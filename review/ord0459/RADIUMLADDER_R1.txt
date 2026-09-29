@@ -1,19 +1,21 @@
 ORD-0459 -- the component-level radius ladder, measured on the live tip 57ff5d1c2f85
 
 Lane 2d2d7428, 2026-09-29 ~13:0x +08. The order was issued by the commander at 10:02 as ORD-0441
-step 2 and renumbered to ORD-0459 at 12:20 (CITYNEXUS_AGENT_CONTROL.md:17550), because ORD-0448 was
+step 2 and renumbered to ORD-0459 at 12:20 (CITYNEXUS_AGENT_CONTROL.md:17670), because ORD-0448 was
 already held by another lane. His two rulers are the acceptance, and both are run here unmodified:
   _cmdr_radii_r1.js  -- the computed radius distribution of everything painted on the demo screen
   a pixel difference -- that must name the affected elements, not just count pixels
 
 0. WHAT THIS COMMIT IS (all coordinates read live from the branch)
    branch  refs/heads/review/Q-ord0459-radii-tier-step2-r1
-   head    3224de66bc5b954e98b66aadb4c710a69be4a5e7   tree 869288f0678af060f9ce78bb0cdab82e2c75dc75   parent 57ff5d1c2f8540d498d945ed591c36689fc0f39e
+   product commits touching frontend/ between the tip and this branch: 2 (f23a6ac3 3224de66)
+   last of them  f23a6ac308e3e3a17ed9ee13e7bef07ce17ffadc   tree 6908cc9db5a120bbb6c395933a0874092b839bcc   parent 6b39b7d57dda908ba9c317b45088a59c5f02b373
+   commits on the branch after the tip, including this file's chain: 3 (f23a6ac3 6b39b7d5 3224de66)
    base    57ff5d1c2f8540d498d945ed591c36689fc0f39e, read live with env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin
            refs/heads/mirror/integration-frontend-apple-pass1
-   merge-base(tip, HEAD) = 57ff5d1c2f8540d498d945ed591c36689fc0f39e  => HEAD is a strict successor of the tip, no merge needed
-   files   8  lines +144 -130
-           frontend/src/design-tokens.css  blob dbf01f27d3206c6bf605f3d53dc71f6b18bbacd9
+   merge-base(tip, product commit) = 57ff5d1c2f8540d498d945ed591c36689fc0f39e  => the product commit is a strict successor of the tip
+   files   8  lines +145 -130
+           frontend/src/design-tokens.css  blob 133cf2e6bc3a3fefe50f09ff9219eba199e65480
            frontend/src/features/access/access.css  blob 6f0961245d95410d9959e08289a02f4f040d925e
            frontend/src/features/discovery/discovery-batch.css  blob 9c596740d5b74626eddb19061f40c009a4ba07ec
            frontend/src/features/planning/planRanking.css  blob caffd58979565149863fd72cadc3b7e14933c600
@@ -40,6 +42,23 @@ already held by another lane. His two rulers are the acceptance, and both are ru
    snap rule: nearest tier, ties to the LARGER tier -- tightening a corner can clip content,
    loosening one cannot. 99 px and above is the pill tier, 50 percent is the circle tier.
 
+1b. WHERE THE TIERS COME FROM, RE-READ FROM THE TWO DUMPS (provenance, not memory)
+   source of the numbers: the reference app's own painted corners, counted out of its layout dump
+     (D:/moodle/_apk_analysis_pi_travel/out/layout_tiers_r1.json, buckets.radius; 830 entries seen,
+     the six most-used values are listed below with their counts, in the file's own order):
+       32dp     used 63 times
+       16dp     used 57 times
+       24dp     used 57 times
+       20dp     used 49 times
+       12dp     used 35 times
+       8dp      used 29 times
+   the resource table cannot be the source: its radius bucket holds 6 named entries whose distinct
+   values are 2.0dp, 10.0dp, 30.0dp -- three values, none of which is a ladder the product draws; that is why the ladder
+   was taken from painted frequency and not from dimens.xml.
+   our step-1 rules carried 11 px and 13 px. In the same painted list those read 11dp used 3 times
+   and 13dp used 0 times, out of 38 distinct values -- neither is a corner the app draws, which is
+   the measured reason both were folded onto the nearest tier.
+
 2. THE MIGRATION, COUNTED OVER EVERY STYLESHEET IN THE SOURCE TREE
    instrument: audit_radii_ladder_r1.py (this directory). It lists the files from the BASELINE tree
    with git ls-tree, pairs each file's radius declarations in document order, then re-derives the
@@ -63,13 +82,13 @@ already held by another lane. His two rulers are the acceptance, and both are ru
    the pill's own corner is in scope and is the one exception worth naming: .cn-copilot-edge
    goes 15px -> 16px and its mark 8px -> 8px by token; every other declaration in that rule is
    byte-identical to the tip (width, min-height, border, background, box-shadow, font-size).
-   line-level shape of the whole change: 144 added, 130 removed, 270 of the 274 changed lines mention a
+   line-level shape of the whole change: 145 added, 130 removed, 271 of the 275 changed lines mention a
    radius, the tier table or a ladder word. The remaining 4 are printed here verbatim so the reader
    can see they belong to the one comment block that was rewritten together with the table:
      -     24dp x57, 20dp x49, 12dp x35, 8dp x29 -- 11 and 13 appear nowhere in that set. */
      +     values, 2dp/10dp/30dp), but the reference app's own painted corners, counted out of its layout
-     +     dump -- 32dp x63, 16dp x57, 24dp x57, 20dp x49, 12dp x35, 8dp x29 are the six most-used, and 11
-     +     and 13, which our step-1 rules used to carry, appear nowhere in that set.
+     +     dump -- 32dp x63, 16dp x57, 24dp x57, 20dp x49, 12dp x35, 8dp x29 are the six most-used. Of the two
+     +     values our step-1 rules carried, 11dp is used 3 times and 13dp not once, so neither is a corner the
 
 4. THE TWO ARMS AND WHO OWNS THEM
    before  base=http://127.0.0.1:49160/  entry=/assets/index-DbA8xyvx.js  http_root_status=200  index served 1200 B, disk 1200 B
@@ -86,6 +105,10 @@ already held by another lane. His two rulers are the acceptance, and both are ru
      (that file is not a git object and cannot be cat-file'ed; the copy shipped here as
      _build_o459before_info.json is, and its blob id is listed with the other artifacts).
    after arm: this branch's own working tree, npx vite build --outDir naming this lane's dist.
+     the two comment-only rebuilds (dist_after3, which every reading above was taken against, and
+     dist_after4 from the final source) were compared file by file: 10 files, all sha1 equal = True,
+     0 file present only in the newer dist. Content-hashed asset names cannot collide, and the
+     per-file sha1 says it directly, so the readings above bind to the head this file describes.
    backend: this lane's own uvicorn on :65218 over the read-only copy
      D:/moodle/_qoder_q_ord0419_20260929/ord0419.db (3710976 B, sha1 over bytes feb7c737c923f0cf3987565b88126f2875379e5a, recomputed locally, not a
      git object, so it cannot be cat-file'ed; the cat-file'able coordinates in this paragraph are the
@@ -131,10 +154,10 @@ already held by another lane. His two rulers are the acceptance, and both are ru
 7. THE DARK PAIRING RULER, RUN ON BOTH TREES (the standing gate from ORD-0441)
    instrument: tools/cnx_token_night_pairing_r1.py --tokens <file>, run on design-tokens.css taken
    from git show of both refs. Its original output for each side is pair_tip.txt and pair_branch.txt.
-   tip    : rules 181, colour tokens in root theme scopes 40, NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10,
-            PAIRED_IN_DARK 17, non-colour 49, token declarations 106
-   branch : rules 181, colour tokens in root theme scopes 40, NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10,
-            PAIRED_IN_DARK 17, non-colour 57, token declarations 114
+   tip    : rules 181, token declarations 106, colour tokens in root theme scopes 40,
+            NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10, PAIRED_IN_DARK 17, non-colour 49
+   branch : rules 181, token declarations 114, colour tokens in root theme scopes 40,
+            NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10, PAIRED_IN_DARK 17, non-colour 57
    the colour cells are unchanged and the only movement is +8 non-colour tokens, which are the new
    tier names. Both runs exited 0.
 

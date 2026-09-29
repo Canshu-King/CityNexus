@@ -44,14 +44,33 @@ def line_of(path, needle, label):
 
 
 HEAD_SHA = git("rev-parse", "HEAD")
-TREE = git("rev-parse", "HEAD^{tree}")
-PARENT = git("rev-parse", "HEAD^")
-MERGE_BASE = git("merge-base", TIP, "HEAD")
-NUMSTAT = [l.split("\t") for l in git("diff", "--numstat", TIP, "HEAD").splitlines()]
+
+
+def product_ref():
+    """The newest commit that touches frontend/ -- the commits on top of it are this file's own chain."""
+    ref = "HEAD"
+    for _ in range(12):
+        files = git("show", "--name-only", "--format=", ref).splitlines()
+        if any(f.startswith("frontend/") for f in files):
+            return ref
+        parent = git("rev-parse", "%s^" % ref)
+        if not parent:
+            return ref
+        ref = parent
+
+
+PROD_REF = product_ref()
+TREE = git("rev-parse", "%s^{tree}" % PROD_REF)
+PARENT = git("rev-parse", "%s^" % PROD_REF)
+MERGE_BASE = git("merge-base", TIP, PROD_REF)
+NUMSTAT = [r.split("\t") for r in git("diff", "--numstat", TIP, PROD_REF, "--", "frontend/").splitlines()]
+TEXT = [r for r in NUMSTAT if r[0] != "-"]
 FILES = [r[2] for r in NUMSTAT]
-ADDED = sum(int(r[0]) for r in NUMSTAT)
-REMOVED = sum(int(r[1]) for r in NUMSTAT)
-BLOBS = {f: git("rev-parse", "HEAD:" + f) for f in FILES}
+PROD_COMMITS = git("log", "--format=%h", "%s..%s" % (TIP, PROD_REF), "--", "frontend/").split()
+EVID_COMMITS = git("log", "--format=%h", "%s..HEAD" % TIP).split()
+ADDED = sum(int(r[0]) for r in TEXT)
+REMOVED = sum(int(r[1]) for r in TEXT)
+BLOBS = {f: git("rev-parse", "%s:%s" % (PROD_REF, f)) for f in FILES if not f.startswith("review/")}
 
 aud = read("audit_radii_out_r2.txt")
 audit_total = int(grab(aud, r"radius declarations: baseline (\d+), branch"))
@@ -84,7 +103,7 @@ before_steps = [(s.get("name") or s.get("step") or "step%d" % i, s.get("rc"))
 before_rcs = [rc for _n, rc in before_steps]
 
 # the line-level shape of the change, classified from the diff itself rather than remembered
-diff0 = git("diff", TIP, "HEAD", "--unified=0")
+diff0 = git("diff", TIP, PROD_REF, "--unified=0", "--", "frontend/")
 changed_lines = [l for l in diff0.splitlines()
                  if (l.startswith("+") and not l.startswith("+++")) or (l.startswith("-") and not l.startswith("---"))]
 radius_lines = [l for l in changed_lines if re.search(r"radius|--cn-r-|ladder|tier", l, re.I)]
@@ -140,10 +159,14 @@ A("  a pixel difference -- that must name the affected elements, not just count 
 A("")
 A("0. WHAT THIS COMMIT IS (all coordinates read live from the branch)")
 A("   branch  refs/heads/review/Q-ord0459-radii-tier-step2-r1")
-A("   head    %s   tree %s   parent %s" % (HEAD_SHA, TREE, PARENT))
+A("   product commits touching frontend/ between the tip and this branch: %d (%s)"
+  % (len(PROD_COMMITS), " ".join(PROD_COMMITS)))
+A("   last of them  %s   tree %s   parent %s" % (git("rev-parse", PROD_REF), TREE, PARENT))
+A("   commits on the branch after the tip, including this file's chain: %d (%s)"
+  % (len(EVID_COMMITS), " ".join(EVID_COMMITS)))
 A("   base    %s, read live with env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin" % TIP)
 A("           refs/heads/mirror/integration-frontend-apple-pass1")
-A("   merge-base(tip, HEAD) = %s  => HEAD is a strict successor of the tip, no merge needed" % MERGE_BASE)
+A("   merge-base(tip, product commit) = %s  => the product commit is a strict successor of the tip" % MERGE_BASE)
 A("   files   %d  lines +%d -%d" % (len(FILES), ADDED, REMOVED))
 for f in FILES:
     A("           %s  blob %s" % (f, BLOBS[f]))
@@ -153,6 +176,27 @@ for name, val in table_defs:
     A("   %-22s %s" % (name, val))
 A("   snap rule: nearest tier, ties to the LARGER tier -- tightening a corner can clip content,")
 A("   loosening one cannot. 99 px and above is the pill tier, 50 percent is the circle tier.")
+A("")
+A("1b. WHERE THE TIERS COME FROM, RE-READ FROM THE TWO DUMPS (provenance, not memory)")
+prov = json.loads(pathlib.Path("D:/moodle/_apk_analysis_pi_travel/out/layout_tiers_r1.json").read_text(encoding="utf-8"))
+res = json.loads(pathlib.Path("D:/moodle/_apk_analysis_pi_travel/out/dimen_ladder.json").read_text(encoding="utf-8"))
+painted = prov["buckets"]["radius"]
+A("   source of the numbers: the reference app's own painted corners, counted out of its layout dump")
+A("     (D:/moodle/_apk_analysis_pi_travel/out/layout_tiers_r1.json, buckets.radius; %d entries seen," % prov["layouts_seen"])
+A("     the six most-used values are listed below with their counts, in the file's own order):")
+for val, n in painted[:6]:
+    A("       %-8s used %d times" % (val, n))
+A("   the resource table cannot be the source: its radius bucket holds %d named entries whose distinct"
+  % res["buckets"]["radius"]["count"])
+A("   values are %s -- three values, none of which is a ladder the product draws; that is why the ladder"
+  % ", ".join(str(v) + "dp" for v in res["buckets"]["radius"]["tiers"]))
+A("   was taken from painted frequency and not from dimens.xml.")
+rare = {v: dict(painted).get(v, 0) for v in ("11dp", "13dp")}
+A("   our step-1 rules carried 11 px and 13 px. In the same painted list those read 11dp used %d times"
+  % rare["11dp"])
+A("   and 13dp used %d times, out of %d distinct values -- neither is a corner the app draws, which is"
+  % (rare["13dp"], len(painted)))
+A("   the measured reason both were folded onto the nearest tier.")
 A("")
 A("2. THE MIGRATION, COUNTED OVER EVERY STYLESHEET IN THE SOURCE TREE")
 A("   instrument: audit_radii_ladder_r1.py (this directory). It lists the files from the BASELINE tree")
@@ -201,6 +245,12 @@ A("     reports export_blob_equality against the tip blobs and these steps with 
 A("     (that file is not a git object and cannot be cat-file'ed; the copy shipped here as")
 A("     _build_o459before_info.json is, and its blob id is listed with the other artifacts).")
 A("   after arm: this branch's own working tree, npx vite build --outDir naming this lane's dist.")
+deq = json.loads(read("dist_equal_after3_after4.json"))
+A("     the two comment-only rebuilds (dist_after3, which every reading above was taken against, and")
+A("     dist_after4 from the final source) were compared file by file: %d files, all sha1 equal = %s,"
+  % (deq["files"], deq["all_equal"]))
+A("     %d file present only in the newer dist. Content-hashed asset names cannot collide, and the" % len(deq["only_in_after4"]))
+A("     per-file sha1 says it directly, so the readings above bind to the head this file describes.")
 A("   backend: this lane's own uvicorn on :65218 over the read-only copy")
 A("     D:/moodle/_qoder_q_ord0419_20260929/ord0419.db (%d B, sha1 over bytes %s, recomputed locally, not a"
   % ((pathlib.Path("D:/moodle/_qoder_q_ord0419_20260929/ord0419.db")).stat().st_size,
@@ -257,11 +307,17 @@ A("")
 A("7. THE DARK PAIRING RULER, RUN ON BOTH TREES (the standing gate from ORD-0441)")
 A("   instrument: tools/cnx_token_night_pairing_r1.py --tokens <file>, run on design-tokens.css taken")
 A("   from git show of both refs. Its original output for each side is pair_tip.txt and pair_branch.txt.")
-A("   tip    : rules 181, colour tokens in root theme scopes 40, NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10,")
-A("            PAIRED_IN_DARK 17, non-colour 49, token declarations 106")
-A("   branch : rules 181, colour tokens in root theme scopes 40, NEUTRAL_BY_NAME 13, PAIRED_INHERITED 10,")
-A("            PAIRED_IN_DARK 17, non-colour 57, token declarations 114")
-A("   the colour cells are unchanged and the only movement is +8 non-colour tokens, which are the new")
+pair_t = read("pair_tip.txt")
+pair_b = read("pair_branch.txt")
+for lab, t in (("tip", pair_t), ("branch", pair_b)):
+    A("   %-7s: rules %s, token declarations %s, colour tokens in root theme scopes %s,"
+      % (lab, grab(t, r"(\d+) rules seen"), grab(t, r"(\d+) token declarations taken"),
+         grab(t, r"colour tokens in root theme scopes\s*:\s*(\d+)")))
+    A("            NEUTRAL_BY_NAME %s, PAIRED_INHERITED %s, PAIRED_IN_DARK %s, non-colour %s"
+      % (grab(t, r"NEUTRAL_BY_NAME\s*:\s*(\d+)"), grab(t, r"PAIRED_INHERITED\s*:\s*(\d+)"),
+         grab(t, r"PAIRED_IN_DARK\s*:\s*(\d+)"), grab(t, r"non-colour tokens in scope\s*:\s*(\d+)")))
+A("   the colour cells are unchanged and the only movement is +%d non-colour tokens, which are the new"
+  % (int(grab(pair_b, r"non-colour tokens in scope\s*:\s*(\d+)")) - int(grab(pair_t, r"non-colour tokens in scope\s*:\s*(\d+)"))))
 A("   tier names. Both runs exited 0.")
 A("")
 A("8. GATES")

@@ -1,0 +1,67 @@
+{
+ "files": 10,
+ "all_equal": true,
+ "only_in_after4": [],
+ "rows": [
+  {
+   "file": "assets\\index-DFAb5Cd0.js",
+   "after3_sha1": "a1c494ebf0732ad48e4e4c78b1b1d73df3ce66be",
+   "after4_exists": true,
+   "after4_sha1": "a1c494ebf0732ad48e4e4c78b1b1d73df3ce66be"
+  },
+  {
+   "file": "assets\\index-DFgigICH.css",
+   "after3_sha1": "c7e0a19c93961f956fa85a47b59f47ccede27a79",
+   "after4_exists": true,
+   "after4_sha1": "c7e0a19c93961f956fa85a47b59f47ccede27a79"
+  },
+  {
+   "file": "assets\\JourneyMap-DmOZrXBw.js",
+   "after3_sha1": "8b7abba3026968cdaac458b27a560792d01fccf4",
+   "after4_exists": true,
+   "after4_sha1": "8b7abba3026968cdaac458b27a560792d01fccf4"
+  },
+  {
+   "file": "assets\\maplibre-gl-CSA9sTB7.js",
+   "after3_sha1": "eb814f5dfb96022da5c726c0f894069397229b02",
+   "after4_exists": true,
+   "after4_sha1": "eb814f5dfb96022da5c726c0f894069397229b02"
+  },
+  {
+   "file": "favicon.svg",
+   "after3_sha1": "e8bc19d33009029d092505724ff72e7b55100e3e",
+   "after4_exists": true,
+   "after4_sha1": "e8bc19d33009029d092505724ff72e7b55100e3e"
+  },
+  {
+   "file": "index.html",
+   "after3_sha1": "d9d2693a43cfe44c5ebe9799d8f4036b2fc6bbb7",
+   "after4_exists": true,
+   "after4_sha1": "d9d2693a43cfe44c5ebe9799d8f4036b2fc6bbb7"
+  },
+  {
+   "file": "manifest.webmanifest",
+   "after3_sha1": "870f46b0861d8f9e4855a5c1cd9c64abe3311cc1",
+   "after4_exists": true,
+   "after4_sha1": "870f46b0861d8f9e4855a5c1cd9c64abe3311cc1"
+  },
+  {
+   "file": "sw.js",
+   "after3_sha1": "413659cee9cb25b50c54be4882e9848279790aa8",
+   "after4_exists": true,
+   "after4_sha1": "413659cee9cb25b50c54be4882e9848279790aa8"
+  },
+  {
+   "file": "v10-sw.js",
+   "after3_sha1": "0240af70d7f4b0e9243b07c00698355050f6c6fe",
+   "after4_exists": true,
+   "after4_sha1": "0240af70d7f4b0e9243b07c00698355050f6c6fe"
+  },
+  {
+   "file": "workbox-6923124b.js",
+   "after3_sha1": "4b612c4365afa04beb243f26945fff3a4ec36372",
+   "after4_exists": true,
+   "after4_sha1": "4b612c4365afa04beb243f26945fff3a4ec36372"
+  }
+ ]
+}
