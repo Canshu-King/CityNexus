@@ -898,6 +898,14 @@ class SharedPlan(BaseModel):
 
     id: UUID
     version_no: int
+    # Which plan this is, in the server's own words rather than guessed at the far end.  `source` has
+    # traveller-facing labels already on the front (`frontend/src/lib/displayVocabulary.ts:30`,
+    # `PLAN_SOURCE`), so a screen can name a first generation apart from a replan without inventing a
+    # sentence; `status` is the plan's own state, which the traveller may read but not change here.
+    # Both are the same enumerations `PlanVersion` above declares for the same two columns, and
+    # `tests/test_qoder_ord0465_shared_landing.py` pins them against it rather than trusting the copy.
+    source: Literal["INITIAL", "REPLAN", "MANUAL"]
+    status: Literal["CANDIDATE", "SELECTED", "ACTIVE", "SUPERSEDED", "REJECTED"]
     stops: list[SharedStop]
 
 

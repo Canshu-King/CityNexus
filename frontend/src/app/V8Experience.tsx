@@ -57,6 +57,7 @@ import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
 import { useDemoScene } from "../lib/sceneClock";
+import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
@@ -87,7 +88,7 @@ import {
 import { useCandidateRejections } from "../api/candidateRejections";
 import { useContinuationState } from "../api/useContinuationState";
 import { syncStatedInterests } from "../api/travelerPreferences";
-import { desktopRoutes, mobileRoutes, navGroupKey } from "../routes/v8Routes";
+import { desktopRoutes, mobileRoutes, navGroupKey, tokenRoutes } from "../routes/v8Routes";
 import {
   readOfflineJourney,
   saveOfflineJourneyVerified,
@@ -102,7 +103,7 @@ import {
 } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
-import { JOURNEY_ID_SEGMENT, v8FirstSegment } from "../lib/journeyLink";
+import { JOURNEY_ID_SEGMENT, v8FirstSegment, v8SecondSegment } from "../lib/journeyLink";
 import { measureRawFacts, type RawFacts } from "../lib/rawFacts";
 import { RawFactsPanel } from "../components/RawFactsPanel";
 import {
@@ -480,6 +481,11 @@ const ROUTE_ALIASES: Record<string, string> = {
 const KNOWN_ROUTES = new Set<string>([
   ...desktopRoutes.map((r) => r.key),
   ...mobileRoutes.map((r) => r.key),
+  /* ORD-0465: `/v8/shared/<token>` has to be a known key or a hard refresh on a share link is answered
+     with Today, which is the whole defect this order exists to close. It comes from its own table and
+     not from `desktopRoutes`, because this set is what makes an address a route while `desktopRoutes`
+     is also what makes it a button. */
+  ...tokenRoutes.map((r) => r.key),
 ]);
 
 /**
@@ -498,7 +504,7 @@ const KNOWN_ROUTES = new Set<string>([
  *   bare     -- `/v8/` itself, which is Today and nothing was asked.
  */
 type DeepLink =
-  | { kind: "screen"; route: string }
+  | { kind: "screen"; route: string; token: string }
   | { kind: "journey" }
   | { kind: "unknown"; segment: string }
   | { kind: "bare" };
@@ -510,17 +516,31 @@ function deepLinkFromPath(): DeepLink {
   if (!segment) return { kind: "bare" };
   const key = segment.toLowerCase();
   // A real route wins over an alias, otherwise refresh changes the screen.
-  if (KNOWN_ROUTES.has(key)) return { kind: "screen", route: key };
+  if (KNOWN_ROUTES.has(key)) {
+    // A token route is not finished until its value is read, and the value keeps its case: the server
+    // looks it up in a BINARY-collated column. Ordinary screens have no value, and say so with "".
+    const isTokenRoute = tokenRoutes.some((entry) => entry.key === key);
+    return {
+      kind: "screen",
+      route: key,
+      token: isTokenRoute ? v8SecondSegment(window.location.pathname) : "",
+    };
+  }
   const alias = ROUTE_ALIASES[key];
-  if (alias) return { kind: "screen", route: alias };
+  if (alias) return { kind: "screen", route: alias, token: "" };
   if (JOURNEY_ID_SEGMENT.test(key)) return { kind: "journey" };
   return { kind: "unknown", segment };
 }
 
-function routeFromPath() {
+/** The address this device is standing on, read as one value so a screen and its token cannot come
+ *  from two different addresses. `navigate` and `popstate` both move through `addressFromPath`, and
+ *  the only consumer of `token` is the share-receiving screen. */
+type V8Address = { route: string; token: string };
+
+function addressFromPath(): V8Address {
   const link = deepLinkFromPath();
   // Never render an empty shell: anything that names no screen is Today.
-  return link.kind === "screen" ? link.route : "hub";
+  return { route: link.kind === "screen" ? link.route : "hub", token: link.kind === "screen" ? link.token : "" };
 }
 
 const drawerRoutes = [
@@ -572,7 +592,11 @@ function nextActivityOf(plan: V8Data["active_plan"]) {
 }
 
 export function V8Experience() {
-  const [route, setRoute] = useState(routeFromPath);
+  /* ORD-0465: the route and the value a token route carries are one reading of one address, so they are
+     held together. Held apart, a navigation could leave the screen naming a token the address no longer
+     has -- which is exactly the class of bug ORD-0404 was about, pointed at the share link. */
+  const [address, setAddress] = useState(addressFromPath);
+  const route = address.route;
   /* ORD-0404: what the address asked for, read once at mount -- before anything this session does
      to the address. Both the sealed-demo gate and the create-trip flow navigate, and navigating to
      Today is precisely what erased the screen the traveller had asked for, so the answer has to be
@@ -783,6 +807,18 @@ export function V8Experience() {
     let cancelled = false;
     async function boot() {
       setBusy(true);
+      /* ORD-0465: a share link is opened by somebody who was invited, not by the traveller this device
+         holds. The boot read below is `GET /journeys/<stored id>/experience`, which is the door this
+         project already has a 500 for because it writes while it answers -- so opening someone else's
+         link must not ask it, and must not create anything on their behalf either. When no stored id
+         exists, the same boot ends by opening the create-a-trip wizard, and a stranger following a
+         link would find a form they never asked for sitting on the page they were invited to see.
+         Judged off `deepLink`, the reading taken at mount: that is what the address asked, and the one
+         thing a later navigation cannot rewrite. */
+      if (deepLink.kind === "screen" && deepLink.route === "shared") {
+        if (!cancelled) setBusy(false);
+        return;
+      }
       try {
         let journeyId = localStorage.getItem("citynexus.v8.journey_id");
         if (journeyId) {
@@ -857,7 +893,7 @@ export function V8Experience() {
   }, []);
 
   useEffect(() => {
-    const onPopState = () => setRoute(routeFromPath());
+    const onPopState = () => setAddress(addressFromPath());
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
@@ -916,7 +952,9 @@ export function V8Experience() {
     const value = next || "hub";
     withViewTransition(() => {
       window.history.pushState({}, "", `/v8/${value}`);
-      setRoute(value);
+      /* Read back what was just written rather than assuming `value` is what the address became: this is
+         the one place that decides both halves, and a second guess about the address is a second truth. */
+      setAddress(addressFromPath());
       setNavOpen(false);
       setAlertsOpen(false);
     });
@@ -1374,6 +1412,23 @@ export function V8Experience() {
   const nearbyActivities = detailActivity
     ? allActivities.filter((item) => item.id !== detailActivity.id)
     : [];
+
+  /* ORD-0465: the share-receiving screen, and the one surface in this file that answers with no
+     journey on the device. Everything below this point belongs to the traveller's own shell -- the
+     failure view, the loading view, the cached-copy view and then `if (!data)`, which is the gate that
+     would otherwise swallow this address and print 「没有可显示的行程」 at somebody who was never supposed
+     to have one. It is also the reason this screen is returned here rather than added to
+     `v8PanelRegistry`: the registry mounts inside that shell, and the shell's own sidebar reads
+     `data.options.length`, so a screen for a visitor cannot live behind it without the shell being
+     rewritten around a null. The three views above it are the same shape of decision, made three
+     times already. */
+  if (route === "shared") {
+    return (
+      <main className="v8-page">
+        <SharedJourneyScreen token={address.token} />
+      </main>
+    );
+  }
 
   /* R14-P / ORD-0169: one failure view, driven by the classification that was made at the evidence
      boundary.  The kicker, the headline, the body, the announcement and the recovery button are all

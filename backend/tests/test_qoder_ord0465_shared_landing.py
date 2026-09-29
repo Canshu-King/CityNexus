@@ -281,6 +281,9 @@ def test_ord0465_success_carries_the_stops_the_landing_screen_has_to_draw():
     assert body["title"] == "沿海一周"
     assert body["timezone"] == "Asia/Shanghai"
     assert body["plan_state"] == "ACTIVE_PLAN_PRESENT"
+    assert body["active_plan"]["version_no"] == 3
+    assert body["active_plan"]["source"] == "INITIAL"
+    assert body["active_plan"]["status"] == "ACTIVE"
     stops = body["active_plan"]["stops"]
     assert [item["sequence_no"] for item in stops] == [1, 2]
     # The place's own name, not the planner's typed title: the screen prefers it, and can only do so
@@ -385,6 +388,21 @@ def test_ord0465_the_read_writes_nothing():
         assert session.get(Journey, journey_id).updated_at == before_updated
         after_audit = len(session.execute(text("SELECT 1 FROM audit_logs")).all())
     assert after_audit == before_audit
+
+
+def test_ord0465_the_two_words_naming_the_plan_are_the_same_words_the_plan_itself_uses():
+    """`SharedPlan` copies two enumerations out of `PlanVersion`, and a copy is exactly the thing that
+    drifts.  Pinned against the model for the same two columns rather than against a list written in
+    this file, so widening a `plan_versions.source` value fails here before it can reach a screen."""
+    import typing
+
+    from app.schemas import PlanVersion as PlanVersionSchema
+    from app.schemas import SharedPlan
+
+    for field in ("source", "status"):
+        mine = set(typing.get_args(SharedPlan.model_fields[field].annotation))
+        theirs = set(typing.get_args(PlanVersionSchema.model_fields[field].annotation))
+        assert mine == theirs, (field, mine ^ theirs)
 
 
 def test_ord0465_the_projection_does_not_reach_a_routing_provider():

@@ -1,0 +1,92 @@
+/* ORD-0465 -- the share-receiving screen. Its own sheet, same reason every other panel on this tree
+   has one: the shared token sheet is edited by other lanes, and every value below is read from it
+   rather than redefined. */
+.cn-shared {
+  display: grid;
+  gap: 14px;
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 22px 20px 40px;
+}
+.cn-shared-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cn-shared-language { width: fit-content; }
+.cn-shared-title {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-title);
+  font-weight: 700;
+  line-height: var(--cn-lh-tight);
+  /* A trip title is whatever its owner typed. It can be one unbroken token longer than a phone
+     column, and clipping it would hide the one line this screen is about. */
+  overflow-wrap: anywhere;
+}
+.cn-shared-notice {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+  background: var(--v8-panel);
+  color: var(--v8-ink);
+}
+.cn-shared-notice p { margin: 0; overflow-wrap: anywhere; }
+.cn-shared-details { margin-top: 2px; }
+.cn-shared-details summary {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+}
+.cn-shared-code-label {
+  margin: 6px 0 0;
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+}
+.cn-shared-details code {
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+.cn-shared-day {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+  background: var(--v8-panel);
+}
+.cn-shared-day-head {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-card);
+  font-weight: 700;
+}
+.cn-shared-stops { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cn-shared-stop { display: grid; gap: 2px; }
+.cn-shared-stop-name {
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  overflow-wrap: anywhere;
+}
+.cn-shared-stop-meta {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-meta);
+}
+.cn-shared-map { display: grid; gap: 8px; }
+.cn-shared-map-head {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-card);
+  font-weight: 700;
+}
+
+/* Amendment F-2: the >=44px contract belongs to the touch layer, and on this screen the two controls
+   a visitor can actually press are 再读一次 and the language switch. Desktop keeps the 30px the rest
+   of the shell's quiet buttons use, which is set by the shared sheet rather than repeated here. */
+@media (max-width: 680px) {
+  .cn-shared { padding: 16px 14px 32px; }
+  .cn-shared .v8-quiet-button { min-height: var(--cn-touch-min); }
+}

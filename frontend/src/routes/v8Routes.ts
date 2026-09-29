@@ -24,6 +24,16 @@ export const desktopRoutes = [
   { key: "access", label: "Access", icon: "user", group: "SYSTEM" },
 ] as const;
 
+/* ORD-0465: routes addressed by a value, not just by a name. `/v8/shared/<token>` is the third thing
+   a `/v8/` segment can be -- not a screen key, and not a journey id -- and it needs its own table
+   rather than a row in `desktopRoutes` for two reasons. The drawer would put a "Shared trip" button in
+   front of the traveller, and clicking it goes nowhere: there is nothing to share until an owner
+   grants it, so the entry would advertise an action the product has not taken. And the keys in
+   `desktopRoutes` / `mobileRoutes` feed `t("nav." + key)` (app/V8Experience.tsx:1734, :1997) with no
+   fallback hook, so a row here would demand a nav label for a control that must not be drawn.
+   `KNOWN_ROUTES` still has to know the key, or a hard refresh on a share link lands on Today. */
+export const tokenRoutes = [{ key: "shared" }] as const;
+
 // The group code is a machine token; the heading a traveller reads comes from the dictionary.
 export const navGroupKeys: Record<string, string> = {
   TODAY: "nav.groupToday",

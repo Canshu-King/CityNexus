@@ -1,5 +1,9 @@
 import type { components } from "../../generated/api";
-import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import {
+  refusalReasonCode,
+  rejectionWithFacts,
+  RejectionWithFacts,
+} from "../../lib/rejectionFacts";
 
 /**
  * ORD-0402 slice 2 -- the two doors the recycle-bin screen uses, in one file, so the screen itself
@@ -59,24 +63,12 @@ export function undeleteJourney(journeyId: string): Promise<{ id: string; title:
 }
 
 /**
- * Which condition refused, in the server's own token, read out of the parsed envelope.
+ * Which condition refused, in the server's own token.
  *
- * `error.reason_code` is where ORD-0101 put it (`backend/app/main.py:598` -- `http_error` forwards
- * `getattr(exc, "reason_code", null)`), and the two names this door can answer with are
- * `JOURNEY_NOT_DELETED` (409) and `JOURNEY_NOT_FOUND` (404). Returning `null` is not a failure: it
- * means this device did not read a name, and the screen then says so instead of picking a sentence.
+ * ORD-0465: the reading itself moved to `lib/rejectionFacts.ts`, where the second screen that needs it
+ * can reach it without importing this feature. It is re-exported under the name this panel already
+ * imports, so the one copy stays the one copy and nothing here changed what it answers.
  */
-export function refusalReasonCode(cause: unknown): string | null {
-  if (!(cause instanceof RejectionWithFacts)) return null;
-  const envelope = cause.envelope;
-  if (typeof envelope !== "object" || envelope === null) return null;
-  const error = (envelope as Record<string, unknown>).error;
-  if (typeof error === "object" && error !== null) {
-    const code = (error as Record<string, unknown>).reason_code;
-    if (typeof code === "string" && code.trim()) return code;
-  }
-  const top = (envelope as Record<string, unknown>).reason_code;
-  return typeof top === "string" && top.trim() ? top : null;
-}
+export { refusalReasonCode };
 
 export { RejectionWithFacts };

@@ -2708,10 +2708,23 @@ components:
         configured, so the only shapes available are frozen fixture geometry.  Drawing a route the
         server cannot honestly name would be a second claim about how a traveller moves.
       type: object
-      required: [id, version_no, stops]
+      required: [id, version_no, source, status, stops]
       properties:
         id: {type: string, format: uuid}
         version_no: {type: integer}
+        source:
+          type: string
+          enum: [INITIAL, REPLAN, MANUAL]
+          description: >-
+            Which generation of the trip this is, read off `plan_versions.source`.  The traveller-facing
+            words for these three values already exist on the front
+            (`frontend/src/lib/displayVocabulary.ts:30`), so a guest screen can say 首次生成 / 来自一次重规划
+            without inventing a sentence -- and without one, "the trip you were sent" and "the trip you
+            were sent, three replans later" are the same words.
+        status:
+          type: string
+          enum: [CANDIDATE, SELECTED, ACTIVE, SUPERSEDED, REJECTED]
+          description: The plan's own state, which a share holder may read and cannot change from here.
         stops:
           type: array
           items: {$ref: '#/components/schemas/SharedStop'}

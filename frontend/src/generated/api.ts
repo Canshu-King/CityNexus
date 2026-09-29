@@ -3082,6 +3082,16 @@ export interface components {
             /** Format: uuid */
             id: string;
             version_no: number;
+            /**
+             * @description Which generation of the trip this is, read off `plan_versions.source`.  The traveller-facing words for these three values already exist on the front (`frontend/src/lib/displayVocabulary.ts:30`), so a guest screen can say 首次生成 / 来自一次重规划 without inventing a sentence -- and without one, "the trip you were sent" and "the trip you were sent, three replans later" are the same words.
+             * @enum {string}
+             */
+            source: "INITIAL" | "REPLAN" | "MANUAL";
+            /**
+             * @description The plan's own state, which a share holder may read and cannot change from here.
+             * @enum {string}
+             */
+            status: "CANDIDATE" | "SELECTED" | "ACTIVE" | "SUPERSEDED" | "REJECTED";
             stops: components["schemas"]["SharedStop"][];
         };
         /** @description ORD-0465: what the holder of a share link is shown when the grant still reads.  The journey half is `Journey` unchanged - the same fields, the same names, the same meanings - because one journey shape is the promise this door has always kept. */

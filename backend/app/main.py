@@ -3455,7 +3455,9 @@ def _shared_plan_projection(session: Session, journey: Journey) -> tuple[str, Sh
         )
         for item in activities
     ]
-    return "ACTIVE_PLAN_PRESENT", SharedPlan(id=plan.id, version_no=plan.version_no, stops=stops)
+    return "ACTIVE_PLAN_PRESENT", SharedPlan(
+        id=plan.id, version_no=plan.version_no, source=plan.source, status=plan.status, stops=stops
+    )
 
 
 @app.get("/api/v1/shared/journeys/{token}", response_model=SharedJourneyRead)

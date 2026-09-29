@@ -32,6 +32,25 @@ export function v8FirstSegment(pathname: string): string {
   return pathname.replace(/^\/v8\/+/, "").split("/")[0] ?? "";
 }
 
+/**
+ * ORD-0465: the value after a token route's name -- `/v8/shared/<this part>` of a share link.
+ *
+ * Not lower-cased, for the same reason `v8FirstSegment` is not: the server looks this string up in a
+ * BINARY-collated column (`JourneyShareGrant.token`, `backend/app/db/models.py`), and the tokens it
+ * mints are `secrets.token_urlsafe(24)` -- mixed case by construction. A normaliser here would quietly
+ * turn a valid link into `SHARE_GRANT_UNKNOWN`, and the screen would tell the traveller their link
+ * does not exist.
+ *
+ * Anything non-empty is handed to the door, including shapes this file could not recognise as a token.
+ * Judging a token is the server's job and it has a named answer for each of its three verdicts; a
+ * client-side pattern would only be a second, weaker judge that turns "the link you gave me has no
+ * token in it" into a guess about a token it never looked at. `""` is the one case this device can
+ * decide on its own, because nothing was sent.
+ */
+export function v8SecondSegment(pathname: string): string {
+  return pathname.replace(/^\/v8\/+/, "").split("/")[1] ?? "";
+}
+
 export type JourneyLinkEnv = {
   journeyId: string;
   origin: string;
