@@ -1,0 +1,105 @@
+{
+ "rev": "6336b0e4e1bab3ae17e4ce4b1a96e2696541ef56",
+ "tag": "r4",
+ "ruler": "ui_exposure_taint_ast_r7b.cjs",
+ "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+ "cells_total_reported": 12,
+ "cells": [
+  {
+   "key": "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "cdfe4dfe298f1093",
+   "file": "CnxMeasuredFacts.tsx",
+   "line": 57,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:span testid=span:{computed}"
+  },
+  {
+   "key": "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM",
+   "id": "69089b117b4151f1",
+   "file": "DestinationPreparationPanel.tsx",
+   "line": 421,
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "sink_shape": "text-in:p testid=p:prep-check-error"
+  },
+  {
+   "key": "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM",
+   "id": "99744f615f602330",
+   "file": "DestinationPreparationPanel.tsx",
+   "line": 544,
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "sink_shape": "text-in:p testid=p:prep-server-message"
+  },
+  {
+   "key": "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM",
+   "id": "e893bc679cefe90f",
+   "file": "DestinationPreparationPanel.tsx",
+   "line": 597,
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "sink_shape": "text-in:p testid=p:prep-action-error"
+  },
+  {
+   "key": "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "id": "3da2ddc1783bb8e4",
+   "file": "PlanWithAiSheet.tsx",
+   "line": 884,
+   "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "sink_shape": "attribute:data-result-status"
+  },
+  {
+   "key": "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "fec78ea862b50245",
+   "file": "PlanWithAiSheet.tsx",
+   "line": 909,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:p testid=div:plan-ai-result"
+  },
+  {
+   "key": "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "fd20c87a2369a807",
+   "file": "PlanWithAiSheet.tsx",
+   "line": 982,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:code testid=code:plan-ai-reason"
+  },
+  {
+   "key": "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "7feb812a1e486a9d",
+   "file": "RecoveryRequiredPanel.tsx",
+   "line": 299,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:code testid=code:recovery-reason"
+  },
+  {
+   "key": "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "fca34cf42fe474c4",
+   "file": "SimulationPanel.tsx",
+   "line": 937,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:p testid=p:sim-outcome"
+  },
+  {
+   "key": "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "id": "863b577aaae8b6e9",
+   "file": "JourneyTrashPanel.tsx",
+   "line": 232,
+   "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "sink_shape": "attribute:data-cnx-value"
+  },
+  {
+   "key": "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "id": "0e2fd6823141b44f",
+   "file": "JourneyTrashPanel.tsx",
+   "line": 233,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "sink_shape": "text-in:span testid=div:trash-outcome"
+  },
+  {
+   "key": "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+   "id": "1f8bfb4f2b900363",
+   "file": "ActivityDetail.tsx",
+   "line": 216,
+   "rule": "RAW_BODY_TO_DOM",
+   "sink_shape": "text-in:dd testid=dd:activity-hours"
+  }
+ ]
+}
