@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `56d8907e`
+- final product/evidence commit before this receipt update: `d0fd2a7f`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -213,11 +213,23 @@ The disabled state is derived from the actual absence of a recomputable selected
 option; it does not infer or invent a route mode. `TRANSIT` is no longer presented as
 an active mode for this plan.
 
+The shell count was corrected in the same bounded follow-up. It now reads the actual
+option `leg_modes` and selected plan `legs[*].mode` fields. The clean page consequently
+shows:
+
+```text
+1 个方案 · 出行方式待补充
+```
+
+instead of `1 个方案 · 5 种模式`. The supported-mode count is retained only when a
+real option or plan leg supplies a mode.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png`
 
 The final frontend gates after this repair were:
 
