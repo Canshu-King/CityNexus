@@ -1,6 +1,7 @@
 {
   "what": "control on the contract-seam arm of the ORD-0436 reading",
-  "tip": "1070759651b29f92a9a9587a1e0c1084298e0714",
+  "tree_read": "5e8b0d8fef5b6ef64377435f753e50def0a023c9",
+  "authoritative_base": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
   "upstream_ref": "refs/heads/review/qoder-0434-share-grants-r1",
   "upstream_sha": "811b90dc56d9e7ea3a06f37c67dc508d700ea9d5",
   "upstream_resolves": true,
@@ -22,7 +23,7 @@
   },
   "cases": [
     {
-      "case": "A_tip",
+      "case": "A_tree_under_test",
       "parsed": null
     },
     {
