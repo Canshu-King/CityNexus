@@ -167,7 +167,7 @@ def test_strict_catalogue_mobility_excludes_unresolved_opening_rows():
     assert _mobility_catalogue_place_ids(places, [], []) == ("known-visit",)
 
 
-def test_strict_catalogue_candidates_try_provider_cost_before_unknown_cost():
+def test_strict_catalogue_templates_exclude_unverified_cost_rows():
     def place(place_id: str, cost: int | None):
         metadata = {"duration_min": 60}
         if cost is None:
@@ -199,11 +199,8 @@ def test_strict_catalogue_candidates_try_provider_cost_before_unknown_cost():
     templates = _catalogue_templates(places, lambda _origin, _destination: 5, variants=1)
 
     assert templates
-    assert [item[0] for item in templates[0]] == [
-        "known-cost-a",
-        "known-cost-b",
-        "unknown-cost",
-    ]
+    assert [item[0] for item in templates[0]] == ["known-cost-a", "known-cost-b"]
+    assert all(item[0] != "unknown-cost" for template in templates for item in template)
 
 
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):

@@ -253,7 +253,16 @@ def test_the_packer_drops_a_stop_that_cannot_fit_before_its_own_closing_time() -
             longitude=116.4,
             opening_hours_json=json.dumps({"open": open_at, "close": close_at}),
             tags_json=json.dumps(["culture"]),
-            metadata_json=json.dumps({"duration_min": duration, "cost_minor": 0}),
+                metadata_json=json.dumps(
+                    {
+                        "duration_min": duration,
+                        "cost_evidence": {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": "CNY",
+                        },
+                    }
+                ),
             updated_at="2026-09-22T00:00:00+08:00",
         )
 

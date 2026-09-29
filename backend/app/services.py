@@ -919,11 +919,10 @@ def _catalogue_templates(
     The contract is kept identical, only its source changes: up to three day sequences of
     `(place_id, title, start HH:MM, end HH:MM)`, built from each place's own open/close and
     duration, with the frozen travel minutes between consecutive stops actually subtracted so
-    the literal windows are ones the gate can honour.  Stops with provider-backed cost evidence
-    are considered before unresolved-cost stops; within each cost class they are taken
-    earliest-opening first (ids break ties, so the order is reproducible).  This keeps strict
-    AUTO from spending its bounded candidate budget on schedules that the cost gate must reject
-    while retaining unresolved rows for later variants.  A stop that cannot fit before its own
+    the literal windows are ones the gate can honour.  Strict candidates use only places with
+    provider-backed cost evidence; UNKNOWN-cost rows remain in the catalog and provisional lane
+    but cannot be smuggled into a selectable candidate.  Stops are taken earliest-opening first
+    (ids break ties, so the order is reproducible).  A stop that cannot fit before its own
     closing time is dropped rather than squeezed in, and the variants rotate the queue so the
     candidates are genuinely different plans instead of one plan three times.
     """
@@ -932,10 +931,11 @@ def _catalogue_templates(
         (
             place
             for place in places.values()
-            if _place_window(place) and _catalogue_visit_eligible(place)
+            if _place_window(place)
+            and _catalogue_visit_eligible(place)
+            and _place_verified_cost(place) is not None
         ),
         key=lambda place: (
-            0 if _place_verified_cost(place) is not None else 1,
             (_place_window(place) or (0, 0))[0],
             place.id,
         ),
