@@ -13,6 +13,7 @@ from app.db.session import SessionLocal, ensure_schema
 from app.fact_acquisition import (
     _safe_get,
     _validate_public_http_url,
+    _search_fact_candidates,
     acquire_place_facts,
 )
 
@@ -125,6 +126,151 @@ def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypa
 
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_PRIVATE_TARGET"):
         _safe_get(RedirectClient(), "https://example.com/facts", retrieved_at="now")
+
+
+def test_search_source_returns_structured_candidates_without_authority(monkeypatch):
+    from app import fact_acquisition
+    from app.integrations.web.searxng import SearXNGObservation
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "settings",
+        SimpleNamespace(searxng_url="https://search.example.test"),
+    )
+
+    class Provider:
+        def __init__(self, base_url, *, client):
+            assert base_url == "https://search.example.test"
+
+        def search(self, query, *, limit):
+            assert '"way/1417996052"' in query
+            assert limit == 5
+            return (
+                SearXNGObservation(
+                    query=query,
+                    url="https://example.gov.cn/park",
+                    title="贡山县总体国家安全观主题公园",
+                    domain="example.gov.cn",
+                    content="开放时间：09:00-17:00；门票：30元",
+                    captured_at="2026-09-25T00:00:00+00:00",
+                ),
+            )
+
+        def close(self):
+            return None
+
+    monkeypatch.setattr(fact_acquisition, "SearXNGSearchProvider", Provider)
+    result = _search_fact_candidates(
+        object(),
+        SimpleNamespace(name="贡山县总体国家安全观主题公园", external_id="overpass:way/1417996052"),
+        SimpleNamespace(city_code="OSM:R:2729765"),
+        retrieved_at="2026-09-25T00:00:01+00:00",
+    )
+    assert result["status"] == "CANDIDATES_FOUND"
+    assert result["opening_hours"]["status"] == "SEARCH_CANDIDATE"
+    assert result["cost_evidence"]["status"] == "SEARCH_CANDIDATE"
+    assert result["cost_evidence"]["amount_minor"] == 3000
+    assert result["observations"][0]["authority_status"] == "SEARCH_CANDIDATE"
+
+
+def test_search_candidate_never_overwrites_unknown_place_facts(monkeypatch):
+    from app import fact_acquisition
+    from app.integrations.web.searxng import SearXNGObservation
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "settings",
+        SimpleNamespace(
+            overpass_url="https://overpass.example/api",
+            nominatim_url="https://nominatim.example",
+            searxng_url="https://search.example",
+        ),
+    )
+
+    class Response:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self.payload
+
+    class Client:
+        def __init__(self, **kwargs):
+            self.closed = False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            self.closed = True
+            return False
+
+        def post(self, *args, **kwargs):
+            assert not self.closed
+            return Response({"elements": [{"type": "node", "id": 177, "tags": {"tourism": "viewpoint"}}]})
+
+        def get(self, *args, **kwargs):
+            assert not self.closed
+            return Response([{"osm_type": "node", "osm_id": 177, "extratags": {}}])
+
+    class Provider:
+        def __init__(self, base_url, *, client):
+            assert base_url == "https://search.example"
+
+        def search(self, query, *, limit):
+            return (
+                SearXNGObservation(
+                    query=query,
+                    url="https://example.gov.cn/park",
+                    title="贡山县总体国家安全观主题公园",
+                    domain="example.gov.cn",
+                    content="开放时间：09:00-17:00；门票：30元",
+                    captured_at="2026-09-25T00:00:00+00:00",
+                ),
+            )
+
+        def close(self):
+            return None
+
+    monkeypatch.setattr("app.fact_acquisition.httpx.Client", Client)
+    monkeypatch.setattr(fact_acquisition, "SearXNGSearchProvider", Provider)
+    ensure_schema()
+    place_id = f"r77-search-{uuid4().hex}"
+    with SessionLocal() as session:
+        place = Place(
+            id=place_id,
+            provider_key="overpass",
+            external_id="overpass:node/177",
+            city_code="OSM:R:2729765",
+            name="贡山县总体国家安全观主题公园",
+            category="viewpoint",
+            latitude=27.7,
+            longitude=98.6,
+            opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+            tags_json="[]",
+            metadata_json=json.dumps({}),
+            updated_at="2026-09-25T00:00:00+00:00",
+        )
+        session.add(place)
+        session.commit()
+        receipt = acquire_place_facts(
+            session,
+            SimpleNamespace(id=f"journey-{uuid4().hex}", city_code="OSM:R:2729765"),
+        )
+        session.commit()
+        refreshed = session.get(Place, place_id)
+        metadata = json.loads(refreshed.metadata_json)
+        assert receipt["search_source"]["status"] == "CANDIDATES_FOUND"
+        assert metadata["fact_acquisition"]["search_source"]["cost_evidence"]["status"] == "SEARCH_CANDIDATE"
+        assert metadata["cost_evidence"]["status"] == "UNKNOWN"
+        assert metadata["cost_evidence"]["amount_minor"] is None
+        assert metadata["price_known"] is False
+        assert json.loads(refreshed.opening_hours_json)["status"] == "UNKNOWN"
+        session.delete(refreshed)
+        session.commit()
 
 
 def test_live_discovery_cache_is_keyed_by_the_provider_question():

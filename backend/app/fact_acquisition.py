@@ -229,22 +229,121 @@ def _official_web_facts(client: httpx.Client, source_url: str, *, retrieved_at: 
     return {"provider": "official_web", "source": final_url, "retrieved_at": retrieved_at, "status": status, "opening_hours": opening, "cost_evidence": cost}
 
 
-def _search_fact_candidates(client: httpx.Client, place: Place, journey: Journey, *, retrieved_at: str) -> dict[str, Any]:
+def _search_fact_candidates(
+    client: httpx.Client,
+    place: Place,
+    journey: Journey,
+    *,
+    retrieved_at: str,
+    nominatim_row: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Collect sourceful search leads without promoting them to Place truth."""
+
+    unknown_opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    unknown_cost = {
+        "status": "UNKNOWN",
+        "amount_minor": None,
+        "currency": "CNY",
+        "source": "searxng",
+    }
     if not settings.searxng_url:
-        return {"provider": "searxng", "status": "UNCONFIGURED", "attempted": False, "observations": []}
+        return {
+            "provider": "searxng",
+            "status": "UNCONFIGURED",
+            "attempted": False,
+            "observations": [],
+            "opening_hours": unknown_opening,
+            "cost_evidence": unknown_cost,
+        }
+
+    names: list[str] = [str(place.name).strip()]
+    row = nominatim_row or {}
+    display_name = str(row.get("display_name") or "").split(",", 1)[0].strip()
+    if display_name:
+        names.append(display_name)
+    namedetails = row.get("namedetails")
+    if isinstance(namedetails, dict):
+        for key in ("name", "name:zh", "official_name", "official_name:zh"):
+            value = str(namedetails.get(key) or "").strip()
+            if value:
+                names.append(value)
+    public_names = list(dict.fromkeys(name for name in names if name))
+    ref = _element_ref(place)
+    identity = f"{ref[0]}/{ref[1]}" if ref else ""
+    identity_terms = [f'"{name}"' for name in public_names]
+    if identity:
+        identity_terms.append(f'"{identity}"')
+    query = " ".join((*identity_terms, "opening hours", "admission fee"))
+
     provider = SearXNGSearchProvider(settings.searxng_url, client=client)
-    query = f"{place.name} {journey.city_code} official opening hours ticket price"
-    observations = []
     try:
-        for item in provider.search(query, limit=5):
-            observations.append({
-                "query": item.query, "url": item.url, "title": item.title,
-                "domain": item.domain, "content": item.content,
-                "captured_at": item.captured_at, "authority_status": "SEARCH_CANDIDATE",
-            })
+        observations = provider.search(query, limit=5)
     finally:
         provider.close()
-    return {"provider": "searxng", "status": "CANDIDATES_FOUND" if observations else "NO_RESULTS", "attempted": True, "retrieved_at": retrieved_at, "observations": observations}
+
+    opening = dict(unknown_opening)
+    cost = dict(unknown_cost)
+    retained: list[dict[str, Any]] = []
+    opening_pattern = re.compile(
+        r"(?:opening\s+hours?|开放时间|营业时间)\s*[:：]?\s*"
+        r"(?P<value>\d{1,2}(?::\d{2})?\s*[-–—]\s*\d{1,2}(?::\d{2})?)",
+        re.IGNORECASE,
+    )
+    cost_pattern = re.compile(
+        r"(?:admission|entrance\s+fee|ticket|门票(?:价格)?|票价)\s*[:：]?\s*"
+        r"(?P<amount>\d+(?:\.\d{1,2})?)\s*(?P<currency>元|CNY|RMB|¥)?",
+        re.IGNORECASE,
+    )
+    for item in observations:
+        content = f"{item.title}\n{item.content}".strip()
+        opening_match = opening_pattern.search(content)
+        cost_match = cost_pattern.search(content)
+        parsed = {
+            "url": item.url,
+            "title": item.title,
+            "domain": item.domain,
+            "content_excerpt": item.content,
+            "captured_at": item.captured_at,
+            "provider": item.provider_key,
+            "query": item.query,
+            "parsed_fields": [],
+            "authority_status": "SEARCH_CANDIDATE",
+        }
+        if opening_match:
+            normalized = normalize_opening_hours(opening_match.group("value"))
+            if normalized.get("status") == "NORMALIZED_VALID":
+                opening = {
+                    **normalized,
+                    "status": "SEARCH_CANDIDATE",
+                    "source": "searxng",
+                    "source_url": item.url,
+                    "retrieved_at": retrieved_at,
+                }
+                parsed["parsed_fields"].append("opening_hours")
+        if cost_match:
+            raw_currency = (cost_match.group("currency") or "CNY").upper()
+            currency = "CNY" if raw_currency in {"元", "RMB", "¥"} else raw_currency
+            cost = {
+                "status": "SEARCH_CANDIDATE",
+                "amount_minor": round(float(cost_match.group("amount")) * 100),
+                "currency": currency,
+                "source": "searxng",
+                "source_url": item.url,
+                "retrieved_at": retrieved_at,
+            }
+            parsed["parsed_fields"].append("cost_evidence")
+        if parsed["parsed_fields"]:
+            retained.append(parsed)
+    return {
+        "provider": "searxng",
+        "status": "CANDIDATES_FOUND" if retained else "NO_STRUCTURED_FACTS",
+        "attempted": True,
+        "query": query,
+        "retrieved_at": retrieved_at,
+        "observations": retained,
+        "opening_hours": opening,
+        "cost_evidence": cost,
+    }
 
 
 def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[str] | None = None) -> dict[str, Any]:
@@ -314,7 +413,13 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 except (httpx.HTTPError, ValueError, AttributeError) as exc:
                     official = {"provider": "official_web", "source": source_url, "retrieved_at": retrieved_at, "status": "UNAVAILABLE", "error": type(exc).__name__}
                     receipt["official_web"]["status"] = "UNAVAILABLE"
-            search = _search_fact_candidates(client, place, journey, retrieved_at=retrieved_at)
+            search = _search_fact_candidates(
+                client,
+                place,
+                journey,
+                retrieved_at=retrieved_at,
+                nominatim_row=nominatim_row,
+            )
             receipt["search_source"] = {"provider": "searxng", "status": search.get("status"), "attempted": bool(search.get("attempted")), "acquired": len(search.get("observations") or [])}
             if opening.get("status") in {"NORMALIZED_VALID", "CLOSED", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER"}:
                 receipt["known_opening_count"] += 1
