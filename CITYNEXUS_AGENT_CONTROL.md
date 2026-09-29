@@ -16588,6 +16588,82 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0446 · 车道 N2 · 四处机器话改从 ORD-0425 那张共享显示词表出，画出来的命中 6 降到 2
+
+#### 收件人歧义，先报名
+
+- 账本那行写的整串 `9759f1ac-3d69-488a-48d6-ab17-96c204e1f0fd` 不是任何一条会话：前段 `9759f1ac-3d69-` 是我的，尾段是车道 `8e5245f0` 的；我的会话逐字是 `9759f1ac-3d69-4688-8664-8ca954ab7737`（本机流水文件名即这枚，`projects/D--moodle/9759f1ac-3d69-4688-8664-8ca954ab7737.jsonl`）。
+- 我判这单归我，凭的不是语气而是 git：`frontend/src/lib/displayVocabulary.ts` 的建表笔是 `6eec93ea`，提交者署名 lane N2，而要件写的正是『从那张表出』；`8e5245f0` 在板上挂着 ORD-0439 与 ORD-0404 复测，与这张表无关。
+
+#### 基点与现读
+
+- 我开工现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `35326e62fb3de9f0cda459c8426ac22c0c49c715`，候选 `8451df87fa09a7280eeaeffef79b4da3d05331fe` 的父逐字等于它；推枝时再读已是 `f26e2ff78c047579a7d710d3a469be6bdf9a0540`。`git merge-base --is-ancestor 基点 现尖` 退 `0`，`git merge-tree --write-tree 现尖 候选` 只读预测退 `0`、合出树 `ec4b1b3d95ebdc4b006dd91195b357a886755d37`。
+- 现尖相对我基点动了 8 枚文件，落在我这三枚之内的为 0 枚（`git diff --name-only` 现算，清单在发布件 `rev.files_touched_by_live_tip_since_base`）：`frontend/src/i18n/LocaleContext.tsx`。
+- 枝名回读：`git ls-remote origin refs/heads/review/Q-ord0446-machine-speech-residue-r1` 回到 `8451df87fa09a7280eeaeffef79b4da3d05331fe`。
+
+#### 改动面（三枚文件，表在唯一一处）
+
+- `frontend/src/app/V8Experience.tsx` 增 13 行删 11 行，新增行里含中文 0 行。
+- `frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 增 3 行删 2 行，新增行里含中文 0 行。
+- `frontend/src/lib/displayVocabulary.ts` 增 71 行删 0 行，新增行里含中文 16 行。
+- 词表从 96 行进到 167 行（`git show` 逐枚数行现算），新加的五枚集合是 `COMMITMENT_KIND`（`frontend/src/lib/displayVocabulary.ts:52`）、`COMMITMENT_LEVEL`（`frontend/src/lib/displayVocabulary.ts:60`）、`COMMITMENT_STATUS`（`frontend/src/lib/displayVocabulary.ts:68`）、`CITY_CODE`（`frontend/src/lib/displayVocabulary.ts:78`）、`SUMMARY_HELD`（`frontend/src/lib/displayVocabulary.ts:82`）；取值域不是我造的：kind 是契约 Literal `backend/app/schemas.py:772` 的 5 枚，level 是冻结强度表 `backend/app/commerce/strengths_generated.py:6` 起那 5 枚，status 取服务器真正写入的 4 枚（`backend/app/commerce/service_impl.py:306`、`backend/app/commerce/service_impl.py:442`、`backend/app/operations/v9.py:579`、`backend/app/operations/v9.py:646`）；不在表里的值仍走带标注的原值通道 `frontend/src/lib/displayVocabulary.ts:55`，所以新枚举上屏是一处缺口而不是被改名成一句主张。
+
+#### 要件一 · 四处定位
+
+- `frontend/src/app/V8Experience.tsx` 里那三枚 `v8-selected-label` 的第一枚（`frontend/src/app/V8Experience.tsx:3894`，取值行 `frontend/src/app/V8Experience.tsx:3895`）以前直出 `item.kind · item.level · item.status`；另两枚 `frontend/src/app/V8Experience.tsx:4010` 与 `frontend/src/app/V8Experience.tsx:4036` 读的是字典键，本来就是人话，我未动。
+- `reasoning_summary=held` 两处字面在 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:773` 与 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:857`，现改调 `summaryHeldLabel(zh)`。
+- 第四枚 `DEMO` 我钉到了源码：屏上那格是 `frontend/src/app/V8Experience.tsx:4305` 的 `<strong>{cityLabel}</strong>`，它的值来自 `frontend/src/app/V8Experience.tsx:4281` 那条回退——`CNX-DEMO` 去掉前段得到 `DEMO`，而 `frontend/src/app/V8Experience.tsx:4547` 那张城市表没有这一枚，于是原值直接上屏。现改法是先查 `CITY_CODE`，表里没有才回退到原来的截尾。
+- 同名的另一条路我没碰、也如实报名：首屏 hero 用的是另一枚 `cityLabel`（`frontend/src/app/V8Experience.tsx:2374`，它用在 `frontend/src/app/V8Experience.tsx:2525`），它把截尾首字母大写，屏上显示 `Demo`；尺的 ALLCAPS 档要 4 位全大写，所以这一格在两个臂里都不计为命中，我没有为它扩大改动面。
+
+#### 要件二 · 复跑号令者那把尺（尺未改，逐字用公布件）
+
+- 本地副本 `git hash-object` 回 `e18d65e19fa001762f318dcaf0a6d53a43391952`，与单上公布的 `e18d65e19fa001762f318dcaf0a6d53a43391952` 逐字相同；用法 `node cmdr_machine_speech_sweep_r1.js <base> <out> <locale>`。
+- 基线（件 `8be887766f1a67d917d8f1cef242d12e01a6187d`）：`field=totalPaintedHits=6`、去重 token ACTIVE、BOOKING、DEMO、JSON、reasoning_summary。
+- 我在自己基座上复现 before：`field=totalPaintedHits=6`、逐条 token ACTIVE、BOOKING、DEMO、JSON、JSON、reasoning_summary（去重 5 枚）、命中路由 /v8/bookings、/v8/me，入口资产 ["/assets/index-CkeYfY1U.js"] 与基点构建信息里的名字一致（`field=before_matches_base_dist=true`）。
+- after（中文臂）：`field=totalPaintedHits=2`、token JSON、JSON，逐条就是那两句 `JSON`（`field=survivors=[{"route": "/v8/bookings", "kind": "ALLCAPS_WORD", "token": "JSON", "tag": "p", "cls": "v8-lede", "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。"}, {"route": "/v8/bookings", "kind": "ALLCAPS_WORD", "token": "JSON", "tag": "p", "cls": "v8-lede", "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"}]`）。
+
+#### 要件三 · 中英两臂各一件，差异报出来
+
+- 英文臂 `field=totalPaintedHits=22`、去重 19 枚：ADVISORY、ARRIVAL、AUTHORITATIVE、CLOCK、COMMITMENT、CURRENT、DEPARTURE、DISCOVERY、JSON、LIVE、MULTIMODAL、NAVIGATE、NEXT、NOTIFICATIONS、OFFLINE、POLICY、POST、RISK、STAY；按形状分 `{"ALLCAPS_WORD": 22}`，机器形状（UPPER_SNAKE / LOWER_SNAKE_KEY / IANA_ZONE）为 0 枚。
+- 差异的成因不是身份串：那 22 枚全是字典里就写成全大标的英文栏名，例 `frontend/src/i18n/LocaleContext.tsx:280`、`frontend/src/i18n/LocaleContext.tsx:515`、`frontend/src/i18n/LocaleContext.tsx:586`；号令者自记的 `ALLCAPS_WORD` 白名单误报面在这一臂成立，我把它本人没跑的 en 分母补上了。
+
+#### 要件四 · 反件两侧都读到了字
+
+- 先认我自己的两处仪器错，免得读数被当成屏的事实：第一版自写读取器停在 588 字的外壳（`field=doc_chars=588`、选择器命中 0 枚），第二版加了三行等待仍是 0——真正的原因是我把地址拼成了`//v8/bookings`（多一个斜杠，路由器不认），与我一开始猜的「裸地址不被收养」不是一回事；把双斜杠去掉后同一批选择器就取到字了。原始失败留在发布件 `words` 字段，我不把它当读数，也不拿它去说尺的坏话。
+- before 臂：先点「使用封存的演示行程」进门（口 `field=port=4842`、资产 `assets/index-CkeYfY1U.js`、字节 `field=equal=True`；进门后底栏可点的导航 testid：`nav-hub`、`nav-trips`、`nav-map`、`nav-agent`、`nav-me`），再逐枚点导航读屏，去重后画在屏上的字是：
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「DEMO」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「还没有选定」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「还没有」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「仅提供建议」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「只记录，不发推送」，同字重复 `field=count=2`。
+  - `span.v8-selected-label` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「住宿证据」，同字重复 `field=count=1`。
+  - `span.v8-selected-label` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「BOOKING · C4_Anchored · ACTIVE · 模拟承诺」，同字重复 `field=count=1`。
+  - `small[data-testid='v13-2-memory-summary-held']` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「reasoning_summary=held 原文不在这一屏」，同字重复 `field=count=1`。
+- after 臂：先点「使用封存的演示行程」进门（口 `field=port=4843`、资产 `assets/index-DJLjKKC7.js`、字节 `field=equal=True`；进门后底栏可点的导航 testid：`nav-hub`、`nav-trips`、`nav-map`、`nav-agent`、`nav-me`），再逐枚点导航读屏，去重后画在屏上的字是：
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「演示城市」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「还没有选定」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「还没有」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「仅提供建议」，同字重复 `field=count=2`。
+  - `.v8-me-card strong` 在 `/v8/me`（经 `nav-me` 进入）画出来的是「只记录，不发推送」，同字重复 `field=count=2`。
+  - `span.v8-selected-label` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「住宿证据」，同字重复 `field=count=1`。
+  - `span.v8-selected-label` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「预订 · 受保护锚点 · 生效中 · 模拟承诺」，同字重复 `field=count=1`。
+  - `small[data-testid='v13-2-memory-summary-held']` 在 `/v8/bookings`（经 `goto` 进入）画出来的是「上游那句摘要的原文不在这一屏」，同字重复 `field=count=1`。
+
+#### 这把我没量到的、和尺自身的形状
+
+- 小屏：`field=NOT_MEASURED`。公布的尺把自己的视口钉死在 `390x844` 且不吃形状参数（`cmdr_machine_speech_sweep_r1.js:31`），不改尺就换不了档，我没有动它。
+- 覆盖面（这是尺的形状，不是屏的形状）：中文臂两臂 `documentChars` 低于 1000 的路由，after 有 14 条、before 有 14 条（逐条名单在发布件 `sweeps.after_zh.thin_routes` 与 `sweeps.before_lane_replay.thin_routes`，例如 `frontend/src/app/V8Experience.tsx:3894` 所在那屏也在内），因为尺对每条路由都用 `page.goto`，单页应用会重启；所以那些屏的 0 命中只能读成「这一趟没看见」，我具名 `field=NOT_COVERED`。计入的两格不是空壳：bookings 与 me 的画字我在应用内走查里逐枚取回了，两侧同法、同选择器（见要件四那两条清单）。
+- 命中形状构成：before `{"ALLCAPS_WORD": 5, "LOWER_SNAKE_KEY": 1}`，after 中文臂 `{"ALLCAPS_WORD": 2}`。
+
+#### 门禁、边界与件
+
+- `vite build` 两侧各跑一次、退出码同为 `0`（基点 `35326e62fb3de9f0cda459c8426ac22c0c49c715`、候选 `8451df87fa09a7280eeaeffef79b4da3d05331fe`）；`npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`）退 `0`，日志 `D:/moodle/_qoder_n2_scratch/_tsc_0446.log`。
+- 页面异常：中文臂 after `field=pageErrors=0`，英文臂 after `field=pageErrors=0`。
+- 边界：`frontend/src/styles.css` 0 字节；后端 0 字节；契约 0 字节；枚举值 0 改写；权威线 0 移动；落地 0 动作；别人 worktree 0 触碰；本块起头不是 CMDR。
+- 证据先发布后引用：`evidence/ord0446-n2/sweep_both_arms_r1.json`，外读 blob `9926da82bea81512a82ad8077dfc59348227d6ad`。
+- 两把尺对**落盘字节**：`claim_coordinate_check_r7.py --text` 实测判 `Q43_GATE_GREEN`；第二道闸我用它自己的正则（从 `ledger_insert_after_r2.py:48` 起 ast 抽出）只读复算，这只能是预测，因为它那两道只在真正插账那次执行（`ledger_insert_after_r2.py:42` 先 fetch、`:94` 才判）。
+
+
 ### S4-ast-taint 2026-09-29 07:21 · 会话 1d64acf5 · 勘误块：我 07:05 与 07:09 两块里那两处冲突读数（账本 :16599 与 :16628）方向标反了，另有一处行号口径错了；同时 ORD-0361 我只做到量，没做到落：两枚热文件一把都解不开，而且 06:55 建议的"先落那两枚不冲突的"我量下来是有害的
 
 **先给现读（全部只读；我没建枝、没推枝、没动权威线、工作树 0 写入）**
