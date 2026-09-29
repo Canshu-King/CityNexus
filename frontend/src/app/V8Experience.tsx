@@ -149,9 +149,13 @@ type Wallet = {
     kind: string;
     external_ref: string | null;
     status: string;
-    /* `_commitment_payload` (main.py:5311) puts the money under `monetary_value` and says how much
-       is actually known in `monetary_value_status`; the schedule it protects is under `policy`.
+    /* `_commitment_payload` (backend/app/main.py:7046) puts the money under `monetary_value` and says
+       how much is actually known in `monetary_value_status`; the schedule it protects is under `policy`.
        Declaring less than this is how a committed booking ended up with no honest way to render. */
+    /* ORD-0428: the same payload names the plan row this promise was bound to (`:7050`, written by the
+       selection path at `:6144`).  It was not declared here, so the card had no way to reach a name and
+       printed the join key instead. */
+    activity_id?: string | null;
     monetary_value?: {
       amount_minor?: number | null;
       currency?: string | null;
@@ -2165,7 +2169,11 @@ function TripsWorkspace({
      A new panel on any of these four tabs is one entry in that table. */
   const tripsSlots = {
     walletCommitments: () => (
-      <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
+      <WalletCommitments
+        wallet={wallet}
+        timezone={data.journey.timezone || undefined}
+        activities={data.active_plan?.activities ?? []}
+      />
     ),
     bookingsAdvanced: () => (
       <Bookings
@@ -4045,6 +4053,45 @@ function realtimeLabel(value: string | null | undefined, zh: boolean): string {
 }
 
 /**
+ * ORD-0428 槽二: this card's headline used to print `policy.semantic_key` itself.  That value is a
+ * join key the backend matches on (`backend/app/main.py:6128-6144`), not a name, so on the
+ * traveller's 预订 tab the title of a confirmed promise read `place-river-cruise` while every other
+ * line on the card was already human.  The name comes from the plan this screen already holds: the
+ * wallet payload names the bound row in `activity_id` (`_commitment_payload`,
+ * `backend/app/main.py:7050`, written for ACTIVE C3/C4 commitments at `:6144`), and a commitment
+ * that carries no binding is matched on the same three fields the backend's own binding used --
+ * `place_id`, `city_service_id`, `metadata.semantic_key` including its `<place>:<key>` form.
+ * Nothing is invented: an unjoined card falls back to the localised wording it already had, and the
+ * identifier stays off the screen rather than becoming the title.
+ */
+function commitmentCardTitle(
+  item: Wallet["commitments"][number],
+  activities: NonNullable<V8Data["active_plan"]>["activities"],
+  zh: boolean,
+): string {
+  const bound = item.activity_id
+    ? activities.find((activity) => activity.id === item.activity_id)
+    : undefined;
+  const key = String(item.policy?.semantic_key ?? "").trim();
+  const byKey =
+    !bound && key
+      ? activities.find((activity) => {
+          const metaKey = String(
+            ((activity.metadata ?? {}) as Record<string, unknown>).semantic_key ?? "",
+          );
+          return (
+            activity.place_id === key ||
+            activity.city_service_id === key ||
+            metaKey === key ||
+            metaKey.endsWith(`:${key}`)
+          );
+        })
+      : undefined;
+  const name = String(bound?.title ?? byKey?.title ?? "").trim();
+  return name || `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`;
+}
+
+/**
  * ORD-0087 / ORD-0084: `commitments` was declared on this file's own `Wallet` type and drawn
  * nowhere, so a commitment the server had confirmed could not reach the screen and the truth it
  * carries (is this mine, is it real, when is it due) died in the payload.  Every word here comes
@@ -4058,13 +4105,18 @@ function realtimeLabel(value: string | null | undefined, zh: boolean): string {
 function WalletCommitments({
   wallet,
   timezone,
+  activities,
 }: {
   wallet: Wallet | null;
   timezone?: string;
+  /** The plan rows the card titles join to (ORD-0428).  Absent means no plan is loaded, which is a
+   *  name the card cannot read, not a name it may invent. */
+  activities?: NonNullable<V8Data["active_plan"]>["activities"];
 }) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const planActivities = activities ?? [];
   return (
     <>
       {(wallet?.commitments ?? []).map((item) => {
@@ -4096,10 +4148,7 @@ function WalletCommitments({
                   </b>
                 )}
               </span>
-              <h2>
-                {item.policy?.semantic_key ||
-                  `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`}
-              </h2>
+              <h2>{commitmentCardTitle(item, planActivities, zh)}</h2>
               <p data-testid="wallet-commitment-window">
                 {start && end
                   ? `${dateInZone(start, locale, tz ?? "UTC")} → ${dateInZone(end, locale, tz ?? "UTC")}`
@@ -4289,7 +4338,11 @@ function Bookings({
           {/* The cards live in their own component so the phone's Trips -> 预订 tab can draw them
               above its 高级 / 开发者 disclosure instead of buried inside it. */}
           {showCommitments ? (
-            <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
+            <WalletCommitments
+              wallet={wallet}
+              timezone={data.journey.timezone || undefined}
+              activities={data.active_plan?.activities ?? []}
+            />
           ) : null}
         </div>
         <aside className="v9-inbox">

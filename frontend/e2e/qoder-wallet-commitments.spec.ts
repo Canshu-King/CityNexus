@@ -473,3 +473,67 @@ test("ord0087-empty-list-is-not-labelled-mock — 没有承诺时不该有任何
     node("ord0087-empty-list-is-not-labelled-mock", "the simulated label appears with no commitment at all"),
   ).toBe(false);
 });
+
+/**
+ * ORD-0428 槽二 -- the card's headline is a name, never a join key.
+ *
+ * `policy.semantic_key` is the key the backend matches on (`backend/app/main.py:6128-6144`), and the
+ * headline printed it as written, so a confirmed promise was titled `place-river-cruise` on the
+ * traveller's 预订 tab.  This arm pins the half that a read of the sealed demo cannot pin on its own:
+ * with nothing to join to -- `activity_id: null`, and no plan row carrying that place id -- the card
+ * has to say so in the localised wording it already had, and the identifier has to be gone from the
+ * card's whole subtree rather than moved onto a `data-*` attribute, which is exactly how a cell count
+ * can fall while the exposure stays (ORD-0448).
+ *
+ * The other half -- a card that *can* join prints the activity's own title -- is measured against real
+ * server data instead of a stub, in the four screen arms beside this file.
+ */
+test("ord0428-headline-is-a-name-not-the-join-key — 卡片大标题不许是内部地点 id", async ({ page }) => {
+  test.setTimeout(240_000);
+  const journeyId = await seedOwnJourney(page);
+  expect(journeyId, "the gate could not create its own journey through the product API").toMatch(/^[0-9a-f-]{36}$/);
+  await stubWallet(page, [
+    {
+      id: "bbbbbbbb-0000-4000-8000-000000000042",
+      journey_id: journeyId,
+      activity_id: null,
+      kind: "BOOKING",
+      level: "C4_Anchored",
+      status: "ACTIVE",
+      monetary_value: { amount_minor: 12000, currency: "CNY" },
+      monetary_value_status: "KNOWN",
+      external_ref: "mock-booking:stub:confirmed",
+      policy: { semantic_key: "place-river-cruise", scheduled_start_at: "2026-10-10T15:30:00+08:00", scheduled_end_at: "2026-10-10T16:30:00+08:00", fixed_schedule: true },
+    },
+  ]);
+  await openOnJourney(page, journeyId, "/v8/bookings");
+  const card = page.getByTestId("wallet-commitment").first();
+  await expect(card).toBeVisible({ timeout: 30_000 });
+  const headline = clean(await card.locator("h2").innerText());
+  const subtree = await card.evaluate((el) => el.outerHTML);
+  writeFileSync(
+    evidencePath("wallet-commitment-headline-ord0428.json"),
+    JSON.stringify(
+      {
+        node: "ord0428-headline-is-a-name-not-the-join-key",
+        journey_id: journeyId,
+        headline_read: headline,
+        join_key_sent_by_the_server: "place-river-cruise",
+        subtree_contains_join_key: String(subtree).includes("place-river-cruise"),
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+  expect(
+    headline,
+    node("ord0428-headline-is-a-name-not-the-join-key",
+      `the headline reads ${JSON.stringify(headline)}; a card with nothing to join to has to fall back to the localised wording, not to the server's join key`),
+  ).toBe("承诺 bbbbbbbb");
+  expect(
+    String(subtree).includes("place-river-cruise"),
+    node("ord0428-headline-is-a-name-not-the-join-key",
+      "the join key is still somewhere in the card's DOM: keeping it on a data-* attribute while the text changed would lower a count without closing the face"),
+  ).toBe(false);
+});
