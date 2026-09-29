@@ -37,6 +37,7 @@ from app.replanning.feasibility import (
 from app.replanning.provider_snapshots import MobilitySnapshot
 from app.planning.anchor_schedule import (
     ANCHOR_DURATION_MIN,
+    ANCHOR_PROVIDER_KEY,
     CandidateActivity,
     MID_TRIP_ROLE,
     active_c4_commitments,
@@ -260,6 +261,14 @@ def seed_demo(session: Session) -> dict[str, str]:
         metadata: dict[str, Any] = {
             "duration_min": item["duration_min"],
             "cost_minor": item["cost_minor"],
+            "cost_evidence": {
+                "status": "KNOWN",
+                "amount_minor": item["cost_minor"],
+                "currency": "CNY",
+                "source": "SEALED_DEMO_FIXTURE",
+            },
+            "price_known": True,
+            "authority_envelope": SEALED_DEMO_AUTHORITY_ENVELOPE,
         }
         evidence = _demo_accessibility_evidence(item)
         if evidence:
@@ -540,6 +549,133 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
     return False, None
 
 
+# These are provider-backed cost states.  ``cost_minor=0`` is retained as a
+# compatibility storage value, but it is never evidence that an attraction is
+# free.  A place is cost-complete only when the evidence object says so.
+KNOWN_COST_EVIDENCE_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+
+SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_MOBILITY_NOT_AUTHORITATIVE_FOR_LIVE_CONTENT"
+UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
+SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
+SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE = "SEALED_REAL_REPLAY"
+SEALED_AUTHORITY_ENVELOPES = frozenset(
+    {SEALED_DEMO_AUTHORITY_ENVELOPE, SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE}
+)
+
+
+def _place_metadata(place: Place) -> dict[str, Any]:
+    return json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+
+
+def _place_verified_cost(place: Place) -> int | None:
+    metadata = _place_metadata(place)
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        legacy_cost = metadata.get("cost_minor")
+        if (
+            place.provider_key == "mock-city"
+            and isinstance(legacy_cost, (int, float))
+            and legacy_cost > 0
+        ):
+            return int(legacy_cost)
+        return None
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if status not in KNOWN_COST_EVIDENCE_STATUSES or amount is None:
+        legacy_cost = metadata.get("cost_minor")
+        if (
+            place.provider_key == "mock-city"
+            and status == "UNKNOWN"
+            and isinstance(legacy_cost, (int, float))
+            and legacy_cost > 0
+        ):
+            return int(legacy_cost)
+        return None
+    return int(amount)
+
+
+def _catalogue_visit_eligible(place: Place) -> bool:
+    """Return true only for content that can be a visit stop.
+
+    Lodging, parking and transport rows are useful provider facts, but they are
+    not attractions.  Keeping that role decision here prevents the provisional
+    lane from turning an accommodation row into a generic visit.
+    """
+
+    category = str(place.category or "").casefold()
+    if category in {
+        "hotel", "lodging", "accommodation", "guest_house", "hostel",
+        "parking", "car_park", "bus_station", "train_station", "transit_station",
+    }:
+        return False
+    role = str(_place_metadata(place).get("place_role") or "").casefold()
+    if role in {"lodging", "accommodation", "parking", "transit"}:
+        return False
+    return category in {
+        "aquarium", "attraction", "cafe", "experience", "food", "gallery",
+        "heritage", "landmark", "library", "museum", "nightlife", "park",
+        "restaurant", "temple", "tourism", "viewpoint", "zoo",
+    }
+
+
+def plan_authority_blocker(
+    item: PlanVersion,
+    places_by_id: Mapping[str, Place],
+    *,
+    used_place_ids: Sequence[str] | None = None,
+) -> str | None:
+    """Return the shared authority blocker for a plan, if any.
+
+    Only mobility edges actually traversed by the plan participate in the
+    synthetic check.  An unused fallback edge in a complete matrix cannot veto
+    a route whose used edges are live/provider-backed.
+    """
+
+    explanation = json.loads(item.explanation_json or "{}")
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS":
+        return UNRESOLVED_ACTIVITY_FACTS
+
+    evidence = json.loads(item.mobility_evidence_json or "{}")
+    if not isinstance(evidence, Mapping):
+        return None
+    facts = [fact for fact in evidence.get("facts", []) if isinstance(fact, Mapping)]
+    used = [str(value) for value in (used_place_ids or ()) if value]
+    used_edges = set(zip(used, used[1:]))
+    used_facts = [
+        fact for fact in facts
+        if (str(fact.get("origin_key")), str(fact.get("destination_key"))) in used_edges
+    ]
+    relevant = used_facts if used_place_ids is not None else facts
+    synthetic = any(
+        str(fact.get("route_provenance") or "").upper() == "SYNTHETIC_FIXTURE"
+        or str(fact.get("fact_quality") or "").upper() == "SYNTHETIC_DEFAULT"
+        for fact in relevant
+    )
+    if not synthetic and used_place_ids is None:
+        provider = str(evidence.get("source_provider") or "").casefold()
+        synthetic = provider.startswith(("mock", "fixture"))
+    if not synthetic:
+        return None
+    content_places = [
+        place for place in places_by_id.values()
+        if place.provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    sealed = bool(content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in content_places
+    )
+    return None if sealed else SYNTHETIC_LIVE_SELECTION_BLOCKED
+
+
+def plan_unresolved_activity_facts(item: PlanVersion) -> list[dict[str, Any]]:
+    explanation = json.loads(item.explanation_json or "{}")
+    unresolved = explanation.get("unresolved_facts")
+    if not isinstance(unresolved, list):
+        return []
+    return [dict(row) for row in unresolved if isinstance(row, Mapping)]
+
+
 _CURRENT_UNRESOLVED = object()
 
 #: Why composition refused, named (ORD-0101). `No feasible plan candidates` is one sentence
@@ -555,6 +691,7 @@ CATALOG_INSUFFICIENT = "CATALOG_INSUFFICIENT"
 # the order adopted, one per condition the raise site can actually observe.
 PLACES_NOT_IN_CATALOG = "PLACES_NOT_IN_CATALOG"
 PLACE_COST_UNVERIFIED = "PLACE_COST_UNVERIFIED"
+LODGING_ROWS_USED_AS_GENERIC_VISITS = "LODGING_ROWS_USED_AS_GENERIC_VISITS"
 PLACE_OUTSIDE_JOURNEY_WINDOW = "PLACE_OUTSIDE_JOURNEY_WINDOW"
 
 
@@ -623,6 +760,15 @@ def plan_schema(
     if current_plan_version_id is _CURRENT_UNRESOLVED:
         owner = session.get(Journey, item.journey_id)
         current_plan_version_id = owner.active_plan_version_id if owner is not None else None
+    activity_keys = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in activities
+    ]
+    authority_blocker = plan_authority_blocker(
+        item,
+        places_by_id,
+        used_place_ids=activity_keys,
+    )
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
@@ -644,7 +790,7 @@ def plan_schema(
         explanation=json.loads(item.explanation_json or "{}"),
         created_at=item.created_at or None,
         stale=stale,
-        selectable=not stale,
+        selectable=not stale and authority_blocker is None,
         stale_reason=stale_reason,
     )
 
@@ -780,7 +926,11 @@ def _catalogue_templates(
     """
 
     ordered = sorted(
-        (place for place in places.values() if _place_window(place)),
+        (
+            place
+            for place in places.values()
+            if _place_window(place) and _catalogue_visit_eligible(place)
+        ),
         key=lambda place: (_place_window(place) or (0, 0))[0],
     )
     if not ordered:
@@ -823,6 +973,199 @@ def _catalogue_templates(
         if len(packed) >= 2 and packed not in templates:
             templates.append(packed)
     return templates
+
+
+def _provisional_catalogue_plan(
+    session: Session,
+    journey: Journey,
+    planning_mode: str,
+) -> list[PlanVersion]:
+    """Materialize a useful, explicitly non-authoritative real-catalogue draft.
+
+    This is only reached when strict catalogue composition has no opening-window
+    sequence.  It uses the actual provider Place rows, keeps their unresolved
+    facts visible, and leaves selection to the shared authority gate.
+    """
+
+    places = [
+        place
+        for place in session.scalars(
+            select(Place).where(Place.city_code == journey.city_code)
+        ).all()
+        if _catalogue_visit_eligible(place)
+        and place.latitude is not None
+        and place.longitude is not None
+    ]
+    if len(places) < 2:
+        return []
+    preferred = {"park": 0, "viewpoint": 1, "attraction": 2, "landmark": 3}
+    places.sort(key=lambda item: (preferred.get(str(item.category).casefold(), 9), item.id))
+    selected = places[:2]
+    pairs = tuple(
+        (origin.id, destination.id)
+        for origin in selected
+        for destination in selected
+        if origin.id != destination.id
+    )
+    mobility = capture_runtime_mobility_snapshot(
+        session,
+        journey,
+        pairs,
+        operation_key=f"provisional-compose:{journey.id}",
+    ).snapshot
+    cursor = parse_dt(journey.start_at)
+    rows: list[tuple[Place, datetime, datetime, int]] = []
+    previous: str | None = None
+    for place in selected:
+        travel = _safe_estimate_minutes(mobility, previous, place.id) if previous else 0
+        begin = cursor + timedelta(minutes=travel)
+        end = begin + timedelta(minutes=_place_duration(place))
+        rows.append((place, begin, end, travel))
+        cursor = end
+        previous = place.id
+    if rows[-1][2] > parse_dt(journey.end_at):
+        return []
+
+    unresolved: list[dict[str, Any]] = []
+    unknown_cost_count = 0
+    for place in selected:
+        opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+        opening_status = str(opening.get("status") or "UNKNOWN").upper()
+        if opening_status not in {"NORMALIZED_VALID", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER"}:
+            unresolved.append(
+                {
+                    "place_id": place.id,
+                    "place_name": place.name,
+                    "fact": "opening",
+                    "state": "REQUIRES_CONFIRMATION",
+                    "reason": "No provider opening window was captured",
+                }
+            )
+        cost = _place_metadata(place).get("cost_evidence")
+        cost_status = str(cost.get("status") or "UNKNOWN").upper() if isinstance(cost, Mapping) else "UNKNOWN"
+        if cost_status not in KNOWN_COST_EVIDENCE_STATUSES or not isinstance(cost, Mapping) or cost.get("amount_minor") is None:
+            unknown_cost_count += 1
+            unresolved.append(
+                {
+                    "place_id": place.id,
+                    "place_name": place.name,
+                    "fact": "cost",
+                    "state": "UNKNOWN",
+                    "reason": "No provider cost evidence was captured",
+                }
+            )
+
+    if not unresolved:
+        return []
+    version_no = (
+        session.scalar(
+            select(PlanVersion.version_no)
+            .where(PlanVersion.journey_id == journey.id)
+            .order_by(PlanVersion.version_no.desc())
+            .limit(1)
+        )
+        or 0
+    ) + 1
+    plan_id = deterministic_id(
+        f"plan:{journey.id}:{version_no}:provisional:{','.join(item.id for item in selected)}"
+    )
+    explanation = {
+        "reason": "Real provider Places arranged as a provisional itinerary",
+        "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+        "unresolved_facts": unresolved,
+        "cost_summary": {
+            "status": "PARTIAL",
+            "known_subtotal_minor": sum(_place_verified_cost(place) or 0 for place in selected),
+            "unknown_item_count": unknown_cost_count,
+            "currency": journey.budget_currency,
+        },
+        "opening_summary": {
+            "status": "REQUIRES_CONFIRMATION",
+            "unknown_item_count": sum(1 for item in unresolved if item["fact"] == "opening"),
+        },
+        "mobility_snapshot_id": mobility.snapshot_id,
+        "mobility_provider": mobility.source_provider_key,
+    }
+    now = iso_now()
+    plan = PlanVersion(
+        id=plan_id,
+        journey_id=journey.id,
+        version_no=version_no,
+        planning_mode=planning_mode,
+        status="CANDIDATE",
+        source="INITIAL",
+        parent_plan_version_id=None,
+        total_cost_minor=sum(_place_verified_cost(place) or 0 for place in selected),
+        currency=journey.budget_currency,
+        estimated_duration_min=sum(
+            int((end - begin).total_seconds() // 60) + travel
+            for _place, begin, end, travel in rows
+        ),
+        utility_score=None,
+        score_breakdown_json=None,
+        explanation_json=dump(explanation),
+        mobility_snapshot_id=mobility.snapshot_id,
+        mobility_evidence_json=dump(mobility.to_evidence()),
+        created_at=now,
+    )
+    session.add(plan)
+    session.flush()
+    for sequence, (place, begin, end, travel) in enumerate(rows, start=1):
+        metadata = _place_metadata(place)
+        cost = metadata.get("cost_evidence")
+        known_cost = (
+            isinstance(cost, Mapping)
+            and str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_EVIDENCE_STATUSES
+            and cost.get("amount_minor") is not None
+        )
+        opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+        session.add(
+            Activity(
+                id=deterministic_id(f"activity:{plan_id}:{sequence}"),
+                plan_version_id=plan.id,
+                sequence_no=sequence,
+                activity_type="visit",
+                title=place.name,
+                place_id=place.id,
+                city_service_id=None,
+                start_at=begin.isoformat(),
+                end_at=end.isoformat(),
+                travel_from_prev_min=travel,
+                estimated_cost_minor=int(cost.get("amount_minor") if known_cost else 0),
+                currency=journey.budget_currency,
+                status="PLANNED",
+                locked=False,
+                metadata_json=dump(
+                    {
+                        "compose_source": "PROVISIONAL_REAL_CATALOGUE",
+                        "category": place.category,
+                        "opening_state": str(opening.get("status") or "UNKNOWN"),
+                        "opening_hours": opening,
+                        "cost_evidence": cost if isinstance(cost, Mapping) else {"status": "UNKNOWN"},
+                        "cost_status": "KNOWN" if known_cost else "UNKNOWN",
+                        "price_known": known_cost,
+                        "latitude": place.latitude,
+                        "longitude": place.longitude,
+                        "crs": "WGS84",
+                    }
+                ),
+                created_at=now,
+                updated_at=now,
+            )
+        )
+    record_audit(
+        session,
+        action="plans.generated.provisional",
+        entity_type="PlanVersion",
+        entity_id=plan.id,
+        journey_id=journey.id,
+        after={
+            "place_ids": [item.id for item in selected],
+            "authority_state": explanation["authority_state"],
+            "unresolved_facts": unresolved,
+        },
+    )
+    return [plan]
 
 
 def _safe_estimate_minutes(provider, origin: str | None, destination: str | None) -> int:
@@ -1037,8 +1380,8 @@ def _generic_compose_plans(
     for place_id in ordered_ids:
         place = places[place_id]
         metadata = json.loads(place.metadata_json or "{}")
-        raw_cost = metadata.get("cost_minor")
-        if raw_cost is None:
+        verified_cost = _place_verified_cost(place)
+        if verified_cost is None:
             # "Unknown cost" is not "your budget is too tight": it means this place has no
             # price we can vouch for, which is a catalog fact the caller can act on.
             raise CompositionRefusal(
@@ -1050,7 +1393,7 @@ def _generic_compose_plans(
                     "journey_budget_minor": journey.budget_amount_minor,
                 },
             )
-        cost_minor = int(raw_cost)
+        cost_minor = int(verified_cost)
         duration_min = max(15, int(metadata.get("duration_min", 60)))
         travel_min = (
             mobility_provider.estimate_minutes(previous, place_id) if previous else 0
@@ -1279,6 +1622,28 @@ def _generic_compose_variants(
     ordered = list(dict.fromkeys(str(item) for item in place_ids))
     if len(ordered) < 2:
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
+
+    places_for_scope = {
+        place.id: place
+        for place in session.scalars(select(Place).where(Place.id.in_(ordered))).all()
+    }
+    lodging_ids = [
+        place_id
+        for place_id, place in places_for_scope.items()
+        if not _catalogue_visit_eligible(place)
+        and (
+            str(place.category or "").casefold()
+            in {"hotel", "lodging", "accommodation", "guest_house", "hostel"}
+            or str(_place_metadata(place).get("place_role") or "").casefold()
+            in {"lodging", "accommodation"}
+        )
+    ]
+    if lodging_ids:
+        raise CompositionRefusal(
+            "GENERIC_COMPOSE_LODGING_IS_NOT_A_VISIT",
+            reason_code=LODGING_ROWS_USED_AS_GENERIC_VISITS,
+            details={"city_code": journey.city_code, "place_ids": lodging_ids},
+        )
 
     # Distinct scopes, longest first, never below two stops.
     scopes: list[list[str]] = []
@@ -1675,6 +2040,30 @@ def generate_plans(
     for offset, schedule in enumerate(schedules):
         if len(created) >= candidate_count:
             break
+        unverified_cost_places = [
+            item.place_id
+            for item in schedule
+            if item.anchor_role is None
+            and item.place_id in places
+            and _place_verified_cost(places[item.place_id]) is None
+        ]
+        if unverified_cost_places:
+            rejection = {
+                "reason_codes": [PLACE_COST_UNVERIFIED],
+                "summary": "candidate dropped before persistence: provider cost evidence is UNKNOWN",
+                "place_ids": unverified_cost_places,
+                "candidate_sequence": offset,
+            }
+            candidate_rejections.append(rejection)
+            record_audit(
+                session,
+                action="plans.candidate_rejected",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after=rejection,
+            )
+            continue
         total_cost = sum(int(item.cost_minor) for item in schedule)
         if total_cost > journey.budget_amount_minor:
             continue
@@ -1799,6 +2188,13 @@ def generate_plans(
             raise ValueError(
                 "C4_ANCHOR_UNRESOLVED:" + ",".join(sorted(set(unresolved_anchors)))
             )
+        # A real catalogue with no opening-window sequence is not the same as
+        # an empty catalogue.  Preserve its provider Places as a visible draft
+        # and keep strict composition as the only path to authority.
+        if not raw_templates:
+            provisional = _provisional_catalogue_plan(session, journey, planning_mode)
+            if provisional:
+                return provisional
         detail = _anchor_block_reason(session, journey)
         # "No feasible plan candidates" is true for both "this city has nothing to plan with"
         # and "there were places, and none of the combinations survived the gate" - and a

@@ -46,10 +46,9 @@ def _place_metadata(
 ) -> dict[str, Any]:
     """Metadata for a materialised discovery Place.
 
-    ``cost_minor`` is required by the compose path.  When the provider gives no
-    price we record an explicit **zero-cost unknown** and keep the honest
-    ``cost_evidence`` alongside it, rather than inventing a price or refusing to
-    plan at all: an OSM attraction genuinely has no known ticket price.
+    ``cost_minor`` is retained as a compatibility storage value.  When the
+    provider gives no price it is explicitly **UNKNOWN**, and the zero storage
+    value is never exposed as proof of a free attraction.
     """
 
     metadata: dict[str, Any] = {
@@ -57,12 +56,19 @@ def _place_metadata(
         "discovery_mode": mode,
         "cost_evidence": cost_evidence,
     }
+    if candidate.provider_key == "openstreetmap-replay" and mode in {
+        "replay", "captured_replay", "replay-fallback"
+    }:
+        # Replay is never LIVE.  This explicit envelope permits sealed test/replay
+        # assertions without making the same synthetic mobility authoritative for
+        # an unsealed provider-backed Place.
+        metadata["authority_envelope"] = "SEALED_REAL_REPLAY"
     status = str(cost_evidence.get("status") or "UNKNOWN").upper()
     if status == "KNOWN" and cost_evidence.get("amount_minor") is not None:
         metadata["cost_minor"] = int(cost_evidence["amount_minor"])
     else:
         metadata.setdefault("cost_minor", 0)
-    metadata["price_known"] = status == "KNOWN"
+    metadata["price_known"] = status in {"KNOWN", "VERIFIED_PROVIDER"}
     if not opening_hours:
         metadata.setdefault("opening_hours", {"status": "UNKNOWN"})
     return metadata
@@ -673,6 +679,7 @@ OVERPASS_MIRRORS = (
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
 )
 
 
@@ -735,7 +742,7 @@ class OverpassPOIProvider:
             (("restaurant", "food", "餐厅", "吃饭", "美食"), '"amenity"~"restaurant|food_court"'),
             (("park", "garden", "公园", "户外", "outdoor"), '"leisure"~"park|garden"'),
             (("hotel", "住宿", "酒店"), '"tourism"~"hotel|hostel|guest_house"'),
-            (("attraction", "sight", "景点", "tourist"), '"tourism"~"attraction|viewpoint"'),
+            (("attraction", "sight", "viewpoint", "景点", "tourist"), '"tourism"~"attraction|viewpoint"'),
             # The three coverage categories that used to borrow the default set (g18a/g18b):
             # each asks its own question, so "0 answers" reads as a real zero per category
             # instead of "the default cafe query found nothing".
@@ -1031,6 +1038,7 @@ def materialize_candidates(
     *,
     captured_at: str,
     mode: str,
+    query: str | None = None,
 ) -> list[dict[str, Any]]:
     expires_at = (
         datetime.fromisoformat(captured_at)
@@ -1077,6 +1085,7 @@ def materialize_candidates(
         row.evidence_json = _json(
             {
                 "provider": candidate.provider_key,
+                "request": {"query": query} if query else {},
                 "captured_at": captured_at,
                 "ttl_seconds": settings.real_city_cache_ttl_seconds,
                 "provenance": (
@@ -1341,7 +1350,12 @@ def capture_real_city_candidates(
                 )
             )
             materialized_hit = materialize_candidates(
-                session, journey, cached, captured_at=captured_at_hit, mode="live"
+                session,
+                journey,
+                cached,
+                captured_at=captured_at_hit,
+                mode="live",
+                query=query,
             )
             return {
                 "journey_id": journey.id,
@@ -1545,7 +1559,12 @@ def capture_real_city_candidates(
         )
     )
     materialized = materialize_candidates(
-        session, journey, candidates, captured_at=captured_at, mode=mode
+        session,
+        journey,
+        candidates,
+        captured_at=captured_at,
+        mode=mode,
+        query=query,
     )
     return {
         "journey_id": journey.id,

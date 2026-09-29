@@ -1,0 +1,349 @@
+"""Acquire source-linked Place facts without weakening planning authority.
+
+The provider observation is deliberately separate from planning.  A current
+unknown observation replaces an older positive observation, search snippets
+remain candidates, and a provider-tag website is fetched only after its URL
+and every redirect have passed the public-network boundary.
+"""
+
+from __future__ import annotations
+
+import html
+import ipaddress
+import json
+import re
+import socket
+from datetime import datetime, timezone
+from typing import Any
+from urllib.parse import urljoin, urlparse
+
+import httpx
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.core.config import settings
+from app.db.models import Journey, Place
+from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
+from app.integrations.provider_config import trust_environment_for_public_providers
+from app.integrations.web.searxng import SearXNGSearchProvider
+
+
+KNOWN_COST_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+_JSON_LD_SCRIPT = re.compile(
+    r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+    re.IGNORECASE | re.DOTALL,
+)
+_SCHEMA_DAYS = {
+    "monday": "Mo", "tuesday": "Tu", "wednesday": "We", "thursday": "Th",
+    "friday": "Fr", "saturday": "Sa", "sunday": "Su",
+}
+_BLOCKED_HOSTNAMES = {
+    "localhost", "localhost.localdomain", "metadata", "metadata.google.internal",
+    "instance-data.ec2.internal",
+}
+
+
+def _element_ref(place: Place) -> tuple[str, str] | None:
+    external = str(place.external_id or "")
+    if not external.startswith("overpass:"):
+        return None
+    kind, separator, number = external.removeprefix("overpass:").partition("/")
+    if not separator or kind not in {"node", "way", "relation"} or not number.isdigit():
+        return None
+    return kind, number
+
+
+def _query(refs: list[tuple[str, str]]) -> str:
+    clauses = ";".join(f"{kind}({number})" for kind, number in refs)
+    return f"[out:json][timeout:20];({clauses};);out tags center;"
+
+
+def _nominatim_ids(refs: list[tuple[str, str]]) -> str:
+    return ",".join(f"{kind[0].upper()}{number}" for kind, number in refs)
+
+
+def _resolved_public_addresses(hostname: str) -> set[ipaddress._BaseAddress]:
+    lowered = hostname.rstrip(".").casefold()
+    if lowered in _BLOCKED_HOSTNAMES or lowered.endswith((".internal", ".local")):
+        raise ValueError("OFFICIAL_SOURCE_PRIVATE_TARGET")
+    try:
+        return {ipaddress.ip_address(hostname)}
+    except ValueError:
+        pass
+    try:
+        rows = socket.getaddrinfo(hostname, None, type=socket.SOCK_STREAM)
+    except OSError as exc:
+        raise ValueError("OFFICIAL_SOURCE_DNS_UNAVAILABLE") from exc
+    addresses = {ipaddress.ip_address(row[4][0]) for row in rows if row[4]}
+    if not addresses:
+        raise ValueError("OFFICIAL_SOURCE_DNS_EMPTY")
+    return addresses
+
+
+def _validate_public_http_url(url: str, *, base_url: str | None = None) -> str:
+    candidate = urljoin(base_url or "", str(url).strip())
+    parsed = urlparse(candidate)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        raise ValueError("OFFICIAL_SOURCE_URL_SCHEME_REJECTED")
+    if parsed.username or parsed.password:
+        raise ValueError("OFFICIAL_SOURCE_URL_CREDENTIALS_REJECTED")
+    addresses = _resolved_public_addresses(parsed.hostname)
+    for address in addresses:
+        if (
+            address.is_private or address.is_loopback or address.is_link_local
+            or address.is_multicast or address.is_reserved or address.is_unspecified
+        ):
+            raise ValueError("OFFICIAL_SOURCE_PRIVATE_TARGET")
+    return candidate
+
+
+def _safe_get(client: httpx.Client, url: str, *, retrieved_at: str) -> tuple[httpx.Response, str]:
+    """Fetch an official page while validating the target before every redirect."""
+
+    current = _validate_public_http_url(url)
+    for _ in range(4):
+        response = client.get(
+            current,
+            headers={"User-Agent": "CityNexus/real-trip-facts"},
+            follow_redirects=False,
+        )
+        if 300 <= response.status_code < 400:
+            location = response.headers.get("location")
+            if not location:
+                raise ValueError("OFFICIAL_SOURCE_REDIRECT_WITHOUT_LOCATION")
+            current = _validate_public_http_url(location, base_url=current)
+            continue
+        response.raise_for_status()
+        return response, current
+    raise ValueError("OFFICIAL_SOURCE_REDIRECT_LIMIT")
+
+
+def _nominatim_lookup(
+    client: httpx.Client, refs: list[tuple[str, str]]
+) -> tuple[dict[tuple[str, str], dict[str, Any]], str]:
+    endpoint = f"{settings.nominatim_url.rstrip('/')}/lookup"
+    response = client.get(
+        endpoint,
+        params={"osm_ids": _nominatim_ids(refs), "format": "jsonv2", "extratags": 1, "namedetails": 1},
+        headers={"User-Agent": "CityNexus/real-trip-facts"},
+    )
+    response.raise_for_status()
+    rows = response.json()
+    if not isinstance(rows, list):
+        raise ValueError("NOMINATIM_LOOKUP_INVALID_PAYLOAD")
+    return {
+        (str(row.get("osm_type")), str(row.get("osm_id"))): row
+        for row in rows
+        if isinstance(row, dict) and row.get("osm_type") and row.get("osm_id")
+    }, endpoint
+
+
+def _json_ld_nodes(body: str) -> list[dict[str, Any]]:
+    nodes: list[dict[str, Any]] = []
+    for raw in _JSON_LD_SCRIPT.findall(body):
+        try:
+            payload = json.loads(html.unescape(raw).strip())
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        candidates = payload if isinstance(payload, list) else [payload]
+        for candidate in candidates:
+            if not isinstance(candidate, dict):
+                continue
+            graph = candidate.get("@graph")
+            if isinstance(graph, list):
+                nodes.extend(item for item in graph if isinstance(item, dict))
+            nodes.append(candidate)
+    return nodes
+
+
+def _official_opening(nodes: list[dict[str, Any]], source_url: str) -> dict[str, Any]:
+    raw_values: list[str] = []
+    for node in nodes:
+        raw = node.get("openingHours")
+        if isinstance(raw, str):
+            raw_values.append(raw)
+        elif isinstance(raw, list):
+            raw_values.extend(str(item) for item in raw if isinstance(item, str))
+        specifications = node.get("openingHoursSpecification")
+        if isinstance(specifications, dict):
+            specifications = [specifications]
+        if not isinstance(specifications, list):
+            continue
+        for specification in specifications:
+            if not isinstance(specification, dict):
+                continue
+            opens, closes = str(specification.get("opens") or ""), str(specification.get("closes") or "")
+            if not opens or not closes:
+                continue
+            days = specification.get("dayOfWeek") or ["*"]
+            if isinstance(days, str):
+                days = [days]
+            short_days = [_SCHEMA_DAYS.get(str(day).rsplit("/", 1)[-1].casefold(), "*") for day in days]
+            prefix = ",".join(short_days)
+            raw_values.append(f"{prefix} {opens}-{closes}" if prefix != "*" else f"{opens}-{closes}")
+    for raw in raw_values:
+        normalized = normalize_opening_hours(raw)
+        if normalized.get("status") == "NORMALIZED_VALID":
+            normalized.update({"status": "OFFICIAL_WEB_VERIFIED", "source": "official_web", "source_url": source_url})
+            return normalized
+    return {"status": "UNKNOWN", "raw": None, "intervals": []}
+
+
+def _official_cost(nodes: list[dict[str, Any]], source_url: str) -> dict[str, Any]:
+    for node in nodes:
+        if node.get("isAccessibleForFree") is True:
+            return {"status": "VERIFIED_PROVIDER", "amount_minor": 0, "currency": "CNY", "source": "official_web", "source_url": source_url}
+        offers = node.get("offers")
+        if isinstance(offers, dict):
+            offers = [offers]
+        for offer in offers if isinstance(offers, list) else []:
+            if not isinstance(offer, dict) or offer.get("price") is None:
+                continue
+            try:
+                amount = round(float(str(offer["price"]).replace(",", "")) * 100)
+            except (TypeError, ValueError):
+                continue
+            return {
+                "status": "VERIFIED_PROVIDER", "amount_minor": amount,
+                "currency": str(offer.get("priceCurrency") or "CNY").upper(),
+                "source": "official_web", "source_url": source_url,
+            }
+    return {"status": "UNKNOWN", "amount_minor": None, "currency": "CNY", "source": "official_web", "source_url": source_url}
+
+
+def _official_source_url(tags: dict[str, Any]) -> str | None:
+    for key in ("website", "contact:website", "url"):
+        value = str(tags.get(key) or "").strip()
+        if value.startswith(("https://", "http://")):
+            return value
+    return None
+
+
+def _official_web_facts(client: httpx.Client, source_url: str, *, retrieved_at: str) -> dict[str, Any]:
+    response, final_url = _safe_get(client, source_url, retrieved_at=retrieved_at)
+    body = response.text[:1_000_000]
+    nodes = _json_ld_nodes(body)
+    opening = _official_opening(nodes, final_url)
+    cost = _official_cost(nodes, final_url)
+    status = "ACQUIRED" if opening.get("status") != "UNKNOWN" or cost.get("status") != "UNKNOWN" else "NO_STRUCTURED_FACTS"
+    return {"provider": "official_web", "source": final_url, "retrieved_at": retrieved_at, "status": status, "opening_hours": opening, "cost_evidence": cost}
+
+
+def _search_fact_candidates(client: httpx.Client, place: Place, journey: Journey, *, retrieved_at: str) -> dict[str, Any]:
+    if not settings.searxng_url:
+        return {"provider": "searxng", "status": "UNCONFIGURED", "attempted": False, "observations": []}
+    provider = SearXNGSearchProvider(settings.searxng_url, client=client)
+    query = f"{place.name} {journey.city_code} official opening hours ticket price"
+    observations = []
+    try:
+        for item in provider.search(query, limit=5):
+            observations.append({
+                "query": item.query, "url": item.url, "title": item.title,
+                "domain": item.domain, "content": item.content,
+                "captured_at": item.captured_at, "authority_status": "SEARCH_CANDIDATE",
+            })
+    finally:
+        provider.close()
+    return {"provider": "searxng", "status": "CANDIDATES_FOUND" if observations else "NO_RESULTS", "attempted": True, "retrieved_at": retrieved_at, "observations": observations}
+
+
+def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[str] | None = None) -> dict[str, Any]:
+    statement = select(Place).where(Place.city_code == journey.city_code)
+    if place_ids:
+        statement = statement.where(Place.id.in_(place_ids))
+    places = session.scalars(statement.order_by(Place.id)).all()
+    selected = [(place, ref) for place in places if (ref := _element_ref(place))]
+    retrieved_at = datetime.now(timezone.utc).isoformat()
+    endpoint = settings.overpass_url.rstrip("/")
+    if endpoint.endswith("/api"):
+        endpoint += "/interpreter"
+    receipt: dict[str, Any] = {
+        "provider": "overpass", "source": endpoint, "retrieved_at": retrieved_at,
+        "journey_id": journey.id, "places": [], "known_opening_count": 0, "known_cost_count": 0,
+        "official_web": {"provider": "official_web", "status": "NO_SOURCE_URL", "attempted": 0, "acquired": 0},
+        "search_source": {"provider": "searxng", "status": "UNCONFIGURED" if not settings.searxng_url else "PENDING", "attempted": False, "acquired": 0},
+    }
+    if not selected:
+        receipt["status"] = "NO_PROVIDER_ENTITIES"
+        return receipt
+    refs = [ref for _, ref in selected]
+    # Keep every network phase in one live context.  The old R77 version closed this
+    # client after Overpass/Nominatim and then reused it for official/search fetches.
+    with httpx.Client(timeout=25.0, trust_env=trust_environment_for_public_providers()) as client:
+        response = client.post(endpoint, data={"data": _query(refs)}, headers={"User-Agent": "CityNexus/real-trip-facts"})
+        response.raise_for_status()
+        payload = response.json()
+        try:
+            nominatim_rows, nominatim_endpoint = _nominatim_lookup(client, refs)
+            secondary = {"provider": "nominatim", "source": nominatim_endpoint, "status": "ACQUIRED", "element_count": len(nominatim_rows)}
+        except (httpx.HTTPError, ValueError, AttributeError) as exc:
+            nominatim_rows, nominatim_endpoint = {}, f"{settings.nominatim_url.rstrip('/')}/lookup"
+            secondary = {"provider": "nominatim", "source": nominatim_endpoint, "status": "UNAVAILABLE", "error": type(exc).__name__}
+        receipt["secondary_source"] = secondary
+        elements = {
+            (str(item.get("type")), str(item.get("id"))): item
+            for item in payload.get("elements", []) if isinstance(item, dict)
+        }
+        for place, ref in selected:
+            element = elements.get(ref, {})
+            tags = dict(element.get("tags") or {})
+            nominatim_row = nominatim_rows.get(ref) or {}
+            nominatim_tags = dict(nominatim_row.get("extratags") or {})
+            opening = normalize_opening_hours(tags.get("opening_hours"))
+            cost = cost_evidence_from_tags(tags, source="overpass")
+            if opening.get("status") == "UNKNOWN" and nominatim_tags.get("opening_hours"):
+                opening = normalize_opening_hours(nominatim_tags["opening_hours"])
+                opening["source"] = "nominatim"
+            if cost.get("status") == "UNKNOWN" and nominatim_tags:
+                candidate = cost_evidence_from_tags(nominatim_tags, source="nominatim")
+                if candidate.get("status") != "UNKNOWN":
+                    cost = candidate
+            official = {"status": "NO_SOURCE_URL"}
+            source_url = _official_source_url({**tags, **nominatim_tags})
+            if source_url:
+                receipt["official_web"]["attempted"] += 1
+                try:
+                    official = _official_web_facts(client, source_url, retrieved_at=retrieved_at)
+                    receipt["official_web"]["status"] = official["status"]
+                    if official["status"] == "ACQUIRED":
+                        receipt["official_web"]["acquired"] += 1
+                    if opening.get("status") == "UNKNOWN" and official.get("opening_hours", {}).get("status") == "OFFICIAL_WEB_VERIFIED":
+                        opening = official["opening_hours"]
+                    if cost.get("status") == "UNKNOWN" and official.get("cost_evidence", {}).get("status") == "VERIFIED_PROVIDER":
+                        cost = official["cost_evidence"]
+                except (httpx.HTTPError, ValueError, AttributeError) as exc:
+                    official = {"provider": "official_web", "source": source_url, "retrieved_at": retrieved_at, "status": "UNAVAILABLE", "error": type(exc).__name__}
+                    receipt["official_web"]["status"] = "UNAVAILABLE"
+            search = _search_fact_candidates(client, place, journey, retrieved_at=retrieved_at)
+            receipt["search_source"] = {"provider": "searxng", "status": search.get("status"), "attempted": bool(search.get("attempted")), "acquired": len(search.get("observations") or [])}
+            if opening.get("status") in {"NORMALIZED_VALID", "CLOSED", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER"}:
+                receipt["known_opening_count"] += 1
+            if str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_STATUSES and cost.get("amount_minor") is not None:
+                receipt["known_cost_count"] += 1
+            metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+            metadata["fact_acquisition"] = {
+                "source": endpoint, "provider": "overpass", "retrieved_at": retrieved_at,
+                "provider_entity": place.external_id,
+                "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "provider_entity": place.external_id, "supporting_content": {"extratags": nominatim_tags}},
+                "official_web": official, "search_source": search,
+                "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
+                "claims": {"opening_hours": {"status": opening.get("status"), "normalized": opening}, "cost": cost},
+            }
+            # The latest observation wins.  Missing facts intentionally reset old positives.
+            place.opening_hours_json = json.dumps(opening, ensure_ascii=False)
+            price_known = str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_STATUSES and cost.get("amount_minor") is not None
+            metadata["cost_evidence"] = cost
+            metadata["cost_minor"] = int(cost["amount_minor"]) if price_known else 0
+            metadata["price_known"] = price_known
+            place.metadata_json = json.dumps(metadata, ensure_ascii=False)
+            row_receipt = {
+                "place_id": place.id, "provider": "overpass", "source": endpoint,
+                "provider_entity": place.external_id, "retrieved_at": retrieved_at,
+                "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "status": secondary["status"], "matched_provider_entity": ref in nominatim_rows},
+                "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
+                "opening_hours": opening, "cost_evidence": cost, "official_web": official, "search_source": search,
+            }
+            receipt["places"].append(row_receipt)
+    receipt["status"] = "ACQUIRED"
+    receipt["element_count"] = len(elements)
+    return receipt

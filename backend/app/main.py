@@ -228,6 +228,7 @@ from app.integrations.discovery.real_city import (
     normalize_opening_hours,
 )
 from app.integrations.discovery.orchestration import orchestrate_discovery
+from app.fact_acquisition import acquire_place_facts
 from app.integrations.inbox.vision import extract_reservation_image, extract_reservation_text
 from app.integrations.inbox.semantic_intake import (
     journey_interpreter_context,
@@ -329,6 +330,7 @@ from app.schemas import (
     GeneratePlansRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
+    FactAcquisitionRequest,
     GuardianAutopilotStart,
     JourneyCreate,
     JourneyPatch,
@@ -411,6 +413,8 @@ from app.services import (
     journey_schema,
     place_schema,
     plan_schema,
+    plan_authority_blocker,
+    plan_unresolved_activity_facts,
     preference_schema,
     recycle_bin_entry_schema,
     seed_demo,
@@ -1753,6 +1757,33 @@ def discover_real_city_services(
         raise HTTPException(503, str(exc)) from exc
     session.commit()
     return result
+
+
+@app.post("/api/v1/journeys/{journey_id}/facts/acquire")
+def acquire_journey_place_facts(
+    journey_id: UUID,
+    payload: FactAcquisitionRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Refresh source-linked opening/cost facts for this journey's Places.
+
+    The endpoint records provider observations, but it does not promote a
+    search result or a missing fee into authoritative truth.  Planning remains
+    responsible for deciding whether the refreshed facts are sufficient.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    try:
+        receipt = acquire_place_facts(
+            session,
+            journey,
+            place_ids=payload.place_ids if payload else None,
+        )
+        session.commit()
+    except (httpx.HTTPError, ValueError) as exc:
+        session.rollback()
+        raise HTTPException(502, str(exc)) from exc
+    return receipt
 
 
 @app.post("/api/v1/journeys/{journey_id}/real-city/intelligence", status_code=201)
@@ -5870,6 +5901,24 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
     ).all()
+    activity_place_ids = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in activities
+    ]
+    authority_blocker = plan_authority_blocker(
+        plan,
+        places,
+        used_place_ids=activity_place_ids,
+    )
+    if authority_blocker is not None:
+        refused = HTTPException(409, f"PlanVersion {plan.id} is not authoritative: {authority_blocker}")
+        refused.reason_code = authority_blocker
+        refused.error_details = {
+            "plan_id": plan.id,
+            "unresolved_facts": plan_unresolved_activity_facts(plan),
+            "used_place_ids": activity_place_ids,
+        }
+        raise refused
     evidence_payload = json.loads(plan.mobility_evidence_json or "{}")
     if not evidence_payload.get("snapshot_id"):
         raise HTTPException(409, "STALE_RECOMPOSE_REQUIRED: PlanVersion has no frozen provider evidence")

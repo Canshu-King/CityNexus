@@ -557,6 +557,12 @@ class CatalogHydrationRequest(BaseModel):
     requested_categories: list[str] | None = Field(default=None, max_length=6)
 
 
+class FactAcquisitionRequest(BaseModel):
+    """Acquire source-linked facts for existing provider Places."""
+
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=50)
+
+
 class AuthoritativeComposeRequest(BaseModel):
     """User-selected bounded input for the V12 multi-day planner."""
 

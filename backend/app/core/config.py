@@ -72,6 +72,9 @@ class Settings:
     )
     nominatim_url: str = os.getenv("CITYNEXUS_NOMINATIM_URL", "https://nominatim.openstreetmap.org")
     overpass_url: str = os.getenv("CITYNEXUS_OVERPASS_URL", "https://overpass-api.de/api")
+    # Optional sourceful search for fact acquisition. Search results are leads only;
+    # they never become authoritative opening or cost facts by themselves.
+    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
     real_city_timeout_seconds: float = float(os.getenv("CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS", "12"))
     real_city_cache_ttl_seconds: int = int(
         os.getenv("CITYNEXUS_REAL_CITY_CACHE_TTL_SECONDS", "900")
