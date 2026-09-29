@@ -855,6 +855,15 @@ class JourneyMember(BaseModel):
     created_at: str
     updated_at: str
     member_state: MemberState
+    # Only a role write fills this in: it is the fact the screen reads to say "from X to Y" without
+    # comparing two list responses of its own.
+    previous_role: str | None = None
+
+
+class JourneyMemberRoleChange(BaseModel):
+    """The rung to move a member to, plus nothing else: who asked is a door parameter, not payload."""
+
+    role: MemberRole
 
 
 class JourneyRoleRule(BaseModel):
