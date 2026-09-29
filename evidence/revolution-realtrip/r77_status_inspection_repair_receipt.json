@@ -1,0 +1,139 @@
+{
+  "schema": "citynexus.revolution.r77.status-inspection-repair.v1",
+  "observed_at": "2026-09-29T22:17:38Z",
+  "source_commit": "f03f3f053c7566200ac75c6e7441a228ffe89eee",
+  "git_status_porcelain": "",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery",
+  "database": "backend/r77_selectable_probe.db",
+  "journey": {
+    "id": "9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2",
+    "destination": "苏州市 / CN-SUZHOU",
+    "active_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+    "current_activity_id": "3400829f-bfa6-4a09-9ced-e529a4de1144",
+    "current_title": "网师园",
+    "next_activity_id": "bbbb9588-2242-4552-931a-caff09417cfc",
+    "next_title": "狮子林"
+  },
+  "defect_reproduction": {
+    "old_server_source_commit": "b6dda434cd16b24dccbec2a331e7dd40b5be6784",
+    "first_false_positive_event_id": "476b258b-6c02-46a7-b3cb-e07db1be3e91",
+    "first_false_positive_event": {
+      "provider_key": "user-command",
+      "provenance": "USER_REPORTED",
+      "event_type": "CLOSURE",
+      "status": "DETECTED",
+      "affected_activity_id": "3400829f-bfa6-4a09-9ced-e529a4de1144",
+      "classification": "read-only recovery-status inspection misclassified as current closure"
+    },
+    "second_probe_event_id": "48dc9f2d-5078-4a87-b447-9279ad8ab298",
+    "mechanism": "run_agent_command persisted an Event whenever the interpretation intent was DISRUPTION_REPORT and an event_type was present; semantic context containing 闭馆 was promoted despite the command asking to inspect an existing recovery proposal."
+  },
+  "repair": {
+    "commit": "f03f3f053c7566200ac75c6e7441a228ffe89eee",
+    "files": [
+      "backend/app/integrations/ai/copilot_contract.py",
+      "backend/app/main.py",
+      "backend/tests/test_v16_integration.py",
+      "backend/tests/test_v17_semantic_compiler.py"
+    ],
+    "boundary": "inspection marker + existing recovery/authority reference => read-only; no disruption Event",
+    "genuine_report_preserved": "现在博物馆关门了 remains CLOSURE"
+  },
+  "post_repair_replay": {
+    "method": "POST",
+    "path": "/api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/agent/commands",
+    "command": "检查当前已经启动的苏州行程，确认闭馆后的恢复提案是否已成为权威计划，并报告当前站、下一站、路线来源和是否还有待处理调整；只读，不要修改。",
+    "requested_autonomy": "PLAN_ONLY",
+    "source_binding": {
+      "commit": "f03f3f053c7566200ac75c6e7441a228ffe89eee",
+      "git_status_porcelain": ""
+    },
+    "before_event_ids": [
+      "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+      "476b258b-6c02-46a7-b3cb-e07db1be3e91",
+      "48dc9f2d-5078-4a87-b447-9279ad8ab298"
+    ],
+    "after_event_ids": [
+      "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+      "476b258b-6c02-46a7-b3cb-e07db1be3e91",
+      "48dc9f2d-5078-4a87-b447-9279ad8ab298"
+    ],
+    "event_count_before": 3,
+    "event_count_after": 3,
+    "response_event_id": null,
+    "mission_id": "6843910a-e073-4d03-8bda-e5284c09fb93",
+    "run_id": "34c884f7-b9b7-4cb9-8a44-f45bf7130fcb",
+    "run_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+    "run_runtime_identity": "NATIVE_DEEPSEEK_TOOL_LOOP",
+    "run_provider_key": "deepseek",
+    "run_tool_steps": [],
+    "interpretation": "no new Event; deterministic authority boundary passed"
+  },
+  "runtime_status_at_replay": {
+    "runtime_identity": "NOT_CONFIGURED",
+    "native_binary_detected": true,
+    "native_mcp_proven": false,
+    "deepseek_configured": false,
+    "hermes_compat_configured": false,
+    "ai_state": "DISABLED_BY_OPS",
+    "hermes_native_gateway_ready": false,
+    "new_hermes_or_deepseek_execution_claimed": false,
+    "prior_real_hermes_compat_run_id": "d66bc824-888d-41cc-816d-c0995f7f5403"
+  },
+  "probe_cleanup": {
+    "scope": "disposable backend/r77_selectable_probe.db only",
+    "deleted_exact_event_ids": [
+      "476b258b-6c02-46a7-b3cb-e07db1be3e91",
+      "48dc9f2d-5078-4a87-b447-9279ad8ab298"
+    ],
+    "preserved_event_id": "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+    "remaining_event_count": 1,
+    "authority_operation": false
+  },
+  "final_authority_readback": {
+    "journey_status": "ACTIVE",
+    "active_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+    "twin_latest_event_id": "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+    "twin_projection_status": "READY",
+    "cursor_status": "VALID",
+    "next_mode": "WALK",
+    "next_eta_min": 38,
+    "next_leg_id": "plan-evidence:3c176241-de74-47af-9c3c-7018e52ef56b:0",
+    "mobility_provider": "valhalla-http",
+    "route_provenance": "LIVE_PROVIDER_CAPTURE",
+    "fact_quality": "LIVE_PROVIDER_CAPTURE",
+    "used_edge_ids": [
+      [
+        "real-place-8bc850f117297987997c87cf",
+        "real-place-054fa857eff7a99169399bdf"
+      ]
+    ],
+    "degraded": false,
+    "p7": false
+  },
+  "user_visible": {
+    "url": "http://127.0.0.1:5174/v8/live",
+    "screenshot": "frontend/output/playwright/r77-suzhou-replan-live-fixed.png",
+    "observed_text": [
+      "当前：网师园",
+      "下一步 · 狮子林 · 步行 · 38 min",
+      "供应商支持的路线 · WGS84",
+      "风险 · 低 · 路线证据有效",
+      "当前没有需要你决定的调整。",
+      "刚才的行程变化已经处理好，已确认的预订保持不变。"
+    ]
+  },
+  "focused_tests": {
+    "command": "py -3.13 -m pytest -q tests/test_revolution_r77_recovery.py tests/test_qoder_catalog_reason_code.py tests/test_qoder_mobility_evidence_sources.py tests/test_provider_runtime_gate.py tests/test_agent_runtime_gate.py tests/test_agent_authority_v2_actions.py tests/test_v16_integration.py tests/test_v17_semantic_compiler.py",
+    "result": "73 passed, 1 warning",
+    "warning": "existing Starlette/httpx deprecation"
+  },
+  "truth_notes": [
+    "A read-only status inspection no longer creates a disruption Event even when a model falsely returns asserted CLOSURE.",
+    "The simulated closure remains explicitly diagnostic and is not live provider evidence.",
+    "Valhalla evidence is live only for the actual used edge; no synthetic mobility was relabeled LIVE.",
+    "No native MCP execution is claimed for the post-repair replay.",
+    "P7=false; no authority/mainline merge."
+  ]
+}

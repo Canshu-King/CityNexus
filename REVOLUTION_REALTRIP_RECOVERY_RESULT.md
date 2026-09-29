@@ -12,7 +12,8 @@
 
 - Starting commit: `4ee14229f80691cf8e5ea913375c0caf83ac02ee`
 - Latest product code commit: `c352bacd`
-- Final experimental/evidence commit for this recovery continuation: `f8cb2417`
+- R77 recovery repair commit: `f03f3f053c7566200ac75c6e7441a228ffe89eee`
+- Final evidence commit: the final `git rev-parse HEAD` reported with this handoff
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Database: `backend/r77_selectable_probe.db` (disposable lab DB)
@@ -114,6 +115,58 @@ Full machine evidence is in
 `evidence/revolution-realtrip/r77_replan_recovery_receipt.json`.
 
 The focused follow-on suite passed `53 passed, 1 warning in 8.07s`.
+
+## R77 follow-on: false-positive disruption capture and bounded repair
+
+The first real Hermes compatibility inspection exposed a product defect. The
+read-only command
+
+`检查当前已经启动的苏州行程，确认闭馆后的恢复提案是否已成为权威计划，并报告当前站、下一站、路线来源和是否还有待处理调整；只读，不要修改。`
+
+was incorrectly compiled as a new current `CLOSURE` and the legacy agent
+command endpoint persisted event `476b258b-6c02-46a7-b3cb-e07db1be3e91`.
+The same old server process produced a second probe artifact
+`48dc9f2d-5078-4a87-b447-9279ad8ab298`. Both were `USER_REPORTED`/`user-command`
+events, not live provider evidence. The cause was the combination of broad
+closure words (`闭馆`) and an unconditional `DISRUPTION_REPORT` → Event path;
+the command's inspection/recovery-reference meaning was not treated as
+read-only.
+
+Commit `f03f3f053c7566200ac75c6e7441a228ffe89eee` adds the narrow
+`is_status_inspection_reference()` boundary, makes the deterministic event
+classifier return no disruption for this shape, prevents model compilation
+for this shape, and guards the agent command Event creation path. It does not
+weaken genuine reports such as `现在博物馆关门了`. The focused regression
+tests cover both a model that falsely returns an asserted `CLOSURE` and the
+actual command endpoint.
+
+After the commit, with `git status --porcelain` empty, the same endpoint was
+run against the same disposable Journey. Event IDs were unchanged
+(`3 → 3`) and the response contained `event_id=null`. The runtime status was
+`NOT_CONFIGURED`; the attempted agent run was `SKIPPED_EXTERNAL_DEPENDENCY`
+with zero tool steps, so this replay claims deterministic product evidence,
+not a new Hermes/DeepSeek execution. The earlier real compatibility run
+`d66bc824-888d-41cc-816d-c0995f7f5403` remains the Hermes evidence for the
+accepted recovery.
+
+The two precisely identified false-positive rows were then removed only from
+the disposable `backend/r77_selectable_probe.db` probe database, preserving
+the intended simulated trigger `b649a9c0-b2d4-4e2f-9e9f-7dc461702a30`. This
+cleanup is recorded as probe-artifact cleanup, not as a product authority
+operation. Final readback has one acknowledged diagnostic event, Twin
+`latest_event_id` points to the intended trigger, the accepted plan remains
+`3c176241-de74-47af-9c3c-7018e52ef56b`, and the real Valhalla edge remains
+`real-place-8bc850f117297987997c87cf → real-place-054fa857eff7a99169399bdf`
+with `WALK`, 38 minutes, `LIVE_PROVIDER_CAPTURE`, and `degraded=false`.
+
+The complete repair/replay/cleanup receipt is
+`evidence/revolution-realtrip/r77_status_inspection_repair_receipt.json`.
+The refreshed user-visible proof is
+`frontend/output/playwright/r77-suzhou-replan-live-fixed.png`.
+
+The combined focused backend gates passed `73 passed, 1 warning`; the warning
+is the existing Starlette/httpx deprecation. `P7=false`, `MOCK != LIVE`, and
+no authority/mainline merge were introduced.
 
 Replay evidence and screenshots are under `evidence/revolution-realtrip/` and
 `frontend/output/playwright/`, including `r77-suzhou-live-executing-clean.png`.
