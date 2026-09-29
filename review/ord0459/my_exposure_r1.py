@@ -18,7 +18,8 @@ LC = r"D:\moodle\_qoder_cmdr_ref_20260921\live_checks"
 RULER = os.path.join(LC, "ui_exposure_taint_ast_r7b.cjs")
 OUT = r"D:\moodle\_qoder_q_ord0448_20260929\exposure_delta_mine_r1.txt"
 WT = "D:/moodle/_qoder_q_ord0427_20260929/wt"
-CAND = "d48049247bf6aea7b0092ea435b4d450723b02e9"
+LANE = "review/Q-ord0459-radii-tier-step2-r2"
+# both refs are fetched so merge-base and the ruler can resolve them locally; the fetch writes nothing outside .git
 PINNED = "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2"
 
 
@@ -39,11 +40,15 @@ def run_ruler(ref, path):
             "files_failed": d["files_failed"], "parse_diagnostics_total": d["parse_diagnostics_total"]}
 
 
+git("fetch", "origin", "mirror/integration-frontend-apple-pass1", "refs/heads/review/" + LANE)
 TIP = git("ls-remote", "--refs", "origin", "refs/heads/mirror/integration-frontend-apple-pass1").split()[0]
+CAND = git("ls-remote", "--refs", "origin", "refs/heads/" + LANE).split()[0]
 identity = hashlib.sha1(open(RULER, "rb").read()).hexdigest()
 # git hash-object prepends a blob header, so reproduce it the way git does
 blob_id = subprocess.run(["git", "hash-object", RULER], capture_output=True, text=True).stdout.strip()
-FORK = git("merge-base", TIP, CAND)
+# the lane's own fork point: the tip as it was before ORD-0459 landed. Comparing against the live tip
+# after landing would silently compare the change with itself and report an empty denominator.
+FORK = "8cf94ad794a94df0b6f992dc9e6e1bb0c6e70a4a"
 files = [f for f in git("diff", "--name-only", FORK, CAND, "--", "frontend/src").splitlines()
          if f.endswith((".css", ".ts", ".tsx"))]
 
@@ -54,7 +59,9 @@ A("ruler identity: git hash-object %s = %s ; pinned by the driver as %s ; identi
   % (os.path.basename(RULER), blob_id, PINNED, blob_id == PINNED))
 A("(the sha1 of the raw file bytes is %s -- that is a local byte hash, not a git object id)" % identity)
 A("tip read live        %s" % TIP)
-A("candidate            %s   files compared here %d" % (CAND, len(files)))
+A("compared against     %s -- the tip ORD-0459 forked from; the live tip already carries this lane's bytes," % FORK)
+A("                       so measuring against it again would be a 0-file denominator, not a pass)")
+A("candidate            refs/heads/%s = %s   files compared here %d" % (LANE, CAND, len(files)))
 A("")
 A("per file: cells_total on the tip, cells_total on the candidate, new cells by set difference")
 new_total = 0

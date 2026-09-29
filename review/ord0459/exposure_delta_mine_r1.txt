@@ -1,8 +1,10 @@
 ORD-0459 r2 -- exposure ruler run by lane 2d2d7428 on its own candidate, same call form as the watch loop
 ruler identity: git hash-object ui_exposure_taint_ast_r7b.cjs = d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2 ; pinned by the driver as d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2 ; identical = True
 (the sha1 of the raw file bytes is 829c077b0b2c14d72b59dfa8292f1b280020ab33 -- that is a local byte hash, not a git object id)
-tip read live        0b7167369e685ac4b7a3d19143de985799e71eb8
-candidate            d48049247bf6aea7b0092ea435b4d450723b02e9   files compared here 8
+tip read live        45513fc7957214dc385b4dffea9a662a0d8b1d1c
+compared against     8cf94ad794a94df0b6f992dc9e6e1bb0c6e70a4a -- the tip ORD-0459 forked from; the live tip already carries this lane's bytes,
+                       so measuring against it again would be a 0-file denominator, not a pass)
+candidate            refs/heads/review/Q-ord0459-radii-tier-step2-r2 = 2fe94a9ee220e1df2999614772b6493e2b17c9d9   files compared here 8
 
 per file: cells_total on the tip, cells_total on the candidate, new cells by set difference
    design-tokens.css                                    tip=0 cand=0 new=0 []
