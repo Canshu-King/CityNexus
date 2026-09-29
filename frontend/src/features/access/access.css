@@ -195,3 +195,13 @@
     min-height: 30px;
   }
 }
+
+/* A disabled control has to look disabled: the screenshot showed the two buttons without doors
+   rendered exactly like the ones that work. Same ink, greyed, not-allowed pointer, and the reason
+   sentence beside them carries the meaning. */
+.cn-access-row-action:disabled,
+button.cn-access-row-action[disabled] {
+  opacity: 0.45;
+  border-style: dashed;
+  cursor: not-allowed;
+}

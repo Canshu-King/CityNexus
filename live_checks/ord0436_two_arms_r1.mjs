@@ -256,6 +256,15 @@ async function arm(browser, locale) {
       reasonsOnScreen: squeeze(
         await page.locator('[data-testid="access-disabled-reasons"]').first().innerText(),
       ),
+      // Greyed is part of the claim: a disabled control that looks enabled is a bug the DOM
+      // attribute alone cannot show, so the computed style is what gets read.
+      look: await page
+        .locator('[data-testid="access-member-role-change"]')
+        .first()
+        .evaluate((element) => {
+          const style = getComputedStyle(element);
+          return { opacity: Number(style.opacity), cursor: style.cursor };
+        }),
     };
     await page.click('[data-testid="access-member-withdraw"]');
     await page.click('[data-testid="access-confirm-yes"]');
@@ -560,6 +569,9 @@ add(
     zh.disabledReasons.roleChange === "改角色" &&
     zh.disabledReasons.selfExit === "我自己退出" &&
     zh.disabledReasons.reasonsOnScreen.length > 12 &&
+    zh.disabledReasons.look.opacity < 1 &&
+    zh.disabledReasons.look.cursor === "not-allowed" &&
+    en.disabledReasons.look.opacity < 1 &&
     /改角色要等|我自己退出/.test(zh.disabledReasons.reasonsOnScreen) &&
     /waits for this server|door of its own/.test(en.disabledReasons.reasonsOnScreen),
   JSON.stringify({ zh: zh.disabledReasons, en: en.disabledReasons }).slice(0, 320),

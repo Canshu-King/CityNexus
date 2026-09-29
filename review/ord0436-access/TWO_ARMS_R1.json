@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T15:17:43+08:00",
+  "started_at": "2026-09-29T15:29:05+08:00",
   "backend_identity": {
-    "listener_pid": 58284,
+    "listener_pid": 42860,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,14 +10,14 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "952922d1-ac25-416f-90bf-8df0f1f40b42",
+    "journey_id": "f4b15dc7-3108-449e-8ea1-817927552aa3",
     "journey_ids": [
-      "952922d1-ac25-416f-90bf-8df0f1f40b42",
-      "93736893-1f97-4201-b574-d9e392b1b84d"
+      "f4b15dc7-3108-449e-8ea1-817927552aa3",
+      "80aa3c1c-1d83-44bf-afe7-031798e9949f"
     ],
     "member_ids": [
-      "718fed42-ee0d-4e58-bcc5-b85533b83515",
-      "86fc0130-31bb-4865-8959-fd448dbd415a"
+      "418cd90c-810c-4e9d-b7a5-58c59f80d15d",
+      "e44b4690-5072-4518-b26e-7d881fb02ff1"
     ],
     "delete_door_status": {
       "delete_0": 204,
@@ -148,28 +148,32 @@
         "before": "empty",
         "afterCreate": "获得链接者可见 · 到 12月6日 08:00 之前可开。",
         "confirmSaid": "撤销后，拿这条链接的人就打不开了。你自己的权限不变。 确认撤销 撤销",
-        "afterRevoke": "获得链接者可见 · 已于 9月29日 15:19 撤销。拿这条链接的人再也打不开了。",
+        "afterRevoke": "获得链接者可见 · 已于 9月29日 15:29 撤销。拿这条链接的人再也打不开了。",
         "stillOpenAfterAsk": "false",
         "confirmStillVisible": true,
         "confirmButtonPresent": true,
         "pastRefusal": "那个到期时刻已经过去了，服务器没有发出这条邀请。",
         "grantRowsAfterRefusal": 1
       },
-      "rosterLine": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。",
+      "rosterLine": "协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。",
       "activityCaveat": "成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。",
       "member": {
         "rows": 1,
-        "scopeSaid": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 还在生效 这一档能做什么：能读这条行程、编辑地点。",
+        "scopeSaid": "协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 还在生效 这一档能做什么：能读这条行程、编辑地点。",
         "statesBefore": "MEMBER_IN_FORCE",
-        "afterWithdraw": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。",
-        "afterReload": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。"
+        "afterWithdraw": "协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。",
+        "afterReload": "协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。"
       },
       "disabledReasons": {
         "roleChange": "改角色",
         "selfExit": "我自己退出",
         "roleChangeDisabledAttr": "",
         "selfExitDisabledAttr": "",
-        "reasonsOnScreen": "改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。"
+        "reasonsOnScreen": "改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。",
+        "look": {
+          "opacity": 0.45,
+          "cursor": "not-allowed"
+        }
       },
       "roleScopes": [
         "能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。",
@@ -179,7 +183,7 @@
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
       "cjkChars": 945,
-      "latinWords": 18,
+      "latinWords": 16,
       "wholePageCjkChars": 961,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -260,15 +264,15 @@
         "created this trip",
         "put this trip in the recycle bin",
         "brought this trip back from the recycle bin",
-        "This server reported an action this screen has no sentence for: journey.unlisted_share_change.",
-        "added a member this server did not name to this trip"
+        "added a member this server did not name to this trip",
+        "This server reported an action this screen has no sentence for: journey.unlisted_share_change."
       ],
       "activityAttributes": [
         "journey.created",
         "journey.deleted",
         "journey.undeleted",
-        "journey.unlisted_share_change",
-        "journey.member_added"
+        "journey.member_added",
+        "journey.unlisted_share_change"
       ],
       "activityEmpty": false,
       "activityFailed": false,
@@ -286,28 +290,32 @@
         "before": "empty",
         "afterCreate": "Anyone with the link · Open until 6 Dec, 08:00.",
         "confirmSaid": "After this, whoever holds the link can no longer open it. Your own access does not change. Confirm withdrawal Withdraw",
-        "afterRevoke": "Anyone with the link · Withdrawn at 29 Sept, 15:19. Whoever held this link can no longer open it.",
+        "afterRevoke": "Anyone with the link · Withdrawn at 29 Sept, 15:29. Whoever held this link can no longer open it.",
         "stillOpenAfterAsk": "false",
         "confirmStillVisible": true,
         "confirmButtonPresent": true,
         "pastRefusal": "That expiry moment is already behind us, so the server did not issue the invitation.",
         "grantRowsAfterRefusal": 1
       },
-      "rosterLine": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places. Change role Leave this trip Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request.",
+      "rosterLine": "Collaborator · token 4446065c-d285-4920-882e-767183397640 · withdrawn at 29 Sept, 15:29 What this role can do: Can read this trip and edit places. Change role Leave this trip Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request.",
       "activityCaveat": "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
       "member": {
         "rows": 1,
-        "scopeSaid": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · still in force What this role can do: Can read this trip and edit places.",
+        "scopeSaid": "Collaborator · token 4446065c-d285-4920-882e-767183397640 · still in force What this role can do: Can read this trip and edit places.",
         "statesBefore": "MEMBER_IN_FORCE",
-        "afterWithdraw": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places.",
-        "afterReload": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places."
+        "afterWithdraw": "Collaborator · token 4446065c-d285-4920-882e-767183397640 · withdrawn at 29 Sept, 15:29 What this role can do: Can read this trip and edit places.",
+        "afterReload": "Collaborator · token 4446065c-d285-4920-882e-767183397640 · withdrawn at 29 Sept, 15:29 What this role can do: Can read this trip and edit places."
       },
       "disabledReasons": {
         "roleChange": "Change role",
         "selfExit": "Leave this trip",
         "roleChangeDisabledAttr": "",
         "selfExitDisabledAttr": "",
-        "reasonsOnScreen": "Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request."
+        "reasonsOnScreen": "Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request.",
+        "look": {
+          "opacity": 0.45,
+          "cursor": "not-allowed"
+        }
       },
       "roleScopes": [
         "Can read this trip, manage members and edit places. This server grants this role 3 capabilities.",
@@ -317,7 +325,7 @@
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
       "cjkChars": 0,
-      "latinWords": 619,
+      "latinWords": 617,
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -413,7 +421,7 @@
       {
         "name": "the English arm reads English",
         "verdict": "PASS",
-        "detail": "panelCjk=0 latin=619"
+        "detail": "panelCjk=0 latin=617"
       },
       {
         "name": "the one control is under the finger at 390x844",
@@ -438,12 +446,12 @@
       {
         "name": "after the confirmation the row says withdrawn, in the language the device is in",
         "verdict": "PASS",
-        "detail": "{\"zh\":\"获得链接者可见 · 已于 9月29日 15:19 撤销。拿这条链接的人再也打不开了。\",\"en\":\"Anyone with the link · Withdrawn at 29 Sept, 15:19. Whoever held this link can no longer open it.\"}"
+        "detail": "{\"zh\":\"获得链接者可见 · 已于 9月29日 15:29 撤销。拿这条链接的人再也打不开了。\",\"en\":\"Anyone with the link · Withdrawn at 29 Sept, 15:29. Whoever held this link can no longer open it.\"}"
       },
       {
         "name": "the member door's answer is read out, empty included, and the activity caveat is on screen",
         "verdict": "PASS",
-        "detail": "{\"roster\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\",\"caveat\":\"成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\"}"
+        "detail": "{\"roster\":\"协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\",\"caveat\":\"成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\"}"
       },
       {
         "name": "the role ladder is the door's three rows, each with the dictionary's own sentence for its key",
@@ -453,17 +461,17 @@
       {
         "name": "a member row carries its scope sentence, and removing it is the server's answer, not the screen's",
         "verdict": "PASS",
-        "detail": "{\"zh\":{\"rows\":1,\"scopeSaid\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 还在生效 这一档能做什么：能读这条行程、编辑地点。\",\"statesBefore\":\"MEMBER_IN_FORCE\",\"afterWithdraw\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"afterReload\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 "
+        "detail": "{\"zh\":{\"rows\":1,\"scopeSaid\":\"协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 还在生效 这一档能做什么：能读这条行程、编辑地点。\",\"statesBefore\":\"MEMBER_IN_FORCE\",\"afterWithdraw\":\"协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"afterReload\":\"协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 "
       },
       {
         "name": "the withdrawal is still there after a reload (it came from the server, not from component state)",
         "verdict": "PASS",
-        "detail": "{\"zh\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"en\":\"Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places.\"}"
+        "detail": "{\"zh\":\"协作者 · 令牌 4446065c-d285-4920-882e-767183397640 · 已在 9月29日 15:29 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"en\":\"Collaborator · token 4446065c-d285-4920-882e-767183397640 · withdrawn at 29 Sept, 15:29 What this role can do: Can read this trip and edit places.\"}"
       },
       {
         "name": "the two controls with no door are disabled and say why, in the language of the device",
         "verdict": "PASS",
-        "detail": "{\"zh\":{\"roleChange\":\"改角色\",\"selfExit\":\"我自己退出\",\"roleChangeDisabledAttr\":\"\",\"selfExitDisabledAttr\":\"\",\"reasonsOnScreen\":\"改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\"},\"en\":{\"roleChange\":\"Change role\",\"selfExit\":\"Leave this trip\",\"roleChangeDisabledAttr\":\"\",\"selfExitDisabledAttr\":\"\",\"reasonsOnScreen"
+        "detail": "{\"zh\":{\"roleChange\":\"改角色\",\"selfExit\":\"我自己退出\",\"roleChangeDisabledAttr\":\"\",\"selfExitDisabledAttr\":\"\",\"reasonsOnScreen\":\"改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\",\"look\":{\"opacity\":0.45,\"cursor\":\"not-allowed\"}},\"en\":{\"roleChange\":\"Change role\",\"selfExit\":\"Leave this trip\",\"roleChangeDisabledAttr"
       },
       {
         "name": "a refusal the traveller can cause is named by its code's sentence, and issues nothing",
@@ -481,7 +489,7 @@
   },
   "server_readback": {
     "zh": {
-      "journey_id": "952922d1-ac25-416f-90bf-8df0f1f40b42",
+      "journey_id": "f4b15dc7-3108-449e-8ea1-817927552aa3",
       "grants_http": 200,
       "grants": 1,
       "with_expiry": 1,
@@ -489,7 +497,7 @@
       "members_http": 200
     },
     "en": {
-      "journey_id": "93736893-1f97-4201-b574-d9e392b1b84d",
+      "journey_id": "80aa3c1c-1d83-44bf-afe7-031798e9949f",
       "grants_http": 200,
       "grants": 1,
       "with_expiry": 1,
