@@ -1,0 +1,269 @@
+{
+ "tip": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "served_asset": "/assets/index-DbA8xyvx.js",
+ "eight_rows": [
+  {
+   "row": "Stated; confirmation needed",
+   "readable_both_arms": true,
+   "zh_rendered": "已声明，尚待确认",
+   "state_source": "fixture: traveler_capabilities confirmed=0 row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "policy unavailable · confirmation required",
+   "readable_both_arms": false,
+   "zh_rendered": null,
+   "state_source": "fixture: PRESENTED replan proposal row; fixture: traveler_agent_policies row deleted; fixture: traveler_capabilities confirmed=0 row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "CHANGED",
+   "readable_both_arms": true,
+   "zh_rendered": "已变化",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "已变化"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "PROTECTED",
+   "readable_both_arms": true,
+   "zh_rendered": "受保护",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "受保护"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "Baseline evidence",
+   "readable_both_arms": true,
+   "zh_rendered": "基线证据",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "基线证据"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "Incident evidence",
+   "readable_both_arms": true,
+   "zh_rendered": "事发证据",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "事发证据"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "Deterministic gate",
+   "readable_both_arms": true,
+   "zh_rendered": "确定性门控",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    }
+   ]
+  },
+  {
+   "row": "Delegation policy",
+   "readable_both_arms": true,
+   "zh_rendered": "授权策略",
+   "state_source": "fixture: PRESENTED replan proposal row",
+   "attempts": [
+    {
+     "why": "fixture: PRESENTED replan proposal row",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "授权策略"
+     ]
+    },
+    {
+     "why": "fixture: traveler_capabilities confirmed=0 row",
+     "en": false,
+     "zh": false,
+     "zh_texts": [
+      "授权策略"
+     ]
+    },
+    {
+     "why": "fixture: traveler_agent_policies row deleted",
+     "en": true,
+     "zh": true,
+     "zh_texts": [
+      "授权策略"
+     ]
+    }
+   ]
+  }
+ ],
+ "readable": 7,
+ "not_reached": [
+  "policy unavailable · confirmation required"
+ ]
+}
