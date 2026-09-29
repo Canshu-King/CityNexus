@@ -24,6 +24,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
 import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
+import { failureSentence, nameTheFailure } from "./prepFailureCopy";
 import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
 import {
   cityNexusApi,
@@ -86,9 +87,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           }
         } catch (error) {
           /* A read that failed is not a job that failed: name it and keep the last real reading. */
-          setActionError(
-            error instanceof Error ? error.message : zh ? "读取准备进度失败。" : "Reading the job failed.",
-          );
+          setActionError(failureSentence("read", nameTheFailure(error), zh));
         }
       };
       void tick();
@@ -110,9 +109,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       setCapability(await cityNexusApi.getDestinationCapability(wanted));
     } catch (error) {
       setCapability(null);
-      setCapabilityError(
-        error instanceof Error ? error.message : zh ? "这次没有读到能力判定。" : "The capability read failed.",
-      );
+      setCapabilityError(failureSentence("check", nameTheFailure(error), zh));
     } finally {
       setChecking(false);
     }
@@ -130,9 +127,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
          than answering 409, so the screen says "already preparing" instead of pretending to start. */
       if (!started.terminal) watch(started.operation_id);
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : zh ? "没能开始准备。" : "Could not start preparing.",
-      );
+      setActionError(failureSentence("start", nameTheFailure(error), zh));
     } finally {
       setBusy(false);
     }
@@ -148,9 +143,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       setJob(stopped);
       return true;
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : zh ? "没能停止这次准备。" : "Could not stop this preparation.",
-      );
+      setActionError(failureSentence("stop", nameTheFailure(error), zh));
       return false;
     } finally {
       setBusy(false);
@@ -321,11 +314,15 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     }
   };
 
+  /* ORD-0440 second half: this cell used to print `job.error.message`, i.e. whatever sentence the
+     server happened to answer with. The refusal is still said - by the token the server owns
+     (`code` / `reason_code` / `message_key`), which chooses a sentence written here. The prose itself
+     is dropped, and it does not ride into a `data-*` either: `error_receipt_id` and friends are not
+     among the six fields a slot may name. */
   const serverError = job?.error ?? null;
-  const serverMessage =
-    serverError && typeof serverError === "object"
-      ? String((serverError as { message?: unknown }).message ?? "")
-      : "";
+  const serverSentence = serverError
+    ? failureSentence("read", nameTheFailure(serverError), zh)
+    : "";
   /* The action comes from the server.  `retryable` is the pair the fourth cell is obliged to keep
      (`NOT_ANSWERED => retryable is true and a provider_status exists`), so the retry action reads it
      rather than deciding for itself that retrying is reasonable. */
@@ -538,10 +535,9 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           <span className="v8-kicker">{zh ? "准备进度" : "Preparation"} · {job.status}</span>
           <h3 data-testid="prep-job-title">{jobCopy().title}</h3>
           <p data-testid="prep-job-body">{jobCopy().body}</p>
-          {serverMessage && (
+          {serverSentence && (
             <p className="prep-server" data-testid="prep-server-message">
-              {zh ? "服务器的原话：" : "The server's own words: "}
-              {serverMessage}
+              {serverSentence}
             </p>
           )}
           <div className="prep-actions">
