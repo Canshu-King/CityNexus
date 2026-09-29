@@ -207,9 +207,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "07:23",
-          "08:23",
-          "09:23"
+          "10:59",
+          "11:59",
+          "12:59"
         ]
       }
     },
@@ -240,7 +240,7 @@
         "stop_cells": 0,
         "day_cells": 0,
         "title_still": true,
-        "body_len": 93
+        "body_len": 94
       }
     },
     {
@@ -257,7 +257,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/e01ac5O6t5okY7ntVU40yUZuxe3Y6KV6",
+        "pathname": "/v8/shared/1MtcObaBgwSdIa9S6Ww2EYzeXtMrzVu5",
         "title_still_on_screen": true
       }
     },
@@ -312,13 +312,16 @@
       }
     },
     {
-      "arm": "code/hides_until_opened",
+      "arm": "ord0474/measured_rows_render_text",
       "pass": true,
       "detail": {
-        "on_details_face": [
-          "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN"
-        ],
-        "leaks_to_the_face": false
+        "empty_rows": [],
+        "code": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
+        "status": "这台设备看到的回读：HTTP 409",
+        "media": "回读的媒体类型 application/json",
+        "bytes": "这台设备数到的字节 372",
+        "receipt": "服务器回执号 CNX-QCG4P3Q4",
+        "fold_open": true
       }
     },
     {

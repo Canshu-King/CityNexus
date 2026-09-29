@@ -4,6 +4,7 @@
 # result read off a port that is still serving the previous bytes is not a result.
 set -euo pipefail
 LANE="D:/moodle/_qoder_r_ord0465_20260929"
+REPO="$LANE/wt"
 NO_PROXY="*"; unset HTTP_PROXY HTTPS_PROXY
 
 BUILD="dist_$(date +%H%M%S)"
@@ -19,7 +20,7 @@ nohup /d/moodle/CityNexus/.venv/Scripts/python.exe \
   --dist "$LANE/$BUILD" --port 4931 --api 8731 \
   --log "$LANE/run/front_4931.log" > "$LANE/run/front_4931.out" 2>&1 &
 
-sed -i "s#dist_[A-Za-z0-9]*#$BUILD#g" "$LANE/run/lane_witnesses_r1.py"
+sed -i "s#dist_[A-Za-z0-9]*#$BUILD#g" "$REPO/review/ord0465/lane_witnesses_r1.py"
 
 /d/moodle/CityNexus/.venv/Scripts/python.exe -c "
 import time, urllib.request
@@ -35,7 +36,7 @@ else:
 "
 
 echo "== ownership witnesses =="
-/d/moodle/CityNexus/.venv/Scripts/python.exe "$LANE/run/lane_witnesses_r1.py" 2>&1 | tail -2
+/d/moodle/CityNexus/.venv/Scripts/python.exe "$REPO/review/ord0465/lane_witnesses_r1.py" 2>&1 | tail -2
 echo "== screen arms =="
-node "$LANE/run/screen_arms_r1.cjs" 2>&1 | tail -30
+node "$REPO/review/ord0465/screen_arms_r1.js" 2>&1 | tail -30
 echo "== current served dist: $BUILD =="

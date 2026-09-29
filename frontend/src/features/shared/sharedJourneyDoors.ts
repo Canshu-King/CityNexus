@@ -82,6 +82,9 @@ export type SharedScreenRead =
       facts: RawFacts | null;
       /** Classified by `lib/failureAttribution`, the one owner of "network, origin, or nothing" (R14-P). */
       attribution: Attribution;
+      /** Always null on this arm, and named so rather than omitted: there is no answer to read a
+       *  receipt out of when no answer arrived. The fold says 服务器未给回执号 because nothing came. */
+      envelope: null;
     }
   | {
       state: "refused";
@@ -91,6 +94,10 @@ export type SharedScreenRead =
       reason_code: string | null;
       details: Record<string, unknown> | null;
       facts: RawFacts | null;
+      /** The parsed envelope, carried so `CnxMeasuredFacts` can read the server's own receipt number
+       *  out of it. Dropping it here is what made that line answer "no server receipt" about a body
+       *  that did carry one -- ORD-0474's fourth row. */
+      envelope: unknown;
     }
   | { state: "ready"; answer: SharedJourneyRead };
 
@@ -120,13 +127,14 @@ export function askSharedJourney(token: string): Promise<SharedScreenRead> {
           reason_code: code,
           details: refusalDetails(cause),
           facts: cause.facts,
+          envelope: cause.envelope,
         };
       }
       /* A fetch that never got an answer is not a refusal, and it has no code to read. This is the one
          arm that may name the device rather than the server, and it is not allowed to borrow one of
          the four sentences above -- so it carries the classification that `lib/failureAttribution`
          produces, which is R14-P's one owner for "was this the network, the origin, or nothing". */
-      return { state: "read_failed", facts: null, attribution: classifyReadFailure(cause) };
+      return { state: "read_failed", facts: null, envelope: null, attribution: classifyReadFailure(cause) };
     });
 }
 

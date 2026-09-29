@@ -336,25 +336,44 @@ async function refusalArm(name, url, expectedCode, expectedWords, forbiddenWords
     await page.context().close();
   }
 
-  /* ------------------------------ a refusal names its code on the details face, and nowhere else */
+  /* ------------------- ORD-0474: the measured rows have to be RENDERED, not merely present in the DOM */
   {
     const page = await newPage(DESKTOP, "zh-CN");
     await open(page, seed.urls.binned);
-    const folded = await page.$$eval('[data-testid="shared-refusal-code"]', (els) =>
-      els.map((el) => el.textContent.trim()),
-    );
-    const visibleOutside = await page.evaluate(() => {
-      const details = document.querySelector(".cn-shared-details");
-      const rest = document.querySelector('[data-testid="shared-screen"]').cloneNode(true);
-      rest.querySelectorAll(".cn-shared-details").forEach((node) => node.remove());
-      return rest.textContent;
+    const rows = await page.evaluate(() => {
+      const want = ["shared-refusal-code", "shared-refused-content_type",
+        "shared-refused-body_bytes", "shared-refused-http_status", "shared-refused-receipt"];
+      const out = {};
+      for (const id of want) {
+        const el = document.querySelector(`[data-testid="${id}"]`);
+        // `innerText`, not `textContent`: a closed <details> keeps every byte in the DOM and renders
+        // none of them, which is exactly how these rows reached a reviewer as empty strings while the
+        // previous judge still passed. textContent cannot see that defect; innerText can.
+        out[id] = el ? { rendered: el.innerText.trim(), dom: el.textContent.trim(),
+                         fold_open: el.closest("details") ? el.closest("details").open : null }
+                      : { rendered: "ELEMENT ABSENT", dom: "ELEMENT ABSENT", fold_open: null };
+      }
+      return out;
     });
-    record("code/hides_until_opened",
-      folded.join("|") === "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN" &&
-        !visibleOutside.includes("SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN"),
-      { on_details_face: folded, leaks_to_the_face: visibleOutside.includes("SHARE_GRANT") });
-    await page.click(".cn-shared-details summary");
-    await page.waitForTimeout(300);
+    const empty = Object.entries(rows).filter(([, v]) => !v.rendered || v.rendered === "ELEMENT ABSENT");
+    const code = rows["shared-refusal-code"].rendered;
+    const bytes = rows["shared-refused-body_bytes"].rendered;
+    const status = rows["shared-refused-http_status"].rendered;
+    const media = rows["shared-refused-content_type"].rendered;
+    const receipt = rows["shared-refused-receipt"].rendered;
+    const octets = parseInt(bytes.replace(/[^0-9]/g, ""), 10);
+    record("ord0474/measured_rows_render_text",
+      empty.length === 0 &&
+        code.includes("SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN") &&
+        /409/.test(status) && /application.json/.test(media) &&
+        // The byte count is this device's own reading of the answer it received, so it has to be a
+        // real number out of THIS response and never a placeholder.
+        Number.isFinite(octets) && octets > 0 &&
+        // The server does mint a receipt for a refusal. A line claiming none was given, about a body
+        // that carried one, is the same class of defect as an empty line.
+        !/NOT-EMITTED|no server receipt/.test(receipt),
+      { empty_rows: empty.map(([k]) => k), code, status, media, bytes, receipt,
+        fold_open: rows["shared-refusal-code"].fold_open });
     await page.screenshot({ path: path.join(shotDir, "refusal_details_open.png") });
     await page.context().close();
   }

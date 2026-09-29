@@ -168,13 +168,13 @@ export function SharedJourneyScreen({ token }: { token: string }) {
         <div className="cn-shared-notice" role="alert" data-testid="shared-read-failed">
           <p>{copyFor(read.attribution, zh).body}</p>
           {read.facts ? (
-            <details className="cn-shared-details">
+            <details className="cn-shared-details" open>
               <summary>{t("agent.advancedDetail")}</summary>
               <CnxMeasuredFacts
                 facts={read.facts}
                 zh={zh}
                 testId="shared-read-failed"
-                envelope={null}
+                envelope={read.envelope}
               />
             </details>
           ) : null}
@@ -195,14 +195,25 @@ export function SharedJourneyScreen({ token }: { token: string }) {
           <b data-testid="shared-refusal-title">{t(refusalKey)}</b>
           {/* The server's own name for what it refused goes here and nowhere else on the face of the
               screen: quotable, and not required reading. */}
-          <details className="cn-shared-details">
+          {/* `open`, not collapsed. A closed <details> keeps its children in the DOM but renders no
+              text for them, and that is how three of these rows -- the server's own name for the
+              refusal, the media type and the octet count this device measured -- came back as empty
+              strings to anybody reading the screen (ORD-0474). `CnxMeasuredFacts` already opens its
+              own fold for the same reason and says why on the spot: a hidden line the traveller is
+              entitled to see is still hidden. */}
+          <details className="cn-shared-details" open>
             <summary>{t("agent.advancedDetail")}</summary>
             <p className="cn-shared-code-label">{t("shared.refusalCodeLabel")}</p>
             <code data-testid="shared-refusal-code">
               {read.reason_code ?? t("shared.refusalCodeNone")}
             </code>
             {read.facts ? (
-              <CnxMeasuredFacts facts={read.facts} zh={zh} testId="shared-refused" envelope={null} />
+              <CnxMeasuredFacts
+                facts={read.facts}
+                zh={zh}
+                testId="shared-refused"
+                envelope={read.envelope}
+              />
             ) : null}
           </details>
           <button
