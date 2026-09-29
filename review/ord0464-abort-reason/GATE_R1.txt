@@ -4,10 +4,13 @@ WHAT WAS RUN
   command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
   runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py (refuses unless both lane listeners are up)
   lane    : review/ord0464-abort-reason/lane_r1.py -- started both legs and proved them before any browser ran
-  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD e778d53f1a88e76df4b3280603d93f1d37bc3cd6
-  base    : 45513fc7957214dc385b4dffea9a662a0d8b1d1c (the authoritative line the commander's 13:55 block read)
+  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD d80d4661d079a8f6439625599d8c05a4afdd6505
+  base    : 4037cb331ea00b83124316d40329762fa1131689 -- the authoritative line this branch was rebased onto after the read-only re-cut
+            refused the earlier base.  First cut was measured on 45513fc7957214dc385b4dffea9a662a0d8b1d1c; the re-cut named five
+            shared faces (`backend/app/main.py`, `backend/app/schemas.py`, `contracts/openapi.yaml`,
+            `frontend/src/app/v8PanelRegistry.tsx`, `frontend/src/generated/api.ts`).
   spec    : frontend/e2e/qoder-ord0464-abort-reason.spec.ts  19406 bytes  git blob cf924f8b764f52996e95e932e35504a6b8ff23fa  335 lines
-  shape   : git diff --shortstat 45513fc7957214dc385b4dffea9a662a0d8b1d1c e778d53f1a88e76df4b3280603d93f1d37bc3cd6  ->  21 files changed, 2388 insertions(+), 6 deletions(-)
+  shape   : git diff --shortstat 4037cb331ea00b83124316d40329762fa1131689 d80d4661d079a8f6439625599d8c05a4afdd6505  ->  21 files changed, 2397 insertions(+), 6 deletions(-)
   export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend (gate.py synced 266 files; the worktree stays source-only)
 
 WHAT ANSWERED
@@ -16,22 +19,22 @@ WHAT ANSWERED
   front   : vite preview on :4192 over D:/moodle/_qoder_q_ord0369_wk\dist_cand -- a built bundle, not `npm run dev`
   proof 1 : scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035: in MY copy=1 versions=9; probe versions=21
   proof 2 : lane_r1 prints "served==disk: True" -- the bytes :4192 serves are the bytes this tree built
-  bundle  : assets/index-CZv-0a3I.js
+  bundle  : assets/index-BqSc5Dj-.js
             this is the generation the arms ran against and the kill table was re-run against; after all
             six mutants were restored byte-for-byte and rebuilt, the same asset name came back and the
             eight arms ran green again
 
 RESULT
   playwright rc = 0
-  stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 20107.539}
-  A1 屏上八项就是契约那八项，机器词面不上屏                                 passed 3255ms
-  A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                         passed 3589ms
-  A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                          passed 1633ms
-  A4 输入框上限就是那扇门真的上限                                      passed 1449ms
-  A5 什么都没勾时，等待的那枚按钮自己说明为什么                               passed 1605ms
-  A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                            passed 1730ms
-  A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                         passed 1388ms
-  A7 手机上这一屏真的点得到：滚进视口、按中心命中                              passed 1545ms
+  stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 7703.0019999999995}
+  A1 屏上八项就是契约那八项，机器词面不上屏                                 passed 938ms
+  A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                         passed 1190ms
+  A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                          passed 826ms
+  A4 输入框上限就是那扇门真的上限                                      passed 835ms
+  A5 什么都没勾时，等待的那枚按钮自己说明为什么                               passed 693ms
+  A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                            passed 909ms
+  A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                         passed 653ms
+  A7 手机上这一屏真的点得到：滚进视口、按中心命中                              passed 699ms
 
 THE ROWS THE ARMS ACTUATED (no response stubbing anywhere in this spec)
   every journey is created through POST /travelers + POST /journeys and binned through the real DELETE
@@ -96,6 +99,28 @@ THE ROWS THE ARMS ACTUATED (no response stubbing anywhere in this spec)
       payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
     ORD-0464 A8            journeys.id=ef4b26e9-fd00-4e6d-b23a-00f0cd5edbc8 journey_outcome_events.rowid=33 occurred_at_actual=2026-09-29T10:48:43.499650+00:00
       payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A2            journeys.id=07a0eb37-cd6d-49b2-9068-d7cae535d5ba journey_outcome_events.rowid=37 occurred_at_actual=2026-09-29T16:37:19.386268+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=a20c3dfa-bd06-44e5-bd23-e3943b041422 journey_outcome_events.rowid=38 occurred_at_actual=2026-09-29T16:37:20.279553+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=0df25cf9-205b-4e2b-a45e-a78588993bec journey_outcome_events.rowid=39 occurred_at_actual=2026-09-29T16:37:20.832592+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=2577c76f-171b-407a-9614-f7800b150ca7 journey_outcome_events.rowid=40 occurred_at_actual=2026-09-29T16:37:22.164640+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A8            journeys.id=961a48ee-43c8-48d8-93af-046c3a753586 journey_outcome_events.rowid=41 occurred_at_actual=2026-09-29T16:37:55.160732+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A3            journeys.id=ce176f71-6571-41c8-82bf-bd6b19a0d927 journey_outcome_events.rowid=42 occurred_at_actual=2026-09-29T16:38:12.464254+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A2            journeys.id=fbf17f07-8950-40e6-9bf7-48dce49aa03f journey_outcome_events.rowid=43 occurred_at_actual=2026-09-29T16:39:50.078108+00:00
+      payload={"codes": ["BUDGET_DOES_NOT_FIT", "DATES_OR_PLACE_CHANGED"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=db9582dc-ae3d-468c-b174-3c48807b2b4b journey_outcome_events.rowid=44 occurred_at_actual=2026-09-29T16:47:57.877070+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=1dabeda6-6b40-454d-8e87-db72f979a4c4 journey_outcome_events.rowid=45 occurred_at_actual=2026-09-29T16:47:58.960177+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=7a0a1032-facd-4978-bfe4-756731c37652 journey_outcome_events.rowid=46 occurred_at_actual=2026-09-29T16:47:59.807325+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=f06cfb27-83a1-4518-bc74-5f3d786d2068 journey_outcome_events.rowid=47 occurred_at_actual=2026-09-29T16:48:01.677689+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
 
 FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE KEPT
   1. the lane's `vite preview` was first started without CITYNEXUS_BACKEND_PORT, so its proxy used the
@@ -112,8 +137,10 @@ FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE 
 
 BACKEND COLLECTION, BOTH SIDES OF THE COMPARISON (verbatim last lines of
 `python -m pytest tests --collect-only -q -p no:randomly`)
-  this tree:  1419 tests collected, 20 errors in 8.66s
-  sparse copy of the base tip:  1406 tests collected, 20 errors in 8.06s
+  this tree, with my module:  1458 tests collected, 20 errors in 4.71s
+  the same command with `--ignore=tests/test_qoder_ord0464_abort_reason_capture.py`:  1445 tests collected, 20 errors in 4.54s
+  (the ignored run is the base's own denominator -- this branch adds no other test file, so the
+   difference is exactly my module)
   the two error file lists have an empty symmetric difference: 20 files, all `tests/test_v18_hermes_*.py`
   generated-client control: regenerating `api.ts` from the BASE contract with the installed
   openapi-typescript 7.13.0 diffed 0 lines against the committed `api.ts` at that same base, so the
