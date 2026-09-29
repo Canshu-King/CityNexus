@@ -28,7 +28,8 @@ NODE = r"C:/Program Files/nodejs/node.exe"
 TSC = os.path.join(NM_SRC, "typescript", "bin", "tsc")
 VITE = os.path.join(NM_SRC, "vite", "bin", "vite.js")
 VENV = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
-BRANCH = "review/Q-ord0455-estimation-ladder-r1"
+BRANCH = "review/Q-ord0455-estimation-ladder-r2"
+R1_BRANCH = "review/Q-ord0455-estimation-ladder-r1"
 R7_BLOB = "cf1f047d53d4848fa16abcd03df34099ec87d90d"
 R7_SHA1_WANTED = "2690a3f7eb0b817a882212854ad906bfc8703e2d"
 SPEC = "frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts"
@@ -322,6 +323,11 @@ if POST:
 PRODUCT = git("rev-list", "--max-count=1", INSTR + "~3") if len(git("rev-list", "--count", BASE + ".." + INSTR).split()) else BASE
 
 MT_PUSH_RC, _MTPO = run(["git", "-C", REPO, "merge-tree", "--write-tree", TIP, PUSHED])
+R1_HEAD = head_of("refs/heads/" + R1_BRANCH)
+R1_FILES = NEW + CHANGED + [SPEC]
+R1_SAME = [f for f in R1_FILES if blob_at(R1_HEAD, f) and blob_at(R1_HEAD, f) == blob_at(PUSHED, f)]
+if R1_HEAD and len(R1_SAME) != len(R1_FILES):
+    bad.append("the frozen r1 and this r2 differ in product bytes: " + json.dumps([f for f in R1_FILES if f not in R1_SAME]))
 SPEC_TS = "frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts"
 PANEL_TS = "frontend/src/features/estimation/EstimationLadderPanel.tsx"
 STAY_TS = "frontend/src/features/stay/StayExplorer.tsx"
@@ -370,6 +376,11 @@ P = ARMS["control_pair"]
 L = []
 A = L.append
 A("### ORD-0455 交付 · 道0370（会话 e4f3490f-a55f-4fcb-b7af-227e41018656）· 估算四级梯：说方法 → 事前警告 → 事后核对 → 给补救 · 2026-09-29 " + NW + "+08")
+A("")
+A("## 0. 为什么这枝叫 -r2")
+A("   `-r1` 的头 " + R1_HEAD + " 我已经推出去了（那时它还和线同线）。之后权威线又走了几批，我把这枝 rebase 到现尖 —— 已发布 ref 冻结，我不覆盖它，所以换新名重交，`-r1` 原样留在那枚 40 位上。" +
+  "两枝之间产品字节 0 差：这 " + str(len(R1_SAME)) + "/" + str(len(R1_FILES)) + " 枚（4 枚新件 + 3 枚改动 + 仪表）在 `-r1` 与本头上 blob 逐枚相同（脚本按 `git rev-parse <rev>:<path>` 断言，不同即拒收）。" +
+  "仪表文件名仍带 `-r1`：文件名不是枝名，改它会让已入账那笔 receipt 的 target 对不上。")
 A("")
 A("## 1. 坐标")
 A("   枝 `refs/heads/" + BRANCH + "`（新名，未覆盖任何已推 ref）；`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/" + BRANCH + "` 现读头 " + PUSHED + " ，`git cat-file -t` = commit 。")
@@ -458,6 +469,7 @@ A("   跑闸：`env -u HTTP_PROXY -u HTTPS_PROXY python review/e4f_e2e_r1.py --w
 A("   读数汇总（含两臂逐档句子、反件、三行退出码、bundle 命中、墙上格子现读）在 `review/q455_estimation_ladder_r1.json`（blob " + ART_BLOB + " ，可 `git cat-file -p` ）。")
 SUPER = [l for l in git("log", "--format=%H %s", BASE + ".." + PUSHED).splitlines()
          if "ORD-0455" in l and not l.startswith(PUSHED)]
+A("")
 A("")
 A("## 10. 这批的迭代留痕（不藏）")
 A("   第一版交付生成器崩在装配账本块那一步：`claim_coordinate_check_r7.py` 的 `--text` 收的是**草稿文件路径**，我把正文塞了进去，尺在 open() 上抛 OSError；同版另有一处未绑定变量。" +
