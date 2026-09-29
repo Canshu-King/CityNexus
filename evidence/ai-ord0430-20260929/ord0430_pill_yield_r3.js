@@ -19,7 +19,7 @@ const OUT = process.argv[3] || "D:/moodle/_qoder_ai_ord0387_20260928/ord0430_r3_
 const ARM = process.argv[4] || "after";
 
 const ENTRY = ["使用封存的演示行程", "Use the sealed demo journey", "sealed demo", "封存演示"];
-const SCREENS = ["twin", "discover", "intelligence"];
+const SCREENS = (process.env.SCREENS_CSV || "twin,discover,intelligence").split(",");
 const READABLE = "h1,h2,h3,h4,h5,p,li,dt,dd,th,td,label,figcaption,summary";
 const ACTIONABLE = 'button, a[href], input, select, textarea, [role="button"]';
 
