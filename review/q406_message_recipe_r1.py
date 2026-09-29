@@ -330,10 +330,10 @@ A("   驱动：`page.goto(\"/v8/nosuchscreen\")`（等 `today-heading` 可见再
 A("   渲染出来的句子（%s 中文臂 / %s 英文臂，run_id=%s verdict=%s）：" % (DICT_ZH, DICT_EN, receipt["run_id"], receipt["verdict"]))
 A("      zh：%r" % A_ZH["verdict"]["text"])
 A("      en：%r" % A_EN["verdict"]["text"])
-A("      两臂同位：box y=%d..%d、最后一条绘制行底边 %d 对 hit_line=%d、中心 %s 命中自己=%s 、role=%s 、visible=%s ；" % (
+A("      两臂同位：box y=%d..%d、最后一条绘制行底边 %d 对 hit_line=%d、中心 %s 命中自己=%s 、role=%s 、visible=%s （逐格数在 %s 的 arms.armA_* 里，枝上 blob %s ）；" % (
     A_ZH["verdict"]["box"]["y"], A_ZH["verdict"]["box"]["bottom"], A_ZH["verdict"]["lastLineBottom"],
     A_ZH["hitLine"], json.dumps(A_ZH["verdict"]["centre"]), A_ZH["verdict"]["centreHitSelf"],
-    A_ZH["verdict"]["role"], A_ZH["verdict"]["visible"]))
+    A_ZH["verdict"]["role"], A_ZH["verdict"]["visible"], ART, ART_BLOB))
 A("      两臂各一句、非属性：中文臂句里含汉字与段名 nosuchscreen，英文臂同（断言在仪表里，%s ）；证据 %s/armA_zh-CN.json 与 armA_en.json 。" % (
         line_of(PUSHED, SPEC, "the sentence has to be painted text, not an attribute"),
         "frontend/review/evidence/qoder-ord0406-recipe"))
@@ -343,9 +343,10 @@ A("   数据条件具名到接口与载荷字段：GET/PUT `/api/v1/travelers/{t
 A("   这一格**不新建进度/勾选状态**：句子由那一次写成功触发，`shell.dismiss`（%s）关掉就不再挂，服务端策略改回去句子也不会自己出现。" % DISMISS_LINE)
 A("      zh：%r" % B_ZH["banner"]["text"])
 A("      en：%r" % B_EN["banner"]["text"])
-A("      同位读数：box y=%d..%d、最后绘制行底边 %d 对 hit_line=%d、中心 %s 命中自己=%s 、role=%s ；两臂各一份证据 armB_zh-CN.json / armB_en.json 。" % (
+A("      同位读数：box y=%d..%d、最后绘制行底边 %d 对 hit_line=%d、中心 %s 命中自己=%s 、role=%s （两臂原始数在 %s 的 arms.armB_* 里，枝上 blob %s ）；" % (
     B_ZH["banner"]["box"]["y"], B_ZH["banner"]["box"]["bottom"], B_ZH["banner"]["lastLineBottom"],
-    B_ZH["hitLine"], json.dumps(B_ZH["banner"]["centre"]), B_ZH["banner"]["centreHitSelf"], B_ZH["banner"]["role"]))
+    B_ZH["hitLine"], json.dumps(B_ZH["banner"]["centre"]), B_ZH["banner"]["centreHitSelf"],
+    B_ZH["banner"]["role"], ART, ART_BLOB))
 A("      这一格必须**先滚进可达带再判命中**：点完那一刻，en 那臂的句子在视口外（box.y=%d 、它在文档里的位置 documentY=%d 、scrollY=%d 、页高=%d px），" % (
     (B_EN.get("before_scroll", {}).get("sentences") or [{}])[0].get("box", {}).get("y", 0),
     (B_EN.get("before_scroll", {}).get("sentences") or [{}])[0].get("documentY", 0),
@@ -359,8 +360,8 @@ A("")
 A("## 配方二 · 反向那一格：一次答不上的读，两处 `.v8-message` 都不渲染（这是缺口不是我的绿）")
 A("   我拿一个库里没有的行程 UUID 直接当地址进 `%s`：后端答 404，体里 `code=NOT_FOUND`、`message_key=resource.not_found`、带 `trace_id` 与 `error_receipt_id`（逐枚在 %s 的 dead_link.responses 里）；" % (
     "/v8/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f", ART))
-A("   屏上读数：`.v8-message` 个数=%d 、`.v8-product-shell` 挂了吗=%s 、body 可视字数=%d —— 也就是这条路径根本没走到能挂横幅的那层。" % (
-    DEAD["message_count"], DEAD["shell_mounted"], DEAD["body_chars"]))
+A("   屏上读数：`.v8-message` 个数=%d 、`.v8-product-shell` 挂了吗=%s 、body 可视字数=%d —— 也就是这条路径根本没走到能挂横幅的那层（那一格原始 responses 在 %s 的 arms.armB_*.dead_link 里，枝上 blob %s ）。" % (
+    DEAD["message_count"], DEAD["shell_mounted"], DEAD["body_chars"], ART, ART_BLOB))
 A("   所以「读失败要说话」这句话现在不在这枚元素里；要它出现在 `.v8-message`，得改的是 shell 的 boot 读路径（在 %s 里），那是热文件、我不在这单里偷改，具名交给号令者。" % V8)
 A("")
 A("## 服务证明：dev 给不了字节等证，静态口给")
@@ -388,7 +389,8 @@ A("## 没改善的部分")
 A("1. site 2 的驱动选了 `activateAutonomy`，它写了策略（PUT 到我私有库 `_cmdr%s.db` 那一代）；我没有找「零写入也能亮横幅」的路径——那要产品先有一条只读失败上屏的通路（见配方二）。" % str(receipt["run_id"]).replace("cmdr", ""))
 A("2. 这些读数都在车道私有栈的 dev 上，手机那一代仍未推；静态口那一段只证「我发出去的就是这些字节」，不证手机上那台。")
 A("3. 仪表里 `armS` 断言的是入口同源 + 差量即注入块，**没有**断言 dev 下字节相等；等相等只在静态口量到，两处分开报。")
-A("4. 我没跑整套 e2e，也没跑号令者手上那把配对尺（不越界），只跑了本单这一支 spec（%d 条）。" % receipt["counts"].get("passed", -1))
+A("4. 我没跑整套 e2e，也没跑号令者手上那把配对尺（不越界），只跑了本单这一支 spec：%s 记 passed=%d 条（日志 %s ；判据行都在 %s 里）。" % (
+    receipt["run_id"], receipt["counts"].get("passed", -1), receipt["log"], SPEC))
 A("5. 本回合我返工三次，收据都留着（同目录同名 .log 可逐枚查）：`%s` 与 `%s` 两轮 arm B 猜「答不上的读会走共享横幅」，实测那一屏 `.v8-message` 个数=%d ，路径不对（那才是配方二）；`%s` 到了现尖之后横幅**渲染了但中心命中为假**——那一轮 zh 臂 box.y=%d（为负，句子在滚动位置之上），判语 `and be hit-testable where it paints`。" % (
     EARLY[0][1], EARLY[1][1], DEAD["message_count"], EARLY[2][1],
     (FAILGEOM.get("armB_zh-CN", {}).get("banner") or {}).get("box", {}).get("y", 0)))
