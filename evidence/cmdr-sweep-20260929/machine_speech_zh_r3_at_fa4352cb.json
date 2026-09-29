@@ -1,0 +1,141 @@
+{
+  "instrument": "cmdr_machine_speech_sweep_r1",
+  "base": "http://127.0.0.1:49701/",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-Bi2rjs95.js"
+  ],
+  "routesWalked": 14,
+  "viewport": "390x844",
+  "allowListForAllCaps": [
+    "UTC",
+    "GMT",
+    "PDF",
+    "ID",
+    "URL",
+    "API",
+    "AI",
+    "GPS",
+    "OSM",
+    "OK",
+    "FAQ",
+    "COPILOT",
+    "COPILOT"
+  ],
+  "routesWithPaintedMachineText": 1,
+  "routes_with_hits": [
+    "/v8/bookings"
+  ],
+  "totalPaintedHits": 2,
+  "distinctTokens": 1,
+  "topTokens": [
+    [
+      "JSON",
+      2
+    ]
+  ],
+  "perRoute": {
+    "/v8/hub": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 674,
+      "kinds": {}
+    },
+    "/v8/live": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 641,
+      "kinds": {}
+    },
+    "/v8/map": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 449,
+      "kinds": {}
+    },
+    "/v8/studio": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 266,
+      "kinds": {}
+    },
+    "/v8/stay": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 146,
+      "kinds": {}
+    },
+    "/v8/discover": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 338,
+      "kinds": {}
+    },
+    "/v8/bookings": {
+      "totalTextNodesScanned": 2,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。",
+          "tag": "p",
+          "cls": "v8-lede"
+        }
+      ],
+      "documentChars": 604,
+      "kinds": {
+        "ALLCAPS_WORD": 2
+      }
+    },
+    "/v8/agent": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 363,
+      "kinds": {}
+    },
+    "/v8/authoritative": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 892,
+      "kinds": {}
+    },
+    "/v8/intelligence": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 375,
+      "kinds": {}
+    },
+    "/v8/twin": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 340,
+      "kinds": {}
+    },
+    "/v8/trash": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 137,
+      "kinds": {}
+    },
+    "/v8/trips": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 400,
+      "kinds": {}
+    },
+    "/v8/me": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 309,
+      "kinds": {}
+    }
+  },
+  "pageErrors": []
+}
