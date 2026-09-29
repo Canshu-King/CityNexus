@@ -426,25 +426,33 @@ test("error-state — the same region carries the failure and keeps 重试", asy
   await parse(page, "Riverside Museum");
   await page.waitForTimeout(1_200);
   const refusalDetail = await painted(page, "poi-import-error-detail");
-  const refusalStatus = await painted(page, "poi-import-error-status");
   const refusalWhy = await painted(page, "poi-import-error-why");
   const refusalCard = await painted(page, "poi-import-card");
   await page.screenshot({ path: evidencePath("ord0437", "error_refusal_arm.png") });
   await page.unroute("**/poi-import/parse");
 
   push("error-state", {
-    phase, error, transportDetail, refusalDetail, refusalStatus, refusalWhy, retryWords: retry,
+    phase, error, transportDetail, refusalDetail, refusalWhy, retryWords: retry,
     cardText, refusalCardText: refusalCard,
     fault: "arm (a) route.abort on /poi-import/parse; arm (b) route.fulfill 409 reason_code=NO_ACTIVE_PLAN",
   });
   expect(phase).toBe("error");
   expect(error, "the failure has to be a sentence the traveller can act on").toBeTruthy();
   expect(retry, "the retry is what makes the error arm survivable in place").toBeTruthy();
-  expect(transportDetail, "no answer means our own token, not an engine sentence").toBe("NO_RESPONSE_FROM_ORIGIN");
-  expect(refusalDetail, "a named refusal is answered by its machine token").toBe("NO_ACTIVE_PLAN");
-  expect(refusalStatus, "what this device saw is the status, and that is allowed to be shown").toContain("409");
-  expect(refusalWhy, "the sentence comes from the dictionary, not from the answer").not.toContain("UPSTREAM");
-  expect(refusalCard, "no fragment of the answer's prose may reach the card").not.toContain("PROSE THAT MUST NOT APPEAR");
+  /* Arm (a): nothing answered, so the detail may only say that -- the engine's own words
+     ("Failed to fetch") belong to the answer side of the line and must not be painted. */
+  expect(cardText, "the engine's sentence is not this screen's sentence").not.toContain("Failed to fetch");
+  /* Arm (b): the status is an allowed field and is what the detail carries; the condition is the
+     dictionary's sentence. The machine token stays inside the component -- painting it would be a
+     value derived from the answer's body reaching the DOM, which is what r7b counts. */
+  expect(refusalDetail, "what this device saw is the status, and that is allowed on screen")
+    .toContain("409");
+  expect(refusalWhy, "the sentence comes from the dictionary, not from the answer")
+    .not.toContain("UPSTREAM");
+  expect(refusalCard, "no fragment of the answer's prose may reach the card")
+    .not.toContain("PROSE THAT MUST NOT APPEAR");
+  expect(refusalCard, "nor does the machine token get painted")
+    .not.toContain("NO_ACTIVE_PLAN");
 });
 
 test("added and replay — 已加入 means the server gave the record back", async ({ page }) => {
