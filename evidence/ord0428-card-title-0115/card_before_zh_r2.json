@@ -1,0 +1,80 @@
+{
+ "order": "ORD-0428",
+ "instrument": "card_reader_r2",
+ "arm": "tip4037_zh",
+ "locale_written_to_storage": "zh-CN",
+ "tabs_aria_label_read": "行程分区",
+ "base_url": "http://localhost:4472",
+ "route_used": "/v8/trips",
+ "tab_clicked": "trips-tab-bookings",
+ "entry_button_used": "使用封存的演示行程",
+ "tabs_found": [
+  {
+   "testid": "trips-tab-itinerary",
+   "text": "行程"
+  },
+  {
+   "testid": "trips-tab-stay",
+   "text": "住宿"
+  },
+  {
+   "testid": "trips-tab-bookings",
+   "text": "预订"
+  },
+  {
+   "testid": "trips-tab-spend",
+   "text": "花费"
+  }
+ ],
+ "wallet_commitment_cards": 1,
+ "cards": [
+  {
+   "index": 0,
+   "h2_text_content": "place-river-cruise",
+   "badge_text_content": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+   "whole_card_text_content": "预订 · 受保护锚点 · 生效中 · 模拟承诺place-river-cruise10月10日 15:30 → 10月10日 16:30¥120.00时间已锁定",
+   "h2_children_count": 0,
+   "place_id_hits_h2": [
+    "place-river-cruise"
+   ],
+   "screaming_hits_h2": [],
+   "place_id_hits_badge": [],
+   "screaming_hits_badge": [],
+   "whole_card_place_id_hits": [
+    "place-river-cruise"
+   ],
+   "whole_card_screaming_hits": [],
+   "h2_attributes": [],
+   "card_attributes": [
+    "class=v8-booking-card",
+    "data-testid=wallet-commitment",
+    "data-simulated=true",
+    "data-monetary-status=KNOWN"
+   ],
+   "place_id_hits_card_outer_html": [
+    "place-river-cruise"
+   ],
+   "place_id_hits_h2_outer_html": [
+    "place-river-cruise"
+   ],
+   "bounding_box": {
+    "x": 17,
+    "y": 1194,
+    "width": 356,
+    "height": 130
+   }
+  }
+ ],
+ "console_errors": [],
+ "verdict": {
+  "any_place_id_in_any_h2": true,
+  "any_screaming_in_any_h2": false,
+  "any_place_id_in_any_badge": false,
+  "any_screaming_in_any_badge": false,
+  "any_place_id_in_any_card_attribute": true
+ },
+ "h2_texts": [
+  "place-river-cruise"
+ ],
+ "screenshot": "card_before_zh_r2.png"
+}
