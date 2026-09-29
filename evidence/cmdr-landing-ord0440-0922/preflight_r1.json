@@ -1,0 +1,572 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T09:22:47+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0440-r2",
+ "candidate_tip": "527f471b6d009d8ef8fead5d32ad455005ac281b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/discovery/PrepAbandonSurvey.tsx",
+   "frontend/src/features/discovery/prepAbandonSurvey.css",
+   "frontend/src/features/discovery/prepAbandonSurveyCopy.ts",
+   "review/n3_0440_copy_pair_check_r1.py",
+   "review/n3_0440_evidence_r1/MERGE_PREDICTION_r1.txt",
+   "review/n3_0440_evidence_r1/_shift_source_reading.txt",
+   "review/n3_0440_evidence_r1/census_r1.json",
+   "review/n3_0440_evidence_r1/census_r2.json",
+   "review/n3_0440_evidence_r1/exposure_mine_r1.json",
+   "review/n3_0440_evidence_r1/exposure_tip_r1.json",
+   "review/n3_0440_evidence_r1/jitter_mine_r1.txt",
+   "review/n3_0440_evidence_r1/jitter_tip_r1.txt",
+   "review/n3_0440_evidence_r1/label_parity_r1.json",
+   "review/n3_0440_evidence_r1/mine2.json",
+   "review/n3_0440_evidence_r1/mutations_r1.json",
+   "review/n3_0440_evidence_r1/mutations_r2.json",
+   "review/n3_0440_evidence_r1/mutations_r3.json",
+   "review/n3_0440_evidence_r1/mutations_r4.json",
+   "review/n3_0440_evidence_r1/mutations_r5.json",
+   "review/n3_0440_evidence_r1/mutations_r6.json",
+   "review/n3_0440_evidence_r1/mutations_r7.json",
+   "review/n3_0440_evidence_r1/mutations_r8.json",
+   "review/n3_0440_evidence_r1/pair_check_after_r1.json",
+   "review/n3_0440_evidence_r1/pair_check_after_r1.txt",
+   "review/n3_0440_evidence_r1/pair_check_after_r2.json",
+   "review/n3_0440_evidence_r1/receipt_anchors_r1.txt",
+   "review/n3_0440_evidence_r1/receipt_anchors_r2.txt",
+   "review/n3_0440_evidence_r1/survey_pair_r1.json",
+   "review/n3_0440_evidence_r1/survey_pair_r2.json",
+   "review/n3_0440_evidence_r1/tip.json",
+   "review/n3_0440_evidence_r1/typecheck_r1.txt",
+   "review/n3_0440_evidence_r1/vite_build_r1.txt",
+   "review/n3_0440_evidence_r1/vite_build_r2.txt",
+   "review/n3_0440_evidence_r1/vite_build_r3.txt",
+   "review/n3_0440_evidence_r1/vite_build_r4.txt",
+   "review/n3_0440_evidence_r1/vite_build_r5.txt",
+   "review/n3_0440_evidence_r1/vite_build_r6.txt",
+   "review/n3_0440_evidence_r1/vite_build_r7.txt",
+   "review/n3_0440_evidence_r1/walk/en_final.png",
+   "review/n3_0440_evidence_r1/walk/en_no_sheet.png",
+   "review/n3_0440_evidence_r1/walk/en_sheet_filled.png",
+   "review/n3_0440_evidence_r1/walk/walk_en.json",
+   "review/n3_0440_evidence_r1/walk/walk_zh.json",
+   "review/n3_0440_evidence_r1/walk/walk_zh_mut_7007ff.json",
+   "review/n3_0440_evidence_r1/walk/walk_zh_mut_a24446.json",
+   "review/n3_0440_evidence_r1/walk/walk_zh_mut_a3627c.json",
+   "review/n3_0440_evidence_r1/walk/zh_final.png",
+   "review/n3_0440_evidence_r1/walk/zh_mut_7007ff_final.png",
+   "review/n3_0440_evidence_r1/walk/zh_mut_7007ff_sheet_filled.png",
+   "review/n3_0440_evidence_r1/walk/zh_mut_a24446_final.png",
+   "review/n3_0440_evidence_r1/walk/zh_mut_a24446_sheet_filled.png",
+   "review/n3_0440_evidence_r1/walk/zh_mut_a3627c_no_sheet.png",
+   "review/n3_0440_evidence_r1/walk/zh_no_sheet.png",
+   "review/n3_0440_evidence_r1/walk/zh_sheet_filled.png",
+   "review/ord0440/_jitter_who.cjs",
+   "review/ord0440/_shift_source_probe.cjs",
+   "review/ord0440/_stability_probe.cjs",
+   "review/ord0440/mutations_r1.py",
+   "review/ord0440/ord0440_destructive_census_r1.py",
+   "review/ord0440/receipt_anchors_r1.py",
+   "review/ord0440/survey_pair_check_r1.py",
+   "review/ord0440/walk_r1.cjs"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/discovery/PrepAbandonSurvey.tsx",
+   "frontend/src/features/discovery/prepAbandonSurvey.css",
+   "frontend/src/features/discovery/prepAbandonSurveyCopy.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "280c5b9840a132875c61425677b7ccf294ef98d3",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_092200",
+  "blob_equality": [
+   {
+    "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "candidate_blob": "925d36d805692dd436a50f3e29dcc04eacb53fa3",
+    "export_blob": "925d36d805692dd436a50f3e29dcc04eacb53fa3",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/discovery/PrepAbandonSurvey.tsx",
+    "candidate_blob": "7ef8da6196ce10916f3256a88373c4aa6bc639aa",
+    "export_blob": "7ef8da6196ce10916f3256a88373c4aa6bc639aa",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "candidate_blob": "1b42a9b3f6d3f4231c947a598201e695e76d54dc",
+    "export_blob": "1b42a9b3f6d3f4231c947a598201e695e76d54dc",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/discovery/prepAbandonSurveyCopy.ts",
+    "candidate_blob": "b6cc4d997f622b6414e5c6319132859fe5a15a77",
+    "export_blob": "b6cc4d997f622b6414e5c6319132859fe5a15a77",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_copy_pair_check_r1.py",
+    "candidate_blob": "f5e9ddc6d9c6c1a45cf55179a82d657bdab6dd45",
+    "export_blob": "f5e9ddc6d9c6c1a45cf55179a82d657bdab6dd45",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/MERGE_PREDICTION_r1.txt",
+    "candidate_blob": "ab11ee15452d91c793e79c683d8f3d08601d2a4b",
+    "export_blob": "ab11ee15452d91c793e79c683d8f3d08601d2a4b",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/_shift_source_reading.txt",
+    "candidate_blob": "d54eb3bfa9d15934da4a3056c0ef530ad7d65222",
+    "export_blob": "d54eb3bfa9d15934da4a3056c0ef530ad7d65222",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/census_r1.json",
+    "candidate_blob": "2385641a7552331306425caf30f3846e6d892447",
+    "export_blob": "2385641a7552331306425caf30f3846e6d892447",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/census_r2.json",
+    "candidate_blob": "5476ba51d8ae7983af2b643be2cbb8cec6317196",
+    "export_blob": "5476ba51d8ae7983af2b643be2cbb8cec6317196",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/exposure_mine_r1.json",
+    "candidate_blob": "d74ca56422ca1fbcd15bcd19c15d91d8605e7932",
+    "export_blob": "d74ca56422ca1fbcd15bcd19c15d91d8605e7932",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/exposure_tip_r1.json",
+    "candidate_blob": "ae5ff01c0d32bf82d536db820911cf9636ac55ea",
+    "export_blob": "ae5ff01c0d32bf82d536db820911cf9636ac55ea",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/jitter_mine_r1.txt",
+    "candidate_blob": "7510247af22e55350d4c461380948345cb153741",
+    "export_blob": "7510247af22e55350d4c461380948345cb153741",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/jitter_tip_r1.txt",
+    "candidate_blob": "523d28b04838bc467c071fc5f6d3f40a829bb152",
+    "export_blob": "523d28b04838bc467c071fc5f6d3f40a829bb152",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/label_parity_r1.json",
+    "candidate_blob": "1d6b0aaa171fdd94269abe52c565dd7e2e6a848d",
+    "export_blob": "1d6b0aaa171fdd94269abe52c565dd7e2e6a848d",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mine2.json",
+    "candidate_blob": "d74ca56422ca1fbcd15bcd19c15d91d8605e7932",
+    "export_blob": "d74ca56422ca1fbcd15bcd19c15d91d8605e7932",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r1.json",
+    "candidate_blob": "5600ed0160736772ac41003df2911455590015ca",
+    "export_blob": "5600ed0160736772ac41003df2911455590015ca",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r2.json",
+    "candidate_blob": "a8ac0b3ca5ccf5afd424668472ca524ae07197c1",
+    "export_blob": "a8ac0b3ca5ccf5afd424668472ca524ae07197c1",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r3.json",
+    "candidate_blob": "9cd1b37030aa5ac8fdc83666e63504f798e73547",
+    "export_blob": "9cd1b37030aa5ac8fdc83666e63504f798e73547",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r4.json",
+    "candidate_blob": "8ad77964e3e61d529dee102eccb1d1c35a7e87f6",
+    "export_blob": "8ad77964e3e61d529dee102eccb1d1c35a7e87f6",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r5.json",
+    "candidate_blob": "651be6e9e6fbc0860fd258a7bcf71d21dd9336e3",
+    "export_blob": "651be6e9e6fbc0860fd258a7bcf71d21dd9336e3",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r6.json",
+    "candidate_blob": "7c4c145cdf92398d49f1de70a89f590f0e70e170",
+    "export_blob": "7c4c145cdf92398d49f1de70a89f590f0e70e170",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r7.json",
+    "candidate_blob": "ae342baf18fe1fca72382ef6e4ee530ad10b411f",
+    "export_blob": "ae342baf18fe1fca72382ef6e4ee530ad10b411f",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/mutations_r8.json",
+    "candidate_blob": "70430c5925ea60a8b4b9e6193f46fe249a663272",
+    "export_blob": "70430c5925ea60a8b4b9e6193f46fe249a663272",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/pair_check_after_r1.json",
+    "candidate_blob": "b2edf0acf0aa8f0fabe85ec4048755d992f62723",
+    "export_blob": "b2edf0acf0aa8f0fabe85ec4048755d992f62723",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/pair_check_after_r1.txt",
+    "candidate_blob": "005fdadd4a221cd38b8a8482d249264e588878f8",
+    "export_blob": "005fdadd4a221cd38b8a8482d249264e588878f8",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/pair_check_after_r2.json",
+    "candidate_blob": "8b6fb26a28ba5a3aa2a09e1945a7741a8d652b16",
+    "export_blob": "8b6fb26a28ba5a3aa2a09e1945a7741a8d652b16",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/receipt_anchors_r1.txt",
+    "candidate_blob": "d2d6c8df95474b09abd295876c05cad740e14251",
+    "export_blob": "d2d6c8df95474b09abd295876c05cad740e14251",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/receipt_anchors_r2.txt",
+    "candidate_blob": "24427adecd6f040f312b512d72e6e637e7a9504d",
+    "export_blob": "24427adecd6f040f312b512d72e6e637e7a9504d",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/survey_pair_r1.json",
+    "candidate_blob": "4d4760a9cede2696881142cf552b257aafdf792d",
+    "export_blob": "4d4760a9cede2696881142cf552b257aafdf792d",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/survey_pair_r2.json",
+    "candidate_blob": "79c79818f73ad0ab2169eeb62cc4eaa98c57f8b9",
+    "export_blob": "79c79818f73ad0ab2169eeb62cc4eaa98c57f8b9",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/tip.json",
+    "candidate_blob": "ae5ff01c0d32bf82d536db820911cf9636ac55ea",
+    "export_blob": "ae5ff01c0d32bf82d536db820911cf9636ac55ea",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/typecheck_r1.txt",
+    "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "export_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r1.txt",
+    "candidate_blob": "0aad5166c2d8d581b36733dcc784cec7dba99be2",
+    "export_blob": "0aad5166c2d8d581b36733dcc784cec7dba99be2",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r2.txt",
+    "candidate_blob": "d72d0a5a0350720d193856f1c24360206a4e0748",
+    "export_blob": "d72d0a5a0350720d193856f1c24360206a4e0748",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r3.txt",
+    "candidate_blob": "97bdf23e5704725b06d322b7cf61ff91499e2fc3",
+    "export_blob": "97bdf23e5704725b06d322b7cf61ff91499e2fc3",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r4.txt",
+    "candidate_blob": "8661f0402051a328e3cf2f5e35d83dca0aee1976",
+    "export_blob": "8661f0402051a328e3cf2f5e35d83dca0aee1976",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r5.txt",
+    "candidate_blob": "4ffce1c7db56724d2ac229c4eec07e1281596974",
+    "export_blob": "4ffce1c7db56724d2ac229c4eec07e1281596974",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r6.txt",
+    "candidate_blob": "791555f8e6ec0300d1501497e2ddc0387f7193c8",
+    "export_blob": "791555f8e6ec0300d1501497e2ddc0387f7193c8",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/vite_build_r7.txt",
+    "candidate_blob": "04e3a9d37b59f9c8a954d09903b243da67fb6551",
+    "export_blob": "04e3a9d37b59f9c8a954d09903b243da67fb6551",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/en_final.png",
+    "candidate_blob": "86e50cd593fcc89902c10a6b4e504074f02df3db",
+    "export_blob": "86e50cd593fcc89902c10a6b4e504074f02df3db",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/en_no_sheet.png",
+    "candidate_blob": "b5f8f913ac02a13995025c65c284e37144bdd078",
+    "export_blob": "b5f8f913ac02a13995025c65c284e37144bdd078",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/en_sheet_filled.png",
+    "candidate_blob": "e801bbcd499b27b76e2f5d5e4080dd43466362cc",
+    "export_blob": "e801bbcd499b27b76e2f5d5e4080dd43466362cc",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/walk_en.json",
+    "candidate_blob": "8f3cc4fdd51f31d312e8bdae533a472b26c6b5b7",
+    "export_blob": "8f3cc4fdd51f31d312e8bdae533a472b26c6b5b7",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/walk_zh.json",
+    "candidate_blob": "0b412d2a7b00a9039f95001e18aec602c26465d2",
+    "export_blob": "0b412d2a7b00a9039f95001e18aec602c26465d2",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/walk_zh_mut_7007ff.json",
+    "candidate_blob": "11583da66826fe9861638cc429e4bfef44b4dac7",
+    "export_blob": "11583da66826fe9861638cc429e4bfef44b4dac7",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/walk_zh_mut_a24446.json",
+    "candidate_blob": "b61f0f48fe096c5b38a51e0f3c1d6ca5c096e1b0",
+    "export_blob": "b61f0f48fe096c5b38a51e0f3c1d6ca5c096e1b0",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/walk_zh_mut_a3627c.json",
+    "candidate_blob": "96ea94ae8950fa602ce3123189929c1854067895",
+    "export_blob": "96ea94ae8950fa602ce3123189929c1854067895",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_final.png",
+    "candidate_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "export_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_mut_7007ff_final.png",
+    "candidate_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "export_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_mut_7007ff_sheet_filled.png",
+    "candidate_blob": "7715b63c19762901e4297c0adbfde8ad8dd89239",
+    "export_blob": "7715b63c19762901e4297c0adbfde8ad8dd89239",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_mut_a24446_final.png",
+    "candidate_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "export_blob": "10e59bbc9c035e31756f56e71563387146faeb99",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_mut_a24446_sheet_filled.png",
+    "candidate_blob": "4c2742e8ea20d577f52956ce55db5541b2c47d9c",
+    "export_blob": "4c2742e8ea20d577f52956ce55db5541b2c47d9c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_mut_a3627c_no_sheet.png",
+    "candidate_blob": "5c245ee05023a1f9b20fed71794fabcd03993aa1",
+    "export_blob": "5c245ee05023a1f9b20fed71794fabcd03993aa1",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_no_sheet.png",
+    "candidate_blob": "ac71ed68b324bc215a6643514727954fa600d26f",
+    "export_blob": "ac71ed68b324bc215a6643514727954fa600d26f",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0440_evidence_r1/walk/zh_sheet_filled.png",
+    "candidate_blob": "4c2742e8ea20d577f52956ce55db5541b2c47d9c",
+    "export_blob": "4c2742e8ea20d577f52956ce55db5541b2c47d9c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/_jitter_who.cjs",
+    "candidate_blob": "140f8d6cdf9e2ed93abe6bd9626f0dcb382db956",
+    "export_blob": "140f8d6cdf9e2ed93abe6bd9626f0dcb382db956",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/_shift_source_probe.cjs",
+    "candidate_blob": "55d68f7f32e84af45d8b46f25cdcfd9db0b4fa38",
+    "export_blob": "55d68f7f32e84af45d8b46f25cdcfd9db0b4fa38",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/_stability_probe.cjs",
+    "candidate_blob": "75e0dd4dbab7d7b424eb5e1570c99f6f0e127e27",
+    "export_blob": "75e0dd4dbab7d7b424eb5e1570c99f6f0e127e27",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/mutations_r1.py",
+    "candidate_blob": "1a1b63104e61228503a721c75f6543afec0d619f",
+    "export_blob": "1a1b63104e61228503a721c75f6543afec0d619f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/ord0440_destructive_census_r1.py",
+    "candidate_blob": "54560811623d307901c6ee33c461eec3156caa02",
+    "export_blob": "54560811623d307901c6ee33c461eec3156caa02",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/receipt_anchors_r1.py",
+    "candidate_blob": "e918e23c8e58e68ad7678216281b807abd2fcaa3",
+    "export_blob": "e918e23c8e58e68ad7678216281b807abd2fcaa3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/survey_pair_check_r1.py",
+    "candidate_blob": "491f29cd60d1822d6fa3766c94a91123f073ef10",
+    "export_blob": "491f29cd60d1822d6fa3766c94a91123f073ef10",
+    "equal": true
+   },
+   {
+    "path": "review/ord0440/walk_r1.cjs",
+    "candidate_blob": "bc1270112e422c15d9eb35df303aad80649d4cb8",
+    "export_blob": "bc1270112e422c15d9eb35df303aad80649d4cb8",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1440,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1440 tests collected in 8.06s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 4,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 3,
+   "removed": [
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM"
+   ],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-R6JYnSC-.js",
+    "/assets/index-B4q9no4B.css"
+   ],
+   "live_tree": "280c5b9840a132875c61425677b7ccf294ef98d3",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_527f471_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "527f471b6d009d8ef8fead5d32ad455005ac281b",
+  "branches_route": "527f471b6d009d8ef8fead5d32ad455005ac281b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
