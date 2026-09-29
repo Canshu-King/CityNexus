@@ -1772,7 +1772,6 @@ export interface paths {
         };
         get: operations["listJourneyOutcomes"];
         put?: never;
-        /** @description ORD-0464 boundary, stated rather than implied: `JOURNEY_DELETED` is not one of the tokens this door accepts.  The fact of a binning is written by `DELETE /journeys/{journey_id}` alone, so a client cannot file a deletion -- or a reason for one -- without deleting anything. */
         post: operations["recordJourneyOutcome"];
         delete?: never;
         options?: never;
@@ -2662,6 +2661,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * @description ORD-0467. The named rejection codes this product answers with, as one closed vocabulary. Each is raised by name in the doors listed below and reaches a client as the first token of the error detail (`CODE` or `CODE: argument`), which is why `frontend/src/features/pending/pendingPlaceWrites.ts` and `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` match on it rather than reading a structured field -- they read what the server actually sent. Emission sites, read from this tree: . The credential gate (backend/app/security/credential_literals.py) may exempt a literal only when it is byte-identical to one of these members; a value shaped like a provider key is never exempted by contract membership.
+         * @enum {string}
+         */
+        V13NamedRejection: "V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW" | "V13_AUTHORITATIVE_BOUNDED_MULTIDAY" | "V13_C4_ANCHOR_NOT_IN_INPUT" | "V13_C4_ANCHOR_OUTSIDE_JOURNEY" | "V13_CHECK_OUT_DEPARTURE_BUFFER" | "V13_COMMITMENT_ANCHOR_DAY_CONFLICT" | "V13_COMMITMENT_ANCHOR_TOO_EARLY" | "V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER" | "V13_COMMITMENT_OUTSIDE_OPENING_HOURS" | "V13_DAY_TRIP_CANNOT_SELECT_STAY" | "V13_DISCOVERY_COMPOSE_EMPTY" | "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET" | "V13_DISCOVERY_NO_FEASIBLE_PLAN" | "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR" | "V13_INVALID_ANCHOR_WINDOW" | "V13_INVALID_C4_ANCHOR_TIME" | "V13_JOURNEY_DAYS_OUT_OF_BOUNDS" | "V13_STAY_CANDIDATE_UNAVAILABLE" | "V13_STAY_CHECK_IN_OUTSIDE_JOURNEY";
         /** @enum {string} */
         PlanningMode: "balanced" | "budget" | "explore" | "strict_schedule";
         HealthResponse: {
@@ -2943,6 +2947,11 @@ export interface components {
             codes: components["schemas"]["JourneyAbortCode"][];
             note: string | null;
         };
+        /**
+         * @description ORD-0464, stated here so this order's contract additions stay one contiguous block instead of three scattered hunks in a file two other lanes are editing tonight: `JOURNEY_DELETED` is written by `DELETE /journeys/{journey_id}` and by nothing else.  `POST /journeys/{journey_id}/outcomes` does not accept the token -- its `event_type` Literal in `app/schemas.py` omits it -- so a client cannot file the fact of a binning, or a reason for one, without binning anything.  The outcomes door's own request body is still the pre-existing `{type: object}` on the line above this block; widening that is not this order's to do, and the guard is pinned by `backend/tests/test_qoder_ord0464_abort_reason_capture.py::test_r10_the_generic_outcomes_door_cannot_file_a_deletion`.
+         * @enum {string}
+         */
+        JourneyAbortBoundary: "JOURNEY_DELETED";
         JourneyCreate: {
             /** Format: uuid */
             traveler_id: string;
