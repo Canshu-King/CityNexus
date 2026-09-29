@@ -240,6 +240,53 @@ def test_leaving_needs_no_permission_but_does_need_a_membership() -> None:
     assert listed[0]["member_state"] == "MEMBER_WITHDRAWN"
 
 
+def test_an_expiry_already_spent_is_refused_for_a_membership_too() -> None:
+    """ORD-0460's shape, applied to the member door: refused at the write, and nothing stored.
+
+    The grant door stopped minting dead tokens; a membership was left answering the same way -- 201
+    with a row that `_member_state` immediately called `MEMBER_LAPSED`.  Both doors now read one
+    verdict (`_expiry_verdict`), so the boundary ("exactly now") sits on the refused side here too.
+    """
+    journey_id, _owner = _journey()
+    past = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+    refused = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": _traveler(), "role": "COLLABORATOR", "invited_by": "ord0461",
+              "expires_at": past},
+    )
+    assert _reason(refused.json()) == "MEMBER_EXPIRY_IN_PAST", refused.text[:200]
+    assert refused.status_code == 422, refused.text[:200]
+    assert client.get(MEMBER_PATH.format(journey_id=journey_id)).json() == [], (
+        "a refused membership must not leave a row behind"
+    )
+
+    boundary = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": _traveler(), "role": "COLLABORATOR", "invited_by": "ord0461",
+              "expires_at": datetime.now(timezone.utc).isoformat()},
+    )
+    assert _reason(boundary.json()) == "MEMBER_EXPIRY_IN_PAST", boundary.text[:200]
+
+    future = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    accepted = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": _traveler(), "role": "COLLABORATOR", "invited_by": "ord0461",
+              "expires_at": future},
+    )
+    assert _reason(accepted.json()) is None, accepted.text[:200]
+    assert accepted.status_code == 201, accepted.text[:200]
+    assert accepted.json()["member_state"] == "MEMBER_IN_FORCE", accepted.json()
+
+    no_offset = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": _traveler(), "role": "COLLABORATOR", "invited_by": "ord0461",
+              "expires_at": "2030-01-01T00:00:00"},
+    )
+    assert _reason(no_offset.json()) == "MEMBER_EXPIRY_NO_OFFSET", (
+        "the refusal that already worked keeps its own name"
+    )
+
+
 def test_an_unknown_member_id_keeps_its_own_name_apart_from_every_refusal_above() -> None:
     journey_id, owner = _journey()
     answer = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id="no-such-row"),

@@ -158,12 +158,19 @@ def test_a_grant_without_an_expiry_is_still_accepted_and_reads() -> None:
 
 
 def test_the_new_name_is_not_already_used_for_something_else() -> None:
-    """The naming rule this lane works under: a code is added, never overloaded."""
+    """The naming rule this lane works under: a code is added, never overloaded.
+
+    The sentence this arm first wrote -- "no other occurrence of `EXPIRY_IN_PAST`" -- stopped being
+    true the moment ORD-0461 gave the member door its own sibling refusal, so it is re-expressed as
+    what it meant: each name has exactly one emitter, and the only occurrences of the suffix are the
+    two prefixed door names.  A bare `EXPIRY_IN_PAST`, or a third door borrowing it, still fails.
+    """
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[2]
     text = (root / "backend/app/main.py").read_text(encoding="utf-8")
-    assert text.count('"SHARE_GRANT_EXPIRY_IN_PAST"') == 1, "one emitter, at the write door"
-    assert "EXPIRY_IN_PAST" not in text.replace("SHARE_GRANT_EXPIRY_IN_PAST", ""), (
-        "the new name must not borrow an existing one"
-    )
+    assert text.count('"SHARE_GRANT_EXPIRY_IN_PAST"') == 1, "one emitter, at the grant write door"
+    assert text.count('"MEMBER_EXPIRY_IN_PAST"') == 1, "one emitter, at the member write door"
+    leftover = text.replace("SHARE_GRANT_EXPIRY_IN_PAST", "").replace("MEMBER_EXPIRY_IN_PAST", "")
+    assert "EXPIRY_IN_PAST" not in leftover, "no third name may borrow the suffix"
+    assert '"EXPIRY_IN_PAST"' not in text, "the suffix never stands alone as a code"

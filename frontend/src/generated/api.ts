@@ -519,7 +519,7 @@ export interface paths {
         /** @description The whole set, withdrawn rows included and carrying `removed_at`: a screen has to be able to say someone was in and is out without inferring it from an absence. */
         get: operations["listJourneyMembers"];
         put?: never;
-        /** @description ORD-0434 step 2: one member set per journey.  The store holds the single-set promise as a unique index on (journey_id, traveler_id), so a second invitation to the same traveller is refused by name instead of quietly listing them twice.  `expires_at` follows the grant rule: no offset means no instant stored.  ORD-0461 adds the ceiling: a journey holds at most 12 in-force memberships (`JOURNEY_MEMBER_CAP` in `backend/app/main.py`), and the refusal repeats that number in `error.details.cap` so no screen ever counts rows to find a limit. */
+        /** @description ORD-0434 step 2: one member set per journey.  The store holds the single-set promise as a unique index on (journey_id, traveler_id), so a second invitation to the same traveller is refused by name instead of quietly listing them twice.  `expires_at` follows the grant rule: no offset means no instant stored.  ORD-0461 adds the ceiling: a journey holds at most 12 in-force memberships (`JOURNEY_MEMBER_CAP` in `backend/app/main.py`), and the refusal repeats that number in `error.details.cap` so no screen ever counts rows to find a limit. An `expires_at` the server already reads as spent is refused too (`MEMBER_EXPIRY_IN_PAST`), by the same comparison the read path applies - an instant equal to "now" is on the refused side - so a membership can never be stored born lapsed. */
         post: operations["addJourneyMember"];
         delete?: never;
         options?: never;
@@ -4780,7 +4780,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET */
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET / MEMBER_EXPIRY_IN_PAST */
             422: {
                 headers: {
                     [name: string]: unknown;

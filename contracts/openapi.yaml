@@ -687,6 +687,9 @@ paths:
         no offset means no instant stored.  ORD-0461 adds the ceiling: a journey holds at most
         12 in-force memberships (`JOURNEY_MEMBER_CAP` in `backend/app/main.py`), and the refusal
         repeats that number in `error.details.cap` so no screen ever counts rows to find a limit.
+        An `expires_at` the server already reads as spent is refused too
+        (`MEMBER_EXPIRY_IN_PAST`), by the same comparison the read path applies - an instant equal to
+        "now" is on the refused side - so a membership can never be stored born lapsed.
       requestBody:
         required: true
         content:
@@ -709,7 +712,7 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
         '422':
-          description: "error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET"
+          description: "error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET / MEMBER_EXPIRY_IN_PAST"
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}

@@ -35,7 +35,7 @@ from uuid import uuid4
 import yaml
 from fastapi.testclient import TestClient
 
-from app.db.models import Journey, JourneyShareGrant, Traveler
+from app.db.models import Journey, JourneyMember, JourneyShareGrant, Traveler
 from app.db.session import SessionLocal
 from app.main import app
 
@@ -320,6 +320,32 @@ BIN_PATH = "/api/v1/recycle-bin/journeys"
 OWNER_BIN_PATH = "/api/v1/travelers/{traveler_id}/recycle-bin/journeys"
 
 
+def _store_aged_member(journey_id: str, traveler_id: str, expires_at: str) -> dict:
+    """Put a membership row in the store whose deadline has already gone by.
+
+    ORD-0461 made the member door refuse an `expires_at` it would read as already spent -- the same
+    born-dead shape ORD-0460 closed for grants.  So a lapsed membership has to be produced the way it
+    happens for a traveller: invited with the deadline in front of them, then aged past it.
+    """
+    stamp = datetime.now(timezone.utc).isoformat()
+    member = JourneyMember(
+        id=str(uuid4()),
+        journey_id=journey_id,
+        traveler_id=traveler_id,
+        role="COLLABORATOR",
+        invited_by="lane-rel",
+        expires_at=expires_at,
+        joined_at=stamp,
+        removed_at=None,
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    with SessionLocal() as session:
+        session.add(member)
+        session.commit()
+    return {"traveler_id": traveler_id, "expires_at": expires_at}
+
+
 def _add_member(journey_id: str, traveler_id: str, role: str = "COLLABORATOR",
                 expires_at: str | None = None) -> dict:
     response = client.post(
@@ -393,11 +419,12 @@ def test_an_in_force_member_reads_an_invitees_only_grant() -> None:
     assert ok.status_code == 200, ok.text
     assert ok.json()["id"] == journey_id
 
-    lapsed = _add_member(journey_id, _traveler(), "COLLABORATOR",
-                         expires_at=(datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat())
-    assert lapsed["member_state"] == "MEMBER_LAPSED"
+    lapsed_traveler = _traveler()
+    _store_aged_member(journey_id, lapsed_traveler,
+                       (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat())
+    assert client.get(MEMBER_PATH.format(journey_id=journey_id)).json()[1]["member_state"] == "MEMBER_LAPSED"
     assert _reason(client.get(TOKEN_PATH.format(token=grant["token"]),
-                              params={"member": lapsed["traveler_id"]}).json()) == (
+                              params={"member": lapsed_traveler}).json()) == (
         "SHARE_GRANT_NOT_A_MEMBER"
     ), "a lapsed membership must not read"
 
