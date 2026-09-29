@@ -36,8 +36,23 @@ WORK = pathlib.Path("D:/moodle/_qoder_ord0436_build")
 DIST = WORK / "frontend" / "dist"
 OUT = REPO / "review" / "ord0436-access"
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
-BACKEND_PORT = 4731
-FRONTEND_PORT = 4802
+def free_port() -> int:
+    """Ask the operating system for a port nobody is holding.
+
+    Hard-coded ports were wrong twice over on the run that produced this: another lane's
+    `uvicorn --port 4802` was already listening, so this lane's `vite preview --strictPort` exited
+    without binding, and the reading then spent twenty seconds waiting for a panel from a backend
+    that serves no HTML at all. A free port plus the identity proof below is the pair that works.
+    """
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return int(sock.getsockname()[1])
+
+
+BACKEND_PORT = free_port()
+FRONTEND_PORT = free_port()
 DB = pathlib.Path("D:/moodle/_qoder_ord0436_stack/cnx.db")
 FORBIDDEN_STORES = ("_preview.db", "_live.db")
 
@@ -286,6 +301,9 @@ def main() -> None:
         assert report["backend_identity"]["command_names_this_app_and_port"], report["backend_identity"]
         assert not report["backend_identity"]["shared_stores_named_by_this_run"]
 
+        import httpx
+
+        httpx_client = httpx.Client(base_url=f"http://127.0.0.1:{FRONTEND_PORT}", trust_env=False, timeout=30)
         seeded = seed("")
         report["seed"] = seeded
 
@@ -300,6 +318,26 @@ def main() -> None:
             stderr=subprocess.STDOUT,
         )
         assert wait_for_port(FRONTEND_PORT, 90.0), "vite preview never took its port"
+        front_pid = listener_pid(FRONTEND_PORT)
+        front_info = process_info(front_pid) if front_pid else {}
+        front_command = str(front_info.get("CommandLine", ""))
+        report["frontend_identity"] = {
+            "listener_pid": front_pid,
+            "listener_is_spawned_or_its_child": front_pid == frontend.pid
+            or front_info.get("ParentProcessId") == frontend.pid,
+            "listener_command": front_command[:200],
+            "command_names_preview_and_this_port": "preview" in front_command and f"--port {FRONTEND_PORT}" in front_command,
+        }
+        assert report["frontend_identity"]["listener_is_spawned_or_its_child"], report["frontend_identity"]
+        assert report["frontend_identity"]["command_names_preview_and_this_port"], report["frontend_identity"]
+        # The bytes it serves have to be the bytes this lane built: a different tree's preview on a
+        # recycled port would otherwise be reported as this screen.
+        entry = sorted((DIST / "assets").glob("index-*.js"))
+        served = httpx_client.get("/" + str(entry[-1].relative_to(DIST)).replace("\\", "/"))
+        report["frontend_identity"]["served_entry"] = entry[-1].name
+        report["frontend_identity"]["served_matches_disk_bytes"] = served.content == entry[-1].read_bytes()
+        report["frontend_identity"]["served_bytes"] = len(served.content)
+        assert report["frontend_identity"]["served_matches_disk_bytes"], report["frontend_identity"]
         # Node resolves a bare package name from the importing file's own directory upward, so the
         # reader has to sit next to the tree that has `node_modules`; running it out of the repo's
         # `live_checks/` gave `Cannot find package 'playwright'` with nothing else wrong.
@@ -380,6 +418,10 @@ def main() -> None:
             print(f"{check['verdict']:5s} {check['name']} :: {str(check['detail'])[:150]}")
         print("all_pass:", (report.get("reading") or {}).get("all_pass"), "| readout:", OUT / "TWO_ARMS_R1.json")
     finally:
+        try:
+            httpx_client.close()
+        except Exception:
+            pass
         for process in (frontend, backend):
             if process is None:
                 continue
