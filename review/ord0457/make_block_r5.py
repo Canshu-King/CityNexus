@@ -68,12 +68,16 @@ def main() -> int:
     prev = cat40(git("rev-parse", "4efe7efb70ac4e08471da9bd5153f178348e4db9"))
     named_base = cat40(git("rev-parse", "b2abd99b9e07c77e565f9cbdbd3875fcc733697b"))
 
+    # each order's bytes live on its own branch: 0457 on HEAD here, 0440 on the exposure-cells ref
+    my_ref = {"0457": "HEAD", "0440": tip_0440}
     landed = {}
     for order, paths in FILES.items():
         for p in paths:
-            landed[p] = {"tip_blob": cat40(git("rev-parse", f"{tip}:{p}")), "my_blob": blob(p)}
-        for k, v in landed.items():
-            v["byte_equal"] = v["tip_blob"] == v["my_blob"]
+            landed[p] = {"tip_blob": cat40(git("rev-parse", f"{tip}:{p}")),
+                         "my_blob": cat40(git("rev-parse", f"{my_ref[order]}:{p}")),
+                         "my_ref": my_ref[order]}
+    for v in landed.values():
+        v["byte_equal"] = v["tip_blob"] == v["my_blob"]
 
     v8_tip_text = git("cat-file", "blob", f"{tip}:frontend/src/app/V8Experience.tsx")
     marker_hits = {m: len(re.findall(re.escape(m), v8_tip_text)) for m in MARKERS}
