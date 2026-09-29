@@ -1,0 +1,48 @@
+{
+ "tool_blob_note": "the tool is read from its working-tree path; its blob is published separately",
+ "candidate_edit": {
+  "deleted_line": 64,
+  "file": "styles.css",
+  "removed_rule_starts": ".family-chip {",
+  "selected_rule_still_present": true
+ },
+ "tip_absolute": {
+  "exit": 1,
+  "finding": "[MET      ] STATE_PAIR               14 stylesheet(s) read, 7 on-state cell(s): 7 paired, 0 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 614 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active",
+  "unpaired_rows": [],
+  "tail": "exit=1"
+ },
+ "cand_absolute": {
+  "exit": 1,
+  "finding": "[VIOLATION] STATE_PAIR               14 stylesheet(s) read, 7 on-state cell(s): 6 paired, 1 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 613 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active",
+  "unpaired_rows": [],
+  "tail": "exit=1"
+ },
+ "cand_growth_vs_tip": {
+  "exit": 1,
+  "finding": "[VIOLATION] STATE_PAIR               14 stylesheet(s) read, 7 on-state cell(s): 6 paired, 1 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 613 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active; growth mode against D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0454\\_tip\\frontend\\src: that tree already carries 0 unpaired cell(s), this one adds 1 new",
+  "unpaired_rows": [],
+  "tail": "exit=1"
+ },
+ "tip_growth_vs_itself": {
+  "exit": 1,
+  "finding": "[MET      ] STATE_PAIR               14 stylesheet(s) read, 7 on-state cell(s): 7 paired, 0 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 614 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active; growth mode against D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0454\\_tip\\frontend\\src: that tree already carries 0 unpaired cell(s), this one adds 0 new",
+  "unpaired_rows": [],
+  "tail": "exit=1"
+ },
+ "cand_listing_unpaired_rows": [
+  "     [UNPAIRED] styles.css:63 .family-chip.selected  state .selected on base .family-chip  twin: NONE"
+ ],
+ "verdicts": {
+  "tip_absolute": "MET",
+  "cand_absolute": "VIOLATION",
+  "cand_growth_vs_tip": "VIOLATION",
+  "tip_growth_vs_itself": "MET"
+ },
+ "reading": {
+  "a_real_gap_turns_the_face_red": true,
+  "growth_mode_blames_the_candidate_for_it": true,
+  "the_tip_itself_adds_nothing_under_growth": true,
+  "the_row_names_the_file_and_line": true
+ }
+}
