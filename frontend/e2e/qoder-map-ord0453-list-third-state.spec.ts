@@ -118,12 +118,32 @@ test("pressed-then-expanded — the capture control answers in both states", asy
   expect(pressed, "the stop list must exist").not.toBeNull();
   const shotPressed = evidencePath("ord0453-list", "list_pressed.png");
   await page.getByTestId("map-stops").screenshot({ path: shotPressed });
+  /* One artefact per state, not one per arm: the acceptance names both states, and a single file that
+     holds both lets a reader take the expanded hit for the collapsed one. */
+  push("state-collapsed", { shotPressed, hit: pressed!.captureHitsItself,
+    hitTarget: pressed!.hitTarget, captureBox: pressed!.captureBox,
+    captureText: pressed!.captureText, expanded: pressed!.expanded,
+    pressed: pressed!.pressed, ariaExpanded: pressed!.ariaExpanded,
+    rowCount: pressed!.rowCount, markers: pressed!.markers,
+    rowsIn: pressed!.rowsInBefore, boxClientH: pressed!.boxClientH,
+    boxScrollH: pressed!.boxScrollH, pressHeight: pressed!.pressHeight,
+    maskVisible: pressed!.maskVisible, maskPointerEvents: pressed!.maskPointerEvents,
+    panelBox: pressed!.panelBox, belowFold: pressed!.captureBelowFoldBeforeScrolling });
 
   await page.getByTestId("map-stops-capture").click();
   await page.waitForTimeout(500);
   const expanded = await readList(page);
   const shotExpanded = evidencePath("ord0453-list", "list_expanded.png");
   await page.getByTestId("map-stops").screenshot({ path: shotExpanded });
+  push("state-expanded", { shotExpanded, hit: expanded!.captureHitsItself,
+    hitTarget: expanded!.hitTarget, captureBox: expanded!.captureBox,
+    captureText: expanded!.captureText, expanded: expanded!.expanded,
+    pressed: expanded!.pressed, ariaExpanded: expanded!.ariaExpanded,
+    rowCount: expanded!.rowCount, markers: expanded!.markers,
+    rowsIn: expanded!.rowsInBefore, boxClientH: expanded!.boxClientH,
+    boxScrollH: expanded!.boxScrollH, pressHeight: expanded!.pressHeight,
+    maskVisible: expanded!.maskVisible, maskPointerEvents: expanded!.maskPointerEvents,
+    panelBox: expanded!.panelBox, belowFold: expanded!.captureBelowFoldBeforeScrolling });
 
   push("pressed-then-expanded", { pressed, expanded, shotPressed, shotExpanded });
 
