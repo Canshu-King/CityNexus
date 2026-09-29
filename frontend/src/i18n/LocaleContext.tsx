@@ -533,8 +533,8 @@ const en: Dict = {
   "exec.offline": "OFFLINE COPY",
   "exec.readOnlyReady": "available offline",
   "exec.next24hSaved": "next 24 hours saved",
-  "exec.evidenceTrail": "{n} {plural:source}",
-  "exec.noEvidence": "none recorded yet",
+  "exec.evidenceTrail": "{n} web sources",
+  "exec.noEvidence": "no web observations recorded yet",
   "exec.noWebObs": "No web observation is authoritative. Search evidence appears here only after server capture.",
 
   // ── Execution: V12 Authoritative Panel ──
@@ -1435,8 +1435,8 @@ const zhCN: Dict = {
   "exec.offline": "离线副本",
   "exec.readOnlyReady": "只读就绪",
   "exec.next24hSaved": "未来 24 小时已保存",
-  "exec.evidenceTrail": "{n} 个来源",
-  "exec.noEvidence": "暂无记录",
+  "exec.evidenceTrail": "{n} 个网页来源",
+  "exec.noEvidence": "暂无网页观察记录",
   "exec.noWebObs": "无网络观察具有权威性。搜索证据仅在服务端采集后出现。",
 
   // ── 执行：V12 权威面板 ──
