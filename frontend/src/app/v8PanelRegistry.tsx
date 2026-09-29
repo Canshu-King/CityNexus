@@ -19,6 +19,7 @@ import { StayExplorer } from "../features/stay/StayExplorer";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { TripItinerary } from "../features/trip/TripItinerary";
 import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
+import { AccessPanel } from "../features/access/AccessPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
@@ -309,6 +310,16 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     testId: "journey-trash-panel",
     when: (s) => s.route === "trash",
     render: () => <JourneyTrashPanel />,
+  },
+  {
+    /* ORD-0436: 成员与权限. Same registry-mounted route as the bin above, so the shell stays shut for
+       this screen too. The screen reads the two doors that are on the line today (the trip list and
+       the per-trip action feed) and says out loud that the sharing door is not there yet. */
+    id: "access",
+    surface: "route",
+    testId: "access-panel",
+    when: (s) => s.route === "access",
+    render: () => <AccessPanel />,
   },
 ];
 
