@@ -1,0 +1,262 @@
+{
+ "generations": {
+  "r7b": {
+   "cells_total_reported": 12,
+   "hits": 12,
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 3,
+   "contract_exempted_count": null,
+   "contract_blocked_count": null,
+   "parse_diagnostics_total": 0,
+   "ruler_blob": null,
+   "union_size": 13
+  },
+  "r7b1": {
+   "cells_total_reported": 11,
+   "hits": 11,
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 2,
+   "contract_exempted_count": null,
+   "contract_blocked_count": null,
+   "parse_diagnostics_total": 0,
+   "ruler_blob": null,
+   "union_size": 13
+  },
+  "r7b4": {
+   "cells_total_reported": 11,
+   "hits": 11,
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 1,
+   "contract_exempted_count": 0,
+   "contract_blocked_count": 2,
+   "parse_diagnostics_total": 0,
+   "ruler_blob": null,
+   "union_size": 13
+  }
+ },
+ "union_keys": {
+  "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "attributed_in_fold"
+   ],
+   "r7b4": [
+    "attributed_in_fold"
+   ]
+  },
+  "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "ActivityDetail.tsx:216|RAW_BODY_TO_DOM": {
+   "r7b": [
+    "hits"
+   ],
+   "r7b1": [
+    "hits"
+   ],
+   "r7b4": [
+    "hits"
+   ]
+  },
+  "V8Experience.tsx:2711|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    "attributed_in_fold"
+   ],
+   "r7b1": [
+    "attributed_in_fold"
+   ],
+   "r7b4": [
+    "attributed_in_fold"
+   ]
+  }
+ },
+ "per_generation_union_size": {},
+ "differences_against_the_door_pinned_r7b": [
+  {
+   "generation": "r7b1",
+   "union_lost": [],
+   "union_gained": [],
+   "union_equal": true,
+   "refiled_differently": {
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+     "r7b": [
+      "hits"
+     ],
+     "r7b1": [
+      "attributed_in_fold"
+     ],
+     "r7b4": [
+      "attributed_in_fold"
+     ]
+    }
+   }
+  },
+  {
+   "generation": "r7b4",
+   "union_lost": [],
+   "union_gained": [],
+   "union_equal": true,
+   "refiled_differently": {
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+     "r7b": [
+      "hits"
+     ],
+     "r7b1": [
+      "attributed_in_fold"
+     ],
+     "r7b4": [
+      "attributed_in_fold"
+     ]
+    }
+   }
+  }
+ ],
+ "recovery_panel_cells_by_generation": {
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": [
+    {
+     "filed": "hits",
+     "cell_id": "7feb812a1e486a9d",
+     "sink_shape": "text-in:code testid=code:recovery-reason"
+    }
+   ],
+   "r7b1": [
+    {
+     "filed": "attributed_in_fold",
+     "anchor_field": "dynamic:notice.field",
+     "anchor_line": 297,
+     "fold_container": "details",
+     "fold_container_line": 288,
+     "snippet": "{notice.quote}"
+    }
+   ],
+   "r7b4": [
+    {
+     "filed": "attributed_in_fold",
+     "anchor_field": "dynamic:notice.field",
+     "anchor_line": 297,
+     "fold_container": "details",
+     "fold_container_line": 288,
+     "snippet": "{notice.quote}"
+    }
+   ]
+  }
+ },
+ "r7b4_selftest": {
+  "exit": 0,
+  "verdict": "SELFTEST_PASS",
+  "arms_total": 0,
+  "arms_failed": [],
+  "r7b1_arms": []
+ },
+ "reading": "no ability lost: hits UNION attributed_in_fold is the same set in every generation read here; the cell the ORD-0448 block called missing is read by r7b1 and r7b4 and filed in attributed_in_fold with its anchor named"
+}
