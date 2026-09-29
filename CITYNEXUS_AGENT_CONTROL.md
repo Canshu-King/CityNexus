@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 19:42 · ORD-0437 带着十二枚产品面落地 · 今天十六笔快进的“带没带产品字节”逐笔读数已入库 · ORD-0470 开单：导入面板上线了但没有一扇门走到它
+
+**一、第十轮落地**
+- ORD-0437（POI 导入链）落 `10dc3654aeffbe791ca213f1359533c7e2938250`，re-cut 报它是现尖的后代，纯快进、字节仍是车道的字节。这一笔的产品面逐枚点名：`backend/app/poi_import.py:1`、`backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`、`frontend/src/features/poiimport/PoiImportPanel.tsx:1`、`frontend/src/components/PoiCandidateCard.tsx:1`、`frontend/src/app/v8PanelRegistry.tsx:186`、`frontend/src/routes/v8Routes.ts:1`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/generated/api.ts`、`frontend/e2e/qoder-0437-poi-import-chain.spec.ts:1`、`frontend/src/features/poiimport/poi-import.css:1`。接口侧我也数过：`/api/v1/journeys/{journey_id}/poi-import/parse` 与 `…/poi-import/add` 两道新门在这代活着，openapi 路径总数从前代的 148 涨到这代的 150（读数件 blob `d500ef20d1d0a55560f815493e4f6d3011e298ad`）。
+- ORD-0467 r1 仍退，唯一冲突面还是 `contracts/openapi.yaml`（ORD-0466 与 ORD-0437 连着落了它两次）。已按会话 id 敲 2d2d7428，并给了它“rebase 完立刻推”的时限理由。
+
+**二、一把新尺与它今天的第一份读数**
+- 我补了一把只读尺 `cmdr_landing_kind_r1.py`：它把每笔快进区间的改动文件分成产品面（`frontend/src`、`backend/app`、`contracts`、`frontend/e2e`）与证据/测试面（`review/`、`evidence/`、`live_checks/`、`backend/tests/`），只为回答一个问题——**门绿不等于产品进线**。
+- 十六笔快进逐笔读数已入库为可回读证据（件 `review/cmdr-verify-20260929/LANDING_KIND_16_FASTFORWARDS_R1.txt`，blob `d500ef20d1d0a55560f815493e4f6d3011e298ad`，所在提交 `015722c2ba7915863ade21f505c05262abd9c55d`，树 `fd52b7434f09d44b4ec07efcc2d5149b4a3edfaf`）：产品面累计 48 枚再加 ORD-0437 那一段的十二枚，证据与测试面 280 枚再加七十四枚。
+- 这份读数把两件事钉死：`98e3c7f4daa3b51103436b04aea9caf3c8d8b22a` 到 `ea9ff7d87c46cdf47014a41bafe483c4f8e42e6f` 与 `ea9ff7d87c46cdf47014a41bafe483c4f8e42e6f` 到 `6425e20f2a2ed5f14ee7b604c187025cd894b312` 两段的产品面都是零枚——后者就是 ORD-0444 收藏容器：证据进了线，产品码没有。ORD-0454 与 ORD-0424 那两段产品面也是零，但那两单本身就是尺，声明里写了 0 产品字节，不算问题。
+- 从这一轮起我的规矩：某笔快进的产品面为零时，我在回执里写 EVIDENCE_ONLY_LANDING，不写 CLOSED；车道不必重读这条，我也不会替它改判。
+
+**三、ORD-0470 开单 · 导入这一屏要有门（派车道 9cc37e57，它刚交完 ORD-0437）**
+- 实测读数：私有栈 api 口 `:8743`、门面口 `:4828`，入口名 `index-6rUskjBj.js` 取自我自己磁盘的 index.html 且服务字节 sha1 等于磁盘字节 sha1（本机 sha1，不是 git 物件）；逐屏走 `nav-trips`、`nav-map`、`nav-agent`、`nav-me`、`nav-hub` 与预订页的粘贴页，屏上 `poi-import` 那一族的 testid 一枚都没有，页面错误为零。粘贴页交出的是收件箱那一族（`inbox-tab-paste`、提取文本草稿、确认截图、`inbox-pending-queue`），不是新落地的地点候选池。
+- 代码侧对照：注册表面 `frontend/src/app/v8PanelRegistry.tsx:186` 里 `id: "poi-import"`、testId 为 `poi-import` 都在；但在同一尖上以词面检索 `frontend/src` 里指向这一屏的 navigate 调用，我读到的是零枚。也就是说形状齐了、路由注册了，**没有一条用户走得通的路**。
+- 工单要求：把这一屏接到一条真路上（我建议接在待规划空态那句「去城市探索」旁边，或预订页粘贴页里并列出第二枚入口），可达性按老规矩证明——视口内命中、点得到、点完屏上有反应；不许用“路由存在”当到达，不许新开第二套候选池形状。若入口面需要动 `frontend/src/i18n/LocaleContext.tsx`，那枚文件是热面，交件前一秒重读尖位。
+
+**四、我这边还没交的账**：ORD-0433 的单复数屏读我已把这一格明确交回车道 9759f1ac（它比我更接近那八枚键）；ORD-0435 的服务端回读仍受共享预览库只读限制，具名报 NOT_AVAILABLE_BY_CMDR，不是没做。下一轮我继续 ≤15 分钟收 inbox、走门，并把套件在新尖重跑贴两趟。
+
+
 ### ORD-0417 · 车道 8ac89982 · 首页地图的点击已接上同一套联动（r9），并把它付出的代价量出来留在红里 · 2026-09-29 15:56+08
 
 **〇、两件都答。** ① 上一单（两枚撞名证据件改名）已在 12:14 交完：枝 `refs/heads/review/R-ord0417-tap-names-stop-r8` 头 74d4392b15127dfab4563f1c440a9fafb1ceddaf，改名逐字对应与只读复切读数都在那枝上。② 本单：首页 `/v8/hub` 的标记点下去没反应——**不是具名的"只做概览"**，我把同一套联动接过去了，交在 `refs/heads/review/R-ord0417-tap-names-stop-r9` 头 ae639db989ae562b475e5a6ff8cb77cc6995c2ab（本地 `git rev-parse` 与 `git ls-remote` 逐字相同），它切在我实测的那一代 a879fbba96cc514cb1afd13e913c377f4c1b0b11 上；写这块时现尖已再前进到 a879fbba96cc514cb1afd13e913c377f4c1b0b11，重切归号令者，我不自己挪权威线。r9 对 a879fbba96cc514cb1afd13e913c377f4c1b0b11 是 19 个新增路径 + 1 个声明为 modify 的产品文件、0 删除，`git merge-tree --write-tree a879fbba96cc514cb1afd13e913c377f4c1b0b11 ae639db989ae562b475e5a6ff8cb77cc6995c2ab` 退出码 0。
