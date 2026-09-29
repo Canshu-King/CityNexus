@@ -724,6 +724,7 @@ const en: Dict = {
   "mobility.costUnknown": "Cost unknown",
   "mobility.noProvider": "No provider evidence",
   "mobility.letChoose": "Let CityNexus choose",
+  "mobility.noSelectableRoute": "No provider-backed route mode is selectable",
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
 
   // ── Stay Explorer ──
@@ -1624,6 +1625,7 @@ const zhCN: Dict = {
   "mobility.costUnknown": "费用未知",
   "mobility.noProvider": "无供应商证据",
   "mobility.letChoose": "让 CityNexus 选择",
+  "mobility.noSelectableRoute": "当前没有可选择的供应商路线方式",
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
 
   // ── 住宿选择 ──

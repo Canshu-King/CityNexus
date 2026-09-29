@@ -2014,6 +2014,7 @@ export function V8Experience() {
         <MobilitySheet
           facts={comparison.length ? comparison : data.mobility_facts}
           selectedMode={mode}
+          canChoose={Boolean(selected && (comparison.length || data.mobility_facts.length))}
           onSelect={(next) => void changeMode(next)}
           onClose={() => setSheetOpen(false)}
         />
