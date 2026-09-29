@@ -37,6 +37,12 @@ export type AttributionReason =
    * an HTML document, a plain sentence, zero bytes.  Neither "the network is down" nor "nobody
    * answered" describes it, because an answer arrived and was discarded. */
   | "ORIGIN_INVALID_RESPONSE"
+  /* ORD-0457: the two answers that were being filed as "unknown" and then told to retry.  A 429 is
+     not a failure to read, it is the server asking for a slower pace, and a 409 on a state column is
+     the work having already happened.  Both said "原因还没有分类" before this, which is a screen
+     admitting it cannot read an answer it did receive. */
+  | "RATE_LIMITED"
+  | "STATE_ALREADY_MOVED"
   | "UNKNOWN_FAILURE";
 
 export type EvidenceKind = "HTTP_RESPONSE" | "TRANSPORT" | "HEALTH_PROBE";
@@ -48,7 +54,11 @@ export type RecoveryAction =
   | "choose-journey"
   | "retry"
   | "read-only-cached"
-  | "sign-in";
+  | "sign-in"
+  /* ORD-0457: one action per cause (R14 §5). "Later" is not "again now", and looking at what a
+     finished state is is not retrying the act that produced it. */
+  | "retry-later"
+  | "view-current-state";
 
 export type Attribution = {
   reason: AttributionReason;
@@ -66,6 +76,8 @@ export type Attribution = {
   cached_copy_present?: boolean;
   /** What the origin actually sent, for the state where the answer's media type is the whole story. */
   content_type?: string | null;
+  /** ORD-0457: the wait a 429 carried, in the server's own milliseconds. Absent means it never said. */
+  retry_after_ms?: number | null;
   /** Short, greppable line for production logs.  Shape follows R14 §8. */
   telemetry: string;
 };
@@ -75,7 +87,24 @@ export type ServerErrorShape = {
   status?: number;
   code?: string | null;
   message?: string | null;
+  /** The wait the answer carried, in milliseconds. Absent means it was never sent, not zero. */
+  retry_after_ms?: number | null;
 };
+
+/** The server's own wait, or null. Never a number this screen picked. */
+function retryAfterMs(error: unknown, server?: ServerErrorShape | null): number | null {
+  const candidates = [
+    server?.retry_after_ms,
+    error instanceof Error && "retry_after_ms" in error
+      ? (error as { retry_after_ms?: unknown }).retry_after_ms
+      : null,
+  ];
+  for (const value of candidates) {
+    const n = typeof value === "string" ? Number(value) : value;
+    if (typeof n === "number" && Number.isFinite(n) && n > 0) return Math.round(n);
+  }
+  return null;
+}
 
 /**
  * ORD-0263 fifth state: the response arrived and was 2xx, but its body is not this screen's data.
@@ -178,6 +207,36 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape | 
     }
     if (status === 403) {
       return make("FORBIDDEN", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "choose-journey", "failure.forbidden", code);
+    }
+    if (status === 429) {
+      /* The wait is the server's own number or nothing at all: this screen has never been allowed to
+         invent a delay, and a retry offered without one still says what was measured. */
+      const wait = retryAfterMs(error, server);
+      return {
+        ...make(
+          "RATE_LIMITED",
+          "HTTP_RESPONSE",
+          status,
+          "RUNTIME",
+          true,
+          wait === null ? "retry" : "retry-later",
+          wait === null ? "failure.rateLimitedNoWait" : "failure.rateLimited",
+          code,
+        ),
+        retry_after_ms: wait,
+      };
+    }
+    if (status === 409) {
+      return make(
+        "STATE_ALREADY_MOVED",
+        "HTTP_RESPONSE",
+        status,
+        "RESOURCE_STATE",
+        false,
+        "view-current-state",
+        "failure.stateAlreadyMoved",
+        code,
+      );
     }
     if (status >= 500) {
       return make("SERVER_ERROR", "HTTP_RESPONSE", status, "RUNTIME", true, "retry", "failure.serverError");
@@ -424,6 +483,37 @@ export function copyFor(
               ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
               : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
+    /* ORD-0457: a refusal to be asked again so soon is not a failed read, and the wait is only ever
+       the server's own. The retry control stays on screen either way - "later" is a pace, not a
+       refusal to act. */
+    case "failure.rateLimited":
+      return {
+        kicker: zh ? "问得太快" : "Asked too quickly",
+        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        body: zh
+          ? `这一发被限流了（http_status=${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
+              (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
+            )} 毫秒后再问。数据没有丢，下面那个按钮一直在，等一会儿再按它就行。`
+          : `This request was rate-limited (http_status=${attribution.http_status}). The server named its own wait: ask again in about ${Math.round(
+              (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
+            )} milliseconds. Nothing was lost; the button below stays, so wait a moment and use it.`,
+      };
+    case "failure.rateLimitedNoWait":
+      return {
+        kicker: zh ? "问得太快" : "Asked too quickly",
+        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        body: zh
+          ? `这一发被限流了（http_status=${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
+          : `This request was rate-limited (http_status=${attribution.http_status}) and no wait came with it this time. Nothing was lost - press the button below again shortly.`,
+      };
+    case "failure.stateAlreadyMoved":
+      return {
+        kicker: zh ? "已经办过了" : "Already done",
+        title: zh ? "这件事的状态已经变了，不是没读到" : "The state already moved - this was not a failed read",
+        body: zh
+          ? `服务器接了这发，回答的是「现在已经是这样了」（http_status=${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
+          : `The server took this request and answered that it is already so (http_status=${attribution.http_status}). That is not a failure: asking again just re-reads the current state. Its own name for the condition is in the attribution detail below.`,
+      };
     /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
        whether the request travelled is not something this screen knows, so the sentence does not
        claim it.  The deadline's own value comes from the mechanism, not from a second number. */
