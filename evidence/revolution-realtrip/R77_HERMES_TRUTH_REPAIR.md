@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `8c225912`
+- final product/evidence commit before this receipt update: `56d8907e`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -189,10 +189,44 @@ The previous UI emitted `mode=walk` even though the selected provider fact had n
 mode. That behavior is removed. A provider mode is used only when it exists; otherwise
 the UI opens the exact destination marker and says `打开目的地 →`.
 
+### Unsupported mode control readback
+
+The same clean page also proved that this direct selected PlanVersion has no
+recomputation target (`experience.options = 0`). Before the bounded UI repair, clicking
+`步行` focused the button but produced no request and no state change because the
+frontend's `changeMode` correctly had no selected stay option to address. The control
+was nevertheless presented as actionable.
+
+At final commit `5a0cb7fe`, the page now renders:
+
+```text
+当前方案没有可重算的出行方式
+步行 [disabled]
+骑行 [disabled]
+公交地铁 [disabled]
+驾车 [disabled]
+网约车 [disabled]
+当前方案没有可比较的出行方式 [disabled]
+```
+
+The disabled state is derived from the actual absence of a recomputable selected
+option; it does not infer or invent a route mode. `TRANSIT` is no longer presented as
+an active mode for this plan.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png`
+
+The final frontend gates after this repair were:
+
+```text
+npm run typecheck -> passed
+npm run build     -> passed
+```
+
+The build retained only the existing Vite large-chunk advisory.
 
 No new DeepSeek or Hermes execution is claimed for this presentation-only repair. The
 agent evidence above remains the actual Builder/Operator execution record; the latest
