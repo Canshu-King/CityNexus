@@ -116,6 +116,33 @@ def _has_any(value: str, terms: tuple[str, ...]) -> bool:
     return any(term in value for term in terms)
 
 
+_STATUS_INSPECTION_MARKERS = (
+    "检查", "确认", "核对", "查看", "回顾", "复盘", "汇报", "报告", "inspect", "check",
+    "confirm", "review", "report", "verify",
+)
+_RECOVERY_REFERENCE_MARKERS = (
+    "恢复提案", "恢复方案", "重规划提案", "重规划结果", "权威计划", "已处理", "已经处理",
+    "处理好", "已成为", "闭馆后的", "关门后的", "after the closure", "recovery proposal",
+    "recovery plan", "replan proposal", "authoritative plan", "already handled",
+    "already processed", "active plan", "accepted proposal",
+)
+
+
+def is_status_inspection_reference(message: str) -> bool:
+    """Recognize a read-only inspection that refers to an existing recovery.
+
+    A report such as ``现在博物馆关门了`` remains an actionable disruption.
+    This narrower shape is only for commands asking about an already-created
+    recovery/authority result; the referenced disruption must not be captured
+    again as a new Event.
+    """
+
+    value = message.casefold().strip()
+    return bool(value) and _has_any(value, _STATUS_INSPECTION_MARKERS) and _has_any(
+        value, _RECOVERY_REFERENCE_MARKERS
+    )
+
+
 def _disruption_semantic_status(value: str) -> tuple[str, str]:
     """Return assertion status and effective time before creating an Event."""
 
@@ -204,6 +231,8 @@ def disruption_event_type(message: str) -> str | None:
 
     value = message.casefold().strip()
     if not value:
+        return None
+    if is_status_inspection_reference(value):
         return None
 
     assertion_status, _effective_time = _disruption_semantic_status(value)

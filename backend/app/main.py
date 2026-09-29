@@ -207,6 +207,7 @@ from app.integrations.ai.copilot_contract import (
     classify_copilot_message,
     disruption_event_type,
     disruption_severity,
+    is_status_inspection_reference,
     simulate_what_if,
     validate_proposed_action,
 )
@@ -1208,7 +1209,8 @@ def run_agent_command(
     interpretation = _copilot_fallback_or_ai(payload.command, _copilot_context(session, journey))
     event_type = (
         str(interpretation.entities.get("event_type"))
-        if interpretation.intent == "DISRUPTION_REPORT"
+        if not is_status_inspection_reference(payload.command)
+        and interpretation.intent == "DISRUPTION_REPORT"
         and interpretation.entities.get("event_type")
         else None
     )
@@ -11589,6 +11591,8 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
 
 def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInterpretation:
     fallback = classify_copilot_message(message)
+    if is_status_inspection_reference(message):
+        return fallback
     client = _deepseek_client()
     if client is None:
         return fallback
