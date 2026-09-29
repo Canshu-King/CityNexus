@@ -1,0 +1,191 @@
+{
+ "11_counter_empty_name": {
+  "code": "VALIDATION_ERROR",
+  "http": 422,
+  "is_500": false,
+  "message_key": "request.invalid"
+ },
+ "12_openapi_json_visible": {
+  "add_door_response_codes_in_hand_contract": [
+   "201",
+   "404",
+   "409",
+   "422"
+  ],
+  "add_door_response_codes_served": [
+   "201",
+   "404",
+   "409",
+   "422"
+  ],
+  "bytes": 160408,
+  "collection_components_served": [
+   "CollectionFolder",
+   "CollectionFolderCreate",
+   "CollectionItem",
+   "CollectionItemCreate"
+  ],
+  "collection_paths_found": [
+   "/api/v1/collections",
+   "/api/v1/collections/{folder_id}/items"
+  ],
+  "http": 200,
+  "methods": {
+   "/api/v1/collections": [
+    "get",
+    "post"
+   ],
+   "/api/v1/collections/{folder_id}/items": [
+    "post"
+   ]
+  }
+ },
+ "13_contract_fields_match_served_spec": {
+  "CollectionFolder": {
+   "authored_yaml": [
+    "created_at",
+    "id",
+    "item_count",
+    "items",
+    "name",
+    "updated_at"
+   ],
+   "equal": true,
+   "served": [
+    "created_at",
+    "id",
+    "item_count",
+    "items",
+    "name",
+    "updated_at"
+   ]
+  },
+  "CollectionFolderCreate": {
+   "authored_yaml": [
+    "name"
+   ],
+   "equal": true,
+   "served": [
+    "name"
+   ]
+  },
+  "CollectionItem": {
+   "authored_yaml": [
+    "added_at",
+    "category",
+    "city_code",
+    "coordinate_system",
+    "folder_id",
+    "id",
+    "location",
+    "name",
+    "note",
+    "place_id",
+    "provider_key"
+   ],
+   "equal": true,
+   "served": [
+    "added_at",
+    "category",
+    "city_code",
+    "coordinate_system",
+    "folder_id",
+    "id",
+    "location",
+    "name",
+    "note",
+    "place_id",
+    "provider_key"
+   ]
+  },
+  "CollectionItemCreate": {
+   "authored_yaml": [
+    "note",
+    "place_id"
+   ],
+   "equal": true,
+   "served": [
+    "note",
+    "place_id"
+   ]
+  }
+ },
+ "14_operationid_divergence_control": {
+  "mine_addCollectionItem": {
+   "authored_yaml": "addCollectionItem",
+   "equal": false,
+   "served": "add_collection_item_api_v1_collections__folder_id__items_post"
+  },
+  "mine_createCollection": {
+   "authored_yaml": "createCollection",
+   "equal": false,
+   "served": "create_collection_api_v1_collections_post"
+  },
+  "mine_listCollections": {
+   "authored_yaml": "listCollections",
+   "equal": false,
+   "served": "list_collections_api_v1_collections_get"
+  },
+  "pre_existing_ORD0402_recycle_bin": {
+   "authored_yaml": "listRecycleBinJourneys",
+   "equal": false,
+   "served": "list_recycle_bin_journeys_api_v1_recycle_bin_journeys_get"
+  },
+  "pre_existing_journeys_list": {
+   "authored_yaml": "listJourneys",
+   "equal": false,
+   "served": "list_journeys_api_v1_journeys_get"
+  }
+ },
+ "4r_resolution_re_measured": {
+  "all_fields_equal": true,
+  "http": 201,
+  "keys_in_served_but_not_compared": [
+   "added_at",
+   "folder_id",
+   "id",
+   "note",
+   "place_id"
+  ],
+  "per_field_equal": {
+   "category": true,
+   "city_code": true,
+   "coordinate_system": true,
+   "location": true,
+   "name": true,
+   "provider_key": true
+  },
+  "places_row": {
+   "category": "nightlife",
+   "city_code": "CN-BEIJING",
+   "coordinate_system": "WGS84",
+   "location": {
+    "latitude": 39.941,
+    "longitude": 116.383
+   },
+   "name": "Houhai Lake Bar Street (后海酒吧街)",
+   "provider_key": "mock-city"
+  },
+  "served_body": {
+   "added_at": "2026-09-28T21:51:30.179764+00:00",
+   "category": "nightlife",
+   "city_code": "CN-BEIJING",
+   "coordinate_system": "WGS84",
+   "folder_id": "4833882b-b237-4f33-8506-0926c13b63a0",
+   "id": "5cf580cd-b694-4764-b3ad-676435061a82",
+   "location": {
+    "latitude": 39.941,
+    "longitude": 116.383
+   },
+   "name": "Houhai Lake Bar Street (后海酒吧街)",
+   "note": "r5 复核",
+   "place_id": "place-beijing-houhai",
+   "provider_key": "mock-city"
+  }
+ },
+ "created_shelf_for_this_probe": {
+  "id": "4833882b-b237-4f33-8506-0926c13b63a0",
+  "name": "r5 复核夹",
+  "r4_shelf": "05a8933c-7430-42f0-9778-661294be6643"
+ }
+}

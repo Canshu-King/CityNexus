@@ -16,6 +16,8 @@ from app.core.audit import record_audit
 from app.db.models import (
     Activity,
     CityService,
+    CollectionFolder,
+    CollectionItem,
     Commitment,
     Journey,
     JourneyConstraint,
@@ -50,6 +52,8 @@ from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.reference_replanner import WEIGHTS
 from app.schemas import Activity as ActivitySchema
 from app.schemas import CityService as CityServiceSchema
+from app.schemas import CollectionFolder as CollectionFolderSchema
+from app.schemas import CollectionItem as CollectionItemSchema
 from app.schemas import Constraint as ConstraintSchema
 from app.schemas import Journey as JourneySchema
 from app.schemas import Money, ScoreBreakdown
@@ -156,6 +160,23 @@ def reset_all(session: Session) -> None:
         "plan_versions",
         "constraints",
         "city_services",
+        # ORD-0444: the collection shelf is cleared with the rest of the scene, and it has to be
+        # cleared *before* `places`, because `collection_items.place_id` references `places(id)` with
+        # no `ON DELETE` clause and `PRAGMA foreign_keys=ON` is set on every connection
+        # (`backend/app/db/session.py:64`).  Measured before this line existed: a shelf holding one
+        # place made `POST /api/v1/demo/reset` answer 500 with
+        # `sqlite3.IntegrityError: FOREIGN KEY constraint failed`
+        # (`scratch/reset_counter_before_r1.json`, keys `4_demo_reset_with_a_non_empty_shelf` and
+        # `6_server_log_attribution`).  That door is the fixture reset for roughly 140 test modules
+        # and for the demo stage, so a container that could not be emptied would have broken all of
+        # them the first time a traveller favourited something.
+        # The other reading -- that a collection is user data and survives a scene reset -- would
+        # need `place_id` to stop being a hard reference, because a bookmark pointing at a place the
+        # scene no longer holds is then a state every reader must render honestly.  That is a
+        # product decision this slice does not make; it names the two shapes and ships the one the
+        # foreign key already implies.
+        "collection_items",
+        "collection_folders",
         "places",
         "journeys",
         "preferences",
@@ -434,6 +455,58 @@ def place_schema(item: Place) -> PlaceSchema:
         provider_key=item.provider_key,
         coordinate_system=item.coordinate_system,
         source_coordinate_system=item.source_coordinate_system,
+    )
+
+
+def collection_item_schema(item: CollectionItem, place: Place) -> CollectionItemSchema:
+    """One shelf row, with the place behind it resolved from the `places` table.
+
+    The two arguments are the reason this takes a place instead of looking one up: the list door
+    already reads the shelf together with the places it points at, so a row and its place arrive
+    in the same pass and this function cannot answer a shelf with a place that was never the one
+    stored.  A missing place is the caller's problem to name (`PLACE_NOT_FOUND`), not something to
+    paper over here.
+
+    `note` passes through as stored, including `None`, because "no note was written" is the fact
+    the screen has to be able to show.  There is no `address` in this shape and none is derived:
+    `places` has no address column, and the demo rows' `metadata_json` hold
+    `cost_minor`/`duration_min`/`accessibility_evidence` and nothing address-shaped.
+    """
+
+    return CollectionItemSchema(
+        id=item.id,
+        folder_id=item.folder_id,
+        place_id=item.place_id,
+        name=place.name,
+        category=place.category,
+        city_code=place.city_code,
+        location={"latitude": place.latitude, "longitude": place.longitude},
+        provider_key=place.provider_key,
+        coordinate_system=place.coordinate_system,
+        note=item.note,
+        added_at=item.added_at,
+    )
+
+
+def collection_folder_schema(
+    folder: CollectionFolder, items: list[tuple[CollectionItem, Place]]
+) -> CollectionFolderSchema:
+    """A shelf and its rows, where `item_count` is counted out of the same array `items` becomes.
+
+    The count is a length of the payload rather than a number from a second query on purpose: a
+    shelf that reported 4 next to 3 rows would be reporting two different reads as one answer.
+    `items` arrives in `added_at` order from the list door, and nothing here re-sorts it -- the
+    order a traveller reads is the order the server chose.
+    """
+
+    rows = [collection_item_schema(item, place) for item, place in items]
+    return CollectionFolderSchema(
+        id=folder.id,
+        name=folder.name,
+        created_at=folder.created_at,
+        updated_at=folder.updated_at,
+        item_count=len(rows),
+        items=rows,
     )
 
 

@@ -1,0 +1,49 @@
+{
+ "0_health": {
+  "http": 200
+ },
+ "1_create_shelf": {
+  "http": 201,
+  "id": "1be8cf46-41e1-4250-bc31-4c570323529a"
+ },
+ "2_add_place": {
+  "http": 201,
+  "item_id": "436ddf6f-73f7-4875-83f3-8e2e769c189e"
+ },
+ "3_shelf_holds_a_place_before_reset": {
+  "http": 200,
+  "item_count": 1,
+  "shelf_present": true
+ },
+ "4_demo_reset_with_a_non_empty_shelf": {
+  "body_head": "Internal Server Error",
+  "code": null,
+  "http": 500,
+  "is_500": true,
+  "message_key": null,
+  "reason_code": null,
+  "reset_credential_char_count": 32,
+  "reset_env_field_name": "CITYNEXUS_DEMO_RESET_TOKEN",
+  "reset_header_name": "X-Demo-Reset-Token"
+ },
+ "5_collections_after_the_reset_attempt": {
+  "body_head": "[{\"id\":\"1be8cf46-41e1-4250-bc31-4c570323529a\",\"name\":\"重置前的夹\",\"created_at\":\"2026-09-28T22:01:12.541194+00:00\",\"updated_at\":\"2026-09-28T22:01:12.541194+00:00\",\"item_count\":1,\"items\":[{\"id\":\"436ddf6f-73f",
+  "http": 200
+ },
+ "6_server_log_attribution": {
+  "five_hundred_lines": [
+   "INFO:     127.0.0.1:56534 - \"POST /api/v1/demo/reset HTTP/1.1\" 500 Internal Server Error"
+  ],
+  "foreign_key_lines": [
+   "sqlite3.IntegrityError: FOREIGN KEY constraint failed",
+   "sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) FOREIGN KEY constraint failed"
+  ],
+  "integrity_error_lines": [
+   "sqlite3.IntegrityError: FOREIGN KEY constraint failed",
+   "sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) FOREIGN KEY constraint failed"
+  ]
+ },
+ "base": "http://127.0.0.1:60148",
+ "finished_at_utc": "2026-09-28T22:01:12.669736+00:00",
+ "started_at_utc": "2026-09-28T22:01:12.521194+00:00"
+}

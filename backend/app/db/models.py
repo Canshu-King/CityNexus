@@ -1225,3 +1225,45 @@ class CatalogHydrationOperation(Base):
     finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
     abandon_requested_at: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String)
+
+
+class CollectionFolder(Base):
+    """ORD-0444: a named shelf a traveller keeps places on -- the 「收藏」 container.
+
+    Two columns carry the shelf itself.  There is deliberately no traveller, journey or plan
+    pointer here or on the item row: this version of the container is not scoped to one of them,
+    and the contract says so rather than leaving a reader to assume the shelf is private.  A
+    nullable `traveler_id` would have been worse than none at all -- it would look like ownership
+    while nothing wrote it, and 「我的收藏」 would then be a claim the row cannot support.
+
+    `name` is not unique.  Two shelves can both read 「周末」, so the id is what addresses one, and
+    the door that adds a place takes the id and never a name.
+    """
+
+    __tablename__ = "collection_folders"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class CollectionItem(Base):
+    """One place on one shelf, plus the note its owner wrote about it.
+
+    The row stores a *reference* to `places` and no copy of the place's fields, so a shelf cannot
+    show a name that the place row has since changed.  `note` is nullable because "no note was
+    written" is a fact a screen has to be able to tell apart from "an empty note".
+
+    `UNIQUE(folder_id, place_id)` is the durable half of the duplicate refusal: two workers
+    handling two taps of the same place onto the same shelf cannot both win, which a
+    select-then-insert check inside one process could not promise.
+    """
+
+    __tablename__ = "collection_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    folder_id: Mapped[str] = mapped_column(ForeignKey("collection_folders.id", ondelete="CASCADE"))
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id"))
+    note: Mapped[str | None] = mapped_column(String, nullable=True)
+    added_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (UniqueConstraint("folder_id", "place_id"),)

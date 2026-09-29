@@ -1,0 +1,20 @@
+=== tip advance, measured at handover, not copied from an order
+authority tip when this lane opened: 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a
+authority tip now: f26e2ff78c047579a7d710d3a469be6bdf9a0540	refs/heads/mirror/integration-frontend-apple-pass1
+OLD is an ancestor of NEW: yes
+merge-base: 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a
+commits NEW has beyond OLD: 7
+files those commits change: 11
+files they change among the 8 paths this order edits:
+    backend/db/schema.sql -> 0 hits
+    backend/app/db/models.py -> 0 hits
+    backend/app/schemas.py -> 0 hits
+    backend/app/services.py -> 0 hits
+    backend/app/main.py -> 0 hits
+    contracts/openapi.yaml -> 0 hits
+    frontend/src/generated/api.ts -> 0 hits
+    frontend/src/app/v8PanelRegistry.tsx -> 0 hits
+read-only merge prediction `git merge-tree --write-tree NEW MINE`:
+   exit 0 tree a98813aefcaa95ba7215af0ae5a33c6e9c8d13b6 stderr 
+this lane's two commits: c46f89e88cfe443cc8459a3659260954c277e510 d1a84fb393e5ade1d8e945dd1d327b0caa5784f5
+delta of the pushed branch against OLD: 34 files changed, 3454 insertions(+)

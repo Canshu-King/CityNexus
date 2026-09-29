@@ -1,0 +1,287 @@
+{
+ "0_pre_boot_state_measured_before_the_server_ran": {
+  "bytes": 7213056,
+  "collection_tables_present": [],
+  "dst": "scratch/private_r4.db",
+  "places_rows": 16,
+  "preview_sha1": "462da61a3d81be690b496ee1e2aa21e01ec8ba15",
+  "sha1": "c8b44a7aa77cd3a4a66a6f89f639073f69a9a65d",
+  "total_tables": 55
+ },
+ "10_shelf_after_three_refusals": {
+  "http": 200,
+  "item_count": 1,
+  "items_len": 1
+ },
+ "11_counter_empty_name": {
+  "code": "VALIDATION_ERROR",
+  "http": 422,
+  "is_500": false,
+  "message_key": "request.invalid"
+ },
+ "12_openapi_json_visible": {
+  "add_door_response_codes_in_hand_contract": [
+   "201",
+   "404",
+   "409",
+   "422"
+  ],
+  "add_door_response_codes_served": [
+   "201",
+   "404",
+   "409",
+   "422"
+  ],
+  "bytes": 160408,
+  "collection_components_served": [
+   "CollectionFolder",
+   "CollectionFolderCreate",
+   "CollectionItem",
+   "CollectionItemCreate"
+  ],
+  "collection_paths_found": [
+   "/api/v1/collections",
+   "/api/v1/collections/{folder_id}/items"
+  ],
+  "http": 200,
+  "methods": {
+   "/api/v1/collections": [
+    "get",
+    "post"
+   ],
+   "/api/v1/collections/{folder_id}/items": [
+    "post"
+   ]
+  }
+ },
+ "13_contract_fields_match_served_spec": {
+  "CollectionFolder": {
+   "authored_yaml": [
+    "created_at",
+    "id",
+    "item_count",
+    "items",
+    "name",
+    "updated_at"
+   ],
+   "equal": true,
+   "served": [
+    "created_at",
+    "id",
+    "item_count",
+    "items",
+    "name",
+    "updated_at"
+   ]
+  },
+  "CollectionFolderCreate": {
+   "authored_yaml": [
+    "name"
+   ],
+   "equal": true,
+   "served": [
+    "name"
+   ]
+  },
+  "CollectionItem": {
+   "authored_yaml": [
+    "added_at",
+    "category",
+    "city_code",
+    "coordinate_system",
+    "folder_id",
+    "id",
+    "location",
+    "name",
+    "note",
+    "place_id",
+    "provider_key"
+   ],
+   "equal": true,
+   "served": [
+    "added_at",
+    "category",
+    "city_code",
+    "coordinate_system",
+    "folder_id",
+    "id",
+    "location",
+    "name",
+    "note",
+    "place_id",
+    "provider_key"
+   ]
+  },
+  "CollectionItemCreate": {
+   "authored_yaml": [
+    "note",
+    "place_id"
+   ],
+   "equal": true,
+   "served": [
+    "note",
+    "place_id"
+   ]
+  }
+ },
+ "14_operationid_divergence_control": {
+  "mine_addCollectionItem": {
+   "authored_yaml": "addCollectionItem",
+   "equal": false,
+   "served": "add_collection_item_api_v1_collections__folder_id__items_post"
+  },
+  "mine_createCollection": {
+   "authored_yaml": "createCollection",
+   "equal": false,
+   "served": "create_collection_api_v1_collections_post"
+  },
+  "mine_listCollections": {
+   "authored_yaml": "listCollections",
+   "equal": false,
+   "served": "list_collections_api_v1_collections_get"
+  },
+  "pre_existing_ORD0402_recycle_bin": {
+   "authored_yaml": "listRecycleBinJourneys",
+   "equal": false,
+   "served": "list_recycle_bin_journeys_api_v1_recycle_bin_journeys_get"
+  },
+  "pre_existing_journeys_list": {
+   "authored_yaml": "listJourneys",
+   "equal": false,
+   "served": "list_journeys_api_v1_journeys_get"
+  }
+ },
+ "15_ownership_three_ways": {
+  "a_marker_row_in_my_sqlite_is_the_id_the_api_answered": true,
+  "b_listener_pid_on_60144": [
+   "27668"
+  ],
+  "c_log_500_lines": [],
+  "c_my_log_holds_the_collection_requests": 10,
+  "folder_rows": [
+   [
+    "05a8933c-7430-42f0-9778-661294be6643",
+    "默认收藏夹"
+   ]
+  ],
+  "item_rows": [
+   [
+    "fd884a6e-b373-4c7f-8f3c-bf107e628ec6",
+    "05a8933c-7430-42f0-9778-661294be6643",
+    "place-beijing-houhai"
+   ]
+  ]
+ },
+ "16_shared_preview_untouched": {
+  "equal": true,
+  "sha1_at_backup_time": "462da61a3d81be690b496ee1e2aa21e01ec8ba15",
+  "sha1_now": "462da61a3d81be690b496ee1e2aa21e01ec8ba15"
+ },
+ "1_post_boot_state": {
+  "collection_folder_columns": [
+   "id",
+   "name",
+   "created_at",
+   "updated_at"
+  ],
+  "collection_item_columns": [
+   "id",
+   "folder_id",
+   "place_id",
+   "note",
+   "added_at"
+  ],
+  "collection_item_indexes": [
+   "idx_collection_items_folder_added",
+   "sqlite_autoindex_collection_items_1",
+   "sqlite_autoindex_collection_items_2"
+  ],
+  "collection_tables_present": [
+   "collection_folders",
+   "collection_items"
+  ],
+  "total_tables": 57
+ },
+ "2_get_before_any_write": {
+  "bytes": 2,
+  "http": 200,
+  "is_literal_empty_array": true
+ },
+ "3_post_collection": {
+  "created_equals_updated": true,
+  "http": 201,
+  "id_is_uuid_shape": true,
+  "item_count": 0,
+  "items_len": 0,
+  "name": "默认收藏夹",
+  "name_round_trips_cjk": true
+ },
+ "4_post_item": {
+  "every_place_field_resolved_from_the_places_row": false,
+  "http": 201,
+  "id": "fd884a6e-b373-4c7f-8f3c-bf107e628ec6",
+  "no_address_key_served": true,
+  "note": "傍晚去，日落最好",
+  "place_fields_compared": [
+   "category",
+   "city_code",
+   "coordinate_system",
+   "latitude",
+   "longitude",
+   "name",
+   "provider_key"
+  ],
+  "place_id": "place-beijing-houhai",
+  "served_body_fields": [
+   "category",
+   "city_code",
+   "coordinate_system",
+   "location",
+   "name",
+   "place_id",
+   "provider_key"
+  ]
+ },
+ "5_get_after_write_server_side_readback": {
+  "count_equals_array_length": true,
+  "http": 200,
+  "item_count": 1,
+  "items_len": 1,
+  "my_shelf_present": true,
+  "row_note": "傍晚去，日落最好",
+  "row_place_name": "Houhai Lake Bar Street (后海酒吧街)",
+  "shelf_count": 1
+ },
+ "6_counter_unknown_shelf": {
+  "http": 404,
+  "is_500": false,
+  "message_key": "resource.not_found",
+  "reason_code": "COLLECTION_FOLDER_NOT_FOUND",
+  "receipt_field_present": true
+ },
+ "7_counter_non_uuid_shelf_id": {
+  "http": 404,
+  "is_500": false,
+  "message_key": "resource.not_found",
+  "reason_code": "COLLECTION_FOLDER_NOT_FOUND"
+ },
+ "8_counter_unknown_place": {
+  "details": {
+   "folder_id": "05a8933c-7430-42f0-9778-661294be6643",
+   "place_id": "place-not-here"
+  },
+  "http": 404,
+  "is_500": false,
+  "reason_code": "PLACE_NOT_FOUND"
+ },
+ "9_counter_duplicate": {
+  "existing_added_at_matches": true,
+  "existing_item_id_names_the_winning_row": true,
+  "http": 409,
+  "is_500": false,
+  "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+ },
+ "base": "http://127.0.0.1:60144",
+ "finished_at_utc": "2026-09-28T21:50:50.464171+00:00",
+ "started_at_utc": "2026-09-28T21:50:48.701119+00:00"
+}

@@ -428,6 +428,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/collections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description ORD-0444: every collection shelf this server holds, each with the rows on it.  The 收藏 exit of the POI capture chain needed a container to land in; before this order the product had no such object at all (`collection`/`favorite`/收藏 named nothing but GeoJSON FeatureCollection). One door answers both halves because a screen that had to ask per shelf could not tie a count to the rows beneath it: `item_count` here is the length of that same answer's `items` array (`backend/app/services.py` -- `collection_folder_schema`). Unscoped, and said rather than implied: no traveller, journey or plan owns a shelf in this version, and there is no pagination, filter or sort parameter.  「我的收藏」 is a name a screen puts on a shelf, not a column.  An empty store answers `[]` -- absence is a list, not a 404. */
+        get: operations["listCollections"];
+        put?: never;
+        /** @description ORD-0444: name a shelf.  The only input is `name`, bounded exactly as `TravelerCreate.display_name` is (1..120 characters) and stored verbatim -- there is no rename door on this server yet, so what is written here is what the shelf reads for as long as it exists.  Two shelves may share a name; the id addresses one. The body is the shelf as `listCollections` answers it, read back through the same helper (`backend/app/main.py` -- `_collection_rows_by_folder`), so a new shelf reports `item_count` 0 because the read found no rows, not because the door typed a zero. */
+        post: operations["createCollection"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/collections/{folder_id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0444: put one place on one shelf.  The row stores a *reference* to `places`, not a copy: the name, category, city code and coordinate in the answer are resolved from that row on every read, so a shelf cannot show a place the store no longer holds under it.  No plan, activity or day is written -- that is the 加进计划 door's job, and the reason 收藏 is a separate exit at all. `folder_id` is a plain string rather than a uuid-formatted parameter, and that is what makes the counter-case answerable: a shelf this server does not hold is `404 COLLECTION_FOLDER_NOT_FOUND`, a place it does not hold is `404 PLACE_NOT_FOUND`, and a place already on that shelf is `409 PLACE_ALREADY_IN_COLLECTION` naming the row that won. None of the three is a 500 and none is the generic `require()` not-found, because the three conditions need three different sentences on a screen. One shelf holds a place once, enforced by `UNIQUE(folder_id, place_id)` (`backend/db/schema.sql`) so two workers taking two taps of the same place cannot both write.  There is no remove-from-shelf door on this server yet; nothing here may imply one. */
+        post: operations["addCollectionItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/constraints": {
         parameters: {
             query?: never;
@@ -2808,6 +2845,34 @@ export interface components {
             coordinate_system: string;
             source_coordinate_system: string | null;
         };
+        CollectionFolderCreate: {
+            name: string;
+        };
+        CollectionItemCreate: {
+            place_id: string;
+            note?: string | null;
+        };
+        CollectionItem: {
+            id: string;
+            folder_id: string;
+            place_id: string;
+            name: string;
+            category: string;
+            city_code: string;
+            location: components["schemas"]["GeoPoint"];
+            provider_key: string;
+            coordinate_system: string;
+            note: string | null;
+            added_at: string;
+        };
+        CollectionFolder: {
+            id: string;
+            name: string;
+            created_at: string;
+            updated_at: string;
+            item_count: number;
+            items: components["schemas"]["CollectionItem"][];
+        };
         RealCityDiscoveryCandidate: {
             id: string;
             external_id: string;
@@ -3385,6 +3450,7 @@ export interface components {
         DemoResetToken: string;
         TravelerId: string;
         JourneyId: string;
+        CollectionFolderId: string;
         ActivityId: string;
         EventId: string;
         PlanVersionId: string;
@@ -4164,6 +4230,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecycleBinJourney"][];
+                };
+            };
+        };
+    };
+    listCollections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Shelves, oldest created first, each carrying its own rows in add order */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionFolder"][];
+                };
+            };
+        };
+    };
+    createCollection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionFolderCreate"];
+            };
+        };
+        responses: {
+            /** @description The shelf as this server now holds it, with no rows on it yet */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionFolder"];
+                };
+            };
+            /** @description Name missing or outside 1..120 characters */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    addCollectionItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionItemCreate"];
+            };
+        };
+        responses: {
+            /** @description The row as this server now holds it, with the place resolved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionItem"];
+                };
+            };
+            /** @description COLLECTION_FOLDER_NOT_FOUND, or PLACE_NOT_FOUND -- which one is in `reason_code` */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description PLACE_ALREADY_IN_COLLECTION; `details` names the row that is already there */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Body outside the declared bounds */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };
