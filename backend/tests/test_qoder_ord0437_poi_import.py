@@ -268,3 +268,61 @@ def test_the_write_refuses_a_schedule_node_and_a_foreign_city_row() -> None:
         assert accepted.status_code == 201, accepted.text
     finally:
         _drop_places("place-ord0437-stay", "place-ord0437-abroad")
+
+
+def test_the_import_routes_left_the_neighbouring_routes_alone() -> None:
+    """ORD-0471, and it is mine.
+
+    `main.py` declares some routes by stacking two decorators on one function -- `/trip-studio/preview`
+    and `/plans/preview-reorder` both sit on `trip_studio_preview`. My import block was appended right
+    after the first of that pair, so Python bound `/trip-studio/preview` to `poi_import_parse` instead:
+    ten v12/v13 tests that post `{"activity_ids": [...]}` went green to red with 422 extra_forbidden,
+    and the route table showed exactly one endpoint having changed hands.
+
+    So the guard reads the mapping off the live app rather than off the source text -- the defect was
+    placement, and a text search for my own comment would have stayed silent either way.
+    """
+    owners: dict[str, str | None] = {}
+    for route in app.routes:
+        methods = getattr(route, "methods", None) or set()
+        path = getattr(route, "path", None)
+        if "POST" in methods and path:
+            owners[path] = getattr(getattr(route, "endpoint", None), "__name__", None)
+    expected = {
+        "/api/v1/journeys/{journey_id}/trip-studio/preview": "trip_studio_preview",
+        "/api/v1/journeys/{journey_id}/plans/preview-reorder": "trip_studio_preview",
+        "/api/v1/journeys/{journey_id}/trip-studio/accept": "trip_studio_accept",
+        "/api/v1/journeys/{journey_id}/poi-import/parse": "poi_import_parse",
+        "/api/v1/journeys/{journey_id}/poi-import/add": "poi_import_add",
+    }
+    got = {path: owners.get(path) for path in expected}
+    assert got == expected, got
+
+
+def test_the_preview_door_still_answers_for_activity_ids() -> None:
+    """The reported symptom, asserted directly: `activity_ids` must not come back as an unknown field.
+
+    A made-up journey id is fine here -- the point is which validation layer answers. Bound to the
+    wrong model, this request was rejected before any lookup happened, with `type == "extra_forbidden"`
+    on `activity_ids`; bound to the right one, the same field is rejected as `too_short` because the
+    preview really does want at least two activities.
+
+    The first version of this guard read FastAPI's default `detail` key and so looked at an empty list
+    on BOTH trees -- a check that cannot fail is not a check. This app answers validation with its own
+    envelope (`error.details.errors`, built at `backend/app/main.py:621`), which is what is parsed below,
+    and the assertion requires a positive signature rather than the absence of a complaint.
+    """
+    response = client.post(
+        "/api/v1/journeys/00000000-0000-0000-0000-000000000000/trip-studio/preview",
+        json={"activity_ids": []},
+    )
+    body = response.json()
+    complaints = body.get("detail")
+    if not isinstance(complaints, list):
+        complaints = ((body.get("error") or {}).get("details") or {}).get("errors")
+    assert isinstance(complaints, list) or response.status_code != 422, (response.status_code, body)
+    named = [(tuple(err.get("loc") or ()), err.get("type")) for err in (complaints or [])]
+    on_field = [kind for loc, kind in named if "activity_ids" in loc]
+    assert on_field, (response.status_code, named)
+    assert "extra_forbidden" not in on_field, named
+    assert "too_short" in on_field, named
