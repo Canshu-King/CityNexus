@@ -1,0 +1,80 @@
+{
+  "experiment": "R77 same-destination facts refresh after Overpass mirror repair",
+  "executed_at": "2026-09-29T19:40:13.144438+00:00",
+  "worktree": "D:/moodle/CityNexus-Revolution-RealTrip-Recovery",
+  "branch": "codex/revolution-realtrip-recovery",
+  "executed_commit": "a55b234edbf911d7fa15b2b3202f4a1ff88f5de5",
+  "clean_before_product_call": true,
+  "destination": "贡山独龙族怒族自治县",
+  "city_code": "OSM:R:2729765",
+  "journey_id": "aee858ad-6cb1-48ae-a084-5b75b94e52c4",
+  "place_ids": [
+    "real-place-b80da739cba29adc7cb6a006",
+    "real-place-c365c44a508d5cd3c4fc5484"
+  ],
+  "http_status": 200,
+  "provider": "overpass",
+  "answered_source": "https://overpass.openstreetmap.fr/api/interpreter",
+  "overpass_attempts": [
+    {
+      "endpoint": "https://overpass-api.de/api/interpreter",
+      "answered": false,
+      "http_status": 504,
+      "elapsed_ms": 8237.6,
+      "error_type": "HTTPStatusError"
+    },
+    {
+      "endpoint": "https://overpass.kumi.systems/api/interpreter",
+      "answered": false,
+      "http_status": null,
+      "elapsed_ms": 25714.3,
+      "error_type": "ReadTimeout"
+    },
+    {
+      "endpoint": "https://overpass.private.coffee/api/interpreter",
+      "answered": false,
+      "http_status": null,
+      "elapsed_ms": 27572.2,
+      "error_type": "ReadTimeout"
+    },
+    {
+      "endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+      "answered": true,
+      "http_status": 200,
+      "elapsed_ms": 1223.6,
+      "elements": 2
+    }
+  ],
+  "secondary_source": {
+    "provider": "nominatim",
+    "source": "https://nominatim.openstreetmap.org/lookup",
+    "status": "ACQUIRED",
+    "exact_match_count": 2,
+    "requested_entities": [
+      "overpass:way/1417996052",
+      "overpass:node/13030932589"
+    ]
+  },
+  "places": [
+    {
+      "place_id": "real-place-b80da739cba29adc7cb6a006",
+      "provider_entity": "overpass:way/1417996052",
+      "opening_status": "UNKNOWN",
+      "cost_status": "UNKNOWN",
+      "official_web": "NO_SOURCE_URL",
+      "search_source": "UNCONFIGURED"
+    },
+    {
+      "place_id": "real-place-c365c44a508d5cd3c4fc5484",
+      "provider_entity": "overpass:node/13030932589",
+      "opening_status": "UNKNOWN",
+      "cost_status": "UNKNOWN",
+      "official_web": "NO_SOURCE_URL",
+      "search_source": "UNCONFIGURED"
+    }
+  ],
+  "known_opening_count": 0,
+  "known_cost_count": 0,
+  "status": "ACQUIRED",
+  "product_truth": "Facts acquisition recovered from transient primary/mirror provider failure; no authoritative opening or cost fact was acquired. UNKNOWN remains UNKNOWN."
+}
