@@ -7,7 +7,10 @@
 - starting commit: `4ee14229f80691cf8e5ea913375c0caf83ac02ee`
 - prior clean product code: `8c05fb4373efc866fbcc30e49e6177be4e07721a`
 - mobility projection repair commit: `001882a34e479b6c111937aeee0608ca92745559`
-- used-edge projection repair / final experimental code commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
+- used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
+- selected-plan experience projection repair commit: `86d2f27a`
+- truthful live-navigation repair commit: `91cbf629`
+- final product/evidence commit before this receipt update: `8c225912`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -135,6 +138,65 @@ npm run build      -> passed
 ```
 
 Vite emitted only its existing chunk-size advisory; the production bundle was generated successfully.
+
+## Latest clean product readback
+
+The later frontend repair was exercised only after the isolated worktree was clean. The
+backend process was already running from the clean backend-compatible commit
+`54960cc0`; the later commits changed only the frontend and evidence artifacts.
+
+### API projection
+
+The clean selected-plan readback remained:
+
+```text
+GET /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/experience -> HTTP 200
+options = 0
+active_status = SELECTED
+leg_count = 1
+used_edge_ids = [["real-place-8bc850f117297987997c87cf","real-place-ba7377353c422c39dfd752b7"]]
+leg_provider = valhalla-http
+leg_provenance = LIVE_PROVIDER_CAPTURE
+leg_minutes = 42
+valhalla_status = CAPTURED
+valhalla_source = selected-plan-frozen-evidence
+```
+
+`options = 0` means this direct selected PlanVersion has no `StayJourneyOption`
+lodging alternatives; it is not projected as “zero plans”. The selected plan remains
+visible and authoritative in the experience projection.
+
+### User-visible real-trip readback
+
+The clean Playwright page at `/v8/live` showed:
+
+```text
+1 个方案 · 5 种模式
+当前：网师园
+下一步 · 拙政园 · 未提供出行方式 · 42 min
+1 段路程 · 供应商支持的路线 · WGS84
+预计到达 · 未提供出行方式
+风险：低 · 路线证据有效
+```
+
+The navigation link now is the evidence-honest marker form:
+
+```text
+https://uri.amap.com/marker?position=120.6247266,31.3264725&name=拙政园&coordinate=wgs84&callnative=1
+```
+
+The previous UI emitted `mode=walk` even though the selected provider fact had no
+mode. That behavior is removed. A provider mode is used only when it exists; otherwise
+the UI opens the exact destination marker and says `打开目的地 →`.
+
+Captured artifacts:
+
+- `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png`
+
+No new DeepSeek or Hermes execution is claimed for this presentation-only repair. The
+agent evidence above remains the actual Builder/Operator execution record; the latest
+UI behavior was verified by deterministic API and Playwright machine evidence.
 
 ## Truth boundaries
 
