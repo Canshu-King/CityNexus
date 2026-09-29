@@ -118,6 +118,8 @@ from app.db.models import (
     AutopilotEnrollment,
     CityService,
     CitySignalFixture,
+    CollectionFolder,
+    CollectionItem,
     CounterfactualSimulation,
     EdgeDevice,
     ExternalReservationDraft,
@@ -396,6 +398,18 @@ from app.schemas import (
     RecycleBinJourney,
 )
 from app.schemas import (
+    CollectionFolder as CollectionFolderSchema,
+)
+from app.schemas import (
+    CollectionFolderCreate,
+)
+from app.schemas import (
+    CollectionItem as CollectionItemSchema,
+)
+from app.schemas import (
+    CollectionItemCreate,
+)
+from app.schemas import (
     RealCityDiscoveryResponse,
 )
 from app.schemas import (
@@ -406,6 +420,8 @@ from app.schemas import (
 )
 from app.services import (
     _journey_constraints_with_capabilities,
+    collection_folder_schema,
+    collection_item_schema,
     constraint_schema,
     generate_plans,
     journey_schema,
@@ -3140,6 +3156,244 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
         .order_by(Journey.deleted_at.desc(), Journey.id)
     ).all()
     return [recycle_bin_entry_schema(item) for item in items]
+
+
+#: ORD-0444: the two reads the shelf doors share, each in exactly one SELECT.
+#:
+#: Both are helpers rather than inline queries because the create door and the list door have to
+#: answer the same shelf the same way: a shelf that read its rows one way when the traveller made
+#: it and another way when they listed it would give the screen two different numbers for one
+#: container.
+def _collection_shelves(session: Session) -> list[CollectionFolder]:
+    """Every shelf this server holds, oldest first.
+
+    Ordered by `created_at` with the id behind it so two shelves written in the same instant still
+    come back in a stable order.  There is no filter, no scope and no page here: this version of
+    the container is the whole shelf list, and saying so is cheaper than leaving a reader to
+    discover the absence by trying a query parameter.
+    """
+
+    return list(
+        session.scalars(
+            select(CollectionFolder).order_by(CollectionFolder.created_at, CollectionFolder.id)
+        ).all()
+    )
+
+
+def _collection_rows_by_folder(
+    session: Session,
+) -> dict[str, list[tuple[CollectionItem, Place]]]:
+    """Every shelf row on every shelf, grouped by shelf, in two reads whatever the count.
+
+    The join is against `places` rather than a lookup per row, so listing ten shelves costs two
+    statements and not eleven.  It is an INNER join, and that is load-bearing rather than
+    incidental: `collection_items.place_id` references `places(id)` with no `ON DELETE` clause
+    (`backend/db/schema.sql`), and `PRAGMA foreign_keys=ON` is set on every connection
+    (`backend/app/db/session.py:64`), so a place a shelf points at cannot be deleted underneath
+    it.  A shelf row therefore always has a place to resolve to, and the join cannot quietly drop
+    a row and leave `item_count` short of what was asked for.
+
+    The order is the shelf's own: first put on, first read.  Nothing downstream re-sorts it, so the
+    order the screen renders is the order the server chose.
+    """
+
+    grouped: dict[str, list[tuple[CollectionItem, Place]]] = {}
+    for item, place in session.execute(
+        select(CollectionItem, Place)
+        .join(Place, Place.id == CollectionItem.place_id)
+        .order_by(CollectionItem.added_at, CollectionItem.id)
+    ).all():
+        grouped.setdefault(item.folder_id, []).append((item, place))
+    return grouped
+
+
+def _collection_payloads(session: Session) -> list[CollectionFolderSchema]:
+    """Shelves and rows together, so no door can answer a shelf without its contents."""
+
+    rows = _collection_rows_by_folder(session)
+    return [
+        collection_folder_schema(folder, rows.get(folder.id, []))
+        for folder in _collection_shelves(session)
+    ]
+
+
+@app.post("/api/v1/collections", response_model=CollectionFolderSchema, status_code=201)
+def create_collection(payload: CollectionFolderCreate, session: Session = Depends(get_session)):
+    """ORD-0444: make a named shelf.  The 「收藏」 exit of the POI capture chain needs a container.
+
+    This is the whole of creating one: a name goes in, an id and two timestamps come out.  The name
+    is stored verbatim, exactly as `POST /api/v1/travelers` stores `display_name` verbatim, and
+    there is no rename door on this server yet -- so what a traveller types here is what the shelf
+    reads for as long as it exists, which is why the length bound is the same one
+    `CollectionFolderCreate` copies from that door.
+
+    `created_at` and `updated_at` are written equal and `updated_at` is then *not* touched by
+    adding or removing a row: it records when this shelf row was last written, and adding a place
+    writes an `collection_items` row, not this one.  Leaving it alone is what keeps the column
+    true; bumping it would put a second, contradicting account of the shelf next to `created_at`.
+
+    The response is the shelf read back through the same helper `GET /api/v1/collections` uses, not
+    an object assembled from the request.  An empty shelf is therefore reported as the server now
+    holds it -- `item_count` 0 and `items` [] both come out of the read -- rather than from a
+    literal someone typed because a new shelf is surely empty.
+    """
+
+    identifier = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    session.add(
+        CollectionFolder(id=identifier, name=payload.name, created_at=now, updated_at=now)
+    )
+    session.commit()
+    record_audit(
+        session,
+        action="collection.folder.created",
+        entity_type="CollectionFolder",
+        entity_id=identifier,
+        after={"name": payload.name},
+    )
+    session.commit()
+    return collection_folder_schema(
+        session.get(CollectionFolder, identifier),
+        _collection_rows_by_folder(session).get(identifier, []),
+    )
+
+
+@app.get("/api/v1/collections", response_model=list[CollectionFolderSchema])
+def list_collections(session: Session = Depends(get_session)):
+    """ORD-0444: every shelf and every row on it, in one answer, because the list screen needs both.
+
+    One door for both halves on purpose.  A screen that had to ask per shelf to learn what was on
+    it would render a count it could not tie to the rows under it -- and the count here is the
+    length of the same `items` array the rows are drawn from
+    (`collection_folder_schema`, `backend/app/services.py`), so the number a traveller reads and
+    the list beneath it cannot describe two different reads.
+
+    Empty is a real answer and is answered as one: a shelf with nothing on it comes back with
+    `item_count` 0 and `items` [], and an absent container comes back as the empty list -- not a
+    404.  Nothing in this payload is inferred from absence; the fields are read from rows.
+
+    Unscoped, and stated rather than implied: these shelves belong to no traveller, journey or
+    plan in this version, and there is no pagination, filter or sort parameter.  「我的收藏」 is a
+    name a screen puts on a shelf, not a column and not a claim about whose shelf the row is.
+    """
+
+    return _collection_payloads(session)
+
+
+@app.post(
+    "/api/v1/collections/{folder_id}/items",
+    response_model=CollectionItemSchema,
+    status_code=201,
+    # ORD-0444, following ORD-0395's rule at `backend/app/main.py:2114`: the refusal is behaviour
+    # this door exists to have, so the application's own served spec has to say it.  The hand
+    # contract declared the 404 and the 409; without this block `/openapi.json` showed only
+    # 201 and 422, and a consumer of the served document could not see that a shelf it does not
+    # hold is an answer rather than a crash.  The descriptions name the three tokens the door can
+    # emit, so nothing has to be guessed from the status code alone.
+    responses={
+        404: {
+            "description": (
+                "Refused with a named code in `error.reason_code`: COLLECTION_FOLDER_NOT_FOUND when"
+                " this server holds no shelf with that id (including an id that is not uuid-shaped,"
+                " since the path parameter is a plain string), PLACE_NOT_FOUND when the shelf exists"
+                " but the place does not.  Nothing was written in either case."
+            )
+        },
+        409: {
+            "description": (
+                "PLACE_ALREADY_IN_COLLECTION -- that place is already on that shelf.  `error.details`"
+                " names the row that won (`existing_item_id`, `existing_added_at`), and the duplicate"
+                " refusal holds across workers because `UNIQUE(folder_id, place_id)` is in the table."
+            )
+        },
+    },
+)
+def add_collection_item(
+    folder_id: str, payload: CollectionItemCreate, session: Session = Depends(get_session)
+):
+    """ORD-0444: put one place on one shelf.  The write the 「收藏」 exit of the chain needs.
+
+    `folder_id` is a plain string, not a `UUID`, and that is the whole of the difference between a
+    named refusal and a validation error on the counter-case.  A shelf id this server does not hold
+    is answered `404 COLLECTION_FOLDER_NOT_FOUND`; a place id it does not hold is answered
+    `404 PLACE_NOT_FOUND`.  Neither is allowed to become a 500, and neither is allowed to come back
+    as the generic `resource.not_found` that `require()` answers with, because the two conditions
+    need different sentences on a screen: 「这个收藏夹不在这台服务器上」 and 「这个地点不在这台
+    服务器上」 are not the same failure, and the traveller did the second one by tapping a place
+    that is no longer there.
+
+    A duplicate is refused by name too.  `UNIQUE(folder_id, place_id)`
+    (`backend/db/schema.sql`) is what makes that hold across two workers -- a select-then-insert
+    check would let two taps of the same place both write, and the second shelf row would be a
+    silent nothing that the count still reported.  The loser's `IntegrityError` is rolled back and
+    re-read, so the 409 can name the row that is already there instead of the one this tap tried
+    to make.
+
+    The reference is stored, not the place's fields: `name`, `category`, `city_code` and the
+    coordinate come back resolved from `places` on every read.  No plan, activity or day is touched
+    -- that is the 「加进计划」 door's job, and the reason 收藏 is a separate exit at all.
+    """
+
+    folder = session.get(CollectionFolder, folder_id)
+    if folder is None:
+        refused = HTTPException(404, f"Collection folder {folder_id} was not found")
+        refused.reason_code = "COLLECTION_FOLDER_NOT_FOUND"
+        refused.error_details = {"folder_id": folder_id}
+        raise refused
+    place = session.get(Place, payload.place_id)
+    if place is None:
+        refused = HTTPException(
+            404, f"Place {payload.place_id} was not found on this server"
+        )
+        refused.reason_code = "PLACE_NOT_FOUND"
+        refused.error_details = {"folder_id": folder_id, "place_id": payload.place_id}
+        raise refused
+
+    identifier = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    try:
+        session.add(
+            CollectionItem(
+                id=identifier,
+                folder_id=folder.id,
+                place_id=place.id,
+                note=payload.note,
+                added_at=now,
+            )
+        )
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        already = session.execute(
+            select(CollectionItem).where(
+                CollectionItem.folder_id == folder.id,
+                CollectionItem.place_id == place.id,
+            )
+        ).scalars().first()
+        refused = HTTPException(
+            409,
+            f"Place {payload.place_id} is already in collection folder {folder_id}",
+        )
+        refused.reason_code = "PLACE_ALREADY_IN_COLLECTION"
+        refused.error_details = {
+            "folder_id": folder_id,
+            "place_id": payload.place_id,
+            "existing_item_id": already.id if already is not None else None,
+            "existing_added_at": already.added_at if already is not None else None,
+        }
+        raise refused
+
+    record_audit(
+        session,
+        action="collection.item.added",
+        entity_type="CollectionItem",
+        entity_id=identifier,
+        after={"folder_id": folder.id, "place_id": place.id, "note": payload.note},
+    )
+    session.commit()
+
+    stored = session.get(CollectionItem, identifier)
+    return collection_item_schema(stored, session.get(Place, stored.place_id))
 
 
 @app.get("/api/v1/journeys/{journey_id}")

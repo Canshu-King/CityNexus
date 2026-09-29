@@ -402,6 +402,74 @@ class Place(BaseModel):
     source_coordinate_system: str | None
 
 
+class CollectionFolderCreate(BaseModel):
+    """ORD-0444: the one thing creating a shelf asks for -- its name.
+
+    The bounds copy `TravelerCreate.display_name` above rather than inventing a third rule, and the
+    name is stored verbatim: this version has no rename door, so what is written here is what the
+    shelf reads for as long as it exists.
+    """
+
+    name: str = Field(min_length=1, max_length=120)
+
+
+class CollectionItemCreate(BaseModel):
+    """Which place goes on which shelf, and the note its owner wrote with it.
+
+    `place_id` is a string because `places.id` is a string column, not a UUID
+    (`backend/app/db/models.py` -- `Place.id`), and a UUID-typed parameter would answer a real
+    place with `validation.not_an_id`.  `note` is optional and stays optional: "no note was
+    written" must not be flattened into "an empty note".
+    """
+
+    place_id: str = Field(min_length=1, max_length=64)
+    note: str | None = Field(default=None, max_length=280)
+
+
+class CollectionItem(BaseModel):
+    """One place as the shelf answers it -- the reference resolved, not copied.
+
+    `name`, `category`, `city_code`, `location`, `provider_key` and `coordinate_system` are read
+    from the `places` row at answer time by `collection_item_schema`, so a shelf cannot show a
+    name that the place row no longer holds.  There is no `address` field here, and there is no
+    cover image: `places` has neither column nor metadata key for one, so a screen that displayed
+    「地址」 would be displaying a label over nothing.
+    """
+
+    id: str
+    folder_id: str
+    place_id: str
+    name: str
+    category: str
+    city_code: str
+    location: GeoPoint
+    provider_key: str
+    coordinate_system: str
+    note: str | None
+    added_at: str
+
+
+class CollectionFolder(BaseModel):
+    """A shelf and everything on it, in one answer, because the list screen needs both.
+
+    `item_count` is computed from the `items` array of this same payload (`collection_folder_schema`
+    in `backend/app/services.py`), so the number a traveller reads cannot describe a different read
+    from the rows under it.
+
+    This version is not scoped to a traveller, a journey, or anything else: `GET /api/v1/collections`
+    answers every shelf this server holds, with no pagination and no filter parameter, and neither
+    this shape nor the contract advertises one.  「我的收藏」 is the name a screen puts on the first
+    shelf; it is not a column and not a promise about whose shelf it is.
+    """
+
+    id: str
+    name: str
+    created_at: str
+    updated_at: str
+    item_count: int
+    items: list[CollectionItem]
+
+
 class RealCityDiscoveryCandidate(BaseModel):
     """One place candidate as `materialize_candidates` emits it -- the single dict
     site the screen's place card reads.
