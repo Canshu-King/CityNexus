@@ -134,6 +134,9 @@ export function PoiImportPanel({
 }) {
   const t = useT();
   const [mode, setMode] = useState<"text" | "screenshot">("text");
+  /** ORD-0463: what this device counted about the chosen file -- name, octets, media type. Nothing
+   *  else is known about it, and nothing may be claimed beyond that. */
+  const [image, setImage] = useState<{ name: string; bytes: number; type: string } | null>(null);
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [parsed, setParsed] = useState<ParseResponse | null>(null);
@@ -250,9 +253,46 @@ export function PoiImportPanel({
             </button>
           </div>
           {mode === "screenshot" ? (
-            <p className="v8-message" role="status" data-testid="poi-import-mode-unsupported">
-              {t("poiImport.screenshotNotSupported")}
-            </p>
+            /* ORD-0463 -- the shell, and nothing more. It receives a picture and says 尚未识别 in the
+               same breath; there is no "识别中" state here because there is no channel behind it, and
+               no place is offered off the back of a file this device only counted. The bytes never
+               leave the device: this branch issues no request, so the shared candidate pool and the
+               shared refusal codes stay exactly as ORD-0437 defined them -- this screen adds no
+               second shape to either. */
+            <div data-testid="poi-import-screenshot-shell">
+              <p className="v8-message" role="status" data-testid="poi-import-mode-unsupported">
+                {t("poiImport.screenshotNotYetNone")}
+              </p>
+              <label htmlFor="poi-import-image-file">{t("poiImport.screenshotPick")}</label>
+              <input
+                id="poi-import-image-file"
+                type="file"
+                accept="image/*"
+                data-testid="poi-import-image-file"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  setImage(
+                    file
+                      ? { name: file.name, bytes: file.size, type: file.type || "unknown" }
+                      : null,
+                  );
+                }}
+              />
+              {image && (
+                <p data-testid="poi-import-image-received">
+                  {image.type.startsWith("image/")
+                    ? t("poiImport.screenshotReceived", {
+                        name: image.name,
+                        bytes: image.bytes,
+                        type: image.type,
+                      })
+                    : t("poiImport.screenshotNotImage", { type: image.type })}
+                </p>
+              )}
+              <p className="v8-sheet-note" data-testid="poi-import-image-stays">
+                {t("poiImport.screenshotStays")}
+              </p>
+            </div>
           ) : (
             <>
               <label htmlFor="poi-import-text">{t("poiImport.intent")}</label>

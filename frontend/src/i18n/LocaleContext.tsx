@@ -30,6 +30,16 @@ const en: Dict = {
   "poiImport.modeText": "Recognise text or links",
   "poiImport.modeScreenshot": "Recognise a screenshot",
   "poiImport.screenshotNotSupported": "Screenshot recognition is not in this build. Paste the text instead; the picture form is named, not silently unavailable.",
+  /* ORD-0463 -- the screenshot shell says what has not happened, in the same breath as what did. */
+  "poiImport.screenshotNotYetNone":
+    "Screenshot recognition is not built in this version. Choose a picture and this screen will say it has not been recognised: no 'recognising' state appears, and no place is offered from it.",
+  "poiImport.screenshotPick": "Choose a picture",
+  "poiImport.screenshotReceived":
+    "This device received {name} ({bytes} bytes, type {type}). Nothing has been recognised from it.",
+  "poiImport.screenshotNotImage":
+    "This device did not read an image type: {type}. Nothing has been recognised.",
+  "poiImport.screenshotStays":
+    "The picture stays on this device: this screen sends no request, and the candidate pool is unchanged.",
   "poiImport.intent": "Your text",
   "poiImport.placeholder": "One place per line, or a whole note. Links may be mixed in.",
   "poiImport.scopeHint": "This reads the text you paste. Links to Xiaohongshu notes, WeChat Official Account posts or Feishu docs are named back as unread -- this build opens nobody else's page.",
@@ -1034,6 +1044,14 @@ const zhCN: Dict = {
   "poiImport.modeText": "文本或链接识别",
   "poiImport.modeScreenshot": "截图识别",
   "poiImport.screenshotNotSupported": "这一版没有截图识别。请改贴文字——这个形态是具名不支持，不是悄悄没有。",
+  /* ORD-0463 -- 截图这一支：说什么没发生，和发生了什么在同一句里。 */
+  "poiImport.screenshotNotYetNone":
+    "这一版还没有截图识别。选一张图片，这一屏会明说还没识别：不会出现\"识别中\"，也不会因此给出地点。",
+  "poiImport.screenshotPick": "选一张图片",
+  "poiImport.screenshotReceived":
+    "这台设备收到 {name}（{bytes} 字节，类型 {type}）。还没有从它识别出任何东西。",
+  "poiImport.screenshotNotImage": "这台设备读到的不是图片类型：{type}。还没有识别任何东西。",
+  "poiImport.screenshotStays": "图片不离开这台设备：这一屏不发任何请求，候选池也没有变化。",
   "poiImport.intent": "你的文字",
   "poiImport.placeholder": "一行一个地点，或者整段笔记；链接可以混在里面。",
   "poiImport.scopeHint": "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。",
