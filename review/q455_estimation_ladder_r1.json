@@ -3,10 +3,10 @@
  "lane": "e4f3490f-a55f-4fcb-b7af-227e41018656",
  "branch": "review/Q-ord0455-estimation-ladder-r1",
  "named_tip_in_the_order": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
- "my_base": "17dff25a095a7f0899977816fb18a91ab5c050b5",
- "head_at_readings": "81839966c1107036db94f7af6cf2bbb2d3e96472",
- "live_tip_at_delivery": "45513fc7957214dc385b4dffea9a662a0d8b1d1c",
- "n_commits_tip_past_my_head": 16,
+ "my_base": "b2abd99b9e07c77e565f9cbdbd3875fcc733697b",
+ "head_at_readings": "f206cba09d44a216416564905daf7951040c65e0",
+ "live_tip_at_delivery": "b2abd99b9e07c77e565f9cbdbd3875fcc733697b",
+ "n_commits_tip_past_my_head": 0,
  "named_tip_is_ancestor_of_my_head": true,
  "depends_blob_drift": [],
  "merge_tree_prediction_rc": 0,
@@ -24,8 +24,8 @@
  ],
  "walled_files_touched": [],
  "receipt": {
-  "run_id": "cmdr134939e4f",
-  "tree": "bff0f6efd96dd4c2f460a35d8cb1a1009d6ebf11",
+  "run_id": "cmdr142731e4f",
+  "tree": "f206cba09d44a216416564905daf7951040c65e0",
   "worktree": "D:/moodle/_qoder_lane_q0406",
   "target": "e2e/qoder-ord0455-estimation-ladder-r1.spec.ts",
   "full": false,
@@ -35,7 +35,7 @@
    "backend": 6570
   },
   "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
-  "db": "_cmdr134939e4f.db",
+  "db": "_cmdr142731e4f.db",
   "env_keys_dropped_names_only": [
    "DEEPSEEK_API_KEY",
    "OPENAI_API_KEY",
@@ -51,10 +51,10 @@
    "passed": 7
   },
   "listed_case_count": 0,
-  "started_local": "2026-09-29T13:49:39",
-  "duration_s": 47.432495,
-  "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/e4f_bff0f6ef_134939.log",
-  "log_bytes": 29337
+  "started_local": "2026-09-29T14:27:31",
+  "duration_s": 55.503498,
+  "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/e4f_f206cba0_142731.log",
+  "log_bytes": 29244
  },
  "arms": {
   "m1_reachability": {
@@ -341,19 +341,19 @@
     ]
    },
    "api_calls_named": [
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/replans",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/replans",
     "GET /api/v1/demo/scene",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/agent-feed?limit=200",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/plans",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/provider-mesh",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/agent-feed?limit=200",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/plans",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/provider-mesh",
     "GET /api/v1/places?city_code=CN-TIANJIN",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/twin",
-    "GET /api/v1/travelers/fddeab4e-afb5-4d20-abc0-2ad5c9a07a72/agent-policy",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/wallet",
-    "GET /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/offline-snapshot",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/twin",
+    "GET /api/v1/travelers/ebe735a9-25a3-455c-9163-323eea5c3078/agent-policy",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/wallet",
+    "GET /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/offline-snapshot",
     "GET /api/v1/agent/runtime-status",
-    "POST /api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/stay-options/87034b35-d24b-4e37-b6c7-ffc4f77fcd8d/select"
+    "POST /api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/stay-options/224f37d3-5fc7-4222-baaf-4afbcdb2533e/select"
    ]
   },
   "screen_en": {
@@ -448,12 +448,12 @@
   "control_pair": {
    "witness": "HTTP_RESPONSE —— 这两代形状是本地应答出来的，不是这台服务器给的；判据是梯子的边界，不是产品数据",
    "endpoints_patched": [
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4",
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4",
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4",
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4",
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4",
-    "/api/v1/journeys/74fa4c1e-1139-4515-9dd6-3412e043ac55/experience options=4"
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4",
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4",
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4",
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4",
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4",
+    "/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4"
    ],
    "four_tiers": [
     "一次采回来的报价回放：¥1,560.00。这台服务器没有随这条回答给出置信度。",
@@ -496,9 +496,9 @@
  ],
  "export_nlink": 19,
  "entry_asset": [
-  "index-DmBHc2fK.js"
+  "index-eTK7XYRt.js"
  ],
- "entry_asset_sha1_over_bytes": "34320edf5c6f18b4c258e4f79744c20e5827fcec",
+ "entry_asset_sha1_over_bytes": "56f5154d05eb31f8972371c516c2b780c06e1092",
  "ladder_copy_in_bundle": [
   [
    "这台服务器没有随这条回答给出置信度",
@@ -516,11 +516,11 @@
  "wall_cell_readouts": {
   "frontend/src/app/V8Experience.tsx :: 每人每天约": {
    "at": "frontend/src/app/V8Experience.tsx:2253",
-   "blob": "5202a1738a672807d156934b8fcd0fc854b6196d"
+   "blob": "eb247ffb29a74583a2bbaf887dc693148c322ec5"
   },
   "frontend/src/app/V8Experience.tsx :: map.unknownCosts": {
-   "at": "frontend/src/app/V8Experience.tsx:3821",
-   "blob": "5202a1738a672807d156934b8fcd0fc854b6196d"
+   "at": "frontend/src/app/V8Experience.tsx:3914",
+   "blob": "eb247ffb29a74583a2bbaf887dc693148c322ec5"
   },
   "frontend/src/features/stay/StayExplorer.tsx :: function priceLabel(": {
    "at": "frontend/src/features/stay/StayExplorer.tsx:184",
@@ -536,7 +536,7 @@
   },
   "frontend/src/features/agent/CopilotDock.tsx :: const VERIFICATION_LABELS": {
    "at": "frontend/src/features/agent/CopilotDock.tsx:512",
-   "blob": "83dc76378bae3dd4cb980bd7fa891dc35ca57b26"
+   "blob": "297203ed0462d6c253d72eb3ffc379dab2049656"
   },
   "frontend/src/features/trip/ActivityDetail.tsx :: 都在约": {
    "at": "frontend/src/features/trip/ActivityDetail.tsx:285",

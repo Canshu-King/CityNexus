@@ -52,8 +52,10 @@ DEPENDS = [
     "frontend/src/i18n/LocaleContext.tsx",
     "frontend/e2e/_qoderShellSeed.ts",
     "frontend/e2e/_qoderEvidence.ts",
-    "frontend/src/app/V8Experience.tsx",
 ]
+# The shell is the hottest file on the line and I only *read two of its cells* for the wall report.
+# Its drift is therefore disclosed with the generation it was measured on, not asserted equal.
+SHELL_WATCH = ["frontend/src/app/V8Experience.tsx"]
 # The wall cells this batch had to read but was forbidden to change, named by the order.
 READOUT_CELLS = [
     (WALL[1], "每人每天约"),
@@ -123,6 +125,8 @@ if TIP and not git_ok("merge-base", "--is-ancestor", BASE, HEAD):
 DRIFT = [f for f in DEPENDS if blob_at(HEAD, f) and blob_at(TIP, f) and blob_at(HEAD, f) != blob_at(TIP, f)]
 if DRIFT:
     bad.append("bytes my readings depend on moved past my head: " + json.dumps(DRIFT))
+SHELL_DRIFT = [f for f in SHELL_WATCH
+               if blob_at(HEAD, f) and blob_at(TIP, f) and blob_at(HEAD, f) != blob_at(TIP, f)]
 MT_RC, MT_OUT = run(["git", "-C", REPO, "merge-tree", "--write-tree", TIP, HEAD])
 TOUCHED = [l for l in git("diff", "--name-only", BASE, HEAD, cwd=REPO).splitlines() if l.strip()]
 HIT_WALL = [w for w in WALL if w in TOUCHED]
@@ -318,6 +322,18 @@ if POST:
 PRODUCT = git("rev-list", "--max-count=1", INSTR + "~3") if len(git("rev-list", "--count", BASE + ".." + INSTR).split()) else BASE
 
 MT_PUSH_RC, _MTPO = run(["git", "-C", REPO, "merge-tree", "--write-tree", TIP, PUSHED])
+SPEC_TS = "frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts"
+PANEL_TS = "frontend/src/features/estimation/EstimationLadderPanel.tsx"
+STAY_TS = "frontend/src/features/stay/StayExplorer.tsx"
+COORD = {
+    "m2_loop": line_of(PUSHED, SPEC_TS, "for (const canRecompute of"),
+    "viewport": line_of(PUSHED, SPEC_TS, "width: 390, height: 844"),
+    "hit_probe": line_of(PUSHED, SPEC_TS, "const nav = document.querySelector"),
+    "price_row": line_of(PUSHED, STAY_TS, "function priceLabel("),
+    "control_amount": line_of(PUSHED, SPEC_TS, "stay.total_amount_minor = 156000"),
+    "endpoint_line": line_of(PUSHED, GEN, "两形各自改到的响应"),
+    "panel_facts": line_of(PUSHED, PANEL_TS, "data-ladder-rungs"),
+}
 SPEC_BLOB = blob_at(PUSHED, SPEC)
 ART_BLOB = blob_at(PUSHED, ART)
 GEN_BLOB = blob_at(PUSHED, GEN)
@@ -381,23 +397,23 @@ A("   ① 说方法：只有当屏幕上真有一个数时才允许说话。触�
 A("   ② 事前警告：`无数` 或 `有数无置信度` 各一种措辞。")
 A("   ③ 事后核对：有数才说；`refundable === false` 时换成点名后果的那一句。")
 A("   ④ 给补救：只在警告出现过时出现，并三门挑一（可换候选 / 只能去重算 / 明确说没有门）。")
-A("   反证不变量在 " + str(M2["cases"]) + " 例全组合上跑：" +
-  "警告与补救必成对、无数时不许出现①③、有数时①③各且仅一次、档位顺序不得倒挂 —— 违反 " + str(M2["violations_total"]) + " 例（`O455 m2_invariants`）。")
+A("   反证不变量在 " + str(M2["cases"]) + " 例全组合上跑（那七重循环在 " + COORD["m2_loop"] + " ，计数同读 `arms.m2_invariants.cases`）：" +
+  "警告与补救必成对、无数时不许出现①③、有数时①③各且仅一次、档位顺序不得倒挂 —— 违反 " + str(M2["violations_total"]) + " 例（`O455 m2_invariants`，取字处 " + COORD["m2_loop"] + "）。")
 A("   四档全部点得亮，且没有一枚措辞无人引用：`rung_keys_derived=" + str(M1["rung_keys_derived"]) + "` 、`unreachable=" + json.dumps(M1["unreachable"], ensure_ascii=False) + "` 、`orphan_copy_keys=" + json.dumps(M1["orphan_copy_keys"], ensure_ascii=False) + "` 。")
 A("")
 A("## 4. 屏上读到的是句子本身（本单要求的第二件事）")
-A("   两臂都是 390x844 、底栏顶边 hit_line=" + str(Z["screen"]["hitLine"]) + " 、先 `scrollIntoViewIfNeeded()` 再命中。")
-A("   中文臂实读到 " + str(len(Z["sentences"])) + " 档，逐档中心命中且末行在底栏之上：" + json.dumps(Z["sentences"], ensure_ascii=False))
-A("   英文臂实读到 " + str(len(E["sentences"])) + " 档：" + json.dumps(E["sentences"], ensure_ascii=False))
+A("   两臂都是 390x844 （视口写在 " + COORD["viewport"] + " ）、底栏顶边 hit_line=" + str(Z["screen"]["hitLine"]) + " （那一格读法在 " + COORD["hit_probe"] + " ），先 `scrollIntoViewIfNeeded()` 再命中。")
+A("   中文臂实读到 " + str(len(Z["sentences"])) + " 档，逐档中心命中且末行在底栏之上：" + json.dumps(Z["sentences"], ensure_ascii=False) + " （两句里的价格是明细行 " + COORD["price_row"] + " 的读数；原文取字处 " + COORD["hit_probe"] + "）")
+A("   英文臂实读到 " + str(len(E["sentences"])) + " 档：" + json.dumps(E["sentences"], ensure_ascii=False) + " （同一取字处 " + COORD["hit_probe"] + "）")
 A("   两臂的屏上档位与「按 DOM 事实独立重算」的结果逐字相等（`painted == predicted_from_dom_facts`），漏出的占位符 0 枚（`leaked_placeholder=" + json.dumps(Z["leaked_placeholder"]) + "`）。")
 A("   权威口径：这两臂跑在 `npm run dev` 上（闸的既有口径），证的是**措辞与触发条件落到了屏上**；产物字节另由第 5 节那三行退出码与 bundle 命中给，dev 的响应字节与磁盘字节不等，我不主张等值。")
 A("")
 A("## 5. 反件（四档同屏的边界就在置信度那一格）")
 A("   真数据这次只点亮两档：`GET /api/v1/journeys/{id}/experience` 交回的住处证据是「有数 + 有来源 + 置信度 0.96」，②④ 的触发条件是「无数」或「有数无置信度」，这台服务器这次没有给出这两种形状。" +
   "所以反件把 experience 的响应改写成骑在边界两侧的两种形状，各读一次屏（同一枚端点、同一把闸、同一个上下文）：")
-A("   无置信度那一形：屏上 " + json.dumps(P["four_tiers"], ensure_ascii=False) + " 四档按梯序落地，触发行 " + json.dumps(P["four_triggers"], ensure_ascii=False) + " ，四档都中心命中。")
-A("   补上置信度那一形：屏上 " + json.dumps(P["two_tiers"], ensure_ascii=False) + " ，警告与补救自己退场。")
-A("   两形各自改到的响应（去重后 " + str(len(set(P["endpoints_patched"]))) + " 条端点、逐次改写 " + str(len(P["endpoints_patched"])) + " 次）：" + json.dumps(sorted(set(P["endpoints_patched"])), ensure_ascii=False) + " 。")
+A("   无置信度那一形：屏上 " + json.dumps(P["four_tiers"], ensure_ascii=False) + " 四档按梯序落地，触发行 " + json.dumps(P["four_triggers"], ensure_ascii=False) + " ，四档都中心命中（那枚金额是反件写进 " + COORD["control_amount"] + " 的一格，取字处 " + COORD["hit_probe"] + "）。")
+A("   补上置信度那一形：屏上 " + json.dumps(P["two_tiers"], ensure_ascii=False) + " ，警告与补救自己退场（同一取字处 " + COORD["hit_probe"] + " ，同一写入处 " + COORD["control_amount"] + "）。")
+A("   两形各自改到的响应（去重后 " + str(len(set(P["endpoints_patched"]))) + " 条端点、逐次改写 " + str(len(P["endpoints_patched"])) + " 次，判据行 " + COORD["endpoint_line"] + "）：" + json.dumps(sorted(set(P["endpoints_patched"])), ensure_ascii=False) + " 。")
 A("   见证类型 = HTTP_RESPONSE：这两代形状是我本地应答的，不是这台服务器给的；它证明的是梯子的边界画在对的地方，不是产品数据长这样。")
 A("   编译臂（我这枚头的导出件，node_modules 走 `os.link` 硬链、nlink=" + str(NLINK) + " ）逐行退出码：")
 for label, rc, _t in BUILD:
@@ -407,7 +423,8 @@ A("   入口 asset " + json.dumps(ASSETS) + " ，本机字节 sha1 over bytes = 
 A("")
 A("## 6. 我没动的东西，以及动不了的格子（具名 + 读数）")
 A("   禁改墙：" + json.dumps(WALL) + " 在本批 `git diff --name-only` 的 touched 集合里 0 命中（脚本断言 `walled_files_touched=" + json.dumps(HIT_WALL) + "`）。")
-A("   墙上有两格本来就属于这架梯子，我只交读数、不开改不完的口子：")
+A("   墙上有两格本来就属于这架梯子，我只交读数、不开改不完的口子（这两行读数取自我这一代 " + git("rev-parse", "--short", HEAD) + " ；现尖 " + TIP[:12] + " 上这枚外壳的字节 " +
+  ("已换过一代，blob 不等，所以这两行只在我这一代成立" if SHELL_DRIFT else "与我这代逐字节相同") + "）：")
 for k in (WALL[1] + " :: 每人每天约", WALL[1] + " :: map.unknownCosts"):
     A("     " + k + " 现读 " + CELLS[k]["at"] + " ，blob " + CELLS[k]["blob"] + " 。")
 A("     前一格是「每天约 X」那句：它已经自带 说方法（按你的预算平均下来的参考值）+ 事前警告（TIGHT_CAVEAT_ZH，" + line_of(PUSHED, WALL[1], "const TIGHT_CAVEAT_ZH") + "）+ 给补救（那句里的「可以先调整预算」）三档，" +
@@ -439,8 +456,8 @@ A("## 9. 复现")
 A("   跑闸：`env -u HTTP_PROXY -u HTTPS_PROXY python review/e4f_e2e_r1.py --wt D:/moodle/_qoder_lane_q0406 --target e2e/qoder-ord0455-estimation-ladder-r1.spec.ts --tag e4f` ；" +
   "本跑 run_id = " + RECEIPT["run_id"] + " ，stdout 读数件 = " + RECEIPT["log"] + " （" + str(RECEIPT["log_bytes"]) + " 字节），计数 = " + json.dumps(RECEIPT["counts"]) + " 。")
 A("   读数汇总（含两臂逐档句子、反件、三行退出码、bundle 命中、墙上格子现读）在 `review/q455_estimation_ladder_r1.json`（blob " + ART_BLOB + " ，可 `git cat-file -p` ）。")
-SUPER = [l for l in git("log", "--format=%h %s", BASE + ".." + PUSHED).splitlines()
-         if "ORD-0455" in l and not l.startswith(git("rev-parse", "--short", PUSHED))]
+SUPER = [l for l in git("log", "--format=%H %s", BASE + ".." + PUSHED).splitlines()
+         if "ORD-0455" in l and not l.startswith(PUSHED)]
 A("")
 A("## 10. 这批的迭代留痕（不藏）")
 A("   第一版交付生成器崩在装配账本块那一步：`claim_coordinate_check_r7.py` 的 `--text` 收的是**草稿文件路径**，我把正文塞了进去，尺在 open() 上抛 OSError；同版另有一处未绑定变量。" +
