@@ -95,8 +95,10 @@ def receipts(tag):
 
 
 def cases(r):
-    return sorted(re.findall(r"›\s*(\S+\.spec\.ts):\d+:\d+ ›\s*(.+?)\s*$", io.open(
-        r["log"], encoding="utf-8", errors="replace").read(), re.M))
+    """Only the failure heads, so a list of failing cases really means failing cases."""
+    txt = io.open(r["log"], encoding="utf-8", errors="replace").read()
+    return sorted(re.findall(r"^\s+\d+\) \[chromium\] ›\s*\S+ ›\s*(.+?)\s*$", txt, re.M))
+
 
 
 TIP = head_of("refs/heads/mirror/integration-frontend-apple-pass1")
@@ -305,18 +307,20 @@ A("   我那枚读数件 `%s` 也仍跑绿：run_id=%s verdict=%s passed=%d（�
     M1["qoder-ord0415-label-string-origin.spec.ts"]["verdict"], M1["qoder-ord0415-label-string-origin.spec.ts"]["counts"]["passed"]))
 A("   `qoder-map-ord0403-named-control-and-labels.spec.ts`：带我这次搬动 run_id=%s verdict=%s passed=%d failed=%d 日志 %s ；" % (
     G0403["run_id"], G0403["verdict"], G0403["counts"].get("passed", -1), G0403["counts"].get("failed", -1), G0403["log"]))
-A("   红的是同四条 `reach — the control is hittable and does not collide @%s`（用例名逐枚 %s ），报的都不是 import/规则那一格；" % (
-    "、".join(str(w) for w in WIDTHS), "、".join(F_MOVE)))
+A("   红的是四条 `reach` 形（四形宽 %s ，用例名逐枚 %s ），报的都不是 import/规则那一格；判据行 %s ，日志 %s" % (
+    "、".join(str(w) for w in WIDTHS), "、".join(F_MOVE), line_of(PUSHED, S0403, "does not collide @"), G0403["log"]))
 A("   `labels`（吃这张禁表的那格）与 `control-state`、`marker-to-card` 都在这条 run 里过了（passed=%d 里含它们，见上面日志）——搬动没把共用的表弄断。" % G0403["counts"].get("passed", -1))
-A("   同一把闸在我之外的两代基线上跑，失败集合逐字相同：基点 %s 带旧位文件那一次 run_id=%s verdict=%s failed=%d ；" % (
-    BASE[:12], BASE0403[1]["run_id"], BASE0403[1]["verdict"], BASE0403[1]["counts"].get("failed", -1)))
+A("   同一把闸在我之外的两代基线上跑，失败用例名逐字相同：基点 %s 带旧位文件那一次 run_id=%s verdict=%s failed=%d 日志 %s ；" % (
+    BASE[:12], BASE0403[1]["run_id"], BASE0403[1]["verdict"], BASE0403[1]["counts"].get("failed", -1), BASE0403[1]["log"]))
 A("   再往前到 ORD-0406 那一搬落地之前（%s，band 还在地图之后）run_id=%s verdict=%s failed=%d 日志 %s 。" % (
     GEN_BASE[:12], BASE0403[0]["run_id"], BASE0403[0]["verdict"], BASE0403[0]["counts"].get("failed", -1), BASE0403[0]["log"]))
 A("   ⇒ 三条 run 的失败用例名一致 ⇒ 「两把 spec 仍跑绿」这一半被一枚**先前就在**的地图屏缺陷挡住了，不是这次搬动造成的，我也没去改它的判据换绿。")
-A("   那枚缺陷的读数：`[data-testid='map-viewport-reset']`（标签 \"Fit to my journey\"）与瓦片提示的重叠面积四形都 = %s px²，" % "、".join(str(x) for x in OVERLAP))
-A("   控件盒 x/y/w/h 见 %s 那格 reach-* 行（四形宽 %s 都 `hitSelf=true`，`withHint` 读数集合=%s 、`withStack` 集合=%s ）；" % (
-    ART, "、".join(str(w) for w in WIDTHS), json.dumps(sorted({int(m) for m in re.findall(r'"withHint":(-?\d+)', io.open(G0403["log"], encoding="utf-8", errors="replace").read())})),
-    json.dumps(sorted({int(m) for m in re.findall(r'"withStack":(-?\d+)', io.open(G0403["log"], encoding="utf-8", errors="replace").read())}))))
+A("   那枚缺陷的读数：控件 `map-viewport-reset`（标签 \"Fit to my journey\"）与瓦片提示的重叠面积四形 = %s px²，判据行 %s ；" % (
+    "、".join(str(x) for x in OVERLAP), line_of(PUSHED, S0403, "must not sit under the tile notice")))
+A("   控件盒 x/y/w/h、`hitSelf`、`withHint`=%s 、`withStack`=%s 逐形记在那格 reach-* 行里（读数件 %s blob %s ，日志 %s ）；" % (
+    json.dumps(sorted({int(m) for m in re.findall(r'"withHint":(-?\d+)', io.open(G0403["log"], encoding="utf-8", errors="replace").read())})),
+    json.dumps(sorted({int(m) for m in re.findall(r'"withStack":(-?\d+)', io.open(G0403["log"], encoding="utf-8", errors="replace").read())})),
+    ART, ART_BLOB, G0403["log"]))
 A("   归属：那是地图面板的布局，不在我名下也不在禁改墙上，请号令者派给持 `MapPanel`/`styles.css` 的车道；判据源 %s 。" % line_of(PUSHED, S0403, "must not sit under the tile notice"))
 A("")
 A("## 我为什么支持乙案：产品产物本来就没有它")

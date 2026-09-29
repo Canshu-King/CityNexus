@@ -2,8 +2,8 @@
  "tip": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
  "base": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
  "branch": "review/Q-ord0415-label-rule-out-of-product-r1",
- "head": "3cd572f40353c379fa4c25e0083becf27062ea18",
- "commits_since_base": 2,
+ "head": "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f",
+ "commits_since_base": 3,
  "lag_behind_tip": 0,
  "merge_tree": {
   "rc": 0,
@@ -22,11 +22,11 @@
   "refs_in_frontend_src_on_head": [],
   "path_refs_in_frontend_src_on_head": [],
   "importers_of_new_path": [
-   "3cd572f40353c379fa4c25e0083becf27062ea18:frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:5:import { MAP_LABEL_FORBIDDEN } from \"./_mapLabelRules\";",
-   "3cd572f40353c379fa4c25e0083becf27062ea18:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:5:import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelViolations } from \"./_mapLabelRules\";",
-   "3cd572f40353c379fa4c25e0083becf27062ea18:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:80:    ord0403ImportsThisModule: gate.includes('from \"./_mapLabelRules\"'),",
-   "3cd572f40353c379fa4c25e0083becf27062ea18:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:91:  expect(gate.includes('from \"./_mapLabelRules\"'),",
-   "3cd572f40353c379fa4c25e0083becf27062ea18:frontend/e2e/qoder-ord0415-label-string-origin.spec.ts:23:import { MAP_LABEL_FORBIDDEN, mapLabelViolations } from \"./_mapLabelRules\";"
+   "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f:frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:5:import { MAP_LABEL_FORBIDDEN } from \"./_mapLabelRules\";",
+   "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:5:import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelViolations } from \"./_mapLabelRules\";",
+   "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:80:    ord0403ImportsThisModule: gate.includes('from \"./_mapLabelRules\"'),",
+   "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f:frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:91:  expect(gate.includes('from \"./_mapLabelRules\"'),",
+   "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f:frontend/e2e/qoder-ord0415-label-string-origin.spec.ts:23:import { MAP_LABEL_FORBIDDEN, mapLabelViolations } from \"./_mapLabelRules\";"
   ],
   "stale_importers": [],
   "old_module_blob_on_base": "1df86120291b6956ae3fcf783f1e785d57812f47",
@@ -204,28 +204,10 @@
    "log_bytes": 35107
   },
   "ord0403_failing_cases": [
-   "control-state — the button follows the camera, and pressing it reframes",
-   "control-state — the button follows the camera, and pressing it reframes",
-   "labels — nothing off-whitelist is painted on the glass",
-   "labels — nothing off-whitelist is painted on the glass",
-   "marker-to-card — tapping a marker changes the card's selection",
-   "marker-to-card — tapping a marker changes the card's selection",
-   "reach — the control is hittable and does not collide @320",
-   "reach — the control is hittable and does not collide @320",
-   "reach — the control is hittable and does not collide @320",
-   "reach — the control is hittable and does not collide @320",
-   "reach — the control is hittable and does not collide @360",
-   "reach — the control is hittable and does not collide @360",
-   "reach — the control is hittable and does not collide @360",
-   "reach — the control is hittable and does not collide @360",
-   "reach — the control is hittable and does not collide @390",
-   "reach — the control is hittable and does not collide @390",
-   "reach — the control is hittable and does not collide @390",
-   "reach — the control is hittable and does not collide @390",
-   "reach — the control is hittable and does not collide @414",
-   "reach — the control is hittable and does not collide @414",
-   "reach — the control is hittable and does not collide @414",
-   "reach — the control is hittable and does not collide @414"
+   "e",
+   "e",
+   "e",
+   "e"
   ],
   "tile_notice_overlap_px2": [
    2713,
@@ -267,7 +249,7 @@
    }
   },
   "mine": {
-   "ref": "3cd572f40353c379fa4c25e0083becf27062ea18",
+   "ref": "2de45ce4cf41d8d38e9f1e672b26fde1ded8b06f",
    "src_lib_mapLabels_exists": false,
    "e2e_rules_exists": true,
    "tsconfig.check.json": {
