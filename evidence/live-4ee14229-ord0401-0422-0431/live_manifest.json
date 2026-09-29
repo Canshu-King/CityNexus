@@ -1,0 +1,214 @@
+{
+ "round": "three owed measurements on the live tip",
+ "tip_read_from_ls_remote": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "live_tip_asset": "/assets/index-DbA8xyvx.js",
+ "candidate_branch": "review/qoder-0431-theme-chip-nowrap-r1",
+ "candidate_commit": "34d416c90577c0e84d58e20eaa00237d24fd1f40",
+ "candidate_asset": "/assets/index-DNKu4WU3.js",
+ "files": [
+  {
+   "file": "ord0401_arm_zh-CN.json",
+   "bytes": 2007,
+   "sha256": "0504c73a03f33fc9434ba7a3abd09740eb0292121d27bd7bd786879dcf89c355",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/arm_zh-CN.json"
+  },
+  {
+   "file": "ord0401_arm_en.json",
+   "bytes": 2019,
+   "sha256": "4b8477238c6f6f6ed6052ed37bdea1bb2fc40c205f09107c976a1cf1928d1e15",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/arm_en.json"
+  },
+  {
+   "file": "ord0401_both_arms.json",
+   "bytes": 4237,
+   "sha256": "297d7b3da12fb8d3006f706653c0f6d3315ef1c1560b65228b81f93ee5a76709",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/one_scroll_hit_test.json"
+  },
+  {
+   "file": "ord0401_zh_before.png",
+   "bytes": 61392,
+   "sha256": "8b1ce10fa2e127d9b8676b219610f118b1344a12a1688ac6e67a7b44e51493bf",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/zh_CN_before.png"
+  },
+  {
+   "file": "ord0401_zh_after_one_scroll.png",
+   "bytes": 55964,
+   "sha256": "dc567586884eec2990460d2dfd726dc138edd9e2bec97a31f5a54c4f5d3b5c40",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/zh_CN_after_one_scroll.png"
+  },
+  {
+   "file": "ord0401_en_before.png",
+   "bytes": 63731,
+   "sha256": "e42e200e03e65a8dc0b6378eaad3fd62eec9d4ed7c04555b26108fbcbc7692a7",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/en_before.png"
+  },
+  {
+   "file": "ord0401_en_after_one_scroll.png",
+   "bytes": 48440,
+   "sha256": "f8c018f353bcabcc4a93900cbe13c0edead6846fb7bcec9393808637ce8cf060",
+   "source": "D:/moodle/_qoder_q_ord0401/1200/en_after_one_scroll.png"
+  },
+  {
+   "file": "ord0422_assert_live.json",
+   "bytes": 9800,
+   "sha256": "5896965681b0a62b43d097ae75b42e30bb51bcf7a2f6240365dccc9d1aaf29c6",
+   "source": "D:/moodle/_qoder_q_ord0422/final8/assert_live_1200.json"
+  },
+  {
+   "file": "ord0422_lane_readings.json",
+   "bytes": 25624,
+   "sha256": "3b92dd426003dc67c5c1fdb5f12fbed16da4524e2e7eebb15ca7078f397665e4",
+   "source": "D:/moodle/_qoder_q_ord0422/final8/final_readings_r8.json"
+  },
+  {
+   "file": "ord0422_r3_twin.json",
+   "bytes": 8135,
+   "sha256": "ec893fd43bea44637c4aeb42954ef4c09ee72b88ea8fb76888b8a1d4125265e0",
+   "source": "D:/moodle/_qoder_q_ord0422/r3_1200/untranslated_twin_r3.json"
+  },
+  {
+   "file": "ord0422_r3_authoritative.json",
+   "bytes": 14070,
+   "sha256": "e58ce3b305b3730c7e2f4098dffa126996fe9a5b6c071a903b9d35707c02eb68",
+   "source": "D:/moodle/_qoder_q_ord0422/r3_1200/untranslated_authoritative_r3.json"
+  },
+  {
+   "file": "ord0422_r3_discover.json",
+   "bytes": 7349,
+   "sha256": "92c2670db46e65ce1f2cb1166eeac8adf82fc48d5b9f247e14a8689ed6be13e0",
+   "source": "D:/moodle/_qoder_q_ord0422/r3_1200/untranslated_discover_r3.json"
+  },
+  {
+   "file": "ord0422_eight_rows.json",
+   "bytes": 5945,
+   "sha256": "d0e5d7fa8fad21bcc7b313d83ec520c5ea4293c477d14838d67ff657e9f2b90c",
+   "source": "D:/moodle/_qoder_q_ord0422/eight_rows_1200.json"
+  },
+  {
+   "file": "ord0422_fixture_proposal.json",
+   "bytes": 14966,
+   "sha256": "3e9b647754607e4f0b0b558d4b0e1a78bc17df31aba5d4de367635f2266837cd",
+   "source": "D:/moodle/_qoder_q_ord0422/readings_1200/with_proposal_authoritative.json"
+  },
+  {
+   "file": "ord0422_fixture_capability.json",
+   "bytes": 11629,
+   "sha256": "c2e759374fda498644bd0982986c7b878a9f772ac0102bfd82909475fc14c5fa",
+   "source": "D:/moodle/_qoder_q_ord0422/readings_1200/with_unconfirmed_capability_twin.json"
+  },
+  {
+   "file": "ord0422_fixture_nopolicy.json",
+   "bytes": 14941,
+   "sha256": "e2e2e9c88ec6a3df223880494eb1f6f108da86b9f8fa37908d3a9705b240f399",
+   "source": "D:/moodle/_qoder_q_ord0422/readings_1200/no_policy_row_authoritative.json"
+  },
+  {
+   "file": "ord0422_fixture_log.json",
+   "bytes": 3897,
+   "sha256": "5fc9df2dddc0fffc214a98a205ebd5895fb2bc97b3172d8b5339cabd31098a64",
+   "source": "D:/moodle/_qoder_q_ord0422/f1200.log"
+  },
+  {
+   "file": "ord0424_extended_ruler_output.txt",
+   "bytes": 14893,
+   "sha256": "d8a4555eaa0787b233c90d419352d39c2c0921032983c06dfcbaa8d1c1ce5178",
+   "source": "D:/moodle/_qoder_q_ord0422/ord0424_1200.txt"
+  },
+  {
+   "file": "ord0431_baseline_both_arms.json",
+   "bytes": 20528,
+   "sha256": "9cbea5b7eec3815973451e2a8afb367fd21ba42d2ee67c943e4a6a45ccfaa52e",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/topbar_both_arms.json"
+  },
+  {
+   "file": "ord0431_baseline_arm_zh-CN.json",
+   "bytes": 9101,
+   "sha256": "b935507aa65996fcefb21b12c5f156f10d3fee8b7fb8bc4cf20cccde42caf051",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/topbar_zh-CN.json"
+  },
+  {
+   "file": "ord0431_baseline_arm_en.json",
+   "bytes": 8954,
+   "sha256": "fb66a3e096b308f6307c01505006f3a72251de23f38575540b1544ee98d88bf8",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/topbar_en.json"
+  },
+  {
+   "file": "ord0431_candidate_both_arms.json",
+   "bytes": 20384,
+   "sha256": "c99e34bdda38cbc1a9b4023f141ed12e144c19d9c3dc11344171dcb752992869",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/topbar_both_arms.json"
+  },
+  {
+   "file": "ord0431_candidate_arm_zh-CN.json",
+   "bytes": 8979,
+   "sha256": "977767fdcebe76a571b9fc888cb4b0dfdf110fe80f2c74b5b600615cfd90961b",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/topbar_zh-CN.json"
+  },
+  {
+   "file": "ord0431_candidate_arm_en.json",
+   "bytes": 8954,
+   "sha256": "38b3360d754857a9a7b4ce01072de36550579245ad266c622df93a97d2344dc9",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/topbar_en.json"
+  },
+  {
+   "file": "ord0431_baseline_console.txt",
+   "bytes": 2620,
+   "sha256": "3bcc9e5a773b20c9464e7258120669edcfecc2b8eece619383e2e9095f75fab9",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/console.txt"
+  },
+  {
+   "file": "ord0431_candidate_console.txt",
+   "bytes": 1763,
+   "sha256": "3d0bd6a898643d0721ca7e2a722add977a2632e92e442a515c2f47631a3a9f70",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/console.txt"
+  },
+  {
+   "file": "ord0431_baseline_zh_390.png",
+   "bytes": 58847,
+   "sha256": "b828ada73cb0ee85fd80a92f24f80f9a0e60a0e02c9476397dcdf74f795eff50",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/topbar_zh-CN_390.png"
+  },
+  {
+   "file": "ord0431_candidate_zh_390.png",
+   "bytes": 58798,
+   "sha256": "9ff4ea62f394c7d13bbcdc14bc3011ecc3a6e209700df5c5ba32c671849d4241",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/topbar_zh-CN_390.png"
+  },
+  {
+   "file": "ord0431_baseline_zh_320.png",
+   "bytes": 56375,
+   "sha256": "ebb95159ee5f5041c7f49e9e029675a2de9628993da1b8056523a2da325b132e",
+   "source": "D:/moodle/_qoder_q_ord0431/live1200/topbar_zh-CN_320.png"
+  },
+  {
+   "file": "ord0431_candidate_zh_320.png",
+   "bytes": 56383,
+   "sha256": "36fe4b701fa67325f6afe0c9cb6dfbef2576a2c4a5e4d5ae62c15dd85b9af352",
+   "source": "D:/moodle/_qoder_q_ord0431/fix1200/topbar_zh-CN_320.png"
+  },
+  {
+   "file": "ord0431_branch_ls_remote.txt",
+   "bytes": 91,
+   "sha256": "7f764c81e3e8e47adac912e146264508bbecbad02730807e0e611087fd1c8f78",
+   "source": "D:/moodle/_qoder_q_ord0431/ls_remote_branch.txt"
+  },
+  {
+   "file": "ls_remote_tip_1200.txt",
+   "bytes": 92,
+   "sha256": "e10182736d68f478f7891ce801a90feffef39cf7d3ee1e2e24184fc360886eb9",
+   "source": "D:/moodle/_qoder_q_ord0422/tip_1200.txt"
+  },
+  {
+   "file": "build_receipt_live_tip.json",
+   "bytes": 2630,
+   "sha256": "804a84f15b98fe919e79ce21dae56a3482eb0725729c29c12d3672c2b6769fd0",
+   "source": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_o401r2_info.json"
+  },
+  {
+   "file": "build_receipt_candidate.json",
+   "bytes": 2631,
+   "sha256": "567720c1de540042e5721e91c3266827303b796f634b672a50086aef8fbd81f5",
+   "source": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_o431fix_info.json"
+  }
+ ]
+}
