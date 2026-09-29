@@ -1,0 +1,305 @@
+{
+ "ui": "http://127.0.0.1:4314",
+ "widths": [
+  390
+ ],
+ "arms": {
+  "zh-CN": [
+   {
+    "path": "/v8/discover",
+    "viewport": 390,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 390,
+    "bar_clientWidth": 390,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 191,
+     "right": 373,
+     "clipped_by_viewport": false,
+     "visible_width": 182
+    },
+    "wrapped_leaves": [
+     "跟随系统"
+    ],
+    "leaves": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 96,
+       "right": 100,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "城市探索",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 48
+      },
+      "box": {
+       "left": 110,
+       "right": 158,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "跟随系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 2,
+       "heights": [
+        21,
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 191,
+       "right": 256,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 264,
+       "right": 329,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 390
+   }
+  ],
+  "en": [
+   {
+    "path": "/v8/discover",
+    "viewport": 390,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 390,
+    "bar_clientWidth": 390,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 195,
+     "right": 373,
+     "clipped_by_viewport": false,
+     "visible_width": 178
+    },
+    "wrapped_leaves": [],
+    "leaves": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 41
+      },
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 86,
+       "right": 90,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "City Discovery",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 81
+      },
+      "box": {
+       "left": 100,
+       "right": 181,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 50
+      },
+      "box": {
+       "left": 195,
+       "right": 258,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 266,
+       "right": 329,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 390
+   }
+  ]
+ }
+}
