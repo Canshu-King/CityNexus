@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import logging
 import os
+import secrets
 import time
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -126,6 +127,9 @@ from app.db.models import (
     JourneyLeg,
     JourneyConstraint,
     JourneyMission,
+    JourneyMember as JourneyMemberModel,
+    JourneyRoleCapability,
+    JourneyShareGrant,
     JourneyOutcomeEvent,
     JourneyTripContext,
     MobilityFact,
@@ -344,6 +348,12 @@ from app.schemas import (
     ReservationVisionRequest,
     ResilienceRefreshRequest,
     ScheduleChangeRequest,
+    ShareGrant,
+    ShareGrantCreate,
+    ShareGrantRevoked,
+    JourneyMember,
+    JourneyMemberCreate,
+    JourneyRoleRule,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
     StayPlanGenerateRequest,
@@ -3135,6 +3145,419 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
 @app.get("/api/v1/journeys/{journey_id}")
 def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
+
+
+# ORD-0434: a share grant is a server fact instead of a URL the client assembles
+# (`frontend/src/lib/journeyLink.ts:34`).  The anonymous read above is deliberately untouched - the
+# phone demo chain and every existing e2e walk it, and tightening what it accepts is a daylight
+# decision.  `PRIVATE` refuses every token read; `INVITEES_ONLY` asks the reader to name a member
+# and checks that name against `journey_members`, and a read that names nobody is refused rather
+# than waved through.
+def _share_refusal(status: int, message: str, reason_code: str, details: dict) -> HTTPException:
+    """One shape for every grant refusal: the status picks the code, the name rides in reason_code."""
+    refused = HTTPException(status, message)
+    refused.reason_code = reason_code
+    refused.error_details = details
+    return refused
+
+
+def _share_grant_state(grant: JourneyShareGrant, now: datetime) -> str:
+    """One place decides what this token may do right now, and it fails closed."""
+    if grant.revoked_at:
+        return "REVOKED"
+    if grant.expires_at:
+        try:
+            expires = datetime.fromisoformat(grant.expires_at)
+        except ValueError:
+            return "EXPIRY_UNREADABLE"
+        if expires.tzinfo is None:
+            return "EXPIRY_UNREADABLE"
+        if expires <= now:
+            return "EXPIRED"
+    return "READABLE"
+
+
+def _member_is_in_force(session: Session, journey_id: str, traveler_id: str, now: datetime) -> bool:
+    # A membership counts when it was not withdrawn and its own deadline has not passed.
+    member = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey_id,
+            JourneyMemberModel.traveler_id == traveler_id,
+        )
+    ).first()
+    if member is None or member.removed_at:
+        return False
+    if member.expires_at:
+        try:
+            expires = datetime.fromisoformat(member.expires_at)
+        except ValueError:
+            return False
+        if expires.tzinfo is None or expires <= now:
+            return False
+    return True
+
+
+def _share_grant_payload(grant: JourneyShareGrant) -> ShareGrant:
+    return ShareGrant(
+        id=grant.id,
+        journey_id=grant.journey_id,
+        visibility=grant.visibility,
+        created_by=grant.created_by,
+        expires_at=grant.expires_at,
+        revoked_at=grant.revoked_at,
+        created_at=grant.created_at,
+        updated_at=grant.updated_at,
+        token=grant.token,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/share-grants", status_code=201, response_model=ShareGrant)
+def create_share_grant(
+    journey_id: UUID, payload: ShareGrantCreate, session: Session = Depends(get_session)
+):
+    require(session, Journey, str(journey_id), "Journey")
+    creator = payload.created_by.strip()
+    if not creator:
+        raise _share_refusal(
+            422,
+            "A share grant needs the person or device that created it.",
+            "SHARE_GRANT_CREATOR_EMPTY",
+            {"field": "created_by"},
+        )
+    expires_at: str | None = None
+    if payload.expires_at is not None:
+        raw = payload.expires_at.strip()
+        try:
+            parsed = datetime.fromisoformat(raw)
+        except ValueError:
+            raise _share_refusal(
+                422,
+                "The expiry sent cannot be read as an instant.",
+                "SHARE_GRANT_EXPIRY_UNREADABLE",
+                {"field": "expires_at"},
+            )
+        if parsed.tzinfo is None:
+            raise _share_refusal(
+                422,
+                "An expiry without an offset would be a guess about whose clock it is.",
+                "SHARE_GRANT_EXPIRY_NO_OFFSET",
+                {"field": "expires_at"},
+            )
+        expires_at = parsed.astimezone(timezone.utc).isoformat()
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant = JourneyShareGrant(
+        id=str(uuid4()),
+        journey_id=str(journey_id),
+        token=secrets.token_urlsafe(24),
+        visibility=payload.visibility,
+        created_by=creator,
+        expires_at=expires_at,
+        revoked_at=None,
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    session.add(grant)
+    session.commit()
+    return _share_grant_payload(grant)
+
+
+@app.get(
+    "/api/v1/travelers/{traveler_id}/recycle-bin/journeys",
+    response_model=list[RecycleBinJourney],
+)
+def list_traveler_recycle_bin_journeys(traveler_id: UUID, session: Session = Depends(get_session)):
+    """ORD-0434 step 2: the same bin rows, scoped to one owner.
+
+    This is its own door rather than a parameter on `GET /api/v1/recycle-bin/journeys` because that
+    one carries a tested promise to advertise no filter, no scope and no page - a promise this order
+    has no business bending.  Naming an owner in a path is not proof of who is asking; binding the
+    caller to the name is the daylight decision step 2 does not make.  Rows and ordering are the same
+    schema and the same `deleted_at` newest-first rule, so the two doors cannot disagree about a row.
+    """
+    items = session.scalars(
+        select(Journey)
+        .where(Journey.deleted_at.is_not(None), Journey.traveler_id == str(traveler_id))
+        .order_by(Journey.deleted_at.desc(), Journey.id)
+    ).all()
+    return [recycle_bin_entry_schema(item) for item in items]
+
+
+@app.get("/api/v1/journeys/{journey_id}/share-grants", response_model=list[ShareGrant])
+def list_share_grants(journey_id: UUID, session: Session = Depends(get_session)):
+    require(session, Journey, str(journey_id), "Journey")
+    rows = session.scalars(
+        select(JourneyShareGrant)
+        .where(JourneyShareGrant.journey_id == str(journey_id))
+        .order_by(JourneyShareGrant.created_at, JourneyShareGrant.id)
+    ).all()
+    # Revoked grants stay in the list: an owner must be able to see that a link was withdrawn,
+    # and a silently filtered row is indistinguishable from one that never existed.
+    return [_share_grant_payload(row) for row in rows]
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/share-grants/{grant_id}/revoke",
+    response_model=ShareGrantRevoked,
+)
+def revoke_share_grant(journey_id: UUID, grant_id: str, session: Session = Depends(get_session)):
+    grant = session.get(JourneyShareGrant, grant_id)
+    if grant is None or grant.journey_id != str(journey_id):
+        raise _share_refusal(
+            404,
+            "No share grant of this journey carries that id.",
+            "SHARE_GRANT_UNKNOWN",
+            {"field": "grant_id", "journey_id": str(journey_id)},
+        )
+    if grant.revoked_at:
+        raise _share_refusal(
+            409,
+            "This grant was already withdrawn; withdrawing it again is not a new fact.",
+            "SHARE_GRANT_ALREADY_REVOKED",
+            {"revoked_at": grant.revoked_at, "grant_id": grant.id},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant.revoked_at = stamp
+    grant.updated_at = stamp
+    session.commit()
+    return ShareGrantRevoked(
+        id=grant.id,
+        journey_id=grant.journey_id,
+        visibility=grant.visibility,
+        revoked_at=stamp,
+        already_revoked=False,
+    )
+
+
+@app.get("/api/v1/shared/journeys/{token}")
+def read_shared_journey(
+    token: str,
+    member: str | None = None,
+    session: Session = Depends(get_session),
+):
+    """The door a grant token is actually presented at, so expiry and revocation can mean something.
+
+    The body on success is the same `journey_schema` the anonymous route returns: one journey shape,
+    not a second one that can drift.
+    """
+    grant = session.scalars(
+        select(JourneyShareGrant).where(JourneyShareGrant.token == token)
+    ).first()
+    if grant is None:
+        # "never existed" answers 404; a grant that stopped working answers 409.  Two different facts
+        # cannot share one number, or a client collapses them into the same sentence.
+        raise _share_refusal(
+            404, "No share grant carries that token.", "SHARE_GRANT_UNKNOWN", {"field": "token"}
+        )
+    moment = datetime.now(timezone.utc)
+    if grant.visibility == "INVITEES_ONLY" and not member:
+        raise _share_refusal(
+            409,
+            "This grant is for invited members, and the read named nobody.",
+            "SHARE_GRANT_MEMBERSHIP_REQUIRED",
+            {"grant_id": grant.id, "visibility": grant.visibility},
+        )
+    if member and grant.visibility == "INVITEES_ONLY":
+        if not _member_is_in_force(session, grant.journey_id, member, moment):
+            raise _share_refusal(
+                409,
+                "The member named is not in force on this journey.",
+                "SHARE_GRANT_NOT_A_MEMBER",
+                {"grant_id": grant.id, "member_field": "member"},
+            )
+    if grant.visibility == "PRIVATE":
+        raise _share_refusal(
+            409,
+            "A private grant answers no token read.",
+            "SHARE_GRANT_NOT_LINK_READABLE",
+            {"grant_id": grant.id, "visibility": grant.visibility},
+        )
+    state = _share_grant_state(grant, moment)
+    if state != "READABLE":
+        details: dict[str, str] = {"grant_id": grant.id, "state": state}
+        if state == "REVOKED":
+            details["revoked_at"] = str(grant.revoked_at)
+        elif state in ("EXPIRED", "EXPIRY_UNREADABLE"):
+            details["expires_at"] = str(grant.expires_at)
+        elif state == "NOT_LINK_READABLE":
+            details["visibility"] = grant.visibility
+        raise _share_refusal(
+            409,
+            "This share grant does not allow a read right now.",
+            f"SHARE_GRANT_{state}",
+            details,
+        )
+    journey = session.get(Journey, grant.journey_id)
+    if journey is None:
+        raise _share_refusal(
+            404,
+            "The journey behind this grant is no longer readable.",
+            "SHARE_GRANT_JOURNEY_GONE",
+            {"grant_id": grant.id},
+        )
+    return journey_schema(journey)
+
+
+# ORD-0434 step 2: membership is one set per journey, and what a role may do is a table the server
+# holds.  Shape borrowed from RELATION/relation_and_copy_findings.md:94 (a role answers "what may
+# this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
+# are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
+# (`app/stay_mobility.py:1963`).
+def _member_state(member: JourneyMemberModel, now: datetime) -> str:
+    if member.removed_at:
+        return "MEMBER_WITHDRAWN"
+    if member.expires_at:
+        try:
+            expires = datetime.fromisoformat(member.expires_at)
+        except ValueError:
+            return "MEMBER_LAPSED"
+        if expires.tzinfo is None or expires <= now:
+            return "MEMBER_LAPSED"
+    return "MEMBER_IN_FORCE"
+
+
+def _member_payload(member: JourneyMemberModel) -> JourneyMember:
+    return JourneyMember(
+        id=member.id,
+        journey_id=member.journey_id,
+        traveler_id=member.traveler_id,
+        role=member.role,
+        invited_by=member.invited_by,
+        expires_at=member.expires_at,
+        joined_at=member.joined_at,
+        removed_at=member.removed_at,
+        created_at=member.created_at,
+        updated_at=member.updated_at,
+        member_state=_member_state(member, datetime.now(timezone.utc)),
+    )
+
+
+def _member_expiry(raw: str | None) -> str | None:
+    """Same rule as a grant: an instant with no offset is a guess about whose clock, so refuse it."""
+    if raw is None:
+        return None
+    value = raw.strip()
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        raise _share_refusal(
+            422, "The expiry sent cannot be read as an instant.",
+            "MEMBER_EXPIRY_UNREADABLE", {"field": "expires_at"},
+        )
+    if parsed.tzinfo is None:
+        raise _share_refusal(
+            422, "An expiry without an offset would be a guess about whose clock it is.",
+            "MEMBER_EXPIRY_NO_OFFSET", {"field": "expires_at"},
+        )
+    return parsed.astimezone(timezone.utc).isoformat()
+
+
+@app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
+def add_journey_member(
+    journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
+):
+    require(session, Journey, str(journey_id), "Journey")
+    inviter = payload.invited_by.strip()
+    if not inviter:
+        raise _share_refusal(
+            422, "A membership needs the person or device that granted it.",
+            "MEMBER_INVITER_EMPTY", {"field": "invited_by"},
+        )
+    traveler_id = str(payload.traveler_id)
+    if session.get(Traveler, traveler_id) is None:
+        raise _share_refusal(
+            404, "No traveller carries that id.", "MEMBER_TRAVELER_UNKNOWN", {"field": "traveler_id"}
+        )
+    expires_at = _member_expiry(payload.expires_at)
+    existing = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == str(journey_id),
+            JourneyMemberModel.traveler_id == traveler_id,
+        )
+    ).first()
+    if existing is not None:
+        # One set means one row: a second invitation to the same traveller is the same fact twice,
+        # so it is refused by name rather than quietly adding a duplicate the list would show twice.
+        raise _share_refusal(
+            409,
+            "This traveller is already in this journey's member set.",
+            "MEMBER_ALREADY_PRESENT",
+            {"member_id": existing.id, "member_state": _member_state(existing, datetime.now(timezone.utc))},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    member = JourneyMemberModel(
+        id=str(uuid4()),
+        journey_id=str(journey_id),
+        traveler_id=traveler_id,
+        role=payload.role,
+        invited_by=inviter,
+        expires_at=expires_at,
+        joined_at=stamp,
+        removed_at=None,
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    session.add(member)
+    session.commit()
+    return _member_payload(member)
+
+
+@app.get("/api/v1/journeys/{journey_id}/members", response_model=list[JourneyMember])
+def list_journey_members(journey_id: UUID, session: Session = Depends(get_session)):
+    require(session, Journey, str(journey_id), "Journey")
+    rows = session.scalars(
+        select(JourneyMemberModel)
+        .where(JourneyMemberModel.journey_id == str(journey_id))
+        .order_by(JourneyMemberModel.created_at, JourneyMemberModel.id)
+    ).all()
+    # Withdrawn rows stay listed with their own state: a screen has to be able to say "this person
+    # was here and is out" without guessing from an absence.
+    return [_member_payload(row) for row in rows]
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
+    response_model=JourneyMember,
+)
+def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
+    member = session.get(JourneyMemberModel, member_id)
+    if member is None or member.journey_id != str(journey_id):
+        raise _share_refusal(
+            404,
+            "No member of this journey carries that id.",
+            "MEMBER_UNKNOWN",
+            {"field": "member_id", "journey_id": str(journey_id)},
+        )
+    if member.removed_at:
+        raise _share_refusal(
+            409,
+            "This membership was already withdrawn; withdrawing it again is not a new fact.",
+            "MEMBER_ALREADY_WITHDRAWN",
+            {"member_id": member.id, "removed_at": member.removed_at},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    member.removed_at = stamp
+    member.updated_at = stamp
+    session.commit()
+    return _member_payload(member)
+
+
+@app.get("/api/v1/journeys/{journey_id}/acl/roles", response_model=list[JourneyRoleRule])
+def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_session)):
+    """The product's own answer to what a role may do, read off the seeded table."""
+    require(session, Journey, str(journey_id), "Journey")
+    rows = session.scalars(
+        select(JourneyRoleCapability).order_by(JourneyRoleCapability.role, JourneyRoleCapability.capability)
+    ).all()
+    by_role: dict[str, JourneyRoleRule] = {}
+    for row in rows:
+        rule = by_role.get(row.role)
+        if rule is None:
+            rule = JourneyRoleRule(role=row.role, capabilities=[], scope_message_key=row.scope_message_key)
+            by_role[row.role] = rule
+        rule.capabilities.append(row.capability)
+    return [by_role[role] for role in sorted(by_role)]
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")

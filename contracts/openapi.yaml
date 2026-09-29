@@ -484,6 +484,28 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/{traveler_id}/recycle-bin/journeys:
+    get:
+      operationId: listTravelerRecycleBinJourneys
+      description: >-
+        ORD-0434 step 2: the recycle bin scoped to one owner.  A separate door rather than a query
+        parameter on `/recycle-bin/journeys`, because that door's contract carries a tested promise to
+        advertise no filter, no scope and no pagination, and this order does not get to bend it.  The
+        rows are the same `RecycleBinJourney` shape in the same `deleted_at` newest-first order, so the
+        two doors cannot disagree about a trip.  Naming an owner in a path is not proof of who is
+        asking - binding a caller to a name is the daylight decision this step leaves open.
+      parameters:
+        - {name: traveler_id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200':
+          description: Every binned journey belonging to that traveller
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/RecycleBinJourney'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
   /recycle-bin/journeys:
     get:
       operationId: listRecycleBinJourneys
@@ -504,6 +526,212 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/RecycleBinJourney'}
+  /journeys/{journey_id}/share-grants:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    post:
+      operationId: createShareGrant
+      description: >-
+        ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles.
+        One journey can hold many grants; each carries a named visibility, an optional deadline, the
+        moment it was withdrawn, and the creator the creating device asserted - not authenticated in
+        this step, because the anonymous read is still the product's default.  An `expires_at` without
+        an offset is refused: reading a bare instant against the server's own clock would be a guess
+        about the traveller's.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ShareGrantCreate'}
+      responses:
+        '201':
+          description: The grant, with the token its holder needs
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ShareGrant'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '422':
+          description: "error.code = VALIDATION_ERROR with error.reason_code = SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+    get:
+      operationId: listShareGrants
+      description: >-
+        Every grant of this journey, withdrawn ones included: a row that vanished from the list would
+        be indistinguishable from one that never existed.
+      responses:
+        '200':
+          description: The grants of this journey, oldest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/ShareGrant'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
+  /journeys/{journey_id}/share-grants/{grant_id}/revoke:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: grant_id, in: path, required: true, schema: {type: string}}
+    post:
+      operationId: revokeShareGrant
+      description: >-
+        Withdrawal takes effect on the token's next read.  A second withdrawal is a different answer,
+        not a repeat of the first.
+      responses:
+        '200':
+          description: Withdrawn now
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ShareGrantRevoked'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN - no grant of this journey carries that id"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = SHARE_GRANT_ALREADY_REVOKED - this grant was withdrawn earlier"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
+  /shared/journeys/{token}:
+    parameters:
+      - {name: token, in: path, required: true, schema: {type: string}}
+      - name: member
+        in: query
+        required: false
+        schema: {type: string, format: uuid}
+        description: >-
+            Who is reading, when the grant is INVITEES_ONLY.  Absent on such a grant answers 409 with
+            error.reason_code = SHARE_GRANT_MEMBERSHIP_REQUIRED rather than waving the read through;
+            a name that is not in force answers SHARE_GRANT_NOT_A_MEMBER.
+    get:
+      operationId: readSharedJourney
+      description: >-
+        The door a grant token is presented at, so that a deadline and a withdrawal can mean
+        something.  A successful read answers with the same Journey shape as
+        `/journeys/{journey_id}` - one shape, not a second one that can drift.  The named facts ride
+        in `error.reason_code`, inside the one envelope every door already uses: never existed is 404
+        NOT_FOUND / SHARE_GRANT_UNKNOWN, while withdrawn, out of date and not-link-readable are 409
+        CONFLICT with their own reason_code.  PRIVATE and INVITEES_ONLY fail closed as
+        SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder
+        against.
+      responses:
+        '200':
+          description: The journey this grant lets its holder read
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Journey'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE - a grant that exists but no longer allows a read"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN (never existed) or SHARE_GRANT_JOURNEY_GONE - a different number from the one above, on purpose"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
+  /journeys/{journey_id}/members:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    post:
+      operationId: addJourneyMember
+      description: >-
+        ORD-0434 step 2: one member set per journey.  The store holds the single-set promise as a
+        unique index on (journey_id, traveler_id), so a second invitation to the same traveller is
+        refused by name instead of quietly listing them twice.  `expires_at` follows the grant rule:
+        no offset means no instant stored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyMemberCreate'}
+      responses:
+        '201':
+          description: The membership row, with the state derived from its own columns
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyMember'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_TRAVELER_UNKNOWN"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_PRESENT"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: "error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+    get:
+      operationId: listJourneyMembers
+      description: >-
+        The whole set, withdrawn rows included and carrying `removed_at`: a screen has to be able to
+        say someone was in and is out without inferring it from an absence.
+      responses:
+        '200':
+          description: The journey's members, oldest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/JourneyMember'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
+  /journeys/{journey_id}/members/{member_id}/withdraw:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: member_id, in: path, required: true, schema: {type: string}}
+    post:
+      operationId: withdrawJourneyMember
+      description: >-
+        Takes effect on the next read of anything that checks membership, including an
+        `INVITEES_ONLY` token read.  A second withdrawal answers differently from the first.
+      responses:
+        '200':
+          description: The row, now carrying its withdrawal moment
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyMember'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
+  /journeys/{journey_id}/acl/roles:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    get:
+      operationId: listJourneyRoleRules
+      description: >-
+        The product's own answer to what a role may do, read off the seeded table
+        (`journey_role_capabilities`).  Each row carries a capability and the message key that states
+        the role's scope in one sentence - the sentence itself is not here, because a server-authored
+        string reaching a screen is the defect this project keeps having to fix.
+      responses:
+        '200':
+          description: One entry per role, with its capabilities
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/JourneyRoleRule'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
   /journeys/{journey_id}/constraints:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2271,6 +2499,109 @@ components:
           properties:
             deleted_at: {type: string, format: date-time}
             bin_state: {type: string, enum: [IN_RECYCLE_BIN]}
+    MemberRole:
+      type: string
+      description: >-
+        Three tiers, each answering what that person may do through the ACL door below.  The words
+        are checked in the store too (`backend/db/schema.sql`).
+      enum: [OWNER, ADMIN, COLLABORATOR]
+    MemberState:
+      type: string
+      description: >-
+        Derived from the row's own columns, never stored.  Prefixed because bare EXPIRED and WITHDRAWN
+        already mean something to accommodation offers (`backend/app/stay_mobility.py:1963`).
+      enum: [MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN]
+    JourneyCapability:
+      type: string
+      enum: [JOURNEY_READ, JOURNEY_UPDATE, PLACE_EDIT, MEMBER_MANAGE, SHARE_GRANT_MANAGE]
+    JourneyMemberCreate:
+      type: object
+      additionalProperties: false
+      required: [traveler_id, role, invited_by]
+      properties:
+        traveler_id: {type: string, format: uuid}
+        role: {$ref: '#/components/schemas/MemberRole'}
+        invited_by: {type: string, minLength: 1, maxLength: 120}
+        expires_at: {type: [string, 'null'], format: date-time}
+    JourneyMember:
+      type: object
+      required: [id, journey_id, traveler_id, role, invited_by, expires_at, joined_at, removed_at, created_at, updated_at, member_state]
+      properties:
+        id: {type: string, format: uuid}
+        journey_id: {type: string, format: uuid}
+        traveler_id: {type: string, format: uuid}
+        role: {$ref: '#/components/schemas/MemberRole'}
+        invited_by: {type: string}
+        expires_at: {type: [string, 'null'], format: date-time}
+        joined_at: {type: [string, 'null'], format: date-time}
+        removed_at: {type: [string, 'null'], format: date-time}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+        member_state: {$ref: '#/components/schemas/MemberState'}
+    JourneyRoleRule:
+      type: object
+      required: [role, capabilities, scope_message_key]
+      properties:
+        role: {$ref: '#/components/schemas/MemberRole'}
+        capabilities:
+          type: array
+          items: {$ref: '#/components/schemas/JourneyCapability'}
+        scope_message_key:
+          type: string
+          description: >-
+            A dictionary key, not a sentence: the words stay on the side that owns the language.
+    ShareVisibility:
+      type: string
+      description: >-
+        The store checks this list too (`backend/db/schema.sql`).  PRIVATE and INVITEES_ONLY are
+        storable but not link-readable in this step - there is no member data to check a holder
+        against yet - so a token for either answers SHARE_GRANT_NOT_LINK_READABLE rather than
+        reading as open.
+      enum: [PRIVATE, LINK_READ, INVITEES_ONLY, PUBLIC]
+    ShareGrantCreate:
+      type: object
+      additionalProperties: false
+      required: [visibility, created_by]
+      properties:
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        created_by: {type: string, minLength: 1, maxLength: 120}
+        expires_at: {type: [string, 'null'], format: date-time}
+    ShareGrant:
+      type: object
+      required: [id, journey_id, visibility, created_by, expires_at, revoked_at, created_at, updated_at, token]
+      properties:
+        id: {type: string, format: uuid}
+        journey_id: {type: string, format: uuid}
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        created_by: {type: string}
+        expires_at:
+          type: [string, 'null']
+          format: date-time
+          description: null means no deadline was ever set - not a far-future date, not the server's clock.
+        revoked_at:
+          type: [string, 'null']
+          format: date-time
+          description: null means this grant has never been withdrawn.
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+        token:
+          type: string
+          description: >-
+            The whole capability a holder needs.  It is a random value the server minted, not the
+            journey id, so withdrawing a grant cannot be worked around by knowing a trip's address.
+    ShareGrantRevoked:
+      type: object
+      required: [id, journey_id, visibility, revoked_at, already_revoked]
+      properties:
+        id: {type: string, format: uuid}
+        journey_id: {type: string, format: uuid}
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        revoked_at: {type: string, format: date-time}
+        already_revoked:
+          type: boolean
+          description: >-
+            False on the withdrawal that did it.  A repeat withdrawal is refused with
+            SHARE_GRANT_ALREADY_REVOKED instead of answering the same thing twice.
     Money:
       type: object
       required: [amount_minor, currency]

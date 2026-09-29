@@ -788,3 +788,78 @@ class Commitment(BaseModel):
         if value not in SOURCE_COMMITMENT_STRENGTHS:
             raise ValueError("level must be one of the frozen commitment strength codes")
         return value
+
+
+# ORD-0434 step 1.  `PRIVATE` and `INVITEES_ONLY` are stored here but not yet honoured by the
+# token read: there is no member data to check against until step 2, and a grant must not read as
+# "open" just because the server cannot yet tell who is holding the link.
+ShareVisibility = Literal["PRIVATE", "LINK_READ", "INVITEES_ONLY", "PUBLIC"]
+
+
+class ShareGrantCreate(BaseModel):
+    visibility: ShareVisibility
+    # What the creating device says it is.  Not authenticated in this step; see the table comment.
+    created_by: str = Field(min_length=1, max_length=120)
+    expires_at: str | None = None
+
+
+class ShareGrant(BaseModel):
+    id: str
+    journey_id: str
+    visibility: ShareVisibility
+    created_by: str
+    expires_at: str | None
+    revoked_at: str | None
+    created_at: str
+    updated_at: str
+    # The token is returned only where it can be acted on: list answers carry it so the owner can
+    # build or revoke the link, and the create answer carries it once, at creation.
+    token: str
+
+
+class ShareGrantRevoked(BaseModel):
+    id: str
+    journey_id: str
+    visibility: ShareVisibility
+    revoked_at: str
+    already_revoked: bool
+
+
+# ORD-0434 step 2.  The member-state words are prefixed on purpose: bare EXPIRED and WITHDRAWN are
+# already accommodation-offer statuses (`app/stay_mobility.py:1963`), and borrowing them here would
+# make one word mean two things in two different answers.
+MemberRole = Literal["OWNER", "ADMIN", "COLLABORATOR"]
+MemberState = Literal["MEMBER_IN_FORCE", "MEMBER_LAPSED", "MEMBER_WITHDRAWN"]
+JourneyCapability = Literal[
+    "JOURNEY_READ", "JOURNEY_UPDATE", "PLACE_EDIT", "MEMBER_MANAGE", "SHARE_GRANT_MANAGE"
+]
+
+
+class JourneyMemberCreate(BaseModel):
+    traveler_id: UUID
+    role: MemberRole
+    invited_by: str = Field(min_length=1, max_length=120)
+    # None means the membership was given no end.  No default instant, no far-future sentinel.
+    expires_at: str | None = None
+
+
+class JourneyMember(BaseModel):
+    id: str
+    journey_id: str
+    traveler_id: str
+    role: MemberRole
+    invited_by: str
+    expires_at: str | None
+    joined_at: str | None
+    removed_at: str | None
+    created_at: str
+    updated_at: str
+    member_state: MemberState
+
+
+class JourneyRoleRule(BaseModel):
+    """One role, the capabilities the server holds for it, and the key that states its scope."""
+
+    role: MemberRole
+    capabilities: list[JourneyCapability]
+    scope_message_key: str
