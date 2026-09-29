@@ -16588,6 +16588,88 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 dt（会话 be19052c）ORD-0435 欠件补交：修后屏读两臂（并认我上一版是假双臂）+ ORD-0452 报名 + ORD-0458 前提冲突请裁（2026-09-29 12:27 +08）
+
+**一、欠的那件补上了，成因比"没跑"更难看**。号令者 12:00 块（账本
+`D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16617`）点名「`be19052c` 的 ORD-0435 已落地但"修后屏读两臂"没交」。
+现读属实：我上一版把 5 条臂各注册两次、臂标签带 locale，但 body 第一行仍写死
+`openConsole(page, "zh-CN")` —— 英文臂从头到尾开的是中文屏。Q1en 与 Q3en 照样绿（它们断言枚数与几何，
+与语言无关），只有 Q2en 红在 `Expected substring: "commitment"` 而实读到
+`1 处受保护承诺随这一批一起提交，不计入勾选数。`。也就是说：如果我只看"9 臂通过"就交件，这一格是假绿。
+现在 5 个 body 从注册循环取 locale（spec blob `1371a0385b6deab156fbc37838510571eb1550a5`），
+transform 脚本一并入库（blob `b855a8ab60753db63381fb07bd4b70ee0b3b6ab8`）以便复跑。
+
+**二、两臂读数（10 枚证据全部入库，可 `git cat-file -t` 回读为 blob）**。两臂各 5 条，全部 `passed`，
+每臂结果卡 3 张、seed 走 `GET /api/v1/demo/scene`：
+- 计数与空态：中文臂 `已选 0 处` → `已选 1 处`（blob `13c15667235018b882229c5fdde35ed75d4508d7`），
+  英文臂 `0 picked` → `1 picked`（blob `89f131792f8eefb87ac9b8850de14a802abaabca`）——两臂读到的是各自语言的屏。
+- 拒绝臂：中文臂屏上 `这一批装不进行程已保护的那一天：少勾几处，或换一天。`，英文臂
+  `That batch does not fit inside the day the journey already protects…`（两臂各 1 条，compose 均回 http 422）。
+- 写入臂：中文臂 plan `bac46dd2-304f-42b2-8a0b-b518d2090af7`、英文臂 plan
+  `865533dd-8830-409d-8ac0-ba4a904a71ee`，两臂各自的第二次读都回 http 200、状态 CANDIDATE、
+  日期 2026-10-10（证据 blob `5d4f47c82bc523d87d33be386f2d87ad16abaacd` 与
+  `702b6576a0cc4e88528243471c5668cf360cac8a`）。
+- 几何臂：两臂在 320、360、390、430 四个窄屏宽度上"完成"与"新建一批"同带 4 次、4 次，
+  勾选控件占卡宽 19 %（zh）与 18 %（en）。
+
+**三、这次跑不动不是产品变了，是我那份库的证据到期**。10 臂第一次跑全红在 boot，具名是
+`V13_DISCOVERY_NO_FEASIBLE_PLAN: STALE_RECOMPOSE_REQUIRED: PlanVersion evidence expired`，
+判点在 `backend/app/main.py:5880`；只读查我 05:28 那份备份，最新 6 枚 plan 的
+`mobility_evidence_json.expires_at` 全部已过期（未过期 0 枚）。处置是换成号令者 11:47 那份只读备份的
+**真复制**（`backend/_ord0435c_priv.db`）并种新 marker `ORD0435CMARKER-7a0f1a30`，两腿 `/plans` 各命中
+1 处、字节 35,481 相同、伪造串 0 处；没有改任何一行数据去凑绿。栈仍是本车道自己的 `:8812` 与 `:4835`。
+
+**四、现读坐标**。`git -c http.proxy= -c https.proxy= ls-remote origin` 我 12:25 现读：
+`refs/heads/review/ord0435-poi-batch-multiselect-r2` = `1a802ec8e3e4c778b39c665e7c01d209146527c7`
+（本次 push 是 fast-forward `c9df501a..1a802ec8`），
+`refs/heads/mirror/integration-frontend-apple-pass1` = `57ff5d1c2f8540d498d945ed591c36689fc0f39e`
+——权威线又前进了，我这枝的基座是 `4ee14229f80691cf8e5ea913375c0caf83ac02ee`（`git merge --ff-only` 上去的，
+我 12:00 后没再动过基座）。权威线我没动过，一次也没有。
+
+**五、ORD-0452 报名：不新开识别通道，它已经在了**。侦察结论我自己逐条复核过：
+图片档走 `POST /api/v1/journeys/{journey_id}/inbox/vision`（发射器 `backend/app/main.py:4528`、
+契约 `contracts/openapi.yaml:1996`），落 `artifact_type="IMAGE"`；而
+`POST /inbox/import` 的枚举只有 STRUCTURED_JSON、ICS、TEXT 三档（`backend/app/schemas.py:301`），
+没有图片档——所以"我们自己的通道"就是 vision 那条。红线要的"接不到就具名报不能"也已有形状：
+`NOT_CONFIGURED`（`backend/app/main.py:4544`）与 `FAILED_EXTERNAL`（`backend/app/main.py:4553`）。
+前端上传口在 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:737`（`accept="image/*"`）。
+因此 0452 我要做的是号令者列的五格文案与守卫（事前责任交回、上限参数化、删除后果点名来源与恢复路径、
+离开守卫、空态带动作），0 新端点；上限参数化的既有参照在 `backend/app/core/config.py`
+（如 `:76`、`:80`、`:87` 三枚），视觉侧目前只有 `backend/app/schemas.py:310` 的硬编码长度——那一格我会
+改成从 settings 读。文案按新规矩从共享表出（`frontend/src/lib/displayVocabulary.ts`），不在组件里贴字符串。
+
+**六、ORD-0458 有一处前提冲突，请裁，我不擅自选**。工单写"接在已有的 pretrip 面板上，不新建对象"，
+但同一块要的四格里有两格要持久化，而那个面板是明文不持久化的：
+- 面板 `frontend/src/features/checklist/PretripChecklistPanel.tsx`（105 行）与派生
+  `frontend/src/lib/pretripChecklist.ts`（124 行），后者 `:17` 原话
+  `It stores nothing and writes nothing. Completion is not a checkbox`；
+- 条目对象 `ChecklistItem` 只有 key、title、why、basis、target 五字段（`frontend/src/lib/pretripChecklist.ts:32`
+  起），没有勾选态、没有分组、没有备注；面板上那枚 `cn-pretrip-note` 是标题说明句
+  （`frontend/src/features/checklist/PretripChecklistPanel.tsx:53`），不是条目字段；
+- 数据只读自 `GET /api/v1/journeys/{id}/experience`（挂载在
+  `frontend/src/app/v8PanelRegistry.tsx:482` 起，实读在 `frontend/src/app/V8Experience.tsx:709`），
+  契约里 `experience_flags` 只有 needs_review、recovery_required、staleness、feasibility_failures 四键
+  （`contracts/openapi.yaml:1722` 起），全文没有 `checklist` 字样；
+- 写路由 0 条：`grep -iE "pretrip|checklist" backend/app/main.py` 命中 0 处（词面 0，只说明词面没有；
+  我另外把 `operations/` 一族逐条看过，唯一相关的持久化写通道是
+  `PUT /api/v1/journeys/{journey_id}/operations/luggage`，`backend/app/main.py:4384`）。
+三条路请挑：**甲** 只做屏上粒度——勾选态与完成计数为本次会话视图，面板上明确写"本次不保存"，
+0 新对象 0 写路由（守"不新建对象"，但"勾选"不跨设备）；**乙** 给清单开字段与写路由（勾选与备注真持久化，
+但违"不新建对象"，且要同笔进契约与 `frontend/src/generated/api.ts`）；**丙** 把勾选态挂到已有的
+luggage 写通道（`backend/app/main.py:4384`）上，不新建对象但语义要借，需要号令者判这算不算"接已有对象"。
+我推荐 **甲 + 具名声明**，因为 0435 刚教过：客户端状态一旦看起来像已保存，就是红线本身。
+排在 0452 之后，所以这一格裁回来之前我不会动 0458 的字节。
+
+**七、顺带一枚漂移（不在我单里，报给该管的人）**：`frontend/src/lib/pretripChecklist.ts:13` 起的注释把
+契约锚钉在 `openapi.yaml` 的 1393 与 1923 两处，而现尖上 `feasibility_failures` 实际在 `:1728`、
+`requires_user_decision` 在 `:2258` —— 注释锚已漂 335 与 335 行。这是既有问题，我没改。
+
+**八、没做到的**：① 以上 10 臂仍是开发者模式口径（`reuseExistingServer=true`、未设
+`CITYNEXUS_E2E_RUN_ID`），权威口径的堵点不变（`backend/app/main.py:2069` 那枚具名 token 无人供给）；
+② 交件形式按新规矩走本块，`bolt_replica.py` 我在提交前跑过，结果随块附在下一跳；③ ORD-0452 我只交了
+报名与通道核实，屏还没动——等这格块入账即开工，不等代插（cron 已到期我知道，块不会自己动）。
+
+
 ### ORD-0417 · 车道 8ac89982 · 两枚撞名证据件已改名推 r8；另：r2 现在复切不再是"产品面无冲突" · 2026-09-29 12:14+08
 
 **一、照号令者 12:20 那块第二件做的。** 新枝 `refs/heads/review/R-ord0417-tap-names-stop-r8`，头 74d4392b15127dfab4563f1c440a9fafb1ceddaf（本地 `git rev-parse` 与 `git ls-remote` 回读逐字相同），树 8b316e132539794b1c9bef3b066c66828d09e794，父链落在现尖 4ee14229f80691cf8e5ea913375c0caf83ac02ee 之上（尖自己 `ls-remote` 现读，未沿用别人给的旧值）。对现尖的差集是 7 个新增路径、0 个修改、0 个删除（`git diff --name-status` 首列计数）。
