@@ -1,0 +1,32 @@
+ORD-0428: the wallet card's headline is a name joined from the plan, not the server's join key
+
+The 预订 tab's `wallet-commitment` card printed `policy.semantic_key` as its `<h2>`, so a confirmed
+promise was titled `place-river-cruise` while every other line on that card was already in traveller
+words.  `semantic_key` is the key the backend matches on when it binds a commitment to a plan row
+(`backend/app/main.py:6128-6144`), not a name.
+
+The name comes from data this screen already holds.  `_commitment_payload`
+(`backend/app/main.py:7046`) ships `activity_id`, which is the bound row's id, and the wallet type
+declared in `frontend/src/app/V8Experience.tsx` did not carry it -- that omission is why the card had
+no way to reach a name and printed the key instead.  A commitment that carries no binding is matched
+on the same three fields the backend's own binding used: `place_id`, `city_service_id`, and
+`metadata.semantic_key` including its `<place>:<key>` form.  Nothing is invented: a card with nothing
+to join to keeps the localised fallback it already had, and the identifier does not reappear on a
+`data-*` attribute.
+
+No new mapping table: the badge row keeps using the ORD-0425 shared display layer
+(`frontend/src/lib/displayVocabulary.ts`), which ORD-0446 already wired in, and this change adds no
+word to it.
+
+Measured: two `tsc` configs clean on both trees (0 error lines before and after); `vite build` rc 0;
+four screen arms on a private stack this run started and byte-matched to its own `dist`
+(before: headline `place-river-cruise` in both locales; after: `Nexus River Cruise Pier` in both, with
+no `place-*` anywhere in the card's DOM); two mutant arms where the join is broken in the data
+(`承诺 a0cf7b9c` / `Commitment a0cf7b9c`); the exposure ruler (r7b, r7b4) sees the same 8 cells on both
+trees, the only label difference being an 8-line shift inside the same file; the copy-tier ruler's 83
+rows are identical in tier, shape, file and literal.  The new e2e arm passes here and goes red on the
+pre-fix bytes reading `Received: "place-river-cruise"`.
+
+Not touched: `main.py:5311` -> `:7046` is a citation repair inside the comment block this change
+extends.  `frontend/src/main.tsx:1574` prints the same key on the `/legacy` surface and is left alone
+and named.
