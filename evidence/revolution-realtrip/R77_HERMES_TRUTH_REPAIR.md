@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `77682630`
+- final product/evidence commit before this receipt update: `ab34e04c`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -260,6 +260,10 @@ available without presenting a no-op “let CityNexus choose” action.
 
 The empty sheet title is now also `当前没有可选择的路线方式` rather than
 `选择平稳路线`, so the diagnostic state cannot be mistaken for an available choice.
+
+The final hardening commit `ab34e04c` binds every individual mode tile to the same
+`canChoose` predicate as the bottom action. Even if facts are later present while the
+selected plan target is absent, no tile can invoke the no-op selection callback.
 
 Captured artifacts:
 
