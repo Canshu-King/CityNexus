@@ -6521,7 +6521,6 @@ def _trip_studio_preview_payload(
     }
 
 
-@app.post("/api/v1/journeys/{journey_id}/trip-studio/preview")
 # --- ORD-0437: POI text/link import -------------------------------------------------------------
 
 
@@ -6747,6 +6746,8 @@ def poi_import_add(
     )
 
 
+# Both lines bind this one handler; a banner inserted between them rebinds /trip-studio/preview to the function that follows.
+@app.post("/api/v1/journeys/{journey_id}/trip-studio/preview")
 @app.post("/api/v1/journeys/{journey_id}/plans/preview-reorder")
 def trip_studio_preview(
     journey_id: UUID,
