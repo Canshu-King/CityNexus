@@ -1,0 +1,14 @@
+ORD-0428 follow-up: re-pin the two backend line numbers this file cites to the tip being delivered against
+
+`backend/app/main.py` moved by one line between `4037cb331ea00b83124316d40329762fa1131689`, which this
+branch was cut from, and `0dabe64223036391a6c25561a6b606e1533f3704`, which is the authoritative tip at
+delivery.  Both citations in the block above were therefore one line low: `def _commitment_payload` now
+reads at `backend/app/main.py:7047` and its `"activity_id": item.activity_id` entry at `:7051`.  The
+binding block still reads where it was cited (`semantic_key = str(policy.get(...))` at `:6128`,
+`commitment.activity_id = match.id` at `:6144`), so that half was re-opened and confirmed rather than
+left alone.
+
+Comment lines only.  Proved two ways rather than asserted: `git diff` on the source shows no non-comment
+line changed, and `vite build` reproduces the same asset name and bytes as the shipped bundle the four
+screen arms were taken against -- `dist/assets/index-B4ZuCsnm.js`, 1,483,830 B, sha1
+bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4.  Both `tsc` configs still report 0 error lines.
