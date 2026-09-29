@@ -10,6 +10,7 @@ import { JourneyInboxWorkbench } from "../features/inbox/JourneyInboxWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { PlanRankingPanel } from "../features/planning/PlanRankingPanel";
+import { PendingSetPanel } from "../features/pending/PendingSetPanel";
 import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
@@ -112,6 +113,22 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
       <PlanRankingPanel
         budgetMinor={s.data.journey.budget.amount_minor}
         currency={s.data.journey.budget.currency}
+      />
+    ),
+  },
+  {
+    /* ORD-0445: 待规划 as its own data state. The shell holds no mount for it and none is added --
+       the panel reads its two doors itself and takes the journey it is on from the scope this table
+       already carries, the same way `plan-ranking` above does. It sits under Today because that is
+       where the trip's day-by-day answer lives, and the set is defined against those days. */
+    id: "pending-set",
+    surface: "route",
+    testId: "pending-set",
+    when: (s) => s.route === "hub" && Boolean(s.data?.journey?.id),
+    render: (s) => (
+      <PendingSetPanel
+        data={s.data}
+        onNavigate={(route: string) => s.navigate(route)}
       />
     ),
   },
