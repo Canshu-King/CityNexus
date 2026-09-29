@@ -1,0 +1,44 @@
+{
+ "tip_rev": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+ "landed_rev": "527f471b6d009d8ef8fead5d32ad455005ac281b",
+ "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+ "tip_cells": 12,
+ "landed_cells": 12,
+ "tip_ids": [
+  "0e2fd6823141b44f",
+  "1f8bfb4f2b900363",
+  "3da2ddc1783bb8e4",
+  "69089b117b4151f1",
+  "7feb812a1e486a9d",
+  "863b577aaae8b6e9",
+  "99744f615f602330",
+  "cdfe4dfe298f1093",
+  "e893bc679cefe90f",
+  "fca34cf42fe474c4",
+  "fd20c87a2369a807",
+  "fec78ea862b50245"
+ ],
+ "landed_ids": [
+  "0e2fd6823141b44f",
+  "1f8bfb4f2b900363",
+  "3da2ddc1783bb8e4",
+  "69089b117b4151f1",
+  "7feb812a1e486a9d",
+  "863b577aaae8b6e9",
+  "99744f615f602330",
+  "cdfe4dfe298f1093",
+  "e893bc679cefe90f",
+  "fca34cf42fe474c4",
+  "fd20c87a2369a807",
+  "fec78ea862b50245"
+ ],
+ "id_set_difference_landed_minus_tip": [],
+ "id_set_difference_tip_minus_landed": [],
+ "door_view_growth": {},
+ "identity_count_growth": {},
+ "identity_set_new_ids": [],
+ "cells_already_on_the_line_in_touched_files": {
+  "DestinationPreparationPanel.tsx": 3
+ },
+ "candidate_touched_file_count": 63
+}
