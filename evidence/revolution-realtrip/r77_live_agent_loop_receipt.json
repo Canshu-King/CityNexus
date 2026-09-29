@@ -107,5 +107,16 @@
     "next_title": "狮子林",
     "p7": false,
     "mock_is_live": false
+  },
+  "user_visible": {
+    "url": "http://127.0.0.1:5174/v8/live",
+    "screenshot": "frontend/output/playwright/r77-suzhou-replan-live-deepseek.png",
+    "observed_text": [
+      "当前：网师园",
+      "下一步 · 狮子林 · 步行 · 38 min",
+      "供应商支持的路线 · WGS84",
+      "当前没有需要你决定的调整。",
+      "刚才的行程变化已经处理好，已确认的预订保持不变。"
+    ]
   }
 }
