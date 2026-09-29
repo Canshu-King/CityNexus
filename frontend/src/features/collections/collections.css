@@ -1,0 +1,124 @@
+/* ORD-0444 -- the 收藏 face's own sheet.
+
+It is imported by the component rather than written into `frontend/src/styles.css` because that
+sheet is a hot file under this order (several lanes are landing rules in it at once), and a read
+face does not need to queue behind that.  Vite inlines this into the same document, so the reach is
+the same without touching a byte of the shared sheet.
+
+Colours, sizes and radii come from the `--cn-*` layer, not hex literals, so the dark theme follows
+without a second block.
+
+`width: auto` and `margin-top: 0` on `.cn-collections__retry` are load-bearing, not tidiness:
+`src/styles.css:47` is a bare element rule (`button { display: block; width: 100%; margin-top: 12px;
+… }`), and a class that overrides only `display` inherits the full width and the stray margin -- the
+same trap ORD-0435 measured at 272 px of control inside a 358 px card.
+*/
+
+.cn-collections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-12);
+  padding: var(--cn-s-16) var(--cn-gutter);
+  border: var(--cn-hairline) solid var(--cn-control-border);
+  border-radius: var(--cn-r-16);
+  color: var(--cn-ink);
+  line-height: var(--cn-lh-body);
+}
+
+.cn-collections__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cn-s-12);
+}
+
+.cn-collections__head h2 {
+  margin: 0;
+  font-size: var(--cn-fs-section);
+  font-weight: 600;
+  line-height: var(--cn-lh-tight);
+}
+
+.cn-collections__retry {
+  flex: none;
+  width: auto;
+  margin-top: 0;
+  padding: var(--cn-s-6) var(--cn-s-12);
+  border: var(--cn-hairline) solid var(--cn-control-border);
+  border-radius: var(--cn-r-button);
+  background: transparent;
+  color: var(--cn-ink-secondary);
+  font: inherit;
+  font-size: var(--cn-fs-caption);
+}
+
+.cn-collections__retry:disabled {
+  color: var(--cn-ink-tertiary);
+}
+
+.cn-collections__state {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-body);
+}
+
+.cn-collections__list,
+.cn-collections__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cn-collections__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-12);
+}
+
+.cn-collections__shelf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-6);
+  padding-top: var(--cn-s-12);
+  border-top: var(--cn-hairline) solid var(--cn-control-border);
+}
+
+.cn-collections__shelf-name {
+  margin: 0;
+  font-size: var(--cn-fs-card);
+  font-weight: 600;
+}
+
+.cn-collections__shelf-count,
+.cn-collections__noshelf,
+.cn-collections__item-note,
+.cn-collections__tally {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-meta);
+}
+
+.cn-collections__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-4);
+}
+
+.cn-collections__items li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--cn-s-12);
+}
+
+.cn-collections__item-name {
+  font-size: var(--cn-fs-secondary);
+}
+
+.cn-collections__item-note {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
