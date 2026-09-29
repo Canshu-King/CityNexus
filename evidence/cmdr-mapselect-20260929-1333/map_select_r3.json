@@ -1,0 +1,28 @@
+{
+ "base": "http://127.0.0.1:4825",
+ "hub_route": "/",
+ "hub_markers": 0,
+ "hub_nav_map": null,
+ "map_route": "/v8/map",
+ "map_markers": 6,
+ "map_titles": 0,
+ "map_chars": 449,
+ "marker_clicked": {
+  "cls": "v9-map-marker",
+  "text": "1",
+  "x": 113,
+  "y": 511,
+  "w": 34
+ },
+ "hit_at_point": "v9-map-marker maplibregl-marker maplibregl-marker-",
+ "marker_state_changes": [
+  {
+   "i": 0,
+   "before": "v9-map-marker|1",
+   "after": "v9-map-marker   selected|1"
+  }
+ ],
+ "chars_after": 459,
+ "pageerrors": 0,
+ "verdict": "MAP_CLICK_VISIBLE_ON_MAP_SCREEN"
+}
