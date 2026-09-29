@@ -51,6 +51,7 @@ const zh: Record<string, string> = {
   "abort.confirm": "丢进回收站",
   "abort.pickOne": "至少勾一项才能这样丢，或者选下面的「暂不说明」。",
   "abort.skip": "暂不说明，直接丢进回收站",
+  "abort.loading": "正在看这趟有没有被丢进回收站…",
   "abort.busy": "正在丢进回收站…",
   "abort.doneDeclared": "这趟已经在回收站里。服务器记下的原因是：{codes}。",
   "abort.doneSkipped": "这趟已经在回收站里。当时你选了不说明原因，我们也不会替你编一个。",
@@ -85,6 +86,7 @@ const en: Record<string, string> = {
   "abort.confirm": "Move to recycle bin",
   "abort.pickOne": "Tick at least one reason, or use “skip” below.",
   "abort.skip": "Move it without saying why",
+  "abort.loading": "Checking whether this trip is already in the recycle bin…",
   "abort.busy": "Moving it to the recycle bin…",
   "abort.doneDeclared": "This trip is in the recycle bin. The server holds these reasons: {codes}.",
   "abort.doneSkipped":
