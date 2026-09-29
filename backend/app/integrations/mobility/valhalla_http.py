@@ -55,8 +55,20 @@ class ValhallaHTTPMobilityProvider:
         self._client = client
         self._base_url = base_url.rstrip("/")
         self._place_lookup = place_lookup
-        self._costing = costing
+        self._costing = str(costing).strip().lower()
         self._timeout_s = timeout_s
+
+    @property
+    def mode(self) -> str | None:
+        """Expose the product mode named by the live Valhalla costing request."""
+
+        return {
+            "pedestrian": "WALK",
+            "auto": "AUTO",
+            "bicycle": "BICYCLE",
+            "transit": "TRANSIT",
+            "multimodal": "TRANSIT",
+        }.get(self._costing)
 
     def _location(self, place_id: str) -> dict[str, float]:
         item = self._place_lookup(place_id)

@@ -143,6 +143,14 @@ def test_valhalla_http_adapter_parses_route_and_matrix_without_network():
     assert estimate.distance_m == 1250
     assert estimate.shape == "encoded-shape"
     assert provider.matrix_minutes(["a", "b"]) == [[0, 11], [11, 0]]
+    assert provider.mode == "WALK"
+    auto_provider = ValhallaHTTPMobilityProvider(
+        client=client,
+        base_url="http://valhalla.test",
+        place_lookup=lambda key: points[key],
+        costing="auto",
+    )
+    assert auto_provider.mode == "AUTO"
     client.close()
 
 
