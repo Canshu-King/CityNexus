@@ -35,7 +35,7 @@ from uuid import uuid4
 import yaml
 from fastapi.testclient import TestClient
 
-from app.db.models import Traveler
+from app.db.models import JourneyShareGrant, Traveler
 from app.db.session import SessionLocal
 from app.main import app
 
@@ -177,10 +177,35 @@ def test_a_revoked_token_stops_working_on_the_next_read() -> None:
     assert after.json()["error"]["details"]["grant_id"] == grant["id"]
 
 
+def _store_aged_grant(journey_id: str, visibility: str, expires_at: str) -> dict:
+    """Put a grant row in the store whose deadline has already gone by.
+
+    ORD-0460 made the create door refuse a past `expires_at`, so this arm can no longer mint one that
+    way -- and it should not: the state a traveller actually meets is a grant that was created in the
+    future and *aged*.  Writing the row here is that state, without waiting for the clock.
+    """
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant = JourneyShareGrant(
+        id=str(uuid4()),
+        journey_id=journey_id,
+        token="aged-" + uuid4().hex[:20],
+        visibility=visibility,
+        created_by="ord0434-probe",
+        expires_at=expires_at,
+        revoked_at=None,
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    with SessionLocal() as session:
+        session.add(grant)
+        session.commit()
+    return {"token": grant.token, "expires_at": expires_at}
+
+
 def test_expired_and_never_existed_are_different_named_codes() -> None:
     journey_id = _journey()
     past = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
-    grant = _create(journey_id, "LINK_READ", past)
+    grant = _store_aged_grant(journey_id, "LINK_READ", past)
     expired = client.get(TOKEN_PATH.format(token=grant["token"]))
     assert expired.status_code == 409, expired.text
     assert _reason(expired.json()) == "SHARE_GRANT_EXPIRED"

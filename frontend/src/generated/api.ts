@@ -457,7 +457,7 @@ export interface paths {
         /** @description Every grant of this journey, withdrawn ones included: a row that vanished from the list would be indistinguishable from one that never existed. */
         get: operations["listShareGrants"];
         put?: never;
-        /** @description ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles. One journey can hold many grants; each carries a named visibility, an optional deadline, the moment it was withdrawn, and the creator the creating device asserted - not authenticated in this step, because the anonymous read is still the product's default.  An `expires_at` without an offset is refused: reading a bare instant against the server's own clock would be a guess about the traveller's. */
+        /** @description ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles. One journey can hold many grants; each carries a named visibility, an optional deadline, the moment it was withdrawn, and the creator the creating device asserted - not authenticated in this step, because the anonymous read is still the product's default.  An `expires_at` without an offset is refused: reading a bare instant against the server's own clock would be a guess about the traveller's.  ORD-0460: an `expires_at` the server can already read as spent is refused here for the same reason it would be refused on read - `expires <= now` - so no token is minted that would answer 409 SHARE_GRANT_EXPIRED in the caller's hands.  The boundary belongs to the refused side: an instant equal to "now" is already spent. */
         post: operations["createShareGrant"];
         delete?: never;
         options?: never;
@@ -4470,7 +4470,7 @@ export interface operations {
                 };
             };
             404: components["responses"]["NotFound"];
-            /** @description error.code = VALIDATION_ERROR with error.reason_code = SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET */
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET / SHARE_GRANT_EXPIRY_IN_PAST */
             422: {
                 headers: {
                     [name: string]: unknown;
