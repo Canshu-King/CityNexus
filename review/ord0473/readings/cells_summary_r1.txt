@@ -1,0 +1,16 @@
+=== BEFORE arm
+rows_rendered=16 labels=今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 行程 | 我的
+drawer scroll_before=0 scroll_after=268 scrollHeight=1112 clientHeight=844
+bottom_nav band: {'top': 768, 'h': 76, 'z': '10'}  drawer z-index=46
+last row before scroll={'y': 1047, 'bottom': 1088, 'h': 41} hit=None
+last row after scroll={'y': 779, 'bottom': 820, 'h': 41, 'point': [150, 800]} hit=SELF nav_top_after=768 overlap_px=52
+SCREAMING_SNAKE hits on the open-drawer screen=0 tokens=[]
+
+=== AFTER arm
+rows_rendered=16 labels=今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 行程 | 我的
+drawer scroll_before=0 scroll_after=371 scrollHeight=1215 clientHeight=844
+bottom_nav band: {'top': 768, 'h': 76, 'z': '10'}  drawer z-index=46
+last row before scroll={'y': 1147, 'bottom': 1191, 'h': 44} hit=None
+last row after scroll={'y': 776, 'bottom': 820, 'h': 44, 'point': [150, 798]} hit=SELF nav_top_after=768 overlap_px=52
+SCREAMING_SNAKE hits on the open-drawer screen=0 tokens=[]
+

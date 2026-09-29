@@ -1,0 +1,8 @@
+=== BEFORE
+closed         glyph="≡"        font=20px   text=菜单     expanded=false aria=打开导航         box={'x': 17, 'y': 19, 'w': 46, 'h': 27} press_err=
+open           glyph="≡"        font=20px   text=菜单     expanded=true  aria=打开导航         box={'x': 17, 'y': 19, 'w': 46, 'h': 27} press_err=
+closed_again   glyph="≡"        font=20px   text=菜单     expanded=true  aria=打开导航         box={'x': 17, 'y': 19, 'w': 46, 'h': 27} press_err=TimeoutError: locator.click: Timeout 6000ms exceeded.
+=== AFTER
+closed         glyph="≡"        font=20px   text=菜单     expanded=false aria=打开导航         box={'x': 17, 'y': 11, 'w': 46, 'h': 44} press_err=
+open           glyph="×"        font=20px   text=菜单     expanded=true  aria=关闭导航         box={'x': 17, 'y': 11, 'w': 46, 'h': 44} press_err=
+closed_again   glyph="≡"        font=20px   text=菜单     expanded=false aria=打开导航         box={'x': 17, 'y': 11, 'w': 46, 'h': 44} press_err=

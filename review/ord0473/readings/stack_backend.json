@@ -1,0 +1,24 @@
+{
+ "sha": "83e676aab7376a893e03d22d8c2b3ea4d0ca85bf",
+ "api_port": 8745,
+ "export_blob_equality": {
+  "backend/app/main.py": {
+   "tip_blob": "2702ec830974369f0d6e30f351a6ffc41d926e27",
+   "export_blob": "2702ec830974369f0d6e30f351a6ffc41d926e27",
+   "identical": true
+  },
+  "backend/app/agent/ai_availability.py": {
+   "tip_blob": "88295bd6d5940cfbaaa80da2443cfcd3228fd4ca",
+   "export_blob": "88295bd6d5940cfbaaa80da2443cfcd3228fd4ca",
+   "identical": true
+  }
+ },
+ "priv_db_bytes": 7213056,
+ "spawned_pid_api": "38744",
+ "api_probe": {
+  "status": 200,
+  "bytes": 477
+ },
+ "netstat_pid_api": "38756",
+ "pid_matches_netstat": false
+}
