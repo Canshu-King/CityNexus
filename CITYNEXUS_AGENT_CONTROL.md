@@ -16588,6 +16588,131 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0454 勘误一件：同一 slug 下现在是十件证据，不是八件（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，13:18 交）
+
+只改计数，其余不动：入账块 `CITYNEXUS_AGENT_CONTROL.md:16591` 的交付坐标写的是8 件，那是第一趟上架的件数；第二趟（尖位移动的复读）又落了 2 件进同一个 slug `evidence/ord0454-state-pair-1303/`，合计 10 件。两趟都逐件回读过（第一趟走上架器的 byte_equal，第二趟走 contents API 的服务端 sha 与字节数）。下面十枚 blob 就是这 10 件本身；两趟的上架回执各自留在本刀目录里（publish_0454_receipt.json 与 publish_0454_b2_receipt.json，本机件、未单独入库，所以不在 blob 名单里）。
+
+十件 blob：53391b2b82e95b844e1419df8400428a66bb8f5f、2b46410ff80ecae4657f636aba071602b86622fc、5fb93a85246dc39415f2eab9a1684d5983074904、f80308497a708caad362b837b5f76a24a3f3fbac、072f355362b7c3e7b9d16ccef9d19a6d79796b3f、ad1a091b95904073732d656f58b709859ccdc416、c107bd5270c94eb12ba74094dcf6b97a176932f2、af8dd11e06075a6a6e8f176106e1e90f6c0e0051、d0eadcf17eca9d11b39649254b4b9f60e9ddc995、a7b619b3f43e12b8e64a6f6ba69a4518a8e6b72b
+
+候选枝仍是两枚：review/S4-ord0454-state-pair-face-1303 = cd64bbc3c82b185759891d6446adfb21e9fa11d4（相对尖 57ff5d1c2f8540d498d945ed591c36689fc0f39e 改 9 枚）与 review/S4-ord0454-state-pair-face-1303-b2 = 7743dc60721927813816d20fdbf256dafcd20d2b（相对尖 57ff5d1c2f8540d498d945ed591c36689fc0f39e 改 2 枚）；产品文件 0 枚，`tools/cnx_copy_tiers_r2.py` 与 `live_checks/preflight_and_land_r5.py` 一字未改。尖位读数与面判定未变：两枚尖 4ee14229f806… 与 57ff5d1c2f85… 之间样式表改动 0 枚，STATE_PAIR 在两处都是 7 格全成对（件 blob a7b619b3f43e12b8e64a6f6ba69a4518a8e6b72b）。
+
+
+### ORD-0447 分享文案随授权升级 · 车道 rel（会话 a68b0631）· 那句改成"服务端答什么就说什么"：两臂屏读四格齐、撤销反件两臂都成立；我自己前两版各撞出一格真缺陷（档位键上屏、仪器在重绘前读句子），都量出来再改 · 2026-09-29 13:38+08
+
+**坐标**：基座 `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 11:50 现读 = `4ee14229f80691cf8e5ea913375c0caf83ac02ee`（您 11:47 那块记的是 `c6a0ef6f…`，中间 ORD-0406 的 recut 已落在线上，所以我按现读切）。词典也现读了：`git rev-parse 4ee14229f80691cf8e5ea913375c0caf83ac02ee:frontend/src/i18n/LocaleContext.tsx` = `0477cde9beafdf5c145ae91fbbc2f1b26520e50c`（您记的 `ba667d06a596e548ed2e172645832d070ecbeb46` 是同一格的前一代）。候选枝 `refs/heads/review/qoder-0447-share-copy-r1`，头 `04060d888e19cbaee6d25d1afc5dbebb59ab22f2`，`git ls-remote origin refs/heads/review/qoder-0447-share-copy-r1` 回同一枚；**https 那扇这会儿不通**（`git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/qoder-0447-share-copy-r1` 连接被重置），所以这次按"单通道回读成功"记，不冒充两通道。形状：`git diff --shortstat 4ee14229f80691cf8e5ea913375c0caf83ac02ee 04060d888e19cbaee6d25d1afc5dbebb59ab22f2` 回 13 files changed, 638 insertions(+), 11 deletions(-)。**这单不是纯插入**：删掉的 11 行里有 2 行正是您点名的那句本体（`frontend/src/i18n/LocaleContext.tsx:605` 的 en 与 `:1517` 的 zh，都收窄成只陈述"已复制到本机剪贴板"），其余 9 行是被替换的旧 `outcomeCopy`。后端 0 字节、契约 0 字节、`frontend/src/generated/api.ts` 0 字节。
+
+## 一、机制：一次点击问一扇门，句子由服务端答的内容决定
+
+- **只问一枚已存在的门**：`GET /api/v1/journeys/{journey_id}/share-grants`（ORD-0434 落的列表门），路径常量 `frontend/src/features/inbox/shareGrantRead.ts:22`。不新开写端点、不新造字段。
+- **判定是一枚纯函数**：`frontend/src/features/inbox/shareGrantRead.ts:89` 的 `claimFromRead`，只看服务端给的三个字段（`visibility` / `expires_at` / `revoked_at`）。按"不许客户端猜"落成的规则：撤销时刻压过失效时刻；只要还有一枚 standing 就不说撤销；**空列表**（门答 200 但没有行）与**门没答**（404/405/501）是两格；服务端答了一个词表里没有的档位就答 `UNKNOWN_TIER`，不借最近的一句。
+- **屏上两句一槽**：`frontend/src/features/inbox/JourneyLinkAction.tsx:105` 一次点击并行做剪贴板写与授权读，`:119` 把两句拼进同一个槽（中文不在句号后补空格——空格不是中文的分隔）。剪贴板被拒 / 非安全上下文 / 没有行程那三句原样不动，它们是三件不同的事，不跟授权句混用（同件 `:23`）。
+- **档位与后果的词不是我造的**：走 ORD-0436 那张共享显示表 `accessCopyFor(locale, key)`（`frontend/src/features/inbox/JourneyLinkAction.tsx:3` 引入、`:54` 用），失效时刻用 ORD-0423 的 `formatWhen`。我这侧只新增 8 对中英键 + 1 对"读不懂的时刻"，en 连续段从 `frontend/src/i18n/LocaleContext.tsx:605` 起，zh 连续段从 `:1517` 起。
+- **"这一刻过没过"不归这句判**：`frontend/src/i18n/LocaleContext.tsx:614` 与 `:1524` 两句都把判定交还给门（读门答 409 `SHARE_GRANT_EXPIRED` 才是判定），屏上只陈述服务端记下的时刻。
+
+## 二、先报我自己撞出来的三格（都是这单要防的事，被我的仪器抓到）
+
+1. **机词上屏**：第一版我用 `t("access.visLinkRead")` 取档位词，而那张词表不在 `LocaleContext` 里，`t` 找不到键**把键名原样回吐**——屏上直接写出 `access.visLinkRead`。原文读数钉在 `review/ord0447/first_cut_leak_r1.txt:3`（同一跑批的原件 `review/ord0447/screen_arms_r1.txt:6`）。修法：改走 `accessCopyFor`，并加一条反向断言"渲染文字不许含 `visLinkRead` 字面"（`frontend/e2e/qoder-ord0447-share-copy.spec.ts:192`）。
+2. **我把滞后归错了因，还先写进了注释**：反件第一次不过，我判"是浏览器缓存答的"，加了 `cache:"no-store"` 并把这句判断写进注释。量下来**不成立**：`review/ord0447/screen_arms_r4.txt:2` 显示页面每一次读都是 `answered_by_service_worker=false`、`cache_control=-`、`age=-`、`etag=-`，而同一瞬 Node 侧读服务端已是 `arm2_server_rows_now=revoked`（`review/ord0447/screen_arms_r4.txt:8`）；另有独立探针连读三次都返回 revoked（`review/ord0447/revoke_lag_probe_r1.py`，同件跑批输出 `review/ord0447/screen_arms_r4.txt:18`）。**真因是我的仪器在 React 重绘之前读了同一个 `<p>`，读到的是上一拍的句子。** 修法：拿点击自己的完成信号（按钮 `disabled` 解除）当读句子的前提（`frontend/e2e/qoder-ord0447-share-copy.spec.ts:68`），不是加重试。注释已改成写实测成因；`no-store` 留着，但理由换成"授权读不该可被缓存答"（`frontend/src/features/inbox/shareGrantRead.ts:66`），并具名它这次不是滞后源。
+3. **我的仪器还一度过严**：我给每次点击都加了"句子必须变"的断言——两个不同服务端状态本来可以该说同一句，这条会误报。已撤掉，只在反件那一格要求变（读数 `frontend/e2e/qoder-ord0447-share-copy.spec.ts:207`，断言 `:209`）。
+
+## 三、屏读两臂 + 反件（每格都是浏览器里读到的渲染文字，原件在枝内）
+
+| 臂 | 服务端那瞬答的 | 屏上那句（逐字在件里） |
+| --- | --- | --- |
+| 中文·无授权 | `rows=0`，`review/ord0447/screen_arms_r11.txt:1` | `review/ord0447/screen_arms_r11.txt:3`：…服务端这份行程下没有分享授权，所以这里不主张别人能打开。 |
+| 中文·一枚 standing | `create_http=201`、`expires_at=null`，件 `:5` | 件 `:6`：…档位是「获得链接者可见」，且没给它记失效时刻。 |
+| 中文·撤销同一枚后再点 | `revoke_http=200`，件 `:9` | 件 `:10`：…服务端已撤销这枚授权（撤销记作「9月29日 13:03」），所以这里不说拿到链接就能打开这份行程。 |
+| 中文·带失效时刻的一枚 | `http=201` 带偏移，件 `:12` | 件 `:13`：…它把这枚授权记的时刻写作「9月29日 15:03」；这一刻过没过由那扇门答，不由这句话判。 |
+| 英文·四臂同上 | `en revoke_http=200 sentence_changed=true`，件 `:22` | 件 `:23`：The server revoked this grant (revocation recorded as 29 Sept, 13:03)…；件 `:26`：…it records 29 Sept, 15:03 as the instant this grant carries… |
+
+反件的判据不是"我没看见旧句"，而是**同一屏、同一枚按钮、两次点击的渲染文字逐字不等**：中文 `review/ord0447/screen_arms_r11.txt:9`、英文 `:22` 两处都记 `sentence_changed=true`；且撤销那句里不再含档位那句后果（`frontend/e2e/qoder-ord0447-share-copy.spec.ts:209`）。英文第一臂读到的不是"无授权"而是"已撤销"——上一臂留下的行就是 revoked，件里如实记为 `en arm0 rows=2 predicted=REVOKED`（`review/ord0447/screen_arms_r11.txt:14`）：这一格按"屏说的 == 门答的"判，不按"必须为空"判。
+
+另有三形不走浏览器、直接喂同一枚纯函数：第五档名 → `UNKNOWN_TIER`、门不存在 → `NOT_ANSWERED`、只有受邀档 → `TIER_CLOSED`，加一形"撤销与 standing 混列必须说 standing"（`mixed=OPEN`），读数在 `review/ord0447/screen_arms_r11.txt:27`。两屏截图也在枝内：`review/ord0447/screen_arms_r11-zh-CN.png` 与 `review/ord0447/screen_arms_r11-en.png`。
+
+## 四、门禁与限度
+
+- 屏读那一跑整体 **4 passed**（`review/ord0447/arms_gates_r11.txt:3`），仪表退出码 0（同件 `:4`），`vite build` 在该跑内建成功：built in 21.90s（`review/ord0447/arms_gates_r11.txt:1`）。跑的形制：`playwright.prod-gate.config.ts`（生产构建 + `vite preview`，不是 dev 数），端口 `:4813` 前端 / `:8111` 后端，库 `D:/moodle/_qoder_rel_ord0447_wk/rel0447c-20260929-e2e.db`，run id 每次新起——第二次我没换 id，被 `backend/app/db/session.py:41` 那把守卫直接拒跑，那是设计不是故障。
+- 两道类型门退出码各 0、输出 0 字节：`D:/moodle/_qoder_rel_ord0447_wt/gate_logs/tsc_check_r5.txt` 与同目录 `tsc_typecheck_r4.txt`，都是本机件、**不可外读**；可外读的是枝内那三件屏读原件与两张截图。
+- 整套后端与 parity **未跑**：本单后端 0 字节、契约 0 字节，没有可回归的面。`frontend/e2e/` 多了一枚 spec，下一次整套 e2e 会被 `testDir` 收进去，请算进排期。
+- **没做的**：受邀档 / 仅个人档只在纯函数层证过，屏上没造出那两种真授权（要造得先有邀请入口，那是 ORD-0449 那一格）；句子不指名是哪一枚 token（有意：屏上不出现 token 值）；`expires_at` 等于当前时间这一边界在本单屏上不可观测（写门的事，见 ORD-0460）；谁在问仍未绑定，所以受邀档那句在屏上是"档位陈述"，不是"你就是受邀者"。
+- 一处过期注释**只报不改**：`frontend/src/features/access/accessDoors.ts:10` 仍写着 "None of them answers at this tip"，而 ORD-0434 已落、这三枚门今天都答了（本单实测 `GET …/share-grants` 回 `http=200`，`review/ord0447/screen_arms_r11.txt:1`）。那是车道 `4033270f` 的文件，我不代改。
+- 一块自陈：我 13:2x 写这份块时，一次失败的改写命令把块文件截断成 0 字节（我先 open-for-write 再算内容，违反我自己记过的"写序"规矩）。这份是重写版；上一版没有任何一份读数被引用过，所以没有需要勘误的旧账。
+
+写完就停，不落地。您新开的 ORD-0460 我也接了，那块另发（过去时刻已在写门前拒掉、不发 token，两向反件齐）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 2026-09-29 13:22 · 车道 N3（会话 49fe0d7b）· ORD-0457 失败与网络具名出口：429 与 409 不再是「原因还没有分类」
+
+一、现读与交件
+
+- 我本轮现读尖：`57ff5d1c2f8540d498d945ed591c36689fc0f39e`（`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现取，也是本枝基点，所以不存在拿旧基线往下写）。
+- 件：`refs/heads/review/N3-ord0457-named-failure-exits-r2` = `190281be49ac0461d55e8d6cc09d11b7b7aa4256`（同一条 ls-remote 现读同值）。产品面 2 枚：`frontend/src/lib/failureAttribution.ts` blob `8f3a4d9135234ca8904ad827730d02c99452aea7`、`frontend/src/app/V8Experience.tsx` blob `c7250a3359a984d293e1d2b6340d72b045bbe07c`。词典 `LocaleContext.tsx`、`styles.css`、`openapi.yaml`、`v8PanelRegistry.tsx`、`design-tokens.css`、`backend/app/main.py` 本轮 0 改。
+- 合并自查：`git merge-tree --write-tree FETCH_HEAD HEAD` 退出码 `field=merge_tree_exit=0`。
+
+二、改前先量（不在自己记忆里改）
+
+- 拿**尖自己那版前端**另建一棵树（`git archive 57ff5d1c… frontend` + `cp -al` 硬链 node_modules）构建并起预览，用同一把屏读尺跑三条 stub 答案：429（带 `retry_after_ms=4200`）、409（`JOURNEY_ALREADY_DELETED`）、503（对照）。读数 `review/n3_0457_evidence_r1/walk_before/named_exits_zh.json` blob `af4182ddc05e784439763d411c916e1815318ec1`（`field=checks=6 pass=2 fail=4`，锚 :162）。
+- 429 与 409 在屏上说的是同一句：标题「这一次没读到」、正文「服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。」，归因位 `reason=UNKNOWN_FAILURE`、`retryable=false`、动作只有 `failure-retry`。服务器给的等待毫秒数被丢掉（就是上一行那条 stub 里 `retry_after_ms` 带的那个值，屏上读不到它）。对照臂 `http_status=503` 本来就是具名的（SERVER_ERROR），所以这不是"所有失败都糊"，是这两档没有分支。
+- 根因是静态可指认的：`classifyReadFailure` 的分支只覆盖 404/410、401、403、≥500，429 与 409 落到末尾的 UNKNOWN_FAILURE（`frontend/src/lib/failureAttribution.ts` 现尖 :182-:185 那一段）。
+
+三、改后（同一把尺、同一份 stub、两臂屏读）
+
+- 429 → `field=reason=RATE_LIMITED`，标题「服务器请我们慢一点」，正文引用服务器自己给的 4200 毫秒；等待缺失时走另一句「这一次它没有说等多久」，屏上不编数字。锚 `review/n3_0457_evidence_r1/walk/named_exits_zh.json:9`（blob `fc353d9430f138961407bcd0ed5903aff083f949`）。
+- 409 → `field=reason=STATE_ALREADY_MOVED`，标题「这件事的状态已经变了，不是没读到」，动作 `view-current-state`；服务器给的名字留在归因折叠里，且我验过那折叠真的有内容（`textContent` 含 `attribution_reason=`，`summary` 可点），不是「写着见详情而详情是空的」那一格。锚 `review/n3_0457_evidence_r1/walk/named_exits_zh.json:36`。
+- 两臂各 `field=checks=6 pass=6 fail=0`（英臂 blob `934cccad249589c557347d0a1253676a586cddf4`）。重试出口三臂都还在屏上（N5），所以「稍后」是节奏，不是死路。
+
+四、反件（每条红都指回它自己那一格）
+
+- 尺 `review/ord0457/named_exit_arms_r1.py` blob `30ee4bfcce4fe6d19c5b04228c1d584d17ad0ea0`，读数 `review/n3_0457_evidence_r1/named_exit_arms_r1.json` blob `ac5d78f5bb4bcc4866a2fe3e817a61c1b1a7e03d`：B1 摘掉 429 分支 → N1+N2 红；B2 摘掉 409 分支 → N3 红；B3 把等待时间在请求层丢掉 → 只有 N2 红（屏上那句立刻变成「没有说等多久」）。三臂 `field=all_arms_applied=true`（锚 :41）、`field=every_file_back_at_starting_bytes=true`（锚 :44），还原后重建退出码 0。
+- 落地门那把曝光尺复跑：`field=cells_total=12`，与尖同数，且我这两枚文件里一格都没有（锚 `review/n3_0457_evidence_r1/exposure_after_r1.json:3062`，blob `e6e8bcecb019f2798ce883091f35a387c6d2e045`）。
+- 编译臂：`tsc -p tsconfig.check.json --noEmit` 退出码 `field=typecheck_exit=0`；改前构建 `field=build_before_exit=0`（blob `e5fd94606b54e2952a756b6bb64d2d3a5542bd6a`）、改后构建 `field=build_after_exit=0`（blob `ebb2692f65348bb640b86b2f113dad875d441731`）。
+
+五、这单里我**没有**做到的（不占成做到）
+
+- 「失败三态同屏」我只在共享失败屏上量到 loading/error/empty 的 error 与 empty 两态齐、retry 常驻；三态同屏这一格我**没有**给出一条能证伪的读数，因为这条屏的 loading 态在 stub 下不出现。要判它，需要一条真慢的答案（不是我把 stub 改成延时——那是在造自己想要的读数）。
+- 我只补了 429/409 两档。其余仍落 UNKNOWN_FAILURE 的状态（例如 400/422 的具名拒绝、`RETRY_AFTER` 之外的 5xx 细分）没动，也不替它们猜句子。
+- 屏上文案是我写的，走的是 `copyFor` 那张既有表（没新造第二条通道）；措辞要不要按 ORD-0425 那张显示层表再过一遍，归号令者。
+
+六、顺带把上一单的状态说清（避免停在"门拒了、车道不知道拒因"那种状态）
+
+- ORD-0440 后半（他点名的四格）已交：枝 `review/N3-ord0440-exposure-cells-r2` = `ab171b0c407ad13e570d81b70b69ca95a65f7bae`，块 `n3_1238.md`（12:38 落，两道闸干净），判据 `cells_total` 12→8、`growth` 空、反件四臂各 +1 后还原。值守 12:00 递话时那份读数还在路上，不是没做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 13:36 · 又落三笔（ORD-0447 分享文案、ORD-0449 邀请与撤销、ORD-0450 待规划落到某天）· 地图↔卡片双向选中我亲眼验到了 · 先撤回我自己两次错判
+
+## 1. 三笔落地（串行过同一套门，逐文件等车道字节）
+
+- **ORD-0447 分享文案随授权升级**：落地尖 `647a9abd1335`。
+- **ORD-0449 邀请入口与成员活动流**：落地尖 `8cf94ad794a9`。
+- **ORD-0450 把待规划地点排进某一天**：落地尖 `17dff25a095a7`（现尖）。
+
+三笔的编译臂与构建臂都退零；整套后端仍只 collect，按常设口径记 `NOT_EXECUTED_BY_CMDR`。
+
+**ORD-0444 收藏容器还没进来**：车道 `1ba48dbf` 按我 11:47 的裁定改了（上游文字走共享显示表），我第一次复切是干净的，但我的批量驱动把 ref 名复用在上一次那枝上，push 被拒——**那是我驱动脚本的缺陷，不是车道的问题**，具名记在这里。等我把 0449 与 0450 落完之后它再复切，现在唯一合不成的文件换成 `frontend/src/app/v8PanelRegistry.tsx:1`（两笔新落的注册表改动压在它上面），所以它需要再 rebase 一次。我没手合。
+
+## 2. 地图↔卡片双向选中：我亲眼看到了，这条记 CLOSED
+
+这是借鉴清单里最大的一项、也是被记了最久"仍不可达"的能力。我在当前尖的私有栈上（入口 `index-DbA8xyvx.js`，后端 `:8738` 是我自己从现尖导出的树、只读备份库）走了一遍，仪表外读 blob 0dd0a7bd395ccbefe09d72abfc105fe39433057d：
+
+在 `/v8/map` 上点第 1 枚标记，标记类名从无状态变成带 `selected`，正文从 449 字涨到 459 字，屏上逐字出现「图上选中的这一站 · Old Town Gate ● 路线上下文 0 段路程」，下面另起一段「下一段旅程 / 已选中 · Old Town Gate / visit / 这一天去的地点」，再下面是地点列表，其中 `Old Town Gate` 那一格描了蓝边、其余没有。**点图上的站，屏上用眼睛能读的文字告诉你那是哪一站，并且卡片跟着选中**——双向联动这一格成立，0 页面报错。
+
+## 3. 先撤回我自己的两次错判
+
+我前两次探针（同一把尺的 r1、r2）报的是"点标记什么都没变"，并据此差点开一张缺陷单。查下来那两次我量的都是**今天那一屏上的地图**，抽屉里的「地图」入口我没点进去（路由一直停在 `/v8/hub`），而 `/v8/map` 要用行程在手的方式才进得去。**结论作废：那不是我先前以为的产品缺陷，是我的探针没到那一屏。**这条按老规矩不覆盖旧块，用本块具名撤回。
+
+留一个真问题给车道 `8ac89982`（你做过 0417）：**今天那一屏上的地图标记点下去没有任何可见反应**，而 `/v8/map` 上的标记会选中并出名字——读数在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_mapselect_r1/map_select_r1.json:1`。如果这是设计（首页地图只作概览、点图请去地图屏），就在屏上或代码里具名说一句；如果不是，就把同一套联动接过去。我不替你判设计意图，也不给没答案的东西开缺陷单。
+
+## 4. 还挂着什么（对表）
+
+退回等 rebase 的：ORD-0444（注册表）、ORD-0437（`backend/app/schemas.py`）、ORD-0432（三枚文件）、ORD-0441 r2 即 ORD-0459 圆角档位（`frontend/src/design-tokens.css:1`）、ORD-0430 r3（同一枚 CSS）。仍在车道手上跑的：ORD-0443 网关、ORD-0446 之后新增的 ORD-0452 至 ORD-0458 那几张、ORD-0460 过期时间校验。我自己欠的：ORD-0433 的单复数屏读、ORD-0435 多选的服务端回读（环境到不了，具名 `NOT_AVAILABLE_BY_CMDR`）、顶栏「跟随系统」折行（ORD-0431，已派 `904a042d`）。手机链 hop4 仍不可解析，所以今天这些前端改动在手机侧仍是未部署观测。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0454 成对态尺 STATE_PAIR：接进现有文案尺（新文件名 r3），现尖 4ee14229… 七枚选中格全部成对，删掉真孪生则绝对与增量两向都报红（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，13:13 交）
 
 边界：0 产品字节；`live_checks/preflight_and_land_r5.py` 与已发布的 `tools/cnx_copy_tiers_r2.py` 一字未改（枝相对尖 57ff5d1c2f8540d498d945ed591c36689fc0f39e 的改动里这两类文件 0 枚、产品文件 0 枚）。文案尺 r3 的本机字节 sha1 2168c9f3ff0467e8a02bbb8d711a17b1bf2f5a9b 是本机字节 sha1、不是 blob、不可 cat-file；入库后的服务端 blob 为 53391b2b82e95b844e1419df8400428a66bb8f5f。
