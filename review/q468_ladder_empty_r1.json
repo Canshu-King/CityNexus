@@ -3,7 +3,7 @@
  "lane": "e4f3490f-a55f-4fcb-b7af-227e41018656",
  "branch": "review/Q-ord0468-ladder-empty-reading-r1",
  "base": "0dabe64223036391a6c25561a6b606e1533f3704",
- "head_at_readings": "35bff3f95a520c6b3a2d2be1944441941ba8c693",
+ "head_at_readings": "530bb14e69947edd8b6dc9fde85dd4aa36b0a095",
  "live_tip_at_delivery": "0dabe64223036391a6c25561a6b606e1533f3704",
  "n_commits_tip_past_my_head": 0,
  "depends_blob_drift": [],
@@ -912,7 +912,9 @@
   "frontend/src/features/estimation/EstimationLadderPanel.tsx",
   "frontend/src/features/estimation/estimationLadder.ts",
   "frontend/src/features/estimation/estimationLadderCopy.ts",
-  "frontend/src/features/stay/StayExplorer.tsx"
+  "frontend/src/features/stay/StayExplorer.tsx",
+  "review/q468_empty_r1.py",
+  "review/q468_ladder_empty_r1.json"
  ],
  "walled_files_touched": [],
  "succession": {

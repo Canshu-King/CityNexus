@@ -383,8 +383,14 @@ A("   格② 计数随交互变（同一台机、同一把闸、前后各一枚�
   " 亮 " + json.dumps(PAIR.get("before_keys"), ensure_ascii=False) + " 两枚；之后 cards=" + str(PAIR.get("after_cards")) + " 亮 " +
   json.dumps(PAIR.get("after_keys"), ensure_ascii=False) + " 一枚；`changed=" + json.dumps(PAIR.get("changed")) + "` ，且空读数那枚 key 在有候选时不出现。" +
   "本臂内部没有「改前」可比的那一格写作 `NOT_MEASURED_no_before_reading`，不写 0。")
-A("   格③ 与固定底栏带的关系（先滚进视口再量；本机顶边实测 " + str(Z["cell_3_against_bottom_bar"]["hit_line_px_measured_on_this_box"]) + " px）：" +
-  json.dumps(ROWS, ensure_ascii=False))
+R = ROWS[0] if ROWS else {}
+BX = R.get("box", {})
+CT = R.get("centre", {})
+A("   格③ 与固定底栏带的关系（取字处 " + COORD["hit_probe"] + " ，先 `scrollIntoViewIfNeeded()` 再量）：本机底栏顶边实测 " +
+  str(Z["cell_3_against_bottom_bar"]["hit_line_px_measured_on_this_box"]) + " px ；那一格 box 顶 " + str(BX.get("y")) + " / 底 " + str(BX.get("bottom")) +
+  " / 高 " + str(BX.get("h")) + " ，中心 (" + str(CT.get("x")) + ", " + str(CT.get("y")) + ") 命中自身 = " + json.dumps(R.get("centreHitSelf")) +
+  " ，末行底边 " + str(R.get("lastLineBottom")) + " 不越底栏 = " + json.dumps(R.get("lastLineClearsNav")) + " （同一取字处 " + COORD["hit_probe"] + " ；" +
+  "两臂逐行原始几何（含英文臂那一行）在 `review/q468_ladder_empty_r1.json` 的 `arms_0468.cell_four_zh.cell_3_against_bottom_bar.rows` 与 `…cell_four_en…`，blob " + ART_BLOB + " 可取回）。")
 A("   格④ 条内机器 token：" + json.dumps(Z["cell_4_machine_tokens"]["scanned_lines"], ensure_ascii=False) + " 整行读回后扫描，token_count = " +
   str(Z["cell_4_machine_tokens"]["token_count"]) + " ；原始值只在属性里（`data-ladder-has-candidates=" +
   str(Z["cell_4_machine_tokens"]["attributes_holding_the_raw_values"].get("has_candidates")) + "` 、`data-ladder-candidates=" +
