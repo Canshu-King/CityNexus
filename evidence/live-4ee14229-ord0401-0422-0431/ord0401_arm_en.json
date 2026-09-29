@@ -1,0 +1,118 @@
+{
+ "locale": "en",
+ "before": {
+  "path": "/v8/hub",
+  "scrollTop": 0,
+  "scrollMax": 1142,
+  "viewport": {
+   "w": 390,
+   "h": 844
+  },
+  "empty_present": true,
+  "empty_box": {
+   "top": 895,
+   "bottom": 970,
+   "left": 32,
+   "w": 326,
+   "h": 75
+  },
+  "action_present": true,
+  "action_label": "Review this plan generation",
+  "action_box": {
+   "top": 926,
+   "bottom": 970,
+   "left": 32,
+   "w": 194,
+   "h": 44
+  },
+  "action_centre": {
+   "x": 129,
+   "y": 948
+  },
+  "hit_owner": null,
+  "hit_is_action": false,
+  "fixed_on_screen": [
+   {
+    "tag": "ASIDE",
+    "cls": "cn-copilot-dock collapsed idle-compact",
+    "top": 706,
+    "bottom": 760
+   },
+   {
+    "tag": "NAV",
+    "cls": "v8-mobile-nav",
+    "top": 768,
+    "bottom": 844
+   },
+   {
+    "tag": "DIV",
+    "cls": "cn-sim-float",
+    "top": 634,
+    "bottom": 694
+   }
+  ],
+  "hint_leaves": [],
+  "scrollable_ancestors": []
+ },
+ "after_one_scroll": {
+  "path": "/v8/hub",
+  "scrollTop": 760,
+  "scrollMax": 1142,
+  "viewport": {
+   "w": 390,
+   "h": 844
+  },
+  "empty_present": true,
+  "empty_box": {
+   "top": 135,
+   "bottom": 210,
+   "left": 32,
+   "w": 326,
+   "h": 75
+  },
+  "action_present": true,
+  "action_label": "Review this plan generation",
+  "action_box": {
+   "top": 166,
+   "bottom": 210,
+   "left": 32,
+   "w": 194,
+   "h": 44
+  },
+  "action_centre": {
+   "x": 129,
+   "y": 188
+  },
+  "hit_owner": "BUTTON.v8-quiet-button",
+  "hit_is_action": true,
+  "fixed_on_screen": [
+   {
+    "tag": "ASIDE",
+    "cls": "cn-copilot-dock collapsed idle-compact y",
+    "top": 564,
+    "bottom": 608
+   },
+   {
+    "tag": "NAV",
+    "cls": "v8-mobile-nav",
+    "top": 768,
+    "bottom": 844
+   },
+   {
+    "tag": "DIV",
+    "cls": "cn-sim-float",
+    "top": 492,
+    "bottom": 552
+   }
+  ],
+  "hint_leaves": [],
+  "scrollable_ancestors": []
+ },
+ "verdict": {
+  "same_screen_as_its_empty_state": true,
+  "reached_after_one_scroll": true,
+  "covered_by_a_fixed_element": false,
+  "scroll_is_sayable_on_screen": false,
+  "hint_leaves": []
+ }
+}
