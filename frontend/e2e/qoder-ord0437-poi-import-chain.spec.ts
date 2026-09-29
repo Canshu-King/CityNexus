@@ -25,6 +25,9 @@ import { evidencePath } from "./_qoderEvidence";
  *   added        — 已加入 only appears once the record is read back from the server, and it survives
  *                  a reload, which client state cannot fake.
  *   replay       — a second tap on the same selection reports 本来就在 rather than a second success.
+ *   exits        — the three destinations: 加进计划 opens only when something is ticked, and the two
+ *                  that this line cannot honour (收藏, 新建计划) stay shut and say why in painted text,
+ *                  not in a tooltip a touch screen never shows.
  */
 
 const FILE = "e2e/qoder-ord0437-poi-import-chain.spec.ts";
@@ -552,6 +555,72 @@ test("chinese-arm — the sentences this order adds are Chinese on the Chinese a
   expect(disclosure).toMatch(/[一-龥]/);
   expect(unsupported).toMatch(/[一-龥]/);
   expect(scopeHint, "支持范围那句在中文屏也得是中文").toMatch(/[一-龥]/);
+});
+
+test("exits — the three destinations, and what each one is allowed to promise", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await enterImport(page);
+  test.setTimeout(180_000);
+  await useSlackJourney(page);
+  await ensureActivePlan(page);
+  const built = await pasteText(page);
+  await parse(page, built.text);
+  const disabledNow = async (id: string) =>
+    page.getByTestId(id).first().isDisabled({ timeout: 2_000 }).catch(() => null);
+  const isDone = async (id: string) =>
+    page.getByTestId(id).first().isEnabled({ timeout: 2_000 }).catch(() => null);
+
+  /* The door opens exactly when the count it shows is non-zero, and that is the whole judgment here.
+     Measured on the first run of this arm: after a parse the screen has already ticked every matched
+     place ("2 of 2 matched places selected"), so an assertion that the write door is shut before any
+     press was MY premise, not the product's shape -- the reference's 批量加地点 screen carries a
+     checkSelectedAll for the same reason. Reading the painted count instead of guessing keeps the
+     assertion true in both directions: untick everything and the door has to shut. */
+  const countShown = await painted(page, "poi-import-selection-count");
+  const shown = Number((countShown?.match(/\d+/) ?? [""])[0]);
+  const addDisabledShown = await disabledNow("poi-import-add");
+
+  const selects = page.getByTestId("poi-card-select");
+  const n = await selects.count();
+  for (let i = 0; i < n; i++) await selects.nth(i).click();
+  await page.waitForTimeout(300);
+  const countEmpty = await painted(page, "poi-import-selection-count");
+  const addEmptyDisabled = await disabledNow("poi-import-add");
+  const addEmptyWords = await isDone("poi-import-add");
+
+  const addWords = await painted(page, "poi-import-add");
+  const favWords = await painted(page, "poi-import-favorite");
+  const favWhy = await painted(page, "poi-import-favorite-why");
+  const njWords = await painted(page, "poi-import-new-journey");
+  const njWhy = await painted(page, "poi-import-new-journey-why");
+  const favDisabled = await disabledNow("poi-import-favorite");
+  const njDisabled = await disabledNow("poi-import-new-journey");
+  await page.screenshot({ path: evidencePath("ord0437", "exits_arm.png") });
+  push("exits", {
+    names: built.names, cardsWithSelect: n, countShown, selectedOnParse: shown,
+    doorOpenOnParse: addDisabledShown === false, countEmpty, doorDisabledAtZero: addEmptyDisabled,
+    addWords, favWords, favWhy, favDisabled, njWords, njWhy, njDisabled,
+  });
+
+  expect(addWords, "加进计划 is the exit this screen actually performs").toBeTruthy();
+  expect(shown > 0, "the parse pre-ticks what it matched -- recorded, not assumed").toBe(true);
+  expect(addDisabledShown, "the door agrees with the count it paints").toBe(shown === 0);
+  expect((countEmpty?.match(/\d+/) ?? [""])[0]).toBe("0");
+  expect(addEmptyDisabled, "with nothing ticked the write door has to shut").toBe(true);
+  expect(addEmptyWords, "an enabled control after 0 selected would fake a promise").toBe(false);
+
+  /* The other two are not built on this line: 收藏 has no route here (ORD-0444 is still a review ref),
+     and 新建计划 would mean inventing dates and a budget the traveller never gave us. Inert is
+     acceptable; inert *and silent* is not -- a tooltip never appears on a touch screen, so the reason
+     has to be painted. */
+  expect(favDisabled, "收藏 must not pretend to save").toBe(true);
+  expect(njDisabled, "新建计划 must not invent a trip").toBe(true);
+  expect(favWords).toMatch(/收藏|favour|favorite/i);
+  expect(njWords).toMatch(/计划|plan/i);
+  expect(favWhy, "an exit that is off has to say why in the open").toBeTruthy();
+  expect(njWhy, "an exit that is off has to say why in the open").toBeTruthy();
+  expect(favWhy).toMatch(/收藏|favourite|favorite/i);
+  expect(njWhy).toMatch(/计划|plan|录入/i);
 });
 
 test.afterAll(() => {

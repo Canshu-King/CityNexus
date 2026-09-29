@@ -426,22 +426,32 @@ export function PoiImportPanel({
               >
                 {adding ? t("poiImport.adding") : t("poiImport.addToPlan")}
               </button>
+              {/* A touch screen never shows a tooltip, so an inert exit explained only by `title` is an
+                  exit that says nothing. Both reasons are painted here instead -- and neither button is
+                  enabled, because 收藏 has no door on this line and 新建计划 would mean inventing the
+                  dates and budget the traveller has not given us yet. */}
               <button
                 className="v8-outline-button"
                 data-testid="poi-import-favorite"
                 disabled
-                title={t("poiImport.favoriteNotWired")}
+                aria-describedby="poi-import-favorite-why"
               >
                 {t("poiImport.favorite")}
               </button>
+              <small id="poi-import-favorite-why" data-testid="poi-import-favorite-why">
+                {t("poiImport.favoriteNotWired")}
+              </small>
               <button
                 className="v8-quiet-button"
                 data-testid="poi-import-new-journey"
                 disabled
-                title={t("poiImport.newJourneyNotWired")}
+                aria-describedby="poi-import-new-journey-why"
               >
                 {t("poiImport.newJourney")}
               </button>
+              <small id="poi-import-new-journey-why" data-testid="poi-import-new-journey-why">
+                {t("poiImport.newJourneyNotWired")}
+              </small>
               <button className="v8-quiet-button" data-testid="poi-import-open-plan" onClick={onOpenPlan}>
                 {t("poiImport.openPlan")}
               </button>
