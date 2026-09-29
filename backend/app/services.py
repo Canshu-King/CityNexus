@@ -975,6 +975,43 @@ def _catalogue_templates(
     return templates
 
 
+def _mobility_catalogue_place_ids(
+    places: Mapping[str, Place],
+    raw_templates: Sequence[Sequence[tuple[str, str, str, str]]],
+    anchors: Sequence[Any],
+) -> tuple[str, ...]:
+    """Return only nodes that can participate in a strict catalogue schedule.
+
+    Unknown opening windows cannot enter ``_catalogue_templates`` and therefore do
+    not need a live edge in the strict matrix.  Keeping them out here bounds the
+    real provider work for a destination whose catalog also contains unresolved
+    rows; the provisional lane captures its own two selected rows later when it
+    is actually needed.
+    """
+
+    if raw_templates:
+        candidate_ids = [
+            place_id
+            for template in raw_templates
+            for place_id, *_ in template
+            if place_id in places
+        ]
+    else:
+        candidate_ids = [
+            place.id
+            for place in places.values()
+            if _place_window(place) and _catalogue_visit_eligible(place)
+        ]
+    return tuple(
+        dict.fromkeys(
+            [
+                *candidate_ids,
+                *(anchor.place_id for anchor in anchors if anchor.place_id in places),
+            ]
+        )
+    )
+
+
 def _provisional_catalogue_plan(
     session: Session,
     journey: Journey,
@@ -1984,23 +2021,7 @@ def generate_plans(
     # (template POIs plus resolved anchors) *before* scheduling, so the
     # scheduler inserts real travel gaps and the gate consumes the exact same
     # frozen evidence.
-    schedulable_ids = tuple(
-        dict.fromkeys(
-            [
-                *(
-                    place_id
-                    for template in raw_templates
-                    for place_id, *_ in template
-                    if place_id in places
-                ),
-                # A city with no frozen template of its own is priced over its whole
-                # catalogue: without this the matrix would be captured empty, and the
-                # derived day sequences below would have no travel minutes to respect.
-                *(sorted(places) if not raw_templates else ()),
-                *(anchor.place_id for anchor in anchors),
-            ]
-        )
-    )
+    schedulable_ids = _mobility_catalogue_place_ids(places, raw_templates, anchors)
     mobility_provider = capture_runtime_mobility_snapshot(
         session,
         journey,

@@ -18,6 +18,7 @@ from app.fact_acquisition import (
     _acquire_overpass_payload,
     acquire_place_facts,
 )
+from app.services import _mobility_catalogue_place_ids
 
 
 class _Response:
@@ -139,6 +140,31 @@ def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch)
     assert attempts[0]["error"].startswith("ReadTimeout:")
     assert attempts[1]["answered"] is True
     assert attempts[1]["elements"] == 1
+
+
+def test_strict_catalogue_mobility_excludes_unresolved_opening_rows():
+    places = {
+        "known-visit": SimpleNamespace(
+            id="known-visit",
+            category="attraction",
+            opening_hours_json=json.dumps({"status": "NORMALIZED_VALID", "open": "09:00", "close": "17:00"}),
+            metadata_json=json.dumps({}),
+        ),
+        "unknown-visit": SimpleNamespace(
+            id="unknown-visit",
+            category="attraction",
+            opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+            metadata_json=json.dumps({}),
+        ),
+        "lodging": SimpleNamespace(
+            id="lodging",
+            category="hotel",
+            opening_hours_json=json.dumps({"status": "NORMALIZED_VALID", "open": "00:00", "close": "24:00"}),
+            metadata_json=json.dumps({}),
+        ),
+    }
+
+    assert _mobility_catalogue_place_ids(places, [], []) == ("known-visit",)
 
 
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
