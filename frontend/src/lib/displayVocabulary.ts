@@ -42,6 +42,48 @@ const TIME_ZONE: Record<string, Label> = {
 
 const PLAN_VERSION_NOUN: Label = { zh: "方案版本", en: "Plan version" };
 
+/* ORD-0446: the bookings card used to print the three internal identifiers straight from the wallet
+   payload. The value sets below are not invented here -- `kind` is a contract Literal
+   (`backend/app/schemas.py:772`), `level` is the frozen strength tuple
+   (`backend/app/commerce/strengths_generated.py:6-12`), and `status` is what the server actually writes
+   (`backend/app/commerce/service_impl.py:306`, `:442`, `backend/app/operations/v9.py:579`, `:646`).
+   Anything outside them still falls to the labelled raw channel, so a new server value shows up as a
+   gap rather than being quietly renamed into a claim. */
+const COMMITMENT_KIND: Record<string, Label> = {
+  BOOKING: { zh: "预订", en: "Booking" },
+  ORDER: { zh: "订单", en: "Order" },
+  PAYMENT: { zh: "付款", en: "Payment" },
+  APPOINTMENT: { zh: "预约", en: "Appointment" },
+  OTHER: { zh: "其他凭据", en: "Other evidence" },
+};
+
+const COMMITMENT_LEVEL: Record<string, Label> = {
+  C0_FLEXIBLE: { zh: "可灵活改动", en: "Flexible" },
+  C1_PREFERRED: { zh: "倾向保留", en: "Preferred" },
+  C2_RESERVED: { zh: "已预留", en: "Reserved" },
+  C3_GUARANTEED: { zh: "有保证", en: "Guaranteed" },
+  C4_ANCHORED: { zh: "受保护锚点", en: "Protected anchor" },
+};
+
+const COMMITMENT_STATUS: Record<string, Label> = {
+  ACTIVE: { zh: "生效中", en: "Active" },
+  CONFIRMED: { zh: "已确认", en: "Confirmed" },
+  CANDIDATE: { zh: "待确认", en: "Awaiting confirmation" },
+  PLANNED: { zh: "已排入计划", en: "Planned" },
+};
+
+/* The demo deployment is not a city a traveller can name. `backend/app/anywhere_capability.py:233`
+   already carries traveller-facing labels for this very code, so this says the same thing in words
+   instead of painting the code's last segment. */
+const CITY_CODE: Record<string, Label> = {
+  CNX_DEMO: { zh: "演示城市", en: "Demo city" },
+};
+
+const SUMMARY_HELD: Label = {
+  zh: "上游那句摘要的原文不在这一屏",
+  en: "The upstream summary's own words are not on this screen",
+};
+
 function wantsChinese(zh?: boolean | string | null): boolean {
   if (typeof zh === "boolean") return zh;
   if (typeof zh === "string") return zh.trim().toLowerCase().startsWith("zh");
@@ -93,4 +135,33 @@ export function clockZoneLabel(value: unknown, zh?: boolean | string | null): st
 
 export function planVersionNoun(zh?: boolean | string | null): string {
   return wantsChinese(zh) ? PLAN_VERSION_NOUN.zh : PLAN_VERSION_NOUN.en;
+}
+
+export function commitmentKindLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(COMMITMENT_KIND, value, zh);
+}
+
+export function commitmentLevelLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(COMMITMENT_LEVEL, value, zh);
+}
+
+export function commitmentStatusLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(COMMITMENT_STATUS, value, zh);
+}
+
+/** A city code the display table does not know keeps the old behaviour: the code's own tail on screen.
+ *  Only the demo deployment's code, which names no city at all, gets words. */
+export function cityCodeLabel(value: unknown, zh?: boolean | string | null): string {
+  const key = keyOf(value);
+  const entry = CITY_CODE[key];
+  if (!entry) {
+    const raw = String(value ?? "").trim();
+    const tail = raw.includes("-") ? raw.split("-").slice(1).join("-") : raw;
+    return tail || raw;
+  }
+  return wantsChinese(zh) ? entry.zh : entry.en;
+}
+
+export function summaryHeldLabel(zh?: boolean | string | null): string {
+  return wantsChinese(zh) ? SUMMARY_HELD.zh : SUMMARY_HELD.en;
 }

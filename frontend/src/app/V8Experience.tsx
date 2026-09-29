@@ -1,4 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  cityCodeLabel,
+  commitmentKindLabel,
+  commitmentLevelLabel,
+  commitmentStatusLabel,
+} from "../lib/displayVocabulary";
 import { Icon } from "../components/v8/Icon";
 import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
@@ -3890,7 +3896,8 @@ function WalletCommitments({
             </div>
             <div>
               <span className="v8-selected-label">
-                {item.kind} · {item.level} · {item.status}
+                {commitmentKindLabel(item.kind, zh)} · {commitmentLevelLabel(item.level, zh)} ·{" "}
+                {commitmentStatusLabel(item.status, zh)}
                 {simulated && (
                   <b data-testid="wallet-commitment-simulated">
                     {" · "}
@@ -4270,17 +4277,12 @@ function Me({
         return zh ? "仅提供建议" : "Suggestions only";
     }
   };
+  const citySlug = String(data.journey.city_code || "")
+    .split("-")
+    .pop()
+    ?.toUpperCase() ?? "";
   const cityLabel =
-    CITY_NAME_BY_SLUG[
-      String(data.journey.city_code || "")
-        .split("-")
-        .pop()
-        ?.toUpperCase() ?? ""
-    ]?.[zh ? "zh" : "en"] ??
-    String(data.journey.city_code || "")
-      .split("-")
-      .pop() ??
-    "";
+    CITY_NAME_BY_SLUG[citySlug]?.[zh ? "zh" : "en"] ?? cityCodeLabel(data.journey.city_code, zh);
 
   const bookings = wallet?.reservations ?? [];
   const stay =
