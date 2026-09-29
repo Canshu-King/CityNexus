@@ -49,7 +49,7 @@
   width: 14px;
   height: 14px;
   border: 2px solid currentColor;
-  border-radius: 50%;
+  border-radius: var(--cn-r-circle);
 }
 
 /* on target: the ring is filled — "you are inside the frame" */
@@ -57,7 +57,7 @@
   content: "";
   position: absolute;
   inset: 2px;
-  border-radius: 50%;
+  border-radius: var(--cn-r-circle);
   background: currentColor;
 }
 
