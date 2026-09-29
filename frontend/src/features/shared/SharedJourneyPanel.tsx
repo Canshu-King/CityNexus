@@ -4,8 +4,6 @@ import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
 import { copyFor } from "../../lib/failureAttribution";
 import { MapPanel, type MapPanelInput } from "../../components/v8/MapPanel";
 import { planSourceLabel } from "../../lib/displayVocabulary";
-import { bookingStatusLabel, stopRoleLabel } from "../../i18n/travelerLabels";
-import { formatV8Date } from "../../lib/v8Formatting";
 import { clock, dayLabel, localDateKey } from "../trip/TripItinerary";
 import {
   askSharedJourney,
@@ -224,9 +222,19 @@ export function SharedJourneyScreen({ token }: { token: string }) {
             {answer.title}
           </h1>
           <p className="v8-muted" data-testid="shared-window">
+            {/* Formatted with the same two helpers the day list below uses, so this screen cannot put
+                "starts 10月29日" above "Day 10月30日" for one trip. `formatV8Date` reads the browser's
+                zone; a trip's days are counted in the trip's own zone, and mixing the two on one page
+                is a second clock, not a second format. */}
             {t("shared.window", {
-              from: formatV8Date(answer.start_at, locale),
-              to: formatV8Date(answer.end_at, locale),
+              from: `${dayLabel(localDateKey(answer.start_at, timeZone), 0, locale)} ${clock(
+                answer.start_at,
+                timeZone,
+              )}`,
+              to: `${dayLabel(localDateKey(answer.end_at, timeZone), 0, locale)} ${clock(
+                answer.end_at,
+                timeZone,
+              )}`,
             })}
           </p>
 
@@ -246,7 +254,6 @@ export function SharedJourneyScreen({ token }: { token: string }) {
               {t("shared.planLine", {
                 version: answer.active_plan.version_no,
                 source: planSourceLabel(answer.active_plan.source, zh),
-                status: bookingStatusLabel(answer.active_plan.status, zh),
               })}
             </p>
           )}
@@ -277,9 +284,16 @@ export function SharedJourneyScreen({ token }: { token: string }) {
                         <b className="cn-shared-stop-name" data-testid="shared-stop-name">
                           {stop.place_name || stop.title || t("shared.stopUnnamed")}
                         </b>
+                        {/* Only the clock. The owner's itinerary labels a stop's kind by reading
+                            `metadata.role` first and the activity type last
+                            (`i18n/travelerLabels.ts:261`), and this door sends neither -- `metadata` is
+                            the store's transition record, not a display field. Falling straight to
+                            `activity_type` would have put a machine word like `visit` on a Chinese
+                            screen wherever the owner's screen shows the nicer word the same table gives
+                            its role, i.e. two screens disagreeing about one stop. Showing the time and
+                            the name is the honest subset of what this answer can actually vouch for. */}
                         <span className="cn-shared-stop-meta" data-testid="shared-stop-meta">
-                          {clock(stop.start_at, timeZone)} ·{" "}
-                          {stopRoleLabel({ type: stop.activity_type }, zh)}
+                          {clock(stop.start_at, timeZone)}
                         </span>
                       </li>
                     ))}

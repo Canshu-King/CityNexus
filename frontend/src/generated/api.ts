@@ -3087,11 +3087,6 @@ export interface components {
              * @enum {string}
              */
             source: "INITIAL" | "REPLAN" | "MANUAL";
-            /**
-             * @description The plan's own state, which a share holder may read and cannot change from here.
-             * @enum {string}
-             */
-            status: "CANDIDATE" | "SELECTED" | "ACTIVE" | "SUPERSEDED" | "REJECTED";
             stops: components["schemas"]["SharedStop"][];
         };
         /** @description ORD-0465: what the holder of a share link is shown when the grant still reads.  The journey half is `Journey` unchanged - the same fields, the same names, the same meanings - because one journey shape is the promise this door has always kept. */

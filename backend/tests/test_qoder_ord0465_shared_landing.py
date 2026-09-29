@@ -283,7 +283,6 @@ def test_ord0465_success_carries_the_stops_the_landing_screen_has_to_draw():
     assert body["plan_state"] == "ACTIVE_PLAN_PRESENT"
     assert body["active_plan"]["version_no"] == 3
     assert body["active_plan"]["source"] == "INITIAL"
-    assert body["active_plan"]["status"] == "ACTIVE"
     stops = body["active_plan"]["stops"]
     assert [item["sequence_no"] for item in stops] == [1, 2]
     # The place's own name, not the planner's typed title: the screen prefers it, and can only do so
@@ -390,19 +389,58 @@ def test_ord0465_the_read_writes_nothing():
     assert after_audit == before_audit
 
 
-def test_ord0465_the_two_words_naming_the_plan_are_the_same_words_the_plan_itself_uses():
-    """`SharedPlan` copies two enumerations out of `PlanVersion`, and a copy is exactly the thing that
-    drifts.  Pinned against the model for the same two columns rather than against a list written in
+def test_ord0465_the_word_naming_the_generation_is_the_same_word_the_plan_itself_uses():
+    """`SharedPlan.source` copies an enumeration out of `PlanVersion`, and a copy is exactly the thing
+    that drifts.  Pinned against the model for the same column rather than against a list written in
     this file, so widening a `plan_versions.source` value fails here before it can reach a screen."""
     import typing
 
     from app.schemas import PlanVersion as PlanVersionSchema
     from app.schemas import SharedPlan
 
-    for field in ("source", "status"):
-        mine = set(typing.get_args(SharedPlan.model_fields[field].annotation))
-        theirs = set(typing.get_args(PlanVersionSchema.model_fields[field].annotation))
-        assert mine == theirs, (field, mine ^ theirs)
+    mine = set(typing.get_args(SharedPlan.model_fields["source"].annotation))
+    theirs = set(typing.get_args(PlanVersionSchema.model_fields["source"].annotation))
+    assert mine == theirs, mine ^ theirs
+
+
+def test_ord0465_every_word_this_answer_offers_has_a_label_the_traveller_reads():
+    """The rule this order keeps having to relearn: a machine token that reaches a Chinese screen is a
+    defect no matter how correct it is in the database.
+
+    Every enumeration the share answer carries is therefore checked against the table the front uses
+    to say it -- `PLAN_SOURCE` for the generation, `CAPABILITY_STATES` for a coordinate -- and the
+    plan's own `status` is asserted ABSENT rather than labelled, because two of its five values
+    (`SELECTED`, `SUPERSEDED`) have no entry in `STATUS_LABELS`
+    (`frontend/src/i18n/travelerLabels.ts:81`) and the screen would have nothing to do with them but
+    echo them.  The tables are read out of the TypeScript rather than restated here: a label list
+    copied into a Python test would drift in exactly the way it is supposed to catch."""
+    import re
+    import typing
+    from pathlib import Path
+
+    from app.schemas import SharedPlan
+
+    front = Path(__file__).resolve().parents[2] / "frontend" / "src"
+
+    def table_keys(file_name: str, table: str) -> set[str]:
+        """The keys of one `const TABLE: Record<string, Label> = { KEY: { zh: … }, … }` block, read off
+        the TypeScript the front actually ships."""
+        text = (front / file_name).read_text(encoding="utf-8")
+        start = text.index(f"const {table}")
+        body = text[start : text.index("};", start)]
+        return set(re.findall(r"^\s{2}([A-Z_]+):", body, re.M))
+
+    assert set(typing.get_args(SharedPlan.model_fields["source"].annotation)) == table_keys(
+        "lib/displayVocabulary.ts", "PLAN_SOURCE"
+    ), "a `source` value with no label would be echoed to a traveller as a machine word"
+
+    assert "status" not in SharedPlan.model_fields, (
+        "an unlabelled token must not be on this answer"
+    )
+    unlabelled = {"SELECTED", "SUPERSEDED"} - table_keys("i18n/travelerLabels.ts", "STATUS_LABELS")
+    assert unlabelled == {"SELECTED", "SUPERSEDED"}, (
+        f"if the front gains these labels, `status` may come back: {unlabelled}"
+    )
 
 
 def test_ord0465_the_projection_does_not_reach_a_routing_provider():

@@ -5,15 +5,28 @@
   display: grid;
   gap: 14px;
   width: min(760px, 100%);
+  /* Declared, not inherited: this tree has no global `box-sizing` rule -- every component that needs
+     border-box states it on its own (`.v8-sidebar`, `#v8-nav-drawer`, the composer's fields). Without
+     it, `width: 100%` plus this rule's own 28px of padding made the container 418px wide inside a
+     390px column, and the language button at the end of the header row sat 14px off the right edge of
+     a real phone. Measured at dist_r05; the two earlier attempts (a wrapping flex row, then a grid)
+     both left it at exactly the same 404px because neither was the cause. */
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 22px 20px 40px;
 }
 .cn-shared-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  /* A grid, not a wrapping flex row. The first attempt at this was `flex-wrap: wrap`, and it measured
+     the same 404px right edge on a 390px viewport: a flex item cannot shrink below its own text, so
+     the kicker stayed full width and the row simply pushed the button off the end of the column.
+     `1fr auto` gives the sentence the space that is left and gives the button a lane of its own, so
+     neither one decides where the other ends up. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px 12px;
 }
+.cn-shared-head .v8-kicker { min-width: 0; overflow-wrap: anywhere; }
 .cn-shared-language { width: fit-content; }
 .cn-shared-title {
   margin: 0;
@@ -85,8 +98,15 @@
 
 /* Amendment F-2: the >=44px contract belongs to the touch layer, and on this screen the two controls
    a visitor can actually press are 再读一次 and the language switch. Desktop keeps the 30px the rest
-   of the shell's quiet buttons use, which is set by the shared sheet rather than repeated here. */
+   of the shell's quiet buttons use, which is set by the shared sheet rather than repeated here.
+   The width is pinned alongside the height because the language button holds a two-letter word: a
+   44px-tall, 17px-wide target satisfies one axis of the contract and fails the other, and the corner
+   of a phone column is where a thumb misses it. */
 @media (max-width: 680px) {
   .cn-shared { padding: 16px 14px 32px; }
-  .cn-shared .v8-quiet-button { min-height: var(--cn-touch-min); }
+  .cn-shared .v8-quiet-button {
+    min-width: var(--cn-touch-min);
+    min-height: var(--cn-touch-min);
+    padding-inline: 14px;
+  }
 }
