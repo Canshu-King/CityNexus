@@ -1600,6 +1600,12 @@ export function V8Experience() {
           void load(data.journey.id);
           void authoritativeTwin.refetch();
         }}
+        /* ORD-0417 (hub slice): Today's hero carries a real map with real pins, so a pin here has to
+           answer the same way one on the map screen does.  The shell already owns this selection --
+           `detailActivityId` is what `<MapPage>` reads and writes -- and handing the hub the same pair
+           is what makes a tap visible instead of a no-op on a control that advertises `role="button"`. */
+        selectedActivityId={detailActivityId}
+        onSelectActivity={setDetailActivityId}
       />
     ),
     studio: () => (
@@ -2309,6 +2315,8 @@ function Hub({
   waitStartedAt,
   onRetryStays,
   onStageChanged,
+  selectedActivityId,
+  onSelectActivity,
 }: {
   data: V8Data;
   /** ORD-0082 ②: carries the server's own NOW/NEXT projection (`context.execution`) -- the one
@@ -2335,6 +2343,11 @@ function Hub({
   /** ORD-0082: after the stage moves, Today must re-read the journey it is showing.  The panel
       names which action ran; which journey to re-read stays this screen's own fact. */
   onStageChanged: () => void;
+  /** ORD-0417 (hub slice): the shared stop selection, owned by the shell.  `null` means nothing is
+      picked, which the panel must be able to say out loud -- an unwired callback used to make every
+      pin click vanish without a trace. */
+  selectedActivityId: string | null;
+  onSelectActivity: (id: string | null) => void;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
@@ -3067,6 +3080,8 @@ function Hub({
           data={data}
           option={selected}
           onNoLocationChange={setMapReportsNoLocation}
+          selectedActivityId={selectedActivityId}
+          onSelectActivity={onSelectActivity}
         />
       </div>
       {/* Stay / booking steps OUT of the hero into a compact strip: the hero owns
