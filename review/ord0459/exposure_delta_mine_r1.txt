@@ -1,0 +1,20 @@
+ORD-0459 r2 -- exposure ruler run by lane 2d2d7428 on its own candidate, same call form as the watch loop
+ruler identity: git hash-object ui_exposure_taint_ast_r7b.cjs = d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2 ; pinned by the driver as d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2 ; identical = True
+(the sha1 of the raw file bytes is 829c077b0b2c14d72b59dfa8292f1b280020ab33 -- that is a local byte hash, not a git object id)
+tip read live        0b7167369e685ac4b7a3d19143de985799e71eb8
+candidate            d48049247bf6aea7b0092ea435b4d450723b02e9   files compared here 8
+
+per file: cells_total on the tip, cells_total on the candidate, new cells by set difference
+   design-tokens.css                                    tip=0 cand=0 new=0 []
+   access.css                                           tip=0 cand=0 new=0 []
+   discovery-batch.css                                  tip=0 cand=0 new=0 []
+   planRanking.css                                      tip=0 cand=0 new=0 []
+   SimulationPanel.css                                  tip=0 cand=0 new=0 []
+   map-controls.css                                     tip=0 cand=0 new=0 []
+   styles.css                                           tip=0 cand=0 new=0 []
+   v10.css                                              tip=0 cand=0 new=0 []
+
+new cells across the candidate's own files: 0
+call form: node ui_exposure_taint_ast_r7b.cjs --ref <rev> --path <tree path>  (per-file; the ruler itself says no module graph is built here,
+           so this is a per-file set difference, not the gate's whole-tree verdict -- the gate stays the commander's two runs.)
+read-only: 0 writes, 0 landing, 0 change to the authoritative line.
