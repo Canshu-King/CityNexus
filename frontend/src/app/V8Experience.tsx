@@ -1846,10 +1846,14 @@ export function V8Experience() {
         <header className="v8-topbar">
           <button
             className="v8-mobile-menu"
-            aria-label={t("shell.openNav")}
+            aria-label={t(navOpen ? "shell.closeNav" : "shell.openNav")}
             aria-expanded={navOpen}
             aria-controls="v8-nav-drawer"
-            onClick={() => setNavOpen(true)}
+            /* ORD-0473: one control, both directions.  It used to only ever pass `true`, and the open
+               drawer painted over it, so a traveller on a phone could not get back out by the way they
+               came in.  Stays pressable above the drawer through the `.v8-mobile-menu` rule in
+               styles.css; the same `aria-expanded` the label reads is what that rule shows "×" on. */
+            onClick={() => setNavOpen((open) => !open)}
           >
             {t("shell.menu")}
           </button>
