@@ -16588,6 +16588,71 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### newlane 车道 2026-09-29 14:14 · ORD-0444 r3 已 rebase 重交：注册表三方合流，零增长在**当下现尖**上重量过；枝 review/newlane-ord0444-collections-r3 头 `e016bea70c3f2260c39f28b8a0a4a510df70f889`
+
+**为什么再切一次**
+- 号令者 13:36 块第 1 节具名：唯一合不成的文件是 `frontend/src/app/v8PanelRegistry.tsx`，因 ORD-0449 与 ORD-0450 落在它上面。本枝已 rebase 到现尖 `17dff25a095a7f0899977816fb18a91ab5c050b5`（`git cat-file -t` 答 commit）。
+- 合流结果现读：注册表 route 面条目依次为 `frontend/src/app/v8PanelRegistry.tsx:126`（ORD-0450 的 pending-set）、`frontend/src/app/v8PanelRegistry.tsx:159`（discover）、`frontend/src/app/v8PanelRegistry.tsx:192`（本单的 collections）、`frontend/src/app/v8PanelRegistry.tsx:336`（ORD-0449 的 access），本单注册表文件 blob `276f0ffdaecb28f4b5e9e4fbcb35d322ed44cb83`；别人那三块逐字保留、被本枝删改行数目 0，残留冲突标记 0 处。
+- 枝上四笔（`git log 17dff25a..e016bea7` 现取，逐笔 `git cat-file -t` 答 commit）：产品 `71881370a0d4e959624b1f7efe44724fb11f9146`、曝光读数 `acc83889bfc64236ff1540a104f6af5d6db1e74d`、屏走 `bca035c2b973b686d7bc5f782b636d2195d28f56`、可达性与收尾 `e016bea70c3f2260c39f28b8a0a4a510df70f889`。权威线我移动次数 0。
+- 一处自错记在这里：本块初稿我曾把产品笔的 sha 手拼成不完整的 40 位（真实值是上一行那个 `71881370a0d4e959624b1f7efe44724fb11f9146`），已换成 `git log` 现取并逐笔 cat-file 核过的串；手拼坐标正是这口闸要拒的东西，我自己也刚犯过第二次。
+
+**零增长：在当下这枚尖上重量，不是沿用上次读数**
+- 尺身份先核：`git hash-object live_checks/ui_exposure_taint_ast_r7b.cjs` 答 `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`，与 `live_checks/preflight_and_land_r5.py:42` 声明逐字相同；两侧同用门的 `git archive <rev> frontend/src` 孤立快照法。
+- 读数：现尖快照 cells 数目 12，本枝快照 cells 数目 12，按 (file, rule) 的增长 NONE、减少 NONE，`features/collections/` 目录内格数 0。本枝 `frontend/src` 树与量曝光那笔同为 `933436cccc1cba7d98abbe058d6f21691294a8a3`，故该读数对本枝有效（tree 对象，`git cat-file -t` 答 tree）。
+- 形状（与 13:36 块里「走共享显示表」那句的差别，请认或改，我不自证正确）：那两格其实是同一枚服务端 token `error.reason_code` 既进 `data-cnx-value` 又进 children。本枝的解法是**整块不再上屏**——细节面只留 `CnxMeasuredFacts`（状态码、content-type、字节数、可念回执），旅客读的拒绝句仍是本单自带文案（面板 blob `243cfb3f51749ac675e08d5f1564d03f9b5fb153`）。我先按他给的路径做过并量了：具名类 `COLLECTION_REFUSAL_REASON` 单独加入 cells 仍 12，但再加「features 屏 import 它」这条边就变 24（多出的 10 格全在本单一行未改的文件）。三段对照在 `review/ord0444/exposure_r2_readout_r1.txt`，blob `0f122dfecfea0f187776f3d55614257db8f1e313`。
+
+**三枚具名码的现读发射点（r3 树）**
+- `backend/app/main.py:3340` = `COLLECTION_FOLDER_NOT_FOUND`、`backend/app/main.py:3348` = `PLACE_NOT_FOUND`、`backend/app/main.py:3377` = `PLACE_ALREADY_IN_COLLECTION`（`git grep -n` 于 `e016bea70c3f2260c39f28b8a0a4a510df70f889` 现取）。反件四条仍各落具名码：http 404、http 404、http 404、http 409，服务日志内部错误行数目 0。
+
+**门禁读数（本树现跑，双侧都出数）**
+- `tools/verify_openapi_parity.py`：本枝 formal 165 / runtime 165 / missing 0 / extra 0 退 0；同一支脚本对现尖 `17dff25a…` 的 `git archive` 导出答 formal 162 / runtime 162 / 0 / 0 退 0，那份契约里 `/collections` 出现次数 0 ⇒ 本枝差值 = path×method 三对。
+- `pytest tests/test_qoder_ord0444_collections.py`：通过 13 条、失败 0 条（模块 blob `6f8352a0a401a5996dd588b5a17f947bd605e10b`）。`tsc -p tsconfig.check.json --noEmit` 退出码 0；`vite build` 退出码 0，产物入口 `dist/assets/index-DCleaN0G.js` 内「我的收藏」命中 1 次、「建一个收藏夹」2 次、「这台服务器上没有这个收藏夹」1 次。
+
+**可达性（新落两屏压在上方，所以这次量了）**
+- 桌面形（视口宽 1280、高 1000，读数 blob ce01d189e0171bbf7572e5a5bf7948808e8ec103）：载入时面板顶边 y 读数 837，在 1000 高度视口内（同一读数 blob ce01d189e0171bbf7572e5a5bf7948808e8ec103）；面板中心命中链是 `div[tid=collection-empty]` → `section[tid=collection-panel]`（本屏自己的节点）；**实按**空态动作建出夹并回读 `shelf_count_after_real_press` 读数 1。
+- 手机形（视口宽 390、高 844，读数 blob ce01d189e0171bbf7572e5a5bf7948808e8ec103）：载入时面板顶边 y 读数 1172，即手机需滚动才到（上方两块面板是 ORD-0447/0435 的屏，本单不动它们）；滚动后动作按钮顶边 y 读数 581、在视口内、可点（同一读数 blob ce01d189e0171bbf7572e5a5bf7948808e8ec103）。
+- 一处仪器口径写明：同一坐标上 `document.elementsFromPoint` 回过一个裸 `html`，而 Playwright 在同元素上实按成功，故命中链只作记录、判定以实按为准。读数件 `review/ord0444/reachability_r3.json`，blob `ce01d189e0171bbf7572e5a5bf7948808e8ec103`。
+- 屏走序重跑：`review/ord0444/screen_walk_r3.json`，blob `d0898e9fe1fe308325a93496419eb797e4c38369`，四判定逐字 true（`empty_state_actionable`、`no_server_token_rendered_on_this_screen_anywhere`、`no_upstream_value_in_any_attribute_slot`、`row_visible_only_after_a_refresh_press`）。仍未证到的一格照实说：`measured_fact_nodes` 读数 0，本屏这次走序没发生任何拒绝（它唯一写动作是建夹），所以「拒绝后细节面仍有数字块」我**没走过**；PNG 仍不可得（`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`）。
+
+**卫生**（本枝头 `e016bea70c3f2260c39f28b8a0a4a510df70f889` 可 cat-file，本行只借它作同段可取回锚）：共享预览库全程只 `mode=ro` 开并 `src.backup()` 拷副本，本轮前后 sha1 同为 `1c8a20b9e4656463dcc42d829d7d9f1f936bae8d`（本机 sha1、非 blob、不在对象库）；`demo/reset` 对它调用次数 0；`:8000`、`:4781`、`:4782`、`:8693` 接触次数 0。本车道私有栈本轮新用 `:60154`–`:60157`，收尾会清。
+
+**ORD-0451 已接**：第一刀只做只读定位，不改他人文件——0435 的多选在 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 与本单同一 `discover` 屏上，现尖上前端调用 `api/v1/collections` 处数 0，第三出口是空位；写路径直接复用已交付的 `POST /api/v1/collections/{folder_id}/items`（新开端点数目 0、新造日期状态数目 0）；出口互斥打算按「一次勾选只进一个容器」在 DOM 与属性槽两侧都说出来，做法沿用本单已验的零增长形（不走上游正文进属性槽那条路）。
+
+
+### ORD-0430 · 车道 ai（会话 bac10f40）r4：已 rebase 到 `17dff25a095a`，map 与 hub 两屏各自的交叠读数都补上（14:15+08 · 现读现尖 `17dff25a095a7f0899977816fb18a91ab5c050b5` · 枝 `refs/heads/review/AI-ord0430-pill-relocates-in-view-r4` 头 `9ab4c013a2f0f838927cff2b0272bca1f01ddb28` · 产品提交 `94541f9acfb1d80625aca8728f7865257c1cdcd4`）
+
+【一、rebase 的形状，逐字读数】
+
+我从现尖 `17dff25a095a7f0899977816fb18a91ab5c050b5` 开 `-r4`，把未落的两笔（`6e16d743` 卡片行也认、`54640306` 无滚动的重排也复测）重放上去。对现尖的产品差只有一个文件：`frontend/src/features/agent/CopilotDock.tsx`，blob `297203ed0462d6c253d72eb3ffc379dab2049656`；`frontend/src/design-tokens.css` 这轮**一字未动**，仍是现尖那枚 `790068bfea8dd10a37f0c82a4dc7c67bb8f3f860`（ORD-0441 的档位数值在先，我以它为准，没有回头覆盖）。批次里请把这枚 cand `24ae0a23f60ac7486ff640f82c20bfee4be54db0` 换成 `94541f9acfb1d80625aca8728f7865257c1cdcd4`（枝尖 `9ab4c013a2f0f838927cff2b0272bca1f01ddb28`）——旧 cand 与现尖在 design-tokens.css 上三侧互异，新 cand 不再碰那枚文件，所以那格冲突面从根上没了。
+
+【二、map 屏：你眼看不压字是真的，但盒度量下还有一档没让位】
+
+密扫（每 60 px 一档，zh+en 共 `rests=23`）在现尖那代 `bad=1`（数在件 `evidence/ai-ord0430-20260929/r4_dense_tip_arm.json` blob cc9a2775b9ca75f17cbb00ed023c6fd91baad3d4）：落在 map/zh-CN@480，药丸**没有让位**（`slot=none`、绘制矩形 left=215 right=380、top=706 bottom=760 px），与卡片里 `SMALL 未知费用保持未知。` 那一行的元素盒相交 1890 px²（同一件 blob cc9a2775b9ca75f17cbb00ed023c6fd91baad3d4）；同一档墨迹维度是 0 —— 所以你 13:33 看到"停在地名列表右侧、没压到文字"与我的读数不矛盾：**它压的是那一行的盒子，不是字形**。修后那代同屏 `rests=23`、`bad=0`、两维都为 0，药丸在该档收到 `336,344,44`（件 `evidence/ai-ord0430-20260929/r4_dense_tip_arm.json` blob cc9a2775b9ca75f17cbb00ed023c6fd91baad3d4 与 `r4_dense_rebased_arm.json` blob 790c8035de2ee3d12b308ad639ed13fed64dcf08；两屏逐档汇总由代码算，件 `r4_map_hub_summary.json` blob 41210bdd0cdd42a88595d2eed9968fb311494e8d）。视觉见证成对：修前 `evidence/ai-ord0430-20260929/r4_map_unfixed_at480.png` blob 1e74e7a9d626e71a9bc8e937ee130f00ab0cb42e（满宽药丸横在卡片行上），修后 `r4_map_fixed_at480.png` blob 26babe5933ef7dd0e56357c568cc4d19d9e565bd（44×44 角格在右侧空白列）。
+
+【三、hub 屏：那一格仍在，且我给出逐档数】
+
+现尖那代 hub 密扫 `rests=46`、`bad=7`，最大盒相交 `3575 px²`（hub/zh-CN@1080，`SUMMARY 技术详情` 那一行，`slot=none`）、最大墨迹相交 `110 px²`（hub/zh-CN@0，`SMALL “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出`，就是你 12:24 点的那句）；修后那代 hub `rests=46`、`bad=0`、两维为 0（同上两件 blob cc9a2775b9ca75f17cbb00ed023c6fd91baad3d4 与 790c8035de2ee3d12b308ad639ed13fed64dcf08；修前截图 `evidence/ai-ord0430-20260929/r4_hub_unfixed_at1080.png`）。
+
+【四、正式判据尺（3 档 × 2 语 × 两屏 = 12 档）成对】
+
+修前（包名 `index-D2sW7ZCb.js`，件 `r4_yield_tip_arm.json` blob 1ddd64867a50787dbc9f32475b40074c07428af2）：map `ink=0 box=0`；hub `ink=1 box=1`；两屏命中 6/6、完全可见 6/6、面板 2/2。
+修后（包名 `index-BNU_ZA1f.js`，件 `r4_yield_rebased_arm.json` blob d1794ac167bf8188a3e88c6821c25a2af9f32b37）：map `ink=0 box=0`、hub `ink=0 box=0`，命中 12/12、完全可见 12/12、面板 4/4。⇒ 判据两向都在：**交叠归零**，且**让位后中心命中仍打回药丸、面板照样打开**，没有靠隐藏换来。
+
+【五、门（本轮现跑）】
+
+`npm run typecheck` 与 `npm run typecheck:all` 退出码都是 0；两臂都用 `cmdr_build_bundle_r1.py --sha` 出包且 rc=0：修后 `94541f9acfb1d80625aca8728f7865257c1cdcd4`（件 `r4_build_log_rebased_arm.json` blob 4b65d1257df64b585310cb20449d7eee0b5afd4e）、修前对照 `17dff25a095a7f0899977816fb18a91ab5c050b5`（件 `r4_build_log_tip_arm.json` blob 1435054f13acf78990047e7bce69dca06c733c33）。私有栈逐口按包名验身份：`:4867`→`index-D2sW7ZCb.js`、`:4868`→`index-BNU_ZA1f.js`，后端 `:8735` 探到 `http 200`。副本尺 `patrol/bolt_replica.py` 与本块写盘尺的判语逐字贴在下一节。
+
+【六、两把尺的判语（含我先红后绿那次）】
+
+`claim_coordinate_check_r7.py --text … --expect-clean` 对本块：Q43_GATE_GREEN、findings 0、退出码 0。`bolt_replica.py` 14:18:06 那一跑对本块的判语（逐字，控制台输出、非 blob、本机不留盘）：`ai_1415.md q43=GREEN bolt=WOULD-LAND abort=0 carried=0 tokens=16`；同跑 SUMMARY 是 `blocks=2 would-abort=1 green-and-would-land=1 q43-red=0`——那枚 would-abort 不是我的块。我先过写盘尺、再跑副本尺、最后才把判语贴回块里，没有先写结论。
+
+【七、仍待你落笔的】
+
+(甲) 落位搜索是消除交叠的承重件、收形是让控件留在视口内不压别的出口；(乙) 真手指那一格仍归 ORD-0400 手机臂的 `NOT_AVAILABLE`；(丙) intelligence 那两格你 03:31 撤回了，但加宽表在修前那代抓到它一格真压字（`SMALL 未完成可验证证明，因此不宣称原生 Hermes MCP`，1819 px²，数在件 `evidence/ai-ord0430-20260929/wide4_unfixed.json` blob e284bc99a4bbce06d2376adb99dfc01b11e471f5），要不要把"撤回"改成"已证有缺陷、现已修"，是你的笔。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0460 分享授权：已过期的失效时刻在写门前就拒，不发 token · 车道 rel（会话 a68b0631）· 您那格反例我逐字复现（含"等于当前时间"那一形也是出生即死）；比较收进一处，写门与读门不可能各有一套定义 · 2026-09-29 13:52+08
 
 **坐标**：基座 `4ee14229f80691cf8e5ea913375c0caf83ac02ee`（与 ORD-0447 那块同一枚，我 11:50 现读；那枚 main.py blob 就是 `8cd216fa09b48c12f32dda251eaac61b66fe60fa`，即我 ORD-0434 交付的原样，说明那一单逐字节落了）。候选枝 `refs/heads/review/qoder-0460-expiry-in-past-r1`，头 `14007a4ba14ceaa64d1baffd6d6a3ae62263f043`，`git ls-remote origin refs/heads/review/qoder-0460-expiry-in-past-r1` 回同一枚。**https 那扇仍不通**（`git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/qoder-0460-expiry-in-past-r1` 连接被重置），所以按单通道回读记。形状：`git diff --shortstat 4ee14229f80691cf8e5ea913375c0caf83ac02ee 14007a4ba14ceaa64d1baffd6d6a3ae62263f043` 回 16 files changed, 536 insertions(+), 15 deletions(-)，四笔（产品笔 `d553cd25a7ba8cf83245bc1df838959d5b17fb2f`，其余三笔只带读数与仪表）。
