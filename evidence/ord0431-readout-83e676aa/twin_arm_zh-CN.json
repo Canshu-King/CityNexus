@@ -1,0 +1,728 @@
+[
+ {
+  "path": "/v8/twin",
+  "viewport": {
+   "w": 320,
+   "h": 844
+  },
+  "bar_box": {
+   "top": 0,
+   "h": 66,
+   "left": 0,
+   "right": 320
+  },
+  "bar_overflow_x": 0,
+  "controls": [
+   {
+    "text": "菜单",
+    "tag": "BUTTON",
+    "cls": "v8-mobile-menu",
+    "box": {
+     "left": 17,
+     "right": 60,
+     "top": 9,
+     "bottom": 57,
+     "w": 43,
+     "h": 48
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 9
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "旅行者画像",
+    "tag": "STRONG",
+    "cls": "",
+    "box": {
+     "left": 75,
+     "right": 131,
+     "top": 17,
+     "bottom": 49,
+     "w": 56,
+     "h": 32
+    },
+    "rect_count": 2,
+    "line_boxes": [
+     {
+      "w": 48,
+      "h": 16,
+      "top": 17
+     },
+     {
+      "w": 12,
+      "h": 16,
+      "top": 33
+     }
+    ],
+    "font_size": "12px"
+   },
+   {
+    "text": "跟随系统",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 131,
+     "right": 191,
+     "top": 17,
+     "bottom": 61,
+     "w": 60,
+     "h": 44
+    },
+    "rect_count": 2,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 18
+     },
+     {
+      "w": 32,
+      "h": 21,
+      "top": 39
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "EN",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 199,
+     "right": 259,
+     "top": 17,
+     "bottom": 61,
+     "w": 60,
+     "h": 44
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 28
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "DE",
+    "tag": "BUTTON",
+    "cls": "v8-avatar",
+    "box": {
+     "left": 275,
+     "right": 303,
+     "top": 25,
+     "bottom": 53,
+     "w": 28,
+     "h": 28
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 37
+     }
+    ],
+    "font_size": "16px"
+   }
+  ],
+  "chip_present": true,
+  "chip_text": "跟随系统",
+  "chip_rect_count": 2,
+  "chip_box_h_px": 44,
+  "chip_font_size": "16px",
+  "chip_line_boxes": [
+   {
+    "w": 32,
+    "h": 21,
+    "top": 18
+   },
+   {
+    "w": 32,
+    "h": 21,
+    "top": 39
+   }
+  ],
+  "chip_vs_neighbours": [
+   {
+    "with": "菜单",
+    "overlap_px2": 0,
+    "gap_px": 71,
+    "same_row": true
+   },
+   {
+    "with": "旅行者画像",
+    "overlap_px2": 0,
+    "gap_px": 0,
+    "same_row": true
+   },
+   {
+    "with": "EN",
+    "overlap_px2": 0,
+    "gap_px": 8,
+    "same_row": true
+   },
+   {
+    "with": "DE",
+    "overlap_px2": 0,
+    "gap_px": 84,
+    "same_row": true
+   }
+  ],
+  "wrapped_texts": [
+   "旅行者画像",
+   "跟随系统"
+  ],
+  "width": 320,
+  "page_errors": 0,
+  "page_error_samples": []
+ },
+ {
+  "path": "/v8/twin",
+  "viewport": {
+   "w": 360,
+   "h": 844
+  },
+  "bar_box": {
+   "top": 0,
+   "h": 66,
+   "left": 0,
+   "right": 360
+  },
+  "bar_overflow_x": 0,
+  "controls": [
+   {
+    "text": "菜单",
+    "tag": "BUTTON",
+    "cls": "v8-mobile-menu",
+    "box": {
+     "left": 17,
+     "right": 63,
+     "top": 19,
+     "bottom": 46,
+     "w": 46,
+     "h": 27
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 24
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "旅行者画像",
+    "tag": "STRONG",
+    "cls": "",
+    "box": {
+     "left": 89,
+     "right": 149,
+     "top": 25,
+     "bottom": 41,
+     "w": 60,
+     "h": 16
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 60,
+      "h": 16,
+      "top": 25
+     }
+    ],
+    "font_size": "12px"
+   },
+   {
+    "text": "跟随系统",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 161,
+     "right": 226,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 2,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 18
+     },
+     {
+      "w": 32,
+      "h": 21,
+      "top": 39
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "EN",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 234,
+     "right": 299,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 28
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "DE",
+    "tag": "BUTTON",
+    "cls": "v8-avatar",
+    "box": {
+     "left": 315,
+     "right": 343,
+     "top": 25,
+     "bottom": 53,
+     "w": 28,
+     "h": 28
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 37
+     }
+    ],
+    "font_size": "16px"
+   }
+  ],
+  "chip_present": true,
+  "chip_text": "跟随系统",
+  "chip_rect_count": 2,
+  "chip_box_h_px": 44,
+  "chip_font_size": "16px",
+  "chip_line_boxes": [
+   {
+    "w": 32,
+    "h": 21,
+    "top": 18
+   },
+   {
+    "w": 32,
+    "h": 21,
+    "top": 39
+   }
+  ],
+  "chip_vs_neighbours": [
+   {
+    "with": "菜单",
+    "overlap_px2": 0,
+    "gap_px": 98,
+    "same_row": true
+   },
+   {
+    "with": "旅行者画像",
+    "overlap_px2": 0,
+    "gap_px": 12,
+    "same_row": true
+   },
+   {
+    "with": "EN",
+    "overlap_px2": 0,
+    "gap_px": 8,
+    "same_row": true
+   },
+   {
+    "with": "DE",
+    "overlap_px2": 0,
+    "gap_px": 89,
+    "same_row": true
+   }
+  ],
+  "wrapped_texts": [
+   "跟随系统"
+  ],
+  "width": 360,
+  "page_errors": 0,
+  "page_error_samples": []
+ },
+ {
+  "path": "/v8/twin",
+  "viewport": {
+   "w": 390,
+   "h": 844
+  },
+  "bar_box": {
+   "top": 0,
+   "h": 66,
+   "left": 0,
+   "right": 390
+  },
+  "bar_overflow_x": 0,
+  "controls": [
+   {
+    "text": "菜单",
+    "tag": "BUTTON",
+    "cls": "v8-mobile-menu",
+    "box": {
+     "left": 17,
+     "right": 63,
+     "top": 19,
+     "bottom": 46,
+     "w": 46,
+     "h": 27
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 24
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "旅行者画像",
+    "tag": "STRONG",
+    "cls": "",
+    "box": {
+     "left": 104,
+     "right": 164,
+     "top": 25,
+     "bottom": 41,
+     "w": 60,
+     "h": 16
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 60,
+      "h": 16,
+      "top": 25
+     }
+    ],
+    "font_size": "12px"
+   },
+   {
+    "text": "跟随系统",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 191,
+     "right": 256,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 2,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 18
+     },
+     {
+      "w": 32,
+      "h": 21,
+      "top": 39
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "EN",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 264,
+     "right": 329,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 28
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "DE",
+    "tag": "BUTTON",
+    "cls": "v8-avatar",
+    "box": {
+     "left": 345,
+     "right": 373,
+     "top": 25,
+     "bottom": 53,
+     "w": 28,
+     "h": 28
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 37
+     }
+    ],
+    "font_size": "16px"
+   }
+  ],
+  "chip_present": true,
+  "chip_text": "跟随系统",
+  "chip_rect_count": 2,
+  "chip_box_h_px": 44,
+  "chip_font_size": "16px",
+  "chip_line_boxes": [
+   {
+    "w": 32,
+    "h": 21,
+    "top": 18
+   },
+   {
+    "w": 32,
+    "h": 21,
+    "top": 39
+   }
+  ],
+  "chip_vs_neighbours": [
+   {
+    "with": "菜单",
+    "overlap_px2": 0,
+    "gap_px": 128,
+    "same_row": true
+   },
+   {
+    "with": "旅行者画像",
+    "overlap_px2": 0,
+    "gap_px": 27,
+    "same_row": true
+   },
+   {
+    "with": "EN",
+    "overlap_px2": 0,
+    "gap_px": 8,
+    "same_row": true
+   },
+   {
+    "with": "DE",
+    "overlap_px2": 0,
+    "gap_px": 89,
+    "same_row": true
+   }
+  ],
+  "wrapped_texts": [
+   "跟随系统"
+  ],
+  "width": 390,
+  "page_errors": 0,
+  "page_error_samples": []
+ },
+ {
+  "path": "/v8/twin",
+  "viewport": {
+   "w": 414,
+   "h": 844
+  },
+  "bar_box": {
+   "top": 0,
+   "h": 66,
+   "left": 0,
+   "right": 414
+  },
+  "bar_overflow_x": 0,
+  "controls": [
+   {
+    "text": "菜单",
+    "tag": "BUTTON",
+    "cls": "v8-mobile-menu",
+    "box": {
+     "left": 17,
+     "right": 63,
+     "top": 19,
+     "bottom": 46,
+     "w": 46,
+     "h": 27
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 24
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "旅行者画像",
+    "tag": "STRONG",
+    "cls": "",
+    "box": {
+     "left": 116,
+     "right": 176,
+     "top": 25,
+     "bottom": 41,
+     "w": 60,
+     "h": 16
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 60,
+      "h": 16,
+      "top": 25
+     }
+    ],
+    "font_size": "12px"
+   },
+   {
+    "text": "跟随系统",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 215,
+     "right": 280,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 2,
+    "line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 18
+     },
+     {
+      "w": 32,
+      "h": 21,
+      "top": 39
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "EN",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "box": {
+     "left": 288,
+     "right": 353,
+     "top": 17,
+     "bottom": 61,
+     "w": 65,
+     "h": 44
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 28
+     }
+    ],
+    "font_size": "16px"
+   },
+   {
+    "text": "DE",
+    "tag": "BUTTON",
+    "cls": "v8-avatar",
+    "box": {
+     "left": 369,
+     "right": 397,
+     "top": 25,
+     "bottom": 53,
+     "w": 28,
+     "h": 28
+    },
+    "rect_count": 1,
+    "line_boxes": [
+     {
+      "w": 20,
+      "h": 21,
+      "top": 37
+     }
+    ],
+    "font_size": "16px"
+   }
+  ],
+  "chip_present": true,
+  "chip_text": "跟随系统",
+  "chip_rect_count": 2,
+  "chip_box_h_px": 44,
+  "chip_font_size": "16px",
+  "chip_line_boxes": [
+   {
+    "w": 32,
+    "h": 21,
+    "top": 18
+   },
+   {
+    "w": 32,
+    "h": 21,
+    "top": 39
+   }
+  ],
+  "chip_vs_neighbours": [
+   {
+    "with": "菜单",
+    "overlap_px2": 0,
+    "gap_px": 152,
+    "same_row": true
+   },
+   {
+    "with": "旅行者画像",
+    "overlap_px2": 0,
+    "gap_px": 39,
+    "same_row": true
+   },
+   {
+    "with": "EN",
+    "overlap_px2": 0,
+    "gap_px": 8,
+    "same_row": true
+   },
+   {
+    "with": "DE",
+    "overlap_px2": 0,
+    "gap_px": 89,
+    "same_row": true
+   }
+  ],
+  "wrapped_texts": [
+   "跟随系统"
+  ],
+  "width": 414,
+  "page_errors": 0,
+  "page_error_samples": []
+ }
+]
