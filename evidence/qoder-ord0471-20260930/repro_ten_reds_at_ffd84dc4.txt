@@ -1,0 +1,34 @@
+...........FFFFFFF...FFF.                                                [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:365: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"996975bf-fcf9-4fe2-ac28-89584561546b","details":{"errors":[{"loc":["body","activity_ids"],"msg":"Extra inputs are not permitted","type":"extra_forbidden","message_key":"validation.unknown_field"}]},"error_receipt_id":"CNX-7N3DYGE6"}}
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:426: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:451: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:474: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:496: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:522: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:592: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"a636473d-c43a-410a-8839-2e4b81c0fa73","details":{"errors":[{"loc":["body","activity_ids"],"msg":"Extra inputs are not permitted","type":"extra_forbidden","message_key":"validation.unknown_field"}]},"error_receipt_id":"CNX-5REFRNK9"}}
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v13_integrity.py:829: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v12_authoritative_trip_execution.py:165: assert (422 == 200)
+D:\moodle\_qoder_r_ord0437\wt\backend\tests\test_v12_authoritative_trip_execution.py:202: assert 422 == 200
+============================== warnings summary ===============================
+..\..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_replays_frozen_evidence_and_preserves_progress
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_stale_preview_without_creating_plan
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_repeated_noop_accept_is_idempotent
+FAILED tests/test_v13_integrity.py::test_v13_repeated_non_noop_accept_cannot_create_a_second_plan
+FAILED tests/test_v13_integrity.py::test_v13_concurrent_accepts_have_one_authoritative_winner
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_mutated_or_expired_frozen_evidence_on_accept
+FAILED tests/test_v13_integrity.py::test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair
+FAILED tests/test_v13_integrity.py::test_v13_execution_rejects_terminal_wrong_activity_and_old_plan_mutation
+FAILED tests/test_v12_authoritative_trip_execution.py::test_v12_authoritative_compose_same_evidence_execute_studio_and_edge
+FAILED tests/test_v12_authoritative_trip_execution.py::test_v12_studio_protects_locked_order
+10 failed, 15 passed, 2 warnings in 18.44s

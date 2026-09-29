@@ -1,0 +1,15 @@
+tip=0dabe64223036391a6c25561a6b606e1533f3704
+head=a269c5d6f679f1ea0c54baaab3453f748a686fdd
+merge_base=0dabe64223036391a6c25561a6b606e1533f3704
+merge_base_equals_tip=YES
+tip_is_ancestor_of_head=YES
+paths_touched=1
+merge_tree_rc=0
+merged_tree=70a6d7e27e72c376f27f73a930e89a18aec187ad
+conflict_lines=0
+paths_owned=1 different=0
+face backend/app/main.py base=3accc30185 tip=3accc30185 head=3accc30185
+face contracts/openapi.yaml base=4763b53447 tip=4763b53447 head=4763b53447
+face frontend/src/generated/api.ts base=f83b1f1d6d tip=f83b1f1d6d head=f83b1f1d6d
+face backend/app/schemas.py base=f9ef873233 tip=f9ef873233 head=f9ef873233
+face frontend/src/i18n/LocaleContext.tsx base=8308d542c4 tip=8308d542c4 head=8308d542c4
