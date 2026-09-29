@@ -125,6 +125,17 @@ py -3.13 -m pytest -q \
 
 The warning is the existing Starlette/httpx deprecation warning.
 
+## Frontend gates
+
+The isolated frontend had no installed dependencies initially. `npm install --no-package-lock` populated only the ignored local `node_modules`; it did not change `package.json` or `package-lock.json`.
+
+```text
+npm run typecheck  -> passed
+npm run build      -> passed
+```
+
+Vite emitted only its existing chunk-size advisory; the production bundle was generated successfully.
+
 ## Truth boundaries
 
 - `P7=false`
