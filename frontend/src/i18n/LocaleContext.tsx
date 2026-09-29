@@ -719,6 +719,7 @@ const en: Dict = {
   // ── Mobility Sheet ──
   "mobility.kicker": "Next leg · evidence comparison",
   "mobility.title": "Choose a calm route",
+  "mobility.titleUnavailable": "No selectable route mode",
   "mobility.closeLabel": "Close mobility comparison",
   "mobility.unavailable": "Unavailable",
   "mobility.costUnknown": "Cost unknown",
@@ -1620,6 +1621,7 @@ const zhCN: Dict = {
   // ── 出行对比 ──
   "mobility.kicker": "下一段路程 · 证据对比",
   "mobility.title": "选择平稳路线",
+  "mobility.titleUnavailable": "当前没有可选择的路线方式",
   "mobility.closeLabel": "关闭出行对比",
   "mobility.unavailable": "不可用",
   "mobility.costUnknown": "费用未知",
