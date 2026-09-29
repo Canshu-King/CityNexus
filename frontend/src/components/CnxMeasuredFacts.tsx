@@ -33,7 +33,9 @@ export function CnxMeasuredFacts({
   ];
   return (
     <>
-      {fields.map((field) => (
+      {fields
+        .filter((field) => field.name !== "http_status")
+        .map((field) => (
         <span
           key={field.name}
           className="cnx-measured-fact"
@@ -47,15 +49,38 @@ export function CnxMeasuredFacts({
             : `${field.label} ${field.value}`}
         </span>
       ))}
-      {/* Q68: the repeatable number is the server's, or the screen says there is none -- it never
-          dresses a status or a code up as one, and no anchor is mounted without a value. */}
-      <span
-        className="cnx-measured-fact"
-        data-testid={`${testId}-receipt`}
-        {...receipt.attrs}
-      >
-        {`${receiptLabelOf(receipt.present, zh)} ${receipt.text}`}
-      </span>
+      {/* ORD-0440 second half, with Q68 kept whole. The number on this line is the server's - that is
+          the point of it, a traveller must be able to repeat it - so it cannot be deleted, and it
+          cannot be pushed into a `data-*` instead (attribute cells are never exonerated, and
+          `error_receipt_id` is not one of the six fields a slot may name). The one shape the
+          exposure rule does accept is an upstream text cell inside a fold that also carries a field
+          this device measured, under its contract name.
+          The anchor is written literally because the ruler reads the attribute name off the source: a
+          spread like `{...{ "data-cnx-field": name }}` is invisible to it, which is how the first
+          version of this fold measured back as still a cell. The same element that anchors the fold is
+          the line that shows the reading, so nothing is duplicated on screen. `open` is load-bearing:
+          a collapsed fold would hide a line the traveller is entitled to see, which is X-5's defect
+          approached from the other side. */}
+      <details className="cnx-measured-fact-fold" data-testid={`${testId}-receipt-fold`} open>
+        <summary data-testid={`${testId}-receipt-summary`}>
+          {zh ? "这台设备量到的回读与服务器回执号" : "What this device read back, and the server's receipt"}
+        </summary>
+        <span
+          className="cnx-measured-fact"
+          data-testid={`${testId}-http_status`}
+          data-cnx-field="http_status"
+          {...(facts.http_status === null
+            ? {}
+            : { "data-cnx-value": String(facts.http_status) })}
+        >
+          {facts.http_status === null
+            ? zh ? "这台设备看到的回读：HTTP 没量到" : "This device's reading: HTTP measured none"
+            : `${zh ? "这台设备看到的回读：HTTP" : "This device's reading: HTTP"} ${facts.http_status}`}
+        </span>
+        <span className="cnx-measured-fact" data-testid={`${testId}-receipt`} {...receipt.attrs}>
+          {`${receiptLabelOf(receipt.present, zh)} ${receipt.text}`}
+        </span>
+      </details>
     </>
   );
 }
