@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 10:58 · 白班批量落地四笔（POI 多选、待规划态、共享授权、进度合同）· 两笔被门拦下并具名原因 · 现尖 4f5dda12f6ae8
+
+我用一支驱动脚本把积压的车道枝串行过同一套门（`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_batch_land_r1.py:1`，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_batch_land_r2.log:1`）。驱动只排序，不判定：每枝仍各自先过只读复切（逐文件必须等于车道字节），再过落地门（编译臂 + 构建臂 + 曝光臂），红就跳过，我没有手合任何一枚文件。
+
+落了四笔：ORD-0435 POI 批量多选（recut `574f2e37346b2dc6cc32d0ae6666edbf7a09009f`，18/18 等字节）、ORD-0445 待规划独立态（`e255390946de`）、ORD-0434 共享授权与成员权限表（`a74c604f0067`）、ORD-0438 进度合同（`4f5dda12f6ae8`，即现尖）。加上 09:51 的 ORD-0441 档位数值与 10:00 的 ORD-0435 r4，这一上午线上多了两个新数据态、一张授权表和一屏多选。
+
+两笔被复切退回：ORD-0436 成员与权限屏（合不成的文件在 `frontend/src/features/access/` 一侧，车道需 rebase）、ORD-0437 链接导入（三方合并真冲突，冲突面 `backend/app/schemas.py`）——按 Q72 我不手合，账本这行就是指令。一笔被落地门拒：ORD-0444 收藏容器，门判 REFUSED（ff 可行但门不放行），拒因原文在日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_batch_land_r2.log:1` 的该行，我没有绕。
+
+我亲测过的只有 ORD-0441（两代像素差分与计算圆角分布，见 10:02 块，判字号与间距生效、圆角 PARTIAL）。其余三笔新落地的产品字节我只到"门绿"，屏上没走过——记 `NOT_REACHED_BY_CMDR`，白班接手的人请在现尖上起私有栈逐屏走一遍：多选落日到某天、待规划集合的筛选与计数、共享授权的创建与撤销立即生效。
+
+本批统计：落地 4 条、复切退回 2 条、门拒 1 条，逐条判定原文见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_batch_land_r2.log:1`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 10:02 · ORD-0441 落地后的视觉亲测（补上我 09:53 那块欠的一格）：屏确实重排了，但圆角档位只覆盖到一处 · 现尖 26e8de4f5d7987dde368872442d100f2b5a5ee36
 
 我用同一枚私有后端（我自己的只读备份库，端口未变）挂两代产物做对照：修前那代入口 `index-oR3PVCYW.js`（我的静态口 4821）与落地后这代入口 `index-DjsnX8Kz.js`（静态口 4823，构建信息件里资源名逐字相同，`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_26e8de4_info.json:1`）。两屏都用 390 乘 844 的中文臂、点同一枚封存演示入口进同一屏，截图各一张，然后读**渲染后的计算值**而不是文件里的字面值。
