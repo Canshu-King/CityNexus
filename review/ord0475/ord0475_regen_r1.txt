@@ -1,0 +1,5 @@
+=== STEP A: regen from the UNMODIFIED tip contract ===
+✨ openapi-typescript 7.13.0
+🚀 ../contracts/openapi.yaml → src/generated/api.ts [348.5ms]
+regenA_rc=0
+(empty above = tip client already equals tip contract)

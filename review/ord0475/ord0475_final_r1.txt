@@ -1,0 +1,6 @@
+### collect-only (denominator) ###
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+50 tests collected in 3.11s
+### execution ###
+50 passed, 2 warnings in 7.09s
+exec_rc=0

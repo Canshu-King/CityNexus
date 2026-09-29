@@ -1,0 +1,4 @@
+command: npx tsc -p tsconfig.typecheck.json --noEmit   (cwd frontend/, worktree D:/moodle/_qoder_n2b_ord0466_20260929/wt at commit 6b5c094cfdbc1bd3eeca2fb985ad9c978b528960)
+exit_code=0
+diagnostic_lines=0
+why: the regenerated client carries my contract prose as one JSDoc line, so the whole src tree is typechecked rather than the five-file tsconfig.check.json.
