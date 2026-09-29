@@ -1,0 +1,36 @@
+{
+ "generated_by": "computed by code over the two new-tip artifacts",
+ "tip_sha": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "note": "product bytes at this tip are byte-identical to the landed ORD-0430 r2 (design-tokens.css 790068bf..., CopilotDock.tsx 83dc7637...); this is a re-measurement after other lanes moved the CSS, not a new behaviour",
+ "r3": {
+  "arms": 6,
+  "rests": 18,
+  "rests_covering_ink": 0,
+  "rests_covering_box": 0,
+  "centre_hit_pill": 18,
+  "rests_fully_visible": 18,
+  "panel_opened_arms": 6,
+  "max_box_overlap_px": 0,
+  "served_bundle": [
+   "/assets/index-DbA8xyvx.js"
+  ],
+  "yield_slots": [
+   "336,534,44",
+   "336,554,44",
+   "336,594,44",
+   "336,634,44",
+   "336,654,44",
+   "336,694,44"
+  ]
+ },
+ "census": {
+  "rests": 18,
+  "rests_with_any_text_overlap": 0,
+  "worst_overlaps": [],
+  "grid_cells_tested": 42174,
+  "grid_cells_free_of_everything": 17085,
+  "served_bundle": [
+   "/assets/index-DbA8xyvx.js"
+  ]
+ }
+}
