@@ -4,13 +4,13 @@ WHAT WAS RUN
   command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
   runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py (refuses unless both lane listeners are up)
   lane    : review/ord0464-abort-reason/lane_r1.py -- started both legs and proved them before any browser ran
-  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD d80d4661d079a8f6439625599d8c05a4afdd6505
+  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD f0d087fdd1fde890c4e868bc9241ff40aeae7acf
   base    : 4037cb331ea00b83124316d40329762fa1131689 -- the authoritative line this branch was rebased onto after the read-only re-cut
             refused the earlier base.  First cut was measured on 45513fc7957214dc385b4dffea9a662a0d8b1d1c; the re-cut named five
             shared faces (`backend/app/main.py`, `backend/app/schemas.py`, `contracts/openapi.yaml`,
             `frontend/src/app/v8PanelRegistry.tsx`, `frontend/src/generated/api.ts`).
   spec    : frontend/e2e/qoder-ord0464-abort-reason.spec.ts  19406 bytes  git blob cf924f8b764f52996e95e932e35504a6b8ff23fa  335 lines
-  shape   : git diff --shortstat 4037cb331ea00b83124316d40329762fa1131689 d80d4661d079a8f6439625599d8c05a4afdd6505  ->  21 files changed, 2397 insertions(+), 6 deletions(-)
+  shape   : git diff --shortstat 4037cb331ea00b83124316d40329762fa1131689 f0d087fdd1fde890c4e868bc9241ff40aeae7acf  ->  21 files changed, 2427 insertions(+), 6 deletions(-)
   export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend (gate.py synced 266 files; the worktree stays source-only)
 
 WHAT ANSWERED
@@ -135,10 +135,15 @@ FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE 
   what surfaced a real wording defect: the panel rendered "正在丢进回收站…" while it was *reading*.
   It now has its own `abort.loading` sentence.
 
+OTHER DOORS, VERBATIM
+  `python tools/verify_openapi_parity.py` -> OpenAPI 3.1.0; formal 164; runtime 164; missing 0; extra 0
+  `python -m pytest tests/test_qoder_ord0464_abort_reason_capture.py ... -q` -> 13 passed, 2 warnings in 4.34s
+  the nine-file regression set named in the ledger block -> 67 passed, 2 warnings in 20.30s
+
 BACKEND COLLECTION, BOTH SIDES OF THE COMPARISON (verbatim last lines of
 `python -m pytest tests --collect-only -q -p no:randomly`)
-  this tree, with my module:  1458 tests collected, 20 errors in 4.71s
-  the same command with `--ignore=tests/test_qoder_ord0464_abort_reason_capture.py`:  1445 tests collected, 20 errors in 4.54s
+  this tree, with my module:  1458 tests collected, 20 errors in 4.05s
+  the same command with `--ignore=tests/test_qoder_ord0464_abort_reason_capture.py`:  1445 tests collected, 20 errors in 4.88s
   (the ignored run is the base's own denominator -- this branch adds no other test file, so the
    difference is exactly my module)
   the two error file lists have an empty symmetric difference: 20 files, all `tests/test_v18_hermes_*.py`
