@@ -121,3 +121,21 @@
   line-height: var(--cn-lh-body);
   color: var(--cn-ink-secondary);
 }
+
+/* The download is a `.v8-primary-button` inside a `.v8-page`, so the shell already owns its height
+   (the >=44px floor at `design-tokens.css:309`) and its fill. Only its spacing and the outcome line
+   are described here. */
+.cn-poster-download {
+  margin-top: var(--cn-s-16);
+}
+
+.cn-poster-outcome {
+  margin: var(--cn-s-12) 0 0;
+  font-size: var(--cn-fs-meta);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink-secondary);
+}
+
+.cn-poster-outcome--failed {
+  color: var(--cn-danger);
+}
