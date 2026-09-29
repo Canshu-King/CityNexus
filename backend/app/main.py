@@ -3161,19 +3161,33 @@ def _share_refusal(status: int, message: str, reason_code: str, details: dict) -
     return refused
 
 
+def _expiry_verdict(expires_at: str | None, now: datetime) -> str:
+    """One comparison, in one place, for both doors that care about an expiry.
+
+    `PAST` includes the instant that equals `now`: the read door has always treated `expires <= now` as
+    spent, so a write that accepted equality would mint a token that is dead in the same breath.  The
+    two doors must not hold two definitions of "already over".
+    """
+    if not expires_at:
+        return "NO_EXPIRY"
+    try:
+        expires = datetime.fromisoformat(expires_at)
+    except ValueError:
+        return "UNREADABLE"
+    if expires.tzinfo is None:
+        return "UNREADABLE"
+    return "PAST" if expires <= now else "FUTURE"
+
+
 def _share_grant_state(grant: JourneyShareGrant, now: datetime) -> str:
     """One place decides what this token may do right now, and it fails closed."""
     if grant.revoked_at:
         return "REVOKED"
-    if grant.expires_at:
-        try:
-            expires = datetime.fromisoformat(grant.expires_at)
-        except ValueError:
-            return "EXPIRY_UNREADABLE"
-        if expires.tzinfo is None:
-            return "EXPIRY_UNREADABLE"
-        if expires <= now:
-            return "EXPIRED"
+    verdict = _expiry_verdict(grant.expires_at, now)
+    if verdict == "UNREADABLE":
+        return "EXPIRY_UNREADABLE"
+    if verdict == "PAST":
+        return "EXPIRED"
     return "READABLE"
 
 
@@ -3244,6 +3258,17 @@ def create_share_grant(
                 {"field": "expires_at"},
             )
         expires_at = parsed.astimezone(timezone.utc).isoformat()
+        # ORD-0460: an expiry already in the past is refused here rather than minted.  The answer this
+        # door used to give was 201 plus a token, and the very next read of that token answered 409
+        # SHARE_GRANT_EXPIRED -- a grant born dead, with a live string in the caller's clipboard.  No
+        # token is generated on this path at all, so nothing can outlive the refusal.
+        if _expiry_verdict(expires_at, datetime.now(timezone.utc)) == "PAST":
+            raise _share_refusal(
+                422,
+                "That expiry is already in the past, so no token would work.",
+                "SHARE_GRANT_EXPIRY_IN_PAST",
+                {"field": "expires_at", "expires_at": expires_at},
+            )
     stamp = datetime.now(timezone.utc).isoformat()
     grant = JourneyShareGrant(
         id=str(uuid4()),
