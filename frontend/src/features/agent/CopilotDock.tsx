@@ -696,7 +696,8 @@ export function CopilotDock({
       setYieldSlot(null);
       return;
     }
-    const READABLE = "h1,h2,h3,h4,h5,p,li,dt,dd,th,td,label,figcaption,summary";
+    const READABLE =
+      "h1,h2,h3,h4,h5,h6,p,li,dt,dd,th,td,label,figcaption,caption,summary,blockquote,small,strong,em,time,code";
     const ACTIONABLE = 'button, a[href], input, select, textarea, [role="button"]';
     const SLOT = 44;
     const INSET = 10;
@@ -747,8 +748,15 @@ export function CopilotDock({
       });
       const bar = document.querySelector(".v8-mobile-nav");
       const barTop = bar ? Math.max(INSET, bar.getBoundingClientRect().top) : vh;
+      /* The band is considered occupied when it sits on painted glyphs, on a text element's own
+         box, or on another control.  The box is in there because a 165x54 bar lying across the
+         tail of a line reads as "covering that line" to the traveller even where the last glyph
+         stops short of it -- and because a free cell exists at every measured rest, so accepting
+         the box as an obstacle costs nothing but the pill's usual corner. */
       const covered =
-        ink.some((b) => overlaps(b, rest)) || controls.some((b) => overlaps(b, rest));
+        ink.some((b) => overlaps(b, rest)) ||
+        blocks.some((b) => overlaps(b, rest)) ||
+        controls.some((b) => overlaps(b, rest));
       setRestOverlap(covered);
       if (!covered) {
         yieldSlotRef.current = null;
