@@ -19,11 +19,11 @@ import {
 } from "../progress/journeyProgress";
 import type { V8Data } from "../../app/v8Types";
 
-type Activity = V8Data["active_plan"] extends null
+export type Activity = V8Data["active_plan"] extends null
   ? never
   : NonNullable<V8Data["active_plan"]>["activities"][number];
 
-type DayGroup = {
+export type DayGroup = {
   key: string;      // YYYY-MM-DD
   label: string;    // human label
   activities: Activity[];
@@ -83,6 +83,32 @@ export function dayLabel(key: string, index: number, locale: string): string {
   }
 }
 
+/**
+ * ORD-0472: the day grouping the itinerary draws, exported rather than copied.
+ *
+ * The trip poster has to put the same stops on the same days the traveller is looking at.  A second
+ * bucket loop would agree with this one until a trip crossed a zone boundary or a plan arrived
+ * unordered, and then only one of the two screens would be wrong.
+ */
+export function groupActivitiesByDay(
+  activities: Activity[],
+  timeZone: string,
+  locale: string,
+): DayGroup[] {
+  const buckets = new Map<string, Activity[]>();
+  for (const activity of [...activities].sort((a, b) => a.start_at.localeCompare(b.start_at))) {
+    const key = localDateKey(activity.start_at, timeZone);
+    const list = buckets.get(key) ?? [];
+    list.push(activity);
+    buckets.set(key, list);
+  }
+  return [...buckets.entries()].map(([key, items], index) => ({
+    key,
+    label: dayLabel(key, index, locale),
+    activities: items,
+  }));
+}
+
 export function TripItinerary({
   data,
   onOpenCopilot,
@@ -97,21 +123,10 @@ export function TripItinerary({
   const plan = data.active_plan;
   const tz = data.journey.timezone || "UTC";
 
-  const days = useMemo<DayGroup[]>(() => {
-    const activities = plan?.activities ?? [];
-    const buckets = new Map<string, Activity[]>();
-    for (const activity of [...activities].sort((a, b) => a.start_at.localeCompare(b.start_at))) {
-      const key = localDateKey(activity.start_at, tz);
-      const list = buckets.get(key) ?? [];
-      list.push(activity);
-      buckets.set(key, list);
-    }
-    return [...buckets.entries()].map(([key, items], index) => ({
-      key,
-      label: dayLabel(key, index, locale),
-      activities: items,
-    }));
-  }, [plan, tz, locale]);
+  const days = useMemo<DayGroup[]>(
+    () => groupActivitiesByDay(plan?.activities ?? [], tz, locale),
+    [plan, tz, locale],
+  );
 
   /* ORD-0438: one owner for the two counts a traveller reads as progress.  The day total comes from the
      server's projection, the same number Today quotes, so this screen no longer re-derives a second one
