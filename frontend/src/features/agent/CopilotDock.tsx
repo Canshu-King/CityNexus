@@ -821,11 +821,17 @@ export function CopilotDock({
       setYieldSlot(null);
       schedule();
     };
+    /* A hub card list grows after the scenario arrives, and that reflow moves text under a pill
+       that never received a scroll event. Watching the body's box is the cheapest way to learn the
+       layout changed; the debounce and the two bounded re-checks are the same ones scrolling uses. */
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+    ro?.observe(document.body);
     measureSettled();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
       window.clearTimeout(timer);
+      ro?.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", onResize);
     };
