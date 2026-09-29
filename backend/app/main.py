@@ -356,6 +356,7 @@ from app.schemas import (
     SharedStop,
     JourneyMember,
     JourneyMemberCreate,
+    JourneyMemberRoleChange,
     JourneyRoleRule,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
@@ -3601,6 +3602,115 @@ def read_shared_journey(
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py:1963`).
+# ORD-0461: the member cap lives here and nowhere else.  The contract states the same number, and a
+# test compares the two, so a screen cannot grow its own ruler by counting rows.
+JOURNEY_MEMBER_CAP = 12
+MEMBER_MANAGE_CAPABILITY = "MEMBER_MANAGE"
+
+
+def _refuse_if_recycled(journey: Journey) -> None:
+    """A journey in the recycle bin takes no membership writes.
+
+    `deleted_at` is the only fact that says this, and the doors that list the bin read the same
+    column, so "restore it first" is the answer rather than a write that would vanish on undelete.
+    """
+    if getattr(journey, "deleted_at", None):
+        raise _share_refusal(
+            409,
+            "This journey is in the recycle bin; restore it before changing who is on it.",
+            "MEMBER_JOURNEY_RECYCLED",
+            {"journey_id": journey.id, "deleted_at": journey.deleted_at},
+        )
+
+
+def _actor_role(session: Session, journey: Journey, actor_id: str | None, now: datetime) -> str | None:
+    """What role the asserted actor holds on this journey right now, or None for "no role".
+
+    The creator is `OWNER` because the journey row names them (`journeys.traveler_id`); everyone else
+    is whatever their standing member row says.  A lapsed or withdrawn row is no role at all: the
+    state machine in `_member_state` decides that, and this function does not re-derive it.
+    """
+    if not actor_id:
+        return None
+    if actor_id == journey.traveler_id:
+        return "OWNER"
+    row = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == actor_id,
+        )
+    ).first()
+    if row is None or _member_state(row, now) != "MEMBER_IN_FORCE":
+        return None
+    return row.role
+
+
+def _refuse_actor_without_capability(
+    session: Session, role: str | None, capability: str, actor_id: str | None
+) -> None:
+    """Permission is read off `journey_role_capabilities`, not from a Python comparison.
+
+    A role the ACL table grants nothing to, an unknown role string, and "the actor holds no role"
+    all answer with the same named code and name the capability that was missing -- that is the fact a
+    screen needs in order to say why its button is disabled.
+    """
+    granted = None
+    if role is not None:
+        granted = session.scalars(
+            select(JourneyRoleCapability).where(
+                JourneyRoleCapability.role == role,
+                JourneyRoleCapability.capability == capability,
+            )
+        ).first()
+    if granted is None:
+        details = {"capability": capability, "actor_role": role or "NONE"}
+        if not actor_id:
+            details["field"] = "actor_traveler_id"
+            raise _share_refusal(
+                422,
+                "A membership write has to name who is making it.",
+                "MEMBER_ACTOR_REQUIRED",
+                details,
+            )
+        raise _share_refusal(
+            403,
+            "This actor's role does not carry that capability on this journey.",
+            "MEMBER_ACTOR_NOT_PERMITTED",
+            details,
+        )
+
+
+def _standing_member_count(session: Session, journey_id: str, now: datetime) -> int:
+    return sum(
+        1
+        for row in session.scalars(
+            select(JourneyMemberModel).where(JourneyMemberModel.journey_id == journey_id)
+        ).all()
+        if _member_state(row, now) != "MEMBER_WITHDRAWN"
+    )
+
+
+def _member_target(
+    session: Session, journey: Journey, member_id: str, now: datetime
+) -> JourneyMemberModel:
+    member = session.get(JourneyMemberModel, member_id)
+    if member is None or member.journey_id != journey.id:
+        raise _share_refusal(
+            404,
+            "No member of this journey carries that id.",
+            "MEMBER_UNKNOWN",
+            {"field": "member_id", "journey_id": journey.id},
+        )
+    if member.removed_at:
+        raise _share_refusal(
+            409,
+            "This membership was already withdrawn; operating on it again is not a new fact.",
+            "MEMBER_ALREADY_WITHDRAWN",
+            {"member_id": member.id, "removed_at": member.removed_at},
+        )
+    return member
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"
@@ -3656,7 +3766,8 @@ def _member_expiry(raw: str | None) -> str | None:
 def add_journey_member(
     journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
 ):
-    require(session, Journey, str(journey_id), "Journey")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _refuse_if_recycled(journey)
     inviter = payload.invited_by.strip()
     if not inviter:
         raise _share_refusal(
@@ -3669,6 +3780,15 @@ def add_journey_member(
             404, "No traveller carries that id.", "MEMBER_TRAVELER_UNKNOWN", {"field": "traveler_id"}
         )
     expires_at = _member_expiry(payload.expires_at)
+    now = datetime.now(timezone.utc)
+    standing = _standing_member_count(session, str(journey_id), now)
+    if standing >= JOURNEY_MEMBER_CAP:
+        raise _share_refusal(
+            409,
+            "This journey already holds the most members the server allows.",
+            "MEMBER_CAP_REACHED",
+            {"cap": JOURNEY_MEMBER_CAP, "standing_members": standing},
+        )
     existing = session.scalars(
         select(JourneyMemberModel).where(
             JourneyMemberModel.journey_id == str(journey_id),
@@ -3719,22 +3839,121 @@ def list_journey_members(journey_id: UUID, session: Session = Depends(get_sessio
     "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
     response_model=JourneyMember,
 )
-def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
-    member = session.get(JourneyMemberModel, member_id)
-    if member is None or member.journey_id != str(journey_id):
-        raise _share_refusal(
-            404,
-            "No member of this journey carries that id.",
-            "MEMBER_UNKNOWN",
-            {"field": "member_id", "journey_id": str(journey_id)},
-        )
-    if member.removed_at:
+def withdraw_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    actor_traveler_id: UUID | None = None,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _refuse_if_recycled(journey)
+    now = datetime.now(timezone.utc)
+    actor = str(actor_traveler_id) if actor_traveler_id else None
+    _refuse_actor_without_capability(
+        session, _actor_role(session, journey, actor, now), MEMBER_MANAGE_CAPABILITY, actor
+    )
+    member = _member_target(session, journey, member_id, now)
+    stamp = datetime.now(timezone.utc).isoformat()
+    member.removed_at = stamp
+    member.updated_at = stamp
+    session.commit()
+    return _member_payload(member)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/{member_id}/role",
+    response_model=JourneyMember,
+)
+def change_journey_member_role(
+    journey_id: UUID,
+    member_id: str,
+    payload: JourneyMemberRoleChange,
+    actor_traveler_id: UUID | None = None,
+    session: Session = Depends(get_session),
+):
+    """One rung of the ladder at a time, and the creator's rung is not on the ladder.
+
+    `OWNER` is derived from `journeys.traveler_id` (`_actor_role`), so a member row that claims it
+    would be a second, contradicting source for the same fact -- refused by name rather than stored.
+    """
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _refuse_if_recycled(journey)
+    now = datetime.now(timezone.utc)
+    actor = str(actor_traveler_id) if actor_traveler_id else None
+    actor_role = _actor_role(session, journey, actor, now)
+    if actor_role is None and actor is not None:
         raise _share_refusal(
             409,
-            "This membership was already withdrawn; withdrawing it again is not a new fact.",
-            "MEMBER_ALREADY_WITHDRAWN",
-            {"member_id": member.id, "removed_at": member.removed_at},
+            "The actor named holds no in-force membership on this journey.",
+            "MEMBER_ACTOR_NOT_A_MEMBER",
+            {"actor_traveler_id": actor},
         )
+    _refuse_actor_without_capability(session, actor_role, MEMBER_MANAGE_CAPABILITY, actor)
+    member = _member_target(session, journey, member_id, now)
+    wanted = payload.role.strip()
+    if wanted == "OWNER" or member.traveler_id == journey.traveler_id:
+        raise _share_refusal(
+            409,
+            "The journey's creator is OWNER by creation; that rung is not given or taken here.",
+            "MEMBER_ROLE_CREATOR_IMMUTABLE",
+            {"member_id": member.id, "requested_role": wanted},
+        )
+    if member.role == wanted:
+        raise _share_refusal(
+            409,
+            "This member already holds that role; the write would state nothing new.",
+            "MEMBER_ROLE_UNCHANGED",
+            {"member_id": member.id, "role": wanted},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    previous = member.role
+    member.role = wanted
+    member.updated_at = stamp
+    session.commit()
+    answer = _member_payload(member)
+    answer.previous_role = previous
+    return answer
+
+
+@app.post("/api/v1/journeys/{journey_id}/members/leave", response_model=JourneyMember)
+def leave_journey_membership(
+    journey_id: UUID,
+    actor_traveler_id: UUID | None = None,
+    session: Session = Depends(get_session),
+):
+    """The traveller's own way out, which needs nobody else's permission and cannot be the creator's."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _refuse_if_recycled(journey)
+    actor = str(actor_traveler_id) if actor_traveler_id else None
+    if actor is None:
+        raise _share_refusal(
+            422,
+            "Leaving a journey has to name who is leaving.",
+            "MEMBER_ACTOR_REQUIRED",
+            {"field": "actor_traveler_id"},
+        )
+    if actor == journey.traveler_id:
+        raise _share_refusal(
+            409,
+            "The journey's creator is the last one who can act on it; leaving is refused here.",
+            "MEMBER_LAST_CREATOR_LEAVE",
+            {"actor_traveler_id": actor, "journey_id": journey.id},
+        )
+    now = datetime.now(timezone.utc)
+    row = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == actor,
+        )
+    ).first()
+    if row is None:
+        raise _share_refusal(
+            409,
+            "The actor named is not a member of this journey, so there is nothing to leave.",
+            "MEMBER_ACTOR_NOT_A_MEMBER",
+            {"actor_traveler_id": actor},
+        )
+    member = _member_target(session, journey, row.id, now)
     stamp = datetime.now(timezone.utc).isoformat()
     member.removed_at = stamp
     member.updated_at = stamp

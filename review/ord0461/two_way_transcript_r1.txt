@@ -1,0 +1,29 @@
+cap_constant=12
+members_added=2
+-- 1. permission, read off journey_role_capabilities --
+COLLABORATOR changes a role                    http=403 reason_code=MEMBER_ACTOR_NOT_PERMITTED details={"capability": "MEMBER_MANAGE", "actor_role": "COLLABORATOR"}
+ADMIN changes a role (table grants it)         http=200 reason_code=None details=-
+creator changes a role                         http=200 reason_code=None details=-
+no actor named at all                          http=422 reason_code=MEMBER_ACTOR_REQUIRED details={"capability": "MEMBER_MANAGE", "actor_role": "NONE", "field": "actor_traveler_id"}
+-- 2. operating on someone already gone --
+withdraw the fresh row                         http=200 reason_code=None details=-
+withdraw it a second time                      http=409 reason_code=MEMBER_ALREADY_WITHDRAWN details={"member_id": "fda3160e-8bcc-4501-94ea-4dc58fc8d254", "removed_at": "2026-09-29T06:44:50.157016+00:00"}
+change the role of a removed member            http=409 reason_code=MEMBER_ALREADY_WITHDRAWN details={"member_id": "fda3160e-8bcc-4501-94ea-4dc58fc8d254", "removed_at": "2026-09-29T06:44:50.157016+00:00"}
+an unknown member id                           http=404 reason_code=MEMBER_UNKNOWN details={"field": "member_id", "journey_id": "376077de-800a-4376-8022-dea6fbc8b144"}
+-- 3. leaving: the creator cannot, a stranger has nothing to leave --
+creator tries to leave                         http=409 reason_code=MEMBER_LAST_CREATOR_LEAVE details={"actor_traveler_id": "fae428ce-3438-4c1c-9025-19d35f239814", "journey_id": "376077de-800a-4376-8022-dea6fbc8b144"}
+non-member tries to leave                      http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={"actor_traveler_id": "4ca374de-d3f0-4957-9664-f08ae31d56db"}
+a member leaves on their own                   http=200 reason_code=None details=-
+promoting a member to OWNER                    http=409 reason_code=MEMBER_ROLE_CREATOR_IMMUTABLE details={"member_id": "f70f6362-1774-4271-b8d0-f4e675cb2578", "requested_role": "OWNER"}
+a role write that changes nothing              http=409 reason_code=MEMBER_ROLE_UNCHANGED details={"member_id": "f70f6362-1774-4271-b8d0-f4e675cb2578", "role": "COLLABORATOR"}
+-- 4. the cap --
+set filled to the cap                          standing=12 cap=12
+one member past the cap                        http=409 reason_code=MEMBER_CAP_REACHED details={"cap": 12, "standing_members": 12}
+-- 5. a journey sitting in the recycle bin --
+delete the journey                             http=204 reason_code=None details=-
+add a member to it                             http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={"journey_id": "f8d3184f-7de4-4688-9416-90189e54cae0", "deleted_at": "2026-09-29T06:44:50.693169+00:00"}
+change a role in it                            http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={"journey_id": "f8d3184f-7de4-4688-9416-90189e54cae0", "deleted_at": "2026-09-29T06:44:50.693169+00:00"}
+withdraw in it                                 http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={"journey_id": "f8d3184f-7de4-4688-9416-90189e54cae0", "deleted_at": "2026-09-29T06:44:50.693169+00:00"}
+leave it                                       http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={"journey_id": "f8d3184f-7de4-4688-9416-90189e54cae0", "deleted_at": "2026-09-29T06:44:50.693169+00:00"}
+-- and the set as the server still lists it --
+listed_rows=14 withdrawn_rows=2 roles=['ADMIN', 'COLLABORATOR']

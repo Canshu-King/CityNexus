@@ -519,7 +519,7 @@ export interface paths {
         /** @description The whole set, withdrawn rows included and carrying `removed_at`: a screen has to be able to say someone was in and is out without inferring it from an absence. */
         get: operations["listJourneyMembers"];
         put?: never;
-        /** @description ORD-0434 step 2: one member set per journey.  The store holds the single-set promise as a unique index on (journey_id, traveler_id), so a second invitation to the same traveller is refused by name instead of quietly listing them twice.  `expires_at` follows the grant rule: no offset means no instant stored. */
+        /** @description ORD-0434 step 2: one member set per journey.  The store holds the single-set promise as a unique index on (journey_id, traveler_id), so a second invitation to the same traveller is refused by name instead of quietly listing them twice.  `expires_at` follows the grant rule: no offset means no instant stored.  ORD-0461 adds the ceiling: a journey holds at most 12 in-force memberships (`JOURNEY_MEMBER_CAP` in `backend/app/main.py`), and the refusal repeats that number in `error.details.cap` so no screen ever counts rows to find a limit. */
         post: operations["addJourneyMember"];
         delete?: never;
         options?: never;
@@ -539,8 +539,47 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Takes effect on the next read of anything that checks membership, including an `INVITEES_ONLY` token read.  A second withdrawal answers differently from the first. */
+        /** @description Takes effect on the next read of anything that checks membership, including an `INVITEES_ONLY` token read.  A second withdrawal answers differently from the first. ORD-0461: the actor has to be named, and their role has to carry `MEMBER_MANAGE` in `journey_role_capabilities` - OWNER and ADMIN do, COLLABORATOR does not. */
         post: operations["withdrawJourneyMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/{member_id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0461: moves one member between ADMIN and COLLABORATOR.  The creator's rung is not on this ladder - `OWNER` comes from `journeys.traveler_id`, so a row claiming it would be a second source for one fact, and both giving and taking it are refused by name.  The answer carries `previous_role` so a screen can say "from X to Y" without diffing two list reads. */
+        post: operations["changeJourneyMemberRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0461: a traveller's own way out, which asks nobody else's permission.  The journey's creator cannot use it - they are the last one who can act on the trip - and someone who is not a member has nothing to leave, so both answer with their own name.  The row stays listed with `removed_at`, like any other exit. */
+        post: operations["leaveJourneyMembership"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2988,6 +3027,11 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
             member_state: components["schemas"]["MemberState"];
+            /** @description only the role write fills this in: the rung the member was on before this answer moved them */
+            previous_role?: string | null;
+        };
+        JourneyMemberRoleChange: {
+            role: components["schemas"]["MemberRole"];
         };
         JourneyRoleRule: {
             role: components["schemas"]["MemberRole"];
@@ -4727,7 +4771,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_PRESENT */
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_PRESENT / MEMBER_CAP_REACHED (the cap is 12 in-force memberships per journey) / MEMBER_JOURNEY_RECYCLED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4749,7 +4793,10 @@ export interface operations {
     };
     withdrawJourneyMember: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description who is making the write; self-asserted, not authenticated. Empty answers MEMBER_ACTOR_REQUIRED. */
+                actor_traveler_id?: string;
+            };
             header?: never;
             path: {
                 journey_id: components["parameters"]["JourneyId"];
@@ -4768,6 +4815,15 @@ export interface operations {
                     "application/json": components["schemas"]["JourneyMember"];
                 };
             };
+            /** @description error.code = FORBIDDEN with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED (details.name the missing capability) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
             /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN */
             404: {
                 headers: {
@@ -4777,8 +4833,126 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN */
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN / MEMBER_JOURNEY_RECYCLED */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_ACTOR_REQUIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    changeJourneyMemberRole: {
+        parameters: {
+            query?: {
+                /** @description who is making the write; must hold an in-force role carrying MEMBER_MANAGE. */
+                actor_traveler_id?: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMemberRoleChange"];
+            };
+        };
+        responses: {
+            /** @description The row with its new role and the role it had before */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMember"];
+                };
+            };
+            /** @description error.code = FORBIDDEN with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN / MEMBER_ROLE_CREATOR_IMMUTABLE / MEMBER_ROLE_UNCHANGED / MEMBER_ACTOR_NOT_A_MEMBER / MEMBER_JOURNEY_RECYCLED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_ACTOR_REQUIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    leaveJourneyMembership: {
+        parameters: {
+            query?: {
+                /** @description the traveller leaving; required, and it is the only identity this door asks for. */
+                actor_traveler_id?: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The member row, now carrying its withdrawal moment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMember"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_LAST_CREATOR_LEAVE / MEMBER_ACTOR_NOT_A_MEMBER / MEMBER_ALREADY_WITHDRAWN / MEMBER_JOURNEY_RECYCLED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_ACTOR_REQUIRED */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };

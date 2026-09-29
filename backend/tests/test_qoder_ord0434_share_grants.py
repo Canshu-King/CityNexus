@@ -35,7 +35,7 @@ from uuid import uuid4
 import yaml
 from fastapi.testclient import TestClient
 
-from app.db.models import JourneyShareGrant, Traveler
+from app.db.models import Journey, JourneyShareGrant, Traveler
 from app.db.session import SessionLocal
 from app.main import app
 
@@ -348,7 +348,15 @@ def test_the_member_set_is_one_row_per_traveller_and_says_so_by_name() -> None:
 
 
 def test_withdrawal_is_immediate_and_not_repeatable() -> None:
+    """ORD-0461 moved this door behind an actor, so the arm names one.
+
+    What the arm guards is unchanged -- a withdrawal bites on the next read, and the same withdrawal
+    twice is not the same answer twice -- but the door now refuses an unattributed write, so the test
+    asks as the journey's creator instead of sending nobody.
+    """
     journey_id = _journey()
+    with SessionLocal() as session:
+        creator = session.get(Journey, journey_id).traveler_id
     traveler_id = _traveler()
     member = _add_member(journey_id, traveler_id)
     grant = _create(journey_id, "INVITEES_ONLY")
@@ -358,7 +366,8 @@ def test_withdrawal_is_immediate_and_not_repeatable() -> None:
     assert before.status_code == 200, before.text
     assert before.json()["id"] == journey_id
 
-    first = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]))
+    first = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]),
+                        params={"actor_traveler_id": creator})
     assert first.status_code == 200, first.text
     assert first.json()["member_state"] == "MEMBER_WITHDRAWN"
     after = client.get(token_url, params={"member": traveler_id})
@@ -366,7 +375,8 @@ def test_withdrawal_is_immediate_and_not_repeatable() -> None:
         "the withdrawal has to bite on the next read, not on the next restart"
     )
 
-    twice = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]))
+    twice = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]),
+                        params={"actor_traveler_id": creator})
     assert twice.status_code != first.status_code, "the same withdrawal twice is not the same answer twice"
     assert _reason(twice.json()) == "MEMBER_ALREADY_WITHDRAWN"
     listed = client.get(MEMBER_PATH.format(journey_id=journey_id)).json()
