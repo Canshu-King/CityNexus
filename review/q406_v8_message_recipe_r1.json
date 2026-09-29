@@ -1,0 +1,556 @@
+{
+ "tip": "57ff5d1c2f8540d498d945ed591c36689fc0f39e",
+ "branch_head_at_readings": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "receipt": {
+  "run_id": "cmdr121114q406r5",
+  "tree": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+  "worktree": "D:/moodle/_qoder_lane_q0406",
+  "target": "e2e/qoder-ord0406-v8-message-recipe-r1.spec.ts",
+  "full": false,
+  "grep": null,
+  "ports": {
+   "frontend": 5570,
+   "backend": 6570
+  },
+  "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "db": "_cmdr121114q406r5.db",
+  "env_keys_dropped_names_only": [
+   "DEEPSEEK_API_KEY",
+   "OPENAI_API_KEY",
+   "WB2API_KEY"
+  ],
+  "node_modules": {
+   "mode": "present",
+   "path": "D:/moodle/_qoder_lane_q0406/frontend/node_modules"
+  },
+  "exit_code": 0,
+  "verdict": "GREEN",
+  "counts": {
+   "passed": 4
+  },
+  "listed_case_count": 0,
+  "started_local": "2026-09-29T12:11:14",
+  "duration_s": 111.215026,
+  "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q406r5_4ee14229_121114.log",
+  "log_bytes": 25051
+ },
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q406r5_4ee14229_121114.log",
+ "arms": {
+  "armA_zh-CN": {
+   "arm": "zh-CN",
+   "url": "http://127.0.0.1:5570/v8/nosuchscreen",
+   "lang": "zh-CN",
+   "hitLine": 768,
+   "count": 1,
+   "sentences": [
+    {
+     "text": "这个地址没有对应的屏（它点的是「nosuchscreen」），所以留在今天。",
+     "textLength": 38,
+     "documentY": 79,
+     "testid": "address-no-screen",
+     "role": "status",
+     "box": {
+      "y": 79,
+      "bottom": 133,
+      "h": 54
+     },
+     "centre": {
+      "x": 195,
+      "y": 106
+     },
+     "centreHitSelf": true,
+     "paintedLines": 2,
+     "lastLineBottom": 121,
+     "aboveNav": true,
+     "visible": true
+    }
+   ],
+   "scrollY": 0,
+   "docHeight": 2645,
+   "shellMounted": true,
+   "bodyChars": 958,
+   "verdict": {
+    "text": "这个地址没有对应的屏（它点的是「nosuchscreen」），所以留在今天。",
+    "textLength": 38,
+    "documentY": 79,
+    "testid": "address-no-screen",
+    "role": "status",
+    "box": {
+     "y": 79,
+     "bottom": 133,
+     "h": 54
+    },
+    "centre": {
+     "x": 195,
+     "y": 106
+    },
+    "centreHitSelf": true,
+    "paintedLines": 2,
+    "lastLineBottom": 121,
+    "aboveNav": true,
+    "visible": true
+   }
+  },
+  "armA_en": {
+   "arm": "en",
+   "url": "http://127.0.0.1:5570/v8/nosuchscreen",
+   "lang": "en",
+   "hitLine": 768,
+   "count": 1,
+   "sentences": [
+    {
+     "text": "This address names no screen (it asks for “nosuchscreen”), so this is Today.",
+     "textLength": 76,
+     "documentY": 79,
+     "testid": "address-no-screen",
+     "role": "status",
+     "box": {
+      "y": 79,
+      "bottom": 133,
+      "h": 54
+     },
+     "centre": {
+      "x": 195,
+      "y": 106
+     },
+     "centreHitSelf": true,
+     "paintedLines": 2,
+     "lastLineBottom": 121,
+     "aboveNav": true,
+     "visible": true
+    }
+   ],
+   "scrollY": 0,
+   "docHeight": 2759,
+   "shellMounted": true,
+   "bodyChars": 1715,
+   "verdict": {
+    "text": "This address names no screen (it asks for “nosuchscreen”), so this is Today.",
+    "textLength": 76,
+    "documentY": 79,
+    "testid": "address-no-screen",
+    "role": "status",
+    "box": {
+     "y": 79,
+     "bottom": 133,
+     "h": 54
+    },
+    "centre": {
+     "x": 195,
+     "y": 106
+    },
+    "centreHitSelf": true,
+    "paintedLines": 2,
+    "lastLineBottom": 121,
+    "aboveNav": true,
+    "visible": true
+   }
+  },
+  "armB_zh-CN": {
+   "arm": "zh-CN",
+   "screen": {
+    "url": "http://127.0.0.1:5570/v8/intelligence",
+    "hasControlTowerCard": false,
+    "bodyHead": "CN 正在准备城市周末行程… 锚点 · 住宿 · 出行事实 · 可行性"
+   },
+   "policy_calls": [
+    {
+     "status": 200,
+     "method": "GET",
+     "body_head": "{\"mode\":\"ADVISORY\",\"auto_accept_replan\":false,\"max_auto_replan_cost_delta_minor\":0,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":0,\"allowed_activity_types\":[],\"allowed_booking_types\":[],\"prote"
+    },
+    {
+     "status": 200,
+     "method": "PUT",
+     "body_head": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_"
+    }
+   ],
+   "before_scroll": {
+    "url": "http://127.0.0.1:5570/v8/intelligence",
+    "lang": "zh-CN",
+    "hitLine": 768,
+    "count": 1,
+    "sentences": [
+     {
+      "text": "自主恢复已启用，仅限权限范围内的可逆交通变更。知道了",
+      "textLength": 26,
+      "documentY": 79,
+      "testid": null,
+      "role": "status",
+      "box": {
+       "y": 79,
+       "bottom": 118,
+       "h": 39
+      },
+      "centre": {
+       "x": 195,
+       "y": 99
+      },
+      "centreHitSelf": true,
+      "paintedLines": 3,
+      "lastLineBottom": 106,
+      "aboveNav": true,
+      "visible": true
+     }
+    ],
+    "scrollY": 0,
+    "docHeight": 1418,
+    "shellMounted": true,
+    "bodyChars": 404
+   },
+   "url": "http://127.0.0.1:5570/v8/intelligence",
+   "lang": "zh-CN",
+   "hitLine": 768,
+   "count": 1,
+   "sentences": [
+    {
+     "text": "自主恢复已启用，仅限权限范围内的可逆交通变更。知道了",
+     "textLength": 26,
+     "documentY": 79,
+     "testid": null,
+     "role": "status",
+     "box": {
+      "y": 79,
+      "bottom": 118,
+      "h": 39
+     },
+     "centre": {
+      "x": 195,
+      "y": 99
+     },
+     "centreHitSelf": true,
+     "paintedLines": 3,
+     "lastLineBottom": 106,
+     "aboveNav": true,
+     "visible": true
+    }
+   ],
+   "scrollY": 0,
+   "docHeight": 1418,
+   "shellMounted": true,
+   "bodyChars": 404,
+   "above_viewport_before_scroll": false,
+   "banner": {
+    "text": "自主恢复已启用，仅限权限范围内的可逆交通变更。知道了",
+    "textLength": 26,
+    "documentY": 79,
+    "testid": null,
+    "role": "status",
+    "box": {
+     "y": 79,
+     "bottom": 118,
+     "h": 39
+    },
+    "centre": {
+     "x": 195,
+     "y": 99
+    },
+    "centreHitSelf": true,
+    "paintedLines": 3,
+    "lastLineBottom": 106,
+    "aboveNav": true,
+    "visible": true
+   },
+   "dead_link": {
+    "url": "http://127.0.0.1:5570/v8/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f",
+    "message_count": 0,
+    "shell_mounted": false,
+    "body_chars": 117,
+    "responses": [
+     {
+      "status": 404,
+      "url": "/api/v1/journeys/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f/experience",
+      "body_head": "{\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"Journey 0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f was not found\",\"message_key\":\"resource.not_found\",\"trace_id\":\"89169e28-a53a-40af-99b5-142c0c090e3b\",\"details\":null,\"error_receipt_id\":\"CNX-AYW3K4K5\"}}"
+     }
+    ]
+   }
+  },
+  "armB_en": {
+   "arm": "en",
+   "screen": {
+    "url": "http://127.0.0.1:5570/v8/intelligence",
+    "hasControlTowerCard": false,
+    "bodyHead": "CN Preparing a captured city weekend… Anchors · stays · mobility facts · feasibility"
+   },
+   "policy_calls": [
+    {
+     "status": 200,
+     "method": "GET",
+     "body_head": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_"
+    },
+    {
+     "status": 200,
+     "method": "PUT",
+     "body_head": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_"
+    }
+   ],
+   "before_scroll": {
+    "url": "http://127.0.0.1:5570/v8/intelligence",
+    "lang": "en",
+    "hitLine": 768,
+    "count": 1,
+    "sentences": [
+     {
+      "text": "Autonomous recovery is enabled for reversible transport changes inside this envelope.Dismiss",
+      "textLength": 92,
+      "documentY": 79,
+      "testid": null,
+      "role": "status",
+      "box": {
+       "y": -273,
+       "bottom": -219,
+       "h": 54
+      },
+      "centre": {
+       "x": 195,
+       "y": -246
+      },
+      "centreHitSelf": false,
+      "paintedLines": 4,
+      "lastLineBottom": -231,
+      "aboveNav": true,
+      "visible": true
+     }
+    ],
+    "scrollY": 352,
+    "docHeight": 1519,
+    "shellMounted": true,
+    "bodyChars": 996
+   },
+   "url": "http://127.0.0.1:5570/v8/intelligence",
+   "lang": "en",
+   "hitLine": 768,
+   "count": 1,
+   "sentences": [
+    {
+     "text": "Autonomous recovery is enabled for reversible transport changes inside this envelope.Dismiss",
+     "textLength": 92,
+     "documentY": 79,
+     "testid": null,
+     "role": "status",
+     "box": {
+      "y": 79,
+      "bottom": 133,
+      "h": 54
+     },
+     "centre": {
+      "x": 195,
+      "y": 106
+     },
+     "centreHitSelf": true,
+     "paintedLines": 4,
+     "lastLineBottom": 121,
+     "aboveNav": true,
+     "visible": true
+    }
+   ],
+   "scrollY": 0,
+   "docHeight": 1519,
+   "shellMounted": true,
+   "bodyChars": 996,
+   "above_viewport_before_scroll": true,
+   "banner": {
+    "text": "Autonomous recovery is enabled for reversible transport changes inside this envelope.Dismiss",
+    "textLength": 92,
+    "documentY": 79,
+    "testid": null,
+    "role": "status",
+    "box": {
+     "y": 79,
+     "bottom": 133,
+     "h": 54
+    },
+    "centre": {
+     "x": 195,
+     "y": 106
+    },
+    "centreHitSelf": true,
+    "paintedLines": 4,
+    "lastLineBottom": 121,
+    "aboveNav": true,
+    "visible": true
+   },
+   "dead_link": {
+    "url": "http://127.0.0.1:5570/v8/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f",
+    "message_count": 0,
+    "shell_mounted": false,
+    "body_chars": 298,
+    "responses": [
+     {
+      "status": 404,
+      "url": "/api/v1/journeys/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f/experience",
+      "body_head": "{\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"Journey 0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f was not found\",\"message_key\":\"resource.not_found\",\"trace_id\":\"df5b552a-d0b1-4758-ae36-4587c0b7a511\",\"details\":null,\"error_receipt_id\":\"CNX-AYW3K4K5\"}}"
+     }
+    ]
+   }
+  },
+  "armS": {
+   "origin": "http://127.0.0.1:5570",
+   "port": "5570",
+   "served_status": 200,
+   "served_bytes": 1307,
+   "disk_bytes": 1052,
+   "served_sha1_over_bytes": "8b6bf2d5b2bc0aded53ac17c0c28ad076fec7851",
+   "disk_sha1_over_bytes": "b797d4da101597699083c136d26fb8bf8a011910",
+   "served_equals_disk": false,
+   "entry_line_in_index_html": 20,
+   "entry_named_by_served_html": true,
+   "dev_injected_block": true,
+   "disk_entry_line_text": "<script type=\"module\" src=\"/src/main.tsx\"></script>"
+  }
+ },
+ "static_port": {
+  "port": 5610,
+  "build_rc": 0,
+  "assets": [
+   "index-DbA8xyvx.js"
+  ],
+  "nlink": 18,
+  "served_status": 200,
+  "asset_status": 200,
+  "html_sha1_served": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+  "html_sha1_disk": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+  "html_bytes_served": 1200,
+  "html_bytes_disk": 1200,
+  "asset_sha1_served": "b272811048f1d94655c22355c1f5a04131cd99e5",
+  "asset_sha1_disk": "b272811048f1d94655c22355c1f5a04131cd99e5",
+  "asset_bytes": 1406069,
+  "entry_named_by_served_html": true,
+  "served_equals_disk": true
+ },
+ "sites": {
+  "shell-address-verdict": {
+   "site": "frontend/src/app/V8Experience.tsx:1882",
+   "guard_line": "frontend/src/app/V8Experience.tsx:1881",
+   "guard_text": "{addressNoScreen !== null && (",
+   "blob": "5202a1738a672807d156934b8fcd0fc854b6196d"
+  },
+  "shell-shared-banner": {
+   "site": "frontend/src/app/V8Experience.tsx:1887",
+   "guard_line": "frontend/src/app/V8Experience.tsx:1886",
+   "guard_text": "{message && (",
+   "blob": "5202a1738a672807d156934b8fcd0fc854b6196d"
+  },
+  "agent-send-error": {
+   "site": "frontend/src/features/agent/AgentComposer.tsx:193",
+   "guard_line": "frontend/src/features/agent/AgentComposer.tsx:192",
+   "guard_text": "{error && (",
+   "blob": "3a0d06533a416b4a6c4390cf0e411092038131b4"
+  },
+  "discovery-error": {
+   "site": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:386",
+   "guard_line": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:384",
+   "guard_text": "{error && (",
+   "blob": "8ef92f699b5e18942a554376ac48242aa4d54a36"
+  },
+  "discovery-batch-error": {
+   "site": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:544",
+   "guard_line": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:542",
+   "guard_text": "{batchError && (",
+   "blob": "8ef92f699b5e18942a554376ac48242aa4d54a36"
+  },
+  "rank-failed": {
+   "site": "frontend/src/features/planning/PlanRankingPanel.tsx:74",
+   "guard_line": null,
+   "guard_text": "",
+   "blob": "3ab66d37755ad8508cfb0668f4247dfde660a92b"
+  },
+  "history-failed": {
+   "site": "frontend/src/features/studio/PlanVersionHistoryPanel.tsx:66",
+   "guard_line": "frontend/src/features/studio/PlanVersionHistoryPanel.tsx:65",
+   "guard_text": "{!loading && failed && (",
+   "blob": "c43a128a445a1a71dc84f307c8f4b9d74b0083f7"
+  }
+ },
+ "earlier_iterations": {
+  "run_ids": [
+   "cmdr115005q406r1",
+   "cmdr115607q406r2",
+   "cmdr120906q406r4"
+  ],
+  "biting_run_geometry": {
+   "armB_zh-CN": {
+    "arm": "zh-CN",
+    "screen": {
+     "url": "http://127.0.0.1:5570/v8/intelligence",
+     "hasControlTowerCard": false,
+     "bodyHead": "CN 正在准备城市周末行程… 锚点 · 住宿 · 出行事实 · 可行性"
+    },
+    "policy_calls": [
+     {
+      "status": 200,
+      "method": "GET",
+      "body_head": "{\"mode\":\"ADVISORY\",\"auto_accept_replan\":false,\"max_auto_replan_cost_delta_minor\":0,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":0,\"allowed_activity_types\":[],\"allowed_booking_types\":[],\"prote"
+     },
+     {
+      "status": 200,
+      "method": "PUT",
+      "body_head": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_"
+     }
+    ],
+    "url": "http://127.0.0.1:5570/v8/intelligence",
+    "lang": "zh-CN",
+    "hitLine": 768,
+    "count": 1,
+    "sentences": [
+     {
+      "text": "自主恢复已启用，仅限权限范围内的可逆交通变更。知道了",
+      "textLength": 26,
+      "testid": null,
+      "role": "status",
+      "box": {
+       "y": -236,
+       "bottom": -197,
+       "h": 39
+      },
+      "centre": {
+       "x": 195,
+       "y": -216
+      },
+      "centreHitSelf": false,
+      "paintedLines": 3,
+      "lastLineBottom": -209,
+      "aboveNav": true,
+      "visible": true
+     }
+    ],
+    "shellMounted": true,
+    "bodyChars": 404,
+    "banner": {
+     "text": "自主恢复已启用，仅限权限范围内的可逆交通变更。知道了",
+     "textLength": 26,
+     "testid": null,
+     "role": "status",
+     "box": {
+      "y": -236,
+      "bottom": -197,
+      "h": 39
+     },
+     "centre": {
+      "x": 195,
+      "y": -216
+     },
+     "centreHitSelf": false,
+     "paintedLines": 3,
+     "lastLineBottom": -209,
+     "aboveNav": true,
+     "visible": true
+    },
+    "dead_link": {
+     "url": "http://127.0.0.1:5570/v8/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f",
+     "message_count": 0,
+     "shell_mounted": false,
+     "body_chars": 117,
+     "responses": [
+      {
+       "status": 404,
+       "url": "/api/v1/journeys/0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f/experience",
+       "body_head": "{\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"Journey 0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f was not found\",\"message_key\":\"resource.not_found\",\"trace_id\":\"161ea88c-92d9-4449-b3e8-34fe402f44e0\",\"details\":null,\"error_receipt_id\":\"CNX-AYW3K4K5\"}}"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "sentinel_dead_link_id": "0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f"
+}
