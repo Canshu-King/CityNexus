@@ -135,3 +135,52 @@
     gap: 2px;
   }
 }
+
+/* ORD-0449 -- the invitation form and the two lists it writes back into. `width: auto` on the row
+   action is load-bearing: the global sheet sets `button { width: 100% }`, which would stretch a
+   撤销 button across the whole row and overlap the sentence beside it. */
+.cn-access-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.cn-access-field select,
+.cn-access-field input {
+  min-height: 44px;
+  font: inherit;
+  padding: 6px 8px;
+}
+
+.cn-access-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cn-access-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.cn-access-row-what {
+  flex: 1 1 220px;
+}
+
+.cn-access-row-action {
+  width: auto;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 6px 12px;
+}
+
+.cn-access-refusal,
+.cn-access-muted {
+  margin: 6px 0;
+}

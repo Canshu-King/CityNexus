@@ -28,6 +28,9 @@ export type JourneySummary = {
   title: string;
   city_code?: string;
   status?: string;
+  /** The one person this trip belongs to. Sent by the list door, and the only value this screen is
+   *  willing to put in a `created_by` field. */
+  traveler_id?: string | null;
 };
 
 export type ActivityEvent = {
@@ -117,3 +120,65 @@ export async function readSharingDoors(journeyId: string): Promise<SharingRead> 
 }
 
 export { RejectionWithFacts };
+
+/** -------------------------------------------------------------------------------- ORD-0449 writes
+ *  The three doors below are the ones ORD-0434 landed: create a grant, revoke a grant, withdraw a
+ *  member. Nothing here invents a fourth -- no visibility write, no invitation-cap door, and no
+ *  audit row is claimed, because none of these doors writes `audit_logs` (measured at this tip:
+ *  doors writing audit = 31, sharing doors among them = 0).
+ */
+export type ShareGrant = {
+  id: string;
+  journey_id: string;
+  visibility: string;
+  created_by: string;
+  expires_at: string | null;
+  revoked_at: string | null;
+  token: string;
+};
+
+export type JourneyMemberRow = {
+  id: string;
+  traveler_id: string;
+  role: string;
+  invited_by: string;
+  expires_at: string | null;
+  joined_at: string | null;
+  removed_at: string | null;
+  member_state: string;
+};
+
+export function readShareGrants(journeyId: string): Promise<ShareGrant[]> {
+  return request<ShareGrant[]>(`/journeys/${encodeURIComponent(journeyId)}/share-grants`);
+}
+
+export function readMembers(journeyId: string): Promise<JourneyMemberRow[]> {
+  return request<JourneyMemberRow[]>(`/journeys/${encodeURIComponent(journeyId)}/members`);
+}
+
+/** `created_by` is what this device signs the grant with; the door does not authenticate it, so the
+ *  screen only ever sends the trip's own `traveler_id` -- a value it read from the list door -- and
+ *  says out loud that this is a self-reported signature, not a verified identity. */
+export function createShareGrant(
+  journeyId: string,
+  grant: { visibility: string; created_by: string; expires_at: string | null },
+): Promise<ShareGrant> {
+  return request<ShareGrant>(`/journeys/${encodeURIComponent(journeyId)}/share-grants`, {
+    method: "POST",
+    body: JSON.stringify(grant),
+  });
+}
+
+export function revokeShareGrant(journeyId: string, grantId: string): Promise<ShareGrant> {
+  return request<ShareGrant>(
+    `/journeys/${encodeURIComponent(journeyId)}/share-grants/${encodeURIComponent(grantId)}/revoke`,
+    { method: "POST" },
+  );
+}
+
+export function withdrawMember(journeyId: string, memberId: string): Promise<JourneyMemberRow> {
+  return request<JourneyMemberRow>(
+    `/journeys/${encodeURIComponent(journeyId)}/members/${encodeURIComponent(memberId)}/withdraw`,
+    { method: "POST" },
+  );
+}
