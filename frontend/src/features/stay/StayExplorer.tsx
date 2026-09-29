@@ -3,8 +3,23 @@ import { MapPanel } from "../../components/v8/MapPanel";
 import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { evidenceSourceLabel } from "../../lib/displayVocabulary";
+import { EstimationLadderPanel } from "../estimation/EstimationLadderPanel";
+import type { EstimateReading } from "../estimation/estimationLadder";
 
-export function StayExplorer({ data, selected, onSelect }: { data: V8Data; selected: V8Data["options"][number] | null; onSelect: (id: string) => void }) {
+export function StayExplorer({
+  data,
+  selected,
+  onSelect,
+  onNavigate,
+}: {
+  data: V8Data;
+  selected: V8Data["options"][number] | null;
+  onSelect: (id: string) => void;
+  /** Ord-0455: the ladder's 给补救 rung names a door in words. It may only name one this shell can
+   *  actually reach, so the shell hands the navigation capability in and its absence is honoured. */
+  onNavigate?: (route: string) => void;
+}) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale === "zh-CN";
@@ -54,12 +69,62 @@ export function StayExplorer({ data, selected, onSelect }: { data: V8Data; selec
               <dt>{t("stay.provider")}</dt>
               <dd>{evidenceLabel(selected, zh)}</dd>
             </div>
-          </dl></div></div>
+          </dl>
+          {selected ? (
+            <EstimationLadderPanel
+              estimate={stayEstimate(
+                selected,
+                data.options.length,
+                locale,
+                zh,
+                Boolean(onNavigate),
+                t("nav.studio"),
+              )}
+              sourceToken={selected.stay.evidence?.source ?? null}
+            />
+          ) : null}
+        </div>
+      </div>
     </div>
   </section>;
 }
 
 function money(minor: number | null | undefined, currency = "CNY", locale = "en") { return formatMinorMoney(minor, currency, locale === "zh-CN" ? "zh-CN" : "en-US"); }
+
+/**
+ * ORD-0455 -- the cells this server sent about one stay's price, reduced to what the ladder reads.
+ *
+ * The words for the figure come from the same `money()` the card above uses, so the ladder can never
+ * quote a total that disagrees with the price it is describing. `source` is the traveller's words for
+ * `stay.evidence.source`, produced by the shared display layer (ORD-0425) rather than by this file,
+ * and it stays empty when the payload carried no source cell -- an absent cell is not a source that
+ * happens to be called "unknown".
+ */
+function stayEstimate(
+  option: V8Data["options"][number],
+  candidates: number,
+  locale: string,
+  zh: boolean,
+  canRecompute: boolean,
+  doorLabel: string,
+): EstimateReading {
+  const stay = option.stay;
+  const total = typeof stay.total_amount_minor === "number" ? stay.total_amount_minor : null;
+  const nightly = typeof stay.nightly_amount_minor === "number" ? stay.nightly_amount_minor : null;
+  const minor = (total ?? 0) > 0 ? total : (nightly ?? 0) > 0 ? nightly : null;
+  const token = String(stay.evidence?.source ?? "").trim();
+  const confidence = stay.evidence?.confidence;
+  return {
+    amountMinor: minor,
+    amountLabel: minor === null ? "" : money(minor, stay.currency, locale),
+    source: token ? evidenceSourceLabel(token, zh) : "",
+    confidence: typeof confidence === "number" ? confidence : null,
+    binding: stay.refundable === false,
+    alternatives: Math.max(0, candidates - 1),
+    canRecompute,
+    doorLabel,
+  };
+}
 
 /**
  * OSM carries no price, so a live stay arrives as 0.  "0" is not a price: it

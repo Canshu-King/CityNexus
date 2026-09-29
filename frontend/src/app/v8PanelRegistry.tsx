@@ -151,6 +151,7 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         data={s.data}
         selected={s.selected}
         onSelect={(id: string) => void s.selectOption(id)}
+        onNavigate={(route: string) => s.navigate(route)}
       />
     ),
   },
