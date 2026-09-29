@@ -1,0 +1,38 @@
+{
+ "base": "4037cb331ea00b83124316d40329762fa1131689",
+ "first_commit": "251cabde02548cbc5484dba4ecb5719e3db796dc",
+ "head_commit": "638935d12320894ff0448894f6e150de6fd6a5fa",
+ "files": [
+  "frontend/src/app/V8Experience.tsx"
+ ],
+ "second_commit_diff": {
+  "added_lines": 6,
+  "removed_lines": 6,
+  "added_comment_lines": 5,
+  "added_non_comment_lines": 1,
+  "removed_comment_lines": 5,
+  "removed_non_comment_lines": 1,
+  "non_comment_lines_verbatim": [
+   "+       backend/app/main.py:7051, written for ACTIVE C3/C4 rows by the selection path at :6144).  It was",
+   "-       selection path at `:6144`).  It was not declared here, so the card had no way to reach a name and"
+  ],
+  "comment_only": false
+ },
+ "branch_vs_base": {
+  "files": [
+   "frontend/e2e/qoder-wallet-commitments.spec.ts",
+   "frontend/src/app/V8Experience.tsx"
+  ],
+  "numstat": [
+   "64\t0\tfrontend/e2e/qoder-wallet-commitments.spec.ts",
+   "61\t8\tfrontend/src/app/V8Experience.tsx"
+  ]
+ },
+ "built_entry_after_second_commit": [
+  {
+   "name": "index-B4ZuCsnm.js",
+   "bytes": 1483830,
+   "local_bytes_sha1": "bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4"
+  }
+ ]
+}
