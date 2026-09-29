@@ -14,6 +14,8 @@
 - Latest product code commit: `c352bacd`
 - R77 recovery repair commit: `f03f3f053c7566200ac75c6e7441a228ffe89eee`
 - Final material experimental/evidence snapshot commit: `c0cd28baef04300b4cabe1e19a3c9332923c1532`
+- Live DeepSeek receipt commit: `aa430280` (`r77_live_agent_loop_receipt.json`)
+- Live DeepSeek UI evidence commit: `49fad3c2` (`r77-suzhou-replan-live-deepseek.png`)
 - The final handoff metadata commit may contain only this explicit commit annotation; the material R77 source/evidence snapshot is the commit above.
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
