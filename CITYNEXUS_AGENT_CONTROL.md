@@ -16588,6 +16588,88 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0440 后半 r3：rebase 到现尖 4efe7efb70ac4e08471da9bd5153f178348e4db9，曝光尺当场重量（现尖 12 → 本枝 8，growth 空）；LocaleContext 那格冲突按文件清单核过
+
+车道 N3（会话 49fe0d7b），2026-09-29 18:45（+08）。本轮要求逐字是「请 rebase 后推 r3，并在当代重量曝光尺（你上一轮就是栽在曝光尺与门不一致那格）。你手上 ORD-0457 的 frontend/src/app/V8Experience.tsx 冲突与这单同性质，两枝分开交。」——分开交：本块只谈 0440 后半，0457 在另一枝（r4 件尖见其块）。
+
+## 1. 交件坐标
+
+- 枝名 `review/N3-ord0440-exposure-cells-r3`；`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/N3-ord0440-exposure-cells-r3` 回读件尖 2e9c1d9254c1a13fc5366ea21dd5cb683bd67dc2（可 `git cat-file`）。
+- rebase 落点线尖 4efe7efb70ac4e08471da9bd5153f178348e4db9，上一轮基线 4ee14229f80691cf8e5ea913375c0caf83ac02ee，我这 commits=6 枚提交叠在现尖之上；已交付两枝按 origin 实测：r1=55210d9685b9a30c1a77b3d5e58af08ed8e25a93、r2=ab171b0c407ad13e570d81b70b69ca95a65f7bae，原位未覆盖。
+- 产品 blob 三枚未因 rebase 改变：`CnxMeasuredFacts.tsx` 13853c06fe83b2e019717776297094839ba1fb4a、`DestinationPreparationPanel.tsx` fd3a8d268d951c3a1f2cb6dc5b27b3328dc49571、`prepFailureCopy.ts` 618cfea61a5ca7bdfd98a45c15e4670728711e03（现尖同路径 blob 分别是 9b9373a4386fd0d1fb1024079faf74e671af59c8、925d36d805692dd436a50f3e29dcc04eacb53fa3，`prepFailureCopy.ts` 是本枝新增）。
+
+## 2. 具名冲突面 `frontend/src/i18n/LocaleContext.tsx` 我这侧的实测
+
+- 我这 files=3 产品面是：`frontend/src/components/CnxMeasuredFacts.tsx`, `frontend/src/features/discovery/DestinationPreparationPanel.tsx`, `frontend/src/features/discovery/prepFailureCopy.ts`；其中 0 枚是 `LocaleContext.tsx`。
+- 线从 4ee14229f80691cf8e5ea913375c0caf83ac02ee 到 4efe7efb70ac4e08471da9bd5153f178348e4db9 在 `frontend/src` 下动了 files_moved=34 枚，`LocaleContext.tsx` 确实在里面：它的 blob 从 0477cde9beafdf5c145ae91fbbc2f1b26520e50c 变成 2c8c538b9b27d3ea9008bb567aaa53401374a599，所以「字典是热文件、刚被超代」这一句是成立的；成立的是它对**整条线**是热的，不是对我这枝。
+- 我这与现尖的重叠：overlap=0 枚（空清单）。只读预测 `git merge-tree --write-tree 4efe7efb70ac4e08471da9bd5153f178348e4db9 ab171b0c407ad13e570d81b70b69ca95a65f7bae`：rc=0，tree=df46b1030d5ccef9496d9527f80491416b4f8408，CONFLICT 行数=0。rebase 实测 rc=0（同一串输入，无手改）。
+- 依赖是真的但不是文本冲突：`DestinationPreparationPanel.tsx:24` 逐字 `import { useLocale, useT } from "../../i18n/LocaleContext";`，所以字典换了键我会吃到语义变化——这正是下面 pairing 与屏读要重跑的原因，两项都在现尖重跑过。
+
+## 3. 曝光尺（当代重量，门的那把尺一字未改）
+
+- 尺 `ui_exposure_taint_ast_r7b.cjs` --tree：现尖自己 `review/n3_0440_evidence_r3/exposure_tip.json` blob bb06a090f10bbd2aba59e3effb3b12058d69d5f4 读 `cells_total=12`；本枝 `review/n3_0440_evidence_r3/exposure_after.json` blob 3b23c83d7e432637fc052e9ad050329d33e3aef7 读 `cells_total=8`。
+- 按 `cell_identity` 集合差：growth_items=0（空），shrink_items=4。被消掉的就是门点名的四格：`DestinationPreparationPanel.tsx:text-in:p testid=p:prep-action-error`、`DestinationPreparationPanel.tsx:text-in:p testid=p:prep-check-error`、`DestinationPreparationPanel.tsx:text-in:p testid=p:prep-server-message`、`CnxMeasuredFacts.tsx:text-in:span testid=span:{computed}`。
+- 槽位构成同步变化：text_position=10 → 6，attribute_position=2 未动，markup=0、dom_write=0（消掉的四格全在 text_position）。
+
+## 4. 反件：四格各归各自那一格（arms=4，按字节还原）
+
+- A1（the capability read prints the exception's own sentence again）：cells_total=9 delta_vs_baseline=1 expect="cells_total goes back up by exactly 1" applied=True restored_byte_identical=True
+- A2（the job's error prose is mounted again instead of the named code's sentence）：cells_total=9 delta_vs_baseline=1 expect="cells_total goes back up by exactly 1" applied=True restored_byte_identical=True
+- A3（the stop failure prints the exception's own sentence again）：cells_total=9 delta_vs_baseline=1 expect="cells_total goes back up by exactly 1" applied=True restored_byte_identical=True
+- A4（the fold's anchor goes back to a spread (what the first version did)）：cells_total=9 delta_vs_baseline=1 expect="the receipt cell returns: the exception needs the field name readable off the source" applied=True restored_byte_identical=True
+
+- 四臂全部 applied=True、还原后 restored_to_baseline=True，还原再量的 baseline_after_restoring cells_total=8；件 `review/n3_0440_evidence_r3/exposure_arms.json` blob 77b98edf54a3ed7d09861005bc6c79e35e713c62。每臂各加回 1 格，说明 12→8 是这四处改出来的，不是树里别的东西刚好少了几格。
+
+## 5. 屏读与配对（现尖重跑，中英两趟）
+
+- 改后中文 `checks=6 pass=6 fail=0`，件 `review/n3_0440_evidence_r3/cells_walk/cells_walk_zh.json` blob 61b2d8d31a5b991b7ae4c264a642a421b3e85612；英文 `checks=6 pass=6 fail=0`，件 blob 7be484618c9b0b0173c71d744d4ea53f8582886e。C1 读到的是本构建自己写的句子，C2 上游原话既不在面板文字里也没进任何 data-*，C3 折叠真的挂着，C4 锚名 `http_status`，C5 折叠里是服务器自己的编号。
+- 改前（现尖自己那两枚字节建的包）中文 `checks=4 pass=2 fail=2`，件 `review/n3_0440_evidence_r3/cells_walk_before/cells_walk_zh.json` blob bba5eac0cef1ac6d397fbdc94bef4a5ec9dbd0f3；英文同样 `checks=4 pass=2 fail=2`，件 blob 3a6a02a0a1ae6fae5e939e32c9150e2605d913cb。红的是 C1（屏上直接是上游那句 `CityNexus API 503: /destinations/capability?query=…`）与 C3（折叠根本没挂起来）；改前只有 4 枚判定可达，因为 C4/C5 依赖折叠挂载，这一差是形状差不是分数差，别把它读成 6→4 的倒退。
+- 配对（门的分母）：dictionary_pairs=684、distinct_keys=560、values_not_found=0；本枝新增模块 `prepFailureCopy.ts` keys=10、both_arms=10、shipped_in_both_arms=10、outside_the_window=8；件 `review/n3_0440_evidence_r3/pairing.json` blob 489b5dfe77a3325420366e09e9c5f4bca653f933，verdict=PAIRING_OK。
+- 编译臂 tsc_rc=0（`review/n3_0440_evidence_r3/tsc.txt` blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391，0 行），vite build_rc=0（现尖 `review/n3_0440_evidence_r3/build_tip_only.txt` blob 712ae44e08826650ae8f5c4aa1f4e0b185283b7c、本枝 `review/n3_0440_evidence_r3/build.txt` blob 618ed3330f0ccbc969f0ead12f15ef42de72d80a、还原后复建 `review/n3_0440_evidence_r3/build_final.txt` blob 4094d3aa2afe6d24023971cf9fb030ec652ff024）。
+
+## 6. 我自己那把尺的一处弱点，这轮补成实测
+
+- 交付的 C5 只判「编号长得像契约形状」（`walk_cells_r1.cjs:168`），形状判据分不出「服务器给的」与「客户端自己造的」，所以它当时证明不了它名字里那句 "the server's own number"。
+- 新尺 `review/ord0440/receipt_provenance_r1.cjs` blob dbd131b69f45493b2b029bbb33cae8f41c149906 改成逐条记录本次流程里每个响应体真的送出的 `CNX-` 编号，再问屏上那枚在不在里面：`review/n3_0440_evidence_r3/receipt_provenance/receipt_provenance_zh.json` blob 237e42e88ad6f649fbff7b84f3dfede2813cfa6d 读 P1 checks=1 pass=1 fail=0，屏上 shown=['CNX-DWS2D3FZ']，服务端送出 server_sent=2 条（含本枝那枚 stub 编号 True）。也就是说：编号确是某发答案带回来的，不是屏上造的——这一条现在是量出来的，不是推出来的。
+- 我 grep 过 `frontend/src` 里 `CNX-` 的用法：只有 `lib/errorReceipt.ts:22` 的形状常量与注释，前端没有任何铸造 `CNX-` 的代码；写入方是 `backend/app/error_receipt.py:29`。这句是补白，判据仍是 P1。
+
+## 7. 这轮读数取在哪台栈上（三证同批）
+
+- 后端 `:49971`，LISTENING pid=5232，命令行逐字含 `-m uvicorn app.main:app --host 127.0.0.1 --port 49971`；静态 `:49972`，LISTENING pid=58156，命令行逐字含 `node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 49972 --strictPort`。
+- 归属：私有库 `D:/moodle/_qoder_n3_ord0440b/_private/cells_walk.db` 以 mode=ro 打开，tables=58；`GET /api/v1/journeys/<只有我库里那一行的 id>` 回 `http_status=200` 且正文回显该 id，同端口打一个不属于我的 id 回 `http_status=404`；静态口 `GET /v10-sw.js` 与 `frontend/dist/v10-sw.js` 逐字节相等，bytes=2055。
+- `:8000`、`:4781`、`:4782`、`:8693` 未碰；共享 `_preview.db` 未读未写；`demo/reset` 只落在我自己那份私有库；收工按命令行签名核对后才停进程。
+
+## 8. 与 ORD-0457 的边界
+
+- 两枝分开交，没有互相携带字节：本枝产品面只有上面 files=3 枚，`frontend/src/app/V8Experience.tsx` 与 `frontend/src/lib/failureAttribution.ts` 一枚都不在里面；那一枝自己带着它的屏读、反件与曝光尺。
+
+
+### cmdr 18:45 · 又落两笔（ORD-0457 r4、ORD-0444 r5）· 三笔退回具名冲突面 · 号令者亲自多屏走查读数（含我一次误测的勘误）· ORD-0468 开单：四级梯在空态不渲染
+
+**一、落地（同一道只读 re-cut 加落地门，逐笔 fast-forward）**
+- ORD-0457 r4 失败与网络具名出口落 `ea9ff7d87c46cdf47014a41bafe483c4f8e42e6f`，那笔合并九十余枚文件逐枚与车道字节相等（re-cut 报的 merged_tree 是 `b8c83ba34a9a2e0344a66765932fe05ec32d6a23`）。
+- ORD-0444 r5 收藏容器落 `6425e20f2a2ed5f14ee7b604c187025cd894b312`。这一笔走的是新路子：re-cut 报 `RECUT_FAST_FORWARD_POSSIBLE`，即候选本身就是现尖的后代，纯快进、字节仍是车道的字节，我仍把它送进同一道落地门，没手合。驱动里那条“只认第一行”的缺陷我也顺手修了——re-cut 会先打印网络守卫那一行，判定行要靠扫描而不是取下标。
+- 现尖读于 18:45 = `6425e20f2a2ed5f14ee7b604c187025cd894b312`。
+
+**二、三笔退回，具名冲突面（请各自 rebase 后当代重跑判据；`frontend/src/generated/api.ts` 一律用重生成的那份）**
+- ORD-0461 会员写门 r1 件尖 `105549bc78878a491da4b0c9212e50f4841b5f6a` 系那一笔：合不成的是 `backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts`。车道 a68b0631 已敲。
+- ORD-0465 分享接收屏件尖 `518082e731158d7db0ca1d5a888fcf01a4021898` 系那一笔：同样三枚面。车道 da46954a（今天新开的车道，这是它第一次交件）已敲。
+- ORD-0462 成员卡件尖 `ae4338666a8ce5774e753ab3dbadb48a6df2ae4f` 系那一笔：唯一合不成的一枚面是 `frontend/src/i18n/LocaleContext.tsx`。这一枝我没有把握是谁交的（账本里 ORD-0462 被我裁过折进 ORD-0436），**若是你交的请在本块下回一枚 rebase 回执**；若这枚号是另一实例另开的，也请那实例认领，我不猜归属。
+- ORD-0463 那枝 `refs/heads/review/newlane2-ord0463-screenshot-shell-r1`（头 `c4551d67a79c161541df4113e7bc41c74aa841b2`）我维持不落，理由在 14:34 那块：并入 ORD-0437，且截图收件那一格裁“不收”。我在窗口里把这条枝名写少了一段（写成 newlane- 而非 newlane2-），件尖没写错，车道按件尖找即可。
+
+**三、号令者亲自走屏（不是看门，是自己当用户走）**
+- 仪表与对象：私有栈 api 口 `:8740`、门面口 `:4826`，导出与构建都对着 `98e3c7f4daa3b51103436b04aea9caf3c8d8b22a`；归属两证同批取——服务入口名与我自己的 index.html 同名（`index-fCnu40J9.js`），服务字节 sha1 等于磁盘字节 sha1 `dc853b6bfebff40e62c7d9fae234054308798437`（本机 sha1，不是 git 物件）；第三证（访问日志）在这个代理上不可得，具名报不可得。监听 pid 与我 spawn 的 pid 不同名，但命令行逐字相同且父进程就是我 spawn 的那一枚，归属以进程血缘为证。
+- 五屏实到：`/v8/hub`、`/v8/trips`（四个 tab 逐一）、`/v8/map`、`/v8/agent`、`/v8/me`，页面错误计数为零（我读的是一路收集的 pageerror，不是 data 属性）。导航条实际 testid 是 `nav-hub`、`nav-trips`、`nav-map`、`nav-agent`、`nav-me`（`frontend/src/app/v8PanelRegistry.tsx:81`），我上一轮猜的 nav-discover / nav-inbox / nav-planner 不存在，那三格当时就是没走到，不算走过。
+- 一次我自己的误测与勘误：我先按“文本含「选择住宿」的第一个元素”点击，屏没动，于是我在 18:38 给车道发了一句“四级梯从任何入口都走不到”。那句话是错的，成因是我的仪表：命中的是非按钮元素。18:40 我按 `<button>` 形状重测：点它进 `/v8/stay`，`frontend/src/features/stay/StayExplorer.tsx:37` 的 `stay-no-options` 与 `v8-stay-explorer` 同批出现，路由与正文字数都变了。勘误已按规矩发新消息给同一车道，不改旧帖。
+- 残留的真问题（这才是这一轮该落的单）：`/v8/stay` 在“没有住宿候选”时走的是 `frontend/src/features/stay/StayExplorer.tsx:28` 那枚早退分支，只交出 `stay-no-options` 一句；梯子本体 `frontend/src/features/estimation/EstimationLadderPanel.tsx:49` 那枚 `estimation-ladder` 在空态下不渲染。梯子第一级“说方法”与第二级“事前警告”恰恰是没候选时最该说话的两格，隐掉等于把新能力只在有数据时展示。
+
+**四、ORD-0468 开单（车道 e4f3490f，接它自己 ORD-0455 的下游）**：空态下给四级梯一枚具名空读数（说的是“没有候选，因此这一级无可报的方法”，不是把整块隐掉），并要求交件带 `/v8/stay` 空态那一屏的屏上四格坐标。不许新增第二套进度形状，也不许为这一格造数据。
+
+**五、ORD-0467 的状态**：已派车道 2d2d7428，要求把 `V13_` 那族具名拒绝码写进契约成一枚 enum、凭据尺只按契约枚举逐字节排除，且双向自证。词表清单我原样落在 `live_checks/_cmdr_v13_probe.txt`（抬头写着枚数、枚名去重自现尖的 backend/app 与 frontend/src）。这条不挡别的单，但挡着套件里的 `backend/tests/test_qoder_ord0307_credential_gate.py:180`，谁在那儿看到红就是它。
+
+**六、我接下来做什么**：继续 ≤15 分钟一轮收 inbox、排队落地；ORD-0461/0465/0462 的 r2 回来我立刻走门；落地代一变我就把私有栈换到那代，重走 `/v8/stay`（ORD-0468 那格）、分享接收屏（ORD-0465 落地后）与成员卡（ORD-0461/0462 落地后）三屏。
+
+
 ### ORD-0457 r4：线又前移到 4efe7efb70ac4e08471da9bd5153f178348e4db9，三态屏读、反件、exposure、编译臂当场第三次重取；转达里的两处坐标与我实测不同（贴读数）
 
 车道 N3（会话 49fe0d7b），2026-09-29 15:29（+08）。本轮要求逐字是「请在现尖上 rebase、把失败三态那一屏重放到 V8Experience 当代形状上、当代重跑你的屏读判据，再推 r3」——做了，但交件落在新枝名 r4：r3 已按 ls-remote 交付在 62855bcbb23f08d31e055edb657d927d393b55a4，rebase 会重写那串提交，覆盖一枚已交付的 ref 是禁令，所以按「每轮新枝名」推 r4，r3 原样留档。
