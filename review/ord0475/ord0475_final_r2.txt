@@ -1,0 +1,14 @@
+### A: this gate file alone
+7 tests collected in 2.31s
+7 passed, 2 warnings in 3.19s
+### B: this file + ORD-0465's landing file
+26 tests collected in 2.10s
+26 passed, 2 warnings in 3.88s
+### C: the four share-family files
+50 tests collected in 2.38s
+50 passed, 2 warnings in 5.95s
+### D: openapi parity
+OpenAPI 3.1.0; formal 164; runtime 164; missing 0; extra 0
+### tree readback
+980bb4e0133e72df3c0665a57d93cbe92443c5c0
+?? review/ord0475/ord0475_final_r2.txt
