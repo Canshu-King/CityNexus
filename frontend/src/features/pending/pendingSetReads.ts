@@ -6,11 +6,11 @@ import type { PendingCandidate, PendingPlaceRow } from "./pendingSet";
  * ORD-0445 -- the two doors the 待规划 screen reads, and nothing else.
  *
  * Both are already on the line and already declared, so this order ships no new server surface:
- *  - `GET /api/v1/journeys/{journey_id}/provider-mesh` -- `backend/app/main.py:1671`, the hand-built
- *    dict at `:1702` whose `real_place_candidates` list is the captured-for-this-trip half of the set.
- *  - `GET /api/v1/places?city_code=...` -- `backend/app/main.py:4939`, read only to put a category
+ *  - `GET /api/v1/journeys/{journey_id}/provider-mesh` -- `backend/app/main.py:1681`, the hand-built
+ *    dict at `:1712` whose `real_place_candidates` list is the captured-for-this-trip half of the set.
+ *  - `GET /api/v1/places?city_code=...` -- `backend/app/main.py:5362`, read only to put a category
  *    word on a plan stop that lost its day.  It answers without the server-owned and structural rows
- *    by default (`:4945`-`:4949`), which is exactly why a missing category is named on screen instead
+ *    by default (`:5373`-`:5374`), which is exactly why a missing category is named on screen instead
  *    of guessed.
  *
  * An answer that is not the list this screen needs is returned as `no_list`, not as an empty list.
@@ -71,7 +71,7 @@ export async function readCapturedPlaces(journeyId: string): Promise<Door<Pendin
 export async function readCityPlaces(cityCode: string): Promise<Door<PendingPlaceRow>> {
   const json = await getAnswer(`/places?city_code=${encodeURIComponent(cityCode)}`);
   /* This door's own contract is a bare array (`response_model=list[PlaceSchema]`,
-     `backend/app/main.py:4939`), so anything else -- an envelope, a page object, no bytes at all --
+     `backend/app/main.py:5362`), so anything else -- an envelope, a page object, no bytes at all --
      is `no_list` rather than an empty catalogue. */
   if (!Array.isArray(json)) return { kind: "no_list", keys: topLevelKeys(json) };
   const rows = json
