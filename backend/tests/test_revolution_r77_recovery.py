@@ -18,7 +18,7 @@ from app.fact_acquisition import (
     _acquire_overpass_payload,
     acquire_place_facts,
 )
-from app.services import _mobility_catalogue_place_ids
+from app.services import _catalogue_templates, _mobility_catalogue_place_ids
 
 
 class _Response:
@@ -165,6 +165,45 @@ def test_strict_catalogue_mobility_excludes_unresolved_opening_rows():
     }
 
     assert _mobility_catalogue_place_ids(places, [], []) == ("known-visit",)
+
+
+def test_strict_catalogue_candidates_try_provider_cost_before_unknown_cost():
+    def place(place_id: str, cost: int | None):
+        metadata = {"duration_min": 60}
+        if cost is None:
+            metadata["cost_evidence"] = {"status": "UNKNOWN", "amount_minor": None}
+        else:
+            metadata["cost_evidence"] = {
+                "status": "KNOWN",
+                "amount_minor": cost,
+                "currency": "CNY",
+            }
+        return SimpleNamespace(
+            id=place_id,
+            name=place_id,
+            category="park",
+            provider_key="overpass",
+            opening_hours_json=json.dumps({"open": "09:00", "close": "17:00"}),
+            metadata_json=json.dumps(metadata),
+        )
+
+    places = {
+        item.id: item
+        for item in (
+            place("unknown-cost", None),
+            place("known-cost-a", 3000),
+            place("known-cost-b", 9000),
+        )
+    }
+
+    templates = _catalogue_templates(places, lambda _origin, _destination: 5, variants=1)
+
+    assert templates
+    assert [item[0] for item in templates[0]] == [
+        "known-cost-a",
+        "known-cost-b",
+        "unknown-cost",
+    ]
 
 
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
