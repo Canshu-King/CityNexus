@@ -1,0 +1,144 @@
+{
+ "tip_rev": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+ "modification": "conditional attribute spread replaced by a plain attribute; no other byte in the export changed",
+ "export": {
+  "spread_occurrences_found": 1,
+  "file_bytes_before": 13107,
+  "file_bytes_after": 13086,
+  "edited_file_sha1_over_bytes": "34ee1d0fedb4b1f7a90c9725bd4168db129c6059",
+  "tsx_files_in_export": 102
+ },
+ "by_generation": {
+  "r7b": {
+   "status": "ok",
+   "cells_total": 12,
+   "recovery_cells": [
+    {
+     "line": 299,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "cell_id": "80e97d379768151d",
+     "sink_shape": "text-in:details testid=details:recovery-technical"
+    }
+   ]
+  },
+  "r7b1": {
+   "status": "ok",
+   "cells_total": 12,
+   "recovery_cells": [
+    {
+     "line": 299,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "cell_id": "80e97d379768151d",
+     "sink_shape": "text-in:details testid=details:recovery-technical"
+    }
+   ]
+  },
+  "r7b4": {
+   "status": "ok",
+   "cells_total": 12,
+   "recovery_cells": [
+    {
+     "line": 299,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "cell_id": "80e97d379768151d",
+     "sink_shape": "text-in:details testid=details:recovery-technical"
+    }
+   ]
+  }
+ },
+ "recovery_reason_sink_present": {
+  "r7b": false,
+  "r7b1": false,
+  "r7b4": false
+ },
+ "cell_keys_after_the_edit": {
+  "r7b": [
+   "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+   "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "r7b1": [
+   "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+   "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "r7b4": [
+   "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+   "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ]
+ },
+ "lost_key_present_after_the_edit": {
+  "r7b": true,
+  "r7b1": true,
+  "r7b4": true
+ },
+ "all_three_agree_on_the_same_key_set": true,
+ "expected_sink_shape": "text-in:code testid=code:recovery-reason",
+ "sink_shape_preserved": {
+  "r7b": false,
+  "r7b1": false,
+  "r7b4": false
+ },
+ "recovery_cell_id_by_generation": {
+  "r7b": [
+   "80e97d379768151d"
+  ],
+  "r7b1": [
+   "80e97d379768151d"
+  ],
+  "r7b4": [
+   "80e97d379768151d"
+  ]
+ },
+ "identity_stable_across_generations_same_bytes": true,
+ "cell_id_pristine_r7b": [
+  "7feb812a1e486a9d"
+ ],
+ "identity_changed_with_the_bytes": true,
+ "control_pristine_export": {
+  "cells_by_generation": {
+   "r7b": 12,
+   "r7b1": 11,
+   "r7b4": 11,
+   "r7b4_with_contract": 11
+  },
+  "lost_from_newer": [
+   [
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   [
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  ],
+  "source": "generation_reconciliation_r1.json, same tip rev, spread present"
+ },
+ "reading": "INCONCLUSIVE_FIXTURE: the key `RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM` reappears for all three generations, but the sink that line now belongs to is `text-in:details testid=details:recovery-technical`, not the shipped `text-in:code testid=code:recovery-reason`. Deleting the spread moved the element the parser is inside, so this is not a single-variable test and it does not prove the spread is the cause. What stands is the pin: on pristine bytes, identical export, r7b reads the cell and r7b1/r7b4 do not."
+}
