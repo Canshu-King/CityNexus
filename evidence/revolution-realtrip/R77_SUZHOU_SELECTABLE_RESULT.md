@@ -4,7 +4,8 @@ This receipt closes the real-trip selectable milestone on an unseeded disposable
 Suzhou journey. It is not a mock or an explicit-place-only diagnostic.
 
 - Starting commit: `4ee14229f80691cf8e5ea913375c0caf83ac02ee`
-- Final experimental commit: `8c05fb4373efc866fbcc30e49e6177be4e07721a`
+- Executed source / final code commit: `8c05fb4373efc866fbcc30e49e6177be4e07721a`
+- Final experimental / receipt commit: `fef8ff167cf62e0c74c1bb8bde01ce66c3d0e4ef`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Destination: `苏州市` / `CN-SUZHOU`
