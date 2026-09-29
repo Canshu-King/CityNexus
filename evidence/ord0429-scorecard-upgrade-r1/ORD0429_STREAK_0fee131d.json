@@ -1,0 +1,1481 @@
+{
+  "generated": "2026-09-29T08:25:49+0800",
+  "lane": "HERMES_REVIVAL / 9baacb24",
+  "policy": "GATE_ACCEPTANCE_STREAK (arbiter 5773071703 @15:58) + amendment conds 9/10 (arbiter 5773588112 @16:40)",
+  "command": "tools/streak_ruler_v3_ord0429.py --tree line0429 --shape whole-ladder --runs 5 --first-port 8580 --allow-sweep --out D:/moodle/CityNexus-Hermes-Revival/evidence/0212/ORD0429_STREAK_0fee131d.json",
+  "tree": "line0429",
+  "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+  "run_shape": "whole-ladder",
+  "target_node": null,
+  "in_scope_nodes": [
+    "H4",
+    "H5",
+    "H6",
+    "H7",
+    "H8a",
+    "H9",
+    "H10a",
+    "H10b"
+  ],
+  "node_ordering": [
+    "H4",
+    "H5",
+    "H6",
+    "H7",
+    "H8a",
+    "H9",
+    "H10a",
+    "H10b"
+  ],
+  "preconditions_per_run": [
+    "seed via the product's own ensure_schema+seed_demo",
+    "build_active_plan (ACTIVE plan required by H6/H10)",
+    "PUT /travelers/{id}/agent-policy via the product API"
+  ],
+  "interpreters": {
+    "backend": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "backend_version": "3.12.14",
+    "ladder": "D:\\moodle\\CityNexus-Hermes-Revival\\mcp-server\\.venv\\Scripts\\python.exe"
+  },
+  "instruments": {
+    "seeder": "seed_lane_db.py",
+    "driver": "streak_ruler_v3_ord0429.py",
+    "ladder": "h4_h10_ladder.py",
+    "ladder_sha256_12": "e2a8d917d1c5",
+    "driver_sha256_12": "857aadd0cdec",
+    "seeder_sha256_12": "7ec8fd779d59"
+  },
+  "cond1_same_provenance_across_runs": true,
+  "cond1_provenance_first_run": {
+    "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+    "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+    "branch": "HEAD",
+    "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+    "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+    "dirty_entries_under_backend_app_or_db": 0,
+    "dirty_entries": [],
+    "git_warnings": [],
+    "pinned_files": [
+      {
+        "path": "app/main.py",
+        "exists": true,
+        "bytes": 507950,
+        "sha256_12": "991163907c05",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/agent/gateway.py",
+        "exists": true,
+        "bytes": 59739,
+        "sha256_12": "ecf02d48f040",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/agent/principal.py",
+        "exists": true,
+        "bytes": 2521,
+        "sha256_12": "08071b7710db",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/agent/runtime.py",
+        "exists": true,
+        "bytes": 27984,
+        "sha256_12": "5562888dd7fe",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/agent/runtime_identity.py",
+        "exists": true,
+        "bytes": 2936,
+        "sha256_12": "c9b92110b782",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/core/config.py",
+        "exists": true,
+        "bytes": 6868,
+        "sha256_12": "1edb8993535c",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/db/session.py",
+        "exists": true,
+        "bytes": 48677,
+        "sha256_12": "bf416ad1363d",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/db/models.py",
+        "exists": true,
+        "bytes": 64590,
+        "sha256_12": "a789a53df76d",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/services.py",
+        "exists": true,
+        "bytes": 71495,
+        "sha256_12": "eac029507b5f",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "app/capabilities.py",
+        "exists": true,
+        "bytes": 44246,
+        "sha256_12": "22d1f2910d2e",
+        "worktree_vs_head": "MATCHES_HEAD"
+      },
+      {
+        "path": "db/schema.sql",
+        "exists": true,
+        "bytes": 46646,
+        "sha256_12": "9c1815e8899e",
+        "worktree_vs_head": "MATCHES_HEAD"
+      }
+    ],
+    "content_pin_sha256_12": "11ed369d67b3"
+  },
+  "cond2_independent_processes": [
+    {
+      "run": 1,
+      "seed_pid": 16648,
+      "prep_pid": 32620,
+      "backend_pid": 14992,
+      "ladder_pid": 43380
+    },
+    {
+      "run": 2,
+      "seed_pid": 4592,
+      "prep_pid": 41236,
+      "backend_pid": 38524,
+      "ladder_pid": 25552
+    },
+    {
+      "run": 3,
+      "seed_pid": 40444,
+      "prep_pid": 7904,
+      "backend_pid": 4044,
+      "ladder_pid": 53192
+    },
+    {
+      "run": 4,
+      "seed_pid": 45396,
+      "prep_pid": 24684,
+      "backend_pid": 22792,
+      "ladder_pid": 39836
+    },
+    {
+      "run": 5,
+      "seed_pid": 52908,
+      "prep_pid": 26904,
+      "backend_pid": 40800,
+      "ladder_pid": 29420
+    }
+  ],
+  "cond3_app_resolved_db": [
+    {
+      "run": 1,
+      "app_resolved": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+      "requested": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+      "match": true
+    },
+    {
+      "run": 2,
+      "app_resolved": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+      "requested": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+      "match": true
+    },
+    {
+      "run": 3,
+      "app_resolved": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+      "requested": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+      "match": true
+    },
+    {
+      "run": 4,
+      "app_resolved": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+      "requested": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+      "match": true
+    },
+    {
+      "run": 5,
+      "app_resolved": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+      "requested": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+      "match": true
+    }
+  ],
+  "cond5_all_runs_green": true,
+  "cond6_sleep_sites_in_instruments": [
+    {
+      "file": "streak_ruler_v3_ord0429.py",
+      "line": 380,
+      "call": "time.sleep",
+      "purpose": "backend boot-readiness poll"
+    }
+  ],
+  "cond6_boot_readiness_polls": [
+    {
+      "run": 1,
+      "polls": 2,
+      "seconds": 2.8
+    },
+    {
+      "run": 2,
+      "polls": 2,
+      "seconds": 2.6
+    },
+    {
+      "run": 3,
+      "polls": 2,
+      "seconds": 2.6
+    },
+    {
+      "run": 4,
+      "polls": 2,
+      "seconds": 3.2
+    },
+    {
+      "run": 5,
+      "polls": 2,
+      "seconds": 3.2
+    }
+  ],
+  "cond6_gate_retries": 0,
+  "cond6_expectation_relaxation": "none - out-of-scope nodes are nulled, never forced true (checked per run: out_of_scope_nulled_not_forced)",
+  "cond3_freshness": {
+    "every_run_path_did_not_exist_before_this_run": false,
+    "every_run_inherited_no_preexisting_rows": true,
+    "every_run_path_source_is_app_printed": true,
+    "per_run": [
+      {
+        "run": 1,
+        "did_not_exist_before": false,
+        "cleared": [
+          "_st2_line0429_whole-ladder_ALL_1.db",
+          "_st2_line0429_whole-ladder_ALL_1.db-wal",
+          "_st2_line0429_whole-ladder_ALL_1.db-shm",
+          "_st2_line0429_whole-ladder_ALL_1_app.json"
+        ],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      },
+      {
+        "run": 2,
+        "did_not_exist_before": true,
+        "cleared": [],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      },
+      {
+        "run": 3,
+        "did_not_exist_before": true,
+        "cleared": [],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      },
+      {
+        "run": 4,
+        "did_not_exist_before": true,
+        "cleared": [],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      },
+      {
+        "run": 5,
+        "did_not_exist_before": true,
+        "cleared": [],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      }
+    ],
+    "rule": "any false here => HARNESS_INVALID for closure purposes: a streak over pre-existing databases is an observation, per the arbiter's 18:58 audit"
+  },
+  "closure_allowed": false,
+  "closure_denied_because": [
+    "no reverse-mutation evidence attached (NOT_ATTACHED)"
+  ],
+  "cond3_pre_clean_swept_files": [
+    "_st2_line0429_whole-ladder_ALL_1.db",
+    "_st2_line0429_whole-ladder_ALL_1.db-shm",
+    "_st2_line0429_whole-ladder_ALL_1.db-wal",
+    "_st2_line0429_whole-ladder_ALL_1_app.json",
+    "_st2_line0429_whole-ladder_ALL_1_backend.log",
+    "_st2_line0429_whole-ladder_ALL_1_flow_state.json",
+    "_st2_line0429_whole-ladder_ALL_1_ladder.json"
+  ],
+  "cond3_sweep_authorized_by_flag": true,
+  "cond7_distinct_db_paths": 5,
+  "cond7_no_shared_db_path": true,
+  "cond8_note": "an isolated GREEN here is an observation; closure needs the classification below",
+  "cond9_shape_named": true,
+  "cond10_classification_per_node": {
+    "H4": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H5": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H6": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H7": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H8a": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H9": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H10a": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H10b": {
+      "green_runs": 5,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    }
+  },
+  "reverse_mutation": {
+    "reverse_mutation_required": true,
+    "reverse_mutation_result": "NOT_ATTACHED"
+  },
+  "verdict_ceiling": "STREAK_GREEN",
+  "streak_green_runs": 5,
+  "runs_requested": 5,
+  "runs_completed": 5,
+  "canary_untouched": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "green_db_files_left_by_handle_race": [
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db-shm",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_2.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_2.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_2.db-shm",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_3.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_3.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_3.db-shm",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_4.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_4.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_4.db-shm",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_5.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_5.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_5.db-shm"
+  ],
+  "runs_detail": [
+    {
+      "run_index": 1,
+      "port": 8580,
+      "requested_db_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+      "shape": "whole-ladder",
+      "target": null,
+      "path_did_not_exist_before_this_run": false,
+      "preexisting_files_cleared": [
+        "_st2_line0429_whole-ladder_ALL_1.db",
+        "_st2_line0429_whole-ladder_ALL_1.db-wal",
+        "_st2_line0429_whole-ladder_ALL_1.db-shm",
+        "_st2_line0429_whole-ladder_ALL_1_app.json"
+      ],
+      "seed_exit": 0,
+      "seed_reported_engine_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+      "path_source": "app_printed_receipt_line",
+      "seed_pid": 16648,
+      "initial_row_counts": {
+        "journeys": 1,
+        "plan_versions": 0,
+        "travelers": 1,
+        "replan_proposals": 0,
+        "activities": 0
+      },
+      "inherited_no_preexisting_rows": true,
+      "path_removed_by_this_receipt_before_seeding": true,
+      "provenance": {
+        "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+        "branch": "HEAD",
+        "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+        "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+        "dirty_entries_under_backend_app_or_db": 0,
+        "dirty_entries": [],
+        "git_warnings": [],
+        "pinned_files": [
+          {
+            "path": "app/main.py",
+            "exists": true,
+            "bytes": 507950,
+            "sha256_12": "991163907c05",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/gateway.py",
+            "exists": true,
+            "bytes": 59739,
+            "sha256_12": "ecf02d48f040",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/principal.py",
+            "exists": true,
+            "bytes": 2521,
+            "sha256_12": "08071b7710db",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime.py",
+            "exists": true,
+            "bytes": 27984,
+            "sha256_12": "5562888dd7fe",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime_identity.py",
+            "exists": true,
+            "bytes": 2936,
+            "sha256_12": "c9b92110b782",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/core/config.py",
+            "exists": true,
+            "bytes": 6868,
+            "sha256_12": "1edb8993535c",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/session.py",
+            "exists": true,
+            "bytes": 48677,
+            "sha256_12": "bf416ad1363d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/models.py",
+            "exists": true,
+            "bytes": 64590,
+            "sha256_12": "a789a53df76d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/services.py",
+            "exists": true,
+            "bytes": 71495,
+            "sha256_12": "eac029507b5f",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/capabilities.py",
+            "exists": true,
+            "bytes": 44246,
+            "sha256_12": "22d1f2910d2e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "db/schema.sql",
+            "exists": true,
+            "bytes": 46646,
+            "sha256_12": "9c1815e8899e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          }
+        ],
+        "content_pin_sha256_12": "11ed369d67b3"
+      },
+      "canary_before": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "backend_pid": 14992,
+      "boot_readiness_polls": 2,
+      "boot_readiness_seconds": 2.8,
+      "boot_readiness": "READY",
+      "app_resolved": {
+        "app_resolved_database_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+        "intended": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_1.db",
+        "match": true,
+        "cwd": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "pid": 7248,
+        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+      },
+      "build_active_plan_exit": 0,
+      "build_active_plan_pid": 32620,
+      "build_active_plan_flow_file": "_st2_line0429_whole-ladder_ALL_1_flow_state.json",
+      "build_active_plan_flow_sha256_12": "e978fbfbe5bb",
+      "build_active_plan_output_tail": "\": \"2026-10-10T10:30:00+08:00\"}, {\"id\": \"61e3096d-89bc-5702-ab7d-21ad8289c1ee\", \"title\": \"Central Food Hall\", \"start_at\": \"2026-10-10T12:00:00+08:00\"}, {\"id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"title\": \"Tech Art Center\", \"start_at\": \"2026-10-10T13:20:00+08:00\"}, {\"id\": \"74f10240-fc4d-500e-b6ac-e520bcab1036\", \"title\": \"Nexus River Cruise Pier\", \"start_at\": \"2026-10-10T15:30:00+08:00\"}, {\"id\"\n",
+      "isolated_policy_set": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        },
+        "why": "a fresh DB defaults to ADVISORY/auto_accept_replan=false; H6's positive case needs the isolated traveller to opt in through the product API"
+      },
+      "ladder_pid": 43380,
+      "exit_code": 0,
+      "ladder_output_tail": "rning: 'citynexus_mcp.server' found in sys.modules after import of package 'citynexus_mcp', but prior to execution of 'citynexus_mcp.server'; this may result in unpredictable behaviour\nProcessing request of type ListToolsRequest\nProcessing request of type CallToolRequest\nHTTP Request: POST http://127.0.0.1:8580/api/v1/agent/tools/request_replan \"HTTP/1.1 422 Unprocessable Entity\"\n{\n  \"nonce\": \"st2line0429_whole-ladder_ALL1\",\n  \"verdicts\": {\n    \"H4\": true,\n    \"H5\": true,\n    \"H6\": true,\n    \"H7\": true,\n    \"H8a\": true,\n    \"H8b\": null,\n    \"H9\": true,\n    \"H10a\": true,\n    \"H10b\": true\n  }\n}\n",
+      "doc_expected_nonce": "st2line0429_whole-ladder_ALL1",
+      "doc_present_before_run": true,
+      "doc_nonce_matches_run": true,
+      "doc_run_shape": "whole-ladder",
+      "doc_shape_matches_request": true,
+      "doc_target_matches": true,
+      "in_scope_nodes": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8a",
+        "H9",
+        "H10a",
+        "H10b"
+      ],
+      "node_attempts": {
+        "H4": 1,
+        "H5": 1,
+        "H6": 1,
+        "H7": 1,
+        "H8a": 1,
+        "H9": 1,
+        "H10a": 1,
+        "H10b": 1
+      },
+      "gate_verdicts": {
+        "H4": true,
+        "H5": true,
+        "H6": true,
+        "H7": true,
+        "H8a": true,
+        "H9": true,
+        "H10a": true,
+        "H10b": true
+      },
+      "out_of_scope_nulled_not_forced": true,
+      "green": true,
+      "final_row_counts": {
+        "journeys": 1,
+        "plan_versions": 5,
+        "travelers": 1,
+        "replan_proposals": 2,
+        "activities": 30
+      },
+      "canary_after": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "canary_unchanged": true
+    },
+    {
+      "run_index": 2,
+      "port": 8581,
+      "requested_db_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+      "shape": "whole-ladder",
+      "target": null,
+      "path_did_not_exist_before_this_run": true,
+      "preexisting_files_cleared": [],
+      "seed_exit": 0,
+      "seed_reported_engine_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+      "path_source": "app_printed_receipt_line",
+      "seed_pid": 4592,
+      "initial_row_counts": {
+        "journeys": 1,
+        "plan_versions": 0,
+        "travelers": 1,
+        "replan_proposals": 0,
+        "activities": 0
+      },
+      "inherited_no_preexisting_rows": true,
+      "path_removed_by_this_receipt_before_seeding": false,
+      "provenance": {
+        "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+        "branch": "HEAD",
+        "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+        "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+        "dirty_entries_under_backend_app_or_db": 0,
+        "dirty_entries": [],
+        "git_warnings": [],
+        "pinned_files": [
+          {
+            "path": "app/main.py",
+            "exists": true,
+            "bytes": 507950,
+            "sha256_12": "991163907c05",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/gateway.py",
+            "exists": true,
+            "bytes": 59739,
+            "sha256_12": "ecf02d48f040",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/principal.py",
+            "exists": true,
+            "bytes": 2521,
+            "sha256_12": "08071b7710db",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime.py",
+            "exists": true,
+            "bytes": 27984,
+            "sha256_12": "5562888dd7fe",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime_identity.py",
+            "exists": true,
+            "bytes": 2936,
+            "sha256_12": "c9b92110b782",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/core/config.py",
+            "exists": true,
+            "bytes": 6868,
+            "sha256_12": "1edb8993535c",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/session.py",
+            "exists": true,
+            "bytes": 48677,
+            "sha256_12": "bf416ad1363d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/models.py",
+            "exists": true,
+            "bytes": 64590,
+            "sha256_12": "a789a53df76d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/services.py",
+            "exists": true,
+            "bytes": 71495,
+            "sha256_12": "eac029507b5f",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/capabilities.py",
+            "exists": true,
+            "bytes": 44246,
+            "sha256_12": "22d1f2910d2e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "db/schema.sql",
+            "exists": true,
+            "bytes": 46646,
+            "sha256_12": "9c1815e8899e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          }
+        ],
+        "content_pin_sha256_12": "11ed369d67b3"
+      },
+      "canary_before": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "backend_pid": 38524,
+      "boot_readiness_polls": 2,
+      "boot_readiness_seconds": 2.6,
+      "boot_readiness": "READY",
+      "app_resolved": {
+        "app_resolved_database_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+        "intended": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_2.db",
+        "match": true,
+        "cwd": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "pid": 41740,
+        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+      },
+      "build_active_plan_exit": 0,
+      "build_active_plan_pid": 41236,
+      "build_active_plan_flow_file": "_st2_line0429_whole-ladder_ALL_2_flow_state.json",
+      "build_active_plan_flow_sha256_12": "e978fbfbe5bb",
+      "build_active_plan_output_tail": "\": \"2026-10-10T10:30:00+08:00\"}, {\"id\": \"61e3096d-89bc-5702-ab7d-21ad8289c1ee\", \"title\": \"Central Food Hall\", \"start_at\": \"2026-10-10T12:00:00+08:00\"}, {\"id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"title\": \"Tech Art Center\", \"start_at\": \"2026-10-10T13:20:00+08:00\"}, {\"id\": \"74f10240-fc4d-500e-b6ac-e520bcab1036\", \"title\": \"Nexus River Cruise Pier\", \"start_at\": \"2026-10-10T15:30:00+08:00\"}, {\"id\"\n",
+      "isolated_policy_set": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        },
+        "why": "a fresh DB defaults to ADVISORY/auto_accept_replan=false; H6's positive case needs the isolated traveller to opt in through the product API"
+      },
+      "ladder_pid": 25552,
+      "exit_code": 0,
+      "ladder_output_tail": "rning: 'citynexus_mcp.server' found in sys.modules after import of package 'citynexus_mcp', but prior to execution of 'citynexus_mcp.server'; this may result in unpredictable behaviour\nProcessing request of type ListToolsRequest\nProcessing request of type CallToolRequest\nHTTP Request: POST http://127.0.0.1:8581/api/v1/agent/tools/request_replan \"HTTP/1.1 422 Unprocessable Entity\"\n{\n  \"nonce\": \"st2line0429_whole-ladder_ALL2\",\n  \"verdicts\": {\n    \"H4\": true,\n    \"H5\": true,\n    \"H6\": true,\n    \"H7\": true,\n    \"H8a\": true,\n    \"H8b\": null,\n    \"H9\": true,\n    \"H10a\": true,\n    \"H10b\": true\n  }\n}\n",
+      "doc_expected_nonce": "st2line0429_whole-ladder_ALL2",
+      "doc_present_before_run": true,
+      "doc_nonce_matches_run": true,
+      "doc_run_shape": "whole-ladder",
+      "doc_shape_matches_request": true,
+      "doc_target_matches": true,
+      "in_scope_nodes": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8a",
+        "H9",
+        "H10a",
+        "H10b"
+      ],
+      "node_attempts": {
+        "H4": 1,
+        "H5": 1,
+        "H6": 1,
+        "H7": 1,
+        "H8a": 1,
+        "H9": 1,
+        "H10a": 1,
+        "H10b": 1
+      },
+      "gate_verdicts": {
+        "H4": true,
+        "H5": true,
+        "H6": true,
+        "H7": true,
+        "H8a": true,
+        "H9": true,
+        "H10a": true,
+        "H10b": true
+      },
+      "out_of_scope_nulled_not_forced": true,
+      "green": true,
+      "final_row_counts": {
+        "journeys": 1,
+        "plan_versions": 5,
+        "travelers": 1,
+        "replan_proposals": 2,
+        "activities": 30
+      },
+      "canary_after": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "canary_unchanged": true
+    },
+    {
+      "run_index": 3,
+      "port": 8582,
+      "requested_db_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+      "shape": "whole-ladder",
+      "target": null,
+      "path_did_not_exist_before_this_run": true,
+      "preexisting_files_cleared": [],
+      "seed_exit": 0,
+      "seed_reported_engine_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+      "path_source": "app_printed_receipt_line",
+      "seed_pid": 40444,
+      "initial_row_counts": {
+        "journeys": 1,
+        "plan_versions": 0,
+        "travelers": 1,
+        "replan_proposals": 0,
+        "activities": 0
+      },
+      "inherited_no_preexisting_rows": true,
+      "path_removed_by_this_receipt_before_seeding": false,
+      "provenance": {
+        "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+        "branch": "HEAD",
+        "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+        "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+        "dirty_entries_under_backend_app_or_db": 0,
+        "dirty_entries": [],
+        "git_warnings": [],
+        "pinned_files": [
+          {
+            "path": "app/main.py",
+            "exists": true,
+            "bytes": 507950,
+            "sha256_12": "991163907c05",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/gateway.py",
+            "exists": true,
+            "bytes": 59739,
+            "sha256_12": "ecf02d48f040",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/principal.py",
+            "exists": true,
+            "bytes": 2521,
+            "sha256_12": "08071b7710db",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime.py",
+            "exists": true,
+            "bytes": 27984,
+            "sha256_12": "5562888dd7fe",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime_identity.py",
+            "exists": true,
+            "bytes": 2936,
+            "sha256_12": "c9b92110b782",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/core/config.py",
+            "exists": true,
+            "bytes": 6868,
+            "sha256_12": "1edb8993535c",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/session.py",
+            "exists": true,
+            "bytes": 48677,
+            "sha256_12": "bf416ad1363d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/models.py",
+            "exists": true,
+            "bytes": 64590,
+            "sha256_12": "a789a53df76d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/services.py",
+            "exists": true,
+            "bytes": 71495,
+            "sha256_12": "eac029507b5f",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/capabilities.py",
+            "exists": true,
+            "bytes": 44246,
+            "sha256_12": "22d1f2910d2e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "db/schema.sql",
+            "exists": true,
+            "bytes": 46646,
+            "sha256_12": "9c1815e8899e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          }
+        ],
+        "content_pin_sha256_12": "11ed369d67b3"
+      },
+      "canary_before": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "backend_pid": 4044,
+      "boot_readiness_polls": 2,
+      "boot_readiness_seconds": 2.6,
+      "boot_readiness": "READY",
+      "app_resolved": {
+        "app_resolved_database_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+        "intended": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_3.db",
+        "match": true,
+        "cwd": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "pid": 49176,
+        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+      },
+      "build_active_plan_exit": 0,
+      "build_active_plan_pid": 7904,
+      "build_active_plan_flow_file": "_st2_line0429_whole-ladder_ALL_3_flow_state.json",
+      "build_active_plan_flow_sha256_12": "cbaa056cb0f8",
+      "build_active_plan_output_tail": "\": \"2026-10-10T10:30:00+08:00\"}, {\"id\": \"61e3096d-89bc-5702-ab7d-21ad8289c1ee\", \"title\": \"Central Food Hall\", \"start_at\": \"2026-10-10T12:00:00+08:00\"}, {\"id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"title\": \"Tech Art Center\", \"start_at\": \"2026-10-10T13:20:00+08:00\"}, {\"id\": \"74f10240-fc4d-500e-b6ac-e520bcab1036\", \"title\": \"Nexus River Cruise Pier\", \"start_at\": \"2026-10-10T15:30:00+08:00\"}, {\"id\"\n",
+      "isolated_policy_set": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        },
+        "why": "a fresh DB defaults to ADVISORY/auto_accept_replan=false; H6's positive case needs the isolated traveller to opt in through the product API"
+      },
+      "ladder_pid": 53192,
+      "exit_code": 0,
+      "ladder_output_tail": "rning: 'citynexus_mcp.server' found in sys.modules after import of package 'citynexus_mcp', but prior to execution of 'citynexus_mcp.server'; this may result in unpredictable behaviour\nProcessing request of type ListToolsRequest\nProcessing request of type CallToolRequest\nHTTP Request: POST http://127.0.0.1:8582/api/v1/agent/tools/request_replan \"HTTP/1.1 422 Unprocessable Entity\"\n{\n  \"nonce\": \"st2line0429_whole-ladder_ALL3\",\n  \"verdicts\": {\n    \"H4\": true,\n    \"H5\": true,\n    \"H6\": true,\n    \"H7\": true,\n    \"H8a\": true,\n    \"H8b\": null,\n    \"H9\": true,\n    \"H10a\": true,\n    \"H10b\": true\n  }\n}\n",
+      "doc_expected_nonce": "st2line0429_whole-ladder_ALL3",
+      "doc_present_before_run": true,
+      "doc_nonce_matches_run": true,
+      "doc_run_shape": "whole-ladder",
+      "doc_shape_matches_request": true,
+      "doc_target_matches": true,
+      "in_scope_nodes": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8a",
+        "H9",
+        "H10a",
+        "H10b"
+      ],
+      "node_attempts": {
+        "H4": 1,
+        "H5": 1,
+        "H6": 1,
+        "H7": 1,
+        "H8a": 1,
+        "H9": 1,
+        "H10a": 1,
+        "H10b": 1
+      },
+      "gate_verdicts": {
+        "H4": true,
+        "H5": true,
+        "H6": true,
+        "H7": true,
+        "H8a": true,
+        "H9": true,
+        "H10a": true,
+        "H10b": true
+      },
+      "out_of_scope_nulled_not_forced": true,
+      "green": true,
+      "final_row_counts": {
+        "journeys": 1,
+        "plan_versions": 5,
+        "travelers": 1,
+        "replan_proposals": 2,
+        "activities": 30
+      },
+      "canary_after": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "canary_unchanged": true
+    },
+    {
+      "run_index": 4,
+      "port": 8583,
+      "requested_db_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+      "shape": "whole-ladder",
+      "target": null,
+      "path_did_not_exist_before_this_run": true,
+      "preexisting_files_cleared": [],
+      "seed_exit": 0,
+      "seed_reported_engine_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+      "path_source": "app_printed_receipt_line",
+      "seed_pid": 45396,
+      "initial_row_counts": {
+        "journeys": 1,
+        "plan_versions": 0,
+        "travelers": 1,
+        "replan_proposals": 0,
+        "activities": 0
+      },
+      "inherited_no_preexisting_rows": true,
+      "path_removed_by_this_receipt_before_seeding": false,
+      "provenance": {
+        "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+        "branch": "HEAD",
+        "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+        "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+        "dirty_entries_under_backend_app_or_db": 0,
+        "dirty_entries": [],
+        "git_warnings": [],
+        "pinned_files": [
+          {
+            "path": "app/main.py",
+            "exists": true,
+            "bytes": 507950,
+            "sha256_12": "991163907c05",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/gateway.py",
+            "exists": true,
+            "bytes": 59739,
+            "sha256_12": "ecf02d48f040",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/principal.py",
+            "exists": true,
+            "bytes": 2521,
+            "sha256_12": "08071b7710db",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime.py",
+            "exists": true,
+            "bytes": 27984,
+            "sha256_12": "5562888dd7fe",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime_identity.py",
+            "exists": true,
+            "bytes": 2936,
+            "sha256_12": "c9b92110b782",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/core/config.py",
+            "exists": true,
+            "bytes": 6868,
+            "sha256_12": "1edb8993535c",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/session.py",
+            "exists": true,
+            "bytes": 48677,
+            "sha256_12": "bf416ad1363d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/models.py",
+            "exists": true,
+            "bytes": 64590,
+            "sha256_12": "a789a53df76d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/services.py",
+            "exists": true,
+            "bytes": 71495,
+            "sha256_12": "eac029507b5f",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/capabilities.py",
+            "exists": true,
+            "bytes": 44246,
+            "sha256_12": "22d1f2910d2e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "db/schema.sql",
+            "exists": true,
+            "bytes": 46646,
+            "sha256_12": "9c1815e8899e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          }
+        ],
+        "content_pin_sha256_12": "11ed369d67b3"
+      },
+      "canary_before": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "backend_pid": 22792,
+      "boot_readiness_polls": 2,
+      "boot_readiness_seconds": 3.2,
+      "boot_readiness": "READY",
+      "app_resolved": {
+        "app_resolved_database_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+        "intended": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_4.db",
+        "match": true,
+        "cwd": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "pid": 15324,
+        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+      },
+      "build_active_plan_exit": 0,
+      "build_active_plan_pid": 24684,
+      "build_active_plan_flow_file": "_st2_line0429_whole-ladder_ALL_4_flow_state.json",
+      "build_active_plan_flow_sha256_12": "4f54720973dc",
+      "build_active_plan_output_tail": "\": \"2026-10-10T10:30:00+08:00\"}, {\"id\": \"61e3096d-89bc-5702-ab7d-21ad8289c1ee\", \"title\": \"Central Food Hall\", \"start_at\": \"2026-10-10T12:00:00+08:00\"}, {\"id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"title\": \"Tech Art Center\", \"start_at\": \"2026-10-10T13:20:00+08:00\"}, {\"id\": \"74f10240-fc4d-500e-b6ac-e520bcab1036\", \"title\": \"Nexus River Cruise Pier\", \"start_at\": \"2026-10-10T15:30:00+08:00\"}, {\"id\"\n",
+      "isolated_policy_set": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        },
+        "why": "a fresh DB defaults to ADVISORY/auto_accept_replan=false; H6's positive case needs the isolated traveller to opt in through the product API"
+      },
+      "ladder_pid": 39836,
+      "exit_code": 0,
+      "ladder_output_tail": "rning: 'citynexus_mcp.server' found in sys.modules after import of package 'citynexus_mcp', but prior to execution of 'citynexus_mcp.server'; this may result in unpredictable behaviour\nProcessing request of type ListToolsRequest\nProcessing request of type CallToolRequest\nHTTP Request: POST http://127.0.0.1:8583/api/v1/agent/tools/request_replan \"HTTP/1.1 422 Unprocessable Entity\"\n{\n  \"nonce\": \"st2line0429_whole-ladder_ALL4\",\n  \"verdicts\": {\n    \"H4\": true,\n    \"H5\": true,\n    \"H6\": true,\n    \"H7\": true,\n    \"H8a\": true,\n    \"H8b\": null,\n    \"H9\": true,\n    \"H10a\": true,\n    \"H10b\": true\n  }\n}\n",
+      "doc_expected_nonce": "st2line0429_whole-ladder_ALL4",
+      "doc_present_before_run": true,
+      "doc_nonce_matches_run": true,
+      "doc_run_shape": "whole-ladder",
+      "doc_shape_matches_request": true,
+      "doc_target_matches": true,
+      "in_scope_nodes": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8a",
+        "H9",
+        "H10a",
+        "H10b"
+      ],
+      "node_attempts": {
+        "H4": 1,
+        "H5": 1,
+        "H6": 1,
+        "H7": 1,
+        "H8a": 1,
+        "H9": 1,
+        "H10a": 1,
+        "H10b": 1
+      },
+      "gate_verdicts": {
+        "H4": true,
+        "H5": true,
+        "H6": true,
+        "H7": true,
+        "H8a": true,
+        "H9": true,
+        "H10a": true,
+        "H10b": true
+      },
+      "out_of_scope_nulled_not_forced": true,
+      "green": true,
+      "final_row_counts": {
+        "journeys": 1,
+        "plan_versions": 5,
+        "travelers": 1,
+        "replan_proposals": 2,
+        "activities": 30
+      },
+      "canary_after": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "canary_unchanged": true
+    },
+    {
+      "run_index": 5,
+      "port": 8584,
+      "requested_db_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+      "shape": "whole-ladder",
+      "target": null,
+      "path_did_not_exist_before_this_run": true,
+      "preexisting_files_cleared": [],
+      "seed_exit": 0,
+      "seed_reported_engine_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+      "path_source": "app_printed_receipt_line",
+      "seed_pid": 52908,
+      "initial_row_counts": {
+        "journeys": 1,
+        "plan_versions": 0,
+        "travelers": 1,
+        "replan_proposals": 0,
+        "activities": 0
+      },
+      "inherited_no_preexisting_rows": true,
+      "path_removed_by_this_receipt_before_seeding": false,
+      "provenance": {
+        "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "repo_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+        "branch": "HEAD",
+        "head_commit": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+        "head_subject": "Tue Sep 29 07:23:02 2026 +0800 ORD-0406 readouts r2: per-cell evidence, the compile arm on a hardlinked export, and the drawer last-row reading I am only reporting",
+        "dirty_entries_under_backend_app_or_db": 0,
+        "dirty_entries": [],
+        "git_warnings": [],
+        "pinned_files": [
+          {
+            "path": "app/main.py",
+            "exists": true,
+            "bytes": 507950,
+            "sha256_12": "991163907c05",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/gateway.py",
+            "exists": true,
+            "bytes": 59739,
+            "sha256_12": "ecf02d48f040",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/principal.py",
+            "exists": true,
+            "bytes": 2521,
+            "sha256_12": "08071b7710db",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime.py",
+            "exists": true,
+            "bytes": 27984,
+            "sha256_12": "5562888dd7fe",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/agent/runtime_identity.py",
+            "exists": true,
+            "bytes": 2936,
+            "sha256_12": "c9b92110b782",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/core/config.py",
+            "exists": true,
+            "bytes": 6868,
+            "sha256_12": "1edb8993535c",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/session.py",
+            "exists": true,
+            "bytes": 48677,
+            "sha256_12": "bf416ad1363d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/db/models.py",
+            "exists": true,
+            "bytes": 64590,
+            "sha256_12": "a789a53df76d",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/services.py",
+            "exists": true,
+            "bytes": 71495,
+            "sha256_12": "eac029507b5f",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "app/capabilities.py",
+            "exists": true,
+            "bytes": 44246,
+            "sha256_12": "22d1f2910d2e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          },
+          {
+            "path": "db/schema.sql",
+            "exists": true,
+            "bytes": 46646,
+            "sha256_12": "9c1815e8899e",
+            "worktree_vs_head": "MATCHES_HEAD"
+          }
+        ],
+        "content_pin_sha256_12": "11ed369d67b3"
+      },
+      "canary_before": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "backend_pid": 40800,
+      "boot_readiness_polls": 2,
+      "boot_readiness_seconds": 3.2,
+      "boot_readiness": "READY",
+      "app_resolved": {
+        "app_resolved_database_url": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+        "intended": "sqlite:///D:/moodle/CityNexus-Hermes-Revival/evidence/0212/_st2_line0429_whole-ladder_ALL_5.db",
+        "match": true,
+        "cwd": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+        "pid": 28416,
+        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+      },
+      "build_active_plan_exit": 0,
+      "build_active_plan_pid": 26904,
+      "build_active_plan_flow_file": "_st2_line0429_whole-ladder_ALL_5_flow_state.json",
+      "build_active_plan_flow_sha256_12": "e978fbfbe5bb",
+      "build_active_plan_output_tail": "\": \"2026-10-10T10:30:00+08:00\"}, {\"id\": \"61e3096d-89bc-5702-ab7d-21ad8289c1ee\", \"title\": \"Central Food Hall\", \"start_at\": \"2026-10-10T12:00:00+08:00\"}, {\"id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"title\": \"Tech Art Center\", \"start_at\": \"2026-10-10T13:20:00+08:00\"}, {\"id\": \"74f10240-fc4d-500e-b6ac-e520bcab1036\", \"title\": \"Nexus River Cruise Pier\", \"start_at\": \"2026-10-10T15:30:00+08:00\"}, {\"id\"\n",
+      "isolated_policy_set": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        },
+        "why": "a fresh DB defaults to ADVISORY/auto_accept_replan=false; H6's positive case needs the isolated traveller to opt in through the product API"
+      },
+      "ladder_pid": 29420,
+      "exit_code": 0,
+      "ladder_output_tail": "rning: 'citynexus_mcp.server' found in sys.modules after import of package 'citynexus_mcp', but prior to execution of 'citynexus_mcp.server'; this may result in unpredictable behaviour\nProcessing request of type ListToolsRequest\nProcessing request of type CallToolRequest\nHTTP Request: POST http://127.0.0.1:8584/api/v1/agent/tools/request_replan \"HTTP/1.1 422 Unprocessable Entity\"\n{\n  \"nonce\": \"st2line0429_whole-ladder_ALL5\",\n  \"verdicts\": {\n    \"H4\": true,\n    \"H5\": true,\n    \"H6\": true,\n    \"H7\": true,\n    \"H8a\": true,\n    \"H8b\": null,\n    \"H9\": true,\n    \"H10a\": true,\n    \"H10b\": true\n  }\n}\n",
+      "doc_expected_nonce": "st2line0429_whole-ladder_ALL5",
+      "doc_present_before_run": true,
+      "doc_nonce_matches_run": true,
+      "doc_run_shape": "whole-ladder",
+      "doc_shape_matches_request": true,
+      "doc_target_matches": true,
+      "in_scope_nodes": [
+        "H4",
+        "H5",
+        "H6",
+        "H7",
+        "H8a",
+        "H9",
+        "H10a",
+        "H10b"
+      ],
+      "node_attempts": {
+        "H4": 1,
+        "H5": 1,
+        "H6": 1,
+        "H7": 1,
+        "H8a": 1,
+        "H9": 1,
+        "H10a": 1,
+        "H10b": 1
+      },
+      "gate_verdicts": {
+        "H4": true,
+        "H5": true,
+        "H6": true,
+        "H7": true,
+        "H8a": true,
+        "H9": true,
+        "H10a": true,
+        "H10b": true
+      },
+      "out_of_scope_nulled_not_forced": true,
+      "green": true,
+      "final_row_counts": {
+        "journeys": 1,
+        "plan_versions": 5,
+        "travelers": 1,
+        "replan_proposals": 2,
+        "activities": 30
+      },
+      "canary_after": {
+        "tree_citynexus_db": null,
+        "user_live_db": {
+          "path": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32",
+          "sha256_12": "1b484bc49f60"
+        }
+      },
+      "canary_unchanged": true
+    }
+  ]
+}
