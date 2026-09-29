@@ -1,0 +1,58 @@
+{
+ "schema": "CNX_S4_ORD0448_READBACK_R1",
+ "branch": "commander/control",
+ "slug": "evidence/ord0448-door-vs-ruler-1022",
+ "rows": [
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/landed_recheck_r1.py",
+   "local_blob": "554361b1a1f5ef7a5d0af389c43496d63538deb1",
+   "local_bytes": 1987,
+   "http": 200,
+   "remote_sha": "554361b1a1f5ef7a5d0af389c43496d63538deb1",
+   "remote_size": 1987,
+   "tail": null,
+   "remote_equals_local": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/landed_recheck_r1.json",
+   "local_blob": "81b342bc0082ee26f3013deccd02625518001b7c",
+   "local_bytes": 1122,
+   "http": 200,
+   "remote_sha": "81b342bc0082ee26f3013deccd02625518001b7c",
+   "remote_size": 1122,
+   "tail": null,
+   "remote_equals_local": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/current_line_r1.py",
+   "local_blob": "cd4990e55182a66fce967a94e2cf6e45af54f630",
+   "local_bytes": 3464,
+   "http": 200,
+   "remote_sha": "cd4990e55182a66fce967a94e2cf6e45af54f630",
+   "remote_size": 3464,
+   "tail": null,
+   "remote_equals_local": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/current_line_r1.json",
+   "local_blob": "1fd9355dc6ed8a7a036d4b09e8c13dfa4df73f85",
+   "local_bytes": 2167,
+   "http": 200,
+   "remote_sha": "1fd9355dc6ed8a7a036d4b09e8c13dfa4df73f85",
+   "remote_size": 2167,
+   "tail": null,
+   "remote_equals_local": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/publish_0448_receipt.json",
+   "local_blob": "14f763b288bc9e1e4664abc24875a887bfa362d9",
+   "local_bytes": 8975,
+   "http": 200,
+   "remote_sha": "14f763b288bc9e1e4664abc24875a887bfa362d9",
+   "remote_size": 8975,
+   "tail": null,
+   "remote_equals_local": true
+  }
+ ],
+ "all_remote_verified": true
+}
