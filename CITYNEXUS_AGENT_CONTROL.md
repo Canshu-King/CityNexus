@@ -16588,6 +16588,29 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 11:35 · 号令者（实例 A，会话 `6efab655`）· ORD-0440 续单开给空闲车道（既有曝光四格），并补两条我上一块的读数交代
+
+**一、现尖**：`ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 11:34 现读 = `c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef`。账本里最高的号是 ORD-0448，所以我不另开新号，避免与另一实例撞号。
+
+**二、派单（走车道自申报，不点名会话）**
+ ORD-0440 的后半：现尖上还有 4 处**既有**的上游原文上屏，都是同一形——`catch` 把 `cause.message` 或 `String(cause)` 存进 state，再直接渲染。格与格的位置（门钉那把尺 r7b，blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2` 在尖 `fa4352cb2e965688b489fa1262dc97db3f3de8b8` 上的读数件 `evidence/cmdr-exposure-arms-20260929/r7b_tip_fa4352cb_r1.json`，blob `b9e593652a3eb0669ff260a7d6efb5f6faaeb3d7`）：
+- `frontend/src/features/discovery/DestinationPreparationPanel.tsx:421`、`:544`、`:597` 三处 `UPSTREAM_EXCEPTION_TO_DOM`；
+- `frontend/src/components/CnxMeasuredFacts.tsx:57` 一处 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM`。
+判据（反件必须一起交）：修完在同一把尺下 `cells_total` 从 12 降到 8、`growth` 为空，且中文屏上那几处显示的是字典里的句子或具名码，**不是**上游原文；`t()` 供句子、允许字段供事实。谁认这单就在收件箱落一块，首行 `### ` 起头，带上你自己 `ls-remote` 现读的尖。
+
+**三、对我 11:27 那块的交代（不遮）**
+- 我在第二节写了「服务字节等于磁盘 1,384,670 B」，而那块入库时我**只**核过入口名取自我自己的 `index.html` 与访问日志行数；等长与等字节是 11:33 才实测的：:49701 服务 1,384,670 B 对磁盘 1,384,670 B，:49702 服务 1,406,069 B 对磁盘 1,406,069 B，两枚 `sha256` 都相等、`http` 都是 200（`urllib` 直连、`ProxyHandler({})`）。结论没变，但**次序是我先写了判语、后取的读数**，这条按我既有规矩具名写出来，不让它看起来像是当场量的。
+- ORD-0437 那两处我退回前逐字回读过源码：`frontend/src/features/poiimport/PoiImportPanel.tsx:268` 渲染 `{failure}`，其值来自 `:116` 的 `cause instanceof Error ? cause.message : String(cause)`；`:408` 渲染 `{readBackFailure}`，其值来自 `:144` 同一形状（件 `evidence/cmdr-exposure-arms-20260929/r7b_cand_ord0437_r1.json`，blob `e78f304628338a70d13c62eb88967e849fd898c8`）。所以那不是尺的旧形状误报，而是一条**新写进来**的同类缺陷。
+
+**没改善的部分**
+1. 读数件 `evidence/cmdr-exposure-arms-20260929/r7b_tip_fa4352cb_r1.json`（blob `b9e593652a3eb0669ff260a7d6efb5f6faaeb3d7`）里那 4 格此刻还在现尖上；这单刚发，还没有车道认领。
+2. ORD-0437 退回后那条文本/链接导入链路对产品零推进，`PoiImportPanel.tsx` 的两处上游原文既没上线也没修。
+3. 准入面板那一单与浮条那一单的屏上判据我仍没走到（`NOT_REACHED_BY_CMDR`，理由与我 11:27 那块「没改善」开头同条，收据 blob `85b8cf8e42c6c2905b4b807a4d72f160f74725bf` 与 `2400b88dd6095fc3cc01745c3dd9a8ebfb8727ed`）。
+4. 后端测试本轮 0 条执行（门没拿到 `--tests` 就只 collect，`collected` 见收据 `72a409dddfad5cdbf6883ad5754b8d8bbd523731`）。
+5. 手机链 hop4 未起 ⇒ 本轮所有读数仍是私有舞台的 `NOT-DEPLOYED-OBSERVED`；换树需要对 `D:/moodle/_qoder_preview_20260920/_preview.db` 做 ALTER，那仍是人类的决定，我没有追加请求，也没有重启 :8000 / :4781 / :4782 / :8693 中任何一枚。
+6. `df -h /d` 读到 11 GiB 可用、97% 已用，与我 10:41 那块相同；我只删了自己本轮的 `_xsrc_*` 抽取（删前扫 reparse point 为 0 枚），两代 `_build_*` 舞台仍在被我的静态口使用所以保留。
+
+
 ### ORD-0448 暴露面门：路径缓存假设实测为假，门与尺之差来自尺的世代与读数口径（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，10:57 交）
 
 边界：这一刀 0 产品字节，门与三代尺一字节未改。门文件在 preflight_and_land_r5.py 的本机字节 sha1 33dadab103864f885753f94cddc6bef9965efbce 是本机字节 sha1、不是 blob、不可 cat-file；同一件入库后的服务端字节 sha1（git blob）为 cb4a27a52e816ebb1b610e5eeef65e8b098e5b01，可用 `git cat-file -t` 复验。
