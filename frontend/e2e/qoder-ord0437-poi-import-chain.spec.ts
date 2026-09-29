@@ -414,12 +414,17 @@ test("error-state — the same region carries the failure and keeps 重试", asy
   await page.screenshot({ path: evidencePath("ord0437", "error_arm.png") });
   await page.unroute("**/poi-import/parse");
 
+  /* Arm (b) copies the door's own envelope: the backend test reads
+     `response.json()["error"]["reason_code"]`, so the refusal lives at the top level, not under
+     `detail`. My first version of this stub nested it under `detail`, which is why the panel answered
+     with the unnamed sentence -- the reading caught the stub, not the product, and I am keeping both
+     readings instead of quietly fixing the one that flattered me. */
   await page.route("**/poi-import/parse", (route) =>
     route.fulfill({
       status: 409,
       contentType: "application/json",
       body: JSON.stringify({
-        detail: { error: { reason_code: "NO_ACTIVE_PLAN" }, message: "UPSTREAM PROSE THAT MUST NOT APPEAR" },
+        error: { reason_code: "NO_ACTIVE_PLAN", message: "UPSTREAM PROSE THAT MUST NOT APPEAR" },
       }),
     }),
   );
@@ -449,6 +454,8 @@ test("error-state — the same region carries the failure and keeps 重试", asy
     .toContain("409");
   expect(refusalWhy, "the sentence comes from the dictionary, not from the answer")
     .not.toContain("UPSTREAM");
+  expect(refusalWhy, "a named refusal has to be answered by its own condition sentence")
+    .toContain("chosen as the plan");
   expect(refusalCard, "no fragment of the answer's prose may reach the card")
     .not.toContain("PROSE THAT MUST NOT APPEAR");
   expect(refusalCard, "nor does the machine token get painted")
