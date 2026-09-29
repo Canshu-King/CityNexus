@@ -52,8 +52,10 @@ const zh: Record<string, string> = {
   "abort.pickOne": "至少勾一项才能这样丢，或者选下面的「暂不说明」。",
   "abort.skip": "暂不说明，直接丢进回收站",
   "abort.busy": "正在丢进回收站…",
-  "abort.doneDeclared": "这趟已丢进回收站。记下的原因是：{codes}。",
-  "abort.doneSkipped": "这趟已丢进回收站。你没有说明原因，我们也不会替你编一个。",
+  "abort.doneDeclared": "这趟已经在回收站里。服务器记下的原因是：{codes}。",
+  "abort.doneSkipped": "这趟已经在回收站里。当时你选了不说明原因，我们也不会替你编一个。",
+  "abort.doneNotAsked": "这趟已经在回收站里。这台服务器没有收到过这个问题，所以也没有原因可记。",
+  "abort.doneNoState": "这趟已经在回收站里，但那一条记录没有带原因状态。",
   "abort.findAgain": "在回收站里可以找回。",
   "abort.goTrash": "去回收站",
   "abort.refuseWithoutCodes": "服务器说：选了「愿意说明」却没勾任何一项，所以这一次没有丢。",
@@ -84,8 +86,12 @@ const en: Record<string, string> = {
   "abort.pickOne": "Tick at least one reason, or use “skip” below.",
   "abort.skip": "Move it without saying why",
   "abort.busy": "Moving it to the recycle bin…",
-  "abort.doneDeclared": "This trip is in the recycle bin. Recorded reasons: {codes}.",
-  "abort.doneSkipped": "This trip is in the recycle bin. You gave no reason, and we will not invent one.",
+  "abort.doneDeclared": "This trip is in the recycle bin. The server holds these reasons: {codes}.",
+  "abort.doneSkipped":
+    "This trip is in the recycle bin. You chose not to say why, and we will not invent a reason.",
+  "abort.doneNotAsked":
+    "This trip is in the recycle bin. This server was never asked for a reason, so it holds none.",
+  "abort.doneNoState": "This trip is in the recycle bin, but that record carries no reason state.",
   "abort.findAgain": "You can bring it back from the recycle bin.",
   "abort.goTrash": "Open the recycle bin",
   "abort.refuseWithoutCodes":
