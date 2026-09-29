@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 22:40 · 今晚这班收工读数：权威尖 83e676aa 上今天进线十九笔、开单 ORD-0461~0475、套件二十一枚红全部具名；两条阻断单在车道手上未回
+
+**一、收工时的现场**
+- 权威尖 `83e676aab7376a893e03d22d8c2b3ea4d0ca85bf`（22:35 现读，自 21:26 起未再动）。今天由我推动的快进累计十九笔，全部 ff-only、无手合。
+- 套件最近一次真执行（对象同一枚尖 `83e676aab7376a893e03d22d8c2b3ea4d0ca85bf`，独立导出、无并发）：21 failed, 1466 passed, 15 skipped, 1 xfailed。二十一枚红全部有归属：十枚 ORD-0471、一枚 ORD-0475、一枚 ORD-0467、其余九枚落在具名基线族与两枚已具名的状态敏感臂上（`backend/tests/test_qoder_ord0466_version_share.py:148`、`backend/tests/test_qoder_ord0307_credential_gate.py:180` 之外就是 `backend/tests/test_qoder_anywhere_gates.py:1` 那一族）。来路不明的红：零枚。
+- 账本镜像最后一次读回 21:55，STATE 为 BYTE_LEVEL_CONFIRMED。我起的私有栈服务全部停干净（不留端口给车道撞），派生导出只留一份，其余已删。
+
+**二、今晚新落地、且我已亲测的能力（大白话）**
+- 复制链接打开的那一屏（ORD-0465）：陌生人从 URL 直接进来能看到行程标题、时间窗、第几版方案、当天站名与时间，链接无效时给的是具名拒绝而不是空白页。
+- 分享可以只分享某一份方案（ORD-0466 甲片）：带版本的授权回体里有 `shared_plan`，不带版本的没有——证明这个字段真的起作用。
+- 过期时刻的授权被拒（ORD-0460 在落地代复现，具名码 `SHARE_GRANT_EXPIRY_IN_PAST`）。
+- 粘一段文字变成地点候选（ORD-0437）：三枚全 RESOLVED，五档计数齐全。
+- 手机上还有两件挡演示的事没修完：点「菜单」抽屉打不开（ORD-0473）、`activity_ids` 被新加的严格校验拒掉导致主执行面十格红（ORD-0471）。
+
+**三、明天接班的三条硬话**
+- ORD-0444（收藏容器）今天四笔快进产品面全为零。谁接都按同一条规矩：只认产品面枚数，纯证据提交记 EVIDENCE_ONLY_LANDING，不写 CLOSED。
+- ORD-0467 只允许"把 `V13_` 那族具名码写进契约、凭据尺按契约枚举逐字节排除"这一条路；加豁免词表、改断言、删判据一律拒。
+- 车道 da46954a 的交付块今晚连续被写盘门拒（同一枚不存在于对象库的 40 位被当坐标引）并被 SKIP（文件名带 `_question`、`_alert` 后缀）。实质我已代记在 `### cmdr 21:40` 那块，别替它改句子，等它自己修引法。
+- 一条通道事实：今晚多次出现"消息送达但那一回合成 `status: failed`、正文为空"，重发有时仍失败。遇到车道没动，先读它的流水再决定重发或改开新车道，别当成它在摸鱼。
+
+
 ### cmdr 21:55 · 交接班读数（现尖 `83e676aab7376a893e03d22d8c2b3ea4d0ca85bf`）：二十一枚红逐笔归因，没有一枚是我不知道原因的 · 今天十六笔快进的台账 · 接班的号与禁令
 
 **一、真执行套件（独立导出 `v_83e676aa`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest -q -rf --tb=line -p no:randomly`，`DEEPSEEK_API_KEY` 已 unset，跑时我没有任何服务同跑）**
