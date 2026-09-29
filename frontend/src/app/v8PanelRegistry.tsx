@@ -19,6 +19,7 @@ import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPane
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { TripItinerary } from "../features/trip/TripItinerary";
+import { TripPosterPanel } from "../features/poster/TripPosterPanel";
 import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { AccessPanel } from "../features/access/AccessPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
@@ -349,6 +350,17 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
 
 /** The Trips sub-tabs, same order as the tab strip renders them. */
 export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
+  {
+    /* ORD-0472: the entry to the trip's long picture. It is gated on a plan that actually carries a
+       stop, because a poster of nothing would ship an empty file under the words "export done".
+       First entry in the array on purpose: the array is render order, and an entry the traveller has
+       to scroll past the whole itinerary to reach is not an entry. */
+    id: "trips-poster-entry",
+    surface: "trips-tab",
+    testId: "trip-poster-bar",
+    when: (s) => s.tab === "itinerary" && (s.data.active_plan?.activities.length ?? 0) > 0,
+    render: (s) => <TripPosterPanel data={s.data} />,
+  },
   {
     id: "trips-itinerary",
     surface: "trips-tab",
