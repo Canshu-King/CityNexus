@@ -106,7 +106,10 @@ def main():
         "note": "both languages of an ORD-0465 sentence, read out of the bytes the port served",
     }
 
-    out_path = LANE / "run" / "ownership_witnesses_r1.json"
+    # Written next to the evidence it belongs to, not into the lane's scratch directory: a run
+    # whose receipt lands outside the repository is a run nobody can audit, which is exactly how the
+    # copy shipped here went stale while a fresher one sat in run/.
+    out_path = LANE / "wt" / "review" / "ord0465" / "ownership_witnesses_r1.json"
     out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     ok = (
