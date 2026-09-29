@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 20:42 · ORD-0465 分享接收屏我亲测通过（含一格缺陷 ORD-0474）· 一批派单在窗口里失败了已全部重发 · ORD-0465 与 ORD-0437 r12 之后现尖为 14e005ef1bbf
+
+**一、落地**
+- ORD-0465 分享接收屏落 `14e005ef1bbf6eb32badbab7986264888a66f73c`。这一笔是厚产品码：`frontend/src/features/shared/SharedJourneyPanel.tsx:1`、`frontend/src/features/shared/sharedJourneyDoors.ts:1`、`frontend/src/features/shared/sharedJourney.css:1`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/app/V8Experience.tsx`、`backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`，另带一枚五百余行的服务端测试。车道在派单里被我叫停过"别把手势改成能滚就算"，这次交的是屏与门，不是说法。
+- 之前一笔 ORD-0437 r12 落 `ffd84dc480832c29bb4f43b14dc654cd4c02e57a`，落地种类尺读到那一段产品面只有一枚判据件，所以那笔记 EVIDENCE_ONLY_LANDING。
+
+**二、我对 ORD-0465 的亲测（陌生人点开链接的那条路：直接访问 `/v8/shared/<token>`，不是应用内导航）**
+- 有效 token（服务端 http 201 授权回体带 `plan_version_id` 与 token）：屏上交出「从别人分享的链接打开 / One Day in Nexus City / 10月10日周六 09:00 至 19:00 / 第 1 版方案 · 首次生成 / 共 1 天 / 六枚站名带时间」，图上位置那一块也在，正文四百余字、页面错误为零（件 `review/cmdr-verify-20260929/O465_SHARED_LANDING_CMDR_R1.txt:1`）。面（testid）逐枚：`shared-screen`、`shared-title`、`shared-window`、`shared-plan-line`、`shared-day-count`、`shared-day`。
+- 无效 token：屏上不空白、不谎报成功，而是具名拒绝——「这台服务器从来没有过这条链接，所以它背后没有可以打开的行程。」并给「高级详情」与「再读一次」两枚动作。
+- 判语：接收屏本体**通过**（四格齐：屏到了、字在屏上、动作在、重进还在）。
+- 抓到的一格缺陷：details 面里 `shared-refusal-code`、`shared-refused-content_type`、`shared-refused-body_bytes` 三行渲染出来是空字符串——面板承诺陈列原始回读字段却没陈列，正是 X-5 那一族的同一个形。开单 **ORD-0474**（派回车道 da46954a）：把这三行填成真实回读值（状态码、content-type、字节数、正文头部），不许为绿而写死，也不许把这三行删掉糊过去。
+- 原始读数已入库：件 `review/cmdr-verify-20260929/O465_SHARED_LANDING_CMDR_R1.txt`，blob `fbbb9d27ea793ade84f213f02c1540ae0fe98fb5`，所在提交 `eadbc348007b4f2278e1d328b7b225a56e271e9c`。
+
+**三、一条流程事实（我的派单不总是送达）**
+- 我从 19:5x 到 20:1x 发给若干车道的窗口消息，回执读出来是 `status: failed` 且正文为空的回合——即那一轮根本没执行。已重发的单：ORD-0473（抽屉的门，bac10f40）、ORD-0444 收窄（1ba48dbf）、ORD-0471（`extra_forbidden` 让主执行面红十格，9cc37e57）、ORD-0467 rebase（2d2d7428）、ORD-0417 的 hub 那一格（8ac89982）、ORD-0468 与 ORD-0438（e4f3490f）、ORD-0428（1d64acf5）、ORD-0472（新道 e766b154）。
+- 规矩不变：**裁定以账本为准**，窗口消息只是敲门。车道如果发现自己手上没有派单原文，直接读账本里对应那块（本块往上数三块都在说今天这些号）。
+
+**四、待办状态**：ORD-0471（主执行面十格红）与 ORD-0473（手机上「菜单」是死的）是当下最挡演示的两枚，都在车道手上；ORD-0470（导入屏入口）排在 ORD-0473 之后，因为抽屉一开许多面共用同一扇门；ORD-0467、ORD-0464、ORD-0444 产品码、ORD-0461 与 ORD-0462 的 r2 在排队；ORD-0472 是新车道第一单。我继续 ≤15 分钟一轮收 inbox、走门、亲测。
+
+
 ### cmdr 20:09 · 亲测挖出一个手机级导航洞：「菜单」是死的（ORD-0473 阻断单）· hub 的地图没有针（ORD-0417 那一切在 hub 不可测）· ORD-0472 已起车道 · 同代产物字节与上一代相同属正常
 
 **一、对象与归属**
