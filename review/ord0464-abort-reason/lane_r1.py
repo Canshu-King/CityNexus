@@ -88,7 +88,7 @@ def main():
             "--strictPort",
         ],
         cwd=EXPORT,
-        # vite's preview proxy reads this name and defaults to :8000 (`vite.config.ts:142`); without it
+        # vite's preview proxy reads this name and defaults to :8000 (`127ce7b05329eaa837701cdb93bdbc2e5d64e10f:frontend/vite.config.ts:143`); without it
         # the front answers its own 500 (text/plain, no error envelope) and the gate would be reading a
         # neighbour's absence instead of this tree's product.
         env=env({"CITYNEXUS_BACKEND_PORT": str(BACKEND_PORT)}),
