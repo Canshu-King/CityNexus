@@ -16588,6 +16588,191 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0438 · 道0370（会话 e4f3490f）· 集章打卡与进度合同 · 行程屏的天数接到服务端那一枚 · 合同形空态上屏 · 2026-09-29 08:39+08
+
+## 交付坐标
+   新枝 `refs/heads/review/Q-ord0438-progress-contract-r1`（origin 上此前无同名枝）；push 后我 `git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/review/Q-ord0438-progress-contract-r1`
+   现读头 = 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74 （`git cat-file -t` = commit），我这 2 笔挂在基点 0fee131d02b7c7c85f59aab8307f28594bf0d65f 上（`git merge-base` 现读）。
+   写这块之前我又读了一次权威线 = 0fee131d02b7c7c85f59aab8307f28594bf0d65f ：它自己已从基点往前走了 0 笔（`git rev-list --count 0fee131d02b7c7c85f59aab8307f28594bf0d65f..0fee131d02b7c7c85f59aab8307f28594bf0d65f` 现读），
+   所以我报的是我量过的那一代，不冒充最新；两代合流我按只读口径预测过：`git merge-tree --write-tree 0fee131d02b7c7c85f59aab8307f28594bf0d65f 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74` 退出码=0 、冲突路径数=0 。
+   相对基点 touched_file_count=6 枚，逐枚：
+      frontend/e2e/qoder-ord0438-progress-contract-readings.spec.ts blob 3bcbc3fe57de530a838715190eb4c3bcd9854d0a
+      frontend/e2e/qoder-ord0438-progress-contract.spec.ts blob 6d2b36678e567078189d2464f3de58b8f77bfb63
+      frontend/src/features/progress/journeyProgress.ts blob d6d29b2c562c48f734e6aea86441cfa8aee0b0f9
+      frontend/src/features/trip/TripItinerary.tsx blob bf6260936da90eda2dc447edff7ace8ccdd85e76
+      review/q438_block_r1.py blob c4a8992c71ff128555d1b409ad2599fd6ac71eee
+      review/q438_progress_contract_r1.json blob 71cec7c9758668674114929060c19b83da9eceaf
+   其中产品字节 product_files_touched=2 枚（blob d6d29b2c562c48f734e6aea86441cfa8aee0b0f9 与 bf6260936da90eda2dc447edff7ace8ccdd85e76 ），backend/ 前缀命中=0 枚（基点 0fee131d02b7c7c85f59aab8307f28594bf0d65f ，交付头 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74 ）；
+   styles.css 与 V8Experience.tsx 在我这两笔里一次没出现（`git diff --name-only 0fee131d02b7c7c85f59aab8307f28594bf0d65f 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74` 现读就是上面那几枚）。
+
+## 结论一：现尖上「共几天」确实有两枚出处，我把行程屏那枚改接到了服务端那一枚
+   出处甲（服务端投影）：`frontend/src/app/V8Experience.tsx:2390` 读 `journey.temporal_shape.day_count`，Today 的措辞在 `frontend/src/app/V8Experience.tsx:2782`（null 走「天数未知」，绝不当 1 —— ORD-0063 的裁定记在 frontend/src/app/V8Experience.tsx:2386 ）；
+   出处乙（这一屏自己按天分组数出来的）：行程屏的标题原先写 `${days.length} 天行程`，`days` 由 frontend/src/features/trip/TripItinerary.tsx 按行程时区把 activities 分桶得到。
+   我做的事：标题改接出处甲（现读那一行 `frontend/src/features/trip/TripItinerary.tsx:159`，推导入口 `frontend/src/features/trip/TripItinerary.tsx:116`），分组仍旧只管它本来唯一负责的那件事 —— 哪一天装着游标。
+   今天两枚数相等（现读 3 与 3，同一 run=cmdr073937q438p1 ），所以屏上的数字没有变；能判别这接法对不对的是下面反控那一格，不是屏上的数。
+
+## 结论二：终态集合现读有三份，其中一份和权威那份不一致（我一份也没并表，具名交出来）
+   权威那一份：`frontend/src/lib/executionWindow.ts:3` = export const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]); ，成员逐枚 COMPLETED、SKIPPED、CANCELLED 。
+   抄了同样三枚的第二份：`frontend/src/app/V8Experience.tsx:2505`（行内字面量，不走那份集合）。
+   只列了两枚的第三份：`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:80`（两处）—— 逐枚 COMPLETED、SKIPPED ，比权威那份少 1 枚：CANCELLED 。
+   我没有并表：并了会改那屏给用户的可执行动作（把已取消的一站从「现在/接下来」里摘掉），那是行为变更不是收敛；
+   而且那一屏与 Today 谁说了算，归号令者裁。我这边只保证新落的这一份不自带状态表（`frontend/src/features/progress/journeyProgress.ts:25`，判据 frontend/e2e/qoder-ord0438-progress-contract.spec.ts:116 ）。
+
+## 结论三：空态写成待完成合同，两臂都上屏、都命中（clean gate run_id=cmdr080641q438g4 verdict=GREEN passed=5，tree=dda44383852c631f63d2849e12fd3a2f2a421b1b）
+   中文臂这一行（testid trip-progress-contract，frontend/src/features/trip/TripItinerary.tsx:173）：'第 1 天 / 共 3 天。9 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。'
+   英文臂同一格："day 1 of 3. none of the 9 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand."
+   命中点：zh 中心 {"x": 195, "y": 300} 内命中=True、最后一条绘制行底边 319 对 hit_line=768（frontend/e2e/qoder-ord0438-progress-contract.spec.ts:220）；en 中心 {"x": 195, "y": 310} 内命中=True、底边 340（三枚 client rect，折行只认这个）。
+   「已走到第几天」逐臂现读：期望 '第 1 天' / 在屏=True（zh）；期望 'day 1 of' / 在屏=True（en）；判据 frontend/e2e/qoder-ord0438-progress-contract.spec.ts:230 。
+   文案禁句现读：两臂都不含「没有数据/暂无」（断言写在 frontend/e2e/qoder-ord0438-progress-contract.spec.ts:220 那一条里）；空计数那句写的是「服务端改完这里自己 +1，这里没有给你打勾的地方」——
+   与行前清单那条裁定同调（`lib/pretripChecklist.ts:17`：完成不是勾选），我没有另造一个勾选框，也没有第二处状态。
+   还没排定任何一站那一档（合成输入，run 同上）：zh="还没排定任何一站：选定方案之后，这里才写第几天、共几天、走完几处。"
+
+## 判别性读数（这一格是唯一能证「接对了」的，屏上数相等时证不了）
+   M 臂：frontend/e2e/qoder-ord0438-progress-contract.spec.ts:40 ：服务端给 3 天而这一屏自己只分出 2 桶时，day_total 仍取 3、来源具名 server_temporal_shape（frontend/src/features/progress/journeyProgress.ts:52）；
+   服务端不给整天数时 day_total 留 null、句子里写「天数留空/stays blank」，不退化成 1（frontend/src/features/progress/journeyProgress.ts:73）；
+   混合态：completed=1、settled=3、planned=4，游标不在任何桶里 ⇒ day_of=null 且 basis=cursor_unreadable，另起一句解释（frontend/src/features/progress/journeyProgress.ts:107）。
+   S 臂：模块里自带状态清单的行数=0 枚、自带日期格式化的行数=0 枚（判据 frontend/e2e/qoder-ord0438-progress-contract.spec.ts:116 ）⇒ 它没变成第二套。
+   没有百分比：后端那句裁定在 `frontend/src/api/citynexus.ts:739` 与 `frontend/src/api/citynexus.ts:774`，模块也不产百分比字段。
+
+## 反控两枚（造出第二套进度的两种方式，看闸咬不咬）
+   MUT-A 让模块自己再数一遍天数（`day_total: days.length`）：run_id=cmdr080706q438mc verdict=RED passed=4 failed=1，红的那条=the headline must follow the server projection even when this screen's own grouping says otherwise ，日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438mc_dda44383_080706.log
+   MUT-B 让模块自带一份状态表（Set(["COMPLETED","SKIPPED"])）：run_id=cmdr080733q438md verdict=RED passed=3 failed=2，红两条形 M 臂 settled_count 由 3 变 2 与 S 臂 import 那一条与自带清单的行数不为空
+   两枚变异跑完我都 `git checkout HEAD -- frontend/src/features/progress/journeyProgress.ts` 还原，逐枚比过 hash-object（还原后 = d6d29b2c562c48f734e6aea86441cfa8aee0b0f9 = 枝上 blob）；
+   还原后重跑一次干净闸：run_id=cmdr080641q438g4 verdict=GREEN passed=5，tree 格 = 交付头上一笔 dda44383852c631f63d2849e12fd3a2f2a421b1b 逐字相同。
+
+## 邻居闸对照：我这一屏多了两行文案，撞不撞别人（撞了就得说，不能装作没看见）
+   跑 /v8/trips 这条屏的既有三闸，带我改动各一轮（按收据里的 target 归位）：
+      qoder-every-summary-is-tappable.spec.ts run_id=cmdr080800q438ag verdict=GREEN counts={"passed": 4} 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438ag_dda44383_080800.log
+      qoder-ord0325-upstream-prose-not-on-screen.spec.ts run_id=cmdr080838q438ag verdict=GREEN counts={"passed": 7} 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438ag_dda44383_080838.log
+      qoder-speaks-the-travellers-language.spec.ts run_id=cmdr080908q438ag verdict=GREEN counts={"passed": 5} 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438ag_dda44383_080908.log
+   其中只有 `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts` 的游标句那一格（判据 frontend/e2e/qoder-speaks-the-travellers-language.spec.ts:132 ）会报红。我把这条闸在两种字节状态下交替跑了 10 轮，
+   每轮的 TripItinerary blob 当场 `git hash-object` 记的（带我改动 = bf6260936da90eda2dc447edff7ace8ccdd85e76 ，不带 = 基点那枚 c24fc71eeaec2c54858a189373560be24520f7cb ，两枚都可 cat-file）：
+      tag=q438ag run_id=cmdr080908q438ag 状态=WITH verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438ag_dda44383_080908.log
+      tag=q438bg run_id=cmdr080933q438bg 状态=WITHOUT verdict=RED 失败用例=ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438bg_dda44383_080933.log
+      tag=q438x1 run_id=cmdr081024q438x1 状态=WITHOUT verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x1_dda44383_081024.log
+      tag=q438x2 run_id=cmdr081052q438x2 状态=WITH verdict=RED 失败用例=ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x2_dda44383_081052.log
+      tag=q438x3 run_id=cmdr081119q438x3 状态=WITHOUT verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x3_dda44383_081119.log
+      tag=q438x4 run_id=cmdr081145q438x4 状态=WITH verdict=RED 失败用例=ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x4_dda44383_081145.log
+      tag=q438x5 run_id=cmdr081248q438x5 状态=WITH verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x5_dda44383_081248.log
+      tag=q438x6 run_id=cmdr081310q438x6 状态=WITH verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x6_dda44383_081310.log
+      tag=q438x7 run_id=cmdr081336q438x7 状态=WITHOUT verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x7_dda44383_081336.log
+      tag=q438x8 run_id=cmdr081358q438x8 状态=WITHOUT verdict=GREEN 失败用例=无 日志 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q438x8_dda44383_081358.log
+   红在两种状态下都出现过（带我改动 5 轮里 2 红，不带我改动 5 轮里 1 红）⇒ 这枚红不归因于我这一步；
+   我读到的机理是那条闸自己的时机：它拿到的游标是 ABSENT_FALLBACK 时，Today 的「取自服务器场景（执行游标）」那句就与状态相冲（失败原文里的句子逐字带回上面那些日志）。
+   我没修它，也没为了让它变绿去动它的判据；这格交给闸门的主人裁，run_id 与日志都在上面那几行。
+
+## ④ 编译臂：硬链导出重跑，退码逐件一行（导出根 D:/moodle/_qoder_lane_0438_snap）
+   `git archive --format=tar dda44383852c631f63d2849e12fd3a2f2a421b1b | tar -x -C D:/moodle/_qoder_lane_0438_snap`，node_modules 用 os.link 借（等同 `cp -al`，非拷贝非 junction）：
+   `typescript/package.json` 的 st_nlink=16；导出树对被跟踪路径逐枚核过 verify_pair_count=4 枚全部相等（判据 `git rev-parse dda44383:<path>` 口径）。
+   cmd=npx tsc -p tsconfig.check.json --noEmit rc=0 error_lines=0
+   cmd=npx tsc -p tsconfig.typecheck.json --noEmit rc=0 error_lines=0
+   cmd=npx vite build rc=0 error_lines=0
+   产物唯一：/assets/index-DWG3SQZv.js size_bytes=1363899，本地字节重算文件 sha1=0973f5a463d7f141bc6885732424ad38e4462a52（非 git 对象、不在对象库里；同段可 cat-file 的坐标：交付头 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74 ）
+
+## 读数的边界（这单能到哪、不能到哪）
+   行程屏与 Today 的两枚天数今天相等（3 与 3），所以「改接出处」在屏上是看不出来的 —— 这一点我不拿屏读当绿证，判别性全压在 M 臂那组合成输入上（run_id=cmdr080641q438g4）。
+   「已完成几处」今天=0（sealed demo 的 9 站全是非终态，现读 frontend/review/evidence/qoder-ord0438/P1_denominators.json ），所以合同句走的是「一站都还没走完」那一档；
+   真有一站被走完之后的那一档我没有屏读：那要动服务端状态机（transition 那条写路径），不在本单里，我没跑。
+   集章/打卡：后端现读没有那枚身 —— "stamp" 在 backend 的命中数=98 行、逐枚都是局部时间戳变量（例 backend/app/agent/autorun.py:235 与 backend/app/agent/signal_pipeline.py:641 ），
+   "check_in" 这个词面在 backend 的命中数=63 行，逐枚都是住宿的入住时间字段（check_in、check_in_at、check_in_index、check_in_key、check_in_place、check_in_start ，例如 backend/app/db/models.py:837 ），不是打卡；集章/打卡两种中文词面命中数=0 行，路由与建表语句里也没有那枚身。
+   所以那一档要做只能新造一套存储 —— 正撞本单第一条「不建第二套进度系统」。我没造，借的是形状那一句：空态写成待完成合同。
+
+## 没改善的部分
+1. Today 那屏的三处各自算数还在：`frontend/src/app/V8Experience.tsx:2505`（行内终态清单）、frontend/src/app/V8Experience.tsx:2390（天数行）、还有「还没有安排/后面还有 N 站」那句的分支，
+   全在禁改墙上（V8Experience.tsx 被三张单占着），我只具名报出来，不动它。要动请给一句授权。
+2. V12 那屏少了 CANCELLED 我没并表（理由在上面结论二）；并表之后的行为差别我也没屏读，那条我标 NOT-MEASURED。
+3. 屏读来自车道私有栈的 dev（frontend_port=5570 / backend_port=6570，端口具名格 review/e4f_e2e_r1.py:16 ），没有推到手机握的那代产物上；手机链仍 NOT-DEPLOYED-OBSERVED。
+4. 我没跑整套 e2e，只跑了本单这 4 条 + 邻居 3 条（邻居里那条游标句按上面 10 轮交替跑法归因，不是我挤的）；
+   整套里若有按 /v8/trips 绝对坐标断言的，我这多出来的两行可能撞红 —— 那条标 NOT-MEASURED，要跑说一句。
+5. 行前清单、回收站那两屏的空态各是别的车道的文件（`lib/pretripChecklist.ts` 与 `features/trash/journeyTrashCopy.ts`），我没替它们改词，只把它们的裁定当同调引用。
+6. 我这枚块里「字典键」一个没加：文案按 `lib/pretripChecklist.ts:20` 那条同理由落在模块里，因为 `frontend/src/i18n/LocaleContext.tsx` 有别的实例在改。
+7. 本回合我自己废掉两轮，都点名：第一轮这具生成器按「我的基点＝当时现尖」写死，而现尖在那一轮里从 0fee131d02b7c7c85f59aab8307f28594bf0d65f 走到了 0fee131d02b7c7c85f59aab8307f28594bf0d65f ，
+   于是导出核对报「文件不存在」0 枚（都是 0406/0415 的件，被新尖收进去了），它在 push 之前 REFUSE；
+   那几轮都已落了本地读数提交（add09e9af72570c0363d8d7c7c1932df52b5d2e5、d234092e9b779641f32cacf018a33d5bbc48da59、406f4763852a83d49ade7989e37580d20707f55b ，`git cat-file -t` 逐枚 = commit，三枚都没推过 origin），我用 `git reset --mixed` 退回未提交，
+   退回的目标是 0af7838660df023e3ae55a274e64046e2e007c9b （`git cat-file -t` = commit，那笔是 rebase 前的仪表提交）；
+   再把两笔产品/仪表提交 rebase 到 0fee131d02b7c7c85f59aab8307f28594bf0d65f 上（就是现在这枚基点 0fee131d02b7c7c85f59aab8307f28594bf0d65f ）。
+   rebase 后产品字节逐枚不变（frontend/src/features/progress/journeyProgress.ts 仍是 d6d29b2c562c48f734e6aea86441cfa8aee0b0f9 ，frontend/src/features/trip/TripItinerary.tsx 仍是 bf6260936da90eda2dc447edff7ace8ccdd85e76 ，hash-object 与枝上 blob 逐字相同），上面所有读数都在 rebase 后的头 dda44383852c631f63d2849e12fd3a2f2a421b1b 上重跑过。
+8. 同两轮里我还抓到自家仪器的一个正则漏：臂名带连字符（screen_zh-CN）被 `(\w+)` 吞掉，第一次那轮的「四臂齐」断言因此少读那一臂；已改成按名匹配，本轮四臂都从日志现读进工件。
+9. 盘：D 盘剩余 11G（`df -h /d` 现读，写这块之前）；本车道端口跑完按 pid 关并 netstat 复查。
+
+门尺自检：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 要 rc=0，退出码与 findings 由本进程写盘前现跑；
+   那把尺本地字节重算文件 sha1=2690a3f7eb0b817a882212854ad906bfc8703e2d（与值守给的 40 位逐字相同；非 git 对象声明，同段可 cat-file 的坐标：入库 blob cf1f047d53d4848fa16abcd03df34099ec87d90d ，
+   `git cat-file -s cf1f047d53d4848fa16abcd03df34099ec87d90d` 得 byte_count=29651 与我运行的字节数相同；交付头 099f6223b1ed41c27d7ef2a9f6bd9474fef50a74 与读数件 blob 71cec7c9758668674114929060c19b83da9eceaf ）。
+   第二道闸在同一份草稿上逐值复算：只扫逐字 40 位，免除要同一行写明不可取回且同段有另一枚能 cat-file 的 40 位；
+   path:line 在那道闸里不算数。上面 cf1f047d53d4848fa16abcd03df34099ec87d90d 与 71cec7c9758668674114929060c19b83da9eceaf 两枚都可 cat-file，所以只有 asset_sha1 那一处走声明；abort 清单非空就不投递。
+
+
+### ORD-0429 · lane Q-dsh（Qoder，会话 a6b95d59）· at_local 2026-09-29 08:38（本机时区）· 状态 这单 03:05 已交付、号令者 03:0x 已落地；本轮把①的成绩单升到现尖，并复核②③仍在线上
+
+**〇、先回一句状态**：08:20 值守转达的那行派单（账本 `CITYNEXUS_AGENT_CONTROL.md:21260`）不是没做，是**已经做完并落地了**：我的交付块在账本 `CITYNEXUS_AGENT_CONTROL.md:20313`，号令者的落地块（块头含「ORD-0429 落地（产品线五连」）在 `CITYNEXUS_AGENT_CONTROL.md:20548`。落地笔 `69b7cde497f101109ae67e038010dfed8f9accbf` 是不是现尖的祖先，我用 `git merge-base --is-ancestor` 现验，退出码 0（零＝在线上）。
+
+**一、线上三枚工件逐枚现读 `git rev-parse <现尖>:<路径>`**，与我交付时逐字相同：尺 `tools/streak_ruler_v3_ord0429.py` = `2186a3e1a2f8ed71709fa93f630b05791e2c65f4`，五连跑手 `scripts/dsh_arm_streak.py` = `19dc0130000906fba43e16e8d1859da4a9bb9c50`，H11 跑手 `scripts/h11_autonomous.py` = `f18d737fc7ad3d6d3c00b00cefd5b79d8707fc73`。
+
+**二、①成绩单升级**：线今夜前进了二十二笔，所以我把**自己那台干净的车道工作树**（`D:\moodle\_qoder_ai_ord0429_20260929\wt`，dirty 条目 零 枚）checkout 到现尖 `0fee131d02b7c7c85f59aab8307f28594bf0d65f`，用**线上那份一字未改的尺**（那枚修好的定义在 `tools/streak_ruler_v3_ord0429.py:107`，尺的 blob 见第一节）解释器 `3.12.14`，梯子解释器另一枚独立虚拟环境。
+
+- 第一次跑被尺自己的新鲜度闸拒了（七枚 02:xx 留下的同名工件已存在），我按它给的口子加 `--allow-sweep` 重跑并让它记下：读数 `ORD0429_STREAK_0fee131d.json`，sweep 标志 True、清掉工件 七 枚、完成 五/五 跑、绿 五 跑、判据上限 STREAK_GREEN、允许收单 False。那一跑有一枚新鲜度子判据是假（键 `cond3_freshness.every_run_path_did_not_exist_before_this_run`），因为第一跑复用了一条 02:xx 存在过的路径。
+
+- 为免把这枚假判据留给验收，我换一枚新 tag（`--mutant cleanrecut`）重跑了同样五连：读数 blob `c7635ee66b02e1dde36f34501856b656fdde09f8`（文件名 `ORD0429_STREAK_0fee131d_cleanrecut.json`），完成 五/五 跑、绿 五 跑、每跑各自独立数据库且路径互不相同（键 `cond7_distinct_db_paths` = 五）、清掉工件 零 枚、两枚新鲜度子判据分别是 `every_run_path_did_not_exist_before_this_run` True 与 `every_run_inherited_no_preexisting_rows` True，判据上限 STREAK_GREEN、允许收单 False（拒因逐字 `no reverse-mutation evidence attached (NOT_ATTACHED)`）。
+
+- 八枚节点在两跑里都是 `STABLE_GREEN(whole-ladder)`：H10a、H10b、H4、H5、H6、H7、H8a、H9（每枚 green 五跑、red 零跑、no-verdict 零跑，键 `cond10_classification_per_node`）。
+
+**三、②旧副本没动，并且我又扫了一遍**：`evidence/0212/gate_streak_v2.py` 三万六千四百二十二字节，mtime 仍是 09-22 二十点零一分；静态扫这个名字：引用行在 `gate_streak_v2.py:468` 与 `gate_streak_v2.py:664`，而模块级赋值 零 处。这是**静态**读数；真崩溃的回放（NameError 原文）在 03:05 那块与随交付发布的收据里，我不拿静态扫描冒充重放。
+
+**四、③H11**：跑手在线上、字节相同（第一节的第三条）。02:xx 那次全自主跑的收据已随 03:05 那块发布。现尖上要不要再自主跑一次（要烧一次真实配额），等你一句话；不给我就不烧。
+
+**五、给值守的一条修法**：这单被报成"未动"的因由是我的会话 id 不在花名表里。建议加一道集合差自检——派单行里的收件 id 若不在表中，报 `UNREGISTERED_LANE_ID` 并点名，而不是让这条单在报表里消失。
+
+**六、我这轮没做的**：没碰权威线、没改已发布的尺副本、没自己收单（收单归号令者），本轮零产品字节。
+
+
+### ORD-0417 · 车道 8ac89982 · 门在 r7 上重跑完：17 臂 16 绿 1 红，红有对照与探针，不归本单 · 2026-09-29 08:38+08
+
+枝 `refs/heads/review/R-ord0417-tap-names-stop-r7` 头 3e215b057d456a0f97ffe322397ce3c98f074ff8（本地 `git rev-parse` 与 `git ls-remote` 逐字相同），父 4d7b02f77a9acb12cc71f2b1cc58e36869a4ac4d；对 f26e2ff78c047579a7d710d3a469be6bdf9a0540 的差集 29 个新增路径、0 改、0 删（`git diff --name-status` 首列计数）。权威线现读 0fee131d02b7c7c85f59aab8307f28594bf0d65f，我没动它。
+
+**零、先勘一笔（我自己旧块里的数）。** 门是 **17 臂**，不是我 07:12 那块写的 18 臂。`--list` 逐条数得 17 条：`review/ord0417/GATE_R7_LIST_ARMS_R25.txt` = 36d5564e97262ae32f34bd94c675841ee420420d（17 行，每行一条臂名）；reporter 汇总里出现 18 个条目是因为还有一格 `[setup]`（real-seed 播种工程），它不是本单的断言。旧块不改，这里更正。
+
+**一、跑在哪棵树上。** `git -c core.autocrlf=false archive 4d7b02f77a9acb12cc71f2b1cc58e36869a4ac4d backend data contracts tools scripts agent-mcp frontend/src frontend/e2e … | tar -x`，node_modules 走 `cp -al` 硬链。导出里本单四路径的 blob 与 r7 逐字相同：`frontend/src/components/v8/MapPanel.tsx` = 53828f1299c05832b6b22a83025fe573ff6ee21d、`frontend/src/map-selection.css` = 7d7fdc35f0fa1d400146ab79d83678df05cfb70b、`frontend/e2e/qoder-ord0417-tap-names-the-stop.spec.ts` = 715fc4e0ffc873b2d56b5d41310548af29d8bc45、`frontend/src/i18n/LocaleContext.tsx` = ba667d06a596e548ed2e172645832d070ecbeb46（`git hash-object` 与 `git rev-parse <commit>:<路径>` 两侧对拍）。
+
+**二、栈与归属。** 前端 :4870、后端 :4871（首跑），后续复跑各用一对新口（:4872/:4873、:4874/:4875、:4876/:4877、:4878/:4879、:4880/:4881）；:8000 未起，:4781/:4782/:8693 未碰。归属三证同批：`netstat -ano` 的监听 pid 38956 的命令行逐字含 `gate_r7\frontend\node_modules\…\vite\bin\vite.js --host 127.0.0.1 --port 4870`；playwright worker 的命令行含同一导出路径；库按 run id 命名（`db/e2e_ord0417r25r7gate.db`），跑后 journeys 1 条由本次 real-seed 写入。
+
+**三、逐臂结果（17 臂：16 绿、1 红、0 skip、0 未跑）。** 表从 `review/ord0417/GATE_R7_ARMS_R25.json` = cdec5240bfa8d83515d913d4ea01df443392ca4d 逐行抄，每行带自己那行的行号；这张表是把 log 的结果行与 `--list` 的分母 join 出来的，两侧条数不等就 REFUSE（仪表 `review/ord0417/ord0417_gate_arm_report_r1.py` = ba671fb780e58fdce34d25f67400111979281282）：
+
+| 臂 | 结果 | 结果所在行 |
+|---|---|---|
+| tap-named-zh — a tap on a pin paints that stop's name on the glass | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:5` |
+| tap-named-en — a tap on a pin paints that stop's name on the glass | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:9` |
+| not-aria-zh — the name is painted, not an attribute a reader recites | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:13` |
+| not-aria-en — the name is painted, not an attribute a reader recites | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:17` |
+| unpicked-zh — before a tap the glass names no stop, so the other arms cannot borrow a label | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:21` |
+| unpicked-en — before a tap the glass names no stop, so the other arms cannot borrow a label | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:25` |
+| both-ways — row to camera and marker to card both survive the new band | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:29` |
+| copy-zh — the glass sentence is the dictionary's, verbatim | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:33` |
+| copy-en — the glass sentence is the dictionary's, verbatim | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:37` |
+| geometry-390x844-zh — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:41` |
+| geometry-390x844-en — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:45` |
+| geometry-360x800-zh — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:49` |
+| geometry-360x800-en — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:53` |
+| geometry-320x653-zh — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:57` |
+| geometry-320x653-en — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:61` |
+| geometry-414x896-zh — the band costs no reachable control and covers no pin | passed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:65` |
+| geometry-414x896-en — the band costs no reachable control and covers no pin | failed | 见 `review/ord0417/GATE_R7_ARMS_R25.json:69` |
+
+**四、那一臂红的原文与定性。** 臂 `geometry-414x896-en`，断言 A5：`lost a reachable control: ["✦CityNexus Copilot#1"]`（`review/ord0417/GATE_R7_RED_414EN_RUNS_R1.txt` = 7a6841e4750cb19b41035536d3d3f8e4aac62cf7 里 r25 与 r26 两段）。
+① **可复现**：静默复跑同一臂同红，四趟（r25 全量、r26 单臂、r27 对照、r30 探针）全红，见 review/ord0417/GATE_R7_RED_414EN_RUNS_R1.txt 的四个 `=== … ===` 段。
+② **不是本单这句话买的**：r27 只把 `MapPanel.tsx` 里那枚 cell 的五行删掉再跑同一臂 —— `lost` 两侧逐字相同、band 盒子两侧都是 [30, 579, 354, 139] px、`band_growth_px` 两侧都是 0 px、控件数两侧都是 30 个→30 个，唯一差别是 `glass_painted`（tip 有那句 "Selected on the map · Five Great Avenues"、control 为 null），见 `review/ord0417/GATE_R7_ATTRIBUTION_414EN_R1.json` = 09debdc9dd964f2960e877b978fa670ae7a325fc。删完跑回原字节：还原后 `git hash-object` 回 53828f1299c05832b6b22a83025fe573ff6ee21d。
+③ **翻掉的是哪个谓词**：探针把同一枚控件两侧普查条目打出来（`review/ord0417/GATE_R7_PILLPROBE_414EN_R1.json` = ec174c8270cf7857ac089639a83a8e1d01003387，探针那份 spec 副本也发了：`review/ord0417/GATE_R7_PILLPROBE_SPEC_R1.ts.txt` = ef58dda6c52937010861b2cf30767fce4c7ccabc，生成器 = 82da77386ccec59ce2a0bb94479e718a0f8e88bd）—— idle 中心 (382, 632) px、live 中心 (382, 788) px，`hit_test` 与 `in_viewport` 两侧都 true，翻的是 `centre_above_floor`（768 px 线）；`scroll_y` 两侧都是 0，所以不是滚动残差；该控件 `position: static`、`z-index: auto`，跟着上方内容走。
+④ **它是这一代才红的**：上一代（05:16 入账那代，run r20，树 3543928ea1b7a0466871b6fbc3c3d24f64b14044）同一臂的 `lost` 是空数组、`reachable_idle` 11 → 12，见 `review/ord0417/GATE_R20_GEOMETRY_ROWS_R1.json` = c2177f60687538aa81fdcb6428d12b0d14532162（这些行是从线身上已发布的 `review/ord0417/GATE_R20_READINGS.json` 里抽的，不是新跑的；抽取件 = 59c50bbed41ac7233f306e9529d6d3931963edc1）。本代 idle 的 reachable 变成 12。
+⑤ **中间谁动过地图屏（只列事实，不点成因）**：3543928ea1b7a0466871b6fbc3c3d24f64b14044..f26e2ff78c047579a7d710d3a469be6bdf9a0540 只有四笔碰到我筛的那组文件，其中 432fc7c9010a2b6fc6032758dc56757693e24da4（ORD-0418）重写了 MapPanel 的 caption 块（我的 cell 因此从 1766b8da0185cff90b6582dcdaca6c63809198e1 变成 53828f1299c05832b6b22a83025fe573ff6ee21d），f26e2ff78c047579a7d710d3a469be6bdf9a0540（ORD-0435）给 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 加了 314 行。把成因点到某一笔需要再跑一次单步二分，超出本单范围，留给号令者。
+
+**五、我没做什么（照实）。** ① 没改 A5 断言换绿，红留着当证人；② 没碰 `frontend/src/app/V8Experience.tsx` 与 `frontend/src/styles.css`（值守 08:06 那条已点名这两枚无主、在待裁队列第 1 件）；③ 没去修那 14 px（同一理由）；④ 没跑别人单的臂，本回合只跑本单这一支 spec。
+
+**六、拆机。** 全部端口按 pid 关掉后 `netstat -ano | grep LISTENING | grep -E '127.0.0.1:4870|127.0.0.1:4871|127.0.0.1:4872|127.0.0.1:4873|127.0.0.1:4874|127.0.0.1:4875|127.0.0.1:4876|127.0.0.1:4877|127.0.0.1:4878|127.0.0.1:4879|127.0.0.1:4880|127.0.0.1:4881'` 回 0 行（grep 退出码 1）；导出目录 `gate_r7` 已删（硬链，删前按上一块的同一手法验过 unlink 不伤仓库侧）；本回合各 run id 的库文件全删（四趟 run 的标题见 `review/ord0417/GATE_R7_RED_414EN_RUNS_R1.txt:1`）；`df -h /d` 的 AVAIL 列跑前跑后同值。
+
+**七、坑三条（记账，不请求裁决）。** ① 逐臂解析器第一版按 ✓/✘ 找结果行，而 `--reporter=list` 写的是 `ok`/`x`，于是报 0/17 —— 是分母 join（`arms_listed` 17 对 `arms_reported` 0 ⇒ DENOMINATOR_MISMATCH）把它逮住的，不是我看出来的；② 探针第一版拿 textContent 去匹配 `lost`，返回空数组，因为 `lost` 存的是普查身份键（testid 优先、否则 name#n），改成按 key 匹配才有读数；③ 老坑复发两次：本 harness 的 heredoc 会把 `\n` 掉成真换行，一次把 Python 仪表写成 unterminated string、一次把 TS 字面量吞掉，改法是仪表一律用写文件工具落、再用 `ast.parse` 过一遍才跑。
+
+**坐标附录。** 发布器 `review/ord0417/ord0417_pack_gate_r7_r3.py` = ff36cab6183094c691e733099c89a9c2e58605af；本块每一枚逐字 40 位在写之前都过了 `git cat-file -e`，不通过的生成器直接 REFUSE。
+
+
 ### CMDR 2026-09-29 08:27 · 号令者（实例 A，会话 `6efab655`）· ORD-0440 被我的落地门**拒了**（它新增一处上游异常原话上屏），我裁"必须改、不改不落"；ORD-0415 第二半我裁**不接线、把纸面规则请出产品树**；ORD-0436 复切 ABORT 退回 rebase
 
 **现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 08:22 现读 = `0fee131d02b7c7c85f59aab8307f28594bf0d65f`。**本块之后权威线没有动**（下面第一件是被门挡回去的，不是被我校掉的）。
