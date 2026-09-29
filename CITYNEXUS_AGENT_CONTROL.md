@@ -16588,6 +16588,148 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0417 · 车道 8ac89982 · 我那两块各入了两次：按正文 sha1 认账、逐枚指名作废哪份、并把规矩装进写块那一步 · 2026-09-30 01:29+08
+
+**〇、事实成立，我复算过。** 账本里以 `### ORD-0417 · 车道 8ac89982` 开头的块共 7 行，其中 2 对的块头逐字相同。现尖自取 bb6119b08b4a8c93c441ff8464d288a9e3fbd3cf（`ls-remote` 现读）；我名下最新枝 `review/R-ord0417-tap-names-stop-r10` 头 b77a6ed4f3f322bc97e65e971d0fa37e2658c712（未落地），上一笔落地的是 8eb72e5579900f5f315e4d0d65a52e727494d199。以下每一枚 sha1 都是我对**账本里那一段正文的 UTF-8 字节**算的内容哈希，是本机字节 sha1、非 blob（账本正文不是 git 物件，`git cat-file` 取不到）；同段可取回坐标是上面那枚 b77a6ed4f3f322bc97e65e971d0fa37e2658c712。
+
+**一、15:56 那一族（首页联动那块；它随落地笔 8eb72e5579900f5f315e4d0d65a52e727494d199 入账，那是一枚可 `git cat-file` 的 commit）：**
+  - 正文 12229 B、本机 sha1，非 blob f177e7049f7d61f26e45a5d909b85dfca336a393；对应 `_processed/r0417_1556.md.inserted_191247`（插入戳 191247）；请作废（先插入）
+  - 正文 13806 B、本机 sha1，非 blob c299fde33d4a8f6ff8f5354f31ee0cc93f33886e；对应 `_processed/r0417_1556.md.inserted_192727`（插入戳 192727）；权威（后插入）
+
+**二、08:38 那一族（r7 门重跑那块；同一笔可解析坐标 8eb72e5579900f5f315e4d0d65a52e727494d199）：**
+  - 正文 9754 B、本机 sha1，非 blob 78c65dddcf24e3fdc9075467f2963d803343c868；对应 `_processed/R_0838.md.inserted_083950`（插入戳 083950）；请作废（先插入）
+  - 正文 10091 B、本机 sha1，非 blob 6b0c2b489ca323ea53d54e6439f39e3a22ed0591；对应 `_processed/R_0838.md.inserted_091627`（插入戳 091627）；权威（后插入）
+
+两份正文的差别是可判的，不是排版：15:56 那族里先入的那份写"还剩 4 枚红"，后入的那份写"还剩 6 枚红"并含"字画在 y=854 px、视口 844 px"这一格——现尖上的状态是后者；08:38 那族只差同一格锚点写法（后入那份把"各 run id 的库全删"改成带 `path:line` 的形式），结论一致。所以**请作废的是先插入的两份**：f177e7049f7d61f26e45a5d909b85dfca336a393（本机 sha1，非 blob）与 78c65dddcf24e3fdc9075467f2963d803343c868（本机 sha1，非 blob）；这两枚的配对依据是同段可解析的那笔 8eb72e5579900f5f315e4d0d65a52e727494d199 之后另一次插入。我不碰账本、不删任何人任何一份件，处置权在号令者。
+
+**三、口径纠正一处。** 转达报的字节是 10,169 / 9,312 与 7,420 / 7,581；我按正文 UTF-8 字节量到的是 13806 / 12229 与 10091 / 9754，且每一枚都与 `_processed` 里同名两份之一逐字相等（sha1 相同）。配对与判重请用"正文 sha1 + 插入戳"，尺寸只作辅助；值守那两对的配对关系是对的，只是数字口径不同。
+
+**四、根因在我这一步，不在门。** 我改完一块之后**用同名文件、同一条块头**重投（块头那个时戳是抄转达里的分钟，不是落笔时的钟），而门的 dedupe 只看当下共存的文件——第一份已搬进 `_processed`，第二份自然拦不住。值守那句"上一份已经搬进 `_processed` 了以它拦不住"我认。
+
+**五、修法已经装进写块那一步（跑过的，不是承诺）。** 本机仪表 `D:/moodle/_qoder_b_ord0417_20260928/run/ord0417_block_guard_r1.py` 三条各自拒因：① 块头时戳必须等于落笔那一刻的钟（容差 = `run/ord0417_block_guard_r1.py:33` 定义的 120 秒）——抄来的时戳直接拒；② 目标文件已存在且字节不同就拒；③ 该块头已在 `_processed` 或账本出现过就拒——重投必须换文件名、换时戳，并在正文写明作废哪份。自测：三条拒因各自 fired（本次 fired 计数 3），落笔后收件口无残留 = True。本块就是经它写出来的。该仪表尚未上枝（它约束的是车道本机行为，不含产品读数），要随证据发上 `review/ord0417/` 我下一轮补，别把它当已发布物件引用。
+
+**六、本块自己踩了同一类坑，先自曝。** 我第一版对账块是按值守给的**账本行号**去取正文的，而账本是被大家不断插入的活文件：等我落笔时那四行已整体下移 26 行，取到的 sha1 是别人的块（其中一枚甚至是空正文的哈希）。那一版已从收件口撤下留痕为 `r0417_0119.md.superseded_line_drift`（未入账、未删），本块改为"扫块头分组 + 正文 sha1 认"。教训与今天早些时候那枚"注释里写死行号会腐烂"是同一族：**引用会动的东西，就不能用位置当身份。**
+
+**七、本轮没做什么。** 没改账本、没删任何人任何一份件、没重发已入过的两块（15:56 与 08:38 两族的正文我不再动，只在此指名作废）、没动权威线、没把 ORD-0417 的 hub 判据改成只测 `/v8/map`。hub 那一半的定性在 `r0417_0102.md`（尚未入账）里，本块不重复其读数。
+
+
+### 车道 newlane（会话 1ba48dbf）0124 · ORD-0444 收窄这一轮交的是产品字节：容器本体＋成员归属＋三扇门＋一枚最小读面；产品枝与证据枝分开推，读面在真浏览器里读到了字
+
+## 1. 交件坐标（两枝，产品在前）
+
+- 产品枝 `refs/heads/review/newlane-ord0444-prod-r3` 头 `f3ca7b220de553bfe253d3cb3f59a434fa504c4d`，树 `b5ec2c673e3bfd862b00b4f0c6119a9d371b3d53`；它站的那枚尖 `0dabe64223036391a6c25561a6b606e1533f3704` 正是它的父提交，`git rev-list --count` 读 2 枚 ⇒ 快进、0 冲突面（`git merge-tree --write-tree 0dabe64223036391a6c25561a6b606e1533f3704 f3ca7b220de553bfe253d3cb3f59a434fa504c4d` = `b5ec2c673e3bfd862b00b4f0c6119a9d371b3d53`，与该头自己的树逐字相同）。
+- 那 2 枚提交里第一枚是容器本体（`git show --stat` 读 13 枚文件、0 删除），第二枚是产品缺陷的修复（见第 4 节），两枚都是产品字节，收据一枚不在这枝上。
+- 证据枝 `refs/heads/review/newlane-ord0444-prod-evidence-r3` 头 `b0effd3c35d76fa71019ee33224f630094ac7423` = 产品枝 + 一枚纯证据提交；上一代的 prod-r1 / prod-r2 / evidence-r1 / evidence-r2 都留着不动，要落的是 r3 这两枚。
+- 我这枝没碰的热面：`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/styles.css`、`frontend/src/design-tokens.css`、`frontend/src/app/V8Experience.tsx`、v12/v13 那一族（ORD-0471 不归于我）。
+
+## 2. ① 容器本体与成员归属（backend）
+
+- 两枚表在 `backend/db/schema.sql`：`collection_folders`（name、`owner_traveler_id` 在 `:1126` 这枚行上写 `TEXT NOT NULL REFERENCES travelers(id)`、两枚时间戳）与 `collection_items`（`UNIQUE (folder_id, place_id)` 是重复添加那格跨进程成立的硬一半）。归属这枚列是这一轮新加的：可空的归属会看起来像所有权而没人写它，「我的收藏」就又是行撑不住的话。
+- 三扇门：`backend/app/main.py:3254` 建架（把断言的旅客对 `travelers` 验一遍，查无此人按 `MEMBER_TRAVELER_UNKNOWN` 具名拒绝——复用 ORD-0461 那扇门已有的名字与形状，不另造词）；`backend/app/main.py:3314` 读（`traveler_id` 必填，`item_count` 就是同一份答案里 `items` 的长度）；`POST /api/v1/collections/{folder_id}/items` 加地点（三枚拒绝各自具名，见第 3 节）。
+- 契约与生成物同代进这一枚提交：`contracts/openapi.yaml` 的 `CollectionFolder` 在 `:2969`，`frontend/src/generated/api.ts` 由 openapi-typescript 7.13.0 重导；对表尺读 `OpenAPI 3.1.0; formal 167; runtime 167; missing 0; extra 0`（退 0）。
+
+## 3. ② 最小读面：不是门禁绿，是屏上有字
+
+- 面在 `frontend/src/features/collections/`，挂在 `frontend/src/app/v8PanelRegistry.tsx:212`，共用「城市探索」那条路由（不新开 nav key：`t()` 缺键会把键名原样吐上屏，而 `LocaleContext.tsx` 不许我开）。它只读，不写：本轮没有「加进收藏」的按钮，导入口与多选按号令者的收窄留给下一轮。
+- 真浏览器（新会话、进「使用封存的演示行程」、按面自己的「重读一次」）读到 `index-DWSjzF2X.js` 那枚 bundle，屏上逐字出现 4 行架子，其中一行是「周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去」；末行 `0 架子 · 0 枚地点`。仪表把 `PLACE_NOT_FOUND`、`nav.collections`、`[object Object]`、`undefined`、`traveler_id`、`/api/v1` 这些机词列成清单去正文里找，命中 0 枚。读数在 `review/ord0444/prod_r3_walk_and_mutant.json`，blob `a9a02e7e1926d83c70dffe8ca5dc985b59279256`；尺 `review/ord0444/prod_r3_screen_walk.cjs`，blob `fc71d3073d2623ba3e4f7513e12280533149b43c`；驱动 `review/ord0444/prod_r3_walk_driver.py`，blob `254023956b0ae67cda2bcfa2d9caaf05ae846378`。
+- 空态也读到了字：把这台私有栈自己库里的行清空、再按「重读一次」，屏上落 「还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。」（`0 架子 · 0 枚地点`），架子 0 行 —— 空是列表不是 404，这句现在在屏上而不只在测试里。
+- Q64 曝光按落地门同一口径重取（`git archive <rev> frontend/src` 各导快照再 `--tree`）：尖 6 格 / 123 模块，我这头 6 格 / 126 模块，新增 0 格 ⇒ growth NONE，我自己文件里 0 格；尺的 blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`。数在 `review/ord0444/prod_r3_reads.json`，blob `9a8df2c499aa3d74077fc5f18c237445594c7726`。
+
+## 4. 这一轮我自己制造又当场发现的产品缺陷（具名）
+
+- 第一枚产品提交里，面的 fetch 用的是**契约的路径** `/collections` 而不是运行时挂的 `/api/v1/collections`。后果在屏上：面显示自己的失败句「这一屏没能从服务器读到架子」，而同一个查询在页面上下文里回 http 200 带着那枚架子——`JSON.parse` 吃到 SPA 回退的 HTML 抛穿，被我 catch 成 unreachable。更难看的是那个模块的头注释写着「路径都带 /api/v1」：**注释是假的，不是代码没读到**。
+- 修法不是把注释改对：`test_the_face_fetches_the_runtime_prefix_not_the_contract_path` 把那枚常量钉成 `/api/v1/collections`，并断言它**不是**契约里的任一路径。反件真跑了：把常量改回契约路径 → `1 failed, 15 passed, 2 warnings`；还原（还原后逐字节比对相等）→ `16 passed, 2 warnings`。这段跑在 `prod_r3_walk_and_mutant.json` 里，不是我手打的。
+- 另有两处仪表缺陷也具名：静态口只绑 `::1`：按 IPv4 字面量连直接被拒，我一度把它读成「静态口没起」，实为我的地址族选错；以及上一轮那台被我 kill 的残留 uvicorn 仍在 :60183 应答——收据现在不匹配就 ABORT（`ABORT_NOT_OWNED`），不再把别人的口当成我的产品。
+
+## 5. 门的数（全部在 r3 这棵树上重跑）
+
+- 本 order 的臂 `16 passed, 2 warnings`（退 0）；整套后端我没跑，记 `NOT_EXECUTED_BY_LANE`；`tsc` `TSC_RC=0`；`vite build` `BUILD_RC=0`。三枚具名拒绝的行号是这棵树上 `git grep` 现取的：`backend/app/main.py:3398`、`backend/app/main.py:3406`、`backend/app/main.py:3435`。
+- HTTP 收据在 `review/ord0444/prod_r3_stack_receipt.json`（blob `4ca2df0eae82a3b71a26f39997038db937feb0b4`），仪表 `review/ord0444/prod_r3_stack_probe.py`（blob `66c8cf4bdf928507954f0446ef61e1e3d6ccf33f`）：第二位旅客是经 `POST /api/v1/travelers` 真造出来的，她读到 0 枚架子、看不见我这枚；未带 `traveler_id` 的读门回 http 422 而不是把所有人的架子交出去。
+- 共享预览库全程只读、前后字节一致：内容 sha1 `1c8a20b9e4656463dcc42d829d7d9f1f936bae8d` 是本机 sha1、非 blob、不在对象库；同段可 cat-file 的 40 位是 `4ca2df0eae82a3b71a26f39997038db937feb0b4`。
+
+## 6. 还没量的格子
+
+- 拒绝那一屏的四个数字（状态码、content-type、字节数、收据号）仍然没在屏上走过——这一轮的面刻意不显示任何上游字，所以那格要么等 ORD-0451 要么按第 5 节的 HTTP 收据看，别当成屏读过。
+- PNG 仍不可取（`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`）；手机侧今天仍是未部署观测。
+- 面只测了 zh 那一臂：`重读一次`、架子行与末行计数都是中文臂的读数，英文臂同表同形未逐字走。
+
+下一刀仍按号令者的清单：ORD-0451 把收藏接成 ORD-0435 多选的第三个出口，出口互斥在屏上说清，不新开写端点（走 `POST /api/v1/collections/{folder_id}/items`）。等 r3 这两枚过门我就动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0433 补件 · 车道 N2 · 16 枚计数插值键在现尖的两臂屏读我自己拿了一次，并把 ORD-0467 要用的对齐事实量出来
+
+- 报名：本会话逐字 `9759f1ac-3d69-4688-8664-8ca954ab7737`（本机流水文件名即这枚：`projects/D--moodle/9759f1ac-3d69-4688-8664-8ca954ab7737.jsonl`）。这一格原本挂在号令者名下（账本 `CITYNEXUS_AGENT_CONTROL.md:16889` 与 `CITYNEXUS_AGENT_CONTROL.md:18632` 两处都写明 ORD-0433 的单复数屏读由车道自己拿），这次由我拿。
+- 现尖：`0dabe64223036391a6c25561a6b606e1533f3704`。交件前一秒 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 重读仍是这一枚；两尖之间移动文件 `field=files_moved_between=0`，其中落在我这 16 枚键所引用的文件之内 `field=quoted_files_moved=0`；本块引用的行逐枚按 `git show <尖>:<路径>` 重读 `field=receipts_checked=68` 枚，带原文的那 `field=quoted_lines=37` 枚逐字相同（`field=mismatched=0`）。
+- 开工尖与交件尖同一枚，所以本块不含『我量的是上一代』这一笔账；被量对象的身份：字典 blob `8308d542c41d1396e688aab318953a84a0ca1518`、`frontend/src/lib/plural.ts` 的 blob `0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98`（后者可 `git cat-file -t` 回读）；后端树 `de8ee0421b873b7262346d6b79fa45e4427c7b5b`，前端树 `4438a0496bebbfdee8e9ee65169b79f1818c0c92`。
+
+#### 一、基数是从字典现读的，不是我从单上抄的
+
+- 现尖带 `{plural:…}` 标记的英文行 `field=keys=16` 枚（命令：`git show 0dabe6422303:frontend/src/i18n/LocaleContext.tsx | grep -c '{plural:'`）。
+- 我那笔落地（`edcc2e2b`）改的是 `field=keys=12` 枚；单上写的『八枚』是派单当时的口径，现尖多出的 `4` 枚是别人在同一把工具上加的：`discovery.batchCommitmentNote`、`discovery.batchLanded`、`discovery.batchRefusedSome`、`shared.dayCount`。
+- 另一类我这次一并量了：`{n}` 直接跟英文名词、却没走那把工具的英文行 `field=lines=19` 枚；其中把复数写成 `(s)` 这种机器形的 `field=lines=5` 枚，逐行报名在第三节。
+
+#### 二、两臂屏读：7 枚画上屏，逐枚给两臂的原文
+
+- 量法：自己那台后端 + 自己那代前端字节，从『使用封存的演示行程』进门后逐枚走 `16` 枚地址，两臂各一趟（中文臂 `field=rc=0`、英文臂 `field=rc=0`，`field=pageErrors=0`）；只算画上屏的字（无子元素或容器自己的直接文本，且矩形在视口内，含滚动并集）。
+- 画上屏 `7` 枚（两臂各读一次；「处」列出这一枚真正画在过的位置，路由/相位）：
+  - `shared.dayCount`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:2044` / 英文 `frontend/src/i18n/LocaleContext.tsx:1051`；调用点 `frontend/src/features/shared/SharedJourneyPanel.tsx:274`；画上屏 `4` 处：`shared/<granted>/plain`、`hub/plain`、`hub/details_opened`、`hub/ai_sheet`；中文上屏「共 1 天」，英文上屏「1 day」；英文那格是 `whole_line_is_the_leaf`。
+  - `shell.travelers`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1201` / 英文 `frontend/src/i18n/LocaleContext.tsx:166`；调用点 `frontend/src/app/V8Experience.tsx:1839`；画上屏 `4` 处：`hub/plain`、`hub/details_opened`、`hub/ai_sheet`、`me/plain`；中文上屏「10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天」，英文上屏「10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days」；英文那格是 `inside_a_longer_line`。
+  - `exec.evidenceTrail`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1612` / 英文 `frontend/src/i18n/LocaleContext.tsx:602`；调用点 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:89`；画上屏 `2` 处：`live/plain`、`live/details_opened`；中文上屏「0 个来源」，英文上屏「0 sources」；英文那格是 `whole_line_is_the_leaf`。
+  - `inbox.protectedFacts`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1727` / 英文 `frontend/src/i18n/LocaleContext.tsx:719`；调用点 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:762`；画上屏 `2` 处：`bookings/plain`、`bookings/details_opened`；中文上屏「1 个受保护事实」，英文上屏「1 protected fact」；英文那格是 `whole_line_is_the_leaf`。
+  - `fmt.activities`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1907` / 英文 `frontend/src/i18n/LocaleContext.tsx:909`；调用点 `frontend/src/features/studio/V12TripStudioPanel.tsx:119`；画上屏 `1` 处：`authoritative/plain`；中文上屏「6 个活动」，英文上屏「6 activities」；英文那格是 `whole_line_is_the_leaf`。
+  - `fmt.protectedAnchors`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1908` / 英文 `frontend/src/i18n/LocaleContext.tsx:910`；调用点 `frontend/src/features/studio/V12TripStudioPanel.tsx:120`；画上屏 `1` 处：`authoritative/plain`；中文上屏「1 个受保护锚点」，英文上屏「1 protected anchor」；英文那格是 `whole_line_is_the_leaf`。
+  - `mapComp.legs`：定义行 中文 `frontend/src/i18n/LocaleContext.tsx:1915` / 英文 `frontend/src/i18n/LocaleContext.tsx:917`；调用点 `frontend/src/components/v8/MapPanel.tsx:651`；画上屏 `4` 处：`hub/plain`、`hub/details_opened`、`hub/ai_sheet`、`live/plain`；中文上屏「0 段路程」，英文上屏「0 legs」；英文那格是 `whole_line_is_the_leaf`。
+
+- `shell.travelers` 这一枚要单列：它的英文读数只在首屏那句长行里出现（`hub/plain` 里的 `<p data-testid="today-when">`，取值行 `frontend/src/app/V8Experience.tsx:2882`），同一句里还挂着 `1 days`——那不是字典键，是模板串 `frontend/src/app/V8Experience.tsx:2890`（中文那侧 `frontend/src/app/V8Experience.tsx:2889` 没有这个毛病）。这一处在 ORD-0433 的允许面之外，我没有为它扩范围，只把位置钉出来。
+- `shared.dayCount` 也单列：它画在自己那块屏（地址 `shared/<granted>`，`field=leaves` 见发布件），令牌是我自己那台后端现建的（`POST /api/v1/journeys/{id}/share-grants`，`backend/app/main.py:3251`；`visibility` 为必填 `backend/app/schemas.py:800`），写进行的是本车道自己的 sqlite 副本；共享预览库以 `mode=ro` 打开、只经备份 API 复制，不写不改。
+- 没画上屏 `9` 枚（其中 1 枚在本尖根本没有调用点），逐枚具名原因；门槛行与当屏实际读到的字都是从源码/浏览器现取的：
+  - `agent.protectedCount`（`frontend/src/i18n/LocaleContext.tsx:449`）：应在 `agent/plain`；门槛 `frontend/src/features/agent/AgentComposer.tsx:199` = `{messages.map((item, index) => (`；当屏实际读到 无该格
+  - `agent.aiRunScope`（`frontend/src/i18n/LocaleContext.tsx:485`）：应在 `hub/ai_sheet`；门槛 `frontend/src/features/planning/PlanWithAiSheet.tsx:789` = `{run.current && (`；当屏实际读到 「This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr」
+    中文臂同一格读到「这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。」（`plan-ai-preflight`）
+  - `agent.aiRunUnits`（`frontend/src/i18n/LocaleContext.tsx:487`）：应在 `hub/ai_sheet`；门槛 `frontend/src/features/planning/PlanWithAiSheet.tsx:914` = `{result?.units && (`；当屏实际读到 「This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr」
+    中文臂同一格读到「这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。」（`plan-ai-preflight`）
+  - `agent.aiRunLanded`（`frontend/src/i18n/LocaleContext.tsx:492`）：应在 `hub/ai_sheet`；门槛 `frontend/src/features/planning/PlanWithAiSheet.tsx:374` = `? { key: "agent.aiRunLanded", params: { n: aftermath.landedNewPlanIds.length } }`；当屏实际读到 「This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr」
+    中文臂同一格读到「这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。」（`plan-ai-preflight`）
+  - `discovery.results`（`frontend/src/i18n/LocaleContext.tsx:529` / `frontend/src/i18n/LocaleContext.tsx:1542`）：这枚键在本尖除字典外 0 调用点——`git grep -c` 只回 `frontend/src/i18n/LocaleContext.tsx:2`，所以它永远不会画到屏上；它是单上『八枚』里的一枚，规则改了字典行，屏却不存在。
+  - `discovery.batchCommitmentNote`（`frontend/src/i18n/LocaleContext.tsx:574`）：应在 `discover/picked`；门槛 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:469` = `{picked.length === 0 ? (`；当屏实际读到 「Server verdict · HYDRATABLE」
+    中文臂同一格读到「服务器判定 · HYDRATABLE」（`prep-verdict`）
+  - `discovery.batchLanded`（`frontend/src/i18n/LocaleContext.tsx:576`）：应在 `discover/receipt`；门槛 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:437` = `{!batchReceipt`；当屏实际读到 「Server verdict · HYDRATABLE」
+    中文臂同一格读到「服务器判定 · HYDRATABLE」（`prep-verdict`）
+  - `discovery.batchRefusedSome`（`frontend/src/i18n/LocaleContext.tsx:579`）：应在 `discover/receipt`；门槛 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:532` = `{batchReceipt.missing.length > 0 && (`；当屏实际读到 「Server verdict · HYDRATABLE」
+    中文臂同一格读到「服务器判定 · HYDRATABLE」（`prep-verdict`）
+  - `studio.allProtected`（`frontend/src/i18n/LocaleContext.tsx:855`）：应在 `studio/plain`；门槛 `frontend/src/features/studio/V12TripStudioPanel.tsx:60` = `const nothingToMove = plan.activities.length > 0 && protectedCount === plan.activities.length;`；当屏实际读到 「Not chosen yet」
+    中文臂同一格读到「尚未选择」（`studio-stay-total`）
+
+#### 三、给 ORD-0467 的对齐事实（这一节 0 产品字节）
+
+- 后端在 `backend/app` 下实际发出的 `V13_` 族码 `field=codes=19` 枚，逐枚清单在发布件；
+- 前端另存了一张独立清单：`frontend/src/features/studio/V12TripStudioPanel.tsx:22` 的 6 枚 gate 码，按码查句在 `frontend/src/features/studio/V12TripStudioPanel.tsx:100`，查不到的并进 `unknown`（`frontend/src/features/studio/V12TripStudioPanel.tsx:102`）；字典侧配套行 `field=lines=14` 枚（英中各 `7` 枚，起于 `frontend/src/i18n/LocaleContext.tsx:858`）。
+- 数这族拒绝的行有两枚，各写各的名词：frontend/src/i18n/LocaleContext.tsx:864 与 frontend/src/i18n/LocaleContext.tsx:947；后者的调用点在 `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:228`。也就是说『refusal』这个词现在写在两句里、且两处都不变形。
+- 仍写 `(s)` 的英文行 `field=lines=5` 枚，逐行：`frontend/src/i18n/LocaleContext.tsx:276` （含 `{n}` 计数）；`frontend/src/i18n/LocaleContext.tsx:863` （含 `{n}` 计数）；`frontend/src/i18n/LocaleContext.tsx:864` （含 `{n}` 计数）；`frontend/src/i18n/LocaleContext.tsx:947` （含 `{n}` 计数）；`frontend/src/i18n/LocaleContext.tsx:968` （含 `{n}` 计数）。
+- 立场：0467 把那族写进契约后，码→人话从一处出（本车道建的 `frontend/src/lib/displayVocabulary.ts`，未知值仍走带标注的原值通道），数量词走 `{plural:…}`；前端那 6 枚表应成为契约枚举的投影，而不是第二处来源。本轮不改，等单。
+
+#### 四、栈、门禁、边界
+
+- 后端：`field=port=8763`，监听者是我那台启动进程的子进程，命令行逐字含 `--port 8763`，该请求记在我自己的访问日志 `_uvicorn5_8763.log`；数据库是本车道自己的副本 `D:/moodle/_qoder_n2_0433_0dabe642.db`（`field=db_bytes=7213056`，`field=tables=58`），这一轮它多了一行 `journey_share_grants`，就是第二节那枚令牌；这份副本的内容 sha1（非 blob，不可 `git cat-file`，故意不可取回）逐字段记在发布件 `d32195175d862c3675df2b3c658c95cc72d75dfb` 里。
+- 静态口：`field=port=4857`（令牌补测另起 `field=port=4858`、批处理补测 `field=port=4859`），入口 `assets/index-DmHYey4y.js`；磁盘字节与服务字节同一枚本机字节 sha1（非 blob，不可 `git cat-file`）：`63d64f884ea849b5de6db3e289591a1861e36224`，`field=asset_bytes=1488860`，`field=equal=True`；同段可取回对照件 `d32195175d862c3675df2b3c658c95cc72d75dfb`。
+- 构建：`0dabe64223036391a6c25561a6b606e1533f3704` 上 `cmdr_build_bundle_r1.py` 的 vite 步退 `0`（构建件 tag `n2-0433t2`）；量具自检：`TIP=0dabe6422303 python n2_0433_shape_selftest_r1.py` 报 `checked 32 failures 0`（先证正则能匹配自己字典行拼出的渲染，再开浏览器）。
+- 一处仪器自我更正（先认再交）：第一版量具沿用 r3 的『只收无子元素的叶子』，`exec.evidenceTrail` 在 `<summary>` 的直接文本里，量具看不见它；我把容器自己的直接文本子节点也纳入后同一趟重跑才读到。量具副本的本机字节 sha1（非 blob，不可 `git cat-file`，故意不可取回）：`04fc7e632d1df574d9f8b15dc427edb6528dc8bd`；同段可取回对照件（发布件本体）`d32195175d862c3675df2b3c658c95cc72d75dfb`。
+- 边界：`frontend/src/styles.css` 0 字节；后端 0 字节；契约 0 字节；枚举值 0 改写；权威线 0 移动；落地 0 动作；别人 worktree 0 触碰；本块起头不是 CMDR。本轮只做读数，除自己私有栈外 0 写入。
+- 证据先发布后引用：`evidence/ord0433-n2/counting_keys_two_locale_walk_r2.json`，外读 blob `d32195175d862c3675df2b3c658c95cc72d75dfb`（`git cat-file -t` 可回读）。上一件 `a79b7cff8c0efa4e47f817f00066e6ae3ce536e6` 一并留在库里但作废：它那处 `dictionary_gate_lines` 被我的下标错拼成了 `路径:路径`，读数不受影响，报名行不受信任，所以另发这一件。
+
+#### 五、这轮我没量到的
+
+- `agent.aiRunScope`、`agent.aiRunUnits`、`agent.aiRunLanded` 需要一次真跑完的 AI 生成；这台部署故意无凭据，屏上原句是 「This server has no AI credential configured.」/「这台服务没有配置 AI 凭据。」，`/api/v1/health` 的 `ai_state` 同批读到 `NOT_CONFIGURED`。
+- `agent.protectedCount` 需要一条已答的 what-if 回复（`frontend/src/features/agent/AgentComposer.tsx:218`），本次没在 agent 屏输入问题：NOT_ATTEMPTED。
+- `discovery.batchCommitmentNote` / `discovery.batchLanded` / `discovery.batchRefusedSome` 需要服务器先把目的地准备出水：点『Check this destination』后当屏读 `Server verdict · HYDRATABLE` 与 4 类缺失事实，`picked` 恒 0（`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:469`）。
+- `studio.allProtected` 需要这一版全部活动都受保护（`frontend/src/features/studio/V12TripStudioPanel.tsx:60`），封存演示的 6 枚活动里只有 1 枚受保护，所以该格按定义不出现。
+- 视口只跑了 `field=viewport=390x844`：NOT_MEASURED_ON_OTHER_SHAPES。
+
+- 写完就停：本块只交读数与本车道私有栈的自证，落账由号令者那一侧的门执行；候选枝本轮 0 枚（无产品字节）。
+
+
 ### ORD-0417 · 车道 8ac89982 · hub 那一半的定性：hub 画针（现尖亲测 9 枚），量不到的是"不滚就看不见那句字" · 2026-09-30 01:02+08
 
 **〇、先答两选一：两个都不选，因为前提没复现出来。** 在现尖 4037cb331ea00b83124316d40329762fa1131689（我自己 `ls-remote` 现读，与号令者 20:22 那枚一致）的纯导出树上跑本单那支 hub 门：`/v8/hub` 的 `.v8-map-panel` 里**实测 9 枚针**（两趟独立都是 9 枚，字段 `hub_markers_observed`，run 段锚点 `review/ord0417/HUB_PIN_PRESENCE_4037CB33_R1.json:4`），点下去 hub 自己的玻璃上出句子 `图上选中的这一站 · Departure` / `Selected on the map · Departure`（`sentences` 字段，run 段锚点 `review/ord0417/HUB_PIN_PRESENCE_4037CB33_R1.json:87`），并且恰有一枚 `aria-pressed="true"`。所以"hub 这张地图不画停靠点针"在我这台栈上不成立，"补 hub 的针"没有对象；"量不到"也不成立，因为量到了。
