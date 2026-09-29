@@ -1,7 +1,10 @@
 """ORD-0464 - a trip that gets binned carries the reason the traveller gave, in one of three named states.
 
-Measured at the authoritative tip `45513fc7957214dc385b4dffea9a662a0d8b1d1c` before this file existed:
-`DELETE /api/v1/journeys/{journey_id}` (`backend/app/main.py:2984`) took no request body at all
+First measured at the authoritative tip `45513fc7957214dc385b4dffea9a662a0d8b1d1c`, and re-measured on the
+base this branch now sits on, `4037cb331ea00b83124316d40329762fa1131689` (the door moved from `:2984` to
+`:3006` underneath the rebase, so the citations below are pinned to that commit rather than to a bare line
+number that the next landing would move).  At both readings
+`DELETE /api/v1/journeys/{journey_id}` (`4037cb331ea00b83124316d40329762fa1131689:backend/app/main.py:3006`) took no request body at all
 (`contracts/openapi.yaml` declared `'204'/'404'/'409'` and nothing else), wrote no
 `journey_outcome_events` row - only `record_audit(action="journey.deleted")` - and the vocabulary that
 door *could* have used, `OutcomeEventCreate.event_type` (`backend/app/schemas.py:620-628`), had no
@@ -257,7 +260,7 @@ def test_r7_a_code_outside_the_vocabulary_is_refused_and_points_at_its_slot():
     """Measured, not assumed: this server does not echo the rejected value back.
 
     The 422 item carries `loc = ["body","codes",0]`, the closed list in `msg`, and the dictionary key
-    `validation.not_an_option` - the `safe_errors` filter at `backend/app/main.py:592-603` keeps
+    `validation.not_an_option` - the `safe_errors` filter at `4037cb331ea00b83124316d40329762fa1131689:backend/app/main.py:613-623` keeps
     `loc`/`msg`/`type`/`message_key` and drops the input, so the screen marks *which* line is wrong and
     says the same sentence for any traveller.  Pinning the slot is what a screen can act on; pinning an
     echoed value would pin a behaviour this server deliberately does not have.
