@@ -1007,9 +1007,10 @@ button[data-testid^="mode-"],
    the pill's own painted bottom edge came back "none" in four of six screen x locale
    combinations, so the assistant was no longer one tap away.  Clearing an overlap by
    deleting the control is not yielding.  Now the same named control collapses to a
-   44px corner cell and moves to the first edge slot the runtime found free of text ink,
-   free of every text element's own box and free of other controls -- one control, two shapes, like the viewport button
-   group's centered/off_center pair.  The decision is still taken against the resting
+   44px corner cell and moves to the first edge slot the runtime found free of text
+   ink, free of every text element's own box and free of other controls -- one
+   control, two shapes, like the viewport button group's centered/off_center pair.
+   The decision is still taken against the resting
    layout box, so this cannot oscillate. */
 .cn-copilot-dock.idle-compact.yield-at-rest {
   right: auto;
