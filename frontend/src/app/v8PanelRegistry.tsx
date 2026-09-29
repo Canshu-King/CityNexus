@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from "react";
 
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { AgentComposer } from "../features/agent/AgentComposer";
+import { JourneyAbortPanel } from "../features/abort/JourneyAbortPanel";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
@@ -131,6 +132,21 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         data={s.data}
         onNavigate={(route: string) => s.navigate(route)}
         onReload={() => void s.load(s.data.journey.id)}
+      />
+    ),
+  },
+  {
+    /* ORD-0464: the reason survey in front of binning this trip. It takes the journey from the scope
+       this table already carries, the same way `pending-set` above does, and owns its own one server
+       call -- the shell gains no mount and no knowledge of the delete door. */
+    id: "abort",
+    surface: "route",
+    testId: "journey-abort",
+    when: (s) => s.route === "hub" && Boolean(s.data?.journey?.id),
+    render: (s) => (
+      <JourneyAbortPanel
+        journeyId={s.data.journey.id}
+        onNavigate={(route: string) => s.navigate(route)}
       />
     ),
   },
