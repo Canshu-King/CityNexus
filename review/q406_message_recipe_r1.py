@@ -366,8 +366,10 @@ A("")
 A("## 服务证明：dev 给不了字节等证，静态口给")
 A("   dev（`npm run dev`，端口带具名格 %s ）：服务到的 HTML 里确实带着本检出自己的入口行 `%s`（磁盘 `frontend/index.html:%d` 那行原文 %r）；" % (
     PORT_LINE, "/src/main.tsx", ENTRY_LINE, ARMS["armS"]["disk_entry_line_text"]))
-A("   但 dev 下 served != disk 是**正常的**：vite 注入了 `/@vite/client` 与 `/@react-refresh` 两块，实测 served_bytes=%d 对 disk_bytes=%d ，两枚 sha1 分别 %s 与 %s（我只断言入口名同源 + 差量就是注入块，不断言相等）；" % (
-    ARMS["armS"]["served_bytes"], ARMS["armS"]["disk_bytes"], ARMS["armS"]["served_sha1_over_bytes"], ARMS["armS"]["disk_sha1_over_bytes"]))
+A("   但 dev 下 served != disk 是**正常的**：vite 注入了 `/@vite/client` 与 `/@react-refresh` 两块，实测 served_bytes=%d 对 disk_bytes=%d ，" % (
+    ARMS["armS"]["served_bytes"], ARMS["armS"]["disk_bytes"]))
+A("   两枚都是本地字节重算文件 sha1：%s 与 %s（非 git 对象、不在对象库里；同段可 cat-file 的坐标：交付头 %s ）——我只断言入口名同源与差量就是注入块，不在 dev 上断言相等。" % (
+    ARMS["armS"]["served_sha1_over_bytes"], ARMS["armS"]["disk_sha1_over_bytes"], PUSHED))
 A("   静态口（这条才是字节等证）：`git archive %s | tar -x` 导出后 `npx vite build --outDir dist`（rc=%d ，node_modules 用 os.link 借、nlink=%d ），再 `vite preview --outDir dist --port %d --strictPort`；" % (
     HEAD, STATIC["build_rc"], STATIC["nlink"], STATIC["port"]))
 A("   实测构建产物 `frontend/dist/index.html`：served_sha1=%s == disk_sha1=%s（bytes %d/%d）；入口资产 /assets/%s：served_sha1=%s == disk_sha1=%s（bytes=%d ，状态码 %s/%s ）⇒ 两枚都逐字节相同（sha1 over bytes，本地重算；非 git 对象声明，同段可 cat-file 的坐标：交付头 %s ）。" % (
