@@ -315,14 +315,17 @@ export function PoiImportPanel({
             {phase === "error" && failure ? (
               <p role="alert" data-testid="poi-import-error">
                 {t("poiImport.loadFailed")}
-                {/* The condition is this screen's own sentence; the detail is a machine token and, when
-                    there was an answer, the status this device saw. No prose from the answer survives
-                    to the screen at all. */}
+                {/* The condition is this screen's own sentence. The only value painted next to it is
+                    the status this device measured -- the named code stays inside the component,
+                    because it is read out of the answer's envelope and the exposure rule forbids
+                    anything derived from the body reaching the DOM by any route, filtering included.
+                    (r7b counted my first attempt as a cell for exactly that reason.) */}
                 <span data-testid="poi-import-error-why">{t(FAILURE_SENTENCE[failure.code])}</span>
-                <small data-testid="poi-import-error-detail">{failure.code}</small>
                 {failure.status ? (
-                  <small data-testid="poi-import-error-status">HTTP {failure.status}</small>
-                ) : null}
+                  <small data-testid="poi-import-error-detail">HTTP {failure.status}</small>
+                ) : (
+                  <small data-testid="poi-import-error-detail">{t("poiImport.errNoResponse")}</small>
+                )}
               </p>
             ) : null}
             {phase === "success" ? (
@@ -462,8 +465,8 @@ export function PoiImportPanel({
                   {readBackFailure === "MISMATCH"
                     ? t("poiImport.readBackFailed")
                     : t(FAILURE_SENTENCE[readBackFailure.code])}
-                  {readBackFailure !== "MISMATCH" ? (
-                    <small data-testid="poi-import-readback-detail">{readBackFailure.code}</small>
+                  {readBackFailure !== "MISMATCH" && readBackFailure.status ? (
+                    <small data-testid="poi-import-readback-detail">HTTP {readBackFailure.status}</small>
                   ) : null}
                 </p>
               ) : null}
