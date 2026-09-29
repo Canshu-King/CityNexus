@@ -1,11 +1,11 @@
 {
-  "base": "http://127.0.0.1:49970",
+  "base": "http://127.0.0.1:49967",
   "locale": "en",
   "floor_px": 768,
   "steps": [
     {
       "step": "panel mounted",
-      "url": "http://127.0.0.1:49970/v8/discover"
+      "url": "http://127.0.0.1:49967/v8/discover"
     },
     {
       "step": "capability read",
@@ -13,7 +13,7 @@
     },
     {
       "step": "job state read at sheet open",
-      "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
+      "operation_id": "f571dce5-9899-4aa9-88fe-768ab1fa7ead",
       "status": "RUNNING",
       "terminal": false
     },
@@ -35,7 +35,7 @@
           "strict": true,
           "ancestor_only": false,
           "within_floor": true,
-          "text": "Preparation · QUEUED"
+          "text": "Preparation · RUNNING"
         },
         {
           "testid": "prep-survey",
@@ -43,7 +43,7 @@
             17,
             117,
             356,
-            532
+            531
           ],
           "centre": [
             195,
@@ -60,7 +60,7 @@
             32,
             130,
             326,
-            22
+            21
           ],
           "centre": [
             195,
@@ -75,13 +75,13 @@
           "testid": "prep-survey-sub",
           "box": [
             32,
-            158,
+            157,
             326,
             17
           ],
           "centre": [
             195,
-            167
+            166
           ],
           "strict": true,
           "ancestor_only": false,
@@ -92,13 +92,13 @@
           "testid": "prep-survey-reason-TOO_SLOW",
           "box": [
             36,
-            197,
+            196,
             13,
             13
           ],
           "centre": [
             43,
-            203
+            202
           ],
           "strict": true,
           "ancestor_only": false,
@@ -110,12 +110,12 @@
           "box": [
             60,
             192,
-            273,
-            22
+            257,
+            21
           ],
           "centre": [
-            196,
-            203
+            188,
+            202
           ],
           "strict": true,
           "ancestor_only": false,
@@ -126,13 +126,13 @@
           "testid": "prep-survey-reason-WRONG_PLACE",
           "box": [
             36,
-            243,
+            242,
             13,
             13
           ],
           "centre": [
             43,
-            249
+            248
           ],
           "strict": true,
           "ancestor_only": false,
@@ -144,12 +144,12 @@
           "box": [
             60,
             238,
-            278,
-            22
+            261,
+            21
           ],
           "centre": [
-            199,
-            249
+            191,
+            248
           ],
           "strict": true,
           "ancestor_only": false,
@@ -160,13 +160,13 @@
           "testid": "prep-survey-reason-CHANGED_MIND",
           "box": [
             36,
-            289,
+            288,
             13,
             13
           ],
           "centre": [
             43,
-            295
+            294
           ],
           "strict": true,
           "ancestor_only": false,
@@ -178,12 +178,12 @@
           "box": [
             60,
             284,
-            207,
-            22
+            195,
+            21
           ],
           "centre": [
-            163,
-            295
+            157,
+            294
           ],
           "strict": true,
           "ancestor_only": false,
@@ -194,13 +194,13 @@
           "testid": "prep-survey-reason-WE_WERE_UNCLEAR",
           "box": [
             36,
-            335,
+            334,
             13,
             13
           ],
           "centre": [
             43,
-            341
+            340
           ],
           "strict": true,
           "ancestor_only": false,
@@ -212,12 +212,12 @@
           "box": [
             60,
             330,
-            294,
-            22
+            277,
+            21
           ],
           "centre": [
-            207,
-            341
+            198,
+            340
           ],
           "strict": true,
           "ancestor_only": false,
@@ -228,13 +228,13 @@
           "testid": "prep-survey-reason-OTHER",
           "box": [
             36,
-            381,
+            380,
             13,
             13
           ],
           "centre": [
             43,
-            387
+            386
           ],
           "strict": true,
           "ancestor_only": false,
@@ -246,12 +246,12 @@
           "box": [
             60,
             376,
-            226,
-            22
+            213,
+            21
           ],
           "centre": [
-            173,
-            387
+            166,
+            386
           ],
           "strict": true,
           "ancestor_only": false,
@@ -262,13 +262,13 @@
           "testid": "prep-survey-note-label",
           "box": [
             32,
-            419,
+            418,
             326,
             17
           ],
           "centre": [
             195,
-            428
+            427
           ],
           "strict": true,
           "ancestor_only": false,
@@ -279,13 +279,13 @@
           "testid": "prep-survey-note",
           "box": [
             32,
-            442,
+            441,
             326,
             44
           ],
           "centre": [
             195,
-            464
+            463
           ],
           "strict": true,
           "ancestor_only": false,
@@ -296,13 +296,13 @@
           "testid": "prep-survey-count",
           "box": [
             32,
-            492,
+            491,
             326,
             17
           ],
           "centre": [
             195,
-            501
+            500
           ],
           "strict": true,
           "ancestor_only": false,
@@ -313,13 +313,13 @@
           "testid": "prep-survey-stored",
           "box": [
             32,
-            515,
+            514,
             326,
             17
           ],
           "centre": [
             195,
-            524
+            523
           ],
           "strict": true,
           "ancestor_only": false,
@@ -330,13 +330,13 @@
           "testid": "prep-survey-no-door",
           "box": [
             32,
-            538,
+            537,
             326,
             34
           ],
           "centre": [
             195,
-            555
+            554
           ],
           "strict": true,
           "ancestor_only": false,
@@ -347,13 +347,13 @@
           "testid": "prep-survey-back",
           "box": [
             32,
-            582,
+            581,
             161,
             52
           ],
           "centre": [
             112,
-            608
+            607
           ],
           "strict": true,
           "ancestor_only": false,
@@ -364,13 +364,13 @@
           "testid": "prep-survey-exit",
           "box": [
             201,
-            582,
+            581,
             157,
             52
           ],
           "centre": [
             279,
-            608
+            607
           ],
           "strict": true,
           "ancestor_only": false,
@@ -383,8 +383,8 @@
       "step": "survey log",
       "entries": 1,
       "last": {
-        "at": "2026-09-29T01:10:22.607Z",
-        "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
+        "at": "2026-09-29T04:23:03.197Z",
+        "operation_id": "f571dce5-9899-4aa9-88fe-768ab1fa7ead",
         "reasons": [
           "TOO_SLOW",
           "WE_WERE_UNCLEAR"
@@ -527,8 +527,8 @@
       "pass": true,
       "detail": {
         "record": {
-          "at": "2026-09-29T01:10:22.607Z",
-          "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
+          "at": "2026-09-29T04:23:03.197Z",
+          "operation_id": "f571dce5-9899-4aa9-88fe-768ab1fa7ead",
           "reasons": [
             "TOO_SLOW",
             "WE_WERE_UNCLEAR"
