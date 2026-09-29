@@ -15,6 +15,7 @@ import {
   isDisruptionAcknowledgedOnly,
   isDisruptionOpen,
 } from "../../lib/disruptionState";
+import { riskReasonLabel } from "../../lib/displayVocabulary";
 import {
   fetchWithWriteDeadline,
   isWriteDeadlineMissed,
@@ -138,6 +139,7 @@ export function LiveRecovery({
   const context = twin.data?.context as
     | {
         disruptions?: Disruption[];
+        feasibility_envelope?: { robust?: boolean; risk_reason_codes?: string[] };
         execution?: {
           now_activity_id?: string | null;
           cursor_status?: string | null;
@@ -184,6 +186,8 @@ export function LiveRecovery({
   );
   const openDisruptions = disruptions.filter((d) => isDisruptionOpen(d, acceptedTriggerIds));
   const handledDisruptions = disruptions.filter((d) => !isDisruptionOpen(d, acceptedTriggerIds));
+  const envelope = context?.feasibility_envelope ?? null;
+  const riskCodes = envelope?.risk_reason_codes ?? [];
   // Acknowledged-but-unresolved events get their own copy: the traveller has
   // seen them, but they still need a decision.
   const acknowledgedOnly = disruptions.filter((d) =>
@@ -291,6 +295,19 @@ export function LiveRecovery({
       {openDisruptions.length > 0 && (
         <div className="live-disruption" data-testid="live-disruption" role="status">
           <b>{zh ? "发生了什么" : "What happened"}</b>
+          <p className="live-disruption-summary" data-testid="live-disruption-summary">
+            {envelope
+              ? zh
+                ? `服务器摘要：${envelope.robust ? "还能按原计划走完" : "需要复核"}${
+                    riskCodes.length ? " · " + riskCodes.map((code) => riskReasonLabel(code, zh)).join("、") : ""
+                  }`
+                : `Server summary: ${envelope.robust ? "still on plan" : "review needed"}${
+                    riskCodes.length ? " · " + riskCodes.map((code) => riskReasonLabel(code, zh)).join(", ") : ""
+                  }`
+              : zh
+                ? "服务器摘要：这台设备还没读到"
+                : "Server summary: not read by this device yet"}
+          </p>
           <ul>
             {openDisruptions.slice(0, 3).map((d) => {
               const copy = EVENT_COPY[d.type] ?? EVENT_COPY.OTHER;
