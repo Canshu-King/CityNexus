@@ -3,6 +3,7 @@ import { Fragment, type ReactNode } from "react";
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
+import { CollectionPanel } from "../features/collections/CollectionPanel";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
@@ -200,6 +201,22 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         />
       );
     },
+  },
+  {
+    /* ORD-0444: the smallest face that proves the container can be read.  It shares the 城市探索
+       route rather than taking a nav key of its own, and the reason is measured: the strip resolves
+       a label as `t("nav." + item.key)` (`app/V8Experience.tsx:1731`) and `t()` falls back to the
+       key itself when the dictionary has no entry (`i18n/LocaleContext.tsx:1825`), so a new route
+       key would put the literal `nav.collections` on screen -- and `LocaleContext.tsx` is a file
+       this order may not open. */
+    id: "collections",
+    surface: "route",
+    testId: "collection-panel",
+    when: (s) => s.route === "discover",
+    /* The journey already names the traveller on this screen (`data.journey.traveler_id`), so the
+       face reads for that id rather than asking for one -- and it stays null-and-silent if the
+       journey has no traveller, because the door requires the parameter. */
+    render: (s) => <CollectionPanel travelerId={s.data.journey?.traveler_id ?? null} />,
   },
   {
     id: "live",

@@ -1292,3 +1292,49 @@ class JourneyRoleCapability(Base):
     capability: Mapped[str] = mapped_column(String, primary_key=True)
     scope_message_key: Mapped[str] = mapped_column(String)
     created_at: Mapped[str] = mapped_column(String)
+
+
+class CollectionFolder(Base):
+    """ORD-0444: a named shelf a traveller keeps places on -- the 「收藏」 container.
+
+    Three columns carry the shelf itself: its name, whose it is, and the two moments.  The owner is
+    `NOT NULL` on purpose.  A nullable `traveler_id` would have been worse than none at all -- it
+    would look like ownership while nothing wrote it, and 「我的收藏」 would then be a claim the row
+    cannot support.  It is an *asserted* membership, not an authenticated one: the creating caller
+    names the traveller and the door checks that id exists in `travelers`, which is the same stance
+    `journey_share_grants.created_by` takes while the anonymous read remains the default.
+
+    `name` is not unique.  Two shelves can both read 「周末」, so the id is what addresses one, and
+    the door that adds a place takes the id and never a name.
+    """
+
+    __tablename__ = "collection_folders"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    owner_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id"), nullable=False
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class CollectionItem(Base):
+    """One place on one shelf, plus the note its owner wrote about it.
+
+    The row stores a *reference* to `places` and no copy of the place's fields, so a shelf cannot
+    show a name that the place row has since changed.  `note` is nullable because "no note was
+    written" is a fact a screen has to be able to tell apart from "an empty note".
+
+    `UNIQUE(folder_id, place_id)` is the durable half of the duplicate refusal: two workers
+    handling two taps of the same place onto the same shelf cannot both win, which a
+    select-then-insert check inside one process could not promise.
+    """
+
+    __tablename__ = "collection_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    folder_id: Mapped[str] = mapped_column(ForeignKey("collection_folders.id", ondelete="CASCADE"))
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id"))
+    note: Mapped[str | None] = mapped_column(String, nullable=True)
+    added_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (UniqueConstraint("folder_id", "place_id"),)
