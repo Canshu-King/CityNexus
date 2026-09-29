@@ -107,17 +107,20 @@ if not git_ok("merge-base", "--is-ancestor", BASE, HEAD):
     bad.append("my branch is not built on the base the ruling names")
 N_LAG = int(git("rev-list", "--count", "%s..%s" % (BASE, TIP)) or 0)
 MT_RC, MT_OUT = run(["git", "-C", REPO, "merge-tree", "--write-tree", TIP, HEAD])
-TOUCHED = [l for l in git("diff", "--name-only", BASE, HEAD, cwd=WT).splitlines() if l.strip()]
+ALL_TOUCHED = [l for l in git("diff", "--name-only", BASE, HEAD, cwd=WT).splitlines() if l.strip()]
+TOUCHED = [t for t in ALL_TOUCHED if not t.startswith("review/")]
 # with rename detection the deleted path folds into the new one, so the expected set is four paths
 if sorted(TOUCHED) != sorted([NEW, S0403, S0412, S0415]):
     bad.append("unexpected touched set: %s" % TOUCHED)
+if [t for t in ALL_TOUCHED if t.startswith("review/") and not t.startswith("review/q415_")]:
+    bad.append("unexpected review paths: %s" % ALL_TOUCHED)
 NOREN = git("diff", "--no-renames", "--name-status", BASE, HEAD, cwd=WT).splitlines()
 DELETED = [l for l in NOREN if l.startswith("D") and OLD in l]
 ADDED = [l for l in NOREN if l.startswith("A") and NEW in l]
 if not DELETED or not ADDED:
     bad.append("the move is not a deletion in the product tree plus an addition on the gate side: %s" % NOREN)
 REN = [l.split()[0] for l in git("diff", "--find-renames", "--name-status", BASE, HEAD, cwd=WT).splitlines() if NEW in l]
-if [t for t in TOUCHED if t.startswith("backend/") or t.startswith("frontend/src/") and t != OLD]:
+if [t for t in TOUCHED if t.startswith("backend/") or (t.startswith("frontend/src/") and t != OLD)]:
     bad.append("paths outside the ruling touched: %s" % TOUCHED)
 # the criterion the ruling states, measured on my head and on the base
 REFS_OLD_HEAD = hits(HEAD, "frontend/src", "mapLabelTextField")
@@ -331,7 +334,7 @@ A("   它在 `frontend/src/lib/` 下只是让人以为运行时有一条玻璃�
     BUILD["mine"]["bundle_tokens"]["get_title_literal"], BUILD["mine"]["bundle_tokens"]["canvas_label_strings_name"],
     BUILD["mine"]["bundle_tokens"]["provider_attribution_source_name"]))
 A("   `openfreemap` 字样=%s 仍在产物里——那是地图自己的归属句，不是这张禁表（%s 记的正是这两面不能混）。" % (
-    BUILD["mine"]["bundle_tokens"]["openfreemap_token"], line_of(PUSHED, NEW, "never judged here")))
+    BUILD["mine"]["bundle_tokens"]["openfreemap_token"], line_of(PUSHED, NEW, "ORD-A basemap provider attribution must stay readable")))
 A("   画在玻璃上的字仍由 `%s` 那句字面量决定（现读该行 %s ），这一点乙案没改，也不该由我改。" % (JM, line_of(PUSHED, JM, '"text-field"')))
 A("")
 A("## 没改善的部分")
