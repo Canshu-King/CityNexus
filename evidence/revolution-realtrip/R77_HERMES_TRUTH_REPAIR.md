@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `62c006ec`
+- final product/evidence commit before this receipt update: `80189a43` (`revolution lab: capture hub truth receipt`)
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -285,6 +285,34 @@ The map surface now uses the same fallback. Its clean readback is:
 
 This keeps the live and map evidence consumers aligned on the same selected-plan leg.
 
+### Hub surface readback
+
+After the final Hub wording repair, the clean page at `/v8/hub` was reloaded from
+the same disposable journey and captured after commit `6f21c8ce`:
+
+```text
+1 个方案 · 出行方式待补充
+已选行程
+下面是已采用的真实行程；住宿方案仍未选择。
+出行方式证据仍待补充。
+09:00 网师园 · 10:42 拙政园
+```
+
+The Hub also renders the nine planner-dropped candidates without duplicating the
+reason text:
+
+```text
+规划前被去掉的候选地点（9 个）
+去掉「一个未读取到名称的地点」：这一站不满足一条未识别的硬性条件
+```
+
+This is the selected product state projected from the real PlanVersion; the pending
+mode evidence remains visible and is not upgraded to a selectable mobility choice.
+
+Hub screenshot receipt:
+
+- `frontend/output/playwright/r77-suzhou-hub-truth-clean.png`
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
@@ -297,6 +325,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-map-no-route-title-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png`
+- `frontend/output/playwright/r77-suzhou-hub-truth-clean.png`
 
 The final frontend gates after this repair were:
 
