@@ -16588,6 +16588,173 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0424 续刀：补我 06:24 那块具名的最后一条欠账（账本 `CITYNEXUS_AGENT_CONTROL.md:20443`），跨行三元与 `useState` 默认值按有界窗口纳入；同一棵树上零丢零增，夹具里注入的全抓到（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，14:57 交）
+
+边界：0 产品字节。新面 `tools/cnx_copy_tiers_multiline_fallback_r1.py` 由已发布 r2 的字节切出（blob c41afdb42a1df67a1fbd1239bedb871d46590609，94887 字节），切它的两份片段也一并上架（片段本身就是证据）；`cnx_copy_tiers_r1.py`、`cnx_copy_tiers_r2.py`、门 `live_checks/preflight_and_land_r5.py` 都不在两枚枝的改动里（`published_tools_or_door_rewritten` [] / []）。新工具本机字节 sha1 46e358105bfc150b1c3e0c225a8518b9f6a145ba 是本机字节 sha1、不是 blob、不可 cat-file；入库后的服务端 blob 即上面那枚。
+
+**① 为什么不做成语句拼接（我先试了，量完否掉）。** 把一条语句按括号配平接成逻辑行、再跑现有正则，在尖 57ff5d1c2f85… 的 115 个文件上量得：真跨行分支 0 条、而合并切出来的模板碎片 188 条（件 blob 94758e4a1c204158d0480f8cc206fbe237c35cf3；分类脚本 blob 603f5ef68942e58c84adf84084dd5d0f50cb62bf）；同一把尺在新尖 b2abd99b9e07… 的 115 个文件上重取：真 0 条、碎片 188 条（blob db7bda16a88cab34a62502c6e0694ad9ece19291）。例子就是那枚 `V8Experience.tsx:241` 的模板：接行后被抓成 `). Your trip is unchanged; check the details and try again.`——没人写过的文本。一条会报自己阅读残留的尺，教出来的是不信任，所以不要。
+
+**② 实际纳入的形只有三种，且各自要下一行是一整段字面量。** 算子悬在行尾：`?`（真分支只能在下一行）、`:`（假分支）、`useState(`（默认值）。`??` 明确排除在这一判据外——它是本面已发布的行为，在这里再收一次会把同一个兜底按两种形各报一遍。`:` 还多一道要求：同一表达式上面必须真有一枚悬空的 `?`，否则 `title:` + 下一行字符串（对象属性）会被当成三元分支——形状一样，东西不一样。控制与判定全在件 blob 3c6ffe7f8407a9fca767ef6a9e2ce2698cde4651：a_fixture_hit_is_never_lost=True；a_live_hit_is_never_lost=True；an_object_property_is_not_a_branch=True；cjk_stays_out_of_this_face=True；the_cross_line_shape_is_now_caught=True；the_template_fragment_stays_quiet=True
+
+**③ 现树等值：0 丢 0 增。** 同一进程里 import 两把尺跑同一棵树，按 `(tier, file, line, literal)` 比：尖 b2abd99b9e07… 上 `identical` True、lost 0 条、gained 0 条，层级计数与 r2 逐字相同（{"B-skipped": 162, "A-skipped": 6, "B": 81, "C": 378, "C-skipped": 4}）；夹具树上旧面报 1 条、新面报 4 条，多出的三枚正是注入的跨行分支，逐枚给行号：RealCrossLine.tsx:4 'The server refused this step, so nothing was' / RealCrossLine.tsx:6 'Nothing was booked, and the server gave the ' / RealCrossLine.tsx:8 'Tell the AI how you like to travel'（旧面在那三行上是 0 条）。模板碎片、对象属性、CJK 三枚控制都按设计静默（同件）。
+
+**④ 自带反控臂：两把并跑逐条一致（48 MET / 4 VIOLATION）。** 四枚红面是既有的 LADDER④⑥、HARDCODED_FALLBACK、RENDER_TIERS，r2 同样红，不是这次改出来的。这里必须自报一件：两把的日志字节相同（同一 blob d2283c40d900…），因为工具抬头里那行 `== cnx_copy_tiers_r1` 是写死的代次名（`cnx_copy_tiers_r2.py` 里 main 的第一条 print），我没顺手改——所以日志分不清是哪把跑的；两把的差别由 ③ 那份进程内对比件承担，不由日志承担。要我把抬头改成运行时文件名，说一句我就另切一刀。
+
+**⑤ 尖在这期间动了两次，每个数都带自己那枚 rev。** 首切与首测在 57ff5d1c2f8540d498d945ed591c36689fc0f39e；复测与批次二在 b2abd99b9e07c77e565f9cbdbd3875fcc733697b；写这块时 `ls-remote` 已读到 4efe7efb70ac4e08471da9bd5153f178348e4db9。两枚枝：`review/S4-ord0424-multiline-fallback-1441` = 196f8e1d72628337a68a0188eaf04f89e6c1930e（基于 b2abd99b9e07c77e565f9cbdbd3875fcc733697b，含工具，13 枚文件）与 `review/S4-ord0424-multiline-fallback-1441-b2` = 0bf55a2af40ab172b15b6843dd9e48ca202a9cbd（基于 4efe7efb70ac4e08471da9bd5153f178348e4db9，只含复测四件，4 枚）。证据 16 件在 `evidence/ord0424-multiline-fallback-1441/`，逐件经 contents API 独立读回（服务端 sha、本机 blob、字节数相符）。
+
+**转达与账本不符的两处，我按账本办：**
+- ORD-0428 我没接：账本 `CITYNEXUS_AGENT_CONTROL.md:23765` 把它派给车道 `a68b0631-cf5a-435d-93d7-b8dc438d9656`，`CITYNEXUS_AGENT_CONTROL.md:23782` 是它自己的回件（说那两处连数据带渲染闭合在禁改文件里），另两条屏上仍在的读数在 `CITYNEXUS_AGENT_CONTROL.md:23212` 与 `CITYNEXUS_AGENT_CONTROL.md:23283`。我没动那两枚文件，也没替它认领。
+- ORD-0424 不是还挂着：三形扩展在 `CITYNEXUS_AGENT_CONTROL.md:20039`（06:24 那块）已交，号令者也在现尖跑过那把扩好的尺（`CITYNEXUS_AGENT_CONTROL.md:17509`）。这次做的只是我在那块里具名的第 3 条欠账。
+
+**没改善 / NOT_DONE（具名）**
+1. 只覆盖算子在行尾这一族。算子在上一行中间、字面量独占下一行的写法仍会漏（方向是少报不是多报）；现树上这种形状是 0 条（分类件 blob db7bda16a88cab34a62502c6e0694ad9ece19291），所以今天不咬人，但根治要走到 AST 上读，不是把行读再补一层。
+2. 新面在现树 gained 0 条（等值件 blob 3c6ffe7f8407a9fca767ef6a9e2ce2698cde4651），意味着这一刀在今天的树上不新增任何报红——它买的是『以后有人这么写就报得到』，不是今天的存量。存量仍是同一件里 HARDCODED_FALLBACK 那层的 tier B 81 条与 tier C 378 条。
+3. tier C 我仍只有形状证据、没有屏证据； RENDER_TIERS 里能证明渲染位的那部分才是可派单的，这刀没改变这一点。
+4. ORD-0391 那 23 行的屏上逐字读回、ORD-0361 的 rebase 仍欠（枝 `review/S4-ord0361-map-tap-selection` 停在 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb）。
+
+
+### R ORD-0437 r9 · 重到 14:49 的尖、客户端改用重生成核对，并接下并入的 ORD-0463（+08 on 2026-09-29）
+
+**一、现读的尖与交付头（逐字）**
+
+- `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 于 15:06 现读 = `4efe7efb70ac4e08471da9bd5153f178348e4db9`（`git show -s` 得 2026-09-29 14:49:35 +0800，ORD-0455 readouts）。
+- 交付枝：`refs/heads/review/R-ord0437-link-import-r9` = `b2f5a2964e2c33f1c1b1eaf9be20f7d4e2d619f0`，同一次 `ls-remote` 逐字回读同一枚 40 位，match=YES。
+- 他 14:34 退回的那枚是 `-r6` = `ea532c95f0ec49d1f0f4264c853b96a391f3a01d`；那之后线又跳了两次（`17dff25a` 13:27、`4efe7efb` 14:49），本枝是跟着跳到最新一枚重放的 19 笔。已推的 `-r1`…`-r8` 全部原位未覆盖，权威分支零次写入。
+
+**二、他点的那两处理由，逐条按他的判据重量（不是按 merge-tree 不冲突）**
+
+- 词典：现尖 `2c8c538b9b27d3ea9008bb567aaa53401374a599`、我这头 `36c38e96f328a5cf246f9c78dbf2fbf1e7043350`，而 `git merge-base <现尖> HEAD` **等于现尖本身** ⇒ 三侧互异已经收敛成"只剩我这侧改过"。
+- 复切判据（合完逐字节等于车道自己那份）我这轮逐枚量：`paths_owned=51`、`different=0`、conflict 行数 0、`merged_tree=67df6e59e8d5a5ae8461d830d4e4d6cab542f97b`。整份读数入库为 `evidence/qoder-ord0437-20260929/predicate_r9.txt`（命令：`git merge-base` / `merge-tree --write-tree` / `rev-parse`，全只读）。
+- `generated/api.ts` 要重生成那份：我跑 `npx --no-install openapi-typescript ../contracts/openapi.yaml -o src/generated/api.ts`（openapi-typescript 7.13.0），生成后文件仍是 blob `95b3bc69b806984adc35d5a656aa661a3c09a8bf`，与入库那枚**逐字节相同**，`git status` 干净 ⇒ 签入的这份本来就是生成的产物，不是我手改的。运行日志入库 `evidence/qoder-ord0437-20260929/genclient_r1.txt`。
+
+**三、当代重跑的自己判据（四套，都在这个头上）**
+
+- 门：`bash run_gate_r1.sh e2e/qoder-ord0437-poi-import-chain.spec.ts --reporter=list`（文件名以 `qoder-ord0437` 起头，工作目录 `D:/moodle/_qoder_r_ord0437`）⇒ **7 passed、退码 0、101 s**，收据 `evidence/qoder-ord0437-20260929/gate_r25.log`。
+- 后端：`D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0437_poi_import.py -q` ⇒ 9 passed（两条服务端守门的判据在 `backend/tests/test_qoder_ord0437_poi_import.py:199`、`:238`）。
+- 契约：`tools/verify_openapi_parity.py` ⇒ `OpenAPI 3.1.0; formal 164; runtime 164; missing 0; extra 0`；本单两条门在 `backend/app/main.py:6371`（parse）与 `:6449`（add）。
+- 前端：`npx tsc -p tsconfig.typecheck.json --noEmit` 输出 0 字节。曝光尺（`ui_exposure_taint_ast_r7b.cjs`，`git hash-object` = `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`）上一代量得 12 格、`features/poiimport` 名下 0 格，与现尖同数；注册表挂载点在 `frontend/src/app/v8PanelRegistry.tsx:186`。
+
+**四、接下并入的 ORD-0463（按他裁的原话：落地代之后由本车道走完那一屏的屏上四格并交坐标）**
+
+- 我读的地基件是 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt`（车道 `6a150e1e` 交的只读测量，其第 7 条已经把我枝上的形制与 30 枚 testid 列进去了）。截图那一格按他裁定维持"不收"：线上把图片变成地点候选的通道没有——他自己复核后点名的三扇 `inbox/vision`、`inbox/text-extract`、`inbox/import`（`backend/app/main.py:4553`、`:4516`、`:4432`）产出的是订房单/票据草稿，不是地点候选池，所以收了图再说"尚未识别"是更弱的真话，这条我不改。
+- 四格里我现在**已经有屏上证据**的三格（都在本枝的门读数里，不在尖上）：认出几枚报几枚 = `poi-import-counts`；认不出的具名说没认出来 = 卡上 `poi-candidate-reason` 与 `poi-import-unsupported`（含链接的 host）；共用同一批拒绝码 = `JOURNEY_NOT_FOUND`、`NO_ACTIVE_PLAN`、`IMPORT_DAY_REQUIRED`、`IMPORT_PLACE_UNKNOWN`、`IMPORT_PLACE_NOT_VISITABLE`（`backend/app/main.py:6520` 是本单新增那枚的发射点）。第四格（截图那一支）按裁定是"具名说不能"，屏上现在是 `poi-import-mode-unsupported`。
+- 所以我不在他落地之前自称 0463 已闭：等这枚候选落地，我按他那句"走完并交坐标"补一屏的坐标件（哪一格在哪个 testid、屏上原文、以及如果他要的是新的第四形，我照他点的做）。
+
+**五、还没改善的**
+
+- 卡仍是两份实现（那张内联在 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx`，我 0 改动；我这枚 import 了已落线的 `discovery-batch.css`）。
+- "收藏""新建计划"两个出口仍 disabled 带具名原因；链接正文与截图仍不读，只具名。
+- 我没跑整套 acceptance，只跑本单的门。
+- 复切实判仍归他那两跑；我全部是只读自测。
+
+
+### R ORD-0437 r8 · 重交：线在 14:23 又跳了一次，我这枝跟着重到那一枚并重新量（+08 on 2026-09-29）
+
+**一、为什么又交一枚（不是重复劳动，是判据要求）**
+
+- 号令者 12:36 退回的那次，评的是我的 `-r2`，当时线路在 `c6a0ef6f…`（他给的日志首行 `START tip=c6a0ef6fdb5c`，同条记录里 `cand=5ebfa4a983813e5aff84b3ec289652e9d02ba99e`，冲突枚是 `backend/app/schemas.py`，base blob `4814e02e43afe755f7d91fc9f680c86253c41a53`）。
+- 我 12:54 那块交的是 `-r6`（基座 `57ff5d1c…`，当时 `merge_base == 现尖`）。之后线又跳了两次：`17dff25a…`（13:27，ORD-0450）与 `b2abd99b…`（14:23，ORD-0454）。**后一次改了 `backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts`，三枚都在我改的清单里** ⇒ 又变成"两侧都改过"，同一把判据会再拒一次。所以本块交的是重到 `b2abd99b` 的那一枚。
+- 现读：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = `b2abd99b9e07c77e565f9cbdbd3875fcc733697b`（`git show -s` 得 2026-09-29 14:23:55 +0800，S4-ast-taint 的 ORD-0454）。
+
+**二、交付坐标**
+
+- 本块评的枝：`refs/heads/review/R-ord0437-link-import-r8` = `044e1c1c0afefa9cd868a76690d2d63e8fd9fa94`，`git ls-remote` 逐字回读同一枚 40 位，match=YES；它与现尖的关系：`git merge-base b2abd99b… HEAD` **等于现尖本身**，`merge-tree --write-tree` 的 conflict 行数 0，对我这枝自有路径逐枚比"合并结果 == 枝上字节"：paths 48、different 0。
+- 之前推的枝全部原位未动：`-r7` = `be34831df4746080d232fa06f0ca4e4ce38b895f`（基座 `17dff25a…`）、`-r6` = `ea532c95f0ec49d1f0f4264c853b96a391f3a01d`（基座 `57ff5d1c…`）、再往前 `-r5`/`-r4`/`-r3`/`-r2`/`-r1` 同位。权威分支零次写入、账本本体我没碰。
+- 净形：12 枚产品与门路径 + 36 枚 `evidence/` 收据，added 一万二千余行、deleted 0 行（`git diff --numstat b2abd99b..HEAD`）。
+- 我这一整天的重基次数：`35326e62` → `0fee131d` → `4f5dda12` → `c6a0ef6f` → `57ff5d1c` → `17dff25a` → `b2abd99b`，每次都是零冲突，所以我从不按"无冲突"交差，只按上面那条逐枚比对比交。**提醒**：这条线今天已经跳了七次，任意一枚候选的"base == 现尖"活不过一小时；要落地请在某一跳的开头重读并让我立刻重基，否则每一跳都可能又撞上。
+
+**三、重基之后重新量的东西（不是复述旧数）**
+
+- 门：`bash run_gate_r1.sh e2e/qoder-ord0437-poi-import-chain.spec.ts --reporter=list` 于 `D:/moodle/_qoder_r_ord0437` ⇒ **7 passed、退码 0、102 s**，收据 `evidence/qoder-ord0437-20260929/gate_r24.log`（上一代 `17dff25a` 上的同门是 `gate_r23.log`，同样 7 passed 退码 0）。
+- 后端：`D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0437_poi_import.py -q` ⇒ 9 passed；文件 `backend/tests/test_qoder_ord0437_poi_import.py:199`、`:238` 是那两枚守门的判据。
+- 契约：`tools/verify_openapi_parity.py` ⇒ formal 164 = runtime 164、missing 0、extra 0。本单只贡献两条门：`backend/app/main.py:6371`（parse）与 `:6449`（add）。
+- 曝光面：同一把尺（`ui_exposure_taint_ast_r7b.cjs`，`git hash-object` = `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`）`--tree` 量我这枝的树 ⇒ `cells_total` 12，与现尖同数，`features/poiimport` 名下 0 格，即 growth 为空。收据 `evidence/qoder-ord0437-20260929/exp_0437r7.json`。
+- 前端：`npx tsc -p tsconfig.typecheck.json --noEmit` 输出 0 字节（无 error），收据 `run/tsc_0437r8.txt`（车道目录）。
+- 注册表挂载点在 `frontend/src/app/v8PanelRegistry.tsx:185`，路由条目在 `frontend/src/routes/v8Routes.ts:10`；写入侧的具名拒绝码在 `backend/app/main.py:6520`，目录剔除在 `:6407`。
+
+**四、还在等的两件（都不是我能替谁做的）**
+
+- 样式表归属那条我 12:36 已撤（ORD-0435 的 `frontend/src/features/discovery/discovery-batch.css` 已落线，我这屏 import 它，实量 44 px 与内侧强调线）。
+- 号令者若要彻底避开 `backend/app/schemas.py` 上的尾部追加对撞，我这边有一步可做：把这单的五枚请求/响应模型从我改的 `schemas.py` 挪进本单已有的 `backend/app/poi_import.py` 旁边另起一枚模块，让这单对 `schemas.py` 的改动归零。代价是本单多一枚文件、生成客户端与契约不动。**我不擅动**，等他在哪一句上点头。
+- ORD-0440 后半我已撤回自申报（撞了 N3 的在跑枝），另见那块。
+
+**五、没改善的（照旧列，不遮）**
+
+- 卡仍是两份实现（面板那张内联在 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx`，我 0 改动）；截图识别/链接抓取/口令码仍具名不做；"收藏""新建计划"两个出口仍 disabled 带具名原因。
+- 我仍没跑整套 acceptance，只跑本单的门：别的臂今天是否红，不在我的读数里。
+- 复切实判仍归 `--apply` 那一跑；本块所有判据都是只读自测（`merge-base` / `merge-tree` / `rev-parse` / `hash-object`）。
+
+**六、卫生**
+
+私有栈只用 `run/_r_ord0437_e2e.db` 与 `:4852`/`:8752`，交完核对 0 监听；`_preview.db` 全程只读、`demo/reset` 只跑在自己的库；工作树 0 处未提交；本车道目录今天多存了若干份门与尺的收据（`evidence/qoder-ord0437-20260929` 之外只有 `run/` 下未入库的中间日志，已列入待清名单，不影响 git）。
+
+
+### ORD-0463 交付 · 截图那一支收图片并明说"尚未识别" · 叠在 ORD-0437 r6 头上（共用的池子还没落地）· 候选 c4551d67a79c161541df4113e7bc41c74aa841b2
+
+一句话：这一支只收不发——选了图片，屏上给的是这台设备自己量到的名字、字节数、类型，加一句"还没有从它识别出任何东西"；候选池与拒绝码一枚都没改，因为那套形状是 ORD-0437 的。
+
+- 现读现尖：`env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 两次等值 = `4efe7efb70ac4e08471da9bd5153f178348e4db9`（读数 `D:/moodle/_qoder_n2b_ord0463_20260929/landing_check_r2.txt:2`）。
+- 我这枝的父 = ORD-0437 的候选头 `ea532c95f0ec49d1f0f4264c853b96a391f3a01d`（枝 `refs/heads/review/R-ord0437-link-import-r6`，同件 `:3`）；我的候选 = `c4551d67a79c161541df4113e7bc41c74aa841b2`（同件 `:4`），已推 `refs/heads/review/newlane2-ord0463-screenshot-shell-r1` 并按 40 位回读相等。相对父提交我改 4 枚文件（同件 `:12`，名单在 `:13` 到 `:16`）。
+- 为什么叠在他头上而不是从线尖改（这把尺换了）：判落地我用逐枚 blob 比对，不用 `merge-base --is-ancestor`——复切会重挂提交，ancestry 会把已落地读成未落地，我 13:22 那块就是用错尺说的 ORD-0450。现测：尖上 `backend/app/poi_import.py` 记 ABSENT（`D:/moodle/_qoder_n2b_ord0463_20260929/landing_check_r2.txt:7`）、`frontend/src/features/poiimport/PoiImportPanel.tsx` 记 ABSENT（同件 `:8`），0437 那族在尖上的枚数 = 0（同件 `:11`）。⇒ 共用的池子确实不在线上；我从线尖去改这两枚就是"两侧都改过同一枚文件"，你那句"合完逐字节等于车道自己那份"必然退回。
+- 屏上做了什么（四句都走字典，两语言各一份）：未选文件时先说明这一版还没有截图识别、不会出现"识别中"、也不会因此给出地点；选完之后给"这台设备收到 {name}（{bytes} 字节，类型 {type}）。还没有从它识别出任何东西。"；再补一句"图片不离开这台设备：这一屏不发任何请求，候选池也没有变化"；非图片类型具名拒（"这台设备读到的不是图片类型：{type}"）。键名在 `frontend/src/i18n/LocaleContext.tsx:34` 起（英文臂）与 `:1048` 起（中文臂）。
+- 门禁：`tsc -p tsconfig.typecheck.json --noEmit` 退出码 rc=0 且诊断为空（`D:/moodle/_qoder_n2b_ord0463_20260929/tsc_rc_0463.txt:1`），`vite build` 退出码 rc=0、入口 `index-BQze7aI6.js`（`D:/moodle/_qoder_n2b_ord0463_20260929/build_r1.txt:11`），车道门 passed=5 failed=0（`D:/moodle/_qoder_n2b_ord0463_20260929/suite_r2.txt:10`）。五臂：S1 未选文件即具名"还没有"+ 不挂解析阶段指示器；S2 真选一张 86 字节的 PNG，屏上回读文件名/字节/类型且非 GET 请求数组为空；S3 英文臂同句无汉字；S4 非图片具名拒；S5 复核 ORD-0437 自己那臂在两语言下仍成立、文字那一支未被我动。
+- 一处自认，两趟读数都贴：我第一版把判据写成"屏上不得出现 识别中 这个词"，抓到的其实是我自己那句免责声明里的引号词——`r1` 因此 failed=1（`D:/moodle/_qoder_n2b_ord0463_20260929/suite_r1.txt:31`）。词不是禁令的对象，状态才是；判据改成"这一支不挂 `poi-import-phase`、不出现声称已识别的词组"，`r2` passed=5（`D:/moodle/_qoder_n2b_ord0463_20260929/suite_r2.txt:10`）。改的是判据，不是断言凑绿：产品字节在两趟之间一字未动。
+- 留给 ORD-0437 车主的一枚残留：字典键 `poiImport.screenshotNotSupported` 现在没人渲染了（我换成新句），我不删别人的键，删不删由你或 `9cc37e57` 判。
+- 落地次序请你定：这枝是 `ea532c95` 的直接子提交——你先落 0437 r6，我这枝就是快进；若 0437 最终落的是别的头，我这 4 枚要 rebase 一次，我会重跑五臂再交，不会让你手合。
+- 上一单复查（换尺之后）：ORD-0450 的写模块在尖上的 blob = `fc65a0220d6df23d0ccbed723fd2871f72b0c665`，与我候选里同一枚路径的 blob 逐字相等 ⇒ 确实已落地，这条不再依赖 ancestry。
+- 边界与现场：私有栈后端 :8013、门面 :4795，库副本从共享预览库以 mode=ro 快照（本机字节 sha1 记在 `D:/moodle/_qoder_n2b_ord0463_20260929/snapshot_r1.json:3` 的键 `sha1`）；共享 `_preview.db` 未写、未 ALTER、未跑 demo/reset，未重启 :8000/:4781/:4782/:8693 任何一枚；本轮未动权威线、未写账本本体。ORD-0445/0450 的服务仍挂着（:8012、:4794、:4793）可复现那两屏。
+
+
+### ORD-0457 复跑勘误：枝先 rebase 到线尖 b2abd99b9e07c77e565f9cbdbd3875fcc733697b，屏读、反件、exposure、编译臂全部在新尖重做（r3）
+
+车道 N3（会话 49fe0d7b），2026-09-29 15:05（+08）。号令者本轮的话逐字是「现尖已经从 17dff25a 往前列（批量落地在跑），交件前请按规矩先 rebase 到当下尖再推 review 枝，别拿旧尖上的自测当新尖证据」。照办：产品字节与 r2 交的一致，重做的是全部读数，本块取代 r2 块里的坐标口径。
+
+## 1. 交件坐标
+
+- 枝名 `review/N3-ord0457-named-failure-exits-r3`；`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/N3-ord0457-named-failure-exits-r3` 回读件尖 62855bcbb23f08d31e055edb657d927d393b55a4（可 `git cat-file`）。
+- rebase 落点线尖 b2abd99b9e07c77e565f9cbdbd3875fcc733697b。r1 件尖 33d990b26d249016a1c27596bca39d7935ce1007、r2 件尖 190281be49ac0461d55e8d6cc09d11b7b7aa4256 都在原位，没有被覆盖。
+- 产品 blob：`frontend/src/app/V8Experience.tsx` = 3b72f69a8895abc8f081c6b195044f6eec93351b，`frontend/src/lib/failureAttribution.ts` = 8f3a4d9135234ca8904ad827730d02c99452aea7。
+- 线在上一版基线 703e00d10dd9132e27343c63f7641a1b5fa02673 之后动的 `frontend/src` 文件是 2 枚，其中不属于我的 2 枚：`frontend/src/features/setup/JourneyTrialSetup.tsx`, `frontend/src/lib/entryLimits.ts`；与我这 files=2 产品文件重叠的 0 枚，都不在失败屏那条路径上。本轮全部读数重取自 b2abd99b9e07c77e565f9cbdbd3875fcc733697b。
+
+## 2. 改前屏读（用线尖自己的两枚产品文件建包，不带我的补丁）
+
+- 改前字节：`V8Experience.tsx` = eb247ffb29a74583a2bbaf887dc693148c322ec5，`failureAttribution.ts` = a9f7659e0434d538f5897d302008f0f07bde63aa。
+- `checks=6 pass_count=2 fail_count=4`；红的是 N1、N2、N3、N4。429 与 409 都落进 `reason=UNKNOWN_FAILURE`，标题「这一次没读到」，正文「服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。」，两枚恢复动作都是 `failure-retry`。
+- 读数件 `review/n3_0457_evidence_r1/walk_before_r3/named_exits_zh.json` blob 1ab6775df6cdc5f4a992fd358e894155fa535c07。
+
+## 3. 改后屏读（同一栈、同一线尖，中英两趟）
+
+- 中文 `checks=6 pass_count=6 fail_count=0`：429 走 `reason=RATE_LIMITED action=retry-later`，标题「服务器请我们慢一点」，正文引用服务器自己给的 `retry_after_ms`；409 走 `reason=STATE_ALREADY_MOVED action=view-current-state`，标题「这件事的状态已经变了，不是没读到」，恢复按钮 testId `failure-view-current-state`。件 `review/n3_0457_evidence_r1/walk_r3/named_exits_zh.json` blob fc353d9430f138961407bcd0ed5903aff083f949。
+- 英文 `checks=6 pass_count=6 fail_count=0`，件 `review/n3_0457_evidence_r1/walk_r3/named_exits_en.json` blob 934cccad249589c557347d0a1253676a586cddf4。
+- 对照臂 503 在两趟里都保持 `reason=SERVER_ERROR`，没有被顺手改掉。
+
+## 4. 反件（arms=3，按字节还原）
+
+- B1（证据目录 `arm1_B1`）：walk_summary=checks=6 pass=4 fail=2，红在 N1, N2；applied=True restored_byte_identical=True
+- B2（证据目录 `arm2_B2`）：walk_summary=checks=6 pass=5 fail=1，红在 N3；applied=True restored_byte_identical=True
+- B3（证据目录 `arm3_B3`）：walk_summary=checks=6 pass=5 fail=1，红在 N2；applied=True restored_byte_identical=True
+
+- 汇总 all_arms_applied=True、all_restored=True、clean_rebuild_after_restoring=0、every_file_back_at_starting_bytes=True；件 `review/n3_0457_evidence_r1/named_exit_arms_r3.json` blob a8cc6f318419d798f1c0e7d371065e074938a1e3。
+- r1 那把尺 `review/ord0457/named_exit_arms_r1.py` 字节未动：在 r2 件尖上 blob 30ee4bfcce4fe6d19c5b04228c1d584d17ad0ea0，在本件尖上 blob 30ee4bfcce4fe6d19c5b04228c1d584d17ad0ea0，equal=True；本轮跑的是新文件名的 `review/ord0457/named_exit_arms_r2.py` blob 94a760e6662cdec109e205141c75de4c48546e78，差别只有每臂一个证据目录、并记下所在线尖。发本块的脚本是 `review/ord0457/make_block_r3.py`。
+
+## 5. Q64 exposure 与编译臂
+
+- 尺 `ui_exposure_taint_ast_r7b.cjs`（--tree 模式，同一枚尺，未改）。改前 `review/n3_0457_evidence_r1/exposure_before_r3.json` blob 4abe894f63cd7fe74d505a41e6d73de1eaad357a 读 `cells_total=12`；改后 `review/n3_0457_evidence_r1/exposure_after_r3.json` blob 4114fead315c666bf013e5e51783262b87ba72e4 读 `cells_total=12`。
+- growth 按 `cell_identity` 集合差算出 growth_items=0、shrink_items=0；我这 files=2 产品文件都不在 hit 面上（hit 面文件清单里命中 0 枚）。
+- 编译臂 tsc_rc=0（`review/n3_0457_evidence_r1/tsc_r3.txt` blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391，0 行输出）；vite build_rc=0，改前 `review/n3_0457_evidence_r1/build_before_r3.txt` blob 8288ee56f2cd26c9b0fb7d655d00dac168cd6980、改后 `review/n3_0457_evidence_r1/build_after_r3.txt` blob 6e7827fb0598533e6a1c979f127a4b98c2edc52d。
+
+## 6. 这轮读数取在哪台栈上（三证同批）
+
+- 后端 `:49965`，LISTENING pid=28080，命令行逐字含 `-m uvicorn app.main:app --host 127.0.0.1 --port 49965`；静态口 `:49966`，LISTENING pid=55440，命令行逐字含 `node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 49966 --strictPort`。
+- 归属：私有库 `D:/moodle/_qoder_n3_ord0457/_private/ord0457.db` 只读打开（mode=ro），tables=58；`GET /api/v1/journeys/<只有我库里那一行的 id>` 回 `http_status=200` 且正文回显该 id，同端口打一个不属于我的 id 回 `http_status=404`；静态口 `GET /v10-sw.js` 返回字节的 sha1 与 `frontend/dist/v10-sw.js` 磁盘字节的 sha1 逐字相同，bytes=2055。
+- `:8000`、`:4781`、`:4782`、`:8693` 四枚共享口这轮都没碰；共享 `_preview.db` 没读也没写；`demo/reset` 只落在我自己那份私有库里。
+
+## 7. 仍未证的（等裁，不自扩）
+
+- 「失败三态同屏」那一格：桩能造 429/409/503 三种答，造不出真的 loading 态，我没拿假 loading 凑 6/6，这条维持「未证」。
+- 除 `http_status=429` 与 `http_status=409` 两档之外，其余落进 `UNKNOWN_FAILURE` 的子形（`http_status=400`、`http_status=403`、`http_status=422`、其它 5xx）本轮没扩，等号令者点名要不要在同一条腿上继续。
+
+
 ### ORD-0455 交付 · 道0370（会话 e4f3490f-a55f-4fcb-b7af-227e41018656）· 估算四级梯：说方法 → 事前警告 → 事后核对 → 给补救 · 2026-09-29 14:41+08
 
 ## 0. 为什么这枝叫 -r2
