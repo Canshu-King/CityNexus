@@ -16,13 +16,24 @@
  * first before-read counted zeros on the onboarding wizard, its second counted them on a loading
  * spinner, and in both cases the zeros looked exactly like the finding.
  */
-import { expect, test } from "@playwright/test";
-import { writeFileSync } from "node:fs";
+import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
+import { readFileSync, writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
 
 const FILE = "e2e/qoder-ord0435-poi-batch-multiselect.spec.ts";
 const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 const RUN = process.env.CITYNEXUS_E2E_RUN_ID ?? "local";
+
+/* ORD-0435 asks for a screen read in both arms, and the first four cuts of this file only ever ran
+   the Chinese one -- the commander's 12:00 block named that correctly ("修后屏读两臂没交"). Every
+   body below is therefore written once and registered twice, and the arm tag carries the locale so
+   the two readings cannot overwrite each other's evidence file. */
+type Locale = "zh-CN" | "en";
+const LOCALES: ReadonlyArray<readonly [Locale, string]> = [
+  ["zh-CN", "zh"],
+  ["en", "en"],
+];
+const want = (locale: Locale) => (zh: string, en: string) => (locale === "zh-CN" ? zh : en);
 
 const TICK = '[data-testid="v13-pick-candidate"]';
 const CARDS = "article.v8-stay-card";
@@ -40,7 +51,7 @@ const TECHNICAL = '[data-testid="v13-discovery-batch-technical"]';
 
 const readings: Record<string, unknown> = {};
 test.afterEach(({}, info) => {
-  const arm = /^([QR]\d)/.exec(info.title)?.[1] ?? info.title.slice(0, 2);
+  const arm = /^([QR]\d(?:zh|en)?)/.exec(info.title)?.[1] ?? info.title.slice(0, 4);
   const prior = (readings[arm] ?? {}) as Record<string, unknown>;
   const body: Record<string, unknown> = { ...prior };
   body.nodeid = `${info.file}:${info.line} > ${info.title}`;
@@ -134,10 +145,10 @@ async function openConsole(page: import("@playwright/test").Page, locale: "zh-CN
   return { journeyId, cards, composeStatuses: statuses, seed_route: seedRoute, scene_status: sceneStatus };
 }
 
-test("Q1_the_tick_is_its_own_state_and_not_the_feasibility_class — 勾选态与「合格」是两回事，不许共用同一个类", async ({ page }) => {
+async function q1(page: Page, locale: Locale, tag: string) {
   test.setTimeout(240_000);
-  const arm = "Q1";
-  const boot = await openConsole(page, "zh-CN");
+  const arm = `Q1${tag}`;
+  const boot = await openConsole(page, locale);
   const feasibilityBefore = await page.locator(`${CARDS}.selected`).count();
   const ticks = await page.locator(TICK).count();
   const unchecked = await page.locator(`${TICK}[aria-checked="false"]`).count();
@@ -215,12 +226,18 @@ test("Q1_the_tick_is_its_own_state_and_not_the_feasibility_class — 勾选态�
   expect(sq.card_width, node(arm, `the card could not be measured (${JSON.stringify(squeeze)})`)).toBeGreaterThan(0);
   expect(sq.name_badge_overlap_area, node(arm, `the place name and the eligibility badge overlap by ${sq.name_badge_overlap_area} px2 -- the tick has taken their row`)).toBe(0);
   expect(sq.tick_share_pct, node(arm, `the tick takes ${sq.tick_share_pct}% of the card width; the bare \`button { width: 100% }\` at src/styles.css:47 is winning again`)).toBeLessThan(40);
-});
+}
+for (const [locale, tag] of LOCALES) {
+  test(`Q1${tag}_${locale} — 勾选态与「合格」是两回事，不许共用同一个类`, async ({ page }) => {
+    test.setTimeout(480_000);
+    await q1(page, locale, tag);
+  });
+}
 
-test("Q2_the_count_the_empty_state_and_the_twin_states_move_together — 计数、空态与成对态要一起动", async ({ page }) => {
+async function q2(page: Page, locale: Locale, tag: string) {
   test.setTimeout(240_000);
-  const arm = "Q2";
-  const boot = await openConsole(page, "zh-CN");
+  const arm = `Q2${tag}`;
+  const boot = await openConsole(page, locale);
   const start = {
     count: (await page.locator(COUNT).innerText()).replace(/\s+/g, " "),
     empty: await page.locator(EMPTY).count(),
@@ -262,18 +279,24 @@ test("Q2_the_count_the_empty_state_and_the_twin_states_move_together — 计数�
   expect(one.finishDisabled, node(arm, "完成 stayed disabled with one place picked")).toBe(false);
   /* The commitment travels with the batch because the planner refuses without it, and it is not one
      of the traveller's picks -- the count has to stay a count of ticks. */
-  expect(one.note, node(arm, `the batch did not say what else travels with it (read "${one.note}")`)).toContain("承诺");
+  expect(one.note, node(arm, `the batch did not say what else travels with it (read "${one.note}")`)).toContain(want(locale)("承诺", "commitment"));
   expect(two.count, node(arm, `two ticks read "${two.count}"`)).toContain("2");
   expect(cleared.count, node(arm, `新建一批 left the batch at "${cleared.count}"`)).toContain("0");
   expect(cleared.checked, node(arm, "新建一批 left a card ticked")).toBe(0);
   expect(cleared.empty, node(arm, "新建一批 did not return the empty state")).toBe(1);
   expect(cleared.finishDisabled, node(arm, "after 新建一批, 完成 was still pressable on an empty batch")).toBe(true);
-});
+}
+for (const [locale, tag] of LOCALES) {
+  test(`Q2${tag}_${locale} — 计数、空态与成对态要一起动`, async ({ page }) => {
+    test.setTimeout(480_000);
+    await q2(page, locale, tag);
+  });
+}
 
-test("Q3_完成_and_新建_stay_in_one_band_at_every_narrow_width — 完成与新建在四个窄屏宽度同带且不重叠", async ({ page }) => {
+async function q3(page: Page, locale: Locale, tag: string) {
   test.setTimeout(360_000);
-  const arm = "Q3";
-  const boot = await openConsole(page, "zh-CN");
+  const arm = `Q3${tag}`;
+  const boot = await openConsole(page, locale);
   const widths: Array<readonly [number, number]> = [
     [320, 568],
     [360, 740],
@@ -339,12 +362,18 @@ test("Q3_完成_and_新建_stay_in_one_band_at_every_narrow_width — 完成与�
     expect(v.finish_escapes_viewport, node(arm, `${key}: 完成 escapes the viewport sideways`)).toBe(false);
     expect(v.covered_by_bottom_nav, node(arm, `${key}: a batch control is covered by the fixed bottom nav`)).toBe(0);
   }
-});
+}
+for (const [locale, tag] of LOCALES) {
+  test(`Q3${tag}_${locale} — 完成与新建在四个窄屏宽度同带且不重叠`, async ({ page }) => {
+    test.setTimeout(480_000);
+    await q3(page, locale, tag);
+  });
+}
 
-test("Q4_完成_writes_through_the_route_and_the_screen_shows_a_second_read — 完成走真实写路由，屏上显示的是第二次读", async ({ page, request }) => {
+async function q4(page: Page, locale: Locale, tag: string, request: APIRequestContext) {
   test.setTimeout(360_000);
-  const arm = "Q4";
-  const boot = await openConsole(page, "zh-CN");
+  const arm = `Q4${tag}`;
+  const boot = await openConsole(page, locale);
   await page.locator(TICK).first().click();
   await page.waitForTimeout(200);
   const cardName = (await page.locator(`${CARDS} h3`).first().innerText()).replace(/\s+/g, " ");
@@ -403,12 +432,18 @@ test("Q4_完成_writes_through_the_route_and_the_screen_shows_a_second_read — 
   /* A batch that was written is a candidate plan, not yet the plan the journey runs. Saying
      "SELECTED" here would claim an action nobody took. */
   expect(payload?.status, node(arm, `the batch landed as ${payload?.status}; this screen's 完成 does not select a plan`)).toBe("CANDIDATE");
-});
+}
+for (const [locale, tag] of LOCALES) {
+  test(`Q4${tag}_${locale} — 完成走真实写路由，屏上显示的是第二次读`, async ({ page, request }) => {
+    test.setTimeout(480_000);
+    await q4(page, locale, tag, request);
+  });
+}
 
-test("Q5_a_refused_batch_is_shown_as_a_refusal — 规划器拒掉的批次不许看起来像已加入", async ({ page }) => {
+async function q5(page: Page, locale: Locale, tag: string) {
   test.setTimeout(360_000);
-  const arm = "Q5";
-  const boot = await openConsole(page, "zh-CN");
+  const arm = `Q5${tag}`;
+  const boot = await openConsole(page, locale);
   await page.locator(TICK).nth(0).click();
   await page.locator(TICK).nth(1).click();
   await page.waitForTimeout(200);
@@ -444,6 +479,79 @@ test("Q5_a_refused_batch_is_shown_as_a_refusal — 规划器拒掉的批次不�
   expect(errorText.length, node(arm, "the refusal rendered as an empty message")).toBeGreaterThan(0);
   expect(errorText, node(arm, `the refusal printed the answer's sentence ("${errorText}") instead of this screen's own words`)).not.toMatch(/V13_|HTTP \d{3}/);
   expect(receipt, node(arm, "a refused batch still showed a read-back receipt -- that is the fake 已加入 this order forbids")).toBe(0);
-  expect(target, node(arm, `the target still claims a write after a refusal (read "${target}")`)).toContain("还没有");
+  expect(target, node(arm, `the target still claims a write after a refusal (read "${target}")`)).toContain(want(locale)("还没有", "Not written to a day"));
   expect(technical, node(arm, "the named refusal left no measured facts behind, so nothing is diagnosable")).toBe(1);
+}
+for (const [locale, tag] of LOCALES) {
+  test(`Q5${tag}_${locale} — 规划器拒掉的批次不许看起来像已加入`, async ({ page }) => {
+    test.setTimeout(480_000);
+    await q5(page, locale, tag);
+  });
+}
+
+/* The commander's third cell: "只选一个与选两个时计数句的单复数形各自逐字".
+ *
+ * Two of these sentences cannot be reached on screen with n=2 on this store -- composing two picks
+ * is refused (`V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW`, asserted in Q5), so a screen read of
+ * "2 activities" is not available here and pretending otherwise would be the same empty-denominator
+ * mistake this file already caught once. What is available is the real mechanism: the dictionary
+ * bytes are read from the file, and the expansion is done by the application's own
+ * `src/lib/plural.ts` served by vite, so the two forms below are produced by the code that ships,
+ * not by a copy of its regex. The sentences that *do* reach the screen at n=2 (`pickedCount`) are
+ * read there by Q2 and by `review/ord0435/_counter_words_r1.js`.
+ */
+test("Q6en_the_counted_sentences_decline_in_both_forms — 计数句单复数两形逐字（英文臂，走应用自己的展开函数）", async ({ page }) => {
+  test.setTimeout(180_000);
+  const arm = "Q6en";
+  const dictPath = new URL("../src/i18n/LocaleContext.tsx", import.meta.url);
+  const dict = readFileSync(dictPath, "utf8");
+  const keys = [
+    "discovery.pickedCount",
+    "discovery.batchLanded",
+    "discovery.batchCommitmentNote",
+    "discovery.batchRefusedSome",
+  ];
+  const raw: Record<string, string> = {};
+  for (const key of keys) {
+    /* Only the English half: the file holds two dictionaries and the first occurrence belongs to `en`.
+       Parsed line by line rather than with a RegExp built from a template string -- that is how this
+       arm first died, with `Unterminated character class` from an escaping level nobody could see. */
+    const line = dict.split("\n").find((l) => l.trim().startsWith(`"${key}":`));
+    expect(line, node(arm, `${key} is not readable in the dictionary file`)).toBeTruthy();
+    const head = `"${key}": "`;
+    const start = String(line).indexOf(head);
+    expect(start, node(arm, `${key} has no value opening on its line`)).toBeGreaterThanOrEqual(0);
+    raw[key] = String(line).slice(start + head.length).replace(/",\s*$/, "");
+  }
+
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  const forms = await page.evaluate(async (entries) => {
+    /* The real mechanism, imported from the dev server rather than copied: a re-typed regex is how a
+       gauge starts agreeing with itself. */
+    // @ts-expect-error vite serves this path at run time; it is not on the type root
+    const mod = (await import(/* @vite-ignore */ "/src/lib/plural.ts")) as {
+      expandPluralMarkers: (t: string, p?: Record<string, string | number>) => string;
+    };
+    const out: Record<string, { one: string; two: string }> = {};
+    for (const [key, value] of entries) {
+      out[key] = {
+        one: mod.expandPluralMarkers(value, { n: 1, day: "2026-10-10" }),
+        two: mod.expandPluralMarkers(value, { n: 2, day: "2026-10-10" }),
+      };
+    }
+    return out;
+  }, Object.entries(raw));
+  readings[arm] = { dictionary_bytes: raw, forms, mechanism: "src/lib/plural.ts, imported from the dev server" };
+
+  /* `expandPluralMarkers` declines the noun; interpolating `{n}` is the other half of `t()`. So these
+     are the two *forms* of each sentence with the number still standing in its slot -- the numbers
+     themselves are read off the screen by Q2 (`1 picked` / `2 picked`) and Q4 (`1 activity`). */
+  expect(forms["discovery.pickedCount"].one).toBe("{n} picked");
+  expect(forms["discovery.pickedCount"].two).toBe("{n} picked");
+  expect(forms["discovery.batchLanded"].one).toBe("Read back from the server: {n} activity on {day}.");
+  expect(forms["discovery.batchLanded"].two).toBe("Read back from the server: {n} activities on {day}.");
+  expect(forms["discovery.batchCommitmentNote"].one).toBe("{n} protected commitment in this batch, not counted as a pick.");
+  expect(forms["discovery.batchCommitmentNote"].two).toBe("{n} protected commitments in this batch, not counted as a pick.");
+  expect(forms["discovery.batchRefusedSome"].one).toBe("Not written by the server: {n} of the picked place.");
+  expect(forms["discovery.batchRefusedSome"].two).toBe("Not written by the server: {n} of the picked places.");
 });
