@@ -8,11 +8,11 @@
    "cardPhaseBeforeAnyPress": null,
    "planState": "already",
    "steps": {
-    "after_viewport": 901,
-    "after_enter_import": 4652,
-    "after_ensure_active_plan": 4750,
-    "after_reading_disclosure": 4757,
-    "after_reading_phase": 6780
+    "after_viewport": 1207,
+    "after_enter_import": 5065,
+    "after_ensure_active_plan": 5212,
+    "after_reading_disclosure": 5221,
+    "after_reading_phase": 7250
    }
   },
   {
@@ -23,13 +23,13 @@
    "arm": "link-named-and-states",
    "planState": "already",
    "slack": {
-    "id": "ab5fccc6-e53d-4309-8898-3b84f2c32645",
+    "id": "63c8391d-10d3-425d-b52e-6cd1a942f6cf",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "ab5fccc6-e53d-4309-8898-3b84f2c32645",
+    "id": "63c8391d-10d3-425d-b52e-6cd1a942f6cf",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -112,23 +112,23 @@
    "error": "The text could not be read. Your words are still here; try again.The server did not answer this one. Nothing was changed.The server did not answer this one. Nothing was changed.",
    "transportDetail": "The server did not answer this one. Nothing was changed.",
    "refusalDetail": "HTTP 409",
-   "refusalWhy": "The server refused without naming a reason we know. Nothing was changed.",
+   "refusalWhy": "Nothing is chosen as the plan yet, so there is no day to add places to.",
    "retryWords": "Try again",
    "cardText": "COULD NOT READ IT The text could not be read. Your words are still here; try again.The server did not answer this one. Nothing was changed.The server did not answer this one. Nothing was changed. Try again Channel LOCAL_TEXT_PARSER Local parser; no third-party reading service. Day it would land on 2026-10-09 Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
-   "refusalCardText": "COULD NOT READ IT The text could not be read. Your words are still here; try again.The server refused without naming a reason we know. Nothing was changed.HTTP 409 Try again Channel LOCAL_TEXT_PARSER Local parser; no third-party reading service. Day it would land on 2026-10-09 Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
+   "refusalCardText": "COULD NOT READ IT The text could not be read. Your words are still here; try again.Nothing is chosen as the plan yet, so there is no day to add places to.HTTP 409 Try again Channel LOCAL_TEXT_PARSER Local parser; no third-party reading service. Day it would land on 2026-10-09 Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
    "fault": "arm (a) route.abort on /poi-import/parse; arm (b) route.fulfill 409 reason_code=NO_ACTIVE_PLAN"
   },
   {
    "arm": "added-and-replay",
    "planState": "already",
    "slack": {
-    "id": "045bbf49-eec6-472c-a2e8-02fd5dd22113",
+    "id": "5949a0ba-b91b-4fb2-bb28-b4f8a32a6e9d",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "045bbf49-eec6-472c-a2e8-02fd5dd22113",
+    "id": "5949a0ba-b91b-4fb2-bb28-b4f8a32a6e9d",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -170,8 +170,8 @@
    "addedSource": "JOURNEY_FIRST_DAY",
    "readBackFailure": null,
    "steps": {
-    "after_slack_journey_and_catalogue": 8743,
-    "after_add_accepted": 10567
+    "after_slack_journey_and_catalogue": 6409,
+    "after_add_accepted": 8236
    },
    "addedAfterReload": null,
    "replayAdded": null,
@@ -206,7 +206,7 @@
    "arm": "chinese-arm",
    "planState": "already",
    "slack": {
-    "id": "cbdc42cb-1b04-49ca-976a-fbcf8b8015c5",
+    "id": "8d58a17c-fbd1-4a0d-b6fb-17be9c1cf292",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
