@@ -288,12 +288,21 @@ def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment(
     assert selected.status_code == 200, selected.text
 
     snapshot_id = "twin-live-snapshot"
+    with SessionLocal() as session:
+        activities = session.query(main_module.Activity).filter(
+            main_module.Activity.plan_version_id == plan_id
+        ).order_by(main_module.Activity.sequence_no).all()
+        assert len(activities) >= 2
     evidence = {
         "snapshot_id": snapshot_id,
         "source_provider": "valhalla-http",
         "degraded": False,
         "facts": [
             {
+                "origin_key": activities[0].place_id,
+                "destination_key": activities[1].place_id,
+                "minutes": 42,
+                "provider": "valhalla-http",
                 "fact_quality": LIVE_PROVIDER_CAPTURE,
                 "route_provenance": LIVE_PROVIDER_CAPTURE,
             }
@@ -315,6 +324,8 @@ def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment(
     assert mobility["source"] == "selected-plan-frozen-evidence"
     assert mobility["fact_quality"] == [LIVE_PROVIDER_CAPTURE]
     assert mobility["route_provenance"] == [LIVE_PROVIDER_CAPTURE]
+    assert mobility["used_edge_ids"] == [[activities[0].place_id, activities[1].place_id]]
+    assert mobility["used_edges"][0]["minutes"] == 42
 
 
 def test_prt07_offline_golden_replan_remains_operational():

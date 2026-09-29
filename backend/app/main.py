@@ -7006,6 +7006,31 @@ def _twin_snapshot(
     selected_plan_facts = selected_plan_evidence.get("facts")
     if not isinstance(selected_plan_facts, list):
         selected_plan_facts = []
+    selected_plan_facts_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in selected_plan_facts
+        if isinstance(item, dict)
+        and item.get("origin_key")
+        and item.get("destination_key")
+    }
+    selected_plan_used_edges: list[dict[str, Any]] = []
+    for previous, current_activity in zip(activities, activities[1:]):
+        origin_key = str(previous.place_id or "").strip()
+        destination_key = str(current_activity.place_id or "").strip()
+        fact = selected_plan_facts_by_pair.get((origin_key, destination_key))
+        if not origin_key or not destination_key or fact is None:
+            continue
+        selected_plan_used_edges.append(
+            {
+                "origin_key": origin_key,
+                "destination_key": destination_key,
+                "minutes": fact.get("minutes"),
+                "provider": fact.get("provider"),
+                "route_provenance": fact.get("route_provenance"),
+                "fact_quality": fact.get("fact_quality"),
+                "degraded": bool(fact.get("degraded", False)),
+            }
+        )
     selected_plan_source = str(selected_plan_evidence.get("source_provider") or "").strip()
     selected_plan_snapshot_id = str(
         (selected_plan.mobility_snapshot_id if selected_plan is not None else None)
@@ -7035,6 +7060,11 @@ def _twin_snapshot(
                     if isinstance(item, dict) and item.get("route_provenance")
                 }
             ),
+            "used_edge_ids": [
+                [item["origin_key"], item["destination_key"]]
+                for item in selected_plan_used_edges
+            ],
+            "used_edges": selected_plan_used_edges,
         }
     mobility_context: dict[str, Any] = frozen_plan_mobility or {
         "provider": "mock-mobility",
