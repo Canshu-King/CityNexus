@@ -57,3 +57,4 @@ extras_listed:
 control_1 both arms alone on the delivered tree: 1 failed, 1 passed, 2 warnings in 4.69s
 control_2 the ORD-0466 arm alone at the untouched base tip: 1 failed, 2 warnings in 3.37s
 diff_lines_in_this_branch_mentioning_guardian=0
+tsc_output_bytes: tsc_check_rc=0 output_bytes=0 | tsc_typecheck_rc=0 output_bytes=0
