@@ -1,0 +1,62 @@
+# --- ORD-0424 follow-up: helpers for a bounded cross-line ternary reading -------------------------------
+# Spliced verbatim into the cut tool by make_multiline_r2.py, and kept as its own file so the code is written
+# and syntax-checked as Python instead of surviving two layers of string escaping.
+#
+# Why "bounded" rather than "join the statement": `multiline_blind_spot_r2.json` measured the join on the live
+# tree (112 files) and found 0 real cross-line branches plus 188 candidates that were template literals cut in
+# half by the join itself. A fragment of
+#     ? `The server refused this step (HTTP ${x}). Your trip is unchanged; ...`
+# is not text anybody wrote, and a face that reports it teaches people to distrust the face.
+
+_QUOTED_BODY = STR if STR.startswith("(?:") else "(?:" + STR + ")"
+_TEMPLATE_BODY = "`[^`" + chr(92) + "n]*`"
+_ANY_TOKEN = "(?:" + _QUOTED_BODY + "|" + _TEMPLATE_BODY + ")"
+_WHOLE_TOKEN = re.compile(_ANY_TOKEN)
+_LEADING_TOKEN = re.compile("^[ \t]*" + _ANY_TOKEN)
+_ANYWHERE_TOKEN = re.compile(_ANY_TOKEN)
+
+
+def _quoted_forms(text):
+    """The three ways this decoded text could be written in source, so wholeness stays a lookup.
+
+    The tool's own `unquote` has already taken the outer quotes off, so the only honest way to ask "is this a
+    whole literal on that line?" is to put each quote character back and look for it verbatim.
+    """
+    q, a, t = chr(34), chr(39), chr(96)
+    return {q + text + q, a + text + a, t + text + t}
+
+
+def _whole_tokens_on(line):
+    """Every quoted token that is COMPLETE inside this one physical line, quotes included."""
+    return {m.group(0) for m in _WHOLE_TOKEN.finditer(line)}
+
+
+def _first_token_on(line):
+    """First quoted token anywhere on the line (`?` and `useState(` continuations start mid-line)."""
+    return _ANYWHERE_TOKEN.search(line)
+
+
+def _decoded(m):
+    """The text inside a token match, whether it came from STR's groups or the template alternative."""
+    for g in (m.groups() or ()):
+        if g:
+            return g
+    return m.group(0)
+
+
+def _stranded_operator(line):
+    """An operator that ENDS a line, which means its operand can only be on the next one.
+
+    `??` is deliberately excluded: a trailing `??` belongs to the face this tool published first, and reading it
+    here would report the same fallback twice under two different shapes.
+    """
+    t = re.sub(r"//.*$", "", line).rstrip()
+    if t.endswith("??"):
+        return None
+    if t.endswith("?"):
+        return "?"
+    if t.endswith(":"):
+        return ":"
+    if re.search(r"useState[ \t]*(?:<[^<>{]{0,80}>)?[ \t]*\($", t):
+        return "("
+    return None
