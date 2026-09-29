@@ -29,7 +29,13 @@ type DayGroup = {
   activities: Activity[];
 };
 
-function localDateKey(iso: string, timeZone: string): string {
+/**
+ * ORD-0465: exported, not copied.  The share-receiving screen groups the same stops into the same
+ * days, and a second implementation of "which calendar day does this instant fall on, in the trip's
+ * own timezone" is a second answer to that question -- the two would agree until a trip crossed a
+ * date line, and only one of them would be wrong.
+ */
+export function localDateKey(iso: string, timeZone: string): string {
   try {
     return new Intl.DateTimeFormat("en-CA", {
       timeZone,
@@ -42,7 +48,7 @@ function localDateKey(iso: string, timeZone: string): string {
   }
 }
 
-function clock(iso: string, timeZone: string): string {
+export function clock(iso: string, timeZone: string): string {
   try {
     return new Intl.DateTimeFormat("en-GB", {
       timeZone,
@@ -62,7 +68,7 @@ function minutesBetween(start: string, end: string): number | null {
   return Math.max(0, Math.round((b - a) / 60000));
 }
 
-function dayLabel(key: string, index: number, locale: string): string {
+export function dayLabel(key: string, index: number, locale: string): string {
   const date = new Date(`${key}T12:00:00Z`);
   if (Number.isNaN(date.getTime())) return key;
   try {

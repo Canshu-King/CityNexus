@@ -30,12 +30,57 @@ export function activityCoordinate(item: {
 }
 
 /**
+ * ORD-0465: the map's own input, named instead of borrowing all of `V8Data`.
+ *
+ * This is a widening, not a change of behaviour: every field below is one of the six the component
+ * actually reads (`active_plan.activities/legs/disruptions/current_activity_id/user_location`, `offers`,
+ * `mobility_facts`, `provider_mesh.mobility`), every existing call site still passes a full `V8Data`,
+ * and a `V8Data` satisfies this type unchanged.
+ *
+ * It exists because the share-receiving screen has stops and coordinates and none of the rest.  Under
+ * the old prop it had to either take `V8Data` whole -- which means inventing a party size and two
+ * owner-only flags for a trip this device does not own -- or cast.  `locked` and `protected` are the
+ * owner's editing facts and the share door deliberately does not send them
+ * (`backend/app/schemas.py`, `SharedStop`), so the honest rendering is a marker with no commitment
+ * ring, not a ring drawn from a `false` nobody was told.
+ */
+export type MapPlottableActivity = {
+  id: string;
+  title: string;
+  metadata?: { latitude?: number; longitude?: number; crs?: string; role?: string } | null;
+  location?: ActivityCoordinate | null;
+  protected?: boolean;
+};
+
+export type MapPanelInput = {
+  active_plan: {
+    current_activity_id?: string | null;
+    activities: MapPlottableActivity[];
+    legs?: Array<{ mode: string; geometry: V8Data["mobility_facts"][number]["geometry"] }>;
+    disruptions?: Array<{ affected_activity_id: string | null }>;
+    user_location?: {
+      latitude: number;
+      longitude: number;
+      accuracy_m: number;
+      captured_at: string;
+      source: string;
+    } | null;
+  } | null;
+  offers?: Array<{
+    property_name: string;
+    location: { latitude: number | null; longitude: number | null };
+  }>;
+  mobility_facts?: V8Data["mobility_facts"];
+  provider_mesh?: Record<string, any>;
+};
+
+/**
  * ORD-0082 ④: the map's own "there is nothing to centre this on" condition, as a pure function of
  * the same fields the point list reads.  Exported because one viewport used to hold two
  * contradictory answers -- the map panel saying this trip has no trustworthy coordinates while the
  * attention band beside it said "一切正常".  One screen, one rule.
  */
-export function tripHasNoCoordinates(data: V8Data | null): boolean {
+export function tripHasNoCoordinates(data: MapPanelInput | null): boolean {
   if (!data) return true;
   const locatedActivity = (data.active_plan?.activities ?? []).some(
     (item) => activityCoordinate(item) != null,
@@ -53,7 +98,7 @@ export function MapPanel({
   selectedActivityId = null,
   onSelectActivity = null,
 }: {
-  data: V8Data | null;
+  data: MapPanelInput | null;
   option: V8Data["options"][number] | null;
   /** ORD-0082 ④: only the map knows whether it found *something to centre on* -- route geometry
       counts, and a trip with no located activity can still have a route.  Attention needs that
@@ -111,11 +156,11 @@ export function MapPanel({
       ...feature,
       properties: { ...(feature.properties ?? {}), mode, leg_index: index },
     });
-    if (data?.active_plan?.legs.length)
+    if (data?.active_plan?.legs?.length)
       return data.active_plan.legs.map((leg, index) => tag(leg.geometry, leg.mode, index));
     if (!data || !option) return [];
     return option.leg_mode_map.flatMap((leg, index) => {
-      const fact = data.mobility_facts.find(
+      const fact = (data.mobility_facts ?? []).find(
         (item) =>
           item.from_key === leg.from_key &&
           item.to_key === leg.to_key &&
@@ -158,11 +203,11 @@ export function MapPanel({
                 title: item.title,
                 longitude: at.longitude,
                 latitude: at.latitude,
-                role: item.metadata.role,
-                protected: item.protected,
+                role: item.metadata?.role,
+                protected: item.protected === true,
                 current: item.id === data?.active_plan?.current_activity_id,
                 disrupted:
-                  data?.active_plan?.disruptions.some(
+                  (data?.active_plan?.disruptions ?? []).some(
                     (event) => event.affected_activity_id === item.id,
                   ) ?? false,
               },
@@ -171,7 +216,7 @@ export function MapPanel({
       }) ?? [];
     if (active.length) return active;
     if (!data) return [];
-    return data.offers.slice(0, 1).map((offer) => ({
+    return (data.offers ?? []).slice(0, 1).map((offer) => ({
       // A stay offer is not a plan activity, so it has no id to select.  Inventing one would let a
       // marker claim a selection the trips list cannot show.
       id: null as string | null,

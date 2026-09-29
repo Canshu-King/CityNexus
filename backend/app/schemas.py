@@ -829,6 +829,92 @@ class ShareGrantRevoked(BaseModel):
     already_revoked: bool
 
 
+# ORD-0465 -- what the holder of a share token is shown when the grant still reads.
+#
+# Why the stops ride on THIS door and are not fetched from another one: every other journey door is
+# either one that writes while you read it (`/journeys/{id}/experience`, which is why this screen does
+# not open it) or one that never heard of a grant (`/journeys/{id}`, `/plans/{id}`).  A landing screen
+# that assembled itself from those would keep working after the deadline passed and after the owner
+# withdrew the link -- which would make both of those facts decorative.  One door, one check.
+#
+# The three models below describe the `active_plan` half of that body.  The door assembles its own
+# dict rather than declaring a response model, because ORD-0466's contract is that `shared_plan` is
+# ABSENT on a journey-level grant, and a response model with a default would put a null in that key
+# and read as "this grant covered a version and it is missing".  `contracts/openapi.yaml` is where
+# the body's shape is written down, and
+# `tests/test_qoder_ord0465_shared_landing.py` reads it from there.
+class SharedActivityCoordinate(BaseModel):
+    """Where the place an activity names actually is, in the capability vocabulary this product froze.
+
+    The four `state` words are `CAPABILITY_STATES` (`app/anywhere_capability.py:74`) and the `reason`
+    words are the `REASON_*` beside it.  They are re-declared here as a `Literal` because a contract
+    needs the enumeration, and `tests/test_qoder_ord0465_shared_landing.py` pins both lists against
+    the source so this cannot drift into a fifth word.  Re-declaring and pinning beats importing:
+    `app/anywhere_capability.py` is a service module and this file is the contract.
+
+    Nothing here invents a position.  When there is no place row to join, or the row carries no
+    coordinate, `latitude`/`longitude` stay None and `state`/`reason` say which of those two cases this
+    is -- the same answer `_active_plan_payload` gives the owner's own screen (`app/stay_mobility.py:1642`).
+    """
+
+    state: Literal["READY", "HYDRATABLE", "UNKNOWN_RETRYABLE", "UNAVAILABLE"]
+    reason: str | None
+    latitude: float | None
+    longitude: float | None
+    coordinate_system: str | None
+    source_coordinate_system: str | None = None
+
+
+class SharedStop(BaseModel):
+    """One stop, projected for someone who did not plan it.
+
+    Deliberately absent, and not by accident:
+      - `locked` and `protected` are the owner's editing flags. A reader cannot unlock anything, so
+        showing them would advertise a control this screen does not have (ORD-0385: copy may not
+        exceed the mechanism).
+      - `metadata` is the store's own record of what a transition wrote; the position a traveller is
+        shown comes from the place row, which is projected as `coordinate` instead.
+      - `city_service_id` and `place_id` are identities this screen never uses to draw anything.
+    """
+
+    id: UUID
+    sequence_no: int
+    title: str
+    # The place's own name, read off the row this activity points at; None when there is no row to
+    # read it from.  The screen's rule is `place_name` first and `title` only when the store has no
+    # name -- `title` is what a planner typed, which is not always the name of the thing itself.
+    place_name: str | None
+    activity_type: str
+    start_at: datetime
+    end_at: datetime
+    coordinate: SharedActivityCoordinate
+
+
+class SharedPlan(BaseModel):
+    """The plan this grant lets its holder read, as a list of stops and nothing else.
+
+    `legs` are absent on purpose: a leg's geometry comes from a routing provider, and on this
+    deployment that provider is not configured (`project-provider-reality-osm`), so the only shapes
+    available are frozen fixture geometry.  Drawing a route line the server cannot honestly name is a
+    second claim about how the traveller moves, and none of the four states this screen exists to
+    report needs it.
+    """
+
+    id: UUID
+    version_no: int
+    # Which generation of the trip this is, in the server's own words rather than a screen's guess.
+    # `source` has traveller-facing labels already on the front
+    # (`frontend/src/lib/displayVocabulary.ts:30`, `PLAN_SOURCE`), and all three of its values are in
+    # that table, so the share screen can name a first generation apart from a replan without printing
+    # a machine word.  The plan's `status` is deliberately NOT carried: two of its five values
+    # (`SELECTED`, `SUPERSEDED`) are absent from the shared status table
+    # (`frontend/src/i18n/travelerLabels.ts:81`), so a screen that received the field would be handed a
+    # token it can only echo.  `tests/test_qoder_ord0465_shared_landing.py` pins that every value of
+    # every word this answer offers has a label, which is why `source` stayed and `status` did not.
+    source: Literal["INITIAL", "REPLAN", "MANUAL"]
+    stops: list[SharedStop]
+
+
 # ORD-0434 step 2.  The member-state words are prefixed on purpose: bare EXPIRED and WITHDRAWN are
 # already accommodation-offer statuses (`app/stay_mobility.py:1963`), and borrowing them here would
 # make one word mean two things in two different answers.

@@ -351,6 +351,9 @@ from app.schemas import (
     ShareGrant,
     ShareGrantCreate,
     ShareGrantRevoked,
+    SharedActivityCoordinate,
+    SharedPlan,
+    SharedStop,
     JourneyMember,
     JourneyMemberCreate,
     JourneyRoleRule,
@@ -426,6 +429,7 @@ from app.services import (
     constraint_schema,
     generate_plans,
     journey_schema,
+    parse_dt,
     place_schema,
     plan_schema,
     preference_schema,
@@ -438,6 +442,7 @@ from app.services import (
 )
 from app.stay_mobility import (
     StayItineraryConflict,
+    activity_coordinate,
     capture_accommodation_offers,
     capture_mobility_facts,
     experience_payload,
@@ -3406,6 +3411,67 @@ def revoke_share_grant(journey_id: UUID, grant_id: str, session: Session = Depen
     )
 
 
+def _shared_plan_projection(
+    session: Session, journey: Journey, scoped_plan: PlanVersion | None = None
+) -> tuple[str, SharedPlan | None]:
+    """The plan this grant covers, as a share holder sees it: stops, their names, and where they are.
+
+    `scoped_plan` is the version an ORD-0466 grant was cut for.  When the caller has one, the guest
+    reads THAT version and not the journey's currently-active one -- a screen that listed the active
+    plan behind a version-scoped link would show a traveller a set of days the owner deliberately did
+    not hand over, and would say nothing while doing it.
+
+    Answers `(plan_state, plan)`, and the state is named rather than left to be inferred from a null.
+    Three cases are genuinely different facts and a screen cannot tell them apart from `None` alone:
+    this journey never had a plan; it points at a plan row that is not there; it has one.
+    `_active_plan_payload` (`app/stay_mobility.py:1684`) is the owner's projection and carries the
+    owner's live position, their commitments and their disruption events -- none of which a guest
+    asked for, and the first of which is a person's location.
+
+    Read-only: one ordered activity query and one batched place query, the same two reads the owner's
+    projection makes.  Nothing here writes, and nothing here calls a provider.
+    """
+    if scoped_plan is not None:
+        return "PLAN_PRESENT", _shared_plan_of(session, scoped_plan)
+    if not journey.active_plan_version_id:
+        return "NO_PLAN", None
+    plan = session.get(PlanVersion, str(journey.active_plan_version_id))
+    if plan is None:
+        return "PLAN_ROW_MISSING", None
+    return "PLAN_PRESENT", _shared_plan_of(session, plan)
+
+
+def _shared_plan_of(session: Session, plan: PlanVersion) -> SharedPlan:
+    activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+    ).all()
+    place_ids = sorted({str(item.place_id) for item in activities if item.place_id})
+    places: dict[str, Place] = {}
+    if place_ids:
+        places = {
+            place.id: place
+            for place in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+        }
+    stops = [
+        SharedStop(
+            id=item.id,
+            sequence_no=item.sequence_no,
+            title=item.title,
+            place_name=places[str(item.place_id)].name if item.place_id and str(item.place_id) in places else None,
+            activity_type=item.activity_type,
+            start_at=parse_dt(item.start_at),
+            end_at=parse_dt(item.end_at),
+            coordinate=SharedActivityCoordinate(
+                **activity_coordinate(item.place_id, places)
+            ),
+        )
+        for item in activities
+    ]
+    return SharedPlan(
+        id=plan.id, version_no=plan.version_no, source=plan.source, stops=stops
+    )
+
+
 @app.get("/api/v1/shared/journeys/{token}")
 def read_shared_journey(
     token: str,
@@ -3414,8 +3480,18 @@ def read_shared_journey(
 ):
     """The door a grant token is actually presented at, so expiry and revocation can mean something.
 
-    The body on success is the same `journey_schema` the anonymous route returns: one journey shape,
-    not a second one that can drift.
+    The body is the accepted `journey_schema` shape plus what a landing screen cannot derive for
+    itself: `plan_state` / `active_plan` (ORD-0465, the guest's view of the days this grant covers)
+    and `grant_scope` / `shared_plan` (ORD-0466, which version the grant was cut for).  The journey
+    half deliberately reuses the one shape the anonymous door returns -- one journey form, not a
+    second one that can drift -- and `shared_plan` is present ONLY on a version-scoped grant, because
+    a key that is always there with a null in it cannot carry the meaning of "this grant never
+    covered a version" (pinned by `tests/test_qoder_ord0466_version_share.py::test_v1_...`).
+
+    The stops come out of this door and no other: every alternative is either a door that writes
+    while it answers (`/journeys/{id}/experience`) or one that never heard of a grant, and a screen
+    assembled from those would keep working after the deadline passed and after the owner withdrew
+    the link.
     """
     grant = session.scalars(
         select(JourneyShareGrant).where(JourneyShareGrant.token == token)
@@ -3472,14 +3548,33 @@ def read_shared_journey(
             "SHARE_GRANT_JOURNEY_GONE",
             {"grant_id": grant.id},
         )
+    # ORD-0465 ④: the owner put this trip in the recycle bin, and a grant does not outlive that.
+    #
+    # Before this branch the door answered 200 with the whole trip, because `journey_schema` carries no
+    # `deleted_at` (`backend/app/schemas.py:239`) and this door never looked at the column -- so the
+    # recipient of a share link read a trip its owner had thrown away, and no word on that screen could
+    # have been true. 409 and not 404: the row is there and the owner can 找回 it, so "no longer
+    # readable" would be a different fact; and the name says which of the two the traveller is being
+    # told, because `SHARE_GRANT_JOURNEY_GONE` already owns the other one.
+    #
+    # This is the bin's state, not the grant's, so it is decided after every grant check above: an
+    # expired link is expired whether or not the trip was binned, and the reader hears the older fact.
+    if journey.deleted_at is not None:
+        raise _share_refusal(
+            409,
+            "The journey behind this grant is in the recycle bin.",
+            "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
+            {"grant_id": grant.id, "deleted_at": journey.deleted_at},
+        )
     body = journey_schema(journey).model_dump(mode="json")
     # ORD-0466: a grant cut for one version reads that version and nothing else.  The scope is said
     # in the body rather than left for the caller to infer from which keys happen to be present, and
     # the plan itself is the same `plan_schema` every other plan door returns -- one shape, not a
     # second one that can drift away from the owner's own view of the version.
+    scoped_plan: PlanVersion | None = None
     if grant.plan_version_id:
-        plan = session.get(PlanVersion, grant.plan_version_id)
-        if plan is None or plan.journey_id != journey.id:
+        scoped_plan = session.get(PlanVersion, grant.plan_version_id)
+        if scoped_plan is None or scoped_plan.journey_id != journey.id:
             raise _share_refusal(
                 409,
                 "The plan version this grant was cut for is no longer readable.",
@@ -3487,10 +3582,18 @@ def read_shared_journey(
                 {"grant_id": grant.id, "plan_version_id": grant.plan_version_id},
             )
         body["grant_scope"] = "PLAN_VERSION"
-        body["shared_plan"] = plan_schema(session, plan)
+        body["shared_plan"] = plan_schema(session, scoped_plan)
     else:
         body["grant_scope"] = "JOURNEY"
+    # ORD-0465: the guest's view of the days -- of the version this grant covers, which is why it is
+    # computed after the scope is settled rather than from the journey's active pointer alone.  The
+    # state is named rather than left to be inferred from `active_plan` being null, because "never
+    # planned" and "planned, and the row is gone" are two facts.  See `_shared_plan_projection` for
+    # what is deliberately not in it.
+    body["plan_state"], guest_plan = _shared_plan_projection(session, journey, scoped_plan)
+    body["active_plan"] = guest_plan.model_dump(mode="json") if guest_plan is not None else None
     return body
+
 
 
 # ORD-0434 step 2: membership is one set per journey, and what a role may do is a table the server
