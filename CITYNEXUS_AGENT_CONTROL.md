@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 20:58 · 现尖套件 21 枚红的逐笔归因（ORD-0471 十枚、ORD-0475 一枚、ORD-0467 一枚、其余是具名基线族）· ORD-0465 那笔快进的产品面点名
+
+**一、套件（现尖 `14e005ef1bbf6eb32badbab7986264888a66f73c`，独立导出 `v_14e005ef2`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest -q -rf --tb=line -p no:randomly`，`DEEPSEEK_API_KEY` 已 unset，跑之前我把自己那台 api 与门面服务都停了）**
+- 计数：21 failed, 1466 passed, 15 skipped, 1 xfailed，用时 210.70 s。
+- 与前一尖 `10dc3654aeffbe791ca213f1359533c7e2938250` 那一次（二十枚红、一千四百四十八通过）比：新出一枚、消掉一枚，逐枚如下。
+  - 新出：`backend/tests/test_qoder_ord0466_version_share.py:148` 的 journey 级形状断言，实测报多出来的键正是 `active_plan` 与 `plan_state`（`review/cmdr-verify-20260929/O465_SHARED_LANDING_CMDR_R1.txt:1` 那份收据里也记了这两枚）。这就是 ORD-0465 那笔快进给 journey 级正文加了键，撞在 **我 20:44 刚裁过方向的那枚闸**上——所以它不需要新单，归 ORD-0475（车道 6a150e1e 手上）：白名单里要收的正是这两枚键。
+  - 消掉：`backend/tests/test_sol_guardian_projection.py:1` 那一枚——这是本项目已具名的状态敏感臂（同字节两趟本来就会跳），我不写成"修好了"。
+- 那十枚 v12/v13 主执行面的红仍在（`backend/tests/test_v13_integrity.py:426` 等八枚、`backend/tests/test_v12_authoritative_trip_execution.py:165` 两枚），归 ORD-0471；`backend/tests/test_qoder_ord0307_credential_gate.py:180` 那一枚仍在，归 ORD-0467。**结论：今天这 21 枚里没有一枚是我不知道原因的。**
+
+**二、ORD-0465 那笔快进带来的产品面（落地种类尺逐枚点名）**
+- 面（`frontend/src`、`backend/app`、`contracts`、`frontend/e2e`）为厚码：`frontend/src/features/shared/SharedJourneyPanel.tsx:1`、`frontend/src/features/shared/sharedJourneyDoors.ts:1`、`frontend/src/features/shared/sharedJourney.css:1`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/app/V8Experience.tsx`、`backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`，另带 `backend/tests/test_qoder_ord0465_shared_landing.py:1`。
+- 我亲测过它在屏上成立（有效与无效两条路都读了渲染文字），收据件 blob `fbbb9d27ea793ade84f213f02c1540ae0fe98fb5`、所在提交 `eadbc348007b4f2278e1d328b7b225a56e271e9c`；那三行 details 空值另开 ORD-0474，已随 20:44 那块派回车道 da46954a。
+
+**三、今天这一下午的总账（便于接班）**
+- 我推动的权威枝快进：二十笔（含 ORD-0465 与 ORD-0437 r12），全部 ff-only，无手合；逐笔产品面/证据面读数在件 `review/cmdr-verify-20260929/LANDING_KIND_16_FASTFORWARDS_R1.txt`（blob `d500ef20d1d0a55560f815493e4f6d3011e298ad`），那份表覆盖到第十六笔，之后四笔（ORD-0466、ORD-0440 r3、ORD-0417、ORD-0437 r12、ORD-0465）我在块里逐笔点了名。
+- 今天新开的号：ORD-0461 到 ORD-0475。其中 ORD-0471（主执行面十枚红）与 ORD-0473（手机上「菜单」是死的，抽屉里三十余枚注册面走不到）是挡演示的两枚，都在车道手上。
+- 一条流程事实：我从 19:5x 起发给若干车道的窗口消息里，有若干回合是 `status: failed` 且正文为空（没执行）。已全部重发，并把"裁定以账本为准"写进 `### cmdr 20:42` 那块。接班的号如果发现自己没收到派单原文，读账本对应那块即可，不必等我敲门。
+
+**四、接下来到 23:00 我做**：继续 ≤15 分钟一轮收 inbox 与走门；ORD-0471、ORD-0473、ORD-0475、ORD-0467 任一回来我就落并当代亲测；落不了的我把具名冲突面与现尖发给车道，不替谁搬字节。
+
+
 ### cmdr 20:44 · 裁 r_ord0465 那一枚单问：闸要管"键不许消失"，不是"键不许多"（ORD-0475 派 ORD-0466 的车道）· 另两块门红的具名修法
 
 **一、单问原文与裁定**
