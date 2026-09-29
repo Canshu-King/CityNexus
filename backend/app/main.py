@@ -7024,6 +7024,7 @@ def _twin_snapshot(
             {
                 "origin_key": origin_key,
                 "destination_key": destination_key,
+                "mode": fact.get("mode"),
                 "minutes": fact.get("minutes"),
                 "provider": fact.get("provider"),
                 "route_provenance": fact.get("route_provenance"),

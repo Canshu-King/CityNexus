@@ -1731,6 +1731,7 @@ def _plan_mobility_projection(
             {
                 "origin_key": str(origin.place_id),
                 "destination_key": str(destination.place_id),
+                "mode": fact.get("mode"),
                 "minutes": fact.get("minutes"),
                 "provider": provider,
                 "route_provenance": provenance,
