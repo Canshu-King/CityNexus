@@ -4,7 +4,7 @@ import { RejectionWithFacts, rejectionWithFacts } from "../../lib/rejectionFacts
 /**
  * ORD-0464: the one door that moves a trip into the recycle bin, and the reason that rides with it.
  *
- * The reason is not a second call. `DELETE /api/v1/journeys/{journey_id}` (`backend/app/main.py:2984`)
+ * The reason is not a second call. `DELETE /api/v1/journeys/{journey_id}` (`4037cb331ea00b83124316d40329762fa1131689:backend/app/main.py:3006`)
  * takes the survey as its own body and writes the trip's `deleted_at` and one `journey_outcome_events`
  * row in the same transaction, so there is no window where the screen knows a cause that the server
  * never recorded, or the reverse.
