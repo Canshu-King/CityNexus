@@ -1,0 +1,28 @@
+== card_before_zh_r2.json arm=tip4037_zh
+  h2='place-river-cruise'
+  badge='预订 · 受保护锚点 · 生效中 · 模拟承诺'
+  whole='预订 · 受保护锚点 · 生效中 · 模拟承诺place-river-cruise10月10日 15:30 → 10月10日 16:30¥120.00时间已锁定'
+  card_attrs=['class=v8-booking-card', 'data-testid=wallet-commitment', 'data-simulated=true', 'data-monetary-status=KNOWN']
+  h2_attrs=[]
+  bbox={'x': 17, 'y': 1194, 'width': 356, 'height': 130} entry='使用封存的演示行程' console_err=0 tabs_aria='行程分区'
+== card_before_en_r2.json arm=tip4037_en
+  h2='place-river-cruise'
+  badge='Booking · Protected anchor · Active · simulated commitment'
+  whole='Booking · Protected anchor · Active · simulated commitmentplace-river-cruise10 Oct, 15:30 → 10 Oct, 16:30CN¥120.00Schedule fixed'
+  card_attrs=['class=v8-booking-card', 'data-testid=wallet-commitment', 'data-simulated=true', 'data-monetary-status=KNOWN']
+  h2_attrs=[]
+  bbox={'x': 17, 'y': 1290, 'width': 356, 'height': 151} entry='Use the sealed demo trip' console_err=0 tabs_aria='Trip sections'
+== card_after_zh_r2.json arm=ord0428r1_zh
+  h2='Nexus River Cruise Pier'
+  badge='预订 · 受保护锚点 · 生效中 · 模拟承诺'
+  whole='预订 · 受保护锚点 · 生效中 · 模拟承诺Nexus River Cruise Pier10月10日 15:30 → 10月10日 16:30¥120.00时间已锁定'
+  card_attrs=['class=v8-booking-card', 'data-testid=wallet-commitment', 'data-simulated=true', 'data-monetary-status=KNOWN']
+  h2_attrs=[]
+  bbox={'x': 17, 'y': 1194, 'width': 356, 'height': 130} entry='使用封存的演示行程' console_err=0 tabs_aria='行程分区'
+== card_after_en_r2.json arm=ord0428r1_en
+  h2='Nexus River Cruise Pier'
+  badge='Booking · Protected anchor · Active · simulated commitment'
+  whole='Booking · Protected anchor · Active · simulated commitmentNexus River Cruise Pier10 Oct, 15:30 → 10 Oct, 16:30CN¥120.00Schedule fixed'
+  card_attrs=['class=v8-booking-card', 'data-testid=wallet-commitment', 'data-simulated=true', 'data-monetary-status=KNOWN']
+  h2_attrs=[]
+  bbox={'x': 17, 'y': 1290, 'width': 356, 'height': 151} entry='Use the sealed demo trip' console_err=0 tabs_aria='Trip sections'
