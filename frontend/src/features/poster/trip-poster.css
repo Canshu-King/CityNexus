@@ -1,0 +1,123 @@
+/* ORD-0472 — the trip poster bar and the sheet it opens.
+   Sizes and colours come from design-tokens.css tiers only (--cn-s-*, --cn-r-*, --cn-fs-*,
+   --cn-ink*), so the poster inherits the light/dark token flip instead of carrying its own palette.
+   The one exception is the 30px fine-pointer control height below: that is Amendment F-2's literal,
+   taken from `design-tokens.css:853`, and the touch override matches `design-tokens.css:859`. */
+
+.cn-poster-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cn-s-4) var(--cn-s-16);
+  margin-bottom: var(--cn-s-12);
+  padding: var(--cn-s-8) var(--cn-s-12);
+  background: var(--cn-surface);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+}
+
+.cn-poster-bar-note {
+  margin: 0;
+  font-size: var(--cn-fs-meta);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink-secondary);
+}
+
+.cn-poster-open {
+  min-height: 30px;
+  padding: 0 var(--cn-s-16);
+  font: inherit;
+  font-size: var(--cn-fs-secondary);
+  font-weight: 600;
+  color: var(--cn-accent-text);
+  background: var(--cn-secondary);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-button);
+  cursor: pointer;
+}
+
+@media (max-width: 680px) {
+  .cn-poster-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cn-poster-open {
+    min-height: var(--cn-touch-min);
+    width: 100%;
+  }
+}
+
+/* The sheet is a `.v8-page`, so the shared shell already gives it the intro, the 44px button floor
+   and the focus ring. Only the day list is described here. */
+.cn-poster-days {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-12);
+  margin: 0 0 var(--cn-s-16);
+  padding: 0;
+  list-style: none;
+}
+
+.cn-poster-day {
+  padding: var(--cn-s-12);
+  background: var(--cn-surface);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+}
+
+.cn-poster-day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--cn-s-8);
+  margin-bottom: var(--cn-s-8);
+}
+
+.cn-poster-day-head b {
+  font-size: var(--cn-fs-card);
+  line-height: var(--cn-lh-tight);
+  color: var(--cn-ink);
+}
+
+.cn-poster-day-head small {
+  font-size: var(--cn-fs-caption);
+  color: var(--cn-ink-tertiary);
+}
+
+.cn-poster-stops {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cn-poster-stop {
+  display: flex;
+  align-items: baseline;
+  gap: var(--cn-s-10);
+}
+
+.cn-poster-stop-time {
+  flex: none;
+  font-size: var(--cn-fs-meta);
+  font-variant-numeric: tabular-nums;
+  color: var(--cn-ink-secondary);
+}
+
+.cn-poster-stop-title {
+  font-size: var(--cn-fs-body);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink);
+}
+
+.cn-poster-attribution {
+  margin: 0;
+  padding-top: var(--cn-s-8);
+  border-top: var(--cn-divider-w) solid var(--cn-hairline);
+  font-size: var(--cn-fs-caption);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink-secondary);
+}

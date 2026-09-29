@@ -911,6 +911,16 @@ const en: Dict = {
 
   // ── Map components ──
   "mapComp.attribution": "© OpenStreetMap contributors",
+  /* ORD-0472 — the trip poster. Its source line reuses `mapComp.attribution` directly above: the
+     attribution obligation is one sentence in this product, not one per surface. */
+  "poster.kicker": "Trip poster",
+  "poster.barNote": "One long picture of this trip, made of the days already on this screen.",
+  "poster.action": "Open the trip poster",
+  "poster.close": "Close the poster",
+  "poster.cityAndDays": "{city} · {days} {plural:day}",
+  "poster.daysUnknown": "{city} · trip length unknown",
+  "poster.dayStops": "{n} {plural:stop}",
+  "poster.attributionLabel": "Source",
   "mapComp.yourLocation": "Your location · {n} m accuracy",
   "mapComp.journeyMap": "Journey map",
   "mapComp.routeContext": "Route context",
@@ -1909,6 +1919,15 @@ const zhCN: Dict = {
 
   // ── 地图组件 ──
   "mapComp.attribution": "© OpenStreetMap 贡献者",
+  /* ORD-0472 — 行程长图（中英两侧同键，见 `poster.kicker` 一节） */
+  "poster.kicker": "行程长图",
+  "poster.barNote": "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。",
+  "poster.action": "展开行程长图",
+  "poster.close": "收起长图",
+  "poster.cityAndDays": "{city} · {days} 天",
+  "poster.daysUnknown": "{city} · 天数未知",
+  "poster.dayStops": "{n} 站",
+  "poster.attributionLabel": "来源",
   "mapComp.yourLocation": "你的位置 · {n} 米精度",
   "mapComp.journeyMap": "行程地图",
   "mapComp.routeContext": "路线上下文",
