@@ -829,6 +829,98 @@ class ShareGrantRevoked(BaseModel):
     already_revoked: bool
 
 
+# ORD-0465 -- what the holder of a share token is shown when the grant still reads.
+#
+# Why the stops ride on THIS door and are not fetched from another one: every other journey door is
+# either one that writes while you read it (`/journeys/{id}/experience`, which is why this screen does
+# not open it) or one that never heard of a grant (`/journeys/{id}`, `/plans/{id}`).  A landing screen
+# that assembled itself from those would keep working after the deadline passed and after the owner
+# withdrew the link -- which would make both of those facts decorative.  One door, one check.
+#
+# `SharedJourneyRead` extends the accepted `Journey` shape rather than replacing it, so the fields that
+# were already on this answer keep their names and their meaning; two fields are added.
+class SharedActivityCoordinate(BaseModel):
+    """Where the place an activity names actually is, in the capability vocabulary this product froze.
+
+    The four `state` words are `CAPABILITY_STATES` (`app/anywhere_capability.py:74`) and the `reason`
+    words are the `REASON_*` beside it.  They are re-declared here as a `Literal` because a contract
+    needs the enumeration, and `tests/test_qoder_ord0465_shared_landing.py` pins both lists against
+    the source so this cannot drift into a fifth word.  Re-declaring and pinning beats importing:
+    `app/anywhere_capability.py` is a service module and this file is the contract.
+
+    Nothing here invents a position.  When there is no place row to join, or the row carries no
+    coordinate, `latitude`/`longitude` stay None and `state`/`reason` say which of those two cases this
+    is -- the same answer `_active_plan_payload` gives the owner's own screen (`app/stay_mobility.py:1642`).
+    """
+
+    state: Literal["READY", "HYDRATABLE", "UNKNOWN_RETRYABLE", "UNAVAILABLE"]
+    reason: str | None
+    latitude: float | None
+    longitude: float | None
+    coordinate_system: str | None
+    source_coordinate_system: str | None = None
+
+
+class SharedStop(BaseModel):
+    """One stop, projected for someone who did not plan it.
+
+    Deliberately absent, and not by accident:
+      - `locked` and `protected` are the owner's editing flags. A reader cannot unlock anything, so
+        showing them would advertise a control this screen does not have (ORD-0385: copy may not
+        exceed the mechanism).
+      - `metadata` is the store's own record of what a transition wrote; the position a traveller is
+        shown comes from the place row, which is projected as `coordinate` instead.
+      - `city_service_id` and `place_id` are identities this screen never uses to draw anything.
+    """
+
+    id: UUID
+    sequence_no: int
+    title: str
+    # The place's own name, read off the row this activity points at; None when there is no row to
+    # read it from.  The screen's rule is `place_name` first and `title` only when the store has no
+    # name -- `title` is what a planner typed, which is not always the name of the thing itself.
+    place_name: str | None
+    activity_type: str
+    start_at: datetime
+    end_at: datetime
+    coordinate: SharedActivityCoordinate
+
+
+class SharedPlan(BaseModel):
+    """The plan this grant lets its holder read, as a list of stops and nothing else.
+
+    `legs` are absent on purpose: a leg's geometry comes from a routing provider, and on this
+    deployment that provider is not configured (`project-provider-reality-osm`), so the only shapes
+    available are frozen fixture geometry.  Drawing a route line the server cannot honestly name is a
+    second claim about how the traveller moves, and none of the four states this screen exists to
+    report needs it.
+    """
+
+    id: UUID
+    version_no: int
+    stops: list[SharedStop]
+
+
+class SharedJourneyRead(Journey):
+    """What the holder of a share link is shown, and how much of it the grant actually covers.
+
+    Two lanes put a plan on this door in the same hour, and the two answers are not the same question:
+      * `plan_state` / `active_plan` (ORD-0465) -- the trip's own days, as far as a guest is shown
+        them: names, times, and where each stop is.
+      * `grant_scope` / `shared_plan` (ORD-0466) -- whether THIS grant was cut for one plan version,
+        and if so that version in the canonical `plan_schema` shape every other plan door returns.
+    Both are carried rather than one being renamed into the other, because a version-scoped grant and
+    an unscored grant genuinely answer differently, and the door must not have to decide which screen
+    is asking. Which of the two the landing screen reads is named in
+    `frontend/src/features/shared/SharedJourneyPanel.tsx`.
+    """
+
+    plan_state: Literal["ACTIVE_PLAN_PRESENT", "NO_ACTIVE_PLAN", "ACTIVE_PLAN_ROW_MISSING"]
+    active_plan: SharedPlan | None
+    grant_scope: Literal["JOURNEY", "PLAN_VERSION"]
+    shared_plan: PlanVersion | None = None
+
+
 # ORD-0434 step 2.  The member-state words are prefixed on purpose: bare EXPIRED and WITHDRAWN are
 # already accommodation-offer statuses (`app/stay_mobility.py:1963`), and borrowing them here would
 # make one word mean two things in two different answers.

@@ -497,7 +497,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /** @description The door a grant token is presented at, so that a deadline and a withdrawal can mean something.  A successful read answers with the same Journey shape as `/journeys/{journey_id}` - one shape, not a second one that can drift.  The named facts ride in `error.reason_code`, inside the one envelope every door already uses: never existed is 404 NOT_FOUND / SHARE_GRANT_UNKNOWN, while withdrawn, out of date and not-link-readable are 409 CONFLICT with their own reason_code.  PRIVATE and INVITEES_ONLY fail closed as SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder against. */
+        /** @description The door a grant token is presented at, so that a deadline and a withdrawal can mean something.  A successful read answers `SharedJourneyRead`: the same `Journey` fields `/journeys/{journey_id}` answers with, plus the two things a landing screen cannot derive -- the plan this grant lets its holder read, and a name for whether there is one.  The stops come out of THIS door and no other, because a screen that filled itself in from an unguarded door would keep working after the deadline passed and after the owner withdrew the link.  The named facts ride in `error.reason_code`, inside the one envelope every door already uses: never existed is 404 NOT_FOUND / SHARE_GRANT_UNKNOWN, while withdrawn, out of date, not-link-readable and binned-by-its-owner are 409 CONFLICT with their own reason_code.  PRIVATE and INVITEES_ONLY fail closed as SHARE_GRANT_NOT_LINK_READABLE until the member data behind them says otherwise. */
         get: operations["readSharedJourney"];
         put?: never;
         post?: never;
@@ -3051,6 +3051,55 @@ export interface components {
             /** @description False on the withdrawal that did it.  A repeat withdrawal is refused with SHARE_GRANT_ALREADY_REVOKED instead of answering the same thing twice. */
             already_revoked: boolean;
         };
+        /** @description ORD-0465: where the place an activity names actually is, and which of the two "it is not" cases this is.  The four `state` words are the frozen capability axis this product already uses everywhere a position is answered (`READY`, `HYDRATABLE`, `UNKNOWN_RETRYABLE`, `UNAVAILABLE`), and nothing here invents a position: when there is no place to join, or the place carries no coordinate, `latitude` and `longitude` stay null and `reason` says why.  The owner's own map reads the same pair from the same function, so a guest screen and an owner screen cannot disagree about whether a stop has a place on it. */
+        SharedActivityCoordinate: {
+            /** @enum {string} */
+            state: "READY" | "HYDRATABLE" | "UNKNOWN_RETRYABLE" | "UNAVAILABLE";
+            reason: string | null;
+            latitude: number | null;
+            longitude: number | null;
+            coordinate_system: string | null;
+            source_coordinate_system: string | null;
+        };
+        /** @description One stop as far as someone who did not plan it is concerned.  Deliberately absent, and each absence is a decision: `locked` and `protected` are the owner's editing flags and a reader has no control to act on them with; `metadata` is the store's record of what a transition wrote, which is not where a traveller's position comes from; `place_id` and `city_service_id` are identities this screen never draws with. */
+        SharedStop: {
+            /** Format: uuid */
+            id: string;
+            sequence_no: number;
+            /** @description What the plan calls this stop. A planner typed it, so it is not always the name of the thing. */
+            title: string;
+            /** @description The place row's own name, read off the identity the activity carries; null when there is no row to read it from.  A landing screen says this one first and falls back to `title` only when the store has no name -- which is a fact about the store, so both ride on the answer. */
+            place_name: string | null;
+            activity_type: string;
+            /** Format: date-time */
+            start_at: string;
+            /** Format: date-time */
+            end_at: string;
+            coordinate: components["schemas"]["SharedActivityCoordinate"];
+        };
+        /** @description The plan this grant lets its holder read, as a list of stops and nothing else.  `legs` are absent on purpose: a leg's geometry comes from a routing provider, and this deployment has none configured, so the only shapes available are frozen fixture geometry.  Drawing a route the server cannot honestly name would be a second claim about how a traveller moves. */
+        SharedPlan: {
+            /** Format: uuid */
+            id: string;
+            version_no: number;
+            stops: components["schemas"]["SharedStop"][];
+        };
+        /** @description ORD-0465: what the holder of a share link is shown when the grant still reads.  The journey half is `Journey` unchanged - the same fields, the same names, the same meanings - because one journey shape is the promise this door has always kept. */
+        SharedJourneyRead: components["schemas"]["Journey"] & {
+            /**
+             * @description Named rather than left to be inferred from `active_plan` being null, because a null is two different facts wearing one shape: this trip never had a plan, and this trip points at a plan row the store does not hold.  The three values here are exactly the three the server can answer with (`_shared_plan_projection`), and the third is fail-closed rather than observed: `journeys.active_plan_version_id` is a foreign key, measured to answer `FOREIGN KEY constraint failed` when a dangling pointer is written through the same session, so no test in this tree can reach that value over HTTP.  It stays in the contract because the branch stays in the server, and a client must not be surprised by a word it was never told to expect.
+             * @enum {string}
+             */
+            plan_state: "ACTIVE_PLAN_PRESENT" | "NO_ACTIVE_PLAN" | "ACTIVE_PLAN_ROW_MISSING";
+            active_plan?: components["schemas"]["SharedPlan"] | null;
+            /**
+             * @description ORD-0466: what this grant covers, said in the body instead of left for a caller to infer from which keys happen to be present.
+             * @enum {string}
+             */
+            grant_scope?: "JOURNEY" | "PLAN_VERSION";
+            /** @description The version this grant was cut for, in the canonical plan shape.  Null for a journey-level grant, which is why `grant_scope` exists beside it rather than being derived from this field being absent. */
+            shared_plan?: components["schemas"]["PlanVersion"] | null;
+        };
         Money: {
             amount_minor: number;
             currency: string;
@@ -4594,17 +4643,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. */
+            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY`; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. ORD-0465 adds the guest's own view of the trip's days alongside it (`plan_state`, `active_plan`), because the landing screen needs a stop's name and its position and the canonical plan projection resolves neither into a field a guest is allowed to read.  Both halves live in one named component because the door answers with one body, and an inline `allOf` here would be a second place to keep that body's shape. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Journey"] & {
-                        /** @enum {string} */
-                        grant_scope: "JOURNEY" | "PLAN_VERSION";
-                        shared_plan?: components["schemas"]["PlanVersion"];
-                    };
+                    "application/json": components["schemas"]["SharedJourneyRead"];
                 };
             };
             /** @description error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN (never existed) or SHARE_GRANT_JOURNEY_GONE - a different number from the one above, on purpose */
@@ -4616,7 +4661,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_VERSION_GONE - a grant that exists but no longer allows a read, or names a version this journey no longer holds */
+            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_VERSION_GONE / SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN - a grant that stopped allowing a read, a version this journey no longer holds, or a trip its owner put in the recycle bin */
             409: {
                 headers: {
                     [name: string]: unknown;
