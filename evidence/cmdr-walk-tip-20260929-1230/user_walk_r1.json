@@ -1,0 +1,4793 @@
+{
+ "base": "http://127.0.0.1:4824",
+ "at": "2026-09-29T03:49:43.793Z",
+ "viewport": "390x844",
+ "routes": {
+  "hub": {
+   "controls_visible": 59,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 111,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "跟随系统",
+      "testid": "topbar-theme",
+      "box": [
+       191,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       264,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -51,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "H1",
+      "text": "Demo之旅",
+      "testid": "today-heading",
+      "box": [
+       17,
+       117,
+       356,
+       39
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H1|today-heading",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天",
+      "testid": "today-when",
+      "box": [
+       17,
+       169,
+       356,
+       21
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|today-when",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接",
+      "testid": "hub-secondary-actions",
+      "box": [
+       17,
+       200,
+       356,
+       90
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|hub-secondary-actions",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "AI 帮我规划",
+      "testid": "hub-plan-with-ai",
+      "box": [
+       17,
+       200,
+       68,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|hub-plan-with-ai",
+     "delta": {
+      "chars": 1263,
+      "url_changed": false,
+      "new_testids": [
+       "plan-ai-sheet",
+       "plan-ai-scroll",
+       "plan-ai-input",
+       "plan-ai-examples",
+       "plan-ai-preflight",
+       "plan-ai-dismiss"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "试用其他城市",
+      "testid": null,
+      "box": [
+       101,
+       200,
+       78,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|hub-secondary-actions",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "打开行程工作台",
+      "testid": null,
+      "box": [
+       195,
+       200,
+       91,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -233,
+      "url_changed": false,
+      "new_testids": [
+       "trial-setup",
+       "trial-scroll",
+       "trial-steps",
+       "trial-step-1",
+       "trial-step-2",
+       "trial-step-3"
+      ],
+      "gone_testids": [
+       "topbar-theme",
+       "topbar-language",
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "复制行程链接",
+      "testid": "journey-link-copy",
+      "box": [
+       17,
+       246,
+       78,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|journey-link-copy",
+     "delta": {
+      "chars": 851,
+      "url_changed": false,
+      "new_testids": [
+       "journey-link-message"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "一切正常",
+      "testid": "today-attention-band",
+      "box": [
+       17,
+       314,
+       356,
+       23
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": 756,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "live": {
+   "controls_visible": 43,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 204,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Light",
+      "testid": "topbar-theme",
+      "box": [
+       210,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -1,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       273,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -945,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v8-live-journey",
+       "live-journey-current",
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "LIVE JOURNEY · SAVED 28 SEPT, 04:41 Choose your next leg. Cu",
+      "testid": "v8-live-journey",
+      "box": [
+       17,
+       93,
+       356,
+       500
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "H2",
+      "text": "Tech Art Center",
+      "testid": "live-journey-current",
+      "box": [
+       92,
+       257,
+       210,
+       32
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H2|live-journey-current",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1 2 3 4 5 6 Fit to my journey Basemap did not load — showing",
+      "testid": "v8-maplibre-panel",
+      "box": [
+       17,
+       353,
+       356,
+       240
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1 2 3 4 5 6",
+      "testid": "v8-maplibre-canvas",
+      "box": [
+       18,
+       354,
+       354,
+       238
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1",
+      "testid": null,
+      "box": [
+       178,
+       456,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "2",
+      "testid": null,
+      "box": [
+       207,
+       437,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "3",
+      "testid": null,
+      "box": [
+       222,
+       418,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "4",
+      "testid": null,
+      "box": [
+       251,
+       399,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -613,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "map": {
+   "controls_visible": 33,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 93,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "暗色",
+      "testid": "topbar-theme",
+      "box": [
+       223,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       280,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 195,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "对比出行方式",
+      "testid": null,
+      "box": [
+       17,
+       247,
+       130,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 719,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1 2 3 4 5 6 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图",
+      "testid": "v8-maplibre-panel",
+      "box": [
+       17,
+       318,
+       356,
+       392
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1 2 3 4 5 6",
+      "testid": "v8-maplibre-canvas",
+      "box": [
+       18,
+       319,
+       354,
+       390
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "1",
+      "testid": null,
+      "box": [
+       96,
+       494,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "2",
+      "testid": null,
+      "box": [
+       143,
+       464,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "3",
+      "testid": null,
+      "box": [
+       166,
+       434,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "4",
+      "testid": null,
+      "box": [
+       213,
+       404,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "CANVAS|",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "5",
+      "testid": null,
+      "box": [
+       236,
+       374,
+       34,
+       34
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|map-viewport-reset",
+     "delta": {
+      "chars": 347,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "studio": {
+   "controls_visible": 17,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 204,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "System",
+      "testid": "topbar-theme",
+      "box": [
+       195,
+       17,
+       63,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -1,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       266,
+       17,
+       63,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -372,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -329,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v8-trip-studio",
+       "studio-stay-total",
+       "studio-walking",
+       "studio-feasibility"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "TRIP STUDIO · MULTI-DAY PLAN Shape the journey around what m",
+      "testid": "v8-trip-studio",
+      "box": [
+       17,
+       93,
+       356,
+       602
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -492,
+      "url_changed": true,
+      "new_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "gone_testids": [
+       "v8-trip-studio",
+       "studio-stay-total",
+       "studio-walking",
+       "studio-feasibility"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Report rain disruption",
+      "testid": null,
+      "box": [
+       17,
+       268,
+       184,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -372,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Choose a stay",
+      "testid": null,
+      "box": [
+       114,
+       385,
+       238,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -492,
+      "url_changed": true,
+      "new_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "gone_testids": [
+       "v8-trip-studio",
+       "studio-stay-total",
+       "studio-walking",
+       "studio-feasibility"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "B",
+      "text": "Not chosen yet",
+      "testid": "studio-stay-total",
+      "box": [
+       274,
+       462,
+       78,
+       15
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "B|studio-stay-total",
+     "delta": {
+      "chars": -372,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "B",
+      "text": "Not chosen yet",
+      "testid": "studio-walking",
+      "box": [
+       274,
+       514,
+       78,
+       15
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "B|studio-walking",
+     "delta": {
+      "chars": -372,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "Constraint checks passed, cost evidence incomplete Arrival, ",
+      "testid": "studio-feasibility",
+      "box": [
+       38,
+       587,
+       314,
+       87
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SMALL|",
+     "delta": {
+      "chars": -372,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦ CityNexus Copilot",
+      "testid": "v18-copilot-dock",
+      "box": [
+       215,
+       706,
+       165,
+       54
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -306,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦ CityNexus Copilot",
+      "testid": null,
+      "box": [
+       215,
+       718,
+       165,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -306,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "stay": {
+   "controls_visible": 13,
+   "attempted": 12,
+   "inert": 1,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 93,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "亮色",
+      "testid": "topbar-theme",
+      "box": [
+       223,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 0,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "INERT"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       280,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 175,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 496,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "住宿选择 · 已采集证据 选择锚点，看见行程。 还没有可用的住宿候选 我们还没有拿到真实住宿数据，所以不会给你看一张假的",
+      "testid": "v8-stay-explorer",
+      "box": [
+       17,
+       93,
+       356,
+       190
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H1|",
+     "delta": {
+      "chars": 175,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "还没有可用的住宿候选 我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。",
+      "testid": "stay-no-options",
+      "box": [
+       17,
+       183,
+       356,
+       100
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|stay-no-options",
+     "delta": {
+      "chars": 175,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦ CityNexus Copilot",
+      "testid": "v18-copilot-dock",
+      "box": [
+       215,
+       706,
+       165,
+       54
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 318,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦ CityNexus Copilot",
+      "testid": null,
+      "box": [
+       215,
+       718,
+       165,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 318,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "今天",
+      "testid": "nav-hub",
+      "box": [
+       5,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-hub",
+     "delta": {
+      "chars": 1303,
+      "url_changed": true,
+      "new_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "gone_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "行程",
+      "testid": "nav-trips",
+      "box": [
+       81,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-trips",
+     "delta": {
+      "chars": 393,
+      "url_changed": true,
+      "new_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "gone_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "地图",
+      "testid": "nav-map",
+      "box": [
+       157,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": 648,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Copilot",
+      "testid": "nav-agent",
+      "box": [
+       233,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-agent",
+     "delta": {
+      "chars": 729,
+      "url_changed": true,
+      "new_testids": [
+       "v15-copilot",
+       "v15-copilot-input",
+       "v15-copilot-submit"
+      ],
+      "gone_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "discover": {
+   "controls_visible": 17,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "I prefer quiet indoor culture, low walking, and rain-friendl",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "Discover and compose",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 222,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Dark",
+      "testid": "topbar-theme",
+      "box": [
+       212,
+       17,
+       54,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       275,
+       17,
+       54,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -628,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "prep-panel",
+       "prep-query",
+       "prep-check",
+       "v13-discovery",
+       "v13-discovery-goal",
+       "v13-discover-submit"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "PREPARE A DESTINATION First, whether this city can be planne",
+      "testid": "prep-panel",
+      "box": [
+       17,
+       93,
+       356,
+       349
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "INPUT|prep-query",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "INPUT",
+      "text": "",
+      "testid": "prep-query",
+      "box": [
+       17,
+       327,
+       356,
+       47
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|prep-check",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Check this destination",
+      "testid": "prep-check",
+      "box": [
+       17,
+       398,
+       356,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H1|",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "GROUNDED CITY DISCOVERY Ask for the kind of city day you act",
+      "testid": "v13-discovery",
+      "box": [
+       17,
+       442,
+       356,
+       788
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": -488,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "prep-panel",
+       "prep-query",
+       "prep-check",
+       "v13-discovery",
+       "v13-discovery-goal",
+       "v13-discover-submit"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "TEXTAREA",
+      "text": "I prefer quiet indoor culture, low walking, and rain-friendl",
+      "testid": "v13-discovery-goal",
+      "box": [
+       37,
+       963,
+       316,
+       150
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Discover and compose",
+      "testid": "v13-discover-submit",
+      "box": [
+       37,
+       1166,
+       235,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦",
+      "testid": "v18-copilot-dock",
+      "box": [
+       336,
+       654,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦",
+      "testid": null,
+      "box": [
+       336,
+       654,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -581,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "bookings": {
+   "controls_visible": 31,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 111,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "跟随系统",
+      "testid": "topbar-theme",
+      "box": [
+       191,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       264,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 19,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v8-bookings",
+       "bookings-no-stay",
+       "bookings-no-stay-action",
+       "wallet-commitment",
+       "wallet-commitment-simulated",
+       "wallet-commitment-window"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 ",
+      "testid": "v8-bookings",
+      "box": [
+       17,
+       93,
+       356,
+       873
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H2|",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ARTICLE",
+      "text": "住宿证据 未选择住宿 这趟行程目前还没有可选的住宿。 到「住宿选择」里找一间可订的房",
+      "testid": "bookings-no-stay",
+      "box": [
+       17,
+       277,
+       356,
+       166
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "到「住宿选择」里找一间可订的房",
+      "testid": "bookings-no-stay-action",
+      "box": [
+       101,
+       383,
+       240,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|bookings-no-stay-action",
+     "delta": {
+      "chars": -302,
+      "url_changed": true,
+      "new_testids": [
+       "v8-stay-explorer",
+       "stay-no-options"
+      ],
+      "gone_testids": [
+       "v8-bookings",
+       "bookings-no-stay",
+       "bookings-no-stay-action",
+       "wallet-commitment",
+       "wallet-commitment-simulated",
+       "wallet-commitment-window"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ARTICLE",
+      "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺 place-river-cruise 10月10日 15:30 → 10",
+      "testid": "wallet-commitment",
+      "box": [
+       17,
+       455,
+       356,
+       175
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H2|",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "B",
+      "text": "· 模拟承诺",
+      "testid": "wallet-commitment-simulated",
+      "box": [
+       214,
+       478,
+       44,
+       12
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "10月10日 15:30 → 10月10日 16:30",
+      "testid": "wallet-commitment-window",
+      "box": [
+       101,
+       569,
+       177,
+       15
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H2|",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "STRONG",
+      "text": "¥120.00",
+      "testid": "wallet-commitment-amount",
+      "box": [
+       101,
+       596,
+       48,
+       17
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|wallet-commitment-window",
+     "delta": {
+      "chars": 874,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DETAILS",
+      "text": "高级：结构化数据",
+      "testid": "bookings-advanced",
+      "box": [
+       40,
+       785,
+       310,
+       55
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": 171,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "v8-bookings",
+       "bookings-no-stay",
+       "bookings-no-stay-action",
+       "wallet-commitment",
+       "wallet-commitment-simulated",
+       "wallet-commitment-window"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "agent": {
+   "controls_visible": 17,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "Why is this plan arranged this way?",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "What if I stay 60 minutes longer?",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "Find an indoor place nearby",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 222,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Light",
+      "testid": "topbar-theme",
+      "box": [
+       210,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -1,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       273,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -513,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -549,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v15-copilot",
+       "v15-copilot-input",
+       "v15-copilot-submit"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "ASK ME ANYTHING ABOUT YOUR TRIP What do you want to change? ",
+      "testid": "v15-copilot",
+      "box": [
+       17,
+       93,
+       356,
+       1113
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "TEXTAREA|v15-copilot-input",
+     "delta": {
+      "chars": -495,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "TEXTAREA",
+      "text": "",
+      "testid": "v15-copilot-input",
+      "box": [
+       37,
+       600,
+       316,
+       150
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -495,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Why is this plan arranged this way?",
+      "testid": null,
+      "box": [
+       37,
+       846,
+       177,
+       32
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "What if I stay 60 minutes longer?",
+      "testid": null,
+      "box": [
+       37,
+       885,
+       167,
+       32
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Find an indoor place nearby",
+      "testid": null,
+      "box": [
+       37,
+       924,
+       145,
+       32
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦",
+      "testid": "v18-copilot-dock",
+      "box": [
+       336,
+       334,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -495,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦",
+      "testid": null,
+      "box": [
+       336,
+       334,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": -495,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Today",
+      "testid": "nav-hub",
+      "box": [
+       5,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-hub",
+     "delta": {
+      "chars": -166,
+      "url_changed": true,
+      "new_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "gone_testids": [
+       "v15-copilot",
+       "v15-copilot-input",
+       "v15-copilot-submit"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "authoritative": {
+   "controls_visible": 39,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "V12 · 方案、移动端、EDGE 与画像 权威行程执行。 你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 93,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "暗色",
+      "testid": "topbar-theme",
+      "box": [
+       223,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       280,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -248,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v12-authoritative-page",
+       "plan-version-history",
+       "history-count",
+       "history-retention",
+       "history-list",
+       "history-row"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "V12 · 方案、移动端、EDGE 与画像 权威行程执行。 你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来",
+      "testid": "v12-authoritative-page",
+      "box": [
+       17,
+       93,
+       356,
+       2294
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "刷新真相",
+      "testid": null,
+      "box": [
+       17,
+       230,
+       94,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "DIV|",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "这趟行程的方案版本 服务器上还留着的每一份版本，按写入先后排。这一屏只读。 共列出 1 份版本 这台服务器没有设保留上限",
+      "testid": "plan-version-history",
+      "box": [
+       17,
+       301,
+       356,
+       303
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|history-count",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "共列出 1 份版本",
+      "testid": "history-count",
+      "box": [
+       38,
+       401,
+       314,
+       21
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。",
+      "testid": "history-retention",
+      "box": [
+       38,
+       438,
+       314,
+       38
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|history-count",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "OL",
+      "text": "版本 1 首次生成 9月28日 04:41 没有父版本 行程正在跑这一份",
+      "testid": "history-list",
+      "box": [
+       38,
+       491,
+       314,
+       38
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|history-retention",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "LI",
+      "text": "版本 1 首次生成 9月28日 04:41 没有父版本 行程正在跑这一份",
+      "testid": "history-row",
+      "box": [
+       58,
+       491,
+       294,
+       38
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|history-retention",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "B",
+      "text": "版本 1",
+      "testid": "history-version",
+      "box": [
+       58,
+       491,
+       36,
+       17
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|history-retention",
+     "delta": {
+      "chars": 951,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "intelligence": {
+   "controls_visible": 13,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 204,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "System",
+      "testid": "topbar-theme",
+      "box": [
+       195,
+       17,
+       63,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -1,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       266,
+       17,
+       63,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -548,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -634,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Enable reversible recovery",
+      "testid": null,
+      "box": [
+       17,
+       290,
+       218,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -548,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "Agent runtime source as this server wrote it: NATIVE_DEEPSEE",
+      "testid": "v17-runtime-status",
+      "box": [
+       45,
+       757,
+       300,
+       130
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -494,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦ CityNexus Copilot",
+      "testid": "v18-copilot-dock",
+      "box": [
+       215,
+       706,
+       165,
+       54
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -482,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦ CityNexus Copilot",
+      "testid": null,
+      "box": [
+       215,
+       718,
+       165,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -482,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Today",
+      "testid": "nav-hub",
+      "box": [
+       5,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-hub",
+     "delta": {
+      "chars": -251,
+      "url_changed": true,
+      "new_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Trips",
+      "testid": "nav-trips",
+      "box": [
+       81,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-trips",
+     "delta": {
+      "chars": -525,
+      "url_changed": true,
+      "new_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Map",
+      "testid": "nav-map",
+      "box": [
+       157,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": -494,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Copilot",
+      "testid": "nav-agent",
+      "box": [
+       233,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-agent",
+     "delta": {
+      "chars": -580,
+      "url_changed": true,
+      "new_testids": [
+       "v15-copilot",
+       "v15-copilot-input",
+       "v15-copilot-submit"
+      ],
+      "gone_testids": [
+       "v17-runtime-status"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "twin": {
+   "controls_visible": 11,
+   "attempted": 11,
+   "inert": 1,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 111,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "亮色",
+      "testid": "topbar-theme",
+      "box": [
+       223,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 0,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "INERT"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       280,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 573,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 284,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦",
+      "testid": "v18-copilot-dock",
+      "box": [
+       336,
+       534,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "ARTICLE|",
+     "delta": {
+      "chars": 573,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦",
+      "testid": null,
+      "box": [
+       336,
+       534,
+       44,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "ARTICLE|",
+     "delta": {
+      "chars": 573,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "今天",
+      "testid": "nav-hub",
+      "box": [
+       5,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-hub",
+     "delta": {
+      "chars": 1093,
+      "url_changed": true,
+      "new_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "行程",
+      "testid": "nav-trips",
+      "box": [
+       81,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-trips",
+     "delta": {
+      "chars": 181,
+      "url_changed": true,
+      "new_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "地图",
+      "testid": "nav-map",
+      "box": [
+       157,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": 436,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Copilot",
+      "testid": "nav-agent",
+      "box": [
+       233,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-agent",
+     "delta": {
+      "chars": 517,
+      "url_changed": true,
+      "new_testids": [
+       "v15-copilot",
+       "v15-copilot-input",
+       "v15-copilot-submit"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "我的",
+      "testid": "nav-me",
+      "box": [
+       309,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-me",
+     "delta": {
+      "chars": 284,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "trips": {
+   "controls_visible": 29,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "Stay",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "Bookings",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "Spend",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 222,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Dark",
+      "testid": "topbar-theme",
+      "box": [
+       212,
+       17,
+       54,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       275,
+       17,
+       54,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -119,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": -228,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "NAV",
+      "text": "Itinerary Stay Bookings Spend",
+      "testid": "trips-tabs",
+      "box": [
+       17,
+       93,
+       356,
+       63
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|trips-tab-itinerary",
+     "delta": {
+      "chars": -119,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Itinerary",
+      "testid": "trips-tab-itinerary",
+      "box": [
+       17,
+       105,
+       356,
+       40
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|trips-tab-itinerary",
+     "delta": {
+      "chars": -119,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Stay",
+      "testid": "trips-tab-stay",
+      "box": [
+       379,
+       105,
+       356,
+       40
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Bookings",
+      "testid": "trips-tab-bookings",
+      "box": [
+       741,
+       105,
+       356,
+       40
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Spend",
+      "testid": "trips-tab-spend",
+      "box": [
+       1103,
+       105,
+       356,
+       40
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "TRIPS 1-day itinerary Day by day. Confirmed bookings are mar",
+      "testid": "trip-itinerary",
+      "box": [
+       17,
+       168,
+       356,
+       620
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "ARTICLE|trip-stop",
+     "delta": {
+      "chars": -248,
+      "url_changed": false,
+      "new_testids": [
+       "activity-detail",
+       "activity-back",
+       "activity-title",
+       "activity-duration",
+       "activity-cost",
+       "activity-hours"
+      ],
+      "gone_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "H1",
+      "text": "1-day itinerary",
+      "testid": "trip-day-total",
+      "box": [
+       17,
+       192,
+       356,
+       39
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "H1|trip-day-total",
+     "delta": {
+      "chars": -119,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "day 1 of 1. 3/6 stops completed.",
+      "testid": "trip-progress-contract",
+      "box": [
+       17,
+       278,
+       356,
+       21
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|trip-progress-contract",
+     "delta": {
+      "chars": -119,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "me": {
+   "controls_visible": 17,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "启用 Web Push",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "高级详情",
+     "reason": "centre_offscreen"
+    },
+    {
+     "text": "查看策略详情",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 93,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "跟随系统",
+      "testid": "topbar-theme",
+      "box": [
+       191,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       264,
+       17,
+       65,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 332,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 314,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 ·",
+      "testid": "v8-me",
+      "box": [
+       17,
+       93,
+       356,
+       1157
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "ARTICLE|",
+     "delta": {
+      "chars": 314,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "INPUT",
+      "text": "",
+      "testid": "me-mode-toggle",
+      "box": [
+       140,
+       908,
+       13,
+       13
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "ARTICLE",
+      "text": "通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+      "testid": "push-capability",
+      "box": [
+       17,
+       961,
+       356,
+       220
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "启用 Web Push",
+      "testid": null,
+      "box": [
+       40,
+       1114,
+       141,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "DETAILS",
+      "text": "高级详情",
+      "testid": "me-advanced",
+      "box": [
+       17,
+       1195,
+       356,
+       55
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "查看策略详情",
+      "testid": null,
+      "box": [
+       40,
+       1574,
+       126,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦ CityNexus Copilot",
+      "testid": "v18-copilot-dock",
+      "box": [
+       215,
+       706,
+       165,
+       54
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|",
+     "delta": {
+      "chars": 314,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦ CityNexus Copilot",
+      "testid": null,
+      "box": [
+       215,
+       718,
+       165,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "ARTICLE|",
+     "delta": {
+      "chars": 314,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "trash": {
+   "controls_visible": 14,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Menu",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       55,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 204,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Light",
+      "testid": "topbar-theme",
+      "box": [
+       210,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": -1,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "中文",
+      "testid": "topbar-language",
+      "box": [
+       273,
+       17,
+       56,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": -124,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 48,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "journey-trash-panel",
+       "trash-empty",
+       "trash-refresh"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "RECYCLE BIN The trips this server says are in the bin. Each ",
+      "testid": "journey-trash-panel",
+      "box": [
+       17,
+       115,
+       356,
+       293
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "P|trash-empty",
+     "delta": {
+      "chars": -124,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "The bin is empty: this server named no trip in it.",
+      "testid": "trash-empty",
+      "box": [
+       32,
+       281,
+       326,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SECTION|journey-trash-panel",
+     "delta": {
+      "chars": -124,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Read the bin again",
+      "testid": "trash-refresh",
+      "box": [
+       32,
+       349,
+       326,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|trash-refresh",
+     "delta": {
+      "chars": -124,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "ASIDE",
+      "text": "✦ CityNexus Copilot",
+      "testid": "v18-copilot-dock",
+      "box": [
+       215,
+       706,
+       165,
+       54
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -58,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "✦ CityNexus Copilot",
+      "testid": null,
+      "box": [
+       215,
+       718,
+       165,
+       42
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": -58,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Today",
+      "testid": "nav-hub",
+      "box": [
+       5,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-hub",
+     "delta": {
+      "chars": 431,
+      "url_changed": true,
+      "new_testids": [
+       "today-heading",
+       "today-when",
+       "hub-secondary-actions",
+       "hub-plan-with-ai",
+       "journey-link-copy",
+       "today-attention-band"
+      ],
+      "gone_testids": [
+       "journey-trash-panel",
+       "trash-empty",
+       "trash-refresh"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Trips",
+      "testid": "nav-trips",
+      "box": [
+       81,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-trips",
+     "delta": {
+      "chars": 157,
+      "url_changed": true,
+      "new_testids": [
+       "trips-tabs",
+       "trips-tab-itinerary",
+       "trips-tab-stay",
+       "trips-tab-bookings",
+       "trips-tab-spend",
+       "trip-itinerary"
+      ],
+      "gone_testids": [
+       "journey-trash-panel",
+       "trash-empty",
+       "trash-refresh"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "Map",
+      "testid": "nav-map",
+      "box": [
+       157,
+       789,
+       76,
+       48
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|nav-map",
+     "delta": {
+      "chars": 188,
+      "url_changed": true,
+      "new_testids": [
+       "v8-maplibre-panel",
+       "v8-maplibre-canvas",
+       "map-viewport-controls",
+       "map-viewport-reset",
+       "v8-map-tile-notice",
+       "v8-map-gesture-hint"
+      ],
+      "gone_testids": [
+       "journey-trash-panel",
+       "trash-empty",
+       "trash-refresh"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    }
+   ]
+  },
+  "access": {
+   "controls_visible": 22,
+   "attempted": 12,
+   "inert": 0,
+   "skipped": [
+    {
+     "text": "所有者 全部权限：改可见性、请人、移除成员、删除行程。 管理员 管理协作者、编辑地点。 协作者 编辑地点。",
+     "reason": "skipped_destructive"
+    },
+    {
+     "text": "转换后这条行程全网可见——原先看不见的人会开始能看见。 转换后，已经在跟踪这条行程的人会失去访问权限。",
+     "reason": "centre_offscreen"
+    }
+   ],
+   "taps": [
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "菜单",
+      "testid": null,
+      "box": [
+       17,
+       19,
+       46,
+       27
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 111,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "暗色",
+      "testid": "topbar-theme",
+      "box": [
+       223,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-theme",
+     "delta": {
+      "chars": 2,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "EN",
+      "testid": "topbar-language",
+      "box": [
+       280,
+       17,
+       49,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|topbar-language",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "BUTTON",
+      "text": "DE",
+      "testid": null,
+      "box": [
+       345,
+       25,
+       28,
+       28
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "BUTTON|",
+     "delta": {
+      "chars": 25,
+      "url_changed": true,
+      "new_testids": [
+       "v8-me",
+       "me-mode-toggle",
+       "push-capability",
+       "me-advanced"
+      ],
+      "gone_testids": [
+       "access-panel",
+       "access-server-read",
+       "access-journey-picker",
+       "access-door-state",
+       "access-role-ladder",
+       "access-role-details"
+      ],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SECTION",
+      "text": "成员与权限 谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。 选一条行程 先选一条要",
+      "testid": "access-panel",
+      "box": [
+       17,
+       93,
+       356,
+       1274
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "DIV",
+      "text": "选一条行程 先选一条要看的行程 One Day in Nexus City",
+      "testid": "access-server-read",
+      "box": [
+       17,
+       215,
+       356,
+       67
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "SELECT",
+      "text": "先选一条要看的行程 One Day in Nexus City",
+      "testid": "access-journey-picker",
+      "box": [
+       17,
+       237,
+       356,
+       45
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SELECT|access-journey-picker",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "P",
+      "text": "正在问这台服务器还有谁能到达这条行程…",
+      "testid": "access-door-state",
+      "box": [
+       17,
+       309,
+       356,
+       19
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SECTION|access-panel",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "UL",
+      "text": "所有者 全部权限：改可见性、请人、移除成员、删除行程。 管理员 管理协作者、编辑地点。 协作者 编辑地点。",
+      "testid": "access-role-ladder",
+      "box": [
+       17,
+       391,
+       356,
+       138
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "skipped_destructive"
+    },
+    {
+     "control": {
+      "tag": "DETAILS",
+      "text": "查看完整权限规则",
+      "testid": "access-role-details",
+      "box": [
+       17,
+       536,
+       356,
+       44
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "UL",
+      "text": "仅个人 别人打不开，拿到链接也打不开。 获得链接者可见 有链接的人不用先进成员名单就能读。 受邀者可见 只有邀请还在有效",
+      "testid": "access-visibility-ladder",
+      "box": [
+       17,
+       630,
+       356,
+       185
+      ],
+      "disabled": false
+     },
+     "clicked": true,
+     "hit_test": "SPAN|",
+     "delta": {
+      "chars": 1195,
+      "url_changed": false,
+      "new_testids": [],
+      "gone_testids": [],
+      "new_errors": 0
+     },
+     "verdict": "ANSWERED"
+    },
+    {
+     "control": {
+      "tag": "UL",
+      "text": "转换后这条行程全网可见——原先看不见的人会开始能看见。 转换后，已经在跟踪这条行程的人会失去访问权限。",
+      "testid": "access-switch-lines",
+      "box": [
+       17,
+       866,
+       356,
+       90
+      ],
+      "disabled": false
+     },
+     "clicked": false,
+     "reason": "centre_offscreen"
+    }
+   ]
+  }
+ },
+ "errors": [],
+ "error_count": 0,
+ "failed_requests": [
+  "https://tile.openstreetmap.org/12/3381/1563.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3381/1564.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3380/1563.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3380/1564.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3382/1563.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3382/1564.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/845/391.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/845/390.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/844/391.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/844/390.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/846/391.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/846/390.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/422/195.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/423/195.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/422/196.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/423/196.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/421/195.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/9/421/196.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3381/1563.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3381/1564.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3380/1563.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/12/3380/1564.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1690/781.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1690/782.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1691/781.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1691/782.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1689/781.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/11/1689/782.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/845/391.png net::ERR_ABORTED",
+  "https://tile.openstreetmap.org/10/845/390.png net::ERR_ABORTED"
+ ],
+ "failed_request_count": 459,
+ "summary": {
+  "routes": 15,
+  "total_inert_controls": 2,
+  "verdict": "SOME_CONTROLS_DO_NOTHING"
+ }
+}
