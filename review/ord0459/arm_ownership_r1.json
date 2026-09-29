@@ -1,0 +1,64 @@
+{
+ "arms": [
+  {
+   "arm": "before",
+   "base": "http://127.0.0.1:49160/",
+   "http_root": "200 text/html 0",
+   "listener_pid": "28944",
+   "listener_cmdline": "\"node\" \"D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_o459before\\frontend\\node_modules\\.bin\\\\..\\vite\\bin\\vite.js\" preview --outDir dist --host 127.0.0.1 --port 49160 --strictPort",
+   "entry_named_by_served_index": "/assets/index-DbA8xyvx.js",
+   "entry_named_by_disk_index": "/assets/index-DbA8xyvx.js",
+   "index_served_sha1": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+   "index_disk_sha1": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+   "index_bytes_served": 1200,
+   "index_bytes_disk": 1200,
+   "entry_http": "200 text/javascript 0",
+   "entry_served_sha1": "b272811048f1d94655c22355c1f5a04131cd99e5",
+   "entry_disk_sha1": "b272811048f1d94655c22355c1f5a04131cd99e5",
+   "entry_bytes_served": 1406069,
+   "entry_bytes_disk": 1406069,
+   "proof_1_entry_name_from_my_index": true,
+   "proof_2_served_equals_disk": true,
+   "proof_3_access_log": "NOT_AVAILABLE_on_vite_preview"
+  },
+  {
+   "arm": "after",
+   "base": "http://127.0.0.1:49161/",
+   "http_root": "200 text/html 0",
+   "listener_pid": "55652",
+   "listener_cmdline": "\"node\" \"D:\\moodle\\_qoder_q_ord0427_20260929\\wt\\frontend\\node_modules\\.bin\\\\..\\vite\\bin\\vite.js\" preview --outDir ../../../_qoder_q_ord0448_20260929/dist_after3 --host 127.0.0.1 --port 49161 --strictPort",
+   "entry_named_by_served_index": "/assets/index-DFAb5Cd0.js",
+   "entry_named_by_disk_index": "/assets/index-DFAb5Cd0.js",
+   "index_served_sha1": "d9d2693a43cfe44c5ebe9799d8f4036b2fc6bbb7",
+   "index_disk_sha1": "d9d2693a43cfe44c5ebe9799d8f4036b2fc6bbb7",
+   "index_bytes_served": 1200,
+   "index_bytes_disk": 1200,
+   "entry_http": "200 text/javascript 0",
+   "entry_served_sha1": "a1c494ebf0732ad48e4e4c78b1b1d73df3ce66be",
+   "entry_disk_sha1": "a1c494ebf0732ad48e4e4c78b1b1d73df3ce66be",
+   "entry_bytes_served": 1406069,
+   "entry_bytes_disk": 1406069,
+   "proof_1_entry_name_from_my_index": true,
+   "proof_2_served_equals_disk": true,
+   "proof_3_access_log": "NOT_AVAILABLE_on_vite_preview"
+  }
+ ],
+ "css_assets": [
+  {
+   "arm": "before",
+   "file": "index-D1cth6A1.css",
+   "disk_bytes": 208293,
+   "served_bytes": 208293,
+   "disk_sha1": "13208234662229e1c9d7b44a6a9e1119f949ec29",
+   "served_sha1": "13208234662229e1c9d7b44a6a9e1119f949ec29"
+  },
+  {
+   "arm": "after",
+   "file": "index-DFgigICH.css",
+   "disk_bytes": 210162,
+   "served_bytes": 210162,
+   "disk_sha1": "c7e0a19c93961f956fa85a47b59f47ccede27a79",
+   "served_sha1": "c7e0a19c93961f956fa85a47b59f47ccede27a79"
+  }
+ ]
+}
