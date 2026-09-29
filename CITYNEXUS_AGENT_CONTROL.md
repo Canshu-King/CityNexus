@@ -16588,6 +16588,137 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0463 报名不动手 · 要共用的那枚候选池还在未落地的 ORD-0437 枝上 · 本轮产品字节 0 枚 · 车道 6a150e1e
+
+这单我量完就停了，没有写屏。原因不是没做完，而是**它要求"共用、不另起第二套形状"的那枚池子此刻不在权威线上**——它在未落地的 ORD-0437 候选枝里，而我这轮任何写法都会撞上你自己的复切判据。全部是只读测量，读数固化在 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:1`。
+
+- 现读现尖：`D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:2` 记 `b2abd99b9e07c77e565f9cbdbd3875fcc733697b`；顺带一条好消息：我上一单 ORD-0450 已在这枚尖上，祖先判据 rc=0（同件 `:3`）。
+- 测量一（池子不在线上）：`git ls-tree` 在尖上找 `backend/app/poi_import.py`、`frontend/src/features/poiimport`、`frontend/src/components/PoiCandidateCard.tsx`，命中数 = 0（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:4`）；尖上字典里 `poiImport.` 键命中数也是 0（同件 `:5`）。
+- 测量二（会撞哪一面）：ORD-0437 候选枝头 = `a1563bd5c237f2f1b07a8068103a760ba4824394`（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:6`，枝名 `refs/heads/review/R-ord0437-link-import-r3`），它一次改 12 枚产品文件（同件 `:7` 是那一条的标题，逐枚名单在 `:8` 到 `:19`），其中 `frontend/src/app/v8PanelRegistry.tsx`、`frontend/src/i18n/LocaleContext.tsx`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts` 正是我这单必须碰的共享面。⇒ 我若现在动手，"合完逐枚等车道字节"这条必然 ABORT，或者逼你手合——两样我都不留给你。
+- 测量三（范围其实已被覆盖）：ORD-0463 的四格要求，ORD-0437 那枝逐格都有实现——粘贴文字进池（`PoiImportParseRequest.text`，上限 max_length=20000，读数 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:21`）、认出几枚报几枚（`PoiImportParseResponse.counts`）、认不出具名说（`PoiImportItem.status = RESOLVED | AMBIGUOUS | UNRESOLVED`）、截图只做外壳并明说（`poi-import-mode-screenshot` + `poi-import-mode-unsupported`），连"落到某一天"与三出口都在（`poi-import-day*`、`poi-import-favorite`、`poi-import-new-journey`）。同件 `:22` 列出该枝面板上的 testid 全名单。
+- 唯一真差的一格，请你判一句：ORD-0437 的截图支**不收图片文件**，选中就明说"这一支不支持"（读数 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:23`）。ORD-0463 写的是"接收图片＋明说尚未识别"。我的建议是保留 ORD-0437 现在的立场：收了图而线上没有任何通道，等于把"我们不做"改写成"我们还没做完"，那是一句更弱的真话。若你仍要收文件那版，等 ORD-0437 落地后我加一枚 `poi-import-image-field` + 一枚字典键，一轮就能交，不必再开形状。
+- 纠正你块里那一格词面：以 `ocr` 与 `识图` 检索无命中——属实。但这能力在线上另有名字：`POST /api/v1/journeys/{journey_id}/inbox/vision` 在 `backend/app/main.py:4553`，`inbox/text-extract` 在 `backend/app/main.py:4516`，`inbox/import` 在 `backend/app/main.py:4432`，请求模型 `ReservationVisionRequest` 在 `backend/app/schemas.py:309`（四条读数同件 `:25`、`:26`、`:27`）。它们是**订房单/票据**入口，产出 `ExternalReservationDraft`，不是地点候选池（同件 `:28`）；地点池那个名字要等 0437 进线后才成立（`poi_import` / `source_channel = LOCAL_TEXT_PARSER`）。
+- 一条转述纠偏，请你确认口径：派单里"文案全走 LocaleContext 字典、硬编码兜底判红"那两行，在账本 13:55 那块里属于 **ORD-0462**（会员体系前端那一格），不在 ORD-0463 那三行原文内。我按 ORD-0463 原文执行；如果你确实要把这条也压给 ORD-0463，请在你下一块里点名一次——那意味着我要动 `frontend/src/i18n/LocaleContext.tsx` 这枚热文件，而我手上收到的约束一直是"它不许改"。
+- 边界：本轮零写入、零构建、未起新栈、未碰权威线与账本本体；上一单的服务仍挂着（后端 :8012、门面 :4794、反件 :4793），你随时可以复现 ORD-0450 的屏。
+
+
+### ORD-0453 r2（车道 3b65af59）：两态各留一件读数件；本轮 0 产品字节，r1 的产品字节已逐字节在权威尖上
+
+**为什么还有第二块**：验收那句是「展开与收起两态都要中心命中」。r1 的门把两态写进了同一件
+`reading_pressed-then-expanded.json`，读的人可以把展开那一次命中当成收起那一次。现在两态各写一件：
+`reading_state-collapsed.json`（push 在 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:123`）与
+`reading_state-expanded.json`（push 在 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:138`）。
+本轮 `git show --stat` 只报 1 file changed, 20 insertions(+), 0 deletions —— 改的是门文件
+`frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts`，产品字节 0。
+
+**地面现读（我自己读的，不沿用别人 11:57 那一份）**
+
+- 权威尖 = 703e00d10dd9132e27343c63f7641a1b5fa02673（提交标题就是 ORD-0453 的 r1）。`git merge-base --is-ancestor 8f0b0c2dbfe86bb7dad2de25b20f83d212a72cae 703e00d10dd9132e27343c63f7641a1b5fa02673` 回 rc=0
+  ⇒ r1 已入账；`git rev-parse 703e00d10dd9132e27343c63f7641a1b5fa02673:frontend/src/app/V8Experience.tsx` 得 eb247ffb29a74583a2bbaf887dc693148c322ec5，
+  与我 r1 同一文件同一枚 blob（`git rev-parse 8f0b0c2dbfe86bb7dad2de25b20f83d212a72cae:frontend/src/app/V8Experience.tsx` 同为 eb247ffb29a74583a2bbaf887dc693148c322ec5）
+  ⇒ 「合完逐字节等于车道自己那份」这一条是量过的，不是推的。
+- 本块对应的 r2 = 5c31c6e89131c724e9dd9b9088a4c860c6553b20，`git merge-base --is-ancestor 5c31c6e89131c724e9dd9b9088a4c860c6553b20 703e00d10dd9132e27343c63f7641a1b5fa02673` 回非 0 ⇒ 还没落，等代插。
+- 枝名 `refs/heads/review/map-ord0453-list-third-state`，`git ls-remote origin` 现读回
+  5c31c6e89131c724e9dd9b9088a4c860c6553b20（逐字同一枚 40 位）。
+- 词典要更正值守那条：`frontend/src/i18n/LocaleContext.tsx` 在 4ee14229f80691cf8e5ea913375c0caf83ac02ee 才是
+  0477cde9beafdf5c145ae91fbbc2f1b26520e50c，在权威尖 703e00d10dd9132e27343c63f7641a1b5fa02673 已是 6104115402df45d688128dd8e07cda3fa92ce9c7（11:57 之后 ORD-0436/0447 那批换的）。
+  本车道没碰词典：合并树 af2551aceecf4e24a39e6aeab216751b5c365b29 里它是 6104115402df45d688128dd8e07cda3fa92ce9c7，与权威尖逐字节相同，
+  `frontend/src/app/v8PanelRegistry.tsx` 同理 —— 不存在拿旧基线反盖。
+
+**两态读数**（run `cmdr0453r2`，`CHILD_EXIT_CODE=0`，`10 passed / 0 failed`，视口 width=390 height=844；
+字段来源 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:123` 与 `:138`）
+
+- 收起态 `reading_state-collapsed.json`：`hit=true`、`hitTarget=map-stops-capture`、`pressed=true`、
+  `expanded=false`、`ariaExpanded=false`、`rowsIn=4`、`rowCount=9`、`markers=9`、
+  `maskVisible=true`、`maskPointerEvents=none`、`captureText="Show all 9 places"`，
+  字段取自 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:123`。
+- 收起态的尺寸：`captureBox=310x35`、`boxClientH=244`、`boxScrollH=519`、`pressHeight=244`，
+  这四枚字段的定义在 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:82`。
+- 展开态 `reading_state-expanded.json`：`hit=true`、`hitTarget=map-stops-capture`、`pressed=false`、
+  `expanded=true`、`ariaExpanded=true`、`rowsIn=9`、`rowCount=9`、`markers=9`、`maskVisible=false`、
+  `captureText="Collapse list"`，字段取自 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:138`。
+- 展开态的尺寸：`captureBox=310x35`、`boxClientH=519`、`boxScrollH=519`（打开后盒子不再装不下东西），
+  后两枚定义在 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:83`。
+- 两态 `panelBox` 逐字段相等这条断言在 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:179`，
+  本轮仍在同一 run 里通过：地图面板一格没被这块控件挪走。
+
+**勘误：r1 那块里指这个门文件的行号，插入之后全部下移**（r1 已入账，按规矩不改旧块，在这里给新坐标；
+偏移量 = 本轮 `git show --stat` 报的那 20 行插入，插入点在同文件
+`frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:121` 之后）
+
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:159` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:179`（panelBox 两态相等）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:163` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:183`（图上点击不展开）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:206` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:226`（afterTapRowsIn 读数）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:215` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:235`（四宽度命中）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:227` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:247`（最小命中盒断言）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:254` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:274`（中文逐字断言）
+- 旧 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:263` → 新 `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:283`（展开后仍能选中）
+- 不动的三枚：`frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:34`（宽度表）、
+  `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:62`（取点式）、
+  `frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts:82`（读数对象字段）—— 都在插入点之前。
+  产品文件的锚不受影响：本轮没改产品文件，下面三枚是从 r2 提交里 `git show` 出来再按行读的：
+  `frontend/src/app/V8Experience.tsx:3706` 是 `COLLAPSED_STOP_ROWS`，
+  `frontend/src/i18n/mapPanelCopy.ts:97` 是 `stopsShowAllTotal`，
+  `frontend/src/map-selection.css:119` 是 `.v8-map-stops-wrap` 那条规则。
+
+**合入预测**（只读，没动权威线）：`git merge-tree --write-tree 703e00d10dd9132e27343c63f7641a1b5fa02673 5c31c6e89131c724e9dd9b9088a4c860c6553b20` 回 `rc=0`、树 af2551aceecf4e24a39e6aeab216751b5c365b29；
+该树里我这一单的四条路径（`frontend/src/app/V8Experience.tsx`、`frontend/src/i18n/mapPanelCopy.ts`、
+`frontend/src/map-selection.css`、`frontend/e2e/qoder-map-ord0453-list-third-state.spec.ts`）
+的 blob 与 5c31c6e89131c724e9dd9b9088a4c860c6553b20 里同名文件的 blob 逐枚相同 ⇒ 落下去就是我这份。
+
+**仍然没变好的（与 r1 同口径，没有新增）**
+
+- 「点图即展开」这半句仍未交付：绑 maplibre 的 `click` 会让
+  `frontend/e2e/qoder-ord0417-tap-names-the-stop.spec.ts:520` 那组读成「26 -> 31」共 8 条红
+  （run `ord0453reg1`），在 canvas 上盖 DOM 层就是这块面板上过一次的 ORD-0134。要它得连那条 arm 一起改，等裁。
+- `frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts` 的 4 条 reach 与
+  `frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:226` 的 4 条 reach 仍红，
+  原尖对照件 `cmdrbase0453c1` 已证与本单无关。
+- 顶栏那条两态重叠带（ORD-0403）仍未修。
+
+**合规**：本轮只有门文件，产品字节 0；`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150` 的 F9 段
+只借信息架构（容器 + 遮罩 + 一个捕获件），该包内图片、字体、动画、代码、色值原表一个字节都没进本仓库。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### cmdr 14:34 · 六笔进线四笔退回（具名冲突面逐条）· ORD-0463 并入 ORD-0437 且截图收件裁"不收"· ORD-0462 折进 ORD-0436 · ORD-0465 新车道开工 · ORD-0466 版本级共享开单 · 两块门红退回
+
+**一、批量落地结果（同一道只读 re-cut：`git merge-tree --write-tree` 加逐枚车道字节相等；再走落地门；每笔 fast-forward）**
+- ORD-0460 过期时刻的拒绝落到 `0b7167369e685ac4b7a3d19143de985799e71eb8`（这枚 commit 改了 `backend/app/main.py`，新增 `backend/tests/test_qoder_ord0460_expiry_in_past.py`）。
+- ORD-0459 圆角档位第二步落到 `4736ab86c237fc1b28276ac7d28c56a23e1bab3e`（八枚 CSS 文件，`frontend/src/design-tokens.css` 是阶梯本体）。
+- ORD-0430 pill 让位落到 `45513fc7957214dc385b4dffea9a662a0d8b1d1c`（map 与 hub 两屏各自的 witness 都在这代）。
+- ORD-0453 站点列表第三态落到 `703e00d10dd9132e27343c63f7641a1b5fa02673`。
+- ORD-0456 向导文件行尾回到这行本来的形状，落到 `9110db281ca7706bb78e8e1f2dbad04a08705d88`。
+- ORD-0454 STATE_PAIR 面落到 `b2abd99b9e07c77e565f9cbdbd3875fcc733697b`，那笔提交正文自己写了 `0 product bytes`。
+- 现尖读于 14:34 = `b2abd99b9e07c77e565f9cbdbd3875fcc733697b`。
+
+**二、四笔退回，具名冲突面（请各车道在现尖 rebase 后当代重跑自己的判据；我不手合、不替谁搬字节）**
+- ORD-0435 件尖 `b4bb6c065a3ede46bb36f94e84f86c3caed0a7ac`：唯一合不成的一枚文件是 `frontend/src/i18n/LocaleContext.tsx`。车道 be19052c 已敲。
+- ORD-0432 件尖 `3e5d160d9d34107a4cc667b4266f7f07ae75095b`：合不成的是 `backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts`，原因就是上面 ORD-0460 那笔落了同三枚文件。车道 a6b95d59 已敲；`generated/api.ts` 请用重生成那一份，别手改。
+- ORD-0457 件尖 `190281be49ac0461d55e8d6cc09d11b7b7aa4256`：合不成的一枚文件是 `frontend/src/app/V8Experience.tsx`。车道 49fe0d7b 已敲。
+- ORD-0437 件尖 `ea532c95f0ec49d1f0f4264c853b96a391f3a01d`：re-cut 报的名单里含 `backend/app/main.py` 与 `contracts/openapi.yaml`（整条读数在 `_batch_run_1351.log` 的收尾 JSON）。
+- ORD-0444 的 r3 件尖 `e016bea70c3f2260c39f28b8a0a4a510df70f889` 已在下一队列里，本轮未跑；跑完的尖位在下一块报。
+
+**三、裁 ORD-0463（车道 6a150e1e 的只读地基测量我收下，读数固化在 `ord0463_grounding_r1.txt` 的第一行起）**
+- 裁定：ORD-0463 不另开形状，**并入 ORD-0437**；ORD-0437 落地代之后由该车道把那一屏的屏上四格走完并交坐标。它那枚 testid 名单（逐枚在 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:22`）就是验收清单。
+- 截图收件那一格裁"不收"，维持 ORD-0437 现有立场：线上没有把图片变成地点候选的通道，收了图再把"识别"写成"尚未识别"，等于把"我们不做"改写成"我们还没做完"——那是一句更弱的真话，我不收。真有通道时开新单，不在这一轮。
+- 我的读数缺陷具名更正：13:55 那块我用 `ocr` 与 `识图` 两个词面检索就断言"能力没有"，这不够。车道指出线上另有入口，我已在现尖逐枚核对：`backend/app/main.py:4553`（inbox/vision）、`backend/app/main.py:4516`（inbox/text-extract）、`backend/app/main.py:4432`（inbox/import）、请求模型 `backend/app/schemas.py:309`。这些产出 `ExternalReservationDraft`（订房单/票据），不是地点候选池，所以"地点候选池没有线上通道"这条结论仍然成立，但我的**取证方式**被推翻：词面缺席只能证明词面缺席，不能证明能力缺席。
+- 措辞纠正成立：那两行"文案全走字典 / 硬编码兜底判红"在我 13:55 那块里挂在 ORD-0462 名下，不在 ORD-0463 原文里，是我用消息把范围加宽的。现在收回：ORD-0463 既然并入 ORD-0437，就以 ORD-0437 车道自己的字典做法为准，我不再要求 6a150e1e 动 `frontend/src/i18n/LocaleContext.tsx`。
+
+**四、ORD-0462 折进 ORD-0436**：会员与权限那一屏一号一屏，归车道 4033270f（已敲，它先做只读那屏）。ORD-0461 的写路由落地后我把新尖具名给它。ORD-0462 这个号本轮作废，后续块不再引用。
+
+**五、ORD-0465 已开并派给新车道 `da46954a-7659-4708-ad4a-c1b4474be85a`（分享接收屏）**：地基读数逐枚现读——客户端形状在 `frontend/src/generated/api.ts:488`，发起与撤销在 `frontend/src/features/access/accessDoors.ts:152` 与 `frontend/src/features/access/accessDoors.ts:174`，而 `frontend/src/routes/v8Routes.ts` 里没有 shared 条目 ⇒ 链接发得出去、打开没有家。这一屏要 token 无效、已撤销、已过期、行程在回收站各有具名说法，读服务端那枚码。
+
+**六、ORD-0466 开单 · 版本级共享（派车道 6a150e1e）**：预设设计写的是"行程与版本支持共享"，现尖上只有行程级授权面（`backend/app/db/models.py:1237`），版本表 `backend/app/db/models.py:505` 没有任何共享出口。要做：选中某一版 → 对该版发起授权 → 接收屏只读那一版，并且与 ORD-0465 共用同一条 token 读路由，不许各造一套。我在账本以"版本共享"与"指定版共享"两词检索读到的是无命中条目；若这能力其实已经落在别的名字下，请车道把那枚路由行指出来，我改这一格判断。
+
+**七、两块门红退回（我不代笔改别人的句子）**
+- `D:/moodle/_qoder_ledger_inbox/map_1427.md` 被 Q43 拒在两处裸数上（报的是 `NUMBER_WITHOUT_COORDINATE`），把那两行的每个读数在同一行配一枚可解析坐标（`path:line` 或字面 40 位物件）即可。
+- `D:/moodle/_qoder_ledger_inbox/newlane2_1428.md` 被拒在开头那段：两个单号写成了裸数字，请加 `ORD-` 前缀；同段那枚上限值要么带单位、要么指到定义它的那行代码。
+
+**八、边界与在跑的事**：本块 0 产品字节改动（权威枝只由我移动，本轮六次移动全部 ff=True，逐笔尖位见第一节）。落地门在无 `--tests` 时 whole_suite 只是 collect-only，所以我在现尖的只读导出上另起了一次真执行套件（导出目录 `v_b2abd99b`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`）。第一跑在收集阶段就被打断：具名形如 `backend/tests/test_v18_hermes_r10_tool_planning_probe.py:1` 那行导不进 `scripts.hermes_r10_tool_planning_probe`，成因是我自己没带 `PYTHONPATH`，不是产品的红；这条仪表缺陷具名记下。第二跑（带 PYTHONPATH）的 passed/failed/skipped 与红集合对照具名基线的结果在下一块报，红集合若不在基线子集内我会逐笔归因。
+
+
 ### newlane 车道 2026-09-29 14:14 · ORD-0444 r3 已 rebase 重交：注册表三方合流，零增长在**当下现尖**上重量过；枝 review/newlane-ord0444-collections-r3 头 `e016bea70c3f2260c39f28b8a0a4a510df70f889`
 
 **为什么再切一次**
