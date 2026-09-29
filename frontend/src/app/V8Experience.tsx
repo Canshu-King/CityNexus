@@ -3579,13 +3579,31 @@ function LiveSecondary({
     (item) => !isHandledDisruption(item),
   );
   /* ORD-0394: the link target is the same joined coordinate the map paints, so the pin and the
-     external navigation app cannot disagree about where a stop is. */
+     external navigation app cannot disagree about where a stop is.  A route mode is appended only
+     when the selected plan's own mobility fact supplied one; a missing mode opens the destination
+     marker instead of silently turning absent evidence into walking. */
   const nextAt = next ? activityCoordinate(next) : null;
+  const amapMode = nextLeg?.mode
+    ? ({
+        WALK: "walk",
+        BICYCLE: "ride",
+        TRANSIT: "bus",
+        AUTO: "car",
+        RIDE_HAIL: "car",
+      } as Record<string, string>)[nextLeg.mode.toUpperCase()] ?? null
+    : null;
   const destination = nextAt != null
       ? data.journey.city_code.startsWith("CN-")
-        ? `https://uri.amap.com/navigation?to=${nextAt.longitude},${nextAt.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
+        ? amapMode
+          ? `https://uri.amap.com/navigation?to=${nextAt.longitude},${nextAt.latitude},${encodeURIComponent(next.title)}&mode=${amapMode}&coordinate=wgs84&callnative=1`
+          : `https://uri.amap.com/marker?position=${nextAt.longitude},${nextAt.latitude}&name=${encodeURIComponent(next.title)}&coordinate=wgs84&callnative=1`
         : `https://www.google.com/maps/dir/?api=1&destination=${nextAt.latitude},${nextAt.longitude}`
       : null;
+  const destinationLabel = nextLeg?.mode
+    ? t("live.navigate")
+    : zh
+      ? "打开目的地 →"
+      : "Open destination →";
   return (
     <section className="v8-page" data-testid="v8-live-secondary">
       {/* Pass-8 ruling #3: Live reads Current -> Map -> Disruption/Replan ->
@@ -3665,7 +3683,7 @@ function LiveSecondary({
                 target="_blank"
                 rel="noreferrer"
               >
-                {t("live.navigate")}
+                {destinationLabel}
               </a>
             )}
             <div className="v9-risk">
