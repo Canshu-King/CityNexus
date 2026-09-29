@@ -1,0 +1,104 @@
+{
+ "base": "http://127.0.0.1:4835",
+ "viewport": [
+  1280,
+  720
+ ],
+ "errors": [],
+ "toggle": {
+  "present": true,
+  "display": "none",
+  "box": {
+   "w": 0,
+   "h": 0
+  }
+ },
+ "drawer_open_at_desktop": false,
+ "sidebar": [
+  {
+   "i": 0,
+   "label": "今天",
+   "box": {
+    "x": 16,
+    "y": 139,
+    "w": 219,
+    "h": 44
+   },
+   "hit_is_self": true,
+   "error": null,
+   "before": {
+    "p": "/v8/hub",
+    "h": "Demo之旅"
+   },
+   "after": {
+    "p": "/v8/hub",
+    "h": "Demo之旅"
+   },
+   "changed": false
+  },
+  {
+   "i": 1,
+   "label": "实时行程",
+   "box": {
+    "x": 16,
+    "y": 199,
+    "w": 219,
+    "h": 44
+   },
+   "hit_is_self": true,
+   "error": null,
+   "before": {
+    "p": "/v8/hub",
+    "h": "Demo之旅"
+   },
+   "after": {
+    "p": "/v8/live",
+    "h": "选择你的下一段路程。"
+   },
+   "changed": true
+  },
+  {
+   "i": 2,
+   "label": "地图",
+   "box": {
+    "x": 16,
+    "y": 259,
+    "w": 219,
+    "h": 44
+   },
+   "hit_is_self": true,
+   "error": null,
+   "before": {
+    "p": "/v8/live",
+    "h": "选择你的下一段路程。"
+   },
+   "after": {
+    "p": "/v8/map",
+    "h": "整座城市，行程叠加其上。"
+   },
+   "changed": true
+  },
+  {
+   "i": 3,
+   "label": "行程工作台",
+   "box": {
+    "x": 16,
+    "y": 346,
+    "w": 219,
+    "h": 44
+   },
+   "hit_is_self": true,
+   "error": null,
+   "before": {
+    "p": "/v8/map",
+    "h": "整座城市，行程叠加其上。"
+   },
+   "after": {
+    "p": "/v8/studio",
+    "h": "围绕重要的事塑造行程。"
+   },
+   "changed": true
+  }
+ ],
+ "sidebar_row_count": 14
+}

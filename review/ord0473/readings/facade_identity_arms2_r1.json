@@ -1,0 +1,26 @@
+{
+ "4834": {
+  "entry_asset": "/assets/index-DmHYey4y.js",
+  "index_bytes_served": 1200,
+  "index_bytes_disk": 1200,
+  "index_sha1_served": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+  "index_sha1_disk": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+  "index_equal": true,
+  "asset_bytes": 1488860,
+  "asset_sha1_served": "63d64f884ea849b5de6db3e289591a1861e36224",
+  "asset_sha1_disk": "63d64f884ea849b5de6db3e289591a1861e36224",
+  "asset_equal": true
+ },
+ "4835": {
+  "entry_asset": "/assets/index-BxouWOlo.js",
+  "index_bytes_served": 1200,
+  "index_bytes_disk": 1200,
+  "index_sha1_served": "51054be4a0be0e9116e8703f074a80fbe93da003",
+  "index_sha1_disk": "51054be4a0be0e9116e8703f074a80fbe93da003",
+  "index_equal": true,
+  "asset_bytes": 1488884,
+  "asset_sha1_served": "35e940821797724dd5e70dbd801f70c148bfd804",
+  "asset_sha1_disk": "35e940821797724dd5e70dbd801f70c148bfd804",
+  "asset_equal": true
+ }
+}

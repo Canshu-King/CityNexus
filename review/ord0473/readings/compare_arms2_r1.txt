@@ -1,0 +1,71 @@
+=== BEFORE arm @ 0dabe64223036391a6c25561a6b606e1533f3704 (facade :4834)
+pageerrors=0 door_error=None
+  landing                    path=/v8/hub          expanded=None  drawer=False rows=0  box=None hit= self=None testids=70
+  after_demo_door            path=/v8/hub          expanded=false drawer=False rows=0  box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-mobile-menu self=True testids=47
+  before_first_press         path=/v8/hub          expanded=false drawer=False rows=0  box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-mobile-menu self=True testids=47
+  after_first_press_open     path=/v8/hub          expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-kicker self=False testids=47
+  after_second_press         path=/v8/hub          expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-kicker self=False testids=47
+  after_close_button         path=/v8/me           expanded=false drawer=False rows=0  box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-mobile-menu self=True testids=12
+  after_backdrop_press       path=/v8/me           expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 19, 'w': 46, 'h': 27} hit=v8-kicker self=False testids=12
+  toggle_closed_on_second_press=False close_btn=True backdrop=False escape=True
+  tap errors e1..e7=['', 'TimeoutError: locator.clic', '', '', '', 'TimeoutError: locator.clic', 'TimeoutError: locator.clic']
+  rows=16 self_hit=16 changed=15 row_heights=[41]
+    i=0  今天           /v8/hub->/v8/hub self=True text_after=Demo之旅 / 服务端报出的两类待办 / 每一天，紧密相连。
+    i=1  实时行程         /v8/hub->/v8/live self=True text_after=选择你的下一段路程。 / Tech Art Center / 现在的行程
+    i=2  地图           /v8/live->/v8/map self=True text_after=整座城市，行程叠加其上。 / Nexus River Cruise Pier
+    i=3  行程工作台        /v8/map->/v8/studio self=True text_after=围绕重要的事塑造行程。
+    i=4  住宿选择         /v8/studio->/v8/stay self=True text_after=选择锚点，看见行程。
+    i=5  城市探索         /v8/stay->/v8/discover self=True text_after=先看这座城能不能规划 / 说出你真正想要的城市一天。 / 塑造城市停留
+    i=6  导入地点         /v8/discover->/v8/import self=True text_after=从文本导入地点 / 两条入口
+    i=7  旅行票夹         /v8/import->/v8/bookings self=True text_after=你的真实预订，受保护。 / 未选择住宿 / place-river-cruise
+    i=8  Copilot      /v8/bookings->/v8/agent self=True text_after=你想改什么？ / 需要改变什么？
+    i=9  恢复与执行        /v8/agent->/v8/authoritative self=True text_after=权威行程执行。 / 从方案到边缘的单一真相 / 调整权威行程
+    i=10 智能守护         /v8/authoritative->/v8/intelligence self=True text_after=判断前置。硬事实在关口。 / 自主恢复保持在权限范围内。
+    i=11 旅行者画像        /v8/intelligence->/v8/twin self=True text_after=有边界的个性化。 / 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨
+    i=12 回收站          /v8/twin->/v8/trash self=True text_after=
+    i=13 成员与权限        /v8/trash->/v8/access self=True text_after=
+    i=14 行程           /v8/access->/v8/trips self=True text_after=1 天行程
+    i=15 我的           /v8/trips->/v8/me self=True text_after=我的行程与偏好
+
+=== AFTER arm @ a808fc34a0431e56132d6534ca30fa9418f09433 (facade :4835)
+pageerrors=0 door_error=None
+  landing                    path=/v8/hub          expanded=None  drawer=False rows=0  box=None hit= self=None testids=70
+  after_demo_door            path=/v8/hub          expanded=false drawer=False rows=0  box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=47
+  before_first_press         path=/v8/hub          expanded=false drawer=False rows=0  box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=47
+  after_first_press_open     path=/v8/hub          expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=47
+  after_second_press         path=/v8/hub          expanded=false drawer=False rows=0  box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=47
+  reopened_for_row_walk      path=/v8/hub          expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=47
+  after_close_button         path=/v8/me           expanded=false drawer=False rows=0  box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=12
+  after_backdrop_press       path=/v8/me           expanded=true  drawer=True  rows=16 box={'x': 17, 'y': 11, 'w': 46, 'h': 44} hit=v8-mobile-menu self=True testids=12
+  toggle_closed_on_second_press=True close_btn=True backdrop=False escape=True
+  tap errors e1..e7=['', '', '', '', '', 'TimeoutError: locator.clic', '']
+  rows=16 self_hit=16 changed=15 row_heights=[44]
+    i=0  今天           /v8/hub->/v8/hub self=True text_after=Demo之旅 / 服务端报出的两类待办 / 每一天，紧密相连。
+    i=1  实时行程         /v8/hub->/v8/live self=True text_after=选择你的下一段路程。 / Tech Art Center / 现在的行程
+    i=2  地图           /v8/live->/v8/map self=True text_after=整座城市，行程叠加其上。 / Nexus River Cruise Pier
+    i=3  行程工作台        /v8/map->/v8/studio self=True text_after=围绕重要的事塑造行程。
+    i=4  住宿选择         /v8/studio->/v8/stay self=True text_after=选择锚点，看见行程。
+    i=5  城市探索         /v8/stay->/v8/discover self=True text_after=先看这座城能不能规划 / 说出你真正想要的城市一天。 / 塑造城市停留
+    i=6  导入地点         /v8/discover->/v8/import self=True text_after=从文本导入地点 / 两条入口
+    i=7  旅行票夹         /v8/import->/v8/bookings self=True text_after=你的真实预订，受保护。 / 未选择住宿 / place-river-cruise
+    i=8  Copilot      /v8/bookings->/v8/agent self=True text_after=你想改什么？ / 需要改变什么？
+    i=9  恢复与执行        /v8/agent->/v8/authoritative self=True text_after=权威行程执行。 / 从方案到边缘的单一真相 / 调整权威行程
+    i=10 智能守护         /v8/authoritative->/v8/intelligence self=True text_after=判断前置。硬事实在关口。 / 自主恢复保持在权限范围内。
+    i=11 旅行者画像        /v8/intelligence->/v8/twin self=True text_after=有边界的个性化。 / 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨
+    i=12 回收站          /v8/twin->/v8/trash self=True text_after=
+    i=13 成员与权限        /v8/trash->/v8/access self=True text_after=
+    i=14 行程           /v8/access->/v8/trips self=True text_after=1 天行程
+    i=15 我的           /v8/trips->/v8/me self=True text_after=我的行程与偏好
+
+--- before2: cells(glyph/desktop) ---
+  bottom_nav={'top': 768, 'h': 76, 'z': '10'} drawer_z=46 scroll 0->268 of 1112/844
+  last_row_after_scroll={'y': 779, 'bottom': 820, 'h': 41, 'point': [150, 800]} hit=SELF nav_top=768 overlap=52
+  SCREAMING_SNAKE hits=0 tokens=[]
+  glyphs=[["closed", "\"≡\"", "菜单", "打开导航", "false", {"x": 17, "y": 19, "w": 46, "h": 27}, null], ["open", "\"≡\"", "菜单", "打开导航", "true", {"x": 17, "y": 19, "w": 46, "h": 27}, null], ["closed_again", "\"≡\"", "菜单", "打开导航", "true", {"x": 17, "y": 19, "w": 46, "h": 27}, "TimeoutError: locator.click: Timeout 6000ms exceeded."]]
+  desktop toggle={'present': True, 'display': 'none', 'box': {'w': 0, 'h': 0}} drawer_open=False sidebar_rows=14 changed=3/4 errors=0
+--- after2: cells(glyph/desktop) ---
+  bottom_nav={'top': 768, 'h': 76, 'z': '10'} drawer_z=46 scroll 0->371 of 1215/844
+  last_row_after_scroll={'y': 776, 'bottom': 820, 'h': 44, 'point': [150, 798]} hit=SELF nav_top=768 overlap=52
+  SCREAMING_SNAKE hits=0 tokens=[]
+  glyphs=[["closed", "\"≡\"", "菜单", "打开导航", "false", {"x": 17, "y": 11, "w": 46, "h": 44}, null], ["open", "\"×\"", "菜单", "关闭导航", "true", {"x": 17, "y": 11, "w": 46, "h": 44}, null], ["closed_again", "\"≡\"", "菜单", "打开导航", "false", {"x": 17, "y": 11, "w": 46, "h": 44}, null]]
+  desktop toggle={'present': True, 'display': 'none', 'box': {'w': 0, 'h': 0}} drawer_open=False sidebar_rows=14 changed=3/4 errors=0

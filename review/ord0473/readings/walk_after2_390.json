@@ -1,0 +1,795 @@
+{
+ "base": "http://127.0.0.1:4835",
+ "viewport": [
+  390,
+  844
+ ],
+ "steps": [
+  {
+   "step": "landing",
+   "path": "/v8/hub",
+   "wizard": true,
+   "menu_present": false,
+   "menu_rendered": null,
+   "menu_expanded": null,
+   "menu_hit": null,
+   "drawer_open": false,
+   "drawer_hit": null,
+   "drawer_rows": [],
+   "drawer_close_label": null,
+   "backdrop_open": false,
+   "headings": [
+    "新建行程"
+   ],
+   "breadcrumb": null,
+   "testid_visible": 70,
+   "body_text_len": 168
+  },
+  {
+   "step": "after_demo_door",
+   "path": "/v8/hub",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "false",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": false,
+   "drawer_hit": null,
+   "drawer_rows": [],
+   "drawer_close_label": null,
+   "backdrop_open": false,
+   "headings": [
+    "Demo之旅",
+    "服务端报出的两类待办",
+    "每一天，紧密相连。"
+   ],
+   "breadcrumb": "今天",
+   "testid_visible": 47,
+   "body_text_len": 675
+  },
+  {
+   "step": "before_first_press",
+   "path": "/v8/hub",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "false",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": false,
+   "drawer_hit": null,
+   "drawer_rows": [],
+   "drawer_close_label": null,
+   "backdrop_open": false,
+   "headings": [
+    "Demo之旅",
+    "服务端报出的两类待办",
+    "每一天，紧密相连。"
+   ],
+   "breadcrumb": "今天",
+   "testid_visible": 47,
+   "body_text_len": 675
+  },
+  {
+   "step": "after_first_press_open",
+   "path": "/v8/hub",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "true",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": true,
+   "drawer_hit": {
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 300,
+     "h": 844
+    },
+    "point": [
+     150,
+     422
+    ],
+    "hit_tag": "NAV",
+    "hit_cls": "",
+    "hit_id": "v8-nav-drawer",
+    "self": true
+   },
+   "drawer_rows": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "导入地点",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "回收站",
+    "成员与权限",
+    "行程",
+    "我的"
+   ],
+   "drawer_close_label": "关闭",
+   "backdrop_open": true,
+   "headings": [
+    "Demo之旅",
+    "服务端报出的两类待办",
+    "每一天，紧密相连。"
+   ],
+   "breadcrumb": "今天",
+   "testid_visible": 47,
+   "body_text_len": 791
+  },
+  {
+   "step": "after_second_press",
+   "path": "/v8/hub",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "false",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": false,
+   "drawer_hit": null,
+   "drawer_rows": [],
+   "drawer_close_label": null,
+   "backdrop_open": false,
+   "headings": [
+    "Demo之旅",
+    "服务端报出的两类待办",
+    "每一天，紧密相连。"
+   ],
+   "breadcrumb": "今天",
+   "testid_visible": 47,
+   "body_text_len": 675
+  },
+  {
+   "step": "reopened_for_row_walk",
+   "path": "/v8/hub",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "true",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": true,
+   "drawer_hit": {
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 300,
+     "h": 844
+    },
+    "point": [
+     150,
+     422
+    ],
+    "hit_tag": "NAV",
+    "hit_cls": "",
+    "hit_id": "v8-nav-drawer",
+    "self": true
+   },
+   "drawer_rows": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "导入地点",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "回收站",
+    "成员与权限",
+    "行程",
+    "我的"
+   ],
+   "drawer_close_label": "关闭",
+   "backdrop_open": true,
+   "headings": [
+    "Demo之旅",
+    "服务端报出的两类待办",
+    "每一天，紧密相连。"
+   ],
+   "breadcrumb": "今天",
+   "testid_visible": 47,
+   "body_text_len": 791
+  },
+  {
+   "step": "after_close_button",
+   "path": "/v8/me",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "false",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": false,
+   "drawer_hit": null,
+   "drawer_rows": [],
+   "drawer_close_label": null,
+   "backdrop_open": false,
+   "headings": [
+    "我的行程与偏好"
+   ],
+   "breadcrumb": "我的",
+   "testid_visible": 12,
+   "body_text_len": 309
+  },
+  {
+   "step": "after_backdrop_press",
+   "path": "/v8/me",
+   "wizard": false,
+   "menu_present": true,
+   "menu_rendered": "菜单",
+   "menu_expanded": "true",
+   "menu_hit": {
+    "box": {
+     "x": 17,
+     "y": 11,
+     "w": 46,
+     "h": 44
+    },
+    "point": [
+     40,
+     33
+    ],
+    "hit_tag": "BUTTON",
+    "hit_cls": "v8-mobile-menu",
+    "hit_id": null,
+    "self": true
+   },
+   "drawer_open": true,
+   "drawer_hit": {
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 300,
+     "h": 844
+    },
+    "point": [
+     150,
+     422
+    ],
+    "hit_tag": "NAV",
+    "hit_cls": "",
+    "hit_id": "v8-nav-drawer",
+    "self": true
+   },
+   "drawer_rows": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "导入地点",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "回收站",
+    "成员与权限",
+    "行程",
+    "我的"
+   ],
+   "drawer_close_label": "关闭",
+   "backdrop_open": true,
+   "headings": [
+    "我的行程与偏好"
+   ],
+   "breadcrumb": "我的",
+   "testid_visible": 12,
+   "body_text_len": 407
+  }
+ ],
+ "row_walk": [
+  {
+   "i": 0,
+   "label": "今天",
+   "box": {
+    "x": 14,
+    "y": 169,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    191
+   ],
+   "hit_is_self": true,
+   "hit_cls": "active",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/hub",
+   "path_after": "/v8/hub",
+   "screen_text_before": "Demo之旅 / 服务端报出的两类待办 / 每一天，紧密相连。",
+   "screen_text_after": "Demo之旅 / 服务端报出的两类待办 / 每一天，紧密相连。",
+   "breadcrumb_after": "今天",
+   "drawer_after": false,
+   "screen_changed": false
+  },
+  {
+   "i": 1,
+   "label": "实时行程",
+   "box": {
+    "x": 14,
+    "y": 229,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    251
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/hub",
+   "path_after": "/v8/live",
+   "screen_text_before": "Demo之旅 / 服务端报出的两类待办 / 每一天，紧密相连。",
+   "screen_text_after": "选择你的下一段路程。 / Tech Art Center / 现在的行程",
+   "breadcrumb_after": "实时行程",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 2,
+   "label": "地图",
+   "box": {
+    "x": 14,
+    "y": 289,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    311
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/live",
+   "path_after": "/v8/map",
+   "screen_text_before": "选择你的下一段路程。 / Tech Art Center / 现在的行程",
+   "screen_text_after": "整座城市，行程叠加其上。 / Nexus River Cruise Pier",
+   "breadcrumb_after": "地图",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 3,
+   "label": "行程工作台",
+   "box": {
+    "x": 14,
+    "y": 375,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    397
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/map",
+   "path_after": "/v8/studio",
+   "screen_text_before": "整座城市，行程叠加其上。 / Nexus River Cruise Pier",
+   "screen_text_after": "围绕重要的事塑造行程。",
+   "breadcrumb_after": "行程工作台",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 4,
+   "label": "住宿选择",
+   "box": {
+    "x": 14,
+    "y": 435,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    457
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/studio",
+   "path_after": "/v8/stay",
+   "screen_text_before": "围绕重要的事塑造行程。",
+   "screen_text_after": "选择锚点，看见行程。",
+   "breadcrumb_after": "住宿选择",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 5,
+   "label": "城市探索",
+   "box": {
+    "x": 14,
+    "y": 495,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    517
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/stay",
+   "path_after": "/v8/discover",
+   "screen_text_before": "选择锚点，看见行程。",
+   "screen_text_after": "先看这座城能不能规划 / 说出你真正想要的城市一天。 / 塑造城市停留",
+   "breadcrumb_after": "城市探索",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 6,
+   "label": "导入地点",
+   "box": {
+    "x": 14,
+    "y": 555,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    577
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/discover",
+   "path_after": "/v8/import",
+   "screen_text_before": "先看这座城能不能规划 / 说出你真正想要的城市一天。 / 塑造城市停留",
+   "screen_text_after": "从文本导入地点 / 两条入口",
+   "breadcrumb_after": "今天",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 7,
+   "label": "旅行票夹",
+   "box": {
+    "x": 14,
+    "y": 641,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    663
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/import",
+   "path_after": "/v8/bookings",
+   "screen_text_before": "从文本导入地点 / 两条入口",
+   "screen_text_after": "你的真实预订，受保护。 / 未选择住宿 / place-river-cruise",
+   "breadcrumb_after": "旅行票夹",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 8,
+   "label": "Copilot",
+   "box": {
+    "x": 14,
+    "y": 701,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    723
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/bookings",
+   "path_after": "/v8/agent",
+   "screen_text_before": "你的真实预订，受保护。 / 未选择住宿 / place-river-cruise",
+   "screen_text_after": "你想改什么？ / 需要改变什么？",
+   "breadcrumb_after": "Copilot",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 9,
+   "label": "恢复与执行",
+   "box": {
+    "x": 14,
+    "y": 787,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    809
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/agent",
+   "path_after": "/v8/authoritative",
+   "screen_text_before": "你想改什么？ / 需要改变什么？",
+   "screen_text_after": "权威行程执行。 / 从方案到边缘的单一真相 / 调整权威行程",
+   "breadcrumb_after": "恢复与执行",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 10,
+   "label": "智能守护",
+   "box": {
+    "x": 14,
+    "y": 476,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    498
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/authoritative",
+   "path_after": "/v8/intelligence",
+   "screen_text_before": "权威行程执行。 / 从方案到边缘的单一真相 / 调整权威行程",
+   "screen_text_after": "判断前置。硬事实在关口。 / 自主恢复保持在权限范围内。",
+   "breadcrumb_after": "智能守护",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 11,
+   "label": "旅行者画像",
+   "box": {
+    "x": 14,
+    "y": 536,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    558
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/intelligence",
+   "path_after": "/v8/twin",
+   "screen_text_before": "判断前置。硬事实在关口。 / 自主恢复保持在权限范围内。",
+   "screen_text_after": "有边界的个性化。 / 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水 / 没有习得信号",
+   "breadcrumb_after": "旅行者画像",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 12,
+   "label": "回收站",
+   "box": {
+    "x": 14,
+    "y": 596,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    618
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/twin",
+   "path_after": "/v8/trash",
+   "screen_text_before": "有边界的个性化。 / 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水 / 没有习得信号",
+   "screen_text_after": "",
+   "breadcrumb_after": "今天",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 13,
+   "label": "成员与权限",
+   "box": {
+    "x": 14,
+    "y": 656,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    678
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/trash",
+   "path_after": "/v8/access",
+   "screen_text_before": "",
+   "screen_text_after": "",
+   "breadcrumb_after": "今天",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 14,
+   "label": "行程",
+   "box": {
+    "x": 14,
+    "y": 716,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    738
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/access",
+   "path_after": "/v8/trips",
+   "screen_text_before": "",
+   "screen_text_after": "1 天行程",
+   "breadcrumb_after": "行程",
+   "drawer_after": false,
+   "screen_changed": true
+  },
+  {
+   "i": 15,
+   "label": "我的",
+   "box": {
+    "x": 14,
+    "y": 776,
+    "w": 271,
+    "h": 44
+   },
+   "point": [
+    150,
+    798
+   ],
+   "hit_is_self": true,
+   "hit_cls": "",
+   "in_viewport": true,
+   "error": null,
+   "path_before": "/v8/trips",
+   "path_after": "/v8/me",
+   "screen_text_before": "1 天行程",
+   "screen_text_after": "我的行程与偏好",
+   "breadcrumb_after": "我的",
+   "drawer_after": false,
+   "screen_changed": true
+  }
+ ],
+ "errors": [],
+ "door_error": null,
+ "e1": null,
+ "e2": null,
+ "toggle_closed_on_second_press": true,
+ "e3": null,
+ "e4": null,
+ "closed_by_close_button": true,
+ "e5": null,
+ "e6": "TimeoutError: locator.click: Timeout 6000ms exceeded.",
+ "closed_by_backdrop": false,
+ "e7": null,
+ "closed_by_escape": true
+}

@@ -1,0 +1,47 @@
+[
+ {
+  "press_error": null,
+  "step": "closed",
+  "glyph": "\"≡\"",
+  "glyph_font_size": "20px",
+  "label_text": "菜单",
+  "expanded": "false",
+  "aria_label": "打开导航",
+  "box": {
+   "x": 17,
+   "y": 19,
+   "w": 46,
+   "h": 27
+  }
+ },
+ {
+  "press_error": null,
+  "step": "open",
+  "glyph": "\"≡\"",
+  "glyph_font_size": "20px",
+  "label_text": "菜单",
+  "expanded": "true",
+  "aria_label": "打开导航",
+  "box": {
+   "x": 17,
+   "y": 19,
+   "w": 46,
+   "h": 27
+  }
+ },
+ {
+  "press_error": "TimeoutError: locator.click: Timeout 6000ms exceeded.",
+  "step": "closed_again",
+  "glyph": "\"≡\"",
+  "glyph_font_size": "20px",
+  "label_text": "菜单",
+  "expanded": "true",
+  "aria_label": "打开导航",
+  "box": {
+   "x": 17,
+   "y": 19,
+   "w": 46,
+   "h": 27
+  }
+ }
+]
