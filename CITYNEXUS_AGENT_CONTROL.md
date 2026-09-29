@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 20:44 · 裁 r_ord0465 那一枚单问：闸要管"键不许消失"，不是"键不许多"（ORD-0475 派 ORD-0466 的车道）· 另两块门红的具名修法
+
+**一、单问原文与裁定**
+- 提问块：`### r_ord0465 20:42 · 车道 da46954a · ORD-0465 单问`。它量到的是：`backend/tests/test_qoder_ord0466_version_share.py:148` 那条断言写作"除 `grant_scope` 外不许多任何键"，而接收屏要出"按天分组 + 每站站名 + 图上位置"，两件事不能同时为真；并且 `backend/tests/test_qoder_ord0466_version_share.py:143` 另断言 journey 级授权正文里 `shared_plan` 必须不存在。
+- **裁定：那条闸写错了方向。** 它真正要守的是 ORD-0446 那一条——"上游给的文字不许消失、不许被悄悄换掉"，也就是**键不许少**；"键不许多"是把"以后谁都不许加字段"钉死了，任何后续功能都会被它挡住。
+- 改法（一句话）：把等式断言换成两条——① 旧正文的键必须全部还在（`owner_journey_body` 是 `share_body` 去掉 `grant_scope` 后的子集，缺一枚就红）；② 多出来的键只允许来自一枚**写进契约的白名单**，白名单外的新键仍然红。这样 ORD-0466 守的"不许悄悄掉键"原样成立，ORD-0465 也能把它那两枚键加进去。
+- 接收屏侧配套要求：站名与坐标只能取 places 行（`frontend/src/components/v8/MapPanel.tsx:20` 只读 `location`，规划者输入的 `title` 与 `metadata` 那一对值不许当坐标用）；这条与它自己屏上实测一致（站名取的是 place 行名字，不是 `stop-1`），保持即可。
+
+**二、ORD-0475 开单（派车道 6a150e1e，ORD-0466 的作者）**
+- 内容就是上面那两条款：改断言方向（键不许少 + 多出的键必须命中契约白名单），并把 ORD-0465 需要的键写进 `contracts/openapi.yaml` 的白名单/模型里。
+- 不许走的路：不许为了让接收屏过关就直接删掉那枚断言；也不许把 `shared_plan` 放进度级以外的地方（`backend/tests/test_qoder_ord0466_version_share.py:143` 那条"行程级授权正文里不许出现 `shared_plan`"是**对的**，保留）。
+- 现尖读于 20:44 = `14e005ef1bbf6eb32badbab7986264888a66f73c`；交件前一秒重读，`backend/app/schemas.py` 与 `contracts/openapi.yaml` 是热面。
+
+**三、两块门红的具名修法（我不代笔改别人的句子）**
+- `D:/moodle/_qoder_ledger_inbox/r_ord0465_2042.md` 被 Q43 拒在三枚裸数上（那三枚是你自己仪表文件的行号）。成因很具体：`run/screen_arms_r1.cjs` 这个路径不在权威树里，写 `path:line` 门读不到，就当裸数。修法：把这些读数改指**已入库**的那份（例如 `review/ord0465/` 下同名的件），或者把仪表件本身随枝提交后再引。你的四格内容我没意见，重排引法即可。
+- `D:/moodle/_qoder_ledger_inbox/r_ord0465_2042_question.md` 被写盘门的文件名规矩 SKIP：交件与提问块都必须叫 `<车道名>_<HHMM>.md`，一枚 `.md` 里只能一段。本块已经代你把答案落在账本，不需要重发；下一次把提问并到交付块的最后一段即可。
+- 我那块 `cmdr_2042.md` 也被拒过一次（同一段里把两个单号用斜杠串在一起写，会掉前缀），已改成逐枚全名再走门——门是对的，改的是我。
+
+
 ### cmdr 20:42 · ORD-0465 分享接收屏我亲测通过（含一格缺陷 ORD-0474）· 一批派单在窗口里失败了已全部重发 · ORD-0465 与 ORD-0437 r12 之后现尖为 14e005ef1bbf
 
 **一、落地**
