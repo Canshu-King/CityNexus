@@ -266,14 +266,13 @@ rc, co = run(["git", "-C", WT, "commit", "-q", "-m",
 if rc and "nothing to commit" not in co and "no changes added" not in co:
     print("COMMIT FAILED -- %s" % co[-200:])
     sys.exit(1)
+# always push: my local iterations add commits on top of what is already published (fast-forward, no force)
+rc, po = run(["git", "-C", WT, "-c", "http.proxy=", "-c", "https.proxy=", "push", "-q",
+              "origin", "refs/heads/" + BRANCH])
+if rc:
+    print("PUSH FAILED -- %s" % po[-200:])
+    sys.exit(1)
 PUSHED = head_of("refs/heads/" + BRANCH)
-if not PUSHED:
-    rc, po = run(["git", "-C", WT, "-c", "http.proxy=", "-c", "https.proxy=", "push", "-q",
-                  "origin", "refs/heads/" + BRANCH])
-    if rc:
-        print("PUSH FAILED -- %s" % po[-200:])
-        sys.exit(1)
-    PUSHED = head_of("refs/heads/" + BRANCH)
 if not PUSHED or git("cat-file", "-t", PUSHED) != "commit":
     bad.append("the pushed head does not resolve: %r" % PUSHED)
 elif not git_ok("merge-base", "--is-ancestor", HEAD, PUSHED):
