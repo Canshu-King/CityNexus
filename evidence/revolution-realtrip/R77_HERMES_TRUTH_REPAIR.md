@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `d0fd2a7f`
+- final product/evidence commit before this receipt update: `29425b15`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -224,12 +224,24 @@ shows:
 instead of `1 个方案 · 5 种模式`. The supported-mode count is retained only when a
 real option or plan leg supplies a mode.
 
+The execution status card had a separate wording defect: it labeled the saved offline
+copy as `离线`, even on the same page that had just read the live API and displayed
+captured Valhalla evidence. The clean readback now says:
+
+```text
+离线副本 · 只读就绪 · 未来 24 小时已保存
+```
+
+This describes offline availability without claiming that the current product session
+is disconnected.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-offline-copy-clean.png`
 
 The final frontend gates after this repair were:
 
