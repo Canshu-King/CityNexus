@@ -10,7 +10,7 @@ blocker, and the relevant UI captures.
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product repair commit: `a71d0c249170d8e232ba93e8f23ef896e49ddfe7`
-- Evidence/report commit: recorded by the package build after this manifest
+- Evidence/report commit: `ac03c1d72dee100baff0398d369583584164de4f`
 - Disposable DB only: `citynexus-r77-authority-gate-r4-20260930.sqlite3`
 - No authority/mainline merge; `P7=false`
 
