@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `29425b15`
+- final product/evidence commit before this receipt update: `751d7e21`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -235,6 +235,17 @@ captured Valhalla evidence. The clean readback now says:
 This describes offline availability without claiming that the current product session
 is disconnected.
 
+The V10 drawer's empty count was also narrowed from generic `来源` to `网页来源`.
+That drawer reads only `/web-observations`; it is not the authority for the separate
+Valhalla route evidence shown above. The clean page now says:
+
+```text
+0 个网页来源 · 暂无网页观察记录
+```
+
+This keeps an empty web-observation lane from contradicting the live provider route
+lane or implying that all route evidence is absent.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
@@ -242,6 +253,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-offline-copy-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-web-source-label-clean.png`
 
 The final frontend gates after this repair were:
 
