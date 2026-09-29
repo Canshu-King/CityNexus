@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 from uuid import uuid4
 
+import httpx
 import pytest
 
 from app.db.models import Place, RealPlaceCandidate
@@ -14,6 +15,7 @@ from app.fact_acquisition import (
     _safe_get,
     _validate_public_http_url,
     _search_fact_candidates,
+    _acquire_overpass_payload,
     acquire_place_facts,
 )
 
@@ -105,6 +107,40 @@ def test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phase
         assert Client.instances[0].closed is True
 
 
+def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch):
+    from app import fact_acquisition
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "settings",
+        SimpleNamespace(overpass_url="https://primary.example/api"),
+    )
+
+    class Client:
+        def __init__(self):
+            self.calls = []
+
+        def post(self, url, **_kwargs):
+            self.calls.append(url)
+            if len(self.calls) == 1:
+                raise httpx.ReadTimeout("primary timed out")
+            return _Response({"elements": [{"type": "node", "id": 456}]})
+
+    client = Client()
+    payload, endpoint, attempts = _acquire_overpass_payload(client, [("node", "456")])
+
+    assert payload["elements"][0]["id"] == 456
+    assert client.calls[:2] == [
+        "https://primary.example/api/interpreter",
+        "https://overpass-api.de/api/interpreter",
+    ]
+    assert endpoint == "https://overpass-api.de/api/interpreter"
+    assert attempts[0]["answered"] is False
+    assert attempts[0]["error"].startswith("ReadTimeout:")
+    assert attempts[1]["answered"] is True
+    assert attempts[1]["elements"] == 1
+
+
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_PRIVATE_TARGET"):
         _validate_public_http_url("http://127.0.0.1:8080/facts")
@@ -190,6 +226,7 @@ def test_search_candidate_never_overwrites_unknown_place_facts(monkeypatch):
     class Response:
         def __init__(self, payload):
             self.payload = payload
+            self.status_code = 200
 
         def raise_for_status(self):
             return None

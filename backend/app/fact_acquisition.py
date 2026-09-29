@@ -23,7 +23,11 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import Journey, Place
-from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
+from app.integrations.discovery.real_city import (
+    OVERPASS_MIRRORS,
+    cost_evidence_from_tags,
+    normalize_opening_hours,
+)
 from app.integrations.provider_config import trust_environment_for_public_providers
 from app.integrations.web.searxng import SearXNGSearchProvider
 
@@ -56,6 +60,69 @@ def _element_ref(place: Place) -> tuple[str, str] | None:
 def _query(refs: list[tuple[str, str]]) -> str:
     clauses = ";".join(f"{kind}({number})" for kind, number in refs)
     return f"[out:json][timeout:20];({clauses};);out tags center;"
+
+
+def _overpass_endpoints() -> list[str]:
+    configured = settings.overpass_url.rstrip("/")
+    if not configured.endswith("/interpreter"):
+        configured = f"{configured}/interpreter" if configured.endswith("/api") else configured
+    return [configured, *[endpoint for endpoint in OVERPASS_MIRRORS if endpoint != configured]]
+
+
+def _acquire_overpass_payload(
+    client: httpx.Client,
+    refs: list[tuple[str, str]],
+) -> tuple[dict[str, Any], str, list[dict[str, Any]]]:
+    """Fetch one exact-entity question through bounded public mirrors.
+
+    A successful HTTP response, including an empty ``elements`` list, is the
+    provider's answer and ends rotation.  Only transport/status/payload
+    failures move to the next endpoint.
+    """
+
+    attempts: list[dict[str, Any]] = []
+    last_error: Exception | None = None
+    for endpoint in _overpass_endpoints():
+        started = datetime.now(timezone.utc)
+        try:
+            response = client.post(
+                endpoint,
+                data={"data": _query(refs)},
+                headers={"User-Agent": "CityNexus/real-trip-facts"},
+            )
+            status = response.status_code
+            response.raise_for_status()
+            payload = response.json()
+            if not isinstance(payload, dict) or not isinstance(payload.get("elements"), list):
+                raise ValueError("OVERPASS_INVALID_PAYLOAD")
+            attempts.append(
+                {
+                    "endpoint": endpoint,
+                    "answered": True,
+                    "http_status": status,
+                    "elapsed_ms": round((datetime.now(timezone.utc) - started).total_seconds() * 1000.0, 1),
+                    "elements": len(payload["elements"]),
+                }
+            )
+            return payload, endpoint, attempts
+        except (httpx.HTTPError, ValueError, TypeError) as exc:
+            attempts.append(
+                {
+                    "endpoint": endpoint,
+                    "answered": False,
+                    "http_status": getattr(getattr(exc, "response", None), "status_code", None),
+                    "elapsed_ms": round((datetime.now(timezone.utc) - started).total_seconds() * 1000.0, 1),
+                    "error": f"{type(exc).__name__}: {str(exc)[:160]}",
+                }
+            )
+            last_error = exc
+
+    error = last_error or RuntimeError("NO_PROVIDER_ATTEMPTED")
+    try:
+        error.provider_attempts = attempts  # type: ignore[attr-defined]
+    except Exception:  # noqa: BLE001 - frozen exception types refuse attributes
+        pass
+    raise error
 
 
 def _nominatim_ids(refs: list[tuple[str, str]]) -> str:
@@ -353,12 +420,11 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
     places = session.scalars(statement.order_by(Place.id)).all()
     selected = [(place, ref) for place in places if (ref := _element_ref(place))]
     retrieved_at = datetime.now(timezone.utc).isoformat()
-    endpoint = settings.overpass_url.rstrip("/")
-    if endpoint.endswith("/api"):
-        endpoint += "/interpreter"
+    endpoint = _overpass_endpoints()[0]
     receipt: dict[str, Any] = {
         "provider": "overpass", "source": endpoint, "retrieved_at": retrieved_at,
         "journey_id": journey.id, "places": [], "known_opening_count": 0, "known_cost_count": 0,
+        "overpass_attempts": [],
         "official_web": {"provider": "official_web", "status": "NO_SOURCE_URL", "attempted": 0, "acquired": 0},
         "search_source": {"provider": "searxng", "status": "UNCONFIGURED" if not settings.searxng_url else "PENDING", "attempted": False, "acquired": 0},
     }
@@ -369,9 +435,9 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
     # Keep every network phase in one live context.  The old R77 version closed this
     # client after Overpass/Nominatim and then reused it for official/search fetches.
     with httpx.Client(timeout=25.0, trust_env=trust_environment_for_public_providers()) as client:
-        response = client.post(endpoint, data={"data": _query(refs)}, headers={"User-Agent": "CityNexus/real-trip-facts"})
-        response.raise_for_status()
-        payload = response.json()
+        payload, endpoint, overpass_attempts = _acquire_overpass_payload(client, refs)
+        receipt["source"] = endpoint
+        receipt["overpass_attempts"] = overpass_attempts
         try:
             nominatim_rows, nominatim_endpoint = _nominatim_lookup(client, refs)
             secondary = {"provider": "nominatim", "source": nominatim_endpoint, "status": "ACQUIRED", "element_count": len(nominatim_rows)}
