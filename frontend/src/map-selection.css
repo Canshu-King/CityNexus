@@ -94,3 +94,78 @@
   font-weight: 750;
   overflow-wrap: anywhere;
 }
+
+/*
+ * ORD-0453 — the third state of a long stop list: pressed down, masked, and saying so.
+ *
+ * Three rules, and the reason each exists is measurable rather than decorative:
+ *   `.v8-map-stops` is the box whose `max-height` is set from the laid-out chip after the last one it
+ *   shows (see `measurePressed` in `V8Experience.tsx`), with `overflow: hidden` so the cut is a cut.
+ *   It is a height clip, not a deletion: every located stop keeps its row in the document, because
+ *   `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
+ *   `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count those rows as the proof that a pinned stop
+ *   can be picked, and a collapse that removed nodes would read 4 against 9 pins there.
+ *   `align-content: flex-start` keeps the chip lines at their own height instead of squeezing five
+ *   lines into the clipped box.
+ *   `.v8-map-stops-capture` is a real `<button>`, present in BOTH states, so a centre hit-test lands on
+ *   something that answers in each. It is also the only opener: a tap on the glass costs
+ *   `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` its control count, measured, see the note in
+ *   `V8Experience.tsx`.
+ *   `.v8-map-stops-mask` hangs above that button (`bottom: 100%`) onto the clip line, so the fade marks
+ *   the cut without being a second absolute context inside the scrolling box, and stays
+ *   `pointer-events: none` + `aria-hidden` — paint, never a target.
+ * Tokens are the ones this file already uses, so light/dark needs no new colour.
+ */
+.v8-map-page-grid .v8-map-stops-wrap {
+  position: relative;
+}
+
+.v8-map-page-grid .v8-map-stops {
+  position: relative;
+  align-content: flex-start;
+  overflow: hidden;
+}
+
+.v8-map-page-grid .v8-map-stops-capture {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--cn-s-8);
+  min-height: 32px;
+  margin-top: var(--cn-s-8);
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px dashed var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  color: var(--v8-indigo);
+  font-size: var(--cn-fs-caption);
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+}
+
+.v8-map-page-grid .v8-map-stops-capture:focus-visible {
+  outline: 2px solid var(--v8-indigo);
+  outline-offset: 2px;
+}
+
+/* The mask itself: a fade over the last visible row, so the cut reads as "there is more" instead of
+   "this is the whole list". Never a hit target, never a layout participant. */
+.v8-map-page-grid .v8-map-stops-wrap[data-stops-pressed="true"] .v8-map-stops-mask {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: 26px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #ffffff00, #ffffff);
+}
+
+.v8-map-page-grid .v8-map-stops-wrap[data-stops-pressed="false"] .v8-map-stops-mask {
+  display: none;
+}
+
+[data-theme="dark"] .v8-map-page-grid .v8-map-stops-wrap[data-stops-pressed="true"] .v8-map-stops-mask {
+  background: linear-gradient(to bottom, #00000000, var(--cn-surface));
+}
+
