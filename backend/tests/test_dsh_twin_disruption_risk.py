@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 from fastapi.testclient import TestClient
 
@@ -27,6 +28,19 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "contracts" / "openapi.yaml"
 client = TestClient(app)
 NOW = "2026-10-10T13:00:00+08:00"
+
+
+@pytest.fixture(autouse=True)
+def _leave_the_stage_as_found():
+    """This module starts the demo journey and leaves MAJOR/MINOR events on its active plan.
+
+    Measured on `4ee14229…`: thirteen reds with this file in the run, nine without it, while the
+    same five files pass in isolation -- so the residue is read by modules further down the
+    sequence that do not claim the reset door themselves. Restoring the stage after each test is
+    the fixture's job; no assertion here is weakened by it.
+    """
+    yield
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
 
 
 def _active_journey() -> tuple[str, str]:
