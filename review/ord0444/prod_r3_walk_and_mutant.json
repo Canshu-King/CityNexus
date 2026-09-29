@@ -1,0 +1,86 @@
+{
+ "base": "http://localhost:60186",
+ "api": "http://127.0.0.1:60185/api/v1",
+ "store_before": [
+  3,
+  3
+ ],
+ "seeded_through_the_doors": {
+  "shelf_id": "2f519fd1-1e08-42ab-aca4-868181df95dc",
+  "shelf_name": "周末收藏",
+  "owner": "11111111-1111-4111-8111-111111111111",
+  "item_name": "Houhai Lake Bar Street (后海酒吧街)",
+  "item_note": "傍晚去"
+ },
+ "store_after_seed": [
+  4,
+  4
+ ],
+ "walk_with_one_row": {
+  "state_label": "with-one-row",
+  "base": "http://localhost:60186",
+  "entered_wizard_by_click": true,
+  "retry_disabled_before_press": false,
+  "console_errors": [],
+  "bundle": [
+   "/assets/index-DWSjzF2X.js"
+  ],
+  "panel_text": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去 周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去 周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去 周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去 4 架子 · 4 枚地点",
+  "shelf_rows": [
+   "周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去"
+  ],
+  "item_rows": [
+   "Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "Houhai Lake Bar Street (后海酒吧街) 傍晚去",
+   "Houhai Lake Bar Street (后海酒吧街) 傍晚去"
+  ],
+  "tally": "4 架子 · 4 枚地点",
+  "empty_text": null,
+  "failure_text": null,
+  "panel_chars": 234,
+  "machine_tokens_in_body": [],
+  "cjk_in_panel": 98
+ },
+ "store_after_clear": [
+  0,
+  0
+ ],
+ "walk_empty": {
+  "state_label": "empty",
+  "base": "http://localhost:60186",
+  "entered_wizard_by_click": true,
+  "retry_disabled_before_press": false,
+  "console_errors": [],
+  "bundle": [
+   "/assets/index-DWSjzF2X.js"
+  ],
+  "panel_text": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点",
+  "shelf_rows": [],
+  "item_rows": [],
+  "tally": "0 架子 · 0 枚地点",
+  "empty_text": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
+  "failure_text": null,
+  "panel_chars": 84,
+  "machine_tokens_in_body": [],
+  "cjk_in_panel": 66
+ },
+ "reverted_byte_for_byte": true,
+ "mutant": {
+  "rc_with_contract_path": 1,
+  "summary": [
+   "FAILED tests/test_qoder_ord0444_collections.py::test_the_face_fetches_the_runtime_prefix_not_the_contract_path",
+   "1 failed, 15 passed, 2 warnings in 6.08s"
+  ],
+  "named_arm": "test_the_face_fetches_the_runtime_prefix_not_the_contract_path"
+ },
+ "arms_after_revert": {
+  "rc": 0,
+  "summary": [
+   "16 passed, 2 warnings in 6.25s"
+  ]
+ }
+}

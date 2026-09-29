@@ -1,0 +1,50 @@
+{
+ "product_ref": "refs/heads/review/newlane-ord0444-prod-r3",
+ "product_commits": [
+  "f3ca7b220de553bfe253d3cb3f59a434fa504c4d",
+  "ac11d9e8c7405a5cded1aa0800f2421d07796051"
+ ],
+ "stood_on_tip": "0dabe64223036391a6c25561a6b606e1533f3704",
+ "tip_is_ancestor": true,
+ "merge_tree_predicted": "b5ec2c673e3bfd862b00b4f0c6119a9d371b3d53",
+ "merge_tree_equals_head_tree": true,
+ "backend_pytest": {
+  "rc": 0,
+  "summary": [
+   "16 passed, 2 warnings in 6.52s"
+  ],
+  "whole_suite": "NOT_EXECUTED_BY_LANE"
+ },
+ "openapi_parity": {
+  "rc": 0,
+  "line": "OpenAPI 3.1.0; formal 167; runtime 167; missing 0; extra 0"
+ },
+ "tsc": "TSC_RC=0",
+ "vite_build": {
+  "entry": [
+   "dist/assets/index-DWSjzF2X.js        1,492.79 kB │ gzip: 456.20 kB"
+  ],
+  "rc_line": "BUILD_RC=0"
+ },
+ "q64_exposure": {
+  "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+  "method": "git archive <rev> frontend/src, then --tree on that snapshot",
+  "tip_cells": 6,
+  "tip_modules": 123,
+  "head_cells": 6,
+  "head_modules": 126,
+  "added": [],
+  "removed": [],
+  "cells_in_this_orders_files": [],
+  "growth": "NONE"
+ },
+ "why_a_second_product_commit": "the first cut's face fetched the contract's path and showed its failure line against a door answering 200; found by walking the screen, not by reading a gate",
+ "files": [
+  "prod_r3_reads.json",
+  "prod_r3_stack_receipt.json",
+  "prod_r3_stack_probe.py",
+  "prod_r3_screen_walk.cjs",
+  "prod_r3_walk_driver.py",
+  "prod_r3_walk_and_mutant.json"
+ ]
+}
