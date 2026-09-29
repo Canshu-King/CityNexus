@@ -1,0 +1,168 @@
+{
+  "receipt_kind": "REAL_TRIP_RECOVERY_LIVE_EXECUTION",
+  "execution_source": {
+    "starting_commit": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+    "execution_commit": "300a6abbe24a66ac731f98c0d2f4705c3169dc76",
+    "branch": "codex/revolution-realtrip-recovery",
+    "worktree": "D:/moodle/CityNexus-Revolution-RealTrip-Recovery",
+    "git_status_before_product_calls": "empty",
+    "database": "backend/r77_final_live.db",
+    "database_scope": "disposable isolated lab runtime",
+    "provider_environment": {
+      "real_city_enabled": true,
+      "valhalla_url": "https://valhalla1.openstreetmap.de",
+      "secrets_persisted": false
+    }
+  },
+  "scenario": {
+    "destination": "贡山独龙族怒族自治县",
+    "city_code": "OSM:R:2729765",
+    "journey_id": "aee858ad-6cb1-48ae-a084-5b75b94e52c4",
+    "journey_window": [
+      "2026-10-03T09:00:00+08:00",
+      "2026-10-03T20:00:00+08:00"
+    ],
+    "anchor": {
+      "source": "journey_memory_arrival",
+      "location": "贡山独龙族怒族自治县",
+      "latitude": 27.7443567,
+      "longitude": 98.6672235
+    }
+  },
+  "provider_evidence": {
+    "discovery": {
+      "park": {
+        "http_status": 200,
+        "provider": "overpass",
+        "answered_endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+        "answered_elements": 1,
+        "attempts": [
+          {"endpoint": "https://overpass-api.de/api/interpreter", "http_status": 504, "answered": false},
+          {"endpoint": "https://overpass.kumi.systems/api/interpreter", "http_status": null, "answered": false},
+          {"endpoint": "https://overpass.private.coffee/api/interpreter", "http_status": null, "answered": false},
+          {"endpoint": "https://overpass.openstreetmap.fr/api/interpreter", "http_status": 200, "answered": true}
+        ]
+      },
+      "attraction": {
+        "http_status": 200,
+        "provider": "overpass",
+        "answered_endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+        "answered_elements": 1,
+        "attempts": [
+          {"endpoint": "https://overpass-api.de/api/interpreter", "http_status": 504, "answered": false},
+          {"endpoint": "https://overpass.kumi.systems/api/interpreter", "http_status": null, "answered": false},
+          {"endpoint": "https://overpass.private.coffee/api/interpreter", "http_status": null, "answered": false},
+          {"endpoint": "https://overpass.openstreetmap.fr/api/interpreter", "http_status": 200, "answered": true}
+        ]
+      }
+    },
+    "places": [
+      {
+        "place_id": "real-place-b80da739cba29adc7cb6a006",
+        "provider": "overpass",
+        "provider_entity": "overpass:way/1417996052",
+        "category": "park",
+        "opening_status": "UNKNOWN",
+        "cost_status": "UNKNOWN",
+        "price_known": false
+      },
+      {
+        "place_id": "real-place-c365c44a508d5cd3c4fc5484",
+        "provider": "overpass",
+        "provider_entity": "overpass:node/13030932589",
+        "category": "viewpoint",
+        "opening_status": "UNKNOWN",
+        "cost_status": "UNKNOWN",
+        "price_known": false
+      }
+    ],
+    "secondary_source": {
+      "provider": "nominatim",
+      "source": "https://nominatim.openstreetmap.org/lookup",
+      "status": "ACQUIRED",
+      "matched_provider_entity": true,
+      "matched_count": 2,
+      "opening_facts_added": 0,
+      "cost_facts_added": 0,
+      "extratags": "present but no opening/cost authority"
+    },
+    "official_web": {"status": "NO_SOURCE_URL"},
+    "search_source": {"provider": "searxng", "status": "UNCONFIGURED", "observations": 0}
+  },
+  "preparation_and_planning": {
+    "facts_acquire_http_status": 200,
+    "facts_acquire_status": "ACQUIRED",
+    "known_opening_count": 0,
+    "known_cost_count": 0,
+    "plan_http_status": 201,
+    "plan_id": "dd171df4-a987-565b-bbd4-3904926eb11e",
+    "plan_status": "CANDIDATE",
+    "selectable": false,
+    "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+    "activities": [
+      {
+        "sequence": 1,
+        "place_id": "real-place-b80da739cba29adc7cb6a006",
+        "activity_type": "visit",
+        "cost_status": "UNKNOWN",
+        "start_at": "2026-10-03T09:00:00+08:00",
+        "end_at": "2026-10-03T10:00:00+08:00"
+      },
+      {
+        "sequence": 2,
+        "place_id": "real-place-c365c44a508d5cd3c4fc5484",
+        "activity_type": "visit",
+        "cost_status": "UNKNOWN",
+        "start_at": "2026-10-03T10:52:00+08:00",
+        "end_at": "2026-10-03T11:52:00+08:00",
+        "travel_from_prev_min": 52
+      }
+    ],
+    "mobility": {
+      "provider": "valhalla-http",
+      "provider_capability": "AVAILABLE",
+      "deployment": "3.9.0-a689e60",
+      "fact_quality": "LIVE_PROVIDER_CAPTURE",
+      "route_provenance": "LIVE_PROVIDER_CAPTURE",
+      "geometry_provider": "valhalla-http",
+      "matrix_edges": [
+        ["real-place-b80da739cba29adc7cb6a006", "real-place-c365c44a508d5cd3c4fc5484"],
+        ["real-place-c365c44a508d5cd3c4fc5484", "real-place-b80da739cba29adc7cb6a006"]
+      ],
+      "matrix_minutes": [52, 53],
+      "used_edge_ids": [
+        ["real-place-b80da739cba29adc7cb6a006", "real-place-c365c44a508d5cd3c4fc5484"]
+      ],
+      "eligibility_receipts": [],
+      "eligibility_receipts_note": "No per-edge hard-eligibility receipt was emitted before the unresolved-facts authority stop; none is synthesized here."
+    },
+    "unresolved_facts": [
+      {"place_id": "real-place-b80da739cba29adc7cb6a006", "fact": "opening", "state": "REQUIRES_CONFIRMATION"},
+      {"place_id": "real-place-b80da739cba29adc7cb6a006", "fact": "cost", "state": "UNKNOWN"},
+      {"place_id": "real-place-c365c44a508d5cd3c4fc5484", "fact": "opening", "state": "REQUIRES_CONFIRMATION"},
+      {"place_id": "real-place-c365c44a508d5cd3c4fc5484", "fact": "cost", "state": "UNKNOWN"}
+    ]
+  },
+  "selection": {
+    "http_status": 409,
+    "reason_code": "UNRESOLVED_ACTIVITY_FACTS",
+    "plan_id": "dd171df4-a987-565b-bbd4-3904926eb11e",
+    "used_place_ids": [
+      "real-place-b80da739cba29adc7cb6a006",
+      "real-place-c365c44a508d5cd3c4fc5484"
+    ],
+    "active_plan_pointer_created": false,
+    "error_receipt_id": "CNX-CJD9KXSS"
+  },
+  "agent_runtime": {
+    "deepseek": {"status": "NOT_CONFIGURED", "execution_claimed": false},
+    "hermes_native": {"ready": false, "configured": false, "execution_claimed": false}
+  },
+  "result": {
+    "milestone": "REAL_DRAFT_CLOSED",
+    "selectable": false,
+    "exact_current_blocker": "UNRESOLVED_ACTIVITY_FACTS: both actual provider-backed visit rows lack authoritative opening and cost observations; Nominatim matched both entities but supplied neither fact, official source URLs are absent, and SearXNG is unconfigured.",
+    "mock_is_live": false,
+    "p7": false
+  }
+}
