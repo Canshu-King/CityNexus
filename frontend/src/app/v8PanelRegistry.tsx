@@ -130,6 +130,7 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
       <PendingSetPanel
         data={s.data}
         onNavigate={(route: string) => s.navigate(route)}
+        onReload={() => void s.load(s.data.journey.id)}
       />
     ),
   },
