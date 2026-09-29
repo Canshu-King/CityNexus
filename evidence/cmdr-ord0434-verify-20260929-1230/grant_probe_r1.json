@@ -1,0 +1,169 @@
+{
+ "journeys_http": 200,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "create_link_read": [
+  201,
+  357,
+  {
+   "id": "35652ab4-3962-44c5-83d9-89d219a17991",
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "visibility": "LINK_READ",
+   "created_by": "cmdr-priv-8738",
+   "expires_at": "2026-09-29T05:04:41.480870+00:00",
+   "revoked_at": null,
+   "created_at": "2026-09-29T04:04:41.488965+00:00",
+   "updated_at": "2026-09-29T04:04:41.488965+00:00",
+   "token": "bSopNxPnDGIyrd_NRs2GcWitkG0g16iY"
+  }
+ ],
+ "create_private": [
+  201,
+  325,
+  {
+   "id": "437583da-db03-450c-9fda-c9458110afc4",
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "visibility": "PRIVATE",
+   "created_by": "cmdr-priv-8738",
+   "expires_at": null,
+   "revoked_at": null,
+   "created_at": "2026-09-29T04:04:41.520679+00:00",
+   "updated_at": "2026-09-29T04:04:41.520679+00:00",
+   "token": "ihJOox_zzTHD_kzBiIF1GBvEJEpHVNfd"
+  }
+ ],
+ "create_already_expired": [
+  201,
+  357,
+  {
+   "id": "f979d2e3-ab6a-4d95-bd57-3e84d08cf72e",
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "visibility": "LINK_READ",
+   "created_by": "cmdr-priv-8738",
+   "expires_at": "2026-09-29T03:59:41.480870+00:00",
+   "revoked_at": null,
+   "created_at": "2026-09-29T04:04:41.551658+00:00",
+   "updated_at": "2026-09-29T04:04:41.551658+00:00",
+   "token": "iQOuYDcabTB4X2VY2xflKUuCdSWtoqAY"
+  }
+ ],
+ "read_with_live_token": [
+  200,
+  475,
+  {
+   "id": "22222222-2222-4222-8222-222222222222",
+   "traveler_id": "11111111-1111-4111-8111-111111111111",
+   "title": "One Day in Nexus City",
+   "city_code": "CNX-DEMO",
+   "timezone": "Asia/Shanghai",
+   "start_at": "2026-10-10T09:00:00+08:00",
+   "end_at": "2026-10-10T19:00:00+08:00",
+   "budget": {
+    "amount_minor": 50000,
+    "currency": "CNY"
+   },
+   "planning_mode": "balanced",
+   "status": "ACTIVE",
+   "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+   "current_activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6"
+  }
+ ],
+ "read_with_private_token": [
+  409,
+  328,
+  {
+   "error": {
+    "code": "CONFLICT",
+    "message": "A private grant answers no token read.",
+    "message_key": "request.conflict",
+    "trace_id": "1341beea-8b43-49b2-9804-99aa503a2eea",
+    "details": {
+     "grant_id": "437583da-db03-450c-9fda-c9458110afc4",
+     "visibility": "PRIVATE"
+    },
+    "reason_code": "SHARE_GRANT_NOT_LINK_READABLE",
+    "error_receipt_id": "CNX-NTRHJ9Z8"
+   }
+  }
+ ],
+ "read_with_expired_token": [
+  409,
+  372,
+  {
+   "error": {
+    "code": "CONFLICT",
+    "message": "This share grant does not allow a read right now.",
+    "message_key": "request.conflict",
+    "trace_id": "d39e56c1-1ebc-4f87-b7fb-62129660f3ce",
+    "details": {
+     "grant_id": "f979d2e3-ab6a-4d95-bd57-3e84d08cf72e",
+     "state": "EXPIRED",
+     "expires_at": "2026-09-29T03:59:41.480870+00:00"
+    },
+    "reason_code": "SHARE_GRANT_EXPIRED",
+    "error_receipt_id": "CNX-WTNFG3E8"
+   }
+  }
+ ],
+ "read_with_nonsense_token": [
+  404,
+  260,
+  {
+   "error": {
+    "code": "NOT_FOUND",
+    "message": "No share grant carries that token.",
+    "message_key": "resource.not_found",
+    "trace_id": "5ee9d47d-c696-42f4-8706-74607fd0ae1a",
+    "details": {
+     "field": "token"
+    },
+    "reason_code": "SHARE_GRANT_UNKNOWN",
+    "error_receipt_id": "CNX-TZV7G4YY"
+   }
+  }
+ ],
+ "list_grants": [
+  200,
+  3483,
+  "[{\"id\": \"642cd6b6-7754-413f-a1a4-4b80ace06f95\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"visibility\": \"PRIVATE\", \"created_by\": \"cmdr-priv-8738\", \"expires_at\": null, \"revoked_at\": \"2026-09-29T04:02:20.678615+00:00\", \"created_at\": \"2026-09-29T04:02:20.562767+00:00\", \"updated_at\": \"2026-0"
+ ],
+ "grant_id_found": true,
+ "revoke": [
+  409,
+  386,
+  {
+   "error": {
+    "code": "CONFLICT",
+    "message": "This grant was already withdrawn; withdrawing it again is not a new fact.",
+    "message_key": "request.conflict",
+    "trace_id": "b8e0b0d3-bdb9-4ce0-a086-551fffc90256",
+    "details": {
+     "revoked_at": "2026-09-29T04:02:20.678615+00:00",
+     "grant_id": "642cd6b6-7754-413f-a1a4-4b80ace06f95"
+    },
+    "reason_code": "SHARE_GRANT_ALREADY_REVOKED",
+    "error_receipt_id": "CNX-3GD9VH42"
+   }
+  }
+ ],
+ "read_after_revoke": [
+  200,
+  475,
+  {
+   "id": "22222222-2222-4222-8222-222222222222",
+   "traveler_id": "11111111-1111-4111-8111-111111111111",
+   "title": "One Day in Nexus City",
+   "city_code": "CNX-DEMO",
+   "timezone": "Asia/Shanghai",
+   "start_at": "2026-10-10T09:00:00+08:00",
+   "end_at": "2026-10-10T19:00:00+08:00",
+   "budget": {
+    "amount_minor": 50000,
+    "currency": "CNY"
+   },
+   "planning_mode": "balanced",
+   "status": "ACTIVE",
+   "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+   "current_activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6"
+  }
+ ]
+}
