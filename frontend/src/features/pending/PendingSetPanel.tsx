@@ -30,7 +30,7 @@ import "./pendingSet.css";
  *  - It may not filter by a category the server did not name.  Facets are built from the rows
  *    (`pendingSet.ts:facetsOf`), and a row whose category no read gave says so and stays under 全部.
  *  - It may not promise to put a place on a day.  This server has no such write
- *    (`backend/app/main.py:6798`, `:6803`, `:6808` only move an activity through execution), so the
+ *    (`backend/app/main.py:7221`, `:7226`, `:7231` only move an activity through execution), so the
  *    screen states the missing door instead of mounting a button for it (ORD-0385).
  *  - It may not count an unread door as zero places.  「这台服务器没答出那份清单」 is its own sentence,
  *    apart from 「没有待规划的地点」 and apart from 「没读到」 (`pendingSetReads.ts`).
