@@ -90,6 +90,8 @@ def main() -> int:
     before_en = load(E + "cells_walk_before/cells_walk_en.json")
     pairing = load(E + "pairing.json")
     prov = load(E + "receipt_provenance/receipt_provenance_zh.json")
+    carriers = [c for c in prov["server_sent_tokens"] if c["token"] in prov["on_screen_tokens"]]
+    carrier_str = "、".join(f"`{c['url'].split('?')[0]}`（http_status={c['status']}）" for c in carriers) or "NOT_RECORDING"
 
     cb = {h["cell_identity"] for h in exp_tip["hits"]}
     ca = {h["cell_identity"] for h in exp_after["hits"]}
@@ -141,7 +143,7 @@ def main() -> int:
 ## 6. 我自己那把尺的一处弱点，这轮补成实测
 
 - 交付的 C5 只判「编号长得像契约形状」（`walk_cells_r1.cjs:168`），形状判据分不出「服务器给的」与「客户端自己造的」，所以它当时证明不了它名字里那句 "the server's own number"。
-- 新尺 `review/ord0440/receipt_provenance_r1.cjs` blob {blob("review/ord0440/receipt_provenance_r1.cjs")} 改成逐条记录本次流程里每个响应体真的送出的 `CNX-` 编号，再问屏上那枚在不在里面：`{E}receipt_provenance/receipt_provenance_zh.json` blob {blob(E + "receipt_provenance/receipt_provenance_zh.json")} 读 P1 checks=1 pass=1 fail=0，屏上 shown={prov['on_screen_tokens']}，服务端送出 server_sent={len(prov['server_sent_tokens'])} 条（含本枝那枚 stub 编号 {prov['observations']['stub_arrived_in_a_body']}）。也就是说：编号确是某发答案带回来的，不是屏上造的——这一条现在是量出来的，不是推出来的。
+- 新尺 `review/ord0440/receipt_provenance_r1.cjs` blob {blob("review/ord0440/receipt_provenance_r1.cjs")} 改成逐条记录本次流程里每个响应体真的送出的 `CNX-` 编号，再问屏上那枚在不在里面：`{E}receipt_provenance/receipt_provenance_zh.json` blob {blob(E + "receipt_provenance/receipt_provenance_zh.json")} 读 P1 checks={len(prov['checks'])} pass={prov['pass_count']} fail={prov['fail_count']}。屏上 shown={prov['on_screen_tokens']} 那枚确实在响应体清单里，它由 {carrier_str} 带回来；本枝桩自己写的那枚 stub 编号也在清单里（stub_arrived_in_a_body={prov['observations']['stub_arrived_in_a_body']}），但它不是这一屏读到的那枚。也就是说：编号是某发答案带回来的，不是屏上造的——这一条现在是量出来的，不是推出来的。
 - 我 grep 过 `frontend/src` 里 `CNX-` 的用法：只有 `lib/errorReceipt.ts:22` 的形状常量与注释，前端没有任何铸造 `CNX-` 的代码；写入方是 `backend/app/error_receipt.py:29`。这句是补白，判据仍是 P1。
 
 ## 7. 这轮读数取在哪台栈上（三证同批）
