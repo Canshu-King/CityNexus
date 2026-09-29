@@ -1,0 +1,68 @@
+{
+  "sentence": "The river cruise stop is closed this afternoon. What should I move, and what stays untouched?",
+  "shim": "patched copy, own port, user's :7864 untouched",
+  "key_length": 58,
+  "key_written_to_any_file": false,
+  "off": {
+    "arm": "off",
+    "port": 54140,
+    "lane_db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_ab_off.db",
+    "health": {
+      "status": "ok",
+      "database": "ok",
+      "ai": "disabled",
+      "ai_state": "DISABLED_BY_OPS",
+      "e2e_run_id": "",
+      "e2e_database_id": ""
+    },
+    "copilot": {
+      "http": 200,
+      "bytes": 247,
+      "elapsed_s": 1.55,
+      "body_sha1": "af56302f9f1ceba4",
+      "words": {},
+      "mission_status": null,
+      "failure_reason": null,
+      "ai_state": null
+    },
+    "events_after": [],
+    "envelope_after": {
+      "robust": true,
+      "risk_reason_codes": []
+    }
+  },
+  "on": {
+    "arm": "on",
+    "port": 51548,
+    "lane_db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_ab_on.db",
+    "health": {
+      "status": "ok",
+      "database": "ok",
+      "ai": "enabled",
+      "ai_state": "CONFIGURED_UNVERIFIED",
+      "e2e_run_id": "",
+      "e2e_database_id": ""
+    },
+    "copilot": {
+      "http": 200,
+      "bytes": 3908,
+      "elapsed_s": 98.74,
+      "body_sha1": "2de6382e1412fd7f",
+      "words": {},
+      "mission_status": "COMPLETED",
+      "failure_reason": null,
+      "ai_state": "CONFIGURED_UNVERIFIED"
+    },
+    "events_after": [],
+    "envelope_after": {
+      "robust": true,
+      "risk_reason_codes": []
+    }
+  },
+  "diff": {
+    "bodies_equal": false,
+    "off_words": {},
+    "on_words": {}
+  },
+  "verdict_model_words_reach_product_reply": false
+}
