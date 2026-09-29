@@ -13,7 +13,7 @@
 - live routing mode binding commit: `b24975b0`
 - cross-projection mode binding commit: `570c7eff`
 - actual-mode count UI commit: `bb8ca6f5`
-- final product/evidence commit before this receipt update: `4dd565d9` (`revolution lab: capture live mode product receipt`)
+- final product code commit before this receipt update: `c352bacd` (`revolution lab: project frozen route into twin execution`)
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -58,6 +58,60 @@ The repair exposes a compact summary of the selected plan's persisted evidence:
 - evidence-backed `used_edge_ids` and `used_edges`
 
 Precedence is preserved: an active C4 commitment's persisted replan snapshot/fact still overrides the context used for that commitment window. The selected-plan summary is used when that override is absent. Missing or incomplete evidence continues to use the existing honest mock fallback; no fact is synthesized.
+
+## Twin execution repair from a real agent run
+
+The first real PLAN_ONLY inspection on this same Journey exposed a cross-surface
+truth gap. Before `c352bacd`, Hermes compatibility run
+`1584e899-6a04-4b22-bbdd-c0683548f61a` received the real Journey and the real
+Valhalla mobility context, but `inspect_twin` returned:
+
+```text
+now = 网师园
+next = 拙政园
+cursor_status = ABSENT_FALLBACK
+next_mode = NONE
+next_eta_min = 0
+next_leg_id = null
+```
+
+The selected PlanVersion had no materialised `JourneyLeg` row; its actual route
+was in the frozen provider evidence already consumed by `/experience`. The
+bounded repair binds Twin execution to the exact consecutive evidence pair when
+that is the available persisted route source. It does not create a database leg,
+and it keeps mode/ETA absent when the evidence is incomplete.
+
+After the repair, the same disposable Journey was rerun through the supported
+Hermes compatibility path:
+
+```text
+mission = f60ee6f1-5c08-437d-95e2-8623ce360566
+AgentRun = b1b7ce5a-aded-49cb-8455-35b19c47bea9
+runtime_identity = HERMES_COMPAT_ENDPOINT
+provider = hermes
+model = cn:deepseek-v4.1-flash
+status = COMPLETED
+tools = inspect_journey -> inspect_twin -> list_replans
+decisions = ALLOW_AUTO -> ALLOW_AUTO -> ALLOW_AUTO
+mutation = none
+```
+
+The machine-returned Twin execution now agrees with the real route:
+
+```text
+cursor_status = ABSENT_FALLBACK
+now = 网师园
+next = 拙政园
+next_leg_id = plan-evidence:e311ab50-5e61-5520-92fa-15ad977a565d:0
+next_mode = WALK
+next_eta_min = 42
+provider = valhalla-http
+route_provenance = LIVE_PROVIDER_CAPTURE
+```
+
+The agent correctly declined to request a replan because no server-owned
+disruption trigger exists. Native MCP remains unproven; this run is recorded as
+the configured Hermes compatibility runtime, not as native Hermes.
 
 ## DeepSeek Builder execution
 
@@ -426,6 +480,8 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-evidence-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-live-mode-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-final-twin-clean.png`
+- `evidence/revolution-realtrip/r77_agent_plan_only_rerun.json`
 
 The final frontend gates after this repair were:
 
@@ -436,9 +492,9 @@ npm run build     -> passed
 
 The build retained only the existing Vite large-chunk advisory.
 
-No new DeepSeek or Hermes execution is claimed for this presentation-only repair. The
-agent evidence above remains the actual Builder/Operator execution record; the latest
-UI behavior was verified by deterministic API and Playwright machine evidence.
+The Twin execution repair was followed by the actual Hermes compatibility PLAN_ONLY
+rerun recorded above; no native MCP execution is claimed. The latest UI behavior was
+verified by deterministic API and Playwright machine evidence.
 
 ## Truth boundaries
 
