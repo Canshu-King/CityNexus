@@ -254,7 +254,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 @keyframes v9-risk-pulse { 50% { box-shadow: 0 0 0 8px #b4231830; } }
 .v9-live-actions { display: flex; align-items: center; gap: 8px; }
 .v9-live-actions button { min-height: 42px; }
-.v9-language { min-width: 44px; min-height: 44px; padding: 0 var(--cn-s-10); border: 1px solid #dfe4ed; border-radius: 7px; color: var(--v8-indigo); background: #fff; cursor: pointer; font-size: 10px; font-weight: 850; }
+.v9-language { white-space: nowrap; min-width: 44px; min-height: 44px; padding: 0 var(--cn-s-10); border: 1px solid #dfe4ed; border-radius: 7px; color: var(--v8-indigo); background: #fff; cursor: pointer; font-size: 10px; font-weight: 850; }
 .v9-navigate { display: inline-flex; min-height: 44px; align-items: center; margin-top: 18px; padding: 0 14px; border-radius: 7px; color: #fff; background: var(--v8-indigo); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-decoration: none; }
 .v9-risk { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid #d8e9df; color: #416b5b; font-size: 10px; }.v9-risk b { color: #b44f33; letter-spacing: .1em; }
 .v9-wallet-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr); gap: 18px; }
