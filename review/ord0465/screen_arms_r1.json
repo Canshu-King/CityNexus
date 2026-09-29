@@ -152,7 +152,7 @@
       "detail": {
         "state": "ready",
         "door_status": 200,
-        "plan_state": "ACTIVE_PLAN_PRESENT",
+        "plan_state": "PLAN_PRESENT",
         "title_on_screen": true,
         "days": 2,
         "stops": [
@@ -169,7 +169,7 @@
       "detail": {
         "state": "ready",
         "door_status": 200,
-        "plan_state": "ACTIVE_PLAN_PRESENT",
+        "plan_state": "PLAN_PRESENT",
         "title_on_screen": true,
         "days": 2,
         "stops": [
@@ -207,9 +207,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "05:00",
-          "06:00",
-          "07:00"
+          "06:22",
+          "07:22",
+          "08:22"
         ]
       }
     },
@@ -235,7 +235,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "plan_state": "NO_ACTIVE_PLAN",
+        "plan_state": "NO_PLAN",
         "named": true,
         "stop_cells": 0,
         "day_cells": 0,
@@ -257,7 +257,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/9XT9fZ4Txv2gBYUAEwSVmwcj3Q2dd8bk",
+        "pathname": "/v8/shared/jVuAQg4dBLBuInYFArfHUXSHdbvpVFuM",
         "title_still_on_screen": true
       }
     },

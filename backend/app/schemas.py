@@ -837,8 +837,12 @@ class ShareGrantRevoked(BaseModel):
 # that assembled itself from those would keep working after the deadline passed and after the owner
 # withdrew the link -- which would make both of those facts decorative.  One door, one check.
 #
-# `SharedJourneyRead` extends the accepted `Journey` shape rather than replacing it, so the fields that
-# were already on this answer keep their names and their meaning; two fields are added.
+# The three models below describe the `active_plan` half of that body.  The door assembles its own
+# dict rather than declaring a response model, because ORD-0466's contract is that `shared_plan` is
+# ABSENT on a journey-level grant, and a response model with a default would put a null in that key
+# and read as "this grant covered a version and it is missing".  `contracts/openapi.yaml` is where
+# the body's shape is written down, and
+# `tests/test_qoder_ord0465_shared_landing.py` reads it from there.
 class SharedActivityCoordinate(BaseModel):
     """Where the place an activity names actually is, in the capability vocabulary this product froze.
 
@@ -909,26 +913,6 @@ class SharedPlan(BaseModel):
     # every word this answer offers has a label, which is why `source` stayed and `status` did not.
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
     stops: list[SharedStop]
-
-
-class SharedJourneyRead(Journey):
-    """What the holder of a share link is shown, and how much of it the grant actually covers.
-
-    Two lanes put a plan on this door in the same hour, and the two answers are not the same question:
-      * `plan_state` / `active_plan` (ORD-0465) -- the trip's own days, as far as a guest is shown
-        them: names, times, and where each stop is.
-      * `grant_scope` / `shared_plan` (ORD-0466) -- whether THIS grant was cut for one plan version,
-        and if so that version in the canonical `plan_schema` shape every other plan door returns.
-    Both are carried rather than one being renamed into the other, because a version-scoped grant and
-    an unscored grant genuinely answer differently, and the door must not have to decide which screen
-    is asking. Which of the two the landing screen reads is named in
-    `frontend/src/features/shared/SharedJourneyPanel.tsx`.
-    """
-
-    plan_state: Literal["ACTIVE_PLAN_PRESENT", "NO_ACTIVE_PLAN", "ACTIVE_PLAN_ROW_MISSING"]
-    active_plan: SharedPlan | None
-    grant_scope: Literal["JOURNEY", "PLAN_VERSION"]
-    shared_plan: PlanVersion | None = None
 
 
 # ORD-0434 step 2.  The member-state words are prefixed on purpose: bare EXPIRED and WITHDRAWN are

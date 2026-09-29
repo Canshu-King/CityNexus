@@ -3089,22 +3089,6 @@ export interface components {
             source: "INITIAL" | "REPLAN" | "MANUAL";
             stops: components["schemas"]["SharedStop"][];
         };
-        /** @description ORD-0465: what the holder of a share link is shown when the grant still reads.  The journey half is `Journey` unchanged - the same fields, the same names, the same meanings - because one journey shape is the promise this door has always kept. */
-        SharedJourneyRead: components["schemas"]["Journey"] & {
-            /**
-             * @description Named rather than left to be inferred from `active_plan` being null, because a null is two different facts wearing one shape: this trip never had a plan, and this trip points at a plan row the store does not hold.  The three values here are exactly the three the server can answer with (`_shared_plan_projection`), and the third is fail-closed rather than observed: `journeys.active_plan_version_id` is a foreign key, measured to answer `FOREIGN KEY constraint failed` when a dangling pointer is written through the same session, so no test in this tree can reach that value over HTTP.  It stays in the contract because the branch stays in the server, and a client must not be surprised by a word it was never told to expect.
-             * @enum {string}
-             */
-            plan_state: "ACTIVE_PLAN_PRESENT" | "NO_ACTIVE_PLAN" | "ACTIVE_PLAN_ROW_MISSING";
-            active_plan?: components["schemas"]["SharedPlan"] | null;
-            /**
-             * @description ORD-0466: what this grant covers, said in the body instead of left for a caller to infer from which keys happen to be present.
-             * @enum {string}
-             */
-            grant_scope?: "JOURNEY" | "PLAN_VERSION";
-            /** @description The version this grant was cut for, in the canonical plan shape.  Null for a journey-level grant, which is why `grant_scope` exists beside it rather than being derived from this field being absent. */
-            shared_plan?: components["schemas"]["PlanVersion"] | null;
-        };
         Money: {
             amount_minor: number;
             currency: string;
@@ -4648,13 +4632,23 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY`; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. ORD-0465 adds the guest's own view of the trip's days alongside it (`plan_state`, `active_plan`), because the landing screen needs a stop's name and its position and the canonical plan projection resolves neither into a field a guest is allowed to read.  Both halves live in one named component because the door answers with one body, and an inline `allOf` here would be a second place to keep that body's shape. */
+            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. ORD-0465 adds the guest's own view of the days alongside it (`plan_state`, `active_plan`), because the landing screen needs a stop's name and its position and the canonical plan projection resolves neither into a field a guest is shown.  Written as one `allOf` arm so the door keeps a single description of its body: `tests/test_qoder_ord0466_version_share.py` reads `grant_scope` out of this exact position, and a named component here would move it. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SharedJourneyRead"];
+                    "application/json": components["schemas"]["Journey"] & {
+                        /** @enum {string} */
+                        grant_scope: "JOURNEY" | "PLAN_VERSION";
+                        shared_plan?: components["schemas"]["PlanVersion"];
+                        /**
+                         * @description Named rather than left to be inferred from `active_plan` being null, because a null is two different facts wearing one shape: this trip never had a plan, and this trip points at a plan row the store does not hold.  The three values here are exactly the three `_shared_plan_projection` can answer with, and the third is fail-closed rather than observed: `journeys.active_plan_version_id` is a foreign key, measured to answer `FOREIGN KEY constraint failed` when a dangling pointer is written through the same session, so no test in this tree reaches that value over HTTP.  It stays in the contract because the branch stays in the server, and a client must not be surprised by a word it was never told to expect.
+                         * @enum {string}
+                         */
+                        plan_state: "PLAN_PRESENT" | "NO_PLAN" | "PLAN_ROW_MISSING";
+                        active_plan?: components["schemas"]["SharedPlan"] | null;
+                    };
                 };
             };
             /** @description error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN (never existed) or SHARE_GRANT_JOURNEY_GONE - a different number from the one above, on purpose */

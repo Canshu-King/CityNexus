@@ -1,4 +1,4 @@
-import type { components } from "../../generated/api";
+import type { components, paths } from "../../generated/api";
 import { classifyReadFailure, type Attribution } from "../../lib/failureAttribution";
 import type { RawFacts } from "../../lib/rawFacts";
 import {
@@ -24,7 +24,15 @@ import {
  * has no business deciding they did.
  */
 
-export type SharedJourneyRead = components["schemas"]["SharedJourneyRead"];
+/**
+ * The door's 200 body, read off the generated operation rather than re-declared here.  This door has
+ * no `response_model` on the server -- ORD-0466's contract is that `shared_plan` is ABSENT on a
+ * journey-level grant, and a model with a default would write a null into that key and read as "this
+ * grant covered a version and it went missing" -- so the generated client type for this response is
+ * the only place the body is described on this side, and a hand-copy here would be a second shape.
+ */
+export type SharedJourneyRead =
+  paths["/shared/journeys/{token}"]["get"]["responses"][200]["content"]["application/json"];
 export type SharedPlan = components["schemas"]["SharedPlan"];
 export type SharedStop = components["schemas"]["SharedStop"];
 export type SharedActivityCoordinate = components["schemas"]["SharedActivityCoordinate"];
@@ -130,7 +138,7 @@ export function askSharedJourney(token: string): Promise<SharedScreenRead> {
  * does not hold) and the screen says them with different sentences.
  */
 export function sharedStopsOf(answer: SharedJourneyRead): SharedStop[] {
-  return answer.plan_state === "ACTIVE_PLAN_PRESENT" ? (answer.active_plan?.stops ?? []) : [];
+  return answer.plan_state === "PLAN_PRESENT" ? (answer.active_plan?.stops ?? []) : [];
 }
 
 export { RejectionWithFacts, refusalReasonCode };

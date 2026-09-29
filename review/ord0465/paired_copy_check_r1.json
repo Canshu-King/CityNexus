@@ -2,14 +2,14 @@
   "looked_at": {
     "source": "wt/frontend/src/i18n/LocaleContext.tsx",
     "served_shell_http_status": 200,
-    "entry_asset": "/assets/index-D3vZjXvt.js",
+    "entry_asset": "/assets/index-DZLLFMy5.js",
     "entry_http_status": 200,
-    "entry_bytes": 1448524
+    "entry_bytes": 1483420
   },
   "keys_this_order_added": 28,
   "dictionary_totals": {
-    "en": 824,
-    "zh-CN": 824
+    "en": 890,
+    "zh-CN": 890
   },
   "one_sided_keys": {
     "en_only": [],

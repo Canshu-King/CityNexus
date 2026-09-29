@@ -238,18 +238,18 @@ export function SharedJourneyScreen({ token }: { token: string }) {
             })}
           </p>
 
-          {answer.plan_state === "NO_ACTIVE_PLAN" && (
+          {answer.plan_state === "NO_PLAN" && (
             <p className="v8-muted" data-testid="shared-no-plan">
               {t("shared.noPlan")}
             </p>
           )}
-          {answer.plan_state === "ACTIVE_PLAN_ROW_MISSING" && (
+          {answer.plan_state === "PLAN_ROW_MISSING" && (
             <p className="v8-muted" data-testid="shared-plan-row-missing">
               {t("shared.planRowMissing")}
             </p>
           )}
 
-          {answer.plan_state === "ACTIVE_PLAN_PRESENT" && answer.active_plan && (
+          {answer.plan_state === "PLAN_PRESENT" && answer.active_plan && (
             <p className="v8-muted" data-testid="shared-plan-line">
               {t("shared.planLine", {
                 version: answer.active_plan.version_no,
@@ -258,7 +258,7 @@ export function SharedJourneyScreen({ token }: { token: string }) {
             </p>
           )}
 
-          {answer.plan_state === "ACTIVE_PLAN_PRESENT" && stops.length === 0 && (
+          {answer.plan_state === "PLAN_PRESENT" && stops.length === 0 && (
             /* Rule 3. This is the arm a screen falls into by accident: the read answered, the plan is
                there, and there is not one stop in it. Saying nothing here would put a heading above an
                empty page. */

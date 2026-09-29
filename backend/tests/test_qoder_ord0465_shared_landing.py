@@ -32,7 +32,7 @@ from app.anywhere_capability import CAPABILITY_STATES
 from app.db.models import Activity, Journey, JourneyShareGrant, Place, PlanVersion, Traveler
 from app.db.session import SessionLocal
 from app.main import app, _shared_plan_projection
-from app.schemas import SharedActivityCoordinate, SharedJourneyRead, SharedStop
+from app.schemas import SharedActivityCoordinate, SharedPlan, SharedStop
 from app.stay_mobility import activity_coordinate
 
 client = TestClient(app, raise_server_exceptions=False)
@@ -280,7 +280,7 @@ def test_ord0465_success_carries_the_stops_the_landing_screen_has_to_draw():
     assert body["id"] == journey_id
     assert body["title"] == "沿海一周"
     assert body["timezone"] == "Asia/Shanghai"
-    assert body["plan_state"] == "ACTIVE_PLAN_PRESENT"
+    assert body["plan_state"] == "PLAN_PRESENT"
     assert body["active_plan"]["version_no"] == 3
     assert body["active_plan"]["source"] == "INITIAL"
     stops = body["active_plan"]["stops"]
@@ -315,7 +315,7 @@ def test_ord0465_no_plan_is_named_and_not_left_to_be_inferred_from_a_null():
         session.get(Journey, journey_id).active_plan_version_id = None
         session.commit()
     body = client.get(TOKEN_PATH.format(token=_grant(journey_id))).json()
-    assert body["plan_state"] == "NO_ACTIVE_PLAN"
+    assert body["plan_state"] == "NO_PLAN"
     assert body["active_plan"] is None
 
 
@@ -334,7 +334,7 @@ def test_ord0465_a_dangling_plan_pointer_fails_closed_rather_than_answering_a_pl
 
     with SessionLocal() as session:
         stub = SimpleNamespace(active_plan_version_id=str(uuid4()), id="stub")
-        assert _shared_plan_projection(session, stub) == ("ACTIVE_PLAN_ROW_MISSING", None)
+        assert _shared_plan_projection(session, stub) == ("PLAN_ROW_MISSING", None)
 
 
 def test_ord0465_a_stop_whose_place_row_was_deleted_names_which_nothing_it_is():
@@ -443,6 +443,45 @@ def test_ord0465_every_word_this_answer_offers_has_a_label_the_traveller_reads()
     )
 
 
+def test_ord0465_a_version_scoped_grant_carries_both_reads_and_neither_one_is_inferred():
+    """The merge test, not a courtesy one.
+
+    ORD-0466 landed on the authoritative line while this order was being written and put a plan on the
+    same answer under different names.  The two are different questions -- what the trip's own days
+    are, and what this particular grant covers -- so the door now answers both, and this pins that
+    adding one did not quietly change the other: a version-scoped grant still says which version it is
+    scoped to, and the guest's day list is still the journey's active plan rather than the scoped one.
+    Asserted together because the failure mode of a merge like this is one half being read as if it
+    answered the other."""
+    journey_id, _ = _journey_with_plan(stops=2)
+    with SessionLocal() as session:
+        plan_id = session.get(Journey, journey_id).active_plan_version_id
+
+    scoped = client.post(
+        f"/api/v1/journeys/{journey_id}/share-grants",
+        json={
+            "visibility": "LINK_READ",
+            "created_by": "ord0465-probe",
+            "plan_version_id": plan_id,
+        },
+    )
+    assert scoped.status_code == 201, scoped.text[:300]
+    body = client.get(TOKEN_PATH.format(token=scoped.json()["token"])).json()
+
+    assert body["grant_scope"] == "PLAN_VERSION", body.get("grant_scope")
+    assert body["shared_plan"] is not None and body["shared_plan"]["id"] == plan_id
+    assert body["plan_state"] == "PLAN_PRESENT"
+    assert [item["sequence_no"] for item in body["active_plan"]["stops"]] == [1, 2]
+
+    # And a journey-level grant says so, rather than leaving a null for the screen to interpret.
+    # `shared_plan` is ABSENT there, not null: that is ORD-0466's own rule and this lane does not
+    # soften it (`test_qoder_ord0466_version_share.py::test_v1_...`).
+    plain = client.get(TOKEN_PATH.format(token=_grant(journey_id))).json()
+    assert plain["grant_scope"] == "JOURNEY", plain.get("grant_scope")
+    assert "shared_plan" not in plain
+    assert plain["plan_state"] == "PLAN_PRESENT"
+
+
 def test_ord0465_the_projection_does_not_reach_a_routing_provider():
     """Legs are absent from this answer (see `SharedPlan`), so a stop's position can only have come
     from the place row -- which means this read cannot fail because a provider is down, and cannot
@@ -456,15 +495,27 @@ def test_ord0465_the_projection_does_not_reach_a_routing_provider():
 # ------------------------------------------------------------------ contract pins
 
 
-def test_ord0465_the_answer_is_a_superset_of_the_accepted_journey_shape():
-    """`SharedJourneyRead` must be `Journey` plus two fields -- not a re-spelling of it.  A screen that
-    reads `title` from this door and from `/journeys/{id}` has to get the same field both times, which
-    is what the subclass promise here is protecting."""
-    from app.schemas import Journey as JourneySchema
+def test_ord0465_the_answer_is_a_superset_of_the_journey_the_owner_reads():
+    """The share answer must be the accepted `Journey` body plus the shared-read fields -- not a
+    re-spelling of it.  Checked between two live bodies rather than between two models, because this
+    door has no response model to check: a screen that reads `title` from this door and from
+    `/journeys/{id}` has to get the same field both times.
 
-    added = set(SharedJourneyRead.model_fields) - set(JourneySchema.model_fields)
-    assert added == {"plan_state", "active_plan"}, added
-    assert set(JourneySchema.model_fields) <= set(SharedJourneyRead.model_fields)
+    Four fields are added, and each is attributed.  `plan_state` and `active_plan` are this order's;
+    `grant_scope` and `shared_plan` are ORD-0466's, which landed on the authoritative line while this
+    file was being written.  The set is asserted exactly, so a fifth field added by anybody has to be
+    attributed here the same way."""
+    journey_id, _ = _journey_with_plan(stops=1)
+    token = _grant(journey_id)
+    shared = client.get(TOKEN_PATH.format(token=token)).json()
+    owner = client.get(f"/api/v1/journeys/{journey_id}").json()
+
+    added = set(shared) - set(owner)
+    assert added == {"plan_state", "active_plan", "grant_scope"}, added
+    assert set(owner) <= set(shared), sorted(set(owner) - set(shared))
+    # `shared_plan` is present only on a version-scoped grant -- ORD-0466 pins that absence itself in
+    # `test_qoder_ord0466_version_share.py::test_v1_...`, and this file does not re-litigate it.
+    assert "shared_plan" not in shared
     assert SharedStop.model_fields["coordinate"].annotation is SharedActivityCoordinate
 
 
@@ -480,24 +531,46 @@ def test_ord0465_coordinate_states_are_the_frozen_four_and_no_more():
     assert set(annotated) == set(CAPABILITY_STATES), annotated
 
 
-def test_ord0465_the_door_that_answers_is_the_door_the_server_describes():
-    """Both OpenAPI artifacts on this tree describe this door, and neither reads the other: the
-    hand-written `contracts/openapi.yaml` is what `frontend/src/generated/api.ts` is built from, and
-    FastAPI's own `/openapi.json` is built from the `response_model` on the route.  A door with no
-    response model puts its values in the body and nothing in the contract -- which is how this door
-    was built before this order -- so this pins that the schema the server publishes for a 200 is the
-    schema the door actually sends."""
-    schema = app.openapi()
-    answer = schema["paths"]["/api/v1/shared/journeys/{token}"]["get"]["responses"]
-    assert answer["200"]["content"]["application/json"]["schema"]["$ref"] == (
-        "#/components/schemas/SharedJourneyRead"
-    ), answer["200"]
-    read = schema["components"]["schemas"]["SharedJourneyRead"]["properties"]
-    # FastAPI flattens a subclass into one property bag rather than emitting `allOf`, so the
-    # superset promise is checked against the shape a client actually reads.
-    journey = schema["components"]["schemas"]["Journey"]["properties"]
-    assert set(journey) <= set(read), sorted(set(journey) - set(read))
-    assert set(read) - set(journey) == {"plan_state", "active_plan"}, sorted(set(read) - set(journey))
-    assert "ACTIVE_PLAN_ROW_MISSING" in read["plan_state"]["enum"], read["plan_state"]
-    states = schema["components"]["schemas"]["SharedActivityCoordinate"]["properties"]["state"]
-    assert set(states["enum"]) == set(CAPABILITY_STATES), states
+def test_ord0465_the_contract_the_client_is_generated_from_carries_every_field_this_door_sends():
+    """`contracts/openapi.yaml` is hand-written and `frontend/src/generated/api.ts` is built from it,
+    while FastAPI's own `/openapi.json` is built from a `response_model` this door deliberately does
+    not have.  So the only contract a client can be checked against on this side is the YAML one, and
+    this reads it directly: every field the door puts on a 200 has to be in the arm the client is
+    generated from, or the screen type-checks against a shape nobody promised.
+
+    The gap this test does NOT close, named rather than papered over: with no response model,
+    `/openapi.json` describes this body as a bare object, so the two OpenAPI artifacts on this tree
+    still disagree about this door.  Attaching a model would write a `null` into `shared_plan` on a
+    journey-level grant, which is the one thing ORD-0466's own gate forbids -- so the choice is left
+    for the commander, and this lane's single-question block carries it."""
+    from pathlib import Path
+
+    import yaml
+
+    spec = yaml.safe_load(
+        (Path(__file__).resolve().parents[2] / "contracts" / "openapi.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    arm = spec["paths"]["/shared/journeys/{token}"]["get"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]["allOf"][1]
+    assert set(arm["properties"]) == {
+        "grant_scope", "shared_plan", "plan_state", "active_plan",
+    }, sorted(arm["properties"])
+    assert set(arm["properties"]["plan_state"]["enum"]) == {
+        "PLAN_PRESENT", "NO_PLAN", "PLAN_ROW_MISSING",
+    }, arm["properties"]["plan_state"]["enum"]
+    assert arm["properties"]["grant_scope"]["enum"] == ["JOURNEY", "PLAN_VERSION"]
+    assert set(arm["required"]) == {"grant_scope", "plan_state"}, arm["required"]
+
+    journey_id, _ = _journey_with_plan(stops=1)
+    body = client.get(TOKEN_PATH.format(token=_grant(journey_id))).json()
+    owner = client.get(f"/api/v1/journeys/{journey_id}").json()
+    beyond_the_journey = set(body) - set(owner)
+    assert beyond_the_journey <= set(arm["properties"]), sorted(
+        beyond_the_journey - set(arm["properties"])
+    )
+
+    coordinate = spec["components"]["schemas"]["SharedActivityCoordinate"]["properties"]["state"]
+    assert set(coordinate["enum"]) == set(CAPABILITY_STATES), coordinate
