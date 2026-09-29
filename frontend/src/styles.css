@@ -1854,3 +1854,32 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
     min-height: var(--cn-touch-min);
   }
 }
+
+/* ORD-0473: the phone's navigation toggle.
+   Appended as one block, mobile-scoped, longhand-only -- `styles.css` is a hot file and the rules
+   above are other lanes' lines.  The drawer sits at z-index 46 over a 65px topbar, so the toggle
+   that opened it was itself covered: pressing 菜单 a second time hit `#v8-nav-drawer` instead, and
+   there was no way back out through the control the traveller used to get in.  Lifting the toggle
+   above the drawer and padding the drawer's own top by the bar it floats in front of keeps every row
+   of the drawer visible and both directions pressable.  `aria-expanded` is the state the toggle
+   already published, so the glyph reads "×" exactly when a press closes. */
+@media (max-width: 680px) {
+  .v8-topbar .v8-mobile-menu {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 47;
+    min-width: var(--cn-touch-min);
+    min-height: var(--cn-touch-min);
+  }
+  .v8-topbar .v8-mobile-menu[aria-expanded="true"]:after {
+    content: "\00d7";
+  }
+  #v8-nav-drawer {
+    padding-top: calc(65px + var(--cn-safe-top) + var(--cn-s-8));
+  }
+  #v8-nav-drawer button:not(.v8-quiet-button) {
+    min-height: var(--cn-touch-min);
+  }
+}
+
