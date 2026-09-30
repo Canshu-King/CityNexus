@@ -3873,6 +3873,27 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        /** @enum {string} */
+        JourneyAbortCode: "ITINERARY_NOT_USEFUL" | "BUDGET_DOES_NOT_FIT" | "DATES_OR_PLACE_CHANGED" | "EVIDENCE_UNAVAILABLE" | "PROTECTED_ITEM_DROPPED" | "ARRANGED_ELSEWHERE" | "TEST_OR_DEMO_DATA" | "OTHER";
+        /** @enum {string} */
+        JourneyAbortState: "DECLARED" | "SKIPPED_BY_TRAVELER" | "NOT_ASKED";
+        /** @description ORD-0464: the reason a traveller gives for putting a trip in the recycle bin.  `additionalProperties` is false and `answered` is required, so a caller cannot claim the third state in a payload - the server records `NOT_ASKED` only when no reason object arrived at all.  That is the `stay_budget_declared` rule from ORD-0355: a question nobody asked must not be stored as an answer nobody gave.  `SKIPPED_BY_TRAVELER` is a legal answer the traveller chose, distinct from both a declaration and silence, and it is never this door's default. What the door does with it (ORD-0464, stated here because this order's contract additions are two pure appends and rewrite nothing of ORD-0383's): a malformed reason refuses the whole tap, so a trip is never binned with a half-recorded cause; on success exactly one `journey_outcome_events` row is written with `event_type = JOURNEY_DELETED`, whose `occurred_at_actual` is the same stored `deleted_at` moment; a refused second tap (`JOURNEY_ALREADY_DELETED`) records no second reason row and leaves the first deletion moment alone. */
+        JourneyAbortRequest: {
+            answered: boolean;
+            codes?: components["schemas"]["JourneyAbortCode"][];
+            note?: string | null;
+        };
+        /** @description The shape written into `journey_outcome_events.payload_json` for `event_type = JOURNEY_DELETED`.  `codes` carries meaning only beside `DECLARED`; the empty list in the other two states is the shape of the question going unanswered, not a blank reason. */
+        JourneyAbortRecorded: {
+            reason_state: components["schemas"]["JourneyAbortState"];
+            codes: components["schemas"]["JourneyAbortCode"][];
+            note: string | null;
+        };
+        /**
+         * @description ORD-0464, stated here so this order's contract additions stay one contiguous block instead of three scattered hunks in a file two other lanes are editing tonight: `JOURNEY_DELETED` is written by `DELETE /journeys/{journey_id}` and by nothing else.  `POST /journeys/{journey_id}/outcomes` does not accept the token -- its `event_type` Literal in `app/schemas.py` omits it -- so a client cannot file the fact of a binning, or a reason for one, without binning anything.  The outcomes door's own request body is still the pre-existing `{type: object}` on the line above this block; widening that is not this order's to do, and the guard is pinned by `backend/tests/test_qoder_ord0464_abort_reason_capture.py::test_r10_the_generic_outcomes_door_cannot_file_a_deletion`.
+         * @enum {string}
+         */
+        JourneyAbortBoundary: "JOURNEY_DELETED";
     };
     responses: {
         /** @description Not found */
@@ -4592,7 +4613,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["JourneyAbortRequest"];
+            };
+        };
         responses: {
             /** @description Deleted - the row is in the recycle bin */
             204: {
@@ -4612,6 +4637,15 @@ export interface operations {
             };
             /** @description error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_DELETED - the row is already in the bin, and its original deleted_at is left unchanged */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The reason object contradicts itself, and the trip is NOT deleted.  Two names, each with a `journey_outcome_events` row count of zero behind it: `ABORT_ANSWER_WITHOUT_CODES` when `answered` is true but no reason is named, and `ABORT_SKIP_WITH_CODES` when the question was declined yet reasons arrived in the same object.  A code outside `JourneyAbortCode`, a note over 200 characters, and any unknown property are refused by the same envelope. */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
