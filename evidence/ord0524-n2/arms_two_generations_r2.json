@@ -1,0 +1,1031 @@
+{
+ "order": "ORD-0524",
+ "lane": "N2",
+ "session": "9759f1ac-3d69-4688-8664-8ca954ab7737",
+ "built_at_local": "2026-10-01T02:50:07",
+ "generations": {
+  "base": {
+   "commit": "7862c6de5565c02c20ec2dccaa9da18960603e06",
+   "commit_subject": "ORD-0532 r2: main.py back to LF on the current tip, .gitattributes pins *.py text eol=lf",
+   "build_rc_steps": [
+    {
+     "step": "archive",
+     "rc": 0
+    },
+    {
+     "step": "junction_node_modules",
+     "rc": 0
+    },
+    {
+     "step": "vite_build",
+     "rc": 0
+    }
+   ],
+   "static_port": 4895,
+   "backend_port": 8766,
+   "served_asset": "/assets/index-DaHdgt6W.js",
+   "asset_disk_sha1": "95c9a395feb02d708a410cbddff90174d20a66a4",
+   "asset_served_sha1": "95c9a395feb02d708a410cbddff90174d20a66a4",
+   "served_equals_disk": true,
+   "entry_matches_build": true,
+   "run_id": "r2base01",
+   "built_from_bytes": {
+    "src/features/poiimport/PoiImportPanel.tsx": {
+     "export_blob": "b76f1d09cf7bd17db9d5b9d203e81b73fd8ea4e8",
+     "commit_blob": "b76f1d09cf7bd17db9d5b9d203e81b73fd8ea4e8",
+     "identical": true
+    },
+    "src/features/poiimport/poiImportCopy.ts": {
+     "in_export": false
+    },
+    "src/features/poiimport/poi-import.css": {
+     "export_blob": "dfe6678c9a2d091da43fd0873a0ecf4722799802",
+     "commit_blob": "dfe6678c9a2d091da43fd0873a0ecf4722799802",
+     "identical": true
+    },
+    "src/app/v8PanelRegistry.tsx": {
+     "export_blob": "e511e38baa9c46df1f5547d1c4f6831a8bdb1bfa",
+     "commit_blob": "e511e38baa9c46df1f5547d1c4f6831a8bdb1bfa",
+     "identical": true
+    },
+    "e2e/qoder-ord0437-poi-import-chain.spec.ts": {
+     "export_blob": "96cdce682c7d99b09ce159f02e8e70c2b254b1c1",
+     "commit_blob": "96cdce682c7d99b09ce159f02e8e70c2b254b1c1",
+     "identical": true
+    }
+   },
+   "numstat_vs_branch_point": [],
+   "store_reseed": {
+    "canary_sha256": "6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86",
+    "copy_sha256": "6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86",
+    "copy_equals_canary": true,
+    "copy_attempt": 1,
+    "rows": [
+     3,
+     134,
+     19,
+     16
+    ]
+   },
+   "shelf_supply": {
+    "create_http_status": 201,
+    "read_back": {
+     "http_status": 200,
+     "shelves": 1,
+     "items": 0
+    }
+   },
+   "shapes": {
+    "phone": {
+     "viewport": "390x844",
+     "pageerror_count": 0,
+     "journey": {
+      "http_status": 200,
+      "id": "22222222-2222-4222-8222-222222222222",
+      "traveler_id": "11111111-1111-4111-8111-111111111111"
+     },
+     "supply": {
+      "plan_activities_before": 6,
+      "shelf_items_before": 0,
+      "shelves": 1
+     },
+     "after_parse_count_line": "已选 3 / 可加 3",
+     "after_parse_aria_checked": [
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      }
+     ],
+     "final_exits_column_inner_text": "去处 已选 1 / 可加 3 落点日子加进计划存到收藏 这一版还没有收藏的门，所以这里不能承诺保存。 新建为一个计划 从导入地点新建计划属于批量录入那一步，本屏没有接。 打开计划 1 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN",
+     "centre_hits": {
+      "card_select": {
+       "testid": "poi-card-select",
+       "present": true,
+       "painted": true,
+       "box_w": 55,
+       "box_h": 44,
+       "centre": [
+        217,
+        422
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "select_all": {
+       "testid": "poi-import-select-all",
+       "present": false
+      },
+      "exit_plan": {
+       "testid": "poi-import-exit-plan",
+       "present": false
+      },
+      "exit_shelf": {
+       "testid": "poi-import-exit-shelf",
+       "present": false
+      },
+      "exit_store_only": {
+       "testid": "poi-import-exit-store-only",
+       "present": false
+      },
+      "collect": {
+       "testid": "poi-import-collect",
+       "present": false
+      }
+     }
+    },
+    "desktop": {
+     "viewport": "1280x900",
+     "pageerror_count": 0,
+     "journey": {
+      "http_status": 200,
+      "id": "22222222-2222-4222-8222-222222222222",
+      "traveler_id": "11111111-1111-4111-8111-111111111111"
+     },
+     "supply": {
+      "plan_activities_before": 7,
+      "shelf_items_before": 0,
+      "shelves": 2
+     },
+     "after_parse_count_line": "已选 3 / 可加 3",
+     "after_parse_aria_checked": [
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "true",
+       "disabled": false,
+       "text": "✓ 已选中——点一下取消"
+      }
+     ],
+     "final_exits_column_inner_text": "去处 已选 1 / 可加 3 落点日子加进计划存到收藏 这一版还没有收藏的门，所以这里不能承诺保存。 新建为一个计划 从导入地点新建计划属于批量录入那一步，本屏没有接。 打开计划 1 个本来就在那一天，没有重复添加。",
+     "centre_hits": {
+      "card_select": {
+       "testid": "poi-card-select",
+       "present": true,
+       "painted": true,
+       "box_w": 55,
+       "box_h": 44,
+       "centre": [
+        498,
+        450
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "select_all": {
+       "testid": "poi-import-select-all",
+       "present": false
+      },
+      "exit_plan": {
+       "testid": "poi-import-exit-plan",
+       "present": false
+      },
+      "exit_shelf": {
+       "testid": "poi-import-exit-shelf",
+       "present": false
+      },
+      "exit_store_only": {
+       "testid": "poi-import-exit-store-only",
+       "present": false
+      },
+      "collect": {
+       "testid": "poi-import-collect",
+       "present": false
+      }
+     }
+    }
+   },
+   "verdict_count": 14,
+   "passed_count": 2,
+   "failed_count": 12,
+   "failing_keys": [
+    "arm_a_no_silent_select_all__desktop",
+    "arm_a_no_silent_select_all__phone",
+    "arm_a_select_all_control__desktop",
+    "arm_a_select_all_control__phone",
+    "arm_b_choice_moves_the_door__desktop",
+    "arm_b_choice_moves_the_door__phone",
+    "arm_b_effects_are_exclusive__desktop",
+    "arm_b_effects_are_exclusive__phone",
+    "arm_b_landing_day_is_text__desktop",
+    "arm_b_landing_day_is_text__phone",
+    "arm_b_one_radiogroup_three_exits__desktop",
+    "arm_b_one_radiogroup_three_exits__phone"
+   ],
+   "verdicts": {
+    "arm_a_no_silent_select_all__phone": {
+     "pass": false,
+     "painted_count": "已选 3 / 可加 3",
+     "selected_shown": 3,
+     "selectable_shown": 3,
+     "card_controls": 3,
+     "aria_checked_after_parse": [
+      "true",
+      "true",
+      "true"
+     ],
+     "add_mounted": true,
+     "add_disabled": false
+    },
+    "arm_a_select_all_control__phone": {
+     "pass": false,
+     "mounted_select_all": false,
+     "count_after_on": null,
+     "selected_after_on": null,
+     "selected_after_off": null,
+     "aria_after_on": null,
+     "count_after_off": null,
+     "select_all_words": null
+    },
+    "arm_b_one_radiogroup_three_exits__phone": {
+     "pass": false,
+     "radiogroup": null,
+     "three_named_exits": false,
+     "lead": null,
+     "checked_at_start": null
+    },
+    "arm_b_choice_moves_the_door__phone": {
+     "pass": false,
+     "seq": [
+      {
+       "exit": "poi-import-exit-shelf",
+       "present": false
+      },
+      {
+       "exit": "poi-import-exit-store-only",
+       "present": false
+      },
+      {
+       "exit": "poi-import-exit-plan",
+       "present": false
+      }
+     ],
+     "every_one_checked": false,
+     "shelf_state": false,
+     "store_only_state": false,
+     "plan_state": false
+    },
+    "arm_b_landing_day_is_text__phone": {
+     "pass": false,
+     "landing_day_before": null,
+     "landing_day_after_typing": null,
+     "typed": "2026-10-12"
+    },
+    "arm_b_effects_are_exclusive__phone": {
+     "pass": false,
+     "plan_added_by_exit_1": 1,
+     "already_present_line": null,
+     "added_line": "1 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN",
+     "shelf_items_after_exit_1": 0,
+     "shelf_items_before": 0,
+     "fresh_shelf": {
+      "name": "ORD0524-base-phone-架子",
+      "made_http": 201,
+      "made_id": "bb853b2b-f66f-4515-b8cb-b3e8edb6c6bc"
+     },
+     "shelf_row_found": 0,
+     "collect_button_mounted": 0,
+     "fresh_shelf_held_after_exit_2": 0,
+     "collected_line": null,
+     "already_line": null,
+     "unconfirmed_line": null,
+     "plan_grew_by_exit_2": 0,
+     "plan_write_line": "1 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN",
+     "shelf_state_line": false
+    },
+    "arm_b_no_uuid_on_the_glass__phone": {
+     "pass": true,
+     "uuid_found": false,
+     "exits_column_head": "去处 已选 1 / 可加 3 落点日子加进计划存到收藏 这一版还没有收藏的门，所以这里不能承诺保存。 新建为一个计划 从导入地点新建计划属于批量录入那一步，本屏没有接。 打开计划 1 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN"
+    },
+    "arm_a_no_silent_select_all__desktop": {
+     "pass": false,
+     "painted_count": "已选 3 / 可加 3",
+     "selected_shown": 3,
+     "selectable_shown": 3,
+     "card_controls": 3,
+     "aria_checked_after_parse": [
+      "true",
+      "true",
+      "true"
+     ],
+     "add_mounted": true,
+     "add_disabled": false
+    },
+    "arm_a_select_all_control__desktop": {
+     "pass": false,
+     "mounted_select_all": false,
+     "count_after_on": null,
+     "selected_after_on": null,
+     "selected_after_off": null,
+     "aria_after_on": null,
+     "count_after_off": null,
+     "select_all_words": null
+    },
+    "arm_b_one_radiogroup_three_exits__desktop": {
+     "pass": false,
+     "radiogroup": null,
+     "three_named_exits": false,
+     "lead": null,
+     "checked_at_start": null
+    },
+    "arm_b_choice_moves_the_door__desktop": {
+     "pass": false,
+     "seq": [
+      {
+       "exit": "poi-import-exit-shelf",
+       "present": false
+      },
+      {
+       "exit": "poi-import-exit-store-only",
+       "present": false
+      },
+      {
+       "exit": "poi-import-exit-plan",
+       "present": false
+      }
+     ],
+     "every_one_checked": false,
+     "shelf_state": false,
+     "store_only_state": false,
+     "plan_state": false
+    },
+    "arm_b_landing_day_is_text__desktop": {
+     "pass": false,
+     "landing_day_before": null,
+     "landing_day_after_typing": null,
+     "typed": "2026-10-12"
+    },
+    "arm_b_effects_are_exclusive__desktop": {
+     "pass": false,
+     "plan_added_by_exit_1": 0,
+     "already_present_line": "1 个本来就在那一天，没有重复添加。",
+     "added_line": null,
+     "shelf_items_after_exit_1": 0,
+     "shelf_items_before": 0,
+     "fresh_shelf": {
+      "name": "ORD0524-base-desktop-架子",
+      "made_http": 201,
+      "made_id": "4db43758-9d43-403f-a789-b4949863ae4e"
+     },
+     "shelf_row_found": 0,
+     "collect_button_mounted": 0,
+     "fresh_shelf_held_after_exit_2": 0,
+     "collected_line": null,
+     "already_line": null,
+     "unconfirmed_line": null,
+     "plan_grew_by_exit_2": 0,
+     "plan_write_line": null,
+     "shelf_state_line": false
+    },
+    "arm_b_no_uuid_on_the_glass__desktop": {
+     "pass": true,
+     "uuid_found": false,
+     "exits_column_head": "去处 已选 1 / 可加 3 落点日子加进计划存到收藏 这一版还没有收藏的门，所以这里不能承诺保存。 新建为一个计划 从导入地点新建计划属于批量录入那一步，本屏没有接。 打开计划 1 个本来就在那一天，没有重复添加。"
+    }
+   }
+  },
+  "candidate": {
+   "commit": "54b694418c8ce94a02cc42e50bd88c89d40c977e",
+   "commit_subject": "ORD-0524 r2: the copy table fills the values it interpolates, and the ORD-0437 gate judges the new shape",
+   "build_rc_steps": [
+    {
+     "step": "archive",
+     "rc": 0
+    },
+    {
+     "step": "junction_node_modules",
+     "rc": 0
+    },
+    {
+     "step": "vite_build",
+     "rc": 0
+    }
+   ],
+   "static_port": 4896,
+   "backend_port": 8766,
+   "served_asset": "/assets/index-BVIBAiI_.js",
+   "asset_disk_sha1": "8d8e4a1eef016324a4c34acbeae145b9dbd31bb0",
+   "asset_served_sha1": "8d8e4a1eef016324a4c34acbeae145b9dbd31bb0",
+   "served_equals_disk": true,
+   "entry_matches_build": true,
+   "run_id": "r2cand01",
+   "built_from_bytes": {
+    "src/features/poiimport/PoiImportPanel.tsx": {
+     "export_blob": "5366e1fef802d10c6b042153e0a8bec07c12c5e9",
+     "commit_blob": "5366e1fef802d10c6b042153e0a8bec07c12c5e9",
+     "identical": true
+    },
+    "src/features/poiimport/poiImportCopy.ts": {
+     "export_blob": "371a746ee1954ca3b5546f11b721b34af2ba6bea",
+     "commit_blob": "371a746ee1954ca3b5546f11b721b34af2ba6bea",
+     "identical": true
+    },
+    "src/features/poiimport/poi-import.css": {
+     "export_blob": "4c2e6decac8424320fe8fbd71901142493f7ac87",
+     "commit_blob": "4c2e6decac8424320fe8fbd71901142493f7ac87",
+     "identical": true
+    },
+    "src/app/v8PanelRegistry.tsx": {
+     "export_blob": "446c4ba72c8d7f4951d8f73683b47ff3b1658a34",
+     "commit_blob": "446c4ba72c8d7f4951d8f73683b47ff3b1658a34",
+     "identical": true
+    },
+    "e2e/qoder-ord0437-poi-import-chain.spec.ts": {
+     "export_blob": "dbb7b42be88e52ef5e9d4823c4d1ad41c889b610",
+     "commit_blob": "dbb7b42be88e52ef5e9d4823c4d1ad41c889b610",
+     "identical": true
+    }
+   },
+   "numstat_vs_branch_point": [
+    [
+     "118",
+     "54",
+     "frontend/e2e/qoder-ord0437-poi-import-chain.spec.ts"
+    ],
+    [
+     "1",
+     "0",
+     "frontend/src/app/v8PanelRegistry.tsx"
+    ],
+    [
+     "361",
+     "67",
+     "frontend/src/features/poiimport/PoiImportPanel.tsx"
+    ],
+    [
+     "59",
+     "0",
+     "frontend/src/features/poiimport/poi-import.css"
+    ],
+    [
+     "122",
+     "0",
+     "frontend/src/features/poiimport/poiImportCopy.ts"
+    ]
+   ],
+   "store_reseed": {
+    "canary_sha256": "6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86",
+    "copy_sha256": "6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86",
+    "copy_equals_canary": true,
+    "copy_attempt": 1,
+    "rows": [
+     3,
+     134,
+     19,
+     16
+    ]
+   },
+   "shelf_supply": {
+    "create_http_status": 201,
+    "read_back": {
+     "http_status": 200,
+     "shelves": 1,
+     "items": 0
+    }
+   },
+   "shapes": {
+    "phone": {
+     "viewport": "390x844",
+     "pageerror_count": 0,
+     "journey": {
+      "http_status": 200,
+      "id": "22222222-2222-4222-8222-222222222222",
+      "traveler_id": "11111111-1111-4111-8111-111111111111"
+     },
+     "supply": {
+      "plan_activities_before": 6,
+      "shelf_items_before": 0,
+      "shelves": 1
+     },
+     "after_parse_count_line": "已选 0 / 可加 3",
+     "after_parse_aria_checked": [
+      {
+       "testid": "poi-import-select-all",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "全选可加的行"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      }
+     ],
+     "final_exits_column_inner_text": "去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-phone-架子」——这句是从同一扇读门重读回来的。 打开计划",
+     "centre_hits": {
+      "card_select": {
+       "testid": "poi-card-select",
+       "present": true,
+       "painted": true,
+       "box_w": 127,
+       "box_h": 44,
+       "centre": [
+        253,
+        602
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "select_all": {
+       "testid": "poi-import-select-all",
+       "present": true,
+       "painted": true,
+       "box_w": 356,
+       "box_h": 44,
+       "centre": [
+        195,
+        441
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_plan": {
+       "testid": "poi-import-exit-plan",
+       "present": true,
+       "painted": true,
+       "box_w": 306,
+       "box_h": 44,
+       "centre": [
+        195,
+        422
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_shelf": {
+       "testid": "poi-import-exit-shelf",
+       "present": true,
+       "painted": true,
+       "box_w": 306,
+       "box_h": 44,
+       "centre": [
+        195,
+        484
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_store_only": {
+       "testid": "poi-import-exit-store-only",
+       "present": true,
+       "painted": true,
+       "box_w": 306,
+       "box_h": 44,
+       "centre": [
+        195,
+        546
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "collect": {
+       "testid": "poi-import-collect",
+       "present": true,
+       "painted": true,
+       "box_w": 130,
+       "box_h": 44,
+       "centre": [
+        107,
+        819
+       ],
+       "hit": "SPAN",
+       "is_own": false
+      }
+     }
+    },
+    "desktop": {
+     "viewport": "1280x900",
+     "pageerror_count": 0,
+     "journey": {
+      "http_status": 200,
+      "id": "22222222-2222-4222-8222-222222222222",
+      "traveler_id": "11111111-1111-4111-8111-111111111111"
+     },
+     "supply": {
+      "plan_activities_before": 8,
+      "shelf_items_before": 2,
+      "shelves": 2
+     },
+     "after_parse_count_line": "已选 0 / 可加 3",
+     "after_parse_aria_checked": [
+      {
+       "testid": "poi-import-select-all",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "全选可加的行"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      },
+      {
+       "testid": "poi-card-select",
+       "aria_checked": "false",
+       "disabled": false,
+       "text": "选中"
+      }
+     ],
+     "final_exits_column_inner_text": "去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 ORD0524-candidate-desktop-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-desktop-架子」——这句是从同一扇读门重读回来的。 打开计划",
+     "centre_hits": {
+      "card_select": {
+       "testid": "poi-card-select",
+       "present": true,
+       "painted": true,
+       "box_w": 127,
+       "box_h": 44,
+       "centre": [
+        534,
+        143
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "select_all": {
+       "testid": "poi-import-select-all",
+       "present": true,
+       "painted": true,
+       "box_w": 482,
+       "box_h": 44,
+       "centre": [
+        539,
+        22
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_plan": {
+       "testid": "poi-import-exit-plan",
+       "present": true,
+       "painted": true,
+       "box_w": 386,
+       "box_h": 44,
+       "centre": [
+        1016,
+        170
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_shelf": {
+       "testid": "poi-import-exit-shelf",
+       "present": true,
+       "painted": true,
+       "box_w": 386,
+       "box_h": 44,
+       "centre": [
+        1016,
+        232
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "exit_store_only": {
+       "testid": "poi-import-exit-store-only",
+       "present": true,
+       "painted": true,
+       "box_w": 386,
+       "box_h": 44,
+       "centre": [
+        1016,
+        294
+       ],
+       "hit": "itself",
+       "is_own": true
+      },
+      "collect": {
+       "testid": "poi-import-collect",
+       "present": true,
+       "painted": true,
+       "box_w": 130,
+       "box_h": 44,
+       "centre": [
+        888,
+        635
+       ],
+       "hit": "itself",
+       "is_own": true
+      }
+     }
+    }
+   },
+   "verdict_count": 14,
+   "passed_count": 14,
+   "failed_count": 0,
+   "failing_keys": [],
+   "verdicts": {
+    "arm_a_no_silent_select_all__phone": {
+     "pass": true,
+     "painted_count": "已选 0 / 可加 3",
+     "selected_shown": 0,
+     "selectable_shown": 3,
+     "card_controls": 3,
+     "aria_checked_after_parse": [
+      "false",
+      "false",
+      "false"
+     ],
+     "add_mounted": true,
+     "add_disabled": true
+    },
+    "arm_a_select_all_control__phone": {
+     "pass": true,
+     "mounted_select_all": true,
+     "count_after_on": "已选 3 / 可加 3",
+     "selected_after_on": 3,
+     "selected_after_off": 0,
+     "aria_after_on": [
+      "true",
+      "true",
+      "true"
+     ],
+     "count_after_off": "已选 0 / 可加 3",
+     "select_all_words": [
+      "✓ 已全选——点一下取消全部"
+     ]
+    },
+    "arm_b_one_radiogroup_three_exits__phone": {
+     "pass": true,
+     "radiogroup": {
+      "testid": "poi-import-exits",
+      "children": [
+       "poi-import-exit-plan",
+       "poi-import-exit-shelf",
+       "poi-import-exit-store-only"
+      ]
+     },
+     "three_named_exits": true,
+     "lead": "三个去处只能选一个：选了哪一个，就只照那一个写。",
+     "checked_at_start": 1
+    },
+    "arm_b_choice_moves_the_door__phone": {
+     "pass": true,
+     "seq": [
+      {
+       "exit": "poi-import-exit-shelf",
+       "checked": 1,
+       "add": false,
+       "collect": true,
+       "day_input": false,
+       "landing_day": null,
+       "refused": null
+      },
+      {
+       "exit": "poi-import-exit-store-only",
+       "checked": 1,
+       "add": false,
+       "collect": false,
+       "day_input": false,
+       "landing_day": null,
+       "refused": "这一项选上了，但它没有可写的门：上面那句就是它的全部回答，这一屏什么都没写。"
+      },
+      {
+       "exit": "poi-import-exit-plan",
+       "checked": 1,
+       "add": true,
+       "collect": false,
+       "day_input": true,
+       "landing_day": "没有填日子，就落在计划的第一天：2026-10-10",
+       "refused": null
+      }
+     ],
+     "every_one_checked": true,
+     "shelf_state": true,
+     "store_only_state": true,
+     "plan_state": true
+    },
+    "arm_b_landing_day_is_text__phone": {
+     "pass": true,
+     "landing_day_before": "没有填日子，就落在计划的第一天：2026-10-10",
+     "landing_day_after_typing": "你选的日子：2026-10-12",
+     "typed": "2026-10-12"
+    },
+    "arm_b_effects_are_exclusive__phone": {
+     "pass": true,
+     "plan_added_by_exit_1": 2,
+     "already_present_line": null,
+     "added_line": "2 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN",
+     "shelf_items_after_exit_1": 0,
+     "shelf_items_before": 0,
+     "fresh_shelf": {
+      "name": "ORD0524-candidate-phone-架子",
+      "made_http": 201,
+      "made_id": "7147b2e8-76a0-4643-bad3-6b22a4e55ca8"
+     },
+     "shelf_row_found": 1,
+     "collect_button_mounted": 1,
+     "fresh_shelf_held_after_exit_2": 2,
+     "collected_line": "2 枚已收在「ORD0524-candidate-phone-架子」——这句是从同一扇读门重读回来的。",
+     "already_line": null,
+     "unconfirmed_line": null,
+     "plan_grew_by_exit_2": 0,
+     "plan_write_line": "2 个地点已在 2026-10-12 ——这是从服务端读回来的结果。TRAVELLER_CHOSEN",
+     "shelf_state_line": true
+    },
+    "arm_b_no_uuid_on_the_glass__phone": {
+     "pass": true,
+     "uuid_found": false,
+     "exits_column_head": "去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-phone-架子」——这句是从同一扇读门重读回来的。 打开计划"
+    },
+    "arm_a_no_silent_select_all__desktop": {
+     "pass": true,
+     "painted_count": "已选 0 / 可加 3",
+     "selected_shown": 0,
+     "selectable_shown": 3,
+     "card_controls": 3,
+     "aria_checked_after_parse": [
+      "false",
+      "false",
+      "false"
+     ],
+     "add_mounted": true,
+     "add_disabled": true
+    },
+    "arm_a_select_all_control__desktop": {
+     "pass": true,
+     "mounted_select_all": true,
+     "count_after_on": "已选 3 / 可加 3",
+     "selected_after_on": 3,
+     "selected_after_off": 0,
+     "aria_after_on": [
+      "true",
+      "true",
+      "true"
+     ],
+     "count_after_off": "已选 0 / 可加 3",
+     "select_all_words": [
+      "✓ 已全选——点一下取消全部"
+     ]
+    },
+    "arm_b_one_radiogroup_three_exits__desktop": {
+     "pass": true,
+     "radiogroup": {
+      "testid": "poi-import-exits",
+      "children": [
+       "poi-import-exit-plan",
+       "poi-import-exit-shelf",
+       "poi-import-exit-store-only"
+      ]
+     },
+     "three_named_exits": true,
+     "lead": "三个去处只能选一个：选了哪一个，就只照那一个写。",
+     "checked_at_start": 1
+    },
+    "arm_b_choice_moves_the_door__desktop": {
+     "pass": true,
+     "seq": [
+      {
+       "exit": "poi-import-exit-shelf",
+       "checked": 1,
+       "add": false,
+       "collect": true,
+       "day_input": false,
+       "landing_day": null,
+       "refused": null
+      },
+      {
+       "exit": "poi-import-exit-store-only",
+       "checked": 1,
+       "add": false,
+       "collect": false,
+       "day_input": false,
+       "landing_day": null,
+       "refused": "这一项选上了，但它没有可写的门：上面那句就是它的全部回答，这一屏什么都没写。"
+      },
+      {
+       "exit": "poi-import-exit-plan",
+       "checked": 1,
+       "add": true,
+       "collect": false,
+       "day_input": true,
+       "landing_day": "没有填日子，就落在计划的第一天：2026-10-10",
+       "refused": null
+      }
+     ],
+     "every_one_checked": true,
+     "shelf_state": true,
+     "store_only_state": true,
+     "plan_state": true
+    },
+    "arm_b_landing_day_is_text__desktop": {
+     "pass": true,
+     "landing_day_before": "没有填日子，就落在计划的第一天：2026-10-10",
+     "landing_day_after_typing": "你选的日子：2026-10-12",
+     "typed": "2026-10-12"
+    },
+    "arm_b_effects_are_exclusive__desktop": {
+     "pass": true,
+     "plan_added_by_exit_1": 0,
+     "already_present_line": "2 个本来就在那一天，没有重复添加。",
+     "added_line": null,
+     "shelf_items_after_exit_1": 2,
+     "shelf_items_before": 2,
+     "fresh_shelf": {
+      "name": "ORD0524-candidate-desktop-架子",
+      "made_http": 201,
+      "made_id": "7f084d87-1c3d-490c-81ee-ec2af9f2b044"
+     },
+     "shelf_row_found": 1,
+     "collect_button_mounted": 1,
+     "fresh_shelf_held_after_exit_2": 2,
+     "collected_line": "2 枚已收在「ORD0524-candidate-desktop-架子」——这句是从同一扇读门重读回来的。",
+     "already_line": null,
+     "unconfirmed_line": null,
+     "plan_grew_by_exit_2": 0,
+     "plan_write_line": null,
+     "shelf_state_line": true
+    },
+    "arm_b_no_uuid_on_the_glass__desktop": {
+     "pass": true,
+     "uuid_found": false,
+     "exits_column_head": "去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 ORD0524-candidate-desktop-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-desktop-架子」——这句是从同一扇读门重读回来的。 打开计划"
+    }
+   }
+  }
+ },
+ "comparison": {
+  "base_passing": 2,
+  "candidate_passing": 14,
+  "arm_keys_both": [
+   "arm_a_no_silent_select_all__desktop",
+   "arm_a_no_silent_select_all__phone",
+   "arm_a_select_all_control__desktop",
+   "arm_a_select_all_control__phone",
+   "arm_b_choice_moves_the_door__desktop",
+   "arm_b_choice_moves_the_door__phone",
+   "arm_b_effects_are_exclusive__desktop",
+   "arm_b_effects_are_exclusive__phone",
+   "arm_b_landing_day_is_text__desktop",
+   "arm_b_landing_day_is_text__phone",
+   "arm_b_no_uuid_on_the_glass__desktop",
+   "arm_b_no_uuid_on_the_glass__phone",
+   "arm_b_one_radiogroup_three_exits__desktop",
+   "arm_b_one_radiogroup_three_exits__phone"
+  ],
+  "flipped_base_red_candidate_green": [
+   "arm_a_no_silent_select_all__desktop",
+   "arm_a_no_silent_select_all__phone",
+   "arm_a_select_all_control__desktop",
+   "arm_a_select_all_control__phone",
+   "arm_b_choice_moves_the_door__desktop",
+   "arm_b_choice_moves_the_door__phone",
+   "arm_b_effects_are_exclusive__desktop",
+   "arm_b_effects_are_exclusive__phone",
+   "arm_b_landing_day_is_text__desktop",
+   "arm_b_landing_day_is_text__phone",
+   "arm_b_one_radiogroup_three_exits__desktop",
+   "arm_b_one_radiogroup_three_exits__phone"
+  ],
+  "red_on_candidate": []
+ },
+ "own_bytes_sha1": {
+  "n2_0524_arms_r1.js": "5f5b2dcd5aa893e72377b9757e1ff2fa654207d2",
+  "n2_0524_arms_run_r1.py": "2b446b0ff212caecbf1f2c8f2ada40ebe87692e7",
+  "n2_0524_reseed_r1.py": "1211b04f944d33f1836f9cc508fdf7d56bafc9c4"
+ }
+}
