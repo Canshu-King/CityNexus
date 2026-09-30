@@ -579,6 +579,15 @@ def _place_metadata(place: Place) -> dict[str, Any]:
     return json.loads(place.metadata_json or "{}") if place.metadata_json else {}
 
 
+def _place_strategy_estimate(place: Place) -> dict[str, Any] | None:
+    estimate = _place_metadata(place).get("strategy_estimate")
+    if not isinstance(estimate, Mapping):
+        return None
+    if str(estimate.get("status") or "").upper() != "ESTIMATED_AGENT":
+        return None
+    return dict(estimate)
+
+
 def _place_verified_cost(place: Place) -> int | None:
     metadata = _place_metadata(place)
     provider_key = getattr(place, "provider_key", None)
@@ -1380,9 +1389,44 @@ def _provisional_catalogue_plan(
     cursor = parse_dt(journey.start_at)
     rows: list[tuple[Place, datetime, datetime, int]] = []
     previous: str | None = None
+    strategy_estimates: list[dict[str, Any]] = []
+    estimated_total_cost = 0
     for place in selected:
         travel = _safe_estimate_minutes(mobility, previous, place.id) if previous else 0
         begin = cursor + timedelta(minutes=travel)
+        estimate = _place_strategy_estimate(place)
+        if estimate is not None:
+            opening_estimate = estimate.get("opening_hours")
+            if isinstance(opening_estimate, Mapping):
+                open_minutes = opening_estimate.get("open_minutes")
+                try:
+                    if open_minutes is not None:
+                        estimated_open = datetime.combine(
+                            begin.date(),
+                            datetime.min.time(),
+                            begin.tzinfo,
+                        ) + timedelta(minutes=int(open_minutes))
+                        begin = max(begin, estimated_open)
+                except (TypeError, ValueError, OverflowError):
+                    pass
+            cost_estimate = estimate.get("cost_evidence")
+            if isinstance(cost_estimate, Mapping) and cost_estimate.get("amount_minor") is not None:
+                try:
+                    amount = int(cost_estimate["amount_minor"])
+                except (TypeError, ValueError):
+                    amount = 0
+                if amount >= 0:
+                    estimated_total_cost += amount
+            strategy_estimates.append(
+                {
+                    "place_id": place.id,
+                    "status": "ESTIMATED_AGENT",
+                    "authority_eligible": False,
+                    "basis": estimate.get("basis"),
+                    "opening_hours": opening_estimate or {"status": "ESTIMATED_AGENT"},
+                    "cost_evidence": cost_estimate or {"status": "ESTIMATED_AGENT"},
+                }
+            )
         end = begin + timedelta(minutes=_place_duration(place))
         rows.append((place, begin, end, travel))
         cursor = end
@@ -1447,6 +1491,13 @@ def _provisional_catalogue_plan(
             "status": "REQUIRES_CONFIRMATION",
             "unknown_item_count": sum(1 for item in unresolved if item["fact"] == "opening"),
         },
+        "strategy_estimate_summary": {
+            "status": "ESTIMATED_AGENT" if strategy_estimates else "NONE",
+            "authority_eligible": False,
+            "estimated_total_cost_minor": estimated_total_cost,
+            "facts": strategy_estimates,
+            "note": "Estimates guide this provisional strategy only; canonical authority still requires provider evidence.",
+        },
         "mobility_snapshot_id": mobility.snapshot_id,
         "mobility_provider": mobility.source_provider_key,
     }
@@ -1508,6 +1559,7 @@ def _provisional_catalogue_plan(
                         "cost_evidence": cost if isinstance(cost, Mapping) else {"status": "UNKNOWN"},
                         "cost_status": "KNOWN" if known_cost else "UNKNOWN",
                         "price_known": known_cost,
+                        "strategy_estimate": _place_strategy_estimate(place),
                         "latitude": place.latitude,
                         "longitude": place.longitude,
                         "crs": "WGS84",

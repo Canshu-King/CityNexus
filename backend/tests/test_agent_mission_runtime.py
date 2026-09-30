@@ -564,6 +564,14 @@ def test_estimate_place_facts_is_explicitly_non_authoritative():
         f"/api/v1/journeys/{journey_id}"
     ).json()["budget"]["currency"]
 
+    with SessionLocal() as session:
+        estimate = json.loads(session.get(Place, "place-riverside-museum").metadata_json)[
+            "strategy_estimate"
+        ]
+        assert estimate["status"] == "ESTIMATED_AGENT"
+        assert estimate["authority_eligible"] is False
+        assert estimate["cost_evidence"]["status"] == "ESTIMATED_AGENT"
+
 
 def test_acquire_place_facts_commits_canonical_observation_before_next_read(monkeypatch):
     journey_id = _selected_journey()

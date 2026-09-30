@@ -167,6 +167,9 @@ def _agent_place_metadata(place: Place) -> dict[str, Any]:
         for key in ("discovery_mode", "osm_id", "duration_min", "price_known", "place_role")
         if key in raw
     }
+    strategy_estimate = raw.get("strategy_estimate")
+    if isinstance(strategy_estimate, dict):
+        compact["strategy_estimate"] = strategy_estimate
     cost = raw.get("cost_evidence")
     if isinstance(cost, dict):
         compact["cost_evidence"] = {
@@ -731,6 +734,20 @@ class AgentToolGateway:
             estimate["cost_evidence"].update(
                 {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
             )
+        metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+        metadata["strategy_estimate"] = {
+            "status": "ESTIMATED_AGENT",
+            "authority_eligible": False,
+            "basis": estimate["basis"],
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "opening_hours": dict(estimate["opening_hours"]),
+            "cost_evidence": dict(estimate["cost_evidence"]),
+        }
+        place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+        # Estimates are strategy observations, not canonical Place facts.  Persisting them lets
+        # the next deterministic compose explain how the Agent's decision was made without
+        # promoting the values into opening_hours_json or cost_evidence.
+        self.session.commit()
         return {
             "tool": "estimate_place_facts",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
