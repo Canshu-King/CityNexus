@@ -1108,6 +1108,7 @@ def _real_strategy_metrics(
     }
     provenance = {
         "strategy_profile": profile,
+        "metric_values": dict(metrics),
         "travel_minutes": travel_minutes,
         "degraded_edges": degraded_edges,
         "edge_count": edge_count,
@@ -1859,17 +1860,26 @@ def _generic_compose_plans(
     plan_id = deterministic_id(
         f"plan:{journey.id}:{version_no}:generic:{','.join(ordered_ids)}"
     )
-    budget_fit = max(0.0, min(1.0, 1 - total_cost / max(1, journey.budget_amount_minor)))
-    metrics = {
-        "commitment_preservation": 1.0,
-        "stability": 0.9,
-        "time_reliability": 0.9,
-        "preference_fit": 0.8,
-        "mobility_fit": 0.85,
-        "budget_fit": budget_fit,
-        "robustness": 0.85,
-        "opportunity_value": 0.8,
-    }
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
+    schedule = [
+        CandidateActivity(
+            place_id=place.id,
+            title=place.name,
+            start_at=start_at,
+            end_at=end_at,
+            cost_minor=cost_minor,
+            metadata={"category": place.category},
+        )
+        for place, start_at, end_at, _travel_min, cost_minor in rows
+    ]
+    metrics, score_provenance = _real_strategy_metrics(
+        schedule,
+        places,
+        mobility_provider,
+        journey,
+        strategy_profile,
+    )
     breakdown = {**metrics, "total": _score(metrics)}
     now = iso_now()
     plan = PlanVersion(
@@ -1894,6 +1904,9 @@ def _generic_compose_plans(
                 "input_place_ids": selected_ids,
                 "compose_order": list(ordered_ids),
                 "deterministic_gate": "PASSED",
+                "strategy_profile": strategy_profile,
+                "strategy_intent": strategy_intent,
+                "score_provenance": score_provenance,
                 "mobility_provider": mobility_provider.source_provider_key,
                 "mobility_snapshot_id": mobility_provider.snapshot_id,
                 "mobility_provenance": [

@@ -488,6 +488,45 @@ def test_hermes_runtime_consumes_wb2api_streaming_tool_call(monkeypatch):
     }
 
 
+def test_hermes_runtime_retries_an_empty_stream_without_switching_model(monkeypatch):
+    calls: list[bool] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        calls.append(bool(payload["stream"]))
+        if payload["stream"]:
+            return httpx.Response(
+                200,
+                headers={"content-type": "text/event-stream"},
+                content=(
+                    'data: {"choices":[{"delta":{"reasoning_content":"partial"}}]}\n\n'
+                    "data: [DONE]\n\n"
+                ).encode(),
+            )
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"role": "assistant", "content": "READY"}}]},
+        )
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    monkeypatch.setattr(
+        "app.agent.orchestrator.settings",
+        replace(
+            runtime_settings,
+            hermes_api_url="http://wb2api.test/v1/chat/completions",
+            hermes_api_key="test-key",
+            hermes_model="cn:glm-5.3-flash",
+            hermes_model_fallbacks=("cn:deepseek-v4.1-flash",),
+        ),
+    )
+    agent = HermesJourneyAgent(client=fake_client)
+    message = agent._complete([])
+
+    assert message["content"] == "READY"
+    assert agent.model_key == "cn:glm-5.3-flash"
+    assert calls == [True, False]
+
+
 def test_estimate_place_facts_is_explicitly_non_authoritative():
     journey_id = _selected_journey()
     response = client.post(

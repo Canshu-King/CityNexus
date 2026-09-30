@@ -71,7 +71,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 ) as response:
                     response.raise_for_status()
                     content_type = response.headers.get("content-type", "")
-                    if "application/json" in content_type:
+                    stream_response = "application/json" not in content_type
+                    if not stream_response:
                         response.read()
                         message = response.json()["choices"][0]["message"]
                     else:
@@ -79,7 +80,28 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 if not isinstance(message, dict):
                     raise TypeError("Hermes response message is invalid")
                 if not str(message.get("content") or "").strip() and not message.get("tool_calls"):
-                    raise ValueError("Hermes response message is empty")
+                    if stream_response:
+                        # WB2api can finish a streamed reasoning turn without emitting the
+                        # final assistant delta.  Retry the same domestic model once through
+                        # its non-stream OpenAI-compatible response before consuming the next
+                        # model in the configured chain; otherwise a transient empty stream
+                        # looks like a model failure and needlessly burns the fallback.
+                        retry_payload = {**payload, "stream": False}
+                        retry = self._client.post(
+                            settings.hermes_api_url,
+                            headers={"Authorization": f"Bearer {settings.hermes_api_key}"},
+                            json=retry_payload,
+                        )
+                        retry.raise_for_status()
+                        message = retry.json()["choices"][0]["message"]
+                    if (
+                        not isinstance(message, dict)
+                        or (
+                            not str(message.get("content") or "").strip()
+                            and not message.get("tool_calls")
+                        )
+                    ):
+                        raise ValueError("Hermes response message is empty")
                 self.model_key = model
                 return message
             except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:

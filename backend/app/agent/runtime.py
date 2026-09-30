@@ -94,7 +94,16 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 **journey,
                 "place_id": _property("string"),
                 "source_url": _property("string"),
-                "source_class": _property("string"),
+                "source_class": _property(
+                    "string",
+                    enum=[
+                        "OFFICIAL_WEB",
+                        "OFFICIAL_OPERATOR",
+                        "OFFICIAL_TICKETING",
+                        "MUNICIPAL_AUTHORITY",
+                    ],
+                    description="Use only a verified official or municipal source class; never use OSM/provider as an official source.",
+                ),
             },
             ["journey_id", "place_id"],
         ),
