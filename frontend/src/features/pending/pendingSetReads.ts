@@ -65,6 +65,7 @@ export async function readCapturedPlaces(journeyId: string): Promise<Door<Pendin
         name,
         category: text(record.category),
         provider_key: text(record.provider_key),
+        external_id: text(record.external_id),
         status: text(record.status),
         materialized_place_id: text(record.materialized_place_id),
         captured_at: text(record.captured_at),

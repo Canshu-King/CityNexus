@@ -396,7 +396,8 @@ export function PendingSetPanel({
         {derived.rows.map((row) => (
           <p key={row.key} className="cn-pending-token">
             {row.key} · {row.stateToken ?? say("pending.stateMissing")} ·{" "}
-            {row.providerKey ?? "no_provider_key"} · {row.placeId ?? "no_place_row_yet"} ·{" "}
+            {row.providerKey ?? "no_provider_key"}:{row.externalId ?? "no_external_id"} ·{" "}
+            {row.placeId ?? "no_place_row_yet"} ·{" "}
             {row.categoryToken ?? "no_category_token"}
           </p>
         ))}

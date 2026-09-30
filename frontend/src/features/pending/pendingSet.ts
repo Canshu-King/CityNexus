@@ -34,6 +34,7 @@ export interface PendingCandidate {
   name: string;
   category: string | null;
   provider_key: string | null;
+  external_id: string | null;
   status: string | null;
   materialized_place_id: string | null;
   captured_at: string | null;
@@ -66,6 +67,7 @@ export interface PendingRow {
   tripEnd: string | null;
   stateToken: string | null;
   providerKey: string | null;
+  externalId: string | null;
   placeId: string | null;
   openingStatus: string | null;
   openingRaw: string | null;
@@ -175,6 +177,7 @@ export function derivePendingSet(input: {
       tripEnd,
       stateToken: candidate.status,
       providerKey: candidate.provider_key,
+      externalId: candidate.external_id,
       placeId: materialised,
       openingStatus: candidate.opening_hours.status,
       openingRaw: candidate.opening_hours.raw,
