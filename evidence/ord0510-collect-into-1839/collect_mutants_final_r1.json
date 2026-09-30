@@ -1,0 +1,121 @@
+{
+ "order": "ORD-0510",
+ "instrument": "collect_mutants_r3",
+ "arms": {
+  "A_empty_shelf": {
+   "shelves_offered": 0,
+   "no_shelf_line": "这位旅客名下还没有架子，所以这一枚没地方放。",
+   "result_line_present": false,
+   "picker_text": "收到哪个架子 这位旅客名下还没有架子，所以这一枚没地方放。 先不收",
+   "claims_collected_anywhere": false
+  },
+  "B_faked_write": {
+   "shelves_offered": 7,
+   "clicked": {
+    "clicked_shelf_name": "反件架 103358211",
+    "expected_shelf": "反件架 103358211",
+    "result_line": "已收在 反件专用架、反件架 103216783"
+   },
+   "intercepted_post": true,
+   "server_answer_for_that_place": [
+    {
+     "name": "周末架子",
+     "item_count": 1,
+     "places": [
+      "place-old-town"
+     ]
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    },
+    {
+     "name": "周末架子",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "周末架子",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "反件架 103216783",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    },
+    {
+     "name": "反件架 103358211",
+     "item_count": 0,
+     "places": []
+    }
+   ],
+   "postReachedServer": true
+  },
+  "B_control_real_write": {
+   "clicked_shelf_name": "反件架 103358211",
+   "expected_shelf": "反件架 103358211",
+   "result_line": "已收在 反件专用架、反件架 103216783、反件架 103358211",
+   "server_answer": [
+    {
+     "name": "周末架子",
+     "item_count": 1,
+     "places": [
+      "place-old-town"
+     ]
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    },
+    {
+     "name": "周末架子",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "周末架子",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 0,
+     "places": []
+    },
+    {
+     "name": "反件架 103216783",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    },
+    {
+     "name": "反件架 103358211",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    }
+   ]
+  }
+ },
+ "shelf_for_B": {
+  "id": "684e7332-cbf2-4474-9baa-47f134935bda",
+  "name": "反件架 103358211",
+  "item_count": 0
+ }
+}
