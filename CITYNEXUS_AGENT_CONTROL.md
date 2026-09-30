@@ -16588,6 +16588,56 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### e766b154 · ORD-0498 长图“多天”那一格做成了真读数：第二天是产品写路由造出来的，产品字节改动 0 枚
+
+**〇、结论先说**
+
+- 我此前具名写过的 NOT_REACHED_BY_LANE 这一格已经变成屏上读数：长图读到两块日卡 day_rows=2，成图从 712×938 长到 712×1154，长高 delta_height=216 与屏上那一句逐值一致。件 `frontend/review/ord0498/run/M1_one_vs_two_days.json:95`。
+- 第二天不是种子也不是 SQL：只走了两枚产品写路由。`PATCH /api/v1/journeys/{id}` 答 http 200，`POST /api/v1/journeys/{id}/poi-import/add` 答 http 201 且回 `day_source=TRAVELLER_CHOSEN`，逐枚原文收据 `frontend/review/ord0498/run/write_route_walk.json:8` 与同件 `:17`。
+- 产品字节改动 0 枚：本枝只加了判据件与本单仪表，画布与面板一行未动 —— 这一格从来不是缺陷，是没量到。
+- 件枝 = `refs/heads/review/e766b154-ord0498-poster-multiday-r1`，尖 `f2dcb2fabdc93b33447d7f73adcccc7cc5237cbb`（区间内两笔：`d357ebcf5793ee4464d4e13f95ca4fb8adab65b8` 判据与读数、`f2dcb2fabdc93b33447d7f73adcccc7cc5237cbb` 回归位收据）；基座 = 我动手前一秒现读的权威尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`。ORD-0472 那九批不重放（它已整件落地：poster 四面与 spec 的 blob 与线上一枚一枚相同），我对权威枝写入 writes=0。
+
+**一、对照形制（为什么这个读数只赖得到“第二天”头上）**
+
+- 同一枚构建产物（基座 de341634 起，`--tag ord0498r1`）挂两台门面：`:4962` 指向**没被写过**的库副本，`:4961` 指向**走过那两次写**的库副本；两份库都出自 `_live.db` 的 `Connection.backup()`（源库只 `mode=ro`）。
+- 两臂在同一趟运行里各开各的 origin，唯一变量是那两次写。件 `frontend/review/ord0498/run/M1_one_vs_two_days.json:20`（未写侧 day_rows=1）与同件 `:63`（已写侧 day_rows=2）。
+
+**二、屏上读到什么（读渲染文字，不读 data 属性）**
+
+- 未写侧：页头 `演示城市 · 1 天`，一张日卡 `10月10日周六 | 6 站`，首站 `09:00 – 10:15 Old Town Gate`，屏句 `已存为 PNG：107533 字节，712 × 938 像素。`，见 `frontend/review/ord0498/run/M1_one_vs_two_days.json:36`。
+- 已写侧：页头 `演示城市 · 2 天`，第二张日卡 `10月11日周日 | 1 站`，那一站是 `09:00 – 10:15 Nexus City Park`，屏句 `已存为 PNG：126157 字节，712 × 1154 像素。`，见 `frontend/review/ord0498/run/M1_one_vs_two_days.json:86`。
+- 站名不是我挑的：`poi-import/add` 的响应里那枚 place 就叫 Nexus City Park，回读在 `frontend/review/ord0498/run/M2_second_card.json:37`。
+- 入口那一格在两侧同形：盒 `x=30 y=233.59 width=330 height=44`，中心命中 tag=button、owns_it=true，见 `frontend/review/ord0498/run/M1_one_vs_two_days.json:20` 同段。
+- 来源那一行仍是 `来源 · © OpenStreetMap 贡献者`（合规项没因多天而掉）。
+
+**三、成图与入库物件逐枚对得上**
+
+- 已写侧那枚长图入库 blob `d433fcc5a542e4e846ae4587b709df74ea8d8f59`，`git cat-file -s` 对它答 size=126157，等于屏上报的字节数；它自己的 IHDR 答 width=712 height=1154，等于屏上报的尺寸。
+- 未写侧那枚 blob `2c0c61f98429a96f14d48a17b2c582b3d5f3eaed`，`git cat-file -s` 答 size=107533 —— 与 ORD-0472 交件时那张单日长图是同一枚 blob，跨两单、跨两个基座逐字节相同，说明多天化没有动到单日那一形。
+
+**四、天数来自服务投影，没有补 1**
+
+- 写之前 `/experience` 答 `temporal_shape.day_count` 为 1，PATCH 之后答 2（`night_count` 同刻从 0 变 1，`semantics` 仍是 `CALENDAR_DAYS_INCLUSIVE`），再读一次确认在 `frontend/review/ord0498/run/M2_second_card.json:50` 答 server_day_count=2，同件的服务侧独立日集合是 2026-10-10 与 2026-10-11 两枚。
+- 长图页头那个数一直取自 `journeyProgress` 对 `temporal_shape.day_count` 的投影，不是数日卡块数：本例两者恰好同为 2，我不拿它当已证 —— ORD-0438 的 M 臂早把“分组说 2、服务说 3 时以服务为准”那一形量过了。
+
+**五、一条如实观察（我没动它）**
+
+- 行程标题仍是 `One Day in Nexus City`，而它现在是两天。那是旅客自己起的名字，不是数据错；改它要走 `PATCH` 的 title 字段、由旅客决定，我不替用户改标题。
+
+**六、现场与红线**
+
+- 私有栈：api `:8760`（已写库）与 `:8761`（未写库），门面 `:4961` 与 `:4962`，四件都在我具名的 87xx/49xx 段，此刻仍在跑供复走。库都是本车道自己的备份文件，`_preview.db` 写入 writes=0，`demo/reset` 调用 calls=0，`:8000`/`:4781`/`:4782`/`:8693` 一个没重启。
+- 驱动脚本与本单仪表一并入枝：`frontend/review/ord0498/drive_write_routes_r1.py`（blob `8e036a3a84ee64fa6ea90d4d521cda3c9f0c7947`），它自己写着“拒绝就停下、把拒绝码与响应原文交回来”。本轮两枚写门都没拒。
+- 新增依赖 deps_added=0；长图从点击到落盘 network_calls=0。
+
+**七、本轮仍未量的格**
+
+- 多天 + 真实城市词面：仍只有 `CNX-DEMO` 与 `CN-BEIJING` 两枚码带行程，其它宣传城市的城市词没量到。
+- 跨月/跨年与跨时区的日界：`localDateKey` 走 Intl 的行程自带时区，本例两天同月，12-31 到 01-01 那一形仍 NOT_REACHED_BY_LANE。
+- 整套 acceptance、ORD-0438 两枚行程屏 spec、后端 pytest 套件：NOT_RUN_BY_LANE（要 `npm run dev` 的共享后端或权威线的库）。
+- 本单真跑过的：ORD-0498 两臂，加 ORD-0472 那六臂在本基座上的回归位 —— 同一枚 bundle、指向未写过的那对（`:4962`/`:8761`），arms=6 passed=6，其中字典独占那臂读回 `长图没有生成：画布没有交出 PNG 字节。`，件 `frontend/review/ord0498/regression_ord0472/A6_failure_line.json:3`。
+
+
 ### ORD-0489 演示盘面：三枚行程、两枚有目录的城市加一枚空城市，落枝并屏上走过（车道 seed @13:23+08）
 
 基座与交件坐标：现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `dcb90cccc68b81f2317b28db19051dedb9f06c80`（git ls-remote 与 GitHub `git/ref/heads` 两路同值），本车道候选 `refs/heads/review/newlane-ord0489-demo-seed-r1` = `66e0c96bea5c0ec58511bbba3bac3e4be062e579`。
