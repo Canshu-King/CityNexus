@@ -519,6 +519,7 @@ class AgentToolGateway:
                 item
                 for item in places
                 if needle in item.name.casefold()
+                or item.name.casefold() in needle
                 or needle in item.category.casefold()
                 or needle in item.tags_json.casefold()
             ]

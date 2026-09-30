@@ -9,6 +9,7 @@ from uuid import uuid4
 import httpx
 import pytest
 
+from app.agent.gateway import AgentToolGateway
 from app.db.models import Place, RealPlaceCandidate
 from app.db.session import SessionLocal, ensure_schema
 from app.fact_acquisition import (
@@ -19,6 +20,7 @@ from app.fact_acquisition import (
     _official_web_facts,
     acquire_place_facts,
 )
+from app.schemas import AgentToolCall
 from app.services import (
     SEALED_DEMO_AUTHORITY_ENVELOPE,
     UNRESOLVED_ACTIVITY_FACTS,
@@ -436,6 +438,52 @@ def test_bound_official_facts_supersede_known_map_tags(monkeypatch):
         assert json.loads(refreshed.opening_hours_json)["close"] == "17:30"
         assert metadata["cost_evidence"]["amount_minor"] == 4000
         assert metadata["cost_minor"] == 4000
+
+
+def test_agent_place_search_accepts_exact_name_with_fact_query_terms():
+    ensure_schema()
+    city = f"R77-AF-{uuid4().hex[:20]}"
+    place_id = f"r77-place-{uuid4().hex}"
+    with SessionLocal() as session:
+        session.add(
+            Place(
+                id=place_id,
+                provider_key="overpass",
+                external_id=f"overpass:way/{uuid4().int % 1000000000}",
+                city_code=city,
+                name="网师园",
+                category="attraction",
+                latitude=31.3004,
+                longitude=120.6298,
+                opening_hours_json=json.dumps(
+                    {"status": "OFFICIAL_WEB_VERIFIED", "open": "07:30", "close": "17:30"}
+                ),
+                tags_json="[]",
+                metadata_json=json.dumps(
+                    {
+                        "cost_evidence": {
+                            "status": "VERIFIED_PROVIDER",
+                            "amount_minor": 4000,
+                            "currency": "CNY",
+                            "source": "official_web",
+                        }
+                    }
+                ),
+                updated_at="2026-09-30T00:00:00+00:00",
+            )
+        )
+        session.commit()
+        gateway = AgentToolGateway(session)
+        result = gateway.search_city_services(
+            AgentToolCall(
+                request_id="r77-agent-fact-search",
+                city_code=city,
+                q="网师园 official opening hours ticket cost",
+            )
+        )
+        assert [item["id"] for item in result["places"]] == [place_id]
+        assert result["places"][0]["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+        assert result["places"][0]["metadata"]["cost_evidence"]["amount_minor"] == 4000
 
 
 def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch):
