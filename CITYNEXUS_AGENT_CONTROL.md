@@ -16588,6 +16588,53 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:18 · 中止门与导入写门的基线（中止还不存在；导入写门已有具名拒绝），外加两枚备用仪器已就绪
+
+**〇、口径**
+
+栈：后端 `:4781`（私有库，含我 API 造的那枚行程）、局域网宿主 `:4783`（已改服 `_build_day7`，即含 ORD-0510 的那一代）。工具 `_cmdr_walk_abort_import_r40.py`，读数落 `_walk_r40_baseline.json`。所有 `http_status` 都是现场回的。
+
+**一、中止门基线（ORD-0520 尚未落地，这一跑当对照）**
+
+| 形 | 读数 |
+|---|---|
+| `POST /api/v1/journeys/{id}/abort` 带原因 | `http_status=404`，正文只有 `detail`（FastAPI 的默认 404，**不是**具名拒绝） |
+| 同一路径不带原因 | `http_status=404`（同上） |
+| 同一路径再发一发 | `http_status=404` |
+| 陌生行程号 | `http_status=404` |
+| 之后读行程 | `http_status=200`，行程仍在（未被改动） |
+| 之后读回收站 | `http_status=200`、行数 0（中止没被误写成丢弃） |
+
+结论：此刻**没有**任何 `abort` 路由；ORD-0520 落地后我会用同一把仪器重跑同一批臂，两代对照。
+
+**二、导入写门基线（ORD-0524 那一族，先量现状）**
+
+| 形 | 读数 |
+|---|---|
+| `POST .../poi-import/parse`（三条文本） | `http_status=200`，`counts={"extracted":3,"resolved":0,"ambiguous":0,"unresolved":3,"addable":0}`（目录空，所以全未解析） |
+| `POST .../poi-import/add` 空列表 | `http_status=422` `code=VALIDATION_ERROR` |
+| `POST .../poi-import/add` 一枚不存在的地点 | `http_status=409` `code=CONFLICT` `reason_code=NO_ACTIVE_PLAN`，句子 `This journey has no active plan to add places to yet` |
+
+第二条那枚具名拒绝值得记：**导入写门在“这趟行程还没有活动方案”时说的是人话且具名**，不是笼统的 `http_status=500`。ORD-0524 的批量三出口必须把这一形接到屏上（否则用户会以为是自己点错了）。
+
+**三、我今晚备好的仪器（落地即可跑，避免落地后才发现没量具）**
+
+- `_cmdr_walk_abort_import_r40.py`：中止门六臂 + 导入写门四臂（本块第一节与第二节就是它的基线跑）。
+- `_cmdr_walk_nine_r37.js`：落一条 `citynexus.v8.journey_id` 引用后读九格（长图/日块/分页、暗色、空城市导入、收藏入口、点图、足迹、日历）。
+- `_cmdr_walk_members_r38.js`：成员屏两扇门的屏读。
+- `_cmdr_wait_for_event_r1.py`：短时值守器（新块 / 尖动 / 我派的单出新枝），只读、不写、不落。
+
+**四、没改善的部分**
+
+1. 长图/地图/日历/足迹/收藏入口五格的屏读仍等供给（ORD-0526 登记源、ORD-0521 非破坏供给）。
+2. 手机五格探针未跑（同因）；局域网口已换到最新代，地址仍是 `http://192.168.69.189:4783`（这一代尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`）。
+3. 成员屏空转（ORD-0527 在跑）。
+4. ORD-0495 三枚臂在最新尖的导出树上仍红（我 23:07 那块：`3 failed, 69 passed`）。
+5. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:07 · 最新尖上我自己跑的五个模块（69 绿 3 红，红仍是 ORD-0495 那三枚）+ 收藏入口挂在每一站上这一格的结构读数
 
 **〇、口径**
