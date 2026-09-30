@@ -10,10 +10,11 @@
  * empty poster. The list the sheet renders and the list the canvas draws are the same value, built
  * once here: a picture of something else than the traveller is reading would be a second answer.
  */
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { progressContractCopy } from "../progress/journeyProgress";
 import {
+  countPosterPages,
   drawTripPoster,
   savePosterBlob,
   type PosterFailureStep,
@@ -53,6 +54,10 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
   const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<DrawState>({ phase: "idle" });
+  const [page, setPage] = useState(0);
+  /* The bound is expressed in CSS pixels, so the page count can only be decided once the sheet has
+     a width on screen -- measured after it is in the DOM, not guessed from a breakpoint. */
+  const [sheetWidth, setSheetWidth] = useState(0);
   const sheet = useRef<HTMLElement | null>(null);
 
   const poster = useMemo(() => buildTripPoster(data, locale), [data, locale]);
@@ -81,12 +86,21 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
     };
   }, [poster, locale, t]);
 
+  useEffect(() => {
+    if (!open || !sheet.current) return;
+    setSheetWidth(sheet.current.getBoundingClientRect().width);
+    setPage(0);
+  }, [open, lines]);
+
   if (!poster || !lines) return null;
+
+  const pageCount = lines && sheetWidth > 0 ? countPosterPages(lines, sheetWidth) : 1;
+  const currentPage = Math.min(page, pageCount - 1);
 
   const makePoster = async () => {
     setState({ phase: "working" });
     const measuredWidth = sheet.current ? sheet.current.getBoundingClientRect().width : 0;
-    const result = await drawTripPoster(lines, measuredWidth);
+    const result = await drawTripPoster(lines, measuredWidth, currentPage);
     /* Tested by which arm the value carries rather than by `ok`, because this project type-checks
        with `strict: false` (`tsconfig.typecheck.json:2`) and a boolean discriminant does not narrow
        a union here -- the failure fields would read as missing. */
@@ -94,7 +108,11 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
       setState({ phase: "failed", step: result.step });
       return;
     }
-    if (!savePosterBlob(result.blob, POSTER_FILE_NAME)) {
+    const fileName =
+      result.page_count > 1
+        ? POSTER_FILE_NAME.replace(/\.png$/, `-p${result.page_index + 1}.png`)
+        : POSTER_FILE_NAME;
+    if (!savePosterBlob(result.blob, fileName)) {
       setState({ phase: "failed", step: "NoDownloadRoute" });
       return;
     }
@@ -137,6 +155,32 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
             </div>
           </div>
 
+          {pageCount > 1 && (
+            <>
+              <p className="cn-poster-paged" data-testid="poster-paged-note">
+                {t("poster.paged", { pages: pageCount })}
+              </p>
+              <div className="cn-poster-pages" data-testid="poster-pages" role="group">
+                {Array.from({ length: pageCount }, (_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={index === currentPage ? "cn-poster-page is-current" : "cn-poster-page"}
+                    data-testid={`poster-page-${index + 1}`}
+                    data-contrast-role="control"
+                    aria-pressed={index === currentPage}
+                    onClick={() => {
+                      setPage(index);
+                      setState({ phase: "idle" });
+                    }}
+                  >
+                    {t("poster.page", { page: index + 1 })}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
           <ol className="cn-poster-days" data-testid="poster-days">
             {lines.days.map((day, index) => (
               <li className="cn-poster-day" key={`${day.label}-${index}`} data-testid={`poster-day-${index + 1}`}>
@@ -178,13 +222,20 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
           </button>
 
           {state.phase === "made" && (
-            <p className="cn-poster-outcome" data-testid="poster-result" data-state="made">
-              {t("poster.made", {
-                bytes: state.bytes,
-                width: state.width,
-                height: state.height,
-              })}
-            </p>
+            <>
+              <p className="cn-poster-outcome" data-testid="poster-result" data-state="made">
+                {t("poster.made", {
+                  bytes: state.bytes,
+                  width: state.width,
+                  height: state.height,
+                })}
+              </p>
+              {pageCount > 1 && (
+                <p className="cn-poster-outcome" data-testid="poster-page-result">
+                  {t("poster.madePage", { page: currentPage + 1, pages: pageCount })}
+                </p>
+              )}
+            </>
           )}
           {state.phase === "failed" && (
             <p

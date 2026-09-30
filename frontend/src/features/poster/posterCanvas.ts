@@ -50,6 +50,10 @@ export type PosterDraw = {
   /** Day blocks, and the drawn breaks between them: `blocks - 1` unless there is one block. */
   dayBlocks: number;
   dayDividers: number;
+  /** The zero-based page actually drawn, how many pages this trip takes, and the bound. */
+  page_index: number;
+  page_count: number;
+  limit_css: number;
 };
 
 export type PosterDrawFailure = { ok: false; step: PosterFailureStep; detail: string };
@@ -58,6 +62,19 @@ export type PosterDrawResult = PosterDraw | PosterDrawFailure;
 
 /** Two times the sheet's own CSS width: a share image that stays legible when zoomed. */
 const DEVICE_SCALE = 2;
+
+/**
+ * The one height bound this feature owns, named because a bound nobody can point at is not a bound.
+ *
+ * It is a technical ceiling, not a taste judgement: a canvas sits on an engine-side surface, and
+ * past a few thousand device pixels an export can come back short or empty without the page saying
+ * so. Splitting is therefore done by whole day blocks -- "one block per day" stays true -- and a day
+ * that alone exceeds the bound is never cut: it gets a page to itself.
+ */
+export const POSTER_MAX_RASTER_HEIGHT_PX = 4096;
+
+/** The same bound expressed in the CSS pixels the layout works in. */
+export const POSTER_MAX_HEIGHT_CSS = POSTER_MAX_RASTER_HEIGHT_PX / DEVICE_SCALE;
 
 const SIZE_TOKENS = [
   "--cn-s-4",
@@ -351,9 +368,70 @@ function layoutPoster(
   return { height: Math.ceil(y), runs, cards, dayDividers };
 }
 
+export type PosterPagePlan = {
+  ok: true;
+  pages: Array<{ first: number; count: number }>;
+  total_height_css: number;
+  limit_css: number;
+};
+export type PosterPlanFailure = { ok: false; step: PosterFailureStep; detail: string };
+
+/**
+ * Groups whole day blocks into pages that each fit under `POSTER_MAX_HEIGHT_CSS`.
+ *
+ * The heights come from the same layout pass the picture is drawn from -- not from an estimate like
+ * "roughly 40px a stop" -- so the page count a traveller reads is the page count the encoder makes.
+ */
+export function planPosterPages(
+  lines: PosterLines,
+  measuredWidthCss: number,
+): PosterPagePlan | PosterPlanFailure {
+  if (typeof document === "undefined") return { ok: false, step: "NoCanvasContext", detail: "" };
+  const width = Math.floor(measuredWidthCss);
+  if (!Number.isFinite(width) || width <= 0) {
+    return { ok: false, step: "NoMeasuredWidth", detail: `${Math.round(measuredWidthCss || 0)}px` };
+  }
+  const probe = document.createElement("canvas").getContext("2d");
+  if (!probe) return { ok: false, step: "NoCanvasContext", detail: "" };
+  const read = cssPalette();
+  if ("missing" in read) return { ok: false, step: "MissingTokens", detail: `${read.missing}` };
+  const { scale, palette, family } = read;
+  const whole = layoutPoster(probe, lines, width, scale, palette, family);
+  if (whole.cards.length === 0) return { ok: false, step: "BlankAfterDraw", detail: "0" };
+
+  /* Everything that is not a day block -- kicker, title, subtitle, progress, the source line and the
+     padding -- is charged to every page, because every page draws it again. */
+  const chrome = whole.cards[0].top + (whole.height - whole.cards[whole.cards.length - 1].bottom);
+  const blockHeights = whole.cards.map((card) => card.bottom - card.top);
+  const gap = scale["--cn-s-32"];
+
+  const pages: Array<{ first: number; count: number }> = [];
+  let start = 0;
+  let used = chrome;
+  for (let index = 0; index < blockHeights.length; index += 1) {
+    const need = blockHeights[index] + (index > start ? gap : 0);
+    if (index > start && used + need > POSTER_MAX_HEIGHT_CSS) {
+      pages.push({ first: start, count: index - start });
+      start = index;
+      used = chrome + blockHeights[index];
+    } else {
+      used += need;
+    }
+  }
+  pages.push({ first: start, count: blockHeights.length - start });
+  return { ok: true, pages, total_height_css: whole.height, limit_css: POSTER_MAX_HEIGHT_CSS };
+}
+
+/** How many pages this trip's poster takes at the given width; 1 when it fits. */
+export function countPosterPages(lines: PosterLines, measuredWidthCss: number): number {
+  const plan = planPosterPages(lines, measuredWidthCss);
+  return "pages" in plan ? plan.pages.length : 1;
+}
+
 export async function drawTripPoster(
   lines: PosterLines,
   measuredWidthCss: number,
+  pageIndex = 0,
 ): Promise<PosterDrawResult> {
   if (typeof document === "undefined") {
     return { ok: false, step: "NoCanvasContext", detail: "" };
@@ -372,9 +450,18 @@ export async function drawTripPoster(
   }
   const { scale, palette, family, background } = read;
 
+  const planned = planPosterPages(lines, measuredWidthCss);
+  if (!("pages" in planned)) return planned;
+  const resolvedPage = Math.max(0, Math.min(pageIndex, planned.pages.length - 1));
+  const page = planned.pages[resolvedPage];
+  const pageLines: PosterLines = {
+    ...lines,
+    days: lines.days.slice(page.first, page.first + page.count),
+  };
+
   canvas.width = width * DEVICE_SCALE;
   canvas.height = 1;
-  const plan = layoutPoster(ctx, lines, width, scale, palette, family);
+  const plan = layoutPoster(ctx, pageLines, width, scale, palette, family);
   if (
     !Number.isFinite(plan.height) ||
     plan.height <= 0 ||
@@ -448,6 +535,9 @@ export async function drawTripPoster(
     runsDrawn: plan.runs.length,
     dayBlocks: plan.cards.length,
     dayDividers: plan.dayDividers.length,
+    page_index: resolvedPage,
+    page_count: planned.pages.length,
+    limit_css: planned.limit_css,
   };
 }
 
