@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.db.models import CityService, Journey, Place
 from app.integrations.mobility.snapshot_capture import (
+    MobilitySnapshotCaptureError,
     MobilitySnapshotCaptureResult,
     capture_mobility_snapshot,
 )
@@ -121,6 +122,12 @@ def capture_runtime_mobility_snapshot(
             base_url=settings.live_valhalla_url,
             place_lookup=lambda key: _place_lookup(session, key),
         )
+        live_auto_fallback: Any = ValhallaHTTPMobilityProvider(
+            client=client,
+            base_url=settings.live_valhalla_url,
+            place_lookup=lambda key: _place_lookup(session, key),
+            costing="auto",
+        )
         try:
             capabilities = primary.status_capabilities()
         except ValhallaProviderError as exc:
@@ -132,13 +139,25 @@ def capture_runtime_mobility_snapshot(
         # V4 #4: a live-configured HARD capture must not fall back to the mock
         # fixture.  Soft/offline captures keep the pair-level mock fallback.
         hard_capture = require_explicit_facts
-        captured = capture_mobility_snapshot(
-            normalized_pairs,
-            primary=primary,
-            fallback=None if hard_capture else mock,
-            captured_at=captured_at,
-            operation_key=operation_key,
-        )
+        try:
+            captured = capture_mobility_snapshot(
+                normalized_pairs,
+                primary=primary,
+                fallback=live_auto_fallback,
+                fallback_is_live=True,
+                captured_at=captured_at,
+                operation_key=operation_key,
+            )
+        except MobilitySnapshotCaptureError:
+            if hard_capture:
+                raise
+            captured = capture_mobility_snapshot(
+                normalized_pairs,
+                primary=primary,
+                fallback=mock,
+                captured_at=captured_at,
+                operation_key=operation_key,
+            )
         # V5 blocker-1: with a live routing provider configured, a leg the live
         # provider FAILED must not enter hard feasibility just because the mock
         # happened to carry an explicit matrix value for it.  The bulk replan
@@ -150,9 +169,18 @@ def capture_runtime_mobility_snapshot(
         # Offline demos have no fallback pairs, so they keep using their
         # legitimate explicit mock facts as hard truth.
         snapshot = captured.snapshot
-        if captured.fallback_pairs:
+        synthetic_fallback_pairs = tuple(
+            pair
+            for pair in captured.fallback_pairs
+            if str(captured.snapshot.facts[pair].provider_key).casefold().startswith(
+                ("mock", "fixture")
+            )
+            or str(captured.snapshot.facts[pair].route_provenance or "").upper()
+            in {"SYNTHETIC_FIXTURE", "SYNTHETIC_DEFAULT"}
+        )
+        if synthetic_fallback_pairs:
             facts = dict(snapshot.facts)
-            for pair in captured.fallback_pairs:
+            for pair in synthetic_fallback_pairs:
                 fact = facts.get(pair)
                 if fact is not None and fact.fact_quality is not None:
                     facts[pair] = replace(fact, fact_quality=None)

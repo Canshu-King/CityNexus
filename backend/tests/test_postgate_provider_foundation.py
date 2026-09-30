@@ -52,6 +52,32 @@ def test_snapshot_capture_freezes_primary_and_explicit_fallback_provenance():
     assert result.fallback_pairs == (("b", "c"),)
 
 
+def test_live_fallback_keeps_live_truth_and_records_active_mode():
+    class LiveProvider(_Provider):
+        capture_provenance = "LIVE_PROVIDER_CAPTURE"
+        time_basis = "VALHALLA_ROUTE_CAPTURED_AT"
+        mode = "WALK"
+
+        def fact_quality(self, _origin: str, _destination: str) -> str:
+            return "LIVE_PROVIDER_CAPTURE"
+
+    class AutoProvider(LiveProvider):
+        mode = "AUTO"
+
+    result = capture_mobility_snapshot(
+        [("a", "b")],
+        primary=LiveProvider("valhalla-http", {("a", "b"): 30}, fail={("a", "b")}),
+        fallback=AutoProvider("valhalla-http", {("a", "b"): 240}),
+        fallback_is_live=True,
+    )
+    fact = result.snapshot.facts[("a", "b")]
+    assert result.degraded is False
+    assert fact.degraded is False
+    assert fact.mode == "AUTO"
+    assert fact.route_provenance == "LIVE_PROVIDER_CAPTURE"
+    assert fact.fact_quality == "LIVE_PROVIDER_CAPTURE"
+
+
 def test_snapshot_capture_fails_explicitly_when_no_safe_fact_exists():
     primary = _Provider("valhalla", {}, fail={("a", "b")})
     try:
