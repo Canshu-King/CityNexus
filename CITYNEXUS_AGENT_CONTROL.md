@@ -16588,6 +16588,67 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0495 r3 · 读上一代源码的臂，在「导出套在别人仓里」那一代也站得住（两代读数都贴）
+
+**坐标（现读，一趟取完）**
+- 基座 = 现读尖 1e95d106f81b29048ba17695fd0e49172516b9b1（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`；与探针量时同值，不同值本次就拒收）
+- 候选枝 review/2d2d7428-ord0495-gitshow-portable-r3b，远端头 5b0c0d35dd06dfd417093e2db70f3916b58bc93b；被量的字节是那代 8cd05d00407f03694b0fc9545b88636f962939af（5ac1a0dd063943f51949df1bb9b0e8d6b42f3065 / 8cd05d00407f03694b0fc9545b88636f962939af / 5b0c0d35dd06dfd417093e2db70f3916b58bc93b 三笔）
+- 对尖 `git merge-tree --write-tree` rc=0；改动 3 枚文件、**0 枚产品字节**：
+  - backend/tests/qoder_git_source_r1.py blob a8d94449b55c194d6aeab131af638d5d7514af7e
+  - backend/tests/test_qoder_ord0495_gitshow_portable.py blob f407acb9ece2cd2176c8503b8f09d7339a686c0e
+  - review/ord0495/FINDINGS_0495_R3.txt blob 922f848587d571fa2cb12fb9d965a6b73d322e16
+- 解释器 D:/moodle/CityNexus/.venv/Scripts/python.exe；两侧同一形制 `-v -rsf --no-header -p no:cacheprovider`
+
+**你要的两代读数（同一次探针运行里跑完）**
+- 真仓 worktree：本单 8 passed in 2.16s rc=0；同族四份文件 36 passed in 14.83s rc=0
+- 导出树：同一枚 8cd05d00407f03694b0fc9545b88636f962939af 的 `git archive`，解出 896 枚 / 14.2 MiB（14888960 字节），落在 `git init`
+  的邻居仓里（scratch/neighbour/subdir/export）。导出自身不带 .git，往上走唯一那枚 .git 是邻居的，
+  而它认不出本枝任何一枚 commit——这就是你 18:49 量的形状。
+- 该代本单：4 passed, 4 skipped in 0.36s rc=0，弃答两支都在 backend/tests/qoder_git_source_r1.py:102 与 backend/tests/qoder_git_source_r1.py:135（不是格子里自己吞）
+  同族四份文件：31 passed, 5 skipped in 14.00s rc=0，多出来的第五枚弃答同一对行号 backend/tests/qoder_git_source_r1.py:102
+  弃答具名到这一行：skip 4 枚（族内 5 枚），FAILED 0 枚。
+- 逐行原文（pytest 自己的 short summary，族内那一趟）：
+    test_G01_a_real_repository_still_yields_the_source  <-  SKIPPED [1] tests\test_qoder_ord0495_gitshow_portable.py:61: NOT_MEASURED: no repository root above this file, so no object store can be asked
+    test_G05_no_state_is_silently_green  <-  SKIPPED [1] tests\test_qoder_ord0495_gitshow_portable.py:125: NOT_MEASURED: no repository root above this file, so no object store can be asked
+    test_G06_the_ancestry_arm_answers_or_names_itself  <-  SKIPPED [1] tests\test_qoder_ord0495_gitshow_portable.py:142: NOT_MEASURED: no repository root above this file, so no object store can be asked
+    test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo  <-  SKIPPED [1] tests\test_qoder_ord0495_gitshow_portable.py:157: NOT_MEASURED: no repository root above this file, so no object store can be asked
+    test_H07_the_two_forbidden_shortcuts_were_not_taken  <-  SKIPPED [1] tests\qoder_git_source_r1.py:102: NOT_MEASURED: cannot read 127ce7b05329:backend/app/security/credential_literals.py -- no repository root above this file (an export tree holds no .git)
+  前四枚是本单的 G01/G05/G06/G07，导出侧的 skip 由 backend/tests/test_qoder_ord0495_gitshow_portable.py:49 那枚 fixture 发；第五枚正是 ORD-0479 的
+  H07，它弃答在 backend/tests/qoder_git_source_r1.py:135，理由里带上取不到的那代 127ce7b05329eaa837701cdb93bdbc2e5d64e10f。
+- 同一批字节在真仓里 8 passed in 2.16s，所以「导出里弃答」不是这一轮藏红的办法：同一份代码在仓里断言、
+  在导出里弃测，弃的那一句必须写清是环境不行。
+
+**反件：遮掉判定必红（同一棵邻居仓里，只改那一行）**
+- 把 backend/tests/qoder_git_source_r1.py:53 那一行 `if all((candidate / m).is_file() for m in markers):` 改成 `if True:`（即回到「上面只要有 .git 就算本仓」），本单 4 failed, 3 passed, 1 skipped in 0.52s rc=1
+- 红的四枚点名：
+    FAILED tests/test_qoder_ord0495_gitshow_portable.py::test_G01_a_real_repository_still_yields_the_source
+    FAILED tests/test_qoder_ord0495_gitshow_portable.py::test_G05_no_state_is_silently_green
+    FAILED tests/test_qoder_ord0495_gitshow_portable.py::test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo
+    FAILED tests/test_qoder_ord0495_gitshow_portable.py::test_G10_a_neighbour_repository_is_not_this_project
+- 前三枚正是你在导出树里量到的那三枚（G01/G05/G07），第四枚是这一轮新加的 G10——所以这枚反件复现的
+  是你的形状，不是拿别的格凑一条红。
+- 判定遮掉后臂不再说「上面没有仓库根」，而是走进那枚从没听说过本枝的仓去问，再按问回来的东西断言；
+  两侧理由文本实测不同（reasons_differ=true）：
+    遮掉：SKIPPED [1] tests\qoder_git_source_r1.py:135: NOT_MEASURED: cannot order HEAD~1 against HEAD -- this object store cannot answer for HEAD~1 (fatal: Not a valid object name HEAD~1^{{commit}})
+    实际：SKIPPED [1] tests\test_qoder_ord0495_gitshow_portable.py:61: NOT_MEASURED: no repository root above this file, so no object store can be asked
+- 首枚断言原文（不转述）：
+    D:\moodle\_qoder_q_ord0495_20260930\scratch\neighbour\subdir\mexp\backend\tests\test_qoder_ord0495_gitshow_portable.py:64: AssertionError: ('NOT_MEASURED', 'this object store cannot answer for 127ce7b05329 (fatal: Not a valid object name 127ce7b05329eaa837701cdb93bdbc2e5d64e10f^{{commit}})')
+- 变异打在 helper 的**源码**上（scratch 副本里改那一行），不是 monkeypatch：markers 那个默认值在 def
+  时就绑好了，且格子里 import 的是名字本身，patch 掉的物件根本不会被调到——那种反件是空转。
+
+**没做的、不能算数的**
+- 本单 0 枚产品字节、0 枚前端字节；没有浏览器、没有设备、没有开发栈，也没跑契约门与构建门（无字节可量）。
+- NOT_MEASURED 说的是环境，不是产品：导出里上一代字节确实取不到。开机门那一半（扫工作树）在两代里都
+  真跑真过；弃答只有「对拍一枚固定的旧提交」这一件事。
+- 探针自己的一处错也交出来：先前一趟同时传了 `-rs` 与 `-rf`，argparse 让后者顶掉前者，于是跑出「4 skipped
+  却一枚都没点名」，那趟被探针自己的拒收拦下、没有上交；上面所有读数出自单枚 `-rsf`。
+- scratch 已在本趟内删净（scratch_removed=true）：D 盘 26.89 GiB -> 26.88 GiB；
+  当时唯一的未跟踪件是工件本身（review/ord0495/FINDINGS_0495_R3.txt），被量的树跟踪区干净。
+
+**下一跳**：等你的落地裁语。若权威尖动了 backend/tests/qoder_git_source_r1.py 或 backend/tests/test_qoder_ord0495_gitshow_portable.py，这块就得重取。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0464 车道 8e5245f0 · r7：`main.py` 的真冲突按"两边都保住"手解，逐枚 hunk 归属列表；生成物改由契约重生成
 
 **基座现读**：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = 1e95d106f81b29048ba17695fd0e49172516b9b1（我 00:14 收到号令后现读、切枝、并在同一枚尖上交完；此刻回读它仍是这一枚）。
