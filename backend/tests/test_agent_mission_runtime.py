@@ -12,7 +12,7 @@ import app.main as main_module
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import DeepSeekJourneyAgent
 from app.core.config import settings as runtime_settings
-from app.db.models import AgentRun, Event, JourneyMission
+from app.db.models import AgentRun, Event, JourneyMission, Place
 from app.db.session import SessionLocal
 
 client = TestClient(main_module.app)
@@ -347,6 +347,33 @@ def test_estimate_place_facts_is_explicitly_non_authoritative():
     assert body["estimate"]["cost_evidence"]["currency"] == client.get(
         f"/api/v1/journeys/{journey_id}"
     ).json()["budget"]["currency"]
+
+
+def test_acquire_place_facts_commits_canonical_observation_before_next_read(monkeypatch):
+    journey_id = _selected_journey()
+
+    def fake_acquire(session, journey, *, place_ids=None, source_bindings=None):
+        place = session.get(Place, place_ids[0])
+        metadata = json.loads(place.metadata_json or "{}")
+        metadata["test_committed_fact"] = "VERIFIED_PROVIDER"
+        place.metadata_json = json.dumps(metadata)
+        session.flush()
+        return {"status": "ACQUIRED", "places": [{"place_id": place.id}]}
+
+    monkeypatch.setattr("app.agent.gateway.acquire_place_facts", fake_acquire)
+    response = client.post(
+        "/api/v1/agent/tools/acquire_place_facts",
+        json={
+            "request_id": "acquire-commit-1",
+            "agent_id": "test-agent",
+            "journey_id": journey_id,
+            "place_id": "place-riverside-museum",
+        },
+    )
+    assert response.status_code == 200, response.text
+    with SessionLocal() as session:
+        place = session.get(Place, "place-riverside-museum")
+        assert json.loads(place.metadata_json)["test_committed_fact"] == "VERIFIED_PROVIDER"
 
 
 def test_wb2api_stream_retains_reasoning_for_tool_continuation():

@@ -581,6 +581,10 @@ class AgentToolGateway:
             place_ids=[place.id],
             source_bindings=bindings,
         )
+        # Fact acquisition mutates canonical Place rows.  This gateway is the
+        # product write boundary, so a successful tool call must survive the
+        # request session before the next planner/read operation begins.
+        self.session.commit()
         return {
             "tool": "acquire_place_facts",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
