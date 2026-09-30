@@ -35,7 +35,7 @@ from uuid import uuid4
 import yaml
 from fastapi.testclient import TestClient
 
-from app.db.models import JourneyShareGrant, Traveler
+from app.db.models import JourneyMember, JourneyShareGrant, Traveler
 from app.db.session import SessionLocal
 from app.main import app
 
@@ -322,13 +322,27 @@ OWNER_BIN_PATH = "/api/v1/travelers/{traveler_id}/recycle-bin/journeys"
 
 def _add_member(journey_id: str, traveler_id: str, role: str = "COLLABORATOR",
                 expires_at: str | None = None) -> dict:
+    already_gone = expires_at is not None and datetime.fromisoformat(expires_at)         <= datetime.now(timezone.utc)
     response = client.post(
         MEMBER_PATH.format(journey_id=journey_id),
         json={"traveler_id": traveler_id, "role": role, "invited_by": "lane-rel",
-              "expires_at": expires_at},
+              "expires_at": None if already_gone else expires_at},
     )
     assert response.status_code == 201, response.text
-    return response.json()
+    row = response.json()
+    if already_gone:
+        # ORD-0461 r3: this door no longer stores a membership born lapsed, so the deadline is moved
+        # after the seat is made.  The arm below still reads an out-of-date membership.
+        with SessionLocal() as session:
+            stored = session.get(JourneyMember, row["id"])
+            assert stored is not None, row["id"]
+            stored.expires_at = expires_at
+            session.commit()
+        # read the state back through the list door: the arm asks what this membership is now, and the
+        # 201 it was seated with predates the moved deadline.
+        answer_rows = client.get(MEMBER_PATH.format(journey_id=journey_id)).json()
+        row = [item for item in answer_rows if item["id"] == row["id"]][0]
+    return row
 
 
 def test_the_member_set_is_one_row_per_traveller_and_says_so_by_name() -> None:
