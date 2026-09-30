@@ -1,0 +1,170 @@
+{
+  "tool": "gen5_build_r1",
+  "took_local": "2026-10-01T01:21:14.343863+08:00",
+  "faces": [
+    {
+      "label": "TIP_822db3d9",
+      "tree": "wt13",
+      "out_dir": "faces/tip5",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_TIP_822db3d9_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_TIP_822db3d9_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen5_build_TIP_822db3d9.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 7.99s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "89d441ab246979ce068f9dbc5cb590ec7fdbf28767c0976c5f18e703245d541d",
+          "local_sha1": "95ab5e45be5e6bf1d57606b329f9a62d50b84f37"
+        },
+        "entry_asset": "index-BXpnOJjO.js",
+        "css_asset": "index-BIYEp83f.css",
+        "bundle": {
+          "bytes": 1542545,
+          "sha256": "182cdaed5ac2bbc960e26b62a8b0fbfac20ba655a6158c4039d8251a005b1835",
+          "local_sha1": "bd6eb3768e959c71a8806469ae8ad4c61129e95c"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    },
+    {
+      "label": "O0500_R2",
+      "tree": "wt9",
+      "out_dir": "faces/o0500_r2",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0500_R2_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0500_R2_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen5_build_O0500_R2.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 6.21s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "2fd5d0ee6f193fa7112bb0f2954e66d8289a004bb12d4f9e18f9091d7ae49189",
+          "local_sha1": "32d2687050be291ab01882fbef9633e71116864d"
+        },
+        "entry_asset": "index-P2OoEuQ-.js",
+        "css_asset": "index-D01jsZYo.css",
+        "bundle": {
+          "bytes": 1546083,
+          "sha256": "dc0717beea10fbb23f6ec81e7a1b763a39a7db26079ef5f9b7e2c62f430c4310",
+          "local_sha1": "404f238deb7f73b61532d38fde1df830b47cab84"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    },
+    {
+      "label": "O0500_CLIENTBOOL_MUTANT",
+      "tree": "wt10",
+      "out_dir": "faces/o0500_clientbool5",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen5_build_O0500_CLIENTBOOL_MUTANT.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 7.98s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "39de36ec26da83f40a3fa70bf8b995224c917c19d954a1c4fcab666226fba9ee",
+          "local_sha1": "73c1296ea5ed933b7735379300a20a32d36bb2af"
+        },
+        "entry_asset": "index-Ba0cjWmU.js",
+        "css_asset": "index-D01jsZYo.css",
+        "bundle": {
+          "bytes": 1546111,
+          "sha256": "9d19b52355a56491b2712734acbf88f65c811242a4d48ebb661f5f7a78b3b02e",
+          "local_sha1": "6abaf6fab033d277b9da95fe6c1ad7ce582ae4b5"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    },
+    {
+      "label": "O0485_R4",
+      "tree": "wt11",
+      "out_dir": "faces/o0485_r4",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0485_R4_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen5_tsc_O0485_R4_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen5_build_O0485_R4.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 6.16s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "62f7e3a5c21e0ae402738600acf73b95ddb511cad4d1d992d193307e1c706b11",
+          "local_sha1": "6611fc452154272b387bf92d6ecb7d1e8a5a5cb1"
+        },
+        "entry_asset": "index-ByasA939.js",
+        "css_asset": "index-BIYEp83f.css",
+        "bundle": {
+          "bytes": 1542700,
+          "sha256": "1cc6c8e17352a05da0c490e7ff8095468902e3c245880874241d0366a59e2105",
+          "local_sha1": "7ae0f88ead1fbb6bcfbf055fe8d2aed1c18d6c37"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    }
+  ]
+}
