@@ -23,6 +23,11 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import {
+  catalogueCountSentence,
+  readCityCatalogue,
+  type CatalogueReadback,
+} from "./catalogueReadback";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { type AgentRuntimeStatus } from "../../api/citynexus";
 import {
@@ -100,6 +105,14 @@ function examplesFor(
  * compose exit); anything the table does not know is shown as unknown, with the server's own sentence
  * under 技术详情, because inventing a paraphrase of a code we have not read is a lie waiting to happen.
  */
+/**
+ * ORD-0504: the refusals that are *about the catalogue*.  These are the only ones that earn both a
+ * re-read of the server's place count and a door into the paste-import screen, because they are the
+ * ones whose sentence can be false by the time a traveller reads it - the store may already hold
+ * places, and the run that wrote this status did not look again.
+ */
+const CATALOGUE_SHAPE_CODES = ["CATALOG_EMPTY", "CATALOG_INSUFFICIENT", "PLACES_NOT_IN_CATALOG"];
+
 const BLOCKED_BY_CODE: Record<
   string,
   { zh: string; en: string; action: "another-city" | "retry" | "none" }
@@ -413,6 +426,7 @@ export function PlanWithAiSheet({
   onPlanned,
   onChooseAnotherCity,
   onViewChat,
+  onImportPlaces,
 }: {
   journeyId: string;
   cityCode?: string;
@@ -427,6 +441,13 @@ export function PlanWithAiSheet({
    * session surface to go to still has to offer exit 2 -- the wait itself is never a cage.
    */
   onViewChat?: () => void;
+  /**
+   * ORD-0504: the way out of "this city has no places" that is not "go to another city".  The paste
+   * door already exists on this tree (`/api/v1/journeys/{id}/poi-import/*`, mounted at the import
+   * route); it simply had no entry from this screen, so the refusal was a dead end for a traveller
+   * who could supply the places themselves.
+   */
+  onImportPlaces?: () => void;
 }) {
   const { locale } = useLocale();
   const t = useT();
@@ -455,6 +476,32 @@ export function PlanWithAiSheet({
   /* ORD-0382: pressing the close control while a run is going no longer silently aborts it.  It asks,
      and the two answers are the pair the reference product names: 去看会话 / 继续生成. */
   const [leaveChoice, setLeaveChoice] = useState(false);
+
+  /* ORD-0504: the count under a catalogue-shaped refusal is read from this server on every mount of
+     that refusal, never carried over from the run that wrote the status.  Places imported while
+     this sheet was closed therefore change the sentence on the next open, and a door that did not
+     answer produces "we could not read it" rather than the remembered number or a silence that
+     reads as zero. */
+  const blockedCode = (result?.status || "").startsWith("BLOCKED:")
+    ? (result?.status || "").slice("BLOCKED:".length)
+    : "";
+  /* `PLACES_HTTP_*` is in as well: that name is written by the run when the catalogue door itself
+     refused, which is exactly the case where a traveller would otherwise be left with a number the
+     device never read. */
+  const catalogueShaped =
+    CATALOGUE_SHAPE_CODES.includes(blockedCode) || blockedCode.startsWith("PLACES_HTTP");
+  const [catalogue, setCatalogue] = useState<CatalogueReadback | null>(null);
+  useEffect(() => {
+    if (!catalogueShaped) {
+      setCatalogue(null);
+      return;
+    }
+    const controller = new AbortController();
+    void readCityCatalogue(cityCode, controller.signal).then((read) => {
+      if (!controller.signal.aborted) setCatalogue(read);
+    });
+    return () => controller.abort();
+  }, [catalogueShaped, cityCode, result?.status]);
 
   useEffect(() => {
     if (!busy) {
@@ -1030,6 +1077,29 @@ export function PlanWithAiSheet({
             )}
             {/* A refusal the traveller cannot act on is a dead end, so the reason carries exactly one
                 next step -- and it is the step the server's own code earns, not a generic "try again". */}
+            {catalogueShaped && (
+              <p data-testid="plan-ai-catalogue-count" className="plan-ai-catalogue-count">
+                {catalogueCountSentence(catalogue, zh)}
+              </p>
+            )}
+            {catalogueShaped && onImportPlaces && (
+              <button
+                type="button"
+                /* The product's own secondary style, deliberately: ORD-0375's narrow-screen gate
+                   counts strikeable `.v8-primary-button` and this refusal already carries one
+                   (换一座有数据的城市). A second primary here would be a quiet-row violation, not a
+                   help. */
+                className="v8-outline-button plan-ai-import-entry"
+                data-testid="plan-ai-import-entry"
+                data-next-step="import-places"
+                onClick={() => {
+                  onClose();
+                  onImportPlaces();
+                }}
+              >
+                {zh ? "粘贴你自己的地点，导入这趟行程" : "Paste your own places and import them into this trip"}
+              </button>
+            )}
             {copy?.action === "another-city" && onChooseAnotherCity && (
               <button
                 type="button"

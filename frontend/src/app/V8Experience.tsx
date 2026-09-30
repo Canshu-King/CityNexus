@@ -2058,6 +2058,13 @@ export function V8Experience() {
           onClose={() => setPlanAiOpen(false)}
           onPlanned={() => void load(data.journey.id)}
           onChooseAnotherCity={() => setSetupOpen(true)}
+          onImportPlaces={() => {
+            /* ORD-0504: the refusal that says "this city has no places" used to offer exactly one
+               way out - change city.  The paste door was already on this tree and already writes
+               through `/poi-import/*`; it just had no entry from here. */
+            setPlanAiOpen(false);
+            navigate("import");
+          }}
           onViewChat={() => {
             setPlanAiOpen(false);
             navigate("agent");
