@@ -7034,6 +7034,10 @@ def _twin_snapshot(
                 "degraded": bool(fact.get("degraded", False)),
             }
         )
+    selected_plan_edge_receipts = _plan_mobility_eligibility_receipts(
+        selected_plan,
+        list(activities),
+    )
     # A real-trip PlanVersion may carry its frozen provider route in
     # mobility_evidence_json without materialising JourneyLeg rows.  The
     # experience projection already exposes that evidence, but the Twin's
@@ -7097,6 +7101,10 @@ def _twin_snapshot(
                 for item in selected_plan_used_edges
             ],
             "used_edges": selected_plan_used_edges,
+            "eligibility_receipts": selected_plan_edge_receipts["receipts"],
+            "all_actual_edges_hard_eligible": selected_plan_edge_receipts[
+                "all_actual_edges_hard_eligible"
+            ],
         }
     mobility_context: dict[str, Any] = frozen_plan_mobility or {
         "provider": "mock-mobility",
@@ -7559,6 +7567,75 @@ def _activity_routing_key(item: Activity | None) -> str | None:
     return semantic or item.place_id or item.city_service_id
 
 
+def _plan_mobility_eligibility_receipts(
+    plan: PlanVersion | None,
+    activities: list[Activity],
+) -> dict[str, Any]:
+    """Expose the deterministic hard gate for every actual consecutive plan edge.
+
+    The plan and JourneyTwin already carried the frozen facts, but the agent-facing
+    projection only exposed a hard-eligible count.  That left an agent unable to tell
+    which actual edge was covered without reimplementing the product gate.  These receipts
+    are read-only projections of the persisted plan evidence; they never grant authority.
+    """
+
+    empty = {
+        "used_edge_ids": [],
+        "receipts": [],
+        "all_actual_edges_hard_eligible": False,
+    }
+    if plan is None:
+        return empty
+    evidence = _json_object(plan.mobility_evidence_json, {})
+    raw_facts = evidence.get("facts")
+    facts = [item for item in raw_facts if isinstance(item, dict)] if isinstance(raw_facts, list) else []
+    facts_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in facts
+        if item.get("origin_key") and item.get("destination_key")
+    }
+    snapshot: MobilitySnapshot | None = None
+    try:
+        snapshot = MobilitySnapshot.from_evidence(evidence)
+    except (KeyError, TypeError, ValueError):
+        pass
+
+    receipts: list[dict[str, Any]] = []
+    for origin_activity, destination_activity in zip(activities, activities[1:]):
+        origin_key = str(_activity_routing_key(origin_activity) or "").strip()
+        destination_key = str(_activity_routing_key(destination_activity) or "").strip()
+        if not origin_key or not destination_key or origin_key == destination_key:
+            continue
+        fact = facts_by_pair.get((origin_key, destination_key))
+        receipt: dict[str, Any] = {
+            "origin_key": origin_key,
+            "destination_key": destination_key,
+            "provider": fact.get("provider") if fact else evidence.get("source_provider"),
+            "fact_quality": fact.get("fact_quality") if fact else None,
+            "route_provenance": fact.get("route_provenance") if fact else None,
+            "degraded": bool(fact.get("degraded", False)) if fact else bool(evidence.get("degraded", False)),
+            "persisted_minutes": fact.get("minutes") if fact else None,
+            "hard_minutes": None,
+            "hard_eligible": False,
+            "decision": "MOBILITY_DATA_UNAVAILABLE" if fact is None else "HARD_INELIGIBLE",
+        }
+        if snapshot is not None and fact is not None:
+            try:
+                receipt["hard_minutes"] = snapshot.hard_minutes(origin_key, destination_key)
+                receipt["hard_eligible"] = True
+                receipt["decision"] = "HARD_ELIGIBLE"
+            except KeyError:
+                pass
+        receipts.append(receipt)
+
+    return {
+        "used_edge_ids": [[item["origin_key"], item["destination_key"]] for item in receipts],
+        "receipts": receipts,
+        "all_actual_edges_hard_eligible": bool(receipts)
+        and all(bool(item["hard_eligible"]) for item in receipts),
+    }
+
+
 def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> dict[str, Any]:
     """How much of the plan's own walking order the sealed evidence can actually carry.
 
@@ -7579,6 +7656,9 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
         "reference_consistent": False,
         "legs_total": 0,
         "legs_hard_eligible": 0,
+        "used_edge_ids": [],
+        "eligibility_receipts": [],
+        "all_actual_edges_hard_eligible": False,
     }
     if plan is None:
         return empty
@@ -7591,6 +7671,7 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
     ).all()
     keys = [str(key) for key in (_activity_routing_key(item) for item in activities) if key]
     legs = [(left, right) for left, right in zip(keys, keys[1:]) if left != right]
+    edge_receipts = _plan_mobility_eligibility_receipts(plan, list(activities))
     snapshot: MobilitySnapshot | None = None
     if snapshot_id is not None:
         try:
@@ -7610,6 +7691,9 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
         "reference_consistent": bool(snapshot_id) and snapshot_id == plan.mobility_snapshot_id,
         "legs_total": len(legs),
         "legs_hard_eligible": hard_eligible,
+        "used_edge_ids": edge_receipts["used_edge_ids"],
+        "eligibility_receipts": edge_receipts["receipts"],
+        "all_actual_edges_hard_eligible": edge_receipts["all_actual_edges_hard_eligible"],
     }
 
 
@@ -7655,6 +7739,9 @@ def demo_scene(session: Session = Depends(get_session)):
             "evidence_reference_consistent": None,
             "mobility_legs_total": None,
             "mobility_legs_hard_eligible": None,
+            "mobility_used_edge_ids": [],
+            "mobility_eligibility_receipts": [],
+            "all_actual_edges_hard_eligible": False,
             # Constant key set: a strict client-side shape check (missing key -> the envelope is
             # dropped) would otherwise turn an honest empty stage into "cannot read the scene",
             # which is the ORD-0070 family of defects seen from the other side.
@@ -7728,6 +7815,9 @@ def demo_scene(session: Session = Depends(get_session)):
         # still decides for itself.
         "mobility_legs_total": coverage["legs_total"],
         "mobility_legs_hard_eligible": coverage["legs_hard_eligible"],
+        "mobility_used_edge_ids": coverage["used_edge_ids"],
+        "mobility_eligibility_receipts": coverage["eligibility_receipts"],
+        "all_actual_edges_hard_eligible": coverage["all_actual_edges_hard_eligible"],
         "plan_version_id": str(plan.id) if plan is not None else None,
     }
 

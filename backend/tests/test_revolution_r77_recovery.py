@@ -20,6 +20,7 @@ from app.fact_acquisition import (
     _official_web_facts,
     acquire_place_facts,
 )
+from app.main import _plan_mobility_eligibility_receipts
 from app.schemas import AgentToolCall
 from app.services import (
     SEALED_DEMO_AUTHORITY_ENVELOPE,
@@ -484,6 +485,51 @@ def test_agent_place_search_accepts_exact_name_with_fact_query_terms():
         assert [item["id"] for item in result["places"]] == [place_id]
         assert result["places"][0]["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
         assert result["places"][0]["metadata"]["cost_evidence"]["amount_minor"] == 4000
+
+
+def test_selected_plan_projection_exposes_edge_scoped_hard_receipts():
+    plan = SimpleNamespace(
+        id="r77-edge-receipt-plan",
+        mobility_evidence_json=json.dumps(
+            {
+                "source_provider": "valhalla-http",
+                "facts": [
+                    {
+                        "origin_key": "real-place-a",
+                        "destination_key": "real-place-b",
+                        "minutes": 13,
+                        "provider": "valhalla-http",
+                        "fact_quality": "LIVE_PROVIDER_CAPTURE",
+                        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                        "degraded": False,
+                    }
+                ],
+            }
+        ),
+    )
+    activities = [
+        SimpleNamespace(place_id="real-place-a", city_service_id=None, metadata_json="{}"),
+        SimpleNamespace(place_id="real-place-b", city_service_id=None, metadata_json="{}"),
+    ]
+
+    result = _plan_mobility_eligibility_receipts(plan, activities)
+
+    assert result["used_edge_ids"] == [["real-place-a", "real-place-b"]]
+    assert result["all_actual_edges_hard_eligible"] is True
+    assert result["receipts"] == [
+        {
+            "origin_key": "real-place-a",
+            "destination_key": "real-place-b",
+            "provider": "valhalla-http",
+            "fact_quality": "LIVE_PROVIDER_CAPTURE",
+            "route_provenance": "LIVE_PROVIDER_CAPTURE",
+            "degraded": False,
+            "persisted_minutes": 13,
+            "hard_minutes": 13,
+            "hard_eligible": True,
+            "decision": "HARD_ELIGIBLE",
+        }
+    ]
 
 
 def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch):
