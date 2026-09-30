@@ -1,0 +1,118 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4195 backend=:6997 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361iso.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [28196]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:6997 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:53244 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65204 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ord0361iso frontend=:4195 -> backend=:6997 ai=disabled db=_e2e_ord0361iso.db
+
+Running 2 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4195 backend=:6997 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361iso.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:65364 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:65369 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:65364 - "POST /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65369 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65364 - "POST /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/stay-options/805adcf8-bc58-4fc6-8cbb-2985325290e3/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=db617f1a-ff8f-41e9-b2cc-b44d7c4ea388 options=4 chosen=805adcf8-bc58-4fc6-8cbb-2985325290e3 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:51744 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51753 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61639 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61645 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61641 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/replans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, context_json=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-09-30T04:33:48.232407+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "VALID", "next": {"end_at": "2026-10-09T19:05:00+08:00", "id": "425b654f-903b-4360-bdd5-dbc ... (923 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '2026-09-30T04:33:48.232407+00:00', 'db617f1a-ff8f-41e9-b2cc-b44d7c4ea388')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:51764 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56324 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56330 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60174 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61644 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56328 - "GET /api/v1/travelers/375793b1-fd82-40ea-b7a6-a2a5af9e8dd4/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56049 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58810 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (8.7s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4195 backend=:6997 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361iso.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:58332 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58344 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50652 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58367 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50651 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50648 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50649 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50653 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49821 - "GET /api/v1/travelers/375793b1-fd82-40ea-b7a6-a2a5af9e8dd4/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50122 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50839 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55922 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51206 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50229 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50238 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50239 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50240 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49709 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49714 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59444 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59445 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54462 - "GET /api/v1/travelers/375793b1-fd82-40ea-b7a6-a2a5af9e8dd4/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53745 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53744 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49337 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60609 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51005 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51519 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53518 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54177 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54241 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64419 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57868 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64275 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61361 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53563 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59204 - "GET /api/v1/journeys/db617f1a-ff8f-41e9-b2cc-b44d7c4ea388/twin HTTP/1.1" 200 OK
+  x  2 [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:326:1 › ord0361-pick-returns-for-this-journey — 选过的这一站要跟着这趟行程回来 (3.0m)
+
+
+  1) [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:326:1 › ord0361-pick-returns-for-this-journey — 选过的这一站要跟着这趟行程回来 
+
+    Test timeout of 180000ms exceeded.
+
+    Error: locator.click: Test timeout of 180000ms exceeded.
+    Call log:
+      - waiting for getByTestId('nav-map')
+        - locator resolved to <button class="" data-testid="nav-map">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+          - waiting 100ms
+        339 × waiting for element to be visible, enabled and stable
+            - element is not visible
+          - retrying click action
+            - waiting 500ms
+
+
+      31 |   await ensureDemoJourney(page);
+      32 |   await openScreen(page, "/v8/hub", ["today-heading", "today-attention"]);
+    > 33 |   await page.getByTestId("nav-map").click();
+         |                                     ^
+      34 |   await expect(page.getByTestId("v8-maplibre-panel").first()).toBeVisible({ timeout: 25_000 });
+      35 |   await page.waitForTimeout(1_500);
+      36 | }
+        at enterMap (D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:33:37)
+        at D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:328:3
+
+    Error Context: test-results\qoder-map-ord0390-selectio-83860-s-journey-—-选过的这一站要跟着这趟行程回来-chromium\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-83860-s-journey-—-选过的这一站要跟着这趟行程回来-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:326:1 › ord0361-pick-returns-for-this-journey — 选过的这一站要跟着这趟行程回来 
+  1 passed (3.4m)
