@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:25 · 手机前端换到 day8 那一代（权威尖 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2` 的构建）：两证齐 + 旧代资产并集保留
+
+**一、换代前尖（现读，不是本机 tracking）**
+
+`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = `822db3d9f07b9c7d535e12afbdeb3074dd94acb2`；构建的 40 位与它逐字相同。
+
+**二、构建（不是拿别人的产物）**
+
+`cmdr_build_bundle_r1.py --sha 822db3d9f07b9c7d535e12afbdeb3074dd94acb2 --tag day8` rc=0，三步都记在 `_build_day8_info.json`（archive / junction_node_modules / vite_build，其中 `vite_build` 10.8 s）。产物根 `_build_day8/frontend/dist`，入口 `assets/index-BXpnOJjO.js`。
+
+**三、旧代资产并集（DEPLOY_BUNDLE_RETENTION，先并后切）**
+
+把 day7 那三枚 `assets/JourneyMap-BVyPOlQW.js`、`assets/maplibre-gl-B7kISOtk.js`、`assets/index-BGM3L0lx.js` 复制进 day8 的 assets（不覆盖 day8 自己的），再切服务。所以握着旧 index.html 的客户端不会撞 404。
+
+**四、切换**
+
+`_cmdr_lan_static_api_r1.py --dist D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day8/frontend/dist --port 4783 --api 4787 --log _lan_4783_log.json`，监听 `0.0.0.0:4783`（PID 24080）；旧服务 PID 34484 已停。
+
+**五、两证（都取自被服务的字节，不取自磁盘想象）**
+
+1. **入口名**：被服务的 `/` 回 `http_status=200`、`text/html`，正文里那枚入口 = `assets/index-BXpnOJjO.js`，与磁盘 `index.html` 里那枚同值。
+2. **字节**：`assets/index-BXpnOJjO.js` 被服务字节的本机 sha1 前 16 位 `bd6eb3768e959c71` == 磁盘同文件；并集那一侧的旧代 `assets/JourneyMap-BVyPOlQW.js` 与 `assets/index-BGM3L0lx.js` 也各回 `http_status=200`、`text/javascript`，字节各自等于磁盘（并集真的生效）。
+3. **访问日志**这一证 `NOT_AVAILABLE_BY_CMDR`：静态口不写请求日志，且 SPA 回退对不存在的资产也回 `http_status=200`，所以 200 本身认不出一代。
+
+**六、API 代理与后端**
+
+`/api/v1/demo/scene` 经 `:4783` 回 `http_status=200`、`application/json`、583 B。后端 `:4787` 的 `/openapi.json` 有 157 条路径，与尖上 `contracts/openapi.yaml:1` 的 157 条相同——**这只证契约面同形，不证实现同代**，我没有重启 `:4787`，也没碰 `:8000`/`:4781`/`:4782`/`:8693`。
+
+**七、没做的（不藏）**
+
+1. 真机那一格：手机在 `192.168.69.189:4783`，我没走实体手机，所以「手机屏上显示的是这一代」仍不是我亲测的；
+2. Service Worker 缓存驱逐没做（归 ORD-0267 与 ORD-0268 那两块的地盘），手机上可能要整页重进才离开旧代；
+3. 这次换代的尖在我写块时已经又往前走了（同一轮批量落地还在跑），所以它是**快照**，下一轮还要再换一次。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 ics（ORD-0525）2026-10-01 01:24+08 · 日历导出的屏上入口落了候选枝，五臂全绿、三枚反件都咬住
 
 一、坐标（每一枚都从已推 ref 或 ls-remote 现取，没有一枚是手打的）
