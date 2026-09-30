@@ -113,13 +113,13 @@ async function tierWords(page: Page): Promise<Array<{ tier: string; word: string
   );
 }
 
-/** The trip rows in the order the door put them, as a traveller's screen reader would read them. */
+/** The trip rows in the order the door put them, as a traveller's screen reader would read them.
+ *  ORD-0518 replaced the closed `<select>` with visible rows, so this reads the roster; the arms
+ *  below still judge the door's order, which is what did not change. */
 async function optionTitles(page: Page): Promise<string[]> {
-  const words = await page.$$eval("[data-testid='access-journey-picker'] option", (options) =>
-    options.map((option) => (option.textContent ?? "").trim()),
+  return page.$$eval("[data-testid='access-trip-row']", (rows) =>
+    rows.map((row) => (row.textContent ?? "").trim()),
   );
-  // the first option is the screen's own "pick a trip" placeholder, not a row
-  return words.slice(1);
 }
 
 async function currentTierSentence(page: Page): Promise<string> {
@@ -228,13 +228,14 @@ for (const arm of ARMS) {
       { words, sentence, shot, option_order: await optionTitles(page) },
     );
 
-    expect(words.length, node("C1", `${arm.code}: the tier control offers ${words.length} tiers`)).toBe(3);
+    // ORD-0518 added a fourth control: 创建序, which is this door's order when no `sort` is sent
+    expect(words.length, node("C1", `${arm.code}: the tier control offers ${words.length} tiers`)).toBe(4);
     expect(
       words.map((w) => w.tier).sort(),
-      node("C1", `${arm.code}: the tier set is not the contract's three words: ${JSON.stringify(words)}`),
-    ).toEqual([DEPARTURE, RECENT, TITLE].sort());
+      node("C1", `${arm.code}: the tier set is not the contract's three words plus creation order: ${JSON.stringify(words)}`),
+    ).toEqual(["CREATION_ORDER", DEPARTURE, RECENT, TITLE].sort());
     expect(
-      words.map((w) => w.word.trim()),
+      words.filter((w) => w.tier !== "CREATION_ORDER").map((w) => w.word.trim()),
       node("C1", `${arm.code}: the buttons do not read ${arm.recent}/${arm.departure}/${arm.title}: ${JSON.stringify(words)}`),
     ).toEqual([arm.recent, arm.departure, arm.title]);
     expect(
@@ -417,19 +418,19 @@ for (const arm of ARMS) {
       const sentence = await currentTierSentence(page);
       const emptyVisible = await page.getByTestId("access-trips-empty").isVisible().catch(() => false);
       const failedVisible = await page.getByTestId("access-trips-failed").isVisible().catch(() => false);
-      const pickerPresent = await page.getByTestId("access-journey-picker").count();
+      const rosterPresent = await page.getByTestId("access-trip-roster").count();
       const shot = evidencePath(DIR, `${RUN}_empty_${arm.code}.png`);
       await page.screenshot({ path: shot, fullPage: true });
       write(
         `sort-empty-${arm.code}`,
-        { binned, empty_visible: emptyVisible, failed_visible: failedVisible, picker_present: pickerPresent, sentence, shot },
+        { binned, empty_visible: emptyVisible, failed_visible: failedVisible, roster_present: rosterPresent, sentence, shot },
       );
 
       expect(emptyVisible, node("C4", `${arm.code}: zero trips did not show the named empty sentence`)).toBe(true);
       expect(failedVisible, node("C4", `${arm.code}: an empty list was reported as a failure`)).toBe(false);
       expect(
-        pickerPresent,
-        node("C4", `${arm.code}: a picker with no rows is not an empty state`),
+        rosterPresent,
+        node("C4", `${arm.code}: a roster with no rows is not an empty state`),
       ).toBe(0);
       expect(
         sentence,
