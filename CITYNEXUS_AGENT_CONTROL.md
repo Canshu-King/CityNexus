@@ -16588,6 +16588,143 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 22:52 · 四条裁定执行情况：局域网直连已通（两证齐）、构建已重开、九笔屏读被向导门挡住（空分母，不当读数）
+
+**一、裁定 2（手机链改局域网直连）：已通，两证齐**
+
+- 后端：`uvicorn backend.app.main:app --host 127.0.0.1 --port :4781`，库是我自己那份私有副本（`sqlite:///…/_cmdr_phone_4781.db`），**没有**读写 `_preview.db`、没有跑 `demo/reset`、`:8000`/`:4782`/`:8693` 未碰（`:8000` 现读是别人的进程 `CityNexus-Revolution-RealTrip-Recovery`，我不动）。
+- 前端宿主：新写一枚绑 `0.0.0.0` 的静态+API 口 `_cmdr_lan_static_api_r1.py`，起在 `0.0.0.0:4783`，`--api :4781`（不复用那枚只绑回环的旧尺，免得改动已发布读数的形制）。
+- 三处可读：`http://127.0.0.1:4783` 与 `http://192.168.69.189:4783` 都回 `http_status=200`，入口名同为 `index-DSgL9QXT.js`。（这一代尖 `4da5769b1d7bc94c1c341343157d10b6a6a97795`）
+- 第二证：`served_bytes=1524321 B disk_bytes=1524321 B bytes_equal=True`，两侧 sha1 同为 `3f4bf721686a` 起头。第三证（访问日志）在这一代不可取，具名 `NOT_AVAILABLE_BY_CMDR`：我新写的宿主虽然记了计数，但那份计数只在进程退出时落盘，**不拿它冒充第三证**。
+- 手机侧五格探针：**未跑**。原因是下一节那道门——屏上到不了内屏，五格没有分母；具名 `NOT_REACHED_BY_CMDR`，等 ORD-0521 把"零库到有一趟能走的行程"做成产品门之后再跑。
+
+**二、裁定 1（重开构建 + 九笔逐笔看屏）：构建好了，屏读被向导门挡住**
+
+构建：`cmdr_build_bundle_r1.py --sha 4da5769b1d7bc94c1c341343157d10b6a6a97795 --tag day5` 回 `BUILD rc=0 dist=True index=True assets=2`，产物 `_build_day5/frontend/dist`。
+
+然后我在 `390x844` 上真走了两趟（两版读数都留着，作废的那版也留）：
+1. 第一趟直接按路径进 `/v8/trips`、`/v8/import`、`/v8/access`：**每一屏渲染的都是同一张向导屏**，可见 `data-testid` 是 `trial-setup`/`trial-steps`/`trial-step-1`…`trial-step-3`/`trial-city`，行程长图、日历入口、成员门、足迹开关、收藏入口那几格**全部 0 命中**。按我自己那条坑（修前屏读要先证主体在屏上），这版九格是空分母，**不当读数**。
+2. 第二趟我先用 API 给这库造了一趟行程（`POST /api/v1/travelers` 回 `http_status=201`、`POST /api/v1/journeys` 回 `http_status=201`、`GET /api/v1/journeys` 回 `count=1`，全程未跑 `demo/reset`），再走一遍：**向导屏仍在**，而且它已经走到第二步（可见 `trial-step2-body`/`trial-party`/`trial-rooms`/`trial-budget`）。也就是说这道门是**客户端引导**，服务端已经有行程也顶不掉它。
+3. 第三趟我试着自己把向导走完：目的地那格填进去了（`trial-inferred` 出现），但"下一步/创建"这两枚我按文字找点不到（超时），向导停在第二步。这与 ORD-0338 甲那条记录一致：**CTA 是网格行**，按文字定位点不动。
+
+结论（这条我认为比九格本身更值钱）：**在一台干净浏览器上，内屏的唯一入口是走完那张向导；向导没走完，长图/日历/成员/足迹/收藏/导入六族的屏读都没有分母**。这正是 ORD-0502 的 C2 失败与 C3…C7 全 `NOT_AVAILABLE` 的同一条根，也正是 ORD-0521 要解的那一格。我把这条写进 ORD-0521 的验收要求里：门做成之后，干净浏览器上从零到"有一趟能走的行程"必须不再依赖走向导。
+
+**三、裁定 3（可用那两枚 key 跑 provider 依赖验收）：本趟没用**
+
+原因照实说：本趟我要跑的那几格（长图多天/暗色/空城市导入/收藏/点图/足迹）都是**屏读**，屏读先被向导门挡住；provider 依赖的那几族（真实进度流/来源卡/结果去向/anywhere 那几枚）我还没开跑，留到下一趟。用时我按规矩只引路径+字段名（`http://127.0.0.1:7863/panel/#config`），**值没有写进任何文件、日志、账本或消息**。
+
+**四、裁定 4（两档排队派单）：已发第一档，第二档等它落地**
+
+- 第一档已发：ORD-0524 POI 批量录入（多选 + 三出口互斥 + 两枚反件），派给 `9759f1ac` 那条车道，并明确写"不许与地图↔卡片双向选中同时开工"。
+- 第二档（地图↔卡片双向选中）我按裁**压着不发**，等 ORD-0524 落地（或它具名 `BLOCKED_HOTFILE`）之后再发，避免两车撞同一枚热文件。
+
+**五、这一趟的账外事实**
+
+- D 盘现读 29 G 可用（你放开了），构建与导出都跑得动；那枚 Adobe 分段下载残件我没动。
+- 本轮落地：ORD-0503（成员两扇写门：改角色 + 自我移出，四枚具名拦停）与 ORD-0508（生成物可由契约复现）都已 ff 落地，尖现读 `4da5769b1d7b…`。
+- 我自己那趟整套在导出树上的读数仍是本晚基线：`11 failed, 1506 passed, 16 skipped, 1 xfailed`（判据行 `backend/tests/test_qoder_ord0495_gitshow_portable.py:59`），另 20 枚收集错误全是未入库的 `scripts.hermes_rNN_*` probe 族（要逐枚 `--ignore` 才有分母）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0508 车道 8e5245f0 · 改号重交 r2：现尖的生成物已可由契约复现，本单只剩"尺看得见 schema 层"这一半
+
+**先认领编号勘误**：我 18:24 那块标题写的是 ORD-0503，按号令者 17:38 那条改号为 ORD-0508（0503 归 1ba48dbf 的成员两扇门）。
+那块**未被入账**就被我从待插队列摘走，留痕名 `8e5245f0_1824.my_superseded_wrong_order_number_0503_should_be_0508`（去掉 `.md` 按常例；那枚未入账件对应的枝是 03d4e81c690cd23801c0cb779bff0c73f5dddbc8）；
+枝名、测试件名、收据路径、反例臂里自造的假组件名也一并改号，所以没有一枚本单产物会以 0503 的名义留在树里。
+改号那一笔在旧基座上：件尖 39d7f114f172265d915015539ef47b050059908c 的同族枝 0231fca98d65c33779dbc48cb2912787c674827c（旧尖上的一笔，不参与落地）。
+
+**基座现读**：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a。
+我 17:34 交 r6 时你们给的尖是 f707e1b3908c9ff4371e4a013242880b7e36045d，尖到这次现读为止前进了 33 笔（`git rev-list --count f707e1b3908c9ff4371e4a013242880b7e36045d..f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a`）。
+
+**交付（r2）**：`refs/heads/review/Q-ord0508-contract-reproducible-client-r2` 回读 = 90762576171b2ace24f2de74a9c165ba8941e776（本地 HEAD 同枚）。
+`git merge-tree --write-tree f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a 90762576171b2ace24f2de74a9c165ba8941e776` 退出码 rc=0，合并树 5eb0108c1bf67663a0ad25aae7b333f3925df025；
+四枚面的合并后 blob 与枝上自己那枚逐枚相等：`tools/verify_openapi_parity.py`、`backend/tests/test_qoder_ord0508_generated_client_schemas.py`、
+`review/ord0508/CONTROL_DIFF_R1.txt`、`review/ord0508/CONTROL_DIFF_R2.txt`，另加一枚我没动的 `frontend/src/generated/api.ts` 也相等。
+`git diff --numstat f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a 90762576171b2ace24f2de74a9c165ba8941e776`：尺 61 增 1 删、新测试 175 增、两枚收据 10 增与 26 增，**产品面 0 枚**。
+`refs/heads/master` 回读 = 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，权威线未动。
+
+**号令者那条"重生到差 0 行"在现尖上已经不归我做了**：现尖的客户端已经可由现尖契约复现——不是我的推断，是量出来的：
+`node .../openapi-typescript/bin/cli.js contracts/openapi.yaml` 重生成 8188 行 vs 枝上已入库 8188 行，差 0 行
+（逐字在 90762576171b2ace24f2de74a9c165ba8941e776:review/ord0508/CONTROL_DIFF_R2.txt:7）；
+`frontend/src/generated/api.ts` 的 blob = 1e3f4d25691d86f8defdf89b291ece7177a0069d，与 f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a 上那枚逐字节相同。
+做这件事的是 ORD-0496 那一枝，它的自证件在 90762576171b2ace24f2de74a9c165ba8941e776:review/ord0496/codegen_recheck_r1.txt:4（那两行 shipped 与 regenerated 的 sha256 同值，:6 写 byte_identical=True）。
+所以本单剩下的半格——"下一笔再漏跑生成物时会有人喊"——才是我这次交的东西，它 0 产品字节。
+
+**尺扩到 schema 层（现尖当代读数）**：`python tools/verify_openapi_parity.py` 在 90762576171b2ace24f2de74a9c165ba8941e776 上退出码 rc=0，逐字两行
+`OpenAPI 3.1.0; formal 170; runtime 170; missing 0; extra 0` 与 `schemas formal 82; generated 82; missing 0; extra 0`；
+路径×方法从 166 涨到 170 是这两小时别的单带来的（逐字 `90762576171b2ace24f2de74a9c165ba8941e776:review/ord0508/CONTROL_DIFF_R2.txt:16`），
+组件从 78 涨到 82 同理（同件 `:17`）——`contracts/openapi.yaml` 在本枝 0 字节未动。
+
+**一正五负臂（现尖重取，全部跑真件，不跑夹具）**：本模块 `6 passed`（把 `CNX_OPENAPI_TS` 指到 7.13.0 那枚 cli.js 时），
+不给则 `5 passed, 1 skipped`，skip 原因里带 `CNX_OPENAPI_TS=None`，不静默。负臂读数：
+① 契约里凭空造一枚组件 → 尺**只**报这一枚名；② 客户端里留一枚幽灵 → 报 extra；③ 解析集合必须逐枚等于契约自己数的集合（`parameters:`/`content:` 不许进集合，这两行在生成物里另有数百次命中）；
+④ **CLI 退出码两向**：把上一代那份生成物（件尖 f707e1b3908c9ff4371e4a013242880b7e36045d 已入库那枚，254102 字节，从 git 取、不再往树里塞一份 7913 行的副本）
+换进 `frontend/src/generated/api.ts`，尺立刻 rc=1 并点名 5 枚缺失组件：CollectionFolder、CollectionFolderCreate、CollectionItem、CollectionItemCreate、V13NamedRejection
+（逐字在 90762576171b2ace24f2de74a9c165ba8941e776:review/ord0508/CONTROL_DIFF_R2.txt:21）；跑完还原并断言逐字节还原成功。
+**这一枚反例正是本单要防的事本身**：现尖之前的那一代客户端就漏着 5 枚组件，而旧尺在那一代报的是 rc=0。
+⑤ 收集面（两趟都在 90762576171b2ace24f2de74a9c165ba8941e776 这棵树上跑）：本枝 `1540 tests collected, 20 errors`，同一棵树 `--ignore` 掉我这枚新测试回 `1534 tests collected, 20 errors`（差 added=6 正是纯新增），
+20 枚错误里非 `test_v18_hermes_` 命中的是 0 枚。邻测同跑 4 枚（`backend/tests/test_contract.py`、`tests/test_qoder_ord0387_ai_state_contract_sync.py`、
+`tests/test_qoder_ord0402_recycle_bin.py`、`tests/test_qoder_ord0467_v13_contract_family.py`）与本模块：`31 passed`。
+⑥ 前端门本轮**没跑**：本枝 0 枚前端面，`tsc`/`vite build` 的输入字节与现尖相同，我不拿没跑的东西当证据（上一代 r1 跑过 rc=0 且产物名 index-DFMGpJIJ.js，那属于 f707e1b3908c9ff4371e4a013242880b7e36045d 那一代，别混用）。
+
+**与 ORD-0464 的关系（量的，不是感觉）**：r6 在现尖上已被只读复切拦下——`git merge-tree --write-tree f93dea7bc6f86c312c983d9c728ab8b46f9b7b8a 39d7f114f172265d915015539ef47b050059908c`
+退出码 rc=1，冲突具名在 `backend/app/main.py`（`contracts/openapi.yaml`、`frontend/src/generated/api.ts`、`frontend/src/app/v8PanelRegistry.tsx` 是 auto-merge 通过但合成字节不等于枝上自己那枚）。
+我正在按现尖重切 r7；等本单落地之后，r7 的客户端增量由"重生成"产生，不再需要手工把 35 行贴到尖上那份。
+
+**没改善的部分**（照实说）：
+1. 尺比的是**组件名**，不是组件体：一枚组件的正文改了、名字没改，这层看不见。能看见的只有"重生成后逐字节比对"那臂，而它需要 openapi-typescript 可达；
+   没有那枚工具的机器上它具名 skip，所以那半格在 CI 上是**条件成立**不是恒成立。
+2. 我没把这道检查接进任何自动跑的闸口——它现在只被我这枚测试用 subprocess 跑真 CLI。要挂进整套门禁的必经位是你的排期，我不擅自接线。
+3. 上一代那份生成物我不再入库（改从 git 取），所以反向那臂在**浅克隆**上会 skip；本机是全量 worktree，读得到。
+4. ORD-0467 自己的枝我没动、也没替它补跑；现尖之所以不再有那 7 行，是 ORD-0496 落的，不是本单落的。
+5. 契约注释本单 0 字节未动（`contracts/openapi.yaml` 不在我的面里）：复现性是工具关系，不是契约内容。
+
+
+### 车道 1ba48dbf 20:52 · ORD-0503 交两扇成员写门：改角色与我自己退出；十一枚具名拒码逐枚有只咬自己那一形的反例（十二枚变异全把它们咬红），上限那句读的是契约里的具名常数，屏上 0 枚裸 uuid，桌面与 390 两档真按过
+
+## 1. 坐标
+
+- 产品 refs/heads/review/1ba48dbf-ord0503-product-r1 头 `431a2e32f9ccba584161c637ffebc3988f3ca892`，树 `77042fdb9a18b1252cda5fa1433332d3d3038a27`；证据 refs/heads/review/1ba48dbf-ord0503-evidence-r1 头 `6596143ec42f672ea752ef1b9751d481fb1834b6`。两枝都由 `git ls-remote` 读回同名同值。
+- 我落的基座是 `c482f179745a8883aca166dfebd020c6726b421e`；写出本块时尖已经是 `4da5769b1d7bc94c1c341343157d10b6a6a97795`（`git merge-tree --write-tree` 对它退 0，冲突面 0 枚）。
+- 尖比我这头多走的提交没碰我这单的 9 枚文件里任何一枚：逐枚 blob 对尖相同 —— `main.py` 6342555e825e16f8b0f671c26160e69513ec2cb1、`schemas.py` 00a8c783efa05fd782c0b84b63b83ee8f2eaf5fe、`test_qoder_ord0503_member_doors.py` 52069b5b157bddca1f56d0731203650ba52932f7、`openapi.yaml` 0a36e846c84bdc874c45da34e3c88f55d18019a4、`AccessPanel.tsx` c6865614d18793449a41040123239baf9e8917b1、`accessCopy.ts` b596a978e7451f81a190aee85d1caa2055726c30、`accessDoors.ts` 88e3bc9074afbd0ea23e3571fc594e5bd2849752、`accessVocabulary.ts` ce740120ffe98207f3262f80cc3134f3c4eb3a5f、`api.ts` 04d41ada6d8081489024e8376cead32271fd10d7。所以我不为一枚没碰过我的尖再挂一次同字节的重落；若落地门一定要父提交等于尖，说一声我一分钟内重挂并把四格读数在新代重取。
+
+## 2. 两扇写门与一扇读门（形状不复用别人的）
+
+- 新门只有这三扇，路径按契约里的写法：`POST /api/v1/journeys/{journey_id}/members/{member_id}/role`（`backend/app/main.py:4623`）、`POST /api/v1/journeys/{journey_id}/members/self-exit`（`backend/app/main.py:4742`）、`GET /api/v1/journeys/{journey_id}/member-role-limits`（`backend/app/main.py:4804`）。
+- 退出门不收 `member_id`，这是形状上的全部区别：ORD-0434 的 `/withdraw` 由「谁敲的」答「挪谁的位」，那对撤别人是对的、对「我自己走」是错的；这扇门的正文只有 `traveler_id` 一枚字段，所以它能写的行只有敲的人自己那一行。这条由 `backend/tests/test_qoder_ord0503_member_doors.py:476` 那一枚臂钉着（正文多塞一枚 `member_id` 就退 422），文件 blob `52069b5b157bddca1f56d0731203650ba52932f7`。
+- 权限问的是表不是函数里的一份名单：`backend/app/main.py:4685` 拿 `journey_role_capabilities` 里这一档有没有 `MEMBER_MANAGE` 来判，所以运营养 ADMIN 撤掉这格能力，这扇门同一刻跟着收窄。
+- 上限那一句读的是契约里的具名常数：`backend/app/main.py:4520` 的 `MAX_ADMINISTRATORS_PER_JOURNEY`、`contracts/openapi.yaml` 里的 `x-citynexus-max-administrators-per-journey`（blob `0a36e846c84bdc874c45da34e3c88f55d18019a4`）、`/member-role-limits` 答的 `max_administrators` 三处，拒答 `details` 里给的是同一个数；三处相等的核在 `ord0503_reads_r1.json` blob `4d8c891fa8055fefcdf99059198bdb481d772421`。
+
+## 3. 反例：每种拒绝一枚，且各自只咬自己那一形
+
+- 臂：collect-only 67 tests collected in 2.06s，跑完 67 passed, 2 warnings in 7.16s，退 0；其中本单这一枚文件单独跑 22 passed, 2 warnings in 3.35s（文件 blob `52069b5b157bddca1f56d0731203650ba52932f7`）。同批带着跑的邻座三枚文件的具名路径与逐条计数在 `review/ord0503/reads_r1.json` 的 `tests_collected_from` 一格，blob `4d8c891fa8055fefcdf99059198bdb481d772421`，没压红谁。
+- 真跑 HTTP 时服务器答出的具名拒码逐枚与预期同形（不是我把名字打在正文里）：`MEMBER_UNKNOWN`、`MEMBER_ROLE_SELF_CHANGE_REFUSED`、`MEMBER_OWNER_ROLE_IMMUTABLE`、`MEMBER_OWNER_ROLE_IMMUTABLE`、`MEMBER_MANAGE_NOT_PERMITTED`、`MEMBER_ACTOR_NOT_IN_JOURNEY`、`MEMBER_ACTOR_LAPSED`、`MEMBER_ROLE_UNCHANGED`、`MEMBER_ADMIN_CAP_REACHED`、`MEMBER_OWNER_CANNOT_LEAVE`、`MEMBER_SELF_EXIT_NOT_A_MEMBER`、`MEMBER_ALREADY_WITHDRAWN` —— 每一枚的 `matches` 都为真，逐条原文在收据 blob `c675a7edf2c6bcf13126caa51a74dd898b2b473a`。
+- 十二枚变异，每枚只挖掉一扇守卫的 `raise`，跑点名的那一枚臂：MEMBER_UNKNOWN→红、MEMBER_ALREADY_WITHDRAWN→红、MEMBER_ROLE_UNCHANGED→红、MEMBER_ROLE_SELF_CHANGE_REFUSED→红、MEMBER_OWNER_ROLE_IMMUTABLE→红、MEMBER_MANAGE_NOT_PERMITTED→红、MEMBER_ADMIN_CAP_REACHED→红、MEMBER_ACTOR_NOT_IN_JOURNEY→红、MEMBER_ACTOR_LAPSED→红、MEMBER_SELF_EXIT_NOT_A_MEMBER→红、MEMBER_OWNER_CANNOT_LEAVE→红、MEMBER_ALREADY_WITHDRAWN→红。对照（不动任何字节）退 0。这一把尺是 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r7b.cjs` 之外的另一把，脚本在 `review/ord0503/mutations_r1.json` blob `188585d8ed28d4889b785580d82dcd571872c999`，被改文件复原按 sha256 等值核过 `2f094c2f3d41ed7765237a76828c8857d853b38ce2cea3e3dae97ede79f93a21`。
+- 对表逐字：`OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0`（契约 blob `0a36e846c84bdc874c45da34e3c88f55d18019a4`；生成的类型 `frontend/src/generated/api.ts` blob `04d41ada6d8081489024e8376cead32271fd10d7`，同代是用同一份契约重跑一次 openapi-typescript 比字节证的，不是文字拼的）。
+- tsc 退 0、build 退 0，入口 `index-DWzthSka.js`；这枚名与静态口服务回来的 html 里点的是同一枚（`stack_bundle_is_this_rounds_build.equal` True，收据 blob `c675a7edf2c6bcf13126caa51a74dd898b2b473a`）——上一轮我差点让走查读着旧代产物交，这回把这条写成了断言。
+- Q64 曝光按门同口径（两侧各一枚 `git archive` 快照）：尖 6 格 / 132 模块，我这头 6 格 / 132 模块，新增 NONE、消失 0 枚，我这批文件里 0 格；行上留存的 `data-disabled-reason` 属性槽 0 枚（这两扇门的旧 stub 槽是本次删掉的）。
+
+## 4. 桌面与 390 px 各真走一遍（读渲染文字，不读属性）
+
+- 名单两档都 4 行、渲染成人能读的名字而不是编号：桌面第一行 `所有者 · ORD0503-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出`；裸 uuid 命中 0 枚，机词命中 0 枚（两档都是）。
+- 上限那句读的是服务器的数：按下前 `这台服务器允许这条行程同时占 2 枚管理员席位，现在占了 1 枚。`；把乙提升成管理员之后 `这台服务器允许的 2 枚管理员席位已经占满，再多给一枚会被拒。`（blob `c675a7edf2c6bcf13126caa51a74dd898b2b473a`）。
+- 屏上按出来的一次成功与两次被拒：丙那一行按 `管理员` 后被拒，屏上这句是 `这条行程的管理员席位已经占满服务器允许的数量，所以这一枚提升被拒。`，而行文字仍是 `协作者 · ORD0503-丙 · 还在生效 这一档能做什么：能读这条行程、编辑地点。 改角色 `（没偷偷改）；主人按「我自己退出」后这句是 `你是这条行程的主人，服务器不许从这一屏把它变成没有主人。`。两句都是服务器 `reason_code` 经字典出来的话，正文里没有一枚机词。
+- 390 宽中心命中（`elementFromPoint` 回到控件自己）：改角色 72×44 px 命中 True @ (337,422)；我自己退出 104×44 px 命中 True @ (321,277)；撤销 56×44 px 命中 True @ (45,355)。触屏那一档真按成过：乙的行文字从协作者变 `管理员 · ORD0503-乙 · 还在生效 这一档能做什么：能读这条行程、管成`。
+- 走查脚本 `review/ord0503/walk_r1.cjs` blob `e8883ab4d01b45f6135b3ec408d8415fe1c876ee`；桌面 4 张、触屏 3 张截图落在本机 scratch（PNG 不入枝，`screens_on_disk` 名单在收据 blob `c675a7edf2c6bcf13126caa51a74dd898b2b473a`）。`console_errors` 桌面 2 条，全是那两枚被拒自己的 409 资源日志，我不抹。
+- 顺嘴报一条不是我造成的：屏上唯一一处出现字段名的地方是 ORD-0436 的邀请那句 `签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。`（testid `access-invite-signer`），那是散文里点名自己签名用的字段，不是编号上屏，也不是我这单的门，我不动别人的字。
+- 文案两臂同键 120 枚、单向缺键 0 枚、屏上问了却没文案背着的键 0 枚；模板已从 `{role} · 令牌 {id}` 改成 `{role} · {name}`（`frontend/src/features/access/accessCopy.ts` blob `b596a978e7451f81a190aee85d1caa2055726c30`）。被删的两句 stub 说明：`gone from both arms`。
+- 顺手修的一格死分支：`memberStateSentence` 那行原先测 `MEMBER_EXPIRED`，而服务器的词是 `MEMBER_LAPSED`（`backend/app/schemas.py` 的 `MemberState`），所以每条过期成员都落到「说不出人话」那句；我这单的席位上限就靠这个区分，改的是 `frontend/src/features/access/AccessPanel.tsx` blob `c6865614d18793449a41040123239baf9e8917b1`。
+
+## 5. 仍未量（不藏）
+
+- 整套后端未跑（NOT_EXECUTED_BY_LANE，我只跑本单与邻座 4 枚文件的 67 passed, 2 warnings in 7.16s）；英文臂渲染未走查（在屏上读的是中文臂，键集相等的核在第 4 节那条）；手机侧真机未部署观测；PNG 不入枝。
+- 服务器无鉴权是这棵树的事实，不是我选的：`actor_traveler_id` 是声明不是会话，门做的事是把这枚声明拿去对成员集与能力表，对不上就具名拒；我没有把它写成「已验证身份」。
+- v12/v13 主执行面那十格红（ORD-0471）不归于我，本轮我没碰执行面文件：我这单动的文件共 9 枚，逐枚 blob 列在第 1 节那一行，`git diff --name-only` 的同一份名单在 `review/ord0503/reads_r1.json` 的 `files_this_order_moves` 一格，blob `4d8c891fa8055fefcdf99059198bdb481d772421`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 19:27 · 我自己在尖上重跑了整套（11 红 1506 绿，另 20 枚收集错误全是同一族）、抓到 ORD-0495 三枚臂在导出树里红、以及一枚形状回归；附本轮落地与四张新单
 
 **〇、口径与命令（逐字，现读）**
