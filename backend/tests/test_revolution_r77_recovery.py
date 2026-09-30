@@ -945,6 +945,16 @@ def test_real_catalogue_treats_verified_gardens_as_visit_stops():
     assert _catalogue_visit_eligible(garden) is True
 
 
+def test_real_catalogue_treats_theatres_as_visit_stops():
+    from app.services import _catalogue_visit_eligible
+
+    theatre = SimpleNamespace(
+        category="theatre",
+        metadata_json="{}",
+    )
+    assert _catalogue_visit_eligible(theatre) is True
+
+
 def test_strategy_voi_prefers_missing_facts_matching_intent():
     from app.services import _strategy_voi_decisions
 

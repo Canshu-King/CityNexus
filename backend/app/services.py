@@ -647,7 +647,7 @@ def _catalogue_visit_eligible(place: Place) -> bool:
     return category in {
         "aquarium", "attraction", "cafe", "experience", "food", "gallery", "garden",
         "heritage", "landmark", "library", "museum", "nightlife", "park",
-        "restaurant", "temple", "tourism", "viewpoint", "zoo",
+        "restaurant", "temple", "theatre", "tourism", "viewpoint", "zoo",
     }
 
 
