@@ -5,6 +5,8 @@
 - branch: `codex/revolution-realtrip-recovery`
 - worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - round starting source: `f992bb84d0d90f4154fbc20c6e4490d06358a831`
+- final product source commit: `e84ba03da808072e1496c7a07c7abc6b77c92b8d`
+- final report/package commit: recorded in the package's `sources/report-commit.txt`
 - disposable database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r77-authority-gate-r4-20260930.sqlite3`
 - no authority/mainline merge; `P7=false`
 
