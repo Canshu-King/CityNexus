@@ -16588,6 +16588,140 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### newlane2 00:26 · 车道 6a150e1e · ORD-0511 交了：住宿那一屏从"诚实的空"到"点一下真去要、要到了能定、定完按读回来的说话"
+
+**〇、交付坐标（一笔枝，七枚文件）**
+- 枝 `refs/heads/review/newlane2-ord0511-stay-empty-to-bookable-r1` = `d7c08d1293835adc7b2628f7100263066d610322`；基座 = 交件前一秒连读两次的现尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`；`git merge-tree` 零冲突，合并树 `cf0361abf22cbeda0867fd77f632028182a0bb72`。
+- 我这三枚产品文件的逐枚复切：`backend/app/main.py` blob `66244b6bfb0621470f8598847ad93825a60bbb2e`，`frontend/src/app/v8PanelRegistry.tsx` blob `5dd4d8c91c8bb2bd5c63939374b307ddc1cd51db`，`frontend/src/features/stay/StayExplorer.tsx` blob `105b3d4dbfe2dea6dc7ff307165272775f93a6ac`。清单在件 `review/ord0511/`（本枝内）。
+- 中途我按同一道门的规矩 rebase 过两次（现尖从 `be0ffee2` 走到 `0dd06928` 又走到现值，`backend/app/main.py` 每跳都被别人动过）；每次重基后我把后端族与屏臂整套重跑一遍，下面所有数都出自最终基座。
+
+**一、先把可用面盘清（全部现读，不是从源码猜）**
+- 生成 `backend/app/main.py:5070`，读列表 `backend/app/main.py:5161`，选定（写）`backend/app/main.py:5179`，采集 `backend/app/main.py:4863`；结果名那一族在 `backend/app/stay_mobility.py:1625` 一带（`OPTIONS_FOUND` / `NOT_APPLICABLE_ZERO_NIGHTS` / `NO_OFFERS_FROM_PROVIDER` / `STAY_BUDGET_NOT_DECLARED` / `ALL_CANDIDATES_REJECTED`）。
+- 住宿候选的数据源是出厂文件 `data/v9/city_operations.json`，带 `stays` 的城市只有 CN-TIANJIN 与 CN-BEIJING 两枚；默认库地址是 `backend/app/core/config.py:10` 的相对 `./citynexus.db`，我的栈把它覆盖成本道私有副本（绝对路径），共享预览库只读复制、零写入。
+- 实测三格：两夜的 CN-TIANJIN 答 `OPTIONS_FOUND`、排定 4 枚；同日往返答 `NOT_APPLICABLE_ZERO_NIGHTS`（这台服务器判定零晚是对的，演示里那枚"One Day in Nexus City"本来就没地方住）；没有住宿数据的城市答 `NO_OFFERS_FROM_PROVIDER`，`provider_attempts` 里连原因都给了。读数件 `review/ord0511/surface_r1.json` blob `ca3fc9d4fd3964a06bbc7be058b22f2e031ae653`、`review/ord0511/chain_r1.json` blob `6cc481bdbb3ea7269a047dc48701c35791a70af2`。
+- 选定之后回库查，不是信响应体：`stay_journey_options.status` 从 CANDIDATE 变 SELECTED，落了枚 plan version，住宿那几站在 `activities` 里 `locked=1`（件 `review/ord0511/chain_r1.json`）。
+- 两条要报的实底：其一，选定之后 `bookings` 与 `commitments` 这两张表在该行程上是 0 行——所以"已确认"目前在存储里的形状是"被锁定的活动"，不是一枚预订记录；屏上那句话因此只说"按这台服务器的记录排定"，不说"已下单"。其二，声明 `amount_minor=8000`（¥80.00 CNY）的住宿预算照样排定一枚 `amount_minor=36000`（¥360.00 CNY）的候选，`rejections_by_reason` 为空——出厂规划没有拿住宿预算拦候选（件 `review/ord0511/budget_gate_r1.json`，blob `96287533fcbe6fd8ec95f8769d1f66b7dbd4e9d8`）。
+
+**二、屏上做了什么（动作、措辞、具名拒绝）**
+- 空态那一格多了一枚动作，点一下真发一次生成；卡片一律来自 shell 自己那次读（`/experience`），本屏不另存第二份候选表。
+- 结果名走一张词形表翻成人话，表里没有的名字只说"这一屏还没有对应词形"，不替服务器编解释；屏上不出现裸 uuid（四枚臂逐屏扫渲染文字，命中均为 0）。
+- 选定那句"已按这台服务器的记录排定：Haihe Riverside Hotel"由读门驱动；同屏另有"行程里受保护的站：Arrival、Check in · …、Overnight · …、Check out · …、Departure"（用的是产品已有的那个标记，没给它新增含义）与预算那一格。
+- 预算那句话写明是"本屏把拿到的两个数相减，不是这台服务器的判定"——因为上面那条实底。没声明时说"没有声明住宿预算"，`declared` 为 null 的老行说"这台服务器没交回是否声明这一格"。
+- 拒绝形：选住那扇门原来三种拒绝共用两条裸类别（一个所有缺行都用的 NOT_FOUND、两句 `http_status=422` 散文），现在各带一枚具名码 `STAY_OPTION_UNKNOWN` / `STAY_ITINERARY_CONFLICT` / `STAY_NOT_AUTHORITATIVE`，状态码与原句不动，屏按名字措辞。
+
+**三、反件两枚与一处防呆（全部真跑）**
+- 反件甲：没有候选时屏上不出现任何"定下来"的控件——同日与无数据两屏实测 `confirm_control = 0`，生成之后仍是 0（件 `review/ord0511/ord0511_screen_arms.json` 的 S1/S2）。
+- 反件乙：把写路由换成产品自己那枚 `http_status=422`（`STAY_ITINERARY_CONFLICT`，由仪表注入、件里逐字标注），点卡片之后确认句必须不出现——屏上卡片 4 枚、确认句点击前 0 枚、点击后 0 枚，逐枚读数在件 blob `e1e666bc05d52851d2e821f38ce6fa5ca4d0ffa7`。这条证明那句是服务器驱动而不是点击驱动。
+- 后端也有反证：逐枚拿掉三个 `reason_code` 名字，各自只红自己那一格（外加"三名必须互不相同"那格），每趟之间 main.py 字节还原（件 `review/ord0511/reason_code_mutants_r1.txt`，blob `4e91d96862f8f3456d617a3f17ef4456f3a3efe7`）。
+- 一处防呆：若这一屏没拿到重读能力，屏上具名报"这是本屏自己报的缺，不是服务器的答复"，不再停在旧读数一声不响。
+
+**四、被自家闸抓住的一次真错（已修，说明留档）**
+- 我第一版在门里直接 `return error("NOT_FOUND", …)` 自造信封，被 `backend/tests/test_qoder_ord0272_continuation.py:350` 那枚 G6 判红："本单不新增错误码"。它是对的——发出的码本来就没变（404 由统一转换点映射成 NOT_FOUND），多的是我新写进去的一枚字面码。
+- 改法走产品既有形制：`refused = HTTPException(...)` 之后挂 `refused.reason_code`（需要计数时再挂 `error_details`），仍由那一个转换点出信封；`"NOT_FOUND"` 这枚字面码的计数回到基线那一处（同一枚 `backend/app/main.py:666`），逐趟红清单在 `review/ord0511/reason_code_mutants_r1.txt`，blob `4e91d96862f8f3456d617a3f17ef4456f3a3efe7`（件 `review/ord0511/suite_compare_r1.txt` 同名批次的两次红→绿）。我没有去放宽任何判据。
+
+**五、跑过什么**
+- 屏臂 6 枚全绿（viewport 宽 390 px、高 844 px、zh-CN、触屏），最终基座上重跑一遍仍是 6 枚通过，逐条读数在 `review/ord0511/arms_r7.txt`，blob `65189946e20eb0f393612921ff1cdec5dac71d6f`；截图在同目录。
+- 后端相关族：我新加的 4 枚 + ORD-0272 全件 + 住宿四件 = 60 passed（解释器 Python 3.12.14、pytest 8.4.2、`DEEPSEEK_API_KEY` 与两枚代理变量逐条 unset、`-p no:randomly`）。
+- 后端整套两趟对照：现尖自己 failed 8 枚 / passed 1509 枚，我这枝同基座 failed 8 枚 / passed 1513 枚，集合差两侧都为空——逐行摘要与红清单在 `review/ord0511/suite_compare_r1.txt`，blob `9c90c8d3b94027b5341881acfb76a784839b119e`。分母形状具名：我剔除了 `backend/tests` 下那批 hermes 探针模块——它们 import 一个未入库的包，不剔除时整套在收集阶段被打断、实际执行零条。这条与本单无关，我也不修。
+- 前端 `npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0（件里同名日志）。本枝**不交**重生成的 `frontend/src/generated/api.ts`：现尖上那份已入库客户端与用它自己的契约生成的结果差 5 行，那 5 行整体是 ORD-0467 的 `V13NamedRejection`，在这里重跑生成器等于把别人的字节装进 ORD-0511。
+
+**六、请裁 / 我没做**
+- 契约那一面：`/journeys/{journey_id}/stay-options/{option_id}/select` 在 `contracts/openapi.yaml:2300` 只有 200，没写任何 4xx，所以这三枚具名码目前只在服务端与屏上成立、契约看不见。要不要我补这段（连带评估客户端要不要重生成，绕不开上面那条漂移）请点一句。
+- "确认的住宿应当留下一枚 `bookings`/`commitments` 记录"这件事我做成了报告而不是顺手补——那要动 materialize 那一段的写入语义，属 ORD-0444/ORD-0446 那一族的地盘；屏上我先把话收在实测范围内。
+- ORD-0466 第二半仍悬着：「对这版发起授权」那枚控件归哪枚文件，仍等点名。
+- 本道私有服务（api 与门面）现在还在监听，判完我就关；ORD-0445 至 ORD-0466 那几轮的旧端口也还开着，需要我一并清掉的回一句。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### e766b154 · ORD-0515 长图体积上限与分页：五臂全绿，两枚反件真跑，读数落盘
+
+**〇、枝与基座**
+
+- 基座 = 我动手前一秒 `git ls-remote` 现读的权威尖 `9dea5cafb43009dc6e6ba03c339560bc4224008a`；件枝 `refs/heads/review/e766b154-ord0515-poster-pagination`，尖 `48dfea1524fa6ac346de8e94a37046205318d701`，`ls-remote` 回读逐字相同；我对权威枝写入 writes=0。
+- 产品字节三枚面：`frontend/src/features/poster/posterCanvas.ts`（上限与分页）、`TripPosterPanel.tsx`（页码条与逐页导出）、`LocaleContext.tsx`（三枚新键）。
+- 磁盘：本单只在已有那一代上重跑构建（`--tag ord0515r1/r2/r3`），未新开整树导出、未清别人的东西；起手现读 `df` 余量 2.1 G，收尾复读 3.6 G（他人释放，不是我清的）。
+
+**一、上限是具名的，不是感觉**
+
+- 名字与数：`POSTER_MAX_RASTER_HEIGHT_PX = 4096`，见 `frontend/src/features/poster/posterCanvas.ts:74`；换成布局用的 CSS 像素即 2048。它是画布表面的技术天花板（超了可能给出短一截或空的图而不吭声），不是审美取舍。
+- 判据与仪表都不抄这个数，而是从源码里读出来用：`frontend/review/ord0515/poster_size_readings_r1.py`（入库 blob `09875f7a4dc5419df760a8aca387610732f437f0`）与臂 臂 `frontend/e2e/qoder-ord0515-poster-pagination.spec.ts:27` 同名读取；读数件 `frontend/review/ord0515/run/size_readings_r1.json:3` 记 bound_raster_px=4096。
+
+**二、单日与多日的体积都真量了（不折算）**
+
+- 单日（封存行程）：屏上 `已存为 PNG：106970 字节，712 × 914 像素。`，同一枚文件自己 IHDR 答 712x914、bytes=106970，块数 blocks=1，within_bound=True。
+- 七天（本车道用产品写门造出来的：`PATCH /journeys/{id}` 答 http_status=200 使 day_count 1→7；六枚 `POST /journeys/{id}/poi-import/add` 各答 http_status=201，拒绝 refusals=0；逐枚原文在 `frontend/review/ord0515/write_route_walk.json`）：分页页 1 为 500729 B、712x3986、blocks=6；页 2 为 125141 B、712x1024、blocks=1；两页合计 blocks_total=7，见 `frontend/review/ord0515/run/P2_seven_day_pagination.json:34`。
+- 每页各自可导：文件名带页码（`citynexus-trip-poster-p1.png` / `-p2.png`），且每页 IHDR 高度都 ≤ 4096。页 1 那枚入库 blob `83577d862c75a295b6ddd6fe426889dad157272d`，`git cat-file -s` 答 size=500729。
+
+**三、超上限不裁切、不只导第一天**
+
+- 屏上句子走字典（中英各一枚，`frontend/src/i18n/LocaleContext.tsx:944` 起三枚键）：中文 `图过长，已按天分页：共 {pages} 页，每页可单独导出。`；页码按钮 `第 {page} 页`；导出后另起一行 `刚导出的是第 {page} / 共 {pages} 页。`。
+- 面板与画布切的是同一份 plan（`planPosterPages` 的条目），所以“这一屏这块”与“这一页这张图”只有一个答案；首帧就用 layout effect 量宽，避免先列七天再塌成第一页的那一跳。
+- 底部留白逐页量：P1 bottom_padding_rows=72、页 1 与页 2 亦 >8，最底墨行在框内 ⇒ 高差是多了一块块出来的，不是裁出来的。
+
+**四、两枚反件（基座代与候选代的通过数都贴）**
+
+- X1（去掉上限判定会不会静默）：同一枚七天行程跑在**没有上限的那一代产物**上（`_build_ord0501r1`，门面 `:4969`）——屏上没有任何分页句子（paged_note=null）、页码按钮 buttons=0、只交一枚 712x4600 的图，bytes=580089，`within_named_bound=False`（4600 > 4096），而它照样是个能打开、底部不裁的合法 PNG ⇒ 只看“有没有出错”的判据在这一枚下会假绿。件 `frontend/review/ord0515/run/X1_unbounded_bundle.json:29`，图 blob `aa01b2b04bb2c036d9828a6cfa2556627f044352`。
+- X2（页码与块数同代相等）：把最后一天在传输路上摘掉（route 拦截，不写库），跨页合计 blocks_total 从 7 变 6、页码条按钮数同步变小且 never exceeds blocks，见 `frontend/review/ord0515/run/X2_pages_follow_blocks.json`。
+- 五臂在候选代：arms=5 passed=5 failed=0（`frontend/review/ord0515/run/` 五枚读数件）。基座代（未修判据前）同五臂是 passed=1 failed=4，两枚红是我判据自己的错：一处把发丝行换算成块数用了 `g/2`（画了日分隔时应当是 `3n-1`，七天读成 10 块），一处 `innerText()` 没给超时、对不存在的元素一直等到 420 秒测试上限。两处都在本块具名，修正见 `frontend/e2e/qoder-ord0515-poster-pagination.spec.ts:145`。
+
+**五、EN/DE 那一格：DE 不是本产品的档**
+
+- 实测：`type TripLocale = "en" | "zh-CN"`，`dictionaries` 两臂，`german_arm_present=false`（`frontend/review/ord0515/run/P3_languages.json`）。屏顶确实有“DE”两个字，但它不是语言：那是头像按钮 `.v8-avatar` 与 `.v8-user` 里的旅行者姓名首字母，语言开关是 `[data-testid="topbar-language"]`（aria “Switch language”）。
+- 所以 EN 与 zh-CN 两档各跑一趟并逐面数键名回吏：joined 文本里 `poster.` / `mapComp.` / `fmt.` / `{` / `}` 逐面计数 key_echo_hits=0，断言在 `frontend/e2e/qoder-ord0515-poster-pagination.spec.ts:214`；七天日行在两档各自齐（中文 `10月10日周六`…`10月16日周五`，英文 `Sat 10 Oct`…`Fri 16 Oct`）。
+- 若要真加德语档，那是第三本字典（现存每侧 keys_per_side=928，见 `frontend/src/i18n/LocaleContext.tsx:2133` 那一行的两臂字典），不是长图这一单的形状 ⇒ 具名 NOT_AVAILABLE_BY_CMDR，等裁。
+
+**六、现场与红线**
+
+- 本单车道栈：api `:8764`（七天库）与 `:8765`（封存库），门面 `:4972`/`:4973` 跑候选代产物、`:4969` 跑无上限代产物；库都是本车道自己的 `Connection.backup()` 副本（源库只 `mode=ro`）。
+- `_preview.db` 写入 writes=0；`demo/reset` 调用 calls=0；`:8000`、`:4781`、`:4782`、`:4783`、`:4785`、`:8693` 一个没碰没重启；新增依赖 deps_added=0；长图导出 network_calls=0。
+- 两份 tsc 配置各自 rc=0、输出 0 字节；字典尺 `VERDICT=ALL_KEYS_RESOLVED_BOTH_SIDES`（两侧各 21 枚 poster 键）。
+
+
+### ORD-0517 车道 82f55d8a 交付：票夹卡片不再把原始 id 与内部锁标记当标题（4 枚产品文件 + 2 枚判据文件，候选已推 review/*）
+
+**一、坐标。**基座＝我开工时现读的权威尖 `9dea5cafb43009dc6e6ba03c339560bc4224008a`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。候选＝`8273968eebaa47407dbdcd944f2405530f097409`，枝名 `refs/heads/review/82f55d8a-ord0517-ticket-titles-r1`，push 后 `git ls-remote --heads` 回读同名同值。提交内 6 条路径、579 insertions / 18 deletions（`git show --stat HEAD`）。`backend/ contracts/ data/` 三侧 0 改动：`git diff --name-only 9dea5cafb43009dc6e6ba03c339560bc4224008a 8273968eebaa47407dbdcd944f2405530f097409 -- backend contracts data` 回空。**权威线 0 次移动、0 次直推**（我全程只 ls-remote 读它）。
+
+**二、题面之外我先量到的一处现读事实：权威尖在我干活期间动了。**`git ls-remote` 现读为 `1e95d106f81b29048ba17695fd0e49172516b9b1`（我开工时现读到的尖是 `9dea5cafb43009dc6e6ba03c339560bc4224008a`，全块都以它作基座）。只读复算：我那 4 枚文件里 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx`、`frontend/src/lib/displayVocabulary.ts` 两枚 blob 未动（2b181b01c5d543cbd652a3364e9dbec67f8d9c77、91ae48c0a8a6e0ad75d4486eb5c7b288c88bdbd1 逐枚相同），而 `frontend/src/app/V8Experience.tsx` 与 `frontend/src/i18n/LocaleContext.tsx` 两枚在你这边变了（前者 5d46930aab08a9adfa9f79c2f35c030f0e9b1750 → b069da0347d2a8ec5a6fd11ad91b114cbe6a3c62）。`git merge-tree --write-tree` 只读预测：退出码 0、无冲突文件、合并树 `77834af4e8c8f8471bcde634ab097236a818ba3b`。**我没有自己 rebase**：rebase 后 V8Experience 与 LocaleContext 的字节就不再是我判过的那一枚，屏读必须整套重取，这一步等你点头我再做（要 r2 我就在新尖上把两枚反件 + 屏读 + 构建全重跑一遍）。另：ORD-0343 留过「V8Experience 再动要先报」，本块先报，改的就是那枚卡片。
+
+**三、改前屏读（读渲染文字，不读 data-\*）。**私有栈：我自己的库 `run/ord0517_be.db`、后端 `:41517`、vite dev `:41518`；没碰 `demo/reset`、没碰共享库。行程与票据全走产品 API 自造：`POST /api/v1/travelers` → `POST /api/v1/journeys` → import 三回、confirm 两回，判据形制见 `frontend/e2e/qoder-82f55d8a-ord0517-ticket-titles.spec.ts:63`。
+分母是 12 张屏：手机竖屏与桌面横屏 × zh-CN / en × 票夹屏、Trips 预订页、粘贴确认页；读数原样落在 `D:/moodle/_qoder_82f55d8a_ord0517_20260930/run/readings-base.json`，本机 60360 B。逐张卡片标题行原样：
+
+- `wallet-commitment` 两枚卡标题都是 `v12:3f4c754d-f733-4c38-9485-23795108bdf3:arrival-anchor` —— 内部锚点键当标题，里面还嵌着行程 UUID。发射点 `frontend/src/app/V8Experience.tsx:4151`。
+- 无锚点键时同一格落到 `frontend/src/app/V8Experience.tsx:4152`，屏上写 `承诺 77777777`（id 截断当名）。这条在反件 `frontend/e2e/qoder-82f55d8a-ord0517-ticket-titles.spec.ts:356` 的基座读数里被拍到，不是我从源码推的。
+- `wallet-reservation` 两枚卡标题 `ORD0517NAMEDA1`、`ORD0517NAMELESS` —— 订单号当标题；服务端同一枚 payload 里的 `origin.name` 天津西站、`destination.name` 北京南站一个字都没上屏。发射点 `frontend/src/app/V8Experience.tsx:4314`。
+- `inbox-pending-row` 标题 `ORD0517PENDING`，而 `extracted.title` 明明是「海河悦榕庄 湖景房」。发射点 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:809`。
+- 顺带同一条屏读拍到的两枚形状缺陷：预订卡类型那一格屏上是空的（`frontend/src/app/V8Experience.tsx:4311` 读 `item.type`，而 `_reservation_payload` 写的是 `reservation_type`）；退出的锚点卡屏上写 `这台服务器写的：CANCELLED`，因为那张表只有四行、没有 CANCELLED（表头 `frontend/src/lib/displayVocabulary.ts:76`，ACTIVE/CONFIRMED/CANDIDATE/PLANNED 四枚逐枚读回）。
+- 计账：12 张屏的已绘层里 enum 机词 12 枚、UUID 8 枚、锚点键 8 枚。
+- 一格**没修**、也归不到我这单：`/memory` 那两行屏上是 `Travel fact · 未确定`，`label` 那列服务器自己写了 `ORD0517NAMELESS`。这是后端 `/memory` 的措辞（`title` 是它自己的英文散文），前端只是照读，我没动，报给你定归属。
+
+**四、改后（同一台屏读仪、同一批屏）。**`run/readings-candidate.json`（本机 63752 B）：预订卡标题 `天津西站 → 北京南站`、`滨海国际机场 → 首都机场`；承诺卡标题 `服务器没有给这项承诺的名字`；队列行标题 `海河悦榕庄 湖景房`，订单号降级成带标签的一行 `订单号 ORD0517PENDING`。机词计数 12 张屏全部归零：SCREAMING_SNAKE 0 枚、服务端 enum 词 0 枚、UUID 0 枚、锚点键 0 枚。取的键序（name → location → title）不是我新造的，是审核面板 `renderFact` 早就在用的那一套，见 `frontend/src/app/V8Experience.tsx:4108`；队列行的标签复用 `fieldLabel("confirmation_ref")` 的旧词。
+
+**五、具名空态与「技术详情」。**新词全走字典通道：`bookings.reservationUnnamed`、`bookings.commitmentUnnamed`、`bookings.orderRef`（`frontend/src/i18n/LocaleContext.tsx:388` 为 en、`:1449` 为 zh），`inbox.unnamedArtifact` 由「没有订单号的一条」改成「服务器没有给这张确认单的名字」（基座值在 `frontend/src/i18n/LocaleContext.tsx:1805`、en 在 `:761`）。**de 这一档在本代不存在**：`frontend/src/i18n/LocaleContext.tsx:4` 现读是 `export type TripLocale = "en" | "zh-CN"`，`frontend/src/i18n/LocaleContext.tsx:2127` 的 `dictionaries` 只有这两把键；`Dict` 按 TripLocale 收口，只加一侧会 tsc 红，所以 zh/en 是强制成对的，第三档要开得先开语言位——这不是我能在本单里补的，具名交回。承诺卡把机器身份移进每枚卡自己的 `<details data-testid="wallet-commitment-technical">`（`frontend/src/app/V8Experience.tsx:4207`，summary 复用既有 `inbox.technicalDetail` 词），屏上「技术详情」元素计数＝2 枚、每枚含 3 个 `code` 槽；展开后读数里确实带 `v12:` 与 `arrival-anchor`（收据在 `run/evidence/ord0517/ord0517-2-reading-O0517-BUNDLE-0030.json`，本机 6591 B）。
+
+**六、两枚反件 + 三代真跑。**判据文件 `frontend/e2e/qoder-82f55d8a-ord0517-ticket-titles.spec.ts`，跑法 `frontend/playwright.ord0517-82f.config.ts`（这配置不起任何东西，两端口必须由跑的人点名，且把 `:8000`、`:4781`、`:4782`、`:8693` 写死拒绝）。
+
+| 代次 | 服务的是什么字节 | 通过 | 失败 | 失败名 |
+|---|---|---|---|---|
+| 基座（未改，4 枚产品文件逐枚等于 9dea5caf 的 blob） | vite dev | 0 | 2 | ord0517-1、ord0517-2 |
+| 候选（`8273968eebaa47407dbdcd944f2405530f097409` 同字节） | vite dev | 2 | 0 | — |
+| 候选（同一代） | vite build 产物 + preview | 2 | 0 | — |
+| 反件代（遮服务端名字读取） | vite dev | 1 | 1 | ord0517-1 |
+
+- 反件一＝ord0517-2：无名字时必须说清「服务器没给名字」，不许长出假标题。基座实拍到的是 `{"reservation": "", "commitments": ["v12:…:arrival-anchor", "承诺 77777777"]}`；候选是三格全具名空态，且屏上没有 id 的头 8 位。
+- 反件二＝遮掉服务端名字读取：单变量改 `serverPlaceName` 的键序为空（一枚行内突变），先证明它真落进了被测字节——被服务的模块文本里现在是 `for (const key of [])`。结果 ord0517-1 红（两枚预订卡标题退化成具名空态，错误里原样贴出），ord0517-2 仍绿，说明这枚突变不是把整屏砸红的粗暴件。突变跑完我把 4 枚文件还原并逐枚 `git hash-object` 比回候选 blob（4/4 相同），报告 `run/report-mutant.json`（本机 9904 B）。
+- 兄弟闸同批跑：`qoder-wallet-commitments.spec.ts` 四枚里可跑三枚，基座 3 绿 1 红、候选 3 绿 1 红，红集合相同且都是 `ord0087-booked-commitment-is-on-the-wallet-screen`，红因是产品自己的门（服务器原话：这一步要删整库 52 张表并要运行者环境变量里的令牌），不是我改的卡。候选红集合 ⊆ 基座红集合。
+- 未跑，具名 `NOT_REACHED_BY_CMDR`：`qoder-inbox-review-queue.spec.ts`、`qoder-ord0323-two-exposure-cells.spec.ts` 这类要走 `/api/v1/demo/scene` 播种的闸——我这台 fresh 库没有排好的场景，而 `demo/reset` 是本单红线，我不自己开那扇门（这与 09-29 那条「权威口径当前不可达」同源）。它们消费的 `wallet-reservation` 文本我按判据逐条比过：卡片仍带 `订单号 <ref>`，`hasText: reference` 与 `text.includes(confirmation_ref)` 两处取词都还在同一张卡里。
+
+**七、构建与身份三证。**开工时 `df -B1 /d` 现读 2,224,861,184 B 剩余 ⇒ 按令不建新的整树导出、不开 vite 构建，屏读全在 dev 上取；收尾时同一把尺现读 29,796,732,928 B ⇒ 补跑了一次构建并把两枚反件在产物上重跑。`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0，`--listFiles` 925 枚且我改的 4 枚逐枚在列（非空转）。`vite build --outDir D:/moodle/_qoder_82f55d8a_ord0517_20260930/dist/candidate` 退出码 0、耗时 14.4 s。身份（`run/identity.json`，本机 1905 B）：①入口名 `/assets/index-uvNXVx1N.js` 由我自己 dist 的 `index.html` 说出，被服务的 `/` 字节 sha1 本机前 12 位 fbddca23063d == 磁盘同文件（不是 git 对象）；②该模块被服务 1515260 B、磁盘 1515260 B，两侧本机字节 sha1 前 12 位都是 0579dfc84662，且产物里现读得到 `bookings.commitmentUnnamed`、`bookings.reservationUnnamed`、`wallet-commitment-technical` 三枚我自己的新符号（证它是我这代，不是别道的旧壳）；③监听 `:41519` 的进程命令行原样含 `--outDir D:/moodle/_qoder_82f55d8a_ord0517_20260930/dist/candidate --port 41519`；④访问日志这一证 `NOT_AVAILABLE_BY_CMDR`：vite preview 不写请求日志，且 SPA 回退对不存在的资产也回 http_status=200，200 认不出一代。后端另取一证：我写的 marker 行程标题在自己库 `run/ord0517_bundle.db` 的 `journeys.title` 上回读到 1 行，监听 `:41517` 的命令行是我起的 uvicorn。每趟一个 fresh 库：`ord0517_be.db`、`ord0517_base.db`、`ord0517_mut.db`、`ord0517_bundle.db`。
+
+**八、动作边界。**权威线 0 次移动、0 次直推；`_preview.db` 0 读写、也没 ALTER；`demo/reset` 0 次；basic-auth 口令 0 读（只认那条路径 `D:/moodle/_qoder_preview_20260920/run/preview_auth.txt`）；API key 值 0 打印，跑测前我 `unset DEEPSEEK_API_KEY CITYNEXUS_AI_API_KEY CITYNEXUS_AGENT_TOKEN` 并把 `HTTP_PROXY`/`HTTPS_PROXY` 摘掉再判可达；竞品逆向产物 0 涉及；skip/mock/改断言 0 次（`test.skip` 与 `.only` 在我那枚 spec 里 0 命中）；候选只落 `refs/heads/review/*`，枝名不含 40 位十六进制；`D:/moodle/_qoder_ledger_inbox` 之外 0 直写账本。
+
+**九、留给你的三格。**①rebase 到 `1e95d106f81b29048ba17695fd0e49172516b9b1` 要不要我出 r2（要的话我在新尖上把屏读、两枚反件、突变、构建全重跑，不拿旧读数顶）；②承诺卡现在诚实写「服务器没有给这项承诺的名字」，要让它有名字，缺的是后端 `/wallet` 的 commitment 带一枚标题字段（`_commitment_payload` 目前只有 id/kind/level/status/external_ref/policy），那是契约动作、归你裁；③`/memory` 那两行 `Travel fact` 与 `label` 用订单号，是服务器散文，我这屏只照读，归口请你定。
+
+**十、现场与下一步的价。**我这台的三扇门还开着供你复核：后端 `:41517`、vite dev `:41518`、构建产物 preview `:41519`（各一枚 pid：47392、50340、36576，命令行已在第七节回读）。本 worktree 当前分支就是 `refs/heads/review/82f55d8a-ord0517-ticket-titles-r1`，没有配 upstream，裸 `git push` 从这里会直接失败，权威线只能由你那侧动。若点头要 r2：rebase 到现尖 + 4 枚产品文件重取屏读 12 张屏 + 两枚反件在 dev 与 build 两侧各跑 + 一枚突变 + 兄弟闸对照，我按这一趟的实测估 25 分钟一轮；不做 r2 的话本块第七节已经把「构建代」的读数补齐了，缺的只是新尖那两侧。
+
+
 ### CMDR 00:15 · 额度已回：车道重新开工，我一次叫醒 15 条（不重发长单，只报单号与形制）（同代尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`）
 
 **〇、我怎么知道额度回来了（读数，不是猜）**
