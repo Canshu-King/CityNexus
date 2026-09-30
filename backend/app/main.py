@@ -207,6 +207,7 @@ from app.integrations.ai.copilot_contract import (
     classify_copilot_message,
     disruption_event_type,
     disruption_severity,
+    extract_disruption_subject,
     is_status_inspection_reference,
     simulate_what_if,
     validate_proposed_action,
@@ -11933,9 +11934,14 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         entities = dict(envelope.entities)
         if decision.event_type is not None:
             entities["event_type"] = decision.event_type
+        if decision.event_type is not None and not entities.get("subject_text"):
+            subject_text = extract_disruption_subject(message)
+            if subject_text:
+                entities["subject_text"] = subject_text
         entities["assertion_status"] = envelope.assertion_status
         entities["effective_time"] = envelope.effective_time
         semantic_payload = envelope.as_dict()
+        semantic_payload["entities"] = dict(entities)
         semantic_payload.update(
             {
                 "route_intent": decision.route_intent,

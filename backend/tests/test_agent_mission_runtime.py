@@ -2,18 +2,22 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
+from datetime import datetime, timezone
 
 import httpx
 import pytest
 from demo_stage import demo_reset_headers
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 
 import app.main as main_module
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import DeepSeekJourneyAgent
 from app.core.config import settings as runtime_settings
-from app.db.models import AgentRun, Event, JourneyMission, Place
+from app.db.models import Activity, AgentRun, Event, Journey, JourneyMission, Place
 from app.db.session import SessionLocal
+from app.integrations.ai.copilot_contract import classify_copilot_message
+from app.integrations.ai.event_targeting import resolve_event_target
 
 client = TestClient(main_module.app)
 
@@ -100,6 +104,39 @@ def test_agent_command_reuses_existing_actionable_event_for_same_current_activit
     events = client.get(f"/api/v1/journeys/{journey_id}/events")
     assert events.status_code == 200, events.text
     assert [item["id"] for item in events.json()] == [original_id]
+
+
+def test_named_current_disruption_targets_named_future_activity():
+    journey_id = _selected_journey()
+    started = client.post(f"/api/v1/journeys/{journey_id}/start")
+    assert started.status_code == 200, started.text
+    interpretation = classify_copilot_message("丽江金塔景区临时关闭了，请重新安排。")
+    assert interpretation.entities["subject_text"] == "丽江金塔景区"
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        activities = list(
+            session.scalars(
+                select(Activity)
+                .where(Activity.plan_version_id == journey.active_plan_version_id)
+                .order_by(Activity.sequence_no)
+            )
+        )
+        assert len(activities) >= 2
+        named = activities[-1]
+        target = resolve_event_target(
+            session,
+            journey,
+            event_type="CLOSURE",
+            semantic={
+                "effective_time": "NOW",
+                "entities": {"subject_text": named.title},
+            },
+            now=datetime.now(timezone.utc),
+        )
+        assert target.activity_id == named.id
+        assert target.resolution == "AUTHORITATIVE_NAMED_ACTIVITY"
 
 
 def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkeypatch):

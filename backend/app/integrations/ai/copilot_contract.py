@@ -212,6 +212,7 @@ def _disruption_semantic_status(value: str) -> tuple[str, str]:
         value,
         (
             "现在", "此刻", "目前", "当前", "刚刚", "正在", "已经", "发生", "有交通管制", "有堵车", "有拥堵", "有封路", "有暴雨", "有大雨", "前面", "这里",
+            "临时关闭", "临时闭馆", "临时闭园", "突然关闭", "突然闭馆", "突然闭园",
             "currently", "right now", "just now", "is now", "has been", "there is", "at the moment",
         ),
     )
@@ -333,6 +334,43 @@ def disruption_severity(message: str, event_type: str) -> str:
     return "MAJOR"
 
 
+def extract_disruption_subject(message: str) -> str | None:
+    """Extract an explicitly named venue without inventing an entity.
+
+    This is intentionally a narrow boundary helper.  It only returns text that
+    is immediately attached to a known disruption verb; generic reports such
+    as ``现在下雨`` remain unscoped and continue to use the current position.
+    The persisted plan is the authority that decides whether the returned
+    name identifies exactly one Activity.
+    """
+
+    value = str(message or "").strip()
+    if not value:
+        return None
+    chinese = re.search(
+        r"(?P<subject>[^，。！？,!?；;]{2,60}?)"
+        r"(?:临时|突然|已经|已|正在|目前|现在)?\s*"
+        r"(?:闭馆|闭园|关闭|关门|没开门|歇业|停业|不开放|暂停开放|维修|施工中|停止营业|停电|停水)",
+        value,
+    )
+    if chinese:
+        subject = chinese.group("subject").strip()
+        subject = re.sub(r"^(?:现在|目前|刚刚|这里|前面)\s*", "", subject)
+        if subject in {"下一站", "当前地点", "当前活动", "这个地方", "这里"}:
+            return None
+        return subject or None
+    english = re.search(
+        r"(?:the\s+)?(?P<subject>[A-Za-z][A-Za-z0-9 &'’\-]{1,60}?)\s+"
+        r"(?:is|was|has been|will be)\s+(?:temporarily\s+)?"
+        r"(?:closed|shut|out of service|under maintenance)",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if english:
+        return english.group("subject").strip() or None
+    return None
+
+
 def _classify_copilot_message(message: str) -> CopilotInterpretation:
     """Route obvious requests without treating preference text as an event."""
 
@@ -382,7 +420,14 @@ def _classify_copilot_message(message: str) -> CopilotInterpretation:
             "DISRUPTION_REPORT",
             0.97,
             f"reported current {event_type.lower()} reality",
-            {"event_type": event_type},
+            {
+                "event_type": event_type,
+                **(
+                    {"subject_text": extract_disruption_subject(message)}
+                    if extract_disruption_subject(message)
+                    else {}
+                ),
+            },
             "deterministic",
             True,
         )

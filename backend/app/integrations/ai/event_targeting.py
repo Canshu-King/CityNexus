@@ -41,21 +41,45 @@ def resolve_event_target(
 ) -> EventTarget:
     """Use only persisted Activity/Booking/Commitment facts for future scope."""
 
-    if str(semantic.get("effective_time") or "NOW").upper() != "FUTURE":
-        return EventTarget(journey.current_activity_id, now.isoformat(), "CURRENT_POSITION")
-
     plan = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
     semantic_entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
     subject = str(semantic_entities.get("subject_text") or "").casefold()
+    effective_time = str(semantic.get("effective_time") or "NOW").upper()
     if plan is None:
+        if effective_time != "FUTURE":
+            return EventTarget(journey.current_activity_id, now.isoformat(), "CURRENT_POSITION")
         if event_type == "SCHEDULE_DELAY":
             return EventTarget(None, journey.end_at, "AUTHORITATIVE_JOURNEY_END")
         return EventTarget(None, None, "UNRESOLVED_REVIEW_REQUIRED")
+
     activities = list(
         session.scalars(
             select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
         )
     )
+    words = [word for word in re.split(r"[^\w\u4e00-\u9fff]+", subject) if len(word) > 1]
+
+    def matches(activity: Activity) -> bool:
+        haystack = f"{activity.title} {activity.activity_type}".casefold()
+        return bool(words and any(word in haystack for word in words))
+
+    # A current disruption may explicitly name a future stop.  Prefer that
+    # server-owned Activity over the execution cursor; otherwise a report such
+    # as “Jinta is closed” incorrectly closes whatever the traveller is doing
+    # now.  If the name is present but not unique, fail closed rather than
+    # silently falling back to the cursor.
+    if effective_time != "FUTURE" and subject:
+        named = [
+            item
+            for item in activities
+            if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"} and matches(item)
+        ]
+        if len(named) == 1:
+            return EventTarget(named[0].id, now.isoformat(), "AUTHORITATIVE_NAMED_ACTIVITY")
+        return EventTarget(None, None, "UNRESOLVED_REVIEW_REQUIRED")
+    if effective_time != "FUTURE":
+        return EventTarget(journey.current_activity_id, now.isoformat(), "CURRENT_POSITION")
+
     upcoming = [
         activity
         for activity in activities
@@ -65,12 +89,6 @@ def resolve_event_target(
     commitments = list(session.scalars(select(Commitment).where(Commitment.journey_id == journey.id)).all())
     protected_activity_ids = {item.activity_id for item in commitments if item.activity_id}
     booked_activity_ids = {item.activity_id for item in bookings if item.activity_id}
-    words = [word for word in re.split(r"[^\w\u4e00-\u9fff]+", subject) if len(word) > 1]
-
-    def matches(activity: Activity) -> bool:
-        haystack = f"{activity.title} {activity.activity_type}".casefold()
-        return bool(words and any(word in haystack for word in words))
-
     candidates = [item for item in upcoming if matches(item)]
     if event_type == "SCHEDULE_DELAY":
         booked = [item for item in upcoming if item.id in booked_activity_ids]
