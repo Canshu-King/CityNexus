@@ -421,6 +421,7 @@ from app.schemas import (
 )
 from app.schemas import (
     RecycleBinJourney,
+    TravelerRecycleBinJourney,
 )
 from app.schemas import (
     CollectionFolder as CollectionFolderSchema,
@@ -4314,25 +4315,100 @@ def create_share_grant(
     return _share_grant_payload(grant)
 
 
+def _recycle_bin_in_force_seat(
+    session: Session, journey_id: str, traveler_id: str, now: datetime
+) -> JourneyMemberModel | None:
+    """The seat this traveller actually holds on one trip right now, if any (ORD-0531).
+
+    Read through `_member_state` rather than a fresh `removed_at is None` test, so a withdrawn or
+    lapsed seat stops counting here at the same moment it stops counting at the member doors.
+    """
+
+    for member in session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey_id,
+            JourneyMemberModel.traveler_id == traveler_id,
+        )
+    ).all():
+        if _member_state(member, now) == "MEMBER_IN_FORCE":
+            return member
+    return None
+
+
+def _traveler_bin_row(
+    session: Session, journey: Journey, traveler_id: str, now: datetime
+) -> TravelerRecycleBinJourney | None:
+    """One bin row said from one seat: whose trip it is, and whether this traveller may 找回 it.
+
+    Returning `None` means the row is not this traveller's to see at all, which is the other half of
+    the isolation: a trip neither owned by them nor seated to them does not appear with a refusal,
+    because a refusal would still be somebody else's discarded trip.
+    """
+
+    base = recycle_bin_entry_schema(journey).model_dump()
+    if journey.traveler_id == traveler_id:
+        return TravelerRecycleBinJourney(
+            **base,
+            ownership="OWNED_BY_THIS_TRAVELER",
+            member_role=None,
+            recovery="RECOVERY_ALLOWED",
+        )
+    seat = _recycle_bin_in_force_seat(session, journey.id, traveler_id, now)
+    if seat is None:
+        return None
+    may_restore = "JOURNEY_UPDATE" in _role_capabilities(session, seat.role)
+    return TravelerRecycleBinJourney(
+        **base,
+        ownership="OWNED_BY_ANOTHER_TRAVELER",
+        member_role=seat.role,
+        recovery=(
+            "RECOVERY_ALLOWED" if may_restore else "RECOVERY_REFUSED_ROLE_CANNOT_RESTORE"
+        ),
+    )
+
+
 @app.get(
     "/api/v1/travelers/{traveler_id}/recycle-bin/journeys",
-    response_model=list[RecycleBinJourney],
+    response_model=list[TravelerRecycleBinJourney],
 )
 def list_traveler_recycle_bin_journeys(traveler_id: UUID, session: Session = Depends(get_session)):
-    """ORD-0434 step 2: the same bin rows, scoped to one owner.
+    """ORD-0434 step 2 scoped to one traveller, and since ORD-0531 isolated by 归属 and 共享态.
 
     This is its own door rather than a parameter on `GET /api/v1/recycle-bin/journeys` because that
     one carries a tested promise to advertise no filter, no scope and no page - a promise this order
-    has no business bending.  Naming an owner in a path is not proof of who is asking; binding the
-    caller to the name is the daylight decision step 2 does not make.  Rows and ordering are the same
-    schema and the same `deleted_at` newest-first rule, so the two doors cannot disagree about a row.
+    has no business bending, and it is untouched.  Naming an owner in a path is not proof of who is
+    asking; binding the caller to the name is the daylight decision step 2 does not make, and nothing
+    here pretends that binding has happened.
+
+    What changed with ORD-0531 is what a row is allowed to say and who may see it.  The set is now
+    "the trips in the bin that this traveller owns, plus the ones an in-force seat reaches", and a
+    trip belonging to somebody else with no seat to this traveller is not returned at all.  Ordering
+    stays `deleted_at` newest-first, so the two doors still cannot disagree about a row they both
+    hold; the two names (`ownership`, `recovery`) are what this door adds, and `recovery` is asked of
+    `journey_role_capabilities` rather than decided from a role list written into this function.
     """
-    items = session.scalars(
+    now = datetime.now(timezone.utc)
+    viewer = str(traveler_id)
+    owned = session.scalars(
         select(Journey)
-        .where(Journey.deleted_at.is_not(None), Journey.traveler_id == str(traveler_id))
+        .where(Journey.deleted_at.is_not(None), Journey.traveler_id == viewer)
         .order_by(Journey.deleted_at.desc(), Journey.id)
     ).all()
-    return [recycle_bin_entry_schema(item) for item in items]
+    seated = session.scalars(
+        select(Journey)
+        .where(
+            Journey.deleted_at.is_not(None),
+            Journey.traveler_id != viewer,
+            Journey.id.in_(
+                select(JourneyMemberModel.journey_id).where(
+                    JourneyMemberModel.traveler_id == viewer
+                )
+            ),
+        )
+        .order_by(Journey.deleted_at.desc(), Journey.id)
+    ).all()
+    rows = [_traveler_bin_row(session, item, viewer, now) for item in [*owned, *seated]]
+    return [row for row in rows if row is not None]
 
 
 @app.get("/api/v1/journeys/{journey_id}/share-grants", response_model=list[ShareGrant])
