@@ -4,13 +4,15 @@ WHAT WAS RUN
   command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
   runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py (refuses unless both lane listeners are up)
   lane    : review/ord0464-abort-reason/lane_r1.py -- started both legs and proved them before any browser ran
-  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD ac44ec9aaf03fc14ebc14344d3b82705d937dc83
-  base    : dcb90cccc68b81f2317b28db19051dedb9f06c80 -- the third base this branch has been rebased onto.  Re-cut #1 refused 45513fc7957214dc385b4dffea9a662a0d8b1d1c
+  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD 3e4c1c49af64378ce8c1d8b84f543a8f287f1a8f
+  base    : 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 -- the third base this branch has been rebased onto.  Re-cut #1 refused 45513fc7957214dc385b4dffea9a662a0d8b1d1c
             (five shared faces), #2 refused 4037cb331ea00b83124316d40329762fa1131689 (ORD-0471's route rebind in main.py, ORD-0467's V13
-            entry in the contract), #3 refused 127ce7b05329eaa837701cdb93bdbc2e5d64e10f because ORD-0476 inserted its footprint schemas
-            at the same `components:` anchor this order used.  All three were positional.
+            entry in the contract), #3 refused the branch based on 127ce7b05329eaa837701cdb93bdbc2e5d64e10f (ORD-0476's footprint schemas
+            hit the same `components:` anchor), #4 refused the branch based on dcb90cccc68b81f2317b28db19051dedb9f06c80 after ORD-0472's
+            poster and ORD-0475's share-key gate moved `contracts/openapi.yaml` and
+            `frontend/src/app/v8PanelRegistry.tsx`.  All four were positional, none semantic.
   spec    : frontend/e2e/qoder-ord0464-abort-reason.spec.ts  19406 bytes  git blob cf924f8b764f52996e95e932e35504a6b8ff23fa  335 lines
-  shape   : git diff --shortstat dcb90cccc68b81f2317b28db19051dedb9f06c80 ac44ec9aaf03fc14ebc14344d3b82705d937dc83  ->  21 files changed, 2491 insertions(+), 3 deletions(-)
+  shape   : git diff --shortstat 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 3e4c1c49af64378ce8c1d8b84f543a8f287f1a8f  ->  21 files changed, 2492 insertions(+), 4 deletions(-)
   export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend (gate.py synced 266 files; the worktree stays source-only)
 
 WHAT ANSWERED
@@ -19,22 +21,22 @@ WHAT ANSWERED
   front   : vite preview on :4192 over D:/moodle/_qoder_q_ord0369_wk\dist_cand -- a built bundle, not `npm run dev`
   proof 1 : scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035: in MY copy=1 versions=9; probe versions=21
   proof 2 : lane_r1 prints "served==disk: True" -- the bytes :4192 serves are the bytes this tree built
-  bundle  : assets/index-B2vOrCNp.js
+  bundle  : assets/index-Drhg9Pr1.js
             this is the generation the arms ran against and the kill table was re-run against; after all
             six mutants were restored byte-for-byte and rebuilt, the same asset name came back and the
             eight arms ran green again
 
 RESULT
   playwright rc = 0
-  stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 7736.873999999999}
-  A1 屏上八项就是契约那八项，机器词面不上屏                                 passed 775ms
-  A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                         passed 1171ms
-  A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                          passed 716ms
-  A4 输入框上限就是那扇门真的上限                                      passed 687ms
-  A5 什么都没勾时，等待的那枚按钮自己说明为什么                               passed 693ms
-  A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                            passed 849ms
-  A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                         passed 592ms
-  A7 手机上这一屏真的点得到：滚进视口、按中心命中                              passed 772ms
+  stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 21300.528}
+  A1 屏上八项就是契约那八项，机器词面不上屏                                 passed 1167ms
+  A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                         passed 1227ms
+  A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                          passed 2999ms
+  A4 输入框上限就是那扇门真的上限                                      passed 1037ms
+  A5 什么都没勾时，等待的那枚按钮自己说明为什么                               passed 1111ms
+  A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                            passed 1212ms
+  A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                         passed 821ms
+  A7 手机上这一屏真的点得到：滚进视口、按中心命中                              passed 850ms
 
 THE ROWS THE ARMS ACTUATED (no response stubbing anywhere in this spec)
   every journey is created through POST /travelers + POST /journeys and binned through the real DELETE
@@ -165,6 +167,28 @@ THE ROWS THE ARMS ACTUATED (no response stubbing anywhere in this spec)
       payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
     ORD-0464 A8            journeys.id=2c935e71-f1bf-4c6b-adad-911f981205a6 journey_outcome_events.rowid=75 occurred_at_actual=2026-09-30T03:47:52.041692+00:00
       payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A2            journeys.id=f10dc2eb-1ed1-4726-99da-fc2c6b625cd7 journey_outcome_events.rowid=79 occurred_at_actual=2026-09-30T04:26:59.606733+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=55a2606d-f7ba-479f-9095-e076ff1f0a15 journey_outcome_events.rowid=80 occurred_at_actual=2026-09-30T04:27:00.866413+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=9cfc3a24-2dbc-4ec8-a733-3c1cbf4d7608 journey_outcome_events.rowid=81 occurred_at_actual=2026-09-30T04:27:01.645202+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=3fb1782d-e3b2-4ac9-895d-00513523dc72 journey_outcome_events.rowid=82 occurred_at_actual=2026-09-30T04:27:03.706082+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A8            journeys.id=c2a028f0-122e-47f0-a45a-4bfd66823044 journey_outcome_events.rowid=83 occurred_at_actual=2026-09-30T04:27:44.155766+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A3            journeys.id=3fb73fe8-c924-4265-96e8-945e292fdcd0 journey_outcome_events.rowid=84 occurred_at_actual=2026-09-30T04:28:00.761860+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A2            journeys.id=741f3a09-29da-40e1-9d0d-b6ec83fb1654 journey_outcome_events.rowid=85 occurred_at_actual=2026-09-30T04:29:53.762708+00:00
+      payload={"codes": ["BUDGET_DOES_NOT_FIT", "DATES_OR_PLACE_CHANGED"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=89df532b-206d-4d37-a531-266d349cd9b5 journey_outcome_events.rowid=86 occurred_at_actual=2026-09-30T04:33:25.726041+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=221655b1-bd4d-4813-a6a4-f9e0f3a6b932 journey_outcome_events.rowid=87 occurred_at_actual=2026-09-30T04:33:28.990744+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=c24a4e8b-0bf8-4d73-ada2-a8c54561e241 journey_outcome_events.rowid=88 occurred_at_actual=2026-09-30T04:33:29.976799+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=70bf73e5-c3e1-4ddf-b488-9c9fef7c354d journey_outcome_events.rowid=89 occurred_at_actual=2026-09-30T04:33:32.689271+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
 
 FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE KEPT
   1. the lane's `vite preview` was first started without CITYNEXUS_BACKEND_PORT, so its proxy used the
@@ -181,13 +205,13 @@ FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE 
 
 OTHER DOORS, VERBATIM
   `python tools/verify_openapi_parity.py` -> OpenAPI 3.1.0; formal 166; runtime 166; missing 0; extra 0
-  `python -m pytest tests/test_qoder_ord0464_abort_reason_capture.py ... -q` -> 13 passed, 2 warnings in 4.10s
-  the nine-file regression set named in the ledger block -> 67 passed, 2 warnings in 18.77s
+  `python -m pytest tests/test_qoder_ord0464_abort_reason_capture.py ... -q` -> 13 passed, 2 warnings in 6.15s
+  the nine-file regression set named in the ledger block -> 67 passed, 2 warnings in 23.51s
 
 BACKEND COLLECTION, BOTH SIDES OF THE COMPARISON (verbatim last lines of
 `python -m pytest tests --collect-only -q -p no:randomly`)
-  this tree, with my module:  1482 tests collected, 20 errors in 6.55s
-  the same command with `--ignore=tests/test_qoder_ord0464_abort_reason_capture.py`:  1469 tests collected, 20 errors in 6.09s
+  this tree, with my module:  1483 tests collected, 20 errors in 8.20s
+  the same command with `--ignore=tests/test_qoder_ord0464_abort_reason_capture.py`:  1470 tests collected, 20 errors in 6.44s
   (the ignored run is the base's own denominator -- this branch adds no other test file, so the
    difference is exactly my module)
   the two error file lists have an empty symmetric difference: 20 files, all `tests/test_v18_hermes_*.py`
