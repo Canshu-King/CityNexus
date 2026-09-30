@@ -10,7 +10,10 @@ Two design points, because a measuring gate that cannot measure is worse than no
 
 * the instrument proves itself first (G9a). Zero overlap is meaningless if the probe saw zero
   transactions and zero network calls, so G9a forces one known write path and one known
-  provider-shaped call and requires both to be recorded;
+  provider-shaped call and requires both to be recorded. What it requires of that call is *that the
+  hook recorded it*: how the call ends belongs to the machine running the suite - with a live proxy in
+  the environment the reserved host is answered, without one it is refused by the resolver - and
+  pinning either shape would make the self-proof flip with the shell rather than with the product;
 * the provider call is observed by wrapping the transport layer, and only hosts the product
   actually talks to are counted (`LIVE_HOSTS`,抄自 app/integrations/**). TestClient traffic
   goes over an ASGI transport, so it neither registers nor pollutes the overlap arithmetic.
@@ -42,6 +45,8 @@ client = TestClient(app)
 CAPABILITY = "/api/v1/destinations/capability"
 HYDRATIONS = "/api/v1/catalog-hydrations"
 UNSEEN_COUNTY = "贡山独龙族怒族自治县"
+SELFTEST_HOST = "instrument-selftest.invalid"
+SELFTEST_URL = "http://%s/api/interpreter" % SELFTEST_HOST
 WRITE_VERB = re.compile(r"^\s*(insert|update|delete|replace|create|alter|drop)\b", re.IGNORECASE)
 LIVE_HOSTS = (
     "photon.komoot.io",
@@ -185,6 +190,22 @@ def _summary(response) -> str:
         return f"{response.status_code} / <non-json>"
 
 
+def _selftest_provider_call() -> dict:
+    """One provider-shaped call to the reserved self-test host; how it ends is not the claim.
+
+    Measured on this box: when the runner's shell exports a live HTTP(S) proxy, the proxy answers the
+    reserved name (a 502) and httpx returns; when those variables are absent the resolver refuses it
+    (`gaierror 11001`) and httpx raises `ConnectError`. The transport hook records the call either way,
+    and that recording is all G9a has to prove, so the arm carries the outcome into its own message
+    instead of requiring one of the two shapes -- which is what made the arm flip per environment.
+    """
+    try:
+        response = httpx.get(SELFTEST_URL, timeout=5.0)
+        return {"ended": "answered_by_proxy", "status": response.status_code}
+    except Exception as exc:  # noqa: BLE001 - the arm proves the hook fired, not how the call ended
+        return {"ended": "refused_locally", "exception": type(exc).__name__}
+
+
 def _reset_seed() -> str:
     reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, f"SETUP 失败：/demo/reset 实际 {_summary(reset)}"
@@ -205,14 +226,14 @@ def test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls(
         f"实际：写窗口 {len(writes)}，全部事务窗口 {len(_windows)}"
     )
 
-    with pytest.raises(Exception):  # noqa: BLE001 - 不可解析域，预期失败，只要窗口被记录
-        httpx.get("http://instrument-selftest.invalid/api/interpreter", timeout=5.0)
+    outcome = _selftest_provider_call()
     assert _calls, (
         "期望：provider 形态的调用被记录到（证明 transport 挂钩真的挂上了）；"
-        f"实际：记录 {len(_calls)} 条"
+        f"实际：记录 {len(_calls)} 条，这一枚调用的收场 {str(outcome)[:90]}"
     )
     assert any(call["host"].endswith(".invalid") for call in _calls), (
-        f"期望：至少一条 provider 形态调用被记录到；实际 hosts：{sorted({c['host'] for c in _calls})}"
+        f"期望：至少一条 provider 形态调用被记录到；实际 hosts：{sorted({c['host'] for c in _calls})}，"
+        f"这一枚调用的收场 {str(outcome)[:90]}"
     )
 
 
