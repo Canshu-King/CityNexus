@@ -1,0 +1,11 @@
+command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit   (run in frontend/, exit code taken without a pipe)
+result: exit 0, diagnostics_lines = 0
+base: 7862c6de5565c02c20ec2dccaa9da18960603e06, with this lane's frontend/src/i18n/LocaleContext.tsx insert applied
+scope: tsconfig.check.json is another lane's curated file and this lane did not edit it. Its include list names
+  src/i18n/LocaleContext.tsx directly, and src/app/V8Experience.tsx reaches src/features/poiimport/PoiImportPanel.tsx
+  through the panel registry, so both the dictionary this order changed and the screen that reads it are typechecked.
+  The order's own e2e spec and playwright config are NOT in that program, and the project does not typecheck e2e specs;
+  those two files are exercised by the gate run in report_ord0533_r1.json instead.
+deps caveat: node_modules came from a sibling tree whose package.json is byte-identical to this one, because
+  package-lock.json on this line is out of sync (see review/ord0525/readouts/npm_ci_failure_r1.txt on
+  refs/heads/review/newlane-ord0525-calendar-entry-r2); typescript used here is 5.9.3.
