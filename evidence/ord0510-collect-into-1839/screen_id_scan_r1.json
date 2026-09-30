@@ -1,0 +1,12 @@
+{
+ "collect_arms_r2.json": {
+  "screen_text_fields_checked": 12,
+  "fields_with_uuid_or_slug": 0,
+  "examples": []
+ },
+ "collect_mutants_r1.json": {
+  "screen_text_fields_checked": 4,
+  "fields_with_uuid_or_slug": 0,
+  "examples": []
+ }
+}
