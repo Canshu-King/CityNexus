@@ -1,0 +1,47 @@
+{
+ "base": "http://127.0.0.1:59147",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "entered_wizard_by_click": true,
+ "screen_with_one_shelf": {
+  "panel_present": true,
+  "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会 1 架子 · 1 枚地点",
+  "shelf_rows": [
+   "周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会"
+  ],
+  "item_rows": [
+   "The Palace Museum (故宫博物院) 值得慢走一会"
+  ],
+  "empty_words": null,
+  "failed_words": null,
+  "no_traveler_words": null,
+  "machine_tokens": []
+ },
+ "retry_hit": {
+  "point": {
+   "cx": 309,
+   "cy": 422
+  },
+  "element": "button.cn-collections__retry",
+  "is_the_control": true,
+  "width_px": 88,
+  "height_px": 35
+ },
+ "after_retry_press": {
+  "panel_present": true,
+  "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会 1 架子 · 1 枚地点",
+  "shelf_rows": [
+   "周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会"
+  ],
+  "item_rows": [
+   "The Palace Museum (故宫博物院) 值得慢走一会"
+  ],
+  "empty_words": null,
+  "failed_words": null,
+  "no_traveler_words": null,
+  "machine_tokens": []
+ },
+ "console_errors": []
+}
