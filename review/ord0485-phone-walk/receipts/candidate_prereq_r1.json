@@ -1,0 +1,33 @@
+{
+  "tool": "candidate_prereq_r1",
+  "took_local": "2026-09-30T12:31:28.754623+08:00",
+  "dictionary_file": {
+    "wt_sha256": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a",
+    "export_sha256": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a",
+    "identical": true,
+    "cr_bytes_in_file": 0
+  },
+  "tsc": {
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit",
+    "cwd": "export/frontend",
+    "exit": 0,
+    "diagnostics_bytes": 0,
+    "diagnostics_head": ""
+  },
+  "tsc_all": {
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit",
+    "exit": 0,
+    "diagnostics_bytes": 0,
+    "diagnostics_head": ""
+  },
+  "i18n_gap_after_fix": {
+    "keys_in_en": 895,
+    "keys_in_zhCN": 895,
+    "referenced_key_count": 698,
+    "referenced_keys_missing_from_en": 0,
+    "referenced_keys_missing_from_zhCN": 0,
+    "referenced_keys_missing_from_both": 0,
+    "missing_from_both": []
+  },
+  "i18n_gap_exit": 0
+}

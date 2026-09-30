@@ -1,0 +1,48 @@
+{
+  "tool": "static_identity_r2",
+  "static_port": 4861,
+  "took_local": "2026-09-30 11:43:07 +0800",
+  "root_status": 200,
+  "root_bytes": 1200,
+  "disk_index_bytes": 1200,
+  "PROOF_1_index_served_is_my_file": true,
+  "index_sha1_served": "6983fa84b1846e699128c70984988e8208af58d6",
+  "index_sha1_disk": "6983fa84b1846e699128c70984988e8208af58d6",
+  "PROOF_0_entry_asset_named_from_served_index_html": "index-BdXy-aFm.js",
+  "PROOF_2_asset_bytes_served_vs_disk": [
+    {
+      "asset": "index-BdXy-aFm.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "served_bytes": 1489936,
+      "disk_bytes": 1489936,
+      "served_sha1_over_bytes": "a0797e7095e2a462703444dae9660bc293fbda44",
+      "disk_sha1_over_bytes": "a0797e7095e2a462703444dae9660bc293fbda44",
+      "bytes_equal": true,
+      "is_html_fallback": false
+    },
+    {
+      "asset": "index-DPUEzqQU.css",
+      "status": 200,
+      "content_type": "text/css",
+      "served_bytes": 215624,
+      "disk_bytes": 215624,
+      "served_sha1_over_bytes": "95754e89784746d9bcd5a16800f66236d1b64a90",
+      "disk_sha1_over_bytes": "95754e89784746d9bcd5a16800f66236d1b64a90",
+      "bytes_equal": true,
+      "is_html_fallback": false
+    }
+  ],
+  "nonexistent_asset_probe": {
+    "status": 200,
+    "content_type": "text/html",
+    "bytes": 1200,
+    "answered_as_html_fallback": true
+  },
+  "listener_pid": "24216",
+  "listener_command_line": "\"C:/Program Files/nodejs/node.exe\" node_modules/vite/bin/vite.js preview --outDir D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/dist --host 127.0.0.1 --port 4861 --strictPort",
+  "listener_command_line_points_at_my_dist": true,
+  "preview_log_bytes_delta_after_a_request": 0,
+  "PROOF_3_access_log": "NOT_AVAILABLE_BY_CMDR",
+  "overall_static_identity": "GREEN_TWO_PROOFS_PLUS_PROCESS_LINE"
+}

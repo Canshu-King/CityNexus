@@ -1,0 +1,90 @@
+{
+  "tool": "stack_up_r1",
+  "lane": "phone ord0485",
+  "backend_port": 8139,
+  "static_port": 4861,
+  "db": "D:/moodle/_qoder_phone_ord0485_20260930/run/phone_ord0485.db",
+  "export": "D:/moodle/_qoder_phone_ord0485_20260930/export",
+  "started_local": "2026-09-30 11:40:19 +0800",
+  "forbidden_ports_touched": "none - this tool binds only the two lane ports",
+  "pre_boot_listeners_backend": [],
+  "pre_boot_listeners_static": [],
+  "backend_spawn_pid": 51248,
+  "backend_alive": true,
+  "demo_scene_status": "200",
+  "demo_scene": {
+    "demo_mode": true,
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "journey_status": "ACTIVE",
+    "current_activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+    "scene_start_at": "2026-10-10T09:00:00+08:00",
+    "scene_end_at": "2026-10-10T19:00:00+08:00",
+    "effective_now": "2026-10-10T13:20:00+08:00",
+    "basis": "CURSOR",
+    "evidence_expires_at": null,
+    "evidence_state": "FROZEN_WITHOUT_TTL",
+    "evidence_snapshot_id": "2e1f2d48-a34b-4ea9-8fbb-2221c5fce422",
+    "evidence_reference_consistent": true,
+    "mobility_legs_total": 5,
+    "mobility_legs_hard_eligible": 5,
+    "plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839"
+  },
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "database": "ok",
+      "ai": "disabled",
+      "ai_state": "DISABLED_BY_OPS",
+      "e2e_run_id": "",
+      "e2e_database_id": ""
+    }
+  },
+  "marker_post_status": "201",
+  "marker_rows_in_my_db": 1,
+  "journey_rows": [
+    [
+      "22222222-2222-4222-8222-222222222222",
+      "CNX-DEMO",
+      "One Day in Nexus City",
+      "ACTIVE"
+    ]
+  ],
+  "new_tables_present_in_my_db": {
+    "journey_checkins": true,
+    "journey_share_grants": true,
+    "pois_or_places": [
+      "places"
+    ]
+  },
+  "ownership_marker_in_my_db": true,
+  "static_spawn_pid": 24216,
+  "static_identity": {
+    "static_listeners": [
+      {
+        "local": "127.0.0.1:4861",
+        "pid": "24216"
+      }
+    ],
+    "listener_command_line_names_outdir": true,
+    "listener_command_line": "\"C:/Program Files/nodejs/node.exe\" node_modules/vite/bin/vite.js preview --outDir D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/dist --host 127.0.0.1 --port 4861 --strictPort",
+    "preview_log_bytes_before": 0,
+    "preview_log_bytes_after_probes": 77,
+    "preview_request_log_rows": [
+      "\u001b[32m➜\u001b[39m  \u001b[1mLocal\u001b[22m:   \u001b[36mhttp://127.0.0.1:\u001b[1m4861\u001b[22m/\u001b[39m"
+    ],
+    "PROOF_3_access_log": "NOT_AVAILABLE_BY_CMDR",
+    "static_leg_api_health_status": "200",
+    "static_leg_api_body_keys": [
+      "ai",
+      "ai_state",
+      "database",
+      "e2e_database_id",
+      "e2e_run_id",
+      "status"
+    ],
+    "static_leg_marker_seen_via_proxy": 1,
+    "marker": "ord0485-marker-5dbbc0dac3c3"
+  },
+  "backend_log_tail": "INFO:     Started server process [37720]\r\nINFO:     Waiting for application startup.\r\nINFO:     Application startup complete.\r\nINFO:     Uvicorn running on http://127.0.0.1:8139 (Press CTRL+C to quit)\r\nINFO:     127.0.0.1:50030 - \"GET /api/v1/demo/scene HTTP/1.1\" 200 OK\r\nINFO:     127.0.0.1:50035 - \"GET /api/v1/health HTTP/1.1\" 200 OK\r\nINFO:     127.0.0.1:50036 - \"POST /api/v1/travelers HTTP/1.1\" 201 Created\r\nINFO:     127.0.0.1:49737 - \"GET /api/v1/health HTTP/1.1\" 200 OK\r\n"
+}

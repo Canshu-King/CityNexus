@@ -1,0 +1,42 @@
+{
+  "tool": "import_g1_r1",
+  "base": "http://127.0.0.1:4861",
+  "served_entry_asset": "/assets/index-BdXy-aFm.js",
+  "arm": "L_import_on_candidate",
+  "page_errors": 0,
+  "page_error_list": [],
+  "non_get_requests": 0,
+  "reading": {
+    "path": "/v8/import",
+    "chars": 359,
+    "head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n把你已经写下的东西贴进来\n\n从文本导入地点\n\n贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。\n\npoiImport.channelLocal\nCityNexus\n两条入口\n\n今天支持文本与链接；截图也列出来，让缺口有名字。\n\n不抓取任何内容\n识别只跑本部署自己的文本规则和我们已有的地点行。\n文本或链接识别\n截图识别\n你的文字\n\n0 字\n\n这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。\n\n识别\n\n会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。\n\n至少写两个字再识别。\n\n✦\n今天\n行程\n地图\nCopilot\n我的",
+    "evidence_labels": [
+      "poiImport.channelLocal"
+    ],
+    "testids": [
+      "v8-mobile-menu",
+      "topbar-theme",
+      "topbar-language",
+      "poi-import",
+      "poi-import-mode-text",
+      "poi-import-mode-screenshot",
+      "poi-import-text",
+      "poi-import-char-count",
+      "poi-import-scope-hint",
+      "poi-import-parse",
+      "poi-import-day-disclosure",
+      "v18-copilot-dock",
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+    ],
+    "key_shapes": [
+      "poiImport.channelLocal"
+    ],
+    "pill_contains_leaked_key": true
+  },
+  "screenshot_file": "L_import_candidate.png",
+  "screenshot_bytes": 45224
+}

@@ -1,0 +1,369 @@
+{
+  "schema": "CNX_PHONE_SHARE_R1",
+  "base": "http://127.0.0.1:4861",
+  "started_local": "Wed Sep 30 2026 12:17:45 GMT+0800 (中国标准时间)",
+  "screens": [
+    {
+      "arm": "H1_access_before_choice",
+      "route_read_from_location": "/v8/access",
+      "rendered_text_chars": 719,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n成员与权限\n\n谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。\n\n选一条行程\n先选一条要看的行程\nOne Day in Nexus City\n\n正在问这台服务器还有谁能到达这条行程…\n\n每一档能做什么，按这台服务器自己的 ACL 行读出来的\n\n角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么。\n\n查看完整权限规则\n可见性每一档，后果就在同一句里\n仅个人\n别人打不开，拿到链接也打不开。\n获得链接者可见\n有链接的人不用先进成员名单就能读。\n受邀者可见\n只有邀请还在有效期内的人打得开，过期就打不开了。\n公开\n全网公开可见。\n私到公、公到私，各写一句对方会怎样\n转换后这条行程全网可见——原先看不见的人会开始能看见。\n转换后，已经在跟踪这条行程的人会失去访问权限。\n改权限之前，屏会先这样问\n只动对方的档位，你的不变\n对方将获得对应权限。\n你把这条行程交到别人手上\n对方将获得对应权限，你的权限也会随之变化。\n这台设备没读到你自己的档位\n对方将获得对应权限，你的权限也会随之变化。\n你撤销某个人的访问权限\n对方将失去这条行程的权限。\n邀请\n\n这台服务器没有给出邀请的有效期，所以这里不声称有一个。\n\n这台服务器没有给出这条行程的成员数与上限，所以这里不计数。\n\n发一条带有效期的邀请\n这条邀请带哪一档可见性\n仅个人\n获得链接者可见\n受邀者可见\n公开\n到期时刻（留空就是这条不会自己失效）\n\n签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。\n\n发出邀请\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 24,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "access-panel",
+        "access-server-read",
+        "access-journey-picker",
+        "access-door-state",
+        "access-role-ladder-empty",
+        "access-role-details",
+        "access-visibility-ladder",
+        "access-switch-lines",
+        "access-confirm-table",
+        "access-invite-ttl",
+        "access-invite-quota",
+        "access-invite-visibility",
+        "access-invite-expiry",
+        "access-invite-signer",
+        "access-invite-submit",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "查看完整权限规则",
+        "发出邀请",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+        "可见性每一档，后果就在同一句里",
+        "私到公、公到私，各写一句对方会怎样",
+        "改权限之前，屏会先这样问",
+        "邀请",
+        "发一条带有效期的邀请"
+      ],
+      "machine_or_key_lookalikes": [],
+      "page_errors_total_at_read": 0,
+      "extra": null
+    },
+    {
+      "arm": "H2_access_after_invite",
+      "route_read_from_location": "/v8/access",
+      "rendered_text_chars": 1935,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n成员与权限\n\n谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。\n\n选一条行程\n先选一条要看的行程\nOne Day in Nexus City\n\n现在在看：One Day in Nexus City\n\n这条行程上发生过什么\n\n成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\n\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：plans.generated。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：domain_mutation。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：booking.created。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：payment.capture.succeeded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.started。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n\n这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。\n\n每一档能做什么，按这台服务器自己的 ACL 行读出来的\n管理员\n能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。\n能力编号（服务器原样叫法）\n协作者\n能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。\n能力编号（服务器原样叫法）\n所有者\n能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。\n能力编号（服务器原样叫法）\n查看完整权限规则\n可见性每一档，后果就在同一句里\n仅个人\n别人打不开，拿到链接也打不开。\n获得链接者可见\n有链接的人不用先进成员名单就能读。\n受邀者可见\n只有邀请还在有效期内的人打得开，过期就打不开了。\n公开\n全网公开可见。\n私到公、公到私，各写一句对方会怎样\n转换后这条行程全网可见——原先看不见的人会开始能看见。\n转换后，已经在跟踪这条行程的人会失去访问权限。\n改权限之前，屏会先这样问\n只动对方的档位，你的不变\n对方将获得对应权限。\n你把这条行程交到别人手上\n对方将获得对应权限，你的权限也会随之",
+      "visible_testid_count": 35,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "access-panel",
+        "access-server-read",
+        "access-journey-picker",
+        "access-chosen",
+        "access-activity-caveat",
+        "access-activity-list",
+        "access-door-state",
+        "access-role-ladder",
+        "access-role-scope",
+        "access-role-scope",
+        "access-role-scope",
+        "access-role-details",
+        "access-visibility-ladder",
+        "access-switch-lines",
+        "access-confirm-table",
+        "access-invite-ttl",
+        "access-invite-quota",
+        "access-invite-visibility",
+        "access-invite-expiry",
+        "access-invite-signer",
+        "access-invite-submit",
+        "access-grant-list",
+        "access-grant-row",
+        "access-grant-row",
+        "access-grant-revoke",
+        "access-roster-empty",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "能力编号（服务器原样叫法）",
+        "能力编号（服务器原样叫法）",
+        "能力编号（服务器原样叫法）",
+        "查看完整权限规则",
+        "发出邀请",
+        "这条邀请带的令牌",
+        "撤销",
+        "这条邀请带的令牌",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "这条行程上发生过什么",
+        "每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+        "可见性每一档，后果就在同一句里",
+        "私到公、公到私，各写一句对方会怎样",
+        "改权限之前，屏会先这样问",
+        "邀请",
+        "发一条带有效期的邀请",
+        "这条行程发出去的邀请",
+        "这条行程的成员，按成员门答的"
+      ],
+      "machine_or_key_lookalikes": [
+        "plans.generated",
+        "booking.created",
+        "payment.capture",
+        "journey.started",
+        "journey.outcome",
+        "activity.completed"
+      ],
+      "page_errors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "H2_after_invite.png",
+        "bytes": 43120
+      },
+      "expected_level_chosen": "LINK_READ"
+    },
+    {
+      "arm": "H3_access_token_fold_open",
+      "route_read_from_location": "/v8/access",
+      "rendered_text_chars": 1984,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n成员与权限\n\n谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。\n\n选一条行程\n先选一条要看的行程\nOne Day in Nexus City\n\n现在在看：One Day in Nexus City\n\n这条行程上发生过什么\n\n成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\n\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：plans.generated。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：domain_mutation。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：booking.created。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：payment.capture.succeeded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.started。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。\n9月28日 04:41\n这台服务器报了一个本屏说不出人话的动作：activity.completed。\n\n这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。\n\n每一档能做什么，按这台服务器自己的 ACL 行读出来的\n管理员\n能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。\n能力编号（服务器原样叫法）\n协作者\n能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。\n能力编号（服务器原样叫法）\n所有者\n能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。\n能力编号（服务器原样叫法）\n查看完整权限规则\n可见性每一档，后果就在同一句里\n仅个人\n别人打不开，拿到链接也打不开。\n获得链接者可见\n有链接的人不用先进成员名单就能读。\n受邀者可见\n只有邀请还在有效期内的人打得开，过期就打不开了。\n公开\n全网公开可见。\n私到公、公到私，各写一句对方会怎样\n转换后这条行程全网可见——原先看不见的人会开始能看见。\n转换后，已经在跟踪这条行程的人会失去访问权限。\n改权限之前，屏会先这样问\n只动对方的档位，你的不变\n对方将获得对应权限。\n你把这条行程交到别人手上\n对方将获得对应权限，你的权限也会随之",
+      "visible_testid_count": 35,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "access-panel",
+        "access-server-read",
+        "access-journey-picker",
+        "access-chosen",
+        "access-activity-caveat",
+        "access-activity-list",
+        "access-door-state",
+        "access-role-ladder",
+        "access-role-scope",
+        "access-role-scope",
+        "access-role-scope",
+        "access-role-details",
+        "access-visibility-ladder",
+        "access-switch-lines",
+        "access-confirm-table",
+        "access-invite-ttl",
+        "access-invite-quota",
+        "access-invite-visibility",
+        "access-invite-expiry",
+        "access-invite-signer",
+        "access-invite-submit",
+        "access-grant-list",
+        "access-grant-row",
+        "access-grant-row",
+        "access-grant-revoke",
+        "access-roster-empty",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "能力编号（服务器原样叫法）",
+        "能力编号（服务器原样叫法）",
+        "能力编号（服务器原样叫法）",
+        "查看完整权限规则",
+        "发出邀请",
+        "这条邀请带的令牌",
+        "撤销",
+        "这条邀请带的令牌",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "这条行程上发生过什么",
+        "每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+        "可见性每一档，后果就在同一句里",
+        "私到公、公到私，各写一句对方会怎样",
+        "改权限之前，屏会先这样问",
+        "邀请",
+        "发一条带有效期的邀请",
+        "这条行程发出去的邀请",
+        "这条行程的成员，按成员门答的"
+      ],
+      "machine_or_key_lookalikes": [
+        "plans.generated",
+        "booking.created",
+        "payment.capture",
+        "journey.started",
+        "journey.outcome",
+        "activity.completed"
+      ],
+      "page_errors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "H3_token_fold.png",
+        "bytes": 43490
+      }
+    },
+    {
+      "arm": "H4_shared_receive_with_token",
+      "route_read_from_location": "/v8/shared/ydOlMASKED_len32",
+      "rendered_text_chars": 182,
+      "rendered_text_head": "从别人分享的链接打开\nEN\n分享这趟行程的人已经收回了这条链接。它以前能打开，现在不能。\n高级详情\n\n服务器给这次拒绝留下的名字\n\nSHARE_GRANT_REVOKED回读的媒体类型 application/json这台设备数到的字节 372\n这台设备量到的回读与服务器回执号\n这台设备看到的回读：HTTP 409服务器回执号 CNX-RNAW5NPK\n再读一次",
+      "visible_testid_count": 12,
+      "visible_testids": [
+        "shared-screen",
+        "shared-language",
+        "shared-refused",
+        "shared-refusal-title",
+        "shared-refusal-code",
+        "shared-refused-content_type",
+        "shared-refused-body_bytes",
+        "shared-refused-receipt-fold",
+        "shared-refused-receipt-summary",
+        "shared-refused-http_status",
+        "shared-refused-receipt",
+        "shared-refresh"
+      ],
+      "visible_buttons": [
+        "EN",
+        "高级详情",
+        "这台设备量到的回读与服务器回执号",
+        "再读一次"
+      ],
+      "visible_headings": [],
+      "machine_or_key_lookalikes": [
+        "SHARE_GRANT_REVOKED"
+      ],
+      "page_errors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "H4_receive.png",
+        "bytes": 25579
+      }
+    },
+    {
+      "arm": "H5_shared_receive_bad_token",
+      "route_read_from_location": "/v8/shared/ydOlNK__FimDue5p3Fe7Ck68xx2tZZZZ",
+      "rendered_text_chars": 182,
+      "rendered_text_head": "从别人分享的链接打开\nEN\n这台服务器从来没有过这条链接，所以它背后没有可以打开的行程。\n高级详情\n\n服务器给这次拒绝留下的名字\n\nSHARE_GRANT_UNKNOWN回读的媒体类型 application/json这台设备数到的字节 260\n这台设备量到的回读与服务器回执号\n这台设备看到的回读：HTTP 404服务器回执号 CNX-M27ZRHJA\n再读一次",
+      "visible_testid_count": 12,
+      "visible_testids": [
+        "shared-screen",
+        "shared-language",
+        "shared-refused",
+        "shared-refusal-title",
+        "shared-refusal-code",
+        "shared-refused-content_type",
+        "shared-refused-body_bytes",
+        "shared-refused-receipt-fold",
+        "shared-refused-receipt-summary",
+        "shared-refused-http_status",
+        "shared-refused-receipt",
+        "shared-refresh"
+      ],
+      "visible_buttons": [
+        "EN",
+        "高级详情",
+        "这台设备量到的回读与服务器回执号",
+        "再读一次"
+      ],
+      "visible_headings": [],
+      "machine_or_key_lookalikes": [
+        "SHARE_GRANT_UNKNOWN"
+      ],
+      "page_errors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "H5_bad_token.png",
+        "bytes": 25550
+      }
+    },
+    {
+      "arm": "H6_shared_no_token_at_all",
+      "route_read_from_location": "/v8/shared/",
+      "rendered_text_chars": 126,
+      "rendered_text_head": "从别人分享的链接打开\nEN\n这个地址里没有分享暗号\n\n这台服务器没有收到任何请求，因为地址里本来就没有可发送的东西。请让分享这趟行程的人把完整链接再发一次。\n\n这一句是这台设备在地址里看到的事实，不是服务器给的判定：没有发出读取，也就没有结果可以引用。",
+      "visible_testid_count": 3,
+      "visible_testids": [
+        "shared-screen",
+        "shared-language",
+        "shared-no-token"
+      ],
+      "visible_buttons": [
+        "EN"
+      ],
+      "visible_headings": [],
+      "machine_or_key_lookalikes": [],
+      "page_errors_total_at_read": 0,
+      "extra": null
+    }
+  ],
+  "writes": [
+    {
+      "arm": "owner_access",
+      "method": "POST",
+      "url": "http://127.0.0.1:4861/api/v1/journeys/22222222-2222-4222-8222-222222222222/share-grants"
+    }
+  ],
+  "page_errors": 0,
+  "owner_picker_options": [
+    {
+      "value": "",
+      "label": "先选一条要看的行程"
+    },
+    {
+      "value": "22222222-2222-4222-8222-222222222222",
+      "label": "One Day in Nexus City"
+    }
+  ],
+  "owner_visibility_options": [
+    "PRIVATE",
+    "LINK_READ",
+    "INVITEES_ONLY",
+    "PUBLIC"
+  ],
+  "submit_disabled_before": false,
+  "grant_rows_in_dom": 2,
+  "grant_row_rendered_text": [
+    "获得链接者可见 · 已于 9月30日 12:16 撤销。拿这条链接的人再也打不开了。 这条邀请带的令牌 邀请令牌（服务器原样给的）：ydOlMASKED_len32",
+    "获得链接者可见 · 这条邀请没有到期时刻，不会自己失效。 撤销 这条邀请带的令牌"
+  ],
+  "token_read_from_rendered_sentence": "ydOlMASKED_len32",
+  "finished_local": "Wed Sep 30 2026 12:18:44 GMT+0800 (中国标准时间)"
+}

@@ -1,0 +1,18 @@
+{
+  "tool": "i18n_key_gap_r1",
+  "dictionary_file": "frontend/src/i18n/LocaleContext.tsx",
+  "dictionary_line_count": 2119,
+  "table_block_names": [
+    "en",
+    "zhCN"
+  ],
+  "keys_in_en": 895,
+  "keys_in_zhCN": 895,
+  "referenced_key_count": 698,
+  "referenced_keys_missing_from_en": 0,
+  "referenced_keys_missing_from_zhCN": 0,
+  "referenced_keys_missing_from_both": 0,
+  "missing_from_both": [],
+  "missing_from_zh_only_falls_back_to_english": [],
+  "missing_from_en_only": []
+}

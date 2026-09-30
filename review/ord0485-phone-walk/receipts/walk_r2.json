@@ -1,0 +1,2492 @@
+{
+  "schema": "CNX_PHONE_WALK_R2",
+  "order": "ORD-0485",
+  "base": "http://127.0.0.1:4861",
+  "viewport": {
+    "width": 390,
+    "height": 844,
+    "hasTouch": true,
+    "isMobile": true
+  },
+  "started_local": "Wed Sep 30 2026 12:06:21 GMT+0800 (中国标准时间)",
+  "screens": [
+    {
+      "arm": "A_first_visit",
+      "route_read_from_location": "/",
+      "rendered_text_chars": 168,
+      "rendered_text_head": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n使用封存的演示行程\n下一步",
+      "visible_testid_count": 70,
+      "visible_testids": [
+        "trial-setup",
+        "trial-scroll",
+        "trial-steps",
+        "trial-step-1",
+        "trial-step-2",
+        "trial-step-3",
+        "trial-step1-body",
+        "trial-city",
+        "trial-supported-cities",
+        "trial-supported-toggle",
+        "trial-supported-group-supported",
+        "trial-supported-group-rule-supported",
+        "trial-supported-none-supported",
+        "trial-supported-group-needs_lookup",
+        "trial-supported-group-rule-needs_lookup",
+        "trial-supported-none-needs_lookup",
+        "trial-supported-group-unknown",
+        "trial-supported-group-rule-unknown",
+        "trial-supported-row-厦门",
+        "trial-supported-identity-厦门",
+        "trial-supported-fields-厦门",
+        "trial-supported-row-北京",
+        "trial-supported-identity-北京",
+        "trial-supported-fields-北京",
+        "trial-supported-row-上海",
+        "trial-supported-identity-上海",
+        "trial-supported-fields-上海",
+        "trial-supported-row-天津",
+        "trial-supported-identity-天津",
+        "trial-supported-fields-天津",
+        "trial-supported-row-福州",
+        "trial-supported-identity-福州",
+        "trial-supported-fields-福州",
+        "trial-supported-row-广州",
+        "trial-supported-identity-广州",
+        "trial-supported-fields-广州",
+        "trial-supported-row-深圳",
+        "trial-supported-identity-深圳",
+        "trial-supported-fields-深圳",
+        "trial-supported-row-成都",
+        "trial-supported-identity-成都",
+        "trial-supported-fields-成都",
+        "trial-supported-row-杭州",
+        "trial-supported-identity-杭州",
+        "trial-supported-fields-杭州",
+        "trial-supported-row-东京",
+        "trial-supported-identity-东京",
+        "trial-supported-fields-东京",
+        "trial-supported-row-新加坡",
+        "trial-supported-identity-新加坡",
+        "trial-supported-fields-新加坡",
+        "trial-arrival",
+        "trial-departure",
+        "trial-start",
+        "trial-end",
+        "trial-country",
+        "trial-timezone",
+        "trial-currency",
+        "trial-show-advanced",
+        "trial-required-hint",
+        "trial-missing-jump",
+        "trial-missing-jump",
+        "trial-missing-jump",
+        "trial-next-reason",
+        "trial-tianjin-demo",
+        "trial-sticky-cta",
+        "trial-next",
+        "sim-float",
+        "sim-ball",
+        "sim-ball-dot"
+      ],
+      "visible_buttons": [
+        "EN",
+        "看支持的目的地",
+        "高级设置",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "visible_headings": [
+        "新建行程"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "trial-city",
+          "kind": "input",
+          "type": null,
+          "label": "目的地",
+          "placeholder": "例如：天津、东京、新加坡"
+        },
+        {
+          "testid": "trial-arrival",
+          "kind": "input",
+          "type": null,
+          "label": "抵达地点",
+          "placeholder": "例如：某地站 / 机场"
+        },
+        {
+          "testid": "trial-departure",
+          "kind": "input",
+          "type": null,
+          "label": "离开地点",
+          "placeholder": "例如：某地站 / 机场"
+        },
+        {
+          "testid": "trial-start",
+          "kind": "input",
+          "type": "datetime-local",
+          "label": "抵达时间",
+          "placeholder": ""
+        },
+        {
+          "testid": "trial-end",
+          "kind": "input",
+          "type": "datetime-local",
+          "label": "离开时间",
+          "placeholder": ""
+        },
+        {
+          "testid": "trial-country",
+          "kind": "input",
+          "type": null,
+          "label": "",
+          "placeholder": ""
+        },
+        {
+          "testid": "trial-timezone",
+          "kind": "input",
+          "type": null,
+          "label": "",
+          "placeholder": ""
+        },
+        {
+          "testid": "trial-currency",
+          "kind": "input",
+          "type": null,
+          "label": "",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": null,
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "A_first_visit.png",
+        "bytes": 34747
+      },
+      "wizard_mounted": true,
+      "sealed_entry_in_dom": 1
+    },
+    {
+      "arm": "B_after_sealed_demo",
+      "route_read_from_location": "/v8/hub",
+      "rendered_text_chars": 674,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n下午好\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n一切正常\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n现在没有可比的方案。\n\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 48,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "today-heading",
+        "today-when",
+        "hub-secondary-actions",
+        "hub-plan-with-ai",
+        "journey-link-copy",
+        "today-attention-band",
+        "today-attention",
+        "today-hero",
+        "today-now",
+        "today-next",
+        "today-hero-cta",
+        "today-clock-source",
+        "v8-maplibre-panel",
+        "v8-maplibre-canvas",
+        "map-viewport-controls",
+        "map-viewport-reset",
+        "v8-map-tile-notice",
+        "v8-map-gesture-hint",
+        "v8-map-attribution",
+        "today-strip",
+        "today-stay",
+        "pretrip-checklist",
+        "pretrip-empty",
+        "pretrip-empty-action",
+        "hub-glance-empty",
+        "plan-ranking",
+        "rank-none",
+        "pending-set",
+        "pending-count",
+        "pending-filter-open",
+        "pending-empty",
+        "pending-empty-title",
+        "pending-empty-action",
+        "pending-reread",
+        "pending-details",
+        "pending-reads",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me",
+        "sim-float",
+        "sim-ball",
+        "sim-ball-dot"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "复制行程链接",
+        "查看实时行程",
+        "回到行程视野",
+        "去看这一代方案",
+        "对比住宿 →",
+        "筛选",
+        "去城市探索",
+        "再读一次",
+        "技术详情",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "Demo之旅",
+        "服务端报出的两类待办",
+        "每一天，紧密相连。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [
+        "pretrip-checklist"
+      ],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "B_after_sealed_demo.png",
+        "bytes": 83542
+      },
+      "wizard_still_mounted": false
+    },
+    {
+      "arm": "C_drawer_hub",
+      "route_read_from_location": "/v8/hub",
+      "rendered_text_chars": 674,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n下午好\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n一切正常\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n现在没有可比的方案。\n\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 48,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "today-heading",
+        "today-when",
+        "hub-secondary-actions",
+        "hub-plan-with-ai",
+        "journey-link-copy",
+        "today-attention-band",
+        "today-attention",
+        "today-hero",
+        "today-now",
+        "today-next",
+        "today-hero-cta",
+        "today-clock-source",
+        "v8-maplibre-panel",
+        "v8-maplibre-canvas",
+        "map-viewport-controls",
+        "map-viewport-reset",
+        "v8-map-tile-notice",
+        "v8-map-gesture-hint",
+        "v8-map-attribution",
+        "today-strip",
+        "today-stay",
+        "pretrip-checklist",
+        "pretrip-empty",
+        "pretrip-empty-action",
+        "hub-glance-empty",
+        "plan-ranking",
+        "rank-none",
+        "pending-set",
+        "pending-count",
+        "pending-filter-open",
+        "pending-empty",
+        "pending-empty-title",
+        "pending-empty-action",
+        "pending-reread",
+        "pending-details",
+        "pending-reads",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me",
+        "sim-float",
+        "sim-ball",
+        "sim-ball-dot"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "复制行程链接",
+        "查看实时行程",
+        "回到行程视野",
+        "去看这一代方案",
+        "对比住宿 →",
+        "筛选",
+        "去城市探索",
+        "再读一次",
+        "技术详情",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "Demo之旅",
+        "服务端报出的两类待办",
+        "每一天，紧密相连。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [
+        "pretrip-checklist"
+      ],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "今天",
+        "expected_route": "/v8/hub"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_hub.png",
+        "bytes": 83542
+      }
+    },
+    {
+      "arm": "C_drawer_live",
+      "route_read_from_location": "/v8/live",
+      "rendered_text_chars": 641,
+      "rendered_text_head": "菜单\n/\n实时行程\n跟随系统\nEN\nDE\n\n实时行程 · 已保存 9月28日 04:41\n\n选择你的下一段路程。\n\n当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。\n\n现在\nTech Art Center\n\n下一步 · Nexus River Cruise Pier · 公交地铁 · 时长待定\n\n13:20\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n\n当前没有需要你决定的调整。\n\n更新位置\n报告降雨\n下一段路程方式\n选择平稳路线\n步行\n骑行\n公交地铁\n驾车\n网约车\n对比所有方式\n下一步 · 最晚出发\nNexus River Cruise Pier\n\n10月10日 15:30 前到达 · 余量约0分钟\n\n15:30\n预计到达 · 公交地铁\n开始导航 →\n风险\n低 · 路线证据有效\n证据\n供应商路线、时效、费用和可行性\n实时状态\n当前正在发生什么\n刚刚更新\n时钟\n12:06\n上海时间\n当前步骤\n进行中\n行程状态\n离线\n只读就绪\n未来 24 小时已保存\n0 个来源\n暂无记录\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 32,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-live-journey",
+        "live-journey-current",
+        "v8-maplibre-panel",
+        "v8-maplibre-canvas",
+        "map-viewport-controls",
+        "map-viewport-reset",
+        "v8-map-tile-notice",
+        "v8-map-gesture-hint",
+        "v8-map-attribution",
+        "live-recovery",
+        "live-no-proposal",
+        "v8-live-secondary",
+        "live-toolbar-actions",
+        "live-update-location",
+        "live-report-rain",
+        "mode-walk",
+        "mode-bicycle",
+        "mode-transit",
+        "mode-auto",
+        "mode-ride_hail",
+        "live-leave-by",
+        "v10-live-execution-panel",
+        "v10-current-step",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "回到行程视野",
+        "更新位置",
+        "报告降雨",
+        "步行",
+        "骑行",
+        "公交地铁",
+        "驾车",
+        "网约车",
+        "对比所有方式",
+        "开始导航 →",
+        "证据 供应商路线、时效、费用和可行性",
+        "0 个来源 暂无记录",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "选择你的下一段路程。",
+        "Tech Art Center",
+        "Nexus River Cruise Pier",
+        "当前正在发生什么"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "实时行程",
+        "expected_route": "/v8/live"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_live.png",
+        "bytes": 123774
+      }
+    },
+    {
+      "arm": "C_drawer_map",
+      "route_read_from_location": "/v8/map",
+      "rendered_text_chars": 460,
+      "rendered_text_head": "菜单\n/\n地图\n跟随系统\nEN\nDE\n\n地图 · 一目了然\n\n整座城市，行程叠加其上。\n\n采集的路线几何和供应商事实在你穿越行程时始终可见。\n\n对比出行方式\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n下一段路程\nNexus River Cruise Pier\n这一天去的地点\nOld Town Gate\nRiverside Museum\nCentral Food Hall\nTech Art Center\nNexus River Cruise Pier\nSkyline Dinner House\n查看全部 6 个地点\n未知费用保持未知。\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 26,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-maplibre-panel",
+        "v8-maplibre-canvas",
+        "map-viewport-controls",
+        "map-viewport-reset",
+        "v8-map-tile-notice",
+        "v8-map-gesture-hint",
+        "v8-map-attribution",
+        "map-selected-stop",
+        "map-stops",
+        "map-stops-box",
+        "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+        "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+        "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+        "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+        "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+        "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+        "map-stops-capture",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "对比出行方式",
+        "回到行程视野",
+        "Old Town Gate",
+        "Riverside Museum",
+        "Central Food Hall",
+        "Tech Art Center",
+        "Nexus River Cruise Pier",
+        "Skyline Dinner House",
+        "查看全部 6 个地点",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "整座城市，行程叠加其上。",
+        "Nexus River Cruise Pier"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "地图",
+        "expected_route": "/v8/map"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_map.png",
+        "bytes": 214468
+      }
+    },
+    {
+      "arm": "C_drawer_studio",
+      "route_read_from_location": "/v8/studio",
+      "rendered_text_chars": 266,
+      "rendered_text_head": "菜单\n/\n行程工作台\n跟随系统\nEN\nDE\n\n行程工作台 · 多日方案\n\n围绕重要的事塑造行程。\n\n更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。\n\n报告降雨中断\n尚未选择住宿\n选择住宿\n住宿总计\n尚未选择\n日均出行\n尚未选择\n步行暴露\n尚未选择\n方案健康度\n受保护 · 约0分钟余量\n行程约束检查通过，费用证据不完整\n到达、出发和受保护承诺已验证。预算未验证：还有 1 项缺少已验证的供应商价格，因此不给出总价结论。\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 13,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-trip-studio",
+        "studio-stay-total",
+        "studio-walking",
+        "studio-feasibility",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "报告降雨中断",
+        "选择住宿",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "围绕重要的事塑造行程。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "行程工作台",
+        "expected_route": "/v8/studio"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_studio.png",
+        "bytes": 42937
+      }
+    },
+    {
+      "arm": "C_drawer_stay",
+      "route_read_from_location": "/v8/stay",
+      "rendered_text_chars": 194,
+      "rendered_text_head": "菜单\n/\n住宿选择\n跟随系统\nEN\nDE\n\n住宿选择 · 已采集证据\n\n选择锚点，看见行程。\n还没有可用的住宿候选\n\n我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。\n\n怎么来的\n这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 13,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-stay-explorer",
+        "stay-no-options",
+        "estimation-ladder",
+        "ladder-rung-method",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "选择锚点，看见行程。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "住宿选择",
+        "expected_route": "/v8/stay"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_stay.png",
+        "bytes": 36366
+      }
+    },
+    {
+      "arm": "C_drawer_discover",
+      "route_read_from_location": "/v8/discover",
+      "rendered_text_chars": 338,
+      "rendered_text_head": "菜单\n/\n城市探索\n跟随系统\nEN\nDE\n\n准备目的地\n\n先看这座城能不能规划\n\n输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。\n\n目的地\n看看能不能规划\n\n真实依据城市探索\n\n说出你真正想要的城市一天。\n\n直接告诉 CityNexus 你想做什么。它会找出符合你行程和已确认预订的真实地点。\n\n密封真实回放\nCN / 探索\n塑造城市停留\n\n描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。\n\n边界\n供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。\n旅行者意图\n证据模式 \n密封真实回放\n实时供应商\n合成演示回放\n探索并组合\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 15,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "prep-panel",
+        "prep-query",
+        "prep-check",
+        "v13-discovery",
+        "v13-discovery-goal",
+        "v13-discover-submit",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "看看能不能规划",
+        "探索并组合",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "先看这座城能不能规划",
+        "说出你真正想要的城市一天。",
+        "塑造城市停留"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "prep-query",
+          "kind": "input",
+          "type": null,
+          "label": "目的地",
+          "placeholder": "例如：天津、贡山独龙族怒族自治县"
+        },
+        {
+          "testid": "v13-discovery-goal",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": ""
+        },
+        {
+          "testid": null,
+          "kind": "select",
+          "type": null,
+          "label": "证据模式 密封真实回放 实时供应商 合成演示回放",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [
+        "prep-check"
+      ],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "城市探索",
+        "expected_route": "/v8/discover"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_discover.png",
+        "bytes": 60513
+      }
+    },
+    {
+      "arm": "C_drawer_import",
+      "route_read_from_location": "/v8/import",
+      "rendered_text_chars": 359,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n把你已经写下的东西贴进来\n\n从文本导入地点\n\n贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。\n\npoiImport.channelLocal\nCityNexus\n两条入口\n\n今天支持文本与链接；截图也列出来，让缺口有名字。\n\n不抓取任何内容\n识别只跑本部署自己的文本规则和我们已有的地点行。\n文本或链接识别\n截图识别\n你的文字\n\n0 字\n\n这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。\n\n识别\n\n会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。\n\n至少写两个字再识别。\n\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 17,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "poi-import",
+        "poi-import-mode-text",
+        "poi-import-mode-screenshot",
+        "poi-import-text",
+        "poi-import-char-count",
+        "poi-import-scope-hint",
+        "poi-import-parse",
+        "poi-import-day-disclosure",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "文本或链接识别",
+        "截图识别",
+        "识别",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "从文本导入地点",
+        "两条入口"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "poi-import-text",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": "一行一个地点，或者整段笔记；链接可以混在里面。"
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "导入地点",
+        "expected_route": "/v8/import"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_import.png",
+        "bytes": 45224
+      }
+    },
+    {
+      "arm": "C_drawer_bookings",
+      "route_read_from_location": "/v8/bookings",
+      "rendered_text_chars": 604,
+      "rendered_text_head": "菜单\n/\n旅行票夹\n跟随系统\nEN\nDE\n\n行程收件箱 · 旅行票夹\n\n你的真实预订，受保护。\n\n粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。\n\n住宿证据\n未选择住宿\n\n这趟行程目前还没有可选的住宿。\n\n到「住宿选择」里找一间可订的房\n预订 · 受保护锚点 · 生效中 · 模拟承诺\nplace-river-cruise\n\n10月10日 15:30 → 10月10日 16:30\n\n¥120.00\n时间已锁定\n导入预订\n\n结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。\n\n高级：结构化数据\n权限始终明确\n导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。\n扫描票据代码\nZXing 确定性解码 · 仍需确认\n打开扫描器\n多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n权威记忆\n已保存的行程事实\n1 个受保护事实\nNexus River Cruise Pier · 中途Nexus River Cruise Pier · 10月10日 15:30受保护 · 置信度待定上游那句摘要的原文不在这一屏\n等你审核的确认单\n\n这里没有等你审核的确认单。\n\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 25,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-bookings",
+        "bookings-no-stay",
+        "bookings-no-stay-action",
+        "wallet-commitment",
+        "wallet-commitment-simulated",
+        "wallet-commitment-window",
+        "wallet-commitment-amount",
+        "bookings-advanced",
+        "bookings-json-input",
+        "journey-link-copy",
+        "inbox-tab-paste",
+        "inbox-tab-manual",
+        "v13-2-memory",
+        "v13-2-memory-summary-held",
+        "inbox-pending-queue",
+        "inbox-pending-empty",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "到「住宿选择」里找一间可订的房",
+        "高级：结构化数据",
+        "打开扫描器",
+        "复制行程链接",
+        "粘贴确认信息",
+        "手动填写",
+        "提取文本草稿",
+        "提取图片草稿",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "你的真实预订，受保护。",
+        "未选择住宿",
+        "place-river-cruise",
+        "将确认带入行程",
+        "已保存的行程事实"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "bookings-json-input",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": "{\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"}"
+        },
+        {
+          "testid": null,
+          "kind": "textarea",
+          "type": null,
+          "label": "粘贴的确认 提取文本草稿",
+          "placeholder": "粘贴铁路、航班、酒店或场地确认文本"
+        },
+        {
+          "testid": null,
+          "kind": "input",
+          "type": "file",
+          "label": "确认截图 图片字节仅用于此次提取请求。 提取图片草稿",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "旅行票夹",
+        "expected_route": "/v8/bookings"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_bookings.png",
+        "bytes": 50976
+      }
+    },
+    {
+      "arm": "C_drawer_agent",
+      "route_read_from_location": "/v8/agent",
+      "rendered_text_chars": 363,
+      "rendered_text_head": "菜单\n/\nCopilot\n跟随系统\nEN\nDE\n\n随时问关于这趟行程的任何事\n\n你想改什么？\n\n可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。\n\n画像上下文就绪\nCN / AI\n需要改变什么？\n\n使用自然语言。你的明确预算和受保护时刻在每一步都可见。\n\n我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。\n\n消息\n行程 · One Day in Nexus City\n询问 Copilot\n为什么这样安排？\n如果我多待 60 分钟会怎样？\n找附近的室内地点\n我的理解\n试算一次改动\n在不改动已选方案的前提下，预览时间和成本变化。\n受保护\n到达 / 出发锚点 · 未发起支付\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 12,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v15-copilot",
+        "v15-copilot-input",
+        "v15-copilot-submit",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "询问 Copilot",
+        "为什么这样安排？",
+        "如果我多待 60 分钟会怎样？",
+        "找附近的室内地点",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "你想改什么？",
+        "需要改变什么？"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "v15-copilot-input",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": "可以问为什么这样安排、试算一个假设、找地点，或报告正在发生的中断…"
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "Copilot",
+        "expected_route": "/v8/agent"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_agent.png",
+        "bytes": 53744
+      }
+    },
+    {
+      "arm": "C_drawer_authoritative",
+      "route_read_from_location": "/v8/authoritative",
+      "rendered_text_chars": 874,
+      "rendered_text_head": "菜单\n/\n恢复与执行\n跟随系统\nEN\nDE\n\nV12 · 方案、移动端、EDGE 与画像\n\n权威行程执行。\n\n你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。\n\n刷新真相\n这趟行程的方案版本\n\n服务器上还留着的每一份版本，按写入先后排。这一屏只读。\n\n共列出 1 份版本\n\n这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。\n\n版本 1\n首次生成\n9月28日 04:41\n没有父版本\n行程正在跑这一份\n\n这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。\n\nzh\n权威行程\n从方案到边缘的单一真相\n冻结证据\n现在\nTech Art Center\n活跃\n下一步\nNexus River Cruise Pier\n计划中\n15:30\nOld Town Gate\n已完成\nRiverside Museum\n已完成\nCentral Food Hall\n已完成\n4\nTech Art Center\n活跃\n5\nNexus River Cruise Pier\n计划中\n6\nSkyline Dinner House\n计划中\n服务端执行真相 · 可审计\n标记 出发中\n行程工作台 · 起草后接受\n调整权威行程\n\n在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。\n\n相同证据\n6 个活动\n1 个受保护锚点\n无草稿变更\n•\nOld Town Gate\n○\nRiverside Museum\n○\nCentral Food Hall\n○\nTech Art Center\n○\nNexus River Cruise Pier\n○\nSkyline Dinner House\n\n按住一项活动，拖到新的位置，就是一次草稿改动。\n\n锁定/受保护位置为确定性\n预览无状态；接受将重新检查活跃方案和证据\n方案版本 1 · 首次生成\n预览影响\n接受编辑\nV14 · 现实变了\n有据可依的自适应恢复\n重新读取恢复方案\n\n这趟行程没有等待你决定的恢复方案。\n\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 28,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v12-authoritative-page",
+        "plan-version-history",
+        "history-count",
+        "history-retention",
+        "history-list",
+        "history-row",
+        "history-version",
+        "history-source",
+        "history-created",
+        "history-parent",
+        "history-current",
+        "history-no-restore",
+        "history-locale",
+        "v12-authoritative-panel",
+        "v12-trip-studio",
+        "v12-studio-drag-hint",
+        "v12-preview-impact",
+        "v12-accept-edit",
+        "v14-recovery-truth",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "刷新真相",
+        "标记 出发中",
+        "预览影响",
+        "接受编辑",
+        "重新读取恢复方案",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "权威行程执行。",
+        "从方案到边缘的单一真相",
+        "调整权威行程",
+        "有据可依的自适应恢复"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "恢复与执行",
+        "expected_route": "/v8/authoritative"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_authoritative.png",
+        "bytes": 79278
+      }
+    },
+    {
+      "arm": "C_drawer_intelligence",
+      "route_read_from_location": "/v8/intelligence",
+      "rendered_text_chars": 357,
+      "rendered_text_head": "菜单\n/\n智能守护\n跟随系统\nEN\nDE\n\n智能守护 · 控制塔\n\n判断前置。硬事实在关口。\n\nDeepSeek 可解读模糊的城市信号。CityNexus 对照行程、供应商状态、预算和承诺权限验证所选操作。\n\n启用可逆恢复\nGUARDIAN 就绪\n自主恢复保持在权限范围内。\n\n降雨是语义信号。网关在选择操作后检查：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。\n\nDeterministic fallback→\nCityNexus Direct→\n网关\n智能体运行时来源\n未配置\n未完成可验证证明，因此不宣称原生 Hermes MCP\n策略\n建议\n版本 1 · 预授权交通权限\n操作后关口\n可行\n方式变更后硬约束已验证\n承诺\n受保护\n持久时刻不会被静默打破\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 10,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v17-runtime-status",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "启用可逆恢复",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "判断前置。硬事实在关口。",
+        "自主恢复保持在权限范围内。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "智能守护",
+        "expected_route": "/v8/intelligence"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_intelligence.png",
+        "bytes": 55688
+      }
+    },
+    {
+      "arm": "C_drawer_twin",
+      "route_read_from_location": "/v8/twin",
+      "rendered_text_chars": 340,
+      "rendered_text_head": "菜单\n/\n旅行者画像\n跟随系统\nEN\nDE\n\n旅行者画像 · 软上下文\n\n有边界的个性化。\n\n显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。\n\n显式\n文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水\n\n来自此次行程请求\n\n直接应用于当前方案目标。\n能力需求\n\n没有记录到明确的能力事实。\n\n学习到的软信号\n没有习得信号\n\n来自已完成的行程结果\n\n仅用于排序 · 随证据新鲜度过期。\n习得的能力状态\n\n无障碍硬性需求不会从行为里推断出来。\n\n权限边界\n\n你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。\n\n可检查的溯源可用\n来源不明的无障碍证据，不作为无障碍依据。\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 9,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "有边界的个性化。",
+        "文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+        "能力需求",
+        "没有习得信号",
+        "习得的能力状态"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "旅行者画像",
+        "expected_route": "/v8/twin"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_twin.png",
+        "bytes": 55823
+      }
+    },
+    {
+      "arm": "C_drawer_trash",
+      "route_read_from_location": "/v8/trash",
+      "rendered_text_chars": 137,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n回收站\n\n这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。\n\n回收站是空的：这台服务器没有报出任何在站里的行程。\n\n再读一次回收站\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 12,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "journey-trash-panel",
+        "trash-empty",
+        "trash-refresh",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "再读一次回收站",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "回收站",
+        "expected_route": "/v8/trash"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_trash.png",
+        "bytes": 26222
+      }
+    },
+    {
+      "arm": "C_drawer_access",
+      "route_read_from_location": "/v8/access",
+      "rendered_text_chars": 719,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n成员与权限\n\n谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。\n\n选一条行程\n先选一条要看的行程\nOne Day in Nexus City\n\n正在问这台服务器还有谁能到达这条行程…\n\n每一档能做什么，按这台服务器自己的 ACL 行读出来的\n\n角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么。\n\n查看完整权限规则\n可见性每一档，后果就在同一句里\n仅个人\n别人打不开，拿到链接也打不开。\n获得链接者可见\n有链接的人不用先进成员名单就能读。\n受邀者可见\n只有邀请还在有效期内的人打得开，过期就打不开了。\n公开\n全网公开可见。\n私到公、公到私，各写一句对方会怎样\n转换后这条行程全网可见——原先看不见的人会开始能看见。\n转换后，已经在跟踪这条行程的人会失去访问权限。\n改权限之前，屏会先这样问\n只动对方的档位，你的不变\n对方将获得对应权限。\n你把这条行程交到别人手上\n对方将获得对应权限，你的权限也会随之变化。\n这台设备没读到你自己的档位\n对方将获得对应权限，你的权限也会随之变化。\n你撤销某个人的访问权限\n对方将失去这条行程的权限。\n邀请\n\n这台服务器没有给出邀请的有效期，所以这里不声称有一个。\n\n这台服务器没有给出这条行程的成员数与上限，所以这里不计数。\n\n发一条带有效期的邀请\n这条邀请带哪一档可见性\n仅个人\n获得链接者可见\n受邀者可见\n公开\n到期时刻（留空就是这条不会自己失效）\n\n签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。\n\n发出邀请\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 24,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "access-panel",
+        "access-server-read",
+        "access-journey-picker",
+        "access-door-state",
+        "access-role-ladder-empty",
+        "access-role-details",
+        "access-visibility-ladder",
+        "access-switch-lines",
+        "access-confirm-table",
+        "access-invite-ttl",
+        "access-invite-quota",
+        "access-invite-visibility",
+        "access-invite-expiry",
+        "access-invite-signer",
+        "access-invite-submit",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "查看完整权限规则",
+        "发出邀请",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+        "可见性每一档，后果就在同一句里",
+        "私到公、公到私，各写一句对方会怎样",
+        "改权限之前，屏会先这样问",
+        "邀请",
+        "发一条带有效期的邀请"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "access-journey-picker",
+          "kind": "select",
+          "type": null,
+          "label": "选一条行程 先选一条要看的行程 One Day in Nexus City",
+          "placeholder": ""
+        },
+        {
+          "testid": "access-invite-visibility",
+          "kind": "select",
+          "type": null,
+          "label": "这条邀请带哪一档可见性 仅个人 获得链接者可见 受邀者可见 公开",
+          "placeholder": ""
+        },
+        {
+          "testid": "access-invite-expiry",
+          "kind": "input",
+          "type": "datetime-local",
+          "label": "到期时刻（留空就是这条不会自己失效）",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "成员与权限",
+        "expected_route": "/v8/access"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_access.png",
+        "bytes": 44605
+      }
+    },
+    {
+      "arm": "C_drawer_trips",
+      "route_read_from_location": "/v8/trips",
+      "rendered_text_chars": 400,
+      "rendered_text_head": "菜单\n/\n行程\n跟随系统\nEN\nDE\n行程\n住宿\n预订\n花费\n\n行程\n\n1 天行程\n\n逐日安排。已确认的预订会被标记为受保护。\n\n第 1 天 / 共 1 天。已完成 3/6 站。\n\n10月10日周六\n6 项\n09:00\n10:15\nOld Town Gate\n1 小时 15 分\n详情 ›\n10:30\n11:45\nRiverside Museum\n1 小时 15 分\n详情 ›\n12:00\n13:00\nCentral Food Hall\n1 小时\n详情 ›\n13:20\n14:40\nTech Art Center\n1 小时 20 分\n当前\n详情 ›\n15:30\n16:30\nNexus River Cruise Pier\n1 小时\n已确认 · 受保护\n详情 ›\n17:00\n18:30\nSkyline Dinner House\n1 小时 30 分\n详情 ›\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 27,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "trips-tabs",
+        "trips-tab-itinerary",
+        "trips-tab-stay",
+        "trips-tab-bookings",
+        "trips-tab-spend",
+        "trip-itinerary",
+        "trip-day-total",
+        "trip-progress-contract",
+        "trip-day-strip",
+        "trip-day-0",
+        "trip-day-detail",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop-protected",
+        "trip-stop",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "行程",
+        "住宿",
+        "预订",
+        "花费",
+        "10月10日周六 6 项",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "1 天行程"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "行程",
+        "expected_route": "/v8/trips"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_trips.png",
+        "bytes": 41376
+      }
+    },
+    {
+      "arm": "C_drawer_me",
+      "route_read_from_location": "/v8/me",
+      "rendered_text_chars": 309,
+      "rendered_text_head": "菜单\n/\n我的\n跟随系统\nEN\nDE\n\n我的\n\n我的行程与偏好\n\n这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。\n\n这趟行程\n演示城市\n\n1 位旅行者 · ¥500.00\n\n住宿\n还没有选定\n\n在「行程 · 住宿」里挑选\n\n已确认的预订\n还没有\n\n在「行程 · 预订」里导入你的票或确认单。\n\n改动偏好\n仅提供建议\n\n任何会影响已确认预订或受保护安排的改动，都会先征得你同意。\n\n开启自动执行\n通知\n只记录，不发推送\n\n服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。\n\n启用 Web Push\n高级详情\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 13,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-me",
+        "me-mode-toggle",
+        "push-capability",
+        "me-advanced",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "启用 Web Push",
+        "高级详情",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "我的行程与偏好"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "me-mode-toggle",
+          "kind": "input",
+          "type": "checkbox",
+          "label": "开启自动执行",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": {
+        "entry_label": "我的",
+        "expected_route": "/v8/me"
+      },
+      "reached_expected_route": true,
+      "screenshot": {
+        "png": "C_me.png",
+        "bytes": 43249
+      }
+    },
+    {
+      "arm": "D1_trips_landed",
+      "route_read_from_location": "/v8/trips",
+      "rendered_text_chars": 400,
+      "rendered_text_head": "菜单\n/\n行程\n跟随系统\nEN\nDE\n行程\n住宿\n预订\n花费\n\n行程\n\n1 天行程\n\n逐日安排。已确认的预订会被标记为受保护。\n\n第 1 天 / 共 1 天。已完成 3/6 站。\n\n10月10日周六\n6 项\n09:00\n10:15\nOld Town Gate\n1 小时 15 分\n详情 ›\n10:30\n11:45\nRiverside Museum\n1 小时 15 分\n详情 ›\n12:00\n13:00\nCentral Food Hall\n1 小时\n详情 ›\n13:20\n14:40\nTech Art Center\n1 小时 20 分\n当前\n详情 ›\n15:30\n16:30\nNexus River Cruise Pier\n1 小时\n已确认 · 受保护\n详情 ›\n17:00\n18:30\nSkyline Dinner House\n1 小时 30 分\n详情 ›\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 27,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "trips-tabs",
+        "trips-tab-itinerary",
+        "trips-tab-stay",
+        "trips-tab-bookings",
+        "trips-tab-spend",
+        "trip-itinerary",
+        "trip-day-total",
+        "trip-progress-contract",
+        "trip-day-strip",
+        "trip-day-0",
+        "trip-day-detail",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop",
+        "trip-stop-protected",
+        "trip-stop",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "行程",
+        "住宿",
+        "预订",
+        "花费",
+        "10月10日周六 6 项",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "1 天行程"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null
+    },
+    {
+      "arm": "D2_trips-tab-bookings",
+      "route_read_from_location": "/v8/trips",
+      "rendered_text_chars": 378,
+      "rendered_text_head": "菜单\n/\n行程\n跟随系统\nEN\nDE\n行程\n住宿\n预订\n花费\n多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n权威记忆\n已保存的行程事实\n1 个受保护事实\nNexus River Cruise Pier · 中途Nexus River Cruise Pier · 10月10日 15:30受保护 · 置信度待定上游那句摘要的原文不在这一屏\n等你审核的确认单\n\n这里没有等你审核的确认单。\n\n预订 · 受保护锚点 · 生效中 · 模拟承诺\nplace-river-cruise\n\n10月10日 15:30 → 10月10日 16:30\n\n¥120.00\n时间已锁定\n高级 / 开发者\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 31,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "trips-tabs",
+        "trips-tab-itinerary",
+        "trips-tab-stay",
+        "trips-tab-bookings",
+        "trips-tab-spend",
+        "journey-link-copy",
+        "inbox-tab-paste",
+        "inbox-tab-manual",
+        "v13-2-memory",
+        "v13-2-memory-summary-held",
+        "inbox-pending-queue",
+        "inbox-pending-empty",
+        "trips-commitments",
+        "wallet-commitment",
+        "wallet-commitment-simulated",
+        "wallet-commitment-window",
+        "wallet-commitment-amount",
+        "v8-bookings",
+        "bookings-no-stay",
+        "bookings-no-stay-action",
+        "bookings-advanced",
+        "bookings-json-input",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "行程",
+        "住宿",
+        "预订",
+        "花费",
+        "复制行程链接",
+        "粘贴确认信息",
+        "手动填写",
+        "提取文本草稿",
+        "提取图片草稿",
+        "高级 / 开发者",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "将确认带入行程",
+        "已保存的行程事实",
+        "place-river-cruise"
+      ],
+      "visible_inputs": [
+        {
+          "testid": null,
+          "kind": "textarea",
+          "type": null,
+          "label": "粘贴的确认 提取文本草稿",
+          "placeholder": "粘贴铁路、航班、酒店或场地确认文本"
+        },
+        {
+          "testid": null,
+          "kind": "input",
+          "type": "file",
+          "label": "确认截图 图片字节仅用于此次提取请求。 提取图片草稿",
+          "placeholder": ""
+        },
+        {
+          "testid": "bookings-json-input",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": "{\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"}"
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "D_trips-tab-bookings.png",
+        "bytes": 39482
+      }
+    },
+    {
+      "arm": "D2_inbox-tab-paste",
+      "route_read_from_location": "/v8/trips",
+      "rendered_text_chars": 378,
+      "rendered_text_head": "菜单\n/\n行程\n跟随系统\nEN\nDE\n行程\n住宿\n预订\n花费\n多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n权威记忆\n已保存的行程事实\n1 个受保护事实\nNexus River Cruise Pier · 中途Nexus River Cruise Pier · 10月10日 15:30受保护 · 置信度待定上游那句摘要的原文不在这一屏\n等你审核的确认单\n\n这里没有等你审核的确认单。\n\n预订 · 受保护锚点 · 生效中 · 模拟承诺\nplace-river-cruise\n\n10月10日 15:30 → 10月10日 16:30\n\n¥120.00\n时间已锁定\n高级 / 开发者\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 31,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "trips-tabs",
+        "trips-tab-itinerary",
+        "trips-tab-stay",
+        "trips-tab-bookings",
+        "trips-tab-spend",
+        "journey-link-copy",
+        "inbox-tab-paste",
+        "inbox-tab-manual",
+        "v13-2-memory",
+        "v13-2-memory-summary-held",
+        "inbox-pending-queue",
+        "inbox-pending-empty",
+        "trips-commitments",
+        "wallet-commitment",
+        "wallet-commitment-simulated",
+        "wallet-commitment-window",
+        "wallet-commitment-amount",
+        "v8-bookings",
+        "bookings-no-stay",
+        "bookings-no-stay-action",
+        "bookings-advanced",
+        "bookings-json-input",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "行程",
+        "住宿",
+        "预订",
+        "花费",
+        "复制行程链接",
+        "粘贴确认信息",
+        "手动填写",
+        "提取文本草稿",
+        "提取图片草稿",
+        "高级 / 开发者",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "将确认带入行程",
+        "已保存的行程事实",
+        "place-river-cruise"
+      ],
+      "visible_inputs": [
+        {
+          "testid": null,
+          "kind": "textarea",
+          "type": null,
+          "label": "粘贴的确认 提取文本草稿",
+          "placeholder": "粘贴铁路、航班、酒店或场地确认文本"
+        },
+        {
+          "testid": null,
+          "kind": "input",
+          "type": "file",
+          "label": "确认截图 图片字节仅用于此次提取请求。 提取图片草稿",
+          "placeholder": ""
+        },
+        {
+          "testid": "bookings-json-input",
+          "kind": "textarea",
+          "type": null,
+          "label": "",
+          "placeholder": "{\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"}"
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "D_inbox-tab-paste.png",
+        "bytes": 39471
+      }
+    },
+    {
+      "arm": "E_stay",
+      "route_read_from_location": "/v8/stay",
+      "rendered_text_chars": 194,
+      "rendered_text_head": "菜单\n/\n住宿选择\n跟随系统\nEN\nDE\n\n住宿选择 · 已采集证据\n\n选择锚点，看见行程。\n还没有可用的住宿候选\n\n我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。\n\n怎么来的\n这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 13,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "v8-stay-explorer",
+        "stay-no-options",
+        "estimation-ladder",
+        "ladder-rung-method",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "✦ CityNexus Copilot",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "选择锚点，看见行程。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "E_stay.png",
+        "bytes": 36366
+      }
+    },
+    {
+      "arm": "F_access",
+      "route_read_from_location": "/v8/access",
+      "rendered_text_chars": 719,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n成员与权限\n\n谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。\n\n选一条行程\n先选一条要看的行程\nOne Day in Nexus City\n\n正在问这台服务器还有谁能到达这条行程…\n\n每一档能做什么，按这台服务器自己的 ACL 行读出来的\n\n角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么。\n\n查看完整权限规则\n可见性每一档，后果就在同一句里\n仅个人\n别人打不开，拿到链接也打不开。\n获得链接者可见\n有链接的人不用先进成员名单就能读。\n受邀者可见\n只有邀请还在有效期内的人打得开，过期就打不开了。\n公开\n全网公开可见。\n私到公、公到私，各写一句对方会怎样\n转换后这条行程全网可见——原先看不见的人会开始能看见。\n转换后，已经在跟踪这条行程的人会失去访问权限。\n改权限之前，屏会先这样问\n只动对方的档位，你的不变\n对方将获得对应权限。\n你把这条行程交到别人手上\n对方将获得对应权限，你的权限也会随之变化。\n这台设备没读到你自己的档位\n对方将获得对应权限，你的权限也会随之变化。\n你撤销某个人的访问权限\n对方将失去这条行程的权限。\n邀请\n\n这台服务器没有给出邀请的有效期，所以这里不声称有一个。\n\n这台服务器没有给出这条行程的成员数与上限，所以这里不计数。\n\n发一条带有效期的邀请\n这条邀请带哪一档可见性\n仅个人\n获得链接者可见\n受邀者可见\n公开\n到期时刻（留空就是这条不会自己失效）\n\n签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。\n\n发出邀请\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 24,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "access-panel",
+        "access-server-read",
+        "access-journey-picker",
+        "access-door-state",
+        "access-role-ladder-empty",
+        "access-role-details",
+        "access-visibility-ladder",
+        "access-switch-lines",
+        "access-confirm-table",
+        "access-invite-ttl",
+        "access-invite-quota",
+        "access-invite-visibility",
+        "access-invite-expiry",
+        "access-invite-signer",
+        "access-invite-submit",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "查看完整权限规则",
+        "发出邀请",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+        "可见性每一档，后果就在同一句里",
+        "私到公、公到私，各写一句对方会怎样",
+        "改权限之前，屏会先这样问",
+        "邀请",
+        "发一条带有效期的邀请"
+      ],
+      "visible_inputs": [
+        {
+          "testid": "access-journey-picker",
+          "kind": "select",
+          "type": null,
+          "label": "选一条行程 先选一条要看的行程 One Day in Nexus City",
+          "placeholder": ""
+        },
+        {
+          "testid": "access-invite-visibility",
+          "kind": "select",
+          "type": null,
+          "label": "这条邀请带哪一档可见性 仅个人 获得链接者可见 受邀者可见 公开",
+          "placeholder": ""
+        },
+        {
+          "testid": "access-invite-expiry",
+          "kind": "input",
+          "type": "datetime-local",
+          "label": "到期时刻（留空就是这条不会自己失效）",
+          "placeholder": ""
+        }
+      ],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "F_access.png",
+        "bytes": 44605
+      }
+    },
+    {
+      "arm": "G_hub_refresh",
+      "route_read_from_location": "/v8/hub",
+      "rendered_text_chars": 674,
+      "rendered_text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n下午好\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n一切正常\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n现在没有可比的方案。\n\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的",
+      "visible_testid_count": 48,
+      "visible_testids": [
+        "v8-mobile-menu",
+        "topbar-theme",
+        "topbar-language",
+        "today-heading",
+        "today-when",
+        "hub-secondary-actions",
+        "hub-plan-with-ai",
+        "journey-link-copy",
+        "today-attention-band",
+        "today-attention",
+        "today-hero",
+        "today-now",
+        "today-next",
+        "today-hero-cta",
+        "today-clock-source",
+        "v8-maplibre-panel",
+        "v8-maplibre-canvas",
+        "map-viewport-controls",
+        "map-viewport-reset",
+        "v8-map-tile-notice",
+        "v8-map-gesture-hint",
+        "v8-map-attribution",
+        "today-strip",
+        "today-stay",
+        "pretrip-checklist",
+        "pretrip-empty",
+        "pretrip-empty-action",
+        "hub-glance-empty",
+        "plan-ranking",
+        "rank-none",
+        "pending-set",
+        "pending-count",
+        "pending-filter-open",
+        "pending-empty",
+        "pending-empty-title",
+        "pending-empty-action",
+        "pending-reread",
+        "pending-details",
+        "pending-reads",
+        "v18-copilot-dock",
+        "nav-hub",
+        "nav-trips",
+        "nav-map",
+        "nav-agent",
+        "nav-me",
+        "sim-float",
+        "sim-ball",
+        "sim-ball-dot"
+      ],
+      "visible_buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "复制行程链接",
+        "查看实时行程",
+        "回到行程视野",
+        "去看这一代方案",
+        "对比住宿 →",
+        "筛选",
+        "去城市探索",
+        "再读一次",
+        "技术详情",
+        "✦",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "visible_headings": [
+        "Demo之旅",
+        "服务端报出的两类待办",
+        "每一天，紧密相连。"
+      ],
+      "visible_inputs": [],
+      "machine_word_scan": {},
+      "stamp_word_counts": {
+        "打卡": 0,
+        "check-in": 0,
+        "checkin": 0,
+        "stamp": 0,
+        "footprint": 0,
+        "足迹": 0
+      },
+      "stamp_matching_testids": [
+        "pretrip-checklist"
+      ],
+      "bottom_nav_band": {
+        "top": 768,
+        "bottom": 844
+      },
+      "drawer_open_after_read": false,
+      "dialog_count": 0,
+      "pageerrors_total_at_read": 0,
+      "extra": null,
+      "screenshot": {
+        "png": "G_hub_refresh.png",
+        "bytes": 83551
+      }
+    }
+  ],
+  "requests_non_get": [],
+  "page_errors_total": 0,
+  "request_failed_list": [
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3381/1563.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3381/1564.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3380/1563.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3380/1564.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3382/1563.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/12/3382/1564.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1690/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1690/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1691/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1691/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1689/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1689/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/845/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/845/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/844/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/844/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/846/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/846/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/422/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/423/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/422/196.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/423/196.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/421/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/421/196.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/13/6761/3127.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/13/6761/3128.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1690/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1690/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1691/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1691/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1689/781.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/11/1689/782.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/845/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/845/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/844/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/844/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/846/391.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/10/846/390.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/422/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/423/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/422/196.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/423/196.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/421/195.png",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "arm": "A_first_visit",
+      "url": "https://tile.openstreetmap.org/9/421/196.png",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "drawer": {
+    "open_probe": {
+      "opened_with": "v8-mobile-menu"
+    },
+    "entry_count": 16,
+    "entries": [
+      {
+        "testid": "v8-drawer-entry-hub",
+        "text": "今天"
+      },
+      {
+        "testid": "v8-drawer-entry-live",
+        "text": "实时行程"
+      },
+      {
+        "testid": "v8-drawer-entry-map",
+        "text": "地图"
+      },
+      {
+        "testid": "v8-drawer-entry-studio",
+        "text": "行程工作台"
+      },
+      {
+        "testid": "v8-drawer-entry-stay",
+        "text": "住宿选择"
+      },
+      {
+        "testid": "v8-drawer-entry-discover",
+        "text": "城市探索"
+      },
+      {
+        "testid": "v8-drawer-entry-import",
+        "text": "导入地点"
+      },
+      {
+        "testid": "v8-drawer-entry-bookings",
+        "text": "旅行票夹"
+      },
+      {
+        "testid": "v8-drawer-entry-agent",
+        "text": "Copilot"
+      },
+      {
+        "testid": "v8-drawer-entry-authoritative",
+        "text": "恢复与执行"
+      },
+      {
+        "testid": "v8-drawer-entry-intelligence",
+        "text": "智能守护"
+      },
+      {
+        "testid": "v8-drawer-entry-twin",
+        "text": "旅行者画像"
+      },
+      {
+        "testid": "v8-drawer-entry-trash",
+        "text": "回收站"
+      },
+      {
+        "testid": "v8-drawer-entry-access",
+        "text": "成员与权限"
+      },
+      {
+        "testid": "v8-drawer-entry-trips",
+        "text": "行程"
+      },
+      {
+        "testid": "v8-drawer-entry-me",
+        "text": "我的"
+      }
+    ]
+  },
+  "finished_local": "Wed Sep 30 2026 12:08:36 GMT+0800 (中国标准时间)"
+}

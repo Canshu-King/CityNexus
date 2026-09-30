@@ -1,0 +1,268 @@
+{
+  "tool": "server_cells_r1",
+  "base": "http://127.0.0.1:8139",
+  "db_under_test": "D:/moodle/_qoder_phone_ord0485_20260930/run/phone_ord0485.db",
+  "took_local": "2026-09-30T12:16:05.303512+08:00",
+  "journey_row_named": {
+    "id": "22222222-2222-4222-8222-222222222222",
+    "traveler_id": "11111111-1111-4111-8111-111111111111",
+    "city_code": "CNX-DEMO",
+    "status": "ACTIVE"
+  },
+  "shared_preview_db_opened": false,
+  "cells": [
+    {
+      "cell": "checkin_post_first",
+      "http_status": 201,
+      "reason_code": null,
+      "payload_keys": [
+        "activity_id",
+        "activity_title",
+        "activity_type",
+        "id",
+        "journey_id",
+        "note",
+        "place_category",
+        "place_id",
+        "place_name",
+        "source",
+        "stamped_at",
+        "target_key",
+        "target_kind"
+      ],
+      "payload_head": "{\"id\": \"c482254b-7369-42f3-ad5b-b55c8b1449d5\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"activity_id\": \"abe4e842-249e-516f-ac43-b41695083792\", \"place_id\": null, \"target_kind\": \"ACTIVITY\", \"target_key\": \"activity:abe4e842-249e-516f-ac43-b41695083792\", \"stamped_at\": \"2026-09-30T04:16:05.441051+00:00\", \"note\": \"ord0485 first stamp\", \"source\": \"FOREGROUND_WEB\", \"activity_title\": \"Riverside Museum\", \"activity_type\": \"visit\", \"place_name\": null, \"place_category\": null}",
+      "stamped_activity": {
+        "id": "abe4e842-249e-516f-ac43-b41695083792",
+        "title": "Riverside Museum",
+        "place_id": "place-riverside-museum"
+      },
+      "db_rows_named": [
+        [
+          "c482254b-7369-42f3-ad5b-b55c8b1449d5",
+          "22222222-2222-4222-8222-222222222222",
+          "abe4e842-249e-516f-ac43-b41695083792",
+          null,
+          "ACTIVITY",
+          "activity:abe4e842-249e-516f-ac43-b41695083792",
+          "2026-09-30T04:16:05.441051+00:00",
+          "FOREGROUND_WEB",
+          "ord0485 first stamp"
+        ]
+      ]
+    },
+    {
+      "cell": "checkin_list_readback",
+      "http_status": 200,
+      "reason_code": null,
+      "payload_keys": null,
+      "payload_head": "[{\"id\": \"c482254b-7369-42f3-ad5b-b55c8b1449d5\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"activity_id\": \"abe4e842-249e-516f-ac43-b41695083792\", \"place_id\": null, \"target_kind\": \"ACTIVITY\", \"target_key\": \"activity:abe4e842-249e-516f-ac43-b41695083792\", \"stamped_at\": \"2026-09-30T04:16:05.441051+00:00\", \"note\": \"ord0485 first stamp\", \"source\": \"FOREGROUND_WEB\", \"activity_title\": \"Riverside Museum\", \"activity_type\": \"visit\", \"place_name\": null, \"place_category\": null}]",
+      "list_length": 1,
+      "titles_back": [
+        "Riverside Museum"
+      ],
+      "same_id_as_write": true
+    },
+    {
+      "cell": "checkin_replay_second_tap",
+      "http_status": 409,
+      "reason_code": "CHECKIN_DUPLICATE_STAMP",
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"CONFLICT\", \"message\": \"That target is already stamped on this trip.\", \"message_key\": \"request.conflict\", \"trace_id\": \"28b9ddfe-1449-4438-b1d8-47dec395ade9\", \"details\": {\"target_key\": \"activity:abe4e842-249e-516f-ac43-b41695083792\", \"existing_checkin_id\": \"c482254b-7369-42f3-ad5b-b55c8b1449d5\", \"existing_stamped_at\": \"2026-09-30T04:16:05.441051+00:00\"}, \"reason_code\": \"CHECKIN_DUPLICATE_STAMP\", \"error_receipt_id\": \"CNX-KE5W4K27\"}}",
+      "expected": "409 CHECKIN_DUPLICATE_STAMP",
+      "names_the_winning_row": true
+    },
+    {
+      "cell": "checkin_activity_unknown",
+      "http_status": 404,
+      "reason_code": "CHECKIN_ACTIVITY_UNKNOWN",
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"NOT_FOUND\", \"message\": \"No activity on this server carries that id.\", \"message_key\": \"resource.not_found\", \"trace_id\": \"aafd8a7f-d71d-43c6-8cd3-7546fec18f90\", \"details\": {\"activity_id\": \"e0c2f3bc-e912-4840-a767-c041b59b6c1f\"}, \"reason_code\": \"CHECKIN_ACTIVITY_UNKNOWN\", \"error_receipt_id\": \"CNX-6KNKMR4Y\"}}",
+      "expected": "404 CHECKIN_ACTIVITY_UNKNOWN",
+      "ghost_id_length": 36
+    },
+    {
+      "cell": "checkin_no_target_field",
+      "http_status": 422,
+      "reason_code": "CHECKIN_TARGET_REQUIRED",
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"A footprint has to name what was visited.\", \"message_key\": \"request.invalid\", \"trace_id\": \"b50a4231-e9cd-4d87-a0a8-b49ce316def7\", \"details\": {\"fields\": [\"activity_id\", \"place_id\"]}, \"reason_code\": \"CHECKIN_TARGET_REQUIRED\", \"error_receipt_id\": \"CNX-7WPWBME4\"}}",
+      "expected": "named refusal"
+    },
+    {
+      "cell": "checkin_journey_unknown",
+      "http_status": 404,
+      "reason_code": null,
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"NOT_FOUND\", \"message\": \"Journey 96782100-36c1-4c37-815f-e1fe445bc9ee was not found\", \"message_key\": \"resource.not_found\", \"trace_id\": \"d676636b-7d89-4452-95ad-0006a1e2243c\", \"details\": null, \"error_receipt_id\": \"CNX-WGPPAEG6\"}}",
+      "expected": "the door speaks about the journey before the target"
+    },
+    {
+      "cell": "share_create_LINK_READ",
+      "http_status": 201,
+      "reason_code": null,
+      "payload_keys": [
+        "created_at",
+        "created_by",
+        "expires_at",
+        "id",
+        "journey_id",
+        "plan_version_id",
+        "revoked_at",
+        "token",
+        "updated_at",
+        "visibility"
+      ],
+      "payload_head": "{\"id\": \"c4d8c764-8b9b-4ffe-8949-a3f6623be1d6\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"visibility\": \"LINK_READ\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"expires_at\": \"2026-10-02T04:16:05.571998+00:00\", \"revoked_at\": null, \"created_at\": \"2026-09-30T04:16:05.579999+00:00\", \"updated_at\": \"2026-09-30T04:16:05.579999+00:00\", \"plan_version_id\": null, \"token\": \"ydOlMASKED_len32\"}",
+      "expected": "201 with a token",
+      "token_length": 32,
+      "grant_id": "c4d8c764-8b9b-4ffe-8949-a3f6623be1d6",
+      "db_rows_named": [
+        [
+          "c4d8c764-8b9b-4ffe-8949-a3f6623be1d6",
+          "22222222-2222-4222-8222-222222222222",
+          "LINK_READ",
+          "11111111-1111-4111-8111-111111111111",
+          "2026-10-02T04:16:05.571998+00:00",
+          null
+        ]
+      ]
+    },
+    {
+      "cell": "share_create_lowercase_visibility",
+      "http_status": 422,
+      "reason_code": null,
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"Request validation failed\", \"message_key\": \"request.invalid\", \"trace_id\": \"0aa73fd2-6557-4107-884f-bda41e5b1f41\", \"details\": {\"errors\": [{\"loc\": [\"body\", \"visibility\"], \"msg\": \"Input should be 'PRIVATE', 'LINK_READ', 'INVITEES_ONLY' or 'PUBLIC'\", \"type\": \"literal_error\", \"message_key\": \"validation.not_an_option\"}]}, \"error_receipt_id\": \"CNX-NYMPFGC8\"}}",
+      "expected": "422 -- the contract takes the uppercase enum only"
+    },
+    {
+      "cell": "share_create_without_created_by",
+      "http_status": 422,
+      "reason_code": null,
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"Request validation failed\", \"message_key\": \"request.invalid\", \"trace_id\": \"782a7b5a-2a7f-4a81-9495-b205d33c6e19\", \"details\": {\"errors\": [{\"loc\": [\"body\", \"created_by\"], \"msg\": \"Field required\", \"type\": \"missing\", \"message_key\": \"validation.field_missing\"}]}, \"error_receipt_id\": \"CNX-NYMPFGC8\"}}",
+      "expected": "422 -- created_by is required"
+    },
+    {
+      "cell": "share_list",
+      "http_status": 200,
+      "reason_code": null,
+      "payload_keys": null,
+      "payload_head": "[{\"id\": \"c4d8c764-8b9b-4ffe-8949-a3f6623be1d6\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"visibility\": \"LINK_READ\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"expires_at\": \"2026-10-02T04:16:05.571998+00:00\", \"revoked_at\": null, \"created_at\": \"2026-09-30T04:16:05.579999+00:00\", \"updated_at\": \"2026-09-30T04:16:05.579999+00:00\", \"plan_version_id\": null, \"token\": \"ydOlMASKED_len32\"}]",
+      "grant_count": 1,
+      "every_row_carries_a_token": true
+    },
+    {
+      "cell": "shared_door_with_token",
+      "http_status": 200,
+      "reason_code": null,
+      "payload_keys": [
+        "active_plan",
+        "active_plan_version_id",
+        "budget",
+        "city_code",
+        "current_activity_id",
+        "end_at",
+        "grant_scope",
+        "id",
+        "plan_state",
+        "planning_mode",
+        "start_at",
+        "status",
+        "timezone",
+        "title",
+        "traveler_id"
+      ],
+      "payload_head": "{\"id\": \"22222222-2222-4222-8222-222222222222\", \"traveler_id\": \"11111111-1111-4111-8111-111111111111\", \"title\": \"One Day in Nexus City\", \"city_code\": \"CNX-DEMO\", \"timezone\": \"Asia/Shanghai\", \"start_at\": \"2026-10-10T09:00:00+08:00\", \"end_at\": \"2026-10-10T19:00:00+08:00\", \"budget\": {\"amount_minor\": 50000, \"currency\": \"CNY\"}, \"planning_mode\": \"balanced\", \"status\": \"ACTIVE\", \"active_plan_version_id\": \"55523d40-cafe-5bd2-b30a-de057ec7a839\", \"current_activity_id\": \"98af0be5-966b-5f49-b699-5dfdceea8ab6\", \"grant_scope\": \"JOURNEY\", \"plan_state\": \"PLAN_PRESENT\", \"active_plan\": {\"id\": \"55523d40-cafe-5bd2-b30a-de057ec7a839\", \"version_no\": 1, \"source\": \"INITIAL\", \"stops\": [{\"id\": \"3a58c470-524c-5854-aa39-",
+      "top_level_keys": [
+        "active_plan",
+        "active_plan_version_id",
+        "budget",
+        "city_code",
+        "current_activity_id",
+        "end_at",
+        "grant_scope",
+        "id",
+        "plan_state",
+        "planning_mode",
+        "start_at",
+        "status",
+        "timezone",
+        "title",
+        "traveler_id"
+      ]
+    },
+    {
+      "cell": "shared_door_wrong_token",
+      "http_status": 404,
+      "reason_code": "SHARE_GRANT_UNKNOWN",
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"NOT_FOUND\", \"message\": \"No share grant carries that token.\", \"message_key\": \"resource.not_found\", \"trace_id\": \"3c99e56f-d889-40ab-8bb3-8a9acaa76a82\", \"details\": {\"field\": \"token\"}, \"reason_code\": \"SHARE_GRANT_UNKNOWN\", \"error_receipt_id\": \"CNX-M27ZRHJA\"}}",
+      "expected": "a named refusal, not a bare 404"
+    },
+    {
+      "cell": "share_revoke",
+      "http_status": 200,
+      "reason_code": null,
+      "payload_keys": [
+        "already_revoked",
+        "id",
+        "journey_id",
+        "revoked_at",
+        "visibility"
+      ],
+      "payload_head": "{\"id\": \"c4d8c764-8b9b-4ffe-8949-a3f6623be1d6\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"visibility\": \"LINK_READ\", \"revoked_at\": \"2026-09-30T04:16:05.686584+00:00\", \"already_revoked\": false}",
+      "expected": "200 with revoked_at set"
+    },
+    {
+      "cell": "shared_door_after_revoke",
+      "http_status": 409,
+      "reason_code": "SHARE_GRANT_REVOKED",
+      "payload_keys": [
+        "error"
+      ],
+      "payload_head": "{\"error\": {\"code\": \"CONFLICT\", \"message\": \"This share grant does not allow a read right now.\", \"message_key\": \"request.conflict\", \"trace_id\": \"d27d1572-d63a-4426-9d8a-0e12ad8c7ca2\", \"details\": {\"grant_id\": \"c4d8c764-8b9b-4ffe-8949-a3f6623be1d6\", \"state\": \"REVOKED\", \"revoked_at\": \"2026-09-30T04:16:05.686584+00:00\"}, \"reason_code\": \"SHARE_GRANT_REVOKED\", \"error_receipt_id\": \"CNX-RNAW5NPK\"}}",
+      "expected": "the receiving door refuses by name",
+      "same_token_still_resolves": false
+    }
+  ],
+  "plan_row_named": {
+    "plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+    "status": "ACTIVE",
+    "version_no": 1,
+    "activity_count": 6
+  },
+  "checkin_rows_after_all_arms": [
+    [
+      1,
+      "2026-09-30T04:16:05.441051+00:00",
+      "2026-09-30T04:16:05.441051+00:00"
+    ]
+  ],
+  "grant_rows_after_all_arms": [
+    [
+      "c4d8c764-8b9b-4ffe-8949-a3f6623be1d6",
+      "LINK_READ",
+      1
+    ]
+  ],
+  "verdicts": {
+    "checkin_write_and_readback_landed": true,
+    "checkin_ui_on_this_build": "NOT_REACHED - see the walk readings",
+    "share_grant_issued_and_revoked": true
+  }
+}

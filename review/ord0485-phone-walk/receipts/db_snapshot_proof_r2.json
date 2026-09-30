@@ -1,0 +1,47 @@
+{
+  "tool": "db_snapshot_proof_r2",
+  "took_local": "2026-09-30 12:41:03 +0800",
+  "shared_now": {
+    "bytes": 7213056,
+    "mtime_ns": 1790644827980246600,
+    "mtime_local": "2026-09-29 09:20:27"
+  },
+  "shared_at_copy_time_as_printed_by_db_snapshot_r1": {
+    "bytes": 7213056,
+    "mtime_local": "2026-09-29 09:20:27",
+    "provenance": "the 11:33 run's own stdout line; the byte value and mtime are re-read here, so this field is a claim being checked, not a quote trusted"
+  },
+  "shared_bytes_equal_to_copy_time": true,
+  "shared_mtime_equal_to_copy_time": true,
+  "lane_copy": {
+    "bytes": 7213056,
+    "mtime_ns": 1790739181249081000,
+    "mtime_local": "2026-09-30 11:33:01"
+  },
+  "shared_opened_read_only": true,
+  "shared_counts_now": {
+    "journeys": 1,
+    "travelers": 1,
+    "plan_versions": 1,
+    "journey_checkins": "TABLE_ABSENT",
+    "journey_share_grants": "TABLE_ABSENT",
+    "traveler_names": [
+      "Alex Chen"
+    ]
+  },
+  "lane_counts_now": {
+    "journeys": 2,
+    "travelers": 3,
+    "plan_versions": 1,
+    "journey_checkins": 1,
+    "journey_share_grants": 3,
+    "traveler_names": [
+      "ord0485-marker-5dbbc0dac3c3",
+      "City traveler",
+      "Alex Chen"
+    ]
+  },
+  "byte_diff_to_the_1133_copy_supported": false,
+  "why_no_byte_diff": "the lane backend wrote its marker traveller, one footprint and three share grants into run/phone_ord0485.db after the copy, so a whole-file comparison against the shared file is no longer a meaningful claim",
+  "verdict_shared_untouched": true
+}

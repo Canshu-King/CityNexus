@@ -1,0 +1,335 @@
+{
+  "tool": "package_deliverables_r1",
+  "staged_at": "2026-09-30T12:41:04.216824+08:00",
+  "tokens_known_and_masked": 3,
+  "token_shapes_replaced": 13,
+  "manifest": [
+    {
+      "path": "review/ord0485-phone-walk/tools/stack_up_r1.py",
+      "bytes": 11459,
+      "sha256": "c8dbb10759bd963f180365a7066d94ca6b5d6db16908ccec98186ee5bcf089c2"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/static_identity_r2.py",
+      "bytes": 5629,
+      "sha256": "412f7bcd419cef45404deafdfdc297fef86631a022db37ef502b159a1243f204"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/db_snapshot_r1.py",
+      "bytes": 2319,
+      "sha256": "0290bfbbd3aca2dcc9546924f2dbcc7240761b8c93c3b61ad9bfb8d4dcb5ad3b"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/db_snapshot_proof_r2.py",
+      "bytes": 3527,
+      "sha256": "c73400e9c11874d5d8df8c2b7050b10a4264a5edcee3133adfe6a0df9d260b42"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/walk_phone_r1.cjs",
+      "bytes": 10911,
+      "sha256": "1472e9b38cda9ffb0432426a0b6091a8e0b7723710d54425fa450aaa8759e5f6"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/walk_phone_r2.cjs",
+      "bytes": 10795,
+      "sha256": "66c72843cb609325f0491638a8e1502f865b4e359286d6c10bfb9d784be3b0b9"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/share_receive_walk_r1.cjs",
+      "bytes": 8117,
+      "sha256": "26bd6dd8ba7dca32919f02616cfd75fbb56115edc1eb5a31736f98405b9f71ac"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/wizard_and_live_share_r1.cjs",
+      "bytes": 11591,
+      "sha256": "c72a267626fda512a82ada831eab1e9f5c2ce68827c63104bd8af14509b1d892"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/server_cells_r1.py",
+      "bytes": 9891,
+      "sha256": "799871ea280727b841336f69cd3d0bcc3c39c968a98f2c5c76e522aa51b1e490"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r1.py",
+      "bytes": 4739,
+      "sha256": "0a084cc6874ebaa8a950675d77a67e7d20f37efcf1170068f8e81a371937d562"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/serve_g1_r1.py",
+      "bytes": 2171,
+      "sha256": "7866b21cf73688e5bcb2d802461624e93cf357254913a8e7abe965cee2037080"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/import_g1_read_r1.cjs",
+      "bytes": 3352,
+      "sha256": "96bd71ee6f0644f5e70c35fc92ef3a64df91b7ed96d885892aa73d8546287dce"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/candidate_prereq_r1.py",
+      "bytes": 3534,
+      "sha256": "fa826b4b9b601e8fcb83270b826072ec56494cf5fc32edabf7e3083c76cafdbc"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/make_readings_r1.py",
+      "bytes": 23508,
+      "sha256": "c3cb09f39fad9ba9957efb0619e6258325a57d3038e7f985b8baccb4ec344b9c"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/package_deliverables_r1.py",
+      "bytes": 8960,
+      "sha256": "71a7b2255df298e2bc839f12700c9480a006b3380a594e9804970f5fc35fa7c8"
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/stack_up_r1.json",
+      "bytes": 3353,
+      "sha256": "46334bd5b9c89f997b01e1b0bf269a47b738d7e40188b45c5d86a34583344764",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/static_identity_r2.json",
+      "bytes": 1826,
+      "sha256": "59cbb71e9c0ffa81507e7a7fa61bc838080b9f57c8aa437b1ce232bd9bce1285",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/db_snapshot_proof_r2.json",
+      "bytes": 1527,
+      "sha256": "605231dcb2b8629377565a55abd806694fd95cd4ab97b8afb5b797dec1ae4fdb",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/walk_r2.json",
+      "bytes": 88826,
+      "sha256": "9f0bc4358a8397324206f8eff72a4a85a2a443f804a7788d46eb9f2cc8e8d8b5",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/share_r1.json",
+      "bytes": 20722,
+      "sha256": "50be9dce141e5536bb7d578ea80b856fa02243770c6c1173257d0ad553b3609d",
+      "token_occurrences_masked": 3
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/wizard_r1.json",
+      "bytes": 29009,
+      "sha256": "331ef5df416e1f9184610dde928c3cd5ecf087919a21e61833727d1561248f39",
+      "token_occurrences_masked": 6
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/server_cells_r1.json",
+      "bytes": 12592,
+      "sha256": "afa0fc5f112b3679c82e296b399d2f1600ce0b624fd28402dcd3c8e8406fa65b",
+      "token_occurrences_masked": 2
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/i18n_gap_r1.json",
+      "bytes": 483,
+      "sha256": "a453ba16059d52e54bc26a9ba0ee4798f1dce3a6f635dbd0a98fe654f334d6bb",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/candidate_prereq_r1.json",
+      "bytes": 1014,
+      "sha256": "2ef231a723699cc5b5fd1397d3a1a17f1e2c65cd51da5ff9d2ef65c6c9d29e20",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/import_face_4861_G0.json",
+      "bytes": 1897,
+      "sha256": "0a9a0385a23bfe10a6e62948c6fe7107413431491696540f39d7a54bdca01b0b",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/import_face_4862_G1.json",
+      "bytes": 1842,
+      "sha256": "f0d0e7e129a013b03b21aaef7868d6eb22a072b2824eede8d6158b0af93bc2a4",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/carrier_G0_pre_fix.json",
+      "bytes": 8652,
+      "sha256": "82a6e111ced098ad3f1c3cf847f95a6199ea871de15546c595a2970430baf710",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/carrier_G1_candidate.json",
+      "bytes": 4535,
+      "sha256": "db13626bf5d0c0619024ee2c7629568ea9efb90b0c8ed550bedade0bf0f6cd27",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/neighbour_word_gates_G1.json",
+      "bytes": 11590,
+      "sha256": "8a160bd150427b499a18b68e7e9cb0c2b56d99b32ef0af2ff22e49770ddd4933",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/server_cells_r1_stdout.json",
+      "bytes": 12593,
+      "sha256": "15cf24afe18a3dc5ed1bc2528b596c66a4d30ae37cf8a09799ba8a778999d48d",
+      "token_occurrences_masked": 2
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/A_first_visit_wizard.png",
+      "bytes": 34747,
+      "sha256": "0c2fbe2f9c8460d3b7f29ed59ef52c293c8a5b5986ea5c226752948d974ca5e8"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/B_hub_sealed_demo.png",
+      "bytes": 83542,
+      "sha256": "2b2a6b6834966f615c0f37a0e3e20a1aa93997a0ed4362735c6e888213ad7952"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_hub.png",
+      "bytes": 83542,
+      "sha256": "2b2a6b6834966f615c0f37a0e3e20a1aa93997a0ed4362735c6e888213ad7952"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_live.png",
+      "bytes": 123774,
+      "sha256": "d8d6f5a2e067acc50748f7cd5f7e45c86082ce64f5ae4f2cd1a6f52f54b61f7a"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_map.png",
+      "bytes": 214468,
+      "sha256": "dadf362e502fa31428bec0050d3497705c9bf53d203c8c6e0cd45ce8468884d3"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_studio.png",
+      "bytes": 42937,
+      "sha256": "b908151fa822708b545cb72130ed2a1f9ef9cfdff169fa80f68f6f3035efa47a"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_stay.png",
+      "bytes": 36366,
+      "sha256": "3f3e69110d959e307ec567190c826100d02a72deb3d53428ab02a69ead986576"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_discover.png",
+      "bytes": 60513,
+      "sha256": "df02b1f764d748f233462e5e7688a1a79ab3719f9f8a9548b78011b88f1bbc94"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_import_PRE_FIX_pill.png",
+      "bytes": 45224,
+      "sha256": "39bb16d80470f91f60fc281f58f1158e2639c509c0462ee0541787af2cd00406"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_bookings.png",
+      "bytes": 50976,
+      "sha256": "23b14a7e7235119371dff1587c0e088b1515bbfc250d92f7f9ea041b456696c8"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_agent.png",
+      "bytes": 53744,
+      "sha256": "1f7954cd9c58c0b8f0e190a9c3521a32b9eb49363d98d8c29f9a50e52c9a2ca2"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_authoritative.png",
+      "bytes": 79278,
+      "sha256": "96bd34225b15ee969428e290fe09c02152adca2088d20f2e6dbb563718d00778"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_intelligence.png",
+      "bytes": 55688,
+      "sha256": "1206ee1eb0b680e5a467d963ca291ac50c2f3284b2717b8fbfd7101f1a11de21"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_twin.png",
+      "bytes": 55823,
+      "sha256": "92ef1bb4d3c0832d81fe737ad9552526f4c8c4d1ca47f481b9b740b9ae6195fc"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_trash.png",
+      "bytes": 26222,
+      "sha256": "7599b00acb9f9613291eefc125dab02af4148b0783f3a2adac7410f59d9c83ff"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_access.png",
+      "bytes": 44605,
+      "sha256": "eb07721bb6089a3fcf77f6af9f3cf160bb23f0fe509b60d01e1782f5c27e052c"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_trips.png",
+      "bytes": 41376,
+      "sha256": "3363dad321230e49029c546361cb768c95d32a7035c5198a11167f055d43d712"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/drawer_me.png",
+      "bytes": 43249,
+      "sha256": "63f3b5ec985c21587069413adc33cad5869f73a597785ffff39869476930b5c0"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/trips_bookings_tab.png",
+      "bytes": 39482,
+      "sha256": "54f23a17e57581fa0052566141d920053899dfe49e729f79f24452c2feec1255"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/trips_bookings_paste_tab.png",
+      "bytes": 39471,
+      "sha256": "bddb0accd5beb43091d590d418d386e3ac11ed27852b648fb943db292ecfd637"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/stay_screen.png",
+      "bytes": 36366,
+      "sha256": "3f3e69110d959e307ec567190c826100d02a72deb3d53428ab02a69ead986576"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/access_before_choice.png",
+      "bytes": 44605,
+      "sha256": "eb07721bb6089a3fcf77f6af9f3cf160bb23f0fe509b60d01e1782f5c27e052c"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/hub_hard_refresh.png",
+      "bytes": 83551,
+      "sha256": "fac3b55ac8caa65394265c45075dd019a438c4cbd61d3235fa4b372f408915dc"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/share_receive_revoked_token.png",
+      "bytes": 25579,
+      "sha256": "ae06ea52e70a1b3bd57e46690196a910ab5f2e2aeb8ab395aa223a6c5b22cdf4"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/share_receive_unknown_token.png",
+      "bytes": 25550,
+      "sha256": "74c46cfe8ca849a2248c920cf52e034a5876408093b59c9a87dcfe1bc0a7b59b"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/share_receive_live_token.png",
+      "bytes": 80105,
+      "sha256": "c67cca08aa746dc3f04cc8b275e8f4acecf2d7d8fea50f7e8aac7e167b9c637c"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/hub_after_creating_a_trip.png",
+      "bytes": 41918,
+      "sha256": "69735c2eb13ea80c458a6bcd884e32a73c59f1615ab3553bf1f86e00ec4f0191"
+    },
+    {
+      "path": "review/ord0485-phone-walk/shots/import_CANDIDATE_pill.png",
+      "bytes": 45077,
+      "sha256": "2e92c65e79171430879d2f95e3bca1b9db7a67b95206fe46021b6401ba3e73ff"
+    }
+  ],
+  "shots_missing_locally": [],
+  "not_staged": [
+    {
+      "local": "evidence/share_r1/H2_after_invite.png",
+      "reason": "paints a live share token inside the opened grant fold"
+    },
+    {
+      "local": "evidence/share_r1/H3_token_fold.png",
+      "reason": "paints a live share token inside the opened grant fold"
+    },
+    {
+      "local": "evidence/wizard_r1/J1_access_live.png",
+      "reason": "paints live share tokens in three opened grant folds"
+    },
+    {
+      "local": "evidence/walk_r1/walk_r1.json",
+      "reason": "first walk run: its drawer helper refused to re-open the covered menu button, so every C_* row is an instrument ABORT and would read as a product defect; kept locally, superseded by walk_r2"
+    }
+  ],
+  "ledger_sha256_before": "f002113f2f9600333b9f9465e1bc71fe2bf185b31c89bd1474c227d84e92c828",
+  "ledger_sha256_after": "f002113f2f9600333b9f9465e1bc71fe2bf185b31c89bd1474c227d84e92c828",
+  "ledger_untouched": true
+}

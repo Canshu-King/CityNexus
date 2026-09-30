@@ -1,0 +1,189 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0485-phone.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\playwright.ord0485-phone.config.ts",
+    "rootDir": "D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-ord0485-.*\\.spec\\.ts/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:/moodle/_qoder_phone_ord0485_20260930/run/report_ord0485_G0_r2.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-ord0485-phone-words.spec.ts",
+      "file": "qoder-ord0485-phone-words.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0485-1-the-import-pill-says-a-word-not-a-key — 导入屏的证据牌不得回吐字典键",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 435,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-1 — the pill fell back to the dictionary key: poiImport.channelLocal\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-1 — the pill fell back to the dictionary key: poiImport.channelLocal\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\e2e\\qoder-ord0485-phone-words.spec.ts:66:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\e2e\\qoder-ord0485-phone-words.spec.ts",
+                      "column": 5,
+                      "line": 66
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 64 |\u001b[39m     scan\u001b[33m.\u001b[39mvisual\u001b[33m.\u001b[39mincludes(\u001b[33mLEAKED_PILL_KEY\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 65 |\u001b[39m     node(\u001b[32m\"ord0485-1\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`the pill fell back to the dictionary key: ${LEAKED_PILL_KEY}`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 66 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 67 |\u001b[39m   expect(\n \u001b[90m 68 |\u001b[39m     scan\u001b[33m.\u001b[39maccessible\u001b[33m.\u001b[39mincludes(\u001b[33mLEAKED_PILL_KEY\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 69 |\u001b[39m     node(\u001b[32m\"ord0485-1\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`the key is not painted but an announcer can still speak it: ${LEAKED_PILL_KEY}`\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\e2e\\qoder-ord0485-phone-words.spec.ts",
+                        "column": 5,
+                        "line": 66
+                      },
+                      "message": "Error: e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-1 — the pill fell back to the dictionary key: poiImport.channelLocal\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  64 |     scan.visual.includes(LEAKED_PILL_KEY),\n  65 |     node(\"ord0485-1\", `the pill fell back to the dictionary key: ${LEAKED_PILL_KEY}`),\n> 66 |   ).toBe(false);\n     |     ^\n  67 |   expect(\n  68 |     scan.accessible.includes(LEAKED_PILL_KEY),\n  69 |     node(\"ord0485-1\", `the key is not painted but an announcer can still speak it: ${LEAKED_PILL_KEY}`),\n    at D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\e2e\\qoder-ord0485-phone-words.spec.ts:66:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T04:30:45.953Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\test-results\\qoder-ord0485-phone-words--bcb78--not-a-key-—-导入屏的证据牌不得回吐字典键\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\export\\frontend\\e2e\\qoder-ord0485-phone-words.spec.ts",
+                    "column": 5,
+                    "line": 66
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "397043185d62b8280522-65a91b985cac0adfda08",
+          "file": "qoder-ord0485-phone-words.spec.ts",
+          "line": 46,
+          "column": 1
+        },
+        {
+          "title": "ord0485-2-no-execution-state-key-reaches-any-phone-screen — 执行状态词表不许把键名放上屏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1401,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-2 — settled after 1000 ms of waiting for the plan read\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-30T04:30:47.475Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "397043185d62b8280522-67fdd0d4613c175c8101",
+          "file": "qoder-ord0485-phone-words.spec.ts",
+          "line": 77,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-30T04:30:45.496Z",
+    "duration": 3618.523,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
