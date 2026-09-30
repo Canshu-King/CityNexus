@@ -1,0 +1,223 @@
+{
+ "base_revision": "1e95d106f81b29048ba17695fd0e49172516b9b1",
+ "candidate_head": "1e95d106f81b29048ba17695fd0e49172516b9b1",
+ "runs": [],
+ "private_db": "ord0527_f706ca5f.db",
+ "readiness_probe": {
+  "/health": "no answer yet",
+  "/api/v1/health": 200
+ },
+ "seed": {
+  "travellers": [
+   "d545bbf1-9342-49fa-a4a7-f19ca2f7ade3",
+   "0bdc5e14-e190-4e0e-b78b-c3a95b347c98"
+  ],
+  "journey_with_seat": "38aa2bca-cf0e-4f41-8341-092dd13fdfb4",
+  "journey_without_seat": "22ba38db-de6e-494f-8aa9-f96ce5987d33",
+  "member_add_http_status": [
+   201,
+   201
+  ],
+  "members_row_count": 2,
+  "no_seat_row_count": 0
+ },
+ "doors_measured": {
+  "acl_roles": {
+   "http_status": 200,
+   "shape": "list of 3"
+  },
+  "members": {
+   "http_status": 200,
+   "shape": "list of 2"
+  },
+  "role_limits": {
+   "http_status": 200,
+   "shape": [
+    "max_administrators",
+    "admin_count_in_force",
+    "roles"
+   ]
+  },
+  "traveller_registry": {
+   "http_status": 200,
+   "shape": [
+    "display_name",
+    "email",
+    "locale",
+    "timezone",
+    "id",
+    "created_at"
+   ]
+  },
+  "experience": {
+   "http_status": 200,
+   "shape": [
+    "journey",
+    "trip",
+    "offers",
+    "options",
+    "selected_option_id",
+    "mobility_facts"
+   ]
+  }
+ },
+ "candidate": {
+  "generation": "candidate",
+  "build_exit": 0,
+  "bundle_entry": [
+   "index-CADy2gy3.js"
+  ],
+  "cases": [
+   {
+    "arm": "arm_present",
+    "journey": "38aa2bca-cf0e-4f41-8341-092dd13fdfb4",
+    "identity_read_masked": false,
+    "exit": 0,
+    "held": true,
+    "failures": [],
+    "reading": {
+     "panel": 1,
+     "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+     "stale_words": null,
+     "no_authority_words": null,
+     "roster_rows": [
+      "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销",
+      "协作者 · ORD0527-乙 · 还在生效 这一档能做什么：能读这条行程、编辑地点。 改角色 撤销"
+     ],
+     "role_change": 1,
+     "self_exit": 1,
+     "ladder_empty": 0,
+     "roster_empty": 0,
+     "picker_present": 1,
+     "uuids": 0,
+     "words_withdraw_family": 1
+    }
+   },
+   {
+    "arm": "arm_absent",
+    "journey": "22ba38db-de6e-494f-8aa9-f96ce5987d33",
+    "identity_read_masked": false,
+    "exit": 0,
+    "held": true,
+    "failures": [],
+    "reading": {
+     "panel": 1,
+     "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+     "stale_words": null,
+     "no_authority_words": null,
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 0,
+     "roster_empty": 1,
+     "picker_present": 1,
+     "uuids": 0,
+     "words_withdraw_family": 1
+    }
+   },
+   {
+    "arm": "arm_present",
+    "journey": "38aa2bca-cf0e-4f41-8341-092dd13fdfb4",
+    "identity_read_masked": true,
+    "exit": 1,
+    "held": false,
+    "failures": [
+     "panel mounted",
+     "roster lists the seeded seats",
+     "identity line names the person",
+     "a role-change control is listed",
+     "a leaving control is listed",
+     "access-member-role-change exists to be hit",
+     "access-member-self-exit exists to be hit",
+     "role choices cannot open without a control",
+     "role choices came from the seat door"
+    ],
+    "reading": {
+     "panel": 0,
+     "identity_words": null,
+     "stale_words": null,
+     "no_authority_words": null,
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 0,
+     "roster_empty": 0,
+     "picker_present": 0,
+     "uuids": 0,
+     "words_withdraw_family": 0
+    }
+   }
+  ]
+ },
+ "base": {
+  "generation": "base",
+  "build_exit": 0,
+  "bundle_entry": [
+   "index-BGM3L0lx.js"
+  ],
+  "cases": [
+   {
+    "arm": "arm_present",
+    "journey": "38aa2bca-cf0e-4f41-8341-092dd13fdfb4",
+    "identity_read_masked": false,
+    "exit": 1,
+    "held": false,
+    "failures": [
+     "ladder is NOT the empty cell",
+     "roster lists the seeded seats",
+     "identity line names the person",
+     "a role-change control is listed",
+     "a leaving control is listed",
+     "access-member-role-change exists to be hit",
+     "access-member-self-exit exists to be hit",
+     "role choices cannot open without a control",
+     "role choices came from the seat door"
+    ],
+    "reading": {
+     "panel": 1,
+     "identity_words": null,
+     "stale_words": null,
+     "no_authority_words": null,
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 1,
+     "roster_empty": 0,
+     "picker_present": 1,
+     "uuids": 0,
+     "words_withdraw_family": 0
+    }
+   },
+   {
+    "arm": "arm_absent",
+    "journey": "22ba38db-de6e-494f-8aa9-f96ce5987d33",
+    "identity_read_masked": false,
+    "exit": 1,
+    "held": false,
+    "failures": [
+     "the screen says it has no seat for you"
+    ],
+    "reading": {
+     "panel": 1,
+     "identity_words": null,
+     "stale_words": null,
+     "no_authority_words": null,
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 1,
+     "roster_empty": 0,
+     "picker_present": 1,
+     "uuids": 0,
+     "words_withdraw_family": 0
+    }
+   }
+  ]
+ },
+ "restored_build": {
+  "exit": 0,
+  "bundle_entry": [
+   "index-CADy2gy3.js"
+  ]
+ }
+}
