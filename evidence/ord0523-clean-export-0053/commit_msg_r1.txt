@@ -1,0 +1,38 @@
+ORD-0523: a clean export can collect the whole backend suite -- the root was never on pytest's path
+
+Measured on a `git archive` export of the authoritative tip, with no PYTHONPATH set:
+
+    cwd = <export>/backend
+    python -m pytest tests -p no:randomly -q --collect-only
+    -> 1562 tests collected, 20 errors during collection
+
+The twenty are one family: `ModuleNotFoundError: No module named 'scripts.hermes_rNN_*'`.
+
+The premise that those probes were never committed does not hold, and the fix is not in the tests.
+Printed inventory rather than assertion: `git ls-tree -r --name-only <tip> -- scripts | grep -c
+'hermes_r.*probe'` answers 23, and the same count holds at each of the three bases this round was
+checked against.  `scripts/hermes_r9_mcp_context_probe.py` entered the line in `65df31df` ("ORD-0318 r3
+port Hermes harness minus the two unresolvable tests"), and the files are present in the export --
+hiding one of them by hand makes its test error again, which is what proves the export carries them.
+
+What is missing is the path.  `backend/pyproject.toml` declares
+`pythonpath = [".", "../agent-mcp"]` -- rootdir-relative, so pytest puts `backend/` and `agent-mcp/` on
+sys.path and never the repository root, which is where `scripts/` lives.  Twenty test files import
+`scripts.<probe>`, so they collect only when the caller happens to supply the root themselves.  Lanes
+inside a working copy never notice: their cwd or a parent directory already puts the root on the path,
+and `PYTHONPATH=backend;<树根>` is what the hand-run recipe has always carried.  A fresh clone, a
+`git archive` export, a new lane worktree, the landing gate's root-test leg and any future CI get
+nothing of the sort.
+
+One line: `pythonpath` gains `".."`.  After it, the same export collects 1620 with 0 errors -- the 58
+that come back are the twenty modules' own tests, not a widened net: no test file was edited, no
+assertion was removed, no file was ignored, and nothing is skipped.
+
+Counter-example kept in the delivery rather than asserted: with the fix in place, move
+`scripts/hermes_r9_mcp_context_probe.py` out of the export and collect its test -- it still answers
+`ModuleNotFoundError: No module named 'scripts.hermes_r9_mcp_context_probe'` and 1 error, so a genuinely
+missing probe is still loud.  The file was put back byte-for-byte (compared against
+`git cat-file blob <tip>:scripts/hermes_r9_mcp_context_probe.py`, 35,976 B, equal).
+
+Both readings are delivered: the collection count on an export of this branch and a real run of the
+whole suite on that same export, each with cwd and the exact command.
