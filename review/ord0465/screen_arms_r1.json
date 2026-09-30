@@ -217,9 +217,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "01:48",
-          "02:48",
-          "03:48"
+          "11:31",
+          "12:31",
+          "13:31"
         ]
       }
     },
@@ -250,7 +250,7 @@
         "stop_cells": 0,
         "day_cells": 0,
         "title_still": true,
-        "body_len": 94
+        "body_len": 95
       }
     },
     {
@@ -267,7 +267,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/YMFIdxKSttX6T_acXfA_6ybs5Edu5vuj",
+        "pathname": "/v8/shared/7-hPGsEU7WtcvSDYTTPxJoulamJoNJ4n",
         "title_still_on_screen": true
       }
     },
@@ -330,7 +330,7 @@
         "status": "这台设备看到的回读：HTTP 409",
         "media": "回读的媒体类型 application/json",
         "bytes": "这台设备数到的字节 372",
-        "receipt": "服务器回执号 CNX-5SMBQ42S",
+        "receipt": "服务器回执号 CNX-N7PD3KF2",
         "fold_open": true
       }
     },
