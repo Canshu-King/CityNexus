@@ -1,0 +1,212 @@
+{
+ "order": "ORD-0510",
+ "instrument": "collect_arms_r1",
+ "base_url": "http://localhost:4511",
+ "shelf_created": {
+  "status": "created",
+  "id": "6ac41f53-7b7c-46f9-953a-ec2d079f586f",
+  "name": "周末架子"
+ },
+ "arms": [
+  {
+   "arm": "empty_390_zh",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "locale": "zh-CN",
+   "stops_on_screen": 6,
+   "entry_text": "收藏到…",
+   "entry_hit": {
+    "found": true,
+    "box": {
+     "w": 272,
+     "h": 44,
+     "x": 224,
+     "y": 422
+    },
+    "top_is_the_control": true,
+    "top_tag": "BUTTON"
+   },
+   "picker_text": "收到哪个架子 周末架子 1 枚地点 这一枚已经在这个架子上。 反件专用架 1 枚地点 周末架子 0 枚地点 先不收",
+   "shelves_listed": 3,
+   "no_shelf_line": null,
+   "after_pick": {
+    "hit": {
+     "found": true,
+     "box": {
+      "w": 250,
+      "h": 61,
+      "x": 224,
+      "y": 422
+     },
+     "top_is_the_control": true,
+     "top_tag": "SPAN"
+    },
+    "result": "这一枚已经在这个架子上。 · 已收在 周末架子"
+   },
+   "console_errors": [
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ]
+  },
+  {
+   "arm": "happy_390_zh",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "locale": "zh-CN",
+   "stops_on_screen": 6,
+   "entry_text": "收藏到…",
+   "entry_hit": {
+    "found": true,
+    "box": {
+     "w": 272,
+     "h": 44,
+     "x": 224,
+     "y": 422
+    },
+    "top_is_the_control": true,
+    "top_tag": "BUTTON"
+   },
+   "picker_text": "收到哪个架子 周末架子 1 枚地点 这一枚已经在这个架子上。 反件专用架 1 枚地点 周末架子 0 枚地点 周末架子 0 枚地点 先不收",
+   "shelves_listed": 4,
+   "no_shelf_line": null,
+   "after_pick": {
+    "hit": {
+     "found": true,
+     "box": {
+      "w": 250,
+      "h": 61,
+      "x": 224,
+      "y": 422
+     },
+     "top_is_the_control": true,
+     "top_tag": "SPAN"
+    },
+    "result": "这一枚已经在这个架子上。 · 已收在 周末架子"
+   },
+   "console_errors": [
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ]
+  },
+  {
+   "arm": "again_390_zh",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "locale": "zh-CN",
+   "stops_on_screen": 6,
+   "entry_text": "收藏到…",
+   "entry_hit": {
+    "found": true,
+    "box": {
+     "w": 272,
+     "h": 44,
+     "x": 224,
+     "y": 422
+    },
+    "top_is_the_control": true,
+    "top_tag": "BUTTON"
+   },
+   "picker_text": "收到哪个架子 周末架子 1 枚地点 这一枚已经在这个架子上。 反件专用架 1 枚地点 周末架子 0 枚地点 周末架子 0 枚地点 先不收",
+   "shelves_listed": 4,
+   "no_shelf_line": null,
+   "after_pick": {
+    "hit": {
+     "found": true,
+     "box": {
+      "w": 250,
+      "h": 61,
+      "x": 224,
+      "y": 422
+     },
+     "top_is_the_control": true,
+     "top_tag": "SPAN"
+    },
+    "result": "这一枚已经在这个架子上。 · 已收在 周末架子"
+   },
+   "console_errors": [
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ]
+  },
+  {
+   "arm": "happy_desktop_en",
+   "viewport": {
+    "width": 1280,
+    "height": 900
+   },
+   "locale": "en",
+   "stops_on_screen": 6,
+   "entry_text": "Collect into…",
+   "entry_hit": {
+    "found": true,
+    "box": {
+     "w": 852,
+     "h": 44,
+     "x": 795,
+     "y": 450
+    },
+    "top_is_the_control": true,
+    "top_tag": "BUTTON"
+   },
+   "picker_text": "Which shelf should hold it 周末架子 1 places This place is already on that shelf. 反件专用架 1 places 周末架子 0 places 周末架子 0 places Not now",
+   "shelves_listed": 4,
+   "no_shelf_line": null,
+   "after_pick": {
+    "hit": {
+     "found": true,
+     "box": {
+      "w": 830,
+      "h": 61,
+      "x": 795,
+      "y": 450
+     },
+     "top_is_the_control": true,
+     "top_tag": "SPAN"
+    },
+    "result": "This place is already on that shelf. · Collected into 周末架子"
+   },
+   "console_errors": [
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ]
+  }
+ ],
+ "server_readback_after_all_arms": [
+  {
+   "id": "736d86ea-4396-4926-8432-25bf7d1468b4",
+   "name": "周末架子",
+   "item_count": 1,
+   "items": [
+    {
+     "place_id": "place-old-town",
+     "name": "Old Town Gate"
+    }
+   ]
+  },
+  {
+   "id": "6a091f15-7ea5-44d4-a4ee-681e28ca6c84",
+   "name": "反件专用架",
+   "item_count": 1,
+   "items": [
+    {
+     "place_id": "place-riverside-museum",
+     "name": "Riverside Museum"
+    }
+   ]
+  },
+  {
+   "id": "966d13c1-2d47-4680-93d7-ae2c58b4f701",
+   "name": "周末架子",
+   "item_count": 0,
+   "items": []
+  },
+  {
+   "id": "6ac41f53-7b7c-46f9-953a-ec2d079f586f",
+   "name": "周末架子",
+   "item_count": 0,
+   "items": []
+  }
+ ]
+}
