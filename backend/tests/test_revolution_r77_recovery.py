@@ -1156,6 +1156,9 @@ def test_japanese_admission_does_not_budget_rental_hours_or_headcounts():
         url, reference_at="2026-10-02",
     )
     assert (primary["open"], primary["close"]) == ("09:00", "17:00")
+    whole_hour = _plain_text_opening("開館時間 10時～16時", url, reference_at=None)
+    assert (whole_hour["open"], whole_hour["close"]) == ("10:00", "16:00")
+    assert _plain_text_cost("入館無料", url, reference_at=None)["amount_minor"] == 0
 
 
 def test_real_catalogue_fallback_is_visible_but_not_selectable():

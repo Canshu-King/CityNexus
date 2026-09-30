@@ -521,6 +521,7 @@ def _plain_text_opening(
         str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
     )
     excerpt = re.sub(r"(\d{1,2})時(\d{2})分", r"\1:\2", excerpt)
+    excerpt = re.sub(r"(?<!\d)(\d{1,2})時(?!\d)", r"\1:00", excerpt)
     if re.search("\u5168\u5929\u5f00\u653e" + r"|all\s*day|24\s*hours?", excerpt, re.IGNORECASE):
         return {
             "status": "OFFICIAL_WEB_VERIFIED",
@@ -591,6 +592,7 @@ def _plain_text_cost(
         + "\u95e8" + r"\s*" + "\u7968" + r"(?:\s*" + "\u4ef7" + r"\s*" + "\u683c)?"
         + "|\u5165\u9928\u6599"
         + "|\u5165\u5834\u6599"
+        + "|\u5165\u9928"
         + "|\u5165\u5712\u6599|\u62dd\u89b3\u6599"
         + "|(?<!利用)料金"
         + r"|admission\s+fee|entrance\s+fee|ticket)"
