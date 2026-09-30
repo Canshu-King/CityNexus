@@ -164,6 +164,9 @@ def test_the_new_name_is_not_already_used_for_something_else() -> None:
     root = Path(__file__).resolve().parents[2]
     text = (root / "backend/app/main.py").read_text(encoding="utf-8")
     assert text.count('"SHARE_GRANT_EXPIRY_IN_PAST"') == 1, "one emitter, at the write door"
-    assert "EXPIRY_IN_PAST" not in text.replace("SHARE_GRANT_EXPIRY_IN_PAST", ""), (
-        "the new name must not borrow an existing one"
-    )
+    # The rule is "a code is added, never overloaded", so what is pinned is the exact literal and how
+    # many emitters it has -- not the suffix.  ORD-0461 r3 added `MEMBER_EXPIRY_IN_PAST`, a different
+    # name with its own door, and this arm would otherwise call a second door a reuse of the first.
+    assert text.count('"SHARE_GRANT_EXPIRY_IN_PAST"') == 1, "one grant emitter, at the grant write door"
+    assert text.count('"MEMBER_EXPIRY_IN_PAST"') == 1, "one member emitter, at the member write door"
+    assert '"EXPIRY_IN_PAST"' not in text, "a bare EXPIRY_IN_PAST would be one name for two doors"

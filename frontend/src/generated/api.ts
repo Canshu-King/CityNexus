@@ -5090,7 +5090,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET */
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = MEMBER_INVITER_EMPTY / MEMBER_EXPIRY_UNREADABLE / MEMBER_EXPIRY_NO_OFFSET / MEMBER_EXPIRY_IN_PAST (a deadline the server would already read as spent, the instant equal to now included, is refused before the row is written -- the same verdict the grant write door answers with, and no membership row is created) */
             422: {
                 headers: {
                     [name: string]: unknown;

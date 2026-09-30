@@ -4397,7 +4397,22 @@ def _member_expiry(raw: str | None) -> str | None:
             422, "An expiry without an offset would be a guess about whose clock it is.",
             "MEMBER_EXPIRY_NO_OFFSET", {"field": "expires_at"},
         )
-    return parsed.astimezone(timezone.utc).isoformat()
+    normalized = parsed.astimezone(timezone.utc).isoformat()
+    # ORD-0461 r3: a membership whose deadline this server would already read as spent is refused at
+    # the write door, by the one comparison the read path uses (`_expiry_verdict`,
+    # backend/app/main.py:3934) and exactly as the grant door refuses it at
+    # backend/app/main.py:4036.  Accepting it stored a row that `_member_state` called
+    # `MEMBER_LAPSED` in the same breath -- a membership born dead.  `PAST` includes the instant equal
+    # to now, because that is what the read door has always meant by spent; the two doors cannot hold
+    # two definitions.
+    if _expiry_verdict(normalized, datetime.now(timezone.utc)) == "PAST":
+        raise _share_refusal(
+            422,
+            "That expiry is already in the past, so the membership would start out lapsed.",
+            "MEMBER_EXPIRY_IN_PAST",
+            {"field": "expires_at", "expires_at": normalized},
+        )
+    return normalized
 
 
 @app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)

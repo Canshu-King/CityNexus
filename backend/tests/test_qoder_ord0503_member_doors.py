@@ -124,6 +124,10 @@ def _lapsed(days: int = -2) -> str:
     return (datetime.now(timezone.utc) + timedelta(days=days)).isoformat()
 
 
+def _is_past(instant: str) -> bool:
+    return datetime.fromisoformat(instant) <= datetime.now(timezone.utc)
+
+
 def _add(journey_id: str, traveler_id: str, role: str, expires_at: str | None = None) -> dict:
     """Seat somebody through ORD-0434's own door rather than writing the row here.
 
@@ -131,13 +135,28 @@ def _add(journey_id: str, traveler_id: str, role: str, expires_at: str | None = 
     cap arms below count on the rows the door actually made.
     """
 
+    already_gone = expires_at is not None and _is_past(expires_at)
     answer = client.post(
         f"/api/v1/journeys/{journey_id}/members",
         json={"traveler_id": traveler_id, "role": role, "invited_by": "lane-1ba48dbf",
-              "expires_at": expires_at},
+              "expires_at": None if already_gone else expires_at},
     )
     assert answer.status_code == 201, answer.text
     row = answer.json()
+    if already_gone:
+        # ORD-0461 r3 made this door refuse an invitation whose deadline had already gone by, because
+        # the row it stored was read as lapsed in the same breath.  The seat is still made by the door;
+        # the deadline is then moved into the past the way time moves it, so every arm below still
+        # faces a lapsed membership and nothing about its assertions changed.
+        with SessionLocal() as session:
+            stored = session.get(JourneyMember, row["id"])
+            assert stored is not None, row["id"]
+            stored.expires_at = expires_at
+            session.commit()
+        # the state is taken back from the read door, not from what the write door answered before
+        # the deadline was moved: the arms below ask what this membership is now.
+        answer_rows = client.get(f"/api/v1/journeys/{journey_id}/members").json()
+        row = [item for item in answer_rows if item["id"] == row["id"]][0]
     ADDED.append(row["id"])
     return row
 
