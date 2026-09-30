@@ -381,6 +381,12 @@ const en: Dict = {
   "bookings.noStayAction": "Open Stay Explorer to look for one",
   "bookings.notBooked": "Not booked",
   "bookings.priceUnknown": "Price unknown",
+  /* ORD-0517: a card may not borrow an identifier for a title. These are the named empty states for
+     the two payload kinds that carry no name of their own. `Dict` is keyed by TripLocale, so a key
+     that lands on one side only is a type error -- that is what keeps every tier paired. */
+  "bookings.reservationUnnamed": "The server gave no name for this booking",
+  "bookings.commitmentUnnamed": "The server gave no name for this commitment",
+  "bookings.orderRef": "Reference",
   "bookings.protectedC4": "Protected C4",
   "bookings.importKicker": "IMPORT CONFIRMATION",
   "bookings.reservationJson": "Reservation JSON",
@@ -757,8 +763,10 @@ const en: Dict = {
   "inbox.pendingQueue": "Confirmations waiting on you",
   "inbox.queueEmpty": "Nothing here is waiting for your review.",
   /* ORD-0370: a queue row with neither a confirmation number nor a title still needs a label;
-     the component may not invent one in whichever language it happens to be compiled for. */
-  "inbox.unnamedArtifact": "an unnamed one",
+     the component may not invent one in whichever language it happens to be compiled for.
+     ORD-0517 names the gap the same way on every card: what is missing is a name from the server,
+     and saying so beats showing the row's identifier as if it were a title. */
+  "inbox.unnamedArtifact": "The server gave no name for this confirmation",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
   "inbox.openReview": "Open to review",
   "inbox.pendingUnreadable": "The review list could not be read:",
@@ -1437,6 +1445,9 @@ const zhCN: Dict = {
   "bookings.noStayAction": "到「住宿选择」里找一间可订的房",
   "bookings.notBooked": "未预订",
   "bookings.priceUnknown": "价格未知",
+  "bookings.reservationUnnamed": "服务器没有给这单预订的名字",
+  "bookings.commitmentUnnamed": "服务器没有给这项承诺的名字",
+  "bookings.orderRef": "订单号",
   "bookings.protectedC4": "受保护 C4",
   "bookings.importKicker": "导入确认",
   "bookings.reservationJson": "预订 JSON",
@@ -1802,7 +1813,7 @@ const zhCN: Dict = {
   "inbox.needsReview": "需要审核：",
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
-  "inbox.unnamedArtifact": "没有订单号的一条",
+  "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
   "inbox.readyToConfirm": "服务器说这条可以收下了",
   "inbox.openReview": "打开核对",
   "inbox.pendingUnreadable": "待审清单读不出来：",

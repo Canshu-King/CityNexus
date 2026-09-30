@@ -78,6 +78,11 @@ const COMMITMENT_STATUS: Record<string, Label> = {
   CONFIRMED: { zh: "已确认", en: "Confirmed" },
   CANDIDATE: { zh: "待确认", en: "Awaiting confirmation" },
   PLANNED: { zh: "已排入计划", en: "Planned" },
+  /* A retired anchor is a state this server writes (operations/v9.py, superseded-active-anchor), so
+     it is named here in the words `travelerLabels.ts` already uses for it -- the row is a copy of that
+     entry, not a second reading of the fact. */
+  CANCELLED: { zh: "已取消", en: "Cancelled" },
+  CANCELED: { zh: "已取消", en: "Cancelled" },
 };
 
 /* The demo deployment is not a city a traveller can name. `backend/app/anywhere_capability.py:233`

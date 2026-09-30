@@ -128,8 +128,12 @@ type Policy = {
 type Wallet = {
   reservations: Array<{
     id: string;
-    type: string;
-    confirmation_ref: string;
+    /* `_reservation_payload` in backend/app/main.py writes `reservation_type` and the two place
+       objects, and has never written `type` -- reading the absent key left the type word empty. */
+    reservation_type: string | null;
+    origin?: Record<string, unknown> | null;
+    destination?: Record<string, unknown> | null;
+    confirmation_ref: string | null;
     scheduled_departure_at: string;
     scheduled_arrival_at: string;
     realtime_status: string;
@@ -4079,9 +4083,11 @@ const BOOKING_TYPES: Record<string, { zh: string; en: string }> = {
   RESERVATION: { zh: "预订", en: "Reservation" },
 };
 
-function bookingTypeLabel(value: string | null | undefined): string {
+function bookingTypeLabel(value: string | null | undefined, zh: boolean): string {
   const key = String(value ?? "").toUpperCase();
-  return BOOKING_TYPES[key]?.zh ?? key.replaceAll("_", " ").toLowerCase();
+  const entry = BOOKING_TYPES[key];
+  if (entry) return zh ? entry.zh : entry.en;
+  return key.replaceAll("_", " ").toLowerCase();
 }
 
 function realtimeLabel(value: string | null | undefined, zh: boolean): string {
@@ -4093,6 +4099,36 @@ function realtimeLabel(value: string | null | undefined, zh: boolean): string {
     return zh ? "暂无实时状态" : "No live status";
   }
   return zh ? "状态未知" : "Status unknown";
+}
+
+/* ORD-0517: a card's title is a name the server wrote, never an identifier. The key order below is
+   the one the review panel already uses for these objects (`renderFact` in
+   features/inbox/JourneyInboxWorkbench.tsx), so the card adds no second rule for "what is this
+   called" -- and with no name in the payload it says which fact is missing instead of shortening an id. */
+function serverPlaceName(value: unknown): string | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  for (const key of ["name", "location", "title"]) {
+    const candidate = record[key];
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+  }
+  return null;
+}
+
+function reservationTitle(item: Wallet["reservations"][number]): string | null {
+  const places = [
+    serverPlaceName(item.origin),
+    serverPlaceName(item.destination),
+  ].filter((place): place is string => Boolean(place));
+  return places.length ? [...new Set(places)].join(" → ") : null;
+}
+
+function commitmentTitle(item: Wallet["commitments"][number]): string | null {
+  for (const key of ["title", "name", "label"]) {
+    const candidate = (item.policy ?? {})[key];
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+  }
+  return null;
 }
 
 /**
@@ -4147,9 +4183,8 @@ function WalletCommitments({
                   </b>
                 )}
               </span>
-              <h2>
-                {item.policy?.semantic_key ||
-                  `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`}
+              <h2 data-testid="wallet-commitment-title">
+                {commitmentTitle(item) ?? t("bookings.commitmentUnnamed")}
               </h2>
               <p data-testid="wallet-commitment-window">
                 {start && end
@@ -4165,6 +4200,34 @@ function WalletCommitments({
                     ? "价格未知"
                     : t("bookings.priceUnknown")}
               </strong>
+              {/* The anchor key and the commitment id are machine addresses: they leave the headline and
+                  stay reachable here, which is the only place this card carries raw values. */}
+              <details
+                className="v8-advanced"
+                data-testid="wallet-commitment-technical"
+              >
+                <summary>{t("inbox.technicalDetail")}</summary>
+                <dl>
+                  <div>
+                    <dt>id</dt>
+                    <dd>
+                      <code>{item.id}</code>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>semantic_key</dt>
+                    <dd>
+                      <code>{String(item.policy?.semantic_key ?? "")}</code>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>external_ref</dt>
+                    <dd>
+                      <code>{item.external_ref ?? ""}</code>
+                    </dd>
+                  </div>
+                </dl>
+              </details>
             </div>
             <span className="v8-booking-state safe">
               {item.policy?.fixed_schedule
@@ -4308,14 +4371,23 @@ function Bookings({
               </div>
               <div>
                 <span className="v8-selected-label neutral">
-                  {zh ? bookingTypeLabel(item.type) : item.type} ·{" "}
+                  {bookingTypeLabel(item.reservation_type, zh)} ·{" "}
                   {realtimeLabel(item.realtime_status, zh)}
                 </span>
-                <h2>{item.confirmation_ref}</h2>
+                <h2 data-testid="wallet-reservation-title">
+                  {reservationTitle(item) ?? t("bookings.reservationUnnamed")}
+                </h2>
                 <p>
                   {date(item.scheduled_departure_at, locale)} →{" "}
                   {date(item.scheduled_arrival_at, locale)}
                 </p>
+                {/* The reference is a fact the traveller checks the ticket against, so it stays on the
+                    card -- as its own labelled line, not as the title. */}
+                {item.confirmation_ref ? (
+                  <small data-testid="wallet-reservation-ref">
+                    {t("bookings.orderRef")} {item.confirmation_ref}
+                  </small>
+                ) : null}
                 <strong>
                   {item.price.amount_minor == null
                     ? t("bookings.priceUnknown")
