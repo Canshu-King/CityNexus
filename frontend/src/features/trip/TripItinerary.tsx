@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { readCheckins, stampStop } from "../checkin/checkins";
 import "../checkin/footprint.css";
+import { calendarRefusalKey, exportJourneyCalendar } from "./calendarExport";
 import { CollectInto } from "../collections/CollectInto";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
 import {
@@ -168,6 +169,27 @@ export function TripItinerary({
     setPendingStop(null);
   };
 
+  /* ORD-0525: 把这张行程收成能带走的日历。  What the traveller reads back is this screen's own
+     dictionary sentence, picked by the refusal the client named -- never a reason code, and never a
+     silent nothing when the tap produced no file.  The count in the success sentence is counted out of
+     the bytes that came back, so the screen cannot promise an export the file does not contain. */
+  const [calendarNotice, setCalendarNotice] = useState<string | null>(null);
+  const [calendarPending, setCalendarPending] = useState(false);
+
+  const exportCalendar = async () => {
+    setCalendarPending(true);
+    setCalendarNotice(null);
+    const answer = await exportJourneyCalendar(journeyId);
+    if (answer.kind === "exported") {
+      setCalendarNotice(t("calendar.done", { events: answer.events }));
+    } else if (answer.kind === "refused") {
+      setCalendarNotice(t(calendarRefusalKey(answer.refusal)));
+    } else {
+      setCalendarNotice(t("calendar.unreachable"));
+    }
+    setCalendarPending(false);
+  };
+
   const days = useMemo<DayGroup[]>(
     () => groupActivitiesByDay(plan?.activities ?? [], tz, locale),
     [plan, tz, locale],
@@ -242,6 +264,23 @@ export function TripItinerary({
           {dayOfGapCopy(progress, zh) && (
             <p className="v8-lede" data-testid="trip-progress-daygap">
               {dayOfGapCopy(progress, zh)}
+            </p>
+          )}
+          {/* ORD-0525: the itinerary's own way out to a calendar app.  A quiet button rather than a
+             primary one on purpose -- this screen already carries the traveller's primary calls to
+             action, and a download is not louder than choosing what to do next. */}
+          <button
+            type="button"
+            className="v8-quiet-button"
+            data-testid="calendar-export"
+            disabled={calendarPending}
+            onClick={() => void exportCalendar()}
+          >
+            {calendarPending ? t("calendar.busy") : t("calendar.export")}
+          </button>
+          {calendarNotice && (
+            <p className="v8-lede" data-testid="calendar-export-notice">
+              {calendarNotice}
             </p>
           )}
         </div>
