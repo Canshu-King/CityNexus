@@ -114,7 +114,12 @@ async function refusalArm(name, url, expectedCode, expectedWords, forbiddenWords
     record(`refusal/${name}/${shape}`,
       read.settled && gotCode === expectedCode && wordsOnScreen &&
         forbiddenOnScreen.length === 0 && onlyGetOneDoor,
-      { state: read.state, body_code: gotCode, door_status: read.door && read.door.status,
+      // `settled` is printed because it is the one conjunct with no reading beside it: an earlier
+      // pass of this arm went red on a cold browser context with every value below correct, and the
+      // detail could not say which of the five had failed. A red that cannot be diagnosed is not a
+      // measurement -- and the fix here is to print more, not to widen the wall.
+      { state: read.state, settled: read.settled, body_code: gotCode,
+        door_status: read.door && read.door.status,
         expected: expectedCode, words_on_screen: wordsOnScreen,
         forbidden_found: forbiddenOnScreen, write_calls: read.writeCalls,
         shared_door_calls: read.sharedDoorCalls.length });

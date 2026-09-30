@@ -20,7 +20,7 @@ tests/test_qoder_ord0490_shared_after_restore.py::test_ord0490_a_trip_binned_and
     _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-11 tests collected in 2.84s
+11 tests collected in 4.06s
 ...........                                                              [100%]
 ============================== warnings summary ===============================
 ..\..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
@@ -32,4 +32,4 @@ tests/test_qoder_ord0490_shared_after_restore.py::test_ord0490_a_trip_binned_and
     _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-11 passed, 2 warnings in 2.67s
+11 passed, 2 warnings in 4.05s
