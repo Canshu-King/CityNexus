@@ -3826,6 +3826,7 @@ function MapPage({
   const planStops = (data.active_plan?.activities ?? []).filter(
     (item) => activityCoordinate(item) != null,
   );
+  const coLocatedLegs = (data.active_plan?.legs ?? []).filter((leg) => leg.co_located);
   const { nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const selectedActivity =
     planStops.find((item) => item.id === selectedActivityId) ?? null;
@@ -3898,6 +3899,11 @@ function MapPage({
                 </button>
               ))}
             </div>
+          )}
+          {coLocatedLegs.length > 0 && (
+            <p className="v8-muted" data-testid="map-co-located-evidence">
+              {t("live.routeCoLocatedSummary", { count: coLocatedLegs.length })}
+            </p>
           )}
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>
