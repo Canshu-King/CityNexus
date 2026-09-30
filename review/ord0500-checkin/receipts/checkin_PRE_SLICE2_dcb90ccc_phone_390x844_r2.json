@@ -1,0 +1,57 @@
+{
+  "schema": "CNX_PHONE_CHECKIN_R2",
+  "face": "http://127.0.0.1:4873",
+  "generation": "PRE_SLICE2_dcb90ccc_phone",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "started_local": "Thu Oct 01 2026 01:27:03 GMT+0800 (中国标准时间)",
+  "rows": [
+    {
+      "arm": "PRE_SLICE2_dcb90ccc_phone_1_arrived",
+      "state": {
+        "path": "/v8/trips",
+        "rendered_chars": 400,
+        "visible_testid_count": 27,
+        "stop_count": 6,
+        "checkin_button_count": 0,
+        "checkin_visible_count": 0,
+        "marks_stamped_words": 0,
+        "fresh_words": 0,
+        "button_words": [],
+        "notice_count": 0,
+        "notice_visible_count": 0,
+        "notices": [],
+        "notice_owners": [],
+        "uuids_on_screen": [],
+        "screaming_on_screen": [],
+        "dotted_keys_on_screen": []
+      }
+    },
+    {
+      "arm": "PRE_SLICE2_dcb90ccc_phone_2_census_after_scroll",
+      "buttons": []
+    },
+    {
+      "arm": "PRE_SLICE2_dcb90ccc_phone_3_tap_an_unstamped_stop",
+      "ABORT": "NO_UNSTAMPED_PRESSABLE_STOP",
+      "pressable_words": []
+    }
+  ],
+  "requests": [],
+  "page_errors": 0,
+  "tap_summary": {
+    "buttons": 0,
+    "pressable_by_centre_hit": 0,
+    "unpressable_indices": [],
+    "boxes": []
+  },
+  "shots": {
+    "arrived": {
+      "file": "checkin_PRE_SLICE2_dcb90ccc_phone_arrived.png",
+      "bytes": 41376
+    }
+  },
+  "finished_local": "Thu Oct 01 2026 01:27:25 GMT+0800 (中国标准时间)"
+}

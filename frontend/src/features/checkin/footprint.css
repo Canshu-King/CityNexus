@@ -123,3 +123,34 @@ which is what the hit test in the delivery receipt measures.
   color: var(--cn-ink-secondary);
   font-size: var(--cn-fs-caption);
 }
+
+/* ORD-0500 -- two phone-reachability rules for the stop row.
+ *
+ * 1. The nav overlap was measured and NOT "fixed" with a rule that does nothing.  At 390x844, after
+ *    the browser's own `scrollIntoView`, all six stops answer a centre hit on the control on both the
+ *    tip bundle and this one, and `clear_at_nearest` is 2 of 6 either way -- a `scroll-margin-bottom`
+ *    on `.trip-stop` changed no measured number, so it was taken out.  What is still true, and left
+ *    open on purpose: at the position Playwright's `scrollIntoViewIfNeeded` stops the third row, its
+ *    centre is on `.v8-mobile-nav`, and a tap there changes tab.  That needs the scroll container's
+ *    own padding, not a margin on the row, and it is a reachability order of its own.
+ *
+ * 2. `.trip-stop-more` is a real <button> now (it used to be an aria-hidden span inside a row that
+ *    claimed role="button").  The bare `button { width: 100% }` in `styles.css` would stretch it
+ *    across the meta row, so it is reset here, where the control lives.
+ */
+.trip-stop-more {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  opacity: 0.5;
+}
+
+.trip-stop-more:focus-visible {
+  outline: 2px solid var(--cn-accent-text);
+  outline-offset: 2px;
+}
