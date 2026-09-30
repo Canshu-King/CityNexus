@@ -1,77 +1,101 @@
-ORD-0522 r2 -- the sentence walked on a screen, and the dark tier that was hiding it
-lane review/2d2d7428-ord0522-board-supply-state-r2  head 26e93e7ed431677d30fe37b6be0277eb49fa36db  live tip read now 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7  merge-base 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7
-bundle measured: entry /assets/index-2NH0yPDr.js  |  backend :4891 and static :4892, both started and stopped by this lane
-interpreter D:/moodle/CityNexus/.venv/Scripts/python.exe  |  rendered 2026-10-01 04:23:32  |  every number below is re-read from the run's JSONs
+ORD-0522 r2 -- the sentence walked on a screen at the live generation, the dark tier that was
+hiding it, and one of my own arms that had rotted into citing a line number
+lane review/2d2d7428-ord0522-board-supply-state-r2b -- this ref, not the earlier ...-r2 (refs/heads/review/2d2d7428-ord0522-board-supply-state-r2),
+which was cut one generation back and is left in place unfrozen rather than rewritten
+head fe63d4d54011ccfeb935894f5ff8eb774d9f4600  live tip read by this render 514b397f96f3b5165b24865f4a544ab6f8020084  merge-base = the tip itself
+bundle measured /assets/index-Bgt0wtqD.js  served bytes 1574476  served sha1 7c564d1db80c == disk sha1 7c564d1db80c
+rendered 2026-10-01 07:52:15  interpreter D:/moodle/CityNexus/.venv/Scripts/python.exe  |  every number here is re-read from this round's JSONs or from git
 
-0. WHAT THIS ROUND CLOSES
-   r1 left one line as NOT_MEASURED: the map panel's new sentence had proof at the server and at the
-   compiler, but nobody had read it off a screen. This round boots the lane's own stack on a staged plan
-   with a stop that has no place identity, reads the sentence as RENDERED TEXT in two colour tiers and
-   two shapes, and reports what the server said in the same second. It found one real defect on the way
-   -- the sentence was unreadable in the dark tier -- and that is fixed here, in one declaration.
+0. WHAT THIS ROUND DOES
+   r1 delivered the board's supply state and left exactly one line NOT_MEASURED: nobody had read the
+   map panel's new sentence off a screen. This round does that on the live generation, in two colour
+   tiers and two shapes, reading rendered text rather than attributes. It found a real defect on the
+   way -- the sentence was white-on-white in the dark tier -- fixed it in one declaration, and
+   repaired one of my own ORD-0479 arms that had gone red on the line for an unrelated reason.
 
-1. THE STAGED STATE, AND WHAT IS HONESTLY STAGED ABOUT IT
-   The seed's demo journey carries no plan at all, so its supply state is legitimately `NOT_ASKED` and
-   no sentence appears. To measure the positive arm a plan was written into THIS LANE'S database
-   (`_tip_render.db`, ports 4891/4892) through the model: three stops, two pointing at place rows that
-   exist, one with `place_id` NULL, plus one catalog-hydration job whose stored attempts say photon
-   answered-nothing and nominatim never answered. The row is a fixture for a render test, not a supply
-   claim: the product has no door that creates `place_id` NULL-with-a-dangling-reference, because
-   `activities.place_id` is ON DELETE SET NULL, which is also why the projection's other reason
-   (COVERAGE_INCOMPLETE) cannot be reached on this screen and is left unmeasured rather than forced.
-   Two repairs were needed to my own staging before any of this was readable, and both are named here
-   because they looked like product failures until they were not:
-     - `start_at`/`end_at` written as `09:0:00` -> `datetime.fromisoformat` raised through three routes;
-     - a plan id that was not a UUID -> the response model refused `active_plan_version_id`, and
-       `GET /journeys/<id>/plans` and `/twin` answered 500. With legal ids all four routes answer 200:
-       plans, twin, experience, offline-snapshot. Neither was a defect in the line.
-   Server statement taken with the screen reading (200): state=NO_REGISTERED_SOURCE failed_stage=DISCOVERING_POIS legs={"photon": "ANSWERED_EMPTY", "nominatim": "NOT_ANSWERED", "overpass": "NOT_ASKED"} stops={"plan_present": true, "total": 3, "with_coordinate": 2, "without_coordinate": 1, "reasons": ["NO_CANONICAL_IDENTITY"], "source_kinds": ["REMOTE_PROVIDER"]}
+1. THE SERVER SIDE, ON THE GENERATION DELIVERED NOW
+   The plain seeded stage first, without anything staged by me: `GET /api/v1/demo/scene` after
+   `POST /api/v1/demo/reset` answers plan_version_id={} and supply.state={}. ORD-0526 and ORD-0521
+   have both landed since r1 and the seed still brings no plan of its own, so the claim r1 made
+   (`NOT_ASKED` is honest for this stage) holds at this head too.
+   A plan was then staged into THIS LANE'S database (`_tip_render.db`; backend :4891 and static :4892
+   started and stopped by this lane alone) with three stops -- two pointing at place rows that exist,
+   one with `place_id` NULL -- plus one catalog-hydration job whose stored attempts say photon
+   answered-nothing and nominatim never answered. That is a fixture for a render test, not a supply
+   claim about the product: `activities.place_id` is ON DELETE SET NULL (models.py:536), so the
+   projection's other reason, COVERAGE_INCOMPLETE, cannot be produced in this store and is left
+   unmeasured rather than forced. The read taken with it:
+     state=NO_REGISTERED_SOURCE failed_stage=DISCOVERING_POIS legs={"photon": "ANSWERED_EMPTY", "nominatim": "NOT_ANSWERED", "overpass": "NOT_ASKED"}
+     stops={"plan_present": true, "total": 3, "with_coordinate": 2, "without_coordinate": 1, "reasons": ["NO_CANONICAL_IDENTITY"], "source_kinds": ["REMOTE_PROVIDER"]}
 
-2. THE SCREEN, FOUR ARMS PER STATE, READ AS TEXT
-   text is `innerText`, contrast is the same relative-luminance formula the lane's ruler uses, the
-   centre is hit-tested with `elementFromPoint` after scrolling the element into view.
-   1 枚无位置  1280x900/dark      text='另有 1 个站点这次没有位置，地图就不列它们' 对比=15.63 需=4.5 过=True 盒=[234, 42] px 中心命中自身=True 完整在视口=True 芯片=2
-   1 枚无位置  1280x900/light     text='另有 1 个站点这次没有位置，地图就不列它们' 对比=16.83 需=4.5 过=True 盒=[234, 42] px 中心命中自身=True 完整在视口=True 芯片=2
-   1 枚无位置  390x844/dark       text='另有 1 个站点这次没有位置，地图就不列它们' 对比=15.63 需=4.5 过=True 盒=[310, 42] px 中心命中自身=True 完整在视口=True 芯片=2
-   1 枚无位置  390x844/light      text='另有 1 个站点这次没有位置，地图就不列它们' 对比=16.83 需=4.5 过=True 盒=[310, 42] px 中心命中自身=True 完整在视口=True 芯片=2
-   2 枚无位置  1280x900/dark      text='另有 2 个站点这次没有位置，地图就不列它们' 对比=15.63 过=True 芯片=1
-   2 枚无位置  1280x900/light     text='另有 2 个站点这次没有位置，地图就不列它们' 对比=16.83 过=True 芯片=1
-   2 枚无位置  390x844/dark       text='另有 2 个站点这次没有位置，地图就不列它们' 对比=15.63 过=True 芯片=1
-   2 枚无位置  390x844/light      text='另有 2 个站点这次没有位置，地图就不列它们' 对比=16.83 过=True 芯片=1
-   0 枚无位置  1280x900/dark      sentence_present=False 芯片=3 (库说少 0)
-   0 枚无位置  1280x900/light     sentence_present=False 芯片=3 (库说少 0)
-   0 枚无位置  390x844/dark       sentence_present=False 芯片=3 (库说少 0)
-   0 枚无位置  390x844/light      sentence_present=False 芯片=3 (库说少 0)
-   守的三条: 屏上句中的数 == 库里的数; 一枚不少时那句话必须不在屏上（不是永挂的文案）; 机词
-   `NO_CANONICAL_IDENTITY` 只在属性里，`machine_token_printed_on_screen` 四臂皆假。
+2. THE SCREEN: TWELVE ARMS, THREE STATES, READ AS TEXT
+   per arm: rendered text, contrast by the same relative-luminance formula the lane's ruler uses,
+   the box in px, whether the box centre hit-tests to that element after scrolling it into view, and
+   how many stop chips the map drew.
+                 dark        '另有 1 个站点这次没有位置，地图就不列它们' 对比=15.63 需=4.5 过=True 盒=[234, 42]px 中心命中=True 在视口=True 芯片=2
+                 light       '另有 1 个站点这次没有位置，地图就不列它们' 对比=16.83 需=4.5 过=True 盒=[234, 42]px 中心命中=True 在视口=True 芯片=2
+   1 枚无位置  dark        '另有 1 个站点这次没有位置，地图就不列它们' 对比=15.63 需=4.5 过=True 盒=[310, 42]px 中心命中=True 在视口=True 芯片=2
+   1 枚无位置  light       '另有 1 个站点这次没有位置，地图就不列它们' 对比=16.83 需=4.5 过=True 盒=[310, 42]px 中心命中=True 在视口=True 芯片=2
+   2 枚无位置  dark        '另有 2 个站点这次没有位置，地图就不列它们' 对比=15.63 过=True 芯片=1
+   2 枚无位置  light       '另有 2 个站点这次没有位置，地图就不列它们' 对比=16.83 过=True 芯片=1
+   2 枚无位置  dark        '另有 2 个站点这次没有位置，地图就不列它们' 对比=15.63 过=True 芯片=1
+   2 枚无位置  light       '另有 2 个站点这次没有位置，地图就不列它们' 对比=16.83 过=True 芯片=1
+   0 枚无位置  dark        present=False 芯片=3 (库说少 0)
+   0 枚无位置  light       present=False 芯片=3 (库说少 0)
+   0 枚无位置  dark        present=False 芯片=3 (库说少 0)
+   0 枚无位置  light       present=False 芯片=3 (库说少 0)
+   three invariants the script enforces, not me: the number in the sentence equals the number in the
+   store; with nothing dropped the sentence is absent (so it is not permanent copy); and no machine
+   token is printed -- `NO_CANONICAL_IDENTITY` travels only in `data-supply-reasons`, and the regex
+   for an all-caps token over the rendered text came back false in every arm that showed a sentence.
+   Chips plus dropped always equals the total: 2 drawn + 1 dropped = 3.
 
-3. THE DEFECT THIS READING FOUND, AND THE ONE LINE THAT FIXES IT
-   On the pre-fix bundle the dark tier read: fg=245,245,247 on bg=255,255,255 -> 对比 **1.09**, 需 4.5 -> 不过档：白底白字。
-   Cause: the card that holds the sentence carried a hardcoded surface, unlike every other card --
-     旧: --v8-line); border-radius: var(--cn-r-12); background: #fff;
-     新: order-radius: var(--cn-r-12); background: var(--cn-surface);
-   After the change, same cell, same four arms: light 16.83 / dark 15.63 (需 4.5), both pass.
-   The before number is recomputable rather than remembered: the removed declaration is re-imposed as
-   an author style on the current bundle and measured again -- labelled as an EMULATION of the old rule,
-   not a reading of an old artifact. It yields 1.09 again, and light stays at 16.83.
-   No second colour scale was introduced: `--cn-surface` is the token the other cards already take
-   (light #ffffff, dark #1c1c1e), and the change is one insertion and one deletion in one selector.
+3. THE DEFECT THE READING FOUND, AND THE ONE DECLARATION THAT FIXES IT
+   Before the change the dark tier put前景 245,245,247 on 背景 255,255,255 -> 对比 1.09 against a required 4.5 -- the
+   sentence was there in the DOM and unreadable on screen. Light was fine at 16.83.
+   Cause: the card holding it hardcoded its surface where every comparable card takes the token --
+     old: .v8-map-facts background #fff   ->   new: .v8-map-facts background var(--cn-surface)
+   `--cn-surface` is the token already declared once per scheme (design-tokens.css:11 light #ffffff,
+   design-tokens.css:168 dark #1c1c1e): no new scale, no new variable, one insertion and one deletion
+   in frontend/src/styles.css.
+   After it, the same four arms read 16.83 (light) and 15.63 (dark) at both shapes -- both over the
+   required 4.5 tier, box [310, 42] px at the phone shape with the centre hit-testing to itself.
+   The before figure is recomputable rather than remembered: the removed declaration is re-imposed as
+   an author style on the delivered bundle and measured again. The artifact labels that arm EMULATION
+   of the old rule -- it is the old rule applied to today's element, not a reading of an old bundle --
+   and it yields 1.09 again, light still 16.83.
 
-4. GATES ON THIS GENERATION
-   base = the live tip 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7; this lane's commit 26e93e7ed431677d30fe37b6be0277eb49fa36db; files vs the tip: 1.
+4. ONE ARM OF MINE THAT HAD ROTTED (ORD-0479 H01b), AND WHAT REPLACED THE CITATION
+   On the tip before this round H01b was red, twice, reproducibly -- not because the tree got worse:
+   the credential scan still cleared, every exemption still re-derived, and the site this order was
+   opened for was still forgiven. What had moved was the line number my assertion cited: c1f06772 2026-10-01 00:52:40 +0800 ORD-0528: a poster link is the same grant, opened as a second shape
+   added two comment lines above that table, pushing the site from line 45 to line 47.
+   The fix is not a loosening: the arm now names the site by the value behind the label
+   (`shared.refusedTokenUnknown`) and still requires the exemption to report the line where that
+   value physically sits, re-read from the file in the same assertion. A line number is weaker
+   evidence than that: it identifies a position, not a site, and rots on any edit above it.
+   Ten cells in that file pass at this head, and the family is green twice below.
+
+5. GATES AND DENOMINATORS, THIS GENERATION, ONE SESSION
+   this order's cells twice: 8 passed, 2 warnings in 2.70s / 8 passed, 2 warnings in 2.27s
+   five-file family (ORD-0522 + 0495 + 0479 + 0307 + 0467) twice: 44 passed, 2 warnings in 16.05s / 44 passed, 2 warnings in 16.00s
+   whole backend suite collects 1657 tests -- the four numbers above are a subset of that, and the
+   suite itself was not run this round (NOT_EXECUTED_BY_LANE).
+   contract parity: OpenAPI 3.1.0; formal 174; runtime 174; missing 0; extra 0 | schemas formal 85; generated 85; missing 0; extra 0
+   frontend: TSC_EXIT=0 and BUILD_EXIT=0 (the bundle the arms were read from is the one named at the top).
+   3 files against the tip, blobs read back out of the head commit:
+     backend/tests/test_qoder_ord0479_dictionary_key_shape.py  blob 8d51d5f458d00aee87db2bdd9c759b4b67aee513
      frontend/src/styles.css  blob 130d9c0bebaa2aa9a996330ed9574458009c6598
-   TSC_EXIT=0  BUILD_EXIT=0
-   cells measured on the tip before this commit, two runs in one session: 44 passed / 44 passed
-   (this order's eight plus ORD-0495, ORD-0479, ORD-0307, ORD-0467), and the whole backend suite
-   collects 1638 there -- the denominator the four numbers are a subset of.
+     review/ord0522/FINDINGS_0522_R2.txt  blob fbe32d9d738809cf718f5e54c6da5db305377951
 
-5. WHAT THIS ROUND STILL DOES NOT CLAIM
-   - The staged plan is a fixture, so the screen reading proves the sentence renders and tracks the
-     server's count; it does not prove a real journey reaches that state by itself. That door is
-     ORD-0521's, and nothing here speaks for it.
-   - Not run: the mobile drawer, share receiving and the poster screens (ORD-0509's set), the e2e
-     suite, and any device. The tile basemap never loaded on this host and the panel says so itself
-     (`底图未加载，显示的是路线示意`), so no statement here depends on tiles.
-   - The shared preview store and the ports named in the order (:8000 :4781 :4782 :4893 family) were
-     not touched; `demo/reset` was called only against this lane's own database file.
+6. WHAT THIS ROUND STILL DOES NOT CLAIM
+   The plan behind the reading is staged by me, so the arms prove the sentence tracks the server and
+   is legible in both tiers; they do not prove a real journey arrives at that state by itself -- that
+   door is ORD-0521's and nothing here speaks for it, and no byte of it was touched.
+   Not run: the e2e suite, any device, and ORD-0509's other screens (drawer, share receiving, poster).
+   Tiles never loaded on this host and the panel says so itself (`底图未加载`), so no claim here
+   depends on basemap pixels; nothing in this round reads a tile.
+   The shared preview database and the ports named in the order were not touched; `demo/reset` was
+   called only against this lane's own file, and both lane servers are stopped afterwards (sweep
+   printed `left after the sweep: 0`).
 REFUSALS = []
