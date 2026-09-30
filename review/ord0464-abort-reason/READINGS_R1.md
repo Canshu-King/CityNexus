@@ -1,14 +1,14 @@
 # ORD-0464 · 丢弃前问一次 · 屏上读数与没做到的部分
 
 分支 `review/Q-ord0464-abort-reason`；本文件与规格同一笔提交（那笔的 40 位在账本块里，写这里时还不存在）。
-父尖（命令者 13:55 那块所记现读）`127ce7b05329eaa837701cdb93bdbc2e5d64e10f`。
+父尖（命令者 13:55 那块所记现读）`dcb90cccc68b81f2317b28db19051dedb9f06c80`。
 
 ## 三态在屏上的原话（zh-CN，390x844 无头 Chrome，页面是本车道自己的 `vite preview :4192` 构建产物）
 
 逐字取自本目录 `SCREEN_READINGS_R1.json`；三张截图 `screen_declared_r1.png`、`screen_skipped_r1.png`、
 `screen_silent_r1.png` 同批。
 
-- **declared** 行程 `journeys.id=42569dbc-8ec2-4db7-930a-c31e4b0a40c0`
+- **declared** 行程 `journeys.id=faa21f4a-c820-4046-a419-2804f146e2ed`
   - 触发钮：把这趟丢进回收站
   - 问句：方便说说为什么不需要这趟了吗？
   - 八条说明句：安排不合用（活动、顺序或节奏）／预算兜不住／日期或目的地变了／关键信息拿不到（路况、住宿没有可信答案）／被保护的安排被排掉了／已经用别的方式安排好了／这是测试或演示数据／其他
@@ -17,7 +17,7 @@
   - 落定那格：data-cnx-state=DECLARED → 这趟已经在回收站里。服务器记下的原因是：预算兜不住、被保护的安排被排掉了。
   - 服务器那一行：event_type=JOURNEY_DELETED payload={"codes": ["BUDGET_DOES_NOT_FIT", "PROTECTED_ITEM_DROPPED"], "note": "住的那一晚超出了预算", "reason_state": "DECLARED"}
 
-- **skipped** 行程 `journeys.id=c2fe76e5-6b40-406d-8a6c-22b5125255a6`
+- **skipped** 行程 `journeys.id=fa636a50-f6d5-4a69-b92f-aabda4a6d750`
   - 触发钮：把这趟丢进回收站
   - 问句：方便说说为什么不需要这趟了吗？
   - 八条说明句：安排不合用（活动、顺序或节奏）／预算兜不住／日期或目的地变了／关键信息拿不到（路况、住宿没有可信答案）／被保护的安排被排掉了／已经用别的方式安排好了／这是测试或演示数据／其他
@@ -26,7 +26,7 @@
   - 落定那格：data-cnx-state=SKIPPED_BY_TRAVELER → 这趟已经在回收站里。当时你选了不说明原因，我们也不会替你编一个。
   - 服务器那一行：event_type=JOURNEY_DELETED payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
 
-- **silent** 行程 `journeys.id=e92e7123-3e72-4395-a331-fff0f6c6227b`
+- **silent** 行程 `journeys.id=40900a5c-ac80-429d-be33-a1c7b16fc106`
   - 触发钮：（这趟已在回收站，屏上不再端出触发钮）
   - 落定那格：data-cnx-state=NOT_ASKED → 这趟已经在回收站里。这台服务器没有收到过这个问题，所以也没有原因可记。
   - 服务器那一行：event_type=JOURNEY_DELETED payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
