@@ -1,0 +1,98 @@
+{
+ "product_ref": "refs/heads/review/newlane-ord0444-prod-r5",
+ "head": "2f5a1a5cf72c4eb62e7fd9394768f85c96bf25a2",
+ "head_tree": "2c1b63e28282e4112a6ac0f96ad2dd8d83f43ef4",
+ "commits_in_order": [
+  "2f5a1a5cf72c4eb62e7fd9394768f85c96bf25a2 ORD-0444 product fix: the create door declared its 404 in the contract only, so `/openapi.json` never carried it",
+  "a1413f7bbea658b97f51f828896da8ff0ac52d4b ORD-0444 product fix: the face fetched the contract's path, so it showed its failure line while the door answered 200",
+  "78e2cc3450f4c555a0276b9ae89a9b73e856ef63 ORD-0444 product: the 收藏 container exists, carries whose it is, and answers a read scoped by that"
+ ],
+ "base_tip_read_at": "aa2a08ce164a37a83bd6ed225524053bb0fa0606",
+ "base_is_ancestor": true,
+ "ahead": 3,
+ "merge_tree_predicted": "2c1b63e28282e4112a6ac0f96ad2dd8d83f43ef4",
+ "merge_tree_equals_head_tree": true,
+ "recut_conflicts_resolved": [
+  "backend/app/main.py (one hunk: the sorted `from app.services import` run, where the line's `checkin_schema` and this order's two collection helpers wanted the same slot)",
+  "backend/app/db/models.py (one hunk: the tail, where JourneyCheckin and the two collection models were both appended)",
+  "backend/db/schema.sql (one hunk: the tail, same collision)",
+  "every resolution keeps the line's block and this lane's block, in that order -- nothing was hand-merged out of two versions of one function, and the 0476 arms run in the same batch as the 0444 arms to prove it"
+ ],
+ "backend_pytest_both_orders": {
+  "rc": 0,
+  "summary": [
+   "28 passed, 2 warnings in 9.06s"
+  ],
+  "whole_suite": "NOT_EXECUTED_BY_LANE"
+ },
+ "openapi_parity": {
+  "rc": 0,
+  "line": "OpenAPI 3.1.0; formal 169; runtime 169; missing 0; extra 0"
+ },
+ "frontend_bytes_unchanged_since_a1413f7b": {
+  "prior_src_tree": "17b7cd4b1376c64e5f96ac48dae90d5451b868af",
+  "head_src_tree": "17b7cd4b1376c64e5f96ac48dae90d5451b868af",
+  "identical": true,
+  "so_these_were_taken_at": "a1413f7bbea658b97f51f828896da8ff0ac52d4b"
+ },
+ "vite_build": {
+  "line": [
+   "dist/assets/index-Ba2JhGYd.js        1,506.02 kB │ gzip: 461.08 kB"
+  ],
+  "rc": "BUILD_RC=0"
+ },
+ "q64_exposure": {
+  "method": "git archive <rev> frontend/src, then --tree on the snapshot",
+  "tip_cells": 6,
+  "tip_modules": 126,
+  "head_cells": 6,
+  "head_modules": 129,
+  "growth": "NONE",
+  "cells_in_this_orders_files": []
+ },
+ "served_spec_defect_found_and_fixed": {
+  "symptom": "the served document answered create_responses [\"201\",\"422\"] while the contract declares a 404 for that door",
+  "cause": "ORD-0395: a status the decorator does not name never reaches /openapi.json; the parity door compares path and method sets and stayed green across the disagreement",
+  "arm": "test_the_served_document_declares_the_refusals_the_contract_declares",
+  "mutant_summary": "17 passed, 2 warnings in 7.49s",
+  "mutant_finding": [
+   "E           AssertionError: ('/collections', 'post', ['201', '422'])",
+   "E           assert {'404'} <= {'201', '422'}",
+   "E",
+   "E             Extra items in the left set:",
+   "E             '404'"
+  ],
+  "mutant_restored_byte_for_byte": true
+ },
+ "http_round_trip": {
+  "steps": 15,
+  "ownership_three_proofs": [
+   true,
+   true,
+   "listening pid read off netstat in the same batch"
+  ],
+  "preview_db_untouched": true,
+  "second_traveller_sees_nothing": [
+   {
+    "step": "read_as_other_traveller",
+    "status": 200,
+    "shelves": 0,
+    "my_shelf_visible": false,
+    "ids": []
+   }
+  ],
+  "named_refusals": [
+   "COLLECTION_FOLDER_NOT_FOUND",
+   "MEMBER_TRAVELER_UNKNOWN",
+   "PLACE_ALREADY_IN_COLLECTION",
+   "PLACE_NOT_FOUND"
+  ]
+ },
+ "not_measured": [
+  "the shelf face has not been re-walked on a rendered screen at THIS base (the screen's four files are byte-identical since r3; the registry entry moved)",
+  "PNG evidence: NATIVE_BROWSER_VIEWPORT_UNAVAILABLE",
+  "the whole backend suite: NOT_EXECUTED_BY_LANE"
+ ],
+ "tsc": "TSC_RC=0",
+ "line_ending_hazard_found_in_my_own_instrument": "the mutation script restored main.py with newline LF while the file is stored with CRLF; git then reported the whole 13362-line file as changed while  reported 0 lines. The file was restored from HEAD before this commit, so no EOL flip ships in it -- named because the near-miss was mine, not the product."
+}
