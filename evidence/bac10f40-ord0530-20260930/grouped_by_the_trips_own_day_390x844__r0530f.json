@@ -1,12 +1,12 @@
 {
  "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
- "arm": "grouped_by_the_trips_own_day_1280x900",
- "run_id": "r0530d",
+ "arm": "grouped_by_the_trips_own_day_390x844",
+ "run_id": "r0530f",
  "denominator": "copied private db",
  "journey_id": "22222222-2222-4222-8222-222222222222",
  "shape": {
-  "width": 1280,
-  "height": 900
+  "width": 390,
+  "height": 844
  },
  "trip_zone": "Asia/Shanghai",
  "device_zone": "America/Los_Angeles",
@@ -43,14 +43,14 @@
   {
    "text": "9月29日周二",
    "box": {
-    "x": 318,
-    "y": 245,
-    "w": 896,
+    "x": 37,
+    "y": 304,
+    "w": 316,
     "h": 26
    },
    "centre": {
-    "x": 766,
-    "y": 257
+    "x": 195,
+    "y": 317
    },
    "hit": "h3.cn-footprints__day",
    "in_viewport": true
@@ -58,14 +58,14 @@
   {
    "text": "10月1日周四",
    "box": {
-    "x": 318,
-    "y": 375,
-    "w": 896,
+    "x": 37,
+    "y": 409,
+    "w": 316,
     "h": 26
    },
    "centre": {
-    "x": 766,
-    "y": 388
+    "x": 195,
+    "y": 422
    },
    "hit": "h3.cn-footprints__day",
    "in_viewport": true
@@ -80,7 +80,7 @@
     "上午先到一步",
     "网页端打的"
    ],
-   "under_day": 274,
+   "under_day": 334,
    "hit": "span.cn-footprints__note",
    "in_viewport": true
   },
@@ -92,7 +92,7 @@
     "没写备注",
     "网页端打的"
    ],
-   "under_day": 405,
+   "under_day": 384,
    "hit": "span.cn-footprints__note cn-f",
    "in_viewport": true
   },
@@ -104,7 +104,7 @@
     "没写备注",
     "网页端打的"
    ],
-   "under_day": 406,
+   "under_day": 473,
    "hit": "span.cn-footprints__note cn-f",
    "in_viewport": true
   }

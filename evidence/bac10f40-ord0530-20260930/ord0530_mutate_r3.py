@@ -1,4 +1,4 @@
-"""ORD-0530 counterexample harness r2 -- the stale-data counterexample that r1's first try could not be.
+"""ORD-0530 counterexample harness r3 -- the stale-data counterexample that r1's first try could not be.
 
 r1 ran three steps.  Two of them bit:
 
@@ -27,7 +27,7 @@ import time
 
 WT = "D:/moodle/_qoder_ai_ord0387_20260928/wt"
 FRONT = WT + "/frontend"
-OUT = "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_r2"
+OUT = "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_r3"
 SPEC = "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts"
 PANEL = "src/features/checkin/FootprintPanel.tsx"
 PRODUCT = ["src/features/checkin/FootprintPanel.tsx", "src/features/checkin/footprint.css",
@@ -35,8 +35,8 @@ PRODUCT = ["src/features/checkin/FootprintPanel.tsx", "src/features/checkin/foot
 BASE_TIP = "1e95d106f81b29048ba17695fd0e49172516b9b1"
 NODE_CLI = "D:/moodle/_qoder_ai_ord0387_20260928/node_modules/@playwright/test/cli.js"
 JOURNEY = "22222222-2222-4222-8222-222222222222"
-STACK_FRONT = "4795"
-STACK_BACK = "4791"
+STACK_FRONT = "50752"
+STACK_BACK = "50750"
 LF = chr(10)
 
 STALE = (
