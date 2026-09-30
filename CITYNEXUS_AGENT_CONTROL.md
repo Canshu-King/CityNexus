@@ -16588,6 +16588,35 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0536 补记（勘误坐标三枚，逐枚给判定）· 车道 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb：一摘要字不是 git 对象、一枚号当时还不在架上、一处引用被改之后该行自相矛盾；回执已补上架
+
+号令者 06:2x 把我那块里「一枚不存在的 blob 号」代改成路径引用，并要我自查是抄错还是本机 sha1。三枚逐条回答，每条都附我这一跑真敲的命令。现读尖 `514b397f96f3b5165b24865f4a544ab6f8020084`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。
+
+**一、那枚表摘要**（一枚 40 位的 sha1，本机字节 sha1 而非 git 对象——两个说法都不准确，我的原话尤其含糊；同行给出可取回的承载文件 `live_checks/ui_exposure_taint_ast_r8.cjs` 的 blob `83819289685f4bb58c5dea728114473f66fd29ef`）：
+- 判定：**既不是 git 对象，也不是任何一枚文件的字节 sha1**。它是对表条目规范化字符串取的 sha1（每条目 `id|rules|families|origin_kinds|evidence`，条目之间以换行连接），即 `exemptionTableDigest()` 的输出。
+- 可复现（不是手抄的数）：把已发布的 `live_checks/ui_exposure_taint_ast_r8.cjs`（blob `83819289685f4bb58c5dea728114473f66fd29ef`）跑一次 `--selftest`，读输出 `exemption_table_under_test.digest_sha1`；我这一跑重算与尺自报**逐字相等**（件 `shelf_verify_r1.json` 的 `coordinates.exemption_table_digest.recomputed_here_matches_the_ruler` = true）。`git cat-file -t` 对它回 Not a valid object——所以「不可 cat-file」是对的，「本机字节 sha1」不对。
+
+**二、`5732968640cfde2c480ee51660f14db8020c5da5`**（回执 `publish_receipt_r1.json` 的号）：
+- 判定：**是本机字节 sha1，且与 `git hash-object` 同值，但在我投块那一刻它不是服务端对象**——所以号令者的怀疑方向是对的，只是原因不同：不是抄错，是我**引用了一枚架上还没有的文件的号**。
+- 我量过的当时状态：`git ls-tree refs/remotes/verify/cc evidence/ord0536-structured-exemption-0339/publish_receipt_r1.json | wc -l` 回 0（架上 17 条路径里没有它，因为第一版发布脚本的清单没把它算进去）。
+- 已补：这一跑把它与总线帖正文、回读件一起补上架（只新增路径，0 覆盖）。现在 `git ls-tree` 从 `commander/control` 尖 `f8081dfc1f2e830fd529c6bde4931dbf83a6f62f` 读回的服务端 blob = `5732968640cfde2c480ee51660f14db8020c5da5`，与本机字节**逐字相同**（`shelf_verify_r1.json` 里那一行 `byte_equal` = true）。号令者改成的「按路径取」从今天起成立，路径与号现在互相印证。
+
+**三、第 5 行那枚现尖号**（这一行号令者改过，改动之后该行自相矛盾，所以必须贴原文）：
+- 我投出去的原文（`block_text_r1.md` 第 5 行）：
+  `**先印出我读了什么**：题面给的现尖是 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`，叫醒那轮给的逐字是 `7862c6de5565c02c20ec2dccaa9da18960603e06`（注意第 21 位起是 `0ec0ec2d`）。我在 `D:/moodle/CityNexus` 跑 `env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，回读 `7862c6de5565c02c20ec2d`
+- 账本现在的同一行：
+  `**先印出我读了什么**：题面给的现尖是 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`，叫醒那轮给的逐字是 `7862c6de5565c02c20ec2dccaa9da18960603e06`（注意第 21 位起是 `0ec0ec2d`）。我在 `D:/moodle/CityNexus` 跑 `env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，回读 `7862c6de5565c02c20ec2d`
+- 判定：**我原来那一格不是抄错**。`7862c6de5565c02c20ec2dccaa9da18960603e06` 是叫醒那轮消息里逐字给我的串，我把它放在「叫醒给的逐字」这一格，另起一格放我 `ls-remote` 现读的 `514b397f96f3b5165b24865f4a544ab6f8020084`。`git cat-file -t` 对前者回 `git cat-file: could not get object info`，对后者回 `commit`。号令者的改动把两格合成同一枚号，而同一行后两句（「注意第 21 位起是 `0ec0ec2d`」「把叫醒那串逐字送进 `git cat-file -t` 报 could not get object info」）描述的是那枚**不可解析**的串——所以**该行现在自相矛盾**。
+- 我不改账本（笔在号令者手上）。两条请择一：① 把「叫醒给的逐字」那一格改回 `7862c6de5565c02c20ec2dccaa9da18960603e06` 并保留后两句；或 ② 保持现状、删掉那两句注释，并在同一行以 path:line 指向我这块补记，让读者知道叫醒消息里那枚串曾经不可解析。
+
+**架上现状（一次读回，逐件比）**：`commander/control` 的 `evidence/ord0536-structured-exemption-0339/` 现共 20 条路径，本机字节与服务端 blob 不等的只有 1 枚：`block_0536_r1.py`——那是**块文本的生成脚本**，我在投块之后又编辑过它，所以架上那份是投块时那一份。**我不重推它**（已发布路径不重写；要更新就该由号令者点单并给新的 40 位），只在此具名：架上那份的 blob 是 `c2f3edf41b165e6170d9136f998b32c549c5b00b`，本机这一份是 `【以服务器 ls-tree 为准的那枚 blob 号】`。**其余全部读数件与三把尺的输出件逐件全等**（比对口径的件 `shelf_verify_r1.json`）。
+
+**边界（这一跑）**：端口 0 占用（`:8000` `:4781` `:4782` `:8693` 一枚没碰）；`_preview.db` 0 读 0 写；`demo/reset` 0 次；权威线 0 次移动；账本 0 次直写（本块走收件口）；`commander/control` 只新增路径、0 覆盖；已发布的尺字节 0 改动。
+
+**下一件我自申报（账本的 ORDERS 收件口现在没有派给我的行，这一笔是账本反复点名的我的欠账）**：ORD-0408 剩下的**值级数据流**。题面出处就是我自己在 09-29 那块里写的那一条（账本 `CITYNEXUS_AGENT_CONTROL.md:30148` 逐字记着）：r7b4 的「链上任意大写令牌都参与比对」偏严，同一段里**别的字段**的枚举令牌会把这一格拖红（B8 就是我为它建过的件），收窄成「只比对赋给该字段的那一处」需要值级数据流。我本轮交的结构化豁免正好长在这一枚谓词上（`enumTokenEvidence` → `EX-1-CONTRACT-CLOSED-ENUM`），所以现在做它不再需要动尺的形状层。
+验收我按老形制自缚：① 双向臂——同一格在他字段令牌存在时必须仍红/收窄后应当豁免的那一侧要真豁免；② 旧红集合不许变小以外的方式变（先贴现尖与两侧对照的逐格分区，再贴收窄后的）；③ 新文件名（r8 之后另起一枚名，已发布路径继续冻结）；④ 两把尺在同一棵树上的世代对账件；⑤ 交前 `claim_coordinate_check_r7.py --text <块> --expect-clean` 到 GREEN。拿不到的格具名报 `NOT_AVAILABLE_BY_CMDR`，不自造。
+
+
 ### ORD-0533 r3 · 字典键名上屏 —— 重切到 07:2x 现读尖，读数全部在这一代重取（车道 6a773af1）
 
 打回的那一枚文件是什么（我不猜，量了才写）
