@@ -18,14 +18,14 @@
  *     affordance and no token painted — the same rule the trip screen states for screenshots. The
  *     only thing this page hands over is a PNG of the days the grant let the guest read.
  */
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
 import { copyFor } from "../../lib/failureAttribution";
 import { REFUSAL_KEY } from "../shared/SharedJourneyPanel";
 import { askSharedJourney, sharedStopsOf, type SharedScreenRead } from "../shared/sharedJourneyDoors";
 import { buildPosterFromShared, posterLinesFor } from "./posterModel";
-import { drawTripPoster, savePosterBlob } from "./posterCanvas";
+import { drawTripPoster, planPosterPages, savePosterBlob } from "./posterCanvas";
 /* The notice/head/details styles this screen's four non-ready arms reuse are ORD-0465's, and it
    imports its own sheet: a poster page is a different surface, and it should not render only because
    some other module happened to pull the same stylesheet into the bundle. */
@@ -84,16 +84,40 @@ export function SharedPosterScreen({ token }: { token: string }) {
   const refusalKey =
     read.state === "refused" ? REFUSAL_KEY[read.refusal] ?? REFUSAL_KEY.unnamed : null;
 
-  const download = async () => {
+  /* The guest's page has to obey the same bound the traveller's sheet obeys, and the only honest way
+     to do that is to use the same splitter with the same inputs: this page's own measured width, not
+     a number typed into this file. A hardcoded 360 here would draw a different picture on a desktop
+     than the one the guest is looking at, and would silently clip a trip long enough to exceed the
+     bound -- which is the exact defect ORD-0515 closed on the traveller's side. */
+  const list = useRef<HTMLOListElement | null>(null);
+  const [listWidth, setListWidth] = useState(0);
+  const [page, setPage] = useState(0);
+  useLayoutEffect(() => {
+    if (list.current) setListWidth(list.current.getBoundingClientRect().width);
+  }, [lines]);
+
+  const planned = lines && listWidth > 0 ? planPosterPages(lines, listWidth) : null;
+  const pages = planned && "pages" in planned ? planned.pages : null;
+  const pageCount = pages ? pages.length : 1;
+  const currentPage = Math.min(page, pageCount - 1);
+  const slice = pages ? pages[currentPage] : null;
+  const pageLines =
+    lines && slice ? { ...lines, days: lines.days.slice(slice.first, slice.first + slice.count) } : null;
+
+  const download = useCallback(async () => {
     if (!lines) return;
     setNote("working");
-    const result = await drawTripPoster(lines, 360, 0);
+    const result = await drawTripPoster(lines, listWidth, currentPage);
     if (!("blob" in result) || !result.blob) {
       setNote("failed");
       return;
     }
-    setNote(savePosterBlob(result.blob, SHARED_POSTER_FILE_NAME) ? "made" : "failed");
-  };
+    const fileName =
+      result.page_count > 1
+        ? SHARED_POSTER_FILE_NAME.replace(/\.png$/, `-p${result.page_index + 1}.png`)
+        : SHARED_POSTER_FILE_NAME;
+    setNote(savePosterBlob(result.blob, fileName) ? "made" : "failed");
+  }, [lines, listWidth, currentPage]);
 
   const shell = (state: string, body: ReactNode) => (
     <div className="cn-shared-poster" data-testid="shared-poster-screen" data-poster-state={state}>
@@ -234,8 +258,37 @@ export function SharedPosterScreen({ token }: { token: string }) {
         {t("sharedPoster.formNote")}
       </p>
 
-      <ol className="cn-poster-days" data-testid="shared-poster-days">
-        {lines.days.map((day, index) => (
+      {/* The same bound sentence the traveller's sheet uses -- one owner for the sentence that says
+          "this is too tall for one picture", because the bound is a product rule and not a per-screen
+          opinion. */}
+      {pageCount > 1 && (
+        <>
+          <p className="cn-poster-paged" data-testid="shared-poster-paged-note">
+            {t("poster.paged", { pages: pageCount })}
+          </p>
+          <div className="cn-poster-pages" data-testid="shared-poster-pages" role="group">
+            {Array.from({ length: pageCount }, (_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={index === currentPage ? "cn-poster-page is-current" : "cn-poster-page"}
+                data-testid={`shared-poster-page-${index + 1}`}
+                data-contrast-role="control"
+                aria-pressed={index === currentPage}
+                onClick={() => {
+                  setPage(index);
+                  setNote("idle");
+                }}
+              >
+                {t("poster.page", { page: index + 1 })}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      <ol className="cn-poster-days" data-testid="shared-poster-days" ref={list}>
+        {(pageLines ?? lines).days.map((day, index) => (
           <li className="cn-poster-day" key={`${day.label}-${index}`} data-testid={`shared-poster-day-${index + 1}`}>
             <div className="cn-poster-day-head">
               <b>{day.label}</b>
@@ -276,6 +329,11 @@ export function SharedPosterScreen({ token }: { token: string }) {
       {note !== "idle" && note !== "working" && (
         <p className="cn-poster-outcome" data-testid="shared-poster-note" data-state={note}>
           {t(DRAWN_KEY[note])}
+        </p>
+      )}
+      {note === "made" && pageCount > 1 && (
+        <p className="cn-poster-outcome" data-testid="shared-poster-page-result">
+          {t("poster.madePage", { page: currentPage + 1, pages: pageCount })}
         </p>
       )}
     </>,
