@@ -281,8 +281,47 @@ def test_hermes_runtime_skips_empty_glm_response_and_reaches_domestic_deepseek(m
 
     assert message["content"] == "READY"
     assert agent.model_key == "cn:deepseek-v4.1-flash"
+
+
     assert calls == [
         "global:deep-model",
         "cn:glm-5.3-flash",
         "cn:deepseek-v4.1-flash",
     ]
+
+
+def test_hermes_runtime_consumes_wb2api_streaming_tool_call(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        assert payload["stream"] is True
+        body = "".join(
+            [
+                'data: {"choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"inspect_journey","arguments":"{\\"journey_id\\":\\""}}]}}]}\n\n',
+                'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"journey-1\\"}"}}]}}]}\n\n',
+                "data: [DONE]\n\n",
+            ]
+        )
+        return httpx.Response(
+            200,
+            headers={"content-type": "text/event-stream"},
+            content=body.encode(),
+        )
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    monkeypatch.setattr(
+        "app.agent.orchestrator.settings",
+        replace(
+            runtime_settings,
+            hermes_api_url="http://wb2api.test/v1/chat/completions",
+            hermes_api_key="test-key",
+            hermes_model="cn:glm-5.3-flash",
+            hermes_model_fallbacks=(),
+        ),
+    )
+    agent = HermesJourneyAgent(client=fake_client)
+    message = agent._complete([])
+
+    assert message["tool_calls"][0]["function"]["name"] == "inspect_journey"
+    assert json.loads(message["tool_calls"][0]["function"]["arguments"]) == {
+        "journey_id": "journey-1"
+    }

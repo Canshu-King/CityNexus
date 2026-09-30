@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import Callable, Protocol
 
 import httpx
@@ -36,7 +37,9 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             raise AgentRuntimeUnavailable("Hermes runtime model chain is empty")
         self._model_index = 0
         self.model_key = self._model_chain[0]
-        self._client = client or httpx.Client(timeout=settings.impact_timeout_seconds)
+        self._client = client or httpx.Client(
+            timeout=httpx.Timeout(connect=10.0, read=None, write=10.0, pool=10.0)
+        )
         self._owns_client = client is None
 
     def _complete(self, messages: list[dict]) -> dict:
@@ -44,22 +47,29 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         while self._model_index < len(self._model_chain):
             model = self._model_chain[self._model_index]
             try:
-                response = self._client.post(
+                payload = {
+                    "model": model,
+                    "temperature": 0,
+                    "max_tokens": 1200,
+                    "messages": messages,
+                    "tools": __import__(
+                        "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
+                    ).citynexus_tool_definitions(),
+                    "tool_choice": "auto",
+                    "stream": True,
+                }
+                with self._client.stream(
+                    "POST",
                     settings.hermes_api_url,
                     headers={"Authorization": f"Bearer {settings.hermes_api_key}"},
-                    json={
-                        "model": model,
-                        "temperature": 0,
-                        "max_tokens": 1200,
-                        "messages": messages,
-                        "tools": __import__(
-                            "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
-                        ).citynexus_tool_definitions(),
-                        "tool_choice": "auto",
-                    },
-                )
-                response.raise_for_status()
-                message = response.json()["choices"][0]["message"]
+                    json=payload,
+                ) as response:
+                    response.raise_for_status()
+                    content_type = response.headers.get("content-type", "")
+                    if "application/json" in content_type:
+                        message = response.json()["choices"][0]["message"]
+                    else:
+                        message = self._merge_sse(response.iter_lines())
                 if not isinstance(message, dict):
                     raise TypeError("Hermes response message is invalid")
                 if not str(message.get("content") or "").strip() and not message.get("tool_calls"):
@@ -70,6 +80,39 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 last_error = exc
                 self._model_index += 1
         raise AgentRuntimeUnavailable("Hermes Agent completion failed for configured model chain") from last_error
+
+    @staticmethod
+    def _merge_sse(lines) -> dict:
+        content: list[str] = []
+        calls: dict[int, dict] = {}
+        for line in lines:
+            if not line or not line.startswith("data:"):
+                continue
+            raw = line[5:].strip()
+            if raw == "[DONE]":
+                break
+            chunk = json.loads(raw)
+            delta = ((chunk.get("choices") or [{}])[0].get("delta") or {})
+            if delta.get("content"):
+                content.append(str(delta["content"]))
+            for item in delta.get("tool_calls") or []:
+                index = int(item.get("index", 0))
+                call = calls.setdefault(
+                    index,
+                    {
+                        "id": item.get("id") or f"tool-call-{index}",
+                        "type": "function",
+                        "function": {"name": "", "arguments": ""},
+                    },
+                )
+                if item.get("id"):
+                    call["id"] = item["id"]
+                function = item.get("function") or {}
+                if function.get("name"):
+                    call["function"]["name"] = function["name"]
+                if function.get("arguments"):
+                    call["function"]["arguments"] += str(function["arguments"])
+        return {"role": "assistant", "content": "".join(content), "tool_calls": [calls[i] for i in sorted(calls)]}
 
 
 def configured_journey_agent(
