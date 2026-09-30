@@ -12,6 +12,7 @@ import {
   rowsForFilter,
   type PendingCandidate,
   type PendingPlaceRow,
+  type PendingRow,
 } from "./pendingSet";
 import { fillPending, pendingCopy, type PendingSetCopyKey } from "./pendingSetCopy";
 import "./pendingSet.css";
@@ -45,6 +46,26 @@ type DoorState<T> =
   | { phase: "failed"; facts: RawFacts | null; attribution: Attribution };
 
 const LOADING: DoorState<never> = { phase: "loading" };
+
+function openingLabel(row: PendingRow, zh: boolean): string {
+  const status = row.openingStatus?.toUpperCase();
+  if (!status || status === "UNKNOWN") return zh ? "营业时间未知" : "Opening hours unknown";
+  return row.openingRaw || status;
+}
+
+function costLabel(row: PendingRow, zh: boolean): string {
+  const status = row.costStatus?.toUpperCase();
+  if (status === "KNOWN_FREE" || (status === "KNOWN" && row.costAmountMinor === 0)) {
+    return zh ? "免费" : "Free";
+  }
+  const paid =
+    (status === "KNOWN_PAID" || status === "KNOWN" || status === "VERIFIED_PROVIDER") &&
+    row.costAmountMinor != null;
+  if (paid) {
+    return `${row.costCurrency ?? ""} ${Math.round(row.costAmountMinor / 100)}`.trim();
+  }
+  return zh ? "暂无价格（未知）" : "Price unavailable (unknown)";
+}
 
 function failed(cause: unknown): DoorState<never> {
   const rejection = cause instanceof RejectionWithFacts ? cause : null;
@@ -298,6 +319,9 @@ export function PendingSetPanel({
                   {row.categoryToken === null
                     ? say("pending.rowCategoryMissing")
                     : categoryLabel(row.categoryToken, zh)}
+                </p>
+                <p className="cn-pending-row-facts" data-testid="pending-row-facts">
+                  {zh ? "营业" : "Opening"}: {openingLabel(row, zh)} · {zh ? "费用" : "Cost"}: {costLabel(row, zh)}
                 </p>
               </li>
             ))}
