@@ -122,6 +122,12 @@ _CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
     "室内": ("indoor", "museum", "library", "theatre"),
     "历史": ("historic", "attraction", "museum"),
 }
+_CITY_CATEGORY_ALIASES: dict[str, tuple[str, ...]] = {
+    "culture": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "cultural": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "indoor": ("museum", "gallery", "library", "theatre", "attraction"),
+    "outdoor": ("park", "garden", "viewpoint", "heritage", "attraction"),
+}
 
 
 def _city_search_terms(query: str | None) -> tuple[str, ...]:
@@ -134,6 +140,13 @@ def _city_search_terms(query: str | None) -> tuple[str, ...]:
         if phrase in normalized:
             terms.extend(aliases)
     return tuple(dict.fromkeys(term for term in terms if term))
+
+
+def _city_category_terms(category: str | None) -> tuple[str, ...]:
+    if not category:
+        return ()
+    normalized = category.casefold().strip()
+    return tuple(dict.fromkeys((normalized, *_CITY_CATEGORY_ALIASES.get(normalized, ()))))
 
 
 def _upgrade_cached_request_replan_response(
@@ -552,9 +565,13 @@ class AgentToolGateway:
         places = self.session.scalars(
             select(Place).where(Place.city_code == city_code).order_by(Place.id)
         ).all()
-        if request.category:
-            category = request.category.casefold()
-            places = [item for item in places if category in item.category.casefold()]
+        category_terms = _city_category_terms(request.category)
+        if category_terms:
+            places = [
+                item
+                for item in places
+                if any(term in item.category.casefold() for term in category_terms)
+            ]
         if search_terms:
             places = [
                 item

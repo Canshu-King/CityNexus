@@ -343,6 +343,22 @@ def test_agent_runtime_limits_batched_city_searches_to_one_per_turn(monkeypatch)
     assert calls == 2
 
 
+def test_agent_search_category_culture_expands_to_real_visit_categories():
+    journey_id = _selected_journey()
+    response = client.post(
+        "/api/v1/agent/tools/search_city_services",
+        json={
+            "request_id": "culture-category-alias-1",
+            "agent_id": "test-agent",
+            "journey_id": journey_id,
+            "category": "culture",
+        },
+    )
+    assert response.status_code == 200, response.text
+    place_ids = {item["id"] for item in response.json()["places"]}
+    assert "place-riverside-museum" in place_ids
+
+
 def test_hermes_runtime_uses_configured_model_fallback_chain(monkeypatch):
     calls: list[str] = []
 
