@@ -1,63 +1,63 @@
 {
- "started_local": "2026-09-30T12:21:11+0800",
+ "started_local": "2026-09-30T12:30:26+0800",
  "spec": "e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts",
- "generation_under_mutation": "7e1d3532bc2d277b24c730a4b0381da1e9ac6863",
+ "generation_under_mutation": "869399f821def9d11e4961593d801b7d40501e95",
  "runs": [
   {
    "arm_mutated": "close_button",
-   "run_id": "mutclose122112",
+   "run_id": "mutclose123027",
    "mutation_landed_dirty_line": "M frontend/src/app/V8Experience.tsx",
    "playwright_exit": 1,
    "infra_failure": false,
    "summary_lines": [
     "2 failed",
-    "3 passed (42.1s)"
+    "3 passed (34.1s)"
    ],
    "error_heads": [
     "Error: close_button: #v8-nav-drawer is still mounted -- that path did not close the drawer",
     "Error: expect(received).toBeGreaterThanOrEqual(expected)"
    ],
-   "log_bytes": 15453,
-   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r2\\mutant_close_button.log"
+   "log_bytes": 16253,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r3\\mutant_close_button_mutclose123027.log"
   },
   {
    "arm_mutated": "backdrop",
-   "run_id": "mutbackdr122155",
+   "run_id": "mutbackdr123102",
    "mutation_landed_dirty_line": "M frontend/src/app/V8Experience.tsx",
    "playwright_exit": 1,
    "infra_failure": false,
    "summary_lines": [
     "2 failed",
-    "3 passed (30.1s)"
+    "3 passed (33.3s)"
    ],
    "error_heads": [
     "Error: backdrop: #v8-nav-drawer is still mounted -- that path did not close the drawer",
     "Error: expect(received).toBeGreaterThanOrEqual(expected)"
    ],
    "log_bytes": 15429,
-   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r2\\mutant_backdrop.log"
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r3\\mutant_backdrop_mutbackdr123102.log"
   },
   {
    "arm_mutated": "escape",
-   "run_id": "mutescape122226",
+   "run_id": "mutescape123136",
    "mutation_landed_dirty_line": "M frontend/src/app/V8Experience.tsx",
    "playwright_exit": 1,
    "infra_failure": false,
    "summary_lines": [
     "2 failed",
-    "3 passed (29.9s)"
+    "3 passed (37.3s)"
    ],
    "error_heads": [
     "Error: escape: #v8-nav-drawer is still mounted -- that path did not close the drawer",
     "Error: expect(received).toBeGreaterThanOrEqual(expected)"
    ],
    "log_bytes": 15466,
-   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r2\\mutant_escape.log"
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0480_mutants_r3\\mutant_escape_mutescape123136.log"
   }
  ],
  "tree_after": {
   "dirty_lines_for_V8Experience": 0,
   "raw": ""
  },
- "ended_local": "2026-09-30T12:22:57+0800"
+ "ended_local": "2026-09-30T12:32:14+0800"
 }
