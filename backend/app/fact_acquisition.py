@@ -514,8 +514,20 @@ def _plain_text_opening(
         + re.escape(":\uFF1A")
         + r"]?"
     )
-    label = re.search(label_pattern, text, re.IGNORECASE)
-    if not label:
+    labels = list(re.finditer(label_pattern, text, re.IGNORECASE))
+    label = next(
+        (
+            candidate
+            for candidate in labels
+            if re.search(
+                r"\d+(?:[.,]\d+)?\s*(?:元|円|CNY|RMB|¥|JPY)|免费|免費|無料|無\u6599|free",
+                text[candidate.end() : candidate.end() + 320],
+                re.IGNORECASE,
+            )
+        ),
+        labels[0] if labels else None,
+    )
+    if label is None:
         return {"status": "UNKNOWN", "raw": None, "intervals": []}
     excerpt = text[label.end() : label.end() + 260].translate(
         str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
