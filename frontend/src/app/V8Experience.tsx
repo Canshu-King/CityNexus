@@ -14,6 +14,7 @@ import { CopilotDock } from "../features/agent/CopilotDock";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
 import { PlanAiRunStrip } from "../features/planning/PlanAiRunStrip";
 import { TripItinerary } from "../features/trip/TripItinerary";
+import { SpendPanel } from "../features/trip/SpendPanel";
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
@@ -2219,7 +2220,7 @@ function TripsWorkspace({
   onOpenActivity: (activityId: string) => void;
   onRefresh: () => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const [tab, setTab] = useState<"itinerary" | "stay" | "bookings" | "spend">(
     "itinerary",
@@ -2230,21 +2231,12 @@ function TripsWorkspace({
     { key: "bookings" as const, zh: "预订", en: "Bookings" },
     { key: "spend" as const, zh: "花费", en: "Spend" },
   ];
-  const activityCount = data.active_plan?.activities.length ?? 0;
-  // Only a *chosen* stay is a committed cost.  Summing every candidate option
-  // would invent a spend the traveller never agreed to.
-  const chosenStayOption = chosen;
-  const chosenStayPriceKnown = Boolean(
-    chosenStayOption &&
-    ((chosenStayOption.stay?.nightly_amount_minor ?? 0) > 0 ||
-      (chosenStayOption.stay_total_minor ?? 0) > 0),
-  );
-  const chosenStayTotalMinor = chosenStayPriceKnown
-    ? chosenStayOption!.stay_total_minor
-    : null;
-  /* ORD-0392: the tab bodies live in `app/v8PanelRegistry.tsx` now; this file keeps the local
-     markup the Spend tab is made of and the `Bookings` / `WalletCommitments` shells it defines.
-     A new panel on any of these four tabs is one entry in that table. */
+  /* ORD-0392: the tab bodies live in `app/v8PanelRegistry.tsx` now; this file keeps the
+     `Bookings` / `WalletCommitments` shells it defines. A new panel on any of these four tabs is one
+     entry in that table. The Spend tab's own face moved out to
+     `features/trip/SpendPanel.tsx` with ORD-0504, and the three locals that used to compute a stay
+     total here went with it -- the rule "only a chosen stay is a cost, and a chosen stay is still not
+     a booked one" is now stated once, in `spendFacts.ts`. */
   const tripsSlots = {
     walletCommitments: () => (
       <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
@@ -2262,45 +2254,20 @@ function TripsWorkspace({
       />
     ),
     spend: () => (
-      <section className="v8-page" data-testid="trips-spend">
-        <div className="v8-page-intro compact">
-          <div>
-            <p className="v8-kicker">{zh ? "花费" : "Spend"}</p>
-            <h1>{zh ? "这趟旅行花多少" : "What this trip costs"}</h1>
-            <p className="v8-lede">
-              {zh
-                ? `预算 ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}；当前方案 ${activityCount} 个活动。`
-                : `Budget ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}; the active plan has ${activityCount} stops.`}
-            </p>
-          </div>
-        </div>
-        <dl className="trial-review">
-          <div>
-            <dt>{zh ? "总预算" : "Total budget"}</dt>
-            <dd>
-              {data.journey.budget.currency}{" "}
-              {Math.round(data.journey.budget.amount_minor / 100)}
-            </dd>
-          </div>
-          <div>
-            <dt>{zh ? "住宿合计（已选）" : "Stay total (selected)"}</dt>
-            <dd data-testid="spend-stay-total">
-              {!chosenStayOption
-                ? zh
-                  ? "还没有选定住宿"
-                  : "No stay chosen yet"
-                : chosenStayTotalMinor == null
-                  ? zh
-                    ? "价格未知（供应商未提供房价）"
-                    : "Price unknown (no provider rate)"
-                  : `${chosenStayOption.stay.currency} ${Math.round(chosenStayTotalMinor / 100)}`}
-            </dd>
-          </div>
-          <div>
-            <dt>{zh ? "活动数量" : "Stops"}</dt>
-            <dd>{activityCount}</dd>
-          </div>
-        </dl>
+      /* ORD-0504: this slot used to print the declared budget and a stop count under a heading that
+         asks what the trip costs, because nothing on this screen could reach a price. The face now
+         reads the four classes of settled fact the two doors this workspace already fetches do
+         answer -- legs, the selected stay, reservations, commitments -- and says by name the five
+         classes no journey-scoped read carries. The arithmetic and the confirmed/estimated
+         vocabulary live in `features/trip/spendFacts.ts`, not here. */
+      <>
+        <SpendPanel
+          data={data}
+          wallet={wallet}
+          timeZone={data.journey.timezone || "UTC"}
+          locale={locale}
+          t={t}
+        />
         <Studio
           data={data}
           selected={selected}
@@ -2309,7 +2276,7 @@ function TripsWorkspace({
           onNavigate={onNavigate}
           onRain={onRain}
         />
-      </section>
+      </>
     ),
   };
   const tripsTabScope = {
