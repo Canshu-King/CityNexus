@@ -16588,6 +16588,139 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 18:16 · 我亲测第二格：回收站整巡（删→箱→找回→再找回→回读态）、打卡三扇拒绝门的人话句、收藏那一族的模块臂自跑；外加一张新车道
+
+**〇、栈与身份**
+
+还是我 18:05 那块里那台私有栈：后端 `:4941`、静态 `:4943`，导出树 = `git archive` 取自 `be0ffee216c7d24e48652427d290da848a9195cf`（现尖已比我这代新，见第四节“没改善的部分”）。这一格我只打 HTTP 与 pytest，不新建构建，D 盘现读 2.1 G 我没有再吃它。`:8000/:4781/:4782/:8693` 未碰，`_preview.db` 未写，`demo/reset` 未跑。
+
+**一、回收站整巡（ORD-0490 那一族，我自己走的一圈，逐发都是现场回读）**
+
+新建一枚我自己的行程（`POST /api/v1/journeys` 回 `http_status=201`），然后：
+
+1. `DELETE /api/v1/journeys/{id}` 回 `http_status=204`；
+2. `GET /api/v1/recycle-bin/journeys` 回 `http_status=200`、行数 1，那一行带 `deleted_at` 这一列（列声明 `backend/app/db/models.py:200`；值形如 `2026-09-30T10:14:55.404102Z`，服务器给的时刻，不是设备时刻）；行的字段集含 `title`、`city_code`、`start_at`、`end_at`、`budget`、`planning_mode`；
+3. `POST /api/v1/journeys/{id}/undelete` 回 `http_status=200` 且正文就是那枚行程；
+4. 同一条再来一发回 `http_status=409` `reason_code=JOURNEY_NOT_DELETED`；
+5. 再读箱：行数 0；
+6. `GET /api/v1/journeys/{id}` 回 `http_status=200`，`status` 字段值为 `DRAFT`（我这枚新创建的行程本来就是 DRAFT，所以这一格证的是“找回后仍可被读到”，不证状态迁移——状态迁移那一格我没造出对照，具名 `NOT_REACHED_BY_CMDR`）；
+7. 再删一次再读箱：行数回到 1（说明这一族的删除是可重入的，不是找回一次就失效）。
+
+**二、打卡那一族的三扇拒绝门（ORD-0476），句子我逐字取回来了**
+
+| 形 | 读数 |
+|---|---|
+| 同时给 `activity_id` 与 `place_id` | `http_status=422` `code=VALIDATION_ERROR` `reason_code=CHECKIN_TARGET_AMBIGUOUS` `details` 带 `activity_id` 与 `place_id`，句子原文 `One footprint names one target: an activity or a place, not both.` |
+| 给一枚服务器没有的活动号 | `http_status=404` `code=NOT_FOUND` `reason_code=CHECKIN_ACTIVITY_UNKNOWN`，句子原文 `No activity on this server carries that id.`（句子里没有 uuid） |
+| 什么都不指 | `http_status=422` `reason_code=CHECKIN_TARGET_REQUIRED`，句子原文 `A footprint has to name what was visited.` |
+
+这一格推翻我自己早先的一个担心：这三句不是浏览器造的，是服务器正文，且句内不印裸 id。写入那一腿我这代没能走到——我这台栈的演示行程里 `activity_id` 计数为 0（我从 `/experience` 正文里两种取法都数过，命中 0，只数得出 4 枚 `place_id`），所以「写入 `http_status=201`（锚 `backend/app/main.py:3593`）+ 列表回读同一枚 id」这两格在这一代具名 `NOT_REACHED_BY_CMDR`；我 12:5x 在 `dcb90ccc…` 那一代真走过写入与重放，读数在那一块里，不跨代折算。
+
+**三、收藏那一族的模块臂我自己跑了一遍（不是转抄车道件）**
+
+命令：`python -m pytest tests/test_qoder_ord0444_collections.py tests/test_qoder_anywhere_lock_duration.py -p no:randomly -q --tb=line -rf --no-header`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（CPython 3.12.14），cwd 在导出树 `backend/`，`PYTHONPATH=backend;<树根>`，provider 变量剥掉。结果 `1 failed, 19 passed`。
+
+唯一那一枚红是 `test_g9b_provider_http_never_runs_inside_an_open_write_transaction`，断言消息里自己写明 `observed provider calls = 0`、状态 `UNAVAILABLE` ——这正是 ORD-0494 那块里车道具名过的“本 box 出网为 0 时 g9b 恒红”，不是新红。同一趟里 g9a 与 g9c 都在这棵树上绿，这就是 ORD-0494 交的那件事：臂不再要求世界必须拒我。锚：`backend/tests/test_qoder_anywhere_lock_duration.py:264`。
+
+**四、这一轮新增的两张车道与欠账**
+
+- 新建车道 `82f55d8a-93fa-46e8-be8b-708a65d63a33` 领 ORD-0517（票夹卡片把原始 id 与内部锁标记当标题那一格，产品字节 + 两枚反件）。
+- ORD-0515 派给长图那条车道（多天导出的体积上限与分页，具名上限进契约或常量），ORD-0509 催在暗色对比那条车道（新落地的几屏逐屏亮/暗两档重取）。
+- 我自己写错的两处已当场更正、不写成缺陷：第一次我把 `GET /api/v1/collections/{folder_id}/items` 的 `http_status=405` 当成缺门（架上内容本来读自 `GET /api/v1/collections?traveler_id=…` 的 `item_count` 与 `items[]`）；另一次我以为 `POST /api/v1/journeys` 建不成（实为我的请求体字段名不对，按 `backend/app/schemas.py:210` 的 `traveler_id`/`city_code`/`start_at`/`end_at`/`budget` 形制重打就回 `http_status=201`）。
+- 没改善的部分：① 我这台栈停在 `be0ffee216…`，ORD-0501 的日块分隔与 ORD-0489 的三枚行程盘面都在这代之上，我没有在它们自己那一代看过屏，两格具名 `NOT_REVERIFIED_BY_CMDR`，重开构建要等 D 盘腾出来（我已把那一枚 1.88 G 的可腾项作为唯一一问写在桌面留言里，不自己删）；② 手机端打卡入口仍未通（ORD-0500 在跑）；③ ORD-0464 r6 是 `backend/app/main.py` 的真冲突，等 r7 自解；④ ORD-0435 的服务端回读仍 `NOT_AVAILABLE_BY_CMDR`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 18:17 · ORD-0461 重切（04:15 单）交付：只做现尖真缺的两枚写门（改角色、移除成员），四枚具名拦停全进契约，权限读 journey_role_capabilities 不写死角色名单，臂经删校验变异证明
+
+**坐标（交件前一秒现读）**：枝 `refs/heads/review/a68b0631-ord0461-member-write-doors-r2`，头 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d —— 推送后 `git ls-remote origin refs/heads/review/a68b0631-ord0461-member-write-doors-r2` 回同一枚 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d，两者逐字相同。切枝基座 be0ffee216c7d24e48652427d290da848a9195cf（号令者 CMDR 17:36 所记现尖，我外读一致）。
+推送那一秒再读现尖 = 9dea5cafb43009dc6e6ba03c339560bc4224008a，自我切枝以来推进 18 笔；逐枚比 blob：`backend/app/main.py` moved=no, `backend/app/schemas.py` moved=no, `contracts/openapi.yaml` moved=no, `frontend/src/generated/api.ts` moved=no。`git merge-tree --write-tree 9dea5cafb43009dc6e6ba03c339560bc4224008a 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d` 只回一枚树 c4867fdb9a4a4de437b5d4aa995a5cc3041b3fde、冲突名 0 枚 ⇒ 不必再 rebase 一次也能干净落地。
+
+## 一、为什么这一代必须重落一次（行尾事实，不是我挑的形）
+
+现尖把 main.py 整文件转成 CRLF：`review/ord0461/READINGS_member_r2.txt:42` 回 `f707e1b3=0/13057`（LF 代）而 `review/ord0461/READINGS_member_r2.txt:42` 回 `be0ffee2=13362/13362`（全 CRLF）。直接 `git rebase` 因此塌成一整枚文件级冲突（1→13364→26539 一段）。
+我没有改那枚转换：按本枝自身 per-file 补丁、以目标文件的行尾重落，结果见 `review/ord0461/READINGS_member_r2.txt:10` —— 四枚产品文件删除列全为 0（`review/ord0461/READINGS_member_r2.txt:10` 里 product_del=0），main.py 重落后仍是 13479/13479 全 CRLF，即我这 117 行纯插入，不回退也不对冲上游的行尾整改。
+
+## 二、两枚门与其拒绝出口（每枚都有 path:line，按交付头数）
+
+| 门 | 路由 | 拦停（`http_status=` 与具名码） |
+| --- | --- | --- |
+| 改角色 | `POST /api/v1/journeys/{journey_id}/members/{member_id}/role`（`backend/app/main.py:4420`，交付头 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d） | `http_status=409 MEMBER_JOURNEY_RECYCLED`、`http_status=409 MEMBER_ACTOR_NOT_A_MEMBER`、`http_status=403 MEMBER_ACTOR_NOT_PERMITTED`、`http_status=404 MEMBER_UNKNOWN`、`http_status=409 MEMBER_ALREADY_WITHDRAWN`（沿用现尖已有名，`backend/app/main.py:4306`） |
+| 移除成员 | `DELETE /api/v1/journeys/{journey_id}/members/{member_id}`（`backend/app/main.py:4448`，交付头 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d） | 同前四枚；它与 `.../withdraw`（`backend/app/main.py:4306`）是两件事：withdraw 留行并标 `MEMBER_WITHDRAWN`，remove 把行从集合里抹掉 |
+
+检查顺序是答案的一部分，且被臂钉住：回收站最先（行程被主人丢进箱子时，无论操作者是谁都不写），再操作者、再目标；`review/ord0461/READINGS_member_r2.txt:119` 那行取的 `binned journey, actor also unknown` 读数即为证明——actor 同时也不存在时，屏上听到的是回收站那一枚而不是别的。
+
+权限不是写死的角色名单：`MEMBER_MANAGE` 逐次从 `journey_role_capabilities` 读（表 `backend/app/db/models.py:1283`，种子 `backend/app/db/session.py:244`）。对照臂两枚都在：review/ord0461/READINGS_member_r2.txt:113 行给出 COLLABORATOR 被拒的读数与行数，review/ord0461/READINGS_member_r2.txt:118 行给出同一请求在表里加一行之后 `http_status=200`、撤掉那行之后又回到被拒。
+
+## 三、四枚具名拦停在本代的实际读数（响应体，不是状态码）
+
+- `MEMBER_ACTOR_NOT_A_MEMBER` 在本代对照记录里出现 4 行，读数取自 `review/ord0461/READINGS_member_r2.txt:112`（`review/ord0461/member_write_transcript_r2.txt`）
+- `MEMBER_ACTOR_NOT_PERMITTED` 在本代对照记录里出现 2 行，读数取自 `review/ord0461/READINGS_member_r2.txt:113`（`review/ord0461/member_write_transcript_r2.txt`）
+- `MEMBER_UNKNOWN` 在本代对照记录里出现 4 行，读数取自 `review/ord0461/READINGS_member_r2.txt:114`（`review/ord0461/member_write_transcript_r2.txt`）
+- `MEMBER_JOURNEY_RECYCLED` 在本代对照记录里出现 3 行，读数取自 `review/ord0461/READINGS_member_r2.txt:115`（`review/ord0461/member_write_transcript_r2.txt`）
+- 拒绝侧状态码集合 = `http_status=403,404,409`，来自 `review/ord0461/READINGS_member_r2.txt:116`；放行/写入成功侧 = `http_status=200`，同一份对照记录里 `role_change/remove/withdraw` 三行读来（`review/ord0461/READINGS_member_r2.txt:117`）。
+
+## 四、变异证明（号令者要求：删掉那行校验，臂必须变红）
+
+四枚变异，每枚只掐掉 raise 那枚具名码的那一条判据，跑完按 blob 复原：
+`review/ord0461/READINGS_member_r2.txt:108`（`review/ord0461/member_r2_mutation_r1.json`，被测文件行尾 = `CRLF`）
+- 掐掉 `MEMBER_JOURNEY_RECYCLED` 的判据 ⇒ `1 failed, 11 deselected, 2 warnings in 1.96s`（`review/ord0461/READINGS_member_r2.txt:104`）
+- 掐掉 `MEMBER_ACTOR_NOT_A_MEMBER` 的判据 ⇒ `2 failed, 10 deselected, 2 warnings in 1.92s`（`review/ord0461/READINGS_member_r2.txt:105`）
+- 掐掉 `MEMBER_ACTOR_NOT_PERMITTED` 的判据 ⇒ `2 failed, 10 deselected, 2 warnings in 2.06s`（`review/ord0461/READINGS_member_r2.txt:106`）
+- 掐掉 `MEMBER_UNKNOWN` 的判据 ⇒ `1 failed, 11 deselected, 2 warnings in 2.09s`（`review/ord0461/READINGS_member_r2.txt:107`）
+- 复原核对：`every_mutant_made_its_arm_red=True`、`file_restored_after_every_mutant=True`，最终 main.py 的 blob 与提交头一致 `34495c9312dba796e3ff794f96fe56e11494dbe3`（`review/ord0461/READINGS_member_r2.txt:109`）。
+
+## 五、门禁与整套对照（当代重取，两侧各两趟）
+
+- 契约对齐门：`review/ord0461/READINGS_member_r2.txt:69` —— formal/runtime/missing/extra 四数同行见该行。
+- `generated/api.ts` 只取重生成：`review/ord0461/READINGS_member_r2.txt:71`，其中 `bytes_equal_to_the_file_on_disk=True` 且该文件即提交内容；提交里的 blob = `ba770857cbfa747fedda6aea4baf8239c0346003`。
+- 集合数：本树 `review/ord0461/READINGS_member_r2.txt:64`，不动的基线 `review/ord0461/READINGS_member_r2.txt:65`，差 = 12（正是我新增文件的臂数，见 `review/ord0461/READINGS_member_r2.txt:51`）。
+- 前端三闸（同一枚头 3f18c53a2ec42fd045199a4c5ef1684b117f0d6d）：`review/ord0461/READINGS_member_r2.txt:75`。
+- 反例门：只我这枚文件 `review/ord0461/READINGS_member_r2.txt:49`；点名扩到邻近已落门（含 G6 词表闸、契约门、回收站门）`review/ord0461/READINGS_member_r2.txt:50`。
+- 整套：本树两趟 `review/ord0461/READINGS_member_r2.txt:82` / `review/ord0461/READINGS_member_r2.txt:83`，不动基线两趟 `review/ord0461/READINGS_member_r2.txt:84` / `review/ord0461/READINGS_member_r2.txt:85`。两侧在这一代都会逐趟浮动，所以我按集合并/稳定核判定而非只看数：`my_stable_core_is_inside_the_base_union=True`（`review/ord0461/READINGS_member_r2.txt:88`），并且我稳定核里的红在基线并集里全部存在。
+- 两侧唯一分歧的臂逐枚单跑复核（`review/ord0461/READINGS_member_r2.txt:94` 起三行）：`g3_xproc_two_uvicorn_workers...` 在**不动的基线上单跑也红**（且上一代两趟不动基线都红着它，见同文件后两行），故它先于本枝落地，不是我引入、我也不claim修好；`test_shape_a_terminal_job...` 单跑绿，只在全跑里翻，属本项目已记的状态敏感一族。
+
+## 六、我没动的东西（现尖实测，报事实不动手）
+
+- 现尖上 add/list/withdraw/acl 四枚门我一枚没重造：路由逐枚读回 `review/ord0461/READINGS_member_r2.txt:55`，本枝产品字节只落在 `review/ord0461/READINGS_member_r2.txt:11` 列的那 5 个文件上。
+- 那三枚已落的写门不查操作者也不查回收站（逐函数字面读过：`backend/app/main.py:4242`、`backend/app/main.py:4292`、`backend/app/main.py:4306`），所以现尖仍可无人为地把成员加进行程、或撤销一枚回收站里行程的成员；这不在本单点名的两枚之内，我按纪律没顺手改。
+- 现尖的 add 门仍不看 `expires_at` 是否已过期（`_member_expiry` 只判可读与偏移，`backend/app/main.py:4220` 起），因此仍会出生即死的会员行——这与 ORD-0460 已落的授权门形状不一致，但它落在别人的那枚门上，等号令者定形制。
+- 行程创建者不会自动成为成员行（全库只 `backend/app/main.py:4275` 一处建 JourneyMember），所以现尖上没有任何 actor 天生握有 `MEMBER_MANAGE`；我的臂因此先把 owner invite 成 OWNER 成员再按门，这一点写在了测试的 fixture 注释里，而不是偷偷改产品行为。
+
+## 七、下一手
+
+- 落地由号令者执行；我这枝不自取。合完请逐字节回验我列的 5 枚产品文件与重生成的 api.ts。
+- ORD-0502（手机端打卡入口）我已接单，按该单形制另交一块到 `rel_<HHMM>.md`；本轮只敲这一次门。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0477 · 车道 8ac89982 · 行程列表三档具名排序已落地；r2 交在现尖上，另有一枚别人的字节门被我重记，请裁 · 2026-09-30 18:15+08
+
+**〇、坐标（每一枚都先 `git cat-file -e` 过再写）。** 候选枝 `refs/heads/review/8ac89982-ord0477-journey-sort-r2` = commit 7c67f88ce98d2f46f9590914d54c25f8d9bb7ca9，树 64b6067354e8c4410cd0c7f0e4c15b3b4df7efaa，父 = 号令者给的现尖 be0ffee216c7d24e48652427d290da848a9195cf（我自己 `ls-remote` 现读 mirror 当时也是这一枚）。推完再 `ls-remote` 回读：r2 = 7c67f88ce98d2f46f9590914d54c25f8d9bb7ca9，r1 = 74f106d5bc43ce74bcbc4be7211338365d4a6b6b 一字未动（force 0 次、删 ref 0 次）。**r1 为什么还在**：它切在 dcb90cccc68b81f2317b28db19051dedb9f06c80 上，我开工时那是现尖；权威线在我做单期间走了两次，所以我不覆盖它，另交 r2。落笔此刻 mirror 又前进到 1b2d7af7db908a5cf78044c1d60604b691c414a0 —— 若还要我贴到那一枚，`review/ord0477/ord0477_recut_r1.py`（blob fee9043d7148abf8d9921cce890a4798593e3f0a）一条命令重切，锚点不唯一就 REFUSE。
+
+**一、后端：档位、具名拒绝、以及"不默默退默认"。** 读路由 `backend/app/main.py:3033`（blob 7bdf95f40aef1129b09760906bfc447e4750f36d）接 `sort`，三档在 `backend/app/schemas.py:260` 一处命名（blob 74016c4e76a85856fc78e1410f25671ac7699f4f）：`RECENT_UPDATE`＝`journeys.updated_at` 新在前、`DEPARTURE_DATE`＝`journeys.start_at` 早在前、`TITLE`＝`journeys.title` 做 casefold 后按码位升序；三档共用同一 tie-break＝`journeys.id` 升序（`main.py:3121`，两趟稳定排序实现，因为 `ORDER BY ... DESC` 会把 id 一起倒过来）。非法值在 `main.py:3084` 拒：422、`error.code=VALIDATION_ERROR`、`error.reason_code=JOURNEY_SORT_NOT_RECOGNISED`（名字在 `main.py:3013`）、`error.details` 带 `sort`（发过来的词）与 `supported`（三档），**不返回任何列表**；`?sort=`（空词）与 `recent_update`（大小写不对）同样按名拒。`sort` 不传时那条 SELECT 逐字保留 ORD-0383 slice 1 的形状（`created_at, id`），所以不认识档位的客户端一个字都没变。为什么 `sort` 读成裸串而不是 `Literal`：`Literal` 会让 pydantic 用没有名字的 `VALIDATION_ERROR` 顶掉它，正是本单禁的形状；`reason_code` 挂在既有 `error.code` 家族里，不新铸码。
+
+**二、档位排的是"时刻"不是"字符"，这条是量出来的。** `journeys.start_at` 是 TEXT，`create_journey` 存的是 `payload.start_at.isoformat()`，所以同一列上 `+08:00` / `Z` / 无偏移三种拼法共存（`backend/tests/test_qoder_ord0383_journey_soft_delete.py:189` 的 fixture 就写 `+08:00`）。探针实测三行（`review/ord0477/ord0477_probe_r1.json`，blob 07e1d8541fa7488b7596c0564aa5cf8ebe0c552e）：`2026-11-03T09:00:00+08:00`（＝01:00Z）、`2026-11-03T08:00:00Z`、`2026-11-05T09:00:00`（无偏移）——按字符排会把第二行排前面，按时刻排才对，臂 `test_departure_date_tier_orders_by_instant_not_by_characters` 里还带一枚自检：若两种排法在这组 fixture 上变得相同，臂自己先红（"这枚判据失效了"），不许我悄悄换数。无偏移读作 UTC 是**写进契约的句子**（`contracts/openapi.yaml:413` 那段注释与描述，blob 0d85ff20b4b17d5a6a38ba74a4cc02b899d308c7），不是碰巧能跑；`test_a_naive_stored_departure_is_read_as_utc_the_rule_the_contract_states` 拿"若按 Asia/Shanghai 读会反过来"当对照。
+
+**三、契约、生成式 spec、生成式客户端：一处词汇四处一致。** 手契约给 `listJourneys` 加了 `sort`（enum 三档）与一枚 422 描述（写明 `JOURNEY_SORT_NOT_RECOGNISED`）；路由装饰器同时把 422 写进 FastAPI 自己的 `/openapi.json`（这是 ORD-0395 那一格的教训：只写手契约，消费 `/openapi.json` 的人看不见有拒绝）。`frontend/src/generated/api.ts` 是生成件，我**没有**整份重生成：`review/ord0477/ord0477_api_sync_r3.py` 只把"契约改动带来的那 4 段 hunk"按唯一上下文打到现尖那份文件上，三拒（每段 before-text 唯一、hunk 只落在 `listJourneys` 窗口内、结果相对现尖只改这几段）全过才写；报告 `review/ord0477/ord0477_api_sync_r3_on_tip.txt`（blob 0ccbdaaeaa0f819c9c4c06df247f7d0f9d70b667）记着：若整份重生成，除我这 4 段外还会牵动别处 —— 那是上一手留下的漂移，不是本单造成的，我一个字没替它改。契约↔路由路径对齐仪表在这棵树上跑：formal 169、runtime 169、missing 0、extra 0（同一契约件 0d85ff20b4b17d5a6a38ba74a4cc02b899d308c7）。
+
+**四、屏上：档位控件、当前档读得到字、空集合有名。** 这棵树上读 `GET /api/v1/journeys` 的屏只有一处（清单：`frontend/src/features/access/accessDoors.ts:76` 的 `readJourneys` 唯一被 `AccessPanel.tsx:149` 调；`frontend/e2e/` 里没有任何 spec 引用过这屏的 testid），所以控件加在 `/v8/access`。三档按钮由 `accessVocabulary.ts:268` 的阶梯渲染（词在 `accessCopy.ts` 双语各一份，机器词不上屏），当前档另有一句渲染文字（`AccessPanel.tsx:338`），屏上读作「现在按最近更新排。」/ "This list is ordered by: Recently updated."；切换即带 `?sort=<词>` 重新问服务器（臂 `sort-asked-by-word-*` 直接看请求 URL，不许本地 sort 冒充）。`TITLE` 档多一句「名称档按字符先后排，不按拼音，也不按笔画。」，只在切到那一档时出现。空集合用屏上原有的具名空态 `access-trips-empty`（`review/ord0477/e2e/ord0477cut1_sort-empty-zh.json`，blob 见枝内同名件：empty_visible true、failed_visible false、picker 0 枚）——它是"这台服务器没报出你的行程"，不是"网络不可用"。**没有新增任何拖拽机制**：活动排序那套 `frontend/src/features/studio/SortableActivityList.tsx` 一个字节未动，本单 diff 里也没有 `@dnd-kit` 的 import。
+
+**五、门与反件（都是真跑的）。** 后端 `backend/tests/test_qoder_ord0477_journey_sort.py`（blob b0a05c8c3df929d0146920fafac46d6f1f57599b）16 条臂；前端 `frontend/e2e/qoder-ord0477-journey-list-sort.spec.ts`（blob 98a401a350f9592f34cc27dcc74a6ec20b8df18c）13 条臂，加 real-seed 一趟共 14 个节点，两趟各 14 passed（`review/ord0477/gate_tip_cut_pass1.log` blob b6d3a86d44c8824458a38560d79dc0b1657b1dce、pass2 blob f7011fd35ced29d98cfa08cd7c7730cb29d0c53f）。反件 5 枚，每枚跑完立刻按 sha256 回读还原：①把拒绝改成"默默回默认序" ⇒ 后端 3 条臂红（`ord0477_mutant_silent_default.txt` a76631e5ae8c2571f27989fc6216dfa4ff68d747）；②档改成按字符排 ⇒ 1 条臂红（2ddedbcd96afd71a71806b54e1025f775e0bf582）；③去掉 casefold ⇒ 1 条臂红（e88400a95ad79d1e6dfd3176159265b7e66556fe）；④屏不发档位 ⇒ 前端 4 条臂红（7220b94f2b17ff524e0c15762be6a17db27d39ad）；⑤把 `list_journeys` 换回上一代字节 ⇒ 那枚字节门红（a076703760c320eef93816a60ef884de5fde0ebc）。
+
+**六、几何与可达（新增控件的代价，按现尖量）。** 冻结口径（控件集、768 px 底线、`elementFromPoint` 打自己中心）：390x844 px 下带控件可达 8 枚、把本单控件摘掉后 5 枚，`lost=[]`；320x653 px 下 13 枚对 10 枚，`lost=[]`；当前档那句的盒子在 390x844 px 档是 [17, 239, 356, 21] px，在 320x653 px 档是 [17, 260, 286, 21] px，两档都在视口内、中心在 768 px 底线之上、中心命中得到自己（逐臂读数在 `review/ord0477/e2e/` 下 `ord0477cut1_sort-geometry-*.json`）。摘控件是在同一份构建里做的减法读数，不是另起一台基线。
+
+**七、回归（分母都具名）。** 后端整套各跑两趟：现尖 `10 failed, 1486 passed`（两趟同一集合，`review/ord0477/backend_suite_tip_pass1.log` 30305851d7bfb68c489b04004f55b275b89fe3f3 / pass2 a2eb42039ed44da56d885ff1cdb4f0276022090f）；候选 `11 failed, 1501 passed`（db9fe8fadedf972458de4a84bc709324ee8d4d08 / 96ff537b862289512d79443ada992b5eedafa931）。**可复现的新红 0 枚**：候选两趟交集里没有任何一枚不在现尖两趟并集中（四趟红集合逐枚列在 `backend_suite_red_sets_r1.json` 6d7b30359ad799ff5a9beb7e735d1c62320f6521）；候选多出来的那枚在两趟之间会换位置——`test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned` 与 `test_qoder_ord0332_error_receipt.py::test_R4_...` 交替红，两枚都是跨进程/状态敏感臂；单独各跑三趟在两棵树上都 3/3 绿，所以我判它是整套时序抖动，不是我引入的——判语只到这里，不写"无红"。定向：本单 16 条 + ORD-0402 8 条 + ORD-0434 + `test_contract.py` 合跑 45 passed。前端邻域同一子集在两棵树各跑一趟，读数一模一样：`19 passed, 1 failed`，那枚红是 `qoder-ord0407-empty-state-actions` 的 C6，现尖上本来就红（d9a065d1fdb8f3b83163e1bf83e902729521a3ac 对 0eff212803af3df5341e312e0b65ce9757da7d02）。两份 typecheck 配置各 0 错，`vite build` 出件正常。**没跑的**：整套 558 条前端测试（本机 D 盘只剩个位数 GB，且没有一枚 spec 引用这屏），要的话我下一轮补。
+
+**八、我动了别人的一枚门，请裁。** ORD-0402 在 `backend/tests/test_qoder_ord0402_recycle_bin.py`（blob cbe663347a60e45209850cd56a5f508324ec4020）里钉着"这枚读路由一个字节都不许动"，比对的基线件是 `review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json`。本单正是被命令改这枚路由，所以我**没有删它、也没有改它比对的数字**：r2 原件一字不动留在树里，我加了一枚 `make_list_door_baseline_artifact_r2.py`（33d4f00f0c866dc32544fc2de44673cceb89dc55）产出 `LIST_DOOR_BASELINE_r3.json`（a8a5dfd85905a24da9ae2e9041bde6a4640e4f59），r3 同时记 pre-tier 段的 sha256 与本代段的 sha256，且它拒绝 git（整套也在 `git archive` 导出上跑）；臂现在钉的是"本代字节 + 上一代哈希仍在 r2 里"，第五枚反件证明它还咬人。如果号令者认为这枚门不该由我重记，回退只需丢掉 r3 与那 39 行改动，产品字节不受影响。
+
+**九、拿不到的格，具名报。** ①`NOT_AVAILABLE_BY_CMDR`：手机抽屉入口在 ORD-0473（bac10f40 名下）未回绿前，`/v8/access` 在手机上只能直链到达，所以移动臂我用直链跑，没有主张"用户点得到"；②`NOT_AVAILABLE_BY_CMDR`：`journeys.updated_at` 不在公开 `Journey` 形状里（`backend/app/schemas.py:259` 往上数那个类没有此字段），所以"最近更新"档客户端能**排**但不能自行**核验依据**——要核验得给 `Journey` 加一枚字段，那是新语义，我不自己加；③屏上列表今天是一枚 `<select>`，档位切换后 DOM 里 option 顺序真变（臂已量），但要**肉眼**看到顺序得展开下拉——把它换成可见行列表是另开一单的事，本单不顺手改。
+
+**十、栈与拆机。** 门全跑在自己端口上：交付两趟 `:4918`/`:4919`，邻域 A/B `:4920`/`:4921` 与 `:4922`/`:4923`，首代读数 `:4910`/`:4911`；`:8000` 未起，`:4781`/`:4782`/`:8693` 未碰，`D:/moodle/_qoder_preview_20260920/_preview.db` 一次未开（本单一律新建 run-id 库：`db/e2e_ord0477cut1.db` 等），`demo/reset` 0 次。收尾 `netstat -ano | grep LISTENING | grep -E "127\.0\.0\.1:49(1|2)[0-9]"` 回 0 行。`node_modules` 用的是 junction（`cmd /c mklink /J`），拆的时候用 `rmdir`，不对它跑 `rm -rf`（那会顺着链接删进主树）。
+
+
 ### e766b154 · ORD-0501 长图多天排版：日块之间改成“画出来的分隔”，五臂加两枚反件真跑，六臂回归未破
 
 **〇、基座与枝（现读，不引旧快照）**
