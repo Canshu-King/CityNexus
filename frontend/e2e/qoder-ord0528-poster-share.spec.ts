@@ -194,7 +194,6 @@ test("ORD-0528 S3 one grant, two shapes that do not look alike", async ({ browse
     url_tail: parsed!.form,
     poster_screen: await guestPage.getByTestId("shared-poster-screen").count(),
     trip_screen: await guestPage.getByTestId("shared-screen").count(),
-    day_blocks: await guestPage.getByTestId(/^shared-poster-day-/).count(),
     stop_rows: await guestPage.getByTestId("shared-poster-stop").count(),
     map_present: await guestPage.getByTestId("shared-map").count(),
     plan_line_present: await guestPage.getByTestId("shared-plan-line").count(),
@@ -202,6 +201,28 @@ test("ORD-0528 S3 one grant, two shapes that do not look alike", async ({ browse
     kicker: (await guestPage.getByTestId("shared-poster-kicker").innerText()).trim(),
     inner_text_chars: posterText.length,
   };
+  /* The guest's page obeys the traveller's own size bound, so it may page. Walk whatever pages it
+     offers and sum them: expecting every day on one screen would be asserting that the bound does
+     not exist on this side. */
+  poster.paged_note = await guestPage.getByTestId("shared-poster-paged-note").innerText({ timeout: 1_000 }).catch(() => null);
+  poster.page_buttons = await guestPage.getByTestId(/^shared-poster-page-\d+$/).count();
+  poster.day_blocks_pages = [];
+  for (let index = 0; index < Math.max(1, poster.page_buttons); index += 1) {
+    if (poster.page_buttons > 0) {
+      await guestPage.getByTestId(`shared-poster-page-${index + 1}`).click();
+      await guestPage.waitForTimeout(350);
+    }
+    poster.day_blocks_pages.push(await guestPage.getByTestId(/^shared-poster-day-\d+$/).count());
+  }
+  poster.day_blocks = poster.day_blocks_pages.reduce((total: number, n: number) => total + n, 0);
+  poster.inner_text_chars = posterText.length;
+  /* Back to page one before the picture, so the PNG measured below is comparable with the block count
+     on that page rather than with whichever page the walk happened to end on. */
+  if (poster.page_buttons > 0) {
+    await guestPage.getByTestId("shared-poster-page-1").click();
+    await guestPage.waitForTimeout(350);
+  }
+  poster.day_blocks_on_exported_page = await guestPage.getByTestId(/^shared-poster-day-\d+$/).count();
   /* The guest's picture has to be the traveller's picture: drawn here, and measured here. */
   const downloadPromise = guestPage.waitForEvent("download", { timeout: 90_000 });
   await guestPage.getByTestId("shared-poster-download").click();
@@ -254,6 +275,14 @@ test("ORD-0528 S3 one grant, two shapes that do not look alike", async ({ browse
   expect(poster.map_present, "the picture shape shows no map").toBe(0);
   expect(poster.plan_line_present, "and no plan-source line").toBe(0);
   expect(poster.day_blocks, "one day block per day the grant let the guest read").toBeGreaterThanOrEqual(2);
+  /* The picture's own rows have to describe the same number of blocks the page showed: each card
+     contributes its top and bottom hairline and every break between two cards adds one drawn seam,
+     so `3n-1` groups is the only honest reading of n blocks. This is the guest side of the link
+     ORD-0515 pinned on the traveller's side. */
+  expect(
+    poster.pixels.hairline_groups,
+    `the exported page showed ${poster.day_blocks_on_exported_page} day blocks`,
+  ).toBe(3 * poster.day_blocks_on_exported_page - 1);
   expect(poster.form_note.length, "the page says in words which shape this is").toBeGreaterThan(10);
   expect(tripShape.poster_screen, "the bare token still opens the trip, not the picture").toBe(0);
   expect(tripShape.map_present, "and that screen keeps the map the poster has no room for").toBe(1);
