@@ -29,6 +29,22 @@ from qoder_git_source_r1 import (  # noqa: E402
 HERE = Path(__file__).resolve()
 GATE_REL = "backend/app/security/credential_literals.py"
 ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
+REPO_ROOT = find_repo_root(HERE)
+
+
+@pytest.fixture()
+def repo() -> Path:
+    """A checkout whose object store can answer, or a NAMED skip.
+
+    This file is about telling the two worlds apart, so it has to live by the same rule: a cell that
+    can only pass inside a repository must say NOT_MEASURED outside one, not go red. The commander's
+    whole complaint was an export tree reading like a product defect.
+    """
+
+    if REPO_ROOT is None:
+        pytest.skip("%s: no repository root above this file, so no object store can be asked"
+                    % NOT_MEASURED)
+    return REPO_ROOT
 
 
 def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess:
@@ -37,13 +53,12 @@ def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess:
 
 
 # ---------------------------------------------------------------- G01 正控：真仓库里它照旧取到源码
-def test_G01_a_real_repository_still_yields_the_source() -> None:
-    root = find_repo_root(HERE)
-    assert root is not None and (root / ".git").exists(), "this test is not running inside a repo"
-    status, text, reason = git_source(ORDER_BASE, GATE_REL, root)
+def test_G01_a_real_repository_still_yields_the_source(repo: Path) -> None:
+    assert (repo / ".git").exists(), "this test is not running inside a repo"
+    status, text, reason = git_source(ORDER_BASE, GATE_REL, repo)
     assert status == OK, (status, reason)
     assert "PLACEHOLDER_MARKERS" in text, len(text)
-    assert require_git_source(ORDER_BASE, GATE_REL, root) == text
+    assert require_git_source(ORDER_BASE, GATE_REL, repo) == text
 
 
 # ---------------------------------------------------------------- G02 反控：没有仓库根 ⇒ 具名不可测
@@ -96,25 +111,25 @@ def test_G04_a_resolvable_commit_missing_the_path_is_a_defect_not_a_skip(tmp_pat
 
 
 # ---------------------------------------------------------------- G05 不许静默绿：三种状态互斥
-def test_G05_no_state_is_silently_green(tmp_path: Path) -> None:
+def test_G05_no_state_is_silently_green(tmp_path: Path, repo: Path) -> None:
     """OK 必带字节；NOT_MEASURED 必无字节且只能以 skip 出去；DEFECT 必以断言失败出去。
 
     这格钉的是接口本身：任何一格把"没量到"伪装成"量到了且相等"，这里就红。
     """
-    statuses = [git_source(ORDER_BASE, GATE_REL, find_repo_root(HERE))[0],
+    statuses = [git_source(ORDER_BASE, GATE_REL, repo)[0],
                 git_source(ORDER_BASE, GATE_REL, None)[0],
-                git_source("0" * 40, GATE_REL, find_repo_root(HERE))[0]]
+                git_source("0" * 40, GATE_REL, repo)[0]]
     assert statuses[0] == OK and statuses[1] == NOT_MEASURED and statuses[2] == NOT_MEASURED, statuses
     for bad in (None, tmp_path):
         status, text, reason = git_source(ORDER_BASE, GATE_REL, bad)
         assert status == NOT_MEASURED and text == "" and reason, (status, text, reason)
-    ok_status, ok_text, _r = git_source(ORDER_BASE, GATE_REL, find_repo_root(HERE))
+    ok_status, ok_text, _r = git_source(ORDER_BASE, GATE_REL, repo)
     assert ok_status == OK and ok_text, "the readable case handed back nothing to compare"
 
 
 # ---------------------------------------------------------------- G06 祖先那一臂同样两种都行
-def test_G06_the_ancestry_arm_answers_or_names_itself(tmp_path: Path) -> None:
-    root = find_repo_root(HERE)
+def test_G06_the_ancestry_arm_answers_or_names_itself(tmp_path: Path, repo: Path) -> None:
+    root = repo
     head = _git(root, "rev-parse", "HEAD").stdout.strip()
     parent = _git(root, "rev-parse", "HEAD~1").stdout.strip()
     assert head and parent, "this checkout cannot answer for its own history"
@@ -128,7 +143,7 @@ def test_G06_the_ancestry_arm_answers_or_names_itself(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------- G07 被改的那一格在两种世界里都不红
-def test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo(tmp_path: Path) -> None:
+def test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo(tmp_path: Path, repo: Path) -> None:
     """把 ORD-0479 的 H07 单独跑在两处：真树里它过，导出树里它是具名 skip——不是失败。
 
     "导出"在这里是**工作树里 backend/ 的一份副本，不带 .git**（号令者那侧是 git archive 导出；两者
@@ -136,7 +151,7 @@ def test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo(tmp_pat
     交的那批字节，不是上一次提交的。
     """
     nodeid = "tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken"
-    repo_root = find_repo_root(HERE)
+    repo_root = repo
     in_repo = _git(repo_root, "rev-parse", "HEAD").stdout.strip()
 
     export = tmp_path / "export"
