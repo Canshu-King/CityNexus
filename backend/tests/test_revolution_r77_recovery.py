@@ -1150,6 +1150,13 @@ def test_japanese_admission_does_not_budget_rental_hours_or_headcounts():
     rental = _plain_text_cost("茶室利用料金 9:00～12:00 12,560円", url, reference_at=None)
     assert rental["status"] == "UNKNOWN"
 
+    from app.fact_acquisition import _plain_text_opening
+    primary = _plain_text_opening(
+        "開園時間 9時00分～17時00分 入園料 無料 茶室利用時間 9時00分～12時00分",
+        url, reference_at="2026-10-02",
+    )
+    assert (primary["open"], primary["close"]) == ("09:00", "17:00")
+
 
 def test_real_catalogue_fallback_is_visible_but_not_selectable():
     from fastapi.testclient import TestClient

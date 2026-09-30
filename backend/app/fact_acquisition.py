@@ -459,8 +459,17 @@ def _lotsmall_order_notice_opening(
         )
     if not seasonal:
         return {"status": "UNKNOWN", "raw": text[:4000], "intervals": []}
+    # An empty period is the fallback/default.  Prefer an explicitly dated
+    # period when it matches, otherwise retain the first (primary) range. This
+    # keeps a facility's 09:00-17:00 opening window ahead of later tea-room
+    # booking ranges such as 09:00-12:00.
     chosen = next(
-        (item for item in seasonal if _period_matches(item["period"], reference_at)),
+        (
+            item
+            for item in seasonal
+            if item["period"].strip()
+            and _period_matches(item["period"], reference_at)
+        ),
         seasonal[0],
     )
     normalized = normalize_opening_hours(f"{chosen['open']}-{chosen['close']}")
