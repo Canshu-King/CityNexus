@@ -1,0 +1,136 @@
+{
+ "base_revision": "822db3d9f07b9c7d535e12afbdeb3074dd94acb2",
+ "private_db": "ord0527ab_7f9376d8.db",
+ "port_backend": 62893,
+ "port_preview": 62894,
+ "generations": [
+  {
+   "generation": "base",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-BXpnOJjO.js"
+   ],
+   "journey": "2b5a084f-f80e-43d4-bb7f-cec937c36c5f",
+   "read_before_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 1,
+    "identity_words": null,
+    "uuids": 0,
+    "words_withdraw_family": 0,
+    "picker_present": 1,
+    "checks": null
+   },
+   "add_member": {
+    "http_status": 201,
+    "fields_sent": [
+     "traveler_id",
+     "role",
+     "invited_by"
+    ],
+    "member_id": "389dc58c-45ed-4a71-85cf-1180eb61247f",
+    "role_answered": "OWNER",
+    "member_state": "MEMBER_IN_FORCE"
+   },
+   "read_back_rows": 1,
+   "read_after_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 1,
+    "identity_words": null,
+    "uuids": 0,
+    "words_withdraw_family": 0,
+    "picker_present": 1,
+    "checks": null
+   },
+   "read_after_add_desktop": {
+    "exit": 0,
+    "shape": "1280x900",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 1,
+    "identity_words": null,
+    "uuids": 0,
+    "words_withdraw_family": 0,
+    "picker_present": 1,
+    "checks": null
+   }
+  },
+  {
+   "generation": "candidate",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-CZ9KL2SQ.js"
+   ],
+   "journey": "9ebed2e6-1c1b-491c-8451-b89396801854",
+   "read_before_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 0,
+    "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+    "uuids": 0,
+    "words_withdraw_family": 1,
+    "picker_present": 1,
+    "checks": null
+   },
+   "add_member": {
+    "http_status": 201,
+    "fields_sent": [
+     "traveler_id",
+     "role",
+     "invited_by"
+    ],
+    "member_id": "e1baf8d2-6b52-4d1a-9199-fd233942f4a3",
+    "role_answered": "OWNER",
+    "member_state": "MEMBER_IN_FORCE"
+   },
+   "read_back_rows": 1,
+   "read_after_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [
+     "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销"
+    ],
+    "role_change": 0,
+    "self_exit": 1,
+    "ladder_empty": 0,
+    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+    "uuids": 0,
+    "words_withdraw_family": 1,
+    "picker_present": 1,
+    "checks": null
+   },
+   "read_after_add_desktop": {
+    "exit": 0,
+    "shape": "1280x900",
+    "roster_rows": [
+     "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销"
+    ],
+    "role_change": 0,
+    "self_exit": 1,
+    "ladder_empty": 0,
+    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+    "uuids": 0,
+    "words_withdraw_family": 1,
+    "picker_present": 1,
+    "checks": null
+   }
+  }
+ ],
+ "restored": {
+  "build_exit": 0,
+  "bundle_entry": [
+   "index-CZ9KL2SQ.js"
+  ]
+ }
+}

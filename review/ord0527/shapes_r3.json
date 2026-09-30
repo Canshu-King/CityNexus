@@ -1,0 +1,346 @@
+{
+ "port_backend": 49225,
+ "port_preview": 49226,
+ "at": "01:18:29",
+ "head": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+ "cases": [
+  {
+   "arm": "arm_present",
+   "shape": "390x844",
+   "exit": 0,
+   "failures": [],
+   "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+   "roster_rows": 2,
+   "role_change": 1,
+   "self_exit": 1,
+   "ladder_empty": 0,
+   "uuids": 0,
+   "checks": [
+    {
+     "check": "panel mounted",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "ladder is NOT the empty cell",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "roster lists the seeded seats",
+     "held": true,
+     "reading": 2
+    },
+    {
+     "check": "identity line names the person",
+     "held": true,
+     "reading": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。"
+    },
+    {
+     "check": "a role-change control is listed",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "a leaving control is listed",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "no bare uuid on the screen",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "access-member-role-change has a box",
+     "held": true,
+     "reading": {
+      "w": 72
+     }
+    },
+    {
+     "check": "access-member-role-change centre hit",
+     "held": true,
+     "reading": {
+      "top": "button.cn-access-row-action",
+      "is_the_control": true,
+      "h": 44
+     }
+    },
+    {
+     "check": "access-member-role-change is at least 44 px tall",
+     "held": true,
+     "reading": {
+      "height": 44,
+      "floor": 44
+     }
+    },
+    {
+     "check": "access-member-self-exit has a box",
+     "held": true,
+     "reading": {
+      "w": 104
+     }
+    },
+    {
+     "check": "access-member-self-exit centre hit",
+     "held": true,
+     "reading": {
+      "top": "button.cn-access-row-action",
+      "is_the_control": true,
+      "h": 44
+     }
+    },
+    {
+     "check": "access-member-self-exit is at least 44 px tall",
+     "held": true,
+     "reading": {
+      "height": 44,
+      "floor": 44
+     }
+    },
+    {
+     "check": "role choices came from the seat door",
+     "held": true,
+     "reading": [
+      "管理员"
+     ]
+    },
+    {
+     "check": "a confirmation step is offered before the write",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "the write answered with a human sentence, not a code",
+     "held": true,
+     "reading": null
+    }
+   ]
+  },
+  {
+   "arm": "arm_present",
+   "shape": "1280x900",
+   "exit": 0,
+   "failures": [],
+   "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+   "roster_rows": 2,
+   "role_change": 1,
+   "self_exit": 1,
+   "ladder_empty": 0,
+   "uuids": 0,
+   "checks": [
+    {
+     "check": "panel mounted",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "ladder is NOT the empty cell",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "roster lists the seeded seats",
+     "held": true,
+     "reading": 2
+    },
+    {
+     "check": "identity line names the person",
+     "held": true,
+     "reading": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。"
+    },
+    {
+     "check": "a role-change control is listed",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "a leaving control is listed",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "no bare uuid on the screen",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "access-member-role-change has a box",
+     "held": true,
+     "reading": {
+      "w": 72
+     }
+    },
+    {
+     "check": "access-member-role-change centre hit",
+     "held": true,
+     "reading": {
+      "top": "button.cn-access-row-action",
+      "is_the_control": true,
+      "h": 33
+     }
+    },
+    {
+     "check": "access-member-role-change is at least 30 px tall",
+     "held": true,
+     "reading": {
+      "height": 33,
+      "floor": 30
+     }
+    },
+    {
+     "check": "access-member-self-exit has a box",
+     "held": true,
+     "reading": {
+      "w": 104
+     }
+    },
+    {
+     "check": "access-member-self-exit centre hit",
+     "held": true,
+     "reading": {
+      "top": "button.cn-access-row-action",
+      "is_the_control": true,
+      "h": 33
+     }
+    },
+    {
+     "check": "access-member-self-exit is at least 30 px tall",
+     "held": true,
+     "reading": {
+      "height": 33,
+      "floor": 30
+     }
+    },
+    {
+     "check": "role choices came from the seat door",
+     "held": true,
+     "reading": [
+      "协作者"
+     ]
+    },
+    {
+     "check": "a confirmation step is offered before the write",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "the write answered with a human sentence, not a code",
+     "held": true,
+     "reading": null
+    }
+   ]
+  },
+  {
+   "arm": "arm_absent",
+   "shape": "390x844",
+   "exit": 0,
+   "failures": [],
+   "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+   "roster_rows": 0,
+   "role_change": 0,
+   "self_exit": 0,
+   "ladder_empty": 0,
+   "uuids": 0,
+   "checks": [
+    {
+     "check": "no role-change control grew",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "no leaving control grew",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "the screen says it has no seat for you",
+     "held": true,
+     "reading": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。"
+    },
+    {
+     "check": "a way in is on the screen",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "no bare uuid on the screen",
+     "held": true,
+     "reading": 0
+    }
+   ]
+  },
+  {
+   "arm": "arm_absent",
+   "shape": "1280x900",
+   "exit": 0,
+   "failures": [],
+   "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+   "roster_rows": 0,
+   "role_change": 0,
+   "self_exit": 0,
+   "ladder_empty": 0,
+   "uuids": 0,
+   "checks": [
+    {
+     "check": "no role-change control grew",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "no leaving control grew",
+     "held": true,
+     "reading": 0
+    },
+    {
+     "check": "the screen says it has no seat for you",
+     "held": true,
+     "reading": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。"
+    },
+    {
+     "check": "a way in is on the screen",
+     "held": true,
+     "reading": 1
+    },
+    {
+     "check": "no bare uuid on the screen",
+     "held": true,
+     "reading": 0
+    }
+   ]
+  }
+ ],
+ "ownership_backend": {
+  "listening_pids": [
+   "18164"
+  ],
+  "launched_pid": 43216,
+  "pid_matches_child": false
+ },
+ "seed": {
+  "journey_with_seat": "e28f350b-60fa-412c-beb2-25687aef6c7f",
+  "journey_without_seat": "a4124513-a17d-4ab9-b041-3252f680c671",
+  "member_rows_on_the_seat_journey": 2,
+  "member_rows_on_the_no_seat_journey": 0,
+  "roles_listed": [
+   "OWNER",
+   "COLLABORATOR"
+  ],
+  "traveller": "e67e1a10-2168-4afc-a09b-935d27a63c65"
+ },
+ "preview": {
+  "listening_pids": [
+   "8388"
+  ],
+  "launched_pid": 8388,
+  "pid_matches_child": true,
+  "entry_from_served_html": [
+   "index-CZ9KL2SQ.js"
+  ],
+  "served_entry_sha1": "df4611e2fd935a9bd1afffcf0ef3ad38654ef8df",
+  "disk_entry_sha1": "df4611e2fd935a9bd1afffcf0ef3ad38654ef8df",
+  "served_bytes_equal_disk": true,
+  "served_entry_bytes": 1545592
+ }
+}

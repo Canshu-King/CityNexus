@@ -1,0 +1,809 @@
+{
+ "measured_at": "01:19:41",
+ "tip": "822db3d9f07b9c7d535e12afbdeb3074dd94acb2",
+ "head": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+ "head_tree": "55b0190f3eac42ffa4b8598d344dcd0398215cfe",
+ "interpreter": "D:/moodle/CityNexus/backend/.venv/Scripts/python.exe",
+ "merge_tree_rc": 0,
+ "conflict_paths": [],
+ "files_this_order_moves": [
+  "frontend/src/app/v8PanelRegistry.tsx",
+  "frontend/src/features/access/AccessPanel.tsx",
+  "frontend/src/features/access/accessCopy.ts",
+  "frontend/src/features/access/accessDoors.ts"
+ ],
+ "collect_only": {
+  "rc": 0,
+  "files": [
+   "tests/test_qoder_ord0503_member_doors.py",
+   "tests/test_qoder_ord0434_share_grants.py",
+   "tests/test_qoder_ord0476_checkins.py"
+  ],
+  "line": [
+   "50 tests collected in 2.50s"
+  ]
+ },
+ "arms": {
+  "rc": 0,
+  "files": [
+   "tests/test_qoder_ord0503_member_doors.py",
+   "tests/test_qoder_ord0434_share_grants.py",
+   "tests/test_qoder_ord0476_checkins.py"
+  ],
+  "line": [
+   "50 passed, 2 warnings in 6.62s"
+  ]
+ },
+ "parity": {
+  "rc": 0,
+  "lines": [
+   "OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0",
+   "schemas formal 85; generated 85; missing 0; extra 0"
+  ]
+ },
+ "tsc": {
+  "rc": 0
+ },
+ "vite_build": {
+  "rc": 0,
+  "index_html_entry": [
+   "index-CZ9KL2SQ.js"
+  ]
+ },
+ "exposure_gate": {
+  "tip": {
+   "rc": 0,
+   "cells_total": 6,
+   "modules_in_graph": 135,
+   "cell_ids": [
+    "RAW_BODY_TO_DOM :: frontend/src/features/trip/ActivityDetail.tsx :: text-in:dd testid=dd:activity-hours :: raw-body :: - :: :: upstream read opening?.raw | interpolated into `${opening?.raw || (zh ? \"已提供\" : \"Provided\")}${opening?.raw ? (zh ? \" · 供应商原文\"...",
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT :: frontend/src/features/planning/PlanWithAiSheet.tsx :: attribute:data-result-status :: raw-body :: - :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:code testid=code:plan-ai-reason :: prose :: text :: serverReasonSentence>failureNote>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { detail?: unknown } | null)?.detail | `detail` = (body as { detail?: unknown } | null)?.detail | serverReasonSentence() returns { text: detail, field: \"detail\" } | serverReasonSentence(body) was handed to failureNote() as `server` | failureNote() returns server ? { text: server.text, from: \"server\", field: server.field } : { text: ... | { status: `HTTP_${response.status}`, failureReason: failureNote( serverReasonS... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:p testid=div:plan-ai-result :: raw-body :: body :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun>statusCopy>slice :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null | result.status was handed to statusCopy() as `status` | .toUpperCase(...) passes it on | `s` = (status || \"\").toUpperCase() | .slice(...) passes it on | `code` = s.slice(\"BLOCKED:\".length) | interpolated into `${known.zh}（服务器给的原因编号：${code}）` | statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... | `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/recovery/RecoveryRequiredPanel.tsx :: text-in:code testid=code:recovery-reason :: raw-body :: quote :: trim>noticeFromRefusal>setNotice :: upstream read envelope.error off envelope | `nested` = envelope.error ?? {} | read further as message of it | .trim(...) passes it on | `sentence` = typeof nested.message === \"string\" ? nested.message.trim() : \"\" | noticeFromRefusal() returns { key, params: { status: refusal.http_status, code }, origin: \"server\", field:... | state `notice` written by setNotice(...)",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/simulation/SimulationPanel.tsx :: text-in:p testid=p:sim-outcome :: raw-body :: - :: bodyOf>round>retryHint>zh>describeFailure>en>setOutcome :: upstream read (error as { body?: unknown }).body off error | `raw` = (error as { body?: unknown }).body | bodyOf() returns raw as ErrorBody | read further as error of it | `details` = bodyOf(error)?.error?.details ?? {} | read further as retry_after_ms of it | `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null | passed through Math.round() | interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` | retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` | `extra` = busy ? retryHint(error) : fields | passed through hit.zh() | describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } | came back from describeFailure imported from ./simulationAdapter | `named` = describeFailure(error) | state `outcome` written by setOutcome(...)"
+   ],
+   "cells_in_access_files": []
+  },
+  "head": {
+   "rc": 0,
+   "cells_total": 6,
+   "modules_in_graph": 135,
+   "cell_ids": [
+    "RAW_BODY_TO_DOM :: frontend/src/features/trip/ActivityDetail.tsx :: text-in:dd testid=dd:activity-hours :: raw-body :: - :: :: upstream read opening?.raw | interpolated into `${opening?.raw || (zh ? \"已提供\" : \"Provided\")}${opening?.raw ? (zh ? \" · 供应商原文\"...",
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT :: frontend/src/features/planning/PlanWithAiSheet.tsx :: attribute:data-result-status :: raw-body :: - :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:code testid=code:plan-ai-reason :: prose :: text :: serverReasonSentence>failureNote>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { detail?: unknown } | null)?.detail | `detail` = (body as { detail?: unknown } | null)?.detail | serverReasonSentence() returns { text: detail, field: \"detail\" } | serverReasonSentence(body) was handed to failureNote() as `server` | failureNote() returns server ? { text: server.text, from: \"server\", field: server.field } : { text: ... | { status: `HTTP_${response.status}`, failureReason: failureNote( serverReasonS... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:p testid=div:plan-ai-result :: raw-body :: body :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun>statusCopy>slice :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null | result.status was handed to statusCopy() as `status` | .toUpperCase(...) passes it on | `s` = (status || \"\").toUpperCase() | .slice(...) passes it on | `code` = s.slice(\"BLOCKED:\".length) | interpolated into `${known.zh}（服务器给的原因编号：${code}）` | statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... | `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/recovery/RecoveryRequiredPanel.tsx :: text-in:code testid=code:recovery-reason :: raw-body :: quote :: trim>noticeFromRefusal>setNotice :: upstream read envelope.error off envelope | `nested` = envelope.error ?? {} | read further as message of it | .trim(...) passes it on | `sentence` = typeof nested.message === \"string\" ? nested.message.trim() : \"\" | noticeFromRefusal() returns { key, params: { status: refusal.http_status, code }, origin: \"server\", field:... | state `notice` written by setNotice(...)",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/simulation/SimulationPanel.tsx :: text-in:p testid=p:sim-outcome :: raw-body :: - :: bodyOf>round>retryHint>zh>describeFailure>en>setOutcome :: upstream read (error as { body?: unknown }).body off error | `raw` = (error as { body?: unknown }).body | bodyOf() returns raw as ErrorBody | read further as error of it | `details` = bodyOf(error)?.error?.details ?? {} | read further as retry_after_ms of it | `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null | passed through Math.round() | interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` | retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` | `extra` = busy ? retryHint(error) : fields | passed through hit.zh() | describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } | came back from describeFailure imported from ./simulationAdapter | `named` = describeFailure(error) | state `outcome` written by setOutcome(...)"
+   ],
+   "cells_in_access_files": []
+  },
+  "growth": "NONE",
+  "removed": [],
+  "ruler_path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r7b.cjs",
+  "ruler_local_sha1": "829c077b0b2c14d72b59dfa8292f1b280020ab33",
+  "ruler_local_sha1_kind": "本机 sha1（这把尺不在任何对象库里）",
+  "snapshot_method": "git archive <rev> frontend/src | tar -x"
+ },
+ "copy_dictionary": {
+  "en_keys": 127,
+  "zh_keys": 127,
+  "key_sets_equal": true,
+  "one_sided": [],
+  "asked_with_no_copy_behind_it": [],
+  "identity_keys": [
+   "access.identityLine",
+   "access.identityNoSeat",
+   "access.identityStale",
+   "access.identityUnknown",
+   "access.identityUnknownWay",
+   "access.identityUnnamed"
+  ]
+ },
+ "ord0527_arms_r1": {
+  "base_revision": "822db3d9f07b9c7d535e12afbdeb3074dd94acb2",
+  "candidate_head": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+  "runs": [],
+  "private_db": "ord0527_4ac1566a.db",
+  "readiness_probe": {
+   "/health": "no answer yet",
+   "/api/v1/health": 200
+  },
+  "seed": {
+   "travellers": [
+    "1abb4a73-ac6b-433b-87f0-970a82a7813b",
+    "de6d018d-4a25-43df-bf08-fd6312bf43ea"
+   ],
+   "journey_with_seat": "a388df0d-4e2f-4e2c-bb8f-0964bdfe7374",
+   "journey_without_seat": "117ab67f-4143-4c1c-beb2-f323007d7e34",
+   "member_add_http_status": [
+    201,
+    201
+   ],
+   "members_row_count": 2,
+   "no_seat_row_count": 0
+  },
+  "doors_measured": {
+   "acl_roles": {
+    "http_status": 200,
+    "shape": "list of 3"
+   },
+   "members": {
+    "http_status": 200,
+    "shape": "list of 2"
+   },
+   "role_limits": {
+    "http_status": 200,
+    "shape": [
+     "max_administrators",
+     "admin_count_in_force",
+     "roles"
+    ]
+   },
+   "traveller_registry": {
+    "http_status": 200,
+    "shape": [
+     "display_name",
+     "email",
+     "locale",
+     "timezone",
+     "id",
+     "created_at"
+    ]
+   },
+   "experience": {
+    "http_status": 200,
+    "shape": [
+     "journey",
+     "trip",
+     "offers",
+     "options",
+     "selected_option_id",
+     "mobility_facts"
+    ]
+   }
+  },
+  "candidate": {
+   "generation": "candidate",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-CZ9KL2SQ.js"
+   ],
+   "cases": [
+    {
+     "arm": "arm_present",
+     "journey": "a388df0d-4e2f-4e2c-bb8f-0964bdfe7374",
+     "identity_read_masked": false,
+     "exit": 0,
+     "held": true,
+     "failures": [],
+     "reading": {
+      "panel": 1,
+      "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+      "stale_words": null,
+      "no_authority_words": null,
+      "roster_rows": [
+       "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销",
+       "协作者 · ORD0527-乙 · 还在生效 这一档能做什么：能读这条行程、编辑地点。 改角色 撤销"
+      ],
+      "role_change": 1,
+      "self_exit": 1,
+      "ladder_empty": 0,
+      "roster_empty": 0,
+      "picker_present": 1,
+      "uuids": 0,
+      "words_withdraw_family": 1
+     }
+    },
+    {
+     "arm": "arm_absent",
+     "journey": "117ab67f-4143-4c1c-beb2-f323007d7e34",
+     "identity_read_masked": false,
+     "exit": 0,
+     "held": true,
+     "failures": [],
+     "reading": {
+      "panel": 1,
+      "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+      "stale_words": null,
+      "no_authority_words": null,
+      "roster_rows": [],
+      "role_change": 0,
+      "self_exit": 0,
+      "ladder_empty": 0,
+      "roster_empty": 1,
+      "picker_present": 1,
+      "uuids": 0,
+      "words_withdraw_family": 1
+     }
+    },
+    {
+     "arm": "arm_present",
+     "journey": "a388df0d-4e2f-4e2c-bb8f-0964bdfe7374",
+     "identity_read_masked": true,
+     "exit": 1,
+     "held": false,
+     "failures": [
+      "panel mounted",
+      "roster lists the seeded seats",
+      "identity line names the person",
+      "a role-change control is listed",
+      "a leaving control is listed",
+      "access-member-role-change exists to be hit",
+      "access-member-self-exit exists to be hit",
+      "role choices cannot open without a control",
+      "role choices came from the seat door"
+     ],
+     "reading": {
+      "panel": 0,
+      "identity_words": null,
+      "stale_words": null,
+      "no_authority_words": null,
+      "roster_rows": [],
+      "role_change": 0,
+      "self_exit": 0,
+      "ladder_empty": 0,
+      "roster_empty": 0,
+      "picker_present": 0,
+      "uuids": 0,
+      "words_withdraw_family": 0
+     }
+    }
+   ]
+  },
+  "base": {
+   "generation": "base",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-BXpnOJjO.js"
+   ],
+   "cases": [
+    {
+     "arm": "arm_present",
+     "journey": "a388df0d-4e2f-4e2c-bb8f-0964bdfe7374",
+     "identity_read_masked": false,
+     "exit": 1,
+     "held": false,
+     "failures": [
+      "ladder is NOT the empty cell",
+      "roster lists the seeded seats",
+      "identity line names the person",
+      "a role-change control is listed",
+      "a leaving control is listed",
+      "access-member-role-change exists to be hit",
+      "access-member-self-exit exists to be hit",
+      "role choices cannot open without a control",
+      "role choices came from the seat door"
+     ],
+     "reading": {
+      "panel": 1,
+      "identity_words": null,
+      "stale_words": null,
+      "no_authority_words": null,
+      "roster_rows": [],
+      "role_change": 0,
+      "self_exit": 0,
+      "ladder_empty": 1,
+      "roster_empty": 0,
+      "picker_present": 1,
+      "uuids": 0,
+      "words_withdraw_family": 0
+     }
+    },
+    {
+     "arm": "arm_absent",
+     "journey": "117ab67f-4143-4c1c-beb2-f323007d7e34",
+     "identity_read_masked": false,
+     "exit": 1,
+     "held": false,
+     "failures": [
+      "the screen says it has no seat for you"
+     ],
+     "reading": {
+      "panel": 1,
+      "identity_words": null,
+      "stale_words": null,
+      "no_authority_words": null,
+      "roster_rows": [],
+      "role_change": 0,
+      "self_exit": 0,
+      "ladder_empty": 1,
+      "roster_empty": 0,
+      "picker_present": 1,
+      "uuids": 0,
+      "words_withdraw_family": 0
+     }
+    }
+   ]
+  },
+  "restored_build": {
+   "exit": 0,
+   "bundle_entry": [
+    "index-CZ9KL2SQ.js"
+   ]
+  }
+ },
+ "ord0527_shapes_r2": {
+  "port_backend": 49225,
+  "port_preview": 49226,
+  "at": "01:18:29",
+  "head": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+  "cases": [
+   {
+    "arm": "arm_present",
+    "shape": "390x844",
+    "exit": 0,
+    "failures": [],
+    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+    "roster_rows": 2,
+    "role_change": 1,
+    "self_exit": 1,
+    "ladder_empty": 0,
+    "uuids": 0,
+    "checks": [
+     {
+      "check": "panel mounted",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "ladder is NOT the empty cell",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "roster lists the seeded seats",
+      "held": true,
+      "reading": 2
+     },
+     {
+      "check": "identity line names the person",
+      "held": true,
+      "reading": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。"
+     },
+     {
+      "check": "a role-change control is listed",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "a leaving control is listed",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "no bare uuid on the screen",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "access-member-role-change has a box",
+      "held": true,
+      "reading": {
+       "w": 72
+      }
+     },
+     {
+      "check": "access-member-role-change centre hit",
+      "held": true,
+      "reading": {
+       "top": "button.cn-access-row-action",
+       "is_the_control": true,
+       "h": 44
+      }
+     },
+     {
+      "check": "access-member-role-change is at least 44 px tall",
+      "held": true,
+      "reading": {
+       "height": 44,
+       "floor": 44
+      }
+     },
+     {
+      "check": "access-member-self-exit has a box",
+      "held": true,
+      "reading": {
+       "w": 104
+      }
+     },
+     {
+      "check": "access-member-self-exit centre hit",
+      "held": true,
+      "reading": {
+       "top": "button.cn-access-row-action",
+       "is_the_control": true,
+       "h": 44
+      }
+     },
+     {
+      "check": "access-member-self-exit is at least 44 px tall",
+      "held": true,
+      "reading": {
+       "height": 44,
+       "floor": 44
+      }
+     },
+     {
+      "check": "role choices came from the seat door",
+      "held": true,
+      "reading": [
+       "管理员"
+      ]
+     },
+     {
+      "check": "a confirmation step is offered before the write",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "the write answered with a human sentence, not a code",
+      "held": true,
+      "reading": null
+     }
+    ]
+   },
+   {
+    "arm": "arm_present",
+    "shape": "1280x900",
+    "exit": 0,
+    "failures": [],
+    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+    "roster_rows": 2,
+    "role_change": 1,
+    "self_exit": 1,
+    "ladder_empty": 0,
+    "uuids": 0,
+    "checks": [
+     {
+      "check": "panel mounted",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "ladder is NOT the empty cell",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "roster lists the seeded seats",
+      "held": true,
+      "reading": 2
+     },
+     {
+      "check": "identity line names the person",
+      "held": true,
+      "reading": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。"
+     },
+     {
+      "check": "a role-change control is listed",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "a leaving control is listed",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "no bare uuid on the screen",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "access-member-role-change has a box",
+      "held": true,
+      "reading": {
+       "w": 72
+      }
+     },
+     {
+      "check": "access-member-role-change centre hit",
+      "held": true,
+      "reading": {
+       "top": "button.cn-access-row-action",
+       "is_the_control": true,
+       "h": 33
+      }
+     },
+     {
+      "check": "access-member-role-change is at least 30 px tall",
+      "held": true,
+      "reading": {
+       "height": 33,
+       "floor": 30
+      }
+     },
+     {
+      "check": "access-member-self-exit has a box",
+      "held": true,
+      "reading": {
+       "w": 104
+      }
+     },
+     {
+      "check": "access-member-self-exit centre hit",
+      "held": true,
+      "reading": {
+       "top": "button.cn-access-row-action",
+       "is_the_control": true,
+       "h": 33
+      }
+     },
+     {
+      "check": "access-member-self-exit is at least 30 px tall",
+      "held": true,
+      "reading": {
+       "height": 33,
+       "floor": 30
+      }
+     },
+     {
+      "check": "role choices came from the seat door",
+      "held": true,
+      "reading": [
+       "协作者"
+      ]
+     },
+     {
+      "check": "a confirmation step is offered before the write",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "the write answered with a human sentence, not a code",
+      "held": true,
+      "reading": null
+     }
+    ]
+   },
+   {
+    "arm": "arm_absent",
+    "shape": "390x844",
+    "exit": 0,
+    "failures": [],
+    "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+    "roster_rows": 0,
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 0,
+    "uuids": 0,
+    "checks": [
+     {
+      "check": "no role-change control grew",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "no leaving control grew",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "the screen says it has no seat for you",
+      "held": true,
+      "reading": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。"
+     },
+     {
+      "check": "a way in is on the screen",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "no bare uuid on the screen",
+      "held": true,
+      "reading": 0
+     }
+    ]
+   },
+   {
+    "arm": "arm_absent",
+    "shape": "1280x900",
+    "exit": 0,
+    "failures": [],
+    "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+    "roster_rows": 0,
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 0,
+    "uuids": 0,
+    "checks": [
+     {
+      "check": "no role-change control grew",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "no leaving control grew",
+      "held": true,
+      "reading": 0
+     },
+     {
+      "check": "the screen says it has no seat for you",
+      "held": true,
+      "reading": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。"
+     },
+     {
+      "check": "a way in is on the screen",
+      "held": true,
+      "reading": 1
+     },
+     {
+      "check": "no bare uuid on the screen",
+      "held": true,
+      "reading": 0
+     }
+    ]
+   }
+  ],
+  "ownership_backend": {
+   "listening_pids": [
+    "18164"
+   ],
+   "launched_pid": 43216,
+   "pid_matches_child": false
+  },
+  "seed": {
+   "journey_with_seat": "e28f350b-60fa-412c-beb2-25687aef6c7f",
+   "journey_without_seat": "a4124513-a17d-4ab9-b041-3252f680c671",
+   "member_rows_on_the_seat_journey": 2,
+   "member_rows_on_the_no_seat_journey": 0,
+   "roles_listed": [
+    "OWNER",
+    "COLLABORATOR"
+   ],
+   "traveller": "e67e1a10-2168-4afc-a09b-935d27a63c65"
+  },
+  "preview": {
+   "listening_pids": [
+    "8388"
+   ],
+   "launched_pid": 8388,
+   "pid_matches_child": true,
+   "entry_from_served_html": [
+    "index-CZ9KL2SQ.js"
+   ],
+   "served_entry_sha1": "df4611e2fd935a9bd1afffcf0ef3ad38654ef8df",
+   "disk_entry_sha1": "df4611e2fd935a9bd1afffcf0ef3ad38654ef8df",
+   "served_bytes_equal_disk": true,
+   "served_entry_bytes": 1545592
+  }
+ },
+ "ord0527_ab_r4": {
+  "base_revision": "822db3d9f07b9c7d535e12afbdeb3074dd94acb2",
+  "private_db": "ord0527ab_7f9376d8.db",
+  "port_backend": 62893,
+  "port_preview": 62894,
+  "generations": [
+   {
+    "generation": "base",
+    "build_exit": 0,
+    "bundle_entry": [
+     "index-BXpnOJjO.js"
+    ],
+    "journey": "2b5a084f-f80e-43d4-bb7f-cec937c36c5f",
+    "read_before_add": {
+     "exit": 0,
+     "shape": "390x844",
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 1,
+     "identity_words": null,
+     "uuids": 0,
+     "words_withdraw_family": 0,
+     "picker_present": 1,
+     "checks": null
+    },
+    "add_member": {
+     "http_status": 201,
+     "fields_sent": [
+      "traveler_id",
+      "role",
+      "invited_by"
+     ],
+     "member_id": "389dc58c-45ed-4a71-85cf-1180eb61247f",
+     "role_answered": "OWNER",
+     "member_state": "MEMBER_IN_FORCE"
+    },
+    "read_back_rows": 1,
+    "read_after_add": {
+     "exit": 0,
+     "shape": "390x844",
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 1,
+     "identity_words": null,
+     "uuids": 0,
+     "words_withdraw_family": 0,
+     "picker_present": 1,
+     "checks": null
+    },
+    "read_after_add_desktop": {
+     "exit": 0,
+     "shape": "1280x900",
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 1,
+     "identity_words": null,
+     "uuids": 0,
+     "words_withdraw_family": 0,
+     "picker_present": 1,
+     "checks": null
+    }
+   },
+   {
+    "generation": "candidate",
+    "build_exit": 0,
+    "bundle_entry": [
+     "index-CZ9KL2SQ.js"
+    ],
+    "journey": "9ebed2e6-1c1b-491c-8451-b89396801854",
+    "read_before_add": {
+     "exit": 0,
+     "shape": "390x844",
+     "roster_rows": [],
+     "role_change": 0,
+     "self_exit": 0,
+     "ladder_empty": 0,
+     "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+     "uuids": 0,
+     "words_withdraw_family": 1,
+     "picker_present": 1,
+     "checks": null
+    },
+    "add_member": {
+     "http_status": 201,
+     "fields_sent": [
+      "traveler_id",
+      "role",
+      "invited_by"
+     ],
+     "member_id": "e1baf8d2-6b52-4d1a-9199-fd233942f4a3",
+     "role_answered": "OWNER",
+     "member_state": "MEMBER_IN_FORCE"
+    },
+    "read_back_rows": 1,
+    "read_after_add": {
+     "exit": 0,
+     "shape": "390x844",
+     "roster_rows": [
+      "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销"
+     ],
+     "role_change": 0,
+     "self_exit": 1,
+     "ladder_empty": 0,
+     "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+     "uuids": 0,
+     "words_withdraw_family": 1,
+     "picker_present": 1,
+     "checks": null
+    },
+    "read_after_add_desktop": {
+     "exit": 0,
+     "shape": "1280x900",
+     "roster_rows": [
+      "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销"
+     ],
+     "role_change": 0,
+     "self_exit": 1,
+     "ladder_empty": 0,
+     "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+     "uuids": 0,
+     "words_withdraw_family": 1,
+     "picker_present": 1,
+     "checks": null
+    }
+   }
+  ],
+  "restored": {
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-CZ9KL2SQ.js"
+   ]
+  }
+ }
+}
