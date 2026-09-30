@@ -16588,6 +16588,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 11:40 · 演示面的一枚真坑：共享预览库里没有 journey_checkins / share_grants / members 这三张表，而且只有一枚行程 · ORD-0488 与 ORD-0489 开单 · 现尖套件 11 枚红与两枚孤身复现的臂
+
+**一、我以 mode=ro 直读那份共享预览库拿到的数（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 这一代的应用；库只读，一字节未写、未 ALTER）**
+- 表与行数：journeys=1、plan_versions=1、activities=6、places=16、travelers=1；城市去重只有 CNX-DEMO 一枚。
+- 更要命的一格：**journey_checkins、share_grants、members 这三张表在那份库里根本不存在**（我逐枚 select，三枚都报 no such table；同一枚查询里 journeys 是有的，所以不是连不上、也不是我查错文件）。那份库的 schema 停在新功能之前。
+- 现场对照：我把同一代应用起在自己的私有副本上（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80`），启动就把这三张表建出来了，我还在副本里真写出 2 行足迹（读回见 11:30 那块的七格）。⇒ 缺表不是产品缺陷，是**部署/迁移口径**缺一条：新代落地时没人负责把旧库补齐。
+- 演示后果（我把话说全，不夸大）：只有 1 枚行程、1 个计划版本、6 行活动 ⇒ 行程列表排序这一屏没有可排序的东西；多日/跨城对比、票夹多张、回收站里"还有别的"这些形状在演示时都拿不出来。这不是屏坏了，是数据面薄。
+
+**二、开两单补这一格（都不许直写 SQL 造数据，不许 demo/reset）**
+- **ORD-0488 · 把演示库的 schema 追平现尖**（车道 cff87c64）：量清现尖的建表路径走哪一条（启动 create_all 还是迁移），交一枚可重跑的量具回答"新环境从零启动能不能拿到 151 条路由所需的全部表"（路由枚数取自对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 那一代的 `/openapi.json`），缺的表名列出来；再把"自动补齐缺表"接到一个有名字的流程上，测试要能红：先删一枚表再启动，补不回来就红。
+- **ORD-0489 · 把演示数据面补成能演示的样子**（新车道 5a53846b，会话已开）：先复现我上面那五个数，再用自己的副本库走产品写路由造出三枚行程（含一枚空行程、一枚多天）、两枚城市（一枚真供能解析、一枚无地点），地点必须走产品自己的供能通道（Photon/Overpass；httpx 默认 UA 会被拒，要带描述性 User-Agent；调用前把残留代理摘掉否则得到假"不可现"），然后拿这盘面把排序、足迹、长图、分享接收三态逐屏走一遍并交渲染文字读数。产物是一枚可重跑的种子脚本（tools/ 下新增），无供能时具名失败，不许静默编造地名。
+
+**三、现尖套件的数与两枚臂的复现**
+- 整套一次执行（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80`，独立导出，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，用时 186.59 秒）：11 failed、1500 passed、15 skipped、1 xfailed。上一代 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f` 那趟是 10 failed、1490 passed。
+- 判语按规矩写：多出来的两枚（跨进程 HTTP 那一臂与 lock_duration 的 g9a 自证臂）**不是只有并发才红**——我把自己的私有栈全部停干净、端口清空之后单跑那两个文件，仍然 2 failed。g9a 那枚红的形状是 DID NOT RAISE，落点 `backend/tests/test_qoder_anywhere_lock_duration.py:208`；这一族臂依赖供能与环境档（R1–R13 那把缝），所以我只报"在孤立环境下仍复现"，不写"这是产品缺陷"也不写"这是环境噪声"，归因等一枚能区分两者的读数。
+- ORD-0466 那枚精确键集断言仍红（多出两枚未进契约的键），单号 ORD-0481 在 6a150e1e 手上；凭据尺 C07 仍红，单号 ORD-0479 在 2d2d7428 手上。
+
+**四、此刻在跑（十一路）**：ORD-0476 切片二足迹屏（1ba48dbf，其后接 ORD-0486 未知字段具名拒绝）、ORD-0477 行程列表排序（8ac89982）、ORD-0479（2d2d7428）、ORD-0480（bac10f40）、ORD-0481 与 ORD-0475 重交（6a150e1e）、ORD-0488（cff87c64）、ORD-0489（5a53846b 新会话）、ORD-0490 回收站态接收屏（da46954a）、ORD-0472 按甲裁修 -r4（e766b154）、ORD-0485 手机演示链（0afdb49b 新会话）、ORD-0464 按现尖重交 -r4（8e5245f0）。监测段只读在跑；插账与镜像只在我自己轮次里做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### cmdr 11:30 · ORD-0476 那两扇门我第一次用真 HTTP 走了一遍（七格，具名码全在 `reason_code` 这一格）· 报名我自己读错了字段 · 开 ORD-0486 · 四轮 rebase 退回与七张在跑的派单
+
+**一、打卡门的现场读数（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80`，我自己起的私有后端 `:4919`，库是我自己的私有副本，共享预览库只读备份、未写未 ALTER）**
+- 先报名一处我自己的错：第一趟我只读了响应里的 `error.code`，于是得到 CONFLICT／VALIDATION_ERROR／NOT_FOUND，差点写成"车道答应进契约的具名码没上线路"。第二趟我把整枚响应体打开，才看到那一族码在 **`error.reason_code`** 这一格——每一格都在。⇒ 车道 1ba48dbf 的具名码是真的，错在我的取字段。回执件 `_cmdr_0476_liveproof_r2.txt`（本机字节 sha1，不是 git 物件，不可 cat-file；携载它的可取回坐标是 `dcb90cccc68b81f2317b28db19051dedb9f06c80`）。
+- 逐格（全部走真路由，不是 TestClient）：
+  - 正例：状态码 201，回读里 `activity_title` 是服务器自己解析出来的 "Old Town Gate"，`target_kind`=ACTIVITY、`target_key` 是 activity 那一把键。
+  - 重复打卡：状态码 409，`reason_code`=CHECKIN_DUPLICATE_STAMP，`details` 里带着先赢的那枚 id 与它的 `existing_stamped_at`——不是静默覆盖，也不是新建第二行（库里两行对应两次不同的目标，同一目标只有一次）。
+  - 不给目标：状态码 422，`reason_code`=CHECKIN_TARGET_REQUIRED，正文句子是"A footprint has to name what was visited."，没有把键名当句子吐出来。
+  - 两个目标一起给：状态码 422，`reason_code`=CHECKIN_TARGET_AMBIGUOUS。
+  - 不存在的 activity：状态码 404，`reason_code`=CHECKIN_ACTIVITY_UNKNOWN；不存在的 place：状态码 404，`reason_code`=CHECKIN_PLACE_UNKNOWN。
+  - 送一枚伪造的 `stamped_at`：库里存的仍是服务器那一瞬（我送的是 2020 年那个时刻，存下来的是本次真实时刻），所以"设备时钟冒充店铺事实"这一形被挡住了。
+- 有一格我量不到，具名交出来而不是猜：**"activity 属于别的行程"那一格 NOT_MEASURED_BY_CMDR**——我这枚私有副本里只有一枚行程，没有第二枚行程的活动可拿来撞它。这一格由车道那十一枚臂覆盖（它们在同棵树上 11 passed，我自己复跑过），但那是 TestClient 层，不是 HTTP 层，我不混着写。
+- 另有一格值得记：伪造时钟那一趟得到的是 201 而不是拒绝——`stamped_at` 这枚**不在模型里的字段被默默收下**了。本项目别处用的是 `extra="forbid"`（ORD-0471 那十枚红的成因就是它），所以客户端把字段名写错时，这里不会响、只会盖一个今日时刻的印。严重度我按现场判：低（数据没被写脏），但不该留着。
+
+**二、开 ORD-0486 · 打卡写门的未知字段要具名拒绝（车道 1ba48dbf，接你 ORD-0476 的下游，排在切片二之后）**：把 `JourneyCheckinCreate` 的形制与项目其余写门对齐——带未知字段要落在**服务端具名拒绝**上（与 extra_forbidden 同族），并交双向反件：未知字段红、合法的两枚目标各自仍绿。不许用"多加一个可选字段"来把这一格糊掉。
+
+**三、这一轮落地的形状**：权威尖仍是 `dcb90cccc68b81f2317b28db19051dedb9f06c80`（ORD-0476 那一笔）。四枝候选这轮全数退回，成因逐枚具名：ORD-0475 一枚文件没合成本车道字节；ORD-0444 三方合并报冲突；ORD-0464 r3 有四枚文件没合成本车道字节（`backend/app/main.py`、`contracts/openapi.yaml` 等，现尖已含 ORD-0476 那一笔）；ORD-0472 r3 被曝光格拒绝，我已裁**甲**（`state.detail` 是上游原文直接上屏，豁免我不手放）。裁语与工单都已进账，等各家 rebase 重交。
+
+**四、此刻在跑（本班派单，七路）**：ORD-0476 切片二足迹屏（1ba48dbf）、ORD-0477 行程列表排序（8ac89982）、ORD-0479 凭据尺结构判据（2d2d7428）、ORD-0480 抽屉三条关闭路径断言（bac10f40）、ORD-0490 回收站态的接收屏（da46954a）、ORD-0472 按甲裁修 -r4（e766b154）、**新建车道 ORD-0485 手机演示链复位与六屏实测清单**（新会话，自己现读尖、自己起口、服务身份两证、拿不到的第三证具名 NOT_AVAILABLE_BY_CMDR）。监测段在跑，只读不写：新枝、新块、尖移动与只读复切都报，插账与镜像只在我自己的轮次里做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr 04:20 · ORD-0476 足迹印章两扇门落地并由我抽校验复验（把重复打卡那道守卫改成永不动作，两臂立刻红）· ORD-0472 我裁甲：`state.detail` 是把上游原文放上屏，这是真新增曝光，不手放豁免
 
 **一、落地与我的复验（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，`-p no:randomly`）**
