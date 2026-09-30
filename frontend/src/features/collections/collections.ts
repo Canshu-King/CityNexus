@@ -69,10 +69,77 @@ export async function readCollections(travelerId: string | null): Promise<ReadOu
   }
 }
 
+/** ORD-0510: the write leg.  Six named answers, because the door has six and a screen that folds
+ *  "the shelf is gone" together with "the network is down" tells the traveller one thing while the
+ *  server said another.  The reason code is read out of the envelope to split the two 404s --
+ *  `backend/app/main.py` `add_collection_item` writes `COLLECTION_FOLDER_NOT_FOUND` / `PLACE_NOT_FOUND`
+ *  into `error.reason_code`, and the status alone cannot tell them apart.  Nothing here carries the
+ *  server's message text into the DOM; the caller picks a sentence from `collectionCopy.ts`. */
+export type AddOutcome =
+  | { kind: "added"; shelfId: string; itemId: string }
+  | { kind: "already_there" }
+  | { kind: "no_folder" }
+  | { kind: "no_place" }
+  | { kind: "refused" }
+  | { kind: "unreachable" };
+
+export function collectionItemsPath(folderId: string): string {
+  return `${COLLECTIONS_LIST_PATH}/${encodeURIComponent(folderId)}/items`;
+}
+
+export async function addPlaceToCollection(
+  folderId: string,
+  placeId: string,
+): Promise<AddOutcome> {
+  if (!folderId || !placeId) return { kind: "refused" };
+  try {
+    const response = await fetch(collectionItemsPath(folderId), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ place_id: placeId }),
+    });
+    if (response.ok) {
+      const text = await response.text();
+      const row = text ? JSON.parse(text) : null;
+      if (!row || typeof row.id !== "string") return { kind: "refused" };
+      return { kind: "added", shelfId: folderId, itemId: row.id };
+    }
+    const text = await response.text();
+    let reason = "";
+    try {
+      const body = text ? JSON.parse(text) : null;
+      reason = String(body?.error?.reason_code ?? "");
+    } catch {
+      reason = "";
+    }
+    if (response.status === 404) {
+      if (reason === "PLACE_NOT_FOUND") return { kind: "no_place" };
+      return { kind: "no_folder" };
+    }
+    if (response.status === 409) return { kind: "already_there" };
+    return { kind: "refused" };
+  } catch {
+    return { kind: "unreachable" };
+  }
+}
+
+/** Which of this traveller's shelves actually hold the place, taken from a fresh read of the list
+ *  door rather than from what the tap asked for.  ORD-0476 set the shape: a stop never shows 已打卡
+ *  because a button was pressed, only because the read returned that row -- so a place never shows
+ *  已收在 because a write looked like it worked. */
+export function shelvesHolding(
+  outcome: ReadOutcome,
+  placeId: string,
+): Array<{ id: string; name: string }> {
+  if (outcome.kind !== "loaded") return [];
+  return outcome.shelves
+    .filter((shelf) => shelf.items.some((item) => item.place_id === placeId))
+    .map((shelf) => ({ id: shelf.id, name: shelf.name }));
+}
+
 export function copyFor(key: CollectionCopyKey, zh: boolean): string {
   return COLLECTION_COPY[key][zh ? "zh" : "en"];
 }
-
 export function refusalCopy(zh: boolean): string {
   return COLLECTION_REFUSAL[zh ? "zh" : "en"];
 }
