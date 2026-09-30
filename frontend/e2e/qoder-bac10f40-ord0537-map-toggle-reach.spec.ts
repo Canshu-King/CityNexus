@@ -246,18 +246,22 @@ test("ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers,
   expect(parked!.centre_inside_band, "the centre really is inside the fixed band").toBe(true);
   expect(parked!.hit_is_nav, "and there the band owns the pointer").toBe(true);
   expect(parked!.hit_is_self, "so the switch is not hittable at that scroll position").toBe(false);
+  /* The picture has to be taken in the state it is supposed to witness: the first draft screenshotted
+     at the end of the arm, which is after the lift, so it showed the reachable position while the
+     numbers in the same file described the covered one. */
+  await page.screenshot({ path: evidencePath(`qoder-bac10f40-ord0537-parked_under_bar--${runId}.png`) });
 
   const lifted = await readMap(page);
   await page.locator(SWITCH).scrollIntoViewIfNeeded();
   const again = await readMap(page);
   expect(again.post.hit_is_self, "one scroll later the same control takes its own tap").toBe(true);
+  await page.screenshot({ path: evidencePath(`qoder-bac10f40-ord0537-lifted_clear--${runId}.png`) });
   push("under_the_bar", {
     parked,
     before_lift: { centre: parked!.centre, hit: parked!.hit },
     lifted: { centre: again.post.centre, hit: again.post.hit, hit_is_self: again.post.hit_is_self, nav_top: again.nav_top },
     scroll_y_after: again.scroll_y_after,
   });
-  await page.screenshot({ path: evidencePath(`qoder-bac10f40-ord0537-under_the_bar--${runId}.png`) });
 });
 
 test("ORD-0537 zh the arms kept their own files", async () => {
