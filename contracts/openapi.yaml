@@ -727,6 +727,13 @@ paths:
             projection resolves neither into a field a guest is shown.  Written as one `allOf` arm so
             the door keeps a single description of its body: `tests/test_qoder_ord0466_version_share.py`
             reads `grant_scope` out of this exact position, and a named component here would move it.
+            The same position carries a second duty from ORD-0475: the keys named in `properties` below
+            ARE the whitelist that door may answer with beyond the owner's own journey body, and the
+            gate reads them from here instead of restating them, so widening this door means writing
+            this contract where a reviewer can see it.  What the gate forbids is a key going missing,
+            never a key being documented.  From ORD-0481 the comparison runs both ways: the `required`
+            list under this arm is read the same way, and a key promised there that this door stops
+            answering is a refusal, not a silent narrowing.
           content:
             application/json:
               schema:
