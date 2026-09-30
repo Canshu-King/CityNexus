@@ -199,6 +199,7 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
       return (
         <PoiImportPanel
           journeyId={s.data.journey.id}
+          travelerId={s.data.journey.traveler_id ?? null}
           firstDay={dates[0] ?? (s.data.journey.start_at || "").slice(0, 10) ?? null}
           onOpenPlan={() => s.navigate("authoritative")}
         />
