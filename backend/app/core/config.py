@@ -51,10 +51,13 @@ class Settings:
     solver_mode: str = os.getenv("CITYNEXUS_SOLVER", "deterministic")
     hermes_api_url: str | None = os.getenv("CITYNEXUS_HERMES_API_URL")
     hermes_api_key: str | None = os.getenv("CITYNEXUS_HERMES_API_KEY")
-    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "hermes")
+    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "global:deep-model")
     hermes_model_fallbacks: tuple[str, ...] = tuple(
         item.strip()
-        for item in os.getenv("CITYNEXUS_HERMES_MODEL_FALLBACKS", "").split(",")
+        for item in os.getenv(
+            "CITYNEXUS_HERMES_MODEL_FALLBACKS",
+            "cn:glm-5.3-flash,cn:deepseek-v4.1-flash",
+        ).split(",")
         if item.strip()
     )
     hermes_native_binary: str | None = os.getenv("CITYNEXUS_HERMES_BINARY") or None

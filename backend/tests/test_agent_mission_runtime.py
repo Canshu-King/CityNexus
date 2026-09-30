@@ -18,6 +18,14 @@ from app.db.session import SessionLocal
 client = TestClient(main_module.app)
 
 
+def test_default_hermes_model_order_is_international_then_domestic_fallbacks():
+    assert runtime_settings.hermes_model == "global:deep-model"
+    assert runtime_settings.hermes_model_fallbacks == (
+        "cn:glm-5.3-flash",
+        "cn:deepseek-v4.1-flash",
+    )
+
+
 def _selected_journey() -> str:
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
