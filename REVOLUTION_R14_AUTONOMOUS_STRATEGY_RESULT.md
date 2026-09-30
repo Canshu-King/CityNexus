@@ -184,3 +184,49 @@ one decision-sensitive second-source opening/cost fact for a new real Lijiang
 Place, regenerate the same intent-driven strategy, and measure whether the
 candidate set changes. The estimate envelope must remain separate from
 canonical truth, and any source that cannot corroborate must remain UNKNOWN.
+
+## VOI experiment executed after the checkpoint
+
+The next experiment was executed, not merely proposed, on Journey
+`fa5db347-4f93-42bc-959d-4600f49f02ae` (`R14 Lijiang VOI second-source
+experiment`). It remained isolated as `DRAFT` and was never selected or
+activated.
+
+- AgentRun: `6a487ff0-4e30-4852-812f-ed5ba7d4a823`
+- model: `cn:glm-5.3-flash`
+- mission: `c7da8742-d7d9-401f-94ea-1929550e3372`
+- status: `COMPLETED`
+- ordered tools:
+  `inspect_journey → inspect_twin → search_city_services →
+  search_city_services(category=attraction) → acquire_place_facts(OFFICIAL_TICKETING) →
+  acquire_place_facts(MUNICIPAL_AUTHORITY) → generate_plans`
+
+The Agent selected `real-place-5677eb6e9a22401a4f8c7c5d` (千古情大剧院) as
+the VOI target because its theatre/ticket cost could change the ranking more
+than the surrounding free/unknown attractions. The acquisition receipts show:
+
+- Overpass answered with HTTP 200 and the exact provider entity
+  `overpass:node/13016989428`.
+- Nominatim lookup completed with `matched_provider_entity=true`, but
+  `nominatim_extratags={}`.
+- No exact official URL was bound (`official_web=NO_SOURCE_URL`).
+- SearxNG was unconfigured and therefore not treated as evidence.
+- `known_opening_count=0`, `known_cost_count=0`.
+- Canonical opening and cost remained `UNKNOWN`; no estimate was written.
+
+The Agent first sent one malformed `generate_plans` argument payload; the
+Gateway rejected it as `MALFORMED_TOOL_ARGUMENTS` with no side effect. The
+next valid call used four real Place IDs and produced candidate
+`fa79ea3b-bef6-548f-bbdd-76105731a167` with:
+
+- `status=CANDIDATE`
+- `selectable=false`
+- `authority_state=PROVISIONAL_UNRESOLVED_FACTS`
+- `mobility_provider=valhalla-http`
+- mobility snapshot `d24e0313-0641-484b-bbb7-6f445f8fedf1`
+- unresolved opening/cost facts preserved for the selected real Places
+
+This is the intended R14 behavior: the strategy engine chose a decision-
+sensitive fact, attempted bounded source acquisition, retained UNKNOWN when
+corroboration was absent, and continued to a non-authoritative candidate
+without silently promoting evidence.
