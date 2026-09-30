@@ -268,3 +268,101 @@ in the sentence above the buttons, a heavier border, and bolder ink on the press
     min-height: 30px;
   }
 }
+
+/* ----------------------------------------------------------------- ORD-0518 the list, and what the server said
+
+/* The trip list used to be a closed <select>: its order lived in the DOM and one line of text was
+   on the glass, so 'the first and last trip' could not be read without opening the control. Rows
+   now, each one speaking its trip's name. The shell's `button { display:block; width:100% }
+   (styles.css) is what a full-width row wants, so nothing here fights it. */
+.cn-access-trips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cn-access-trip-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: cn-access-trip;
+}
+
+.cn-access-trip-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+/* The position is said with a number the traveller reads, not only with a `data-position` a gate
+   can query: 'first' and 'last' have to be visible facts about the list, not attributes. */
+.cn-access-trip-row::before {
+  counter-increment: cn-access-trip;
+  content: counter(cn-access-trip);
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+  min-width: 1.5em;
+}
+
+.cn-access-trip-open {
+  flex: 1 1 auto;
+  min-height: 44px;
+  margin-top: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: transparent;
+  color: var(--v8-ink);
+  font: inherit;
+  font-size: var(--cn-fs-caption);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.cn-access-trip-open[aria-current='true'] {
+  border-width: 2px;
+  border-color: var(--cn-accent);
+  font-weight: 700;
+}
+
+.cn-access-order-verdict,
+.cn-access-picker-hint {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+
+/* "the rows are not in the order I asked for" is the one sentence on this screen that must not look
+   like a calm statement of fact. It gets a dashed box and bolder ink as well as colour, and the
+   `data-state` is what the gate reads alongside the painted words -- the words carry it on their own. */
+.cn-access-order-verdict[data-state='INCONSISTENT'] {
+  border: 1px dashed var(--cn-accent);
+  border-radius: var(--cn-r-8);
+  padding: 6px 8px;
+  font-weight: 700;
+}
+
+.cn-access-sort-absent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cn-access-sort-absent-line {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .cn-access-trip-open {
+    min-height: 30px;
+  }
+}
