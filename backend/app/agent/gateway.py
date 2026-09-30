@@ -32,6 +32,7 @@ from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2, tool_catalog, tool_
 from app.commerce.idempotency import canonical_request_signature
 from app.commerce.service_impl import CommerceConflict, CommerceValidationError
 from app.core.audit import record_audit
+from app.fact_acquisition import acquire_place_facts
 from app.db.models import (
     Activity,
     Booking,
@@ -362,6 +363,7 @@ class AgentToolGateway:
             "inspect_twin": self.inspect_twin,
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
+            "acquire_place_facts": self.acquire_place_facts,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -548,6 +550,34 @@ class AgentToolGateway:
                 }
                 for item in places
             ],
+        }
+
+    def acquire_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for acquire_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        bindings = None
+        if request.source_url:
+            bindings = {
+                place.id: {
+                    "source_url": request.source_url,
+                    "source_class": request.source_class,
+                }
+            }
+        receipt = acquire_place_facts(
+            self.session,
+            journey,
+            place_ids=[place.id],
+            source_bindings=bindings,
+        )
+        return {
+            "tool": "acquire_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "place_id": place.id,
+            "receipt": receipt,
         }
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:

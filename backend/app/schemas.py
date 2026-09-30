@@ -139,6 +139,14 @@ class AgentToolCall(BaseModel):
     q: str | None = Field(default=None, max_length=120)
     category: str | None = Field(default=None, max_length=80)
     service_type: str | None = Field(default=None, max_length=80)
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    source_url: str | None = Field(default=None, min_length=1, max_length=2048)
+    source_class: Literal[
+        "OFFICIAL_WEB",
+        "OFFICIAL_OPERATOR",
+        "OFFICIAL_TICKETING",
+        "MUNICIPAL_AUTHORITY",
+    ] = "OFFICIAL_WEB"
     approval_id: UUID | None = None
     activity_id: UUID | None = None
     replacement_activity_id: UUID | None = None

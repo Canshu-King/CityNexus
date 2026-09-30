@@ -39,6 +39,7 @@ TOOLS = (
 )
 
 TYPED_TOOLS = (
+    ToolDescriptor(AgentAction.ACQUIRE_PLACE_FACTS, "acquire_place_facts", True, False, False),
     ToolDescriptor(AgentAction.REPLACE_ACTIVITY, "replace_activity", True, False, False),
     ToolDescriptor(AgentAction.RESCHEDULE_ACTIVITY, "reschedule_activity", True, False, False),
     ToolDescriptor(AgentAction.CREATE_BOOKING, "create_booking", True, True, False),

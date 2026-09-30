@@ -88,6 +88,17 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id"],
         ),
         _tool(
+            "acquire_place_facts",
+            "Acquire provider-backed facts for one existing Place; missing facts remain UNKNOWN.",
+            {
+                **journey,
+                "place_id": _property("string"),
+                "source_url": _property("string"),
+                "source_class": _property("string"),
+            },
+            ["journey_id", "place_id"],
+        ),
+        _tool(
             "request_replan",
             "Generate deterministic feasible recovery proposals for the disruption.",
             {
