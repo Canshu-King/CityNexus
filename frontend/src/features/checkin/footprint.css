@@ -123,3 +123,43 @@ which is what the hit test in the delivery receipt measures.
   color: var(--cn-ink-secondary);
   font-size: var(--cn-fs-caption);
 }
+
+/* ORD-0530 -- the day the trip was actually on.
+ *
+ * `.cn-footprints__zone` is the sentence that says WHICH clock split the days. It is on the screen
+ * rather than in a comment because the alternative -- grouping quietly in the device's zone -- puts a
+ * wrong date in front of a traveller who has no way to see where it came from.
+ * `.cn-footprints__day` is a heading, not another row: an empty day never renders one (the groups are
+ * built from the stamps the server sent), so a day line cannot exist without a stamp under it.
+ * `.cn-footprints__source` shares the note's column so the time column stays the only clock on the
+ * row, and every cell still has a word in it -- an absent note says 没写备注, an unnamed source says
+ * the server gave no name. Colours are the sheet's existing `--cn-*` tokens, so dark needs no block.
+ */
+.cn-footprints__zone {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-meta);
+  overflow-wrap: anywhere;
+}
+
+.cn-footprints__day-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-4);
+}
+
+.cn-footprints__day {
+  margin: 0;
+  padding-bottom: var(--cn-s-4);
+  border-bottom: var(--cn-hairline) solid var(--cn-control-border);
+  color: var(--cn-ink);
+  font-size: var(--cn-fs-secondary);
+  font-weight: 700;
+}
+
+.cn-footprints__source {
+  grid-column: 2;
+  margin: 0;
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+}
