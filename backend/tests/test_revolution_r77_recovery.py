@@ -920,6 +920,30 @@ def test_real_catalogue_treats_verified_gardens_as_visit_stops():
     assert _catalogue_visit_eligible(garden) is True
 
 
+def test_strategy_voi_prefers_missing_facts_matching_intent():
+    from app.services import _strategy_voi_decisions
+
+    def unknown(place_id: str, category: str, tags: list[str]):
+        return SimpleNamespace(
+            id=place_id,
+            name=place_id,
+            category=category,
+            tags_json=json.dumps(tags),
+            opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+            metadata_json=json.dumps({"cost_evidence": {"status": "UNKNOWN"}}),
+        )
+
+    museum = unknown("unknown-museum", "museum", ["indoor"])
+    park = unknown("unknown-park", "park", ["outdoor"])
+    decisions = _strategy_voi_decisions(
+        None,
+        None,
+        {museum.id: museum, park.id: park},
+        {"user_text": "indoor museum and craft", "preferences": {"indoor": True}},
+    )
+    assert decisions[0]["place_id"] == "unknown-museum"
+
+
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_PRIVATE_TARGET"):
         _validate_public_http_url("http://127.0.0.1:8080/facts")

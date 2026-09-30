@@ -581,11 +581,12 @@ def _place_metadata(place: Place) -> dict[str, Any]:
 
 def _place_verified_cost(place: Place) -> int | None:
     metadata = _place_metadata(place)
+    provider_key = getattr(place, "provider_key", None)
     evidence = metadata.get("cost_evidence")
     if not isinstance(evidence, Mapping):
         legacy_cost = metadata.get("cost_minor")
         if (
-            place.provider_key == "mock-city"
+            provider_key == "mock-city"
             and isinstance(legacy_cost, (int, float))
             and legacy_cost > 0
         ):
@@ -596,7 +597,7 @@ def _place_verified_cost(place: Place) -> int | None:
     if status not in KNOWN_COST_EVIDENCE_STATUSES or amount is None:
         legacy_cost = metadata.get("cost_minor")
         if (
-            place.provider_key == "mock-city"
+            provider_key == "mock-city"
             and status == "UNKNOWN"
             and isinstance(legacy_cost, (int, float))
             and legacy_cost > 0
@@ -1122,6 +1123,53 @@ def _real_strategy_metrics(
         },
     }
     return metrics, provenance
+
+
+def _strategy_voi_decisions(
+    session: Session, journey: Journey, places: Mapping[str, Place], intent: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Choose the next decision-sensitive fact without promoting it to truth."""
+
+    decisions: list[dict[str, Any]] = []
+    for place in places.values():
+        missing: list[str] = []
+        if _place_window(place) is None:
+            missing.append("opening_hours")
+        if _place_verified_cost(place) is None:
+            missing.append("cost")
+        if not missing or not _catalogue_visit_eligible(place):
+            continue
+        metadata = _place_metadata(place)
+        binding = metadata.get("fact_source_binding") if isinstance(metadata, Mapping) else None
+        fact_acquisition = metadata.get("fact_acquisition") if isinstance(metadata, Mapping) else None
+        if not binding and isinstance(fact_acquisition, Mapping):
+            binding = fact_acquisition.get("source_binding")
+        tags = json.loads(place.tags_json or "[]") if place.tags_json else []
+        source_url = None
+        if isinstance(binding, Mapping):
+            source_url = binding.get("source_url")
+        if not source_url and isinstance(tags, Mapping):
+            source_url = tags.get("website") or tags.get("contact:website") or tags.get("url")
+        profile = _strategy_profile(intent)
+        preference_signal = _strategy_place_score(place, profile)[0]
+        value = (
+            (3 if "opening_hours" in missing else 0)
+            + (2 if "cost" in missing else 0)
+            + preference_signal
+        )
+        decisions.append(
+            {
+                "place_id": place.id,
+                "missing_fact": missing,
+                "value": value,
+                "why": "missing facts can change strict feasibility or ranking",
+                "source_candidate": source_url,
+                "action": "acquire_exact_bound_source" if source_url else "search_and_corroborate_source",
+                "strategy_profile": profile,
+            }
+        )
+    decisions.sort(key=lambda item: (-int(item["value"]), str(item["place_id"])))
+    return decisions[:3]
 
 
 def _catalogue_templates(
@@ -2190,6 +2238,22 @@ def generate_plans(
     constraints = _journey_constraints_with_capabilities(session, journey)
     strategy_intent = _latest_strategy_intent(session, journey)
     strategy_profile = _strategy_profile(strategy_intent)
+    voi_decisions = _strategy_voi_decisions(session, journey, places, strategy_intent)
+    record_audit(
+        session,
+        action="strategy.value_of_information",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        after={
+            "strategy_profile": strategy_profile,
+            "intent": strategy_intent,
+            "decisions": voi_decisions,
+            "outcome": "prioritize_missing_facts_before broad acquisition",
+        },
+        actor_type="strategy_engine",
+        actor_id="r14-autonomous-strategy",
+    )
     # The frozen fixture templates stay authoritative for the city they were authored for:
     # taking only the templates whose every place id exists keeps `CNX-DEMO` on the identical
     # path (all three resolve there) while a city with its own real catalogue - where none
@@ -2373,6 +2437,7 @@ def generate_plans(
                 "reason": "Strategy-ranked provider-backed candidate",
                 "strategy_profile": strategy_profile,
                 "strategy_intent": strategy_intent,
+                "voi_decisions": voi_decisions,
                 "score_provenance": score_provenance,
                 "mobility_snapshot_id": mobility_provider.snapshot_id,
             }
