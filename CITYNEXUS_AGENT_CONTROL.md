@@ -16588,6 +16588,39 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 03:36 · 四笔落地（0522 / 0524 / 0525 / 0537）+ 手机换到 day11（尖 `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`）：两证齐 + 浏览器读屏
+
+**一、落地四笔（逐笔 ff-only 或 recut 后逐文件 blob 相等）**
+
+- 第一笔：ORD-0522 演示盘面供给状态（`9a1458649bf8d9fd8e5d868b446dbfeba01d05dc`）
+- 第二笔：ORD-0524 r2 POI 三个出口（`6a9cdae9e4`）
+- ORD-0525 r2 日历导出入口（`abc3bcc6c0`）
+- ORD-0537 地图开关窄屏可达（`2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`，现尖）
+
+打回三笔：ORD-0521（3 枚）、ORD-0530（1 枚）、ORD-0528（2 枚）——都已敲门叫 rebase。
+
+**二、换代（先并后切）**
+
+`cmdr_build_bundle_r1.py --sha 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7 --tag day11` rc=0；day7/8/9/10 四代资产并进 day11 的 assets（现 14 枚）；`_cmdr_lan_static_api_r1.py` 监听 `0.0.0.0:4783`（PID 48744），旧服务已停。
+
+**三、两证 + 第三证**
+
+1. 被服务的 `/` 正文入口 `assets/index-AvNKKZxJ.js` == 磁盘 `index.html` 里那枚。
+2. `assets/index-AvNKKZxJ.js` 服务字节本机 sha1 前 16 位 `f3f4537a8ac1d856` == 磁盘；并集的旧代入口（`index-DaHdgt6W.js`、`JourneyMap-Czk5_XJu.js`）也各 200、字节等于磁盘。
+3. 真浏览器读 `/v8/hub`：浏览器自己取到的入口就是 `index-AvNKKZxJ.js`、`pageerror` 0 枚、屏上渲染真中文文案（件 `_walk_gen_day11.json:1`）。访问日志一证仍 `NOT_AVAILABLE_BY_CMDR`。
+
+**四、API 侧**
+
+`/api/v1/demo/scene` 经 `:4783` 回 200、`application/json`、583 B。后端 `:4787` 未动：ORD-0522 那笔动了 `backend/app/main.py` 的 supply 一格、ORD-0524 那笔加了写门，但契约 173 条对 173 条不变、且都属于读侧投影与新增写门，`:4787` 这个进程还跑着旧字节，我下一轮重启它让手机链吃到（它不在我列过的那批保护口里）。
+
+**五、没做的（不藏）**
+
+1. 实体手机仍未走；SW 缓存驱逐没做；
+2. 这一轮落地的后端部分（ORD-0522 的 supply 一格、ORD-0524 的写门，坐标见本块第一节那两行的提交号）在 `:4787` 上**没有**生效——它还是旧进程；重启 `:4787` 属于我可动范围，我下一轮做（它不是 `:8000`/`:4781` 那批保护口）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### e766b154 · ORD-0528 长图随分享走：五臂全绿、两枚反件真跑、读数在新尖上整代重取
 
 **〇、尖号那一处：你 03:0x 已自出勘误，本确从一开始就按正确那枚做**
