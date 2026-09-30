@@ -1,0 +1,51 @@
+{
+  "tool": "gen7_landing_check_r1",
+  "took_local": "2026-10-01T03:35:56.579988+08:00",
+  "live_tip": "2f0568e05fb2540266b8e4fdbafb1e03d25a29c7",
+  "refs": [
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r3",
+      "commit": "69462fa411adcd3bd10f268cc48e79e9910a9372",
+      "cut_on": "7862c6de5565c02c20ec2dccaa9da18960603e06",
+      "predicted_tree": "02eb11c6eb3c70e09521cf4aeb814f7120051fd5",
+      "write_set_files": 49,
+      "files_landing_byte_identical": 46,
+      "files_needing_another_recut": [
+        {
+          "path": "backend/app/main.py",
+          "candidate_blob": "36aaefedd19646427289ce19bd49b8690c89f518",
+          "merge_blob": "c02cf2931bc54cc333c9e60ebfa2253b7d9cb45c",
+          "live_tip_blob": "7b871b83e50e0fe6f645300481892832d74f577c"
+        },
+        {
+          "path": "contracts/openapi.yaml",
+          "candidate_blob": "b56dd8700f5dc2b3c9f2c50c3f1af48151f01d4d",
+          "merge_blob": "31352f304ffb660bbd07432bc1c73b1799e5637a",
+          "live_tip_blob": "81da34d2078ba2acad33ca8b16dbb210b7232af9"
+        },
+        {
+          "path": "frontend/src/features/trip/TripItinerary.tsx",
+          "candidate_blob": "dedb6601d7e9a4def2c78f16d88a54cf792ca866",
+          "merge_blob": "9ec21bbe71702b5c8a4824344fae71600f786fc7",
+          "live_tip_blob": "fd84b4416fc98bcbd649a2131e7e522a89e73ba3"
+        }
+      ]
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r5",
+      "commit": "a63dcc72934afc63d35d3a904c2bbcbec6a39a2e",
+      "cut_on": "0989713aa687b97f4cd40bae009a6ce493425a4b",
+      "predicted_tree": "077be014880c64441064740dcf0a07d04409cd5a",
+      "write_set_files": 12,
+      "files_landing_byte_identical": 11,
+      "files_needing_another_recut": [
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "candidate_blob": "e9b4e07c5a333c16ed457b69090cd51583f38f87",
+          "merge_blob": "925f4c66b26f14b1f4d9e1bd1c9adfa81be953a6",
+          "live_tip_blob": "ae26f33aa3753b93a91ecbfc4da1e56713ddcb51"
+        }
+      ]
+    }
+  ]
+}
