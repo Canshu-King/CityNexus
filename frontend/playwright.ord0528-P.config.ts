@@ -24,5 +24,5 @@ export default defineConfig({
   timeout: 420_000,
   expect: { timeout: 30_000 },
   reporter: [["list"], ["json", { outputFile: process.env.CITYNEXUS_ORD0528_REPORT }]],
-  use: { viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" },
+  use: { viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN", actionTimeout: 20_000 },
 });
