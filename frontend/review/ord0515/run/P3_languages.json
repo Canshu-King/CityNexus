@@ -14,7 +14,8 @@
    "10月14日周三",
    "10月15日周四",
    "10月16日周五"
-  ]
+  ],
+  "blocks_total": 7
  },
  "en": {
   "subtitle": "Demo city · 7 days",
@@ -27,7 +28,8 @@
    "Wed 14 Oct",
    "Thu 15 Oct",
    "Fri 16 Oct"
-  ]
+  ],
+  "blocks_total": 7
  },
  "german_arm_present": false
 }

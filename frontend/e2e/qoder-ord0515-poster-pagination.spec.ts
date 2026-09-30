@@ -112,6 +112,42 @@ async function exportPage(page: Page, tag: string) {
   };
 }
 
+/**
+ * Walks the page strip and collects what the sheet lists on each page.
+ *
+ * The panel shows one page at a time -- that is the point of paging -- so a day count has to be
+ * summed across pages. An earlier version of these arms read the panel and expected every day of the
+ * trip to be on screen at once, which is the behaviour this order removed.
+ */
+async function readAllPages(page: Page) {
+  const first = await readSheet(page);
+  const buttons = first.page_buttons;
+  const perPage: any[] = [];
+  for (let index = 1; index <= Math.max(buttons, 1); index += 1) {
+    if (index > 1) {
+      await page.getByTestId(`poster-page-${index}`).click();
+      await page.waitForTimeout(250);
+    }
+    perPage.push(await readSheet(page));
+  }
+  return {
+    buttons,
+    paged_note: first.paged_note,
+    subtitle: first.subtitle,
+    per_page: perPage,
+    blocks_total: perPage.reduce((sum, sheet) => sum + sheet.day_rows, 0),
+    stops_total: perPage.reduce((sum, sheet) => sum + sheet.stop_rows, 0),
+    labels: perPage.flatMap((sheet) => sheet.day_labels),
+  };
+}
+
+/** Hairline rows to day blocks. `seamsDrawn` is the difference between this build and the boundless one. */
+function blocksFromHairlines(groups: number, seamsDrawn: boolean) {
+  const blocks = seamsDrawn ? (groups + 1) / 3 : groups / 2;
+  expect(Number.isInteger(blocks), `hairline rows ${groups} do not describe whole blocks`).toBe(true);
+  return blocks;
+}
+
 test("ORD-0515 P1 the short trip still exports one picture, and its size is measured", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
   const page = await context.newPage();
@@ -133,32 +169,35 @@ test("ORD-0515 P2 the seven-day trip pages, and every page exports inside the bo
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
   const page = await context.newPage();
   await openSheet(page, LONG, "zh-CN");
-  const sheet = await readSheet(page);
+  const walked = await readAllPages(page);
 
-  expect(sheet.day_rows, "the trip the write doors built has seven days").toBe(7);
-  expect(sheet.page_buttons, "the strip offers one button per page").toBeGreaterThan(1);
-  expect(sheet.paged_note, "and the sheet says so in words").toContain("分页");
+  expect(walked.buttons, "the strip offers one button per page").toBeGreaterThan(1);
+  expect(walked.blocks_total, "the seven days the write doors built are all there, across pages").toBe(7);
+  expect(new Set(walked.labels).size, "and no day appears twice").toBe(7);
+  expect(walked.paged_note, "the sheet says so in words").toContain("分页");
 
   const pages: any[] = [];
-  let blocksAcrossPages = 0;
-  for (let index = 1; index <= sheet.page_buttons; index += 1) {
+  for (let index = 1; index <= walked.buttons; index += 1) {
     await page.getByTestId(`poster-page-${index}`).click();
     await page.waitForTimeout(250);
-    const onScreen = await page.getByTestId(/^poster-day-\d+$/).count();
-    blocksAcrossPages += onScreen;
+    const onScreen = (await readSheet(page)).day_rows;
     const exported = await exportPage(page, `P2_page${index}`);
     expect(exported.ihdr.height, `page ${index} must fit inside the named bound`).toBeLessThanOrEqual(LIMIT_RASTER_PX);
     expect(exported.suggested_filename, `page ${index} names itself in the file name`)
       .toContain(`-p${index}.png`);
+    /* n blocks draw n card tops + n card bottoms + (n-1) drawn day seams = 3n-1 hairlines; the
+       pre-bound build draws no seam, so it is 2n. Dividing by two was my own arithmetic error and it
+       read 8.5 blocks for a six-block page. */
+    expect(
+      blocksFromHairlines(exported.pixels.hairline_groups, true),
+      `page ${index} exports exactly the blocks it lists`,
+    ).toBe(onScreen);
     pages.push({ page: index, blocks_on_screen: onScreen, ...exported });
   }
-  expect(blocksAcrossPages, "no day is dropped and none is duplicated across pages").toBe(sheet.day_rows);
   write("P2_seven_day_pagination", {
     limit_raster_px: LIMIT_RASTER_PX,
-    sheet,
+    walked,
     pages,
-    blocks_across_pages: blocksAcrossPages,
-    page_buttons: sheet.page_buttons,
   });
   await context.close();
 });
@@ -169,13 +208,13 @@ test("ORD-0515 P3 the day row in both shipped languages, counted for key echo", 
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale });
     const page = await context.newPage();
     await openSheet(page, LONG, locale);
-    const sheet = await readSheet(page);
-    const joined = [sheet.subtitle, ...(sheet.paged_note ? [sheet.paged_note] : []), ...sheet.day_labels].join(" | ");
+    const sheet = await readAllPages(page);
+    const joined = [sheet.subtitle, ...(sheet.paged_note ? [sheet.paged_note] : []), ...sheet.labels].join(" | ");
     for (const needle of ["poster.", "mapComp.", "fmt.", "{", "}"]) {
       expect(joined, `a dictionary key reached the ${locale} screen: ${joined}`).not.toContain(needle);
     }
-    expect(sheet.day_labels.length).toBe(7);
-    rows[locale] = { subtitle: sheet.subtitle, paged_note: sheet.paged_note, day_labels: sheet.day_labels };
+    expect(sheet.blocks_total, "every day of the trip is listed, across the pages").toBe(7);
+    rows[locale] = { subtitle: sheet.subtitle, paged_note: sheet.paged_note, day_labels: sheet.labels, blocks_total: sheet.blocks_total };
     await context.close();
   }
   const source = readFileSync("src/i18n/LocaleContext.tsx", "utf8");
@@ -207,9 +246,9 @@ test("ORD-0515 X2 page count and block count are taken in the same breath", asyn
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
   const page = await context.newPage();
   await openSheet(page, LONG, "zh-CN");
-  const before = await readSheet(page);
-  const buttonsBefore = before.page_buttons;
-  const blocksBefore = before.day_rows;
+  const before = await readAllPages(page);
+  const buttonsBefore = before.buttons;
+  const blocksBefore = before.blocks_total;
 
   /* Take the last day away in flight -- no write, no SQL -- and require both numbers to move
      together. A page count cached from an earlier render would keep the old strip. */
@@ -225,15 +264,14 @@ test("ORD-0515 X2 page count and block count are taken in the same breath", asyn
   await expect(page.getByTestId("trip-poster-bar").first()).toBeVisible({ timeout: 30_000 });
   await page.getByTestId("poster-open").click();
   await expect(page.getByTestId("trip-poster")).toBeVisible({ timeout: 20_000 });
-  const after = await readSheet(page);
+  const after = await readAllPages(page);
 
-  expect(after.day_rows, "one day less on the panel").toBe(blocksBefore - 1);
-  expect(after.page_buttons, "the strip is recomputed, not carried over").toBeLessThanOrEqual(buttonsBefore);
-  expect(after.page_buttons, "and it is never more pages than there are blocks")
-    .toBeLessThanOrEqual(after.day_rows);
+  expect(after.blocks_total, "one day less across the pages").toBe(blocksBefore - 1);
+  expect(after.buttons, "the strip is recomputed, not carried over").toBeLessThanOrEqual(buttonsBefore);
+  expect(after.buttons, "and it is never more pages than there are blocks").toBeLessThanOrEqual(after.blocks_total);
   write("X2_pages_follow_blocks", {
     before: { blocks: blocksBefore, buttons: buttonsBefore },
-    after: { blocks: after.day_rows, buttons: after.page_buttons, subtitle: after.subtitle },
+    after: { blocks: after.blocks_total, buttons: after.buttons, subtitle: after.subtitle },
   });
   await context.close();
 });
