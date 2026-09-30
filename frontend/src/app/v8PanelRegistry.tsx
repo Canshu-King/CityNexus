@@ -21,6 +21,8 @@ import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { TripItinerary } from "../features/trip/TripItinerary";
 import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { AccessPanel } from "../features/access/AccessPanel";
+/* ORD-0476 slice 2: the footprint screen, mounted from here like every other route panel. */
+import { FootprintPanel } from "../features/checkin/FootprintPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
@@ -344,6 +346,16 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     testId: "access-panel",
     when: (s) => s.route === "access",
     render: () => <AccessPanel />,
+  },
+  {
+    /* ORD-0476 slice 2: the footprint screen. The row's own 打卡 control lives on the itinerary
+       (features/trip/TripItinerary.tsx), and this is where the whole set is read -- the journey id
+       comes from the same scope the other route panels read it from. */
+    id: "footprints",
+    surface: "route",
+    testId: "footprint-panel",
+    when: (s) => s.route === "footprints",
+    render: (s) => <FootprintPanel journeyId={s.data.journey?.id ?? null} />,
   },
 ];
 

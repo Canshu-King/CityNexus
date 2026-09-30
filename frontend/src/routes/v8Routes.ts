@@ -9,6 +9,14 @@ export const desktopRoutes = [
      here is what makes `/v8/import` a screen instead of a URL that bounces to Today. */
   { key: "import", label: "Import places", icon: "map", group: "PLAN" },
   { key: "bookings", label: "Travel Wallet", icon: "ticket", group: "TRAVEL" },
+  /* ORD-0476 slice 2: the footprint screen. A key in this table is what makes `/v8/footprints` a
+     screen instead of a URL that bounces to Today (`KNOWN_ROUTES` is built from these two tables,
+     app/V8Experience.tsx:467), and `nav.footprints` is added to both dictionary arms so the drawer
+     cannot fall back to printing the key -- the fallback is `dictionaries.en[key] ?? key`.
+     Deliberately not in `mobileRoutes`: that table is the five-item bottom bar, and a sixth item
+     there is a crowding change this order does not own. The mobile route is reachable by URL and by
+     the 打卡 control on each stop. */
+  { key: "footprints", label: "Footprints", icon: "calendar", group: "TRAVEL" },
   { key: "agent", label: "Copilot", icon: "spark", group: "TRAVEL" },
   { key: "authoritative", label: "Recovery", icon: "spark", group: "SYSTEM" },
   { key: "intelligence", label: "Intelligence", icon: "spark", group: "SYSTEM" },
