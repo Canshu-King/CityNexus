@@ -1,9 +1,9 @@
 {
  "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
  "arm": "grouped_by_the_trips_own_day_390x844",
- "run_id": "r0530e",
+ "run_id": "r0530g",
  "denominator": "authoritative fresh db",
- "journey_id": "a10ca880-fc28-4692-b3a2-081962ee535b",
+ "journey_id": "902316b1-a4d8-4c6e-a42a-aa04018ce5cf",
  "shape": {
   "width": 390,
   "height": 844
@@ -19,14 +19,14 @@
  "zones_disagree": true,
  "door_rows": [
   {
-   "stamped_at": "2026-09-30T16:48:36.041836+00:00",
-   "target_key": "activity:db39e628-43ff-43da-8fc8-1ac635c1efc3",
+   "stamped_at": "2026-09-30T19:15:53.554885+00:00",
+   "target_key": "activity:f26811b9-d7f2-4fcd-ad78-384554e37f9c",
    "note": null,
    "source": "FOREGROUND_WEB"
   },
   {
-   "stamped_at": "2026-09-30T16:48:36.839577+00:00",
-   "target_key": "activity:ceece040-bedc-4698-8936-484f8abcbad8",
+   "stamped_at": "2026-09-30T19:15:54.340109+00:00",
+   "target_key": "activity:8e887c94-bba6-47bb-a910-db568d7616d0",
    "note": null,
    "source": "FOREGROUND_WEB"
   }
@@ -50,9 +50,9 @@
  ],
  "stamp_rows": [
   {
-   "text": "00:48 Arrival 没写备注 网页端打的",
+   "text": "03:15 Arrival 没写备注 网页端打的",
    "cells": [
-    "00:48",
+    "03:15",
     "Arrival",
     "没写备注",
     "网页端打的"
@@ -62,9 +62,9 @@
    "in_viewport": true
   },
   {
-   "text": "00:48 Check in · Haihe Riverside Hotel 没写备注 网页端打的",
+   "text": "03:15 Check in · Haihe Riverside Hotel 没写备注 网页端打的",
    "cells": [
-    "00:48",
+    "03:15",
     "Check in · Haihe Riverside Hotel",
     "没写备注",
     "网页端打的"

@@ -4,14 +4,14 @@ Running 6 tests using 1 worker
 
 [1/6] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
-[qoder-real-seed] journey=bf0e0858-c700-4a92-85f9-1a961cf41d4c options=4 chosen=e5b11809-eef3-4c70-800d-3169e4e4068c (Haihe Riverside Hotel)
+[qoder-real-seed] journey=f94339b8-0e4e-4913-80f4-8234f7b2c164 options=4 chosen=52f8974b-9de5-4c11-91b9-ddf290475334 (Haihe Riverside Hotel)
 
 [qoder-real-seed] trialWizard=false live-journey-current=true
 
 
 [2/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
 [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
-e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: answered_empty — {"journey_id":"bf0e0858-c700-4a92-85f9-1a961cf41d4c","door_rows":0,"state_line":"还没有足迹。打开行程，在一站上按「打卡」。","day_rows":0,"stamp_rows":0,"tally":"这次行程共有 0 枚足迹。","screaming_snake":[],"uuids":[]}
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: answered_empty — {"journey_id":"f94339b8-0e4e-4913-80f4-8234f7b2c164","door_rows":0,"state_line":"还没有足迹。打开行程，在一站上按「打卡」。","day_rows":0,"stamp_rows":0,"tally":"这次行程共有 0 枚足迹。","screaming_snake":[],"uuids":[]}
 
 [3/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day
   1) [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day 
@@ -75,14 +75,14 @@ e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: retry_after_the_door_sto
 
 [6/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:316:1 › ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer
 [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:316:1 › ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer
-e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: refused_and_unreachable — {"refused_journey_id":"bf0e0858-c700-4a92-85f9-1a961cf41d4c","refused_line":"服务器答了，但这次没有把足迹交出来。","refused_rows":0,"refused_days":0,"unreachable_journey_id":"22222222-2222-4222-8222-222222222222","unreachable_line":"这一屏没问到服务器，所以这里既没说有事，也没说没事。","unreachable_rows":0,"unreachable_days":0,"injected":"route.abort on the checkins read (a failure, not a doctored answer)"}
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: refused_and_unreachable — {"refused_journey_id":"f94339b8-0e4e-4913-80f4-8234f7b2c164","refused_line":"服务器答了，但这次没有把足迹交出来。","refused_rows":0,"refused_days":0,"unreachable_journey_id":"22222222-2222-4222-8222-222222222222","unreachable_line":"这一屏没问到服务器，所以这里既没说有事，也没说没事。","unreachable_rows":0,"unreachable_days":0,"injected":"route.abort on the checkins read (a failure, not a doctored answer)"}
 
   2 failed
     [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day 
     [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 1280x900 arm=grouped_by_the_trips_own_day 
-  4 passed (16.1s)
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+  4 passed (23.8s)
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true

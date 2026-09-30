@@ -4,14 +4,14 @@ Running 6 tests using 1 worker
 
 [1/6] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
-[qoder-real-seed] journey=f8410efa-4339-4cd2-823a-8fb32e6bf4a6 options=4 chosen=092ed83d-aaa0-4c3f-b00e-55fdc76815a4 (Haihe Riverside Hotel)
+[qoder-real-seed] journey=8c0dabf8-59ef-40ba-8ea9-106dd71b2996 options=4 chosen=33c8d962-bce9-42e6-98d3-ded7fd9525a3 (Haihe Riverside Hotel)
 
 [qoder-real-seed] trialWizard=false live-journey-current=true
 
 
 [2/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
 [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
-e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: answered_empty — {"journey_id":"f8410efa-4339-4cd2-823a-8fb32e6bf4a6","door_rows":0,"state_line":"还没有足迹。打开行程，在一站上按「打卡」。","day_rows":0,"stamp_rows":0,"tally":"这次行程共有 0 枚足迹。","screaming_snake":[],"uuids":[]}
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: answered_empty — {"journey_id":"8c0dabf8-59ef-40ba-8ea9-106dd71b2996","door_rows":0,"state_line":"还没有足迹。打开行程，在一站上按「打卡」。","day_rows":0,"stamp_rows":0,"tally":"这次行程共有 0 枚足迹。","screaming_snake":[],"uuids":[]}
 
 [3/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day
 [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day
@@ -61,7 +61,7 @@ e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: grouped_by_the_trips_own
     [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:280:1 › ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read 
     [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:316:1 › ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer 
   4 passed (1.2m)
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4795 backend=:4791 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:50752 backend=:50750 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
