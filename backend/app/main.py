@@ -4349,9 +4349,9 @@ def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_ses
 # ORD-0461 r2: the two member write doors the set still lacked -- changing a member's role, and
 # removing a member outright.  Both ask the same questions in the same order, and neither holds a role
 # list of its own: whether a role may do this is read out of `journey_role_capabilities`
-# (backend/app/db/models.py:1283, seeded at backend/app/db/session.py:244), so granting a capability to
+# (backend/app/db/models.py:1283, seeded at backend/app/db/session.py:253), so granting a capability to
 # a role stays a table row rather than becoming a second answer written here.  Whether someone is still
-# a member is decided by the landed rule at backend/app/main.py:3498, which this block calls instead of
+# a member is decided by the landed rule at backend/app/main.py:3803, which this block calls instead of
 # copying, because a membership the read door counts and the write door does not is one defect with two
 # names.
 def _member_write_journey(session: Session, journey_id: str) -> Journey:
@@ -4359,7 +4359,7 @@ def _member_write_journey(session: Session, journey_id: str) -> Journey:
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.deleted_at is not None:
         # 409 and not 404 for the same reason the footprint door records at
-        # backend/app/main.py:3232: the row is there, and 找回 puts it back.
+        # backend/app/main.py:3537: the row is there, and 找回 puts it back.
         raise _share_refusal(
             409,
             "This trip is in the recycle bin. 找回 it before changing its member set.",
@@ -4452,7 +4452,7 @@ def remove_journey_member(
     session: Session = Depends(get_session),
     actor_traveler_id: str = Query("", max_length=120),
 ):
-    """Erase the traveller from this journey's set; `.../withdraw` (backend/app/main.py:4001) is the door
+    """Erase the traveller from this journey's set; `.../withdraw` (backend/app/main.py:4306) is the door
     that records a departure and keeps the row listed, and this one does not pretend otherwise."""
     journey = _member_write_journey(session, str(journey_id))
     _member_actor_role(session, journey.id, actor_traveler_id)

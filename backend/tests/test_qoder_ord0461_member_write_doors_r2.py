@@ -2,8 +2,8 @@
 
 Measured at the authoritative tip `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72` before anything was
 written here.  That tree already answers four member questions - add a member
-(`backend/app/main.py:3937`), list the set (`backend/app/main.py:3987`), withdraw one
-(`backend/app/main.py:4001`) and what a role may do (`backend/app/main.py:4027`) - and none of them can
+(`backend/app/main.py:4242`), list the set (`backend/app/main.py:4292`), withdraw one
+(`backend/app/main.py:4306`) and what a role may do (`backend/app/main.py:4332`) - and none of them can
 change a role or take a row out of the set.  So this file adds exactly those two doors and refuses to
 re-cut the four that exist.
 
@@ -80,7 +80,7 @@ def _journey() -> tuple[str, str]:
 
     The actor has to be invited into the set first, and that is a fact about this tip rather than about
     the fixture's convenience: `JourneyMemberModel` rows are created in exactly one place
-    (`backend/app/main.py:3970`, the add door), so a journey's own creator holds no member row and no
+    (`backend/app/main.py:4275`, the add door), so a journey's own creator holds no member row and no
     role until somebody invites them.  Reported rather than quietly fixed here -- making the creator a
     member is the add door's decision, and it is not one of the two doors this file is allowed to cut.
     """
