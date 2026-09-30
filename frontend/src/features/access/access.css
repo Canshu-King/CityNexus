@@ -205,3 +205,66 @@ button.cn-access-row-action[disabled] {
   border-style: dashed;
   cursor: not-allowed;
 }
+
+/* ----------------------------------------------------------------- ORD-0477 the list's order tier
+
+The three tier buttons are the screen's only control over *how* the door orders its answer, so they
+are laid out as a stack of named options rather than as a strip of chips: the traveller has to read
+which one is in use, and the shell's `button { display:block; width:100% }` (styles.css) would have
+stretched each one to the full canvas with no state of its own.
+
+"This is the order in use" is carried three ways, because colour alone is not a state: the tier word
+in the sentence above the buttons, a heavier border, and bolder ink on the pressed button itself. */
+.cn-access-sort {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cn-access-sort-current {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  overflow-wrap: anywhere;
+}
+
+.cn-access-sort-tiers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.cn-access-sort-tier {
+  width: fit-content;
+  margin-top: 0;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: transparent;
+  color: var(--v8-ink);
+  font: inherit;
+  font-size: var(--cn-fs-caption);
+  font-weight: 400;
+}
+
+.cn-access-sort-tier[aria-pressed="true"] {
+  border-width: 2px;
+  border-color: var(--cn-accent);
+  font-weight: 700;
+}
+
+.cn-access-sort-note {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+
+/* Same 44px / 30px split ORD-0462 set for this screen's other controls. */
+@media (min-width: 768px) {
+  .cn-access-sort-tier {
+    min-height: 30px;
+  }
+}

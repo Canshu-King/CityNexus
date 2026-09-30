@@ -14,6 +14,7 @@
  * Shape: `D:/moodle/_apk_analysis_pi_travel/RELATION/relation_and_copy_findings.md` section 1.4.
  */
 import type { AccessCopyKey } from "./accessCopy";
+import type { JourneySortTier } from "./accessDoors";
 
 export const ROLE_OWNER = "OWNER" as const;
 export const ROLE_ADMIN = "ADMIN" as const;
@@ -249,4 +250,38 @@ export const REFUSAL_SENTENCES: Record<string, AccessCopyKey> = {
 
 export function refusalSentenceKey(code: string | null): AccessCopyKey | null {
   return code === null ? null : REFUSAL_SENTENCES[code] ?? null;
+}
+
+/* ------------------------------------------------------------- ORD-0477 the order of the trip list
+
+The three tiers are the door's, typed off the generated client (`operations["listJourneys"]`), so a
+tier the contract renames stops this file compiling instead of living on as a control that does
+nothing -- the rule `VISIBILITY_LADDER` above already states for sharing: a ladder row the server
+cannot be set to is a row that lies.
+
+The order is the order a traveller reads them in: what just changed, then what comes next, then by
+name. It is not the contract's enum order; the contract's list is a set, this one is a screen. */
+export const SORT_RECENT_UPDATE = "RECENT_UPDATE" as const;
+export const SORT_DEPARTURE_DATE = "DEPARTURE_DATE" as const;
+export const SORT_TITLE = "TITLE" as const;
+
+export const JOURNEY_SORT_LADDER: readonly { tier: JourneySortTier; labelKey: AccessCopyKey }[] = [
+  { tier: SORT_RECENT_UPDATE, labelKey: "access.sortRecent" },
+  { tier: SORT_DEPARTURE_DATE, labelKey: "access.sortDeparture" },
+  { tier: SORT_TITLE, labelKey: "access.sortTitle" },
+];
+
+/** The tier this screen asks for first.  The door has its own order for a call that names no tier;
+ *  this screen never makes one, so the order on screen is always a word the traveller can read back. */
+export const DEFAULT_JOURNEY_SORT: JourneySortTier = SORT_RECENT_UPDATE;
+
+/** The word for a tier, or `null` for a tier this screen has no sentence for. `null` is the honest
+ *  answer and the panel says so rather than quoting the server's token as if it were a label. */
+export function sortLabelKey(tier: JourneySortTier | null | undefined): AccessCopyKey | null {
+  const entry = JOURNEY_SORT_LADDER.find((row) => row.tier === tier);
+  return entry ? entry.labelKey : null;
+}
+
+export function isJourneySortTier(value: unknown): value is JourneySortTier {
+  return JOURNEY_SORT_LADDER.some((row) => row.tier === value);
 }

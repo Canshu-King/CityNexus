@@ -33,6 +33,18 @@ export const accessCopy = {
     "access.pickLoading": "Reading your trip list…",
     "access.pickEmpty":
       "This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.",
+    /* ORD-0477: the tier words.  `RECENT_UPDATE` / `DEPARTURE_DATE` / `TITLE` are the server's
+       (`backend/app/schemas.py::JOURNEY_SORT_TIERS`) and never reach a traveller; these are the words
+       the control renders, and the current tier is spelled out in its own sentence so the order a
+       list is in is something the screen says rather than something the reader infers. */
+    "access.sortHeading": "Order of this list",
+    "access.sortRecent": "Recently updated",
+    "access.sortDeparture": "Departure date",
+    "access.sortTitle": "Name",
+    "access.sortCurrent": "This list is ordered by: {tier}.",
+    "access.sortTitleNote": "Names are ordered by characters, not by pinyin or by stroke count.",
+    "access.sortTierUnknown":
+      "This list arrived in an order this screen has no word for: {tier}. The server's own word is shown.",
     "access.selected": "Looking at: {title}",
     "access.ladderHeading": "Three roles, each with the one sentence that says what it can do",
     "access.roleOwner": "Owner",
@@ -155,6 +167,15 @@ export const accessCopy = {
     "access.pickNone": "先选一条要看的行程",
     "access.pickLoading": "正在读你的行程列表…",
     "access.pickEmpty": "这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。",
+    /* ORD-0477: 三档的名字。旅客读的这三个词与服务器的 RECENT_UPDATE / DEPARTURE_DATE / TITLE
+       一一对应（`backend/app/schemas.py::JOURNEY_SORT_TIERS`），机器词从不上屏。 */
+    "access.sortHeading": "这一列行程怎么排",
+    "access.sortRecent": "最近更新",
+    "access.sortDeparture": "出发日期",
+    "access.sortTitle": "名称",
+    "access.sortCurrent": "现在按{tier}排。",
+    "access.sortTitleNote": "名称档按字符先后排，不按拼音，也不按笔画。",
+    "access.sortTierUnknown": "这一列回来一个本屏没有名字的排序档：{tier}。这里写的就是服务器自己的词。",
     "access.selected": "现在在看：{title}",
     "access.ladderHeading": "三档角色，每档一句它能做什么",
     "access.roleOwner": "所有者",
