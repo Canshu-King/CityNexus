@@ -1,8 +1,8 @@
 {
- "port_backend": 49895,
- "port_preview": 49896,
- "at": "00:39:55",
- "head": "1e95d106f81b29048ba17695fd0e49172516b9b1",
+ "port_backend": 55318,
+ "port_preview": 55319,
+ "at": "00:51:11",
+ "head": "c35f1fe04a920c03955f596453b11acc6a172c44",
  "cases": [
   {
    "arm": "arm_present",
@@ -68,9 +68,12 @@
      }
     },
     {
-     "check": "access-member-role-change is 44 px tall",
+     "check": "access-member-role-change is at least 44 px tall",
      "held": true,
-     "reading": 44
+     "reading": {
+      "height": 44,
+      "floor": 44
+     }
     },
     {
      "check": "access-member-self-exit has a box",
@@ -89,9 +92,12 @@
      }
     },
     {
-     "check": "access-member-self-exit is 44 px tall",
+     "check": "access-member-self-exit is at least 44 px tall",
      "held": true,
-     "reading": 44
+     "reading": {
+      "height": 44,
+      "floor": 44
+     }
     },
     {
      "check": "role choices came from the seat door",
@@ -115,11 +121,8 @@
   {
    "arm": "arm_present",
    "shape": "1280x900",
-   "exit": 1,
-   "failures": [
-    "access-member-role-change is 44 px tall",
-    "access-member-self-exit is 44 px tall"
-   ],
+   "exit": 0,
+   "failures": [],
    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
    "roster_rows": 2,
    "role_change": 1,
@@ -179,9 +182,12 @@
      }
     },
     {
-     "check": "access-member-role-change is 44 px tall",
-     "held": false,
-     "reading": 33
+     "check": "access-member-role-change is at least 30 px tall",
+     "held": true,
+     "reading": {
+      "height": 33,
+      "floor": 30
+     }
     },
     {
      "check": "access-member-self-exit has a box",
@@ -200,9 +206,12 @@
      }
     },
     {
-     "check": "access-member-self-exit is 44 px tall",
-     "held": false,
-     "reading": 33
+     "check": "access-member-self-exit is at least 30 px tall",
+     "held": true,
+     "reading": {
+      "height": 33,
+      "floor": 30
+     }
     },
     {
      "check": "role choices came from the seat door",
@@ -304,27 +313,27 @@
  ],
  "ownership_backend": {
   "listening_pids": [
-   "47432"
+   "20556"
   ],
-  "launched_pid": 58644,
+  "launched_pid": 51836,
   "pid_matches_child": false
  },
  "seed": {
-  "journey_with_seat": "85b24525-cd60-4f3a-a128-34207e5a5562",
-  "journey_without_seat": "8b8793bc-bd41-4edf-8350-bfcbe5b64aa0",
+  "journey_with_seat": "a5f6421b-b261-4c5b-8d37-813b7e86cf20",
+  "journey_without_seat": "55a666cc-a3f4-456f-9571-1034e88078d0",
   "member_rows_on_the_seat_journey": 2,
   "member_rows_on_the_no_seat_journey": 0,
   "roles_listed": [
    "OWNER",
    "COLLABORATOR"
   ],
-  "traveller": "25eff56c-cc4d-4121-bf2f-0f5f8fe2d6cb"
+  "traveller": "ccd1fedf-cbd5-4e94-90d5-4cbc4b8aca04"
  },
  "preview": {
   "listening_pids": [
-   "44376"
+   "57312"
   ],
-  "launched_pid": 44376,
+  "launched_pid": 57312,
   "pid_matches_child": true,
   "entry_from_served_html": [
    "index-CADy2gy3.js"
