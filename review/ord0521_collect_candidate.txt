@@ -1,1 +1,1 @@
-1576 tests collected, 20 errors in 2.72s
+1578 tests collected, 20 errors in 4.34s

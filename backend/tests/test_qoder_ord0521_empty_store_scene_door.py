@@ -335,6 +335,78 @@ def test_C11_the_door_leaves_rows_it_did_not_create_alone(client):
 # --- the contract and the receipt --------------------------------------------------------------
 
 
+def test_C15_a_supplied_city_without_a_satisfiable_constraint_refuses_by_name(client):
+    """CN-BEIJING is supplied but the shipped constraints are written for CNX-DEMO.
+
+    The honest answer is a named refusal with the hop that broke, not a trip silently built on the
+    other city - so this arm pins the state the second half of the order has to move.
+    """
+
+    decision = ensure(client, "c15", {"city_code": "CN-BEIJING"}).json()
+
+    assert decision["state"] == "SCENE_INSTALLED_BUT_PLAN_REFUSED", decision["state"]
+    assert decision["plan_version_id"] is None, decision["plan_version_id"]
+    assert decision["city_code"] == "CN-BEIJING", decision["city_code"]
+    refused = decision["advance_refused_steps"]
+    assert refused[0]["step"] == "plans/generate", refused
+    assert refused[0]["refused"] == "CatalogShortfall", refused
+    assert decision["journey_created_by_this_call"] is True, "the residue must name its own row"
+
+    # the supply itself did land for that city - the refusal is about the plan, not the catalogue
+    assert decision["supply"]["places_held"]["CN-BEIJING"] == 8, decision["supply"]["places_held"]
+    assert client.store.count("places") == FIXTURE_PLACES
+    anchored = client.store.rows(
+        "select count(*) from journeys where city_code = 'CN-BEIJING' and status = 'DRAFT'"
+    )[0][0]
+    assert anchored == 1, anchored
+
+
+def test_C16_the_door_advances_its_own_trip_not_the_newest_row(client):
+    """On a board that already holds somebody else's journey the door must not move theirs."""
+
+    from app.db.models import Journey, Traveler
+
+    with client.store.session() as session:
+        session.add(
+            Traveler(
+                id="00000000-0000-4000-8000-000000000009",
+                display_name="Another board",
+                email="another@example.invalid",
+                locale="en",
+                timezone="Asia/Shanghai",
+                created_at="2099-01-01T00:00:00+00:00",
+                updated_at="2099-01-01T00:00:00+00:00",
+            )
+        )
+        session.flush()
+        other = Journey(
+            id=str(uuid.uuid4()),
+            traveler_id="00000000-0000-4000-8000-000000000009",
+            title="Newest draft on the board",
+            city_code="CNX-DEMO",
+            timezone="Asia/Shanghai",
+            start_at="2026-11-01T00:00:00+00:00",
+            end_at="2026-11-02T00:00:00+00:00",
+            budget_currency="CNY",
+            budget_amount_minor=10000,
+            planning_mode="balanced",
+            status="DRAFT",
+            created_at="2099-01-01T00:00:00+00:00",
+            updated_at="2099-01-01T00:00:00+00:00",
+        )
+        session.add(other)
+        session.commit()
+        other_id = str(other.id)
+
+    decision = ensure(client, "c16").json()
+
+    assert decision["state"] == "READY", decision
+    assert decision["journey_created_by_this_call"] is False, decision
+    assert decision["journey_id"] != other_id, "the door advanced a board it does not own"
+    untouched = client.store.rows("select status,active_plan_version_id from journeys where id=?", (other_id,))
+    assert untouched == [("DRAFT", None)], untouched
+
+
 def test_C12_the_spec_carries_the_route_and_both_refusal_shapes(client):
     spec = client.get("/openapi.json").json()
     operation = spec["paths"]["/api/v1/demo/scene/ensure"]["post"]

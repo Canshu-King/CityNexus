@@ -1,0 +1,4 @@
+test_g3_xproc_two_uvicorn_workers_over_http_   pristine-base  2/5 isolated reds
+test_g3_xproc_two_uvicorn_workers_over_http_   candidate      1/5 isolated reds
+test_shape_a_terminal_job_then_five_requests   pristine-base  0/5 isolated reds
+test_shape_a_terminal_job_then_five_requests   candidate      0/5 isolated reds

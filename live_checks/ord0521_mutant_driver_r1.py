@@ -45,6 +45,18 @@ MUTANTS = [
         "    if False:  # MUTANT M4\n        return (\n            \"SCENE_TOKEN_REQUIRED\",",
         "test_C4_no_token_is_a_named_refusal_and_writes_nothing",
     ),
+    (
+        "M5-a-requested-city-is-answered-with-another-citys-trip",
+        "        journey = _journey_for_city(session, requested, journey)",
+        "        pass  # MUTANT M5: hand back the shipped city and call it the requested one",
+        "test_C15_a_supplied_city_without_a_satisfiable_constraint_refuses_by_name",
+    ),
+    (
+        "M6-the-door-advances-whatever-row-is-newest",
+        "    journey = session.get(Journey, fixture_id) if fixture_id else None",
+        "    journey = None  # MUTANT M6: fall through to 'newest DRAFT' and move another board",
+        "test_C16_the_door_advances_its_own_trip_not_the_newest_row",
+    ),
 ]
 
 
