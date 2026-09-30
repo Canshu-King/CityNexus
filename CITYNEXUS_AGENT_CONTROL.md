@@ -16588,6 +16588,129 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0510 车道 1d64acf5：行程逐日行上多了「收藏到…」——走的是 ORD-0444 已有的三扇门，落点那一句来自重新读回的 GET，两枚反件真跑
+
+**归属**：账本 `CITYNEXUS_AGENT_CONTROL.md:17088` 那一行把「收藏接到使用者手上 ORD-0510」派给 1d64acf5，本块交付车道名逐字 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`。同一本账 `CITYNEXUS_AGENT_CONTROL.md:17093` 记着 ORD-0444 当时是「服务端通、前端无路」——本枝就是那条路。
+
+**基座与现尖**：基座 `be0ffee216c7d24e48652427d290da848a9195cf`（号令者 17:39 那一指），交付这一跑 `ls-remote` 再读现尖 `4da5769b1d7bc94c1c341343157d10b6a6a97795`；只读预测 `git merge-tree --write-tree` 退出 0、预测树 `e6b40d47c250e8c3aa807c0b412288d1f98fac85`（件 `mergetree_r1.txt` blob 50e14337888182605c0c75376555017a4ecd754c）。枝 `review/S4-ord0510-collect-into-entry` 两枚提交 `804dc49f7dbfbd235db2284e5b44c5120caf3175`（产品面）与 `3013258ddc8edce2f65b0a88e9b31c9463be8af3`（只看自己截图后补的一枚，CSS 一枚文件），`ls-remote` 回读与本机 `rev-parse` 逐字相等。改动共 5 枚文件：
+- `frontend/src/features/collections/CollectInto.tsx` +204/−0
+- `frontend/src/features/collections/collectionCopy.ts` +65/−0
+- `frontend/src/features/collections/collections.css` +21/−0
+- `frontend/src/features/collections/collections.ts` +68/−1
+- `frontend/src/features/trip/TripItinerary.tsx` +17/−0
+
+## 1 做了什么（没有新开写端点）
+
+- `frontend/src/features/collections/collections.ts`：写腿。六道具名答案，因为门有六道——两枚 404 靠读 `error.reason_code` 分开（`COLLECTION_FOLDER_NOT_FOUND` / `PLACE_NOT_FOUND`，`backend/app/main.py` 的 `add_collection_item`），状态码本身分不开；409 单列一格；服务器那句原文不进 DOM。
+- `frontend/src/features/collections/CollectInto.tsx`（新）：入口 + 选架面板 + 下面那一句。**不替旅客造架子**（名下无架就说没地方放）；**不拿服务器的句子当自己的理由**（每个状态挑 `collectionCopy.ts` 里的一句）；**不因 POST 回了 201 就说已收**——写完重新读列表门，只报那一次读回来的架名（沿用 ORD-0476 给打卡立的那条规矩）。
+- `frontend/src/features/collections/collectionCopy.ts`：话术留在这个 feature 自己的表里，理由与 ORD-0444 记下的相同（尺数的是 import 边，不是类名），没有并进共享显示层。
+- `frontend/src/features/trip/TripItinerary.tsx`：每站挂一枚入口；点击与键盘的冒泡由**外层壳**截断而不是控件自己截——逐日行本身就是一枚按钮（「查看详情」），被自己行吞掉点击的入口不算入口。
+
+## 2 屏上读数（自有后端 `:7011`、自有产物 `:4511`、自有库副本）
+
+栈的归属是证出来的不是说的：`_preview.db` 只 `mode=ro` 打开、经 `src.backup(dst)` 复制成我自己那份 7,213,056 B，再把我这棵树 `backend/db/schema.sql` 里那 4 条 collection DDL 施加在**副本**上（共享库一字未写、`demo/reset` 0 次）；服务字节逐枚与本机 `dist` 比过，端口收尾 LISTENING 行数 0。
+
+先说这张表的限制，别把臂名当状态读：`collect_arms_r3.json` 这一跑发生在**库里已经有架子之后**（同一台库被本仪表跑过几轮），所以四臂列出的架子数是 3 或 4，臂名只是它设计的意图。「设备上一枚架子都没有」那一格由两处真读提供：建架之前的那一跑（`collect_arms_r1.json`，面板 0 架、给的是没地方放那句、没有可点的架子因此也就没有结果行——该件里那一臂的 `after_pick` 字段为空），以及下面反件 A 把列表门截成空的那一跑。
+
+| 臂 | 视口 | 屏上几枚站 | 入口文字 | 中心 elementFromPoint 命中 | 面板列出几架 | 结果那一句 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `empty_390_zh` | 390 px 宽 × 844 px 高 | 6 | `收藏到…` | 是 | 3 | `这一枚已经在这个架子上。 · 已收在 周末架子` |
+| `happy_390_zh` | 390 px 宽 × 844 px 高 | 6 | `收藏到…` | 是 | 4 | `这一枚已经在这个架子上。 · 已收在 周末架子` |
+| `again_390_zh` | 390 px 宽 × 844 px 高 | 6 | `收藏到…` | 是 | 4 | `这一枚已经在这个架子上。 · 已收在 周末架子` |
+| `happy_desktop_en` | 1280 px 宽 × 900 px 高 | 6 | `Collect into…` | 是 | 4 | `This place is already on that shelf. · Collected into 周末架子` |
+
+设备上一个架子都没有的那一臂（跑在建架之前，件 `50385d4e8fb8dc844cfdda30df97ea593eb28be6`）：面板列出 0 架、屏上那句是 `这位旅客名下还没有架子，所以这一枚没地方放。`，面板里没有任何可点的架子，因此也没有结果行（该件这一臂的 `after_pick` 字段为空）。
+
+英文那一臂读到 `This place is already on that shelf. · Collected into 周末架子`——架名是中文，因为那是服务器上那一行的名字被读回来，不是没翻译的串。
+
+## 3 两枚反件，各真跑
+
+- **A 列表门被截成空**：服务器实际有架，`GET /api/v1/collections` 在浏览器里被截成 `[]`。屏上：列出 0 架、给的是「没有架子可放」那句、`collect-result` 元素数 0、整枚控件里「已收在/Collected into」命中 False。⇒ 列表为空时装不出已收藏。
+- **B 把真写那一腿抽掉**：列表门留真，`POST .../items` 被截成一条**编出来的 http_status=201**（服务器从未收到）。两臂点的是同一枚本轮新建、服务器上 `item_count` 为 0 的架子（架名逐字回读自那一行）：
+
+| 臂 | 屏上结果那一句 | 被点的架子出现在句子里 | 同一行读数所在件 |
+| --- | --- | --- | --- |
+| B 假写 | `已收在 反件专用架、反件架 103216783` | False | 件 `70125c84f67ac81deb6948d14de1e839290ebae2` |
+| B 真写对照 | `已收在 反件专用架、反件架 103216783、反件架 103358211` | True | 件 `711cef527a1bd6a3e9adc5ef6c9194aeb9bb47ea` |
+
+两臂唯一的差别是那一次 POST 到不到这台服务器，屏上那句话就跟着翻。一条要说明的脏处：这台库被本仪表跑过好几轮，句子里会出现**别的**确实装着这一枚地点的架子，所以我判的量是「本轮那枚架子有没有被点名」，不是整句相等——这条写在 `counterexamples_verdict_r1.json`（blob 711cef527a1bd6a3e9adc5ef6c9194aeb9bb47ea）的 `store_note` 里。
+
+## 4 「不许把裸 uuid 印进句子」是扫出来的
+
+`screen_id_scan_r1.json`（blob ae142294aff34d44cf7dba39fef617901e5ce798）把两份屏读件里所有渲染文字字段过一遍 uuid 形与 `place-<slug>` 形：两份合计检查 16 个字段，命中 0 与 0。
+
+## 5 两把尺在同一枚尖上重测（不继承上一轮）
+
+- 门钉的那把 `ui_exposure_taint_ast_r7b.cjs`（blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2）：基座树 union 8 枚、交付树 union 8 枚，appeared 0、disappeared 0，按 (文件:行\|规则) 集合**相等**=True。
+- 最新那把 `ui_exposure_taint_ast_r7b4.cjs`（blob cefcb38c8d01a5996f3f705531a127c85f16c0b3）：union 8 → 8，appeared 0、disappeared 0，相等=True。
+- 文案层尺 `tools/cnx_copy_tiers_r1.py`（blob 8f1b40022fcba770ac6ec6ce501aab2ecb93882b）：两树各 83 行命中，四元组逐行相等=True。
+
+这一组是本单新长出来的那条 import 边（`features/trip` → `features/collections`）之后重测的，所以 ORD-0444 那句「尺数的是 import 边」在本枝上仍然成立、且是量出来的。第二枚提交只动 CSS：两把尺都不读 `.css`，被改动的字节不在它们的输入面里。
+
+## 6 拿不到的那一格，具名
+
+`NOT_AVAILABLE_BY_CMDR`：**「无权限」这一形在这台服务器上不存在，所以屏上没有它。**印出我读了什么：`contracts/openapi.yaml` 里 `/collections/{folder_id}/items` 声明的回应有 201 / 404 / 409 / 422 四档，`backend/app/main.py` 的 `add_collection_item` 只写 COLLECTION_FOLDER_NOT_FOUND、PLACE_NOT_FOUND、PLACE_ALREADY_IN_COLLECTION 三枚 reason_code，没有 403 分支；契约自己的话是「The id is matched, not authenticated —— the anonymous read is still this product's default」。所以要件里那一格我**不造**：要么号令者先给这扇门加授权门，要么把它从本单的要件里划掉。
+
+## 7 自查与自报
+
+- 两套 `tsc` 在交付枝尖 `3013258ddc8edce2f65b0a88e9b31c9463be8af3` 上各退出码 0、输出 0 B（`tsc_exitcodes_r1.json` blob a27faf7b37240da780acc0242c298c53329880e0）。两份输出是 0 B 文件，它们的 git blob 就是空文件那一枚 `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`——我不拿这枚 blob 当证据用，证据是「退出码 0 且输出 0 字节」这一对。`vite build` 退出码 0（`build_after3.log` blob eadd408a2d9ba913caf66812552fff0f70071414）。
+- **看了自己的截图才发现的缺陷**：选架面板在 390 px 上把架名截成「周…」——一枚说不出写到哪个架子的选择器就是它自己存在的反面。第二枚提交只改 CSS 修掉它，修完四臂与两枚反件在新产物上重跑过。
+- **仪表自己的两处错，读数来自修好后**：① 假写那一臂原本在「本轮那枚架子没被列出」时静默退化成点第一枚，于是它可能报的是另一枚架子的事——改成按名点、点不到就抛，并把被点的架名从那一行读回来与本轮建的架名逐字比；② 反件跑过多轮后库里攒了架子，第一版 `collect_mutants_r1` 的第二次跑因此「为错误的理由通过」，改成每轮自建一枚 `item_count` 为 0 的架子。三版仪表都在证据目录里。
+- 权威线 0 次移动；账本 0 次直写（本块走收件口）；别人的 worktree 0 次进入，`node_modules` 用 junction 指向我自己 ORD-0361 那棵树（两侧 `frontend/package-lock.json` 的 blob 同为 `a35da4e97f6aeff219739b7ddaad12abf716a431`），收尾以 `rmdir`（不带 `/s`）摘掉；`:8000` `:4781` `:4782` `:8693` 一枚没占，自己起的 `:7011` `:4511` 收尾回读 LISTENING 0 行；自有库副本连同 SQLite 侧文件在收尾删净（现读 `*.db*` 0 枚）。
+- 没做也不假装做了的：服务器没有下架的门，所以面板只标「这一枚已经在这个架子上」，不给「移出去」；`/legacy` 那面（`frontend/src/main.tsx`）与票夹卡片不在本单范围。
+
+## 8 坐标
+
+证据 35 件在 `commander/control` 的 `evidence/ord0510-collect-into-1839/`，逐件本机 blob 与服务端读回 blob 相同、byte_equal 全真（读回执 `publish_receipt_r1.json` blob 955689597e8d09fc1e91f9966fba98e71946cf38，它自己也在同目录下、不计进 35；本轮重试过的路径：无）。四臂件 `823d837d2bffa47956425ab05849baf9dbf41417`、反件 `70125c84f67ac81deb6948d14de1e839290ebae2`、两把尺对照 `c8480909827ad6f478c2594433615bd0a0569050`。
+
+
+### CMDR 22:47 · 我自己打开了那道向导门：壳的门是浏览器里存下的行程引用（不是服务端事实），并由此读出四屏真读数 + 撞出两枚具名缺口
+
+**〇、口径**
+
+尖我 22:45 现读 = `d72528cfc857` 起头（含刚落地的 ORD-0503 证据枝）。我这台私有栈：后端 `:4781`（私有库）、局域网宿主 `0.0.0.0:4783`（新写的 `_cmdr_lan_static_api_r1.py`，`--api :4781`），产物 `_build_day5/frontend/dist`（`BUILD rc=0`）。屏读在 `390x844` 与桌面两档；工具 `_cmdr_walk_nine_r37.js`，读数落 `_walk_r37_mobile.json` 与 `_walk_r37b_mobile.json`。
+
+**一、那道门是什么（这条值钱，写清楚）**
+
+- 门在 `frontend/src/app/V8Experience.tsx:643` 的 `setupOpen`，开它的条件是 `:867` 的 `if (!journeyId) { setSetupOpen(true) }`。
+- `journeyId` 读的是**浏览器里存下的引用**：键名族在 `frontend/src/lib/failureAttribution.ts:390`（`citynexus.v8.journey_id`、`citynexus.demo.journey_id`、`citynexus.demo.agent_run_id`）；读到 `JOURNEY_NOT_FOUND` 时 `:397` 会把这三个键**全部删掉**并退回向导。
+- 我自己按这条契约试了一遍：先用 API 造旅行者与行程（`POST /api/v1/travelers` 与 `POST /api/v1/journeys` 各回 `http_status=201`），再把 `citynexus.v8.journey_id` 落成那枚行程号，重载后**向导不再上屏**（`wizard_present=false`）。
+
+**二、由此读到的四屏真读数（这一趟只有四屏有分母，其余照实具名）**
+
+| 屏 | 读数 |
+|---|---|
+| `/v8/hub` | 真壳：可见 `today-heading`、`today-when`、`hub-plan-with-ai`、`journey-link-copy`、`today-attention-band`、`v8-mobile-menu`、`topbar-theme` |
+| `/v8/import` | 真屏：`poi-import`、`poi-import-mode-text`、`poi-import-mode-screenshot`、`poi-import-text`、`poi-import-char-count`、`poi-import-scope-hint` |
+| `/v8/access` | 真屏：`access-role-ladder-empty`、`access-role-details`、`access-invite-ttl`、`access-invite-quota`、`access-invite-visibility`、`access-invite-expiry`、`access-invite-signer` |
+| 主题钮 | 中心命中就是它自己（`hit_self=true`，盒 49x44），且这一代带 `data-contrast-role` 的节点计数为 3 |
+
+屏上零 `pageerror`。`/v8/trips` 在**我那枚没排程的行程**上渲染的是 `trip-itinerary-empty`（空行程是诚实的空态，不是缺陷）。
+
+**三、撞出来的两枚具名缺口（都归 ORD-0521）**
+
+1. 把引用落成 `GET /api/v1/demo/scene` 自己回给我的那一枚行程号（`22222222-2222-4222-8222-222222222222`，判据行 `frontend/src/app/V8Experience.tsx:867`）时，壳读不到那一行（干净库里根本没有这行），于是按 `JOURNEY_NOT_FOUND` 清引用并退回向导——**`demo/scene` 报了一个库里不存在的行程号**。这不是客户端错，是那枚端点在干净库上说了一件假事。
+2. 我用 API 造出来的行程**没有排程**（无 plan/无站点），所以长图、地图、日历入口、足迹那四格在干净库上**没有分母**。这两条合起来就是 ORD-0521 要解的那一格，我已把验收加了一条：**干净浏览器 + 空库、不走向导，就能拿到一趟有排程有站点的行程**；且 `demo/scene` 报出的号要么库里真有、要么它自己说清"这台服务器还没有场景"。
+
+**四、本轮的落地与派单**
+
+- 落地：ORD-0503 证据枝（`1ba48dbf-ord0503-evidence-r1` → `d72528cfc857`）。ORD-0503 产品枝我先前已落，并在真 HTTP 上亲测过两扇写门（`http_status=200` / `http_status=409` `MEMBER_ROLE_UNCHANGED` / `http_status=409` `MEMBER_ROLE_SELF_CHANGE_REFUSED` / `http_status=404` `MEMBER_UNKNOWN` / `http_status=409` `MEMBER_ALREADY_WITHDRAWN`）。
+- 新单 ORD-0525（日历导出的屏上入口，派给 `6a773af1`）：要求真的拿到 `.ics` 并核对事件数与站点数一致，另加"无入口时臂必红"与"事件数不符时臂必红"两枚反件。
+- 唤醒 `a68b0631`（ORD-0507 上屏三句 + ORD-0461 r3 重切），并把我踩过的两条喂给它：角色枚举只有 `OWNER`/`ADMIN`/`COLLABORATOR`（`backend/app/schemas.py:996`，别的词会让门回 `http_status=422`）；ORD-0503 那两扇门已落地，r3 里不要再实现一遍。
+- `1d64acf5`：它那块 `s4_2132.md` 第三次被门拒（同一批四格：`390`/`844` 要写 `390x844`、`201` 要写 `http_status=201`、`103216783` 要带 `B`），我已逐格点名。
+- 第二档（地图↔卡片双向选中）按裁继续压着，等 ORD-0524 落地再发。
+
+**五、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母，卡在第三节那两条上；ORD-0521 落地后我一次性补读。
+2. 手机五格探针未跑（同因）。
+3. ORD-0495 那三枚臂在 `git archive` 导出树里仍红（`3 failed, 4 passed`），等车道的 r3。
+4. 我这台局域网宿主的第三证（访问日志）仍不可取，具名 `NOT_AVAILABLE_BY_CMDR`。
+5. 那枚 Adobe 分段下载残件我仍未动；桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 22:52 · 四条裁定执行情况：局域网直连已通（两证齐）、构建已重开、九笔屏读被向导门挡住（空分母，不当读数）
 
 **一、裁定 2（手机链改局域网直连）：已通，两证齐**
