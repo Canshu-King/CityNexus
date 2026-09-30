@@ -392,6 +392,25 @@ export interface paths {
         patch: operations["updateJourney"];
         trace?: never;
     };
+    "/journeys/{journey_id}/calendar.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description ORD-0496 slice 1: the trip's active plan as an RFC 5545 calendar, generated from the rows this server holds.  The source is `journeys.active_plan_version_id` and that plan version's `activities` rows -- the same pointer every other plan door reads, so an export cannot present a schedule the product does not consider active, and there is no second notion of "the plan" behind this door.  Nothing is scheduled by this door: it is a read. One clocked activity row is one VEVENT, printed in `activities.sequence_no` order.  An interval whose stored end falls on a later UTC day than its stored start stays the one event the row is and is counted in `X-CityNexus-Ics-Cross-Day`, because splitting it would need a start instant for the second half and an end instant for the first, and no column holds either. `DTSTART`/`DTEND` are the row's own instants converted to UTC (so no `VTIMEZONE` component is emitted, and no offset is re-labelled), and `DTSTAMP` is the row's own `updated_at` with `created_at` behind it -- never the moment the export was asked for, which is what makes two exports of an unchanged trip the same bytes. A row with no usable clock -- `start_at` or `end_at` empty, unparseable, or a time without its own UTC offset -- is skipped and counted, never guessed at and never dropped quietly.  A plan with no clocked activity answers 200 with a `VCALENDAR` holding no VEVENT, and the headers say so in numbers. */
+        get: operations["getJourneyCalendarIcs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/undelete": {
         parameters: {
             query?: never;
@@ -4556,6 +4575,62 @@ export interface operations {
             };
             409: components["responses"]["Conflict"];
             422: components["responses"]["ValidationError"];
+        };
+    };
+    getJourneyCalendarIcs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The calendar for the trip's active plan.  CRLF-terminated lines of at most 75 octets each (RFC 5545 section 3.1), SUMMARY/LOCATION/DESCRIPTION escaped per section 3.3.11. */
+            200: {
+                headers: {
+                    /** @description The same value the three streaming doors already carry, so a phone that re-exports after editing the trip revalidates instead of reopening a stored file. */
+                    "Cache-Control"?: "no-cache";
+                    /** @description `attachment; filename="calendar.ics"; filename*=UTF-8''<title>--<journey id>.ics`.  The ASCII half stays generic on purpose: a CJK title has no honest ASCII form and transliterating one would be this server naming a trip the traveller never named.  The `filename*` half carries the real title percent-encoded per RFC 5987, with the journey id appended so two trips sharing a title do not arrive as one file. */
+                    "Content-Disposition"?: string;
+                    /** @description VEVENTs printed.  The arithmetic a screen may lean on is: activities = events + X-CityNexus-Ics-Skipped-No-Clock + X-CityNexus-Ics-Skipped-No-Stamps. */
+                    "X-CityNexus-Ics-Events"?: string;
+                    /** @description Activity rows skipped because `start_at` or `end_at` is empty, unparseable, or a clock with no UTC offset.  This is the named handling for "no time"; the alternative is this server inventing an instant. */
+                    "X-CityNexus-Ics-Skipped-No-Clock"?: string;
+                    /** @description Activity rows with a usable interval but no usable `updated_at` or `created_at` of their own, which is the second way a row cannot be printed without fabricating a time. */
+                    "X-CityNexus-Ics-Skipped-No-Stamps"?: string;
+                    /** @description Events among the printed ones whose `DTSTART` and `DTEND` fall on different UTC days. */
+                    "X-CityNexus-Ics-Cross-Day"?: string;
+                    /** @description Activity rows the active plan version holds, i.e. the denominator for the three counts above. */
+                    "X-CityNexus-Ics-Activities"?: string;
+                    /** @description Values whose leading or trailing plain space had to be removed, because RFC 5545 section 3.1 forbids one at either edge of a value and a fold cannot carry one either. Reported rather than spent quietly. */
+                    "X-CityNexus-Ics-Whitespace-Trimmed"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/calendar; charset=utf-8": string;
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row.  The status, `message_key` and sentence are the ones `getJourney` answers with; this door grows no second 404 shape. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT, with error.reason_code naming which condition refused. CALENDAR_JOURNEY_IN_RECYCLE_BIN: the trip is in the bin, and `listJourneys` refuses to list it, so its schedule is not exportable either; 找回 first.  CALENDAR_SOURCE_UNREADABLE with `error.details.reason` = ACTIVE_PLAN_NOT_DECLARED (the trip has no active plan), ACTIVE_PLAN_ROW_ABSENT (the pointer names a plan version this server no longer holds), or ACTIVE_PLAN_BELONGS_TO_ANOTHER_JOURNEY (the pointer names another trip's plan) -- three different facts, and "here is your empty calendar" would be a lie about all three. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     undeleteJourney: {
