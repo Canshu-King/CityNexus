@@ -2299,6 +2299,10 @@ function TripsWorkspace({
     onOpenCopilot,
     onOpenActivity,
     onRefresh,
+    /* ORD-0529: the itinerary's empty cell is the one place a traveller stands with nothing to
+       press, and the door that can fill it (`/v8/import`) is a shell route.  The scope already
+       carried the two callbacks this screen uses; the navigator was the missing third. */
+    onNavigate,
     zh,
     slots: tripsSlots,
   };
