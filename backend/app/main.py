@@ -3254,7 +3254,22 @@ def _collection_payloads(session: Session, owner_traveler_id: str) -> list[Colle
     ]
 
 
-@app.post("/api/v1/collections", response_model=CollectionFolderSchema, status_code=201)
+@app.post(
+    "/api/v1/collections",
+    response_model=CollectionFolderSchema,
+    status_code=201,
+    # The contract declares this refusal, and ORD-0395's rule in this tree is that a code the
+    # decorator does not name never reaches `/openapi.json` at all -- so the served artifact and
+    # `contracts/openapi.yaml` would disagree while the parity door, which compares paths and
+    # methods, stayed green.  Declared here for that reason, and one arm now reads the served
+    # document to keep the two from drifting again.
+    responses={
+        404: {
+            "description": "error.reason_code = MEMBER_TRAVELER_UNKNOWN -- no traveller carries the "
+            "asserted owner, so no shelf is stored for it"
+        }
+    },
+)
 def create_collection(payload: CollectionFolderCreate, session: Session = Depends(get_session)):
     """ORD-0444: make a named shelf, written to one traveller.  The 「收藏」 exit needs a container.
 

@@ -563,6 +563,34 @@ def test_demo_reset_can_empty_the_container_and_does_it_in_the_right_order():
     print(f"reset_all declares {len(tables)} tables")
 
 
+def test_the_served_document_declares_the_refusals_the_contract_declares():
+    """`/openapi.json` is a second artifact, and a code unnamed in the decorator never reaches it.
+
+    Found on this order's own round trip: the contract declares a 404 for creating a shelf (the
+    asserted traveller does not exist), while the served document answered `201, 422` for that door
+    because the decorator had named no 404 -- and `tools/verify_openapi_parity.py` compares path and
+    method sets, so it stayed green across exactly that gap.  ORD-0395's rule is written here as an
+    arm rather than as a sentence: for every refusal name the contract carries on these three doors,
+    the served document must carry the same status code.
+    """
+
+    served = app.openapi()
+    contract = _contract()["paths"]
+    doors = {
+        ("/collections", "post"): {"404"},
+        ("/collections/{folder_id}/items", "post"): {"404", "409"},
+        ("/collections", "get"): {"422"},
+    }
+    for (path, verb), expected in doors.items():
+        assert path in contract, path
+        # the runtime mounts everything under /api/v1, which the contract path omits by design
+        node = served["paths"]["/api/v1" + path][verb]
+        got = set(node.get("responses", {}))
+        assert expected <= got, (path, verb, sorted(got))
+        for code in sorted(expected):
+            assert code in contract[path][verb].get("responses", {}), (path, verb, code)
+
+
 def test_the_shape_claims_no_address_because_places_carries_none():
     """A tripwire for the next order, not a claim that the competitor's row is matched.
 
