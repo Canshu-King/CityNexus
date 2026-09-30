@@ -1,18 +1,18 @@
 {
- "started_local": "2026-09-30T17:57:24+0800",
+ "started_local": "2026-09-30T18:19:27+0800",
  "spec": "e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
  "target": "src/components/v8/MapPanel.tsx",
  "runs": [
   {
    "arm_mutated": "solid",
-   "run_id": "mutsolid175724",
+   "run_id": "mutsolid181927",
    "ports": "frontend=:4901 backend=:8770",
    "mutation_landed": "M frontend/src/components/v8/MapPanel.tsx",
    "playwright_exit": 1,
    "infra_failure": false,
    "summary_lines": [
     "3 failed",
-    "3 passed (1.1m)"
+    "3 passed (34.0s)"
    ],
    "failing_arms": [
     "filter_toggle",
@@ -23,19 +23,19 @@
     "Error: the stamped pin is never hidden by its own filter",
     "Error: expect(received).toBeGreaterThanOrEqual(expected)"
    ],
-   "log_bytes": 29855,
-   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0497_mutants_r1\\mutant_solid_mutsolid175724.log"
+   "log_bytes": 29857,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0497_mutants_r1\\mutant_solid_mutsolid181927.log"
   },
   {
    "arm_mutated": "unguarded",
-   "run_id": "mutunguard175830",
+   "run_id": "mutunguard182001",
    "ports": "frontend=:4903 backend=:8772",
    "mutation_landed": "M frontend/src/components/v8/MapPanel.tsx",
    "playwright_exit": 1,
    "infra_failure": false,
    "summary_lines": [
     "2 failed",
-    "4 passed (58.2s)"
+    "4 passed (58.3s)"
    ],
    "failing_arms": [
     "read_never_arrived"
@@ -45,13 +45,13 @@
     "Error: expect(received).toBeGreaterThanOrEqual(expected)"
    ],
    "log_bytes": 30469,
-   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0497_mutants_r1\\mutant_unguarded_mutunguard175830.log"
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0497_mutants_r1\\mutant_unguarded_mutunguard182001.log"
   }
  ],
- "generation_under_mutation": "3d4641948565451de5000816d2d090d5c0610ed0",
+ "generation_under_mutation": "af6de0c634a3f81034cef7c960bd613725759977",
  "tree_after": {
   "dirty_lines_for_MapPanel": 0,
   "raw": ""
  },
- "ended_local": "2026-09-30T17:59:29+0800"
+ "ended_local": "2026-09-30T18:21:00+0800"
 }
