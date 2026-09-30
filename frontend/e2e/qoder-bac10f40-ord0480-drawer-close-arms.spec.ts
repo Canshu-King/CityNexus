@@ -159,7 +159,10 @@ test("ORD-0480 zh 390x844 the three arms write their readings", async ({ page })
   const idle = await page.evaluate(witness, SEL);
   push("closed_baseline", { locale: "zh-CN", viewport: PHONE, ...idle });
   writeFileSync(
-    evidencePath("qoder-bac10f40-ord0480-drawer-close-arms.json"),
+    /* The run id belongs in the file name. Two earlier copies of this evidence were overwritten
+       by a mutant run that shared the name, which turned "the clean readings" into a reading of a
+       broken tree -- the same trap the block records, fixed at the place that writes. */
+    evidencePath(`qoder-bac10f40-ord0480-drawer-close-arms--${process.env.CITYNEXUS_E2E_RUN_ID || "dev"}.json`),
     JSON.stringify({ file: FILE, viewport: PHONE, rows }, null, 1),
     "utf8",
   );
