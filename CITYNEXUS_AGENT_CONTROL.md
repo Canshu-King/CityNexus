@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:04 · 死局的构造性根因：唯一播种路径的第一行就是抹除；且夹具城市号与补水门数的号不是同一个
+
+**〇、口径**
+
+尖 = `c80dce10b3ef` 起头。以下都是我在导出树 `_verify_http_7b93d18d…` 上逐行读源码取的，行号我逐枚打开回读过；车道已被要求自己再回读一遍，不许只信我转述。
+
+**一、播种路径天生带抹除（这是死局的构造性根因）**
+
+`backend/app/services.py:241` 起：
+
+```
+def seed_demo(session: Session) -> dict[str, str]:
+    reset_all(session)          # 第一行
+    now = "2026-10-01T00:00:00+00:00"
+```
+
+于是：① `POST /api/v1/demo/prepare-scenario` 与 `start-scenario` 只能建在“刚被 reset 过的库”上，在空库上只能回 `http_status=409` `DEMO_SCENARIO_MISSING` 并指回 `demo/reset`；② 任何“在已有库上补演示数据”的做法**不能调 `seed_demo`**，否则抹掉别人的数据——这正是号令者禁止 `demo/reset` 的原因。修法因此只能是：**新增一条非破坏的播种/捕获腿**（不调 `seed_demo`、不调 `reset_all`）。
+
+**二、补水门“只数不写”，且夹具的号与它数的号不是同一个**
+
+- 判据在 `backend/app/catalog_hydration_operations.py:792`：`if survey["places_held"] == 0 and survey["pending_materialisations"] == 0` → `NO_REGISTERED_SOURCE`。
+- 两个计数的定义在同文件 `:638` 起：`held = count(Place.id) where Place.city_code == canonical_destination_id`；`pending = count(RealPlaceCandidate.id) where city_code == … and materialized_place_id is NULL`。
+- 同文件 `:789` 的注释逐字写着：把候选变成 `places` 行 **是另一条写路，本 build 没有**（ORD-0095-1 只覆盖既有源）。
+- 我这一趟的 canonical 是 `CN-TIANJIN`（由 `POST /api/v1/catalog-hydrations {"query":"天津"}` 回），而夹具 `_templates()` 是 **`CNX-DEMO` 的 place id**（`backend/app/services.py:845` 那段注释逐字如此）。**两边不是同一个城市号**，所以就算夹具行存在，用 `CN-TIANJIN` 去数也数不到。
+
+**三、已把上面三条按序发给 ORD-0526 的车道（`5a53846b`）**
+
+交付形状二选一：甲）捕获腿 + 落地写路（`materialized_place_id` 从 NULL 变指向新 `places` 行），使 `places_held` 大于 0；乙）捕获腿 + 一个具名新终态，使 `pending_materialisations` 大于 0。两条路都不许凭空造地名，反件仍两枚，交件要逐枚贴 `city_code`/`places_held`/`pending_materialisations`/`outcome` 四个值。并建议先用 `CNX-DEMO` 打通全链，别在同一天里又动城市号映射。
+
+**四、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母（供给死局）。
+2. 手机五格探针未跑。
+3. 成员屏空转已有单（ORD-0527），未修好前 ORD-0503 只算“服务端已通、屏上不可达”。
+4. ORD-0495 三枚臂在导出树里仍红（`3 failed, 4 passed`）。
+5. 我这台线的三处验证栈（`:4781`、`:4783`、`:4785`）收工按名单回收；桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:01 · 最新尖上屏：成员那两扇门在服务端是真的、在屏上是死的（已开 ORD-0527）；另附 ORD-0526 的根因行
 
 **〇、口径**
