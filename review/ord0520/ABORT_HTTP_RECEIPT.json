@@ -1,30 +1,23 @@
 {
-  "run_id": "20260930T190842Z",
+  "run_id": "20260930T223324Z",
   "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-  "tree_root": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt",
+  "tree_root": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt2",
   "store": {
-    "path": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt\\backend\\ord0520_probe_20260930T190842Z.db",
-    "declared_as": "sqlite:///D:/moodle/_qoder_lane_ord0520_20260930/wt/backend/ord0520_probe_20260930T190842Z.db"
+    "path": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt2\\backend\\ord0520_probe_20260930T223324Z.db",
+    "declared_as": "sqlite:///D:/moodle/_qoder_lane_ord0520_20260930/wt2/backend/ord0520_probe_20260930T223324Z.db"
   },
   "server": {
-    "pid": 32316,
+    "pid": 35136,
     "port": 60520,
     "command_line": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 60520 --log-level info",
     "log": "review\\ord0520\\ABORT_HTTP_RECEIPT.uvicorn.log",
     "bind_seen_in_log": true,
-    "database_url_in_child_env": "sqlite:///D:/moodle/_qoder_lane_ord0520_20260930/wt/backend/ord0520_probe_20260930T190842Z.db",
+    "database_url_in_child_env": "sqlite:///D:/moodle/_qoder_lane_ord0520_20260930/wt2/backend/ord0520_probe_20260930T223324Z.db",
     "health_http_status": 404,
-    "exit_code_after_terminate": 1,
-    "log_bytes": "8926 B",
-    "log_bytes_sha1": "85d134a1387908bcbee9f06d4dc139330ccc36d5",
-    "log_excerpt_verbatim": [
-      "INFO:     Application startup complete.",
-      "INFO:     Uvicorn running on http://127.0.0.1:60520 (Press CTRL+C to quit)"
-    ],
-    "log_gitignored_from_repo": true
+    "exit_code_after_terminate": 1
   },
   "ownership": {
-    "marker_title": "ORD-0520 abort probe 20260930T190842Z",
+    "marker_title": "ORD-0520 abort probe 20260930T223324Z",
     "list_journeys_http_status": 200,
     "marker_rows_read_back_over_http": 1,
     "marker_live_view_over_http": {
@@ -51,18 +44,18 @@
       "details_keys": [],
       "body_bytes_read": null
     },
-    "journey_id": "617589d0-f78f-4054-ba04-a4f67086b7df",
-    "traveler_id": "2bf07287-5f82-488e-b740-4a568fb56270"
+    "journey_id": "ce8afecc-fa0c-4921-9cf4-0b1c9cee8c77",
+    "traveler_id": "22261544-9392-43b1-ba50-f2a7bf1bbd20"
   },
   "before_write": {
     "row": {
       "rowid": 1,
-      "id": "617589d0-f78f-4054-ba04-a4f67086b7df",
-      "traveler_id": "2bf07287-5f82-488e-b740-4a568fb56270",
+      "id": "ce8afecc-fa0c-4921-9cf4-0b1c9cee8c77",
+      "traveler_id": "22261544-9392-43b1-ba50-f2a7bf1bbd20",
       "status": "DRAFT",
-      "title": "ORD-0520 abort probe 20260930T190842Z",
-      "created_at": "2026-09-30T19:09:45.458423+00:00",
-      "updated_at": "2026-09-30T19:09:45.458423+00:00",
+      "title": "ORD-0520 abort probe 20260930T223324Z",
+      "created_at": "2026-09-30T22:34:25.296667+00:00",
+      "updated_at": "2026-09-30T22:34:25.296667+00:00",
       "deleted_at": null,
       "aborted_at": null,
       "abort_reason": null
@@ -79,7 +72,7 @@
     "body_bytes_read": 601,
     "response_status": "CANCELLED",
     "response_abort_reason": "家里临时有事，这趟先不去了（probe）",
-    "response_aborted_at": "2026-09-30T19:09:45.512991Z",
+    "response_aborted_at": "2026-09-30T22:34:25.306667Z",
     "response_live_view": {
       "included": false,
       "reason_code": "JOURNEY_ABORTED"
@@ -88,14 +81,14 @@
   "after_write": {
     "row": {
       "rowid": 1,
-      "id": "617589d0-f78f-4054-ba04-a4f67086b7df",
-      "traveler_id": "2bf07287-5f82-488e-b740-4a568fb56270",
+      "id": "ce8afecc-fa0c-4921-9cf4-0b1c9cee8c77",
+      "traveler_id": "22261544-9392-43b1-ba50-f2a7bf1bbd20",
       "status": "CANCELLED",
-      "title": "ORD-0520 abort probe 20260930T190842Z",
-      "created_at": "2026-09-30T19:09:45.458423+00:00",
-      "updated_at": "2026-09-30T19:09:45.458423+00:00",
+      "title": "ORD-0520 abort probe 20260930T223324Z",
+      "created_at": "2026-09-30T22:34:25.296667+00:00",
+      "updated_at": "2026-09-30T22:34:25.296667+00:00",
       "deleted_at": null,
-      "aborted_at": "2026-09-30T19:09:45.512991+00:00",
+      "aborted_at": "2026-09-30T22:34:25.306667+00:00",
       "abort_reason": "家里临时有事，这趟先不去了（probe）"
     },
     "table_count_in_store": 61
@@ -132,7 +125,7 @@
       "rowid": 3,
       "action": "journey.aborted",
       "actor_type": "traveler",
-      "actor_id": "2bf07287-5f82-488e-b740-4a568fb56270"
+      "actor_id": "22261544-9392-43b1-ba50-f2a7bf1bbd20"
     }
   ],
   "refusals_over_http": {
@@ -141,7 +134,7 @@
       "error_code": "NOT_FOUND",
       "reason_code": "JOURNEY_NOT_FOUND",
       "message_key": "resource.not_found",
-      "error_receipt_id": "CNX-HTP2WPS4",
+      "error_receipt_id": "CNX-GVVE5SAA",
       "details_keys": [
         "journey_id"
       ],
@@ -152,7 +145,7 @@
       "error_code": "REQUEST_ERROR",
       "reason_code": "ABORT_ACTOR_NOT_OWNER",
       "message_key": "request.forbidden",
-      "error_receipt_id": "CNX-899WHDJ6",
+      "error_receipt_id": "CNX-2S4TRVT3",
       "details_keys": [
         "field",
         "journey_id",
@@ -165,7 +158,7 @@
       "error_code": "CONFLICT",
       "reason_code": "JOURNEY_ALREADY_ABORTED",
       "message_key": "request.conflict",
-      "error_receipt_id": "CNX-7H53EBAM",
+      "error_receipt_id": "CNX-CSMD7MB8",
       "details_keys": [
         "abort_reason",
         "aborted_at",
@@ -178,7 +171,7 @@
       "error_code": "CONFLICT",
       "reason_code": "ABORT_JOURNEY_IN_RECYCLE_BIN",
       "message_key": "request.conflict",
-      "error_receipt_id": "CNX-NZW87DE3",
+      "error_receipt_id": "CNX-P7PXYCH9",
       "details_keys": [
         "abort_state",
         "deleted_at",
@@ -190,7 +183,7 @@
   "binned_row_after_refusal": {
     "rowid": 2,
     "status": "DRAFT",
-    "deleted_at": "2026-09-30T19:09:45.687475+00:00",
+    "deleted_at": "2026-09-30T22:34:25.345170+00:00",
     "aborted_at": null,
     "abort_reason": null
   },
