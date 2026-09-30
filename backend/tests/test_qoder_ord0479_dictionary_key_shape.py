@@ -43,6 +43,10 @@ GIT_ROOT = find_repo_root(Path(__file__))
 ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
+#: what the order was opened for, in the file's own words: the value that sits behind the label
+#: `token_unknown`. Stable under an unrelated line shift, exact about the site -- the line number
+#: this test used to cite was rotated by ORD-0528 (c1f06772) adding two comment lines above it.
+SITE_VALUE = "shared.refusedTokenUnknown"
 VALUE = "shared.refusedTokenUnknown"
 
 
@@ -171,17 +175,29 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
     both = en & zh
     exemptions = report["vocabulary_exemptions"]
     assert exemptions, "the tree is clear with nothing forgiven -- then C07 was already green and this order moved"
+    seen: list[tuple[str, int, str]] = []
     for e in exemptions:
         assert "translation_lookup_table" in e["reason"], e
         line_text = (REPO / e["path"]).read_text(encoding="utf-8", errors="replace").splitlines()[e["line"] - 1]
         m = re.search(r':\s*"([^"]+)"', line_text)
         assert m, e
         value = m.group(1)
+        seen.append((e["path"], e["line"], value))
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: the site this order was opened for is among them, and is forgiven on the same grounds.
+    #: Pinned on the VALUE, not on a line number: another lane adding a comment above the table moves
+    #: the line (measured: ORD-0528 at c1f06772 pushed this very site from 45 to 47), and a citation
+    #: that rots on an unrelated edit is a red that tells nobody anything. The value names the site
+    #: exactly -- and the exemption has to report the line where that value actually sits, checked
+    #: against the file below, so nothing here is looser than the line-number version was.
+    site = [s for s in seen if s[0] == SITE]
+    assert site, [(p, v) for p, _l, v in seen]
+    assert [v for _p, _l, v in site] == [SITE_VALUE], site
+    at = site[0][1]
+    line_now = (REPO / SITE).read_text(encoding="utf-8", errors="replace").splitlines()[at - 1]
+    assert SITE_VALUE in line_now, (at, line_now)
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红
