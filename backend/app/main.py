@@ -5874,6 +5874,14 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     # Do this before the normal transition/audit path so retries do not emit a
     # second plan.selected audit event.
     if plan.status == "SELECTED" and journey.active_plan_version_id == plan.id:
+        # A planned Journey has no execution cursor.  Clear a cursor left by a
+        # previous plan before returning the idempotent response; otherwise the
+        # plan pointer and execution projection disagree even though selection is
+        # already authoritative.
+        if journey.status == "PLANNED" and journey.current_activity_id is not None:
+            journey.current_activity_id = None
+            journey.updated_at = datetime.now(timezone.utc).isoformat()
+            session.commit()
         return journey_schema(journey)
     if plan.status not in {"CANDIDATE", "SELECTED"}:
         raise HTTPException(422, "Only a candidate plan can be selected")
@@ -6031,6 +6039,8 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
                 ),
                 None,
             )
+    if journey.status != "ACTIVE":
+        journey.current_activity_id = None
     journey.status = "PLANNED"
     journey.active_plan_version_id = plan.id
     journey.updated_at = datetime.now(timezone.utc).isoformat()
