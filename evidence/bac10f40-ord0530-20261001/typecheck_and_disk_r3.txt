@@ -1,0 +1,11 @@
+run_local=2026-10-01 04:35:32 +0800
+interpreter=3.12.14 node=v24.14.0
+cwd=/d/moodle/_qoder_ai_ord0387_20260928/wt/frontend
+--- npx tsc -p tsconfig.check.json --noEmit ---
+exit_code=0
+--- npx tsc -p tsconfig.typecheck.json --noEmit ---
+exit_code=0
+--- git rev-parse HEAD at this run ---
+6ce7cf6b7d6214c60cdbc7c2373c2b3794da5ccd
+--- df -h /d ---
+D:              308G  285G   23G  93% /d
