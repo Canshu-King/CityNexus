@@ -3,7 +3,7 @@
  "runs": [
   {
    "tag": "declared",
-   "journey_id": "42569dbc-8ec2-4db7-930a-c31e4b0a40c0",
+   "journey_id": "faa21f4a-c820-4046-a419-2804f146e2ed",
    "on_screen_before": {
     "trigger": "把这趟丢进回收站",
     "boxes": 8,
@@ -30,11 +30,11 @@
    },
    "server_rows": [
     {
-     "id": "2dca3fc5-5fff-4322-88da-c4ec994f4a57",
+     "id": "e648150b-98c6-4bdf-a3f1-e809edc8a769",
      "activity_id": null,
      "event_type": "JOURNEY_DELETED",
      "actor_type": "USER",
-     "occurred_at_actual": "2026-09-29T21:16:08.675405+00:00",
+     "occurred_at_actual": "2026-09-30T03:47:55.139090+00:00",
      "planned_start_at": null,
      "planned_end_at": null,
      "source": "DOMAIN",
@@ -53,7 +53,7 @@
   },
   {
    "tag": "skipped",
-   "journey_id": "c2fe76e5-6b40-406d-8a6c-22b5125255a6",
+   "journey_id": "fa636a50-f6d5-4a69-b92f-aabda4a6d750",
    "on_screen_before": {
     "trigger": "把这趟丢进回收站",
     "boxes": 8,
@@ -80,11 +80,11 @@
    },
    "server_rows": [
     {
-     "id": "f496cabc-8295-4d8a-8e59-f27805a1c95e",
+     "id": "c60aa378-64dc-456d-8444-4cf37490f22c",
      "activity_id": null,
      "event_type": "JOURNEY_DELETED",
      "actor_type": "USER",
-     "occurred_at_actual": "2026-09-29T21:16:09.158177+00:00",
+     "occurred_at_actual": "2026-09-30T03:47:55.808917+00:00",
      "planned_start_at": null,
      "planned_end_at": null,
      "source": "DOMAIN",
@@ -100,7 +100,7 @@
   },
   {
    "tag": "silent",
-   "journey_id": "e92e7123-3e72-4395-a331-fff0f6c6227b",
+   "journey_id": "40900a5c-ac80-429d-be33-a1c7b16fc106",
    "on_screen_before": {
     "trigger": null,
     "boxes": 0,
@@ -112,11 +112,11 @@
    },
    "server_rows": [
     {
-     "id": "375b8af9-0896-4e9f-beae-e2bd77429e7a",
+     "id": "1092ca5c-5d07-43d0-be62-1fa8090ef24b",
      "activity_id": null,
      "event_type": "JOURNEY_DELETED",
      "actor_type": "USER",
-     "occurred_at_actual": "2026-09-29T21:16:09.228178+00:00",
+     "occurred_at_actual": "2026-09-30T03:47:55.909963+00:00",
      "planned_start_at": null,
      "planned_end_at": null,
      "source": "DOMAIN",
