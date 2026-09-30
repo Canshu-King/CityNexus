@@ -16588,6 +16588,126 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0536 车道 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb：曝光尺的豁免全部改由一枚冻在尺里的形状表决定，而那张表在形制上写不出「某一格」；豁免前的分母从此不动，现尖上 8 枚格＝5 红＋3 枚逐格有据，号令者那两侧对照（候选 10 / 现尖 6）用门钉那把逐字复现
+
+**归属**：题面在账本 `CITYNEXUS_AGENT_CONTROL.md:16779`（CMDR 02:13 那块的第一节，收件人逐字 `1d64acf5`）。
+
+**先印出我读了什么**：题面给的现尖是 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`，叫醒那轮给的逐字是 `7862c6de5565c02c20ec2dccaa9da18960603e06`（注意第 21 位起是 `0ec0ec2d`）。我在 `D:/moodle/CityNexus` 跑 `env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，回读 `7862c6de5565c02c20ec2dccaa9da18960603e06`；把叫醒那串逐字送进 `git cat-file -t` 报 could not get object info，我这一串回 commit。本块所有读数都长在我这一串上；题面那串是 02:13 的针，我没去复现它，它也不是现针。
+
+**这一单真正的缺口是我找出来的，不是题面写好的**：尺族里已经有两条结构化豁免（ORD-0408 甲的契约闭集、Q67/Q75 的折叠具名锚），它们**判得对**；坏在**豁免一生效，那一格就从 `hits` 搬进别的列表，分母跟着制度走**。同一棵现尖导出树上门钉的 r7b 报 6 枚 hits、我上一轮发的 r7b4 报 5 枚，差的那一格正是 `RecoveryRequiredPanel.tsx` 里被折叠锚**静默**移走的那枚，没人打印过它的依据（逐格分区在件 `generation_reconciliation_r1.json` blob 2ed661a05438f4531fc51bb8a1ec91662f701236）。门 Q64 那一臂比的正是绝对格数（`preflight_and_land_r7.py:384` 从 `exposure_counts` 造 `growth`），所以「尺换了一代」与「候选真的长了曝光面」在门上读起来是同一件事。这就是「靠人手放」的真实形状：不是有人在块里写字，是**数字会随制度漂，只有人能把它圆回来**。
+
+## 1 交的一枚文件（已发布路径 0 改动）
+
+新名 `live_checks/ui_exposure_taint_ast_r8.cjs`，blob `83819289685f4bb58c5dea728114473f66fd29ef`，本机字节 199377 B；枝 `review/S4-ord0536-structured-exemption-r8` 头 `66cd53af64ac99c0784108ebd7b5276cc8ac2917`，`ls-remote` 回读与本机 `rev-parse` 逐字相等；对现尖只读预测 `git merge-tree --write-tree` 退出 0、预测树 `6147d21fb54ce37e1370020335eac3b4445ffc97`。r7b 与 r7b4 两枚已发布字节一字未动，而且本轮**把它们当对照各跑了一遍**：r7b blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`、r7b4 blob `cefcb38c8d01a5996f3f705531a127c85f16c0b3`（`generation_reconciliation_r1.json` 的 `rulers` 段，逐枚 `git hash-object` 实测）。
+
+## 2 豁免由结构化条件决定，这条要求写成了数据
+
+一枚冻在尺里的表 `b2d307677213`，两条目，键就是题面点名的三根轴：**哪条规则 × 哪种 sink 形状家族 × 哪个 origin_kind**，再加一条**必须在树上量得到**的证据谓词：
+
+| 条目 | rules | sink 形状家族 | origin_kind | 证据谓词（实测才放行） |
+| --- | --- | --- | --- | --- |
+| `EX-1-CONTRACT-CLOSED-ENUM` | `*` | `*` | `raw-body`, `prose`, `named-prose-member`, `exception` | `contract_closed_enum` |
+| `EX-2-ATTRIBUTED-FOLD` | `UPSTREAM_TEXT_VIA_HELPER_TO_DOM`, `RAW_BODY_TO_DOM`, `UPSTREAM_READ_DIRECT`, `UPSTREAM_EXCEPTION_TO_DOM` | `text-in`, `text` | `raw-body`, `prose`, `exception` | `attributed_fold` |
+
+表的字节摘要（一枚 40 位的 sha1，随每次跑印在输出 `exemption_table.digest_sha1` 里，它不是 git 对象、也不可 cat-file，本机字节 sha1 摘要而已；同行给出可取回的承载文件 `live_checks/ui_exposure_taint_ast_r8.cjs` 的 blob `83819289685f4bb58c5dea728114473f66fd29ef`），所以事后能问「是哪一枚字节放行的」。
+
+**表写不出「某一格」——这是形制检查，不是口号**：`validateExemptionTable` 只认 `id / rules / sink_shape_families / origin_kinds / evidence` 五枚键；任何值长得像路径、扩展名、行号或 16 位格 id 就拒；家族轴里带 `:`（一整枚 sink 形状而不是一族）也拒；`evidence` 不在实现过的谓词名里同样拒。六枚真跑的拒件各退 3、回 `EXEMPTION_TABLE_SCHEMA_REJECTED`，逐枚点名（件 `counterexamples_r1.json` blob 17587b3a67e653639b289c81cab91a7e807ba228）：
+- `names_a_file` ⇒ 报出 `UNKNOWN_KEY`；我预期的那条形制检查确实响：True
+- `names_a_line` ⇒ 报出 `UNKNOWN_KEY`；我预期的那条形制检查确实响：True
+- `names_a_cell_id` ⇒ 报出 `UNKNOWN_KEY`；我预期的那条形制检查确实响：True
+- `names_one_whole_sink_shape` ⇒ 报出 `FAMILY_NAMES_ONE_SINK`；我预期的那条形制检查确实响：True
+- `invents_an_evidence_name` ⇒ 报出 `EVIDENCE_NOT_IMPLEMENTED`；我预期的那条形制检查确实响：True
+- `names_a_file_through_the_family_axis` ⇒ 报出 `AXIS_NAMES_A_CELL`；我预期的那条形制检查确实响：True
+
+**命令行也没有缝**：接受的旗标是一枚闭集（`--tree` `--file` `--ref` `--path` `--out` `--contract` `--selftest`），长得像豁免的旗标逐具名拒，不忽略、不静默降级。四枚真跑：
+- `--waive-cell` ⇒ 退出 2，第一条 reason `HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL`，而且 `--out` 那枚文件没被写出：True
+- `--exempt-cells` ⇒ 退出 2，第一条 reason `HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL`，而且 `--out` 那枚文件没被写出：True
+- `--baseline-cells` ⇒ 退出 2，第一条 reason `HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL`，而且 `--out` 那枚文件没被写出：True
+- `--authoritative-count` ⇒ 退出 2，第一条 reason `UNRECOGNISED_FLAG`，而且 `--out` 那枚文件没被写出：True
+
+## 3 具名报回：现尖上被豁免的格逐格打印，没豁免的照旧红
+
+跑形制（`node` v24.18.0，环境里没有 `PYTHONPATH` 也没有 `NODE_PATH`；两行都在 `D:/moodle/_qoder_lane_S4_0926/work/ord0536` 下逐字敲的）：
+
+```
+$ git archive 7862c6de5565c02c20ec2dccaa9da18960603e06 frontend/src contracts | tar -x -C exp_tip_r8
+$ node ui_exposure_taint_ast_r8.cjs --tree exp_tip_r8/frontend/src \
+    --contract exp_tip_r8/contracts/openapi.yaml --out report_tip_7862c6de.json
+cells_total 8 = red 5 + exempted 3   # 门钉的 r7b 在同一棵树上报 6 hits
+```
+
+被豁免的 3 枚，规则 + 文件 + 行 + 依据（全文在 `report_r1.txt` blob 168d4ab69062d474303eab60b36163c6840f6946）：
+
+| 规则 | 文件:行 | cell_id | 条目 / 证据 | 在树上量到的依据 |
+| --- | --- | --- | --- | --- |
+| UPSTREAM_TEXT_VIA_HELPER_TO_DOM | `app/V8Experience.tsx:2870` | 2936eafd474f9b3b | EX-2-ATTRIBUTED-FOLD / `attributed_fold` | fold `details`@2864 的具名锚 `http_status`@2877 |
+| UPSTREAM_TEXT_VIA_HELPER_TO_DOM | `components/CnxMeasuredFacts.tsx:81` | cdfe4dfe298f1093 | EX-2-ATTRIBUTED-FOLD / `attributed_fold` | fold `details`@64 的具名锚 `http_status`@71 |
+| UPSTREAM_TEXT_VIA_HELPER_TO_DOM | `features/recovery/RecoveryRequiredPanel.tsx:299` | 7feb812a1e486a9d | EX-2-ATTRIBUTED-FOLD / `attributed_fold` | fold `details`@288 的具名锚 `dynamic:notice.field`@297 |
+
+第三枚的锚是 `dynamic:notice.field`，那是 r7b1 那条「展开写法必须伴一枚来路标签」的形状，本轮它从**看不见**变成**看得见并且带依据**。照旧红的 5 枚一枚没藏，每枚带尺自己给的理由：属性位那枚是 `shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL`，`ActivityDetail.tsx` 那枚结尾是 `NO_FOLD_CONTAINER`（逐格见 `report_r1.txt` 与 `rec_r8_tip_7862c6de.json` blob 8d228842ffb5037ce70cf8f509f2ed745de4e39e）。
+
+**分母不再随豁免移动，这是量出来的**：同一棵针树把折叠条目整枚删掉 ⇒ red 8、exempted 0；把该谓词改成「不读树就答 ok」（那正是「有人写一句就算豁免」在仪器里的样子）⇒ red 1、exempted 7。两种改法 `cells_total` 都还是 8，而 `--selftest` 双双 SELFTEST_FAIL（退 7），点名条目分别是 ``fold_pair`, `no_drift_against_the_published_partition`` 与 ``class_name_opens_nothing`, `contract_is_not_for_sale_to_the_fold`, `contract_pair`, `fold_pair`, `new_call_site_into_a_shared_helper_is_not_exemptible`, `no_drift_against_the_published_partition``；未改动的交付字节 SELFTEST_PASS、退 0。三行都在 `counterexamples_r1.json` 的 `mutants`。
+
+## 4 正反两向自检（两侧读数都贴）
+
+`node ui_exposure_taint_ast_r8.cjs --selftest` 退出 0、`verdict` SELFTEST_PASS；新增豁免臂 9 枚全 met，逐条两侧读数在 `st_r8_full.json`（blob b2d30767721371e2da53ed042e6efad7af097019）的 `exemption_arms`：
+
+| 臂 | 应当豁免的一侧 | 不应当豁免的一侧 |
+| --- | --- | --- |
+| `fold_pair` | 折叠 + 具名锚：cells 1 枚、red 0，那枚格 verdict EXEMPTED 且**仍在 cells 里** | 同一格把锚换成 JSX 注释：cells 1 枚、red 1，near_miss 具名 EX-2 且 `fold_without_anchor` 为真 ⇒ 改的是判语，不是分母 |
+| `contract_pair` | 契约声明闭集且值在集内：cells 1 枚、red 0，依据里回显 enum 行号 | 值在集外：red 1（`value_not_in_the_contract_set`）；契约根本没声明该字段：red 1（`CONTRACT_MISSING_ENUM`）。三侧 cells 都是 1/1/1 |
+| `contract_is_not_for_sale_to_the_fold` | 同上，值在集内 ⇒ 豁免 | 同一格裹进合法折叠与合法锚、值在集外 ⇒ cells 1 枚、red 1：契约先拒的不会被折叠条目救回 |
+
+其余几枚管的是表与输入面：`table_cannot_name_a_cell`（上面那六枚反例）、`no_waiver_input_channel`、`class_name_opens_nothing`、`fold_family_excludes_the_attribute_slot`（EX-2 的家族轴里没有 `attribute`，Q71 那扇门仍关着）、`new_call_site_into_a_shared_helper_is_not_exemptible`（**号令者点名要我考虑的那条形状**：共用 helper 多一条来路上游正文，两枚面板各长出的格**全红**，包含车道根本没打开的那枚文件——作者身份不是这三根轴之一，表里就没有这一列）、`no_drift_against_the_published_partition`。
+
+旧三组按原期望仍全中：fixtures 20 条、mode 臂 2/2、cross 臂 7/7；不漂移那枚拿**已发布的** 19 条 R7 臂的原期望逐条比分区，19/19 相等（期望不是我这一轮写的；逐条读数在件 `st_r8_full.json`，其 blob b2d30767721371e2da53ed042e6efad7af097019）。
+
+## 5 与号令者那两侧对照对齐口径
+
+他那两棵树按题面逐字 rev 各自重新 `git archive … frontend/src contracts` 导出，三把尺在同一棵上各跑一遍（件 `generation_reconciliation_r1.json`、`door_view_r1.json` blob c5ff9c584ca4fc133102091672127b932ab203c1）：
+
+| 树 | r7b hits | r7b4 hits | r8 cells_total（豁免前） | r8 red | r8 exempted |
+| --- | --- | --- | --- | --- | --- |
+| 候选 `62f030f351e70bd95108377fe2e3bbc49c5ef288` | 10 | 9 | 12 | 9 | 3 |
+| 现尖 `0989713aa687b97f4cd40bae009a6ce493425a4b` | 6 | 5 | 8 | 5 | 3 |
+| 本轮现尖 `7862c6de5565c02c20ec2dccaa9da18960603e06` | 6 | 5 | 8 | 5 | 3 |
+
+⇒ **r7b 那一列逐字复现他题面里的 10 / 6**（候选 / 现尖），口径是接上的；同一对树上 r8 读到红 9 与 5、豁免前 12 与 8。三把尺的**豁免前分母逐棵相等**（`pre_exemption_denominator_stable_across_generations` 三棵全 True），会漂的只有「红」那一列——而 r8 把每一枚漂移都打印出来了。
+
+**给门的那一句**：候选相对现尖按格 id 新增 4 枚、消失 0 枚，逐枚是 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/access/AccessPanel.tsx:474`; `UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/access/AccessPanel.tsx:462`; `UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/studio/PlanVersionHistoryPanel.tsx:87`; `UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/studio/PlanVersionHistoryPanel.tsx:100`。门那套按 (file, rule) 计数的判语指的是同一批格（`the_two_views_agree` = true），差别只在身份视图额外说得出文件与行。绝对格数继续可用；我**没动门**（`preflight_and_land_r7.py:384` 仍是原字节），只把门可直接消费的两枚视图交出来（`door_view_r1.json`），换判语要号令者点单。
+
+## 6 顺手抓到一枚调用方的形红（是尺族自己的问题，具名报、不擅自修别人的量具）
+
+`live_checks/patrol/_exposure_delta_r1.py:66` 取的是 `j.get("cells") or []`，而**已发布的任何一代在 `--file`/`--ref` 模式都不吐 `cells` 这枚键**（r7b、r7b4 都没有；r8 有）。同一枚针、同一份路径各跑一遍的证据在 `caller_cells_key_r1.json`（blob 336a6f12e65b9f4b0c54ef6f3bd56f8ac63a9947）：`JourneyTrashPanel.tsx` 那一枚 r7b 回 2 hits，而 `cells` 键长 0、按那行代码抽出的格 id 0 ⇒ 那支扫描对每枚文件拿到的都是空集，于是它那句「不会新增曝光格（按逐枚文件集合差）」在该形状下**恒为真**，与产品字节无关。r8 同一份路径回 hits 2、`cells` 键长 2、抽出格 id 2，即这一判语从今天起才真的有力。修法是一行（让那支扫描改读 r8 的 `cells`，或改读 `hits`），但那枚脚本不是我的字节，我不重写别人的量具，等号令者点单。
+
+同一份件里还有格既有分歧、不是我引入的：`JourneyTrashPanel.tsx` 在 `--tree` 下不产格、在 `--file` 下产 2 枚——r7b4 自己的 `upper_bound_claim` 早把这种两模式分歧记成 REFUTED；本轮 `no_drift` 只保证与已发布分区一致，没把它抹平。**这格我没修，也不写成修了。**
+
+## 7 形制与边界
+
+- 基座 = 现读尖 `7862c6de5565c02c20ec2dccaa9da18960603e06`；权威线 0 次移动；账本 0 次直写（本块走收件口）；别人的 worktree 0 次进入。
+- `:8000` `:4781` `:4782` `:8693` 一枚没占；本轮 0 次起服务、0 次开端口（全部离线读树）；`_preview.db` 一字未读未写；`demo/reset` 0 次。
+- 新开整树导出 0 枚：三棵都只含 `frontend/src contracts` 两段，逐棵按 `os.walk` 实测字节 2515818 / 2515344 / 2527087，合计 7558249 B（件 `export_sizes_r1.json` blob 7df659cb301193cc55bdf185849cde44691df405），跑完留在 `work/ord0536/` 等号令者处置。
+- 反件与自检只读产品字节；六枚形制拒件、四枚旗标拒件与两枚 mutant 都在 `work/ord0536/` 本地，**mutant 不是交付字节**，`counterexamples_r1.json` 里 `published_bytes_unchanged` = true 是那一次跑完对本文件字节的复读。
+- 我没做的也没假装做了：没改门、没改值守那支扫描、没动 r7b / r7b1 / r7b3 / r7b4 任何一枚已发布字节、没把任何一格改成永真、没有 `--ignore`、没有 skip。
+
+## 8 仍未改善（不折进已收口）
+
+- 现尖上照旧有 5 枚红格，本单不吞它们，也**没有**为它们任何一枚新增表条目——那要的是产品字节改动或号令者具名裁语，不是仪器放行。
+- 折叠豁免证到的是「这一格折在具名锚后面」，证不了「用户打开以后读得明白」。后者是屏尺的活，我把这句话写死在 `interpretation_limit` 里，没让尺替它作答。
+- EX-1 在全树模式本轮豁免 0 枚：现尖上没有一枚格的元素具名 `*_code` 契约字段（唯一像的那枚只在 `--file` 下现，见第 6 节）。所以它的正反两向是在自检与真文件两处都跑的，我没拿一侧宣称过关。
+- 门那侧换成按身份比较需要一单改门；`cells_total` 从今天起不随豁免动，但门仍钉在 r7b 上，那道比较还是绝对格数。
+
+## 9 坐标
+
+证据 17 枚在 `commander/control` 的 `evidence/ord0536-structured-exemption-0339/`，逐件本机 blob 与**从分支尖 `ls-tree` 读回的服务端 blob** 相同、`all_byte_equal` = true（回执 `publish_receipt_r1.json` 在 `commander/control` 的 `evidence/ord0536-structured-exemption-0339/` 下可取——它的服务端 blob 号以服务器 `ls-tree` 读回为准，块里不再手抄一枚数字；号令者可按路径直接取。这一跑重推的路径：`publish_0536_r1.py, caller_cells_key_r1.json`）。
+
+**自报一件我自己的错，读数来自修好后**：第一版发布脚本把回执里那枚键读成 `sha`，而 `cmdr_git_mirror_r1.py:185` 实际打印的是 `readback_blob` / `readback_size` / `byte_equal`——于是 17 枚**早就落上去**的文件在我的回执里全成了 `byte_equal: false`，这正是「推送成功却看着没成功」那枚老坑换了个方向。第二版不重推已在的字节，改为按分支尖取真实 blob 逐件比（`publish_0536_r2.py`，同目录，回执即它产的）。
+
+**同一轮还留着一枚早批落点**：`evidence/ord0536-structured-exemption-0337/` 有 17 枚同名文件，是同批字节早一拍的落点；它与交付集并非全部相同（`all_same_blobs` = false，差的正是上面重推那两枚与第 6 节那枚后加的读数件）。我不删 `commander/control` 上的任何东西，等号令者处置；本块引用的坐标全部指向 `evidence/ord0536-structured-exemption-0339`。
+
+汇总读数三件：`generation_reconciliation_r1.json` blob 2ed661a05438f4531fc51bb8a1ec91662f701236（三代 × 三棵树分区对账）、`counterexamples_r1.json` blob 17587b3a67e653639b289c81cab91a7e807ba228（六枚形制拒件 + 四枚旗标拒件 + 两枚 mutant 的格数与自检判语）、`door_view_r1.json` blob c5ff9c584ca4fc133102091672127b932ab203c1（门可直接消费的身份视图与 (file, rule) 计数视图）。交付字节：`live_checks/ui_exposure_taint_ast_r8.cjs` blob `83819289685f4bb58c5dea728114473f66fd29ef`。
+
+
 ### CMDR 04:27 · 第五批四笔落地（0521 / 0528 / 0530 / 0526）· 尖 `514b397f96f3b5165b24865f4a544ab6f8020084`；0533 一笔打回
 
 **一、落地（`cmdr_batch_land_r1.py` 输出里逐笔 `verdict=READY_TO_LAND mode=LAND`）**
