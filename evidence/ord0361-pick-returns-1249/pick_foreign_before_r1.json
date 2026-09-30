@@ -1,0 +1,156 @@
+{
+ "order": "ORD-0361",
+ "instrument": "pick_persistence_r1",
+ "arm": "foreign",
+ "base_url": "http://localhost:4491",
+ "seeded_storage": [
+  [
+   "citynexus.v8.map_pick.11111111-1111-4111-8111-111111111111",
+   "3a58c470-524c-5854-aa39-6c37a350eb80"
+  ]
+ ],
+ "on_arrival": {
+  "glass": null,
+  "heading": "Nexus River Cruise Pier",
+  "markers": [
+   {
+    "label": "1",
+    "aria_label": "Old Town Gate",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "2",
+    "aria_label": "Riverside Museum",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "3",
+    "aria_label": "Central Food Hall",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "4",
+    "aria_label": "Tech Art Center",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "5",
+    "aria_label": "Nexus River Cruise Pier",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "6",
+    "aria_label": "Skyline Dinner House",
+    "pressed": "false",
+    "selected_class": false
+   }
+  ],
+  "storage": {
+   "citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222",
+   "citynexus.locale": "zh-CN",
+   "citynexus.copilot.history.22222222-2222-4222-8222-222222222222": "[]",
+   "citynexus.v8.map_pick.11111111-1111-4111-8111-111111111111": "3a58c470-524c-5854-aa39-6c37a350eb80"
+  }
+ },
+ "after_user_pick_of_marker_3": {
+  "markers": [
+   {
+    "label": "1",
+    "aria_label": "Old Town Gate",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "2",
+    "aria_label": "Riverside Museum",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "3",
+    "aria_label": "Central Food Hall",
+    "pressed": "true",
+    "selected_class": true
+   },
+   {
+    "label": "4",
+    "aria_label": "Tech Art Center",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "5",
+    "aria_label": "Nexus River Cruise Pier",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "6",
+    "aria_label": "Skyline Dinner House",
+    "pressed": "false",
+    "selected_class": false
+   }
+  ],
+  "glass": null
+ },
+ "after_reload": {
+  "glass": null,
+  "markers": [
+   {
+    "label": "1",
+    "aria_label": "Old Town Gate",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "2",
+    "aria_label": "Riverside Museum",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "3",
+    "aria_label": "Central Food Hall",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "4",
+    "aria_label": "Tech Art Center",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "5",
+    "aria_label": "Nexus River Cruise Pier",
+    "pressed": "false",
+    "selected_class": false
+   },
+   {
+    "label": "6",
+    "aria_label": "Skyline Dinner House",
+    "pressed": "false",
+    "selected_class": false
+   }
+  ],
+  "storage": {
+   "citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222",
+   "citynexus.locale": "zh-CN",
+   "citynexus.copilot.history.22222222-2222-4222-8222-222222222222": "[]",
+   "citynexus.v8.map_pick.11111111-1111-4111-8111-111111111111": "3a58c470-524c-5854-aa39-6c37a350eb80"
+  }
+ },
+ "verdict": {
+  "glass_named_on_arrival": false,
+  "glass_named_after_reload": false,
+  "pin_painted_after_reload": false,
+  "restored_entry_present_after_reload": true,
+  "stale_entry_dropped": false
+ },
+ "console_errors": []
+}
