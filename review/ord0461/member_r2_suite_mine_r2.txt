@@ -2,27 +2,27 @@
 ........................................................................ [  9%]
 ..............................s......................................... [ 13%]
 ..................................F....F.....F.F....F...F............... [ 18%]
-.....................F......................F........................... [ 23%]
+.....................F......................F........................... [ 22%]
 ........................................................................ [ 27%]
-..................F..................................................... [ 32%]
+..................F..................................................... [ 31%]
 ........................................................................ [ 36%]
-........................................................................ [ 41%]
-...................................................x.................... [ 46%]
-........................................................................ [ 50%]
-........................................................................ [ 55%]
+........................................................................ [ 40%]
+....................................................................x... [ 45%]
+......F................................................................. [ 50%]
+........................................................................ [ 54%]
 ........................................................................ [ 59%]
-........................................................................ [ 64%]
-........................................................................ [ 69%]
-........................................................................ [ 73%]
-........................................................................ [ 78%]
-......................sssssssssssss..................................... [ 82%]
-........................................................................ [ 87%]
-........................................................................ [ 92%]
-...s.................................................................... [ 96%]
-.....................................................                    [100%]
+........................................................................ [ 63%]
+........................................................................ [ 68%]
+........................................................................ [ 72%]
+........................................................................ [ 77%]
+.......................................sssssssssssss.................... [ 81%]
+........................................................................ [ 86%]
+........................................................................ [ 91%]
+....................s................................................... [ 95%]
+......................................................................   [100%]
 ================================== FAILURES ===================================
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_gates.py:843: AssertionError: 期望：`run.outcome` 带上 §11 的机器可读语义；实际：run.outcome=None，而 run.status='SKIPPED_EXTERNAL_DEPENDENCY' / failure_reason='AI is switched off by the operator' —— 这次运行确实什么都没改（没 key、没动作），可它只留下一个运行时标签；一个既没变化也没原因的 200，正是用户早上看到的那句「转了半天啥也没发生」
-D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_lock_duration.py:264: AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': 'e7312310-dd1c-48bf-a6d8-0c027f5c63a2', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL
+D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_lock_duration.py:264: AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '3bb6c591-9fd6-4ef3-b4b6-b1012ab95faa', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_matrix_truth.py:375: AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_matrix_truth.py:466: KeyError: 'error_type'
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_provider_independence.py:70: AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:609: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest", timeout=1.0) ; backend\tests\test_qoder_provider_identity.py:325: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})
@@ -30,6 +30,7 @@ D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_anywhere_provider_truth
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_city_failure_reasons.py:197: AssertionError: assert 'PROVIDER_SERVER_ERROR' == 'PROVIDER_BAD_RESPONSE'
 C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\urllib\request.py:1347: urllib.error.URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>
 D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_ord0296_write_deadline.py:212: AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'], 'app\\core\\config.py...settings.write_busy_timeout_ms)', 'def busy_timeout_seconds() -> float:', 'return busy_timeout_ms() / 1000', ...], ...}
+D:\moodle\_qoder_rel_ord0461_wt\backend\tests\test_qoder_ord224_g3_generation_measurement.py:188: AssertionError: 期望：这一形制在库里留下**两代**（A 已终态 + 后继另开一代）；实际 2 行 [('bdb59f00', 'UNAVAILABLE'), ('1950cdd2', 'UNAVAILABLE')]
 ============================== warnings summary ===============================
 ..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
   D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
@@ -55,5 +56,6 @@ FAILED backend\tests\test_qoder_anywhere_provider_truth.py::test_g10_every_norma
 FAILED backend\tests\test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
 FAILED backend\tests\test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
 FAILED backend\tests\test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
-9 failed, 1540 passed, 15 skipped, 1 xfailed, 4 warnings in 213.02s (0:03:33)
+FAILED backend\tests\test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+10 failed, 1556 passed, 15 skipped, 1 xfailed, 4 warnings in 180.72s (0:03:00)
 m2_rc=1

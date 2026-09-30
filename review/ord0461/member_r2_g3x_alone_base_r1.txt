@@ -1,1 +1,2 @@
-1 passed, 2 warnings in 5.51s
+FAILED backend\tests\test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+1 failed in 3.61s

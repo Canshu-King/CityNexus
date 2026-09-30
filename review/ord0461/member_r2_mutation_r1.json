@@ -1,11 +1,12 @@
 {
-  "head": "862b2634234f20caec6dd1e5d1eb193510151ed4",
-  "before": "862b2634234f20caec6dd1e5d1eb193510151ed4",
+  "head": "ee00ec3e605a6cc5c5dc0328b478074ae067edab",
+  "before": "ee00ec3e605a6cc5c5dc0328b478074ae067edab",
+  "main_py_line_ending": "CRLF",
   "results": [
     {
       "code": "MEMBER_JOURNEY_RECYCLED",
       "arm_filter": "test_a_journey_in_the_recycle_bin_takes_neither_member_write_on_either_door",
-      "summary": "1 failed, 11 deselected, 2 warnings in 3.54s",
+      "summary": "1 failed, 11 deselected, 2 warnings in 1.96s",
       "mutated_blob_differs": true,
       "restored_byte_identical": true,
       "exit": 1
@@ -13,7 +14,7 @@
     {
       "code": "MEMBER_ACTOR_NOT_A_MEMBER",
       "arm_filter": "test_an_actor_that_is_not_in_the_member_set_is_refused_by_name_on_both_doors or test_a_membership_that_is_no_longer_in_force_gives_its_holder_no_voice",
-      "summary": "2 failed, 10 deselected, 2 warnings in 2.51s",
+      "summary": "2 failed, 10 deselected, 2 warnings in 1.92s",
       "mutated_blob_differs": true,
       "restored_byte_identical": true,
       "exit": 1
@@ -21,7 +22,7 @@
     {
       "code": "MEMBER_ACTOR_NOT_PERMITTED",
       "arm_filter": "test_a_role_the_capability_table_does_not_grant_is_refused_by_name or test_the_permission_answer_is_read_off_the_acl_table_and_not_a_role_list",
-      "summary": "2 failed, 10 deselected, 2 warnings in 2.22s",
+      "summary": "2 failed, 10 deselected, 2 warnings in 2.06s",
       "mutated_blob_differs": true,
       "restored_byte_identical": true,
       "exit": 1
@@ -29,7 +30,7 @@
     {
       "code": "MEMBER_UNKNOWN",
       "arm_filter": "test_an_id_that_is_not_a_member_of_this_journey_is_refused_by_name_on_both_doors",
-      "summary": "1 failed, 11 deselected, 2 warnings in 2.18s",
+      "summary": "1 failed, 11 deselected, 2 warnings in 2.09s",
       "mutated_blob_differs": true,
       "restored_byte_identical": true,
       "exit": 1

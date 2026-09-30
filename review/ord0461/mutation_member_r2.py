@@ -54,16 +54,26 @@ def committed_blob():
 
 
 original = io.open(MAIN, encoding="utf-8", newline="").read()
+EOL = "\r\n" if "\r\n" in original else "\n"
+print("main_py_line_ending=%s" % ("CRLF" if EOL == "\r\n" else "LF"))
 start_blob = blob_of(MAIN)
+
+
+def fit(text):
+    """Anchors are written with \\n; the file may be CRLF, so match the file's own endings."""
+    return text.replace("\n", EOL)
+
+
 print("main_py_head=%s" % committed_blob())
 print("main_py_before_mutants=%s matches_the_commit=%s" % (start_blob, start_blob == committed_blob()))
 
 results = []
 for mutant in MUTANTS:
-    count = original.count(mutant["anchor"])
+    anchor, replace = fit(mutant["anchor"]), fit(mutant["replace"])
+    count = original.count(anchor)
     assert count == 1, "%s: anchor matched %d times, not the one guard" % (mutant["name"], count)
     io.open(MAIN, "w", encoding="utf-8", newline="").write(
-        original.replace(mutant["anchor"], mutant["replace"]))
+        original.replace(anchor, replace))
     mutated_blob = blob_of(MAIN)
     run = subprocess.run([PY, "-m", "pytest", "-q", "-rf", "--tb=no",
                           "backend/tests/test_qoder_ord0461_member_write_doors_r2.py",
@@ -90,6 +100,8 @@ all_restored = all(r["restored_byte_identical"] for r in results)
 print("every_mutant_made_its_arm_red=%s" % all_went_red)
 print("file_restored_after_every_mutant=%s final_blob=%s" % (all_restored, blob_of(MAIN)))
 io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(
-    {"head": committed_blob(), "before": start_blob, "results": results,
+    {"head": committed_blob(), "before": start_blob,
+     "main_py_line_ending": "CRLF" if EOL == "\r\n" else "LF",
+     "results": results,
      "every_mutant_made_its_arm_red": all_went_red,
      "file_restored_after_every_mutant": all_restored}, ensure_ascii=False, indent=2) + "\n")
