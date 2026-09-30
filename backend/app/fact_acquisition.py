@@ -629,17 +629,8 @@ def _plain_text_cost(
     excerpt = excerpt.translate(
         str.maketrans({"\uff08": "(", "\uff09": ")"})
     )
-    if re.search("\u514d\u8d39|\u514d\u8cbb|\u7121\u6599" + r"|free", excerpt, re.IGNORECASE):
-        return {
-            "status": "VERIFIED_PROVIDER",
-            "amount_minor": 0,
-            "currency": "CNY",
-            "source": "official_web",
-            "source_url": source_url,
-            "raw": excerpt,
-        }
     price_pattern = re.compile(
-        r"(?P<amount>\d+(?:\.\d{1,2})?)\s*(?P<currency>"
+        r"(?P<amount>\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)\s*(?P<currency>"
         + re.escape("\u5143")
         + r"|CNY|RMB|"
         + re.escape("\u00a5")
@@ -654,11 +645,20 @@ def _plain_text_cost(
         seasonal.append(
             {
                 "period": _period_text(match.group("period") or "").strip(),
-                "amount_minor": round(float(match.group("amount")) * 100),
+                "amount_minor": round(float(match.group("amount").replace(",", "")) * 100),
                 "currency": currency,
             }
         )
     if not seasonal:
+        if re.search("\u514d\u8cbb|\u7121\u6599|\u514d\u8d39" + r"|free", excerpt, re.IGNORECASE):
+            return {
+                "status": "VERIFIED_PROVIDER",
+                "amount_minor": 0,
+                "currency": "CNY",
+                "source": "official_web",
+                "source_url": source_url,
+                "raw": excerpt,
+            }
         return {
             "status": "UNKNOWN",
             "amount_minor": None,
@@ -862,8 +862,14 @@ def _official_web_facts(
     visible_text = _visible_html_text(body)
     if opening.get("status") == "UNKNOWN":
         opening = _plain_text_opening(visible_text, final_url, reference_at=reference_at)
-    if cost.get("status") == "UNKNOWN":
-        cost = _plain_text_cost(visible_text, final_url, reference_at=reference_at)
+    visible_cost = _plain_text_cost(visible_text, final_url, reference_at=reference_at)
+    if visible_cost.get("status") != "UNKNOWN":
+        # The rendered admission section is the operator-facing fact.  Some
+        # sites publish generic JSON-LD (including isAccessibleForFree=true)
+        # alongside a paid admission table; prefer the explicit labelled text
+        # when it contains a cost fact instead of letting generic metadata
+        # erase the real ticket price.
+        cost = visible_cost
     status = "ACQUIRED" if opening.get("status") != "UNKNOWN" or cost.get("status") != "UNKNOWN" else "NO_STRUCTURED_FACTS"
     return {
         "provider": "official_web",
