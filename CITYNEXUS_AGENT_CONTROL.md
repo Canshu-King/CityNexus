@@ -16588,6 +16588,62 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 22:58 · 死局的根因由产品自己说出：目录补水终态 `NO_REGISTERED_SOURCE`（并已开 ORD-0526 去登记供给源）
+
+**〇、口径**
+
+新尖 = `c80dce10b3ef` 起头（本轮落了 ORD-0519 与 ORD-0497 r3）。栈：导出树 `_verify_http_7b93d18d…`、后端 `:4785`（私有库、`CITYNEXUS_DEMO_MODE=true`）。`demo/reset` 未跑，`_preview.db` 未写。
+
+**一、那扇我先前没试的门，以及它的终态**
+
+```
+POST /api/v1/catalog-hydrations   {"query": "天津"}
+-> http_status=202
+   {"operation_id":"644bcc21-13b0-4a30-bee1-deb963cb500e",
+    "fingerprint":"9c0be3a6fecd0f66a57eac01f32a7ccc","reused":false,
+    "status":"QUEUED","phase":"QUEUED","terminal":false,
+    "canonical_destination_id":"CN-TIANJIN"}
+
+GET /api/v1/catalog-hydrations/644bcc21-13b0-4a30-bee1-deb963cb500e
+-> http_status=200
+   {"status":"UNAVAILABLE","recorded_status":"UNAVAILABLE","phase":"FINALIZING",
+    "outcome":"NO_REGISTERED_SOURCE","terminal":true}
+```
+
+两个形状要紧：① 它把一个人名（"天津"）解析成权威城市号 `CN-TIANJIN`，说明"地名→身份"这一跳**不需要出网**；② 终态是具名的 `NO_REGISTERED_SOURCE`，不是 timeout、也不是空目录——**这台服务器没有登记任何目录供给源**。
+
+**二、于是今晚的死局可以一句话说尽**
+
+产品能认城市（上一节）、能建行程（`POST /api/v1/journeys` 回 `http_status=201`）、能开门（`/v8/hub`、`/v8/import`、`/v8/access` 三屏我都读到真内容），但**没有任何一个已登记的供给源能把一枚地点放进目录**：
+
+| 腿 | 它的回答 |
+|---|---|
+| 演示夹具 `prepare-scenario` | `http_status=409` `DEMO_SCENARIO_MISSING`，原话指回 `demo/reset`（破坏门，禁） |
+| 排程 `plans/generate` | `http_status=422`，`places_in_catalog: 0` |
+| 粘贴解析 `poi-import/parse` | `http_status=200`，三条全 `UNRESOLVED`、`addable=0`（无目录可解析） |
+| 供应商锚定 `real-city/discover` | 本机这一腿死（`failure_stage=anchor_geocode`、`fallback_reason=PROVIDER_TIMEOUT`） |
+| 目录补水 `catalog-hydrations` | 终态 `NO_REGISTERED_SOURCE`（本块第一节） |
+
+**三、已开的两张单（都按这条读数写）**
+
+- ORD-0521（`cff87c64`）：验收四条，核心是**不许用 `demo/reset`、也不许拿它当前置**；要一条非破坏的供给路。
+- ORD-0526（`5a53846b`）：**给服务器登记一个不出网的供给源**（内置夹具源即可），让 `catalog-hydrations` 终态从 `NO_REGISTERED_SOURCE` 变成有地点的终态；要求逐枚盘清现有适配器与注册时机，并带两枚反件（源未登记时仍须 `NO_REGISTERED_SOURCE`；地点数谎报时臂必红）。夹具模板我点名在 `backend/app/services.py:845` 的 `_templates()`，并要它自己打开回读，不许只信我转述的行号。
+
+**四、本轮落地**
+
+ORD-0503 证据枝（→ `d72528cfc857`）、ORD-0519 供给腿（→ `7b93d18d9d9c`）、ORD-0497 r3 足迹上地图（→ `c80dce10b3ef`）。三笔都走同一道门（只读复切或 FF 判定 → 落地门 → ff-only）。
+
+**五、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母；等 ORD-0526 把源登记上、ORD-0521 把非破坏供给打通，我再一次性补读（这两条今晚多半做不完，我会在明早之前把能补的先补）。
+2. 手机五格探针未跑（同因）。
+3. ORD-0495 三枚臂在导出树里仍红（`3 failed, 4 passed`），等车道 r3。
+4. 我这台线的三处验证栈（`:4781`、`:4783`、`:4785`）收工时会按名单回收。
+5. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 22:53 · ORD-0519 落地后重跑三扇门：空库上产品自己的出路是 `demo/reset`（破坏门），这条死局已钉成产品原话
 
 **〇、口径**
