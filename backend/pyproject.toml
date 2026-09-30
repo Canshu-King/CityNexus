@@ -31,7 +31,12 @@ push = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = [".", "../agent-mcp"]
+# `..` is not decoration: twenty `backend/tests/test_v18_hermes_r*_probe.py` files import
+# `scripts.hermes_r*`, and `scripts/` sits at the repository root.  Without it those twenty are
+# `ModuleNotFoundError` at collection on any tree that is not already inside a working copy -- a fresh
+# clone, a `git archive` export, a new lane worktree, the landing gate's root-test leg, and future CI.
+# Lanes did not see it because their cwd happened to put the root on sys.path.
+pythonpath = [".", "../agent-mcp", ".."]
 markers = ["integration: optional tests that require an explicitly configured live provider"]
 
 [tool.ruff]
