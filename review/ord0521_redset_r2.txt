@@ -1,0 +1,7 @@
+base      : 14 failed, 1599 passed, 16 skipped, 1 xfailed, 4 warnings in 245.02s (0:04:05)
+candidate : 12 failed, 1617 passed, 16 skipped, 1 xfailed, 4 warnings in 227.48s (0:03:47)
+base red names 14, candidate red names 12
+NEW REDS: none - every red on the candidate is red on the base too
+RED ON BASE ONLY (2) - timing-sensitive, moved in the candidate's favour:
+  - tests/test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment
+  - tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first

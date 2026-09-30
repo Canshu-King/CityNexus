@@ -238,11 +238,23 @@ def hard_rule_codes_on_file(constraints: Sequence[Any]) -> list[str]:
     return sorted(codes)
 
 
-def seed_demo(session: Session) -> dict[str, str]:
-    reset_all(session)
-    # The fixture is deliberately frozen so two reset/seed runs produce the
-    # same logical rows and byte-identical exported records.
-    now = "2026-10-01T00:00:00+00:00"
+DEMO_FIXTURE_NOW = "2026-10-01T00:00:00+00:00"
+
+
+def build_demo_fixture_rows(now: str = DEMO_FIXTURE_NOW) -> list[Any]:
+    """Every row the demo fixture ships, as ORM objects, built without touching a session.
+
+    Split out of `seed_demo` because an empty store needs these rows too, and needs them
+    additively: `seed_demo` is the reset door (it deletes 52 tables before seeding), while
+    ORD-0521 `demo/scene/ensure` has to install the same scenario on a store that already
+    holds somebody elses journeys.  One list of rows for both, so the two cannot drift into
+    disagreeing about what "the demo" is.
+
+    The frozen `now` and the deterministic ids are unchanged: two runs still have to produce
+    byte-identical exported records.
+    """
+
+    rows: list[Any] = []
     traveler_data = load("traveler_demo.json")
     traveler = Traveler(
         id=traveler_data["id"],
@@ -253,9 +265,8 @@ def seed_demo(session: Session) -> dict[str, str]:
         created_at=now,
         updated_at=now,
     )
-    session.add(traveler)
-    session.flush()
-    session.add(
+    rows.append(traveler)
+    rows.append(
         TravelerTwinSnapshot(
             traveler_id=traveler.id,
             explicit_preferences_json="[]",
@@ -268,7 +279,7 @@ def seed_demo(session: Session) -> dict[str, str]:
         )
     )
     for index, item in enumerate(traveler_data["preferences"], start=1):
-        session.add(
+        rows.append(
             Preference(
                 id=deterministic_id(f"preference:{index}"),
                 traveler_id=traveler.id,
@@ -290,7 +301,7 @@ def seed_demo(session: Session) -> dict[str, str]:
         evidence = _demo_accessibility_evidence(item)
         if evidence:
             metadata["accessibility_evidence"] = evidence
-        session.add(
+        rows.append(
             Place(
                 id=item["id"],
                 provider_key=item["provider_key"],
@@ -306,9 +317,8 @@ def seed_demo(session: Session) -> dict[str, str]:
                 updated_at=now,
             )
         )
-    session.flush()
     for item in city_provider.city_services():
-        session.add(
+        rows.append(
             CityService(
                 id=item["id"],
                 provider_key=item["provider_key"],
@@ -326,7 +336,7 @@ def seed_demo(session: Session) -> dict[str, str]:
     # with the bookable River Cruise and tradable Food Hall services.  Keep the
     # overlay additive so the WP00-WP03 city fixtures remain unchanged.
     for item in load("wp04_city_services_overlay.json"):
-        session.add(
+        rows.append(
             CityService(
                 id=item["id"],
                 provider_key=item["provider_key"],
@@ -358,10 +368,9 @@ def seed_demo(session: Session) -> dict[str, str]:
         created_at=now,
         updated_at=now,
     )
-    session.add(journey)
-    session.flush()
+    rows.append(journey)
     for index, item in enumerate(load("demo_journey.json")["constraints"], start=1):
-        session.add(
+        rows.append(
             JourneyConstraint(
                 id=deterministic_id(f"constraint:{index}"),
                 journey_id=journey.id,
@@ -375,12 +384,29 @@ def seed_demo(session: Session) -> dict[str, str]:
                 updated_at=now,
             )
         )
-    session.commit()
-    return {
+    return rows
+
+
+def seed_demo(session: Session) -> dict[str, str]:
+    reset_all(session)
+    # The fixture is deliberately frozen so two reset/seed runs produce the
+    # same logical rows and byte-identical exported records.
+    rows = build_demo_fixture_rows()
+    traveler = next(row for row in rows if isinstance(row, Traveler))
+    journey = next(row for row in rows if isinstance(row, Journey))
+    # Read the summary before the commit rather than after: nothing here needs live ORM state.
+    summary = {
         "traveler_id": traveler.id,
         "journey_id": journey.id,
         "city_code": journey.city_code,
     }
+    # One flush per row, in the fixture's own order: these rows lean on table-level foreign
+    # keys only, so a batched insert can put a child ahead of the parent it points at.
+    for row in rows:
+        session.add(row)
+        session.flush()
+    session.commit()
+    return summary
 
 
 def traveler_schema(item: Traveler) -> TravelerSchema:

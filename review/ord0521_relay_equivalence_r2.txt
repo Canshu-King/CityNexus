@@ -1,0 +1,17 @@
+ORD-0521 r1 -> r2 relay equivalence
+r1: 1e95d106f81b..5e3c412c4f57   r2 base: 7862c6de5565
+
+A. files this order creates - compared byte for byte after normalising line endings:
+   backend/app/demo_scene.py                                    r2 9b6910433ef068b1  r1 9b6910433ef068b1  identical=True
+   backend/tests/test_qoder_ord0521_empty_store_scene_door.py   r2 68253527d39e129b  r1 68253527d39e129b  identical=True
+   live_checks/ord0521_empty_store_walk_r1.py                   r2 3893458be849fa9b  r1 3893458be849fa9b  identical=True
+   live_checks/ord0521_mutant_driver_r1.py                      r2 39523b13f86a969a  r1 39523b13f86a969a  identical=True
+   live_checks/ord0521_flake_probe_r1.py                        r2 ee7597e4c42edd56  r1 ee7597e4c42edd56  identical=True
+
+B. files shared with other lanes - compared by MY delta (added/removed lines), not by the file:
+   backend/app/main.py                                          r2 +101/-0  r1 +101/-0  my_delta_identical=True
+   backend/app/services.py                                      r2 +44/-18  r1 +44/-18  my_delta_identical=True
+   contracts/openapi.yaml                                       r2 +95/-0  r1 +95/-0  my_delta_identical=True
+   frontend/src/generated/api.ts                                r2 +92/-0  r1 +92/-0  my_delta_identical=True
+
+VERDICT: every ORD-0521 byte of mine carried over unchanged

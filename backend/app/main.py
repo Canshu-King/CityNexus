@@ -189,6 +189,13 @@ from app.db.write_deadline import (
     start_request_budget,
     write_attempt,
 )
+from app.demo_scene import (
+    DEMO_SCENE_HEADER,
+    DEMO_STATE_SUPPLY_UNAVAILABLE,
+    SceneIdempotencyConflict,
+    demo_scene_token_denied,
+    ensure_demo_scene,
+)
 from app.error_receipt import (  # ORD-0332: 一枚可复述回执号，唯一字段名
     RECEIPT_FIELD,
     arm_receipt_seed,
@@ -2152,6 +2159,100 @@ def demo_reset_token_denied(presented: str | None) -> tuple[str, str] | None:
             "The demo reset token presented does not match; nothing was deleted.",
         )
     return None
+
+
+@app.post(
+    "/api/v1/demo/scene/ensure",
+    # ORD-0521: the refusal bodies are part of what this route exists to say, so the application's
+    # own spec carries them the same way ORD-0395 put demo/reset's 403 into it.
+    responses={
+        403: {
+            "description": (
+                "Scene ensure refused, with a named code in the body: SCENE_TOKEN_REQUIRED when no"
+                " token was presented, SCENE_TOKEN_INVALID when the presented token is not the"
+                " operator's. Nothing was written in either case."
+            )
+        },
+        422: {
+            "description": (
+                "Idempotency-Key is required, and a key replayed against a different body answers"
+                " IDEMPOTENCY_KEY_REUSE_CONFLICT rather than performing a second board."
+            )
+        },
+        409: {
+            "description": (
+                "DEMO_STATE_SUPPLY_UNAVAILABLE: this server holds no place row for the requested"
+                " destination. The body names the failed hop, how many places it holds there and"
+                " the cities its supply does cover, instead of inventing a place. Nothing was"
+                " written - the install that had been staged is rolled back."
+            )
+        },
+    },
+)
+def demo_scene_ensure(
+    response: Response,
+    x_demo_scene_token: str | None = Header(default=None, alias=DEMO_SCENE_HEADER),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    body: dict | None = None,
+    session: Session = Depends(get_session),
+):
+    """ORD-0521: from an empty store to one trip a phone can actually walk, or a named refusal.
+
+    Sits beside `demo/reset` because it is the same class of door -- guarded, token-gated, demo-
+    mode-gated -- and the opposite one in what it touches: `demo/reset` deletes the board before it
+    seeds, this door may only add, and only rows this server already holds offline.  The whole
+    decision lives in `app/demo_scene.py`, whose docstring records why inventing a place name is
+    the failure this order exists to close.
+    """
+
+    if not demo_mode_enabled():
+        refused = HTTPException(
+            403,
+            "Ensuring the demo scene needs CITYNEXUS_DEMO_MODE=true; nothing was written.",
+        )
+        refused.reason_code = "DEMO_MODE_REQUIRED"
+        refused.error_details = {"flag": "CITYNEXUS_DEMO_MODE", "rows_protected": True}
+        raise refused
+    denied = demo_scene_token_denied(x_demo_scene_token)
+    if denied is not None:
+        code, message = denied
+        refused = HTTPException(403, message)
+        refused.reason_code = code
+        refused.error_details = {
+            "header": DEMO_SCENE_HEADER,
+            "idempotency_key_present": idempotency_key is not None,
+            "rows_protected": True,
+        }
+        raise refused
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        decision = ensure_demo_scene(
+            session,
+            idempotency_key=idempotency_key,
+            body=body or {},
+            # The same in-process advance `demo/prepare-scenario` uses: plans are built by the
+            # generator over ORM rows, never by calling the HTTP handler from inside the app.
+            advance=lambda journey_id: advance_seed_to_executable(session, journey_id),
+        )
+    except SceneIdempotencyConflict as exc:
+        refused = HTTPException(422, str(exc))
+        refused.reason_code = "IDEMPOTENCY_KEY_REUSE_CONFLICT"
+        raise refused
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if decision.get("state") == DEMO_STATE_SUPPLY_UNAVAILABLE:
+        refused = HTTPException(409, decision.get("message", "no real place row to build from"))
+        refused.reason_code = DEMO_STATE_SUPPLY_UNAVAILABLE
+        refused.error_details = {
+            "failed_hop": decision.get("failed_hop"),
+            "reason": decision.get("reason"),
+            "places_held": decision.get("places_held"),
+            "next_hop": decision.get("next_hop"),
+        }
+        raise refused
+    response.status_code = 200
+    return decision
 
 
 @app.post(
