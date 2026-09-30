@@ -1,0 +1,164 @@
+{
+ "method": "one real run of ui_exposure_taint_ast_r8.cjs --tree per export, plus the door-pinned ui_exposure_taint_ast_r7b.cjs on the same tree for the count view",
+ "trees": {
+  "tip_7862c6de": {
+   "rev": "7862c6de5565c02c20ec2dccaa9da18960603e06",
+   "r8": {
+    "cells_total": 8,
+    "red": 5,
+    "exempted": 3,
+    "red_cell_ids": [
+     "1f8bfb4f2b900363",
+     "3da2ddc1783bb8e4",
+     "fca34cf42fe474c4",
+     "fd20c87a2369a807",
+     "fec78ea862b50245"
+    ],
+    "exempted_cell_ids": [
+     "2936eafd474f9b3b",
+     "7feb812a1e486a9d",
+     "cdfe4dfe298f1093"
+    ],
+    "exemption_ids_used": [
+     "EX-2-ATTRIBUTED-FOLD"
+    ]
+   },
+   "r7b_hits": 6,
+   "r7b_hit_keys": [
+    "features/planning/PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/planning/PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "features/planning/PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/recovery/RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/simulation/SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/trip/ActivityDetail.tsx|216|RAW_BODY_TO_DOM"
+   ]
+  },
+  "cmdr_side_tip": {
+   "rev": "0989713aa687b97f4cd40bae009a6ce493425a4b",
+   "r8": {
+    "cells_total": 8,
+    "red": 5,
+    "exempted": 3,
+    "red_cell_ids": [
+     "1f8bfb4f2b900363",
+     "3da2ddc1783bb8e4",
+     "fca34cf42fe474c4",
+     "fd20c87a2369a807",
+     "fec78ea862b50245"
+    ],
+    "exempted_cell_ids": [
+     "2936eafd474f9b3b",
+     "7feb812a1e486a9d",
+     "cdfe4dfe298f1093"
+    ],
+    "exemption_ids_used": [
+     "EX-2-ATTRIBUTED-FOLD"
+    ]
+   },
+   "r7b_hits": 6,
+   "r7b_hit_keys": [
+    "features/planning/PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/planning/PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "features/planning/PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/recovery/RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/simulation/SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/trip/ActivityDetail.tsx|216|RAW_BODY_TO_DOM"
+   ]
+  },
+  "cmdr_side_candidate": {
+   "rev": "62f030f351e70bd95108377fe2e3bbc49c5ef288",
+   "r8": {
+    "cells_total": 12,
+    "red": 9,
+    "exempted": 3,
+    "red_cell_ids": [
+     "1f8bfb4f2b900363",
+     "3da2ddc1783bb8e4",
+     "920750ee8c1529e4",
+     "acbe11b413d73327",
+     "f512ff828129ebc1",
+     "fca34cf42fe474c4",
+     "fd20c87a2369a807",
+     "fec78ea862b50245",
+     "ffafd031edcc4390"
+    ],
+    "exempted_cell_ids": [
+     "2936eafd474f9b3b",
+     "7feb812a1e486a9d",
+     "cdfe4dfe298f1093"
+    ],
+    "exemption_ids_used": [
+     "EX-2-ATTRIBUTED-FOLD"
+    ]
+   },
+   "r7b_hits": 10,
+   "r7b_hit_keys": [
+    "features/access/AccessPanel.tsx|462|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/access/AccessPanel.tsx|474|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/planning/PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/planning/PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "features/planning/PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/recovery/RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/simulation/SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/studio/PlanVersionHistoryPanel.tsx|100|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/studio/PlanVersionHistoryPanel.tsx|87|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "features/trip/ActivityDetail.tsx|216|RAW_BODY_TO_DOM"
+   ]
+  }
+ },
+ "commander_pair": {
+  "his_reading": {
+   "candidate": 10,
+   "tip": 6,
+   "note": "the numbers in the ORD-0536 order text, taken with the door-pinned r7b"
+  },
+  "r7b_reproduced_here": {
+   "candidate": 10,
+   "tip": 6
+  },
+  "r8_red": {
+   "candidate": 9,
+   "tip": 5
+  },
+  "r8_cells_total": {
+   "candidate": 12,
+   "tip": 8
+  },
+  "growth_by_identity_new_cell_ids": [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/access/AccessPanel.tsx:474",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/access/AccessPanel.tsx:462",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/studio/PlanVersionHistoryPanel.tsx:87",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM|features/studio/PlanVersionHistoryPanel.tsx:100"
+  ],
+  "growth_by_identity_gone_cell_ids": [],
+  "growth_by_file_and_rule_count_view": {
+   "AccessPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+   "PlanVersionHistoryPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2
+  },
+  "door_count_view_tip_per_file_and_rule": {
+   "PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+   "SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+   "RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+   "PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+   "ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+  },
+  "door_count_view_candidate_per_file_and_rule": {
+   "PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+   "AccessPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+   "SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+   "PlanVersionHistoryPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+   "RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+   "PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+   "ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+  },
+  "line_exact_added_hits": [
+   "AccessPanel.tsx:462|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "AccessPanel.tsx:474|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanVersionHistoryPanel.tsx:100|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanVersionHistoryPanel.tsx:87|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "line_exact_removed_hits": [],
+  "the_two_views_agree": true,
+  "note": "the count view and the identity view name the same four additions; the identity view also says which file and line each one is, which is what a lane has to go fix"
+ }
+}
