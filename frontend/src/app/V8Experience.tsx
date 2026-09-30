@@ -3488,6 +3488,7 @@ function Live({
 }) {
   const t = useT();
   const { locale } = useLocale();
+  const journeyCompleted = String(data.journey.status ?? "").toUpperCase() === "COMPLETED";
   const {
     now,
     next,
@@ -3505,8 +3506,10 @@ function Live({
               ? t("live.saved", { date: date(offline.updated_at, locale) })
               : t("live.syncing")}
           </p>
-          <h1>{t("live.title")}</h1>
-          <p className="v8-lede">{t("live.lede")}</p>
+          <h1>{journeyCompleted ? t("live.completedTitle") : t("live.title")}</h1>
+          <p className="v8-lede">
+            {journeyCompleted ? t("live.completedLede") : t("live.lede")}
+          </p>
         </div>
       </div>
       <div className="v8-live-main">
@@ -3525,7 +3528,9 @@ function Live({
               // execution state.
               data-cursor-status={cursorStatus ?? "UNKNOWN"}
             >
-              {cursorUnresolved
+              {journeyCompleted
+                ? t("live.completedStatus")
+                : cursorUnresolved
                 ? t("live.unresolvedStep")
                 : now
                   ? now.title
@@ -3534,7 +3539,9 @@ function Live({
                     : t("live.awaitingPlan")}
             </h2>
             <p>
-              {cursorUnresolved
+              {journeyCompleted
+                ? t("live.completedAdvisory")
+                : cursorUnresolved
                 ? t("live.unresolvedStepHint")
                 : next
                   ? t("live.nextLeg", {
@@ -3557,7 +3564,9 @@ function Live({
             </p>
           </div>
           <strong>
-            {now && !cursorUnresolved
+            {journeyCompleted
+              ? t("live.completedStatusUpper")
+              : now && !cursorUnresolved
               ? clockInZone(now.start_at, data.journey.timezone || "UTC")
               : cursorUnresolved
                 ? "—"
@@ -3598,6 +3607,7 @@ function LiveSecondary({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const journeyCompleted = String(data.journey.status ?? "").toUpperCase() === "COMPLETED";
   const { next, nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const planDisruptions = data.active_plan?.disruptions ?? [];
   const disruptions = planDisruptions.filter(
@@ -3691,9 +3701,11 @@ function LiveSecondary({
         <div className="v8-live-side">
           <div className="v8-next-card">
             <span>{t("live.leaveBy")}</span>
-            <h3>{next?.title ?? t("live.awaitingPlan")}</h3>
+            <h3>{journeyCompleted ? t("live.completedStatus") : next?.title ?? t("live.awaitingPlan")}</h3>
             <p data-testid="live-leave-by">
-              {next
+              {journeyCompleted
+                ? t("live.completedAdvisory")
+                : next
                 ? t("live.arriveBy", {
                     date: dateInZone(
                       next.start_at,
@@ -3706,11 +3718,17 @@ function LiveSecondary({
             </p>
             <div className="v8-eta">
               <strong>
-                {next
+                {journeyCompleted
+                  ? "—"
+                  : next
                   ? clockInZone(next.start_at, data.journey.timezone || "UTC")
                   : "—"}
               </strong>
-              <span>{t("live.eta", { mode: modeLabel(nextLeg?.mode, zh) })}</span>
+              <span>
+                {journeyCompleted
+                  ? t("live.completedStatus")
+                  : t("live.eta", { mode: modeLabel(nextLeg?.mode, zh) })}
+              </span>
             </div>
             {destination && (
               <a
@@ -3725,7 +3743,9 @@ function LiveSecondary({
             <div className="v9-risk">
               <b>{t("live.risk")}</b>
               <span>
-                {disruptions.length
+                {journeyCompleted
+                  ? t("live.completedRisk")
+                  : disruptions.length
                   ? t("live.guardianMonitoring", {
                       severity: disruptions[0].severity,
                     })

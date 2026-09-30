@@ -95,10 +95,12 @@ export function humanReplanReason(raw: string, zh: boolean): string {
 
 export function LiveRecovery({
   journeyId,
+  journeyStatus,
   handledEventIds = [],
   onAccepted,
 }: {
   journeyId: string;
+  journeyStatus?: string | null;
   /** Event ids the shell already knows are resolved by an accepted replan. */
   handledEventIds?: string[];
   onAccepted?: () => void;
@@ -128,6 +130,9 @@ export function LiveRecovery({
 
   const plan =
     plans.data?.find((p) => p.status === "ACTIVE" || p.status === "SELECTED") ?? null;
+  const journeyCompleted =
+    String(journeyStatus ?? twin.data?.context?.journey_status ?? "").toUpperCase() ===
+    "COMPLETED";
   const activities = (plan?.activities ?? []) as unknown as Array<Record<string, unknown>>;
   // The projection this card reads is the shared execution truth, whose keys are
   // now_activity_id / next_activity_id / cursor_status / persisted_cursor.  It used to
@@ -267,30 +272,58 @@ export function LiveRecovery({
     <section className="v8-page" data-testid="live-recovery">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "正在进行" : "In progress"}</p>
-          <h1>{zh ? "现在的行程" : "Your trip right now"}</h1>
+          <p className="v8-kicker">
+            {journeyCompleted
+              ? zh
+                ? "已完成"
+                : "Completed"
+              : zh
+                ? "正在进行"
+                : "In progress"}
+          </p>
+          <h1>
+            {journeyCompleted
+              ? t("live.completedTitle")
+              : zh
+                ? "现在的行程"
+                : "Your trip right now"}
+          </h1>
           <p
             className="v8-lede"
             data-testid="live-next"
             data-cursor-status={cursorStatus ?? "UNKNOWN"}
             data-now-activity-id={String(liveNow?.id ?? "")}
           >
-            {liveNow
-              ? zh
-                ? `下一站：${String(liveNow.title ?? "")}`
-                : `Next: ${String(liveNow.title ?? "")}`
-              : !plan
-                ? t("live.awaitingPlan")
-                : cursorStatus === "STALE"
-                  ? t("live.unresolvedStep")
-                  : t("live.nothingDue")}
+            {journeyCompleted
+              ? t("live.completedAdvisory")
+              : liveNow
+                  ? zh
+                    ? `下一站：${String(liveNow.title ?? "")}`
+                    : `Next: ${String(liveNow.title ?? "")}`
+                  : !plan
+                    ? t("live.awaitingPlan")
+                    : cursorStatus === "STALE"
+                      ? t("live.unresolvedStep")
+                      : t("live.nothingDue")}
           </p>
         </div>
       </div>
 
+      {journeyCompleted && (openDisruptions.length > 0 || pending.length > 0) && (
+        <p className="v8-muted" data-testid="live-completed">
+          {t("live.completedProposalIntro")}
+        </p>
+      )}
+
       {openDisruptions.length > 0 && (
         <div className="live-disruption" data-testid="live-disruption" role="status">
-          <b>{zh ? "发生了什么" : "What happened"}</b>
+          <b>
+            {journeyCompleted
+              ? t("live.completedDisruption")
+              : zh
+                ? "发生了什么"
+                : "What happened"}
+          </b>
           <ul>
             {openDisruptions.slice(0, 3).map((d) => {
               const copy = EVENT_COPY[d.type] ?? EVENT_COPY.OTHER;
@@ -341,9 +374,17 @@ export function LiveRecovery({
             : `Option ${String.fromCharCode(65 + index)}`;
           const summary = proposal.explanation?.summary?.trim();
           return (
-            <article className="live-proposal" key={proposal.id} data-testid="live-proposal" data-state={busy === proposal.id ? "accepting" : "idle"}>
-              <b>
-                {optionLabel} · {zh ? "推荐怎么改" : "Suggested change"}
+            <article
+              className="live-proposal"
+              key={proposal.id}
+              data-testid="live-proposal"
+              data-authority={journeyCompleted ? "advisory-after-completion" : "actionable"}
+              data-state={busy === proposal.id ? "accepting" : "idle"}
+            >
+              <b data-testid="live-proposal-heading">
+                {journeyCompleted
+                  ? t("live.completedProposalTitle")
+                  : `${optionLabel} · ${zh ? "推荐怎么改" : "Suggested change"}`}
               </b>
               {summary && (
                 <p className="live-summary" data-testid="live-summary">
@@ -381,41 +422,47 @@ export function LiveRecovery({
                   )}
                 </dl>
               )}
-              <div className="live-actions">
-                <button
-                  type="button"
-                  className="v8-primary-button"
-                  data-testid="live-accept"
-                  disabled={busy !== null}
-                  onClick={() => void accept(proposal.id)}
-                >
-                  {busy === proposal.id
-                    ? zh ? "应用中…" : "Applying…"
-                    : zh ? "接受新方案" : "Accept new plan"}
-                </button>
-                <button
-                  type="button"
-                  className="v8-outline-button"
-                  data-testid="live-today-only"
-                  disabled={busy !== null}
-                  onClick={() =>
-                    setMessage(
-                      zh ? "只调整今天：已记录，今天的安排会优先。" : "Adjust today only: noted.",
-                    )
-                  }
-                >
-                  {zh ? "仅调整今天" : "Adjust today only"}
-                </button>
-                <button
-                  type="button"
-                  className="v8-outline-button"
-                  data-testid="live-remind-later"
-                  disabled={busy !== null}
-                  onClick={defer}
-                >
-                  {zh ? "稍后提醒" : "Remind me later"}
-                </button>
-              </div>
+              {journeyCompleted ? (
+                <p className="v8-muted" data-testid="live-advisory-only">
+                  {t("live.advisoryOnly")}
+                </p>
+              ) : (
+                <div className="live-actions">
+                  <button
+                    type="button"
+                    className="v8-primary-button"
+                    data-testid="live-accept"
+                    disabled={busy !== null}
+                    onClick={() => void accept(proposal.id)}
+                  >
+                    {busy === proposal.id
+                      ? zh ? "应用中…" : "Applying…"
+                      : zh ? "接受新方案" : "Accept new plan"}
+                  </button>
+                  <button
+                    type="button"
+                    className="v8-outline-button"
+                    data-testid="live-today-only"
+                    disabled={busy !== null}
+                    onClick={() =>
+                      setMessage(
+                        zh ? "只调整今天：已记录，今天的安排会优先。" : "Adjust today only: noted.",
+                      )
+                    }
+                  >
+                    {zh ? "仅调整今天" : "Adjust today only"}
+                  </button>
+                  <button
+                    type="button"
+                    className="v8-outline-button"
+                    data-testid="live-remind-later"
+                    disabled={busy !== null}
+                    onClick={defer}
+                  >
+                    {zh ? "稍后提醒" : "Remind me later"}
+                  </button>
+                </div>
+              )}
             </article>
           );
         })
