@@ -16588,6 +16588,48 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0464 车道 8e5245f0 · r7：`main.py` 的真冲突按"两边都保住"手解，逐枚 hunk 归属列表；生成物改由契约重生成
+
+**基座现读**：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = 1e95d106f81b29048ba17695fd0e49172516b9b1（我 00:14 收到号令后现读、切枝、并在同一枚尖上交完；此刻回读它仍是这一枚）。
+**交付**：`refs/heads/review/Q-ord0464-abort-reason-r7` 回读 = 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe（两笔：产品字节 eb8ada37ed201464c69d05d462762f64d911fa10、当代收据 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe）。
+`git merge-tree --write-tree 1e95d106f81b29048ba17695fd0e49172516b9b1 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe` 退出码 rc=0，合并树 51fd93c20e2154ef07a14d84518ea68e84623f73；
+**逐枚面比过**：枝上 11 枚产品面 + 收据面，合并后的 blob 与枝上自己那枚**全部相等**（DIFF 计数 0 枚），所以这一轮复切该绿。`refs/heads/master` 回读 = 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，权威线我没动。
+
+**这一轮为什么是真冲突（现读出来的成因，不是猜）**：尖把 `backend/app/main.py` 整枚转成了 CRLF——13836 行里有 13836 个 CR 字节，而我其余面全是 LF（`backend/app/schemas.py`、`contracts/openapi.yaml`、`frontend/src/app/v8PanelRegistry.tsx`、`frontend/src/generated/api.ts` 的 CR 计数各 0 枚）。
+转手那笔是 1ba48dbf 的 ORD-0503 产品件 431a2e32（18:15）。后果：我这 46 行的 LF 补丁做三方合并时**整文件**成冲突（`<<<<<<< ours` 顶到文件头），而不是在我那段冲突。
+**解法按号令者说的"两方都保住"**（产品字节 eb8ada37ed201464c69d05d462762f64d911fa10）：以尖那份为文件本体 → 归一成 LF → 只重放我这 6 枚 hunk → 再逐行装回 CRLF（结果 13880 行、13880 个 CR 字节、609453 B）。
+**证明而不是意图**：`git diff --ignore-cr-at-eol -U0 <尖> -- backend/app/main.py` 给出的 6 枚 hunk，与 `<r6 基座>..<r6 件尖>` 那 6 枚 hunk 的增删行**逐枚同序同文**；raw 与 ignore-cr 两种 numstat 都读 46 增 2 删。
+所以尖自从我 r6 基座以来加进这文件的 779 行（成员两扇门、日历导出门、足迹门、分享落地……9 枚 hunk）一行没被我改写，我的行也没替换它们。
+**"哪些行是我的、哪些是尖上别人的"逐段列表**在 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe:review/ord0464-abort-reason/READINGS_R1.md:1（6 枚 hunk 每枚都带尖上位置 + 我增/我替换的原行）。
+
+**生成物不再手贴（照 17:38 与 18:41 那两条，且 ORD-0508 已落地）**：`frontend/src/generated/api.ts` 这轮由 `node .../openapi-typescript/bin/cli.js contracts/openapi.yaml` 产出。
+先证尖本身自洽：从 1e95d106f81b29048ba17695fd0e49172516b9b1 的契约重生成，与该尖已入库那份差 0 行；
+再从**我合并后的契约**重生成，与尖那份差 **35 增 1 删**，那唯一一枚删除是 `deleteJourney` 的 `requestBody?: never;`；
+别人的行带走 0 枚（把 api.ts 的 delta 拿去 grep `V13NamedRejection`、`CollectionFolder` 命中 0 枚）；同一枚契约再跑一次，差 0 行（幂等）。
+
+**当代读数全重取（无一处沿用 r1..r6）**：本单模块 `13 passed`；九面同跑 `99 passed`（我的 + undelete_write_lock、journey_undelete、recycle_bin、honest_stay_budget、shared_landing、checkins、shared_after_restore、calendar_export）；
+`python tools/verify_openapi_parity.py` 在 r7 上读 `formal 173; runtime 173; missing 0; extra 0` 且 schema 那行 `formal 90; generated 90; missing 0; extra 0`、rc=0（173 与 90 都是尖这两小时涨上来的，本单只加 5 枚组件）；
+收集（在 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe 上跑）1575 tests collected / 20 errors，`--ignore` 掉我这枚测试回 1562 / 20 ⇒ added=13 纯新增，20 枚错误里非 `test_v18_hermes_` 命中 0 枚；
+前端门：`tsc -p tsconfig.typecheck.json --noEmit` rc=0、`vite build` rc=0、入口产物名 `/assets/index-BgxIWZ63.js`（1546176 B）。
+八臂门禁（真门、无响应桩）：`playwright rc=0`，stats 里 expected=8 / unexpected=0 / skipped=0 / flaky=0、时长 5523.892 ms，逐字在 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe:review/ord0464-abort-reason/GATE_R1.txt:17；
+反件 6 枚全咬、逐枚 `restored_byte_identical=true`、末了干净重建 rc=0（表在同件 `:31` 起）。
+**归属证据**：库仍是这条车道那份 `D:/moodle/_qoder_q_ord0369_wk/q0386.db`，`:8713` 是我这棵树的 backend、`:4192` 是我这棵树建出的包；
+scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035 在我这份副本里 in MY copy=1、versions=9，probe versions=21。
+屏读三态各一趟（`390x844`，读 innerText 且先看自己截图）：勾了说的是「这趟已经在回收站里。服务器记下的原因是：预算兜不住、被保护的安排被排掉了。」，跳过与没问过各说各那句，PNG 三枚在 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe:review/ord0464-abort-reason/screen_declared_r1.png:1。
+
+**我自己这轮的仪器缺陷（发现并当场修，红留着）**：`lane_r1.py` 过去只验「服务中的 index == 磁盘 index」，**一份过期 dist_cand 也能过**——我第一次起车道时它就把 18:06 那枚旧包报成了本轮产物（名字与 ORD-0508 那轮相同）。
+现在它会去取服务中 index 真正指向的那枚 entry bundle，并要求本单自己的特征在里面（`journey-abort` 命中 9 枚、`ITINERARY_NOT_USEFUL` 命中 1 枚，逐字在 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe:review/ord0464-abort-reason/GATE_R1.txt:10），否则 REFUSE。
+另两处：`gate.py` 的 build 步在 print 阶段被 GBK 崩过一次（构建本身 rc=0，我用 `-X utf8` 重跑）；`.mjs` 探针从 wk 目录跑时 bare import 找不到 playwright，改成绝对路径。
+
+**请号令者判的一件事（只报不改）**：`backend/app/main.py` 现在是全树唯一一枚 CRLF 大文件，而它正是今晚最热的面。
+只要它保持 CRLF，任何车道带着 LF 补丁来碰它都会得到"整文件冲突"，也就必然要有人手合——这是结构性返工源，不是我这单的问题。
+两条路请你点：① 开一张单把它转回 LF（或加 `.gitattributes` 钉 `*.py text eol=lf`），代价是一笔纯行尾改动、会让那一笔的 numstat 巨大；② 维持现状，后续每单在块里自带"逐枚 hunk 归属表"（我这轮那种）。我不擅自替全树改行尾。
+
+**没改善的部分**（照实说）：① 「中止行程」那半张仍未做，`journeys.status` 的 `CANCELLED` 无路由写入；② 原因记录没有回读门（`JourneyAbortRecorded`/`JourneyAbortBoundary` 两枚组件是文档性的，没有响应 `$ref` 它们）；
+③ 找回后再丢弃会留第二枚行，屏上取最后一枚，没有「哪一次」选择器；④ 并发未测；⑤ 真机（实体手机）未走，本轮只有 6eb40a7babccc3e43f45fdcd50d423811bcc4ebe 那棵树上 `390x844` 的命中测试；
+⑥ `playwright.config.ts` 仍只被收集未执行；⑦ 八枚词未做用户研究；⑧ 我这单的枝现在并存 r1..r7 七枚（都没 force、没删），请你定去留。
+
+
 ### newlane2 00:26 · 车道 6a150e1e · ORD-0511 交了：住宿那一屏从"诚实的空"到"点一下真去要、要到了能定、定完按读回来的说话"
 
 **〇、交付坐标（一笔枝，七枚文件）**
