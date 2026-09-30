@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 22:53 · ORD-0519 落地后重跑三扇门：空库上产品自己的出路是 `demo/reset`（破坏门），这条死局已钉成产品原话
+
+**〇、口径**
+
+新尖 = `7b93d18d9d9c671e23083cfde1d02aa5a9327b77`（ORD-0519 刚 ff 落地）。我另起一台私有栈验它：导出树 `_verify_http_7b93d18d…`、后端 `:4785`（私有库 `_cmdr_4785.db`，带 `CITYNEXUS_DEMO_MODE=true`）。旧的 `:4781`/`:4783` 仍在跑（它们服的是上一代）。`demo/reset` 未跑，`_preview.db` 未写，`:8000/:4782/:8693` 未碰。
+
+**一、逐门读数（新旧两代对照）**
+
+| 门 | 旧尖 `d72528cfc857` | 新尖 `7b93d18d9d9c` |
+|---|---|---|
+| `GET /api/v1/demo/scene` | 报 `journey_id=22222222-…`（库里不存在的号；判据行 `frontend/src/app/V8Experience.tsx:867`） | `http_status=200`、`journey_id=null`（自己说"还没有场景"，这一格是改善） |
+| `POST /api/v1/demo/prepare-scenario` | `http_status=200` 但体内 `advance.steps[0].refused=CatalogShortfall` | `http_status=409` `code=DEMO_SCENARIO_MISSING`，原话 `There is no seeded scenario to prepare; call demo/reset first.`，带 `error_receipt_id` |
+| `POST .../plans/generate` | `http_status=422`、`places_in_catalog: 0` | 同（这条我没在新尖重跑，具名 `NOT_REVERIFIED_BY_CMDR`） |
+| `POST .../poi-import/parse` | `http_status=200`、三条全 `UNRESOLVED`、`addable=0` | 同（同上，未在新尖重跑） |
+
+**二、这条为什么是要紧的**
+
+新尖把空库那条路钉成了产品自己的话：**要拿演示场景，先去 `demo/reset`**。而 `demo/reset` 是会删 52 张表的破坏门，号令者明令不许我跑它。于是今天在空库上：排程排不出（目录 0 地点）、导入解析不出（无目录可解析）、夹具推不动（它自己指回 `demo/reset`）、供应商那条腿本机是死的。**"空库 → 一趟能走的行程"没有任何非破坏出口。**
+
+**三、我把 ORD-0521 的验收加到了四条（已发车道）**
+
+1) `advance.steps` 里不得再出现 `refused`，`plan_version_id` 非空；2) 干净浏览器 + 空库、不走向导，能拿到一趟有排程有站点的行程；3) 至少一条**不出网**的腿能把真实地点放进目录，且它自己要说清来自哪条腿；4) **验收过程不许调用 `demo/reset`、也不许拿它当前置**——要的是一条非破坏的供给路。做不完就拆两半交：先交具名的非破坏出口，再交真供给。
+
+**四、本轮其余动作**
+
+- 落地：ORD-0503 证据枝（→ `d72528cfc857`）、ORD-0519 供给腿（→ `7b93d18d9d9c`）。
+- 派单：ORD-0525（日历导出屏上入口，`6a773af1`）；ORD-0507 + ORD-0461 r3 唤醒（`a68b0631`）；`1d64acf5` 第三版块已过门入账；S4 那块的逐格改法已第二次点名。
+- 第二档（地图↔卡片双向选中）仍压着，等 ORD-0524。
+
+**五、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母（同一条死局）；ORD-0521 落地后补读。
+2. 手机五格探针未跑（同因）。
+3. ORD-0495 三枚臂在导出树里仍红（`3 failed, 4 passed`），等车道 r3。
+4. 我这条线今晚起了三台私有栈（`:4781`、`:4783`、`:4785`），收工时我会按名单回收，不碰别人的进程。
+5. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 22:52 · 干净库上的死局量到底了：三扇门没有一扇能把一枚地点放进目录（夹具 / 排程 / 粘贴解析逐门读数）
 
 **〇、口径**
