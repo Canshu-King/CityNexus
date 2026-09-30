@@ -439,7 +439,42 @@ class DeepSeekJourneyAgent:
                     function = call.get("function") or {}
                     tool_name = str(function.get("name") or "")
                     call_id = str(call.get("id") or f"tool-call-{sequence}")
-                    arguments = _tool_args(str(function.get("arguments") or "{}"))
+                    raw_arguments = str(function.get("arguments") or "{}")
+                    try:
+                        arguments = _tool_args(raw_arguments)
+                    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+                        # A streamed provider can terminate a tool-call fragment
+                        # mid-JSON.  Never execute guessed arguments and never let
+                        # one malformed model frame turn the whole AgentRun into
+                        # an unhandled HTTP 500; return a machine-visible tool
+                        # error so the model can repair or stop.
+                        sequence += 1
+                        arguments = {"_raw_arguments": raw_arguments[:1000]}
+                        result = {
+                            "tool": tool_name,
+                            "error": "MALFORMED_TOOL_ARGUMENTS",
+                            "detail": type(exc).__name__,
+                            "decision": "REJECT_MALFORMED_ARGUMENTS",
+                        }
+                        step_now = _now()
+                        step = AgentRunStep(
+                            id=str(uuid4()), run_id=run.id, sequence_no=sequence,
+                            tool_name=tool_name, arguments_json=_json_text(arguments),
+                            result_json=_json_text(result), decision=result["decision"],
+                            status="TOOL_ERROR", created_at=step_now, completed_at=step_now,
+                        )
+                        session.add(step)
+                        tool_trace.append({
+                            "sequence_no": sequence, "tool_name": tool_name,
+                            "arguments": arguments, "result": result,
+                            "decision": result["decision"], "status": "TOOL_ERROR",
+                            "created_at": step_now, "completed_at": step_now,
+                        })
+                        messages.append({
+                            "role": "tool", "tool_call_id": call_id,
+                            "content": _result_for_model(result),
+                        })
+                        continue
                     signature = (tool_name, json.dumps(arguments, ensure_ascii=False, sort_keys=True))
                     if signature in seen_calls:
                         result = {

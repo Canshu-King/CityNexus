@@ -182,6 +182,50 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
     ]
 
 
+def test_agent_runtime_records_truncated_tool_json_instead_of_http_500(monkeypatch):
+    journey_id = _selected_journey()
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            message = {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [{
+                    "id": "call-truncated",
+                    "type": "function",
+                    "function": {"name": "inspect_journey", "arguments": '{"journey_id":"'},
+                }],
+            }
+        else:
+            message = {"role": "assistant", "content": "The tool payload was malformed; no action was taken."}
+        return httpx.Response(200, json={"choices": [{"message": message}]})
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    fake_agent = object.__new__(DeepSeekJourneyAgent)
+    fake_agent.model_key = "cn:glm-5.3-flash"
+    fake_agent._client = fake_client
+    fake_agent._owns_client = False
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace(runtime_settings, ai_api_key="test-key", ai_model="cn:glm-5.3-flash"),
+    )
+    monkeypatch.setattr(main_module, "DeepSeekJourneyAgent", lambda: fake_agent)
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        json={"command": "请检查当前行程和实时状态。", "requested_autonomy": "PLAN_ONLY"},
+    )
+    assert response.status_code == 200, response.text
+    steps = response.json()["run"]["tool_steps"]
+    assert steps[0]["status"] == "TOOL_ERROR"
+    assert steps[0]["decision"] == "REJECT_MALFORMED_ARGUMENTS"
+    assert response.json()["run"]["status"] == "COMPLETED"
+
+
 def test_hermes_runtime_uses_configured_model_fallback_chain(monkeypatch):
     calls: list[str] = []
 
