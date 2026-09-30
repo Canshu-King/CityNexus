@@ -35,6 +35,64 @@ import {
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
 
+/**
+ * ORD-0531 -- the same bin, asked from one seat.
+ *
+ * The path above answers the whole bin to anybody and is kept exactly as it is; this one is the door
+ * this screen reads now, because a bin that cannot say whose trip it is leaves the screen to decide
+ * whether 找回 belongs there by comparing ids, and that is the guess the order forbids.
+ */
+export const trashScopePath = (travelerId: string): string =>
+  `/travelers/${encodeURIComponent(travelerId)}/recycle-bin/journeys`;
+
+/** The two named shapes the scoped door answers with. Read as strings and compared, never derived. */
+export type BinOwnership =
+  | "OWNED_BY_THIS_TRAVELER"
+  | "OWNED_BY_ANOTHER_TRAVELER"
+  | "NOT_STATED";
+
+export type BinRecovery =
+  | "RECOVERY_ALLOWED"
+  | "RECOVERY_REFUSED_NOT_OWNER"
+  | "RECOVERY_REFUSED_ROLE_CANNOT_RESTORE"
+  | "RECOVERY_REFUSED_NO_SEAT";
+
+export type ScopedBinRow = DiscardedJourney & {
+  ownership?: unknown;
+  member_role?: unknown;
+  recovery?: unknown;
+};
+
+/**
+ * What the server said about ownership, or `null` when the row carried no such name.
+ *
+ * `null` is not "nobody's" and not "mine": the panel renders those rows without an action, because a
+ * missing answer is a reason to do nothing, not a reason to guess.
+ */
+export function binOwnership(row: ScopedBinRow): BinOwnership | null {
+  const value = row.ownership;
+  return value === "OWNED_BY_THIS_TRAVELER" ||
+    value === "OWNED_BY_ANOTHER_TRAVELER" ||
+    value === "NOT_STATED"
+    ? value
+    : null;
+}
+
+export function binRecovery(row: ScopedBinRow): BinRecovery | null {
+  const value = row.recovery;
+  return value === "RECOVERY_ALLOWED" ||
+    value === "RECOVERY_REFUSED_NOT_OWNER" ||
+    value === "RECOVERY_REFUSED_ROLE_CANNOT_RESTORE" ||
+    value === "RECOVERY_REFUSED_NO_SEAT"
+    ? value
+    : null;
+}
+
+/** The one question a row answers for a traveller: may this finger take it back. */
+export function binMayRestore(row: ScopedBinRow): boolean {
+  return binRecovery(row) === "RECOVERY_ALLOWED";
+}
+
 /** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped
  *  `RecycleBinJourney` into the generated client (`frontend/src/generated/api.ts:2771`), so the
  *  screen's rows and the server's schema cannot drift apart silently. The guards in the panel stay
@@ -52,6 +110,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export function readDiscardedJourneys(): Promise<DiscardedJourney[]> {
   return request<DiscardedJourney[]>(TRASH_LIST_PATH);
+}
+
+/** The bin as one seat sees it (ORD-0531). No caller name, no call -- see the panel's 无身份 state. */
+export function readScopedDiscardedJourneys(travelerId: string): Promise<ScopedBinRow[]> {
+  return request<ScopedBinRow[]>(trashScopePath(travelerId));
 }
 
 /** The 找回 write. Returns the trip as the server now holds it (`response_model=JourneySchema`). */

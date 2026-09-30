@@ -355,7 +355,9 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     surface: "route",
     testId: "journey-trash-panel",
     when: (s) => s.route === "trash",
-    render: () => <JourneyTrashPanel />,
+    render: (s) => (
+      <JourneyTrashPanel travelerId={s.data?.journey?.traveler_id ?? null} />
+    ),
   },
   {
     /* ORD-0436: 成员与权限. Same registry-mounted route as the bin above, so the shell stays shut for

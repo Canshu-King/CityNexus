@@ -264,6 +264,38 @@ class RecycleBinJourney(Journey):
     bin_state: Literal["IN_RECYCLE_BIN"]
 
 
+class TravelerRecycleBinJourney(RecycleBinJourney):
+    """One binned trip, answered from one traveller's seat (ORD-0531).
+
+    The two extra names are the whole point of this shape.  A bin row used to say only "this is in
+    the bin", which left a screen to decide whether it may offer 找回 by comparing ids it was never
+    given a rule about -- the same mistake ORD-0239 names for every other derived state on this
+    product.  So the server says it:
+
+    * `ownership` -- whose trip this is, relative to the traveller named in the path.  The column
+      already exists (`journeys.traveler_id`); no new column was needed to know it, so none was
+      invented.  `NOT_STATED` is reserved for a row the store cannot attribute, and a screen must
+      treat it as no authority rather than as a missing value to guess at.
+    * `recovery` -- whether this traveller may take the trip back, and if not, in which of the three
+      ways not.  It is decided from `journey_role_capabilities`, read through the same helper the
+      member doors use, so narrowing that table narrows this answer the same instant.
+
+    A refused row still appears: an owner who shared a trip must be able to see that it is there and
+    read why it is not theirs to restore.  What may not happen is a row that looks restorable.
+    """
+
+    ownership: Literal[
+        "OWNED_BY_THIS_TRAVELER", "OWNED_BY_ANOTHER_TRAVELER", "NOT_STATED"
+    ]
+    member_role: Literal["OWNER", "ADMIN", "COLLABORATOR"] | None = None
+    recovery: Literal[
+        "RECOVERY_ALLOWED",
+        "RECOVERY_REFUSED_NOT_OWNER",
+        "RECOVERY_REFUSED_ROLE_CANNOT_RESTORE",
+        "RECOVERY_REFUSED_NO_SEAT",
+    ]
+
+
 class MobilityModeRequest(BaseModel):
     mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"]
 
