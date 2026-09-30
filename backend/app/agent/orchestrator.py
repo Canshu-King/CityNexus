@@ -48,6 +48,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
 
     def _complete(self, messages: list[dict]) -> dict:
         last_error: Exception | None = None
+        errors: list[str] = []
         while self._model_index < len(self._model_chain):
             model = self._model_chain[self._model_index]
             try:
@@ -83,8 +84,13 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 return message
             except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
                 last_error = exc
+                detail = str(exc).replace("\n", " ")[:240]
+                errors.append(f"{model}:{type(exc).__name__}:{detail}")
                 self._model_index += 1
-        raise AgentRuntimeUnavailable("Hermes Agent completion failed for configured model chain") from last_error
+        suffix = f"; attempts={'; '.join(errors)}" if errors else ""
+        raise AgentRuntimeUnavailable(
+            "Hermes Agent completion failed for configured model chain" + suffix
+        ) from last_error
 
     @staticmethod
     def _merge_sse(lines) -> dict:
