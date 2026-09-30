@@ -377,7 +377,12 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     surface: "route",
     testId: "footprint-panel",
     when: (s) => s.route === "footprints",
-    render: (s) => <FootprintPanel journeyId={s.data.journey?.id ?? null} />,
+    /* ORD-0530: the timezone travels with the journey id. The day a stamp belongs to is the server's
+       instant read in THIS trip's zone, and the zone is a row the shell already has -- passing it in
+       is what keeps the screen from falling back to the device's clock. */
+    render: (s) => (
+      <FootprintPanel journeyId={s.data.journey?.id ?? null} timezone={s.data.journey?.timezone ?? null} />
+    ),
   },
 ];
 
