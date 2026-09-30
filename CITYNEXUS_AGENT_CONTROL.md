@@ -16588,6 +16588,272 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0488 演示库 schema 追平（重交 r2）：三枚被拒数字各带真锚，从零那格只用本车道自己的启动日志作证
+
+先说拒因，不当借口用：门报的三行号与三枚带千分位写法（`151` 枚路径，锚 `review/ord0488/route_denominators.txt:18`；`1,203 B`，锚 `backend/db/schema.sql:1129`；`7,213,056 B`，锚 `review/ord0488/preview_store_stat_ro.txt:4`）在我 **12:13** 那份草稿里逐行命中——`cff87c64_1212.md.my_superseded_earlier_draft` 第 `11`、`15`、`19` 行正是路由分母段、反件段、禁令段；我 12:22 的 `cff87c64_1220.md` 同三行是 alembic 行、空行、boot_B 行，不含这三枚 token。门读的是我已改名的作废稿，请以本件为准。其中一条是我真空口说过：`7,213,056 B` 当时枝上无任何收据、只是我终端 ls 的输出（现锚 `review/ord0488/preview_store_stat_ro.txt:4`）——这条门拒对了，故本件先把它变成工件再落锚，不是把数字搬回去。
+
+**三枚被拒数字，现各带真锚（数量未删未改）**
+
+- `151` 枚 `openapi_paths`：读数在 `review/ord0488/route_denominators.txt:18`，该收据的 40 位 blob = `5ec6a42ddcd63ed8af30016b6845b72a9fe1d1d2`（`git cat-file -t` 回 `blob`）。同段另三个分母 `166` 枚分别在 `review/ord0488/route_denominators.txt:17`、`:15`、`:16`。
+- `1,203 B` = M3 从 DDL 删去的 `journey_checkins` 建表块字节：打印在 `review/ord0488/mutation_driver_log.txt:19`（blob = `b677bb9c883ace372741cbb26f75904dbfab0cb8`），被删的那枚 CREATE 块本体在 `backend/db/schema.sql:1129`，本会话离线重算同得 `1203`。
+- `7,213,056 B` = 共享预览库本体字节：新增只读收据 `review/ord0488/preview_store_stat_ro.txt:4`，blob = `a7fd21b8fa30701beb1dcd051028d7bdda662f02`。该件仅用 `os.stat` 生成、不连库，所以它自己的制作不可能写过被测物；同件 `:5` 记 `-wal` 为 `0 B`，两者 mtime 仍为 `2026-09-29 09:20:27` 与 `10:27:22`，整场未变。
+
+**"新环境从零启动能拿到全量表"这一格，只用本车道自己的启动日志作证**
+
+- 判据：`review/ord0488/boot_B_from_zero.txt:12` 记 `present_count` 为 `59`，同件 `:9` 记 `missing_in_db` 为空；该日志 blob = `fded459c68c8d567cf317a9cfa5e4454bc441198`。
+- 它的来历是我自己的：量具 `live_checks/ord0488_schema_catchup_r1.py` 的 `--mode boot` 指向一个**当时不存在**的路径 `D:/moodle/_ord0488/fresh_zero.db`，由产品启动路径（`backend/app/main.py:494` 的 `ensure_schema()`）从零建出来，不依赖任何既有库，也不依赖阁下的私有副本。
+- 明确不作证的部分：`review/ord0488/boot_A_stale_copy_of_preview.txt:12`（present 由 `55` 变 `59`）跑在**阁下私有预览库的一份拷贝**上，它只证"旧代库能被一趟 boot 补齐"，不能当"新环境从零"的证据，故本格不引它。
+
+**1）建表路径走哪一条（量的）**
+
+- `create_all` 除去 `review/` 快照后全树只 `1` 处命中且在测试里：`backend/tests/test_v6_enrollment.py:15`，boot 到不了。
+- alembic 为 `0` 处：`git ls-tree -r --name-only dcb90cccc68b81f2317b28db19051dedb9f06c80 | grep -ic alembic` 实测回 `0`。
+- 真路径是 boot 自己刷 DDL：调用点 `backend/app/main.py:494`，函数定义 `backend/app/db/session.py:588`，执行落点 `backend/app/db/session.py:611` 的 `raw.executescript(sql)`。
+- DDL 可重放：`backend/db/schema.sql` 的 `59` 枚 `CREATE TABLE` 与 `36` 枚 `CREATE INDEX` 全带 `IF NOT EXISTS`，写明处 `review/ord0488/SCHEMA_CATCHUP.md:22`。
+- 结论：旧库本就能自愈，共享预览库只是没被重启过，不是坏了。量具 `live_checks/ord0488_schema_catchup_r1.py`（三档 `declared`/`inspect`/`boot`），对共享库的写路径是代码级 REFUSE，原文 `review/ord0488/operator_refusal_shared_store.txt:1`。
+
+**2）缺表与行数，逐枚具名（含对工单的两处更正）**
+
+- declared `59` 对 present `55`：`review/ord0488/inspect_shared_preview_mode_ro.txt:15`。
+- 缺 `4` 枚清单在 `review/ord0488/inspect_shared_preview_mode_ro.txt:7`：`journey_checkins`、`journey_members`、`journey_role_capabilities`、`journey_share_grants`。其一，`journey_role_capabilities` 是工单没点的第四枚；其二，工单写的 `share_grants`/`members` 是**门名**（`contracts/openapi.yaml:1418` 那一类路径词），真表名带 `journey_` 前缀——按裸名在库里找只会得到假的"不存在"。
+- `present_not_declared` 为 `0` 枚：`review/ord0488/inspect_shared_preview_mode_ro.txt:16`。
+- 行数由本车道自己走 `uri=ro` 连接逐枚 `SELECT COUNT(*)` 取，另成收据：`review/ord0488/preview_store_row_census_ro.txt:5` 记 `journeys` 为 `1`，同件 `:6`、`:7`、`:8`、`:9` 依次 `plan_versions` `1`、`activities` `6`、`places` `16`、`travelers` `1`，`:11` 记 tables present `55`，blob = `c0106d348bc03bf5b4d55d040f8f611de4dce11e`。与工单读数相符。
+
+**3）接成的具名流程与四格测试**
+
+- 改前 `ensure_schema()` 返回 `None`，"补回四枚表"与"什么都没补"在部署日志里是同一行。现返回并记录 `SCHEMA_CATCHUP` 四字段（`backend/app/db/session.py:26`），出口 `backend/app/db/session.py:923`，经 `logging.getLogger("citynexus.schema")` 具名打出补回表名，且只在事务提交后发布。
+- 运维门 `backend/db/apply_schema_catchup.py`，形制照 `backend/db/apply_ord0355_stay_budget_declared.py:5`：默认只读报告、`--apply` 才治、拒共享库。
+- 前后差用**新副本**重拍（第一对跑在已治好的副本上，弱证据，已弃）：改前 `missing` 为 `4`（`review/ord0488/operator_before_apply_fresh_copy.txt:3`），改后 `catch-up created` 为 `4` 且 `still missing after --apply` 为 `0`（`review/ord0488/operator_after_apply_fresh_copy.txt:5`）。
+- 测试 `backend/tests/test_qoder_ord0488_schema_catchup.py` 共 `4` 格：`--collect-only` 实收 `4 tests collected`（`review/ord0488/collect_only.txt:6`），执行 `4 passed`；具名表清单 `backend/tests/test_qoder_ord0488_schema_catchup.py:26`，第一格 `:74`。
+
+**4）反件三枚加还原，各在自己的导出树里跑**
+
+- 先证原树绿才采信红：从交付头重导 `backend` 与 `data` 与 `contracts`，还原后同判据 `4 passed`（`review/ord0488/mutation_driver_log.txt:30`）。
+- M1 把 `executescript` 与兜底循环替成 `pass`（不补）→ `3 failed, 1 passed`（`review/ord0488/mutation_driver_log.txt:4`），杀第 `1`、`3`、`4` 格。
+- M2 保持 DDL 真跑但把 `created` 写死为空（补而不说）→ `2 failed, 2 passed`（`review/ord0488/mutation_driver_log.txt:13`），只杀第 `3`、`4` 格。
+- M3 删去 `1,203 B` 的建表块 → `4 failed`（`review/ord0488/mutation_driver_log.txt:20`），全杀。
+- 判语：M2 留着第 `1`、`2` 格绿，正证第 `4` 格判的是**报告**不是数据库；M1 留着第 `2` 格绿，正证第 `2` 格是对 DDL 的静态断言、不是第 `1` 格的复印件。每枚变异先断言"真落上"（锚点出现恰 `1` 次、替文在、原文不在）才采信，驱动件 `review/ord0488/mutation_driver_r1.py`。
+- 第三格逐枚表名过一遍，判据是列声明与索引名同从零构建**相等**，不是名字回来了就算。
+
+**5）炸半径与没跑的**
+
+- `backend/app/db/session.py` 净增 `46` 行（`48` 增 `2` 删），本代 `1116` 行对基的 `1070` 行，锚 `backend/app/db/session.py:588`。
+- 返回值只被新文件消费：`2` 处命中全在 `backend/tests/test_qoder_ord0488_schema_catchup.py:123`。
+- 调 `ensure_schema` 的 `18` 枚模块加 `test_contract.py` 跑 `153 passed, 2 failed`（`review/ord0488/slice_ensure_schema_callers_after.txt:291`）。
+- 那 `2` 枚红在未改动的现尖 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 逐字重现，基线读数 `2 failed, 10 passed`（`review/ord0488/baseline_unmodified_tip_two_files.txt:289`）：同 nodeid，判语同 `At index 2 diff: 'main.py' != 'session.py'` 一条、`10061` 连接被拒一条。我的红集是该具名基线红集的子集，不是新增。
+- 没跑且不冒充跑了的：整套后端套件（一趟全量是观察不是基线，我手上没有现尖未改动的全量基线可差）、前端构建、e2e。
+
+**禁令遵守**
+
+- 共享预览库全程只以 `mode=ro` 打开，唯一开库处 `live_checks/ord0488_schema_catchup_r1.py:47`；未写、未 ALTER、未 `--apply`、未重启。
+- `-shm` 不说"零影响"，并把上一版的说法降级：它不是只动过一次。首开时 `11:36` 变 `11:37`，到本件生成时读到 `12:26:27`（`review/ord0488/preview_store_stat_ro.txt:6`）——每次只读开一个活的 WAL 库，读者都会往共享内存写读标记。未变的是库本体与 `-wal`，见 `review/ord0488/preview_store_stat_ro.txt:4`。
+- `demo/reset` 未调用；Basic auth 口令文件未读未拷；全程未启动任何服务、未占任何端口，`:8000`、`:4781`、`:4782`、`:8693` 一字节未碰；跑每趟套件前该 cwd 内不存在我的 uvicorn。
+
+**腾盘更正（覆盖我 ORD-0478 块里"留着等具名令"那句）**
+
+- D 盘掉到 `3.7 G` 剩余时我删了本会话自建、可用 `git archive <sha>` 复现的派生件：`_ord0478_scratch/` 的 `4` 棵变异与基树、`_ord0478_verify/` 与 `_ord0478_verify2/`，本单的 `mut/`、`base_tip/` 及各副本；回收后 `4.7 G` 剩余，枝上件未减。
+
+**交件坐标**
+
+- 枝 `refs/heads/review/cff87c64-ord0488-schema-catchup-r1` 交件前一秒回读 = `13fd3774d463498ea0dfe00df95e09ba0401aa51`；权威尖同刻外读 = `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`；我的基 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 经 `git merge-base --is-ancestor` 证仍在干线内。
+- 只读合并预测本件实跑过：`git merge-tree --write-tree 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 13fd3774d463498ea0dfe00df95e09ba0401aa51` 退出码 `0`、得树 `e69f4d465f8d4ee5bd62f444f2dfdbdc1584a423`、CONFLICT `0` 处。DRY 模式不跑闸，这只是形状预测，不算"可插"。
+- 本枝共 `6` 枚提交：`c3d1b8b3e27d906ffb6d85f3042d342ed579dd48`、`7a75f66aeab5e0aa5382ee70fbb4f88cd2541965`、`0e50ca4f309e6155a0239f340dada0a6d4aa92ce`、`26e86f176f9364a0ce67876457a5146dc4624d61`、`b62c6a1ec0796998cf5875c082e81f6516283721`、`13fd3774d463498ea0dfe00df95e09ba0401aa51`。
+- 共 `24` 枚文件 = `4` 枚代码与量具加 `20` 枚证据，代码锚 `backend/tests/test_qoder_ord0488_schema_catchup.py:26`。
+
+**尺自述**：本机只有 `_qoder_f_run/q43_ruler_r4b_from_commander.py`，r7 不在我手上，故本块自判只算**预测**，你那把 r7 才是判据。若仍判红请点名让我重交 `-r3`，不要手合。作废稿两份（`cff87c64_1212.md.my_superseded_earlier_draft`、`cff87c64_1230.md.my_superseded_wrong_schema_anchor`）请勿入账，以本件为准。
+
+**请裁一格**：`SCHEMA_CATCHUP` 是进程内全局（`backend/app/db/session.py:26`），多引擎交替启动时后写覆盖前写。我按"最近一次 `ensure_schema` 的报告"实现并写进字段名；若号令者要**每库一份**的部署台账，那要落一张表或一个文件，属另一张单，我没顺手加。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0488 演示库 schema 追平：建表路径量清、缺表逐枚具名、补齐接成有名字会出声的流程（车道 cff87c64，r1）
+
+基与尖：开工外读 `refs/heads/mirror/integration-frontend-apple-pass1` 得 `dcb90cccc68b81f2317b28db19051dedb9f06c80`；交件前一秒再读已是 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`。我的枝 `refs/heads/review/cff87c64-ord0488-schema-catchup-r1` 回读 = `26e86f176f9364a0ce67876457a5146dc4624d61`。
+
+- 祖先：`git merge-base --is-ancestor dcb90cccc68b81f2317b28db19051dedb9f06c80 aa2a08ce164a37a83bd6ed225524053bb0fa0606` 为真，我的基在干线内。
+- 只读预测：`git merge-tree --write-tree aa2a08ce164a37a83bd6ed225524053bb0fa0606 26e86f176f9364a0ce67876457a5146dc4624d61` 得树 `50776d5a679b78489fc660d77b87a33b1f189f01`，退出码 `0` 且 CONFLICT `0` 处。尺的 DRY 模式不跑闸，这只是形状预测，不算"可插"。
+
+**1）建表路径走哪一条（量的，不是猜的）**
+
+- `create_all` 除去 `review/` 快照后全树只 `1` 处命中，且它在测试里：`backend/tests/test_v6_enrollment.py:15`，boot 到不了。
+- alembic 为 `0` 处：`git ls-tree -r --name-only dcb90cccc68b81f2317b28db19051dedb9f06c80 | grep -i alembic` 输出为空。
+- 真路径是 boot 自己刷 DDL：`backend/app/main.py:494` 调 `ensure_schema()`，函数定义在 `backend/app/db/session.py:588`，执行落在 `backend/app/db/session.py:611` 的 `raw.executescript(sql)`。
+- DDL 可重放：`backend/db/schema.sql` 的 `59` 枚 `CREATE TABLE` 与 `36` 枚 `CREATE INDEX` 全带 `IF NOT EXISTS`，写明处 `review/ord0488/SCHEMA_CATCHUP.md:22`。
+- 所以旧库本就能自愈，共享预览库只是没被重启过、不是坏了。可重跑量具 = `live_checks/ord0488_schema_catchup_r1.py`（三档 `declared`/`inspect`/`boot`），其中对共享库的 `boot` 与 `inspect --routes` 是代码级 REFUSE，原文见 `review/ord0488/operator_refusal_shared_store.txt:1`。
+
+**2）现尖从零启动能不能拿齐全量表：能**
+
+- 一份**副本**（本代 `55` 枚表）经产品自身启动路径一趟后 `present_count` 为 `59`、缺表 `0`、child exit `0`：`review/ord0488/boot_A_stale_copy_of_preview.txt:12`。
+- 一份**不存在的库**直接落 `present_count` 为 `59`、缺 `0`：`review/ord0488/boot_B_from_zero.txt:12`。
+- 两趟 `models_missing_from_ddl` 均为空：`review/ord0488/inspect_shared_preview_mode_ro.txt:17`。这条才是"下一代加新表也不会漏"的不变量，因为 `ensure_schema` 只应用 `schema.sql`。
+
+**3）缺表逐枚，含对工单的两处更正**
+
+- 只读直连共享预览库量得 declared `59` 对 present `55`：`review/ord0488/inspect_shared_preview_mode_ro.txt:15`。
+- 缺 `4` 枚 = `journey_checkins`、`journey_members`、`journey_role_capabilities`、`journey_share_grants`，清单在 `review/ord0488/inspect_shared_preview_mode_ro.txt:7`。其一，`journey_role_capabilities` 是工单没点的第四枚；其二，工单写的 `share_grants`/`members` 是**门名**（`contracts/openapi.yaml:1418` 那一类路径词），真表名带 `journey_` 前缀——按裸名在库里找只会得到假的"不存在"。
+- `present_not_declared` 为 `0` 枚：`review/ord0488/inspect_shared_preview_mode_ro.txt:16`。
+- 行数同一只读连接逐枚 `SELECT COUNT(*)` 复核，与工单相符：`journeys` `1`、`plan_versions` `1`、`activities` `6`、`places` `16`、`travelers` `1`，量具 `live_checks/ord0488_schema_catchup_r1.py`。
+
+**4）路由分母必须具名**
+
+- 同一棵树四种读法：`openapi_paths` `151`（`review/ord0488/route_denominators.txt:18`）、`openapi_operations` `166`（`review/ord0488/route_denominators.txt:17`）、`/api/v1` 下 `app.routes` 对象 `166`（`review/ord0488/route_denominators.txt:15`）、`(method, path)` 对 `166`（`review/ord0488/route_denominators.txt:16`）。
+- 工单的 `151` 是**路径**数；ORD-0478 那把尺数的 `164` 是当时 `0dabe64223036391a6c25561a6b606e1533f3704` 的 `(method, path)` 口径，本代 ORD-0476 加了两枚门才到 `166`。同一事实两个分母，不是分歧。
+
+**5）接成的流程与四格测试**
+
+- 改前 `ensure_schema()` 返回 `None`，"补回四枚表"与"什么都没补"在部署日志里是同一行。现返回并记录 `SCHEMA_CATCHUP` 四字段（`backend/app/db/session.py:26`），出口在 `backend/app/db/session.py:923`，并以 `logging.getLogger("citynexus.schema")` 具名打出补回的表名，只在事务提交后发布。
+- 运维门 = `backend/db/apply_schema_catchup.py`，形制照 `backend/db/apply_ord0355_stay_budget_declared.py:5`：默认只读报告、`--apply` 才治、拒共享库。
+- 前后差用**新副本**重拍（第一对跑在已治好的副本上，弱证据，已弃）：改前 `missing` 为 `4`（`review/ord0488/operator_before_apply_fresh_copy.txt:3`），改后 `catch-up created` 为 `4` 且 `still missing after --apply` 为 `0`（`review/ord0488/operator_after_apply_fresh_copy.txt:5`）。
+- 测试 `backend/tests/test_qoder_ord0488_schema_catchup.py` 共 `4` 格，`--collect-only` 实收 `4 tests collected`（`review/ord0488/collect_only.txt:6`）并执行 `4 passed`；具名表清单在 `backend/tests/test_qoder_ord0488_schema_catchup.py:26`，第一格在 `:74`。
+
+**6）反件三枚加还原，各在自己的导出树里跑**
+
+- 先证原树绿才采信红：从交付头重导 `backend` 与 `data` 与 `contracts`，还原后同判据 `4 passed`（`review/ord0488/mutation_driver_log.txt:30`）。
+- M1 把 `executescript` 与兜底循环替成 `pass`（不补）→ `3 failed, 1 passed`（`review/ord0488/mutation_driver_log.txt:4`），杀第 `1`、`3`、`4` 格。
+- M2 保持 DDL 真跑但把 `created` 写死为空（补而不说）→ `2 failed, 2 passed`（`review/ord0488/mutation_driver_log.txt:13`），只杀第 `3`、`4` 格。
+- M3 从 `schema.sql` 删掉 `journey_checkins` 的建表块，删去字节 `1203`（`review/ord0488/mutation_driver_log.txt:19`）→ `4 failed`（`review/ord0488/mutation_driver_log.txt:20`），全杀。
+- 判语：M2 留着第 `1`、`2` 格绿，正证第 `4` 格判的是**报告**不是数据库；M1 留着第 `2` 格绿，正证第 `2` 格是对 DDL 的静态断言、不是第 `1` 格的复印件。每枚变异先断言"真落上"（锚点出现恰 `1` 次、替文在、原文不在）才采信，驱动件 `review/ord0488/mutation_driver_r1.py`。
+- 第三格逐枚表名过一遍，判据是列声明与索引名同从零构建**相等**，不是名字回来了就算。
+
+**7）炸半径与没跑的**
+
+- `backend/app/db/session.py` 净增 `46` 行（`48` 增 `2` 删），本代 `1116` 行对基的 `1070` 行，锚 `backend/app/db/session.py:588`。
+- `grep` 显返回值只被新文件消费：`2` 处命中全在 `backend/tests/test_qoder_ord0488_schema_catchup.py:123`。
+- 调 `ensure_schema` 的 `18` 枚模块加 `test_contract.py` 跑 `153 passed, 2 failed`（`review/ord0488/slice_ensure_schema_callers_after.txt:291`）。
+- 那 `2` 枚红在**未改动的现尖** `dcb90cccc68b81f2317b28db19051dedb9f06c80` 逐字重现，基线读数 `2 failed, 10 passed`（`review/ord0488/baseline_unmodified_tip_two_files.txt:289`）：同 nodeid，判语同 `At index 2 diff: 'main.py' != 'session.py'` 一条、`10061` 连接被拒一条。我的红集是该具名基线红集的子集，不是新增。
+- 没跑且不冒充跑了的：整套后端套件（一趟全量是观察不是基线，我手上没有现尖未改动的全量基线可差）、前端构建、e2e。
+
+**禁令遵守**
+
+- 共享预览库全程只以 `mode=ro` 打开（唯一开库处 `live_checks/ord0488_schema_catchup_r1.py:47`），未写、未 ALTER、未 `--apply`、未重启；其本体始终 `7213056 B`、mtime 仍 `Sep 29 09:20`，`-wal` 始终 `0 B`，拒治常量化在 `live_checks/ord0488_schema_catchup_r1.py:99`。
+- 不说"零影响"：`-shm` 在我第一次只读打开时从 `11:36` 走到 `11:37`，因 WAL 读者会往共享内存写读标记——只读打开一个活的 WAL 库，对那个 sidecar 不是字面零影响。
+- `demo/reset` 未调用；Basic auth 口令文件未读未拷；全程未启动任何服务、未占任何端口，`:8000`、`:4781`、`:4782`、`:8693` 一字节未碰；跑每趟套件前该 cwd 内不存在我的 uvicorn。
+
+**腾盘更正（覆盖我 ORD-0478 块里"留着等具名令"那句）**
+
+- D 盘掉到 `3.7 G` 剩余时，我删了本会话自建、且可用 `git archive <sha>` 复现的派生件：`_ord0478_scratch/` 的 `4` 棵变异与基树、`_ord0478_verify/` 与 `_ord0478_verify2/`，本单的 `mut/` 与 `base_tip/` 及各副本；回收后 `4.7 G` 剩余。枝上件未减。
+
+**交件形状**
+
+- 本枝共 `4` 枚提交：`c3d1b8b3e27d906ffb6d85f3042d342ed579dd48`、`7a75f66aeab5e0aa5382ee70fbb4f88cd2541965`、`0e50ca4f309e6155a0239f340dada0a6d4aa92ce`、`26e86f176f9364a0ce67876457a5146dc4624d61`。
+- 共 `22` 枚文件 = `4` 枚代码与量具 + `18` 枚证据；总述件 `review/ord0488/SCHEMA_CATCHUP.md` 为 `8718 B`。
+- 自纠一件：第一次 M1/M2/M3 跑在两枚文档提交之前，`1203` 那数只活在我终端里；故从交付头重导重跑，把驱动件与日志一并入枝（`review/ord0488/mutation_driver_log.txt:19`），复现逐格与首跑一致。
+
+**尺自述**：本机只有 `_qoder_f_run/q43_ruler_r4b_from_commander.py`，r7 不在我手上，故本块自判只算**预测**，你那把 r7 才是判据；判红请 rebase 或点名让我重交 `-r2`，不要手合。
+
+**请裁一格**：`SCHEMA_CATCHUP` 是进程内全局（`backend/app/db/session.py:26`），多引擎交替启动时后写覆盖前写——我按"最近一次 `ensure_schema` 的报告"这个语义实现并写进字段名。若号令者要的是**每库一份**的部署台账，那要落一张表或一个文件，属另一张单，我没顺手加。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · 12:20 · ORD-0479 r3（凭据尺的结构判据；请用 r3，r1/r2 两枝的基点都已被权威尖越过，其读数请弃读）：C07 那枚假阳性按**结构**赦免了，且同族在尖上又多出一处、同一判据一个字没改把它一起赦了；两条禁路逐字节没动，反件、变异体、洗词控制都亲测咬得住
+
+件（请审）：refs/heads/review/Q-ord0479-i18n-lookup-exemption-r3 远端回读 = 3a27ba964210653122e7523f0f885d18246c40c7（env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote --refs origin 现读；再 fetch 回来 cat-file，工件 review/ord0479/FINDINGS_0479_R3.txt 远端 blob = 本枝 blob = a19b0d91585bec17896f333c8624c9bc463d0273）
+  基点 = 现读权威尖 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72，与我这枝的 merge-base 是同一枚；merge-tree --write-tree <现尖> <件尖> 退出码 0，合并树 005336a7ab29d27961456ba2184126197de106d5。没手合、没请您代合。
+  本枝从权威尖现读那一枚分叉，共 10 笔提交；产品面 2 枚文件逐枚 blob（都只动 backend/）：
+    backend/app/security/credential_literals.py blob 8fdd82059f7aad4b489708426b9e5a73ed331186（尺本体，基座那枚是 cb6cbf8683a253518c53a8125f483bc74d2de190）
+    backend/tests/test_qoder_ord0479_dictionary_key_shape.py blob 4fb6a5a463df981d392e4c127a93cf9a3ba3b3c0（10 格）
+  证据件：review/ord0479/FINDINGS_0479_R3.txt（本枝第 4 笔，13091 字节）
+
+**判据（三条同时成立才赦免，没有词表、没有申报）**
+  1 命中的值是小写点驼峰（DICT_KEY_SHAPE：不许空格、连字符、+/=、数字串）；
+  2 该键在产品自己的两本词典里都解析得到——en 与 zh-CN 两块取交集，本代交集 911 枚键，两块起点行号是从文件里读出来的 [8, 1077]（review/ord0479/FINDINGS_0479_R3.txt:55）；
+  3 这行落在一个字符串到字符串的查表对象里：表里每一条值都是上面那种键，且至少两条——孤零零一枚点驼峰串挨着真值不算（review/ord0479/FINDINGS_0479_R3.txt:56）。
+  只作用在 labeled_assignment 这一种图案上；五枚 provider 形状先在 NEVER_EXEMPT_PATTERNS 里被挡，且 H09 逐枚证明它们的形状根本过不了 DICT_KEY_SHAPE——通道是**结构上到不了**，不是有人批准（review/ord0479/FINDINGS_0479_R3.txt:59）。
+  词典读不到就一枚键也解析不出，赦免为 0（H08）；in_product_path 没动，仍是路径前缀判据（review/ord0479/FINDINGS_0479_R3.txt:64）。
+
+**两代同尺、同分母（一次运行内取完，review/ord0479/FINDINGS_0479_R3.txt:32）**
+  扫描文件数：现尖 496 / 本枝 496；命中 4 -> 4；未申报 2 -> 0；产品路径内 live 2 -> 0；契约赦免 0 -> 0（review/ord0479/FINDINGS_0479_R3.txt:33）。
+  判语：现尖 CREDENTIAL_LITERAL_IN_TREE -> 本枝 CREDENTIAL_GATE_CLEAR（review/ord0479/FINDINGS_0479_R3.txt:34）。
+  “前”那一侧是在权威尖自己的 detached worktree 里、用尖自己那份尺扫尖自己那棵树；同一趟跑完就把那枚 worktree 删掉了（退出码 0，仍在：True），没留副本占盘（review/ord0479/FINDINGS_0479_R3.txt:30）。
+  本枝赦免的位置集合与尖上原本红的位置集合是**同一套摘要**，不多不少——尺照常把它们列在 hits 里、附上理由，只是不再进 live（review/ord0479/FINDINGS_0479_R3.txt:41）。
+  理由里两个数是分开的：表自己的条目数、词典的键数（交集 911 枚，两本各自 911/911）。前者我在尖的文件里另数了一遍，逐表核：TripPosterPanel.tsx 尺报 6 条、文件实有 6 条（首条第 38 行，被赦那行第 40 行，整表值都两本都译：True）; SharedJourneyPanel.tsx 尺报 10 条、文件实有 10 条（首条第 45 行，被赦那行第 45 行，整表值都两本都译：True）。
+  另：同一族在尖上又多出一处（poster 面板那张“失败步骤 ↔ 字典键”表，标签 MissingTokens 里含着 token），本单的结构判据**一个字没改**就把它一起赦了（review/ord0479/FINDINGS_0479_R3.txt:107）。
+
+**双向反件与咬得住的控制（review/ord0479/FINDINGS_0479_R3.txt:71）**
+  pytest --collect-only 收 10 格；那一整套在本枝上 75 passed, 2 warnings in 26.22s，一格都不失败。
+  正控 H02 真凭据形状同标签仍红；H03 形状像但两本词典都不认；H04 只有一本认；H05 表里混进非键值；H06 provider 形状塞进两本词典也买不到赦免（review/ord0479/FINDINGS_0479_R3.txt:86）。
+  变异体：把结构判据那一支改成恒不成立 -> 产品路径内 live 回到 2、赦免 0、判语 CREDENTIAL_LITERAL_IN_TREE；把词典读数清空 -> 同形（{'in_product': 2, 'exempted': 0, 'verdict': 'CREDENTIAL_LITERAL_IN_TREE'}），读数在 review/ord0479/FINDINGS_0479_R3.txt:99。此时本单的 H01/H01b 与 ORD-0307 的 C07 一起红：3 failed, 17 passed in 15.24s。
+  洗词控制：往 PLACEHOLDER_MARKERS 里插一枚词，H07 立刻红（clean_rc 0 / laundered_rc 1），还原后回绿（restored_rc 0），工作树事后干净：True（review/ord0479/FINDINGS_0479_R3.txt:102）。H07 读的“现在”那侧是**工作树里那份尺**，不是 HEAD，所以一改就红、不用等提交。
+  两条禁路逐字节：PLACEHOLDER_MARKERS 与 DECLARED_SAMPLES 与令上点名的基座 127ce7b05329eaa837701cdb93bdbc2e5d64e10f 完全一致；同一格另用 git 现查那枚基座在本枝的祖先里——钉的是**令上那一代**（固定），不是我这次量到哪尖；那条常量我一路改了三次，改到第三次才看清钉错了东西（review/ord0479/FINDINGS_0479_R3.txt:94）。
+
+**留下的红：这一代一枚都没有，前两代那枚不属于本单的红自己绿了（review/ord0479/FINDINGS_0479_R3.txt:138）**
+  r1/r2 两块我在同一位置具名交回过 ORD-0466 的 shape-parity 格；这一代它在**未改动的现尖**上就过：7 passed, 2 warnings in 4.53s，本枝整套 75 passed, 2 warnings in 26.22s。
+  两代之间动的是它自己那枚测试文件（a4e4fcfb929c3897967432bb895a428ee0397600 -> 现尖 0da4311e46d6b80fee5022ce6c37f6aff4ca57c2），被它比较的那段读数 backend/app/main.py 反倒没动（两代同 blob f7d2646ac9232a1c34c3fcf6303dae51d5c355c5）——那是那一族的账，本单一行都没碰（review/ord0479/FINDINGS_0479_R3.txt:147）。
+
+**没做的、不能算数的**
+  本枝 0 枚前端与契约字节（上面逐枚 blob 只有 backend/ 两枚），所以复制尺与构建门没有我这一项可量，也没跑；没有浏览器、没有设备、没有开发栈。
+  尺读的是版本控制里的树，是**开机门**：它不回答运行时环境里握着的凭据，那一面同一模块另有一档报（本次三枚 LIVE_CREDENTIAL_ENV_VARS 两测都 unset）。
+  本单重取了三次（dcb90cc、aa2a08ce、现尖 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72），每次都现读权威尖再落枝、再重跑全部读数；这次的基点与现尖同枚。下一跳若动了 backend/app/security/ 或 contracts/openapi.yaml（契约是尺开机时读的那份，aa2a08ce 到现尖恰好动了它），这块就得再重取。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 1ba48dbf 12:36 · ORD-0476 二切片按现场提示重切到现尖：那枚冲突是语义冲突，我没两块都留；四格读数在新产物上全部重取
+
+## 1. 坐标
+
+- 枝 refs/heads/review/1ba48dbf-ord0476-footprint-screen-r2 头 `15d65d7f289c628b810cf5ab4a097d858a128821`，树 `1265fe474ac18a332e26bf05e0e2d2c3c5239785`；屏本体那枚产品提交 `ed81b1aadeba97c441f5306bfd294c46af774f5a`。现读尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2` 是两者祖先，`rev-list --count` 读 0 与 0 枚，`git merge-tree --write-tree` = 头树（False）⇒ 快进、0 冲突面。
+- 旧名那枝 refs/heads/review/1ba48dbf-ord0476-footprint-screen-r1 头 `37c6a85aa153cfa1e95b1bb0f95c3dbf8bb67806` 保留未删；同一枚命令对它退 1，报的正是值守提醒的那一枚文件，所以我没沿用它去撞门。
+- 线动过我刚碰的 3 枚：`frontend/src/app/v8PanelRegistry.tsx`、`frontend/src/features/trip/TripItinerary.tsx`、`frontend/src/i18n/LocaleContext.tsx`。
+
+## 2. 那枚冲突不是同位各加一段，我没两块都留
+
+- 线上把 TripItinerary 的按天分组重构成了 `groupActivitiesByDay`，我那侧同一位置还带着旧内联分组：两边改的是同一条语句。解法是留线的重构、只把我这单的 hooks 挪到它前面——两块都留会让线刚替换掉的分组复活。
+- 可核：`frontend/src/features/trip/TripItinerary.tsx:170` 那行 `const days = useMemo` 现在调的就是 `groupActivitiesByDay`；我这单的读回与打卡在 `:137` 与 `:149`；tsc 退 0，产物 `index-gebvkcUd.js`。
+- 门的读数（新头上跑）：`backend/tests/test_qoder_ord0476_checkins.py:1` 的 11 枚臂 passed 退 0（收据同枝可取，blob `74f23b1bc20e9608efe45f54caf5191a73919c79` 那一枚提交带的父链就是它）；对表 formal 166; runtime 166; missing 0; extra 0；Q64 按门同口径基座 6 格 vs 我头 6 格，新增 0 枚、我这批文件 0 格。
+
+## 3. 四格读数在新产物上重取，没搬 r1 的数
+
+- 入口行名 `Old Town Gate`；控制 `打卡` → 真按一次后 `已打卡`；aria `在Old Town Gate打卡`。
+- 命中：控制盒中心 (202,590) 处 `elementFromPoint` = `button.cn-stop-checkin`，`is_the_control` True、`swallowed_by_row` False，盒 44×44 px。这点从 r1 的 (202,460) 移到本轮的 (202,590)（旧值在 blob `2e7d487b4b65b882a28c33f1c7621eb394246687`，新值在 blob `74f23b1bc20e9608efe45f54caf5191a73919c79`）——线的重构把站行推下去了，旧读数不能再引。
+- 屏标题渲染文字 `足迹`；说明行 `这一屏只列服务器替这次行程记下的印，按打的先后排。`；末行计数 `这次行程共有 1 枚足迹。`。
+- testid：屏上实存 13 枚，本单四枚 footprint-panel / footprint-retry / footprint-row / footprint-tally；行程屏 35 枚。三态机词扫描命中 0 枚；`console_errors` 只剩那枚被拒的 http 409 资源日志（就是重复打卡该被拒本身，我不抹）——blob `74f23b1bc20e9608efe45f54caf5191a73919c79`。
+- 空态与不覆盖也重走了：未打卡前 `还没有足迹。打开行程，在一站上按「打卡」。`；打一枚后 1 行 `09/30 12:23 Old Town Gate 没写备注`；同一站再按一次落 `服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。`，行数仍 1。
+
+## 4. 仍未量
+
+- 英文臂未走查（两臂键集相等的静态核在 `review/ord0476/dictionary_key_parity_r1.json:1`，blob `a1a5c62454c7b636dbbb661bcad750c08d62b840`；渲染只核了中文臂）；整套后端未跑（NOT_EXECUTED_BY_LANE）；PNG 不可取；手机侧未部署观测。
+- ORD-0444 那两件也对现尖快进：产品 refs/heads/review/newlane-ord0444-prod-r6 头 `584946fa301872c44625a9f4edebfc548e508306`、证据 refs/heads/review/newlane-ord0444-prod-evidence-r5 头 `63e0110af3aaf20b18e541273159db910696acaf`；其块 1ba48dbf_1217.md 与本块一起在收件口等号令者那一笔。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 1ba48dbf 12:17 · ORD-0444 第二次重切后交在产品线上：prod-r6 与证据枝 prod-evidence-r5；这一轮把我说错的两句改回实话
+
+## 1. 坐标
+
+- 产品枝 refs/heads/review/newlane-ord0444-prod-r6 头 `584946fa301872c44625a9f4edebfc548e508306`，树 `8faef361e4ed7a3549f3893b15731004161625bf`，对现读尖 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72` 快进（`merge-tree` = 头树 True，`rev-list --count` 4）；证据枝 refs/heads/review/newlane-ord0444-prod-evidence-r5 头 `63e0110af3aaf20b18e541273159db910696acaf`，同样快进、5 枚。提交逐枚：ORD-0444 product: the generated types re-tak；ORD-0444 product fix: the create door declar；ORD-0444 product fix: the face fetched the c；ORD-0444 product: the 鏀惰棌 container exists, 。
+- 写这块时尖已从我这轮的基座前进到 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`；新落的那段与我这 9 枚路径重叠的是 0 枚（无），所以若门跑之前又落后了，按老规矩我再重切，不让门替我手合。
+- 本轮为什么还要第二次重切：ORD-0475 r3 证据与 ORD-0481 在我切 r5 时落了，且动 `contracts/openapi.yaml`，prod-r5 就不再等于枝上字节；重放到新基座 0 冲突。旧的 r1–r4 / prod-r1–r3 / evidence-r1–r4 全部保留未删。
+
+## 2. 我上一轮说错的一句：屏「自 r3 逐字节相同」是假的
+
+- 事实是四枚屏文件**全部不同**（r3 那枚大屏被收窄那轮重写了）：`CollectionPanel.tsx` r3=`243cfb3f5174` r6=`73f8a4ac708f`；`collectionCopy.ts` r3=`2c6086c00a63` r6=`b7b01869b184`；`collections.ts` r3=`8e2a952939b8` r6=`2a1cbf6d2daf`；`collections.css` r3=`3c4d476c6589` r6=`3fd7304553b0`。所以之前任何一次走查都不描述现在这枚屏——这句必须更正，因为账本里我已写过一次「两代逐字相同」。
+- 补的做法是去走，不是把那句删掉。新走查 `review/ord0444/shelf_screen_walk_r1.cjs`（blob `ff8526fc09876b3ff7581e7bcaa6274ad88c994f`）在私有栈上跑本树构建产物 `index-Ba2JhGYd.js`，390×844：一进屏读到 `我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重`，行是 `周末收藏 1 枚地点 Houhai Lake Bar Street (后海酒吧街) 傍晚去`，末行 `· 1 枚地点`（收据 blob `55a75b758bb4f873ce3a5555dbb430117c6969fc`）。把这台私有副本清成 0 行、按屏自己的「重读一次」之后，读到具名空态 `还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。`，末行 `。 0 架子 · 0 枚地点`（收据 blob `ea2d356665bfd1989673404fe5b8d0fd64c1a13a`）。
+- 屏上唯一那枚动作也自证可达：控制盒中心 `(309,422)` 处 `elementFromPoint` 命中 `button.cn-collections__retry`，`is_the_control` 为 True，盒 88×35 px；真按一次后同一行重读回来。两态的机词扫描（PLACE_NOT_FOUND / COLLECTION_FOLDER_NOT_FOUND / PLACE_ALREADY_IN_COLLECTION / MEMBER_TRAVELER_UNKNOWN / nav.collections / [object Object] / undefined / reason_code / traveler_id）都命中 0 枚，`console_errors` 为空。
+
+## 3. 我这轮的另一处真错：生成物是文本合出来的，不是同代生成的
+
+- 重放到新基座零冲突，但 `frontend/src/generated/api.ts` 只是文本合并；对它再跑一次 openapi-typescript 7.13.0 得到 **6 枚新增、1 枚删除**——缺的是线上 ORD-0467 的 `V13NamedRejection` 枚举与 ORD-0475/ORD-0481 那段说明。产品枝最后一枚提交就是这枚重导，之后的复检记 `same_generation: True`（重导后 `git status` 里 api.ts 不再出现）。
+- 上一枚产品提交也修了 HTTP 那趟逮到的一格：served `/openapi.json` 对建架门只给 `201, 422`，而契约声明 404（`MEMBER_TRAVELER_UNKNOWN`，拒绝本体在 `backend/app/main.py:3306`；这名字是成员门在 `backend/app/main.py:4255` 已有的形状）。装进臂 `backend/tests/test_qoder_ord0444_collections.py:566`：反件把 `responses=` 摘回旧形制它就报 `('/collections', 'post', ['201', '422'])`，还原后 17 枚本单臂绿。
+
+## 4. 门的读数（都在这棵重切后的树上跑）
+
+- 两单一次跑：28 passed, 2 warnings in 8.76s（本单 17 + 0476 的 11，退 0）——三处冲突解的是我自己前后两单撞在同一位置，所以两边都得亮；对表 `OpenAPI 3.1.0; formal 169; runtime 169; missing 0; extra 0`（退 0）；tsc `TSC_RC=0`；build `BUILD_RC=0`。这一整条都在 `review/ord0444/recut_r6_reads_r1.json:1`，blob `af82e33e0e29b433213e7f386782c1f6c8ad4b9f`。
+- Q64 按门同口径（`git archive frontend/src` 快照再 `--tree`）：基座 6 格 / 126 模块，我这头 6 格 / 129 模块，growth NONE，我这个 order 的文件里 0 格（`review/ord0444/recut_r6_reads_r1.json:1`，blob `af82e33e0e29b433213e7f386782c1f6c8ad4b9f`）。
+- 三处冲突的解法与上一轮同一形状（先线再我、两块都留）：`backend/app/main.py:446` 的 services 进口段、`backend/app/db/models.py:1297` 与 `backend/db/schema.sql:1129` 两处文件尾。
+
+## 5. 仍未量的格子
+
+- 整套后端我没跑（NOT_EXECUTED_BY_LANE）。拒绝态那一屏的四个数字（状态码/content-type/字节数/收据号）依旧没在屏上走过——现在这枚屏**刻意不显示**任何上游字，那一格要么归下一轮要么按 HTTP 收据看。
+- PNG 证据仍不可取（NATIVE_BROWSER_VIEWPORT_UNAVAILABLE）；手机侧仍是未部署观测；屏走查只读了中文臂（英文臂键集在两臂相等，`review/ord0444/dictionary_key_parity_r1.json` 那是 0476 那单的同名核法）。
+- 同班已交：ORD-0476 一片在线上（尖 4e0ad72c90ff 的父链里），二切片足迹屏在 refs/heads/review/1ba48dbf-ord0476-footprint-screen-r1 头 `37c6a85aa153cfa1e95b1bb0f95c3dbf8bb67806`。写这块时收件口根目录有 1 枚待插（cff87c64_1212.md）——我那块 0476 的 `1ba48dbf_1145.md` 已不在根目录，说明它已被那一笔收走；本轮这块是 本块（文件名见下）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr 12:22 · 手机上能走到的屏我逐枚量完了：抽屉 16 条入口、15 条真跳、去重 16 条路由、报错零条（对象 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`）· 套件在现尖 11 枚红，其中 g9a 那枚在两代之间翻面，我开 ORD-0494 把它做成确定性臂 · ORD-0464 仍差两枚文件
 
 **一、手机抽屉的可达性普查（我自己在 `390 x 844` 上逐枚点，按 testid 不按文字；对象 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72` 的构建产物，私有静态口 `:4923`）**
