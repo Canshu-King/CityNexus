@@ -482,6 +482,79 @@ def _token_present(value: str, tokens: Iterable[str]) -> bool:
     return any(token in value for token in tokens)
 
 
+_PREFERENCE_NEGATION_MARKERS = (
+    "不喜欢",
+    "不爱",
+    "不想",
+    "不要",
+    "避免",
+    "拒绝",
+    "讨厌",
+    "不愿",
+    "别选",
+    "排除",
+    "放弃",
+    "跳过",
+    "不选",
+    "不考虑",
+    "避开",
+    "不去",
+    "不看",
+    "don't like",
+    "do not like",
+    "not interested in",
+    "prefer not",
+    "avoid",
+    "exclude",
+    "skip",
+    "reject",
+    "dislike",
+    "without",
+)
+
+
+def preference_is_positive(value: str, terms: Iterable[str]) -> bool:
+    """Return whether a preference term is positively requested in its clause.
+
+    This is intentionally narrow: it handles preference polarity only.  It
+    does not infer a substitute preference from a negation, so callers can
+    preserve an explicit "dislike indoor" as a negative signal without
+    turning it into an accidental indoor preference.
+    """
+
+    raw_value = str(value or "").casefold()
+    clauses = (
+        part.strip()
+        for part in re.split(r"[,，。；;!?！？\n]+|(?<!\d)\.(?!\d)|但|但是|不过", raw_value)
+        if part.strip()
+    )
+    normalized_terms = tuple(str(term).casefold() for term in terms)
+    for clause in clauses:
+        if not any(term in clause for term in normalized_terms):
+            continue
+        if any(marker in clause for marker in _PREFERENCE_NEGATION_MARKERS):
+            continue
+        return True
+    return False
+
+
+def preference_is_explicitly_excluded(value: str, terms: Iterable[str]) -> bool:
+    """Return whether the user explicitly excludes a preference dimension."""
+
+    raw_value = str(value or "").casefold()
+    clauses = (
+        part.strip()
+        for part in re.split(r"[,，。；;!?！？\n]+|(?<!\d)\.(?!\d)|但|但是|不过", raw_value)
+        if part.strip()
+    )
+    normalized_terms = tuple(str(term).casefold() for term in terms)
+    return any(
+        any(term in clause for term in normalized_terms)
+        and any(marker in clause for marker in _PREFERENCE_NEGATION_MARKERS)
+        for clause in clauses
+    )
+
+
 def _quantity_before(value: str, terms: Iterable[str]) -> tuple[int | None, str | None]:
     """Parse ``<term> ... <number> <unit>`` and return (value_in_metres, unit).
 
@@ -875,7 +948,7 @@ def extract_capabilities_from_text(
         add("QUIET_ENVIRONMENT", {"preferred": True})
     if any(token in value for token in ("低刺激", "low stimulation", "sensory-friendly")):
         add("SENSORY_LOW_STIMULATION", {"preferred": True})
-    if any(token in value for token in ("室内", "indoor")):
+    if preference_is_positive(value, ("室内", "indoor")):
         add("INDOOR_PREFERRED", {"preferred": True})
     return tuple(item.as_dict() for item in found)
 

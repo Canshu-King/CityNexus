@@ -18,6 +18,12 @@ from app.db.models import Activity, AgentRun, Event, Journey, JourneyMission, Pl
 from app.db.session import SessionLocal
 from app.integrations.ai.copilot_contract import classify_copilot_message
 from app.integrations.ai.event_targeting import resolve_event_target
+from app.agent.mission import compile_mission
+from app.capabilities import (
+    extract_capabilities_from_text,
+    preference_is_explicitly_excluded,
+    preference_is_positive,
+)
 
 client = TestClient(main_module.app)
 
@@ -28,6 +34,32 @@ def test_default_hermes_model_order_is_international_then_domestic_fallbacks():
         "cn:glm-5.3-flash",
         "cn:deepseek-v4.1-flash",
     )
+
+
+def test_negative_indoor_preference_does_not_compile_as_indoor_preferred(monkeypatch):
+    command = "我喜欢户外自然景观，不喜欢剧场和室内馆，路线松弛不要赶。"
+    capabilities = extract_capabilities_from_text(command)
+    assert "INDOOR_PREFERRED" not in {item["code"] for item in capabilities}
+    monkeypatch.setattr("app.agent.mission._resolve_protected_activities", lambda *_args: ())
+
+    spec = compile_mission(
+        None,
+        type(
+            "JourneyStub",
+            (),
+            {"budget_currency": "CNY", "active_plan_version_id": None},
+        )(),
+        command,
+        requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+    )
+    assert "PREFER_INDOOR" not in spec.objective_codes
+    assert "PREFER_OUTDOOR" in spec.objective_codes
+
+
+def test_abandoning_indoor_path_does_not_compile_as_indoor_preferred():
+    command = "明确放弃剧场和室内馆路径，优先户外自然景观。"
+    assert preference_is_explicitly_excluded(command, ("室内", "indoor"))
+    assert not preference_is_positive(command, ("室内", "indoor"))
 
 
 def _selected_journey() -> str:
@@ -596,7 +628,9 @@ def test_estimate_place_facts_is_explicitly_non_authoritative():
     assert body["estimate"]["authority_eligible"] is False
     assert body["estimate"]["opening_hours"]["status"] == "ESTIMATED_AGENT"
     assert body["estimate"]["cost_evidence"]["status"] == "ESTIMATED_AGENT"
-    assert "cannot make a plan selectable" in body["warning"]
+    assert "never becomes canonical/provider truth" in body["warning"]
+    assert "selectable coursework-only candidate" in body["warning"]
+    assert "selection remains separate" in body["warning"]
     assert body["estimate"]["cost_evidence"]["currency"] == client.get(
         f"/api/v1/journeys/{journey_id}"
     ).json()["budget"]["currency"]

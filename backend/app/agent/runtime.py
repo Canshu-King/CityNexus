@@ -109,7 +109,7 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
         ),
         _tool(
             "estimate_place_facts",
-            "Estimate opening and cost for strategy comparison only. In the coursework lab, the Agent may provide bounded hypotheses when peer evidence is absent; every such value is stored as ESTIMATED_AGENT and is never authoritative or selectable.",
+            "Estimate opening and cost for strategy comparison. In the coursework lab, the Agent may provide bounded hypotheses when peer evidence is absent; each remains ESTIMATED_AGENT, never canonical/provider truth, and can support selection only inside the explicit isolated lab estimate envelope after live mobility and deterministic gates pass.",
             {
                 **journey,
                 "place_id": _property("string"),

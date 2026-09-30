@@ -773,7 +773,11 @@ class AgentToolGateway:
             "tool": "estimate_place_facts",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "estimate": estimate,
-            "warning": "ESTIMATED_AGENT is strategy evidence only; it cannot make a plan selectable or active",
+            "warning": (
+                "ESTIMATED_AGENT never becomes canonical/provider truth. It may support a selectable "
+                "coursework-only candidate only when the explicit isolated lab estimate envelope, "
+                "live mobility evidence, and deterministic authority gate all pass; selection remains separate."
+            ),
         }
 
     def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:

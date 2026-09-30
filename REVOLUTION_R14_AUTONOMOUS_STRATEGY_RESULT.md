@@ -158,7 +158,7 @@ with 93 minutes, `LIVE_PROVIDER_CAPTURE`, and a hard-eligible receipt.
 
 ```text
 uv run pytest backend/tests/test_agent_mission_runtime.py -q
-18 passed, 1 warning
+20 passed, 1 warning
 
 uv run pytest backend/tests/test_agent_mission_runtime.py \
   backend/tests/test_agent_runtime_gate.py \
@@ -169,7 +169,7 @@ uv run pytest backend/tests/test_agent_mission_runtime.py \
   backend/tests/test_provider_runtime_gate.py \
   backend/tests/test_qoder_mobility_truth_contract.py \
   backend/tests/test_v10_generic_compose.py -q
-132 passed, 1 warning
+134 passed, 1 warning
 ```
 
 ## Candidate/base delta and remaining frontier
@@ -179,11 +179,9 @@ the pre-existing focused suite remains green. The real run moved from
 wrong-cursor removal to correct named-activity removal, then to a completed
 Journey with an auditable old/new PlanVersion lineage.
 
-The next autonomous experiment is to use the existing VOI decisions to acquire
-one decision-sensitive second-source opening/cost fact for a new real Lijiang
-Place, regenerate the same intent-driven strategy, and measure whether the
-candidate set changes. The estimate envelope must remain separate from
-canonical truth, and any source that cannot corroborate must remain UNKNOWN.
+The VOI acquisition and strategy pivot experiment below continued this
+checkpoint. The estimate envelope remains separate from canonical truth, and
+sources that cannot corroborate remain UNKNOWN.
 
 ## VOI experiment executed after the checkpoint
 
@@ -230,3 +228,138 @@ This is the intended R14 behavior: the strategy engine chose a decision-
 sensitive fact, attempted bounded source acquisition, retained UNKNOWN when
 corroboration was absent, and continued to a non-authoritative candidate
 without silently promoting evidence.
+
+## Strategy pivot, selection, and completed execution
+
+The same Journey continued with a second domestic-model AgentRun instead of
+restarting the scenario:
+
+- Journey: `fa5db347-4f93-42bc-959d-4600f49f02ae`
+- AgentRun: `abd9de3c-0bfc-4ea4-9e28-794c70fc544f`
+- mission: `90d788e8-3dad-44cc-94e4-3e0d4e2bc8df`
+- model: `cn:glm-5.3-flash`
+- run status: `COMPLETED`
+- persisted tool steps: 7 (one rejected malformed call had no side effect)
+- ordered useful path:
+  `inspect_journey → inspect_twin → list_replans → search_city_services →
+  acquire_place_facts(OFFICIAL_OPERATOR) → generate_plans`
+
+The persisted before/after candidate activities show an actual Place-set
+change:
+
+| Candidate | Provider-backed Place IDs | Inter-place walk | State |
+| --- | --- | ---: | --- |
+| Before, `fa79ea3b-bef6-548f-bbdd-76105731a167` | 千古情大剧院 `real-place-5677eb6e9a22401a4f8c7c5d` + 邱塘关 `real-place-2390ded5c079f8ac2aa626d3` | 148 min | provisional candidate, not selected |
+| After, `200e74ef-cc42-5d4f-b2b3-54a48135f014` | 丽江恋歌 `real-place-353711c2b3f8f91ce1b58d13` + 万德宫 `real-place-714c34dc753247bdb5c5d1fe` | 92 min | selected and completed |
+
+The Agent explicitly abandoned the 千古情 source path after its second-source
+lookup confirmed the same OSM entity but found no structured opening or cost
+facts. It chose a theatre-plus-museum alternative to preserve cultural intent
+and reduce walking burden. The 丽江恋歌 acquisition was exact-entity-bound to
+`overpass:way/1492458576`; official structured facts remained absent, so its
+canonical opening and cost stayed UNKNOWN. The municipal/search path was
+unconfigured/unavailable; no claim was promoted from Nominatim tags.
+
+The alternative candidate became `selectable=true` only inside the explicitly
+enabled lab `COURSEWORK_ESTIMATE` envelope. Its Place records carried earlier
+persisted `ESTIMATED_AGENT` hypotheses (10:00–18:00, estimated cost 0); those
+hypotheses were not acquired in this pivot run and are not provider facts. The
+plan itself preserves four unresolved canonical facts (two opening, two cost),
+with cost summary `PARTIAL`, `unknown_item_count=2`; its explanation says
+coursework-only and not LIVE provider-ready. Estimated zero is not described
+as verified free.
+
+### Product execution receipts
+
+- `POST /api/v1/journeys/fa5db347-4f93-42bc-959d-4600f49f02ae/plans/200e74ef-cc42-5d4f-b2b3-54a48135f014/select` returned Journey `PLANNED` with that active PlanVersion.
+- `POST /api/v1/journeys/fa5db347-4f93-42bc-959d-4600f49f02ae/start` returned Journey `ACTIVE`, current activity 丽江恋歌.
+- The actual used edge was `[real-place-353711c2b3f8f91ce1b58d13, real-place-714c34dc753247bdb5c5d1fe]`, 92 minutes, `valhalla-http`, `LIVE_PROVIDER_CAPTURE`, `degraded=false`, `hard_minutes=92`, decision `HARD_ELIGIBLE`.
+- The active plan's eligible mobility snapshot was `e914b4ce-1358-4975-85b0-98e46da8ba25`.
+- Both activities were executed through their persisted `depart → arrive → begin → complete` endpoints.
+- Final API state: Journey `COMPLETED`; `active_plan_version_id=200e74ef-cc42-5d4f-b2b3-54a48135f014`; `current_activity_id=null`; Twin `projection_status=READY`, `now_state=COMPLETE`, cursor absent, and the same Valhalla snapshot/edge eligibility receipt.
+
+This is a real coursework-usable result, not a claim that unknown canonical
+opening/cost facts became verified. The Agent strategy pivot, product
+selection, execution cursor, persisted activities, and final Twin all agree.
+Next strategy frontier: compare a second explicit natural-language preference
+against this cultural/low-walk run and make the resulting Place set or order
+diverge for a reason traceable to intent and actual catalogue evidence.
+
+## Outdoor-intent contrast, polarity repair, and completed product journey
+
+### Preference contrast and semantic repair
+
+The second Lijiang intent was explicitly different from the completed
+cultural/low-walk journey: outdoor nature and old buildings, relaxed pace, and
+dislike of theatres/indoor venues. The first live compile correctly emitted
+only `PREFER_OUTDOOR` for the phrase “不喜欢剧场和室内馆”. A later Agent-authored
+phrase, “明确放弃剧场和室内馆路径”, exposed a narrower deterministic
+polarity gap: the compiler did not yet treat `放弃`/`跳过`/`不选` as negative
+preference markers, so a mission briefly persisted both `PREFER_INDOOR` and
+`PREFER_OUTDOOR`.
+
+The bounded repair adds those Chinese negation forms and the equivalent
+English `exclude`/`skip`/`reject`/`dislike` markers to the existing clause-level
+polarity logic. It also keeps an explicit final polarity guard at the
+`create_mission` authority boundary. Regression tests cover both “不喜欢室内”
+and “放弃室内路径”. A fresh live `/agent/commands` replay after service restart
+persisted mission `7cacabeb-0bcc-4554-ae2e-2180cf882448` with exactly
+`objective_codes=["PREFER_OUTDOOR"]` and `preferences={"outdoor":true}`; no
+`PREFER_INDOOR` leaked into the mission. The replay used domestic GLM through
+`HERMES_COMPAT_ENDPOINT`, AgentRun
+`ca16df27-077d-441f-acea-6ac73ba0abc3`, model `cn:glm-5.3-flash`.
+
+### Real catalog strategy and bounded estimate
+
+Journey `cc2d7b07-6567-430c-9544-5deb842d8adb` was used for the independent
+outdoor-intent contrast. AgentRun
+`de743fd1-26b7-4fdc-93e0-f1133f62de63` (`cn:glm-5.3-flash`) inspected Journey
+and Twin, searched live Lijiang OSM-backed catalog, and generated the
+candidate. An earlier search trace on the same Journey proved that natural /
+historic terms could return zero; the Agent changed to the `park` category and
+obtained two real Place IDs:
+
+- `real-place-b1d338c31a9b5b4cb26d99e2` — 世界记忆遗产公园
+- `real-place-cfa76a6b4c7dd1fe68a4dfdf` — 文笔公园
+
+The Agent used `estimate_place_facts` on both returned IDs. Each hypothesis is
+stored as `ESTIMATED_AGENT` / `AGENT_PROVIDED_HYPOTHESIS`: 09:00–18:00 and
+¥50 per place. The canonical opening records still say
+`REQUIRES_CONFIRMATION`, canonical cost evidence remains `UNKNOWN`, verified
+cost subtotal remains zero with two unknown items, and the estimated ¥100
+total is not described as verified or free.
+
+The resulting PlanVersion is `7133780a-03f7-5ba4-8f95-b89334113864`
+(version 4), containing only those two searched Places. It is
+`selectable=true` solely within the explicit `COURSEWORK_ESTIMATE` envelope;
+the explanation states it is not a LIVE provider-ready result. Its frozen
+mobility snapshot is `87dcf106-d96a-49d8-977d-b67a50949c45`, provider
+`valhalla-http`. The actual used edge is
+`[real-place-b1d338c31a9b5b4cb26d99e2,
+real-place-cfa76a6b4c7dd1fe68a4dfdf]`, 45 minutes, `WALK`,
+`LIVE_PROVIDER_CAPTURE`, not degraded, with a persisted 45-minute
+`HARD_ELIGIBLE` receipt.
+
+### Product selection and completion
+
+The deterministic selection endpoint accepted that candidate and set it as
+the active PlanVersion. The product start endpoint moved the Journey to
+`ACTIVE`; both real catalog activities then traversed the persisted lifecycle
+through `depart → arrive → begin → complete`. The resulting API and Twin state
+agree:
+
+- Journey `cc2d7b07-6567-430c-9544-5deb842d8adb`: `COMPLETED`
+- active PlanVersion: `7133780a-03f7-5ba4-8f95-b89334113864`
+- `current_activity_id=null`; Twin projection `READY`; execution state `COMPLETE`
+- mobility source remains `valhalla-http`, frozen snapshot remains
+  `87dcf106-d96a-49d8-977d-b67a50949c45`, actual edge remains hard eligible
+- opening and price remain visibly unresolved canonical facts; this is a
+  coursework-estimated product Journey, not a claim about a physically
+  completed real-world visit
+
+This contrast materially changed the activity set from the earlier cultural
+pair (玉龙纳西族自治县文化馆 + 万德宫) to two outdoor parks, based on the explicit
+outdoor preference and real provider categories. The only remaining R14
+frontier is to carry the same strategy/VOI/pivot mechanism to another
+unseeded city and to tighten search-budget continuity so a bounded multi-step
+Agent run can pivot across turns without misreading per-turn search limits.
