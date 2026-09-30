@@ -196,6 +196,25 @@ test("ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is 
   });
 });
 
+/** Ask the same door the screen asks, from the test, so the painted count and the served count are
+ *  two independent readings of one fact rather than one reading quoted twice. */
+async function doorRows(page: Page): Promise<number> {
+  const journeyId = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id"));
+  expect(journeyId, "the screen has to have a journey for the door to answer about").toBeTruthy();
+  const url = new URL(`/api/v1/journeys/${journeyId}/checkins`, page.url()).toString();
+  const answer = await page.request.get(url);
+  expect(answer.status(), "the read route answers").toBe(200);
+  const body = await answer.json();
+  expect(Array.isArray(body), "the door answers a list, and an empty trip is an empty list").toBe(true);
+  return body.length;
+}
+
+/** The stop rows beside the map, counted as nodes: the filter is allowed to hide pins, not to delete
+ *  anybody's row. */
+async function chipRows(page: Page): Promise<number> {
+  return page.locator("[data-testid^='map-stop-']").count();
+}
+
 test("ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("citynexus.locale", "zh-CN"));
   await page.setViewportSize(PHONE);
@@ -212,6 +231,8 @@ test("ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what i
   await page.waitForTimeout(1_200);
 
   const w = await enterMap(page);
+  const served = await doorRows(page);
+  expect(served, "the door's own row count is what the map paints solid").toBe(w.solid_count);
   expect(w.band_text.startsWith(COPY.stampedLead.zh), `the read arm has to name the count, got "${w.band_text}"`).toBe(true);
   expect(w.solid_count, "exactly the one stop the server holds a stamp for is solid").toBe(1);
   expect(w.badge_count, "and it carries exactly one date").toBe(1);
@@ -224,6 +245,7 @@ test("ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what i
     locale: "zh-CN",
     viewport: PHONE,
     control_before: before,
+    door_rows_served: served,
     band_text: w.band_text,
     pin_total: w.pin_total,
     solid_count: w.solid_count,
@@ -255,6 +277,11 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
   await filter.scrollIntoViewIfNeeded();
   const hit = await readMap(page);
   expect(hit.filter_hit, "the switch takes its own tap").toContain("v8-map-footprint-filter");
+  /* The switch is a view, not a write: the door's row count and the row count beside the map have to
+     be the same numbers on both sides of every press. Anything else would mean pressing a filter
+     changed what the server holds, or deleted somebody's row. */
+  const doorBefore = await doorRows(page);
+  const chipsBefore = await chipRows(page);
   /* A picture of the two things the numbers above claim: the sentence beside the map and the switch
      under it. The map itself is screenshotted by the arm that stamps, so the two together show the
      claim and its control on one screen. */
@@ -282,6 +309,10 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
   const back = await readMap(page);
   expect(back.hidden_count, "pressing again shows them all").toBe(0);
   expect(back.filter_pressed, "and the state says so").toBe("false");
+  const doorAfter = await doorRows(page);
+  const chipsAfter = await chipRows(page);
+  expect(doorAfter - doorBefore, "the switch writes no row to the server").toBe(0);
+  expect(chipsAfter - chipsBefore, "and removes no row from the screen").toBe(0);
 
   /* The order's other half: the switch state is not written down anywhere. A reload is a fresh mount,
      and a filter that survived it would mean the screen had found somewhere to store it. */
@@ -299,6 +330,10 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
     viewport: PHONE,
     label_before: label,
     filter_hit: hit.filter_hit,
+    door_rows_before: doorBefore,
+    door_rows_after: doorAfter,
+    chip_rows_before: chipsBefore,
+    chip_rows_after: chipsAfter,
     open_hidden: open.hidden_count,
     on_hidden: on.hidden_count,
     on_pin_claim: on.pin_claim,
