@@ -15,7 +15,7 @@ import re
 import socket
 from datetime import date, datetime, timezone
 from typing import Any
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 
 import httpx
 from sqlalchemy import select
@@ -573,6 +573,154 @@ def _plain_text_cost(
     }
 
 
+def _lotsmall_bound_facts(
+    client: httpx.Client,
+    final_url: str,
+    *,
+    retrieved_at: str,
+    reference_at: str | datetime | date | None,
+    source_binding: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Read facts from the exact public Lotsmall ticket entity in a URL binding.
+
+    The website tag is accepted only after the exact provider entity was returned
+    by Nominatim/Overpass and the public ticket API echoes the same product id,
+    product code, and merchant id.  A same-name result without those exact ids is
+    not eligible for promotion.
+    """
+
+    parsed = urlparse(final_url)
+    if parsed.hostname != "wap.lotsmall.cn" or parsed.path != "/vue/detail/ticket":
+        return None
+    if not source_binding or (source_binding.get("identity_basis") or {}).get("matched_provider_entity") is not True:
+        return None
+    query = parse_qs(parsed.query)
+    product_id = str((query.get("id") or [""])[0]).strip()
+    product_code = str((query.get("productCode") or [""])[0]).strip()
+    merchant_id = str((query.get("m_id") or [""])[0]).strip()
+    if not product_id.isdigit() or not product_code or not merchant_id.isdigit():
+        return None
+
+    api_root = "https://wap.lotsmall.cn/bff"
+    detail_url = api_root + "/merchant/api/merchantParkInfo/merchantParkInfo?" + urlencode(
+        {"merchantParkInfoId": product_id, "wayType": "1", "merchantInfoId": merchant_id}
+    )
+    detail_response, detail_source = _safe_get(client, detail_url, retrieved_at=retrieved_at)
+    detail_payload = detail_response.json()
+    detail = detail_payload.get("data") if isinstance(detail_payload, dict) else None
+    if not isinstance(detail, dict):
+        return None
+    if (
+        str(detail.get("id") or "") != product_id
+        or str(detail.get("productCode") or "") != product_code
+        or str(detail.get("merchantInfoId") or "") != merchant_id
+    ):
+        return None
+
+    reference_date = _reference_date(reference_at) or date.today()
+    grid_url = api_root + "/merchant/api/merchantParkTicketGridNew?" + urlencode(
+        {
+            "currPage": "1",
+            "pageSize": "50",
+            "playDate": reference_date.isoformat(),
+            "businessType": "park",
+            "merchantParkInfoId": product_id,
+            "merchantInfoId": merchant_id,
+        }
+    )
+    grid_response, grid_source = _safe_get(client, grid_url, retrieved_at=retrieved_at)
+    grid_payload = grid_response.json()
+    groups = grid_payload.get("data") if isinstance(grid_payload, dict) else None
+    if not isinstance(groups, list):
+        return None
+
+    adult_ticket: dict[str, Any] | None = None
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        label = str(group.get("labelValue") or "")
+        for ticket in group.get("ticketList") or []:
+            if not isinstance(ticket, dict):
+                continue
+            if (
+                str(ticket.get("merchantParkInfoId") or "") != product_id
+                or str(ticket.get("merchantInfoId") or "") != merchant_id
+                or (str(ticket.get("saleStatus") or "").upper() not in {"T", "TRUE"})
+                or ticket.get("buyDateAllow") is False
+            ):
+                continue
+            model_name = str(ticket.get("modelName") or "")
+            if label != "成人票" and "成人票" not in model_name:
+                continue
+            amount = ticket.get("price")
+            if not isinstance(amount, (int, float)):
+                amount = ticket.get("merchantLinePrice")
+            if not isinstance(amount, (int, float)):
+                continue
+            adult_ticket = {"label": label, **ticket, "amount": amount}
+            break
+        if adult_ticket:
+            break
+
+    opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    open_time = str(detail.get("openTime") or "").strip()
+    close_time = str(detail.get("endTime") or "").strip()
+    normalized = normalize_opening_hours(f"{open_time}-{close_time}") if open_time and close_time else opening
+    if normalized.get("status") == "NORMALIZED_VALID":
+        opening = {
+            **normalized,
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "source": "official_web",
+            "source_url": final_url,
+            "source_api_url": detail_source,
+            "provider_product_id": product_id,
+            "provider_product_code": product_code,
+            "raw": str(detail.get("orderNotice") or "")[:4000],
+        }
+
+    cost = {
+        "status": "UNKNOWN",
+        "amount_minor": None,
+        "currency": "CNY",
+        "source": "official_web",
+        "source_url": final_url,
+    }
+    if adult_ticket is not None:
+        cost = {
+            "status": "VERIFIED_PROVIDER",
+            "amount_minor": round(float(adult_ticket["amount"]) * 100),
+            "currency": "CNY",
+            "source": "official_web",
+            "source_url": final_url,
+            "source_api_url": grid_source,
+            "provider_product_id": product_id,
+            "provider_product_code": product_code,
+            "provider_ticket_id": str(adult_ticket.get("parkTicketId") or adult_ticket.get("id") or ""),
+            "provider_model_code": str(adult_ticket.get("modelCode") or ""),
+            "raw": str(adult_ticket.get("modelName") or adult_ticket.get("label") or ""),
+        }
+
+    return {
+        "provider": "official_web",
+        "source": final_url,
+        "retrieved_at": retrieved_at,
+        "status": "ACQUIRED" if opening["status"] != "UNKNOWN" or cost["status"] != "UNKNOWN" else "NO_STRUCTURED_FACTS",
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "source_binding": source_binding,
+        "provider_identity": {
+            "provider_entity": source_binding.get("provider_entity"),
+            "matched_provider_entity": True,
+            "merchant_info_id": merchant_id,
+            "merchant_park_info_id": product_id,
+            "product_code": product_code,
+            "detail_api_url": detail_source,
+            "ticket_grid_api_url": grid_source,
+            "reference_date": reference_date.isoformat(),
+        },
+    }
+
+
 def _official_web_facts(
     client: httpx.Client,
     source_url: str,
@@ -582,6 +730,15 @@ def _official_web_facts(
     source_binding: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     response, final_url = _safe_get(client, source_url, retrieved_at=retrieved_at)
+    bound = _lotsmall_bound_facts(
+        client,
+        final_url,
+        retrieved_at=retrieved_at,
+        reference_at=reference_at,
+        source_binding=source_binding,
+    )
+    if bound is not None:
+        return bound
     body = response.text[:1_000_000]
     nodes = _json_ld_nodes(body)
     opening = _official_opening(nodes, final_url)
@@ -778,6 +935,28 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 if source_binding
                 else _official_source_url({**tags, **nominatim_tags})
             )
+            if (
+                source_binding is None
+                and source_url
+                and secondary.get("status") == "ACQUIRED"
+                and ref in nominatim_rows
+                and source_url in {
+                    str(tags.get("website") or "").strip(),
+                    str(nominatim_tags.get("website") or "").strip(),
+                }
+            ):
+                source_binding = {
+                    "provider_entity": place.external_id,
+                    "source_url": source_url,
+                    "source_class": "OFFICIAL_TICKETING",
+                    "identity_basis": {
+                        "matched_provider_entity": True,
+                        "provider_entity": place.external_id,
+                        "basis": "exact_provider_website_tag",
+                        "secondary_provider": "nominatim",
+                    },
+                    "approval": "PROVIDER_TAG_EXACT_URL",
+                }
             if source_url:
                 receipt["official_web"]["attempted"] += 1
                 try:
@@ -828,6 +1007,8 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
                 "claims": {"opening_hours": {"status": opening.get("status"), "normalized": opening}, "cost": cost},
             }
+            if source_binding is not None:
+                metadata["fact_source_binding"] = source_binding
             # Fresh provider observations reset stale values when data is absent;
             # operator-bound municipal evidence above supersedes lower-priority map tags.
             place.opening_hours_json = json.dumps(opening, ensure_ascii=False)

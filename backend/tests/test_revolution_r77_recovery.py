@@ -152,6 +152,121 @@ def test_official_html_parser_promotes_date_applicable_opening_and_cost(monkeypa
     assert len(result["cost_evidence"]["seasonal_amounts"]) == 2
 
 
+def test_lotsmall_exact_product_api_promotes_bound_provider_facts(monkeypatch):
+    from app import fact_acquisition
+
+    final_url = (
+        "https://wap.lotsmall.cn/vue/detail/ticket?"
+        "id=8187&productCode=park2021051111555676069&m_id=1939"
+    )
+    detail = {
+        "data": {
+            "id": 8187,
+            "productCode": "park2021051111555676069",
+            "merchantInfoId": 1939,
+            "openTime": "07:30",
+            "endTime": "17:30",
+            "orderNotice": "每年3月1日-10月31日：7:30开始检票，17:30闭园。",
+        }
+    }
+    grid = {
+        "data": [
+            {
+                "labelValue": "成人票",
+                "ticketList": [
+                    {
+                        "id": "49827",
+                        "parkTicketId": "52526",
+                        "modelName": "网师园旺季成人票",
+                        "modelCode": "MP2021060917054740913",
+                        "merchantParkInfoId": "8187",
+                        "merchantInfoId": "1939",
+                        "price": 40,
+                        "saleStatus": "T",
+                        "buyDateAllow": True,
+                    }
+                ],
+            }
+        ]
+    }
+
+    def fake_safe_get(_client, url, **_kwargs):
+        if url.endswith("jump.szjlxx.cn/?park=wsy"):
+            return _Response({}, headers={"location": final_url}), final_url
+        if "/merchantParkInfo/merchantParkInfo?" in url:
+            return _Response(detail), url
+        if "/merchantParkTicketGridNew?" in url:
+            return _Response(grid), url
+        raise AssertionError(url)
+
+    monkeypatch.setattr(fact_acquisition, "_safe_get", fake_safe_get)
+    binding = {
+        "provider_entity": "overpass:node/5042033121",
+        "source_url": "http://jump.szjlxx.cn/?park=wsy",
+        "source_class": "OFFICIAL_TICKETING",
+        "identity_basis": {
+            "matched_provider_entity": True,
+            "provider_entity": "overpass:node/5042033121",
+        },
+    }
+    result = _official_web_facts(
+        object(),
+        "http://jump.szjlxx.cn/?park=wsy",
+        retrieved_at="2026-09-30T12:00:00+08:00",
+        reference_at="2026-10-04T09:00:00+08:00",
+        source_binding=binding,
+    )
+
+    assert result["status"] == "ACQUIRED"
+    assert result["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert result["opening_hours"]["open"] == "07:30"
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 4000
+    assert result["provider_identity"]["merchant_park_info_id"] == "8187"
+
+
+def test_lotsmall_product_identity_mismatch_stays_unknown(monkeypatch):
+    from app import fact_acquisition
+
+    final_url = (
+        "https://wap.lotsmall.cn/vue/detail/ticket?"
+        "id=8187&productCode=park2021051111555676069&m_id=1939"
+    )
+
+    def fake_safe_get(_client, url, **_kwargs):
+        if url == "http://jump.szjlxx.cn/?park=wsy":
+            return _Response({}, headers={"location": final_url}), final_url
+        return _Response(
+            {
+                "data": {
+                    "id": 8187,
+                    "productCode": "different-product",
+                    "merchantInfoId": 1939,
+                    "openTime": "07:30",
+                    "endTime": "17:30",
+                }
+            }
+        ), url
+
+    monkeypatch.setattr(fact_acquisition, "_safe_get", fake_safe_get)
+    result = _official_web_facts(
+        object(),
+        "http://jump.szjlxx.cn/?park=wsy",
+        retrieved_at="2026-09-30T12:00:00+08:00",
+        reference_at="2026-10-04T09:00:00+08:00",
+        source_binding={
+            "provider_entity": "overpass:node/5042033121",
+            "source_url": "http://jump.szjlxx.cn/?park=wsy",
+            "source_class": "OFFICIAL_TICKETING",
+            "identity_basis": {"matched_provider_entity": True},
+        },
+    )
+
+    assert result["status"] == "NO_STRUCTURED_FACTS"
+    assert result["opening_hours"]["status"] == "UNKNOWN"
+    assert result["cost_evidence"]["status"] == "UNKNOWN"
+
+
 def test_official_html_parser_keeps_verified_free_and_all_day_distinct_from_unknown(monkeypatch):
     from app import fact_acquisition
 
