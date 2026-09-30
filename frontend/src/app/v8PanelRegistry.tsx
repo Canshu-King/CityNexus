@@ -23,6 +23,9 @@ import { TripItinerary } from "../features/trip/TripItinerary";
 import { TripPosterPanel } from "../features/poster/TripPosterPanel";
 import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { AccessPanel } from "../features/access/AccessPanel";
+/* ORD-0520: the trip's own 中止 control, and the notice 实时行程 shows for a trip the server has
+   decided is not live. Mounted from here so the shell stays shut, like every other panel. */
+import { JourneyAbortPanel, JourneyAbortedNotice } from "../features/abort/JourneyAbortPanel";
 /* ORD-0476 slice 2: the footprint screen, mounted from here like every other route panel. */
 import { FootprintPanel } from "../features/checkin/FootprintPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
@@ -228,21 +231,29 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     surface: "route",
     testId: "live-recovery",
     when: (s) => s.route === "live",
-    render: (s) => (
-      <div
-        className="live-shell"
-        data-decision-active={s.disruptions.length > 0 ? "true" : "false"}
-      >
-        {s.slots.live()}
-        <LiveRecovery
-          journeyId={s.data.journey.id}
-          handledEventIds={s.handledEventIds}
-          onAccepted={() => void s.load(s.data.journey.id)}
-        />
-        {s.slots.liveSecondary()}
-        <V10LiveExecutionPanel journeyId={s.data.journey.id} plan={s.data.active_plan ?? null} />
-      </div>
-    ),
+    /* ORD-0520: a trip the server has decided is not live does not get live content.  The decision is
+       read from `journey.live_view` -- answered by `backend/app/services.py` (`journey_live_view`) and
+       carried by `getJourneyExperience` -- and nothing here filters `status`, because a second copy of
+       that rule on the device is a second answer waiting to disagree.  When the field is absent the
+       notice says the server gave no decision rather than assuming the trip is live. */
+    render: (s) =>
+      s.data?.journey?.live_view?.included === false ? (
+        <JourneyAbortedNotice data={s.data} />
+      ) : (
+        <div
+          className="live-shell"
+          data-decision-active={s.disruptions.length > 0 ? "true" : "false"}
+        >
+          {s.slots.live()}
+          <LiveRecovery
+            journeyId={s.data.journey.id}
+            handledEventIds={s.handledEventIds}
+            onAccepted={() => void s.load(s.data.journey.id)}
+          />
+          {s.slots.liveSecondary()}
+          <V10LiveExecutionPanel journeyId={s.data.journey.id} plan={s.data.active_plan ?? null} />
+        </div>
+      ),
   },
   {
     id: "map",
@@ -399,6 +410,20 @@ export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
     testId: "trip-poster-bar",
     when: (s) => s.tab === "itinerary" && (s.data.active_plan?.activities.length ?? 0) > 0,
     render: (s) => <TripPosterPanel data={s.data} />,
+  },
+  {
+    /* ORD-0520 中止: the trip's own page is where calling it off belongs, and it is mounted above the
+       itinerary because an action the traveller has to scroll past the whole plan to reach is not an
+       action.  It renders for every trip on this tab, aborted or not: the panel reads the server's
+       `live_view` and shows either the reason box or the stored reason and moment -- it never derives
+       the state from `status` itself. */
+    id: "trips-abort",
+    surface: "trips-tab",
+    testId: "journey-abort",
+    when: (s) => s.tab === "itinerary",
+    render: (s) => (
+      <JourneyAbortPanel data={s.data} onAborted={() => void s.onRefresh()} />
+    ),
   },
   {
     id: "trips-itinerary",
