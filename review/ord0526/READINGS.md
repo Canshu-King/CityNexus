@@ -55,7 +55,7 @@ live/replay 行的分类一个字节没动，因为给它们补标记等于**加
 文件自报 `city_code=TSN`、`city_name=Tianjin`、`captured_at=2026-09-12T03:15:03.659327+00:00`。
 按 CMDR 23:20 的裁语，这单**没有**去让解析器认 `CNX-DEMO`，也没有把 D 那半格折进来。
 
-## 3. 门读数（私有后端 `:8798`，三证见 `evidence/ownership__final0526.json`）
+## 3. 门读数（私有后端 `:8798`，三证见 `receipts/ownership__final0526.json`）
 
 逐枚四值（`city_code` / `places_held` / `pending_materialisations` / 终态 `outcome`，带 `operation_id`）：
 
@@ -64,7 +64,7 @@ live/replay 行的分类一个字节没动，因为给它们补标记等于**加
 | 登记生效（正常一代） | CN-TIANJIN | 5 | 0 | COMPLETED | ALREADY_CURRENT | `8846c1e1-ea72-4d12-bcd9-2ea4d96edd5d` |
 | 源未登记（反件 M1） | CN-TIANJIN | 0 | 0 | UNAVAILABLE | NO_REGISTERED_SOURCE | `ad118535-f609-4fc6-989b-4dd3f65c0be6` |
 
-正常一代 `result.offline_source_applied` 全文（`evidence/door__final0526.json`）：
+正常一代 `result.offline_source_applied` 全文（`receipts/door__final0526.json`）：
 `in_effect=true`、`candidate_count=5`（文件自报可用行）、`candidates_captured=5`、
 `places_before=0`、`places_after=5`、`places_written=5`、`reason=null`、
 `source_kind=OFFLINE_SNAPSHOT`、`provider_key=openstreetmap-replay`、`bytes` 见件。
@@ -88,9 +88,9 @@ P3 监听进程向上回追到我记录的启动 PID。
 （`:8799`，另一枚库），只加 `CITYNEXUS_CATALOG_OFFLINE_SOURCES=off`：终态
 `NO_REGISTERED_SOURCE` / `UNAVAILABLE`，`places_held=0`，`offline_source_applied.in_effect=false`
 `reason=NO_REGISTERED_OFFLINE_SOURCE`，`registry=[]`，`places` 门 0 行，排程门
-`CATALOG_EMPTY`。判据没被改松成假成功。件：`evidence/door__finalm1.json`。
+`CATALOG_EMPTY`。判据没被改松成假成功。件：`receipts/door__finalm1.json`。
 
-**M2 夹具行数被谎报时臂必红。** `evidence/mutant_M2_row_count.json` 三趟连跑：
+**M2 夹具行数被谎报时臂必红。** `receipts/mutant_M2_row_count.json` 三趟连跑：
 
 1. 诚实基座：`3 passed`（先证明它本来就绿，否则「红」不是证据）；
 2. 谎报：把注册表那一行改指一枚自报 5 行、实际只有 3 个不同 `external_id` 的快照（重复 id 由
