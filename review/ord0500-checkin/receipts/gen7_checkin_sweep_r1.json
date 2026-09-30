@@ -1,0 +1,833 @@
+{
+  "tool": "gen7_stack_r1",
+  "took_local": "2026-10-01T03:19:08.211230+08:00",
+  "shared_db": {
+    "bytes": 7213056,
+    "mtime_local": "2026-09-29 09:20:27"
+  },
+  "runs": [
+    {
+      "tag": "TIP_7862c6de_phone",
+      "face_dir": "faces/tip7",
+      "backend_tree": "wt17",
+      "viewport": "390x844",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "54292",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4869,
+        "face_dir": "faces/tip7",
+        "entry_asset": "index-DaHdgt6W.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "4f6e1bea99b59c3726e622859b63d5d686e54a1f",
+        "index_local_sha1_disk": "4f6e1bea99b59c3726e622859b63d5d686e54a1f",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "95c9a395feb02d708a410cbddff90174d20a66a4",
+        "bundle_local_sha1_disk": "95c9a395feb02d708a410cbddff90174d20a66a4",
+        "listener_pid": "40964",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=TIP_7862c6de_phone VP=390x844 BUTTONS=6 PRESSABLE=6 MARKS=2 NOTICES=0 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_TIP_7862c6de_phone_390x844_r2.json",
+        "bytes": 10428
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 6,
+          "marks": 0,
+          "fresh_words": 6,
+          "visible_testids": 47,
+          "rendered_chars": 490
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 6,
+          "unpressable_indices": [],
+          "boxes": [
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44"
+          ],
+          "words": [
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡"
+          ],
+          "stops": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ]
+        },
+        "after_first_tap": {
+          "notice_count": 0,
+          "marks": 1,
+          "notice_owners": []
+        },
+        "after_duplicate": {
+          "notice_count": 6,
+          "notices": [
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ],
+          "marks": 1,
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": []
+        },
+        "after_second": {
+          "marks": 2,
+          "notice_count": 0
+        },
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "721bd3cd-915c-4408-9077-58b2fdb27558",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "stamped_at": "2026-09-30T19:19:39.457389+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "9405c153-9ff7-4efc-896c-e64f65c8b4ea",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "abe4e842-249e-516f-ac43-b41695083792",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:abe4e842-249e-516f-ac43-b41695083792",
+            "stamped_at": "2026-09-30T19:19:51.602018+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "TIP_7862c6de_desktop",
+      "face_dir": "faces/tip7",
+      "backend_tree": "wt17",
+      "viewport": "1280x800",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "60156",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4869,
+        "face_dir": "faces/tip7",
+        "entry_asset": "index-DaHdgt6W.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "4f6e1bea99b59c3726e622859b63d5d686e54a1f",
+        "index_local_sha1_disk": "4f6e1bea99b59c3726e622859b63d5d686e54a1f",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "95c9a395feb02d708a410cbddff90174d20a66a4",
+        "bundle_local_sha1_disk": "95c9a395feb02d708a410cbddff90174d20a66a4",
+        "listener_pid": "50588",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=TIP_7862c6de_desktop VP=1280x800 BUTTONS=6 PRESSABLE=6 MARKS=2 NOTICES=0 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_TIP_7862c6de_desktop_1280x800_r2.json",
+        "bytes": 10451
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 6,
+          "marks": 0,
+          "fresh_words": 6,
+          "visible_testids": 41,
+          "rendered_chars": 634
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 6,
+          "unpressable_indices": [],
+          "boxes": [
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44"
+          ],
+          "words": [
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡"
+          ],
+          "stops": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ]
+        },
+        "after_first_tap": {
+          "notice_count": 0,
+          "marks": 1,
+          "notice_owners": []
+        },
+        "after_duplicate": {
+          "notice_count": 6,
+          "notices": [
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ],
+          "marks": 1,
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": []
+        },
+        "after_second": {
+          "marks": 2,
+          "notice_count": 0
+        },
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "ee9f54f6-a397-4a0e-85ed-00ac096649bc",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "stamped_at": "2026-09-30T19:20:29.691194+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "082c9017-bcbe-429b-b58a-62f95525eb24",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "abe4e842-249e-516f-ac43-b41695083792",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:abe4e842-249e-516f-ac43-b41695083792",
+            "stamped_at": "2026-09-30T19:20:41.856684+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "O0500_R3_phone",
+      "face_dir": "faces/o0500_r3",
+      "backend_tree": "wt16",
+      "viewport": "390x844",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "31848",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4871,
+        "face_dir": "faces/o0500_r3",
+        "entry_asset": "index-B-4JbgaK.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "9514e0938e1b13bb3f6c77213634f863c6f2f9a9",
+        "index_local_sha1_disk": "9514e0938e1b13bb3f6c77213634f863c6f2f9a9",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "0252e55d0de6f72d7af88f0ea05564991c1daf31",
+        "bundle_local_sha1_disk": "0252e55d0de6f72d7af88f0ea05564991c1daf31",
+        "listener_pid": "41800",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=O0500_R3_phone VP=390x844 BUTTONS=6 PRESSABLE=6 MARKS=2 NOTICES=1 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_O0500_R3_phone_390x844_r2.json",
+        "bytes": 9826
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 6,
+          "marks": 0,
+          "fresh_words": 6,
+          "visible_testids": 53,
+          "rendered_chars": 490
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 6,
+          "unpressable_indices": [],
+          "boxes": [
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44"
+          ],
+          "words": [
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡"
+          ],
+          "stops": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ]
+        },
+        "after_first_tap": {
+          "notice_count": 0,
+          "marks": 1,
+          "notice_owners": []
+        },
+        "after_duplicate": {
+          "notice_count": 1,
+          "notices": [
+            "这一站已经打过卡了（服务器记的是 10月1日 03:21），这次没有再盖一枚，行程里还是原来那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate"
+          ],
+          "marks": 1,
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": []
+        },
+        "after_second": {
+          "marks": 2,
+          "notice_count": 1
+        },
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "31f494fb-7a3e-4903-becb-5344174cb939",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "stamped_at": "2026-09-30T19:21:18.095164+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "c0c2ab91-8865-427e-b5db-d64ed13db654",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "abe4e842-249e-516f-ac43-b41695083792",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:abe4e842-249e-516f-ac43-b41695083792",
+            "stamped_at": "2026-09-30T19:21:30.257430+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "O0500_R3_desktop",
+      "face_dir": "faces/o0500_r3",
+      "backend_tree": "wt16",
+      "viewport": "1280x800",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "21240",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4871,
+        "face_dir": "faces/o0500_r3",
+        "entry_asset": "index-B-4JbgaK.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "9514e0938e1b13bb3f6c77213634f863c6f2f9a9",
+        "index_local_sha1_disk": "9514e0938e1b13bb3f6c77213634f863c6f2f9a9",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "0252e55d0de6f72d7af88f0ea05564991c1daf31",
+        "bundle_local_sha1_disk": "0252e55d0de6f72d7af88f0ea05564991c1daf31",
+        "listener_pid": "31276",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=O0500_R3_desktop VP=1280x800 BUTTONS=6 PRESSABLE=6 MARKS=2 NOTICES=1 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_O0500_R3_desktop_1280x800_r2.json",
+        "bytes": 9849
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 6,
+          "marks": 0,
+          "fresh_words": 6,
+          "visible_testids": 47,
+          "rendered_chars": 634
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 6,
+          "unpressable_indices": [],
+          "boxes": [
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44",
+            "44x44"
+          ],
+          "words": [
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡",
+            "打卡"
+          ],
+          "stops": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ]
+        },
+        "after_first_tap": {
+          "notice_count": 0,
+          "marks": 1,
+          "notice_owners": []
+        },
+        "after_duplicate": {
+          "notice_count": 1,
+          "notices": [
+            "这一站已经打过卡了（服务器记的是 10月1日 03:22），这次没有再盖一枚，行程里还是原来那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate"
+          ],
+          "marks": 1,
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": []
+        },
+        "after_second": {
+          "marks": 2,
+          "notice_count": 1
+        },
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "3c3218cc-3a6c-48ec-b78e-ca91b8850c6b",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "stamped_at": "2026-09-30T19:22:08.329970+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "c114a5e6-43c8-4b44-93ea-aa6a3bd7f868",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "abe4e842-249e-516f-ac43-b41695083792",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:abe4e842-249e-516f-ac43-b41695083792",
+            "stamped_at": "2026-09-30T19:22:20.492712+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "O0500_CLIENTBOOL_MUTANT_phone",
+      "face_dir": "faces/o0500_clientbool7",
+      "backend_tree": "wt16",
+      "viewport": "390x844",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "53852",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4872,
+        "face_dir": "faces/o0500_clientbool7",
+        "entry_asset": "index-BnrJYfML.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "9f91c8d36e7a06938e37be20f03807416fc10eda",
+        "index_local_sha1_disk": "9f91c8d36e7a06938e37be20f03807416fc10eda",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "bd33b82b316894376d923bd5e59452974a9a953c",
+        "bundle_local_sha1_disk": "bd33b82b316894376d923bd5e59452974a9a953c",
+        "listener_pid": "56832",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=O0500_CLIENTBOOL_MUTANT_phone VP=390x844 BUTTONS=6 PRESSABLE=6 MARKS=3 NOTICES=1 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
+        "bytes": 10034
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 6,
+          "marks": 3,
+          "fresh_words": 3,
+          "visible_testids": 53,
+          "rendered_chars": 493
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 6,
+          "unpressable_indices": [],
+          "boxes": [
+            "54x44",
+            "54x44",
+            "54x44",
+            "44x44",
+            "44x44",
+            "44x44"
+          ],
+          "words": [
+            "已打卡",
+            "已打卡",
+            "已打卡",
+            "打卡",
+            "打卡",
+            "打卡"
+          ],
+          "stops": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ]
+        },
+        "after_first_tap": {
+          "notice_count": 0,
+          "marks": 3,
+          "notice_owners": []
+        },
+        "after_duplicate": {
+          "notice_count": 1,
+          "notices": [
+            "这一站已经打过卡了（服务器记的是 10月1日 03:22），这次没有再盖一枚，行程里还是原来那一枚。"
+          ],
+          "notice_owners": [
+            "Tech Art Center"
+          ],
+          "marks": 3,
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": []
+        },
+        "after_second": {
+          "marks": 3,
+          "notice_count": 1
+        },
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "13a54beb-a539-45b8-b69d-59f8e9f44da2",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:98af0be5-966b-5f49-b699-5dfdceea8ab6",
+            "stamped_at": "2026-09-30T19:22:59.583239+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "9eeee330-0a4b-4240-b1d0-f9c1523c9bf9",
+            "journey_id": "22222222-2222-4222-8222-222222222222",
+            "activity_id": "74f10240-fc4d-500e-b6ac-e520bcab1036",
+            "place_id": null,
+            "target_kind": "ACTIVITY",
+            "target_key": "activity:74f10240-fc4d-500e-b6ac-e520bcab1036",
+            "stamped_at": "2026-09-30T19:23:11.744444+00:00",
+            "note": null,
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "PRE_SLICE2_dcb90ccc_phone",
+      "face_dir": "export/frontend/dist",
+      "backend_tree": "export",
+      "viewport": "390x844",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "52576",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL",
+        "basis": "CURSOR"
+      },
+      "store_after_schema": {
+        "count": 0,
+        "rows": []
+      },
+      "serve": {
+        "port": 4873,
+        "face_dir": "export/frontend/dist",
+        "entry_asset": "index-BdXy-aFm.js",
+        "index_bytes_served": 1200,
+        "index_bytes_on_disk": 1200,
+        "index_local_sha1_served": "6983fa84b1846e699128c70984988e8208af58d6",
+        "index_local_sha1_disk": "6983fa84b1846e699128c70984988e8208af58d6",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "a0797e7095e2a462703444dae9660bc293fbda44",
+        "bundle_local_sha1_disk": "a0797e7095e2a462703444dae9660bc293fbda44",
+        "listener_pid": "46604",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR"
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=PRE_SLICE2_dcb90ccc_phone VP=390x844 BUTTONS=0 PRESSABLE=0 MARKS=NOT_TAKEN NOTICES=NOT_TAKEN REQ=[] PAGEERRORS=0",
+        "evidence": "checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json",
+        "bytes": 1468
+      },
+      "readings": {
+        "arrived": {
+          "stops": 6,
+          "controls": 0,
+          "marks": 0,
+          "fresh_words": 0,
+          "visible_testids": 27,
+          "rendered_chars": 400
+        },
+        "census": {
+          "controls": 0,
+          "pressable_by_centre_hit": 0,
+          "unpressable_indices": [],
+          "boxes": [],
+          "words": [],
+          "stops": []
+        },
+        "SLICE2_dcb90ccc_phone_3_tap_an_unstamped_stop": "NO_UNSTAMPED_PRESSABLE_STOP",
+        "requests": [],
+        "page_errors": 0,
+        "FATAL": null
+      },
+      "store_after_arm": {
+        "count": 0,
+        "rows": []
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "tool": "gen7_ce1_tree_proof_r1",
+  "took_local": "2026-10-01T03:12:17.630044+08:00",
+  "candidate_tree": "wt16",
+  "mutant_tree": "mutgen6",
+  "dirs": {
+    "backend": {
+      "files_compared": 387,
+      "differing": [
+        "app/main.py"
+      ],
+      "absent_from_mutant_count": 0
+    },
+    "data": {
+      "files_compared": 13,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    },
+    "contracts": {
+      "files_compared": 24,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    },
+    "frontend/src/generated": {
+      "files_compared": 1,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    }
+  },
+  "files_compared_total": 425,
+  "only_main_py_differs": true,
+  "candidate_main_sha256": "ddf42ebe8c12e42ce735a959263af161a881321c4a640a891082c606301c76bf",
+  "mutant_main_sha256": "95ecfd5573c2b1d6d54fc22160a7be1a9060b1a2b5485f668097bbebcf105209"
+}
