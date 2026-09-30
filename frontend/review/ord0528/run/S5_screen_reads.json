@@ -1,0 +1,40 @@
+{
+ "readings": [
+  {
+   "locale": "zh-CN",
+   "viewport": "390x844",
+   "sheet_inner_text_chars": 357,
+   "share_sentence": "已分享。服务器自己的授权列表对这趟旅行答出 4 条，这条链接对应的那一条是 0e50219d-c66a-4391-8ced-26ae633cadbf。",
+   "guest_inner_text_chars": 407,
+   "day_blocks": 2,
+   "key_echo_hits": 0
+  },
+  {
+   "locale": "zh-CN",
+   "viewport": "1280x900",
+   "sheet_inner_text_chars": 357,
+   "share_sentence": "已分享。服务器自己的授权列表对这趟旅行答出 5 条，这条链接对应的那一条是 7fc2d248-d1ef-47d3-8ee9-7b0c6eda7478。",
+   "guest_inner_text_chars": 407,
+   "day_blocks": 2,
+   "key_echo_hits": 0
+  },
+  {
+   "locale": "en",
+   "viewport": "390x844",
+   "sheet_inner_text_chars": 434,
+   "share_sentence": "Shared. The server's own grant list answers with 6 row(s) for this trip, and this link's row is fd5539ed-2235-459a-8b31-997c6b65d924.",
+   "guest_inner_text_chars": 564,
+   "day_blocks": 2,
+   "key_echo_hits": 0
+  },
+  {
+   "locale": "en",
+   "viewport": "1280x900",
+   "sheet_inner_text_chars": 434,
+   "share_sentence": "Shared. The server's own grant list answers with 7 row(s) for this trip, and this link's row is 8c5f5d22-0b45-4bfc-ba62-456c24b0ad32.",
+   "guest_inner_text_chars": 564,
+   "day_blocks": 2,
+   "key_echo_hits": 0
+  }
+ ]
+}

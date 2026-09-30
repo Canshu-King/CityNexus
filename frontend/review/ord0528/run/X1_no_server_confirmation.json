@@ -1,0 +1,28 @@
+{
+ "readings": [
+  {
+   "shape": "write_refused",
+   "data_share_state": "NOT_CONFIRMED",
+   "sentence": "没有分享出去：服务器拒了这次授权写入（状态码 unreachable）。",
+   "claims_shared": false,
+   "link_input_present": 0,
+   "key_echo": false
+  },
+  {
+   "shape": "no_token",
+   "data_share_state": "NOT_CONFIRMED",
+   "sentence": "没有分享出去：写入答回来了，但没有交出暗号，所以没有链接可以给你。",
+   "claims_shared": false,
+   "link_input_present": 0,
+   "key_echo": false
+  },
+  {
+   "shape": "row_not_listed",
+   "data_share_state": "NOT_CONFIRMED",
+   "sentence": "没有分享出去：服务器回读的授权列表里没有这台设备刚写入的那一条。",
+   "claims_shared": false,
+   "link_input_present": 0,
+   "key_echo": false
+  }
+ ]
+}
