@@ -3669,11 +3669,46 @@ def get_journey_experience(journey_id: UUID, session: Session = Depends(get_sess
     # Staleness is an independent condition: the selected plan's frozen
     # evidence may have expired without any HARD capability recovery event.
     staleness = any("STALE_RECOMPOSE_REQUIRED" in item for item in failures)
+    authority_blocker: str | None = None
+    active_plan = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
+    if active_plan is not None:
+        active_activities = session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == active_plan.id)
+            .order_by(Activity.sequence_no)
+        ).all()
+        active_place_ids = {
+            str(item.place_id) for item in active_activities if item.place_id
+        }
+        active_places = {
+            place.id: place
+            for place in session.scalars(
+                select(Place).where(Place.id.in_(active_place_ids))
+            ).all()
+        }
+        authority_blocker = plan_authority_blocker(
+            active_plan,
+            active_places,
+            used_place_ids=[
+                str(item.place_id or item.city_service_id or "")
+                for item in active_activities
+            ],
+        )
+        if isinstance(payload.get("active_plan"), dict):
+            payload["active_plan"]["selectable"] = (
+                not staleness and authority_blocker is None
+            )
+            payload["active_plan"]["authority_blocker"] = authority_blocker
     open_recovery = recovery is not None and recovery.get("state") != "RESOLVED"
     flags = recovery_flags(session, journey)
     flags["staleness"] = staleness
+    flags["authority_blocker"] = authority_blocker
     flags["feasibility_failures"] = failures
-    flags["needs_review"] = bool(open_recovery) or staleness
+    flags["needs_review"] = bool(open_recovery) or staleness or authority_blocker is not None
     flags["recovery_required"] = bool(open_recovery)
     flags["acknowledged"] = bool(recovery and recovery.get("acknowledged"))
     flags["recovery_state"] = recovery.get("state") if recovery else None
