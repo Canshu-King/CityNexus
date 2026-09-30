@@ -593,6 +593,7 @@ def _plain_text_cost(
         + "|\u5165\u9928\u6599"
         + "|\u5165\u5834\u6599"
         + "|\u5165\u9928"
+        + "|\u89b3\u89a7\u6599"
         + "|\u5165\u5712\u6599|\u62dd\u89b3\u6599"
         + "|(?<!利用)料金"
         + r"|admission\s+fee|entrance\s+fee|ticket)"
