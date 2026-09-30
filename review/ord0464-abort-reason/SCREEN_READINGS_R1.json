@@ -1,0 +1,134 @@
+{
+ "base": "http://127.0.0.1:4192",
+ "runs": [
+  {
+   "tag": "declared",
+   "journey_id": "be98ab47-0cee-423e-839e-1b4fd1e80724",
+   "on_screen_before": {
+    "trigger": "把这趟丢进回收站",
+    "boxes": 8,
+    "labels": [
+     "安排不合用（活动、顺序或节奏）",
+     "预算兜不住",
+     "日期或目的地变了",
+     "关键信息拿不到（路况、住宿没有可信答案）",
+     "被保护的安排被排掉了",
+     "已经用别的方式安排好了",
+     "这是测试或演示数据",
+     "其他"
+    ],
+    "question": "方便说说为什么不需要这趟了吗？",
+    "help": "可以勾好几项，也可以一项都不勾直接跳过。这只帮我们改进，不影响这趟能不能找回。",
+    "confirm": "丢进回收站",
+    "confirmDisabled": true,
+    "skip": "暂不说明，直接丢进回收站",
+    "noteMaxLength": "200"
+   },
+   "on_screen_after": {
+    "state": "DECLARED",
+    "text": "这趟已经在回收站里。服务器记下的原因是：预算兜不住、被保护的安排被排掉了。"
+   },
+   "server_rows": [
+    {
+     "id": "da0dc506-d419-4cfc-98eb-805048e5bd72",
+     "activity_id": null,
+     "event_type": "JOURNEY_DELETED",
+     "actor_type": "USER",
+     "occurred_at_actual": "2026-09-30T16:30:42.130659+00:00",
+     "planned_start_at": null,
+     "planned_end_at": null,
+     "source": "DOMAIN",
+     "payload": {
+      "codes": [
+       "BUDGET_DOES_NOT_FIT",
+       "PROTECTED_ITEM_DROPPED"
+      ],
+      "note": "住的那一晚超出了预算",
+      "reason_state": "DECLARED"
+     },
+     "related_proposal_id": null,
+     "related_agent_run_id": null
+    }
+   ]
+  },
+  {
+   "tag": "skipped",
+   "journey_id": "43c4c45a-1417-4867-8929-cf23b04a6a6b",
+   "on_screen_before": {
+    "trigger": "把这趟丢进回收站",
+    "boxes": 8,
+    "labels": [
+     "安排不合用（活动、顺序或节奏）",
+     "预算兜不住",
+     "日期或目的地变了",
+     "关键信息拿不到（路况、住宿没有可信答案）",
+     "被保护的安排被排掉了",
+     "已经用别的方式安排好了",
+     "这是测试或演示数据",
+     "其他"
+    ],
+    "question": "方便说说为什么不需要这趟了吗？",
+    "help": "可以勾好几项，也可以一项都不勾直接跳过。这只帮我们改进，不影响这趟能不能找回。",
+    "confirm": "丢进回收站",
+    "confirmDisabled": true,
+    "skip": "暂不说明，直接丢进回收站",
+    "noteMaxLength": "200"
+   },
+   "on_screen_after": {
+    "state": "SKIPPED_BY_TRAVELER",
+    "text": "这趟已经在回收站里。当时你选了不说明原因，我们也不会替你编一个。"
+   },
+   "server_rows": [
+    {
+     "id": "49529388-cd1d-4f94-a9cc-884c2f298dec",
+     "activity_id": null,
+     "event_type": "JOURNEY_DELETED",
+     "actor_type": "USER",
+     "occurred_at_actual": "2026-09-30T16:30:42.712389+00:00",
+     "planned_start_at": null,
+     "planned_end_at": null,
+     "source": "DOMAIN",
+     "payload": {
+      "codes": [],
+      "note": null,
+      "reason_state": "SKIPPED_BY_TRAVELER"
+     },
+     "related_proposal_id": null,
+     "related_agent_run_id": null
+    }
+   ]
+  },
+  {
+   "tag": "silent",
+   "journey_id": "64e064f3-0784-41ef-8f40-d0a6055bcd27",
+   "on_screen_before": {
+    "trigger": null,
+    "boxes": 0,
+    "labels": []
+   },
+   "on_screen_after": {
+    "state": "NOT_ASKED",
+    "text": "这趟已经在回收站里。这台服务器没有收到过这个问题，所以也没有原因可记。"
+   },
+   "server_rows": [
+    {
+     "id": "c97014f5-50d5-4070-ab49-1e43c01afd1a",
+     "activity_id": null,
+     "event_type": "JOURNEY_DELETED",
+     "actor_type": "USER",
+     "occurred_at_actual": "2026-09-30T16:30:42.785775+00:00",
+     "planned_start_at": null,
+     "planned_end_at": null,
+     "source": "DOMAIN",
+     "payload": {
+      "codes": [],
+      "note": null,
+      "reason_state": "NOT_ASKED"
+     },
+     "related_proposal_id": null,
+     "related_agent_run_id": null
+    }
+   ]
+  }
+ ]
+}
