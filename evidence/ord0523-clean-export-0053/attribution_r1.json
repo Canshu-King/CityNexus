@@ -1,0 +1,29 @@
+{
+ "baseline_tip_export_ignoring_20": {
+  "counts": [
+   "38",
+   "1502",
+   "21",
+   "1"
+  ],
+  "failed_ids": 38
+ },
+ "mine_with_the_one_line_fix": {
+  "counts": [
+   "38",
+   "1560",
+   "21",
+   "1"
+  ],
+  "failed_ids": 38
+ },
+ "failed_set_identical": false,
+ "only_in_baseline": [
+  "tests/test_qoder_stay_generation_operations.py::test_acceptance_answers_while_the_provider_is_still_being_asked"
+ ],
+ "only_in_mine": [
+  "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one"
+ ],
+ "passed_delta": 58,
+ "tests_collected_baseline_plus_ignored_files": "1620 vs 1562+58"
+}
