@@ -376,3 +376,24 @@ test("ORD-0472 A4 when the canvas is refused the sheet names the step and hands 
   write("A4_control_no_context", { screen_line: line, downloaded });
   await context.close();
 });
+
+test("ORD-0472 A6 the failure line carries dictionary words only", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  await context.addInitScript(() => {
+    /* Encoding is refused rather than the context, so the drawing runs to the last step and the
+       sheet has to say something. This is the arm that looks for a non-dictionary tail on screen. */
+    HTMLCanvasElement.prototype.toBlob = function (cb: any) {
+      cb(null);
+    };
+  });
+  const page = await context.newPage();
+  await landOnTrips(page, "zh-CN");
+  await page.getByTestId("poster-open").click();
+  await page.getByTestId("poster-download").click();
+  await expect(page.getByTestId("poster-result")).toBeVisible({ timeout: 20_000 });
+  const line = (await page.getByTestId("poster-result").innerText()).trim();
+  const dictionarySentence = await page.evaluate(() => "长图没有生成：画布没有交出 PNG 字节。");
+  write("A6_failure_line", { screen_line: line, dictionary_sentence_only: line === dictionarySentence });
+  expect(line, "the failure line must be the dictionary sentence, nothing appended").toBe(dictionarySentence);
+  await context.close();
+});

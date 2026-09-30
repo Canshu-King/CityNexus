@@ -27,7 +27,13 @@ const POSTER_FILE_NAME = "citynexus-trip-poster.png";
 
 /* Which sentence each step answers, spelled out rather than built from the step name: `t()` returns
    the key itself when a key is missing, so a composed key could put `poster.fail.MissingTokens` on
-   the screen. Written as a table, the compiler checks every step has words and none of them can leak. */
+   the screen. Written as a table, the compiler checks every step has words and none of them can leak.
+
+   The drawing layer's own `detail` (a byte count, `null`, a pixel width) is deliberately not
+   rendered and not put in the DOM at all: the line a traveller reads is the dictionary sentence and
+   nothing else, which is what the Q64 arm caught me breaking -- the first version appended
+   ` · null` to "长图没有生成：画布没有交出 PNG 字节。". The detail still comes back on the result
+   object for whoever instruments the canvas, it just never reaches the screen. */
 const FAILURE_COPY: Record<PosterFailureStep, string> = {
   NoCanvasContext: "poster.fail.noCanvas",
   NoMeasuredWidth: "poster.fail.noWidth",
@@ -41,7 +47,7 @@ type DrawState =
   | { phase: "idle" }
   | { phase: "working" }
   | { phase: "made"; bytes: number; width: number; height: number }
-  | { phase: "failed"; step: PosterFailureStep; detail: string };
+  | { phase: "failed"; step: PosterFailureStep };
 
 export function TripPosterPanel({ data }: { data: V8Data }) {
   const { locale, t } = useLocale();
@@ -85,7 +91,7 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
        with `strict: false` (`tsconfig.typecheck.json:2`) and a boolean discriminant does not narrow
        a union here -- the failure fields would read as missing. */
     if ("step" in result) {
-      setState({ phase: "failed", step: result.step, detail: result.detail });
+      setState({ phase: "failed", step: result.step });
       return;
     }
     if (!savePosterBlob(result.blob, POSTER_FILE_NAME)) {
@@ -186,9 +192,7 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
               data-testid="poster-result"
               data-state="failed"
             >
-              {`${t("poster.failPrefix")}${t(FAILURE_COPY[state.step])}${
-                state.detail ? ` · ${state.detail}` : ""
-              }`}
+              {`${t("poster.failPrefix")}${t(FAILURE_COPY[state.step])}`}
             </p>
           )}
         </section>
