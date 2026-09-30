@@ -129,6 +129,45 @@
   margin-top: var(--cn-s-16);
 }
 
+/* Only shown when the trip is too tall for one picture: the bound is named in the code, so the
+   traveller reads the consequence of it here rather than a silently shorter file. */
+.cn-poster-paged {
+  margin: 0 0 var(--cn-s-8);
+  font-size: var(--cn-fs-meta);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink-secondary);
+}
+
+.cn-poster-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+  margin-bottom: var(--cn-s-12);
+}
+
+.cn-poster-page {
+  min-height: 30px;
+  padding: 0 var(--cn-s-12);
+  font: inherit;
+  font-size: var(--cn-fs-meta);
+  color: var(--cn-accent-text);
+  background: var(--cn-secondary);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  cursor: pointer;
+}
+
+.cn-poster-page.is-current {
+  color: var(--cn-ink);
+  font-weight: 600;
+}
+
+@media (max-width: 680px) {
+  .cn-poster-page {
+    min-height: var(--cn-touch-min);
+  }
+}
+
 .cn-poster-outcome {
   margin: var(--cn-s-12) 0 0;
   font-size: var(--cn-fs-meta);
