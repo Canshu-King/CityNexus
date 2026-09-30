@@ -10,6 +10,7 @@ import {
   leaveJourney,
   readActivity,
   readJourneys,
+  readJourneyReference,
   readMembers,
   readMemberRoleLimits,
   readRoleRules,
@@ -121,14 +122,19 @@ const CONFIRMATION_CASES: readonly {
   },
 ];
 
-export function AccessPanel() {
+export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: AccessCopyKey, params: Record<string, string | number> = {}) =>
     fillAccess(accessCopyFor(locale, key), params);
 
   const [trips, setTrips] = useState<TripsState>({ phase: "loading" });
+  /** ORD-0527: the trip is not only picked here.  The shell already holds one
+   *  (`citynexus.v8.journey_id`), and a panel that waits for a manual pick leaves a roster with rows
+   *  in the store painting the empty cell -- which is what the commander measured at 390x844.  The
+   *  reference is used only after the list door answers a row for it; a stale one says so. */
   const [chosen, setChosen] = useState<string | null>(null);
+  const [referenceState, setReferenceState] = useState<"unknown" | "matched" | "stale">("unknown");
   const [activity, setActivity] = useState<ActivityState>({ phase: "idle" });
   const [access, setAccess] = useState<AccessRead>({ phase: "loading" });
   const [members, setMembers] = useState<JourneyMemberRow[]>([]);
@@ -288,6 +294,32 @@ export function AccessPanel() {
     }
     await loadRoster(journeyId);
   }, [loadRoster]);
+
+  /** The shell's own trip reference, honoured as soon as the list door can vouch for it.  Nothing is
+   *  loaded from a reference the door did not answer a row for: that is the stale-id hazard
+   *  `lib/failureAttribution.ts:5` documents, and here it is named on screen instead of left blank. */
+  useEffect(() => {
+    if (trips.phase !== "ready" || chosen !== null) return;
+    const reference = initialJourneyId ?? readJourneyReference();
+    if (reference === null) {
+      setReferenceState("unknown");
+      return;
+    }
+    if (trips.rows.some((row) => row.id === reference)) {
+      setReferenceState("matched");
+      void openTrip(reference);
+    } else {
+      setReferenceState("stale");
+    }
+  }, [chosen, initialJourneyId, openTrip, trips]);
+
+  /** Whose seat this device may speak for, and what that seat is on this trip.  Both come from
+   *  doors: the traveller from the list row, the seat from the member set, the capability from the
+   *  seeded ACL table.  Nothing here is inferred from a name, a colour or a guess. */
+  const mySeat = signer === null ? null : members.find((row) => row.traveler_id === signer) ?? null;
+  const myCapabilities =
+    (roleRules ?? []).find((rule) => mySeat !== null && rule.role === mySeat.role)?.capabilities ?? null;
+  const mayManageMembers = myCapabilities !== null && myCapabilities.includes("MEMBER_MANAGE");
 
   const rows = trips.phase === "ready" ? trips.rows : [];
   const chosenTitle =
@@ -647,6 +679,28 @@ export function AccessPanel() {
       {chosen !== null ? (
         <section className="cn-access-block" aria-label={say("access.rosterHeading")}>
           <h3 className="cn-access-h">{say("access.rosterHeading")}</h3>
+          {/* ORD-0527: whose seat this device speaks for, said out loud.  An unknown identity used to
+              leave the whole block silently empty; it now names itself and names the way in. */}
+          <p className="cn-access-scope" data-testid="access-identity">
+            {signer === null
+              ? `${say("access.identityUnknown")} ${say("access.identityUnknownWay")}`
+              : mySeat === null || mySeat.removed_at !== null
+                ? say("access.identityNoSeat")
+                : say("access.identityLine", {
+                    name: names[signer] ? names[signer] as string : say("access.identityUnnamed"),
+                    role: roleLabel(mySeat.role),
+                  })}
+          </p>
+          {referenceState === "stale" ? (
+            <p className="cn-access-refusal" data-testid="access-reference-stale">
+              {say("access.identityStale")}
+            </p>
+          ) : null}
+          {signer !== null && mySeat !== null && mySeat.removed_at === null && !mayManageMembers ? (
+            <p className="cn-access-muted" data-testid="access-no-authority">
+              {say("access.noAuthorityLine")}
+            </p>
+          ) : null}
           <p className="cn-access-muted" data-testid="access-admin-cap">
             {capState
               ? say(capState.key, {
@@ -695,7 +749,7 @@ export function AccessPanel() {
                     {/* ORD-0503's two doors. The role change is offered for a seat that is not the
                         caller's own and that this door can move; leaving is offered only for the
                         caller's own row, because that is the one row the self-exit door can write. */}
-                    {!isSelf && choices.length > 0 ? (
+                    {mayManageMembers && !isSelf && choices.length > 0 ? (
                       <button
                         className="cn-access-row-action"
                         data-testid="access-member-role-change"
