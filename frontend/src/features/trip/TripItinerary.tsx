@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { readCheckins, stampStop } from "../checkin/checkins";
 import "../checkin/footprint.css";
+import { CollectInto } from "../collections/CollectInto";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
 import {
   dayOfGapCopy,
@@ -389,6 +390,22 @@ export function TripItinerary({
                         {stopNotice}
                       </p>
                     ) : null}
+                    {/* ORD-0510: the way into the container ORD-0444 built.  The wrapper, not the
+                        control, stops propagation -- the row around this is itself a button
+                        (「查看详情」), and an entry whose click is swallowed by its own row is not an
+                        entry.  Nothing here remembers the write: the line under it is drawn from a
+                        fresh `GET /api/v1/collections`, the way the footprint above it is. */}
+                    <div
+                      className="cn-stop-collect-host"
+                      onClick={(event) => event.stopPropagation()}
+                      onKeyDown={(event) => event.stopPropagation()}
+                    >
+                      <CollectInto
+                        travelerId={data.journey.traveler_id ?? null}
+                        placeId={activity.place_id ?? null}
+                        placeTitle={activity.title}
+                      />
+                    </div>
                   </div>
                 </article>
               );
