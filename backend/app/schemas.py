@@ -407,8 +407,8 @@ class Place(BaseModel):
     # These are the place's own captured facts.  In particular, UNKNOWN cost is
     # represented by the evidence status and a null amount; the compatibility
     # cost_minor=0 storage field is deliberately not projected as price truth.
-    opening_hours: dict[str, Any] = Field(default_factory=dict)
-    cost_evidence: dict[str, Any] = Field(default_factory=dict)
+    opening_hours: dict[str, Any]
+    cost_evidence: dict[str, Any]
 
 
 class RealCityDiscoveryCandidate(BaseModel):
