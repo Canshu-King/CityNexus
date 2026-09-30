@@ -1,0 +1,241 @@
+{
+ "branch": "commander/control",
+ "tip_at_read": "b79ff648eef9e904340f9e5c169d5013b2193d65",
+ "tip_after": "8e7bdea0e3acc642d22ed4222537ef0e5bb2d819",
+ "slug": "evidence/ord0536-structured-exemption-0339",
+ "files": [
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/generation_reconciliation_r1.json",
+   "bytes": 24989,
+   "local_blob": "2ed661a05438f4531fc51bb8a1ec91662f701236",
+   "server_blob": "2ed661a05438f4531fc51bb8a1ec91662f701236",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/report_r1.txt",
+   "bytes": 9049,
+   "local_blob": "168d4ab69062d474303eab60b36163c6840f6946",
+   "server_blob": "168d4ab69062d474303eab60b36163c6840f6946",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/door_view_r1.json",
+   "bytes": 6016,
+   "local_blob": "c5ff9c584ca4fc133102091672127b932ab203c1",
+   "server_blob": "c5ff9c584ca4fc133102091672127b932ab203c1",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/counterexamples_r1.json",
+   "bytes": 8160,
+   "local_blob": "17587b3a67e653639b289c81cab91a7e807ba228",
+   "server_blob": "17587b3a67e653639b289c81cab91a7e807ba228",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/st_r8_full.json",
+   "bytes": 46644,
+   "local_blob": "b2d30767721371e2da53ed042e6efad7af097019",
+   "server_blob": "b2d30767721371e2da53ed042e6efad7af097019",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/rec_r8_tip_7862c6de.json",
+   "bytes": 140931,
+   "local_blob": "8d228842ffb5037ce70cf8f509f2ed745de4e39e",
+   "server_blob": "8d228842ffb5037ce70cf8f509f2ed745de4e39e",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/rec_r8_cmdr_side_candidate.json",
+   "bytes": 179011,
+   "local_blob": "0213bfafeb25692241590075c86af733d460818d",
+   "server_blob": "0213bfafeb25692241590075c86af733d460818d",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/rec_r7b_cmdr_side_candidate.json",
+   "bytes": 117815,
+   "local_blob": "0d2979b1b9964133550a452dd5cd992a42058ca7",
+   "server_blob": "0d2979b1b9964133550a452dd5cd992a42058ca7",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/export_sizes_r1.json",
+   "bytes": 319,
+   "local_blob": "7df659cb301193cc55bdf185849cde44691df405",
+   "server_blob": "7df659cb301193cc55bdf185849cde44691df405",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/commit_msg_r1.txt",
+   "bytes": 1280,
+   "local_blob": "5ab03cfec4bb3dd9a39c036638374d7da3628fa9",
+   "server_blob": "5ab03cfec4bb3dd9a39c036638374d7da3628fa9",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/reconcile_r1.py",
+   "bytes": 5976,
+   "local_blob": "7f0aa0943608891e08e361948c7b103195e6cca3",
+   "server_blob": "7f0aa0943608891e08e361948c7b103195e6cca3",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/report_r1.py",
+   "bytes": 8792,
+   "local_blob": "b1cb6c55718ee00e6247ca244730146403880cac",
+   "server_blob": "b1cb6c55718ee00e6247ca244730146403880cac",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/counterexamples_r1.py",
+   "bytes": 11252,
+   "local_blob": "619eac68952f6321dd9f98e904465cefa9157b79",
+   "server_blob": "619eac68952f6321dd9f98e904465cefa9157b79",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/block_0536_r1.py",
+   "bytes": 19554,
+   "local_blob": "c2f3edf41b165e6170d9136f998b32c549c5b00b",
+   "server_blob": "c2f3edf41b165e6170d9136f998b32c549c5b00b",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/bus_post_0536_r1.py",
+   "bytes": 6884,
+   "local_blob": "fe07035ae15e220228537d4956751fc341425bd3",
+   "server_blob": "fe07035ae15e220228537d4956751fc341425bd3",
+   "byte_equal": true,
+   "re_pushed_by_this_run": false
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/publish_0536_r1.py",
+   "bytes": 5159,
+   "local_blob": "aaca77d47423d11df834615d64c5436b72257bdc",
+   "server_blob": "aaca77d47423d11df834615d64c5436b72257bdc",
+   "byte_equal": true,
+   "re_pushed_by_this_run": true
+  },
+  {
+   "path": "evidence/ord0536-structured-exemption-0339/caller_cells_key_r1.json",
+   "bytes": 1654,
+   "local_blob": "336a6f12e65b9f4b0c54ef6f3bd56f8ac63a9947",
+   "server_blob": "336a6f12e65b9f4b0c54ef6f3bd56f8ac63a9947",
+   "byte_equal": true,
+   "re_pushed_by_this_run": true
+  }
+ ],
+ "all_byte_equal": true,
+ "re_pushed_this_run": [
+  "publish_0536_r1.py",
+  "caller_cells_key_r1.json"
+ ],
+ "duplicate_dir_from_the_earlier_drop": {
+  "path": "evidence/ord0536-structured-exemption-0337",
+  "rows": [
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/generation_reconciliation_r1.json",
+    "server_blob": "2ed661a05438f4531fc51bb8a1ec91662f701236",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/report_r1.txt",
+    "server_blob": "168d4ab69062d474303eab60b36163c6840f6946",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/door_view_r1.json",
+    "server_blob": "c5ff9c584ca4fc133102091672127b932ab203c1",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/counterexamples_r1.json",
+    "server_blob": "17587b3a67e653639b289c81cab91a7e807ba228",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/st_r8_full.json",
+    "server_blob": "b2d30767721371e2da53ed042e6efad7af097019",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/rec_r8_tip_7862c6de.json",
+    "server_blob": "8d228842ffb5037ce70cf8f509f2ed745de4e39e",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/rec_r8_cmdr_side_candidate.json",
+    "server_blob": "0213bfafeb25692241590075c86af733d460818d",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/rec_r7b_cmdr_side_candidate.json",
+    "server_blob": "0d2979b1b9964133550a452dd5cd992a42058ca7",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/export_sizes_r1.json",
+    "server_blob": "7df659cb301193cc55bdf185849cde44691df405",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/commit_msg_r1.txt",
+    "server_blob": "5ab03cfec4bb3dd9a39c036638374d7da3628fa9",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/reconcile_r1.py",
+    "server_blob": "7f0aa0943608891e08e361948c7b103195e6cca3",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/report_r1.py",
+    "server_blob": "b1cb6c55718ee00e6247ca244730146403880cac",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/counterexamples_r1.py",
+    "server_blob": "619eac68952f6321dd9f98e904465cefa9157b79",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/block_0536_r1.py",
+    "server_blob": "c2f3edf41b165e6170d9136f998b32c549c5b00b",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/bus_post_0536_r1.py",
+    "server_blob": "fe07035ae15e220228537d4956751fc341425bd3",
+    "same_bytes_as_delivered": true
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/publish_0536_r1.py",
+    "server_blob": "36e9d6431fb1294557281502f98e2520665c4fe2",
+    "same_bytes_as_delivered": false
+   },
+   {
+    "path": "evidence/ord0536-structured-exemption-0337/caller_cells_key_r1.json",
+    "server_blob": null,
+    "same_bytes_as_delivered": false
+   }
+  ],
+  "all_same_blobs": false
+ },
+ "note": "the first publisher run parsed a key the mirror does not print (`sha`), which made a provably-successful push read back as byte_equal=false; the pushes themselves landed, this file recomputes the receipt from `git ls-tree` on the branch tip"
+}
