@@ -363,7 +363,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL. No pagination and no per-traveller scope yet; a trip moved to the recycle bin by `deleteJourney` is absent here and still answers `getJourney`. */
+        /** @description ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL. No pagination and no per-traveller scope yet; a trip moved to the recycle bin by `deleteJourney` is absent here and still answers `getJourney`. ORD-0477 adds the order a traveller reads that list in: one named tier per call, and no tier changes which rows appear. */
         get: operations["listJourneys"];
         put?: never;
         post: operations["createJourney"];
@@ -4517,20 +4517,32 @@ export interface operations {
     };
     listJourneys: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description RECENT_UPDATE: `journeys.updated_at` newest first.  DEPARTURE_DATE: `journeys.start_at` earliest first.  TITLE: `journeys.title` case-folded, ascending.  Ties break on `journeys.id` ascending under every tier.  Any other word is refused by name. */
+                sort?: "RECENT_UPDATE" | "DEPARTURE_DATE" | "TITLE";
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Journeys not deleted */
+            /** @description Journeys not deleted, in the order the tier names (or in `created_at, id` order when no tier was sent) */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["Journey"][];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = JOURNEY_SORT_NOT_RECOGNISED, when `sort` was sent a word that is not one of the three tiers.  The door refuses rather than answering in its own default order: a list that looks sorted but was not sorted by the word the traveller asked for is the failure this order forbids.  `error.details` names the word sent and the tiers supported.  An empty `sort=` is a sent word, so it is refused too. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };

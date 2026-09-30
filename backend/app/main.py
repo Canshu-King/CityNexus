@@ -398,6 +398,9 @@ from app.schemas import (
     Event as EventSchema,
 )
 from app.schemas import (
+    JOURNEY_SORT_TIERS,
+)
+from app.schemas import (
     Journey as JourneySchema,
 )
 from app.schemas import (
@@ -3012,8 +3015,43 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     return journey_schema(journey)
 
 
-@app.get("/api/v1/journeys", response_model=list[JourneySchema])
-def list_journeys(session: Session = Depends(get_session)):
+#: ORD-0477: the name `GET /api/v1/journeys` answers when `sort` is neither absent nor a tier.  It
+#: rides in `error.reason_code` under the door's existing `error.code`, like `JOURNEY_NOT_FOUND` and
+#: `JOURNEY_ALREADY_DELETED` do, so no new failure family enters the suite (the G6 boundary in
+#: `backend/tests/test_qoder_ord0272_continuation.py`).
+JOURNEY_SORT_REFUSAL = "JOURNEY_SORT_NOT_RECOGNISED"
+
+
+@app.get(
+    "/api/v1/journeys",
+    response_model=list[JourneySchema],
+    # ORD-0477: a `sort` this door does not know is an answer the door has to give, so FastAPI's own
+    # spec says it out loud too.  The hand contract alone was not enough (ORD-0395: the 403 was in
+    # `contracts/openapi.yaml` and missing from `/openapi.json`, so a consumer of the generated spec
+    # could not see that a refusal existed).
+    responses={
+        422: {
+            "description": (
+                "error.code = VALIDATION_ERROR with error.reason_code = "
+                "JOURNEY_SORT_NOT_RECOGNISED - `sort` named no tier this door knows, and the door "
+                "refuses instead of answering in its own default order."
+            )
+        }
+    },
+)
+def list_journeys(
+    session: Session = Depends(get_session),
+    sort: str | None = Query(
+        default=None,
+        json_schema_extra={"enum": list(JOURNEY_SORT_TIERS)},
+        description=(
+            "Which order to answer in: RECENT_UPDATE (journeys.updated_at, newest first), "
+            "DEPARTURE_DATE (journeys.start_at, earliest first) or TITLE (journeys.title, "
+            "case-folded).  Any other word is refused by name.  No `sort` keeps the order this "
+            "door has always answered in - journeys.created_at, then journeys.id."
+        ),
+    ),
+):
     """Every trip on this server that a traveller has not put in the recycle bin.
 
     ORD-0383 slice 1 keeps this door to one rule - `deleted_at IS NULL` - so it has no
@@ -3022,14 +3060,86 @@ def list_journeys(session: Session = Depends(get_session)):
     sub-resource doors: the query below is the only place on this tree that filters the column,
     and no other module under `backend/app` reads it.  Slice 1 removes a trip from the list,
     not from the store, and the row is what a recycle bin will have to show.
+
+    ORD-0477 adds the order a traveller reads that list in, as one named tier out of
+    `JOURNEY_SORT_TIERS`.  Three of its decisions are deliberate:
+
+    * The tier is a *query* value, so `sort` is read as a plain string and checked here rather
+      than declared as a `Literal`.  A `Literal` would have pydantic answer an unknown word with
+      the generic `VALIDATION_ERROR` and no name of its own, which is the silent-default shape the
+      order forbids: `JOURNEY_SORT_NOT_RECOGNISED` (422) says which word was sent and which three
+      the door knows, and `error.code` stays in the one family
+      `backend/tests/test_qoder_ord0272_continuation.py::test_G6...` keeps the suite to.
+    * Without `sort` the SELECT is the one slice 1 shipped, byte for byte.  Clients that do not
+      know about tiers keep the answer they had before; only a caller that names a tier gets a
+      different order, and no order is implied by an unrecognised word.
+    * A tier sorts *instants*, not characters.  `journeys.start_at` is TEXT written straight from
+      the posted value (`create_journey` stores `payload.start_at.isoformat()`), so `+08:00` and
+      `+00:00` rows coexist on this tree - the fixtures in
+      `backend/tests/test_qoder_ord0383_journey_soft_delete.py` insert `+08:00` ones.  Comparing
+      those strings would put 09:00+08:00 (01:00 UTC) after 08:00+00:00.  `_journey_instant`
+      converts to UTC first; a stored value with no offset is read as UTC, which is stated in the
+      hand contract rather than left to whichever reader parses it first.
+
+    The order is applied in this function rather than by SQL `ORDER BY` because the keys are
+    parsed values, and because SQLite compares TEXT by code unit: `ORDER BY title` would sort
+    `Zoo` before `apple` and give a traveller an order the door never named.
     """
 
-    items = session.scalars(
-        select(Journey)
-        .where(Journey.deleted_at.is_(None))
-        .order_by(Journey.created_at, Journey.id)
-    ).all()
-    return [journey_schema(item) for item in items]
+    live = select(Journey).where(Journey.deleted_at.is_(None))
+    if sort is None:
+        items = session.scalars(live.order_by(Journey.created_at, Journey.id)).all()
+        return [journey_schema(item) for item in items]
+    if sort not in JOURNEY_SORT_TIERS:
+        refused = HTTPException(
+            422,
+            f"sort={sort} names no journey list order this server knows",
+        )
+        refused.reason_code = JOURNEY_SORT_REFUSAL
+        refused.error_details = {"sort": sort, "supported": list(JOURNEY_SORT_TIERS)}
+        raise refused
+    rows = _journeys_in_tier_order(list(session.scalars(live).all()), sort)
+    return [journey_schema(item) for item in rows]
+
+
+#: The two tiers that read a timestamp and the one that reads a name, each with the stored column it
+#: orders by and the direction a traveller gets.  Nothing here re-reads a column it does not list:
+#: `journeys.updated_at` is written by this server's own doors (`update_journey` on PATCH,
+#: `create_journey` on create), and `journeys.title` is what `PATCH /api/v1/journeys/{id}` changes.
+_JOURNEY_TIER_KEYS = {
+    "RECENT_UPDATE": (lambda row: _journey_instant(row.updated_at), True),
+    "DEPARTURE_DATE": (lambda row: _journey_instant(row.start_at), False),
+    "TITLE": (lambda row: row.title.casefold(), False),
+}
+
+
+def _journey_instant(value: str) -> datetime:
+    """The UTC instant a stored `journeys` timestamp names.
+
+    A value with no offset - reachable by posting a naive `start_at` to the create door, which
+    stores `payload.start_at.isoformat()` - is read as UTC.  That is a stated rule, not a guess: the
+    column is TEXT with no CHECK (`backend/db/schema.sql`, the `journeys` table), so the door has to
+    pick a reading, and UTC is the one this server writes for its own timestamps
+    (`datetime.now(timezone.utc).isoformat()`).
+    """
+
+    parsed = datetime.fromisoformat(value)
+    return parsed.replace(tzinfo=timezone.utc) if parsed.tzinfo is None else parsed
+
+
+def _journeys_in_tier_order(rows: list[Journey], tier: str) -> list[Journey]:
+    """`rows` in the order `tier` names, ties broken by `journeys.id` ascending.
+
+    Two passes, because Python's sort is stable: ordering by id first makes every tier's tie-break
+    ascending by id even where the tier itself runs newest-first, so the answer is a total order and
+    two calls cannot interleave a tie differently.
+    """
+
+    key, descending = _JOURNEY_TIER_KEYS[tier]
+    ordered = sorted(rows, key=lambda row: row.id)
+    ordered.sort(key=key, reverse=descending)
+    return ordered
+
 
 
 @app.delete("/api/v1/journeys/{journey_id}", status_code=204)

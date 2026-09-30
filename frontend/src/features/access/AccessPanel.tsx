@@ -24,6 +24,7 @@ import {
   type ActivityEvent,
   type DoorProbe,
   type JourneyMemberRow,
+  type JourneySortTier,
   type JourneySummary,
   type MemberRoleLimits,
   type RoleRule,
@@ -53,6 +54,9 @@ import {
   VISIBILITY_LADDER,
   visibilitySwitchKey,
   invitationQuotaKey,
+  DEFAULT_JOURNEY_SORT,
+  JOURNEY_SORT_LADDER,
+  sortLabelKey,
 } from "./accessVocabulary";
 import "./access.css";
 
@@ -129,6 +133,9 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
     fillAccess(accessCopyFor(locale, key), params);
 
   const [trips, setTrips] = useState<TripsState>({ phase: "loading" });
+  /* ORD-0477: the order this list is in is state the screen holds and says out loud, because the
+     order is the server's answer to a word this screen sent -- not a side effect of row order. */
+  const [sort, setSort] = useState<JourneySortTier>(DEFAULT_JOURNEY_SORT);
   /** ORD-0527: the trip is not only picked here.  The shell already holds one
    *  (`citynexus.v8.journey_id`), and a panel that waits for a manual pick leaves a roster with rows
    *  in the store painting the empty cell -- which is what the commander measured at 390x844.  The
@@ -158,10 +165,10 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
   const [pickVisibility, setPickVisibility] = useState<string>(VISIBILITY_LINK_READ);
   const [pickExpiry, setPickExpiry] = useState<string>("");
 
-  const loadTrips = useCallback(async () => {
+  const loadTrips = useCallback(async (tier: JourneySortTier) => {
     setTrips({ phase: "loading" });
     try {
-      setTrips({ phase: "ready", rows: await readJourneys() });
+      setTrips({ phase: "ready", rows: await readJourneys(tier) });
     } catch (cause) {
       setTrips({
         phase: "failed",
@@ -172,8 +179,8 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
   }, []);
 
   useEffect(() => {
-    void loadTrips();
-  }, [loadTrips]);
+    void loadTrips(sort);
+  }, [sort, loadTrips]);
 
   const loadRoster = useCallback(async (journeyId: string) => {
     setRosterFailed(null);
@@ -381,6 +388,11 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
     return say("access.memberStateUnknown", { state: member.member_state });
   };
 
+  /* ORD-0477: the word for the tier in use, taken from the ladder rather than from the token the
+     server uses. `null` means this screen owns no sentence for that tier, and it is said as that --
+     the machine word is quoted, never worn as a label. */
+  const tierWordKey = sortLabelKey(sort);
+
   return (
     <section
       className="cn-access"
@@ -395,6 +407,40 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
 
       {/* ---------------------------------------------------------- read from this server */}
       <div className="cn-access-read" data-testid="access-server-read">
+        {/* ORD-0477 -- which order the list below is in, said in words and set by a control the
+            traveller can see. The tier the screen is on is this screen's own state, so it stays
+            readable while the rows are still arriving; the rows themselves are the door's answer to
+            the word this screen sent. */}
+        <div className="cn-access-sort" data-testid="access-sort">
+          <span className="cn-access-picker-label">{say("access.sortHeading")}</span>
+          <p className="cn-access-sort-current" data-testid="access-sort-current">
+            {tierWordKey
+              ? say("access.sortCurrent", { tier: say(tierWordKey) })
+              : say("access.sortTierUnknown", { tier: sort })}
+          </p>
+          <div className="cn-access-sort-tiers" role="group" aria-label={say("access.sortHeading")}>
+            {JOURNEY_SORT_LADDER.map((row) => (
+              <button
+                key={row.tier}
+                type="button"
+                className="cn-access-sort-tier"
+                data-testid={`access-sort-tier-${row.tier}`}
+                aria-pressed={row.tier === sort ? "true" : "false"}
+                onClick={() => setSort(row.tier)}
+              >
+                {say(row.labelKey)}
+              </button>
+            ))}
+          </div>
+          {/* The one tier whose order surprises a Chinese-speaking traveller: characters, not pinyin.
+              Said only while that tier is the one in use, so the sentence is never about a different
+              order than the list below is actually in. */}
+          {tierWordKey === "access.sortTitle" ? (
+            <p className="cn-access-sort-note" data-testid="access-sort-note">
+              {say("access.sortTitleNote")}
+            </p>
+          ) : null}
+        </div>
         {trips.phase === "loading" && <p data-testid="access-trips-loading">{say("access.pickLoading")}</p>}
         {trips.phase === "failed" && (
           <div role="alert" data-testid="access-trips-failed">
