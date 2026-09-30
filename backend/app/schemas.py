@@ -252,6 +252,14 @@ class Journey(BaseModel):
     current_activity_id: UUID | None = None
 
 
+#: ORD-0477: the orders `GET /api/v1/journeys` answers by, named once here so the door's validator,
+#: the hand contract (`contracts/openapi.yaml`), FastAPI's own `/openapi.json` and the screen's
+#: control all read one vocabulary.  A traveller never sees these tokens; the words they read are
+#: in `frontend/src/features/access/accessCopy.ts`, keyed by the tier.
+JourneySortTier = Literal["RECENT_UPDATE", "DEPARTURE_DATE", "TITLE"]
+JOURNEY_SORT_TIERS: tuple[JourneySortTier, ...] = ("RECENT_UPDATE", "DEPARTURE_DATE", "TITLE")
+
+
 class RecycleBinJourney(Journey):
     """One trip the recycle bin holds, carrying the two facts a screen must not infer.
 

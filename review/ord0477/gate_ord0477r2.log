@@ -1,0 +1,383 @@
+
+> test:e2e
+> playwright test e2e/qoder-ord0477-journey-list-sort.spec.ts --reporter=line
+
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4910 backend=:4911 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0477r2.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     Started server process [44292]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:4911 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:51960 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+
+Running 14 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4910 backend=:4911 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0477r2.db ai=inherited from the environment reuseExistingServer=true
+
+[1/14] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:52523 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:53326 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:52523 - "POST /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53326 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52523 - "POST /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/stay-options/a56d7a2a-85f6-4295-8c5b-9eb656ae1131/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=8eb99361-e084-4ec5-ac12-1580fc9b62b8 options=4 chosen=a56d7a2a-85f6-4295-8c5b-9eb656ae1131 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:52661 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52662 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64018 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64020 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64017 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52663 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49245 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49253 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49255 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64019 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49249 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63185 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49257 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4910 backend=:4911 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0477r2.db ai=inherited from the environment reuseExistingServer=true
+
+[2/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:218:3 › sort-control-zh — three named tiers, one in use, no machine word on the glass
+[WebServer] INFO:     127.0.0.1:50257 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63640 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63645 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60414 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60413 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63647 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63648 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50277 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60415 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[3/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:218:3 › sort-control-en — three named tiers, one in use, no machine word on the glass
+[WebServer] INFO:     127.0.0.1:50512 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50513 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50515 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56328 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64225 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56330 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50516 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50517 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56329 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[4/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:265:3 › sort-reorders-zh — each tier puts the same four trips in a different order
+[WebServer] INFO:     127.0.0.1:51468 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51469 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51470 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57429 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53667 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57425 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51471 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51472 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57431 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63400 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63408 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63415 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63429 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63437 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63445 - "PATCH /api/v1/journeys/c4cdc615-cfad-40bf-a435-6d4eadf06696 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52568 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56133 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58810 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[5/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:265:3 › sort-reorders-en — each tier puts the same four trips in a different order
+[WebServer] INFO:     127.0.0.1:56847 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56848 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56849 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56851 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62938 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61915 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62937 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56853 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62939 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57485 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:59659 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:59680 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58903 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:56795 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:56798 - "PATCH /api/v1/journeys/6cdf86b9-165d-4724-8a75-51aca5e6fab0 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58272 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55686 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49688 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[6/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:326:3 › sort-asked-by-word-zh — the screen asks the door, and says which tier is in use
+[WebServer] INFO:     127.0.0.1:59351 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59352 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59355 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59358 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59359 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61427 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64821 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64822 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64823 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51533 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61291 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[7/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:326:3 › sort-asked-by-word-en — the screen asks the door, and says which tier is in use
+[WebServer] INFO:     127.0.0.1:51665 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51669 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51670 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51673 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55989 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55988 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51671 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51672 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55990 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53699 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49996 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[8/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:397:3 › sort-empty-zh — no trips is said as no trips, not as a failure or a glitch
+[WebServer] INFO:     127.0.0.1:63559 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63561 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63563 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63565 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63567 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57692 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57690 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58780 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57693 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57710 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57714 - "DELETE /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57716 - "DELETE /api/v1/journeys/71c8fd39-268b-451b-88bb-10d7f60d6924 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57719 - "DELETE /api/v1/journeys/b2db9ce8-7fea-4053-b505-ffd77992e857 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57722 - "DELETE /api/v1/journeys/343ee9f7-13c3-4fd7-9271-64324df007d3 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57724 - "DELETE /api/v1/journeys/602cf9a4-c2be-4d15-87d1-9144c55d641c HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57728 - "DELETE /api/v1/journeys/99522040-3e21-4148-a947-1ff6464e0698 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57730 - "DELETE /api/v1/journeys/e2377343-e6a7-47dc-815c-c57829ddf513 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57743 - "DELETE /api/v1/journeys/6cdf86b9-165d-4724-8a75-51aca5e6fab0 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:57745 - "DELETE /api/v1/journeys/c4cdc615-cfad-40bf-a435-6d4eadf06696 HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:49379 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49391 - "DELETE /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49393 - "DELETE /api/v1/journeys/71c8fd39-268b-451b-88bb-10d7f60d6924/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49395 - "DELETE /api/v1/journeys/b2db9ce8-7fea-4053-b505-ffd77992e857/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49398 - "DELETE /api/v1/journeys/343ee9f7-13c3-4fd7-9271-64324df007d3/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49400 - "DELETE /api/v1/journeys/602cf9a4-c2be-4d15-87d1-9144c55d641c/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49402 - "DELETE /api/v1/journeys/99522040-3e21-4148-a947-1ff6464e0698/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49404 - "DELETE /api/v1/journeys/e2377343-e6a7-47dc-815c-c57829ddf513/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49406 - "DELETE /api/v1/journeys/6cdf86b9-165d-4724-8a75-51aca5e6fab0/undelete HTTP/1.1" 405 Method Not Allowed
+
+[WebServer] INFO:     127.0.0.1:49676 - "DELETE /api/v1/journeys/c4cdc615-cfad-40bf-a435-6d4eadf06696/undelete HTTP/1.1" 405 Method Not Allowed
+
+[9/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:397:3 › sort-empty-en — no trips is said as no trips, not as a failure or a glitch
+[WebServer] INFO:     127.0.0.1:61551 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61553 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61555 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63291 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54383 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63287 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61556 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61557 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63292 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63300 - "GET /api/v1/journeys?sort=DEPARTURE_DATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51688 - "GET /api/v1/journeys?sort=TITLE HTTP/1.1" 200 OK
+
+[10/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:446:5 › sort-geometry-390x844-zh — the tier control is reachable and costs nothing else
+[WebServer] INFO:     127.0.0.1:58904 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58905 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58906 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58907 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53776 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53501 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58908 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53500 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53502 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[11/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:446:5 › sort-geometry-390x844-en — the tier control is reachable and costs nothing else
+[WebServer] INFO:     127.0.0.1:61942 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61949 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61955 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64285 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49692 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64284 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61956 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61957 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64286 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[12/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:446:5 › sort-geometry-320x653-zh — the tier control is reachable and costs nothing else
+[WebServer] INFO:     127.0.0.1:58760 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58761 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58762 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58763 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57299 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56881 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57298 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58764 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57300 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[13/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:446:5 › sort-geometry-320x653-en — the tier control is reachable and costs nothing else
+[WebServer] INFO:     127.0.0.1:57694 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57695 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57697 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57698 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51851 - "GET /api/v1/travelers/de4a13f7-1a8f-4365-9e97-52e4c0530ea2/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57700 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57648 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57646 - "GET /api/v1/journeys/8eb99361-e084-4ec5-ac12-1580fc9b62b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57649 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[14/14] [chromium] › e2e\qoder-ord0477-journey-list-sort.spec.ts:516:1 › sort-refusal-over-http — an unknown word is answered by name, and not with a list
+[WebServer] INFO:     127.0.0.1:62663 - "GET /api/v1/journeys?sort=by_mood HTTP/1.1" 422 Unprocessable Entity
+
+  14 passed (1.1m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-ord0477-journey-list-sort.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\ord0477\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\e2e_ord0477r2.db ports 4910/4911 tree D:\moodle\_qoder_b_ord0417_20260928\ord0477

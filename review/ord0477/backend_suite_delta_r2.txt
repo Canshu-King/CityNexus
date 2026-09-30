@@ -1,0 +1,11 @@
+base_run1=14 base_run2=14 patched=18
+BASELINE_FLAPS (0):
+PATCHED_MINUS_STABLE_BASELINE (6):
+  + tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present
+  + tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes
+  + tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip
+  + tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage
+  + tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+  + tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged
+STABLE_BASELINE_REDS_STILL_RED=12 OF 14
+STABLE_BASELINE_REDS_NOW_GREEN: tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation, tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on

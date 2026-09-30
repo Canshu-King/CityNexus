@@ -12,8 +12,17 @@
  * read as "nobody shares this trip" -- a claim this tree has no source for.
  */
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import type { operations } from "../../generated/api";
 
 export const JOURNEY_LIST_PATH = "/journeys";
+
+/** ORD-0477: which order the list door answers in, taken from the generated client rather than
+ *  written out again here -- `operations["listJourneys"]` is generated from the `sort` enum in
+ *  `contracts/openapi.yaml`, so a tier the contract renames is a build error on this screen instead
+ *  of a control that quietly stops working, and a tier the contract drops cannot survive as a button. */
+export type JourneySortTier = NonNullable<
+  NonNullable<operations["listJourneys"]["parameters"]["query"]>["sort"]
+>;
 export const ACTIVITY_FEED_SUFFIX = "/agent-feed";
 /**
  * The sharing state lives behind three doors, and their names are read off ORD-0434's route set
@@ -54,8 +63,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function readJourneys(): Promise<JourneySummary[]> {
-  return request<JourneySummary[]>(JOURNEY_LIST_PATH);
+/** The door's path with the tier spelled out in it, so a gate can read the word this screen sent
+ *  instead of inferring it from the order the rows happened to come back in. */
+export function journeyListPath(sort: JourneySortTier): string {
+  return `${JOURNEY_LIST_PATH}?sort=${encodeURIComponent(sort)}`;
+}
+
+/** ORD-0477: the list, in the order the traveller asked for.  A tier the door does not know is a
+ *  422 naming itself (`JOURNEY_SORT_NOT_RECOGNISED`) and no rows at all, which reaches this screen
+ *  as a refusal with facts rather than as an empty list -- `access.pickEmpty` stays the sentence for
+ *  "there are no trips", and is never the sentence for "you asked wrongly". */
+export function readJourneys(sort: JourneySortTier): Promise<JourneySummary[]> {
+  return request<JourneySummary[]>(journeyListPath(sort));
 }
 
 /** The server's `summary` is deliberately not trusted for the words on screen: for an action the

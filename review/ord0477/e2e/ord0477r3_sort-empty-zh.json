@@ -1,0 +1,23 @@
+{
+ "file": "e2e/qoder-ord0477-journey-list-sort.spec.ts",
+ "arm": "sort-empty-zh",
+ "run_id": "ord0477r3",
+ "readings": {
+  "binned": [
+   "be39651f-8e11-4c45-aea1-a68602226f4b",
+   "0c6ef9f1-7347-41e0-8efc-b6b01382005f",
+   "9e45197e-5676-4f42-877a-34b0f1cae93f",
+   "1f68a947-b599-40eb-b0fa-325956ce407c",
+   "94217bde-e39a-45bb-99f6-a9043f7221a0",
+   "104212b3-b36f-4e36-b4c2-e09fca5aa1f9",
+   "bfa74cfe-6ebf-4a8a-9b31-27b086ed7055",
+   "266efca2-1948-4486-827a-913a5b6f29f8",
+   "ad3cd6f6-9d68-42f8-82e2-b51fce592821"
+  ],
+  "empty_visible": true,
+  "failed_visible": false,
+  "picker_present": 0,
+  "sentence": "现在按名称排。",
+  "shot": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0477\\e2e\\ord0477-sort\\ord0477r3_empty_zh.png"
+ }
+}

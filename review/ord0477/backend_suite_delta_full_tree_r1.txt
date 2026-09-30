@@ -1,0 +1,7 @@
+baseline pass1 summary: (names captured) 14 reds
+baseline pass2 summary: 14 failed, 1439 passed, 15 skipped, 1 xfailed, 4 warnings, 20 errors
+candidate full-tree summary: 12 failed, 1457 passed, 15 skipped, 1 xfailed, 4 warnings, 20 errors in 255.18
+candidate_reds=12
+NEW_vs_both_baselines: none
+BASELINE_STABLE_REDS_NOT_REPRODUCED: tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation, tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on
+ERRORS candidate=20

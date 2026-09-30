@@ -1,0 +1,54 @@
+{
+ "file": "e2e/qoder-ord0477-journey-list-sort.spec.ts",
+ "arm": "sort-reorders-en",
+ "run_id": "ord0477r3",
+ "readings": {
+  "observed": {
+   "DEPARTURE_DATE": [
+    "ORD0477-en Alpha",
+    "ORD0477-en charlie",
+    "ORD0477-en 北京",
+    "ORD0477-en delta"
+   ],
+   "TITLE": [
+    "ORD0477-en Alpha",
+    "ORD0477-en charlie",
+    "ORD0477-en delta",
+    "ORD0477-en 北京"
+   ],
+   "RECENT_UPDATE": [
+    "ORD0477-en delta",
+    "ORD0477-en 北京",
+    "ORD0477-en charlie",
+    "ORD0477-en Alpha"
+   ]
+  },
+  "expected": {
+   "RECENT_UPDATE": [
+    "ORD0477-en delta",
+    "ORD0477-en 北京",
+    "ORD0477-en charlie",
+    "ORD0477-en Alpha"
+   ],
+   "DEPARTURE_DATE": [
+    "ORD0477-en Alpha",
+    "ORD0477-en charlie",
+    "ORD0477-en 北京",
+    "ORD0477-en delta"
+   ],
+   "TITLE": [
+    "ORD0477-en Alpha",
+    "ORD0477-en charlie",
+    "ORD0477-en delta",
+    "ORD0477-en 北京"
+   ]
+  },
+  "ids": [
+   "ad3cd6f6-9d68-42f8-82e2-b51fce592821",
+   "9e45197e-5676-4f42-877a-34b0f1cae93f",
+   "94217bde-e39a-45bb-99f6-a9043f7221a0",
+   "104212b3-b36f-4e36-b4c2-e09fca5aa1f9"
+  ],
+  "shot": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0477\\e2e\\ord0477-sort\\ord0477r3_reorders_en.png"
+ }
+}
