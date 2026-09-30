@@ -10,7 +10,7 @@
  * empty poster. The list the sheet renders and the list the canvas draws are the same value, built
  * once here: a picture of something else than the traveller is reading would be a second answer.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { progressContractCopy } from "../progress/journeyProgress";
 import {
@@ -86,7 +86,10 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
     };
   }, [poster, locale, t]);
 
-  useEffect(() => {
+  /* Layout effect, not effect: with the plain one the first paint lists every day and the second
+     collapses to page one, so a traveller watches the list jump. Measuring before the browser paints
+     means the first thing on screen is already the paged thing. */
+  useLayoutEffect(() => {
     if (!open || !sheet.current) return;
     setSheetWidth(sheet.current.getBoundingClientRect().width);
     setPage(0);

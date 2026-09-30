@@ -67,13 +67,21 @@ async function openSheet(page: Page, origin: string, locale: "zh-CN" | "en") {
 }
 
 async function readSheet(page: Page) {
-  const cards = page.getByTestId(/^poster-day-\d+$/);
-  const dayRows = await cards.count();
-  const labels: string[] = [];
-  for (let i = 0; i < dayRows; i += 1) {
-    labels.push((await cards.nth(i).locator("b").first().innerText()).trim());
-  }
-  const stops = await page.getByTestId("poster-stop").count();
+  /* One atomic read. Counting and then indexing by testid raced with the sheet's own first
+     pagination: the count said seven while the panel had already collapsed to page one, and the
+     arm waited four hundred seconds for an eighth card that was never going to exist. */
+  const listed = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('[data-testid^="poster-day-"]')).map((node) => ({
+      label: node.querySelector("b")?.textContent?.trim() ?? "",
+      count: node.querySelector("small")?.textContent?.trim() ?? "",
+      stops: Array.from(node.querySelectorAll('[data-testid="poster-stop"]')).map((s) =>
+        (s.textContent ?? "").trim(),
+      ),
+    })),
+  );
+  const dayRows = listed.length;
+  const labels = listed.map((row) => row.label);
+  const stops = listed.reduce((total, row) => total + row.stops.length, 0);
   return {
     day_rows: dayRows,
     day_labels: labels,
