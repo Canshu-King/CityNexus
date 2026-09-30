@@ -1662,6 +1662,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/facts/acquire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["acquireJourneyPlaceFacts"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/real-city/intelligence": {
         parameters: {
             query?: never;
@@ -6229,6 +6247,42 @@ export interface operations {
                 content?: never;
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    acquireJourneyPlaceFacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    place_ids?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Source-linked opening and cost facts for existing provider Places */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     streamJourneyOperations: {
