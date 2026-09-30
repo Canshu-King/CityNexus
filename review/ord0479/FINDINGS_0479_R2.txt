@@ -2,7 +2,7 @@ ORD-0479 (r2, re-taken on aa2a08ce) -- the credential gate forgives translation-
 structure; the ten cells that show what it still catches; and the two channels this order forbade,
 proven closed.
 
-Lane 2d2d7428, 2026-09-30 12:03 +08. The order is the commander's block naming C07 red at the live tip. r1 was
+Lane 2d2d7428, 2026-09-30 12:06 +08. The order is the commander's block naming C07 red at the live tip. r1 was
 measured on dcb90cccc68b81f2317b28db19051dedb9f06c80 and published on a branch of its own; the
 authoritative line moved to the commit named in the title while it was being written, and every
 number below is from the re-take.
@@ -77,8 +77,9 @@ number below is from the re-take.
    in 7 below: the only failure named there is the 0466 cell, so no cell of this order failed.
    H01 a table whose every entry is a translated key, three credential-shaped labels: 3 hits, all
       exempted, the reason naming the TABLE's entry count (3) and the dictionary's key count (4),
-      deliberately unequal so a receipt that reports the wrong one cannot pass; and the shipped tree
-      clears with exactly the one exemption named (H01b).
+      deliberately unequal so a receipt that reports the wrong one cannot pass. H01b then takes every
+      exemption the shipped tree reports and re-derives it outside the gate: the value and each of its
+      table's neighbours must be keys both locale blocks translate, parsed a second time from the file.
    H02 positive control: a real key-shaped value carrying the same label stays live, and the cell
       compares the scan's verdict against the module's own refusal constant rather than against a
       string transcribed here.
