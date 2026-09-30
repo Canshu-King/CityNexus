@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:01 · 最新尖上屏：成员那两扇门在服务端是真的、在屏上是死的（已开 ORD-0527）；另附 ORD-0526 的根因行
+
+**〇、口径**
+
+尖 = `c80dce10b3ef` 起头（本轮落了 ORD-0519 与 ORD-0497 r3）。产物：我重建了 `_build_day6/frontend/dist`（`BUILD rc=0`，入口 `index-DMATcw_6.js`），并把局域网宿主 `:4783` 改服这一代（API 仍指 `:4781`，那台含 ORD-0503 的产品枝）。屏读在 `390x844`，工具 `_cmdr_walk_members_r38.js`，读数落 `_walk_r38_mobile.json`。零 `pageerror`。（同代判据行 `frontend/src/app/V8Experience.tsx:867`）
+
+**一、同一件事的两侧读数（这是本块的重点）**
+
+| 侧 | 读数 |
+|---|---|
+| 服务端（我 22:5x 亲测） | 加人 `http_status=201`；改角色 `http_status=200`；角色未变 `http_status=409` `MEMBER_ROLE_UNCHANGED`；改自己 `http_status=409` `MEMBER_ROLE_SELF_CHANGE_REFUSED`；陌生成员 `http_status=404` `MEMBER_UNKNOWN`；非法角色 `http_status=422`；自我移出 `http_status=200`；再移出 `http_status=409` `MEMBER_ALREADY_WITHDRAWN` |
+| 屏上（同一代产物） | `/v8/access` 渲染出 `access-role-ladder-empty`（空的那一格）、`access-role-details`、`access-invite-ttl`、`access-invite-quota`、`access-invite-visibility`（均可见，宽 356 px）；但屏上「移出/移除/退出」词命中 **0**；屏上自己那句写着“角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么” |（角色枚举声明 `backend/app/schemas.py:996`）
+
+结论：**门是真的，路是死的**——客户端没有旅行者身份，于是“我在这个行程里是什么角色”永远答不了，成员屏只能空转。已开 ORD-0527（要求先量清“我”从哪来、服务端哪扇门能给档位；身份已知时两枚控件真上屏；身份未知时不许默默空转，要给一条能走的入口；两枚反件；`390x844` 与桌面各一趟）。
+
+**二、ORD-0526 的根因行（我读源码取的，已发车道）**
+
+`NO_REGISTERED_SOURCE` 的判据在 `backend/app/catalog_hydration_operations.py:792`：`if survey["places_held"] == 0 and survey["pending_materialisations"] == 0`；同文件 `:789` 的注释写着“in this build the registered sources are already applied”。也就是说这个 build 里那些已登记的确定性源对 `CN-TIANJIN` 什么都没持有。目标因此钉成两个可测数：`places_held` 至少在一个目的地上大于 0（地点须来自具名源），终态从 `NO_REGISTERED_SOURCE` 变成有地点的终态。夹具模板点名在 `backend/app/services.py:845`。
+
+**三、本轮落地**
+
+ORD-0503 证据枝（→ `d72528cfc857`）、ORD-0519（→ `7b93d18d9d9c`）、ORD-0497 r3 足迹上地图（→ `c80dce10b3ef`）。
+
+**四、我今晚自己打通的那道门（复述，供后来者少走弯路）**
+
+干净浏览器上内屏唯一入口是那张引导向导；壳按浏览器里存下的行程引用决定（键族 `frontend/src/lib/failureAttribution.ts:390`，判据 `frontend/src/app/V8Experience.tsx:867`）。把 `citynexus.v8.journey_id` 落成自己用 API 造的行程号，向导即不再上屏——我就是靠这一步读到 `/v8/hub`、`/v8/import`、`/v8/access` 三屏真内容的。
+
+**五、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母（供给死局）；等 ORD-0526 登记源、ORD-0521 打通非破坏供给。
+2. 手机五格探针未跑（同因）。
+3. 成员屏空转这一格现在有了单（ORD-0527），但没修好之前，ORD-0503 只能算“服务端已通、屏上不可达”。
+4. ORD-0495 三枚臂在导出树里仍红（`3 failed, 4 passed`）。
+5. 我今晚的验证栈三处（`:4781`、`:4783`、`:4785`）收工按名单回收；桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 22:58 · 死局的根因由产品自己说出：目录补水终态 `NO_REGISTERED_SOURCE`（并已开 ORD-0526 去登记供给源）
 
 **〇、口径**
