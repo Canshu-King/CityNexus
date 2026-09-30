@@ -1,0 +1,172 @@
+{
+  "tool": "gen4_walk_r1",
+  "took_local": "2026-10-01T00:41:41.945908+08:00",
+  "store": {
+    "journeys": 1,
+    "shared_bytes": 7213056,
+    "shared_mtime_local": "2026-09-29 09:20:27"
+  },
+  "backend": {
+    "ready": true,
+    "pid": "32500",
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "evidence_state": "FROZEN_WITHOUT_TTL"
+  },
+  "faces": [
+    {
+      "label": "TIP_1e95d106",
+      "face_dir": "faces/tip4",
+      "gap_tree": "wt7",
+      "serve": {
+        "port": 4874,
+        "face_dir": "faces/tip4",
+        "entry_asset": "index-BGM3L0lx.js",
+        "index_html_bytes_served": 1200,
+        "bundle_bytes_served": 1534649,
+        "bundle_bytes_on_disk": 1534649,
+        "bundle_local_sha1_served": "d4941d7606950f05c8a1604fc79cfdba4151e540",
+        "bundle_local_sha1_disk": "d4941d7606950f05c8a1604fc79cfdba4151e540",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "log_bytes_added_since_boot": 77,
+        "access_log_request_lines_found": 0,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR: vite preview writes no request line to the file this lane controls",
+        "listener_pid": "58432"
+      },
+      "walk": {
+        "exit": 0,
+        "walk": "evidence\\walk_gen4_tip\\walk_r2.json",
+        "screen_count": 25,
+        "page_errors_total": 0,
+        "non_write_requests": 0,
+        "machine_word_keys": [],
+        "import_screen_evidence_labels": [],
+        "import_screen_head": [],
+        "routes": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "gap": {
+        "exit": 0,
+        "unparsed": "{\r\n  \"generation_label\": \"TIP_1e95d106\",\r\n  \"dictionary_sha256_over_bytes\": \"4f3545d6d9abfd1c9cb4b5330ff47dac24dfca7477ae59808ecadf1d11d47ed6\",\r\n  \"keys_in_en\": 931,\r\n  \"keys_in_zhCN\": 931,\r\n  \"referenced_key_count\": 727,\r\n  \"referenced_keys_missing_from_both\": 2\r\n}\r\nWROTE D:/moodle/_qoder_phone_ord0485_20260930\\evidence\\i18n_gap_TIP_1e95d106_r1.json\r\n"
+      },
+      "carrier": {
+        "port": 4874,
+        "exit": 1,
+        "log": "run\\gen4_carrier_4874.txt",
+        "verdict_line": "1 passed (2.6s)",
+        "red_test_names": [
+          "ord0485-1-the-import-pill-says-a-word-not-a-key"
+        ],
+        "notes": [
+          "[1/2] e2e\\qoder-ord0485-phone-words.spec.ts:46:1 › ord0485-1-the-import-pill-says-a-word-not-a-key — 导入屏的证据牌不得回吐字典键",
+          "  1) e2e\\qoder-ord0485-phone-words.spec.ts:46:1 › ord0485-1-the-import-pill-says-a-word-not-a-key — 导入屏的证据牌不得回吐字典键 ",
+          "    Error: e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-1 — the pill fell back to the dictionary key: poiImport.channelLocal",
+          "    Error Context: test-results\\qoder-ord0485-phone-words--bcb78--not-a-key-—-导入屏的证据牌不得回吐字典键\\error-context.md"
+        ]
+      }
+    },
+    {
+      "label": "O0485_R3",
+      "face_dir": "faces/o0485_r3",
+      "gap_tree": "wt5",
+      "serve": {
+        "port": 4875,
+        "face_dir": "faces/o0485_r3",
+        "entry_asset": "index-BdYXjcDp.js",
+        "index_html_bytes_served": 1200,
+        "bundle_bytes_served": 1534804,
+        "bundle_bytes_on_disk": 1534804,
+        "bundle_local_sha1_served": "6406f2ad386974ee1d9bf12087177d18e647240b",
+        "bundle_local_sha1_disk": "6406f2ad386974ee1d9bf12087177d18e647240b",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "log_bytes_added_since_boot": 77,
+        "access_log_request_lines_found": 0,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR: vite preview writes no request line to the file this lane controls",
+        "listener_pid": "16632"
+      },
+      "walk": {
+        "exit": 0,
+        "walk": "evidence\\walk_gen4_r3\\walk_r2.json",
+        "screen_count": 25,
+        "page_errors_total": 0,
+        "non_write_requests": 0,
+        "machine_word_keys": [],
+        "import_screen_evidence_labels": [],
+        "import_screen_head": [],
+        "routes": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "gap": {
+        "exit": 0,
+        "unparsed": "{\r\n  \"generation_label\": \"O0485_R3\",\r\n  \"dictionary_sha256_over_bytes\": \"43f149d122b71fe4d2ddf1a0274bbee11e59865a5a060f57ea38fb8ace42af95\",\r\n  \"keys_in_en\": 933,\r\n  \"keys_in_zhCN\": 933,\r\n  \"referenced_key_count\": 727,\r\n  \"referenced_keys_missing_from_both\": 0\r\n}\r\nWROTE D:/moodle/_qoder_phone_ord0485_20260930\\evidence\\i18n_gap_O0485_R3_r1.json\r\n"
+      },
+      "carrier": {
+        "port": 4875,
+        "exit": 0,
+        "log": "run\\gen4_carrier_4875.txt",
+        "verdict_line": "2 passed (2.0s)",
+        "red_test_names": [],
+        "notes": [
+          "[1/2] e2e\\qoder-ord0485-phone-words.spec.ts:46:1 › ord0485-1-the-import-pill-says-a-word-not-a-key — 导入屏的证据牌不得回吐字典键",
+          "[2/2] e2e\\qoder-ord0485-phone-words.spec.ts:77:1 › ord0485-2-no-execution-state-key-reaches-any-phone-screen — 执行状态词表不许把键名放上屏",
+          "e2e\\qoder-ord0485-phone-words.spec.ts:77:1 › ord0485-2-no-execution-state-key-reaches-any-phone-screen — 执行状态词表不许把键名放上屏",
+          "e2e/qoder-ord0485-phone-words.spec.ts :: ord0485-2 — settled after 1000 ms of waiting for the plan read"
+        ]
+      }
+    }
+  ],
+  "dictionary_files": {
+    "TIP_1e95d106": "4f3545d6d9abfd1c9cb4b5330ff47dac24dfca7477ae59808ecadf1d11d47ed6",
+    "O0485_R3": "43f149d122b71fe4d2ddf1a0274bbee11e59865a5a060f57ea38fb8ace42af95"
+  },
+  "the_two_dictionaries_are_different_bytes": true
+}

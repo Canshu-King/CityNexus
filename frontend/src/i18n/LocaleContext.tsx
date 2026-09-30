@@ -52,6 +52,7 @@ const en: Dict = {
   "poiImport.retry": "Try again",
   "poiImport.channelLabel": "Channel",
   "poiImport.channelNote": "Local parser; no third-party reading service.",
+  "poiImport.channelLocal": "Local channel",
   "poiImport.unsupportedLabel": "Forms not read",
   "poiImport.unsupportedHosts": "Links seen but not opened: {hosts}",
   "poiImport.unsupportedNoFetch": "Links are never fetched here; paste the text of the note.",
@@ -661,6 +662,7 @@ const en: Dict = {
   "exec.state.active": "ACTIVE",
   "exec.state.completed": "COMPLETED",
   "exec.state.skipped": "SKIPPED",
+  "exec.state.notStarted": "NOT STARTED",
 
   // ── Inbox: Booking Artifact Scanner ──
   "inbox.scannerLabel": "Deterministic QR and barcode scanner",
@@ -1144,6 +1146,7 @@ const zhCN: Dict = {
   "poiImport.retry": "重试",
   "poiImport.channelLabel": "通道",
   "poiImport.channelNote": "本地解析器；不接第三方读取服务。",
+  "poiImport.channelLocal": "本地通道",
   "poiImport.unsupportedLabel": "未读取的形态",
   "poiImport.unsupportedHosts": "看到链接但没有打开：{hosts}",
   "poiImport.unsupportedNoFetch": "这里的链接一律不抓取；请把笔记正文贴进来。",
@@ -1712,6 +1715,7 @@ const zhCN: Dict = {
   "exec.state.active": "活跃",
   "exec.state.completed": "已完成",
   "exec.state.skipped": "已跳过",
+  "exec.state.notStarted": "未开始",
 
   // ── 收件箱：预订扫描器 ──
   "inbox.scannerLabel": "确定性二维码和条形码扫描器",
