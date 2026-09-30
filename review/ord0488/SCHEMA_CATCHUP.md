@@ -14,8 +14,10 @@ Not `create_all`, not a migration tool:
 - There is no alembic: `git ls-tree -r --name-only dcb90ccc | grep -i alembic` returns nothing, and
   the only files matching `migrat` are `backend/tests/test_sol_migration_truth.py`,
   `docs/LEGACY_E2E_MIGRATION.md` and two `review/ord0459/*` scripts.
-- The boot itself applies the DDL: `backend/app/main.py:494` calls `ensure_schema()`, and
-  `backend/app/db/session.py:588` applies `backend/db/schema.sql` with `executescript`.
+- The boot itself applies the DDL: `backend/app/main.py:494` calls `ensure_schema()`, which is
+  defined at `backend/app/db/session.py:588` and reaches the DDL at its
+  `raw.executescript(sql)` on `backend/app/db/session.py:611` (line numbers are of THIS ref, whose
+  `session.py` runs `1116` lines against the base's `1070`, a net `46` longer).
 - That DDL is replayable by construction: all `59` `CREATE TABLE` statements carry
   `IF NOT EXISTS`, and all `36` `CREATE INDEX` statements do too. So a store that predates a table
   grows it on its own next boot -- which is why the shared preview store is stale rather than
