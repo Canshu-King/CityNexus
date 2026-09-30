@@ -168,6 +168,77 @@
   }
 }
 
+/* ORD-0528: "share this picture" sits under the download, not beside it -- two presses that both
+   reach out (one to the file system, one to the server) should not read as one choice. Same 30px
+   fine-pointer floor as the bar's own control, with the touch override matching `design-tokens.css:859`. */
+.cn-poster-share {
+  display: block;
+  min-height: 30px;
+  margin-top: var(--cn-s-8);
+  padding: 0 var(--cn-s-16);
+  font: inherit;
+  font-size: var(--cn-fs-secondary);
+  font-weight: 600;
+  color: var(--cn-accent-text);
+  background: var(--cn-secondary);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-button);
+  cursor: pointer;
+}
+
+.cn-poster-share:disabled {
+  color: var(--cn-ink-tertiary);
+  cursor: default;
+}
+
+/* The link the server's read-back confirmed. Selectable, wrap-safe, and deliberately an input rather
+   than a bare <p>: a traveller has to be able to take it away without a clipboard permission. */
+.cn-poster-link {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 30px;
+  margin-top: var(--cn-s-8);
+  padding: var(--cn-s-6) var(--cn-s-10);
+  font: inherit;
+  font-size: var(--cn-fs-meta);
+  color: var(--cn-ink-secondary);
+  background: var(--cn-canvas);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+}
+
+@media (max-width: 680px) {
+  .cn-poster-share {
+    min-height: var(--cn-touch-min);
+    width: 100%;
+  }
+  .cn-poster-link {
+    min-height: var(--cn-touch-min);
+  }
+}
+
+/* The guest's poster shape (ORD-0528). It reuses the day blocks, the attribution line and the
+   download above; only what the trip screen cannot carry is described here, so the two shapes of the
+   same grant are visibly different pages rather than one page with a hidden mode. */
+.cn-shared-poster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-8);
+}
+
+.cn-poster-form-note {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  font-size: var(--cn-fs-meta);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-ink-secondary);
+  background: var(--cn-surface);
+  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border-left: var(--cn-divider-w) solid var(--cn-accent);
+  border-radius: var(--cn-r-card);
+}
+
 .cn-poster-outcome {
   margin: var(--cn-s-12) 0 0;
   font-size: var(--cn-fs-meta);
