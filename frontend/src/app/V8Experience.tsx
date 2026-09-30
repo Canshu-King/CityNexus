@@ -8,6 +8,7 @@ import {
 import { Icon } from "../components/v8/Icon";
 import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
+import { footprintWords, useFootprints } from "../features/checkin/footprintRead";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
@@ -3885,6 +3886,20 @@ function MapPage({
   const planStops = (data.active_plan?.activities ?? []).filter(
     (item) => activityCoordinate(item) != null,
   );
+  /* ORD-0497 -- the footprints on this map. One read, the same door the footprint screen and the
+     per-stop 打卡 control read (`GET /api/v1/journeys/{id}/checkins`, `checkins.ts:93`), asked once
+     per mount by `useFootprints` and cached nowhere: the traveller who stamps a stop on the trips
+     screen and comes back to the map is looking at what the server holds at that moment, not at
+     something this panel remembered. That is also why no second footprint state was introduced --
+     see the header of `features/checkin/footprintRead.ts`.
+     The 「只看打过」 switch is local React state and nothing else: it is never sent, never stored,
+     never written to a database, so a filter cannot outlive the screen it was pressed on. */
+  const footprints = useFootprints(data.journey.id);
+  const [onlyStamped, setOnlyStamped] = useState(false);
+  /* A filter over an unanswered read would be a filter over nothing: on `refused` / `unreachable` /
+     `not_asked` the pins carry no stamp claim, so hiding half of them by stamp would invent one.
+     The control is therefore offered on exactly the arm that can honour it. */
+  const footprintsOfferFilter = footprints.kind === "read";
   /* ORD-0453 — the third state. A long list on a short screen used to be called reachable because it
      scrolled, but nothing on the screen said so: the rows past the fold were simply off the edge of a
      clipped box. Here the clip is admitted — the box is pressed down to the top edge of the chip after
@@ -3960,6 +3975,8 @@ function MapPage({
           option={selected}
           selectedActivityId={selectedActivityId}
           onSelectActivity={onSelectActivity}
+          footprints={footprints}
+          onlyStamped={onlyStamped}
         />
         <div className="v8-map-facts">
           <span className="v8-kicker">{t("map.nextLeg")}</span>
@@ -3979,6 +3996,31 @@ function MapPage({
             <p className="v8-map-selected-type" data-testid="map-selected-type">
               {selectedActivity.type}
             </p>
+          ) : null}
+          {/* ORD-0497: the read out loud, in the facts column rather than on the glass. The bottom
+              overlay band inside `.v8-map-panel` is what `fitBounds` measures its padding against
+              (the ORD-0417/ORD-0453 note in `map-selection.css`), so a line added there moves ground
+              the camera was promised; this column already carries sentences of the same kind.
+              The empty arm says what THIS read brought back -- "这台服务器这次没有交回任何足迹" --
+              because an empty list is a fact about one answer, not about the traveller. */}
+          <p
+            className="v8-map-footprint-state"
+            data-testid="v8-map-footprint-state"
+            role="status"
+            aria-live="polite"
+          >
+            {footprintWords(locale, footprints)}
+          </p>
+          {footprintsOfferFilter ? (
+            <button
+              className="v8-map-footprint-filter"
+              type="button"
+              data-testid="v8-map-footprint-filter"
+              aria-pressed={onlyStamped}
+              onClick={() => setOnlyStamped((on) => !on)}
+            >
+              {mapCopy(locale, onlyStamped ? "footprintFilterClear" : "footprintFilterLabel")}
+            </button>
           ) : null}
           {/* The reverse half: a row here selects the stop, which pans the map and presses its
               marker.  Name only — times and money stay off the map affordance. */}
