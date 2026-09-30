@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0529 车道 8e5245f0 · r2：三枚被打回的面按现尖重放，两边都逐行验过；八臂、三反件、四屏读在新代全重取
+
+**基座现读**：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = 514b397f96f3b5165b24865f4a544ab6f8020084。
+**交付**：`refs/heads/review/8e5245f0-ord0529-trip-empty-next-step-r2` 回读 = 79b2007efc9be67b9f427351b2a29de9c324ee78（旧 ref f20bfb9a0b3462b684dba844458de755c0b7d2ee 冻结未动、没 force、没删）。
+**落地前自查**：`git merge-tree --write-tree 514b397f96f3b5165b24865f4a544ab6f8020084 79b2007efc9be67b9f427351b2a29de9c324ee78` 退出码 rc=0；本枝相对基座的 12 枚面（5 枚产品/测试 + 7 枚收据）合并后 blob 与枝上自己那枚**全等，DIFF 0 枚**。`refs/heads/master` 回读 = 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，权威线我没动。
+
+**上一轮为什么被打回（我自己复现那三枚面）**：尖从我 r1 的基座走到 514b397f96f3b5165b24865f4a544ab6f8020084 这一批，`frontend/src/features/trip/TripItinerary.tsx` 被加了 39 行、`frontend/src/app/v8PanelRegistry.tsx` 加了 7 行删 1 行、`frontend/src/app/V8Experience.tsx` 加了 44 行删 5 行——文本上不冲突（`merge-tree` rc=0），但合成字节不等于我枝上那枚，所以按你的判据就是三枚面点名打回。
+**这一轮的重法**：把我那 5 枚面当**补丁**重放（`git apply --3way`），不是拿文件覆盖；而且"cleanly applied"我不当证据——逐枚比过尖自从我旧基座以来新增的行是否还在这三枚面里：**39 枚中 39、7 枚中 7、44 枚中 44 全在**，我的面对新尖读回 101 增 8 删、1 增 0 删、4 增 0 删，与冻结的 r1 三枚形状逐枚相同（逐字在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:60 起）。
+
+**这单做的事没变**（题面在账本 CMDR 23:04 那块）：`trip-itinerary-empty` 那格通过 ORD-0504 已有的回读门问服务器「这座城能排出多少个地点」，把下一步说成人话，并交出那扇门——`去导入这趟的地点` 走壳自己的 `navigate("import")` 落在既有 `/v8/import`；**没有新写端点、没有新库**。读不到 / 零个 / n 个是三格答案，不并成两格；有选定方案却没站点排在某一天时，不再说成「还没有选定的方案」。
+
+**两枚条件仍是库里真行**（写在这条车道自己那份 `D:/moodle/_qoder_q_ord0369_wk/q0529.db`，共享预览库整晚没被本车道打开）：零目录那趟 1b849dc1-4488-4136-858d-7445dac19f63（CN-XIAMEN，门回读 0 行）；有方案没排程那趟 011a2238-0a45-4840-9405-c28c098662e8（CNX-DEMO，`active_plan=('ACTIVE', 0)`，门回读 8 行），逐字在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:15。
+**上一轮报过、这轮仍然成立的那件旁证**：CN-GUANGZHOU 库里有 14 行地点，旅客那扇门却答 0——那 14 行全是服务器自有结构性行，被 `include_structural=false` 排除（同件 `:17`）。
+
+**当代读数全重取（r1 的数一个没沿用）**：八臂 `expected=8 / unexpected=0 / skipped=0 / flaky=0`、时长 14631.505 ms，逐字在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:21。
+三枚反件全由**点名的那条断言**咬住：N1 动作变摆设 → A2 的 `toBeVisible`（79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:39）、N2 有方案就算排好 → A6 的 `toHaveCount`（同件在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:43）、N3 目录数字凭空写 → A1 的 `toContain`（同件在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:47）；三枚都 `restored_byte_identical=True`、末了干净重建 rc=0。
+屏读四趟（viewport 390x844 两趟、1280x800 两趟）中心 `elementFromPoint` 全是 `BUTTON|trip-itinerary-empty-action`，手机 `box_y=348`、桌面 `box_y=341`，四行逐字在 79b2007efc9be67b9f427351b2a29de9c324ee78:review/ord0529/GATE_R1.txt:51，四张 PNG 也入库、我自己看过。
+前端门：`tsc -p tsconfig.typecheck.json --noEmit` rc=0、`vite build` rc=0、入口产物 `/assets/index-Cj8wdO2k.js`（1576002 B），且服务中 index 指向的那枚 bundle 里本单 testid 计数 `trip-itinerary-empty-action=2`、`trip-itinerary-empty-catalogue=1`（同件 `:8`）——这条哨兵正是 0464 那轮我把过期包当成本轮产物之后加的。车道已拆（`:8714`/`:4193` 回读 0 枚监听）。
+
+**没改善的部分**（照实说）：① 「下一步」只给了导入这一扇门，生成侧仍是原来那个 Copilot 入口；② 补水终态 `NO_REGISTERED_SOURCE` 那句没上屏——它是任务型读数（`GET /catalog-hydrations/{id}`），要它就得在空态挂轮询，那是另一张单的体量，我停在这里没顺手做；③ 目录只在进这一格时读一次，在本页导入完回来仍要走一次重载；④ 并发与实体手机未测，本轮只有 390x844 的命中；⑤ `playwright.config.ts` 仍只被收集未执行，八臂跑在 `playwright.ord0529-P.config.ts` 上；⑥ 我这单的 ref 现在 r1、r2 两枚并存，请你定去留。
+
+
 ### 值守 42d1a6fa · 10-01 凌晨终值与今晚真正的约束换了：额度不是瓶颈（停在额度 0），盘是——按现斜率外推 2 GiB 档落在 17:49—23:42 之间（`_disk_trend_0357.txt:14`）
 
 **一、这一夜车队在干活（01:00→04:00 终值，一条命令可复跑）**
