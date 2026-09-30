@@ -17,6 +17,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
+  /demo/scene/ensure:
+    post:
+      operationId: ensureDemoScene
+      # ORD-0521: an empty store had exactly one way to become a demo trip -- `demo/reset`, which
+      # deletes 52 tables before it seeds anything.  This door is the additive half of that story:
+      # it registers the supply this server already holds offline (`data/mock/places.json`, 16 rows,
+      # `provider_key=mock-city`, read from disk with no socket), installs only the fixture rows the
+      # store does not already hold, and advances one journey to a SELECTED plan.  It never deletes;
+      # `rows_deleted` is reported in the body so a reader can check the claim instead of trusting
+      # it.  A destination the supply cannot hold is refused by name rather than answered with an
+      # invented place, and the refusal rolls its own staged install back.
+      parameters:
+        - {$ref: '#/components/parameters/DemoSceneToken'}
+        - {$ref: '#/components/parameters/IdempotencyKey'}
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                city_code:
+                  type: string
+                  description: >-
+                    A destination this server's supply can hold.  Omit it to take the city the
+                    shipped scenario is set in; a city the supply does not hold is refused, not
+                    invented.
+      responses:
+        '200':
+          description: >-
+            One trip the store can walk.  `state` is READY when a plan was selected, or
+            SCENE_INSTALLED_BUT_PLAN_REFUSED when the supply landed and a later hop refused -- that
+            hop is carried in `advance_refused_steps` rather than smoothed over.  A key replayed with
+            the same body returns the first receipt with `idempotency_replay` true and writes no
+            further rows.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [state, journey_id, plan_version_id, supply, advance]
+                properties:
+                  state: {type: string, enum: [READY, SCENE_INSTALLED_BUT_PLAN_REFUSED]}
+                  journey_id: {type: string}
+                  city_code: {type: string}
+                  journey_status: {type: string}
+                  plan_version_id:
+                    type: [string, "null"]
+                  scene_label: {type: string}
+                  supply:
+                    type: object
+                    properties:
+                      supply_leg: {type: string}
+                      destructive: {type: boolean}
+                      rows_deleted: {type: integer}
+                      rows_installed: {type: integer}
+                      rows_already_present: {type: integer}
+                      places_held: {type: object}
+                      supported_city_codes: {type: array, items: {type: string}}
+                  advance: {type: object}
+        '403':
+          description: >-
+            Refused before anything was written, with `error.reason_code` naming which guard spoke:
+            DEMO_MODE_REQUIRED when CITYNEXUS_DEMO_MODE is off, SCENE_TOKEN_REQUIRED when no token
+            was presented, SCENE_TOKEN_INVALID when the presented token is not this deployment's.
+            Neither refusal reaches the catalogue, and neither echoes the token.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: >-
+            DEMO_STATE_SUPPLY_UNAVAILABLE: this server holds no place row for that destination.  The
+            body names the failed hop, how many places it holds there, and the cities its supply does
+            cover, so the screen can say "this server cannot obtain places" instead of showing an
+            unresolved count over a trip that was never supplied.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: >-
+            Missing `Idempotency-Key`, or the same key presented against a different body
+            (`IDEMPOTENCY_KEY_REUSE_CONFLICT`) -- which is refused rather than run as a second board.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /demo/reset:
     post:
       operationId: resetDemo
@@ -2600,6 +2685,16 @@ components:
       # caller who omits it must still get a named answer (RESET_TOKEN_REQUIRED) rather than a
       # transport-level 422 -- the refusal is the product behaviour being pinned.
       name: X-Demo-Reset-Token
+      in: header
+      required: false
+      schema: {type: string}
+    DemoSceneToken:
+      # ORD-0521: the claim that opens the additive scene door.  Optional in the schema because a
+      # caller who omits it must get the named refusal (SCENE_TOKEN_REQUIRED) rather than a
+      # transport-level 422 -- the refusal is the behaviour being pinned.  It is a separate token
+      # from the reset one on purpose: being allowed to build a demo is not being allowed to empty
+      # the library, and a deployment can offer one door without the other.
+      name: X-Demo-Scene-Token
       in: header
       required: false
       schema: {type: string}
