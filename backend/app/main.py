@@ -5187,7 +5187,15 @@ def select_stay_journey_option(
         )
     )
     if option is None:
-        raise HTTPException(404, "StayJourneyOption was not found")
+        # ORD-0511: this refusal used to be the bare NOT_FOUND class every missing row on the
+        # product shares, so a screen could not say "这一枚候选这台服务器没有过" without quoting the
+        # identifier back.  The name is the answer; the identifier stays server-side.
+        return error(
+            "NOT_FOUND",
+            "StayJourneyOption was not found",
+            status=404,
+            reason_code="STAY_OPTION_UNKNOWN",
+        )
     try:
         materialized = materialize_stay_option(
             session, journey, option, source="STAY_SELECTION"
@@ -5197,16 +5205,22 @@ def select_stay_journey_option(
         # confirmed itinerary is a product conflict, not a server fault.  It
         # must reach the traveller as an explicit, readable refusal.
         session.rollback()
-        raise HTTPException(
-            422,
+        return error(
+            "VALIDATION_ERROR",
             "STAY_ITINERARY_CONFLICT: " + str(exc),
-        ) from exc
+            status=422,
+            reason_code="STAY_ITINERARY_CONFLICT",
+        )
     if materialized.gate_status != "PASSED" or materialized.plan is None:
         session.rollback()
-        raise HTTPException(
-            422,
+        # The gate already answered in its own vocabulary; a screen needs the name, not the count.
+        return error(
+            "VALIDATION_ERROR",
             "Stay option could not become authoritative Journey truth: "
             + ", ".join(materialized.failures),
+            status=422,
+            reason_code="STAY_NOT_AUTHORITATIVE",
+            details={"failure_count": len(materialized.failures)},
         )
     session.commit()
     offers = session.scalars(
