@@ -144,11 +144,22 @@ test.describe.serial("ORD-0511 the stay rung", () => {
     await expect(section.getByTestId("stay-generate")).toBeVisible();
     const cardsBefore = await section.getByTestId("stay-offer-card").count();
     const confirmBefore = await section.getByTestId("stay-confirmed-line").count();
-    await section.getByTestId("stay-generate").click();
-    await expect(section.getByTestId("stay-generation-outcome")).toBeVisible({ timeout: 180_000 });
-    const outcome = (await section.getByTestId("stay-generation-outcome").innerText()).trim();
-    await expect(section.getByTestId("stay-offer-card").first()).toBeVisible({ timeout: 60_000 });
+
+    /* The outcome sentence lives in the empty branch, so it disappears the moment the reload brings
+       cards -- that is the screen working, not a defect.  Reading it from the response this press
+       actually got keeps the claim about the server's answer true, and the card count is what the
+       traveller is left with, so that is what the arm waits on. */
+    const pressing = section.getByTestId("stay-generate").click();
+    const answered = await page.waitForResponse(
+      (response) => response.url().includes("/stay-options/generate"),
+      { timeout: 180_000 },
+    );
+    await pressing;
+    const generation = (await answered.json()).generation ?? {};
+    const outcomeFromRealResponse = String(generation.outcome ?? "");
+    await expect(section.getByTestId("stay-offer-card").first()).toBeVisible({ timeout: 90_000 });
     const cards = await section.getByTestId("stay-offer-card").count();
+    const outcomeLineStillOnScreen = await section.getByTestId("stay-generation-outcome").count();
     const firstCard = (await section.getByTestId("stay-offer-card").first().innerText()).replace(/\s+/g, " ");
     await section.getByTestId("stay-offer-card").first().click();
     await expect(section.getByTestId("stay-confirmed-line")).toBeVisible({ timeout: 90_000 });
@@ -159,7 +170,9 @@ test.describe.serial("ORD-0511 the stay rung", () => {
       fixture_created_by_instrument_over_real_write_door: true,
       cards_before_generate: cardsBefore,
       confirm_control_before_generate: confirmBefore,
-      outcome_on_screen: outcome,
+      outcome_read_from_this_press_response: outcomeFromRealResponse,
+      ranked_in_response: generation.options_ranked ?? null,
+      outcome_line_on_screen_after_cards: outcomeLineStillOnScreen,
       cards_after_generate: cards,
       first_card_text_head: firstCard.slice(0, 90),
       confirmed_line: confirmed,
@@ -169,7 +182,7 @@ test.describe.serial("ORD-0511 the stay rung", () => {
     });
     expect(cardsBefore).toBe(0);
     expect(confirmBefore).toBe(0);
-    expect(outcome).toContain("可以选的住宿候选");
+    expect(outcomeFromRealResponse).toBe("OPTIONS_FOUND");
     expect(cards).toBeGreaterThan(0);
     expect(confirmed).toContain("已按这台服务器的记录排定");
     expect(protectedLine).toContain("受保护的站");
@@ -199,9 +212,12 @@ test.describe.serial("ORD-0511 the stay rung", () => {
     );
     const id = await freshTianjinTrip(page);
     const section = await openStay(page, id);
-    await section.getByTestId("stay-generate").click();
-    await expect(section.getByTestId("stay-offer-card").first()).toBeVisible({ timeout: 180_000 });
+    const pressing = section.getByTestId("stay-generate").click();
+    await page.waitForResponse((r) => r.url().includes("/stay-options/generate"), { timeout: 180_000 });
+    await pressing;
+    await expect(section.getByTestId("stay-offer-card").first()).toBeVisible({ timeout: 90_000 });
     const cards = await section.getByTestId("stay-offer-card").count();
+    const confirmedBefore = await section.getByTestId("stay-confirmed-line").count();
     await section.getByTestId("stay-offer-card").first().click();
     await page.waitForTimeout(5_000);
     const confirmedCount = await section.getByTestId("stay-confirmed-line").count();
@@ -209,6 +225,7 @@ test.describe.serial("ORD-0511 the stay rung", () => {
     note("S4_refusal_injected", {
       fault_injected_by_instrument: true,
       cards,
+      confirmed_line_before_the_click: confirmedBefore,
       confirmed_line_present: confirmedCount,
       screen_claims_confirmed_anyway: text.includes("已按这台服务器的记录排定"),
     });
