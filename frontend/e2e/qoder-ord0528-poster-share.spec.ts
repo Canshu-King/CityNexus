@@ -316,11 +316,16 @@ test("ORD-0528 X1 with no server confirmation the sheet does not read 'shared'",
     expect(reading.link_input_present, `${reading.shape} has no link to hand over`).toBe(0);
     expect(reading.key_echo, `${reading.shape} speaks in sentences, not key names`).toBe(false);
   }
-  const refused = readings.find((reading) => reading.shape === "write_refused");
-  expect(refused?.status_named_on_screen, "the refused write quotes the door's own number").toBe("403");
-  const silent = readings.filter((reading) => reading.shape !== "write_refused");
-  for (const reading of silent) {
-    expect(reading.status_named_on_screen, `${reading.shape} invents no number it did not measure`).toBeNull();
+  /* The number the screen quotes has to be the number the door answered -- and only where a door
+     actually answered with one. The two stubbed-write shapes carry their status, and the two shapes
+     whose answer arrived fine have no number to quote, so they must not invent one. */
+  const named = { write_refused: "403", read_refused: "500", no_token: null, row_not_listed: null };
+  for (const [shape, status] of Object.entries(named)) {
+    const reading = readings.find((item) => item.shape === shape);
+    expect(
+      reading?.status_named_on_screen,
+      `${shape} quotes ${status === null ? "no number at all" : `the door's own ${status}`}`,
+    ).toBe(status);
   }
 });
 
