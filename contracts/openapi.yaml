@@ -454,6 +454,52 @@ paths:
               schema: {$ref: '#/components/schemas/Journey'}
         '409': {$ref: '#/components/responses/Conflict'}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/abort:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    post:
+      operationId: abortJourney
+      description: >-
+        ORD-0505 中止 (abort): writes `status = CANCELLED`, the traveller's `reason` and the server's own
+        moment into the same row.  `journeys.status` has offered CANCELLED since the first schema while no
+        door on this tree wrote it -- the only journey-status writes are PLANNED, ACTIVE and COMPLETED --
+        so a traveller could discard a trip and could not stop one.  This is not the bin door wearing
+        another hat: `deleted_at` is untouched, the trip stays in `listJourneys`, and
+        `getJourneyExperience` refuses it with JOURNEY_ABORTED_NOT_LIVE, because an aborted trip has no
+        live screen.  No `Idempotency-Key`: the durable `status` decides, and a replayed tap is refused
+        with a name instead of replayed as a second success.  Concurrent taps are settled by the database
+        -- the UPDATE carries the status this tap read, so the loser refuses.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyAbortRequest'}
+      responses:
+        '200':
+          description: The trip, stopped, with the reason and the moment read back off the row
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Journey'}
+        '403':
+          description: "error.reason_code = JOURNEY_ABORT_NOT_AUTHORISED - requested_by is not this trip's traveller, and nothing was written"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.reason_code = JOURNEY_NOT_FOUND - this tree never held that trip"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.reason_code = JOURNEY_ABORT_ALREADY_CANCELLED - it is stopped already and the first reason stands; also the answer when a concurrent tap wins"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: "error.reason_code = JOURNEY_ABORT_REASON_REQUIRED - a blank reason is refused rather than stored as nothing"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /journeys/{journey_id}/undelete:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2660,6 +2706,18 @@ components:
         end_at: {type: string, format: date-time}
         budget: {$ref: '#/components/schemas/Money'}
         planning_mode: {$ref: '#/components/schemas/PlanningMode'}
+    JourneyAbortRequest:
+      type: object
+      description: >-
+        ORD-0505: the traveller's own word for stopping a trip, and who stopped it.  `reason` is
+        required and is stored in the row; `requested_by` is compared with `journeys.traveler_id`,
+        because this product has no session identity yet and a door that writes a state a traveller
+        cannot undo would otherwise claim an authorisation it does not have.
+      required: [reason, requested_by]
+      additionalProperties: false
+      properties:
+        reason: {type: string, minLength: 3, maxLength: 500}
+        requested_by: {type: string, format: uuid}
     JourneyPatch:
       type: object
       properties:
@@ -2683,6 +2741,10 @@ components:
         status: {type: string, enum: [DRAFT, PLANNED, ACTIVE, COMPLETED, CANCELLED]}
         active_plan_version_id: {type: [string, 'null'], format: uuid}
         current_activity_id: {type: [string, 'null'], format: uuid}
+        # ORD-0505: read off `journeys.cancelled_at` / `cancelled_reason`.  Null on every trip
+        # that was never aborted, so a screen cannot read an absent reason as a blank one.
+        cancelled_at: {type: [string, 'null'], format: date-time}
+        cancelled_reason: {type: [string, 'null']}
     RecycleBinJourney:
       description: >-
         ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from

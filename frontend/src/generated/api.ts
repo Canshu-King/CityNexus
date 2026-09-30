@@ -392,6 +392,25 @@ export interface paths {
         patch: operations["updateJourney"];
         trace?: never;
     };
+    "/journeys/{journey_id}/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0505 中止 (abort): writes `status = CANCELLED`, the traveller's `reason` and the server's own moment into the same row.  `journeys.status` has offered CANCELLED since the first schema while no door on this tree wrote it -- the only journey-status writes are PLANNED, ACTIVE and COMPLETED -- so a traveller could discard a trip and could not stop one.  This is not the bin door wearing another hat: `deleted_at` is untouched, the trip stays in `listJourneys`, and `getJourneyExperience` refuses it with JOURNEY_ABORTED_NOT_LIVE, because an aborted trip has no live screen.  No `Idempotency-Key`: the durable `status` decides, and a replayed tap is refused with a name instead of replayed as a second success.  Concurrent taps are settled by the database -- the UPDATE carries the status this tap read, so the loser refuses. */
+        post: operations["abortJourney"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/undelete": {
         parameters: {
             query?: never;
@@ -2661,6 +2680,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * @description ORD-0467. The named rejection codes this product answers with, as one closed vocabulary. Each is raised by name in the doors listed below and reaches a client as the first token of the error detail (`CODE` or `CODE: argument`), which is why `frontend/src/features/pending/pendingPlaceWrites.ts` and `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` match on it rather than reading a structured field -- they read what the server actually sent. Emission sites, read from this tree: . The credential gate (backend/app/security/credential_literals.py) may exempt a literal only when it is byte-identical to one of these members; a value shaped like a provider key is never exempted by contract membership.
+         * @enum {string}
+         */
+        V13NamedRejection: "V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW" | "V13_AUTHORITATIVE_BOUNDED_MULTIDAY" | "V13_C4_ANCHOR_NOT_IN_INPUT" | "V13_C4_ANCHOR_OUTSIDE_JOURNEY" | "V13_CHECK_OUT_DEPARTURE_BUFFER" | "V13_COMMITMENT_ANCHOR_DAY_CONFLICT" | "V13_COMMITMENT_ANCHOR_TOO_EARLY" | "V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER" | "V13_COMMITMENT_OUTSIDE_OPENING_HOURS" | "V13_DAY_TRIP_CANNOT_SELECT_STAY" | "V13_DISCOVERY_COMPOSE_EMPTY" | "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET" | "V13_DISCOVERY_NO_FEASIBLE_PLAN" | "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR" | "V13_INVALID_ANCHOR_WINDOW" | "V13_INVALID_C4_ANCHOR_TIME" | "V13_JOURNEY_DAYS_OUT_OF_BOUNDS" | "V13_STAY_CANDIDATE_UNAVAILABLE" | "V13_STAY_CHECK_IN_OUTSIDE_JOURNEY";
         /** @enum {string} */
         PlanningMode: "balanced" | "budget" | "explore" | "strict_schedule";
         HealthResponse: {
@@ -2939,6 +2963,12 @@ export interface components {
             budget: components["schemas"]["Money"];
             planning_mode?: components["schemas"]["PlanningMode"];
         };
+        /** @description ORD-0505: the traveller's own word for stopping a trip, and who stopped it.  `reason` is required and is stored in the row; `requested_by` is compared with `journeys.traveler_id`, because this product has no session identity yet and a door that writes a state a traveller cannot undo would otherwise claim an authorisation it does not have. */
+        JourneyAbortRequest: {
+            reason: string;
+            /** Format: uuid */
+            requested_by: string;
+        };
         JourneyPatch: {
             title?: string;
             /** Format: date-time */
@@ -2967,6 +2997,9 @@ export interface components {
             active_plan_version_id?: string | null;
             /** Format: uuid */
             current_activity_id?: string | null;
+            /** Format: date-time */
+            cancelled_at?: string | null;
+            cancelled_reason?: string | null;
         };
         /** @description ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a screen never reconstructs "it was deleted" from absence in another list. */
         RecycleBinJourney: components["schemas"]["Journey"] & {
@@ -4485,6 +4518,68 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    abortJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyAbortRequest"];
+            };
+        };
+        responses: {
+            /** @description The trip, stopped, with the reason and the moment read back off the row */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_NOT_AUTHORISED - requested_by is not this trip's traveller, and nothing was written */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_NOT_FOUND - this tree never held that trip */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_ALREADY_CANCELLED - it is stopped already and the first reason stands; also the answer when a concurrent tap wins */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_REASON_REQUIRED - a blank reason is refused rather than stored as nothing */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     undeleteJourney: {
         parameters: {
             query?: never;
@@ -4766,7 +4861,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. ORD-0465 adds the guest's own view of the days alongside it (`plan_state`, `active_plan`), because the landing screen needs a stop's name and its position and the canonical plan projection resolves neither into a field a guest is shown.  Written as one `allOf` arm so the door keeps a single description of its body: `tests/test_qoder_ord0466_version_share.py` reads `grant_scope` out of this exact position, and a named component here would move it. */
+            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. ORD-0465 adds the guest's own view of the days alongside it (`plan_state`, `active_plan`), because the landing screen needs a stop's name and its position and the canonical plan projection resolves neither into a field a guest is shown.  Written as one `allOf` arm so the door keeps a single description of its body: `tests/test_qoder_ord0466_version_share.py` reads `grant_scope` out of this exact position, and a named component here would move it. The same position carries a second duty from ORD-0475: the keys named in `properties` below ARE the whitelist that door may answer with beyond the owner's own journey body, and the gate reads them from here instead of restating them, so widening this door means writing this contract where a reviewer can see it.  What the gate forbids is a key going missing, never a key being documented.  From ORD-0481 the comparison runs both ways: the `required` list under this arm is read the same way, and a key promised there that this door stops answering is a refusal, not a silent narrowing. */
             200: {
                 headers: {
                     [name: string]: unknown;

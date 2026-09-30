@@ -1,0 +1,11 @@
+run_id=ORD0505-191130 port=:4615 db=D:\moodle\_ord0505\ORD0505-191130.db child=38740
+POST /api/v1/travelers -> http_status=201
+POST /api/v1/journeys -> http_status=201
+GET /api/v1/journeys/{id} -> http_status=200 status=DRAFT cancelled_at=None cancelled_reason=None
+POST .../abort (not the traveller) -> http_status=403 reason_code=JOURNEY_ABORT_NOT_AUTHORISED error_code=REQUEST_ERROR
+POST .../abort (no such trip) -> http_status=404 reason_code=JOURNEY_NOT_FOUND
+POST .../abort (the real write) -> http_status=200 status=CANCELLED cancelled_at=2026-09-30T11:11:32.693100Z reason='同行的人改期了'
+POST .../abort (replayed) -> http_status=409 reason_code=JOURNEY_ABORT_ALREADY_CANCELLED
+GET .../experience (live screen) -> http_status=409 reason_code=JOURNEY_ABORTED_NOT_LIVE
+GET /api/v1/journeys -> http_status=200 contains aborted trip: True
+READ BACK FROM ORD0505-191130.db: rowid=1 status=CANCELLED deleted_at=None cancelled_at='2026-09-30T11:11:32.693100+00:00' cancelled_reason='同行的人改期了' (tables in file: 59)

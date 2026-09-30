@@ -131,6 +131,12 @@ CREATE TABLE IF NOT EXISTS journeys (
     -- deleted is NULL, which is what every pre-existing row already is; a default would have
     -- to invent a deletion moment.  See `deleted_at` in `app/db/models.py`.
     deleted_at TEXT,
+    -- ORD-0505: additive and deliberately without a DEFAULT, the same way `deleted_at` above is
+    -- cut.  `CANCELLED` was already a legal value of `status` but no door ever wrote it, so an
+    -- aborted trip has to carry *why* in the row rather than on a screen: NULL in these two columns
+    -- means this trip was never aborted, which is what every pre-existing row already is.
+    cancelled_reason TEXT,
+    cancelled_at TEXT,
     CHECK (end_at > start_at)
 );
 
