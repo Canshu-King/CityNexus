@@ -38,13 +38,20 @@ export function StayExplorer({
      actually answered to the one call this screen can make; it is never the source of the cards. */
   const [door, setDoor] = useState<GenerateDoor | null>(null);
   const [working, setWorking] = useState(false);
+  /* The shell hands this screen its one read door; if it ever stops doing so, a generation would
+     really happen and the cards would still not appear. That is a fact this screen can see and must
+     say, not one it may leave as a silent difference between the answer and the page. */
+  const [reloadMissing, setReloadMissing] = useState(false);
 
   const runGeneration = async () => {
     setWorking(true);
     const answer = await generateStayOptions(data.journey.id);
     setDoor(answer);
     setWorking(false);
-    if (answer.kind === "ok") onReload?.();
+    if (answer.kind === "ok") {
+      if (onReload) onReload();
+      else setReloadMissing(true);
+    }
   };
 
   // A city label derived from the Journey, never a hard-coded demo city.
@@ -108,6 +115,13 @@ export function StayExplorer({
                 <dd>{door.offers ?? "—"}</dd>
               </div>
             </dl>
+          ) : null}
+          {reloadMissing ? (
+            <p role="alert" className="v8-muted" data-testid="stay-reload-absent">
+              {zh
+                ? "这一轮服务器答完了，但这一屏没有从外层拿到重新读取的能力，所以卡片不会出现在这里——这一句是本屏自己报的缺，不是服务器的答复。"
+                : "This run was answered, but this screen was not handed a way to re-read, so the cards cannot appear here -- this line is the screen reporting its own missing capability, not the server's answer."}
+            </p>
           ) : null}
           {/* ORD-0468: the ladder keeps its own name here instead of going with the missing cards. */}
           <EstimationLadderPanel
