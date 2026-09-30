@@ -5,11 +5,14 @@ import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failur
 import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
 import {
-  readDiscardedJourneys,
+  binMayRestore,
+  binOwnership,
+  binRecovery,
+  readScopedDiscardedJourneys,
   refusalReasonCode,
   undeleteJourney,
   RejectionWithFacts,
-  type DiscardedJourney,
+  type ScopedBinRow,
 } from "./journeyTrash";
 import { fillTrash, trashCopy, type JourneyTrashCopyKey } from "./journeyTrashCopy";
 import "./journeyTrash.css";
@@ -41,8 +44,12 @@ type Outcome =
   | { kind: "unknown"; attribution: Attribution };
 
 type ReadState =
+  /* ORD-0531: the door this screen reads now asks about one seat, so without a seat to ask for it
+     says so and shows nobody's bin. Rendering the whole-bin door here would leak exactly the rows
+     this order exists to isolate. */
+  | { phase: "noViewer" }
   | { phase: "loading" }
-  | { phase: "ready"; rows: DiscardedJourney[] }
+  | { phase: "ready"; rows: ScopedBinRow[] }
   | { phase: "absent"; facts: RawFacts | null; attribution: Attribution }
   | { phase: "failed"; facts: RawFacts | null; attribution: Attribution };
 
@@ -54,20 +61,40 @@ const OUTCOME_KEY: Record<Outcome["kind"], JourneyTrashCopyKey | null> = {
   unknown: null,
 };
 
-export function JourneyTrashPanel() {
+/** The sentence a refused row owes the traveller: why this one is read-only, in their language. */
+const RECOVERY_REASON_KEYS: Record<string, JourneyTrashCopyKey> = {
+  RECOVERY_REFUSED_ROLE_CANNOT_RESTORE: "trash.recoveryRefusedRole",
+  RECOVERY_REFUSED_NO_SEAT: "trash.recoveryRefusedNoSeat",
+  RECOVERY_REFUSED_NOT_OWNER: "trash.recoveryRefusedOther",
+};
+
+/** Which copy key explains a row the traveller may not restore; null when the row said nothing. */
+function recoveryReasonKey(row: ScopedBinRow): JourneyTrashCopyKey | null {
+  const code = binRecovery(row);
+  return code === null ? null : RECOVERY_REASON_KEYS[code] ?? null;
+}
+
+export function JourneyTrashPanel({ travelerId = null }: { travelerId?: string | null }) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: JourneyTrashCopyKey, params: Record<string, string | number> = {}) =>
     fillTrash(trashCopy(locale, key), params);
 
-  const [read, setRead] = useState<ReadState>({ phase: "loading" });
+  const [read, setRead] = useState<ReadState>(
+    travelerId ? { phase: "loading" } : { phase: "noViewer" },
+  );
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!travelerId) {
+      /* No seat to ask about: the whole-bin door is deliberately not used as a fallback. */
+      setRead({ phase: "noViewer" });
+      return;
+    }
     setRead({ phase: "loading" });
     try {
-      setRead({ phase: "ready", rows: await readDiscardedJourneys() });
+      setRead({ phase: "ready", rows: await readScopedDiscardedJourneys(travelerId) });
     } catch (cause) {
       const rejection =
         cause instanceof RejectionWithFacts ? cause : null;
@@ -81,13 +108,13 @@ export function JourneyTrashPanel() {
         attribution,
       });
     }
-  }, []);
+  }, [travelerId]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const bringBack = async (row: DiscardedJourney) => {
+  const bringBack = async (row: ScopedBinRow) => {
     setBusyId(row.id);
     setOutcome(null);
     try {
@@ -129,6 +156,12 @@ export function JourneyTrashPanel() {
         <span className="v8-kicker">{say("trash.title")}</span>
         <p className="v8-muted">{say("trash.sub")}</p>
       </header>
+
+      {read.phase === "noViewer" && (
+        <p className="v8-muted" data-testid="trash-no-viewer" role="status">
+          {say("trash.noViewer")}
+        </p>
+      )}
 
       {read.phase === "loading" && (
         <p className="v8-muted" data-testid="trash-loading">
@@ -183,15 +216,33 @@ export function JourneyTrashPanel() {
                       })
                     : say("trash.deletedAtMissing")}
                 </span>
-                <button
-                  type="button"
-                  className="v8-quiet-button cn-trash-action"
-                  data-testid="trash-bring-back"
-                  disabled={busyId === row.id}
-                  onClick={() => void bringBack(row)}
-                >
-                  {busyId === row.id ? say("trash.busy") : say("trash.action")}
-                </button>
+                {/* ORD-0531: whose trip, and whether this seat may take it back -- both read out of
+                    the row, both said in words. A row the server did not clear is rendered without an
+                    action rather than with a button that would be refused. */}
+                <span className="cn-trash-row-owner" data-testid="trash-row-owner">
+                  {binOwnership(row) === "OWNED_BY_THIS_TRAVELER"
+                    ? say("trash.rowOwnedByMe")
+                    : binOwnership(row) === "OWNED_BY_ANOTHER_TRAVELER"
+                      ? say("trash.rowOwnedByOther")
+                      : binOwnership(row) === "NOT_STATED"
+                        ? say("trash.rowNotStated")
+                        : say("trash.rowOwnershipMissing")}
+                </span>
+                {binMayRestore(row) ? (
+                  <button
+                    type="button"
+                    className="v8-quiet-button cn-trash-action"
+                    data-testid="trash-bring-back"
+                    disabled={busyId === row.id}
+                    onClick={() => void bringBack(row)}
+                  >
+                    {busyId === row.id ? say("trash.busy") : say("trash.action")}
+                  </button>
+                ) : (
+                  <p className="v8-muted" data-testid="trash-row-readonly-reason">
+                    {say(recoveryReasonKey(row) ?? "trash.recoveryMissing")}
+                  </p>
+                )}
               </li>
             ))}
           </ul>
