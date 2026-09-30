@@ -1,0 +1,225 @@
+{
+ "order": "ORD-0361",
+ "instrument": "tap_probe_r1",
+ "base_url": "http://localhost:4491",
+ "locale": "zh-CN",
+ "route": "/v8/map",
+ "entry_button_used": "使用封存的演示行程",
+ "markers_total": 6,
+ "markers_that_are_controls": 6,
+ "markers_with_aria_pressed": 6,
+ "marker_min_box": 0,
+ "before": {
+  "selected_stop": null,
+  "selected_stop_count": 0,
+  "facts_heading": "Nexus River Cruise Pier",
+  "markers": [
+   {
+    "text": "1",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Old Town Gate",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   },
+   {
+    "text": "2",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Riverside Museum",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   },
+   {
+    "text": "3",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Central Food Hall",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   },
+   {
+    "text": "4",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Tech Art Center",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   },
+   {
+    "text": "5",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Nexus River Cruise Pier",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   },
+   {
+    "text": "6",
+    "role": "button",
+    "tabindex": "0",
+    "aria_label": "Skyline Dinner House",
+    "aria_pressed": "false",
+    "box": {
+     "w": 34,
+     "h": 34
+    }
+   }
+  ],
+  "storage": {
+   "citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222",
+   "citynexus.v8.trial_draft": "{\"step\":1,\"draft\":{\"cityName\":\"\",\"countryCode\":\"CN\",\"timezon",
+   "citynexus.locale": "zh-CN",
+   "citynexus.copilot.history.22222222-2222-4222-8222-222222222222": "[]"
+  }
+ },
+ "tap": {
+  "attempted": true,
+  "marker_label": "3",
+  "marker_aria_label_tapped": "Central Food Hall",
+  "selected_stop_before": null,
+  "selected_stop_after": "图上选中的这一站 · Central Food Hall",
+  "heading_before": "Nexus River Cruise Pier",
+  "heading_after": "已选中 · Central Food Hall",
+  "pressed_before": [
+   "false",
+   "false",
+   "false",
+   "false",
+   "false",
+   "false"
+  ],
+  "pressed_after": [
+   "false",
+   "false",
+   "true",
+   "false",
+   "false",
+   "false"
+  ],
+  "name_changed": true,
+  "heading_changed": true,
+  "after": {
+   "selected_stop": "图上选中的这一站 · Central Food Hall",
+   "selected_stop_count": 1,
+   "facts_heading": "已选中 · Central Food Hall",
+   "markers": [
+    {
+     "text": "1",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Old Town Gate",
+     "aria_pressed": "false",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    },
+    {
+     "text": "2",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Riverside Museum",
+     "aria_pressed": "false",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    },
+    {
+     "text": "3",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Central Food Hall",
+     "aria_pressed": "true",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    },
+    {
+     "text": "4",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Tech Art Center",
+     "aria_pressed": "false",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    },
+    {
+     "text": "5",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Nexus River Cruise Pier",
+     "aria_pressed": "false",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    },
+    {
+     "text": "6",
+     "role": "button",
+     "tabindex": "0",
+     "aria_label": "Skyline Dinner House",
+     "aria_pressed": "false",
+     "box": {
+      "w": 34,
+      "h": 34
+     }
+    }
+   ],
+   "storage": {
+    "citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222",
+    "citynexus.v8.trial_draft": "{\"step\":1,\"draft\":{\"cityName\":\"\",\"countryCode\":\"CN\",\"timezon",
+    "citynexus.locale": "zh-CN",
+    "citynexus.copilot.history.22222222-2222-4222-8222-222222222222": "[]"
+   }
+  },
+  "keyboard": {
+   "attempted": true,
+   "marker_label": "1",
+   "active_element_after_focus": "v9-map-marker maplibregl-marker maplibregl-marker-anchor-center|1",
+   "selected_stop_after_enter": "图上选中的这一站 · Old Town Gate",
+   "changed_by_enter": true
+  },
+  "reload": {
+   "selected_stop_after_reload": null,
+   "heading_after_reload": "Nexus River Cruise Pier",
+   "pressed_after_reload": [
+    "false",
+    "false",
+    "false",
+    "false",
+    "false",
+    "false"
+   ],
+   "storage_after_reload": {
+    "citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222",
+    "citynexus.v8.trial_draft": "{\"step\":1,\"draft\":{\"cityName\":\"\",\"countryCode\":\"CN\",\"timezon",
+    "citynexus.locale": "zh-CN",
+    "citynexus.copilot.history.22222222-2222-4222-8222-222222222222": "[]"
+   },
+   "pick_survived_reload": false
+  }
+ },
+ "console_errors": [],
+ "screenshot": "D:/moodle/_qoder_lane_S4_0926/work/ord0361/tap_probe_tip_r1.png"
+}
