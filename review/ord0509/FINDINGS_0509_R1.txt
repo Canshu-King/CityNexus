@@ -1,8 +1,9 @@
 ORD-0509 -- the five new surfaces read under both schemes with the project's own ruler; one 档位
 moved because the readings said to move it, and the readings taken before and after are both here.
 
-Lane 2d2d7428, 2026-09-30 18:43 +08. Branch tip d4fe391d7facebc8dd290f259d108f7134d8c1e3, born from the live tip c482f179745a8883aca166dfebd020c6726b421e (read with ls-remote; 2 commits).
-   Both snapshots come from the authoritative e2e mode of THIS checkout: own backend port, own vite dev server, a run-stamped private sqlite, external AI off. No vite build was produced and no export tree was created, as the order required: D: holds 2.35 GB free now, and what this order wrote into the tree is 11 JSON receipts plus this artifact.
+Lane 2d2d7428, 2026-09-30 19:56 +08. measurement-base: 9dea5cafb43009dc6e6ba03c339560bc4224008a
+   Branch tip b3a898758ea60293493857c3917ed26bf2c4f9e7, born from that commit (the fork, from git merge-base); the authoritative tip read live while this artifact was rendered was 0dd0692888f51edb6b9ffeb8d43a98455ebd21da (3 commits on the base).
+   Both snapshots come from the authoritative e2e mode of THIS checkout: own backend port, own vite dev server, a run-stamped private sqlite, external AI off. No vite build was produced and no export tree was created, as the order required: D: holds 2.33 GB free now, and what this order wrote into the tree is 11 JSON receipts plus this artifact.
 
 0. THE RULER, AND THE ARM IT DID NOT HAVE
    frontend/e2e/_qoderContrastScan.ts judges four things today: text contrast (4.5:1, 3.0:1 for
