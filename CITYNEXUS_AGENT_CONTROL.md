@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:07 · 最新尖上我自己跑的五个模块（69 绿 3 红，红仍是 ORD-0495 那三枚）+ 收藏入口挂在每一站上这一格的结构读数
+
+**〇、口径**
+
+尖 = `1e95d106f81b29048ba17695fd0e49172516b9b1`（ORD-0510 收藏入口落地后）。树 = `git archive` 导出 `_verify_http_1e95d106…`。解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（CPython 3.12.14），cwd 在导出树 `backend/`，`PYTHONPATH=backend;<树根>`，provider 变量剥掉，`-p no:randomly`。
+
+**一、五个模块一次跑（我自己跑的，不是转抄车道件）**
+
+命令：`python -m pytest tests/test_qoder_ord0444_collections.py tests/test_qoder_ord0490_shared_after_restore.py tests/test_qoder_ord0495_gitshow_portable.py tests/test_qoder_ord0496_calendar_export.py tests/test_qoder_ord0503_member_doors.py -p no:randomly -q --tb=line -rf --no-header`
+
+结果：`3 failed, 69 passed`。三枚红全在 ORD-0495 那一族（`test_G01_a_real_repository_still_yields_the_source`、`test_G05_no_state_is_silently_green`、`test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo`，判据行 `backend/tests/test_qoder_ord0495_gitshow_portable.py:59`）——与我 19:27 那块在上一代量到的一致，车道 r3 还没交。
+
+单独跑 ORD-0503 那一枚文件（`tests/test_qoder_ord0503_member_doors.py`）：`22 passed`。
+
+**二、收藏入口这一格的结构读数（我自己读源码 + 上屏）**
+
+- ORD-0510 的组件是 `frontend/src/features/collections/CollectInto.tsx`，可见节点：`collect-into`、`collect-entry`、`collect-picker`、以及三种具名状态 `collect-no-place-id`、`collect-no-traveler`、`collect-list-failure`。
+- 它挂在**每一站**上：`frontend/src/features/trip/TripItinerary.tsx:403`。所以当这趟行程没有排程时（`trip-itinerary-empty`），这一格**没有分母**——不是它坏了，是它还没被挂上。
+- 结论：ORD-0510 的屏上验收与长图/地图那几格卡在同一条供给死局上（ORD-0526 在解）。我把它记成结构事实，不记成缺陷。
+
+**三、没改善的部分**
+
+1. 长图/地图/日历/足迹/收藏入口五格的屏读都要等供给（ORD-0526 登记源、ORD-0521 非破坏供给）。
+2. 手机五格探针未跑（同因）。
+3. 成员屏空转（ORD-0527 在跑）。
+4. ORD-0495 三枚臂在导出树里仍红（本块第一节）。
+5. 我这台线的验证栈现为四处（`:4781`、`:4783`、`:4785`，另有两棵导出树），收工按名单回收；桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:04 · 死局的构造性根因：唯一播种路径的第一行就是抹除；且夹具城市号与补水门数的号不是同一个
 
 **〇、口径**
