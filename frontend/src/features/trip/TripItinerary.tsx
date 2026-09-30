@@ -9,8 +9,10 @@
  * (design corrections §8).  Missing data is shown as missing.
  */
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { readCheckins, stampStop } from "../checkin/checkins";
+import "../checkin/footprint.css";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
 import {
   dayOfGapCopy,
@@ -118,10 +120,52 @@ export function TripItinerary({
   onOpenCopilot: () => void;
   onOpenActivity: (activityId: string) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const plan = data.active_plan;
   const tz = data.journey.timezone || "UTC";
+
+  /* ORD-0476 slice 2: which stops already carry a footprint, read from the server rather than
+     remembered from a tap. The map is keyed by the door's own `target_key`, and every entry in it
+     came out of `GET /api/v1/journeys/{id}/checkins` -- a stop never shows 已打卡 because a button was
+     pressed, only because the read returned that row. */
+  const journeyId = data.journey.id;
+  const [stamped, setStamped] = useState<Record<string, string>>({});
+  const [pendingStop, setPendingStop] = useState<string | null>(null);
+  const [stopNotice, setStopNotice] = useState<string | null>(null);
+
+  const reloadStamps = useCallback(async () => {
+    const answer = await readCheckins(journeyId);
+    if (answer.kind !== "read") return;
+    const next: Record<string, string> = {};
+    for (const stamp of answer.stamps) next[stamp.target_key] = stamp.id;
+    setStamped(next);
+  }, [journeyId]);
+
+  useEffect(() => {
+    void reloadStamps();
+  }, [reloadStamps]);
+
+  const stampThisStop = async (activityId: string) => {
+    setPendingStop(activityId);
+    setStopNotice(null);
+    const answer = await stampStop(journeyId, activityId);
+    if (answer.kind === "stamped") {
+      setStamped((current) => ({ ...current, [answer.stamp.target_key]: answer.stamp.id }));
+      // Read back rather than trusting the 201's own body for what the trip now holds.
+      await reloadStamps();
+    } else if (answer.kind === "refused" && answer.refusal === "CHECKIN_DUPLICATE_STAMP") {
+      /* The server's answer, taken as the fact it is: a stamp is already on file for this stop, so
+         the row is re-read and shown instead of being overwritten -- and the sentence is this
+         screen's own dictionary words, because a reason code or the server's message on a Chinese
+         screen is the defect this project keeps having to fix. */
+      setStopNotice(t("checkin.duplicate"));
+      await reloadStamps();
+    } else {
+      setStopNotice(t("checkin.refused"));
+    }
+    setPendingStop(null);
+  };
 
   const days = useMemo<DayGroup[]>(
     () => groupActivitiesByDay(plan?.activities ?? [], tz, locale),
@@ -311,7 +355,40 @@ export function TripItinerary({
                       <span className="trip-stop-more" aria-hidden="true">
                         {zh ? "详情 ›" : "Details ›"}
                       </span>
+                      {/* ORD-0476 slice 2: the tap that makes a footprint. It stops propagation
+                          because the row around it is itself a button (「查看详情」), and a control
+                          whose click is swallowed by its own row is not an entry a traveller reaches.
+                          Its state -- 打卡 or 已打卡 -- comes from the read above, not from local
+                          optimism. */}
+                      <button
+                        type="button"
+                        className="cn-stop-checkin"
+                        data-testid="stop-checkin"
+                        data-state={
+                          stamped[`activity:${activity.id}`] ? "stamped" : "fresh"
+                        }
+                        disabled={pendingStop === activity.id}
+                        aria-label={t(
+                          stamped[`activity:${activity.id}`]
+                            ? "checkin.doneAria"
+                            : "checkin.buttonAria",
+                          { stop: activity.title },
+                        )}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void stampThisStop(activity.id);
+                        }}
+                      >
+                        {stamped[`activity:${activity.id}`]
+                          ? t("checkin.done")
+                          : t("checkin.button")}
+                      </button>
                     </div>
+                    {stopNotice ? (
+                      <p className="cn-stop-checkin__notice" data-testid="stop-checkin-notice">
+                        {stopNotice}
+                      </p>
+                    ) : null}
                   </div>
                 </article>
               );
