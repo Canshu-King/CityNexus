@@ -58,6 +58,7 @@ from app.schemas import CollectionItem as CollectionItemSchema
 from app.schemas import Constraint as ConstraintSchema
 from app.schemas import Journey as JourneySchema
 from app.schemas import JourneyCheckin as JourneyCheckinSchema
+from app.schemas import JourneyLiveView
 from app.schemas import Money, ScoreBreakdown
 from app.schemas import Place as PlaceSchema
 from app.schemas import PlanVersion as PlanSchema
@@ -406,6 +407,22 @@ def preference_schema(item: Preference) -> PreferenceSchema:
     )
 
 
+def journey_live_view(item: Journey) -> JourneyLiveView:
+    """One computation, one place: whether this trip belongs on 实时行程 (ORD-0520).
+
+    The rule is the durable `status`, and only a trip the traveller called off is excluded.  It is
+    written here rather than in a screen because the order asks for the judgement from the server:
+    a device that re-derived it would hold a second copy of the rule, and the two would disagree
+    the first time the rule grows a case the client has not heard of.  A trip in the recycle bin is
+    not decided here -- `listJourneys` already refuses to list it, and the bin has its own column,
+    its own door and its own word (`backend/app/schemas.py` -- `RecycleBinJourney`).
+    """
+
+    if item.status == "CANCELLED":
+        return JourneyLiveView(included=False, reason_code="JOURNEY_ABORTED")
+    return JourneyLiveView(included=True)
+
+
 def journey_schema(item: Journey) -> JourneySchema:
     return JourneySchema(
         id=item.id,
@@ -420,6 +437,9 @@ def journey_schema(item: Journey) -> JourneySchema:
         status=item.status,
         active_plan_version_id=item.active_plan_version_id,
         current_activity_id=item.current_activity_id,
+        aborted_at=parse_dt(item.aborted_at) if item.aborted_at else None,
+        abort_reason=item.abort_reason,
+        live_view=journey_live_view(item),
     )
 
 

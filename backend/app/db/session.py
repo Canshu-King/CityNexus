@@ -628,6 +628,13 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
             # inventing a deletion moment for it.
             if "deleted_at" not in journey_columns:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN deleted_at TEXT")
+            # ORD-0520 中止: same additive rule as `deleted_at` above.  A trip that was never
+            # aborted has no moment and gave no reason, so both stay NULL instead of taking a
+            # DEFAULT that would put words in a traveller's mouth.
+            if "aborted_at" not in journey_columns:
+                connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN aborted_at TEXT")
+            if "abort_reason" not in journey_columns:
+                connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN abort_reason TEXT")
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.

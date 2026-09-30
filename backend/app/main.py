@@ -401,6 +401,9 @@ from app.schemas import (
     Journey as JourneySchema,
 )
 from app.schemas import (
+    JourneyAbort,
+)
+from app.schemas import (
     JourneyTwin as JourneyTwinSchema,
 )
 from app.schemas import (
@@ -457,6 +460,7 @@ from app.services import (
     collection_item_schema,
     constraint_schema,
     generate_plans,
+    journey_live_view,
     journey_schema,
     parse_dt,
     place_schema,
@@ -3165,6 +3169,219 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(session.get(Journey, str(journey_id)))
 
 
+#: How often the 中止 door re-reads before it admits that another writer keeps winning this row.
+#: Same rule as `_UNDELETE_WRITE_ATTEMPTS`: it is not a wait budget and it sets no clock, because
+#: the lock wait has exactly one home (`app/db/write_deadline.py`).  A lost attempt costs one
+#: SELECT and one UPDATE that matched nothing.
+_ABORT_WRITE_ATTEMPTS = 3
+
+
+def _abort_refusal(status: int, message: str, reason_code: str, details: dict) -> HTTPException:
+    """One shape for every refusal this door makes: the status picks the generic code, the name
+    rides in `error.reason_code` (`_share_refusal` above is the same rule for the grant doors)."""
+
+    refused = HTTPException(status, message)
+    refused.reason_code = reason_code
+    refused.error_details = details
+    return refused
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/abort",
+    response_model=JourneySchema,
+    # ORD-0395: a status this decorator does not name never reaches the generated document, and the
+    # parity door compares path x method, so an undeclared refusal is a silent agreement between two
+    # documents that disagree.  Every class this function can answer is named here.
+    responses={
+        403: {
+            "description": "error.reason_code = ABORT_ACTOR_NOT_OWNER - the actor named on this "
+            "request is not the traveller the row belongs to, so it carries no authority over it"
+        },
+        404: {
+            "description": "error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND"
+        },
+        409: {
+            "description": "error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_ABORTED "
+            "/ ABORT_JOURNEY_IN_RECYCLE_BIN / ABORT_WRITE_CONTESTED"
+        },
+    },
+)
+def abort_journey(
+    journey_id: UUID, payload: JourneyAbort, session: Session = Depends(get_session)
+):
+    """ORD-0520 中止: the trip is called off, with the traveller's reason stored on the row.
+
+    `journeys.status` gains `CANCELLED`, the one word the closed CHECK in `backend/db/schema.sql`
+    already held and that no door on this tree wrote before this order (the writers that exist put
+    PLANNED / ACTIVE / COMPLETED there).  `aborted_at` and `abort_reason` are written in the same
+    UPDATE as the status, so a row cannot be aborted with no reason attached: the reason is what the
+    traveller typed, kept as given, and it is read back by `getJourney`, `listJourneys` and
+    `getJourneyExperience` rather than living only on the screen that asked for it.
+
+    **中止 is not 丢弃.** Nothing here touches `deleted_at`, so the trip stays in
+    `GET /api/v1/journeys` -- a list door that hid an aborted trip would be a recycle bin by another
+    name, and the bin's doors (`deleteJourney`, `undeleteJourney`) answer with their own refusals.
+    What an aborted trip loses is its place on 实时行程, and that judgement is not left to the
+    device: every journey this server answers with carries `live_view` = {included, reason_code},
+    computed in one function (`app/services.py` -- `journey_live_view`) from the same durable status
+    this door writes.  A screen that filtered `status != "CANCELLED"` itself would hold a second
+    copy of that rule.
+
+    Four refusals, each with its own name, because each is a different fact a screen has to say
+    differently: `JOURNEY_NOT_FOUND` (404, no such row), `ABORT_ACTOR_NOT_OWNER` (403, the row is
+    somebody else's), `ABORT_JOURNEY_IN_RECYCLE_BIN` (409, the owner has already dropped it -- the
+    `<feature>_JOURNEY_IN_RECYCLE_BIN` shape the check-in, calendar and share-grant doors use), and
+    `JOURNEY_ALREADY_ABORTED` (409, and the body repeats the moment and reason that are already
+    stored instead of overwriting them with this tap's).  A fifth, `ABORT_WRITE_CONTESTED`, is the
+    honest answer when a tap loses the row three times over to a writer that neither aborted it nor
+    binned it; no single screen tap reaches it, and it must never be dressed up as a success.
+
+    `updated_at` is not written, for the same reason 找回 left it alone: `aborted_at` is the
+    authority for this moment, and a second timestamp for the same instant hands a reader two.
+    No `Idempotency-Key` either -- whether the write happens is decided by durable state, so a
+    replayed tap lands on `JOURNEY_ALREADY_ABORTED` rather than pretending to be a second success.
+    The conditional UPDATE carries the status and the empty `aborted_at` this tap read, so the
+    database, not this process's view of an ORM object, decides who wrote the row.
+
+    What this door does *not* decide is recorded in the contract: an `actor_traveler_id` is a
+    declared identity, the same kind the member doors take, and binding a caller to a name is the
+    daylight authentication decision this order leaves open.  Cancelling an aborted trip is not
+    undoing it -- this server has no un-abort door, so no copy on any screen may promise one; the
+    words for getting a trip back belong to the bin (找回 / 还原), and 恢复 stays autonomous recovery.
+    """
+
+    for _ in range(_ABORT_WRITE_ATTEMPTS):
+        journey = session.get(Journey, str(journey_id))
+        if journey is None:
+            raise _abort_refusal(
+                404,
+                f"Journey {journey_id} was not found",
+                "JOURNEY_NOT_FOUND",
+                {"journey_id": str(journey_id)},
+            )
+        if journey.traveler_id != str(payload.actor_traveler_id):
+            raise _abort_refusal(
+                403,
+                "The actor named on this request is not the traveller that journey belongs to.",
+                "ABORT_ACTOR_NOT_OWNER",
+                {
+                    "field": "actor_traveler_id",
+                    "journey_id": str(journey_id),
+                    "journey_traveler_id": journey.traveler_id,
+                },
+            )
+        if journey.deleted_at is not None:
+            raise _abort_refusal(
+                409,
+                f"Journey {journey_id} is in the recycle bin; 中止 is not 丢弃.",
+                "ABORT_JOURNEY_IN_RECYCLE_BIN",
+                {
+                    "journey_id": str(journey_id),
+                    "deleted_at": journey.deleted_at,
+                    "abort_state": "NOT_WRITTEN",
+                },
+            )
+        if journey.status == "CANCELLED":
+            raise _abort_refusal(
+                409,
+                f"Journey {journey_id} was already aborted.",
+                "JOURNEY_ALREADY_ABORTED",
+                {
+                    "journey_id": str(journey_id),
+                    "aborted_at": journey.aborted_at,
+                    "abort_reason": journey.abort_reason,
+                },
+            )
+        seen_status = journey.status
+        seen_aborted_at = journey.aborted_at
+        moment = datetime.now(timezone.utc).isoformat()
+        # 抢不到就不写: the predicate holds what this tap read, so a tap that raced another one
+        # loses on `rowcount` instead of writing over the winner's reason with its own.
+        written = session.execute(
+            update(Journey)
+            .where(
+                Journey.id == str(journey_id),
+                Journey.status == seen_status,
+                Journey.aborted_at == seen_aborted_at,
+            )
+            .values(
+                status="CANCELLED",
+                aborted_at=moment,
+                abort_reason=payload.reason,
+            )
+            .execution_options(synchronize_session=False)
+        ).rowcount
+        if written == 1:
+            break
+        session.rollback()
+    else:
+        current = session.get(Journey, str(journey_id))
+        if current is None:
+            raise _abort_refusal(
+                404,
+                f"Journey {journey_id} was not found",
+                "JOURNEY_NOT_FOUND",
+                {"journey_id": str(journey_id)},
+            )
+        if current.status == "CANCELLED":
+            raise _abort_refusal(
+                409,
+                f"Journey {journey_id} was already aborted.",
+                "JOURNEY_ALREADY_ABORTED",
+                {
+                    "journey_id": str(journey_id),
+                    "aborted_at": current.aborted_at,
+                    "abort_reason": current.abort_reason,
+                },
+            )
+        if current.deleted_at is not None:
+            raise _abort_refusal(
+                409,
+                f"Journey {journey_id} is in the recycle bin; 中止 is not 丢弃.",
+                "ABORT_JOURNEY_IN_RECYCLE_BIN",
+                {
+                    "journey_id": str(journey_id),
+                    "deleted_at": current.deleted_at,
+                    "abort_state": "NOT_WRITTEN",
+                },
+            )
+        raise _abort_refusal(
+            409,
+            f"Journey {journey_id} changed while this attempt was running, so nothing was written.",
+            "ABORT_WRITE_CONTESTED",
+            {
+                "journey_id": str(journey_id),
+                "status_seen": seen_status,
+                "status_now": current.status,
+                "attempts": _ABORT_WRITE_ATTEMPTS,
+            },
+        )
+
+    before = {"status": seen_status, "aborted_at": seen_aborted_at, "abort_reason": None}
+    session.commit()
+    record_audit(
+        session,
+        action="journey.aborted",
+        entity_type="Journey",
+        entity_id=str(journey_id),
+        journey_id=str(journey_id),
+        before=before,
+        after={"status": "CANCELLED", "aborted_at": moment, "abort_reason": payload.reason},
+        actor_type="traveler",
+        actor_id=str(payload.actor_traveler_id),
+    )
+    session.commit()
+    # The answer must be the row, not this process's memory of it.  `SessionLocal` runs with
+    # `expire_on_commit=False` (`app/db/session.py`), and the write above is a conditional UPDATE
+    # with `synchronize_session=False`, so nothing puts the new columns back on the loaded object:
+    # without this refresh a successful tap would answer 200 with the status and the reason it had
+    # *before* the write, and `abort_reason: null` would be the first lie on the screen.  Measured,
+    # not assumed -- the arm in `backend/tests/test_qoder_ord0520_journey_abort.py` that reads
+    # `body["status"]` was red against the un-refreshed version.
+    session.refresh(journey)
+    return journey_schema(journey)
+
+
 @app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
 def list_recycle_bin_journeys(session: Session = Depends(get_session)):
     """ORD-0402 slice 1: the trips that are in the recycle bin, each with its own deletion moment.
@@ -4872,6 +5089,15 @@ def get_journey_experience(journey_id: UUID, session: Session = Depends(get_sess
     flags["acknowledged"] = bool(recovery and recovery.get("acknowledged"))
     flags["recovery_state"] = recovery.get("state") if recovery else None
     payload["experience_flags"] = flags
+    # ORD-0520: 实时行程 reads through this door, so the "is this trip still live" judgement is
+    # answered here rather than derived on the device.  It goes through the one function that
+    # decides it (`app/services.py` -- `journey_live_view`), which `listJourneys` and `getJourney`
+    # already use through `journey_schema`, so the same row cannot be live in one payload and not
+    # live in another.  The two stored facts travel with it because the screen has to say why, in
+    # the traveller's own words, and not merely that the panel is empty.
+    payload["journey"]["aborted_at"] = journey.aborted_at
+    payload["journey"]["abort_reason"] = journey.abort_reason
+    payload["journey"]["live_view"] = journey_live_view(journey).model_dump()
     return payload
 
 

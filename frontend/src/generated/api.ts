@@ -430,6 +430,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description ORD-0520 中止: writes `journeys.status` = CANCELLED together with the traveller's own reason (`abort_reason`) and the server's moment (`aborted_at`), in one conditional UPDATE whose predicate carries the status and the empty `aborted_at` this tap read, so the store - not this process - decides who wrote the row.  `CANCELLED` is a word the store's CHECK already held; no door on this server wrote it before this one, so nothing that today reads a CANCELLED trip has to be re-audited for a new meaning.
+         *     中止 is not 丢弃.  This door does not touch `journeys.deleted_at`, so the trip stays in `listJourneys` and stays out of `/recycle-bin/journeys`; the bin's two doors (`deleteJourney`, `undeleteJourney`) keep their own verbs and their own refusals, and this order mints no word that they already own - 找回 and 还原 are the bin's and the plan-version screen's, and 恢复 stays autonomous recovery.
+         *     What an aborted trip loses is its place on 实时行程, and that judgement is this server's, not the device's: every journey answered here carries `live_view` = {included, reason_code}, computed by one function from the same durable status, and `getJourney`, `listJourneys` and `getJourneyExperience` answer it for the same row through that one function.
+         *     `reason` is required and is stored as given - an empty sentence is refused (422) rather than written, because a trip that is over "for no reason" would leave the screen inventing one. `actor_traveler_id` is the traveller this request speaks for and is compared against the row's own `traveler_id`; it is a declared identity, the same kind the member doors take, and binding a caller to a name is the authentication decision this order leaves open.  There is no `Idempotency-Key`: the durable status decides, so a replayed tap is refused as `JOURNEY_ALREADY_ABORTED` and quotes the moment and reason already stored instead of overwriting them.  Nothing here un-aborts a trip - this server has no such door, so no screen may promise one, and the words for getting a trip back belong to the bin.
+         */
+        post: operations["abortJourney"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}/recycle-bin/journeys": {
         parameters: {
             query?: never;
@@ -3066,6 +3090,18 @@ export interface components {
             end_at?: string;
             budget?: components["schemas"]["Money"];
         };
+        /** @description ORD-0520: what the traveller says when they call their own trip off.  `reason` is kept as given and stored on the row, so a later screen reads the traveller's sentence rather than inventing one; `actor_traveler_id` is the declared identity the door compares against `journeys.traveler_id`. */
+        JourneyAbort: {
+            reason: string;
+            /** Format: uuid */
+            actor_traveler_id: string;
+        };
+        /** @description The server's own answer to "does this trip belong on 实时行程" (ORD-0520).  Shipped as a field rather than left to the device because a screen that filtered the status itself would hold a second copy of the rule, and the two would disagree the first time the rule grows a case the client has not heard of.  `reason_code` is the same token the abort door answers with, and is null when nothing excludes the trip. */
+        JourneyLiveView: {
+            included: boolean;
+            /** @enum {string|null} */
+            reason_code?: "JOURNEY_ABORTED" | null;
+        };
         Journey: {
             /** Format: uuid */
             id: string;
@@ -3086,6 +3122,10 @@ export interface components {
             active_plan_version_id?: string | null;
             /** Format: uuid */
             current_activity_id?: string | null;
+            /** Format: date-time */
+            aborted_at?: string | null;
+            abort_reason?: string | null;
+            live_view: components["schemas"]["JourneyLiveView"];
         };
         /** @description ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a screen never reconstructs "it was deleted" from absence in another list. */
         RecycleBinJourney: components["schemas"]["Journey"] & {
@@ -4735,6 +4775,59 @@ export interface operations {
                 };
             };
             /** @description error.code = CONFLICT with error.reason_code = JOURNEY_NOT_DELETED - the row was never in the bin, so nothing was written */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    abortJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyAbort"];
+            };
+        };
+        responses: {
+            /** @description The trip as the store now holds it: status CANCELLED, the reason, the moment, and `live_view.included` = false */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description error.reason_code = ABORT_ACTOR_NOT_OWNER - the actor named on this request is not the traveller the row belongs to, so it carries no authority over it.  Nothing was written, and the row keeps the status and the empty abort columns it had. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_ABORTED (the trip is already off, and `details` repeats the stored `aborted_at` and `abort_reason` rather than replacing them) / ABORT_JOURNEY_IN_RECYCLE_BIN (the owner dropped the whole trip in the bin; 中止 is not 丢弃, so it is refused here and the trip aborts once 找回 puts it back) / ABORT_WRITE_CONTESTED (another writer held this row through all three attempts and did neither of those things, so nothing was written and this tap says so) */
             409: {
                 headers: {
                     [name: string]: unknown;
