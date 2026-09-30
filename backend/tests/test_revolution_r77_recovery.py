@@ -302,6 +302,142 @@ def test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phase
         assert Client.instances[0].closed is True
 
 
+def test_bound_official_facts_supersede_known_map_tags(monkeypatch):
+    from app import fact_acquisition
+
+    ensure_schema()
+    city = f"R77-OFFICIAL-PRIORITY-{uuid4().hex}"
+    place_id = f"r77-place-{uuid4().hex}"
+    provider_entity = "overpass:way/44679452"
+    source_url = "https://official.example/master-of-nets"
+    with SessionLocal() as session:
+        place = Place(
+            id=place_id,
+            provider_key="overpass",
+            external_id=provider_entity,
+            city_code=city,
+            name="网师园",
+            category="attraction",
+            latitude=31.3004105,
+            longitude=120.6297906,
+            opening_hours_json=json.dumps(
+                {"status": "NORMALIZED_VALID", "raw": "Mo-Su 07:30-17:00", "close": "17:00"}
+            ),
+            tags_json="[]",
+            metadata_json=json.dumps(
+                {
+                    "cost_evidence": {
+                        "status": "KNOWN",
+                        "amount_minor": 3000,
+                        "currency": "CNY",
+                        "source": "overpass",
+                    },
+                    "cost_minor": 3000,
+                    "price_known": True,
+                    "fact_source_binding": {
+                        "provider_entity": provider_entity,
+                        "source_url": source_url,
+                        "source_class": "MUNICIPAL_AUTHORITY",
+                        "identity_basis": {
+                            "matched_provider_entity": True,
+                            "provider_entity": provider_entity,
+                        },
+                        "approval": "OPERATOR_VERIFIED",
+                    },
+                }
+            ),
+            updated_at="2026-09-30T00:00:00+00:00",
+        )
+        session.add(place)
+        session.commit()
+
+        monkeypatch.setattr(
+            fact_acquisition,
+            "_acquire_overpass_payload",
+            lambda *_args, **_kwargs: (
+                {
+                    "elements": [
+                        {
+                            "type": "way",
+                            "id": "44679452",
+                            "tags": {
+                                "fee": "30 CNY",
+                                "opening_hours": "Mo-Su 07:30-17:00",
+                            },
+                        }
+                    ]
+                },
+                "https://overpass.example/api",
+                [],
+            ),
+        )
+        monkeypatch.setattr(
+            fact_acquisition,
+            "_nominatim_lookup",
+            lambda *_args, **_kwargs: (
+                {("way", "44679452"): {"osm_type": "way", "osm_id": 44679452, "extratags": {}}},
+                "https://nominatim.example/lookup",
+            ),
+        )
+        monkeypatch.setattr(
+            fact_acquisition,
+            "_official_web_facts",
+            lambda *_args, **kwargs: {
+                "provider": "official_web",
+                "source": source_url,
+                "status": "ACQUIRED",
+                "source_binding": kwargs.get("source_binding"),
+                "opening_hours": {
+                    "status": "OFFICIAL_WEB_VERIFIED",
+                    "source": "official_web",
+                    "source_url": source_url,
+                    "raw": "07:30-17:30",
+                    "open": "07:30",
+                    "close": "17:30",
+                    "intervals": [{"open": "07:30", "close": "17:30", "days": ["*"]}],
+                },
+                "cost_evidence": {
+                    "status": "VERIFIED_PROVIDER",
+                    "amount_minor": 4000,
+                    "currency": "CNY",
+                    "source": "official_web",
+                    "source_url": source_url,
+                },
+            },
+        )
+        monkeypatch.setattr(
+            fact_acquisition,
+            "_search_fact_candidates",
+            lambda *_args, **_kwargs: {
+                "provider": "searxng",
+                "status": "UNCONFIGURED",
+                "attempted": False,
+                "observations": [],
+                "opening_hours": {"status": "UNKNOWN", "intervals": []},
+                "cost_evidence": {"status": "UNKNOWN", "amount_minor": None},
+            },
+        )
+
+        receipt = acquire_place_facts(
+            session,
+            SimpleNamespace(id=f"journey-{uuid4().hex}", city_code=city, start_at="2026-10-04T09:00:00+08:00"),
+            place_ids=[place_id],
+        )
+        session.commit()
+
+        refreshed = session.get(Place, place_id)
+        metadata = json.loads(refreshed.metadata_json)
+        row = receipt["places"][0]
+        assert receipt["official_web"]["acquired"] == 1
+        assert row["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+        assert row["opening_hours"]["close"] == "17:30"
+        assert row["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+        assert row["cost_evidence"]["amount_minor"] == 4000
+        assert json.loads(refreshed.opening_hours_json)["close"] == "17:30"
+        assert metadata["cost_evidence"]["amount_minor"] == 4000
+        assert metadata["cost_minor"] == 4000
+
+
 def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch):
     from app import fact_acquisition
 

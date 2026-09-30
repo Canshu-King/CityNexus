@@ -791,9 +791,19 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                     receipt["official_web"]["status"] = official["status"]
                     if official["status"] == "ACQUIRED":
                         receipt["official_web"]["acquired"] += 1
-                    if opening.get("status") == "UNKNOWN" and official.get("opening_hours", {}).get("status") == "OFFICIAL_WEB_VERIFIED":
+                    # OSM/Nominatim tags are useful discovery evidence, but a fresh,
+                    # operator-bound municipal page is the stronger source for these
+                    # same facts.  Do not promote an arbitrary website tag here.
+                    if (
+                        source_binding
+                        and official.get("opening_hours", {}).get("status") == "OFFICIAL_WEB_VERIFIED"
+                    ):
                         opening = official["opening_hours"]
-                    if cost.get("status") == "UNKNOWN" and official.get("cost_evidence", {}).get("status") == "VERIFIED_PROVIDER":
+                    if (
+                        source_binding
+                        and official.get("cost_evidence", {}).get("status") == "VERIFIED_PROVIDER"
+                        and official.get("cost_evidence", {}).get("amount_minor") is not None
+                    ):
                         cost = official["cost_evidence"]
                 except (httpx.HTTPError, ValueError, AttributeError) as exc:
                     official = {"provider": "official_web", "source": source_url, "retrieved_at": retrieved_at, "status": "UNAVAILABLE", "error": type(exc).__name__}
@@ -818,7 +828,8 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
                 "claims": {"opening_hours": {"status": opening.get("status"), "normalized": opening}, "cost": cost},
             }
-            # The latest observation wins.  Missing facts intentionally reset old positives.
+            # Fresh provider observations reset stale values when data is absent;
+            # operator-bound municipal evidence above supersedes lower-priority map tags.
             place.opening_hours_json = json.dumps(opening, ensure_ascii=False)
             price_known = str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_STATUSES and cost.get("amount_minor") is not None
             metadata["cost_evidence"] = cost
