@@ -80,7 +80,10 @@ async function downloadPoster(page: Page, name: string) {
 }
 
 const statedNumbers = (line: string) => {
-  const m = /([\d,]+)\s*(?:字节|bytes)[,\s]+([\d,]+)\s*[×x]\s*([\d,]+)/.exec(line.replace(/,/g, ""));
+  /* The Chinese line separates with a full-width comma, the English one with an ASCII comma: a
+     pattern that accepts only one of them reads the other as "the screen stated nothing", which is
+     what this arm's first run did. */
+  const m = /([\d,]+)\s*(?:字节|bytes)\s*[,，]?\s*([\d,]+)\s*[×x]\s*([\d,]+)/.exec(line.replace(/,/g, ""));
   if (!m) return null;
   return { bytes: Number(m[1]), width: Number(m[2]), height: Number(m[3]) };
 };
@@ -138,9 +141,27 @@ test("ORD-0501 S1 two days draw two blocks with a drawn seam, and nothing is cli
 test("ORD-0501 C1 stub the stroke away and the same audit must stop seeing the seam", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
   await context.addInitScript(() => {
-    /* The one mutation: no stroking. The gap between blocks stays, so a judge that only measures
-       whitespace would still be green -- this is exactly the arm that shows the difference. */
-    (CanvasRenderingContext2D.prototype as unknown as { stroke: () => void }).stroke = () => undefined;
+    /* The mutation has to be narrow. Stubbing every stroke also erases the two card edges, which
+       is a different picture and not the one under test -- the first run of this arm read zero
+       hairlines for exactly that reason. So: only a path made of straight segments is left
+       unstroked, which is what the day divider is and what a rounded card never is. */
+    const proto = CanvasRenderingContext2D.prototype as unknown as {
+      stroke: () => void;
+      quadraticCurveTo: (...a: number[]) => void;
+      __curved?: boolean;
+    };
+    const realStroke = proto.stroke;
+    const realCurve = proto.quadraticCurveTo;
+    proto.quadraticCurveTo = function (this: CanvasRenderingContext2D, ...a: number[]) {
+      (this as unknown as { __curved?: boolean }).__curved = true;
+      return realCurve.apply(this, a as [number, number, number, number]);
+    };
+    proto.stroke = function (this: CanvasRenderingContext2D) {
+      const curved = (this as unknown as { __curved?: boolean }).__curved === true;
+      (this as unknown as { __curved?: boolean }).__curved = false;
+      if (!curved) return;
+      return realStroke.call(this);
+    };
   });
   const page = await context.newPage();
   await openPoster(page, WRITTEN, "zh-CN");

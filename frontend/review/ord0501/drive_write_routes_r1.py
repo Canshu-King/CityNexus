@@ -14,9 +14,9 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 
-API = "http://127.0.0.1:8760/api/v1"
+API = "http://127.0.0.1:%s/api/v1" % (sys.argv[2] if len(sys.argv) > 2 else "8760")
 JOURNEY = "22222222-2222-4222-8222-222222222222"
-OUT = "D:/moodle/_qoder_e766b154_ord0498_20260930/run/write_route_walk.json"
+OUT = sys.argv[3] if len(sys.argv) > 3 else "D:/moodle/_qoder_e766b154_ord0501_20260930/run/write_route_walk.json"
 MARKER_CITY = "CNX-ORD0472"
 
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
