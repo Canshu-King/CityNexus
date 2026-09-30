@@ -1,0 +1,229 @@
+
+
+[WebServer] INFO:     127.0.0.1:61096 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59924 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+
+Running 5 tests using 1 worker
+
+
+[1/5] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:59938 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:59941 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:59938 - "POST /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59941 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59938 - "POST /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/stay-options/7e745ca4-1ce7-4e2d-930e-1e919b86f7f8/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=d674d295-1790-47ea-99e7-05be48f42448 options=4 chosen=7e745ca4-1ce7-4e2d-930e-1e919b86f7f8 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:50888 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50891 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60381 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60385 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60379 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/plans HTTP/1.1" 200 OK
+
+
+[WebServer] INFO:     127.0.0.1:50892 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50724 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50727 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50726 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60383 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50725 - "GET /api/v1/travelers/b5527e07-7976-40a3-8147-368bc51081bc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62403 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50728 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+
+[2/5] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:109:1 › ORD-0480 zh 390x844 arm=close_button 关闭 really takes the drawer away
+[WebServer] INFO:     127.0.0.1:63973 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63976 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63998 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54151 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54158 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54159 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54153 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52367 - "GET /api/v1/travelers/b5527e07-7976-40a3-8147-368bc51081bc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53374 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54161 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53373 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51287 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54532 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  1) [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:109:1 › ORD-0480 zh 390x844 arm=close_button 关闭 really takes the drawer away 
+
+    Error: close_button: #v8-nav-drawer is still mounted -- that path did not close the drawer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      100 | async function expectClosed(page: Page, arm: string) {
+      101 |   const after = await page.evaluate(witness, SEL);
+    > 102 |   expect(after.drawer_nodes, `${arm}: ${DRAWER} is still mounted -- that path did not close the drawer`).toBe(0);
+          |                                                                                                          ^
+      103 |   expect(after.backdrop_nodes, `${arm}: ${BACKDROP} is still mounted -- the overlay is still eating taps`).toBe(0);
+      104 |   expect(after.ham_expanded, `${arm}: the hamburger still reports aria-expanded=true`).toBe("false");
+      105 |   expect(after.hit_is_ham, `${arm}: the page behind the drawer is not reachable again (centre hit = ${after.hit_at_ham_centre})`).toBe(true);
+        at expectClosed (D:\moodle\_qoder_ai_ord0387_20260928\wt\frontend\e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:102:106)
+        at D:\moodle\_qoder_ai_ord0387_20260928\wt\frontend\e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:119:17
+
+    Error Context: test-results\qoder-bac10f40-ord0480-dra-3c6bc-eally-takes-the-drawer-away-chromium\error-context.md
+
+
+
+[3/5] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:127:1 › ORD-0480 zh 390x844 arm=backdrop a press outside the panel takes it away
+[WebServer] INFO:     127.0.0.1:59435 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59436 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59437 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52442 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52444 - "GET /api/v1/travelers/b5527e07-7976-40a3-8147-368bc51081bc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61387 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61394 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61392 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62048 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52376 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52877 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52443 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63040 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:127:1 › ORD-0480 zh 390x844 arm=backdrop a press outside the panel takes it away
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: backdrop — {"locale":"zh-CN","viewport":{"width":390,"height":844},"ham_box":{"x":17,"y":19,"w":46,"h":27},"press_point":{"x":350,"y":400},"hit_before":"button.v8-drawer-backdrop","entries_before":16,"after":{"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}}
+
+[4/5] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:145:1 › ORD-0480 zh 390x844 arm=escape Escape takes it away
+[WebServer] INFO:     127.0.0.1:52663 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52665 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52666 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62105 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59572 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59574 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62107 - "GET /api/v1/travelers/b5527e07-7976-40a3-8147-368bc51081bc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59573 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64221 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55581 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51854 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55582 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62106 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/twin HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:145:1 › ORD-0480 zh 390x844 arm=escape Escape takes it away
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: escape — {"locale":"zh-CN","viewport":{"width":390,"height":844},"ham_box":{"x":17,"y":19,"w":46,"h":27},"key":"Escape","entries_before":16,"after":{"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}}
+
+[5/5] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings
+[WebServer] INFO:     127.0.0.1:52563 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52565 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55923 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55920 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55922 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52567 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55921 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56298 - "GET /api/v1/travelers/b5527e07-7976-40a3-8147-368bc51081bc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55924 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53442 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50677 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51079 - "GET /api/v1/journeys/d674d295-1790-47ea-99e7-05be48f42448/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52757 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: closed_baseline — {"locale":"zh-CN","viewport":{"width":390,"height":844},"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}
+
+  2) [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 4
+    Received:    3
+
+      165 |   );
+      166 |   /* A reading nobody can re-run is a rumour: this file has to exist for the block to cite it. */
+    > 167 |   expect(rows.length).toBeGreaterThanOrEqual(4);
+          |                       ^
+      168 | });
+      169 |
+        at D:\moodle\_qoder_ai_ord0387_20260928\wt\frontend\e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:167:23
+
+    Error Context: test-results\qoder-bac10f40-ord0480-dra-50238-e-arms-write-their-readings-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:109:1 › ORD-0480 zh 390x844 arm=close_button 关闭 really takes the drawer away 
+    [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings 
+  3 passed (33.0s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4875 backend=:8746 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_mutclose.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [40920]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8746 (Press CTRL+C to quit)
+[citynexus e2e] provenance ok: run=mutclose frontend=:4875 -> backend=:8746 ai=disabled db=_mutclose.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4875 backend=:8746 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_mutclose.db ai=disabled reuseExistingServer=false
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, context_json=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-09-30T04:01:14.653696+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "VALID", "next": {"end_at": "2026-10-09T19:05:00+08:00", "id": "6096960f-cbe6-4920-b495-5da ... (923 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '2026-09-30T04:01:14.653696+00:00', 'd674d295-1790-47ea-99e7-05be48f42448')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4875 backend=:8746 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_mutclose.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4875 backend=:8746 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_mutclose.db ai=disabled reuseExistingServer=false
