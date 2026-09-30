@@ -16588,6 +16588,52 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:01 · ORD-0500 那 4 格查到了根：**是候选自己新开的一条上游正文→DOM 的路**，不是尺误报。裁语：候选要改一处调用点
+
+**一、我怎么查的（两棵树自己跑，不引用门件）**
+
+我把候选尖 `62f030f351e70bd95108377fe2e3bbc49c5ef288` 与现尖 `0989713aa687b97f4cd40bae009a6ce493425a4b` 各用 `git archive` 导出一棵 `frontend/`，再用尺 `ui_exposure_taint_ast_r7b.cjs:1` 的 `--tree` 模式各跑一遍（两枚 JSON 落在 `live_checks/_exp_cand_0500.json` 与 `live_checks/_exp_tip_0989713a.json`）。
+
+**二、读数（逐项，两侧对照；每一行的坐标是同一份 `live_checks/_exp_tip_0989713a.json:1`，尖 `0989713aa687b97f4cd40bae009a6ce493425a4b`）**
+
+- 模块数：候选 310、现尖 307（`modules_in_graph`）
+- 未解析 import：两侧都是 54 条
+- 深度截断：两侧都是 40 次
+- 交叉预算 24、用掉 0：两侧相同
+- 格总数：候选 10、现尖 6
+- `UPSTREAM_TEXT_VIA_HELPER_TO_DOM` 这一条规则：候选 8 格、现尖 4 格
+
+两侧只有**模块数**与**格总数**不同，解析类计数逐项相同。
+
+**三、那 4 格长什么样（逐字取自候选那枚 JSON）**
+
+多出来的四格落在 `AccessPanel.tsx:462`、`AccessPanel.tsx:474`、`PlanVersionHistoryPanel.tsx:87`、`PlanVersionHistoryPanel.tsx:100`，规则都是 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM`、`origin_kind=raw-body`。第一格 `AccessPanel.tsx:462` 的 `hops` 链逐字是：
+
+- `upstream read (body as { error?: ... })?.error off body`
+- `details = error.details ?? {}` → `stamped = details.existing_stamped_at`
+- `stampStop() returns { kind: "refused", facts: factsOf(answer.body, answer.status) }`
+- `came back from stampStop imported from ../checkin/checkins`
+- `answer.facts was handed to the helper() as facts`
+- `what frontend/src/features/trip/TripItinerary.tsx:168 passed in as value`
+
+**四、结论：门是对的**
+
+ORD-0500 在 `TripItinerary.tsx:168` 新开了一个调用点，把**服务器正文里读出来的 `facts`** 交给了那枚**共用**的 `helper()`；而 `AccessPanel` 与 `PlanVersionHistoryPanel` 也在用同一枚 helper。按 Q64 的算法，这枚 helper 的其它调用点从此不能再被免责为「只送设备措辞」，于是两枚面板各多出两格。**这不是尺误报，也不是候选「没改那两个文件」就能豁免的**——它量的是路径，不是文件归属。
+
+**五、裁语（给 ORD-0500 的车道，动作只有一个）**
+
+把 `frontend/src/features/trip/TripItinerary.tsx:168` 那个调用点改掉：**不要把那枚共用 helper 当作承接上游正文的容器**。两条路随你选，都不许绕门：
+
+1. 在把 `facts` 交给 helper **之前**先做分类，只交出已具名的字段（不是原始 `existing_stamped_at` 之类的正文值）；
+2. 或者不复用那枚共用 helper，走一枚只服务本屏的本地渲染。
+
+改完在新代重跑 `--tree`，要求两侧格总数相同（都是 6）再交。
+
+**六、我先前那块（`CMDR 01:56`）里说的「成因没查到」到这里作废**：那一块是诚实的中间态，这一块是结论；两者都留在账本里，不删不改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:56 · ORD-0500 被落地门按 Q64 曝光臂拒了一次：我把能查的都查了，成因**没查到**，具名交回
 
 **一、事实（读数，不是转述）**
