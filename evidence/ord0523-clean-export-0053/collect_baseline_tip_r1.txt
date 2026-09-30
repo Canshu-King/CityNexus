@@ -1,0 +1,46 @@
+### baseline: authoritative tip's export, no PYTHONPATH, unmodified pyproject
+$ git archive 1e95d106f81b29048ba17695fd0e49172516b9b1 backend scripts agent-mcp tools data contracts | tar -x -C <export_tip>
+$ cd <export_tip>/backend
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests -p no:randomly -q --collect-only
+E   ModuleNotFoundError: No module named 'scripts.hermes_r10_tool_planning_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r11_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r12_delay_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r13_weather_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r14_budget_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r15_commitment_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r16_protected_target_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r17_provider_state_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r18_unavailable_proposal_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r19_runtime_fallback_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r20_transport_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r21_request_replan_retry_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r21_request_replan_retry_reliability_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r22_response_loss_recovery_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r24_concurrent_request_replan_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r25_concurrent_request_replan_conflict_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r6_h11_model_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r7_human_approval_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r8_context_probe'
+E   ModuleNotFoundError: No module named 'scripts.hermes_r9_mcp_context_probe'
+ERROR tests/test_v18_hermes_r10_tool_planning_probe.py
+ERROR tests/test_v18_hermes_r11_reliability_probe.py
+ERROR tests/test_v18_hermes_r12_delay_reliability_probe.py
+ERROR tests/test_v18_hermes_r13_weather_reliability_probe.py
+ERROR tests/test_v18_hermes_r14_budget_reliability_probe.py
+ERROR tests/test_v18_hermes_r15_commitment_reliability_probe.py
+ERROR tests/test_v18_hermes_r16_protected_target_reliability_probe.py
+ERROR tests/test_v18_hermes_r17_provider_state_reliability_probe.py
+ERROR tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py
+ERROR tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py
+ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py
+ERROR tests/test_v18_hermes_r21_request_replan_retry_probe.py
+ERROR tests/test_v18_hermes_r22_response_loss_recovery_probe.py
+ERROR tests/test_v18_hermes_r23_unguided_response_loss_probe.py
+ERROR tests/test_v18_hermes_r24_concurrent_request_replan_probe.py
+ERROR tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py
+ERROR tests/test_v18_hermes_r6_h11_model_probe.py
+ERROR tests/test_v18_hermes_r7_human_approval_probe.py
+ERROR tests/test_v18_hermes_r8_context_probe.py
+ERROR tests/test_v18_hermes_r9_mcp_context_probe.py
+!!!!!!!!!!!!!!!!!! Interrupted: 20 errors during collection !!!!!!!!!!!!!!!!!!!
+1562 tests collected, 20 errors in 5.95s
