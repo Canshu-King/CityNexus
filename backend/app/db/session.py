@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from pathlib import Path
 from typing import Generator
@@ -16,6 +17,14 @@ from app.db.write_deadline import busy_timeout_seconds as write_busy_timeout_sec
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = ROOT / "db" / "schema.sql"
+
+# ORD-0488: what the most recent `ensure_schema()` call had to create.  Deploying a new generation
+# over an old database heals itself in here, and this is the only place that says out loud WHICH
+# tables it added -- a boot that silently grew four tables is otherwise indistinguishable from one
+# that grew none, and the operator has no way to tell a catch-up that worked from one that was never
+# reached.
+SCHEMA_CATCHUP: dict[str, object] = {"database": None, "before": 0, "after": 0, "created": []}
+schema_log = logging.getLogger("citynexus.schema")
 
 
 def _refuse_to_reopen_an_existing_e2e_database(url: str) -> None:
@@ -269,6 +278,15 @@ def _table_exists(connection, name: str) -> bool:
         "SELECT name FROM sqlite_master WHERE type='table' AND name=?", (name,)
     ).fetchone()
     return row is not None
+
+
+def _table_names(connection) -> set[str]:
+    """Every table really in this database, `sqlite_*` bookkeeping excluded."""
+    return {
+        row[0]
+        for row in connection.exec_driver_sql("SELECT name FROM sqlite_master WHERE type='table'")
+        if not str(row[0]).startswith("sqlite_")
+    }
 
 
 def _quarantine_existing_duplicates(connection) -> None:
@@ -567,10 +585,17 @@ def _quarantine_duplicates(connection) -> None:
 
 
 
-def ensure_schema(target_engine: Engine = engine) -> None:
-    """Apply the package SQL schema to an empty or existing SQLite database."""
+def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
+    """Apply the package SQL schema to an empty or existing SQLite database.
+
+    Returns the ORD-0488 catch-up report -- the table names this call had to add -- and records the
+    same in `SCHEMA_CATCHUP`.  Deploying a new generation over an old database is meant to heal
+    itself here; the report is what makes that a stated fact in the deploy log rather than an
+    inference from the absence of a crash.
+    """
     sql = SCHEMA_PATH.read_text(encoding="utf-8")
     with target_engine.begin() as connection:
+        before = _table_names(connection)
         raw = getattr(connection.connection, "driver_connection", connection.connection)
         # Quarantine historical duplicates *before* the schema script runs, so
         # the unique index in the script can actually be created on a database
@@ -866,6 +891,14 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 )
             _reconcile_commitment_strength_check(connection)
             _reconcile_activity_status_check(connection)
+        after = _table_names(connection)
+        created = sorted(after - before)
+        report: dict[str, object] = {
+            "database": str(target_engine.url.database),
+            "before": len(before),
+            "after": len(after),
+            "created": created,
+        }
 
     # SQLite does not allow toggling this pragma while a transaction is open.
     # The activity-table reconciliation temporarily disables it so the table
@@ -875,6 +908,19 @@ def ensure_schema(target_engine: Engine = engine) -> None:
     if target_engine.dialect.name == "sqlite":
         with target_engine.connect() as connection:
             connection.execute(text("PRAGMA foreign_keys = ON"))
+
+    # Published only after the transaction committed: an uncommitted catch-up would name tables a
+    # rolled-back boot never actually created.
+    SCHEMA_CATCHUP.clear()
+    SCHEMA_CATCHUP.update(report)
+    if created:
+        schema_log.info(
+            "ORD-0488 schema catch-up on %s: %d tables were missing and are now created: %s",
+            target_engine.url.database,
+            len(created),
+            ", ".join(created),
+        )
+    return dict(SCHEMA_CATCHUP)
 
 
 def _reconcile_commitment_strength_check(connection) -> None:
