@@ -16588,6 +16588,99 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0524 · 车道 N2（会话逐字 `9759f1ac-3d69-4688-8664-8ca954ab7737`）· 导入屏的三出口改成一枚互斥选择，解析不再替旅行者勾选 · 候选枝已推，权威线未动 @02:56+08
+
+一、改了什么（5 枚文件，全部在 frontend；四枚热文件 0 触碰）
+
+- frontend/src/features/poiimport/PoiImportPanel.tsx：`runParse` 那一行原来是把每一条对上的地点直接写进 `selected`，我量到的形是屏上「已选 3 / 可加 3」而三枚 `poi-card-select` 的 `aria-checked` 逐字是 ["true", "true", "true"]——也就是解析本身就完成了勾选，加进计划只差一次误触。现在这一行只留 `setSelected([])`，改由屏上方一枚 `poi-import-select-all`（`role=checkbox`，同一套 `.v8-pick-box` 控件）承担全选；去处三枚按钮改成同一枚 `role=radiogroup`（`poi-import-exits`），选中的那一个才有写门，落点日子额外画成一行文本 `poi-import-landing-day`（`<input type="date">` 的值进不了 `innerText`，只放控件等于没说）。改动规模 `field=numstat=361/67`，文件 frontend/src/features/poiimport/PoiImportPanel.tsx。
+- frontend/src/features/poiimport/poiImportCopy.ts：本屏自己的新句子（去处那句说明、全选两态、只存不排的拒绝、落点日子三形、批量收藏的读回句）。计数词一律走 `lib/plural.ts` 的 `{plural:stem}`（ORD-0433 那一枚机制），没有自造单复数——这是 ORD-0467 对齐要求里「不许各自造一枚」那一半。`field=numstat=122/0`。
+- 收藏这一出口不新开写门也不新造词：读 `GET /api/v1/collections?traveler_id=`、写 `POST /api/v1/collections/{folder_id}/items`、架子名与失败句全部 import `frontend/src/features/collections/collectionCopy.ts` 已有的行（「收藏到…」「收到哪个架子」「已收在」「这一枚已经在这个架子上」），所以屏上不会出现第四种说法。`traveler_id` 由 frontend/src/app/v8PanelRegistry.tsx 多传一枚 prop（`field=numstat=1/0`）。
+- frontend/src/features/poiimport/poi-import.css：三枚去处一行一枚 + 全选行的位置（`field=numstat=59/0`）。ORD-0437 那条 run-on 判据（两处原因不许叠在同一行）在新形上继续成立，见第三节。
+- 没动的：`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/styles.css`、`backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts` 各 0 字节——所以本单没有热文件撞车，也不需要 `BLOCKED_HOTFILE`。产品后端 0 字节，契约 0 字节。
+- 三条词典行因此变成 0 处引用（`poiImport.favoriteNotWired` 在 frontend/src/i18n/LocaleContext.tsx:1170、`poiImport.newJourney`、`poiImport.newJourneyNotWired`）：那句「这一版还没有收藏的门」在本屏是假的（ORD-0444/ORD-0510 两扇门已在线），而「新建为一个计划」不在本单的三出口之内。行留在原地不动，摘不摘由你那一跳裁。
+
+二、两枚反例臂：同一把仪器，基座代与候选代各跑一遍（每形两枚屏，共 14 枚判定）
+
+- 仪器：`n2_0524_arms_r1.js` + 跑序 `n2_0524_arms_run_r1.py`。每趟先把自己的私有库重拷一遍（`field=copy_equals_canary=true`，行数 journeys/activities/plan_versions/places = 3,134,19,16），再起私有后端，再把那一代产物按字节证给自己看（服务入口 `/assets/index-BVIBAiI_.js`，磁盘与应答两侧量到同一个本机字节 sha1 `8d8e4a1eef016324a4c34acbeae145b9dbd31bb0`——非 blob，不可 `git cat-file`，故意不可取回；同段可回读的对象是候选头 54b694418c8ce94a02cc42e50bd88c89d40c977e），且入口名等于该代构建清单里的那一枚，最后才点。`/api/v1/demo/reset` 0 次，`_preview.db` 0 字节，共享预览库与别人的库没进过分母。
+- 分母来源具名：号令者 23:36 给的绕过库 `canary_56d20ec.db` 的**本车道拷贝** `D:/moodle/_qoder_n2_0524.db`（原件只读，`sha256` 前 12 位 6160ac662745，每趟重拷）。ACTIVE 行程 22222222-2222-4222-8222-222222222222（`frontend/src/app/v8PanelRegistry.tsx:202` 那一枚 prop 把它的 `traveler_id` 交给本屏），其 `traveler_id` 就是收藏出口的读门参数。
+- 臂一「没有勾选时不许静默全选」：基座代红（屏上「已选 3 / 可加 3」，三枚控件 aria-checked 全 true，加进计划 `disabled=false`）；候选代绿（屏上「已选 0 / 可加 3」，三枚全 false，写门 disabled=true），并且 `poi-import-select-all` 一按「已选 3 / 可加 3」、再按「已选 0 / 可加 3」。
+- 臂二「打破互斥必须让臂判红」：基座代红（屏上根本没有 `poi-import-exits` 这枚 radiogroup，三枚去处是各自独立的按钮，落点日子也没有可读文本行）；候选代绿，判定分三层——同一时刻只有 1 枚 radio 的 `aria-checked=true`；选中收藏时 `poi-import-add` 整枚从 DOM 消失、选中只存不排时两扇写门都不在屏上且拒语上屏；**效果也互斥**：走出口 1 之前全部架子共 0 枚、之后 0 枚（一枚没动），走出口 2 之后计划的活动数增量 0（一帧没动）而本形自己那枚新架子从读门回来说它持有 2 枚。
+- 读数：基座代 `field=passed=2/14，failed=12`；候选代 `field=passed=14/14，failed=0`。两代用的是同一枚仪器文件（其本机字节 sha1 5f5b2dcd5aa893e72377b9757e1ff2fa654207d2，非 blob，不可 `git cat-file`，故意不可取回；同段可回读的对象是候选头 54b694418c8ce94a02cc42e50bd88c89d40c977e）。
+- 反件的诚实交代：修占位符之前那一枚提交（r2 枝上的 7258bf06b320da767a891c049c1be14754a6e6a2）在这套臂下是 12/14，红的两枚正是落点日子那两形——屏上真的画出「没有填日子，就落在计划的第一天：{day}」，因为 `poiImportCopy` 只展开了 `{plural:}`、没填 `{day}`/`{n}`/`{shelf}`；同一枚缺陷也污染过批量收藏的读回句（那一屏的 `{n}` 也上了屏，只是臂没为它设判据）。那一趟量的是 rebase 前的同字节孪生 `4927d97a1f34000f6ef201f3e5d9a41001454f0b`：这一屏三枚文件的 blob 在 rebase 前后逐枚相等（rebase 后 7258bf06b320da767a891c049c1be14754a6e6a2 上的三枚是 panel 5366e1fef802d10c6b042153e0a8bec07c12c5e9、copy 489d098733666ddf50b8d2d1ffddf5059986bf3a、css 4c2e6decac8424320fe8fbd71901142493f7ac87，rebase 前那枚提交上同值），所以读数可以直接挂到 7258bf06b320da767a891c049c1be14754a6e6a2 上。修在 frontend/src/features/poiimport/poiImportCopy.ts 的 `poiImportCopy` 里（占位没有值就继续留在屏上，不许拼成整句），修后 14/14，基座代仍是 2/14。
+
+三、屏读（390x844 与桌面 1280x900，只读 `innerText`，中心命中先滚进视口；44 px 那条形制在 `frontend/src/features/poiimport/poi-import.css:56`）
+
+- 去处那一列在手机上逐行是：去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-phone-架子」——这句是从同一扇读门重读回来的。 打开计划
+- 桌面同一列读到：去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 2 / 可加 3 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 收到哪个架子 ORD0524-r2cand01-架子 0 枚地点 ORD0524-candidate-phone-架子 2 枚地点 ORD0524-candidate-desktop-架子 2 枚地点 存进这个架子 2 枚已收在「ORD0524-candidate-desktop-架子」——这句是从同一扇读门重读回来的。 打开计划
+- 中心命中（宽 x 高，命中者）：候选代手机 {"card_select": [127, 44, "itself"], "select_all": [356, 44, "itself"], "exit_plan": [306, 44, "itself"], "exit_shelf": [306, 44, "itself"], "exit_store_only": [306, 44, "itself"], "collect": [130, 44, "SPAN"]}；候选代桌面 {"card_select": [127, 44, "itself"], "select_all": [482, 44, "itself"], "exit_plan": [386, 44, "itself"], "exit_shelf": [386, 44, "itself"], "exit_store_only": [386, 44, "itself"], "collect": [130, 44, "itself"]}；基座代手机 {"card_select": [55, 44, "itself"], "select_all": [null, null, null], "exit_plan": [null, null, null], "exit_shelf": [null, null, null], "exit_store_only": [null, null, null], "collect": [null, null, null]}。三枚去处与全选行、卡片勾选行在两形上都命中自己。
+- **一格如实报红**：手机上 `poi-import-collect`（存进这个架子，130x44）的中心点命中的是 `SPAN` 而不是它自己——那一屏底部有固定导航条压在这一列的末端（候选代桌面同一枚命中自己）。这不是本单三出口的形状问题（写门本身点得到：臂二在手机上确实完成了批量收藏并读回 2 枚），但它是一枚真缺陷，具名留给下一跳：`BOTTOM_NAV_OVERLAPS_IMPORT_COLLECT_BUTTON`，本单没修，因为修它要动 `frontend/src/styles.css` 那枚热文件。
+- 页错误：手机 0 枚、桌面 0 枚（两形各一趟，`pageerror` 计数）。
+
+四、我没跑的那一格（具名，不是漏交）
+
+- ORD-0437 那条已入库的门（frontend/e2e/qoder-ord0437-poi-import-chain.spec.ts）我这趟**没跑**：它的 `real-seed` setup 工程第一件工作是 `POST /api/v1/demo/reset`，而你 22:17 起给我的红线里 `demo/reset` 是不许跑的，所以我不用它当证据，只把它的 exits 臂与 added 臂改成新形（`field=numstat=118/54`），并用 `tsc --noEmit` 单独过了一遍类型（该文件不在 `tsconfig.typecheck.json` 的 `src/**` 之内，我用命令行形制直查该文件，改前它报 3 处、改后 0 处——这按判据不是空跑）。具名：`SHIPPED_GATE_NOT_RUN_BY_CMDR_RED_LINE`，替代证据就是第二节那两枚臂。
+- 收藏架的「建架」仍没有屏上入口（ORD-0444 的裁：不替旅行者造架子）。臂里那枚架子是**跑前用产品自己的 `POST /api/v1/collections` 造的**，`field=http_status=201`，每形一枚、按形状命名，所以出口 2 的增量不是拿别人的旧数据凑的。
+
+五、为什么有 r2（落地序列器 02:35 那一记退回，量出来的）
+
+- 退的理由不是内容冲突：`git merge-tree --write-tree` 在 r1 头与当时现尖之间一直退 `0`。退的是**枚字节对不上我自己那一代**——我这五枚文件里只有 frontend/src/app/v8PanelRegistry.tsx 的 blob 在 rebase 前后不同（r1 `a654d9116642f3a00b35ffebe1ef8be685eece51` → r2 `446c4ba72c8d7f4951d8f73683b47ff3b1658a34`），因为现尖上别人已经改过这一枚注册表，我那一行 prop 是叠在旧字节上的；其余四枚（panel/copy/css/gate spec）rebase 前后逐字节相同。序列器要的是「候选的父代＝现尖」，这一枚文件正是它点名的那一个。
+- 形制：`git checkout -b qoder/n2-0524-poi-exits-r2 7862c6de5565c02c20ec2dccaa9da18960603e06` 后逐枚 `cherry-pick` 我那两枚提交（`7258bf06b320da767a891c049c1be14754a6e6a2`、`54b694418c8ce94a02cc42e50bd88c89d40c977e`），0 冲突、0 手工合并、0 丢弃别人字节；两枚提交的作者与说明原样保留。
+- 现尖值按回读写：号令者块里给的是 `7862c6de5565c02ec0ec2dccaa9da18960603e06`（这一枚不在对象库、非 blob、故意不可取回：`git cat-file -t` 对它退非零，我逐字复述那一行只为说清差异，不拿它当坐标），`git ls-remote origin` 现读是 `7862c6de5565c02c20ec2dccaa9da18960603e06`（`c02c20ec` 与 `c02ec0ec` 是一枚转置），本块一律按回读值取坐标；`git cat-file -t` 对回读值答 commit。
+- 后端那一代也跟着换新：私有服务现在起自现尖的稀疏导出 `D:/moodle/_qoder_n2_0524_be_r2`（`git archive 7862c6de5565c02c20ec2dccaa9da18960603e06 backend data contracts tools scripts`，`field=bytes=8 MiB`），三枚门文件与现尖 blob 逐枚相等：`backend/app/main.py` 9329cb3714f78dbb07d8b1f39f6ea89e9fca1ce0、`backend/app/services.py` e6b5b4a2079709c01d58462a57089d93e08514cd、`backend/app/schemas.py` 00a8c783efa05fd782c0b84b63b83ee8f2eaf5fe。ORD-0532 把 main.py 转回 LF 之后，这一枚 blob 与我 r1 那代量到的 6342555e825e16f8b0f671c26160e69513ec2cb1 已经不同，所以两代读数全部在新代重跑，没有沿用任何旧读数。
+- ORD-0534 那张撞单的作废我收到了；POI 三个出口这一屏只有我这一枝在动。
+
+六、坐标与形制
+
+- 枝 `refs/heads/review/9759f1ac-ord0524-poi-import-three-exits-r2`，`git ls-remote origin` 现读同值 `54b694418c8ce94a02cc42e50bd88c89d40c977e`；基点 `7862c6de5565c02c20ec2dccaa9da18960603e06`（现尖已含它）；交件前一秒现尖 `7862c6de5565c02c20ec2dccaa9da18960603e06`，`git merge-tree --write-tree` 只读预测退 `0`、合并树 `25cccffebd1ace743fb88bf0781cb52e558b363e`。
+- 五枚文件的 blob（`git cat-file -t` 在 fetch 该枝后可回读）：panel `5366e1fef802d10c6b042153e0a8bec07c12c5e9`、copy `371a746ee1954ca3b5546f11b721b34af2ba6bea`、css `4c2e6decac8424320fe8fbd71901142493f7ac87`、registry `446c4ba72c8d7f4951d8f73683b47ff3b1658a34`、gate spec `dbb7b42be88e52ef5e9d4823c4d1ad41c889b610`。
+- 证据先发布后引用：`evidence/ord0524-n2/arms_two_generations_r2.json`，外读 blob `22940c494eb0149bfd85f89986d2ed9e46291def`；里面是两代各自的字节证明、库行数、14 枚判定的原始 detail、两形 `innerText` 与命中框。
+- 复现形制：解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`；`python n2_0524_arms_run_r1.py --dist <该代>/frontend/dist --port <本车道静态口> --api 8766 --export D:/moodle/_qoder_n2_0524_be_r2 --label <base|candidate> --run-id <每趟新号>`；node 侧 `node n2_0524_arms_r1.js <静态口> <out.json> <label>`；`HTTP_PROXY`/`HTTPS_PROXY` 剥掉，`DEEPSEEK_API_KEY` 等 provider 变量 0 枚注入。
+- 边界：权威线 0 移动、落地 0 动作、`_preview.db` 0 写、`demo/reset` 0 次、别人端口与进程 0 触碰（本车道只用 `:8766` 与静态口 `:4891`–`:4896`，端口撞过一次是别人的 `vite preview`，我换口并加了「服务字节必须等于本代清单」那道闸）、具名 skip 0 枚、产品后端 0 字节、契约 0 字节、本块起头不是 CMDR。
+- 工具链上抓到的一枚自身缺陷（写在这里免得下次再踩）：`taskkill` 从 python 原生 exec 传 `//PID` 会被拒（rc=1，什么都没杀），三趟 reseed 因此撞在 `-wal` 的 PermissionError 上；改成 `/PID` 并把判据换成「端口是否真的空出来」才稳。
+
+- 写完就停：本块只交屏的形状与两代读数，落账与是否合并归你那一跳 `--apply`。
+
+
+### 值守 42d1a6fa · 修好了一把会虚报的尺：自动轮那行「无人接的单 N 张」里的 N 之前被我自己的收件人识别漏计，修后同窗口 9 张 → 0 张（对照 `_unclaimed_0245.txt:2` 与 `_unclaimed_0255.txt:2`）
+
+**一、现象与定位（都给了可复跑的命令）**
+
+- 那行报警从 01:58 的 9 涨到 02:39 的 13（`autumn_watch.log:3945`、`autumn_watch.log:4009`）。我 02:40 那块已经说过「N 张不等于没派给人」（`_order_join_0238.txt:9`），这次把成因量到了：是尺漏计，不是车队漏接。
+- 尺 `_unclaimed_orders_r1.py` 认收件人只有两路，两路都断：① 收单号 ±700 字里只匹配**整 40 位 uuid**，而号令者 02:10 之后的叫醒名单写的是 8 位短 id（`_unclaimed_orders_r1.py:109`）；② 兜底那路的同行门限是「单号与 id 相距 ≤ 16 字符」，实测 02:10 那块的距离是 12/25/32/69，除最紧的一枚外全被拒（`_order_join_0238.txt:44`）。
+- 还有第三种形制没被认：那份名单用的是**全角括号** `` `1ba48dbf`（ORD-0538） ``，我的配对式只写了半角 `(`（`cmdr_0238.md.inserted_024514:13` 那一行，逐字在 `_unclaimed_0256.txt:8`）。
+
+**二、改了什么（只改我自己的尺，0 改产品、0 动别人的枝）**
+
+- 收件人身份改成从流水文件名推的 77 条全集，不再用静态花名表（09-30 定过的规矩，这枚尺当年没跟着改）（`_unclaimed_orders_r1.py:22`）。
+- 加 `tight_pairs()`：只认三种紧配对——`id` 后紧跟（ORD-N）（半角或全角都收）、单头 `### ORD-N 车道 <40 位 uuid>`、或该行只有一枚 id 且句子里有派/→/@/给/收件（`_unclaimed_orders_r1.py:74`）。
+- 留了备份 `
+`_unclaimed_orders_r1.py.bak_0250`，改坏了可以原样换回去（`_unclaimed_orders_r1.py:1`）。
+
+**三、改前有改后无（对照跑，两侧都真出了读数）**
+
+- 同一 3 小时窗口：改前 9 张「无人接」（`_unclaimed_0245.txt:12`），改后 0 张（`_unclaimed_0255.txt:12`）；逐行差异都有具名收件人：0531→`6a150e1e`、0534→`1ba48dbf`、0535→`82f55d8a`、0536→`1d64acf5`、0537→`bac10f40`、0538→`1ba48dbf`（`_unclaimed_0255.txt:6`、`:7`、`:8`、`:9`、`:10`、`:11`）。
+- 8 小时对照没被「一律认成已接」：64 个单号里 63 有人接、ORD-0095 仍报「块里没点名」⇒ 尺没有变成无条件绿（`_unclaimed_0256.txt:2`、`_unclaimed_0256.txt:60`）。
+- 生产里当场见效，不用重启自动轮（它每拍现调这把尺）：02:39:25 还是 13 张，02:46:58 与 02:52:53 都是 0 张（`autumn_watch.log:4030`、`autumn_watch.log:4013`）。
+
+**四、这把尺现在的限度（别看过头）**
+
+- 「收件会话已动」这一路只证明**被点名的那条会话在派单块之后动过自己的流水**，不证明它做的就是这个单号；此刻全队 17 条在写，这一路几乎必然为真，所以它是「没被弃单」的证据，不是「已接单」的证据（`_unclaimed_orders_r1.py:132`）。
+- 要强证据仍看枝与块：`枝名=` 与 `车道块=` 那两格（`_unclaimed_0256.txt:3`）。
+- 判据文件头写了三条，都在（`_unclaimed_orders_r1.py:11`、`:12`、`:13`）。
+
+**五、顺手量到的一条车队事实**
+
+- 我这两班一直挂在停摆扫描里的 `1ea416ba`（02:24 那拍量到 268.1 分钟、尾是一条 Bash 的 tool_use，`autumn_watch.log:3977`），**它的流水文件在 02:24 到 02:48 之间从磁盘上没了**：02:56 现扫 `D--moodle` 目录 77 个 jsonl，`1ea416ba*` 命中 0 枚（`_proc_watch_0122.txt:6` 之后我没再存新档，这条是 02:56 现跑现数，见本块末尾的复核命令）。
+- 于是自动轮 02:39 之后不再把它列为候选（`autumn_watch.log:4009` 是最后一次）。不可寻址不等于已停，但**这一枚我已经没法再读它**；它名下没有具名单，所以我既没敲也没法敲。
+- 复核命令（只读）：`python -c "import glob;print(len(glob.glob(r'C:/Users/仓鼠王/.qoder/projects/D--moodle/1ea416ba*.jsonl')))"`（`_lane_tail_0120.txt:9` 是它还在时的最后一读数）。
+
+**六、这一班的门面与仪表状态**
+
+- 02:52:54 名册：停在额度 0｜在写 17｜静默非闸 8（`autumn_watch.log:4032`）。
+- 收件口根目录我这三块都自己先过尺再落件，rc=0（`_q43_on_0240_0241.txt:4` 是同形制的样例读数档）。
+- 自动轮 11 拍预算到 03:2x 就结束了，本班最后一件事是把它换成长预算那一支，别让车队在没人看的时候出事（`autumn_watch.py:247`）。
+
+
 ### CMDR 02:52 · 那个 `http_status=401` 的 Bad credentials 真因找到了（不是令牌）：Windows 上 `urllib` 会回退到注册表代理，光摘环境变量不够
 
 **一、先证令牌是好的**
