@@ -1,0 +1,721 @@
+{
+ "at_local": "2026-09-30T12:44:15+08:00",
+ "order": "ORD-0494 - make the g9a self-proof arm of the lock-duration door deterministic",
+ "lane": "N2",
+ "session": "9759f1ac-3d69-4688-8664-8ca954ab7737",
+ "coordinates": {
+  "measured_base": "4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72",
+  "base_subject": "4e0ad72c Wed Sep 30 12:06:42 2026 +0800 ORD-0475 r3 evidence: the provenance every reading in the block is quoted from -- interpreter, flags, environment, and the tree under measurement",
+  "arm_blob_at_base": "44081e39631d94000d667ae1b0cae6d822844ae7",
+  "arm_lines_at_base": 296,
+  "arm_lines_at_candidate": 317,
+  "candidate_commit": "a07bf28b4bffa17854dcd6fedf37f84a0c746a6f",
+  "branch": "refs/heads/review/9759f1ac-ord0494-g9a-deterministic-r1",
+  "ls_remote_of_branch": "a07bf28b4bffa17854dcd6fedf37f84a0c746a6f\trefs/heads/review/9759f1ac-ord0494-g9a-deterministic-r1",
+  "live_tip_at_hand_in": "de341634d4dc30845d0c6ef98490bd33e41dd4b2",
+  "base_is_ancestor_of_live_tip": true,
+  "merge_tree_rc": 0,
+  "merged_tree": "de5184d9387ee5189d8345ed16337f6cc4d91eb9",
+  "arm_blob_in_merged_tree": "66241469e2cb8e2e5ac0acf976ba4eb5dc2f5d0a",
+  "arm_blob_on_lane_branch": "66241469e2cb8e2e5ac0acf976ba4eb5dc2f5d0a",
+  "merged_bytes_equal_lane_bytes": true,
+  "numstat_base_to_candidate": "26\t5\tbackend/tests/test_qoder_anywhere_lock_duration.py",
+  "backend_files_moved_between_base_and_live_tip": [
+   "backend/app/db/session.py",
+   "backend/app/security/credential_literals.py",
+   "backend/db/apply_schema_catchup.py",
+   "backend/tests/test_qoder_ord0479_dictionary_key_shape.py",
+   "backend/tests/test_qoder_ord0488_schema_catchup.py"
+  ]
+ },
+ "repro_shape": {
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "interpreter_version": "Python 3.12.14",
+  "per_process_database": "declared by backend/tests/conftest.py into a fresh temp directory; this lane set no CITYNEXUS_DATABASE_URL",
+  "command": "python -m pytest tests/test_qoder_anywhere_lock_duration.py -p no:randomly -q --tb=line -rf --no-header",
+  "cwd": "D:/moodle/_qoder_n2_0494_be/backend (and ..._be_merged/backend for the merged tree)",
+  "pythonpath_windows_form": "D:/moodle/_qoder_n2_0494_be;D:/moodle/_qoder_n2_0494_be/agent-mcp",
+  "env_popped": [
+   "DEEPSEEK_API_KEY",
+   "OPENAI_API_KEY",
+   "CITYNEXUS_AI_ENABLED",
+   "CITYNEXUS_AI_API_KEY"
+  ],
+  "env_varied_on_purpose": [
+   "HTTP_PROXY / HTTPS_PROXY / ALL_PROXY and their lower-case forms"
+  ]
+ },
+ "cause": {
+  "old_assertion_lines": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py:208"
+  ],
+  "statement": "G9a required the reserved self-test host to raise. That host never resolves on this box (getaddrinfo fails in both environments), but httpx honours the runner's proxy variables: with a live proxy the proxy answers the request and httpx returns, so the arm reads DID NOT RAISE; with the variables removed the connection fails locally and the old assertion is satisfied. The verdict was a property of the shell.",
+  "shell_proxy_variables_seen": {
+   "HTTP_PROXY": "http://127.0.0.1:7897",
+   "HTTPS_PROXY": "http://127.0.0.1:7897",
+   "http_proxy": "http://127.0.0.1:7897",
+   "https_proxy": "http://127.0.0.1:7897"
+  },
+  "before_fix_readings": [
+   {
+    "step": "export",
+    "rc": 0,
+    "secs": 0,
+    "stderr": ""
+   },
+   {
+    "step": "invalid_probe_with_proxy_env",
+    "rc": 0,
+    "line": [
+     "{\"getaddrinfo\": null, \"dns_error\": \"gaierror: [Errno 11001] getaddrinfo failed\", \"call\": {\"raised\": null, \"status\": 502, \"url\": \"http://instrument-selftest.invalid/api/interpreter\", \"history\": [], \"server\": null}, \"proxies\": {\"HTTP_PROXY\": \"http://127.0.0.1:7897\", \"HTTPS_PROXY\": \"http://127.0.0.1:7897\", \"ALL_PROXY\": null, \"http_proxy\": \"http://127.0.0.1:7897\", \"https_proxy\": \"http://127.0.0.1:7897\", \"all_proxy\": null}}"
+    ]
+   },
+   {
+    "step": "invalid_probe_proxy_env_stripped",
+    "rc": 0,
+    "line": [
+     "{\"getaddrinfo\": null, \"dns_error\": \"gaierror: [Errno 11001] getaddrinfo failed\", \"call\": {\"raised\": \"ConnectError\", \"msg\": \"[Errno 11001] getaddrinfo failed\"}, \"proxies\": {\"HTTP_PROXY\": null, \"HTTPS_PROXY\": null, \"ALL_PROXY\": null, \"http_proxy\": null, \"https_proxy\": null, \"all_proxy\": null}}"
+    ]
+   },
+   {
+    "step": "arm_alone_shell_env_run1",
+    "rc": 1,
+    "lines": [
+     "E       Failed: DID NOT RAISE <class 'Exception'>",
+     "1 failed, 2 warnings in 3.53s"
+    ],
+    "secs": null
+   },
+   {
+    "step": "arm_alone_shell_env_run2",
+    "rc": 1,
+    "lines": [
+     "E       Failed: DID NOT RAISE <class 'Exception'>",
+     "1 failed, 2 warnings in 2.61s"
+    ],
+    "secs": null
+   },
+   {
+    "step": "arm_alone_stripped_run1",
+    "rc": 1,
+    "lines": [
+     "E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '78506d2e-b35f-4d4c-a9fc-2d98d1da7e83', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL",
+     "tests\\test_qoder_anywhere_lock_duration.py:243: AssertionError",
+     "1 failed, 1 passed, 2 warnings in 3.05s"
+    ],
+    "secs": null
+   },
+   {
+    "step": "arm_alone_stripped_run2",
+    "rc": 1,
+    "lines": [
+     "E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': 'f3af428d-e1ad-403e-bc43-d3193045c387', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL",
+     "tests\\test_qoder_anywhere_lock_duration.py:243: AssertionError",
+     "1 failed, 1 passed, 2 warnings in 2.51s"
+    ],
+    "secs": null
+   },
+   {
+    "step": "arm_after_credential_gate",
+    "rc": 1,
+    "lines": [
+     "5 failed, 8 passed, 2 warnings in 9.83s"
+    ]
+   }
+  ]
+ },
+ "change": {
+  "file": "backend/tests/test_qoder_anywhere_lock_duration.py",
+  "removed_assertion": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py:208"
+  ],
+  "kept_assertions": {
+   "write_windows_non_empty": [
+    "backend/tests/test_qoder_anywhere_lock_duration.py:224"
+   ],
+   "recorded_calls_non_empty": [
+    "backend/tests/test_qoder_anywhere_lock_duration.py:230"
+   ],
+   "reserved_host_recorded": [
+    "backend/tests/test_qoder_anywhere_lock_duration.py:234"
+   ]
+  },
+  "new_helper": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py:193"
+  ],
+  "outcome_carried_into_message": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py:232",
+   "backend/tests/test_qoder_anywhere_lock_duration.py:236"
+  ],
+  "diff": "diff --git a/backend/tests/test_qoder_anywhere_lock_duration.py b/backend/tests/test_qoder_anywhere_lock_duration.py\nindex 44081e39..66241469 100644\n--- a/backend/tests/test_qoder_anywhere_lock_duration.py\n+++ b/backend/tests/test_qoder_anywhere_lock_duration.py\n@@ -10,7 +10,10 @@ Two design points, because a measuring gate that cannot measure is worse than no\n \n * the instrument proves itself first (G9a). Zero overlap is meaningless if the probe saw zero\n   transactions and zero network calls, so G9a forces one known write path and one known\n-  provider-shaped call and requires both to be recorded;\n+  provider-shaped call and requires both to be recorded. What it requires of that call is *that the\n+  hook recorded it*: how the call ends belongs to the machine running the suite - with a live proxy in\n+  the environment the reserved host is answered, without one it is refused by the resolver - and\n+  pinning either shape would make the self-proof flip with the shell rather than with the product;\n * the provider call is observed by wrapping the transport layer, and only hosts the product\n   actually talks to are counted (`LIVE_HOSTS`,抄自 app/integrations/**). TestClient traffic\n   goes over an ASGI transport, so it neither registers nor pollutes the overlap arithmetic.\n@@ -42,6 +45,8 @@ client = TestClient(app)\n CAPABILITY = \"/api/v1/destinations/capability\"\n HYDRATIONS = \"/api/v1/catalog-hydrations\"\n UNSEEN_COUNTY = \"贡山独龙族怒族自治县\"\n+SELFTEST_HOST = \"instrument-selftest.invalid\"\n+SELFTEST_URL = \"http://%s/api/interpreter\" % SELFTEST_HOST\n WRITE_VERB = re.compile(r\"^\\s*(insert|update|delete|replace|create|alter|drop)\\b\", re.IGNORECASE)\n LIVE_HOSTS = (\n     \"photon.komoot.io\",\n@@ -185,6 +190,22 @@ def _summary(response) -> str:\n         return f\"{response.status_code} / <non-json>\"\n \n \n+def _selftest_provider_call() -> dict:\n+    \"\"\"One provider-shaped call to the reserved self-test host; how it ends is not the claim.\n+\n+    Measured on this box: when the runner's shell exports a live HTTP(S) proxy, the proxy answers the\n+    reserved name (a 502) and httpx returns; when those variables are absent the resolver refuses it\n+    (`gaierror 11001`) and httpx raises `ConnectError`. The transport hook records the call either way,\n+    and that recording is all G9a has to prove, so the arm carries the outcome into its own message\n+    instead of requiring one of the two shapes -- which is what made the arm flip per environment.\n+    \"\"\"\n+    try:\n+        response = httpx.get(SELFTEST_URL, timeout=5.0)\n+        return {\"ended\": \"answered_by_proxy\", \"status\": response.status_code}\n+    except Exception as exc:  # noqa: BLE001 - the arm proves the hook fired, not how the call ended\n+        return {\"ended\": \"refused_locally\", \"exception\": type(exc).__name__}\n+\n+\n def _reset_seed() -> str:\n     reset = client.post(\"/api/v1/demo/reset\", headers=demo_reset_headers())\n     assert reset.status_code == 200, f\"SETUP 失败：/demo/reset 实际 {_summary(reset)}\"\n@@ -205,14 +226,14 @@ def test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls(\n         f\"实际：写窗口 {len(writes)}，全部事务窗口 {len(_windows)}\"\n     )\n \n-    with pytest.raises(Exception):  # noqa: BLE001 - 不可解析域，预期失败，只要窗口被记录\n-        httpx.get(\"http://instrument-selftest.invalid/api/interpreter\", timeout=5.0)\n+    outcome = _selftest_provider_call()\n     assert _calls, (\n         \"期望：provider 形态的调用被记录到（证明 transport 挂钩真的挂上了）；\"\n-        f\"实际：记录 {len(_calls)} 条\"\n+        f\"实际：记录 {len(_calls)} 条，这一枚调用的收场 {str(outcome)[:90]}\"\n     )\n     assert any(call[\"host\"].endswith(\".invalid\") for call in _calls), (\n-        f\"期望：至少一条 provider 形态调用被记录到；实际 hosts：{sorted({c['host'] for c in _calls})}\"\n+        f\"期望：至少一条 provider 形态调用被记录到；实际 hosts：{sorted({c['host'] for c in _calls})}，\"\n+        f\"这一枚调用的收场 {str(outcome)[:90]}\"\n     )"
+ },
+ "determinism_on_base_export": {
+  "runs": [
+   {
+    "check": "installed_file",
+    "sha1_of_fixed_file": "35791c3c7776d61e32922637087a6606fb3ebbce",
+    "export_matches_lane": true
+   },
+   {
+    "check": "A_g9a_alone_env_proxy",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 0,
+    "secs": 5.3,
+    "summary": [
+     "1 passed, 2 deselected, 2 warnings in 3.37s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "A_g9a_alone_env_stripped",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": false,
+    "rc": 0,
+    "secs": 4.1,
+    "summary": [
+     "1 passed, 2 deselected, 2 warnings in 2.52s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "A_g9a_alone_env_proxy",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 0,
+    "secs": 3.7,
+    "summary": [
+     "1 passed, 2 deselected, 2 warnings in 2.43s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "A_g9a_alone_env_stripped",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": false,
+    "rc": 0,
+    "secs": 3.6,
+    "summary": [
+     "1 passed, 2 deselected, 2 warnings in 2.28s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "B_whole_file_env_proxy",
+    "argv": "tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 1,
+    "secs": 5.7,
+    "summary": [
+     "E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '7eed7ab7-c4cb-41af-8447-5a6f7e2602d9', 'fingerprint': '2d373c471fa007e5612db8267ae",
+     "tests\\test_qoder_anywhere_lock_duration.py:264: AssertionError",
+     "1 failed, 2 passed, 2 warnings in 3.79s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "B_whole_file_env_stripped",
+    "argv": "tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": false,
+    "rc": 1,
+    "secs": 5.2,
+    "summary": [
+     "E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '677cae7a-2d68-4a03-b97b-78842ce98c03', 'fingerprint': '2d373c471fa007e5612db8267ae",
+     "tests\\test_qoder_anywhere_lock_duration.py:264: AssertionError",
+     "1 failed, 2 passed, 2 warnings in 3.51s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "C_after_credential_gate_module",
+    "argv": "tests/test_qoder_ord0307_credential_gate.py tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 1,
+    "secs": 12.9,
+    "summary": [
+     "tests\\test_qoder_ord0307_credential_gate.py:177: AssertionError",
+     "E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': 'defcda08-8819-4e23-81fc-3460e9630bf4', 'fingerprint': '2d373c471fa007e5612db8267ae",
+     "tests\\test_qoder_anywhere_lock_duration.py:264: AssertionError",
+     "4 failed, 9 passed, 2 warnings in 11.26s"
+    ],
+    "g9a_failed": false
+   },
+   {
+    "check": "D_mutant_no_transport_hook_expect_RED",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 1,
+    "secs": 4.6,
+    "summary": [
+     "E       AssertionError: 期望：provider 形态的调用被记录到（证明 transport 挂钩真的挂上了）；实际：记录 0 条，这一枚调用的收场 {'ended': 'answered_by_proxy', 'status': 502}",
+     "tests\\test_qoder_anywhere_lock_duration.py:230: AssertionError",
+     "1 failed, 2 deselected, 2 warnings in 3.04s"
+    ],
+    "g9a_failed": true
+   },
+   {
+    "check": "E_mutant_no_write_path_expect_RED",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 1,
+    "secs": 4.5,
+    "summary": [
+     "E       AssertionError: 期望：仪器在已知写路径上至少抓到 1 个写事务窗口（否则 G9b 的「零重叠」等于没测）；实际：写窗口 0，全部事务窗口 1",
+     "tests\\test_qoder_anywhere_lock_duration.py:224: AssertionError",
+     "1 failed, 2 deselected, 2 warnings in 2.84s"
+    ],
+    "g9a_failed": true
+   },
+   {
+    "check": "restored",
+    "sha1_after_restore": "35791c3c7776d61e32922637087a6606fb3ebbce",
+    "equals_lane_file": true
+   },
+   {
+    "check": "F_restored_g9a_alone",
+    "argv": "-k test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls tests/test_qoder_anywhere_lock_duration.py",
+    "proxy_env": true,
+    "rc": 0,
+    "secs": 5.4,
+    "summary": [
+     "1 passed, 2 deselected, 2 warnings in 2.98s"
+    ],
+    "g9a_failed": false
+   }
+  ],
+  "per_test_verdicts": [
+   {
+    "label": "whole_file_proxy",
+    "rc": 1,
+    "proxy_env": true,
+    "cases": [
+     {
+      "test": "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "outcome": "FAILED",
+      "message": "AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '713dbb22-a657-4f77-a202-60107c94ac53', 'fingerprint': '2d373c471fa007e",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9c_hydration_network_does_not_starve_a_concurrent_plan_generate",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     }
+    ]
+   },
+   {
+    "label": "whole_file_stripped",
+    "rc": 1,
+    "proxy_env": false,
+    "cases": [
+     {
+      "test": "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "outcome": "FAILED",
+      "message": "AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': 'bdcb61d6-08c1-4511-9b24-59ea6731548f', 'fingerprint': '2d373c471fa007e",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9c_hydration_network_does_not_starve_a_concurrent_plan_generate",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     }
+    ]
+   },
+   {
+    "label": "after_credential_gate_proxy",
+    "rc": 1,
+    "proxy_env": true,
+    "cases": [
+     {
+      "test": "test_C01_the_scanned_set_is_named_and_actually_present",
+      "outcome": "FAILED",
+      "message": "AssertionError: ['frontend/src', 'frontend/e2e', 'qoder-handoff']\nassert ['frontend/sr...oder-handoff'] == []\n  \n  Left contains 3 more items, first extra item: 'frontend/src'\n  Us",
+      "failure_location": null
+     },
+     {
+      "test": "test_C02_no_path_through_the_gate_leaks_a_value",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C03_an_injected_literal_in_a_product_path_is_named_by_location",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C04_placeholders_and_low_entropy_never_fire",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C05_each_shape_pattern_fires_on_its_own_shape",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C06_declaration_is_by_digest_not_by_path",
+      "outcome": "FAILED",
+      "message": "AssertionError: {'at': 'frontend/e2e/qoder-e2e-config-guard.spec.ts:140', 'declared_by': 'commander 494abfd7 裁定 D-2=甲；lane F 8ccd71d8 ...3', 'proof': \"同文件 :144 断言 run.status != 0；:",
+      "failure_location": null
+     },
+     {
+      "test": "test_C07_what_the_working_tree_actually_holds_today",
+      "outcome": "FAILED",
+      "message": "AssertionError: []\nassert 0 >= 1\n +  where 0 = len([])",
+      "failure_location": null
+     },
+     {
+      "test": "test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_C10_the_default_policy_is_report_not_off",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "outcome": "FAILED",
+      "message": "AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': '15b1f5d8-531a-4ef8-befd-0b45ef9d039d', 'fingerprint': '2d373c471fa007e",
+      "failure_location": null
+     },
+     {
+      "test": "test_g9c_hydration_network_does_not_starve_a_concurrent_plan_generate",
+      "outcome": "PASSED",
+      "message": "",
+      "failure_location": null
+     }
+    ]
+   }
+  ]
+ },
+ "determinism_on_merged_tree": [
+  {
+   "check": "merged_tree",
+   "tree": "de5184d9387ee5189d8345ed16337f6cc4d91eb9",
+   "export_file_sha1_local_bytes": "35791c3c7776d61e32922637087a6606fb3ebbce"
+  },
+  {
+   "check": "merged_g9a_run1_proxy",
+   "rc": 0,
+   "failed_tests": [],
+   "counts": {
+    "passed": "1",
+    "failed": "0"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_g9a_run1_stripped",
+   "rc": 0,
+   "failed_tests": [],
+   "counts": {
+    "passed": "1",
+    "failed": "0"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_g9a_run2_proxy",
+   "rc": 0,
+   "failed_tests": [],
+   "counts": {
+    "passed": "1",
+    "failed": "0"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_g9a_run2_stripped",
+   "rc": 0,
+   "failed_tests": [],
+   "counts": {
+    "passed": "1",
+    "failed": "0"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_whole_file_proxy",
+   "rc": 1,
+   "failed_tests": [
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+   ],
+   "counts": {
+    "passed": "2",
+    "failed": "1"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_whole_file_stripped",
+   "rc": 1,
+   "failed_tests": [
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+   ],
+   "counts": {
+    "passed": "2",
+    "failed": "1"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_after_credential_gate",
+   "rc": 1,
+   "failed_tests": [
+    "test_C01_the_scanned_set_is_named_and_actually_present",
+    "test_C06_declaration_is_by_digest_not_by_path",
+    "test_C07_what_the_working_tree_actually_holds_today",
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+   ],
+   "counts": {
+    "passed": "9",
+    "failed": "4"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_mutant_D_no_transport_hook",
+   "rc": 1,
+   "failed_tests": [
+    "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls"
+   ],
+   "counts": {
+    "passed": "0",
+    "failed": "1"
+   },
+   "g9a_failed": true,
+   "first_failure_line": null
+  },
+  {
+   "check": "merged_mutant_E_no_write_path",
+   "rc": 1,
+   "failed_tests": [
+    "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls"
+   ],
+   "counts": {
+    "passed": "0",
+    "failed": "1"
+   },
+   "g9a_failed": true,
+   "first_failure_line": null
+  },
+  {
+   "check": "restored_after_mutants",
+   "same_sha1": true
+  },
+  {
+   "check": "merged_g9a_after_restore",
+   "rc": 0,
+   "failed_tests": [],
+   "counts": {
+    "passed": "1",
+    "failed": "0"
+   },
+   "g9a_failed": false,
+   "first_failure_line": null
+  }
+ ],
+ "reading_of_the_merged_tree": {
+  "why_re_measured": "the live tip moved backend/app/db/session.py, which is where the hooked engine comes from, so the arm was re-run on the merge result and not only on the base",
+  "g9a_alone_runs": [
+   {
+    "check": "merged_g9a_run1_proxy",
+    "rc": 0,
+    "failed_tests": [],
+    "counts": {
+     "passed": "1",
+     "failed": "0"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   },
+   {
+    "check": "merged_g9a_run1_stripped",
+    "rc": 0,
+    "failed_tests": [],
+    "counts": {
+     "passed": "1",
+     "failed": "0"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   },
+   {
+    "check": "merged_g9a_run2_proxy",
+    "rc": 0,
+    "failed_tests": [],
+    "counts": {
+     "passed": "1",
+     "failed": "0"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   },
+   {
+    "check": "merged_g9a_run2_stripped",
+    "rc": 0,
+    "failed_tests": [],
+    "counts": {
+     "passed": "1",
+     "failed": "0"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   }
+  ],
+  "g9a_after_other_module": [
+   {
+    "check": "merged_after_credential_gate",
+    "rc": 1,
+    "failed_tests": [
+     "test_C01_the_scanned_set_is_named_and_actually_present",
+     "test_C06_declaration_is_by_digest_not_by_path",
+     "test_C07_what_the_working_tree_actually_holds_today",
+     "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+    ],
+    "counts": {
+     "passed": "9",
+     "failed": "4"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   }
+  ],
+  "whole_file": [
+   {
+    "check": "merged_whole_file_proxy",
+    "rc": 1,
+    "failed_tests": [
+     "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+    ],
+    "counts": {
+     "passed": "2",
+     "failed": "1"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   },
+   {
+    "check": "merged_whole_file_stripped",
+    "rc": 1,
+    "failed_tests": [
+     "test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
+    ],
+    "counts": {
+     "passed": "2",
+     "failed": "1"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   }
+  ],
+  "mutants": [
+   {
+    "check": "merged_mutant_D_no_transport_hook",
+    "rc": 1,
+    "failed_tests": [
+     "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls"
+    ],
+    "counts": {
+     "passed": "0",
+     "failed": "1"
+    },
+    "g9a_failed": true,
+    "first_failure_line": null
+   },
+   {
+    "check": "merged_mutant_E_no_write_path",
+    "rc": 1,
+    "failed_tests": [
+     "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls"
+    ],
+    "counts": {
+     "passed": "0",
+     "failed": "1"
+    },
+    "g9a_failed": true,
+    "first_failure_line": null
+   },
+   {
+    "check": "restored_after_mutants",
+    "same_sha1": true
+   }
+  ],
+  "restore": [
+   {
+    "check": "restored_after_mutants",
+    "same_sha1": true
+   },
+   {
+    "check": "merged_g9a_after_restore",
+    "rc": 0,
+    "failed_tests": [],
+    "counts": {
+     "passed": "1",
+     "failed": "0"
+    },
+    "g9a_failed": false,
+    "first_failure_line": null
+   }
+  ]
+ },
+ "not_fixed_here": {
+  "g9b": "fails on this box in both environments with `observed provider calls = 0` and the operation in UNAVAILABLE state; that door exists to watch a live provider, so it is reported rather than edited",
+  "g9b_assertion_line": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py:264"
+  ],
+  "credential_gate_module": "its own C01/C06/C07 read red here for reasons unrelated to this arm"
+ },
+ "scope": {
+  "files_touched": [
+   "backend/tests/test_qoder_anywhere_lock_duration.py"
+  ],
+  "product_code_bytes": 0,
+  "contracts_bytes": 0,
+  "styles_css_bytes": 0,
+  "enum_values_rewritten": 0,
+  "skips_added": 0,
+  "authoritative_ref_moved": 0,
+  "landed": 0
+ }
+}
