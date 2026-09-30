@@ -16588,6 +16588,49 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0533 r3 · 字典键名上屏 —— 重切到 07:2x 现读尖，读数全部在这一代重取（车道 6a773af1）
+
+打回的那一枚文件是什么（我不猜，量了才写）
+- 写集里唯一合不上的是 `frontend/src/i18n/LocaleContext.tsx`：r2 那代的基座字节是 blob ae26f33aa3753b93a91ecbfc4da1e56713ddcb51，而现尖上同一枚文件已经是 blob 1908117c85b910be6b3c81e95b72c72a909d1c80，被提交 c1f067722b16b80a3179e4ab8b72e2a36d9d8338（ORD-0528）改过。
+- 我先把"是不是冲突"这条排除了：`git merge-tree --write-tree` 对我 r2 那枚头与现尖只吐一枚 tree、没有 CONFLICT 段，rc 0。所以这不是合并冲突，是门要的那句"插入必须落在这代真正存在的字节上"，r2 说不出这句话，r3 说得出——重放工具里那条断言就是它。
+- 这两枚 blob 与那枚提交都可 `git cat-file -t` 解析；完整测量与工具 stdout 记在 blob 5d07cf6bb9658498876bd9d2b9014432cea943db。
+
+枝与基座
+- 交付枝 refs/heads/review/newlane-ord0533-copy-gate-r3，头 = eaeb3cb190f009b5984b47293908dc34e26f4224，父提交 = 我写这块前 `git ls-remote` 现读的权威尖 514b397f96f3b5165b24865f4a544ab6f8020084（这一枚单提交就是全部写集，不再有两枚的形状）。
+- r2 与 r1 都冻结着不动：refs/heads/review/newlane-ord0533-copy-gate-r2 仍是 4b9882cf879d53c14eef33fb96110e34fe113644，r1 仍是 34457f6df5fe86b48b0ead052be53e7bfc870004。本块取代这两块里的**产品坐标**；两串字一个字没改，所以词的判定不变。
+- 0 次 --force、0 次改写已发布提交；推与读都按你给的形制走 `env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY='*'`。
+
+① zh 与 en 两侧都补词（重切后的落点）
+- en 在 refs/heads/review/newlane-ord0533-copy-gate-r3:frontend/src/i18n/LocaleContext.tsx:57，zh 在同一枝同一文件的 :1194，纯插入 7 行、删改 0 行，文件 blob cec0651cb5d9e0d0df0f71ce4c2ca0f07bea379f。
+- 词仍是「本地解析，不打开链接」/ "Local parse, no links opened"，与已入账的 r1、r2 两块逐字相同。
+
+② 这一屏其它 `t()` 调用逐枚核过（这一代重取）
+- 静态臂本轮读数：53 处 t() 调用点、去重 47 枚键，en 命中 47、zh 命中 47，missing 两侧都是空数组，证据 blob 38809d4f8ada78ce6339eb75846ae83b12a6ff3a。
+- 缺陷在这一代仍然是活的：重放前先量——现尖那 137818 字节的字典里 `poiImport.channelLocal` 出现 0 次，而调用点在 `frontend/src/features/poiimport/PoiImportPanel.tsx:352`（blob 5366e1fef802d10c6b042153e0a8bec07c12c5e9，我没动过它这一族任何一行）。
+
+③ 反件（真跑在这一代）
+- 回执 blob 297819ef43255842d97e8592267fec3d26034ea0（工具 blob 4385b514e6e2d9d9fb06a7d3e7d719dcd0e6e533），整轮 rc 0。
+- 摘掉那两行：屏读臂红且 key_name_rendered = true，也就是键名 `poiImport.channelLocal` 又回到渲染文字里；静态臂同时红；字典按原始字节还原（还原前后摘要同值）；控制臂 3 条全绿 rc 0。
+
+④ 屏读在 390 那一档，读渲染文字不读属性
+- B2：视口 390x844，`document.body.innerText`，那一格逐字等于「本地解析，不打开链接」，整屏 347 字，键名形态命中 0、机词命中 0、裸 uuid 命中 0，证据 blob 7e31642e748b380b18f5c39d7344130f9f971806。
+- B3：en-GB 同一格是 "Local parse, no links opened"，证据 blob c74d37a013ca6bf3164a41d1ba3777fb4260bab5；闸本体 blob b42820f895a9dacc308d322af223da5bebfefa4a，JSON 报告 blob 09016e42a3d193c44d9bb39a357a96ed94f8d5b2。
+
+重放工具本身（它替我把"连续插入、不手合"变成可执行断言）
+- 工具 blob 214f4f134b5ee2c4cfaa6fff93b79301c0092531。它 fail-closed 的四条：键在基座字节上必须还不存在；两枚锚点各自只出现一次（防止插进错本子）；把本单的插入行减掉必须逐行重建基座字节（这条才是"没有编辑别人的字"）；产物不得引入 CR（这文件自 ORD-0532 起是 LF）。
+- 第五条是这单挨打回来的那一条：插入前那 137818 字节的 sha256 与 `git hash-object` 出来的 oid 必须等于现尖该路径的 blob，即上面那枚 1908117c85b910be6b3c81e95b72c72a909d1c80。
+
+形制
+- 私有栈：后端 port 4911 只监听 127.0.0.1，跑完已停；启动与身份判定在 blob 15921d5370f552100ed79be7e4823b6d0a3c4eb4（marker 行程回 CALENDAR_SOURCE_UNREADABLE、真行程 200、假行程 http_status=404 三证同批）。
+- 分母仍是那份 canary 的副本：源库只以 mode=ro 打开、用 sqlite3 online backup 现场复制，副本与源四张表计数逐个相等（见同一枚回执 blob 15921d5370f552100ed79be7e4823b6d0a3c4eb4）；共享库主文件摘要我打开前后各算一次、两枚相等，0 次 demo/reset、0 次写 `_preview.db`、0 次碰你点名的端口。
+- 类型检查：exit 0、diagnostics 0 行，回执 blob b5faa9d88ff433cce8dcb2b7abc724ec430ff704。
+
+没做到与没做的（具名）
+- NOT_REACHED_BY_LANE：走完引导向导再进内屏那一形仍未做。壳的门是存下的行程引用，这一代我重新读了条件行：`frontend/src/app/V8Experience.tsx:874`。
+- 这一单不含 `poiImportCopy.ts` 那一族：0524 把那屏的一部分句子搬进特性自己的表（那张表 14 枚键），本单只补还在走 `t()` 的那一枚徽章，没碰那枚文件；要不要把徽章也搬过去是一条独立裁语，我等你定。
+- 我这轮改的只有：字典 7 行的落点、以及把生成戳/副本/摘要这三处"不可回查"补成实测（r2 那块已写明）。词、判据、反件设计都没变。
+
+
 ### ORD-0529 车道 8e5245f0 · r2：三枚被打回的面按现尖重放，两边都逐行验过；八臂、三反件、四屏读在新代全重取
 
 **基座现读**：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = 514b397f96f3b5165b24865f4a544ab6f8020084。
