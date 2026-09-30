@@ -1,0 +1,301 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [36756]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:6999 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:54706 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60244 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ord0361reachB frontend=:4197 -> backend=:6999 ai=disabled db=_e2e_ord0361reachB.db
+
+Running 5 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60302 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60305 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60302 - "POST /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60305 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60302 - "POST /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/stay-options/ee1fde2f-ac95-4480-953b-b1be687c64f9/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=b994703d-6eb7-408f-80ac-ca10df4379cf options=4 chosen=ee1fde2f-ac95-4480-953b-b1be687c64f9 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:59304 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59330 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64998 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59348 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65002 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64996 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56943 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56946 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56948 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65000 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56945 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62726 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56954 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (6.4s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60525 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60526 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60530 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64108 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64107 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64103 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64867 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64106 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58741 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64866 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60126 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60864 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63624 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61075 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61087 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61092 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57091 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57088 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57082 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51431 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57087 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62737 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59976 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54975 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50377 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55032 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-map-ord0390-selection-both-ways.spec.ts :: reach-320 — {"markers":9,"clusters":6,"misses":[{"want":["9"],"got":"none","at":[224,382]}],"coLocated":[{"labels":["2","3","7","8"],"names":["Check in · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Check out · Haihe Riverside Hotel"],"lng":117.22299,"lat":38.87655,"px":[126,468]}],"rows":9,"allStopsHaveRows":true,"smallestHitPx2":1156,"doc":320,"win":320}
+  x  2 [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @320 (5.0s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:50925 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50931 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50946 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65415 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54117 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65416 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65417 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60093 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54119 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52700 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49676 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54118 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60523 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58136 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58139 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58145 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62237 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59716 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59718 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59714 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50175 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59720 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62051 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62050 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53374 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51938 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-map-ord0390-selection-both-ways.spec.ts :: reach-360 — {"markers":9,"clusters":6,"misses":[{"want":["9"],"got":"none","at":[244,382]}],"coLocated":[{"labels":["2","3","7","8"],"names":["Check in · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Check out · Haihe Riverside Hotel"],"lng":117.22299,"lat":38.87655,"px":[146,468]}],"rows":9,"allStopsHaveRows":true,"smallestHitPx2":1156,"doc":360,"win":360}
+  x  3 [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @360 (9.3s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60055 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60070 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60081 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64454 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55350 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55347 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55348 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64456 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64455 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50597 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50595 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50242 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50598 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64969 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64979 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53050 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64984 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53044 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64982 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53043 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54826 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55653 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61593 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55651 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54010 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59601 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-map-ord0390-selection-both-ways.spec.ts :: reach-390 — {"markers":9,"clusters":6,"misses":[{"want":["9"],"got":"none","at":[259,382]}],"coLocated":[{"labels":["2","3","7","8"],"names":["Check in · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Check out · Haihe Riverside Hotel"],"lng":117.22299,"lat":38.87655,"px":[161,468]}],"rows":9,"allStopsHaveRows":true,"smallestHitPx2":1156,"doc":390,"win":390}
+  x  4 [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @390 (4.9s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4197 backend=:6999 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361reachB.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:51578 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51584 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51593 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57231 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59938 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59934 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59936 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57235 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55808 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57233 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56156 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50224 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64041 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60091 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60097 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58524 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60105 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58523 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60103 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58522 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50564 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54255 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62892 - "GET /api/v1/travelers/76235c52-c5fc-4ce9-9e2c-8b34e4b8965d/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54685 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60501 - "GET /api/v1/journeys/b994703d-6eb7-408f-80ac-ca10df4379cf/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60499 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-map-ord0390-selection-both-ways.spec.ts :: reach-414 — {"markers":9,"clusters":6,"misses":[{"want":["9"],"got":"none","at":[271,382]}],"coLocated":[{"labels":["2","3","7","8"],"names":["Check in · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Overnight · Haihe Riverside Hotel","Check out · Haihe Riverside Hotel"],"lng":117.22299,"lat":38.87655,"px":[173,468]}],"rows":9,"allStopsHaveRows":true,"smallestHitPx2":1156,"doc":414,"win":414}
+  x  5 [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @414 (5.1s)
+
+
+  1) [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @320 
+
+    Error: a pixel whose top element is not one of its own pins: [{"want":["9"],"got":"none","at":[224,382]}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 12
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "at": Array [
+    +       224,
+    +       382,
+    +     ],
+    +     "got": "none",
+    +     "want": Array [
+    +       "9",
+    +     ],
+    +   },
+    + ]
+
+      281 |       smallestHitPx2: smallest, ...scroll,
+      282 |     });
+    > 283 |     expect(misses, `a pixel whose top element is not one of its own pins: ${JSON.stringify(misses)}`).toEqual([]);
+          |                                                                                                       ^
+      284 |     expect(rowCount, "every stop on the map has a selectable row at this width").toBe(markers.length);
+      285 |     expect(scroll.doc, "no horizontal page scroll").toBeLessThanOrEqual(scroll.win + 1);
+      286 |     expect(smallest, "every marker keeps a real hit box").toBeGreaterThanOrEqual(20 * 20);
+        at D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:283:103
+
+    Error Context: test-results\qoder-map-ord0390-selectio-8b1c8-table-on-the-map-screen-320-chromium\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-8b1c8-table-on-the-map-screen-320-chromium\error-context.md
+
+  2) [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @360 
+
+    Error: a pixel whose top element is not one of its own pins: [{"want":["9"],"got":"none","at":[244,382]}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 12
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "at": Array [
+    +       244,
+    +       382,
+    +     ],
+    +     "got": "none",
+    +     "want": Array [
+    +       "9",
+    +     ],
+    +   },
+    + ]
+
+      281 |       smallestHitPx2: smallest, ...scroll,
+      282 |     });
+    > 283 |     expect(misses, `a pixel whose top element is not one of its own pins: ${JSON.stringify(misses)}`).toEqual([]);
+          |                                                                                                       ^
+      284 |     expect(rowCount, "every stop on the map has a selectable row at this width").toBe(markers.length);
+      285 |     expect(scroll.doc, "no horizontal page scroll").toBeLessThanOrEqual(scroll.win + 1);
+      286 |     expect(smallest, "every marker keeps a real hit box").toBeGreaterThanOrEqual(20 * 20);
+        at D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:283:103
+
+    Error Context: test-results\qoder-map-ord0390-selectio-941dc-table-on-the-map-screen-360-chromium\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-941dc-table-on-the-map-screen-360-chromium\error-context.md
+
+  3) [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @390 
+
+    Error: a pixel whose top element is not one of its own pins: [{"want":["9"],"got":"none","at":[259,382]}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 12
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "at": Array [
+    +       259,
+    +       382,
+    +     ],
+    +     "got": "none",
+    +     "want": Array [
+    +       "9",
+    +     ],
+    +   },
+    + ]
+
+      281 |       smallestHitPx2: smallest, ...scroll,
+      282 |     });
+    > 283 |     expect(misses, `a pixel whose top element is not one of its own pins: ${JSON.stringify(misses)}`).toEqual([]);
+          |                                                                                                       ^
+      284 |     expect(rowCount, "every stop on the map has a selectable row at this width").toBe(markers.length);
+      285 |     expect(scroll.doc, "no horizontal page scroll").toBeLessThanOrEqual(scroll.win + 1);
+      286 |     expect(smallest, "every marker keeps a real hit box").toBeGreaterThanOrEqual(20 * 20);
+        at D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:283:103
+
+    Error Context: test-results\qoder-map-ord0390-selectio-d3572-table-on-the-map-screen-390-chromium\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-d3572-table-on-the-map-screen-390-chromium\error-context.md
+
+  4) [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @414 
+
+    Error: a pixel whose top element is not one of its own pins: [{"want":["9"],"got":"none","at":[271,382]}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 12
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "at": Array [
+    +       271,
+    +       382,
+    +     ],
+    +     "got": "none",
+    +     "want": Array [
+    +       "9",
+    +     ],
+    +   },
+    + ]
+
+      281 |       smallestHitPx2: smallest, ...scroll,
+      282 |     });
+    > 283 |     expect(misses, `a pixel whose top element is not one of its own pins: ${JSON.stringify(misses)}`).toEqual([]);
+          |                                                                                                       ^
+      284 |     expect(rowCount, "every stop on the map has a selectable row at this width").toBe(markers.length);
+      285 |     expect(scroll.doc, "no horizontal page scroll").toBeLessThanOrEqual(scroll.win + 1);
+      286 |     expect(smallest, "every marker keeps a real hit box").toBeGreaterThanOrEqual(20 * 20);
+        at D:\moodle\_qoder_lane_S4_0926\wt0361\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:283:103
+
+    Error Context: test-results\qoder-map-ord0390-selectio-1e976-table-on-the-map-screen-414-chromium\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-1e976-table-on-the-map-screen-414-chromium\error-context.md
+
+  4 failed
+    [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @320 
+    [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @360 
+    [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @390 
+    [chromium] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:231:3 › reach — every stop is selectable on the map screen @414 
+  1 passed (51.7s)
