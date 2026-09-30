@@ -25,6 +25,7 @@ from app.fact_acquisition import (
 from app.main import _plan_mobility_eligibility_receipts, _provider_mesh_candidate_payload
 from app.schemas import AgentToolCall
 from app.services import (
+    COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE,
     SEALED_DEMO_AUTHORITY_ENVELOPE,
     UNRESOLVED_ACTIVITY_FACTS,
     _catalogue_templates,
@@ -54,6 +55,53 @@ def test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_b
             }
         ),
         updated_at="2026-09-30T00:00:00+00:00",
+    )
+
+
+def test_coursework_estimate_envelope_is_explicit_and_lab_scoped(monkeypatch):
+    place = Place(
+        id="coursework-estimate-place",
+        provider_key="overpass",
+        external_id="overpass:node/coursework-estimate",
+        city_code="CN-TEST",
+        name="Coursework estimated place",
+        category="museum",
+        latitude=31.0,
+        longitude=120.0,
+        opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+        tags_json="[]",
+        metadata_json=json.dumps(
+            {
+                "cost_evidence": {"status": "UNKNOWN", "amount_minor": None},
+                "strategy_estimate": {
+                    "status": "ESTIMATED_AGENT",
+                    "opening_hours": {"open_minutes": 600, "close_minutes": 1080},
+                    "cost_evidence": {"status": "ESTIMATED_AGENT", "amount_minor": 0},
+                },
+            }
+        ),
+        updated_at="2026-09-30T00:00:00+00:00",
+    )
+    plan = SimpleNamespace(
+        id="coursework-estimate-plan",
+        explanation_json=json.dumps(
+            {
+                "authority_state": "COURSEWORK_ESTIMATED_FACTS",
+                "authority_envelope": COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE,
+            }
+        ),
+        mobility_evidence_json=json.dumps(
+            {"snapshot_id": "live-snapshot", "source_provider": "valhalla-http", "facts": []}
+        ),
+    )
+
+    monkeypatch.setattr("app.services.settings", SimpleNamespace(lab_estimate_authority=True))
+    assert plan_authority_blocker(plan, {place.id: place}, used_place_ids=[place.id]) is None
+
+    monkeypatch.setattr("app.services.settings", SimpleNamespace(lab_estimate_authority=False))
+    assert (
+        plan_authority_blocker(plan, {place.id: place}, used_place_ids=[place.id])
+        == UNRESOLVED_ACTIVITY_FACTS
     )
     plan = SimpleNamespace(
         id="candidate-with-unknown-facts",

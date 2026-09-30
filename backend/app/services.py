@@ -11,6 +11,7 @@ from uuid import UUID, uuid5
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.execution.traveler_twin import capability_constraint_items
 from app.core.audit import record_audit
 from app.db.models import (
@@ -570,6 +571,7 @@ SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_MOBILITY_NOT_AUTHORITATIVE_FOR_LIV
 UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
 SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
 SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE = "SEALED_REAL_REPLAY"
+COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE = "COURSEWORK_ESTIMATE"
 SEALED_AUTHORITY_ENVELOPES = frozenset(
     {SEALED_DEMO_AUTHORITY_ENVELOPE, SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE}
 )
@@ -586,6 +588,21 @@ def _place_strategy_estimate(place: Place) -> dict[str, Any] | None:
     if str(estimate.get("status") or "").upper() != "ESTIMATED_AGENT":
         return None
     return dict(estimate)
+
+
+def _coursework_estimate_covers(place: Place) -> bool:
+    estimate = _place_strategy_estimate(place)
+    if estimate is None:
+        return False
+    opening = estimate.get("opening_hours")
+    cost = estimate.get("cost_evidence")
+    if not isinstance(opening, Mapping) or not isinstance(cost, Mapping):
+        return False
+    return (
+        opening.get("open_minutes") is not None
+        and opening.get("close_minutes") is not None
+        and cost.get("amount_minor") is not None
+    )
 
 
 def _place_verified_cost(place: Place) -> int | None:
@@ -674,7 +691,20 @@ def plan_authority_blocker(
     """
 
     explanation = json.loads(item.explanation_json or "{}")
+    used = [str(value) for value in (used_place_ids or ()) if value]
+    used_unique = list(dict.fromkeys(used))
+    coursework_places = [places_by_id.get(place_id) for place_id in used_unique]
+    coursework_estimate = (
+        settings.lab_estimate_authority
+        and str(explanation.get("authority_envelope") or "").upper()
+        == COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE
+        and bool(coursework_places)
+        and all(place is not None and _coursework_estimate_covers(place) for place in coursework_places)
+    )
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS":
+        if not coursework_estimate:
+            return UNRESOLVED_ACTIVITY_FACTS
+    elif explanation.get("authority_state") == "COURSEWORK_ESTIMATED_FACTS" and not coursework_estimate:
         return UNRESOLVED_ACTIVITY_FACTS
 
     # Replan candidates can be materialised by a different composition path
@@ -683,10 +713,9 @@ def plan_authority_blocker(
     # provider-backed UNKNOWN opening/cost facts remain non-selectable.  An
     # explicit sealed demo/replay envelope is the only exception, so fixtures
     # and captured replay tests keep their existing contract.
-    used = [str(value) for value in (used_place_ids or ()) if value]
     used_content_places = [
         places_by_id[place_id]
-        for place_id in dict.fromkeys(used)
+        for place_id in used_unique
         if place_id in places_by_id
         and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
     ]
@@ -695,7 +724,7 @@ def plan_authority_blocker(
         in SEALED_AUTHORITY_ENVELOPES
         for place in used_content_places
     )
-    if used_content_places and not sealed and any(
+    if used_content_places and not sealed and not coursework_estimate and any(
         _place_has_unresolved_visit_facts(place) for place in used_content_places
     ):
         return UNRESOLVED_ACTIVITY_FACTS
@@ -1465,6 +1494,11 @@ def _provisional_catalogue_plan(
 
     if not unresolved:
         return []
+    coursework_authority = (
+        settings.lab_estimate_authority
+        and bool(strategy_estimates)
+        and all(_coursework_estimate_covers(place) for place in selected)
+    )
     version_no = (
         session.scalar(
             select(PlanVersion.version_no)
@@ -1479,7 +1513,19 @@ def _provisional_catalogue_plan(
     )
     explanation = {
         "reason": "Real provider Places arranged as a provisional itinerary",
-        "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+        "authority_state": (
+            "COURSEWORK_ESTIMATED_FACTS"
+            if coursework_authority
+            else "PROVISIONAL_UNRESOLVED_FACTS"
+        ),
+        "authority_envelope": (
+            COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+        ),
+        "authority_note": (
+            "Coursework-only selection using explicit Agent estimates; this is not a LIVE provider-ready result."
+            if coursework_authority
+            else None
+        ),
         "unresolved_facts": unresolved,
         "cost_summary": {
             "status": "PARTIAL",
@@ -1493,10 +1539,17 @@ def _provisional_catalogue_plan(
         },
         "strategy_estimate_summary": {
             "status": "ESTIMATED_AGENT" if strategy_estimates else "NONE",
-            "authority_eligible": False,
+            "authority_eligible": coursework_authority,
+            "authority_envelope": (
+                COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+            ),
             "estimated_total_cost_minor": estimated_total_cost,
             "facts": strategy_estimates,
-            "note": "Estimates guide this provisional strategy only; canonical authority still requires provider evidence.",
+            "note": (
+                "Coursework estimate envelope is enabled for this isolated lab; values remain explicitly estimated."
+                if coursework_authority
+                else "Estimates guide this provisional strategy only; canonical authority still requires provider evidence."
+            ),
         },
         "mobility_snapshot_id": mobility.snapshot_id,
         "mobility_provider": mobility.source_provider_key,
