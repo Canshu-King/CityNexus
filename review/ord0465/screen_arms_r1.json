@@ -11,6 +11,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_UNKNOWN",
         "door_status": 404,
         "expected": "SHARE_GRANT_UNKNOWN",
@@ -25,6 +26,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_UNKNOWN",
         "door_status": 404,
         "expected": "SHARE_GRANT_UNKNOWN",
@@ -39,6 +41,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_REVOKED",
         "door_status": 409,
         "expected": "SHARE_GRANT_REVOKED",
@@ -53,6 +56,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_REVOKED",
         "door_status": 409,
         "expected": "SHARE_GRANT_REVOKED",
@@ -67,6 +71,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_EXPIRED",
         "door_status": 409,
         "expected": "SHARE_GRANT_EXPIRED",
@@ -81,6 +86,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_EXPIRED",
         "door_status": 409,
         "expected": "SHARE_GRANT_EXPIRED",
@@ -95,6 +101,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
         "door_status": 409,
         "expected": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
@@ -109,6 +116,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
         "door_status": 409,
         "expected": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
@@ -123,6 +131,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_NOT_LINK_READABLE",
         "door_status": 409,
         "expected": "SHARE_GRANT_NOT_LINK_READABLE",
@@ -137,6 +146,7 @@
       "pass": true,
       "detail": {
         "state": "refused",
+        "settled": true,
         "body_code": "SHARE_GRANT_NOT_LINK_READABLE",
         "door_status": 409,
         "expected": "SHARE_GRANT_NOT_LINK_READABLE",
@@ -207,9 +217,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "21:44",
-          "22:44",
-          "23:44"
+          "01:48",
+          "02:48",
+          "03:48"
         ]
       }
     },
@@ -257,7 +267,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/yM57hqIZwinN1tQ8A2kV0YwilJZYiwu-",
+        "pathname": "/v8/shared/YMFIdxKSttX6T_acXfA_6ybs5Edu5vuj",
         "title_still_on_screen": true
       }
     },
@@ -320,7 +330,7 @@
         "status": "这台设备看到的回读：HTTP 409",
         "media": "回读的媒体类型 application/json",
         "bytes": "这台设备数到的字节 372",
-        "receipt": "服务器回执号 CNX-XW3M8AT5",
+        "receipt": "服务器回执号 CNX-5SMBQ42S",
         "fold_open": true
       }
     },
