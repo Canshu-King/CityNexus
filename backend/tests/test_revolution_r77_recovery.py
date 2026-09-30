@@ -175,6 +175,33 @@ def test_official_html_parser_keeps_verified_free_and_all_day_distinct_from_unkn
     assert result["cost_evidence"]["amount_minor"] == 0
 
 
+def test_official_html_parser_keeps_login_shell_as_no_structured_facts(monkeypatch):
+    from app import fact_acquisition
+
+    body = """
+    <html><title>用户登录</title>
+      <input placeholder="请输入手机号/邮箱" />
+      <input placeholder="请输入密码" />
+      <div>登录即代表同意《用户协议》</div>
+    </html>
+    """
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://wap.example/login"),
+    )
+    result = _official_web_facts(object(), "https://wap.example/login", retrieved_at="now")
+
+    assert result["status"] == "NO_STRUCTURED_FACTS"
+    assert result["opening_hours"]["status"] == "UNKNOWN"
+    assert result["cost_evidence"]["status"] == "UNKNOWN"
+
+
 def test_official_price_label_with_full_width_spacing_is_parsed_as_cost(monkeypatch):
     from app import fact_acquisition
 
