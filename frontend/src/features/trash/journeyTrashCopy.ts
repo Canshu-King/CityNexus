@@ -51,6 +51,21 @@ export const journeyTrashCopy = {
     "trash.doorAbsent":
       "This server did not answer the list of binned trips, so no row can be shown yet. Nothing about your trips changed.",
     "trash.refresh": "Read the bin again",
+    "trash.noViewer":
+      "This screen does not know whose bin to ask for, so it is not showing anybody's. Nothing about your trips changed.",
+    "trash.rowOwnershipMissing": "this server gave no owner for this row",
+    "trash.rowOwnedByOther": "kept by another traveller on this server",
+    "trash.rowOwnedByMe": "yours on this server",
+    "trash.rowNotStated": "this server did not say whose trip this is",
+    "trash.recoveryAllowed": "you may bring this one back",
+    "trash.recoveryRefusedRole":
+      "You hold a seat on this trip, but the role you hold may not bring it back, so it is read-only here.",
+    "trash.recoveryRefusedNoSeat":
+      "This trip belongs to somebody else and you hold no seat on it here, so it cannot be brought back from this screen.",
+    "trash.recoveryRefusedOther":
+      "This trip belongs to another traveller on this server, so it is shown without an action.",
+    "trash.recoveryMissing":
+      "This server gave no answer about whether you may bring this one back, so no action is offered.",
   },
   "zh-CN": {
     "trash.title": "回收站",
@@ -78,6 +93,16 @@ export const journeyTrashCopy = {
     "trash.transport": "回收站没有从这台服务器读到。这一屏没有改动你的任何行程。",
     "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
+    "trash.noViewer": "这一屏还不知道要问谁的回收站，所以谁的和盘都不显示。你的行程没有因此变化。",
+    "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
+    "trash.rowOwnedByOther": "由这台服务器上的另一位旅客保管",
+    "trash.rowOwnedByMe": "在这台服务器上属于你",
+    "trash.rowNotStated": "这台服务器没说这条行程是谁的",
+    "trash.recoveryAllowed": "这条你可以找回",
+    "trash.recoveryRefusedRole": "你在这条行程上有席位，但你那个角色不能把它找回来，所以这里只读。",
+    "trash.recoveryRefusedNoSeat": "这条属于别人，而且你在这台服务器上没有它的席位，所以这一屏找不回来。",
+    "trash.recoveryRefusedOther": "这条在这台服务器上属于另一位旅客，所以这里显示但不给动作。",
+    "trash.recoveryMissing": "服务器没有回答这条能不能找回，所以这里不给动作。",
   },
 } as const;
 
