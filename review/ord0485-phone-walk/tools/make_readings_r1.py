@@ -31,7 +31,9 @@ def main():
     share = load(EV + "/share_r1/share_r1.json")
     wiz = load(EV + "/wizard_r1/wizard_r1.json")
     cells = load(EV + "/server_cells_r1.json")
-    gap_before = load(EV + "/i18n_gap_r1.json")
+    gap_before = load(EV + "/i18n_gap_base_gen_r1.json")
+    gap_after = load(EV + "/i18n_gap_candidate_gen_r1.json")
+    gap_pair = load(EV + "/i18n_gap_pair_r1.json")
     prereq = load(EV + "/candidate_prereq_r1.json")
     face4861 = load(EV + "/import_face_4861.json")
     face4862 = load(EV + "/import_face_4862.json")
@@ -218,22 +220,37 @@ def main():
         "(`frontend/src/i18n/LocaleContext.tsx:2085` - `dictionaries[locale][key]`, then `?? key`), and the "
         "call site is `frontend/src/features/poiimport/PoiImportPanel.tsx:216`.")
     add("")
-    add("The instrument `tools/i18n_key_gap_r1.py` counted the whole family at the tip instead of fixing one "
-        "word: " + str(gap_before["referenced_key_count"]) + " keys referenced across `frontend/src`, "
+    add("The instrument `tools/i18n_key_gap_r2.py` counted the whole family at the tip instead of fixing "
+        "one word. Measured on the tip's own bytes (`receipts/i18n_gap_base_gen_r1.json`, dictionary sha256 "
+        "`" + gap_before["dictionary_sha256_over_bytes"][:16] + "…`): "
+        + str(gap_before["referenced_key_count"]) + " keys referenced across `frontend/src`, "
         + str(gap_before["keys_in_en"]) + " held by `en` and " + str(gap_before["keys_in_zhCN"])
-        + " by `zhCN`, and exactly " + str(gap_before["referenced_keys_missing_from_both"])
+        + " by `zhCN`, and " + str(gap_before["referenced_keys_missing_from_both"])
         + " referenced by the code but missing from **both** tables:")
     add("")
     for m in gap_before["missing_from_both"]:
         add("- `" + m["key"] + "` - call sites " + json.dumps(m["call_sites"], ensure_ascii=False)
             + " - proven on screen in arms " + json.dumps(m["on_screen_arms"], ensure_ascii=False) + "")
     add("")
+    add("Re-measured on the candidate's bytes (`receipts/i18n_gap_candidate_gen_r1.json`, dictionary sha256 "
+        "`" + gap_after["dictionary_sha256_over_bytes"][:16] + "…`, "
+        + str(gap_after["keys_in_en"]) + " keys per table): `referenced_keys_missing_from_both="
+        + str(gap_after["referenced_keys_missing_from_both"]) + "`. The two dictionaries are different "
+        "bytes: `the_two_dictionaries_are_different_bytes="
+        + str(gap_pair["the_two_dictionaries_are_different_bytes"]) + "`, and the export was restored to "
+        "the bytes that were built into the candidate bundle: "
+        "`export_restored_to_the_built_candidate_bytes="
+        + str(gap_pair["export_restored_to_the_built_candidate_bytes"]) + "`.")
+    add("")
+    add("How this sheet got it wrong the first time, kept in the artifact on purpose: the first version of "
+        "the instrument wrote to one fixed output path, so the candidate run overwrote the tip run's JSON "
+        "and this section printed `0 missing` while describing the tip. `i18n_gap_pair_r1.py` now takes one "
+        "file per generation and asserts the two dictionaries differ; the superseded artifact "
+        "`i18n_gap_r1.json` is not shipped, and the readings sheet above it is the corrected one.")
+    add("")
     add("The fix adds both keys to both tables (`poiImport.channelLocal` = Local channel / 本地通道, "
         "`exec.state.notStarted` = NOT STARTED / 未开始, the register taken from the six sibling "
-        "`exec.state.*` rows). After the fix the same instrument reads "
-        + json.dumps({k: prereq["i18n_gap_after_fix"][k] for k in
-                      ("keys_in_en", "keys_in_zhCN", "referenced_keys_missing_from_both")},
-                     ensure_ascii=False) + ".")
+        "`exec.state.*` rows).")
     add("")
     add("Preconditions that were run, not assumed:")
     add("")

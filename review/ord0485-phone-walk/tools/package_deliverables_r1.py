@@ -26,12 +26,16 @@ LEDGER = r"D:/moodle/CITYNEXUS_AGENT_CONTROL.md"
 TOOLS = ["stack_up_r1.py", "static_identity_r2.py", "db_snapshot_r1.py", "db_snapshot_proof_r2.py",
          "walk_phone_r1.cjs",
          "walk_phone_r2.cjs", "share_receive_walk_r1.cjs", "wizard_and_live_share_r1.cjs",
-         "server_cells_r1.py", "i18n_key_gap_r1.py", "serve_g1_r1.py", "import_g1_read_r1.cjs",
+         "server_cells_r1.py", "i18n_key_gap_r1.py", "i18n_key_gap_r2.py", "i18n_gap_pair_r1.py",
+         "serve_g1_r1.py", "import_g1_read_r1.cjs",
          "candidate_prereq_r1.py", "make_readings_r1.py", "package_deliverables_r1.py"]
 
 RECEIPTS = [("run/stack_up_r1.json", "stack_up_r1.json"),
             ("run/static_identity_r2.json", "static_identity_r2.json"),
             ("evidence/db_snapshot_proof_r2.json", "db_snapshot_proof_r2.json"),
+            ("evidence/i18n_gap_base_gen_r1.json", "i18n_gap_base_gen_r1.json"),
+            ("evidence/i18n_gap_candidate_gen_r1.json", "i18n_gap_candidate_gen_r1.json"),
+            ("evidence/i18n_gap_pair_r1.json", "i18n_gap_pair_r1.json"),
             ("evidence/walk_r2/walk_r2.json", "walk_r2.json"),
             ("evidence/share_r1/share_r1.json", "share_r1.json"),
             ("evidence/wizard_r1/wizard_r1.json", "wizard_r1.json"),
@@ -141,6 +145,11 @@ def main():
          "reason": "paints a live share token inside the opened grant fold"},
         {"local": "evidence/wizard_r1/J1_access_live.png",
          "reason": "paints live share tokens in three opened grant folds"},
+        {"local": "evidence/i18n_gap_r1.json",
+         "reason": "SUPERSEDED BY MY OWN DEFECT: r1 wrote to one fixed path, so the candidate run "
+                   "overwrote the tip reading and the first delivered sheet quoted that clobbered "
+                   "number as the tip's. Replaced by i18n_gap_base_gen_r1.json and "
+                   "i18n_gap_candidate_gen_r1.json; the file stays on this machine as the record."},
         {"local": "evidence/walk_r1/walk_r1.json",
          "reason": "first walk run: its drawer helper refused to re-open the covered menu button, so "
                    "every C_* row is an instrument ABORT and would read as a product defect; kept "

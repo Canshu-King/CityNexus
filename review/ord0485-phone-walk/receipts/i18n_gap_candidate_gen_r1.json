@@ -1,0 +1,17 @@
+{
+  "tool": "i18n_key_gap_r2",
+  "generation_label": "CANDIDATE_80608938",
+  "src_measured": "D:/moodle/_qoder_phone_ord0485_20260930/export/frontend/src",
+  "dictionary_file": "frontend/src/i18n/LocaleContext.tsx",
+  "dictionary_sha256_over_bytes": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a",
+  "dictionary_line_count": 2119,
+  "keys_in_en": 895,
+  "keys_in_zhCN": 895,
+  "referenced_key_count": 698,
+  "referenced_keys_missing_from_en": 0,
+  "referenced_keys_missing_from_zhCN": 0,
+  "referenced_keys_missing_from_both": 0,
+  "missing_from_both": [],
+  "missing_from_zh_only_falls_back_to_english": [],
+  "missing_from_en_only": []
+}

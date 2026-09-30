@@ -1,0 +1,43 @@
+{
+  "tool": "i18n_gap_pair_r1",
+  "base_generation": {
+    "dictionary_sha256_over_bytes": "4ed1a52cf92e58dd6aa99e92efc40584b05956f745d1c9577136e92161b7640b",
+    "keys_in_en": 893,
+    "keys_in_zhCN": 893,
+    "referenced_key_count": 698,
+    "referenced_keys_missing_from_both": 2
+  },
+  "base_missing_from_both": [
+    {
+      "key": "exec.state.notStarted",
+      "call_sites": [
+        "src/features/execution/V12AuthoritativeJourneyPanel.tsx:59",
+        "src/features/execution/V12StatePrimitives.tsx:17"
+      ],
+      "on_screen_arms": []
+    },
+    {
+      "key": "poiImport.channelLocal",
+      "call_sites": [
+        "src/features/poiimport/PoiImportPanel.tsx:216"
+      ],
+      "on_screen_arms": [
+        "C_drawer_import"
+      ]
+    }
+  ],
+  "candidate_generation": {
+    "dictionary_sha256_over_bytes": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a",
+    "keys_in_en": 895,
+    "keys_in_zhCN": 895,
+    "referenced_key_count": 698,
+    "referenced_keys_missing_from_both": 0
+  },
+  "candidate_missing_from_both": [],
+  "the_two_dictionaries_are_different_bytes": true,
+  "export_restored_to_the_built_candidate_bytes": true,
+  "export_sha_before_and_after_this_tool": {
+    "before": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a",
+    "after": "5b62cc0c4a7579f1a49421f4614052b5daee961aa5292b339db77ecd5d58735a"
+  }
+}

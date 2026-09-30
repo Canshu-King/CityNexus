@@ -1,6 +1,6 @@
 {
   "tool": "package_deliverables_r1",
-  "staged_at": "2026-09-30T12:41:04.216824+08:00",
+  "staged_at": "2026-09-30T15:27:59.460259+08:00",
   "tokens_known_and_masked": 3,
   "token_shapes_replaced": 13,
   "manifest": [
@@ -55,6 +55,16 @@
       "sha256": "0a084cc6874ebaa8a950675d77a67e7d20f37efcf1170068f8e81a371937d562"
     },
     {
+      "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+      "bytes": 5213,
+      "sha256": "43d82261501c68e257d42b9dc1534ea435ee11cf9787dd59489ebc88d8372f55"
+    },
+    {
+      "path": "review/ord0485-phone-walk/tools/i18n_gap_pair_r1.py",
+      "bytes": 3953,
+      "sha256": "3c0a781348db64cc6b0bc847018d4667240d840a333fa8a3a45a05dfdb284bb4"
+    },
+    {
       "path": "review/ord0485-phone-walk/tools/serve_g1_r1.py",
       "bytes": 2171,
       "sha256": "7866b21cf73688e5bcb2d802461624e93cf357254913a8e7abe965cee2037080"
@@ -71,13 +81,13 @@
     },
     {
       "path": "review/ord0485-phone-walk/tools/make_readings_r1.py",
-      "bytes": 23508,
-      "sha256": "c3cb09f39fad9ba9957efb0619e6258325a57d3038e7f985b8baccb4ec344b9c"
+      "bytes": 24845,
+      "sha256": "1ccaf25847df6ad272447cb902444f60c2c80d28a734f75d28876754f99d7b8c"
     },
     {
       "path": "review/ord0485-phone-walk/tools/package_deliverables_r1.py",
-      "bytes": 8960,
-      "sha256": "71a7b2255df298e2bc839f12700c9480a006b3380a594e9804970f5fc35fa7c8"
+      "bytes": 9692,
+      "sha256": "9f5e957da2f108d66732c95bd6107eaa3239b25a136db16bde88d699727e93dc"
     },
     {
       "path": "review/ord0485-phone-walk/receipts/stack_up_r1.json",
@@ -95,6 +105,24 @@
       "path": "review/ord0485-phone-walk/receipts/db_snapshot_proof_r2.json",
       "bytes": 1527,
       "sha256": "605231dcb2b8629377565a55abd806694fd95cd4ab97b8afb5b797dec1ae4fdb",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/i18n_gap_base_gen_r1.json",
+      "bytes": 1093,
+      "sha256": "716c0e8c0ae1ea8aa285faa4f70fb142516a32da4e9e75b4cc30f81fb56a8ea6",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/i18n_gap_candidate_gen_r1.json",
+      "bytes": 659,
+      "sha256": "6968a64eb5a7da6359d934a1aac5a763841cf5eb4f384fbdb8a3b76418f205c1",
+      "token_occurrences_masked": 0
+    },
+    {
+      "path": "review/ord0485-phone-walk/receipts/i18n_gap_pair_r1.json",
+      "bytes": 1377,
+      "sha256": "df075835843ee7ae5ca1a90e2392d4864e4a6c897a42248b4beb9e041206d2db",
       "token_occurrences_masked": 0
     },
     {
@@ -325,11 +353,15 @@
       "reason": "paints live share tokens in three opened grant folds"
     },
     {
+      "local": "evidence/i18n_gap_r1.json",
+      "reason": "SUPERSEDED BY MY OWN DEFECT: r1 wrote to one fixed path, so the candidate run overwrote the tip reading and the first delivered sheet quoted that clobbered number as the tip's. Replaced by i18n_gap_base_gen_r1.json and i18n_gap_candidate_gen_r1.json; the file stays on this machine as the record."
+    },
+    {
       "local": "evidence/walk_r1/walk_r1.json",
       "reason": "first walk run: its drawer helper refused to re-open the covered menu button, so every C_* row is an instrument ABORT and would read as a product defect; kept locally, superseded by walk_r2"
     }
   ],
-  "ledger_sha256_before": "f002113f2f9600333b9f9465e1bc71fe2bf185b31c89bd1474c227d84e92c828",
-  "ledger_sha256_after": "f002113f2f9600333b9f9465e1bc71fe2bf185b31c89bd1474c227d84e92c828",
+  "ledger_sha256_before": "dcaea35f574b6cd5f1a8503a4f39c866d14d1fa58c532a7e9a3542dc468e41fe",
+  "ledger_sha256_after": "dcaea35f574b6cd5f1a8503a4f39c866d14d1fa58c532a7e9a3542dc468e41fe",
   "ledger_untouched": true
 }
