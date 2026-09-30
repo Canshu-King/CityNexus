@@ -1653,7 +1653,13 @@ def capture_real_city_candidates(
                 provider_status = {
                     "nominatim": "REPLAY_FALLBACK",
                     "overpass": "REPLAY_FALLBACK",
-                    "anchor": journey_anchor,
+                    # ORD-0519: this shape replaces the whole status, so it has to carry the credit
+                    # over itself.  A city that photon grounded and Overpass then refused used to
+                    # read back as `nominatim: REPLAY_FALLBACK` with no anchor at all - the
+                    # mis-credit this order exists to stop.  `counts_as_supply: false` keeps the
+                    # ban: naming the leg is not the same as accepting its places.
+                    "anchor": anchor or journey_anchor,
+                    "anchor_credit_kept": anchor is not None,
                     # One vocabulary for one question: a named reason, never an exception
                     # class, and `PROVIDER_NO_RESULTS` when the providers answered but found
                     # nothing (which is a different thing from answering at all).
@@ -1672,7 +1678,8 @@ def capture_real_city_candidates(
                 provider_status = {
                     "nominatim": "UNAVAILABLE",
                     "overpass": "UNAVAILABLE",
-                    "anchor": journey_anchor,
+                    "anchor": anchor or journey_anchor,
+                    "anchor_credit_kept": anchor is not None,
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
