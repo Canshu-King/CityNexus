@@ -910,6 +910,16 @@ def test_strict_catalogue_templates_exclude_unverified_cost_rows():
     assert all(item[0] != "unknown-cost" for template in templates for item in template)
 
 
+def test_real_catalogue_treats_verified_gardens_as_visit_stops():
+    from app.services import _catalogue_visit_eligible
+
+    garden = SimpleNamespace(
+        category="garden",
+        metadata_json="{}",
+    )
+    assert _catalogue_visit_eligible(garden) is True
+
+
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_PRIVATE_TARGET"):
         _validate_public_http_url("http://127.0.0.1:8080/facts")

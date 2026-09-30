@@ -19,6 +19,7 @@ from app.db.models import (
     Commitment,
     Journey,
     JourneyConstraint,
+    JourneyMission,
     Place,
     PlanVersion,
     Preference,
@@ -643,7 +644,7 @@ def _catalogue_visit_eligible(place: Place) -> bool:
     if role in {"lodging", "accommodation", "parking", "transit"}:
         return False
     return category in {
-        "aquarium", "attraction", "cafe", "experience", "food", "gallery",
+        "aquarium", "attraction", "cafe", "experience", "food", "gallery", "garden",
         "heritage", "landmark", "library", "museum", "nightlife", "park",
         "restaurant", "temple", "tourism", "viewpoint", "zoo",
     }
@@ -955,12 +956,181 @@ def _place_duration(place: Place) -> int:
         return 60
 
 
+def _latest_strategy_intent(session: Session, journey: Journey) -> dict[str, Any]:
+    """Read the latest user mission as strategy input, never as a truth source."""
+
+    mission = session.scalar(
+        select(JourneyMission)
+        .where(JourneyMission.journey_id == journey.id)
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(1)
+    )
+    if mission is None:
+        return {"user_text": str(journey.title or ""), "preferences": {}}
+    try:
+        preferences = json.loads(mission.preferences_json or "{}")
+    except (TypeError, ValueError):
+        preferences = {}
+    return {
+        "user_text": str(mission.user_text or journey.title or ""),
+        "preferences": preferences if isinstance(preferences, dict) else {},
+        "mission_id": mission.id,
+    }
+
+
+def _strategy_profile(intent: Mapping[str, Any]) -> str:
+    text = " ".join(
+        [
+            str(intent.get("user_text") or ""),
+            json.dumps(intent.get("preferences") or {}, ensure_ascii=False),
+        ]
+    ).casefold()
+    if any(token in text for token in ("少走", "步行少", "low walking", "compact", "紧凑")):
+        return "compact"
+    if any(token in text for token in ("室内", "indoor", "museum", "美术馆", "工艺", "工藝")):
+        return "indoor"
+    if any(token in text for token in ("庭园", "庭園", "garden", "park", "公园", "公園", "heritage", "历史", "歷史", "long walk", "散步")):
+        return "heritage_outdoor"
+    return "balanced"
+
+
+def _strategy_place_score(place: Place, profile: str) -> tuple[int, int, str]:
+    haystack = " ".join(
+        [
+            str(getattr(place, "name", "") or ""),
+            str(getattr(place, "category", "") or ""),
+            str(getattr(place, "tags_json", "") or ""),
+        ]
+    ).casefold()
+    indoor = any(token in haystack for token in ("museum", "gallery", "craft", "工艺", "工藝", "美術", "美术", "文化館", "library"))
+    outdoor = any(token in haystack for token in ("garden", "park", "庭園", "庭园", "viewpoint", "historic", "temple", "shrine", "heritage"))
+    preference = (
+        3 if profile == "indoor" and indoor else
+        3 if profile == "heritage_outdoor" and outdoor else
+        3 if profile == "compact" and indoor else
+        1 if profile in {"indoor", "compact"} and outdoor else
+        1
+    )
+    completeness = int(_place_window(place) is not None) + int(_place_verified_cost(place) is not None)
+    return preference, completeness, place.id
+
+
+def _strategy_order(
+    places: Sequence[Place], profile: str, travel: Callable[[str, str], int]
+) -> list[list[Place]]:
+    ranked = sorted(
+        places,
+        key=lambda place: (
+            -_strategy_place_score(place, profile)[0],
+            -_strategy_place_score(place, profile)[1],
+            place.id,
+        ),
+    )
+    if not ranked:
+        return []
+    compact = [ranked[0]]
+    remaining = ranked[1:]
+    while remaining and len(compact) < min(4, len(ranked)):
+        previous = compact[-1]
+        next_place = min(
+            remaining,
+            key=lambda place: (
+                travel(previous.id, place.id),
+                -_strategy_place_score(place, profile)[0],
+                place.id,
+            ),
+        )
+        compact.append(next_place)
+        remaining.remove(next_place)
+    diverse: list[Place] = []
+    seen_categories: set[str] = set()
+    for place in ranked:
+        category = str(place.category or "").casefold()
+        if category not in seen_categories or len(diverse) >= 4:
+            diverse.append(place)
+            seen_categories.add(category)
+        if len(diverse) >= min(5, len(ranked)):
+            break
+    return [ranked, compact, diverse]
+
+
+def _real_strategy_metrics(
+    schedule: Sequence[CandidateActivity],
+    places: Mapping[str, Place],
+    mobility_provider: Any,
+    journey: Journey,
+    profile: str,
+) -> tuple[dict[str, float], dict[str, Any]]:
+    """Derive candidate dimensions from measured facts, with neutral evidence made explicit."""
+
+    total_cost = sum(int(item.cost_minor) for item in schedule)
+    travel_minutes = 0
+    degraded_edges = 0
+    edge_count = 0
+    previous: str | None = None
+    for item in schedule:
+        if previous is not None:
+            fact = mobility_provider.facts.get((previous, item.place_id))
+            if fact is not None:
+                travel_minutes += int(fact.minutes)
+                degraded_edges += int(bool(fact.degraded))
+                edge_count += 1
+        previous = item.place_id
+    slack_minutes = 0
+    known_opening = 0
+    for item in schedule:
+        window = _place_window(places[item.place_id])
+        if window is None:
+            continue
+        known_opening += 1
+        slack_minutes += max(0, window[1] - (item.end_at.hour * 60 + item.end_at.minute))
+    known_cost = sum(
+        int(_place_verified_cost(places[item.place_id]) is not None) for item in schedule
+    )
+    known_ratio = (known_opening + known_cost) / max(1, 2 * len(schedule))
+    budget_fit = max(0.0, min(1.0, 1 - total_cost / max(1, journey.budget_amount_minor)))
+    mobility_fit = max(0.0, min(1.0, 1 - travel_minutes / max(1, len(schedule) * 90)))
+    time_reliability = max(0.0, min(1.0, slack_minutes / max(1, len(schedule) * 120)))
+    robustness = known_ratio * (1 - degraded_edges / max(1, edge_count))
+    preference_fit = 0.5 if profile == "balanced" else sum(
+        _strategy_place_score(places[item.place_id], profile)[0] >= 3 for item in schedule
+    ) / max(1, len(schedule))
+    metrics = {
+        "commitment_preservation": 1.0,
+        "stability": round(time_reliability, 6),
+        "time_reliability": round(time_reliability, 6),
+        "preference_fit": round(preference_fit, 6),
+        "mobility_fit": round(mobility_fit, 6),
+        "budget_fit": round(budget_fit, 6),
+        "robustness": round(robustness, 6),
+        "opportunity_value": round(preference_fit * known_ratio, 6),
+    }
+    provenance = {
+        "strategy_profile": profile,
+        "travel_minutes": travel_minutes,
+        "degraded_edges": degraded_edges,
+        "edge_count": edge_count,
+        "slack_minutes": slack_minutes,
+        "verified_opening_count": known_opening,
+        "verified_cost_count": known_cost,
+        "preference_fit_basis": "provider category/tags and mission text" if profile != "balanced" else "NEUTRAL_NO_EXPLICIT_PREFERENCE",
+        "score_sources": {
+            "budget_fit": "verified activity cost / journey budget",
+            "mobility_fit": "LIVE measured travel minutes",
+            "time_reliability": "opening close minus scheduled end",
+            "robustness": "fact completeness and degraded live edges",
+        },
+    }
+    return metrics, provenance
+
+
 def _catalogue_templates(
     places: Mapping[str, Place],
     travel: Callable[[str, str], int],
     *,
     day_start_minutes: int = 9 * 60,
     variants: int = 3,
+    intent: Mapping[str, Any] | None = None,
 ) -> list[list[tuple[str, str, str, str]]]:
     """Compose the template shape out of whatever the city's catalogue really holds.
 
@@ -976,13 +1146,12 @@ def _catalogue_templates(
     duration, with the frozen travel minutes between consecutive stops actually subtracted so
     the literal windows are ones the gate can honour.  Strict candidates use only places with
     provider-backed cost evidence; UNKNOWN-cost rows remain in the catalog and provisional lane
-    but cannot be smuggled into a selectable candidate.  Stops are taken earliest-opening first
-    (ids break ties, so the order is reproducible).  A stop that cannot fit before its own
-    closing time is dropped rather than squeezed in, and the variants rotate the queue so the
-    candidates are genuinely different plans instead of one plan three times.
+    but cannot be smuggled into a selectable candidate.  The latest natural-language mission
+    orders a bounded primary, compact, and diverse search; no static quality metrics or queue
+    rotation is used to pretend that candidates differ.
     """
 
-    ordered = sorted(
+    eligible = sorted(
         (
             place
             for place in places.values()
@@ -990,13 +1159,12 @@ def _catalogue_templates(
             and _catalogue_visit_eligible(place)
             and _place_verified_cost(place) is not None
         ),
-        key=lambda place: (
-            (_place_window(place) or (0, 0))[0],
-            place.id,
-        ),
+        key=lambda place: place.id,
     )
-    if not ordered:
+    if not eligible:
         return []
+    profile = _strategy_profile(intent or {})
+    orders = _strategy_order(eligible, profile, travel)[: max(1, variants)]
 
     def pack(sequence: Sequence[Place]) -> list[tuple[str, str, str, str]]:
         schedule: list[tuple[str, str, str, str]] = []
@@ -1029,9 +1197,8 @@ def _catalogue_templates(
         return schedule
 
     templates: list[list[tuple[str, str, str, str]]] = []
-    for offset in range(max(1, variants)):
-        rotated = list(ordered[offset % len(ordered) :]) + list(ordered[: offset % len(ordered)])
-        packed = pack(rotated)
+    for ordered in orders:
+        packed = pack(ordered)
         if len(packed) >= 2 and packed not in templates:
             templates.append(packed)
     return templates
@@ -2021,6 +2188,8 @@ def generate_plans(
         ).all()
     }
     constraints = _journey_constraints_with_capabilities(session, journey)
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
     # The frozen fixture templates stay authoritative for the city they were authored for:
     # taking only the templates whose every place id exists keeps `CNX-DEMO` on the identical
     # path (all three resolve there) while a city with its own real catalogue - where none
@@ -2047,38 +2216,6 @@ def generate_plans(
     )
     journey_start = parse_dt(effective_start_text)
     journey_end = parse_dt(effective_end_text)
-    metrics_list = [
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.95,
-            "time_reliability": 0.94,
-            "preference_fit": 0.92,
-            "mobility_fit": 0.88,
-            "budget_fit": 0.90,
-            "robustness": 0.90,
-            "opportunity_value": 0.82,
-        },
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.93,
-            "time_reliability": 0.96,
-            "preference_fit": 0.90,
-            "mobility_fit": 0.93,
-            "budget_fit": 0.96,
-            "robustness": 0.92,
-            "opportunity_value": 0.78,
-        },
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.92,
-            "time_reliability": 0.95,
-            "preference_fit": 0.91,
-            "mobility_fit": 0.91,
-            "budget_fit": 0.95,
-            "robustness": 0.91,
-            "opportunity_value": 0.80,
-        },
-    ]
     # Capture one frozen mobility matrix over every node a candidate can visit
     # (template POIs plus resolved anchors) *before* scheduling, so the
     # scheduler inserts real travel gaps and the gate consumes the exact same
@@ -2105,6 +2242,7 @@ def generate_plans(
         raw_templates = _catalogue_templates(
             places,
             lambda origin, destination: travel_minutes.get((origin, destination), 0),
+            intent=strategy_intent,
         )
     schedules: list[list[CandidateActivity]] = []
     for template in raw_templates:
@@ -2150,7 +2288,6 @@ def generate_plans(
         total_cost = sum(int(item.cost_minor) for item in schedule)
         if total_cost > journey.budget_amount_minor:
             continue
-        metrics = metrics_list[offset % len(metrics_list)]
         activity_facts: list[FeasibilityActivity] = []
         previous_place: str | None = None
         for item in schedule:
@@ -2209,6 +2346,9 @@ def generate_plans(
                 after=rejection,
             )
             continue
+        metrics, score_provenance = _real_strategy_metrics(
+            schedule, places, mobility_provider, journey, strategy_profile
+        )
         # Version numbers remain contiguous among accepted candidates even
         # when an earlier raw template is rejected by a hard constraint.
         version_no = existing_max + len(created) + 1
@@ -2228,7 +2368,15 @@ def generate_plans(
             estimated_duration_min=570,
             utility_score=total,
             score_breakdown_json=dump(breakdown),
-            explanation_json=dump({"reason": "Deterministic provider-backed candidate", "mobility_snapshot_id": mobility_provider.snapshot_id}),
+        explanation_json=dump(
+            {
+                "reason": "Strategy-ranked provider-backed candidate",
+                "strategy_profile": strategy_profile,
+                "strategy_intent": strategy_intent,
+                "score_provenance": score_provenance,
+                "mobility_snapshot_id": mobility_provider.snapshot_id,
+            }
+        ),
             mobility_snapshot_id=mobility_provider.snapshot_id,
             mobility_evidence_json=dump(mobility_provider.to_evidence()),
             created_at=now,
