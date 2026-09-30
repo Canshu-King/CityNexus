@@ -149,6 +149,61 @@ def _city_category_terms(category: str | None) -> tuple[str, ...]:
     return tuple(dict.fromkeys((normalized, *_CITY_CATEGORY_ALIASES.get(normalized, ()))))
 
 
+def _agent_place_metadata(place: Place) -> dict[str, Any]:
+    """Project bounded fact metadata for the Agent search surface.
+
+    Canonical Place metadata may contain captured article text and provider response
+    bodies.  Those are useful evidence at the fact-acquisition boundary, but sending
+    them with every search result starves the model of context for the next strategy
+    decision.  Keep statuses, amounts, identity bindings, and source candidates; the
+    full capture remains persisted on the Place and is returned by acquisition receipts.
+    """
+
+    raw = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+    if not isinstance(raw, dict):
+        return {}
+    compact: dict[str, Any] = {
+        key: raw[key]
+        for key in ("discovery_mode", "osm_id", "duration_min", "price_known", "place_role")
+        if key in raw
+    }
+    cost = raw.get("cost_evidence")
+    if isinstance(cost, dict):
+        compact["cost_evidence"] = {
+            key: cost[key]
+            for key in ("status", "amount_minor", "currency", "source", "source_url")
+            if key in cost
+        }
+    binding = raw.get("fact_source_binding")
+    if isinstance(binding, dict):
+        compact["fact_source_binding"] = {
+            key: binding[key]
+            for key in ("provider_entity", "source_url", "source_class", "approval")
+            if key in binding
+        }
+    acquisition = raw.get("fact_acquisition")
+    if isinstance(acquisition, dict):
+        official = acquisition.get("official_web")
+        summary: dict[str, Any] = {"status": acquisition.get("status")}
+        if isinstance(official, dict):
+            summary["official_web"] = {
+                key: official[key]
+                for key in ("status", "source", "source_url", "provider")
+                if key in official
+            }
+        compact["fact_acquisition"] = summary
+    provider_tags = raw.get("tags")
+    if isinstance(provider_tags, dict):
+        candidate_urls = {
+            key: provider_tags[key]
+            for key in ("website", "contact:website", "url")
+            if provider_tags.get(key)
+        }
+        if candidate_urls:
+            compact["source_candidates"] = candidate_urls
+    return compact
+
+
 def _upgrade_cached_request_replan_response(
     session: Session,
     stored: dict[str, Any],
@@ -605,7 +660,7 @@ class AgentToolGateway:
                     "location": {"latitude": item.latitude, "longitude": item.longitude},
                     "tags": json.loads(item.tags_json or "[]"),
                     "opening_hours": json.loads(item.opening_hours_json or "{}"),
-                    "metadata": json.loads(item.metadata_json or "{}"),
+                    "metadata": _agent_place_metadata(item),
                 }
                 for item in places
             ],

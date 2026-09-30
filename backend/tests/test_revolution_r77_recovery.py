@@ -739,7 +739,15 @@ def test_agent_place_search_accepts_exact_name_with_fact_query_terms():
                             "amount_minor": 4000,
                             "currency": "CNY",
                             "source": "official_web",
-                        }
+                        },
+                        "fact_acquisition": {
+                            "status": "ACQUIRED",
+                            "official_web": {
+                                "status": "ACQUIRED",
+                                "source_url": "https://example.test/wangshi",
+                                "raw": "captured article body " * 2000,
+                            },
+                        },
                     }
                 ),
                 updated_at="2026-09-30T00:00:00+00:00",
@@ -757,6 +765,8 @@ def test_agent_place_search_accepts_exact_name_with_fact_query_terms():
         assert [item["id"] for item in result["places"]] == [place_id]
         assert result["places"][0]["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
         assert result["places"][0]["metadata"]["cost_evidence"]["amount_minor"] == 4000
+        assert result["places"][0]["metadata"]["fact_acquisition"]["official_web"]["status"] == "ACQUIRED"
+        assert "raw" not in result["places"][0]["metadata"]["fact_acquisition"]["official_web"]
         assert result["places"][0]["provider_key"] == "overpass"
         assert result["places"][0]["external_id"].startswith("overpass:way/")
 
