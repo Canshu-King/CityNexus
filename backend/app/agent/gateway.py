@@ -534,6 +534,13 @@ class AgentToolGateway:
                     "name": item.name,
                     "category": item.category,
                     "city_code": item.city_code,
+                    # Keep provider identity first-class in the agent result.  A real
+                    # catalogue may contain multiple rows with the same display label
+                    # (for example an OSM way and a separate OSM node).  The agent must
+                    # be able to distinguish those rows without guessing from the name
+                    # or silently taking the first result.
+                    "provider_key": item.provider_key,
+                    "external_id": item.external_id,
                     "location": {"latitude": item.latitude, "longitude": item.longitude},
                     "tags": json.loads(item.tags_json or "[]"),
                     "opening_hours": json.loads(item.opening_hours_json or "{}"),
