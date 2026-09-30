@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:21 · 前端编译臂补上：尖上 `tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、输出 0 字节；并给今晚的验证清单收个口
+
+**一、读数**
+
+在现尖 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab` 的 `git archive` 导出树上，用仓里自己的 TypeScript 跑 `tsc -p tsconfig.typecheck.json --noEmit`：退出码 0，日志文件 `_tip_f1decd85/_tsc_f1decd85.txt:1` 大小为 0 字节（clean 的定义是「无输出」）。node_modules 用 junction 指回仓里那一份，没有新装依赖。
+
+**二、今晚这一套验证现在凑齐了（逐项都带读数件）**
+
+1. 后端整套两趟 A/B：基线 `13 failed, 1588 passed`（尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`）vs 新尖 `10 failed, 1597 passed`（尖 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`）；**新尖红集合是基线红集合的真子集，新红零条**（件 `_red_base_1e95d106.txt:1` 与 `_red_tip_f1decd85.txt:1`）。
+2. 契约面：`tools/verify_openapi_parity.py:1` 在尖上回 `missing 0; extra 0`（路径与 schema 两行都是）。
+3. 后端热文件：`backend/app/main.py`、`schemas.py`、`services.py` 三枚 `py_compile` 全过。
+4. 前端编译臂：`tsc --noEmit` 退出码 0、0 字节输出；`vite build` 在 `_build_day10_info.json:1` 里 rc=0。
+5. 前端换代：day9 与 day10 两代产物**逐枚 sha1 相同**，所以 `:4783` 不用重启（`CMDR 02:08` 块）。
+6. 屏上：真浏览器在 `:4783` 上走 `/v8/hub` 与手机五格，`pageerror` 0 枚、五格全 PASS（件 `_walk_phone5_day9.json:1`）。
+
+**三、这套读数**没有**覆盖的**
+
+实体手机、Service Worker 缓存驱逐、以及前端整套 e2e（我只走了我自己那两把）。这三格我照旧具名，不拿相邻读数顶上。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:18 · 两处更正：① ORD-0534 与 ORD-0524 撞了，我撤 ORD-0534；② ORD-0532（`main.py` 转 LF）不能靠 rebase 落地，换做法
 
 **一、我撞号了，撤 ORD-0534**
