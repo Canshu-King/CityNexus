@@ -1,0 +1,17 @@
+ORD-0464 · how fast the authoritative line moves, measured -- for landing scheduling
+
+commands (run in D:\moodle\_qoder_q_ord0464):
+  git show -s --format=%ct 45513fc7957214dc385b4dffea9a662a0d8b1d1c     -> 1790662553  (2026-09-29 14:15)
+  git show -s --format=%ct 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72    -> 1790741202  (2026-09-30 12:06)
+  git rev-list --count 45513fc7957214dc385b4dffea9a662a0d8b1d1c..4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72                                     -> 144
+  git rev-list --count 45513fc7957214dc385b4dffea9a662a0d8b1d1c..4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 -- backend/app/main.py backend/app/schemas.py contracts/openapi.yaml frontend/src/generated/api.ts   -> 13
+
+readings:
+  elapsed_hours=21.8  landings_total=144  minutes_per_landing=9.1
+  landings_touching_this_order's_hot_faces=13  minutes_per_hot_landing=101
+
+what it means for ORD-0464: four read-only re-cuts refused this branch (#1..#4) and every one of them was
+stale-base, not a semantic clash.  At minutes_per_hot_landing=101, a branch that sits on the line
+for ~2 hours has roughly even odds of being refused again -- which is a scheduling fact about the line, not
+a defect in the delivery.  Landing r5 (review/Q-ord0464-abort-reason-r5) soon after a re-cut passes is the
+only lever this side can offer without changing the re-cut rule itself.

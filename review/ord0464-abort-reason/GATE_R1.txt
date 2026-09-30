@@ -1,0 +1,83 @@
+ORD-0464 r8 GATE -- everything below was produced on this branch, base read with git ls-remote
+base (tip at the moment this branch was cut) = bf3ad16358738206918f3c74c57ec1f785ad4ef9
+r7 commit replayed from = 39d7f114f172265d915015539ef47b050059908c (its own base was f707e1b3908c9ff4371e4a013242880b7e36045d)
+lane: this tree's backend on :8713, this tree's built bundle on :4192, sqlite copy D:\moodle\_qoder_q_ord0369_wk\q0386.db
+
+FRONT GATES (gate.py with CNX_LANE_WT=this worktree; it syncs src/e2e/public after wiping them)
+  typecheck: node .../typescript/bin/tsc -p tsconfig.typecheck.json --noEmit  -> rc=0
+  build    : node .../vite/bin/vite.js build --outDir D:\moodle\_qoder_q_ord0369_wk\dist_cand --emptyOutDir -> rc=0
+  entry artifact: /assets/index-SLuEPX70.js  (1554072 B)
+  sentinel counted in the bundle :4192 served (served bytes == disk bytes, proved by the lane): journey-abort hits=9, ITINERARY_NOT_USEFUL hits=1
+  instrument defect found and fixed this round: lane_r1.py used to accept any dist_cand that
+  happened to be on disk (served index == disk index passes for a stale bundle). It now fetches
+  the entry asset the served index names and refuses unless this order's own feature is in it.
+
+EIGHT ARMS, one browser, no response stubbing
+  command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
+  playwright rc = 0
+  stats: {'startTime': '2026-09-30T17:06:04.400Z', 'duration': 5153.7880000000005, 'expected': 8, 'skipped': 0, 'unexpected': 0, 'flaky': 0}
+  (report kept out-of-band: report-ord0386-1790787963.json)
+    A1 屏上八项就是契约那八项，机器词面不上屏                                         passed
+    A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                                 passed
+    A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                                  passed
+    A4 输入框上限就是那扇门真的上限                                              passed
+    A5 什么都没勾时，等待的那枚按钮自己说明为什么                                       passed
+    A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                                    passed
+    A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                                 passed
+    A7 手机上这一屏真的点得到：滚进视口、按中心命中                                      passed
+
+COUNTEREXAMPLES (each one mutates a shipped file, rebuilds, runs the arm named, then restores)
+  killed = 6 of 6; restored byte-identical = 6; final clean rebuild rc=0
+    P1-never-asked-collapsed-into-declined       arm=A8  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A8 — 屏上状态不是 NOT_ASKED
+    P2-skip-rendered-as-a-declaration            arm=A3  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A3 — 跳过那句不是字典里那句实话，实读=这趟已经在回收站里。服务器记下的原因是：。
+    P3-named-refusal-dropped                     arm=A6  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A6 — 被拒之后屏上没有那格拒绝
+    P4-vocabulary-grows-a-nine                   arm=A1  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A1 — 屏上方框数与契约枚数不等，屏上=9
+    P5-travellers-order-replaced-by-sort         arm=A2  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A2 — 原因句没按旅客勾的顺序说，实读=这趟已经在回收站里。服务器记下的原因是：预算兜不住、日期或目的地变了。
+    P6-note-limit-is-a-decoration                arm=A4  killed=True restored=True
+      first error: Error: e2e/qoder-ord0464-abort-reason.spec.ts :: A4 — 刚好 500 字应当收，实读=422
+
+BACKEND READINGS on this base (each line below is the last line of the command named)
+  python -m pytest tests/test_qoder_ord0464_abort_reason_capture.py -q -> 13 passed, 2 warnings in 2.56s
+  python -m pytest <nine faces: mine + undelete_write_lock, journey_undelete, recycle_bin,
+    honest_stay_budget, shared_landing, checkins, shared_after_restore, calendar_export> -q -> 99 passed, 2 warnings in 11.27s
+  python tools/verify_openapi_parity.py -> rc=0
+      OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0
+      schemas formal 90; generated 90; missing 0; extra 0
+  collect with my file: 1580 tests collected, 20 errors in 3.22s
+  collect with it --ignore'd: 1567 tests collected, 20 errors in 2.63s
+
+CLIENT: produced by regeneration, not by hand
+  regenerate from bf3ad16358738206918f3c74c57ec1f785ad4ef9's contract vs that generation's committed client: 0 differing lines
+  regenerate from this branch's merged contract: differs from the tip's client by 35 added / 1 deleted
+  the single deletion is deleteJourney's `requestBody?: never;`
+  foreign lines carried: 0 (grep of the api.ts delta for V13NamedRejection and CollectionFolder = 0)
+  second regeneration of the same contract: 0 differing lines (idempotent)
+
+PER-FACE LINE COUNTS against this base
+     46     2  backend/app/main.py
+     74     0  backend/app/schemas.py
+    419     0  backend/tests/test_qoder_ord0464_abort_reason_capture.py
+     80     0  contracts/openapi.yaml
+    335     0  frontend/e2e/qoder-ord0464-abort-reason.spec.ts
+     16     0  frontend/src/app/v8PanelRegistry.tsx
+    281     0  frontend/src/features/abort/JourneyAbortPanel.tsx
+     15     0  frontend/src/features/abort/journeyAbort.css
+    139     0  frontend/src/features/abort/journeyAbort.ts
+    128     0  frontend/src/features/abort/journeyAbortCopy.ts
+     35     1  frontend/src/generated/api.ts
+     17     0  review/ord0464-abort-reason/CADENCE_R1.txt
+     82     0  review/ord0464-abort-reason/GATE_R1.txt
+     98     0  review/ord0464-abort-reason/MUTANT_KILL_TABLE_R1.json
+     94     0  review/ord0464-abort-reason/READINGS_R1.md
+    134     0  review/ord0464-abort-reason/SCREEN_READINGS_R1.json
+    144     0  review/ord0464-abort-reason/lane_r1.py
+    179     0  review/ord0464-abort-reason/mutants_r1.py
+      -     -  review/ord0464-abort-reason/screen_declared_r1.png
+      -     -  review/ord0464-abort-reason/screen_silent_r1.png
+      -     -  review/ord0464-abort-reason/screen_skipped_r1.png
+    119     0  review/ord0464-abort-reason/screens_r1.mjs
