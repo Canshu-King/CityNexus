@@ -1,6 +1,6 @@
 # ORD-0485 r4/r5 -- 现尖 0989713aa687b97f4cd40bae009a6ce493425a4b 读数单
 
-生成 `2026-10-01T02:43:23.819654+08:00`。本代全部重量，无跨代折算。
+生成 `2026-10-01T02:43:56.889066+08:00`。本代全部重量，无跨代折算。
 
 ## 一、两面的产物身份
 
@@ -29,8 +29,8 @@
 
 ## 四、重切状态（逐枚比字节，不按血缘）
 
-- 我这枚候选提交 `0989713aa687b97f4cd40bae009a6ce493425a4b`（`git rev-parse lane/ord0485-r5` 现读）里 `frontend/src/i18n/LocaleContext.tsx` 的 blob 是 `83df88df16771ada15e7cb36fa0745b72163ed0e`。
+- 我这枚候选提交 `6cb1caecc4960fc8314c986a1ce357d95a7484f1`（`git rev-parse lane/ord0485-r5` 现读）里 `frontend/src/i18n/LocaleContext.tsx` 的 blob 是 `e9b4e07c5a333c16ed457b69090cd51583f38f87`。
 - 我切它时那枚基座 `0989713aa687b97f4cd40bae009a6ce493425a4b` 上同一文件是 `83df88df16771ada15e7cb36fa0745b72163ed0e`；号令者下一次落地时读到的现尖 `7862c6de5565c02c20ec2dccaa9da18960603e06` 上仍是 `83df88df16771ada15e7cb36fa0745b72163ed0e`——两枚同一 blob，所以逐枚比字节的结果是合得上、不需要再重切。
-- 只读预测 `git merge-tree --write-tree 7862c6de5565c02c20ec2dccaa9da18960603e06 0989713aa687b97f4cd40bae009a6ce493425a4b` 的预测树是 `a0d9cbecfff67edc75e2ba2e8853d6f65881e48e`，从那枚树里把同一文件取回来再数是 `83df88df16771ada15e7cb36fa0745b72163ed0e`，与我候选那枚逐字节同一枚：True。
-- 产品写集只有 4 行：`git diff --numstat 0989713aa687b97f4cd40bae009a6ce493425a4b 0989713aa687b97f4cd40bae009a6ce493425a4b -- frontend/src/i18n/LocaleContext.tsx` = 0。
+- 只读预测 `git merge-tree --write-tree 7862c6de5565c02c20ec2dccaa9da18960603e06 6cb1caecc4960fc8314c986a1ce357d95a7484f1` 的预测树是 `989f907a537d4838460664cf9fd259b6d734e911`，从那枚树里把同一文件取回来再数是 `e9b4e07c5a333c16ed457b69090cd51583f38f87`，与我候选那枚逐字节同一枚：True。
+- 产品写集只有 4 行：`git diff --numstat 0989713aa687b97f4cd40bae009a6ce493425a4b 6cb1caecc4960fc8314c986a1ce357d95a7484f1 -- frontend/src/i18n/LocaleContext.tsx` = 4	0	frontend/src/i18n/LocaleContext.tsx。
 
