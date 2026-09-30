@@ -804,13 +804,18 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
             <span>
               {artifactTypeLabel(item.artifact_type, zh)} · {statusLabel(item.status, zh)}
             </span>
-            <b>
-              {String(
-                item.extracted.confirmation_ref ??
-                  item.extracted.title ??
-                  t("inbox.unnamedArtifact"),
-              )}
+            {/* ORD-0517: the name the server extracted is the row's title, and the order reference is a
+                labelled fact under it -- reading them in the other order made the id the headline. */}
+            <b data-testid="inbox-pending-title">
+              {String(item.extracted.title ?? "").trim() ||
+                t("inbox.unnamedArtifact")}
             </b>
+            {item.extracted.confirmation_ref ? (
+              <small>
+                {fieldLabel("confirmation_ref", zh)}{" "}
+                {String(item.extracted.confirmation_ref)}
+              </small>
+            ) : null}
             <small>
               {item.unresolved_fields.length
                 ? `${t("inbox.needsReview")} ${item.unresolved_fields
