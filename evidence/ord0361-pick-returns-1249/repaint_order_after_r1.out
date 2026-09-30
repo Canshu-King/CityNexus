@@ -1,0 +1,27 @@
+{
+ "after_boot_restore": [
+  "1:true*",
+  "2:false",
+  "3:false",
+  "4:false",
+  "5:false",
+  "6:false"
+ ],
+ "after_click_2": [
+  "1:false",
+  "2:true*",
+  "3:false",
+  "4:false",
+  "5:false",
+  "6:false"
+ ],
+ "after_click_1": [
+  "1:true*",
+  "2:false",
+  "3:false",
+  "4:false",
+  "5:false",
+  "6:false"
+ ],
+ "glass_now": "图上选中的这一站 · Old Town Gate"
+}
