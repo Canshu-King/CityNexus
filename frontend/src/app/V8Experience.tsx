@@ -59,6 +59,8 @@ import { V12AuthoritativeJourneyPanel } from "../features/execution/V12Authorita
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
 import { useDemoScene } from "../lib/sceneClock";
 import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
+import { SharedPosterScreen } from "../features/poster/SharedPosterScreen";
+import { POSTER_SHARE_FORM } from "../features/poster/posterShare";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
@@ -104,7 +106,7 @@ import {
 } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
-import { JOURNEY_ID_SEGMENT, v8FirstSegment, v8SecondSegment } from "../lib/journeyLink";
+import { JOURNEY_ID_SEGMENT, v8FirstSegment, v8SecondSegment, v8ThirdSegment } from "../lib/journeyLink";
 import { measureRawFacts, type RawFacts } from "../lib/rawFacts";
 import { RawFactsPanel } from "../components/RawFactsPanel";
 import {
@@ -509,7 +511,7 @@ const KNOWN_ROUTES = new Set<string>([
  *   bare     -- `/v8/` itself, which is Today and nothing was asked.
  */
 type DeepLink =
-  | { kind: "screen"; route: string; token: string }
+  | { kind: "screen"; route: string; token: string; form: string }
   | { kind: "journey" }
   | { kind: "unknown"; segment: string }
   | { kind: "bare" };
@@ -529,10 +531,13 @@ function deepLinkFromPath(): DeepLink {
       kind: "screen",
       route: key,
       token: isTokenRoute ? v8SecondSegment(window.location.pathname) : "",
+      // ORD-0528: which *shape* a share link asks to be opened as. Normalised here because it names a
+      // component and not a store row -- `/v8/shared/<token>/POSTER` and `/poster` are the same ask.
+      form: isTokenRoute ? v8ThirdSegment(window.location.pathname).toLowerCase() : "",
     };
   }
   const alias = ROUTE_ALIASES[key];
-  if (alias) return { kind: "screen", route: alias, token: "" };
+  if (alias) return { kind: "screen", route: alias, token: "", form: "" };
   if (JOURNEY_ID_SEGMENT.test(key)) return { kind: "journey" };
   return { kind: "unknown", segment };
 }
@@ -540,12 +545,14 @@ function deepLinkFromPath(): DeepLink {
 /** The address this device is standing on, read as one value so a screen and its token cannot come
  *  from two different addresses. `navigate` and `popstate` both move through `addressFromPath`, and
  *  the only consumer of `token` is the share-receiving screen. */
-type V8Address = { route: string; token: string };
+type V8Address = { route: string; token: string; form: string };
 
 function addressFromPath(): V8Address {
   const link = deepLinkFromPath();
   // Never render an empty shell: anything that names no screen is Today.
-  return { route: link.kind === "screen" ? link.route : "hub", token: link.kind === "screen" ? link.token : "" };
+  return link.kind === "screen"
+    ? { route: link.route, token: link.token, form: link.form }
+    : { route: "hub", token: "", form: "" };
 }
 
 const drawerRoutes = [
@@ -1476,6 +1483,18 @@ export function V8Experience() {
      rewritten around a null. The three views above it are the same shape of decision, made three
      times already. */
   if (route === "shared") {
+    /* ORD-0528: the same grant, opened as one of two shapes. Only the address tail decides which, and
+       it decides *rendering* -- the authorization stays the token, so `/poster` on a link revokes
+       nothing and grants nothing that `/v8/shared/<token>` did not already have. An unrecognised tail
+       falls to the trip screen, which is the shape that existed first and answers a stranger's
+       mistyped clipboard rather than dead-ending it. */
+    if (address.form === POSTER_SHARE_FORM) {
+      return (
+        <main className="v8-page">
+          <SharedPosterScreen token={address.token} />
+        </main>
+      );
+    }
     return (
       <main className="v8-page">
         <SharedJourneyScreen token={address.token} />

@@ -11,8 +11,12 @@
  * its only owner.
  */
 import { cityCodeLabel } from "../../lib/displayVocabulary";
-import { journeyProgress, type JourneyProgress } from "../progress/journeyProgress";
-import { clock, groupActivitiesByDay } from "../trip/TripItinerary";
+import {
+  journeyProgress,
+  progressContractCopy,
+  type JourneyProgress,
+} from "../progress/journeyProgress";
+import { clock, dayLabel, groupActivitiesByDay, localDateKey } from "../trip/TripItinerary";
 import type { V8Data } from "../../app/v8Types";
 
 export type PosterStop = {
@@ -33,8 +37,11 @@ export type TripPoster = {
   city: string;
   /** The server's day count for the trip shape; `null` means the shape answers nothing. */
   dayTotal: number | null;
-  /** Kept whole so the poster quotes the panel's own progress sentence instead of a paraphrase. */
-  progress: JourneyProgress;
+  /** Kept whole so the poster quotes the panel's own progress sentence instead of a paraphrase.
+   *  Absent on the guest side, which has no progress to quote -- see `buildPosterFromShared`. */
+  progress?: JourneyProgress;
+  /** The sentence itself, when the caller already has one; the guest door sends no progress. */
+  progressCopy?: string;
   days: PosterDay[];
   stopTotal: number;
 };
@@ -77,7 +84,89 @@ export function buildTripPoster(data: V8Data, locale: string): TripPoster | null
     city: cityCodeLabel(data.journey.city_code, locale),
     dayTotal: progress.day_total,
     progress,
+    progressCopy: progressContractCopy(progress, locale.startsWith("zh")),
     days,
     stopTotal: days.reduce((total, day) => total + day.stops.length, 0),
+  };
+}
+
+/**
+ * The sentences and rows a poster shows, built once for both ends of a share link.
+ *
+ * The traveller's sheet and the guest's poster screen call this and nothing else, so "what the
+ * picture says" has one owner. `dayTotal` comes from the server's projection when the payload carries
+ * one; where it does not, the caller says so with its own key rather than letting a counted number
+ * wear the projection's clothes.
+ */
+export function posterLinesFor(
+  poster: TripPoster,
+  locale: string,
+  t: (key: string, params?: Record<string, string | number>) => string,
+): import("./posterCanvas").PosterLines {
+  return {
+    kicker: t("poster.kicker"),
+    title: poster.title,
+    subtitle:
+      poster.dayTotal === null
+        ? t("poster.daysUnknown", { city: poster.city })
+        : t("poster.cityAndDays", { city: poster.city, days: poster.dayTotal }),
+    progress: poster.progressCopy ?? "",
+    attribution: `${t("poster.attributionLabel")} · ${t("mapComp.attribution")}`,
+    days: poster.days.map((day) => ({
+      label: day.label,
+      count: t("poster.dayStops", { n: day.stops.length }),
+      stops: day.stops.map((stop) => ({
+        time: `${stop.from} – ${stop.to}`,
+        title: stop.title,
+      })),
+    })),
+  };
+}
+
+/**
+ * A poster read off the guest door's payload: the same days, the same times, no second calendar.
+ *
+ * `dayTotal` is null and stays null. The trip-length projection is a field of the traveller's own
+ * door; `GET /api/v1/shared/journeys/{token}` answers with the journey body plus the four keys its
+ * contract whitelist names (`frontend/src/generated/api.ts:4995`), and the length projection is not
+ * one of them. So the guest side has no projection to quote, and `posterLinesFor` is handed a
+ * *counted* sentence for its progress line instead -- which says out loud that it counted.
+ */
+export function buildPosterFromShared(input: {
+  answer: { title?: string; city_code?: string } | null;
+  stops: Array<{ id: string; title: string; place_name?: string | null; start_at: string; end_at: string }>;
+  timeZone: string;
+  locale: string;
+  t: (key: string, params?: Record<string, string | number>) => string;
+}): TripPoster | null {
+  const { answer, stops, timeZone, locale, t } = input;
+  if (!answer || stops.length === 0) return null;
+  const buckets = new Map<string, typeof stops>();
+  for (const stop of [...stops].sort((a, b) => a.start_at.localeCompare(b.start_at))) {
+    const key = localDateKey(stop.start_at, timeZone);
+    const list = buckets.get(key) ?? [];
+    list.push(stop);
+    buckets.set(key, list);
+  }
+  const days = [...buckets.entries()].map(([key, items], index) => ({
+    key,
+    label: dayLabel(key, index, locale),
+    stops: items.map((stop) => ({
+      from: clock(stop.start_at, timeZone),
+      to: clock(stop.end_at, timeZone),
+      title: stop.place_name?.trim() || stop.title,
+    })),
+  }));
+  const stopTotal = days.reduce((total, day) => total + day.stops.length, 0);
+  return {
+    title: answer.title ?? "",
+    city: cityCodeLabel(answer.city_code ?? "", locale),
+    dayTotal: null,
+    /* Counted, and labelled as counted by the caller's own sentence, because the length projection
+       this door cannot reach. `stopTotal` rides along so the guest picture is not the one poster
+       missing its headline line. */
+    progressCopy: t("sharedPoster.counted", { days: days.length, stops: stopTotal }),
+    days,
+    stopTotal,
   };
 }

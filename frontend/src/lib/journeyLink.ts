@@ -51,6 +51,21 @@ export function v8SecondSegment(pathname: string): string {
   return pathname.replace(/^\/v8\/+/, "").split("/")[1] ?? "";
 }
 
+/**
+ * ORD-0528: the value after a share token -- `/v8/shared/<token>/<this part>`.
+ *
+ * This segment chooses which *screen* a grant opens as; it is not part of the authorization. The token
+ * above it stays the only thing the door sends, so a link cannot be given more reach by having its
+ * tail edited, and a stranger's clipboard edits nothing either: a poster link and a trip link are the
+ * same grant read twice.
+ *
+ * Read exactly as written and lower-cased by the caller, because a mistyped tail (`/Poster`, `/poster/`)
+ * should fall back to the trip screen rather than dead-end a traveller who holds a valid token.
+ */
+export function v8ThirdSegment(pathname: string): string {
+  return pathname.replace(/^\/v8\/+/, "").split("/")[2] ?? "";
+}
+
 export type JourneyLinkEnv = {
   journeyId: string;
   origin: string;
