@@ -1,9 +1,13 @@
 """ORD-0479 · 凭据尺不许把 i18n 查表的值读成凭据——判据是结构，不是词表、也不是申报。
 
-号令者 01:3x 那块：现尖唯一那枚凭据红在 `backend/tests/test_qoder_ord0307_credential_gate.py:180`
-（C07，断 hits_in_product_path == 0 得 1），命中的是 frontend/src/features/shared/SharedJourneyPanel.tsx:45
+号令者那块点名的红在 backend/tests/test_qoder_ord0307_credential_gate.py:180（C07，断
+hits_in_product_path == 0 得 1），命中的是 frontend/src/features/shared/SharedJourneyPanel.tsx:45
 那张"拒绝码 ↔ 字典键"对照表里的值。要求写得很死：要结构判据，不要往占位词表塞词，也不要走申报通道
 （那等于把尺的假阳性登记成真凭据）。
+
+重取到 aa2a08ce 那一代时，同一族又多出一处（features/poster/TripPosterPanel.tsx 的失败步骤 ↔ 字典键
+表，标签 MissingTokens 里含着 token）——结构判据不需要为它改一个字，两处都靠同三条赦免。所以本文件
+不写"赦免了几处"这种会随上游移动的数字；真树那一格改成把尺报出来的每一处**脱离尺再证一遍**。
 
 每格自己造输入（临时 root，自己的词典、自己的表），断言只用位置摘要与长度，绝不打印命中值；
 正控与反控成对：真凭据形状仍红、形状像但结构不符仍红、词典读不到仍红。
@@ -111,15 +115,78 @@ def test_H01_the_real_site_is_exempted_by_structure_not_by_a_word(tmp_root: Path
         {h["position_fp"] for h in hits}, report["vocabulary_exemptions"]
 
 
-def test_H01b_the_shipped_tree_clears_with_one_named_exemption() -> None:
-    """真树上：C07 那句断言成立，且赦免的原因可指名——不是占位词、不是申报通道。"""
+def _independent_locale_keys() -> tuple[set[str], set[str]]:
+    """The two dictionaries read a second time, without touching any helper in the gate.
+
+    The point is not a faster parse: it is that a claim about what the product translates is checked
+    against the file rather than against the code that also grants the exemption.
+    """
+
+    lines = (REPO / "frontend/src/i18n/LocaleContext.tsx").read_text(
+        encoding="utf-8", errors="replace").splitlines()
+    per: dict[str, set[str]] = {}
+    for name in ("en", "zhCN"):
+        head = [i for i, l in enumerate(lines) if l.startswith("const %s: Dict = {" % name)]
+        assert len(head) == 1, (name, head)
+        keys = set()
+        for line in lines[head[0] + 1:]:
+            if line.startswith("};"):
+                break
+            m = re.match(r'^\s*"([^"]+)"\s*:\s*"', line)
+            if m:
+                keys.add(m.group(1))
+        assert keys, name
+        per[name] = keys
+    return per["en"], per["zhCN"]
+
+
+def _table_values_around(path: str, line_no: int) -> list[str]:
+    """Every quoted value in the object literal the given line sits in, read straight from the file."""
+
+    lines = (REPO / path).read_text(encoding="utf-8", errors="replace").splitlines()
+    start = None
+    for i in range(line_no - 1, -1, -1):
+        if lines[i].lstrip().startswith(("const ", "export const ")) and lines[i].rstrip().endswith("{"):
+            start = i
+            break
+    assert start is not None, (path, line_no)
+    values = []
+    for line in lines[start + 1:]:
+        if line.startswith("};"):
+            break
+        m = re.match(r'^\s*[A-Za-z_][A-Za-z0-9_]*\s*:\s*"([^"]+)"\s*,?\s*$', line)
+        if m:
+            values.append(m.group(1))
+    assert len(values) >= 2, (path, start + 1, values)
+    return values
+
+
+def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> None:
+    """真树上：C07 那句断言成立；而且每一处被赦免的行，都能脱离尺自己再证一遍。
+
+    这一格不数"赦免了几处"——那是会随上游移动的量——它把尺报出来的每一处拿去独立核对：值必须在
+    两本词典里都作为键出现，且它所在的那张表每一条值都是两本词典里的键。对不上就红。
+    """
 
     report = CL.scan(REPO)
     assert report["hits_in_product_path"] == 0, report["live"]
     assert report["verdict"] == CL.CODE_OK, report["verdict"]
-    sites = [(e["path"], e["line"], e["reason"]) for e in report["vocabulary_exemptions"]]
-    assert (SITE, 45, sites[0][2]) in sites or any(p == SITE for p, _l, _r in sites), sites
-    assert all("translation_lookup_table" in r for _p, _l, r in sites), sites
+    assert report["hits_undeclared"] == 0, report["live"]
+    en, zh = _independent_locale_keys()
+    both = en & zh
+    exemptions = report["vocabulary_exemptions"]
+    assert exemptions, "the tree is clear with nothing forgiven -- then C07 was already green and this order moved"
+    for e in exemptions:
+        assert "translation_lookup_table" in e["reason"], e
+        line_text = (REPO / e["path"]).read_text(encoding="utf-8", errors="replace").splitlines()[e["line"] - 1]
+        m = re.search(r':\s*"([^"]+)"', line_text)
+        assert m, e
+        value = m.group(1)
+        assert value in both, (e["path"], e["line"], "not a key in both locales")
+        for v in _table_values_around(e["path"], e["line"]):
+            assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
+    #: the site this order was opened for is among them, and is forgiven on the same grounds
+    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红
