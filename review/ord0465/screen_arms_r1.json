@@ -207,9 +207,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "21:44",
-          "22:44",
-          "23:44"
+          "22:50",
+          "23:50",
+          "00:50"
         ]
       }
     },
@@ -257,7 +257,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/yM57hqIZwinN1tQ8A2kV0YwilJZYiwu-",
+        "pathname": "/v8/shared/rcoQ9ijF6BOiOUDm8u5kQIu9Yx9R-LTE",
         "title_still_on_screen": true
       }
     },
@@ -320,7 +320,7 @@
         "status": "这台设备看到的回读：HTTP 409",
         "media": "回读的媒体类型 application/json",
         "bytes": "这台设备数到的字节 372",
-        "receipt": "服务器回执号 CNX-XW3M8AT5",
+        "receipt": "服务器回执号 CNX-T23YDTAG",
         "fold_open": true
       }
     },
