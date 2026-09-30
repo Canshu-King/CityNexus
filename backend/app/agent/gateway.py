@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from statistics import median
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
 from uuid import UUID
@@ -48,7 +49,13 @@ from app.db.models import (
     ReplanProposal,
 )
 from app.schemas import AgentToolCall, ReplanGenerateRequest
-from app.services import activity_schema, journey_schema, service_schema
+from app.services import (
+    _place_verified_cost,
+    _place_window,
+    activity_schema,
+    journey_schema,
+    service_schema,
+)
 
 
 def _agent_key(kind: str, *parts: object) -> str:
@@ -364,6 +371,7 @@ class AgentToolGateway:
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
             "acquire_place_facts": self.acquire_place_facts,
+            "estimate_place_facts": self.estimate_place_facts,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -578,6 +586,42 @@ class AgentToolGateway:
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "place_id": place.id,
             "receipt": receipt,
+        }
+
+    def estimate_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for estimate_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        peers = self.session.scalars(
+            select(Place).where(Place.city_code == journey.city_code, Place.category == place.category)
+        ).all()
+        peer_costs = [value for peer in peers if (value := _place_verified_cost(peer)) is not None]
+        peer_windows = [window for peer in peers if (window := _place_window(peer)) is not None]
+        estimate: dict[str, Any] = {
+            "place_id": place.id,
+            "authority_eligible": False,
+            "basis": "same-city verified peers in the same provider category",
+            "opening_hours": {"status": "ESTIMATED_AGENT"},
+            "cost_evidence": {"status": "ESTIMATED_AGENT", "currency": "JPY"},
+        }
+        if peer_windows:
+            opens = [window[0] for window in peer_windows]
+            closes = [window[1] for window in peer_windows]
+            estimate["opening_hours"].update(
+                {"open_minutes": int(median(opens)), "close_minutes": int(median(closes)), "peer_count": len(peer_windows)}
+            )
+        if peer_costs:
+            estimate["cost_evidence"].update(
+                {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
+            )
+        return {
+            "tool": "estimate_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "estimate": estimate,
+            "warning": "ESTIMATED_AGENT is strategy evidence only; it cannot make a plan selectable or active",
         }
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:

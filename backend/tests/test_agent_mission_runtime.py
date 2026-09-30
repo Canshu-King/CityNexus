@@ -325,3 +325,22 @@ def test_hermes_runtime_consumes_wb2api_streaming_tool_call(monkeypatch):
     assert json.loads(message["tool_calls"][0]["function"]["arguments"]) == {
         "journey_id": "journey-1"
     }
+
+
+def test_estimate_place_facts_is_explicitly_non_authoritative():
+    journey_id = _selected_journey()
+    response = client.post(
+        "/api/v1/agent/tools/estimate_place_facts",
+        json={
+            "request_id": "estimate-place-facts-1",
+            "agent_id": "test-agent",
+            "journey_id": journey_id,
+            "place_id": "place-riverside-museum",
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["estimate"]["authority_eligible"] is False
+    assert body["estimate"]["opening_hours"]["status"] == "ESTIMATED_AGENT"
+    assert body["estimate"]["cost_evidence"]["status"] == "ESTIMATED_AGENT"
+    assert "cannot make a plan selectable" in body["warning"]

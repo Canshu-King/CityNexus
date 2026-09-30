@@ -99,6 +99,12 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id", "place_id"],
         ),
         _tool(
+            "estimate_place_facts",
+            "Estimate opening and cost for strategy comparison only. Estimates are never authoritative or selectable.",
+            {**journey, "place_id": _property("string")},
+            ["journey_id", "place_id"],
+        ),
+        _tool(
             "request_replan",
             "Generate deterministic feasible recovery proposals for the disruption.",
             {
