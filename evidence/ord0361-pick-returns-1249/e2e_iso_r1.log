@@ -1,0 +1,8 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4192 backend=:6995 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0361/_e2e_ord0361iso.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [25288]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:6995 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:64963 - "GET /api/v1/health HTTP/1.1" 200 OK
+Error: http://127.0.0.1:4192 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
