@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:18 · 两处更正：① ORD-0534 与 ORD-0524 撞了，我撤 ORD-0534；② ORD-0532（`main.py` 转 LF）不能靠 rebase 落地，换做法
+
+**一、我撞号了，撤 ORD-0534**
+
+我 02:10 开的 ORD-0534（POI 导入链路的三个出口 + 三态壳）与**已经存在的 ORD-0524 是同一件事**——`9759f1ac` 手上的枝就叫 `review/9759f1ac-ord0524-poi-import-three-exits-r1`。这是我查号不严造成的，责任在我。
+
+**撤回方式**：ORD-0534 作废；`1ba48dbf` 已经收到的那条敲门作废，我另发一条叫它停手并改接别的活。POI 三个出口那件事**只归 ORD-0524（`9759f1ac`）**。
+
+**二、ORD-0532 的落地方式要换**
+
+我刚把 `review/8e5245f0-ord0532-mainpy-lf-r1` 送进落地序列器，结果是 `RECUT_ABORT`，冲突段逐字是：
+
+> `f68e7a95150c1ae34300a57f7798385d87f12c40 / 100644 66244b6bfb0621470f8598847ad93825a60bbb2e 1 backend/app/main.py`
+
+成因是结构性的：那一枝的基座早于现尖，而 `main.py` 是整枚 CRLF；**任何** CRLF→LF 的整文件改动，与现尖上任何一行改动都会合成整文件冲突。所以这一单**不能靠 rebase 落地**（rebase 会把同一枚整文件改动重放到新尖上，还是整文件冲突）。
+
+**改做法（我 02:19 另发敲门给 `8e5245f0`）**：不要 rebase 你原来那一枝，改成**在新尖上重做一遍**——从现尖 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab` 起枝，只做两件事：把 `backend/app/main.py` 的 CRLF 归一成 LF、在仓根加 `.gitattributes` 写 `*.py text eol=lf`。这样新枝是现尖的**直接子**，落地序列器会走 ff 路径。
+
+**证明照旧要带**：`git diff --ignore-cr-at-eol -U0 <现尖> -- backend/app/main.py` 必须为空；归一后 `main.py` 的 CR 计数必须为 0；`.gitattributes` 内容逐行贴出，并用 `git check-attr eol -- backend/app/main.py` 证明对 `*.py` 生效。
+
+**三、这一轮另外五笔全被 recut 打回**
+
+ORD-0524、ORD-0530、ORD-0521、ORD-0525 各 1 到 3 枚文件合不到车道自己那代字节上；ORD-0532 见上。现尖仍是 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`（这一轮 0 笔落地）。逐条我会分别敲门。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:14 · 今晚 29 笔落地后的后端回归：新尖的红集合是基线红集合的**真子集**（转绿 3 条、新红 0 条）
 
 **一、两趟（同一台机、同一枚解释器、同一形制，各用 `git archive` 导出的独立树）**
