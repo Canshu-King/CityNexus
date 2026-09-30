@@ -1,0 +1,252 @@
+{
+ "ruler_under_test": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\ui_exposure_taint_ast_r8.cjs",
+ "tree": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\exp_tip_r8\\frontend\\src",
+ "contract": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\exp_tip_r8\\contracts\\openapi.yaml",
+ "method": "each row is one subprocess of a real ruler, with its own exit code and JSON",
+ "mutants": {
+  "names_a_file": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_names_a_file.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['text-in'], origin_kinds: ['*'], evidence: 'attributed_fold', file: 'features/recovery/RecoveryRequiredPanel.tsx' }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "UNKNOWN_KEY"
+   ],
+   "expected_problem": "UNKNOWN_KEY",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "names_a_line": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_names_a_line.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['text-in'], origin_kinds: ['*'], evidence: 'attributed_fold', line: 299 }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "UNKNOWN_KEY"
+   ],
+   "expected_problem": "UNKNOWN_KEY",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "names_a_cell_id": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_names_a_cell_id.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['text-in'], origin_kinds: ['*'], evidence: 'attributed_fold', cell_id: '9f2c1b0a4d5e6f70' }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "UNKNOWN_KEY"
+   ],
+   "expected_problem": "UNKNOWN_KEY",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "names_one_whole_sink_shape": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_names_one_whole_sink_shape.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['text-in:details testid=code:plan-ai-reason'], origin_kinds: ['*'], evidence: 'attributed_fold' }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "FAMILY_NAMES_ONE_SINK"
+   ],
+   "expected_problem": "FAMILY_NAMES_ONE_SINK",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "invents_an_evidence_name": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_invents_an_evidence_name.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['text-in'], origin_kinds: ['*'], evidence: 'commander_said_so' }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "EVIDENCE_NOT_IMPLEMENTED"
+   ],
+   "expected_problem": "EVIDENCE_NOT_IMPLEMENTED",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "names_a_file_through_the_family_axis": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_names_a_file_through_the_family_axis.cjs",
+   "entry_tried": "{ id: 'EX-9-MUTANT', rules: ['*'], sink_shape_families: ['features/recovery/RecoveryRequiredPanel.tsx'], origin_kinds: ['*'], evidence: 'attributed_fold' }",
+   "exit": 3,
+   "refused": true,
+   "reason": "EXEMPTION_TABLE_SCHEMA_REJECTED",
+   "problems": [
+    "AXIS_NAMES_A_CELL"
+   ],
+   "expected_problem": "AXIS_NAMES_A_CELL",
+   "expected_problem_reported": true,
+   "counts_if_it_ran": {
+    "cells_total": null,
+    "red": null,
+    "exempted": null,
+    "verdict": "REFUSED"
+   }
+  },
+  "cli_waive-cell": {
+   "exit": 2,
+   "verdict": "REFUSED",
+   "refusal_reasons": [
+    "HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL",
+    "POSITIONAL_ARGUMENT_NOT_ACCEPTED"
+   ],
+   "expected_reason_present": true,
+   "no_output_file_written": true
+  },
+  "cli_exempt-cells": {
+   "exit": 2,
+   "verdict": "REFUSED",
+   "refusal_reasons": [
+    "HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL",
+    "POSITIONAL_ARGUMENT_NOT_ACCEPTED"
+   ],
+   "expected_reason_present": true,
+   "no_output_file_written": true
+  },
+  "cli_baseline-cells": {
+   "exit": 2,
+   "verdict": "REFUSED",
+   "refusal_reasons": [
+    "HUMAN_DECLARED_WAIVER_IS_NOT_AN_INPUT_CHANNEL",
+    "POSITIONAL_ARGUMENT_NOT_ACCEPTED"
+   ],
+   "expected_reason_present": true,
+   "no_output_file_written": true
+  },
+  "cli_authoritative-count": {
+   "exit": 2,
+   "verdict": "REFUSED",
+   "refusal_reasons": [
+    "UNRECOGNISED_FLAG",
+    "POSITIONAL_ARGUMENT_NOT_ACCEPTED"
+   ],
+   "expected_reason_present": true,
+   "no_output_file_written": true
+  },
+  "fold_entry_removed": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_fold_entry_removed.cjs",
+   "run_exit": 0,
+   "counts": {
+    "cells_total": 8,
+    "red": 8,
+    "exempted": 0,
+    "verdict": "EXPOSURE_SHAPE_FOUND"
+   },
+   "counts_delta_vs_control": {
+    "cells_total": 0,
+    "red": 3,
+    "exempted": -3
+   },
+   "selftest_exit": 7,
+   "selftest_verdict": "SELFTEST_FAIL",
+   "failing_arms": [
+    "fold_pair",
+    "no_drift_against_the_published_partition"
+   ],
+   "failing_old_arms": [
+    "R7B1_1_shipped_shape_spread_anchor_beside_a_provenance_label",
+    "R7B1_3_object_spread_resolved_to_one_local_literal",
+    "R7_2_same_sentence_in_a_fold_with_an_anchor",
+    "R7_8_data_cnx_fold_counts_as_a_fold_surface"
+   ]
+  },
+  "fold_exempts_without_measuring": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\mutant_fold_exempts_without_measuring.cjs",
+   "run_exit": 0,
+   "counts": {
+    "cells_total": 8,
+    "red": 1,
+    "exempted": 7,
+    "verdict": "EXPOSURE_SHAPE_FOUND"
+   },
+   "counts_delta_vs_control": {
+    "cells_total": 0,
+    "red": -4,
+    "exempted": 4
+   },
+   "selftest_exit": 7,
+   "selftest_verdict": "SELFTEST_FAIL",
+   "failing_arms": [
+    "class_name_opens_nothing",
+    "contract_is_not_for_sale_to_the_fold",
+    "contract_pair",
+    "fold_pair",
+    "new_call_site_into_a_shared_helper_is_not_exemptible",
+    "no_drift_against_the_published_partition"
+   ],
+   "failing_old_arms": [
+    "R7B1_2_the_provenance_label_deleted_so_the_cell_returns",
+    "R7B1_4_an_unresolvable_spread_opens_nothing",
+    "R7B1_5_a_literal_field_outside_the_six_opens_nothing_via_spread",
+    "R7B1_6_two_candidate_declarations_resolve_to_nothing",
+    "R7B1_7_two_declarations_with_one_name_resolve_to_nothing",
+    "R7_10_an_anchor_outside_the_six_fields_opens_nothing",
+    "R7_1_server_sentence_on_the_face_still_fires",
+    "R7_3_anchor_deleted_so_the_cell_returns",
+    "R7_9_a_class_name_opens_nothing"
+   ]
+  },
+  "published_bytes": {
+   "selftest_exit": 0,
+   "selftest_verdict": "SELFTEST_PASS",
+   "counts": {
+    "cells_total": 8,
+    "red": 5,
+    "exempted": 3,
+    "verdict": "EXPOSURE_SHAPE_FOUND"
+   }
+  }
+ },
+ "control": {
+  "exit": 0,
+  "counts": {
+   "cells_total": 8,
+   "red": 5,
+   "exempted": 3,
+   "verdict": "EXPOSURE_SHAPE_FOUND"
+  },
+  "exemption_ids_seen": [
+   "EX-2-ATTRIBUTED-FOLD"
+  ]
+ },
+ "published_bytes_unchanged": true,
+ "mutant_files": [
+  "mutant_fold_entry_removed.cjs",
+  "mutant_fold_exempts_without_measuring.cjs",
+  "mutant_invents_an_evidence_name.cjs",
+  "mutant_names_a_cell_id.cjs",
+  "mutant_names_a_file.cjs",
+  "mutant_names_a_file_through_the_family_axis.cjs",
+  "mutant_names_a_line.cjs",
+  "mutant_names_one_whole_sink_shape.cjs"
+ ]
+}
