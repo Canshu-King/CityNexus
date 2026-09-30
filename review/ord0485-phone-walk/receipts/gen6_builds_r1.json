@@ -1,0 +1,88 @@
+{
+  "tool": "gen6_build_r1",
+  "took_local": "2026-10-01T01:52:57.566359+08:00",
+  "faces": [
+    {
+      "label": "TIP_0989713a",
+      "tree": "wt14",
+      "out_dir": "faces/tip6",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen6_tsc_TIP_0989713a_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen6_tsc_TIP_0989713a_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen6_build_TIP_0989713a.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 9.21s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "e7e89588ee92a763c748012469cb725dd0582911be7a5779de8be629f1702104",
+          "local_sha1": "4f6e1bea99b59c3726e622859b63d5d686e54a1f"
+        },
+        "entry_asset": "index-DaHdgt6W.js",
+        "css_asset": "index-BIYEp83f.css",
+        "bundle": {
+          "bytes": 1547460,
+          "sha256": "5311bae9cf7a40756c1d769c1b747cff29154e1844d6ad36cb1245abc289473c",
+          "local_sha1": "95c9a395feb02d708a410cbddff90174d20a66a4"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    },
+    {
+      "label": "O0485_R5",
+      "tree": "wt15",
+      "out_dir": "faces/o0485_r5",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen6_tsc_O0485_R5_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/gen6_tsc_O0485_R5_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/gen6_build_O0485_R5.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 6.67s\u001b[39m"
+        ],
+        "module_lines": 4
+      },
+      "entry": {
+        "index_html": {
+          "bytes": 1200,
+          "sha256": "c6f41728ca255c4bf41fafa3f4049baa38ddd7fbe8cbfa60529db28085dbd992",
+          "local_sha1": "1d76ba1924c4434437ea6215eb9346ab5ef07b4f"
+        },
+        "entry_asset": "index-C3-5f0ll.js",
+        "css_asset": "index-BIYEp83f.css",
+        "bundle": {
+          "bytes": 1547615,
+          "sha256": "81bfda0ff8b14b97ada7a700373b917a323172f147a13cfb491ab3dc3f114fa2",
+          "local_sha1": "960d633ae594323c06d85d585f959b59514cb382"
+        },
+        "sw": true,
+        "file_count": 10
+      }
+    }
+  ]
+}
