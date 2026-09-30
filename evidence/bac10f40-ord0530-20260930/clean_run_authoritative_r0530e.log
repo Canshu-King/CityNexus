@@ -1,0 +1,386 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:60818 backend=:60819 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_e2e_r0530e.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [11620]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:60819 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:52081 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52142 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=r0530e frontend=:60818 -> backend=:60819 ai=disabled db=_e2e_r0530e.db
+
+Running 6 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:60818 backend=:60819 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_e2e_r0530e.db ai=disabled reuseExistingServer=false
+
+[1/6] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:65383 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:65387 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:65383 - "POST /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65387 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65383 - "POST /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/stay-options/fd0d185a-3f14-4e64-b73e-014b0eb71fd4/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=a10ca880-fc28-4692-b3a2-081962ee535b options=4 chosen=fd0d185a-3f14-4e64-b73e-014b0eb71fd4 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:61891 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61892 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56200 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56196 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56208 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61893 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61099 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61101 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53567 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56204 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61100 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62707 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63581 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:60818 backend=:60819 db=sqlite:///D:/moodle/_qoder_ai_ord0387_20260928/_e2e_r0530e.db ai=disabled reuseExistingServer=false
+
+[2/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
+[WebServer] INFO:     127.0.0.1:62596 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62608 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54555 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54557 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54558 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62620 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54556 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54559 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53648 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55877 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55869 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58037 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51892 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59173 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51551 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51561 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51569 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51567 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55792 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55780 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55791 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51571 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51595 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:182:1 › ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: answered_empty — {"journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","door_rows":0,"state_line":"还没有足迹。打开行程，在一站上按「打卡」。","day_rows":0,"stamp_rows":0,"tally":"这次行程共有 0 枚足迹。","screaming_snake":[],"uuids":[]}
+
+[3/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day
+[WebServer] INFO:     127.0.0.1:53247 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53250 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58340 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53253 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58342 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58343 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58341 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65453 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50931 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50930 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55565 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50101 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58344 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61754 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61755 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61758 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49692 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49694 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61762 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55557 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61763 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49696 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52703 - "POST /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:52494 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57539 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62410 - "POST /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50609 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52060 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52064 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52072 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62901 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62903 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62904 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62911 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65493 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65492 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62908 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62910 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65494 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: grouped_by_the_trips_own_day_390x844 — {"journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","shape":{"width":390,"height":844},"trip_zone":"Asia/Shanghai","device_zone":"America/Los_Angeles","device_zone_would_give":["9月30日周三"],"trip_zone_gives":["10月1日周四"],"zones_disagree":true,"door_rows":[{"stamped_at":"2026-09-30T16:48:36.041836+00:00","target_key":"activity:db39e628-43ff-43da-8fc8-1ac635c1efc3","note":null,"source":"FOREGROUND_WEB"},{"stamped_at":"2026-09-30T16:48:36.839577+00:00","target_key":"activity:ceece040-bedc-4698-8936-484f8abcbad8","note":null,"source":"FOREGROUND_WEB"}],"day_rows":[{"text":"10月1日周四","box":{"x":37,"y":304,"w":316,"h":26},"centre":{"x":195,"y":317},"hit":"h3.cn-footprints__day","in_viewport":true}],"stamp_rows":[{"text":"00:48 Arrival 没写备注 网页端打的","cells":["00:48","Arrival","没写备注","网页端打的"],"under_day":334,"hit":"span.cn-footprints__note cn-f","in_viewport":true},{"text":"00:48 Check in · Haihe Riverside Hotel 没写备注 网页端打的","cells":["00:48","Check in · Haihe Riverside Hotel","没写备注","网页端打的"],"under_day":378,"hit":"span.cn-footprints__note cn-f","in_viewport":true}],"under_day":["10月1日周四","10月1日周四"],"tally":"这次行程共有 2 枚足迹。 分成 1 天。","zone_line":"日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。","screaming_snake":[],"uuids":[]}
+
+[4/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 1280x900 arm=grouped_by_the_trips_own_day
+[WebServer] INFO:     127.0.0.1:63572 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63573 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51084 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51083 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51081 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63574 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62746 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57337 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54503 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51082 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51085 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63943 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62374 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59824 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59825 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61732 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61731 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59826 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56875 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59827 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59828 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64921 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57763 - "POST /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 409 Conflict
+
+[WebServer] INFO:     127.0.0.1:62201 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62205 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62207 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62209 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60116 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60117 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61091 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61090 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54396 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60118 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60119 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60120 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65251 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:207:3 › ORD-0530 zh 1280x900 arm=grouped_by_the_trips_own_day
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: grouped_by_the_trips_own_day_1280x900 — {"journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","shape":{"width":1280,"height":900},"trip_zone":"Asia/Shanghai","device_zone":"America/Los_Angeles","device_zone_would_give":["9月30日周三"],"trip_zone_gives":["10月1日周四"],"zones_disagree":true,"door_rows":[{"stamped_at":"2026-09-30T16:48:36.041836+00:00","target_key":"activity:db39e628-43ff-43da-8fc8-1ac635c1efc3","note":null,"source":"FOREGROUND_WEB"},{"stamped_at":"2026-09-30T16:48:36.839577+00:00","target_key":"activity:ceece040-bedc-4698-8936-484f8abcbad8","note":null,"source":"FOREGROUND_WEB"}],"day_rows":[{"text":"10月1日周四","box":{"x":318,"y":245,"w":896,"h":26},"centre":{"x":766,"y":257},"hit":"h3.cn-footprints__day","in_viewport":true}],"stamp_rows":[{"text":"00:48 Arrival 没写备注 网页端打的","cells":["00:48","Arrival","没写备注","网页端打的"],"under_day":274,"hit":"span.cn-footprints__note cn-f","in_viewport":true},{"text":"00:48 Check in · Haihe Riverside Hotel 没写备注 网页端打的","cells":["00:48","Check in · Haihe Riverside Hotel","没写备注","网页端打的"],"under_day":363,"hit":"span.cn-footprints__note cn-f","in_viewport":true}],"under_day":["10月1日周四","10月1日周四"],"tally":"这次行程共有 2 枚足迹。 分成 1 天。","zone_line":"日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。","screaming_snake":[],"uuids":[]}
+
+[5/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:280:1 › ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read
+[WebServer] INFO:     127.0.0.1:55198 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55200 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55206 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58097 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58091 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58095 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58101 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58093 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64743 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60648 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58099 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58942 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59193 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53532 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53538 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53540 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53546 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57613 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57612 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53542 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53544 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57614 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57647 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:280:1 › ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: retry_after_the_door_stops — {"journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","rows_before":2,"door_rows":2,"state_after":"这一屏没问到服务器，所以这里既没说有事，也没说没事。","rows_after":0,"days_after":0,"tally_after":"这次行程共有 0 枚足迹。","injected":"route.abort on the checkins read, then the screen's own 重读一次"}
+
+[6/6] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:316:1 › ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer
+[WebServer] INFO:     127.0.0.1:58854 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58857 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63669 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63670 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63667 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63668 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51372 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62133 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51158 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58860 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54345 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54344 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63671 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52902 - "DELETE /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b HTTP/1.1" 204 No Content
+
+[WebServer] INFO:     127.0.0.1:65152 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65173 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65178 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/checkins HTTP/1.1" 409 Conflict
+
+[WebServer] INFO:     127.0.0.1:63470 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61233 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56290 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65186 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65194 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63469 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56064 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56070 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59292 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59290 - "GET /api/v1/travelers/ba53160f-5c2c-4e20-be57-2ae133808f41/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59291 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56076 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59289 - "GET /api/v1/journeys/a10ca880-fc28-4692-b3a2-081962ee535b/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59293 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:316:1 › ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: refused_and_unreachable — {"refused_journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","refused_line":"服务器答了，但这次没有把足迹交出来。","refused_rows":0,"refused_days":0,"unreachable_journey_id":"a10ca880-fc28-4692-b3a2-081962ee535b","unreachable_line":"这一屏没问到服务器，所以这里既没说有事，也没说没事。","unreachable_rows":0,"unreachable_days":0,"injected":"route.abort on the checkins read (a failure, not a doctored answer)"}
+
+  6 passed (27.0s)

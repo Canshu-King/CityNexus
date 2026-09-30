@@ -1,0 +1,121 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+ "arm": "grouped_by_the_trips_own_day_1280x900",
+ "run_id": "r0530d",
+ "denominator": "copied private db",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "shape": {
+  "width": 1280,
+  "height": 900
+ },
+ "trip_zone": "Asia/Shanghai",
+ "device_zone": "America/Los_Angeles",
+ "device_zone_would_give": [
+  "9月28日周一",
+  "9月30日周三"
+ ],
+ "trip_zone_gives": [
+  "9月29日周二",
+  "10月1日周四"
+ ],
+ "zones_disagree": true,
+ "door_rows": [
+  {
+   "stamped_at": "2026-09-29T01:20:00+00:00",
+   "target_key": "activity:7951eb3f-a41b-49f6-9218-37bbd65f7d85",
+   "note": "上午先到一步",
+   "source": "FOREGROUND_WEB"
+  },
+  {
+   "stamped_at": "2026-09-30T16:17:38.173025+00:00",
+   "target_key": "activity:1f2fb0b3-09ba-4f54-8d74-8c8ba381a9cf",
+   "note": null,
+   "source": "FOREGROUND_WEB"
+  },
+  {
+   "stamped_at": "2026-09-30T16:17:38.183028+00:00",
+   "target_key": "activity:9cbbaa92-b72c-4777-b3a7-74978b7c379a",
+   "note": null,
+   "source": "FOREGROUND_WEB"
+  }
+ ],
+ "day_rows": [
+  {
+   "text": "9月29日周二",
+   "box": {
+    "x": 318,
+    "y": 245,
+    "w": 896,
+    "h": 26
+   },
+   "centre": {
+    "x": 766,
+    "y": 257
+   },
+   "hit": "h3.cn-footprints__day",
+   "in_viewport": true
+  },
+  {
+   "text": "10月1日周四",
+   "box": {
+    "x": 318,
+    "y": 375,
+    "w": 896,
+    "h": 26
+   },
+   "centre": {
+    "x": 766,
+    "y": 388
+   },
+   "hit": "h3.cn-footprints__day",
+   "in_viewport": true
+  }
+ ],
+ "stamp_rows": [
+  {
+   "text": "09:20 Central Food Hall 上午先到一步 网页端打的",
+   "cells": [
+    "09:20",
+    "Central Food Hall",
+    "上午先到一步",
+    "网页端打的"
+   ],
+   "under_day": 274,
+   "hit": "span.cn-footprints__note",
+   "in_viewport": true
+  },
+  {
+   "text": "00:17 Old Town Gate 没写备注 网页端打的",
+   "cells": [
+    "00:17",
+    "Old Town Gate",
+    "没写备注",
+    "网页端打的"
+   ],
+   "under_day": 405,
+   "hit": "span.cn-footprints__note cn-f",
+   "in_viewport": true
+  },
+  {
+   "text": "00:17 Riverside Museum 没写备注 网页端打的",
+   "cells": [
+    "00:17",
+    "Riverside Museum",
+    "没写备注",
+    "网页端打的"
+   ],
+   "under_day": 406,
+   "hit": "span.cn-footprints__note cn-f",
+   "in_viewport": true
+  }
+ ],
+ "under_day": [
+  "9月29日周二",
+  "10月1日周四",
+  "10月1日周四"
+ ],
+ "tally": "这次行程共有 3 枚足迹。 分成 2 天。",
+ "zone_line": "日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。",
+ "screaming_snake": [],
+ "uuids": []
+}
