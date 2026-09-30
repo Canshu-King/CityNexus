@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 00:04 · 第三条端到端：分享四臂（建/读/陌生/撤销后）在真 HTTP 上全通，接收屏在**无行程引用的新上下文**里渲染出真行程
+
+**〇、口径**
+
+分母同前（我复制的那份有排程私有库、后端 `:4787`、局域网宿主 `:4783`、最新尖 `1e95d106f81b29048ba17695fd0e49172516b9b1` 那一代产物）。行程 `22222222-2222-4222-8222-222222222222`。屏读视口 `390x844`，工具 `_cmdr_walk_shared_r51.js`，读数落 `_walk_r51_shared.json`，零 `pageerror`。
+
+**一、服务端四臂（逐发真 HTTP）**
+
+| 臂 | 读数 |
+|---|---|
+| 建授权 `POST /api/v1/journeys/{id}/share-grants` 带 `{visibility:"LINK_READ", created_by}` | `http_status=201`，回 `id` 与 **32 位**令牌 |
+| 按令牌读 `GET /api/v1/shared/journeys/{token}` | `http_status=200`，正文就是那趟行程（`title=One Day in Nexus City`、`city_code=CNX-DEMO`） |
+| 陌生令牌 | `http_status=404` `code=NOT_FOUND`，句子 `No share grant carries that token.` |
+| 撤销 `POST .../share-grants/{grant_id}/revoke` | `http_status=200`；**撤销后同一令牌再读**回 `http_status=409` `code=CONFLICT`，句子 `This share grant does not allow a read right now.` |
+
+顺带一条形制事实：`visibility` 的真值是 `PRIVATE`/`LINK_READ`/`INVITEES_ONLY`/`PUBLIC`（`backend/app/schemas.py:871`）——我第一次拿 `LINK` 去试被 `http_status=422` 挡了，是我自己用错词，不是门的问题。
+
+**二、接收屏（在新上下文里、没有存任何行程引用）**
+
+- 路由 `/v8/shared/<32 位令牌>`；
+- 可见节点：`shared-screen`、`shared-language`、`shared-title`、`shared-window`、`shared-plan-line`、`shared-day-count`、`shared-day`、以及逐站的 `shared-stop`/`shared-stop-name`/`shared-stop-meta`；
+- 屏上文字：标题 `One Day in Nexus City`、时间窗「10月10日… 09:00 – 10月10日… 19:00」、天数、以及逐站名字与时刻（Old Town Gate 09:00、Riverside Museum 10:45、Central Food Hall 12:15、Tech Art Center 13:35、Nexus River Cruise Pier …）；
+- 屏上无 SCREAMING_SNAKE 机词、无 uuid。
+
+**三、这一条钉住了什么**
+
+接收方那台设备**没有存过任何行程引用**（我没有往它的 localStorage 里写 `citynexus.v8.journey_id`），却照样读到了真行程与逐站时刻——也就是说这一屏的供给**只来自令牌**，不依赖本机是否“拥有”这趟行程。这正是分享语义该有的样子。
+
+**四、没改善的部分**
+
+1. 长图「日块分隔」像素读数仍缺（开关坑已记）。
+2. 日历导出入口未上屏（ORD-0525 在跑）。
+3. 成员屏空转（ORD-0527，已定性为客户端接线）。
+4. 真机五格仍未跑（设备不在手）。
+5. 供给死局仍靠“拿现成有排程的库副本”绕过；干净库那条路等 ORD-0526 与 ORD-0521。
+6. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 00:02 · 第二条端到端：屏上点打卡门，服务端真多一行（1→2）；并附六枚控件的逐枚命名
 
 **〇、口径**
