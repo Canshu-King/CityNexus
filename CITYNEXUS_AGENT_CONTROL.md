@@ -16588,6 +16588,217 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0521 r3：已重切到 2f0568e0…；r2 被退不是文本冲突，是基座不同源（车道 cff87c64，r3）
+
+基与尖：
+- 开工外读 `refs/heads/mirror/integration-frontend-apple-pass1` = 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7
+- 交件前一秒再读同一支 = 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7，与我这一枚的父逐字相同
+- 我的枝 r3 `refs/heads/review/cff87c64-ord0521-empty-store-scene-door-r3` = c2d2f6cbb0d344d824f7b1d89a5430fefd8996bd，`git ls-remote` 回读同值，并把服务端那枚的 `backend/app/main.py` 取回与我量过的工作树比 sha256，一致
+- r1 = 5e3c412c4f5724a5d7c79f1dbe2b1e3b0e06a874、r2 = 0f92c63e458e93eaedcd57856220c342452186f1，两支冻结未动
+- `git merge-tree --write-tree` 对现尖与我这一枚只读预测：退出码 0、CONFLICT 0 处 —— 只预测形状，DRY 不跑闸，不算「可插」
+
+r2 被打回时「3 枚文件」到底是哪种不合（我复现了两种判据，不猜）：
+- 只读合并预测：把现尖与我 r2 那一枚合一次，0 处冲突 —— 所以不是文本冲突
+- 把我 r2 的全量增量当补丁打到新尖上 dry-run：也只错开 6 行（main.py 的 hunk 命中在 2167），无 fuzz、无失败
+- 而那 3 枚文件在尖上确实与我 r2 基座不同字节：`backend/app/main.py` 多 62 行、`contracts/openapi.yaml` 与 `frontend/src/generated/api.ts` 各 1 增 1 删，都出自 9071608a7bb54f2fde4f286bf550a9354b9e558f（ORD-0522）
+- 结论：序列器要的是**候选的基座逐字等于现尖**，不是补丁能不能贴上。我按这条交 r3，基座就是现尖本身
+
+r2 ↔ r3 等价性（这单要能证明「只是换了世代」）—— 全表 `review/ord0521/relay_equivalence_r3.txt`：
+- 本单新建的文件逐字节相同，含 `backend/app/demo_scene.py` —— `review/ord0521/relay_equivalence_r3.txt:5`
+- 与他人共享的按我贡献的增删行相同：main.py +101/-0 —— `review/ord0521/relay_equivalence_r3.txt:12`；services.py +44/-18 —— `review/ord0521/relay_equivalence_r3.txt:13`；契约 +95/-0 同表
+- 派生的客户端不比差值比复现：尖上的 api.ts 就是尖的契约跑生成器（同一枚 sha256），我交付的 api.ts 就是我改后契约跑同一工具 —— `review/ord0521/regen_reproducibility_r3.txt:5` 与 `review/ord0521/regen_reproducibility_r3.txt:9`
+- 总判定 —— `review/ord0521/relay_equivalence_r3.txt:19`
+
+新代重取的读数（臂与反件都在 r3 这一代跑的，不是抄）：
+- 本单 16 条臂与路权闸同跑 21 条全绿；补丁错开 6 行之后我把装饰器栈逐行读过，`@app.post(` 的收尾紧贴 `def demo_scene_ensure(`，中间没有插入物 —— `backend/app/main.py:2198`，路径声明 `backend/app/main.py:2171`
+- 空库走查 VERDICT GREEN —— `review/ord0521/ord0521_empty_store_walk_r3.txt:20`；只加不删 installed=37 already=0 —— 同文件 `:9`；库内读回 journeys 1、places 16、city_services 10 —— 同文件 `:12`
+- cell(1) 走过门之后 `http_status=200`、refused 计数 0、plan_version_id 非空 —— `review/ord0521/ord0521_empty_store_walk_r3.txt:13`
+- cell(3) 供不出的城市 `http_status=409`、`reason_code=DEMO_STATE_SUPPLY_UNAVAILABLE`、正文直说 —— `review/ord0521/ord0521_empty_store_walk_r3.txt:16`
+- 6 枚反件全杀 —— `review/ord0521/ord0521_mutants_r3.txt:9`；被改的 `demo_scene.py` 基线 sha256 与前两代同一枚（9b6910433ef068b1 开头），所以变异面也没变
+- 契约奇偶 formal 与 runtime 相等、missing 0、extra 0 —— `review/ord0521/ord0521_openapi_parity_r3.txt:1`
+- 前端类型闸 `tsc -p tsconfig.check.json --noEmit` 退出码 0
+
+两代整套（同一枚 commit 的两枚 worktree，顺序跑不并发）：
+- 收集：基座 1638 条 —— `review/ord0521/ord0521_collect_r3_base.txt:1650`；候选 1654 条 —— `review/ord0521/ord0521_collect_r3_candidate.txt:1666`；差值就是本单的 16 条臂
+- 整套：基座 11 红 1610 绿 —— `review/ord0521/ord0521_suite_r3_base.txt:337`；候选 11 红 1626 绿 —— `review/ord0521/ord0521_suite_r3_candidate.txt:337`
+- 逐名：两侧红名各 11，NEW REDS 为 none —— `review/ord0521/redset_r3.txt:3` 与 `review/ord0521/redset_r3.txt:4`；这次连"基座独有"的轮转都没出现，绿数差 16 正好等于我的臂
+- 判语：本单零新红；红着的 11 枚是 anywhere/provider 那一族在本机的既有状态，不归我修也不替它们遮
+
+顺手收敛的一处：我 r2 带来的两枚 runner 与这代派生的同名异体并存（`*_r2.py` 与 `*_r3.py`），我在提交前删掉了 r2 命名的那两枚并复算等价性，交付面只剩一套尺
+
+仍然未做的格（与前两代相同，等裁语）：
+- REQ-0521A：cell(2) 手机端「清洁浏览器 + 空库 + 不开向导」这一半。门与 reset 同族，要 `X-Demo-Scene-Token`，浏览器给不出这枚头。① 预览/反代在服务侧补这枚头（我倾向这条：不新造免鉴权写面）② 让无守护的 prepare-scenario 在空库时退到这条加法供给。点哪条我走哪条
+- CN-BEIJING 那一腿：地点供得上、计划仍被拒（CatalogShortfall），已钉成臂 —— `backend/tests/test_qoder_ord0521_empty_store_scene_door.py:338`
+- `catalog-hydrations` 那台状态机我没接这条供给路，只证到它的终态是本地判定 —— `backend/app/catalog_hydration_operations.py:913`
+- 夹具行清单现在与破坏门共用一份，共享点在这几枚 —— `backend/app/services.py:244` 与 `backend/app/services.py:390`
+
+磁盘：我这一代新起 1 枚 worktree（r3 候选）；纯尖基座沿用 `_qoder_ord0521r2_20261001/base` 并已 checkout 到 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7（未新增磁盘）。r1/r2 两枚候选树仍在，要不要收由您点单
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0518 · 行程列表"按什么排"上屏 r2：rebase 后在新代重跑，三枚热面逐字节未动（车道 8ac89982，03:52）
+
+**一、形制与写集**。父 = ORD-0477 r3 `725ea40ab32b9e96939f7ec1c32dfc897e46288f`（其父为现尖 `7862c6de5565c02c20ec2dccaa9da18960603e06`），候选 = `705922f7ca60390d0afb250180a9d325781b5cb5`，树 = `b94ef46fbb8f2de1fedb458d6a7ad0421050126d`，枝 = `refs/heads/review/8ac89982-ord0518-trip-order-said-out-loud-r2`，`git push --atomic` 退出 0、远端 `ls-remote` 回读同一枚。对父的写集：8 枚产品文件（新增 `frontend/src/features/access/journeyOrderVerdict.ts` blob `4b5fb93af82fcfb2f239127ae0a404133dbee708` 与本单的验收 `frontend/e2e/qoder-0518-trip-order-said-out-loud.spec.ts` blob `8548151a7537b21394d4dd9330a6e13ff0a8f94b`，其余六枚修改），`git diff --name-status` 同一行给出 35 枚新增 / 6 枚修改 / 0 枚删除——0 删除是硬要求，因为这一格改的正是 ORD-0503/0527 这周落过的那一族。`-r1` = `8074fb6d7a14c57d4434d3d2310f13ea65268f0e` 冻结不动；r1 与 r2 之间只差一枚证据件（`git diff --name-status` 只报 `A review/ord0518/first_cut_reds_previous_generation.txt`），三枚关键产品 blob 在两枚提交里逐字节同一枚，所以跑臂的那一代与交出去的这一代是同一份代码。
+
+**二、不撞三枚热面是量出来的，不是承诺**。对着父逐枚比 blob：`backend/app/main.py` = `da531dfe936378bb223f58ba6bc7b4c9f0f911fc`、`contracts/openapi.yaml` = `05209cd75cf8d7bf9e8f507fb2b4b30cf6d7ab39`、`frontend/src/generated/api.ts` = `215a14e415615ef8f73af576a3b606bab340f946`，三枚在候选里与在 r3 里完全一致（判定原文 `review/ord0518/hot_face_check_against_ord0477_r3.txt`）。因此不需要具名 `BLOCKED_HOTFILE`：这一格全部落在 `features/access/` 自己的模块、字典与 CSS 里，`LocaleContext.tsx` 一字节没碰。
+
+**三、指令点名的三档，逐档对账**。抵达时间序——门里没有这个字段：`contracts/openapi.yaml` 给的行形状里没有抵达时刻，它藏在 `journey_trip_contexts` 的锚里，而这台服务器上没有任何门按它排行程；所以这一档**不在控件上**，而是与"已存序"一起写在同一屏的具名缺失块里（`data-testid="access-sort-absent"`，zh 句子为"行程列表门没有抵达字段…这台服务器没有任何门按它排行程"），不是我悄悄收窄成两档。创建序——真给了，它是"这一屏不发那个词"那一档（值 `null`，`journeyListPath(null)` 不带 `sort`），排在阶梯第一位，因为旅人先读"我存的顺序"再读"我刚改过的"。已存序——这台服务器没有第二个叫"已存"的时刻，行上只有创建与更新两个时刻且各自已有档，所以它也只作为具名缺失写出。另加两条真档位（出发日期、名称）与 ORD-0477 的"最近更新"，屏上共四档，`access-sort-tier-*` 四个 testid 各一个词，且机词 `RECENT_UPDATE`/`DEPARTURE_DATE`/`TITLE` 不允许当标签（臂里逐枚断言不含）。
+
+**四、"服务端不给序时不得假装"落在哪一行**。`journeyOrderVerdict.ts` 只看门发来的行：`DEPARTURE_DATE` 逐行比 `start_at` 解析出的瞬时（naive 读作 UTC，与契约给这条门的读法同一条规则），`TITLE` 比折行后的名字，`RECENT_UPDATE` 与创建序则**核不了**——因为这条门发的行里没有 `created_at` 也没有 `updated_at`（我是对着 `contracts/openapi.yaml` 的 `listJourneys` 行形状量的，不是猜）。新代实跑读数（`review/ord0518/e2e/ord0518r20_order-verified-zh.json`）：`CREATION_ORDER` = NOT_VERIFIABLE/no_created_at_in_row、`RECENT_UPDATE` = NOT_VERIFIABLE/no_updated_at_in_row、`DEPARTURE_DATE` = CONSISTENT/compared_start_at、`TITLE` = CONSISTENT/compared_title；zh 屏上原文两例——"逐行核过：这些行确实是这个顺序（核的是行程名）。"与"这一档这一屏核不了（这一列里没有创建时间可比），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。"机词不上屏：`journeys.`、`created_at`、`updated_at`、`start_at`、`U+` 五种都断言不出现在渲染文字里，它们只在 `data-compared` / `data-blocked-code-point` 属性上给闸口读（`frontend/e2e/qoder-0518-trip-order-said-out-loud.spec.ts` 的 V3 段）。
+
+**五、折行守卫的边界是量出来的**。上一代我用语域白名单，结果真行程名 `Tianjin · stay-aware weekend` 里那枚 `·`（`U+00B7`）被误拒、TITLE 报"核不了"——那是把能核的东西说成不能核。改法：`review/ord0518/fold_casefold_server_r1.py` 用服务器自己的解释器（`D:/moodle/CityNexus/backend/.venv`，实测 3.12.14）对每个码位记 `casefold`，`review/ord0518/fold_diff_browser_vs_server_r1.cjs` 再问 V8 同样的问题，留下两边答案不是同一串字符的码位：**1112064 个非代理码位里 352 枚分歧、压成 49 段**（三个数依次是 `review/ord0518/fold_diff_browser_vs_server_r1.txt:1`、`:2`、`:3` 那三行；入库表与测量按集合相等的复核对 `review/ord0518/fold_table_check_r1.txt:1` 与 `:4`，判定原文 `review/ord0518/fold_table_check_r1.txt:7` = verdict MATCH）。`U+03A3` 单独拒：逐码位量它两折相同，但整串量 `"AΣ".toLowerCase()` = `aς` 而 `"AΣ".casefold()` = `ασ`（Final_Sigma 是上下文条件，逐字符扫看不见它；两侧原文并排记在 `review/ord0518/sigma_context_reading_r1.txt`）。这一代在真浏览器里复跑：`review/ord0518/e2e/ord0518r20_order-fold-r1.json:6` 报 checked_code_points 1112064、`:7` measured_divergent 352、`:8` shipped_ranges 49、`:10` only_in_shipped 与 `:11` only_in_measured 都是空表；作答的引擎串记在同件 `:19`（HeadlessChrome，版本号就在那一行里）；同件里 `refused_names` 给出六枚该拒的（straße / ﬁle list / ς / ŉ / AΣ / ǰ）与 `checkable_names` 给出六枚不该拒的（含 `Tianjin · stay-aware weekend`、北京 三日、São Paulo、İstanbul）。
+
+**六、首尾两行读得出是哪两枚行程**。列表不再是封闭 `<select>`：`<ol data-testid="access-trip-roster">` 逐行渲染，每行一枚 `access-trip-open-*` 按钮，序号由 CSS counter 写在屏上（不是只有 `data-position` 属性能查），行文字是行程名，uuid 出现即断言红。四档各点一遍，读数在 `review/ord0518/e2e/ord0518r20_order-rows-named-zh.json` 与 `...-en.json`：`observed` 与 `expected` 逐档相等、四档的"首枚‖末枚"四对互不相同。为了让 `RECENT_UPDATE` 不是靠时钟 tick 而是靠一次动作成立，夹具在创建之后用产品自己的 PATCH 门改一档（`api/v1/journeys/{id}` 回 200，标题原样送回；断言原文 `frontend/e2e/qoder-0518-trip-order-said-out-loud.spec.ts:268`），所以那一档的首行是"刚被改过"的那一枚。
+
+**七、390 与桌面各一趟，读 innerText，可达性先滚进视口再打中**。这条判据上一代错过一次（不滚就说"够不着"），所以两趟测：第一趟在所有元素的滚动零位读"首屏可见集"，第二趟只对不在首屏者 `scrollIntoView` 后重测并判可达。新代读数（四件 `review/ord0518/e2e/ord0518r20_order-geometry-*.json`）：390x844 下量到的可达线 = 768（`review/ord0518/e2e/ord0518r20_order-geometry-390x844-zh.json:11`），直接来自 `.v8-mobile-nav` 的盒子 `[0, 768, 390, 76]`（同件 `:15`），与车道 N3 当年冻在 390x844 的那枚数字一致（我是量出来再比，不是写死）；桌面 1280x900 那两条 `bar_box` 为 None、线为 900（`review/ord0518/e2e/ord0518r20_order-geometry-1280x900-zh.json:11`），因为那条 nav 只在 `frontend/src/styles.css:178` 那一条媒体查询里才 `display:grid`——把 768 硬贴到 900 高屏幕上会把本来可点的行判成缺陷。四档控件、"这一屏要的是哪一序"那句、判定句三者都必须在不滚时就在首屏（臂里断言），行程行则允许滚：手机 zh 21 行里 3 行在首屏（`review/ord0518/e2e/ord0518r20_order-geometry-390x844-zh.json:542`）、en 25 行里 2 行在首屏（`review/ord0518/e2e/ord0518r20_order-geometry-390x844-en.json:618`），桌面 zh 29 行里 7 行在首屏（`review/ord0518/e2e/ord0518r20_order-geometry-1280x900-zh.json:689`）。"这单有没有挤掉别人的可点控件"用减法读：`lost` 四枚全为空表（手机 zh 那件 `:574`）；可点数与隐藏本单两块后的可点数，手机 zh 是 12 对 5（同件 `:572` 与 `:573`）。
+
+**八、反件三枚，全咬、全按 sha256 验回归还**（`sha_before` == `sha_after_revert` 逐枚写在三份 `review/ord0518/mutant_r1_server_order_masked.txt`、`mutant_r1_tier_switch_keeps_the_list_still.txt`、`mutant_r1_verdict_stops_reading_the_rows.txt`）：遮掉服务端序（`accessDoors.ts` 把门发来的行倒序）→ 4 failed / 8 passed，红的是 `order-verified-*` 与 `order-rows-named-*` 两族；换档不动列表（`journeyListPath` 恒发同一条路径）→ 4 failed / 8 passed，同样两族红；判定不看行、逢档就说"逐行核过"（`journeyOrderVerdict.ts` 里那条不可核验分支短路）→ 2 failed / 10 passed，只有 `order-verified-*` 红——这枚不在指令点名的两枚里，我加它是因为前两枚都让判定"读行"，动不到"不许假装"那一腿。第一枚之所以咬得住，正是因为判定是从行算的：门被遮时屏改说"这些行不是这一屏要的那个顺序"，臂钉的是 CONSISTENT，于是红——一个硬编码绿色的屏不会红。
+
+**九、上一代首切就是红的，原文一并交**。`review/ord0518/first_cut_reds_previous_generation.txt` 是那 8 枚红的点名原文（R1 两枚、V1 两枚、G1 四枚），三类成因即上面第三、五、七节所述；它记的是被 rebase 掉的那一代（基座 `be0ffee216c7d24e48652427d290da848a9195cf`），只作为"我改了什么"的原始读数，不作为新代结论。
+
+**十、新代总成读数**。本单 11 臂与 ORD-0477 那 14 臂同跑两趟：25 passed 与 25 passed（第一趟的结论行 `review/ord0518/gate_rebased_pass1.log:1136`，第二趟在 `review/ord0518/gate_rebased_pass2.log`，run id `ord0518r20` / `ord0518r21`，私有端口与权威档都印在同一代日志的表头上——`review/ord0518/gate_rebased_pass1.log:5` 那行写着 `authoritative=true`、`frontend=:5120 backend=:5121`、这次的库名与 `reuseExistingServer=false`；第二趟同格式在 `review/ord0518/gate_rebased_pass2.log`）；`npm run typecheck:all` 退出 0（`review/ord0518/typecheck_r1.txt`）、`npm run build` 退出 0（`review/ord0518/vite_build_r1.txt`，precache 8 entries）。落地预测：r2 落在"现尖 + r3"之后 0 枚冲突，预测树 `196335a2ddc93b6fd82eda79e36ee3ade4cd09f4`（父系链为 r3 = `725ea40ab32b9e96939f7ec1c32dfc897e46288f`，新尖 = `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`）。
+
+**十一、没走的（具名）**。这一格不碰服务端，所以行里没有 `created_at` / `updated_at` 这件事没修——真要屏能核 `RECENT_UPDATE` 与创建序，得给这条门加一个可回读的发序凭据（响应头或行内字段），那是另一张单的形状与另一张单的写点。行程列表无分页：`GET /api/v1/journeys` 仍把全库未删除的行程都发回来，所以手机首屏只装得下 2 到 3 行、其余靠滚动（第七节实测），这条限制具名交回而不修。生产构建只在本机私有栈验过，未部署、未取屏；手机端与隧道 `NOT_MEASURED`。ORD-0512（地图标注上屏）仍未接进渲染路径：`src/lib/mapLabels.ts` 的落地与多帧像素差分的两枚反件都还没交，那一格我排在下一轮。
+
+
+### ORD-0533 r2 · 字典键名上屏 —— 重切到现尖，并更正我 r1 那块里的一枚读数（车道 6a773af1，03:50）
+
+先说我自己的状态：这块之前我在 03:31 交过一版（已入账，`CITYNEXUS_AGENT_CONTROL.md:17101` 起那截），它指的是 refs/heads/review/newlane-ord0533-copy-gate-r1。你让我 rebase 的这条我照做了，并且现尖确实又走了两代，所以 **r1 那块的产品坐标请当已被本块取代**（枝我留着不动，只是不再是交付点）。
+
+枝与基座
+- 交付枝 refs/heads/review/newlane-ord0533-copy-gate-r2，头 = 4b9882cf879d53c14eef33fb96110e34fe113644；它父 = 68c582c80e876c842c35bc00b6c5488926b03361（字典那 7 行纯插入），再父 = 我写这块时 `git ls-remote` 现读的权威尖 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7（ORD-0537 那枚）。
+- r1 冻结：refs/heads/review/newlane-ord0533-copy-gate-r1 仍是 34457f6df5fe86b48b0ead052be53e7bfc870004，0 次 --force、0 次改写已发布提交。
+- 撞车检查做在动手之前：ORD-0524 r2 把这屏的一部分句子搬进了 `frontend/src/features/poiimport/poiImportCopy.ts`（blob 371a746ee1954ca3b5546f11b721b34af2ba6bea，那张表有 14 枚键），所以 `PoiImportPanel.tsx` 整个文件动了 361 行增、67 行删，`t("poiImport.channelLocal")` 从原来的 :216 迁到了 :352。我没改这枚文件的任何一行（blob 5366e1fef802d10c6b042153e0a8bec07c12c5e9 与尖上逐字节相同），只补字典。
+
+① zh 与 en 两侧都补词
+- 两本各一枚：en 在 refs/heads/review/newlane-ord0533-copy-gate-r2:frontend/src/i18n/LocaleContext.tsx:57，zh 在同一枝同一文件的 :1172，文件 blob 725f7b5b826d82aaedb2e85209ff64e29224be7d。
+- 中文那句「本地解析，不打开链接」，英文那句 "Local parse, no links opened"。这两串与 r1 那块里写的完全一致，没改字。
+
+② 这一屏其它 `t()` 调用逐枚核过 —— 顺带更正我 r1 报过的那个分母
+- r1 那块写"这一屏用到的键共 54 枚"，那是我把**调用点**数当成了**键**数：静态臂那枚字段叫 distinct_keys_called，底下装的却是没去重的列表。字段名不对的是我的量具，不是账本抄错。
+- 现在的读数两个都记、各自按自己数的东西命名：这一屏 53 处 t() 调用点、去重后 47 枚键，en 命中 47、zh 命中 47，missing 两侧都是空数组（证据 blob 2006a5a0a6aca575aeb163af1944afa14ab9763d）。
+- 判据强度没降也没有变：仍然是"每一枚调用点用到的键两本都得有"，只是不再把调用点谎称成键。
+
+③ 反件：把新键拿掉，屏上必须重现键名
+- 回执 blob 92ec49d52e72692c1416f90dbee897097650952a（工具 blob 93414661be9a799cce713182938dfa54bd601759），整轮 rc 0。
+- 摘掉那两行之后 B2 那臂红且 key_name_rendered = true —— 键名 `poiImport.channelLocal` 又出现在渲染文字里；B1 同时红；字典按原始字节还原，还原前后摘要同一个值（回执里 dictionary_sha256_before 与 after_restore 相等）；控制臂 3 条全绿 rc 0。
+
+④ 屏读在 390 那一档，读渲染文字不读属性
+- B2：视口 390x844，读 `document.body.innerText`，那一格逐字等于「本地解析，不打开链接」，整屏 347 字，键名形态命中 0、机词命中 0、裸 uuid 命中 0（证据 blob e45d19b2d12cf2aa80730f908f30383dd94f30fe）。
+- B3：换 en-GB 同一格是 "Local parse, no links opened"（证据 blob dc7d353acc93856750f0b250fc189fc4bddac714）。闸本体 blob 807e7f5bdda8b7102caabd5bbdf2ea4e237d8488，配置 blob ac3c4000cb059cd68ae07b990e6e2f2552304552，整份 JSON 报告 blob 3c12e49c2f4cab86b3704e0cf76420029d87a03b。
+
+这一轮我把自家量具的三处"不可回查"改掉了
+- 生成戳不再能填空：spec 现在要求 `CITYNEXUS_ORD0533_BASE_TIP` 是一枚 40 位，缺就拒绝起跑，不再生成 base_tip="unknown" 的读数——这正是我今晚在自己 ORD-0525 那块里认下的同类毛病，改在我自己这一单上。
+- 库副本改在这一步现场做：`sqlite3` 的 online backup 走 mode=ro 连接，工具 blob 8bf8aaf52ca2413b9aa1d8e4dc235cbced42995a、回执 blob 0f7fd8fa4f8bfbfc5467483010277026b3d30602。原因是那份 canary 处在 WAL 模式、旁边真有一枚 -wal 侧文件（回执里 source_canary_sidecars_present 记着两枚都在），只拷主文件字节可能少读日志里的行。
+- 副本与源的表计数四格逐个相等（journeys 3、activities 134、places 16、plan_versions 19），这组数在回执 blob 0f7fd8fa4f8bfbfc5467483010277026b3d30602 里的 store_counts_source 与 store_counts_my_copy 两字段。
+- 共享库没被我写过，这句现在是量出来的：我打开它之前与之后各算一次主文件摘要，两枚相等（同上那枚回执 blob 0f7fd8fa4f8bfbfc5467483010277026b3d30602 的 before/after 两个字段）；r1 那版工具是把一个抄来的值写进回执，那种"证据"不该算证据。
+
+一件顺带量到的、不属于本单但影响 ORD-0496 旧悬案
+- 那枚 ACTIVE canary 行程的 `.ics`：我在这次的新基座上重新 GET 了一次，字节 1922 B，对它算 `git hash-object` 得到的 oid 等于本枝上早先已发布的那枚导出件（blob 3159f0695a2313f2d8216c7bd1fbc7b22963c5d0），逐字节相等的判定与完整摘要写在回执 blob 201c3b24ac2b1f46828c16ee30fb04b073e87760 里。跨 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7 与上一代 7862c6de5565c02c20ec2dccaa9da18960603e06 两个代码代，导出字节完全一致 —— 所以权威线上那 3 个字的差额（1925 对 1922）不在导出器代码里，只能在"当时读的是哪份库、哪一行标题"里。两单都已落地，这条不改任何判定，只是把那条悬案往前推了一格。
+
+形制与其它
+- 私有栈：后端 port 4911、前端 port 4912，只监听 127.0.0.1，跑完已停（回执 blob 0f7fd8fa4f8bfbfc5467483010277026b3d30602 记 killed 与 still_listening）。你点名的端口这一轮现读到的是别人持有：8000、4781、4783、4785、4787 各有其主，我一个没碰；0 次 demo/reset、0 次写 `_preview.db`。
+- 类型检查：exit 0、diagnostics 0 行，回执 blob 12395d00a134a718246c1468fdf65b5067d666e7。
+- 我没查的一格（具名，不猜）：`{placeholder}` 那种未填值的形态没进我的判据，它归 ORD-0524 自己那臂在管；本单只管 t() 回吐键名这一族。
+
+一处归属更正（关于你说的"02:56 那块 ORD-0500"）
+- 我今晚只交了两块：03:28 交 ORD-0525 r2、03:31 交 ORD-0533 r1，都在账本里；02:56 那个时刻我名下没有任何件。ORD-0500 的根因那块在 `CITYNEXUS_AGENT_CONTROL.md:17903`，抬头写的是"车道 phone"，而你 03:3x 的叫醒名单 `CITYNEXUS_AGENT_CONTROL.md:16914` 里 ORD-0500 归 `0afdb49b`。另外 `CITYNEXUS_AGENT_CONTROL.md:16715` 那行出现过一枚 `_unclaimed_0256.txt` 的名字——那是一枚 02:56 的无人认领扫描，不是我交过的块。若这条只是转述时串了行，忽略即可；我没有因此改过 ORD-0500 的任何东西，也不会去接它。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0526 · 重交（车道 5a53846b，03:51）· 上一块被第二道闸拦下，这是改对坐标后的同一张单
+
+先落字你给的原因：`5a53846b_0317.md` 第 9 行那枚 40 位 `87aca0c70125d1b6d2477d242d5f84184d25b3c5` 不是 git 对象——它是 `git patch-id --stable` 的值（对补丁正文重算的内容哈希，`git cat-file` 取不到）。我当时写了「值不是 git 对象」，但那两句不在闸的逐字披露表里（表里认的是 `不是 blob` / `本机 sha1` / `不可 cat-file` 这类说法），所以门拒得对。同一条里还有一枚 `1a2843660dae0f57ab3ef0ea4330ab59d5cf2e7d` 是同族问题（那是**本机 sha1**，`git hash-object` 一类的字节哈希，不是 blob），第一道 ABORT 挡住后我还没走到它——两块本条都用表里的说法逐字标出来了。旧块我没删，改名留在收件目录旁（`5a53846b_0317.md.aborted_gate2_patchid_not_a_git_object`），供你比对。本块的坐标尺子：现尖 `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`、delivered head `dc86d1d0e63e665670ebe055b14ae3f45f28c08d`，两枚都可 `git cat-file`。
+
+**这一代坐标（两路现读一致：`git ls-remote origin` 与本地 remote-tracking ref）**
+
+- 现尖 `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`（比我上一块写的那枚新了 13 笔，含 ORD-0522/0524/0525/0537 的落地）。
+- delivered head `dc86d1d0e63e665670ebe055b14ae3f45f28c08d`，五笔线性坐在那枚现尖上；产品那一笔 `589d6a5787f4d654928c71ef39022a990914a95a`。服务器侧回读 `refs/heads/review/newlane-ord0526-supply-source-r1` == 同一枚 head（我用 `--force-with-lease` 换的，被替掉的那代 head 是 `3e6f9418bd898cc631df90bf7eb2264d69c3fa55`，对象仍在库里、没删——这枚 ref 只属于本车道，追尖 re-cut 是车道自己的动作，权威线我没碰）。
+- 换基座只是换父位、没改字：两代产品那一笔的 `git patch-id --stable` 相同，值 `87aca0c70125d1b6d2477d242d5f84184d25b3c5`（patch-id 不是 blob，`git cat-file` 取不到；比的是 `589d6a5787f4d654928c71ef39022a990914a95a` 与 `e506524eb2da49ea3a951e2a4e617eb742c16008` 这两笔可取回的提交）。
+
+**为什么要重跑一整代，而不是只搬基座**：`backend/app/catalog_hydration_operations.py` 在 ORD-0522 里被加了 128 行只读看板（`backend/app/catalog_hydration_operations.py:265` 的 `OUTCOMES_WITH_SUPPLY`、`:280` 的 `leg_states`），于是 `git merge-tree --write-tree` 虽然退出码 0、冲突标记 0 处，把我那枚 blob 在预测树里**改写**了：`a15856d1b72c345dbe4b96ea2f5d9893fb355cd7` → `d7d8d5877a907fbd6608b99d83b59b1feeeabcd9`（预测树 `dad8a9b15561108d8034241be8a284888999e54d`）。这一步只有把路径在预测树里打开回读才看得见；行号也整体下移。所以门读数、三证、两枚反件、集合全部在新基座重测一遍，件名带 `gen3`。合并后的 PERSISTING 段仍只有一处供给调用（`backend/app/catalog_hydration_operations.py:985`，我的），没有第二次写；他们那句 `OUTCOMES_WITH_SUPPLY` 正好把我这单挣来的 `ALREADY_CURRENT` 认成「留下了能排的物质」的结尾，两单在这一格不打架。
+
+**产品字节（blob 逐枚可 `git cat-file`，都是 delivered head 上的值）**
+
+- 新增 `backend/app/catalog_sources.py` = `f72e4c908faa535b7ace60ead8b28b0ba6cfce90`：注册表是字面量表 `backend/app/catalog_sources.py:63`，「已登记」判定 `backend/app/catalog_sources.py:91`，开关 `CITYNEXUS_CATALOG_OFFLINE_SOURCES` 在 `backend/app/catalog_sources.py:42`。
+- 改 `backend/app/catalog_hydration_operations.py` = `d7d8d5877a907fbd6608b99d83b59b1feeeabcd9`：`apply_registered_offline_source` 在 `backend/app/catalog_hydration_operations.py:791`，worker 只在两计数皆零时叫它一次 `backend/app/catalog_hydration_operations.py:985`，叫完**重新** `_survey`（`backend/app/catalog_hydration_operations.py:752`）再定终态；`places_written` 是改前后两次库内计数之差，不是循环里数的。
+- 改 `backend/app/integrations/discovery/real_city.py` = `ab10aded1b1b25d37c29c773a686d5fa268fb6e7`：落地腿 `backend/app/integrations/discovery/real_city.py:1137` 的 owner 从「一趟旅程」放宽成「旅程或一座城」，城 scoped 的行 `journey_id` 留 NULL 而不是编一个；`backend/app/integrations/discovery/real_city.py:71` 只在 `mode=offline_snapshot` 那一形给 `Place.metadata_json` 写 `provenance = OFFLINE_SNAPSHOT`。live/replay 行的分类一个字节没动——给它们补标记等于**加强**类别，正是 `_classify_source`（`backend/app/anywhere_capability.py:1065`）反过来防的方向。
+- 新增 `backend/tests/test_ord0526_offline_source_row_count_r1.py` = `a9a8d47c6c652ec13aedaa82721cefd95bbbda39`：臂对**每一枚**已登记的源生效，另两枚钉住「谎报行数必拒」与「别城的文件不许记到这座城」。
+
+**「已登记」的四个条件（缺一枚就具名拒绝，不静默）**：路径不出树；解析得出 `candidates`；文件里**自报**的 `city_code` 与登记城市同城——这枚快照自报 `TSN` 而不是 `CN-TIANJIN`，等价关系借产品自己已有的谓词 `real_city._is_tianjin_replay_city` 并把它写进事实字段 `city_equivalence_predicate`，没有新造别名表；每行候选有 `external_id`/`name`/数值经纬。地点名一个也不是我造的：五行全部来自 `data/replay/tianjin_real_snapshot.json` 里现成的 OSM way/node id。
+
+**门读数（私有后端 `:8798`；件 `review/ord0526/receipts/door__gen3_0526.json`）**
+
+| 形制 | city_code | places_held | pending_materialisations | 终态 outcome | operation_id |
+| --- | --- | --- | --- | --- | --- |
+| 源登记生效 | CN-TIANJIN | 5 | 0 | ALREADY_CURRENT（COMPLETED） | `0a81d27b-4a68-44e1-b9ff-40e0e3e7a734` |
+| 源未登记（M1） | CN-TIANJIN | 0 | 0 | NO_REGISTERED_SOURCE（UNAVAILABLE） | `066a7bc4-80a6-4b55-97c5-c54e46b65849` |
+
+生效那一代 `result.offline_source_applied` 逐字段：`in_effect` true、`candidate_count` 5、`candidates_captured` 5、`places_before` 0、`places_after` 5、`places_written` 5、`reason` null、`provider_key` `openstreetmap-replay`、`source_kind` `OFFLINE_SNAPSHOT`、`city_code_inside_file` `TSN`；同代 `source_kinds` = [`OFFLINE_SNAPSHOT`]、`registry` 一枚、`capability_after` HYDRATABLE、`coverage_after.attractions` READY（其余五类仍 MISSING，这单没碰）。紧接着同一趟 journey 的 `POST /api/v1/journeys/{id}/plans/generate`：`http_status=422`、`reason_code` = `CATALOG_INSUFFICIENT`、**`places_in_catalog` = 5**、`day_sequences_available` = 0；M1 那一格是 `CATALOG_EMPTY` / `places_in_catalog` = 0。目录计数现在由这扇门自己报，不再是我数库。
+
+三证归属随件（`review/ord0526/receipts/ownership__gen3_0526.json`）：P1 监听进程命令行同时含 `--app-dir` 指向我这棵树的 `backend` 与 `--port 8798`；P2 我库里的 journey 被路由回读 `http_status=200`、一枚现造 uuid 回 `http_status=404`、`GET /api/v1/places` 行数与同文件 `select count(*)` 相等（都是 5），`every_row_marked_offline_snapshot` = true；P3 监听进程向上回追到我记录的启动 PID。
+
+**两枚反件，真跑**
+
+- M1：同一扇门、同一 query、另一枚私有库（`:8799`），只多一枚 `CITYNEXUS_CATALOG_OFFLINE_SOURCES=off` ⇒ `UNAVAILABLE` / `NO_REGISTERED_SOURCE`、`places_held` 0、`reason` = `NO_REGISTERED_OFFLINE_SOURCE`、`registry` 空、`places` 门回读行数是 0。判据没被改松成假成功。件 `review/ord0526/receipts/door__gen3m1.json`。
+- M2（件 `review/ord0526/receipts/mutant_M2_row_count_wt526.json`，一趟连跑三趟）：诚实基座 `3 passed` 先证它本来就绿；然后把注册表那一行改指一枚自报 5 行、实含 3 个不同 `external_id` 的快照（重复 id 被落地腿按（城市, provider_key, external_id）收敛，库里真只长 3 行，量在 delivered head `dc86d1d0e63e665670ebe055b14ae3f45f28c08d`），臂红并点名两枚数：`OFFLINE_SOURCE_ROW_COUNT: 5 rows were captured and the store gained 3`，失败格 `test_every_registered_offline_source_claims_only_rows_that_land`；再还原 ⇒ `3 passed`，`catalog_sources.py` 改前改后逐字节相同（本机 sha1，对文件字节重算，不是 blob：`1a2843660dae0f57ab3ef0ea4330ab59d5cf2e7d`），谎报文件删净，`git status --porcelain` 为空。
+
+**集合与红集归因**
+
+`-k "catalog or hydration or real_city or discover or offline_source or place or provenance or source_kind"` ⇒ `4 failed, 130 passed, 1 skipped, 1505 deselected`（读数随 delivered head `dc86d1d0e63e665670ebe055b14ae3f45f28c08d` 的 `review/ord0526/READINGS_gen3.md`）。四枚红不是我这一代带上去的，两代干净检出对照：现尖 `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7` 的无改动树同组也红这四枚；ORD-0519 之前那一代 `8dd6905dec515b49b7713ea487806fe4f069d92a` 只红 `test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes` 与 `test_G4_the_lock_wait_is_written_in_exactly_one_place`，`test_g16a_...` / `test_g16b_...` 绿 ⇒ **g16a/g16b 归我自己 ORD-0519**：锚腿在未过期候选闸门之前被问，暖趟因此多发一次 Photon 外呼，而那枚臂要求外呼数为 0（判据行 `backend/tests/test_qoder_anywhere_discovery_truth.py:251`）。这单没顺手改它。`test_v18_hermes_r20_transport_reliability_probe.py` 在本树是 `ModuleNotFoundError: citynexus_mcp`，稀疏检出的环境限制，具名 NOT_REACHED_BY_LANE。
+
+**三条要落字的事实**
+
+1. 「落地写路根本不存在」这句不准。写路一直在：`materialize_candidates`（`backend/app/integrations/discovery/real_city.py:1137`）创建 `Place` 行并钉上 `row.materialized_place_id`；缺的是补水 worker 从来没叫它。这单加的是「叫它」。发现路由在 `backend/app/main.py:1792`，编排 `backend/app/integrations/discovery/real_city.py:1423`，另两处已有调用 `backend/app/integrations/discovery/real_city.py:1481`、`backend/app/integrations/discovery/real_city.py:1779`。
+2. `.gitattributes` 落地后仍有三枚 CRLF 的 `.py` 在每个新检出里假脏：`backend/app/commerce/strengths_generated.py`、`backend/app/stay_mobility.py`、`backend/tests/test_v1922_six_fix_regressions.py`（在 `refs/heads/review/newlane-ord0526-supply-source-r1` 那棵树上现读；`git diff --numstat` 报的行数对是 13/13、2056/2056、525/525，而我逐枚量：工作树与 HEAD blob 的 CR 字节数完全相同，内容 0 处不同）。归 ORD-0532 那单收还是另开，等你点。
+3. 我自己两次漏网，都在这张单里改了：一次是收据被 `.gitignore` 的 `evidence/` 整目录规则静默跳过（已挪 `receipts/` 并逐枚在 `git ls-tree HEAD` 数得到）；一次就是本条开头那枚 patch-id——我把一个内容哈希写成了像 git 坐标的样子。同族那条我记进交付文档：`git rc=0` 与「逐字 40 位」都不等于可取回，得 `git cat-file` 走一遍。
+
+**形制选甲**（捕获腿 + 已有落地写路 ⇒ `places_held` > 0），不是乙（只捕获、新增一枚 `pending_materialisations` > 0 的具名终态）。理由：落地腿本就存在并已钉 `materialized_place_id`；乙会造出「知道自己有货却不给货」的终态，而旅客走发现腿时拿到的正是甲的形状。`OUTCOME_PENDING_UNAPPLIED` 原位留着（`backend/app/catalog_hydration_operations.py:1000`），没改名也没删。
+
+**没动的东西（按令）**：`demo/reset`、`seed_demo`（`backend/app/services.py:241`，其第一行 `backend/app/services.py:242` 就是 `reset_all(session)`）一字未改；`prepare-scenario` 那句 "call demo/reset first" 措辞未动，等你判；解析器 `resolve_destination`（`backend/app/anywhere_capability.py:944`）与 `CNX-DEMO` 可解析性未动（按你 23:20 的裁语没折进来）；夹具模板现读在 `backend/app/services.py:780`（你给我的 `:845` 在我读的树里差 65 行）；Photon 的配置注册在 `backend/app/integrations/provider_config.py:22`；分类词表 `backend/app/anywhere_capability.py:79`（`OFFLINE_SNAPSHOT` 本来就在表里，不是我生的名）。共享预览库未写；`:8000` `:4781` `:4782` `:4783` `:4785` `:4786` `:4787` `:8693` 未碰，本单只用 `:8798` `:8799`。
+
+**请你判的三件事**：(a) g16a/g16b 那半格要不要开成一单派回我（我倾向由我修，是我写上去的）；(b) 生效终态现在叫 `ALREADY_CURRENT`，字面是「已经是当前」而事实是「刚刚由离线源补给」，原因在 `result.offline_source_applied` 里带着——保持现有词表还是补一枚具名副词；(c) 第 2 条那三枚 CRLF 文件归谁收。
+
+逐字复现命令在 `review/ord0526/READINGS_gen3.md` 与 `review/ord0526/READINGS.md` 第 8 节（同一枚 delivered head `dc86d1d0e63e665670ebe055b14ae3f45f28c08d`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守 42d1a6fa · 把「静默非闸 14 条」拆开看：今晚真正闲着的只有 2 条，且两条都在等门/等验收，不是掉队（现读 `_idle_register_0349.txt:1`）
+
+**一、为什么再补这一格**
+
+- 自动轮每拍印「停在额度 N｜在写 M｜静默非闸 K」，03:42:14 那拍 K=14（`autumn_watch.log:4129`）。这 14 条要不要叫醒，是这一班最容易被误判的一件事——所以我按你定的办法回流水里查，不看进程也不看端口。
+
+**二、现读结果**
+
+- 新尺 `_idle_lanes_register_r1.py`：会话全集从 `projects/D--moodle/*.jsonl` 推，按 id 取最近动过的那一份（一条车道多份 fork 只算一次），只列静默 30 分—12 小时这一段，超过 12 小时的归为历史会话、不混进重点（`_idle_lanes_register_r1.py:143`）。
+- 03:49 这一趟：静默 30 分—12 小时的会话 **2 条**，另有 **58 条**静默超过 12 小时（`_idle_register_0349.txt:1`）。
+- 那 2 条是：`a68b0631` 静默 56.4 分，尾句是它核完别人的勘误之后写的「没有需要勘误的交付物」（`_idle_register_0349.txt:3`）；`9759f1ac` 静默 47.3 分，尾句是「勘误块已发（旧帖不动）」并写了件路径与字节数（`_idle_register_0349.txt:5`）。⇒ 一条答完在等下一句，一条交完在等门，两条都没有未交的单。
+- 自动轮那 14 条静默的名字与时长在这（`autumn_watch.log:4131`）：Q 1615 分、0383 1614 分、map 1614 分、N3 1612 分——全是 26—27 小时以前停的会话，落在花名表里所以每拍都被列进 K，但它们不属于"今晚掉队"。（这一条是**定义差异**，不是说那 14 条不重要，等裁语的那些仍归你点名。）
+
+**三、所以这一班我没发消息给任何车道，理由逐条给**
+
+- 两条闲着的都不缺话：一条在等你回它，一条的件已经过门（`_idle_register_0349.txt:3`、`:5`）。
+- 其余 58 条超过 12 小时没动，按 09-30 定的规矩，潮退后的叫醒归号令者点名，我不越位敲（同 `_unclaimed_selftest_r1.py:7` 那条克制：只报读数不代决定）。
+- 唯一挂着的问题是**闸口拒**而不是没人干活：`5a53846b_0317.md` 已等 20.0 分、第二道闸 aborts=2，自动轮已连拍上总线（`autumn_watch.log:4119`）——那是那条车道要 re-cut 的事，它此刻还在写。
+
+**四、这把新尺的限度（别看过头）**
+
+- 「没查到未交单」= 近 12 小时号令者块里点过名的单号，凡远端有含该单号的 `review/*` 枝、或账本/块正文提到过的，都算有交付痕迹 ⇒ 它只证明**有交付痕迹**，不判交付对不对（`_idle_lanes_register_r1.py:14`）。
+- 分类词（请裁/已交/额度/链路）只用来分组，判语请以每行下面那条**尾句原文**为准（`_idle_register_0349.txt:4`、`:7`）。
+- 静默按流水文件 mtime 算：一条长命令跑着的会话，文件本来就不写，会被读成"静默"——这与自动轮停摆扫描同一限制，所以超过 30 分我才列（`_idle_lanes_register_r1.py:33`）。
+
+**五、门面**
+
+- 03:41:22 「停在失败上」的清贴真发出去了（回读对上），那一档此前哑了一夜，修的是 `%d` 吃 `str()`（`autumn_watch.log:4118`）。
+- 03:42:14 名册：停在额度 0｜在写 11｜静默非闸 14（`autumn_watch.log:4129`）；我这班 7 枚块全部入账，最后一枚 03:39:02（`_processed/42d1a6fa_0325.md.inserted_033902:1`）。
+- 自动轮 03:39 起重跑 30 拍，覆盖大约到 09:0x；本块按三关交：坐标逐枚回读全好、`claim_coordinate_check_r7.py --expect-clean` rc=0、83 字节尾行逐字节补上，才从草稿复制进收件口（`_citation_check_r1.py:11`）。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 03:46 · 手机链后端 `:4787` 已换到尖上那一代（含 ORD-0522 的 supply 一格与 ORD-0524 的写门）；旧的走完了它的班
 
 **一、为什么换**
