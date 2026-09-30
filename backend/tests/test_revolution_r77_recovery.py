@@ -29,6 +29,7 @@ from app.services import (
     _mobility_catalogue_place_ids,
     plan_authority_blocker,
 )
+from app.stay_mobility import _plan_mobility_projection
 
 
 def test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary():
@@ -733,6 +734,40 @@ def test_selected_plan_projection_exposes_edge_scoped_hard_receipts():
             "decision": "HARD_ELIGIBLE",
         }
     ]
+
+
+def test_selected_plan_projection_names_provider_collocated_zero_minute_edge():
+    plan = SimpleNamespace(
+        id="r77-collocated-plan",
+        mobility_snapshot_id="r77-collocated-snapshot",
+        mobility_evidence_json=json.dumps(
+            {
+                "source_provider": "valhalla-http",
+                "facts": [
+                    {
+                        "origin_key": "real-place-way",
+                        "destination_key": "real-place-node",
+                        "minutes": 0,
+                        "route_geometry": [[120.630126, 31.300803], [120.630126, 31.300803]],
+                        "provider": "valhalla-http",
+                        "fact_quality": "LIVE_PROVIDER_CAPTURE",
+                        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                        "degraded": False,
+                    }
+                ],
+            }
+        ),
+    )
+    activities = [
+        SimpleNamespace(id="activity-way", place_id="real-place-way", city_service_id=None),
+        SimpleNamespace(id="activity-node", place_id="real-place-node", city_service_id=None),
+    ]
+
+    summary, legs = _plan_mobility_projection(plan, activities)
+
+    assert summary["used_edges"][0]["co_located"] is True
+    assert legs[0]["duration_min"] == 0
+    assert legs[0]["co_located"] is True
 
 
 def test_fact_acquisition_rotates_to_mirror_after_transport_failure(monkeypatch):

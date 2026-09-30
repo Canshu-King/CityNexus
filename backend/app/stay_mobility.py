@@ -1681,6 +1681,16 @@ def activity_coordinate(place_id: str | None, places: dict[str, Place]) -> dict[
     }
 
 
+def _provider_collocated_edge(fact: dict[str, Any]) -> bool:
+    """Name a real zero-minute edge only when the captured geometry collapses to one point."""
+
+    coordinates = fact.get("route_geometry") or []
+    if fact.get("minutes") != 0 or len(coordinates) < 2:
+        return False
+    first = tuple(coordinates[0])
+    return all(tuple(point) == first for point in coordinates[1:])
+
+
 def _plan_mobility_projection(
     plan: PlanVersion, activities: list[Activity]
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -1737,6 +1747,7 @@ def _plan_mobility_projection(
                 "route_provenance": provenance,
                 "fact_quality": quality,
                 "degraded": bool(fact.get("degraded", evidence.get("degraded", False))),
+                "co_located": _provider_collocated_edge(fact),
             }
         )
 
@@ -1788,6 +1799,7 @@ def _plan_mobility_projection(
                 "captured_at": fact.get("captured_at") or evidence.get("captured_at"),
                 "expires_at": fact.get("expires_at") or evidence.get("expires_at"),
                 "source": "PLAN_MOBILITY_EVIDENCE",
+                "co_located": _provider_collocated_edge(fact),
             }
         )
 

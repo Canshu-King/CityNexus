@@ -3544,8 +3544,10 @@ function Live({
                         locale.startsWith("zh"),
                       ),
                       duration:
-                        nextLeg?.duration_min ?? t("live.durationPending"),
-                      unit: nextLeg ? " min" : "",
+                        nextLeg?.co_located
+                          ? t("live.routeCoLocated")
+                          : nextLeg?.duration_min ?? t("live.durationPending"),
+                      unit: nextLeg?.co_located ? "" : nextLeg ? " min" : "",
                     })
                   : data.active_plan
                     ? // A plan that is spent is not a plan that is missing, and the
@@ -3774,9 +3776,11 @@ function LiveSecondary({
                   >
                     <b>{modeLabel(nextLeg.mode, zh)}</b>
                     <span>
-                      {t("live.routeDurationOnly", {
-                        duration: nextLeg.duration_min,
-                      })}
+                      {nextLeg.co_located
+                        ? t("live.routeCoLocated")
+                        : t("live.routeDurationOnly", {
+                            duration: nextLeg.duration_min,
+                          })}
                     </span>
                     <strong>{t("mobility.costUnknown")}</strong>
                   </div>
@@ -3919,7 +3923,11 @@ function MapPage({
           {!comparison.length && nextLeg && (
             <div className="v8-route-row" data-testid="map-frozen-route-evidence">
               <b>{modeLabel(nextLeg.mode, locale.startsWith("zh"))}</b>
-              <span>{t("live.routeDurationOnly", { duration: nextLeg.duration_min })}</span>
+              <span>
+                {nextLeg.co_located
+                  ? t("live.routeCoLocated")
+                  : t("live.routeDurationOnly", { duration: nextLeg.duration_min })}
+              </span>
               <strong>{t("mobility.costUnknown")}</strong>
             </div>
           )}
