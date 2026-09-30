@@ -534,9 +534,9 @@ def _plain_text_opening(
             "source_url": source_url,
         }
     range_pattern = re.compile(
-        r"(?P<open>\d{1,2}(?::\d{2})?)\s*["
+        r"(?P<open>\d{1,2}:\d{2})\s*["
         + re.escape("-\u2013\u2014\uff5e\u301c")
-        + r"]\s*(?P<close>\d{1,2}(?::\d{2})?)"
+        + r"]\s*(?P<close>\d{1,2}:\d{2})"
         + r"\s*(?:\(\s*(?P<period>[^)]{1,80})\))?"
     )
     seasonal: list[dict[str, Any]] = []
