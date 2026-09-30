@@ -1,0 +1,19 @@
+ORD-0536 r1: exposure ruler r8 - exemptions only from a frozen shape table, every cell reported
+
+The published names are frozen, so this is a new file rather than an edit of r7b4.
+
+What changed in the instrument:
+- EXEMPTION_TABLE is one frozen array keyed by (rule x sink-shape family x origin kind) plus one
+  measured evidence predicate. validateExemptionTable refuses the run (exit 3) if an entry can name a
+  file, a line, a cell id or one whole sink shape, so a hand-placed exemption is not expressible.
+- The CLI flag list is closed; a waiver-shaped flag is refused with its own named reason (exit 2)
+  instead of being ignored.
+- cells_total is now the PRE-EXEMPTION denominator and every cell carries a verdict, so adding or
+  removing an exemption can no longer move the number the pre-landing door compares. Measured on three
+  exports: 8 / 8 / 12 cells across r7b, r7b4 and r8 while the published "hits" numbers read 6/5 and
+  10/9 for the same trees.
+- exemption_ledger prints the exempted cells (rule, file, line, cell id, entry, evidence and the fact
+  measured on the tree); red cells keep their reason and name which entry they just missed.
+- Nine selftest arms in both directions, plus no drift: the 19 published R7_ARMS partitions still
+  come back identical.
+
