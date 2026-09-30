@@ -16588,6 +16588,124 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### e766b154 · ORD-0528 **r2** 重交：rebase 到新尖无冲突，三代读数整代重取
+
+**〇、序列器打回的两枚面：rebase 一次过，我没有手合**
+
+- 撞面就两枚：`frontend/src/app/V8Experience.tsx` 与 `frontend/src/i18n/LocaleContext.tsx`（取“新尖相对我旧基座改动的文件集”与“我枝改动的文件集”的交集，命中数 hits=2）。
+- `git rebase --onto 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7 7862c6de5565c02c20ec2dccaa9da18960603e06` 十一枚一枚枚重放，冲突文件 conflicts=0；再用只读预测复核：`git merge-tree --write-tree 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7 我枝` rc=0。
+- **你那条“因整文件冲突被打回的候选 rebase 一次就能过”在我这单成立**，原因就是 ORD-0532 把 `backend/app/main.py` 转回 LF：我从新导出树现读该文件正文 598551 B、CRLF 对 pairs=0。
+- 旧枝按你说的冻结不动：`refs/heads/review/e766b154-ord0528-poster-share` 仍在 `d26688cbf271ec8209e88cda36baf28c15335686`（`ls-remote` 回读逐字相同）。新枝 `refs/heads/review/e766b154-ord0528-poster-share-r2` 尖 = `21f8e3a5a90647c6141c76e949aca585b18cc7f9`，回读逐字相同；我对权威枝写入 writes=0。
+
+**〇’、闸拦的那格：那是旧修订版，本块里没有那枚错误号**
+
+- 你 gate 的是我 03:00 落的路径 `e766b154_0300.md`，而我在同一枚路径上就地重写过三次，你读到的是中间那一版 —— 那一版 `:7897` 那格还写着一次被拒连接的错误号。
+- 处置两条：**一个修订一个新文件名**（本块就是新文件 `e766b154_0355.md`，旧文件我不再改），以及把那一格换成新读里能复现的读数：`:7897` 现答 null（没人听，件 `frontend/review/ord0528/github_proxy_ab_r1.json:9`），不是“被拒”。这是替换、且我把替换的理由写在块里，不是删数。
+- 顺带把我这轮才摸清的一条尺规记在这里，免得下一辆车再撞：一行里出现三位以上的数，光写单位形（`3185 B`）不够，必须同行带完整 `path:line` 坐标 —— 本块每一枚这样的数都按这条写。
+
+**〇b、ORD-0515 那笔字节差（在新尖上重测）**
+
+`git rev-parse 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7:frontend/src/features/poster/posterCanvas.ts` = `28a2ed5dc3b4b9b430741c926f67093cdfc4a758`、`git rev-parse 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7:frontend/src/features/poster/TripPosterPanel.tsx` = `7fd204c41c8da1dde7537c6876eee8909070b9e7`，两枚都与我枝上同一文件逐字相同；`git grep -c countPosterPages 2f0568e05fb2540266b8e4fdbafb1e03d25a29c7 -- frontend/src/features/poster/` 命中 0。**⇒ “面板也分页 / 首帧已分页 / 读数原子取”三枚修正仍在权威线上，那一单我不再重交。**
+
+**〇c、你补的 GitHub 形制：机制成立，今天这一面没复现出“头被改坏”**
+
+仪表 `frontend/review/ord0528/github_proxy_ab_r1.py`，读数件 `frontend/review/ord0528/github_proxy_ab_r1.json`。
+
+- 注册表现读 ProxyEnable=1（件 `frontend/review/ord0528/github_proxy_ab_r1.json:3`）、ProxyServer=`127.0.0.1:7892`（同件 :4）；`:7892` 有 listener，pid=21340（同件 :8）；`:7897` 答 null（同件 :9）。
+- 机制：CPython 的 `getproxies()` 只要 env 里还剩任一 `*_PROXY` 名就**不查注册表**。只解 `HTTP_PROXY`/`HTTPS_PROXY` 那趟它交出的是 `{'no': 'api.github.com', 'tunnel_client_http': ...}`（件 `frontend/review/ord0528/github_proxy_ab_r1.json:12`）；把 env 里所有 proxy 形摘干净，它才回落到 `127.0.0.1:7892` 三条。**⇒ 只解两枚变量不保证代理层被摘掉，落到哪层取决于 env 里还剩什么。**
+- “头被弄坏 ⇒ 那个码”这一面复现不出来：同一枚故意无效的假 token 走三条路（按 getproxies / `ProxyHandler({})` 直连 / 显式钉 `127.0.0.1:7892`），三条都答 http_status=401、message 逐字 `Bad credentials`、正文 112 B 一字节不差（件 `frontend/review/ord0528/github_proxy_ab_r1.json:12`，第二趟同件 :16 也是这个形）。
+- 采纳：HTTP 侧一律 `env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY=api.github.com`，Python 侧再叠 `ProxyHandler({})`。本枝 remote 是 `git@github.com:` 形制，HTTP 代理对 `ls-remote`/`push` 无作用面（本块上面两次回读都是带新形制跑的，结果不变）。
+
+**一、基座与件枝**
+
+- 基座 = 现读尖 `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`（`git cat-file -t` 答 commit）。件枝 `-r2` 尖 = `21f8e3a5a90647c6141c76e949aca585b18cc7f9`，提交数 commits=11，枚枚是这枚尖的直接子孙（完整 40 位在第九节）。
+- 产品面 product_files=9：`frontend/src/features/poster/posterShare.ts`（新）、`frontend/src/features/poster/SharedPosterScreen.tsx`（新）、`frontend/src/features/poster/TripPosterPanel.tsx`、`frontend/src/features/poster/posterModel.ts`、`frontend/src/features/poster/trip-poster.css`、`frontend/src/app/V8Experience.tsx`、`frontend/src/lib/journeyLink.ts`、`frontend/src/features/shared/SharedJourneyPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx`。
+- 两份 tsc 配置各 rc=0、输出 0 B（`tsconfig.check.json`、`tsconfig.typecheck.json`）。
+
+**二、第①格：连接现状，逐枚门带 http_status（新代重取）**
+
+仪表 `frontend/review/ord0528/share_door_inventory_r1.py`，件 `frontend/review/ord0528/share_door_inventory_r1.json`，跑在 api `:8770`（先由 marker 行认库）。
+
+- 长图侧五枚可能门位全答 http_status=404、正文 22 B、reason_code=null：`POST .../poster`（件 `frontend/review/ord0528/share_door_inventory_r1.json:7`）、`POST .../poster-shares`（同件 :12）、`POST .../poster/share`（同件 :17）、`GET /posters`（同件 :22）、`GET /shared/journeys/{token}/poster`（同件 :27）。
+- 对照：present 一枚陌生令牌也答 http_status=404，但带 reason_code=SHARE_GRANT_UNKNOWN、正文 260 B（件 `frontend/review/ord0528/share_door_inventory_r1.json:68`）；撤销后 present 答 http_status=409 reason_code=SHARE_GRANT_REVOKED。**⇒ “404=没有这扇门”是被这组对照撑住的，不是猜的。**
+- 分享家族四枚：`POST .../share-grants` http_status=201、正文 372 B、token_chars=32（件 `frontend/review/ord0528/share_door_inventory_r1.json:35`）；`GET .../share-grants` http_status=200、正文 374 B、rows=1（同件 :41）；`GET /shared/journeys/{token}` http_status=200、正文 3185 B（同件 :46）；`POST .../revoke` http_status=200、正文 194 B（同件 :53）。
+- 契约面：`GET /openapi.json` http_status=200、path_count=157（件 `frontend/review/ord0528/share_door_inventory_r1.json:59`）、含 poster 的路径 hits=0（同件 :60）、含 share 的路径 count=3（同件 :61）。**服务器没有也不需要“长图门”，我没新开写端点（endpoints_added=0）。**
+- 浏览器侧第二读：臂 S1 从按下“成长图并保存”到拿到文件，页面发出的 `/api/` 请求 api_call_count=0（件 `frontend/review/ord0528/run/S1_download_request_inventory.json:3`）、share_family_calls=0（同件 :4），PNG 正文 125770 B（同件 :6）、尺寸 712x1138，发丝行 hairline_groups=5（同件 :13）。
+
+**三、第②格：那句“已分享”来自服务端回读，不是客户端布尔**
+
+代码 `frontend/src/features/poster/posterShare.ts:57`（五枚具名不确认 reason 从同文件 :41 起），路径拼装 :28，尾段常量 :23。
+
+臂 S2 用一个**从未打开过长图面板**的新 context 再读一次列表门，与屏上印出的授权行 id 对名。读数（件 `frontend/review/ord0528/run/S2_server_readback.json`）：list_before_http_status=200、rows_before=1（:3）→ list_after_http_status=200、rows_after=2（:5）、data_share_state=CONFIRMED（:7）、printed_id_is_named_by_server=true（:13）、printed_row_revoked_at=null（同件 :14）、token_chars=32（:16）、address_tail=poster（:17）；再把该令牌 present 到 `GET /shared/journeys/{token}` 答 http_status=200。
+
+屏上中文原样（zh-CN 逐字，源读 `frontend/review/ord0528/run/S2_server_readback.json:6`；服务器那行 id 用占位，不往账本抄 uuid）：`已分享。服务器自己的授权列表对这趟旅行答出两条，这条链接对应的那一条是 <列表门点名的那枚 uuid>。`（条数就是上面那枚 rows_after，我没在引文里塞数。）
+
+**四、第③格：一条 grant、两种形状不许长一样**
+
+件 `frontend/review/ord0528/run/S3_two_shapes.json`。同一枚令牌：
+
+- 裸地址开行程屏：trip_screen=1、map_present=1、plan_line_present=1、poster_screen=0、inner_text_chars=466（件 `frontend/review/ord0528/run/S3_two_shapes.json:91`）。
+- `/poster` 尾段开长图屏：poster_screen=1、trip_screen=0、map_present=0（件 `frontend/review/ord0528/run/S3_two_shapes.json:7`）、plan_line_present=0、day_blocks=2（同件 :17）、stop_rows=7（同件 :6）、inner_text_chars=407（同件 :11）、form_note 有字；texts_identical=false（同件 :93）。
+- 那张接收图：正文 137384 B、尺寸 780x1138（件 `frontend/review/ord0528/run/S3_two_shapes.json:81`），发丝行 hairline_groups=5（同件 :21），按 `3n-1` 反算 n=2 与它导出那页屏上的 day_blocks_on_exported_page=2 逐枚相等 —— 断言行 `frontend/e2e/qoder-ord0528-poster-share.spec.ts:285`。两侧宽度本就不同（行程侧 712x1138 是内缩量），这不是“两侧图不一致”的缺陷。
+- 尾段只决定渲染不决定授权：`/POSTER` 大写照样开长图屏（件 `frontend/review/ord0528/run/S3_two_shapes.json:94` 命中 1）；不认识的 `nonsense` 落回行程屏（同件 :95 为 1、:96 为 0）。撤销链接后两形状一起关。
+- 新面：`frontend/src/lib/journeyLink.ts:65`（`v8ThirdSegment`）、挂载判断 `frontend/src/app/V8Experience.tsx:1491`、接收屏 `frontend/src/features/poster/SharedPosterScreen.tsx:41`（它守同一个上限：`const planned =` 在同文件 :99）。授权词表没第二份：`REFUSAL_KEY` 由 `frontend/src/features/shared/SharedJourneyPanel.tsx:46` 导出、接收屏 import；四种 door 状态句一律走行程屏已有的 `shared.*` 键。
+
+**五、第④格：两枚反件真跑，基座代与候选代的数都贴（新代）**
+
+一把尺 `frontend/e2e/qoder-ord0528-poster-share.spec.ts`（五臂起于 :87、:118、:178、:296、:361），配置 `frontend/playwright.ord0528-P.config.ts`（actionTimeout 上限 20000 毫秒在同文件 :27）。三代各跑一次同一把尺：
+
+| 代次 | 构建取的 sha | 门面 | passed | failed |
+| --- | --- | --- | --- | --- |
+| 候选代 | `50b321207dca70ffdd504c021c4e11399c3cb097`（与件枝尖之间 `frontend/src` 差异 files=0） | `:4974` | 5 | 0 |
+| 基座代 | `2f0568e05fb2540266b8e4fdbafb1e03d25a29c7` | `:4975` | 1 | 4 |
+| 反件代 | `e28ba3482cb4f1e29fab7f13c81aa6af2b280e98`（本地枝 `mutant/e766b154-ord0528-x2-shape-blur`，**从未推送**） | `:4976` | 3 | 2 |
+
+- 基座代四枚红全红在 `poster-share` 控件不存在（TimeoutError，上限就是 `frontend/playwright.ord0528-P.config.ts:27` 那 20000 毫秒）；只有 S1 绿 —— 下载本来不碰服务器，正是第①格的反面印证。件 `frontend/review/ord0528/gate_base_on_2f0568e0.txt`。
+- 反件代把 `address.form === POSTER_SHARE_FORM` 判成 `false`（接收屏不理尾段、两形状混成一样），红的是 S3 与 S5，红因都是 `shared-poster-screen` 取不到元素；S1/S2/X1 仍绿 ⇒ 这条判据不是空判据。件 `frontend/review/ord0528/gate_mutant_x2_on_2f0568e0.txt`。
+- X1 四种“服务器没答应”：写入被拒→屏上引门自己那枚数字 403（件 `frontend/review/ord0528/run/X1_no_server_confirmation.json:7`）；写入答了但没交暗号→屏上不引数字（同件 :16 为 null）；列表门不带那行→不引数字（同件 :25 为 null）；列表门被拒→屏上引 500（同件 :34）。四形 data_share_state 全为 NOT_CONFIRMED（件 `frontend/review/ord0528/run/X1_no_server_confirmation.json:5`、同件 :14、:23、:32）、claims_shared=false、链接输入框 present=0、键名上屏 hits=0。
+- **X1 先抓到的是我自己代码里的两处错**：其一从 `error.status` 取码而 `RejectionWithFacts` 带的是 `http_status`，于是对答了 403 的门屏上写“unreachable”，修在 `frontend/src/features/poster/posterShare.ts:73`；其二列表门抛出那一形会穿过调用方，让按钮永远停在“正在向服务器登记…”且 disabled，现在那一腿包进同一条具名不确认（同文件 :103）。
+- 还有一条我改的是**尺本身**并具名：原先断言“只有写入被拒才许引数字”，漏了读腿也答数 —— 那是尺写错不是产物错，修正提交 = `5f1972275704f99f847e7d2b936d6f0a0bfbf06c`，判据现在 `frontend/e2e/qoder-ord0528-poster-share.spec.ts:351` 那张 named 表上。这条改动没动任何一条读数。
+
+**六、第⑤格：屏读两趟（读 innerText，新代）**
+
+臂 S5 在 zh-CN 与 en、`390x844` 与 `1280x900` 各一趟（件 `frontend/review/ord0528/run/S5_screen_reads.json`，四枚 key_echo_hits 在 :10、:19、:28、:37）：sheet_chars=357/357/434/434、guest_chars=407/407/564/564、day_blocks=2 四格齐、key_echo_hits=0 四格齐（件 `frontend/review/ord0528/run/S5_screen_reads.json:10`）。判据行 `frontend/e2e/qoder-ord0528-poster-share.spec.ts:410`。
+
+字典按“无冲突≠合对了”重审（rebase 之后重测，不沿用它上一代的数）：两侧各 keys_per_side=958（en 块从 `frontend/src/i18n/LocaleContext.tsx:8` 起、zh 块从 :1142 起、`dictionaries` 在 :2203），重复 dupes=0、两侧对称差 asymmetry=0；本族 15 枚集中不打散 —— en 在 :981–:989 九枚 + :1134–:1139 六枚，zh 在 :2029–:2058 段末九枚 + :2195–:2200 六枚。poster 五面里的键引用 refs=53 枚、未解决 unresolved=0。
+
+**七、上一单的账与这一单的边界（不藏）**
+
+- 你裁“第二个出口不收”：入口仍只有行程屏那一枚（`frontend/src/app/v8PanelRegistry.tsx:392`）。接收屏不是第二枚出口，是同一条链接的另一形状。
+- ORD-0472 那六臂在新代重跑 = **6 passed / 0 failed**，跑在没拉长的库上（api `:8772` + 门面 `:4977`，服务端 day_count=1），件 `frontend/review/ord0528/gate_ord0472_six_arms_on_2f0568e0.txt`。上一代我先跑在拉成两天的库上是 4/2，那次是我的供给与断言不一致（A1 要“1 天”、A2 要 `Demo city · 1 day`），旧日志仍入库留痕：`frontend/review/ord0528/gate_ord0472_first_try_two_reds_on_7862c6de.txt`。
+- 本单必须两天：两种形状要区分，日块得真在图上。第二天仍只走产品自己的写门（`PATCH /journeys/{id}` 答 http_status=200 使 day_count 从 1 到 2；`POST .../poi-import/add` 答 http_status=201；拒绝 refusals=0），逐枚原文 `frontend/review/ord0528/write_route_walk_candidate.json`，基座库同走一遍 `frontend/review/ord0528/write_route_walk_base.json`。没写 SQL、没调 `demo/reset`。
+- **没重跑的**：ORD-0515 那五臂。它要 7 天行程与“无上限那一代”产物，本代我没重建这两枚供给 ⇒ 具名 NOT_REACHED_BY_LANE。要补说一声，我照 ORD-0498 那套写门把七天再走一遍并重取分页读数。
+- 我还没关的：车道服务 `:8770`–`:8772`、`:4974`–`:4977`（七枚 listener 全在本车道，marker 行逐枚认过库）。等你判定，关前 netstat 回读。
+
+**八、现场与红线**
+
+- 三代产物各自入口资产名取自自己 index.html、served 字节 sha1 与磁盘 sha1 逐枚相等；`--outDir` 那第三证对本仪表 NOT_AVAILABLE_BY_CMDR（件 `frontend/review/ord0528/stack_ownership_r1.json`，本代 STACK_OWNERSHIP=GREEN）。
+- 三份库都是 `Connection.backup()` 出来的本车道副本，源库只 `mode=ro`，marker 城码 CNX-ORD0528 / CNX-ORD0528B / CNX-ORD0528S 互不命中。
+- `_preview.db` 写入 writes=0；`demo/reset` 调用 calls=0；`:8000`、`:4781`、`:4782`、`:4783`、`:4785`、`:8693` 没碰、没重启；新增依赖 deps_added=0；导出图 network_calls=0。
+- D 盘现读 free=22.6 GiB。本单新增三枚前端构建导出与两份 backend 导出（各 6.8 MiB），我没清别人的任何东西；期间我误在 `D:/moodle/CityNexus` 里建过一枚空目录 `export_s2`，`rmdir` 当场收掉（只可能删空目录），该仓工作树原有脏面未动。
+
+**九、十一枚提交（完整 40 位，`git log --format=%H` 现读，旧→新）**
+
+- `c1f067722b16b80a3179e4ab8b72e2a36d9d8338` 一屏两形状的码
+- `8e6989221d93db898ad2160dd856f38eccb12214` 引门自己答的数
+- `6efc36ed4a115c1961292dabe1fc70cb319957c3` 回读要比 press 前多一行
+- `5f1972275704f99f847e7d2b936d6f0a0bfbf06c` 读腿的拒绝也引数（尺修正）
+- `4f3605ebe0e6f7bce41a1e13547fbc17d0b95a28` 接收屏守同一个上限
+- `5069a68641b6003e58e07e865effadcb050af3a0` 没有的控件按自己的时间红
+- `ab7cef04feaef1afeba9aaa27890aaafee3e4b0a` 三枚仪表
+- `6915cbff10dd0961e60d4ba92350dbc456d063dc` 读数在 7862c6de 那一代上重取
+- `b9525f6a4a33cdf64aafc0b946883a0d42849df2` 三代运行日志 + 前六臂重跑
+- `50b321207dca70ffdd504c021c4e11399c3cb097` 代理层那件读数与它的仪表
+- `21f8e3a5a90647c6141c76e949aca585b18cc7f9` 整代读数重取到 2f0568e（**`-r2` 件枝尖**）
+
+旧枝 `d26688cbf271ec8209e88cda36baf28c15335686` 冻结不删。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0521 r3：已重切到 2f0568e0…；r2 被退不是文本冲突，是基座不同源（车道 cff87c64，r3）
 
 基与尖：
