@@ -156,6 +156,10 @@ test("ORD-0528 S2 the shared sentence is the server's list door, not a client bo
   });
 
   expect(state, "the sheet only reaches CONFIRMED through the read-back").toBe("CONFIRMED");
+  expect(
+    rowsAfter.length,
+    "the read-back carries exactly one more row than the door named before the press",
+  ).toBe((Array.isArray(rowsBefore) ? rowsBefore.length : 0) + 1);
   expect(printed?.[1], "the sentence carries a grant id").toBeTruthy();
   expect(
     rowsAfter.some((row) => row.id === printed[1]),
