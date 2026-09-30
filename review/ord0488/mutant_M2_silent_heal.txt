@@ -1,6 +1,6 @@
 ============================= test session starts =============================
 platform win32 -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0 -- D:\moodle\CityNexus\.venv\Scripts\python.exe
-ORD-0211 test database: resolved=C:\Users\������\AppData\Local\Temp\cnx_pytest_zuwwf7v1\suite.db | exists=False | declared_by=conftest temp dir
+ORD-0211 test database: resolved=C:\Users\������\AppData\Local\Temp\cnx_pytest_gv_v4y2h\suite.db | exists=False | declared_by=conftest temp dir
 rootdir: D:\moodle\_ord0488\mut\backend
 configfile: pyproject.toml
 plugins: anyio-4.15.1, asyncio-0.26.0
@@ -18,4 +18,4 @@ D:\moodle\_ord0488\mut\backend\tests\test_qoder_ord0488_schema_catchup.py:153: A
 =========================== short test summary info ===========================
 FAILED tests/test_qoder_ord0488_schema_catchup.py::test_ord0488_dropping_a_preview_missing_table_then_booting_heals_it
 FAILED tests/test_qoder_ord0488_schema_catchup.py::test_ord0488_the_catch_up_report_is_named_and_complete
-========================= 2 failed, 2 passed in 1.29s =========================
+========================= 2 failed, 2 passed in 1.25s =========================
