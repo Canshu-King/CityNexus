@@ -1,0 +1,24 @@
+{
+ "tree": "D:\\moodle\\_qoder_lane_S4_0926\\wt0510\\frontend",
+ "tree_head": "3013258ddc8edce2f65b0a88e9b31c9463be8af3",
+ "runs": [
+  {
+   "config": "tsconfig.check.json",
+   "npm_script": "npm run typecheck",
+   "exit_code": 0,
+   "output_bytes": 0,
+   "output_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "empty_blob": true,
+   "receipt": "tsc_out_check.txt"
+  },
+  {
+   "config": "tsconfig.typecheck.json",
+   "npm_script": "npm run typecheck:all",
+   "exit_code": 0,
+   "output_bytes": 0,
+   "output_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "empty_blob": true,
+   "receipt": "tsc_out_typecheck.txt"
+  }
+ ]
+}
