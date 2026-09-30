@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/demo/scene/ensure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ensureDemoScene"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/demo/reset": {
         parameters: {
             query?: never;
@@ -3923,6 +3939,7 @@ export interface components {
     };
     parameters: {
         DemoResetToken: string;
+        DemoSceneToken: string;
         TravelerId: string;
         JourneyId: string;
         CollectionFolderId: string;
@@ -3955,6 +3972,81 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    ensureDemoScene: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Demo-Scene-Token"?: components["parameters"]["DemoSceneToken"];
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description A destination this server's supply can hold.  Omit it to take the city the shipped scenario is set in; a city the supply does not hold is refused, not invented. */
+                    city_code?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description One trip the store can walk.  `state` is READY when a plan was selected, or SCENE_INSTALLED_BUT_PLAN_REFUSED when the supply landed and a later hop refused -- that hop is carried in `advance_refused_steps` rather than smoothed over.  A key replayed with the same body returns the first receipt with `idempotency_replay` true and writes no further rows. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        state: "READY" | "SCENE_INSTALLED_BUT_PLAN_REFUSED";
+                        journey_id: string;
+                        city_code?: string;
+                        journey_status?: string;
+                        plan_version_id: string | null;
+                        scene_label?: string;
+                        supply: {
+                            supply_leg?: string;
+                            destructive?: boolean;
+                            rows_deleted?: number;
+                            rows_installed?: number;
+                            rows_already_present?: number;
+                            places_held?: Record<string, never>;
+                            supported_city_codes?: string[];
+                        };
+                        advance: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Refused before anything was written, with `error.reason_code` naming which guard spoke: DEMO_MODE_REQUIRED when CITYNEXUS_DEMO_MODE is off, SCENE_TOKEN_REQUIRED when no token was presented, SCENE_TOKEN_INVALID when the presented token is not this deployment's. Neither refusal reaches the catalogue, and neither echoes the token. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description DEMO_STATE_SUPPLY_UNAVAILABLE: this server holds no place row for that destination.  The body names the failed hop, how many places it holds there, and the cities its supply does cover, so the screen can say "this server cannot obtain places" instead of showing an unresolved count over a trip that was never supplied. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Missing `Idempotency-Key`, or the same key presented against a different body (`IDEMPOTENCY_KEY_REUSE_CONFLICT`) -- which is refused rather than run as a second board. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };
