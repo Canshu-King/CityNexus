@@ -20,7 +20,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import delete, func, insert, select, update
+from sqlalchemy import delete, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -4274,25 +4274,18 @@ def list_traveler_recycle_bin_journeys(traveler_id: UUID, session: Session = Dep
     """
     now = datetime.now(timezone.utc)
     viewer = str(traveler_id)
-    owned = session.scalars(
-        select(Journey)
-        .where(Journey.deleted_at.is_not(None), Journey.traveler_id == viewer)
-        .order_by(Journey.deleted_at.desc(), Journey.id)
-    ).all()
-    seated = session.scalars(
+    seated_on = select(JourneyMemberModel.journey_id).where(
+        JourneyMemberModel.traveler_id == viewer
+    )
+    items = session.scalars(
         select(Journey)
         .where(
             Journey.deleted_at.is_not(None),
-            Journey.traveler_id != viewer,
-            Journey.id.in_(
-                select(JourneyMemberModel.journey_id).where(
-                    JourneyMemberModel.traveler_id == viewer
-                )
-            ),
+            or_(Journey.traveler_id == viewer, Journey.id.in_(seated_on)),
         )
         .order_by(Journey.deleted_at.desc(), Journey.id)
     ).all()
-    rows = [_traveler_bin_row(session, item, viewer, now) for item in [*owned, *seated]]
+    rows = [_traveler_bin_row(session, item, viewer, now) for item in items]
     return [row for row in rows if row is not None]
 
 
