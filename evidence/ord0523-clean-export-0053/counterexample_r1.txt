@@ -1,0 +1,18 @@
+### counter-example: hide one probe from the export, with the fix in place
+
+$ mv scripts/hermes_r9_mcp_context_probe.py ../_hidden_probe.py
+$ cd backend && python -m pytest tests/test_v18_hermes_r9_mcp_context_probe.py -p no:randomly -q --collect-only
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_v18_hermes_r9_mcp_context_probe.py:1: in <module>
+    from scripts.hermes_r9_mcp_context_probe import _acceptance, _read_measurement
+E   ModuleNotFoundError: No module named 'scripts.hermes_r9_mcp_context_probe'
+=========================== short test summary info ===========================
+ERROR tests/test_v18_hermes_r9_mcp_context_probe.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+no tests collected, 1 error in 0.15s
+
+$ # put it back byte-for-byte
+$ python -m pytest tests/test_v18_hermes_r9_mcp_context_probe.py -p no:randomly -q --collect-only
+tests/test_v18_hermes_r9_mcp_context_probe.py::test_r9_acceptance_requires_median_tokens_text_and_non_regressed_calls
+
+2 tests collected in 0.08s
