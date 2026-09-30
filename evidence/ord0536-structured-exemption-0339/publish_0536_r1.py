@@ -19,7 +19,7 @@ REF = r"D:\moodle\_qoder_cmdr_ref_20260921\live_checks"
 REPO = "D:/moodle/CityNexus"
 MIR = os.path.join(REF, "cmdr_git_mirror_r1.py")
 ENV = dict(os.environ, HTTPS_PROXY="", HTTP_PROXY="", NO_PROXY="*")
-STAMP = time.strftime("%H%M")
+STAMP = os.environ.get("CNX_PUBLISH_STAMP", "0339")
 SLUG = "evidence/ord0536-structured-exemption-" + STAMP
 MSG = ("S4-ast-taint ORD-0536: the exposure ruler's structured exemption revision (r8) measured against the "
        "two published generations on three export trees, its both-direction selftest, and three counterexamples "
@@ -62,16 +62,36 @@ def put(name, slug):
         for line in out.splitlines():
             line = line.strip()
             if line.startswith("{") and line.endswith("}"):
+                # the mirror prints exactly this record; the keys are named here rather than guessed at
                 rec = json.loads(line)
-        if r.returncode == 0 and rec:
+        if r.returncode == 0 and rec and rec.get("byte_equal"):
             break
         row.setdefault("attempts", []).append({"attempt": attempt, "rc": r.returncode,
-                                              "tail": out.strip()[-300:]})
+                                              "rec": rec, "tail": out.strip()[-240:]})
         time.sleep(3)
-    row.update({"server_readback_blob": (rec or {}).get("sha"),
-                "byte_equal": (rec or {}).get("sha") == row["local_blob"],
-                "commit": (rec or {}).get("commit")})
+    row.update({"server_readback_blob": (rec or {}).get("readback_blob"),
+                "server_readback_bytes": (rec or {}).get("readback_size"),
+                "byte_equal": (rec or {}).get("byte_equal"),
+                "tip_matches_push": (rec or {}).get("tip_matches_push"),
+                "pushed_commit": (rec or {}).get("pushed_commit")})
     return row
+
+
+def sibling_dir_check(slug, other):
+    """The same bytes were dropped into an earlier dir this round; say whether they are the same blobs."""
+    rows = []
+    for n in FILES:
+        base = blob_of(os.path.join(WORK, n))
+        rc, out, err = git("ls-tree", "-r", "--name-only", "refs/remotes/verify/cc", other + "/" + n)
+        present = bool(out.strip())
+        if present:
+            rc2, sha, _ = git("ls-tree", "refs/remotes/verify/cc", other + "/" + n)
+            sha = sha.split()[2] if len(sha.split()) >= 3 else None
+            rows.append({"path": other + "/" + n, "blob": sha, "same_bytes_as_here": sha == base})
+        else:
+            rows.append({"path": other + "/" + n, "present": False})
+    return {"other_dir": other, "rows": rows,
+            "all_same_blobs": all(r.get("same_bytes_as_here") for r in rows) if rows else None}
 
 
 def main():
