@@ -236,6 +236,19 @@ export function actionNamesAMember(action: string | null | undefined): boolean {
 export const REFUSAL_SENTENCES: Record<string, AccessCopyKey> = {
   MEMBER_ALREADY_WITHDRAWN: "access.refuseMemberAlreadyWithdrawn",
   MEMBER_UNKNOWN: "access.refuseMemberUnknown",
+  // ORD-0503's two doors. Every one of these is a code the server really answers with -- the raise
+  // sites are listed in `backend/tests/test_qoder_ord0503_member_doors.py`, and each has an arm that
+  // goes red when its guard is taken out -- so a sentence here is never waiting for a refusal that
+  // cannot arrive, and an arrival is never left to the unnamed fallback.
+  MEMBER_ACTOR_LAPSED: "access.refuseActorLapsed",
+  MEMBER_ACTOR_NOT_IN_JOURNEY: "access.refuseActorNotInJourney",
+  MEMBER_ADMIN_CAP_REACHED: "access.refuseAdminCapReached",
+  MEMBER_MANAGE_NOT_PERMITTED: "access.refuseMemberManageNotPermitted",
+  MEMBER_OWNER_CANNOT_LEAVE: "access.refuseOwnerCannotLeave",
+  MEMBER_OWNER_ROLE_IMMUTABLE: "access.refuseOwnerRoleImmutable",
+  MEMBER_ROLE_SELF_CHANGE_REFUSED: "access.refuseRoleSelfChange",
+  MEMBER_ROLE_UNCHANGED: "access.refuseRoleUnchanged",
+  MEMBER_SELF_EXIT_NOT_A_MEMBER: "access.refuseSelfExitNotAMember",
   SHARE_GRANT_ALREADY_REVOKED: "access.refuseGrantAlreadyRevoked",
   SHARE_GRANT_CREATOR_EMPTY: "access.refuseExpiryUnreadable",
   SHARE_GRANT_EXPIRY_IN_PAST: "access.refuseExpiryInPast",
@@ -249,4 +262,33 @@ export const REFUSAL_SENTENCES: Record<string, AccessCopyKey> = {
 
 export function refusalSentenceKey(code: string | null): AccessCopyKey | null {
   return code === null ? null : REFUSAL_SENTENCES[code] ?? null;
+}
+
+/**
+ * ORD-0503: which roles this screen may offer for a seat, and how many ADMIN seats are left.
+ *
+ * The candidate list comes from the server's own `roles` answer, and two exclusions are the door's
+ * rules rather than this file's taste: the current role (a change that changes nothing is refused
+ * with `MEMBER_ROLE_UNCHANGED`), and OWNER in either direction (`MEMBER_OWNER_ROLE_IMMUTABLE`).
+ * Offering a choice the door always refuses would be the copy-exceeds-mechanism defect this project
+ * already names in `accessCopy.ts`.
+ */
+export function moveableRoleChoices(read: {
+  serverRoles: string[] | null;
+  currentRole: string;
+}): string[] {
+  if (read.serverRoles === null) return [];
+  return read.serverRoles.filter((role) => role !== read.currentRole && role !== ROLE_OWNER);
+}
+
+/** The cap line needs both numbers the server sent. A cap without the count, or a count without the
+ *  cap, is `null` here so the screen says nothing about fullness instead of dividing by a number
+ *  nobody answered. */
+export function adminCapState(read: {
+  cap: number | null;
+  used: number | null;
+}): { key: AccessCopyKey; free: number } | null {
+  if (read.cap === null || read.used === null) return null;
+  const free = Math.max(read.cap - read.used, 0);
+  return { key: free === 0 ? "access.adminCapFull" : "access.adminCapOpen", free };
 }

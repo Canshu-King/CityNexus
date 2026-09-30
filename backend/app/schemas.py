@@ -1028,6 +1028,39 @@ class JourneyRoleRule(BaseModel):
     role: MemberRole
     capabilities: list[JourneyCapability]
     scope_message_key: str
+
+
+# --- ORD-0503: the two member write doors, and the one read door that carries the cap ----------
+# `actor_traveler_id` is a claim the caller makes about who is asking, not an authenticated session:
+# this product has no auth (`app/main.py` has no dependency that resolves a caller), and a door that
+# pretended otherwise would be the invented-default defect again.  What the door does with the claim
+# is the load-bearing part -- it is checked against the member set and the seeded ACL table, so a
+# caller who names somebody else is refused by name rather than trusted.
+
+
+class JourneyMemberRoleChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    role: MemberRole
+    actor_traveler_id: UUID
+
+
+class JourneyMemberSelfExit(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    traveler_id: UUID
+
+
+class MemberRoleLimits(BaseModel):
+    """The cap this server enforces, answered by the server rather than typed on a screen.
+
+    `max_administrators` is the same module constant the role door compares against, and
+    `contracts/openapi.yaml` names it a third time as `x-citynexus-max-administrators-per-journey`;
+    `tests/test_qoder_ord0503_member_doors.py` fails if those two spellings ever disagree, so the
+    roster line on the screen cannot quietly diverge from what the door refuses on.
+    """
+
+    max_administrators: int = Field(ge=1)
+    admin_count_in_force: int = Field(ge=0)
+    roles: list[MemberRole]
 # --- ORD-0437: the POI text/link import channel ---------------------------------------------
 # The parse side carries no provider field on purpose: extraction is local, so a response that
 # claimed a provider would be a lie waiting to be written.  `unsupported_forms` is the named list the

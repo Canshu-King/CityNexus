@@ -593,6 +593,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/members/{member_id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Move one member of one journey between the roles the server already knows.  The actor is named on the request, not resolved from a session this product does not have, and that name is checked: it must hold an in-force membership on this journey, and that membership's role must hold `MEMBER_MANAGE` in `journey_role_capabilities` -- the door asks the seeded table, so narrowing what a role may do narrows this door the same instant.  Guards run in a fixed order (unknown row, withdrawn row, no-op change, self-change, OWNER seat, actor authority, ADMIN capacity) and each has its own counterexample, because read in another order some of them would never be reachable and that is the same as the rule not being there. */
+        post: operations["changeJourneyMemberRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/self-exit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The traveller named on the request takes themselves out.  Deliberately not `/members/{member_id}/withdraw`: that door answers to whoever calls it about whomever it names, which is right for clearing somebody else's seat and wrong for leaving.  Here there is no `member_id` to point at, so the only row this door can write is the caller's own.  The OWNER refusal is what stops a trip becoming unowned by its own owner walking out; a withdrawn row stays listed carrying `removed_at`. */
+        post: operations["leaveJourneyAsSelf"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-role-limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description The cap and the seats it has already been spent on, answered by the server.  A roster that typed its own number would hold the limit in two places with only one of them load bearing, which is why the screen reads this door and an arm pins its `max_administrators` to the `x-citynexus-max-administrators-per-journey` named above. */
+        get: operations["readJourneyMemberRoleLimits"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/acl/roles": {
         parameters: {
             query?: never;
@@ -3056,6 +3114,20 @@ export interface components {
             /** Format: date-time */
             expires_at?: string | null;
         };
+        JourneyMemberRoleChange: {
+            role: components["schemas"]["MemberRole"];
+            /** Format: uuid */
+            actor_traveler_id: string;
+        };
+        JourneyMemberSelfExit: {
+            /** Format: uuid */
+            traveler_id: string;
+        };
+        MemberRoleLimits: {
+            max_administrators: number;
+            admin_count_in_force: number;
+            roles: components["schemas"]["MemberRole"][];
+        };
         JourneyCheckinCreate: {
             activity_id?: string;
             place_id?: string;
@@ -5068,6 +5140,141 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
+        };
+    };
+    changeJourneyMemberRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMemberRoleChange"];
+            };
+        };
+        responses: {
+            /** @description The row read back through the same payload the list door uses, with `updated_at` moved and `joined_at` not */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMember"];
+                };
+            };
+            /** @description error.reason_code = MEMBER_ACTOR_NOT_IN_JOURNEY / MEMBER_ACTOR_LAPSED / MEMBER_MANAGE_NOT_PERMITTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ROLE_UNCHANGED / MEMBER_ALREADY_WITHDRAWN / MEMBER_ROLE_SELF_CHANGE_REFUSED / MEMBER_OWNER_ROLE_IMMUTABLE / MEMBER_ADMIN_CAP_REACHED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR: a role outside `MemberRole`, an actor id that is not a uuid, or a field this body does not take (`additionalProperties: false`) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    leaveJourneyAsSelf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMemberSelfExit"];
+            };
+        };
+        responses: {
+            /** @description The caller's row, now carrying its withdrawal moment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMember"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_SELF_EXIT_NOT_A_MEMBER */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN / MEMBER_OWNER_CANNOT_LEAVE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = VALIDATION_ERROR: a traveller id that is not a uuid, or a field this body does not take (`additionalProperties: false`) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    readJourneyMemberRoleLimits: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The enforced cap, the in-force ADMIN count on this journey, and the role words the doors accept */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberRoleLimits"];
+                };
+            };
+            404: components["responses"]["NotFound"];
         };
     };
     listJourneyRoleRules: {

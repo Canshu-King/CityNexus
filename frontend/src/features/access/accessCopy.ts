@@ -48,10 +48,17 @@ export const accessCopy = {
       "The role door answered nothing, so this screen lists no capabilities -- it does not guess them from the role name.",
     "access.roleChangeButton": "Change role",
     "access.selfExitButton": "Leave this trip",
-    "access.roleChangeDisabled":
-      "Changing a role waits for this server's own write door; this screen will not change one by itself.",
-    "access.selfExitDisabled":
-      "Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request.",
+    "access.roleChoicesHeading": "Move this seat to:",
+    "access.roleChangePending":
+      "This changes what that person may do on this trip. Your own access does not change.",
+    "access.confirmSelfExit":
+      "This takes you out of this trip. The row stays listed, so anybody reading the roster can see you left.",
+    "access.adminCapOpen":
+      "This server lets this trip hold {cap} admin seats, and {used} of them are taken right now.",
+    "access.adminCapFull":
+      "All {cap} admin seats this server allows are taken, so one further promotion is refused.",
+    "access.adminCapUnanswered":
+      "The seat door did not answer, so this screen says nothing about how many admins this trip may hold.",
     "access.memberScopeLine": "What this role can do: ",
     "access.roleDetailsBody":
       "A role is what this server lets that person do on this trip, not what a screen shows them. Removing the last owner is refused by the server rather than left for a traveller to discover.",
@@ -111,7 +118,9 @@ export const accessCopy = {
       "This server answered all three sharing doors. The roster and the invitations below are its answers; the ladders and the confirmation lines are still this screen's own words.",
     "access.rosterHeading": "Members of this trip, as the member door answers",
     "access.rosterEmpty": "The member door answered with nobody in the list -- that is its answer, not a load failure.",
-    "access.memberRow": "{role} · token {id}",
+    "access.memberRow": "{role} · {name}",
+    "access.memberNameUnread":
+      "This server named nobody for that member id, so this row shows no name.",
     "access.memberStateActive": "still in force",
     "access.memberStateExpired": "past the expiry this server gave it",
     "access.memberStateRemoved": "withdrawn at {removed}",
@@ -145,6 +154,15 @@ export const accessCopy = {
     "access.refuseGrantUnknown": "This trip has no such invitation on the server, so nothing was withdrawn.",
     "access.refuseMemberAlreadyWithdrawn": "That member already left; the server did not touch the row again.",
     "access.refuseMemberUnknown": "This trip has no such member on the server, so nothing was withdrawn.",
+    "access.refuseRoleUnchanged": "That is already the role this member holds, so the server changed nothing.",
+    "access.refuseRoleSelfChange": "The server will not let a person move their own seat; somebody else has to make that change.",
+    "access.refuseOwnerRoleImmutable": "The owner seat does not move through this door in either direction, so a role change can never leave this trip unowned.",
+    "access.refuseMemberManageNotPermitted": "The role you signed this request with does not hold member management on this trip, so the server refused to move that seat.",
+    "access.refuseActorNotInJourney": "The person this request was signed as is not a member of this trip, so the server answered nothing.",
+    "access.refuseActorLapsed": "That person's membership on this trip has run out, so it carries no authority to change a role.",
+    "access.refuseAdminCapReached": "This trip already holds the number of admin seats the server allows, so the promotion was refused.",
+    "access.refuseSelfExitNotAMember": "This server has no membership row for you on this trip, so there was nothing for you to leave.",
+    "access.refuseOwnerCannotLeave": "You are this trip's owner, and the server will not let it be left unowned from this screen.",
     "access.activityNoSharingWriter":
       "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
   },
@@ -170,10 +188,12 @@ export const accessCopy = {
       "角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么。",
     "access.roleChangeButton": "改角色",
     "access.selfExitButton": "我自己退出",
-    "access.roleChangeDisabled":
-      "改角色要等这台服务器给出改角色的写门，这一屏不自己改。",
-    "access.selfExitDisabled":
-      "「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。",
+    "access.roleChoicesHeading": "把这枚席位改成：",
+    "access.roleChangePending": "这改的是那个人在这条行程里能做的事。你自己的权限不变。",
+    "access.confirmSelfExit": "这把你从这条行程里移出去。这一行还留在名单上，别人读得到你走过。",
+    "access.adminCapOpen": "这台服务器允许这条行程同时占 {cap} 枚管理员席位，现在占了 {used} 枚。",
+    "access.adminCapFull": "这台服务器允许的 {cap} 枚管理员席位已经占满，再多给一枚会被拒。",
+    "access.adminCapUnanswered": "席位那扇门没答，所以这一屏不说这条行程能放几枚管理员。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
       "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除，这条由服务器拒绝，而不是让旅行者自己撞上才知道。",
@@ -229,7 +249,9 @@ export const accessCopy = {
       "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",
     "access.rosterEmpty": "成员门答了，名单是空的——这是它的答案，不是没读到。",
-    "access.memberRow": "{role} · 令牌 {id}",
+    "access.memberRow": "{role} · {name}",
+    "access.memberNameUnread":
+      "这台服务器说没人为那个成员编号登记名字，所以这一行不显示名字。",
     "access.memberStateActive": "还在生效",
     "access.memberStateExpired": "已过它自己的到期时刻",
     "access.memberStateRemoved": "已在 {removed} 撤回",
@@ -263,6 +285,15 @@ export const accessCopy = {
     "access.refuseGrantUnknown": "这条行程在服务器上没有这条邀请，所以什么都没撤销。",
     "access.refuseMemberAlreadyWithdrawn": "这一位早就退出了，服务器没有再动这一行。",
     "access.refuseMemberUnknown": "这条行程在服务器上没有这一位成员，所以什么都没撤回。",
+    "access.refuseRoleUnchanged": "那本来就是这一位在服务器上的角色，所以服务器什么都没改。",
+    "access.refuseRoleSelfChange": "服务器不许一个人自己挪自己的席位，这一改得由别人来按。",
+    "access.refuseOwnerRoleImmutable": "主人席位不从这扇门两头挪，所以改角色不会让这条行程没有主人。",
+    "access.refuseMemberManageNotPermitted": "你签名用的那个角色在这条行程上没有成员管理权，所以服务器没让你挪这一席。",
+    "access.refuseActorNotInJourney": "这笔请求签名的人在服务器上不属这条行程的成员，所以服务器什么都没答。",
+    "access.refuseActorLapsed": "那个人在这条行程上的成员期限已过，所以他没有改别人角色的权。",
+    "access.refuseAdminCapReached": "这条行程的管理员席位已经占满服务器允许的数量，所以这一枚提升被拒。",
+    "access.refuseSelfExitNotAMember": "服务器在这条行程上没有你的成员行，所以也没有可退的位置。",
+    "access.refuseOwnerCannotLeave": "你是这条行程的主人，服务器不许从这一屏把它变成没有主人。",
     "access.activityNoSharingWriter":
       "成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。",
   },
