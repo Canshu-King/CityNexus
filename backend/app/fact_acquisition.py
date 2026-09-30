@@ -555,7 +555,12 @@ def _plain_text_opening(
     if not seasonal:
         return {"status": "UNKNOWN", "raw": excerpt, "intervals": []}
     chosen = next(
-        (item for item in seasonal if _period_matches(item["period"], reference_at)),
+        (
+            item
+            for item in seasonal
+            if item["period"].strip()
+            and _period_matches(item["period"], reference_at)
+        ),
         seasonal[0],
     )
     normalized = normalize_opening_hours(f"{chosen['open']}-{chosen['close']}")
