@@ -147,6 +147,8 @@ class AgentToolCall(BaseModel):
         "OFFICIAL_TICKETING",
         "MUNICIPAL_AUTHORITY",
     ] = "OFFICIAL_WEB"
+    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    planning_mode: PlanningMode | None = None
     approval_id: UUID | None = None
     activity_id: UUID | None = None
     replacement_activity_id: UUID | None = None

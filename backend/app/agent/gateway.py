@@ -54,7 +54,9 @@ from app.services import (
     _place_verified_cost,
     _place_window,
     activity_schema,
+    generate_plans as compose_plans,
     journey_schema,
+    plan_schema,
     service_schema,
 )
 
@@ -394,6 +396,7 @@ class AgentToolGateway:
             "search_city_services": self.search_city_services,
             "acquire_place_facts": self.acquire_place_facts,
             "estimate_place_facts": self.estimate_place_facts,
+            "generate_plans": self.generate_plans,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -661,6 +664,62 @@ class AgentToolGateway:
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "estimate": estimate,
             "warning": "ESTIMATED_AGENT is strategy evidence only; it cannot make a plan selectable or active",
+        }
+
+    def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:
+        journey = _require_journey(self.session, request.journey_id)
+        requested = list(dict.fromkeys(str(item) for item in (request.place_ids or [])))
+        if len(requested) < 2:
+            raise HTTPException(422, "place_ids must contain at least two distinct server-owned Place IDs")
+        rows = self.session.scalars(select(Place).where(Place.id.in_(requested))).all()
+        found = {row.id: row for row in rows}
+        missing = [place_id for place_id in requested if place_id not in found]
+        wrong_city = [place_id for place_id in requested if place_id in found and found[place_id].city_code != journey.city_code]
+        if missing or wrong_city:
+            raise HTTPException(
+                422,
+                _json({
+                    "code": "PLACE_IDS_NOT_IN_JOURNEY_CITY",
+                    "missing_place_ids": missing,
+                    "wrong_city_place_ids": wrong_city,
+                }),
+            )
+        try:
+            plans = compose_plans(
+                self.session,
+                journey,
+                request.planning_mode or journey.planning_mode,
+                request.candidate_count,
+                place_ids=requested,
+            )
+        except (TypeError, ValueError) as exc:
+            self.session.rollback()
+            raise HTTPException(422, str(exc)) from exc
+        self.session.commit()
+        summaries: list[dict[str, Any]] = []
+        for plan in plans:
+            projected = plan_schema(self.session, plan).model_dump(mode="json")
+            explanation = projected.get("explanation") or {}
+            mobility = projected.get("mobility_evidence") or {}
+            summaries.append(
+                {
+                    "id": projected["id"],
+                    "version_no": projected["version_no"],
+                    "status": projected["status"],
+                    "selectable": projected["selectable"],
+                    "place_ids": [item.get("place_id") for item in projected["activities"]],
+                    "unresolved_facts": explanation.get("unresolved_facts", []),
+                    "authority_state": explanation.get("authority_state"),
+                    "mobility_provider": mobility.get("source_provider"),
+                    "mobility_snapshot_id": projected.get("mobility_snapshot_id"),
+                }
+            )
+        return {
+            "tool": "generate_plans",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "candidate_count": len(summaries),
+            "plans": summaries,
+            "authority_note": "Candidates are not selected or active; selection remains a separate deterministic authority decision.",
         }
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:

@@ -105,6 +105,17 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id", "place_id"],
         ),
         _tool(
+            "generate_plans",
+            "Generate deterministic candidate plans from server-owned Place IDs. This creates candidates only; it never selects or activates a plan.",
+            {
+                **journey,
+                "place_ids": _property("array", items=_property("string")),
+                "candidate_count": _property("integer", minimum=1, maximum=5),
+                "planning_mode": _property("string"),
+            },
+            ["journey_id", "place_ids"],
+        ),
+        _tool(
             "request_replan",
             "Generate deterministic feasible recovery proposals for the disruption.",
             {
@@ -216,6 +227,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
+        "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
         "Issue at most one tool call per assistant turn. "
         "If a tool reports SEARCH_SATURATION or SEARCH_BATCH_LIMIT, stop searching and choose a different available action. "
         + (
