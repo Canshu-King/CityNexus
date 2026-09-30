@@ -16,10 +16,17 @@ RUN = Path("D:/moodle/_qoder_r_ord0465_20260929/run")
 OUT = Path("D:/moodle/_qoder_r_ord0465_20260929/wt/review/ord0504/suite_red_set_r1.txt")
 SUMMARY = re.compile(r"(\d+) failed, (\d+) passed")
 
+#: (generation, label, lane log). Two generations because the authoritative line moved while this
+#: order was being written, and the readings that ship are the ones taken on the tip being delivered to.
 RUNS = [
-    ("base, this order's file not collected", "suite_0504_base_r1.txt"),
-    ("with this order's 6 tests", "suite_0504_r1.txt"),
+    ("c2bb95b8", "base, my file not collected", "suite_0504_base_r1.txt"),
+    ("c2bb95b8", "with my 6 tests", "suite_0504_r1.txt"),
+    ("59b7bc00", "base, my file not collected (pass 1)", "r7_suite_base_r1.txt"),
+    ("59b7bc00", "base, my file not collected (pass 2)", "r7_suite_base_pass2_r1.txt"),
+    ("59b7bc00", "with my 6 tests (pass 1)", "r7_suite_mine_r1.txt"),
+    ("59b7bc00", "with my 6 tests (pass 2)", "r7_suite_mine_pass2_r1.txt"),
 ]
+SUMMARY = re.compile(r"(\d+) failed, (\d+) passed")
 
 
 def read(receipt: str) -> tuple[str, set[str]]:
@@ -32,31 +39,34 @@ def read(receipt: str) -> tuple[str, set[str]]:
 
 
 def main() -> int:
-    base_summary, base_reds = read(RUNS[0][1])
-    lines = [
-        "ORD-0504 whole-suite red sets on c2bb95b8f4d78e6aacbb80773594020f1992f8a2",
-        f"base red set = {len(base_reds)}",
-        "",
-    ]
-    for label, receipt in RUNS:
-        summary, reds = read(receipt)
-        added = sorted(reds - base_reds)
-        gone = sorted(base_reds - reds)
-        verdict = ("identical set" if not added and not gone else
-                   "SUBSET of the base set (nothing this order added)" if not added else
-                   "NOT A SUBSET -- this order added a red")
-        lines.append(f"{label:<40} {summary:<26} {verdict}")
-        lines.append(f"{'':<40} {'':<26} log: {receipt}")
-        for item in added:
-            lines.append(f"{'':<40} {'':<40}added: {item}")
-        for item in gone:
-            lines.append(f"{'':<40} {'':<40}gone:  {item}")
+    lines = ["ORD-0504 whole-suite red sets, grouped by the generation they ran on."]
+    for generation in dict.fromkeys(row[0] for row in RUNS):
+        rows = [row for row in RUNS if row[0] == generation]
+        _, base_reds = read(rows[0][2])
+        lines += ["", "=" * 96, f"generation {generation} -- base red set = {len(base_reds)}", "=" * 96]
+        for _, label, receipt in rows:
+            summary, reds = read(receipt)
+            added = sorted(reds - base_reds)
+            gone = sorted(base_reds - reds)
+            verdict = ("identical set" if not added and not gone else
+                       "SUBSET of the base set (nothing this order added)" if not added else
+                       "NOT A SUBSET -- this order added a red")
+            lines.append(f"{label:<40} {summary:<26} {verdict}")
+            lines.append(f"{'':<40} {'':<26} log: {receipt}")
+            for item in added:
+                lines.append(f"{'':<40} {'':<40}added: {item}")
+            for item in gone:
+                lines.append(f"{'':<40} {'':<40}gone:  {item}")
     lines += [
         "",
-        "reading: with this order's six tests the red set is a strict subset of the base's -- nothing was",
-        "added, and one base red (ord197 r4) is green again. That one is not claimed as a fix: it is the",
-        "same arm that moved in ORD-0490's seven-run table on identical bytes. What is claimed here is",
-        "only the direction that matters, and it is computed from the two logs rather than asserted.",
+        "reading, and it is not the comfortable one: on 59b7bc00 the same bytes with my six tests produced",
+        "13 failed once (pass 1, adding g3_xproc and ord197 r3) and 11 failed the next time (pass 2, whose",
+        "1603 passes are the base's 1597 plus exactly my six). The configuration did not change between",
+        "those two runs, so the delta is not attributable to this order -- but neither can this lane write",
+        "'no new red': the honest form is that the suite's red set floats between 11 and 13 on identical",
+        "bytes, in both the base and the delivered configuration, and that the arms which move",
+        "(g3_xproc, ord197 r3/r4, ord224 shape-A) are the worker-and-timing family catalogued across",
+        "review/ord0490/suite_red_table_r1.txt. Nothing in this order touches a table those arms read.",
     ]
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print("\n".join(lines))
