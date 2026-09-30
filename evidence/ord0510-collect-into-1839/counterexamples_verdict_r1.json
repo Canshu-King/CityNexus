@@ -1,0 +1,18 @@
+{
+ "shelf_clicked_by_both_arms": "反件架 103358211",
+ "B_faked_write": {
+  "result_line": "已收在 反件专用架、反件架 103216783",
+  "clicked_shelf_named_on_screen": false
+ },
+ "B_control_real_write": {
+  "result_line": "已收在 反件专用架、反件架 103216783、反件架 103358211",
+  "clicked_shelf_named_on_screen": true
+ },
+ "A_empty_shelf": {
+  "result_line_present": false,
+  "claims_collected_anywhere": false,
+  "no_shelf_line": "这位旅客名下还没有架子，所以这一枚没地方放。"
+ },
+ "reading": "the only difference between the two B arms is whether the POST reaches this server; the clicked shelf is named on screen exactly when the write was real",
+ "store_note": "the store holds shelves from earlier runs of this instrument, so the line may name another shelf that really carries the place; the property measured is membership of the clicked shelf, not the whole sentence"
+}
