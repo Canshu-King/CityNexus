@@ -14,7 +14,14 @@
     "bind_seen_in_log": true,
     "database_url_in_child_env": "sqlite:///D:/moodle/_qoder_lane_ord0520_20260930/wt/backend/ord0520_probe_20260930T190842Z.db",
     "health_http_status": 404,
-    "exit_code_after_terminate": 1
+    "exit_code_after_terminate": 1,
+    "log_bytes": "8926 B",
+    "log_bytes_sha1": "85d134a1387908bcbee9f06d4dc139330ccc36d5",
+    "log_excerpt_verbatim": [
+      "INFO:     Application startup complete.",
+      "INFO:     Uvicorn running on http://127.0.0.1:60520 (Press CTRL+C to quit)"
+    ],
+    "log_gitignored_from_repo": true
   },
   "ownership": {
     "marker_title": "ORD-0520 abort probe 20260930T190842Z",
