@@ -16588,6 +16588,45 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 00:06 · 第四条端到端：回收站屏上的「找回」真把行数从 1 变 0（附我自己写错控件名的一次）
+
+**〇、口径**
+
+分母同前（我复制的那份有排程私有库、后端 `:4787`、局域网宿主 `:4783`、最新尖 `1e95d106f81b29048ba17695fd0e49172516b9b1` 那一代产物）。我用**自己造的那趟一次性行程**（`CN-FUZHOU`）当试验品，**不动**那趟有排程的演示行程（它是我的分母，不能删）。视口 `390x844`，工具 `_cmdr_walk_trash_e2e_r52.js`，读数落 `_walk_r52b.json`，零 `pageerror`。
+
+**一、端到端读数**
+
+| 步 | 读数 |
+|---|---|
+| 把试验品丢进回收站 `DELETE /api/v1/journeys/{id}` | `http_status=204` |
+| 丢之前 / 丢之后读箱 `GET /api/v1/recycle-bin/journeys` | 0 行 → **1 行** |
+| 回收站屏 `/v8/trash` | 可见节点：`journey-trash-panel`、`trash-count`、`trash-list`、`trash-row`、`trash-row-title`、`trash-row-state`、`trash-row-deleted-at`、**`trash-bring-back`**、`trash-refresh`；屏上无机词、无 uuid |
+| 点 `trash-bring-back` | 点击无拦截错 |
+| 点之后读箱 | **0 行** |
+
+**二、我自己写错的一次（记下来免得下次再犯）**
+
+我第一次找“找回”控件用的是 `[data-testid*='restore'|'undelete'|'recover']`——**一个都没命中**，于是那一趟报 `no restore control on screen`。回读屏面节点才发现这枚控件叫 **`trash-bring-back`**。这不是产品缺控件，是我按英文同义词猜了名字。教训：**屏上的控件名要先去屏上抄，不要按语义猜**。
+
+**三、今晚我亲手走通的四条端到端（汇总，四条都是屏与服务端两侧对上的）**
+
+1. 收藏：屏上点 `collect-entry` → picker 列出架 → 点它 → 服务端 `item_count` 1；
+2. 打卡：屏上点第 6 站的 `stop-checkin` → 服务端 `checkins` 1→2；
+3. 分享：`/v8/shared/<令牌>` 在**没有存任何行程引用**的新上下文里渲染出真行程与逐站时刻；
+4. 回收站：屏上点 `trash-bring-back` → 服务端箱内行数 1→0。
+
+**四、没改善的部分**
+
+1. 长图「日块分隔」像素读数仍缺（开关坑已记）。
+2. 日历导出入口未上屏（ORD-0525 在跑）。
+3. 成员屏空转（ORD-0527，已定性为客户端接线）。
+4. 真机五格仍未跑（设备不在手）。
+5. 供给死局仍靠“拿现成有排程的库副本”绕过；干净库那条路等 ORD-0526 与 ORD-0521。
+6. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 00:04 · 第三条端到端：分享四臂（建/读/陌生/撤销后）在真 HTTP 上全通，接收屏在**无行程引用的新上下文**里渲染出真行程
 
 **〇、口径**
