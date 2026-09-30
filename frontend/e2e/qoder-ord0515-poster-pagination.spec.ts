@@ -1,0 +1,231 @@
+/**
+ * ORD-0515 — the poster's size bound, its pagination, and the two arms that prove neither is decoration.
+ *
+ *   P1  the short trip: one page, no pagination sentence, and the exported bytes/pixels measured
+ *       (this is the reading the bound is expressed against).
+ *   P2  the seven-day trip the product's own write doors built: the sheet says it paged, offers one
+ *       button per page, every page exports, and no page's own IHDR exceeds the named bound.
+ *   P3  the day row read in both shipped languages, counted for key echo.
+ *   X1  the same seven-day journey against the bundle that predates the bound: one over-tall picture
+ *       and no sentence about it -- which is the silent case P2 exists to catch.
+ *   X2  page count and block count taken in the same breath, and re-taken after a day disappears.
+ */
+import { execFileSync } from "node:child_process";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { expect, test, type Browser, type Page } from "@playwright/test";
+
+const JOURNEY_ID = "22222222-2222-4222-8222-222222222222";
+const SHORT = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0515_SHORT_PORT)}`;
+const LONG = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0515_LONG_PORT)}`;
+const UNBOUNDED = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0515_UNBOUNDED_PORT)}`;
+const AUDIT = (process.env.CITYNEXUS_ORD0515_AUDIT ?? "").trim();
+const PYTHON = (process.env.CITYNEXUS_ORD0515_PY ?? "").trim();
+const EVIDENCE = (process.env.CITYNEXUS_ORD0515_EVIDENCE ?? "").trim();
+/** Read back out of the product source, never retyped here: a bound the test restates by hand can
+ *  drift away from the bound the product enforces, and both would still be green. */
+const SOURCE_BOUND = readFileSync("src/features/poster/posterCanvas.ts", "utf8");
+const LIMIT_RASTER_PX = Number(/POSTER_MAX_RASTER_HEIGHT_PX = (\d+)/.exec(SOURCE_BOUND)?.[1] ?? "0");
+for (const [name, value] of [
+  ["CITYNEXUS_ORD0515_AUDIT", AUDIT],
+  ["CITYNEXUS_ORD0515_PY", PYTHON],
+  ["CITYNEXUS_ORD0515_EVIDENCE", EVIDENCE],
+] as const) {
+  if (!value) throw new Error(`[ord0515] ${name} must be named by the runner`);
+}
+if (!(LIMIT_RASTER_PX > 0)) throw new Error("[ord0515] the named bound could not be read from source");
+mkdirSync(EVIDENCE, { recursive: true });
+
+function write(name: string, body: unknown) {
+  const path = `${EVIDENCE}/${name}.json`;
+  writeFileSync(path, JSON.stringify(body, null, 1), "utf8");
+  console.log(`O515 ${name} ${JSON.stringify(body).slice(0, 700)}`);
+}
+
+function audit(path: string): any {
+  const out = execFileSync(PYTHON, [AUDIT, path], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  return JSON.parse(out.trim().split("\n")[0]);
+}
+
+const statedNumbers = (line: string) => {
+  const m = /([\d,]+)\s*(?:字节|bytes)\s*[,，]?\s*([\d,]+)\s*[×x]\s*([\d,]+)/.exec(line.replace(/,/g, ""));
+  return m ? { bytes: Number(m[1]), width: Number(m[2]), height: Number(m[3]) } : null;
+};
+
+async function openSheet(page: Page, origin: string, locale: "zh-CN" | "en") {
+  await page.addInitScript(
+    ([language, journey]) => {
+      localStorage.setItem("citynexus.locale", language);
+      localStorage.setItem("citynexus.v8.journey_id", journey);
+    },
+    [locale, JOURNEY_ID] as const,
+  );
+  await page.goto(`${origin}/v8/trips`, { waitUntil: "load", timeout: 90_000 });
+  await expect(page.getByTestId("trip-poster-bar").first()).toBeVisible({ timeout: 30_000 });
+  await page.waitForTimeout(900);
+  await page.getByTestId("poster-open").click();
+  await expect(page.getByTestId("trip-poster")).toBeVisible({ timeout: 20_000 });
+}
+
+async function readSheet(page: Page) {
+  const cards = page.getByTestId(/^poster-day-\d+$/);
+  const dayRows = await cards.count();
+  const labels: string[] = [];
+  for (let i = 0; i < dayRows; i += 1) {
+    labels.push((await cards.nth(i).locator("b").first().innerText()).trim());
+  }
+  const stops = await page.getByTestId("poster-stop").count();
+  return {
+    day_rows: dayRows,
+    day_labels: labels,
+    stop_rows: stops,
+    subtitle: (await page.getByTestId("poster-subtitle").innerText()).trim(),
+    paged_note: await page.getByTestId("poster-paged-note").innerText({ timeout: 1_000 }).catch(() => null),
+    page_buttons: await page.getByTestId(/^poster-page-\d+$/).count(),
+  };
+}
+
+async function exportPage(page: Page, tag: string) {
+  const downloadPromise = page.waitForEvent("download", { timeout: 90_000 });
+  await page.getByTestId("poster-download").click();
+  const download = await downloadPromise;
+  const saved = `${EVIDENCE}/${tag}_${download.suggestedFilename()}`;
+  await download.saveAs(saved);
+  const screen_line = (await page.getByTestId("poster-result").innerText()).trim();
+  const page_line = await page.getByTestId("poster-page-result").innerText({ timeout: 1_000 }).catch(() => null);
+  const buffer = readFileSync(saved);
+  return {
+    file: saved.split("/").pop(),
+    suggested_filename: download.suggestedFilename(),
+    screen_line,
+    page_line,
+    stated: statedNumbers(screen_line),
+    ihdr: { bytes: buffer.length, width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) },
+    pixels: audit(saved),
+  };
+}
+
+test("ORD-0515 P1 the short trip still exports one picture, and its size is measured", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  const page = await context.newPage();
+  await openSheet(page, SHORT, "zh-CN");
+  const sheet = await readSheet(page);
+  const exported = await exportPage(page, "P1");
+
+  expect(sheet.day_rows, "the sealed journey is one day").toBe(1);
+  expect(sheet.page_buttons, "one day needs no page strip").toBe(0);
+  expect(sheet.paged_note, "and no sentence about paging").toBeNull();
+  expect(exported.ihdr.height, "the single picture sits under the bound").toBeLessThanOrEqual(LIMIT_RASTER_PX);
+  expect(exported.stated!.height, "the screen states the PNG's own height").toBe(exported.ihdr.height);
+  expect(exported.stated!.bytes, "and its own byte count").toBe(exported.ihdr.bytes);
+  write("P1_short_trip", { limit_raster_px: LIMIT_RASTER_PX, sheet, exported });
+  await context.close();
+});
+
+test("ORD-0515 P2 the seven-day trip pages, and every page exports inside the bound", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  const page = await context.newPage();
+  await openSheet(page, LONG, "zh-CN");
+  const sheet = await readSheet(page);
+
+  expect(sheet.day_rows, "the trip the write doors built has seven days").toBe(7);
+  expect(sheet.page_buttons, "the strip offers one button per page").toBeGreaterThan(1);
+  expect(sheet.paged_note, "and the sheet says so in words").toContain("分页");
+
+  const pages: any[] = [];
+  let blocksAcrossPages = 0;
+  for (let index = 1; index <= sheet.page_buttons; index += 1) {
+    await page.getByTestId(`poster-page-${index}`).click();
+    await page.waitForTimeout(250);
+    const onScreen = await page.getByTestId(/^poster-day-\d+$/).count();
+    blocksAcrossPages += onScreen;
+    const exported = await exportPage(page, `P2_page${index}`);
+    expect(exported.ihdr.height, `page ${index} must fit inside the named bound`).toBeLessThanOrEqual(LIMIT_RASTER_PX);
+    expect(exported.suggested_filename, `page ${index} names itself in the file name`)
+      .toContain(`-p${index}.png`);
+    pages.push({ page: index, blocks_on_screen: onScreen, ...exported });
+  }
+  expect(blocksAcrossPages, "no day is dropped and none is duplicated across pages").toBe(sheet.day_rows);
+  write("P2_seven_day_pagination", {
+    limit_raster_px: LIMIT_RASTER_PX,
+    sheet,
+    pages,
+    blocks_across_pages: blocksAcrossPages,
+    page_buttons: sheet.page_buttons,
+  });
+  await context.close();
+});
+
+test("ORD-0515 P3 the day row in both shipped languages, counted for key echo", async ({ browser }) => {
+  const rows: Record<string, any> = {};
+  for (const locale of ["zh-CN", "en"] as const) {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale });
+    const page = await context.newPage();
+    await openSheet(page, LONG, locale);
+    const sheet = await readSheet(page);
+    const joined = [sheet.subtitle, ...(sheet.paged_note ? [sheet.paged_note] : []), ...sheet.day_labels].join(" | ");
+    for (const needle of ["poster.", "mapComp.", "fmt.", "{", "}"]) {
+      expect(joined, `a dictionary key reached the ${locale} screen: ${joined}`).not.toContain(needle);
+    }
+    expect(sheet.day_labels.length).toBe(7);
+    rows[locale] = { subtitle: sheet.subtitle, paged_note: sheet.paged_note, day_labels: sheet.day_labels };
+    await context.close();
+  }
+  const source = readFileSync("src/i18n/LocaleContext.tsx", "utf8");
+  const union = /type TripLocale = ([^;]+);/.exec(source)?.[1]?.trim() ?? "";
+  const arms = [...union.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  write("P3_languages", { arms, ...rows, german_arm_present: arms.includes("de") || arms.includes("de-DE") });
+  expect(arms).toEqual(["en", "zh-CN"]);
+});
+
+test("ORD-0515 X1 the bundle without the bound ships one over-tall picture and says nothing", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  const page = await context.newPage();
+  await openSheet(page, UNBOUNDED, "zh-CN");
+  const sheet = await readSheet(page);
+  const exported = await exportPage(page, "X1");
+
+  expect(sheet.day_rows, "same journey, same seven days").toBe(7);
+  expect(sheet.page_buttons, "the pre-bound build offers no pages").toBe(0);
+  expect(sheet.paged_note, "and never tells the traveller the picture is over the bound").toBeNull();
+  expect(exported.ihdr.height, "this is the silent case: one file taller than the named bound")
+    .toBeGreaterThan(LIMIT_RASTER_PX);
+  expect(exported.pixels.bottom_padding_rows, "the file still encodes, so nothing looks broken on screen")
+    .toBeGreaterThan(8);
+  write("X1_unbounded_bundle", { limit_raster_px: LIMIT_RASTER_PX, sheet, exported });
+  await context.close();
+});
+
+test("ORD-0515 X2 page count and block count are taken in the same breath", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  const page = await context.newPage();
+  await openSheet(page, LONG, "zh-CN");
+  const before = await readSheet(page);
+  const buttonsBefore = before.page_buttons;
+  const blocksBefore = before.day_rows;
+
+  /* Take the last day away in flight -- no write, no SQL -- and require both numbers to move
+     together. A page count cached from an earlier render would keep the old strip. */
+  await page.route(`**/api/v1/journeys/${JOURNEY_ID}/experience`, async (route) => {
+    const response = await route.fetch();
+    const payload = await response.json();
+    const acts = payload?.active_plan?.activities ?? [];
+    const lastDay = acts.map((a: any) => (a.start_at ?? "").slice(0, 10)).sort().pop();
+    payload.active_plan.activities = acts.filter((a: any) => (a.start_at ?? "").slice(0, 10) !== lastDay);
+    await route.fulfill({ response, body: JSON.stringify(payload) });
+  });
+  await page.reload({ waitUntil: "load" });
+  await expect(page.getByTestId("trip-poster-bar").first()).toBeVisible({ timeout: 30_000 });
+  await page.getByTestId("poster-open").click();
+  await expect(page.getByTestId("trip-poster")).toBeVisible({ timeout: 20_000 });
+  const after = await readSheet(page);
+
+  expect(after.day_rows, "one day less on the panel").toBe(blocksBefore - 1);
+  expect(after.page_buttons, "the strip is recomputed, not carried over").toBeLessThanOrEqual(buttonsBefore);
+  expect(after.page_buttons, "and it is never more pages than there are blocks")
+    .toBeLessThanOrEqual(after.day_rows);
+  write("X2_pages_follow_blocks", {
+    before: { blocks: blocksBefore, buttons: buttonsBefore },
+    after: { blocks: after.day_rows, buttons: after.page_buttons, subtitle: after.subtitle },
+  });
+  await context.close();
+});

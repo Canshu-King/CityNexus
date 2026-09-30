@@ -422,12 +422,6 @@ export function planPosterPages(
   return { ok: true, pages, total_height_css: whole.height, limit_css: POSTER_MAX_HEIGHT_CSS };
 }
 
-/** How many pages this trip's poster takes at the given width; 1 when it fits. */
-export function countPosterPages(lines: PosterLines, measuredWidthCss: number): number {
-  const plan = planPosterPages(lines, measuredWidthCss);
-  return "pages" in plan ? plan.pages.length : 1;
-}
-
 export async function drawTripPoster(
   lines: PosterLines,
   measuredWidthCss: number,
