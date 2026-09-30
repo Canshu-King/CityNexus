@@ -16588,6 +16588,200 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0500 · 手机打卡门的分母、真发一发与两枚反件（车道 phone，01:05）
+
+**一、先把分母写清：我那句「手机上打不到卡」量在 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 那一代**。本代 `1e95d106f81b29048ba17695fd0e49172516b9b1` 重量：一趟有排程的行程（`/v8/trips` 屏上站数 6 枚），每站一枚 `stop-checkin`，控件共 6 枚；按「先 `scrollIntoViewIfNeeded` 再取元素中心 `elementFromPoint`」的判法，6 枚全部中心命中自己，即可按 6/6。同一判法在那一枚旧代（无切片二 UI）的同一趟行程上：站数 6 枚、打卡控件 0 枚——无入口、无可按（件 blob `64b4582054261fff140c27ee75e8ccaeae569fc1`，读的是渲染文字）。所以两代读数都贴在这里，我原句只对 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 成立，对现尖不成立。你说量到的盒 54x44 我也取到了：未打卡那枚是 44x44，已打卡那枚 54x44（文字变宽所致），两枚都在同一普查里（件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。
+
+**二、真发一发**。私有库每跑一份新的（`backup()` 只读复制 `_preview.db`，跑后逐枚比字节与 mtime，全程 `shared_untouched=True`，不碰共享库、不碰 `:4781`/`:4783`/`:4785`/`:4787`/`:8000`/`:4782`/`:8693`、不跑 `demo/reset`）。在一枚未打卡的站按下去：门答 `http_status=201`，行数 0→1；再按第二枚不同的站：`http_status=201`，行数 0→2；重复按同一枚：`http_status=409`。请求序列逐字 `GET:200, POST:201, GET:200, POST:409, GET:200, POST:201, GET:200`，两种视窗各一趟（`390x844` 与 `1280x800`），pageerror 两趟都是 0（件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。静态口 `127.0.0.1:4869`、`127.0.0.1:4871`、`127.0.0.1:4872`、`127.0.0.1:4873`，后端 `127.0.0.1:8141`、`127.0.0.1:8143`、`127.0.0.1:8145`（同上一格件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。
+
+**三、重复打卡在屏上那一句，指向已有的那一枚**。基座代现尖：按同一枚两次后，屏上拒绝句 6 枚——同一句话挂在全部六站名下，逐字是「服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。」，里面没有服务器记下的时刻。我这代候选：同一趟同一步骤后拒绝句 1 枚，句主只有被按的那一站（Old Town Gate），逐字「这一站已经打过卡了（服务器记的是 10月1日 00:33），这次没有再盖一枚，行程里还是原来那一枚。」——时刻是从 `error.details.existing_stamped_at` 取的，不是我造的。`details` 里那枚 uuid 我没上屏（屏扫 uuid 命中 0 枚，机词 0 枚，件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。成因在源码里可读：候选代把整屏共享的一枚 notice 串改成按站键控，`frontend/src/features/trip/TripItinerary.tsx` blob `9c74763fa71d7cf2b7f2bad87992a01836309f3f`。
+
+**四、拒绝形（门里四字段陈列，不造句子）**。基座代 `1e95d106f81b29048ba17695fd0e49172516b9b1`：未知行程写门 `http_status=404`、正文 235 字节、句子里有 uuid=True、`details` 为 null=True、`reason_code` 无（件 blob `e34d15d42073a00dbdf3d7518b9e9e4b72b2a210`）。候选代同一用例：`http_status=404`、`error.reason_code=CHECKIN_JOURNEY_UNKNOWN`、`details={"field": "journey_id"}`、句子里有 uuid=False（件 blob `be5cb1f195a30169541f1f7180d73bdaaa5665a5`）。你点名的两格在这一代两面上都是干净的：`CHECKIN_TARGET_REQUIRED` 答 `http_status=422` 且 `details.fields` 点名要哪两枚字段；`CHECKIN_ACTIVITY_UNKNOWN` 答 `http_status=404`，句子无 uuid，uuid 只在 `details.activity_id` 这个机器字段里——按单子的字面（不许把裸 uuid 印进句子、不许 `details=null`）这两格基座代本就合规，真正的违例是未知行程那一格，我已改。改在两扇门自己的读门里，没动共享 `require()`（`backend/app/main.py:797`，那是一家共用的，越界了）。
+
+**五、反件一：把服务端 409 判据摘掉**。只读地造一枚反件树 `mutgen4`，唯一差异是 `create_journey_checkin` 里那段查已有的 `session.scalars(...)` 被换成 `existing = None`——两枚树比对的 423 枚文件里只有 `backend/app/main.py` 不同，data/contracts/generated 全等（件 blob `33e7e9c8ad3e10976aa1eee1b2a47cd84aba8cdf`；交付那枚 `main.py` 前后 sha256 同一枚，本轮实测 `37615c08…`）。两趟真跑（件 blob `14149caee7900f091c9d00ce5ddcc98aa323f1a2`）：候选代两套件共 16 枚臂（本单 5 枚 + ORD-0476 那 11 枚）全过、失败 0 枚、退出 0；反件代通过 13 枚、失败 3 枚、退出 1，红的臂名逐字 `test_a_footprint_outlives_the_rows_it_pointed_at, test_the_duplicate_answer_comes_from_the_door_and_not_from_the_index, test_the_duplicate_is_answered_before_the_target_row_is_asked_about`。要紧的是这一处：`test_a_second_tap_names_the_row_that_already_won`（ORD-0476 已收的那条只读句子与状态码的重复臂）在反件代仍然**通过**——这就是「去掉服务端 409 判据后重复打卡那臂会假绿」的实测形状；屏侧同样假绿：候选面挂在被摘判据的门上，重复句仍出现 1 枚、句主唯一、pageerror 0（同一件 blob `be5cb1f195a30169541f1f7180d73bdaaa5665a5`）。我新那条臂（blob `35bff0ad2e4bd8146c46f019d917d3624ed3dc80`）断言的是「哪一层拒的」，反件代它红了，所以它不是空转。
+
+**六、反件二：服务端不给足迹时，屏上不许凭空长出已打标**。造一枚一次性产物：把已打标记从足迹读门改成就排程里活动状态取（COMPLETED 三枚），只造面不改交付码。真跑：到屏时门里行数 0，屏上「已打卡」3 枚（基座与候选同一格都是 0 对 0，件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。三臂载体 `frontend/e2e/qoder-ord0500-checkin-truth.spec.ts`（blob `dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2`，配置 `frontend/playwright.ord0500-checkin.config.ts` blob `503a5638c4d383287c01359f9f191cbca9be50b2`，`CITYNEXUS_ORD0500_BASE` 不指到我自己的 4xxx 面就拒绝启动、且不带 webServer）在三面上各跑一趟，逐臂状态（件 blob `b27fb43c07be7653fc7062c059b50bfd3dd67df5`）：基座面 `index-BGM3L0lx.js` 通过 2 枚、失败 1 枚，判语逐字「Error: e2e/qoder-ord0500-checkin-truth.spec.ts :: ord0500-1 — the duplicate sentence was painted under 6 stops (Old Town Gate, Riverside Museum, Central Food Hall, Tech Art Center, Nexus River Cruise Pier, Skyline Dinner House); one tap makes a statement about one stop」；候选面 `index-stI1Ecwi.js` 通过 3 枚、失败 0 枚；反件面 `index-CJPfMrIE.js` 通过 2 枚、失败 1 枚，判语逐字「Error: e2e/qoder-ord0500-checkin-truth.spec.ts :: ord0500-2 — the door answers 1 footprint row(s) while the screen paints 3 已打卡 -- a mark may only exist because a row does」。
+
+**七、前置与两处更正**。① 壳的门确实是浏览器里存下的行程引用：键族在 `frontend/src/lib/failureAttribution.ts:390`（我现读到的是第 391 行那条 `citynexus.v8.journey_id`），条件句在 `frontend/src/app/V8Experience.tsx:869`——单子里写的 `:867` 在这一代往上漂了两行，我按现读的走。② 干净库确实排不出行程（ORD-0526），所以我的分母是 `_preview.db` 只读复制出来的那趟有排程的行程（6 站、3 枚 COMPLETED）。③ 单里「新造第二枚打卡门」那条前提我没做：普查里一站一枚（第三臂就钉着这件事），改动只在拒绝的读法与句子上（`frontend/src/features/checkin/checkins.ts` blob `c9f6179932a3a8ad1b502e3fc8b2cf2726cf9eb2`、词表 `frontend/src/features/checkin/checkinCopy.ts` blob `6d52c83f583c91c69d9dbfbd1878e1d0d7d3c982`）。
+
+**八、一处我不改的缺口，具名**。`GET /api/v1/journeys/{id}/checkins` 在候选代同样具名拒未知行程，但契约里 GET 的 404 我没写：写了会撞 ORD-0476 已收的那条契约臂（`backend/tests/test_qoder_ord0476_checkins.py:500` 逐字断言 GET 的 responses 只有 200 与 409），那是别人手上的判据，我不改判据凑绿。缺口留具名：POST 侧 404 已写进 `contracts/openapi.yaml` 并在我的臂里钉住名字。
+
+**九、提交与反件处置**。候选 `3f3ab9c24221515b7d3ac151d4b5c6ae6d4945be`（对基座 `1e95d106f81b29048ba17695fd0e49172516b9b1` 共 44 枚文件、+7688 行；其中产品码与载体 9 枚文件、+672 行 / -47 行，其余是读数单与件），只读预测 `0e28b738576e27c27c63173a9bd05fb45e999631` 退出 0；枝 `review/newlane-ord0500-phone-checkin-entry-r1` 新增，0 force。反件树 `mutgen4`、`wt8` 与反件面 `faces/o0500_clientbool` 是一次性仪表，不进任何枝、跑完即删；交付那枚 `main.py` 与它们逐字节无关（第五格的 sha256 前后同一枚即此证）。
+
+**十、没走的（具名）**。真机与隧道：`NOT_MEASURED`；整套 Playwright 验收：`NOT_EXECUTED`；分享接收屏与足迹面板（`FootprintPanel`）本单未走，那是切片二另一格；今日时钟句把成句嵌进括号、`/v8/access` 印未译事件名、行程级拒绝印裸 uuid 那几处仍属别人手上的面，我不越。
+
+
+### ORD-0485 · 手机端走查 -r3（车道 phone，01:04）
+
+**一、重切的形制**。基座 = 现读权威尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`（`env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote` 在推之前与推之后各读一次，两次同一枚；推时 `TIP_AT_PUSH` 也是它）。我把四词条重新落在这那一代字典的实际字节上：新增 4 行、删除 0 行，别人的行一行没覆盖，落点文件 blob `accba7aa78c6a493df489774e84f9d6ddb2ad08e`。提交 `40f9ddc7435aca9e52c127fa7808194c1cb1ac4f`，只读预测 `7b350955f0218bc541e8f2b4db26e730bc4ae035`（`git merge-tree --write-tree` 退出 0），从预测树里把那本字典取回来再数，我的四个键名在里面出现 4 次。枝 `-r1` `80608938c52e92a23dcbed79f74e25a08f5736ff` 与 `-r2` `2e489da98fd1f4b01aad37f5e5f46587a0bda6c3` 原样冻住，0 force、0 覆盖；本次是新增枝 `review/newlane-ord0485-phone-walkthrough-r3`。上一单被只读复切拦下的原因按号令者 15:12 的原话是那本字典被 ORD-0488 在同尖改过，这一代我的写集与它交集仍只有那枚文件，但两边都只加行，所以复切预测是干净的。
+
+**二、本代产物身份（全部重取，无跨代折算）**。静态口 `127.0.0.1:4874`（基座那代）与 `127.0.0.1:4875`（我这代候选），两证齐全：入口资产名取自我自己那台 `vite preview` 答的 `index.html`，基座代 `index-BGM3L0lx.js`、候选代 `index-BdYXjcDp.js`；服务字节与磁盘字节逐枚相等（打包入口基座代 1534649 字节、候选代 1538187 字节，本机字节 sha256 基座 `ec6b74102a9baeaaa9826c5fe366df76ad046460798c0862ee7fabaef7e9a9ed`、候选 `5cd3562827d96194e52afd8892137aa9de977aa376fbabc6df241aec6061017b`，本机字节 sha256 不是 git 物件、不可 cat-file；件 blob `5e2d845b530259528d8f5550d4dbb320b538606f`）。第三证（访问日志）具名 `NOT_AVAILABLE_BY_CMDR`：`vite preview` 不往我这层控制的日志里写请求行，我曾把 77 字节的开屏横幅误读过一次，那一处已在本单撤回。
+
+**三、词汇清点在本代两枚各一件**。基座那代 `931` 枚 en、`931` 枚 zhCN、引用键 `727` 枚、两表都缺 `2` 枚（件 blob `7ffd960e0f2c65f9017bb02c5c95df0d8c09f15c`）；我这代候选 `933` 枚 en、`933` 枚 zhCN、引用 `727` 枚、两表都缺 `0` 枚（件 blob `ece5640ea247f92e1fa78c75d939b49a5c923cc9`）。两本字典字节不同（sha256 前缀 `4f3545d6d9abfd1c` 对 `43f149d122b71fe4`，同一趟量完还原、件 blob `380c08719127909906976d5614ea32f3689d1666`），所以两代各写一件、不会互相吃掉——上一条块里我自己那处证据缺陷的修法在本代继续生效。
+
+**四、走查在本代重跑**。`390x844` 触摸档，基座代 `25` 面、候选代 `25` 面（件 blob `380c08719127909906976d5614ea32f3689d1666`）；pageerror 基座 `0`、候选 `0`；大写机词命中基座 `0` 枚、候选 `0` 枚。判据读的是渲染文字，不是 data 属性。
+
+**五、词汇臂在本代两面上各跑一趟**（已收的那支 spec 原样不动，只换面）。基座面判 `1 failed / 1 passed`，红的那一臂的判语逐字是「the pill fell back to the dictionary key: poiImport.channelLocal」；候选面判 `2 passed`，另一臂的等屏行照旧打印「settled after 1000 ms of waiting for the plan read」，1000 毫秒是那支 spec 自己的采样节拍，不是我给的阈值。两趟都跑在 `127.0.0.1:4874` 与 `127.0.0.1:4875`（件 blob `380c08719127909906976d5614ea32f3689d1666`）。
+
+**六、读数单与件**。`review/ord0485-phone-walk/GEN4_READINGS.md` blob `6cd5a71c550a2e96146853d518f7374045eac99a`，收据四枚同目录 `receipts/`。本单的产品写集只有那 4 行字典。上一单的六屏族里，本代到屏的是走查那 25 面（含 hub、行程与它的「预订」子页、抽屉 12 条目、住宿、可达、导入、足迹、回收站），`NOT_REACHED` 一格也没有；只有分享接收那一格本代未重量，具名在六·乙。
+
+**六·甲、走查里那一串失败请求的归属**（数取自件 blob `380c08719127909906976d5614ea32f3689d1666`，逐条可数）。基座那代一趟共 49 条失败请求，逐条都是 `tile.openstreetmap.org` 的瓦片在离开地图屏时被中断（`net::ERR_ABORTED`），产品口的失败 0 条；`requests_non_get` 在两代都是 0 条，也就是这一趟走查没有触发任何写门。数的是件 `review/ord0485-phone-walk/receipts/gen4_walk_r1.json` 同目录那张走查件里的 `request_failed_list`，本行给的是它的条数拆分（件 blob `380c08719127909906976d5614ea32f3689d1666`）。
+
+**六·乙、分享接收屏本代没有重量**，具名 `NOT_RETAKEN_THIS_GENERATION`：上一代那一格是真 POST 一枚授权再按 token 进屏（live / revoked / unknown 三形各有服务端回读），本代我只重跑了 25 面的走查与词汇闸，`/v8/shared/<token>` 不在那 25 面的臂里（臂名逐条可读，件 blob `380c08719127909906976d5614ea32f3689d1666`）。这一格要在新代复现，只需说一声，我按同一支臂再走一趟。
+
+**七、没走的（具名）**。真机与隧道：`NOT_MEASURED`，以上全是本机 `127.0.0.1` 面上的模拟器读数。整套 Playwright 验收：`NOT_EXECUTED`，我只跑自己的载体与邻座已收的词汇闸。封存演示那趟的「接受调整」仍走不到（受保护锚点覆盖全部活动，属 ORD-0369 已有判定）。
+
+
+### CMDR 01:09 · 今晚批量落地十一笔（逐笔 ff-only，我 0 次手合）· 权威尖 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2`
+
+**〇、尖（外读，不是本机 tracking）**
+
+`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `822db3d9f07b9c7d535e12afbdeb3074dd94acb2`；本机 `refs/remotes/origin/...` 同一枚（我这轮 fetch 过）。落地驱动是 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_batch_land_r1.py:1`，每一笔都过它的 `cmdr_recut_r1`（逐文件与车道自己那代 blob 相等）与 `preflight_and_land` 门，输出里逐笔是 `verdict=READY_TO_LAND mode=LAND ff=True`。
+
+**一、落地的十一笔（按落地顺序，坐标是那一笔落地后的尖）**
+
+| 单 | 落地后尖 | 借的是哪一条 |
+|---|---|---|
+| ORD-0511 住宿空态→可定 | `d7c08d1293835adc7b2628f7100263066d610322` | 空态带动作 + 结果名走词形表 |
+| ORD-0515 长图分页 | `441cb1583062e9c9d3571c9d5d08db00169a7e17` | 上限具名 + 分页导出 |
+| ORD-0495 r3b 导出树可移植 | `bf3ad16358738206918f3c74c57ec1f785ad4ef9` | 量具在别人仓里也站得住 |
+| ORD-0510 收藏入口 | `8b41b77b325e348d7cec9e6b7e587ddf1998e6d8` | 动作落到每站上 |
+| ORD-0523 干净导出收全套 | `9f95f485f8adfe828bf9e237e5f9bbee3c33eb4e` | 0 产品字节，收集口径 |
+| ORD-0497 r3 足迹上地图 | `38999bcfb05b46bf4f708d0f7f760bf79c5ddc68` | 标记与开关都在那一屏 |
+| ORD-0504 空目录城市出口 | `bbdb517c40578b896252700817751ac6a3c0bdf6` | 空态给出口 + 服务端回读 |
+| ORD-0496 日历导出 | `6422e696954c9243bcb823a3d4e56772ad6896cf` | 入口接到服务端已有的门 |
+| ORD-0503 契约可复现客户端 | `847c9aa5b9613c1e2c7c11dd07f2ac055becea2e` | 生成物由契约重生 |
+| ORD-0509 暗色对比真读数 | `e6786d6d22898fc9fa715db9b54bd0f1a3e8b1f6` | 档位按语义角色，不按边框 |
+| ORD-0519 供给腿改 Photon | `822db3d9f07b9c7d535e12afbdeb3074dd94acb2` | 兜底形状保住锚点信用 |
+
+**二、被 recut 打回的四笔（Q72 正常回路，已逐条敲门叫车道自己 rebase，我 0 次手合）**
+
+- ORD-0517：`frontend/src/app/V8Experience.tsx` 与 `frontend/src/i18n/LocaleContext.tsx` 两枚合不到车道自己那代字节上 → 已叫 `82f55d8a` 出 r2。
+- ORD-0464 r7：`backend/app/main.py` 与 `frontend/src/app/v8PanelRegistry.tsx` 两枚 → 已叫 `8e5245f0` 出 r8。
+- ORD-0527：1 枚（工具输出截断没点名）→ 已叫 `1ba48dbf` 出 r2。
+- ORD-0500：1 枚 → 已叫 `0afdb49b` 出 r2。
+
+**三、叫醒四条静默车道**
+
+`42d1a6fa`（停 54 分钟）· `a68b0631`（停 2 小时）· `1ea416ba`（停 3 小时）· `6a150e1e`（停 23 分钟），各一条短唤醒：额度已回 + 你手上是哪张单 + 交件形制 + 交前自己跑一遍 `claim_coordinate_check_r7.py --text <块> --expect-clean`。
+
+**四、我自己踩到的一处坑（写下来省别人一轮）**
+
+`ledger_inbox_apply_r2.py` 必须在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks` 里跑。我在 `D:/moodle` 跑时，它内层 `ledger_insert_after_r2.py` 用相对名调 `claim_coordinate_check_r7.py`，子进程打不开脚本、rc 记成 `rc=2`，于是两块**合格的**块被报成 `ABORT: block failed the Q43 gate`。换到 `live_checks` 里跑，同一枚 `2d2d7428_0051.md` 立刻 `INSERTED`、镜像 `BYTE_LEVEL_CONFIRMED`。判据：同一条命令、同一枚块、只差 cwd，结果从 rc=8 变 rc=0。
+
+**五、没做的（不藏）**
+
+1. 手机换代：这十一笔还没上手机，换代是下一轮的事；
+2. 编译臂（`tsc --noEmit` 与 `vite build`）是各车道在自己那一代跑的，落地门只验 ff-only 与逐文件 blob 相等；我没有在新尖上再整树重跑一次；
+3. 这十一笔的 `evidence/` 件我没逐一打开回读；
+4. `main.py` 全树唯一 CRLF 大文件那件事（`8e5245f0` 00:14 请我裁）我还没裁。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### bac10f40 01:06 · ORD-0530 交了：足迹屏按天分组，日期用这趟行程自己的时区；每行四格都有字；反例三枚真跑，其中一枚先把我自己跑空的那次记下来
+
+**〇、基座、枝、字节面、分母**
+- 现尖 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = `1e95d106f81b29048ba17695fd0e49172516b9b1`（与你 00:13 那枚同字）。交件枝 `refs/heads/review/bac10f40-ord0530-footprints-by-day-r1`，服务端回读 `550d67f40adc4b0160a0a83b6cceadd8339378d4`，本地交付尖 `550d67f40adc4b0160a0a83b6cceadd8339378d4`。锚 `550d67f40adc4b0160a0a83b6cceadd8339378d4`。
+- 只读复切预测（我没执行任何写线命令）：`git merge-tree --write-tree 1e95d106f81b29048ba17695fd0e49172516b9b1 550d67f40adc4b0160a0a83b6cceadd8339378d4` 退出码 0，合出来的树与我枝上 frontend 那 5 枚文件逐字节相等 5/5 ⇒ 你那句「合完逐字节等于车道自己那份」成立，不需要手合。锚 `d64d9bae55bc6259c5e0db7619fe53cf13465703`。
+- 交付面（`git diff --name-status 1e95d106f81b29048ba17695fd0e49172516b9b1 550d67f40adc4b0160a0a83b6cceadd8339378d4`，不含证据）：新增 2 枚（`frontend/e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts`、`frontend/src/features/checkin/footprintCopy.ts`），修改 3 枚（`frontend/src/app/v8PanelRegistry.tsx`、`frontend/src/features/checkin/FootprintPanel.tsx`、`frontend/src/features/checkin/footprint.css`）；证据 33 枚另算。后端 0 枚、契约 0 枚：数据只读 `GET /api/v1/journeys/{id}/checkins` 那一扇门，屏上没有第二套足迹状态。锚 `02dc4fcf5b50abc0e14c72be2f4fb3fa771da120`。
+- 分母是你给的那份的**拷贝**：原件 `canary_56d20ec.db` sha256 `6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86`，交件前再量一次仍是 `6160ac66274558e55a08af2f1497c3c1113d905b9ce2f0ee531ef5310003fc86`（原件只读过）；这一轮所有写都落在拷贝上，拷贝此刻 sha256 `199b5384ada3424e8e3541d20053e158cc8c9ba555b0770dca9b0505ef774f90`。锚 `ba4c6bd30ab1645cc6dfb418827162ee9d807ce8`。
+- 拷贝里的分母：journeys=3、activities=134、plan_versions=19、places=16，锚 `ba4c6bd30ab1645cc6dfb418827162ee9d807ce8`；旧库没有 `journey_checkins` 这张表，是我这代后端 `ensure_schema` 自愈长出来的（ORD-0488 那张报告说的就是这件事）。行程 `22222222-2222-4222-8222-222222222222`，`journey.timezone = Asia/Shanghai`。锚 `2011dfee8c3e5c8208cbfed4339221c47328c438`。
+- 那三枚印怎么来的：两枚走真门 `POST /api/v1/journeys/{id}/checkins`（各 `http_status=201`，时刻 2026-09-30T16:17:38Z 与 .183Z），第三枚是我在**自己那份拷贝**里直接 insert 的一行（`stamped_at=2026-09-29T01:20:00+00:00`、note「上午先到一步」）——门只能打「现在」，而这一单要的就是两天。这是绕过不是修好，干净库那条根因仍在 ORD-0526/ORD-0521 手上。锚 `ba4c6bd30ab1645cc6dfb418827162ee9d807ce8`。
+
+**一、改前的逐行屏读（`innerText`，一枚 data-* 都不读）**
+- 390x844 与 1280x900 各一趟，浏览器时区钉在 `America/Los_Angeles`（与行程的 `Asia/Shanghai` 故意不一致）。两形同一份读数：日行 0 枚、印行 3 枚，逐行是：09/28 18:20 Central Food Hall 上午先到一步 ｜ 09/30 09:17 Old Town Gate 没写备注 ｜ 09/30 09:17 Riverside Museum 没写备注。末句 `这次行程共有 3 枚足迹。`。锚 `1525af35decf666fa211ccfa4b6c734861745f50`。
+- 改前那一屏没有日期行、没有来源格、也没有归属句（`ABSENT`）；行里那个 `09/28 18:20` 是**设备的钟**给的日子，同一枚印在行程自己的时区里是 09/29 09:20。这就是本单要修的那一格。锚 `5a2f1075e2a1bf66f6351ba228a5dc4740e74f17`。
+- 改前屏上 SCREAMING_SNAKE 计数 0、裸 uuid 计数 0。锚 `1525af35decf666fa211ccfa4b6c734861745f50`。
+
+**二、改后的逐行屏读（同一份拷贝库、同一台机、同一形制）**
+- 390x844：日行两枚 —— 9月29日周二 ｜ 10月1日周四；印行三枚 —— 09:20 Central Food Hall 上午先到一步 网页端打的 ｜ 00:17 Old Town Gate 没写备注 网页端打的 ｜ 00:17 Riverside Museum 没写备注 网页端打的；末句 `这次行程共有 3 枚足迹。 分成 2 天。`；顶上多出一句归属：`日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。`。锚 `2011dfee8c3e5c8208cbfed4339221c47328c438`。
+- 1280x900：日行 9月29日周二 ｜ 10月1日周四，印行 3 枚 —— 两形同一份分组，不是窄屏折叠出来的。锚 `f0924825918ce91a438d4469830f15e135f87a8a`。
+- 每行四格都在：时刻 / 地点名或活动名 / 备注（没写的那两枚写「没写备注」）/ 来源（`FOREGROUND_WEB` 上屏是「网页端打的」，未知值说「来源这一格服务器没给名字」，绝不印原词）。锚 `947f79783a891f26a4e2d36f3d3e8411914b96cb`。
+- 权威模式（fresh 库、干净库排不出行程 ⇒ 屏自己走 `使用封存的演示行程` + 两枚 `打卡`）：`6 passed (27.0s)`；两形日行分别是 10月1日周四 与 10月1日周四。同一批印按行程时区（`Asia/Shanghai`）落是 10月1日周四，按这台设备的钟（`America/Los_Angeles`）落会是 9月30日周三 —— 两形屏上都取的是前者。锚 `82e44ac9052ba31f810bb695d8e81f002f103d2f`。
+- 三形各一句，逐字：空 `还没有足迹。打开行程，在一站上按「打卡」。`（行数 0、日行 0）；服务器不收 `服务器答了，但这次没有把足迹交出来。`；没问到 `这一屏没问到服务器，所以这里既没说有事，也没说没事。`。锚 `1dc4a0081d6421187f9acf5624ca2ed6ee8df3b7`。
+- 拒绝那一形不是伪造的：我把演示行程走产品自己的 `DELETE /api/v1/journeys/{id}`（`http_status=204`）丢进回收站，读门就答 `http_status=409`、`reason_code=CHECKIN_JOURNEY_IN_RECYCLE_BIN`；那个码留在屏下当值用，屏上 SCREAMING_SNAKE 计数 0、裸 uuid 计数 0。锚 `af3d593d3d18303bda80528e797751f97104f5e6`。
+- 仪表自报身份那行：`[citynexus e2e] provenance ok: run=r0530e frontend=:60818 -> backend=:60819 ai=disabled db=_e2e_r0530e.db`。锚 `d1938a1bf7adc24069047271b2834418106b144a`。
+
+**三、反例（三枚，逐枚真跑；跑在拷贝库分母上，行程有两天可分）**
+- A `base_generation`：把本单碰过的三枚产品文件退回现尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`、新模块删掉，spec 留着 —— `4 failed / 2 passed (1.2m)`，红的是 grouped_by_the_trips_own_day、refused_and_unreachable、retry_after_the_door_stops（两形分组臂 + 重试臂 + 拒绝臂），第一句报错 `Error: one visible line per day the trip was on`。空读那一臂在基座代仍绿，因为那句「还没有足迹」本来就在屏上 —— 我不把它算成本单的证据。锚 `142d2c1d84ccd852238a0344d753e7c257def6f4`。
+- B `stale_on_failed_read`（你要的假绿防线）：让读失败时保留旧状态（门不答就不改屏）。`2 failed / 4 passed (1.2m)`，红的是 refused_and_unreachable、retry_after_the_door_stops，第一句 `TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.` ⇒ 「服务端不给足迹时屏上不会凭空长出印」是被断言钉住的：屏先在真读里拿到 2 枚，遮掉门再按「重读一次」之后行数 0、日行 0、末句变成 `这次行程共有 0 枚足迹。`。锚 `7b120d07942dd77119b9216dbfa835c25682f308`。
+- C `grouping_merged`：把日期的比较去掉，让所有印都落进第一组。`2 failed / 4 passed (16.1s)`，红的是 grouped_by_the_trips_own_day（390x844 与 1280x900 两形都红），第一句 `Error: one visible line per day the trip was on`。锚 `82e44ac9052ba31f810bb695d8e81f002f103d2f`。
+- 我自己先跑空的一枚，留在账上：r1 的 `invented_day`（让 `days` 在没读到时也交出一组）跑完是 `5 passed (13.0s)`、退出码 0 —— 什么都没红。原因是那三形失败/空态分支根本不走日列表渲染，一枚上不了屏的变异证明不了任何事。所以 B 换形重跑（同一枚仪表，报告分开存）。锚 `8171759cd3e98bc60e0486f68f714d8dbc3eda57`。
+- 两趟仪表跑完 `git status --porcelain -- src` 脏行数 r1 0 枚、r2 0 枚；变异都打在 `mut` 前缀的唯一 run id 上、日志名带 run id、无 playwright 汇总的趟一律判 `infra_failure` 不计反例；被量那一代 = `a3d2f00105fe270644591ed59c2b4f863f159307`。锚 `c17f66773cd6f37b12306f70579f6e3d20f69d6c`。
+
+**四、附：ORD-0497 那格指针归属（你 23:53 的读数，按你的形制量了两形）**
+- 针（`.v9-map-marker`）：盒 147 405 34x34，`pointer-events: auto`，中心 `elementFromPoint` 回到针自己（light 实测 `div.v9-map-marker maplibregl-marke`；dark 同样 `hit_is_self=True`）。锚 `fa5bc104b93f7939b57fe3558ae93387130682c4`。
+- 日期徽章（`.v8-map-stamp-date`）：盒 134 410 60x24，`pointer-events: none`，中心命中的是 `canvas.maplibregl-canvas`（dark 同一枚答案 `canvas.maplibregl-canvas`）⇒ 你看到的不是坏，是设计：徽章是画，不是靶。锚 `fa5bc104b93f7939b57fe3558ae93387130682c4`。
+- 但有一格是真的：徽章盒与针盒重叠 816 px²（dark 816 px²），也就是「看得见的那行日期」正压在针的命中盒上，点它会落到地图上而不是那一站。我的判断：DOM 针接管指针、徽章永不接管（改成可点会把 ORD-0134 那层覆盖玻璃的老路走回来）；该修的是让开命中盒（偏移从 15 px 抬到针外沿，量级 22 px），那是 ORD-0497 域内的一行，我不在本单里顺手改，等你裁。锚 `fa5bc104b93f7939b57fe3558ae93387130682c4`。
+- 那一屏当时的针数 6 枚、实心 3 枚、徽章 3 枚（我拷贝库里三枚印都在计划里）。锚 `fa5bc104b93f7939b57fe3558ae93387130682c4`。
+
+**五、没做的（具名残差，别按合格计）**
+- 整套前端门我没跑；只跑本单 spec（权威一趟 `6 passed (27.0s)`、私有栈一趟 `6 passed (15.0s)`）。整套执行数归你的落地门。锚 `d1938a1bf7adc24069047271b2834418106b144a`。
+- 分母是拷贝库 + 一枚我 insert 的印：干净库仍排不出行程（ORD-0526/ORD-0521 在解），本单没碰那条根因。锚 `ba4c6bd30ab1645cc6dfb418827162ee9d807ce8`。
+- 英文臂没写屏读：三句新句子在 `footprintCopy.ts` 里 zh/en 成对存在（同表 parity 由枚数对得上，不靠两处手工同步），但我只在中文屏上逐字验过。锚 `f35dae86625d3fb699831825aa97e30395f0d99b`。
+- 足迹屏本身的暗色屏读没取（本屏全用既有 `--cn-*` token，没新增颜色）；暗色只在第四节那格指针归属里量了。锚 `fdbaecf3c1073d2b61c22b3c80113fc05fc74815`。
+- `/v8/footprints` 仍不在 `mobileRoutes`（ORD-0476 的裁法），手机我是按 URL 进的；把入口搬到手机底栏不是本单该长的东西。锚 `5ae158c8cb9cc6b6f8dc3d0f30ed6adec1fc2026`。
+
+**六、现在与下一步（不用回）**：枝在 `review/bac10f40-ord0530-footprints-by-day-r1` = `550d67f40adc4b0160a0a83b6cceadd8339378d4`，你走门。仪表与屏读脚本都在证据目录里（驱动 `ord0530_screen_read_r1.mjs`、指针探针 `ord0497_pointer_probe_r1.mjs`），重跑要先把我那对私有口（前端 :4795、后端 :4791）起回来，屏读驱动是 `ord0530_screen_read_r1.mjs`。锚 `da863d4f9e7f83ba0ff2eb372e82331043889b6f`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 1ba48dbf 00:56 · ORD-0527 交件：成员屏的「我的档位」有了来源；同一库同一代产物我把加成员前后两趟都跑了（基座代两趟都空，候选代加完长出 1 行与「我自己退出」）；反件两枚真跑，遮掉身份读取那一枚 9 条失败
+
+## 1. 坐标
+
+- 产品 refs/heads/review/1ba48dbf-ord0527-access-identity-r1 头 `87f7a2b86536b99a6043c79e2532e0f1ebd39695`，证据 refs/heads/review/1ba48dbf-ord0527-evidence-r1 头 `e801e310268bc4489d964ed7c2da7ec5f463b3bc`；推送那一刻 `git ls-remote` 现读尖 `1e95d106f81b29048ba17695fd0e49172516b9b1` 是产品头的祖先，`git merge-base --is-ancestor` 退 0 ⇒ 快进候选。两枚头名都在本块写出前用同一枚命令读回过。
+- 我这单动的只有 4 枚文件（blob 逐枚可 cat-file）：`frontend/src/app/v8PanelRegistry.tsx` `d25cd66f01e232eac5f45b6ab46c7273380e8f86`、`frontend/src/features/access/AccessPanel.tsx` `24f3b86f54cc2a1f960289b4ef7fd06f2341b680`、`frontend/src/features/access/accessDoors.ts` `8ff86aca13536d8bf087abb6249bd113be5bb375`、`frontend/src/features/access/accessCopy.ts` `45d395bdb19d83ffbf25537740ace4e17d005a88`。没有新增后端字节，所以 `a03a4cceb36f52f76a6734d8dd59fd5f7097c117` 里没有契约形状变化。
+
+## 2. 空转的成因，逐枚开过再写
+
+- 壳早就知道是哪条行程：写它的是 `frontend/src/app/V8Experience.tsx:1184`，读它的是 `frontend/src/app/V8Experience.tsx:824`，键族名单在 `frontend/src/lib/failureAttribution.ts:5`；别的面板已经有先例自己接住它——`frontend/src/features/planning/PlanRankingPanel.tsx:39`。
+- 唯独这一屏没接：注册表把面板挂成不带任何行程（我改后的那一行现在在 `frontend/src/app/v8PanelRegistry.tsx:369`，改前是 `render: () => <AccessPanel />`），面板内 `frontend/src/features/access/AccessPanel.tsx:136` 的 `chosen` 起于 null，于是名单、能力梯、两枚控件全等用户再手动选一次同一条行程。
+- 我这轮加的接线：引用先问壳给的行程号、再问设备存的键（`frontend/src/features/access/AccessPanel.tsx:303`，键名落在 `frontend/src/features/access/accessDoors.ts:181`），并且**只有列表门答得出这一行才生效**——存到过期号时 `frontend/src/features/access/AccessPanel.tsx:684` 那条句子明说而不是空着。
+- 「我」的四个来源都是门，不是这一屏编的：行程自己的 `traveler_id`（`GET /api/v1/journeys`）、名字（`GET /api/v1/travelers/{id}` 的 `display_name`，屏上不印 uuid）、席位（`GET /api/v1/journeys/{id}/members` 里那一行）、有没有搬别人席位的权（`GET /api/v1/journeys/{id}/acl/roles` 那张表里 `MEMBER_MANAGE` 在不在；控件的门在 `frontend/src/features/access/AccessPanel.tsx:752`）。
+
+## 3. 门的现读（我自己的库拷贝与端口；`:4781/:4783/:4785/:4787` 没碰，`_preview.db` 只复制过没写过）
+
+- `acl_roles` 回 http_status=200（list of 3）、`members` 回 http_status=200（list of 2）、`role_limits` 回 http_status=200（['max_administrators', 'admin_count_in_force', 'roles']）、`traveller_registry` 回 http_status=200（['display_name', 'email', 'locale', 'timezone', 'id', 'created_at']）、`experience` 回 http_status=200（['journey', 'trip', 'offers', 'options', 'selected_option_id', 'mobility_facts']）
+- 一条会绊仪器的事实：`/health` 在这个尖上回 http_status=404，健康门已是 `GET /api/v1/health`（`backend/app/main.py:861` 回 http_status=200）。我的就绪探针原先等的是旧路径，第一次跑就误报「我自己起的服务器没起来」；两侧状态都记在 `e5b138d1e2801180ab773f5fa94d6fecaa52fe4d` 的 `readiness_probe` 一格。
+
+## 4. 你要的那对读数：同一个库、同一代产物，加成员前后各一趟
+
+- 加成员走的门与字段：`POST /api/v1/journeys/{行程号}/members`，正文 ``traveler_id`、`role`、`invited_by``，服务器回 http_status=201、`member_state=MEMBER_IN_FORCE`、`role=OWNER`；紧接着 `GET` 同一路径读回行数 1 枚。
+- 基座代（产物 `index-BGM3L0lx.js`）：加之前成员行 0 枚、控件 0/0 枚、空梯格 1 枚；加之后成员行 0 枚、控件 0/0 枚、空梯格 1 枚——**数据在，屏不动**，和你 23:49 那两趟一致。
+- 候选代（产物 `index-CADy2gy3.js`，只有我这 4 枚文件不同）：加之前成员行 0 枚且那句是「服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。」；加之后成员行 1 枚、屏上这一行是「所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能」、我自己退出控件 1 枚、空梯格 0 枚。改角色控件此时是 0 枚，这是对的：这条行程唯一的成员就是你自己，而那扇门不许自己挪自己的席位（`MEMBER_ROLE_SELF_CHANGE_REFUSED`）。
+- 两趟都是新建的行程号，跑在同一台服务器与同一个库文件上（库名 `ord0527ab_9b1b1b1a.db`）；读数全部取 `innerText`，本块没有任何一条结论来自 `data-*`。原文在 `review/ord0527/ab_r4.json` blob `7185bda5db7f6cd8f9e4212c9daabd7b10375cb2`。
+
+## 5. 反件两枚，真跑，两侧数都贴
+
+- 第一枚「身份未知时长不出假控件」：候选代在一条没有你的成员行的行程上跑 `arm_absent`，失败清单为空；同一枚臂在基座代退 1，失败点名的就是那句「没有成员行」的话，因为基座代根本没有这句话——两代的逐条读数在 `review/ord0527/arms_r1.json` blob `e5b138d1e2801180ab773f5fa94d6fecaa52fe4d`。
+- 第二枚「遮掉身份读取必红」：在候选代产物上把设备那枚键的读取遮掉（`window.localStorage.getItem` 对 `*journey_id` 一律回 null），同一枚臂退 1，失败清单如下（全文在 `review/ord0527/arms_r1.json` blob `e5b138d1e2801180ab773f5fa94d6fecaa52fe4d`）。这一枚证明臂不是永真。
+- 基座代在「有席位」的库上跑同一枚臂也退 1，失败清单 9 条见 blob `e5b138d1e2801180ab773f5fa94d6fecaa52fe4d` 的 `base` 一格——也就是说我改之前那两枚控件从来没上过屏，你亲测的「屏上还是死的」和我这枚臂说的是同一件事。
+- 候选代四趟（两臂 × 两档），逐档一条：
+  - A(arm_present) @390x844 px 一档：成员行 2 枚、改角色 1 枚、我自己退出 1 枚、空梯格 0 枚、裸 uuid 0 枚，失败清单 空 —— 这一格的两枚控件渲染在 frontend/src/features/access/AccessPanel.tsx:752 与 :684，读数原文在 review/ord0527/shapes_r2.json（blob 6c1d56285c3141220cbd6f64f7f3a817e6dff389）
+  - A(arm_present) @1280x900 px 一档：成员行 2 枚、改角色 1 枚、我自己退出 1 枚、空梯格 0 枚、裸 uuid 0 枚，失败清单 空 —— 这一格的两枚控件渲染在 frontend/src/features/access/AccessPanel.tsx:752 与 :684，读数原文在 review/ord0527/shapes_r2.json（blob 6c1d56285c3141220cbd6f64f7f3a817e6dff389）
+  - A(arm_absent) @390x844 px 一档：成员行 0 枚、改角色 0 枚、我自己退出 0 枚、空梯格 0 枚、裸 uuid 0 枚，失败清单 空 —— 这一格的两枚控件渲染在 frontend/src/features/access/AccessPanel.tsx:752 与 :684，读数原文在 review/ord0527/shapes_r2.json（blob 6c1d56285c3141220cbd6f64f7f3a817e6dff389）
+  - A(arm_absent) @1280x900 px 一档：成员行 0 枚、改角色 0 枚、我自己退出 0 枚、空梯格 0 枚、裸 uuid 0 枚，失败清单 空 —— 这一格的两枚控件渲染在 frontend/src/features/access/AccessPanel.tsx:752 与 :684，读数原文在 review/ord0527/shapes_r2.json（blob 6c1d56285c3141220cbd6f64f7f3a817e6dff389）
+- 臂本体在 `review/ord0527/arm_r1.cjs` blob `e17af8ed1138d259aa406242961a14679f45d7a4`；两代完整失败清单在 blob `6c1d56285c3141220cbd6f64f7f3a817e6dff389`（本单）与 blob `e5b138d1e2801180ab773f5fa94d6fecaa52fe4d`（上一单的成员门）。
+- 两档的控件高度都量了：触屏那一档两枚控件各 44 px，桌面那一档各 33 px。44 px 那条触达门槛按本树常设判据只管触屏，桌面走 30 px 档，所以臂里的阈值跟着视口走（检查名自己带着当次那道门槛，见 `review/ord0527/shapes_r2.json` 的 `checks` 一格，blob `6c1d56285c3141220cbd6f64f7f3a817e6dff389`，判据那一行在 frontend/src/features/access/AccessPanel.tsx:752）。
+
+## 6. 其余门
+
+- tsc 退 0、build 退 0，候选代入口 `index-CADy2gy3.js`；静态口两证齐（监听 pid 就是我起的 node 进程、服务回来的入口字节与磁盘同 sha1），`pid_matches_child` True / `served_bytes_equal_disk` True，记录在 blob `6c1d56285c3141220cbd6f64f7f3a817e6dff389`。
+- 对表两行逐字：`OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0` / `schemas formal 85; generated 85; missing 0; extra 0`。后端臂 50 passed, 2 warnings in 6.19s（collect-only 与跑同一份 3 枚文件名单，避免分母不一致）。
+- Q64 曝光按门同口径（两侧各一枚 `git archive` 快照）：尖 6 格 / 134 模块，我这头 6 格 / 134 模块，新增 NONE、消失 0 枚，`/access/` 名下 0 枚；尺是 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r7b.cjs` 这枚文件——它不在任何对象库里，所以我按路径点它，不贴它的本机字节摘要。
+- 文案两臂同键 127 枚、单向缺键 0 枚、屏上问了却没文案背着的键 0 枚；这一轮新增的身份那几句是 `access.identityLine`、`access.identityNoSeat`、`access.identityStale`、`access.identityUnknown`、`access.identityUnknownWay`、`access.identityUnnamed`（blob `45d395bdb19d83ffbf25537740ace4e17d005a88`）。
+
+## 7. 没做的，说清楚
+
+- ORD-0513 我只有量、没有交字节：uuid 那句的出处在 `backend/app/main.py:3461`（`f"Place ..." is already in collection folder {folder_id}"`），改成人话不用动错误码与 `details` 形状，这条我下一轮交；但「zh/en/de 三档」这一件我量到的是 `TripLocale` 只有两档（`frontend/src/i18n/LocaleContext.tsx:4`，`dictionaries` 在 `:2133`），而 `LocaleContext.tsx` 在给我的不动名单里——第三档要能在屏上被读到，得先给那两行加一档。要哪种请点单。
+- 整套后端未跑（NOT_EXECUTED_BY_LANE，我只跑了第 6 节那 3 枚文件的名单）；英文臂的渲染只在候选代那一趟里顺带可见，没单独走查；手机侧真机未部署观测；本单的臂不落 PNG。
+- 我这轮没动 ORD-0503 的两扇门与错误码，也没动契约；`access` 之外的面板一概没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0495 r3 · 读上一代源码的臂，在「导出套在别人仓里」那一代也站得住（两代读数都贴）
 
 **坐标（现读，一趟取完）**
