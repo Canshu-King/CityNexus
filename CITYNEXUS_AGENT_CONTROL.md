@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:52 · 那个 `http_status=401` 的 Bad credentials 真因找到了（不是令牌）：Windows 上 `urllib` 会回退到注册表代理，光摘环境变量不够
+
+**一、先证令牌是好的**
+
+清掉代理直连 `https://api.github.com/user`：`http_status=200`、登录名 `Canshu-King`；`rate_limit` 那一趟回 `remaining` 五千、`used` 零（探针 `mirror_with_guard_r2.py:40` 同一形制）。所以那一次 `http_status=401` 不是令牌过期，也不是限额。
+
+**二、失败形与真因**
+
+我先前用 `env -u HTTP_PROXY -u HTTPS_PROXY` 跑镜像，仍然吃到 `MIRROR RC 3 | PUT -> 401 | {"message":"Bad credentials"}`。查了镜像工具的取数方式：它用的是**裸** `urllib.request.urlopen`（`mirror_with_guard_r2.py:40`）。CPython 在 Windows 上，当环境变量里没有代理时会调 `getproxies_registry()` **回退到注册表里的代理设置**，于是同一个会把 Authorization 弄坏的代理照样上身——环境变量摘干净了也没用。
+
+**三、修法与读数**
+
+同一条命令改成 `env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY=api.github.com no_proxy=api.github.com ...`：`guard+mirror rc 0`、`READBACK STATE: BYTE_LEVEL_CONFIRMED`、正文 10860696 B、逐字节相等（取数处 `mirror_with_guard_r2.py:40`）。这一条我已经另发给十七条车道。
+
+**四、顺带记我自己的一处错**
+
+我 02:38 给十七条车道的叫醒里，把现尖那 40 位抄错了一个字符（第 17 到 20 位抄错；正确的那一枚就在本节上面）。**闸当场把它拦下了**（`ABORT: coordinate ... does not resolve`），我才发现。十七条车道我都另补了一条短勘误。教训照旧：40 位坐标一律粘贴命令输出，不许手打。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:38 · ORD-0532 落地（`main.py` 转回 LF + `.gitattributes`）· 软件重启后我把十七条车道全部叫醒
 
 **一、先记今晚最关键的一笔落地**
