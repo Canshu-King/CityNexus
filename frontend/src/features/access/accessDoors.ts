@@ -169,6 +169,27 @@ export function readMembers(journeyId: string): Promise<JourneyMemberRow[]> {
   return request<JourneyMemberRow[]>(`/journeys/${encodeURIComponent(journeyId)}/members`);
 }
 
+/** ORD-0527: the journey this device is already on, read the way the shell reads it.
+ *
+ *  `citynexus.v8.journey_id` is the shell's own reference (`app/V8Experience.tsx:824`, and the
+ *  `citynexus.v8.*` family named at `lib/failureAttribution.ts:391`); `features/planning/
+ *  PlanRankingPanel.tsx:39` is the shipped precedent of a panel reading it instead of waiting for a
+ *  manual pick.  This screen read nothing, which is why a roster with rows in the store still painted
+ *  the empty cell.  The value is only a *reference*: the caller must find it among the rows the list
+ *  door answered, because a stale id here is the exact hazard that file documents.
+ */
+export const JOURNEY_REFERENCE_KEY = "citynexus.v8.journey_id";
+
+export function readJourneyReference(): string | null {
+  try {
+    return window.localStorage.getItem(JOURNEY_REFERENCE_KEY);
+  } catch {
+    // A device that refuses storage is a real state, not a crash: the screen says it does not know
+    // which trip it is on, and the trip picker stays the way in.
+    return null;
+  }
+}
+
 /** `created_by` is what this device signs the grant with; the door does not authenticate it, so the
  *  screen only ever sends the trip's own `traveler_id` -- a value it read from the list door -- and
  *  says out loud that this is a self-reported signature, not a verified identity. */

@@ -59,6 +59,21 @@ export const accessCopy = {
       "All {cap} admin seats this server allows are taken, so one further promotion is refused.",
     "access.adminCapUnanswered":
       "The seat door did not answer, so this screen says nothing about how many admins this trip may hold.",
+    // ORD-0527: who this device is speaking for, said in the same breath as what it will not do.
+    "access.identityLine":
+      "This device is speaking for {name}, who is {role} on this trip.",
+    "access.identityUnnamed":
+      "The registry gave no name for the traveller this trip belongs to, so this line shows no id.",
+    "access.identityUnknown":
+      "This device does not know who you are: the trip this screen is on carries no traveller the server named.",
+    "access.identityUnknownWay":
+      "To go on, pick a trip above whose traveller this server did name -- this screen will not invent an identity to sign with.",
+    "access.identityStale":
+      "The trip reference this device stored matches nothing the list door answered, so nothing is loaded yet; pick a trip above.",
+    "access.identityNoSeat":
+      "This server has no membership row for you on this trip, so it lists no role-change or leaving control -- both doors would refuse.",
+    "access.noAuthorityLine":
+      "Your role does not hold member management on this server, so this screen lists no role-change control.",
     "access.memberScopeLine": "What this role can do: ",
     "access.roleDetailsBody":
       "A role is what this server lets that person do on this trip, not what a screen shows them. Removing the last owner is refused by the server rather than left for a traveller to discover.",
@@ -194,6 +209,14 @@ export const accessCopy = {
     "access.adminCapOpen": "这台服务器允许这条行程同时占 {cap} 枚管理员席位，现在占了 {used} 枚。",
     "access.adminCapFull": "这台服务器允许的 {cap} 枚管理员席位已经占满，再多给一枚会被拒。",
     "access.adminCapUnanswered": "席位那扇门没答，所以这一屏不说这条行程能放几枚管理员。",
+    // ORD-0527：这台设备替谁说话，以及它不替谁去做的事，同一句里说完。
+    "access.identityLine": "这台设备替「{name}」说话，他在这条行程上是{role}。",
+    "access.identityUnnamed": "服务器没给这条行程所属的旅行者登记名字，所以这句不写编号。",
+    "access.identityUnknown": "这台设备还不知道你是谁：这一屏所在的行程，服务器没有写出它属于哪位旅行者。",
+    "access.identityUnknownWay": "要往下走，先在上方挑一条服务器写了旅行者的行程——这一屏不会自己编一个身份来签名。",
+    "access.identityStale": "这台设备存的行程号在服务器的名单里没有对应，所以什么都没加载；请在上方重新挑一条行程。",
+    "access.identityNoSeat": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+    "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权，所以这里不列改角色的按钮。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
       "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除，这条由服务器拒绝，而不是让旅行者自己撞上才知道。",

@@ -363,7 +363,10 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     surface: "route",
     testId: "access-panel",
     when: (s) => s.route === "access",
-    render: () => <AccessPanel />,
+    /* ORD-0527: the shell already knows which trip is open, and a member screen that waits for a
+       second pick cannot show a roster that exists.  The reference is handed down; the panel still
+       only acts on it once the list door answers a row for it. */
+    render: (s) => <AccessPanel initialJourneyId={s.data.journey?.id ?? null} />,
   },
   {
     /* ORD-0476 slice 2: the footprint screen. The row's own 打卡 control lives on the itinerary
