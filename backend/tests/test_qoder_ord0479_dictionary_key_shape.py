@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import hashlib
 import re
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -25,10 +24,17 @@ import pytest
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from app.security import credential_literals as CL  # noqa: E402
+from qoder_git_source_r1 import (  # noqa: E402
+    find_repo_root, require_git_ancestor, require_git_source)
 
 REPO = CL.REPO
+#: ORD-0495: the repository this arm needs is found from THIS file upward, not from the product's own
+#: idea of the root. In a `git archive` export the layout is identical and the .git is simply absent,
+#: so the honest answer there is "the object store cannot be asked", not "the product is broken".
+GIT_ROOT = find_repo_root(Path(__file__))
 #: The generation the order was written against -- a fixed commit, not whichever tip this branch
 #: happens to sit on, because the tip moves while an order is in flight and a pin that chases it is
 #: a pin that gets re-edited instead of a fact that gets checked. H07 compares the two forbidden
@@ -38,16 +44,6 @@ ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
 VALUE = "shared.refusedTokenUnknown"
-
-
-def _git_show(rev: str, rel: str) -> str:
-    """The file as that generation holds it, or a red that names the real reason."""
-
-    r = subprocess.run(["git", "-C", str(REPO), "show", "%s:%s" % (rev, rel)],
-                       capture_output=True, text=True, encoding="utf-8", errors="replace")
-    assert r.returncode == 0, "cannot read %s:%s in this checkout -- this cell is NOT_MEASURED, not green" % (rev, rel)
-    assert r.stdout, "git show %s:%s produced no bytes" % (rev, rel)
-    return r.stdout
 
 
 def _write(root: Path, rel: str, text: str) -> str:
@@ -276,17 +272,19 @@ def test_H07_the_two_forbidden_shortcuts_were_not_taken() -> None:
 
     cur = (Path(REPO) / GATE_REL).read_text(encoding="utf-8", errors="replace")
     assert cur, "the working-tree gate file read back empty -- this cell would pass on nothing"
-    base = _git_show(ORDER_BASE, GATE_REL)
+    #: ORD-0495: a previous generation is read through the portable arm. Where no object store can
+    #: answer, this names NOT_MEASURED and the run skips; it never returns an empty text that would
+    #: satisfy the comparison below by being nothing.
+    base = require_git_source(ORDER_BASE, GATE_REL, GIT_ROOT)
     for name in ("PLACEHOLDER_MARKERS", "DECLARED_SAMPLES"):
         assert tuple_from(cur, name) == tuple_from(base, name), \
             ("%s moved against the order's base: neither the placeholder list nor the declaration "
              "channel may carry this order's exemption" % name)
     assert 'rp.startswith(PRODUCT_ROOTS)' in cur, "the product-path rule was rewritten"
     #: the pin has to sit behind this branch, or the comparison is with a generation this order never
-    #: stood on; read it from git, not from a comment
-    anc = subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", ORDER_BASE, "HEAD"],
-                         capture_output=True, text=True, encoding="utf-8", errors="replace")
-    assert anc.returncode == 0, "the order's base %s is not an ancestor of HEAD" % ORDER_BASE[:12]
+    #: stood on; read it from git where git can answer, and name the case where it cannot
+    assert require_git_ancestor(ORDER_BASE, "HEAD", GIT_ROOT), \
+        "the order's base %s is not an ancestor of HEAD" % ORDER_BASE[:12]
 
 
 # ---------------------------------------------------------------- H08 词典读不到时朝闭
