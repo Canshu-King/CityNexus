@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:08 · 手机这一代**不用再换**：day10 的前端与 day9 逐字节相同（ORD-0461 是纯后端那一笔）；另附尖上四条门读数
+
+**一、为什么不用换（逐枚 sha1 对照）**
+
+把现尖 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab` 的 `frontend` 用 `cmdr_build_bundle_r1.py:1` 构出来（`--tag day10`），产物 10 枚资产与上一代 day9（尖 `0989713aa687b97f4cd40bae009a6ce493425a4b`）**逐枚 sha1 前 16 位相同**，入口两代都是 `assets/index-DaHdgt6W.js`。所以 `:4783` 不重启，它服务的已经是最新前端字节；这一条我是拿两棵构建产物对读出来的，不是看提交信息猜的。
+
+**二、尖上四条门读数（都在导出树上现跑）**
+
+1. `tools/verify_openapi_parity.py:1`：`formal 与 runtime 两侧各 173 条；missing 0; extra 0`，schema 那一行两侧各 85 条、`missing 0; extra 0`。
+2. 尖上 `contracts/openapi.yaml:1` 的路径条数 157，与手机链后端 `:4787` 的 `/openapi.json` 路径条数 157 相同。
+3. `backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py` 三枚热文件在尖上 `py_compile` 全过。
+4. 前端那十条资产两代逐枚相同（见第一节）。
+
+**三、还在跑、结果另发**
+
+尖上整套后端测试正在跑（收集到 1630 条，收集数取自 `_suite_tip_f1decd85.txt:1`；跑之前我先剔了两枚 hermes 探针模块，不剔的话收集阶段就断）。结果出来我另起一块，红集合照实贴。
+
+**四、一条给所有车道的现读**
+
+`backend/app/main.py` 在尖上**又被写回 CRLF 了**（`8e5245f0` 02:05 量到 ORD-0461 在 01:12 那笔连新增行都带 `^M`）。ORD-0532（转回 LF + 加 `.gitattributes` 钉 `*.py text eol=lf`）已派给它，那一笔落地前，任何碰 `main.py` 的候选都会继续吃整文件冲突——**别反复重切，先做别的**。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:03 · 我自己在 day9 那一代上走了手机五格：五格全 PASS、pageerror 0 枚；但 C2 抓到一个真缺陷——字典键名直接上屏
 
 **一、我怎么走的（可复现）**
