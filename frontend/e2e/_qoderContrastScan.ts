@@ -14,7 +14,8 @@ import type { Page } from "@playwright/test";
  */
 
 export interface Violation {
-  kind: "text-contrast" | "light-surface" | "control-boundary" | "state-indicator";
+  kind: "text-contrast" | "light-surface" | "control-boundary" | "state-indicator"
+    | "unclassified-control";
   selector: string;
   testId: string | null;
   text: string;
@@ -167,6 +168,32 @@ export async function scanContrast(
       const isControl = role === "control" || el.classList.contains("v8-outline-button");
       const isState = role === "state";
       const parentBg = el.parentElement ? backgroundUnder(el.parentElement) : bg;
+
+      /* ORD-0509: intent must be declared, not guessed. A control a traveller can see and tap -- an
+       * interactive element carrying its own test identity -- with no data-contrast-role is a finding
+       * in itself: without the role this ruler silently stops measuring that element, so a screen can
+       * read as clean while not one of its buttons was ever judged. This arm is what makes hiding a
+       * role cost something. */
+      const looksControl = el.tagName === "BUTTON" || el.getAttribute("role") === "button";
+      if (looksControl && !role && el.getAttribute("data-testid")) {
+        const fill = parse(style.backgroundColor);
+        const fillC = fill[3] > 0.5 ? contrast(compositeOver(fill, parentBg), parentBg) : 0;
+        const bc = parse(style.borderTopColor);
+        const borderC = bw(style) >= 1 && bc[3] > 0.3 ? contrast(compositeOver(bc, parentBg), parentBg) : 0;
+        rows.push({
+          kind: "unclassified-control",
+          selector: describe(el),
+          testId: el.getAttribute("data-testid"),
+          text: (hasDirectText(el) || "").slice(0, 40),
+          color: style.borderTopColor,
+          background: style.backgroundColor,
+          fontSizePx: parseFloat(style.fontSize),
+          bold: false,
+          contrast: Math.round(Math.max(fillC, borderC) * 100) / 100,
+          required: 3,
+        });
+        continue;
+      }
 
       if (isControl) {
         const fill = parse(style.backgroundColor);

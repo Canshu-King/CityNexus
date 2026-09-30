@@ -13,6 +13,11 @@
   --cn-ink: #1d1d1f;
   --cn-ink-secondary: #6e6e73;
   --cn-ink-tertiary: #86868b;
+  /* Declared once, on :root, so the scheme block below can beat it. The shared
+     `:root, .v8-product-shell` block used to repeat the light value, and a custom property
+     inherits from the nearest ancestor that declares one -- so every drawer and bottom bar
+     inside the shell kept #ffffff under the dark theme (ORD-0509 measurement, run 0509run6). */
+  --cn-nav-bg: var(--cn-tint-white-95);
   --cn-accent: #0a66ff;
   /* Fill for controls that carry white text. Kept at the deeper blue even in
      dark so a button label clears AA (white on #0a66ff ≈ 4.8:1), unlike the
@@ -229,7 +234,8 @@
      happened to be"; the nav itself carried no safe-area at all.  48 + 8 + 7 = 63
      is the arithmetic the old literal stood for, now written out. */
   --cn-touch-min: 44px;
-  --cn-nav-bg: var(--cn-tint-white-95);
+  /* --cn-nav-bg moved up to the scheme blocks: redeclaring the light value here made the shell
+     the nearest ancestor inside itself, so the dark theme's nav surface never reached a drawer. */
   --cn-nav-item-h: max(48px, var(--cn-touch-min));
   /* One 档位 for the icon in a nav row, shared by the desktop sidebar (`.v8-nav button svg`) and the
      mobile drawer (`#v8-nav-drawer button svg`). 17px is the value the sidebar has always used; it is
