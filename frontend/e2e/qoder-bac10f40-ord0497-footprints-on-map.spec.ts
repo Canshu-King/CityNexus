@@ -255,6 +255,12 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
   await filter.scrollIntoViewIfNeeded();
   const hit = await readMap(page);
   expect(hit.filter_hit, "the switch takes its own tap").toContain("v8-map-footprint-filter");
+  /* A picture of the two things the numbers above claim: the sentence beside the map and the switch
+     under it. The map itself is screenshotted by the arm that stamps, so the two together show the
+     claim and its control on one screen. */
+  await page.screenshot({
+    path: evidencePath("ord0497", `facts_read_${process.env.CITYNEXUS_E2E_RUN_ID || "dev"}.png`),
+  });
 
   await filter.click();
   await page.waitForTimeout(700);
@@ -264,6 +270,9 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
   expect(on.hidden_count, "every unstamped pin is hidden").toBe(on.pin_claim - on.solid_count);
   expect(on.solid_count, "the stamped pin is never hidden by its own filter").toBe(1);
   expect(on.badge_count, "its date stays painted").toBe(1);
+  await page.screenshot({
+    path: evidencePath("ord0497", `facts_filtered_on_${process.env.CITYNEXUS_E2E_RUN_ID || "dev"}.png`),
+  });
 
   await filter.click();
   await page.waitForTimeout(700);
