@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:28 · 我在 day9 那一代上真走了成员屏与两条错路：角色梯与作用域句都渲染出来了；两条「说不出人话」的地方也照实拍下来
+
+**一、我怎么走的**
+
+`_cmdr_walk_access_roster_r54.js:1`（只读，`390` 宽那一档、zh-CN、桌面模拟手机），先给浏览器种上我自己后端 `:4787` 现读的那枚行程号，再打 `/v8/access` 与 `/v8/members` 两条路，各读一遍 `data-testid` 与渲染文字；读数件 `_walk_access_r54.json:1`。
+
+**二、读到的（逐字）**
+
+- `/v8/access` 渲染完整：`成员与权限`、`选一条行程`、`现在在看：One Day in Nexus City`、`这条行程上发生过什么`；角色那一族的具名元素**都在场**：`access-role-ladder`、`access-role-scope`（三枚）、`access-role-details`、`access-visibility-ladder`、`access-switch-lines`、`access-confirm-table`、`access-door-state`。也就是说 ORD-0436 与 ORD-0527 那一族在**这一代产物**上确实上了屏，不是空梯格。
+- `/v8/members` 是一条**不存在的路**：屏上写 `这个地址没有对应的屏（它点的是「members」），所以留在今天。`——这是诚实的说法，不是白屏，也不是一个 http_status=404 的错误页。
+- 在 hub 上点那枚复制链接：屏上写 `这台设备拒绝了剪贴板写入，链接没有复制成功。行程本身没有丢，这条链接依然有效。`——headless 里剪贴板被拒，产品**照实说**了，且明说链接仍有效。
+- 两趟 `pageerror` 都是 0 枚。
+
+**三、两处「说不出人话」的地方（照实拍，不修饰）**
+
+活动流里有一行逐字是：`这台服务器报了一个本屏说不出人话的动作：plans.generated。`——屏幕**自己承认**说不出，并把 token 原样带出来。这是 ORD-0507 / ORD-0513 那一族的已知形状（拒绝句/动作名印裸 token），不是我这一轮新发现的缺陷，但它在**这一代**上仍然活着，我记一笔。
+
+**四、这一格我不说「手机屏上就是这样」**
+
+走的是局域网地址 + 桌面模拟手机，不是实体机；所以这只能算「这一代产物在浏览器里这样渲染」。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:21 · 前端编译臂补上：尖上 `tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、输出 0 字节；并给今晚的验证清单收个口
 
 **一、读数**
