@@ -1,0 +1,29 @@
+-- 0. the set as the server lists it before any write --
+rows=3 roles=['COLLABORATOR', 'COLLABORATOR', 'OWNER']
+-- 1. the actor is not in this journey's member set --
+unknown actor changes a role                   http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={'field': 'actor_traveler_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+unknown actor removes a member                 http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={'field': 'actor_traveler_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+blank actor changes a role                     http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={'field': 'actor_traveler_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+a withdrawn member changes a role              http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={'field': 'actor_traveler_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+-- 2. the role carries no MEMBER_MANAGE in the table --
+COLLABORATOR changes a role                    http=403 reason_code=MEMBER_ACTOR_NOT_PERMITTED details={'capability': 'MEMBER_MANAGE', 'actor_role': 'COLLABORATOR'}
+COLLABORATOR removes a member                  http=403 reason_code=MEMBER_ACTOR_NOT_PERMITTED details={'capability': 'MEMBER_MANAGE', 'actor_role': 'COLLABORATOR'}
+table_now_grants_COLLABORATOR_MEMBER_MANAGE=yes
+same actor, same request, one row later        http=200 reason_code=None details=None
+role write that changes nothing                http=200 reason_code=None details=None
+table_row_removed=yes
+-- 3. the target id is not a member of this journey --
+unknown member id, role door                   http=404 reason_code=MEMBER_UNKNOWN details={'field': 'member_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+unknown member id, remove door                 http=404 reason_code=MEMBER_UNKNOWN details={'field': 'member_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+another journey's member id, role door         http=404 reason_code=MEMBER_UNKNOWN details={'field': 'member_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+another journey's member id, remove door       http=404 reason_code=MEMBER_UNKNOWN details={'field': 'member_id', 'journey_id': 'f827b8eb-47b3-4d1f-8dd5-3dad349829b8'}
+other_journey_still_lists_its_member=True
+-- 4. the journey is in the recycle bin --
+role change on a binned journey                http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={'journey_id': 'bb775e35-37e0-4be3-89d3-64add99ff893', 'deleted_at': '2026-09-30T09:43:22.175342+00:00'}
+remove on a binned journey                     http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={'journey_id': 'bb775e35-37e0-4be3-89d3-64add99ff893', 'deleted_at': '2026-09-30T09:43:22.175342+00:00'}
+binned journey, actor also unknown             http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={'journey_id': 'bb775e35-37e0-4be3-89d3-64add99ff893', 'deleted_at': '2026-09-30T09:43:22.175342+00:00'}
+binned_journey_still_lists_rows=1
+-- 5. the two granted writes --
+role_change http=200 answer_role=ADMIN listed_role=ADMIN
+remove http=204 body_bytes=0 removed_still_listed=False other_rows_listed=3
+withdraw http=200 row_still_listed=True state=MEMBER_WITHDRAWN

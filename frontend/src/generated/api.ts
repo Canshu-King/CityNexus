@@ -574,6 +574,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/members/{member_id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0461 r2: give a member of this journey a different role.  Whether the actor may do it is answered by the `journey_role_capabilities` table (capability `MEMBER_MANAGE`), never by a role list kept here or in the door, so granting the power to a role stays one table row.  The order the four refusals are checked in is part of the answer: the bin first, because a trip the owner threw away is not writable whoever the actor is; then the actor, then the target.  Writing the role the row already holds answers 200 with the unchanged row and stamps no moment. */
+        post: operations["changeJourneyMemberRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/{member_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description ORD-0461 r2: take the traveller out of this journey's member set for good, answering 204 with no body.  This is a different fact from `.../withdraw`, which records the departure and keeps the row listed as `MEMBER_WITHDRAWN`; a screen that needs the history reads the withdraw door, a screen that needs the set reads this one.  Same actor rule as the role door: the capability table decides, and an actor that is not in force in this journey has no voice whatever its name. */
+        delete: operations["removeJourneyMember"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/acl/roles": {
         parameters: {
             query?: never;
@@ -3037,6 +3077,10 @@ export interface components {
             /** Format: date-time */
             expires_at?: string | null;
         };
+        JourneyMemberRoleChange: {
+            role: components["schemas"]["MemberRole"];
+            actor_traveler_id: string;
+        };
         JourneyCheckinCreate: {
             activity_id?: string;
             place_id?: string;
@@ -4985,6 +5029,111 @@ export interface operations {
                 };
             };
             /** @description error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    changeJourneyMemberRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMemberRoleChange"];
+            };
+        };
+        responses: {
+            /** @description The membership row as the set now holds it */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMember"];
+                };
+            };
+            /** @description error.code = REQUEST_ERROR with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED (the actor's role carries no MEMBER_MANAGE in the capability table) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN (no member of this journey carries that id, including another journey's member id) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_JOURNEY_RECYCLED / MEMBER_ACTOR_NOT_A_MEMBER / MEMBER_ALREADY_WITHDRAWN */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    removeJourneyMember: {
+        parameters: {
+            query?: {
+                /** @description The traveller asked to make this change.  Declared not-required because an omitted or blank name is a fact the door puts a name to (`MEMBER_ACTOR_NOT_A_MEMBER`, 409) rather than a schema rejection the screen can only echo -- the same reason `JourneyMemberRoleChange` carries no minLength. */
+                actor_traveler_id?: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The row is no longer part of this journey's member set */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description error.code = REQUEST_ERROR with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED (the actor's role carries no MEMBER_MANAGE in the capability table) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN (no member of this journey carries that id, including another journey's member id) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = MEMBER_JOURNEY_RECYCLED / MEMBER_ACTOR_NOT_A_MEMBER */
             409: {
                 headers: {
                     [name: string]: unknown;

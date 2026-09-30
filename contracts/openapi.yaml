@@ -850,6 +850,88 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
 
+  /journeys/{journey_id}/members/{member_id}/role:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: member_id, in: path, required: true, schema: {type: string}}
+    post:
+      operationId: changeJourneyMemberRole
+      description: >-
+        ORD-0461 r2: give a member of this journey a different role.  Whether the actor may do it is
+        answered by the `journey_role_capabilities` table (capability `MEMBER_MANAGE`), never by a role
+        list kept here or in the door, so granting the power to a role stays one table row.  The order
+        the four refusals are checked in is part of the answer: the bin first, because a trip the owner
+        threw away is not writable whoever the actor is; then the actor, then the target.  Writing the
+        role the row already holds answers 200 with the unchanged row and stamps no moment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyMemberRoleChange'}
+      responses:
+        '200':
+          description: The membership row as the set now holds it
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyMember'}
+        '403':
+          description: "error.code = REQUEST_ERROR with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED (the actor's role carries no MEMBER_MANAGE in the capability table)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN (no member of this journey carries that id, including another journey's member id)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_JOURNEY_RECYCLED / MEMBER_ACTOR_NOT_A_MEMBER / MEMBER_ALREADY_WITHDRAWN"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
+  /journeys/{journey_id}/members/{member_id}:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: member_id, in: path, required: true, schema: {type: string}}
+    delete:
+      operationId: removeJourneyMember
+      description: >-
+        ORD-0461 r2: take the traveller out of this journey's member set for good, answering 204 with
+        no body.  This is a different fact from `.../withdraw`, which records the departure and keeps
+        the row listed as `MEMBER_WITHDRAWN`; a screen that needs the history reads the withdraw door,
+        a screen that needs the set reads this one.  Same actor rule as the role door: the capability
+        table decides, and an actor that is not in force in this journey has no voice whatever its
+        name.
+      parameters:
+        - name: actor_traveler_id
+          in: query
+          required: false
+          description: >-
+            The traveller asked to make this change.  Declared not-required because an omitted or blank
+            name is a fact the door puts a name to (`MEMBER_ACTOR_NOT_A_MEMBER`, 409) rather than a
+            schema rejection the screen can only echo -- the same reason `JourneyMemberRoleChange`
+            carries no minLength.
+          schema: {type: string, maxLength: 120}
+      responses:
+        '204':
+          description: The row is no longer part of this journey's member set
+        '403':
+          description: "error.code = REQUEST_ERROR with error.reason_code = MEMBER_ACTOR_NOT_PERMITTED (the actor's role carries no MEMBER_MANAGE in the capability table)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN (no member of this journey carries that id, including another journey's member id)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_JOURNEY_RECYCLED / MEMBER_ACTOR_NOT_A_MEMBER"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
   /journeys/{journey_id}/acl/roles:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2849,6 +2931,16 @@ components:
         role: {$ref: '#/components/schemas/MemberRole'}
         invited_by: {type: string, minLength: 1, maxLength: 120}
         expires_at: {type: [string, 'null'], format: date-time}
+    JourneyMemberRoleChange:
+      # ORD-0461 r2: the role the set should answer with, and who asked.  `actor_traveler_id` carries no
+      # `minLength` on purpose: a blank name is a fact the door puts a name to
+      # (`MEMBER_ACTOR_NOT_A_MEMBER`), not a schema rejection a screen can only echo.
+      type: object
+      additionalProperties: false
+      required: [role, actor_traveler_id]
+      properties:
+        role: {$ref: '#/components/schemas/MemberRole'}
+        actor_traveler_id: {type: string, maxLength: 120}
     JourneyCheckinCreate:
       # ORD-0476: what stamping a footprint asks for.  Exactly one of the two ids must be present, and
       # the door refuses both readings of that with a name -- the contract says it here because the

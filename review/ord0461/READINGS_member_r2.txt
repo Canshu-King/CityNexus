@@ -1,0 +1,127 @@
+== ORD-0461 r2 (04:15 re-cut) readings, every line parsed out of a command result ==
+branch_head=f703c87e506df7ceeca4302272a01fd4c7153757
+readings_measured_while_the_runs_were_taken_at=93dec3015ae0f6ed16e95da4afdffa4956103b81
+product_bytes_identical_between_that_head_and_this_one=True (the only commits in between add review/ evidence files)
+rebased_onto=f707e1b3908c9ff4371e4a013242880b7e36045d
+ancestry_holds=True
+commits_on_branch=3
+diff_against_tip=24 files changed, 1660 insertions(+), 1 deletion(-)
+product_files=5 product_add=753 product_del=1
+product_file_list=backend/app/main.py,backend/app/schemas.py,backend/tests/test_qoder_ord0461_member_write_doors_r2.py,contracts/openapi.yaml,frontend/src/generated/api.ts
+numstat:
+  117	0	backend/app/main.py
+  11	0	backend/app/schemas.py
+  378	0	backend/tests/test_qoder_ord0461_member_write_doors_r2.py
+  92	0	contracts/openapi.yaml
+  155	1	frontend/src/generated/api.ts
+  98	0	review/ord0461/READINGS_member_r2.txt
+  32	0	review/ord0461/fe_gates_member_r2.py
+  177	0	review/ord0461/make_readings_member_r2.py
+  1	0	review/ord0461/member_r2_base_collect_r1.txt
+  1	0	review/ord0461/member_r2_collect_r1.txt
+  12	0	review/ord0461/member_r2_doors_r1.txt
+  12	0	review/ord0461/member_r2_doors_wide_r1.txt
+  8	0	review/ord0461/member_r2_fe_gates_r1.txt
+  1	0	review/ord0461/member_r2_g3x_alone_base_r1.txt
+  1	0	review/ord0461/member_r2_g3x_alone_mine_r1.txt
+  40	0	review/ord0461/member_r2_mutation_r1.json
+  1	0	review/ord0461/member_r2_parity_r1.txt
+  61	0	review/ord0461/member_r2_suite_base_r1.txt
+  63	0	review/ord0461/member_r2_suite_base_r2.txt
+  59	0	review/ord0461/member_r2_suite_mine_r1.txt
+  59	0	review/ord0461/member_r2_suite_mine_r2.txt
+  157	0	review/ord0461/member_write_transcript_r2.py
+  29	0	review/ord0461/member_write_transcript_r2.txt
+  95	0	review/ord0461/mutation_member_r2.py
+
+== the two doors and their refusals, at this head ==
+doors_r2_selection=12 passed, 2 warnings in 2.43s
+doors_wide_selection=52 passed, 2 warnings in 7.49s
+collected_per_file=ord0461_member_write_doors_r2=12,ord0434_share_grants=17,ord0460_expiry_in_past=7,ord0272_continuation=8,contract=4,anywhere_contract_parity=4
+
+== registered routes (proof the doors are reachable, not only written) ==
+member_and_acl_routes=6
+the_two_cut_here=DELETE /api/v1/journeys/{journey_id}/members/{member_id} | POST /api/v1/journeys/{journey_id}/members/{member_id}/role
+  DELETE /api/v1/journeys/{journey_id}/members/{member_id}
+  GET /api/v1/journeys/{journey_id}/acl/roles
+  GET /api/v1/journeys/{journey_id}/members
+  POST /api/v1/journeys/{journey_id}/members
+  POST /api/v1/journeys/{journey_id}/members/{member_id}/role
+  POST /api/v1/journeys/{journey_id}/members/{member_id}/withdraw
+
+== collection (this tree vs the untouched tip it was cut from) ==
+mine=1565 tests collected in 3.01s
+base=1553 tests collected in 3.18s
+arm_delta=1565-1553=12
+
+== contract parity ==
+run=OpenAPI 3.1.0; formal 168; runtime 168; missing 0; extra 0
+formal_runtime_missing_extra_parsed=168,168,0,0
+generated_api_ts_blob_at_head=044d4503ae4a5d8dd604f42fc81a309f9f826e87
+api_ts_regeneration_check=generator_rc=0 bytes_regenerated=262763 bytes_equal_to_the_file_on_disk=True the_file_on_disk_is_what_is_committed=True
+
+== frontend gates (each exit code captured by the command that produced it) ==
+gates_run_at_head=93dec3015ae0f6ed16e95da4afdffa4956103b81
+tsc_check_rc=0
+tsc_check_output_bytes=0
+tsc_typecheck_rc=0
+tsc_typecheck_output_bytes=0
+vite_rc=0 built in 5.82s
+gate_cwd=D:/moodle/_qoder_rel_ord0461_wt/frontend: npx tsc -p tsconfig.check.json --noEmit, npx tsc -p tsconfig.typecheck.json --noEmit, npx vite build
+
+== whole backend suite: two runs on this tree, two on untouched full worktrees of the tip ==
+suite_runs_taken_at_head=93dec3015ae0f6ed16e95da4afdffa4956103b81
+member_r2_suite_mine_r1.txt summary=9 failed, 1540 passed, 15 skipped, 1 xfailed, 4 warnings in 222.84s (0:03:42) reds=9
+member_r2_suite_mine_r2.txt summary=9 failed, 1540 passed, 15 skipped, 1 xfailed, 4 warnings in 213.02s (0:03:33) reds=9
+member_r2_suite_base_r1.txt summary=10 failed, 1527 passed, 15 skipped, 1 xfailed, 4 warnings in 193.04s (0:03:13) reds=10
+member_r2_suite_base_r2.txt summary=11 failed, 1526 passed, 15 skipped, 1 xfailed, 4 warnings in 223.12s (0:03:43) reds=11
+mine_runs_agree_id_by_id=True
+base_runs_agree_id_by_id=False base_red_counts=[10, 11]
+base_flip_between_runs=tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage
+new_reds_on_my_tree_vs_base_union=NONE
+my_reds_all_inside_the_base_stable_core=True
+base_core_reds_absent_from_my_tree=tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation
+control_for_those: 1 passed, 2 warnings in 6.24s || 1 passed, 2 warnings in 5.51s
+the_two_control_arms_were_run_alone_on_both_trees_and_are_green_on_both, so the difference reads as a full-run state effect and is not claimed as a fix
+mine_red_list:
+  tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+  tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+  tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+  tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+  tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+  tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+  tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+  tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+base_union_red_list:
+  tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation
+  tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+  tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+  tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+  tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+  tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+  tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+  tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+  tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+  tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage
+
+== the mutation proof: one guard deadened at a time, the matching arm has to go red ==
+MEMBER_JOURNEY_RECYCLED -> 1 failed, 11 deselected, 2 warnings in 3.54s (exit=1, file_restored_byte_identical=True)
+MEMBER_ACTOR_NOT_A_MEMBER -> 2 failed, 10 deselected, 2 warnings in 2.51s (exit=1, file_restored_byte_identical=True)
+MEMBER_ACTOR_NOT_PERMITTED -> 2 failed, 10 deselected, 2 warnings in 2.22s (exit=1, file_restored_byte_identical=True)
+MEMBER_UNKNOWN -> 1 failed, 11 deselected, 2 warnings in 2.18s (exit=1, file_restored_byte_identical=True)
+every_mutant_made_its_arm_red=True file_restored_after_every_mutant=True
+main_py_blob_now=862b2634234f20caec6dd1e5d1eb193510151ed4
+
+== the four named refusals, read off the transcript's own body column ==
+MEMBER_ACTOR_NOT_A_MEMBER -> 4 row(s); first: unknown actor changes a role                   http=409 reason_code=MEMBER_ACTOR_NOT_A_MEMBER details={'field': 'actor_traveler_id',
+MEMBER_ACTOR_NOT_PERMITTED -> 2 row(s); first: COLLABORATOR changes a role                    http=403 reason_code=MEMBER_ACTOR_NOT_PERMITTED details={'capability': 'MEMBER_MANAGE
+MEMBER_UNKNOWN -> 4 row(s); first: unknown member id, role door                   http=404 reason_code=MEMBER_UNKNOWN details={'field': 'member_id', 'journey_id': '13d
+MEMBER_JOURNEY_RECYCLED -> 3 row(s); first: role change on a binned journey                http=409 reason_code=MEMBER_JOURNEY_RECYCLED details={'journey_id': 'f05a164e-3e35-48
+statuses_that_refused=403,404,409
+granted_rows_parsed:
+  same actor, same request, one row later        http=200 reason_code=None details=None
+  role_change http=200 answer_role=ADMIN listed_role=ADMIN
+  remove http=204 body_bytes=0 removed_still_listed=False other_rows_listed=3
+  withdraw http=200 row_still_listed=True state=MEMBER_WITHDRAWN

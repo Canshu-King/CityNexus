@@ -361,6 +361,7 @@ from app.schemas import (
     JourneyCheckinCreate,
     JourneyMember,
     JourneyMemberCreate,
+    JourneyMemberRoleChange,
     JourneyRoleRule,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
@@ -4343,6 +4344,122 @@ def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_ses
             by_role[row.role] = rule
         rule.capabilities.append(row.capability)
     return [by_role[role] for role in sorted(by_role)]
+
+
+# ORD-0461 r2: the two member write doors the set still lacked -- changing a member's role, and
+# removing a member outright.  Both ask the same questions in the same order, and neither holds a role
+# list of its own: whether a role may do this is read out of `journey_role_capabilities`
+# (backend/app/db/models.py:1283, seeded at backend/app/db/session.py:244), so granting a capability to
+# a role stays a table row rather than becoming a second answer written here.  Whether someone is still
+# a member is decided by the landed rule at backend/app/main.py:3498, which this block calls instead of
+# copying, because a membership the read door counts and the write door does not is one defect with two
+# names.
+def _member_write_journey(session: Session, journey_id: str) -> Journey:
+    """The trip has to exist, and a trip in the recycle bin takes no member writes."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.deleted_at is not None:
+        # 409 and not 404 for the same reason the footprint door records at
+        # backend/app/main.py:3232: the row is there, and 找回 puts it back.
+        raise _share_refusal(
+            409,
+            "This trip is in the recycle bin. 找回 it before changing its member set.",
+            "MEMBER_JOURNEY_RECYCLED",
+            {"journey_id": journey.id, "deleted_at": journey.deleted_at},
+        )
+    return journey
+
+
+def _member_actor_role(session: Session, journey_id: str, actor_traveler_id: str) -> str:
+    """The actor's own role, and only if that membership is in force right now."""
+    actor = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey_id,
+            JourneyMemberModel.traveler_id == (actor_traveler_id or "").strip(),
+        )
+    ).first()
+    if actor is None or not _member_is_in_force(
+        session, journey_id, (actor_traveler_id or "").strip(), datetime.now(timezone.utc)
+    ):
+        # One name for both halves of the same fact -- nobody, or somebody whose membership has been
+        # withdrawn or has run out.  Neither has a voice in this set now.
+        raise _share_refusal(
+            409,
+            "The member write names a traveller who is not in this journey's member set.",
+            "MEMBER_ACTOR_NOT_A_MEMBER",
+            {"field": "actor_traveler_id", "journey_id": journey_id},
+        )
+    granted = session.scalars(
+        select(JourneyRoleCapability).where(
+            JourneyRoleCapability.role == actor.role,
+            JourneyRoleCapability.capability == "MEMBER_MANAGE",
+        )
+    ).first()
+    if granted is None:
+        raise _share_refusal(
+            403,
+            "This role can read the member set but cannot change it.",
+            "MEMBER_ACTOR_NOT_PERMITTED",
+            {"capability": "MEMBER_MANAGE", "actor_role": actor.role},
+        )
+    return actor.role
+
+
+def _member_write_target(session: Session, journey: Journey, member_id: str) -> JourneyMemberModel:
+    """The target must be a row *of this journey*; another journey's member id is not a near miss."""
+    member = session.get(JourneyMemberModel, (member_id or "").strip())
+    if member is None or member.journey_id != journey.id:
+        raise _share_refusal(
+            404,
+            "No member of this journey carries that id.",
+            "MEMBER_UNKNOWN",
+            {"field": "member_id", "journey_id": journey.id},
+        )
+    return member
+
+
+@app.post("/api/v1/journeys/{journey_id}/members/{member_id}/role", response_model=JourneyMember)
+def change_journey_member_role(
+    journey_id: UUID,
+    member_id: str,
+    payload: JourneyMemberRoleChange,
+    session: Session = Depends(get_session),
+):
+    journey = _member_write_journey(session, str(journey_id))
+    _member_actor_role(session, journey.id, payload.actor_traveler_id)
+    member = _member_write_target(session, journey, member_id)
+    if member.removed_at:
+        raise _share_refusal(
+            409,
+            "This membership was already withdrawn; giving it a role is not a new fact.",
+            "MEMBER_ALREADY_WITHDRAWN",
+            {"member_id": member.id, "removed_at": member.removed_at},
+        )
+    if member.role == payload.role:
+        # The same "not a new fact" rule the withdraw door applies to a second withdrawal, but here the
+        # honest answer is the unchanged row rather than a refusal: nothing about the member is different,
+        # so the row and its `updated_at` are left exactly as they were.
+        return _member_payload(member)
+    member.role = payload.role
+    member.updated_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    return _member_payload(member)
+
+
+@app.delete("/api/v1/journeys/{journey_id}/members/{member_id}", status_code=204)
+def remove_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    session: Session = Depends(get_session),
+    actor_traveler_id: str = Query("", max_length=120),
+):
+    """Erase the traveller from this journey's set; `.../withdraw` (backend/app/main.py:4001) is the door
+    that records a departure and keeps the row listed, and this one does not pretend otherwise."""
+    journey = _member_write_journey(session, str(journey_id))
+    _member_actor_role(session, journey.id, actor_traveler_id)
+    member = _member_write_target(session, journey, member_id)
+    session.delete(member)
+    session.commit()
+    return Response(status_code=204)
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")

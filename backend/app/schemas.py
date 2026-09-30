@@ -1008,6 +1008,17 @@ class JourneyMemberCreate(BaseModel):
     expires_at: str | None = None
 
 
+class JourneyMemberRoleChange(BaseModel):
+    """ORD-0461: the role the member set should answer with, and the traveller who asked for it.
+
+    `actor_traveler_id` deliberately has no `min_length`: an empty name is a fact the door can put a
+    name to (`MEMBER_ACTOR_NOT_A_MEMBER`) instead of a schema rejection the screen can only echo.
+    """
+
+    role: MemberRole
+    actor_traveler_id: str = Field(max_length=120)
+
+
 class JourneyMember(BaseModel):
     id: str
     journey_id: str
