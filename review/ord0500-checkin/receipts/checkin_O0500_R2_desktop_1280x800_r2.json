@@ -1,0 +1,396 @@
+{
+  "schema": "CNX_PHONE_CHECKIN_R2",
+  "face": "http://127.0.0.1:4871",
+  "generation": "O0500_R2_desktop",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "started_local": "Thu Oct 01 2026 01:25:25 GMT+0800 (中国标准时间)",
+  "rows": [
+    {
+      "arm": "O0500_R2_desktop_1_arrived",
+      "state": {
+        "path": "/v8/trips",
+        "rendered_chars": 634,
+        "visible_testid_count": 47,
+        "stop_count": 6,
+        "checkin_button_count": 6,
+        "checkin_visible_count": 6,
+        "marks_stamped_words": 0,
+        "fresh_words": 6,
+        "button_words": [
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡"
+        ],
+        "notice_count": 0,
+        "notice_visible_count": 0,
+        "notices": [],
+        "notice_owners": [],
+        "uuids_on_screen": [],
+        "screaming_on_screen": [],
+        "dotted_keys_on_screen": []
+      }
+    },
+    {
+      "arm": "O0500_R2_desktop_2_census_after_scroll",
+      "buttons": [
+        {
+          "index": 0,
+          "stop": "Old Town Gate",
+          "words": "打卡",
+          "box": {
+            "x": 461,
+            "y": 548,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 483,
+            "y": 570
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        },
+        {
+          "index": 1,
+          "stop": "Riverside Museum",
+          "words": "打卡",
+          "box": {
+            "x": 461,
+            "y": 705,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 483,
+            "y": 727
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        },
+        {
+          "index": 2,
+          "stop": "Central Food Hall",
+          "words": "打卡",
+          "box": {
+            "x": 435,
+            "y": 378,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 457,
+            "y": 400
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        },
+        {
+          "index": 3,
+          "stop": "Tech Art Center",
+          "words": "打卡",
+          "box": {
+            "x": 487,
+            "y": 535,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 509,
+            "y": 557
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        },
+        {
+          "index": 4,
+          "stop": "Nexus River Cruise Pier",
+          "words": "打卡",
+          "box": {
+            "x": 509,
+            "y": 692,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 531,
+            "y": 714
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        },
+        {
+          "index": 5,
+          "stop": "Skyline Dinner House",
+          "words": "打卡",
+          "box": {
+            "x": 461,
+            "y": 559,
+            "w": 44,
+            "h": 44
+          },
+          "centre": {
+            "x": 483,
+            "y": 581
+          },
+          "hit_tag": "BUTTON",
+          "hit_words": "打卡",
+          "hit_self": true,
+          "in_viewport": true,
+          "overlaps_nav": false,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "arm": "O0500_R2_desktop_3_after_tapping_unstamped",
+      "tapped": {
+        "index": 0,
+        "stop": "Old Town Gate",
+        "words": "打卡",
+        "box": {
+          "x": 461,
+          "y": 548,
+          "w": 44,
+          "h": 44
+        },
+        "centre": {
+          "x": 483,
+          "y": 570
+        },
+        "hit_tag": "BUTTON",
+        "hit_words": "打卡",
+        "hit_self": true,
+        "in_viewport": true,
+        "overlaps_nav": false,
+        "disabled": false
+      },
+      "state": {
+        "path": "/v8/trips",
+        "rendered_chars": 635,
+        "visible_testid_count": 47,
+        "stop_count": 6,
+        "checkin_button_count": 6,
+        "checkin_visible_count": 6,
+        "marks_stamped_words": 1,
+        "fresh_words": 5,
+        "button_words": [
+          "已打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡"
+        ],
+        "notice_count": 0,
+        "notice_visible_count": 0,
+        "notices": [],
+        "notice_owners": [],
+        "uuids_on_screen": [],
+        "screaming_on_screen": [],
+        "dotted_keys_on_screen": []
+      }
+    },
+    {
+      "arm": "O0500_R2_desktop_4_after_tapping_the_same_stop_again",
+      "tapped": {
+        "index": 0,
+        "stop": "Old Town Gate",
+        "words": "打卡",
+        "box": {
+          "x": 461,
+          "y": 548,
+          "w": 44,
+          "h": 44
+        },
+        "centre": {
+          "x": 483,
+          "y": 570
+        },
+        "hit_tag": "BUTTON",
+        "hit_words": "打卡",
+        "hit_self": true,
+        "in_viewport": true,
+        "overlaps_nav": false,
+        "disabled": false
+      },
+      "state": {
+        "path": "/v8/trips",
+        "rendered_chars": 688,
+        "visible_testid_count": 48,
+        "stop_count": 6,
+        "checkin_button_count": 6,
+        "checkin_visible_count": 6,
+        "marks_stamped_words": 1,
+        "fresh_words": 5,
+        "button_words": [
+          "已打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡"
+        ],
+        "notice_count": 1,
+        "notice_visible_count": 1,
+        "notices": [
+          "这一站已经打过卡了（服务器记的是 10月1日 01:25），这次没有再盖一枚，行程里还是原来那一枚。"
+        ],
+        "notice_owners": [
+          "Old Town Gate"
+        ],
+        "uuids_on_screen": [],
+        "screaming_on_screen": [],
+        "dotted_keys_on_screen": []
+      }
+    },
+    {
+      "arm": "O0500_R2_desktop_5_after_tapping_a_second_stop",
+      "tapped": {
+        "index": 1,
+        "stop": "Riverside Museum",
+        "words": "打卡",
+        "box": {
+          "x": 461,
+          "y": 705,
+          "w": 44,
+          "h": 44
+        },
+        "centre": {
+          "x": 483,
+          "y": 727
+        },
+        "hit_tag": "BUTTON",
+        "hit_words": "打卡",
+        "hit_self": true,
+        "in_viewport": true,
+        "overlaps_nav": false,
+        "disabled": false
+      },
+      "state": {
+        "path": "/v8/trips",
+        "rendered_chars": 689,
+        "visible_testid_count": 48,
+        "stop_count": 6,
+        "checkin_button_count": 6,
+        "checkin_visible_count": 6,
+        "marks_stamped_words": 2,
+        "fresh_words": 4,
+        "button_words": [
+          "已打卡",
+          "已打卡",
+          "打卡",
+          "打卡",
+          "打卡",
+          "打卡"
+        ],
+        "notice_count": 1,
+        "notice_visible_count": 1,
+        "notices": [
+          "这一站已经打过卡了（服务器记的是 10月1日 01:25），这次没有再盖一枚，行程里还是原来那一枚。"
+        ],
+        "notice_owners": [
+          "Old Town Gate"
+        ],
+        "uuids_on_screen": [],
+        "screaming_on_screen": [],
+        "dotted_keys_on_screen": []
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 201
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 409
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 201
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4871/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "http_status": 200
+    }
+  ],
+  "page_errors": 0,
+  "tap_summary": {
+    "buttons": 6,
+    "pressable_by_centre_hit": 6,
+    "unpressable_indices": [],
+    "boxes": [
+      "44x44",
+      "44x44",
+      "44x44",
+      "44x44",
+      "44x44",
+      "44x44"
+    ]
+  },
+  "shots": {
+    "arrived": {
+      "file": "checkin_O0500_R2_desktop_arrived.png",
+      "bytes": 43863
+    },
+    "after_first_tap": {
+      "file": "checkin_O0500_R2_desktop_after_first_tap.png",
+      "bytes": 52800
+    },
+    "after_duplicate": {
+      "file": "checkin_O0500_R2_desktop_after_duplicate.png",
+      "bytes": 57232
+    },
+    "after_second": {
+      "file": "checkin_O0500_R2_desktop_after_second.png",
+      "bytes": 57328
+    }
+  },
+  "finished_local": "Thu Oct 01 2026 01:26:07 GMT+0800 (中国标准时间)"
+}
