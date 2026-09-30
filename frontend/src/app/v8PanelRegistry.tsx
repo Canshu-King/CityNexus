@@ -410,6 +410,7 @@ export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
         data={s.data}
         onOpenCopilot={s.onOpenCopilot}
         onOpenActivity={s.onOpenActivity}
+        onNavigate={s.onNavigate}
       />
     ),
   },

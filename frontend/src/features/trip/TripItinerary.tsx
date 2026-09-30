@@ -21,6 +21,11 @@ import {
   journeyProgress,
   progressContractCopy,
 } from "../progress/journeyProgress";
+import {
+  catalogueCountSentence,
+  readCityCatalogue,
+  type CatalogueReadback,
+} from "../planning/catalogueReadback";
 import type { V8Data } from "../../app/v8Types";
 
 export type Activity = V8Data["active_plan"] extends null
@@ -117,10 +122,12 @@ export function TripItinerary({
   data,
   onOpenCopilot,
   onOpenActivity,
+  onNavigate,
 }: {
   data: V8Data;
   onOpenCopilot: () => void;
   onOpenActivity: (activityId: string) => void;
+  onNavigate: (route: string) => void;
 }) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
@@ -212,23 +219,109 @@ export function TripItinerary({
 
   const [activeDay, setActiveDay] = useState(0);
 
-  if (!plan || days.length === 0) {
+  /* ORD-0529: this cell used to be honest but a dead end -- it said "no itinerary yet" and offered
+     nothing, so a traveller standing here had no way to the door that actually puts stops on the
+     trip.  It now reads the one thing that decides whether a plan could hold stops at all -- how many
+     places this server holds for this journey's city -- through ORD-0504's read-back door, and offers
+     the import screen as the way through.  Nothing is invented here: the count comes from rows the
+     server returned on this open, `null` (a door that did not answer) and `0` (an empty catalogue)
+     are different sentences, and the itinerary itself still only renders from the plan. */
+  const scheduled = Boolean(plan) && days.length > 0;
+  const [catalogue, setCatalogue] = useState<CatalogueReadback | null>(null);
+  const [catalogueAsking, setCatalogueAsking] = useState(false);
+  useEffect(() => {
+    if (scheduled) return;
+    let alive = true;
+    setCatalogueAsking(true);
+    void readCityCatalogue(data.journey.city_code).then((answer) => {
+      if (!alive) return;
+      setCatalogue(answer);
+      setCatalogueAsking(false);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [scheduled, data.journey.city_code]);
+
+  if (!scheduled) {
+    const emptyCatalogue = catalogue !== null && catalogue.source === "server" && catalogue.placeCount === 0;
+    const importCopy = zh ? "去导入这趟的地点" : "Import places for this trip";
+    const planCopy = emptyCatalogue
+      ? zh
+        ? "AI 帮我规划（要先有地点）"
+        : "Plan my trip with AI (needs places first)"
+      : zh
+        ? "AI 帮我规划"
+        : "Plan my trip with AI";
     return (
       <section className="v8-page" data-testid="trip-itinerary-empty">
         <div className="v8-page-intro compact">
           <div>
             <p className="v8-kicker">{zh ? "行程" : "Trips"}</p>
             <h1>{zh ? "还没有可看的行程" : "No itinerary yet"}</h1>
-            <p className="v8-lede">
-              {zh
-                ? "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。"
-                : "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here."}
+            <p className="v8-lede" data-testid="trip-itinerary-empty-why">
+              {plan
+                ? zh
+                  ? "这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。"
+                  : "No stop in this plan sits on a day yet. Add stops and this screen lists them day by day."
+                : zh
+                  ? "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。"
+                  : "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here."}
+            </p>
+            <p className="v8-lede" data-testid="trip-itinerary-empty-catalogue">
+              {catalogueAsking
+                ? zh
+                  ? "正在向服务器回读这座城有多少地点…"
+                  : "Reading back from the server how many places this city holds…"
+                : catalogueCountSentence(catalogue, zh)}
             </p>
           </div>
         </div>
-        <button type="button" className="v8-primary-button" onClick={onOpenCopilot}>
-          {zh ? "AI 帮我规划" : "Plan my trip with AI"}
-        </button>
+        {/* One primary action -- the one that can actually move this trip forward -- plus the other
+            door underneath it.  With an empty catalogue, planning is the dead end and importing is
+            the way, so the two swap places rather than both sitting there equally loud. */}
+        {emptyCatalogue ? (
+          <>
+            <button
+              type="button"
+              className="v8-primary-button"
+              data-testid="trip-itinerary-empty-action"
+              data-contrast-role="control"
+              onClick={() => onNavigate("import")}
+            >
+              {importCopy}
+            </button>
+            <button
+              type="button"
+              className="v8-quiet-button"
+              data-testid="trip-itinerary-empty-copilot"
+              onClick={onOpenCopilot}
+            >
+              {planCopy}
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              className="v8-primary-button"
+              data-testid="trip-itinerary-empty-action"
+              data-contrast-role="control"
+              onClick={onOpenCopilot}
+            >
+              {planCopy}
+            </button>
+            <button
+              type="button"
+              className="v8-quiet-button"
+              data-testid="trip-itinerary-empty-import"
+              data-contrast-role="control"
+              onClick={() => onNavigate("import")}
+            >
+              {importCopy}
+            </button>
+          </>
+        )}
       </section>
     );
   }
