@@ -21,12 +21,12 @@ import urllib.error
 import urllib.request
 
 FRONTS = {
-    "4974": ("candidate", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r1/frontend/dist"),
-    "4975": ("base", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528base/frontend/dist"),
-    "4976": ("mutant-x2", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528x2/frontend/dist"),
+    "4974": ("candidate", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2/frontend/dist"),
+    "4975": ("base", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2base/frontend/dist"),
+    "4976": ("mutant-x2", "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2x2/frontend/dist"),
 }
-APIS = {"8768": ("candidate db", "CNX-ORD0528"), "8769": ("base db", "CNX-ORD0528B")}
-OUT = "D:/moodle/_qoder_e766b154_ord0528_20261001/run/stack_r1.json"
+APIS = {"8770": ("candidate db", "CNX-ORD0528"), "8771": ("base db", "CNX-ORD0528B")}
+OUT = "D:/moodle/_qoder_e766b154_ord0528_20261001/run/stack_r2.json"
 
 
 def get(url):

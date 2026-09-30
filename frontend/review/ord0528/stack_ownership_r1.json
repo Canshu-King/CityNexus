@@ -1,0 +1,67 @@
+{
+  "fronts": {
+    "4974": {
+      "label": "candidate",
+      "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2/frontend/dist",
+      "index_http_status": 200,
+      "entry_from_served_index": "/assets/index-BMzRGyR1.js",
+      "pid_on_port": "56460",
+      "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+      "asset_http_status": 200,
+      "served_asset_sha1": "08c850da737e7076187fab2d876e991f42232c6f",
+      "disk_asset_sha1": "08c850da737e7076187fab2d876e991f42232c6f",
+      "served_asset_bytes": 1559729,
+      "disk_asset_bytes": 1559729,
+      "bytes_equal": true,
+      "index_bytes_equal": true
+    },
+    "4975": {
+      "label": "base",
+      "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2base/frontend/dist",
+      "index_http_status": 200,
+      "entry_from_served_index": "/assets/index-DaHdgt6W.js",
+      "pid_on_port": "50844",
+      "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+      "asset_http_status": 200,
+      "served_asset_sha1": "95c9a395feb02d708a410cbddff90174d20a66a4",
+      "disk_asset_sha1": "95c9a395feb02d708a410cbddff90174d20a66a4",
+      "served_asset_bytes": 1547460,
+      "disk_asset_bytes": 1547460,
+      "bytes_equal": true,
+      "index_bytes_equal": true
+    },
+    "4976": {
+      "label": "mutant-x2",
+      "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0528r2x2/frontend/dist",
+      "index_http_status": 200,
+      "entry_from_served_index": "/assets/index-BwRBbFAG.js",
+      "pid_on_port": "51228",
+      "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+      "asset_http_status": 200,
+      "served_asset_sha1": "c718848b8d5a889c19192168da0759d50dde2b75",
+      "disk_asset_sha1": "c718848b8d5a889c19192168da0759d50dde2b75",
+      "served_asset_bytes": 1552650,
+      "disk_asset_bytes": 1552650,
+      "bytes_equal": true,
+      "index_bytes_equal": true
+    }
+  },
+  "apis": {
+    "8770": {
+      "label": "candidate db",
+      "marker_city": "CNX-ORD0528",
+      "marker_http_status": 200,
+      "marker_rows": 1,
+      "other_lanes_marker_rows": 0,
+      "pid_on_port": "536"
+    },
+    "8771": {
+      "label": "base db",
+      "marker_city": "CNX-ORD0528B",
+      "marker_http_status": 200,
+      "marker_rows": 1,
+      "other_lanes_marker_rows": 0,
+      "pid_on_port": "27884"
+    }
+  }
+}
