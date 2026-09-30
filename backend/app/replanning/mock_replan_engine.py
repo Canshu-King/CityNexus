@@ -445,13 +445,21 @@ def rank_closure_replacements(
         meta = _json(getattr(place, "metadata_json", "{}"), {})
         tags = set(_json(getattr(place, "tags_json", "[]"), []))
         duration = int(meta.get("duration_min", 60))
-        cost_evidence = meta.get("cost_evidence") or {}
-        if (
-            str(cost_evidence.get("status")) in {"KNOWN", "ESTIMATED"}
-            and cost_evidence.get("amount_minor") is not None
-        ):
+        cost_evidence = meta.get("cost_evidence")
+        if isinstance(cost_evidence, dict):
+            if (
+                str(cost_evidence.get("status") or "UNKNOWN").upper()
+                not in {"KNOWN", "ESTIMATED"}
+                or cost_evidence.get("amount_minor") is None
+            ):
+                # `cost_minor=0` is retained for compatibility/display, but it
+                # is not evidence that a real provider place is free.  Unknown
+                # cost rows must stay out of an authoritative recovery option.
+                continue
             cost = int(cost_evidence["amount_minor"])
         else:
+            # Legacy sealed fixtures predate cost_evidence and keep their
+            # explicit cost_minor contract.
             cost = int(meta.get("cost_minor", 0))
         if duration <= 0 or duration > max_duration_min:
             continue

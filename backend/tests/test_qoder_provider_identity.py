@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import unquote_plus
 
 import httpx
 import pytest
@@ -312,6 +313,41 @@ def test_elements_from_a_real_answer_are_kept_with_provider_identity():
     payload = json.loads(body)
     assert len(candidates) == len(payload.get("elements") or [])
     assert attempts[0]["answered"] is True and attempts[0]["http_status"] == 200
+
+
+def test_free_museum_question_requests_explicit_fee_no_and_keeps_known_zero():
+    seen: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request.content.decode())
+        return httpx.Response(
+            200,
+            json={
+                "elements": [
+                    {
+                        "type": "node",
+                        "id": 42,
+                        "lat": 35.0,
+                        "lon": 135.7,
+                        "tags": {"name": "Free Museum", "tourism": "museum", "fee": "no"},
+                    }
+                ]
+            },
+        )
+
+    provider_obj = _overpass_with(handler)
+    try:
+        candidates, attempts = provider_obj.search_with_evidence(
+            "free museum", latitude=35.0, longitude=135.7, radius_m=5000, limit=8
+        )
+    finally:
+        provider_obj.close()
+
+    assert len(seen) == 1
+    assert '["tourism"="museum"]["fee"="no"]' in unquote_plus(seen[0])
+    assert attempts[0]["answered"] is True
+    assert candidates[0].cost_evidence["status"] == "KNOWN"
+    assert candidates[0].cost_evidence["amount_minor"] == 0
 
 
 def test_httpx_transport_signature_matches_the_replay_contract():

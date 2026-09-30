@@ -733,6 +733,7 @@ class OverpassPOIProvider:
         # single fixed cafe/restaurant tag set meant "any museums nearby" came
         # back with cafes, which then looked like a relevant answer.
         tags = '"amenity"~"cafe|restaurant|library|arts_centre|theatre"'
+        free_only = any(token in requested for token in ("free", "免费", "免票", "免费票"))
         for keywords, candidate_tags in (
             (("museum", "博物馆"), '"tourism"="museum"'),
             (("gallery", "美术馆", "画廊"), '"tourism"="gallery"|"amenity"="arts_centre"'),
@@ -759,6 +760,18 @@ class OverpassPOIProvider:
             if any(token in requested for token in keywords):
                 tags = candidate_tags
                 break
+        # A free-only question is still provider discovery, but it must ask the
+        # provider for an explicit fee=no tag.  That lets a real catalog expose
+        # multiple provider-backed known-zero places without treating UNKNOWN as
+        # free.  Keep this narrow and deterministic; other fee vocabularies stay
+        # on the ordinary category query until the provider returns evidence.
+        if free_only:
+            if any(token in requested for token in ("museum", "博物馆")):
+                tags = '"tourism"="museum"]["fee"="no"'
+            elif any(token in requested for token in ("gallery", "美术馆", "画廊")):
+                tags = '"tourism"="gallery"]["fee"="no"'
+            elif any(token in requested for token in ("park", "garden", "公园", "庭园", "花园")):
+                tags = '"leisure"~"park|garden"]["fee"="no"'
         query_text = (
             f"[out:json][timeout:10];nwr[{tags}](around:{radius_m},{latitude},{longitude});"
             "out center tags;"

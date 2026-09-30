@@ -292,3 +292,27 @@ def test_occupied_venue_is_not_reused_under_another_id() -> None:
     assert all(
         choice.place_id not in {already_used.id, _wrapper_row().id} for choice in choices
     ), "a venue already used in the plan was offered again under a different id"
+
+
+def test_unknown_cost_row_is_not_ranked_as_a_free_recovery_option() -> None:
+    from app.replanning.mock_replan_engine import rank_closure_replacements
+
+    unknown = SimpleNamespace(
+        id="real-place-unknown-cost",
+        provider_key="overpass",
+        external_id="overpass:node/unknown",
+        latitude=24.6,
+        longitude=118.2,
+        name="Unknown fee venue",
+        category="museum",
+        tags_json='["indoor", "museum"]',
+        metadata_json='{"duration_min": 60, "cost_minor": 0, "cost_evidence": {"status": "UNKNOWN", "amount_minor": null}}',
+    )
+    choices = rank_closure_replacements(
+        affected_place=_wrapper_row(),
+        candidate_places=[unknown],
+        occupied_place_ids={_wrapper_row().id},
+        max_duration_min=90,
+    )
+
+    assert choices == ()
