@@ -974,6 +974,19 @@ const en: Dict = {
   "poster.fail.blank": "the picture was read back pixel by pixel after drawing and nothing was on it.",
   "poster.fail.noBytes": "the drawing surface returned no PNG bytes.",
   "poster.fail.noDownload": "this browser gives us no way to hand you a file.",
+  /* ORD-0528: "share this picture". One outlet, one door (the trip's own share grants), and the
+     sentence below is only ever the server's list door agreeing that a row exists -- so each of the
+     four ways that agreement can fail has its own words. None of them quote the response body: the
+     only upstream value these lines carry is the HTTP status the door itself chose. */
+  "poster.share": "Share this picture",
+  "poster.sharing": "Asking the server…",
+  "poster.shareDone": "Shared. The server's own grant list answers with {rows} row(s) for this trip, and this link's row is {grant}.",
+  "poster.shareErrRefused": "Not shared: the server refused this grant write (status {status}).",
+  "poster.shareErrNoToken": "Not shared: the write came back without a token, so there is no link to hand over.",
+  "poster.shareErrNotListed": "Not shared: the server's grant list does not carry the row this device just wrote.",
+  "poster.shareErrRevoked": "Not shared: the row on the server's list carries a revocation, so the link is already withdrawn.",
+  "poster.shareErrReadUnanswered": "Not shared: the grant list gave no answer (status {status}), so this device has nothing to confirm.",
+  "poster.shareLinkLabel": "The link that opens this picture for somebody else",
   "mapComp.yourLocation": "Your location · {n} m accuracy",
   "mapComp.journeyMap": "Journey map",
   "mapComp.routeContext": "Route context",
@@ -1115,6 +1128,15 @@ const en: Dict = {
   "shared.dayHeading": "Day {label}",
   "shared.stopUnnamed": "A stop on this trip that was never given a name",
   "shared.mapHeading": "Where these stops are",
+  /* ORD-0528: the guest's poster shape. Only the sentences that say what *this shape* are here --
+     loading, no-token, refusal and empty-plan lines are the door's, and this screen quotes
+     `shared.*` for them so one fact cannot grow two wordings. */
+  "sharedPoster.kicker": "A shared trip poster",
+  "sharedPoster.counted": "Counted from what this link's read sent: {days} {plural:day:days} · {stops} {plural:stop:stops}.",
+  "sharedPoster.formNote": "This link opens the trip's long picture: one block per day, and nothing here you can act on. The trip itself and its map open from the same link in its other shape.",
+  "sharedPoster.download": "Save this picture",
+  "sharedPoster.made": "Saved as a PNG.",
+  "sharedPoster.failed": "The picture was not made: this device's drawing surface refused to draw.",
 };
 
 const zhCN: Dict = {
@@ -2025,6 +2047,15 @@ const zhCN: Dict = {
   "poster.fail.blank": "画完把像素逐块读回来，图上没有任何一笔。",
   "poster.fail.noBytes": "画布没有交出 PNG 字节。",
   "poster.fail.noDownload": "这台浏览器不给我们递文件的出口。",
+  "poster.share": "分享这张长图",
+  "poster.sharing": "正在向服务器登记…",
+  "poster.shareDone": "已分享。服务器自己的授权列表对这趟旅行答出 {rows} 条，这条链接对应的那一条是 {grant}。",
+  "poster.shareErrRefused": "没有分享出去：服务器拒了这次授权写入（状态码 {status}）。",
+  "poster.shareErrNoToken": "没有分享出去：写入答回来了，但没有交出暗号，所以没有链接可以给你。",
+  "poster.shareErrNotListed": "没有分享出去：服务器回读的授权列表里没有这台设备刚写入的那一条。",
+  "poster.shareErrRevoked": "没有分享出去：服务器列表上的那一条带着撤销记录，链接已经被收回。",
+  "poster.shareErrReadUnanswered": "没有分享出去：授权列表没有给出答复（状态码 {status}），这台设备无从确认。",
+  "poster.shareLinkLabel": "让别人打开这张长图的链接",
   "mapComp.yourLocation": "你的位置 · {n} 米精度",
   "mapComp.journeyMap": "行程地图",
   "mapComp.routeContext": "路线上下文",
@@ -2161,6 +2192,12 @@ const zhCN: Dict = {
   "shared.dayHeading": "这一天 · {label}",
   "shared.stopUnnamed": "这趟行程里有一站没有名字",
   "shared.mapHeading": "这些站在图上的位置",
+  "sharedPoster.kicker": "别人分享给你的行程长图",
+  "sharedPoster.counted": "按这条链接读到的内容数出：{days} 天 · {stops} 站。",
+  "sharedPoster.formNote": "这一屏是这趟旅行的长图形状：一天一块，可以存成图片。它不是行程本身——行程和地图用同一条链接的另一种形状打开，这里没有任何能改动别人旅行的操作。",
+  "sharedPoster.download": "存下这张图",
+  "sharedPoster.made": "已存为 PNG。",
+  "sharedPoster.failed": "图没有生成：这台设备的画布没有交出可用的绘制上下文。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

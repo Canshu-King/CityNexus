@@ -40,8 +40,10 @@ import "./sharedJourney.css";
  *     and a screenshot of this page should not hand the trip to whoever receives the screenshot.
  */
 
-/** The arms that name themselves with one dictionary key, and the key each one uses. */
-const REFUSAL_KEY: Record<string, string> = {
+/** The arms that name themselves with one dictionary key, and the key each one uses.
+ *  ORD-0528 exports it: the poster's receiving screen reads the same door and must refuse with the
+ *  same nine names rather than holding a second, drifting copy of this table. */
+export const REFUSAL_KEY: Record<string, string> = {
   token_unknown: "shared.refusedTokenUnknown",
   revoked: "shared.refusedRevoked",
   expired: "shared.refusedExpired",

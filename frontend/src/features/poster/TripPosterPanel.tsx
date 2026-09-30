@@ -12,7 +12,7 @@
  */
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
-import { progressContractCopy } from "../progress/journeyProgress";
+
 import {
   drawTripPoster,
   planPosterPages,
@@ -20,11 +20,22 @@ import {
   type PosterFailureStep,
   type PosterLines,
 } from "./posterCanvas";
-import { buildTripPoster } from "./posterModel";
+import { buildTripPoster, posterLinesFor } from "./posterModel";
+import { sharePosterLink, type PosterShareOutcome } from "./posterShare";
 import type { V8Data } from "../../app/v8Types";
 import "./trip-poster.css";
 
 const POSTER_FILE_NAME = "citynexus-trip-poster.png";
+
+/* Which sentence each non-confirmation answers, spelled out: a composed key would print
+   `poster.shareErr...` on the screen if a reason ever arrived without a row here. */
+const SHARE_FAILURE_KEYS = {
+  CREATE_REFUSED: "poster.shareErrRefused",
+  NO_TOKEN: "poster.shareErrNoToken",
+  NOT_IN_SERVER_READ: "poster.shareErrNotListed",
+  REVOKED_IN_SERVER_READ: "poster.shareErrRevoked",
+  READ_NOT_ANSWERED: "poster.shareErrReadUnanswered",
+} as const;
 
 /* Which sentence each step answers, spelled out rather than built from the step name: `t()` returns
    the key itself when a key is missing, so a composed key could put `poster.fail.MissingTokens` on
@@ -54,6 +65,8 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
   const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<DrawState>({ phase: "idle" });
+  const [share, setShare] = useState<PosterShareOutcome | null>(null);
+  const [sharing, setSharing] = useState(false);
   const [page, setPage] = useState(0);
   /* The bound is expressed in CSS pixels, so the page count can only be decided once the sheet has
      a width on screen -- measured after it is in the DOM, not guessed from a breakpoint. */
@@ -63,28 +76,12 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
   const poster = useMemo(() => buildTripPoster(data, locale), [data, locale]);
 
   /* One value for the screen and for the picture. Every string here is what the DOM already shows. */
-  const lines = useMemo<PosterLines | null>(() => {
-    if (!poster) return null;
-    const zh = locale.startsWith("zh");
-    return {
-      kicker: t("poster.kicker"),
-      title: poster.title,
-      subtitle:
-        poster.dayTotal === null
-          ? t("poster.daysUnknown", { city: poster.city })
-          : t("poster.cityAndDays", { city: poster.city, days: poster.dayTotal }),
-      progress: progressContractCopy(poster.progress, zh),
-      attribution: `${t("poster.attributionLabel")} · ${t("mapComp.attribution")}`,
-      days: poster.days.map((day) => ({
-        label: day.label,
-        count: t("poster.dayStops", { n: day.stops.length }),
-        stops: day.stops.map((stop) => ({
-          time: `${stop.from} – ${stop.to}`,
-          title: stop.title,
-        })),
-      })),
-    };
-  }, [poster, locale, t]);
+  /* One builder for both ends of a share link: what the sheet lists and what the picture paints are
+     the same value, and the guest's poster screen assembles it the same way. */
+  const lines = useMemo<PosterLines | null>(
+    () => (poster ? posterLinesFor(poster, locale, t) : null),
+    [poster, locale, t],
+  );
 
   /* Layout effect, not effect: with the plain one the first paint lists every day and the second
      collapses to page one, so a traveller watches the list jump. Measuring before the browser paints
@@ -234,6 +231,48 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
           >
             {state.phase === "working" ? t("poster.working") : t("poster.download")}
           </button>
+
+          {/* ORD-0528: "share this picture" reuses the trip's own grant door -- it does not open a
+              second write endpoint and does not mint a second token. The sentence below is only ever
+              the server's list door agreeing that the row exists. */}
+          <button
+            type="button"
+            className="v8-quiet-button cn-poster-share"
+            data-testid="poster-share"
+            data-contrast-role="control"
+            disabled={sharing}
+            onClick={() => {
+              setSharing(true);
+              setShare(null);
+              void sharePosterLink(data.journey.id, data.journey.traveler_id).then((outcome) => {
+                setShare(outcome);
+                setSharing(false);
+              });
+            }}
+          >
+            {sharing ? t("poster.sharing") : t("poster.share")}
+          </button>
+
+          {share && (
+            <p
+              className={share.state === "CONFIRMED" ? "cn-poster-outcome" : "cn-poster-outcome cn-poster-outcome--failed"}
+              data-testid="poster-share-result"
+              data-share-state={share.state}
+            >
+              {share.state === "CONFIRMED"
+                ? t("poster.shareDone", { rows: share.rows_read, grant: share.grant_id })
+                : t(SHARE_FAILURE_KEYS[share.reason], { status: share.http_status })}
+            </p>
+          )}
+          {share?.state === "CONFIRMED" && (
+            <input
+              className="cn-poster-link"
+              data-testid="poster-share-link"
+              readOnly
+              value={`${window.location.origin}${share.path}`}
+              aria-label={t("poster.shareLinkLabel")}
+            />
+          )}
 
           {state.phase === "made" && (
             <>
