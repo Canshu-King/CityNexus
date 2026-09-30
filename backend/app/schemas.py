@@ -147,6 +147,9 @@ class AgentToolCall(BaseModel):
         "OFFICIAL_TICKETING",
         "MUNICIPAL_AUTHORITY",
     ] = "OFFICIAL_WEB"
+    estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_cost_minor: int | None = Field(default=None, ge=0)
     place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
     planning_mode: PlanningMode | None = None
     approval_id: UUID | None = None

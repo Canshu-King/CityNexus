@@ -109,8 +109,14 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
         ),
         _tool(
             "estimate_place_facts",
-            "Estimate opening and cost for strategy comparison only. Estimates are never authoritative or selectable.",
-            {**journey, "place_id": _property("string")},
+            "Estimate opening and cost for strategy comparison only. In the coursework lab, the Agent may provide bounded hypotheses when peer evidence is absent; every such value is stored as ESTIMATED_AGENT and is never authoritative or selectable.",
+            {
+                **journey,
+                "place_id": _property("string"),
+                "estimated_open_minutes": _property("integer", minimum=0, maximum=1440),
+                "estimated_close_minutes": _property("integer", minimum=0, maximum=1440),
+                "estimated_cost_minor": _property("integer", minimum=0),
+            },
             ["journey_id", "place_id"],
         ),
         _tool(

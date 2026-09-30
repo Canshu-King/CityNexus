@@ -573,6 +573,35 @@ def test_estimate_place_facts_is_explicitly_non_authoritative():
         assert estimate["cost_evidence"]["status"] == "ESTIMATED_AGENT"
 
 
+def test_agent_bounded_estimate_is_persisted_as_strategy_only_evidence():
+    journey_id = _selected_journey()
+    response = client.post(
+        "/api/v1/agent/tools/estimate_place_facts",
+        json={
+            "request_id": "estimate-place-facts-bounded-1",
+            "agent_id": "test-agent",
+            "journey_id": journey_id,
+            "place_id": "place-riverside-museum",
+            "estimated_open_minutes": 600,
+            "estimated_close_minutes": 1080,
+            "estimated_cost_minor": 1800,
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["estimate"]["basis"] == "agent_bounded_hypothesis"
+    assert body["estimate"]["opening_hours"]["open_minutes"] == 600
+    assert body["estimate"]["cost_evidence"]["amount_minor"] == 1800
+    assert body["estimate"]["authority_eligible"] is False
+
+    with SessionLocal() as session:
+        place = session.get(Place, "place-riverside-museum")
+        metadata = json.loads(place.metadata_json)
+        assert metadata["strategy_estimate"]["status"] == "ESTIMATED_AGENT"
+        assert metadata["strategy_estimate"]["opening_hours"]["open_minutes"] == 600
+        assert metadata["cost_evidence"]["status"] != "ESTIMATED_AGENT"
+
+
 def test_acquire_place_facts_commits_canonical_observation_before_next_read(monkeypatch):
     journey_id = _selected_journey()
 

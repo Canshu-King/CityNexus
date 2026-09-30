@@ -734,6 +734,27 @@ class AgentToolGateway:
             estimate["cost_evidence"].update(
                 {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
             )
+        if (
+            request.estimated_open_minutes is not None
+            and request.estimated_close_minutes is not None
+            and request.estimated_close_minutes > request.estimated_open_minutes
+        ):
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": request.estimated_open_minutes,
+                    "close_minutes": request.estimated_close_minutes,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
+        if request.estimated_cost_minor is not None:
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["cost_evidence"].update(
+                {
+                    "amount_minor": request.estimated_cost_minor,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
         metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
         metadata["strategy_estimate"] = {
             "status": "ESTIMATED_AGENT",
