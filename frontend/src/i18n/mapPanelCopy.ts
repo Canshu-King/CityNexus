@@ -37,7 +37,19 @@ export type MapCopyKey =
   | "viewportOffTarget"
   | "stopsShowAllTotal"
   | "stopsCollapseCta"
-  | "stopsCaptureAria";
+  | "stopsCaptureAria"
+  /* ORD-0497 -- the footprint arms. Named per read, never per traveller: the empty sentence says
+     what THIS read brought back, because "还没有足迹" would be a claim about the person rather than
+     about the door. */
+  | "footprintStamped"
+  | "footprintNone"
+  | "footprintRefused"
+  | "footprintUnreachable"
+  | "footprintAsking"
+  | "footprintNotAsked"
+  | "footprintBadgeAria"
+  | "footprintFilterLabel"
+  | "footprintFilterClear";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -97,6 +109,43 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   stopsShowAllTotal: { zh: "查看全部 %s 个地点", en: "Show all %s places" },
   stopsCollapseCta: { zh: "收起清单", en: "Collapse list" },
   stopsCaptureAria: { zh: "展开或收起地点清单", en: "Expand or collapse the stop list" },
+  /* ORD-0497 — 足迹上地图。Three rules these sentences have to keep:
+     1. the `read` arm with nothing in it names the READ ("这台服务器这次没有交回"), not the
+        traveller ("你没有去过任何一站"), because an empty list from one server on one occasion is
+        all this surface was ever given (`backend/app/main.py:3419` -- absence is a list, not a 404);
+     2. the two unanswered arms say the map distinguishes NOTHING, so a plain pin cannot be read as
+        "checked in" by someone who never asked;
+     3. `%s` carries only the server's own count. The day under a pin is that same row's
+        `stamped_at`, rendered date-only -- see `formatStampDay` for the glass rule that forbids a
+        clock here. */
+  footprintStamped: {
+    zh: "这台服务器这次交回 %s 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。",
+    en: "This server handed back %s footprints on this read: solid pins are the stops it recorded, and the day under a pin is that stamp's; hollow pins are the stops it returned no stamp for.",
+  },
+  footprintNone: {
+    zh: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
+    en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
+  },
+  footprintRefused: {
+    zh: "服务器这次没收下这个读取请求，所以图上不区分到过的站与没到过的站。",
+    en: "The server would not take this read, so the map draws no distinction between stamped and unstamped stops.",
+  },
+  footprintUnreachable: {
+    zh: "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
+    en: "This read never reached the server, so the map draws no distinction — nothing painted here speaks for the server.",
+  },
+  footprintAsking: { zh: "正在向服务器问这一趟的足迹…", en: "Asking the server for this trip's footprints…" },
+  footprintNotAsked: {
+    zh: "这一屏没有打开的行程，所以没向服务器问过足迹。",
+    en: "No trip is open on this screen, so nothing was ever asked of the server.",
+  },
+  footprintBadgeAria: { zh: "到站日期 %s", en: "Day stamped %s" },
+  /* The 「只看打过」 switch. Two labels, one per state, in the direction of what the press DOES --
+     ORD-0403 settled that a state-bearing control on this surface says a different sentence in each
+     state rather than the same word with a different colour, because "只看打过" painted while the
+     filter is already on tells the traveller nothing about what the next press gives back. */
+  footprintFilterLabel: { zh: "只看打过", en: "Stamped only" },
+  footprintFilterClear: { zh: "看全部站", en: "Show every stop" },
 };
 
 /** Same locale rule the component used inline: anything starting with zh takes the Chinese arm. */
