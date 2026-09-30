@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from statistics import median
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
@@ -110,6 +111,27 @@ _LEGACY_REPLAN_PROPOSAL_FIELDS = frozenset({
     "id", "status", "hard_constraints_passed", "locked_commitments_preserved",
 })
 _REPLAN_CACHE_UNAVAILABLE = "AGENT_IDEMPOTENCY_RESPONSE_SCHEMA_UNAVAILABLE"
+
+_CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
+    "博物馆": ("museum",),
+    "美术馆": ("gallery", "museum"),
+    "图书馆": ("library",),
+    "文化": ("culture", "museum", "library", "theatre"),
+    "室内": ("indoor", "museum", "library", "theatre"),
+    "历史": ("historic", "attraction", "museum"),
+}
+
+
+def _city_search_terms(query: str | None) -> tuple[str, ...]:
+    if not query:
+        return ()
+    normalized = query.casefold().strip()
+    terms: list[str] = [normalized]
+    terms.extend(token for token in re.findall(r"[\w\u4e00-\u9fff]+", normalized) if len(token) > 1)
+    for phrase, aliases in _CITY_SEARCH_ALIASES.items():
+        if phrase in normalized:
+            terms.extend(aliases)
+    return tuple(dict.fromkeys(term for term in terms if term))
 
 
 def _upgrade_cached_request_replan_response(
@@ -514,24 +536,33 @@ class AgentToolGateway:
                 for item in services
                 if item.service_type.lower() == request.service_type.lower()
             ]
-        if request.q:
-            needle = request.q.casefold()
-            services = [item for item in services if needle in item.name.casefold()]
+        search_terms = _city_search_terms(request.q)
+        if search_terms:
+            services = [
+                item
+                for item in services
+                if any(
+                    term in item.name.casefold() or term in item.service_type.casefold()
+                    for term in search_terms
+                )
+            ]
         places = self.session.scalars(
             select(Place).where(Place.city_code == city_code).order_by(Place.id)
         ).all()
         if request.category:
             category = request.category.casefold()
             places = [item for item in places if category in item.category.casefold()]
-        if request.q:
-            needle = request.q.casefold()
+        if search_terms:
             places = [
                 item
                 for item in places
-                if needle in item.name.casefold()
-                or item.name.casefold() in needle
-                or needle in item.category.casefold()
-                or needle in item.tags_json.casefold()
+                if any(
+                    term in item.name.casefold()
+                    or item.name.casefold() in term
+                    or term in item.category.casefold()
+                    or term in item.tags_json.casefold()
+                    for term in search_terms
+                )
             ]
         return {
             "tool": "search_city_services",
