@@ -1,0 +1,39 @@
+{
+ "base": "http://127.0.0.1:55108",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "entered_wizard_by_click": true,
+ "screen_with_one_shelf": {
+  "panel_present": true,
+  "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点",
+  "shelf_rows": [],
+  "item_rows": [],
+  "empty_words": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
+  "failed_words": null,
+  "no_traveler_words": null,
+  "machine_tokens": []
+ },
+ "retry_hit": {
+  "point": {
+   "cx": 309,
+   "cy": 422
+  },
+  "element": "button.cn-collections__retry",
+  "is_the_control": true,
+  "width_px": 88,
+  "height_px": 35
+ },
+ "after_retry_press": {
+  "panel_present": true,
+  "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点",
+  "shelf_rows": [],
+  "item_rows": [],
+  "empty_words": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
+  "failed_words": null,
+  "no_traveler_words": null,
+  "machine_tokens": []
+ },
+ "console_errors": []
+}
