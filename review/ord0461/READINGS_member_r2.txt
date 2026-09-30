@@ -1,11 +1,12 @@
 == ORD-0461 r2 on the be0ffee2 generation, every line parsed out of a command result ==
-branch_head=2bc88b7ccfce5af430c6cf8727a72c4c23d1d078
+branch_head=3fddbd6cf8feac3de7516de8d4c1ca245f2758d1
 cut_from=be0ffee216c7d24e48652427d290da848a9195cf
 ancestry_holds=True
-commits_on_branch=3
-readings_and_runs_taken_at=27c21d2677b944b9c4361dc7fb53cfc787129fd6
-product_bytes_identical_between_that_head_and_this_one=False
-diff_against_tip=27 files changed, 1854 insertions(+)
+commits_on_branch=4
+readings_and_runs_taken_at=3fddbd6cf8feac3de7516de8d4c1ca245f2758d1
+product_bytes_identical_between_that_head_and_this_one=True
+lines_added_between_those_heads_in_product_paths=0 of_which_citation_lines=0 of_which_other=0 -- every gate, arm and run below was taken at the head named above
+diff_against_tip=27 files changed, 1857 insertions(+)
 product_files=5 product_add=747 product_del=0
 product_file_list=backend/app/main.py,backend/app/schemas.py,backend/tests/test_qoder_ord0461_member_write_doors_r2.py,contracts/openapi.yaml,frontend/src/generated/api.ts
 numstat:
@@ -14,7 +15,7 @@ numstat:
   378	0	backend/tests/test_qoder_ord0461_member_write_doors_r2.py
   92	0	contracts/openapi.yaml
   149	0	frontend/src/generated/api.ts
-  118	0	review/ord0461/READINGS_member_r2.txt
+  121	0	review/ord0461/READINGS_member_r2.txt
   32	0	review/ord0461/fe_gates_member_r2.py
   226	0	review/ord0461/make_readings_member_r4g.py
   1	0	review/ord0461/member_r2_base_collect_r1.txt
@@ -38,15 +39,15 @@ numstat:
   107	0	review/ord0461/mutation_member_r2.py
 
 == the line-ending fact that decided how this branch had to be re-landed ==
-backend/app/main.py crlf_terminated/total_lines f707e1b3=0/13057 be0ffee2=13362/13362 2bc88b7c=13479/13479
-backend/app/schemas.py crlf_terminated/total_lines f707e1b3=0/1065 be0ffee2=0/1140 2bc88b7c=0/1151
-contracts/openapi.yaml crlf_terminated/total_lines f707e1b3=0/3494 be0ffee2=0/3683 2bc88b7c=0/3775
-frontend/src/generated/api.ts crlf_terminated/total_lines f707e1b3=0/7913 be0ffee2=0/8113 2bc88b7c=0/8262
+backend/app/main.py crlf_terminated/total_lines f707e1b3=0/13057 be0ffee2=13362/13362 3fddbd6c=13479/13479
+backend/app/schemas.py crlf_terminated/total_lines f707e1b3=0/1065 be0ffee2=0/1140 3fddbd6c=0/1151
+contracts/openapi.yaml crlf_terminated/total_lines f707e1b3=0/3494 be0ffee2=0/3683 3fddbd6c=0/3775
+frontend/src/generated/api.ts crlf_terminated/total_lines f707e1b3=0/7913 be0ffee2=0/8113 3fddbd6c=0/8262
 a plain rebase onto this tip collapsed into one whole-file conflict on main.py; the branch was re-landed from its own per-file patch with the target's endings, which is why every product file above carries 0 deletions
 
 == the two doors and their refusals, at this head ==
-doors_12_selection=12 passed, 2 warnings in 4.97s
-doors_wide_selection=52 passed, 2 warnings in 6.53s
+doors_12_selection=12 passed, 2 warnings in 2.70s
+doors_wide_selection=52 passed, 2 warnings in 7.16s
 collected_per_file=ord0461_member_write_doors_r2=12,ord0434_share_grants=17,ord0460_expiry_in_past=7,ord0272_continuation=8,contract=4,anywhere_contract_parity=4
 
 == registered routes (proof the doors are reachable, not only written) ==
@@ -70,12 +71,12 @@ generated_api_ts_blob_at_head=ba770857cbfa747fedda6aea4baf8239c0346003
 api_ts_regeneration_check=generator_rc=0 bytes_regenerated=272169 bytes_equal_to_the_file_on_disk=True the_file_on_disk_is_what_is_committed=True
 
 == frontend gates (each exit code captured by the command that produced it) ==
-gates_run_at_head=27c21d2677b944b9c4361dc7fb53cfc787129fd6
+gates_run_at_head=3fddbd6cf8feac3de7516de8d4c1ca245f2758d1
 tsc_check_rc=0
 tsc_check_output_bytes=0
 tsc_typecheck_rc=0
 tsc_typecheck_output_bytes=0
-vite_rc=0 built in 6.57s
+vite_rc=0 built in 6.66s
 
 == whole backend suite: two runs here, two on untouched worktrees of the tip ==
 member_r2_suite_mine_r1.txt summary=8 failed, 1558 passed, 15 skipped, 1 xfailed, 4 warnings in 204.89s (0:03:24) reds=8

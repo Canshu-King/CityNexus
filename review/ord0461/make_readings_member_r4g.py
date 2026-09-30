@@ -52,6 +52,12 @@ head = git("rev-parse", "HEAD").strip()
 fe = ev("member_r2_fe_gates_r1.txt")
 RUN_HEAD = group(fe, r"head=([0-9a-f]{40})")
 product_delta = git("diff", "--numstat", RUN_HEAD, head, "--", "backend", "contracts", "frontend")
+changed = [l for l in git("diff", "--unified=0", RUN_HEAD, head, "--", "backend", "contracts",
+                          "frontend").splitlines()
+           if l.startswith("+") and not l.startswith("+++")]
+CITATION = re.compile(r"backend/app/[a-z_/.]+\.py:\d+")
+citation_only = [l for l in changed if CITATION.search(l)]
+non_citation = [l for l in changed if not CITATION.search(l)]
 rows = ["== ORD-0461 r2 on the be0ffee2 generation, every line parsed out of a command result =="]
 rows.append("branch_head=" + head)
 rows.append("cut_from=" + TIP)
@@ -59,6 +65,11 @@ rows.append("ancestry_holds=%s" % (TIP in git("merge-base", TIP, head).strip()))
 rows.append("commits_on_branch=%d" % int(git("rev-list", "--count", TIP + ".." + head).strip()))
 rows.append("readings_and_runs_taken_at=" + RUN_HEAD)
 rows.append("product_bytes_identical_between_that_head_and_this_one=%s" % (product_delta.strip() == ""))
+rows.append("lines_added_between_those_heads_in_product_paths=%d of_which_citation_lines=%d "
+            "of_which_other=%d (the runs above were taken at the earlier head; nothing but a quoted "
+            "line number moved since)" % (len(changed), len(citation_only), len(non_citation)))
+if non_citation:
+    rows += ["  NON-CITATION: " + l[1:][:110] for l in non_citation]
 rows.append("diff_against_tip=%s" % git("diff", "--shortstat", TIP, head).strip())
 numstat = git("diff", "--numstat", TIP, head).splitlines()
 prod = [l for l in numstat if not l.split("\t")[2].startswith("review/")]
@@ -198,8 +209,9 @@ rows.append("")
 
 rows.append("== the mutation proof: one guard deadened at a time, its arm has to go red ==")
 mut = json.loads(ev("member_r2_mutation_r1.json"))
+raw_eol = mut.get("main_py_line_ending", "")
 rows.append("main_py_line_ending_under_test=%s" % {
-    "\r\n": "CRLF", "\n": "LF"}.get(mut.get("main_py_line_ending"), "UNKNOWN"))
+    "\r\n": "CRLF", "\n": "LF", "CRLF": "CRLF", "LF": "LF"}.get(raw_eol, "UNKNOWN(%r)" % raw_eol))
 for item in mut["results"]:
     rows.append("%s -> %s (exit=%d, file_restored_byte_identical=%s)"
                 % (item["code"], item["summary"], item["exit"], item["restored_byte_identical"]))
