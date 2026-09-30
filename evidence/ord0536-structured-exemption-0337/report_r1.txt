@@ -1,0 +1,107 @@
+====================================================================================================
+tip_7862c6de  rev 7862c6de5565c02c20ec2dccaa9da18960603e06
+  ruler ui_exposure_taint_ast_r8.cjs | modules 135 | contract readable True bytes 179310 blob 3df16a6e5fef47916848e2c8b705701129762057
+  cells_total 8 = red 5 + exempted 3   (the door-pinned r7b reports 6 hits)
+
+  EXEMPTED CELLS, one row each (3):
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=app/V8Experience.tsx  line=2870  cell_id=2936eafd474f9b3b
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:continuation-resume-server-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 2864 names http_status at line 2877
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=components/CnxMeasuredFacts.tsx  line=81  cell_id=cdfe4dfe298f1093
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:{computed} (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 64 names http_status at line 71
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=features/recovery/RecoveryRequiredPanel.tsx  line=299  cell_id=7feb812a1e486a9d
+     origin_kind=raw-body  sink_shape=text-in:code testid=code:recovery-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 288 names dynamic:notice.field at line 297
+
+  CELLS STILL RED (5), with the reason the ruler printed:
+   - rule=UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT  features/planning/PlanWithAiSheet.tsx:931  cell_id=3da2ddc1783bb8e4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:956  cell_id=fec78ea862b50245
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:1029  cell_id=fd20c87a2369a807
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/simulation/SimulationPanel.tsx:937  cell_id=fca34cf42fe474c4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=RAW_BODY_TO_DOM  features/trip/ActivityDetail.tsx:216  cell_id=1f8bfb4f2b900363
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+====================================================================================================
+cmdr_side_tip  rev 0989713aa687b97f4cd40bae009a6ce493425a4b
+  ruler ui_exposure_taint_ast_r8.cjs | modules 135 | contract readable True bytes 179073 blob 0a36e846c84bdc874c45da34e3c88f55d18019a4
+  cells_total 8 = red 5 + exempted 3   (the door-pinned r7b reports 6 hits)
+
+  EXEMPTED CELLS, one row each (3):
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=app/V8Experience.tsx  line=2870  cell_id=2936eafd474f9b3b
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:continuation-resume-server-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 2864 names http_status at line 2877
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=components/CnxMeasuredFacts.tsx  line=81  cell_id=cdfe4dfe298f1093
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:{computed} (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 64 names http_status at line 71
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=features/recovery/RecoveryRequiredPanel.tsx  line=299  cell_id=7feb812a1e486a9d
+     origin_kind=raw-body  sink_shape=text-in:code testid=code:recovery-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 288 names dynamic:notice.field at line 297
+
+  CELLS STILL RED (5), with the reason the ruler printed:
+   - rule=UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT  features/planning/PlanWithAiSheet.tsx:931  cell_id=3da2ddc1783bb8e4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:956  cell_id=fec78ea862b50245
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:1029  cell_id=fd20c87a2369a807
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/simulation/SimulationPanel.tsx:937  cell_id=fca34cf42fe474c4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=RAW_BODY_TO_DOM  features/trip/ActivityDetail.tsx:216  cell_id=1f8bfb4f2b900363
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+====================================================================================================
+cmdr_side_candidate  rev 62f030f351e70bd95108377fe2e3bbc49c5ef288
+  ruler ui_exposure_taint_ast_r8.cjs | modules 136 | contract readable True bytes 179111 blob c870395cb084d13173e10d9425daa677e5a2efc6
+  cells_total 12 = red 9 + exempted 3   (the door-pinned r7b reports 10 hits)
+
+  EXEMPTED CELLS, one row each (3):
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=app/V8Experience.tsx  line=2870  cell_id=2936eafd474f9b3b
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:continuation-resume-server-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 2864 names http_status at line 2877
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=components/CnxMeasuredFacts.tsx  line=81  cell_id=cdfe4dfe298f1093
+     origin_kind=raw-body  sink_shape=text-in:span testid=span:{computed} (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 64 names http_status at line 71
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM
+     file=features/recovery/RecoveryRequiredPanel.tsx  line=299  cell_id=7feb812a1e486a9d
+     origin_kind=raw-body  sink_shape=text-in:code testid=code:recovery-reason (family text-in)
+     exemption=EX-2-ATTRIBUTED-FOLD  evidence=attributed_fold
+     basis=fold details at line 288 names dynamic:notice.field at line 297
+
+  CELLS STILL RED (9), with the reason the ruler printed:
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/access/AccessPanel.tsx:462  cell_id=acbe11b413d73327
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/access/AccessPanel.tsx:474  cell_id=920750ee8c1529e4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT  features/planning/PlanWithAiSheet.tsx:931  cell_id=3da2ddc1783bb8e4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:956  cell_id=fec78ea862b50245
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/planning/PlanWithAiSheet.tsx:1029  cell_id=fd20c87a2369a807
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/simulation/SimulationPanel.tsx:937  cell_id=fca34cf42fe474c4
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/studio/PlanVersionHistoryPanel.tsx:87  cell_id=f512ff828129ebc1
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=UPSTREAM_TEXT_VIA_HELPER_TO_DOM  features/studio/PlanVersionHistoryPanel.tsx:100  cell_id=ffafd031edcc4390
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
+   - rule=RAW_BODY_TO_DOM  features/trip/ActivityDetail.tsx:216  cell_id=1f8bfb4f2b900363
+     shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER
