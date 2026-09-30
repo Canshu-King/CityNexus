@@ -244,6 +244,128 @@ def find_open_operation(
     )
 
 
+#: ORD-0522 -- the words this projection is allowed to say, every one borrowed from the module that
+#: already owns it: a leg answers with the same tokens `real_city.py` writes into `leg_states`, and the
+#: job answers with its own stored `status` / `phase` / `outcome` columns.  A second vocabulary for
+#: "which hop lost the places" would be a second thing that can disagree with the first, and the
+#: disagreement is what a traveller gets shown.
+BOARD_LEGS = ("photon", "nominatim", "overpass")
+LEG_NOT_ASKED = "NOT_ASKED"
+LEG_CAPTURED = "CAPTURED"
+LEG_ANSWERED_EMPTY = "ANSWERED_EMPTY"
+LEG_NOT_ANSWERED = "NOT_ANSWERED"
+#: Endings that left material this build can plan with.  Every other ending -- including
+#: `PENDING_CANDIDATES_UNAPPLIED`, where the candidates exist but were not promoted -- is a statement
+#: that the board is standing on something else, and the caller has to be able to see that.
+OUTCOMES_WITH_SUPPLY = (OUTCOME_PREPARED, OUTCOME_ALREADY_CURRENT)
+
+
+def _leg_of(endpoint: Any) -> str | None:
+    """Which leg a stored attempt belongs to, by the host the product actually called."""
+
+    lowered = str(endpoint or "").casefold()
+    for leg in BOARD_LEGS:
+        if leg in lowered:
+            return leg
+    if "openstreetmap" in lowered:
+        return "nominatim"
+    return None
+
+
+def leg_states(attempts: list[dict[str, Any]]) -> dict[str, str | None]:
+    """Per leg: asked or not, answered or not, and whether the answer carried anything countable.
+
+    A leg whose attempt replied but stored no counter is `None`, not `ANSWERED_EMPTY`: an uncounted
+    reply is not a measured zero (`ProviderAttempt.to_evidence` says so in its own words), and naming
+    a zero here would be the same overreach the audit columns were added to prevent.
+    """
+
+    states: dict[str, str | None] = {leg: LEG_NOT_ASKED for leg in BOARD_LEGS}
+    for attempt in attempts or []:
+        if not isinstance(attempt, dict):
+            continue
+        leg = _leg_of(attempt.get("endpoint"))
+        if leg is None:
+            continue
+        if not attempt.get("answered"):
+            states[leg] = LEG_NOT_ANSWERED
+            continue
+        counted = attempt.get("candidates_before_filter")
+        if counted is None:
+            counted = attempt.get("features_viewed")
+        if counted is None:
+            states[leg] = None
+        else:
+            states[leg] = LEG_CAPTURED if counted else LEG_ANSWERED_EMPTY
+    return states
+
+
+def board_supply(session: Session, journey_id: str | None) -> dict[str, Any]:
+    """What this screen's places rest on, read out of the job rows and out of nothing else.
+
+    The board could already say `NO_SCENARIO`, which is an honest word about the stage and no word at
+    all about why the places behind a stage were never obtained.  Which hop refused *is* recorded --
+    `provider_attempts` travels with the job (`anywhere_capability.audit_evidence`) -- it was just
+    never put in front of a reader.  Nothing here asks a provider: a read that phoned home would make
+    the emptiness depend on the moment somebody looked.
+    """
+
+    row = (
+        session.scalar(
+            select(CatalogHydrationOperation)
+            .where(CatalogHydrationOperation.journey_id == journey_id)
+            .order_by(CatalogHydrationOperation.queued_at.desc())
+        )
+        if journey_id
+        else None
+    )
+    if row is None:
+        return {
+            "asked": False,
+            "operation_id": None,
+            "job_status": None,
+            "state": LEG_NOT_ASKED,
+            "failed_stage": None,
+            "reason_code": None,
+            "retryable": None,
+            "leg_states": {leg: LEG_NOT_ASKED for leg in BOARD_LEGS},
+            "counts_as_supply": False,
+        }
+    stored: dict[str, Any] = {}
+    for blob in (row.result_json, row.error_json):
+        try:
+            loaded = json.loads(blob or "{}")
+        except (TypeError, ValueError):
+            loaded = None
+        if isinstance(loaded, dict):
+            stored.update(loaded)
+            # An unresolved ending writes the standard error envelope, whose extras live one level
+            # down; reading only the top would report "the job kept no attempts" for a job that kept
+            # them under `details` -- a wrong reading, not a missing feature.
+            details = loaded.get("details")
+            if isinstance(details, dict):
+                stored.update(details)
+    attempts = stored.get("provider_attempts") or stored.get("attempts") or []
+    outcome = str(row.outcome or "")
+    return {
+        "asked": True,
+        "operation_id": row.id,
+        "job_status": row.status,
+        "state": outcome or row.status,
+        # The stage the job was standing in when it stopped supplying: `phase` is that column and
+        # nothing else, and a job that ended with material in hand has no failed stage to name.
+        "failed_stage": None if outcome in OUTCOMES_WITH_SUPPLY else row.phase,
+        "reason_code": stored.get("reason_code"),
+        "retryable": bool(
+            row.status == FAILED or outcome == OUTCOME_RESOLVER_RUNTIME_FAILURE
+        ),
+        "leg_states": leg_states(list(attempts) if isinstance(attempts, list) else []),
+        # The ban `real_city.py` writes as `counts_as_supply: False`, reused rather than re-worded:
+        # a replay, a refusal, or a job that never produced rows may not be presented as supply.
+        "counts_as_supply": bool(outcome in OUTCOMES_WITH_SUPPLY),
+    }
+
+
 class TransitionRefused(RuntimeError):
     """A status write that did not match its guard."""
 

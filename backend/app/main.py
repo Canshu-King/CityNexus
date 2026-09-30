@@ -503,6 +503,9 @@ from app.catalog_hydration_operations import (  # ORD-0095-1: the destination-sc
 from app.catalog_hydration_operations import (
     operation_payload as hydration_payload,
 )
+from app.catalog_hydration_operations import (  # ORD-0522: the board's own supply read
+    board_supply,
+)
 from app.catalog_hydration_operations import (
     read_operation as read_hydration,
 )
@@ -512,6 +515,9 @@ from app.catalog_hydration_operations import (
 from app.anywhere_capability import (
     GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE,
     evaluate_capability,
+    # ORD-0522: the one classifier of where a place row came from.  Imported rather than re-written,
+    # so this screen cannot grow a second opinion about what counts as supply.
+    _source_kind,
 )
 
 assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything
@@ -8987,6 +8993,56 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
     }
 
 
+def _board_supply_block(
+    session: Session, journey_id: str | None, plan: PlanVersion | None
+) -> dict[str, Any]:
+    """ORD-0522: what the stage's places rest on, and how many of them a map can stand on.
+
+    Two halves, both read out of rows.  The job this journey was given (which hop answered, which
+    refused, and at which stage it stopped supplying) comes from
+    `catalog_hydration_operations.board_supply`; the stops this stage actually has come from the same
+    coordinate test the map panel uses.  Nothing here asks a provider -- a read that phoned home would
+    make the board's emptiness depend on the moment somebody looked -- and nothing here coins a word:
+    the vocabularies belong to those two modules.
+    """
+
+    block = board_supply(session, journey_id)
+    stops = (
+        session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+        if plan is not None
+        else []
+    )
+    place_ids = sorted({str(item.place_id) for item in stops if item.place_id})
+    places: dict[str, Place] = {}
+    if place_ids:
+        places = {
+            place.id: place
+            for place in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+        }
+    coordinates = [activity_coordinate(item.place_id, places) for item in stops]
+    placeable = [c for c in coordinates if c["latitude"] is not None and c["longitude"] is not None]
+    missing = [c for c in coordinates if c["latitude"] is None or c["longitude"] is None]
+    kinds = sorted({_source_kind(place) for place in places.values()})
+    block["stops"] = {
+        "plan_present": plan is not None,
+        "total": len(stops),
+        "with_coordinate": len(placeable),
+        "without_coordinate": len(stops) - len(placeable),
+        # Named, not counted-and-dropped: the reason the projection already carries for each stop that
+        # has no position is what the screen has to say out loud instead of quietly drawing fewer rows.
+        "reasons": sorted({str(c["reason"]) for c in missing}),
+        "source_kinds": kinds,
+    }
+    # The second ban this order names, in the same word `real_city.py` uses: a stage whose stops all
+    # come back from a replay is not a stage that was supplied.  The job's own ending is necessary but
+    # not sufficient -- what the rows are actually made of has to agree.
+    if block["counts_as_supply"] and kinds and set(kinds) == {"REPLAY"}:
+        block["counts_as_supply"] = False
+    return block
+
+
 @app.get("/api/v1/demo/scene")
 def demo_scene(session: Session = Depends(get_session)):
     """Which day the stage is set on, from the server - the one read gap Simulation needs.
@@ -9033,6 +9089,9 @@ def demo_scene(session: Session = Depends(get_session)):
             # dropped) would otherwise turn an honest empty stage into "cannot read the scene",
             # which is the ORD-0070 family of defects seen from the other side.
             "plan_version_id": None,
+            # ORD-0522: an empty stage says which hop lost the places too, in the same shape it has
+            # when a stage exists -- here `asked: false`, because no journey means no job was opened.
+            "supply": _board_supply_block(session, None, None),
         }
     context = session.get(JourneyTripContext, journey.id)
     start_raw, end_raw = (
@@ -9103,6 +9162,9 @@ def demo_scene(session: Session = Depends(get_session)):
         "mobility_legs_total": coverage["legs_total"],
         "mobility_legs_hard_eligible": coverage["legs_hard_eligible"],
         "plan_version_id": str(plan.id) if plan is not None else None,
+        # ORD-0522: which hop the places behind this stage rest on, at which stage a job stopped
+        # supplying, and how many of the stops the map can actually stand on.
+        "supply": _board_supply_block(session, journey.id, plan),
     }
 
 

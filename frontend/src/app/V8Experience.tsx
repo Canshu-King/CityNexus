@@ -3890,6 +3890,14 @@ function MapPage({
   const planStops = (data.active_plan?.activities ?? []).filter(
     (item) => activityCoordinate(item) != null,
   );
+  /* ORD-0522 -- and the rows the map could not stand on. They used to leave no trace: a traveller
+     counted three chips where the plan held five, and no word on the screen said which half was
+     missing or why. The server already names each unmappable stop (`stay_mobility.activity_coordinate`
+     emits the frozen `state` / `reason` tokens beside the null position), so both the count and the
+     reason are reported here rather than inferred from a shorter list. */
+  const droppedStops = (data.active_plan?.activities ?? []).filter(
+    (item) => activityCoordinate(item) == null,
+  );
   /* ORD-0497 -- the footprints on this map. One read, the same door the footprint screen and the
      per-stop 打卡 control read (`GET /api/v1/journeys/{id}/checkins`, `checkins.ts:93`), asked once
      per mount by `useFootprints` and cached nowhere: the traveller who stamps a stop on the trips
@@ -4091,6 +4099,18 @@ function MapPage({
                 </button>
               ) : null}
             </div>
+          )}
+          {droppedStops.length > 0 && (
+            <p
+              className="v8-map-stops-dropped"
+              data-testid="map-stops-dropped"
+              data-dropped-count={droppedStops.length}
+              data-supply-reasons={Array.from(
+                new Set(droppedStops.map((item) => item.location?.reason).filter(Boolean)),
+              ).join(",")}
+            >
+              {mapCopy(locale, "stopsWithoutPlace").replace("%s", String(droppedStops.length))}
+            </p>
           )}
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>

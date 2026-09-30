@@ -38,6 +38,9 @@ export type MapCopyKey =
   | "stopsShowAllTotal"
   | "stopsCollapseCta"
   | "stopsCaptureAria"
+  /* ORD-0522 -- the stops the map cannot stand on. The sentence is human words and carries no
+     server token; the named reason rides in a data attribute for the gates to read. */
+  | "stopsWithoutPlace"
   /* ORD-0497 -- the footprint arms. Named per read, never per traveller: the empty sentence says
      what THIS read brought back, because "还没有足迹" would be a claim about the person rather than
      about the door. */
@@ -109,6 +112,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   stopsShowAllTotal: { zh: "查看全部 %s 个地点", en: "Show all %s places" },
   stopsCollapseCta: { zh: "收起清单", en: "Collapse list" },
   stopsCaptureAria: { zh: "展开或收起地点清单", en: "Expand or collapse the stop list" },
+  stopsWithoutPlace: { zh: "另有 %s 个站点这次没有位置，地图就不列它们", en: "%s stops have no position, so the map leaves them out" },
   /* ORD-0497 — 足迹上地图。Three rules these sentences have to keep:
      1. the `read` arm with nothing in it names the READ ("这台服务器这次没有交回"), not the
         traveller ("你没有去过任何一站"), because an empty list from one server on one occasion is
