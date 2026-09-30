@@ -1,0 +1,9 @@
+base      : 13 failed, 1600 passed, 16 skipped, 1 xfailed, 4 warnings in 234.84s (0:03:54)
+candidate : 13 failed, 1608 passed, 16 skipped, 1 xfailed, 4 warnings in 223.01s (0:03:43)
+base red names 13, candidate red names 13
+NEW REDS (2) - these belong to this order:
+  + tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  + tests/test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment
+RED ON BASE ONLY (2) - timing-sensitive, moved in the candidate's favour:
+  - tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+  - tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match

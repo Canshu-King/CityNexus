@@ -1,0 +1,26 @@
+ORD-0505 r1 -> r2 relay equivalence
+r1: f707e1b3908c..e18d09985194   r2 base: 7862c6de5565
+
+A. files this order creates (byte for byte after normalising line endings):
+   backend/tests/test_qoder_ord0505_journey_abort.py            r2 89a858502a38f695  r1 89a858502a38f695  identical=True
+   frontend/src/features/abort/JourneyAbortPanel.tsx            r2 e0c4bb89bcdffd5b  r1 e0c4bb89bcdffd5b  identical=True
+   frontend/src/features/abort/journeyAbort.ts                  r2 24305c52b0757ccc  r1 24305c52b0757ccc  identical=True
+   frontend/src/features/abort/journeyAbortCopy.ts              r2 8aa39e9196963de5  r1 8aa39e9196963de5  identical=True
+   review/ord0505/real_http_abort_readback_r1.py                r2 c593a75e94e25883  r1 c593a75e94e25883  identical=True
+   review/ord0505/mutants_r1.py                                 r2 4f18778b28d0c978  r1 cad8e9dc0c61bf97  identical=False   <- changed on purpose in this re-cut
+
+B. files shared with other lanes (by MY added/removed lines, not by the file):
+   backend/app/main.py                                          r2 +131/-0  r1 +131/-0  my_delta_identical=True
+   backend/app/schemas.py                                       r2 +20/-0  r1 +20/-0  my_delta_identical=True
+   backend/app/services.py                                      r2 +5/-0  r1 +5/-0  my_delta_identical=True
+   backend/app/db/models.py                                     r2 +6/-0  r1 +6/-0  my_delta_identical=True
+   backend/app/db/session.py                                    r2 +6/-0  r1 +6/-0  my_delta_identical=True
+   backend/db/schema.sql                                        r2 +6/-0  r1 +6/-0  my_delta_identical=True
+   frontend/src/app/v8PanelRegistry.tsx                         r2 +21/-0  r1 +21/-0  my_delta_identical=True
+   contracts/openapi.yaml                                       r2 +62/-0  r1 +62/-0  my_delta_identical=True
+
+C. derived artifact - NOT relayed by patch, and NOT compared by line delta:
+   frontend/src/generated/api.ts                                r2 +90/-0  r1 +96/-1  delta may differ by design
+     the judgement on a generated file is reproducibility, not equality with an older generation: see review/ord0505/regen_reproducibility_r2.txt
+
+VERDICT (A and B): everything carried over unchanged

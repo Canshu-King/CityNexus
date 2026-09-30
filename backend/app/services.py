@@ -420,6 +420,11 @@ def journey_schema(item: Journey) -> JourneySchema:
         status=item.status,
         active_plan_version_id=item.active_plan_version_id,
         current_activity_id=item.current_activity_id,
+        # ORD-0505: the abort's own two columns, carried here so the reason a traveller gave can be
+        # read off the server instead of kept by whichever screen asked.  `parse_dt` returns None for
+        # None, which is the state of every trip that was never aborted.
+        cancelled_at=parse_dt(item.cancelled_at) if item.cancelled_at else None,
+        cancelled_reason=item.cancelled_reason,
     )
 
 

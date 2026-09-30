@@ -1,0 +1,13 @@
+ORD-0505 r2: the generated client is regenerated, not relayed - reproducibility evidence
+
+1  generator( base contract, 7862c6de )            = a2ac321e335d864bc60cafd3c37569c5d1891378e9aa886244f7f509a077f033
+2  7862c6de:frontend/src/generated/api.ts          = a2ac321e335d864bc60cafd3c37569c5d1891378e9aa886244f7f509a077f033
+   -> the checked-in client IS this generator output on the base commit: True
+
+3  generator( this tree contract )                 = dcbe4611f6d455269e064541cb751ff10db8cddd54421c9b51d451a9a3e745b2
+4  this tree frontend/src/generated/api.ts          = dcbe4611f6d455269e064541cb751ff10db8cddd54421c9b51d451a9a3e745b2
+   -> the delivered client is the same generator run on the delivered contract: True
+
+openapi-typescript 7.13.0, invoked as: node .../openapi-typescript/bin/cli.js <contract> -o <client>
+This is why the r1-vs-r2 line delta of this file is allowed to differ: the file is a function of the
+contract it was generated from, and this generation contract carries other lanes paths too.

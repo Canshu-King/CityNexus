@@ -1,0 +1,16 @@
+mode 1 - the rotating arms alone, 4x each tree
+  pristine-base  test_g3_xproc_two_uvicorn_workers_over_http_share_on   1/4 red alone
+  pristine-base  test_R4_the_seed_reads_the_call_itself_not_the_momen   0/4 red alone
+  pristine-base  test_an_abandon_from_another_process_resolves_the_te   0/4 red alone
+  pristine-base  test_r4_a_failed_source_is_named_retryable_and_never   0/4 red alone
+  candidate      test_g3_xproc_two_uvicorn_workers_over_http_share_on   0/4 red alone
+  candidate      test_R4_the_seed_reads_the_call_itself_not_the_momen   0/4 red alone
+  candidate      test_an_abandon_from_another_process_resolves_the_te   0/4 red alone
+  candidate      test_r4_a_failed_source_is_named_retryable_and_never   0/4 red alone
+mode 2 - rotating arms + this order's gate module, on the candidate
+  test_qoder_ord0505_journey                                               -> 8 passed, 2 warnings in 2.38s
+  test_qoder_g3_xproc_http.p+test_qoder_ord0332_error_r+test_qoder_ord05   -> 10 passed, 2 warnings in 8.88s
+  test_qoder_g3_xproc_http.p+test_qoder_ord0332_error_r+test_qoder_catal   -> 12 passed, 2 warnings in 9.26s
+mode 3 - rotating arms alone again, on the candidate (state left behind?)
+  test_g3_xproc_two_uvicorn_workers_over_http_share_on   -> 1 passed in 6.63s
+  test_R4_the_seed_reads_the_call_itself_not_the_momen   -> 1 passed, 2 warnings in 1.77s

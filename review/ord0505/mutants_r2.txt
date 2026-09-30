@@ -1,0 +1,13 @@
+main.py sha1 before any mutation: e5e3b44bc80fdd533e8f18147d3684e52f7139aa
+MA_no_authorisation: landed; arm says -> 1 failed, 2 warnings in 2.32s
+MB_no_already_cancelled: landed; arm says -> 1 failed, 2 warnings in 2.62s
+MC_no_missing_trip: landed; arm says -> 1 failed, 2 warnings in 2.52s
+MD_no_live_refusal: landed; arm says -> 1 failed, 2 warnings in 2.57s
+restored sha1 == original: True
+after restore, the success arm says -> 1 passed, 2 warnings in 2.92s
+
+verdict:
+  MA_no_authorisation        exit=1 :: 1 failed, 2 warnings in 2.32s
+  MB_no_already_cancelled    exit=1 :: 1 failed, 2 warnings in 2.62s
+  MC_no_missing_trip         exit=1 :: 1 failed, 2 warnings in 2.52s
+  MD_no_live_refusal         exit=1 :: 1 failed, 2 warnings in 2.57s

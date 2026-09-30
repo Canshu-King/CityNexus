@@ -340,6 +340,7 @@ from app.schemas import (
     CatalogHydrationRequest,
     GuardianAutopilotStart,
     JourneyCreate,
+    JourneyAbortRequest,
     JourneyPatch,
     LocationObservationRequest,
     LuggageContextRequest,
@@ -3165,6 +3166,123 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(session.get(Journey, str(journey_id)))
 
 
+_JOURNEY_ABORT_ATTEMPTS = 3
+
+
+@app.post("/api/v1/journeys/{journey_id}/abort", response_model=JourneySchema)
+def abort_journey(
+    journey_id: UUID,
+    payload: JourneyAbortRequest,
+    session: Session = Depends(get_session),
+):
+    """ORD-0505: stop a trip on the record, not only on the screen.
+
+    `journeys.status` has offered `CANCELLED` since the first schema (see the CHECK in
+    `backend/db/schema.sql`), yet no door wrote it: the only journey-status writes on this tree are
+    `PLANNED`, `ACTIVE` and `COMPLETED`.  So the traveller could discard a trip into the recycle bin
+    and could not stop one.  This door is the missing half, and it is deliberately not the bin door
+    wearing another hat.
+
+    Three refusals, each named, each riding in `error.reason_code` and minting no `error.code` --
+    the same boundary `backend/tests/test_qoder_ord0272_continuation.py::test_G6` keeps:
+
+        http_status=404 `JOURNEY_NOT_FOUND`                this tree never held that trip
+        http_status=403 `JOURNEY_ABORT_NOT_AUTHORISED`     the caller is not the trip's traveller
+        http_status=409 `JOURNEY_ABORT_ALREADY_CANCELLED`  it is stopped; the first why stands
+
+    `requested_by` is checked against `journeys.traveler_id` rather than waved through.  This product
+    has no session identity yet (`backend/app/schemas.py:801` says as much about `created_by`), and a
+    door that writes a state a traveller cannot undo by reading the path alone would be claiming an
+    authorisation it does not have.
+
+    The reason goes in the row (`cancelled_reason`) together with the server's own moment
+    (`cancelled_at`), both additive and without a DEFAULT, cut the way `deleted_at` was: NULL means
+    never aborted, so every pre-existing row keeps telling the truth.  Nothing here touches
+    `deleted_at`, which is what keeps 中止 distinct from 丢弃 -- an aborted trip stays in
+    `GET /api/v1/journeys` and stops appearing on the live door (`.../experience` refuses it with
+    `JOURNEY_ABORTED_NOT_LIVE`).
+
+    Concurrent taps are decided by the database, not by this process's view of an ORM object: the
+    UPDATE carries the status this tap read, so a tap that is overtaken loses on `rowcount` and
+    refuses with a name.  No `Idempotency-Key`: whether the write happens is settled by durable
+    state, and a replayed tap lands on `JOURNEY_ABORT_ALREADY_CANCELLED`.
+    """
+
+    reason = payload.reason.strip()
+    if not reason:
+        refused = HTTPException(422, "An abort needs a reason the record can keep")
+        refused.reason_code = "JOURNEY_ABORT_REASON_REQUIRED"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+
+    for _ in range(_JOURNEY_ABORT_ATTEMPTS):
+        journey = session.get(Journey, str(journey_id))
+        if journey is None:
+            refused = HTTPException(404, f"Journey {journey_id} was not found")
+            refused.reason_code = "JOURNEY_NOT_FOUND"
+            refused.error_details = {"journey_id": str(journey_id)}
+            raise refused
+        if journey.traveler_id != str(payload.requested_by):
+            refused = HTTPException(
+                403, f"Journey {journey_id} belongs to traveller {journey.traveler_id}"
+            )
+            refused.reason_code = "JOURNEY_ABORT_NOT_AUTHORISED"
+            refused.error_details = {
+                "journey_id": str(journey_id),
+                "requested_by": str(payload.requested_by),
+            }
+            raise refused
+        seen = journey.status
+        if seen == "CANCELLED":
+            refused = HTTPException(409, f"Journey {journey_id} is already aborted")
+            refused.reason_code = "JOURNEY_ABORT_ALREADY_CANCELLED"
+            refused.error_details = {
+                "journey_id": str(journey_id),
+                "cancelled_at": journey.cancelled_at,
+                "cancelled_reason": journey.cancelled_reason,
+            }
+            raise refused
+        moment = datetime.now(timezone.utc).isoformat()
+        written = session.execute(
+            update(Journey)
+            .where(Journey.id == str(journey_id), Journey.status == seen)
+            .values(status="CANCELLED", cancelled_reason=reason, cancelled_at=moment)
+            .execution_options(synchronize_session=False)
+        ).rowcount
+        if written == 1:
+            break
+        session.rollback()
+    else:
+        current = session.get(Journey, str(journey_id))
+        refused = HTTPException(409, f"Journey {journey_id} was aborted by a concurrent tap")
+        refused.reason_code = "JOURNEY_ABORT_ALREADY_CANCELLED"
+        refused.error_details = {
+            "journey_id": str(journey_id),
+            "cancelled_at": current.cancelled_at if current is not None else None,
+            "cancelled_reason": current.cancelled_reason if current is not None else None,
+        }
+        raise refused
+
+    before = {"status": seen, "cancelled_at": None, "cancelled_reason": None}
+    session.commit()
+    record_audit(
+        session,
+        action="journey.aborted",
+        entity_type="Journey",
+        entity_id=str(journey_id),
+        journey_id=str(journey_id),
+        before=before,
+        after={"status": "CANCELLED", "cancelled_at": moment, "cancelled_reason": reason},
+    )
+    session.commit()
+    # The write above was a conditional UPDATE, not an object assignment, and this sessionmaker runs
+    # with `expire_on_commit=False` (`app/db/session.py`) -- so the ORM still holds the row as this
+    # process read it before the write.  Returning that would show the caller a `DRAFT` trip that the
+    # database has already stopped, and the response would contradict its own 200.
+    session.expire_all()
+    return journey_schema(session.get(Journey, str(journey_id)))
+
+
 @app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
 def list_recycle_bin_journeys(session: Session = Depends(get_session)):
     """ORD-0402 slice 1: the trips that are in the recycle bin, each with its own deletion moment.
@@ -4837,6 +4955,19 @@ def read_journey_member_role_limits(journey_id: UUID, session: Session = Depends
 @app.get("/api/v1/journeys/{journey_id}/experience")
 def get_journey_experience(journey_id: UUID, session: Session = Depends(get_session)):
     journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0505: an aborted trip is not discarded -- it stays in `GET /api/v1/journeys` -- but it no
+    # longer has a live screen.  Refusing here, before anything else on this door runs, also keeps
+    # the promise honest: this read reconciles state as it goes, and an stopped trip must not be
+    # written on its way to being told it is not live.
+    if journey.status == "CANCELLED":
+        refused = HTTPException(409, f"Journey {journey_id} was aborted and is not live")
+        refused.reason_code = "JOURNEY_ABORTED_NOT_LIVE"
+        refused.error_details = {
+            "journey_id": str(journey_id),
+            "cancelled_at": journey.cancelled_at,
+            "cancelled_reason": journey.cancelled_reason,
+        }
+        raise refused
     payload = experience_payload(session, journey)
     # Surface the durable recovery state (and, if the plan is still ACTIVE,
     # re-check feasibility so a stale plan cannot look healthy to the phone).
