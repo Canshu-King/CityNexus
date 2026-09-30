@@ -123,6 +123,15 @@ export function MapPanel({
      A ref keeps the handler current without making the camera its hostage. */
   const selectRef = useRef(onSelectActivity);
   selectRef.current = onSelectActivity;
+  /* The same hostage problem one line above, on the other side of the marker: the build effect reads
+     `selectedActivityId` when it paints `aria-pressed`, and markers are created after the map reports
+     itself ready — seconds after the render that scheduled the build.  A selection that already exists
+     by then (a pick restored on boot) was therefore painted from the older render's value, so the glass
+     named the stop while every pin answered `aria-pressed=false`, and nothing re-painted it until the
+     traveller clicked.  Measured: restored pick → pins all false at 0/1.5/3/6 s; one click → correct.
+     A ref keeps the pressed state current without making the camera hostage to it. */
+  const selectedRef = useRef(selectedActivityId);
+  selectedRef.current = selectedActivityId;
   // Map truth: never centre on a hardcoded city.  If the Journey has no
   // trustworthy coordinates we say so explicitly instead of silently showing
   // an unrelated city (design corrections §10).
@@ -423,7 +432,11 @@ export function MapPanel({
          keyboard; the hit area is the marker box itself, which the narrow-width gate measures. */
       marker.setAttribute("role", "button");
       marker.tabIndex = 0;
-      marker.setAttribute("aria-pressed", String(!!point.id && point.id === selectedActivityId));
+      marker.setAttribute("aria-pressed", String(!!point.id && point.id === selectedRef.current));
+      /* The class is the painted half of the same state (`map-selection.css:22`), and the build path
+         set only the attribute, so a selection that existed before the markers were created announced
+         itself to a screen reader and not to the eye. */
+      if (point.id && point.id === selectedRef.current) marker.classList.add("selected");
       const choose = () => selectRef.current?.(point.id ?? null);
       marker.addEventListener("click", choose);
       marker.addEventListener("keydown", (event) => {

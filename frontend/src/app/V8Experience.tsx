@@ -1413,6 +1413,54 @@ export function V8Experience() {
     ? allActivities.filter((item) => item.id !== detailActivity.id)
     : [];
 
+  /* ORD-0361 residual: a stop picked on the map does have an observable consequence now (ORD-0390
+     paints its name on the glass, ORD-0417 says which stop it was), but the pick did not outlive the
+     document.  It is kept per journey here, beside the shell's other `citynexus.v8.*` references, so
+     re-entering the page returns the traveller to the stop they were looking at.  Two rules keep this
+     from becoming a second source of truth: the entry is keyed by the journey the data actually belongs
+     to, so switching journeys cannot carry a pick over; and an id that is not a stop on *this* plan is
+     dropped rather than shown, because restoring an id the plan no longer has would print a name the
+     server does not stand behind -- worse than the blank it replaces.  The id set is compared as one
+     string so these effects run when the plan changes, not on every render. */
+  const pickJourneyId = data?.journey?.id ?? null;
+  const planActivityIds = allActivities.map((item) => item.id).join(",");
+  const mapPickRestored = useRef<string | null>(null);
+  const mapPickKey = (id: string) => `citynexus.v8.map_pick.${id}`;
+  useEffect(() => {
+    if (!pickJourneyId || mapPickRestored.current === pickJourneyId) return;
+    const ids = planActivityIds ? planActivityIds.split(",") : [];
+    const key = mapPickKey(pickJourneyId);
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(key);
+    } catch {
+      stored = null;
+    }
+    if (stored && ids.indexOf(stored) >= 0) {
+      setDetailActivityId(stored);
+    } else if (stored) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        /* a blocked store cannot be cleaned; nothing is restored either way, which is the point */
+      }
+    }
+    mapPickRestored.current = pickJourneyId;
+  }, [pickJourneyId, planActivityIds]);
+  useEffect(() => {
+    if (!pickJourneyId || mapPickRestored.current !== pickJourneyId) return;
+    const ids = planActivityIds ? planActivityIds.split(",") : [];
+    try {
+      if (detailActivityId && ids.indexOf(detailActivityId) >= 0) {
+        localStorage.setItem(mapPickKey(pickJourneyId), detailActivityId);
+      } else {
+        localStorage.removeItem(mapPickKey(pickJourneyId));
+      }
+    } catch {
+      /* Storage blocked means the pick lives for this visit only, which is what it did before. */
+    }
+  }, [pickJourneyId, detailActivityId, planActivityIds]);
+
   /* ORD-0465: the share-receiving screen, and the one surface in this file that answers with no
      journey on the device. Everything below this point belongs to the traveller's own shell -- the
      failure view, the loading view, the cached-copy view and then `if (!data)`, which is the gate that
