@@ -16588,6 +16588,144 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### bac10f40 12:44 · ORD-0480 交了：抽屉的三条出路各一枚臂，正控在臂里，三枚反例各自只咬自己那一条（枝 -r2，基座=现尖）
+
+**〇、基座、枝，和「只加测试」这一句的计数**
+- 现尖我自己现读：`git fetch origin mirror/integration-frontend-apple-pass1` ⇒ `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`（与账本 cmdr 12:12 那块同一枚）。本单交付件 `d138a59567c01616d855b86b463c647595a819fc`。
+- 交件枝 `refs/heads/review/bac10f40-ord0480-drawer-close-arms-r2`，服务端 `git ls-remote` 回读尖 `91644673e2a7baec710037d6103f32ac4aaade77`；被驱动的产物 `d138a59567c01616d855b86b463c647595a819fc`。
+- 为什么交 -r2 不是 -r1：裁语点名的 -r1 我在 12:05 推在旧基 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 上；那之后尖走了 ORD-0472 与 ORD-0475 两笔，你落地的门是 ff-only ⇒ 候选必须含现尖，所以 rebase 成新 ref，旧 ref 不删不强推：`git ls-remote` 回读 -r1 仍是 `614f86a0f654359256c39dd4831b79f989ed71eb`。
+- 只读预测（这一轮我 0 次移动线、0 次写账本，只跑只读命令）：`git merge-base --is-ancestor 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 91644673e2a7baec710037d6103f32ac4aaade77` 为真 ⇒ behind=0；`git diff --name-status 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 91644673e2a7baec710037d6103f32ac4aaade77` = 新增 10 枚、修改与删除各 0 枚；同一句里 frontend 下只有新开的那枚 spec ⇒ 产品字节 0 枚。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 三条路径所在的产品文件与现尖同一枚字节：`frontend/src/app/V8Experience.tsx` 在 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72` 与我枝上是同一 blob `91c3677805fa4d14bc9fbe165424f03c09fa8d9d` ⇒ 三枚反例是打在现尖那份字节上的，不是打在我改过的树上。
+- spec 在我四个枝尖（rebase 后逐跳）都是同一 blob `d138a59567c01616d855b86b463c647595a819fc`（9451 B，171 行）⇒ 下面每格读数测的都是这一份断言。
+
+**一、断言写成什么形（三臂各自一条出路，正控不许靠"抽屉从来没开过"蒙绿）**
+- 下面凡引 `frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:行号` 的，行号都是相对我交付的那枚 blob `d138a59567c01616d855b86b463c647595a819fc`（171 行）数的，不是相对现尖那棵树——这枚文件此刻还不在线上，落地后才是；引错的人可以按 blob 直接打开。
+- 每臂都是：先 `expectOpen` 再判 `expectClosed`——`frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:90` 起断 drawer=1、backdrop=1、entry_nodes>0、门把 aria-expanded=true、屏上渲染文字就是「菜单」。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 门把几何（三臂同一读数）：盒 x=17 y=19 w=46 h=27，中心 (40, 33)。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 关闭按钮臂：先取 `frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:114` 那条断言——屏上 innerText 必须逐字是「关闭」，再取其盒 x=241 y=18 w=32 h=44 点击。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- backdrop 臂：按下点 (350, 400)，按之前先证明该点命中的就是 backdrop 本身（读回 `button.v8-drawer-backdrop`）。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- Esc 臂：`page.keyboard.press("Escape")`，与上两臂共用同一个 `expectClosed`（`frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:102`）。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 关后四条一起判：drawer_nodes=0、backdrop_nodes=0、entry_nodes=0、aria-expanded="false"，且门把中心命中回到 `button.v8-mobile-menu`（hit_is_ham=true）——"页面重新可用"在触屏上就是这一句。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 正控另有一向：抽屉展开时 `frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:95` 断言中心命中**不得**落在门把上（那格就是你裁"门把不改"时引的读数）；我在臂里把它读出来，没有为它改产品。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+
+**二、干净一趟（authoritative 模式，两趟独立，落盘读数逐字节相同）**
+- 命令：`node @playwright/test/cli.js test e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts --reporter=line`，环境 `CITYNEXUS_E2E_AUTHORITATIVE=1`、`CITYNEXUS_AI_ENABLED=false`、两个代理变量与 DEEPSEEK/CITYNEXUS_AI key 逐条 unset、run id `r0480g`、fresh 库 `_e2e_r0480g.db`。锚 `88e89caf0f9a07d79c4fb79f3a543b31dda4176a`。
+- 服务身份那行是仪表自己打印的：`[citynexus e2e] provenance ok: run=r0480g frontend=:4893 -> backend=:8764 ai=disabled db=_e2e_r0480g.db`。锚 `88e89caf0f9a07d79c4fb79f3a543b31dda4176a`。
+- 结果 `5 passed (41.0s)`，本单 4 枚命名测试全过（三臂 + 读数落盘那枚）。锚 `88e89caf0f9a07d79c4fb79f3a543b31dda4176a`。
+- 落盘读数 2680 B、4 行记录（close_button / backdrop / escape / closed_baseline），盘上名带 run id：`qoder-bac10f40-ord0480-drawer-close-arms--r0480g.json`。锚 `2793d01a8209ecbe2ef3e8b9e4a72c8617dc2c45`。
+- 上一趟 `r0480f` 在 :4891 与 :8762 跑的落盘读数与这一趟**同一枚 blob** `2793d01a8209ecbe2ef3e8b9e4a72c8617dc2c45` ⇒ 两趟独立、字节相同；那一趟的 stdout 我当初没留档，所以它的用时数我不写（第四节是同一件事的另一半）。锚 `2793d01a8209ecbe2ef3e8b9e4a72c8617dc2c45`。
+- 抽屉里条目数：三臂展开时各读到 entry_nodes=16（现尖词表就是这些路由）。锚 `2793d01a8209ecbe2ef3e8b9e4a72c8617dc2c45`。
+
+**三、三枚反例：断开任一条出路，门必须红，而且只让它自己那枚红**
+- 仪表 `D:/moodle/_qoder_ai_ord0387_20260928/wt/evidence/bac10f40-ord0480-20260929/ord0480_mutate_r3.py`（5590 B，harness r3 blob `e8989943f7b9aa021030b79269548fa22192e76b`）：一次只改一条出路的处理函数，跑同一套 spec，无论成败都 `git checkout --` 还原；r1 那份是初版 blob `8e5c57bcd81aebee5ff47450377ad4813069b4b7`，r2 那份补上 run id 与 infra 判定 blob `0dbb01f6c905a30a8a33446d7515fcf95828e316`。
+- 注入落地有回执：三趟各自 `git status --porcelain -- src/app/V8Experience.tsx` = `M frontend/src/app/V8Experience.tsx`，跑完汇总里脏行数 0 ⇒ 变异真进过被 import 的那棵树，也真被还原。锚 `611e4e755ad4e7bf838c0deaa23f3a972f138c6c`。
+- close_button 臂（把 `onClick` 换成空函数）：exit 1，`2 failed / 3 passed (34.1s)`，红的是它自己那枚 + 读数落盘那枚；报的第一行是 `close_button: #v8-nav-drawer is still mounted -- that path did not close the drawer`。日志 16253 B blob `7b66e229e67ee7927bf105577e530ba7d453f4bb`，run id mutclose123027。
+- backdrop 臂（同样把 `onClick` 换成空函数）：exit 1，`2 failed / 3 passed (33.3s)`，红 :127 自己那枚 + 落盘那枚；`backdrop: #v8-nav-drawer is still mounted -- that path did not close the drawer`。日志 15429 B blob `349d7bb7db29936a05bcc67394ce55382226dbf9`，run id mutbackdr123102。
+- Esc 臂（把比较的键名改成永远不来的那枚）：exit 1，`2 failed / 3 passed (37.3s)`，红 :145 自己那枚 + 落盘那枚；`escape: #v8-nav-drawer is still mounted -- that path did not close the drawer`。日志 15466 B blob `9ae93fcce5ec6d817b9e51585c3d4a58ea4d04e1`，run id mutescape123136。
+- 交叉归因（这格是三枚里最容易写虚的）：每趟里另两条命名臂仍然过——close_button 那趟 backdrop 与 escape 在失败清单之外，backdrop 那趟 close_button 与 escape 之外，escape 那趟 close_button 与 backdrop 之外 ⇒ 三条断言互不借红。锚 `611e4e755ad4e7bf838c0deaa23f3a972f138c6c`。
+- 每趟第二枚红我说清性质：那是落盘那枚（`frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:170`），它先抛在"必须回到关闭态"这一步、写不满 4 行读数，所以是**后果**不是第三条独立断言；我不把它算成反例数。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 汇总 2100 B blob `611e4e755ad4e7bf838c0deaa23f3a972f138c6c`（gen=`869399f821def9d11e4961593d801b7d40501e95`，本班 2026-09-30T12:30:26+0800 到 2026-09-30T12:32:14+0800）——三枚变异跑在 `869399f821def9d11e4961593d801b7d40501e95` 那一跳；其后两跳只往 evidence 目录加文件，`git diff --name-only 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 91644673e2a7baec710037d6103f32ac4aaade77 -- frontend` 仍然只列我新开的这枚 spec ⇒ frontend 下既有文件被动过 0 枚。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+
+**四、这一轮我踩的两枚坑，都装进了"执行写的那一步"**
+- run id 复用被库守卫杀掉：r2 的第一趟三枚日志只有 ~4 KB，正文是 `RuntimeError: E2E run 'mutclose' refuses to reopen an existing database` 加 `Error: Process from config.webServer was not able to start`——退出码同样是 exit 1。只看退出码会把"没测到"读成"门红了"。从此仪表每趟取唯一 run id，并把 `not able to start` 判成 `infra_failure` 而不计反例。锚 `0dbb01f6c905a30a8a33446d7515fcf95828e316`。
+- 同名文件互相覆盖：那三枚 infra 日志的名字不带 run id，第二趟真日志写进同一批名字就把它们顶掉了 ⇒ 原始件**不可取回**，只剩这一段文字与仪表里"日志名带 run id"那一行（harness r3 blob `e8989943f7b9aa021030b79269548fa22192e76b`）。同一类缺陷我也在 spec 落盘那行修掉：文件名带上 `CITYNEXUS_E2E_RUN_ID`（`frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:165`，blob `d138a59567c01616d855b86b463c647595a819fc`）。
+
+**五、没做的（具名残差，别按合格计）**
+- 整套前端门我没跑；只跑本 spec 并用 `--list` 证它在默认 config 里被发现（`Total: 5 tests in 2 files`，含 real-seed setup 那枚）。整套执行数归你的落地门。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 字面断言只钉 zh-CN 的「菜单」「关闭」二字（你点名的字面），本地化经 `frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:69` 的 addInitScript 定住；en 那三条形同这些路径，但没有"渲染文字必须是什么"的臂。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- 门把在抽屉展开时被盖住那一格按裁语未动，也没抬 z-index：它作为正控被读进 `frontend/e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:95`。锚 `d138a59567c01616d855b86b463c647595a819fc`。
+- tracked 的 `reports/e2e-provenance/authoritative.json` 每趟 authoritative 都会被我改脏，每一趟之后我都 `git checkout --` 还原 ⇒ 它在现尖是 blob `f5c24f40619231f2c52b3472dc40cd7b136bce48`、在我交付尖也是同一枚 `f5c24f40619231f2c52b3472dc40cd7b136bce48`，没在这 10 枚新增里。锚 `91644673e2a7baec710037d6103f32ac4aaade77`。
+- 逐请求访问日志那一证我这链路上不可得，具名 NOT_AVAILABLE_BY_LANE；身份只由仪表自己打印的那行端口/run id 担保。锚 `88e89caf0f9a07d79c4fb79f3a543b31dda4176a`。
+
+**六、现在与下一步（不用回）**：枝在 `review/bac10f40-ord0480-drawer-close-arms-r2`，你走门；我不再敲门，本单只这一枚块。另一件与本单无关、但写这行时我当场量到的：D 盘 `308G total / 304G used / 4.3G avail (99%) on /d`（`df -h /d` 现跑现取，我这轮只新增 10 枚小证据件、没做任何导出拷贝）。锚 `611e4e755ad4e7bf838c0deaa23f3a972f138c6c`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0494 · 车道 N2（会话逐字 `9759f1ac-3d69-4688-8664-8ca954ab7737`）· g9a 自证臂改成确定性臂 · 候选枝已推，权威线未动 @12:50+08
+
+一、翻面的成因（量出来的，不是推的）
+
+- 旧臂在这一枚要求保留域那次 GET 必须抛异常：backend/tests/test_qoder_anywhere_lock_duration.py:208（这一行属于基树 blob `44081e39631d94000d667ae1b0cae6d822844ae7`，`git cat-file -t` 可回读）。
+- 同一棵基导出树、两套 shell：留着 shell 的 HTTP(S)_PROXY 时，请求被本机代理代答、httpx 拿到响应，臂读 `DID NOT RAISE` 而红；把那几枚变量剥掉，解析器直接拒绝保留名（两环境下 `getaddrinfo` 都失败，所以 DNS 从来不是变量），httpx 抛 `ConnectError`，臂就绿。翻面的是跑它的那层 shell，不是产品、不是跑序、也不是别的臂留下的库态。
+- 现尖在我基点之后动过 `backend/app/db/session.py`——挂钩的 engine 就是从那里来的——所以我把臂搬到合并树上又测了一遍，见第三节。
+
+二、改法（只动这一枚文件，0 具名 skip）
+
+- 拿掉的是「必须抛异常」这一条与产品无关的要求；调用怎么收场（被代理代答 / 本地被拒，连同 status 或异常名）改为写进断言消息。辅助函数在 `backend/tests/test_qoder_anywhere_lock_duration.py:193`，基树与候选树同一枚文件行数分别是 `field=lines_base=296` 与 `field=lines_candidate=317`。
+- 留下并仍然会判的两条真断言：已知写路径至少产生 1 个写事务窗口 `backend/tests/test_qoder_anywhere_lock_duration.py:224`；transport 挂钩确实记录到那枚 provider 形态调用 `backend/tests/test_qoder_anywhere_lock_duration.py:230` 与 `backend/tests/test_qoder_anywhere_lock_duration.py:234`。
+- 改动规模 `field=numstat=26/5/backend/tests/test_qoder_anywhere_lock_duration.py`（增行/删行/文件），文件只有这一枚：backend/tests/test_qoder_anywhere_lock_duration.py。
+
+三、确定性与双向自证（都在合并树 `de5184d9387ee5189d8345ed16337f6cc4d91eb9` 上跑，`git merge-tree --write-tree` 只读预测退 `0`）
+
+- 同棵导出树连跑必同结果：g9a 单跑 4 趟（留着代理变量 ×2、剥掉 ×2）全部退 `0`，无失败条目；整枚文件在两环境下各跑一趟，红的那条始终是 `test_g9b_provider_http_never_runs_inside_an_open_write_transaction`（本 box 上 provider 出网为 0，判据行 `backend/tests/test_qoder_anywhere_lock_duration.py:264`），g9a 与 g9c 都绿。
+- 跑序不敏感：把本文件排在 `backend/tests/test_qoder_ord0307_credential_gate.py` 之后跑，失败条目是那枚门自己的 3 条加 g9b，g9a 不在其中（`field=rc=1`）。
+- 突变（关掉 transport 挂钩的安装） → g9a 必红（`field=rc=1`，失败条目含 g9a：`test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls`）。只改导出件，跑完还原。
+- 突变（把已知写路径换成只读调用） → g9a 必红（`field=rc=1`，失败条目含 g9a：`test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls`）。只改导出件，跑完还原。
+- 还原后再跑 g9a 复绿（`field=rc=0`）；还原件与车道件同字节，候选树里该文件的 blob 是 `66241469e2cb8e2e5ac0acf976ba4eb5dc2f5d0a`，与合并树里的那枚逐字相同（`field=merged_equals_lane=True`）。
+- 结论：这按臂处理，不按产品缺陷开新单——它断的那件事（写事务窗口有没有包住 provider 调用）在两环境下都没变，变的只是它顺带要求世界必须拒掉那枚保留域名。g9b 的恒红是另一件事，它的用途就是看活 provider，要不要给它具名供能开关归你裁，我没动它。
+
+四、坐标、复现形制与边界
+
+- 基点 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72`（`4e0ad72c`）；候选头 `a07bf28b4bffa17854dcd6fedf37f84a0c746a6f`；枝 `refs/heads/review/9759f1ac-ord0494-g9a-deterministic-r1`，`git ls-remote origin` 回读同值 `a07bf28b4bffa17854dcd6fedf37f84a0c746a6f`；交件前一秒现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`，`git merge-base --is-ancestor` 退 `0`；两尖之间 `field=backend_files_moved=5` 枚 backend 文件移动，枚名在发布件。
+- 复现形制（每一步都用这两条形制）：解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest tests/test_qoder_anywhere_lock_duration.py -p no:randomly -q --tb=line -rf --no-header`，cwd 在导出树的 `backend/`，`DEEPSEEK_API_KEY` 等 4 枚 provider 变量剥掉，库路径由 `backend/tests/conftest.py:98` 每进程新生成的临时目录决定（本车道没声明 `CITYNEXUS_DATABASE_URL`）。
+- 证据先发布后引用：`evidence/ord0494-n2/g9a_determinism_r1.json`，外读 blob `5747dc3e5c73731e5d67e30116528d66b37a95fb`（`git cat-file -t` 回 blob）；里面带两套 shell 的原始读数、4 趟单跑、两趟整档、跑序那一趟、两枚突变与还原核对。
+- 边界：`frontend/src/styles.css` 0 字节、产品代码 0 字节、契约 0 字节、枚举值 0 改写、具名 skip 0 枚、权威线 0 移动、落地 0 动作、别人 worktree 0 触碰、本块起头不是 CMDR；突变只落在我自己的导出副本，跑完即还原。
+
+- 写完就停：本块只交臂的改动与读数，落账与是否合并归你那一跳 `--apply`。
+
+
+### ORD-0464 车道 8e5245f0 · r5：第四次位置性 re-cut 后重交，当代读数全重取；附尖的推进节奏
+
+**现读尖**（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）= 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72。
+四次拦我的都是**基线过期**、没有一次是语义撞车：#1 枝基 45513fc7957214dc385b4dffea9a662a0d8b1d1c（五枚面）、#2 枝基 4037cb331ea00b83124316d40329762fa1131689（ORD-0471 路由重绑 + ORD-0467 V13 进契约）、
+#3 枝基 127ce7b05329eaa837701cdb93bdbc2e5d64e10f（ORD-0476 足迹 schema 与我同一枚 `components:` 锚）、**#4 枝基 dcb90cccc68b81f2317b28db19051dedb9f06c80**（ORD-0472 长图海报与 ORD-0475 分享键闸
+动了 `contracts/openapi.yaml` 与 `frontend/src/app/v8PanelRegistry.tsx`；`main.py`/`schemas.py`/`api.ts` 那三代没动）。
+
+**推进节奏（给排期用，原件在枝上）**：`45513fc7957214dc385b4dffea9a662a0d8b1d1c` → `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72` 之间 landings_total=144、minutes_per_landing=9.1、
+动过我四枚热面的 landings=13、minutes_per_hot_landing=101 —— 逐字与命令原文在
+`b32037e8fce13a66da7573b8032ed91cf558ede8:review/ord0464-abort-reason/CADENCE_R1.txt:10` 与同档 `:11`（跨度 elapsed_hours=21.8 记在同档 `:10`）。
+⇒ 尖每 9 分钟动一次、每 101 分钟就有一枚落地动到我碰的四枚面之一。r5 若在复切通过后**一两个小时内**落地，通过概率最高；
+再往后我还会被撞，这不是交付得不对，是"复切要求字节等于枝上 blob"与"尖每 9 分钟动一次"天然打架。
+
+**形状没退回去**（号令者两次要的收拢仍在）：`git diff --numstat 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 HEAD -- contracts/openapi.yaml` 回 "80 0"（增/删），
+`git diff -U0` 是 2 段纯追加（16 行接 `deleteJourney` 末尾、64 行接 `components.schemas` 文件尾）；
+注册表那枚条目 `git diff --numstat` 回 "16 0"，也是纯追加。0 处改写别人的行。
+
+**交付坐标（push 后从 GitHub 回读）**：`refs/heads/review/Q-ord0464-abort-reason-r5` = b32037e8fce13a66da7573b8032ed91cf558ede8，在 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 之上 16 笔，
+`git diff --shortstat 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 b32037e8fce13a66da7573b8032ed91cf558ede8` 回 "22 files changed, 2533 insertions(+), 4 deletions(-)"（整枝 files=22 +2533 -4；产品字节止于 3e4c1c49af64378ce8c1d8b84f543a8f287f1a8f）。
+`refs/heads/master` 回读 = 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，权威线未动；`git merge-tree --write-tree 4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72 b32037e8fce13a66da7573b8032ed91cf558ede8` 退出码 rc=0。
+**五枚枝并存**（r1 acea5e239d1e… / r2 32e65ca6b018… / r3 a50bae63c184… / r4 e318af4a4290… / r5 b32037e8fce1…），
+我逐枚量过：r1..r4 相对 r5 **独有文件 0 枚**（`comm -23 <(git ls-tree -r --name-only rN) <(git ls-tree -r --name-only r5)` 计数），
+且 ORD-0464 的 11 枚面在现尖上**一枚都没落**（逐枚 blob 对比尖，未落=11）⇒ 要落的只有 r5，其余四枚是纯历史。
+
+**当代读数（r5 基上全重取）**：本单模块 `13 passed`；九面邻测同跑 `67 passed`；
+`tools/verify_openapi_parity.py` 回 formal=166 runtime=166 missing=0 extra=0（逐字
+`b32037e8fce13a66da7573b8032ed91cf558ede8:review/ord0464-abort-reason/GATE_R1.txt:207`）；收集带我的模块 collected=1483 errors=20（同档 `:213`）、
+`--ignore` 掉后 collected=1470 errors=20（同档 `:214`），差 added=13 正是纯新增，20 枚错误里非 `test_v18_hermes_*` 命中 0 枚；
+门禁 stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 21300.528}（去时长形 expected=8 unexpected=0 skipped=0 flaky=0，逐字 `b32037e8fce13a66da7573b8032ed91cf558ede8:review/ord0464-abort-reason/GATE_R1.txt:31`，
+这是**反件还原之后**那一跑）；反件 killed=6/共 6 枚、restored=6 枚逐枚还原；
+产物名 /assets/index-Drhg9Pr1.js（与 r4 的 index-B2vOrCNp.js 不同，因为 ORD-0472 的海报进了前端包）；
+归属证据 "scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035: in MY copy=1 versions=9; probe versions=21"，库是这条车道自己那份 `D:/moodle/_qoder_q_ord0369_wk/q0386.db`。
+
+**回你提醒的两件**：① 共享预览库缺 `journey_checkins`/`journey_share_grants`/`journey_members` 这条我按你说的走自己副本——
+现读我这份拷贝，三张表**都在**（`journey_checkins`、`journey_share_grants`、`journey_members` 命中 3/3，总表数 59），
+是车道后端启动时 `ensure_schema` 按本树 `backend/db/schema.sql` 补的，所以我所有读数不依赖共享库、也不会被那个缺口影响；
+② 入账判据（三位以上数字同行带 40 位或 path:line 锚）我这块每枚数都按它写，本块过尺结果附在最后。
+
+**那件与我不相干、但已经长到两处的事实（只报不改）**：把 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72:contracts/openapi.yaml` 用同一把 openapi-typescript 7.13.0
+重生成，与 `4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72:frontend/src/generated/api.ts` 比差 10 行 ⇒ 尖上生成物落后契约**两处**：
+`V13NamedRejection` 整枚组件缺失（契约命中 1、生成物命中 0），以及一行分享授权描述是旧的。
+现有 codegen 尺只比 operationId 不比 schema，所以两处都不报红。我的 `api.ts` 差异 41 增 2 删里含 `theirs=6` 行
+（= 41 减纯本单 35）；手摘就不可由契约复现，所以留着并报给你判。
+
+**没改善的部分**：① "中止"那半张仍未做，`journeys.status` 的 `CANCELLED`（`4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72:backend/db/schema.sql:125`）无路由写入；
+② 原因无回读的门（`JourneyAbortRecorded`/`JourneyAbortBoundary` 是文档性组件，没有响应 `$ref` 它们）；
+③ 找回后再丢弃留第二枚行，屏上取最后一枚，无"哪一次"选择器；④ 并发未测；⑤ 真机未走；
+⑥ `playwright.config.ts` 只被收集未执行；⑦ 八枚词未做用户研究；⑧ 五枚枝并存请定去留（事实层已给：r1..r4 无独有文件）；
+⑨ 下一次尖再动那两枚热面，我仍会被撞成 stale——要根治得在落地侧解决（复切通过后立刻落，或允许"合并结果"而非"枝上 blob"为准），
+我不改你的工具，只把节奏读数交给你。
+
+
 ### cmdr 12:48 · 四笔落地（足迹屏、抽屉关闭三径、字典键形状判据、schema 追平）· 足迹屏我自己真按了打卡键，两臂都读到「已打卡」与那一枚足迹 · 长图导出我也真下了那张 PNG · ORD-0495 开单一枚
 
 **一、落地（我一笔一笔走门，ff-only，每笔前一秒重读尖；本班零点后累计十五笔）**
