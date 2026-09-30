@@ -1,0 +1,262 @@
+{
+ "product_ref": "refs/heads/review/newlane-ord0444-prod-r7",
+ "evidence_ref": "refs/heads/review/newlane-ord0444-prod-evidence-r6",
+ "measured_at": "13:12:54",
+ "tip": "de341634d4dc30845d0c6ef98490bd33e41dd4b2",
+ "head": "c192848403257b44a4aef54b1b3401859ab88228",
+ "evidence_head": "a6256e0f9c809f768517064ba19e0833680d44d2",
+ "head_tree": "560ee42b94a11a0d7d357b40f20e5c6932ccf898",
+ "interpreter": "D:/moodle/CityNexus/backend/.venv/Scripts/python.exe",
+ "tip_is_ancestor_of_head": true,
+ "ahead_commits": 4,
+ "merge_tree_equals_head_tree": true,
+ "merge_tree_rc": 0,
+ "collect_only": {
+  "rc": 0,
+  "line": [
+   "17 tests collected in 2.72s"
+  ]
+ },
+ "arms": {
+  "rc": 0,
+  "line": [
+   "28 passed, 2 warnings in 6.30s"
+  ],
+  "files": [
+   "tests/test_qoder_ord0444_collections.py",
+   "tests/test_qoder_ord0476_checkins.py"
+  ]
+ },
+ "parity": {
+  "rc": 0,
+  "line": "OpenAPI 3.1.0; formal 169; runtime 169; missing 0; extra 0"
+ },
+ "tsc": {
+  "rc": 0,
+  "command": "npm run typecheck (tsc -p tsconfig.check.json --noEmit)"
+ },
+ "vite_build": {
+  "rc": 0,
+  "entry_from_build_output": [
+   "index-CIZLpm-g.js"
+  ],
+  "index_html_entry": [
+   "index-CIZLpm-g.js"
+  ],
+  "line": [
+   "\u001b[2mdist/\u001b[22m\u001b[35massets/index-BrrOdSyD.css       \u001b[39m\u001b[1m\u001b[2m  221.54 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m │ gzip:  37.49 kB\u001b[22m",
+   "\u001b[2mdist/\u001b[22m\u001b[36massets/index-CIZLpm-g.js        \u001b[39m\u001b[1m\u001b[33m1,512.43 kB\u001b[39m\u001b[22m\u001b[2m │ gzip: 462.87 kB\u001b[22m"
+  ]
+ },
+ "exposure_gate": {
+  "ruler_path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r7b.cjs",
+  "ruler_local_sha1": "829c077b0b2c14d72b59dfa8292f1b280020ab33",
+  "ruler_local_sha1_kind": "本机 sha1（这条尺不在任何对象库里，所以只能这样具名）",
+  "tip": {
+   "rc": 0,
+   "cells_total": 6,
+   "modules_in_graph": 128,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "cell_ids": [
+    "RAW_BODY_TO_DOM :: frontend/src/features/trip/ActivityDetail.tsx :: text-in:dd testid=dd:activity-hours :: raw-body :: - :: :: upstream read opening?.raw | interpolated into `${opening?.raw || (zh ? \"已提供\" : \"Provided\")}${opening?.raw ? (zh ? \" · 供应商原文\"...",
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT :: frontend/src/features/planning/PlanWithAiSheet.tsx :: attribute:data-result-status :: raw-body :: - :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:code testid=code:plan-ai-reason :: prose :: text :: serverReasonSentence>failureNote>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { detail?: unknown } | null)?.detail | `detail` = (body as { detail?: unknown } | null)?.detail | serverReasonSentence() returns { text: detail, field: \"detail\" } | serverReasonSentence(body) was handed to failureNote() as `server` | failureNote() returns server ? { text: server.text, from: \"server\", field: server.field } : { text: ... | { status: `HTTP_${response.status}`, failureReason: failureNote( serverReasonS... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:p testid=div:plan-ai-result :: raw-body :: body :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun>statusCopy>slice :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null | result.status was handed to statusCopy() as `status` | .toUpperCase(...) passes it on | `s` = (status || \"\").toUpperCase() | .slice(...) passes it on | `code` = s.slice(\"BLOCKED:\".length) | interpolated into `${known.zh}（服务器给的原因编号：${code}）` | statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... | `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/recovery/RecoveryRequiredPanel.tsx :: text-in:code testid=code:recovery-reason :: raw-body :: quote :: trim>noticeFromRefusal>setNotice :: upstream read envelope.error off envelope | `nested` = envelope.error ?? {} | read further as message of it | .trim(...) passes it on | `sentence` = typeof nested.message === \"string\" ? nested.message.trim() : \"\" | noticeFromRefusal() returns { key, params: { status: refusal.http_status, code }, origin: \"server\", field:... | state `notice` written by setNotice(...)",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/simulation/SimulationPanel.tsx :: text-in:p testid=p:sim-outcome :: raw-body :: - :: bodyOf>round>retryHint>zh>describeFailure>en>setOutcome :: upstream read (error as { body?: unknown }).body off error | `raw` = (error as { body?: unknown }).body | bodyOf() returns raw as ErrorBody | read further as error of it | `details` = bodyOf(error)?.error?.details ?? {} | read further as retry_after_ms of it | `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null | passed through Math.round() | interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` | retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` | `extra` = busy ? retryHint(error) : fields | passed through hit.zh() | describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } | came back from describeFailure imported from ./simulationAdapter | `named` = describeFailure(error) | state `outcome` written by setOutcome(...)"
+   ],
+   "cells_in_my_files": []
+  },
+  "head": {
+   "rc": 0,
+   "cells_total": 6,
+   "modules_in_graph": 131,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "cell_ids": [
+    "RAW_BODY_TO_DOM :: frontend/src/features/trip/ActivityDetail.tsx :: text-in:dd testid=dd:activity-hours :: raw-body :: - :: :: upstream read opening?.raw | interpolated into `${opening?.raw || (zh ? \"已提供\" : \"Provided\")}${opening?.raw ? (zh ? \" · 供应商原文\"...",
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT :: frontend/src/features/planning/PlanWithAiSheet.tsx :: attribute:data-result-status :: raw-body :: - :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:code testid=code:plan-ai-reason :: prose :: text :: serverReasonSentence>failureNote>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun :: upstream read (body as { detail?: unknown } | null)?.detail | `detail` = (body as { detail?: unknown } | null)?.detail | serverReasonSentence() returns { text: detail, field: \"detail\" } | serverReasonSentence(body) was handed to failureNote() as `server` | failureNote() returns server ? { text: server.text, from: \"server\", field: server.field } : { text: ... | { status: `HTTP_${response.status}`, failureReason: failureNote( serverReasonS... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/planning/PlanWithAiSheet.tsx :: text-in:p testid=div:plan-ai-result :: raw-body :: body :: trim>toUpperCase>serverReasonCode>helper>emit>getRunSnapshot>useSyncExternalStore>useAiRun>statusCopy>slice :: upstream read (body as { error?: Record<string, unknown> } | null)?.error off body | `error` = (body as { error?: Record<string, unknown> } | null)?.error | read off error through a computed key | `value` = error[key] | .trim(...) passes it on | .toUpperCase(...) passes it on | serverReasonCode() returns { code: value.trim().toUpperCase(), field: key } | `refusedCode` = serverReasonCode(unreadable) | interpolated into `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.stat... | { status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesRes... was handed to the helper() as `result` | { running: false, phase: null, result, unread: !snapshot.watched } was handed to emit() as `patch` | `snapshot` reassigned to { ...snapshot, ...patch } | getRunSnapshot() returns snapshot | passed through useSyncExternalStore() | useAiRun() returns useSyncExternalStore(subscribe, getRunSnapshot) | came back from useAiRun imported from ./aiGenerationRun | `run` = useAiRun() | `result` = mine ? run.result : null | result.status was handed to statusCopy() as `status` | .toUpperCase(...) passes it on | `s` = (status || \"\").toUpperCase() | .slice(...) passes it on | `code` = s.slice(\"BLOCKED:\".length) | interpolated into `${known.zh}（服务器给的原因编号：${code}）` | statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... | `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/recovery/RecoveryRequiredPanel.tsx :: text-in:code testid=code:recovery-reason :: raw-body :: quote :: trim>noticeFromRefusal>setNotice :: upstream read envelope.error off envelope | `nested` = envelope.error ?? {} | read further as message of it | .trim(...) passes it on | `sentence` = typeof nested.message === \"string\" ? nested.message.trim() : \"\" | noticeFromRefusal() returns { key, params: { status: refusal.http_status, code }, origin: \"server\", field:... | state `notice` written by setNotice(...)",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/simulation/SimulationPanel.tsx :: text-in:p testid=p:sim-outcome :: raw-body :: - :: bodyOf>round>retryHint>zh>describeFailure>en>setOutcome :: upstream read (error as { body?: unknown }).body off error | `raw` = (error as { body?: unknown }).body | bodyOf() returns raw as ErrorBody | read further as error of it | `details` = bodyOf(error)?.error?.details ?? {} | read further as retry_after_ms of it | `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null | passed through Math.round() | interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` | retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` | `extra` = busy ? retryHint(error) : fields | passed through hit.zh() | describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } | came back from describeFailure imported from ./simulationAdapter | `named` = describeFailure(error) | state `outcome` written by setOutcome(...)"
+   ],
+   "cells_in_my_files": []
+  },
+  "growth": "NONE",
+  "removed": [],
+  "snapshot_method": "git archive <rev> frontend/src | tar -x (a live work tree is not comparable)"
+ },
+ "walk_script": {
+  "committed_blob": "ff8526fc09876b3ff7581e7bcaa6274ad88c994f",
+  "bytes_equal_to_committed_blob": true,
+  "local_bytes": 3830,
+  "committed_bytes": 3830
+ },
+ "files_this_order_moves": [
+  "backend/app/db/models.py",
+  "backend/app/main.py",
+  "backend/app/schemas.py",
+  "backend/app/services.py",
+  "backend/db/schema.sql",
+  "backend/tests/test_qoder_ord0444_collections.py",
+  "contracts/openapi.yaml",
+  "frontend/src/app/v8PanelRegistry.tsx",
+  "frontend/src/features/collections/CollectionPanel.tsx",
+  "frontend/src/features/collections/collectionCopy.ts",
+  "frontend/src/features/collections/collections.css",
+  "frontend/src/features/collections/collections.ts",
+  "frontend/src/generated/api.ts"
+ ],
+ "line_moved_those_files_since_base": [],
+ "stack": {
+  "port_backend": 59597,
+  "port_preview": 59598,
+  "head": "c192848403257b44a4aef54b1b3401859ab88228",
+  "tree": "560ee42b94a11a0d7d357b40f20e5c6932ccf898",
+  "steps": [
+   "ids_from_private_copy",
+   "instrument_exception",
+   "server_up",
+   "second_traveller_minted_through_the_door",
+   "preview_proofs",
+   "shelf_face_walk_empty",
+   "create_shelf",
+   "counter_owner_unknown",
+   "counter_unscoped_read",
+   "add_place",
+   "read_as_owner",
+   "read_as_other_traveller",
+   "store_named",
+   "counter_no_such_shelf",
+   "counter_no_such_place",
+   "counter_duplicate_add",
+   "served_spec",
+   "shelf_face_walk_one_shelf"
+  ],
+  "ownership": {
+   "private_db": "ord0444r7_bf664e93.db",
+   "preview_sha1_before": "1c8a20b9e4656463dcc42d829d7d9f1f936bae8d",
+   "url_given_to_server": "sqlite:///./ord0444r7_bf664e93.db",
+   "same_file_on_both_sides": true,
+   "launched_pid": 28900,
+   "listening_pids": [
+    "46120"
+   ],
+   "server_pid": "46120",
+   "server_parent_pid": "28900",
+   "server_command_line": "\"C:\\Users\\仓鼠王\\AppData\\Roaming\\uv\\python\\cpython-3.12-windows-x86_64-none\\python.exe\"  -m uvicorn app.main:app --host 127.0.0.1 --port 59597",
+   "pid_matches_child": true,
+   "private_sha1_after": "1c8a20b9e4656463dcc42d829d7d9f1f936bae8d",
+   "preview_sha1_after": "1c8a20b9e4656463dcc42d829d7d9f1f936bae8d",
+   "preview_untouched": true
+  },
+  "preview": {
+   "up": true,
+   "seconds": 1.1,
+   "port": 59598,
+   "listening_pids": [
+    "43088"
+   ],
+   "launched_pid": 43088,
+   "pid_matches_child": true,
+   "backend_port_given_to_preview": "59597",
+   "entry_from_served_html": [
+    "index-CIZLpm-g.js"
+   ],
+   "entry_named_on_served_html": true,
+   "entry_matches_disk_index": true,
+   "served_html_sha1": "f1e85fc0b5a8274c4a7ba16c98dbad98067dc623",
+   "disk_html_sha1": "f1e85fc0b5a8274c4a7ba16c98dbad98067dc623",
+   "served_entry_sha1": "0bdfabc0b5fde536df91c5123eeef36828511d34",
+   "disk_entry_sha1": "0bdfabc0b5fde536df91c5123eeef36828511d34",
+   "served_bytes_equal_disk": true,
+   "served_entry_bytes": 1512426
+  },
+  "walk_empty": {
+   "base": "http://127.0.0.1:59598",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "entered_wizard_by_click": true,
+   "screen_with_one_shelf": {
+    "panel_present": true,
+    "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点",
+    "shelf_rows": [],
+    "item_rows": [],
+    "empty_words": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
+    "failed_words": null,
+    "no_traveler_words": null,
+    "machine_tokens": []
+   },
+   "retry_hit": {
+    "point": {
+     "cx": 309,
+     "cy": 422
+    },
+    "element": "button.cn-collections__retry",
+    "is_the_control": true,
+    "width_px": 88,
+    "height_px": 35
+   },
+   "after_retry_press": {
+    "panel_present": true,
+    "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点",
+    "shelf_rows": [],
+    "item_rows": [],
+    "empty_words": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
+    "failed_words": null,
+    "no_traveler_words": null,
+    "machine_tokens": []
+   },
+   "console_errors": []
+  },
+  "walk_one_shelf": {
+   "base": "http://127.0.0.1:59598",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "entered_wizard_by_click": true,
+   "screen_with_one_shelf": {
+    "panel_present": true,
+    "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会 1 架子 · 1 枚地点",
+    "shelf_rows": [
+     "周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会"
+    ],
+    "item_rows": [
+     "The Palace Museum (故宫博物院) 值得慢走一会"
+    ],
+    "empty_words": null,
+    "failed_words": null,
+    "no_traveler_words": null,
+    "machine_tokens": []
+   },
+   "retry_hit": {
+    "point": {
+     "cx": 309,
+     "cy": 422
+    },
+    "element": "button.cn-collections__retry",
+    "is_the_control": true,
+    "width_px": 88,
+    "height_px": 35
+   },
+   "after_retry_press": {
+    "panel_present": true,
+    "panel_words": "我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会 1 架子 · 1 枚地点",
+    "shelf_rows": [
+     "周末收藏 1 枚地点 The Palace Museum (故宫博物院) 值得慢走一会"
+    ],
+    "item_rows": [
+     "The Palace Museum (故宫博物院) 值得慢走一会"
+    ],
+    "empty_words": null,
+    "failed_words": null,
+    "no_traveler_words": null,
+    "machine_tokens": []
+   },
+   "console_errors": []
+  }
+ }
+}
