@@ -51,6 +51,10 @@ const en: Dict = {
   "poiImport.errUnnamed": "The server refused without naming a reason we know. Nothing was changed.",
   "poiImport.retry": "Try again",
   "poiImport.channelLabel": "Channel",
+  // ORD-0533: this badge is rendered by PoiImportPanel.tsx and had no entry in either book, so the
+  // key name itself was what the traveller read.  The words below say only what this screen already
+  // promises elsewhere (scopeHint and unsupportedNoFetch): nothing is opened, nothing is fetched.
+  "poiImport.channelLocal": "Local parse, no links opened",
   "poiImport.channelNote": "Local parser; no third-party reading service.",
   "poiImport.unsupportedLabel": "Forms not read",
   "poiImport.unsupportedHosts": "Links seen but not opened: {hosts}",
@@ -1185,6 +1189,9 @@ const zhCN: Dict = {
   "poiImport.errUnnamed": "服务器拒绝了，但没给出我们认得的理由。什么都没改动。",
   "poiImport.retry": "重试",
   "poiImport.channelLabel": "通道",
+  // ORD-0533：这枚徽章由 PoiImportPanel.tsx 渲染，两本里都没有它，所以旅客读到的是键名本身。
+  // 下面这句只复述这一屏已经说过的话（scopeHint 与 unsupportedNoFetch）：不打开、不抓取。
+  "poiImport.channelLocal": "本地解析，不打开链接",
   "poiImport.channelNote": "本地解析器；不接第三方读取服务。",
   "poiImport.unsupportedLabel": "未读取的形态",
   "poiImport.unsupportedHosts": "看到链接但没有打开：{hosts}",
