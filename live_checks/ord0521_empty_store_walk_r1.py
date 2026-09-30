@@ -48,7 +48,7 @@ with TestClient(m.app) as c:
 
     r = c.post("/api/v1/demo/scene/ensure", json={})
     check("no token refused", r.status_code == 403,
-          f"http_status={r.status_code} reason={r.json().get('reason_code')}")
+          f'http_status={r.status_code} reason={r.json().get("error", {}).get("reason_code")}')
     r = c.post("/api/v1/demo/scene/ensure", headers=TOKEN, json={})
     check("no Idempotency-Key refused", r.status_code == 422, f"http_status={r.status_code}")
 
@@ -81,14 +81,14 @@ with TestClient(m.app) as c:
     r = c.post("/api/v1/demo/scene/ensure", headers={**TOKEN, "Idempotency-Key": "walk-1"},
                json={"city_code": "CN-BEIJING"})
     check("same key, other body conflicts", r.status_code == 422,
-          f"http_status={r.status_code} reason={r.json().get('reason_code')}")
+          f'http_status={r.status_code} reason={r.json().get("error", {}).get("reason_code")}')
 
     r = c.post("/api/v1/demo/scene/ensure", headers={**TOKEN, "Idempotency-Key": "tidy-9"},
                json={"city_code": "CN-TIDY"})
     body = r.json().get("error", {})
     check("cell(3): an unsupplied destination says so readably", r.status_code == 409 and
           "cannot obtain places" in str(body.get("message")) and body.get("details", {}).get("failed_hop"),
-          f"http_status={r.status_code} reason={r.json().get('reason_code')} message={str(body.get('message'))[:110]}")
+          f'http_status={r.status_code} reason={body.get("reason_code")} message={str(body.get("message"))[:110]}')
 
     print("census final:", json.dumps(census()))
     con = sqlite3.connect(DB)
