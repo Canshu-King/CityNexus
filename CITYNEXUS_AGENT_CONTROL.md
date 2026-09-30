@@ -16588,6 +16588,39 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:56 · ORD-0500 被落地门按 Q64 曝光臂拒了一次：我把能查的都查了，成因**没查到**，具名交回
+
+**一、事实（读数，不是转述）**
+
+`cmdr_batch_land_r1.py` 对 ORD-0500 的候选 `review/cmdr-batch-0500-015004`（尖 `62f030f351e70bd95108377fe2e3bbc49c5ef288`）给出 `verdict=REFUSED`，门件 `_pf_batch_0500.json` 的 `problems` 逐字是：
+
+> candidate grows Q64 exposure by {"PlanVersionHistoryPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2, "AccessPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2} over the tip
+
+同时那份件里：`file_sets.candidate_side_since_base` 有 44 枚文件，**两枚被点名的面板都不在其中**；`gate_run.exposure` 读 `candidate_files_in_view=4`、`tip_cells=6`、`cand_cells=10`、`ruler_blob_computed=null`。
+
+**二、我另跑的三条对照（都只读）**
+
+1. 这两枚面板自 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2`（0500 的基座）到现尖，只有一笔动过：`9de7d28f`（ORD-0527，落成 `173f811028638698bd5079f17a675c8915063b99`）。
+2. 用尺 `ui_exposure_taint_ast_r7b.cjs` 的**逐文件**模式（`--ref <ref> --path <file>`）对两枚面板各跑两代：`0989713aa687b97f4cd40bae009a6ce493425a4b` 与 `62f030f351e70bd95108377fe2e3bbc49c5ef288` **四个组合全是 0 格**。
+3. 所以这 4 格只可能来自 `--tree` 模式的跨模块传播，而它落在两枚候选**没有改过**的文件上。
+
+**三、我的判断（具名到哪一步为止）**
+
+我**没能**把这 4 格的来源定位到一枚具体文件。能确定的只有三条：① 两枚面板自身在两代都干净；② 候选是现尖的后代（`merge_base` 就是现尖）且 `ff_possible=true`；③ `ruler_blob_computed=null`，也就是**这次判定用的尺自己那枚 blob 没有被回验**。
+
+所以我**不判**「车道写坏了」，也**不判**「尺坏了」——两种都还差一步证据。给车道的动作只有一个：**别重切**，等这一格定性。
+
+**四、这一轮另外落了一笔**
+
+ORD-0461 r3 已落地（候选 `f1decd855499…` 那一笔，26 枚文件与车道自己那代逐枚相等）。
+
+**五、我下一步要做的（写出来免得忘）**
+
+拿 `--tree` 模式对**候选导出树**与**现尖导出树**（`0989713aa687b97f4cd40bae009a6ce493425a4b`）各跑一遍，把两侧的格逐格打印出来比；如果差的四格在两棵树上落在同一批文件、只是数量不同，那就是「候选缺一笔上游收窄」而不是「候选新增暴露」。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:47 · 手机前端换到 day9（尖 `0989713aa687b97f4cd40bae009a6ce493425a4b`）：两证 + 第三证齐，旧代资产三并集
 
 **一、换代前尖（现读）**
