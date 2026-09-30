@@ -29,12 +29,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.security import credential_literals as CL  # noqa: E402
 
 REPO = CL.REPO
-#: The generation these readings were taken on: the authoritative tip, read live, that this branch was
-#: re-taken onto. The base the order names is 127ce7b05329eaa837701cdb93bdbc2e5d64e10f, and H07 pins
-#: that BOTH generations hold the same bytes for the gate file -- so the comparison is against the
-#: vocabulary as it stood before this order, whichever name you start from, and a pin that silently
-#: rots goes red here instead of reading as a pass.
-PIN_BASE = "aa2a08ce164a37a83bd6ed225524053bb0fa0606"
+#: The generation the order was written against -- a fixed commit, not whichever tip this branch
+#: happens to sit on, because the tip moves while an order is in flight and a pin that chases it is
+#: a pin that gets re-edited instead of a fact that gets checked. H07 compares the two forbidden
+#: channels against this generation and requires it to be an ancestor of HEAD, so the comparison is
+#: against the vocabulary as it stood before this order and cannot silently rot into self-reference.
 ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
@@ -266,7 +265,8 @@ def test_H07_the_two_forbidden_shortcuts_were_not_taken() -> None:
 
     这格是反"洗绿"的：如果谁把那一处假阳性塞进 PLACEHOLDER_MARKERS，或者用 DECLARED_SAMPLES 给它
     登记一个指纹，这里立刻红。被比的"现在"这一侧读的是**工作树里那份尺**（也就是真在跑的那份），
-    不是 HEAD，所以改动一落盘就红，不必等提交。
+    不是 HEAD，所以改动一落盘就红，不必等提交。基座只钉令上点名那一枚（固定的），并用 git 现查它
+    在本枝的祖先里——钉"我这次量到哪尖"会随上游一路改常量，那不是判据。
     """
 
     def tuple_from(text: str, name: str) -> str:
@@ -276,16 +276,17 @@ def test_H07_the_two_forbidden_shortcuts_were_not_taken() -> None:
 
     cur = (Path(REPO) / GATE_REL).read_text(encoding="utf-8", errors="replace")
     assert cur, "the working-tree gate file read back empty -- this cell would pass on nothing"
-    for rev in (PIN_BASE, ORDER_BASE):
-        base = _git_show(rev, GATE_REL)
-        assert tuple_from(cur, "PLACEHOLDER_MARKERS") == tuple_from(base, "PLACEHOLDER_MARKERS"), \
-            "PLACEHOLDER_MARKERS moved against %s: the placeholder list must not carry this order's exemption" % rev
-        assert tuple_from(cur, "DECLARED_SAMPLES") == tuple_from(base, "DECLARED_SAMPLES"), \
-            "DECLARED_SAMPLES moved against %s: the declaration channel must not be used for this" % rev
-        assert 'rp.startswith(PRODUCT_ROOTS)' in cur, "the product-path rule was rewritten"
-    #: the two pins must name the same bytes, or "compared against one" would not be the claim
-    assert _git_show(PIN_BASE, GATE_REL) == _git_show(ORDER_BASE, GATE_REL), \
-        "the tip this branch was measured on and the base the order names no longer hold the same gate file"
+    base = _git_show(ORDER_BASE, GATE_REL)
+    for name in ("PLACEHOLDER_MARKERS", "DECLARED_SAMPLES"):
+        assert tuple_from(cur, name) == tuple_from(base, name), \
+            ("%s moved against the order's base: neither the placeholder list nor the declaration "
+             "channel may carry this order's exemption" % name)
+    assert 'rp.startswith(PRODUCT_ROOTS)' in cur, "the product-path rule was rewritten"
+    #: the pin has to sit behind this branch, or the comparison is with a generation this order never
+    #: stood on; read it from git, not from a comment
+    anc = subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", ORDER_BASE, "HEAD"],
+                         capture_output=True, text=True, encoding="utf-8", errors="replace")
+    assert anc.returncode == 0, "the order's base %s is not an ancestor of HEAD" % ORDER_BASE[:12]
 
 
 # ---------------------------------------------------------------- H08 词典读不到时朝闭
