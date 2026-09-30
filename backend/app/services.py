@@ -1347,6 +1347,7 @@ def _provisional_catalogue_plan(
         if _catalogue_visit_eligible(place)
         and place.latitude is not None
         and place.longitude is not None
+        and (preferred_place_ids is None or place.id in preferred_place_ids)
     ]
     if len(places) < 2:
         return []
@@ -2047,7 +2048,7 @@ def _generic_compose_variants(
             for place_id in ordered
             if places_for_scope.get(place_id) is not None
         ]
-        all_cost_failures = bool(failures) and names and all(
+        all_cost_failures = bool(failures) and len(names) == len(failures) and all(
             name == PLACE_COST_UNVERIFIED for name in names
         )
         provider_backed = len(provider_places) >= 2 and all(
