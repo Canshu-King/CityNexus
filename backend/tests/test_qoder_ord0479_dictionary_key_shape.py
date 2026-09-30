@@ -25,11 +25,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.security import credential_literals as CL  # noqa: E402
 
 REPO = CL.REPO
-#: The generation this order was measured on: the live tip read at the time the branch was born.
-#: The base the order names is `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`; H07 also pins that those
-#: two generations hold the SAME bytes for the gate file, so comparing against one compares against
-#: the other, and a pin that silently rots goes red here instead of reading as a pass.
-PIN_BASE = "dcb90cccc68b81f2317b28db19051dedb9f06c80"
+#: The generation these readings were taken on: the authoritative tip, read live, that this branch was
+#: re-taken onto. The base the order names is 127ce7b05329eaa837701cdb93bdbc2e5d64e10f, and H07 pins
+#: that BOTH generations hold the same bytes for the gate file -- so the comparison is against the
+#: vocabulary as it stood before this order, whichever name you start from, and a pin that silently
+#: rots goes red here instead of reading as a pass.
+PIN_BASE = "aa2a08ce164a37a83bd6ed225524053bb0fa0606"
 ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
