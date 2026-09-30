@@ -1,0 +1,280 @@
+{
+  "tool": "gen4_doors_r1",
+  "took_local": "2026-10-01T00:39:32.358054+08:00",
+  "shared_db": {
+    "bytes": 7213056,
+    "mtime_local": "2026-09-29 09:20:27"
+  },
+  "runs": [
+    {
+      "tree": "wt7",
+      "main_sha256": "2f094c2f3d41ed7765237a76828c8857d853b38ce2cea3e3dae97ede79f93a21",
+      "backend": {
+        "ready": true,
+        "pid": "48004",
+        "db": "D:/moodle/_qoder_phone_ord0485_20260930\\run\\gen4_doors_wt7.db",
+        "journey_id": "22222222-2222-4222-8222-222222222222"
+      },
+      "staged": {
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "stops": 6,
+        "stop_titles": [
+          "Old Town Gate",
+          "Riverside Museum",
+          "Central Food Hall",
+          "Tech Art Center",
+          "Nexus River Cruise Pier",
+          "Skyline Dinner House"
+        ],
+        "store_before": {
+          "count": 0,
+          "rows": []
+        }
+      },
+      "probes": [
+        {
+          "case": "no_target_named",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 422,
+          "content_type": "application/json",
+          "body_bytes": 295,
+          "reason_code": "CHECKIN_TARGET_REQUIRED",
+          "message": "A footprint has to name what was visited.",
+          "details": {
+            "fields": [
+              "activity_id",
+              "place_id"
+            ]
+          },
+          "uuid_in_message": false,
+          "uuid_in_details": false,
+          "details_is_null": false,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "reason_code",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "both_targets_named",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 422,
+          "content_type": "application/json",
+          "body_bytes": 365,
+          "reason_code": "CHECKIN_TARGET_AMBIGUOUS",
+          "message": "One footprint names one target: an activity or a place, not both.",
+          "details": {
+            "activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+            "place_id": "place-old-town"
+          },
+          "uuid_in_message": false,
+          "uuid_in_details": true,
+          "details_is_null": false,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "reason_code",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "activity_not_on_this_server",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 404,
+          "content_type": "application/json",
+          "body_bytes": 311,
+          "reason_code": "CHECKIN_ACTIVITY_UNKNOWN",
+          "message": "No activity on this server carries that id.",
+          "details": {
+            "activity_id": "3ed2fe64-7cd5-4417-9c7f-4476e612aa79"
+          },
+          "uuid_in_message": false,
+          "uuid_in_details": true,
+          "details_is_null": false,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "reason_code",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "place_not_on_this_server",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 404,
+          "content_type": "application/json",
+          "body_bytes": 302,
+          "reason_code": "CHECKIN_PLACE_UNKNOWN",
+          "message": "No place on this server carries that id.",
+          "details": {
+            "place_id": "3ed2fe64-7cd5-4417-9c7f-4476e612aa79"
+          },
+          "uuid_in_message": false,
+          "uuid_in_details": true,
+          "details_is_null": false,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "reason_code",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "write_door_unknown_journey",
+          "method": "POST",
+          "path": "/api/v1/journeys/3ed2fe64-7cd5-4417-9c7f-4476e612aa79/checkins",
+          "http_status": 404,
+          "content_type": "application/json",
+          "body_bytes": 235,
+          "reason_code": null,
+          "message": "Journey 3ed2fe64-7cd5-4417-9c7f-4476e612aa79 was not found",
+          "details": null,
+          "uuid_in_message": true,
+          "uuid_in_details": null,
+          "details_is_null": true,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "read_door_unknown_journey",
+          "method": "GET",
+          "path": "/api/v1/journeys/3ed2fe64-7cd5-4417-9c7f-4476e612aa79/checkins",
+          "http_status": 404,
+          "content_type": "application/json",
+          "body_bytes": 235,
+          "reason_code": null,
+          "message": "Journey 3ed2fe64-7cd5-4417-9c7f-4476e612aa79 was not found",
+          "details": null,
+          "uuid_in_message": true,
+          "uuid_in_details": null,
+          "details_is_null": true,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "first_tap_on_a_real_stop",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 201,
+          "content_type": "application/json",
+          "body_bytes": 435,
+          "reason_code": null,
+          "message": null,
+          "details": null,
+          "uuid_in_message": false,
+          "uuid_in_details": null,
+          "details_is_null": true,
+          "envelope_keys": "NO_ERROR_OBJECT"
+        },
+        {
+          "case": "same_stop_tapped_again",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 409,
+          "content_type": "application/json",
+          "body_bytes": 434,
+          "reason_code": "CHECKIN_DUPLICATE_STAMP",
+          "message": "That target is already stamped on this trip.",
+          "details": {
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "existing_checkin_id": "9540d8ee-469f-452b-8845-351f19f1e6eb",
+            "existing_stamped_at": "2026-09-30T16:39:35.048506+00:00"
+          },
+          "uuid_in_message": false,
+          "uuid_in_details": true,
+          "details_is_null": false,
+          "envelope_keys": [
+            "code",
+            "details",
+            "error_receipt_id",
+            "message",
+            "message_key",
+            "reason_code",
+            "trace_id"
+          ]
+        },
+        {
+          "case": "second_stop_tapped",
+          "method": "POST",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 201,
+          "content_type": "application/json",
+          "body_bytes": 438,
+          "reason_code": null,
+          "message": null,
+          "details": null,
+          "uuid_in_message": false,
+          "uuid_in_details": null,
+          "details_is_null": true,
+          "envelope_keys": "NO_ERROR_OBJECT"
+        },
+        {
+          "case": "read_footprints_back",
+          "method": "GET",
+          "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+          "http_status": 200,
+          "content_type": "application/json",
+          "body_bytes": 876,
+          "reason_code": null,
+          "message": null,
+          "details": null,
+          "uuid_in_message": false,
+          "uuid_in_details": null,
+          "details_is_null": true,
+          "envelope_keys": "NO_ERROR_OBJECT"
+        }
+      ],
+      "store_after": {
+        "count": 2,
+        "rows": [
+          {
+            "id": "9540d8ee-469f-452b-8845-351f19f1e6eb",
+            "target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80",
+            "stamped_at": "2026-09-30T16:39:35.048506+00:00",
+            "source": "FOREGROUND_WEB"
+          },
+          {
+            "id": "ab9e9cad-af5d-4f42-8687-f8469f61cde9",
+            "target_key": "activity:abe4e842-249e-516f-ac43-b41695083792",
+            "stamped_at": "2026-09-30T16:39:35.064965+00:00",
+            "source": "FOREGROUND_WEB"
+          }
+        ]
+      },
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "tool": "gen4_ce1_tree_proof_r1",
+  "took_local": "2026-10-01T00:41:33.040210+08:00",
+  "why": "the first CE-1 run produced a fourth mutant red caused by a file the throwaway tree did not carry (frontend/src/generated/api.ts), not by the mutation; this names what actually differs between the delivered bytes and the mutant bytes",
+  "dirs": {
+    "backend": {
+      "files_compared": 385,
+      "differing": [
+        "app/main.py"
+      ],
+      "absent_from_mutant_count": 0
+    },
+    "data": {
+      "files_compared": 13,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    },
+    "contracts": {
+      "files_compared": 24,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    },
+    "frontend/src/generated": {
+      "files_compared": 1,
+      "differing": [],
+      "absent_from_mutant_count": 0
+    }
+  },
+  "only_main_py_differs": true
+}

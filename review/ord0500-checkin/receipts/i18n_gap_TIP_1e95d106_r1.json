@@ -1,0 +1,35 @@
+{
+  "tool": "i18n_key_gap_r2",
+  "generation_label": "TIP_1e95d106",
+  "src_measured": "D:/moodle/_qoder_phone_ord0485_20260930\\wt7\\frontend\\src",
+  "dictionary_file": "frontend/src/i18n/LocaleContext.tsx",
+  "dictionary_sha256_over_bytes": "4f3545d6d9abfd1c9cb4b5330ff47dac24dfca7477ae59808ecadf1d11d47ed6",
+  "dictionary_line_count": 2198,
+  "keys_in_en": 931,
+  "keys_in_zhCN": 931,
+  "referenced_key_count": 727,
+  "referenced_keys_missing_from_en": 2,
+  "referenced_keys_missing_from_zhCN": 2,
+  "referenced_keys_missing_from_both": 2,
+  "missing_from_both": [
+    {
+      "key": "exec.state.notStarted",
+      "call_sites": [
+        "src/features/execution/V12AuthoritativeJourneyPanel.tsx:59",
+        "src/features/execution/V12StatePrimitives.tsx:17"
+      ],
+      "on_screen_arms": []
+    },
+    {
+      "key": "poiImport.channelLocal",
+      "call_sites": [
+        "src/features/poiimport/PoiImportPanel.tsx:216"
+      ],
+      "on_screen_arms": [
+        "C_drawer_import"
+      ]
+    }
+  ],
+  "missing_from_zh_only_falls_back_to_english": [],
+  "missing_from_en_only": []
+}

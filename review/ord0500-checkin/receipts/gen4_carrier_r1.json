@@ -1,0 +1,152 @@
+{
+  "tool": "gen4_carrier_r1",
+  "took_local": "2026-10-01T00:47:05.236770+08:00",
+  "spec_sha256": "ca6da744af7225fd18e100f9e5cfa135c7d90af4a0f00a198aa61ad88d1da686",
+  "runs": [
+    {
+      "label": "base_tip",
+      "face_dir": "faces/tip4",
+      "backend_tree": "wt7",
+      "backend": {
+        "ready": true,
+        "pid": "50936",
+        "db": "gen4_carrier_base_tip.db",
+        "journey_id": "22222222-2222-4222-8222-222222222222"
+      },
+      "rows_before": 0,
+      "serve": {
+        "port": 4880,
+        "face_dir": "faces/tip4",
+        "entry_asset": "index-BGM3L0lx.js",
+        "index_bytes_equal_served_vs_disk": true,
+        "listener_pid": "36720"
+      },
+      "exit": 1,
+      "log": "run\\gen4_carrier_base_tip.txt",
+      "verdict_line": "2 passed (21.7s)",
+      "arm_lines": [
+        "x  1 e2e\\qoder-ord0500-checkin-truth.spec.ts:89:1 › ord0500-1-a-duplicate-refusal-speaks-about-the-stop-that-was-tapped — 拒绝只说被按的那一站 (11.0s)"
+      ],
+      "report_stats": {
+        "expected": 2,
+        "unexpected": 1,
+        "flaky": 0,
+        "skipped": 0
+      },
+      "failing_arms": [
+        {
+          "title": "ord0500-1-a-duplicate-refusal-speaks-about-the-stop-that-was-tapped — 拒绝只说被按的那一站",
+          "status": "failed",
+          "node_message": "Error: e2e/qoder-ord0500-checkin-truth.spec.ts :: ord0500-1 — the duplicate sentence was painted under 6 stops (Old Town Gate, Riverside Museum, Central Food Hall, Tech Art Center, Nexus River Cruise Pier, Skyline Dinner House); one tap makes a statement about one stop"
+        },
+        {
+          "title": "ord0500-2-the-marks-on-screen-are-the-rows-in-the-door — 屏上几枚，门里几行",
+          "status": "passed",
+          "node_message": ""
+        },
+        {
+          "title": "ord0500-3-one-control-per-stop-and-no-second-one-appears — 一站一枚，不长第二套",
+          "status": "passed",
+          "node_message": ""
+        }
+      ],
+      "rows_after": 2
+    },
+    {
+      "label": "candidate_o0500",
+      "face_dir": "faces/o0500_r1",
+      "backend_tree": "wt6",
+      "backend": {
+        "ready": true,
+        "pid": "44468",
+        "db": "gen4_carrier_candidate_o0500.db",
+        "journey_id": "22222222-2222-4222-8222-222222222222"
+      },
+      "rows_before": 0,
+      "serve": {
+        "port": 4881,
+        "face_dir": "faces/o0500_r1",
+        "entry_asset": "index-stI1Ecwi.js",
+        "index_bytes_equal_served_vs_disk": true,
+        "listener_pid": "5364"
+      },
+      "exit": 0,
+      "log": "run\\gen4_carrier_candidate_o0500.txt",
+      "verdict_line": "3 passed (21.3s)",
+      "arm_lines": [],
+      "report_stats": {
+        "expected": 3,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0
+      },
+      "failing_arms": [
+        {
+          "title": "ord0500-1-a-duplicate-refusal-speaks-about-the-stop-that-was-tapped — 拒绝只说被按的那一站",
+          "status": "passed",
+          "node_message": ""
+        },
+        {
+          "title": "ord0500-2-the-marks-on-screen-are-the-rows-in-the-door — 屏上几枚，门里几行",
+          "status": "passed",
+          "node_message": ""
+        },
+        {
+          "title": "ord0500-3-one-control-per-stop-and-no-second-one-appears — 一站一枚，不长第二套",
+          "status": "passed",
+          "node_message": ""
+        }
+      ],
+      "rows_after": 2
+    },
+    {
+      "label": "mutant_clientbool_ce2",
+      "face_dir": "faces/o0500_clientbool",
+      "backend_tree": "wt6",
+      "backend": {
+        "ready": true,
+        "pid": "58032",
+        "db": "gen4_carrier_mutant_clientbool_ce2.db",
+        "journey_id": "22222222-2222-4222-8222-222222222222"
+      },
+      "rows_before": 0,
+      "serve": {
+        "port": 4882,
+        "face_dir": "faces/o0500_clientbool",
+        "entry_asset": "index-CJPfMrIE.js",
+        "index_bytes_equal_served_vs_disk": true,
+        "listener_pid": "16620"
+      },
+      "exit": 1,
+      "log": "run\\gen4_carrier_mutant_clientbool_ce2.txt",
+      "verdict_line": "2 passed (17.6s)",
+      "arm_lines": [
+        "x  2 e2e\\qoder-ord0500-checkin-truth.spec.ts:135:1 › ord0500-2-the-marks-on-screen-are-the-rows-in-the-door — 屏上几枚，门里几行 (2.8s)"
+      ],
+      "report_stats": {
+        "expected": 2,
+        "unexpected": 1,
+        "flaky": 0,
+        "skipped": 0
+      },
+      "failing_arms": [
+        {
+          "title": "ord0500-1-a-duplicate-refusal-speaks-about-the-stop-that-was-tapped — 拒绝只说被按的那一站",
+          "status": "passed",
+          "node_message": ""
+        },
+        {
+          "title": "ord0500-2-the-marks-on-screen-are-the-rows-in-the-door — 屏上几枚，门里几行",
+          "status": "failed",
+          "node_message": "Error: e2e/qoder-ord0500-checkin-truth.spec.ts :: ord0500-2 — the door answers 1 footprint row(s) while the screen paints 3 已打卡 -- a mark may only exist because a row does"
+        },
+        {
+          "title": "ord0500-3-one-control-per-stop-and-no-second-one-appears — 一站一枚，不长第二套",
+          "status": "passed",
+          "node_message": ""
+        }
+      ],
+      "rows_after": 1
+    }
+  ]
+}
