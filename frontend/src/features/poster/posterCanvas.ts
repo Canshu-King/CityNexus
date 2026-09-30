@@ -47,6 +47,9 @@ export type PosterDraw = {
   paintedPixels: number;
   /** Text runs actually drawn. */
   runsDrawn: number;
+  /** Day blocks, and the drawn breaks between them: `blocks - 1` unless there is one block. */
+  dayBlocks: number;
+  dayDividers: number;
 };
 
 export type PosterDrawFailure = { ok: false; step: PosterFailureStep; detail: string };
@@ -204,9 +207,10 @@ function layoutPoster(
   scale: Scale,
   palette: Palette,
   family: string,
-): { height: number; runs: Run[]; cards: Card[] } {
+): { height: number; runs: Run[]; cards: Card[]; dayDividers: number[] } {
   const runs: Run[] = [];
   const cards: Card[] = [];
+  const dayDividers: number[] = [];
   const padX = scale["--cn-s-24"];
   const inner = width - padX * 2;
   const lh = scale["--cn-lh-body"];
@@ -255,7 +259,8 @@ function layoutPoster(
   }
   const timeColumn = Math.min(timeWidth + scale["--cn-s-8"], inner * 0.38);
 
-  for (const day of lines.days) {
+  for (let dayIndex = 0; dayIndex < lines.days.length; dayIndex += 1) {
+    const day = lines.days[dayIndex];
     const cardTop = y;
     y += scale["--cn-s-16"];
     const headX = padX + scale["--cn-s-16"];
@@ -318,8 +323,19 @@ function layoutPoster(
     }
 
     y += scale["--cn-s-16"];
-    cards.push({ top: cardTop, bottom: y - scale["--cn-s-12"] });
-    y += scale["--cn-s-16"];
+    const cardBottom = y - scale["--cn-s-12"];
+    cards.push({ top: cardTop, bottom: cardBottom });
+    /* One block per day, and the break between two days is drawn, not hoped for. Inside a block the
+       rhythm is `--cn-s-6`; between two days the gap is `--cn-s-32` with a hairline across it, so a
+       reader -- and the pixel audit -- can tell "this is the next day" from "this is the next stop".
+       Two days used to differ from one day only by extra whitespace, which photographed as one tall
+       card and graded the layout by luck. */
+    if (dayIndex + 1 < lines.days.length) {
+      dayDividers.push(cardBottom + scale["--cn-s-16"]);
+      y = cardBottom + scale["--cn-s-32"];
+    } else {
+      y = cardBottom + scale["--cn-s-16"];
+    }
   }
 
   write(
@@ -332,7 +348,7 @@ function layoutPoster(
   );
   y += scale["--cn-s-32"];
 
-  return { height: Math.ceil(y), runs, cards };
+  return { height: Math.ceil(y), runs, cards, dayDividers };
 }
 
 export async function drawTripPoster(
@@ -390,6 +406,15 @@ export async function drawTripPoster(
     ctx.stroke();
   }
 
+  for (const dividerY of plan.dayDividers) {
+    ctx.strokeStyle = palette["--cn-hairline"];
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(scale["--cn-s-24"], dividerY);
+    ctx.lineTo(width - scale["--cn-s-24"], dividerY);
+    ctx.stroke();
+  }
+
   ctx.textBaseline = "alphabetic";
   for (const run of plan.runs) {
     ctx.font = `${run.weight} ${run.size}px ${family}`;
@@ -421,6 +446,8 @@ export async function drawTripPoster(
     height: canvas.height,
     paintedPixels: painted,
     runsDrawn: plan.runs.length,
+    dayBlocks: plan.cards.length,
+    dayDividers: plan.dayDividers.length,
   };
 }
 
