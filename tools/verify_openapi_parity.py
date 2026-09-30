@@ -91,7 +91,7 @@ def main() -> int:
     if extra:
         print("EXTRA:", extra)
 
-    # ORD-0503: the same claim, one level down.  Comparing paths and methods cannot see a component the
+    # ORD-0508: the same claim, one level down.  Comparing paths and methods cannot see a component the
     # contract declares and the checked-in client does not contain, and that gap let a schema land on the
     # line with no typed client for it.  Both directions are named, because a component deleted from the
     # contract while the client keeps it is the same class of lie.

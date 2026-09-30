@@ -1,4 +1,4 @@
-"""ORD-0503 - the generated client must be reproducible from the contract, and the ruler must see it.
+"""ORD-0508 - the generated client must be reproducible from the contract, and the ruler must see it.
 
 Measured on the base `f707e1b3908c9ff4371e4a013242880b7e36045d` before this file existed: the contract
 declares 78 component schemas and the checked-in `frontend/src/generated/api.ts` carries 77 -- the missing
@@ -58,7 +58,7 @@ def test_a_component_declared_only_in_the_contract_turns_the_ruler_red_and_is_na
     """The negative arm: invent a component in the contract, and the ruler must name exactly that one."""
 
     t = _tool()
-    phantom = "Ord0503PhantomSchemaOnlyInContract"
+    phantom = "Ord0508PhantomSchemaOnlyInContract"
     assert phantom not in _contract_schemas(), "这枚假名已经被用了，反例就不成立"
     formal = t.formal_schemas() | {phantom}
     generated = t.generated_schemas(GENERATED.read_text(encoding="utf-8"))
@@ -72,7 +72,7 @@ def test_a_component_left_in_the_client_after_contract_removal_is_also_named() -
 
     t = _tool()
     formal = t.formal_schemas()
-    ghost = "Ord0503GhostInClient"
+    ghost = "Ord0508GhostInClient"
     generated = t.generated_schemas(GENERATED.read_text(encoding="utf-8")) | {ghost}
     missing, extra = t.schema_drift(formal, generated)
     assert missing == [], missing
@@ -111,7 +111,7 @@ def test_the_cli_exits_zero_on_a_reproduced_client_and_one_on_the_base_one() -> 
 
     backup = GENERATED.read_bytes()
     try:
-        stale = ROOT / "review" / "ord0503" / "api_base_committed.ts"
+        stale = ROOT / "review" / "ord0508" / "api_base_committed.ts"
         if not stale.exists():
             raise AssertionError(f"缺少基线生成物原件 {stale}，反向那半格无法验，先把它交进来")
         GENERATED.write_bytes(stale.read_bytes())
