@@ -3035,9 +3035,16 @@ export interface components {
             city_code: string;
             location: components["schemas"]["GeoPoint"];
             tags?: string[];
+            external_id: string;
             provider_key: string;
             coordinate_system: string;
             source_coordinate_system: string | null;
+            opening_hours: {
+                [key: string]: unknown;
+            };
+            cost_evidence: {
+                [key: string]: unknown;
+            };
         };
         RealCityDiscoveryCandidate: {
             id: string;

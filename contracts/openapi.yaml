@@ -2628,7 +2628,7 @@ components:
             active: {type: boolean}
     Place:
       type: object
-      required: [id, name, category, location, city_code, provider_key, coordinate_system, source_coordinate_system]
+      required: [id, name, category, location, city_code, external_id, provider_key, coordinate_system, source_coordinate_system, opening_hours, cost_evidence]
       properties:
         id: {type: string}
         name: {type: string}
@@ -2636,6 +2636,9 @@ components:
         city_code: {type: string}
         location: {$ref: '#/components/schemas/GeoPoint'}
         tags: {type: array, items: {type: string}}
+        # Provider entity identity stays beside the display label so duplicate
+        # live rows cannot be conflated by a consumer.
+        external_id: {type: string}
         provider_key: {type: string}
         # The system the stored geometry is written in; NOT NULL in the schema.
         coordinate_system: {type: string}
@@ -2644,6 +2647,10 @@ components:
         # and a null value is the server answering "never recorded", which is not the
         # same fact as WGS84 and is therefore typed nullable rather than defaulted.
         source_coordinate_system: {type: [string, 'null']}
+        # Fact payloads are passed through with their evidence status.  In
+        # particular, UNKNOWN cost is not a free-price amount.
+        opening_hours: {type: object}
+        cost_evidence: {type: object}
     RealCityDiscoveryCandidate:
       type: object
       x-fastapi-extra: allow

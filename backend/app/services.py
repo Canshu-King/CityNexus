@@ -433,6 +433,11 @@ def constraint_schema(item: JourneyConstraint) -> ConstraintSchema:
 
 
 def place_schema(item: Place) -> PlaceSchema:
+    metadata = json.loads(item.metadata_json or "{}")
+    opening_hours = json.loads(item.opening_hours_json or "{}")
+    cost_evidence = metadata.get("cost_evidence")
+    if not isinstance(cost_evidence, dict):
+        cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
     return PlaceSchema(
         id=item.id,
         name=item.name,
@@ -440,9 +445,12 @@ def place_schema(item: Place) -> PlaceSchema:
         city_code=item.city_code,
         location={"latitude": item.latitude, "longitude": item.longitude},
         tags=json.loads(item.tags_json),
+        external_id=item.external_id,
         provider_key=item.provider_key,
         coordinate_system=item.coordinate_system,
         source_coordinate_system=item.source_coordinate_system,
+        opening_hours=opening_hours,
+        cost_evidence=cost_evidence,
     )
 
 

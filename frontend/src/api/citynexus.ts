@@ -60,11 +60,20 @@ export interface PlaceRecord {
   city_code: string;
   location: { latitude: number; longitude: number };
   tags: string[];
+  external_id: string;
   provider_key: string;
   coordinate_system: string;
   /** Null means the capture never recorded what system the provider handed us --
       which is not the same fact as a stored system, so it stays null. */
   source_coordinate_system: string | null;
+  opening_hours: Record<string, unknown>;
+  /** `status: UNKNOWN` with a null amount is not a free-price claim. */
+  cost_evidence: {
+    status?: string;
+    amount_minor?: number | null;
+    currency?: string;
+    [key: string]: unknown;
+  };
 }
 
 export interface AgentPolicy {

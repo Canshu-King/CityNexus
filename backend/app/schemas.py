@@ -391,6 +391,10 @@ class Place(BaseModel):
     city_code: str
     location: GeoPoint
     tags: list[str] = Field(default_factory=list)
+    # Display names are not identities: a live catalogue can carry an OSM way and
+    # node with the same label.  The public catalogue must expose the provider
+    # entity so a user-visible fact can be traced to the exact row.
+    external_id: str
     # A coordinate means nothing without the system it is written in, and a place
     # read from a provider is only checkable if the payload says which provider.
     # No defaults on purpose: a producer has to state these, so the value that
@@ -400,6 +404,11 @@ class Place(BaseModel):
     # What the provider actually handed us; None means it was never recorded --
     # which is a different fact from "WGS84" and must not collapse into it.
     source_coordinate_system: str | None
+    # These are the place's own captured facts.  In particular, UNKNOWN cost is
+    # represented by the evidence status and a null amount; the compatibility
+    # cost_minor=0 storage field is deliberately not projected as price truth.
+    opening_hours: dict[str, Any] = Field(default_factory=dict)
+    cost_evidence: dict[str, Any] = Field(default_factory=dict)
 
 
 class RealCityDiscoveryCandidate(BaseModel):
