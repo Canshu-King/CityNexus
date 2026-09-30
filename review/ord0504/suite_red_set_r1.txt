@@ -1,0 +1,13 @@
+ORD-0504 whole-suite red sets on c2bb95b8f4d78e6aacbb80773594020f1992f8a2
+base red set = 9
+
+base, this order's file not collected    9 failed / 1545 passed     identical set
+                                                                    log: suite_0504_base_r1.txt
+with this order's 6 tests                8 failed / 1552 passed     SUBSET of the base set (nothing this order added)
+                                                                    log: suite_0504_r1.txt
+                                                                                 gone:  tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+
+reading: with this order's six tests the red set is a strict subset of the base's -- nothing was
+added, and one base red (ord197 r4) is green again. That one is not claimed as a fix: it is the
+same arm that moved in ORD-0490's seven-run table on identical bytes. What is claimed here is
+only the direction that matters, and it is computed from the two logs rather than asserted.
