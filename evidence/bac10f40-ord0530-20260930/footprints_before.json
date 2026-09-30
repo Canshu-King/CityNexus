@@ -1,0 +1,184 @@
+{
+ "base": "http://127.0.0.1:4795",
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "tag": "before",
+ "browser_timezone": "America/Los_Angeles",
+ "shapes": [
+  {
+   "shape": {
+    "name": "phone_390x844",
+    "width": 390,
+    "height": 844
+   },
+   "read": {
+    "panel_text": "足迹 这一屏只列服务器替这次行程记下的印，按打的先后排。 重读一次 09/28 18:20 Central Food Hall 上午先到一步 09/30 09:17 Old Town Gate 没写备注 09/30 09:17 Riverside Museum 没写备注 这次行程共有 3 枚足迹。",
+    "tally": "这次行程共有 3 枚足迹。",
+    "state_line": "",
+    "day_rows": [],
+    "stamp_rows": [
+     {
+      "cells": [
+       "09/28 18:20",
+       "Central Food Hall",
+       "上午先到一步"
+      ],
+      "text": "09/28 18:20 Central Food Hall 上午先到一步",
+      "probe": {
+       "box": {
+        "x": 37,
+        "y": 251,
+        "w": 316,
+        "h": 66
+       },
+       "centre": {
+        "x": 195,
+        "y": 284
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     },
+     {
+      "cells": [
+       "09/30 09:17",
+       "Old Town Gate",
+       "没写备注"
+      ],
+      "text": "09/30 09:17 Old Town Gate 没写备注",
+      "probe": {
+       "box": {
+        "x": 37,
+        "y": 317,
+        "w": 316,
+        "h": 66
+       },
+       "centre": {
+        "x": 195,
+        "y": 350
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     },
+     {
+      "cells": [
+       "09/30 09:17",
+       "Riverside Museum",
+       "没写备注"
+      ],
+      "text": "09/30 09:17 Riverside Museum 没写备注",
+      "probe": {
+       "box": {
+        "x": 37,
+        "y": 384,
+        "w": 316,
+        "h": 66
+       },
+       "centre": {
+        "x": 195,
+        "y": 417
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     }
+    ],
+    "screaming_snake_count": 0,
+    "screaming_snake_tokens": [],
+    "uuid_count": 0,
+    "uuid_tokens": []
+   }
+  },
+  {
+   "shape": {
+    "name": "desktop_1280x900",
+    "width": 1280,
+    "height": 900
+   },
+   "read": {
+    "panel_text": "足迹 这一屏只列服务器替这次行程记下的印，按打的先后排。 重读一次 09/28 18:20 Central Food Hall 上午先到一步 09/30 09:17 Old Town Gate 没写备注 09/30 09:17 Riverside Museum 没写备注 这次行程共有 3 枚足迹。",
+    "tally": "这次行程共有 3 枚足迹。",
+    "state_line": "",
+    "day_rows": [],
+    "stamp_rows": [
+     {
+      "cells": [
+       "09/28 18:20",
+       "Central Food Hall",
+       "上午先到一步"
+      ],
+      "text": "09/28 18:20 Central Food Hall 上午先到一步",
+      "probe": {
+       "box": {
+        "x": 318,
+        "y": 212,
+        "w": 896,
+        "h": 66
+       },
+       "centre": {
+        "x": 766,
+        "y": 245
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     },
+     {
+      "cells": [
+       "09/30 09:17",
+       "Old Town Gate",
+       "没写备注"
+      ],
+      "text": "09/30 09:17 Old Town Gate 没写备注",
+      "probe": {
+       "box": {
+        "x": 318,
+        "y": 278,
+        "w": 896,
+        "h": 66
+       },
+       "centre": {
+        "x": 766,
+        "y": 311
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     },
+     {
+      "cells": [
+       "09/30 09:17",
+       "Riverside Museum",
+       "没写备注"
+      ],
+      "text": "09/30 09:17 Riverside Museum 没写备注",
+      "probe": {
+       "box": {
+        "x": 318,
+        "y": 344,
+        "w": 896,
+        "h": 66
+       },
+       "centre": {
+        "x": 766,
+        "y": 377
+       },
+       "in_viewport": true,
+       "hit": "li.cn-footprints__row",
+       "hit_is_self": true
+      }
+     }
+    ],
+    "screaming_snake_count": 0,
+    "screaming_snake_tokens": [],
+    "uuid_count": 0,
+    "uuid_tokens": []
+   }
+  }
+ ]
+}
