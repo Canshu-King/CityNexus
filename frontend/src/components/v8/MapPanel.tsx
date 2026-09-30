@@ -5,6 +5,7 @@ import type { ActivityCoordinate, V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { mapCopy } from "../../i18n/mapPanelCopy";
 import { MapViewportControls, type ViewportState } from "./MapViewportControls";
+import { formatStampDay, stampForActivity, type FootprintState } from "../../features/checkin/footprintRead";
 import "../../map-attribution.css";
 import "../../map-selection.css";
 
@@ -97,6 +98,8 @@ export function MapPanel({
   onNoLocationChange = null,
   selectedActivityId = null,
   onSelectActivity = null,
+  footprints = null,
+  onlyStamped = false,
 }: {
   data: MapPanelInput | null;
   option: V8Data["options"][number] | null;
@@ -110,6 +113,27 @@ export function MapPanel({
   /** ORD-0390: called with the activity id a marker stands for, or null to clear.  A stay offer
       that has no plan activity reports null rather than inventing an id. */
   onSelectActivity?: ((id: string | null) => void) | null;
+  /**
+   * ORD-0497: the footprint *read*, held by the surface that asked and passed down -- the map keeps
+   * no footprint of its own.  `null` means this surface never asked (the hub, Live, the share
+   * screen), and the map then paints exactly what it painted before this prop existed: no hollow
+   * pins, no dates, no claim.  Only the `read` arm is allowed to distinguish solid from hollow;
+   * `refused` / `unreachable` / `not_asked` fall to the same silence, because a pin that went hollow
+   * on a failed read would be the map answering for a server that never answered.
+   */
+  footprints?: FootprintState | null;
+  /**
+   * ORD-0497: 「只看打过」. Lives with the surface that owns the read, not in a library and not in a
+   * database -- the order rules that the switch state is never written down, and this prop is the
+   * whole of its travel.  On, it hides the pins the read returned no stamp for; it never hides a pin
+   * the read did not answer about (`footprints` not on its `read` arm ⇒ the switch is not offered at
+   * all, see the row in V8Experience).  Hiding is `visibility`, never removal:
+   * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
+   * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins and rows as the proof that every
+   * located stop can still be picked, and ORD-0453 already settled that a filter is a clip, not a
+   * deletion.
+   */
+  onlyStamped?: boolean;
 }) {
   const host = useRef<HTMLDivElement | null>(null);
   /* ORD-0390: the marker elements and the map instance are kept in refs so a selection change can
@@ -117,7 +141,24 @@ export function MapPanel({
      rebuild path is `useEffect([data, points, route])` below, and panning through it would reset
      the zoom the traveller just chose. */
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
-  const markerEls = useRef<{ el: HTMLElement; id: string | null }[]>([]);
+  const markerEls = useRef<{ el: HTMLElement; id: string | null; at: [number, number] | null }[]>([]);
+  /* ORD-0497: the date badges are maplibre markers of their own, appended and removed by
+     `applyFootprints` -- never children of a pin, because
+     `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:177` asserts a pin paints nothing but
+     its stop number. Kept in a ref so a footprint read that lands after the map was built can restyle
+     the pins without tearing the map down (the camera-reset lesson of ORD-0390 right above). */
+  const stampBadges = useRef<import("maplibre-gl").Marker[]>([]);
+  /* maplibre is loaded by dynamic import inside the build effect, so the only handle on its
+     `Marker` class is the one that effect can hand out.  The badges need it, and nothing else does. */
+  const maplibreRef = useRef<{ Marker: typeof import("maplibre-gl").Marker } | null>(null);
+  /* The read and the filter are both re-applied, never rebuilt: refs so the map-building effect can
+     call the current version of `applyFootprints` without making either one of them a dependency of
+     the camera. */
+  const footprintsRef = useRef<FootprintState | null>(footprints);
+  const filterRef = useRef<boolean>(onlyStamped);
+  const applyFootprintsRef = useRef<() => void>(() => {});
+  footprintsRef.current = footprints;
+  filterRef.current = onlyStamped;
   /* The click handlers are attached inside the map-building effect, which deliberately does not
      depend on `onSelectActivity` (rebuilding the map to rebind a callback would reset the camera).
      A ref keeps the handler current without making the camera its hostage. */
@@ -254,6 +295,7 @@ export function MapPanel({
     let resizeObserver: ResizeObserver | null = null;
     void import("maplibre-gl").then(({ default: maplibregl }) => {
       if (disposed || !host.current) return;
+      maplibreRef.current = maplibregl;
       const coordinates = route
         .flatMap((feature) => feature.geometry.coordinates)
         .filter((value) => value.length >= 2);
@@ -445,7 +487,7 @@ export function MapPanel({
           choose();
         }
       });
-      markerEls.current.push({ el: marker, id: point.id });
+      markerEls.current.push({ el: marker, id: point.id, at: [point.longitude, point.latitude] });
         new maplibregl.Marker({ element: marker })
         .setLngLat([point.longitude, point.latitude])
         .addTo(mapInstance);
@@ -465,6 +507,12 @@ export function MapPanel({
         ])
         .addTo(mapInstance);
     }
+    /* ORD-0497: a map that has just been built is a set of brand-new pin elements, which carry no
+       footprint class until somebody paints them.  This is that somebody, and it is called here as
+       well as from the effect below because the read usually lands while the map already exists --
+       but on a first mount the two arrive in the other order, and a screen that showed hollow pins
+       only after the traveller panned would be a second, timing-dependent truth. */
+    applyFootprintsRef.current();
     /* ORD-0410: what the journey's view is framed on — the route geometry when there is any, and
        otherwise the stops this panel just painted markers for.  Gating this on route coordinates
        alone made the whole block conditional on a journey having leg geometry, so a journey with
@@ -557,11 +605,73 @@ export function MapPanel({
     return () => {
       disposed = true;
       resizeObserver?.disconnect();
+      /* ORD-0497: the badges are markers on this map instance, so they go with it -- while it is
+         still there to take them. Doing it after `map.remove()` would be removing nodes from a map
+         that no longer has a container to remove them from. */
+      for (const badge of stampBadges.current) badge.remove();
+      stampBadges.current = [];
       map?.remove();
       mapRef.current = null;
+      maplibreRef.current = null;
       markerEls.current = [];
     };
   }, [data, points, route]);
+
+  /* ORD-0497 -- paint the footprint read onto the pins that already exist.
+   *
+   * Three rules this function is the only place for:
+   *   1. only a `read` arm paints. A `refused` / `unreachable` / `not_asked` read, or no read at all
+   *      (the hub, Live, the share screen), leaves every pin exactly as it was drawn -- the map does
+   *      not answer for a server that did not;
+   *   2. a stamp is matched by the server's own `target_key` (`stampForActivity`), never by a title
+   *      or an index, so a renamed stop cannot move a stamp onto a neighbour;
+   *   3. 「只看打过」 only ever removes pins the read answered "no stamp" about. Stamped pins, stay
+   *      offers and the traveller's own dot are never filtered, and filtering hides by visibility:
+   *      the node stays in the document, because the accepted map gates count pins and rows as the
+   *      proof that a located stop is still pickable.
+   */
+  const applyFootprints = () => {
+    const read = footprintsRef.current?.kind === "read" ? footprintsRef.current : null;
+    const only = filterRef.current;
+    const map = mapRef.current;
+    const maplibre = maplibreRef.current;
+    for (const badge of stampBadges.current) badge.remove();
+    stampBadges.current = [];
+    for (const entry of markerEls.current) {
+      entry.el.classList.remove("stamped", "un-stamped", "filtered-out");
+      if (!read || !entry.id) continue;
+      const stamp = stampForActivity(read, entry.id);
+      if (!stamp) {
+        entry.el.classList.add("un-stamped");
+        if (only) entry.el.classList.add("filtered-out");
+        continue;
+      }
+      entry.el.classList.add("stamped");
+      if (!map || !maplibre || !entry.at) continue;
+      /* The day goes beside the pin, not inside it: `e2e/qoder-map-ord0403-named-control-and-labels
+         .spec.ts:177` asserts a pin paints nothing but its stop number, and a child node would
+         break that with the text it adds. Date only, never a clock -- `formatStampDay` names the
+         glass rule that forbids one. */
+      const badge = document.createElement("div");
+      badge.className = "v8-map-stamp-date";
+      badge.setAttribute("data-testid", `map-stamp-date-${entry.id}`);
+      const day = formatStampDay(locale, stamp.stamped_at);
+      badge.textContent = day;
+      badge.setAttribute("aria-label", mapCopy(locale, "footprintBadgeAria").replace("%s", day));
+      stampBadges.current.push(
+        new maplibre.Marker({ element: badge, anchor: "top", offset: [0, 15] })
+          .setLngLat(entry.at)
+          .addTo(map),
+      );
+    }
+  };
+  applyFootprintsRef.current = applyFootprints;
+  /* Re-paint, never rebuild: the read can arrive after the map, the switch can flip at any moment,
+     and a language change changes the badge's words. None of those is a reason to reset the camera,
+     which is why this is a separate effect on the same refs ORD-0390 established. */
+  useEffect(() => {
+    applyFootprintsRef.current();
+  }, [footprints, onlyStamped, points, locale]);
 
   /* ORD-0390, the reverse half of the link: a selection made anywhere else (the trips card's
      「在地图上显示」, or a sibling stop in the detail sheet) has to move this camera.  It is a
