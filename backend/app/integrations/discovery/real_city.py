@@ -17,7 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.integrations.provider_config import trust_environment_for_public_providers
+from app.core.money import major_to_minor
 from app.db.models import (
     AccommodationOfferSnapshot,
     Activity,
@@ -31,7 +31,7 @@ from app.db.models import (
     StayJourneyOption,
     WebObservation,
 )
-
+from app.integrations.provider_config import trust_environment_for_public_providers
 
 LOGGER = logging.getLogger(__name__)
 
@@ -112,6 +112,44 @@ _DAY_NAMES = {
     "su": "Su",
     "sun": "Su",
 }
+
+# OSM's ``fee`` field is a boolean-ish tag (``yes``/``no``), not a currency
+# code.  Keep the set here deliberately small and explicit: an arbitrary
+# three-letter word from a free-form tag must not become money metadata.
+_KNOWN_CURRENCY_CODES = frozenset(
+    {
+        "AUD",
+        "BRL",
+        "CAD",
+        "CHF",
+        "CNY",
+        "CZK",
+        "DKK",
+        "EUR",
+        "GBP",
+        "HKD",
+        "HUF",
+        "IDR",
+        "INR",
+        "JPY",
+        "KRW",
+        "MXN",
+        "MYR",
+        "NOK",
+        "NZD",
+        "PHP",
+        "PLN",
+        "RUB",
+        "SEK",
+        "SGD",
+        "THB",
+        "TRY",
+        "TWD",
+        "USD",
+        "VND",
+        "ZAR",
+    }
+)
 
 
 def _expand_days(raw: str) -> list[str]:
@@ -198,9 +236,13 @@ def normalize_opening_hours(raw: Any) -> dict[str, Any]:
 
 def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict[str, Any]:
     values = tags or {}
-    currency = str(values.get("currency") or values.get("currency:code") or "CNY").upper()
+    tagged_currency = str(values.get("currency") or values.get("currency:code") or "").strip().upper()
+    currency = tagged_currency if tagged_currency in _KNOWN_CURRENCY_CODES else "CNY"
     fee = values.get("fee")
-    charge = values.get("charge") or values.get("price")
+    # OSM commonly stores admission under ``charge:adult`` rather than the
+    # generic ``charge`` key.  Adult admission is the useful default for a
+    # general itinerary; child/disabled rates must not silently replace it.
+    charge = values.get("charge:adult") or values.get("charge") or values.get("price")
     if isinstance(fee, str) and fee.casefold() in {"no", "false", "free", "免费"}:
         return {"status": "KNOWN", "amount_minor": 0, "currency": currency, "source": source}
     candidate = charge if charge is not None else fee
@@ -212,13 +254,13 @@ def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict
             if symbol in candidate_text:
                 currency = code
                 break
-        if suffix:
+        if suffix and suffix.group(1).upper() in _KNOWN_CURRENCY_CODES:
             currency = suffix.group(1).upper()
         match = re.search(r"(\d+(?:\.\d+)?)", candidate_text)
         if match:
             return {
                 "status": "KNOWN",
-                "amount_minor": round(float(match.group(1)) * 100),
+                "amount_minor": major_to_minor(match.group(1), currency),
                 "currency": currency,
                 "source": source,
             }

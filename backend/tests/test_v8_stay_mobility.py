@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
+from demo_stage import demo_reset_headers
 from fastapi.testclient import TestClient
 
 import app.main as main_module
@@ -10,7 +11,6 @@ from app.db.models import TravelerPreferenceEvidence
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
 from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
-from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -20,6 +20,26 @@ def test_v7_1_trust_fixes_are_explicit() -> None:
     hours = normalize_opening_hours("Mo-Fr 09:00-18:00; Sa 10:00-14:00")
     assert hours["weekday_intervals"][0]["days"] == ["Mo", "Tu", "We", "Th", "Fr"]
     assert hours["weekday_intervals"][1]["days"] == ["Sa"]
+
+
+def test_osm_fee_boolean_is_not_currency_and_adult_charge_is_authoritative() -> None:
+    unknown = cost_evidence_from_tags({"fee": "yes"}, source="overpass")
+    assert unknown == {
+        "status": "UNKNOWN",
+        "amount_minor": None,
+        "currency": "CNY",
+        "source": "overpass",
+    }
+
+    known = cost_evidence_from_tags(
+        {"fee": "yes", "charge:adult": "1200 JPY"}, source="nominatim"
+    )
+    assert known == {
+        "status": "KNOWN",
+        "amount_minor": 1200,
+        "currency": "JPY",
+        "source": "nominatim",
+    }
 
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     with SessionLocal() as session:

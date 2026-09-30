@@ -62,6 +62,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 message = response.json()["choices"][0]["message"]
                 if not isinstance(message, dict):
                     raise TypeError("Hermes response message is invalid")
+                if not str(message.get("content") or "").strip() and not message.get("tool_calls"):
+                    raise ValueError("Hermes response message is empty")
                 self.model_key = model
                 return message
             except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:

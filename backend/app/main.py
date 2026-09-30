@@ -1244,35 +1244,49 @@ def run_agent_command(
                         "effective_time": str(semantic.get("effective_time") or "FUTURE").upper(),
                     },
                 }
-            resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
-            event = EventModel(
-                id=str(uuid4()),
-                journey_id=journey.id,
-                provider_key="user-command",
-                provenance="USER_REPORTED",
-                event_type=event_type,
-                severity=disruption_severity(payload.command, event_type),
-                status="DETECTED",
-                # A free-text disruption is scoped to the server's current
-                # execution position. The model may describe the event, but it
-                # must not invent an Activity target.
-                affected_activity_id=target.activity_id,
-                occurred_at=target.occurred_at or now,
-                detected_at=now,
-                payload_json=json.dumps(
-                    {
-                        "description": payload.command,
-                        "source": "agent_command",
-                        "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
-                        "semantic": {**semantic, "target_resolution": target.resolution},
-                    },
-                    ensure_ascii=False,
-                    sort_keys=True,
-                ),
-                created_at=now,
+            # Re-reporting the same actionable disruption must reuse its
+            # server-owned Event.  Otherwise an agent command that explicitly
+            # refers to the current closure creates a second trigger for the
+            # same activity and splits the recovery history.
+            event = session.scalar(
+                select(EventModel)
+                .where(
+                    EventModel.journey_id == journey.id,
+                    EventModel.event_type == event_type,
+                    EventModel.affected_activity_id == target.activity_id,
+                    EventModel.status.in_(("DETECTED", "ACKNOWLEDGED")),
+                )
+                .order_by(EventModel.detected_at, EventModel.id)
             )
-            session.add(event)
-            session.flush()
+            if event is None:
+                event = EventModel(
+                    id=str(uuid4()),
+                    journey_id=journey.id,
+                    provider_key="user-command",
+                    provenance="USER_REPORTED",
+                    event_type=event_type,
+                    severity=disruption_severity(payload.command, event_type),
+                    status="DETECTED",
+                    # A free-text disruption is scoped to the server's current
+                    # execution position. The model may describe the event, but it
+                    # must not invent an Activity target.
+                    affected_activity_id=target.activity_id,
+                    occurred_at=target.occurred_at or now,
+                    detected_at=now,
+                    payload_json=json.dumps(
+                        {
+                            "description": payload.command,
+                            "source": "agent_command",
+                            "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
+                            "semantic": {**semantic, "target_resolution": target.resolution},
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    created_at=now,
+                )
+                session.add(event)
+                session.flush()
         mission = create_mission(
             session,
             journey,
