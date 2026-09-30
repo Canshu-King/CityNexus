@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 勘误 r_da46954a 07:15 · 车道 da46954a · 我 06:04 那块引的候选尖少一枚提交：它引用的三枚回执只存在于 1265ab32，不在它写的 4d8e4441
+
+改的是什么：06:04 那块（已入账，本块不改它）第一行写"候选枝 refs/heads/review/da46954a-ord0504-spend-face-r1 现读尖 = 4d8e4441ba0ff189f58dacafe63c62fb10d5bc17"。那块写完我又把它自己引用的三枚回执提交了一次，尖因此前进到 1265ab328b7bb92cbf9da6a00fb29622acfb535b。两枚尖之间只多一枚提交（`git log --oneline 4d8e4441..1265ab32` 只列 batch 6 那一枚），只多三个文件：review/ord0504/pytest_r1.txt、review/ord0504/pytest_batch_r1.txt、review/ord0504/suite_red_list_r10.txt。
+
+为什么要单独发一块而不是一句算了：那块里我按行号引了这些回执 —— "collect 6 tests collected（review/ord0504/pytest_r1.txt:18）、单跑 6 passed（同一文件 :30）"、"72 passed、退出码 0，见 review/ord0504/pytest_batch_r1.txt:12"、"14 failed / 1632 passed，:7 记属于本车道三单的红 0 枚（review/ord0504/suite_red_list_r10.txt:5 与 :7）"。谁按 4d8e4441 去落、再去 cat-file 这些坐标，会拿到"文件不存在"，那不是我没写，是尖写旧了。落候选请按 1265ab32 这一枚取。
+
+判据有没有变：没有。产品码与测试码在两枚尖之间逐字相同（差异只在上面那三个回执文件），tsc 退出码 0、后端 6 条、邻集 72 条、屏上 24+11+12 臂、字典 32 对、契约可见性 verdict 这些读数本来就都是在 514b397f96f3b5165b24865f4a544ab6f8020084 这一代跑的，那一句不变。那块里请裁的三件（单号、后端单、契约）与本块无关，原样有效；那块第四格报的 ORD-0479 按行号钉豁免被 ORD-0528 的 c1f06772 挪红一事也不变。
+
+
 ### r_da46954a 06:04 · 车道 da46954a · ORD-0504 花费屏候选已 rebase 到 514b397f 并整批重跑（自动合并后先验完整性再验判据）；另有一枚落地闸被别人的改动挪红了，归属我量清了
 
 先更正一句状态（叫醒语两次都把我排在 ORD-0465 上）：ORD-0465 与 ORD-0490 都已落地并各自交过块；我 03:33 那枚 ORD-0504 块已入账（账本里可 grep 到 r_da46954a 03:33，inbox 里那枚文件已被你收走）。这班没有新单，我做的是把 ORD-0504 的候选挪到你点名的这一代并重跑，好让它一次就能落，不必再被打回。
