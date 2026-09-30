@@ -1827,6 +1827,14 @@ def acquire_journey_place_facts(
             session,
             journey,
             place_ids=payload.place_ids if payload else None,
+            source_bindings=(
+                {
+                    place_id: binding.model_dump()
+                    for place_id, binding in (payload.source_bindings or {}).items()
+                }
+                if payload
+                else None
+            ),
         )
         session.commit()
     except (httpx.HTTPError, ValueError) as exc:

@@ -18,6 +18,8 @@ from app.fact_acquisition import (
     _search_fact_candidates,
     _acquire_overpass_payload,
     _official_web_facts,
+    _plain_text_cost,
+    _plain_text_opening,
     acquire_place_facts,
 )
 from app.main import _plan_mobility_eligibility_receipts, _provider_mesh_candidate_payload
@@ -431,6 +433,49 @@ def test_fact_source_binding_requires_exact_provider_identity():
         },
     )
     assert binding["source_url"] == "https://official.example/46"
+
+
+def test_requested_fact_source_binding_derives_exact_provider_identity():
+    from app.fact_acquisition import _requested_fact_source_binding
+
+    place = SimpleNamespace(external_id="overpass:node/3818354965")
+    binding = _requested_fact_source_binding(
+        place,
+        {
+            "source_url": "https://www.heijo-park.jp/information/facility/",
+            "source_class": "MUNICIPAL_AUTHORITY",
+        },
+    )
+
+    assert binding == {
+        "provider_entity": "overpass:node/3818354965",
+        "source_url": "https://www.heijo-park.jp/information/facility/",
+        "source_class": "MUNICIPAL_AUTHORITY",
+        "identity_basis": {
+            "matched_provider_entity": True,
+            "provider_entity": "overpass:node/3818354965",
+            "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY",
+        },
+        "approval": "OPERATOR_VERIFIED",
+    }
+
+
+def test_official_japanese_facility_labels_are_parsed_as_authoritative_facts():
+    source_url = "https://www.heijo-park.jp/information/facility/"
+    opening = _plain_text_opening(
+        "開館時間 9：00～17：00（入場は16：30まで）",
+        source_url,
+        reference_at="2026-10-02T09:00:00+09:00",
+    )
+    cost = _plain_text_cost(
+        "入館料 無料", source_url, reference_at="2026-10-02T09:00:00+09:00"
+    )
+
+    assert opening["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert opening["open"] == "09:00"
+    assert opening["close"] == "17:00"
+    assert cost["status"] == "VERIFIED_PROVIDER"
+    assert cost["amount_minor"] == 0
 
 
 def test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phases(monkeypatch):

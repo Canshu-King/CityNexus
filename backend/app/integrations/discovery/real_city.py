@@ -90,7 +90,7 @@ def _distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return 2 * radius * math.asin(math.sqrt(a))
 
 
-_TIME_PATTERN = re.compile(r"(?P<open>\d{1,2}(?::\d{2})?)\s*[-–]\s*(?P<close>\d{1,2}(?::\d{2})?)")
+_TIME_PATTERN = re.compile(r"(?P<open>\d{1,2}(?::\d{2})?)\s*[-–—～〜]\s*(?P<close>\d{1,2}(?::\d{2})?)")
 _DAY_PATTERN = re.compile(
     r"^(?P<days>(?:Mo|Mon|Tu|Tue|We|Wed|Th|Thu|Fr|Fri|Sa|Sat|Su|Sun)"
     r"(?:\s*[-–]\s*(?:Mo|Mon|Tu|Tue|We|Wed|Th|Thu|Fr|Fri|Sa|Sat|Su|Sun))?)\s+(?P<times>.+)$",

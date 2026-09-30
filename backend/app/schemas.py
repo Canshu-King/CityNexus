@@ -570,6 +570,19 @@ class FactAcquisitionRequest(BaseModel):
     """Acquire source-linked facts for existing provider Places."""
 
     place_ids: list[str] | None = Field(default=None, min_length=1, max_length=50)
+    source_bindings: dict[str, "FactSourceBindingRequest"] | None = None
+
+
+class FactSourceBindingRequest(BaseModel):
+    """Bind an operator-confirmed official page to one existing provider Place."""
+
+    source_url: str = Field(min_length=1, max_length=2048)
+    source_class: Literal[
+        "OFFICIAL_WEB",
+        "OFFICIAL_OPERATOR",
+        "OFFICIAL_TICKETING",
+        "MUNICIPAL_AUTHORITY",
+    ] = "OFFICIAL_WEB"
 
 
 class AuthoritativeComposeRequest(BaseModel):

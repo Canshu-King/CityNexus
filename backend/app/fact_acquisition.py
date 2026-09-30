@@ -14,7 +14,7 @@ import json
 import re
 import socket
 from datetime import date, datetime, timezone
-from typing import Any
+from typing import Any, Mapping
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 
 import httpx
@@ -322,6 +322,29 @@ def _fact_source_binding(place: Place, metadata: dict[str, Any]) -> dict[str, An
     }
 
 
+def _requested_fact_source_binding(
+    place: Place, requested: Mapping[str, Any] | None
+) -> dict[str, Any] | None:
+    """Turn an operator-supplied URL into a binding for this exact provider entity."""
+
+    if not isinstance(requested, Mapping):
+        return None
+    candidate = {
+        "fact_source_binding": {
+            "provider_entity": str(place.external_id or ""),
+            "source_url": str(requested.get("source_url") or "").strip(),
+            "source_class": str(requested.get("source_class") or "OFFICIAL_WEB").upper(),
+            "identity_basis": {
+                "matched_provider_entity": True,
+                "provider_entity": str(place.external_id or ""),
+                "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY",
+            },
+            "approval": "OPERATOR_VERIFIED",
+        }
+    }
+    return _fact_source_binding(place, candidate)
+
+
 def _visible_html_text(body: str) -> str:
     without_non_content = re.sub(
         r"<(script|style|noscript|template)\b[^>]*>.*?</\1>",
@@ -472,6 +495,10 @@ def _plain_text_opening(
         + "\u5f00\u653e\u65f6\u95f4"
         + "|"
         + "\u8425\u4e1a\u65f6\u95f4"
+        + "|\u958b\u9928\u6642\u9593"
+        + "|\u958b\u653e\u6642\u9593"
+        + "|\u5229\u7528\u6642\u9593"
+        + "|\u55b6\u696d\u6642\u9593"
         + r"|opening\s+hours?|hours?)"
         + r"\s*["
         + re.escape(":\uFF1A")
@@ -481,7 +508,7 @@ def _plain_text_opening(
     if not label:
         return {"status": "UNKNOWN", "raw": None, "intervals": []}
     excerpt = text[label.end() : label.end() + 260].translate(
-        str.maketrans({"\uff08": "(", "\uff09": ")"})
+        str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
     )
     if re.search("\u5168\u5929\u5f00\u653e" + r"|all\s*day|24\s*hours?", excerpt, re.IGNORECASE):
         return {
@@ -496,7 +523,7 @@ def _plain_text_opening(
         }
     range_pattern = re.compile(
         r"(?P<open>\d{1,2}(?::\d{2})?)\s*["
-        + re.escape("-\u2013\u2014")
+        + re.escape("-\u2013\u2014\uff5e\u301c")
         + r"]\s*(?P<close>\d{1,2}(?::\d{2})?)"
         + r"\s*(?:\(\s*(?P<period>[^)]{1,80})\))?"
     )
@@ -546,6 +573,9 @@ def _plain_text_cost(
         + "\u7968" + r"\s*" + "\u4ef7"
         + "|"
         + "\u95e8" + r"\s*" + "\u7968" + r"(?:\s*" + "\u4ef7" + r"\s*" + "\u683c)?"
+        + "|\u5165\u9928\u6599"
+        + "|\u5165\u5834\u6599"
+        + "|\u6599\u91d1"
         + r"|admission\s+fee|entrance\s+fee|ticket)"
         + r"\s*["
         + re.escape(":\uFF1A")
@@ -572,7 +602,7 @@ def _plain_text_cost(
     excerpt = excerpt.translate(
         str.maketrans({"\uff08": "(", "\uff09": ")"})
     )
-    if re.search("\u514d\u8d39" + r"|free", excerpt, re.IGNORECASE):
+    if re.search("\u514d\u8d39|\u514d\u8cbb|\u7121\u6599" + r"|free", excerpt, re.IGNORECASE):
         return {
             "status": "VERIFIED_PROVIDER",
             "amount_minor": 0,
@@ -935,7 +965,13 @@ def _search_fact_candidates(
     }
 
 
-def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[str] | None = None) -> dict[str, Any]:
+def acquire_place_facts(
+    session: Session,
+    journey: Journey,
+    *,
+    place_ids: list[str] | None = None,
+    source_bindings: Mapping[str, Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
     statement = select(Place).where(Place.city_code == journey.city_code)
     if place_ids:
         statement = statement.where(Place.id.in_(place_ids))
@@ -987,7 +1023,10 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 if candidate.get("status") != "UNKNOWN":
                     cost = candidate
             official = {"status": "NO_SOURCE_URL"}
-            source_binding = _fact_source_binding(place, metadata)
+            requested_binding = source_bindings.get(place.id) if source_bindings else None
+            source_binding = _requested_fact_source_binding(place, requested_binding)
+            if source_binding is None:
+                source_binding = _fact_source_binding(place, metadata)
             source_url = (
                 str(source_binding["source_url"])
                 if source_binding
@@ -1079,6 +1118,7 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
             row_receipt = {
                 "place_id": place.id, "provider": "overpass", "source": endpoint,
                 "provider_entity": place.external_id, "retrieved_at": retrieved_at,
+                "source_binding": source_binding,
                 "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "status": secondary["status"], "matched_provider_entity": ref in nominatim_rows},
                 "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
                 "opening_hours": opening, "cost_evidence": cost, "official_web": official, "search_source": search,
