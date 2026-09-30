@@ -16588,6 +16588,50 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 22:52 · 干净库上的死局量到底了：三扇门没有一扇能把一枚地点放进目录（夹具 / 排程 / 粘贴解析逐门读数）
+
+**〇、口径**
+
+尖我 22:48 现读 = `d72528cfc857`。栈：后端 `:4781`（我自己的私有库 `_cmdr_phone_4781.db`，带 `CITYNEXUS_DEMO_MODE=true` 重起过一次）、局域网宿主 `0.0.0.0:4783`、产物 `_build_day5/frontend/dist`。`:8000/:4782/:8693` 未碰，`_preview.db` 未写，`demo/reset` 未跑。
+
+**一、三扇门逐门读数（都是真 HTTP，`http_status` 逐发记）**
+
+| 门 | 读数 | 说明 |
+|---|---|---|
+| 演示夹具 `POST /api/v1/demo/prepare-scenario` | `http_status=200`，体内 `status=prepared`，但 `advance.steps[0]` = `{"step":"plans/generate","ms":2.7,"refused":"CatalogShortfall","detail":"No feasible plan candidates satisfy the journey constraints"}`，`plan_version_id=null` | **失败写在体内，状态码是 200**；只看状态码的臂会把它读成成功 |
+| 排程 `POST /api/v1/journeys/{id}/plans/generate` | `http_status=422` `code=VALIDATION_ERROR`，`details` 里 `places_in_catalog: 0`、`city_code: CNX-DEMO` | 我这枚行程是用 API 造的（`POST /api/v1/journeys` 回 `http_status=201`） |
+| 粘贴解析 `POST /api/v1/journeys/{id}/poi-import/parse` | `http_status=200`，`source_channel=LOCAL_TEXT_PARSER`，`counts={"extracted":3,"resolved":0,"ambiguous":0,"unresolved":3,"addable":0}`；三条全 `status=UNRESOLVED`、`place_id=null`、`addable=false` | 解析要对目录解析，目录空所以全未解析 |
+
+**结论（一句话）**：干净库上，演示夹具、排程、粘贴解析三扇门**没有一扇**能把一枚地点放进目录；唯一能写目录的是 `POST /api/v1/journeys/{id}/real-city/discover` 那条走供应商的腿，而本机这一腿是死的（`failure_stage=anchor_geocode`、`fallback_reason=PROVIDER_TIMEOUT`，我 18:36 那块里量过）。所以一台干净机器上，产品现在既排不出行程、也长不出地图与长图——这不是客户端缺陷，是**供给死局**。
+
+**二、这条死局的可测出口（已作为 ORD-0521 的三格验收写进车道）**
+
+1) 干净库上 `POST /api/v1/demo/prepare-scenario` 的 `advance.steps` 里不得再出现 `refused`，且 `plan_version_id` 非空；
+2) 干净浏览器 + 空库、不走向导，能拿到一趟有排程有站点的行程；
+3) 从零库出发，至少有一条**不出网**的腿能把真实地点放进目录，且它自己要说清地点来自哪条腿；若确实只能靠出网，则屏上要把"这台服务器现在拿不到地点"说成可读状态，而不是让解析默默回 `unresolved=3`。
+
+**三、同一趟里顺带证实的两件（都记在我 22:47 那块里）**
+
+- 壳的门是浏览器里存下的行程引用（键族 `frontend/src/lib/failureAttribution.ts:390`，开它的条件 `frontend/src/app/V8Experience.tsx:867`）；我按契约落了那条引用后，`wizard_present=false`，并读到 `/v8/hub`、`/v8/import`、`/v8/access` 三屏真内容与主题钮的中心命中（盒 49x44）。
+- `demo/scene` 报出的行程号要么库里真有、要么它自己说清"这台服务器还没有场景"——这条我也写进了 ORD-0521。
+
+**四、本轮落地与派单**
+
+- 落地：ORD-0503 证据枝 → 尖 `d72528cfc857`。
+- 派单：ORD-0525（日历导出屏上入口，`6a773af1`）；ORD-0507 与 ORD-0461 r3 唤醒（`a68b0631`，并喂了两条踩坑事实）；`1d64acf5` 的账本块第三版已过门入账。
+- 第二档（地图↔卡片双向选中）仍按裁压着，等 ORD-0524 落地。
+
+**五、没改善的部分**
+
+1. 长图/地图/日历/足迹四格仍无分母——今晚我没法在有站点的行程上读它们，因为第二节那条死局；ORD-0521 落地后一次性补读。
+2. 手机五格探针未跑（同因）。
+3. ORD-0495 三枚臂在导出树里仍红（`3 failed, 4 passed`），等车道 r3。
+4. 我这台局域网宿主的第三证（访问日志）仍不可取，具名 `NOT_AVAILABLE_BY_CMDR`。
+5. 桌面留言仍只挂那一问（那枚 Adobe 分段下载残件是否可删）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0510 车道 1d64acf5：行程逐日行上多了「收藏到…」——走的是 ORD-0444 已有的三扇门，落点那一句来自重新读回的 GET，两枚反件真跑
 
 **归属**：账本 `CITYNEXUS_AGENT_CONTROL.md:17088` 那一行把「收藏接到使用者手上 ORD-0510」派给 1d64acf5，本块交付车道名逐字 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`。同一本账 `CITYNEXUS_AGENT_CONTROL.md:17093` 记着 ORD-0444 当时是「服务端通、前端无路」——本枝就是那条路。
