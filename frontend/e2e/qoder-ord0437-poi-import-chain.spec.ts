@@ -25,9 +25,10 @@ import { evidencePath } from "./_qoderEvidence";
  *   added        — 已加入 only appears once the record is read back from the server, and it survives
  *                  a reload, which client state cannot fake.
  *   replay       — a second tap on the same selection reports 本来就在 rather than a second success.
- *   exits        — the three destinations: 加进计划 opens only when something is ticked, and the two
- *                  that this line cannot honour (收藏, 新建计划) stay shut and say why in painted text,
- *                  not in a tooltip a touch screen never shows.
+ *   exits        — the three destinations, as of ORD-0524 one exclusive radiogroup: a parse selects
+ *                  nothing, 全选可加的行 is the control that does, 加进计划 and 收藏 each own their door
+ *                  and lose it the moment the other is chosen, and 只存不排 is presented and refused in
+ *                  painted text rather than in a tooltip a touch screen never shows.
  */
 
 const FILE = "e2e/qoder-ord0437-poi-import-chain.spec.ts";
@@ -337,7 +338,11 @@ test("link-named and states — a link is named while the text next to it is sti
     with_data_picked: els.filter((el) => el.getAttribute("data-picked") !== null).length,
     total: els.length,
   }));
-  const pickBoxes = await page.locator(".v8-pick-box").count();
+  /* One pick box per *card*, which since ORD-0524 is not the same count as one pick box on screen: the
+     select-all row is built from the same shared control, so it is named out of this count instead of
+     inflating it into a claim that the cards carry more controls than they do. */
+  const pickBoxes = await page.locator('.v8-pick-box:not(.poi-import-select-all)').count();
+  const selectAllRow = await page.locator(".poi-import-select-all").count();
   const selectedCount = await painted(page, "poi-import-selection-count");
   /* The four cells ORD-0463 lists: how many were read, what was not read and why, the shared refusal
      sentence, and the second input form. Coordinates go with the words so the sheet can be re-taken. */
@@ -348,7 +353,7 @@ test("link-named and states — a link is named while the text next to it is sti
   await page.screenshot({ path: evidencePath("ord0437", "success_arm.png") });
   push("link-named-and-states", {
     planState, slack: slack.seen, catalogue: built.why, phaseSeen: seen, finalPhase: phase, counts, unsupported, verifyWarning: warning,
-    retryWords: retry, cards, statuses, selectedCount, pickedHook, pickBoxes, rects,
+    retryWords: retry, cards, statuses, selectedCount, pickedHook, pickBoxes, selectAllRow, rects,
   });
   expect(phase).toBe("success");
   expect(unsupported, "the link must come back named with its host, not swallowed").toContain("mp.weixin.qq.com");
@@ -371,14 +376,15 @@ test("link-named and states — a link is named while the text next to it is sti
      line's own narrow-screen rule gives the control `min-height: var(--cn-touch-min)` = 44 px
      (design-tokens.css:202). A class that reached no rule would still count as one pick box, so the
      box is measured, not named. */
-  const firstBox = await page.locator(".v8-pick-box").first().boundingBox();
-  /* Un-picking one card is what makes the comparison honest: the panel starts with every matched place
-     selected, so without this click there is no unchecked control on screen to compare against, and a
-     "differs" assertion would pass simply because one side was missing. The click is also the only
-     place this gate grades that the tick actually answers. */
+  const firstBox = await page.getByTestId("poi-card-select").first().boundingBox();
+  /* Ticking one card is what makes the comparison honest: the panel now arrives with nothing selected
+     (ORD-0524 ① removed the pre-tick that this arm used to record), so without this click there would be
+     no *checked* control on screen to compare against, and a "differs" assertion would pass simply
+     because one side was missing. The click is also the only place this gate grades that the tick
+     actually answers. */
   await page.locator(".v8-pick-box").first().click();
   await page.waitForTimeout(600);
-  const afterOneDeselected = await painted(page, "poi-import-selection-count");
+  const afterOneTicked = await painted(page, "poi-import-selection-count");
   const paint = await page.evaluate(() => {
     const read = (sel: string) => {
       const el = document.querySelector(sel) as HTMLElement | null;
@@ -393,9 +399,9 @@ test("link-named and states — a link is named while the text next to it is sti
       plainBox: read(".v8-pick-box:not(.checked)"),
     };
   });
-  push("link-named-paint", { firstBoxHeight: firstBox?.height ?? null, afterOneDeselected, ...paint });
+  push("link-named-paint", { firstBoxHeight: firstBox?.height ?? null, afterOneTicked, ...paint });
   expect(firstBox?.height ?? 0, "勾选控件在窄屏要有 44 px 的可点高度").toBeGreaterThanOrEqual(44);
-  expect(afterOneDeselected, "点掉一枚之后计数要跟着减").toMatch(/1/);
+  expect(afterOneTicked, "勾上一枚之后计数要跟着涨").toMatch(/1/);
   expect(paint.unpickedCard, "取消勾选的那张要留在屏上").not.toBeNull();
   expect(paint.plainBox, "取消勾选的那枚控件要留在屏上").not.toBeNull();
   /* "has some box-shadow" would be true even if the shared sheet never reached this screen, so the
@@ -507,6 +513,14 @@ test("added and replay — 已加入 means the server gave the record back", asy
   const twoNames = built.names.slice(0, 2).join("\n");
   await parse(page, twoNames);
   await page.waitForTimeout(1_200);
+  /* ORD-0524 changed what a parse leaves selected: nothing. The row that selects every selectable row
+     is what this arm now presses -- and the count line is read first, because an arm that writes with
+     the pre-tick gone would just sit on a disabled button for its whole budget. */
+  const atZero = await painted(page, "poi-import-selection-count");
+  const addAtZeroDisabled = await page.getByTestId("poi-import-add").first()
+    .isDisabled({ timeout: 2_000 }).catch(() => null);
+  await page.getByTestId("poi-import-select-all").click();
+  await page.waitForTimeout(500);
   const chosen = await painted(page, "poi-import-selection-count");
   const titlesBefore = await planTitles(page);
   await page.getByTestId("poi-import-add").click();
@@ -598,36 +612,61 @@ test("exits — the three destinations, and what each one is allowed to promise"
   const isDone = async (id: string) =>
     page.getByTestId(id).first().isEnabled({ timeout: 2_000 }).catch(() => null);
 
-  /* The door opens exactly when the count it shows is non-zero, and that is the whole judgment here.
-     Measured on the first run of this arm: after a parse the screen has already ticked every matched
-     place ("2 of 2 matched places selected"), so an assertion that the write door is shut before any
-     press was MY premise, not the product's shape -- the reference's 批量加地点 screen carries a
-     checkSelectedAll for the same reason. Reading the painted count instead of guessing keeps the
-     assertion true in both directions: untick everything and the door has to shut. */
+  /* ORD-0524 turned this arm's premise the other way round. The shape ORD-0437 measured and pinned --
+     "the parse pre-ticks what it matched" -- is the defect ORD-0524 removes: a traveller who pressed
+     加进计划 without reading the cards wrote every one of them. So the arm now judges both directions of
+     the new shape: nothing selected on arrival and the door shut, and one control that selects every
+     selectable row and opens it. */
   const countShown = await painted(page, "poi-import-selection-count");
   const shown = Number((countShown?.match(/\d+/) ?? [""])[0]);
   const addDisabledShown = await disabledNow("poi-import-add");
+  const tickStateOnParse = await page.getByTestId("poi-card-select").evaluateAll((els) =>
+    els.map((el) => el.getAttribute("aria-checked")));
 
   const selects = page.getByTestId("poi-card-select");
   const n = await selects.count();
-  for (let i = 0; i < n; i++) await selects.nth(i).click();
-  await page.waitForTimeout(300);
+  const selectAllWords = await painted(page, "poi-import-select-all");
+  await page.getByTestId("poi-import-select-all").click();
+  await page.waitForTimeout(400);
+  const countAllOn = await painted(page, "poi-import-selection-count");
+  const addWithAllOn = await disabledNow("poi-import-add");
+  await page.getByTestId("poi-import-select-all").click();
+  await page.waitForTimeout(400);
   const countEmpty = await painted(page, "poi-import-selection-count");
   const addEmptyDisabled = await disabledNow("poi-import-add");
   const addEmptyWords = await isDone("poi-import-add");
 
   const addWords = await painted(page, "poi-import-add");
-  const favWords = await painted(page, "poi-import-favorite");
-  const favWhy = await painted(page, "poi-import-favorite-why");
-  const njWords = await painted(page, "poi-import-new-journey");
-  const njWhy = await painted(page, "poi-import-new-journey-why");
-  const favDisabled = await disabledNow("poi-import-favorite");
-  const njDisabled = await disabledNow("poi-import-new-journey");
+  const exitsLead = await painted(page, "poi-import-exits-lead");
+  const exitRadios = await page.getByTestId("poi-import-exits").locator('[role="radio"]').evaluateAll((els) =>
+    els.map((el) => ({
+      testid: el.getAttribute("data-testid"),
+      aria_checked: el.getAttribute("aria-checked"),
+      words: ((el as HTMLElement).innerText || "").replace(/\s+/g, " ").trim(),
+    })));
+  /* Moving the choice has to move the door with it -- that is what makes the three destinations
+     exclusive rather than three suggestions. Each step records which write controls are mounted, so a
+     screen that kept two doors open at once fails here instead of in the result. */
+  const doorStates: Array<Record<string, unknown>> = [];
+  for (const id of ["poi-import-exit-shelf", "poi-import-exit-store-only", "poi-import-exit-plan"]) {
+    await page.getByTestId(id).first().click({ timeout: 5_000 });
+    await page.waitForTimeout(1_200);
+    doorStates.push({
+      chosen: id,
+      checked: await page.getByTestId("poi-import-exits").locator('[role="radio"][aria-checked="true"]').count(),
+      add_mounted: await page.getByTestId("poi-import-add").count(),
+      collect_mounted: await page.getByTestId("poi-import-collect").count(),
+      shelf_rows: await page.getByTestId("poi-import-shelf").count(),
+      shelf_empty: await painted(page, "poi-import-shelf-empty"),
+      store_only_refused: await painted(page, "poi-import-store-only-refused"),
+    });
+  }
+  const storeOnlyWhy = await painted(page, "poi-import-store-only-why");
   /* Bring the exits column into view first: the last untick left the page parked at the bottom of the
      candidate list, so the previous PNG showed four cards and none of what this arm judges, and an
      evidence file of the wrong region is not a reading. Rects are taken after this so the numbers in
      the reading are the numbers the screenshot shows. */
-  await page.getByTestId("poi-import-add").first().scrollIntoViewIfNeeded();
+  await page.getByTestId("poi-import-exit-store-only").first().scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
   /* Geometry, because text being present is not the same as text being readable. The first version of
      this fix put both reasons in `<small>` inside `.v8-boundary-card`, which blockifies b/p/span but
@@ -641,42 +680,67 @@ test("exits — the three destinations, and what each one is allowed to promise"
       const b = el.getBoundingClientRect();
       return { top: Math.round(b.top), bottom: Math.round(b.bottom), left: Math.round(b.left), right: Math.round(b.right) };
     };
-    return { favWhy: r("poi-import-favorite-why"), njButton: r("poi-import-new-journey"), njWhy: r("poi-import-new-journey-why") };
+    return {
+      exitPlan: r("poi-import-exit-plan"), exitShelf: r("poi-import-exit-shelf"),
+      exitStoreOnly: r("poi-import-exit-store-only"), storeOnlyWhy: r("poi-import-store-only-why"),
+    };
   });
   await page.screenshot({ path: evidencePath("ord0437", "exits_arm.png") });
   push("exits", {
-    names: built.names, cardsWithSelect: n, countShown, selectedOnParse: shown,
-    doorOpenOnParse: addDisabledShown === false, countEmpty, doorDisabledAtZero: addEmptyDisabled,
-    addWords, favWords, favWhy, favDisabled, njWords, njWhy, njDisabled, rects,
+    names: built.names, cardsWithSelect: n, countShown, selectedOnParse: shown, tickStateOnParse,
+    selectAllWords, countAllOn, addWithAllOn, countEmpty, addEmptyDisabled,
+    addWords, exitsLead, exitRadios, doorStates, storeOnlyWhy, rects,
   });
 
   expect(addWords, "加进计划 is the exit this screen actually performs").toBeTruthy();
-  expect(shown > 0, "the parse pre-ticks what it matched -- recorded, not assumed").toBe(true);
-  expect(addDisabledShown, "the door agrees with the count it paints").toBe(shown === 0);
+  expect(shown, "a parse selects nothing on the traveller's behalf -- ORD-0524 ①").toBe(0);
+  expect(tickStateOnParse.length, "every matched row carries its own tick control").toBeGreaterThan(0);
+  expect(tickStateOnParse.every((v) => v === "false"), "and every one of them is unchecked").toBe(true);
+  expect(addDisabledShown, "with nothing selected the write door is shut").toBe(true);
+  expect(selectAllWords, "the row that selects every selectable row is on screen").toBeTruthy();
+  expect((countAllOn?.match(/\d+/) ?? [""])[0]).not.toBe("0");
+  expect(addWithAllOn, "selecting them all is what opens the door").toBe(false);
   expect((countEmpty?.match(/\d+/) ?? [""])[0]).toBe("0");
-  expect(addEmptyDisabled, "with nothing ticked the write door has to shut").toBe(true);
+  expect(addEmptyDisabled, "with nothing ticked the write door has to shut again").toBe(true);
   expect(addEmptyWords, "an enabled control after 0 selected would fake a promise").toBe(false);
 
-  /* The other two are not built on this line: 收藏 has no route here (ORD-0444 is still a review ref),
-     and 新建计划 would mean inventing dates and a budget the traveller never gave us. Inert is
-     acceptable; inert *and silent* is not -- a tooltip never appears on a touch screen, so the reason
-     has to be painted. */
-  expect(favDisabled, "收藏 must not pretend to save").toBe(true);
-  expect(njDisabled, "新建计划 must not invent a trip").toBe(true);
-  expect(favWords).toMatch(/收藏|favour|favorite/i);
-  expect(njWords).toMatch(/计划|plan/i);
-  expect(favWhy, "an exit that is off has to say why in the open").toBeTruthy();
-  expect(njWhy, "an exit that is off has to say why in the open").toBeTruthy();
-  expect(favWhy).toMatch(/收藏|favourite|favorite/i);
-  expect(njWhy).toMatch(/计划|plan|录入/i);
-  expect(rects.favWhy, "两处原因都得在屏上有自己的位置").not.toBeNull();
-  expect(rects.njWhy, "两处原因都得在屏上有自己的位置").not.toBeNull();
-  expect(rects.njButton).not.toBeNull();
+  /* Three destinations, one choice. 收藏 is no longer a promise this screen refuses to keep: ORD-0444
+     and ORD-0510 ship both doors, so the exit is wired through them and the sentence that used to say
+     「这一版还没有收藏的门」 is gone. 只存不排 stays refused because no door on this line keeps a place
+     without giving it a day -- and it says so in painted text, because a tooltip never appears on a
+     touch screen. */
+  expect(exitsLead, "the screen says out loud that only one destination can be chosen").toBeTruthy();
+  expect(exitRadios.length, "one radiogroup, three named exits").toBe(3);
+  expect(exitRadios.map((e) => e.testid)).toEqual([
+    "poi-import-exit-plan", "poi-import-exit-shelf", "poi-import-exit-store-only",
+  ]);
+  expect(exitRadios.filter((e) => e.aria_checked === "true").length, "exactly one exit is chosen").toBe(1);
+  expect(exitRadios.find((e) => e.testid === "poi-import-exit-shelf")?.words).toMatch(/收藏|favour|favorite/i);
+  expect(exitRadios.find((e) => e.testid === "poi-import-exit-store-only")?.words).toMatch(/只存不排|without a day/);
+
+  const [shelfState, storeState, planState] = doorStates as Array<Record<string, unknown>>;
+  expect(shelfState.checked, "choosing 收藏 leaves one exit chosen").toBe(1);
+  expect(shelfState.add_mounted, "and takes the plan door off the screen").toBe(0);
+  expect(shelfState.collect_mounted, "while the shelf door is mounted").toBe(1);
+  expect(Number(shelfState.shelf_rows) > 0 || shelfState.shelf_empty,
+    "the shelves are listed, or the absence of a shelf is named -- never a silent picker").toBe(true);
+  expect(storeState.add_mounted, "只存不排 writes no plan").toBe(0);
+  expect(storeState.collect_mounted, "只存不排 writes no shelf").toBe(0);
+  expect(storeState.store_only_refused, "and it says that in a sentence, not by doing nothing").toBeTruthy();
+  expect(planState.collect_mounted, "back on 加进计划 there is no shelf door").toBe(0);
+  expect(planState.add_mounted, "and the plan door is itself again").toBe(1);
+
+  expect(storeOnlyWhy, "an exit with no door has to say why in the open").toBeTruthy();
+  expect(storeOnlyWhy).toMatch(/门|door/);
+  for (const [key, label] of [["exitPlan", "加进计划"], ["exitShelf", "收藏"], ["exitStoreOnly", "只存不排"]] as const) {
+    expect(rects[key], `${label} 得在屏上有自己的位置`).not.toBeNull();
+  }
   expect(
-    rects.favWhy!.bottom,
-    "收藏那句不许和 新建计划 那一行重叠 -- 重叠就是首版那个 run-on 缺陷",
-  ).toBeLessThanOrEqual(rects.njButton!.top + 1);
-  expect(rects.njButton!.bottom, "新建计划 那句也得在它自己那一行").toBeLessThanOrEqual(rects.njWhy!.top + 1);
+    rects.exitPlan!.bottom,
+    "三个去处一行一个 -- 叠在一起就是首版那个 run-on 缺陷",
+  ).toBeLessThanOrEqual(rects.exitShelf!.top + 1);
+  expect(rects.exitShelf!.bottom, "收藏那句也得在它自己那一行").toBeLessThanOrEqual(rects.exitStoreOnly!.top + 1);
+  expect(rects.exitStoreOnly!.bottom, "拒绝那句不许压在第三个去处上").toBeLessThanOrEqual(rects.storeOnlyWhy!.top + 1);
 });
 
 test.afterAll(() => {

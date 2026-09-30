@@ -1,8 +1,21 @@
-import { useState } from "react";
-import { useT } from "../../i18n/LocaleContext";
+import { useEffect, useState } from "react";
+import { useT, useLocale } from "../../i18n/LocaleContext";
 import { namedCodeIn } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { PoiCandidateCard } from "../../components/PoiCandidateCard";
+/* ORD-0524 exit 2 borrows the container ORD-0444 built: the same two doors (the scoped list read and
+   `POST /api/v1/collections/{folder_id}/items`), the same re-read-before-you-say-it rule, and the same
+   shelf sentences -- so this screen does not open a third way to say 已收在, and no new write endpoint
+   is invented for a batch. */
+import {
+  addPlaceToCollection,
+  copyFor,
+  readCollections,
+  refusalCopy,
+  shelvesHolding,
+  type ReadOutcome,
+} from "../collections/collections";
+import { poiImportCopy } from "./poiImportCopy";
 import "./poi-import.css";
 
 /**
@@ -25,6 +38,18 @@ import "./poi-import.css";
  *     小红书 or 公众号 link is reported as unread rather than quietly dropped.
  *   加入 is not a client-side colour — after the write, the record is read back from the server and
  *     only the ids that come back are called 已加入.
+ *
+ * ORD-0524 changes three shapes on this screen, and each one is a defect that was measured first:
+ *
+ *   a parse no longer ticks anything. The line below used to seed `selected` with every matched place,
+ *     so a traveller who pressed 加进计划 without reading the cards wrote all of them; measured on the
+ *     390 px arm at tip 1e95d106 as `已选 3 / 可加 3` with all three controls `aria-checked=true`
+ *     before any press. Selecting everything is now a control the traveller presses.
+ *   去处 is one radiogroup, not three independent buttons. Before, all three exits were painted at once
+ *     and two of them were inert, so the screen offered a choice it did not keep. Choosing one now
+ *     decides which write exists at all, and the third refuses by name instead of inventing a door.
+ *   存到收藏 is wired. The sentence under it claimed 「这一版还没有收藏的门」 while `features/collections`
+ *     had been shipping both doors since ORD-0444/ORD-0510 — the cell was false on its own line.
  */
 
 type Item = {
@@ -62,6 +87,23 @@ type AddResponse = {
 };
 
 type Phase = "idle" | "loading" | "error" | "success";
+
+/** ORD-0524: the destination the screen is currently allowed to write to. Exactly one of these is
+ * chosen at a time, and the other two have no write control on screen -- not a greyed suggestion, no
+ * control at all. `store-only` is a state the server has no door for, so it is presented and refused. */
+type Destination = "plan" | "shelf" | "store-only";
+
+/** What a batch collect ended in, counted off the fresh list read rather than off the taps. */
+type CollectReport = {
+  shelfName: string;
+  confirmed: number;
+  already: number;
+  /** The named non-success states this batch met, deduplicated: `no_folder` / `no_place` /
+   * `refused` / `unreachable`. A reason code is read to pick the state, never painted. */
+  states: string[];
+  /** Every write answered and the shelf still holds none of them. */
+  unconfirmed: boolean;
+};
 
 /* ORD-0437 r4 (commander's ruling of 11:27, section 3): the two `<small>` details below used to print
    `cause.message`, and my own `call()` built that message out of the answer's body text -- so an
@@ -125,29 +167,64 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
 export function PoiImportPanel({
   journeyId,
+  travelerId = null,
   firstDay = null,
   onOpenPlan,
 }: {
   journeyId: string;
+  /** Whose shelves the 收藏 exit may ask the list door about. Absent is not "all of them": the read
+   *  door requires a `traveler_id`, so the exit names that state instead of sending a call it knows
+   *  the door will refuse (`features/collections/collections.ts` -- `readCollections`). */
+  travelerId?: string | null;
   /** The day the plan itself starts on: what the automatic landing would pick. */
   firstDay?: string | null;
   onOpenPlan: () => void;
 }) {
   const t = useT();
+  const { locale } = useLocale();
+  const zh = locale.startsWith("zh");
   const [mode, setMode] = useState<"text" | "screenshot">("text");
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [parsed, setParsed] = useState<ParseResponse | null>(null);
   const [failure, setFailure] = useState<Failure | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
+  const [destination, setDestination] = useState<Destination>("plan");
   const [day, setDay] = useState("");
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState<{ ids: string[]; day: string; daySource: string } | null>(null);
   const [alreadyPresent, setAlreadyPresent] = useState<string[]>([]);
   const [readBackFailure, setReadBackFailure] = useState<Failure | "MISMATCH" | null>(null);
+  const [shelves, setShelves] = useState<ReadOutcome | null>(null);
+  const [shelfId, setShelfId] = useState<string | null>(null);
+  const [collecting, setCollecting] = useState(false);
+  const [collected, setCollected] = useState<CollectReport | null>(null);
 
   const addableIds = parsed?.items.filter((i) => i.addable && i.place_id).map((i) => i.place_id as string) ?? [];
   const chosen = selected.filter((id) => addableIds.includes(id));
+  const allChosen = addableIds.length > 0 && addableIds.every((id) => chosen.includes(id));
+  /* Written as a row of text, not only as the value of `<input type="date">`: an input's value is not
+     `innerText`, so a screen that puts the landing day only in the widget is a screen where the day
+     cannot be read off the glass -- which is what ORD-0524 ③ measures. */
+  const landingDay = day || firstDay || null;
+
+  /* The shelf list is read when the exit is chosen, not when the button is painted: an empty read and
+     a read that never happened are two different sentences, and this screen may not say either one
+     before the traveller asks for that destination. */
+  useEffect(() => {
+    if (destination !== "shelf") return;
+    let alive = true;
+    void readCollections(travelerId).then((answer) => {
+      if (!alive) return;
+      setShelves(answer);
+      if (answer.kind === "loaded" && answer.shelves.length && !shelfId) {
+        setShelfId(answer.shelves[0].id);
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [destination, travelerId, shelfId]);
 
   const runParse = async () => {
     setPhase("loading");
@@ -155,13 +232,17 @@ export function PoiImportPanel({
     setAdded(null);
     setAlreadyPresent([]);
     setReadBackFailure(null);
+    setCollected(null);
     try {
       const next = await call<ParseResponse>(`/api/v1/journeys/${journeyId}/poi-import/parse`, {
         method: "POST",
         body: JSON.stringify({ text }),
       });
       setParsed(next);
-      setSelected(next.items.filter((i) => i.addable && i.place_id).map((i) => i.place_id as string));
+      /* ORD-0524 ①. This line used to seed the selection with every matched place, which made a parse
+         a silent batch write waiting for one press. Nothing is picked here; the rows arrive unticked
+         and 全选可加的行 is the control that ticks them. */
+      setSelected([]);
       setPhase("success");
     } catch (cause) {
       setFailure(describeRejection(cause));
@@ -172,6 +253,9 @@ export function PoiImportPanel({
   const runAdd = async () => {
     setAdding(true);
     setReadBackFailure(null);
+    /* Only one destination may have written during a visit to this screen: the shelf line is dropped
+       when the plan write runs, so two success sentences can never sit on the glass at once. */
+    setCollected(null);
     try {
       const written = await call<AddResponse>(`/api/v1/journeys/${journeyId}/poi-import/add`, {
         method: "POST",
@@ -200,6 +284,58 @@ export function PoiImportPanel({
 
   const toggle = (placeId: string) =>
     setSelected((prev) => (prev.includes(placeId) ? prev.filter((x) => x !== placeId) : [...prev, placeId]));
+
+  /** ORD-0524 ①: selecting every row is the traveller's press, not the parse's side effect. */
+  const toggleAll = () => setSelected(allChosen ? [] : addableIds);
+
+  /** Choosing a destination retires the other two writes' sentences: what is on the glass is what the
+   *  exit that is picked now actually did. */
+  const chooseDestination = (next: Destination) => {
+    setDestination(next);
+    if (next !== "plan") {
+      setAdded(null);
+      setAlreadyPresent([]);
+      setReadBackFailure(null);
+    }
+    if (next !== "shelf") setCollected(null);
+  };
+
+  /* ORD-0524 ②, exit 2. The batch goes through the door ORD-0510 already uses for one stop, one call
+     per row, and the sentence under it is counted off a fresh `GET /api/v1/collections` -- not off the
+     taps. A 409 is `already_there`, a 404 is split by its reason code into `no_folder` / `no_place`,
+     and none of those reason codes is painted: the state names the line, which is the rule the
+     collections face was built on. */
+  const runCollect = async () => {
+    if (!shelfId) return;
+    setCollecting(true);
+    setCollected(null);
+    setAdded(null);
+    setAlreadyPresent([]);
+    setReadBackFailure(null);
+    try {
+      const answers = [];
+      for (const placeId of chosen) answers.push(await addPlaceToCollection(shelfId, placeId));
+      const already = answers.filter((a) => a.kind === "already_there").length;
+      const states = Array.from(
+        new Set(
+          answers
+            .filter((a) => a.kind === "no_folder" || a.kind === "no_place" || a.kind === "refused" || a.kind === "unreachable")
+            .map((a) => a.kind),
+        ),
+      );
+      const answered = answers.filter((a) => a.kind === "added").length;
+      const after = await readCollections(travelerId);
+      setShelves(after);
+      const name = after.kind === "loaded" ? (after.shelves.find((s) => s.id === shelfId)?.name ?? "") : "";
+      const confirmed =
+        after.kind === "loaded"
+          ? chosen.filter((placeId) => shelvesHolding(after, placeId).some((s) => s.id === shelfId)).length
+          : 0;
+      setCollected({ shelfName: name, confirmed, already, states, unconfirmed: answered > 0 && confirmed === 0 });
+    } finally {
+      setCollecting(false);
+    }
+  };
 
   const unsupportedForms = parsed?.unsupported_forms ?? [];
 
@@ -388,6 +524,25 @@ export function PoiImportPanel({
           </p>
           <div className="v8-stay-layout">
             <div className="v8-stay-list" data-testid="poi-import-results">
+              {/* ORD-0524 ①: the row that selects every selectable row, mounted above the cards so it is
+                  found before the list is scrolled through. Ticking moves nothing on the server -- the
+                  destination below is what writes. */}
+              {addableIds.length ? (
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={allChosen}
+                  className={allChosen ? "v8-pick-box checked poi-import-select-all" : "v8-pick-box poi-import-select-all"}
+                  data-testid="poi-import-select-all"
+                  data-picked={allChosen ? "true" : "false"}
+                  onClick={toggleAll}
+                >
+                  <span aria-hidden="true">{allChosen ? "✓" : ""}</span>
+                  <span className="v8-pick-box-text">
+                    {allChosen ? poiImportCopy(locale, "selectAllOn") : poiImportCopy(locale, "selectAll")}
+                  </span>
+                </button>
+              ) : null}
               {parsed.items.map((item, index) => (
                 <PoiCandidateCard
                   key={`${item.title}-${index}`}
@@ -408,79 +563,218 @@ export function PoiImportPanel({
             </div>
             <aside className="v8-boundary-card">
               <b>{t("poiImport.exitsTitle")}</b>
+              <p className="v8-sheet-note" data-testid="poi-import-exits-lead">
+                {poiImportCopy(locale, "exitsLead")}
+              </p>
               <p data-testid="poi-import-selection-count">
                 {t("poiImport.selectedCount", { n: chosen.length, total: addableIds.length })}
               </p>
-              <label htmlFor="poi-import-day">{t("poiImport.dayLabel")}</label>
-              <input
-                id="poi-import-day"
-                type="date"
-                data-testid="poi-import-day"
-                value={day}
-                onChange={(event) => setDay(event.target.value)}
-              />
-              <button
-                className="v8-primary"
-                data-testid="poi-import-add"
-                disabled={adding || chosen.length === 0}
-                onClick={() => void runAdd()}
+              {/* ORD-0524 ②: one radiogroup, one chosen destination, and only the chosen one carries a
+                  write control. 只存不排 is selectable on purpose -- choosing it takes both doors away
+                  and leaves the refusal on the glass, which is a stated exit rather than a silent one.
+                  A touch screen never shows a tooltip, so the reason is painted, not titled. */}
+              <div
+                className="v8-exit-radiogroup"
+                role="radiogroup"
+                aria-label={t("poiImport.exitsTitle")}
+                data-testid="poi-import-exits"
               >
-                {adding ? t("poiImport.adding") : t("poiImport.addToPlan")}
-              </button>
-              {/* A touch screen never shows a tooltip, so an inert exit explained only by `title` is an
-                  exit that says nothing. Both reasons are painted here instead -- and neither button is
-                  enabled, because 收藏 has no door on this line and 新建计划 would mean inventing the
-                  dates and budget the traveller has not given us yet. */}
-              <button
-                className="v8-outline-button"
-                data-testid="poi-import-favorite"
-                disabled
-                aria-describedby="poi-import-favorite-why"
-              >
-                {t("poiImport.favorite")}
-              </button>
-              <small id="poi-import-favorite-why" className="poi-import-exit-why" data-testid="poi-import-favorite-why">
-                {t("poiImport.favoriteNotWired")}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={destination === "plan"}
+                  className={destination === "plan" ? "v8-exit chosen" : "v8-exit"}
+                  data-testid="poi-import-exit-plan"
+                  data-picked={destination === "plan" ? "true" : "false"}
+                  onClick={() => chooseDestination("plan")}
+                >
+                  {t("poiImport.addToPlan")}
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={destination === "shelf"}
+                  className={destination === "shelf" ? "v8-exit chosen" : "v8-exit"}
+                  data-testid="poi-import-exit-shelf"
+                  data-picked={destination === "shelf" ? "true" : "false"}
+                  onClick={() => chooseDestination("shelf")}
+                >
+                  {t("poiImport.favorite")}
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={destination === "store-only"}
+                  className={destination === "store-only" ? "v8-exit chosen" : "v8-exit"}
+                  data-testid="poi-import-exit-store-only"
+                  data-picked={destination === "store-only" ? "true" : "false"}
+                  onClick={() => chooseDestination("store-only")}
+                >
+                  {poiImportCopy(locale, "exitStoreOnly")}
+                </button>
+              </div>
+              <small className="poi-import-exit-why" data-testid="poi-import-store-only-why">
+                {poiImportCopy(locale, "storeOnlyRefusal")}
               </small>
-              <button
-                className="v8-quiet-button"
-                data-testid="poi-import-new-journey"
-                disabled
-                aria-describedby="poi-import-new-journey-why"
-              >
-                {t("poiImport.newJourney")}
-              </button>
-              <small id="poi-import-new-journey-why" className="poi-import-exit-why" data-testid="poi-import-new-journey-why">
-                {t("poiImport.newJourneyNotWired")}
-              </small>
+
+              {destination === "plan" ? (
+                <div data-testid="poi-import-exit-plan-body">
+                  <label htmlFor="poi-import-day">{t("poiImport.dayLabel")}</label>
+                  <input
+                    id="poi-import-day"
+                    type="date"
+                    data-testid="poi-import-day"
+                    value={day}
+                    onChange={(event) => setDay(event.target.value)}
+                  />
+                  {/* ORD-0524 ③: the landing day as a row of text. `<input type="date">` holds a value,
+                      not a readable line -- `innerText` cannot reach a widget's value, so the day the
+                      write will use is painted next to it, and it says whose day it is. */}
+                  <p data-testid="poi-import-landing-day">
+                    {landingDay
+                      ? day
+                        ? poiImportCopy(locale, "landingDayChosen", { day: landingDay })
+                        : poiImportCopy(locale, "landingDayFirst", { day: landingDay })
+                      : poiImportCopy(locale, "landingDayNone")}
+                  </p>
+                  <button
+                    className="v8-primary"
+                    data-testid="poi-import-add"
+                    disabled={adding || chosen.length === 0}
+                    onClick={() => void runAdd()}
+                  >
+                    {adding ? t("poiImport.adding") : t("poiImport.addToPlan")}
+                  </button>
+                  {/* A replay adds nothing, so it has no right to a success sentence: this used to read
+                      `added ? ...` and painted "0 places are on 2026-12-05 — read back from the server"
+                      under the 本来就在 line, which is the second success the order forbids -- measured in
+                      the gate's own replay arm. What a replay may say is what was already there. */}
+                  {added && added.ids.length > 0 ? (
+                    <p data-testid="poi-import-added">
+                      {t("poiImport.addedCount", { n: added.ids.length, day: added.day })}
+                      <small data-testid="poi-import-added-source">{added.daySource}</small>
+                    </p>
+                  ) : null}
+                  {alreadyPresent.length ? (
+                    <p data-testid="poi-import-already-present">
+                      {t("poiImport.alreadyPresent", { n: alreadyPresent.length })}
+                    </p>
+                  ) : null}
+                  {readBackFailure ? (
+                    <p role="alert" data-testid="poi-import-readback-failed">
+                      {readBackFailure === "MISMATCH"
+                        ? t("poiImport.readBackFailed")
+                        : t(FAILURE_SENTENCE[readBackFailure.code])}
+                      {readBackFailure !== "MISMATCH" && readBackFailure.status ? (
+                        <small data-testid="poi-import-readback-detail">HTTP {readBackFailure.status}</small>
+                      ) : null}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {destination === "shelf" ? (
+                <div data-testid="poi-import-exit-shelf-body">
+                  {!travelerId ? (
+                    <p className="v8-message" role="status" data-testid="poi-import-shelf-no-traveler">
+                      {copyFor("noTravelerYet", zh)}
+                    </p>
+                  ) : !shelves ? (
+                    <p role="status" data-testid="poi-import-shelf-loading">
+                      {copyFor("loading", zh)}
+                    </p>
+                  ) : shelves.kind === "refused" ? (
+                    <p role="alert" data-testid="poi-import-shelf-refused">
+                      {refusalCopy(zh)}
+                    </p>
+                  ) : shelves.kind === "unreachable" ? (
+                    <p role="alert" data-testid="poi-import-shelf-unreachable">
+                      {copyFor("readUnreachable", zh)}
+                    </p>
+                  ) : shelves.shelves.length === 0 ? (
+                    <p role="status" data-testid="poi-import-shelf-empty">
+                      {copyFor("noShelfToPick", zh)}
+                    </p>
+                  ) : (
+                    <div className="v8-shelf-radiogroup" role="radiogroup" data-testid="poi-import-shelves">
+                      <p className="v8-sheet-note">{copyFor("pickerTitle", zh)}</p>
+                      {shelves.shelves.map((shelf) => (
+                        <button
+                          key={shelf.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={shelfId === shelf.id}
+                          className={shelfId === shelf.id ? "v8-exit chosen" : "v8-exit"}
+                          data-testid="poi-import-shelf"
+                          onClick={() => {
+                            setShelfId(shelf.id);
+                            setCollected(null);
+                          }}
+                        >
+                          <span className="v8-shelf-name">{shelf.name}</span>
+                          <span className="v8-shelf-count">
+                            {shelf.item_count} {copyFor("places", zh)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    className="v8-primary"
+                    data-testid="poi-import-collect"
+                    disabled={collecting || chosen.length === 0 || !shelfId}
+                    onClick={() => void runCollect()}
+                  >
+                    {collecting ? poiImportCopy(locale, "collecting") : poiImportCopy(locale, "collectAction")}
+                  </button>
+                  {collected ? (
+                    <>
+                      {collected.confirmed > 0 ? (
+                        <p data-testid="poi-import-collected">
+                          {poiImportCopy(locale, "collectedCount", {
+                            n: collected.confirmed,
+                            shelf: collected.shelfName,
+                          })}
+                        </p>
+                      ) : null}
+                      {collected.already > 0 ? (
+                        <p data-testid="poi-import-collect-already">
+                          {poiImportCopy(locale, "collectAlready", {
+                            n: collected.already,
+                            shelf: collected.shelfName,
+                          })}
+                        </p>
+                      ) : null}
+                      {collected.unconfirmed ? (
+                        <p role="alert" data-testid="poi-import-collect-unconfirmed">
+                          {poiImportCopy(locale, "collectNothingConfirmed")}
+                        </p>
+                      ) : null}
+                      {collected.states.map((state) => (
+                        <p key={state} role="alert" data-testid="poi-import-collect-state">
+                          {state === "no_folder"
+                            ? copyFor("noFolder", zh)
+                            : state === "no_place"
+                              ? copyFor("noPlace", zh)
+                              : state === "unreachable"
+                                ? copyFor("writeUnreachable", zh)
+                                : copyFor("writeRefused", zh)}
+                        </p>
+                      ))}
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {destination === "store-only" ? (
+                <p className="v8-message" role="status" data-testid="poi-import-store-only-refused">
+                  {poiImportCopy(locale, "storeOnlyChosen")}
+                </p>
+              ) : null}
+
               <button className="v8-quiet-button" data-testid="poi-import-open-plan" onClick={onOpenPlan}>
                 {t("poiImport.openPlan")}
               </button>
-              {/* A replay adds nothing, so it has no right to a success sentence: this used to read
-                  `added ? ...` and painted "0 places are on 2026-12-05 — read back from the server"
-                  under the 本来就在 line, which is the second success the order forbids -- measured in
-                  the gate's own replay arm. What a replay may say is what was already there. */}
-              {added && added.ids.length > 0 ? (
-                <p data-testid="poi-import-added">
-                  {t("poiImport.addedCount", { n: added.ids.length, day: added.day })}
-                  <small data-testid="poi-import-added-source">{added.daySource}</small>
-                </p>
-              ) : null}
-              {alreadyPresent.length ? (
-                <p data-testid="poi-import-already-present">
-                  {t("poiImport.alreadyPresent", { n: alreadyPresent.length })}
-                </p>
-              ) : null}
-              {readBackFailure ? (
-                <p role="alert" data-testid="poi-import-readback-failed">
-                  {readBackFailure === "MISMATCH"
-                    ? t("poiImport.readBackFailed")
-                    : t(FAILURE_SENTENCE[readBackFailure.code])}
-                  {readBackFailure !== "MISMATCH" && readBackFailure.status ? (
-                    <small data-testid="poi-import-readback-detail">HTTP {readBackFailure.status}</small>
-                  ) : null}
-                </p>
-              ) : null}
             </aside>
           </div>
         </>
