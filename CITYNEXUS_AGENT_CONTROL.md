@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:43 · 今晚累计落地 28 项（四批批量落地，逐条 ff-only）· 尖 `173f811028638698bd5079f17a675c8915063b99`；另记一条会伪装成「令牌坏了」的现读
+
+**一、落地（四批，每批都是 `cmdr_batch_land_r1.py` 的 `verdict=READY_TO_LAND mode=LAND ff=True`，我 0 次手合）**
+
+- 第一批 3 项：ORD-0511、ORD-0515、ORD-0495 r3b
+- 第二批 8 项：ORD-0510、ORD-0523、ORD-0497 r3、ORD-0504、ORD-0496、ORD-0503、ORD-0509、ORD-0519
+- 第三批 14 项：ORD-0524、ORD-0473、ORD-0475、ORD-0476、ORD-0490、ORD-0498、ORD-0501、ORD-0502、ORD-0479、ORD-0435、ORD-0436、ORD-0449、ORD-0460、ORD-0434
+- 第四批 3 项：ORD-0517 r2、ORD-0527 r3、ORD-0472 r4
+
+尖从今晚开跑时的 `1e95d106f81b29048ba17695fd0e49172516b9b1` 一路到 `173f811028638698bd5079f17a675c8915063b99`（外读 `git ls-remote` 与本机 tracking 同值）。
+
+**二、被打回的 13 项（逐条已敲门叫车道自己 rebase，我 0 次手合）**
+
+ORD-0517 r1、ORD-0464 r7、ORD-0527 r1、ORD-0500（两轮）、ORD-0512、ORD-0472 r1、ORD-0505、ORD-0461、ORD-0462、ORD-0525、ORD-0464 r8。其中 `backend/app/main.py` 与 `frontend/src/features/access/` 两处是主要撞点。
+
+**三、我裁了 `main.py` 那件事（见 `CMDR 01:36` 块）**
+
+ORD-0532：把 `backend/app/main.py` 转回 LF 并加 `.gitattributes` 钉 `*.py text eol=lf`，派给 `8e5245f0`。理由：它已经连续拦下三单的 rebase，是结构性返工源。
+
+**四、一条给所有车道的现读：`401 Bad credentials` 可能是代理伪装的**
+
+本机 `HTTP_PROXY` 与 `HTTPS_PROXY` 又被设成 `http://127.0.0.1:7892`。读数（同一枚令牌、同一台机、只差一个环境变量）：
+
+- 带着代理环境变量跑镜像：`MIRROR RC 3 | PUT -> 401 | {"message":"Bad credentials"}`；
+- 把两个变量摘掉再跑同一条命令：`guard+mirror rc 0`、`READBACK STATE: BYTE_LEVEL_CONFIRMED`、blob `37dd79f6f99fb14baa66184fc428a2ede693a6c4`；
+- 令牌本身没问题：清掉代理直连 `https://api.github.com/user` 回 `http_status=200`、登录名 `Canshu-King`。
+
+结论：那条 401 是**代理把 Authorization 头弄坏**造成的，不是令牌过期。**任何要写 GitHub 的命令，前面加 `env -u HTTP_PROXY -u HTTPS_PROXY`。**
+
+**五、没做的（不藏）**
+
+1. 手机换代只做到 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2` 那一代（`CMDR 01:25` 块），这一轮 28 条里在它之后落地的那些还没上手机；
+2. 新尖上我没有整树重跑前端 `tsc`；只对 `backend/app/main.py`、`schemas.py`、`services.py` 三枚做了 `py_compile`（三枚都 OK）；
+3. 实体手机那一格仍未走。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0519 锚定改成能活的那条腿，且由服务端具名记腿；REPLAY 仍不算供给（车道 seed @01:33+08）
 
 基座现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `48aa7a9eaa33a9eaea9ed1d84a0e5f926c88d8f3`（`git ls-remote`）；候选 `refs/heads/review/newlane-ord0519-supply-legs-r1` = `a7c77d3061f556f633d7ff03ae8f468474481c0e`（推送后回读同值，工作树 `git status --porcelain` 0 行）。全单只动后端 1 枚文件 + 新增 1 枚工具 + 收据，无新写端点、无前端构建（盘 2.4 GiB 余量，已具名不建）。
