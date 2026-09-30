@@ -31,18 +31,26 @@ OK = "OK"
 NOT_MEASURED = "NOT_MEASURED"
 DEFECT = "DEFECT"
 
+#: What makes an ancestor repository THIS project rather than whatever happens to sit above the
+#: directory the tests were unpacked into. A `.git` alone is not identity: an export dropped inside a
+#: neighbour's work tree walks up, finds that .git, and then reads a store that has never heard of the
+#: commit the arm cites -- which is a wrong answer, not a missing one.
+PROJECT_MARKERS = ("backend/app/security/credential_literals.py", "contracts/openapi.yaml")
 
-def find_repo_root(start) -> Path | None:
-    """The nearest ancestor holding a .git -- directory, file, or a worktree's pointer file.
+
+def find_repo_root(start, markers=PROJECT_MARKERS) -> Path | None:
+    """The nearest ancestor holding a .git AND every marker path -- directory, file, or worktree pointer.
 
     Read from the test file rather than from the module under test, because an export keeps the same
-    relative layout: the answer has to be "is there a repository around HERE", not "where does the
-    product think the root is".
+    relative layout: the answer has to be "is the project's repository around HERE", not "where does
+    the product think the root is" and not "is any repository around here".
     """
 
     p = Path(start).resolve()
     for candidate in (p, *p.parents):
-        if (candidate / ".git").exists():
+        if not (candidate / ".git").exists():
+            continue
+        if all((candidate / m).is_file() for m in markers):
             return candidate
     return None
 
