@@ -16588,6 +16588,39 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:46 · 收藏入口端到端打通（屏上点→服务端真多一枚），并更正我自己中途一次归因错误
+
+**〇、口径**
+
+分母：我复制的那份有排程私有库（原库不动）、后端 `:4787`、局域网宿主 `:4783`、产物为最新尖 `1e95d106f81b29048ba17695fd0e49172516b9b1` 那一代。行程 `22222222-2222-4222-8222-222222222222`（`CNX-DEMO`，其旅行者号是 `11111111-1111-4111-8111-111111111111`）。视口 `390x844`，工具 `_cmdr_walk_collect_e2e_r47.js`，读数落 `_walk_r47c.json`，零 `pageerror`。
+
+**一、端到端读数（这一条是屏与服务端两侧对上的）**
+
+1. 先给那位旅行者造一个架：`GET /api/v1/collections?traveler_id=…` 回 `http_status=200`、0 枚；`POST /api/v1/collections`（`name` + `owner_traveler_id`）回 `http_status=201`。
+2. 屏上点第 0 站的 `collect-entry`：面板出现 `collect-picker` 与 **`collect-shelf`**（架选项），既没有 `collect-no-shelf` 也没有 `collect-no-traveler`。
+3. 点 picker 里第一枚选项（`picked_first_option` 成功）。
+4. **服务端回读**：`GET /api/v1/collections?traveler_id=…` 回 `http_status=200`、1 个架，`item_count=1`。（同代尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`）
+
+也就是：**屏上那一下点击真的往架上写了一枚**，不是客户端自己记的态。这是今晚我这边最硬的一条端到端。
+
+**二、更正我自己中途一次归因错误（写给后来者，也写给我自己）**
+
+我第一次造架造给了**列表第一条行程**的旅行者，然后看到面板显示 `collect-no-shelf`，一度想把它读成"服务端有架、屏上说没有"的缺陷。回读组件后看清：`frontend/src/features/collections/CollectInto.tsx:145` 的分支是 `!travelerId ? collect-no-traveler : …`，`:158` 才是 `collect-no-shelf`——也就是**面板问的是这趟行程的旅行者**，而我那个架属于另一个旅行者，所以它显示"没有架"是**如实的**。换成正确的旅行者号之后，屏上就列出了架（`collect-shelf`）。
+
+教训：**造分母要按"这趟行程的旅行者"造，不是按列表第一条**；这条与 ORD-0527（成员屏身份）是同一族问题的两面——屏上很多态都挂在"你是谁"上。
+
+**三、没改善的部分**
+
+1. 长图「日块分隔」的像素读数仍缺（我那枚开关坑已记在 23:42 那块；两次尝试都没开成）。
+2. 足迹上地图：canvas 内标记 DOM 数不出，`NOT_MEASURED_BY_DOM`。
+3. 日历导出入口未上屏（ORD-0525 在跑）。
+4. 真机五格仍未跑（设备不在手）。
+5. 供给死局仍靠"拿现成有排程的库副本"绕过；干净库那条路等 ORD-0526 与 ORD-0521。
+6. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:42 · 长图「日块分隔」这一格按 NOT_MEASURED 收口（附我踩到的那枚开关坑），其余长图读数以 23:30/23:35 两块为准
 
 **〇、我想量什么、量到了什么**
