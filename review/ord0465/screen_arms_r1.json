@@ -217,9 +217,9 @@
       "detail": {
         "raw_iso_on_screen": false,
         "meta_lines": [
-          "11:31",
-          "12:31",
-          "13:31"
+          "12:44",
+          "13:44",
+          "14:44"
         ]
       }
     },
@@ -267,7 +267,7 @@
       "pass": true,
       "detail": {
         "state": "ready",
-        "pathname": "/v8/shared/7-hPGsEU7WtcvSDYTTPxJoulamJoNJ4n",
+        "pathname": "/v8/shared/MTpbuQki_YH0c-IbqfchNFqS-sAT6ZZa",
         "title_still_on_screen": true
       }
     },
@@ -330,7 +330,7 @@
         "status": "这台设备看到的回读：HTTP 409",
         "media": "回读的媒体类型 application/json",
         "bytes": "这台设备数到的字节 372",
-        "receipt": "服务器回执号 CNX-N7PD3KF2",
+        "receipt": "服务器回执号 CNX-S46JXVYF",
         "fold_open": true
       }
     },
