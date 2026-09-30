@@ -1,0 +1,82 @@
+{
+ "trees": {
+  "before_tip_be0ff": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0510\\tip_be0ff\\frontend",
+  "after_ord0510": "D:\\moodle\\_qoder_lane_S4_0926\\wt0510\\frontend"
+ },
+ "rulers": {
+  "r7b": {
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "bytes": 129082
+  },
+  "r7b4": {
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "bytes": 154410
+  }
+ },
+ "exposure": {
+  "r7b": {
+   "before": {
+    "receipt": "exp_before_tip_be0ff_r7b.json",
+    "cells_total_reported": 6,
+    "hits": 6,
+    "fold": 2,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "after": {
+    "receipt": "exp_after_ord0510_r7b.json",
+    "cells_total_reported": 6,
+    "hits": 6,
+    "fold": 2,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "appeared": [],
+   "disappeared": [],
+   "union_equal": true
+  },
+  "r7b4": {
+   "before": {
+    "receipt": "exp_before_tip_be0ff_r7b4.json",
+    "cells_total_reported": 5,
+    "hits": 5,
+    "fold": 3,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "after": {
+    "receipt": "exp_after_ord0510_r7b4.json",
+    "cells_total_reported": 5,
+    "hits": 5,
+    "fold": 3,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "appeared": [],
+   "disappeared": [],
+   "union_equal": true
+  }
+ },
+ "copy_ruler": {
+  "ruler": {
+   "path": "tools/cnx_copy_tiers_r1.py at the tip",
+   "blob": "8f1b40022fcba770ac6ec6ce501aab2ecb93882b",
+   "bytes": 71637
+  },
+  "before_tip_be0ff": {
+   "exit": 1,
+   "rows": 83,
+   "report": "copy_before_tip_be0ff.txt"
+  },
+  "after_ord0510": {
+   "exit": 1,
+   "rows": 83,
+   "report": "copy_after_ord0510.txt"
+  },
+  "rows_equal_modulo_nothing": true,
+  "appeared": [],
+  "disappeared": []
+ }
+}
