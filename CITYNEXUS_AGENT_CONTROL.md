@@ -16588,6 +16588,84 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0504 空目录那一屏现在走得出去：入口接到粘贴门，那句地点数改成服务端回读（车道 seed @18:33+08）
+
+基座现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `d610f33a118e6878b4e01fb103d01d48397159ba`（`git ls-remote`）；候选 `refs/heads/review/newlane-ord0504-empty-city-import-r1` = 本地尖 `9163fe48b821e439f3ec14c780904e6a449d6be6`，远端回读同值 = `9163fe48b821e439f3ec14c780904e6a449d6be6`；改动 3 枚产品文件加 1 枚收据，全是前端，没新开写端点。
+
+**做了什么（对应工单 1-5）**
+
+- 1) 入口：拒绝那屏多了一枚按钮，逐字写着 `review/ord0504/READINGS.md:15` blob `af0249ebeeafd7105374a6ec45237312f8482580`，按下后地址变 `review/ord0504/READINGS.md:18` blob `af0249ebeeafd7105374a6ec45237312f8482580`，粘贴门自己挂起来（同一件 `review/ord0504/READINGS.md:19` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行为 1）。复用既有面板与路由，写路径还是那两条 `/poi-import/parse`、`/poi-import/add`；挂载点在 `frontend/src/app/V8Experience.tsx:2061` blob `50cd93d5cad3a04b7b8a33dcac771ec993a48b5e`。
+- 2) 那句必须是服务端回读：新文件 `frontend/src/features/planning/catalogueReadback.ts:31` blob `cb6f983c483cfed0a012156852a6fbf4d505064a` 只认这一扇门，读不到就返回 `unreadable`，`null` 永不显示成 0（判据 `frontend/src/features/planning/catalogueReadback.ts:55` blob `cb6f983c483cfed0a012156852a6fbf4d505064a`）；屏在每次出现该类拒绝时重新读（`frontend/src/features/planning/PlanWithAiSheet.tsx:491` blob `78776946b4e0324d4cbcd53eadd7e5798f34fe39` 与 `frontend/src/features/planning/PlanWithAiSheet.tsx:500` blob `78776946b4e0324d4cbcd53eadd7e5798f34fe39`），客户端不计数、不记忆。实测同一扇门的数与屏上的句一致：门 `review/ord0504/READINGS.md:24` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行时句子是 `review/ord0504/READINGS.md:25` blob `af0249ebeeafd7105374a6ec45237312f8482580`；经产品自己的供能写路由把门推到 `review/ord0504/READINGS.md:27` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行之后，同一屏的句子变 `review/ord0504/READINGS.md:28` blob `af0249ebeeafd7105374a6ec45237312f8482580`，一致性判据 `review/ord0504/READINGS.md:29` blob `af0249ebeeafd7105374a6ec45237312f8482580`。
+- 3) 屏上不出现裸 uuid 或键名：逐枚数在 `review/ord0504/READINGS.md:44` blob `af0249ebeeafd7105374a6ec45237312f8482580` 为 true，四组走查各自的命中都是 `review/ord0504/READINGS.md:40` blob `af0249ebeeafd7105374a6ec45237312f8482580`；门故障那一形不编数：屏上该行不出现（`review/ord0504/READINGS.md:36` blob `af0249ebeeafd7105374a6ec45237312f8482580`），只留服务器自己的编号与「这条我们还没有本地文案」那句人话，下一步是 `review/ord0504/READINGS.md:37` blob `af0249ebeeafd7105374a6ec45237312f8482580`。
+- 4) 反件两枚，都真跑：A 在未改动的基座代次上，同一趟福州行程、同一句话提交之后，拒绝屏上的按钮只有 `review/ord0504/READINGS.md:6` blob `af0249ebeeafd7105374a6ec45237312f8482580` 枚，导入入口命中 `review/ord0504/READINGS.md:7` blob `af0249ebeeafd7105374a6ec45237312f8482580`、回读行命中 `review/ord0504/READINGS.md:8` blob `af0249ebeeafd7105374a6ec45237312f8482580`，桌面形同 `review/ord0504/READINGS.md:9` blob `af0249ebeeafd7105374a6ec45237312f8482580`，即入口不存在时确实点不到。B 在零地点城市走粘贴门：那扇门自己回 `review/ord0504/READINGS.md:33` blob `af0249ebeeafd7105374a6ec45237312f8482580`，卡片 `review/ord0504/READINGS.md:34` blob `af0249ebeeafd7105374a6ec45237312f8482580`、可加按钮 `review/ord0504/READINGS.md:34` blob `af0249ebeeafd7105374a6ec45237312f8482580`，回到拒绝屏那句仍是 `review/ord0504/READINGS.md:35` blob `af0249ebeeafd7105374a6ec45237312f8482580`，没有谎称已有地点。
+- 5) 390 与桌面各一遍：手机那一形按下后到 `review/ord0504/READINGS.md:18` blob `af0249ebeeafd7105374a6ec45237312f8482580`，桌面那一形到 `review/ord0504/READINGS.md:20` blob `af0249ebeeafd7105374a6ec45237312f8482580` 且面板挂载 `review/ord0504/READINGS.md:21` blob `af0249ebeeafd7105374a6ec45237312f8482580`；每屏同时交 innerText 读数与 testid 计数，截图在 `review/ord0504/READINGS.md:52` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行列明枚数。
+
+**一处我自己改的设计**：入口按钮先用过 `v8-primary-button`，实测那会让这条拒绝行出现第二枚主按钮，撞上 ORD-0375 数可点主按钮的闸；改成产品自己的次要样式 `review/ord0504/READINGS.md:16` blob `af0249ebeeafd7105374a6ec45237312f8482580`，该屏页面级可见主按钮数 `review/ord0504/READINGS.md:17` blob `af0249ebeeafd7105374a6ec45237312f8482580` 枚（含弹窗背后的 Hub，这一枚不是我加的）。
+
+**没做到的格，具名交**
+
+- `NOT_REACHED_BY_LANE`：整条 e2e 套（含 `e2e/qoder-ai-sheet-blocked.spec.ts` 那几支钉住这屏文案的门）本车道没跑。我按字面查过那支门抓的选择器：下一步按钮取 `frontend/e2e/qoder-ai-sheet-blocked.spec.ts:78` blob `fbe3226f7a16e3f021a20cb65c978c92f379e2fb`，回答文本取 `plan-ai-result` 的 innerText；新按钮带自己的 testid，不与之相冲。但这只是静态读断言，不算门禁跑过。
+- `NOT_REACHED_BY_LANE`：门返回 503 时我那句「没能从服务器读到」的专形没出现。原因实测：那一跑更早停在服务器自己的 无本地文案编号上，屏不编造任何数（同 `review/ord0504/READINGS.md:36` blob `af0249ebeeafd7105374a6ec45237312f8482580`）。要那一形出现，得让运行继续走到目录门本身失败，这一版我没做到，也不假装做到了。
+- 供能那一格两次形状都留了账：连发 12 次探能被判 `RESOLVER_UNREACHABLE` 而 `provenance` 仍写 `LIVE_PROVIDER`（逐次在 `review/ord0504/READINGS.md:47` blob `af0249ebeeafd7105374a6ec45237312f8482580` 起四行，命中总数 `review/ord0504/READINGS.md:49` blob `af0249ebeeafd7105374a6ec45237312f8482580`），拉开 14 秒间隔后同一条门一次就给了 `review/ord0504/READINGS.md:27` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行。「provenance=LIVE_PROVIDER 不等于供能答了」是这一带最容易读错的一格，交给 F 车道与红队作候选。
+
+**禁令自查**：`:8000`、`:4781`、`:4782`、`:8693` 一枚没占（我的端口写在 `review/ord0504/READINGS.md:3` blob `af0249ebeeafd7105374a6ec45237312f8482580`）；共享预览库没写；`demo/reset` 没跑；两处反件都真跑，没有 skip、没有改断言凑绿。
+
+**我抄错过一次屏上原文，在这里改口**：候选第一枚提交 `db83c1ff85facfc9afea7f4b8dad5b59d6180d54` 的说明里，我把粘贴门那句写成「认出 1 条 / 对上 0 条 / 对不上 1 条」——那是我终端按 GBK 读出来的转录，不是屏上原文。屏上以收据为准：`review/ord0504/READINGS.md:33` blob `af0249ebeeafd7105374a6ec45237312f8482580` 行。提交说明已推出去我不改它，本件与 `review/ord0504/READINGS.md:1` blob `af0249ebeeafd7105374a6ec45237312f8482580` 一起作准。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### bac10f40 18:35 · ORD-0497 交了：地图上实心带日期=服务器记下的那一枚，空心=这次没交回印的站，另有一枚不写库的「只看打过」；两枚反例各自咬住自己那一半
+
+**〇、基座、枝、动了哪些字节**
+- 现尖我自己现读（本班读了两次，尖在动）：`git fetch origin refs/heads/mirror/integration-frontend-apple-pass1` ⇒ `9dea5cafb43009dc6e6ba03c339560bc4224008a`；你 17:33 那块点的 `f707e1b3908c9ff4371e4a013242880b7e36045d` 与中途的 `8c073c0f68edcde4ffa4e14db86218d1b687ea02` 都是它的祖先（`git merge-base --is-ancestor` 为真）。
+- 交件枝 `refs/heads/review/bac10f40-ord0497-footprints-on-map-r2`，服务端 `git ls-remote` 回读 `f362aedc45fa9638b9ae0fee379c3072827bf2dc`；`git merge-base --is-ancestor 9dea5cafb43009dc6e6ba03c339560bc4224008a f362aedc45fa9638b9ae0fee379c3072827bf2dc` 为真 ⇒ behind=0、可 ff-only 落。为什么是 -r2：你点名的 -r1 我先推在 `8c073c0f68edcde4ffa4e14db86218d1b687ea02` 那一跳上（服务端回读仍在 `923426f1eb8c9fb92dcd9da549e80a879c45fc38`，不删不强推），随后尖又走了 15 笔，ff-only 要求候选含现尖 ⇒ rebase 成新 ref。
+- 交付面 `git diff --name-status 9dea5cafb43009dc6e6ba03c339560bc4224008a f362aedc45fa9638b9ae0fee379c3072827bf2dc`：新增 14 枚、修改 4 枚。其中产品那侧 5 枚（新增 `frontend/src/features/checkin/footprintRead.ts` + 修改 `frontend/src/app/V8Experience.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/i18n/mapPanelCopy.ts`、`frontend/src/map-selection.css`），门那侧 1 枚新 spec，其余 12 枚全在 `evidence/bac10f40-ord0497-20260930/`。本单是产品单：改的就是产品字节，新读模块 blob `895ccfea171625717d5a450c3576914a0d40fbb2`（5263 B）。
+- 我这一轮 0 次移动线、0 次写账本、0 次 `demo/reset`；私有口 :4895–:4917 逐趟换号、`_e2e_r0497*.db` 每趟新名（库守卫拒复用），`:8000/:4781/:4782/:8693` 与 `_preview.db` 一枚字节没碰。锚 `6286c9b854c7bec6d586b71ba9127d048c66f4c3`。
+
+**一、实现形状（数据只从那一扇门来，屏上不长出第二套足迹）**
+- 唯一入口：`frontend/src/features/checkin/footprintRead.ts` 的 `useFootprints` 调既有客户端 `readCheckins`（`frontend/src/features/checkin/checkins.ts:93`，即 `GET /api/v1/journeys/{id}/checkins`）。每次挂载读一次，不缓存、不落 localStorage、不跨屏传值：地图从来不知道你按过那枚按钮，它只认这次读回来的列表。锚 `895ccfea171625717d5a450c3576914a0d40fbb2`。
+- 四条臂各自有名：`read`（服务器答了，列表可空）/ `refused` / `unreachable` / `not_asked`。只有 `read` 允许改画；其余三臂在 `MapPanel` 里一律走"什么都不画"的分支（`frontend/src/components/v8/MapPanel.tsx` 的 `applyFootprints`，本单交付 blob `a4ef1018cae439d31297d3e8b67a0d3d6b40f39f`）。锚 `a4ef1018cae439d31297d3e8b67a0d3d6b40f39f`。
+- 为什么不是第三套状态：`readCheckins` 的答数此前已被两处各自持有一份（`frontend/src/features/trip/TripItinerary.tsx:133`、`frontend/src/features/checkin/FootprintPanel.tsx:31`）。我没有再抄一份列表进地图：地图持有的是"一次读"，匹配用的是服务器自己存的 `target_key`（`backend/app/schemas.py:1057`），键形 `activity:<id>` 由 `activityTargetKey` 一处定义。锚 `895ccfea171625717d5a450c3576914a0d40fbb2`。
+- 画法：实心=服务器有这一枚印（外加钉下一枚日期徽章），空心=这次读回来没有印的站；没答的站不参与这套画法（保持原样）。日期只到日不到点，因为玻璃上禁表：`frontend/e2e/_mapLabelRules.ts:69` 的 `clock-time` 规则会打在 `.v8-maplibre-canvas` 的渲染文字上。锚 `895ccfea171625717d5a450c3576914a0d40fbb2`。
+- 「只看打过」：`frontend/src/app/V8Experience.tsx` 里 MapPage 的一枚 `useState(false)`（本单交付 blob `202acb9af0ceacf06ad7f3892e52975eac955e46`），开=把空心针 `visibility:hidden`，节点留在文档里（`frontend/src/map-selection.css` 的 `.filtered-out`，blob `d75850c2830f94a9db5c08ebd581886649f172bd`）；关=全部现形；三臂之外（`refused`/`unreachable`/`not_asked`）这枚开关根本不给出来。锚 `202acb9af0ceacf06ad7f3892e52975eac955e46`。
+
+**二、屏上读数（390×844，zh-CN，authoritative 一趟 6 passed (57.8s)；仪表自报身份：`[citynexus e2e] provenance ok: run=r0497h frontend=:4915 -> backend=:8784 ai=disabled db=_e2e_r0497h.db`）**
+- 空读那一臂：这一趟在图上的 9 枚针全部空心（`hollow_count=9`、`solid_count=0`、日期徽章 `0` 枚），屏上逐字读到「这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。」；同一臂在 en 下读到另一句原文（`empty_read_names_itself_en`）。锚 `6286c9b854c7bec6d586b71ba9127d048c66f4c3`。
+- 空心针的命中：盒 x=114 y=464 w=34 h=34，中心 (131, 481)，`elementFromPoint` 回到针自己（`hit_is_pin=true`），该中心本就在视口内（`on_screen=true`），填充色 `rgb(255, 255, 255)`。锚 `6286c9b854c7bec6d586b71ba9127d048c66f4c3`。
+- 真按一次「打卡」之后（走的是 `POST` 那扇门，再换一屏新挂载的地图）：`这台服务器这次交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。`；`solid_count=1`、`hollow_count=8`、日期徽章文字「9月30日」（testid `map-stamp-date-ad9590eb…`）。实心针盒 x=114 y=464 w=34 h=34，中心 (131, 481) 命中回自己，`on_screen=true`。锚 `6286c9b854c7bec6d586b71ba9127d048c66f4c3`。
+- 开关那一臂：初始 `hidden=0`；按下后 `aria-pressed=true`、标签从「只看打过」换成「看全部站」、`hidden=8`（= 9 枚有claims的针 − 1 枚实心），实心针与其日期不被自己藏掉；再按回 `hidden=0`；reload 之后 `aria-pressed=false`、`hidden=0`，`localstorage_footprint_keys=[]` ⇒ 这枚开关没写在任何地方。锚 `6286c9b854c7bec6d586b71ba9127d048c66f4c3`。
+- 三张图（同一趟 r0497h）：`map_stamped_r0497h.png` blob `afaa8dc714d32290ba0721196b8c3217e990cd02`（63620 B，一枚实心带「9月30日」、其余空心）；`facts_read_r0497h.png` blob `dd2eb8490a92b391515734bec729e4ba26f58915`（95281 B，句子与开关同屏）；`facts_filtered_on_r0497h.png` blob `b3861f71d50412878ff7270b77362ec605060c35`（240718 B，整页：图上只剩那一枚实心针，开关写着「看全部站」）。锚 `b3861f71d50412878ff7270b77362ec605060c35`。
+
+**三、两枚反例（仪表 `ord0497_mutate_r1.py` blob `70cc8165ea4a8770a5279e8bbd5bc39347c44d78`，跑在尖 `af6de0c634a3f81034cef7c960bd613725759977` 上；每趟唯一 run id、日志名带 run id、`infra_failure` 具名判定）**
+- A `solid`：把 `entry.el.classList.add("stamped")` 那一行拿掉。结果 exit 1、`3 failed / 3 passed (34.0s)`，红的正是 `solid_after_a_real_stamp`（`exactly the one stop the server holds a stamp for is solid`）与依赖它的 `filter_toggle`，另加落盘那枚（后果，不是第三条独立断言）。日志 blob `e2375465172ae1dad77f3fdfdb3c0f21cc4be902`。
+- B `unguarded`：把「只有 `read` 才允许改画」那道守卫拿掉（`footprintsRef.current?.kind === "read"` → 直接当作已答）。结果 exit 1、`2 failed / 4 passed (58.3s)`，红的是 `read_never_arrived`：`nor an hollow one -- no claim is made about stops it cannot ask about`。⇒ 你要的那格「去掉回读那一腿时屏上不会凭空多出印章」是被断言钉住的，不是我说说的。日志 blob `4d5f3234372f6946a71a582e391cb48908893cc5`。
+- 两趟跑完 `git status --porcelain -- src/components/v8/MapPanel.tsx` 脏行 `0` 枚（变异都还原了），注入落地各有一行 `M frontend/src/components/v8/MapPanel.tsx` 为证。汇总 blob `5a9c9437e42d69439d57d0cf88f83720d08cbcda`（1796 B，本班 2026-09-30T18:19:27+0800 到 2026-09-30T18:21:00+0800）。
+
+**四、我没有把这套画法长到其他地图上，并且量了 A/B**
+- 只接了 `/v8/map` 那一屏（`frontend/src/app/V8Experience.tsx` 的 MapPage）。hub、Live、分享接收屏与住宿屏的 `MapPanel` 没传 `footprints`，prop 默认 `null` ⇒ 一枚像素不多画。你要的"地图上"我按这一屏交，其余屏要不要同一套是另一单。锚 `202acb9af0ceacf06ad7f3892e52975eac955e46`。
+- 为防我在玻璃上多放元素撞坏已收的地图门，同一台机同一配置跑了 5 枝既有地图门（`ord0390`/`ord0403`/`ord0412`/`ord0453`/`ord0417`）两遍对照：我这枝（尖 `f362aedc45fa9638b9ae0fee379c3072827bf2dc`）`7 failed / 41 passed (4.9m)`，日志 blob `357102412f383e61376ea2ed655908364cc0cc6c`；对照侧是不含我这 6 枚文件的上一跳现尖 `8c073c0f68edcde4ffa4e14db86218d1b687ea02`，`6 failed / 42 passed (4.8m)`，日志 blob `0083a0c69fdf1e0d94552ff4e348da3a98a2bffa`。
+- 红集合逐枚对（脚本算的集合差）：`ord0390` 的 `reach — every stop is selectable on the map screen` 两边同一组宽度 320/360/390/414 档，锚 `357102412f383e61376ea2ed655908364cc0cc6c`。
+- `ord0403` 的 `reach — the control is hittable and does not collide`：我这枝 360/390/414，对照侧 360/414，两边交集 360/414，锚 `0083a0c69fdf1e0d94552ff4e348da3a98a2bffa`。
+- 后一族每一枚的报错行都是同一句 `must not sit under the tile notice`，重叠面积两边同值（2713/5371 px²）：底图瓦片没加载出来时那块提示浮层压住视野按钮，中招的宽度档随瓦片通道抖 —— 对照侧（不含我的字节）同样红，所以不是本单带上线的，锚 `357102412f383e61376ea2ed655908364cc0cc6c`。
+- 我这枝没有带进任何一枚新红：`ord0412`/`ord0453`/`ord0417` 三枝（含 `onlyDigitsPainted` 那条：针上只许画站号）全过；日期徽章是独立元素、不是针的孩子，所以那条断言没被我动到。锚 `d75850c2830f94a9db5c08ebd581886649f172bd`。
+
+**五、我自己仪器先红的那一格（原始件留在证据里，不删）**
+- 头一趟 r0497a 的 `read_never_arrived` 报 `the map itself is still the map` 收到 `0`：那是我在 maplibre 的动态 import 还没把针画出来之前就读了屏 —— 零是我的尺造的，不是产品的。修在写的那一步：`settleMap` 同时等句子与针（`frontend/e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts` 的 `settleMap`（该文件第 136 行起）那段）。原始日志 blob `8edd31923cc524a513df7450db4da40060d19ed9`（31256 B，已被同名新趟覆盖前抄进证据目录，命名 `superseded_instrument_red_r0497a.log`）。锚 `9ff6a6381cfdcfe14a0d024aadbf65149817d1a1`。
+- 同一趟还留下一个事实：`solid_after_a_real_stamp` 那次是绿的，说明这个坑只咬"零读数"那一侧 —— 所以我没有把第一趟的任何数字写进上面第二节。锚 `8edd31923cc524a513df7450db4da40060d19ed9`。
+
+**六、没做的（具名残差，别按合格计）**
+- 整套前端门我没跑；只跑了本单 spec（`6 passed (57.8s)`）与第四节那 5 枝对照。整套执行数归你的落地门。锚 `9ff6a6381cfdcfe14a0d024aadbf65149817d1a1`。
+- 站点清单（`map-stop-*` 那些 chip）没有被「只看打过」过滤，它只过滤图上的针：那两枝既有门把 chip 枚数当"每个有坐标的站都能被选中"的证据（`frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284`、`frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:261`），我不在没被点名的门上动刀。锚 `d75850c2830f94a9db5c08ebd581886649f172bd`。
+- 日期徽章只到日；时刻在足迹屏上仍有（`frontend/src/features/checkin/FootprintPanel.tsx:91`）。这是玻璃禁表那条规则的结果，不是漏做。锚 `895ccfea171625717d5a450c3576914a0d40fbb2`。
+- 第二道语言臂我只在"空读"那一格补了 en 原文，其余三臂的字面断言只在 zh；`refused` 那一臂（服务器答了但不收）本轮没有实测臂 —— 它需要注入一枚 409 答案，我判断那是伪造响应，宁可不写。这一格具名 `NOT_AVAILABLE_BY_CMDR`：取不到的原因是我不肯为造那一句话而伪造一枚响应（要它就得让测试替服务器答话）。锚 `f7d0bdaf75090f88a35b054908a5a7e80d462322`。
+- 底图瓦片在本机这几趟经常不加载（第四节那族红就是它），所以"实心/空心在真实底图上的观感"我只在自己的截图里看过（图上那片是路线示意底色）；瓦片通道恢复后这格值得再看一眼。锚 `afaa8dc714d32290ba0721196b8c3217e990cd02`。
+- 三处 `readCheckins` 调用者各留一份读结果（我没把 `TripItinerary`/`FootprintPanel` 迁到新模块：那是别人手上的热文件）。要做"一次读、多屏共用"得另开一单，我不顺手改。锚 `895ccfea171625717d5a450c3576914a0d40fbb2`。
+
+**七、现在与下一步（不用回）**：枝在 `review/bac10f40-ord0497-footprints-on-map-r2` = `f362aedc45fa9638b9ae0fee379c3072827bf2dc`，你走门；本单我只敲这一次门。现场一件与本单无关的读数：D 盘 `308G 306G 2.2G 100% /d`（`df -h /d` 现跑现取）。锚 `5a9c9437e42d69439d57d0cf88f83720d08cbcda`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0504 空目录那一屏现在走得出去：入口接到粘贴门，那句地点数改成服务端回读（车道 seed @18:31+08）
 
 基座现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `d610f33a118e6878b4e01fb103d01d48397159ba`（`git ls-remote`）；候选 `refs/heads/review/newlane-ord0504-empty-city-import-r1` = 本地尖 `9163fe48b821e439f3ec14c780904e6a449d6be6`，远端回读同值 = `9163fe48b821e439f3ec14c780904e6a449d6be6`；改动 3 枚产品文件加 1 枚收据，全是前端，没新开写端点。
