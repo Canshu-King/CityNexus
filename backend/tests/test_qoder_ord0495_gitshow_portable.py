@@ -8,6 +8,11 @@
 洗成不可测。所以这里的分界是判据，不是便利：提交能解析而路径不在 ⇒ DEFECT（仍红）；没有 git、没有
 仓库根、对象库答不出这枚提交 ⇒ NOT_MEASURED（具名 skip）。G04 就是钉这条线的一格。
 
+r3 补的是号令者在导出树里量出来的一件事：导出目录如果被放在**别人仓库的工作树里面**，从测试文件往上
+走会先撞上那一枚不相干的 .git，然后拿它的对象库去答"127ce7b0 在不在"——答不出，于是"找到仓库"这件
+事本身就是错的。find_repo_root 因此不只看 .git，还要看这枚仓库是不是**本项目**（PROJECT_MARKERS）；
+G10 专门量这一条：同一棵树，带标记判据找不到根，去掉判据就找到邻居家。
+
 每格自带临时目录，不依赖跑它的是仓库还是导出；G01 反过来钉"在真仓库里它照旧断言"，防止这单把臂
 改成永远沉默。
 """
@@ -23,7 +28,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from qoder_git_source_r1 import (  # noqa: E402
-    DEFECT, NOT_MEASURED, OK, find_repo_root, git_ancestor, git_source,
+    DEFECT, NOT_MEASURED, OK, PROJECT_MARKERS, find_repo_root, git_ancestor, git_source,
     require_git_ancestor, require_git_source)
 
 HERE = Path(__file__).resolve()
@@ -75,11 +80,17 @@ def test_G02_no_repository_root_is_not_measured(tmp_path: Path) -> None:
 
 # ---------------------------------------------------------------- G03 反控：有个空 .git 也不算仓库
 def test_G03_a_stray_empty_dot_git_is_not_measured(tmp_path: Path) -> None:
-    """导出包里夹一枚 .git 占位（zip 里常见的残留）时，git 会答"not a git repository"。
+    """导出包里夹一枚 .git 占位（zip 里常见的残留），加上本项目该有的标记，仍算环境不可测。
 
-    这一格钉的是：那仍然算环境不可测，不算产品红——但它必须由 git 真的答不出来说出来，不是由我猜。
+    The marker test cannot save this one -- the directory does look like the project -- so what has to
+    save it is the second question: can this store actually answer for the commit cited. It cannot, and
+    the answer is NOT_MEASURED with git's own words, not a red and not a pass.
     """
     (tmp_path / ".git").write_text("", encoding="utf-8", newline="\n")
+    for marker in PROJECT_MARKERS:
+        target = tmp_path / marker
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("placeholder for the marker test\n", encoding="utf-8", newline="\n")
     root = find_repo_root(tmp_path)
     assert root == tmp_path, root
     status, text, reason = git_source(ORDER_BASE, GATE_REL, root)
@@ -184,3 +195,29 @@ def test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo(tmp_pat
     assert "1 passed" in again.stdout, again.stdout[-500:]
     assert "SKIPPED" not in again.stdout, again.stdout[-300:]
     assert in_repo, "the checkout could not name its own head"
+
+
+# ---------------------------------------------------------------- G10 邻居的仓库不是本项目
+def test_G10_a_neighbour_repository_is_not_this_project(tmp_path: Path) -> None:
+    """导出目录被放在别人工作树里时，往上走会先撞上那一枚不相干的 .git（号令者量到的就是这个）。
+
+    "找到 .git"不等于"找到本项目"：带着邻居的对象库去问 127ce7b0 在不在，答案是答不出——那既不是
+    OK 也不是 DEFECT。这一格两头都钉：标记判据把邻居拒掉；而万一调用方还是把那枚根传进来，状态必须
+    是 NOT_MEASURED 并带上 git 原话，绝不能被读成产品缺陷。
+    """
+    neighbour = tmp_path / "neighbour"
+    neighbour.mkdir()
+    assert _git(neighbour, "init", "-q").returncode == 0, "the fixture repository was never made"
+    deep = neighbour / "unpacked" / "backend" / "tests"
+    deep.mkdir(parents=True)
+    probe = deep / "test_probe.py"
+    probe.write_text("", encoding="utf-8", newline="\n")
+
+    blind = find_repo_root(probe, markers=())
+    assert blind == neighbour, "without the marker test the walk lands on the neighbour: {}".format(blind)
+    assert find_repo_root(probe) is None, "the marker test accepted a repository that is not this project"
+
+    status, text, reason = git_source(ORDER_BASE, GATE_REL, blind)
+    assert status == NOT_MEASURED, (status, reason)
+    assert text == "", "an unanswerable store must hand back nothing to compare"
+    assert "cannot answer" in reason, reason
