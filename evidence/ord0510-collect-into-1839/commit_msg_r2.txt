@@ -1,0 +1,18 @@
+ORD-0510 follow-up: the picker stopped truncating the shelf name it is about to write to
+
+Looked at my own screenshot instead of only the receipts.  On a 390 px row the shelf name shared one
+flex line with its item count and the already-held mark, so 「周末架子」 rendered as 「周…」 -- a picker
+that cannot say which shelf it writes to, which is the one thing the control exists to say.
+
+The name gets its own grid row and is allowed to wrap; the count sits on the right of that row and the
+held mark spans below.  CSS only -- no `.ts`/`.tsx` byte changed, so the two `tsc` runs and the
+before/after ruler readings taken one commit back still describe these bytes, and the arms were re-run
+against this build: 390 px zh and 1280 px en read the same lines, and the two counter-examples still
+separate -- with the write intercepted, the shelf clicked is not named on screen
+(`clicked_shelf_named_on_screen: false`); with the write real, the same shelf is named
+(`true`).  `vite build` exits 0.
+
+The instruments were tightened in the same pass, for the same reason: the fake-write arm used to fall
+back to "whichever shelf is first" when its own shelf was not offered, so it could report on a shelf it
+never meant to test.  It now names the shelf it created for that run, reads the name back off the row,
+and throws if it is not offered.
