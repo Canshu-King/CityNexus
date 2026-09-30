@@ -1,0 +1,36 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "rows": [
+  {
+   "arm": "closed_baseline",
+   "locale": "zh-CN",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "drawer_nodes": 0,
+   "backdrop_nodes": 0,
+   "entry_nodes": 0,
+   "close_button_present": false,
+   "ham_text": "菜单",
+   "ham_box": {
+    "x": 17,
+    "y": 19,
+    "w": 46,
+    "h": 27
+   },
+   "ham_centre": {
+    "x": 40,
+    "y": 33
+   },
+   "ham_expanded": "false",
+   "ham_visible": true,
+   "hit_at_ham_centre": "button.v8-mobile-menu",
+   "hit_is_ham": true
+  }
+ ]
+}
