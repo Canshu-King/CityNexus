@@ -16588,6 +16588,119 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:27 · 我自己在尖上重跑了整套（11 红 1506 绿，另 20 枚收集错误全是同一族）、抓到 ORD-0495 三枚臂在导出树里红、以及一枚形状回归；附本轮落地与四张新单
+
+**〇、口径与命令（逐字，现读）**
+
+树 = `git archive` 导出的 `8951257e848dfa828c1d5bbf515ab5b90c36d39d`（这枚尖含 ORD-0496 与 ORD-0495 r2）。权威尖我 19:20 现读 = `0dd0692888f5…` 起头（本轮 ORD-0502/ORD-0505/ORD-0509 之后），所以整套这一跑读的是它前面那一代，逐笔都写在第一节。
+
+命令（两条形制，同一解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，CPython 3.12.14）：
+- `python -m pytest tests -p no:randomly -q --collect-only` → **Interrupted: 20 errors during collection**
+- `python -m pytest tests -p no:randomly -q --tb=no -rf <逐枚 --ignore 那 20 个文件>` → **11 failed, 1506 passed, 16 skipped, 1 xfailed**（时长 `160.41 秒`；cwd 在导出树 `backend/`，`PYTHONPATH=backend;<树根>`，provider 变量剥掉；对照判据行 `backend/tests/test_qoder_ord0495_gitshow_portable.py:59`）
+读数落盘：`_fullsuite_8951257e_cmdr.out`（不带 ignore 那一趟）与 `_fullsuite_8951257e_ign.out`（带 ignore 那一趟）。
+
+**一、本轮落地（门过的，ff-only）**
+
+| 单 | 内容 | 结果 |
+|---|---|---|
+| ORD-0501 长图日块分隔 | `e766b154` 那枝 | 落 |
+| ORD-0484 前提核对（trip_id 在权威线上不存在） | `2d2d7428-ord0484-journey-trip-identity-r1` | 落 |
+| ORD-0515 长图分页与具名上限 | `e766b154-ord0515-poster-pagination` | 落 |
+| ORD-0496 日历导出切片一（服务端+契约） | `newlane-ord0496-calendar-export-r1` | 落，我另跑 `15 passed` 自证（同一枚解释器，命令 `python -m pytest tests/test_qoder_ord0496_calendar_export.py -p no:randomly -q`） |
+| ORD-0505 空城市屏接粘贴门 | `newlane-ord0504-empty-city-import-r1`（车道自标 0504，我按 ORD-0505 计） 调用点锚 `frontend/src/features/poiimport/PoiImportPanel.tsx:216` | 
+| ORD-0502 手机端主链路端到端仪表 | `cff87c64-ord0502-phone-mainline-e2e-r1` | 落 |
+| ORD-0509 暗色档位对新屏重取对比 | `2d2d7428-ord0509-dark-contrast-readings-r1` | 落 |
+| ORD-0495 臂可移植 r2 | `2d2d7428-ord0495-gitshow-portable-r2` | 落，但见第二节我复跑出来的红 |
+
+被只读复切退回（我不手合）：ORD-0497 卡在 `frontend/src/app/V8Experience.tsx`（ORD-0505 刚落同一枚文件）、ORD-0508 卡在 `frontend/src/generated/api.ts`（它自己那枝是在旧基上重生的生成物）、ORD-0461 r2 与 ORD-0477 r2 各卡在 `backend/app/main.py` + 契约 + 生成物这三枚热面。四张退回我都点名要了重切，并把落地顺序排开以免两车互追。
+
+**二、ORD-0495 那三枚臂：我在导出树里复现不出"两种都行"（事实，不是驳回）**
+
+命令 `python -m pytest tests/test_qoder_ord0495_gitshow_portable.py -p no:randomly -q` 在同一棵导出树上得 **3 failed, 4 passed**。三枚红的原文（`backend/tests/test_qoder_ord0495_gitshow_portable.py:59`）：G01 自带判语 `this object store cannot answer for 127ce7b05329 (fatal: Not a valid object name …)`；G05 在 `:122` 读到三格全 `NOT_MEASURED`；G07 在 `:166` 点名 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py`。
+
+要紧的是 G07：它的名字就叫"导出树里 skip、仓库里 assert"，而它在导出树里是**红不是 skip**——这跟它自己的判语不一致。我已让车道交 r3，并明写两条路任选（修臂 或 改那格的名字与判据），但禁止改断言凑绿、禁止整档 `--ignore` 藏起来。
+
+**三、一枚形状回归：写锁等待从"只写一处"变成多处**
+
+`tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place` 在我这一跑里红。断言把命中文件逐枚排出来比对，差在：第三个位置是 `main.py`（应为 `session.py`），且总数多一项。也就是说现在**第二处/第三处**又在代码里各写了一遍 busy_timeout 的等待形状。这一枚不是环境红——它比的是代码形状，且我这条命令里没有任何外部条件参与。已开单追（并入 ORD-0523 那张"整套能从干净导出跑起来"之后，由同一车道一并给读数）。
+
+其余八枚红我逐枚看了归因，不混着报：`g9b`（本 box 出网为 0，车道具名过，见 18:16 那块）、`anywhere_g5`、`matrix_truth g14a/g14c`、`provider_truth g10`、`city_failure_reasons`、`stay_generation_operations` 这六枚都是 provider 依赖臂——`g14a` 的断言原文就写着 `assert 'CAPTURED' == 'FAILED'` 并解释"没有 live_valhalla_url 时该走哪条"。它们按 `ENVIRONMENT_NOT_PRODUCIBLE_ON_LINE` 记，不算本轮新回归，但也**不能**算绿。
+
+**四、二十枚收集错误：干净 clone / 干净导出跑不起整套（真缺口，已开单 ORD-0523）**
+
+同一棵导出树里 `../scripts/` 目录存在，但只有 `build_hermes_r*_review_package.py` 那一类；测试 import 的 probe 模块**没入库**：`scripts.hermes_r9_mcp_context_probe`、`scripts.hermes_r8_context_probe`、`scripts.hermes_r7_human_approval_probe`、`scripts.hermes_r6_h11_model_probe`、`scripts.hermes_r21_request_replan_retry_reliability_probe`（两枚文件引它）、`scripts.hermes_r24_concurrent_request_replan_probe`、`scripts.hermes_r25_concurrent_request_replan_conflict_probe`、`scripts.hermes_r22_response_loss_recovery_probe` 等。后果：任何新 worktree 与落地门"根测试"那一腿在干净树上 collected=0（落盘见 `_fullsuite_8951257e_cmdr.out`；同族判据行 `backend/tests/test_qoder_ord0495_gitshow_portable.py:166`）。修法我给了两选一（把 probe 真入库，或让那批测试具名探测可用性并带原因 skip），并禁止删断言。
+
+**五、我派出去的四张新单（都有我这轮的实测做底）**
+
+- ORD-0519（5a53846b）：演示盘面造不出来那一格。我跑 `tools/ord0489_demo_seed_r1.py` 在自己 fresh 库上得到具名中止 `PROVIDER_SUPPLY_ABSENT_NOT_INVENTING_PLACES`、`failure_stage=anchor_geocode`、`fallback_reason=PROVIDER_TIMEOUT`，nominatim 与 overpass 都报 `REPLAY_FALLBACK`。要求把供给接到本机真能答的腿上，且禁止把 REPLAY 当供给。
+- ORD-0521（cff87c64）：把"从零库到有一趟能走的演示行程"做成产品自己的门（具名、幂等、默认不碰共享库、守卫与 `demo/reset` 同档）。这是结构性堵点：手机端六格（C1 之后全断）与 ORD-0489 盘面都卡在它上面。
+- ORD-0522（2d2d7428）：盘面不可用时服务端要说成可读状态（具名码 + 失败阶段），逐腿读数带 `http_status=` 与字节数；新写门归 ORD-0521，不重复造。
+- ORD-0523（1d64acf5）：第四节的收集错误，交两选一并要导出树/真仓两代读数。
+
+**六、我自己纠正的两次误读（不留成缺陷）**
+
+① 我一度拿 `GET /api/v1/collections/{folder_id}/items` 的 `http_status=405` 当"读门缺失"，回读后架上内容读自 `GET /api/v1/collections?traveler_id=…` 的 `item_count` 与 `items[]`；② 我一度以为 `POST /api/v1/journeys` 建不成，实为我的请求体缺 `traveler_id`/`city_code`/`start_at`/`end_at`/`budget`（形制在 `backend/app/schemas.py:210`），补齐后回 `http_status=201`。
+
+**七、没改善的部分**
+
+1. 手机端打卡入口仍未通（ORD-0500 在跑），所以 ORD-0502 那六格现在只能走到 C1；
+2. 我这台私有栈服的是 `8951257e…`，本轮新落的四笔（0502/0505/0509/0515）的**屏上**行为我没在同一代看过——D 盘现读 2.4 G，重开一次前端构建风险大，那几格具名 `NOT_REVERIFIED_BY_CMDR`；
+3. `:8000` 那一跳仍不可用，手机真链仍停在旧代；
+4. ORD-0435 的服务端回读仍 `NOT_AVAILABLE_BY_CMDR`；
+5. D 盘最大单块仍是系统 Temp 里那枚 Adobe 分段下载残件（1972763272 B），我已把它作为唯一一问写在桌面留言，不自己删。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · 2019 · ORD-0509 r1（暗色对比取真读数）：五屏两档各一遍，量出来的不合格那一格就地移了档位——十臂合计 49 -> 19 条；反件是真会红的（遮掉语义角色立刻多出未声明控件）；剩下 19 条与 54 枚未声明控件我列名不消音
+
+件（请审）：refs/heads/review/2d2d7428-ord0509-dark-contrast-readings-r1 远端回读 = 97e1f4d84253001682a48eea8a41e1ec43079de0（env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote --refs origin 现读；再 fetch 回来 cat-file：工件 review/ord0509/FINDINGS_0509_R1.txt 远端 blob = 本枝 blob = f0b4e5a8a042752a7d8d3ada3481beebb5e6a9e0）。
+  本枝基点 = 落笔时现读的权威尖 9dea5cafb43009dc6e6ba03c339560bc4224008a（同一枚）；此刻线已走到 0dd0692888f51edb6b9ffeb8d43a98455ebd21da，merge-tree --write-tree <现尖> <件尖> 退出码 0、合并树 7da1caa4c4c21c55c88509b23ad2484631a3acaa——没手合、没请您代合。两代之间 styles.css / design-tokens.css / _qoderContrastScan.ts 三枚逐 blob 未变，只有 i18n 词表动了（所以配对尺那串数是 9dea5cafb43009dc6e6ba03c339560bc4224008a 代的数）。
+  本枝共 4 笔提交；改动文件逐枚 blob（产品面 2 枚，其余是量具与收据）：
+    frontend/e2e/_qoderContrastScan.ts  blob 58849396479a1ec645b8cd5df295dd694de44cea
+    frontend/e2e/qoder-ord0509-contrast-screens.spec.ts  blob 3780f36d2bef626d836e85fcbf5a0eac6e74a67c
+    frontend/src/design-tokens.css  blob cd756bca389c2fa11cf881f0f336a963c6d81be2
+    frontend/src/styles.css  blob a042e2f62c7b8a31457501005e996d47b32dde8c
+
+**尺先补了一格才敢读数（review/ord0509/FINDINGS_0509_R1.txt:8）**
+  原来 control-boundary 与 state-indicator 两档只对**声明了** data-contrast-role 的元素开火——没声明的控件根本不被量，于是“整屏没角色”与“这屏过了”长得一模一样。本枝加了第五种 unclassified-control：看得见、带自己的 data-testid、又没声明角色的 button/[role=button] 就是一条不合格。今天新长出来的几屏正好全是这种情况，所以不补这一格，读数会把它们报得比实际安静。
+  十臂 each 一份收据（尺寸 px、中心是否命中该控件、尺返回的每一行）在 review/ord0509/run/，改动前那份在 review/ord0509/run_before/。
+
+**两代同一把尺、同一台私有栈的前后对（review/ord0509/FINDINGS_0509_R1.txt:18）**
+  collections.dark       前 text=1 ligh=1 cont=0 uncl=1 后 text=1 ligh=1 cont=0 uncl=1（状态 RENDERED -> RENDERED）
+  collections.light      前 text=1 ligh=0 cont=0 uncl=1 后 text=1 ligh=0 cont=0 uncl=1（状态 RENDERED -> RENDERED）
+  mobile-drawer.dark     前 text=18 ligh=2 cont=0 uncl=22 后 text=1 ligh=0 cont=0 uncl=22（状态 RENDERED -> RENDERED）
+  mobile-drawer.light    前 text=16 ligh=0 cont=0 uncl=22 后 text=5 ligh=0 cont=0 uncl=22（状态 RENDERED -> RENDERED）
+  poster-days.dark       前 text=1 ligh=0 cont=1 uncl=2 后 text=1 ligh=0 cont=1 uncl=2（状态 RENDERED -> RENDERED）
+  poster-days.light      前 text=2 ligh=0 cont=1 uncl=2 后 text=2 ligh=0 cont=1 uncl=2（状态 RENDERED -> RENDERED）
+  recycle-bin.dark       前 text=0 ligh=0 cont=0 uncl=1 后 text=0 ligh=0 cont=0 uncl=1（状态 RENDERED -> RENDERED）
+  recycle-bin.light      前 text=0 ligh=0 cont=0 uncl=1 后 text=0 ligh=0 cont=0 uncl=1（状态 RENDERED -> RENDERED）
+  share-receiving.dark   前 text=0 ligh=0 cont=0 uncl=1 后 text=0 ligh=0 cont=0 uncl=1（状态 NOT_AVAILABLE_BY_CMDR -> RENDERED）
+  share-receiving.light  前 text=5 ligh=0 cont=0 uncl=1 后 text=5 ligh=0 cont=0 uncl=1（状态 NOT_AVAILABLE_BY_CMDR -> RENDERED）
+  合计（未声明角色另计，那是声明缺口不是颜色）：49 -> 19 条；未声明控件 54 条散布在 10 臂（review/ord0509/FINDINGS_0509_R1.txt:18）。
+  手机抽屉暗档：文字 18 -> 1 条、近白面 2 -> 0 条；亮档文字 16 -> 5 条。最差那一条组标题从 2.21:1 到 3.82:1（review/ord0509/FINDINGS_0509_R1.txt:34）。
+
+**动了哪一枚档位，以及先试错的那一半（review/ord0509/FINDINGS_0509_R1.txt:8）**
+  第一次只把 --cn-nav-bg 从 :root, .v8-product-shell 共享块里挪回 :root（自定义属性取最近一个声明它的祖先，shell 重复声明了亮值，暗值就到不了抽屉）。单独量：前后计数一字不差（run 0509run4 与 0509run5）——因为抽屉那层的白不是档位给的，是 styles.css 里写死的 background: #fff。那一半我先撤了。
+  真正落地的是一对：styles.css 抽屉里四枚写死颜色绑到**已有**的档位（--cn-nav-bg 面、--cn-ink-secondary 行字、--cn-ink-tertiary 组标题、--cn-secondary 选中行），design-tokens.css 让 --cn-nav-bg 只在 :root 声明一次，暗块才压得住。没新造颜色、没起第二套色阶。
+  其余不合格我按 selector 列在件里没删：poster-open 暗档文字 3.82:1 与边框 1.22:1、collections 的 v8-evidence-label 暗档 1.95:1（那是一枚绿字贴近白 chips，属另一族）、分享页三处 small 3.62:1——都要动别人车道的组件或第二套档，不在这单授权范围内（review/ord0509/FINDINGS_0509_R1.txt:51）。
+
+**反件（遮掉语义角色，尺必红）与它自己那次失败（review/ord0509/FINDINGS_0509_R1.txt:64）**
+  长图屏读回 DOM 上声明的 5 枚角色，扫一次；再把 data-contrast-role 全摘掉，扫第二次：行数 4 -> 6，其中未声明控件 5 条（收据 review/ord0509/run/mutant.role-hidden.json）。第一版这枚臂在导航后 0 毫秒就点，页面上还没有角色可摘，它会对空列表断言——加了 900 毫秒等待才是量这台屏幕，而不是量竞态。
+
+**“收藏”这一族新词过配对尺（review/ord0509/FINDINGS_0509_R1.txt:73）**
+  本件渲染时现跑 tools/cnx_copy_tiers_r1.py --i18n frontend/src/i18n/LocaleContext.tsx --baseline 同文件 --src frontend/src：REGISTER_PARITY 928 bilingual keys、928 agree、0 clash；今天下午新增的三族（poster、shared、poiImport）两本词典共 111 枚键、未配对 0 枚。
+  一处被读数纠正的说法：产品只有两本词典（const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN }），没有德文一列可配；能查的是 en 与 zh-CN 同不同档，本次是 0 clash。
+
+**没做的、不能算数的**
+  这十臂是权威 e2e 模式下的 dev 读数（自己后端口 :4817/:4816、自己 vite 口 :5188、run-stamped 私有库 _0509run*.db、外部 AI 关）：按号令者要求**没跑 vite build、没开新导出树**，所以这里没有任何一条是发布产物级证据；D: 现剩 2.31 GiB 可用，本单的私有栈目录 18.8 MiB 交付后删净。
+  分享接收屏前两版是 NOT_AVAILABLE_BY_CMDR：锚名是我猜的、建 grant 的 visibility 用了契约枚举里没有的值而被校验拒掉；两处改正后同一代真到达（收据 reached_by 里有本轮现切的 grant id，见 review/ord0509/FINDINGS_0509_R1.txt:81）。
+  尺量的是活 DOM 的算出色，不担保某个浏览器实机渲染；中心命中只说明该点会打中那个控件。未声明控件那一类（条数与逐枚 selector 已在上文列出，不在此重复）要修得动十几枚别人车道今天的组件文件，不在本单范围，我列名而不是替它们声明角色。
+  本轮 e2e 把 reports/e2e-provenance/authoritative.json 改写过一次，我已回退、没提交（那格属于跑权威套件的记录）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0504 空目录那一屏现在走得出去：入口接到粘贴门，那句地点数改成服务端回读（车道 seed @18:33+08）
 
 基座现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `d610f33a118e6878b4e01fb103d01d48397159ba`（`git ls-remote`）；候选 `refs/heads/review/newlane-ord0504-empty-city-import-r1` = 本地尖 `9163fe48b821e439f3ec14c780904e6a449d6be6`，远端回读同值 = `9163fe48b821e439f3ec14c780904e6a449d6be6`；改动 3 枚产品文件加 1 枚收据，全是前端，没新开写端点。
