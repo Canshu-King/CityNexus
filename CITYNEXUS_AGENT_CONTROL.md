@@ -16588,6 +16588,139 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0489 演示盘面：三枚行程、两枚有目录的城市加一枚空城市，落枝并屏上走过（车道 seed @13:23+08）
+
+基座与交件坐标：现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `dcb90cccc68b81f2317b28db19051dedb9f06c80`（git ls-remote 与 GitHub `git/ref/heads` 两路同值），本车道候选 `refs/heads/review/newlane-ord0489-demo-seed-r1` = `66e0c96bea5c0ec58511bbba3bac3e4be062e579`。
+
+**0）先撤回一句我说错的话（同一轮内自我更正，不是等谁指）**
+
+- 我写过「走过屏之后目录自己涨了」。这是我把两个分母混了：`GET /api/v1/places` 这一扇门默认过滤服务端自造行，而我拿来对照的是库里全量行。单变量实验只走 `/v8/discover` 一条路由，前后两城读数为 ``review/ord0489/screens/discover_write_side_effect_r6_20260930T0451.json:6` blob `00453d83cdecdef2e87545fabfe8eccd638625ba`` 与 ``review/ord0489/screens/discover_write_side_effect_r6_20260930T0451.json:7` blob `00453d83cdecdef2e87545fabfe8eccd638625ba``，即 8 与 4 不变，同件 ``review/ord0489/screens/discover_write_side_effect_r6_20260930T0451.json:22` blob `00453d83cdecdef2e87545fabfe8eccd638625ba`` 记走完后仍为 8 与 4；那扇门加 `include_structural=true` 才得 15 与 12，见 ``review/ord0489/static_serving_proof_final.json:9` blob `fe62d73df2603a93ec26ef17858c593cd0f4e5e5`` 与 ``review/ord0489/static_serving_proof_final.json:12` blob `fe62d73df2603a93ec26ef17858c593cd0f4e5e5``。差值全部由该参数解释，与走屏无关。
+
+**1）号令者给的五个数，我这边只读复现（`mode=ro`，读写前后字节与 mtime 相同，故本收据不可能写过被测物）**
+
+- `journeys` = 1 枚：`review/ord0489/preview_store_readonly_receipt.json:13` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`
+- `plan_versions` = 1 枚：`review/ord0489/preview_store_readonly_receipt.json:14` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`
+- `activities` = 6 枚：`review/ord0489/preview_store_readonly_receipt.json:15` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`
+- `places` = 16 枚：`review/ord0489/preview_store_readonly_receipt.json:16` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`；`travelers` = 1 枚：`review/ord0489/preview_store_readonly_receipt.json:17` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`；`city_services` = 10 枚：`review/ord0489/preview_store_readonly_receipt.json:18` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`
+- 库体 7213056 B，读前后 `unchanged_across_reads` 为真：`review/ord0489/preview_store_readonly_receipt.json:10` blob `a306d94cb59078c7441af5dfedc3d6136bd52648` 记字节，`review/ord0489/preview_store_readonly_receipt.json:40` blob `a306d94cb59078c7441af5dfedc3d6136bd52648` 记前后一致
+- 一处口径更正（不是驳号令者，是把范围说清）：那 16 枚 `places` 落在两枚 `city_code` 上，`CN-BEIJING` 8 枚见 `review/ord0489/preview_store_readonly_receipt.json:20` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`、`CNX-DEMO` 8 枚见 `review/ord0489/preview_store_readonly_receipt.json:21` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`；只有 `journeys` 是单城 ``review/ord0489/preview_store_readonly_receipt.json:24` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`` 的 `CNX-DEMO` 1 枚。「城市只有一枚」在行程维度成立，在地点目录维度不成立。
+- 更硬的一格：共享预览库共 55 张表（`review/ord0489/preview_store_readonly_receipt.json:26` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`），其中 `journey_checkins`、`journey_members`、`journey_role_capabilities`、`journey_share_grants` 四枚不存在（清单 `review/ord0489/preview_store_readonly_receipt.json:27` blob `a306d94cb59078c7441af5dfedc3d6136bd52648` 起四行），`present_checked_tables` 为空数组 `review/ord0489/preview_store_readonly_receipt.json:33` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`。所以足迹与分享接收两族屏在共享盘面上不是「样本少」，是门都还没有表。
+
+**2）我自己的盘面（私有库、私有端口，全部走产品写路由；禁 SQL 直写、禁 `demo/reset` 一条没破）**
+
+- 私有后端 `:8790`、私有前端 `:8791`、候选前端 `:8792`；禁区 `:8000`、`:4781`、`:4782`、`:8693` 全程未占用（工具里写成硬拒，见 `tools/ord0489_demo_seed_r1.py` 同级 `tools/ord0489_lane_stack_r1.py:40` blob `f2a94cb9d33a7027a096c813f9bc3a7e6166aff9`）。
+- 三证归属同批取：唯一监听 pid 见 `review/ord0489/ownership_final.json:5` blob `6404a49d9d90c225fae7664f6f220487b15352a5`，命令行含 `--port 8790` 见 `review/ord0489/ownership_final.json:13` blob `6404a49d9d90c225fae7664f6f220487b15352a5`；我库里 3 枚行程且与共享库零交集（`journey_rows` = 3，`review/ord0489/ownership_final.json:22` blob `6404a49d9d90c225fae7664f6f220487b15352a5`），门回 200 逐字回显该 id、伪造 uuid 回 404（`review/ord0489/ownership_final.json:26` blob `6404a49d9d90c225fae7664f6f220487b15352a5`）；表 59 张 `review/ord0489/ownership_final.json:21` blob `6404a49d9d90c225fae7664f6f220487b15352a5`，库体 3092480 B `review/ord0489/ownership_final.json:20` blob `6404a49d9d90c225fae7664f6f220487b15352a5`。判语 `OWNED_BY_THIS_LANE`：`review/ord0489/ownership_final.json:49` blob `6404a49d9d90c225fae7664f6f220487b15352a5`
+- 地点只有一条来路：`POST /real-city/discover` 且 `mode=live`；`provenance` 不等于 `LIVE_PROVIDER` 就具名中止 `PROVIDER_SUPPLY_ABSENT_NOT_INVENTING_PLACES`，判据行 `tools/ord0489_demo_seed_r1.py:209` blob `b67a087d4b34ceb89131d17e27be43651856a1ea`、中止名 `tools/ord0489_demo_seed_r1.py:212` blob `b67a087d4b34ceb89131d17e27be43651856a1ea`。6 次调用全为 `LIVE_PROVIDER`（逐次读数在 `review/ord0489/board_seed_final.json:96` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e` 起的 `discover_log` 段）。
+- 落成的目录：`CN-TIANJIN` 8 枚 `review/ord0489/board_seed_final.json:282` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`、`CN-BEIJING` 4 枚 `review/ord0489/board_seed_final.json:283` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`、`CN-FUZHOU` 0 枚 `review/ord0489/board_seed_final.json:284` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`（后者是工单要的「无地点城市」，脚本对它不发供能请求，理由写在 `tools/ord0489_demo_seed_r1.py:71` blob `b67a087d4b34ceb89131d17e27be43651856a1ea`）。
+- 行程 3 枚：天津三日两晚、北京四日三晚、福州两日一夜未规划；可见列表 2 枚 `review/ord0489/board_seed_final.json:276` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`（回收站吃掉一枚），服务端序即屏上级序 `review/ord0489/board_seed_final.json:278` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`。
+- 多天行程的活动：两枚都先撞 `plans/generate` 得 422（`review/ord0489/board_seed_final.json:169` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e` 与 `review/ord0489/board_seed_final.json:288` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`），改走 `authoritative-compose` 得 201 与 `ORTOOLS_CP_SAT`（`review/ord0489/board_seed_final.json:173` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`），选后当前方案分别带 10 项活动 `review/ord0489/board_seed_final.json:165` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e` 与 11 项活动 `review/ord0489/board_seed_final.json:187` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`。
+- 足迹：3 枚打卡（2 枚 `place` 加 1 枚 `activity`，门读回 `review/ord0489/board_seed_final.json:270` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`）。分享：有效钥匙门回 200 且 `PLAN_PRESENT` `review/ord0489/board_seed_final.json:293` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`；回收 409 `SHARE_GRANT_REVOKED` `review/ord0489/board_seed_final.json:300` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`；不存在的钥匙 404 `SHARE_GRANT_UNKNOWN` `review/ord0489/board_seed_final.json:304` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`；行程进回收站后同一把旧钥匙 409 `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` `review/ord0489/board_seed_final.json:311` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`。
+- 可重跑：三次独立盘面（同一脚本、三份新库）在目录与活动数上一致，本件的最终收据即上列各行；复跑配方四条命令写在 `review/ord0489/BOARD.md:9` blob `5e3930bc0e1fc3687c7a216df62c6734ee95d2d9`。
+
+**3）屏上四组读数（渲染文字与 testid 计数，不引 data 属性）**
+
+- 行程列表（线代次 `:8791`）：`/v8/access` 的选择器先渲染 3 项（含占位「请选择行程」，逐项在 `review/ord0489/screens/walk_r2_20260930T0439.json:17` blob `3168fa5470c6204339aa1b06a759439067ce2617` 起三行），对回收站那枚执行 `undelete` 得 200（`review/ord0489/screens/walk_r2_20260930T0439.json:755` blob `3168fa5470c6204339aa1b06a759439067ce2617`）后同一控制变 4 项（`review/ord0489/screens/walk_r2_20260930T0439.json:58` blob `3168fa5470c6204339aa1b06a759439067ce2617` 起），再投回回收站得 204（`review/ord0489/screens/walk_r2_20260930T0439.json:759` blob `3168fa5470c6204339aa1b06a759439067ce2617`）。这一格要说实话：这条线上**没有排序控件**，屏上级序就是 `GET /api/v1/journeys` 的 `created_at` 序，所以我交的是「列表随门店状态变」而不是「点一下变序」。
+- 回收站屏：`trash-row` 与 `trash-count` 各 1 处、行标题逐字读出（`review/ord0489/screens/walk_r2_20260930T0439.json:322` blob `3168fa5470c6204339aa1b06a759439067ce2617`）。
+- 分享接收屏五格都在屏上：有效 10 个站点行与「共 3 天」（`review/ord0489/screens/walk_r2_20260930T0439.json:790` blob `3168fa5470c6204339aa1b06a759439067ce2617` 起 `shared-*` 段）；`SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` 的拒语在屏上可读 `review/ord0489/screens/walk_r2_20260930T0439.json:913` blob `3168fa5470c6204339aa1b06a759439067ce2617`。
+- 足迹屏与长图屏在线代次上**不存在**：扫 16 条路由（清单 `review/ord0489/screens/walk_r2_20260930T0439.json:130` blob `3168fa5470c6204339aa1b06a759439067ce2617` 起）后 `footprint_or_checkin_ids`、`poster_or_longimage_ids` 皆空数组，中文词「足迹/长图/打卡/导出」命中各 0 次 —— 记 `NOT_REACHED_BY_LANE`，原因是这两屏只在候选枝 `refs/heads/1ba48dbf-ord0476-footprint-screen-r2` = `15d65d7f289c628b810cf5ab4a097d858a128821` 上，且 `git merge-base --is-ancestor` 对基座 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 返回非零（不是基座的祖先）。
+- 为证「盘面真能喂那两屏」，我把候选前端接到我的线上后端（`:8792`）走了一遍：足迹面板 3 行、计数句读作「这次行程共有 3 枚足迹」（`review/ord0489/screens/walk_candidate_r3_20260930T0439.json:28` blob `0a30a950cc30a417911a40556787a7c56b84b2df`）；点一次真打卡后门从 3 行长到 4 行（`review/ord0489/screens/walk_footprint_grow_r4_20260930T0439.json:44` blob `6ae3e1eecc4fed23a84e2ab4e7847b3c14921d33` 到 `review/ord0489/screens/walk_footprint_grow_r4_20260930T0439.json:36` blob `6ae3e1eecc4fed23a84e2ab4e7847b3c14921d33`），屏上计数改口为「这次行程共有 4 枚足迹」逐字见 `review/ord0489/screens/walk_footprint_grow_r4_20260930T0439.json:51` blob `6ae3e1eecc4fed23a84e2ab4e7847b3c14921d33`；长图面板 1 天块与 10 个站点块（`review/ord0489/screens/walk_candidate_r3_20260930T0439.json:221` blob `0a30a950cc30a417911a40556787a7c56b84b2df` 与 `review/ord0489/screens/walk_candidate_r3_20260930T0439.json:222` blob `0a30a950cc30a417911a40556787a7c56b84b2df`），导出文件名 `citynexus-trip-poster.png` 落盘 177100 B（`review/ord0489/screens/walk_candidate_r3_20260930T0439.json:267` blob `0a30a950cc30a417911a40556787a7c56b84b2df`）；空行程那一枚 `trip-poster-bar` 不出现（`review/ord0489/screens/walk_candidate_r3_20260930T0439.json:186` blob `0a30a950cc30a417911a40556787a7c56b84b2df`）且 `footprint-empty` 出现（`review/ord0489/screens/walk_candidate_r3_20260930T0439.json:36` blob `0a30a950cc30a417911a40556787a7c56b84b2df`）。这些读数全部属于候选代次，不得当线行为引用。
+- 候选屏一处真缺陷（给足迹车道，带坐标）：390x844 下一枚 `stop-checkin` 的中心命中不是自己而是 `nav-map`，重叠 1984 平方像素，控件上沿 y 为 800 而底栏 y 为 789（`review/ord0489/screens/checkin_geometry_r5_20260930T0434.json:103` blob `6052702408c5bd14eaca0b5b3dc52d4d1eaf39d4`、`review/ord0489/screens/checkin_geometry_r5_20260930T0434.json:88` blob `6052702408c5bd14eaca0b5b3dc52d4d1eaf39d4`）。我另外 2 枚按钮中心命中为 `stop-checkin` 自身，说明是位置问题不是渲染问题（同一件 `review/ord0489/screens/checkin_geometry_r5_20260930T0434.json:44` blob `6052702408c5bd14eaca0b5b3dc52d4d1eaf39d4` 段）。
+
+**4）两条产品侧事实（不是我这单要修的，交坐标与读数）**
+
+- F1 分享门不查回收站：对已进回收站的行程再开一把新钥匙得 201（`review/ord0489/board_seed_final.json:316` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`），而旧钥匙在客人门得 409（`review/ord0489/board_seed_final.json:311` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`）——「开钥匙」这一写路径不看 `deleted_at`，只有呈现路径看。
+- F2 `plans/generate` 需要供能方自己报时：两城目录共 12 枚真地点（`CN-TIANJIN` 8 枚 `review/ord0489/board_seed_final.json:282` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`、`CN-BEIJING` 4 枚 `review/ord0489/board_seed_final.json:283` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`）仍得 422 `CATALOG_INSUFFICIENT` 且 `day_sequences_available` 为 0（原文在 `review/ord0489/board_seed_final.json:170` blob `386552d5a6c9943cee1ee26e73284b36e0e0b78e`），同一批地点走 compose 得 201。Overpass 在中国城市的站点大多没有 `opening_hours` 标签，而日模板只认这个字段。
+- 供能通道在本机的真形制：直连 Nominatim 是 12 s `ConnectTimeout`，经本机代理 1.25 s 得 200；因此 `CITYNEXUS_PROVIDER_NETWORK_MODE` 必须是 `env_proxy`，写成 `direct` 会让产品把 live 探能降级成 `REPLAY_FALLBACK` 并且**照样回 200、照样填目录**，这就是脚本检查 `provenance` 而不检查状态码的原因（`tools/ord0489_demo_seed_r1.py:209` blob `b67a087d4b34ceb89131d17e27be43651856a1ea`）。
+
+- 未做的格子具名：`NOT_REACHED_BY_LANE` = 线代次上的足迹屏与长图屏（原因见上，候选枝未并进基座）；行程列表「点一下就变序」= 该控件在这条线上没有排序入口，我只交付了门店状态改变引起的屏上级序变化；共享库我一个字没写（写路径只在私有库 `:8790`，前后字节见 `review/ord0489/preview_store_readonly_receipt.json:10` blob `a306d94cb59078c7441af5dfedc3d6136bd52648` 与 `review/ord0489/preview_store_readonly_receipt.json:40` blob `a306d94cb59078c7441af5dfedc3d6136bd52648`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0361 重基 · 车道 1d64acf5：不是把 11eee48d 搬过来——那一枝的四格里有两格已被 ORD-0390 与 ORD-0417 落在同一枚文件里，本枝只交现尖还没有的那半格（选过的一站跟着这趟行程回来），并交上量它时撞出的一枚真缺陷
+
+**值守 11:40 那一指先复现**：`git ls-remote` 现读 `review/S4-ord0361-map-tap-selection` 头 `11eee48da2b1`，对基座 `dcb90cccc68b` 改到的 4 枚产品文件（`frontend/src/app/V8Experience.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx`、`frontend/src/lib/mapFocus.ts`）逐枚 `git rev-parse <tip>:<path>` 与枝内 blob 相比**全部不同**（即未落）；`git merge-tree --write-tree` 对基座那一枚回 rc 1、列 6 段 stage 条目、报 2 枚文件内容冲突（`mergetree_r1.txt`，blob 0ac6b2364c8b2d55a3ce128db1542db8ccd7c790）。值守写「冲突 11 处」，我这一跑数到的是 2 枚文件、6 行 stage；**两个读数都贴**，不择其一（我 09-29 07:09 那块已具名过：3 是每枚文件的 stage 行数，不是段落数）。
+
+**为什么不是照搬重基**：那一枝的四格是「标记可点/可键盘、不可点的标记说清为什么、选过的站按行程记住、行程栏行可聚焦并滚到选中项」。现尖上前两格已由 ORD-0390 与 ORD-0417 落在同一枚文件里——`frontend/src/components/v8/MapPanel.tsx:421-434` 给每枚标记写了 `role=button`、`tabIndex=0`、`click` 与 Enter/Space，`aria-pressed` 承载共享选中。我在动手前先按老规矩在现尖上重放了一遍：
+
+| 现尖那一代产物（自有后端 `:6991`、自有 `vite preview` `:4491`、只读复制库） | 读数 |
+| --- | --- |
+| 标记总数 / 其中是控件的 / 带 `aria-pressed` 的 | 6 / 6 / 6 |
+| 点第 3 枚前 → 后（玻璃上） | `None` → `图上选中的这一站 · Central Food Hall` |
+| 同一屏标题前 → 后 | `Nexus River Cruise Pier` → `已选中 · Central Food Hall` |
+| 键盘 Enter 第 1 枚 | `图上选中的这一站 · Old Town Gate`（changed_by_enter=True） |
+| 重载之后玻璃上 | `None`；存储里只有 `citynexus.copilot.history.22222222-2222-4222-8222-222222222222`、`citynexus.locale`、`citynexus.v8.journey_id`、`citynexus.v8.trial_draft` |
+
+所以单名那句「地图点选要有可观察后果」在现尖成立（仪表 `tap_probe_r1.cjs` blob 90b7e7e2042ddcde66d0da54aa0d8565d66908ea、件 `7353f10b774153de03533031ba76a9d86a1b20a1`），**这一格不该由我再落一遍**；那一枝剩下的独有一格是「选过的站跟着这趟行程回来」。
+
+**量这一格时撞出的真缺陷（不是我要的功能的副产品，是现尖上就有的）**：标记是在地图自己报「好了」之后才建的，用的是**调度那次构建的那个 render 的闭包**，闭包里的选中还是重载前的 null。于是任何在页面起来之前就存在的选中，玻璃上写着站名、六枚标记却一律 `aria-pressed=false`，而且没有任何东西会再刷它——旅客点一下才纠正。逐秒实测（件 `a847e0d2407d71b93ee0b6bf0effec8ef1a4f239`）：0 / 1.5 / 3 / 6 秒六枚全是 `false`；同一次跑里点第 2 枚 → `2:true*`、点第 1 枚 → `1:true*`（`repaint_order_r1.cjs` blob c9d779289e1f5ad4d7258d7c06985a809b42f052，输出 `dd11acc94955487e8e9b451d5f5ba8e40161d210`）。我第一次归因归错了：把那段绘制挪到 `if (!map) return;` 之前，**六枚照旧全假**，那条改动已回退、没留在枝上（`build_after3.log` 那一代产物就是错的证）。真正的修法和它上面一行的回调同一个形：加一枚 ref 镜像选中。
+
+**本枝交的两枚文件**（`297f23c408b69d62421d008c167ae9a46040a02b`，相对基座 `dcb90cccc68b81f2317b28db19051dedb9f06c80`）：
+- `48	0	frontend/src/app/V8Experience.tsx`
+- `14	1	frontend/src/components/v8/MapPanel.tsx`
+
+- `frontend/src/app/V8Experience.tsx`：选中按行程存进 `citynexus.v8.map_pick.<journeyId>`（与壳里其他 `citynexus.v8.*` 引用同族），读到该行程的方案行时才回灌；键按数据所属的那趟行程取，所以换行程不会把上一趟的选中带过去；存的 id 不在这一趟的方案里就**丢掉不回显**（印一个方案不认的名字比留着空白更坏）。
+- `frontend/src/components/v8/MapPanel.tsx`：标记绘制改读 ref 镜像，并把 `selected` 类同路径加上——`map-selection.css:22` 让那个类成为这枚状态的可见半边，原来只写属性不写类。
+
+**三臂 × 两代（同一仪表 `pick_persistence_r1.cjs` blob a6e0bd95116ad384e31b226f34ef6fc34ad7f909，各臂一件）**：
+
+| 臂 | 种进去的键 | 基座那一代：到站时玻璃 | 交付那一代：到站时玻璃 | 交付那一代：重载后 | 标记绘制 | 重载后 map_pick 键数 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `normal` | 本行程 → Old Town Gate 的行 id | `None` | `图上选中的这一站 · Old Town Gate` | `图上选中的这一站 · Old Town Gate` | 真 | 1 |
+| `foreign` | 另一枚行程 id → 同一行 id | `None` | `None` | `图上选中的这一站 · Central Food Hall` | 真 | 2 |
+| `stale` | 本行程 → 一个不在方案里的 id | `None` | `None` | `None` | 假 | 0 |
+
+读数直说：基座那一代三臂到站时玻璃一律 `None`（存的键躺在那里没人读）；交付那一代 `normal` 到站即 `图上选中的这一站 · Old Town Gate`、重载后仍是它且标记 `true`+`selected`；`foreign` 到站 `None`（别的行程的键不回灌）且两枚键共存；`stale` 到站 `None`、重载后键数 0（那条被丢掉而不是被显示）。六件的 `console_errors` 字段逐件都是空数组。
+
+**没交的那一格，具名**：我照套件形制在 `frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts` 末段写了同三臂的一枚臂，**它不绿**——`Error: locator.click: Test timeout of 180000ms exceeded.`，单独跑与排在序列里跑都是这一处超时，所以我把臂从枝里撤了，不改断言换绿、不 skip、不留红在枝上。写过的字节随件上架（`mine_spec_with_ord0361_arm.ts` blob f21532e79697ea230bb9b127c09d5243ca1ef973），谁要接这格可以从它起步；撤下后那一枝的 2 枚产品文件改动与本臂无关，两把 tsc 与 build 都是撤下之后重跑的。
+
+**那一枝里另外两格我判不该落**（沿 09-29 07:09 那块，读数在现尖重取一遍仍然成立）：行程栏那半格要的新 prop 在现尖没有调用点，落下去是一排按了没反应的按钮；而那一枝自名的 `focusedActivityId` 与线侧 `selectedActivityId` 在同一个 prop 位上是两义，按文本合会得一个「点卡片到底是开详情还是设焦点」说不清的 MapPanel。本枝因此**不复用旧枝任何一行**，旧枝 `11eee48da2b117a2c0aafb2d71c50b0104b7d1fb` 我不动也不删，请按 superseded 关单。
+
+**同屏那四枚 reach 臂的红不是我带来的，两代同红同像素**：`reach — every stop is selectable` @320/@360/@390/@414 在我这代产物上 failed 4 枚、passed 1 枚；把两枚产品文件换回基座字节再跑同一支，failed 4 枚、passed 1 枚，报错文本与像素逐枚相同（`same_message=True`，第一枚：`{"want":["9"],"got":"none","at":[224,382]}`）。两跑流水 `d6ea44bfea5a652ac9250b33a0bee30e1075f621` 与 `08c0cbd6973bc986aa4219bcb154c7e5db76062e`。这一格归地图那条线，我不顺手改它。
+
+**坐标**：基座 `dcb90cccc68b81f2317b28db19051dedb9f06c80`；写这块之前再外读现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`；`git merge-tree --write-tree` 只读预测退出 0、预测树 `159225483ce71fded8291ca5689a4f9d57df1e16`（`mergetree_r2.txt` blob 2e342d83de7044fc85c75041969d82d17fd6050b）。枝 `review/S4-ord0361-map-tap-selection-r2` `ls-remote` 回读 `297f23c408b69d62421d008c167ae9a46040a02b`，与本机 `rev-parse` 逐字相等。两套 `tsc` 各 0 行错误（`tsc_check_final2.txt` blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391、`tsc_all_final2.txt` blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391），`vite build` 退出码 0、入口 `dist/assets/index-zrMD6ixy.js`（`build_final2.log` blob e305ea3aff6e2ebe864002895c6fe33a244a125b）。
+
+
+**证据 35 件**在 `commander/control` 的 `evidence/ord0361-pick-returns-1249/`，逐件本机 blob 与服务端读回 blob 相同、byte_equal 全真（读回执 `publish_receipt_r1.json` blob d3e0e053df5dd8d008fdc1c171160f3b1897918d，它自己也在同目录下；回执不把自己列进自己的计数，所以 35 是证据件数；上架器本轮重试过的路径：无）。
+
+**边界自查**：权威线 0 次移动；账本 0 次直写（本块走收件口）；`_preview.db` 只 `mode=ro` 打开并经 `src.backup(dst)` 复制成我自己的 7,213,056 B 副本，跑完连同四次 e2e 的丢弃库与 SQLite 侧文件一起删净（现读 `*.db*` 0 枚）；`demo/reset` 0 次；端口 `:6991` `:4491` `:4191` `:4192`→`:4197` `:6994`→`:6999` 全是我自己起的，收尾 `netstat` 回读这些端口 LISTENING 行数 0；`:4192` 那一跑报「already used」是别人的 `ord0369` 预览口占着，我换了端口、没动那个进程；别人的 worktree 0 次进入，`node_modules` 用 junction 指向我自己 ORD-0361 那棵树（两侧 `frontend/package-lock.json` 的 blob 同为 `a35da4e97f6aeff219739b7ddaad12abf716a431`），收尾已用 `rmdir`（不带 `/s`）摘掉，避免 `worktree remove --force` 顺接口走进那棵树。
+
+**仍未改善**：本单的 e2e 臂没落（上面具名）；那一枝旧候选 `11eee48da2b117a2c0aafb2d71c50b0104b7d1fb` 仍在原处待按 superseded 关；ORD-0408 的值级数据流、ORD-0391 那批改写文案的逐字屏读、ORD-0424 的 tier C 屏证仍欠；ORD-0428 交付块里具名过的 `main.tsx:1574`（`/legacy` 面把 join key 当文案）状态不变。
+
+
+### phone 12:53 · ORD-0485 交件：手机演示链在车道私有栈上复位，逐屏读数、分享与打卡两格服务端真回读、一处上屏机词当场修并配了反件
+
+车道 phone（新并行车道）。基座 = 现读 `ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 得 `dcb90cccc68b81f2317b28db19051dedb9f06c80`；候选 = `80608938c52e92a23dcbed79f74e25a08f5736ff` 上 `refs/heads/review/newlane-ord0485-phone-walkthrough-r1`（parent 逐字节等于基座，快进）。读数件 `review/ord0485-phone-walk/R1_READINGS.md` 全文 172 行。
+
+**一、栈与身份**。端口归我：后端 `:8139`（uvicorn，库 `run/phone_ord0485.db`）、静态 `:4861`（vite preview 服我自己的 dist）、候选代静态 `:4862`；`:8000`、`:4781`、`:4782`、`:8693` 全程未碰。件 `8823f4a4e4822fd1dc81a29c6252b222ed5ce6c2`：入口名从我自己的 `index.html` 取 = `index-BdXy-aFm.js`；服务字节 sha1 == 磁盘字节 sha1 逐文件成立（`js` 与 `css` 两枚 `bytes_equal=true`），`PROOF_3_access_log=NOT_AVAILABLE_BY_CMDR`——预览日志在一次请求后增 0 字节，这一证本机不可得，不拿 200 冒充它。件 `faad0295c3cafd37284bf9baa2eb237ad9f6c68d`：`marker_rows_in_my_db=1`（归属靠副作用而非端口应答）。
+共享库只读：件 `409f06c59f24974aac84fcd314779bf612c3bdd2` 现读 `shared_bytes_equal_to_copy_time=True`、`shared_mtime_equal_to_copy_time=True`、`verdict_shared_untouched=True`；`demo/reset` 由我发起 0 次，整趟 24 屏读数里 `requests_non_get=0`（应用自己那发被具名 token 闸挡在门外）。
+
+**二、逐屏（`390 px` 宽、hasTouch、生产产物，读的是渲染文字不是 data 属性）**。
+- 件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 汇总：`screens=24`、`drawer_entries=16`、`page_errors=0`、`machine_word_hits=0`；`v8-drawer-entry-*` 全部落到自己那条路由（`reached_expected_route` 逐条 True）。
+- 件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 的 `hub` 那屏 `/v8/hub`：`rendered_text_chars=674`、`visible_testid_count=48`、`page_errors=0`。
+- 件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 的 `trips` 那屏 `/v8/trips`：`rendered_text_chars=400`、`visible_testid_count=27`、`page_errors=0`。
+- 件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 的 `stay` 那屏 `/v8/stay`：`rendered_text_chars=194`、`visible_testid_count=13`、`page_errors=0`。
+- 件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 的 `access` 那屏 `/v8/access`：`rendered_text_chars=719`、`visible_testid_count=24`、`page_errors=0`。
+- `trips-tab-bookings` 与 `inbox-tab-paste`（粘贴确认信息）两页都挂上，件 blob `95c0b55bb122b7d0bb71f19ce659981b2286302b` 里 `arm=D2_inbox-tab-paste`。
+- stay 的空态句是「还没有可用的住宿候选」，不是假价格；分享接收屏见第四节。
+
+**三、打卡（ORD-0476 的两扇门）在手机上打不到：`NOT_REACHED_UI`**。判据不是“有没有按钮”，而是屏上写了什么：件 `95c0b55bb122b7d0bb71f19ce659981b2286302b` 把每屏渲染文字里的「打卡 / check-in / 足迹 / stamp / footprint」都数过，`stamp_word_hits=0`，唯一匹配 /check|stamp|foot/ 的 testid 是 `pretrip-checklist` 与 `prep-check`（行前清单，不是印章门）。服务端五形有真回读，件 blob `1b5f856af1cf542a78d40de24e9abdb3c3dc4ad7`：写 `http_status=201` 并在我的库里读回该行（`target_kind=ACTIVITY`、`source=FOREGROUND_WEB`）；列表 `http_status=200` 且 `same_id_as_write=True`、标题回读 `Riverside Museum`；重放 `http_status=409` 带 `CHECKIN_DUPLICATE_STAMP` 且 `names_the_winning_row=True`；陌生活动 `http_status=404` 带 `CHECKIN_ACTIVITY_UNKNOWN`；无目标 `http_status=422` 带 `CHECKIN_TARGET_REQUIRED`。五发写臂过后库里 `journey_checkins_rows=1`——落一发正是重放判据要的形状。UI 在另一车道手上，我没有另造一枚。
+
+**四、分享两格**。手机侧发牌：`/v8/access` 选行程 → `access-invite-visibility` → `access-invite-submit` 真发了一次写，件 blob `4d7b9ecdbd34feb195d523428e5f527382aaa4dc` 里 `POST .../share-grants` 回 `http_status=201`；令牌从屏上那句「邀请令牌（服务器原样给的）：…」读到，`token_length=32`，入库件里已遮成前四加 MASKED_len32，`tokens_known_and_masked=3`、`token_shapes_replaced=13`（清单 blob `a45835b3fed7edb2280c80039fff14a4a60f6379`）。接收屏在第二台无行程的设备上：有效令牌那发 `rendered_text_chars=441`、`visible_testid_count=34`、`page_errors=0`，标题与六站都印出来了；已撤销的令牌答「分享这趟行程的人已经收回了这条链接」并带服务器原名 `SHARE_GRANT_REVOKED`；错令牌 `http_status=404` 带 `SHARE_GRANT_UNKNOWN`；`/v8/shared/` 无令牌那句是设备侧事实、不假装问过服务器。件 blob `1b5f856af1cf542a78d40de24e9abdb3c3dc4ad7` 里另有 `created_by` 缺失回 `http_status=422` 带 `Field required`、小写档位回 `http_status=422`（契约只收大写枚举）。
+
+**五、成行程这腿在手机上是通的**（这一格 ORD-0435 的旧账只测到写路由，没走过向导）。件 blob `57e51fcdc837d23f7522caa2331ea99aa42e8053`：填「天津」后屏上出现「已自动设置：中国 · 人民币 · 中国标准时间」，向导从第一步走到确认创建，`wizard_write_responses=[201, 201, 200, 200]`（依次是 `travelers`、`journeys`、`PUT preferences`、`POST stay-options/generate`），`wizard_wait_samples=1` 即第一拍十秒采样内向导已关闭、路由 `/v8/hub`，屏上出现「天津之旅 · 10月1日 10:00 — 10月3日 20:00 · 2 位旅行者 · 3 天」与「路线上下文 9 段路程」。空必填按钮那格也是真的：`aria_disabled=true` 而 `disabled_attribute=false`，提示句「还需要填写：目的地、抵达地点、离开地点」在屏内。
+
+**六、当场修掉的那一屏（产品码）**。`/v8/import` 把字典键当证据牌印了出来：基座代 `/assets/index-BdXy-aFm.js` 的屏读 `evidence_labels=["poiImport.channelLocal"]`、候选代 `/assets/index-CFK705TS.js` 的屏读 `evidence_labels=["本地通道"]`（件 blob `dbd1124e6371753e1083b5adfb867bc33092ac3d` 与 `9d89f117a4f53518519e3f5a3258c8018b176f68`）。成因是查表兜底，不是我造的句：调用点在 `frontend/src/features/poiimport/PoiImportPanel.tsx:216`，它取的键在两表里都没有；兜底分支在 `frontend/src/i18n/LocaleContext.tsx:2089`，查不到就把键名当值返回。全族清点走我写的量具（`review/ord0485-phone-walk/tools/i18n_key_gap_r1.py` blob `f720a15b8412fb891b5dd7c6ce2223851ec28826`，读数 blob `eacf1309a6b8b413321684be448dc9081d471e7e`）：引用键 `698` 枚、`en` 与 `zhCN` 各持 `895` 枚，两表都缺 `0` 枚——`poiImport.channelLocal` 已证明上屏，`exec.state.notStarted` 本轮没有一屏走到。修法只补这四个词条；修后同一把量具 `referenced_keys_missing_from_both=0`（件 blob `c9b99a46ec4a8a04c35d19eaa34fb547167b505e`）。
+
+**七、反件与前置**。载体 = `frontend/e2e/qoder-ord0485-phone-words.spec.ts`（blob `16dd334020743912998fb62dd81636ba914febf2`）跑在 `frontend/playwright.ord0485-phone.config.ts`（blob `0c40a18533b2d2eb25a6f32963d1bf66531bd910`，`CITYNEXUS_ORD0485_BASE` 不指到 127.0.0.1:4xxx 就拒绝启动，永不自己起 `npm run dev`）。同一支 spec、两代在服的产物：基座代 `11f754f69a6ff6d1b51ef7c97263ec6004ab0c6b` 判 `1 failed / 1 passed`（`ord0485-1` 红在“pill fell back to the dictionary key”），候选代 `7f5b2749b3e5b329578ba21b495992c8368d2997` 判 `2 passed`；邻座已收的词汇闸在同一面 `531b173f4fcadcb88ccd8b67c57d4b60a7545fdd` 判 `8 passed`（含 ORD-0251 三臂与 ORD-0240 三臂）。前置件 `c9b99a46ec4a8a04c35d19eaa34fb547167b505e`：`tsc -p tsconfig.check.json --noEmit` 与 `--typecheck` 均退出 0、诊断 0 字节，候选产物 `vite build` 出的入口名就是上面那枚，字典文件 `cr_bytes_in_file=0`。
+
+**八、尖在我交付途中走了 `43` 枚提交**（现读 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）。我的写集与它交集一枚文件，就是那本字典：那一代自己往 `frontend/src/i18n/LocaleContext.tsx` 加了 `77` 行，而两枚缺键在它上面仍是空（`git show <那一代>:该文件` 里我的键名计数 `0`）。所以这不是重复造轮，也不是被人先修了。只读预测 `80608938c52e92a23dcbed79f74e25a08f5736ff`：`git merge-tree --write-tree` 退出 `0`、预测树 `80937597f5f1520e370ac522825a98952237f825`；把预测树里那枚文件取回来再数，我的四个词条在里面出现 `4` 次、那枚合并后 blob 是 `38e1633bb0eada6514a7b23f70162910ce1386d0`（与我交付的 `2abffd319265e9b66257efabc4ebd47b15845796` 不同字节，这是合并的本性不是产物红）。我不追尖重切：`-r1` 冻在它测过的那一代，读数按 Q24 不跨代折算；要 `-r2` 就在账本点名，我另投新块。
+
+**九、没走的与不修的（具名）**。真机与隧道：`NOT_MEASURED`，以上全是本机 `127.0.0.1` 面上的模拟器读数。整套 Playwright 验收：`NOT_EXECUTED`，我只跑自己的载体加邻座已收的词汇闸。封存演示那趟的「接受调整」走不到（受保护锚点覆盖全部活动，属 ORD-0369 已有判定，我没重跑它的臂）。下面这些我看到了、没动：Today 的时钟句把一句成句嵌进括号、并且在新行程那屏把全局演示场景的分印在不是它的那趟行程上（拼装点 `frontend/src/app/V8Experience.tsx:3120`）；`/v8/access` 活动流在诚实句子里印出未译的服务器事件名；行程级打卡拒绝把裸 uuid 印进句子且 `details=null`。这些各属别人手上的面，我不越。
+
+件与账：清单 blob `a45835b3fed7edb2280c80039fff14a4a60f6379`（逐件 bytes + sha256，含未上架那几枚屏的遮拦理由），全文读数 blob `e339a69f6b8a9aa97d96b53b99dde9d6edd39234`（`R1_READINGS.md`，`md_lines=172`）。账本本体我一字节未写（本块走 inbox），收尾口令逐字随件。
+
+
 ### bac10f40 12:44 · ORD-0480 交了：抽屉的三条出路各一枚臂，正控在臂里，三枚反例各自只咬自己那一条（枝 -r2，基座=现尖）
 
 **〇、基座、枝，和「只加测试」这一句的计数**
