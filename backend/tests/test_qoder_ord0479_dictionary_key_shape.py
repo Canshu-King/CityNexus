@@ -25,7 +25,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.security import credential_literals as CL  # noqa: E402
 
 REPO = CL.REPO
-BASE_TIP = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
+#: The generation this order was measured on: the live tip read at the time the branch was born.
+#: The base the order names is `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`; H07 also pins that those
+#: two generations hold the SAME bytes for the gate file, so comparing against one compares against
+#: the other, and a pin that silently rots goes red here instead of reading as a pass.
+PIN_BASE = "dcb90cccc68b81f2317b28db19051dedb9f06c80"
+ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
+GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
 VALUE = "shared.refusedTokenUnknown"
 
@@ -188,25 +194,30 @@ def test_H06_a_provider_shaped_value_cannot_hide_inside_a_translated_table(tmp_r
 
 # ---------------------------------------------------------------- H07 两条禁路没被走
 def test_H07_the_two_forbidden_shortcuts_were_not_taken() -> None:
-    """词表与申报表都必须与基座尖上逐字节相同；in_product_path 的算法也一样。
+    """词表与申报表都必须与基座那一代逐字节相同；in_product_path 的算法也一样。
 
     这格是反"洗绿"的：如果谁把那一处假阳性塞进 PLACEHOLDER_MARKERS，或者用 DECLARED_SAMPLES 给它
-    登记一个指纹，这里立刻红。
+    登记一个指纹，这里立刻红。被比的"现在"这一侧读的是**工作树里那份尺**（也就是真在跑的那份），
+    不是 HEAD，所以改动一落盘就红，不必等提交。
     """
-    rel = "backend/app/security/credential_literals.py"
 
     def tuple_from(text: str, name: str) -> str:
         m = re.search(r"^%s: tuple\[[^\]]*\] = \((.*?)\)\n" % name, text, re.M | re.S)
         assert m, "the %s tuple is no longer shaped like the one this cell pins" % name
         return m.group(1)
 
-    base = _git_show(BASE_TIP, rel)
-    cur = _git_show("HEAD", rel)
-    assert tuple_from(cur, "PLACEHOLDER_MARKERS") == tuple_from(base, "PLACEHOLDER_MARKERS"), \
-        "PLACEHOLDER_MARKERS moved: the placeholder list must not carry this order's exemption"
-    assert tuple_from(cur, "DECLARED_SAMPLES") == tuple_from(base, "DECLARED_SAMPLES"), \
-        "DECLARED_SAMPLES moved: the declaration channel must not be used for this"
-    assert 'rp.startswith(PRODUCT_ROOTS)' in cur, "the product-path rule was rewritten"
+    cur = (Path(REPO) / GATE_REL).read_text(encoding="utf-8", errors="replace")
+    assert cur, "the working-tree gate file read back empty -- this cell would pass on nothing"
+    for rev in (PIN_BASE, ORDER_BASE):
+        base = _git_show(rev, GATE_REL)
+        assert tuple_from(cur, "PLACEHOLDER_MARKERS") == tuple_from(base, "PLACEHOLDER_MARKERS"), \
+            "PLACEHOLDER_MARKERS moved against %s: the placeholder list must not carry this order's exemption" % rev
+        assert tuple_from(cur, "DECLARED_SAMPLES") == tuple_from(base, "DECLARED_SAMPLES"), \
+            "DECLARED_SAMPLES moved against %s: the declaration channel must not be used for this" % rev
+        assert 'rp.startswith(PRODUCT_ROOTS)' in cur, "the product-path rule was rewritten"
+    #: the two pins must name the same bytes, or "compared against one" would not be the claim
+    assert _git_show(PIN_BASE, GATE_REL) == _git_show(ORDER_BASE, GATE_REL), \
+        "the tip this branch was measured on and the base the order names no longer hold the same gate file"
 
 
 # ---------------------------------------------------------------- H08 词典读不到时朝闭
