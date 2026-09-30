@@ -1075,6 +1075,7 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
             metadata["cost_minor"] = int(cost["amount_minor"]) if price_known else 0
             metadata["price_known"] = price_known
             place.metadata_json = json.dumps(metadata, ensure_ascii=False)
+            place.updated_at = retrieved_at
             row_receipt = {
                 "place_id": place.id, "provider": "overpass", "source": endpoint,
                 "provider_entity": place.external_id, "retrieved_at": retrieved_at,

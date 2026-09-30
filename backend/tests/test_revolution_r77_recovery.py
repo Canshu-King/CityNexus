@@ -497,6 +497,7 @@ def test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phase
         refreshed = session.get(Place, place_id)
         metadata = json.loads(refreshed.metadata_json)
         assert receipt["status"] == "ACQUIRED"
+        assert refreshed.updated_at == receipt["retrieved_at"]
         assert receipt["secondary_source"]["status"] == "ACQUIRED"
         assert receipt["places"][0]["secondary_source"]["matched_provider_entity"] is True
         assert metadata["cost_evidence"]["status"] == "UNKNOWN"
