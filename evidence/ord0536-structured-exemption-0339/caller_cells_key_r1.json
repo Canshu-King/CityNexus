@@ -1,0 +1,61 @@
+{
+ "method": "each ruler run once with `--ref <tip> --path <file>`; then the extraction that live_checks/patrol/_exposure_delta_r1.py:66 does (`j.get(\"cells\") or []` mapped to cell ids)",
+ "tip": "7862c6de5565c02c20ec2dccaa9da18960603e06",
+ "reading": [
+  {
+   "ruler": "ui_exposure_taint_ast_r7b.cjs",
+   "path": "JourneyTrashPanel.tsx",
+   "rc": 0,
+   "has_cells_key": false,
+   "hits": 2,
+   "cells_key_len": 0,
+   "scan_extracts_ids": 0
+  },
+  {
+   "ruler": "ui_exposure_taint_ast_r7b.cjs",
+   "path": "CnxMeasuredFacts.tsx",
+   "rc": 0,
+   "has_cells_key": false,
+   "hits": 0,
+   "cells_key_len": 0,
+   "scan_extracts_ids": 0
+  },
+  {
+   "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+   "path": "JourneyTrashPanel.tsx",
+   "rc": 0,
+   "has_cells_key": false,
+   "hits": 2,
+   "cells_key_len": 0,
+   "scan_extracts_ids": 0
+  },
+  {
+   "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+   "path": "CnxMeasuredFacts.tsx",
+   "rc": 0,
+   "has_cells_key": false,
+   "hits": 0,
+   "cells_key_len": 0,
+   "scan_extracts_ids": 0
+  },
+  {
+   "ruler": "ui_exposure_taint_ast_r8.cjs",
+   "path": "JourneyTrashPanel.tsx",
+   "rc": 0,
+   "has_cells_key": true,
+   "hits": 2,
+   "cells_key_len": 2,
+   "scan_extracts_ids": 2
+  },
+  {
+   "ruler": "ui_exposure_taint_ast_r8.cjs",
+   "path": "CnxMeasuredFacts.tsx",
+   "rc": 0,
+   "has_cells_key": true,
+   "hits": 0,
+   "cells_key_len": 0,
+   "scan_extracts_ids": 0
+  }
+ ],
+ "finding": "no published generation (r7b, r7b4) emits a top-level `cells` key in this mode, so that scan reads an empty set for every file and can never report an addition; r8 emits it"
+}
