@@ -17,7 +17,7 @@
  */
 import { createShareGrant } from "../access/accessDoors";
 import { readShareGrants } from "../inbox/shareGrantRead";
-import { refusalReasonCode } from "../../lib/rejectionFacts";
+import { refusalReasonCode, RejectionWithFacts } from "../../lib/rejectionFacts";
 
 /** The address segment that asks for the poster form of a shared trip. */
 export const POSTER_SHARE_FORM = "poster";
@@ -66,11 +66,15 @@ export async function sharePosterLink(
       expires_at: null,
     });
   } catch (error) {
-    const status = (error as { status?: number }).status ?? "unreachable";
+    /* Read the number off the object the door actually throws. `RejectionWithFacts` carries
+       `http_status`; a `.status` probe here would answer `undefined` for every real refusal and the
+       screen would print "状态码 unreachable" about a server that did answer with a number. That is
+       what the first run of this arm caught: the stubbed 403 read back as unreachable. */
+    const refused = error instanceof RejectionWithFacts ? error.http_status : "unreachable";
     return {
       state: "NOT_CONFIRMED",
       reason: "CREATE_REFUSED",
-      http_status: status,
+      http_status: refused,
       detail: refusalReasonCode(error as never) ?? "UNNAMED_REFUSAL",
     };
   }
@@ -82,12 +86,29 @@ export async function sharePosterLink(
     return {
       state: "NOT_CONFIRMED",
       reason: "NO_TOKEN",
-      http_status: 201,
+      /* Not `201`: the door that made this call returns the parsed body and drops the status, so the
+         only honest value here is that no number was carried up to this layer. Writing 201 would be
+         the screen quoting a response it never measured. */
+      http_status: "not_carried_by_door",
       detail: created.id,
     };
   }
 
-  const read = await readShareGrants(journeyId);
+  /* The list door throws on a refusal it cannot classify (a 500, a 403), and an exception escaping
+     here would leave the sheet reading "Asking the server…" for ever with the button disabled -- a
+     control that swallowed the answer. So this leg is wrapped too, and a refusal on the read side is
+     its own named non-confirmation. */
+  let read;
+  try {
+    read = await readShareGrants(journeyId);
+  } catch (error) {
+    return {
+      state: "NOT_CONFIRMED",
+      reason: "READ_NOT_ANSWERED",
+      http_status: error instanceof RejectionWithFacts ? error.http_status : "unreachable",
+      detail: refusalReasonCode(error as never) ?? "UNNAMED_REFUSAL",
+    };
+  }
   if (read.state !== "ANSWERED") {
     return {
       state: "NOT_CONFIRMED",

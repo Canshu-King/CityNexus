@@ -1,0 +1,17 @@
+{
+ "list_before_http_status": 200,
+ "rows_before": 0,
+ "list_after_http_status": 200,
+ "rows_after": 1,
+ "sentence_on_screen": "已分享。服务器自己的授权列表对这趟旅行答出 1 条，这条链接对应的那一条是 7f60342c-1e75-4db5-a618-d392ecf80b2b。",
+ "data_share_state": "CONFIRMED",
+ "grant_id_printed_on_screen": "7f60342c-1e75-4db5-a618-d392ecf80b2b",
+ "ids_the_server_names": [
+  "7f60342c-1e75-4db5-a618-d392ecf80b2b"
+ ],
+ "printed_id_is_named_by_server": true,
+ "printed_row_revoked_at": null,
+ "link": "http://127.0.0.1:4974/v8/shared/mipjCgSgv5SWnAKDKlg8nqmvOrEwSQRk/poster",
+ "token_chars": 32,
+ "address_tail": "poster"
+}
