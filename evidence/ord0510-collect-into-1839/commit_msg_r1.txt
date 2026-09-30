@@ -1,0 +1,52 @@
+ORD-0510: a trip card's stop can be collected into a shelf, and where it landed is read back
+
+The container ORD-0444 built had a read face and no way in: `CollectionPanel` could list a traveller's
+shelves, and nothing on a trip card or a day row could put a place onto one.  This adds that path
+through the doors the server already has -- `GET /api/v1/collections?traveler_id=` and
+`POST /api/v1/collections/{folder_id}/items` -- and no new write endpoint.
+
+  frontend/src/features/collections/collections.ts   the write leg: six named answers, because the
+      door has six.  The two 404s are told apart by reading `error.reason_code`
+      (`COLLECTION_FOLDER_NOT_FOUND` / `PLACE_NOT_FOUND`, `backend/app/main.py`
+      `add_collection_item`), since the status alone cannot; 409 is its own state.  The server's
+      message text never reaches the DOM.
+  frontend/src/features/collections/CollectInto.tsx  the entry, the picker, and the line under it.
+      It does not create a shelf for the traveller: someone holding no shelf is told there is nowhere
+      to put this one.  It does not name a failure with the server's words: each state picks a
+      sentence out of `collectionCopy.ts`.  And it does not claim a place is stored because the POST
+      answered -- after a write the list door is read again and only the shelf names that answer
+      carries are shown, the rule ORD-0476 set for 打卡.
+  frontend/src/features/collections/collectionCopy.ts  the words, kept in this feature's own table for
+      the reason ORD-0444 recorded: the ruler counts the import edge into the shared display layer,
+      and this is this order's copy rather than an upstream string.
+  frontend/src/features/trip/TripItinerary.tsx       one mount per stop, with the row's own click and
+      keyboard handlers stopped by the wrapper rather than by the control -- the day row is itself a
+      button (「查看详情」), and an entry whose click is swallowed by its row is not an entry.
+
+Measured on a private stack (own backend on :7011, own build served on :4511 with the served bytes
+compared to this tree's `dist`, own copy of the preview database with the collection DDL applied from
+`backend/db/schema.sql` -- the shared `_preview.db` was opened `mode=ro` only and never written):
+
+  four arms -- 390 px zh and a 1280 px en arm, each reading `innerText` and hit-testing the control at
+      its own centre with `elementFromPoint` after scrolling it into view.  With no shelf on the
+      device the picker offers 0 shelves and prints 「这位旅客名下还没有架子，所以这一枚没地方放。」
+      with no result line at all.  With a shelf created through the server's own POST door, the fresh
+      add reads 「已收在 周末架子」 and the server's answer for that traveller carries the row.
+  two counter-examples, both run -- A intercepts the list door to answer `[]` while the store holds a
+      shelf: 0 shelves offered, no result line, no 已收在 anywhere in the control.  B intercepts the
+      add door to answer 201 with a fabricated row that never reaches the server: the screen re-reads
+      the list and prints 「服务器上的架子里没有这一枚」, while the same arm against the real door
+      prints 「已收在 反件专用架」 and the server then carries the place.  Removing the write leg turns
+      the claim off, which is what makes it a measurement rather than a sentence.
+  no raw identifier on the screen -- every rendered line in both receipts is scanned for a uuid and for
+      a `place-<slug>`; 16 text fields checked, 0 matches.  The one English arm that reads
+      「Collected into 周末架子」 shows the shelf's own stored name, which is the row the server holds,
+      not an untranslated string.
+  both `tsc` configs report 0 error lines; `vite build` exits 0.
+  the rulers, re-measured on these bytes rather than inherited: door-pinned r7b and newest r7b4 each
+      answer the same 8-cell union on both trees with 0 appeared and 0 disappeared, so the new
+      `features/trip` -> `features/collections` import edge did not grow the exposure report; the
+      copy-tier ruler's 83 rows are identical across the two trees.
+
+Not claimed: there is no remove-from-shelf door on this server, so nothing here implies one, and the
+picker marks a shelf that already holds the place rather than offering a way off it.
