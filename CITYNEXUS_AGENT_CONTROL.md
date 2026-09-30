@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 12:48 · 四笔落地（足迹屏、抽屉关闭三径、字典键形状判据、schema 追平）· 足迹屏我自己真按了打卡键，两臂都读到「已打卡」与那一枚足迹 · 长图导出我也真下了那张 PNG · ORD-0495 开单一枚
+
+**一、落地（我一笔一笔走门，ff-only，每笔前一秒重读尖；本班零点后累计十五笔）**
+- 现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`。这一段四笔逐枚：足迹屏 `15d65d7f289c…`（ORD-0476 第二切片，rebase 之后一次过，16 文件全等于车道字节那形我没有再遇到冲突）、抽屉关闭三径断言（ORD-0480）、字典键形状判据（ORD-0479）、schema 追平（ORD-0488，落点即现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）。
+- 退回一笔：ORD-0444 的 r6 复切仍报一枚文件没合成本车道字节，第四次退回，按规矩不手合。
+
+**二、我自己跑的执行数（对象现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2` 的 git archive 导出；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`；`-p no:randomly`）**
+- 四族新落的臂加凭据尺一起：39 passed、1 failed，用时 28.38 秒。那枚红不是判据松了，也不是产品：是 `tests/test_qoder_ord0479_dictionary_key_shape.py` 里 H07 那枚臂要在测试里跑 `git show 127ce7b0…:backend/app/security/credential_literals.py`，而导出树里没有对象库，命令直接以 128 退出。⇒ 落地门里它绿、我这趟它红，差别只是环境。**我把它算成臂的可移植性缺陷，不算车道没做**；同时全树里只有两枚测试文件走这类"读上一代源码"的路（`tests/test_qoder_ord0272_continuation.py` 与 `tests/test_qoder_ord0479_dictionary_key_shape.py`），所以这不是普遍病，是这一族的两个点。
+- 因此开 **ORD-0495**（车道 2d2d7428）：这类臂要么自己把仓库根找出来（从测试文件往上走到 .git），要么拿不到对象库时具名写 NOT_MEASURED——**不许静默绿**，因为下一个撞上的就是别人。
+- 好消息同批：凭据尺 C07 在现尖已转绿（ORD-0479 那族结构判据落地之后），我这次跑的 39 枚里就含它。
+
+**三、足迹屏我自己在两臂上真走过（私有栈静态口 `:4927`，服务身份两证：入口 `index-gebvkcUd.js`、服务端字节 1508498 B 与磁盘逐位相同；对象 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）**
+- 手机臂（`390 x 844`，对象 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）：行程屏上有 6 枚 `cn-stop-checkin` 的打卡键（每站一枚，第一枚中心 (202, 590)、44 px 见方），滚动后中心命中得到它自己（aria 里带着站名 Old Town Gate）。真按下去以后，那一行从「打卡」变成「已打卡」，整屏渲染文字变长且那一行由「打卡」改口为「已打卡」；再打开足迹那一屏，读到的句子逐字是「足迹 这一屏只列服务器替这次行程记下的印，按打的先后排。」，下面一行「09/30 12:43 Old Town Gate 没写备注」，末行计数「这次行程共有 1 枚足迹。」，testid 是 `footprint-row`、`footprint-tally`、`footprint-retry`；机词扫描为空，页面报错零条。⇒ ORD-0476 两切片都判 **ACCEPTED**，屏上的时刻是服务器给的那一瞬，不是我送进去的。
+- 桌面臂（`1280 x 900`，对象 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）同样 6 枚打卡键、命中自己、足迹一屏一枚一行一计数，报错零条。
+- 长图我再补了一格导出实证（英文臂，同一棵产物 `de341634d4dc30845d0c6ef98490bd33e41dd4b2`）：真下载得到 `citynexus-trip-poster.png`，134125 B，PNG 自己的 IHDR 答 1872 x 938；屏上那句结果里带着同一个字节数（我在屏上能搜到它），`poster-result` 那格在场；渲染文字里读得到 `Demo city · 1 day`（单数那一形修对了）与 `3/6 stops completed`。⇒ 甲案改完没有把导出改坏。
+
+**四、一份负面读数的清单（免得"没有"被当成猜）**：我在现尖 `de341634d4dc30845d0c6ef98490bd33e41dd4b2` 的真后端上把契约路由表整个读了一遍（151 条路径），里面**没有任何**含 favorite / collection / saved 的路径；我另猜着探了两条（`/api/v1/collections`、`/api/v1/journeys/{id}/favorites`），都回默认 http_status=404 Not Found（连错误封套都不是项目那一族）。⇒ 收藏容器这一格在权威线上确实还没有路由，这就是 ORD-0444 那枝产品码该补的东西，我已经四次把它退回车道，仍等 rebase。
+- 会员那一面同法核过：`POST /members`、`GET /members`、`GET /acl/roles`、`POST /members/{id}/withdraw` 四枚都在（后一枚对不存在的成员回具名句子），只有**改角色**与**移除成员**两枚真不存在（PATCH/PUT/DELETE 全回默认 http_status=404）。我已把这份逐枚清单转给 a68b0631，让他们只补那两枚。
+
+**五、在跑（十二路以上）**：ORD-0477 排序、ORD-0485 手机演示链、ORD-0489 演示数据面、ORD-0490 回收站态、ORD-0494 g9a 确定性、ORD-0495 臂可移植、ORD-0461 会员两门、ORD-0464 -r5、ORD-0444 -r7、ORD-0470 已撤回。监测段只读在跑；插账与镜像只在我自己轮次里做，最后一次 BYTE_LEVEL_CONFIRMED 是 10309517 B。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0488 演示库 schema 追平（重交 r2）：三枚被拒数字各带真锚，从零那格只用本车道自己的启动日志作证
 
 先说拒因，不当借口用：门报的三行号与三枚带千分位写法（`151` 枚路径，锚 `review/ord0488/route_denominators.txt:18`；`1,203 B`，锚 `backend/db/schema.sql:1129`；`7,213,056 B`，锚 `review/ord0488/preview_store_stat_ro.txt:4`）在我 **12:13** 那份草稿里逐行命中——`cff87c64_1212.md.my_superseded_earlier_draft` 第 `11`、`15`、`19` 行正是路由分母段、反件段、禁令段；我 12:22 的 `cff87c64_1220.md` 同三行是 alembic 行、空行、boot_B 行，不含这三枚 token。门读的是我已改名的作废稿，请以本件为准。其中一条是我真空口说过：`7,213,056 B` 当时枝上无任何收据、只是我终端 ls 的输出（现锚 `review/ord0488/preview_store_stat_ro.txt:4`）——这条门拒对了，故本件先把它变成工件再落锚，不是把数字搬回去。
