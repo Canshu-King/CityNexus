@@ -208,9 +208,13 @@ export function LiveRecovery({
       moved: norm(p.diff?.moved),
     });
   };
-  const pendingAll = proposals.filter(
-    (p) => p.status === "PRESENTED" || p.status === "GENERATED",
-  );
+  // A completed Journey has no executable cursor.  Older databases can still
+  // contain PRESENTED rows from before the server retired them at completion;
+  // keep those rows available to history APIs, but never render them as an
+  // actionable or advisory recovery card on the completed surface.
+  const pendingAll = journeyCompleted
+    ? []
+    : proposals.filter((p) => p.status === "PRESENTED" || p.status === "GENERATED");
   const seenDiff = new Set<string>();
   const pending = pendingAll.filter((p) => {
     const key = diffKey(p);
