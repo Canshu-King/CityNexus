@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:47 · 手机前端换到 day9（尖 `0989713aa687b97f4cd40bae009a6ce493425a4b`）：两证 + 第三证齐，旧代资产三并集
+
+**一、换代前尖（现读）**
+
+`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = `0989713aa687b97f4cd40bae009a6ce493425a4b`；构建的 40 位与它逐字相同。
+
+**二、构建**
+
+`cmdr_build_bundle_r1.py --sha 0989713aa687b97f4cd40bae009a6ce493425a4b --tag day9` rc=0，产物根 `_build_day9/frontend/dist`，入口 `assets/index-DaHdgt6W.js`。
+
+**三、并集（先并后切）**
+
+把 day7 与 day8 两代的所有 `assets/*` 复制进 day9 的 assets（不覆盖），所以现在同一根目录下三代资产都在，握着旧 index.html 的客户端不会撞 404。
+
+**四、切换**
+
+`_cmdr_lan_static_api_r1.py --dist .../_build_day9/frontend/dist --port 4783 --api 4787 --log _lan_4783_log.json`，监听 `0.0.0.0:4783`（PID 58524）；旧服务 PID 24080 已停。
+
+**五、三证**
+
+1. **入口名**：被服务的 `/` 回 `http_status=200`、`text/html`，正文里那枚入口 = `assets/index-DaHdgt6W.js`，与磁盘 `index.html` 同值。
+2. **字节**：`assets/index-DaHdgt6W.js` 被服务字节的本机 sha1 前 16 位 `95c9a395feb02d70` == 磁盘同文件；并集那两侧的旧代入口 `assets/index-BXpnOJjO.js` 与 `assets/index-BGM3L0lx.js` 也各回 `http_status=200`、`text/javascript`、字节等于磁盘。
+3. **真浏览器**：`/v8/hub` 上浏览器自己取到的入口是 `assets/index-DaHdgt6W.js`，屏上渲染真中文产品文案、`pageerror` 0 枚、`data-testid` 里 `trial-setup` 与 `trial-supported-row-福州` 都在。访问日志这一证仍 `NOT_AVAILABLE_BY_CMDR`（静态口不写请求日志）。
+
+**六、API 代理与后端**
+
+`/api/v1/demo/scene` 经 `:4783` 回 `http_status=200`、`application/json`、583 B。后端 `:4787` 我没重启；它对新路由的行为我另取了三点读数：`POST .../stay-options/<bogus>/select` 回 `http_status=404`、`GET /recycle-bin/journeys` 回 `http_status=200` 且正文为空数组、`POST /journeys/<bogus>/undelete` 回 `http_status=404` 且带 `reason_code=JOURNEY_NOT_FOUND`——三条都说明门在，不是 405。
+
+**七、没做的（不藏）**
+
+1. 实体手机那一格仍未走（手机指到 `192.168.69.189` 的 4783 端口，我没在实体设备上看过）；
+2. Service Worker 缓存驱逐没做，手机上可能整页重进才离开旧代；
+3. 这一代是**快照**：我写块时尖仍在动，下一批落地后还要再换。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:43 · 今晚累计落地 28 项（四批批量落地，逐条 ff-only）· 尖 `173f811028638698bd5079f17a675c8915063b99`；另记一条会伪装成「令牌坏了」的现读
 
 **一、落地（四批，每批都是 `cmdr_batch_land_r1.py` 的 `verdict=READY_TO_LAND mode=LAND ff=True`，我 0 次手合）**
