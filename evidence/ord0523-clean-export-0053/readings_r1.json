@@ -1,0 +1,34 @@
+{
+ "command": "python -m pytest tests -p no:randomly -q [--collect-only]",
+ "interpreter": "CPython 3.12.14 at D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "cwd_note": "each run had cwd = <export>/backend and no PYTHONPATH set in the environment",
+ "collect_on_tip_export": {
+  "line": "1562 tests collected, 20 errors in 5.95s",
+  "collected": 1562,
+  "errors": 20
+ },
+ "collect_on_my_branch_export": {
+  "line": "1620 tests collected in 2.20s",
+  "collected": 1620,
+  "errors": 0
+ },
+ "run_tip_export_ignoring_20": {
+  "collected_or_counts": [
+   "38",
+   "1502",
+   "21",
+   "1"
+  ]
+ },
+ "run_my_branch_export": {
+  "collected_or_counts": [
+   "38",
+   "1560",
+   "21",
+   "1"
+  ]
+ },
+ "probe_files_tracked_at_tip": 23,
+ "test_files_that_import_them": 20,
+ "isolation_rerun_of_the_two_swapping_arms": "see block"
+}
