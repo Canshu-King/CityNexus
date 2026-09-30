@@ -2,18 +2,6 @@
  "slug": "evidence/ord0523-clean-export-0053",
  "files": [
   {
-   "path": "evidence/ord0523-clean-export-0053/readings_r1.json",
-   "bytes": 853,
-   "local_blob": "ff8b835b25fcfc068abefe2fa3e90101d0c33111",
-   "readback_blob": "ff8b835b25fcfc068abefe2fa3e90101d0c33111",
-   "byte_equal": true,
-   "decision": null,
-   "pushed_commit": "89c4a671920362e2eb629fccd777269543e76d97",
-   "exit": 0,
-   "attempts": 1,
-   "verified": true
-  },
-  {
    "path": "evidence/ord0523-clean-export-0053/attribution_r1.json",
    "bytes": 673,
    "local_blob": "3488b57490605b8630c9ae00a0fc7bdfb549a6ed",
@@ -50,25 +38,13 @@
    "verified": true
   },
   {
-   "path": "evidence/ord0523-clean-export-0053/run_tip_baseline_r1.txt",
-   "bytes": 82222,
-   "local_blob": "792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f",
-   "readback_blob": "792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f",
+   "path": "evidence/ord0523-clean-export-0053/commit_msg_r1.txt",
+   "bytes": 2612,
+   "local_blob": "98bdd75045ef8b3b1c116d51c9b62dbf22429b10",
+   "readback_blob": "98bdd75045ef8b3b1c116d51c9b62dbf22429b10",
    "byte_equal": true,
    "decision": null,
-   "pushed_commit": "2958c4c4232b8a2c5cd9316bbd6a2262ffac0234",
-   "exit": 0,
-   "attempts": 1,
-   "verified": true
-  },
-  {
-   "path": "evidence/ord0523-clean-export-0053/run_mine_r1.txt",
-   "bytes": 84225,
-   "local_blob": "f701d9232c6a1ca3f4f57e7be071ed27ae7285da",
-   "readback_blob": "f701d9232c6a1ca3f4f57e7be071ed27ae7285da",
-   "byte_equal": true,
-   "decision": null,
-   "pushed_commit": "2de69199ed91fe042ccac0210f081d0b71d1a590",
+   "pushed_commit": "c962688c613fe5932e3addac85b4d807b97c9a1d",
    "exit": 0,
    "attempts": 1,
    "verified": true
@@ -86,13 +62,13 @@
    "verified": true
   },
   {
-   "path": "evidence/ord0523-clean-export-0053/isolation_rerun_r1.txt",
-   "bytes": 361,
-   "local_blob": "e7dd3c00ea14f2d13de8102c0308da33bfa35b6c",
-   "readback_blob": "e7dd3c00ea14f2d13de8102c0308da33bfa35b6c",
+   "path": "evidence/ord0523-clean-export-0053/export_sizes_r1.json",
+   "bytes": 99,
+   "local_blob": "622555948a5a1dfa2758c91423e91b6387ed0658",
+   "readback_blob": "622555948a5a1dfa2758c91423e91b6387ed0658",
    "byte_equal": true,
    "decision": null,
-   "pushed_commit": "998aae1bcfdc6f2461d5d8f4fb1f8bfbb0a2f0dc",
+   "pushed_commit": "357ee572d473491cc568e1590270b06c6cd6057f",
    "exit": 0,
    "attempts": 1,
    "verified": true
@@ -110,20 +86,56 @@
    "verified": true
   },
   {
-   "path": "evidence/ord0523-clean-export-0053/commit_msg_r1.txt",
-   "bytes": 2612,
-   "local_blob": "98bdd75045ef8b3b1c116d51c9b62dbf22429b10",
-   "readback_blob": "98bdd75045ef8b3b1c116d51c9b62dbf22429b10",
+   "path": "evidence/ord0523-clean-export-0053/isolation_rerun_r1.txt",
+   "bytes": 361,
+   "local_blob": "e7dd3c00ea14f2d13de8102c0308da33bfa35b6c",
+   "readback_blob": "e7dd3c00ea14f2d13de8102c0308da33bfa35b6c",
    "byte_equal": true,
    "decision": null,
-   "pushed_commit": "c962688c613fe5932e3addac85b4d807b97c9a1d",
+   "pushed_commit": "998aae1bcfdc6f2461d5d8f4fb1f8bfbb0a2f0dc",
+   "exit": 0,
+   "attempts": 1,
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0523-clean-export-0053/readings_r1.json",
+   "bytes": 853,
+   "local_blob": "ff8b835b25fcfc068abefe2fa3e90101d0c33111",
+   "readback_blob": "ff8b835b25fcfc068abefe2fa3e90101d0c33111",
+   "byte_equal": true,
+   "decision": null,
+   "pushed_commit": "89c4a671920362e2eb629fccd777269543e76d97",
+   "exit": 0,
+   "attempts": 1,
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0523-clean-export-0053/run_mine_r1.txt",
+   "bytes": 84225,
+   "local_blob": "f701d9232c6a1ca3f4f57e7be071ed27ae7285da",
+   "readback_blob": "f701d9232c6a1ca3f4f57e7be071ed27ae7285da",
+   "byte_equal": true,
+   "decision": null,
+   "pushed_commit": "2de69199ed91fe042ccac0210f081d0b71d1a590",
+   "exit": 0,
+   "attempts": 1,
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0523-clean-export-0053/run_tip_baseline_r1.txt",
+   "bytes": 82222,
+   "local_blob": "792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f",
+   "readback_blob": "792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f",
+   "byte_equal": true,
+   "decision": null,
+   "pushed_commit": "2958c4c4232b8a2c5cd9316bbd6a2262ffac0234",
    "exit": 0,
    "attempts": 1,
    "verified": true
   }
  ],
- "files_total": 10,
- "files_verified": 10,
+ "files_total": 11,
+ "files_verified": 11,
  "retried_paths": [],
  "control_head_readback": "c962688c613fe5932e3addac85b4d807b97c9a1d"
 }
