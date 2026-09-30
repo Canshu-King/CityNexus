@@ -58,6 +58,7 @@
     "height": 844
    },
    "control_before": "打卡",
+   "door_rows_served": 1,
    "band_text": "这台服务器这次交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。",
    "pin_total": 9,
    "solid_count": 1,
@@ -66,7 +67,7 @@
     "9月30日"
    ],
    "badge_testids": [
-    "map-stamp-date-31f86274-07a4-4257-b35a-ad9590eb8a7d"
+    "map-stamp-date-baa5a8fa-2c0c-42d6-8c98-6a378d1179b3"
    ],
    "solid_probe": {
     "cls": "v9-map-marker current maplibregl-marker maplibregl-marker-anchor-center stamped",
@@ -116,6 +117,10 @@
    },
    "label_before": "只看打过",
    "filter_hit": "button.v8-map-footprint-filter",
+   "door_rows_before": 1,
+   "door_rows_after": 1,
+   "chip_rows_before": 9,
+   "chip_rows_after": 9,
    "open_hidden": 0,
    "on_hidden": 8,
    "on_pin_claim": 9,
