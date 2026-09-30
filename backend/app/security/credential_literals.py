@@ -64,6 +64,124 @@ NEVER_EXEMPT_PATTERNS = frozenset({"provider_key_shape", "aws_access_key", "gith
                                    "google_api_key", "bearer_or_basic_literal"})
 _CONTRACT_CACHE: dict = {}
 
+#: ORD-0479. A translation-table value is not a credential, and the shape probe was reading one as
+#: such -- the entry at frontend/src/features/shared/SharedJourneyPanel.tsx:45, whose value is a
+#: dictionary key and whose table is a string-to-string lookup. (Quoting that line's text here would
+#: make this very file trip the same probe, which is how the first draft of this comment did.)
+#: The exemption is STRUCTURAL, three things that all have to hold, because none of them alone means
+#: anything -- and none of them is a word list or a declaration:
+#:   1. the value is dotted-camel like a dictionary key: a lowercase first segment, then dot-joined
+#:      segments, and nothing a key would not contain (no space, no dash, no `+/=`, no digits run-in);
+#:   2. that key resolves in the product's own dictionaries -- and in BOTH locales, so a one-sided
+#:      entry cannot invent a vocabulary;
+#:   3. the assignment sits inside an object literal that is a string-to-string lookup table: two or
+#:      more entries, and every value in it is such a key. A lone dotted string next to a real
+#:      value does not qualify.
+#: An unreadable dictionary resolves nothing, so this fails closed too. Provider-shaped patterns are
+#: never exempted here either.
+I18N_SOURCE_REL = "frontend/src/i18n/LocaleContext.tsx"
+DICT_KEY_SHAPE = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]*)*(?:\.[A-Za-z][A-Za-z0-9]*)+$")
+_DICTIONARY_CACHE: dict = {}
+_DICT_BLOCK = re.compile(r"^const\s+(en|zhCN)\s*:\s*Dict\s*=\s*\{", re.M)
+_DICT_ENTRY = re.compile(r'^\s*"([A-Za-z0-9_.-]+)"\s*:\s*"', re.M)
+_TABLE_ENTRY = re.compile(r'^\s*(?:"([A-Za-z0-9_.]+)"|([A-Za-z0-9_]+))\s*:\s*"([^"]*)"\s*,?\s*$')
+
+
+def i18n_dictionary_keys(root: Path = REPO) -> frozenset[str]:
+    """Keys the product actually translates, present in BOTH locale blocks. Fail-closed to empty."""
+
+    path = Path(root) / I18N_SOURCE_REL
+    try:
+        stamp = path.stat().st_mtime_ns, path.stat().st_size
+    except OSError:
+        return frozenset()
+    cached = _DICTIONARY_CACHE.get(str(path))
+    if cached and cached[0] == stamp:
+        return cached[1]
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return frozenset()
+    marks = [(m.group(1), m.start()) for m in _DICT_BLOCK.finditer(text)]
+    if len(marks) < 2:
+        return frozenset()
+    per: dict[str, set[str]] = {}
+    for i, (name, start) in enumerate(marks):
+        stop = marks[i + 1][1] if i + 1 < len(marks) else len(text)
+        per[name] = {m.group(1) for m in _DICT_ENTRY.finditer(text[start:stop])}
+    if not per.get("en") or not per.get("zhCN"):
+        return frozenset()
+    keys = frozenset(per["en"] & per["zhCN"])
+    _DICTIONARY_CACHE[str(path)] = (stamp, keys)
+    return keys
+
+
+def _object_body_lines(lines: list[str], line_index: int) -> list[str] | None:
+    """The lines inside the object literal the given line sits in, or None when there is none.
+
+    Same reason a reader says "this block is one lookup table": walk back to the nearest `{` whose
+    braces are still open, then forward to the `}` that closes it.
+    """
+
+    depth = 0
+    open_line = None
+    for i in range(line_index, -1, -1):
+        for ch in reversed(lines[i]):
+            if ch == "}":
+                depth += 1
+            elif ch == "{":
+                if depth == 0:
+                    open_line = i
+                    break
+                depth -= 1
+        if open_line is not None:
+            break
+    if open_line is None:
+        return None
+    body: list[str] = []
+    depth = 0
+    closed = False
+    for ch_line in lines[open_line + 1:]:
+        for ch in ch_line:
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                if depth == 0:
+                    closed = True
+                    break
+                depth -= 1
+        if closed:
+            break
+        body.append(ch_line)
+    return body if closed else None
+
+
+def translation_lookup_table_size(text: str, line_index: int, keys: frozenset[str]) -> int | None:
+    """The entry count of the string-to-string table the hit sits in, or None when it is not one.
+
+    The count is the TABLE's, not the dictionary's: a reader of the receipt has to be able to see how
+    many entries were forgiven, and how many keys the vocabulary holds, as two separate numbers.
+    """
+
+    if not keys:
+        return None
+    body = _object_body_lines(text.splitlines(), line_index)
+    if not body or len(body) < 2:
+        return None
+    values = []
+    for line in body:
+        stripped = line.strip()
+        if not stripped or stripped.startswith(("//", "/*", "*")):
+            continue
+        m = _TABLE_ENTRY.match(line)
+        if not m:
+            return None
+        values.append(m.group(3))
+    if len(values) < 2 or not all(DICT_KEY_SHAPE.match(v) and v in keys for v in values):
+        return None
+    return len(values)
+
+
 
 def contract_named_codes(root: Path = REPO) -> dict[str, str]:
     """Every enum member the contract names as an UPPER_SNAKE code, mapped to its schema name.
@@ -208,6 +326,7 @@ def _tokens_in(line: str) -> Iterable[tuple[str, str]]:
 def find_literals(paths: list[str], root: Path = REPO) -> list[dict]:
     hits: list[dict] = []
     named = contract_named_codes(root)
+    dict_keys = i18n_dictionary_keys(root)
     for rp in paths:
         try:
             text = (root / rp).read_text(encoding="utf-8", errors="replace")
@@ -222,8 +341,18 @@ def find_literals(paths: list[str], root: Path = REPO) -> list[dict]:
                     continue
                 fp = token_fp(tok)
                 declared = next((d for d in DECLARED_SAMPLES if d["token_fp"] == fp), None)
-                schema = named.get(tok) if (name not in NEVER_EXEMPT_PATTERNS
-                                            and NAMED_CODE_SHAPE.match(tok)) else None
+                exempt = None
+                contract_named = None
+                if name not in NEVER_EXEMPT_PATTERNS:
+                    if NAMED_CODE_SHAPE.match(tok) and tok in named:
+                        contract_named = named[tok]
+                        exempt = "contract_enum:%s" % contract_named
+                    elif (name == "labeled_assignment" and DICT_KEY_SHAPE.match(tok)
+                          and tok in dict_keys):
+                        table = translation_lookup_table_size(text, no - 1, dict_keys)
+                        if table is not None:
+                            exempt = ("translation_lookup_table:%d entries, dictionary:%d keys"
+                                      % (table, len(dict_keys)))
                 hits.append({"path": rp, "line": no, "pattern": name, "length": len(tok),
                              "entropy_bits_per_char": round(ent, 2), "token_fp": fp,
                              "position_fp": position_fp(rp, no),
@@ -231,7 +360,9 @@ def find_literals(paths: list[str], root: Path = REPO) -> list[dict]:
                              "declared": declared is not None,
                              "declared_at": declared["at"] if declared else None,
                              # the contract schema that names this exact string, or None
-                             "contract_named": schema})
+                             "contract_named": contract_named,
+                             # what exempted it: a contract schema or a translation-table structure
+                             "vocabulary_exemption": exempt})
     return hits
 
 
@@ -239,10 +370,13 @@ def scan(root: Path = REPO) -> dict:
     files = candidate_files(root)
     hits = find_literals(files, root)
     undeclared_all = [h for h in hits if not h["declared"]]
-    #: ORD-0467: a literal the contract itself names is vocabulary, not a secret. It stays in `hits`
-    #: so a reader can see the exemption and which schema granted it; it leaves the live set.
-    contract_named = [h for h in undeclared_all if h["contract_named"]]
-    undeclared = [h for h in undeclared_all if not h["contract_named"]]
+    #: ORD-0467 / ORD-0479: a literal the product itself names -- by a contract enum or by sitting in a
+    #: string-to-string translation table whose keys both locales translate -- is vocabulary, not a
+    #: secret. It stays in `hits` with the reason attached so a reader can see what was forgiven where;
+    #: only the live set loses it.
+    exempted = [h for h in undeclared_all if h["vocabulary_exemption"]]
+    contract_named = [h for h in exempted if h["contract_named"]]
+    undeclared = [h for h in undeclared_all if not h["vocabulary_exemption"]]
     product = [h for h in undeclared if h["in_product_path"]]
     verdict = (CODE_OFF if policy() == "off" else CODE_IN_PRODUCT_PATH if product
                else CODE_OUTSIDE_PRODUCT_PATH if undeclared else CODE_OK)
@@ -260,6 +394,12 @@ def scan(root: Path = REPO) -> dict:
             "contract_named_positions": [{"path": h["path"], "line": h["line"],
                                           "position_fp": h["position_fp"],
                                           "schema": h["contract_named"]} for h in contract_named],
+            #: ORD-0479: every vocabulary exemption, whichever channel granted it, with its reason
+            "hits_vocabulary_exempted": len(exempted),
+            "vocabulary_exemptions": [{"path": h["path"], "line": h["line"],
+                                       "position_fp": h["position_fp"], "pattern": h["pattern"],
+                                       "reason": h["vocabulary_exemption"]} for h in exempted],
+            "dictionary_keys_resolved": len(i18n_dictionary_keys(root)),
             "hits": hits,
             "env_present": len(env), "env_undeclared": len(env_undeclared),
             "env_fingerprints": [{k: h[k] for k in ("var", "length", "token_fp", "declared")}
