@@ -1317,3 +1317,73 @@ def test_real_catalogue_fallback_is_visible_but_not_selectable():
     )
     assert selected.status_code == 409, selected.text
     assert selected.json()["error"]["reason_code"] == "UNRESOLVED_ACTIVITY_FACTS"
+
+
+def test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative():
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    ensure_schema()
+    city = f"CN-R77-EXPLICIT-{uuid4().hex}"
+    place_ids = [f"{city}-a", f"{city}-b"]
+    with SessionLocal() as session:
+        session.add_all(
+            [
+                Place(
+                    id=place_ids[0],
+                    provider_key="overpass",
+                    external_id="overpass:node/901001",
+                    city_code=city,
+                    name="Provider attraction A",
+                    category="attraction",
+                    latitude=27.73,
+                    longitude=98.67,
+                    opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+                    tags_json="[]",
+                    metadata_json=json.dumps({"cost_evidence": {"status": "UNKNOWN"}}),
+                    updated_at="2026-09-30T00:00:00+00:00",
+                ),
+                Place(
+                    id=place_ids[1],
+                    provider_key="overpass",
+                    external_id="overpass:node/901002",
+                    city_code=city,
+                    name="Provider attraction B",
+                    category="attraction",
+                    latitude=27.74,
+                    longitude=98.68,
+                    opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+                    tags_json="[]",
+                    metadata_json=json.dumps({"cost_evidence": {"status": "UNKNOWN"}}),
+                    updated_at="2026-09-30T00:00:00+00:00",
+                ),
+            ]
+        )
+        session.commit()
+    client = TestClient(app)
+    traveler = client.post(
+        "/api/v1/travelers",
+        json={"display_name": "R77 explicit provider", "locale": "zh-CN", "timezone": "Asia/Shanghai"},
+    ).json()
+    journey = client.post(
+        "/api/v1/journeys",
+        json={
+            "traveler_id": traveler["id"],
+            "title": "R77 explicit provider catalogue",
+            "city_code": city,
+            "timezone": "Asia/Shanghai",
+            "start_at": "2026-10-03T09:00:00+08:00",
+            "end_at": "2026-10-03T20:00:00+08:00",
+            "budget": {"amount_minor": 100000, "currency": "CNY"},
+        },
+    ).json()
+    generated = client.post(
+        f"/api/v1/journeys/{journey['id']}/plans/generate",
+        json={"candidate_count": 1, "place_ids": place_ids},
+    )
+    assert generated.status_code == 201, generated.text
+    plan = generated.json()[0]
+    assert plan["selectable"] is False
+    assert plan["explanation"]["authority_state"] == "PROVISIONAL_UNRESOLVED_FACTS"
+    assert [item["place_id"] for item in plan["activities"]] == place_ids
+    assert all(item["cost_status"] == "UNKNOWN" for item in plan["activities"])

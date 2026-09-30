@@ -1330,6 +1330,7 @@ def _provisional_catalogue_plan(
     session: Session,
     journey: Journey,
     planning_mode: str,
+    preferred_place_ids: Sequence[str] | None = None,
 ) -> list[PlanVersion]:
     """Materialize a useful, explicitly non-authoritative real-catalogue draft.
 
@@ -1350,7 +1351,17 @@ def _provisional_catalogue_plan(
     if len(places) < 2:
         return []
     preferred = {"park": 0, "viewpoint": 1, "attraction": 2, "landmark": 3}
-    places.sort(key=lambda item: (preferred.get(str(item.category).casefold(), 9), item.id))
+    requested_order = {
+        str(place_id): index
+        for index, place_id in enumerate(preferred_place_ids or ())
+    }
+    places.sort(
+        key=lambda item: (
+            0 if item.id in requested_order else 1,
+            requested_order.get(item.id, preferred.get(str(item.category).casefold(), 9)),
+            item.id,
+        )
+    )
     selected = places[:2]
     pairs = tuple(
         (origin.id, destination.id)
@@ -2031,6 +2042,40 @@ def _generic_compose_variants(
                 if key != "place_ids" and key not in shared:
                     shared[key] = value
     if not created:
+        provider_places = [
+            places_for_scope.get(place_id)
+            for place_id in ordered
+            if places_for_scope.get(place_id) is not None
+        ]
+        all_cost_failures = bool(failures) and names and all(
+            name == PLACE_COST_UNVERIFIED for name in names
+        )
+        provider_backed = len(provider_places) >= 2 and all(
+            str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+            and str(place.external_id or "").casefold().startswith("overpass:")
+            for place in provider_places
+        )
+        if all_cost_failures and provider_backed:
+            provisional = _provisional_catalogue_plan(
+                session,
+                journey,
+                planning_mode,
+                preferred_place_ids=ordered,
+            )
+            if provisional:
+                record_audit(
+                    session,
+                    action="plans.generated.provisional_from_explicit_catalogue",
+                    entity_type="Journey",
+                    entity_id=journey.id,
+                    journey_id=journey.id,
+                    after={
+                        "requested_place_ids": ordered,
+                        "reason_code": PLACE_COST_UNVERIFIED,
+                        "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+                    },
+                )
+                return provisional
         message = "GENERIC_COMPOSE_INFEASIBLE:" + "|".join(failures[:3] or ["NO_VARIANT"])
         # A name is published only when every scope tried blames the same condition.  Mixed or
         # anonymous causes stay anonymous here, because "the widest scope failed on cost" would
