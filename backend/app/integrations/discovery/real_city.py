@@ -61,6 +61,14 @@ def _place_metadata(
         "discovery_mode": mode,
         "cost_evidence": cost_evidence,
     }
+    if mode == "offline_snapshot":
+        # The row-level source marker the catalogue door promises.  `anywhere_capability
+        # ._source_kind` reads `metadata_json.provenance`, and without this key an offline row only
+        # classifies as `OFFLINE_SNAPSHOT` through that function's catch-all - true by accident, and
+        # indistinguishable from an unaccounted-for provider.  Written for this mode only: giving the
+        # replay and live legs a mark here would *strengthen* their class, which the classifier
+        # exists to refuse.
+        metadata["provenance"] = "OFFLINE_SNAPSHOT"
     status = str(cost_evidence.get("status") or "UNKNOWN").upper()
     if status == "KNOWN" and cost_evidence.get("amount_minor") is not None:
         metadata["cost_minor"] = int(cost_evidence["amount_minor"])
@@ -1128,12 +1136,26 @@ def _captured_replay_candidates(
 
 def materialize_candidates(
     session: Session,
-    journey: Journey,
+    journey: Journey | None,
     candidates: list[DiscoveryCandidate],
     *,
     captured_at: str,
     mode: str,
+    city_code: str | None = None,
 ) -> list[dict[str, Any]]:
+    """Apply captured candidates to the store.
+
+    ORD-0526 widened the owner from "a journey" to "a journey or a city": the catalogue-hydration
+    door prepares a *destination*, and a traveller who never opened a trip should still get a
+    registered offline source applied. `city_code` is honoured only when no journey is passed, and
+    a city-scoped row carries `journey_id = NULL` rather than an invented one - the foreign key is
+    on, so a made-up owner id would fail at the store instead of lying quietly.
+    """
+
+    owner_id = journey.id if journey is not None else None
+    owner_city = journey.city_code if journey is not None else (city_code or "")
+    if not owner_city:
+        raise ValueError("MATERIALISE_NEEDS_A_CITY")
     expires_at = (
         datetime.fromisoformat(captured_at)
         + timedelta(seconds=settings.real_city_cache_ttl_seconds)
@@ -1149,21 +1171,25 @@ def materialize_candidates(
         )
         row = session.scalar(
             select(RealPlaceCandidate).where(
-                RealPlaceCandidate.journey_id == journey.id,
+                (
+                    RealPlaceCandidate.journey_id == owner_id
+                    if owner_id
+                    else RealPlaceCandidate.journey_id.is_(None)
+                ),
                 RealPlaceCandidate.provider_key == candidate.provider_key,
                 RealPlaceCandidate.external_id == external_id,
             )
         )
         if row is None:
             row = RealPlaceCandidate(
-                id=f"rpc-{hashlib.sha1(f'{journey.id}|{candidate.provider_key}|{external_id}'.encode()).hexdigest()[:24]}",
-                journey_id=journey.id,
+                id=f"rpc-{hashlib.sha1(f'{owner_id or owner_city}|{candidate.provider_key}|{external_id}'.encode()).hexdigest()[:24]}",
+                journey_id=owner_id,
                 provider_key=candidate.provider_key,
                 external_id=external_id,
             )
             session.add(row)
-        row.journey_id = journey.id
-        row.city_code = journey.city_code
+        row.journey_id = owner_id
+        row.city_code = owner_city
         row.name = candidate.name
         row.category = candidate.category
         row.latitude = candidate.latitude
@@ -1182,9 +1208,17 @@ def materialize_candidates(
                 "captured_at": captured_at,
                 "ttl_seconds": settings.real_city_cache_ttl_seconds,
                 "provenance": (
-                    "SEALED_REAL_REPLAY"
-                    if mode == "captured_replay"
-                    else ("REPLAY" if mode in {"replay", "replay-fallback"} else "LIVE_PROVIDER")
+                    "OFFLINE_SNAPSHOT"
+                    if mode == "offline_snapshot"
+                    else (
+                        "SEALED_REAL_REPLAY"
+                        if mode == "captured_replay"
+                        else (
+                            "REPLAY"
+                            if mode in {"replay", "replay-fallback"}
+                            else "LIVE_PROVIDER"
+                        )
+                    )
                 ),
                 "opening_hours": opening_hours,
                 "cost_evidence": cost_evidence,
@@ -1196,7 +1230,9 @@ def materialize_candidates(
         row.status = "DISCOVERED"
 
         completion = candidate.metadata.get("evidence_completion") if isinstance(candidate.metadata, dict) else None
-        if isinstance(completion, dict):
+        # A city-scoped row has no journey to hang a web observation on, and inventing an owner id
+        # would be caught by the foreign key - so that leg is skipped, not faked.
+        if journey is not None and isinstance(completion, dict):
             observation_ids: list[str] = []
             for observation in completion.get("observations", []):
                 if not isinstance(observation, dict) or not observation.get("url"):
@@ -1253,7 +1289,7 @@ def materialize_candidates(
                 id=f"real-place-{hashlib.sha1(f'{candidate.provider_key}|{external_id}'.encode()).hexdigest()[:24]}",
                 provider_key=candidate.provider_key,
                 external_id=external_id,
-                city_code=journey.city_code,
+                city_code=owner_city,
                 name=candidate.name,
                 category=candidate.category,
                 latitude=candidate.latitude,
@@ -1267,7 +1303,7 @@ def materialize_candidates(
             )
             session.add(place)
         else:
-            place.city_code = journey.city_code
+            place.city_code = owner_city
             place.name = candidate.name
             place.category = candidate.category
             place.latitude = candidate.latitude
@@ -1293,7 +1329,7 @@ def materialize_candidates(
                     provider_key=candidate.provider_key,
                     external_id=f"service:{external_id}",
                     place_id=place.id,
-                    city_code=journey.city_code,
+                    city_code=owner_city,
                     service_type=candidate.category,
                     name=candidate.name,
                     availability_json=_json(opening_hours),

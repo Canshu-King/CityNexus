@@ -50,7 +50,12 @@ from app.anywhere_capability import (
     pending_request_fingerprint,
     resolve_destination,
 )
+from app import catalog_sources
 from app.db.models import CatalogHydrationOperation, Place, RealPlaceCandidate
+from app.integrations.discovery.real_city import (
+    _captured_replay_candidates,
+    materialize_candidates,
+)
 from app.db.session import SessionLocal
 from app.stay_generation_operations import (  # the lifecycle, not a copy of it
     forget_abandonment,
@@ -783,6 +788,68 @@ def _survey(session: Session, canonical_destination_id: str | None) -> dict[str,
     return {"city_code": city_code, "places_held": held, "pending_materialisations": pending}
 
 
+def apply_registered_offline_source(session: Session, city_code: str | None) -> dict[str, object]:
+    """Write the built-in offline snapshot for one city, through the product's own capture code.
+
+    Returns a fact sheet, never a promise: `places_written` is what the store says afterwards, and
+    every early exit says which check stopped it.  A source that is registered but whose file
+    disagrees about the city is reported as not in effect rather than applied to the wrong city.
+    """
+
+    source = catalog_sources.source_for(city_code)
+    if source is None:
+        return {
+            "source": None,
+            "in_effect": False,
+            "reason": "NO_REGISTERED_OFFLINE_SOURCE"
+            if not catalog_sources.registered_sources()
+            else "CITY_NOT_REGISTERED",
+            "places_written": 0,
+            "candidates_captured": 0,
+        }
+    facts = catalog_sources.inspect_source(source)
+    if not facts["in_effect"]:
+        return {**facts, "places_written": 0, "candidates_captured": 0}
+    payload = catalog_sources.snapshot_payload(source)
+    if payload is None:
+        return {**facts, "reason": "SOURCE_UNREADABLE", "places_written": 0, "candidates_captured": 0}
+    candidates = _captured_replay_candidates(
+        "attraction", limit=len(payload.get("candidates") or []), snapshot=payload
+    )
+    if not candidates:
+        return {**facts, "reason": "SOURCE_CANDIDATES_UNUSABLE", "places_written": 0, "candidates_captured": 0}
+    before = _count_city_places(session, source.city_code)
+    materialize_candidates(
+        session,
+        None,
+        candidates,
+        captured_at=now_iso(),
+        mode="offline_snapshot",
+        city_code=source.city_code,
+    )
+    session.commit()
+    after = _count_city_places(session, source.city_code)
+    # Reported from the store, not from the loop: the only claim this job may make about a number
+    # is one it can read back.
+    return {
+        **facts,
+        "candidates_captured": len(candidates),
+        "places_before": before,
+        "places_after": after,
+        "places_written": after - before,
+        "reason": None if after > before else "SOURCE_APPLIED_NO_NEW_ROWS",
+    }
+
+
+def _count_city_places(session: Session, city_code: str) -> int:
+    return int(
+        session.scalar(
+            select(func.count(Place.id)).where(Place.city_code == city_code)
+        )
+        or 0
+    )
+
+
 def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per block, in order
     """The §6 order of operations, in code.
 
@@ -908,8 +975,20 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
         mobility = capability["coverage_detail"]["mobility"]
 
         set_phase(session, operation_id, "PERSISTING")
-        # One short transaction, and it writes the job's own result - no catalogue row is
-        # invented here, because in this build the registered sources are already applied.
+        # One short transaction, and it writes the job's own result.  ORD-0526 replaced the
+        # sentence that used to sit here ("the registered sources are already applied") with the
+        # thing it asserted: a city that nothing holds gets one pass through the registered offline
+        # sources, and the survey that decides the outcome is taken again *after* that pass, so the
+        # outcome belongs to the store and not to the intent.
+        applied: dict[str, object] | None = None
+        if survey["places_held"] == 0 and survey["pending_materialisations"] == 0:
+            applied = apply_registered_offline_source(session, resolution.city_code)
+            if int(applied.get("places_written") or 0) > 0:
+                survey = _survey(session, resolution.canonical_destination_id)
+                capability = evaluate_capability(
+                    session, resolution.query, resolution=resolution
+                )
+                mobility = capability["coverage_detail"]["mobility"]
         if survey["places_held"] == 0 and survey["pending_materialisations"] == 0:
             outcome = OUTCOME_NO_REGISTERED_SOURCE
         elif survey["pending_materialisations"] == 0:
@@ -937,6 +1016,10 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                 "hard_gaps": capability.get("hard_gaps") or [],
             },
             "source_kinds": capability["provenance"]["source_kinds"],
+            # Which offline source (if any) was tried, what its file said, and the row count read
+            # back afterwards.  Absent when the city already held material.
+            "offline_source_applied": applied,
+            "registry": catalog_sources.registry_facts(),
             "outcome": outcome,
             # A COMPLETED/UNAVAILABLE ending that named a destination carries the provider's answer
             # with it: entity reference, WGS84 point, extent, timestamps, and every attempt that led
