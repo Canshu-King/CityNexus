@@ -25,6 +25,9 @@ RUNS = [
     ("59b7bc00", "base, my file not collected (pass 2)", "r7_suite_base_pass2_r1.txt"),
     ("59b7bc00", "with my 6 tests (pass 1)", "r7_suite_mine_r1.txt"),
     ("59b7bc00", "with my 6 tests (pass 2)", "r7_suite_mine_pass2_r1.txt"),
+    ("7862c6de", "base, my file not collected", "r8_suite_base_r1.txt"),
+    ("7862c6de", "with my 6 tests (pass 1)", "r8_suite_mine_r1.txt"),
+    ("7862c6de", "with my 6 tests (pass 2)", "r8_suite_mine_pass2_r1.txt"),
 ]
 SUMMARY = re.compile(r"(\d+) failed, (\d+) passed")
 
@@ -49,8 +52,9 @@ def main() -> int:
             added = sorted(reds - base_reds)
             gone = sorted(base_reds - reds)
             verdict = ("identical set" if not added and not gone else
-                       "SUBSET of the base set (nothing this order added)" if not added else
-                       "NOT A SUBSET -- this order added a red")
+                       "SUBSET of the base set" if not added else
+                       "NOT A SUBSET -- one arm is not in the base set (see the reading below: the next "
+                       "pass on identical bytes is)")
             lines.append(f"{label:<40} {summary:<26} {verdict}")
             lines.append(f"{'':<40} {'':<26} log: {receipt}")
             for item in added:
@@ -59,14 +63,15 @@ def main() -> int:
                 lines.append(f"{'':<40} {'':<40}gone:  {item}")
     lines += [
         "",
-        "reading, and it is not the comfortable one: on 59b7bc00 the same bytes with my six tests produced",
-        "13 failed once (pass 1, adding g3_xproc and ord197 r3) and 11 failed the next time (pass 2, whose",
-        "1603 passes are the base's 1597 plus exactly my six). The configuration did not change between",
-        "those two runs, so the delta is not attributable to this order -- but neither can this lane write",
-        "'no new red': the honest form is that the suite's red set floats between 11 and 13 on identical",
-        "bytes, in both the base and the delivered configuration, and that the arms which move",
-        "(g3_xproc, ord197 r3/r4, ord224 shape-A) are the worker-and-timing family catalogued across",
-        "review/ord0490/suite_red_table_r1.txt. Nothing in this order touches a table those arms read.",
+        "reading, and it is not the comfortable one. On the generation this order delivers to (7862c6de) the",
+        "same bytes with my six tests produced 13 failed once and 11 failed the next time; the 11 set is a",
+        "strict subset of the base's 12. On the previous generation the same thing happened in the other",
+        "direction (13 then 11 with my file, 11 twice without it). Across all seven runs not one of this",
+        "order's six tests appears in a red list -- they are all in the pass counts. So the delta is not",
+        "attributable to ORD-0504, and equally this lane will not write 'no new red': the suite's red set",
+        "floats between 11 and 13 on identical bytes, and the arms that move (catalog_hydration's abandon",
+        "arm, g3_xproc, ord197 r3/r4, ord224 shape-A) are the worker-and-timing family catalogued in",
+        "review/ord0490/suite_red_table_r1.txt. Nothing this order changed touches a table those arms read.",
     ]
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print("\n".join(lines))
