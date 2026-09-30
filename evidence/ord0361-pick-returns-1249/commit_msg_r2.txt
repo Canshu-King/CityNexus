@@ -1,0 +1,52 @@
+ORD-0361 -r2: the residual half, delivered on the line's own selection -- not a rebase of 11eee48d
+
+`review/S4-ord0361-map-tap-selection` (11eee48da2b117a2c0aafb2d71c50b0104b7d1fb) carried four things:
+markers that answer tap/Enter/Space, an unpickable marker that says why, a pick kept per journey, and a
+rail whose rows scroll to the picked stop.  Two of those landed underneath it in other orders --
+ORD-0390 made the map and the card share one selection and made the markers controls
+(`frontend/src/components/v8/MapPanel.tsx:421-434`, `role=button`, `tabIndex`, `click`, Enter and Space,
+`aria-pressed`), and ORD-0417 put the picked stop's name on the glass.  Measured on this tip before
+touching anything: 6 of 6 markers are controls, tapping marker 3 paints
+`图上选中的这一站 · Central Food Hall` and moves the heading to `已选中 · Central Food Hall`, Enter on
+marker 1 does the same, 0 console errors.  So the order's sentence -- 地图点选要有可观察后果 -- is met,
+and rebasing the old commit would have reintroduced a second selection: it keyed its own
+`focusedActivityId` while the line keys on `selectedActivityId`/`detailActivityId`, and the two names
+mean different things on the same prop.
+
+What is delivered here is the one half the tip does not do, measured as absent
+(`selected_stop_after_reload: null`, storage holding only `citynexus.v8.journey_id`,
+`citynexus.v8.trial_draft`, `citynexus.locale` and `citynexus.copilot.history.<journey>`):
+
+  frontend/src/app/V8Experience.tsx -- the picked stop is kept under `citynexus.v8.map_pick.<journeyId>`,
+    beside the shell's other journey-scoped references, and restored when that journey's plan is read.
+    Keyed by the journey the data belongs to, so a pick cannot cross journeys.  An id that is not a stop
+    on this plan is dropped rather than shown: printing a name the plan does not carry is worse than the
+    blank it would replace.
+
+  frontend/src/components/v8/MapPanel.tsx -- one real defect found while measuring that restore.  The
+    markers are created after the map reports itself ready, from the closure of the render that
+    scheduled the build, and that closure still holds the pre-restore selection.  So a selection that
+    already existed when the page came up painted every pin `aria-pressed=false` and no `selected`
+    class -- the glass named the stop while the pins contradicted it, and nothing repainted them until
+    the traveller clicked.  Traced at 0 / 1.5 / 3 / 6 s: all six false, permanently; one click and the
+    same pin flips to `true`.  Fixed the way the callback one line above is already fixed, with a ref,
+    and the `selected` class is applied on the same path because `map-selection.css:22` makes it the
+    visible half of the state.  First attempt at this was a wrong cause -- moving the paint above
+    `if (!map) return;` changed nothing -- and that change was reverted rather than kept as decoration.
+
+Measured after, same instrument, same private stack (own backend, own build byte-compared to what the
+port serves, own read-only copy of the preview database): three arms x two generations.  Before: pick
+restores nothing on any arm.  After: `normal` names `图上选中的这一站 · Old Town Gate` on arrival and
+again after reload with the pin painted `true` + `selected`; `foreign` (key written under a different
+journey id) restores nothing and both keys coexist; `stale` (an id not on this plan) names nothing and
+the entry is gone.  0 console errors on every arm.  Both `tsc` configs report 0 error lines; `vite build`
+exits 0.
+
+Not shipped, said plainly: an e2e arm in `frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts`
+covering the same three readings was written and does not pass -- it times out on a `locator.click`
+before any assertion of its own, in isolation as well as in sequence, so it is left out rather than
+loosened or skipped.  The receipts above are from a node driver, not from the acceptance suite.  Also
+left alone and named: that spec's four `reach` arms are red at this tip independently of anything here
+-- reproduced on untouched tip bytes with the same message and the same pixel
+(`a pixel whose top element is not one of its own pins: [{"want":["9"],"got":"none","at":[224,382]}]`
+at all four widths), which is stop 9's pin centre hitting nothing.
