@@ -16588,6 +16588,185 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0519 锚定改成能活的那条腿，且由服务端具名记腿；REPLAY 仍不算供给（车道 seed @01:33+08）
+
+基座现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `48aa7a9eaa33a9eaea9ed1d84a0e5f926c88d8f3`（`git ls-remote`）；候选 `refs/heads/review/newlane-ord0519-supply-legs-r1` = `a7c77d3061f556f633d7ff03ae8f468474481c0e`（推送后回读同值，工作树 `git status --porcelain` 0 行）。全单只动后端 1 枚文件 + 新增 1 枚工具 + 收据，无新写端点、无前端构建（盘 2.4 GiB 余量，已具名不建）。
+
+**1）现有通道量清（逐腿，带状态码与字节）**
+
+- 好盘面那趟默认顺序 photon,nominatim：photon 腿 `review/ord0519/READINGS.md:11` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行记 `http_status=200 bytes=396 elapsed_ms=5938`；北京那腿同件 `review/ord0519/READINGS.md:16` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行记 `http_status=200 bytes=380 elapsed_ms=3109`。- 我第一版把 Photon 写坏了：多带一个 `geometry=1` 参数， Photon 回 `http_status=400 bytes=108`（原文 "Geometry output requested but not available in database"），去掉该参数即 200 且 GeoJSON 仍带坐标——「看起来死的腿」其实是我自己请求错的腿，这点先记在我账上。- 同一次首跑里 nominatim 腿答了 `review/ord0519/READINGS.md:28` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行 `http_status=200 outcome=ANSWERED elapsed_ms=781`，photon 腿此后在好盘面上被记 `SKIPPED`（`review/ord0519/READINGS.md:13` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行 `nominatim_state=SKIPPED photon_state=CAPTURED`）。
+
+**2）选哪条腿由服务端具名报，REPLAY 不当供给**
+
+- 顺序读配置：`CITYNEXUS_ANCHOR_LEG_ORDER`，默认 photon 先 —— 函数 `backend/app/integrations/discovery/real_city.py:693` blob `69a024221a0a2cd1d5ccf5d79091cd6091e4a08b`，新腿类 `backend/app/integrations/discovery/real_city.py:703` blob `69a024221a0a2cd1d5ccf5d79091cd6091e4a08b`。- 记账不张冠李戴：`anchor.source` 只写真答的那条（好盘面 `review/ord0519/READINGS.md:13` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行为 `photon_city_anchor`）；没问到的腿写 `SKIPPED`；缓存命中那一形原先给两条腿都盖 `CACHED`（等于把 photon  grounds 记到 nominatim 头上），现改 `NOT_ASKED_THIS_CALL` 三条并列 `backend/app/integrations/discovery/real_city.py:1465` blob `69a024221a0a2cd1d5ccf5d79091cd6091e4a08b`。- 降级形也保锚定归属：`anchor_credit_kept` 两处 `backend/app/integrations/discovery/real_city.py:1662` blob `69a024221a0a2cd1d5ccf5d79091cd6091e4a08b`，同时 `counts_as_supply` 仍为 false。- 拒绝造名那条一字未松：种子只在 `provenance == LIVE_PROVIDER` 时继续，且校验锚必须记在答过的腿上；不满足就具名中止并把收据写盘 `tools/ord0519_demo_seed_r1.py:217` blob `904833fb9887b7ee10439d4f8a34e108d513bd67`。
+
+**3）两腿都不答的城市：格子里具名写，不默默少一枚行程**
+
+- 好盘面 `review/ord0519/READINGS.md:3` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行＝三枚行程在 `GET /api/v1/journeys` 回读为 3，城市集合 `review/ord0519/READINGS.md:4` blob `8c79fca7730c33437946ac4bac485954c78505c5` 枚；天津格 `review/ord0519/READINGS.md:23` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行记 `place_rows=11 activities=10 optimizer=ORTOOLS_CP_SAT`；空目录城市格 `review/ord0519/READINGS.md:25` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行记 `kind=no_supply_attempt_by_design`（对它发请求正是会给它造出地点的那一步）。- 盘面自身判语：`review/ord0519/READINGS.md:6` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行为 true，即四枚不变量（三行程、无一枚 REPLAY 当供给、每次 live 都记在答过的腿上、留一枚无供给城市）全绿。
+
+**4）反件两枚，都真跑（各自新库、各自端口）**
+
+- M1/G 遮掉能活那条腿（`CITYNEXUS_ANCHOR_LEG_ORDER=photon` 且把 photon 指到死口）：腿读数 `review/ord0519/READINGS.md:34` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行 `http_status=None outcome=NOT_ANSWERED_ConnectError`，服务端回 `provenance=REPLAY`，锚不记给任何腿（`review/ord0519/READINGS.md:35` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行），供给格写 `NO_REAL_PLACES_ON_THIS_SERVER`，进程退出码 `review/ord0519/READINGS.md:37` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行＝盘面没被假装成成功。- 同形第一次记录（M1）也留在件里：`review/ord0519/READINGS.md:40` blob `8c79fca7730c33437946ac4bac485954c78505c5` 与 `review/ord0519/READINGS.md:41` blob `8c79fca7730c33437946ac4bac485954c78505c5`。- 归属对跑（F）：只准 nominatim 当锚，它答了（`http_status=200` 781 ms）且记录里 `source=nominatim_city_anchor`、photon 未被告过 `review/ord0519/READINGS.md:29` blob `8c79fca7730c33437946ac4bac485954c78505c5` 行——两向都不串名。
+
+**5）我没做到与要说清的**
+
+- 降级形里那条 `nominatim: REPLAY_FALLBACK` 仍是**形**的名字、不是腿的判语；逐腿真相只在 `anchor_legs` 与 `anchor.source` 里。这一格我没改干净，写明而不是遮掉。- 后端整套测试我没跑（本单没改路由/模型，但这是缺口不是通过）；Overpass 的 category 腿在这一小时里抽过两次（同一条腿先前 `overpass=CAPTURED`，随后 `RESOLVER_UNREACHABLE`），我给种子加了一次带 25 秒间隔的有界重试，重试**不接受**降级答案，只再问一遍。- 号令者的 `:4951` 我从头到尾没用（我自己的私有后端 `:8795`/`:8796`/`:8797`，跑完已停），可以直接回收。- 禁令自查：`:8000`、`:4781`、`:4782`、`:8693` 未占用；共享 `_preview.db` 未写；`demo/reset` 未跑；整树导出与 vite 构建未新增（D 盘现读 2.4 GiB 余量）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 01:36 · 裁 ORD-0464 r7 请我点的那件事：`backend/app/main.py` 转回 LF（①），并开 ORD-0532 落地它
+
+**一、我为什么现在裁，而不是再拖**
+
+`8e5245f0` 在 00:14 那块把成因量清了：尖把 `backend/app/main.py` 整枚转成 CRLF（13836 行里 13836 个 CR 字节），于是任何带 LF 补丁的车道碰它都会得到**整文件冲突**。到现在为止，被这一条拦下过 rebase 的单有：ORD-0464（两轮：r7 与 r8）、ORD-0505、ORD-0461；同一族里还有几笔在等。这不是谁的单写坏了，是**结构性返工源**，所以不能再拖。
+
+**二、裁定（①）**
+
+`backend/app/main.py` 转回 LF，并在仓根加 `.gitattributes` 把 `*.py text eol=lf` 钉死。代价说清：那一笔的 numstat 会很大（整文件行尾变更），但它是一次性的；此后所有带补丁的车道都不再需要逐枚 hunk 归属表。
+
+**三、ORD-0532 题面（收件人 `8e5245f0`）**
+
+1. **两笔分开**：第一笔只做行尾归一（`main.py` CRLF→LF）+ 加 `.gitattributes`，**不改任何一行代码内容**；第二笔才是你要交的东西（如果本单没有别的内容，就只交第一笔）。
+2. **证明不是手改**：给出「归一前后 `git diff --ignore-cr-at-eol -U0` 为空」的读数，以及归一后 `main.py` 的字节数与 CR 计数（应为 0 枚 CR）。
+3. **`.gitattributes` 的内容逐行贴出来**，并证明它对 `*.py` 生效（例如在临时导出里 `git check-attr eol -- backend/app/main.py` 的答复）。
+4. **不许顺手改别的文件**；不许在这笔里夹带任何产品改动。
+5. 交件：候选推 `review/8e5245f0-ord0532-mainpy-lf-r1`，块落 `D:\moodle\_qoder_ledger_inbox\8e5245f0_<HHMM>.md`，交前自己跑 `claim_coordinate_check_r7.py --text <块> --expect-clean`，rc 必须为 0。
+
+**四、给所有在跑车道的同一句话**
+
+ORD-0532 落地后，任何手上有 LF 补丁、基座早于那一笔的候选都要**rebase 到它之后**再交；那之前反复重切 `main.py` 是白费力气。
+
+**五、我这一轮另外两条读数（顺带记，不是新裁定）**
+
+- 落地序列器第三批与第四批合计：ORD-0517 r2 与 ORD-0527 r3 已落地，尖现读 `173f811028638698bd5079f17a675c8915063b99`；ORD-0525、ORD-0464 r8、ORD-0500 三笔被 recut 打回（各 1 枚文件合不到车道自己那代字节上）。
+- 我在 `:4783` 这一代上用真浏览器走了一趟 `/v8/hub`：浏览器自己取到的入口是 `assets/index-BXpnOJjO.js`（与磁盘 index.html 同值），屏上渲染的是真中文产品文案、`pageerror` 0 枚、`data-testid` 里有 `trial-setup` 与 `trial-supported-row-福州`。这是**换代那一格的第三证**（前两证在 `CMDR 01:25` 那块），但它仍不是实体手机。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0521 空库→可走行程：非破坏供给门已落地并配闸；手机端那一半与北京那一腿具名待裁（车道 cff87c64，r1）
+
+基与尖：
+- 开工外读 `refs/heads/mirror/integration-frontend-apple-pass1` = 1e95d106f81b29048ba17695fd0e49172516b9b1
+- 交件前一秒再读同一支 = 48aa7a9eaa33a9eaea9ed1d84a0e5f926c88d8f3
+- 我的枝 `refs/heads/review/cff87c64-ord0521-empty-store-scene-door-r1` = 5e3c412c4f5724a5d7c79f1dbe2b1e3b0e06a874，`git ls-remote` 回读同值
+- `git merge-base --is-ancestor` 判 1e95d106f81b29048ba17695fd0e49172516b9b1 在 48aa7a9eaa33a9eaea9ed1d84a0e5f926c88d8f3 之内 ⇒ 我的基座在干线里
+- `git merge-tree --write-tree` 只读预测：退出码 0、CONFLICT 0 处 —— 这只预测合并形状，DRY 模式不跑闸，不算「可插」
+- 我基与最新尖之间 `backend/app/main.py` 已被他人动过，预测仍零冲突；我全部读数都取自上面那个基座，不冒充新尖读数
+
+一句话：`demo/reset` 的第一句就是 `reset_all`，所以干净库上从来没有一条非破坏的路能拿到「有站点的行程」；
+而 `catalog-hydrations` 的 `NO_REGISTERED_SOURCE` 是本地判出来的（`places_held == 0` 即判，那一支根本不发
+provider 请求）。仓库里其实一直躺着一个离线供给源 `data/mock/places.json`（provider_key=mock-city，读盘不开
+socket）。这单做的事就是把它登记成门：`POST /api/v1/demo/scene/ensure`。
+
+交付物（同一枝内三笔，末笔为 5e3c412c4f5724a5d7c79f1dbe2b1e3b0e06a874）：
+- 门的决策体 `backend/app/demo_scene.py:201`，供给腿的名字在同文件 `backend/app/demo_scene.py:48`
+- 路由 `backend/app/main.py:2192`，路径声明 `backend/app/main.py:2165`
+- 夹具行清单从 `seed_demo` 抽成一份共用函数：`backend/app/services.py:244`，破坏门改为调用它 `backend/app/services.py:390`
+- 契约 `contracts/openapi.yaml:20`（200/403/409/422 四形齐），生成客户端 `frontend/src/generated/api.ts:23`
+- 闸 `backend/tests/test_qoder_ord0521_empty_store_scene_door.py`（新增臂全部自开私有 sqlite；条数差值可直接核：`review/ord0521_collect_base.txt:1` 与 `review/ord0521_collect_candidate.txt:1`）
+- 量具 `live_checks/ord0521_empty_store_walk_r1.py`、`live_checks/ord0521_mutant_driver_r1.py`、`live_checks/ord0521_flake_probe_r1.py`
+
+你钉的四格，逐格读数（都在我自己的库里，验收过程零调用 demo/reset，也没拿它当前置）：
+- cell(1) 已动。空库先 `http_status=409`、`code=DEMO_SCENARIO_MISSING` —— `review/ord0521_empty_store_walk_r1.txt:4`；
+  走过门之后 `http_status=200`、refused 计数 0、plan_version_id 非空 —— `review/ord0521_empty_store_walk_r1.txt:13`
+- cell(3) 已动。供不出的目的地不再悄悄给一趟 0 站点的行程：`http_status=409`、`reason_code=DEMO_STATE_SUPPLY_UNAVAILABLE`、
+  正文直说 "cannot obtain places" 并列出它真供得起的城市与 failed_hop —— `review/ord0521_empty_store_walk_r1.txt:16`
+- 非破坏是可核对的而非口头：installed=37、already=0、rows_deleted=0 —— `review/ord0521_empty_store_walk_r1.txt:9`；
+  先植入一枚别人的 journey+place 再走门，那两行仍在 —— `backend/tests/test_qoder_ord0521_empty_store_scene_door.py:270`
+- 库内读回带 rowid：places 与 journeys 的实际行 —— `review/ord0521_empty_store_walk_r1.txt:18` 与 `review/ord0521_empty_store_walk_r1.txt:19`
+- cell(2)「清洁浏览器 + 空库 + 不开向导」**没做**，见下面「要点」；这格的浏览器读数我未取，具名 NOT_MEASURED_BY_LANE
+
+分母与对照（两侧都真产出了读数，同一命令、同一解释器 3.12.14）：
+- collect：基座 1562 条 —— `review/ord0521_collect_base.txt:1`；我这份 1578 条 —— `review/ord0521_collect_candidate.txt:1`；差值就是新增的 16 条臂
+- 整套：基座红 11 条 —— `review/ord0521_suite_base_faithful_r1.txt:557`；我这份红 12 条 —— `review/ord0521_suite_candidate_r2.txt:801`
+- 基座那 11 条名字逐字是我这份红集合的子集，另在我这份上重跑一趟红过 13 条 —— `review/ord0521_suite_candidate.txt:854`
+- 多出来的那枚 `test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation` 我**没**归给我自己：
+  它在纯尖上单跑 5 趟红 2 趟、在我这份上单跑 5 趟红 1 趟 —— `review/ord0521_flake_probe_r1.txt:1` 与 `review/ord0521_flake_probe_r1.txt:2`
+  两侧都能孤立地红 ⇒ 这是一枚竞态臂，判语只写「未归属」，不写「无新红」
+
+反件与自报：
+- 6 枚真变异全被杀（删行 / 把供不出的城市当成供得出 / 不读回执 / 令牌门失开 / 换了城市却交回旧行程 / 推进别人那趟）——
+  `review/ord0521_mutants_r1.txt:9`，每枚都注明是哪一条臂红的
+- 自报一次：驱动的第一趟 4 枚「红」是假的 —— nodeid 少了模块路径，pytest 报 "no tests ran"。驱动现在遇到空分母直接 ABORT，
+  上表是修好后重跑的
+- 自报第二次：我把 `seed_demo` 的中间 flush 去掉，导致父子序错、20 个模块连 collect 都进不去 ——
+  这就是上面基座对照必须先修好再量的原因；交付字节里已按行 flush 复原，原委写在提交语里
+
+剩下三格，具名不遮：
+- REQ-0521A（要您裁）cell(2) 的浏览器那一半。门是 operator 门：它要 `X-Demo-Scene-Token`，而浏览器给不出这枚头
+  （这与 ORD-0389 的裁语一致：demo mode 不等于许可）。两条路：① 预览/反代在服务侧补这枚头，前端不改；
+  ② 让无守护的 `demo/prepare-scenario` 在空库时退到这条加法供给（它已经会写 plan，新增的只是把夹具行装上）。
+  我倾向 ①，因为它不新造任何免鉴权写面。您点哪一条我就走哪一条。
+- 北京那一腿已经钉成臂而不是散记：CN-BEIJING 的 8 枚 place 供得上，但夹具约束是为 CNX-DEMO 写的，
+  于是状态是 `SCENE_INSTALLED_BUT_PLAN_REFUSED`、`refused=CatalogShortfall`，且门自己承认那行 journey 是它新建的 ——
+  `backend/tests/test_qoder_ord0521_empty_store_scene_door.py:338`
+- `catalog-hydrations` 的终态我只证到「它是本地判定」，没有把这条供给路接进那台状态机；要接就是另一单
+
+磁盘与方法：为做对照我建了一份纯尖工作树（`D:/moodle/_qoder_ord0521_20261001/base`，交付后仍在，等您一句话我就收）；
+先前用 `git archive` 导的那份对照基座缺根级 pytest 配置，同一枚 commit 量出红 38 条 vs 真工作树 11 条，
+已删除且其读数不再被本块引用（只留下被取代的说明文件 `review/ord0521_suite_base_named11.txt`，
+由 `review/ord0521_suite_base_named11_rerun.txt:310` 取代）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 01:36 · ORD-0461 r3 · 只剩我原本那半边：成员门在写之前就拒收服务器自己会读成已过期的时刻（含「等于现在」那一形），一行具名码 MEMBER_EXPIRY_IN_PAST 进契约，生成物只重放我本单那一行；两扇成员写门我没再实现，现尖已有 ORD-0503 的
+
+**坐标（写块前一秒现读）**：枝 `refs/heads/review/a68b0631-ord0461-member-expiry-in-past-r3`，头 30dbe2ed05653d9968c8fabdca82caf708cb838a；推送后 `git ls-remote origin refs/heads/review/a68b0631-ord0461-member-expiry-in-past-r3` 回同一枚 30dbe2ed05653d9968c8fabdca82caf708cb838a。切枝基座 = 现读尖 d7c08d1293835adc7b2628f7100263066d610322（你 22:43 记的 `d7c08d12` 我之前外读一致；我动工时又读到一枚更新的尖，基座取的是我落笔那一刻的 `git ls-remote` 值）。
+祖先核对 `git merge-base d7c08d1293835adc7b2628f7100263066d610322 30dbe2ed05653d9968c8fabdca82caf708cb838a` 含基座：True。枝上提交 2 枚，其中产品字节那一枚 3714b1d33ca4c7ce8f6488c45fd0b14d1c92a199；读数与证据落在其后一枚，产品字节与那一枚逐文件相同：True。
+
+## 一、范围：现尖有什么，我就只补什么（逐枚 `git grep -c` 现读，不采信转述）
+
+| 名字 | 我落笔时基座上的出现次数 |
+| --- | --- |
+| `MEMBER_EXPIRY_IN_PAST`（我这半边的码） | 0 —— main.py 与 openapi.yaml 各 0，见 `review/ord0461/READINGS_r3.txt:3` 的 add=1 行 |
+| `MEMBER_ROLE_UNCHANGED` / `MEMBER_ROLE_SELF_CHANGE_REFUSED`（ORD-0503 的两扇写门） | 已在现尖，我**没再实现**，本枝 diff 里不含这两扇门 |
+| `MAX_ADMINISTRATORS_PER_JOURNEY`（上限常数与契约键） | 已在现尖（`review/ord0461/READINGS_r3.txt:10`），我不重复 |
+
+角色枚举只用现尖那三值 `OWNER`/`ADMIN`/`COLLABORATOR`；我没往门里塞 `EDITOR`/`VIEWER` 之类（你踩过的那枚 422，我这单不需要它）。
+
+## 二、改的就是这一处比较：接现成那一枚，而不是再造一张钟
+
+- `backend/app/main.py:4408` 起，成员门先归一时刻，再问 `_expiry_verdict`（`backend/app/main.py:3934` 是它本来的定义处），答 `PAST` 就在写入前抛 `http_status=422`，码在 `backend/app/main.py:4412`；授权写在门用的是同一条比较（`backend/app/main.py:4036`），两扇门不可能各有一套「已经过了」的定义。
+- 产品字节：review/ord0461/READINGS_r3.txt:9（main.py 增删见同区，`backend/app/main.py` 是纯插入，行尾仍是它现尖那形：CRLF）。
+- 契约那一行把码挂在成员门已有的 422 上：`contracts/openapi.yaml:904`；对基座尖它是 1 增 1 删（`review/ord0461/READINGS_r3.txt:10` 里 contracts 那一行）。
+- 生成物按你的形制**只重放我本单那几行**：把「基座的契约」与「加上我这行的契约」各生成一次，取两者之差贴进基座原有的 api.ts —— `review/ord0461/READINGS_r3.txt:28`（生成侧 1 行、枝对基座尖也正好 1 行，反向删除 1 行）。整体重生成不归我，归 8e5245f0 的 ORD-0508。
+
+## 三、反例臂与「去掉判据必红」
+
+- 我这枚文件 5 臂，与邻测同跑：`review/ord0461/READINGS_r3.txt:21`（我的臂在内，含 ORD-0503 的 22 臂、ORD-0460 的 7 臂、ORD-0434、G6 词表闸、契约门、parity 门）。
+- 三种时刻各自钉死：过去 → 422 + 具名码 + **集合与存储都 0 行**；等于现在 → 同一枚码；未来 → `http_status=201` 且读回 `MEMBER_IN_FORCE`。前两枚读的是响应体里的 `error.reason_code`，不是状态码。
+- 一枚结构臂读门自己的源码切片：要求它调用 `_expiry_verdict`，并禁止门里再出现第二个 `<= now` —— 有人往门上焊一套自己的钟时它就红。
+- 变异（你 22:43 要的「反件逐枚形跑」）：`review/ord0461/READINGS_r3.txt:62`。两枚形（把判据变成永假、把那次调用摘掉）都让我的 3 臂红，而 ORD-0503 的 22 臂与 ORD-0460 的 7 臂在两枚形下都仍全绿；跑完 main.py 按 blob 复原一致。
+
+## 四、撞到的邻测怎么处理的（断言一字未动，也没放宽）
+
+三枚臂原本用「发一个已经过期的时刻」造一位失效成员，而这正是这次不再入库的那一行：`backend/tests/test_qoder_ord0503_member_doors.py` 两枚、`backend/tests/test_qoder_ord0434_share_grants.py` 一枚。
+改法是让门照样造那一行，再把截止时刻推进过去（时间本来就会这么使它失效）；问状态的两枚改为从读门重取，而不是留着写在门当场的答案。邻测选择集现在 67 臂全绿（`review/ord0461/READINGS_r3.txt:21`）。
+
+## 五、门禁与整套（当代重取）
+
+- parity：`review/ord0461/READINGS_r3.txt:22`；集合数 base `1624` → 我这 `1629`，差 = 1629（正是我新增的 5 枚臂）。
+- 前端：`review/ord0461/READINGS_r3.txt:32` / `review/ord0461/READINGS_r3.txt:33` / `review/ord0461/READINGS_r3.txt:34`，构建 `review/ord0461/READINGS_r3.txt:35`；入口产物名与本次测试库归属（自己副本，不碰 `_preview.db`）：`review/ord0461/READINGS_r3.txt:36`。
+- 整套：本树两趟 `review/ord0461/READINGS_r3.txt:39` / `review/ord0461/READINGS_r3.txt:40`，不动基线两趟 `review/ord0461/READINGS_r3.txt:41` / `review/ord0461/READINGS_r3.txt:42`；红数 mine=12, 13 base=12, 11。
+- 判据按集合不按单趟：`new_reds_on_my_tree_vs_base_union=tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage`，`my_core_is_inside_base_union=True`（`review/ord0461/READINGS_r3.txt:44`、`review/ord0461/READINGS_r3.txt:45`）。两侧逐趟会翻（`mine_flip=tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage`、`base_flip=tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation`），所以我不把任何一枚红说成我引入或我修好。
+
+## 六、我没做与没动的
+
+- 成员那两扇写门（改角色、我自己退出）没重写；上限常数没重写；`withdraw` 与 `self-exit` 的既有语义一字未改。
+- 匿名读路径与其它门的字节未动：本枝对基座尖只增不删的产品面见 `review/ord0461/READINGS_r3.txt:10`。
+- ORD-0507（上屏那三句）按你的顺序排在 r3 之后，我接着做；它的改前屏读我已取到两档（时钟那句括号里嵌成句，zh/en 都读到），另两处按实测要更正：现尖没有德文档（`TripLocale = "en" | "zh-CN"`），打卡拒绝句今天不印裸 uuid（`checkin.refused` 是无参定句）。
+
+## 七、下一手
+
+- 落地由你执行；合完请逐字节回验 `review/ord0461/READINGS_r3.txt:10` 列出的这些面。
+- 若你希望我把生成物整体重生（ORD-0508 那一族的活），请点名，我不自取。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:31 · 开 ORD-0531（关系层第三步：回收站按归属与共享态隔离）派给 `6a150e1e`；另叫醒三条静默车道
 
 **一、为什么现在开这一单**
