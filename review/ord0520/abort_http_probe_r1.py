@@ -31,6 +31,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import hashlib
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -43,6 +44,10 @@ MARKER = f"ORD-0520 abort probe {RUN_ID}"
 REASON = "家里临时有事，这趟先不去了（probe）"
 
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+
+def _sha1_of(path: Path) -> str:
+    return hashlib.sha1(path.read_bytes()).hexdigest()
 
 
 def request(method: str, path: str, body: dict | None = None) -> tuple[int, dict | None, int]:
@@ -154,6 +159,16 @@ def main() -> int:
         log.flush()
         log_text = log_path.read_text(encoding="utf-8", errors="replace")
         receipt["server"]["bind_seen_in_log"] = f"{HOST}:{PORT}" in log_text
+        # The bind proof has to be produced by this probe, not pasted into the receipt afterwards:
+        # the raw log is gitignored, so the lines the server itself printed (and the count and hash
+        # of the file they came out of) are written into the receipt here or the evidence does not
+        # exist for whoever re-runs this on a later generation.
+        receipt["server"]["log_bytes"] = f"{log_path.stat().st_size} B"
+        receipt["server"]["log_bytes_sha1_local_not_a_git_object"] = _sha1_of(log_path)
+        receipt["server"]["log_excerpt_verbatim"] = [
+            line for line in log_text.splitlines()
+            if str(PORT) in line or "Uvicorn running" in line or "Application startup" in line
+        ]
         receipt["server"]["health_http_status"] = healthy[0] if healthy else None
         try:
             ps = subprocess.run(
