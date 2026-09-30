@@ -1,0 +1,76 @@
+{
+ "started_local": "2026-10-01T00:50:44+0800",
+ "spec": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+ "denominator_journey": "22222222-2222-4222-8222-222222222222",
+ "stack": "frontend=:4795 backend=:4791 (this lane's private stack)",
+ "base_tip": "1e95d106f81b29048ba17695fd0e49172516b9b1",
+ "vacuous_attempt_kept_from_r1": "invented_day",
+ "runs": [
+  {
+   "arm_mutated": "base_generation",
+   "run_id": "basegen005044",
+   "mutation_landed": "M  frontend/src/app/v8PanelRegistry.tsx\nM  frontend/src/features/checkin/FootprintPanel.tsx\nM  frontend/src/features/checkin/footprint.css\n D frontend/src/features/checkin/footprintCopy.ts",
+   "playwright_exit": 1,
+   "infra_failure": false,
+   "summary_lines": [
+    "4 failed",
+    "2 passed (1.2m)"
+   ],
+   "failing_arms": [
+    "grouped_by_the_trips_own_day",
+    "refused_and_unreachable",
+    "retry_after_the_door_stops"
+   ],
+   "error_heads": [
+    "Error: one visible line per day the trip was on",
+    "Error: one visible line per day the trip was on"
+   ],
+   "log_bytes": 8012,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_r2\\mutant_base_generation_basegen005044.log"
+  },
+  {
+   "arm_mutated": "stale_on_failed_read",
+   "run_id": "mutstale_on005159",
+   "mutation_landed": "M frontend/src/features/checkin/FootprintPanel.tsx",
+   "playwright_exit": 1,
+   "infra_failure": false,
+   "summary_lines": [
+    "2 failed",
+    "4 passed (1.2m)"
+   ],
+   "failing_arms": [
+    "refused_and_unreachable",
+    "retry_after_the_door_stops"
+   ],
+   "error_heads": [],
+   "log_bytes": 9049,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_r2\\mutant_stale_on_failed_read_mutstale_on005159.log"
+  },
+  {
+   "arm_mutated": "grouping_merged",
+   "run_id": "mutgrouping005313",
+   "mutation_landed": "M frontend/src/features/checkin/FootprintPanel.tsx",
+   "playwright_exit": 1,
+   "infra_failure": false,
+   "summary_lines": [
+    "2 failed",
+    "4 passed (16.1s)"
+   ],
+   "failing_arms": [
+    "grouped_by_the_trips_own_day"
+   ],
+   "error_heads": [
+    "Error: one visible line per day the trip was on",
+    "Error: one visible line per day the trip was on"
+   ],
+   "log_bytes": 6848,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_r2\\mutant_grouping_merged_mutgrouping005313.log"
+  }
+ ],
+ "generation_under_mutation": "a3d2f00105fe270644591ed59c2b4f863f159307",
+ "tree_after": {
+  "dirty_lines_for_src": 0,
+  "raw": ""
+ },
+ "ended_local": "2026-10-01T00:53:29+0800"
+}
