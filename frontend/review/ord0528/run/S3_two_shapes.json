@@ -3,13 +3,19 @@
   "url_tail": "poster",
   "poster_screen": 1,
   "trip_screen": 0,
-  "day_blocks": 2,
   "stop_rows": 7,
   "map_present": 0,
   "plan_line_present": 0,
   "form_note": "这一屏是这趟旅行的长图形状：一天一块，可以存成图片。它不是行程本身——行程和地图用同一条链接的另一种形状打开，这里没有任何能改动别人旅行的操作。",
   "kicker": "别人分享给你的行程长图",
   "inner_text_chars": 407,
+  "paged_note": null,
+  "page_buttons": 0,
+  "day_blocks_pages": [
+   2
+  ],
+  "day_blocks": 2,
+  "day_blocks_on_exported_page": 2,
   "pixels": {
    "file": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/review/ord0528/run/S3_candidate_guest_citynexus-shared-poster.png",
    "hairline_groups": 5,
@@ -20,7 +26,7 @@
     842,
     1004
    ],
-   "width": 720,
+   "width": 780,
    "height": 1138,
    "background_rgb": [
     245,
@@ -72,8 +78,8 @@
    ]
   },
   "ihdr": {
-   "bytes": 135082,
-   "width": 720,
+   "bytes": 137384,
+   "width": 780,
    "height": 1138
   }
  },
