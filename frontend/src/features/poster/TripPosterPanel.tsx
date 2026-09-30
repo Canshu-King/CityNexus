@@ -95,7 +95,7 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
       return;
     }
     if (!savePosterBlob(result.blob, POSTER_FILE_NAME)) {
-      setState({ phase: "failed", step: "NoDownloadRoute", detail: "" });
+      setState({ phase: "failed", step: "NoDownloadRoute" });
       return;
     }
     setState({

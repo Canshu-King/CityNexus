@@ -368,8 +368,12 @@ test("ORD-0472 A4 when the canvas is refused the sheet names the step and hands 
   const line = (await page.getByTestId("poster-result").innerText()).trim();
   await page.waitForTimeout(1_500);
 
-  expect(line, "the failure must carry the sentence that names the step").toContain("长图没有生成");
-  expect(line).toContain("画布");
+  /* Exact equality, not "contains": after Q64 the line must be the dictionary sentence with nothing
+     appended, so an arm that only looks for a substring would still pass on ` … · 0px`. */
+  expect(
+    line,
+    "the failure line must be the dictionary sentence, nothing appended",
+  ).toBe("长图没有生成：这台设备的画布没有给出可用的绘制上下文。");
   expect(line.includes("poster.fail"), `a raw key reached the screen: ${line}`).toBe(false);
   expect(line.includes("已存为 PNG"), "a refused canvas is not a saved file").toBe(false);
   expect(downloaded, "no file may be handed over when nothing could be drawn").toBe(false);
