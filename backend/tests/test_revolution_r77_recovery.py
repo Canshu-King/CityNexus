@@ -944,6 +944,37 @@ def test_strategy_voi_prefers_missing_facts_matching_intent():
     assert decisions[0]["place_id"] == "unknown-museum"
 
 
+def test_strategy_pivots_after_source_path_has_no_structured_facts():
+    from app.services import _strategy_pivot_decisions
+
+    abandoned = SimpleNamespace(
+        id="unknown-source",
+        name="unknown-source",
+        category="museum",
+        tags_json="[]",
+        opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+        metadata_json=json.dumps({
+            "cost_evidence": {"status": "UNKNOWN"},
+            "fact_acquisition": {"official_web": {"status": "NO_STRUCTURED_FACTS"}},
+        }),
+    )
+    replacement = SimpleNamespace(
+        id="verified-museum",
+        name="verified-museum",
+        category="museum",
+        tags_json="[\"indoor\"]",
+        opening_hours_json=json.dumps({"status": "OFFICIAL_WEB_VERIFIED", "open": "10:00", "close": "17:00"}),
+        metadata_json=json.dumps({"cost_evidence": {"status": "KNOWN", "amount_minor": 0}}),
+    )
+    pivots = _strategy_pivot_decisions(
+        {abandoned.id: abandoned, replacement.id: replacement},
+        {"user_text": "indoor museum", "preferences": {"indoor": True}},
+    )
+    assert pivots[0]["decision"] == "ABANDON_SOURCE_PATH"
+    assert pivots[0]["abandoned_place_ids"] == ["unknown-source"]
+    assert pivots[0]["replacement_place_ids"] == ["verified-museum"]
+
+
 def test_official_source_boundary_rejects_private_targets_and_redirects(monkeypatch):
     with pytest.raises(ValueError, match="OFFICIAL_SOURCE_PRIVATE_TARGET"):
         _validate_public_http_url("http://127.0.0.1:8080/facts")

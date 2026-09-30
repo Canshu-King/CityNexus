@@ -1172,6 +1172,43 @@ def _strategy_voi_decisions(
     return decisions[:3]
 
 
+def _strategy_pivot_decisions(
+    places: Mapping[str, Place], intent: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Record a deliberate pivot after a source path yields no structured facts."""
+
+    profile = _strategy_profile(intent)
+    abandoned: list[Place] = []
+    for place in places.values():
+        if not _place_has_unresolved_visit_facts(place):
+            continue
+        acquisition = _place_metadata(place).get("fact_acquisition")
+        official = acquisition.get("official_web") if isinstance(acquisition, Mapping) else None
+        if isinstance(official, Mapping) and official.get("status") in {
+            "NO_STRUCTURED_FACTS",
+            "UNAVAILABLE",
+        }:
+            abandoned.append(place)
+    if not abandoned:
+        return []
+    replacements = [
+        place
+        for place in places.values()
+        if _catalogue_visit_eligible(place)
+        and _place_window(place) is not None
+        and _place_verified_cost(place) is not None
+        and place not in abandoned
+    ]
+    replacements.sort(key=lambda place: (-_strategy_place_score(place, profile)[0], str(place.id)))
+    return [{
+        "decision": "ABANDON_SOURCE_PATH",
+        "abandoned_place_ids": [place.id for place in abandoned],
+        "replacement_place_ids": [place.id for place in replacements[:3]],
+        "reason": "source returned no structured facts; preserve UNKNOWN and switch to verified catalogue rows",
+        "strategy_profile": profile,
+    }]
+
+
 def _catalogue_templates(
     places: Mapping[str, Place],
     travel: Callable[[str, str], int],
@@ -2239,6 +2276,7 @@ def generate_plans(
     strategy_intent = _latest_strategy_intent(session, journey)
     strategy_profile = _strategy_profile(strategy_intent)
     voi_decisions = _strategy_voi_decisions(session, journey, places, strategy_intent)
+    pivot_decisions = _strategy_pivot_decisions(places, strategy_intent)
     record_audit(
         session,
         action="strategy.value_of_information",
@@ -2249,6 +2287,7 @@ def generate_plans(
             "strategy_profile": strategy_profile,
             "intent": strategy_intent,
             "decisions": voi_decisions,
+            "pivots": pivot_decisions,
             "outcome": "prioritize_missing_facts_before broad acquisition",
         },
         actor_type="strategy_engine",
@@ -2438,6 +2477,7 @@ def generate_plans(
                 "strategy_profile": strategy_profile,
                 "strategy_intent": strategy_intent,
                 "voi_decisions": voi_decisions,
+                "pivot_decisions": pivot_decisions,
                 "score_provenance": score_provenance,
                 "mobility_snapshot_id": mobility_provider.snapshot_id,
             }
