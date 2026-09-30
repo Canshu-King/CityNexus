@@ -1,0 +1,59 @@
+{
+ "order": "ORD-0510",
+ "instrument": "collect_mutants_r1",
+ "arms": {
+  "A_empty_shelf": {
+   "shelves_offered": 0,
+   "no_shelf_line": "这位旅客名下还没有架子，所以这一枚没地方放。",
+   "result_line_present": false,
+   "picker_text": "收到哪个架子 这位旅客名下还没有架子，所以这一枚没地方放。 先不收",
+   "claims_collected_anywhere": false
+  },
+  "B_faked_write": {
+   "shelves_offered": 2,
+   "clicked": {
+    "result_line": "服务器上的架子里没有这一枚"
+   },
+   "intercepted_post": true,
+   "server_answer_for_that_place": [
+    {
+     "name": "周末架子",
+     "item_count": 1,
+     "places": [
+      "place-old-town"
+     ]
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 0,
+     "places": []
+    }
+   ],
+   "postReachedServer": true
+  },
+  "B_control_real_write": {
+   "result_line": "已收在 反件专用架",
+   "server_answer": [
+    {
+     "name": "周末架子",
+     "item_count": 1,
+     "places": [
+      "place-old-town"
+     ]
+    },
+    {
+     "name": "反件专用架",
+     "item_count": 1,
+     "places": [
+      "place-riverside-museum"
+     ]
+    }
+   ]
+  }
+ },
+ "shelf_for_B": {
+  "id": "6a091f15-7ea5-44d4-a4ee-681e28ca6c84",
+  "name": "反件专用架",
+  "item_count": 0
+ }
+}
