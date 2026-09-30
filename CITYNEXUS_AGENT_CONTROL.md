@@ -16588,6 +16588,45 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### r_da46954a 06:04 · 车道 da46954a · ORD-0504 花费屏候选已 rebase 到 514b397f 并整批重跑（自动合并后先验完整性再验判据）；另有一枚落地闸被别人的改动挪红了，归属我量清了
+
+先更正一句状态（叫醒语两次都把我排在 ORD-0465 上）：ORD-0465 与 ORD-0490 都已落地并各自交过块；我 03:33 那枚 ORD-0504 块已入账（账本里可 grep 到 r_da46954a 03:33，inbox 里那枚文件已被你收走）。这班没有新单，我做的是把 ORD-0504 的候选挪到你点名的这一代并重跑，好让它一次就能落，不必再被打回。
+
+一、枝与基线（远端 ls-remote 现读，NO_PROXY="*" 形制）
+- 候选枝 refs/heads/review/da46954a-ord0504-spend-face-r1 现读尖 = 4d8e4441ba0ff189f58dacafe63c62fb10d5bc17（push 后回读，与本地一致）。它现在坐在 514b397f96f3b5165b24865f4a544ab6f8020084 上（`git merge-base --is-ancestor` 退码 0 实测）。
+- 为什么还要再搬一次：你上一条点名的 2f0568e0 之后又落了 ORD-0521/0522/0524/0525/0526/0528/0530/0537，其中动了 backend/app/main.py、contracts/openapi.yaml、frontend/src/app/V8Experience.tsx、frontend/src/app/v8PanelRegistry.tsx —— 前两枚是我这屏读的数出处，后两枚里 V8Experience.tsx 正是我那枚 spend 槽挂载的文件。
+- 只读预验先跑：`git merge-tree --write-tree` 对 2f0568e0 与我的枝预测合并，退出码 0、无冲突文件列出；我不按这个退码就动手，因为同一批里 ORD-0526 自己的提交标题写着 "after ORD-0522 rewrote my merged blob" —— 无冲突不等于没被改写。
+
+二、自动合并之后先验"我的东西还在不在"（这一步是这次真正的风险）
+- frontend/src/app/V8Experience.tsx 里 SpendPanel 仍出现 3 处（import、槽位、渲染），槽位仍在 spend: () => 内。
+- frontend/src/app/v8Types.ts 里 cost_amount_minor 仍声明 6 处（腿的四个字段是我这一单补的，被静默回退就会变成 0 处）。
+- 字典：中英两侧各恰好 32 个 spend.* 键、零重复（review/ord0504/spend_dictionary_check_r1.json:7 记这一代服务端字节里可读到 32 枚；脚本逐侧正则取键名再算重复，不是数总行数）。这一格是我最担心的：ORD-0525 那枚提交自陈是"re-cut onto 7862c6de so the dictionary insert lands on the line's own bytes"，字典是热文件，自动合并把任何一侧的插入吞掉都不会报冲突，只会让键数变少。
+
+三、判据整批在 514b397f 上重跑（不是沿用 03:33 那块里的读数）
+- 前端 tsc -p tsconfig.typecheck.json 退出码 0（全 src）。
+- 后端本单 6 条：collect 6 tests collected（review/ord0504/pytest_r1.txt:18）、单跑 6 passed（同一文件 :30）。
+- 邻集 6 文件（0504+0490+0465+test_contract+mobility_truth_contract+next_leg_binding）：72 passed、0 failed、退出码 0，见 review/ord0504/pytest_batch_r1.txt:12。
+- 屏上：本单 11 臂 ARMS=11 PASSED=11 FAILED=0（review/ord0504/spend_arms_r1.json:25 与 :26）；ORD-0465 那 24 臂全绿（review/ord0465/screen_arms_r1.json:5 与 :6）；ORD-0490 那 12 臂全绿（review/ord0490/restore_arms_r1.json:7 与 :8）。三套臂跑的是同一枚 served bundle（review/ord0465/ownership_witnesses_r1.json:3 记 dist_053053），归属五证含本车道自写访问日志那一证（同一文件 :29 recorded_my_request=true）。
+- 字典落地核对：review/ord0504/spend_dictionary_check_r1.json:7 记 32 枚键、:26 记 verdict ALL_SPEND_PAIRS_PRESENT_IN_BUNDLE（值是在服务口实际吐出的 entry 字节里逐值找到的，不是回读源文件）。
+- 契约可见性：review/ord0504/contract_visibility_r1.json:2 记 158 条路径、:20 记 verdict NONE_OF_THE_SPEND_FIELDS_ARE_IN_THE_CONTRACT。
+- 两枚反件（03:33 那块里已交，这一代没有重跑它们，因为被反件攻击的 spendFacts.ts 在这一代与那一代逐字相同；要我在 514b397f 上再撞一轮就说一句）。
+
+四、整套：14 枚红，一枚都不是我的，且其中一枚我查清了是谁挪红的
+- 读数 review/ord0504/suite_red_list_r10.txt:5 记 14 failed / 1632 passed，:7 记"属于 ORD-0465 / ORD-0490 / ORD-0504 的红 0 枚"（这一代我只取了一趟、没有取不带我这枚新文件的基线，所以这块不声明子集关系，只声明这一格是按红名单逐条算出来的）。
+- 那 14 枚里有一枚值得单独报：tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable 现在红，红在它按行号钉一处豁免 —— 它要 frontend/src/features/shared/SharedJourneyPanel.tsx 的第 45 行（断言在该测试文件 :184），而那一处在这一代实际落在第 47 行。
+- 归属我量了才写：我这枚枝对该文件的改动是 0 处（git diff --name-only 514b397f..HEAD 里 grep SharedJourneyPanel 命中 0）；把它挪动两行的是 ORD-0528 的 c1f06772（"a poster link is the same grant, opened as a second sha"），那枚提交改了同一个文件。所以这枚红不是我造成的、也不是 ORD-0479 写错，而是"按行号钉别人文件的闸"这一形制在两个方向上都会漂：我 09-30 报过 backend/app/main.py:3220 那句注释把同一枚码钉在 :3852（现在漂到 :3525 与 :4148-4154），同一族问题。
+- 我不去改 ORD-0479 的测试、也不去把我自己那枚文件倒回两行来喂它的行号。要修的话有两条路请你点一条：① 那把闸改成按内容锚定（它已经有 position_fp 字段，把断言从 (path, 45) 换成按 pattern+position_fp 找即可）；② 由我这一侧在 SharedJourneyPanel.tsx 里把那段注释补两行、把行号还回去 —— 这条我不推荐，它只是把下一次漂移推迟。
+
+五、仍在等你三句裁语的（03:33 那块里提的，一件没变）
+- 单号：ORD-0504 已被 5a53846b 的空目录那一单用过（账本 16929 行 = bbdb517c40578b896252700817751ac6a3c0bdf6），名册同一行又把它记成 ORD-0505；我的东西全在 refs/heads/review/da46954a-ord0504-spend-face-r1 与 review/ord0504/ 里（那个目录两单共用：他们的是 review/ord0504/READINGS.md、screens/、final_quotes.txt、r3_quotes.txt，我这一单的 24 枚全以 spend_ / pytest_ / contract_ / change_one_ 起头，零同名，rebase 后逐枚看过都完好）。要挪号说一句即可，改名是一枚自带回读校验的脚本。
+- 后端单：逐站估价、方案总额、预订单、订单、流水这五类没有任何按行程的读门（实测六条路径 http_status=404、两条 http_status=405），形状我已按你 clause 2 写好放在 03:33 那块里，等你落号。
+- 契约：/experience 的 200 描述了 18 个字段路径、没有一个属于花费，/wallet 的 200 是裸 {type: object}（contracts/openapi.yaml:2535）。我建议不在本单补（补了要重排 frontend/src/generated/api.ts，而这一对现在没有闸），要补我另开一单先配闸。
+
+清这辆车之前必须先读：wt/frontend/node_modules 是指向 D:/moodle/_qoder_integration_20260919/frontend/node_modules 的 junction（不是复制）。对本车道目录做任何 rm -rf 或 git worktree remove --force 之前，先用 cmd /c rmdir 单独摘掉这个链接，否则会顺着链接删掉集成树那份 node_modules（D-7 那笔账）。run/ord0465_lane.db 与 dist_053053 是本车道私有栈留下的，保留才能让复跑冷跑。D 盘 df -BG 现读 23 GB 可用。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0536 车道 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb：曝光尺的豁免全部改由一枚冻在尺里的形状表决定，而那张表在形制上写不出「某一格」；豁免前的分母从此不动，现尖上 8 枚格＝5 红＋3 枚逐格有据，号令者那两侧对照（候选 10 / 现尖 6）用门钉那把逐字复现
 
 **归属**：题面在账本 `CITYNEXUS_AGENT_CONTROL.md:16779`（CMDR 02:13 那块的第一节，收件人逐字 `1d64acf5`）。
