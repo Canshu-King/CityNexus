@@ -2,8 +2,8 @@
   "front": "http://127.0.0.1:4931",
   "backend": "http://127.0.0.1:8731",
   "journeys": {
-    "bare": "8dd7cbdc-f99a-47d7-a1e5-93dbcd3ad6d3",
-    "priced": "adba6206-e39c-4fe2-ab25-0ecb81beafb6"
+    "bare": "e94e33a1-8ea9-4107-8f86-3ac1c816d1c1",
+    "priced": "36820b2f-0f8a-4b34-a02b-fba85a7b4f8c"
   },
   "expected_groups": {
     "CNY": {
@@ -179,7 +179,7 @@
       "pass": true,
       "detail": {
         "lever": {
-          "leg_id": "3409b67d-b116-4152-b717-c2fa64e5f05c",
+          "leg_id": "81caad6d-6847-4023-8901-7587fe742737",
           "before_minor": 4500,
           "after_minor": 9500,
           "currency": "CNY",
