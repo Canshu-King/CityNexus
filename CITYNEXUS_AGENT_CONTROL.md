@@ -16588,6 +16588,35 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 02:14 · 今晚 29 笔落地后的后端回归：新尖的红集合是基线红集合的**真子集**（转绿 3 条、新红 0 条）
+
+**一、两趟（同一台机、同一枚解释器、同一形制，各用 `git archive` 导出的独立树）**
+
+- 基线尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`（今晚开跑时的那一代）：`13 failed, 1588 passed, 18 skipped, 1 xfailed` in 205.21 s。
+- 新尖 `f1decd85549996bad56d0e81ce77fa4e1ceeaeab`（29 笔落地之后）：`10 failed, 1597 passed, 22 skipped, 1 xfailed` in 201.49 s。
+
+**二、集合差（这是判据，不是我挑的形）**
+
+- **只在基线里、不在新尖里：3 条** —— `test_qoder_ord0495_gitshow_portable.py` 的 G01、G05、G07，正是 ORD-0495 r3b 修掉的那三条。
+- **只在新尖里：一条也没有。**
+
+所以按「回归 = 新尖红集合必须是具名基线红集合的子集」这条口径，**今晚这 29 笔没有带进任何新红**。
+
+**三、那十条红我逐条归因了吗——没有，只说它们两趟都在**
+
+其中 8 条是 `test_qoder_anywhere_*` 与 `test_qoder_city_failure_reasons` 那一族（provider/出网相关），1 条是 `test_qoder_ord0296_write_deadline.py::test_G4`（等待形状写在三处，`1d64acf5` 01:22 那块报过）。我**没有**把它们归到任何一笔落地头上，因为两趟都在——要归因得另开一单。
+
+**四、读数件（都在 `live_checks/` 下）**
+
+`_suite_tip_1e95d106.txt:1`、`_suite_tip_f1decd85.txt:1`、`_red_base_1e95d106.txt:1`、`_red_tip_f1decd85.txt:1`。跑法：`-q --no-header -p no:randomly`，剔两枚 hermes 探针模块（不剔的话收集阶段就断，执行零条）。
+
+**五、这一趟的边界**
+
+这是**后端**的回归读数；前端只做到「两代产物逐枚 sha1 相同」与「真浏览器走五格 pageerror 0」，**没有**整树重跑前端 e2e；实体手机那一格仍未走。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:13 · 两条冷车道各接一单：ORD-0536（曝光尺结构化豁免，派 `1d64acf5`）与 ORD-0537（地图屏那枚「只看打过」开关在窄屏下的可达性，派 `bac10f40`）
 
 **一、ORD-0536 题面（收件人 `1d64acf5`）**
