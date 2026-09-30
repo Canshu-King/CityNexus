@@ -16588,6 +16588,101 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0523 车道 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb：整套在干净导出上跑不起来的那 20 枚收集错误，根因不是 probe 没入库，是 pytest 的 pythonpath 里没有仓库根——一行修好，两代读数与反件都交
+
+**先纠正事实（印出我读了什么，不是断言）**：号令者说「测试 import 的那批 probe 根本没入库」。现读不是这样：`git ls-tree -r --name-only 1e95d106f81b29048ba17695fd0e49172516b9b1 -- scripts` 里名字含 `hermes_r` 且含 `probe` 的有 **23 枚**，`scripts/hermes_r9_mcp_context_probe.py` 是 `65df31df 2026-09-26 03:27:29 +0800 ORD-0318 r3 port Hermes harness minus the two unresolvable tests` 这一笔进的线，且在 1e95d106f81b29048ba17695fd0e49172516b9b1 与其前两枚基座上逐枚数过都是同一个数。导出树里也确实在（我 `git archive` 后 `ls` 过）。所以**甲那一支（把 probe 真入库）在这条线上已经是完成状态**，我不再交一遍；乙（让测试具名探测、带原因 skip）我判**不该做**：那 20 枚文件在补齐路径后全部收得起、且 58 条臂全绿，给它们加 skip 等于把 58 条真断言永久藏起来——正是本单禁止的那一形。
+
+**真正的缺口**：`backend/pyproject.toml` 在基座上原本是 `pythonpath = [".", "../agent-mcp"]`，交付后是 `pythonpath = [".", "../agent-mcp", ".."]`——pytest 的 rootdir 是 `backend/`，所以它把 `backend/` 与 `agent-mcp/` 放上 sys.path，**从不放仓库根**；而那 20 枚文件 import 的 `scripts.<probe>` 就在仓库根下。于是它们只在「调用方自己记得补 PYTHONPATH」时收得起：老 worktree 里 cwd 的父目录恰好把根带上了，所以车道本地绿；干净 clone、`git archive` 导出、新车道 worktree、落地门的根测试那一腿、以及以后 CI 都没有人补，就是 20 枚 ModuleNotFoundError 把整套打断。
+
+**改的一行**：`pythonpath` 追加 `".."`。相对我自己那一笔的父 `1e95d106f81b29048ba17695fd0e49172516b9b1` 改 1 枚文件：`backend/pyproject.toml` +6/−1。已落地：现读尖 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2` 上那一枚 `backend/pyproject.toml` 的 blob 与我枝上同名文件逐枚相同（两侧都是 `f2cd4ee480a054765dd9a616d4db2ad5d5558f7f`），`merge-base --is-ancestor` 也回真。没动任何测试文件、没删断言、没 `--ignore`、没有永真断言。
+
+## 两代现读（两条命令逐字，cwd 与 PYTHONPATH 都写明）
+
+解释器：`D:/moodle/CityNexus/.venv/Scripts/python.exe`（CPython 3.12.14）。**两跑都不在环境里设 PYTHONPATH**（这正是缺口的形状：交付后不需要它）。
+
+```
+$ git archive 1e95d106f81b29048ba17695fd0e49172516b9b1 backend scripts agent-mcp tools data contracts | tar -x -C <export_tip>
+$ cd <export_tip>/backend
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests -p no:randomly -q --collect-only
+1562 tests collected, 20 errors during collection      <- 件 blob 60899137f2324d6e133d3c510034fc0d824a8231
+
+$ git archive 79d4fd564d6430769a39b81e81074f70f0be5c2d backend scripts agent-mcp tools data contracts | tar -x -C <export_mine>
+$ cd <export_mine>/backend
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests -p no:randomly -q --collect-only
+1620 tests collected                                              <- 件 blob 412041269b7160e49b2e75f8b4f6901745d9403e
+
+$ cd <export_tip>/backend   # 同一棵基座树，把打断整套的 20 枚逐具名 --ignore，才有「修前能跑的那部分」的分母
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests -p no:randomly -q $(cat ignore20)   # 20 条 --ignore 逐枚具名，件 blob 41e71479c376c19d1812967549eeecc4d6c99c05
+38 failed, 1502 passed, 21 skipped, 1 xfailed              <- 件 blob 792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f
+
+$ cd <export_mine>/backend
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests -p no:randomly -q
+38 failed, 1560 passed, 21 skipped, 1 xfailed              <- 件 blob f701d9232c6a1ca3f4f57e7be071ed27ae7285da
+```
+
+`1620` 减 `1562` 等于 58，正是那 20 枚文件自己的臂数；passed 也恰好多 58（1502 → 1560）。
+
+## 红集合的归属（两趟都贴，不择其一）
+
+两跑都是 38 枚红，但**集合不是逐字相同**：只有基座有的 `tests/test_qoder_stay_generation_operations.py::test_acceptance_answers_while_the_provider_is_still_being_asked`；只有我这跑有的 `tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one`。
+把这两枚单独再跑一次（同一棵交付导出树）：`29 passed, 2 warnings in 14.37s`——两枚单跑都绿。`ord224_g3_generation_measurement` 的 shape-A 那一臂是先前就记过名的状态敏感臂（同字节两趟红数会漂），所以这一对换向我不算进本单，也**不写成「无新红」**。逐条 id 的集合差在件 blob 3488b57490605b8630c9ae00a0fc7bdfb549a6ed，两跑原文在 792b8057fb2cdccf815d2f4cb2aea0b2aae2c19f 与 f701d9232c6a1ca3f4f57e7be071ed27ae7285da。
+
+## 反件一枚：probe 真的缺失时不会假装全绿
+
+在**已修好**的导出树里，把 `scripts/hermes_r9_mcp_context_probe.py` 移出去再收它那一档：
+```
+$ mv scripts/hermes_r9_mcp_context_probe.py ../_hidden_probe.py
+$ cd backend && python -m pytest tests/test_v18_hermes_r9_mcp_context_probe.py -p no:randomly -q --collect-only
+E   ModuleNotFoundError: No module named 'scripts.hermes_r9_mcp_context_probe'
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!
+no tests collected, 1 error
+```
+放回去之后同一条命令回 `2 tests collected`。原文件 blob f87e4460f97c6110e66a3bd45664b09a67c31324；放回是逐字节比对的（与该 blob 在 1e95d106f81b29048ba17695fd0e49172516b9b1 里的 `git cat-file blob` 相同，35,976 B）。
+⇒ 这一行只把「根不在 path 上」这一形修掉；真的少了一枚 probe 仍然响，不会被 skip 成绿。
+
+## 形制与边界
+
+- 基座 = 我开工那一秒的现读尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`；写这块之前再读现尖 = `822db3d9f07b9c7d535e12afbdeb3074dd94acb2`。**落地判据用字节相等不用祖先**（这一族会被 recut 重挂提交）：已落地：现读尖 `822db3d9f07b9c7d535e12afbdeb3074dd94acb2` 上那一枚 `backend/pyproject.toml` 的 blob 与我枝上同名文件逐枚相同（两侧都是 `f2cd4ee480a054765dd9a616d4db2ad5d5558f7f`），`merge-base --is-ancestor` 也回真。枝 `review/S4-ord0523-clean-export-collection` 头 `79d4fd564d6430769a39b81e81074f70f0be5c2d`，`ls-remote` 回读与本机 `rev-parse` 逐字相等；对现尖只读预测 `git merge-tree --write-tree` 退出 0、预测树 `1a4c32309cafa15a341a41e9ad27693c43919a2b`。
+- 权威线 0 次移动；账本 0 次直写（本块走收件口）；`:8000` `:4781` `:4782` `:8693` 一枚没占；`_preview.db` 一字未读未写（这三跑全在 `git archive` 导出树上，库是 pytest 自己的临时库）；`demo/reset` 0 次；没有新开整树导出——三棵导出树只含 `backend scripts agent-mcp tools data contracts` 六段，逐棵实测 17,189,758 B、16,783,996 B、17,381,458 B，合计 51,355,212 B（件 `export_sizes_r1.json` blob 622555948a5a1dfa2758c91423e91b6387ed0658），跑完留在原地 `work/ord0523/` 等号令者处置。
+- 证据 11 件在 `commander/control` 的 `evidence/ord0523-clean-export-0053/`，逐件本机 blob 与服务端读回 blob 相同、byte_equal 全真（回执 blob 05bea395b55a3f2ceb3b98bbd3ea24789672d0b3，本轮重试过的路径：`无`）。汇总读数两件：ff8b835b25fcfc068abefe2fa3e90101d0c33111 与 3488b57490605b8630c9ae00a0fc7bdfb549a6ed。
+
+## 仍未改善（不折进已收口）
+
+- 修完之后整套**仍有 38 枚红**，本单不吞它们：它们与那 20 枚收集错误无关（两跑红集合只差一枚换向，见上），其中号令者 19:1x 那块里点名的 `test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place` 在我这跑里也在红集合内（busy_timeout 的等待形状现在写在三处，第三处是 `main.py`）。那一格是产品形状问题，不是导出问题，要不要并单归号令者。
+- 我**没有**把 `PYTHONPATH=backend;<树根>` 从车道习惯里拿掉：这一行只是让「不依赖它」成立。落地门与 CI 那两腿是否已经在用 `git archive` 导出跑，仍要号令者自己现读，我只证了我这一棵。
+
+
+### ORD-0464 车道 8e5245f0 · r8：r7 那两枚过期面（`main.py` 与注册表）按现尖重切，逐枚 hunk 归属表照带，生成物仍由契约重生成
+
+**为什么 r7 被打回（我自己复现了门看到的两枚面）**：r7 的基座是 1e95d106f81b29048ba17695fd0e49172516b9b1，之后落进来的三笔里，ORD-0515 给 `frontend/src/app/v8PanelRegistry.tsx` 加了 1 行（长图入口那格），ORD-0495/ORD-0511 给 `backend/app/main.py` 加了 17 行删了 6 行——两枚都是"尖动了我的面"，不是我改了别人的行。
+**r8 的交付**：`refs/heads/review/Q-ord0464-abort-reason-r8` 回读 = 73e44567563d0a8d30459216f6b930dae7661aaf（产品字节 415b8d99f2bacba770b31204cb4abc2b1367a564、当代收据一笔），基座 = 我开工时现读的 bf3ad16358738206918f3c74c57ec1f785ad4ef9。
+**落地前自查（写完收据后又现读一次尖，它已经又前进到 822db3d9f07b9c7d535e12afbdeb3074dd94acb2）**：`git merge-tree --write-tree 822db3d9f07b9c7d535e12afbdeb3074dd94acb2 73e44567563d0a8d30459216f6b930dae7661aaf` 退出码 rc=0、合并树 f0c5fa09d84d89a920ab9ababcac028e6072c0dc；
+**逐枚面比过**：本枝相对基座的 23 枚面（11 枚产品 + 12 枚收据）合并后 blob 与枝上自己那枚**全等，DIFF 0 枚**；并且新尖相对我基座动过的文件里，没有一枚落在我的 23 枚面上（那句"没有一枚"是逐枚 `git diff --numstat 基座 新尖 -- 面` 量出来的，不是推断）。`refs/heads/master` 回读 = 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，权威线我没动。
+
+**`main.py` 那一腿仍是真冲突，成因还是行尾**：现尖这文件是 CRLF（bf3ad16358738206918f3c74c57ec1f785ad4ef9 上 13847 行、13847 个 CR 字节），我其余面全 LF，所以 LF 补丁三方合并必然整文件相撞。
+解法照号令者说的两方都保住：以尖那份为文件本体 → 归一 LF → 只重放我这 6 枚 hunk → 逐行装回 CRLF（结果 13891 行、13891 个 CR 字节、610421 B）。
+**证明**：`git diff --ignore-cr-at-eol -U0 <尖> -- backend/app/main.py` 的 6 枚 hunk 与 `<r6 基座>..<r6 件尖>` 那 6 枚的增删行逐枚同序同文；对尖的 numstat raw 与 ignore-cr 都读 46 增 2 删；尖自从我旧基座以来给这文件加的 796 行一行没被我改写。
+**逐段归属表**（每枚 hunk 在尖上的位置 + 我替换掉的原行 + 我新增的行）在 73e44567563d0a8d30459216f6b930dae7661aaf:review/ord0464-abort-reason/READINGS_R1.md:16 起，第 6 枚（写入那半）在 `:66`。
+`frontend/src/app/v8PanelRegistry.tsx` 这轮 16 增 0 删，尖那 1 行长图入口仍在文件里（我 grep 了自己这份，`poster` 命中 4 处）。
+
+**生成物由契约重生成（四个证明都在 r8 上重跑）**：从 bf3ad16358738206918f3c74c57ec1f785ad4ef9 的契约重生成 vs 那代已入库的 `frontend/src/generated/api.ts` = 差 0 行（尖自洽）；从我合并后的契约重生成 vs 尖那份 = 35 增 1 删，唯一那枚删除是 `deleteJourney` 的 `requestBody?: never;`；delta 里 grep `V13NamedRejection`/`CollectionFolder` 命中 0 枚（别人的行不带走）；同一枚契约再跑一次差 0 行（幂等）。
+
+**当代读数全重取（无一处沿用 r1..r7）**：本单模块 `13 passed`；九面同跑 `99 passed`；`python tools/verify_openapi_parity.py` rc=0，两行 `formal 173; runtime 173; missing 0; extra 0` 与 `schemas formal 90; generated 90; missing 0; extra 0`；
+收集（在 73e44567563d0a8d30459216f6b930dae7661aaf 这棵树上跑）1580 tests collected / 20 errors，`--ignore` 掉我这枚测试回 1567 / 20 ⇒ added=13 纯新增，20 枚错误全在 `test_v18_hermes_*`；
+前端门 `tsc -p tsconfig.typecheck.json --noEmit` rc=0、`vite build` rc=0、入口产物 `/assets/index-SLuEPX70.js`（1554072 B）；
+八臂门禁 `playwright rc=0`、stats expected=8 / unexpected=0 / skipped=0 / flaky=0、时长 5153.788 ms，逐字在 73e44567563d0a8d30459216f6b930dae7661aaf:review/ord0464-abort-reason/GATE_R1.txt:18；
+反件 6 枚全咬、逐枚字节还原、末了干净重建 rc=0（表在同件 `:30`）；
+**归属证据**：库仍是这条车道那份 `D:/moodle/_qoder_q_ord0369_wk/q0386.db`，`:8713` 是我这棵树的 backend、`:4192` 是我这棵树建出的包（服务中 index 指向的那枚 bundle 里 `journey-abort` 命中 9 枚、`ITINERARY_NOT_USEFUL` 命中 1 枚，逐字同件 `:10`）；
+scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035 在我这份副本 in MY copy=1、versions=9，probe versions=21。
+屏读三态各一趟（viewport 390x844，读 innerText、我自己看过 PNG）：DECLARED 那句是「这趟已经在回收站里。服务器记下的原因是：预算兜不住、被保护的安排被排掉了。」，SKIPPED_BY_TRAVELER 是「当时你选了不说明原因，我们也不会替你编一个。」，NOT_ASKED 是「这台服务器没有收到过这个问题，所以也没有原因可记。」，三枚行在 `journey_outcome_events` 里各一行、`event_type=JOURNEY_DELETED`（JSON 在 73e44567563d0a8d30459216f6b930dae7661aaf:review/ord0464-abort-reason/SCREEN_READINGS_R1.json:1）。
+
+**待你裁的那件仍未裁，我按现状做了**：`backend/app/main.py` 还是全树唯一一枚 CRLF 大文件（新尖上 13847 行 / 13847 个 CR 字节）。裁语没到之前我不改行尾，只做"以尖为本体 + 重放我的 6 枚 hunk + 装回 CRLF"这一套，代价就是每轮都要自带归属表。
+
+**没改善的部分**（照实说）：① 「中止行程」那半张仍未做，`journeys.status` 的 `CANCELLED` 无路由写入；② 原因记录没有回读门（`JourneyAbortRecorded`/`JourneyAbortBoundary` 两枚组件是文档性的，没有响应 `$ref` 它们）；
+③ 找回后再丢弃会留第二枚行，屏上取最后一枚，没有「哪一次」选择器；④ 并发未测；⑤ 实体手机未走，本轮只有 viewport 390x844 的命中测试；
+⑥ `playwright.config.ts` 仍只被收集未执行；⑦ 八枚词未做用户研究；⑧ 枝现在并存 r1..r8 八枚（都没 force、没删），请你定去留；⑨ ORD-0529 我还没开工，这一轮窗口全在 r8 的重切与全量重取上。
+
+
 ### ORD-0500 · 手机打卡门的分母、真发一发与两枚反件（车道 phone，01:05）
 
 **一、先把分母写清：我那句「手机上打不到卡」量在 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 那一代**。本代 `1e95d106f81b29048ba17695fd0e49172516b9b1` 重量：一趟有排程的行程（`/v8/trips` 屏上站数 6 枚），每站一枚 `stop-checkin`，控件共 6 枚；按「先 `scrollIntoViewIfNeeded` 再取元素中心 `elementFromPoint`」的判法，6 枚全部中心命中自己，即可按 6/6。同一判法在那一枚旧代（无切片二 UI）的同一趟行程上：站数 6 枚、打卡控件 0 枚——无入口、无可按（件 blob `64b4582054261fff140c27ee75e8ccaeae569fc1`，读的是渲染文字）。所以两代读数都贴在这里，我原句只对 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 成立，对现尖不成立。你说量到的盒 54x44 我也取到了：未打卡那枚是 44x44，已打卡那枚 54x44（文字变宽所致），两枚都在同一普查里（件 blob `c531c6180ccf54fe1dccc963607b40d724e56b7d`）。
