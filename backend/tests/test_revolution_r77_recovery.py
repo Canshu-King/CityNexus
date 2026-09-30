@@ -1133,6 +1133,24 @@ def test_live_discovery_cache_is_keyed_by_the_provider_question():
         assert _unexpired_cached_candidates(session, journey, "viewpoint", None) is None
 
 
+def test_japanese_admission_does_not_budget_rental_hours_or_headcounts():
+    from app.fact_acquisition import _plain_text_cost, _plain_text_opening
+
+    url = "https://official.example/facility"
+    opening = _plain_text_opening(
+        "開園時間 9時00分～17時00分 入園料 無料 茶室利用料金 12,560円",
+        url, reference_at="2026-10-02",
+    )
+    assert (opening["open"], opening["close"]) == ("09:00", "17:00")
+    cost = _plain_text_cost(
+        "拝観料 団体30人以上 大人500円 中学生200円", url, reference_at=None,
+    )
+    assert cost["currency"] == "JPY"
+    assert cost["amount_minor"] == 50000
+    rental = _plain_text_cost("茶室利用料金 9:00～12:00 12,560円", url, reference_at=None)
+    assert rental["status"] == "UNKNOWN"
+
+
 def test_real_catalogue_fallback_is_visible_but_not_selectable():
     from fastapi.testclient import TestClient
 

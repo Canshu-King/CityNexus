@@ -499,6 +499,7 @@ def _plain_text_opening(
         + "|\u958b\u653e\u6642\u9593"
         + "|\u5229\u7528\u6642\u9593"
         + "|\u55b6\u696d\u6642\u9593"
+        + "|\u958b\u5712\u6642\u9593|\u6642\u9593"
         + r"|opening\s+hours?|hours?)"
         + r"\s*["
         + re.escape(":\uFF1A")
@@ -510,6 +511,7 @@ def _plain_text_opening(
     excerpt = text[label.end() : label.end() + 260].translate(
         str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
     )
+    excerpt = re.sub(r"(\d{1,2})時(\d{2})分", r"\1:\2", excerpt)
     if re.search("\u5168\u5929\u5f00\u653e" + r"|all\s*day|24\s*hours?", excerpt, re.IGNORECASE):
         return {
             "status": "OFFICIAL_WEB_VERIFIED",
@@ -575,7 +577,8 @@ def _plain_text_cost(
         + "\u95e8" + r"\s*" + "\u7968" + r"(?:\s*" + "\u4ef7" + r"\s*" + "\u683c)?"
         + "|\u5165\u9928\u6599"
         + "|\u5165\u5834\u6599"
-        + "|\u6599\u91d1"
+        + "|\u5165\u5712\u6599|\u62dd\u89b3\u6599"
+        + "|(?<!利用)料金"
         + r"|admission\s+fee|entrance\s+fee|ticket)"
         + r"\s*["
         + re.escape(":\uFF1A")
@@ -616,13 +619,14 @@ def _plain_text_cost(
         + re.escape("\u5143")
         + r"|CNY|RMB|"
         + re.escape("\u00a5")
-        + r")?\s*(?:\(\s*(?P<period>[^)]{1,100})\))?",
+        + "|円|JPY"
+        + r")\s*(?:\(\s*(?P<period>[^)]{1,100})\))?",
         re.IGNORECASE,
     )
     seasonal: list[dict[str, Any]] = []
     for match in price_pattern.finditer(excerpt):
         raw_currency = (match.group("currency") or "CNY").upper()
-        currency = "CNY" if raw_currency in {"\u5143", "RMB", "\u00a5"} else raw_currency
+        currency = "JPY" if raw_currency == "円" else "CNY" if raw_currency in {"\u5143", "RMB", "\u00a5"} else raw_currency
         seasonal.append(
             {
                 "period": _period_text(match.group("period") or "").strip(),
