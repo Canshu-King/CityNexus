@@ -1,0 +1,699 @@
+{
+ "rulers": {
+  "r7b": {
+   "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks\\ui_exposure_taint_ast_r7b.cjs",
+   "blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "bytes": 129082
+  },
+  "r7b4": {
+   "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks\\ui_exposure_taint_ast_r7b4.cjs",
+   "blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "bytes": 154410
+  },
+  "r8": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0536\\ui_exposure_taint_ast_r8.cjs",
+   "blob": "83819289685f4bb58c5dea728114473f66fd29ef",
+   "bytes": 199377
+  }
+ },
+ "trees": {
+  "tip_7862c6de": {
+   "export_tree": "D:/moodle/_qoder_lane_S4_0926/work/ord0536\\exp_tip_r8\\frontend\\src",
+   "rev": "7862c6de5565c02c20ec2dccaa9da18960603e06",
+   "note": "authoritative tip read by git ls-remote 2026-10-01 02:5x",
+   "r7b": {
+    "red": 6,
+    "folded": 2,
+    "contract_exempted": 0,
+    "fold_without_anchor": 2,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 6,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r7b4": {
+    "red": 5,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 5,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8": {
+    "red": 5,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 8,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8_verdict": "EXPOSURE_SHAPE_FOUND",
+   "r8_ledger": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "app/V8Experience.tsx",
+     "line": 2870,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 2864,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 2877
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "components/CnxMeasuredFacts.tsx",
+     "line": 81,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 64,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 71
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "features/recovery/RecoveryRequiredPanel.tsx",
+     "line": 299,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 288,
+      "attribution_anchor_field": "dynamic:notice.field",
+      "attribution_anchor_line": 297
+     }
+    }
+   ],
+   "r8_table": {
+    "file": "ui_exposure_taint_ast_r8.cjs",
+    "digest_sha1": "0b48d4d0aad012b70ed05d0d7536d46445079c3e",
+    "entry_count": 2,
+    "entries": [
+     {
+      "id": "EX-1-CONTRACT-CLOSED-ENUM",
+      "rules": [
+       "*"
+      ],
+      "sink_shape_families": [
+       "*"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "named-prose-member",
+       "exception"
+      ],
+      "evidence": "contract_closed_enum"
+     },
+     {
+      "id": "EX-2-ATTRIBUTED-FOLD",
+      "rules": [
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+       "RAW_BODY_TO_DOM",
+       "UPSTREAM_READ_DIRECT",
+       "UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "sink_shape_families": [
+       "text-in",
+       "text"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "exception"
+      ],
+      "evidence": "attributed_fold"
+     }
+    ],
+    "entry_schema": [
+     "id",
+     "rules",
+     "sink_shape_families",
+     "origin_kinds",
+     "evidence"
+    ],
+    "evidence_predicates": [
+     "contract_closed_enum",
+     "attributed_fold"
+    ],
+    "evidence_definitions": {
+     "contract_closed_enum": "the cell's own element names a `*_code` contract field, the contract file in the scanned tree declares a closed enum for it, and no literal on the value's chain falls outside that set (ORD-0408 ruling A)",
+     "attributed_fold": "the nearest enclosing fold element (a <details>, or any element carrying data-cnx-fold) holds a data-cnx-field anchor naming one of the six allowed measured fields, and the value sits in the text position inside that same fold (Q67=1 as ruled by Q75, bounded by Q71)"
+    },
+    "schema_check": {
+     "ok": true,
+     "problems": []
+    },
+    "cell_naming": "rejected_by_schema",
+    "cli_accepts": [
+     "--tree",
+     "--file",
+     "--ref",
+     "--path",
+     "--out",
+     "--contract",
+     "--selftest"
+    ],
+    "waiver_input": "no command-line flag, environment variable, comment, class name, test id or ledger sentence is read by this ruler; a waiver-shaped flag is refused with a named reason"
+   },
+   "r8_red_detail": [
+    {
+     "cell": "PlanWithAiSheet.tsx:931",
+     "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:956",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:1029",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label"
+    },
+    {
+     "cell": "SimulationPanel.tsx:937",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "ActivityDetail.tsx:216",
+     "rule": "RAW_BODY_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    }
+   ],
+   "pre_exemption_denominator_stable_across_generations": true,
+   "red_set_identical_r7b_vs_r8": false,
+   "red_diff_r7b_minus_r8": [
+    "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "red_diff_r8_minus_r7b": []
+  },
+  "cmdr_side_tip": {
+   "export_tree": "D:/moodle/_qoder_lane_S4_0926/work/ord0536\\exp_tip0989713a\\frontend\\src",
+   "rev": "0989713aa687b97f4cd40bae009a6ce493425a4b",
+   "note": "the tip of the commander's two-sided comparison (his 6)",
+   "r7b": {
+    "red": 6,
+    "folded": 2,
+    "contract_exempted": 0,
+    "fold_without_anchor": 2,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 6,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r7b4": {
+    "red": 5,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 5,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8": {
+    "red": 5,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 8,
+    "cells_total_field": 8,
+    "red_keys": [
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8_verdict": "EXPOSURE_SHAPE_FOUND",
+   "r8_ledger": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "app/V8Experience.tsx",
+     "line": 2870,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 2864,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 2877
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "components/CnxMeasuredFacts.tsx",
+     "line": 81,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 64,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 71
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "features/recovery/RecoveryRequiredPanel.tsx",
+     "line": 299,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 288,
+      "attribution_anchor_field": "dynamic:notice.field",
+      "attribution_anchor_line": 297
+     }
+    }
+   ],
+   "r8_table": {
+    "file": "ui_exposure_taint_ast_r8.cjs",
+    "digest_sha1": "0b48d4d0aad012b70ed05d0d7536d46445079c3e",
+    "entry_count": 2,
+    "entries": [
+     {
+      "id": "EX-1-CONTRACT-CLOSED-ENUM",
+      "rules": [
+       "*"
+      ],
+      "sink_shape_families": [
+       "*"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "named-prose-member",
+       "exception"
+      ],
+      "evidence": "contract_closed_enum"
+     },
+     {
+      "id": "EX-2-ATTRIBUTED-FOLD",
+      "rules": [
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+       "RAW_BODY_TO_DOM",
+       "UPSTREAM_READ_DIRECT",
+       "UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "sink_shape_families": [
+       "text-in",
+       "text"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "exception"
+      ],
+      "evidence": "attributed_fold"
+     }
+    ],
+    "entry_schema": [
+     "id",
+     "rules",
+     "sink_shape_families",
+     "origin_kinds",
+     "evidence"
+    ],
+    "evidence_predicates": [
+     "contract_closed_enum",
+     "attributed_fold"
+    ],
+    "evidence_definitions": {
+     "contract_closed_enum": "the cell's own element names a `*_code` contract field, the contract file in the scanned tree declares a closed enum for it, and no literal on the value's chain falls outside that set (ORD-0408 ruling A)",
+     "attributed_fold": "the nearest enclosing fold element (a <details>, or any element carrying data-cnx-fold) holds a data-cnx-field anchor naming one of the six allowed measured fields, and the value sits in the text position inside that same fold (Q67=1 as ruled by Q75, bounded by Q71)"
+    },
+    "schema_check": {
+     "ok": true,
+     "problems": []
+    },
+    "cell_naming": "rejected_by_schema",
+    "cli_accepts": [
+     "--tree",
+     "--file",
+     "--ref",
+     "--path",
+     "--out",
+     "--contract",
+     "--selftest"
+    ],
+    "waiver_input": "no command-line flag, environment variable, comment, class name, test id or ledger sentence is read by this ruler; a waiver-shaped flag is refused with a named reason"
+   },
+   "r8_red_detail": [
+    {
+     "cell": "PlanWithAiSheet.tsx:931",
+     "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:956",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:1029",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label"
+    },
+    {
+     "cell": "SimulationPanel.tsx:937",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "ActivityDetail.tsx:216",
+     "rule": "RAW_BODY_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    }
+   ],
+   "pre_exemption_denominator_stable_across_generations": true,
+   "red_set_identical_r7b_vs_r8": false,
+   "red_diff_r7b_minus_r8": [
+    "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "red_diff_r8_minus_r7b": []
+  },
+  "cmdr_side_candidate": {
+   "export_tree": "D:/moodle/_qoder_lane_S4_0926/work/ord0536\\exp_cand0500\\frontend\\src",
+   "rev": "62f030f351e70bd95108377fe2e3bbc49c5ef288",
+   "note": "ORD-0500 candidate of the same comparison (his 10)",
+   "r7b": {
+    "red": 10,
+    "folded": 2,
+    "contract_exempted": 0,
+    "fold_without_anchor": 2,
+    "pre_exemption_cells": 12,
+    "cells_total_field": 10,
+    "red_keys": [
+     "AccessPanel.tsx|462|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "AccessPanel.tsx|474|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|100|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|87|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r7b4": {
+    "red": 9,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 12,
+    "cells_total_field": 9,
+    "red_keys": [
+     "AccessPanel.tsx|462|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "AccessPanel.tsx|474|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|100|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|87|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8": {
+    "red": 9,
+    "folded": 3,
+    "contract_exempted": 0,
+    "fold_without_anchor": 1,
+    "pre_exemption_cells": 12,
+    "cells_total_field": 12,
+    "red_keys": [
+     "AccessPanel.tsx|462|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "AccessPanel.tsx|474|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "ActivityDetail.tsx|216|RAW_BODY_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|100|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanVersionHistoryPanel.tsx|87|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|1029|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "PlanWithAiSheet.tsx|931|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "PlanWithAiSheet.tsx|956|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "SimulationPanel.tsx|937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "exempt_keys": [
+     "CnxMeasuredFacts.tsx|81|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "V8Experience.tsx|2870|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   },
+   "r8_verdict": "EXPOSURE_SHAPE_FOUND",
+   "r8_ledger": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "app/V8Experience.tsx",
+     "line": 2870,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 2864,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 2877
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "components/CnxMeasuredFacts.tsx",
+     "line": 81,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 64,
+      "attribution_anchor_field": "http_status",
+      "attribution_anchor_line": 71
+     }
+    },
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "file": "features/recovery/RecoveryRequiredPanel.tsx",
+     "line": 299,
+     "exemption_id": "EX-2-ATTRIBUTED-FOLD",
+     "evidence": "attributed_fold",
+     "basis": "attributed_fold",
+     "measured_on_tree": {
+      "fold_container": "details",
+      "fold_container_line": 288,
+      "attribution_anchor_field": "dynamic:notice.field",
+      "attribution_anchor_line": 297
+     }
+    }
+   ],
+   "r8_table": {
+    "file": "ui_exposure_taint_ast_r8.cjs",
+    "digest_sha1": "0b48d4d0aad012b70ed05d0d7536d46445079c3e",
+    "entry_count": 2,
+    "entries": [
+     {
+      "id": "EX-1-CONTRACT-CLOSED-ENUM",
+      "rules": [
+       "*"
+      ],
+      "sink_shape_families": [
+       "*"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "named-prose-member",
+       "exception"
+      ],
+      "evidence": "contract_closed_enum"
+     },
+     {
+      "id": "EX-2-ATTRIBUTED-FOLD",
+      "rules": [
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+       "RAW_BODY_TO_DOM",
+       "UPSTREAM_READ_DIRECT",
+       "UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "sink_shape_families": [
+       "text-in",
+       "text"
+      ],
+      "origin_kinds": [
+       "raw-body",
+       "prose",
+       "exception"
+      ],
+      "evidence": "attributed_fold"
+     }
+    ],
+    "entry_schema": [
+     "id",
+     "rules",
+     "sink_shape_families",
+     "origin_kinds",
+     "evidence"
+    ],
+    "evidence_predicates": [
+     "contract_closed_enum",
+     "attributed_fold"
+    ],
+    "evidence_definitions": {
+     "contract_closed_enum": "the cell's own element names a `*_code` contract field, the contract file in the scanned tree declares a closed enum for it, and no literal on the value's chain falls outside that set (ORD-0408 ruling A)",
+     "attributed_fold": "the nearest enclosing fold element (a <details>, or any element carrying data-cnx-fold) holds a data-cnx-field anchor naming one of the six allowed measured fields, and the value sits in the text position inside that same fold (Q67=1 as ruled by Q75, bounded by Q71)"
+    },
+    "schema_check": {
+     "ok": true,
+     "problems": []
+    },
+    "cell_naming": "rejected_by_schema",
+    "cli_accepts": [
+     "--tree",
+     "--file",
+     "--ref",
+     "--path",
+     "--out",
+     "--contract",
+     "--selftest"
+    ],
+    "waiver_input": "no command-line flag, environment variable, comment, class name, test id or ledger sentence is read by this ruler; a waiver-shaped flag is refused with a named reason"
+   },
+   "r8_red_detail": [
+    {
+     "cell": "AccessPanel.tsx:462",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "AccessPanel.tsx:474",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:931",
+     "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM but NO_CODE_FIELD_NAMED_ON_THIS_CELL"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:956",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanWithAiSheet.tsx:1029",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + spread_anchor_without_provenance_label"
+    },
+    {
+     "cell": "SimulationPanel.tsx:937",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanVersionHistoryPanel.tsx:87",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "PlanVersionHistoryPanel.tsx:100",
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    },
+    {
+     "cell": "ActivityDetail.tsx:216",
+     "rule": "RAW_BODY_TO_DOM",
+     "red_because": "shape-matched EX-1-CONTRACT-CLOSED-ENUM + EX-2-ATTRIBUTED-FOLD but NO_CODE_FIELD_NAMED_ON_THIS_CELL + NO_FOLD_CONTAINER"
+    }
+   ],
+   "pre_exemption_denominator_stable_across_generations": true,
+   "red_set_identical_r7b_vs_r8": false,
+   "red_diff_r7b_minus_r8": [
+    "RecoveryRequiredPanel.tsx|299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "red_diff_r8_minus_r7b": []
+  }
+ },
+ "method": "each ruler runs `--tree` over the same export dir once"
+}
