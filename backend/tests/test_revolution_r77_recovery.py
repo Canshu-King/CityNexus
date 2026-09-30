@@ -20,7 +20,7 @@ from app.fact_acquisition import (
     _official_web_facts,
     acquire_place_facts,
 )
-from app.main import _plan_mobility_eligibility_receipts
+from app.main import _plan_mobility_eligibility_receipts, _provider_mesh_candidate_payload
 from app.schemas import AgentToolCall
 from app.services import (
     SEALED_DEMO_AUTHORITY_ENVELOPE,
@@ -166,7 +166,7 @@ def test_lotsmall_exact_product_api_promotes_bound_provider_facts(monkeypatch):
             "merchantInfoId": 1939,
             "openTime": "07:30",
             "endTime": "17:30",
-            "orderNotice": "每年3月1日-10月31日：7:30开始检票，17:30闭园。",
+            "orderNotice": "每年3月1日-10月31日：7:30开始检票，17:00停止检票入园，17:30闭园；每年11月1日-次年2月底：7:30开始检票，16:30停止检票入园，17:00闭园。",
         }
     }
     grid = {
@@ -223,6 +223,64 @@ def test_lotsmall_exact_product_api_promotes_bound_provider_facts(monkeypatch):
     assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
     assert result["cost_evidence"]["amount_minor"] == 4000
     assert result["provider_identity"]["merchant_park_info_id"] == "8187"
+    assert result["opening_hours"]["close"] == "17:30"
+    assert len(result["opening_hours"]["seasonal_periods"]) == 2
+
+    winter = _official_web_facts(
+        object(),
+        "http://jump.szjlxx.cn/?park=wsy",
+        retrieved_at="2026-09-30T12:00:00+08:00",
+        reference_at="2026-11-04T09:00:00+08:00",
+        source_binding=binding,
+    )
+    assert winter["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert winter["opening_hours"]["close"] == "17:00"
+
+
+def test_provider_mesh_projects_current_canonical_place_facts_over_capture():
+    candidate = SimpleNamespace(
+        id="rpc-stale-node",
+        provider_key="overpass",
+        external_id="overpass:node/5042033121",
+        name="网师园",
+        category="attraction",
+        latitude=31.3003833,
+        longitude=120.6298435,
+        tags_json="[]",
+        opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+        metadata_json=json.dumps(
+            {"cost_evidence": {"status": "UNKNOWN", "amount_minor": None}}
+        ),
+        captured_at="2026-09-29T19:55:29+00:00",
+        expires_at=None,
+        materialized_place_id="real-place-bcd9c9f324751168d422a06b",
+        status="DISCOVERED",
+    )
+    canonical = SimpleNamespace(
+        id="real-place-bcd9c9f324751168d422a06b",
+        opening_hours_json=json.dumps(
+            {"status": "OFFICIAL_WEB_VERIFIED", "open": "07:30", "close": "17:30"}
+        ),
+        metadata_json=json.dumps(
+            {
+                "cost_evidence": {
+                    "status": "VERIFIED_PROVIDER",
+                    "amount_minor": 4000,
+                    "currency": "CNY",
+                }
+            }
+        ),
+        updated_at="2026-09-30T04:46:14+00:00",
+    )
+
+    result = _provider_mesh_candidate_payload(candidate, canonical)
+
+    assert result["facts_source"] == "CANONICAL_PLACE"
+    assert result["facts_updated_at"] == "2026-09-30T04:46:14+00:00"
+    assert result["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 4000
+    assert json.loads(candidate.opening_hours_json)["status"] == "UNKNOWN"
 
 
 def test_lotsmall_product_identity_mismatch_stays_unknown(monkeypatch):

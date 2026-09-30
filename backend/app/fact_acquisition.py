@@ -402,6 +402,57 @@ def _period_matches(period: str, reference_at: str | datetime | date | None) -> 
     return False
 
 
+def _lotsmall_order_notice_opening(
+    order_notice: str,
+    source_url: str,
+    *,
+    reference_at: str | datetime | date | None,
+) -> dict[str, Any]:
+    """Choose a date-bound interval from Lotsmall's exact provider notice."""
+
+    text = html.unescape(str(order_notice or "")).replace("\xa0", " ")
+    period = (
+        r"(?P<period>\d{1,2}\s*月\s*\d{1,2}\s*日\s*[-–—至到]\s*"
+        r"(?:次年\s*)?\d{1,2}\s*月\s*(?:\d{1,2}\s*日|底))"
+    )
+    pattern = re.compile(
+        period
+        + r"\s*[:：]\s*(?P<open>\d{1,2}:\d{2})[^；。]*?"
+        + r"(?P<close>\d{1,2}:\d{2})\s*闭园"
+    )
+    seasonal: list[dict[str, Any]] = []
+    for match in pattern.finditer(text):
+        normalized = normalize_opening_hours(
+            f"{_clock_value(match.group('open'))}-{_clock_value(match.group('close'))}"
+        )
+        if normalized.get("status") != "NORMALIZED_VALID":
+            continue
+        seasonal.append(
+            {
+                "period": _period_text(match.group("period") or "").strip(),
+                "open": normalized["open"],
+                "close": normalized["close"],
+            }
+        )
+    if not seasonal:
+        return {"status": "UNKNOWN", "raw": text[:4000], "intervals": []}
+    chosen = next(
+        (item for item in seasonal if _period_matches(item["period"], reference_at)),
+        seasonal[0],
+    )
+    normalized = normalize_opening_hours(f"{chosen['open']}-{chosen['close']}")
+    normalized.update(
+        {
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": text[:4000],
+            "seasonal_periods": seasonal,
+        }
+    )
+    return normalized
+
+
 def _clock_value(value: str) -> str:
     text = str(value).strip()
     if ":" not in text:
@@ -662,20 +713,27 @@ def _lotsmall_bound_facts(
         if adult_ticket:
             break
 
-    opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    opening = _lotsmall_order_notice_opening(
+        str(detail.get("orderNotice") or ""),
+        final_url,
+        reference_at=reference_at,
+    )
     open_time = str(detail.get("openTime") or "").strip()
     close_time = str(detail.get("endTime") or "").strip()
-    normalized = normalize_opening_hours(f"{open_time}-{close_time}") if open_time and close_time else opening
-    if normalized.get("status") == "NORMALIZED_VALID":
+    if opening.get("status") == "UNKNOWN" and open_time and close_time:
+        normalized = normalize_opening_hours(f"{open_time}-{close_time}")
+        if normalized.get("status") == "NORMALIZED_VALID":
+            opening = normalized
+    if opening.get("status") != "UNKNOWN":
         opening = {
-            **normalized,
+            **opening,
             "status": "OFFICIAL_WEB_VERIFIED",
             "source": "official_web",
             "source_url": final_url,
             "source_api_url": detail_source,
             "provider_product_id": product_id,
             "provider_product_code": product_code,
-            "raw": str(detail.get("orderNotice") or "")[:4000],
+            "raw": opening.get("raw") or str(detail.get("orderNotice") or "")[:4000],
         }
 
     cost = {

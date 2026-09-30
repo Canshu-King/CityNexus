@@ -1684,6 +1684,45 @@ def list_journey_counterfactuals(
     }
 
 
+def _provider_mesh_candidate_payload(
+    row: RealPlaceCandidate,
+    canonical_place: Place | None = None,
+) -> dict[str, Any]:
+    """Project current canonical Place facts over a historical discovery capture."""
+
+    captured_opening = json.loads(row.opening_hours_json or "{}")
+    captured_metadata = json.loads(row.metadata_json or "{}")
+    captured_cost = captured_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+    if canonical_place is not None:
+        opening = json.loads(canonical_place.opening_hours_json or "{}")
+        canonical_metadata = json.loads(canonical_place.metadata_json or "{}")
+        cost = canonical_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+        facts_source = "CANONICAL_PLACE"
+        facts_updated_at = canonical_place.updated_at
+    else:
+        opening = captured_opening
+        cost = captured_cost
+        facts_source = "CAPTURED_CANDIDATE"
+        facts_updated_at = row.captured_at
+    return {
+        "id": row.id,
+        "provider_key": row.provider_key,
+        "external_id": row.external_id,
+        "name": row.name,
+        "category": row.category,
+        "location": {"latitude": row.latitude, "longitude": row.longitude},
+        "tags": json.loads(row.tags_json or "[]"),
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "captured_at": row.captured_at,
+        "expires_at": row.expires_at,
+        "materialized_place_id": row.materialized_place_id,
+        "status": row.status,
+        "facts_source": facts_source,
+        "facts_updated_at": facts_updated_at,
+    }
+
+
 @app.get("/api/v1/journeys/{journey_id}/provider-mesh")
 def get_journey_provider_mesh(
     journey_id: UUID,
@@ -1702,6 +1741,15 @@ def get_journey_provider_mesh(
         .order_by(RealPlaceCandidate.captured_at.desc(), RealPlaceCandidate.name)
         .limit(20)
     ).all()
+    materialized_ids = {
+        row.materialized_place_id for row in candidates if row.materialized_place_id
+    }
+    canonical_places = {
+        place.id: place
+        for place in session.scalars(
+            select(Place).where(Place.id.in_(materialized_ids))
+        ).all()
+    }
     return {
         "journey_id": journey.id,
         "providers": [
@@ -1716,23 +1764,7 @@ def get_journey_provider_mesh(
             for row in rows
         ],
         "real_place_candidates": [
-            {
-                "id": row.id,
-                "provider_key": row.provider_key,
-                "external_id": row.external_id,
-                "name": row.name,
-                "category": row.category,
-                "location": {"latitude": row.latitude, "longitude": row.longitude},
-                "tags": json.loads(row.tags_json or "[]"),
-                "opening_hours": json.loads(row.opening_hours_json or "{}"),
-                "cost_evidence": json.loads(row.metadata_json or "{}").get(
-                    "cost_evidence", {"status": "UNKNOWN"}
-                ),
-                "captured_at": row.captured_at,
-                "expires_at": row.expires_at,
-                "materialized_place_id": row.materialized_place_id,
-                "status": row.status,
-            }
+            _provider_mesh_candidate_payload(row, canonical_places.get(row.materialized_place_id))
             for row in candidates
         ],
     }

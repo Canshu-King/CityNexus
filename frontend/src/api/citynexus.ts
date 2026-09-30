@@ -286,6 +286,10 @@ export interface ProviderMeshResponse {
     expires_at: string | null;
     materialized_place_id: string | null;
     status: string;
+    opening_hours: Record<string, unknown>;
+    cost_evidence: Record<string, unknown>;
+    facts_source: "CANONICAL_PLACE" | "CAPTURED_CANDIDATE";
+    facts_updated_at: string;
   }>;
 }
 
