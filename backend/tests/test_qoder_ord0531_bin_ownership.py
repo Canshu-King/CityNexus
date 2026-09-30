@@ -17,7 +17,9 @@ write door will do with a row this door calls read-only is reported, not quietly
   proves the filter is the thing keeping it out (a helper-level mutation, so the shipped door is never
   weakened by this file);
 * B6 the anonymous whole-bin door still answers every binned trip, unscoped, and its rows carry no
-  ownership answer -- the promise ORD-0402 slice 1 tested is intact.
+  ownership answer -- the promise ORD-0402 slice 1 tested is intact;
+* B7 isolation narrows which rows a traveller is handed, not the order they arrive in: the rows both
+  doors answer come out `deleted_at` newest-first from each of them.
 
 Names measured, not assumed: `journeys.traveler_id` is the ownership column, `journey_members.role`
 the seat, `journey_role_capabilities (role, capability)` the table `recovery` is asked of.
@@ -214,3 +216,27 @@ def test_b6_the_anonymous_door_still_answers_the_whole_bin_unchanged() -> None:
     # and the scoped doors for each owner still see only their own
     assert {row["id"] for row in _scoped(owner)} & {first, second} == {first}
     assert {row["id"] for row in _scoped(other)} & {first, second} == {second}
+
+
+def test_b7_the_two_doors_put_the_same_rows_in_the_same_order() -> None:
+    """`deleted_at` newest-first is one rule for both doors, not one per door.
+
+    Isolation narrows which rows this traveller is handed; it must not silently narrow the order too.
+    Reading the same two trips in two different orders from two doors of one bin is the kind of
+    disagreement a screen cannot detect, so it is tested here rather than left to the docstring.
+    """
+    owner = _traveler("owner-b7")
+    earlier = _journey(owner, "ORD-0531 b7 earlier")
+    later = _journey(owner, "ORD-0531 b7 later")
+    _bin(earlier)
+    _bin(later)
+
+    whole = [row["id"] for row in client.get(BIN_PATH).json()]
+    mine = [row["id"] for row in _scoped(owner)]
+    shared = [row_id for row_id in whole if row_id in set(mine)]
+    assert {earlier, later} <= set(shared), (earlier, later, shared)
+    assert [row_id for row_id in mine if row_id in set(whole)] == shared, (
+        "the scoped door reordered rows the whole-bin door already orders"
+    )
+    # and the newest discard really is first in both
+    assert shared.index(later) < shared.index(earlier), shared
