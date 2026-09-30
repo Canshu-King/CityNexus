@@ -285,6 +285,64 @@ def test_agent_runtime_stops_search_saturation_before_more_domain_calls(monkeypa
     assert calls == 7
 
 
+def test_agent_runtime_limits_batched_city_searches_to_one_per_turn(monkeypatch):
+    journey_id = _selected_journey()
+    calls = 0
+
+    def call(call_id: str, name: str, arguments: dict[str, object]) -> dict[str, object]:
+        return {
+            "id": call_id,
+            "type": "function",
+            "function": {"name": name, "arguments": json.dumps(arguments)},
+        }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            message = {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    call("batch-journey", "inspect_journey", {"journey_id": journey_id}),
+                    call("batch-twin", "inspect_twin", {"journey_id": journey_id}),
+                    call("batch-search-one", "search_city_services", {"journey_id": journey_id, "q": "museum"}),
+                    call("batch-search-two", "search_city_services", {"journey_id": journey_id, "q": "culture"}),
+                    call("batch-search-three", "search_city_services", {"journey_id": journey_id, "q": "indoor"}),
+                ],
+            }
+        else:
+            message = {"role": "assistant", "content": "Search batch limited; I will reassess using the returned candidates."}
+        return httpx.Response(200, json={"choices": [{"message": message}]})
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    fake_agent = object.__new__(DeepSeekJourneyAgent)
+    fake_agent.model_key = "cn:glm-5.3-flash"
+    fake_agent._client = fake_client
+    fake_agent._owns_client = False
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace(runtime_settings, ai_api_key="test-key", ai_model="cn:glm-5.3-flash"),
+    )
+    monkeypatch.setattr(main_module, "DeepSeekJourneyAgent", lambda: fake_agent)
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        json={"command": "检查当前状态后搜索室内地点，并根据结果调整策略。", "requested_autonomy": "PLAN_ONLY"},
+    )
+    assert response.status_code == 200, response.text
+    steps = response.json()["run"]["tool_steps"]
+    assert [step["decision"] for step in steps] == [
+        "ALLOW_AUTO",
+        "ALLOW_AUTO",
+        "ALLOW_AUTO",
+        "STOP_SEARCH_BATCH",
+        "STOP_SEARCH_BATCH",
+    ]
+    assert calls == 2
+
+
 def test_hermes_runtime_uses_configured_model_fallback_chain(monkeypatch):
     calls: list[str] = []
 

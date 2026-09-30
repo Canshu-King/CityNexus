@@ -216,6 +216,8 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
+        "Issue at most one tool call per assistant turn. "
+        "If a tool reports SEARCH_SATURATION or SEARCH_BATCH_LIMIT, stop searching and choose a different available action. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -409,6 +411,7 @@ class DeepSeekJourneyAgent:
         tool_counts: dict[str, int] = {}
         try:
             for _ in range(max_steps):
+                batch_search_seen = False
                 message = self._complete(messages)
                 run.model_key = self.model_key
                 tool_calls = message.get("tool_calls") or []
@@ -441,6 +444,9 @@ class DeepSeekJourneyAgent:
                     tool_name = str(function.get("name") or "")
                     call_id = str(call.get("id") or f"tool-call-{sequence}")
                     raw_arguments = str(function.get("arguments") or "{}")
+                    search_batch_limited = tool_name == "search_city_services" and batch_search_seen
+                    if tool_name == "search_city_services":
+                        batch_search_seen = True
                     try:
                         arguments = _tool_args(raw_arguments)
                     except (TypeError, ValueError, json.JSONDecodeError) as exc:
@@ -508,7 +514,14 @@ class DeepSeekJourneyAgent:
                     )
                     if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
                         arguments["trigger_event_id"] = mission.trigger_event_id
-                    if search_saturated:
+                    if search_batch_limited:
+                        result = {
+                            "tool": tool_name,
+                            "error": "SEARCH_BATCH_LIMIT",
+                            "decision": "STOP_SEARCH_BATCH",
+                            "message": "Only one city search is executed per assistant turn; choose a different action on the next turn.",
+                        }
+                    elif search_saturated:
                         result = {
                             "tool": tool_name,
                             "error": "SEARCH_SATURATION",
