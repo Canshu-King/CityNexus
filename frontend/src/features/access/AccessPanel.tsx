@@ -5,13 +5,17 @@ import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failur
 import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
 import {
+  changeMemberRole,
   createShareGrant,
+  leaveJourney,
   readActivity,
   readJourneys,
   readMembers,
+  readMemberRoleLimits,
   readRoleRules,
   readShareGrants,
   readSharingDoors,
+  readTraveller,
   RejectionWithFacts,
   revokeShareGrant,
   SHARING_DOOR_SUFFIXES,
@@ -20,6 +24,7 @@ import {
   type DoorProbe,
   type JourneyMemberRow,
   type JourneySummary,
+  type MemberRoleLimits,
   type RoleRule,
   type ShareGrant,
 } from "./accessDoors";
@@ -30,8 +35,10 @@ import {
 } from "./accessCopy";
 import {
   actionNamesAMember,
+  adminCapState,
   isScopeKey,
   memberActionKey,
+  moveableRoleChoices,
   roleLabelKey,
   ROLE_COLLABORATOR,
   ROLE_OWNER,
@@ -127,12 +134,21 @@ export function AccessPanel() {
   const [members, setMembers] = useState<JourneyMemberRow[]>([]);
   const [grants, setGrants] = useState<ShareGrant[]>([]);
   const [roleRules, setRoleRules] = useState<RoleRule[] | null>(null);
+  /** What the member doors can say about seats: the cap the server enforces, and the names its
+   *  registry holds for the ids this trip's roster carries. Both come from doors, never from here. */
+  const [limits, setLimits] = useState<MemberRoleLimits | null>(null);
+  const [names, setNames] = useState<Record<string, string | null>>({});
+  const [picking, setPicking] = useState<string | null>(null);
   const [rosterFailed, setRosterFailed] = useState<Attribution | null>(null);
-  const [pending, setPending] = useState<{ kind: "grant" | "member"; id: string } | null>(null);
-  const [writeState, setWriteState] = useState<{ busy: boolean; refused: string | null }>({
-    busy: false,
-    refused: null,
-  });
+  const [pending, setPending] = useState<
+    { kind: "grant"; id: string } | { kind: "member"; id: string }
+    | { kind: "role"; id: string; role: string } | { kind: "exit"; id: string } | null
+  >(null);
+  const [writeState, setWriteState] = useState<{
+    busy: boolean;
+    refused: string | null;
+    origin: "invite" | "roster";
+  }>({ busy: false, refused: null, origin: "invite" });
   const [pickVisibility, setPickVisibility] = useState<string>(VISIBILITY_LINK_READ);
   const [pickExpiry, setPickExpiry] = useState<string>("");
 
@@ -156,14 +172,23 @@ export function AccessPanel() {
   const loadRoster = useCallback(async (journeyId: string) => {
     setRosterFailed(null);
     try {
-      const [memberRows, grantRows, rules] = await Promise.all([
+      const [memberRows, grantRows, rules, seatLimits] = await Promise.all([
         readMembers(journeyId),
         readShareGrants(journeyId),
         readRoleRules(journeyId),
+        readMemberRoleLimits(journeyId),
       ]);
       setMembers(memberRows);
       setGrants(grantRows);
       setRoleRules(rules);
+      setLimits(seatLimits);
+      // One registry read per id the roster named. A name this door did not answer stays `null`, and
+      // the row says it has no name rather than falling back to the uuid beside it.
+      const ids = Array.from(new Set(memberRows.map((row) => row.traveler_id)));
+      const read = await Promise.all(
+        ids.map(async (id) => [id, (await readTraveller(id))?.display_name ?? null] as const),
+      );
+      setNames(Object.fromEntries(read));
     } catch (cause) {
       setRosterFailed(classifyReadFailure(cause));
     }
@@ -174,6 +199,7 @@ export function AccessPanel() {
   const afterWrite = useCallback(
     async (journeyId: string) => {
       setPending(null);
+      setPicking(null);
       await Promise.all([loadRoster(journeyId), readActivity(journeyId).then((events) => setActivity({ phase: "ready", rows: events })).catch(() => undefined)]);
     },
     [loadRoster],
@@ -188,41 +214,52 @@ export function AccessPanel() {
     return typeof code === "string" && code.length > 0 ? code : `http_${cause.http_status}`;
   };
 
+  /** Whose seat this device may speak for: the trip's own traveller, as the list door named it.
+   *  Same value ORD-0436 already signs invitations with, and the same honest limitation -- it is a
+   *  claim, not a session, and the doors below check it against the member set. */
+  const signer =
+    (trips.phase === "ready" ? trips.rows : []).find((row) => row.id === chosen)?.traveler_id ?? null;
+
   const issueInvitation = useCallback(async () => {
     if (chosen === null) return;
-    const signer = (trips.phase === "ready" ? trips.rows : []).find((row) => row.id === chosen)?.traveler_id ?? null;
-    if (signer === null || signer === undefined) {
+    if (signer === null) {
       // The list door did not name an owner for this trip, so there is no signature this device is
       // willing to invent for it.
-      setWriteState({ busy: false, refused: "nosigner" });
+      setWriteState({ busy: false, refused: "nosigner", origin: "invite" });
       return;
     }
-    setWriteState({ busy: true, refused: null });
+    setWriteState({ busy: true, refused: null, origin: "invite" });
     try {
       await createShareGrant(chosen, {
         visibility: pickVisibility,
         created_by: signer,
         expires_at: pickExpiry === "" ? null : new Date(pickExpiry).toISOString(),
       });
-      setWriteState({ busy: false, refused: null });
+      setWriteState({ busy: false, refused: null, origin: "invite" });
       await afterWrite(chosen);
     } catch (cause) {
-      setWriteState({ busy: false, refused: refusalKey(cause) });
+      setWriteState({ busy: false, refused: refusalKey(cause), origin: "invite" });
     }
-  }, [afterWrite, chosen, pickExpiry, pickVisibility, trips]);
+  }, [afterWrite, chosen, pickExpiry, pickVisibility, signer]);
 
   const confirmWithdrawal = useCallback(async () => {
     if (chosen === null || pending === null) return;
-    setWriteState({ busy: true, refused: null });
+    setWriteState({ busy: true, refused: null, origin: "roster" });
     try {
       if (pending.kind === "grant") await revokeShareGrant(chosen, pending.id);
-      else await withdrawMember(chosen, pending.id);
-      setWriteState({ busy: false, refused: null });
+      else if (pending.kind === "member") await withdrawMember(chosen, pending.id);
+      else if (pending.kind === "exit") await leaveJourney(chosen, pending.id);
+      else if (signer !== null) await changeMemberRole(chosen, pending.id, pending.role, signer);
+      else {
+        setWriteState({ busy: false, refused: "nosigner", origin: "roster" });
+        return;
+      }
+      setWriteState({ busy: false, refused: null, origin: "roster" });
       await afterWrite(chosen);
     } catch (cause) {
-      setWriteState({ busy: false, refused: refusalKey(cause) });
+      setWriteState({ busy: false, refused: refusalKey(cause), origin: "roster" });
     }
-  }, [afterWrite, chosen, pending]);
+  }, [afterWrite, chosen, pending, signer]);
 
   const openTrip = useCallback(async (journeyId: string) => {
     setChosen(journeyId);
@@ -258,9 +295,15 @@ export function AccessPanel() {
   const activities = activity.phase === "ready" ? activity.rows : [];
   const sharing = access.phase === "present" || access.phase === "partial" ? access : null;
   const expiry = sharing && sharing.expiries.length > 0 ? sharing.expiries[0] : null;
-  // No door in this product carries a member limit, so `cap` stays null and the quota line says so
-  // instead of dividing the roster by a number nobody sent.
+  // No door in this product carries a *invitation* limit, so `cap` stays null and the quota line says
+  // so instead of dividing the roster by a number nobody sent.
   const quotaKey = invitationQuotaKey({ used: sharing?.rosterSize ?? null, cap: null });
+  /** The ADMIN cap is the other kind of "上限", and this one the server really does enforce: the two
+   *  numbers come from `GET /member-role-limits`, the same answer the role door refuses on. */
+  const capState = adminCapState({
+    cap: limits?.max_administrators ?? null,
+    used: limits?.admin_count_in_force ?? null,
+  });
 
   const roleLabel = (role: string): string => {
     const key = roleLabelKey(role);
@@ -296,7 +339,10 @@ export function AccessPanel() {
       return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at, locale) });
     }
     if (member.member_state === "MEMBER_IN_FORCE") return say("access.memberStateActive");
-    if (member.member_state === "MEMBER_EXPIRED") return say("access.memberStateExpired");
+    // The server's word for a membership past its own deadline is `MEMBER_LAPSED`
+    // (`backend/app/schemas.py`, `MemberState`); `MEMBER_EXPIRED` was never one of its answers, so
+    // the branch that tested for it made every lapsed row read as "a state I cannot name".
+    if (member.member_state === "MEMBER_LAPSED") return say("access.memberStateExpired");
     if (member.member_state === "MEMBER_WITHDRAWN") {
       return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at ?? "", locale) });
     }
@@ -601,75 +647,129 @@ export function AccessPanel() {
       {chosen !== null ? (
         <section className="cn-access-block" aria-label={say("access.rosterHeading")}>
           <h3 className="cn-access-h">{say("access.rosterHeading")}</h3>
+          <p className="cn-access-muted" data-testid="access-admin-cap">
+            {capState
+              ? say(capState.key, {
+                  cap: limits?.max_administrators ?? capState.free,
+                  used: (limits?.max_administrators ?? 0) - capState.free,
+                })
+              : say("access.adminCapUnanswered")}
+          </p>
           {rosterFailed !== null ? (
             <p data-testid="access-roster-failed">{copyFor(rosterFailed, zh).body}</p>
           ) : members.length === 0 ? (
             <p data-testid="access-roster-empty">{say("access.rosterEmpty")}</p>
           ) : (
             <ul className="cn-access-rows" data-testid="access-member-list">
-              {members.map((member) => (
-                <li className="cn-access-row" data-state={member.member_state} data-testid="access-member-row" key={member.id}>
-                  <span className="cn-access-row-what">
-                    {fillAccess(say("access.memberRow"), {
-                      role: roleLabel(member.role),
-                      id: member.traveler_id,
-                    })}{" "}
-                    · {memberStateSentence(member)}
-                    {scopeForRole(member.role) === null ? null : (
-                      <>
-                        <br />
-                        {say("access.memberScopeLine")}
-                        {scopeForRole(member.role)}
-                      </>
-                    )}
-                  </span>
-                  {/* Two controls whose doors are not on the line yet. They are short-labelled and
-                      disabled, and the reason is a sentence beside them -- a button that carries its
-                      own paragraph is both unreadable and, at 390 px, what pushed this panel into a
-                      horizontal overflow. */}
-                  <button
-                    className="cn-access-row-action"
-                    data-disabled-reason="role-change-door"
-                    data-testid="access-member-role-change"
-                    disabled
-                    type="button"
-                  >
-                    {say("access.roleChangeButton")}
-                  </button>
-                  <button
-                    className="cn-access-row-action"
-                    data-disabled-reason="self-exit-door"
-                    data-testid="access-member-self-exit"
-                    disabled
-                    type="button"
-                  >
-                    {say("access.selfExitButton")}
-                  </button>
-                  <p className="cn-access-muted" data-testid="access-disabled-reasons">
-                    {say("access.roleChangeDisabled")} {say("access.selfExitDisabled")}
-                  </p>
-                  {member.removed_at === null ? (
-                    <button
-                      className="cn-access-row-action"
-                      data-testid="access-member-withdraw"
-                      type="button"
-                      onClick={() => setPending({ kind: "member", id: member.id })}
-                    >
-                      {pending?.kind === "member" && pending.id === member.id
-                        ? say("access.revokeConfirmButton")
-                        : say("access.revokeButton")}
-                    </button>
-                  ) : null}
-                </li>
-              ))}
+              {members.map((member) => {
+                // Whose seat this device may speak for, and which roles the door could actually move
+                // this seat into. Both decide whether a control is drawn at all: a button whose door
+                // always refuses is the copy-exceeds-mechanism defect this file keeps naming.
+                const isSelf = member.traveler_id === signer;
+                const choices =
+                  member.role === ROLE_OWNER
+                    ? []
+                    : moveableRoleChoices({
+                        serverRoles: limits?.roles ?? null,
+                        currentRole: member.role,
+                      });
+                const named = names[member.traveler_id];
+                return (
+                  <li className="cn-access-row" data-state={member.member_state} data-testid="access-member-row" key={member.id}>
+                    <span className="cn-access-row-what">
+                      {fillAccess(say("access.memberRow"), {
+                        role: roleLabel(member.role),
+                        name: named === undefined || named === null || named === ""
+                          ? say("access.memberNameUnread")
+                          : named,
+                      })}{" "}
+                      · {memberStateSentence(member)}
+                      {scopeForRole(member.role) === null ? null : (
+                        <>
+                          <br />
+                          {say("access.memberScopeLine")}
+                          {scopeForRole(member.role)}
+                        </>
+                      )}
+                    </span>
+                    {/* ORD-0503's two doors. The role change is offered for a seat that is not the
+                        caller's own and that this door can move; leaving is offered only for the
+                        caller's own row, because that is the one row the self-exit door can write. */}
+                    {!isSelf && choices.length > 0 ? (
+                      <button
+                        className="cn-access-row-action"
+                        data-testid="access-member-role-change"
+                        type="button"
+                        disabled={writeState.busy}
+                        onClick={() => setPicking(picking === member.id ? null : member.id)}
+                      >
+                        {say("access.roleChangeButton")}
+                      </button>
+                    ) : null}
+                    {isSelf && member.removed_at === null ? (
+                      <button
+                        className="cn-access-row-action"
+                        data-testid="access-member-self-exit"
+                        type="button"
+                        disabled={writeState.busy}
+                        onClick={() => setPending({ kind: "exit", id: member.traveler_id })}
+                      >
+                        {say("access.selfExitButton")}
+                      </button>
+                    ) : null}
+                    {picking === member.id ? (
+                      <span className="cn-access-role-choices" data-testid="access-role-choices">
+                        <span>{say("access.roleChoicesHeading")}</span>
+                        {choices.map((role) => (
+                          <button
+                            key={role}
+                            className="cn-access-row-action"
+                            data-testid="access-role-option"
+                            type="button"
+                            onClick={() => setPending({ kind: "role", id: member.id, role })}
+                          >
+                            {roleLabel(role)}
+                          </button>
+                        ))}
+                      </span>
+                    ) : null}
+                    {member.removed_at === null ? (
+                      <button
+                        className="cn-access-row-action"
+                        data-testid="access-member-withdraw"
+                        type="button"
+                        onClick={() => setPending({ kind: "member", id: member.id })}
+                      >
+                        {pending?.kind === "member" && pending.id === member.id
+                          ? say("access.revokeConfirmButton")
+                          : say("access.revokeButton")}
+                      </button>
+                    ) : null}
+                  </li>
+                );
+              })}
             </ul>
           )}
+          {writeState.origin === "roster" && writeState.refused !== null && writeState.refused !== "nosigner" ? (
+            <p className="cn-access-refusal" data-testid="access-roster-refused">
+              {(() => {
+                const key = refusalSentenceKey(writeState.refused);
+                return key ? say(key) : say("access.writeRefusedUnknown", { code: writeState.refused });
+              })()}
+            </p>
+          ) : null}
         </section>
       ) : null}
 
       {pending !== null ? (
         <p className="cn-access-refusal" data-testid="access-confirm-pending">
-          {pending.kind === "grant" ? say("access.confirmRevokeGrant") : say("access.confirmRevokeMember")}
+          {pending.kind === "grant"
+            ? say("access.confirmRevokeGrant")
+            : pending.kind === "member"
+              ? say("access.confirmRevokeMember")
+              : pending.kind === "exit"
+                ? say("access.confirmSelfExit")
+                : say("access.roleChangePending")}
           <button data-testid="access-confirm-yes" type="button" onClick={() => void confirmWithdrawal()}>
             {say("access.revokeConfirmButton")}
           </button>

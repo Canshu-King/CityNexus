@@ -946,6 +946,110 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
 
+  /journeys/{journey_id}/members/{member_id}/role:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: member_id, in: path, required: true, schema: {type: string}}
+    x-citynexus-max-administrators-per-journey: 2
+    # ORD-0503 names the cap here because this is the door that refuses on it.  The same number is
+    # `MAX_ADMINISTRATORS_PER_JOURNEY` in `backend/app/main.py` and `max_administrators` in the answer
+    # of `/member-role-limits`; `tests/test_qoder_ord0503_member_doors.py` reads all three and fails
+    # if any two disagree, which is what keeps the roster's 上限 sentence from being the only place
+    # the real limit is written down.
+    post:
+      operationId: changeJourneyMemberRole
+      description: >-
+        Move one member of one journey between the roles the server already knows.  The actor is
+        named on the request, not resolved from a session this product does not have, and that name
+        is checked: it must hold an in-force membership on this journey, and that membership's role
+        must hold `MEMBER_MANAGE` in `journey_role_capabilities` -- the door asks the seeded table,
+        so narrowing what a role may do narrows this door the same instant.  Guards run in a fixed
+        order (unknown row, withdrawn row, no-op change, self-change, OWNER seat, actor authority,
+        ADMIN capacity) and each has its own counterexample, because read in another order some of
+        them would never be reachable and that is the same as the rule not being there.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyMemberRoleChange'}
+      responses:
+        '200':
+          description: The row read back through the same payload the list door uses, with `updated_at` moved and `joined_at` not
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyMember'}
+        '403':
+          description: "error.reason_code = MEMBER_ACTOR_NOT_IN_JOURNEY / MEMBER_ACTOR_LAPSED / MEMBER_MANAGE_NOT_PERMITTED"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_ROLE_UNCHANGED / MEMBER_ALREADY_WITHDRAWN / MEMBER_ROLE_SELF_CHANGE_REFUSED / MEMBER_OWNER_ROLE_IMMUTABLE / MEMBER_ADMIN_CAP_REACHED"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: "error.code = VALIDATION_ERROR: a role outside `MemberRole`, an actor id that is not a uuid, or a field this body does not take (`additionalProperties: false`)"
+
+  /journeys/{journey_id}/members/self-exit:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    post:
+      operationId: leaveJourneyAsSelf
+      description: >-
+        The traveller named on the request takes themselves out.  Deliberately not
+        `/members/{member_id}/withdraw`: that door answers to whoever calls it about whomever it
+        names, which is right for clearing somebody else's seat and wrong for leaving.  Here there is
+        no `member_id` to point at, so the only row this door can write is the caller's own.  The
+        OWNER refusal is what stops a trip becoming unowned by its own owner walking out; a withdrawn
+        row stays listed carrying `removed_at`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyMemberSelfExit'}
+      responses:
+        '200':
+          description: The caller's row, now carrying its withdrawal moment
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyMember'}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = MEMBER_SELF_EXIT_NOT_A_MEMBER"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN / MEMBER_OWNER_CANNOT_LEAVE"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: "error.code = VALIDATION_ERROR: a traveller id that is not a uuid, or a field this body does not take (`additionalProperties: false`)"
+
+  /journeys/{journey_id}/member-role-limits:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    get:
+      operationId: readJourneyMemberRoleLimits
+      description: >-
+        The cap and the seats it has already been spent on, answered by the server.  A roster that
+        typed its own number would hold the limit in two places with only one of them load bearing,
+        which is why the screen reads this door and an arm pins its `max_administrators` to the
+        `x-citynexus-max-administrators-per-journey` named above.
+      responses:
+        '200':
+          description: The enforced cap, the in-force ADMIN count on this journey, and the role words the doors accept
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/MemberRoleLimits'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
   /journeys/{journey_id}/acl/roles:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2945,6 +3049,38 @@ components:
         role: {$ref: '#/components/schemas/MemberRole'}
         invited_by: {type: string, minLength: 1, maxLength: 120}
         expires_at: {type: [string, 'null'], format: date-time}
+    JourneyMemberRoleChange:
+      # ORD-0503: a role move names both halves -- the seat to move and the traveller asking for it.
+      # `extra="forbid"` on the model and `additionalProperties: false` here are the same promise:
+      # a body cannot smuggle a second actor, a self-declared state, or an `invited_by` into a change.
+      type: object
+      additionalProperties: false
+      required: [role, actor_traveler_id]
+      properties:
+        role: {$ref: '#/components/schemas/MemberRole'}
+        actor_traveler_id: {type: string, format: uuid}
+    JourneyMemberSelfExit:
+      # One field, and it is the caller.  There is no target on purpose: a door that accepted a
+      # member id here would be the withdraw door wearing a different name.
+      type: object
+      additionalProperties: false
+      required: [traveler_id]
+      properties:
+        traveler_id: {type: string, format: uuid}
+    MemberRoleLimits:
+      # The server's own cap and the seats spent under it, so the roster line quotes an answer
+      # instead of a number copied into a screen.  `max_administrators` is named a second time above
+      # as `x-citynexus-max-administrators-per-journey`; an arm compares the two spellings with the
+      # constant the refusing door reads.
+      type: object
+      required: [max_administrators, admin_count_in_force, roles]
+      properties:
+        max_administrators: {type: integer, minimum: 1}
+        admin_count_in_force: {type: integer, minimum: 0}
+        roles:
+          type: array
+          minItems: 3
+          items: {$ref: '#/components/schemas/MemberRole'}
     JourneyCheckinCreate:
       # ORD-0476: what stamping a footprint asks for.  Exactly one of the two ids must be present, and
       # the door refuses both readings of that with a name -- the contract says it here because the

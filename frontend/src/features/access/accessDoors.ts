@@ -195,3 +195,61 @@ export function withdrawMember(journeyId: string, memberId: string): Promise<Jou
     { method: "POST" },
   );
 }
+
+/** -------------------------------------------------------------------------------- ORD-0503 writes
+ *  The two member doors this order adds, plus the one read door that carries its cap. Their paths are
+ *  copied from the server's own decorators (`backend/app/main.py`, `change_journey_member_role` and
+ *  `leave_journey_as_self`), not assembled from a guess: `self-exit` deliberately takes no member id,
+ *  because a body that could name a second person would make this the withdraw door again.
+ */
+export type MemberRoleLimits = {
+  max_administrators: number;
+  admin_count_in_force: number;
+  roles: string[];
+};
+
+export type TravellerRead = { id: string; display_name: string | null };
+
+export const MEMBER_ROLE_LIMITS_SUFFIX = "/member-role-limits";
+
+export function readMemberRoleLimits(journeyId: string): Promise<MemberRoleLimits> {
+  return request<MemberRoleLimits>(
+    `/journeys/${encodeURIComponent(journeyId)}${MEMBER_ROLE_LIMITS_SUFFIX}`,
+  );
+}
+
+export function changeMemberRole(
+  journeyId: string,
+  memberId: string,
+  role: string,
+  actorTravelerId: string,
+): Promise<JourneyMemberRow> {
+  return request<JourneyMemberRow>(
+    `/journeys/${encodeURIComponent(journeyId)}/members/${encodeURIComponent(memberId)}/role`,
+    { method: "POST", body: JSON.stringify({ role, actor_traveler_id: actorTravelerId }) },
+  );
+}
+
+export function leaveJourney(journeyId: string, travelerId: string): Promise<JourneyMemberRow> {
+  return request<JourneyMemberRow>(
+    `/journeys/${encodeURIComponent(journeyId)}/members/self-exit`,
+    { method: "POST", body: JSON.stringify({ traveler_id: travelerId }) },
+  );
+}
+
+/** One person's own name, from the registry door.
+ *
+ *  The roster needs it because the member row answers with an id, and an id is not something to put
+ *  in front of a person.  A 404 here is a real answer -- the registry has no row for that id -- and it
+ *  comes back as `null` so the screen says "this server named nobody for that id" rather than printing
+ *  the uuid or the display name of somebody else.
+ */
+export async function readTraveller(travelerId: string): Promise<TravellerRead | null> {
+  const response = await fetch(`/api/v1/travelers/${encodeURIComponent(travelerId)}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw await rejectionWithFacts(response);
+  const body = (await response.json()) as Partial<TravellerRead>;
+  return { id: String(body.id ?? travelerId), display_name: body.display_name ?? null };
+}

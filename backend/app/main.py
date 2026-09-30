@@ -367,7 +367,10 @@ from app.schemas import (
     JourneyCheckinCreate,
     JourneyMember,
     JourneyMemberCreate,
+    JourneyMemberRoleChange,
+    JourneyMemberSelfExit,
     JourneyRoleRule,
+    MemberRoleLimits,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
     StayPlanGenerateRequest,
@@ -4502,6 +4505,318 @@ def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_ses
             by_role[row.role] = rule
         rule.capabilities.append(row.capability)
     return [by_role[role] for role in sorted(by_role)]
+
+
+# --- ORD-0503: the two member write doors the roster screen was missing -------------------------
+# ORD-0434 shipped the member set and ORD-0436 shipped the screen that lists it, and the screen had
+# to say out loud that two of its own buttons led nowhere.  These are those two doors.
+#
+# What is *not* here on purpose: an authenticated caller.  `actor_traveler_id` / `traveler_id` are
+# claims, exactly as `invited_by` is a claim on the add door (`add_journey_member`, above), and a
+# door that read a session this product does not have would be a fabricated default.  What makes the
+# claim safe is that it is checked -- against the member set for the journey, and against the seeded
+# capability table rather than a list typed into this function -- so the only way through is to name
+# somebody who actually holds MEMBER_MANAGE on this journey.
+MAX_ADMINISTRATORS_PER_JOURNEY = 2
+"""How many in-force ADMIN rows one journey may hold.
+
+Named once more in `contracts/openapi.yaml` as `x-citynexus-max-administrators-per-journey` and
+answered to any screen through `GET /api/v1/journeys/{journey_id}/member-role-limits`, because a
+roster that printed its own number would be the same value in two places with one of them load
+bearing.  The equality of these spellings is an arm, not a hope.
+"""
+
+
+def _role_capabilities(session: Session, role: str) -> set[str]:
+    """What a role may do, read out of `journey_role_capabilities` and not out of this function.
+
+    The door asks the table `MEMBER_MANAGE`: if operations narrow the table, the doors follow it the
+    same instant.  A hardcoded `role in {"OWNER", "ADMIN"}` here would have kept working after such
+    a change and said something untrue about the product.
+    """
+
+    return set(
+        session.scalars(
+            select(JourneyRoleCapability.capability).where(JourneyRoleCapability.role == role)
+        ).all()
+    )
+
+
+def _member_admin_count_in_force(session: Session, journey_id: str, now: datetime) -> int:
+    """In-force ADMIN rows on this journey, counted the same way the roster state is derived.
+
+    A withdrawn or lapsed row does not hold a seat, so it does not count toward the cap -- the same
+    `_member_state` the answers report is what decides it, so the number on the screen and the number
+    the door refuses on cannot describe two different rosters.
+    """
+
+    rows = session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey_id,
+            JourneyMemberModel.role == "ADMIN",
+        )
+    ).all()
+    return sum(1 for row in rows if _member_state(row, now) == "MEMBER_IN_FORCE")
+
+
+def _member_in_force_for(session: Session, journey_id: str, traveler_id: str, now: datetime):
+    return session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey_id,
+            JourneyMemberModel.traveler_id == traveler_id,
+        )
+    ).first()
+
+
+def _member_actor_or_unknown(session: Session, journey_id: str, actor_traveler_id: str, now: datetime):
+    """The actor has to be a member of *this* journey whose membership is in force.
+
+    Two refusals come out of one read and they are different facts: no row at all for that traveller
+    here is `MEMBER_ACTOR_NOT_IN_JOURNEY`, and a row that is here but withdrawn or past its own
+    deadline is `MEMBER_ACTOR_LAPSED`.  Collapsing them into one answer would tell a person whose
+    invitation simply expired that they were never invited.
+    """
+
+    member = _member_in_force_for(session, journey_id, actor_traveler_id, now)
+    if member is None:
+        raise _share_refusal(
+            403,
+            "The actor named on this request is not a member of that journey.",
+            "MEMBER_ACTOR_NOT_IN_JOURNEY",
+            {"field": "actor_traveler_id", "journey_id": journey_id},
+        )
+    if _member_state(member, now) != "MEMBER_IN_FORCE":
+        raise _share_refusal(
+            403,
+            "That actor's membership is not in force, so it carries no authority here.",
+            "MEMBER_ACTOR_LAPSED",
+            {
+                "field": "actor_traveler_id",
+                "actor_member_id": member.id,
+                "member_state": _member_state(member, now),
+            },
+        )
+    return member
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/{member_id}/role",
+    response_model=JourneyMember,
+    # ORD-0395: a status this decorator does not name never reaches the generated document, and the
+    # parity door compares path x method, so an undeclared refusal is a silent disagreement between
+    # the contract and the runtime.  Every class this function can answer is named here.
+    responses={
+        403: {
+            "description": "error.reason_code = MEMBER_ACTOR_NOT_IN_JOURNEY / "
+            "MEMBER_ACTOR_LAPSED / MEMBER_MANAGE_NOT_PERMITTED"
+        },
+        404: {
+            "description": "error.code = NOT_FOUND with error.reason_code = MEMBER_UNKNOWN"
+        },
+        409: {
+            "description": "error.code = CONFLICT with error.reason_code = MEMBER_ROLE_UNCHANGED / "
+            "MEMBER_ALREADY_WITHDRAWN / MEMBER_ROLE_SELF_CHANGE_REFUSED / "
+            "MEMBER_OWNER_ROLE_IMMUTABLE / MEMBER_ADMIN_CAP_REACHED"
+        },
+    },
+)
+def change_journey_member_role(
+    journey_id: UUID,
+    member_id: str,
+    payload: JourneyMemberRoleChange,
+    session: Session = Depends(get_session),
+):
+    """ORD-0503: move one member of one journey between the roles the server already knows.
+
+    The order the guards run in is the answer, so it is stated here once and each step has its own
+    arm in `backend/tests/test_qoder_ord0503_member_doors.py`: a row that is not here at all, a row
+    already withdrawn, a change that changes nothing, a person changing their own seat, an OWNER row
+    moving through this door, an actor with no authority, and finally a journey whose ADMIN seats are
+    full.  Read in any other order some of those would never be reachable -- which is the same as the
+    rule not being there.
+
+    `updated_at` moves and `joined_at` does not: this writes the seat, not the day it was taken.
+    The answer is the row read back through the same `_member_payload` the list door uses, so the
+    role a screen shows after a change is the role the store holds.
+    """
+
+    require(session, Journey, str(journey_id), "Journey")
+    member = session.get(JourneyMemberModel, member_id)
+    if member is None or member.journey_id != str(journey_id):
+        raise _share_refusal(
+            404,
+            "No member of this journey carries that id.",
+            "MEMBER_UNKNOWN",
+            {"field": "member_id", "journey_id": str(journey_id)},
+        )
+    now = datetime.now(timezone.utc)
+    if member.removed_at:
+        raise _share_refusal(
+            409,
+            "This membership was withdrawn; a role change would write a seat nobody holds.",
+            "MEMBER_ALREADY_WITHDRAWN",
+            {"member_id": member.id, "removed_at": member.removed_at},
+        )
+    if payload.role == member.role:
+        raise _share_refusal(
+            409,
+            "That is already the role this member holds, so there is nothing to change.",
+            "MEMBER_ROLE_UNCHANGED",
+            {"member_id": member.id, "role": member.role},
+        )
+    if str(payload.actor_traveler_id) == member.traveler_id:
+        raise _share_refusal(
+            409,
+            "A person cannot move their own seat: this door answers for somebody else.",
+            "MEMBER_ROLE_SELF_CHANGE_REFUSED",
+            {"member_id": member.id, "actor_traveler_id": str(payload.actor_traveler_id)},
+        )
+    if "OWNER" in {member.role, payload.role}:
+        # One OWNER is what makes a journey owned, and a demotion through this door could empty that
+        # seat with nobody left to answer for the trip.  Promotion into it is a transfer of
+        # ownership, which is its own decision and not a side effect of a role change.
+        raise _share_refusal(
+            409,
+            "The OWNER seat does not move through this door in either direction.",
+            "MEMBER_OWNER_ROLE_IMMUTABLE",
+            {"member_id": member.id, "from_role": member.role, "to_role": payload.role},
+        )
+    actor = _member_actor_or_unknown(session, str(journey_id), str(payload.actor_traveler_id), now)
+    if "MEMBER_MANAGE" not in _role_capabilities(session, actor.role):
+        raise _share_refusal(
+            403,
+            "The actor's role does not hold MEMBER_MANAGE on this journey.",
+            "MEMBER_MANAGE_NOT_PERMITTED",
+            {
+                "field": "actor_traveler_id",
+                "actor_role": actor.role,
+                "required_capability": "MEMBER_MANAGE",
+            },
+        )
+    if payload.role == "ADMIN" and _member_admin_count_in_force(session, str(journey_id), now) \
+            >= MAX_ADMINISTRATORS_PER_JOURNEY:
+        raise _share_refusal(
+            409,
+            "This journey already holds as many in-force ADMIN members as it may.",
+            "MEMBER_ADMIN_CAP_REACHED",
+            {
+                "max_administrators": MAX_ADMINISTRATORS_PER_JOURNEY,
+                "admin_count_in_force": _member_admin_count_in_force(session, str(journey_id), now),
+                "journey_id": str(journey_id),
+            },
+        )
+    before_role = member.role
+    stamp = datetime.now(timezone.utc).isoformat()
+    member.role = payload.role
+    member.updated_at = stamp
+    session.commit()
+    record_audit(
+        session,
+        action="member.role.changed",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        before={"role": before_role},
+        after={"role": member.role},
+        actor_type="traveler",
+        actor_id=str(payload.actor_traveler_id),
+    )
+    session.commit()
+    return _member_payload(member)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/self-exit",
+    response_model=JourneyMember,
+    responses={
+        404: {
+            "description": "error.code = NOT_FOUND with error.reason_code = "
+            "MEMBER_SELF_EXIT_NOT_A_MEMBER"
+        },
+        409: {
+            "description": "error.code = CONFLICT with error.reason_code = MEMBER_ALREADY_WITHDRAWN"
+            " / MEMBER_OWNER_CANNOT_LEAVE"
+        },
+    },
+)
+def leave_journey_as_self(journey_id: UUID, payload: JourneyMemberSelfExit,
+                          session: Session = Depends(get_session)):
+    """ORD-0503: the person named on the request takes themselves out of this journey.
+
+    Not the withdraw door.  `POST .../members/{member_id}/withdraw` answers to whoever calls it about
+    whomever it names and asks no question -- right for an OWNER clearing a seat, wrong for leaving,
+    where the row being written has to be the caller's own.  So this door takes no `member_id`: the
+    seat is found from the traveller it belongs to, and the only row it can write is that one.
+
+    The OWNER refusal is the one that keeps a trip from becoming unowned by its own owner walking
+    out.  A withdrawn row stays in the list carrying `removed_at`, which is how the roster can say
+    "this person was here and is out" instead of showing a vanishing row.
+    """
+
+    require(session, Journey, str(journey_id), "Journey")
+    traveler_id = str(payload.traveler_id)
+    now = datetime.now(timezone.utc)
+    member = _member_in_force_for(session, str(journey_id), traveler_id, now)
+    if member is None:
+        raise _share_refusal(
+            404,
+            "That traveller holds no membership row on this journey.",
+            "MEMBER_SELF_EXIT_NOT_A_MEMBER",
+            {"field": "traveler_id", "journey_id": str(journey_id)},
+        )
+    if member.removed_at:
+        raise _share_refusal(
+            409,
+            "This membership was already withdrawn; leaving again is not a new fact.",
+            "MEMBER_ALREADY_WITHDRAWN",
+            {"member_id": member.id, "removed_at": member.removed_at},
+        )
+    if member.role == "OWNER":
+        raise _share_refusal(
+            409,
+            "The owner of a journey cannot leave it through this door while it is still owned.",
+            "MEMBER_OWNER_CANNOT_LEAVE",
+            {"member_id": member.id, "journey_id": str(journey_id)},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    member.removed_at = stamp
+    member.updated_at = stamp
+    session.commit()
+    record_audit(
+        session,
+        action="member.self_exited",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        before={"removed_at": None},
+        after={"removed_at": stamp},
+        actor_type="traveler",
+        actor_id=traveler_id,
+    )
+    session.commit()
+    return _member_payload(member)
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-role-limits", response_model=MemberRoleLimits,
+         responses={
+             404: {"description": "error.code = NOT_FOUND for a journey id this server does not hold"}
+         })
+def read_journey_member_role_limits(journey_id: UUID, session: Session = Depends(get_session)):
+    """The cap and the seat count behind it, answered by the server.
+
+    The roster screen's 上限 sentence reads this instead of carrying a number: `max_administrators`
+    is `MAX_ADMINISTRATORS_PER_JOURNEY`, which the role door compares against in the same breath it
+    refuses on, and which `contracts/openapi.yaml` names a third time.  All three are pinned equal by
+    an arm, so a screen cannot be the only place a stale number lives.
+    """
+
+    require(session, Journey, str(journey_id), "Journey")
+    now = datetime.now(timezone.utc)
+    return MemberRoleLimits(
+        max_administrators=MAX_ADMINISTRATORS_PER_JOURNEY,
+        admin_count_in_force=_member_admin_count_in_force(session, str(journey_id), now),
+        roles=["OWNER", "ADMIN", "COLLABORATOR"],
+    )
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")
