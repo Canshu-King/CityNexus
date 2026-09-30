@@ -4,6 +4,7 @@ import hashlib
 import json
 import logging
 import math
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -17,7 +18,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.integrations.provider_config import trust_environment_for_public_providers
+from app.integrations.provider_config import (
+    ExternalProviderSettings,
+    trust_environment_for_public_providers,
+)
 from app.db.models import (
     AccommodationOfferSnapshot,
     Activity,
@@ -674,6 +678,104 @@ OVERPASS_MIRRORS = (
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
 )
+
+
+#: ORD-0519: which geocoder grounds the city anchor, in preference order, and it is decided here
+#: rather than hardcoded into one call.  This machine answers Photon and refuses Nominatim at the
+#: TCP layer (measured 2026-09-30: `anchor_geocode` → `PROVIDER_TIMEOUT` with `network_mode=direct`,
+#: while photon answers 200 in ~1 s), so a single nominatim-only leg made the whole demo board
+#: unbuildable on a host that *does* have a working channel.  The rule that did not move: an
+#: unanswered leg is never credited, and a REPLAY fallback is never supply.
+ANCHOR_LEG_ENV = "CITYNEXUS_ANCHOR_LEG_ORDER"
+DEFAULT_ANCHOR_LEGS = ("photon", "nominatim")
+
+
+def anchor_leg_order() -> tuple[str, ...]:
+    """The legs to try, named by configuration, validated against what this file can actually do."""
+
+    raw = (os.getenv(ANCHOR_LEG_ENV) or "").strip().lower()
+    if not raw:
+        return DEFAULT_ANCHOR_LEGS
+    wanted = tuple(part.strip() for part in raw.replace(",", " ").split() if part.strip())
+    return tuple(leg for leg in wanted if leg in DEFAULT_ANCHOR_LEGS) or DEFAULT_ANCHOR_LEGS
+
+
+class PhotonCityAnchor:
+    """The second city-anchor leg: Photon, asked with the product's own identifying User-Agent."""
+
+    provider_key = "photon"
+
+    def __init__(self, *, client: httpx.Client | None = None, base_url: str | None = None):
+        self.client = client or httpx.Client(
+            timeout=settings.real_city_timeout_seconds,
+            trust_env=trust_environment_for_public_providers(),
+            headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+        )
+        configured = base_url or ExternalProviderSettings().photon_base_url
+        self.base_url = str(configured).rstrip("/")
+        self._owned_client = client is None
+
+    def search(self, query: str, *, city: str, limit: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """Return anchor points and one honest reading of the call that produced them.
+
+        The reading carries the status, the byte count and the elapsed time even when the answer is
+        empty: "answered, found nothing" and "never replied" have to stay tellable apart afterwards.
+        """
+
+        started = time.monotonic()
+        # Measured on photon.komoot.io today: `geometry=1` is refused with HTTP 400
+        # ("Geometry output requested but not available in database"), while the default answer
+        # already carries GeoJSON coordinates.  Asking for geometry therefore lost the leg that
+        # was the only one able to answer on a host where Nominatim times out.
+        params = {"q": f"{query}, {city}", "limit": min(max(limit, 1), 10)}
+        try:
+            response = self.client.get(f"{self.base_url}/api/", params=params)
+        except Exception as exc:
+            return [], {
+                "leg": self.provider_key,
+                "answered": False,
+                "http_status": None,
+                "bytes": 0,
+                "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                "outcome": f"NOT_ANSWERED_{type(exc).__name__}",
+            }
+        elapsed = round((time.monotonic() - started) * 1000.0, 1)
+        points: list[dict[str, Any]] = []
+        if response.status_code == 200:
+            try:
+                for feature in (response.json().get("features") or []):
+                    coords = ((feature.get("geometry") or {}).get("coordinates")) or []
+                    props = feature.get("properties") or {}
+                    if len(coords) >= 2:
+                        points.append(
+                            {
+                                "latitude": float(coords[1]),
+                                "longitude": float(coords[0]),
+                                "name": props.get("name"),
+                                "osm_id": props.get("osm_id"),
+                            }
+                        )
+            except (ValueError, KeyError, TypeError):
+                return [], {
+                    "leg": self.provider_key,
+                    "answered": True,
+                    "http_status": response.status_code,
+                    "bytes": len(response.content),
+                    "elapsed_ms": elapsed,
+                    "outcome": "BAD_RESPONSE",
+                }
+        return points, {
+            "leg": self.provider_key,
+            "answered": response.status_code == 200,
+            "http_status": response.status_code,
+            "bytes": len(response.content),
+            "elapsed_ms": elapsed,
+            "outcome": "ANSWERED" if points else ("ANSWERED_EMPTY" if response.status_code == 200 else "REFUSED"),
+        }
+
+    def close(self) -> None:
+        if self._owned_client:
+            self.client.close()
 
 
 class OverpassPOIProvider:
@@ -1356,8 +1458,15 @@ def capture_real_city_candidates(
                 "provider_status": {
                     "anchor": journey_anchor,
                     "cache": "HIT",
-                    "overpass": "CACHED",
-                    "nominatim": "CACHED",
+                    # ORD-0519: a cache hit asked nobody. Crediting both geocoders with "CACHED"
+                    # made a photon-grounded city read back as nominatim on every repeat call,
+                    # which is exactly the mis-credit this order forbids; the honest statement is
+                    # that this call did not speak to either leg.
+                    "overpass": "NOT_ASKED_THIS_CALL",
+                    "nominatim": "NOT_ASKED_THIS_CALL",
+                    "photon": "NOT_ASKED_THIS_CALL",
+                    "anchor_legs": [],
+                    "anchor_leg_of_original_capture": None,
                     "attempts": [],
                     "failure_stage": None,
                     "fallback_reason": None,
@@ -1373,6 +1482,9 @@ def capture_real_city_candidates(
         failure_stage: str | None = None
         candidates = []
         overpass_attempts: list[dict[str, Any]] = []
+        # Declared before the try because the failure shapes below must still be able to say which
+        # anchor legs were asked and what each one did.
+        anchor_leg_readings: list[dict[str, Any]] = []
         anchor = journey_anchor
         if not settings.real_city_enabled:
             live_error = "REAL_CITY_DISABLED"
@@ -1387,17 +1499,69 @@ def capture_real_city_candidates(
                 context = session.get(JourneyTripContext, journey.id)
                 arrival = _load_json(context.arrival_anchor_json if context else None, {})
                 anchor_query = str(arrival.get("location") or city_label)
-                grounded = (
-                    geocoder.search(anchor_query, city=city_label, limit=1)
-                    if anchor is None
-                    else []
-                )
-                if anchor is None and grounded:
-                    anchor = {
-                        "latitude": grounded[0].latitude,
-                        "longitude": grounded[0].longitude,
-                        "source": "nominatim_city_anchor",
-                    }
+                # ORD-0519: the anchor is taken from the first leg that actually answers, in the
+                # configured order, and the leg that answered is the one named in `anchor.source`.
+                # A leg that was never asked because an earlier one answered is recorded as SKIPPED,
+                # so no reading can be read as "nominatim was fine" when nobody spoke to it.
+                if anchor is None:
+                    legs = anchor_leg_order()
+                    for position, leg in enumerate(legs):
+                        if leg == "photon":
+                            anchors, reading = PhotonCityAnchor().search(
+                                anchor_query, city=city_label, limit=1
+                            )
+                            if anchors:
+                                anchor = {
+                                    "latitude": anchors[0]["latitude"],
+                                    "longitude": anchors[0]["longitude"],
+                                    "source": "photon_city_anchor",
+                                }
+                        else:
+                            started = time.monotonic()
+                            try:
+                                hits = geocoder.search(anchor_query, city=city_label, limit=1)
+                                reading = {
+                                    "leg": "nominatim",
+                                    "answered": True,
+                                    "http_status": 200,
+                                    "bytes": None,
+                                    "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                                    "outcome": "ANSWERED" if hits else "ANSWERED_EMPTY",
+                                }
+                                if hits:
+                                    anchor = {
+                                        "latitude": hits[0].latitude,
+                                        "longitude": hits[0].longitude,
+                                        "source": "nominatim_city_anchor",
+                                    }
+                            except httpx.HTTPError as exc:
+                                reading = {
+                                    "leg": "nominatim",
+                                    "answered": False,
+                                    "http_status": getattr(
+                                        getattr(exc, "response", None), "status_code", None
+                                    ),
+                                    "bytes": None,
+                                    "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                                    "outcome": f"NOT_ANSWERED_{type(exc).__name__}",
+                                }
+                                hits = []
+                        reading["attempted"] = True
+                        anchor_leg_readings.append(reading)
+                        if anchor is not None:
+                            for skipped in legs[position + 1 :]:
+                                anchor_leg_readings.append(
+                                    {"leg": skipped, "attempted": False, "outcome": "SKIPPED"}
+                                )
+                            break
+                    if anchor is None:
+                        # Both legs were asked and neither grounded the city: say which ones, per
+                        # leg, instead of the old single-leg RuntimeError.
+                        raise RuntimeError("NO_ANCHOR_LEG_ANSWERED")
+                elif anchor is not None:
+                    anchor_leg_readings = [
+                        {"leg": "journey_state", "attempted": True, "outcome": "ANSWERED"}
+                    ]
                 if anchor is None:
                     raise RuntimeError("NO_JOURNEY_DERIVED_CITY_ANCHOR")
                 stage = "category_search"
@@ -1425,14 +1589,33 @@ def capture_real_city_candidates(
                     # for "tea shops, CN-TIANJIN" (ORD-0099 ①, measured).
                     stage = "fallback_geocode"
                     candidates = geocoder.search(query, city=city_label, limit=limit)
+                leg_states: dict[str, str] = {}
+                for reading in anchor_leg_readings:
+                    name = reading.get("leg")
+                    if not reading.get("attempted"):
+                        leg_states[name] = "SKIPPED"
+                    elif (anchor or {}).get("source", "").startswith(str(name)):
+                        leg_states[name] = "CAPTURED"
+                    elif reading.get("answered"):
+                        leg_states[name] = "ANSWERED_EMPTY"
+                    else:
+                        leg_states[name] = "NOT_ANSWERED"
+                if stage == "fallback_geocode" and candidates:
+                    # The bounded second attempt is Nominatim's own answer about places, which is a
+                    # different fact from who grounded the city.  Naming it separately is what keeps
+                    # "photon grounded this" from being overwritten by "nominatim said something".
+                    leg_states["nominatim"] = "CAPTURED_FOR_POI"
                 provider_status = {
-                    "nominatim": "CAPTURED",
+                    "nominatim": leg_states.get("nominatim", "NOT_ASKED"),
+                    "photon": leg_states.get("photon", "NOT_ASKED"),
                     # An answered mirror owns the answer even when it found nothing; only
                     # "no endpoint replied" is a failure-shaped status.
                     "overpass": "CAPTURED"
                     if any(a.get("answered") for a in overpass_attempts)
                     else "NOT_ANSWERED",
                     "anchor": anchor,
+                    # ORD-0519: who was asked, who replied, with what status and how many bytes.
+                    "anchor_legs": anchor_leg_readings,
                     "failure_stage": stage,
                     # ORD-0192 ⑥: which endpoints were asked, what they said, how long they took.
                     "attempts": overpass_attempts,
@@ -1476,6 +1659,10 @@ def capture_real_city_candidates(
                     # nothing (which is a different thing from answering at all).
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
+                    # The board cell has to be nameable even in this shape: which leg was asked,
+                    # what it returned, and that none of it was supply.
+                    "anchor_legs": anchor_leg_readings,
+                    "counts_as_supply": False,
                 }
             else:
                 # A generic-city trial must fail visibly rather than importing
@@ -1489,6 +1676,8 @@ def capture_real_city_candidates(
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
+                    "anchor_legs": anchor_leg_readings,
+                    "counts_as_supply": False,
                     # Observations from before the failure: which endpoints were asked and
                     # what each said.  Empty only when nothing was even attempted.
                     "attempts": overpass_attempts,
