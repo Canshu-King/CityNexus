@@ -11598,6 +11598,12 @@ def _accept_replan_executing(
     _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
+    # A replan is accepted while the Journey is already ACTIVE.  The proposed
+    # plan is born with PLANNED activity rows, but its execution cursor must be
+    # live immediately after the authoritative handover; otherwise the next
+    # real depart call cannot advance the Journey.
+    if replacement_current is not None and journey.status == "ACTIVE":
+        replacement_current.status = "ACTIVE"
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
     if trigger_event.status == "DETECTED":

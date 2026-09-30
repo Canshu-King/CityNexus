@@ -22,6 +22,10 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
 
     provider_key = "hermes"
     runtime_identity = HERMES_COMPAT_ENDPOINT
+    # WB2api is an OpenAI-compatible endpoint, not the native MCP transport.
+    # It remains subject to the persisted traveler policy and deterministic
+    # gateway facts, but must not inherit the native MCP proposal-only fence.
+    agent_id = "hermes-compat"
 
     def __init__(
         self,

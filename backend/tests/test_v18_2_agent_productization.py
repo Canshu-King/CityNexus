@@ -44,6 +44,13 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
     assert bounded.decision is AuthorizationDecision.REQUIRE_CONFIRMATION
     assert "CITYNEXUS_NATIVE_PLAN_ONLY_BOUNDARY" in bounded.reason_codes
 
+    with SessionLocal() as session:
+        gateway = AgentToolGateway(session)
+        request = AgentToolCall(request_id="compat-request", agent_id="hermes-compat")
+        auth = AuthorizationResult(AuthorizationDecision.ALLOW_AUTO, (), 7)
+        compat = gateway._bound_authorization(request, auth)
+    assert compat.decision is AuthorizationDecision.ALLOW_AUTO
+
 
 def test_v182_normalized_contract_preserves_safe_tool_metadata_only():
     event = normalize_hermes_event(

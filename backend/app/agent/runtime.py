@@ -291,6 +291,9 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
 class DeepSeekJourneyAgent:
     provider_key = "deepseek"
     runtime_identity = NATIVE_DEEPSEEK_TOOL_LOOP
+    # This is the server-owned identity used for calls emitted by this local
+    # tool loop. Native MCP callers use an explicit mcp-client identity.
+    agent_id = "citynexus-agent"
 
     def __init__(self, *, client: httpx.Client | None = None):
         if not settings.ai_api_key:
@@ -461,6 +464,7 @@ class DeepSeekJourneyAgent:
                     sequence += 1
                     arguments.setdefault("journey_id", journey.id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
+                    arguments.setdefault("agent_id", self.agent_id)
                     if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
                         arguments["trigger_event_id"] = mission.trigger_event_id
                     if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
