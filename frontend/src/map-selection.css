@@ -19,6 +19,58 @@
   outline-offset: 2px;
 }
 
+/*
+ * ORD-0497 — the footprint on the pin: solid and dated for a stop this trip's read carried a stamp
+ * for, hollow for one it did not.
+ *
+ * Deliberately placed ABOVE `.selected` and below `.v9-map-marker` in `styles.css:248`:
+ *   - deeper than `styles.css`'s single-class rules, so it wins without depending on import order
+ *     (the same reason this file exists, per its header);
+ *   - shallower than, and earlier than, `.v8-map-panel .v9-map-marker.selected`, so a pin that is
+ *     both hollow and selected keeps the selection ring -- the stamp claim is about the server, the
+ *     ring is about where the traveller's finger is, and neither is allowed to erase the other.
+ *
+ * Colour comes from the tokens this file already uses (`--cn-surface` / `--v8-indigo` / `--v8-ink`),
+ * which is the pairing `.v8-map-stop` ships in both schemes -- no new colour, so the dark audit has
+ * nothing fresh to fail on. The fill, not the outline, is the claim: `.current`'s scale and
+ * `.disrupted`'s pulse stay plan status, and a stamped pin is told apart by its date badge as well as
+ * its fill, so a surface that never asked (`footprints = null`) cannot be mistaken for "all visited".
+ *
+ * `.filtered-out` hides by visibility and never by removal:
+ * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
+ * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins as the proof that every located stop is
+ * pickable, and ORD-0453 already ruled that a constrained view on this surface is a clip, not a
+ * deletion.
+ */
+.v8-map-panel .v9-map-marker.un-stamped {
+  border-color: var(--v8-indigo);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+}
+
+.v8-map-panel .v9-map-marker.filtered-out {
+  visibility: hidden;
+}
+
+/* The day the server recorded, under the pin and beside nothing else. Its own marker rather than a
+   child of the pin, because `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:177` asserts a
+   pin paints only its stop number; date-only because that gate's `clock-time` rule
+   (`e2e/_mapLabelRules.ts:69`) forbids a time on the glass. `pointer-events: none` is not
+   decorative: an element that swallows a tap here would take the pin's hit test with it, which is
+   what `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` measures at four widths. */
+.v8-map-panel .v8-map-stamp-date {
+  padding: 1px 5px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+  box-shadow: 0 2px 6px #17294533;
+  font-size: var(--cn-fs-caption);
+  font-weight: 750;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .v8-map-panel .v9-map-marker.selected {
   box-shadow: 0 0 0 3px var(--cn-surface), 0 0 0 6px var(--v8-indigo);
 }
@@ -169,3 +221,45 @@
   background: linear-gradient(to bottom, #00000000, var(--cn-surface));
 }
 
+
+/* ORD-0497 — the read out loud, in the facts column beside the map.
+ *
+ * Not inside `.v8-map-panel`, and that is the load-bearing choice: the bottom overlay band inside the
+ * panel is the box `MapPanel` measures its `fitBounds` padding against (the note above
+ * `.v8-map-selected-stop`), so a line added there moves ground the camera was promised. This column
+ * is normal document flow and already carries sentences of this kind.
+ *
+ * Both arms borrow the chip shape `.v8-map-stops-capture` ships: same tokens, same min-height, so the
+ * 44px touch floor this project keeps having to re-learn is not reintroduced one control later.
+ */
+.v8-map-page-grid .v8-map-footprint-state {
+  margin: var(--cn-s-12) 0 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+
+.v8-map-page-grid .v8-map-footprint-filter {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  min-height: 44px;
+  margin-top: var(--cn-s-8);
+  padding: 0 var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  color: var(--v8-indigo);
+  font-size: var(--cn-fs-caption);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.v8-map-page-grid .v8-map-footprint-filter[aria-pressed="true"] {
+  border-color: var(--v8-indigo);
+}
+
+.v8-map-page-grid .v8-map-footprint-filter:focus-visible {
+  outline: 2px solid var(--v8-indigo);
+  outline-offset: 2px;
+}
