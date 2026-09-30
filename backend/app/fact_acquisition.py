@@ -583,6 +583,20 @@ def _plain_text_cost(
     *,
     reference_at: str | datetime | date | None,
 ) -> dict[str, Any]:
+    # Municipal cultural-centre pages often state the admission policy as
+    # “公共文化服务免费开放” without a ticket-price label.  When the exact
+    # bound page is clearly about a cultural centre, that is still an explicit
+    # zero-admission observation; do not leave it UNKNOWN merely because the
+    # page uses policy language instead of a price table.
+    if re.search(r"(?:文化馆|文化中心)[^。；\n]{0,120}(?:免费开放|免费对公众开放)", text):
+        return {
+            "status": "VERIFIED_PROVIDER",
+            "amount_minor": 0,
+            "currency": "CNY",
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": text[:4000],
+        }
     label_pattern = (
         "(?:"
         + "\u4ef7" + r"\s*" + "\u683c"

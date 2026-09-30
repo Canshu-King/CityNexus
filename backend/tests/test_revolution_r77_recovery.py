@@ -351,6 +351,31 @@ def test_official_html_parser_keeps_verified_free_and_all_day_distinct_from_unkn
     assert result["cost_evidence"]["amount_minor"] == 0
 
 
+def test_official_municipal_cultural_service_free_opening_is_structured_cost(monkeypatch):
+    from app import fact_acquisition
+
+    body = "玉龙纳西族自治县文化馆持续提供公共文化服务免费开放。"
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://www.lijiang.cn/article/166182.html"),
+    )
+    result = _official_web_facts(
+        object(),
+        "https://www.lijiang.cn/article/166182.html",
+        retrieved_at="now",
+        source_binding={"source_class": "MUNICIPAL_AUTHORITY"},
+    )
+
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 0
+
+
 def test_official_html_parser_keeps_login_shell_as_no_structured_facts(monkeypatch):
     from app import fact_acquisition
 
