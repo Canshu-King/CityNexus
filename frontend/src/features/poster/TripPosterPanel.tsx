@@ -10,12 +10,12 @@
  * empty poster. The list the sheet renders and the list the canvas draws are the same value, built
  * once here: a picture of something else than the traveller is reading would be a second answer.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { progressContractCopy } from "../progress/journeyProgress";
 import {
-  countPosterPages,
   drawTripPoster,
+  planPosterPages,
   savePosterBlob,
   type PosterFailureStep,
   type PosterLines,
@@ -86,7 +86,10 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
     };
   }, [poster, locale, t]);
 
-  useEffect(() => {
+  /* Layout effect, not effect: with the plain one the first paint lists every day and the second
+     collapses to page one, so a traveller watches the list jump. Measuring before the browser paints
+     means the first thing on screen is already the paged thing. */
+  useLayoutEffect(() => {
     if (!open || !sheet.current) return;
     setSheetWidth(sheet.current.getBoundingClientRect().width);
     setPage(0);
@@ -94,8 +97,16 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
 
   if (!poster || !lines) return null;
 
-  const pageCount = lines && sheetWidth > 0 ? countPosterPages(lines, sheetWidth) : 1;
+  /* One plan, read once: the panel slices by its entries and the encoder slices by the same
+     entries, so "the blocks on this page" has exactly one answer. A second split recomputed from a
+     page count would agree only until block heights stopped being uniform. */
+  const planned = lines && sheetWidth > 0 ? planPosterPages(lines, sheetWidth) : null;
+  const pages = planned && "pages" in planned ? planned.pages : null;
+  const pageCount = pages ? pages.length : 1;
   const currentPage = Math.min(page, pageCount - 1);
+  const slice = pages ? pages[currentPage] : null;
+  const pageLines: PosterLines | null =
+    lines && slice ? { ...lines, days: lines.days.slice(slice.first, slice.first + slice.count) } : null;
 
   const makePoster = async () => {
     setState({ phase: "working" });
@@ -181,8 +192,11 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
             </>
           )}
 
+          {/* The sheet lists the page it is on, not every day of the trip: a strip that pages the
+              picture while the panel still shows all seven days would make the page buttons a
+              caption on a picture the traveller cannot check. */}
           <ol className="cn-poster-days" data-testid="poster-days">
-            {lines.days.map((day, index) => (
+            {(pageLines ?? lines!).days.map((day, index) => (
               <li className="cn-poster-day" key={`${day.label}-${index}`} data-testid={`poster-day-${index + 1}`}>
                 <div className="cn-poster-day-head">
                   <b>{day.label}</b>
