@@ -15,7 +15,7 @@ tests/test_qoder_ord0504_spend_sources.py::test_ord0504_nothing_on_either_answer
     _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-6 tests collected in 2.14s
+6 tests collected in 2.66s
 ......                                                                   [100%]
 ============================== warnings summary ===============================
 ..\..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
@@ -27,4 +27,4 @@ tests/test_qoder_ord0504_spend_sources.py::test_ord0504_nothing_on_either_answer
     _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-6 passed, 2 warnings in 1.95s
+6 passed, 2 warnings in 2.39s
