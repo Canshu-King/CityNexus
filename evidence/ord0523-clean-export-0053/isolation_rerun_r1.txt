@@ -1,0 +1,4 @@
+### the two arms that swapped between the two full runs, re-run alone on my branch export
+$ cd <export_mine>/backend && python -m pytest tests/test_qoder_ord224_g3_generation_measurement.py tests/test_qoder_stay_generation_operations.py -p no:randomly -q
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+29 passed, 2 warnings in 14.37s
