@@ -406,6 +406,7 @@ class DeepSeekJourneyAgent:
         sequence = 0
         tool_trace: list[dict[str, Any]] = []
         seen_calls: set[tuple[str, str]] = set()
+        tool_counts: dict[str, int] = {}
         try:
             for _ in range(max_steps):
                 message = self._complete(messages)
@@ -500,9 +501,21 @@ class DeepSeekJourneyAgent:
                     arguments.setdefault("journey_id", journey.id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     arguments.setdefault("agent_id", self.agent_id)
+                    tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
+                    search_saturated = (
+                        tool_name == "search_city_services"
+                        and tool_counts[tool_name] > 3
+                    )
                     if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
                         arguments["trigger_event_id"] = mission.trigger_event_id
-                    if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
+                    if search_saturated:
+                        result = {
+                            "tool": tool_name,
+                            "error": "SEARCH_SATURATION",
+                            "decision": "STOP_SEARCH_SATURATION",
+                            "message": "Search budget exhausted for this run; choose a different strategy or source.",
+                        }
+                    elif tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
                         result: dict[str, Any] = {
                             "tool": tool_name,
                             "error": "tool is outside the CityNexus V2 allowlist",
