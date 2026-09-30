@@ -10,17 +10,17 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.agent.ai_availability import (
+    ai_availability_state,
+    ai_state_from_failure_reason,
+    reason_sentence,
+)
 from app.agent.gateway import AgentToolGateway
 from app.agent.mission import mission_payload
 from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identity
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
-from app.agent.ai_availability import (
-    ai_availability_state,
-    ai_state_from_failure_reason,
-    reason_sentence,
-)
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
@@ -389,6 +389,7 @@ class DeepSeekJourneyAgent:
         try:
             for _ in range(max_steps):
                 message = self._complete(messages)
+                run.model_key = self.model_key
                 tool_calls = message.get("tool_calls") or []
                 content = message.get("content") or ""
                 persist_span(

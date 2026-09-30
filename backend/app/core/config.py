@@ -52,6 +52,11 @@ class Settings:
     hermes_api_url: str | None = os.getenv("CITYNEXUS_HERMES_API_URL")
     hermes_api_key: str | None = os.getenv("CITYNEXUS_HERMES_API_KEY")
     hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "hermes")
+    hermes_model_fallbacks: tuple[str, ...] = tuple(
+        item.strip()
+        for item in os.getenv("CITYNEXUS_HERMES_MODEL_FALLBACKS", "").split(",")
+        if item.strip()
+    )
     hermes_native_binary: str | None = os.getenv("CITYNEXUS_HERMES_BINARY") or None
     hermes_native_proven: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_PROVEN") or None
     hermes_native_api_url: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_API_URL") or None

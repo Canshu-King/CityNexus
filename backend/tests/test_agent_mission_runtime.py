@@ -5,14 +5,15 @@ from dataclasses import replace
 
 import httpx
 import pytest
+from demo_stage import demo_reset_headers
 from fastapi.testclient import TestClient
 
 import app.main as main_module
+from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import DeepSeekJourneyAgent
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Event, JourneyMission
 from app.db.session import SessionLocal
-from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -138,3 +139,35 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
         "inspect_journey",
         "inspect_twin",
     ]
+
+
+def test_hermes_runtime_uses_configured_model_fallback_chain(monkeypatch):
+    calls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        calls.append(payload["model"])
+        if payload["model"] == "global:deep-model":
+            return httpx.Response(503, json={"error": "international unavailable"})
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"role": "assistant", "content": "READY"}}]},
+        )
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    monkeypatch.setattr(
+        "app.agent.orchestrator.settings",
+        replace(
+            runtime_settings,
+            hermes_api_url="http://wb2api.test/v1/chat/completions",
+            hermes_api_key="test-key",
+            hermes_model="global:deep-model",
+            hermes_model_fallbacks=("cn:glm-5.3-flash", "cn:deepseek-v4.1-flash"),
+        ),
+    )
+    agent = HermesJourneyAgent(client=fake_client)
+    message = agent._complete([])
+
+    assert message["content"] == "READY"
+    assert agent.model_key == "cn:glm-5.3-flash"
+    assert calls == ["global:deep-model", "cn:glm-5.3-flash"]
