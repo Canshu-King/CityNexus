@@ -110,7 +110,13 @@ export function poiImportCopy(
   params?: Record<string, string | number>,
 ): string {
   const table = locale.startsWith("zh") ? COPY[key].zh : COPY[key].en;
-  /* An English line with no Chinese to fall back on still has to answer for the zh arm, so the
-     guard is the other direction: a zh-only sentence would reach the English glass as Chinese. */
-  return expandPluralMarkers(table, params);
+  /* Two passes, in this order: `{plural:stem}` is grammar and belongs to the shared counting rule
+     (ORD-0433), while `{day}` / `{shelf}` / `{n}` are values the caller measured. A placeholder with
+     no value stays visible as the placeholder -- the same rule `fillAccess` keeps, so a field the
+     screen never read cannot arrive as a finished sentence.
+
+     This line is not decoration: the first candidate generation painted 「没有填日子，就落在计划的第一天：{day}」
+     on the glass, and the arm that reads `innerText` is what caught it. */
+  const counted = expandPluralMarkers(table, params);
+  return counted.replace(/\{(\w+)\}/g, (_match, name: string) => String(params?.[name] ?? `{${name}}`));
 }
