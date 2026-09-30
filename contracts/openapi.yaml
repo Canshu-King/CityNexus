@@ -731,7 +731,9 @@ paths:
             ARE the whitelist that door may answer with beyond the owner's own journey body, and the
             gate reads them from here instead of restating them, so widening this door means writing
             this contract where a reviewer can see it.  What the gate forbids is a key going missing,
-            never a key being documented.
+            never a key being documented.  From ORD-0481 the comparison runs both ways: the `required`
+            list under this arm is read the same way, and a key promised there that this door stops
+            answering is a refusal, not a silent narrowing.
           content:
             application/json:
               schema:

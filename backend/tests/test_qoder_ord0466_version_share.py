@@ -10,11 +10,12 @@ table and not a second token door.
 What each arm holds the code to:
 
 * V1 a journey-level grant still answers *every* key the owner's own read answers with -- none may go
-  missing -- and the only keys it may answer beyond those are the ones `contracts/openapi.yaml` names
-  for this door.  ORD-0475 ruled that the first cut of this arm had the direction wrong: "no extra
-  key" forbids every later feature, while the invariant ORD-0446 set is that what the server holds
-  must not silently disappear or be replaced.  Additive, and an old row is a journey-level grant, not
-  an unfinished choice;
+  missing -- the only keys it may answer beyond those are the ones `contracts/openapi.yaml` declares
+  for this door, and every key that declaration marks required is actually answered.  ORD-0475 ruled
+  that the first cut of this arm had the direction wrong: "no extra key" forbids every later feature,
+  while the invariant ORD-0446 set is that what the server holds must not silently disappear or be
+  replaced, and ORD-0481 asked for the comparison to run in both directions.  Additive, and an old row
+  is a journey-level grant, not an unfinished choice;
 * V2 a version-scoped grant reads that one version, and the plan it carries is the *same*
   `PlanVersion` shape `GET /journeys/{id}/plans` answers with - one shape, not a second one that can
   drift away from the owner's own view of the version;
@@ -41,6 +42,7 @@ from uuid import uuid4
 
 import yaml
 from fastapi.testclient import TestClient
+from pytest import raises
 
 from app.db.models import PlanVersion, Traveler
 from app.db.session import SessionLocal
@@ -137,10 +139,13 @@ def _grant_count(journey_id: str) -> int:
     return len(response.json())
 
 
-def _share_extra_keys() -> set[str]:
-    """The whitelist this door may answer beyond the owner's own journey body: the keys the contract
-    declares for it.  Read from `contracts/openapi.yaml` rather than restated here, so there is one
-    list to widen and it is the one a reviewer reads.
+def _share_door_declaration() -> tuple[set[str], set[str]]:
+    """`(declared, promised)` for this door, both read out of `contracts/openapi.yaml`.
+
+    `declared` is the whitelist: every key this door may answer with beyond the owner's own journey
+    body.  `promised` is the same arm's `required` list: the keys a caller is told will always be
+    there.  Read from the contract rather than restated here so there is one list to widen, and it is
+    the list a reviewer reads.
 
     Deliberately *not* pinned to a set of names in this file: demanding the contract name exactly
     today's keys would rebuild the mistake ORD-0475 was opened to remove, one level up."""
@@ -148,19 +153,26 @@ def _share_extra_keys() -> set[str]:
     arm = spec["paths"]["/shared/journeys/{token}"]["get"]["responses"]["200"]["content"][
         "application/json"
     ]["schema"]["allOf"][1]
-    return set(arm["properties"])
+    return set(arm["properties"]), set(arm.get("required", []))
 
 
 def _key_drift(
-    body: dict, owner_body: dict, extra_keys: set[str]
-) -> tuple[set[str], set[str]]:
-    """`(missing, unlisted)` for one share body against the owner's own read of the same journey.
+    body: dict, owner_body: dict, declared: set[str], promised: set[str]
+) -> tuple[set[str], set[str], set[str]]:
+    """`(missing, unlisted, unanswered)` for one share body against the owner's read of the journey.
 
     `grant_scope` is the one key this slice added to every answer, so it is not counted as drift.
     A key the owner answers with and this body does not is `missing`; a key this body answers with,
-    the owner does not, and the contract does not name is `unlisted`."""
+    the owner does not, and the contract does not declare is `unlisted`; a key the contract marks
+    required for this door and the body does not answer is `unanswered`.  The last one is what makes
+    the choice ORD-0481 asked about a real one: taking `plan_state` back out of the payload without
+    taking it out of the contract goes red here, not silently."""
     shared = set(body) - {"grant_scope"}
-    return set(owner_body) - shared, shared - set(owner_body) - extra_keys
+    return (
+        set(owner_body) - shared,
+        shared - set(owner_body) - declared,
+        promised - set(body),
+    )
 
 
 def test_v1_journey_level_grant_keeps_its_shape_and_names_its_scope() -> None:
@@ -176,9 +188,11 @@ def test_v1_journey_level_grant_keeps_its_shape_and_names_its_scope() -> None:
     # the journey half of the body is still the same shape the owner's own read answers with
     owner = client.get(f"/api/v1/journeys/{journey_id}")
     assert owner.status_code == 200, owner.text
-    missing, unlisted = _key_drift(body, owner.json(), _share_extra_keys())
+    declared, promised = _share_door_declaration()
+    missing, unlisted, unanswered = _key_drift(body, owner.json(), declared, promised)
     assert not missing, sorted(missing)
     assert not unlisted, sorted(unlisted)
+    assert not unanswered, sorted(unanswered)
 
 
 def test_v2_version_grant_reads_that_version_in_the_owners_own_shape() -> None:
@@ -279,35 +293,57 @@ def test_v6_contract_and_checked_in_client_carry_the_scope() -> None:
     assert generated.count("plan_version_id") >= 2, "one of the two schemas never reached the client"
 
 
-def test_v7_each_key_arm_bites_on_a_doctored_body() -> None:
-    """ORD-0475 asked for a counter-example per arm, and this file is the evidence for why: V1 was
-    first written as a set equality, which held quietly until ORD-0465 legitimately added two keys to
-    this body and then named those two keys as the failure.  Both arms are fed a body doctored from a
-    live read and must name the doctoring; the untouched body is fed last, so an arm cannot be passing
-    because the doctoring was a no-op."""
+def test_v7_every_key_arm_bites_on_a_doctored_body() -> None:
+    """ORD-0475 asked for a counter-example per arm and ORD-0481 for both directions of the contract
+    comparison, and this file is the evidence for why: V1 was first written as a set equality, which
+    held quietly until ORD-0465 legitimately added two keys to this body and then named those two keys
+    as the failure.  Each arm is fed a body doctored from a live read and must name the doctoring, the
+    untouched body is fed last so an arm cannot be passing because its doctoring was a no-op, and one
+    arm proves the old equality would have flagged the payload that is now lawful."""
     journey_id = _journey()
     grant = _create(journey_id)
     body = client.get(TOKEN_PATH.format(token=grant["token"])).json()
     owner = client.get(f"/api/v1/journeys/{journey_id}").json()
-    extra_keys = _share_extra_keys()
+    declared, promised = _share_door_declaration()
 
     # Arm 1: one key the owner answers with is gone from the share body.
     dropped = {k: v for k, v in body.items() if k != "city_code"}
     assert "city_code" in owner and "city_code" in body, sorted(owner)
     assert len(dropped) == len(body) - 1, "removing city_code removed nothing"
-    missing, unlisted = _key_drift(dropped, owner, extra_keys)
+    missing, unlisted, unanswered = _key_drift(dropped, owner, declared, promised)
     assert missing == {"city_code"}, sorted(missing)
     assert unlisted == set(), sorted(unlisted)
+    assert unanswered == set(), sorted(unanswered)
 
-    # Arm 2: one key the contract never names is answered.
+    # Arm 2: one key the contract never declares is answered.
     invented = dict(body, guest_note="not in the contract")
-    assert "guest_note" not in extra_keys, sorted(extra_keys)
-    missing, unlisted = _key_drift(invented, owner, extra_keys)
+    assert "guest_note" not in declared, sorted(declared)
+    missing, unlisted, unanswered = _key_drift(invented, owner, declared, promised)
     assert missing == set(), sorted(missing)
     assert unlisted == {"guest_note"}, sorted(unlisted)
+    assert unanswered == set(), sorted(unanswered)
 
-    # Both arms quiet on the real body, and the two keys ORD-0465 added are in the whitelist they are
-    # said to come from -- which is the whole point of ORD-0475.
-    missing, unlisted = _key_drift(body, owner, extra_keys)
-    assert (missing, unlisted) == (set(), set()), (sorted(missing), sorted(unlisted))
-    assert {"plan_state", "active_plan"} <= extra_keys, sorted(extra_keys)
+    # Arm 3, the other direction: a key the contract marks required is no longer answered.  This is
+    # the cell that makes ORD-0481's "收回" a decision instead of a silence -- retract the value from
+    # the payload and leave the promise in the contract, and this names it.
+    unpromised = {k: v for k, v in body.items() if k != "plan_state"}
+    assert "plan_state" in promised and "plan_state" in body, sorted(promised)
+    assert len(unpromised) == len(body) - 1, "removing plan_state removed nothing"
+    missing, unlisted, unanswered = _key_drift(unpromised, owner, declared, promised)
+    assert missing == set(), sorted(missing)
+    assert unlisted == set(), sorted(unlisted)
+    assert unanswered == {"plan_state"}, sorted(unanswered)
+
+    # All three quiet on the real body, and the two keys ORD-0465 answers with are declared.
+    missing, unlisted, unanswered = _key_drift(body, owner, declared, promised)
+    assert (missing, unlisted, unanswered) == (set(), set(), set()), (
+        sorted(missing),
+        sorted(unlisted),
+        sorted(unanswered),
+    )
+    assert {"plan_state", "active_plan"} <= declared, sorted(declared)
+
+    # And the rule this order replaced, run against the same live pair, so the record shows what
+    # refusing to change it would keep doing to every lawful payload.
+    with raises(AssertionError):
+        assert set(body) - {"grant_scope"} == set(owner)
