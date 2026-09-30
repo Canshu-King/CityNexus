@@ -51,7 +51,9 @@ class Settings:
     solver_mode: str = os.getenv("CITYNEXUS_SOLVER", "deterministic")
     hermes_api_url: str | None = os.getenv("CITYNEXUS_HERMES_API_URL")
     hermes_api_key: str | None = os.getenv("CITYNEXUS_HERMES_API_KEY")
-    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "global:deep-model")
+    # Prefer the domestic WB2api route when the international quota is fused.
+    # Environment configuration still overrides this for explicit experiments.
+    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "cn:glm-5.3-flash")
     hermes_model_fallbacks: tuple[str, ...] = tuple(
         item.strip()
         for item in os.getenv(
