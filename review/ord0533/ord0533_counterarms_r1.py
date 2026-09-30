@@ -32,7 +32,8 @@ DICTIONARY = FRONTEND / "src/i18n/LocaleContext.tsx"
 CONFIG = "playwright.ord0533-copygate.config.ts"
 DATA = pathlib.Path("D:/moodle/_qoder_newlane_ord0533_data")
 RECEIPT = pathlib.Path(
-    os.environ.get("CITYNEXUS_ORD0533_RECEIPT", "") or (DATA / "ord0533_counterarms_receipt_r1.json")
+    os.environ.get("CITYNEXUS_ORD0533_RECEIPT", "")
+    or (DATA / f"ord0533_counterarms_receipt_{os.environ.get('CITYNEXUS_ORD0533_TAG', 'r2')}.json")
 )
 
 ADDED_LINES = (
@@ -43,7 +44,7 @@ ADDED_LINES = (
 # The generation every reading in this campaign is stamped with.  Passed in rather than guessed at,
 # and required: the first cut left the three evidence files carrying base_tip="unknown", which makes
 # a reader infer the provenance from a console log instead of finding it in the artifact.
-TAG = os.environ.get("CITYNEXUS_ORD0533_TAG", "r1")
+TAG = os.environ.get("CITYNEXUS_ORD0533_TAG", "r2")
 BASE_TIP = os.environ.get("CITYNEXUS_ORD0533_BASE_TIP", "")
 assert len(BASE_TIP) == 40 and all(
     c in "0123456789abcdef" for c in BASE_TIP

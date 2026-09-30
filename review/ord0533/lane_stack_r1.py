@@ -42,9 +42,12 @@ from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DATA = pathlib.Path("D:/moodle/_qoder_newlane_ord0533_data")
-DB = DATA / "_ord0533-lane.db"
-BACKEND_LOG = DATA / "uvicorn_4911_r1.log"
-RECEIPT = DATA / "lane_stack_receipt_r1.json"
+# Every artifact this runner writes is stamped with the generation, because the r1 names were already
+# published on the r1 ref and a re-run must not overwrite the reading a delivered block quoted.
+TAG = os.environ.get("CITYNEXUS_ORD0533_TAG", "r1")
+DB = DATA / f"_ord0533-lane_{TAG}.db"
+BACKEND_LOG = DATA / f"uvicorn_4911_{TAG}.log"
+RECEIPT = DATA / f"lane_stack_receipt_{TAG}.json"
 SOURCE_CANARY = pathlib.Path(
     "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/canary_56d20ec.db"
 )
@@ -151,7 +154,29 @@ def main(argv: list[str]) -> int:
     assert not listening_pids(backend_port), f"backend port {backend_port} is already held"
     assert not listening_pids(frontend_port), f"frontend port {frontend_port} is already held"
     held_forbidden = {p: listening_pids(p) for p in FORBIDDEN if listening_pids(p)}
-    assert DB.is_file(), f"my copy of the scheduled store is missing: {DB}"
+    # The copy is made HERE rather than assumed to exist, for three reasons: the r1 runner asserted a
+    # pre-existing file and then wrote a hand-copied digest into its own receipt, so the receipt could
+    # not prove where its store came from; this generation's code has landed since that copy was taken;
+    # and the canary store is in WAL mode with a live `-wal` beside it, so a plain byte copy of the
+    # main file alone can miss what the write-ahead log still holds. `backup()` over a mode=ro
+    # connection applies the log and never opens the source for write.
+    source_main = SOURCE_CANARY.read_bytes()
+    source_digest_before = hashlib.sha256(source_main).hexdigest()
+    if DB.exists():
+        DB.rename(DB.with_name(DB.stem + ".prev" + DB.suffix))
+    for sidecar in (DB.with_name(DB.name + "-wal"), DB.with_name(DB.name + "-shm")):
+        if sidecar.exists():
+            sidecar.unlink()
+    tables = ("journeys", "activities", "places", "plan_versions")
+    with sqlite3.connect(f"file:{SOURCE_CANARY.as_posix()}?mode=ro", uri=True) as reader:
+        with sqlite3.connect(DB) as writer:
+            reader.backup(writer)
+        source_counts = {t: next(reader.execute(f"select count(*) from {t}"))[0] for t in tables}
+    with sqlite3.connect(f"file:{DB.as_posix()}?mode=ro", uri=True) as mine:
+        copy_counts = {t: next(mine.execute(f"select count(*) from {t}"))[0] for t in tables}
+    assert copy_counts == source_counts, (source_counts, copy_counts)
+    source_digest_after = hashlib.sha256(SOURCE_CANARY.read_bytes()).hexdigest()
+    assert source_digest_after == source_digest_before, "the shared canary store changed under me"
 
     environment = dict(os.environ)
     environment.pop("DEEPSEEK_API_KEY", None)
@@ -274,8 +299,18 @@ def main(argv: list[str]) -> int:
         "source_canary_file": (
             "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/canary_56d20ec.db"
         ),
-        "source_canary_sha256_at_probe": hashlib.sha256(SOURCE_CANARY.read_bytes()).hexdigest()[:16],
-        "source_canary_sha256_at_copy": "6160ac66274558e5",
+        # Computed here rather than transcribed: the r1 receipt carried a hand-written digest, so it
+        # proved nothing about where the store came from.
+        "source_canary_sha256_before_my_open": source_digest_before,
+        "source_canary_sha256_after_my_open": source_digest_after,
+        "source_canary_unchanged_by_me": True,
+        "source_canary_sidecars_present": {
+            suffix: (SOURCE_CANARY.with_name(SOURCE_CANARY.name + suffix)).exists()
+            for suffix in ("-wal", "-shm")
+        },
+        "copy_method": "sqlite3 online backup over a mode=ro source connection",
+        "store_counts_source": source_counts,
+        "store_counts_my_copy": copy_counts,
         "source_canary_opened_only_as_mode_ro": True,
         "canary_calendar_status": ics_status,
         "canary_calendar_media_type": ics_headers.get("content-type"),

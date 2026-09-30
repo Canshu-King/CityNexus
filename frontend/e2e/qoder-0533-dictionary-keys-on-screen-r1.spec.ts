@@ -12,8 +12,9 @@
  *
  * B1 is a static arm over the whole screen.  Every key that file passes to `t()` must exist in BOTH
  *    books.  A zh-only insert is the same defect flipped: an English traveller reads the key.  This
- *    is what "逐枚核一遍" means as an executable claim rather than as a promise -- the reported key
- *    was one of 50, and the other 49 had to be checked too, not sampled.
+ *    is what "逐枚核一遍" means as an executable claim rather than as a promise -- the denominator is
+ *    counted from the file on every run, because a sibling order (ORD-0524) moved part of this
+ *    screen's vocabulary into `poiImportCopy.ts` and a hand-copied count would have gone stale with it.
  * B2 is the screen itself at 390x844, reading `document.body.innerText`.  Rendered text, not an
  *    attribute: a `data-testid` or a title attribute can hold a key name all day without any
  *    traveller ever seeing it, and the reverse -- words painted by CSS content -- is invisible to an
@@ -32,8 +33,16 @@ const TRIP = "22222222-2222-4222-8222-222222222222";
 const PANEL = "frontend/src/features/poiimport/PoiImportPanel.tsx";
 const DICTIONARY = "frontend/src/i18n/LocaleContext.tsx";
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0533", "readouts");
-const TAG = process.env.CITYNEXUS_ORD0533_TAG ?? "r1";
-const BASE_TIP = process.env.CITYNEXUS_ORD0533_BASE_TIP ?? "unknown";
+const TAG = process.env.CITYNEXUS_ORD0533_TAG ?? "r2";
+/* Required, not defaulted to a placeholder.  A sibling lane's readings shipped stamped
+ * base_tip="unknown", which leaves whoever lands them having to infer the generation from a console
+ * log -- so this file refuses to run rather than write a reading with no provenance. */
+const BASE_TIP = process.env.CITYNEXUS_ORD0533_BASE_TIP ?? "";
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
+  throw new Error(
+    "CITYNEXUS_ORD0533_BASE_TIP must be the 40-hex tip this candidate was cut from",
+  );
+}
 
 /** The words this order added.  zh first, because the reported screen was Chinese. */
 const CHANNEL_LOCAL_ZH = "本地解析，不打开链接";
@@ -94,16 +103,22 @@ async function bootToPanel(page: Page) {
 test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
   test("B1 这一屏每一枚 t() 键在两本字典里都有定义", () => {
     const called = keysCalledBy(PANEL);
+    const distinct = [...new Set(called)];
     const { en, zh } = books();
     const missingEn = called.filter((key) => !en.has(key));
     const missingZh = called.filter((key) => !zh.has(key));
+    /* The first cut of this arm printed one number under the name `distinct_keys_called` while the
+       list behind it was call sites, not keys -- so the delivery block said "this screen uses N keys"
+       when the honest reading was "N call sites over M keys".  Both are recorded now, each named for
+       what it counts, because "逐枚核一遍" is about the call sites while "缺哪枚" is about the keys. */
     writeEvidence("b1_key_census", {
       panel: PANEL,
-      distinct_keys_called: called.length,
-      defined_in_en: called.filter((key) => en.has(key)).length,
-      defined_in_zh: called.filter((key) => zh.has(key)).length,
-      missing_from_en: missingEn,
-      missing_from_zh: missingZh,
+      t_call_sites: called.length,
+      distinct_keys: distinct.length,
+      distinct_defined_in_en: distinct.filter((key) => en.has(key)).length,
+      distinct_defined_in_zh: distinct.filter((key) => zh.has(key)).length,
+      missing_from_en: [...new Set(missingEn)],
+      missing_from_zh: [...new Set(missingZh)],
       reported_key_now_defined_in: [en.has("poiImport.channelLocal"), zh.has("poiImport.channelLocal")],
     });
     expect(missingEn, `keys missing from the English book: ${missingEn.join(", ")}`).toEqual([]);

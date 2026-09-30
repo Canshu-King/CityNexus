@@ -25,7 +25,7 @@ export default defineConfig({
       "json",
       {
         outputFile: `../review/ord0533/readouts/report_ord0533_${
-          process.env.CITYNEXUS_ORD0533_TAG ?? "r1"
+          process.env.CITYNEXUS_ORD0533_TAG ?? "r2"
         }.json`,
       },
     ],
