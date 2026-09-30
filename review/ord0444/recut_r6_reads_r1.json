@@ -1,0 +1,61 @@
+{
+ "product_ref": "refs/heads/review/newlane-ord0444-prod-r6",
+ "head": "584946fa301872c44625a9f4edebfc548e508306",
+ "tree": "8faef361e4ed7a3549f3893b15731004161625bf",
+ "base_tip_read": "4e0ad72c90ff1b9bb76718d3ee883dc860f7ab72",
+ "base_is_ancestor": true,
+ "ahead": 4,
+ "merge_tree_equals_head_tree": true,
+ "commits": [
+  "584946fa ORD-0444 product: the generated types re-taken at this base -- the rebase had merged them textually, not by generation",
+  "283621f7 ORD-0444 product fix: the create door declared its 404 in the contract only, so `/openapi.json` never carried it",
+  "bd5f2582 ORD-0444 product fix: the face fetched the contract's path, so it showed its failure line while the door answered 200",
+  "ce7b9ad9 ORD-0444 product: the 鏀惰棌 container exists, carries whose it is, and answers a read scoped by that"
+ ],
+ "recut_this_round": {
+  "why_a_second_recut": "ORD-0475 r3 evidence and ORD-0481 landed while the r5 round was being cut and touched contracts/openapi.yaml, so prod-r5 no longer merged to the lane's own bytes; prod-r6 replays all four commits onto the newest base with zero conflicts",
+  "stale_generated_types_found_by_regenerating": "6 insertions, 1 deletion: V13NamedRejection (ORD-0467) plus the ORD-0475/ORD-0481 description text. The text-merged api.ts was not the file this contract generates.",
+  "regen_check_now": {
+   "rc": 0,
+   "api_ts_dirty_after_regen": [],
+   "same_generation": true
+  }
+ },
+ "arms": {
+  "rc": 0,
+  "summary": [
+   "28 passed, 2 warnings in 8.76s"
+  ],
+  "whole_suite": "NOT_EXECUTED_BY_LANE"
+ },
+ "parity": {
+  "rc": 0,
+  "line": "OpenAPI 3.1.0; formal 169; runtime 169; missing 0; extra 0"
+ },
+ "tsc": "TSC_RC=0",
+ "vite_build": {
+  "entry": "index-Ba2JhGYd.js",
+  "rc": "BUILD_RC=0"
+ },
+ "q64": {
+  "method": "git archive <rev> frontend/src, then --tree on the snapshot",
+  "tip_cells": 6,
+  "tip_modules": 126,
+  "head_cells": 6,
+  "head_modules": 129,
+  "growth": "NONE",
+  "cells_in_this_orders_files": []
+ },
+ "screen_walk_files": [
+  "shelf_screen_walk_r1.cjs",
+  "shelf_screen_walk_with_one_shelf.json",
+  "shelf_screen_walk_empty.json"
+ ],
+ "not_measured": [
+  "whole backend suite: NOT_EXECUTED_BY_LANE",
+  "the refusal face's four numbers on screen",
+  "PNG (NATIVE_BROWSER_VIEWPORT_UNAVAILABLE)",
+  "the mobile side"
+ ],
+ "read_at": "12:14"
+}
