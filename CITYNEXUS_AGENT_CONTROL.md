@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:21 · 局域网口换到最新代（两证齐）；「让夹具城市号走补水门」这条假设被三个词干净否掉
+
+**〇、口径**
+
+尖 = `1e95d106f81b29048ba17695fd0e49172516b9b1`（含 ORD-0510）。栈：`:4781` 后端（私有库）、`:4783` 局域网宿主（新服 `_build_day7`）、`:4785` 后端（新尖导出树，用于读源码与验门）。`demo/reset` 未跑，`_preview.db` 未写。
+
+**一、局域网口两证（手机可直接开）**
+
+- `http://192.168.69.189:4783` 取到入口 `index-BGM3L0lx.js`；（这一代尖 `1e95d106f81b29048ba17695fd0e49172516b9b1`）
+- 服务字节 = 磁盘字节：`served_bytes=1534649 B disk_bytes=1534649 B bytes_equal=True`，两侧 sha1 同为 `d4941d760695` 起头。
+- 第三证（访问日志）仍不可取，具名 `NOT_AVAILABLE_BY_CMDR`（我新写的宿主只在进程退出时落计数，不拿它冒充）。
+
+**二、被否掉的假设（写给 ORD-0526，免得它朝这条死路走）**
+
+我原以为“夹具城市号 `CNX-DEMO` 能通过目录补水门拿到地点”。三个词各发一发 `POST /api/v1/catalog-hydrations`：
+
+| 词 | 读数 |
+|---|---|
+| `演示` | `http_status=202`，`canonical_destination_id` 为 `null`，终态 `outcome=NO_REGISTERED_SOURCE`、`status=UNAVAILABLE` |
+| `CNX-DEMO` | 同上（`canonical_destination_id` 为 `null`，终态同） |
+| `demo` | 同上 |
+
+对照：同一个门拿真城市名（`天津`）能给 `canonical_destination_id=CN-TIANJIN`。结论：**这个解析器认真城市名、不认演示城市号**，所以“让补水门认 `CNX-DEMO`”这条路走不通；夹具腿必须在它自己那条路上把地点写进去。这条已发车道，并要求它验收时把「真城市名走补水」与「夹具城市号走新腿」两个读数分开写，不许合并成一句“源已登记”。
+
+**三、本轮的仪器与值守**
+
+- 备好：中止门六臂 + 导入写门四臂（`_cmdr_walk_abort_import_r40.py`，基线已在 23:18 那块）；九格屏读（`_cmdr_walk_nine_r37.js`）；成员屏两扇门（`_cmdr_walk_members_r38.js`）。
+- 值守器 `_cmdr_wait_for_event_r1.py` 已挂（45 分钟段，只读、不写、不落），交付一到我就接落地与亲测。
+
+**四、没改善的部分**
+
+1. 长图/地图/日历/足迹/收藏入口五格仍无分母；ORD-0526 是唯一能解它的单。
+2. 手机五格探针未跑（同因）。
+3. 成员屏空转（ORD-0527 在跑）。
+4. ORD-0495 三枚臂在最新尖的导出树上仍红（`3 failed, 69 passed`）。
+5. 桌面留言仍只挂那一问。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:18 · 中止门与导入写门的基线（中止还不存在；导入写门已有具名拒绝），外加两枚备用仪器已就绪
 
 **〇、口径**
