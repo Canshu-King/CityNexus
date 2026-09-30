@@ -5187,15 +5187,15 @@ def select_stay_journey_option(
         )
     )
     if option is None:
-        # ORD-0511: this refusal used to be the bare NOT_FOUND class every missing row on the
-        # product shares, so a screen could not say "这一枚候选这台服务器没有过" without quoting the
-        # identifier back.  The name is the answer; the identifier stays server-side.
-        return error(
-            "NOT_FOUND",
-            "StayJourneyOption was not found",
-            status=404,
-            reason_code="STAY_OPTION_UNKNOWN",
-        )
+        # ORD-0511: this refusal used to be the bare NOT_FOUND class every missing row on the product
+        # shares, so a screen could not say "这一枚候选这台服务器没有过" without quoting the identifier
+        # back.  The name is attached, not invented here: one conversion point (`http_error` below)
+        # turns a raise site's `reason_code` into the envelope, which is how ORD-0101 kept a door from
+        # minting a second failure vocabulary -- and ORD-0272's G6 arm is what caught the first take of
+        # this slice building its own envelope.
+        refused = HTTPException(404, "StayJourneyOption was not found")
+        refused.reason_code = "STAY_OPTION_UNKNOWN"
+        raise refused
     try:
         materialized = materialize_stay_option(
             session, journey, option, source="STAY_SELECTION"
@@ -5205,23 +5205,20 @@ def select_stay_journey_option(
         # confirmed itinerary is a product conflict, not a server fault.  It
         # must reach the traveller as an explicit, readable refusal.
         session.rollback()
-        return error(
-            "VALIDATION_ERROR",
-            "STAY_ITINERARY_CONFLICT: " + str(exc),
-            status=422,
-            reason_code="STAY_ITINERARY_CONFLICT",
-        )
+        refused = HTTPException(422, "STAY_ITINERARY_CONFLICT: " + str(exc))
+        refused.reason_code = "STAY_ITINERARY_CONFLICT"
+        raise refused from exc
     if materialized.gate_status != "PASSED" or materialized.plan is None:
         session.rollback()
         # The gate already answered in its own vocabulary; a screen needs the name, not the count.
-        return error(
-            "VALIDATION_ERROR",
+        refused = HTTPException(
+            422,
             "Stay option could not become authoritative Journey truth: "
             + ", ".join(materialized.failures),
-            status=422,
-            reason_code="STAY_NOT_AUTHORITATIVE",
-            details={"failure_count": len(materialized.failures)},
         )
+        refused.reason_code = "STAY_NOT_AUTHORITATIVE"
+        refused.error_details = {"failure_count": len(materialized.failures)}
+        raise refused
     session.commit()
     offers = session.scalars(
         select(AccommodationOfferSnapshot)
