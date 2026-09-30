@@ -4,7 +4,7 @@
 
 - Branch: `codex/revolution-realtrip-recovery`
 - Isolated worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
-- Starting source commit: `4edf9d36b7cc0ae9dc5f96fae08f6c12c05fbc35`
+- Starting source commit: `4edf9d36b5048c1ac827721313b8a328136b8a1a`
 - Final experimental source commit: `a833851437e337595d70aa4850b71d331d107272`
 - Mainline/authority merge: none
 - Clean source was verified before the replay product call.
