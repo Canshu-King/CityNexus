@@ -1164,6 +1164,12 @@ def test_japanese_admission_does_not_budget_rental_hours_or_headcounts():
         "観覧料 アクセス 駐車場 観覧料 | Admission Fee 無料 / Free of Charge",
         url, reference_at=None,
     )["amount_minor"] == 0
+    navigation_page = (
+        "観覧料 アクセス 駐車場 バリアフリー 施設の概要 開館時間 | Hours 10:00-18:00 "
+        + "休館日 Mondays " * 30
+        + "観覧料 | Admission Fee 無料 / Free of Charge アクセス"
+    )
+    assert _plain_text_cost(navigation_page, url, reference_at=None)["amount_minor"] == 0
 
 
 def test_real_catalogue_fallback_is_visible_but_not_selectable():
