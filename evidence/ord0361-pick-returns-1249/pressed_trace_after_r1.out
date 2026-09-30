@@ -1,0 +1,166 @@
+{
+ "at_0": {
+  "markers": [
+   {
+    "t": "1",
+    "p": "true",
+    "sel": true,
+    "label": "Old Town Gate"
+   },
+   {
+    "t": "2",
+    "p": "false",
+    "sel": false,
+    "label": "Riverside Museum"
+   },
+   {
+    "t": "3",
+    "p": "false",
+    "sel": false,
+    "label": "Central Food Hall"
+   },
+   {
+    "t": "4",
+    "p": "false",
+    "sel": false,
+    "label": "Tech Art Center"
+   },
+   {
+    "t": "5",
+    "p": "false",
+    "sel": false,
+    "label": "Nexus River Cruise Pier"
+   },
+   {
+    "t": "6",
+    "p": "false",
+    "sel": false,
+    "label": "Skyline Dinner House"
+   }
+  ],
+  "glass": "图上选中的这一站 · Old Town Gate"
+ },
+ "at_1500": {
+  "markers": [
+   {
+    "t": "1",
+    "p": "true",
+    "sel": true,
+    "label": "Old Town Gate"
+   },
+   {
+    "t": "2",
+    "p": "false",
+    "sel": false,
+    "label": "Riverside Museum"
+   },
+   {
+    "t": "3",
+    "p": "false",
+    "sel": false,
+    "label": "Central Food Hall"
+   },
+   {
+    "t": "4",
+    "p": "false",
+    "sel": false,
+    "label": "Tech Art Center"
+   },
+   {
+    "t": "5",
+    "p": "false",
+    "sel": false,
+    "label": "Nexus River Cruise Pier"
+   },
+   {
+    "t": "6",
+    "p": "false",
+    "sel": false,
+    "label": "Skyline Dinner House"
+   }
+  ],
+  "glass": "图上选中的这一站 · Old Town Gate"
+ },
+ "at_3000": {
+  "markers": [
+   {
+    "t": "1",
+    "p": "true",
+    "sel": true,
+    "label": "Old Town Gate"
+   },
+   {
+    "t": "2",
+    "p": "false",
+    "sel": false,
+    "label": "Riverside Museum"
+   },
+   {
+    "t": "3",
+    "p": "false",
+    "sel": false,
+    "label": "Central Food Hall"
+   },
+   {
+    "t": "4",
+    "p": "false",
+    "sel": false,
+    "label": "Tech Art Center"
+   },
+   {
+    "t": "5",
+    "p": "false",
+    "sel": false,
+    "label": "Nexus River Cruise Pier"
+   },
+   {
+    "t": "6",
+    "p": "false",
+    "sel": false,
+    "label": "Skyline Dinner House"
+   }
+  ],
+  "glass": "图上选中的这一站 · Old Town Gate"
+ },
+ "at_6000": {
+  "markers": [
+   {
+    "t": "1",
+    "p": "true",
+    "sel": true,
+    "label": "Old Town Gate"
+   },
+   {
+    "t": "2",
+    "p": "false",
+    "sel": false,
+    "label": "Riverside Museum"
+   },
+   {
+    "t": "3",
+    "p": "false",
+    "sel": false,
+    "label": "Central Food Hall"
+   },
+   {
+    "t": "4",
+    "p": "false",
+    "sel": false,
+    "label": "Tech Art Center"
+   },
+   {
+    "t": "5",
+    "p": "false",
+    "sel": false,
+    "label": "Nexus River Cruise Pier"
+   },
+   {
+    "t": "6",
+    "p": "false",
+    "sel": false,
+    "label": "Skyline Dinner House"
+   }
+  ],
+  "glass": "图上选中的这一站 · Old Town Gate"
+ }
+}
