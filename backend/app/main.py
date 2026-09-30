@@ -3070,6 +3070,11 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
         entity_id=journey.id,
         journey_id=journey.id,
         before=before,
+        # ORD-0535: the bin row can only say *which* discard it is if each audit row carries the
+        # moment this write stored.  `created_at` is when the log line was made, not what the column
+        # holds, and the two are separate clock reads -- so the stored value is written down here
+        # rather than being inferred from the log's own timestamp.
+        after={"deleted_at": journey.deleted_at},
     )
     session.commit()
 

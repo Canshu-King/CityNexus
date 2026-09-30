@@ -6,10 +6,12 @@ import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
 import {
   readDiscardedJourneys,
+  readDiscardSequence,
   refusalReasonCode,
   undeleteJourney,
   RejectionWithFacts,
   type DiscardedJourney,
+  type DiscardEvent,
 } from "./journeyTrash";
 import { fillTrash, trashCopy, type JourneyTrashCopyKey } from "./journeyTrashCopy";
 import "./journeyTrash.css";
@@ -54,6 +56,35 @@ const OUTCOME_KEY: Record<Outcome["kind"], JourneyTrashCopyKey | null> = {
   unknown: null,
 };
 
+/** ORD-0535 -- one row's discard log, per journey, in its own slot so one trip's unreadable log does
+ *  not blank the rest of the bin. */
+type SequenceState =
+  | { phase: "loading" }
+  | { phase: "ready"; events: DiscardEvent[] }
+  | { phase: "failed" };
+
+/** What the row says about *which* discard this is. Counting is the server's order; the only
+ *  inference made here is "how many `journey.deleted` entries did this trip's own log hand back". */
+function sequenceText(
+  state: SequenceState | undefined,
+  say: (key: JourneyTrashCopyKey, params?: Record<string, string | number>) => string,
+  locale: string,
+): string {
+  if (!state || state.phase === "loading") return say("trash.sequenceLoading");
+  if (state.phase === "failed") return say("trash.sequenceUnreadable");
+  const discards = state.events.filter((event) => event.event_type === "journey.deleted");
+  if (discards.length === 0) return say("trash.sequenceEmpty");
+  if (discards.length === 1) return say("trash.discardSequenceFirst");
+  const previous = discards[discards.length - 2];
+  const when = previous.deleted_at
+    ? { when: formatV8Date(previous.deleted_at, locale) || previous.deleted_at }
+    : { when: previous.timestamp ? formatV8Date(previous.timestamp, locale) || previous.timestamp : "" };
+  return [
+    say("trash.discardSequence", { n: discards.length }),
+    previous.deleted_at ? say("trash.previousDiscard", when) : say("trash.previousDiscardRecorded", when),
+  ].join(" · ");
+}
+
 export function JourneyTrashPanel() {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
@@ -63,6 +94,7 @@ export function JourneyTrashPanel() {
   const [read, setRead] = useState<ReadState>({ phase: "loading" });
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [sequences, setSequences] = useState<Record<string, SequenceState>>({});
 
   const load = useCallback(async () => {
     setRead({ phase: "loading" });
@@ -86,6 +118,43 @@ export function JourneyTrashPanel() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  /* ORD-0535: which discard this is comes from the trip's own log, because the bin row carries only
+     the latest moment. Asked once per row and in parallel; each row renders when its own answer
+     arrives, so one trip's unreadable log says so on that row alone. The signature deliberately
+     includes `deleted_at`: a trip that is dropped again while this screen stays open changes its
+     moment, and a key made of ids alone would keep answering "the first time". */
+  const sequenceSignature =
+    read.phase === "ready"
+      ? read.rows.map((row) => `${row.id}@${row.deleted_at ?? ""}`).join("|")
+      : "";
+  useEffect(() => {
+    if (read.phase !== "ready" || !sequenceSignature) return;
+    const wanted = sequenceSignature.split("|");
+    let live = true;
+    setSequences(() => {
+      const next: Record<string, SequenceState> = {};
+      for (const entry of wanted) {
+        const [id] = entry.split("@");
+        next[id] = { phase: "loading" };
+      }
+      return next;
+    });
+    for (const entry of wanted) {
+      const [id] = entry.split("@");
+      void readDiscardSequence(id)
+        .then((events) => {
+          if (live) setSequences((current) => ({ ...current, [id]: { phase: "ready", events } }));
+        })
+        .catch(() => {
+          if (live) setSequences((current) => ({ ...current, [id]: { phase: "failed" } }));
+        });
+    }
+    return () => {
+      live = false;
+    };
+    // `read.phase` is folded in through the signature: the rows only exist once the read is ready.
+  }, [sequenceSignature]);
 
   const bringBack = async (row: DiscardedJourney) => {
     setBusyId(row.id);
@@ -182,6 +251,11 @@ export function JourneyTrashPanel() {
                         when: formatV8Date(row.deleted_at, locale) || row.deleted_at,
                       })
                     : say("trash.deletedAtMissing")}
+                </span>
+                {/* Same tier as the moment above it on purpose: this is a fact about the row, not a
+                    warning, and it has to be spoken by the screen reader that reads the row. */}
+                <span className="cn-trash-row-when cn-trash-row-sequence" data-testid="trash-row-sequence">
+                  {sequenceText(sequences[row.id], say, locale)}
                 </span>
                 <button
                   type="button"
