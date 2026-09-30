@@ -18,7 +18,7 @@
    "path": "/journeys/22222222-2222-4222-8222-222222222222/poi-import/add",
    "http_status": 201,
    "body_bytes": 468,
-   "body_head": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"plan_version_id\":\"ccaf82b0-33d4-4fee-8308-a56148da9b47\",\"day\":\"2026-10-11\",\"day_source\":\"TRAVELLER_CHOSEN\",\"added\":[{\"id\":\"d890960f-0b42-430d-ae6e-2c0235a30c65\",\"title\":\"Nexus City Park\",\"place_id\":\"place-city-park\",\"sequence_no\":7,\"start_at\":\"2026-10-11T09:00:00+08:00\",\"end_at\":\"2026-10-11T10:15:00+08:00\"}],\"already_present\":[],\"readback_path\"",
+   "body_head": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"plan_version_id\":\"ccaf82b0-33d4-4fee-8308-a56148da9b47\",\"day\":\"2026-10-11\",\"day_source\":\"TRAVELLER_CHOSEN\",\"added\":[{\"id\":\"40a7fd25-afcd-4223-9828-0e4922eb9ea5\",\"title\":\"Nexus City Park\",\"place_id\":\"place-city-park\",\"sequence_no\":7,\"start_at\":\"2026-10-11T09:00:00+08:00\",\"end_at\":\"2026-10-11T10:15:00+08:00\"}],\"already_present\":[],\"readback_path\"",
    "day": "2026-10-11",
    "day_source": "TRAVELLER_CHOSEN",
    "sent_day": "2026-10-11",
