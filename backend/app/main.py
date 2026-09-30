@@ -408,6 +408,7 @@ from app.schemas import (
     Transaction as TransactionSchema,
 )
 from app.services import (
+    KNOWN_COST_EVIDENCE_STATUSES,
     _journey_constraints_with_capabilities,
     constraint_schema,
     generate_plans,
@@ -6682,6 +6683,60 @@ def _json_object(value: str | None, default: dict[str, Any] | None = None) -> di
     return parsed if isinstance(parsed, dict) else (default or {})
 
 
+def _replacement_activity_metadata(
+    candidate_place: Place | None,
+    replacement_choice: Any,
+    *,
+    family: str,
+    replaced_place_id: str | None,
+    reason_codes: tuple[str, ...] | list[str] | None = None,
+    solver_v2_assignment: str | None = None,
+) -> str:
+    """Build replacement metadata from the replacement Place's own facts.
+
+    A replan changes the physical venue. Copying the old activity metadata
+    therefore leaks the old venue's opening hours, coordinates, category, and
+    cost evidence into the new activity. Keep only replan annotations and
+    facts read from the candidate Place itself.
+    """
+
+    place_metadata = _json_object(candidate_place.metadata_json if candidate_place else None)
+    try:
+        opening = json.loads(candidate_place.opening_hours_json or "{}") if candidate_place else {}
+    except (TypeError, ValueError):
+        opening = {}
+    if not isinstance(opening, dict) or not opening:
+        opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    raw_cost = place_metadata.get("cost_evidence")
+    cost_evidence = dict(raw_cost) if isinstance(raw_cost, Mapping) else {}
+    if not cost_evidence:
+        cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
+    cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
+    known_cost = (
+        cost_status in KNOWN_COST_EVIDENCE_STATUSES
+        and cost_evidence.get("amount_minor") is not None
+    )
+    metadata: dict[str, Any] = {
+        "compose_source": "REPLAN_PROVIDER_CATALOGUE",
+        "semantic_key": replacement_choice.place_id,
+        "category": candidate_place.category if candidate_place else None,
+        "opening_state": str(opening.get("status") or "UNKNOWN"),
+        "opening_hours": opening,
+        "cost_evidence": cost_evidence,
+        "cost_status": "KNOWN" if known_cost else "UNKNOWN",
+        "price_known": known_cost,
+        "latitude": candidate_place.latitude if candidate_place else None,
+        "longitude": candidate_place.longitude if candidate_place else None,
+        "crs": candidate_place.coordinate_system if candidate_place else "WGS84",
+        "candidate_family": family,
+        "replan_reason_codes": list(reason_codes or replacement_choice.reason_codes),
+        "replaced_place_id": replaced_place_id,
+    }
+    if solver_v2_assignment is not None:
+        metadata["solver_v2_assignment"] = solver_v2_assignment
+    return json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+
+
 def _booking_payload(item: BookingModel) -> dict[str, Any]:
     return {
         "id": item.id,
@@ -10563,6 +10618,7 @@ def generate_replan(
                 if replacement_choice is None:
                     failed_reasons.add("SOLVER_V2_OPTION_NOT_MATERIALIZED")
                     continue
+                candidate_place = session.get(Place, replacement_choice.place_id)
                 start_dt = journey_start + timedelta(minutes=int(v2_assignment.start_min or 0))
                 row.update(
                     {
@@ -10575,16 +10631,12 @@ def generate_replan(
                         ).isoformat(),
                         "estimated_cost_minor": replacement_choice.cost_minor,
                         "locked": False,
-                        "metadata_json": json.dumps(
-                            {
-                                **_json_object(row.get("metadata_json"), {}),
-                                "semantic_key": replacement_choice.place_id,
-                                "candidate_family": family,
-                                "replan_reason_codes": replacement_choice.reason_codes,
-                                "replaced_place_id": activity.place_id,
-                                "solver_v2_assignment": v2_assignment.option_key,
-                            },
-                            sort_keys=True,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            replacement_choice,
+                            family=family,
+                            replaced_place_id=activity.place_id,
+                            solver_v2_assignment=v2_assignment.option_key,
                         ),
                     }
                 )
@@ -10620,6 +10672,7 @@ def generate_replan(
                     start_dt = datetime.fromisoformat(
                         str(window_evidence["window_opens_at"])
                     ) + timedelta(minutes=int(window_evidence["inbound_travel_min"]))
+                candidate_place = session.get(Place, replacement_choice.place_id)
                 row.update(
                     {
                         "title": replacement_choice.title,
@@ -10631,15 +10684,11 @@ def generate_replan(
                         ).isoformat(),
                         "estimated_cost_minor": replacement_choice.cost_minor,
                         "locked": False,
-                        "metadata_json": json.dumps(
-                            {
-                                **_json_object(row.get("metadata_json"), {}),
-                                "semantic_key": replacement_choice.place_id,
-                                "candidate_family": family,
-                                "replan_reason_codes": replacement_choice.reason_codes,
-                                "replaced_place_id": affected_place_id,
-                            },
-                            sort_keys=True,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            replacement_choice,
+                            family=family,
+                            replaced_place_id=affected_place_id,
                         ),
                     }
                 )
