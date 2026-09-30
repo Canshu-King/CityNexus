@@ -277,6 +277,42 @@ for (const shape of [PHONE, DESKTOP]) {
   });
 }
 
+test("ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read", async ({ page }) => {
+  /* The shape a "no stamps invented" claim really has to survive: the screen HAS rows, then the door
+     stops answering and the traveller presses 重读一次. If a failed re-read left the old rows on the
+     glass, the screen would be asserting footprints the server did not just give it. */
+  const journeyId = SEEDED || (await freshTrip(page));
+  const first = await openFootprints(page, journeyId);
+  const served = await doorRows(page, journeyId);
+  expect(first.stamp_rows.length, "the denominator paints one row per stamp").toBe(served.length);
+  expect(first.stamp_rows.length, "and this arm needs something on the screen to lose").toBeGreaterThan(0);
+  await page.route("**/api/v1/journeys/*/checkins*", (route) => route.abort());
+  const retry = page.locator("[data-testid='footprint-retry']");
+  await retry.scrollIntoViewIfNeeded();
+  await retry.click();
+  await page.waitForFunction(
+    () => !!document.querySelector("[data-testid='footprint-unreachable']"),
+    null,
+    { timeout: 30000 },
+  );
+  await page.waitForTimeout(700);
+  const after = await page.evaluate(witness, SEL);
+  expect(after.state_line, "the screen says it never reached the server").toBe(COPY.unreachable);
+  expect(after.stamp_rows.length, "and the stamps it can no longer read are gone from the glass").toBe(0);
+  expect(after.day_rows.length, "and so are the days under them").toBe(0);
+  expect(after.tally, "the count follows the read, not the memory").toContain("共有 0 枚足迹");
+  push("retry_after_the_door_stops", {
+    journey_id: journeyId,
+    rows_before: first.stamp_rows.length,
+    door_rows: served.length,
+    state_after: after.state_line,
+    rows_after: after.stamp_rows.length,
+    days_after: after.day_rows.length,
+    tally_after: after.tally,
+    injected: "route.abort on the checkins read, then the screen's own 重读一次",
+  });
+});
+
 test("ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer", async ({ page }) => {
   /* A refusal reached through the product: the trip is put in the recycle bin through its own DELETE
      door, and the footprint read then answers 409 with reason_code
