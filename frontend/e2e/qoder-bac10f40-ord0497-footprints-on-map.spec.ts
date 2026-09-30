@@ -270,7 +270,10 @@ test("ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and doe
   expect(on.hidden_count, "every unstamped pin is hidden").toBe(on.pin_claim - on.solid_count);
   expect(on.solid_count, "the stamped pin is never hidden by its own filter").toBe(1);
   expect(on.badge_count, "its date stays painted").toBe(1);
+  /* Whole page, not the viewport: the pressed switch is below the fold and the pins it hid are above
+     it, and a picture that can only show one of the two proves the click and not the filter. */
   await page.screenshot({
+    fullPage: true,
     path: evidencePath("ord0497", `facts_filtered_on_${process.env.CITYNEXUS_E2E_RUN_ID || "dev"}.png`),
   });
 
