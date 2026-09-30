@@ -1,0 +1,10 @@
+{
+ "method": "os.walk over each export dir, summing file sizes; the exports are `git archive <rev> frontend/src contracts` unpacked by tar",
+ "note": "no node_modules, no .git in these trees",
+ "bytes": {
+  "exp_tip_r8": 2515818,
+  "exp_tip0989713a": 2515344,
+  "exp_cand0500": 2527087,
+  "total": 7558249
+ }
+}
