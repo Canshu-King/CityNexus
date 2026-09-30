@@ -598,14 +598,18 @@ class AgentToolGateway:
         peers = self.session.scalars(
             select(Place).where(Place.city_code == journey.city_code, Place.category == place.category)
         ).all()
-        peer_costs = [value for peer in peers if (value := _place_verified_cost(peer)) is not None]
+        peer_costs = [
+            value for peer in peers
+            if json.loads(peer.metadata_json or "{}").get("cost_evidence", {}).get("currency") == journey.budget_currency
+            and (value := _place_verified_cost(peer)) is not None
+        ]
         peer_windows = [window for peer in peers if (window := _place_window(peer)) is not None]
         estimate: dict[str, Any] = {
             "place_id": place.id,
             "authority_eligible": False,
             "basis": "same-city verified peers in the same provider category",
             "opening_hours": {"status": "ESTIMATED_AGENT"},
-            "cost_evidence": {"status": "ESTIMATED_AGENT", "currency": "JPY"},
+            "cost_evidence": {"status": "ESTIMATED_AGENT", "currency": journey.budget_currency},
         }
         if peer_windows:
             opens = [window[0] for window in peer_windows]

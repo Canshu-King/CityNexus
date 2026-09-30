@@ -344,3 +344,18 @@ def test_estimate_place_facts_is_explicitly_non_authoritative():
     assert body["estimate"]["opening_hours"]["status"] == "ESTIMATED_AGENT"
     assert body["estimate"]["cost_evidence"]["status"] == "ESTIMATED_AGENT"
     assert "cannot make a plan selectable" in body["warning"]
+    assert body["estimate"]["cost_evidence"]["currency"] == client.get(
+        f"/api/v1/journeys/{journey_id}"
+    ).json()["budget"]["currency"]
+
+
+def test_wb2api_stream_retains_reasoning_for_tool_continuation():
+    chunks = [
+        {"choices": [{"delta": {"reasoning_content": "protocol-continuation"}}]},
+        {"choices": [{"delta": {"content": "OK"}}]},
+    ]
+    result = HermesJourneyAgent._merge_sse(
+        [*("data: " + json.dumps(chunk) for chunk in chunks), "data: [DONE]"]
+    )
+    assert result["reasoning_content"] == "protocol-continuation"
+    assert result["content"] == "OK"

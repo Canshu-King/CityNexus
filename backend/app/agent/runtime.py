@@ -429,6 +429,8 @@ class DeepSeekJourneyAgent:
                     "tool_calls": tool_calls,
                     "_response_items": message.get("_response_items") or [],
                 }
+                if message.get("reasoning_content"):
+                    assistant_message["reasoning_content"] = message["reasoning_content"]
                 messages.append(assistant_message)
                 for call in tool_calls:
                     function = call.get("function") or {}

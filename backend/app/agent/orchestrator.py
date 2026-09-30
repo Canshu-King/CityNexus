@@ -38,7 +38,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         self._model_index = 0
         self.model_key = self._model_chain[0]
         self._client = client or httpx.Client(
-            timeout=httpx.Timeout(connect=10.0, read=None, write=10.0, pool=10.0)
+            timeout=httpx.Timeout(connect=10.0, read=120.0, write=10.0, pool=10.0)
         )
         self._owns_client = client is None
 
@@ -67,6 +67,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                     response.raise_for_status()
                     content_type = response.headers.get("content-type", "")
                     if "application/json" in content_type:
+                        response.read()
                         message = response.json()["choices"][0]["message"]
                     else:
                         message = self._merge_sse(response.iter_lines())
@@ -84,6 +85,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     @staticmethod
     def _merge_sse(lines) -> dict:
         content: list[str] = []
+        reasoning: list[str] = []
         calls: dict[int, dict] = {}
         for line in lines:
             if not line or not line.startswith("data:"):
@@ -95,6 +97,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             delta = ((chunk.get("choices") or [{}])[0].get("delta") or {})
             if delta.get("content"):
                 content.append(str(delta["content"]))
+            if delta.get("reasoning_content"):
+                reasoning.append(str(delta["reasoning_content"]))
             for item in delta.get("tool_calls") or []:
                 index = int(item.get("index", 0))
                 call = calls.setdefault(
@@ -112,7 +116,10 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                     call["function"]["name"] = function["name"]
                 if function.get("arguments"):
                     call["function"]["arguments"] += str(function["arguments"])
-        return {"role": "assistant", "content": "".join(content), "tool_calls": [calls[i] for i in sorted(calls)]}
+        message = {"role": "assistant", "content": "".join(content), "tool_calls": [calls[i] for i in sorted(calls)]}
+        if reasoning:
+            message["reasoning_content"] = "".join(reasoning)
+        return message
 
 
 def configured_journey_agent(
