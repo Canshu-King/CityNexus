@@ -51,6 +51,13 @@ known_cost_count                = 0
 search_source.status            = UNCONFIGURED
 ```
 
+The page itself was then captured for a parser-boundary check. It returned
+HTTP 200 but was a 16,644-byte Vue application shell with an empty `<title>`,
+no `application/ld+json`, and zero occurrences of the fact labels
+`门票`, `票价`, `价格`, `开放`, `营业`, `opening`, `ticket`, or `price` in the
+returned HTML. There was therefore no structured or visible fact to promote;
+the raw page is included in the evidence package.
+
 This is a real second-source match without a promotable opening or price fact.
 No website text was relabeled as structured evidence, and the compatibility
 `cost_minor=0` value was not treated as free.
@@ -117,6 +124,7 @@ state.
 - `runtime/wangshi-node-public-after.json`
 - `runtime/wangshi-node-plans-after.json`
 - `runtime/wangshi-node-twin-after.json`
+- `runtime/wangshi-official-page.html`
 - `runtime/wangshi-node-focused-tests.txt`
 - `runtime/wangshi-node-frontend-typecheck.txt`
 - `runtime/deepseek-lion-node-facts.json`
