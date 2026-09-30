@@ -3,7 +3,8 @@
 ## Machine checkpoint
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
-- Final SHA: `c236fbfec2d311971d827352495d44ce28c07761`
+- Final experimental code SHA: `83a8828f`
+- Report closure commit: recorded immediately after this checkpoint
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r13-metadata-fix-20260930-b.sqlite3`
