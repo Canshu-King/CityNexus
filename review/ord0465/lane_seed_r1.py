@@ -125,6 +125,13 @@ def main():
 
     good_journey = journey_with_plan("厦门两日 · 别人分享给我的那一趟", "good")
     binned_journey = journey_with_plan("会被丢进回收站的那一趟", "binned")
+    # ORD-0490 walks this trip through the bin and back out of it, three times over.  It is a second
+    # binned trip rather than a reuse of the one above because the two instruments must be runnable in
+    # either order and twice in a row: `screen_arms_r1.js` asserts that `binned` refuses, and
+    # `restore_arms_r1.js` clears that bin to prove the link reads again.  Sharing one row would make
+    # whichever ran last decide whether the other one can pass -- a red that means "somebody ran the
+    # other file first" and nothing else.
+    restorable_journey = journey_with_plan("被主人找回之后还要再读的那一趟", "restorable")
     no_plan_status, no_plan_traveler = call("POST", "/travelers", {
         "display_name": "ORD-0465 no-plan", "email": None,
         "locale": "zh-CN", "timezone": "Asia/Shanghai",
@@ -153,6 +160,7 @@ def main():
     tokens["revoked"], tokens["revoked_grant"] = mint(good_journey)
     tokens["expired"], _ = mint(good_journey, expires_in=timedelta(days=1))
     tokens["binned"], _ = mint(binned_journey)
+    tokens["restorable"], _ = mint(restorable_journey)
     tokens["no_plan"], _ = mint(no_plan_journey)
     private_code, private_row = call(
         "POST", f"/journeys/{good_journey}/share-grants",
@@ -176,6 +184,11 @@ def main():
     assert code == 200, (code, revoked)
     code, binned = call("DELETE", f"/journeys/{binned_journey}")
     assert code == 204, (code, binned)
+    # Through the owner's door, not by writing the column: this file's own rule is that a state the
+    # screen reports has to be a state an owner can produce.  ORD-0490's instrument clears this bin and
+    # puts it back, so the trip starts in the bin the way its owner would have left it.
+    code, restorable_deleted = call("DELETE", f"/journeys/{restorable_journey}")
+    assert code == 204, (code, restorable_deleted)
 
     # Ownership marker: an id no other store on this machine holds, asked for both ways.
     marker = str(uuid4())
@@ -188,7 +201,8 @@ def main():
     miss_status, _ = call("GET", f"/travelers/{str(uuid4())}")
 
     report.update({
-        "journeys": {"with_plan": good_journey, "binned": binned_journey, "no_plan": no_plan_journey},
+        "journeys": {"with_plan": good_journey, "binned": binned_journey,
+                     "restorable": restorable_journey, "no_plan": no_plan_journey},
         "tokens": {key: (value if isinstance(value, str) else "n/a") for key, value in tokens.items()},
         "ownership_marker": marker,
         "marker_probe": {"present_status": hit_status, "present_echoes_id": hit.get("id") == marker,
@@ -198,6 +212,7 @@ def main():
             "revoked": f"/v8/shared/{tokens['revoked']}",
             "expired": f"/v8/shared/{tokens['expired']}",
             "binned": f"/v8/shared/{tokens['binned']}",
+            "restorable": f"/v8/shared/{tokens['restorable']}",
             "no_plan": f"/v8/shared/{tokens['no_plan']}",
             "private": f"/v8/shared/{tokens['private']}",
             "unknown": "/v8/shared/" + "z" * 32,

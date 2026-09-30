@@ -1,0 +1,28 @@
+ORD-0490 whole-suite readings on one product generation (backend/app/* identical in all seven)
+baseline red set = 11 named in review/ord0490/suite_evidence_r1.txt, first block
+
+run                                          summary                  delta against the baseline red set
+------------------------------------------------------------------------------------------------------------------------------------
+base, my file not collected                  11 failed / 1500 passed  identical set
+base, my file not collected (pass 2)         11 failed / 1500 passed  identical set
+base, my file not collected (pass 3)         11 failed / 1500 passed  identical set
+with my 11 tests                             12 failed / 1510 passed  + test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+                                                                        added: tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+with my 11 tests (pass 2)                    12 failed / 1510 passed  + test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+                                                                        added: tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+my file collected, its 11 tests DESELECTED   13 failed / 1498 passed  + test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage , + test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+                                                                        added: tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage
+                                                                        added: tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+11 NO-OP tests instead of mine               12 failed / 1510 passed  + test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+                                                                        added: tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
+
+reading: the last row is the attribution. Eleven tests that write nothing, open no session and
+call no door -- `tests/test_qoder_zz_timing_probe_r1.py`, deleted once the reading was taken --
+reproduce the same SHAPE (12 failed / 1510 passed) while losing a different arm (ord197 r4,
+with ord224 shape-A back to green). So one extra red is what adding any eleven tests to this
+suite costs, and which named arm falls is not determined by this order's fixtures. The run
+above it is the other direction: my file collected and all eleven tests DESELECTED, so none of
+them executed, and it is the reddest of the seven (13) with two arms that moved in no other run.
+
+This lane does not claim 'no new red'. It claims the delta is not attributable to ORD-0490, and
+names the seven readings that show it.

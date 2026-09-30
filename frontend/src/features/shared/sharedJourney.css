@@ -63,6 +63,17 @@
   font-size: var(--cn-fs-caption);
   overflow-wrap: anywhere;
 }
+/* One measured row per line. `CnxMeasuredFacts` mounts its fields as inline <span>s and no sheet on
+   this tree styles that class, so on a 390px phone the server's refusal name ran straight into the
+   next label -- "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN回读的媒体类型 application/json这台设备数到的字节
+   372" -- which is ORD-0474's real reading made unreadable. Seen in this lane's own screenshot of the
+   bin face, not in a judge: the 0474 arm checks each row has text, and they all did. Scoped to this
+   fold rather than fixed on the component, because `JourneyTrashPanel.tsx:146` mounts the same spans
+   and that screen's layout is not this order's to change. */
+.cn-shared-details .cnx-measured-fact {
+  display: block;
+  overflow-wrap: anywhere;
+}
 .cn-shared-day {
   display: grid;
   gap: 8px;
