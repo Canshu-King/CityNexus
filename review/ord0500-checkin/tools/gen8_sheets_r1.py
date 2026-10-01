@@ -90,6 +90,14 @@ def main():
     for tag, r in runs.items():
         rd = r.get("readings", {})
         ad = rd.get("after_duplicate", {})
+        na = (rd.get("census", {}).get("controls") == 0)
+        if na:
+            a("| %s | %s | %s→%s | 不适用：这一族代 %s 枚打卡控件，没有可点的第二下 | 不适用 | 不适用 |" % (
+                tag, cell(rd.get("requests")),
+                cell((r.get("store_after_schema") or {}).get("count")),
+                cell((r.get("store_after_arm") or {}).get("count")),
+                cell(rd.get("census", {}).get("controls"))))
+            continue
         a("| %s | %s | %s→%s | %s | %s | %s |" % (
             tag, cell(rd.get("requests")),
             cell((r.get("store_after_schema") or {}).get("count")),
@@ -139,7 +147,7 @@ def main():
             a("")
     a("## 五、反件一（服务端 409 判据摘掉）")
     a("")
-    a("| 侧 | 收集 | 通过 | 失败 | 退出 | 失败的臂 |")
+    a("| 侧 | 臂数合计 | 通过 | 失败 | 退出 | 失败的臂 |")
     a("|---|---|---|---|---|---|")
     import re as _re
     for r in ce1.get("runs", []):
@@ -148,7 +156,7 @@ def main():
         passed_u = sorted(set(r.get("passed_names") or []))
         failed_u = sorted(set(r.get("failed_names") or []))
         a("| %s | %s | %s | %s | %s | %s |" % (
-            r.get("label"), cell(nums.get("passed") and str(len(passed_u))),
+            r.get("label"), "%s（= 通过 %d + 失败 %d，臂名去重）" % (len(passed_u) + len(failed_u), len(passed_u), len(failed_u)),
             "%s（臂名去重）" % len(passed_u), "%s（臂名去重）" % len(failed_u),
             cell(r.get("exit")), cell(failed_u)))
         r["_failed_unique"] = failed_u

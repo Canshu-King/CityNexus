@@ -1,6 +1,6 @@
 # ORD-0500 r4 -- 现尖 514b397f96f3b5165b24865f4a544ab6f8020084 读数单（与 ORD-0530 同族并块后重量；曝光尺两侧对照在 receipts 里）
 
-生成时间 `2026-10-01T14:09:08.521850+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
+生成时间 `2026-10-01T14:10:36.986914+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
 
 ## 一、本代的产物身份（基座 + 交付候选 + 反件）
 
@@ -32,7 +32,7 @@
 | O0500_R4_phone | ["GET:200", "POST:201", "GET:200", "POST:409", "GET:200", "POST:201", "GET:200"] | 0→2 | 1 | ["Old Town Gate"] | 这一站已经打过卡了（服务器记的是 10月1日 13:39），这次没有再盖一枚，行程里还是原来那一枚。 |
 | O0500_R4_desktop | ["GET:200", "POST:201", "GET:200", "POST:409", "GET:200", "POST:201", "GET:200"] | 0→2 | 1 | ["Old Town Gate"] | 这一站已经打过卡了（服务器记的是 10月1日 13:40），这次没有再盖一枚，行程里还是原来那一枚。 |
 | O0500_CLIENTBOOL_MUTANT_phone | ["GET:200", "POST:201", "GET:200", "POST:409", "GET:200", "POST:201", "GET:200"] | 0→2 | 1 | ["Tech Art Center"] | 这一站已经打过卡了（服务器记的是 10月1日 13:41），这次没有再盖一枚，行程里还是原来那一枚。 |
-| PRE_SLICE2_dcb90ccc_phone | [] | 0→0 | NOT_MEASURED | NOT_MEASURED | NOT_MEASURED |
+| PRE_SLICE2_dcb90ccc_phone | [] | 0→0 | 不适用：这一族代 0 枚打卡控件，没有可点的第二下 | 不适用 | 不适用 |
 
 ## 四、门里的拒绝原文（四字段陈列，不造句子）
 
@@ -85,10 +85,10 @@
 
 ## 五、反件一（服务端 409 判据摘掉）
 
-| 侧 | 收集 | 通过 | 失败 | 退出 | 失败的臂 |
+| 侧 | 臂数合计 | 通过 | 失败 | 退出 | 失败的臂 |
 |---|---|---|---|---|---|
-| candidate_wt19 | NOT_MEASURED | 16（臂名去重） | 0（臂名去重） | 0 | [] |
-| mutant_wt19_ce1 | NOT_MEASURED | 13（臂名去重） | 3（臂名去重） | 1 | ["test_a_footprint_outlives_the_rows_it_pointed_at", "test_the_duplicate_answer_comes_from_the_door_and_not_from_the_index", "test_the_duplicate_is_answered_before_the_target_row_is_asked_about"] |
+| candidate_wt19 | 16（= 通过 16 + 失败 0，臂名去重） | 16（臂名去重） | 0（臂名去重） | 0 | [] |
+| mutant_wt19_ce1 | 16（= 通过 13 + 失败 3，臂名去重） | 13（臂名去重） | 3（臂名去重） | 1 | ["test_a_footprint_outlives_the_rows_it_pointed_at", "test_the_duplicate_answer_comes_from_the_door_and_not_from_the_index", "test_the_duplicate_is_answered_before_the_target_row_is_asked_about"] |
 
 两枚树只差 `backend/app/main.py` 一枚文件（比对 430 枚，data/contracts/generated 全等，件 ）；交付那枚的 `main.py` 前后 sha256 同一枚：eedad6bfc20ae928…（本机字节 sha256，不是 git 物件，不可 cat-file）
 
