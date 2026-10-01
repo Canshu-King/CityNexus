@@ -3093,7 +3093,7 @@ components:
         budget: {$ref: '#/components/schemas/Money'}
     Journey:
       type: object
-      required: [id, traveler_id, title, city_code, timezone, start_at, end_at, budget, status]
+      required: [id, traveler_id, title, city_code, timezone, start_at, end_at, budget, status, created_at]
       properties:
         id: {type: string, format: uuid}
         traveler_id: {type: string, format: uuid}
@@ -3107,6 +3107,14 @@ components:
         status: {type: string, enum: [DRAFT, PLANNED, ACTIVE, COMPLETED, CANCELLED]}
         active_plan_version_id: {type: [string, 'null'], format: uuid}
         current_activity_id: {type: [string, 'null'], format: uuid}
+        created_at:
+          type: string
+          format: date-time
+          description: >-
+            ORD-0506: the moment this row was created, read from `journeys.created_at`.  It is on
+            the wire because a screen must not order trips by a time it invented -- the list can be
+            sorted by departure (`start_at`) or by creation (`created_at`), and both words come from
+            this answer.  Required because the column is NOT NULL in the store.
     RecycleBinJourney:
       description: >-
         ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from

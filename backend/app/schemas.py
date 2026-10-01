@@ -250,6 +250,7 @@ class Journey(BaseModel):
     status: Literal["DRAFT", "PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]
     active_plan_version_id: UUID | None = None
     current_activity_id: UUID | None = None
+    created_at: datetime
 
 
 class RecycleBinJourney(Journey):

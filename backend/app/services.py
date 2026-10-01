@@ -446,6 +446,7 @@ def journey_schema(item: Journey) -> JourneySchema:
         status=item.status,
         active_plan_version_id=item.active_plan_version_id,
         current_activity_id=item.current_activity_id,
+        created_at=parse_dt(item.created_at),
     )
 
 

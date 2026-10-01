@@ -3102,6 +3102,11 @@ export interface components {
             active_plan_version_id?: string | null;
             /** Format: uuid */
             current_activity_id?: string | null;
+            /**
+             * Format: date-time
+             * @description ORD-0506: the moment this row was created, read from `journeys.created_at`.  It is on the wire because a screen must not order trips by a time it invented -- the list can be sorted by departure (`start_at`) or by creation (`created_at`), and both words come from this answer.  Required because the column is NOT NULL in the store.
+             */
+            created_at: string;
         };
         /** @description ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a screen never reconstructs "it was deleted" from absence in another list. */
         RecycleBinJourney: components["schemas"]["Journey"] & {
