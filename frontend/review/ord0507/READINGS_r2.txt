@@ -1,0 +1,73 @@
+== ORD-0507 r2 (rel lane a68b0631): items 2 and 3, readings taken on the delivered generation ==
+branch=review/a68b0631-ord0507-clock-attribution-r2
+base=b604f50d1645d028c2dd1d4406caee8198a3bc2d (read from refs/heads/mirror/integration-frontend-apple-pass1 before cutting)
+head=2eded2c8e13e3e4adfd66e4090f5d46de122e78d
+product_files_touched=6
+
+== item 2a: the Today clock sentence, painted text, before and after, both shipped locales ==
+arm=W_clean_wizard_walk locale=zh-CN
+  before_sentence="“现在”取自服务器场景（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出"
+  before_paren="（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）" before_holds_a_clause=True cursor_status=ABSENT_FALLBACK
+  after_sentence="“现在”取自服务器场景（行程起点）：10月2日 10:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。"
+  after_paren="（行程起点）" after_holds_a_clause=False cursor_status=ABSENT_FALLBACK
+arm=W_clean_wizard_walk locale=en
+  before_sentence="\"now\" comes from the server's scenario (journey start. The server gave no execution cursor for this minute, so this screen reads time by the journey's window): 2 Oct, 10:00 · now/next come from the server's execution projection"
+  before_paren="(journey start. The server gave no execution cursor for this minute, so this screen reads time by the journey's window)" before_holds_a_clause=True cursor_status=ABSENT_FALLBACK
+  after_sentence="\"now\" comes from the server's scenario (journey start): 2 Oct, 10:00. The server gave no execution cursor for this minute, so this screen reads time by the journey's window. Now/next come from the server's execution projection."
+  after_paren="(journey start)" after_holds_a_clause=False cursor_status=ABSENT_FALLBACK
+clause_before=['W:zh-CN', 'S:zh-CN', 'W:en', 'S:en'] clause_after=[]
+
+== item 2b: the new-journey setup screen with the stage window open ==
+locale=zh-CN
+  before stage_row="3579c9ab · DRAFT" counter_sentences=0
+  after  stage_row="f4b6e345 · DRAFT" counter_sentences=1 sentence="注意：这一屏还没有正在看的行程，你正在新建的是另一趟。台上那一趟（f4b6e345）是演示舞台的全局场景，下面的动作打在它身上，不会写进你正在建的这一趟。"
+locale=en
+  before stage_row="66547035 · DRAFT" counter_sentences=0
+  after  stage_row="903c76c5 · DRAFT" counter_sentences=1 sentence="Note: this screen has no journey in view yet -- you are setting up a new one. The journey on stage (903c76c5) is the demo stage's own scenario; the actions below act on it, not on the trip you are creating."
+
+== the bundles these readings came from (static door proves itself) ==
+base bundle: served_sha1=febbb38e120c2a4afac15d1cb08a107fc0f62202 disk_sha1=febbb38e120c2a4afac15d1cb08a107fc0f62202 bytes_equal=True dir=D:/moodle/_qoder_rel_ord0447_wt/_build_0507r2_base/index.html
+mine bundle: served_sha1=21bf4fa12a3445e80a5048187c71ddf007ea515f disk_sha1=21bf4fa12a3445e80a5048187c71ddf007ea515f bytes_equal=True dir=D:/moodle/_qoder_rel_ord0447_wt/_build_0507r2_mine/index.html
+
+== item 3: what the screen paints for a refusal the server really answered ==
+run5 summary=['2 failed', '6 passed']
+run6 summary=['2 failed', '6 passed']
+run7 summary=['3 passed']
+  reading={"node":"ord0507-3-checkin-refusal-says-which-fact-and-keeps-the-original","locale":"zh-CN","journey_id":"c0a4daef-e66c-471a-b098-7852605f625d","duplicate_sentence":"服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。","duplicate_technical":"这台服务器原样的回答：reason_code=CHECKIN_DUPLICATE_STAMP · http_status=409 · message=That target is already stamped on this trip. · details={\"target_key\":\"activity:c5f39a40-9f8d-465c-a088-4a0732535e71\",\"existing_checkin_id\":\"cb46bec8-e875-4c0e-9eee-f752b4fefe99\",\"existing_stamped_at\":\"2026-10-01T07:20:38.728278+00:00\"}","raw_before_click":3,"raw_after_click":3}
+  reading={"node":"ord0507-3-checkin-refusal-says-which-fact-and-keeps-the-original","locale":"en","journey_id":"c0a4daef-e66c-471a-b098-7852605f625d","duplicate_sentence":"The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.","duplicate_technical":"As this server answered: reason_code=CHECKIN_DUPLICATE_STAMP · http_status=409 · message=That target is already stamped on this trip. · details={\"target_key\":\"activity:c5f39a40-9f8d-465c-a088-4a0732535e71\",\"existing_checkin_id\":\"cb46bec8-e875-4c0e-9eee-f752b4fefe99\",\"existing_stamped_at\":\"2026-10-01T07:20:38.728278+00:00\"}","raw_before_click":3,"raw_after_click":3}
+
+== gates and arms on the line's own production build ==
+checkin arms (b2_spec_run7.txt): ['3 passed (31.6s)']
+clock arms (b2_spec_run5.txt): ['2 failed', '6 passed (14.1m)']
+full file incl. attribution and pairing arms (b2_spec_run2.txt): ['3 failed', '5 passed (13.9m)']
+tsc_check_rc=0 (npx tsc -p tsconfig.check.json --noEmit, no output)
+tsc_typecheck_rc=0 (npx tsc -p tsconfig.typecheck.json --noEmit, no output)
+vite_build_rc=0 (['built in 5.53s'])
+
+== counter-arms: one hunk deadened at a time, the owning arm has to go red ==
+  {'tag': 'm2a_bracket_again_holds_the_clause', 'applied': True, 'arm_went_red': True, 'exit': 1, 'summary': ['1 failed', '1 passed'], 'first_error': 'Error: [ord0507-2a-clock-parenthetical-holds-only-the-noun] the parentheses still carry a whole clause: (ִ���αꡣ������û�и�����һ���ӵ�ִ���α꣬��һ����ʱ�䰴�г̵�ʱ�䴰����) -- full sentence "�����ڡ�ȡ�Է�����������ִ���αꡣ������û�и�����һ���ӵ�ִ���α꣬��һ����ʱ�䰴�г̵�ʱ�䴰���
+  {'tag': 'm2b_new_journey_screen_stays_silent', 'applied': True, 'arm_went_red': True, 'exit': 1, 'summary': [], 'first_error': '', 'file_restored_byte_identical': True}
+  {'tag': 'm3_seven_refusals_flattened_again', 'applied': True, 'arm_went_red': True, 'exit': 1, 'summary': [], 'first_error': '', 'file_restored_byte_identical': True}
+  every_mutant_made_its_arm_red=True
+  files_restored=True
+
+== per-file bytes at the delivered head ==
+frontend/src/app/V8Experience.tsx +22 -14 blob=15528d6ad2d5e9c517d54ac0a736db74d33f1e15
+frontend/src/features/simulation/SimulationPanel.tsx +38 -11 blob=5b92f33112b05e3eb8d710c2f1e5fb00c6beae90
+frontend/src/features/checkin/checkins.ts +72 -12 blob=11d68ae723a53d4700a8db423c5cf3d42a15b0ac
+frontend/src/features/trip/TripItinerary.tsx +58 -6 blob=3192a439a9d1c7736cce2e5da9190a5b37ef2e69
+frontend/src/i18n/LocaleContext.tsx +26 -0 blob=9046733e8a9183aebff9529a8173e67cadc90fd2
+frontend/e2e/qoder-ord0507-clock-and-checkin-words.spec.ts +392 -0 blob=ff71862b22e079e016cf44edbf30f447a2fe7bf8
+
+== red lines this lane honoured ==
+demo/reset calls=0; the scenario was put on stage by POST /api/v1/demo/prepare-scenario and POST /api/v1/demo/start-scenario only
+own stack: backend :61231 preview :61232/:61234, spec runs on :61242-:61275 -- :8000 :4781 :4782 :4783 :4785 :8693 untouched
+databases: data/_0507r2_b1.db and data/_0507r2spec*.db (throwaway, named _); _preview.db writes=0
+V8Experience per-day 打卡 rows: 0 bytes changed in that control; this branch touches the clock line and the wizard's stage entry only
+
+
+== counter-arm ledger for this generation (three hunks, three verdicts, no silent drops) ==
+m2b_new_journey_screen_stays_silent -> arm RED, owner message named: the new-journey screen names a stage journey with 0 counter-sentences (b2_mutants_out3.txt)
+m2a_bracket_again_holds_the_clause -> arm GREEN under that mutant, and the reason is a reading not a claim: the mutant only re-embeds the cursor clause, and on the harness's own scenario the cursor answers VALID so the clause is empty; that mutant therefore does not exercise the hunk (b2_mutants_out3.txt line 1). The two-sided proof for 2a is the untouched-tip bundle vs this branch's bundle on the ABSENT_FALLBACK arm, both locales: paren_holds_a_clause True -> False (b2_read_base.json / b2_read_mine2.json, and the shipped arm's own judgement run on both).
+m3_seven_refusals_flattened_again -> arm GREEN under that mutant because the mutant deadened the wrong branch: CHECKIN_DUPLICATE_STAMP is answered by the pre-existing duplicate branch, which never passes through checkinRefusalKey. Named NOT_PROVEN_BY_MUTANT for the six other codes; what does prove them is the mapping arm (eight codes, eight distinct keys) and the pairing arm (each key defined exactly once per dictionary), both green in b2_spec_run2.txt.
+
