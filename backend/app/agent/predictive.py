@@ -719,6 +719,7 @@ def _shadow_evidence(
     kept: list[Activity],
     *,
     scenario_key: str,
+    force_refresh: bool = False,
 ) -> dict[str, Any] | None:
     """Build a new immutable mobility snapshot for one standby order."""
 
@@ -726,7 +727,7 @@ def _shadow_evidence(
     base_snapshot = MobilitySnapshot.from_evidence(base)
     keys = [str(item.place_id or item.city_service_id or item.id) for item in kept]
     pairs = [(left, right) for left, right in zip(keys, keys[1:]) if left != right]
-    missing = [pair for pair in pairs if pair not in base_snapshot.facts]
+    missing = pairs if force_refresh else [pair for pair in pairs if pair not in base_snapshot.facts]
     captured = None
     if missing:
         try:
@@ -810,6 +811,68 @@ def _shadow_evidence(
         "expiry_reason": "provider mobility cache TTL",
     })
     return shadow
+
+
+def _refresh_shadow_plan_mobility(
+    session: Session,
+    journey: Journey,
+    active: PlanVersion,
+    shadow: PlanVersion,
+    simulation: CounterfactualSimulation,
+    changes: list[dict[str, Any]],
+    activities: list[Activity],
+) -> bool:
+    """Refresh a persisted branch without changing its identity or schedule."""
+    dropped = {
+        str(item.get("slot_key"))
+        for item in changes
+        if str(item.get("action") or "").upper() == "DROP"
+    }
+    kept = [item for item in activities if item.id not in dropped]
+    evidence = _shadow_evidence(
+        session,
+        journey,
+        active,
+        kept,
+        scenario_key=simulation.scenario_key,
+        force_refresh=True,
+    )
+    if evidence is None:
+        return False
+    shadow.mobility_snapshot_id = str(evidence["snapshot_id"])
+    shadow.mobility_evidence_json = _json(evidence)
+    explanation = _load(shadow.explanation_json, {})
+    explanation.update({"captured_at": evidence.get("captured_at"), "expires_at": evidence.get("expires_at")})
+    shadow.explanation_json = _json(explanation)
+    fact_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in (evidence.get("facts") or [])
+        if isinstance(item, dict)
+    }
+    shadow_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == shadow.id).order_by(Activity.sequence_no)
+    ).all()
+    for left, right, leg in zip(
+        shadow_activities,
+        shadow_activities[1:],
+        session.scalars(
+            select(JourneyLeg).where(JourneyLeg.plan_version_id == shadow.id).order_by(JourneyLeg.sequence_no)
+        ).all(),
+    ):
+        fact = fact_by_pair.get((str(left.place_id), str(right.place_id))) or {}
+        leg.duration_min = int(fact.get("minutes") or leg.duration_min)
+        leg.arrive_at = right.start_at
+        leg.captured_at = str(evidence.get("captured_at"))
+        leg.expires_at = str(evidence.get("expires_at"))
+        leg.provider_key = str(fact.get("provider") or evidence.get("source_provider") or leg.provider_key)
+        leg.provenance = str(fact.get("capture_provenance") or fact.get("fact_quality") or leg.provenance)
+    gate = validate_plan_feasibility(
+        session,
+        journey,
+        shadow,
+        mobility_provider=MobilitySnapshot.from_evidence(evidence),
+    )
+    return bool(gate.passed)
 
 
 def _materialize_shadow_plan(
@@ -1202,6 +1265,9 @@ def simulate_counterfactuals(
                 for item in changes
                 if item.get("action") == "DROP"
             }
+            refreshed = _refresh_shadow_plan_mobility(
+                session, journey, active_plan, existing_shadow, row, changes, activities
+            )
             existing_shadow.trigger_contract_json = _json(
                 contract_for_simulation(
                     scenario_type=row.scenario_type,
@@ -1218,8 +1284,10 @@ def simulate_counterfactuals(
             evidence["shadow_plan_version_id"] = existing_shadow.id
             evidence["shadow_plan_status"] = existing_shadow.status
             evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+            evidence["mobility_refresh"] = "LIVE_PROVIDER_CAPTURE" if refreshed else "REFRESH_FAILED"
             row.evidence_json = _json(evidence)
-            materialized_shadow_count += 1
+            if refreshed:
+                materialized_shadow_count += 1
         elif active_plan is not None and materialized_shadow_count < 3 and changes:
             shadow = _materialize_shadow_plan(session, journey, active_plan, row, changes)
             if shadow is not None:
