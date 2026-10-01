@@ -562,8 +562,12 @@ def _scenario_problem(
             scenario_type == "mutable_place_closes"
             and activity_index == first_mutable_future_index
         )
+        forced_weather_drop = (
+            scenario_type == "rain_earlier"
+            and activity_index == first_mutable_future_index
+        )
         options: list[SolverV2Option] = []
-        if not forced_mobility_drop and not forced_closure_drop and (
+        if not forced_mobility_drop and not forced_closure_drop and not forced_weather_drop and (
             scenario_type != "mutable_place_closes" or not outdoor
         ):
             options.append(
@@ -580,7 +584,10 @@ def _scenario_problem(
                     risk_penalty_milli=600 if scenario_type == "rain_earlier" and outdoor else 0,
                 )
             )
-        for candidate in ([] if forced_mobility_drop or forced_closure_drop else candidate_places[:3]):
+        for candidate in (
+            [] if forced_mobility_drop or forced_closure_drop or forced_weather_drop
+            else candidate_places[:3]
+        ):
             candidate_tags = set(_load(candidate.tags_json, []))
             if (
                 scenario_type == "replacement_disappears"
@@ -627,7 +634,7 @@ def _scenario_problem(
                     risk_penalty_milli=0,
                 )
             )
-        if options or forced_mobility_drop or forced_closure_drop:
+        if options or forced_mobility_drop or forced_closure_drop or forced_weather_drop:
             slots.append(
                 SolverV2Slot(
                     slot_key=activity.id,
@@ -641,6 +648,7 @@ def _scenario_problem(
                         (scenario_type == "mutable_place_closes" and outdoor)
                         or forced_mobility_drop
                         or forced_closure_drop
+                        or forced_weather_drop
                     ),
                     allow_drop=not any(
                         anchor.location_key == _location(activity) for anchor in anchors
