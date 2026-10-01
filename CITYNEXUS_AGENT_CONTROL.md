@@ -16588,6 +16588,71 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### r_da46954a 14:28 · 车道 da46954a · 自申报：ORD-0465 与 ORD-0490 已按 blob 逐枚比过确认落地；ORD-0504 花费屏候选已 rebase 到现尖 b604f50d 并整批重跑，本班次另把我自己一处调度错与一枚落地闸红报清
+
+一、值守让我核的两张，按 blob 等值判、不按祖先（`merge-base --is-ancestor` 在 recut 重挂之后永远会把已落地读成未落地，这格我吃过一次）：
+- ORD-0465 分享接收屏：frontend/src/features/shared/SharedJourneyPanel.tsx 在线 blob = 3ebedcedeb6b34387e011f63b33d6bc2185e77d0，与我这侧同一枚 blob 逐字相同；frontend/src/features/shared/sharedJourney.css 在线 blob = fe7401ff183ecd31301808f872f5aa597f081ee9，同样相同；backend/tests/test_qoder_ord0465_shared_landing.py 在线 blob = 4e72c947810618eee8cc5744a8ae19eca9a402dd，同样相同。
+- ORD-0490 回收站两形：backend/tests/test_qoder_ord0490_shared_after_restore.py 在线 blob = 2e805439ea0e7d6d662949f4595e665cd549a86c，与我这侧逐字相同。
+- 所以这两张不再重交。账本里点名到我这条会话的第三张是 ORD-0504（花费页真读数），它的状态在第三节。
+
+二、本班次做了什么（不是新单，是把我自己声明过的缺口关掉）：
+- 06:04 那块里我写过一句"两枚反件这一代没重跑，要我在 514b397f 上再撞一轮就说一句"。我没等这一句，直接跑了：M1（把缺价改成 0）与 M2（让估算桶不再跟库存走）各给 ARMS=11 PASSED=8 FAILED=3，红的三枚里各自含它要盯的那枚反件，跑完 spendFacts.ts 按字节还原 —— 读数 review/ord0504/spend_counterexample_controls_r1.txt:9 与 :11（M1）、:18 与 :20（M2）、:22（还原回读）。
+- 中途我自己撞出一枚红，且那红是我的调度错，不是产品也不是判据：我在反件作业还在跑的时候起了重建，于是 bundle 是在 M2 的变异窗口里编译出来的 —— 屏上写"这个币种没有估算项"而门里那枚腿仍是 KNOWN。重跑（先重新种、再在没有任何并发作业时构建）即回到全绿。这条我写进块，是因为它同时证明 M2 那枚变异确实改到了屏上该改的东西。
+
+三、现尖又动了，而这批正好动在我依赖的文件上，所以我搬了枝并整批重跑（不搬就会把 32 枚键交丢）：
+- 现读权威尖 = b604f50d1645d028c2dd1d4406caee8198a3bc2d（13:32 你给的 514b397f 之后落了 ORD-0529/0533/0535）。这批里有一枚提交标题自陈是 "the dictionary insert re-cut onto the bytes the line holds now"，而字典正是我那 32 枚键的落点；同一批还改了 frontend/src/app/V8Experience.tsx（我那枚 spend 槽挂在这里）、frontend/src/features/trip/TripItinerary.tsx（我用的日标签 helper 在这里）、frontend/src/app/v8PanelRegistry.tsx、backend/app/main.py。
+- 自动合并之后先验"我的东西还在不在"，再验判据：V8Experience.tsx 里 SpendPanel 仍 3 处、v8Types.ts 里 cost_amount_minor 仍 6 处、字典中英两侧各恰好 32 枚 spend.* 键且零重复（逐侧正则取键名再算重复，不是数总行数；这一代服务端字节里可读到 32 枚这件事记在 review/ord0504/spend_dictionary_check_r1.json:7）。
+- 重跑结果（都在 b604f50d 这一代）：前端 tsc -p tsconfig.typecheck.json 退出码 0；本单后端 collect 6 条见 review/ord0504/pytest_r1.txt:6、单跑 6 passed 见同一文件 :12；邻集 6 文件 72 passed 0 failed 见 review/ord0504/pytest_batch_r1.txt:12；屏上本单 11 臂全绿见 review/ord0504/spend_arms_r1.json:25 与 :26、ORD-0465 那 24 臂全绿见 review/ord0465/screen_arms_r1.json:5 与 :6、ORD-0490 那 12 臂全绿见 review/ord0490/restore_arms_r1.json:7 与 :8，三套臂跑的是同一枚 served bundle（review/ord0465/ownership_witnesses_r1.json:3 记 dist_141258）。
+- 整套这一代一趟：13 failed / 1633 passed，其中属于 ORD-0465 / ORD-0490 / ORD-0504 的 0 枚（review/ord0504/suite_red_list_r10.txt:9 与 :12，逐条红名在同一文件 :14 起）。这一代与上一代都只取了一趟、没取不带我这枚新文件的基线，所以我不声明子集关系，只声明这一格是按红名单算出来的。
+- 交付枝 refs/heads/review/da46954a-ord0504-spend-face-r1 现读尖 = 189d5793a2fb29b527fd7f7d7520cbfd5dbb0f41（push 后 ls-remote 回读），`git merge-base --is-ancestor b604f50d… HEAD` 退码 0，正坐在现尖上；我这侧工作树 git status 为 0 行。
+
+四、一枚落地闸红，归属我量清了，不动别人的闸也不改自己的文件去喂它的行号：tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable 仍红（单跑 1 failed / 9 passed）。它按行号钉一处豁免 —— 断言在 backend/tests/test_qoder_ord0479_dictionary_key_shape.py:184 要 frontend/src/features/shared/SharedJourneyPanel.tsx 第 45 行，而那一处现在在同一文件第 47 行。挪它的是 ORD-0528 的 c1f06772（那枚提交改了同一个文件），我这枚枝对该文件改动 0 处。要修请点一条：① 那把闸改成按它已有的 pattern + position_fp 锚定（机械改动，不碰产品码）；② 由我在 SharedJourneyPanel.tsx 补两行注释把行号还回去 —— 我不推荐，只是把下一次漂移推迟。
+
+五、下一件我做什么：账本里没有派给我而尚未交的号（ORD-0504 已交、候选待落；0465/0490 已落）。我不去自取新单 —— 这一班的热文件（V8Experience.tsx、LocaleContext.tsx、main.py）正被 ORD-0529/0533/0535 那几辆车改，我自取就会撞。我能立刻接的三件事，点单即可：
+1. 落 ORD-0504 候选（189d5793），或要我把它再挪到新尖（每次挪我都按第三节那一套先验完整性再重跑，约一刻钟）。
+2. 开那张后端单：五类花费事实没有按行程的读门（实测六条路径 http_status=404、两条 http_status=405；逐站估价与方案总额在 /experience 答案里词面 0 命中，钉在 backend/tests/test_qoder_ord0504_spend_sources.py:216）。
+3. 契约那一格：/experience 的 200 描述了 18 个字段路径、没有一个属于花费，/wallet 的 200 是裸 {type: object}（contracts/openapi.yaml:2535），verdict 见 review/ord0504/contract_visibility_r1.json:20。我建议另开一单先配"手写 yaml ↔ 生成 api.ts"的闸再补字段。
+
+单号那件仍未决（06:04 那块第一节报过，本块不重复请裁）：ORD-0504 与 5a53846b 的空目录那一单撞号（账本 16929 行 = bbdb517c40578b896252700817751ac6a3c0bdf6），名册同一行又把它记成 ORD-0505。要挪号说一句即可，我这十二枚仪表与那枚枝名都带 da46954a，改名是一枚自带回读校验的脚本。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守 42d1a6fa · 10-01 午后两件事：盘的清理判据走到第三遍（可清只有 2 枚 = 1090.4 MiB），并更正 07:26 入账那块「2 GiB 档落在今天傍晚」的外推
+
+**一、先更正那条盘的承诺：它没有兑现，而且按实测本来就不该那么写**
+
+- 受影响的已发布读数：`42d1a6fa_0724.md.inserted_072633:14` 那一节，原文按 4 小时窗 +1.47 GiB/小时外推「2 GiB 档落在 10-01 17:49—23:42 之间」。14:16:51 那一拍空闲还有 20.49 GiB（`_disk_trend_1424.txt:1`），离 2 GiB 档差 18.49 GiB——那个傍晚没有到，也不会到。
+- 换成两点平均（只取两份趋势文件各自的落档时刻与现空闲，不选窗）：03:52:14 的 22.56 GiB → 14:16:51 的 20.49 GiB，跨度 10.41 小时、掉 2.07 GiB ⇒ 平均 +0.20 GiB/小时，照它外推到 2 GiB 档还要 93.0 小时（约 10-05 11:16）（`_disk_two_point_latest.txt:3`、`_disk_two_point_latest.txt:4`）。
+- 错因写清：上一块的第 13 行我自己就写了「同一份点、窗口不同就差 2.5 倍」（`42d1a6fa_0724.md.inserted_072633:13`），却还是拿最陡的那扇窗去挑了一个傍晚时刻。判据没变（自动轮仍按整 GiB 分档、越档自己上总线，`_disk_trend_1424.txt:6` 那条边界照旧），受影响的是「时刻」这一格；从现在起我只报两点平均，短窗斜率只当上限用。
+- 现在各窗给的区间仍然宽：近 2 小时 +0.33 GiB/小时 ⇒ 56.6 小时、近 6 小时 +0.10 ⇒ 177.3 小时、近 12 小时 +0.35 ⇒ 52.8 小时（`_disk_trend_1424.txt:2`、`_disk_trend_1424.txt:4`、`_disk_trend_1424.txt:5`）。区间左端 52.8 小时 = 10-03 19:04，也不是今晚。
+
+**二、清理池：前两遍的数要撤回，第三遍才是能拿来做决定的**
+
+- 第一遍只量规模：闲置 12 小时以上且账本 0 引用的候选 165 枚（`_reclaim_sizes_latest.txt:1`），带硬超时逐枚 du 量到 142 枚 = 14154.7 MiB（`_reclaim_sizes_latest.txt:18`）。
+- 第二遍按「目录名或目录内 sha 文件能在 CityNexus 里 rev-parse 成 commit」判出可重建 55 枚 = 9837.1 MiB（`_reclaim_proof2_latest.txt:2`）——**这一版不可信，本块撤回它**：第三遍逐文件对树，判的 14 枚里有 6 枚与被试提交零交集，而这几枚被抽中的那笔提交树内只有 9 个文件（一份 9 个文件的树当然『命中』不了 8 千个文件里的几个）（`_reclaim_cover_latest.txt:3`、`_reclaim_cover_latest.txt:5`）。抽样为什么会虚报：「抽到的几个文件恰好在那笔树里」与「整个目录就是那笔树的导出」是两件事。
+- 第三遍（逐文件全量对树、每枚试三笔候选提交取交集最大、目录里多出的文件按可再生/仓外产物分类）：**判 14 枚｜可清 2 枚 = 1090.4 MiB｜含仓外产物 6 枚 = 1424.7 MiB｜对不上或判据不可靠 6 枚 = 1726.3 MiB**（`_reclaim_cover_latest.txt:18`）。
+- 可清的两枚点名：`_qoder_lane_0455_snap` 555.9 MiB，目录内 8145 个文件全部落在那笔导出提交的树里、多出 0 个（`_reclaim_cover_latest.txt:4`）；`_qoder_cmdr_deploy_d2665e_0923` 534.5 MiB，交集 6978 个文件、多出的 10 个都在可再生类（`_reclaim_cover_latest.txt:6`）。
+- 含仓外产物那 6 枚（合计 1424.7 MiB）不能按这一格动刀：它们目录里有取不回来的东西，最多的一枚有 90 个仓外产物（`_reclaim_cover_latest.txt:8`），要逐枚问过主人才行。
+- 这一格交的是判据不是清单：0 删、0 移，动刀归号令者。
+
+**三、车队现读（一律读任务流水，不按进程、不按端口）**
+
+- 14:27:59 名册：停在额度 1｜在写 6｜静默非闸 18（`_state_snapshot_1430.txt:7`）；在写那 6 条的静默都在 7 分钟以内（`_state_snapshot_1430.txt:8`）。
+- 8 小时窗口里号令者块点到 15 个单号，**无人接 0 张**（`_unclaimed_1429_r8.txt:18`）⇒ 没有车被弃单，所以这一班我 0 次敲门。
+- 叫醒覆盖：在场 17｜被叫醒 15｜叫醒后已回话 15｜未回 0｜停在额度且没人接 0（`_state_snapshot_1430.txt:13`）。
+- 仍挂在额度字样上的三条流水尾部：8e5245f0 最后动水 13:30:30、e766b154 13:40:06、1ba48dbf 13:48:52（`_state_snapshot_1430.txt:14`）；自动轮的失败档已连着 32 拍报这一格（`_state_snapshot_1430.txt:6`）。它是额度潮，叫醒归号令者——我不抢发，重复叫醒会把车道推回去重做已交的部分。
+- 入账门在动：14:14:37 代插过 `0afdb49b_1413.md`，14:18:41 待插 2 枚、最老 2.3 分（`_state_snapshot_1430.txt:3`）；14:31:42 根目录又积了 1 枚（`_state_snapshot_1430.txt:17`）——这是正常流速，我没碰那枚助手。
+
+**四、没做的、没验的**
+
+- 0 删、0 移、0 改产品字节、0 写账本、0 代插、0 次敲车道；`cmdr_night_watch_r1.py` 那枚助手仍然没碰（它是号令者自己起的）。
+- 没验的两处：可清那两枚里多出的 10 个「可再生」文件是按类别名归的（构建产物一类），我没逐枚重建验证过；第三遍的树来自只读的 `git ls-tree`，所以「可清」只等于「内容能从被试提交那笔取回」，不覆盖目录里未入库的东西——那正是仓外产物那一列存在的理由。
+- 复算三条命令：`python _disk_two_point_r1.py`、`TOPN=12 BUDGET=700 python _reclaim_cover_r2.py`（`_reclaim_cover_latest.txt:19`）、`PYTHONIOENCODING=utf-8 python _quota_roster_r1.py`（`_state_snapshot_1430.txt:15`）。
+- 三关照走：坐标逐枚回读、坏 0（`_citation_check_r1.py`，汇总落在 `_cite_on_1432.txt:1`）、`claim_coordinate_check_r7.py --expect-clean` 印的是 `overall Q43_GATE_GREEN` 且 rc=0（`_q43_on_1432.txt:4`）、83 字节尾行逐字节核对。同一趟门另给了一条不改判语的劝告：它把「只由来源行号担保的数」单独列了一串（`_q43_on_1432.txt:2`）——本块的数确实全部取自那三份读数文件，复算命令在上一条里逐条给了。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0506 · 车道 N2（会话逐字 `9759f1ac-3d69-4688-8664-8ca954ab7737`）· 片一：读门先把自己存着的那枚时刻交出来（排序开关与屏读是下一片）· 候选枝已推，权威线未动 @14:18+08
 
 **这一片只交服务端事实，不交屏**。理由在第五节具名写着；我不在事实还没上读门的时候先去做一个"看起来按时间排"的开关。
