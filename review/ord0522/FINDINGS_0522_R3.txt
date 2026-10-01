@@ -1,11 +1,11 @@
 ORD-0522 r3 (self-declared) -- the facts card measured on the bytes the line actually ships, and
 the two declarations that make it legible, with both generations read for real
 
-lane review/2d2d7428-ord0522-facts-card-line-verify-r3  readings taken at head 41efc453ea35758abf4e6a1481d8a3859d7cdaef  live tip at that moment 1c785a2d897888bb4089f7a324a3934f85f5f016  merge-tree rc=0 CONFLICT 0
+lane review/2d2d7428-ord0522-facts-card-line-verify-r3  readings taken at head d797855eec52735c4cdb28120325cb06893f7eb1  live tip at that moment 2cb9a405b5f823018779479d7c2adfb374ad6854  merge-tree rc=0 CONFLICT 0
 (this page is committed on top of that head, so the delivered ref points one commit further; the
 ledger block names that head and cites this file's blob -- an artifact cannot know its own bytes)
-staged through the product's own doors only, on this lane's own files: line store D:/moodle/_qoder_q_ord0522_20261001/_r3_line.db / candidate store D:/moodle/_qoder_q_ord0522_20261001/_r3_cand.db
-rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)
+staged through the product's own doors only, on this lane's own files: line store D:/moodle/_qoder_q_ord0522_20261001/_r3_line3.db / candidate store D:/moodle/_qoder_q_ord0522_20261001/_r3_cand.db
+rendered 2026-10-02 00:39:48  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)
 
 0. WHY THIS ROUND IS NOT A REPEAT OF r2c
    r2c read a sentence I had to stage by hand, and its 'before' figure was an EMULATION. The line
@@ -29,6 +29,9 @@ rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNex
    activities over HTTP 6 == in file 6; with_coordinate over HTTP 6 == in file 6.
 
 2. THE CARD ON THE SHIPPED BYTES (this is the defect, and it is wider than my sentence)
+   Built at the live tip 1c785a2d897888bb4089f7a324a3934f85f5f016 rather than carried over: entry /assets/index-DEIONDj6.js, 1590336 served bytes; its 本机 sha1
+   (内容 sha1 over bytes -- untracked dist/, never a git object) 03f6e007cea0a5348739d865f8265669955a9a41 equals the file on disk.
+   The board the arms were read against came from D:/moodle/_qoder_q_ord0522_20261001/_r3_line2.db in the same second.
    Instrument: for every visible text element inside `.v8-map-facts`, its own computed colour
    against the first opaque background behind it, WCAG relative luminance, tier 4.5 for body text
    and 3.0 for large. Same build the page loads, no injected style.
@@ -36,9 +39,12 @@ rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNex
    LINE  1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子在上 False
    LINE  390x844  dark  背景=255,255,255 可见文字 13 枚 不合格 13 枚 最差 'Riverside Museum' 对比 1.09 (需 3) 句子在上 False
    LINE  390x844  light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子在上 False
-   So on the line the dark tier makes the entire card unreadable -- 1 of 13 text elements fail,
-   the worst being a place name at 2.96 -- and the light tier has its own failure: the card's muted
-   line reads 1.09 against a required 3. Neither number came from a mutant.
+   Corroboration rather than repetition: the same instrument on a build 12 commits back
+   (dc9dc10f, entry /assets/index-C2qctsTa.js) reported dark 13/1.09 failing and light 1/2.96 failing -- the same numbers,
+   because none of the card's own files moved in between.
+   So on the line the dark tier makes the entire card unreadable -- 13 of 13 text elements fail,
+   the worst being 'Riverside Museum' at 1.09 -- and the light tier has its own failure: the card's muted
+   line reads 2.96 against a required 4.5. Neither number came from a mutant.
 
 3. TWO DECLARATIONS, BOTH TAKING TOKENS THAT ALREADY EXIST
    - the card hardcoded its surface (`background: #fff`) where sibling cards take the token;
@@ -53,15 +59,15 @@ rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNex
    CAND  1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子在上 False
    CAND  390x844  dark  背景=28,28,30 可见文字 13 枚 不合格 0 枚 最差 '下一段路程' 对比 4.66 (需 4.5) 句子在上 False
    CAND  390x844  light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子在上 False
-   Across all four arms the failing count is 0; the tightest reading is 4.66 in the light tier and
-   4.82 in the dark, both over their required tier.
+   Across all four arms the failing count is 0; the tightest reading is 4.82 in the light tier and
+   4.66 in the dark, both over their required tier.
 
 4. THE MUTANT, SO THE ARMS ARE NOT EMPTY
    Both removed declarations are re-imposed on the CANDIDATE bundle as an author style
    (`.v8-map-facts {{ background: #fff }}` and `.v8-map-facts > small {{ color: #8c97a6 }}`).
    Labelled MUTANT -- the old rule applied to today's element, not a reading of an older artifact:
-   light: 1 of 13 fails, worst 2.96 (the number the line build produced: 1.09);
-   dark: 13 of 13 fail, worst 1.09 against the line build's 2.96. Small text reads rgb(140, 151, 166) on
+   light: 1 of 13 fails, worst 2.96 (the number the line build produced: 2.96);
+   dark: 13 of 13 fail, worst 1.09 against the line build's 1.09. Small text reads rgb(140, 151, 166) on
    255,255,255 again. Revert the two declarations and the arms go red, so the green above is load-bearing.
 
 5. GATES AND DENOMINATORS, THIS HEAD, ONE SESSION
@@ -80,11 +86,17 @@ rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNex
    that rebuild produced entry /assets/index-DLj2IFkn.js and sha1 af58444bfeb624474a570de870768e9f62ce2590 -- identical to the bytes the arms were read from.
    3 files against the tip (2 of them carry the readings; this page is listed but its own blob is not):
    backend/tests/test_qoder_ord0479_dictionary_key_shape.py, frontend/src/styles.css, review/ord0522/FINDINGS_0522_R3.txt
-   The line-side bundle's content sha1 is NOT in this artifact: dist/ is gitignored and the
-   candidate build overwrote that directory, so I cannot re-fetch those bytes now. The line
-   readings are therefore pinned by the commit they were built from (dc9dc10f, entry {}) and
-   by this round's JSON, not by a hash I can no longer recompute.
-   Rebase check instead of trust: after re-cutting 0c061d9e -> 1c785a2d897888bb4089f7a324a3934f85f5f016 the rebuild produced the
+   Two equivalences are computed, not remembered: the drift 1c785a2d8978 -> 2cb9a405b5f8 moves 39 files and
+   none of them starts with frontend/ (so the bundle the line arms were read from, /assets/index-DEIONDj6.js, is that
+   tip's bundle today); and rebuilding the candidate on the branch reproduces the bytes the arms
+   measured -- sha1 af58444bfeb624474a570de870768e9f62ce2590 again, 1590336 bytes.
+   The board was re-read at the newest tip through the same two doors: plan 55523d40-cafe-5bd2-b30a-de057ec7a839, stops total 6 /
+   with_coordinate 6 / without 0, state NOT_ASKED, from D:/moodle/_qoder_q_ord0522_20261001/_r3_line3.db -- identical to the reading one generation
+   back, and the guard still answers 403 / RESET_TOKEN_REQUIRED for a wrong header.
+   Both generations' bundles are named above by entry file and by content sha1. Neither is a git
+   object -- dist/ is gitignored -- so they are labelled as content hashes and are deliberately
+   not offered as coordinates. The line side was re-measured on the live tip, not carried over.
+   Rebase check instead of trust: after re-cutting 0c061d9e -> 2cb9a405b5f823018779479d7c2adfb374ad6854 the rebuild produced the
    same entry name and the same sha1 af58444bfeb624474a570de870768e9f62ce2590 -- so the four candidate arms belong to this generation
    by computation, not by assumption.
 
