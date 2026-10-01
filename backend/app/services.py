@@ -876,6 +876,7 @@ def plan_schema(
         is_current=str(current_plan_version_id or "") == item.id,
         planning_mode=item.planning_mode,
         status=item.status,
+        lifecycle=item.lifecycle or "ACTIVE",
         source=item.source,
         parent_plan_version_id=item.parent_plan_version_id,
         total_cost=Money(amount_minor=item.total_cost_minor, currency=item.currency),
@@ -890,7 +891,7 @@ def plan_schema(
         explanation=json.loads(item.explanation_json or "{}"),
         created_at=item.created_at or None,
         stale=stale,
-        selectable=not stale and authority_blocker is None,
+        selectable=(item.lifecycle or "ACTIVE") != "STANDBY" and not stale and authority_blocker is None,
         stale_reason=stale_reason,
     )
 

@@ -132,6 +132,7 @@ class AgentToolCall(BaseModel):
     journey_id: UUID | None = None
     mission_id: UUID | None = None
     proposal_id: UUID | None = None
+    standby_plan_id: UUID | None = None
     trigger_event_id: UUID | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
     solver_mode: Literal["deterministic", "ortools", "auto", "v2"] | None = None
@@ -526,6 +527,7 @@ class PlanVersion(BaseModel):
     version_no: int = Field(ge=1)
     planning_mode: PlanningMode
     status: Literal["CANDIDATE", "SELECTED", "ACTIVE", "SUPERSEDED", "REJECTED"]
+    lifecycle: Literal["ACTIVE", "STANDBY", "RETIRED"] = "ACTIVE"
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
     parent_plan_version_id: UUID | None = None
     total_cost: Money

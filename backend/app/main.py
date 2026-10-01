@@ -5980,6 +5980,8 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
         return journey_schema(journey)
     if plan.status not in {"CANDIDATE", "SELECTED"}:
         raise HTTPException(422, "Only a candidate plan can be selected")
+    if getattr(plan, "lifecycle", "ACTIVE") == "STANDBY":
+        raise HTTPException(409, "STANDBY branches require the activate_standby Gateway action")
     # Selecting a different plan leaves the one the traveller may have been executing.
     # Retire it here, in the same transaction, with a predicate the database evaluates
     # against the current row.  Without this the abandoned plan stays ACTIVE with

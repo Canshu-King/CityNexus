@@ -36,6 +36,7 @@ TOOLS = (
     ),
     ToolDescriptor(AgentAction.REQUEST_REPLAN, "request_replan", True, False, False),
     ToolDescriptor(AgentAction.ACCEPT_REPLAN, "accept_replan", True, False, False),
+    ToolDescriptor(AgentAction.ACTIVATE_STANDBY, "activate_standby", True, False, False),
 )
 
 TYPED_TOOLS = (

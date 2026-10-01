@@ -58,7 +58,9 @@ from app.services import (
     journey_schema,
     plan_schema,
     service_schema,
+    validate_plan_feasibility,
 )
+from app.replanning.provider_snapshots import MobilitySnapshot
 
 
 def _agent_key(kind: str, *parts: object) -> str:
@@ -470,6 +472,7 @@ class AgentToolGateway:
             "generate_plans": self.generate_plans,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
+            "activate_standby": self.activate_standby,
             "replace_activity": self.replace_activity,
             "reschedule_activity": self.reschedule_activity,
             "create_booking": self.create_booking,
@@ -532,6 +535,7 @@ class AgentToolGateway:
     def inspect_twin(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _twin_snapshot
+        from app.agent.predictive import standby_portfolio
 
         savepoint = self.session.begin_nested()
         try:
@@ -542,6 +546,7 @@ class AgentToolGateway:
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "twin": twin,
+            "standby_portfolio": standby_portfolio(self.session, journey),
         }
 
     # The agent surface used to hand back *every* persisted proposal with its full
@@ -998,6 +1003,103 @@ class AgentToolGateway:
                 )
             raise
         return response
+
+    def activate_standby(self, request: AgentToolCall) -> dict[str, Any]:
+        """Governed handover of a fresh standby branch; distinct from generic select."""
+        if request.standby_plan_id is None or request.trigger_event_id is None:
+            raise HTTPException(422, "standby_plan_id and trigger_event_id are required")
+        journey = _require_journey(self.session, request.journey_id)
+        standby = self.session.get(PlanVersion, str(request.standby_plan_id))
+        if standby is None or standby.journey_id != journey.id:
+            raise HTTPException(404, "standby plan was not found for this Journey")
+        if standby.lifecycle != "STANDBY" or standby.status != "CANDIDATE":
+            raise HTTPException(409, "only a live STANDBY branch can be activated")
+        if standby.parent_plan_version_id != journey.active_plan_version_id:
+            raise HTTPException(409, "standby parent is no longer the current reality")
+        trigger = self.session.get(Event, str(request.trigger_event_id))
+        if trigger is None or trigger.journey_id != journey.id or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}:
+            raise HTTPException(409, "activation trigger is not actionable")
+        if trigger.provenance == "SIMULATED":
+            raise HTTPException(409, "synthetic trigger cannot activate a standby branch")
+        evidence = json.loads(standby.mobility_evidence_json or "{}")
+        expires = evidence.get("expires_at")
+        try:
+            expired = not expires or datetime.fromisoformat(str(expires)) <= datetime.now(timezone.utc)
+        except ValueError:
+            expired = True
+        if expired:
+            raise HTTPException(409, "standby mobility evidence has expired")
+        mobility = MobilitySnapshot.from_evidence(evidence)
+        gate = validate_plan_feasibility(self.session, journey, standby, mobility_provider=mobility)
+        if not gate.passed:
+            raise HTTPException(409, f"standby is no longer feasible: {', '.join(gate.failures)}")
+        policy_row = get_or_create_policy(self.session, journey.traveler_id)
+        auth = self._bound_authorization(
+            request,
+            evaluate_action(
+                policy_from_model(policy_row), AgentAction.ACCEPT_REPLAN,
+                AuthoritativeActionFacts(
+                    hard_constraints_passed=True,
+                    locked_commitments_preserved=True,
+                    base_plan_current=True,
+                    trigger_actionable=True,
+                    event_severity=trigger.severity,
+                    cost_delta_minor=standby.total_cost_minor - (self.session.get(PlanVersion, journey.active_plan_version_id).total_cost_minor if journey.active_plan_version_id else 0),
+                ),
+            ),
+        )
+        approval = None
+        if auth.decision in {AuthorizationDecision.REQUIRE_CONFIRMATION, AuthorizationDecision.REQUIRE_STEP_UP}:
+            approval_fingerprint_value = approval_fingerprint(
+                action=AgentAction.ACTIVATE_STANDBY.value,
+                journey_id=journey.id,
+                target_type="PlanVersion",
+                target_id=standby.id,
+                policy_version=auth.policy_version,
+                decision=auth.decision.value,
+                facts={"trigger_event_id": trigger.id, "expires_at": expires},
+                proposal_diff={"standby_plan_id": standby.id},
+            )
+            if request.approval_id is not None:
+                approval = consume_action_approval(
+                    self.session, approval_id=str(request.approval_id), journey_id=journey.id,
+                    action=AgentAction.ACTIVATE_STANDBY.value, target_type="PlanVersion",
+                    target_id=standby.id, request_fingerprint=approval_fingerprint_value,
+                    actor_id=request.agent_id,
+                )
+            else:
+                approval = create_or_reuse_approval(
+                    self.session, traveler_id=journey.traveler_id, journey_id=journey.id,
+                    action=AgentAction.ACTIVATE_STANDBY.value, target_type="PlanVersion",
+                    target_id=standby.id, request_fingerprint=approval_fingerprint_value,
+                    actor_id=request.agent_id, required_decision=auth.decision.value,
+                )
+            if approval.status != "CONSUMED":
+                self.session.commit()
+                return {"tool": "activate_standby", "decision": auth.decision.value,
+                        "executed": False, "user_confirmed": False,
+                        **approval_payload(approval), "plan_id": standby.id,
+                        "trigger_event_id": trigger.id}
+        base = self.session.get(PlanVersion, journey.active_plan_version_id)
+        if base is None:
+            raise HTTPException(409, "Journey has no active reality")
+        from app.main import _switch_active_plan_atomically
+        old_current = self.session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
+        _switch_active_plan_atomically(self.session, base=base, proposed=standby, decided_at=datetime.now(timezone.utc).isoformat())
+        standby.lifecycle = "ACTIVE"
+        base.lifecycle = "RETIRED"
+        journey.active_plan_version_id = standby.id
+        replacement = self.session.scalar(select(Activity).where(Activity.plan_version_id == standby.id, Activity.sequence_no == (old_current.sequence_no if old_current else 1)))
+        journey.current_activity_id = replacement.id if replacement else None
+        if replacement:
+            replacement.status = "ACTIVE"
+        record_audit(self.session, action="standby.activated", entity_type="PlanVersion", entity_id=standby.id,
+                     journey_id=journey.id, actor_type="AI_AGENT", actor_id=request.agent_id,
+                     after={"trigger_event_id": trigger.id, "base_plan_version_id": base.id,
+                            "authorization_decision": auth.decision.value})
+        self.session.commit()
+        return {"tool": "activate_standby", "decision": auth.decision.value, "executed": True,
+                "plan_id": standby.id, "previous_active_plan_id": base.id, "trigger_event_id": trigger.id}
 
     def accept_replan(self, request: AgentToolCall) -> dict[str, Any]:
         if request.proposal_id is None:

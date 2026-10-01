@@ -17,6 +17,7 @@ from app.agent.predictive import (
     counterfactual_payload,
     simulate_counterfactuals,
     snapshot_payload,
+    maintain_standby_portfolio,
 )
 from app.agent.signal_pipeline import SignalPipelineResult, refresh_demo_signals
 from app.core.audit import record_audit
@@ -325,6 +326,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             )
         )
         resilience = build_resilience_snapshot(session, journey)
+        standby_maintenance = maintain_standby_portfolio(session, journey)
         trace_spans.append(
             persist_span(
                 session,
@@ -459,6 +461,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             "guardian": guardian_result,
             "resilience": snapshot_payload(resilience),
             "counterfactuals": counterfactuals,
+            "standby_maintenance": standby_maintenance,
             "trace": {
                 "trace_id": trace_id,
                 "phoenix": phoenix_status(),

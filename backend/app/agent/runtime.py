@@ -151,6 +151,12 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id", "proposal_id"],
         ),
         _tool(
+            "activate_standby",
+            "Activate one server-owned STANDBY branch through its dedicated Gateway boundary; never use generic select_plan.",
+            {**journey, "standby_plan_id": _property("string"), "trigger_event_id": _property("string"), "approval_id": _property("string")},
+            ["journey_id", "standby_plan_id", "trigger_event_id"],
+        ),
+        _tool(
             "replace_activity",
             "Replace a mutable Activity through policy and deterministic feasibility.",
             {
@@ -701,6 +707,7 @@ class DeepSeekJourneyAgent:
                         }
                     elif mission.requested_autonomy == "PLAN_ONLY" and tool_name in {
                         "accept_replan",
+                        "activate_standby",
                         "replace_activity",
                         "reschedule_activity",
                         "create_booking",
