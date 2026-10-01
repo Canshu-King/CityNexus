@@ -1,2 +1,0 @@
-# Python sources on this line are LF; CRLF here produced whole-file rebases (ORD-0532).
-*.py text eol=lf

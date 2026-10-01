@@ -1,8 +1,0 @@
-backend/app/main.py: before_lf_only=0 after_lf_only=0 crlf=13376->13376 content_unchanged=True
-frontend/src/app/v8PanelRegistry.tsx: before_lf_only=567 after_lf_only=0 crlf=0->567 content_unchanged=True
-frontend/src/features/stay/StayExplorer.tsx: before_lf_only=450 after_lf_only=0 crlf=0->450 content_unchanged=True
-frontend/src/features/stay/stayGenerationDoor.ts: before_lf_only=106 after_lf_only=0 crlf=0->106 content_unchanged=True
-base backend/app/main.py: lines=13362 crlf=13362 lf_only=0
-base frontend/src/app/v8PanelRegistry.tsx: lines=566 crlf=0 lf_only=566
-base frontend/src/features/stay/StayExplorer.tsx: lines=246 crlf=246 lf_only=0
-base sibling HotelsPanel.tsx: lines=257 crlf=0 lf_only=257

@@ -1,9 +1,0 @@
-ORD-0496 codegen re-check, run at the delivered base (not a claim from memory):
-command: node D:/moodle/_qoder_integration_20260919/frontend/node_modules/openapi-typescript/bin/cli.js contracts/openapi.yaml -o review/ord0496/codegen_recheck.ts
-tool: openapi-typescript 7.13.0 (the version in frontend/package-lock.json)
-shipped_sha256=41cb21cc72c96aa2485054c553b1a5512c2879f83c526872481873e3d7cf6a7e
-regenerated_sha256=41cb21cc72c96aa2485054c553b1a5512c2879f83c526872481873e3d7cf6a7e
-byte_identical=True
-shipped_bytes=271915 regenerated_bytes=271915
-note: an earlier copy taken straight off the cherry-pick index was deleted before commit because the
-note: regenerated file here is the live, re-runnable proof; the delta against the base is kept in api_ts_delta.txt

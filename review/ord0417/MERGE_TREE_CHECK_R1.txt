@@ -1,5 +1,0 @@
-command=git -C D:/moodle/CityNexus merge-tree --write-tree f662905ec4cafe05687d33a05dcbc7ca8031de43 refs/heads/review/R-ord0417-tap-names-stop-r3
-exit=0
-predicted_tree=17b3794ebc88f7d7e4553723608a993b7a61849a
-conflict_lines=0
-lane_head_at_this_check=0fa903e1a6b791513d48752fc13480fdbbd7c607

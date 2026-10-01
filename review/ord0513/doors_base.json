@@ -1,0 +1,114 @@
+{
+ "generated_at": "10-01 23:09:49",
+ "head": "49d0961b4d43726eb1fb4fac31e0bd8819c28eac",
+ "preview_db_bytes_at_copy": 7213056,
+ "private_db": "ord0513_f5a72073.db",
+ "preview_store": {
+  "page_count": 1761,
+  "integrity": "ok",
+  "bytes_before": 7213056,
+  "mtime_ns_before": 1790644827980246600
+ },
+ "refusals": [
+  {
+   "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+   "expected": "MEMBER_TRAVELER_UNKNOWN",
+   "http_status": 404,
+   "message": "No traveller carries that id.",
+   "message_has_uuid": false,
+   "message_uuid_count": 0,
+   "message_contains_given_ids": [],
+   "message_key": "resource.not_found",
+   "code": "NOT_FOUND",
+   "details_keys": [
+    "field"
+   ],
+   "details_has_uuid": false,
+   "trace_id_present": true,
+   "error_receipt_id_present": true
+  },
+  {
+   "reason_code": "PLACE_NOT_FOUND",
+   "expected": "PLACE_NOT_FOUND",
+   "http_status": 404,
+   "message": "Place fb171b31-5d61-4f3b-84a3-8820e094d13a was not found on this server",
+   "message_has_uuid": true,
+   "message_uuid_count": 1,
+   "message_contains_given_ids": [
+    "place_id"
+   ],
+   "message_key": "resource.not_found",
+   "code": "NOT_FOUND",
+   "details_keys": [
+    "folder_id",
+    "place_id"
+   ],
+   "details_has_uuid": true,
+   "trace_id_present": true,
+   "error_receipt_id_present": true
+  },
+  {
+   "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+   "expected": "PLACE_ALREADY_IN_COLLECTION",
+   "http_status": 409,
+   "message": "Place place-beijing-forbidden-city is already in collection folder 8f7424ef-655c-4851-8391-8ea483d295f3",
+   "message_has_uuid": true,
+   "message_uuid_count": 1,
+   "message_contains_given_ids": [
+    "place_id"
+   ],
+   "message_key": "request.conflict",
+   "code": "CONFLICT",
+   "details_keys": [
+    "existing_added_at",
+    "existing_item_id",
+    "folder_id",
+    "place_id"
+   ],
+   "details_has_uuid": true,
+   "trace_id_present": true,
+   "error_receipt_id_present": true
+  },
+  {
+   "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+   "expected": "MEMBER_TRAVELER_UNKNOWN",
+   "http_status": 404,
+   "message": "No traveller carries that id.",
+   "message_has_uuid": false,
+   "message_uuid_count": 0,
+   "message_contains_given_ids": [],
+   "message_key": "resource.not_found",
+   "code": "NOT_FOUND",
+   "details_keys": [
+    "field"
+   ],
+   "details_has_uuid": false,
+   "trace_id_present": true,
+   "error_receipt_id_present": true
+  }
+ ],
+ "store": {
+  "tables_present": 61,
+  "traveler": "11111111…",
+  "places": 3,
+  "journey": "22222222…"
+ },
+ "shelf_created": {
+  "http_status": 201,
+  "id_present": true
+ },
+ "first_add": {
+  "http_status": 201
+ },
+ "reason_codes_seen": [
+  "MEMBER_TRAVELER_UNKNOWN",
+  "PLACE_ALREADY_IN_COLLECTION",
+  "PLACE_NOT_FOUND"
+ ],
+ "expected_vs_seen_mismatch": [],
+ "preview_store_untouched": {
+  "bytes_equal": true,
+  "mtime_ns_equal": true,
+  "bytes_after": 7213056
+ }
+}

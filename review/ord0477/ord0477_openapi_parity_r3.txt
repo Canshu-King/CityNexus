@@ -1,5 +1,0 @@
-ORD-0477 r3 -- OpenAPI parity on the rebased tree (tools/verify_openapi_parity.py, the tip's own copy, extended by upstream since my base)
-command: PYTHONPATH=<tree>/backend <venv python> tools/verify_openapi_parity.py  cwd=<tree>
-OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0
-schemas formal 85; generated 85; missing 0; extra 0
-PARITY_RC=0
