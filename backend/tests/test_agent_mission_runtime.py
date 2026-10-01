@@ -899,7 +899,7 @@ def test_agent_bounded_estimate_is_persisted_as_strategy_only_evidence():
 def test_acquire_place_facts_commits_canonical_observation_before_next_read(monkeypatch):
     journey_id = _selected_journey()
 
-    def fake_acquire(session, journey, *, place_ids=None, source_bindings=None):
+    def fake_acquire(session, journey, *, place_ids=None, source_bindings=None, binding_origin=None):
         place = session.get(Place, place_ids[0])
         metadata = json.loads(place.metadata_json or "{}")
         metadata["test_committed_fact"] = "VERIFIED_PROVIDER"

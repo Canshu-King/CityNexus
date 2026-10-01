@@ -729,6 +729,7 @@ class AgentToolGateway:
             journey,
             place_ids=[place.id],
             source_bindings=bindings,
+            binding_origin="agent",
         )
         # Fact acquisition mutates canonical Place rows.  This gateway is the
         # product write boundary, so a successful tool call must survive the

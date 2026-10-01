@@ -323,12 +323,20 @@ def _fact_source_binding(place: Place, metadata: dict[str, Any]) -> dict[str, An
 
 
 def _requested_fact_source_binding(
-    place: Place, requested: Mapping[str, Any] | None
+    place: Place, requested: Mapping[str, Any] | None, *, origin: str = "operator"
 ) -> dict[str, Any] | None:
-    """Turn an operator-supplied URL into a binding for this exact provider entity."""
+    """The server call path, never a model enum, determines source approval."""
 
     if not isinstance(requested, Mapping):
         return None
+    if origin == "agent":
+        return {
+            "provider_entity": str(place.external_id or ""),
+            "source_url": str(requested.get("source_url") or "").strip(),
+            "source_class": "AGENT_SOURCE_CANDIDATE",
+            "identity_basis": {"matched_provider_entity": False},
+            "approval": "AGENT_SOURCE_CANDIDATE",
+        }
     candidate = {
         "fact_source_binding": {
             "provider_entity": str(place.external_id or ""),
@@ -1066,6 +1074,7 @@ def acquire_place_facts(
     *,
     place_ids: list[str] | None = None,
     source_bindings: Mapping[str, Mapping[str, Any]] | None = None,
+    binding_origin: str = "operator",
 ) -> dict[str, Any]:
     statement = select(Place).where(Place.city_code == journey.city_code)
     if place_ids:
@@ -1119,7 +1128,9 @@ def acquire_place_facts(
                     cost = candidate
             official = {"status": "NO_SOURCE_URL"}
             requested_binding = source_bindings.get(place.id) if source_bindings else None
-            source_binding = _requested_fact_source_binding(place, requested_binding)
+            source_binding = _requested_fact_source_binding(
+                place, requested_binding, origin=binding_origin
+            )
             if source_binding is None:
                 source_binding = _fact_source_binding(place, metadata)
             source_url = (
@@ -1128,13 +1139,13 @@ def acquire_place_facts(
                 else _official_source_url({**tags, **nominatim_tags})
             )
             if (
-                source_binding is None
+                (source_binding is None or source_binding.get("approval") == "AGENT_SOURCE_CANDIDATE")
                 and source_url
-                and secondary.get("status") == "ACQUIRED"
-                and ref in nominatim_rows
+                and (ref in elements or ref in nominatim_rows)
                 and source_url in {
-                    str(tags.get("website") or "").strip(),
-                    str(nominatim_tags.get("website") or "").strip(),
+                    str(source_tags.get(key) or "").strip()
+                    for source_tags in (tags, nominatim_tags)
+                    for key in ("website", "contact:website", "url")
                 }
             ):
                 source_binding = {
@@ -1148,6 +1159,7 @@ def acquire_place_facts(
                         "secondary_provider": "nominatim",
                     },
                     "approval": "PROVIDER_TAG_EXACT_URL",
+                    "source_kind": "PROVIDER_BOUND_EXACT_URL",
                 }
             if source_url:
                 receipt["official_web"]["attempted"] += 1
@@ -1167,11 +1179,13 @@ def acquire_place_facts(
                     # same facts.  Do not promote an arbitrary website tag here.
                     if (
                         source_binding
+                        and source_binding.get("identity_basis", {}).get("matched_provider_entity") is True
                         and official.get("opening_hours", {}).get("status") == "OFFICIAL_WEB_VERIFIED"
                     ):
                         opening = official["opening_hours"]
                     if (
                         source_binding
+                        and source_binding.get("identity_basis", {}).get("matched_provider_entity") is True
                         and official.get("cost_evidence", {}).get("status") == "VERIFIED_PROVIDER"
                         and official.get("cost_evidence", {}).get("amount_minor") is not None
                     ):
