@@ -1,9 +1,0 @@
-{
- "base_tip": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
- "extracted_by": "git show <base>:backend/app/main.py, sliced between the two decorators named below",
- "slice_start": "@app.get(\"/api/v1/journeys/{journey_id}\")",
- "slice_end": "@app.get(\"/api/v1/journeys/{journey_id}/experience\")",
- "get_journey_chars": 201,
- "get_journey_sha256": "134b0d72d39022b7b4b91e2fc097371866961bd75db6ddf57938451352eec0ba",
- "get_journey_text": "@app.get(\"/api/v1/journeys/{journey_id}\")\ndef get_journey(journey_id: UUID, session: Session = Depends(get_session)):\n    return journey_schema(require(session, Journey, str(journey_id), \"Journey\"))\n\n\n"
-}

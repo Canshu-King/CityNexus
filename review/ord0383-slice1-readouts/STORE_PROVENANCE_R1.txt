@@ -1,4 +1,0 @@
-ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest__jr4gli1\suite.db | exists=False | declared_by=conftest temp dir
-rootdir: D:\moodle\_qoder_lane_ord0383_slice1\backend
-collected 7 items
-========================= 7 tests collected in 2.58s ==========================

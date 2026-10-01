@@ -1,2 +1,0 @@
-OpenAPI 3.1.0; formal 164; runtime 164; missing 0; extra 0
-PARITY_RC=0

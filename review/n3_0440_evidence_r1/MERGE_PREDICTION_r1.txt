@@ -1,4 +1,0 @@
-ORD-0440 merge prediction against the present tip
-tip read by ls-remote: f26e2ff78c047579a7d710d3a469be6bdf9a0540
-git merge-tree --write-tree FETCH_HEAD HEAD exit=0 merged_tree=2118daec3a69565bf88b73cc38652c0ab719cc9e
-four product blobs identical between HEAD and the merged tree (checked by git ls-tree per path)

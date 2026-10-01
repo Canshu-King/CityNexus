@@ -1,0 +1,1100 @@
+{
+ "base_revision": "5a4cdbd26d4a58d6ed6b277480e766ac08b15ded",
+ "head": "9ad1a698815189d2204ee660b653c8ae0aa071d8",
+ "started": "10-02 02:11:34",
+ "phases": {
+  "base": {
+   "exit": 0,
+   "stdout_tail": "ACE_ALREADY_IN_COLLECTION  http_status=409 uuid_in_message=True details_keys=['existing_added_at', 'existing_item_id', 'folder_id', 'place_id']\n      message: Place place-beijing-forbidden-city is already in collection folder e491f9bf-efa8-46b7-bceb-bbdfe0b39763\n  MEMBER_TRAVELER_UNKNOWN      http_status=404 uuid_in_message=False details_keys=['field']\n      message: No traveller carries that id.\n",
+   "refusals": [
+    {
+     "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+     "expected": "MEMBER_TRAVELER_UNKNOWN",
+     "http_status": 404,
+     "message": "No traveller carries that id.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "field"
+     ],
+     "details_has_uuid": false,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "PLACE_NOT_FOUND",
+     "expected": "PLACE_NOT_FOUND",
+     "http_status": 404,
+     "message": "Place a7d9a3a0-bc9f-4c77-8ed0-db3c6d0b06fd was not found on this server",
+     "message_has_uuid": true,
+     "message_uuid_count": 1,
+     "message_contains_given_ids": [
+      "place_id"
+     ],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "folder_id",
+      "place_id"
+     ],
+     "details_has_uuid": true,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+     "expected": "PLACE_ALREADY_IN_COLLECTION",
+     "http_status": 409,
+     "message": "Place place-beijing-forbidden-city is already in collection folder e491f9bf-efa8-46b7-bceb-bbdfe0b39763",
+     "message_has_uuid": true,
+     "message_uuid_count": 1,
+     "message_contains_given_ids": [
+      "place_id"
+     ],
+     "message_key": "request.conflict",
+     "code": "CONFLICT",
+     "details_keys": [
+      "existing_added_at",
+      "existing_item_id",
+      "folder_id",
+      "place_id"
+     ],
+     "details_has_uuid": true,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+     "expected": "MEMBER_TRAVELER_UNKNOWN",
+     "http_status": 404,
+     "message": "No traveller carries that id.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "field"
+     ],
+     "details_has_uuid": false,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    }
+   ],
+   "preview_store_untouched": {
+    "bytes_equal": true,
+    "mtime_ns_equal": true,
+    "bytes_after": 7213056
+   },
+   "head": "9ad1a698815189d2204ee660b653c8ae0aa071d8"
+  },
+  "candidate": {
+   "exit": 0,
+   "stdout_tail": "server, so nothing was collected.\n  PLACE_ALREADY_IN_COLLECTION  http_status=409 uuid_in_message=False details_keys=['existing_added_at', 'existing_item_id', 'folder_id', 'place_id']\n      message: This place is already on that shelf, so nothing new was written.\n  MEMBER_TRAVELER_UNKNOWN      http_status=404 uuid_in_message=False details_keys=['field']\n      message: No traveller carries that id.\n",
+   "refusals": [
+    {
+     "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+     "expected": "MEMBER_TRAVELER_UNKNOWN",
+     "http_status": 404,
+     "message": "No traveller carries that id.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "field"
+     ],
+     "details_has_uuid": false,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "PLACE_NOT_FOUND",
+     "expected": "PLACE_NOT_FOUND",
+     "http_status": 404,
+     "message": "That place is not held by this server, so nothing was collected.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "folder_id",
+      "place_id"
+     ],
+     "details_has_uuid": true,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+     "expected": "PLACE_ALREADY_IN_COLLECTION",
+     "http_status": 409,
+     "message": "This place is already on that shelf, so nothing new was written.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "request.conflict",
+     "code": "CONFLICT",
+     "details_keys": [
+      "existing_added_at",
+      "existing_item_id",
+      "folder_id",
+      "place_id"
+     ],
+     "details_has_uuid": true,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    },
+    {
+     "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+     "expected": "MEMBER_TRAVELER_UNKNOWN",
+     "http_status": 404,
+     "message": "No traveller carries that id.",
+     "message_has_uuid": false,
+     "message_uuid_count": 0,
+     "message_contains_given_ids": [],
+     "message_key": "resource.not_found",
+     "code": "NOT_FOUND",
+     "details_keys": [
+      "field"
+     ],
+     "details_has_uuid": false,
+     "trace_id_present": true,
+     "error_receipt_id_present": true
+    }
+   ],
+   "preview_store_untouched": {
+    "bytes_equal": true,
+    "mtime_ns_equal": true,
+    "bytes_after": 7213056
+   },
+   "head": "9ad1a698815189d2204ee660b653c8ae0aa071d8"
+  },
+  "screen_tip_copy": {
+   "rows": [
+    {
+     "shape": "390x844",
+     "locale": "zh-CN",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[zh-CN@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": false,
+        "line": "已收在 ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 2",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架",
+        "posts": 2
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 201
+        },
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 201
+      },
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "screen_tip_copy/zh-CN@390x844 failures: []\n"
+    },
+    {
+     "shape": "390x844",
+     "locale": "en",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[en@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "screen_tip_copy/en@390x844 failures: []\n"
+    },
+    {
+     "shape": "1280x900",
+     "locale": "zh-CN",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[zh-CN@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "screen_tip_copy/zh-CN@1280x900 failures: []\n"
+    },
+    {
+     "shape": "1280x900",
+     "locale": "en",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[en@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "screen_tip_copy/en@1280x900 failures: []\n"
+    }
+   ],
+   "served_entry": [
+    "index-CXnmNy6z.js"
+   ],
+   "all_green": true
+  },
+  "masked_copy": {
+   "rows": [
+    {
+     "shape": "390x844",
+     "locale": "zh-CN",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[zh-CN@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "masked_copy/zh-CN@390x844 failures: []\n"
+    },
+    {
+     "shape": "390x844",
+     "locale": "en",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[en@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "masked_copy/en@390x844 failures: []\n"
+    },
+    {
+     "shape": "1280x900",
+     "locale": "zh-CN",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[zh-CN@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "masked_copy/zh-CN@1280x900 failures: []\n"
+    },
+    {
+     "shape": "1280x900",
+     "locale": "en",
+     "exit": 0,
+     "checks": [
+      {
+       "check": "[en@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 走查架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "failures": [],
+     "posts": [
+      {
+       "url": "/api/v1/collections/a80d55d2-171a-4a58-bb55-c165be130656/items",
+       "status": 409
+      }
+     ],
+     "stderr_tail": "masked_copy/en@1280x900 failures: []\n"
+    }
+   ],
+   "served_entry": [
+    "index-CXnmNy6z.js"
+   ],
+   "all_green": true
+  }
+ },
+ "candidate_main_is_tip_bytes": false,
+ "dumped_after": "masked_copy",
+ "door_comparison": [
+  {
+   "reason_code": "MEMBER_TRAVELER_UNKNOWN",
+   "in_base": true,
+   "in_candidate": true,
+   "http_status_base": 404,
+   "http_status_candidate": 404,
+   "details_keys_base": [
+    "field"
+   ],
+   "details_keys_candidate": [
+    "field"
+   ],
+   "details_shape_same": true,
+   "code_field_same": true,
+   "message_changed": false,
+   "uuid_in_message_base": false,
+   "uuid_in_message_candidate": false,
+   "message_base": "No traveller carries that id.",
+   "message_candidate": "No traveller carries that id."
+  },
+  {
+   "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+   "in_base": true,
+   "in_candidate": true,
+   "http_status_base": 409,
+   "http_status_candidate": 409,
+   "details_keys_base": [
+    "existing_added_at",
+    "existing_item_id",
+    "folder_id",
+    "place_id"
+   ],
+   "details_keys_candidate": [
+    "existing_added_at",
+    "existing_item_id",
+    "folder_id",
+    "place_id"
+   ],
+   "details_shape_same": true,
+   "code_field_same": true,
+   "message_changed": true,
+   "uuid_in_message_base": true,
+   "uuid_in_message_candidate": false,
+   "message_base": "Place place-beijing-forbidden-city is already in collection folder e491f9bf-efa8-46b7-bceb-bbdfe0b39763",
+   "message_candidate": "This place is already on that shelf, so nothing new was written."
+  },
+  {
+   "reason_code": "PLACE_NOT_FOUND",
+   "in_base": true,
+   "in_candidate": true,
+   "http_status_base": 404,
+   "http_status_candidate": 404,
+   "details_keys_base": [
+    "folder_id",
+    "place_id"
+   ],
+   "details_keys_candidate": [
+    "folder_id",
+    "place_id"
+   ],
+   "details_shape_same": true,
+   "code_field_same": true,
+   "message_changed": true,
+   "uuid_in_message_base": true,
+   "uuid_in_message_candidate": false,
+   "message_base": "Place a7d9a3a0-bc9f-4c77-8ed0-db3c6d0b06fd was not found on this server",
+   "message_candidate": "That place is not held by this server, so nothing was collected."
+  }
+ ],
+ "screen_store": {
+  "private_copy": "ord0513_screen_78310.db",
+  "copied_from_bytes": 7213056
+ },
+ "screen_journey_is_the_stores_own": true,
+ "shelf_for_the_walk": {
+  "journey_owner_is_the_folders_owner": 0,
+  "created_through_the_door": 201,
+  "read_lists_rows": 1,
+  "http_status_of_read": 200
+ },
+ "screen_build": {
+  "exit": 0,
+  "built_entry": [
+   "index-CXnmNy6z.js"
+  ]
+ },
+ "preview_ready": {
+  "answered": true,
+  "entry_from_served_html": [
+   "index-CXnmNy6z.js"
+  ]
+ },
+ "masked_build": {
+  "exit": 1,
+  "tail": "end/node_modules/vite/dist/node/chunks/config.js:33977:153)\n    at async CAC.<anonymous> (file:///D:/moodle/_qoder_newlane_ord0444_20260929/wt2/frontend/node_modules/vite/dist/node/cli.js:629:3)\u001b[39m\n"
+ },
+ "restored_build": {
+  "exit": 0,
+  "tail": "rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n"
+ },
+ "finished": "10-02 02:13:51"
+}

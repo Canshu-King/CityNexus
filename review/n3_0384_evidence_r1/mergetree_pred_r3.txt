@@ -1,6 +1,0 @@
-# ORD-0384 pre-delivery merge prediction -- read-only git merge-tree --write-tree
-target=db6a04cb1d734963b673351973329c08bb264ef3 exit=0 tree=d483ab318a241a04c6c96b594eb81271ca3e708f
-target=8fddeb76a79968592a7a3e98d2f296dda450d4df exit=0 tree=d483ab318a241a04c6c96b594eb81271ca3e708f
-delivered_head=19868e846e4f60aba085f6b05aa503cdb7fc27b6
-frontend_tree=b4c7e4c7ec217623fb4714e14dd7463a4f2809c4
-named_tip_db6a04cb_is_ancestor_of_line_tip_8fddeb76: yes (exit 0) -- so 8fddeb76 is the same line, later; rebasing onto it still satisfies "rebase onto db6a04cb" by ancestry, and the merge prediction is clean against BOTH, which is why the two tree lines above are identical.
