@@ -1,0 +1,91 @@
+ORD-0522 r4 -- the same two declarations, re-measured on the day15 generation the line ships now
+lane review/2d2d7428-ord0522-facts-card-line-verify-r4  readings taken at head 02f5389e69d07a5004abdcb24e31ccd07bfbf7e2  live tip 5a4cdbd26d4a58d6ed6b277480e766ac08b15ded  (merge-base = the tip itself)
+drift since r3 (2cb9a405 -> 5a4cdbd26d4a): 105 files, of which 105 start with frontend/; none of my measured
+files moved: clean.
+rendered 2026-10-02 02:26:52  generator interpreter D:/moodle/CityNexus/.venv/Scripts/python.exe  |  the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe
+
+0. WHY ANOTHER ROUND ON THE SAME TWO LINES
+   r3's numbers were taken on 2cb9a405's build. The commander's 01:48 block put the authoritative
+   line at day15 (5a4cdbd26d4a) having moved 105 frontend files -- so r3's bundle is no longer what a user is
+   served, and my own rule ('only recut when the drift touches what I measured') is not the whole
+   test: a bundle is a build over many files, not only over my selector. This round rebuilds both
+   sides on day15 and re-reads them, so nothing below is carried over.
+   Still true: neither declaration has landed. At 5a4cdbd26d4a the card rule reads verbatim
+     .v8-map-facts {{ ... background: #fff; }}  and  .v8-map-facts > small {{ ... color: #8c97a6; }}
+
+1. THE BOARD THROUGH THE PRODUCT'S OWN DOORS, ON DAY15
+   fresh store, this lane's own files: reset http_status=200 -> prepare-scenario http_status=200 -> scene
+   plan_version_id=55523d40-cafe-5bd2-b30a-de057ec7a839 journey=22222222-2222-4222-8222-222222222222
+   supply.state=NOT_ASKED stops: total 6 with_coordinate 6 without_coordinate 0 source_kinds=[GOLDEN_FIXTURE]
+   So the sentence ORD-0522 added ('另有 N 个站点这次没有位置') legitimately does not appear on a
+   journey the product can stage itself, and the four arms confirm that on screen: every arm has
+   sentence_present=false while the board says without_coordinate=0.
+   The reset door's own guard, read rather than assumed: presenting the scene header instead of
+   the reset header answers 403 RESET_TOKEN_REQUIRED and nothing is deleted.
+   Store ownership, computed twice over: HTTP plan == sqlite plan (55523d40-cafe-5bd2-b30a-de057ec7a839), board total 6 == rows in
+   file 6, with_coordinate 6 == 6.
+   tip store D:/moodle/_qoder_q_ord0522_20261001/_r4_tip.db / candidate store D:/moodle/_qoder_q_ord0522_20261001/_r4_cand.db.
+
+2. THE CARD ON DAY15 BYTES (the defect, measured on the served build, no injected style)
+   entry /assets/index-CXnmNy6z.js  1591525 served bytes  its 本机 sha1 (内容 sha1 over bytes, untracked dist/, never a git
+   object, not cat-file-able) 9aec93ce4fc23834b6592427d33c92bc1983db73 == the file on disk.
+   TIP   1280x900 dark  背景=255,255,255 可见文字 13 枚 不合格 13 枚 最差 'Riverside Museum' 对比 1.09 (需 3) 句子 False
+   TIP   1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子 False
+   TIP   390x844  dark  背景=255,255,255 可见文字 13 枚 不合格 13 枚 最差 'Riverside Museum' 对比 1.09 (需 3) 句子 False
+   TIP   390x844  light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子 False
+   Dark tier: every one of the 13 visible text elements in the card fails, the worst being the
+   place name 'Riverside Museum' at 1.09 against a required 3. Light tier: 1 element fails -- the card's
+   muted line '未知费用保持未知。' at 2.96 against a required 4.5.
+   The instrument's own refusals are exactly these four arms' contrast verdicts (4 entries), so
+   the red is asserted per arm, not summarized; any other class of failure aborts this render.
+
+3. THE SAME CARD ON THE CANDIDATE BYTES (day15 + two declarations)
+   entry /assets/index-DCGNeKR0.js  1591525 bytes  本机 sha1 (内容 sha1 over bytes, 未入 git, 不可 cat-file) 6f5c63a3e2b2427d3b985e6e3585c5c22e208d0b == disk
+   CAND  1280x900 dark  背景=28,28,30 可见文字 13 枚 不合格 0 枚 最差 '下一段路程' 对比 4.66 (需 4.5) 句子 False
+   CAND  1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子 False
+   CAND  390x844  dark  背景=28,28,30 可见文字 13 枚 不合格 0 枚 最差 '下一段路程' 对比 4.66 (需 4.5) 句子 False
+   CAND  390x844  light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子 False
+   Failing elements across all four arms: 0. Tightest readings 4.82 (light) and 4.66 (dark), both
+   above their required tier; the dark background is now 28,28,30 instead of 255,255,255.
+   Two lines changed, both taking tokens the palette already declares once per scheme:
+     surface  --cn-surface: #ffffff;
+     surface  --cn-surface: #1c1c1e;
+     ink      --cn-ink-secondary: #6e6e73;
+     ink      --cn-ink-secondary: #aeaeb2;
+   diff against the tip: frontend/src/styles.css 1增1删 和 backend/tests/test_qoder_ord0479_dictionary_key_shape.py 18增2删 (3 枚文件).
+
+4. THE MUTANT -- SO THE GREEN IS LOAD-BEARING
+   Both removed declarations re-imposed as an author style on the CANDIDATE bundle (labelled
+   MUTANT: the old rule applied to today's element, not a reading of an older artifact).
+   light: 1 of 13 failing again, worst 未知费用保持未知。 at 2.96 -- the tip build's own figure is 未知费用保持未知。 at 2.96;
+   dark: 13 of 13 failing, worst Riverside Museum at 1.09; small text computes rgb(140, 151, 166) on background 255,255,255.
+
+5. GATES, DENOMINATORS AND BYTE FACTS AT THIS HEAD
+   cells pass 1 / 2: 8 passed, 2 warnings in 2.29s / 8 passed, 2 warnings in 2.13s
+   family pass 1 / 2: 44 passed, 2 warnings in 20.99s / 44 passed, 2 warnings in 20.79s
+   ORD-0479 file alone: 10 passed rc=0 at 02f5389e69d0 (the pin this order repaired)
+   whole backend suite collects 1682 tests; the suite was not run here (NOT_EXECUTED_BY_LANE).
+   contract parity: OpenAPI 3.1.0; formal 174; runtime 174; missing 0; extra 0
+   credential ruler, both readings: env stripped -> CREDENTIAL_GATE_CLEAR (scanned_files=540 hits_total=5 undeclared=0);
+   environment as started -> LIVE_CREDENTIAL_IN_ENVIRONMENT (DEEPSEEK_API_KEY live in this shell). A fact about who starts the ruler.
+   tsc exit 0 and vite build exit 0 on this head; the entry named above is what that build produced.
+   Byte identity across recuts: styles.css blob at r3 (3880e7ee) is 58e982e1bad6 and at r4 (this head) is
+   58e982e1bad669fe9b66cee392c4651ce0fd3644 -- same bytes, different commit, because the rebase carried the line forward rather than
+   rewriting it. The two bundles differ by name and content (/assets/index-CXnmNy6z.js vs /assets/index-DCGNeKR0.js), which is how this round
+   proves the fix is the difference rather than the build being the same twice.
+   blobs: frontend/src/styles.css 58e982e1bad669fe9b66cee392c4651ce0fd3644 / backend/tests/test_qoder_ord0479_dictionary_key_shape.py 8d51d5f458d00aee87db2bdd9c759b4b67aee513
+   This file does not list its own blob; the ledger block cites it after the commit.
+
+6. WHAT THIS ROUND DOES NOT CLAIM
+   - No product door in this store can produce a stop with no place identity: activities.place_id is
+     ON DELETE SET NULL, so NO_CANONICAL_IDENTITY and COVERAGE_INCOMPLETE stay fixture-shaped from
+     r2c and are not restated as line states.
+   - The board's supply cell reads NOT_ASKED on a door-staged journey. That is honest and is not
+     evidence that real provider supply works; that door is ORD-0521's and no byte here touches it.
+   - Not run: the e2e suite, any real device, ORD-0509's remaining screens (drawer, share
+     receiving, poster). Tiles never load on this host, so nothing here depends on basemap pixels.
+   - Content sha1s of both bundles are labelled as content hashes, not coordinates; dist/ is
+     gitignored so no blob exists for them.
+   - The shared preview database and the ports named in orders were not touched; `demo/reset` ran
+     only against this lane's own files, and both lane servers were stopped after each stack.
+REFUSALS = []
