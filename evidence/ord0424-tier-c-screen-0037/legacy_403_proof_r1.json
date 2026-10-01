@@ -1,0 +1,40 @@
+{
+ "backend_access_lines_for_that_path": [
+  "INFO:     127.0.0.1:64584 - \"POST /api/v1/demo/reset HTTP/1.1\" 403 Forbidden",
+  "INFO:     127.0.0.1:51614 - \"POST /api/v1/demo/reset HTTP/1.1\" 403 Forbidden",
+  "INFO:     127.0.0.1:49201 - \"POST /api/v1/demo/reset HTTP/1.1\" 403 Forbidden"
+ ],
+ "how_many": 3,
+ "the_door_that_refuses_it": {
+  "file": "backend/app/main.py",
+  "near_line": 80200,
+  "named_codes_in_that_region": [
+   "CITYNEXUS_DEMO_RESET_TOKEN",
+   "RESET_TOKEN_INVALID",
+   "RESET_TOKEN_REQUIRED"
+  ],
+  "token_terms_seen": [
+   "CITYNEXUS_DEMO_RESET_TOKEN",
+   "demo_reset_token"
+  ]
+ },
+ "store_now": {
+  "journeys": 1,
+  "places": 16,
+  "activities": 6,
+  "audit_logs": 15,
+  "bookings": 1,
+  "commitments": 1,
+  "plan_versions": 1,
+  "db_bytes": 7213056,
+  "db_sha1": "48efec5a94a6d78518bafce89d191e2bf2263769"
+ },
+ "store_when_copied": {
+  "copy_bytes": 7213056,
+  "places": 16,
+  "itinerary_stops": null
+ },
+ "shared_preview_db_write": "0 - opened mode=ro and copied with the SQLite backup API",
+ "lane_issued_demo_reset": false,
+ "reading": "the 403 is the backend's own answer to the page's request (access line above), and the count that changed nothing is the store hash before and after the walk"
+}
