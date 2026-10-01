@@ -831,7 +831,7 @@ def test_hermes_runtime_retries_length_exhausted_message_with_larger_budget(monk
     assert agent.model_key == "cn:glm-5.3-flash"
     assert calls == [
         ("cn:glm-5.3-flash", True, 1200),
-        ("cn:glm-5.3-flash", False, 2400),
+        ("cn:glm-5.3-flash", False, 4800),
     ]
 
 

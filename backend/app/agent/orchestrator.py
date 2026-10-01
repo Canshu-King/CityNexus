@@ -27,7 +27,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     # gateway facts, but must not inherit the native MCP proposal-only fence.
     agent_id = "hermes-compat"
     _initial_max_tokens = 1200
-    _empty_message_retry_max_tokens = 2400
+    _empty_message_retry_max_tokens = 4800
 
     def __init__(
         self,
