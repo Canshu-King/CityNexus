@@ -362,8 +362,16 @@ def main():
             out = text.format(**s)
         except KeyError as exc:
             raise SystemExit("ABORT_MISSING_SLOT %s in %s" % (exc, key))
-        open(paths[key], "w", encoding="utf-8", newline="\n").write(out)
-        print("WROTE %s bytes=%d" % (paths[key], len(out.encode("utf-8"))))
+        # the standing closing line is copied byte-for-byte out of the commander's own file, never
+        # retyped: a paraphrase is a different string and the arbiter reads it as a missing one.
+        src = r"D:/moodle/_qoder_cmdr_ref_20260921/live_checks/CLOSING_LINE.txt"
+        closing = open(src, "rb").read()
+        if len(closing) != 83:
+            raise SystemExit("ABORT_CLOSING_LINE_SIZE %d != 83" % len(closing))
+        out = out.rstrip() + chr(10) + closing.decode("utf-8").rstrip() + chr(10)
+        open(paths[key], "w", encoding="utf-8", newline=NL).write(out)
+        print("WROTE %s bytes=%d closing=%d" % (paths[key], len(out.encode("utf-8")),
+                                                len(closing)))
     return 0
 
 
