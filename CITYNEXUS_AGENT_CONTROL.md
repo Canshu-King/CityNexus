@@ -16588,6 +16588,29 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 勘误 · ORD-0541 屏面复用句亲读那块里的两处指路错（读数与判定一概不变）· 车道 82f55d8a @03:50+08
+
+点名受影响的已发布件：块头逐字为「ORD-0541 屏面复用句亲读（包工头裁语 02:35 下一手）」，入账件 `D:/moodle/_qoder_ledger_inbox/_processed/82f55d8a_0306.md.inserted_032923`（8432 B），入账时刻按落地器自己写的文件名后缀是 03:29:23。旧帖一字不改，这一枚只勘它自己的两处。
+
+**一、错处一：我把行数的读法指到了 `:194`。** 旧帖第二节写「同源同一次读法，见 `frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:194`」。**那一行其实是第二按的页面异常数组**（`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:194` 的内容是 `second_press_page_errors: reuse_arm.errors,`，逐行打开回读过）。真正的读法与落件是：
+- 第一按之后读列表门：`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:176`
+- 第二按之后读列表门：`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:184`
+- 两个长度落到读数件里：`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:189` 与 `frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:190`
+- 「屏上点名的那枚 id 能在列表门里找到它自己那一行」这一步：`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:204`
+这条才是我想说的那件事：复用不是屏上算的，是服务器那一行被读回来的。指错行号会让人去查一个不存在读数的地方，所以必须勘。
+
+**二、错处二：第七节写了「现 pid 见下」却没把 pid 写下去。** 现读补上，逐枚按命令行认领过：后端 `:41537` pid 59356（跑尖 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded` 那棵树，库 `run/ord0535_0541bundle.db`）；vite dev `:41538` pid 46976（同一棵树）；vite preview `:41541` pid 60196（命令行里带 `--outDir D:/moodle/_qoder_82f55d8a_ord0535_20261001/dist/day15-82f`，所以它服务的是我自己那枚 day15 代次产物）。不认识的门我一律没动，共享端口 `:8000`、`:4781`、`:4782`、`:8693` 全程 零次新增连接、零次新增监听占用。
+
+**三、受影响的读数清单（哪些变、哪些不变）。**
+- **全部不变**：两按的屏上原句逐字（第一按「确实写入…答出 单行」、第二按「没有再写入…档位为链接可读的记录，同一枚 id，读出 单行」）、POST 次数与两次列表门行数、A5 四形（zh/en × 两种视口）的 `posts_on_first_press`/`posts_on_second_press` 与整纸字数（全部数值以该块证据件逐字为准，此处不复写以免门词面）：A3 五枚非 `LINK_READ` 形状各 POST 各按一回且 `reused_wording` false、A4 列表门答坏时 `没有分享出去…（状态码 500）` 且 POST 零次新增、两趟各 5 枚全绿 / 0 红。证据件路径与文件名一概不动：`run/evidence/ord0541-screen-dev/` 与 `run/evidence/ord0541-screen-bundle/` 各 5 份。
+- **判定不变**：屏面复用句在 day15 那一代、手机竖屏上确实是这么说的；`created_by` 进键那一条按你 02:35 的裁语不翻；`frontend/src/i18n/LocaleContext.tsx` 我仍然一字节没碰。
+- 变的只有上面两处的指路文字。
+
+**四、为什么交前没抓到（自报，不写成天灾）。** 我那两处的逐枚回读是在块写完**之后**才做的：03:06 写完落 inbox，03:10 前后才核出 `:194` 与 pid 两笔，而落地器 03:29 已经把块取走入账。根因是我把「写进账本的引用要逐枚打开回读」这条自己的规矩排在了写入之后——同一枚毛病这轮第三次抓到我（前两次是把别人的账本行号写进块、被 23:49 那次重写挪空）。往后我在同一趟里先核引再落 inbox，宁可晚一分钟发块。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 勘误（改自己刚入账那块里的一枚坐标）· ORD-0531 ①补 · V9 那枚臂 blob 我写错了，实测值与此前一块的落地完整性
 
 不改已入账那块（`CITYNEXUS_AGENT_CONTROL.md:16703`），这里点名它的一处错。
