@@ -31,8 +31,7 @@ def cell(v):
 def main():
     builds = load("gen8_builds_r1.json")
     sweep = load("gen8_checkin_sweep_r1.json")
-    doors_c = load("gen8_doors_r1.json")
-    doors_b = load("gen8_doors_wt7.json")
+    doors = load("gen8_doors_r1.json")
     ce1 = load("gen8_ce1_r1.json")
     proof = load("gen8_ce1_tree_proof_r1.json")
     walk = load("gen8_walk_r1.json")
@@ -100,12 +99,14 @@ def main():
     a("")
     a("## 四、门里的拒绝原文（四字段陈列，不造句子）")
     a("")
-    for name, d in (("基座 wt7", doors_b), ("候选 wt6", doors_c)):
-        runs_d = d.get("runs", [])
-        if not runs_d:
+    # one run per served backend, labelled by the tree each one booted -- the sheet must not carry
+    # tree names from an earlier generation
+    ROLE = {"wt20": "基座（现尖原样）", "wt19": "候选（本单交付）", "mutgen8": "反件一（409 判据摘掉）"}
+    for r in doors.get("runs", []):
+        name = ROLE.get(r.get("tree"), r.get("tree"))
+        if not r:
             a("- %s：NOT_MEASURED（件缺）" % name)
             continue
-        r = runs_d[0]
         a("- %s `main.py` sha256 `%s…`，库行数 %s→%s，共享库未被动：%s" % (
             name, r.get("main_sha256", "")[:16],
             cell((r.get("staged") or {}).get("store_before", {}).get("count")),
@@ -116,16 +117,22 @@ def main():
         for p in r.get("probes", []):
             a("  | %s | %s | %s | %s | %s | %s | %s | %s |" % (
                 p.get("case"), cell(p.get("http_status")), cell(p.get("content_type")),
-                cell(p.get("body_bytes")), cell(p.get("reason_code")),
+                cell(p.get("body_bytes")),
+                ("无（这一格测到了：成功体里没有 error 对象）" if p.get("reason_code") is None
+                 else cell(p.get("reason_code"))),
                 cell(p.get("uuid_in_message")), cell(p.get("details_is_null")),
-                cell(p.get("details"))[:120]))
+                ("null（成功体里没有 error 对象）" if p.get("details") is None
+                 else cell(p.get("details"))[:120])))
         a("")
         if r.get("mutant_screen"):
             ms = r["mutant_screen"]
             arm = ms.get("arm") or {}
-            a("  反件屏侧：候选面 `%s` 挂在被改过的门上（判据摘掉），臂退出 %s，拒绝句枚数 %s，"
-              "句主 %s，行数 %s，pageerror %s —— 状态码与句子两样都看不出是哪一层拒的，这就是假绿。"
-              % (cell((ms.get("serve") or {}).get("entry_asset")), cell(arm.get("exit")),
+            a("  反件屏侧：交付候选面 `%s`（outDir `%s`）挂在被改过的门上（判据摘掉），臂退出 %s，"
+              "请求序列 %s，拒绝句枚数 %s，句主 %s，走完臂时库里 %s 行，pageerror %s "
+              "—— 状态码与句子两样都看不出是哪一层拒的，这就是假绿。"
+              % (cell((ms.get("serve") or {}).get("entry_asset")),
+                 str((ms.get("serve") or {}).get("face_dir", "")).split("faces/")[-1],
+                 cell(arm.get("exit")), cell(arm.get("requests")),
                  cell(arm.get("notice_count")), cell(arm.get("notice_owners")),
                  cell((ms.get("store_after_screen") or {}).get("count")),
                  cell(arm.get("page_errors"))))

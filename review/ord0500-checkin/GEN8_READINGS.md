@@ -1,6 +1,6 @@
 # ORD-0500 r4 -- 现尖 514b397f96f3b5165b24865f4a544ab6f8020084 读数单（与 ORD-0530 同族并块后重量；曝光尺两侧对照在 receipts 里）
 
-生成时间 `2026-10-01T13:55:46.832064+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
+生成时间 `2026-10-01T14:09:08.521850+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
 
 ## 一、本代的产物身份（基座 + 交付候选 + 反件）
 
@@ -36,8 +36,53 @@
 
 ## 四、门里的拒绝原文（四字段陈列，不造句子）
 
-- 基座 wt7：NOT_MEASURED（件缺）
-- 候选 wt6：NOT_MEASURED（件缺）
+- 基座（现尖原样） `main.py` sha256 `a7f7b6afc483f54b…`，库行数 0→2，共享库未被动：True
+
+  | 用例 | http_status | content_type | body_bytes | reason_code | 句子里有 uuid | details 为 null | details |
+  |---|---|---|---|---|---|---|---|
+  | no_target_named | 422 | application/json | 295 | CHECKIN_TARGET_REQUIRED | False | False | {"fields": ["activity_id", "place_id"]} |
+  | both_targets_named | 422 | application/json | 365 | CHECKIN_TARGET_AMBIGUOUS | False | False | {"activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80", "place_id": "place-old-town"} |
+  | activity_not_on_this_server | 404 | application/json | 311 | CHECKIN_ACTIVITY_UNKNOWN | False | False | {"activity_id": "620ff5e2-2023-428b-a006-05c33ab95128"} |
+  | place_not_on_this_server | 404 | application/json | 302 | CHECKIN_PLACE_UNKNOWN | False | False | {"place_id": "620ff5e2-2023-428b-a006-05c33ab95128"} |
+  | write_door_unknown_journey | 404 | application/json | 235 | 无（这一格测到了：成功体里没有 error 对象） | True | True | null（成功体里没有 error 对象） |
+  | read_door_unknown_journey | 404 | application/json | 235 | 无（这一格测到了：成功体里没有 error 对象） | True | True | null（成功体里没有 error 对象） |
+  | first_tap_on_a_real_stop | 201 | application/json | 435 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | same_stop_tapped_again | 409 | application/json | 434 | CHECKIN_DUPLICATE_STAMP | False | False | {"target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80", "existing_checkin_id": "7c8141e3-b37d-4ea9-903a-e505c817 |
+  | second_stop_tapped | 201 | application/json | 438 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | read_footprints_back | 200 | application/json | 876 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+
+- 候选（本单交付） `main.py` sha256 `eedad6bfc20ae928…`，库行数 0→2，共享库未被动：True
+
+  | 用例 | http_status | content_type | body_bytes | reason_code | 句子里有 uuid | details 为 null | details |
+  |---|---|---|---|---|---|---|---|
+  | no_target_named | 422 | application/json | 295 | CHECKIN_TARGET_REQUIRED | False | False | {"fields": ["activity_id", "place_id"]} |
+  | both_targets_named | 422 | application/json | 365 | CHECKIN_TARGET_AMBIGUOUS | False | False | {"activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80", "place_id": "place-old-town"} |
+  | activity_not_on_this_server | 404 | application/json | 311 | CHECKIN_ACTIVITY_UNKNOWN | False | False | {"activity_id": "7c32b7eb-4b32-4ded-bfcf-0a7c8ea48c65"} |
+  | place_not_on_this_server | 404 | application/json | 302 | CHECKIN_PLACE_UNKNOWN | False | False | {"place_id": "7c32b7eb-4b32-4ded-bfcf-0a7c8ea48c65"} |
+  | write_door_unknown_journey | 404 | application/json | 296 | CHECKIN_JOURNEY_UNKNOWN | False | False | {"field": "journey_id"} |
+  | read_door_unknown_journey | 404 | application/json | 296 | CHECKIN_JOURNEY_UNKNOWN | False | False | {"field": "journey_id"} |
+  | first_tap_on_a_real_stop | 201 | application/json | 435 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | same_stop_tapped_again | 409 | application/json | 434 | CHECKIN_DUPLICATE_STAMP | False | False | {"target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80", "existing_checkin_id": "e97f325b-14e3-4a31-b7a9-939457b5 |
+  | second_stop_tapped | 201 | application/json | 438 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | read_footprints_back | 200 | application/json | 876 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+
+- 反件一（409 判据摘掉） `main.py` sha256 `c0be9b0f162df58e…`，库行数 0→2，共享库未被动：True
+
+  | 用例 | http_status | content_type | body_bytes | reason_code | 句子里有 uuid | details 为 null | details |
+  |---|---|---|---|---|---|---|---|
+  | no_target_named | 422 | application/json | 295 | CHECKIN_TARGET_REQUIRED | False | False | {"fields": ["activity_id", "place_id"]} |
+  | both_targets_named | 422 | application/json | 365 | CHECKIN_TARGET_AMBIGUOUS | False | False | {"activity_id": "3a58c470-524c-5854-aa39-6c37a350eb80", "place_id": "place-old-town"} |
+  | activity_not_on_this_server | 404 | application/json | 311 | CHECKIN_ACTIVITY_UNKNOWN | False | False | {"activity_id": "0cf071ed-f22f-4b66-874e-e4ee29f88f50"} |
+  | place_not_on_this_server | 404 | application/json | 302 | CHECKIN_PLACE_UNKNOWN | False | False | {"place_id": "0cf071ed-f22f-4b66-874e-e4ee29f88f50"} |
+  | write_door_unknown_journey | 404 | application/json | 296 | CHECKIN_JOURNEY_UNKNOWN | False | False | {"field": "journey_id"} |
+  | read_door_unknown_journey | 404 | application/json | 296 | CHECKIN_JOURNEY_UNKNOWN | False | False | {"field": "journey_id"} |
+  | first_tap_on_a_real_stop | 201 | application/json | 435 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | same_stop_tapped_again | 409 | application/json | 461 | CHECKIN_DUPLICATE_STAMP | False | False | {"target_key": "activity:3a58c470-524c-5854-aa39-6c37a350eb80", "existing_checkin_id": "fa8988b2-6dec-4bd4-b73d-e0ef2fc4 |
+  | second_stop_tapped | 201 | application/json | 438 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+  | read_footprints_back | 200 | application/json | 876 | 无（这一格测到了：成功体里没有 error 对象） | False | True | null（成功体里没有 error 对象） |
+
+  反件屏侧：交付候选面 `index-BmVDim7u.js`（outDir `D:/moodle/_qoder_phone_ord0485_20260930\faces\o0500_r4`）挂在被改过的门上（判据摘掉），臂退出 0，请求序列 ["GET:200", "POST:201", "GET:200", "POST:409", "GET:200", "POST:201", "GET:200"]，拒绝句枚数 1，句主 ["Central Food Hall"]，走完臂时库里 4 行，pageerror 0 —— 状态码与句子两样都看不出是哪一层拒的，这就是假绿。
+
 ## 五、反件一（服务端 409 判据摘掉）
 
 | 侧 | 收集 | 通过 | 失败 | 退出 | 失败的臂 |

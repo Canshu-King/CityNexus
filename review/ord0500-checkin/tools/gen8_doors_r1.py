@@ -262,7 +262,7 @@ def main():
             # CE-1's screen half: the delivered phone face over the mutated door.  If the duplicate
             # sentence still paints with the door's own lookup removed, the arm has not proved the
             # predicate -- it has proved the index, and that difference is the false green.
-            face = serve(os.path.join(LANE, "faces", "o0500_r2"), 4876, "wt19")
+            face = serve(os.path.join(LANE, "faces", "o0500_r4"), 4876, "wt19")
             run["mutant_screen"] = {"serve": face}
             if not face.get("ABORT"):
                 run["mutant_screen"]["arm"] = phone_arm(4876, "O0500_R4_UNDER_MUTANT_CE1")
