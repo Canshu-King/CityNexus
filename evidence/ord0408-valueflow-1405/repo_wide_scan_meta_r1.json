@@ -1,0 +1,11 @@
+{
+ "modules": 135,
+ "cmd": "node ui_exposure_taint_ast_r8.cjs --file <all .ts/.tsx under exp_tip_r8/frontend/src, comma-separated> --contract exp_tip_r8/contracts/openapi.yaml --out repo_wide_perfile_r1.json",
+ "headline": {
+  "cells": 15,
+  "red": 14,
+  "exempted": 1,
+  "contract_blocked": 1,
+  "contract_exempted": 0
+ }
+}
