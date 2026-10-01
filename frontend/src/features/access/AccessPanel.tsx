@@ -122,7 +122,11 @@ const CONFIRMATION_CASES: readonly {
   },
 ];
 
-export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {
+export function AccessPanel({
+  initialJourneyId = null,
+}: {
+  initialJourneyId?: string | null;
+} = {}) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: AccessCopyKey, params: Record<string, string | number> = {}) =>
@@ -295,6 +299,80 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
     await loadRoster(journeyId);
   }, [loadRoster]);
 
+  /** ORD-0538: what an empty state is allowed to offer.  Five cells, five ways forward, and every one
+   *  of them goes through a door or a router this product already has:
+   *   - no trip listed          -> the shell's own 今日 (route "hub"), through the same navigate the
+   *                                `poi-import` panel uses
+   *   - no action recorded      -> re-read `agent-feed`, which is the read that came back empty
+   *   - role door silent        -> re-read `acl/roles`
+   *   - no members listed       -> move to the invitation form that is already on this screen
+   *   - no invitation issued    -> issue one through `POST /share-grants`, the door below already uses
+   *  None of them is a decoration: each either re-reads a door, moves the route, focuses a control that
+   *  exists, or writes through a door that exists.  There is no new endpoint in this list.
+   */
+  const reloadActivity = useCallback(async () => {
+    if (chosen === null) return;
+    try {
+      setActivity({ phase: "ready", rows: await readActivity(chosen) });
+    } catch (cause) {
+      setActivity({
+        phase: "failed",
+        facts: cause instanceof RejectionWithFacts ? cause.facts : null,
+        attribution: classifyReadFailure(cause),
+      });
+    }
+  }, [chosen]);
+
+  const reloadRoleRules = useCallback(async () => {
+    if (chosen === null) return;
+    try {
+      setRoleRules(await readRoleRules(chosen));
+    } catch {
+      setRoleRules(null);
+    }
+  }, [chosen]);
+
+  const focusInviteForm = useCallback(() => {
+    const field = document.querySelector('[data-testid="access-invite-visibility"]');
+    if (field === null) return;
+    field.scrollIntoView({ block: "center" });
+    (field as HTMLElement).focus();
+  }, []);
+
+  /** The invitation the empty state offers is the same write the form below makes, with this
+   *  screen's own default visibility.  It is refused out loud when the list door named no traveller
+   *  to sign with -- the screen does not invent a signature to make the button work. */
+  const issueLinkGrant = useCallback(async () => {
+    if (chosen === null) return;
+    if (signer === null) {
+      setWriteState({ busy: false, refused: "nosigner", origin: "roster" });
+      return;
+    }
+    setWriteState({ busy: true, refused: null, origin: "roster" });
+    try {
+      await createShareGrant(chosen, {
+        visibility: VISIBILITY_LINK_READ,
+        created_by: signer,
+        expires_at: null,
+      });
+      setWriteState({ busy: false, refused: null, origin: "roster" });
+      await afterWrite(chosen);
+    } catch (cause) {
+      setWriteState({ busy: false, refused: refusalKey(cause), origin: "roster" });
+    }
+  }, [afterWrite, chosen, signer]);
+
+  const emptyAction = (testid: string, key: AccessCopyKey, action: () => void) => (
+    <button
+      className="cn-access-row-action"
+      data-testid={testid}
+      type="button"
+      onClick={action}
+    >
+      {say(key)}
+    </button>
+  );
+
   /** The shell's own trip reference, honoured as soon as the list door can vouch for it.  Nothing is
    *  loaded from a reference the door did not answer a row for: that is the stale-id hazard
    *  `lib/failureAttribution.ts:5` documents, and here it is named on screen instead of left blank. */
@@ -408,6 +486,11 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
           </div>
         )}
         {trips.phase === "ready" && rows.length === 0 && (
+          /* ORD-0538: this cell is wired to no action, on purpose and with numbers -- see the block.
+             With nothing listed the shell paints its own onboarding (`trial-setup`), and with a
+             reference the list does not know it paints the failure view (`failure-view`); the panel
+             this line sits in never mounts in either shape, so an action here could not be tapped,
+             tested, or refused. */
           <p data-testid="access-trips-empty">{say("access.pickEmpty")}</p>
         )}
         {trips.phase === "ready" && rows.length > 0 && (
@@ -456,7 +539,11 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
             {say("access.activityNoSharingWriter")}
           </p>
           {activities.length === 0 ? (
-            <p data-testid="access-activity-empty">{say("access.activityEmpty")}</p>
+            <p data-testid="access-activity-empty">
+              {say("access.activityEmpty")}{" "}
+              {emptyAction("access-empty-reload-activity", "access.emptyReloadActivity",
+                () => void reloadActivity())}
+            </p>
           ) : (
             <ul className="cn-access-activity" data-testid="access-activity-list">
               {activities.map((event) => {
@@ -500,8 +587,19 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
 
       <section className="cn-access-block" aria-label={say("access.roleLadderHeading")}>
         <h3 className="cn-access-h">{say("access.roleLadderHeading")}</h3>
-        {roleRules === null ? (
-          <p data-testid="access-role-ladder-empty">{say("access.scopeDoorSilent")}</p>
+        {/* An empty answer is an empty state too: the door said 200 with no rows, which used to fall
+            through to a `<ul>` with nothing in it and no way forward. */}
+        {roleRules === null || roleRules.length === 0 ? (
+          <p data-testid="access-role-ladder-empty">
+            {say("access.scopeDoorSilent")}{" "}
+            {/* The one action that can do something here. This screen only mounts with a trip picked
+                (measured in `ord0538_diag_candidate.json`: no reference or an unknown one paints the
+                shell's 试行程 wizard or its failure view instead), so the picker and 今日 branches
+                that were cut here first had no shape that could reach them, and they were removed
+                rather than shipped as buttons nobody can press. */}
+            {emptyAction("access-empty-reload-roles", "access.emptyReloadRoles",
+              () => void reloadRoleRules())}
+          </p>
         ) : (
           <ul className="cn-access-ladder" data-testid="access-role-ladder">
             {roleRules.map((rule) => (
@@ -632,7 +730,11 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
         <section className="cn-access-block" aria-label={say("access.grantHeading")}>
           <h3 className="cn-access-h">{say("access.grantHeading")}</h3>
           {grants.length === 0 ? (
-            <p data-testid="access-grant-empty">{say("access.grantEmpty")}</p>
+            <p data-testid="access-grant-empty">
+              {say("access.grantEmpty")}{" "}
+              {emptyAction("access-empty-issue-link-grant", "access.emptyIssueGrant",
+                () => void issueLinkGrant())}
+            </p>
           ) : (
             <ul className="cn-access-rows" data-testid="access-grant-list">
               {grants.map((grant) => (
@@ -712,7 +814,10 @@ export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: st
           {rosterFailed !== null ? (
             <p data-testid="access-roster-failed">{copyFor(rosterFailed, zh).body}</p>
           ) : members.length === 0 ? (
-            <p data-testid="access-roster-empty">{say("access.rosterEmpty")}</p>
+            <p data-testid="access-roster-empty">
+              {say("access.rosterEmpty")}{" "}
+              {emptyAction("access-empty-focus-invite", "access.emptyInviteSomeone", focusInviteForm)}
+            </p>
           ) : (
             <ul className="cn-access-rows" data-testid="access-member-list">
               {members.map((member) => {
