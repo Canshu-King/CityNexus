@@ -1,11 +1,12 @@
-"""The r3 blocks: ORD-0500 (the Q64 call-site fix) and ORD-0485 -r5, on generation 7862c6de.
+"""The r5 block: ORD-0500 (the phone footprint door) on generation b604f50d, landed against the live tip.
 
 Every number is read out of an artifact this lane's instruments wrote, and every coordinate is read
 out of git -- commit shas by `git rev-parse`, predicted trees from `run/merge_tree_r9.txt`, blob ids
-from `run/blobs_r9.txt`.  Nothing in here is typed from memory, including the three exposure receipts,
-which are the whole subject of this round: the tip's 6 cells, my r2 tree's 10, and the fixed tree back
-at 6, all from the same ruler instance.
+from `run/blobs_r9.txt`.  Nothing in here is typed from memory: not the three exposure receipts (the
+tip's cells, my r2 tree's, the fixed tree's, all from one ruler), not the five landing judgements,
+not the four re-anchored comment lines.
 """
+import hashlib
 import json
 import os
 import re
@@ -122,7 +123,6 @@ def main():
     # the earlier generations' own denominators, read back out of their frozen refs
     prior = load("prior_denominators_r5.json")
     by_gen = {r.get("generation"): r for r in prior.get("refs", [])}
-
     def face_of(gen, tag_part):
         for f in by_gen.get(gen, {}).get("faces", []):
             if tag_part in str(f.get("generation_tag")):
@@ -139,6 +139,49 @@ def main():
         s["p_%s_notices_base" % g] = base.get("notices_after_duplicate")
     s["p_r4_gap"] = bool(by_gen.get("r4", {}).get("GAP"))
     s["b_prior"] = blobs.get("review/ord0500-checkin/receipts/prior_denominators_r5.json")
+    lh = load("landing_history_r5.json")
+    rows = []
+    for r in lh.get("runs", []):
+        rows.append("| %s | %s | %s | %s 枚逐字节相同 / %s 枚 | %s | %s |" % (
+            cell(r.get("took_local", ""))[:19], cell(str(r.get("live_tip"))[:40]),
+            cell(str(r.get("candidate_head"))[:40]), cell(r.get("write_set_files")),
+            cell(r.get("byte_identical")), cell(r.get("needs_recut"))))
+    s["lh_table"] = (NL if False else chr(10)).join(rows) if rows else "（件缺，NOT_MEASURED）"
+    s["lh_runs"] = lh.get("runs_parsed")
+    s["lh_clean"] = lh.get("every_run_clean")
+    s["lh_tool"] = "review/ord0500-checkin/tools/landing_history_r5.py"
+    s["b_lh"] = blobs.get("review/ord0500-checkin/receipts/landing_history_r5.json")
+    s["tip_live"] = None
+    for line in open(os.path.join(LANE, "run", "merge_tree_r9.txt"), encoding="utf-8"):
+        m = re.match(r"live_tip (\w+)", line)
+        if m:
+            s["tip_live"] = m.group(1)
+    # the landing table's own head is one commit behind the head this block quotes; prove that the
+    # step between them moved nothing outside review/
+    _last_head = [r.get("candidate_head") for r in lh.get("runs", [])
+                  if r.get("candidate_head")]
+    s["lh_last_head"] = _last_head[-1] if _last_head else None
+    moved = []
+    if s["lh_last_head"]:
+        got = subprocess.run(["git", "-C", os.path.join(LANE, "wt22"), "diff", "--name-only",
+                              "%s..%s" % (s["lh_last_head"], cand)], stdout=subprocess.PIPE,
+                             timeout=120).stdout.decode("utf-8", "replace").splitlines()
+        moved = [p for p in got if p.strip() and not p.startswith("review/")]
+    s["non_review_moved"] = len(moved)
+    s["non_review_paths"] = "、".join(moved[:5]) if moved else "无"
+    # the head this block quotes, judged on its own against the tip read at the same minute
+    fresh = load("gen9_landing_check_r1.json")
+    frow = [r for r in fresh.get("refs", [])
+            if r.get("ref", "").endswith("newlane-ord0500-phone-checkin-entry-r5")]
+    frow = frow[0] if frow else {}
+    s["land_now_tip"] = fresh.get("live_tip")
+    s["land_now_took"] = str(fresh.get("took_local", ""))[:19]
+    s["land_now_files"] = frow.get("write_set_files")
+    s["land_now_ident"] = frow.get("files_landing_byte_identical")
+    s["land_now_recut"] = len(frow.get("files_needing_another_recut") or [])
+    s["land_now_head"] = frow.get("commit")
+    s["land_now_sha"] = hashlib.sha256(open(os.path.join(EV, "gen9_landing_check_r1.json"),
+                                            "rb").read()).hexdigest()
     _base_phone = ((_sw.get("TIP_b604f50d_phone", {}).get("readings") or {}).get("census") or {})
     s["press_tip_base"] = _base_phone.get("pressable_by_centre_hit")
     _raw = load("checkin_O0500_R5_phone_390x844_r2.json")
@@ -219,7 +262,17 @@ def main():
 
     block_cand = """### ORD-0500 · 手机打卡门 r5：再对现尖重落，两枚热文件的三对 blob 逐枚贴（车道 phone，{t_cand}）
 
+**读数代先说清**。这一页的每一个读数都取自 `{tip}` 那一代——三面重建、六趟屏幕普查、三枚后端探针、两枚反件、三臂载体、两侧曝光尺，全在同一条时间窗里；号令者给的尖在我收尾这几分钟里又换过，所以「合不合得上」是另一回事，单独在〇′·乙里逐趟贴。
+
 **〇′、r5 为什么再来一次**。落地序列器对 r4 的枝头 `{r4_head}` 报 2 枚合不上，我逐枚比出的就是这两枚：`backend/app/main.py`（我那一代 `{r4_main}` / 只读预测 `{r4_main_merge}` / 现尖 `{r4_main_tip}`）与 `frontend/src/features/trip/TripItinerary.tsx`（`{r4_itin}` / `{r4_itin_merge}` / `{r4_itin_tip}`）——这一批 ORD-0529/0533/0535 落过，两枚都是全树热文件。重落用的是同一把并块工具（`review/ord0500-checkin/tools/land_o0500_r5.py`），落点形状没变：`main.py` 仍是 14 增 2 删、契约里那两行仍在。`footprint.css` 这一枚与 r4 不同，而且是我自己让它不同的：r4 那枚 `{css_blob_r4}`、本轮 `{css_blob}`，差 {css_added} 增 {css_removed} 删，删掉的行全是注释正文（`removed_are_prose_only.clean` = {css_prose}），ORD-0530 那 3 行 `cn-footprints__day` 两侧逐字相等（{css_0530}）——所以这一族没再被人动，动它的是我把自己的那句错话改对了（见〇″）。曝光格两侧对照现读：现尖 {exp_tip} 格 / {exp_tip_mod} 模块，本候选 {exp_r3} 格 / {exp_r3_mod} 模块，逐规则同数、多出的格「无」。
+
+**〇′·乙、落地判读在这一窗口跑了 {lh_runs} 趟，每趟全等**。同一把只读尺（`review/ord0500-checkin/tools/gen9_landing_check_r1.py`）对着每个新尖各跑一次，逐趟读数是（总成件 `{b_lh}`，五行各自的原始 log 收在 `review/ord0500-checkin/run/landing_*.txt`）：
+
+| 跑的时刻 | 当时现尖 | 我的枝头 | 逐字节相同 / 写集枚数 | 要再重切 |
+|---|---|---|---|---|
+{lh_table}
+
+{lh_runs} 趟的 `files_needing_another_recut` 都是空（`every_run_clean` = {lh_clean}）。写这一页时现尖是 `{tip_live}`；序列器读到的尖若又前进了，请以它自己那一趟为准——这把尺只读，不写远程、不动任何枝，树里就有。表里最后一行的枝头 `{lh_last_head}` 是把这张表收进树之前的头，本页页眉那个头是收进之后的；这两步之间非 `review/` 的路径动了 {non_review_moved} 枚（{non_review_paths}），也就是产品字节一枚没变，这一条可以当场用 `git diff --name-only {lh_last_head}..{cand}` 复验。页眉这个头自己也单跑过一次：{land_now_took} 对着现尖 `{land_now_tip}`，写集 {land_now_files} 枚里逐字节相同 {land_now_ident} 枚、要再重切 {land_now_recut} 枚（件在车道 `evidence/gen9_landing_check_r1.json`，本机字节 sha256 `{land_now_sha}`，不是 git 物件，不可 cat-file）。
 
 **〇、这次是真冲突，两族都活着**。落地序列器报的冲突在 checkin 那一族：ORD-0530（按天足迹）在现尖 b604f50d1645d028c2dd1d4406caee8198a3bc2d 上往 footprint.css 追加了 40 行，我那 31 行的站行可达性块也在同一枚文件尾部——两枚都是加法，合并不肯替谁排顺序，所以手工并块：它那 40 行在前（它先落在这条线上），我这 31 行在后，两枚都保留。现读计数：`cn-footprints__day` 3 处、`/* ORD-0500` 1 处（并块由 `review/ord0500-checkin/tools/land_o0500_r5.py` 做，断言是任何一枚缺席、重复或倒序就中止）。`backend/app/main.py` 与 `contracts/openapi.yaml` 在这一批里也被别人加过行，我的落点仍是 14 增 2 删那一小块——LF 之后不再整文件对撞。**调用点按 0530 的新形状重核过**：它那一族自己也是屏内格式化（`footprintCopy.ts` 里的 `zoned()`，注释明写中文 Intl 输出读作 10月1日 周四），`FootprintPanel.tsx` 里 `formatV8Date` 命中 0 枚，所以这一族没有第二条「正文→共用 helper」的路；我那枚 `formatStampedMoment` 管的是行程屏重复打卡那一刻，它那枚 `zoned()` 管的是足迹面板的日头，两家各留各的，我不擅自合并成第三家。
 

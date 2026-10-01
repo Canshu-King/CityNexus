@@ -42,6 +42,7 @@ for branch in (cand, dic):
     out = sh(["git", "merge-tree", "--write-tree", tip, branch])
     lines.append("branch %s predicted_tree %s exit_marker see_block" % (branch, out.split(NL)[0]))
 open(os.path.join(LANE, "run", "merge_tree_r9.txt"), "w", encoding="utf-8", newline=NL).write(
+    "live_tip %s" % tip + NL + 
     NL.join(lines) + NL)
 
 WANTED = [(cand, "review/ord0500-checkin/GEN9_READINGS.md"),
@@ -55,6 +56,7 @@ WANTED = [(cand, "review/ord0500-checkin/GEN9_READINGS.md"),
           (cand, "review/ord0500-checkin/receipts/comment_anchors_r5.json"),
           (cand, "review/ord0500-checkin/receipts/css_delta_proof_r5.json"),
           (cand, "review/ord0500-checkin/receipts/prior_denominators_r5.json"),
+          (cand, "review/ord0500-checkin/receipts/landing_history_r5.json"),
           (cand, "review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json"),
           (cand, "review/ord0500-checkin/receipts/checkin_SCROLLTEST_phone_390x844_r2.json"),
           (cand, "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_390x844_r2.json"),

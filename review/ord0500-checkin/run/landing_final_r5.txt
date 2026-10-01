@@ -1,0 +1,33 @@
+{
+  "tool": "gen9_landing_check_r1",
+  "took_local": "2026-10-01T15:23:18.625038+08:00",
+  "live_tip": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+  "refs": [
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r5",
+      "commit": "322e9ac0ca9feff60417cf7912fe2e9aa7f01585",
+      "cut_on": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+      "predicted_tree": "cffdbb05c39b0cc1daa90c202635fada2b317983",
+      "write_set_files": 113,
+      "files_landing_byte_identical": 113,
+      "files_needing_another_recut": []
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r5",
+      "commit": "a63dcc72934afc63d35d3a904c2bbcbec6a39a2e",
+      "cut_on": "0989713aa687b97f4cd40bae009a6ce493425a4b",
+      "predicted_tree": "5fd242e77ae079c393a0bd1936252119f0b19b03",
+      "write_set_files": 12,
+      "files_landing_byte_identical": 11,
+      "files_needing_another_recut": [
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "candidate_blob": "e9b4e07c5a333c16ed457b69090cd51583f38f87",
+          "merge_blob": "bb656916092d12d4864a3be8d934e6ad69f6bff2",
+          "live_tip_blob": "cec0651cb5d9e0d0df0f71ce4c2ca0f07bea379f"
+        }
+      ]
+    }
+  ]
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\gen9_landing_check_r1.json
