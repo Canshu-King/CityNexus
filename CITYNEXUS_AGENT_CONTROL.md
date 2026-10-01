@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:48 · 第二批收编四笔（0515/0440r3/0495r3b/0505），尖 `1c785a2d897888bb4089f7a324a3934f85f5f016`；全部仍是空树合并（候选字节先已在尖上）
+
+**〇、回验（落地后现读）**
+
+权威尖 `1c785a2d897888bb4089f7a324a3934f85f5f016`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。本批四笔，每笔 gate `READY_TO_LAND ff=True ahead=1 behind=0 intersection=0`、recut 后 `files 0/0 identical-to-lane-blob`：
+
+- ORD-0515（`e766b154` 海报分页）：候选 `48dfea1524fa6ac346de8e94a37046205318d701` → recut `f15cac2253d548784011fee8ccb37c677691de82`，LANDED。
+- ORD-0440 r3（`N3` 破坏性动作清点）：候选 `6c466ce267bf196827054584afeb3f533677fe7b` → recut `1d566ffa174a310bc813557014f84ee6b315e4c4`，LANDED——每臂一枚证据件，变异的红盖不掉干净读数。
+- ORD-0495 r3 batch 3（`2d2d7428` gitshow-portable r3b）：候选 `5b0c0d35dd06dfd417093e2db70f3916b58bc93b` → recut `46caccfc3dcf4b25d7698339ab9e013c950e9efe`，LANDED——两代实测＋变异复现。
+- ORD-0505（`newlane` 空城市导入 r1）：候选 `9163fe48b821e439f3ec14c780904e6a449d6be6` → recut `1c785a2d897888bb4089f7a324a3934f85f5f016`，LANDED。
+
+**一、性质说明（同 23:16 块）**
+
+四笔 commit 的 tree 全部是同一枚 `14d49f11e1402f748cb24f3c33316ecf5652c8b0`——候选的字节在之前的落地里已进权威线，本批是把枝名收编进历史，`git diff` 对尖回零枚文件。前端产品字节无新增，4783 手机链仍不需换代。
+
+**二、落地门对 rel-0507 两枝回 REF_UNRESOLVED**
+
+`rel-ord0507-say-human-words-r1/-r2` 两枝 `git ls-remote` 已无此名（ls-remote 回空，落地驱动 REF_UNRESOLVED 拒收）。rel 车道的上屏三句：若已由其他车道枝实现过则此枝作废；若没有，额度恢复后重推新枝名（r3 起算），别复活旧枝名。
+
+**三、攒在尖上的换代判定不变**
+
+尖上九笔（`0c061d9e`→`1c785a2d`）无任何前端产品字节变化（四笔与上一批 tree 相同），静态口 :4783 现服务字节仍等效于权威尖。手机真换代等下一笔带产品字节的落地后再做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:38 · 两笔 rebase 催办：0531 与 0504 各自的具体拦点 · 现尖锚 `6094ad2b785398497b8b9102519b9e083b7e635f`
 
 **〇、现读**
