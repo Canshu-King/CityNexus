@@ -2,7 +2,7 @@
  "label": "mutant",
  "base": "http://localhost:4542",
  "path": "/legacy",
- "literals_checked": 4,
+ "literals_checked": 6,
  "body_head": "CITYNEXUS · DETERMINISTIC JOURNEY MODE MUTANT-A-LEGACY-HEADLINE-0424 ERROR · CityNexus request refused (HTTP 403) MUTANT-B-LEGACY-BUTTON-0424",
  "api_seen": [
   "403 POST /api/v1/demo/reset"
@@ -51,6 +51,28 @@
    "node_tags": [
     "button"
    ],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": true
+  },
+  {
+   "literal": "Journey connection unavaliable",
+   "label": "mutant",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": false
+  },
+  {
+   "literal": "CityNexus request refused",
+   "label": "mutant",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
    "testids": [],
    "attr_exact": [],
    "data_exact": [],
