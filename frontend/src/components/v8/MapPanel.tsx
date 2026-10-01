@@ -6,8 +6,10 @@ import { useT, useLocale } from "../../i18n/LocaleContext";
 import { mapCopy } from "../../i18n/mapPanelCopy";
 import { MapViewportControls, type ViewportState } from "./MapViewportControls";
 import { formatStampDay, stampForActivity, type FootprintState } from "../../features/checkin/footprintRead";
+import { placeLabels, stopLabel, type LabelBox } from "../../lib/mapStopLabels";
 import "../../map-attribution.css";
 import "../../map-selection.css";
+import "../../map-stop-labels.css";
 
 /**
  * ORD-0394: the one rule for "does this activity have a place on the map".
@@ -48,6 +50,14 @@ export function activityCoordinate(item: {
 export type MapPlottableActivity = {
   id: string;
   title: string;
+  /**
+   * ORD-0512: the place row's own name, when the door this surface reads happens to send it.
+   * `backend/app/schemas.py` (`SharedStop`) sends it and states the screen rule — place name first,
+   * the plan's `title` only when there is no name — so the map asks for it and paints accordingly.
+   * The owner's v8 read sends none of it (measured: `Activity` in `backend/app/schemas.py` has no such
+   * field), and an absent field is the plan's own word being used, not a missing fact papered over.
+   */
+  place_name?: string | null;
   metadata?: { latitude?: number; longitude?: number; crs?: string; role?: string } | null;
   location?: ActivityCoordinate | null;
   protected?: boolean;
@@ -148,6 +158,22 @@ export function MapPanel({
      its stop number. Kept in a ref so a footprint read that lands after the map was built can restyle
      the pins without tearing the map down (the camera-reset lesson of ORD-0390 right above). */
   const stampBadges = useRef<import("maplibre-gl").Marker[]>([]);
+  /* ORD-0512: the stop's word beside the pin. Its own markers for the reason the badges have their own
+     (a pin paints only its number), and its own refs for the reason the pins have theirs: fitting the
+     words to the glass is a placement pass over the current camera, so it restyles elements rather than
+     rebuilding the map — rebuilding to re-fit text would reset the zoom the traveller just chose. */
+  const labelNodes = useRef<
+    {
+      el: HTMLElement;
+      marker: import("maplibre-gl").Marker;
+      key: string;
+      at: [number, number];
+      priority: number;
+      order: number;
+    }[]
+  >([]);
+  const labelMarkers = useRef<import("maplibre-gl").Marker[]>([]);
+  const applyLabelsRef = useRef<() => void>(() => {});
   /* maplibre is loaded by dynamic import inside the build effect, so the only handle on its
      `Marker` class is the one that effect can hand out.  The badges need it, and nothing else does. */
   const maplibreRef = useRef<{ Marker: typeof import("maplibre-gl").Marker } | null>(null);
@@ -251,6 +277,7 @@ export function MapPanel({
               {
                 id: item.id as string | null,
                 title: item.title,
+                place_name: item.place_name ?? null,
                 longitude: at.longitude,
                 latitude: at.latitude,
                 role: item.metadata?.role,
@@ -271,6 +298,9 @@ export function MapPanel({
       // marker claim a selection the trips list cannot show.
       id: null as string | null,
       title: offer.property_name,
+      // A stay offer carries the property's own name, which is exactly what `title` holds here; there
+      // is no separate place row behind it, so the name source stays the plan's word.
+      place_name: null,
       longitude: offer.location.longitude,
       latitude: offer.location.latitude,
       role: "STAY",
@@ -461,6 +491,12 @@ export function MapPanel({
       (host.current as (HTMLElement & { citynexusMap?: unknown })).citynexusMap = mapInstance;
       resizeObserver = new ResizeObserver(() => map?.resize());
       resizeObserver.observe(host.current);
+    /* A rebuild replaces the map instance, so every element that was added to the old one goes with it;
+       `marker.remove()` on nodes of a removed map is a no-op at best, and these arrays are the only
+       handles the panel keeps on them. */
+    for (const marker of labelMarkers.current) marker.remove();
+    labelMarkers.current = [];
+    labelNodes.current = [];
     markerEls.current = [];
     points.forEach((point, index) => {
       const marker = document.createElement("div");
@@ -491,6 +527,33 @@ export function MapPanel({
         new maplibregl.Marker({ element: marker })
         .setLngLat([point.longitude, point.latitude])
         .addTo(mapInstance);
+      /* ORD-0512: the name itself, on the glass. `aria-hidden` is not a loss of information — the pin
+         beside it is a button whose accessible name is already this stop's word, so announcing the chip
+         as well would read every stop twice. What the chip adds is what an eye can use and a screen
+         reader never needed: which number is which place, without tapping. */
+      const label = stopLabel(point);
+      if (label) {
+        const chip = document.createElement("div");
+        chip.className = "v8-map-stop-label";
+        chip.setAttribute("data-testid", "v8-map-stop-label");
+        chip.setAttribute("data-stop-ordinal", String(index + 1));
+        chip.setAttribute("data-name-source", label.from);
+        chip.setAttribute("aria-hidden", "true");
+        chip.textContent = label.text;
+        const at: [number, number] = [point.longitude, point.latitude];
+        const chipMarker = new maplibregl.Marker({ element: chip })
+          .setLngLat(at)
+          .addTo(mapInstance);
+        labelMarkers.current.push(chipMarker);
+        labelNodes.current.push({
+          el: chip,
+          marker: chipMarker,
+          key: point.id ?? `stay-${index}`,
+          at,
+          priority: point.id && point.id === selectedRef.current ? 3 : point.current ? 2 : 1,
+          order: index,
+        });
+      }
     });
     if (data?.active_plan?.user_location) {
       const user = document.createElement("div");
@@ -601,6 +664,27 @@ export function MapPanel({
     };
     mapInstance.on("moveend", syncViewportState);
     mapInstance.on("zoomend", syncViewportState);
+    /* Fitting the names is a job the camera owns: the boxes that collide are screen boxes, so they
+       change on every pan and zoom. Scheduled through one animation frame because `move`/`zoom` fire
+       per frame and measuring a dozen chips per frame is layout thrash the traveller would feel.
+       The first fit goes through the same schedule rather than running here: a marker that maplibre
+       has not yet transformed has a rect of its own choosing, and reading it this early would hide
+       every name behind whatever box the unpositioned nodes happened to share. */
+    let labelFrame = 0;
+    const scheduleLabelFit = () => {
+      if (labelFrame) return;
+      labelFrame = window.requestAnimationFrame(() => {
+        labelFrame = 0;
+        if (disposed) return;
+        applyLabelsRef.current();
+      });
+    };
+    mapInstance.on("move", scheduleLabelFit);
+    mapInstance.on("zoom", scheduleLabelFit);
+    scheduleLabelFit();
+    /* The pass that follows maplibre's first render, when every marker has a transform on it — the one
+       frame where this panel can tell a name that does not fit from a name it has not placed yet. */
+    mapInstance.once("render", scheduleLabelFit);
     });
     return () => {
       disposed = true;
@@ -610,6 +694,9 @@ export function MapPanel({
          that no longer has a container to remove them from. */
       for (const badge of stampBadges.current) badge.remove();
       stampBadges.current = [];
+      for (const marker of labelMarkers.current) marker.remove();
+      labelMarkers.current = [];
+      labelNodes.current = [];
       map?.remove();
       mapRef.current = null;
       maplibreRef.current = null;
@@ -666,6 +753,78 @@ export function MapPanel({
     }
   };
   applyFootprintsRef.current = applyFootprints;
+  /* ORD-0512 — fit the names to the glass this camera is showing, and say why each one is not shown.
+   *
+   * The blockers are measured, never assumed: the map surface is the frame, and whatever the panel has
+   * already painted on top of the map (the basemap attribution the ORD-A obligation requires, the
+   * caption/notice stack, the named control, the gesture bubble) is reserved ground. A name underneath
+   * one of those is not on the glass, and a name that eats the attribution takes away the traveller's
+   * only route to the tile licence.
+   */
+  /* The chip clears its pin's own 28 px box by a few pixels, and the same number is used on both
+     sides so a name flipped left does not sit closer than one that stayed right. */
+  const LABEL_GAP_PX = 18;
+  const applyLabels = () => {
+    const canvas = host.current;
+    const panel = canvas?.closest(".v8-map-panel") ?? null;
+    const map = mapRef.current;
+    if (!canvas || !panel || !map) return;
+    const at = canvas.getBoundingClientRect();
+    const frame: LabelBox = { x: at.x, y: at.y, w: at.width, h: at.height };
+    const reserved: LabelBox[] = Array.from(
+      panel.querySelectorAll<HTMLElement>(
+        [
+          "[data-testid='v8-map-attribution']",
+          ".v8-map-overlay-stack",
+          ".v8-map-caption",
+          ".v8-map-tile-notice",
+          "[data-testid='v8-map-gesture-hint']",
+          "[data-testid='map-viewport-reset']",
+        ].join(", "),
+      ),
+    )
+      .map((el) => el.getBoundingClientRect())
+      .filter((box) => box.width > 0 && box.height > 0)
+      .map((box) => ({ x: box.x, y: box.y, w: box.width, h: box.height }));
+    /* Both sides are built from the pin's anchor point rather than measured off the element, because
+       the element sits wherever the *previous* fit put it -- its width is stable, its position is not. */
+    const candidates = labelNodes.current.map((node) => {
+      const size = node.el.getBoundingClientRect();
+      const pin = map.project(node.at);
+      const cx = frame.x + pin.x;
+      const cy = frame.y + pin.y;
+      return {
+        id: node.key,
+        sides: [
+          { x: cx + LABEL_GAP_PX, y: cy - size.height / 2, w: size.width, h: size.height },
+          { x: cx - LABEL_GAP_PX - size.width, y: cy - size.height / 2, w: size.width, h: size.height },
+        ],
+        priority: node.priority,
+        order: node.order,
+      };
+    });
+    const verdicts = placeLabels(candidates, frame, reserved);
+    for (const node of labelNodes.current) {
+      /* `data-placement` carries the reason and `data-side` the branch that was used: both are facts
+         about this camera, not about the stop, and a machine word belongs in an attribute -- which is
+         where this family already puts them. */
+      const verdict = verdicts.get(node.key) ?? { placement: "no_box" as const, side: 0 };
+      const size = node.el.getBoundingClientRect();
+      const pin = map.project(node.at);
+      const reach = LABEL_GAP_PX + size.width / 2;
+      node.marker.setOffset(verdict.side === 1 ? [-reach, 0] : [reach, 0]);
+      node.el.setAttribute("data-placement", verdict.placement);
+      node.el.setAttribute("data-side", verdict.side === 1 ? "left" : "right");
+      node.el.classList.toggle("label-hidden", verdict.placement !== "shown");
+    }
+  };
+  applyLabelsRef.current = applyLabels;
+  /* Re-fit, never rebuild. A pick changes which name outranks the others, a language change makes
+     every word longer or shorter, and a footprint read can add a date badge the labels have to live
+     with — none of those is a reason to move the camera. */
+  useEffect(() => {
+    applyLabelsRef.current();
+  }, [selectedActivityId, points, locale, footprints, onlyStamped]);
   /* Re-paint, never rebuild: the read can arrive after the map, the switch can flip at any moment,
      and a language change changes the badge's words. None of those is a reason to reset the camera,
      which is why this is a separate effect on the same refs ORD-0390 established. */

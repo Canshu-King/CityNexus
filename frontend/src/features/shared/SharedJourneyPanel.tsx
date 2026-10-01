@@ -71,6 +71,10 @@ function toMapInput(stops: SharedStop[]): MapPanelInput {
       activities: stops.map((stop) => ({
         id: stop.id,
         title: stop.place_name || stop.title,
+        /* ORD-0512: the name itself, handed over as the field the door sent rather than folded in here.
+           The map applies the same rule (`src/lib/mapStopLabels.ts`), so the fold and the painting have
+           one owner instead of two — and this screen's word for a stop does not change. */
+        place_name: stop.place_name,
         metadata: {},
         location: {
           state: stop.coordinate.state,

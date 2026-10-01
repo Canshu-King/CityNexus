@@ -1,0 +1,23 @@
+{
+ "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
+ "arm": "crowding-hides",
+ "run_id": "ord0512c2",
+ "zoom_fit_shown": 5,
+ "zoom_6_shown": 2,
+ "pins_inside_canvas_at_fit": 9,
+ "pins_inside_canvas_at_zoom_6": 9,
+ "label_node_count": 9,
+ "hidden_still_in_document": true,
+ "hidden_reasons": [
+  "off_map",
+  "off_map",
+  "over_a_name",
+  "over_a_name",
+  "off_map",
+  "off_map",
+  "over_a_name"
+ ],
+ "overlapping_shown_pairs": [],
+ "picked_pin_ordinal": "1",
+ "picked_stop_kept_its_name": true
+}

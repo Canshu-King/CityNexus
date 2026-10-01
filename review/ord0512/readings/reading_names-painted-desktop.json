@@ -1,0 +1,21 @@
+{
+ "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
+ "arm": "names-painted-desktop",
+ "run_id": "ord0512c2",
+ "viewport": "1280x900",
+ "server_stop_count": 18,
+ "label_node_count": 9,
+ "shown_count": 5,
+ "placements": [
+  "shown",
+  "shown",
+  "over_a_name",
+  "shown",
+  "shown",
+  "shown",
+  "over_a_name",
+  "over_a_name",
+  "over_a_control"
+ ],
+ "all_label_boxes_inside_canvas": true
+}
