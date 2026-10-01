@@ -1,0 +1,55 @@
+{
+  "tool": "fix_shipped_comments_r5",
+  "took_local": "2026-10-01T14:59:29.357419+08:00",
+  "tip": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+  "anchors": [
+    {
+      "line": 810,
+      "label": "shared require() helper",
+      "text": "def require(session: Session, model: type, identifier: str, label: str):",
+      "carries": "def require(",
+      "verified": true
+    },
+    {
+      "line": 3912,
+      "label": "door's own duplicate lookup",
+      "text": "existing = session.scalars(",
+      "carries": "existing = session.scalars(",
+      "verified": true
+    },
+    {
+      "line": 3948,
+      "label": "index catch branch",
+      "text": "except IntegrityError as exc:",
+      "carries": "except IntegrityError as exc:",
+      "verified": true
+    },
+    {
+      "line": 3965,
+      "label": "caught_by marker",
+      "text": "\"caught_by\": \"unique_index\",",
+      "carries": "\"caught_by\": \"unique_index\"",
+      "verified": true
+    }
+  ],
+  "edits": [
+    {
+      "file": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "sha256_after": "6fc12807cad502e4",
+      "ast": "parsed"
+    },
+    {
+      "file": "frontend/src/features/checkin/footprint.css",
+      "bytes": 5870,
+      "sha256_after": "ed43d7cf5799c974",
+      "asserts_5_of_6": true,
+      "no_stale_all_six": true
+    },
+    {
+      "file": "wt24 (CE-2 mutant) footprint.css synced",
+      "identical_to_candidate": true
+    }
+  ],
+  "head_replaced": true,
+  "body_replaced": "already anchored; the four numbers in place equal this tip's lines"
+}
