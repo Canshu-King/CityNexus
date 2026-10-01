@@ -3203,10 +3203,19 @@ function Hub({
                    bracket on this line carried a whole second sentence -- measured on a production
                    bundle in both shipped locales: 「（行程起点。服务器没有给出…时间窗来读）」 and
                    "(journey start. The server gave no … window)".  The parentheses now hold the noun
-                   the scene named; every clause that needs a verb gets its own sentence. */
+                   the scene named; every clause that needs a verb gets its own sentence.
+                   ORD-0208's shipped gate then bit this rewording, and it is right to: a bracket may
+                   not name an execution cursor in a state where the server's own cursor status says
+                   ABSENT_FALLBACK or STALE, so in that state the bracket is dropped and the cursor
+                   sentence below carries the fact instead. */
+                const cursorAbsent = Boolean(cursorStatus) && cursorStatus !== "VALID";
+                const namesCursor = basis === "执行游标" || basis === "execution cursor";
+                const bracket = zh
+                  ? cursorAbsent && namesCursor ? "" : `（${basis}）`
+                  : cursorAbsent && namesCursor ? "" : ` (${basis})`;
                 const head = zh
-                  ? `“现在”取自服务器场景（${basis}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}。`
-                  : `"now" comes from the server's scenario (${basis}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}.`;
+                  ? `“现在”取自服务器场景${bracket}：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}。`
+                  : `"now" comes from the server's scenario${bracket}: ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}.`;
                 return [head, cursorClause, stationClause]
                   .filter((piece) => piece.length > 0)
                   .join(zh ? "" : " ");

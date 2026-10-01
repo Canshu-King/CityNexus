@@ -34,6 +34,7 @@ const WORDS = {
     /* the degraded clock has two legitimate wordings, chosen by how far the projection got -- the
        same pair the shipped gate `qoder-speaks-the-travellers-language` accepts */
     degraded: /没有给出这一分钟的执行游标|时间窗|没有按游标定位/,
+    claimsCursor: /执行游标）/,
     noJourneyInView: "这一屏还没有正在看的行程",
     duplicate: "已经有一枚印",
     bin: "回收站",
@@ -42,6 +43,7 @@ const WORDS = {
   en: {
     basisNouns: ["journey start", "execution cursor"],
     degraded: /gave no execution cursor|by the journey's window|no station is claimed from the cursor/,
+    claimsCursor: /execution cursor\)/,
     noJourneyInView: "no journey in view",
     duplicate: "already holds a stamp",
     bin: "recycle bin",
@@ -166,23 +168,29 @@ for (const locale of ["zh-CN", "en"] as Locale[]) {
     });
 
     const read = await readClock(page);
-    /* both sides of the comparison are readings, not a claim: what the bracket holds, and whether
-       that content is a clause */
-    expect(read.parenContent, node(NODE_CLOCK, `no parenthetical in the painted sentence: ${JSON.stringify(read.sentence)}`)).not.toBeNull();
+    const cursorAbsent = !!read.cursorStatus && read.cursorStatus !== "VALID";
+    /* ORD-0208's own rule, restated here so this rewording cannot trade one defect for another: a
+       bracket may not name an execution cursor in a state the server itself calls absent/stale */
     expect(
-      HAS_CLAUSE(read.parenContent as string),
-      node(
-        NODE_CLOCK,
-        `the parentheses still carry a whole clause: (${read.parenContent}) -- full sentence ${JSON.stringify(read.sentence)}`,
-      ),
+      cursorAbsent && words.claimsCursor.test(read.sentence),
+      node(NODE_CLOCK, `the sentence claims a server cursor while the cursor is ${read.cursorStatus}: ${JSON.stringify(read.sentence)}`),
     ).toBe(false);
-    expect(
-      words.basisNouns.includes(clean(read.parenContent as string)),
-      node(
-        NODE_CLOCK,
-        `the bracket is not one of the two nouns the scene can name: got ${JSON.stringify(read.parenContent)}, sentence ${JSON.stringify(read.sentence)}, cursor_status=${read.cursorStatus}`,
-      ),
-    ).toBe(true);
+    if (read.parenContent !== null) {
+      expect(
+        HAS_CLAUSE(read.parenContent),
+        node(
+          NODE_CLOCK,
+          `the parentheses still carry a whole clause: (${read.parenContent}) -- full sentence ${JSON.stringify(read.sentence)}`,
+        ),
+      ).toBe(false);
+      expect(
+        words.basisNouns.includes(clean(read.parenContent)),
+        node(
+          NODE_CLOCK,
+          `the bracket is not one of the two nouns the scene can name: got ${JSON.stringify(read.parenContent)}, sentence ${JSON.stringify(read.sentence)}, cursor_status=${read.cursorStatus}`,
+        ),
+      ).toBe(true);
+    }
     /* the degraded clock is still disclosed in words, just no longer inside the bracket */
     if (read.cursorStatus && read.cursorStatus !== "VALID") {
       expect(
