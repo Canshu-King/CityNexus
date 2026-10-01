@@ -3797,7 +3797,18 @@ def _checkin_journey_read(session: Session, journey_id: str) -> Journey:
     product refuses to list -- and one rule at both doors is cheaper to state than two that differ.
     """
 
-    journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0500: this leg used to fall through to `require()`, which answers
+    # "Journey <uuid> was not found" -- an id printed into a traveller's sentence, with
+    # `details: null` and no `reason_code`, at both footprint doors.  The door has a name for
+    # this case, so it says it, and the identity stays out of the prose.
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        raise _share_refusal(
+            404,
+            "This server has no such trip, so nothing was stamped or read.",
+            "CHECKIN_JOURNEY_UNKNOWN",
+            {"field": "journey_id"},
+        )
     if journey.deleted_at is not None:
         raise _share_refusal(
             409,
@@ -3864,7 +3875,8 @@ def _checkin_resolve_targets(
     status_code=201,
     responses={
         404: {
-            "description": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN"
+            "description": "error.reason_code = CHECKIN_JOURNEY_UNKNOWN / "
+            "CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN"
         },
         409: {
             "description": "error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN / "
