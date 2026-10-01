@@ -1234,6 +1234,7 @@ def simulate_counterfactuals(
                 journey_id=journey.id,
                 scenario_key=scenario_key,
                 scenario_type=scenario_type,
+                created_at=_now(),
             )
             session.add(row)
         row.snapshot_id = snapshot.id
