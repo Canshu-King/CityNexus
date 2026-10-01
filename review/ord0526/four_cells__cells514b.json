@@ -1,0 +1,152 @@
+{
+ "at": "2026-10-01T05:32:14.853755+00:00",
+ "port": "8801",
+ "tree": "D:\\moodle\\_qoder_seed_ord0489\\wt_cells_514b",
+ "tree_head": "514b397f96f3b5165b24865f4a544ab6f8020084",
+ "db": "D:\\moodle\\_qoder_seed_ord0489\\run\\_cells514b.db",
+ "launcher_pid": 54404,
+ "journey_days": 2,
+ "hydration": {
+  "operation_id": "f8bbc9a9-ceb1-4cc6-8b0c-7413f0b60193",
+  "status": "COMPLETED",
+  "outcome": "ALREADY_CURRENT",
+  "survey": {
+   "city_code": "CN-TIANJIN",
+   "places_held": 5,
+   "pending_materialisations": 0
+  },
+  "coverage_after": {
+   "attractions": "READY",
+   "food": "MISSING",
+   "nightlife": "MISSING",
+   "lodging": "MISSING",
+   "mobility": "MISSING",
+   "booking": "MISSING"
+  },
+  "missing_categories": [
+   "food",
+   "nightlife",
+   "lodging",
+   "mobility",
+   "booking"
+  ],
+  "offline_source_applied": {
+   "in_effect": true,
+   "candidate_count": 5,
+   "places_written": 5,
+   "reason": null
+  }
+ },
+ "places": {
+  "status": 200,
+  "rows": 5
+ },
+ "journey": {
+  "status": 201,
+  "id": "466700da-05dc-4d85-b119-15dc782882f4"
+ },
+ "plans_generate": {
+  "status": 422,
+  "candidates_returned": null,
+  "reason_code": "CATALOG_INSUFFICIENT",
+  "message_verbatim": "No feasible plan candidates satisfy the journey constraints",
+  "details": {
+   "city_code": "CN-TIANJIN",
+   "places_in_catalog": 5,
+   "city_services_in_catalog": 5,
+   "day_sequences_available": 0,
+   "requested_candidates": 3,
+   "candidate_rejections": []
+  }
+ },
+ "calendar_ics": {
+  "status": 409,
+  "bytes": null,
+  "body_head": {
+   "error": {
+    "code": "CONFLICT",
+    "message": "This trip has no active plan, so there is no schedule here to export.",
+    "message_key": "request.conflict",
+    "trace_id": "c62a7e4d-80f4-423d-9ac1-6afbc6c5869f",
+    "details": {
+     "journey_id": "466700da-05dc-4d85-b119-15dc782882f4",
+     "reason": "ACTIVE_PLAN_NOT_DECLARED"
+    },
+    "reason_code": "CALENDAR_SOURCE_UNREADABLE",
+    "error_receipt_id": "CNX-D977T79V"
+   }
+  }
+ },
+ "checkins_footprint": {
+  "status": 200,
+  "rows": 0,
+  "body": []
+ },
+ "history": {
+  "status": 200,
+  "body": [
+   {
+    "id": "87817f13-e23d-45b3-b84f-4c5511797995",
+    "timestamp": "2026-10-01T05:32:21.040545+00:00",
+    "event_type": "journey.created",
+    "type": "journey.created",
+    "summary": "Journey.created",
+    "actor_type": "system",
+    "actor_id": null,
+    "tool": null,
+    "journey_id": "466700da-05dc-4d85-b119-15dc782882f4",
+    "proposal_id": null,
+    "entity_type": "Journey",
+    "entity_id": "466700da-05dc-4d85-b119-15dc782882f4",
+    "decision": null,
+    "reason_codes": [],
+    "trace_id": "135cc546-bebc-4b4e-81ce-118c042d6c9d",
+    "source": "audit_log",
+    "facts": {}
+   }
+  ]
+ },
+ "share_grant": {
+  "status": 201,
+  "visibility_used": "LINK_READ",
+  "token_present": true,
+  "body": {
+   "id": "1abbcfbc-7302-4e51-820f-c424ab13cec8",
+   "journey_id": "466700da-05dc-4d85-b119-15dc782882f4",
+   "visibility": "LINK_READ",
+   "plan_version_id": null,
+   "revoked_at": null
+  }
+ },
+ "share_receive": {
+  "status": 200,
+  "body_keys": [
+   "active_plan",
+   "active_plan_version_id",
+   "budget",
+   "city_code",
+   "current_activity_id",
+   "end_at",
+   "grant_scope",
+   "id",
+   "plan_state",
+   "planning_mode",
+   "start_at",
+   "status"
+  ],
+  "has_plan": false,
+  "note": "receiving works with no plan; the four plan-screens still have no denominator"
+ },
+ "ownership": {
+  "P1_listener_cmdline_names_tree_and_port": {
+   "53292": true
+  },
+  "P2_api_rows_equal_my_file_count": true,
+  "P2_journey_row_in_this_file": 1,
+  "P2_fabricated_uuid_status": 404,
+  "P3_launcher_pid": 54404,
+  "P3_listener_pids": [
+   "53292"
+  ]
+ }
+}
