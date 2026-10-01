@@ -1,0 +1,1558 @@
+{
+ "base": "http://localhost:4541",
+ "stub": "http://127.0.0.1:7042",
+ "route": "/v8/hub",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "states_walked": 24,
+ "tally": {
+  "no_failure_view": 10,
+  "failure_view": 14
+ },
+ "states": [
+  {
+   "name": "s_off_c0_zh",
+   "scenario": "off",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "Demo之旅",
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 675,
+    "bodyText": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n还没休息\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n一切正常\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n现在没有可比的方案。\n\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的",
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "行程智能",
+     "工作区",
+     "行程运营",
+     "今日",
+     "今天",
+     "实时行程",
+     "地图",
+     "规划",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "出行",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "系统",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "行程事实已同步",
+     "0 个方案 · 5 种模式",
+     "DE",
+     "Demo",
+     "1 位旅行者",
+     "•••",
+     "菜单",
+     "行程",
+     "/",
+     "今天",
+     "行程事实就绪",
+     "跟随系统",
+     "EN",
+     "◌",
+     "DE",
+     "还没休息",
+     "Demo之旅",
+     "10月10日 09:00",
+     "—",
+     "10月10日 19:00",
+     "·",
+     "1 位旅行者",
+     "·",
+     "1 天",
+     "AI 帮我规划",
+     "试用其他城市",
+     "打开行程工作台",
+     "复制行程链接",
+     "需要关注",
+     "一切正常",
+     "现在",
+     "Tech Art Center",
+     "接下来",
+     "15:30 Nexus River Cruise Pier",
+     "今天还有 6 项安排",
+     "查看实时行程",
+     "“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "回到行程视野",
+     "底图未加载，显示的是路线示意。",
+     "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+     "路线上下文",
+     "0 段路程",
+     "这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。",
+     "底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+     "住宿",
+     "还没有选定",
+     "到达",
+     "10月10日 09:00",
+     "出发",
+     "10月10日 19:00",
+     "行前清单",
+     "服务端报出的两类待办",
+     "这一代都没有报出。",
+     "去看这一代方案",
+     "方案概览",
+     "每一天，紧密相连。",
+     "对比住宿 →",
+     "还没有可以预览的行程",
+     "选定方案后，这里会显示每天的安排。",
+     "现在没有可比的方案。",
+     "待规划",
+     "这台服务器说这些地点属于这一程，还没排在任何一天。",
+     "0 个地点没有排在某一天",
+     "筛选",
+     "这一程没有待规划的地点。",
+     "想收进新的地点，去城市探索捕获这一程的地点。",
+     "去城市探索",
+     "再读一次",
+     "技术详情",
+     "已读活动",
+     "6",
+     "·",
+     "已读捕获地点",
+     "0",
+     "·",
+     "已读地点",
+     "8",
+     "·",
+     "已有某天猫住",
+     "6",
+     "·",
+     "已被某天排上的捕获",
+     "0",
+     "✦",
+     "CityNexus Copilot",
+     "今天",
+     "行程",
+     "地图",
+     "Copilot",
+     "我的"
+    ],
+    "attrCount": 2
+   }
+  },
+  {
+   "name": "s_off_c1_zh",
+   "scenario": "off",
+   "locale": "zh",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_c1_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "Demo之旅",
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 675,
+    "bodyText": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n还没休息\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n一切正常\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n现在没有可比的方案。\n\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的",
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "行程智能",
+     "工作区",
+     "行程运营",
+     "今日",
+     "今天",
+     "实时行程",
+     "地图",
+     "规划",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "出行",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "系统",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "行程事实已同步",
+     "0 个方案 · 5 种模式",
+     "DE",
+     "Demo",
+     "1 位旅行者",
+     "•••",
+     "菜单",
+     "行程",
+     "/",
+     "今天",
+     "行程事实就绪",
+     "跟随系统",
+     "EN",
+     "◌",
+     "DE",
+     "还没休息",
+     "Demo之旅",
+     "10月10日 09:00",
+     "—",
+     "10月10日 19:00",
+     "·",
+     "1 位旅行者",
+     "·",
+     "1 天",
+     "AI 帮我规划",
+     "试用其他城市",
+     "打开行程工作台",
+     "复制行程链接",
+     "需要关注",
+     "一切正常",
+     "现在",
+     "Tech Art Center",
+     "接下来",
+     "15:30 Nexus River Cruise Pier",
+     "今天还有 6 项安排",
+     "查看实时行程",
+     "“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "回到行程视野",
+     "底图未加载，显示的是路线示意。",
+     "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+     "路线上下文",
+     "0 段路程",
+     "这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。",
+     "底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+     "住宿",
+     "还没有选定",
+     "到达",
+     "10月10日 09:00",
+     "出发",
+     "10月10日 19:00",
+     "行前清单",
+     "服务端报出的两类待办",
+     "这一代都没有报出。",
+     "去看这一代方案",
+     "方案概览",
+     "每一天，紧密相连。",
+     "对比住宿 →",
+     "还没有可以预览的行程",
+     "选定方案后，这里会显示每天的安排。",
+     "现在没有可比的方案。",
+     "待规划",
+     "这台服务器说这些地点属于这一程，还没排在任何一天。",
+     "0 个地点没有排在某一天",
+     "筛选",
+     "这一程没有待规划的地点。",
+     "想收进新的地点，去城市探索捕获这一程的地点。",
+     "去城市探索",
+     "再读一次",
+     "技术详情",
+     "已读活动",
+     "6",
+     "·",
+     "已读捕获地点",
+     "0",
+     "·",
+     "已读地点",
+     "8",
+     "·",
+     "已有某天猫住",
+     "6",
+     "·",
+     "已被某天排上的捕获",
+     "0",
+     "✦",
+     "CityNexus Copilot",
+     "今天",
+     "行程",
+     "地图",
+     "Copilot",
+     "我的"
+    ],
+    "attrCount": 2
+   }
+  },
+  {
+   "name": "s_not_found_c0_zh",
+   "scenario": "not_found",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 404,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_not_found_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "这台服务器上没有这一趟行程了",
+    "kicker": "连接正常",
+    "reason": "这台设备还记得行程 22222222…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+    "telemetry": "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "选一趟行程",
+    "bodyChars": 117,
+    "bodyText": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 22222222…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情",
+    "textNodes": [
+     "连接正常",
+     "这台服务器上没有这一趟行程了",
+     "这台设备还记得行程 22222222…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+     "选一趟行程",
+     "重试",
+     "归因详情",
+     "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_server_error_c0_zh",
+   "scenario": "server_error",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_server_error_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "服务器这次没能把行程读出来",
+    "kicker": "服务器",
+    "reason": "服务器自己报错了（http_status=503）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+    "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=false",
+    "recovery": "重试",
+    "bodyChars": 90,
+    "bodyText": "服务器\n\n服务器这次没能把行程读出来\n\n服务器自己报错了（http_status=503）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。\n\n重试\n归因详情",
+    "textNodes": [
+     "服务器",
+     "服务器这次没能把行程读出来",
+     "服务器自己报错了（http_status=503）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "重试",
+     "归因详情",
+     "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_server_error_c1_zh",
+   "scenario": "server_error",
+   "locale": "zh",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_server_error_c1_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 37,
+    "bodyText": "CN\n\n正在准备城市周末行程…\n\n锚点 · 住宿 · 出行事实 · 可行性",
+    "textNodes": [
+     "CN",
+     "正在准备城市周末行程…",
+     "锚点 · 住宿 · 出行事实 · 可行性"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_unauthorized_c0_zh",
+   "scenario": "unauthorized",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 401,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_unauthorized_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "这一趟需要重新登录才能读",
+    "kicker": "身份",
+    "reason": "服务器拒绝了这次读取（http_status=401）。登录之后这一趟还在。",
+    "telemetry": "attribution_reason=UNAUTHORIZED evidence_kind=HTTP_RESPONSE http_status=401 source_layer=RESOURCE_STATE retryable=false recovery_action=sign-in",
+    "recovery": "重新登录",
+    "bodyChars": 70,
+    "bodyText": "身份\n\n这一趟需要重新登录才能读\n\n服务器拒绝了这次读取（http_status=401）。登录之后这一趟还在。\n\n重新登录\n重试\n归因详情",
+    "textNodes": [
+     "身份",
+     "这一趟需要重新登录才能读",
+     "服务器拒绝了这次读取（http_status=401）。登录之后这一趟还在。",
+     "重新登录",
+     "重试",
+     "归因详情",
+     "attribution_reason=UNAUTHORIZED evidence_kind=HTTP_RESPONSE http_status=401 source_layer=RESOURCE_STATE retryable=false recovery_action=sign-in"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_forbidden_c0_zh",
+   "scenario": "forbidden",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 403,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_forbidden_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "这一步这台服务器不允许",
+    "kicker": "权限",
+    "reason": "服务器认得你是谁，但明确拒绝了这一步（http_status=403）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。",
+    "telemetry": "attribution_reason=FORBIDDEN evidence_kind=HTTP_RESPONSE http_status=403 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "选一趟行程",
+    "bodyChars": 114,
+    "bodyText": "权限\n\n这一步这台服务器不允许\n\n服务器认得你是谁，但明确拒绝了这一步（http_status=403）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。\n\n选一趟行程\n重试\n归因详情",
+    "textNodes": [
+     "权限",
+     "这一步这台服务器不允许",
+     "服务器认得你是谁，但明确拒绝了这一步（http_status=403）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。",
+     "选一趟行程",
+     "重试",
+     "归因详情",
+     "attribution_reason=FORBIDDEN evidence_kind=HTTP_RESPONSE http_status=403 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_html_200_c0_zh",
+   "scenario": "html_200",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_html_200_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+    "kicker": "服务器",
+    "reason": "它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false",
+    "recovery": "重试",
+    "bodyChars": 192,
+    "bodyText": "服务器\n\n服务器答了 http_status=200，可带回来的不是这一屏能用的数据\n\n它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。\n\n重试\n归因详情",
+    "textNodes": [
+     "服务器",
+     "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+     "它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。",
+     "重试",
+     "归因详情",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_html_200_c1_zh",
+   "scenario": "html_200",
+   "locale": "zh",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_html_200_c1_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 37,
+    "bodyText": "CN\n\n正在准备城市周末行程…\n\n锚点 · 住宿 · 出行事实 · 可行性",
+    "textNodes": [
+     "CN",
+     "正在准备城市周末行程…",
+     "锚点 · 住宿 · 出行事实 · 可行性"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_empty_200_c0_zh",
+   "scenario": "empty_200",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_empty_200_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+    "kicker": "服务器",
+    "reason": "它确实回了话（http_status=200，content_type=application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=false",
+    "recovery": "重试",
+    "bodyChars": 184,
+    "bodyText": "服务器\n\n服务器答了 http_status=200，可带回来的不是这一屏能用的数据\n\n它确实回了话（http_status=200，content_type=application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。\n\n重试\n归因详情",
+    "textNodes": [
+     "服务器",
+     "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+     "它确实回了话（http_status=200，content_type=application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。",
+     "重试",
+     "归因详情",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_empty_200_c1_zh",
+   "scenario": "empty_200",
+   "locale": "zh",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_empty_200_c1_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 37,
+    "bodyText": "CN\n\n正在准备城市周末行程…\n\n锚点 · 住宿 · 出行事实 · 可行性",
+    "textNodes": [
+     "CN",
+     "正在准备城市周末行程…",
+     "锚点 · 住宿 · 出行事实 · 可行性"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_off_c0_en",
+   "scenario": "off",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "Trip to Demo",
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 1427,
+    "bodyText": "Menu\n/\nToday\nSystem\n中文\nDE\n\nSTILL UP\n\nTrip to Demo\n\n10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days\n\nPlan my trip with AI\nTry another city\nOpen Trip Studio\nCopy journey link\nAll clear\nNOW\nTech Art Center\nNEXT\n15:30 Nexus River Cruise Pier\n6 stops today\nOpen Live\n\"now\" comes from the server's scenario (execution cursor): 10 Oct, 13:20 · now/next come from the server's execution projection\n1\n2\n3\n4\n5\n6\nFit to my journey\n\nBasemap did not load — showing the route diagram only.\n\nOne finger drags the map · two fingers zoom · to move the page, drag outside the map\n\nRoute context\n0 legs\nNo route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.\nBasemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org\nSTAY\nNot chosen yet\nARRIVAL\n10 Oct, 09:00\nDEPARTURE\n10 Oct, 19:00\nBEFORE YOU GO\nThe two things the server reports as outstanding\nNeither one is open on this generation.\nReview this plan generation\n\nPLAN AT A GLANCE\n\nEvery day, connected.\nCompare stays →\nNothing to preview yet\n\nChoose a plan and the day-by-day plan appears here.\n\nNo plan is available to compare right now.\n\nNOT ON A DAY YET\n\nPlaces this server says belong to this trip, in no day of it yet.\n\n0 places not on a day\n\nFilter\n\nNo place is waiting for a day on this trip.\n\nTo add one, capture places for this trip.\n\nOpen City Discovery\nRead it again\nTechnical details\n✦\nToday\nTrips\nMap\nCopilot\nMe",
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "journey intelligence",
+     "Workspace",
+     "Trip operations",
+     "TODAY",
+     "Today",
+     "Live Journey",
+     "Map",
+     "PLAN",
+     "Trip Studio",
+     "Stay Explorer",
+     "City Discovery",
+     "Import places",
+     "TRAVEL",
+     "Travel Wallet",
+     "Footprints",
+     "Copilot",
+     "SYSTEM",
+     "Recovery",
+     "Intelligence",
+     "Traveler Twin",
+     "Recycle bin",
+     "Members and access",
+     "Journey facts synced",
+     "0 plans · 5 modes",
+     "DE",
+     "Demo",
+     "1 traveler",
+     "•••",
+     "Menu",
+     "Journeys",
+     "/",
+     "Today",
+     "Journey facts ready",
+     "System",
+     "中文",
+     "◌",
+     "DE",
+     "Still up",
+     "Trip to Demo",
+     "10 Oct, 09:00",
+     "—",
+     "10 Oct, 19:00",
+     "·",
+     "1 traveler",
+     "·",
+     "1 days",
+     "Plan my trip with AI",
+     "Try another city",
+     "Open Trip Studio",
+     "Copy journey link",
+     "Attention",
+     "All clear",
+     "Now",
+     "Tech Art Center",
+     "Next",
+     "15:30 Nexus River Cruise Pier",
+     "6 stops today",
+     "Open Live",
+     "\"now\" comes from the server's scenario (execution cursor): 10 Oct, 13:20 · now/next come from the server's execution projection",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "Fit to my journey",
+     "Basemap did not load — showing the route diagram only.",
+     "One finger drags the map · two fingers zoom · to move the page, drag outside the map",
+     "Route context",
+     "0 legs",
+     "No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.",
+     "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
+     "Stay",
+     "Not chosen yet",
+     "ARRIVAL",
+     "10 Oct, 09:00",
+     "DEPARTURE",
+     "10 Oct, 19:00",
+     "Before you go",
+     "The two things the server reports as outstanding",
+     "Neither one is open on this generation.",
+     "Review this plan generation",
+     "Plan at a glance",
+     "Every day, connected.",
+     "Compare stays →",
+     "Nothing to preview yet",
+     "Choose a plan and the day-by-day plan appears here.",
+     "No plan is available to compare right now.",
+     "Not on a day yet",
+     "Places this server says belong to this trip, in no day of it yet.",
+     "0 places not on a day",
+     "Filter",
+     "No place is waiting for a day on this trip.",
+     "To add one, capture places for this trip.",
+     "Open City Discovery",
+     "Read it again",
+     "Technical details",
+     "activities read",
+     "6",
+     "·",
+     "captured places read",
+     "0",
+     "·",
+     "places read",
+     "8",
+     "·",
+     "places a day already holds",
+     "6",
+     "·",
+     "captures a day already holds",
+     "0",
+     "✦",
+     "CityNexus Copilot",
+     "Today",
+     "Trips",
+     "Map",
+     "Copilot",
+     "Me"
+    ],
+    "attrCount": 2
+   }
+  },
+  {
+   "name": "s_off_c1_en",
+   "scenario": "off",
+   "locale": "en",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_c1_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "Trip to Demo",
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 1427,
+    "bodyText": "Menu\n/\nToday\nSystem\n中文\nDE\n\nSTILL UP\n\nTrip to Demo\n\n10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days\n\nPlan my trip with AI\nTry another city\nOpen Trip Studio\nCopy journey link\nAll clear\nNOW\nTech Art Center\nNEXT\n15:30 Nexus River Cruise Pier\n6 stops today\nOpen Live\n\"now\" comes from the server's scenario (execution cursor): 10 Oct, 13:20 · now/next come from the server's execution projection\n1\n2\n3\n4\n5\n6\nFit to my journey\n\nBasemap did not load — showing the route diagram only.\n\nOne finger drags the map · two fingers zoom · to move the page, drag outside the map\n\nRoute context\n0 legs\nNo route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.\nBasemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org\nSTAY\nNot chosen yet\nARRIVAL\n10 Oct, 09:00\nDEPARTURE\n10 Oct, 19:00\nBEFORE YOU GO\nThe two things the server reports as outstanding\nNeither one is open on this generation.\nReview this plan generation\n\nPLAN AT A GLANCE\n\nEvery day, connected.\nCompare stays →\nNothing to preview yet\n\nChoose a plan and the day-by-day plan appears here.\n\nNo plan is available to compare right now.\n\nNOT ON A DAY YET\n\nPlaces this server says belong to this trip, in no day of it yet.\n\n0 places not on a day\n\nFilter\n\nNo place is waiting for a day on this trip.\n\nTo add one, capture places for this trip.\n\nOpen City Discovery\nRead it again\nTechnical details\n✦\nToday\nTrips\nMap\nCopilot\nMe",
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "journey intelligence",
+     "Workspace",
+     "Trip operations",
+     "TODAY",
+     "Today",
+     "Live Journey",
+     "Map",
+     "PLAN",
+     "Trip Studio",
+     "Stay Explorer",
+     "City Discovery",
+     "Import places",
+     "TRAVEL",
+     "Travel Wallet",
+     "Footprints",
+     "Copilot",
+     "SYSTEM",
+     "Recovery",
+     "Intelligence",
+     "Traveler Twin",
+     "Recycle bin",
+     "Members and access",
+     "Journey facts synced",
+     "0 plans · 5 modes",
+     "DE",
+     "Demo",
+     "1 traveler",
+     "•••",
+     "Menu",
+     "Journeys",
+     "/",
+     "Today",
+     "Journey facts ready",
+     "System",
+     "中文",
+     "◌",
+     "DE",
+     "Still up",
+     "Trip to Demo",
+     "10 Oct, 09:00",
+     "—",
+     "10 Oct, 19:00",
+     "·",
+     "1 traveler",
+     "·",
+     "1 days",
+     "Plan my trip with AI",
+     "Try another city",
+     "Open Trip Studio",
+     "Copy journey link",
+     "Attention",
+     "All clear",
+     "Now",
+     "Tech Art Center",
+     "Next",
+     "15:30 Nexus River Cruise Pier",
+     "6 stops today",
+     "Open Live",
+     "\"now\" comes from the server's scenario (execution cursor): 10 Oct, 13:20 · now/next come from the server's execution projection",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "Fit to my journey",
+     "Basemap did not load — showing the route diagram only.",
+     "One finger drags the map · two fingers zoom · to move the page, drag outside the map",
+     "Route context",
+     "0 legs",
+     "No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.",
+     "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
+     "Stay",
+     "Not chosen yet",
+     "ARRIVAL",
+     "10 Oct, 09:00",
+     "DEPARTURE",
+     "10 Oct, 19:00",
+     "Before you go",
+     "The two things the server reports as outstanding",
+     "Neither one is open on this generation.",
+     "Review this plan generation",
+     "Plan at a glance",
+     "Every day, connected.",
+     "Compare stays →",
+     "Nothing to preview yet",
+     "Choose a plan and the day-by-day plan appears here.",
+     "No plan is available to compare right now.",
+     "Not on a day yet",
+     "Places this server says belong to this trip, in no day of it yet.",
+     "0 places not on a day",
+     "Filter",
+     "No place is waiting for a day on this trip.",
+     "To add one, capture places for this trip.",
+     "Open City Discovery",
+     "Read it again",
+     "Technical details",
+     "activities read",
+     "6",
+     "·",
+     "captured places read",
+     "0",
+     "·",
+     "places read",
+     "8",
+     "·",
+     "places a day already holds",
+     "6",
+     "·",
+     "captures a day already holds",
+     "0",
+     "✦",
+     "CityNexus Copilot",
+     "Today",
+     "Trips",
+     "Map",
+     "Copilot",
+     "Me"
+    ],
+    "attrCount": 2
+   }
+  },
+  {
+   "name": "s_not_found_c0_en",
+   "scenario": "not_found",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 404,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_not_found_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "This trip is not on this server",
+    "kicker": "Connection is fine",
+    "reason": "This device remembered trip 22222222…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.",
+    "telemetry": "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "Choose a trip",
+    "bodyChars": 298,
+    "bodyText": "CONNECTION IS FINE\n\nThis trip is not on this server\n\nThis device remembered trip 22222222…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.\n\nChoose a trip\nTry again\nAttribution detail",
+    "textNodes": [
+     "Connection is fine",
+     "This trip is not on this server",
+     "This device remembered trip 22222222…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.",
+     "Choose a trip",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_server_error_c0_en",
+   "scenario": "server_error",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_server_error_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "The server could not read your trip",
+    "kicker": "Server",
+    "reason": "The server reported an error of its own (http_status=503). That is on its side, not something you typed. Retry; if it persists, come back later.",
+    "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=false",
+    "recovery": "Try again",
+    "bodyChars": 219,
+    "bodyText": "SERVER\n\nThe server could not read your trip\n\nThe server reported an error of its own (http_status=503). That is on its side, not something you typed. Retry; if it persists, come back later.\n\nTry again\nAttribution detail",
+    "textNodes": [
+     "Server",
+     "The server could not read your trip",
+     "The server reported an error of its own (http_status=503). That is on its side, not something you typed. Retry; if it persists, come back later.",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_server_error_c1_en",
+   "scenario": "server_error",
+   "locale": "en",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_server_error_c1_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 86,
+    "bodyText": "CN\n\nPreparing a captured city weekend…\n\nAnchors · stays · mobility facts · feasibility",
+    "textNodes": [
+     "CN",
+     "Preparing a captured city weekend…",
+     "Anchors · stays · mobility facts · feasibility"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_unauthorized_c0_en",
+   "scenario": "unauthorized",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 401,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_unauthorized_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "This trip needs a fresh sign-in",
+    "kicker": "Identity",
+    "reason": "The server refused this read (http_status=401). Your trip is still there once you sign in.",
+    "telemetry": "attribution_reason=UNAUTHORIZED evidence_kind=HTTP_RESPONSE http_status=401 source_layer=RESOURCE_STATE retryable=false recovery_action=sign-in",
+    "recovery": "Sign in again",
+    "bodyChars": 177,
+    "bodyText": "IDENTITY\n\nThis trip needs a fresh sign-in\n\nThe server refused this read (http_status=401). Your trip is still there once you sign in.\n\nSign in again\nTry again\nAttribution detail",
+    "textNodes": [
+     "Identity",
+     "This trip needs a fresh sign-in",
+     "The server refused this read (http_status=401). Your trip is still there once you sign in.",
+     "Sign in again",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=UNAUTHORIZED evidence_kind=HTTP_RESPONSE http_status=401 source_layer=RESOURCE_STATE retryable=false recovery_action=sign-in"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_forbidden_c0_en",
+   "scenario": "forbidden",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 403,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_forbidden_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "This server will not allow this step",
+    "kicker": "Permission",
+    "reason": "The server knows who you are and still refused this step (http_status=403). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.",
+    "telemetry": "attribution_reason=FORBIDDEN evidence_kind=HTTP_RESPONSE http_status=403 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "Choose a trip",
+    "bodyChars": 320,
+    "bodyText": "PERMISSION\n\nThis server will not allow this step\n\nThe server knows who you are and still refused this step (http_status=403). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.\n\nChoose a trip\nTry again\nAttribution detail",
+    "textNodes": [
+     "Permission",
+     "This server will not allow this step",
+     "The server knows who you are and still refused this step (http_status=403). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.",
+     "Choose a trip",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=FORBIDDEN evidence_kind=HTTP_RESPONSE http_status=403 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_html_200_c0_en",
+   "scenario": "html_200",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_html_200_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "The origin answered http_status=200, but not with data this screen can use",
+    "kicker": "The origin",
+    "reason": "It did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false",
+    "recovery": "Try again",
+    "bodyChars": 429,
+    "bodyText": "THE ORIGIN\n\nThe origin answered http_status=200, but not with data this screen can use\n\nIt did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.\n\nTry again\nAttribution detail",
+    "textNodes": [
+     "The origin",
+     "The origin answered http_status=200, but not with data this screen can use",
+     "It did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_html_200_c1_en",
+   "scenario": "html_200",
+   "locale": "en",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_html_200_c1_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 86,
+    "bodyText": "CN\n\nPreparing a captured city weekend…\n\nAnchors · stays · mobility facts · feasibility",
+    "textNodes": [
+     "CN",
+     "Preparing a captured city weekend…",
+     "Anchors · stays · mobility facts · feasibility"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_empty_200_c0_en",
+   "scenario": "empty_200",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_empty_200_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "The origin answered http_status=200, but not with data this screen can use",
+    "kicker": "The origin",
+    "reason": "It did reply (http_status=200, content_type=application/json) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=false",
+    "recovery": "Try again",
+    "bodyChars": 421,
+    "bodyText": "THE ORIGIN\n\nThe origin answered http_status=200, but not with data this screen can use\n\nIt did reply (http_status=200, content_type=application/json) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.\n\nTry again\nAttribution detail",
+    "textNodes": [
+     "The origin",
+     "The origin answered http_status=200, but not with data this screen can use",
+     "It did reply (http_status=200, content_type=application/json) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=false"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_empty_200_c1_en",
+   "scenario": "empty_200",
+   "locale": "en",
+   "cached": true,
+   "journey_id_used": "22222222-2222-4222-8222-222222222222",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": false,
+   "scenario_confirmed_in": 1,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_empty_200_c1_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": null,
+    "kicker": null,
+    "reason": null,
+    "telemetry": null,
+    "recovery": null,
+    "bodyChars": 86,
+    "bodyText": "CN\n\nPreparing a captured city weekend…\n\nAnchors · stays · mobility facts · feasibility",
+    "textNodes": [
+     "CN",
+     "Preparing a captured city weekend…",
+     "Anchors · stays · mobility facts · feasibility"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_off_missingid_c0_zh",
+   "scenario": "off",
+   "locale": "zh",
+   "cached": false,
+   "journey_id_used": "33333333-3333-4333-8333-333333333333",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/33333333-3333-4333-8333-333333333333/experience",
+     "status": 404,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_missingid_c0_zh.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "这台服务器上没有这一趟行程了",
+    "kicker": "连接正常",
+    "reason": "这台设备还记得行程 33333333…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+    "telemetry": "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "选一趟行程",
+    "bodyChars": 117,
+    "bodyText": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 33333333…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情",
+    "textNodes": [
+     "连接正常",
+     "这台服务器上没有这一趟行程了",
+     "这台设备还记得行程 33333333…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+     "选一趟行程",
+     "重试",
+     "归因详情",
+     "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  },
+  {
+   "name": "s_off_missingid_c0_en",
+   "scenario": "off",
+   "locale": "en",
+   "cached": false,
+   "journey_id_used": "33333333-3333-4333-8333-333333333333",
+   "route": "/v8/hub",
+   "url": "http://localhost:4541/v8/hub",
+   "failure_view": true,
+   "scenario_confirmed_in": 0,
+   "journey_responses": [
+    {
+     "url": "/api/v1/journeys/33333333-3333-4333-8333-333333333333/experience",
+     "status": 404,
+     "ct": "application/json"
+    }
+   ],
+   "page_errors": [],
+   "shot": "s_off_missingid_c0_en.png",
+   "read": {
+    "title": "CityNexus Trip Operations",
+    "h1": "This trip is not on this server",
+    "kicker": "Connection is fine",
+    "reason": "This device remembered trip 33333333…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.",
+    "telemetry": "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "recovery": "Choose a trip",
+    "bodyChars": 298,
+    "bodyText": "CONNECTION IS FINE\n\nThis trip is not on this server\n\nThis device remembered trip 33333333…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.\n\nChoose a trip\nTry again\nAttribution detail",
+    "textNodes": [
+     "Connection is fine",
+     "This trip is not on this server",
+     "This device remembered trip 33333333…, and the server answered plainly that it does not exist (http_status=404). This is not a network problem: the server just answered. Your other trips are untouched.",
+     "Choose a trip",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey"
+    ],
+    "attrCount": 0
+   }
+  }
+ ]
+}
