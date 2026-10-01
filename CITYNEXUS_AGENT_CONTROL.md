@@ -16588,6 +16588,38 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0513 补件 · `de` 不可得的理由进证据件头，外加那 12 枚锁死件具名（车道 `1ba48dbf`，r4）
+
+- 裁语（包工头 02:35 裁语的收藏那条）两句都办：① 理由句写进证据件头；② 十二枚 scratch `.db` 不杀进程硬删、具名留在块里。产品字节本件 0 改动，`refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r3` 仍是 `9ad1a698815189d2204ee660b653c8ae0aa071d8`，已入账的 0222 块所述读数一字不动。
+- 新证据枝 `refs/heads/review/1ba48dbf-ord0513-evidence-r4` = `31c27041210a605f75265b13445cc1d91f0177ab`（`git ls-remote --refs` 现读 逐字相等）。r3 那枝 `2ed6a21da3bfb8f65b462a61b65c79e6c71e37a2` 被已入账的块引着，原样不覆盖、不删。
+
+## 一、`de` = `NOT_AVAILABLE` 现在写在被读的那两件上
+
+- 专件：`review/ord0513/NOT_AVAILABLE_de.md` = `a7469ec44ac8fc7471413fdf152c57ab23db1185`。里面把话拆成可核对的三段：现尖 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded` 上 `LocaleContext.tsx` 的联合类型行与注册表行逐字抄出；两遍搜索的计数都留（宽松子串 4 行、逐行点名各是被哪个词的尾巴碰上；整词匹配 0 行）；只贴整词那一遍就是把结论当证据。
+- 测量件头：`review/ord0513/arm_r1.cjs` = `131944410ddfa1a3f51f4fbed6380bfb58f70dc1` 的头注释里同句已入（这件就是产屏读的那枚仪器）。它与跑出已入账读数的 r3 那枚差多少，不靠话说：`review/ord0513/arm_header_proof_r4.txt` = `b612e4ad9410142e02ca8f5d5f0776bcd9ffe184` 记的是「头部之外代码逐字节相同 = True、`node --check` 退出 0」，两枚 blob 名也在里面。
+
+## 二、那十二枚锁死件（具名，不杀进程）
+
+- `git clean -ndx -- backend` 现读列到 15 枚我自己的临时库，逐枚 `rm` 全部报 `Device or resource busy`，我不去动任何进程（你 02:35 裁语的收藏那条与「不碰他人进程」的常设规矩同向）：
+  - `backend/ord0513_b69ac8a5.db` 7213056 字节
+  - `backend/ord0513_fa1faf53.db` 7213056 字节
+  - `backend/ord0513_fab9db4a.db` 7213056 字节
+  - `backend/ord0513_fab9db4a.db-shm` 32768 字节
+  - `backend/ord0513_fab9db4a.db-wal` 412032 字节
+  - `backend/ord0513_mask_52542.db` 7213056 字节
+  - `backend/ord0513_mask_52542.db-shm` 32768 字节
+  - `backend/ord0513_mask_52542.db-wal` 370832 字节
+  - `backend/ord0513_mask_55385.db` 7213056 字节
+  - `backend/ord0513_mask_55385.db-shm` 32768 字节
+  - `backend/ord0513_mask_55385.db-wal` 428512 字节
+  - `backend/ord0513_mask_56146.db` 7213056 字节
+  - `backend/ord0513_mask_56146.db-shm` 32768 字节
+  - `backend/ord0513_mask_56146.db-wal` 428512 字节
+  - `backend/ord0513_screen_78310.db` 7213056 字节
+- 它们被 `.gitignore` 的 `*.db`/`*.db-shm`/`*.db-wal` 三行覆盖，所以 `git status --porcelain` 现在是 0 行——交付面干净，磁盘面留 52262352 字节等重启收。
+- 归属我是查过而不是猜过：这几趟日志里登过的后端端口共 211 枚，逐枚查 LISTENING，仍在听的 0 枚——所以那把锁不是「我还有服务在跑」。共享预览库反证未被写：`_qoder_preview_20260920/_preview.db` 现读 7213056 字节（与门级读数里 `bytes_before`/`bytes_after` 同一枚数）。
+
+
 ### ORD-0391 第 3 步（那批改写文案的屏上逐字读回已取）· 车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`：还在现尖上的 20 行里 18 行逐字亮过屏、屏上每个数都由字段名引入（18/18 全过），2 行具名 NOT_SEEN 并交出缺的前置，另外 3 行已经不在现尖上（被后来的车道改走共用 helper）
 
 **读数取在哪**：针 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 当时回读同值；写这块时该枝已走到 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`，我没有在新尖重跑，任何数都按上一枚针读）的导出树，自有三跳：静态 :4541 → 形制桩 :7042 → 自有后端 :7041（`uvicorn app.main:app --host 127.0.0.1 --port 7041`，那三个口的唯一监听进程命令行都录在件里）。库是从 `_preview.db` 以 `mode=ro` 打开后用 SQLite 备份 API 复制的，共享库 0 次写入。字节同一性：index.html 与两枚资产（1200 B、1591525 B、229637 B）服务字节与磁盘逐枚全等，不存在的资产回 `http_status=404`；链上身份由一枚只活在我这份副本里的具名行程行证（经 4541→7042→7041 读出后删掉， journeys 行数前后 1/1）。件 `served_identity_r2.json` blob `4beaa9bd20248e5b91b6180276cbfe9e31238482`（它替下 r1 那枚：r1 把问句走前门时看不到的场景头记成了 null，看着像失败、其实是我那一跳的性质，具名更正，旧枚不撤回）。
