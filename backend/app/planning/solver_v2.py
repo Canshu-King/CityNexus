@@ -324,7 +324,12 @@ def _advance_anchors(
             travel = problem.travel(cursor_location, anchor.location_key)
         except KeyError:
             return None
-        if cursor_time + travel + problem.safety_buffer_min > anchor.start_min:
+        # No movement is required when the cursor is already at the anchor's
+        # location.  Applying a movement buffer to a same-location anchor at
+        # minute zero makes every counterfactual containing the first
+        # executed activity look infeasible.
+        buffer = problem.safety_buffer_min if travel else 0
+        if cursor_time + travel + buffer > anchor.start_min:
             return None
         cursor_time = anchor.end_min
         cursor_location = anchor.location_key
@@ -477,7 +482,8 @@ def _finish_anchors(
             travel = problem.travel(cursor_location, anchor.location_key)
         except KeyError:
             return None
-        if cursor_time + travel + problem.safety_buffer_min > anchor.start_min:
+        buffer = problem.safety_buffer_min if travel else 0
+        if cursor_time + travel + buffer > anchor.start_min:
             return None
         cursor_time = anchor.end_min
         cursor_location = anchor.location_key
