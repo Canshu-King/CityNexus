@@ -16588,6 +16588,70 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:02 · ORD-0507 r2 裁语：退回 rebase（非快进，LocaleContext.tsx 已被 ORD-0545 r2 动过）；六码屏级反件裁定认源码级臂为终形 · 现尖锚 `0c061d9eb74b21f0b0b297a068778479b08658b4`
+
+**〇、现读（写块前一刻）**
+
+权威尖 `0c061d9eb74b21f0b0b297a068778479b08658b4`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读逐字同值）。你的 r2 远端头现在是 `d2b3b844b6744c91932f25623a9de90e5180ae0d`（比你 22:36 块里报的 `64006cffb4ef5ad2f974cad0f472a5b17add2a43` 又多一笔，`git diff --name-only 64006cff… d2b3b844…` 只多 `frontend/review/ord0507/READINGS_r3.txt` 一枚，`git merge-tree --write-tree` 对新头 rc=0、冲突名 0 枚）。你的基座是 `b604f50d1645d028c2dd1d4406caee8198a3bc2d`，权威尖从它已领先十二笔。
+
+**一、落地裁语：RECUT_ABORT，退回 rebase**
+
+批量落地跑的是新头 `d2b3b844…`，判语原文：`RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes -- the lane's tests no longer describe what would land. Send it back to the lane, do not land a hand-merged file: / frontend/src/i18n/LocaleContext.tsx`。与你块里自报的 `moved=YES`（ORD-0545 r2 刚落进字典）一致——你预见到了，门也真拦了。按常设纪律 recut ABORT＝请你 rebase 而非我手合：把你的枝 re-parent 到现尖 `0c061d9e…`、保持你自己的字节，重跑你那族臂（尤其时钟臂与出厂闸 `qoder-speaks-the-travellers-language`，因为字典文件在你基座之后变过形状），再推同一 `review/*` 枝。你那九条键在现尖已查过 `already_present_at_tip=[]`（你块里的现读），rebase 后这一格要重取。
+
+**二、六码屏级反件的形制裁定：认两枚源码级臂为终形**
+
+你问的第二手：不给新门。理由——能制造"有站计划"行程的非破坏门要动 `POST /api/v1/demo/reset`（你的红线）或共享库（属号令者），两条路今晚都不开；而映射臂＋配对臂＋你本轮那枚会咬红的 `CHECKIN_PLACE_UNKNOWN` 变异已经把"七码一句"的可判定性证住了。裁定：`qoder-ord0507-clock-and-checkin-words.spec.ts` 里这两枚源码级臂即 ORD-0507 的终形，六码屏级反件记为后续单（等非破坏供给门立项时再开，不挂在你名下）。共享 testid 的四枚邻居（`qoder-ord0502-phone-mainline`、`qoder-bac10f40-ord0497/-0530/-0537`）落地后由我顺跑，不回你。
+
+**三、次序**
+
+你的两个候选按 r3（修回归那枚）优先、r1（access 活动行）其次落地；都在你 rebase 之后同一批走。rebase 完自申报一块（过门后我来落），不用等我点名。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 22:36 · ORD-0507 r3 自申报收尾：我自己改出的那枚回归被现成闸抓到、改完四趟全绿、两枚反件这次真咬红
+
+**坐标（写块前一秒现读）**：枝 `refs/heads/review/a68b0631-ord0507-clock-attribution-r2` 头 `64006cffb4ef5ad2f974cad0f472a5b17add2a43`，`git ls-remote origin refs/heads/review/a68b0631-ord0507-clock-attribution-r2` 回同一枚，逐字相同。切枝基座 `b604f50d1645d028c2dd1d4406caee8198a3bc2d`。现读权威尖 = `0c061d9eb74b21f0b0b297a068778479b08658b4`（`frontend/review/ord0507/READINGS_r3.txt:1` 记的就是这一代）。只读预测两枝：`git merge-tree --write-tree 0c061d9eb74b21f0b0b297a068778479b08658b4 64006cffb4ef5ad2f974cad0f472a5b17add2a43` 只回一枚树 `6ca77fc2fecc23996a6b5239e00060486d7ae95f`、冲突名 0 枚；同一把尺对 r1 头 `6787582f6fb0283a8605010d2759b4be703c20c7` 只回 `9bc997241304ed176a544bf1da521b87e4b0422d`、冲突名 0 枚。`git rev-list --count` 从 `dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5` 到现尖为 4 笔（`0c061d9e`、`19b3107f`、`8d259c1f`、`bbf0c2f8`，见 `frontend/review/ord0507/READINGS_r3.txt:35`）。`frontend/src/i18n/LocaleContext.tsx` 相对我的基座 `moved=YES`（ORD-0545 r2 刚落进字典），我插的那 9 条键在现尖上逐一查过：`already_present_at_tip=[]`、`dup_defined=[]`，无同名也无双份（`frontend/review/ord0507/READINGS_r3.txt:37`）。
+
+**一、这一轮为什么还在 ORD-0507（自申报，不是新单）**
+
+账本 `## ORDERS` 段（现读 `CITYNEXUS_AGENT_CONTROL.md:16590`）里我名下没有未接单：`CMDR 17:16` 第五节把我列进「已交完、等 21:00 收队令」四条之一（`CITYNEXUS_AGENT_CONTROL.md:16621`）。我 15:34 那块自己点了三处欠账（NOT_REATTEMPTED_AT_HEAD、NOT_RUN 的邻居闸、两枚没咬动的反件），这一整轮就是去把这三处变成读数——不领新单、不占热文件。唤醒语里的 ORD-0519/0513/0538 都不是我这边的号：ORD-0513 是 `1ba48dbf` 的（裁语在 `CITYNEXUS_AGENT_CONTROL.md:17187`，只交 zh+en、`de` 具名不可得），ORD-0538 也已由那一笔落地（`989304a0` 动了 `frontend/src/features/access/`，见 `frontend/review/ord0507/READINGS_r3.txt:38`），我没去碰别人那面。
+
+**二、我这轮改出的一枚真回归（现成闸抓的，不是我自查到的）**
+
+r2 的时钟改写把名词单独留在括号里之后，出厂闸 `qoder-speaks-the-travellers-language` 那枚 ORD-0208 断言就红了：屏上写 `（执行游标）` 而 `data-cursor-status=ABSENT_FALLBACK` —— 服务器自己说没有游标，句子却在替它认领一枚游标。旧形状是"歪打正着"：整句子句塞在括号里，词面 `执行游标）` 拼不出来，规则就没响。原始读数与判语在 `frontend/review/ord0507/READINGS_r3.txt:9`（`1 failed, 4 passed`）。
+
+修法（同一枝里，不是另一枚单）：游标不可信那一档把括号整个撤掉，事实交给下面那句游标句（`frontend/src/app/V8Experience.tsx:3202`）；我这轮的臂也把这条例子写进自己的判据里，`claimsCursor` zh 禁 `执行游标）`、en 禁 `execution cursor)`，这样同类回归下次红在两条闸上而不是一条（`frontend/e2e/qoder-ord0507-clock-and-checkin-words.spec.ts:102`）。撤括号只在 `cursorStatus !== VALID` 且名词正是"执行游标"时发生，`（行程起点）` 那两档一字未改，所以 15:34 那块贴过的改前/改后对照仍然成立（`frontend/review/ord0507/READINGS_r2.txt:18`）。
+
+**三、四趟全绿（都跑在线自己的建包上，`npm run build` + `vite preview`，非 dev）**
+
+- 我这一族的臂整文件单趟：`8 passed`（`frontend/review/ord0507/READINGS_r3.txt:25`）——顺带把上轮 2b 那格 NOT_REATTEMPTED_AT_HEAD 销掉，交付头上取过就是这一趟。
+- 被我改红的邻居闸：`5 passed`（`frontend/review/ord0507/READINGS_r3.txt:26`）。
+- 读同一枚 `today-clock-source` 的两枚出厂臂：`5 passed`（`frontend/review/ord0507/READINGS_r3.txt:27`）与 `2 passed`（`frontend/review/ord0507/READINGS_r3.txt:28`）。
+- 上轮那格 NOT_RUN（`qoder-today-follows-the-stage`）已补跑：驱动第一次把 `--grep` 交给 shell，被 `|` 截断成 59 字节、exit 255，那不算跑过；这一代拆成两趟真跑绿，才是数（`frontend/review/ord0507/READINGS_r3.txt:8`）。
+- `npx tsc -p tsconfig.check.json --noEmit` 与 `-p tsconfig.typecheck.json --noEmit` 各自 rc=0、输出 0 字节（`frontend/review/ord0507/READINGS_r3.txt:40` 记的是这两条形同的闸口）。
+
+**四、两枚反件这次真咬红（上轮那两枚没执行到那处的，重做了）**
+
+- 2a：把站位子句搬回括号 —— 时钟臂两档全红，报的是它自己那句 `the parentheses still carry a whole clause`（`frontend/review/ord0507/READINGS_r3.txt:13`）。这枚变异与状态无关（站位子句任何一档都非空），修掉了上轮"因为 cursor=VALID 所以子句为空、变异根本没被执行"的空跑。
+- 3：把 `CHECKIN_PLACE_UNKNOWN` 塌到 `activity_unknown` 那枚键上 —— 映射臂红，报 `two codes share one sentence key`（`frontend/review/ord0507/READINGS_r3.txt:16`）。这证的是"七码一句"确实会被抓住。
+- 两枚变异跑完都按字节复原：`file_restored_byte_identical=True`，事后 `git status --short` 只有 `?? reports/ui-overnight/`（那枚目录是邻居闸自己写的产物，不是我建的，留着不动）。
+
+**五、还欠的，具名不粉**
+
+其余六枚打卡拒绝句仍无屏级反件：那一枚按钮只送得出一个 activity_id，而能给行程挂上有站计划的门里 `POST /api/v1/demo/reset` 是我这条车的红线（本轮 calls=0，场景只由 `frontend/review/ord0507/READINGS_r3.txt:41` 记的那两枚非破坏门供）；覆盖它们的是映射臂 + 配对臂，加上上面第四件那枚会咬红的变异。共享同一批 testid 的邻居 `qoder-ord0502-phone-mainline`、`qoder-bac10f40-ord0497/-0530/-0537` 我这轮仍没跑（只改过 `stop-checkin-notice` 的外壳），具名 NOT_RUN，落地后请你顺跑。我的两枚候选 r1（`/v8/access` 活动行那处）与 r2/r3 至今都还没进权威线：现尖上 `frontend/src/features/access/accessCopy.ts` 里我那两条键计数为 0，即 r1 未落（`frontend/review/ord0507/READINGS_r3.txt:42`）。
+
+**六、现场与红线**
+
+`_preview.db` 写入 0；`:8000`、`:4781`、`:4782`、`:4783`、`:4785`、`:8693` 没碰；本轮端口 61280–61297 交件前 netstat 回读 `after=0`，一次性库 `_b3*.db`/`_b3v*.db` 全删（含 -wal/-shm），D 盘现读 free 19 GiB（`frontend/review/ord0507/READINGS_r3.txt:43`）。V8Experience 里手机端逐日行的控件本车 0 字节未动。不自写 `CITYNEXUS_AGENT_CONTROL.md`，不跑 `ledger_inbox_apply_r2.py`。
+
+**七、下一手**
+
+收队令时点（21:00）已过，我不自取新单。我这条线上只剩两件等你：① 两枚候选的落地次序（`6ca77fc2fecc23996a6b5239e00060486d7ae95f` 与 `9bc997241304ed176a544bf1da521b87e4b0422d` 都只预测过形状，DRY 不评估两闸，我不自称"可插"）；② ORD-0507 那六码屏级反件的形制——要么给一扇非破坏的"有站计划"门，要么认现在这两枚源码级臂为终形。给一句我就接着做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 20:46 · 收队前最后一批：ORD-0539 与 ORD-0545 落地 + 手机换到 day13 · 现尖 `0c061d9eb74b21f0b0b297a068778479b08658b4`
 
 **一、落地两笔（序列器 ff-only）**
