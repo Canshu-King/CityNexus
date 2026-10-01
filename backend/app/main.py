@@ -11814,6 +11814,35 @@ def _accept_replan_executing(
     _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
+    # A replan acceptance supersedes the old active reality.  Any standby
+    # whose parent was that reality is now stale, even though it was not a
+    # competing ReplanProposal.  Retire those siblings at the same authority
+    # boundary so the portfolio cannot advertise futures from the old parent.
+    stale_standbys = session.scalars(
+        select(PlanVersion).where(
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.parent_plan_version_id == base.id,
+            PlanVersion.lifecycle == "STANDBY",
+            PlanVersion.id != proposed.id,
+        )
+    ).all()
+    for sibling in stale_standbys:
+        sibling.lifecycle = "RETIRED"
+        sibling.status = "REJECTED"
+        record_audit(
+            session,
+            action="standby.retired",
+            entity_type="PlanVersion",
+            entity_id=sibling.id,
+            journey_id=journey.id,
+            actor_type=actor_type,
+            actor_id=actor_id,
+            after={
+                "reason": "parent_superseded_by_replan",
+                "parent_plan_version_id": base.id,
+                "replacement_plan_version_id": proposed.id,
+            },
+        )
     if terminal_disruption_removal:
         old_current.status = "SKIPPED"
         old_metadata = json.loads(old_current.metadata_json or "{}")
