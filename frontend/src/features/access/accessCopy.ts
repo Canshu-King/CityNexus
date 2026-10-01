@@ -143,6 +143,13 @@ export const accessCopy = {
     "access.memberNoEnd": "carries no expiry, so it will not lapse on its own",
     "access.grantHeading": "Invitations issued for this trip",
     "access.grantEmpty": "The invitation door answered with none issued.",
+    // ORD-0538: the way forward each empty cell offers.  Short on purpose -- these sit inside a
+    // sentence at 390 wide, and a label long enough to push its own centre out of the hit area is the
+    // exact defect the roadmap tells this batch to prove against.
+    "access.emptyReloadActivity": "Re-read the actions",
+    "access.emptyReloadRoles": "Re-read the role door",
+    "access.emptyIssueGrant": "Issue a link-readable invitation",
+    "access.emptyInviteSomeone": "Go to the invitation form",
     "access.roleUnread": "This server named a role this screen has no sentence for: {role}.",
     "access.grantTokenSummary": "The token this invitation carries",
     "access.grantActive": "Open until {expires}.",
@@ -282,6 +289,12 @@ export const accessCopy = {
     "access.memberNoEnd": "没给到期时刻，也就是不会自己失效",
     "access.grantHeading": "这条行程发出去的邀请",
     "access.grantEmpty": "邀请门答了，一条也没发过。",
+    // ORD-0538：每一处空态给一条走得动的路。字短是有意的——这些按钮坐在 390 宽的一句话里，
+    // 标签长到把自己的中心推出命中区，正是这批要求被验的那一事。
+    "access.emptyReloadActivity": "重读一次活动",
+    "access.emptyReloadRoles": "重读角色门",
+    "access.emptyIssueGrant": "发一条凭链接可读的邀请",
+    "access.emptyInviteSomeone": "去邀请那一格",
     "access.roleUnread": "这台服务器报了一个本屏说不出人话的角色：{role}。",
     "access.grantTokenSummary": "这条邀请带的令牌",
     "access.grantActive": "到 {expires} 之前可开。",
