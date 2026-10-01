@@ -3529,14 +3529,14 @@ def add_collection_item(
 
     folder = session.get(CollectionFolder, folder_id)
     if folder is None:
-        refused = HTTPException(404, f"Collection folder {folder_id} was not found")
+        refused = HTTPException(404, "The collection shelf named here does not exist on this server")
         refused.reason_code = "COLLECTION_FOLDER_NOT_FOUND"
         refused.error_details = {"folder_id": folder_id}
         raise refused
     place = session.get(Place, payload.place_id)
     if place is None:
         refused = HTTPException(
-            404, f"Place {payload.place_id} was not found on this server"
+            404, "The place named here is not held by this server"
         )
         refused.reason_code = "PLACE_NOT_FOUND"
         refused.error_details = {"folder_id": folder_id, "place_id": payload.place_id}
@@ -3565,7 +3565,7 @@ def add_collection_item(
         ).scalars().first()
         refused = HTTPException(
             409,
-            f"Place {payload.place_id} is already in collection folder {folder_id}",
+            "That place is already on this collection shelf, so it was not added twice",
         )
         refused.reason_code = "PLACE_ALREADY_IN_COLLECTION"
         refused.error_details = {
