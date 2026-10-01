@@ -37,6 +37,7 @@ from app.db.models import (
 from app.execution.traveler_twin import planning_preference_items
 from app.planning.day_rhythm import DayRhythm, rhythm_from_preferences
 from app.planning.stay_mode_solver import solve_mode_choices
+from app.replanning.reference_replanner import WEIGHTS
 from app.replanning.provider_snapshots import MobilitySnapshot
 from app.stay_mobility import GraphNode, _mode_fact, capture_accommodation_offers, city_fixture
 from app.integrations.mobility.runtime import capture_journey_mobility_matrix
@@ -169,6 +170,197 @@ def _place_facts(place: Place) -> tuple[int, int, str]:
     if raw_cost is None:
         raise ValueError(f"V12_UNKNOWN_POI_COST:{place.id}")
     return int(raw_cost), max(15, int(metadata.get("duration_min", 60))), status
+
+
+def _opening_window(place: Place) -> tuple[int, int] | None:
+    """Return a captured opening window without treating UNKNOWN as all-day."""
+
+    opening = _load(place.opening_hours_json, {})
+    if not isinstance(opening, dict):
+        return None
+    if opening.get("always_available") is True:
+        return 0, 24 * 60
+    try:
+        opened = str(opening.get("open") or "").split(":", 1)
+        closed = str(opening.get("close") or "").split(":", 1)
+        start = int(opened[0]) * 60 + int(opened[1])
+        end = int(closed[0]) * 60 + int(closed[1])
+    except (IndexError, TypeError, ValueError):
+        return None
+    return (start, end) if 0 <= start < end <= 24 * 60 else None
+
+
+def _truthy_strategy_value(raw: Any) -> bool:
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except json.JSONDecodeError:
+            pass
+    if isinstance(raw, bool):
+        return raw
+    if isinstance(raw, (int, float)):
+        return raw > 0
+    if isinstance(raw, str):
+        return raw.strip().casefold() not in {"", "0", "false", "no", "off", "none", "null"}
+    return bool(raw)
+
+
+def _strategy_tags(place: Place) -> set[str]:
+    tags = _load(place.tags_json, [])
+    values = tags if isinstance(tags, list) else []
+    return {
+        value
+        for value in {
+            str(place.category or "").casefold(),
+            str(place.name or "").casefold(),
+            *(str(item).casefold() for item in values),
+        }
+        if value
+    }
+
+
+def _strategy_preference_fit(
+    session: Session,
+    journey: Journey,
+    activity_places: list[Place],
+) -> tuple[float, str]:
+    """Score only persisted intent/category signals; no venue quality is invented."""
+
+    preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    requested: list[str] = []
+    aliases = {
+        "indoor": {"indoor", "museum", "gallery", "library", "theatre", "theater", "craft"},
+        "outdoor": {"outdoor", "park", "garden", "viewpoint", "scenic", "heritage", "nature"},
+        "cultural": {"cultural", "culture", "museum", "gallery", "historic", "heritage", "temple", "shrine"},
+        "food": {"food", "restaurant", "cafe", "café", "market"},
+    }
+    for item in preferences:
+        key = str(getattr(item, "preference_key", "") or "").casefold()
+        if not key or key in {"low_walking", "max_walking_per_leg_m"}:
+            continue
+        if _truthy_strategy_value(getattr(item, "value_json", None)):
+            requested.append(key)
+    if not requested or not activity_places:
+        return 0.5, "NEUTRAL_NO_EXPLICIT_ACTIVITY_PREFERENCE"
+    matched = 0.0
+    for place in activity_places:
+        tags = _strategy_tags(place)
+        place_fit = 0.0
+        for key in requested:
+            accepted = aliases.get(key, {key})
+            if tags.intersection(accepted):
+                place_fit += 1.0
+        matched += min(1.0, place_fit / max(1, len(requested)))
+    return round(matched / len(activity_places), 6), "persisted mission/preference keys matched to Place category/tags"
+
+
+def _strategy_score_breakdown(
+    session: Session,
+    journey: Journey,
+    scheduled: list[ComposeNode],
+    places: dict[str, Place],
+    selected_modes: dict[tuple[str, str], MobilityFact],
+    total_cost: int,
+) -> tuple[dict[str, float], dict[str, Any]]:
+    """Compute multiday candidate dimensions from the facts actually used by the plan."""
+
+    activity_places = [
+        places[node.place_id]
+        for node in scheduled
+        if node.role == "ACTIVITY" and node.place_id in places
+    ]
+    opening_known = 0
+    opening_slack: list[float] = []
+    known_cost = 0
+    for node, place in (
+        (node, places[node.place_id])
+        for node in scheduled
+        if node.role == "ACTIVITY" and node.place_id in places
+    ):
+        if _opening_window(place) is not None:
+            opening_known += 1
+            window = _opening_window(place)
+            assert window is not None
+            end_minutes = node.end_at.hour * 60 + node.end_at.minute
+            opening_slack.append(max(0, window[1] - end_minutes))
+        try:
+            _cost, _duration, cost_status = _place_facts(place)
+        except ValueError:
+            cost_status = "UNKNOWN"
+        if str(cost_status).upper() not in {"UNKNOWN", "ESTIMATED"}:
+            known_cost += 1
+
+    route_facts: list[MobilityFact] = []
+    for previous, current in zip(scheduled, scheduled[1:]):
+        fact = selected_modes.get((previous.key, current.key))
+        if fact is not None:
+            route_facts.append(fact)
+    travel_minutes = sum(int(item.duration_min or 0) for item in route_facts)
+    walking_minutes = sum(int(item.walking_min or 0) for item in route_facts)
+    reliability_values = [
+        max(0.0, min(1.0, float(item.reliability_score)))
+        for item in route_facts
+        if item.reliability_score is not None
+    ]
+    reliability = sum(reliability_values) / len(reliability_values) if reliability_values else 0.5
+    provider_routes = sum(
+        str(item.provenance).upper() in {"CAPTURED_REPLAY", "LIVE_CAPTURE"}
+        for item in route_facts
+    )
+    route_coverage = provider_routes / len(route_facts) if route_facts else 0.5
+    preference_fit, preference_basis = _strategy_preference_fit(session, journey, activity_places)
+    budget_fit = max(
+        0.0,
+        min(1.0, 1.0 - (int(total_cost) / max(1, int(journey.budget_amount_minor)))),
+    )
+    mobility_fit = max(
+        0.0,
+        min(1.0, 1.0 - (travel_minutes / max(1, len(activity_places) * 90))),
+    )
+    opening_ratio = opening_known / max(1, len(activity_places))
+    cost_ratio = known_cost / max(1, len(activity_places))
+    fact_completeness = (opening_ratio + cost_ratio) / 2.0
+    time_reliability = (
+        max(0.0, min(1.0, sum(opening_slack) / max(1, len(opening_slack) * 120)))
+        if opening_slack
+        else 0.5
+    )
+    robustness = max(0.0, min(1.0, fact_completeness * reliability * (0.5 + 0.5 * route_coverage)))
+    metrics = {
+        "commitment_preservation": 1.0,
+        "stability": round(time_reliability, 6),
+        "time_reliability": round(time_reliability, 6),
+        "preference_fit": round(preference_fit, 6),
+        "mobility_fit": round(mobility_fit, 6),
+        "budget_fit": round(budget_fit, 6),
+        "robustness": round(robustness, 6),
+        "opportunity_value": round(preference_fit * fact_completeness, 6),
+    }
+    metrics["total"] = round(
+        sum(WEIGHTS[name] * max(0.0, min(1.0, metrics[name])) for name in WEIGHTS),
+        6,
+    )
+    provenance = {
+        "metric_values": dict(metrics),
+        "preference_fit_basis": preference_basis,
+        "travel_minutes": travel_minutes,
+        "walking_minutes": walking_minutes,
+        "route_fact_count": len(route_facts),
+        "provider_route_count": provider_routes,
+        "provider_route_coverage": round(route_coverage, 6),
+        "reliability_mean": round(reliability, 6),
+        "verified_opening_count": opening_known,
+        "verified_cost_count": known_cost,
+        "fact_completeness": round(fact_completeness, 6),
+        "score_sources": {
+            "preference_fit": "persisted mission/preference keys matched to provider Place category/tags",
+            "mobility_fit": "selected MobilityFact duration_min and walking_min",
+            "budget_fit": "total plan cost / Journey budget",
+            "time_reliability": "captured opening close minus scheduled activity end",
+            "robustness": "opening/cost completeness, route reliability, provider route coverage",
+        },
+    }
+    return metrics, provenance
 
 
 def _distance_minutes(a: ComposeNode | GraphNode, b: ComposeNode | GraphNode) -> int:
@@ -1291,6 +1483,14 @@ def compose_authoritative_multiday(
             stay=stay,
             discovery_evidence=discovery_evidence,
         )
+        metrics, score_provenance = _strategy_score_breakdown(
+            session,
+            journey,
+            scheduled,
+            places,
+            selected_modes,
+            total_cost,
+        )
         now = _now()
         latest_version = int(session.scalar(select(PlanVersion.version_no).where(PlanVersion.journey_id == journey.id).order_by(PlanVersion.version_no.desc()).limit(1)) or 0)
         plan = PlanVersion(
@@ -1311,17 +1511,9 @@ def compose_authoritative_multiday(
                 sum(int((item.end_at - item.start_at).total_seconds() // 60) for item in scheduled)
                 + sum(int(item.duration_min or 0) for item in selected_modes.values())
             ),
-            utility_score=max(0.0, min(1.0, 0.96 - 0.04 * variation)),
+            utility_score=metrics["total"],
             score_breakdown_json=_json({
-                "commitment_preservation": 1.0,
-                "stability": 0.94 - (0.01 * variation),
-                "time_reliability": 0.92,
-                "preference_fit": 0.84,
-                "mobility_fit": 0.88,
-                "budget_fit": max(0.0, min(1.0, 1.0 - (total_cost / max(1, int(journey.budget_amount_minor))))),
-                "robustness": 0.86,
-                "opportunity_value": 0.9,
-                "total": max(0.0, min(1.0, 0.96 - 0.04 * variation)),
+                **metrics,
                 "optimizer": optimizer_kind,
                 "day_assignment": assignment,
                 "days": day_count,
@@ -1331,7 +1523,7 @@ def compose_authoritative_multiday(
                 "protected_c4": c4_ids,
                 "day_rhythm": rhythm.as_dict() if rhythm else None,
             }),
-            explanation_json=_json({"product_path": "V13_AUTHORITATIVE_BOUNDED_MULTIDAY", "optimizer_kind": optimizer_kind, "complete": True, "days": day_count, "nights": night_count, "poi_ids": selected_ids, "day_assignment": assignment, "stay_offer_id": stay.id if stay else None, "reservation_id": reservation_id, "protected_commitment_ids": c4_ids, "mid_trip_commitment_ids": [item.id for values in commitment_anchors.values() for item in values], "mobility_snapshot_id": snapshot_id, "deterministic_gate": "PASSED", "evidence_runtime": evidence.get("runtime_label"), "day_rhythm": rhythm.as_dict() if rhythm else None, "discovery": discovery_evidence or {}}),
+            explanation_json=_json({"product_path": "V13_AUTHORITATIVE_BOUNDED_MULTIDAY", "optimizer_kind": optimizer_kind, "complete": True, "days": day_count, "nights": night_count, "poi_ids": selected_ids, "day_assignment": assignment, "stay_offer_id": stay.id if stay else None, "reservation_id": reservation_id, "protected_commitment_ids": c4_ids, "mid_trip_commitment_ids": [item.id for values in commitment_anchors.values() for item in values], "mobility_snapshot_id": snapshot_id, "deterministic_gate": "PASSED", "evidence_runtime": evidence.get("runtime_label"), "day_rhythm": rhythm.as_dict() if rhythm else None, "score_provenance": score_provenance, "discovery": discovery_evidence or {}}),
             mobility_snapshot_id=snapshot_id,
             mobility_evidence_json=_json(evidence),
             created_at=now,
