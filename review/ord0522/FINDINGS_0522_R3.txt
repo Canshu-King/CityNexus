@@ -1,0 +1,97 @@
+ORD-0522 r3 (self-declared) -- the facts card measured on the bytes the line actually ships, and
+the two declarations that make it legible, with both generations read for real
+
+lane review/2d2d7428-ord0522-facts-card-line-verify-r3  head 8aa0b3b0d96dce99c64130f03fba00c21901a275  live tip 1c785a2d897888bb4089f7a324a3934f85f5f016  merge-tree rc=0 CONFLICT 0
+staged through the product's own doors only, on this lane's own files: line store D:/moodle/_qoder_q_ord0522_20261001/_r3_line.db / candidate store D:/moodle/_qoder_q_ord0522_20261001/_r3_cand.db
+rendered 2026-10-02 00:17:01  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)
+
+0. WHY THIS ROUND IS NOT A REPEAT OF r2c
+   r2c read a sentence I had to stage by hand, and its 'before' figure was an EMULATION. The line
+   has since taken ORD-0521's supply door and ORD-0526's seed work, so this round asks two
+   questions that can be answered without writing a row myself: what does the shipped board say
+   when only product doors are used, and what does that card actually look like on the bytes users
+   are served. Both are answered below off real builds, and the pairing replaces the emulation.
+
+1. THE PRODUCT'S OWN DOORS, NO HAND-WRITTEN ROW
+   Sequence on a fresh store: `POST /api/v1/demo/reset` -> 200, `POST /api/v1/demo/prepare-scenario`
+   -> 200 (main.py:2319 at this tip; it builds and selects a plan and stops short of /start).
+   The board then says: plan_version_id=55523d40-cafe-5bd2-b30a-de057ec7a839 journey=22222222-2222-4222-8222-222222222222 supply.state=NOT_ASKED stops total=6 with_coordinate=6
+   without_coordinate=0 source_kinds=[GOLDEN_FIXTURE].
+   Read the consequence plainly: a journey the product can stage on its own has every stop placed,
+   so the sentence ORD-0522 added ('另有 N 个站点这次没有位置') legitimately does NOT appear, and
+   all four arms here confirm sentence_present=false with without_coordinate=0. That keeps r2c's
+   twelve arms for what they are -- fixture readings -- and this round adds no claim on top of them.
+   The door's own guard is read too, not assumed: presenting the scene header instead of the reset
+   header answers 403 / RESET_TOKEN_REQUIRED and deletes nothing.
+   Store ownership, both sides: the HTTP board and the sqlite file agree -- plan 55523d40-cafe-5bd2-b30a-de057ec7a839 == 55523d40-cafe-5bd2-b30a-de057ec7a839;
+   activities over HTTP 6 == in file 6; with_coordinate over HTTP 6 == in file 6.
+
+2. THE CARD ON THE SHIPPED BYTES (this is the defect, and it is wider than my sentence)
+   Instrument: for every visible text element inside `.v8-map-facts`, its own computed colour
+   against the first opaque background behind it, WCAG relative luminance, tier 4.5 for body text
+   and 3.0 for large. Same build the page loads, no injected style.
+   LINE  1280x900 dark  背景=255,255,255 可见文字 13 枚 不合格 13 枚 最差 'Riverside Museum' 对比 1.09 (需 3) 句子在上 False
+   LINE  1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子在上 False
+   LINE  390x844  dark  背景=255,255,255 可见文字 13 枚 不合格 13 枚 最差 'Riverside Museum' 对比 1.09 (需 3) 句子在上 False
+   LINE  390x844  light 背景=255,255,255 可见文字 13 枚 不合格 1 枚 最差 '未知费用保持未知。' 对比 2.96 (需 4.5) 句子在上 False
+   So on the line the dark tier makes the entire card unreadable -- 1 of 13 text elements fail,
+   the worst being a place name at 2.96 -- and the light tier has its own failure: the card's muted
+   line reads 1.09 against a required 3. Neither number came from a mutant.
+
+3. TWO DECLARATIONS, BOTH TAKING TOKENS THAT ALREADY EXIST
+   - the card hardcoded its surface (`background: #fff`) where sibling cards take the token;
+   - the card's muted line hardcoded `color: #8c97a6` where the palette declares a secondary ink
+     for exactly this purpose (--cn-ink-secondary: #6e6e73;; dark scheme re-declares it as the second line).
+   Both fixes are one insertion and one deletion each in frontend/src/styles.css, blob 58e982e1bad669fe9b66cee392c4651ce0fd3644 -- no new scale, no new
+   variable, and nothing else in that rule touched.
+   The tokens are declared once per scheme: surface in the light block and dark block;
+   --cn-ink-secondary --cn-ink-secondary: #6e6e73; / --cn-ink-secondary: #aeaeb2;
+   Candidate bytes (/assets/index-DLj2IFkn.js, 1590336 served bytes, sha1 af58444bfeb624474a570de870768e9f62ce2590 == disk sha1, the release entry the page names):
+   CAND  1280x900 dark  背景=28,28,30 可见文字 13 枚 不合格 0 枚 最差 '下一段路程' 对比 4.66 (需 4.5) 句子在上 False
+   CAND  1280x900 light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子在上 False
+   CAND  390x844  dark  背景=28,28,30 可见文字 13 枚 不合格 0 枚 最差 '下一段路程' 对比 4.66 (需 4.5) 句子在上 False
+   CAND  390x844  light 背景=255,255,255 可见文字 13 枚 不合格 0 枚 最差 '只看打过' 对比 4.82 (需 4.5) 句子在上 False
+   Across all four arms the failing count is 0; the tightest reading is 4.66 in the light tier and
+   4.82 in the dark, both over their required tier.
+
+4. THE MUTANT, SO THE ARMS ARE NOT EMPTY
+   Both removed declarations are re-imposed on the CANDIDATE bundle as an author style
+   (`.v8-map-facts {{ background: #fff }}` and `.v8-map-facts > small {{ color: #8c97a6 }}`).
+   Labelled MUTANT -- the old rule applied to today's element, not a reading of an older artifact:
+   light: 1 of 13 fails, worst 2.96 (the number the line build produced: 1.09);
+   dark: 13 of 13 fail, worst 1.09 against the line build's 2.96. Small text reads rgb(140, 151, 166) on
+   255,255,255 again. Revert the two declarations and the arms go red, so the green above is load-bearing.
+
+5. GATES AND DENOMINATORS, THIS HEAD, ONE SESSION
+   The instrument reports a below-tier reading as a refusal. For the LINE run that red is the
+   finding, so it was validated rather than suppressed: 4 refusals for 4 arms, each one a
+   contrast verdict and no other class (['对比 1.09 < 3', '对比 2.96 < 4.5']) -- the generator aborts if that stops being true.
+   this order's cells pass 1: 8 passed, 2 warnings in 2.61s
+   this order's cells pass 2: 8 passed, 2 warnings in 2.18s
+   five-file family pass 1: 44 passed, 2 warnings in 17.78s
+   five-file family pass 2: 44 passed, 2 warnings in 19.18s
+   whole backend suite collects 1677 tests; the suite itself was not run (NOT_EXECUTED_BY_LANE).
+   contract parity: OpenAPI 3.1.0; formal 174; runtime 174; missing 0; extra 0
+   credential ruler, both readings: stripped of credential env -> CREDENTIAL_GATE_CLEAR (scanned_files=539 hits_total=5);
+   same tree, environment carrying DEEPSEEK_API_KEY -> LIVE_CREDENTIAL_IN_ENVIRONMENT. Fact about the ruler's start-up, not about these bytes.
+   tsc exit 0 and vite build exit 0 (/tmp/tsc0522r7.txt, /tmp/build0522r7.txt).
+   2 files against the tip: backend/tests/test_qoder_ord0479_dictionary_key_shape.py, frontend/src/styles.css
+   The line-side bundle's content sha1 is NOT in this artifact: dist/ is gitignored and the
+   candidate build overwrote that directory, so I cannot re-fetch those bytes now. The line
+   readings are therefore pinned by the commit they were built from (dc9dc10f, entry {}) and
+   by this round's JSON, not by a hash I can no longer recompute.
+   Rebase check instead of trust: after re-cutting 0c061d9e -> 1c785a2d897888bb4089f7a324a3934f85f5f016 the rebuild produced the
+   same entry name and the same sha1 af58444bfeb624474a570de870768e9f62ce2590 -- so the four candidate arms belong to this generation
+   by computation, not by assumption.
+
+6. WHAT THIS ROUND DOES NOT CLAIM
+   - No product door in this store produces a stop with no place identity: `activities.place_id` is
+     ON DELETE SET NULL (models.py:536 / schema.sql:212), so both NO_CANONICAL_IDENTITY and
+     COVERAGE_INCOMPLETE remain fixture-shaped readings from r2c and are not restated as line states.
+   - The board's supply cell still reads NOT_ASKED on a door-staged journey: nothing was asked of a
+     provider, which is honest, and it is not evidence that real supply works.
+   - Not run: the e2e suite, any device, ORD-0509's remaining screens (drawer, share receiving,
+     poster). Tiles never load on this host, so nothing here depends on basemap pixels.
+   - The shared preview database and the ports named in orders were not touched; `demo/reset` was
+     called only on this lane's own files, and both lane servers were stopped afterwards.
+REFUSALS = []
