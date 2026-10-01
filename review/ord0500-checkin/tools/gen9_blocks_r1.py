@@ -6,6 +6,7 @@ from `run/blobs_r9.txt`.  Nothing in here is typed from memory: not the three ex
 tip's cells, my r2 tree's, the fixed tree's, all from one ruler), not the five landing judgements,
 not the four re-anchored comment lines.
 """
+import glob
 import hashlib
 import json
 import os
@@ -186,6 +187,36 @@ def main():
     s["land_now_head"] = frow.get("commit")
     s["land_now_sha"] = hashlib.sha256(open(os.path.join(EV, "gen9_landing_check_r1.json"),
                                             "rb").read()).hexdigest()
+    # the port inventory, read out of the artifacts that named them rather than from memory
+    face_ports, backend_ports = set(), set()
+    for p in glob.glob(os.path.join(EV, "gen9_*.json")) + glob.glob(
+            os.path.join(EV, "checkin_*_r2.json")):
+        for m in re.finditer(r"127\.0\.0\.1:(\d{4})\b", open(p, encoding="utf-8").read()):
+            face_ports.add(int(m.group(1)))
+    for p in (glob.glob(os.path.join(LANE, "run", "gen9_*backend_*.log"))
+              + glob.glob(os.path.join(LANE, "run", "gen9_backend_*.log"))):
+        m = re.search(r"_(\d{4})", os.path.basename(p))
+        if m:
+            backend_ports.add(int(m.group(1)))
+    listening = set()
+    try:
+        ns = subprocess.run(["netstat", "-ano"], stdout=subprocess.PIPE, timeout=120,
+                            env=os.environ).stdout.decode("utf-8", "replace")
+        for line in ns.splitlines():
+            if "LISTENING" in line:
+                for m in re.finditer(r"127\.0\.0\.1:(\d{4})\b", line):
+                    listening.add(int(m.group(1)))
+    except Exception as exc:  # netstat unreadable is a named gap, not a claim of release
+        listening = None
+        s["port_probe_error"] = str(exc)[:60]
+    mine = sorted(face_ports | backend_ports)
+    s["ports_used"] = "、".join("`:%s`" % x for x in mine)
+    s["ports_still_listening"] = ([p for p in mine if listening is None] if listening is None
+                                  else [p for p in mine if p in listening])
+    s["ports_released"] = (listening is not None and not s["ports_still_listening"])
+    s["ports_faces"] = len(face_ports)
+    s["ports_backends"] = len(backend_ports)
+    s["ports_still"] = "、".join("`:%s`" % x for x in s["ports_still_listening"]) or "无"
     _base_phone = ((_sw.get("TIP_b604f50d_phone", {}).get("readings") or {}).get("census") or {})
     s["press_tip_base"] = _base_phone.get("pressable_by_centre_hit")
     _raw = load("checkin_O0500_R5_phone_390x844_r2.json")
@@ -302,7 +333,7 @@ def main():
 
 **八、一处我不改的缺口，仍具名**。GET 那扇读本候选同样具名拒未知行程，但契约里 GET 的 404 我没写——写了会撞 ORD-0476 已收的契约臂（`backend/tests/test_qoder_ord0476_checkins.py:500` 逐字断言 GET 只有 200 与 409）。POST 侧 404 已写进 `contracts/openapi.yaml` 并由我的臂钉名字。
 
-**九、产物身份与反件处置**。两证：基座面入口 `{entry_tip}`、候选面入口 `{entry_cand}`、反件面 `{entry_mut}`，服务字节与磁盘字节逐枚相等，件 `{b_builds}`（本机字节 sha256，不是 git 物件，不可 cat-file）；第三证具名 `NOT_AVAILABLE_BY_CMDR`（`vite preview` 不往我控制的日志写请求行）。反件树 `wt24`/`mutgen9` 与反件面不进任何枝，重建配方 `review/ord0500-checkin/tools/CE2_MUTANT_RECIPE_r1.md`。我的端口：静态 `127.0.0.1:4869`/`:4871`/`:4872`/`:4873`，后端 `127.0.0.1:8141`/`:8143`/`:8145`，跑完已交还；`:8000`/`:4781`/`:4782`/`:4783`/`:4785`/`:4787`/`:8693` 未碰，`demo/reset` 未跑。
+**九、产物身份与反件处置**。两证：基座面入口 `{entry_tip}`、候选面入口 `{entry_cand}`、反件面 `{entry_mut}`，服务字节与磁盘字节逐枚相等，件 `{b_builds}`（本机字节 sha256，不是 git 物件，不可 cat-file）；第三证具名 `NOT_AVAILABLE_BY_CMDR`（`vite preview` 不往我控制的日志写请求行）。反件树 `wt24`/`mutgen9` 与反件面不进任何枝，两枚反件各与**交付候选**逐行现算的配方在 `review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md`（生成器 `review/ord0500-checkin/tools/ce2_recipe_r5.py`；上一版那份写的是它那一代的树名，所以这次重写而不是沿用）。我这一代开过的口：{ports_used}（数出来的：面 {ports_faces} 枚、后端 {ports_backends} 枚，都是从本代件与 run 日志里正则收上来的，不是我记忆的）；写完这块用 `netstat -ano` 复查，这些口里仍在监听的是 {ports_still_listening}，交还 = {ports_released}；`:8000`/`:4781`/`:4782`/`:4783`/`:4785`/`:4787`/`:8693` 未碰，`demo/reset` 未跑。
 
 **九·甲、落地检查（按字节，不按血缘；这也是我不再追着重切的理由）**。我交的两枝现读现比，件 `{b_land}`（工具 `tools/gen9_landing_check_r1.py`，探针 `tools/git_blob_probe_r1.py`——第一版探针把 `git cat-file -e` 的空 stdout 当成「文件不存在」，那四处 ABSENT_AT_TIP 是我仪器自己的错，已被这枚替换）：
 {landing_rows}
