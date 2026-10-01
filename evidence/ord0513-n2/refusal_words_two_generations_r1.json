@@ -1,0 +1,320 @@
+{
+ "order": "ORD-0513",
+ "lane": "N2",
+ "session": "9759f1ac-3d69-4688-8664-8ca954ab7737",
+ "base_generation": "514b397f96f3b5165b24865f4a544ab6f8020084",
+ "candidate_generation": "f419abe1ae2b8e23fe047d9b59203c644c7329bb",
+ "base_subject": "ORD-0526: the readings taken on 2f0568e0, after ORD-0522 rewrote my merged blob",
+ "candidate_subject": "ORD-0513: the three collection refusals name the condition, and the ids stay in `details`",
+ "numstat": [
+  [
+   "3",
+   "3",
+   "backend/app/main.py"
+  ],
+  [
+   "215",
+   "0",
+   "backend/tests/test_qoder_ord0513_collection_refusal_words.py"
+  ],
+  [
+   "2",
+   "2",
+   "frontend/src/features/poiimport/poiImportCopy.ts"
+  ]
+ ],
+ "refusal_sentences": {
+  "base": [
+   {
+    "line_in_tree": 140904,
+    "status": 404,
+    "is_f_string": true,
+    "text": "Collection folder {folder_id} was not found"
+   },
+   {
+    "line_in_tree": 140910,
+    "status": 404,
+    "is_f_string": true,
+    "text": "Place {payload.place_id} was not found on this server"
+   },
+   {
+    "line_in_tree": 140938,
+    "status": 409,
+    "is_f_string": true,
+    "text": "Place {payload.place_id} is already in collection folder {folder_id}"
+   }
+  ],
+  "candidate": [
+   {
+    "line_in_tree": 140904,
+    "status": 404,
+    "is_f_string": false,
+    "text": "The collection shelf named here does not exist on this server"
+   },
+   {
+    "line_in_tree": 140910,
+    "status": 404,
+    "is_f_string": false,
+    "text": "The place named here is not held by this server"
+   },
+   {
+    "line_in_tree": 140938,
+    "status": 409,
+    "is_f_string": false,
+    "text": "That place is already on this collection shelf, so it was not added twice"
+   }
+  ]
+ },
+ "screen": {
+  "base": {
+   "run_id": "0513b",
+   "generation_sha": "514b397f96f3b5165b24865f4a544ab6f8020084",
+   "served_asset": "/assets/index-DAbk3Cl8.js",
+   "asset_served_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "entry_matches_build": true,
+   "served_equals_disk": true,
+   "backend_export": "D:/moodle/_qoder_n2_0513_be2",
+   "shelf_created_http_status": 201,
+   "cases": {
+    "zh-CN 390x844": {
+     "gate_found": 1,
+     "collect_entries_on_screen": 6,
+     "ui_writes": [
+      {
+       "http_status": 201,
+       "reason_code": null
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      }
+     ],
+     "uuid_hits_in_painted_text_max": 0,
+     "upstream_prose_painted_any": false,
+     "painted_lines": {
+      "after_first_collect": "已收在 ORD0513-0513b-架子",
+      "after_second_collect": null,
+      "import_after_first": "1 枚已收在「ORD0513-0513b-架子」——这句是从同一扇读门重读回来的。",
+      "import_after_second": "1 枚已收在「ORD0513-0513b-架子」——这句是从同一扇读门重读回来的。"
+     },
+     "door_409_body": {
+      "http_status": 409,
+      "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+      "message": "Place place-old-town is already in collection folder 7e4babd4-d463-4052-8b4c-a667816bd82f",
+      "detail_keys": [
+       "folder_id",
+       "place_id",
+       "existing_item_id",
+       "existing_added_at"
+      ]
+     },
+     "pageerror_count": 0
+    },
+    "en 1280x900": {
+     "gate_found": 1,
+     "collect_entries_on_screen": 6,
+     "ui_writes": [
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      }
+     ],
+     "uuid_hits_in_painted_text_max": 0,
+     "upstream_prose_painted_any": false,
+     "painted_lines": {
+      "after_first_collect": "This place is already on that shelf. · Collected into ORD0513-0513b-架子",
+      "after_second_collect": null,
+      "import_after_first": "1 place are now on ORD0513-0513b-架子 — read back from the same list door.",
+      "import_after_second": "1 place are now on ORD0513-0513b-架子 — read back from the same list door."
+     },
+     "door_409_body": {
+      "http_status": 409,
+      "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+      "message": "Place place-old-town is already in collection folder 7e4babd4-d463-4052-8b4c-a667816bd82f",
+      "detail_keys": [
+       "folder_id",
+       "place_id",
+       "existing_item_id",
+       "existing_added_at"
+      ]
+     },
+     "pageerror_count": 0
+    }
+   }
+  },
+  "candidate": {
+   "run_id": "0513c",
+   "generation_sha": "f419abe1ae2b8e23fe047d9b59203c644c7329bb",
+   "served_asset": "/assets/index-CgPIjjDt.js",
+   "asset_served_sha1": "8df14a89ba4e3f565bd0af1e95794f49bf075b3a",
+   "entry_matches_build": true,
+   "served_equals_disk": true,
+   "backend_export": "D:/moodle/_qoder_n2_0513_be_cand",
+   "shelf_created_http_status": 201,
+   "cases": {
+    "zh-CN 390x844": {
+     "gate_found": 1,
+     "collect_entries_on_screen": 6,
+     "ui_writes": [
+      {
+       "http_status": 201,
+       "reason_code": null
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      }
+     ],
+     "uuid_hits_in_painted_text_max": 0,
+     "upstream_prose_painted_any": false,
+     "painted_lines": {
+      "after_first_collect": "已收在 ORD0513-0513c-架子",
+      "after_second_collect": null,
+      "import_after_first": "1 枚已收在「ORD0513-0513c-架子」——这句是从同一扇读门重读回来的。",
+      "import_after_second": "1 枚已收在「ORD0513-0513c-架子」——这句是从同一扇读门重读回来的。"
+     },
+     "door_409_body": {
+      "http_status": 409,
+      "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+      "message": "That place is already on this collection shelf, so it was not added twice",
+      "detail_keys": [
+       "folder_id",
+       "place_id",
+       "existing_item_id",
+       "existing_added_at"
+      ]
+     },
+     "pageerror_count": 0
+    },
+    "en 1280x900": {
+     "gate_found": 1,
+     "collect_entries_on_screen": 6,
+     "ui_writes": [
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      },
+      {
+       "http_status": 409,
+       "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+      }
+     ],
+     "uuid_hits_in_painted_text_max": 0,
+     "upstream_prose_painted_any": false,
+     "painted_lines": {
+      "after_first_collect": "This place is already on that shelf. · Collected into ORD0513-0513c-架子",
+      "after_second_collect": null,
+      "import_after_first": "1 place now on ORD0513-0513c-架子 — read back from the same list door.",
+      "import_after_second": "1 place now on ORD0513-0513c-架子 — read back from the same list door."
+     },
+     "door_409_body": {
+      "http_status": 409,
+      "reason_code": "PLACE_ALREADY_IN_COLLECTION",
+      "message": "That place is already on this collection shelf, so it was not added twice",
+      "detail_keys": [
+       "folder_id",
+       "place_id",
+       "existing_item_id",
+       "existing_added_at"
+      ]
+     },
+     "pageerror_count": 0
+    }
+   }
+  }
+ },
+ "pytest": {
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "command": "python -m pytest <files> -p no:randomly -q --tb=line -rf --no-header",
+  "base": {
+   "tree": "D:/moodle/_qoder_n2_0513_base/backend",
+   "own_arms": {
+    "rc": 1,
+    "failed_nodeids": [
+     "tests/test_qoder_ord0513_collection_refusal_words.py::test_unknown_shelf_says_the_condition_and_not_the_shelf_id",
+     "tests/test_qoder_ord0513_collection_refusal_words.py::test_unknown_place_says_the_condition_and_not_the_place_id",
+     "tests/test_qoder_ord0513_collection_refusal_words.py::test_duplicate_keeps_the_name_and_loses_both_ids_from_the_sentence",
+     "tests/test_qoder_ord0513_collection_refusal_words.py::test_the_family_has_no_other_bare_token_sentence_left"
+    ],
+    "counts": {
+     "failed": 4
+    },
+    "summary_line": "4 failed, 2 warnings in 2.02s"
+   }
+  },
+  "candidate": {
+   "tree": "D:/moodle/_qoder_n2_ord0524_wt/backend",
+   "own_arms": {
+    "rc": 0,
+    "failed_nodeids": [],
+    "counts": {
+     "passed": 4
+    },
+    "summary_line": "4 passed, 2 warnings in 2.32s"
+   },
+   "siblings": {
+    "rc": 0,
+    "failed_nodeids": [],
+    "counts": {
+     "passed": 26
+    },
+    "summary_line": "26 passed, 4 warnings in 6.00s"
+   }
+  }
+ },
+ "judgments": {
+  "base_refusal_sentences": 3,
+  "candidate_refusal_sentences": 3,
+  "base_sentences_carry_a_bare_token": 3,
+  "candidate_sentences_carry_a_bare_token": 0,
+  "candidate_sentences_are_prose": true,
+  "painted_uuid_hits_base": 0,
+  "painted_uuid_hits_candidate": 0,
+  "door_409_message_base": "Place place-old-town is already in collection folder 7e4babd4-d463-4052-8b4c-a667816bd82f",
+  "door_409_message_candidate": "That place is already on this collection shelf, so it was not added twice",
+  "arms_red_on_base": 4,
+  "arms_green_on_candidate": 4,
+  "siblings_green_on_candidate": 26
+ },
+ "own_bytes_sha1": {
+  "n2_0513_screen_r1.js": "b9099a0071e60d858f508215bee8b710ef2769b9",
+  "n2_0513_run_r1.py": "589870d3b709f5684bee9f083038f487e4ee559a",
+  "n2_0513_pytest_ab_r1.py": "2bceaa8f5446a8873aa926c494e2f8010287833c"
+ }
+}
