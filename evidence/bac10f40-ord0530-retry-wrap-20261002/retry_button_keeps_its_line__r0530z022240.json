@@ -1,0 +1,56 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+ "arm": "retry_button_keeps_its_line",
+ "run_id": "r0530z022240",
+ "denominator": "copied private db",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "phone": {
+  "text": "重读一次",
+  "box": {
+   "x": 265,
+   "y": -7,
+   "w": 88,
+   "h": 35
+  },
+  "painted_lines": 1,
+  "centre": {
+   "x": 309,
+   "y": 11
+  },
+  "hit": "button.cn-footprints__retry",
+  "hit_is_self": true,
+  "hit_is_nav": false,
+  "nav_top": 768,
+  "inner_height": 844,
+  "scroll_y": 116,
+  "scroller_top": null,
+  "in_viewport": false
+ },
+ "centred": {
+  "text": "重读一次",
+  "box": {
+   "x": 265,
+   "y": 109,
+   "w": 88,
+   "h": 35
+  },
+  "painted_lines": 1,
+  "centre": {
+   "x": 309,
+   "y": 127
+  },
+  "hit": "button.cn-footprints__retry",
+  "hit_is_self": true,
+  "hit_is_nav": false,
+  "nav_top": 768,
+  "inner_height": 844,
+  "scroll_y": 0,
+  "scroller_top": null,
+  "in_viewport": true
+ },
+ "desktop_width": 88,
+ "desktop_painted_lines": 1,
+ "shell_restored_scroll_y": 116,
+ "nav_top_read_on_screen": 768,
+ "how_wrapping_is_measured": "Range.getClientRects() over the text node, not getBoundingClientRect()"
+}

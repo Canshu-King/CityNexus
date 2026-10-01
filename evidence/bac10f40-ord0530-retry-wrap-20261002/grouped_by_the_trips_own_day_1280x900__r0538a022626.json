@@ -1,0 +1,85 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+ "arm": "grouped_by_the_trips_own_day_1280x900",
+ "run_id": "r0538a022626",
+ "denominator": "authoritative fresh db",
+ "journey_id": "b7bce338-659f-4686-8751-6cdf4e7b7eaa",
+ "shape": {
+  "width": 1280,
+  "height": 900
+ },
+ "trip_zone": "Asia/Shanghai",
+ "device_zone": "America/Los_Angeles",
+ "device_zone_would_give": [
+  "10月1日周四"
+ ],
+ "trip_zone_gives": [
+  "10月2日周五"
+ ],
+ "zones_disagree": true,
+ "door_rows": [
+  {
+   "stamped_at": "2026-10-01T18:26:55.729199+00:00",
+   "target_key": "activity:a6957acb-0e8f-4c51-bf1e-2e501e6629ed",
+   "note": null,
+   "source": "FOREGROUND_WEB"
+  },
+  {
+   "stamped_at": "2026-10-01T18:26:56.488847+00:00",
+   "target_key": "activity:2f44f8ec-cfd7-4b17-a5d6-9f700190923c",
+   "note": null,
+   "source": "FOREGROUND_WEB"
+  }
+ ],
+ "day_rows": [
+  {
+   "text": "10月2日周五",
+   "box": {
+    "x": 318,
+    "y": 245,
+    "w": 896,
+    "h": 26
+   },
+   "centre": {
+    "x": 766,
+    "y": 257
+   },
+   "hit": "h3.cn-footprints__day",
+   "in_viewport": true
+  }
+ ],
+ "stamp_rows": [
+  {
+   "text": "02:26 Arrival 没写备注 网页端打的",
+   "cells": [
+    "02:26",
+    "Arrival",
+    "没写备注",
+    "网页端打的"
+   ],
+   "under_day": 274,
+   "hit": "span.cn-footprints__note cn-f",
+   "in_viewport": true
+  },
+  {
+   "text": "02:26 Check in · Haihe Riverside Hotel 没写备注 网页端打的",
+   "cells": [
+    "02:26",
+    "Check in · Haihe Riverside Hotel",
+    "没写备注",
+    "网页端打的"
+   ],
+   "under_day": 363,
+   "hit": "span.cn-footprints__note cn-f",
+   "in_viewport": true
+  }
+ ],
+ "under_day": [
+  "10月2日周五",
+  "10月2日周五"
+ ],
+ "tally": "这次行程共有 2 枚足迹。 分成 1 天。",
+ "zone_line": "日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。",
+ "screaming_snake": [],
+ "uuids": []
+}

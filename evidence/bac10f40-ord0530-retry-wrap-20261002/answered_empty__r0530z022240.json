@@ -1,0 +1,14 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+ "arm": "answered_empty",
+ "run_id": "r0530z022240",
+ "denominator": "copied private db",
+ "journey_id": "2a1b0bd0-1263-42cb-a8b0-2b6d802e4b04",
+ "door_rows": 0,
+ "state_line": "还没有足迹。打开行程，在一站上按「打卡」。",
+ "day_rows": 0,
+ "stamp_rows": 0,
+ "tally": "这次行程共有 0 枚足迹。",
+ "screaming_snake": [],
+ "uuids": []
+}
