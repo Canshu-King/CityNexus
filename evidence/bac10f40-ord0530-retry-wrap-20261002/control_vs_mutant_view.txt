@@ -1,0 +1,7 @@
+CONTROL summary lines: ["2 passed (8.9s)"]
+CONTROL arm titles:
+  [2/2] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own widt
+  [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own
+MUTANT summary lines: ["1 failed", "1 passed (10.6s)"]
+MUTANT first error: ["Error: one line at 390, measured on the painted text rects"]
+MUTANT landed marker: 'M frontend/src/features/checkin/footprint.css'

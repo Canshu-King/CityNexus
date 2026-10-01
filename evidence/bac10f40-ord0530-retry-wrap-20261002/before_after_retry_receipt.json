@@ -1,0 +1,99 @@
+{
+ "at_local": "2026-10-02T02:28:36+0800",
+ "generation": "5a4cdbd26d4a58d6ed6b277480e766ac08b15ded",
+ "fix_commit": "6f77b010e28a86506e57d721a1638ce5cf83e2ff",
+ "one_variable": ".cn-footprints__retry { flex-shrink: 0; }",
+ "before_the_fix": {
+  "text": "重读一次",
+  "box": {
+   "x": 305,
+   "y": 109,
+   "w": 48,
+   "h": 105
+  },
+  "painted_lines": 4,
+  "white_space": "normal",
+  "parent_display": "flex",
+  "parent_width": 316
+ },
+ "after_the_fix": {
+  "text": "重读一次",
+  "box": {
+   "x": 265,
+   "y": 109,
+   "w": 88,
+   "h": 35
+  },
+  "painted_lines": 1,
+  "white_space": "normal",
+  "parent_display": "flex",
+  "parent_width": 316
+ },
+ "reach_before_the_fix": {
+  "targets": {
+   "retry_button": {
+    "in_viewport": true,
+    "hit_is_self": true,
+    "hit_is_nav": false,
+    "centre": {
+     "x": 329,
+     "y": 162
+    }
+   },
+   "last_stamp_row": {
+    "in_viewport": true,
+    "hit_is_self": true,
+    "hit_is_nav": false,
+    "centre": {
+     "x": 195,
+     "y": 629
+    }
+   }
+  },
+  "nav_top": 768,
+  "all_reachable": true
+ },
+ "reach_after_the_fix": {
+  "targets": {
+   "retry_button": {
+    "in_viewport": true,
+    "hit_is_self": true,
+    "hit_is_nav": false,
+    "centre": {
+     "x": 309,
+     "y": 127
+    }
+   },
+   "last_stamp_row": {
+    "in_viewport": true,
+    "hit_is_self": true,
+    "hit_is_nav": false,
+    "centre": {
+     "x": 195,
+     "y": 654
+    }
+   }
+  },
+  "nav_top": 768,
+  "all_reachable": true
+ },
+ "counterexample": {
+  "mutation": "flex-shrink:0 -> flex-shrink:1",
+  "summary": [
+   "1 failed",
+   "1 passed (10.6s)"
+  ],
+  "failing_assertion": "Error: one line at 390, measured on the painted text rects",
+  "control": [
+   "2 passed (8.9s)"
+  ],
+  "tree_after": 0,
+  "landed": "M frontend/src/features/checkin/footprint.css"
+ },
+ "stack": {
+  "frontend": 51685,
+  "backend": 51679,
+  "marker_in_door_read": true,
+  "rows": 3
+ }
+}

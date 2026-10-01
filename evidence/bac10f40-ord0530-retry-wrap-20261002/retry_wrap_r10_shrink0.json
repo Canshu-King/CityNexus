@@ -1,0 +1,83 @@
+{
+ "base": "http://127.0.0.1:51685",
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "tag": "wrap_r10_shrink0",
+ "shapes": [
+  {
+   "shape": {
+    "name": "phone_390x844",
+    "width": 390,
+    "height": 844
+   },
+   "read": {
+    "text": "重读一次",
+    "char_count": 4,
+    "box": {
+     "x": 265,
+     "y": 109,
+     "w": 88,
+     "h": 35
+    },
+    "computed": {
+     "font_size": "16px",
+     "line_height": "23.2px",
+     "padding": "6px 12px",
+     "white_space": "normal",
+     "width": "88px",
+     "min_height": "auto"
+    },
+    "text_rects": [
+     {
+      "x": 277,
+      "y": 116,
+      "w": 64,
+      "h": 21
+     }
+    ],
+    "painted_lines": 1,
+    "parent_tag": "header.cn-footprints__head",
+    "parent_display": "flex",
+    "parent_width": 316
+   }
+  },
+  {
+   "shape": {
+    "name": "desktop_1280x900",
+    "width": 1280,
+    "height": 900
+   },
+   "read": {
+    "text": "重读一次",
+    "char_count": 4,
+    "box": {
+     "x": 1126,
+     "y": 120,
+     "w": 88,
+     "h": 35
+    },
+    "computed": {
+     "font_size": "16px",
+     "line_height": "23.2px",
+     "padding": "6px 12px",
+     "white_space": "normal",
+     "width": "88px",
+     "min_height": "auto"
+    },
+    "text_rects": [
+     {
+      "x": 1138,
+      "y": 127,
+      "w": 64,
+      "h": 21
+     }
+    ],
+    "painted_lines": 1,
+    "parent_tag": "header.cn-footprints__head",
+    "parent_display": "flex",
+    "parent_width": 896
+   }
+  }
+ ],
+ "phone_wraps": 1,
+ "desktop_wraps": 1
+}

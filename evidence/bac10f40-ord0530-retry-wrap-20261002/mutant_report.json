@@ -1,0 +1,37 @@
+{
+ "started_local": "2026-10-02T02:24:30+0800",
+ "generation": "6f77b010e28a86506e57d721a1638ce5cf83e2ff",
+ "stack": "frontend=:51685 backend=:51679 (this lane's private stack)",
+ "runs": [
+  {
+   "mutation": "flex-shrink:0 -> flex-shrink:1",
+   "run_id": "mutshrink022430",
+   "mutation_landed": "M frontend/src/features/checkin/footprint.css",
+   "playwright_exit": 1,
+   "infra_failure": false,
+   "summary_lines": [
+    "1 failed",
+    "1 passed (10.6s)"
+   ],
+   "error_heads": [
+    "Error: one line at 390, measured on the painted text rects"
+   ],
+   "log_bytes": 2539,
+   "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_retry\\mutant_flex_shrink_mutshrink022430.log"
+  }
+ ],
+ "tree_after": {
+  "dirty_lines_for_src": 0,
+  "raw": ""
+ },
+ "control_run": {
+  "run_id": "cleanretry022441",
+  "playwright_exit": 0,
+  "summary_lines": [
+   "2 passed (8.9s)"
+  ],
+  "log_bytes": 2243,
+  "log": "D:/moodle/_qoder_ai_ord0387_20260928/ord0530_mutants_retry\\clean_retry_arm_cleanretry022441.log"
+ },
+ "ended_local": "2026-10-02T02:24:50+0800"
+}

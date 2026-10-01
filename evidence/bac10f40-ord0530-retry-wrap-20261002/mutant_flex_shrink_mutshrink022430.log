@@ -1,0 +1,39 @@
+
+Running 2 tests using 1 worker
+
+
+[1/2] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=2d7c9dcb-6152-4dd1-9ca1-bb956321ed9c options=4 chosen=8337b13a-980e-42f5-bcce-f038ad7da4bd (Haihe Riverside Hotel)
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+
+[2/2] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre
+  1) [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre 
+
+    Error: one line at 390, measured on the painted text rects
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 4
+
+      331 |   expect(phone.text, "the button says the word the product's own copy table gives it")
+      332 |     .toBe(footprintCopy("zh-CN", "retry"));
+    > 333 |   expect(phone.painted_lines, "one line at 390, measured on the painted text rects").toBe(1);
+          |                                                                                      ^
+      334 |   expect(phone.box.w, "and it keeps the width the same button has where nothing squeezes it")
+      335 |     .toBe(desk.box.w);
+      336 |   /* The shell restores its own scroll position on arrival, which can put the header half out of
+        at D:\moodle\_qoder_ai_ord0387_20260928\wt\frontend\e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:333:86
+
+    Error Context: test-results\qoder-bac10f40-ord0530-foo-4dab7-e-line-own-width-own-centre-chromium\error-context.md
+
+
+  1 failed
+    [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre 
+  1 passed (10.6s)
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true

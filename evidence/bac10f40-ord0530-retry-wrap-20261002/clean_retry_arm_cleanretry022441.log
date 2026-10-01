@@ -1,0 +1,19 @@
+
+Running 2 tests using 1 worker
+
+
+[1/2] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=a671c57e-54d2-4b85-a934-c3d94d2cf424 options=4 chosen=a08c6324-c148-4c70-a8d8-0ce2c8fe4eb6 (Haihe Riverside Hotel)
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+
+[2/2] [chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre
+[chromium] › e2e\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:281:1 › ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre
+e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: retry_button_keeps_its_line — {"journey_id":"22222222-2222-4222-8222-222222222222","phone":{"text":"重读一次","box":{"x":265,"y":-7,"w":88,"h":35},"painted_lines":1,"centre":{"x":309,"y":11},"hit":"button.cn-footprints__retry","hit_is_self":true,"hit_is_nav":false,"nav_top":768,"inner_height":844,"scroll_y":116,"scroller_top":null,"in_viewport":false},"centred":{"text":"重读一次","box":{"x":265,"y":109,"w":88,"h":35},"painted_lines":1,"centre":{"x":309,"y":127},"hit":"button.cn-footprints__retry","hit_is_self":true,"hit_is_nav":false,"nav_top":768,"inner_height":844,"scroll_y":0,"scroller_top":null,"in_viewport":true},"desktop_width":88,"desktop_painted_lines":1,"shell_restored_scroll_y":116,"nav_top_read_on_screen":768,"how_wrapping_is_measured":"Range.getClientRects() over the text node, not getBoundingClientRect()"}
+
+  2 passed (8.9s)
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:51685 backend=:51679 db=(inherited default) ai=inherited from the environment reuseExistingServer=true

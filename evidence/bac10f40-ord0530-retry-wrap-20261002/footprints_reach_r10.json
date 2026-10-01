@@ -1,0 +1,388 @@
+{
+ "base": "http://127.0.0.1:51685",
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "tag": "reach_r10",
+ "browser_locale": "zh-CN",
+ "timezone": "America/Los_Angeles",
+ "shapes": [
+  {
+   "shape": {
+    "name": "phone_390x844",
+    "width": 390,
+    "height": 844,
+    "note": "the narrow档 the order asks about"
+   },
+   "parked": {
+    "scroll_y": 0,
+    "inner_height": 844,
+    "nav_present": true,
+    "nav_box": {
+     "x": 0,
+     "y": 768,
+     "top": 768,
+     "right": 390,
+     "bottom": 844,
+     "w": 390,
+     "h": 76
+    },
+    "panel_box": {
+     "x": 17,
+     "y": 93,
+     "top": 93,
+     "right": 373,
+     "bottom": 756,
+     "w": 356,
+     "h": 663
+    },
+    "targets": [
+     {
+      "label": "retry_button",
+      "box": {
+       "x": 265,
+       "y": 109,
+       "top": 109,
+       "right": 353,
+       "bottom": 144,
+       "w": 88,
+       "h": 35
+      },
+      "centre": {
+       "x": 309,
+       "y": 127
+      },
+      "in_viewport": true,
+      "hit_tag": "button.cn-footprints__retry",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": false
+     },
+     {
+      "label": "last_stamp_row",
+      "box": {
+       "x": 37,
+       "y": 599,
+       "top": 599,
+       "right": 353,
+       "bottom": 708,
+       "w": 316,
+       "h": 109
+      },
+      "centre": {
+       "x": 195,
+       "y": 654
+      },
+      "in_viewport": true,
+      "hit_tag": "span.cn-footprints__note",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": false
+     }
+    ],
+    "retry_min_height": null,
+    "retry_word": "重读一次"
+   },
+   "lifted": {
+    "scroll_y": 0,
+    "inner_height": 844,
+    "nav_present": true,
+    "nav_box": {
+     "x": 0,
+     "y": 768,
+     "top": 768,
+     "right": 390,
+     "bottom": 844,
+     "w": 390,
+     "h": 76
+    },
+    "panel_box": {
+     "x": 17,
+     "y": 93,
+     "top": 93,
+     "right": 373,
+     "bottom": 756,
+     "w": 356,
+     "h": 663
+    },
+    "targets": [
+     {
+      "label": "retry_button",
+      "box": {
+       "x": 265,
+       "y": 109,
+       "top": 109,
+       "right": 353,
+       "bottom": 144,
+       "w": 88,
+       "h": 35
+      },
+      "centre": {
+       "x": 309,
+       "y": 127
+      },
+      "in_viewport": true,
+      "hit_tag": "button.cn-footprints__retry",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": false
+     },
+     {
+      "label": "last_stamp_row",
+      "box": {
+       "x": 37,
+       "y": 483,
+       "top": 483,
+       "right": 353,
+       "bottom": 592,
+       "w": 316,
+       "h": 109
+      },
+      "centre": {
+       "x": 195,
+       "y": 538
+      },
+      "in_viewport": true,
+      "hit_tag": "span.cn-footprints__note",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": false
+     }
+    ],
+    "retry_min_height": null,
+    "retry_word": "重读一次"
+   },
+   "verdict": {
+    "retry_button": {
+     "parked_in_viewport": true,
+     "parked_hit": "button.cn-footprints__retry",
+     "parked_hit_is_self": true,
+     "parked_hit_is_nav": false,
+     "parked_centre": {
+      "x": 309,
+      "y": 127
+     },
+     "lifted_in_viewport": true,
+     "lifted_hit": "button.cn-footprints__retry",
+     "lifted_hit_is_self": true,
+     "lifted_hit_is_nav": false,
+     "lifted_centre": {
+      "x": 309,
+      "y": 127
+     },
+     "reachable_by_some_scroll": true
+    },
+    "last_stamp_row": {
+     "parked_in_viewport": true,
+     "parked_hit": "span.cn-footprints__note",
+     "parked_hit_is_self": true,
+     "parked_hit_is_nav": false,
+     "parked_centre": {
+      "x": 195,
+      "y": 654
+     },
+     "lifted_in_viewport": true,
+     "lifted_hit": "span.cn-footprints__note",
+     "lifted_hit_is_self": true,
+     "lifted_hit_is_nav": false,
+     "lifted_centre": {
+      "x": 195,
+      "y": 538
+     },
+     "reachable_by_some_scroll": true
+    }
+   },
+   "target_count": 2,
+   "retry_word": "重读一次",
+   "retry_min_height": null
+  },
+  {
+   "shape": {
+    "name": "desktop_1280x900",
+    "width": 1280,
+    "height": 900,
+    "note": "control: no mobile bottom bar here"
+   },
+   "parked": {
+    "scroll_y": 0,
+    "inner_height": 900,
+    "nav_present": true,
+    "nav_box": {
+     "x": 0,
+     "y": 0,
+     "top": 0,
+     "right": 0,
+     "bottom": 0,
+     "w": 0,
+     "h": 0
+    },
+    "panel_box": {
+     "x": 298,
+     "y": 104,
+     "top": 104,
+     "right": 1234,
+     "bottom": 631,
+     "w": 936,
+     "h": 527
+    },
+    "targets": [
+     {
+      "label": "retry_button",
+      "box": {
+       "x": 1126,
+       "y": 120,
+       "top": 120,
+       "right": 1214,
+       "bottom": 155,
+       "w": 88,
+       "h": 35
+      },
+      "centre": {
+       "x": 1170,
+       "y": 138
+      },
+      "in_viewport": true,
+      "hit_tag": "button.cn-footprints__retry",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": true
+     },
+     {
+      "label": "last_stamp_row",
+      "box": {
+       "x": 318,
+       "y": 494,
+       "top": 494,
+       "right": 1214,
+       "bottom": 583,
+       "w": 896,
+       "h": 89
+      },
+      "centre": {
+       "x": 766,
+       "y": 539
+      },
+      "in_viewport": true,
+      "hit_tag": "span.cn-footprints__note",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": true
+     }
+    ],
+    "retry_min_height": null,
+    "retry_word": "重读一次"
+   },
+   "lifted": {
+    "scroll_y": 0,
+    "inner_height": 900,
+    "nav_present": true,
+    "nav_box": {
+     "x": 0,
+     "y": 0,
+     "top": 0,
+     "right": 0,
+     "bottom": 0,
+     "w": 0,
+     "h": 0
+    },
+    "panel_box": {
+     "x": 298,
+     "y": 104,
+     "top": 104,
+     "right": 1234,
+     "bottom": 631,
+     "w": 936,
+     "h": 527
+    },
+    "targets": [
+     {
+      "label": "retry_button",
+      "box": {
+       "x": 1126,
+       "y": 120,
+       "top": 120,
+       "right": 1214,
+       "bottom": 155,
+       "w": 88,
+       "h": 35
+      },
+      "centre": {
+       "x": 1170,
+       "y": 138
+      },
+      "in_viewport": true,
+      "hit_tag": "button.cn-footprints__retry",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": true
+     },
+     {
+      "label": "last_stamp_row",
+      "box": {
+       "x": 318,
+       "y": 406,
+       "top": 406,
+       "right": 1214,
+       "bottom": 495,
+       "w": 896,
+       "h": 89
+      },
+      "centre": {
+       "x": 766,
+       "y": 451
+      },
+      "in_viewport": true,
+      "hit_tag": "span.cn-footprints__note",
+      "hit_is_self": true,
+      "hit_is_nav": false,
+      "centre_below_nav_floor": true
+     }
+    ],
+    "retry_min_height": null,
+    "retry_word": "重读一次"
+   },
+   "verdict": {
+    "retry_button": {
+     "parked_in_viewport": true,
+     "parked_hit": "button.cn-footprints__retry",
+     "parked_hit_is_self": true,
+     "parked_hit_is_nav": false,
+     "parked_centre": {
+      "x": 1170,
+      "y": 138
+     },
+     "lifted_in_viewport": true,
+     "lifted_hit": "button.cn-footprints__retry",
+     "lifted_hit_is_self": true,
+     "lifted_hit_is_nav": false,
+     "lifted_centre": {
+      "x": 1170,
+      "y": 138
+     },
+     "reachable_by_some_scroll": true
+    },
+    "last_stamp_row": {
+     "parked_in_viewport": true,
+     "parked_hit": "span.cn-footprints__note",
+     "parked_hit_is_self": true,
+     "parked_hit_is_nav": false,
+     "parked_centre": {
+      "x": 766,
+      "y": 539
+     },
+     "lifted_in_viewport": true,
+     "lifted_hit": "span.cn-footprints__note",
+     "lifted_hit_is_self": true,
+     "lifted_hit_is_nav": false,
+     "lifted_centre": {
+      "x": 766,
+      "y": 451
+     },
+     "reachable_by_some_scroll": true
+    }
+   },
+   "target_count": 2,
+   "retry_word": "重读一次",
+   "retry_min_height": null
+  }
+ ],
+ "all_reachable": true
+}

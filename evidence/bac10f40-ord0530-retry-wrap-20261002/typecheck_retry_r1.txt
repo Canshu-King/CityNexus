@@ -1,0 +1,8 @@
+run_local=2026-10-02 02:27:41 +0800
+cwd=/d/moodle/_qoder_ai_ord0387_20260928/wt/frontend
+git_head=6f77b010e28a86506e57d721a1638ce5cf83e2ff
+node=v24.14.0
+--- npx tsc -p tsconfig.check.json --noEmit ---
+exit_code=0
+--- npx tsc -p tsconfig.typecheck.json --noEmit ---
+exit_code=0
