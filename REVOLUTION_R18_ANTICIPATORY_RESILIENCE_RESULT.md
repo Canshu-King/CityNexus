@@ -22,6 +22,7 @@ activation was claimed.
 
 - Branch: `codex/revolution-realtrip-recovery`
 - R18 base SHA: `d637e0546b98ae377dc16a9363894b72eedda2d7`
+- R18 final SHA: `7a5f4eced3fb85b5fa98d1a8953078a97c310c37`
 - Taskbook blob SHA: `2f94a1600a14ab15b3eb552bdc83271030f93fbb`
 - Estimate authority: `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
 - Agent runtime: `HERMES_COMPAT_ENDPOINT / cn:glm-5.3-flash`
