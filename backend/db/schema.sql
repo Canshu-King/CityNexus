@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS plan_versions (
     planning_mode TEXT NOT NULL CHECK (planning_mode IN ('balanced','budget','explore','strict_schedule')),
     status TEXT NOT NULL CHECK (status IN ('CANDIDATE','SELECTED','ACTIVE','SUPERSEDED','REJECTED')),
     lifecycle TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (lifecycle IN ('ACTIVE','STANDBY','RETIRED')),
+    trigger_contract_json TEXT NOT NULL DEFAULT '{}',
     source TEXT NOT NULL CHECK (source IN ('INITIAL','REPLAN','MANUAL')),
     parent_plan_version_id TEXT REFERENCES plan_versions(id) ON DELETE SET NULL,
     total_cost_minor INTEGER NOT NULL DEFAULT 0 CHECK (total_cost_minor >= 0),

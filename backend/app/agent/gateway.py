@@ -536,6 +536,7 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _twin_snapshot
         from app.agent.predictive import standby_portfolio
+        trigger = self.session.get(Event, str(request.trigger_event_id)) if request.trigger_event_id else None
 
         savepoint = self.session.begin_nested()
         try:
@@ -546,7 +547,12 @@ class AgentToolGateway:
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "twin": twin,
-            "standby_portfolio": standby_portfolio(self.session, journey),
+            "standby_portfolio": standby_portfolio(self.session, journey, trigger),
+            "current_event": (
+                {"id": trigger.id, "event_type": trigger.event_type, "provenance": trigger.provenance,
+                 "severity": trigger.severity, "affected_activity_id": trigger.affected_activity_id}
+                if trigger is not None else None
+            ),
         }
 
     # The agent surface used to hand back *every* persisted proposal with its full
@@ -1021,6 +1027,11 @@ class AgentToolGateway:
             raise HTTPException(409, "activation trigger is not actionable")
         if trigger.provenance == "SIMULATED":
             raise HTTPException(409, "synthetic trigger cannot activate a standby branch")
+        from app.agent.standby import standby_trigger_match
+        current = self.session.get(PlanVersion, journey.active_plan_version_id)
+        match = standby_trigger_match(standby, trigger, current)
+        if not match.compatible:
+            raise HTTPException(409, f"STANDBY_TRIGGER_MISMATCH:{match.code}")
         evidence = json.loads(standby.mobility_evidence_json or "{}")
         expires = evidence.get("expires_at")
         try:
@@ -1080,7 +1091,7 @@ class AgentToolGateway:
                         "executed": False, "user_confirmed": False,
                         **approval_payload(approval), "plan_id": standby.id,
                         "trigger_event_id": trigger.id}
-        base = self.session.get(PlanVersion, journey.active_plan_version_id)
+        base = current
         if base is None:
             raise HTTPException(409, "Journey has no active reality")
         from app.main import _switch_active_plan_atomically
@@ -1093,6 +1104,22 @@ class AgentToolGateway:
         journey.current_activity_id = replacement.id if replacement else None
         if replacement:
             replacement.status = "ACTIVE"
+        siblings = self.session.scalars(
+            select(PlanVersion).where(
+                PlanVersion.journey_id == journey.id,
+                PlanVersion.parent_plan_version_id == base.id,
+                PlanVersion.lifecycle == "STANDBY",
+                PlanVersion.id != standby.id,
+            )
+        ).all()
+        for sibling in siblings:
+            sibling.lifecycle = "RETIRED"
+            sibling.status = "REJECTED"
+            record_audit(
+                self.session, action="standby.retired", entity_type="PlanVersion",
+                entity_id=sibling.id, journey_id=journey.id, actor_type="SYSTEM",
+                actor_id="standby-activation", after={"reason": "parent_superseded", "parent_plan_version_id": base.id},
+            )
         record_audit(self.session, action="standby.activated", entity_type="PlanVersion", entity_id=standby.id,
                      journey_id=journey.id, actor_type="AI_AGENT", actor_id=request.agent_id,
                      after={"trigger_event_id": trigger.id, "base_plan_version_id": base.id,

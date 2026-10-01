@@ -38,6 +38,7 @@ from app.planning.solver_v2 import (
     solver_v2_problem_fingerprint,
 )
 from app.replanning.candidate_evidence import verified_interest_preference_fit
+from app.agent.standby import contract_for_simulation, standby_trigger_match
 
 
 def _now() -> str:
@@ -634,7 +635,7 @@ def counterfactual_payload(row: CounterfactualSimulation) -> dict[str, Any]:
     }
 
 
-def standby_portfolio(session: Session, journey: Journey) -> list[dict[str, Any]]:
+def standby_portfolio(session: Session, journey: Journey, event: Event | None = None) -> list[dict[str, Any]]:
     """Compact server-owned read model for the non-current plan branches."""
     rows = session.scalars(
         select(PlanVersion)
@@ -642,6 +643,7 @@ def standby_portfolio(session: Session, journey: Journey) -> list[dict[str, Any]
         .order_by(PlanVersion.created_at.desc(), PlanVersion.version_no.desc())
     ).all()
     now = datetime.now(timezone.utc)
+    current = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
     result: list[dict[str, Any]] = []
     for row in rows:
         evidence = _load(row.mobility_evidence_json, {})
@@ -660,6 +662,10 @@ def standby_portfolio(session: Session, journey: Journey) -> list[dict[str, Any]
             ) or 0),
             "total_cost_minor": row.total_cost_minor,
             "mobility_snapshot_id": row.mobility_snapshot_id,
+            "trigger_contract": _load(row.trigger_contract_json, {}),
+            "trigger_match": (
+                standby_trigger_match(row, event, current).code if event is not None else "UNASSESSED"
+            ),
         })
     return result
 
@@ -879,6 +885,18 @@ def _materialize_shadow_plan(
         planning_mode=active.planning_mode,
         status="CANDIDATE",
         lifecycle="STANDBY",
+        trigger_contract_json=_json(
+            contract_for_simulation(
+                scenario_type=simulation.scenario_type,
+                dropped_activity_ids=sorted(dropped),
+                dropped_place_ids=[
+                    str(item.place_id) for item in activities
+                    if item.id in dropped and item.place_id
+                ],
+                simulation_id=simulation.id,
+                parent_plan_id=active.id,
+            )
+        ),
         source="REPLAN",
         parent_plan_version_id=active.id,
         total_cost_minor=max(0, active.total_cost_minor - sum(item.estimated_cost_minor for item in activities if item.id in dropped)),
@@ -1090,7 +1108,10 @@ def simulate_counterfactuals(
     )
     result: list[CounterfactualSimulation] = []
     active_plan = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
-    shadow_materialized = False
+    # R20 keeps a deliberately small portfolio: enough distinct futures for
+    # arbitration, but never an unbounded shadow-plan factory.  Materialize at
+    # most one branch per scenario row until three grounded branches exist.
+    materialized_shadow_count = 0
     for scenario_key, scenario_type, parameters in scenarios:
         problem, activities, anchors = _scenario_problem(
             session,
@@ -1161,14 +1182,14 @@ def simulate_counterfactuals(
         row.plan_changes_json = _json(changes)
         row.evidence_json = _json(evidence)
         row.created_at = _now()
-        if active_plan is not None and not shadow_materialized and changes:
+        if active_plan is not None and materialized_shadow_count < 3 and changes:
             shadow = _materialize_shadow_plan(session, journey, active_plan, row, changes)
             if shadow is not None:
                 evidence["shadow_plan_version_id"] = shadow.id
                 evidence["shadow_plan_status"] = shadow.status
                 evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
                 row.evidence_json = _json(evidence)
-                shadow_materialized = True
+                materialized_shadow_count += 1
         result.append(row)
     session.flush()
     return result

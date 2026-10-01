@@ -68,7 +68,10 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id"],
         ),
         _tool(
-            "inspect_twin", "Inspect the current JourneyTwin projection.", journey, ["journey_id"]
+            "inspect_twin",
+            "Inspect the current JourneyTwin, server-owned standby portfolio, and current trigger compatibility.",
+            {**journey, "trigger_event_id": _property("string")},
+            ["journey_id"],
         ),
         _tool(
             "list_replans",
@@ -263,6 +266,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
+        "For branch arbitration, inspect the Journey, then the Twin portfolio and current event; choose activate_standby, request_replan, or NO_ACTION based on server-returned compatibility, never on an ID supplied in this prompt. "
         "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
         "Issue at most one tool call per assistant turn. "
         "If a tool reports SEARCH_SATURATION or SEARCH_BATCH_LIMIT, stop searching and choose a different available action. "
@@ -672,6 +676,8 @@ class DeepSeekJourneyAgent:
                     seen_calls.add(signature)
                     sequence += 1
                     arguments.setdefault("journey_id", journey.id)
+                    if tool_name == "inspect_twin" and mission.trigger_event_id:
+                        arguments.setdefault("trigger_event_id", mission.trigger_event_id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     arguments.setdefault("agent_id", self.agent_id)
                     tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1

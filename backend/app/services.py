@@ -877,6 +877,7 @@ def plan_schema(
         planning_mode=item.planning_mode,
         status=item.status,
         lifecycle=item.lifecycle or "ACTIVE",
+        trigger_contract=json.loads(item.trigger_contract_json or "{}"),
         source=item.source,
         parent_plan_version_id=item.parent_plan_version_id,
         total_cost=Money(amount_minor=item.total_cost_minor, currency=item.currency),

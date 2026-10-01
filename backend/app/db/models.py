@@ -511,6 +511,7 @@ class PlanVersion(Base):
     # Lifecycle is deliberately separate from status: CANDIDATE/SELECTED describe
     # the generic plan state, while STANDBY is a governed, non-current branch.
     lifecycle: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    trigger_contract_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     source: Mapped[str] = mapped_column(String)
     parent_plan_version_id: Mapped[str | None] = mapped_column(
         ForeignKey("plan_versions.id", ondelete="SET NULL"), nullable=True

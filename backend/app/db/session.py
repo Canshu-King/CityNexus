@@ -610,13 +610,20 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 connection.exec_driver_sql(
                     "ALTER TABLE plan_versions ADD COLUMN lifecycle TEXT NOT NULL DEFAULT 'ACTIVE'"
                 )
-                # R18 wrote its standby marker into explanation only.  Promote that
-                # persisted intent into an explicit lifecycle without changing the
-                # Journey's one active pointer.
+            plan_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(plan_versions)")
+            }
+            if plan_columns and "trigger_contract_json" not in plan_columns:
                 connection.exec_driver_sql(
-                    "UPDATE plan_versions SET lifecycle='STANDBY' "
-                    "WHERE status='CANDIDATE' AND explanation_json LIKE '%NON_ACTIVE_STANDBY%'"
+                    "ALTER TABLE plan_versions ADD COLUMN trigger_contract_json TEXT NOT NULL DEFAULT '{}'"
                 )
+            # R18 wrote its standby marker into explanation only.  Promote that
+            # persisted intent into an explicit lifecycle without changing the
+            # Journey's one active pointer.
+            connection.exec_driver_sql(
+                "UPDATE plan_versions SET lifecycle='STANDBY' "
+                "WHERE status='CANDIDATE' AND explanation_json LIKE '%NON_ACTIVE_STANDBY%'"
+            )
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.

@@ -528,6 +528,7 @@ class PlanVersion(BaseModel):
     planning_mode: PlanningMode
     status: Literal["CANDIDATE", "SELECTED", "ACTIVE", "SUPERSEDED", "REJECTED"]
     lifecycle: Literal["ACTIVE", "STANDBY", "RETIRED"] = "ACTIVE"
+    trigger_contract: dict[str, Any] = Field(default_factory=dict)
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
     parent_plan_version_id: UUID | None = None
     total_cost: Money
