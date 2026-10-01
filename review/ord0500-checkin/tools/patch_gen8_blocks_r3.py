@@ -29,7 +29,7 @@ slot_new = (slot_old + '\n        "b_scroll": blobs["review/ord0500-checkin/rece
 assert b.count(slot_old) == 1, "slot anchor"
 b = b.replace(slot_old, slot_new)
 
-prose_old = "（件 `{b_sweep}`）。"
+prose_old = ("桌面 1280x800 那趟 {desk_press} 枚可按、拒绝句 {desk_notices} 枚（件 `{b_sweep}`）。")
 prose_new = ("（件 `{b_sweep}`）。④ 里那句「可按 {press_tip} 枚」不是我这笔造成的：同一普查在基座面上也是 "
              "{press_tip} 枚、桌面 1280x800 两代都 6 枚——不可按的是第 1 站 Riverside Museum，它的元素中心落在固定"
              "底栏「地图」那枚按钮上（`overlaps_nav=true`）。我按上代的教训先量再改：给站行加 "

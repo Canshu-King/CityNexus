@@ -64,6 +64,7 @@ def main():
         "b_gap_tip6": blobs["review/ord0485-phone-walk/receipts/i18n_gap_TIP_0989713a_r1.json"],
         "b_gap_r46": blobs["review/ord0485-phone-walk/receipts/i18n_gap_O0485_R5_r1.json"],
         "b_walk6": blobs["review/ord0485-phone-walk/receipts/gen6_walk_r1.json"],
+        "b_scroll": blobs["review/ord0500-checkin/receipts/checkin_SCROLLTEST_phone_390x844_r2.json"],
     })
     exp = {}
     for key, name in (("tip", "exposure_tip_514b397f_r1.json"),
@@ -157,7 +158,7 @@ def main():
 
 **二、重基到 ORD-0532 之后的尖**。`{tip}` 就是「main.py 转回 LF + .gitattributes 钉 *.py text eol=lf」那一笔；我这轮重落 `backend/app/main.py` 只花了两处小改（`git diff --numstat` 对基座 = 14 增 2 删，blob `{b_main}`），不再是整文件对撞。r1 `{f_r1}`、r2 `{f_r2}` 原样冻结、0 force、0 覆盖；本轮新枝 `review/newlane-ord0500-phone-checkin-entry-r3` = `{cand}`，只读预测 `{tree_cand}`（`git merge-tree --write-tree` 对 `{tip}`）。上一轮 r2 被拦下时工具输出截断没点名，我自己逐枚比出来是 `backend/app/main.py` 与 `contracts/openapi.yaml` 两枚，那一格的账在上一块里已经落了。
 
-**三、分母四代都贴，不折算**。同一判法（先 `scrollIntoViewIfNeeded` 再元素中心 `elementFromPoint`，判据读渲染文字）：① `{pre}` 那代——站 {stops_pre} 枚、`stop-checkin` {ctrls_pre} 枚，无入口（件 `{b_pre}`）；② `{gen1}`——控件 {ctrls_gen1} 枚、可按 {press_gen1} 枚；③ `{gen2}`——控件 6 枚、可按 6 枚、重复点击后拒绝句 6 枚；④ 本轮 `{tip}`——站 {stops_tip} 枚、控件 {ctrls_tip} 枚、中心命中可按 {press_tip} 枚，盒 {boxes_tip}，桌面 1280x800 那趟 {desk_press} 枚可按、拒绝句 {desk_notices} 枚（件 `{b_sweep}`）。
+**三、分母四代都贴，不折算**。同一判法（先 `scrollIntoViewIfNeeded` 再元素中心 `elementFromPoint`，判据读渲染文字）：① `{pre}` 那代——站 {stops_pre} 枚、`stop-checkin` {ctrls_pre} 枚，无入口（件 `{b_pre}`）；② `{gen1}`——控件 {ctrls_gen1} 枚、可按 {press_gen1} 枚；③ `{gen2}`——控件 6 枚、可按 6 枚、重复点击后拒绝句 6 枚；④ 本轮 `{tip}`——站 {stops_tip} 枚、控件 {ctrls_tip} 枚、中心命中可按 {press_tip} 枚，盒 {boxes_tip}，（件 `{b_sweep}`）。④ 里那句「可按 {press_tip} 枚」不是我这笔造成的：同一普查在基座面上也是 {press_tip} 枚、桌面 1280x800 两代都 6 枚——不可按的是第 1 站 Riverside Museum，它的元素中心落在固定底栏「地图」那枚按钮上（`overlaps_nav=true`）。我按上代的教训先量再改：给站行加 `scroll-margin-bottom: 92px` 单独造了一面重跑，仍是 {press_tip} 枚，于是把这条规则撤了不留装饰（重跑件 `{b_scroll}`）；真正要动的是滚动容器与手机底栏那两家，不在本单写集里，具名报出。
 
 **四、真发一发（本轮）**。每跑一份新私库（`backup()` 只读复制 `_preview.db`，跑后逐枚比字节与 mtime，{runs_count} 跑全 `shared_untouched=True`）：未打卡那站按下去 `http_status={req_http}`、行数 0→1；再按另一枚不同站、行数 0→{rows_cand}；同一枚第二次 `http_status={dup_http}`。请求序列逐字 {reqs_tip}，pageerror {pe_tip}。重复点击那句现在只有被按那一站有：屏上拒绝句 {notices_cand} 枚、句主 {owners_cand}，逐字「{sentence_cand}」——时刻是从 `error.details.existing_stamped_at` 取来、由本屏自己渲染的；屏上 uuid 0 枚、机词 0 枚（件 `{b_sweep}`）。同一步在本轮基座面上仍是 {notices_tip} 枚、逐字「{sentence_tip}」，里面没有那个时刻。
 
