@@ -1,0 +1,19 @@
+{
+ "source_opened": "D:\\moodle\\_qoder_preview_20260920\\_preview.db",
+ "source_access": "mode=ro, copied with SQLite backup API",
+ "copy": "D:\\moodle\\_qoder_lane_S4_0926\\wt0424\\backend\\tierC_ord0424_lane.db",
+ "copy_bytes": 7213056,
+ "tables": 55,
+ "places": 16,
+ "itinerary_stops": null,
+ "journeys_first_six": [
+  {
+   "id": "22222222-2222-4222-8222-222222222222",
+   "title": "One Day in Nexus City",
+   "status": "ACTIVE"
+  }
+ ],
+ "stops_per_journey_top_six": [],
+ "marker": "lane_marker_0424 holds this lane's session id",
+ "shared_store_written": false
+}
