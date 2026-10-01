@@ -16588,6 +16588,89 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 23:38 · 两笔 rebase 催办：0531 与 0504 各自的具体拦点 · 现尖锚 `6094ad2b785398497b8b9102519b9e083b7e635f`
+
+**〇、现读**
+
+权威尖 `6094ad2b785398497b8b9102519b9e083b7e635f`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。两笔候选都在 23:36 走了落地门，判语原文如下，各自退回。
+
+**一、`6a150e1e`（ORD-0531 回收站归属 r1）：真冲突，rebase 到现尖**
+
+`RECUT_ABORT: the three-way merge reports conflicts`——撞点是 `frontend/src/features/trash/JourneyTrashPanel.tsx`（ancestor blob `ec3b40c6f6…`，你侧 blob `3aa1ab354b…` 与尖侧改写交叠）。你基座之后尖上对这一屏动过（回收站/找回相关的后续单都落在同一文件）。处置：把你的枝 re-parent 到现尖 `6094ad2b…`，在尖的 `JourneyTrashPanel.tsx` 新形状上重做你那几处归属改动，跑你的族臂（文件形状变了，臂里的选择器/锚点要现取，不能照抄 r1 的），再推 `review/6a150e1e-ord0531-recycle-bin-ownership-r1` 同名枝。若你在新形状上发现归属语义已被尖上后续单实现，直接具名引用那笔 commit、在你的块里声明收窄范围，不要重复实现。
+
+**二、`da46954a`（ORD-0504 消费面 r1）：字典文件撞车，与 ORD-0507 同一形状**
+
+`RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes: frontend/src/i18n/LocaleContext.tsx`——与 a68b0631 的 0507 同一成因：ORD-0545 r2 改过字典，你的候选基座是旧的。处置相同：rebase 到现尖、保持你自己的字节、重跑族臂（尤其你那几枚断言屏上文案的臂，字典变过后要真跑不能复述）、推回同名枝。你额外注意一点：23:16 回执块里 0540–0545 那四笔已落，你的 r1 若有键与 0545 徽章表重名，rebase 后会 `already_present`，要在块里声明删重或改名，别让门再拦一次。
+
+**三、共同纪律**
+
+两条车道额度恢复后先干这一件再领新单；交块照旧进 inbox，我过门后代插。其他车道不受这两笔影响，按各自手上单继续。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 23:34 · 手机链复核：四笔落地全为空树合并、bundle 与 day13 逐字节相同 ⇒ 4783 无需换代；tunnel 外网腿已死（占位 2055B，探针 NOT_VERIFIED 不代表产品坏了）· 现尖锚 `6094ad2b785398497b8b9102519b9e083b7e635f`
+
+**〇、为什么四笔落地没有产生新 bundle 字节（重要，别再重建成 day15）**
+
+`0c061d9e`(0545r2 首落) 与 `6094ad2b`(0540/0495r2) 之间四笔 commit 的 tree 全部是同一枚 `14d49f11e1402f748cb24f3c33316ecf5652c8b0`（`git cat-file -p 4d2499a2 / e0631dd8 / 594dd8e8 / 6094ad2b` 逐枚读回 tree 行，四行逐字相同）。也就是说这四笔的候选字节在 0c061d9e 上已经在了，落地只是把四条 `review/*` 枝名收编进权威历史；`git diff --name-only 0c061d9e 6094ad2b` 回 0 枚文件。因此 `_build_day14` 与 `_build_day13` 的 dist 交集逐字节相同（脚本差分 diff=0，仅 day13 多 18 枚历史代资产，属 union 保留），day14 构建产物与现服务完全一致。
+
+**一、4783 链的三证（手量，2026-10-01 23:32）**
+
+- 归属：4783 listener PID 57560，CommandLine = `_cmdr_lan_static_api_r1.py --dist D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day13/frontend/dist --port 4783 --api 4787`（Get-CimInstance 回读），0.0.0.0 绑定（netstat）。
+- 字节：入口主 JS 资产 `http_status=200`、1,590,336 B、sha1 `03f6e007cea0…` 与磁盘逐字节相等、Content-Type `text/javascript`；CSS 资产 `http_status=200`、229,637 B 相等、`text/css`；`/v10-sw.js` `http_status=200`、2055 B 相等、`text/javascript`。入口引用的两个具名资产与 day14 构建信息 `asset_refs` 一致。
+- 结论：静态口 :4783 现服务的字节就是权威尖 `6094ad2b…` 的等效产物，**换代不发生，因为字节没变**（GENERATION_TRANSFER 只在字节变化时才有意义）。
+
+**二、tunnel 外网腿已死，别被探针的 NOT_VERIFIED 骗了**
+
+`phone_side_probe_r1.py` 默认 curl `https://obligation-plain-arcade-bean.trycloudflare.com`，量到三枚资产全回 2055 B 占位（sha256 同一枚 `5bc0f5bd…`）——探针报 NOT_VERIFIED。成因：软件重启后 cloudflared 进程没了（`Get-CimInstance -Filter "Name='cloudflared.exe'"` 回空），tunnel 域名指向的已不是我们的源站。这**不是产品缺陷**：09-30 裁定手机链已改局域网直连 4783，tunnel 是遗留腿。我已在探针产物 `_phone_chain_day14_check.json`（2164 B）里留了这份说明；明早若手机真要用外网口，须重新起 tunnel 并换新域名，届时再跑探针。桌面留言的地址以局域网 4783 为准。
+
+**三、4787 后端**
+
+仍在听（PID 22644，127.0.0.1 绑定），没动。`:8000` 状态不变（受保护，不碰）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 23:06 · 勘误（只两枚指针，读数一枚不动）· 承 `a68b0631_2236.md.inserted_225746`
+
+那条 22:36 的块已入账，里面两枚指向 `frontend/review/ord0507/READINGS_r3.txt` 的行号点偏了。**受影响的是"这枚数记在哪一行"，不是数本身**：全部跑次读数（`8 passed`、`5 passed`、`5 passed`、`2 passed`、`1 failed, 4 passed` 与两枚变异的 `2 failed` / `1 failed`）、两闸 rc、盘面现读、候选坐标一枚都不动，判语也不动。
+
+1. 那句「现读权威尖 = `0c061d9eb74b21f0b0b297a068778479b08658b4`」我点了 `READINGS_r3.txt:1`——那一行是这份证据件自己的标题，权威尖那行其实是 `frontend/review/ord0507/READINGS_r3.txt:35`。尖本身没写错：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读仍回 `0c061d9eb74b21f0b0b297a068778479b08658b4`。
+2. 那句「从 `dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5` 到现尖为 4 笔」我点了 `:35`——4 笔那行是 `frontend/review/ord0507/READINGS_r3.txt:36`（逐枚 `0c061d9e`、`19b3107f`、`8d259c1f`、`bbf0c2f8`，`git rev-list --count` 的回读仍是 4）。
+
+成因（写下来是因为它会再发生）：我在块落 inbox 之后又往同一枚证据件尾部追加了一节事实行，行号因此整体后移，而我块里的指针是按追加前的布局点的。规则要装在执行写的那一步：以后追加证据件与写块同轮完成，或写块时用可 grep 的标签行而非行号——本块起，我引用这枚文件时两处都用「标签=值」的形式（如 `authority_tip=`、`tip_movement`），指针不再依赖行号。
+
+另：枝 `refs/heads/review/a68b0631-ord0507-clock-attribution-r2` 现头 `d2b3b844b6744c91932f25623a9de90e5180ae0d`（比 22:36 那块报的 `64006cffb4ef5ad2f974cad0f472a5b17add2a43` 多一笔，那一笔只是证据件追加的事实行，产品字节 0 枚改动；`git ls-remote` 现读回的就是 `d2b3b844b6744c91932f25623a9de90e5180ae0d`，两者逐字相同）。落地仍请按 `d2b3b844b6744c91932f25623a9de90e5180ae0d` 取。工作树只剩 `?? reports/ui-overnight/`（邻居闸自写产物，我没动也没删）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 23:16 · 四笔落地回执：0542/0544/0545r2/0540 已进权威线，尖 `6094ad2b785398497b8b9102519b9e083b7e635f`；0541/0543 枝还是旧代没交字节
+
+**〇、回验（落地后现读）**
+
+权威尖 `6094ad2b785398497b8b9102519b9e083b7e635f`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读逐字同值）。六笔链：`0c061d9e`(0545r2 首落) → `4d2499a2`(ORD-0542) → `e0631dd8`(ORD-0544) → `594dd8e8`(ORD-0545 r2 re-cut) → `6094ad2b`(ORD-0495 batch 5)。每笔 gate 都是 `READY_TO_LAND mode=LAND ff=True ahead=1 behind=0 intersection=0`，recut 后 `files 0/0 identical-to-lane-blob`——落在权威线上的就是你枝里的字节，没有我手合的任何一枚。
+
+**一、逐笔对账**
+
+- ORD-0542（`e766b154` 海报日块）：候选 `bc40e6484b94dae61f476267eb78203cfcbf1e9a` → recut `4d2499a278c8eeca79fff912ffadb4e5ded9a55a`，LANDED。
+- ORD-0544（`newlane` 锚腿形制）：候选 `c9221a12551f47a8e86dede4f27db868531aa3bc` → recut `e0631dd85dcfa9e4a485af88dc7689fc7ba73fc0`，LANDED。ALREADY_CURRENT 副词那枚语义随它上线。
+- ORD-0545 r2（徽章文案表）：候选 `8d259c1f75daae0ace81ebe2b32d3f5508fd83b6` → recut `594dd8e8b705cdeda0edce2d95b2dd95fd49b7af`，LANDED 在 0544 之后的新字典字节上。
+- ORD-0495 batch 5（`2d2d7428` gitshow-portable r2）：候选 `17b05423c601593739b6e349c206bf8ea80a58b5` → recut `6094ad2b785398497b8b9102519b9e083b7e635f`，LANDED。
+
+**二、没落的与为什么**
+
+- ORD-0541（`e766b154`）与 ORD-0543（`newlane`）两枝远端头都还指在已落地代 `dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5` 上——枝名在，字节是旧的，落地驱动 REF_UNRESOLVED 拒收（`cand=null`）。这不是退单：你们额度恢复后把真活推上同一枝名即可，我再跑。
+- ORD-0507（`a68b0631`）：`d2b3b844b6744c91932f25623a9de90e5180ae0d` 对尖 RECUT_ABORT——`frontend/src/i18n/LocaleContext.tsx` 在你基座之后被 0545 r2 改过形状，退回 rebase。裁语见 23:02 块：r3 优先、r1 次之，六码屏级反件认源码级臂为终形。
+
+**三、换代的说法**
+
+车道现在全在额度墙后，本轮不换手机链：手机仍握旧代。明早额度回来第一件事就是换到 `6094ad2b…` 再跑真机探针，在那之前所有屏面读数都标旧代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 23:02 · ORD-0507 r2 裁语：退回 rebase（非快进，LocaleContext.tsx 已被 ORD-0545 r2 动过）；六码屏级反件裁定认源码级臂为终形 · 现尖锚 `0c061d9eb74b21f0b0b297a068778479b08658b4`
 
 **〇、现读（写块前一刻）**
