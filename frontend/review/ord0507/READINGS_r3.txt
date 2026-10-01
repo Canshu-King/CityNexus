@@ -1,0 +1,32 @@
+== ORD-0507 r3 close-out (rel lane a68b0631, 22:32): the neighbour that bit the rewording, and the two counter-arms that finally bite ==
+
+Every line below is a run the driver wrote to a file; the driver parsed the summary out of that file, it did not restate a claim.
+Files live in D:/moodle/_qoder_rel_ord0447_wk/ (this lane's scratch dir, not the repo); this file is the delivered digest.
+
+-- pass 1, at head ed5ef4d4f72e96e00999f97e661b246b55d0295b (the generation the 15:34 block was delivered on) --
+run=s1_full            spec=qoder-ord0507-clock-and-checkin-words.spec.ts whole file, one run        summary=8 passed      log=b3_s1_full.txt
+run=s2_nb_today_follows  grep passed through shell                                                              summary=NONE          log=b3_s2_nb_device_clock.txt, 59 bytes, exit 255: the shell split the pattern at the `|`, so the run never started. Named NOT_RUN here, re-taken as v3/v4 below.
+run=s3_nb_speaks       spec=qoder-speaks-the-travellers-language.spec.ts                            summary=1 failed, 4 passed   log=b3_s3_nb_speaks_language.txt
+  the failing assertion, verbatim: `the sentence claims a server cursor while the cursor is ABSENT_FALLBACK`
+  painted at that moment: “现在”取自服务器场景（执行游标）：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。
+  judgement: this lane's own regression. The old composition hid the noun behind an embedded clause, so ORD-0208's rule was satisfied by accident; once the bracket held only the noun, the bracket asserted an execution cursor in a state the server itself calls ABSENT_FALLBACK.
+run=s4_m2a_station_in_bracket   mutant: station clause moved back into the parentheses             summary=2 failed, 1 passed   log=b3_s4_m2a_station_in_bracket.txt
+  the clock arm went red with its own message: `the parentheses still carry a whole clause: (执行游标。服务器的执行投影还没到，这一屏没有按游标定位)` -- the hunk is load-bearing, and this mutant is state-independent because the station clause is never empty.
+  file_restored_byte_identical=True (git checkout -- frontend/src/app/V8Experience.tsx, compared against the pre-mutant bytes)
+run=s5_m3_two_codes_one_key     mutant: CHECKIN_PLACE_UNKNOWN collapsed onto activity_unknown      summary=1 failed, 1 passed   log=b3_s5_m3_two_codes_one_key.txt
+  the mapping arm went red with its own message: `two codes share one sentence key` -- the eight-code mapping arm has teeth.
+  file_restored_byte_identical=True (git checkout -- frontend/src/features/checkin/checkins.ts)
+
+-- the fix, in the same branch --
+frontend/src/app/V8Experience.tsx:3202 now drops the bracket when the cursor status is not VALID and the basis noun names the cursor; the cursor sentence below carries the fact. 12 lines added there, no other behaviour touched.
+frontend/e2e/qoder-ord0507-clock-and-checkin-words.spec.ts:102 restates ORD-0208's rule inside this lane's own arm (`claimsCursor`), so the same accident cannot re-land: zh asserts no `执行游标）` while the cursor is absent, en asserts no `execution cursor)`.
+
+-- pass 2, at head d8b15b5641b6962095f99e724193430285cc94ba (the delivered r3 generation), all on the line's own production build --
+run=v1_my_arms           spec=qoder-ord0507-clock-and-checkin-words.spec.ts whole file   summary=8 passed   log=b3v_v1_my_arms.txt
+run=v2_nb_speaks         spec=qoder-speaks-the-travellers-language.spec.ts               summary=5 passed   log=b3v_v2_nb_speaks.txt   (the regression above is gone)
+run=v3_nb_device_fallback spec=qoder-today-follows-the-stage.spec.ts --grep today-clock-source-is-spoken  summary=5 passed  log=b3v_v3_nb_device_fallback.txt
+run=v4_nb_scene_window   spec=qoder-today-follows-the-stage.spec.ts --grep scene-window   summary=2 passed   log=b3v_v4_nb_scene_window.txt
+
+-- still not proven, named rather than glossed --
+The six other check-in refusal sentences have no screen-level counter-arm: the row's button can only send one activity_id, and of the two doors that put a stop-bearing plan on a journey this lane may not call `POST /api/v1/demo/reset` (calls=0). What covers them is the mapping arm (eight codes -> eight distinct keys) plus the pairing arm (each key defined exactly once per dictionary), and s5 above shows that mapping arm bites.
+Neighbours that share the same testids but were not re-run here: qoder-ord0502-phone-mainline (phone lane) and qoder-bac10f40-ord0497-* / -0530 / -0537 -- this lane changed `stop-checkin-notice`'s wrapper only.
