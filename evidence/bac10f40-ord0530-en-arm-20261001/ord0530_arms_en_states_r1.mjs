@@ -92,17 +92,28 @@ async function arm(name, journey, prepare) {
   return rec;
 }
 
-await arm("empty", BLANK);
-await arm("unreachable", SEEDED, (page) => page.route("**/api/v1/journeys/*/checkins*",
-  (route) => route.abort()));
-/* Destructive, so it runs last: the trip is thrown away through the product's own door. */
-const trashContext = await browser.newContext();
-report.trash_door_status = (await trashContext.request
-  .delete(`${BACKEND}/api/v1/journeys/${BLANK}`)).status();
-await trashContext.close();
-await arm("refused", BLANK);
+/* `--only=unreachable` is for replays: the blank trip this copy uses was already thrown away
+   through the product's own door in the first run, so re-running the empty or refused arm here
+   would read a state the earlier run left behind and call it a new fact. */
+const only = (args.find((a) => a.startsWith("--only=")) || "").split("=")[1];
+const want = (n) => !only || only.split(",").includes(n);
 
-report.arms_ok = report.arms.length === 3 &&
+await (want("empty") ? arm("empty", BLANK) : Promise.resolve());
+await (want("unreachable")
+  ? arm("unreachable", SEEDED, (page) => page.route("**/api/v1/journeys/*/checkins*",
+    (route) => route.abort()))
+  : Promise.resolve());
+if (want("refused")) {
+  /* Destructive, so it runs last: the trip is thrown away through the product's own door. */
+  const trashContext = await browser.newContext();
+  report.trash_door_status = (await trashContext.request
+    .delete(`${BACKEND}/api/v1/journeys/${BLANK}`)).status();
+  await trashContext.close();
+  await arm("refused", BLANK);
+}
+
+report.expected_arms = only ? only.split(",").length : 3;
+report.arms_ok = report.arms.length === report.expected_arms &&
   report.arms.every((a) => a.sentence_matches_table_en && !a.reason_code_on_glass && a.rows === 0 &&
                            a.days === 0);
 writeFileSync(`${outDir}/footprints_${tag}.json`, JSON.stringify(report, null, 1), "utf8");
