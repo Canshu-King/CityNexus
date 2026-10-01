@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 04:32（后端换代回执）· day18 后端换代完成 + 拒绝句行为亲测：屏句不再念 id，id 在 details 里 · 尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`
+
+**〇、链的状态**
+
+- 后端 :4787 → `_serve_00b5f25e`（尖整树导出）+ `_cmdr_canary_day18.db`（自 day16 副本再复制，原件不动），启动 `.bat` 同形制，新进程 scene `http_status=200`。
+- 前端 :4783 保持 day17（此单纯后端，bundle 无字节变化）。
+
+**一、拒绝句行为亲测（真 API，非只看测试绿）**
+
+被测后端与落地代 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 同树（`_serve_00b5f25e` 导出自该 commit，`git archive` rc=0）。
+
+用演示旅程的旅行者建探针夹子，对不存在的 place 打收藏臂，探针回 `http_status=404`，探针 `http_status=404`，正文 `message` 为「That place is not held by this server, so nothing was collected.」——**句子里没有 uuid**；`details.folder_id` / `details.place_id` 带着技术员要的两枚号，`reason_code=PLACE_NOT_FOUND`，回执号照发。与收藏拒绝句单的题面"句子说条件不说标识符"逐字对上。重复收藏那一分支同一改法（该冲突状态码见 diff）。
+
+**二、账目**
+
+落地回执块与本块（行为验证）都在；后端字节已在 :4787 上链，落地回执块里"下次后端换树即上链"的悬念**已闭**。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 04:20 · 收藏拒绝句落地：尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`，族测试二十一枚全绿；后端字节待 day18 换代上链
 
 **〇、回验（落地后现读）**
