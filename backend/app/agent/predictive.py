@@ -522,11 +522,16 @@ def _scenario_problem(
                 travel[(origin, destination)] = 0
             else:
                 travel[(origin, destination)] = (
-                    int(current_minutes.get(f"{origin}|{destination}", 15)) + scenario_delta
+                    int(current_minutes.get(f"{origin}|{destination}", 15))
+                    + (scenario_delta if destination not in {_location(item) for item in activities[: current_index + 1]} else 0)
                 )
     slots: list[SolverV2Slot] = []
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
     for activity in activities:
+        # Anchors are already scheduled by the solver as immutable nodes.
+        # Duplicating them as slots makes the same visit consume time twice.
+        if str(activity.id) in execution_anchor_ids:
+            continue
         place = places.get(activity.place_id) if activity.place_id else None
         original_start = max(0, int((_dt(activity.start_at) - journey_start).total_seconds() // 60))
         original_end = min(
