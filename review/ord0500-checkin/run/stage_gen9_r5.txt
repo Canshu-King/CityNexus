@@ -1,6 +1,6 @@
 {
   "tool": "stage_gen9_r5",
-  "took_local": "2026-10-01T15:13:44.840828+08:00",
+  "took_local": "2026-10-01T15:22:40.724197+08:00",
   "receipts": [
     "GEN9_READINGS.md",
     "receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
@@ -52,6 +52,8 @@
     "receipts/gen9_ce1_tree_proof_r1.json",
     "receipts/gen9_checkin_sweep_r1.json",
     "receipts/gen9_doors_wt23-wt22-mutgen9.json",
+    "receipts/gen9_landing_check_r1.json",
+    "receipts/prior_denominators_r5.json",
     "run/fix_shipped_comments_r5.json",
     "run/gen9_build_out.txt",
     "run/gen9_build_out_r2.txt",
@@ -101,8 +103,9 @@
     "tools/make_gen9_mutants_r1.py",
     "tools/make_gen9_tools_r1.py",
     "tools/patch_gen9_blocks_r1.py",
+    "tools/prior_denominators_r5.py",
     "tools/remeasure_gen9_r1.py",
     "tools/scrollfix_probe_r1.py"
   ],
-  "total_bytes": 2368525
+  "total_bytes": 2402419
 }

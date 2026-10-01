@@ -64,7 +64,10 @@ def main():
     B = coord["blobs"]
     builds = {f["label"]: f for f in load("gen9_builds_r1.json").get("faces", [])}
     sweep = {r["tag"]: r for r in load("gen9_checkin_sweep_r1.json").get("runs", [])}
-    doors = {r["tree"]: r for r in load("gen9_doors_r1.json").get("runs", [])}
+    _dfiles = sorted(__import__("glob").glob(os.path.join(EV, "gen9_doors_*.json")),
+                    key=os.path.getmtime)
+    doors = {r["tree"]: r for r in load(os.path.basename(_dfiles[-1])).get("runs", [])} \
+        if _dfiles else {}
     ce1 = load("gen9_ce1_r1.json")
     proof = load("gen9_ce1_tree_proof_r1.json")
     arms = {r["label"]: r for r in load("gen9_carrier_arms_r1.json").get("runs", [])}
@@ -103,7 +106,7 @@ def main():
         "t0": now.strftime("%H:%M"), "t1": later.strftime("%H:%M"),
         "b_sheet": B.get("review/ord0500-checkin/GEN9_READINGS.md", "NOT_IN_THIS_REF"),
         "b_sweep": B.get("review/ord0500-checkin/receipts/gen9_checkin_sweep_r1.json", "NOT_IN_THIS_REF"),
-        "b_doors": B.get("review/ord0500-checkin/receipts/gen9_doors_r1.json", "NOT_IN_THIS_REF"),
+        "b_doors": B.get("review/ord0500-checkin/receipts/gen9_doors_wt23-wt22-mutgen9.json", "NOT_IN_THIS_REF"),
         "b_ce1": B.get("review/ord0500-checkin/receipts/gen9_ce1_r1.json", "NOT_IN_THIS_REF"),
         "b_proof": B.get("review/ord0500-checkin/receipts/gen9_ce1_tree_proof_r1.json", "NOT_IN_THIS_REF"),
         "b_arms": B.get("review/ord0500-checkin/receipts/gen9_carrier_arms_r1.json", "NOT_IN_THIS_REF"),
