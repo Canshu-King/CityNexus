@@ -527,6 +527,14 @@ def _scenario_problem(
                 )
     slots: list[SolverV2Slot] = []
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    first_mutable_future_index = next(
+        (
+            idx
+            for idx, item in enumerate(activities)
+            if idx > current_index and str(item.id) not in execution_anchor_ids
+        ),
+        -1,
+    )
     for activity_index, activity in enumerate(activities):
         # Anchors are already scheduled by the solver as immutable nodes.
         # Duplicating them as slots makes the same visit consume time twice.
@@ -548,11 +556,11 @@ def _scenario_problem(
         # shorter standby from the active catalog and captured mobility.
         forced_mobility_drop = (
             scenario_type in {"route_plus_20", "route_plus_30"}
-            and activity_index == current_index + 1
+            and activity_index == first_mutable_future_index
         )
         forced_closure_drop = (
             scenario_type == "mutable_place_closes"
-            and activity_index == current_index + 1
+            and activity_index == first_mutable_future_index
         )
         options: list[SolverV2Option] = []
         if not forced_mobility_drop and not forced_closure_drop and (
