@@ -83,6 +83,8 @@ def main():
                     "unresolved": d["unresolved_import_count"], "diags": d["parse_diagnostics_total"],
                     "ruler": d["ruler"]["name"], "extra": sorted(
                         "%s:%s" % (h["file"], h["line"]) for h in d["hits"])}
+    _tip = json.load(open(os.path.join(LANE, "wt22/review/ord0500-checkin/receipts/"
+                                       "exposure_tip_b604f50d_r1.json"), encoding="utf-8"))
     extra_cells = sorted(set(exp["r2"]["extra"]) - set(exp["tip"]["extra"]))
     s["exp_tip"] = exp["tip"]["cells"]
     s["exp_r2"] = exp["r2"]["cells"]
@@ -96,6 +98,8 @@ def main():
     s["exp_diags"] = "%s/%s/%s" % (exp["tip"]["diags"], exp["r2"]["diags"], exp["r3"]["diags"])
     s["exp_extra_cells"] = ", ".join(extra_cells)
     s["exp_ruler"] = exp["r3"]["ruler"]
+    s["exp_budget"] = _tip.get("crossing_budget")
+    s["exp_cuts"] = _tip.get("crossing_cuts")
 
     # the two comments this round corrected, and the re-measurement they forced
     cdp = load("css_delta_proof_r5.json")
@@ -331,7 +335,7 @@ def main():
 
 **零、这一轮改的是我自己那一格，不是尺**。号令者 02:01 那块把根查清了，我用自己的跑复现一遍，三枚件随候选交：同一把尺 `{exp_ruler}`（同一枚实例，三趟）量 ① 现尖 `{tip}` = {exp_tip} 格 / {exp_tip_mod} 模块，② 我 r2 那代 `{f_r2}` = {exp_r2} 格 / {exp_r2_mod} 模块，③ 本轮候选 `{cand}` = {exp_r3} 格 / {exp_r3_mod} 模块。多出来的四格逐字落在我从没打开过的两枚文件上：{exp_extra_cells}。路径是我开的：`frontend/src/features/trip/TripItinerary.tsx` 那一行把 `facts.existingStampedAt`（从服务器正文里读出来的）交给了 `frontend/src/lib/v8Formatting.ts:7` 的 `formatV8Date`，而那枚 helper 同时被 AccessPanel 与 PlanVersionHistoryPanel 调用；Q64 量的是路径不是文件归属，所以两枚面板各失免责。件 `{b_exp_tip}`（现尖 6 格那张）、`{b_exp_r2}`（我这代改前 10 格那张）、`{b_exp_r4}`（改后回到 6 格那张）。
 
-**一、按裁语的第二条路改**：不复用那枚共用 helper，本屏自带渲染。新函数 `formatStampedMoment` 放在 `frontend/src/features/checkin/checkinCopy.ts`（blob `{b_copy}`）——这枚模块只有行程屏 import，正文值走到这里就停了；`TripItinerary.tsx`（blob `{b_itin}`）里 `formatV8Date` 的引用计数已降到 0，连那行 import 一起撤。输出形状沿用这些面上本来那一种（月/日、24 小时、按 locale），我没顺手改别的屏。改完两侧逐规则同数：{exp_rule_counts}（格总数 {exp_r3}={exp_tip}），未解析 import 三趟都是 {exp_unresolved} 条，parse 诊断 {exp_diags}，交叉预算 24 用掉 0——只有模块数与格数在变，这正是裁语要求的形状。
+**一、按裁语的第二条路改**：不复用那枚共用 helper，本屏自带渲染。新函数 `formatStampedMoment` 放在 `frontend/src/features/checkin/checkinCopy.ts`（blob `{b_copy}`）——这枚模块只有行程屏 import，正文值走到这里就停了；`TripItinerary.tsx`（blob `{b_itin}`）里 `formatV8Date` 的引用计数已降到 0，连那行 import 一起撤。输出形状沿用这些面上本来那一种（月/日、24 小时、按 locale），我没顺手改别的屏。改完两侧逐规则同数：{exp_rule_counts}（格总数 {exp_r3}={exp_tip}），未解析 import 三趟各 {exp_unresolved} 条（依次：现尖 / r2 那一代 / 本轮候选），parse 诊断 {exp_diags}，交叉预算 {exp_budget} 用掉 {exp_cuts}——只有模块数与格数在变，这正是裁语要求的形状。
 
 **二、重基到 ORD-0532 之后的尖**。`{tip}` 就是「main.py 转回 LF + .gitattributes 钉 *.py text eol=lf」那一笔；我这轮重落 `backend/app/main.py` 只花了两处小改（`git diff --numstat` 对基座 = 14 增 2 删，blob `{b_main}`），不再是整文件对撞。r1 `{f_r1}`、r2 `{f_r2}` 原样冻结、0 force、0 覆盖；本轮新枝 `review/newlane-ord0500-phone-checkin-entry-r3` = `{cand}`，只读预测 `{tree_cand}`（`git merge-tree --write-tree` 对 `{tip}`）。上一轮 r2 被拦下时工具输出截断没点名，我自己逐枚比出来是 `backend/app/main.py` 与 `contracts/openapi.yaml` 两枚，那一格的账在上一块里已经落了。
 
@@ -339,9 +343,9 @@ def main():
 
 **四、真发一发（本轮）**。每跑一份新私库（`backup()` 只读复制 `_preview.db`，跑后逐枚比字节与 mtime，{runs_count} 跑全 `shared_untouched=True`）：未打卡那站按下去 `http_status={req_http}`、行数 0→1；再按另一枚不同站、行数 0→{rows_cand}；同一枚第二次 `http_status={dup_http}`。请求序列逐字 {reqs_tip}，pageerror {pe_tip}。重复点击那句现在只有被按那一站有：屏上拒绝句 {notices_cand} 枚、句主 {owners_cand}，逐字「{sentence_cand}」——时刻是从 `error.details.existing_stamped_at` 取来、由本屏自己渲染的；屏上 uuid 0 枚、机词 0 枚（件 `{b_sweep}`）。同一步在本轮基座面上仍是 {notices_tip} 枚、逐字「{sentence_tip}」，里面没有那个时刻。
 
-**五、门里四字段陈列（不造句子）**。本轮基座 `{tip}`：未知行程写门 `http_status={base_http}`、正文 {base_bytes} 字节、句子里有 uuid={base_uuid}、`details` 为 null={base_null}、无 reason_code。候选 `{cand}`：`http_status={cand_http}`、`error.reason_code={cand_code}`、`details={{"field": "journey_id"}}`、uuid={cand_uuid}、`details` 为 null={cand_null}（件 `{b_doors}`）。你点名的两格在基座上本就合规：`{target_code}` 答 `http_status={target_http}` 且 `details.fields` 点名两枚字段；`{unknown_code}` 答 `http_status={unknown_http}`，uuid 只在 `details.activity_id` 这个机器字段里。共享 `require()`（`backend/app/main.py:797`）我没动，改在两扇门自己的读门里。
+**五、门里四字段陈列（不造句子）**。本轮基座 `{tip}`：未知行程写门 `http_status={base_http}`、正文 {base_bytes} 字节、句子里有 uuid={base_uuid}、`details` 为 null={base_null}、无 reason_code。候选 `{cand}`：`http_status={cand_http}`、`error.reason_code={cand_code}`、`details={{"field": "journey_id"}}`、uuid={cand_uuid}、`details` 为 null={cand_null}（件 `{b_doors}`）。你点名的两格在基座上本就合规：`{target_code}` 答 `http_status={target_http}` 且 `details.fields` 点名两枚字段；`{unknown_code}` 答 `http_status={unknown_http}`，uuid 只在 `details.activity_id` 这个机器字段里。共享 `require()`（`backend/app/main.py:{a_req}`，这一枚行号是本轮在基座树逐枚读回的，见〇″）我没动，改在两扇门自己的读门里。
 
-**六、反件一：摘掉服务端 409 判据**。一次性树 `mutgen9` 与交付树比对 {compared} 枚文件，只有 `backend/app/main.py` 不同（`{cand_sha}…` 对 `{mut_sha}…`，本机字节 sha256，不是 git 物件，不可 cat-file；件 `{b_proof}`）。两趟真跑（件 `{b_ce1}`）：候选代两套件 {ce1_cand_pass} 枚臂全过、失败 {ce1_cand_fail} 枚、退出 0；反件代通过 {ce1_mut_pass} 枚、失败 {ce1_mut_fail} 枚、退出 1，红臂逐字 `{ce1_mut_names}`。假绿那枚：`{ce1_green_name}`（ORD-0476 已收、只读状态码与句子）在反件代仍通过；屏侧同形——候选面挂在摘了判据的门上，重复句仍 {mut_screen_notices} 枚、pageerror {mut_screen_pe}（件 `{b_doors}`）。我那条钉层次的臂（`{b_pytest}`）在反件代红了，不是空转。
+**六、反件一：摘掉服务端 409 判据**。一次性树 `mutgen9` 与交付树比对 {compared} 枚文件，只有 `backend/app/main.py` 不同（`{cand_sha}…` 对 `{mut_sha}…`，本机字节 sha256，不是 git 物件，不可 cat-file；件 `{b_proof}`）。两趟真跑（件 `{b_ce1}`）：候选代 {ce1_cand_pass} 枚臂全过、失败 {ce1_cand_fail} 枚、退出 0；反件代通过 {ce1_mut_pass} 枚、失败 {ce1_mut_fail} 枚、退出 1，红臂逐字 `{ce1_mut_names}`。假绿那枚：`{ce1_green_name}`（ORD-0476 已收、只读状态码与句子）在反件代仍通过；屏侧同形——候选面挂在摘了判据的门上，重复句仍 {mut_screen_notices} 枚、pageerror {mut_screen_pe}（件 `{b_doors}`）。我那条钉层次的臂（`{b_pytest}`）在反件代红了，不是空转。
 
 **七、反件二：门里不给足迹时屏上不许长出标**。一次性面 `{entry_mut}` 把标记改成从排程活动状态取。真跑：到屏时门里 {rows_mut_arrival} 行、屏上「已打卡」{marks_mut_arrival} 枚（本轮基座与候选同格都是 0 对 0，件 `{b_sweep}`）。三臂载体 `{b_spec}`（配置 `{b_cfg}`）在本轮三面上各一趟（件 `{b_arms}`）：基座面 `{entry_tip}` 通过 {base_arm_pass} 枚、失败 {base_arm_fail} 枚，判语逐字「{base_arm_msg}」；候选面 `{entry_cand}` 通过 {cand_arm_pass} 枚、失败 {cand_arm_fail} 枚；反件面 `{entry_mut}` 通过 {mut_arm_pass} 枚、失败 {mut_arm_fail} 枚，判语逐字「{mut_arm_msg}」。
 
