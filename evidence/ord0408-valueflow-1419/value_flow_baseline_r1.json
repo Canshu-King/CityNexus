@@ -1,0 +1,662 @@
+{
+ "method": "each fixture run through both rulers with each contract, `--file` mode, cwd D:/moodle/_qoder_cmdr_ref_20260921/live_checks; no ruler byte was changed for this file",
+ "field_the_contract_names": "reason_code",
+ "fixtures": {
+  "control": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\control__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": []
+  },
+  "in_set": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\in_set__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [
+      "JOURNEY_NOT_DELETED"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [
+      "JOURNEY_NOT_DELETED"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [
+      "JOURNEY_NOT_DELETED"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [
+      "JOURNEY_NOT_DELETED"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": [
+    {
+     "token": "JOURNEY_NOT_DELETED",
+     "where": [
+      {
+       "line": 98,
+       "role": "assigned_to_the_field",
+       "text": "const code = refusalReasonCode(cause) || \"JOURNEY_NOT_DELETED\";"
+      },
+      {
+       "line": 100,
+       "role": "compares_the_field",
+       "text": "if (code === \"JOURNEY_NOT_DELETED\") setOutcome({ kind: \"already\", code, facts });"
+      }
+     ]
+    }
+   ]
+  },
+  "invented": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\invented__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "NOT_A_REAL_CODE"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "NOT_A_REAL_CODE"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "NOT_A_REAL_CODE"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "NOT_A_REAL_CODE"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": [
+    {
+     "token": "NOT_A_REAL_CODE",
+     "where": [
+      {
+       "line": 98,
+       "role": "assigned_to_the_field",
+       "text": "const code = refusalReasonCode(cause) || \"NOT_A_REAL_CODE\";"
+      }
+     ]
+    }
+   ]
+  },
+  "no_anchor": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\no_anchor__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": []
+  },
+  "undeclared_field": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\undeclared_field__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": []
+  },
+  "unrelated_token": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\unrelated_token__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "INTERNAL_ERROR"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "INTERNAL_ERROR"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "INTERNAL_ERROR"
+     ],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "value_not_in_the_contract_set"
+     ],
+     "tokens_counted": [
+      "INTERNAL_ERROR"
+     ],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": [
+    {
+     "token": "INTERNAL_ERROR",
+     "where": [
+      {
+       "line": 98,
+       "role": "assigned_to_the_field",
+       "text": "const code = refusalReasonCode(cause) || \"INTERNAL_ERROR\";"
+      }
+     ]
+    }
+   ]
+  },
+  "verbatim": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\verbatim__JourneyTrashPanel.tsx",
+   "inline_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "block_enum_names_the_set": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 1,
+     "red": 1,
+     "exempted": 0,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 1,
+     "exempted": 1,
+     "contract_exempted": 1,
+     "contract_blocked": 0,
+     "whys": [],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "enum_owned_by_another_field": {
+    "r7b4": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    },
+    "r8": {
+     "rc": 0,
+     "cells_total": 2,
+     "red": 2,
+     "exempted": 0,
+     "contract_exempted": 0,
+     "contract_blocked": 1,
+     "whys": [
+      "CONTRACT_MISSING_ENUM"
+     ],
+     "tokens_counted": [],
+     "fold_exempted": 0
+    }
+   },
+   "token_provenance": []
+  }
+ },
+ "contracts": {
+  "inline_enum_names_the_set": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+   "bytes": 119872
+  },
+  "block_enum_names_the_set": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_block_enum.yaml",
+   "bytes": 119965
+  },
+  "enum_owned_by_another_field": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_enum_other_field_only.yaml",
+   "bytes": 119912
+  }
+ }
+}
