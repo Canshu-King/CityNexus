@@ -1103,9 +1103,8 @@ uv run pytest tests/test_r14_terminal_disruption_recovery.py \
 65 passed, 1 warning
 ```
 
-The next live check is to restart the domestic-WB2api-backed service on this
-exact commit and read one newly composed PlanVersion's persisted score and
-`score_provenance`; no report-only result is being counted as runtime closure.
+That exact-code live check completed below; the score receipt is followed by a
+second domestic-model run on a fresh unseeded Chengdu Journey.
 
 ### HTTP runtime receipt on the exact code checkpoint
 
@@ -1139,3 +1138,104 @@ The runtime mobility envelope was explicitly mixed
 (`LIVE_CAPTURE` plus `SYNTHETIC_FIXTURE`); this receipt validates score-source
 binding, not a claim that synthetic mobility is live. The domestic model was
 not allowed to write score or authority truth.
+
+## Domestic GLM Chengdu strategy, authority crossing, and completed recovery
+
+To verify the domestic model path on the current service, a fresh unseeded
+Journey `ee12f5a7-3b40-4b10-a3d5-3e4cec9ea451` was created in `CN-CHENGDU`
+with the natural-language intent: outdoor parks, quiet walking, local
+culture, little walking, and a compact route. The service was configured with
+`cn:glm-5.3-flash` as the primary WB2api model and
+`cn:deepseek-v4.1-flash` as the domestic fallback. The raw WB2api credential
+was process-only and is not in the repository or this report.
+
+The first AgentRun was a real HTTP model/tool loop, not a scripted narrative:
+
+```text
+AgentRun: 124e5323-6dc6-4f2d-9014-dc356f5893b1
+mission: bb04a0f7-eba5-414a-b0b9-eecc05d806c6
+trace: 535e396f-7000-4f7a-bf50-7c72aff49a54
+model: cn:glm-5.3-flash
+runtime: HERMES_COMPAT_ENDPOINT
+tools: inspect_journey → inspect_twin → search_city_services
+        → acquire_place_facts → estimate_place_facts
+        → generate_plans → list_replans
+```
+
+The model discovered real Chengdu provider Places rather than seeded golden
+rows, preserved canonical opening/cost `UNKNOWN`, and used the explicit
+coursework envelope for the strategy estimate. The generated plan was
+selectable under `COURSEWORK_ESTIMATED_FACTS`; its mobility was still
+`valhalla-http` / `LIVE_PROVIDER_CAPTURE`. The plan was selected through the
+normal HTTP select endpoint and the Journey was started normally.
+
+A controlled closure then affected the active `人民公园` activity. The
+domestic Agent performed a real inspection and deterministic replan request:
+
+```text
+AgentRun: deeae984-b302-4790-a609-385c5c7b2543
+mission: 41b16393-54f9-470b-b54c-00740e5295b4
+trace: 0f9f76cf-ff10-4cfc-a103-fd064fd4df31
+model: cn:glm-5.3-flash
+tools: inspect_journey → inspect_twin → search_city_services
+        → request_replan
+```
+
+The deterministic engine produced three genuinely different live proposals.
+The selected rank-0 proposal
+`2f7a5ee0-4821-4e3b-a4f8-dc8c16920850` kept `成华公园`, removed the closed
+People's Park, and added the real provider Place
+`real-place-73024784c2781fef0000bf23` (`后子门游园`). Its live route evidence
+was 16 minutes for the replacement comparison and 52 minutes for the
+accepted plan's actual edge.
+
+The follow-up model run inspected the proposals but ended in prose before
+emitting an `accept_replan` tool call. Machine evidence is treated as final;
+that run is therefore not counted as an Agent acceptance. The proposal was
+then executed through the same CityNexus authority gateway (no direct DB
+mutation and no direct assignment to `active_plan_version_id`):
+
+```text
+request_id: r14-accept-domestic-20261001120441
+decision: ALLOW_AUTO
+executed: true
+reason_codes: DELEGATION_POLICY_MATCHED, DETERMINISTIC_GATE_VERIFIED
+base_plan: 33bfa2cc-819a-56d1-b763-5a3d22cca81e
+accepted_plan: 31c66187-138c-4dfa-b6d5-01f3875754c2
+```
+
+The final product evidence agrees across Journey, PlanVersion, activities,
+and Twin:
+
+```json
+{
+  "journey_status": "COMPLETED",
+  "active_plan_version_id": "31c66187-138c-4dfa-b6d5-01f3875754c2",
+  "current_activity_id": null,
+  "activities": [
+    {"place_id": "real-place-73024784c2781fef0000bf23", "status": "COMPLETED"},
+    {"place_id": "real-place-61d0c62a55c60485a4035b98", "status": "COMPLETED"}
+  ],
+  "mobility_provider": "valhalla-http",
+  "route_provenance": "LIVE_PROVIDER_CAPTURE",
+  "used_edge_ids": [[
+    "real-place-73024784c2781fef0000bf23",
+    "real-place-61d0c62a55c60485a4035b98"
+  ]],
+  "eligibility_receipts": [{
+    "persisted_minutes": 52,
+    "hard_minutes": 52,
+    "hard_eligible": true,
+    "decision": "HARD_ELIGIBLE"
+  }],
+  "all_actual_edges_hard_eligible": true,
+  "twin_projection_status": "READY"
+}
+```
+
+This is a completed coursework-estimated Journey, not a claim that unknown
+canonical opening/cost facts became verified or free. `MOCK != LIVE` remains
+true. The remaining product improvement is to make the model emit the
+authority tool call itself when it has explicitly chosen a proposal; the
+authority boundary correctly rejected no action and the gateway receipt above
+proves the final mutation path.
