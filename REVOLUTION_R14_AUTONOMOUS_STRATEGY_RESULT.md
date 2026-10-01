@@ -3,8 +3,8 @@
 ## Machine checkpoint
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
-- Final experimental code SHA: `03dd1736`
-- Report closure commit: recorded after this code checkpoint
+- Final experimental code SHA: `c53df8e6`
+- Report closure commit: recorded after this report update
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r13-metadata-fix-20260930-b.sqlite3`
@@ -13,6 +13,135 @@
 - Fallback configured: `cn:deepseek-v4.1-flash`
 - Endpoint: local WB2api `http://127.0.0.1:7863/v1/chat/completions`
 - Credentials: process environment only; no raw credential is persisted in this tree.
+
+## Current domestic-WB2api checkpoint: Guilin
+
+This is the latest executed checkpoint on top of the prior R14/Dali report.
+The experimental code commit for this checkpoint is `c53df8e6` (the report
+closure commit follows it). The clean source branch remains
+`codex/revolution-realtrip-recovery`; no authority/mainline branch was merged.
+
+### Real discovery and strategy loop
+
+Journey `7a6f9360-5834-4a93-a849-24b7c72895f6` entered previously unseeded
+Guilin (`CN-GUILIN`) through the live product path. Nominatim was unreachable,
+so the new Photon OSM-backed geocoder supplied a captured city anchor; Overpass
+then returned HTTP 200 with 52 elements and materialized eight provider-backed
+Places. The fallback is recorded as `photon_city_anchor`; it did not promote
+opening hours or prices.
+
+The domestic WB2api path was used as:
+
+```text
+primary:  cn:glm-5.3-flash
+fallback: cn:deepseek-v4.1-flash
+endpoint: http://127.0.0.1:7863/v1/chat/completions
+```
+
+The key was process-only. It is not in the repository, report, database, or
+commit. Successful Hermes-compatible AgentRuns included GLM runs
+`9e928578-e8d0-48f0-8a9b-d78797e4796e`,
+`288f94c1-d321-42bd-9a58-117c8b0b47e7`, and
+`07ef88bd-f45c-4a97-b951-e6ba4858399e`; domestic DeepSeek also completed
+`61551482-ef83-4e01-ae20-33c68fa01de8` after a search-saturation stop.
+
+The first Agent estimate for 叠彩山公园 was persisted as strategy-only
+`ESTIMATED_AGENT` facts: opening 08:00–18:00 and cost 3,200 CNY minor. A
+planner bridge repair then made the estimate influence provisional selection,
+and allowed a coursework candidate to mix provider-complete facts with
+agent-estimated facts. It did not change the canonical UNKNOWN opening/cost
+fields. The deterministic parser also accepted the official 七星景区 ticket
+context and persisted 5,500 CNY as provider-backed evidence; it did not treat
+the unrelated 100 CNY team figure as the admission price.
+
+### Select, execute, disrupt, replan, complete
+
+AgentRun `07ef88bd-f45c-4a97-b951-e6ba4858399e` eventually generated plan
+`5ba08863-52dd-592d-bc18-2310356fd3e4` (version 6):
+
+- authority state: `COURSEWORK_ESTIMATED_FACTS`;
+- selectable: `true` inside the explicit isolated coursework envelope;
+- Places: `real-place-5e87d712b0faf693f25aac0f` (虞山公园) and
+  `real-place-7cfb04805ea00e43e24d9ea3` (叠彩山公园);
+- estimated total: 6,400 CNY minor, still explicitly estimated;
+- mobility: Valhalla snapshot `3a876dcf-4a74-49eb-a5d4-b6b9023c4075`.
+
+The product select endpoint returned HTTP 200 and bound that plan. Start then
+returned `ACTIVE`; the first activity was advanced through `depart`, `arrive`,
+and `begin`. The baseline runtime evidence contained the actual edge
+
+```text
+real-place-5e87d712b0faf693f25aac0f
+  -> real-place-7cfb04805ea00e43e24d9ea3
+provider: valhalla-http
+minutes: 22
+route_provenance: LIVE_PROVIDER_CAPTURE
+decision: HARD_ELIGIBLE
+```
+
+The controlled disruption was deliberately labelled `SIMULATED`, not LIVE:
+event `a3b2dac4-0674-46d8-b1aa-d36c763228f1`, type `CLOSURE`,
+`COURSEWORK_CONTROLLED_CLOSURE`, bound to the current Yushan activity.
+Deterministic `request_replan` created proposal
+`d2b99b79-2fc2-408a-a43f-0e3d3b38d37c` with family
+`F1_OPTIONAL_REMOVAL`: remove the closed Yushan stop, keep Diecai, reduce
+travel by 22 minutes, zero cost delta, and preserve hard constraints. Its
+incident mobility snapshot `38f9d6c6-36e5-4062-a5d2-5e7a08789d12` was again
+captured from `valhalla-http`.
+
+The Gateway accepted the proposal with `executed=true` and reason codes
+`DELEGATION_POLICY_MATCHED` and `DETERMINISTIC_GATE_VERIFIED`. The active
+PlanVersion became `c6302d09-3919-4d9b-8c05-e53d521407d9` (version 7), retaining
+lineage to version 6. The revised single-stop plan was then advanced through
+`depart`, `arrive`, `begin`, and `complete`. The final machine state is:
+
+```text
+Journey.status                 = COMPLETED
+Journey.active_plan_version_id = c6302d09-3919-4d9b-8c05-e53d521407d9
+Journey.current_activity_id    = null
+event.status                   = ACKNOWLEDGED
+Twin cursor                    = null
+execution state                = COMPLETE
+```
+
+After the replan there is no remaining leg, so the final plan's
+`used_edge_ids=[]` is the real zero-leg result. No edge, receipt, or mobility
+fact was synthesized. The baseline edge and its hard-eligibility receipt are
+preserved above and in the database.
+
+### Agent runtime limitation observed
+
+Machine evidence also records the limitation honestly. AgentRun
+`2f67a4fa-df14-42e3-9407-5e3e39bf6f63` completed inspection/listing steps but
+the domestic GLM and DeepSeek responses both ended empty, so it is marked
+`FAILED_EXTERNAL / PROVIDER_REFUSED`; it is not counted as a successful critic
+run. Another GLM run made a malformed one-place `generate_plans` call; the
+Gateway rejected it with HTTP 422 and no side effect, after which the run
+recovered and generated the valid candidate. Because the native model did not
+reliably issue `request_replan` in every prompt, the final replan request and
+acceptance are explicitly attributed to the deterministic Agent Gateway, not
+to invented model prose.
+
+### Checkpoint repairs and focused tests
+
+The checkpoint commit includes Photon live-anchor fallback, official ticket
+context parsing, strategy ordering across the explicit-catalogue seam,
+provider-truth plus coursework-estimate coverage, and the strategy tools in
+the execute-within-bounds mission surface. The focused post-change gate was:
+
+```text
+uv run pytest backend/tests/test_v10_generic_compose.py \
+  backend/tests/test_revolution_r77_recovery.py \
+  backend/tests/test_agent_mission_runtime.py \
+  backend/tests/test_v18_2_agent_productization.py \
+  backend/tests/test_qoder_city_failure_reasons.py -q
+69 passed, 1 warning
+```
+
+The remaining product frontier is domestic-model tool-call reliability and a
+second autonomous city transfer using the same strategy engine. The current
+Guilin result is a completed coursework-envelope Journey, not a claim that
+estimated facts are production provider truth.
 
 This round made the same product Journey inspect live state, identify a named
 disruption, request a deterministic recovery, cross the authority boundary,
