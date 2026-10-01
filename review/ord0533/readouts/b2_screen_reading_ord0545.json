@@ -1,0 +1,15 @@
+{
+  "generation": {
+    "tag": "ord0545",
+    "base_tip": "c874b1d6bac6735d4ad164379a76db7b73398bd8",
+    "recorded_at": "2026-10-01T08:05:31.853Z"
+  },
+  "viewport": "390x844",
+  "rendered_characters": 347,
+  "evidence_label_text": "本地解析，不打开链接",
+  "expected_zh_copy": "本地解析，不打开链接",
+  "expected_en_copy": "Local parse, no links opened",
+  "poi_import_key_names_on_screen": [],
+  "machine_words_on_screen": [],
+  "uuids_on_screen": []
+}

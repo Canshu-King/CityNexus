@@ -32,6 +32,7 @@ import path from "node:path";
 const TRIP = "22222222-2222-4222-8222-222222222222";
 const PANEL = "frontend/src/features/poiimport/PoiImportPanel.tsx";
 const DICTIONARY = "frontend/src/i18n/LocaleContext.tsx";
+const COPY_TABLE = "frontend/src/features/poiimport/poiImportCopy.ts";
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0533", "readouts");
 const TAG = process.env.CITYNEXUS_ORD0533_TAG ?? "r3";
 /* Required, not defaulted to a placeholder.  A sibling lane's readings shipped stamped
@@ -85,6 +86,44 @@ function books(): { en: Set<string>; zh: Set<string> } {
   return { en: entries(text.slice(0, split)), zh: entries(text.slice(split)) };
 }
 
+/**
+ * The screen's own sentence table (ORD-0524's `poiImportCopy.ts`), read as key + both halves.
+ *
+ * Parsing is done by plain string search rather than by a regex built inside a template literal: the
+ * first cut did the latter, and the escape layer turned `[\s\S]` into the character class `[sS]`, so
+ * every one of the table's keys reported as missing both halves.  That was my instrument failing, not
+ * the product -- and a green/red that comes from the tool's own typo is worse than no tool.
+ *
+ * What this arm is for: `Record<PoiImportCopyKey, { zh, en }>` already refuses a missing half at
+ * compile time, so the two things worth checking are what the compiler cannot see -- that the union has
+ * no name without an entry, and that a sentence moved here did not stay behind in the dictionary as a
+ * second owner of the same words.
+ */
+function copyTable(): { keys: string[]; entries: { key: string; zh?: string; en?: string }[] } {
+  const text = fs.readFileSync(path.join(repoRoot, COPY_TABLE), "utf-8");
+  const union = text.split("export type PoiImportCopyKey")[1].split(";")[0];
+  const keys = union.split("\n").flatMap((line) => {
+    const at = line.indexOf('  | "');
+    return at === -1 ? [] : [line.slice(at + 5, line.indexOf('"', at + 5))];
+  });
+  const body = text.split("const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {")[1];
+  const half = (block: string, name: string) => {
+    const at = block.indexOf(`${name}: "`);
+    if (at === -1) return undefined;
+    const from = at + name.length + 3;
+    const end = block.indexOf('"', from);
+    return end === -1 ? undefined : block.slice(from, end);
+  };
+  const entries = keys.map((key) => {
+    const open = body.indexOf(`\n  ${key}: {`);
+    if (open === -1) return { key };
+    const close = body.indexOf("\n  }", open);
+    const block = body.slice(open + `\n  ${key}: {`.length, close === -1 ? undefined : close);
+    return { key, zh: half(block, "zh"), en: half(block, "en") };
+  });
+  return { keys, entries };
+}
+
 async function bootToPanel(page: Page) {
   // `/v8/import` is an address the shell itself recognises: `import` is a route key in
   // `frontend/src/routes/v8Routes.ts`, and `KNOWN_ROUTES` is built from those keys, so this is the
@@ -119,11 +158,18 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
       distinct_defined_in_zh: distinct.filter((key) => zh.has(key)).length,
       missing_from_en: [...new Set(missingEn)],
       missing_from_zh: [...new Set(missingZh)],
-      reported_key_now_defined_in: [en.has("poiImport.channelLocal"), zh.has("poiImport.channelLocal")],
+      /* ORD-0545 moved this badge's words out of the two books and into the screen's own table, so the
+         r3 claim "the reported key is now defined in both books" is no longer the right invariant -- it
+         would have failed on a green product.  The owner is asserted in B4 instead; here it is recorded
+         as absent, which is what proves the move left no second copy behind. */
+      reported_key_still_called_via_t: called.includes("poiImport.channelLocal"),
+      reported_key_still_in_dictionary: [en.has("poiImport.channelLocal"), zh.has("poiImport.channelLocal")],
     });
     expect(missingEn, `keys missing from the English book: ${missingEn.join(", ")}`).toEqual([]);
     expect(missingZh, `keys missing from the Chinese book: ${missingZh.join(", ")}`).toEqual([]);
-    expect(called).toContain("poiImport.channelLocal");
+    expect(called).not.toContain("poiImport.channelLocal");
+    expect(en.has("poiImport.channelLocal"), "the dictionary still holds a copy of a moved sentence").toBe(false);
+    expect(zh.has("poiImport.channelLocal"), "the dictionary still holds a copy of a moved sentence").toBe(false);
   });
 
   test("B2 390 宽那一档读渲染文字：新词上屏，键名不上屏", async ({ page }) => {
@@ -151,7 +197,7 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
     expect(rendered).toContain(CHANNEL_LOCAL_ZH);
   });
 
-  test("B3 英文那一本也要给同样的词，缺哪本就会露出键名", async ({ browser }) => {
+  test("B3 英文那一侧也要给同样的词，缺哪侧就会露出键名或空串", async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();
     await page.addInitScript(
@@ -172,5 +218,29 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
       poi_import_key_names_on_screen: rendered.match(/\bpoiImport\.[a-zA-Z0-9]+\b/g) ?? [],
     });
     await context.close();
+  });
+
+  test("B4 ORD-0545：搬进表里的那枚徽章成对，且字典里没有第二份", () => {
+    const { keys, entries } = copyTable();
+    const { en, zh } = books();
+    const withoutPair = entries.filter((entry) => entry.zh === undefined || entry.en === undefined);
+    // A table key that is also in either book is the "fourth way of saying the same thing" ORD-0524's
+    // own header forbids; after a move it is the residue that makes two owners of one sentence.
+    const alsoInDictionary = keys.filter((key) => en.has(`poiImport.${key}`) || zh.has(`poiImport.${key}`));
+    const badge = entries.find((entry) => entry.key === "channelLocal");
+    writeEvidence("b4_copy_table_pairing", {
+      table: COPY_TABLE,
+      union_keys: keys.length,
+      entries_with_both_halves: entries.length - withoutPair.length,
+      entries_missing_a_half: withoutPair.map((entry) => entry.key),
+      table_keys_also_in_dictionary: alsoInDictionary,
+      badge_zh: badge?.zh,
+      badge_en: badge?.en,
+      badge_matches_shipped_words: [badge?.zh === CHANNEL_LOCAL_ZH, badge?.en === CHANNEL_LOCAL_EN],
+    });
+    expect(withoutPair.map((entry) => entry.key), `halves missing: ${withoutPair.map((e) => e.key).join(", ")}`).toEqual([]);
+    expect(alsoInDictionary, `moved sentences left a copy in the dictionary: ${alsoInDictionary.join(", ")}`).toEqual([]);
+    expect(badge?.zh, "the badge's Chinese half is not the sentence ORD-0533 shipped").toBe(CHANNEL_LOCAL_ZH);
+    expect(badge?.en, "the badge's English half is not the sentence ORD-0533 shipped").toBe(CHANNEL_LOCAL_EN);
   });
 });

@@ -1,0 +1,19 @@
+{
+  "generation": {
+    "tag": "ord0545",
+    "base_tip": "c874b1d6bac6735d4ad164379a76db7b73398bd8",
+    "recorded_at": "2026-10-01T08:05:28.786Z"
+  },
+  "panel": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+  "t_call_sites": 52,
+  "distinct_keys": 46,
+  "distinct_defined_in_en": 46,
+  "distinct_defined_in_zh": 46,
+  "missing_from_en": [],
+  "missing_from_zh": [],
+  "reported_key_still_called_via_t": false,
+  "reported_key_still_in_dictionary": [
+    false,
+    false
+  ]
+}
