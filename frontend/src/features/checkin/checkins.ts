@@ -26,15 +26,26 @@ export type CheckinRefusal =
 
 export type StampOutcome =
   | { kind: "stamped"; stamp: CheckinStamp }
-  /* The code is kept as a *value this module switches on*, never rendered: an attribute slot counts
-     as DOM under the exposure rule, and a machine token on a Chinese screen is the defect this
-     project keeps having to fix. The screen answers with its own dictionary sentence. */
-  | { kind: "refused"; refusal: CheckinRefusal; status: number }
+  /* The code is kept as a *value this module switches on*, never rendered into the traveller's
+     sentence: a machine token on a Chinese screen is the defect this project keeps having to fix,
+     so the screen answers with its own dictionary sentence.  ORD-0507 3 adds `technical` beside it:
+     the server's own words do belong on screen, but in the 「技术详情」 fold, not in the sentence. */
+  | {
+      kind: "refused";
+      refusal: CheckinRefusal;
+      status: number;
+      technical: CheckinTechnical;
+    }
   | { kind: "unreachable" };
 
 export type ReadOutcome =
   | { kind: "read"; stamps: CheckinStamp[] }
-  | { kind: "refused"; refusal: CheckinRefusal; status: number }
+  | {
+      kind: "refused";
+      refusal: CheckinRefusal;
+      status: number;
+      technical: CheckinTechnical;
+    }
   | { kind: "unreachable" };
 
 async function call(path: string, init?: RequestInit) {
@@ -51,8 +62,18 @@ async function call(path: string, init?: RequestInit) {
   return { ok: response.ok, status: response.status, body };
 }
 
-/** The refusal name, from the envelope -- or `UNRECOGNISED`, which the screen shows as a gap. */
-function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {
+/** The server's own words about a refusal, kept apart from the sentence the screen says.
+    ORD-0507 3: a traveller reads human words; the reason code, status, message and details the
+    door actually answered go into the 「技术详情」 fold, so the original is never lost and never
+    stands in the traveller's sentence. */
+export type CheckinTechnical = {
+  reason_code: string;
+  http_status: number;
+  message: string | null;
+  details: unknown;
+};
+
+function refusalOf(body: unknown): { refusal: CheckinRefusal; reason_code: string } {
   const error = (body as any)?.error;
   const code = typeof error?.reason_code === "string" ? error.reason_code : "";
   const known: CheckinRefusal[] = [
@@ -68,8 +89,20 @@ function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {
     refusal: (known as string[]).includes(code)
       ? (code as CheckinRefusal)
       : "UNRECOGNISED",
-    status: 0,
+    reason_code: code,
   };
+}
+
+/** What the door answered, verbatim: the fold must be able to name the shape it refuses to speak. */
+function technicalOf(body: unknown, status: number, reason_code: string): CheckinTechnical {
+  const error = (body as any)?.error;
+  const message =
+    typeof error?.message === "string" && error.message.length > 0
+      ? error.message
+      : typeof (body as any)?.detail === "string" && (body as any).detail.length > 0
+        ? ((body as any).detail as string)
+        : null;
+  return { reason_code, http_status: status, message, details: error?.details ?? null };
 }
 
 /** One tap on one stop. Nothing here is written locally: a stamp exists when the door says 201. */
@@ -82,8 +115,13 @@ export async function stampStop(journeyId: string, activityId: string): Promise<
     if (answer.ok && answer.body) {
       return { kind: "stamped", stamp: answer.body as CheckinStamp };
     }
-    const { refusal } = refusalOf(answer.body);
-    return { kind: "refused", refusal, status: answer.status };
+    const { refusal, reason_code } = refusalOf(answer.body);
+    return {
+      kind: "refused",
+      refusal,
+      status: answer.status,
+      technical: technicalOf(answer.body, answer.status, reason_code),
+    };
   } catch {
     return { kind: "unreachable" };
   }
@@ -96,11 +134,33 @@ export async function readCheckins(journeyId: string): Promise<ReadOutcome> {
     if (answer.ok && Array.isArray(answer.body)) {
       return { kind: "read", stamps: answer.body as CheckinStamp[] };
     }
-    const { refusal } = refusalOf(answer.body);
-    return { kind: "refused", refusal, status: answer.status };
+    const { refusal, reason_code } = refusalOf(answer.body);
+    return {
+      kind: "refused",
+      refusal,
+      status: answer.status,
+      technical: technicalOf(answer.body, answer.status, reason_code),
+    };
   } catch {
     return { kind: "unreachable" };
   }
+}
+
+/** The dictionary key for a refusal, so the screen never has to know what a reason code looks like.
+    ORD-0507 3: one key per named refusal, because "这一趟在回收站里" and "这一站不属于这趟" are two
+    different facts and the traveller cannot act on one sentence that covers both. */
+export function checkinRefusalKey(refusal: CheckinRefusal): string {
+  const keys: Record<CheckinRefusal, string> = {
+    CHECKIN_DUPLICATE_STAMP: "checkin.duplicate",
+    CHECKIN_JOURNEY_IN_RECYCLE_BIN: "checkin.refused.bin",
+    CHECKIN_ACTIVITY_NOT_IN_JOURNEY: "checkin.refused.not_in_journey",
+    CHECKIN_ACTIVITY_UNKNOWN: "checkin.refused.activity_unknown",
+    CHECKIN_PLACE_UNKNOWN: "checkin.refused.place_unknown",
+    CHECKIN_TARGET_REQUIRED: "checkin.refused.target_required",
+    CHECKIN_TARGET_AMBIGUOUS: "checkin.refused.target_ambiguous",
+    UNRECOGNISED: "checkin.refused",
+  };
+  return keys[refusal];
 }
 
 /**

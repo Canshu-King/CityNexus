@@ -11,7 +11,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
-import { readCheckins, stampStop } from "../checkin/checkins";
+import {
+  checkinRefusalKey,
+  readCheckins,
+  stampStop,
+  type CheckinTechnical,
+} from "../checkin/checkins";
 import "../checkin/footprint.css";
 import { calendarRefusalKey, exportJourneyCalendar } from "./calendarExport";
 import { CollectInto } from "../collections/CollectInto";
@@ -142,6 +147,8 @@ export function TripItinerary({
   const [stamped, setStamped] = useState<Record<string, string>>({});
   const [pendingStop, setPendingStop] = useState<string | null>(null);
   const [stopNotice, setStopNotice] = useState<string | null>(null);
+  /* ORD-0507 3: the server's own answer rides beside the sentence, never inside it. */
+  const [stopRefusal, setStopRefusal] = useState<CheckinTechnical | null>(null);
 
   const reloadStamps = useCallback(async () => {
     const answer = await readCheckins(journeyId);
@@ -158,6 +165,7 @@ export function TripItinerary({
   const stampThisStop = async (activityId: string) => {
     setPendingStop(activityId);
     setStopNotice(null);
+    setStopRefusal(null);
     const answer = await stampStop(journeyId, activityId);
     if (answer.kind === "stamped") {
       setStamped((current) => ({ ...current, [answer.stamp.target_key]: answer.stamp.id }));
@@ -169,9 +177,18 @@ export function TripItinerary({
          screen's own dictionary words, because a reason code or the server's message on a Chinese
          screen is the defect this project keeps having to fix. */
       setStopNotice(t("checkin.duplicate"));
+      setStopRefusal(answer.technical);
       await reloadStamps();
+    } else if (answer.kind === "refused") {
+      /* ORD-0507 3: every named refusal gets its own sentence.  One fixed line for seven different
+         facts ("服务器没收下这次打卡") told the traveller that something failed while hiding which
+         failure it was -- and the one fact she could act on (这趟在回收站里 / 这一站已不在计划里)
+         was exactly what the flat sentence dropped. */
+      setStopNotice(t(checkinRefusalKey(answer.refusal)));
+      setStopRefusal(answer.technical);
     } else {
-      setStopNotice(t("checkin.refused"));
+      setStopNotice(t("checkin.unreachable"));
+      setStopRefusal(null);
     }
     setPendingStop(null);
   };
@@ -521,6 +538,28 @@ export function TripItinerary({
                       <p className="cn-stop-checkin__notice" data-testid="stop-checkin-notice">
                         {stopNotice}
                       </p>
+                    ) : null}
+                    {/* ORD-0507 3: the refusal's own words are not thrown away, they are moved --
+                        the reason code, the status, the server's message and its `error.details`
+                        sit in this disclosure, which is folded by default, while the sentence above
+                        stays this screen's dictionary.  Same shipped shape as
+                        `data-testid="failure-attribution"` in the shell (a fold that keeps the
+                        technical original reachable without painting it on the traveller's line). */}
+                    {stopRefusal ? (
+                      <details
+                        className="cn-stop-checkin__technical"
+                        data-testid="stop-checkin-technical"
+                      >
+                        <summary>{t("checkin.technicalDetail")}</summary>
+                        <p data-testid="stop-checkin-technical-raw">
+                          {t("checkin.technicalRaw", {
+                            reasonCode: stopRefusal.reason_code.length > 0 ? stopRefusal.reason_code : "—",
+                            status: String(stopRefusal.http_status),
+                            message: stopRefusal.message ?? "—",
+                            details: JSON.stringify(stopRefusal.details ?? null),
+                          })}
+                        </p>
+                      </details>
                     ) : null}
                     {/* ORD-0510: the way into the container ORD-0444 built.  The wrapper, not the
                         control, stops propagation -- the row around this is itself a button

@@ -113,6 +113,20 @@ const en: Dict = {
   "checkin.doneAria": "Already checked in at {stop}",
   "checkin.duplicate": "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
   "checkin.refused": "The server would not take this stamp, so nothing was added to your footprints.",
+  /* ORD-0507 3: one sentence per named refusal.  Seven different facts used to share the line above,
+     so the traveller was told something failed but not which -- and the ones she can act on (this
+     trip is in the recycle bin, this stop has left the plan) were invisible.  Both dictionaries carry
+     every key: `t()` falls back to the key itself, and a key name on screen is the exposure this
+     family of orders forbids. */
+  "checkin.unreachable": "This screen could not reach the server, so it cannot say whether the stamp was taken -- and nothing was written on this device.",
+  "checkin.refused.bin": "This trip is in the recycle bin, so the server takes no stamp on it. Restore it first, then stamp the stop again.",
+  "checkin.refused.not_in_journey": "That stop is not in the plan the server is holding for this trip, so there is nothing here to stamp. Reopen the trip for its current stops.",
+  "checkin.refused.activity_unknown": "The server has no activity row for that stop, so nothing was stamped. It most likely belongs to a plan version this trip no longer uses.",
+  "checkin.refused.place_unknown": "The server has no place row for that target, so nothing was stamped.",
+  "checkin.refused.target_required": "A stamp has to name one target -- a stop or a place -- and this request named neither, so the server refused rather than guessing.",
+  "checkin.refused.target_ambiguous": "This request named both a stop and a place, so the server refused rather than choosing one of them for you.",
+  "checkin.technicalDetail": "Technical detail",
+  "checkin.technicalRaw": "As this server answered: reason_code={reasonCode} · http_status={status} · message={message} · details={details}",
   // ORD-0525: the itinerary's calendar export.  These keys have to exist in BOTH dictionaries, because
   // `t()` falls back to the key itself -- a `calendar.refused.bin` on screen would be the machine-word
   // exposure this order's own acceptance forbids.
@@ -1248,6 +1262,18 @@ const zhCN: Dict = {
   "checkin.doneAria": "已在{stop}打过卡",
   "checkin.duplicate": "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
   "checkin.refused": "服务器没收下这次打卡，你的足迹里没有多出任何东西。",
+  /* ORD-0507 3：一种拒绝一句话。七种不同的事实原本共用上面那一句，使用者只听到「没收下」，听不到
+     是哪一种——而她真能动手的那两种（这趟在回收站里、这一站已不在计划里）就这样被抹平了。
+     每一枚键在两本字典里都要有：`t()` 缺键就回吐键名本身。 */
+  "checkin.unreachable": "这一屏连不上服务器，所以它说不出这枚印到底有没有收下——这台设备上什么都没写。",
+  "checkin.refused.bin": "这一趟在回收站里，服务器不在它上面收印。先把它找回，再重新打这一站的卡。",
+  "checkin.refused.not_in_journey": "这一站不在服务器为这趟保留的计划里，所以这里没有可打的卡。重新打开这趟，看它现在的站。",
+  "checkin.refused.activity_unknown": "服务器查不到这一站的活动记录，所以没有收印。它多半属于这趟已经不再使用的那一版计划。",
+  "checkin.refused.place_unknown": "服务器查不到这个地点，所以没有收印。",
+  "checkin.refused.target_required": "打卡要说清一个目标——一站或一个地点——这次两样都没给，所以服务器宁可拒绝，也不替你猜。",
+  "checkin.refused.target_ambiguous": "这次同时给了一个站和一个地点，所以服务器宁可拒绝，也不替你在两者之间挑一个。",
+  "checkin.technicalDetail": "技术详情",
+  "checkin.technicalRaw": "这台服务器原样的回答：reason_code={reasonCode} · http_status={status} · message={message} · details={details}",
   // ORD-0525：行程屏的日历导出。中文这一本缺任何一条，屏上就会出现键名本身。
   "calendar.export": "导出日历",
   "calendar.busy": "正在导出…",
