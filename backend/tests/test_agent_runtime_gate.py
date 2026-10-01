@@ -233,6 +233,7 @@ def test_agt10_19_catalog_contains_only_v1_allowlist():
         "search_city_services",
         "request_replan",
         "accept_replan",
+        "activate_standby",
     }
     assert not names & {"payment", "refund", "modify_c4", "set_policy", "raw_sql", "terminal"}
 
