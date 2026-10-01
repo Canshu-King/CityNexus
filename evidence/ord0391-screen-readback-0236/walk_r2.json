@@ -1,0 +1,744 @@
+{
+ "base": "http://localhost:4541",
+ "stub": "http://127.0.0.1:7042",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "states_walked": 8,
+ "states": [
+  {
+   "name": "c2_server_error_zh",
+   "family": "cached_copy_failure",
+   "scenario": "server_error",
+   "locale": "zh",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 675,
+   "rules_live": 1,
+   "read": {
+    "reason": "服务器刚才答了你，但它自己报错了（http_status=503）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+    "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 129,
+    "textNodes": [
+     "服务器",
+     "服务暂时不可用",
+     "服务器刚才答了你，但它自己报错了（http_status=503）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+     "看已保存的只读副本",
+     "重试",
+     "归因详情",
+     "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "看已保存的只读副本",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "重试",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ]
+  },
+  {
+   "name": "c2_html_200_zh",
+   "family": "cached_copy_failure",
+   "scenario": "html_200",
+   "locale": "zh",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 675,
+   "rules_live": 1,
+   "read": {
+    "reason": "它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 207,
+    "textNodes": [
+     "服务器",
+     "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+     "它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+     "看已保存的只读副本",
+     "重试",
+     "归因详情",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "看已保存的只读副本",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "重试",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ]
+  },
+  {
+   "name": "c2_empty_200_zh",
+   "family": "cached_copy_failure",
+   "scenario": "empty_200",
+   "locale": "zh",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 675,
+   "rules_live": 1,
+   "read": {
+    "reason": "它确实回了话（http_status=200，content_type=application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 199,
+    "textNodes": [
+     "服务器",
+     "服务器答了 http_status=200，可带回来的不是这一屏能用的数据",
+     "它确实回了话（http_status=200，content_type=application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。",
+     "看已保存的只读副本",
+     "重试",
+     "归因详情",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "看已保存的只读副本",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "重试",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ]
+  },
+  {
+   "name": "c2_studio_refused_zh",
+   "family": "studio_refusal",
+   "locale": "zh",
+   "route_reached": true,
+   "preview_enabled": null,
+   "drag": null,
+   "clicked": null,
+   "rules_live": 1,
+   "refused_calls": [],
+   "read": {
+    "reason": null,
+    "telemetry": null,
+    "studioError": null,
+    "bodyChars": 266,
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "行程智能",
+     "工作区",
+     "行程运营",
+     "今日",
+     "今天",
+     "实时行程",
+     "地图",
+     "规划",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "出行",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "系统",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "行程事实已同步",
+     "0 个方案 · 5 种模式",
+     "DE",
+     "Demo",
+     "1 位旅行者",
+     "•••",
+     "菜单",
+     "行程",
+     "/",
+     "行程工作台",
+     "行程事实就绪",
+     "跟随系统",
+     "EN",
+     "◌",
+     "DE",
+     "行程工作台 · 多日方案",
+     "围绕重要的事塑造行程。",
+     "更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。",
+     "报告降雨中断",
+     "尚未选择住宿",
+     "选择住宿",
+     "住宿总计",
+     "尚未选择",
+     "日均出行",
+     "尚未选择",
+     "步行暴露",
+     "尚未选择",
+     "方案健康度",
+     "受保护 · 约0分钟余量",
+     "行程约束检查通过，费用证据不完整",
+     "到达、出发和受保护承诺已验证。预算未验证：还有 1 项缺少已验证的供应商价格，因此不给出总价结论。",
+     "✦",
+     "CityNexus Copilot",
+     "今天",
+     "行程",
+     "地图",
+     "Copilot",
+     "我的"
+    ],
+    "buttons": [
+     {
+      "testid": null,
+      "label": "今天",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "实时行程",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "地图",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "行程工作台",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "住宿选择",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "城市探索",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "导入地点",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "旅行票夹",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "足迹",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Copilot",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "恢复与执行",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "智能守护",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "旅行者画像",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "回收站",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "成员与权限",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "DEDemo1 位旅行者•••",
+      "disabled": false
+     },
+     {
+      "testid": "v8-mobile-menu",
+      "label": "菜单",
+      "disabled": false
+     },
+     {
+      "testid": "topbar-theme",
+      "label": "跟随系统",
+      "disabled": false
+     },
+     {
+      "testid": "topbar-language",
+      "label": "EN",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "◌",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "DE",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "报告降雨中断",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "选择住宿",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "✦CityNexus Copilot",
+      "disabled": false
+     },
+     {
+      "testid": "nav-hub",
+      "label": "今天",
+      "disabled": false
+     },
+     {
+      "testid": "nav-trips",
+      "label": "行程",
+      "disabled": false
+     },
+     {
+      "testid": "nav-map",
+      "label": "地图",
+      "disabled": false
+     },
+     {
+      "testid": "nav-agent",
+      "label": "Copilot",
+      "disabled": false
+     },
+     {
+      "testid": "nav-me",
+      "label": "我的",
+      "disabled": false
+     }
+    ]
+   }
+  },
+  {
+   "name": "c2_server_error_en",
+   "family": "cached_copy_failure",
+   "scenario": "server_error",
+   "locale": "en",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 1427,
+   "rules_live": 1,
+   "read": {
+    "reason": "The server did answer, and answered with an error of its own (http_status=503). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.",
+    "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 350,
+    "textNodes": [
+     "Server",
+     "The service is temporarily unavailable",
+     "The server did answer, and answered with an error of its own (http_status=503). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.",
+     "Read the saved copy",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=503 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "Read the saved copy",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "Try again",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 503,
+     "ct": "application/json"
+    }
+   ]
+  },
+  {
+   "name": "c2_html_200_en",
+   "family": "cached_copy_failure",
+   "scenario": "html_200",
+   "locale": "en",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 1427,
+   "rules_live": 1,
+   "read": {
+    "reason": "It did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 452,
+    "textNodes": [
+     "The origin",
+     "The origin answered http_status=200, but not with data this screen can use",
+     "It did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.",
+     "Read the saved copy",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "Read the saved copy",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "Try again",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "text/html; charset=utf-8"
+    }
+   ]
+  },
+  {
+   "name": "c2_empty_200_en",
+   "family": "cached_copy_failure",
+   "scenario": "empty_200",
+   "locale": "en",
+   "failure_view": true,
+   "offline_rows_after_healthy_boot": {
+    "error": "OPEN_FAILED"
+   },
+   "healthy_body_chars": 1427,
+   "rules_live": 1,
+   "read": {
+    "reason": "It did reply (http_status=200, content_type=application/json) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.",
+    "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+    "studioError": null,
+    "bodyChars": 444,
+    "textNodes": [
+     "The origin",
+     "The origin answered http_status=200, but not with data this screen can use",
+     "It did reply (http_status=200, content_type=application/json) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.",
+     "Read the saved copy",
+     "Try again",
+     "Attribution detail",
+     "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true"
+    ],
+    "buttons": [
+     {
+      "testid": "failure-read-cached",
+      "label": "Read the saved copy",
+      "disabled": false
+     },
+     {
+      "testid": "failure-retry",
+      "label": "Try again",
+      "disabled": false
+     }
+    ]
+   },
+   "journey_calls_after_reload": [
+    {
+     "p": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+     "status": 200,
+     "ct": "application/json"
+    }
+   ]
+  },
+  {
+   "name": "c2_studio_refused_en",
+   "family": "studio_refusal",
+   "locale": "en",
+   "route_reached": true,
+   "preview_enabled": null,
+   "drag": null,
+   "clicked": null,
+   "rules_live": 1,
+   "refused_calls": [],
+   "read": {
+    "reason": null,
+    "telemetry": null,
+    "studioError": null,
+    "bodyChars": 636,
+    "textNodes": [
+     "CN",
+     "CityNexus",
+     "journey intelligence",
+     "Workspace",
+     "Trip operations",
+     "TODAY",
+     "Today",
+     "Live Journey",
+     "Map",
+     "PLAN",
+     "Trip Studio",
+     "Stay Explorer",
+     "City Discovery",
+     "Import places",
+     "TRAVEL",
+     "Travel Wallet",
+     "Footprints",
+     "Copilot",
+     "SYSTEM",
+     "Recovery",
+     "Intelligence",
+     "Traveler Twin",
+     "Recycle bin",
+     "Members and access",
+     "Journey facts synced",
+     "0 plans · 5 modes",
+     "DE",
+     "Demo",
+     "1 traveler",
+     "•••",
+     "Menu",
+     "Journeys",
+     "/",
+     "Trip Studio",
+     "Journey facts ready",
+     "System",
+     "中文",
+     "◌",
+     "DE",
+     "Trip Studio · multi-day plan",
+     "Shape the journey around what matters.",
+     "Switch the hotel or a leg mode and CityNexus recomputes the travel impact against the same hard commitments.",
+     "Report rain disruption",
+     "NO STAY SELECTED",
+     "Choose a stay",
+     "Stay total",
+     "Not chosen yet",
+     "Daily movement",
+     "Not chosen yet",
+     "Walking exposure",
+     "Not chosen yet",
+     "Plan health",
+     "Protected · Est. 0 min slack",
+     "Constraint checks passed, cost evidence incomplete",
+     "Arrival, departure, and protected commitments verified. Budget not verified: 1 item(s) lack a verified provider price, so no total is claimed.",
+     "✦",
+     "CityNexus Copilot",
+     "Today",
+     "Trips",
+     "Map",
+     "Copilot",
+     "Me"
+    ],
+    "buttons": [
+     {
+      "testid": null,
+      "label": "Today",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Live Journey",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Map",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Trip Studio",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Stay Explorer",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "City Discovery",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Import places",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Travel Wallet",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Footprints",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Copilot",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Recovery",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Intelligence",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Traveler Twin",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Recycle bin",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Members and access",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "DEDemo1 traveler•••",
+      "disabled": false
+     },
+     {
+      "testid": "v8-mobile-menu",
+      "label": "Menu",
+      "disabled": false
+     },
+     {
+      "testid": "topbar-theme",
+      "label": "System",
+      "disabled": false
+     },
+     {
+      "testid": "topbar-language",
+      "label": "中文",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "◌",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "DE",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Report rain disruption",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "Choose a stay",
+      "disabled": false
+     },
+     {
+      "testid": null,
+      "label": "✦CityNexus Copilot",
+      "disabled": false
+     },
+     {
+      "testid": "nav-hub",
+      "label": "Today",
+      "disabled": false
+     },
+     {
+      "testid": "nav-trips",
+      "label": "Trips",
+      "disabled": false
+     },
+     {
+      "testid": "nav-map",
+      "label": "Map",
+      "disabled": false
+     },
+     {
+      "testid": "nav-agent",
+      "label": "Copilot",
+      "disabled": false
+     },
+     {
+      "testid": "nav-me",
+      "label": "Me",
+      "disabled": false
+     }
+    ]
+   }
+  }
+ ]
+}
