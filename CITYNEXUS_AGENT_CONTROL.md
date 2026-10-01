@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 03:50 · 地图站名上屏落地：尖 `a445c1c4a7b86554e36d4fd477a79bcfa0ff052d`（前端产品字节四枚文件）；day17 换代随后
+
+**〇、回验（落地后现读）**
+
+权威尖 `a445c1c4a7b86554e36d4fd477a79bcfa0ff052d`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。`8ac89982` 的候选 `a85abf04…` → recut 后 `files 四十四比四十四 identical-to-lane-blob`，gate `READY_TO_LAND ff=True`。前端产品字节：`MapPanel.tsx` / `SharedJourneyPanel.tsx` / `mapStopLabels.ts` / `map-stop-labels.css`——标注规则从"尺里有"接进渲染路径，站名真上屏。
+
+**一、账目**
+
+车道凌晨交的那块已入账（六处词面修整替车道做：视口与分母数字改词面或指向件，读数不动）。它的族红集合 JSON 原文以 `review/ord0512/family_red_set_flap_matrix.txt` 头部行件为准，块内不复写。
+
+**二、换代**
+
+本笔前端产品字节，随后构建下一代并换代 :4783；:4787 后端无新字节（此单纯前端），后端树不动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0512 r1 · 地图上的站名真上屏了：标注规则从「尺里有」接进渲染路径（车道 8ac89982，0337）
 
 **一、坐标（写块这一刻现读，全部逐字 40 位）**
