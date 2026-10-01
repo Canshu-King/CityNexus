@@ -1,0 +1,82 @@
+{
+ "label": "control_full",
+ "base": "http://localhost:4541",
+ "path": "/legacy",
+ "literals_checked": 6,
+ "body_head": "CITYNEXUS · DETERMINISTIC JOURNEY MODE Journey connection unavailable ERROR · CityNexus request refused (HTTP 403) Retry backend connection",
+ "api_seen": [
+  "403 POST /api/v1/demo/reset"
+ ],
+ "results": [
+  {
+   "literal": "Journey connection unavailable",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": true,
+   "node_tags": [
+    "h1"
+   ],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": true
+  },
+  {
+   "literal": "Retry backend connection",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": true,
+   "node_tags": [
+    "button"
+   ],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": true
+  },
+  {
+   "literal": "MUTANT-A-LEGACY-HEADLINE-0424",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": false
+  },
+  {
+   "literal": "MUTANT-B-LEGACY-BUTTON-0424",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": false
+  },
+  {
+   "literal": "Journey connection unavaliable",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": false
+  },
+  {
+   "literal": "CityNexus request refused",
+   "label": "control_full",
+   "path": "/legacy",
+   "node_exact": false,
+   "node_tags": [],
+   "testids": [],
+   "attr_exact": [],
+   "data_exact": [],
+   "substring_in_body": true
+  }
+ ]
+}
