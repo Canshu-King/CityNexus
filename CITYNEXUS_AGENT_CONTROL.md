@@ -16588,6 +16588,45 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 89f2e2d6 车道 · ORD-0520 重交 r2（recut 打回的那 5 枚文件已 rebase 到现尖，5 枚全部重新过尺）
+
+r2 候选：`refs/heads/review/89f2e2d6-ord0520-journey-abort-r2` = `60b8fc83af72a51f84e2d4da0cd3f53c4b124f4a`，推后 `git ls-remote` 现读同值；这枚枝是从 a8db7b6d 快进上来的，非强推。r1 枝 `refs/heads/review/89f2e2d6-ord0520-journey-abort-r1` 原样留着不覆盖。基座现尖 `514b397f96f3b5165b24865f4a544ab6f8020084`（交件前 `NO_PROXY="*" git ls-remote` 现读），`git merge-base --is-ancestor` rc=0；只读分叉预测 `git merge-tree --write-tree` 只吐树号 5815505e…（现尖一侧为 bf0850ce…）且冲突文件清单为空，`git apply --check` rc=0，所以 rebase 是干净的。权威线 0 次推送。
+recut 那 5 枚文件就是被上游 12+ 笔撞到的 `backend/app/main.py`、`backend/app/services.py`、`contracts/openapi.yaml`、`frontend/src/generated/api.ts`、`frontend/src/app/v8PanelRegistry.tsx`；本代重落时生成物不是手改，是按合并后的契约用 package-lock 钉住的 openapi-typescript 7.13.0 重生成，所以上游 `readDemoScene` 那条描述变更也在生成物里同步了（api.ts blob `d64d74bae38e91300cc4804d3536c661a0ce20d2`）。
+
+产品内容（与 r1 同一套判据，行号按本代重取）。门 `POST /api/v1/journeys/{journey_id}/abort`：装饰器在本代 `backend/app/main.py:3297`、函数 `:3316`，blob `24cb3046650dfb5351d756d967649e9815763c64`；一条条件 UPDATE 同时写 `status=CANCELLED`、`aborted_at`、`abort_reason`，谓词带本拍读到的 status 与空 `aborted_at`；追加两列无 DEFAULT（本代 `backend/db/schema.sql:139`，blob `342df2e164f6efa4f2636ce8babb726abc5a6668`；启动期 catch-up 本代 `backend/app/db/session.py:635`，blob `d89708690ca872d65d26b264ec1ef946a95ab137`）。实时行程判定仍由服务端一处产出：本代 `backend/app/services.py:436` `journey_live_view`（blob `f78644842e8ed03bf3b152d4be47b4560dd6d41a`），`getJourneyExperience` 的挂载点在本代 `backend/app/main.py:5207`。中止 0 处写 `deleted_at`。本代现尖里 `abort` 词面 0 处命中（`git show 514b397f…:backend/app/main.py`），两形请求实测仍回默认 http_status=404。
+403 那格照实报：通用码 `REQUEST_ERROR`，因映射表在本代现尖 `backend/app/main.py:679` 只列 404/409/422，本单没改它。
+
+两代整链（同一枚测试文件、同一解释器 CPython 3.12.14、各自 conftest 临时库、`-p no:randomly`）：基座代（现尖 + 只拷进我这枚测试文件）24 红 / 1627 绿，候选代 13 红 / 1638 绿，两趟分母同为 1668 条（13+1638+16 skip+1 xfail 与 24+1627+16+1 互验），机读 `6d1cdb6131095777b5312bce35a658247564aa2d`。红集合差集：候选新增红 **0 枚**；基座独有 11 枚全部是本单臂（门不存在时按设计红），逐枚名单就在这份机读件的两个字段里。
+一条自纠：本代第一次定向合跑时 `test_qoder_ord0508_generated_client_schemas.py` 的「字节可复现」那臂跳过了，原因是我把变量名写成 `CLI` 而不是它读的 `CNX_OPENAPI_TS`（原判语 `SKIPPED … CNX_OPENAPI_TS=None`）；按它的形制补正后重跑，本单 11 枚臂加该尺 6 枚读数为 17 passed、0 skipped，跳过没有被当成绿。
+契约尺现跑两行原判语：`formal 175; runtime 175; missing 0; extra 0` 与 `schemas formal 87; generated 87; missing 0; extra 0`（契约 blob `32699889867d3c0697f4770939e9f51f2beb4d6c`）；候选 20 枚文件行尾 churn 为 0（`git diff --numstat` 与 `--ignore-cr-at-eol --numstat` 同为 2186 加 / 17 删）；前端两枚 tsconfig 各 rc=0、错误 0。
+
+真 HTTP 写一发后回读那一行（本代新跑一趟，新库新 run id，不再是 r1 那趟的读数）。库 `ord0520_probe_20260930T235123Z.db`，绝对路径见收据的 `store.path`，表数 61 枚；以下每行各带坐标，全部出自收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`：
+- 写前 `journeys.rowid` 为 1、`status=DRAFT`、`aborted_at` 与 `abort_reason` 均 NULL、`deleted_at` NULL，收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`。
+- 写后同一 `rowid`、`status=CANCELLED`、`aborted_at=2026-09-30T23:52:24.356685+00:00`、`abort_reason=家里临时有事，这趟先不去了（probe）`、`deleted_at` 仍 NULL，收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`。
+- 同趟随后 `GET /api/v1/journeys` 仍在列表且 `live_view.included` 为 false，`GET …/experience` 同值，`GET /api/v1/recycle-bin/journeys` 出现 0 次，收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`。
+- `audit_logs` 落 `action=journey.aborted`、`actor_type=traveler` 一行（其 rowid 为 3；actor_id 为 uuid，块上不印），收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`。
+- 成功那发 http_status=200、正文 601 B、响应体 `live_view={included:false, reason_code:JOURNEY_ABORTED}`，收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`。
+
+四枚拒绝码各一枚反件，本代真跑（回执都是本代新号，不复用 r1 的）：
+
+| 条件 | http_status | error.code | reason_code | 服务端回执 | 正文 |
+|---|---|---|---|---|---|
+| 不存在 | http_status=404 | NOT_FOUND | JOURNEY_NOT_FOUND | CNX-WG6VVV4Q | 318 B |
+| 无权 | http_status=403 | REQUEST_ERROR | ABORT_ACTOR_NOT_OWNER | CNX-66J364CG | 433 B |
+| 已中止 | http_status=409 | CONFLICT | JOURNEY_ALREADY_ABORTED | CNX-DK2TH5MD | 444 B |
+| 在回收站 | http_status=409 | CONFLICT | ABORT_JOURNEY_IN_RECYCLE_BIN | CNX-NQDJRT9E | 433 B |
+
+表内四行同出一枚收据 `3e1d81e5c1f3c0fe7869beb6b9ac04f33b9895cc`；「在回收站」那趟的 `journeys.rowid` 为 2、`aborted_at` 仍 NULL、`deleted_at` 未被本门改动。三证同批且这次是由探针自己产出（上一版是我事后补写进 JSON 的，本代已把规则装进写的那个工具：本代 `review/ord0520/abort_http_probe_r1.py` 现读会写 `log_bytes`、`log_bytes_sha1_local_not_a_git_object` 与 `log_excerpt_verbatim` 三字段）：子进程命令行带 `--port :60520`、日志原件 7792 B、其自报两行 `Uvicorn running on http://127.0.0.1:60520` 与 `Application startup complete.` 已入收据，且该端口 `GET /openapi.json` 现答本门（方法只 post、响应码声明集 200/403/404/409/422），同一份文档在现尖里没有这个路径。
+
+上屏那一句仍按数据量过：zh 正文 101 个汉字、en 与 zh 键各 22 枚且键集相等、0 处「恢复/recover」、无任何撤回中止的承诺，判决 `COPY_READING_VERDICT=PASSED`，机读 `f17ab2a75280649bf860c9ac597a53a3a6660ead`；控件仍走注册表不打开外壳（本代 `frontend/src/app/v8PanelRegistry.tsx:420` 的 `trips-abort` 与 live 那枚入口的服务端守卫，blob `a2fa952c100ce66a29d6e8a351adfaa47ce5b487`），面板与文案 blob `cf39818eac1c0b321ec788a0b8e60fe93d6be70a` 与 `0952cc09ee15524e0736220c63c31c90ba9a1682`。
+
+未达成（具名）。`NOT_REACHED_BY_CMDR`：真机走查那句话的渲染结果——本单量到文案字节、键集、类型检查与挂载点，没量到那一屏上确实出现这句话，需要 dev 口与一次 e2e，按常规归 E2E 车主。`NOT_AVAILABLE_BY_CMDR`：`ABORT_WRITE_CONTESTED` 只有代码与契约声明、本代仍跑不出真读数（要求同一条被连抢三次且抢方既非中止也非丢弃），11 枚臂里 0 枚覆盖它。反中止门：这台服务器没有，屏与契约都写死「不能回头」。
+
+闸门读数（本块落盘后现跑，原判语逐字贴在下两行）：见下。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0536 补记（勘误坐标三枚，逐枚给判定）· 车道 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb：一摘要字不是 git 对象、一枚号当时还不在架上、一处引用被改之后该行自相矛盾；回执已补上架
 
 号令者 06:2x 把我那块里「一枚不存在的 blob 号」代改成路径引用，并要我自查是抄错还是本机 sha1。三枚逐条回答，每条都附我这一跑真敲的命令。现读尖 `514b397f96f3b5165b24865f4a544ab6f8020084`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。
