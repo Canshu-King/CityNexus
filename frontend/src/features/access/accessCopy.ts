@@ -30,9 +30,52 @@ export const accessCopy = {
       "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
     "access.pickLabel": "Choose a trip",
     "access.pickNone": "Pick a trip to look at",
+    /* A row with no title is named as that. The old control fell back to the trip's uuid, which
+       is the one thing this list must never read out (ORD-0518: first and last row, by name). */
+    "access.tripUntitled": "This trip came back with no name.",
     "access.pickLoading": "Reading your trip list…",
     "access.pickEmpty":
       "This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.",
+    /* ORD-0477: the tier words.  `RECENT_UPDATE` / `DEPARTURE_DATE` / `TITLE` are the server's
+       (`backend/app/schemas.py::JOURNEY_SORT_TIERS`) and never reach a traveller; these are the words
+       the control renders, and the current tier is spelled out in its own sentence so the order a
+       list is in is something the screen says rather than something the reader infers. */
+    "access.sortHeading": "Order of this list",
+    "access.sortCreation": "Creation order",
+    "access.sortRecent": "Recently updated",
+    "access.sortDeparture": "Departure date",
+    "access.sortTitle": "Name",
+    "access.sortCurrent": "This screen asked the server for: {tier}.",
+    /* ORD-0518: two sentences, not one.  What this screen requested and what the door answered are
+       different facts, and collapsing them is exactly how a screen ends up claiming a time order a
+       server never gave.  `sortServerSilent` is the named absence; `sortMismatch` only renders when
+       both halves are known and disagree. */
+    "access.orderChecked": "Checked row by row: these rows are in this order ({reason}).",
+    "access.orderBroken":
+      "These rows are NOT in the order this screen asked for -- the order breaks at row {row}. The list below is what the server sent, not what the button says.",
+    "access.orderUnverifiable":
+      "This screen cannot check this order from the rows it was given ({reason}), so it does not claim the list is in it. The rows below are in the order they arrived.",
+    /* Why the check compared what it compared, or why it compared nothing.  These are the whole
+       sentence's one variable, and the reason lives here rather than in `journeyOrderVerdict.ts`: the
+       module knows facts, this file knows the traveller's language.  The stored column names
+       (`journeys.start_at`) and the code point behind a refused title go on the element as
+       `data-compared` / `data-blocked-code-point` for the gate, not into a sentence. */
+    "access.orderReasonStartAt": "what was compared is each trip's departure time",
+    "access.orderReasonNoRows": "no trip came back at all",
+    "access.orderReasonTitle": "what was compared is each trip's name",
+    "access.orderReasonNoCreatedAt": "this door sends no created moment in a row",
+    "access.orderReasonNoUpdatedAt": "this door sends no updated moment in a row",
+    "access.orderReasonRowWithoutStart": "row {row} came back with no readable departure time",
+    "access.orderReasonFoldDivergent":
+      "a trip name here carries a character this screen cannot fold the way the server folded it",
+    "access.noTierHeading": "Orders this screen cannot offer",
+    "access.noTierArrival": "Arrival time",
+    "access.noTierArrivalBecause":
+      "The trip-list door has no arrival field. Arrival lives in the trip context's anchors, and no door on this server orders trips by it.",
+    "access.noTierSaved": "Saved order",
+    "access.noTierSavedBecause":
+      "This server keeps no separate saved moment: a trip row carries when it was created and when it was updated, and both already have their own tier.",
+    "access.sortTitleNote": "Names are ordered by characters, not by pinyin or by stroke count.",
     "access.selected": "Looking at: {title}",
     "access.ladderHeading": "Three roles, each with the one sentence that says what it can do",
     "access.roleOwner": "Owner",
@@ -193,8 +236,35 @@ export const accessCopy = {
     "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
     "access.pickLabel": "选一条行程",
     "access.pickNone": "先选一条要看的行程",
+    "access.tripUntitled": "这条行程回来时没有名字。",
     "access.pickLoading": "正在读你的行程列表…",
     "access.pickEmpty": "这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。",
+    /* ORD-0477: 档位的名字。旅客读的这些词与服务器的 CREATION_ORDER / RECENT_UPDATE /
+       DEPARTURE_DATE / TITLE 一一对应（`backend/app/schemas.py::JOURNEY_SORT_TIERS`），机器词从不上屏。 */
+    "access.sortHeading": "这一列行程怎么排",
+    "access.sortCreation": "创建序",
+    "access.sortRecent": "最近更新",
+    "access.sortDeparture": "出发日期",
+    "access.sortTitle": "名称",
+    "access.sortCurrent": "这一屏向服务器要的是：{tier}。",
+    /* ORD-0518: 两句而不是一句。这一屏要了什么、服务器答了什么，是两件事；把它们并成一句，
+       就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
+    "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
+    "access.orderBroken": "这些行不是这一屏要的那个顺序——从第 {row} 行起对不上。下面列的是服务器发来的样子，不是按钮说的那个序。",
+    "access.orderUnverifiable": "这一档这一屏核不了（{reason}），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。",
+    "access.orderReasonStartAt": "核的是每一程的出发时间",
+    "access.orderReasonNoRows": "一行行程都没有回来",
+    "access.orderReasonTitle": "核的是行程名",
+    "access.orderReasonNoCreatedAt": "这一列里没有创建时间可比",
+    "access.orderReasonNoUpdatedAt": "这一列里没有更新时间可比",
+    "access.orderReasonRowWithoutStart": "第 {row} 行没有可读的出发时间",
+    "access.orderReasonFoldDivergent": "有的行程名里带着这个屏折不出服务器那个序的字",
+    "access.noTierHeading": "这一屏给不出的排法",
+    "access.noTierArrival": "抵达时间序",
+    "access.noTierArrivalBecause": "行程列表门没有抵达字段：抵达时刻在行程上下文的锚里，这台服务器没有任何门按它排行程。",
+    "access.noTierSaved": "已存序",
+    "access.noTierSavedBecause": "这台服务器没有另一个叫「已存」的时刻：行程行上只有创建与更新两个时刻，它们各自已经有档了。",
+    "access.sortTitleNote": "名称档按字符先后排，不按拼音，也不按笔画。",
     "access.selected": "现在在看：{title}",
     "access.ladderHeading": "三档角色，每档一句它能做什么",
     "access.roleOwner": "所有者",

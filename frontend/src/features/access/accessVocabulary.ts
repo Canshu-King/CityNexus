@@ -14,6 +14,7 @@
  * Shape: `D:/moodle/_apk_analysis_pi_travel/RELATION/relation_and_copy_findings.md` section 1.4.
  */
 import type { AccessCopyKey } from "./accessCopy";
+import type { JourneyOrderChoice } from "./accessDoors";
 
 export const ROLE_OWNER = "OWNER" as const;
 export const ROLE_ADMIN = "ADMIN" as const;
@@ -292,3 +293,61 @@ export function adminCapState(read: {
   const free = Math.max(read.cap - read.used, 0);
   return { key: free === 0 ? "access.adminCapFull" : "access.adminCapOpen", free };
 }
+
+/* ------------------------------------------------------------- ORD-0477 the order of the trip list
+
+The tiers are the door's, typed off the generated client (`operations["listJourneys"]`), so a tier the
+contract renames stops this file compiling instead of living on as a control that does nothing -- the
+rule `VISIBILITY_LADDER` above already states for sharing: a ladder row the server cannot be set to is
+a row that lies.
+
+The order is the order a traveller reads them in: what the store kept, then what just changed, then
+what comes next, then by name. It is not the contract's enum order; the contract's list is a set, this
+one is a screen. */
+export const SORT_RECENT_UPDATE = "RECENT_UPDATE" as const;
+export const SORT_DEPARTURE_DATE = "DEPARTURE_DATE" as const;
+export const SORT_TITLE = "TITLE" as const;
+
+/** The orders this screen offers. `choice: null` is 创建序: the order the door answers in when no
+ *  `sort` is sent at all. It is offered that way rather than as a fourth word because the door has no
+ *  such tier, and inventing one on the screen side would put a control on the glass that the server
+ *  cannot be asked for. The other three are the door's tiers, typed off the generated client, so a
+ *  tier the contract renames stops this file compiling instead of living on as a button that does
+ *  nothing -- the rule `VISIBILITY_LADDER` above already states for sharing. */
+export const JOURNEY_SORT_LADDER: readonly { choice: JourneyOrderChoice; labelKey: AccessCopyKey }[] = [
+  { choice: null, labelKey: "access.sortCreation" },
+  { choice: SORT_RECENT_UPDATE, labelKey: "access.sortRecent" },
+  { choice: SORT_DEPARTURE_DATE, labelKey: "access.sortDeparture" },
+  { choice: SORT_TITLE, labelKey: "access.sortTitle" },
+];
+
+/** ORD-0518: the orders the commander asked this screen to offer that the door cannot answer, said on
+ *  the glass instead of quietly narrowed away.  Both are absences with a reason, not oversights:
+ *  arrival time is not in this door's row shape at all (`journey_trip_contexts.arrival_anchor_json`
+ *  holds it, and no door on this tree orders by it), and nothing stored here means "已存" -- the row
+ *  has `created_at` and `updated_at`, and calling either of them "saved order" would be a second name
+ *  for a fact that already has one.  Relabelling `start_at` (the departure) as an arrival is exactly
+ *  the "假装按时间排" this order forbids, so the tier is absent and the screen says so. */
+export const JOURNEY_ORDERS_NOT_ANSWERED: readonly {
+  nameKey: AccessCopyKey;
+  becauseKey: AccessCopyKey;
+}[] = [
+  { nameKey: "access.noTierArrival", becauseKey: "access.noTierArrivalBecause" },
+  { nameKey: "access.noTierSaved", becauseKey: "access.noTierSavedBecause" },
+];
+
+/** The order this screen asks for first. */
+export const DEFAULT_JOURNEY_ORDER: JourneyOrderChoice = SORT_RECENT_UPDATE;
+
+/** The word for an order this screen offers, or `null` for one it has no sentence for. `null` is the
+ *  honest answer and the panel says so rather than quoting the server's token as if it were a label. */
+export function sortLabelKey(choice: JourneyOrderChoice): AccessCopyKey | null {
+  const entry = JOURNEY_SORT_LADDER.find((row) => row.choice === choice);
+  return entry ? entry.labelKey : null;
+}
+
+/** Is this value one of the orders the screen knows how to ask for? `null` is: it is 创建序. */
+export function isJourneyOrderChoice(value: unknown): value is JourneyOrderChoice {
+  return value === null || JOURNEY_SORT_LADDER.some((row) => row.choice === value);
+}
+

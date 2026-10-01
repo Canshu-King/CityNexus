@@ -12,8 +12,22 @@
  * read as "nobody shares this trip" -- a claim this tree has no source for.
  */
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import type { operations } from "../../generated/api";
 
 export const JOURNEY_LIST_PATH = "/journeys";
+
+/** ORD-0477: which order the list door answers in, taken from the generated client rather than
+ *  written out again here -- `operations["listJourneys"]` is generated from the `sort` enum in
+ *  `contracts/openapi.yaml`, so a tier the contract renames is a build error on this screen instead
+ *  of a control that quietly stops working, and a tier the contract drops cannot survive as a button. */
+export type JourneySortTier = NonNullable<
+  NonNullable<operations["listJourneys"]["parameters"]["query"]>["sort"]
+>;
+/** ORD-0518: what this screen calls an order.  `null` is `创建序` -- not a fourth word the door
+ *  knows, but the order it answers in when no `sort` is sent at all, which is the only honest way to
+ *  offer creation order without changing the door.  Whether the rows really are in that order is
+ *  judged from the rows in `journeyOrderVerdict.ts`, never from this value. */
+export type JourneyOrderChoice = JourneySortTier | null;
 export const ACTIVITY_FEED_SUFFIX = "/agent-feed";
 /**
  * The sharing state lives behind three doors, and their names are read off ORD-0434's route set
@@ -28,6 +42,10 @@ export type JourneySummary = {
   title: string;
   city_code?: string;
   status?: string;
+  /** ORD-0518: the departure instant, off the same `Journey` shape the door answers with.  The
+   *  screen reads it for one purpose -- to check a `DEPARTURE_DATE` answer against the rows it was
+   *  given instead of against the button it pressed.  It is not painted. */
+  start_at?: string;
   /** The one person this trip belongs to. Sent by the list door, and the only value this screen is
    *  willing to put in a `created_by` field. */
   traveler_id?: string | null;
@@ -54,8 +72,24 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function readJourneys(): Promise<JourneySummary[]> {
-  return request<JourneySummary[]>(JOURNEY_LIST_PATH);
+/** The door's path with the tier spelled out in it, so a gate can read the word this screen sent
+ *  instead of inferring it from the order the rows happened to come back in.  `null` sends no `sort`
+ *  at all, which is the door's creation order -- and the URL says so by not carrying the parameter. */
+export function journeyListPath(choice: JourneyOrderChoice): string {
+  return choice === null ? JOURNEY_LIST_PATH : `${JOURNEY_LIST_PATH}?sort=${encodeURIComponent(choice)}`;
+}
+
+/** ORD-0477: the list, in the order the traveller asked for.  A tier the door does not know is a
+ *  422 naming itself (`JOURNEY_SORT_NOT_RECOGNISED`) and no rows at all, which reaches this screen
+ *  as a refusal with facts rather than as an empty list -- `access.pickEmpty` stays the sentence for
+ *  "there are no trips", and is never the sentence for "you asked wrongly".
+ *
+ *  ORD-0518: this returns the rows and nothing else. There is deliberately no "the order is X" value
+ *  coming from here, because there is nothing on this door that could vouch for one -- no response
+ *  header, and no order field in the row shape. What the screen says about the order is decided by
+ *  `journeyOrderVerdict.ts` from the rows themselves. */
+export function readJourneys(choice: JourneyOrderChoice): Promise<JourneySummary[]> {
+  return request<JourneySummary[]>(journeyListPath(choice));
 }
 
 /** The server's `summary` is deliberately not trusted for the words on screen: for an action the
