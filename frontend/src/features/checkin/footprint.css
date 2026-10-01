@@ -53,6 +53,12 @@ which is what the hit test in the delivery receipt measures.
   font-size: var(--cn-fs-caption);
 }
 
+/* The head is a flex row, so without this the button shrinks to whatever the title leaves and
+   its four characters stack one per line at 390 (measured: box 48x105, 4 painted lines). */
+.cn-footprints__retry {
+  flex-shrink: 0;
+}
+
 .cn-footprints__retry:disabled,
 .cn-stop-checkin:disabled {
   color: var(--cn-ink-tertiary);

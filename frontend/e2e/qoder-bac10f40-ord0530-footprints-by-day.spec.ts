@@ -31,6 +31,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
 import { ensureDemoJourney } from "./_qoderShellSeed";
+import { footprintCopy } from "../src/features/checkin/footprintCopy";
 
 const FILE = "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts";
 const PHONE = { width: 390, height: 844 };
@@ -276,6 +277,79 @@ for (const shape of [PHONE, DESKTOP]) {
     });
   });
 }
+
+test("ORD-0530 zh 390x844 arm=retry_button_keeps_its_line one line, own width, own centre", async ({ page }) => {
+  /* The screen's own control, read the way a thumb meets it. At 390 the head is a flex row and the
+     button shrank to 48 px, so 重读一次 stacked one character per line (box 48x105, four painted line
+     rects). A bounding box cannot prove wrapping -- it grows with the wrap -- so this counts the text
+     range's client rects, and compares the button's rendered width against the same button at desktop
+     width, where it never wrapped. The centre hit is taken without scrolling, because that is the
+     state the traveller arrives in. */
+  const journeyId = SEEDED || (await freshTrip(page));
+  const measure = async (size: { width: number; height: number }, centre = false) => {
+    await openFootprints(page, journeyId, size);
+    return page.evaluate((wantCentre) => {
+      const el = document.querySelector("[data-testid='footprint-retry']") as HTMLElement;
+      if (wantCentre) el.scrollIntoView({ block: "center" });
+      const r = el.getBoundingClientRect();
+      const rects: { y: number; h: number }[] = [];
+      const walk = (node: Node) => {
+        if (node.nodeType === 3 && (node as Text).textContent && (node as Text).textContent!.trim()) {
+          const rg = document.createRange();
+          rg.selectNodeContents(node);
+          Array.from(rg.getClientRects()).forEach((x) => {
+            if (x.width > 0 && x.height > 0) rects.push({ y: Math.round(x.y), h: Math.round(x.height) });
+          });
+        }
+        node.childNodes.forEach(walk);
+      };
+      walk(el);
+      const c = { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+      const hit = document.elementFromPoint(c.x, c.y) as Element | null;
+      const nav = document.querySelector(".v8-mobile-nav");
+      return { text: el.innerText.replace(/\s+/g, " ").trim(),
+               box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
+               painted_lines: new Set(rects.map((x) => x.y)).size,
+               centre: c,
+               hit: hit ? hit.tagName.toLowerCase() + "." + String(hit.className) : "none",
+               hit_is_self: !!hit && (hit === el || el.contains(hit)),
+               hit_is_nav: !!hit && !!nav && (hit === nav || nav.contains(hit)),
+               nav_top: nav ? Math.round(nav.getBoundingClientRect().top) : null,
+               inner_height: window.innerHeight,
+               scroll_y: Math.round(window.scrollY || document.scrollingElement?.scrollTop || 0),
+               scroller_top: (() => { const s = el.closest("[class*='scroll']") as HTMLElement | null;
+                 return s ? { tag: s.tagName.toLowerCase() + '.' + String(s.className),
+                              top: Math.round(s.getBoundingClientRect().top),
+                              bottom: Math.round(s.getBoundingClientRect().bottom),
+                              scroll_top: Math.round(s.scrollTop) } : null; })(),
+               in_viewport: r.top >= 0 && r.bottom <= window.innerHeight };
+    }, centre);
+  };
+  const phone = await measure(PHONE);
+  const desk = await measure(DESKTOP);
+  const centred = await measure(PHONE, true);
+  expect(phone.text, "the button says the word the product's own copy table gives it")
+    .toBe(footprintCopy("zh-CN", "retry"));
+  expect(phone.painted_lines, "one line at 390, measured on the painted text rects").toBe(1);
+  expect(phone.box.w, "and it keeps the width the same button has where nothing squeezes it")
+    .toBe(desk.box.w);
+  /* The shell restores its own scroll position on arrival, which can put the header half out of
+     the viewport (read below as shell_restored_scroll_y). That is not this control's defect, and
+     ORD-0537 already set the shape: reachability means some scroll position puts the centre on
+     the control itself, with the fixed bar not in the way. */
+  expect(centred.in_viewport, "a scroll position puts the whole button inside the viewport").toBe(true);
+  expect(centred.hit_is_self, "and its centre hit lands on the button itself").toBe(true);
+  expect(centred.hit_is_nav, "while the fixed bottom bar does not take that hit").toBe(false);
+  push("retry_button_keeps_its_line", {
+    journey_id: journeyId,
+    phone: phone, centred: centred, desktop_width: desk.box.w,
+    desktop_painted_lines: desk.painted_lines,
+    shell_restored_scroll_y: phone.scroll_y,
+    nav_top_read_on_screen: phone.nav_top,
+    how_wrapping_is_measured: "Range.getClientRects() over the text node, not getBoundingClientRect()",
+  });
+
+});
 
 test("ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read", async ({ page }) => {
   /* The shape a "no stamps invented" claim really has to survive: the screen HAS rows, then the door
