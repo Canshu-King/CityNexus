@@ -1429,3 +1429,92 @@ entity facts, then use an explicitly bounded estimate to make a coursework
 candidate. It does not claim live opening/cost truth, free entry, or
 production authority. `MOCK != LIVE`, `UNKNOWN != FREE`, and `P7=false` remain
 unchanged.
+
+## R14 Nanjing transfer: explicit strategy pivot and completed Journey
+
+The next empty-catalog city was `CN-NANJING`, Journey
+`b40fd0b0-c585-46c8-a87d-e530d005ef58`, with the deliberately different intent
+“安静庭园、历史文化、愿意多走路、不赶时间”. The Agent first searched
+`园林 庭园`; the live response did not yield a Place. A follow-up historical
+query found two provider-backed entities, a theatre and a library, but the
+Agent then hit the product’s `SEARCH_BATCH_LIMIT`/`SEARCH_SATURATION` behavior.
+
+The next AgentRun did not repeat the failed search. It made an explicit pivot:
+
+```text
+park:     0 Places
+heritage: 0 Places
+decision: abandon outdoor/heritage branch and use existing quiet-culture candidates
+```
+
+It acquired both exact provider entities through Overpass + Nominatim, with
+no official source URL and no opening/cost evidence:
+
+```text
+南京文化艺术中心  real-place-3988c9729f061ae123cb7756
+  overpass:node/1069288496 / Nominatim matched_provider_entity=true
+
+德国研究图书馆    real-place-9fd1ea1f6bd0860cda669a73
+  overpass:node/1984689547 / Nominatim matched_provider_entity=true
+```
+
+The completed Agent trace was:
+
+```text
+AgentRun: 8140f06d-9cf4-4264-9a7b-36f27d70ad41
+mission: f31504cc-5a48-48fd-b69d-e866a70d7d89
+model_key: cn:glm-5.3-flash
+tools: inspect_journey → inspect_twin → search(park) → search(heritage)
+        → acquire_place_facts ×2 → estimate_place_facts ×2 → generate_plans
+```
+
+The plan used real Places and real route evidence:
+
+```text
+plan: 4263f69c-e7fe-50a6-ac81-a607f51db75a
+selectable: true
+authority_state: COURSEWORK_ESTIMATED_FACTS
+mobility_provider: valhalla-http
+mobility_snapshot: 710a3833-ffc0-415c-a47b-d6a80f56d6d4
+```
+
+Canonical rows still reported `opening=REQUIRES_CONFIRMATION` and
+`cost=UNKNOWN`; the two estimates were explicitly `ESTIMATED_AGENT`, with
+`authority_eligible=false`. The product then accepted and executed the plan:
+
+```text
+select: PLANNED
+start: ACTIVE
+南京文化艺术中心: depart → arrive → begin → complete
+德国研究图书馆: depart → arrive → begin → complete
+```
+
+Final Journey/Twin evidence:
+
+```json
+{
+  "journey_status": "COMPLETED",
+  "active_plan_version_id": "4263f69c-e7fe-50a6-ac81-a607f51db75a",
+  "current_activity_id": null,
+  "twin_projection_status": "READY",
+  "used_edge_ids": [[
+    "real-place-3988c9729f061ae123cb7756",
+    "real-place-9fd1ea1f6bd0860cda669a73"
+  ]],
+  "eligibility_receipts": [{
+    "provider": "valhalla-http",
+    "fact_quality": "LIVE_PROVIDER_CAPTURE",
+    "route_provenance": "LIVE_PROVIDER_CAPTURE",
+    "persisted_minutes": 27,
+    "hard_minutes": 27,
+    "hard_eligible": true,
+    "decision": "HARD_ELIGIBLE"
+  }],
+  "all_actual_edges_hard_eligible": true
+}
+```
+
+The activity set is materially different from Wuhan’s restaurant pair. This
+is a second-city transfer with an evidence-driven pivot, not a duplicated
+golden itinerary. Estimates remain coursework-only; no UNKNOWN fact became
+LIVE or FREE.
