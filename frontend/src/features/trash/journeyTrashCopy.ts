@@ -29,6 +29,17 @@ export const journeyTrashCopy = {
     "trash.rowStateMissing": "this server gave no bin state for this row",
     "trash.deletedAt": "put in the bin at {when}",
     "trash.deletedAtMissing": "this server gave no discard time for this trip",
+    /* ORD-0535: a trip that was dropped, brought back and dropped again is still ONE row here, and
+       the row's own moment is only the latest one. So the row has to say which discard this is. */
+    "trash.discardSequence": "discard #{n} for this trip",
+    "trash.discardSequenceFirst": "this is the first time this trip was dropped",
+    "trash.previousDiscard": "the earlier one was at {when}",
+    "trash.previousDiscardRecorded": "the earlier one has no discard time in the log; its log line is {when}",
+    "trash.sequenceUnreadable":
+      "this server did not answer this trip's discard log, so which time this is cannot be said",
+    "trash.sequenceLoading": "reading this trip's discard log…",
+    "trash.sequenceEmpty":
+      "the discard log for this trip came back with no discard in it, so which time this is cannot be said",
     "trash.action": "Bring it back",
     "trash.busy": "Bringing it back…",
     "trash.found": "Brought back: {title}. It is in your trip list again.",
@@ -51,6 +62,13 @@ export const journeyTrashCopy = {
     "trash.rowStateMissing": "服务器没有给出这一行的在站状态",
     "trash.deletedAt": "丢弃于 {when}",
     "trash.deletedAtMissing": "这台服务器没有给出这条行程的丢弃时间",
+    "trash.discardSequence": "这是这条行程第 {n} 次被丢弃",
+    "trash.discardSequenceFirst": "这是这条行程第一次被丢弃",
+    "trash.previousDiscard": "上一次丢弃于 {when}",
+    "trash.previousDiscardRecorded": "上一次那笔流水里没有丢弃时间，它的记录时间是 {when}",
+    "trash.sequenceUnreadable": "这台服务器没有答出这条行程的丢弃流水，所以说不清这是第几次",
+    "trash.sequenceLoading": "正在读这条行程的丢弃流水…",
+    "trash.sequenceEmpty": "这条行程的流水里一笔丢弃都没有，所以说不清这是第几次",
     "trash.action": "找回",
     "trash.busy": "正在找回…",
     "trash.found": "已找回：{title}。它回到你的行程列表里了。",

@@ -63,6 +63,38 @@ export function undeleteJourney(journeyId: string): Promise<{ id: string; title:
 }
 
 /**
+ * ORD-0535 -- one discard or one 找回, as the audit projection answers it.
+ *
+ * `GET /api/v1/journeys/{id}/history` is an existing door and this screen only reads it: the door
+ * passes an action it does not recognise straight through as `event_type`, and both
+ * `journey.deleted` and `journey.undeleted` are unrecognised, so the sequence arrives in the
+ * server's own order (`order_by(AuditLog.created_at)`) without anything here re-sorting it.
+ * `deleted_at` is what the discard wrote into the log from ORD-0535 onward; rows older than that
+ * carry none, which is why the screen has a separate sentence for the log's own moment.
+ */
+export type DiscardEvent = {
+  event_type: string;
+  timestamp: string | null;
+  deleted_at: string | null;
+};
+
+export async function readDiscardSequence(journeyId: string): Promise<DiscardEvent[]> {
+  const rows = await request<Array<Record<string, unknown>>>(
+    `/journeys/${encodeURIComponent(journeyId)}/history`,
+  );
+  return rows
+    .filter((row) => row["event_type"] === "journey.deleted" || row["event_type"] === "journey.undeleted")
+    .map((row) => {
+      const facts = (row["facts"] ?? {}) as Record<string, unknown>;
+      return {
+        event_type: String(row["event_type"]),
+        timestamp: typeof row["timestamp"] === "string" ? String(row["timestamp"]) : null,
+        deleted_at: typeof facts["deleted_at"] === "string" ? String(facts["deleted_at"]) : null,
+      };
+    });
+}
+
+/**
  * Which condition refused, in the server's own token.
  *
  * ORD-0465: the reading itself moved to `lib/rejectionFacts.ts`, where the second screen that needs it
