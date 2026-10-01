@@ -156,7 +156,15 @@ def main():
         s["p_%s_notices_base" % g] = base.get("notices_after_duplicate")
     s["p_r4_gap"] = bool(by_gen.get("r4", {}).get("GAP"))
     s["b_prior"] = blobs.get("review/ord0500-checkin/receipts/prior_denominators_r5.json")
-    lh = load("landing_history_r5.json")
+    # the table is built from the receipt that is COMMITTED in this ref, so the blob the page
+    # cites and the rows it prints are the same bytes; runs after that commit are counted
+    # separately in the fresh row below rather than silently appended to a frozen receipt.
+    _lh_tree = os.path.join(LANE, "wt22/review/ord0500-checkin/receipts/landing_history_r5.json")
+    lh = (json.load(open(_lh_tree, encoding="utf-8")) if os.path.exists(_lh_tree)
+          else load("landing_history_r5.json"))
+    lh["runs"] = sorted(lh.get("runs", []), key=lambda r: str(r.get("took_local")))
+    _lane_runs = load("landing_history_r5.json").get("runs", [])
+    s["lh_extra_runs"] = max(0, len(_lane_runs) - len(lh.get("runs", [])))
     rows = []
     for r in lh.get("runs", []):
         rows.append("| %s | %s | %s | %s / %s | %s |" % (
@@ -327,13 +335,13 @@ def main():
 
 **〇′、r5 为什么再来一次**。落地序列器对 r4 的枝头 `{r4_head}` 报 2 枚合不上，我逐枚比出的就是这两枚：`backend/app/main.py`（我那一代 `{r4_main}` / 只读预测 `{r4_main_merge}` / 现尖 `{r4_main_tip}`）与 `frontend/src/features/trip/TripItinerary.tsx`（`{r4_itin}` / `{r4_itin_merge}` / `{r4_itin_tip}`）——这一批 ORD-0529/0533/0535 落过，两枚都是全树热文件。重落用的是同一把并块工具（`review/ord0500-checkin/tools/land_o0500_r5.py`），落点形状没变：`main.py` 仍是 14 增 2 删、契约里那两行仍在。`footprint.css` 这一枚与 r4 不同，而且是我自己让它不同的：r4 那枚 `{css_blob_r4}`、本轮 `{css_blob}`，差 {css_added} 增 {css_removed} 删，删掉的行全是注释正文（`removed_are_prose_only.clean` = {css_prose}），ORD-0530 那 3 行 `cn-footprints__day` 两侧逐字相等（{css_0530}）——所以这一族没再被人动，动它的是我把自己的那句错话改对了（见〇″）。曝光格两侧对照现读：现尖 {exp_tip} 格 / {exp_tip_mod} 模块，本候选 {exp_r3} 格 / {exp_r3_mod} 模块，逐规则同数、多出的格「无」。
 
-**〇′·乙、落地判读在这一窗口跑了 {lh_runs} 趟，每趟全等**。同一把只读尺（`review/ord0500-checkin/tools/gen9_landing_check_r1.py`）对着每个新尖各跑一次，逐趟读数是（总成件 `{b_lh}`，五行各自的原始 log 收在 `review/ord0500-checkin/run/landing_*.txt`）：
+**〇′·乙、落地判读跑了 {lh_runs} 趟，表里每趟都全等**。同一把只读尺（`review/ord0500-checkin/tools/gen9_landing_check_r1.py`）对着每个新尖各跑一次，逐趟读数是（总成件 `{b_lh}`，五行各自的原始 log 收在 `review/ord0500-checkin/run/landing_*.txt`）：
 
 | 跑的时刻 | 当时现尖 | 我的枝头 | 逐字节相同 / 写集枚数 | 要再重切 |
 |---|---|---|---|---|
 {lh_table}
 
-{lh_runs} 趟的 `files_needing_another_recut` 都是空（`every_run_clean` = {lh_clean}）。写这一页时现尖是 `{tip_live}`；序列器读到的尖若又前进了，请以它自己那一趟为准——这把尺只读，不写远程、不动任何枝，树里就有。表里最后一行的枝头 `{lh_last_head}` 是把这张表收进树之前的头，本页页眉那个头是收进之后的；这两步之间非 `review/` 的路径动了 {non_review_moved} 枚（{non_review_paths}），也就是产品字节一枚没变，这一条可以当场用 `git diff --name-only {lh_last_head}..{cand}` 复验。页眉这个头自己也单跑过一次：{land_now_took} 对着现尖 `{land_now_tip}`，写集 {land_now_files} 枚里逐字节相同 {land_now_ident} 枚、要再重切 {land_now_recut} 枚（件在车道 `evidence/gen9_landing_check_r1.json`，本机字节 sha256 `{land_now_sha}`，不是 git 物件，不可 cat-file）。
+{lh_runs} 趟的 `files_needing_another_recut` 都是空（`every_run_clean` = {lh_clean}），这一枚件本身是 `{b_lh}`；那之后我又跑了 {lh_extra_runs} 趟，另记在车道 `evidence/landing_history_r5.json`，不把后来者塞进一枚已入库的件里。写这一页时现尖是 `{tip_live}`；序列器读到的尖若又前进了，请以它自己那一趟为准——这把尺只读，不写远程、不动任何枝，树里就有。表里最后一行的枝头 `{lh_last_head}` 是把这张表收进树之前的头，本页页眉那个头是收进之后的；这两步之间非 `review/` 的路径动了 {non_review_moved} 枚（{non_review_paths}），也就是产品字节一枚没变，这一条可以当场用 `git diff --name-only {lh_last_head}..{cand}` 复验。页眉这个头自己也单跑过一次：{land_now_took} 对着现尖 `{land_now_tip}`，写集 {land_now_files} 枚里逐字节相同 {land_now_ident} 枚、要再重切 {land_now_recut} 枚（件在车道 `evidence/gen9_landing_check_r1.json`，本机字节 sha256 `{land_now_sha}`，不是 git 物件，不可 cat-file）。
 
 **〇、这次是真冲突，两族都活着**。落地序列器报的冲突在 checkin 那一族：ORD-0530（按天足迹）在现尖 b604f50d1645d028c2dd1d4406caee8198a3bc2d 上往 footprint.css 追加了 40 行，我那 31 行的站行可达性块也在同一枚文件尾部——两枚都是加法，合并不肯替谁排顺序，所以手工并块：它那 40 行在前（它先落在这条线上），我这 31 行在后，两枚都保留。现读计数：`cn-footprints__day` 3 处、`/* ORD-0500` 1 处（并块由 `review/ord0500-checkin/tools/land_o0500_r5.py` 做，断言是任何一枚缺席、重复或倒序就中止）。`backend/app/main.py` 与 `contracts/openapi.yaml` 在这一批里也被别人加过行，我的落点仍是 14 增 2 删那一小块——LF 之后不再整文件对撞。**调用点按 0530 的新形状重核过**：它那一族自己也是屏内格式化（`footprintCopy.ts` 里的 `zoned()`，注释明写中文 Intl 输出读作 10月1日 周四），`FootprintPanel.tsx` 里 `formatV8Date` 命中 0 枚，所以这一族没有第二条「正文→共用 helper」的路；我那枚 `formatStampedMoment` 管的是行程屏重复打卡那一刻，它那枚 `zoned()` 管的是足迹面板的日头，两家各留各的，我不擅自合并成第三家。
 

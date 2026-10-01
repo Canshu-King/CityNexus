@@ -1,30 +1,853 @@
 {
   "tool": "gen9_landing_check_r1",
-  "took_local": "2026-10-01T15:49:20.434636+08:00",
-  "live_tip": "c874b1d6bac6735d4ad164379a76db7b73398bd8",
+  "took_local": "2026-10-01T16:02:17.957816+08:00",
+  "live_tip": "ssh:",
   "refs": [
     {
       "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r5",
-      "commit": "a49bd149f664fec4b597f29480a2e096ac96606d",
+      "commit": "9b3e687b97022345d6a078c20c1bfa2fd89ba518",
       "cut_on": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
-      "predicted_tree": "177ceb68857fe2fe29e1574d3977ff499be73048",
+      "predicted_tree": "merge-tree: ssh: - not something we can merge",
       "write_set_files": 126,
-      "files_landing_byte_identical": 126,
-      "files_needing_another_recut": []
+      "files_landing_byte_identical": 0,
+      "files_needing_another_recut": [
+        {
+          "path": "backend/app/main.py",
+          "candidate_blob": "6448e5e74c394c18aad96c231ef4865540a75f20",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:backend/app/main.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "candidate_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "contracts/openapi.yaml",
+          "candidate_blob": "6497d6a1fd02b12e5864c061b428eabb0f020957",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:contracts/openapi.yaml",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+          "candidate_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/playwright.ord0500-checkin.config.ts",
+          "candidate_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/playwright.ord0500-checkin.config.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/src/features/checkin/checkinCopy.ts",
+          "candidate_blob": "48aefc34c35f073ebd86a5c08be3c5ae65607459",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/src/features/checkin/checkinCopy.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/src/features/checkin/checkins.ts",
+          "candidate_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/src/features/checkin/checkins.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/src/features/checkin/footprint.css",
+          "candidate_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/src/features/checkin/footprint.css",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/src/features/trip/TripItinerary.tsx",
+          "candidate_blob": "7535294b19a7a1c7f0cc15afcd1195623713b51b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/src/features/trip/TripItinerary.tsx",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/GEN9_READINGS.md",
+          "candidate_blob": "18429a697cbb50ab8acefce4b9e20f30a6f3c4a4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/GEN9_READINGS.md",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+          "candidate_blob": "5b1faab0668a438ffa800b3529a578f8654145ce",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
+          "candidate_blob": "457dc01dccee89e73399ead52529bdefb7af694e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_duplicate.png",
+          "candidate_blob": "7e26714dc6f1d1fc619d5df5f8b5c911b18f19d3",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_first_tap.png",
+          "candidate_blob": "7bc270d3e94f6710c6daff65578e55c11bc1ecd4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_second.png",
+          "candidate_blob": "7e26714dc6f1d1fc619d5df5f8b5c911b18f19d3",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_arrived.png",
+          "candidate_blob": "7bc270d3e94f6710c6daff65578e55c11bc1ecd4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_390x844_r2.json",
+          "candidate_blob": "7a5a4ea07f4e7dab15b26c46ad1aa33b3e36c7d6",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_duplicate.png",
+          "candidate_blob": "1488a36470cda2bd94fd58b8d10094b91f90389b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_first_tap.png",
+          "candidate_blob": "7bc270d3e94f6710c6daff65578e55c11bc1ecd4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_second.png",
+          "candidate_blob": "37b416ee506cfc99a4cbc4c709902aa9b72b119e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_arrived.png",
+          "candidate_blob": "c44fc31c91c230fd961fedbf77d37301bc34c308",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_UNDER_MUTANT_CE1_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_1280x800_r2.json",
+          "candidate_blob": "20ef9382e31bda65ce71067f3f69e686e2fe1d74",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_1280x800_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_duplicate.png",
+          "candidate_blob": "44e58b08d5a07a5bf738d5c70750796caaa12f53",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_first_tap.png",
+          "candidate_blob": "91ee3f61390ff52f7ba9b0c33f4df6e35be8f32b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_second.png",
+          "candidate_blob": "01a32906df972fbd81f43fb3f855cd422ca04a6c",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_arrived.png",
+          "candidate_blob": "c830de57f76293b1d6e788994fad375ae5b26f30",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_desktop_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_390x844_r2.json",
+          "candidate_blob": "783643bb6272da334cd5b2c60ab2bcd5922e68ec",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_phone_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_duplicate.png",
+          "candidate_blob": "d6c9b8598dc38b9ab0af9d3dc3085cd9bbe0351e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_first_tap.png",
+          "candidate_blob": "b0ccd2b816a28671ee8856d8bfce9217334ef0a0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_second.png",
+          "candidate_blob": "a4a3daa87ed64783133106961ee2c19a1bbfa127",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_phone_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R5_phone_arrived.png",
+          "candidate_blob": "c44fc31c91c230fd961fedbf77d37301bc34c308",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_O0500_R5_phone_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json",
+          "candidate_blob": "53c60457a291b34cadf65d9705a8f933668db208",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_arrived.png",
+          "candidate_blob": "d0bbf371cd799229c0b78b1c4fbf8261d5b3bfa2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_duplicate.png",
+          "candidate_blob": "dc72e0b1c54359db5c2d92ce387b474e00ab1697",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_first_tap.png",
+          "candidate_blob": "b0ccd2b816a28671ee8856d8bfce9217334ef0a0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_second.png",
+          "candidate_blob": "e937281428b9477a87d3fdfd50a62482daeeed63",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_SCROLLTEST_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_SCROLLTEST_arrived.png",
+          "candidate_blob": "c44fc31c91c230fd961fedbf77d37301bc34c308",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_SCROLLTEST_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_SCROLLTEST_phone_390x844_r2.json",
+          "candidate_blob": "758e61c2529df1a7b755d4cb21e898e2eeb958e7",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_SCROLLTEST_phone_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_1280x800_r2.json",
+          "candidate_blob": "b564dc620d3250e47a07b023acc9cb65b525db2c",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_1280x800_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_duplicate.png",
+          "candidate_blob": "0a0b9f7ba64b0eeeaa8aab4029b0597a14dac0c7",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_first_tap.png",
+          "candidate_blob": "8e2830ea512b444c19904d1f24fbf48e803bad5c",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_second.png",
+          "candidate_blob": "4498fd113c9ef56c1cc158d63748cdbed4eb413c",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_arrived.png",
+          "candidate_blob": "96f513fe98b160411e181c4a2bd7602e69f9cf0a",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_desktop_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_390x844_r2.json",
+          "candidate_blob": "ba1fcc34251e8e00cb38a7a18a9e058157870a37",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_390x844_r2.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_duplicate.png",
+          "candidate_blob": "07b2c7c2d34018f925599c252fc1dd328ae0c846",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_duplicate.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_first_tap.png",
+          "candidate_blob": "ca450506444221ac8080716790dac9caf92d15eb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_first_tap.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_second.png",
+          "candidate_blob": "5f3051533079b487930250362b293dfe86a3d7b5",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_after_second.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_arrived.png",
+          "candidate_blob": "f9ed830404d89f1e6d8eae1b86e616182b529edb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/checkin_TIP_b604f50d_phone_arrived.png",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/comment_anchors_r5.json",
+          "candidate_blob": "944e836e4ec0b16e0c1859ef8b238da7c17edf26",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/comment_anchors_r5.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+          "candidate_blob": "a96157230b37781fa22fa89cf37e60f4b8f43e3c",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/exposure_r2_candidate_r1.json",
+          "candidate_blob": "45d0d461cd9902eca49528bd52a87af5c9508a53",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/exposure_r2_candidate_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/exposure_r5_candidate_r1.json",
+          "candidate_blob": "c9449aff4ec2254de9bc97e0691d72ce2534c3ae",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/exposure_r5_candidate_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/exposure_tip_b604f50d_r1.json",
+          "candidate_blob": "5de044613e85c1af6738317b9b92502dec7135af",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/exposure_tip_b604f50d_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_builds_r1.json",
+          "candidate_blob": "e769029767598aaac6f8428f6c2313252c3f6972",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_builds_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_carrier_arms_r1.json",
+          "candidate_blob": "b8d2f140b95b94156e4d8c0873744f4cff3afd0a",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_carrier_arms_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_carrier_r1.json",
+          "candidate_blob": "bd9e7edf66b1f3a1fc59f37ffd003da29245f3bd",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_carrier_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_ce1_r1.json",
+          "candidate_blob": "56e0f04082c1f0c2b064dd812920553a2f1b6211",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_ce1_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_ce1_tree_proof_r1.json",
+          "candidate_blob": "32f62b745c6b6f99c07695839770515f2e8bd304",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_ce1_tree_proof_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_checkin_sweep_r1.json",
+          "candidate_blob": "a404f6a37a10cdc8828e02b36363bd5c21d5ea34",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_checkin_sweep_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_doors_wt23-wt22-mutgen9.json",
+          "candidate_blob": "dbbb39c542b64472bc31cd814234d0ef3fc1a6c4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_doors_wt23-wt22-mutgen9.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_landing_check_r1.json",
+          "candidate_blob": "cff4f90552c1dc541925af219bdd9f7f5e16060e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/gen9_landing_check_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_history_r5.json",
+          "candidate_blob": "40811bef985af0c52a0a71805ed701863783a9d8",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/landing_history_r5.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/prior_denominators_r5.json",
+          "candidate_blob": "bb74650bad4b91e069a0df28f5e70dd99678ac00",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/receipts/prior_denominators_r5.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/coords_final.txt",
+          "candidate_blob": "926b1634723cd104b4d8d0e29068fb308fc58b29",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/coords_final.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/coords_r5c.txt",
+          "candidate_blob": "57a8dc309f9012e00f62635355123e99514ba688",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/coords_r5c.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/css_proof_r5_out.txt",
+          "candidate_blob": "8d90840c4be7b5726f3be96e0876a55608e05222",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/css_proof_r5_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/fix_shipped_comments_r5.json",
+          "candidate_blob": "2eb1b10b98adec9394cf360521af7e14473a781b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/fix_shipped_comments_r5.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_build_out.txt",
+          "candidate_blob": "cc850f5a957d8719880a9954495cbe20306db2cb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_build_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_build_out_r2.txt",
+          "candidate_blob": "c2607ca7ec755e3d34a88f2ef671c816a383c051",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_build_out_r2.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_carrier_arms_r1_out.txt",
+          "candidate_blob": "2cdc068e05c5a322074b7045e832b1920b0e24e3",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_carrier_arms_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_carrier_r1_out.txt",
+          "candidate_blob": "5edca28aa4f81089cc1ee5d99182432b0710a6bb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_carrier_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_ce1_proof_r1_out.txt",
+          "candidate_blob": "dca56dc608b5cbe4379fe9ccb19b303956d387f6",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_ce1_proof_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_ce1_r1_out.txt",
+          "candidate_blob": "53f79ca2f20b97642b4ecbde2a36795cfc12b1f4",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_ce1_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_doors_r1_out.txt",
+          "candidate_blob": "aad30d89be7f0a7566b37180b7f9f0657de197c5",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_doors_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_gen9_stack_r1_out.txt",
+          "candidate_blob": "7bb1274d18036d374131c1df12cdff3ef885009b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_gen9_stack_r1_out.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_pipeline.txt",
+          "candidate_blob": "6030a43c53aa3bc4c9d954e31873c29aef8a42f0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_pipeline.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.check.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.check.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.typecheck.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_O0500_CLIENTBOOL_MUTANT_tsconfig.typecheck.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_O0500_R5_tsconfig.check.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_O0500_R5_tsconfig.check.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_O0500_R5_tsconfig.typecheck.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_O0500_R5_tsconfig.typecheck.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_TIP_b604f50d_tsconfig.check.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_TIP_b604f50d_tsconfig.check.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/gen9_tsc_TIP_b604f50d_tsconfig.typecheck.txt",
+          "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/gen9_tsc_TIP_b604f50d_tsconfig.typecheck.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_86be.txt",
+          "candidate_blob": "b29397861be9e50134aa2c47c66ccb62d0d0f204",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_86be.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_after_push_r5.txt",
+          "candidate_blob": "6f116a2448a6260aeacf1eb0b5ed2b52b91d7d1a",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_after_push_r5.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_c874.txt",
+          "candidate_blob": "5e8c011c4e0129838a4d9712fb4d327c0e9924fb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_c874.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_c95.txt",
+          "candidate_blob": "bd3241ea33e400ef2e481bccebf1e56ef07c5305",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_c95.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_final2_r5.txt",
+          "candidate_blob": "30eef8575e803dbf0ff7d095399a9bd158a710b0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_final2_r5.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/landing_final_r5.txt",
+          "candidate_blob": "363d9a5d64dc48617b09ea4a2658858a213825dc",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/landing_final_r5.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_carrier_arms_r1.txt",
+          "candidate_blob": "3edfd6fac585b34665122c7a59ca11242a9a30a5",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_carrier_arms_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_carrier_r1.txt",
+          "candidate_blob": "82f30851b4c13abed3963e70390d27e113cecfd8",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_carrier_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_ce1_proof_r1.txt",
+          "candidate_blob": "4ab25454c05f9c7e1a599eade806b5c6f19fa1b0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_ce1_proof_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_ce1_r1.txt",
+          "candidate_blob": "ce252ce3c7fe2c294bbb7dbc504cab4a7053f5ba",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_ce1_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_doors_r1.txt",
+          "candidate_blob": "846619ee4151414ccc54f7520125b9292b540bf9",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_doors_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_exposure_candidate_r1.txt",
+          "candidate_blob": "c9ad1fecf6eb136a2d0f13da8025c46a39e3e15d",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_exposure_candidate_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_exposure_tip_r1.txt",
+          "candidate_blob": "d852f19b537381ff42fa82d8db26f07a61902c70",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_exposure_tip_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_gen9_r1.txt",
+          "candidate_blob": "56314b8f8a1f832775cbfc7f4d1625112fe7593a",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_gen9_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/remeasure_stack_r1.txt",
+          "candidate_blob": "8a60f53462ae71827eb1d325e90eb6084c35a57b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/remeasure_stack_r1.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/run/stage_gen9_r5.txt",
+          "candidate_blob": "bd4abb01942d408d718686c3206ce0627066ddce",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/run/stage_gen9_r5.txt",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/ce2_recipe_r5.py",
+          "candidate_blob": "009bf9e30e59a51991c5a049e57b60c00a7de261",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/ce2_recipe_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/checkin_phone_r2.cjs",
+          "candidate_blob": "f15fabb3759ae6a7405613a0b6c89f8c5781c6ed",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/checkin_phone_r2.cjs",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/comment_anchors_r5.py",
+          "candidate_blob": "2551727c28473ca572495e44806bebf157197bd8",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/comment_anchors_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/css_delta_proof_r5.py",
+          "candidate_blob": "6e8d1af10022e2841939a5bb5771c01c417196e0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/css_delta_proof_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/fix_refusal_shape_r4.py",
+          "candidate_blob": "782612651d32ce66cac5c637f1244fe60c526199",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/fix_refusal_shape_r4.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/fix_shipped_comments_r5.py",
+          "candidate_blob": "ac40d75175aa71ca6a8c1a8cfb1d141c3cfe561b",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/fix_shipped_comments_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_blocks_r1.py",
+          "candidate_blob": "623d22f17542ff18881f4ccdacead49a24aa3c7a",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_blocks_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_build_r1.py",
+          "candidate_blob": "2ead60a78f0b37c71defaf37d40e67de5b017e85",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_build_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_carrier_arms_r1.py",
+          "candidate_blob": "1e2c6c2927bd15c051119cea3622ac06885855dd",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_carrier_arms_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_carrier_r1.py",
+          "candidate_blob": "cf8743a18bd2fe6027544a27d606a0c37927732f",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_carrier_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_ce1_proof_r1.py",
+          "candidate_blob": "1aea03575987ec1987d8c9e3aea867c69a210117",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_ce1_proof_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_ce1_r1.py",
+          "candidate_blob": "2930bcd0ef8195a7bdb8e61ec841f586d4e2f18e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_ce1_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_coordinates_r1.py",
+          "candidate_blob": "4d8e16f10f06d3a8d14cbb7b0400b70dc69b51aa",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_coordinates_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_doors_r1.py",
+          "candidate_blob": "507a9c371c183af3c5ce06254975e56566ffd5af",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_doors_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_landing_check_r1.py",
+          "candidate_blob": "d372fdddd9c6d6adb4aeeb67acc178ad9d86f477",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_landing_check_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_sheets_r1.py",
+          "candidate_blob": "3c94836338c349caa6ea416c2fcec3cac78d73c2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_sheets_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_slots_r1.py",
+          "candidate_blob": "55b5e7bbe90966972228f2ef4cb2676e9d8b1db0",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_slots_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_stack_r1.py",
+          "candidate_blob": "b75e0125f30cf74265db3b46e91442be55149f2d",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/gen9_stack_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/git_blob_probe_r1.py",
+          "candidate_blob": "a60487c17185c381b52b1b54fd02c745b5c91a2d",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/git_blob_probe_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/land_o0500_openapi_r4.py",
+          "candidate_blob": "c4662953d51baa1533d566e1ae76de17403e6b85",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/land_o0500_openapi_r4.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/land_o0500_r5.py",
+          "candidate_blob": "6987cdb501cfc69f4066dea4a549ad4237dc4212",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/land_o0500_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/landing_history_r5.py",
+          "candidate_blob": "bc017a73366c1547552f5a07e18e0d80b4aad8c9",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/landing_history_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/make_gen9_mutants_r1.py",
+          "candidate_blob": "a999882ff4189f4d305dab417a049de06d900891",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/make_gen9_mutants_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/make_gen9_tools_r1.py",
+          "candidate_blob": "af7d21c90ff1981e1669c8ddf4be8e2d62ac992e",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/make_gen9_tools_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/patch_gen9_blocks_r1.py",
+          "candidate_blob": "ef62c71697d93eeca10102d5274f43a77c70aed2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/patch_gen9_blocks_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/prior_denominators_r5.py",
+          "candidate_blob": "3f71c10a0ede51c2d72f79e9aa07f70e57b9a668",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/prior_denominators_r5.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/remeasure_gen9_r1.py",
+          "candidate_blob": "85c5239f1483f27e2772faed88b94ca6ec26faca",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/remeasure_gen9_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/scrollfix_probe_r1.py",
+          "candidate_blob": "76d69ee9b13fa5e5124475b3b9abee846bbfaffe",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0500-checkin/tools/scrollfix_probe_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        }
+      ]
     },
     {
       "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r5",
       "commit": "a63dcc72934afc63d35d3a904c2bbcbec6a39a2e",
       "cut_on": "0989713aa687b97f4cd40bae009a6ce493425a4b",
-      "predicted_tree": "4dbc0fa96e5b5b8ce62087aebc4296b09dad8eb2",
+      "predicted_tree": "merge-tree: ssh: - not something we can merge",
       "write_set_files": 12,
-      "files_landing_byte_identical": 11,
+      "files_landing_byte_identical": 0,
       "files_needing_another_recut": [
+        {
+          "path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+          "candidate_blob": "16dd334020743912998fb62dd81636ba914febf2",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "frontend/playwright.ord0485-phone.config.ts",
+          "candidate_blob": "0c40a18533b2d2eb25a6f32963d1bf66531bd910",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/playwright.ord0485-phone.config.ts",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
         {
           "path": "frontend/src/i18n/LocaleContext.tsx",
           "candidate_blob": "e9b4e07c5a333c16ed457b69090cd51583f38f87",
-          "merge_blob": "bb656916092d12d4864a3be8d934e6ad69f6bff2",
-          "live_tip_blob": "cec0651cb5d9e0d0df0f71ce4c2ca0f07bea379f"
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:frontend/src/i18n/LocaleContext.tsx",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/GEN6_READINGS.md",
+          "candidate_blob": "8d005bb93a7d61611bb0e20ce87cc39d94a90ec3",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/GEN6_READINGS.md",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/gen6_builds_r1.json",
+          "candidate_blob": "2acb70f101a335d829b2fd8edab46b19cf7aed06",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/receipts/gen6_builds_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/gen6_walk_r1.json",
+          "candidate_blob": "719deeaa05c4a92cbf105552e4f9dd6ec2ef9761",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/receipts/gen6_walk_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_O0485_R5_r1.json",
+          "candidate_blob": "e13f9d5906c74d55b828328bbbacd76bec6deb00",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/receipts/i18n_gap_O0485_R5_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_TIP_0989713a_r1.json",
+          "candidate_blob": "a074c9c6b87acff46e1a7a404155a2e47d1be5eb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/receipts/i18n_gap_TIP_0989713a_r1.json",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen6_build_r1.py",
+          "candidate_blob": "f221658d4cc8a5df1e51767049cffcbe05a35888",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/tools/gen6_build_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen6_walk_r1.py",
+          "candidate_blob": "fbeb43188d5afcd7809c8e22b29875e542f7cd66",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/tools/gen6_walk_r1.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+          "candidate_blob": "15097f8a6d857128a147135177035f34f4a847ab",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/land_dict_r4.py",
+          "candidate_blob": "51a74d630d86ab837b2b49f049c1c6a1028cdbdb",
+          "merge_blob": "fatal: invalid object name 'merge-tree'.\nmerge-tree: ssh: - not something we can merge:review/ord0485-phone-walk/tools/land_dict_r4.py",
+          "live_tip_blob": "PATH_ABSENT_AT_REV"
         }
       ]
     }

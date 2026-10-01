@@ -1,6 +1,6 @@
 {
   "tool": "stage_gen9_r5",
-  "took_local": "2026-10-01T15:48:52.454653+08:00",
+  "took_local": "2026-10-01T16:03:50.217534+08:00",
   "receipts": [
     "GEN9_READINGS.md",
     "receipts/CE2_MUTANT_RECIPE_r5.md",
@@ -120,5 +120,5 @@
     "tools/remeasure_gen9_r1.py",
     "tools/scrollfix_probe_r1.py"
   ],
-  "total_bytes": 2437045
+  "total_bytes": 2495472
 }
