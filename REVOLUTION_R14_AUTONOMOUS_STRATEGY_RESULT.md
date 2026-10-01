@@ -137,6 +137,37 @@ Journey completed. The remaining frontier is to repeat the same transfer with
 the lab estimate envelope disabled and acquire corroborated opening/cost facts
 before selection; this run does not claim that stronger production state.
 
+### Estimate-authority-off boundary replay
+
+The promised boundary replay used the same current LAB source and disposable
+database, but a separate server process with
+`CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`. Journey
+`ebdd40f0-5769-4c6a-9dd3-de8349150948` received the same two real provider
+Places and the same explicit `ESTIMATED_AGENT` hypotheses. The deterministic
+composition result was:
+
+```text
+plan: 5462acc1-07c8-576d-854c-e98898d010ab
+authority_state: PROVISIONAL_UNRESOLVED_FACTS
+selectable: false
+mobility_provider: valhalla-http
+mobility_snapshot_id: 96ad3817-0d82-4e0f-b850-764ae64cefeb
+```
+
+The real selection endpoint then rejected it:
+
+```text
+POST /api/v1/journeys/ebdd40f0-5769-4c6a-9dd3-de8349150948/plans/5462acc1-07c8-576d-854c-e98898d010ab/select
+HTTP 409
+reason_code: UNRESOLVED_ACTIVITY_FACTS
+error_receipt_id: CNX-57NWWZP5
+```
+
+The follow-up `start` call also returned `409` because the Journey remained
+unselected. This replay proves the estimate is strategy evidence only: turning
+the isolated lab envelope off does not turn UNKNOWN into FREE, LIVE, or
+authoritative selection.
+
 ## Current domestic-WB2api checkpoint: Kunming
 
 This is the latest R14 execution after the Guilin checkpoint. The same
