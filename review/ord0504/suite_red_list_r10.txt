@@ -1,12 +1,16 @@
-ORD-0504 whole-suite run on 514b397f96f3b5165b24865f4a544ab6f8020084, with this order committed on top.
-One pass only: no base run was taken on this generation, so this file does NOT claim a subset
-relation. What it does state is which of the reds belong to this order, and that is computed.
+ORD-0504 whole-suite runs, with this lane's work committed on top. One pass per generation.
+No base run was taken on either generation, so these files do NOT claim a subset relation.
+What they do state is computed from the FAILED lines: which reds belong to this lane's orders.
 
-summary: 14 failed, 1632 passed, 16 skipped, 1 xfailed, 4 warnings in 178.07s (0:02:58)
-red count: 14
-of which belonging to ORD-0465 / ORD-0490 / ORD-0504 (this lane's three orders): 0
+generation 514b397f96f3b5165b24865f4a544ab6f8020084
+  summary: 14 failed, 1632 passed, 16 skipped, 1 xfailed in 178.07s
+  reds belonging to ORD-0465 / ORD-0490 / ORD-0504: 0
 
-the reds, verbatim:
+generation b604f50d1645d028c2dd1d4406caee8198a3bc2d  <-- the tip this candidate now sits on
+  summary: 13 failed, 1633 passed, 16 skipped, 1 xfailed, 4 warnings in 183.81s (0:03:03)
+  reds belonging to ORD-0465 / ORD-0490 / ORD-0504: 0
+
+the b604f50d reds, verbatim:
   tests/test_qoder_anywhere_discovery_truth.py::test_g16a_the_counting_client_sees_every_outbound_call_or_the_zero_proves_nothing
   tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
   tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
@@ -19,5 +23,4 @@ the reds, verbatim:
   tests/test_qoder_city_failure_reasons.py::test_the_bounded_fallback_asks_with_the_same_label_as_the_anchor
   tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
   tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
-  tests/test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment
   tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable
