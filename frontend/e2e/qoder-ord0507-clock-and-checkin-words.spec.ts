@@ -294,21 +294,30 @@ for (const locale of ["zh-CN", "en"] as Locale[]) {
     );
     const rawLoc = page.locator("[data-testid='stop-checkin-technical-raw']");
     const countBefore = await rawLoc.count();
-    const closedText = countBefore ? clean(await rawLoc.first().innerText()) : null;
+    /* a closed <details> keeps its children in the DOM but paints nothing, so the collapsed reading
+       is textContent (the line exists) and the opened reading is innerText (the line is on screen) */
+    const domText = countBefore
+      ? clean(((await rawLoc.first().textContent().catch(() => "")) ?? "") as string)
+      : "";
     await fold.first().locator("summary").click();
     await page.waitForTimeout(1_000);
     const countAfter = await rawLoc.count();
-    const raw = clean(
-      (countAfter ? await rawLoc.first().innerText().catch(() => "") : await rawLoc.first().innerText().catch(() => "")) ?? "",
-    );
+    const painted = countAfter ? clean(await rawLoc.first().innerText().catch(() => "")) : "";
+    const said = painted.length > 0 ? painted : domText;
     expect(
-      closedText ?? raw,
+      said,
       node(
         NODE_REFUSE,
-        `the fold carries no technical line at all: rows_with_fold=${foldCount} raw_before_click=${countBefore} raw_after_click=${countAfter} summary=${JSON.stringify(summary)} notice=${JSON.stringify(duplicateNotice)}`,
+        `the fold carries no technical line: rows_with_fold=${foldCount} raw_before_click=${countBefore} raw_after_click=${countAfter} summary=${JSON.stringify(summary)} notice=${JSON.stringify(duplicateNotice)}`,
       ),
-    ).not.toBeNull();
-    const said = closedText ?? raw;
+    ).not.toBe("");
+    expect(
+      painted.length > 0,
+      node(
+        NODE_REFUSE,
+        `opening 技术详情 did not put the original on screen (painted=${JSON.stringify(painted)}, dom=${JSON.stringify(domText)}, raw_before=${countBefore}, raw_after=${countAfter})`,
+      ),
+    ).toBe(true);
     expect(
       said.includes("CHECKIN_DUPLICATE_STAMP"),
       node(NODE_REFUSE, `the fold does not carry the server's own code: ${JSON.stringify(said)}`),
@@ -321,8 +330,8 @@ for (const locale of ["zh-CN", "en"] as Locale[]) {
       node(NODE_REFUSE, `the fold carries no details from the door: ${JSON.stringify(said)}`),
     ).toBeGreaterThan(0);
     expect(
-      raw.includes("CHECKIN_DUPLICATE_STAMP") && raw.length > "CHECKIN_DUPLICATE_STAMP".length + 40,
-      node(NODE_REFUSE, `the technical line is the code alone, not the answer: ${JSON.stringify(raw)}`),
+      said.includes("CHECKIN_DUPLICATE_STAMP") && said.length > "CHECKIN_DUPLICATE_STAMP".length + 40,
+      node(NODE_REFUSE, `the technical line is the code alone, not the answer: ${JSON.stringify(said)}`),
     ).toBe(true);
 
     /* what the flat sentence used to be, read off the dictionary the same screen ships: the painted

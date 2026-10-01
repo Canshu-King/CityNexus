@@ -534,32 +534,45 @@ export function TripItinerary({
                           : t("checkin.button")}
                       </button>
                     </div>
-                    {stopNotice ? (
-                      <p className="cn-stop-checkin__notice" data-testid="stop-checkin-notice">
-                        {stopNotice}
-                      </p>
-                    ) : null}
-                    {/* ORD-0507 3: the refusal's own words are not thrown away, they are moved --
-                        the reason code, the status, the server's message and its `error.details`
-                        sit in this disclosure, which is folded by default, while the sentence above
-                        stays this screen's dictionary.  Same shipped shape as
-                        `data-testid="failure-attribution"` in the shell (a fold that keeps the
-                        technical original reachable without painting it on the traveller's line). */}
-                    {stopRefusal ? (
-                      <details
-                        className="cn-stop-checkin__technical"
-                        data-testid="stop-checkin-technical"
+                    {/* The row itself is a `role="button"` that opens the activity, so the notice and
+                        its disclosure have to stop the gesture the way ORD-0510's collect wrapper
+                        does -- a fold whose every opening click also navigates away from the screen is
+                        not a fold a traveller can read. */}
+                    {stopNotice || stopRefusal ? (
+                      <div
+                        className="cn-stop-checkin__answer"
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => event.stopPropagation()}
                       >
-                        <summary>{t("checkin.technicalDetail")}</summary>
-                        <p data-testid="stop-checkin-technical-raw">
-                          {t("checkin.technicalRaw", {
-                            reasonCode: stopRefusal.reason_code.length > 0 ? stopRefusal.reason_code : "—",
-                            status: String(stopRefusal.http_status),
-                            message: stopRefusal.message ?? "—",
-                            details: JSON.stringify(stopRefusal.details ?? null),
-                          })}
-                        </p>
-                      </details>
+                        {stopNotice ? (
+                          <p className="cn-stop-checkin__notice" data-testid="stop-checkin-notice">
+                            {stopNotice}
+                          </p>
+                        ) : null}
+                        {/* ORD-0507 3: the refusal's own words are not thrown away, they are moved --
+                            the reason code, the status, the server's message and its `error.details`
+                            sit in this disclosure, which is folded by default, while the sentence
+                            above stays this screen's dictionary.  Same shipped shape as
+                            `data-testid="failure-attribution"` in the shell (a fold that keeps the
+                            technical original reachable without painting it on the traveller's line). */}
+                        {stopRefusal ? (
+                          <details
+                            className="cn-stop-checkin__technical"
+                            data-testid="stop-checkin-technical"
+                          >
+                            <summary>{t("checkin.technicalDetail")}</summary>
+                            <p data-testid="stop-checkin-technical-raw">
+                              {t("checkin.technicalRaw", {
+                                reasonCode:
+                                  stopRefusal.reason_code.length > 0 ? stopRefusal.reason_code : "—",
+                                status: String(stopRefusal.http_status),
+                                message: stopRefusal.message ?? "—",
+                                details: JSON.stringify(stopRefusal.details ?? null),
+                              })}
+                            </p>
+                          </details>
+                        ) : null}
+                      </div>
                     ) : null}
                     {/* ORD-0510: the way into the container ORD-0444 built.  The wrapper, not the
                         control, stops propagation -- the row around this is itself a button
