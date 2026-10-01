@@ -13,6 +13,130 @@
 - Endpoint: local WB2api `http://127.0.0.1:7863/v1/chat/completions`
 - Credentials: process environment only; no raw credential is persisted in this tree.
 
+## Current domestic-WB2api checkpoint: Chongqing
+
+This is the fresh second-city transfer executed after the Kunming runs. It
+entered an unseeded `CN-CHONGQING` Journey with a natural-language preference,
+used the domestic DeepSeek runtime, hit a real calendar/opening gate, changed
+strategy, and completed the revised product Journey. The result is selectable
+only inside the isolated coursework estimate envelope; it is not a claim that
+UNKNOWN opening/cost facts became provider truth.
+
+### Source and runtime binding
+
+- experiment starting commit: `e593162de587f4523ab8632f77e3d2e50667888b`
+- experimental product-code commit used by this run: `46457355b054771f6c97b9fd903510c1e14515cd`
+- branch: `codex/revolution-realtrip-recovery`
+- worktree: `D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery`
+- database: `C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\citynexus-r13-metadata-fix-20260930-b.sqlite3`
+- endpoint: `http://127.0.0.1:7863/v1/chat/completions`
+- model order: `cn:deepseek-v4.1-flash` primary, `cn:glm-5.3-flash` fallback
+- this Chongqing AgentRun persisted `model_key=cn:deepseek-v4.1-flash`; no raw
+  credential was persisted in source, report, database, or commit
+
+### Real Agent entry and first machine blocker
+
+Journey `0b1c4ae1-e1e4-4e5f-8449-61779bf89dd0` entered `CN-CHONGQING` in
+`DRAFT` with no pre-authored itinerary. The user intent was:
+
+```text
+室内展览、地方工艺、安静文化空间、少走路、路线紧凑；事实不足或路线过重时主动放弃并换地点/类别；不要编造 provider、开放时间、价格或交通。
+```
+
+The real domestic AgentRun was
+`f69820f9-ecea-4cbf-8943-446f45b77525`, mission
+`25f507e4-5b02-4e88-a6eb-20703ba668f4`, trace
+`5d880f9d-9069-4e12-a64e-03f4873ce714`. Its machine trace began with
+`inspect_journey → inspect_twin → search_city_services`. Live OSM discovery
+returned eight provider-backed museum Places, including:
+
+- `real-place-cb18acfd1f4e7bf639baabfd` — 三峡博物馆;
+- `real-place-503e1999cbfa048b2cebefd8` — 桂园;
+- `real-place-582b0eeaff5b29e4bac0af89` — 同盟国驻渝外交机构旧址群;
+- `real-place-706b602f4af48527d2ec4e23` — 飞虎队博物馆.
+
+The first candidate was plan
+`e4c17219-b16e-558e-bfd6-585c42cdde8c`, using 三峡博物馆 and 桂园. It had
+real Valhalla mobility and was `COURSEWORK_ESTIMATED_FACTS`, but the actual
+product selection boundary rejected it:
+
+```text
+POST /api/v1/journeys/0b1c4ae1-e1e4-4e5f-8449-61779bf89dd0/plans/e4c17219-b16e-558e-bfd6-585c42cdde8c/select
+HTTP 422
+PLACE_CLOSED:real-place-cb18acfd1f4e7bf639baabfd
+```
+
+That was a real deterministic blocker: the captured 三峡博物馆 window was
+`Tu-Sa 10:00-17:00`, while the Journey date was Sunday 2026-10-18. No model
+prose overruled the gate and the Journey remained `DRAFT`.
+
+### Strategy pivot and successful product path
+
+The Agent then changed the candidate set rather than retrying the same plan.
+The bounded follow-up used the actual Gateway and selected two other provider
+entities from the same live catalog: 同盟国驻渝外交机构旧址群 and 飞虎队博物馆.
+Both received explicit `ESTIMATED_AGENT` hypotheses of 10:00–17:00 and zero
+minor cost for this coursework run. The canonical rows stayed unchanged:
+`opening_hours.status=UNKNOWN`, `cost_evidence.status=UNKNOWN`,
+`authority_eligible=false` for each estimate.
+
+The second composition created plan
+`45c11359-b798-5a7a-a788-cf2970ad5ff2`, version 2. It carried:
+
+```text
+authority_state: COURSEWORK_ESTIMATED_FACTS
+authority_envelope: COURSEWORK_ESTIMATE
+mobility_snapshot_id: d10c6239-ae8f-438e-a85a-08bb8fbb1257
+mobility_provider: valhalla-http
+```
+
+The product-generated mobility evidence was:
+
+```json
+{
+  "used_edge_ids": [[
+    "real-place-582b0eeaff5b29e4bac0af89",
+    "real-place-706b602f4af48527d2ec4e23"
+  ]],
+  "provider": "valhalla-http",
+  "route_provenance": "LIVE_PROVIDER_CAPTURE",
+  "fact_quality": "LIVE_PROVIDER_CAPTURE",
+  "hard_minutes": 42,
+  "hard_eligible": true,
+  "decision": "HARD_ELIGIBLE",
+  "degraded": false
+}
+```
+
+The real product calls then returned `select=200` (`PLANNED`) and `start=200`
+(`ACTIVE`). Both activities traversed the product lifecycle
+`depart → arrive → begin → complete`; no activity or mobility edge was
+fabricated. Final API/Twin truth agrees:
+
+```text
+Journey.status                 = COMPLETED
+Journey.active_plan_version_id = 45c11359-b798-5a7a-a788-cf2970ad5ff2
+Journey.current_activity_id    = null
+Twin.projection_status         = READY
+Twin.now_state                 = COMPLETE
+activity statuses              = COMPLETED, COMPLETED
+```
+
+The final plan still exposes two unresolved facts and `cost_summary.status=PARTIAL`.
+That is intentional: the estimate envelope made a coursework candidate
+possible, but did not turn UNKNOWN into FREE or LIVE. The machine receipt is a
+completed product Journey with live mobility and estimated activity facts, not
+a production-ready factual itinerary.
+
+### Chongqing result
+
+This run demonstrates transfer of the same Strategy Engine to a second fresh
+city: the first strategy was rejected by a real date/opening gate, the Agent
+changed place selection, a new plan crossed deterministic selection, and the
+Journey completed. The remaining frontier is to repeat the same transfer with
+the lab estimate envelope disabled and acquire corroborated opening/cost facts
+before selection; this run does not claim that stronger production state.
+
 ## Current domestic-WB2api checkpoint: Kunming
 
 This is the latest R14 execution after the Guilin checkpoint. The same
