@@ -234,7 +234,12 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
 
           {/* ORD-0528: "share this picture" reuses the trip's own grant door -- it does not open a
               second write endpoint and does not mint a second token. The sentence below is only ever
-              the server's list door agreeing that the row exists. */}
+              the server's list door agreeing that the row exists.
+              ORD-0541: agreeing can happen two ways -- the list door already had a standing
+              LINK_READ row, or this press wrote one and the read-back carries it. Those are
+              different facts about what just happened to the traveller's trip, so they are two
+              sentences, and neither is chosen by a client-side boolean: `reused` comes from which
+              of the server's answers the link was taken out of. */}
           <button
             type="button"
             className="v8-quiet-button cn-poster-share"
@@ -260,7 +265,10 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
               data-share-state={share.state}
             >
               {share.state === "CONFIRMED"
-                ? t("poster.shareDone", { rows: share.rows_read, grant: share.grant_id })
+                ? t(share.reused ? "poster.shareReused" : "poster.shareDone", {
+                    rows: share.rows_read,
+                    grant: share.grant_id,
+                  })
                 : t(SHARE_FAILURE_KEYS[share.reason], { status: share.http_status })}
             </p>
           )}

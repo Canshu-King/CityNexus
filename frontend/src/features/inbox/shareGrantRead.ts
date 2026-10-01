@@ -29,6 +29,17 @@ export type GrantRow = {
   visibility: string;
   expires_at: string | null;
   revoked_at: string | null;
+  /**
+   * ORD-0541: the door has always sent this (`ShareGrant.token`, `backend/app/schemas.py:904` -- "list
+   * answers carry it so the owner can build or revoke the link"), and this file left it off the row
+   * because nothing here needed it. Reusing an existing link instead of minting a second grant needs
+   * it: a row without its token is an id the traveller cannot do anything with.
+   *
+   * Optional, and deliberately so. Nothing in this module's own reading depends on the field, and the
+   * claim it exists to keep making -- "which authorization rows exist, at which tier, with which
+   * server-recorded instants" -- says nothing about reachability and still says nothing now.
+   */
+  token?: string;
 };
 
 export type GrantRead =
