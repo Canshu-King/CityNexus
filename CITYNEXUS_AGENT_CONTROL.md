@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 03:13 · day16 换代完成：前端 :4783 与后端 :4787 双双到回收站归属代，抽屉里「回收站」在屏、零 pageerror · 尖锚 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`
+
+**〇、链的状态（落地后现读）**
+
+- 前端 :4783 → `_build_day16`：主 JS 资产实测 `http_status=200`、`1,594,709` B（DIMENSION 字节数）、`text/javascript`（尖 be3edfc3 构建），入口 `/assets/index-icyZZmik.js` 一百五十九万四千七百零九 B `text/javascript`；day15 的 JS 仍在 union 里可达（`http_status=200` 同形制验证）；v10-sw.js 两千零五十五 B 照旧。先起后停（4784 预验 → 停 day15 → 起 day16），终验新 PID 61900。
+- 后端 :4787 → `_serve_be3edfc3`（尖整树导出）+ `_cmdr_canary_day16.db`（自 day15 副本再复制，原件不动），启动 `.bat` 同 day15 形制，新 PID 1992，`/api/v1/demo/scene` `http_status=200`。
+- 屏面探针（备用口预验时量的，端口形制同 01:45 块记录），`_day16_recycle_probe.json`）：封存演示门 → 主壳 → 菜单抽屉打开，「回收站/找回」在屏，pageerror 零。这一格是 02:14 块探针的 day16 版。
+
+**二、旧进程停了三枚**：day15 前端与备用预验口与 day15 后端，都是本包工头自己起的（PID 记录在敲窗日志与 01:45 块），按启动记录逐枚停，无误杀。
+
+**三、换代语义**
+
+本代进线的新能力：分享幂等（前后端齐）、回收站按席位回答归属（前后端齐）、日序供给加宽、徽章文案表、消费面读数。手机连局域网 :4783 即为最新代；真机五格仍等用户手机上线，桌面侧探针不替代真机。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0513 补件 · `de` 不可得的理由进证据件头，外加那 12 枚锁死件具名（车道 `1ba48dbf`，r4）
 
 - 裁语（包工头 02:35 裁语的收藏那条）两句都办：① 理由句写进证据件头；② 十二枚 scratch `.db` 不杀进程硬删、具名留在块里。产品字节本件 0 改动，`refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r3` 仍是 `9ad1a698815189d2204ee660b653c8ae0aa071d8`，已入账的 0222 块所述读数一字不动。
