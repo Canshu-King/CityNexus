@@ -3,16 +3,159 @@
 ## Machine checkpoint
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
-- Final experimental code SHA: `c53df8e6`
-- Report closure commit: `58b1a4d2` (this report update; final tree commit follows)
+- Final experimental code SHA: `46457355b054771f6c97b9fd903510c1e14515cd`
+- Report closure commit: pending (this report update follows the code commit)
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r13-metadata-fix-20260930-b.sqlite3`
 - Runtime: `HERMES_COMPAT_ENDPOINT`
-- Model used for the successful recovery run: `cn:glm-5.3-flash`
-- Fallback configured: `cn:deepseek-v4.1-flash`
+- Model order for the current recovery run: `cn:deepseek-v4.1-flash` → `cn:glm-5.3-flash`
 - Endpoint: local WB2api `http://127.0.0.1:7863/v1/chat/completions`
 - Credentials: process environment only; no raw credential is persisted in this tree.
+
+## Current domestic-WB2api checkpoint: Kunming
+
+This is the latest R14 execution after the Guilin checkpoint. The same
+strategy/agent path entered a new unseeded city, used domestic WB2api, selected
+a coursework-envelope plan, started the trip, handled a controlled closure,
+and completed the revised Journey.
+
+### Source and runtime binding
+
+- starting source commit: `052d4a604202f9f95a6b91ddac90b16ef7275be4`
+- final experimental code commit: `46457355b054771f6c97b9fd903510c1e14515cd`
+- branch: `codex/revolution-realtrip-recovery`
+- worktree: `D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery`
+- database: `C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\citynexus-r13-metadata-fix-20260930-b.sqlite3`
+- endpoint: `http://127.0.0.1:7863/v1/chat/completions`
+- domestic model order: `cn:deepseek-v4.1-flash` primary, `cn:glm-5.3-flash` fallback
+- raw credentials: process-only; none persisted in source, report, database, or commit
+
+The first Kunming AgentRun was `5f5e8ae0-c858-4931-bb23-aae014dab237` and
+completed real inspect/search/estimate/generate tool work. The later recovery
+AgentRun was `9e312262-bf3c-4a2c-966d-4319cfaab0f1`; DeepSeek was attempted as
+the primary domestic model and the persisted run fell back to GLM after the
+primary response failed. The run's tool trace is still authoritative evidence;
+model narration is not counted as a product decision.
+
+### Same-city product path
+
+Journey `4d50d0b8-51b1-498f-a0e9-33b775b80df5` entered `CN-KUNMING` with no
+golden itinerary. Live OSM discovery materialized eight provider-backed Places.
+The strategy loop retained canonical UNKNOWN opening/cost fields and used only
+explicitly labelled `ESTIMATED_AGENT` strategy hypotheses where the course
+experiment needed a bounded candidate. In particular:
+
+- `real-place-6ecfee02978665da62454688` — 盘龙区图书馆 / Kunming Children’s Library;
+  canonical opening and cost stayed UNKNOWN, with a non-authoritative agent estimate.
+- `real-place-018894348601730c92ddab91` — Prague Bistro; a bounded agent estimate
+  supplied the coursework candidate without changing provider truth.
+- `real-place-f4af94a7bb144e4d08300ef8` — Salvador’s Cafe; the provider/Nominatim
+  tags supplied `http://www.salvadors.cn/` and `Mo-Su 09:00-23:00`, but no
+  structured cost authority was invented.
+
+The selected provisional plan was `8fdc316b-6c0c-5438-9e91-2816cda637d6`,
+with `authority_state=COURSEWORK_ESTIMATED_FACTS`, `selectable=true` only
+inside the isolated lab estimate envelope, and mobility provider
+`valhalla-http`. The real baseline leg was:
+
+```text
+real-place-018894348601730c92ddab91
+  -> real-place-6ecfee02978665da62454688
+minutes: 34
+provider: valhalla-http
+route_provenance: LIVE_PROVIDER_CAPTURE
+decision: HARD_ELIGIBLE
+baseline_snapshot: d490eb21-0702-4cff-9fee-52fcdce6e7ac
+```
+
+The plan was selected and started through the product API. Prague Bistro was
+advanced through `depart → arrive → begin → complete`; the Journey cursor then
+pointed to the library. No synthetic `used_edge_ids` or eligibility receipt
+was added.
+
+### Real disruption, agent critique, bounded repair, rerun
+
+Controlled event `0df8a600-51c5-4fcc-9dd5-caf3ebe2a574` was a deliberately
+labelled `SIMULATED` `CLOSURE` of the current library activity
+`8328b630-59ad-5d4d-9a50-5355807ec83a`. Its payload carries
+`COURSEWORK_CONTROLLED_CLOSURE` and `simulation_only=true`; it is not LIVE.
+
+Hermes first inspected Journey/Twin, listed replans, and requested a real
+replan. The deterministic recovery engine produced proposal
+`9944425c-72bc-4ffe-bf71-efa5e0bbec78`:
+
+- family: `F1_OPTIONAL_REMOVAL`;
+- kept: Prague Bistro;
+- removed: the closed library;
+- proposed PlanVersion: `33ca54c9-a67e-4c11-abb2-c8fe60ef6382`;
+- incident mobility snapshot: `5ec14999-1ca8-48f1-bfa1-42a1f95d6a8b`;
+- incident evidence: Valhalla runtime capture, 34 minutes, not mock;
+- hard constraints: passed;
+- utility: `0.76`.
+
+Before the repair, acceptance stopped at the shared truth boundary with:
+
+```text
+HTTP 409
+replan does not preserve the current execution position
+Journey.status = ACTIVE
+proposal.status = PRESENTED
+```
+
+Hermes did not claim success. The bounded product repair in
+`backend/app/main.py` now distinguishes a genuine terminal disruption from a
+stale child plan. It requires the raw event to identify the actual current
+activity, limits the event to `CLOSURE`/`WEATHER`, rejects terminal rows as a
+new cursor, requires every child activity to be terminal, marks the disrupted
+base activity `SKIPPED` with reason
+`ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED`, records an outcome event, and moves
+the Journey to `COMPLETED`. An ordinary missing-cursor replan still returns the
+original 409.
+
+The focused regression is
+`backend/tests/test_r14_terminal_disruption_recovery.py`; it exercises the
+same authority path and also proves a same-sequence terminal child row is not
+mistaken for a live cursor.
+
+The same Agent Gateway was rerun after the repair and returned:
+
+```text
+decision: ALLOW_AUTO
+executed: true
+reason_codes: DELEGATION_POLICY_MATCHED, DETERMINISTIC_GATE_VERIFIED
+proposal.status: ACCEPTED
+Journey.status: COMPLETED
+Journey.active_plan_version_id: 33ca54c9-a67e-4c11-abb2-c8fe60ef6382
+Journey.current_activity_id: null
+Twin.projection_status: READY
+Twin.current_activity_id: null
+```
+
+The final child has no remaining leg, so its actual `used_edge_ids=[]` is the
+truthful zero-leg result. The real baseline edge and hard eligibility receipt
+remain in the accepted proposal evidence; no route edge was synthesized for
+the terminal child. The raw simulated closure remains `ACKNOWLEDGED`, which
+means the trigger was recorded and acted on; it is not relabelled LIVE or
+silently erased.
+
+### Kunming focused gate
+
+```text
+uv run pytest tests/test_r14_terminal_disruption_recovery.py \\
+  tests/test_agent_mission_runtime.py \\
+  tests/test_v14_grounded_adaptive_recovery.py \\
+  tests/test_v1923_final_code_gate.py \\
+  tests/test_replan_completion_truth.py \\
+  tests/test_sol_concurrency_and_remap.py -q
+58 passed, 1 warning
+```
+
+The next autonomous experiment is a fresh active Kunming Journey with a
+non-terminal replacement candidate, so the agent must choose between retaining
+the current strategy and switching to a genuinely different place rather than
+only exercising terminal removal. The current checkpoint is already pushed to
+the isolated branch; no authority/mainline merge was performed.
 
 ## Current domestic-WB2api checkpoint: Guilin
 
