@@ -1,6 +1,0 @@
-=== ORD-0399 round 2: the one arm only on the rebased candidate, run alone on both trees ===
-node: tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match
---- tree=_qoder_lane_ord0399_restore head=e3f6bbe0ef078db8c89c8721bfbac2219e4ac0cc
-    6 passed, 1 xfailed, 2 warnings in 3.32s
---- tree=_qoder_lane_ord0383_slice1_base head=e7286dfd47db2dd9a1420867dd534b906b2d032a
-    6 passed, 1 xfailed, 2 warnings in 3.81s

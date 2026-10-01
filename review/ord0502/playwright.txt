@@ -1,9 +1,0 @@
-Error: No tests found.
-Make sure that arguments are regular expressions matching test files.
-You may need to escape symbols like "$" or "*" and quote the arguments.
-
-
-npm warn "playwright.ord0502-Q.config.ts" is being parsed as a normal command line argument.
-npm warn Unknown cli config "--config". This will stop working in the next major version of npm.
-npm warn Unknown cli config "--reporter". This will stop working in the next major version of npm.
-[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4612 backend=:4611 db=sqlite:///D:/moodle/_ord0502/ORD0502-175049.db ai=inherited from the environment reuseExistingServer=true

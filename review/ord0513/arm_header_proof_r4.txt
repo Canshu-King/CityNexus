@@ -1,0 +1,5 @@
+r3 arm blob = 738258025e0dff924802a05df1dfd3b50043e7ab
+r4 arm blob = 131944410ddfa1a3f51f4fbed6380bfb58f70dc1
+added 7 removed 0, all inside the leading comment: True
+code below the header identical: True
+node --check rc: 0

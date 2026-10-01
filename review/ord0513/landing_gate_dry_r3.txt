@@ -1,0 +1,7 @@
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7892', 'HTTP_PROXY': 'http://127.0.0.1:7892'}, 'refused': [], 'action': 'KEEP_PROXY'}
+verdict=READY_TO_LAND mode=DRY_RUN tip=5a4cdbd26d cand=9ad1a69881 ff=True ahead=1 behind=0 intersection=0
+product introduced: backend/app/main.py
+gate: {"collect_exit": null, "test_exit": null, "summary": null, "blob_equality_all": true}
+scratch swept: snap_preflight_021056
+receipt=_cmdr_preflight_ORD-0513_021056.json (2934 B) -> publish with publish_evidence_gated_r1.py --local _cmdr_preflight_ORD-0513_021056.json --path evidence/cmdr-landing-<order>-<hhmm>/preflight_r1.json
+PF_RC=0

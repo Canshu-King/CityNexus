@@ -1,7 +1,0 @@
-marker_probe http_status=200 rows=1
-before {"day_count": 1, "activities": 6, "distinct_activity_days": ["2026-10-10"]}
-patch_journey_end_at_plus_one      http_status=200 bytes=475
-poi_import_add_second_day          http_status=201 bytes=468
-after {"day_count": 2, "activities": 7, "distinct_activity_days": ["2026-10-10", "2026-10-11"]}
-receipt D:/moodle/_qoder_e766b154_ord0528_20261001/run/write_route_walk_8777_CNX-ORD0541RC.json
-DISTINCT_DAYS=2 DAY_COUNT_SERVER_PROJECTION=2

@@ -1,2 +1,0 @@
-OpenAPI 3.1.0; formal 173; runtime 173; missing 0; extra 0
-schemas formal 85; generated 85; missing 0; extra 0

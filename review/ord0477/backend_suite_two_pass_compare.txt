@@ -1,6 +1,0 @@
-TIP pass1: 10 failed, 1486 passed | pass2: 10 failed, 1486 passed
-CUT pass1: 11 failed, 1501 passed | pass2: 11 failed, 1501 passed
-TIP flaps across its own two passes (0): none
-CUT flaps across its own two passes (2): tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned, tests/test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment
-CUT reds present in BOTH cut passes and in NEITHER tip pass: none
-stable tip reds (both passes): 10
