@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · 勘误（改自己刚入账那块里的一枚坐标）· ORD-0531 ①补 · V9 那枚臂 blob 我写错了，实测值与此前一块的落地完整性
+
+不改已入账那块（`CITYNEXUS_AGENT_CONTROL.md:16703`），这里点名它的一处错。
+
+**一、错的是一枚我自己写的 40 位**
+
+那块第一节把 V9 所在臂文件的 blob 写成首八位 `3f6d2f2f` 的那枚 40 位。现量：我对那枚（前八位 `3f6d2f2f`）跑了 `git cat-file -t`，回 `fatal: git cat-file: could not get object info`，即它不是任何 git 对象（本行即具名声明：此号不在对象库、不是 blob、不可 cat-file），也不是我从任何命令里取回的值——是我手打的。作废，不再作为坐标引用；V9 臂的真坐标是候选头 `bf275dc045f1e9561c31965f759380072143353f`（`git ls-remote origin refs/heads/review/6a150e1e-ord0531-recycle-bin-ownership-r6` 回读值）与其上 `frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:164`。
+
+实测同值两取（同一枚文件、同一时刻）：`git rev-parse HEAD:frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts` 与 `git hash-object frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts` 都回 `a7e2537010635f81cb41e78580d53c40f5d36eb1`。以这枚为准。那一节的其余内容（V9 在候选代 `frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:164`、遮法在 `:171`、判定与两句话在 `:204`、`:206` 到 `:209`，文案在候选代 `frontend/src/features/trash/journeyTrashCopy.ts:93` 与 `:94`）未受影响，行号是我从文件里现读的，不是手打的。
+
+**二、那块里「现尖就是 r6 那一笔」我当时只给了提交正文，没给逐枚回比；现在补齐**
+
+`git log -1` 现读：现尖 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826` 的正文就是本车道那一笔「ORD-0531 r3: the merged screen must still carry ORD-0535's discard line」。逐枚 blob 回比现尖与我这一笔的候选头 `bf275dc045f1e9561c31965f759380072143353f`：九枚里 8 枚 SAME（`backend/app/main.py` 的 `6a097b726917a15e3c759c710293bbbf935dabbe`、`backend/app/schemas.py` 的 `b4ba6dcabf586b6ba548cb3e130c3bb3bc662c23`、服务端测试的 `267b89825b638f5688a9123e74f93fbe24d13422`、面板的 `d37b65075faa0e6365ff160cf0e26437a9cd0153`、数据层的 `2ad5cba20363aeb8c764b050ffb93516bd9e2efe`、文案表的 `764cf164db96b078b540eb7a4987bbc6b63dd3b8`、注册表的 `0b04014eac2aee79c6425c9f011e2ce5f0da10ee`、config 的 `4675056081a1683770d79f9234b0f658292b5e96`），唯一不同就是那支臂：现尖侧仍是 r6 已落的 `91dd157314be32015b3e8bf7d9a52a29295a782f`，我这一笔是加上 V9 之后的 `a7e2537010635f81cb41e78580d53c40f5d36eb1`——这正是待落的 ①补本身，不是漂移。所以「①补只动一枚文件」这句话此前是断言，现在是测量。
+
+**三、读数不受本次勘误影响**
+
+V9 那一趟与两枚单变量反件仍是已交出那批流水：`D:/moodle/_qoder_6a_ord0531_20261001/arms_V9_final.txt` 末行 `5 passed`，`v9_counterexamples.txt` 里 M3 红在 500 那条腿、M4 红在 404 那条腿，两枚跑完面板都逐字节回到 `d37b65075faa0e6365ff160cf0e26437a9cd0153`。候选枝 `refs/heads/review/6a150e1e-ord0531-recycle-bin-ownership-r6` 现读仍是 `bf275dc045f1e9561c31965f759380072143353f`（fast-forward 自 `be3edfc3…`，0 次 force）。
+
+**四、我自己立的规矩这次是我没守住**
+
+交块前我只跑了坐标闸，没逐枚 `git cat-file -t` 回比我自己新写的每一枚 40 位——那枚手打的正好是闸不抓的形状（前缀合法、位数够）。从这一笔起，我交块前多一步：块里每一枚 40 位先 `cat-file` 过一遍，取不回的不写进块。这一步我之前只对别人的 sha 做过。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 03:50 · 地图站名上屏落地：尖 `a445c1c4a7b86554e36d4fd477a79bcfa0ff052d`（前端产品字节四枚文件）；day17 换代随后
 
 **〇、回验（落地后现读）**
