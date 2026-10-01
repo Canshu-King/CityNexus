@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### bac10f40 14:04 · ORD-0530 英文臂续件（13:49 那块之后线又走了 5 跳）：在被换掉的那枚文件的新字节上重跑四臂，整屏文本逐字相同 = True；一枚缺证具名
+
+**〇、枝与字节面**
+- 枝 `refs/heads/review/bac10f40-ord0530-en-arm-readings-r1` 从 `c0bc45c20cf96faa252dd4d855bbf4def7863404` 前跳到 `fb0e66d1ca7f098daab8922c73359a4de58c4864`（fast-forward，不强推、不改已发布的那一跳），服务端 `git ls-remote` 回读 `fb0e66d1ca7f098daab8922c73359a4de58c4864`；现尖 `b604f50d1645d028c2dd1d4406caee8198a3bc2d`，我这枝 behind=5。锚 `fb0e66d1ca7f098daab8922c73359a4de58c4864`。
+- 交付面 `git diff --name-only 514b397f96f3b5165b24865f4a544ab6f8020084 fb0e66d1ca7f098daab8922c73359a4de58c4864`：22 枚，产品字节 0 枚，全在 `evidence/bac10f40-ord0530-en-arm-20261001/`。只读复切 `git merge-tree --write-tree b604f50d1645d028c2dd1d4406caee8198a3bc2d fb0e66d1ca7f098daab8922c73359a4de58c4864` 合出的树里，我这些文件逐字节相等 22/22。锚 `20e3f7070724ab30ed5818487f69cd028ce4eaad`。
+- 这一跳新入库 22 枚里我新加的复现件是：`replay_receipt_r6.json` blob `8c139662e96377ddb753828d2a7802f2fbd49662`、`footprints_arms_r6_on_b604f50d.json` blob `46730e2ac0aad7a3b93a2b29a42225c34a60038c`、`stack_receipt_r5.json` blob `36187cf054c7e14178f1890add830b068196786f`、仪表 `ord0530_stack_r5.py` blob `e80103d6f280317675ac47d1cb7362e48d333466`、改过一处的 `ord0530_arms_en_states_r1.mjs` blob `050adcb940d1732e69aca361f0ff3cafd0e19a23`。锚 `e80103d6f280317675ac47d1cb7362e48d333466`。
+
+**一、线动了哪一枚，哪一行读数是旧的**
+- `514b397f96f3b5165b24865f4a544ab6f8020084` 到 `b604f50d1645d028c2dd1d4406caee8198a3bc2d` 之间线走了 5 跳：b604f50d ORD-0533 r3: the dictionary insert re-cut onto ｜ eba20474 ORD-0535: the recycle-bin row says which disca ｜ 79b2007e ORD-0529 r2: the same cell replayed on the cur ｜ eaeb3cb1 ORD-0533 r3: the dictionary insert re-cut onto ｜ 463606e5 ORD-0535: the recycle-bin row says which disca。这 5 跳里改了 45 枚文件，其中属于足迹屏那四枚产品字节的有 `frontend/src/app/v8PanelRegistry.tsx`（1 枚）—— 正是上一块（块头 13:48、落件名 `bac10f40_1349.md`）§〇 点过名并逐枚记了 blob 的那枚挂载文件。锚 `405ba32b4343c6372a92cc3441b52d0b1ff98308`。
+- 更正格（点名受影响的已发布读数）：13:49 那块 §〇 第三行写着「现尖上 v8PanelRegistry 的 blob = `53c3d37b6cae7b36cf5831680db17dc04722f3e9`」。那句话只对那块取数的那一代（`514b397f96f3b5165b24865f4a544ab6f8020084`）成立；现尖 `b604f50d1645d028c2dd1d4406caee8198a3bc2d` 上那一枚已是 `405ba32b4343c6372a92cc3441b52d0b1ff98308`。判据本身不变，而且这块不再靠推理：第二节把那一枚文件换成 `405ba32b4343c6372a92cc3441b52d0b1ff98308` 的新字节，在同一份分母上重跑，整屏文本逐字相同。锚 `53c3d37b6cae7b36cf5831680db17dc04722f3e9`。
+
+**二、在新字节上重跑（同一台机、同一份拷贝库、只换那一枚文件的产品字节）**
+- 四臂（en 与 zh × 390x844 与 1280x900）：`all_checks_pass = True`，屏上 SCREAMING_SNAKE 0 枚、裸 uuid 0 枚、机词四式合扫 0 枚；每行仍是 4 格，日行两枚仍是 `Wed, September 30` / `Thu, October 1`（中文 `9月30日周三` / `10月1日周四`）。锚 `46730e2ac0aad7a3b93a2b29a42225c34a60038c`。
+- 跨代次对照：把 `514b397f96f3b5165b24865f4a544ab6f8020084` 那一代与 `b604f50d1645d028c2dd1d4406caee8198a3bc2d` 这一代的整屏文本与判据集排序后比，4 臂全部逐字相同 = True —— 换掉那枚挂载文件没有改变屏上任何一句话。锚 `8c139662e96377ddb753828d2a7802f2fbd49662`。
+- 失败态只复跑 `unreachable` 一臂：屏上「This screen never reached the server, so it is saying neither that there are stamps nor that there are none.」与表里英文逐字等 = True，行 0、日 0，`reason_code` 出现在屏上 = False；同一时刻我用 API 直接再问一次仍 `http_status=200`。锚 `78c214d847e21247112366a15d2dcbd6a590c13c`。
+- `empty` 与 `refused` 两臂不在这代重跑，理由具名：它们用的那枚空行程已被第一趟通过产品自己的 DELETE 门丢进回收站，现在重跑只会读到上一次留下的状态，不是新事实 —— 需要在新代次取这两格的话，我先现建一枚空行程再跑，那是另一次量测。锚 `050adcb940d1732e69aca361f0ff3cafd0e19a23`。
+
+**三、私有栈的归属，含一枚取不到的证**
+- 端口仍由 OS 分配：前端 `:60092` → 后端 `:60091`（仪表 `ord0530_stack_r5.py`）。门回读 `http_status=200`、3 枚印、我这轮写的独有 note 在里面 = True，三个时刻是 2026-09-29T19:45:43.723717+00:00、2026-09-30T19:45:43.686035+00:00、2026-09-30T19:45:43.723717+00:00。锚 `36187cf054c7e14178f1890add830b068196786f`。
+- 具名缺证：归属常例里的 `服务字节 == 磁盘 index.html` 这一枚，在 dev server 上实测为 False —— 也就是这一证取不到，不是它成立。原因是 dev server 自己往入口加了一段 HMR 前导：多出 5 行，服务 1307 B 对磁盘 1052 B；该判断的全文在 `replay_receipt_r6.json` 的 `why_that_proof_is_unreachable_here` 字段里。所以这一轮归属由另外两证承担：四臂屏上都出现只有我库里有的那枚 note = True，以及进程 CommandLine 指向我目录的 `node_modules/vite/bin/vite.js --port 60092`。锚 `8c139662e96377ddb753828d2a7802f2fbd49662`。
+- 图三枚为证：`footprints_arms_r6_on_b604f50d_en_phone_390x844.png` blob `e0e0271ca172046e414174588dcab4bb87d52ace`、`footprints_arms_r6_on_b604f50d_zh_desktop_1280x900.png` blob `033cc40e4fd55055aafb49f66e559c1d9d7f40b5`、失败态 `footprints_states_r6_unreachable_en.png` blob `6c0ff401a7a5d0f5a3ec225d9fdf832cfb2f2283`。锚 `6c0ff401a7a5d0f5a3ec225d9fdf832cfb2f2283`。
+
+**四、没做的 / 仍等裁（与 13:49 那块同，一件没变）**
+- 没量实体手机、没取暗色档、没跑整套前端门；`/v8/footprints` 仍不在 `mobileRoutes`。锚 `80323a80739250c885c74e346a773c7f87984fec`。
+- ORD-0497 的指针归属（徽章盒压在针命中盒 816 px²）与 ORD-0537 的「开关抬进首屏」都还等裁；账本 `## ORDERS` 里点到我名下的派单行现读仍是 0 枚（那一段里唯一含我名的行是 13:38 那块自己的标题）。锚 `c0bc45c20cf96faa252dd4d855bbf4def7863404`。
+
+**五、现在与下一步（不用回）**：枝停在 `fb0e66d1ca7f098daab8922c73359a4de58c4864`，你走门；我不再自开新面。私有栈（前端 `:60092`、后端 `:60091`）本轮结束我停掉，端口不留给别人撞。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 13:55 · 额度恢复后第一轮：全员复工、收块十二块、落地三笔（0529/0535/0533）· 尖 `b604f50d1645d028c2dd1d4406caee8198a3bc2d`
 
 **一、复工与收件**
