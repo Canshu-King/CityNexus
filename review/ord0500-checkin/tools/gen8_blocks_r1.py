@@ -66,9 +66,9 @@ def main():
         "b_walk6": blobs["review/ord0485-phone-walk/receipts/gen6_walk_r1.json"],
     })
     exp = {}
-    for key, name in (("tip", "exposure_tip_7862c6de_r1.json"),
+    for key, name in (("tip", "exposure_tip_514b397f_r1.json"),
                       ("r2", "exposure_r2_candidate_r1.json"),
-                      ("r3", "exposure_r3_candidate_r1.json")):
+                      ("r3", "exposure_r4_candidate_r1.json")):
         d = json.load(open(os.path.join(LANE, "wt19/review/ord0500-checkin/receipts", name),
                            encoding="utf-8"))
         exp[key] = {"cells": d["cells_total"], "modules": d["modules_in_graph"],
@@ -149,7 +149,7 @@ def main():
 
 **〇、这次是真冲突，两族都活着**。落地序列器报的冲突在 checkin 那一族：ORD-0530（按天足迹）在现尖 514b397f96f3b5165b24865f4a544ab6f8020084 上往 footprint.css 追加了 40 行，我那 31 行的站行可达性块也在同一枚文件尾部——两枚都是加法，合并不肯替谁排顺序，所以手工并块：它那 40 行在前（它先落在这条线上），我这 31 行在后，两枚都保留。现读计数：`cn-footprints__day` 3 处、`/* ORD-0500` 1 处（并块由 `review/ord0500-checkin/tools/land_o0500_r4.py` 做，断言是任何一枚缺席、重复或倒序就中止）。`backend/app/main.py` 与 `contracts/openapi.yaml` 在这一批里也被别人加过行，我的落点仍是 14 增 2 删那一小块——LF 之后不再整文件对撞。**调用点按 0530 的新形状重核过**：它那一族自己也是屏内格式化（`footprintCopy.ts` 里的 `zoned()`，注释明写中文 Intl 输出读作 10月1日 周四），`FootprintPanel.tsx` 里 `formatV8Date` 命中 0 枚，所以这一族没有第二条「正文→共用 helper」的路；我那枚 `formatStampedMoment` 管的是行程屏重复打卡那一刻，它那枚 `zoned()` 管的是足迹面板的日头，两家各留各的，我不擅自合并成第三家。
 
-**〇·甲、同族里还有一处是我打断的，补在我这侧**。落地序列器没点名、tsc 点了名：我 r1 把拒绝的码收进 `facts` 时，把 `refusal` 这个名字从并集上摘掉了，而已落地的 ORD-0530 那屏 switch 的正是 `answer.refusal`（`frontend/src/features/checkin/FootprintPanel.tsx:59`）——他们那一代合上我这笔就是 `TS2339: Property 'refusal' does not exist on type '{ kind: "refused"; facts: CheckinRefusalFacts; }'`，屏直接编不过。我不裁别人的屏：名字回到结果上，值在同一处从 `facts` 读出（`checkins.ts` 里新增一枚 `refused()` 构造点，两扇门的返回都走它），他们那枚文件一行未动。改后两档 tsc 退出 {tsc_after}、build 退出 {css_tip}，候选面重出为 `{entry_after_fix}`（件 `{b_builds}`）。两侧格总数也是在这一版上重算的：现尖 6 格 / 318 模块，本候选 6 格 / 321 模块，逐规则同数、多出的格为「无」（件 `{b_exp_tip}` 与 `{b_exp_r4}`）。
+**〇·甲、同族里还有一处是我打断的，补在我这侧**。落地序列器没点名、tsc 点了名：我 r1 把拒绝的码收进 `facts` 时，把 `refusal` 这个名字从并集上摘掉了，而已落地的 ORD-0530 那屏 switch 的正是 `answer.refusal`（`frontend/src/features/checkin/FootprintPanel.tsx:59`）——他们那一代合上我这笔就是 `TS2339: Property 'refusal' does not exist on type '{{ kind: "refused"; facts: CheckinRefusalFacts; }}'`，屏直接编不过。我不裁别人的屏：名字回到结果上，值在同一处从 `facts` 读出（`checkins.ts` 里新增一枚 `refused()` 构造点，两扇门的返回都走它），他们那枚文件一行未动。改后两档 tsc 退出 {tsc_after}、build 退出 {css_tip}，候选面重出为 `{entry_after_fix}`（件 `{b_builds}`）。两侧格总数也是在这一版上重算的：现尖 6 格 / 318 模块，本候选 6 格 / 321 模块，逐规则同数、多出的格为「无」（件 `{b_exp_tip}` 与 `{b_exp_r4}`）。
 
 **零、这一轮改的是我自己那一格，不是尺**。号令者 02:01 那块把根查清了，我用自己的跑复现一遍，三枚件随候选交：同一把尺 `{exp_ruler}`（同一枚实例，三趟）量 ① 现尖 `{tip}` = {exp_tip} 格 / {exp_tip_mod} 模块，② 我 r2 那代 `{f_r2}` = {exp_r2} 格 / {exp_r2_mod} 模块，③ 本轮候选 `{cand}` = {exp_r3} 格 / {exp_r3_mod} 模块。多出来的四格逐字落在我从没打开过的两枚文件上：{exp_extra_cells}。路径是我开的：`frontend/src/features/trip/TripItinerary.tsx` 那一行把 `facts.existingStampedAt`（从服务器正文里读出来的）交给了 `frontend/src/lib/v8Formatting.ts:7` 的 `formatV8Date`，而那枚 helper 同时被 AccessPanel 与 PlanVersionHistoryPanel 调用；Q64 量的是路径不是文件归属，所以两枚面板各失免责。件 `{b_exp_tip}`（现尖 6 格那张）、`{b_exp_r2}`（我这代改前 10 格那张）、`{b_exp_r4}`（改后回到 6 格那张）。
 
