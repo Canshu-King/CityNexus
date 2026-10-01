@@ -1,0 +1,106 @@
+{
+ "order": "ORD-0506",
+ "slice": "1 (server facts on the read door)",
+ "lane": "N2",
+ "session": "9759f1ac-3d69-4688-8664-8ca954ab7737",
+ "base_generation": "514b397f96f3b5165b24865f4a544ab6f8020084",
+ "candidate_generation": "c606f13ba9afa7c196c3b3890e37556a53666885",
+ "branch": "refs/heads/review/9759f1ac-ord0506-journey-order-facts-r1",
+ "branch_readback": "c606f13ba9afa7c196c3b3890e37556a53666885",
+ "numstat": [
+  [
+   "1",
+   "0",
+   "backend/app/schemas.py"
+  ],
+  [
+   "1",
+   "0",
+   "backend/app/services.py"
+  ],
+  [
+   "140",
+   "0",
+   "backend/tests/test_qoder_ord0506_journey_order_facts.py"
+  ],
+  [
+   "9",
+   "1",
+   "contracts/openapi.yaml"
+  ],
+  [
+   "5",
+   "0",
+   "frontend/src/generated/api.ts"
+  ]
+ ],
+ "pytest": {
+  "base": {
+   "tree": "D:/moodle/_qoder_n2_0506_base/backend",
+   "arms": {
+    "rc": 1,
+    "failed_nodeids": [
+     "tests/test_qoder_ord0506_journey_order_facts.py::test_the_list_door_answers_created_at_for_every_row",
+     "tests/test_qoder_ord0506_journey_order_facts.py::test_creation_order_and_departure_order_are_different_facts",
+     "tests/test_qoder_ord0506_journey_order_facts.py::test_the_recycle_bin_row_carries_the_same_created_at_as_the_list",
+     "tests/test_qoder_ord0506_journey_order_facts.py::test_the_contract_requires_the_field_and_the_artifact_carries_it"
+    ],
+    "counts": {
+     "failed": 4
+    },
+    "summary_line": "4 failed, 2 warnings in 2.09s"
+   }
+  },
+  "candidate": {
+   "tree": "D:/moodle/_qoder_n2_ord0524_wt/backend",
+   "arms": {
+    "rc": 0,
+    "failed_nodeids": [],
+    "counts": {
+     "passed": 4
+    },
+    "summary_line": "4 passed, 2 warnings in 6.20s"
+   }
+  }
+ },
+ "artifact_reproducibility": {
+  "tool": "openapi-typescript",
+  "tool_version": "7.13.0",
+  "regenerated_equals_checked_in": true,
+  "regenerated_bytes": 287033,
+  "checked_in_bytes": 287033
+ },
+ "hot_files": {
+  "contracts/openapi.yaml": {
+   "base_blob": "e7d07c5767e86810bea6368d288bf6c7d65baaf7",
+   "tip_blob": "e7d07c5767e86810bea6368d288bf6c7d65baaf7",
+   "untouched_since_branch_point": true
+  },
+  "frontend/src/generated/api.ts": {
+   "base_blob": "c66f59928ec6e0c5fa174d249996d5e310227df1",
+   "tip_blob": "c66f59928ec6e0c5fa174d249996d5e310227df1",
+   "untouched_since_branch_point": true
+  },
+  "backend/app/main.py": {
+   "base_blob": "b1afcaf06ec446959dda8fca11df57cc702f8d3e",
+   "tip_blob": "86049dcb17b8d44ac4dc1a0b6106b8d9cbb9753b",
+   "untouched_since_branch_point": false
+  }
+ },
+ "merge_prediction": {
+  "tip": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+  "rc": 0,
+  "tree": "e87822e2ccd42982831e930f448382f54d4dd8de"
+ },
+ "blobs_on_branch": {
+  "backend/app/schemas.py": "100f259c40e9a9c3717b27785c436a45e5b3762c",
+  "backend/app/services.py": "b537b080662cbe72981e59450cd141e11d4c7865",
+  "contracts/openapi.yaml": "171d0291f72ca700f0b1bbea29d7439de98df519",
+  "frontend/src/generated/api.ts": "617ec33b89c6e30ca072e484aee4aecb58a91e92",
+  "backend/tests/test_qoder_ord0506_journey_order_facts.py": "29c39f673abcbc95c3326ac856ee578fc4c2b20f"
+ },
+ "not_in_this_slice": [
+  "arrival/departure anchors: stored in journey_trip_contexts.arrival_anchor_json, on no read door; journey_schema(item) takes one argument today, so exposing them needs a lookup per list call and a signature change at every caller",
+  "the sort control, the non-persisted toggle and the 390x844/desktop innerText readings"
+ ]
+}
