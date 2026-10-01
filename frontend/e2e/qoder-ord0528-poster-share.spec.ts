@@ -294,13 +294,28 @@ test("ORD-0528 S3 one grant, two shapes that do not look alike", async ({ browse
 });
 
 test("ORD-0528 X1 with no server confirmation the sheet does not read 'shared'", async ({ browser }) => {
-  /* Four shapes of "the server did not agree", and a real 201 in front of each of them: this arm is
-     about what the screen claims, so only the read-back is varied. The fourth is the read leg itself
-     refusing -- an exception escaping there left the button disabled and the sheet stuck on
+  /* Four shapes of "the server did not agree". Two of them refuse the write and answer the list door
+     with an empty roster; one mints a grant the read-back does not carry; the fourth is the read leg
+     itself refusing -- an exception escaping there left the button disabled and the sheet stuck on
      "Asking the server…" with no sentence at all. */
   const shapes = [
-    { name: "write_refused", create: () => ({ status: 403, body: { error: { reason_code: "NOPE" } } }) },
-    { name: "no_token", create: () => ({ status: 201, body: { id: "grant-without-a-token", visibility: "LINK_READ" } }) },
+    /* ORD-0541 changed what these two shapes have to carry. The outlet now asks the list door before
+       it writes, so by the time X1 runs, S2/S3 have left a standing LINK_READ row on this journey and
+       a press that is allowed to reuse it never reaches the create door -- the screen would read
+       "shared, reusing", and this arm's judgment ("no server confirmation -> no shared claim") would
+       be measuring a shape that never happened. The assertions are the same ones that landed; what
+       changed is that a "write refused" press needs a roster with nothing standing on it, which is
+       exactly what the same door answers on a trip nobody has shared yet. */
+    {
+      name: "write_refused",
+      create: () => ({ status: 403, body: { error: { reason_code: "NOPE" } } }),
+      list: () => ({ status: 200, body: [] }),
+    },
+    {
+      name: "no_token",
+      create: () => ({ status: 201, body: { id: "grant-without-a-token", visibility: "LINK_READ" } }),
+      list: () => ({ status: 200, body: [] }),
+    },
     { name: "row_not_listed", create: "real", list: () => ({ status: 200, body: [] }) },
     { name: "read_refused", create: "real", list: () => ({ status: 500, body: { error: { reason_code: "INTERNAL" } } }) },
   ];

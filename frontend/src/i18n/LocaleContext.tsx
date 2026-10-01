@@ -977,16 +977,19 @@ const en: Dict = {
   /* ORD-0528: "share this picture". One outlet, one door (the trip's own share grants), and the
      sentence below is only ever the server's list door agreeing that a row exists -- so each of the
      four ways that agreement can fail has its own words. None of them quote the response body: the
-     only upstream value these lines carry is the HTTP status the door itself chose. */
+     only upstream value these lines carry is the HTTP status the door itself chose.
+     ORD-0541: agreement can arrive two ways, and the two are different claims about this trip, so
+     they are two lines. Both still open with the same confirmation word the landed X1 arm measures. */
   "poster.share": "Share this picture",
   "poster.sharing": "Asking the server…",
-  "poster.shareDone": "Shared. The server's own grant list answers with {rows} row(s) for this trip, and this link's row is {grant}.",
+  "poster.shareDone": "Shared. This press wrote a new grant: the server's own grant list answers with {rows} row(s) for this trip, and this link's row is {grant}.",
   "poster.shareErrRefused": "Not shared: the server refused this grant write (status {status}).",
   "poster.shareErrNoToken": "Not shared: the write came back without a token, so there is no link to hand over.",
   "poster.shareErrNotListed": "Not shared: the server's grant list does not carry the row this device just wrote.",
   "poster.shareErrRevoked": "Not shared: the row on the server's list carries a revocation, so the link is already withdrawn.",
   "poster.shareErrReadUnanswered": "Not shared: the grant list gave no answer (status {status}), so this device has nothing to confirm.",
   "poster.shareLinkLabel": "The link that opens this picture for somebody else",
+  "poster.shareReused": "Shared. This press wrote nothing: the server's grant list for this trip already carried a standing link-readable row, {grant}, and that is the link handed over ({rows} row(s) read).",
   "mapComp.yourLocation": "Your location · {n} m accuracy",
   "mapComp.journeyMap": "Journey map",
   "mapComp.routeContext": "Route context",
@@ -2053,13 +2056,14 @@ const zhCN: Dict = {
   "poster.fail.noDownload": "这台浏览器不给我们递文件的出口。",
   "poster.share": "分享这张长图",
   "poster.sharing": "正在向服务器登记…",
-  "poster.shareDone": "已分享。服务器自己的授权列表对这趟旅行答出 {rows} 条，这条链接对应的那一条是 {grant}。",
+  "poster.shareDone": "已分享：这一次按下确实写入了一条授权。服务器自己的授权列表对这趟旅行答出 {rows} 条，这条链接对应的那一条是 {grant}。",
   "poster.shareErrRefused": "没有分享出去：服务器拒了这次授权写入（状态码 {status}）。",
   "poster.shareErrNoToken": "没有分享出去：写入答回来了，但没有交出暗号，所以没有链接可以给你。",
   "poster.shareErrNotListed": "没有分享出去：服务器回读的授权列表里没有这台设备刚写入的那一条。",
   "poster.shareErrRevoked": "没有分享出去：服务器列表上的那一条带着撤销记录，链接已经被收回。",
   "poster.shareErrReadUnanswered": "没有分享出去：授权列表没有给出答复（状态码 {status}），这台设备无从确认。",
   "poster.shareLinkLabel": "让别人打开这张长图的链接",
+  "poster.shareReused": "已分享：这一次按下没有再写入。服务器对这趟旅行的授权列表里本来就带着一条仍然有效、档位为链接可读的记录 {grant}，交给你的长图地址就是它那一条（读出 {rows} 条）。",
   "mapComp.yourLocation": "你的位置 · {n} 米精度",
   "mapComp.journeyMap": "行程地图",
   "mapComp.routeContext": "路线上下文",
