@@ -473,14 +473,48 @@ paths:
         ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL.
         No pagination and no per-traveller scope yet; a trip moved to the recycle bin by
         `deleteJourney` is absent here and still answers `getJourney`.
+        ORD-0477 adds the order a traveller reads that list in: one named tier per call, and
+        no tier changes which rows appear.
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          # ORD-0477: three tiers, named in `backend/app/schemas.py::JOURNEY_SORT_TIERS`, and the
+          # door checks the word itself rather than letting a schema answer it with an unnamed 422.
+          # Omitting `sort` is not a fourth tier and is not a refusal: it keeps the order this door
+          # shipped before tiers existed, `journeys.created_at` then `journeys.id`.
+          # The instant tiers are read as instants, not as characters: `journeys.start_at` and
+          # `journeys.updated_at` are TEXT columns this server writes in more than one legal
+          # spelling (`+08:00` rows and `+00:00`/`Z` rows coexist), and a stored value carrying no
+          # offset is read as UTC.  `TITLE` is case-folded Unicode code-point order -- it is
+          # deliberately not pinyin and not stroke order, which a Chinese-speaking traveller has to
+          # be told rather than shown.
+          description: >-
+            RECENT_UPDATE: `journeys.updated_at` newest first.  DEPARTURE_DATE: `journeys.start_at`
+            earliest first.  TITLE: `journeys.title` case-folded, ascending.  Ties break on
+            `journeys.id` ascending under every tier.  Any other word is refused by name.
+          schema:
+            type: string
+            enum: [RECENT_UPDATE, DEPARTURE_DATE, TITLE]
       responses:
         '200':
-          description: Journeys not deleted
+          description: Journeys not deleted, in the order the tier names (or in `created_at, id` order when no tier was sent)
           content:
             application/json:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/Journey'}
+        '422':
+          description: >-
+            error.code = VALIDATION_ERROR with error.reason_code = JOURNEY_SORT_NOT_RECOGNISED, when
+            `sort` was sent a word that is not one of the three tiers.  The door refuses rather than
+            answering in its own default order: a list that looks sorted but was not sorted by the
+            word the traveller asked for is the failure this order forbids.  `error.details` names
+            the word sent and the tiers supported.  An empty `sort=` is a sent word, so it is
+            refused too.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
     post:
       operationId: createJourney
       requestBody:
