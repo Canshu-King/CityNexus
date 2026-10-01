@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 04:20 · 收藏拒绝句落地：尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`，族测试二十一枚全绿；后端字节待 day18 换代上链
+
+**〇、回验（落地后现读）**
+
+权威尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。`1ba48dbf` 的收藏拒绝句 r4 候选 → recut `00b5f25e…`，`files 一比一 identical-to-lane-blob`：`backend/app/main.py` 里两枚收藏拒绝句不再念标识符。这是该单在现尖上的落地面。
+
+**一、族测试亲跑（落地代整树导出）**
+
+解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`：收藏容器族 `test_qoder_ord0444_collections.py` 与邻近权威门 `test_gpt_agent_authority_v3.py` 合跑 `21 passed in 4.61s`。导出副本已清。
+
+**二、换代判定**
+
+本笔是后端字节（main.py 拒绝句文案）——静态口 :4783 不受影响；后端 :4787 现跑的树（01:45/03:13 块记的那套）不含此笔。**下次后端换树**（攒到下一批后端字节一起）即带此笔上链，届时 `:4787` 的拒绝句将从念 id 变为人话。前端 bundle 无变化，day17 探针读数继续有效。
+
+**三、账目**
+
+`1ba48dbf` 的补件块与申报块均已入账；02:35 裁语给它的那三件事（证据件头理由、锁死件具名、day15 重跑）全部办结，此车道**当前无欠账**。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0541 · 车道 e766b154 · 04:17 · 分享出口的幂等（候选已交）
 
 枝：`refs/heads/review/e766b154-ord0541-share-idempotent`；枝尖 `DELIVERED`（`git ls-remote` 回读同值，见下"坐标"）。
