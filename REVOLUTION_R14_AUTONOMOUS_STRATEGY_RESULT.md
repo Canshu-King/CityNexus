@@ -168,6 +168,90 @@ unselected. This replay proves the estimate is strategy evidence only: turning
 the isolated lab envelope off does not turn UNKNOWN into FREE, LIVE, or
 authoritative selection.
 
+## Current domestic-WB2api checkpoint: Chengdu outdoor contrast
+
+The next live run used a materially different natural-language intent in a
+third unseeded city. It is the outdoor polarity contrast to the Chongqing
+indoor/cultural run above, not a score-only variation.
+
+### Agent trace and live discovery
+
+Journey `aca99ce4-3ffd-463b-9e8d-770c6fd6e07b` entered `CN-CHENGDU` as `DRAFT`.
+The user intent compiled to exactly:
+
+```text
+objective_codes: [PREFER_OUTDOOR]
+preferences: {outdoor: true}
+```
+
+The domestic DeepSeek run was
+`b79b392a-6c17-431b-a5e0-8829d09c87ec`, mission
+`e1b4b144-a6de-4756-a433-fe39d92293bf`, trace
+`48684bb7-f6ae-42c2-a3be-9e8bb1650219`, model
+`cn:deepseek-v4.1-flash`. Its useful tool path was:
+
+```text
+inspect_journey
+→ inspect_twin
+→ search_city_services (LIVE_PROVIDER, 8 park/garden Places)
+→ acquire_place_facts (人民公园, Nominatim exact-entity match)
+→ acquire_place_facts (三洞古桥公园, Nominatim exact-entity match)
+→ acquire_place_facts (成华公园, Nominatim exact-entity match)
+→ estimate_place_facts (five real outdoor candidates)
+→ generate_plans
+```
+
+The model did not invent a museum or indoor venue. Live Overpass returned
+eight provider-backed outdoor candidates, including People’s Park, 盆景园,
+成华公园, 后子门游园, and 三洞古桥公园. The three secondary-source
+acquisition receipts all reported `matched_provider_entity=true`; Nominatim
+extratags were either a real Wikidata/Wikipedia pair or empty. No opening or
+cost fact was promoted from those lookups: each receipt retained
+`known_opening_count=0`, `known_cost_count=0`, and canonical UNKNOWN values.
+
+### Intent-driven plan and execution
+
+The Agent selected real provider Places
+`real-place-18f19b3c8314398de9276a65` (人民公园) and
+`real-place-589f196c84b73844c0e9d552` (盆景园), with explicit
+`ESTIMATED_AGENT` hypotheses only inside the lab envelope. Plan
+`aefa60a3-2f33-5319-92ce-1697bb03de52` was generated as
+`COURSEWORK_ESTIMATED_FACTS`; canonical opening/cost stayed UNKNOWN and the
+plan explanation retained `cost_summary.status=PARTIAL`.
+
+The real product start receipt contained:
+
+```json
+{
+  "used_edge_ids": [[
+    "real-place-18f19b3c8314398de9276a65",
+    "real-place-589f196c84b73844c0e9d552"
+  ]],
+  "provider": "valhalla-http",
+  "route_provenance": "LIVE_PROVIDER_CAPTURE",
+  "hard_minutes": 4,
+  "hard_eligible": true,
+  "decision": "HARD_ELIGIBLE",
+  "degraded": false
+}
+```
+
+`select` returned `200`, `start` returned `200`, and both activities completed
+through `depart → arrive → begin → complete`. Final product truth:
+
+```text
+Journey.status                 = COMPLETED
+Journey.active_plan_version_id = aefa60a3-2f33-5319-92ce-1697bb03de52
+Journey.current_activity_id    = null
+Twin.projection_status         = READY
+Twin.now_state                 = COMPLETE
+```
+
+This is a genuine outdoor candidate-set transfer from the same Strategy
+Engine, with real provider identity and live mobility. It remains a
+coursework-estimated result, not a claim that unknown opening/cost facts are
+production verified.
+
 ## Current domestic-WB2api checkpoint: Kunming
 
 This is the latest R14 execution after the Guilin checkpoint. The same
