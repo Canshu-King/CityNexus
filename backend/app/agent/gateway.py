@@ -116,6 +116,24 @@ _LEGACY_REPLAN_PROPOSAL_FIELDS = frozenset({
 })
 _REPLAN_CACHE_UNAVAILABLE = "AGENT_IDEMPOTENCY_RESPONSE_SCHEMA_UNAVAILABLE"
 
+
+def _latest_actionable_event(
+    session: Session, journey_id: str, event_id: str | None = None
+) -> Event | None:
+    """Resolve an explicit event or the newest open event for model inspection."""
+
+    if event_id:
+        return session.get(Event, str(event_id))
+    return session.scalar(
+        select(Event)
+        .where(
+            Event.journey_id == journey_id,
+            Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
+        )
+        .order_by(Event.detected_at.desc(), Event.id.desc())
+        .limit(1)
+    )
+
 _CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
     "博物馆": ("museum",),
     "美术馆": ("gallery", "museum"),
@@ -536,7 +554,13 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _twin_snapshot
         from app.agent.predictive import standby_portfolio
-        trigger = self.session.get(Event, str(request.trigger_event_id)) if request.trigger_event_id else None
+        # A mission may be created before the event is attached. Expose the
+        # newest still-actionable server event so an autonomous model can
+        # discover reality through inspection instead of receiving a stale
+        # proposal list or an empty current_event field.
+        trigger = _latest_actionable_event(
+            self.session, journey.id, request.trigger_event_id
+        )
 
         savepoint = self.session.begin_nested()
         try:
@@ -573,9 +597,18 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _replan_payload
 
+        trigger = _latest_actionable_event(
+            self.session, journey.id, request.trigger_event_id
+        )
+        filters = [ReplanProposal.journey_id == journey.id]
+        if trigger is not None:
+            # Do not make an autonomous run compare the current disruption with
+            # stale proposals generated for an older event. An empty scoped set
+            # is a truthful signal to request a fresh deterministic replan.
+            filters.append(ReplanProposal.trigger_event_id == trigger.id)
         proposals = self.session.scalars(
             select(ReplanProposal)
-            .where(ReplanProposal.journey_id == journey.id)
+            .where(*filters)
             .order_by(ReplanProposal.created_at.desc(), ReplanProposal.id.desc())
         ).all()
         total = len(proposals)
@@ -604,6 +637,7 @@ class AgentToolGateway:
             "truncated": total > len(items),
             "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
             "detail_fields_omitted": omitted,
+            "event_scope": str(trigger.id) if trigger is not None else None,
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:

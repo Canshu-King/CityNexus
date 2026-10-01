@@ -4,14 +4,17 @@ from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 from uuid import uuid4
+from unittest.mock import MagicMock, patch
 
 from app.agent.ai_availability import ai_availability_state
+from app.agent.gateway import AgentToolGateway, _latest_actionable_event
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
 from app.agent.runtime import _model_mission_payload, _system_prompt, reconcile_stale_agent_runs
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Journey, JourneyMission, Traveler
 from app.db.session import SessionLocal
+from app.schemas import AgentToolCall
 
 
 def test_r21_recovery_envelope_is_capability_neutral():
@@ -170,3 +173,47 @@ def test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint(monke
     assert "candidate_count to 3" not in prompt
     assert "solver_mode to deterministic" not in prompt
     assert "discoverable from the server-owned JourneyTwin" in prompt
+
+
+def test_r21_inspect_twin_discovers_latest_actionable_event_without_mission_binding():
+    journey = SimpleNamespace(id=str(uuid4()))
+    event = SimpleNamespace(
+        id="event-r21-newest",
+        event_type="CLOSURE",
+        provenance="USER_REPORTED",
+        severity="MAJOR",
+        affected_activity_id="activity-r21-affected",
+    )
+    session = MagicMock()
+    session.get.return_value = journey
+    session.scalar.return_value = event
+    savepoint = MagicMock()
+    session.begin_nested.return_value = savepoint
+    request = AgentToolCall(
+        request_id="r21-event-discovery",
+        agent_id="hermes-compat",
+        journey_id=journey.id,
+    )
+
+    with patch("app.main._twin_snapshot", return_value={"latest_event_id": event.id}), patch(
+        "app.agent.predictive.standby_portfolio", return_value=[]
+    ):
+        result = AgentToolGateway(session).inspect_twin(request)
+
+    assert result["current_event"] == {
+        "id": event.id,
+        "event_type": "CLOSURE",
+        "provenance": "USER_REPORTED",
+        "severity": "MAJOR",
+        "affected_activity_id": "activity-r21-affected",
+    }
+    session.scalar.assert_called_once()
+
+
+def test_r21_latest_event_scope_is_server_selected_when_mission_has_no_event():
+    event = SimpleNamespace(id="event-r21-current")
+    session = MagicMock()
+    session.scalar.return_value = event
+
+    assert _latest_actionable_event(session, "journey-r21-current") is event
+    session.scalar.assert_called_once()
