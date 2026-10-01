@@ -30,3 +30,14 @@ run=v4_nb_scene_window   spec=qoder-today-follows-the-stage.spec.ts --grep scene
 -- still not proven, named rather than glossed --
 The six other check-in refusal sentences have no screen-level counter-arm: the row's button can only send one activity_id, and of the two doors that put a stop-bearing plan on a journey this lane may not call `POST /api/v1/demo/reset` (calls=0). What covers them is the mapping arm (eight codes -> eight distinct keys) plus the pairing arm (each key defined exactly once per dictionary), and s5 above shows that mapping arm bites.
 Neighbours that share the same testids but were not re-run here: qoder-ord0502-phone-mainline (phone lane) and qoder-bac10f40-ord0497-* / -0530 / -0537 -- this lane changed `stop-checkin-notice`'s wrapper only.
+
+== facts this lane read this generation, one line each ==
+authority_tip=0c061d9eb74b21f0b0b297a068778479b08658b4 (read from refs/heads/mirror/integration-frontend-apple-pass1 at 22:38)
+tip_movement dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5..tip = 4 commits: 0c061d9e 19b3107f 8d259c1f bbf0c2f8
+checkin keys this branch adds, checked against the live tip: already_present_at_tip=[] dup_defined=[] (32 checkin.* definitions at the tip, 16 distinct)
+ORD-0538 landed as 989304a0b181697de024b2df3ae4662d926bc129 and it is what moved frontend/src/features/access/AccessPanel.tsx and accessCopy.ts under my base
+s2_first_attempt did not run: the shell split --grep at the pipe, 59 bytes captured, exit 255 -- re-taken as v3 and v4 above
+tsc gates at this head: npx tsc -p tsconfig.check.json --noEmit rc=0 output_bytes=0; npx tsc -p tsconfig.typecheck.json --noEmit rc=0 output_bytes=0
+the two non-destructive scenario doors used instead of demo/reset: backend/app/main.py:2319 prepare-scenario and backend/app/main.py:2371 start-scenario
+r1 not landed: git show tip:frontend/src/features/access/accessCopy.ts grep actionUnknown = 0 hits
+scene at hand-over: listeners after cleanup = 0 on 61280-61297, throwaway dbs _b3*.db and _b3v*.db removed, df free 19 GiB
