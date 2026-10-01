@@ -1,0 +1,110 @@
+{
+ "limit_raster_px": 4096,
+ "sheet": {
+  "day_rows": 7,
+  "day_labels": [
+   "10月10日周六",
+   "10月11日周日",
+   "10月12日周一",
+   "10月13日周二",
+   "10月14日周三",
+   "10月15日周四",
+   "10月16日周五"
+  ],
+  "stop_rows": 54,
+  "subtitle": "演示城市 · 7 天",
+  "paged_note": null,
+  "page_buttons": 0
+ },
+ "exported": {
+  "file": "X1_citynexus-trip-poster.png",
+  "suggested_filename": "citynexus-trip-poster.png",
+  "screen_line": "已存为 PNG：579383 字节，712 × 4576 像素。",
+  "page_line": null,
+  "stated": {
+   "bytes": 579383,
+   "width": 712,
+   "height": 4576
+  },
+  "ihdr": {
+   "bytes": 579383,
+   "width": 712,
+   "height": 4576
+  },
+  "pixels": {
+   "file": "D:/moodle/_qoder_e766b154_ord0515re_20261001/run/evidence/X1_citynexus-trip-poster.png",
+   "hairline_groups": 14,
+   "hairline_group_rows": [
+    339,
+    778,
+    834,
+    1384,
+    1440,
+    1991,
+    2047,
+    2597,
+    2653,
+    3203,
+    3260,
+    3810,
+    3866,
+    4416
+   ],
+   "width": 712,
+   "height": 4576,
+   "background_rgb": [
+    245,
+    245,
+    247
+   ],
+   "first_ink_row": 68,
+   "last_ink_row": 4504,
+   "bottom_padding_rows": 71,
+   "seam_runs": 11,
+   "seams_wider_than_8px": 11,
+   "widest_seam_px": 59,
+   "seams": [
+    {
+     "from_row": 94,
+     "to_row": 124,
+     "px": 31
+    },
+    {
+     "from_row": 180,
+     "to_row": 211,
+     "px": 32
+    },
+    {
+     "from_row": 241,
+     "to_row": 253,
+     "px": 13
+    },
+    {
+     "from_row": 282,
+     "to_row": 337,
+     "px": 56
+    },
+    {
+     "from_row": 780,
+     "to_row": 832,
+     "px": 53
+    },
+    {
+     "from_row": 1386,
+     "to_row": 1439,
+     "px": 54
+    },
+    {
+     "from_row": 1992,
+     "to_row": 2045,
+     "px": 54
+    },
+    {
+     "from_row": 2599,
+     "to_row": 2651,
+     "px": 53
+    }
+   ]
+  }
+ }
+}

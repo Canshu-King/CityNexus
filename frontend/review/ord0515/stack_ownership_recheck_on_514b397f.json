@@ -1,0 +1,86 @@
+{
+ "fronts": {
+  "4974": {
+   "label": "SHORT / this line's bundle / unlengthened trip",
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0515now/frontend/dist",
+   "index_http_status": 200,
+   "entry_from_served_index": "/assets/index-DAbk3Cl8.js",
+   "pid_on_port": "34888",
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "disk_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "served_asset_bytes": 1574476,
+   "disk_asset_bytes": 1574476,
+   "bytes_equal": true
+  },
+  "4975": {
+   "label": "LONG / this line's bundle / seven-day trip",
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0515now/frontend/dist",
+   "index_http_status": 200,
+   "entry_from_served_index": "/assets/index-DAbk3Cl8.js",
+   "pid_on_port": "60124",
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "disk_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "served_asset_bytes": 1574476,
+   "disk_asset_bytes": 1574476,
+   "bytes_equal": true
+  },
+  "4976": {
+   "label": "UNBOUNDED / pre-bound bundle / same seven-day trip",
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0515unb/frontend/dist",
+   "index_http_status": 200,
+   "entry_from_served_index": "/assets/index-DFMGpJIJ.js",
+   "pid_on_port": "16060",
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_sha1": "cc6d01fa580a9d6b6a2f0bcc9cc129999731b2ae",
+   "disk_asset_sha1": "cc6d01fa580a9d6b6a2f0bcc9cc129999731b2ae",
+   "served_asset_bytes": 1509122,
+   "disk_asset_bytes": 1509122,
+   "bytes_equal": true
+  },
+  "4977": {
+   "label": "WRITTEN / this line's bundle / two-day trip",
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0515now/frontend/dist",
+   "index_http_status": 200,
+   "entry_from_served_index": "/assets/index-DAbk3Cl8.js",
+   "pid_on_port": "57112",
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "disk_asset_sha1": "d9e8526352732a29ac304be4e96ef07b216b5f88",
+   "served_asset_bytes": 1574476,
+   "disk_asset_bytes": 1574476,
+   "bytes_equal": true
+  }
+ },
+ "apis": {
+  "8770": {
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "pid_on_port": "40936",
+   "experience_http_status": 200,
+   "server_day_count": 1,
+   "activity_rows": 6
+  },
+  "8771": {
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "pid_on_port": "37212",
+   "experience_http_status": 200,
+   "server_day_count": 7,
+   "activity_rows": 54
+  },
+  "8772": {
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "pid_on_port": "40156",
+   "experience_http_status": 200,
+   "server_day_count": 2,
+   "activity_rows": 7
+  }
+ }
+}
