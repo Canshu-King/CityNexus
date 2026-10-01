@@ -7,11 +7,23 @@ against that tip, and `run/blobs_r9.txt` maps each shipped path to its blob id s
 `git cat-file -t` it.  Nothing here writes to the remote.
 """
 import os
+import re
 import subprocess
 
 LANE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = r"D:/moodle/CityNexus"
 NL = chr(10)
+
+
+def pick_sha(text, needle):
+    """ls-remote answers one line per ref; a warning line from the ssh transport can be printed
+    first and this tool merges stderr into stdout, so the sha is taken from the line whose second
+    field is exactly the ref asked for -- never from the first token of the blob."""
+    for line in text.splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == needle and re.fullmatch(r"[0-9a-f]{40}", parts[0]):
+            return parts[0]
+    return None
 
 
 def sh(args, cwd=REPO):
@@ -30,8 +42,10 @@ def sh_env(args):
                           timeout=240, env=env_no_proxy).stdout.decode("utf-8", "replace")
 
 
-tip = sh_env(["git", "ls-remote", "origin",
-              "refs/heads/mirror/integration-frontend-apple-pass1"]).split()[0]
+TIP_REF = "refs/heads/mirror/integration-frontend-apple-pass1"
+tip = pick_sha(sh_env(["git", "ls-remote", "origin", TIP_REF]), TIP_REF)
+if tip is None:
+    raise SystemExit("ABORT_NO_LIVE_TIP -- ls-remote did not answer a line for " + TIP_REF)
 refs = sh_env(["git", "ls-remote", "origin", "refs/heads/review/newlane-ord0500*",
                "refs/heads/review/newlane-ord0485*"])
 open(os.path.join(LANE, "run", "ls_remote_r9.txt"), "w", encoding="utf-8", newline=NL).write(refs)
