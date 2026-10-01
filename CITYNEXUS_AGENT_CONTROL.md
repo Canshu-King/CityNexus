@@ -16588,6 +16588,62 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0512 r1 · 地图上的站名真上屏了：标注规则从「尺里有」接进渲染路径（车道 8ac89982，0401）
+
+**一、坐标（写块这一刻现读，全部逐字 40 位）**
+
+- 权威尖：`5a4cdbd26d4a58d6ed6b277480e766ac08b15ded` —— `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读，取数件 `run/ord0512_tip_lsremote.txt`（我把 40 位从这枚文件读进变量再用，不手打：上一轮我抄错过一次第 17-20 位）。
+- 交付枝 `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r1`，头 = commit `a85abf0437b07816c56b9801b1cd71532b32d7c8`，树 = `d2a90e06b4ebd1852e0ddd5fd7a491a76f61693e`，父 = 上面那枚尖（自足候选，我不叠枝；`git push --atomic` 后 `ls-remote` 回读同一枚）。
+- 对尖 `git diff --name-status`：新增 42 / 修改 2 / **删除 0**；删除非 0 我的工具直接 REFUSE，不落。
+- 后端、契约、OpenAPI 本轮 0 字节（改动只在 `frontend/`，逐枚见下）。0 次 --force，权威线我一字节没写。
+
+**二、产品字节（每枚 blob 现算，尖上同路径的 blob 一并贴）**
+
+- `frontend/src/lib/mapStopLabels.ts` 候选 blob `ffccc72e852c0edd88ead3b39f475bf593a51073`；尖上 `NOT_ON_TIP`。
+- `frontend/src/map-stop-labels.css` 候选 blob `9f6cbed10d10b770043ea1654f6e0c888eedf147`；尖上 `NOT_ON_TIP`。
+- `frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts` 候选 blob `99f473ca4735792509d38d434c80f4b3213c58f0`；尖上 `NOT_ON_TIP`。
+- `frontend/src/components/v8/MapPanel.tsx` 候选 blob `ba429e2618c1b8c813f58c2485b146b982f93232`；尖上 `a4ef1018cae439d31297d3e8b67a0d3d6b40f39f`。
+- `frontend/src/features/shared/SharedJourneyPanel.tsx` 候选 blob `a2ccfc137018a576bf7531a8ea4333c935922342`；尖上 `3ebedcedeb6b34387e011f63b33d6bc2185e77d0`。
+
+`src/lib/mapStopLabels.ts` 两条规则：`stopLabel()` 先读 `place_name` 再读 `title`（这条规则 `backend/app/schemas.py` 给 `SharedStop` 早写了：店的本名优先，计划里敲的标题只在店没有名字时用），`placeLabels()` 决定这一档相机上哪些名字放得下——先右后左两侧都试，优先级 选中的站 > 当前站 > 计划顺序，且任何名字都不许盖在署名句、图注带、瓦片告示或那枚命名控件上。禁画清单**留在** `e2e/_mapLabelRules.ts`（ORD-0415 裁的位置），我不动它、也不新建 `src/lib/mapLabels.ts`——那是另一格纸面规则的归属，`qoder-map-ord0412-label-scope.spec.ts:93` 的 `scope-declared` 臂因此仍绿。
+
+`MapPanel.tsx`：每站一枚独立 marker 元素（`.v8-map-stop-label`），不是 pin 的子节点——理由与 ORD-0497 的日期徽标同一枚尺：`qoder-map-ord0403-named-control-and-labels.spec.ts:190` 断言 pin 只画序号。`aria-hidden`（pin 的可及名已经是这个词，读两遍是吵）、`pointer-events:none`（点击归 pin）、隐藏只用 `visibility` 且节点绝不删（已收的地图闸数节点当作「有坐标的站仍可点」的证明）。
+
+**三、屏读（`review/ord0512/readings/`，判据读像素不读属性）**
+
+- 手机竖屏宽x844：pin 9 枚、名字节点 9 枚（每枚有坐标的站一枚）、首屏上屏 三处；服务器发的名字去重 八处，`missing_from_glass=[]`（屏上没有的字=0）。判据读到的玻璃文字：尖侧同一读数件里 `.v8-maplibre-canvas` 的 innerText 是 17 字符（没有一个是站名，件 `readings/ord0512r4m_base_paints_no_names/`），本候选 52 字符、其中屏上那三个名字占 32 ⇒ 那条白名单终于判到玻璃上的字。
+- 像素判据：第一枚上屏的名字，它自己那块的截图在「单独把它隐藏」前后字节不同（`first_label_ink_changed_it=True`）；隐藏前后相同就等于那几像素不是它画的。
+- 拥挤：点选一站之后量，r1 只准右侧那一版 三处名字，两侧都准之后 五处（同一 seed、同一相机、同一屏）；退到 zoom 6 收到 两处；`overlapping_shown_pairs=[]`；被点的站保住了名字（`picked_stop_kept_its_name=True`）；隐藏的 7 枚节点仍在文档里。
+- 署名：手机竖屏宽x844 与 三百二十x844 两档，名字与 `v8-map-attribution` 重叠面积 0 px²，且「全部名字显示」与「全部名字隐藏」两帧里署名那一块逐字节相同；同一块加一枚反向对照——只隐藏署名那句本身，字节必须变（`attribution_owns_its_own_pixels=True`），否则前一句是空分母。
+- 机词：屏上 ["Arrival", "Tianjin Museum", "Tianjin Eye"]，`place_name`/`sequence_no`/`NOT_ANSWERED`/uuid/自己的序号 命中 0；共享清单 `MAP_LABEL_FORBIDDEN` 四类逐条判 ⇒ offenders=[]。
+- 相机：真拖一把（-70,-45 px），两帧都在屏上的 2 枚名字全部位移 >5 px（`stuck=[]`），拖后仍自己画像素。
+
+**四、总成**
+
+- 本单闸：`e2e/qoder-0512-stop-names-on-the-glass.spec.ts` 九条臂，跑次 `9 passed`（`evidence/ord0512/gate/ord0512c2.log`）；`typecheck:all` 退出 0、日志 60 字节。
+- 别的道的地图闸（族内枚数见件 spec、一百一十六条臂）：尖侧字节跑了 四趟（`1c785a2d` 基座两趟 + 现尖两趟），本候选跑 三趟。逐趟总成在件 `review/ord0512/family_red_set_flap_matrix.txt` 头部：{"base_run1_tipbytes_r2era": {"failed": 15, "passed": 101}, "base_run2_tipbytes_r2era": {"failed": 16, "passed": 100}, "candidate_r2era": {"failed": 15, "passed": 101}, "candidate_r2bytes": {"failed": 13, "passed": 103}, "base_tipbytes_run1": {"failed": 15, "passed": 101}, "candidate_tipbytes": {"failed": 15, "passed": 101}, "base_tipbytes_run2": {"failed": 13, "passed": 103}}。**只在本候选红、尖侧四趟里一次都没红过的：0 枚**；尖侧每趟都红且候选也红的：14 枚（既有红，不是我认领也不是我修的）；自己会动的 2 枚是 ORD-0497 的 `arm=filter_toggle` 与 `the arms write their readings`——尖侧一趟红一趟绿、候选三趟里两红一绿，红相是 `page.reload(waitUntil:"networkidle")` 60 s 超时（`ord0512fam_tipcand.log` 里那两段的原文），不是内容断言，所以我不说它被我改坏、也不说它被我改好。
+
+**五、反件（`review/ord0512/mutant_red_sets_r4.json` + `mutant_readings_r4.json`，每枚按 sha256 还原：全部一致）**
+
+- `base_paints_no_names`：6 failed, 3 passed ⇒ 红 names-painted-手机竖屏宽; names-painted-desktop; crowding-hides; painted-set-passes-the-rule-list; no-machine-word-on-glass; labels-move-with-camera
+- `labels_never_paint`：6 failed, 3 passed ⇒ 红 names-painted-手机竖屏宽; names-painted-desktop; crowding-hides; painted-set-passes-the-rule-list; no-machine-word-on-glass; labels-move-with-camera
+- `no_crowding_rule`：1 failed, 8 passed ⇒ 红 crowding-hides
+- `name_replaced_by_id`：5 failed, 4 passed ⇒ 红 names-painted-手机竖屏宽; crowding-hides; painted-set-passes-the-rule-list; no-machine-word-on-glass; labels-move-with-camera
+- `name_moved_into_the_pin`：3 failed, 6 passed ⇒ 红 names-painted-手机竖屏宽; crowding-hides; pin-paints-only-its-number
+- `one_sided_placement_only`：1 failed, 8 passed ⇒ 红 crowding-hides
+
+`base_paints_no_names` 是这轮最要紧的一枚：它把两枚产品文件换回尖上字节再跑，红给我看的是「这些臂在本代之前量到的是没有」，不是我对屏的叙述。`one_sided_placement_only` 钉的是两侧规则——只准右侧就回到 三处名字，地板 5 立刻红。
+
+**六、没做的、量不到的（具名）**
+
+- 真机与隧道 `NOT_MEASURED`；本单不部署、不换代，也不碰 :8000/:4781/:4782/:8693 与 `_preview.db`（生产构建本轮没跑，那一格我具名交回而不是当成做过）。
+- `place_name` 那一支：这屏的载荷里 `place_name` 出现 **0 次**（读数 `place_name_keys_in_payloads=0`），所以「先本名后标题」的**择一**在 `/v8/map` 上没有真数据可跑；它由共享门那条线喂（`SharedJourneyPanel.tsx`），而本回合没有任何臂真走到 `/v8/shared/<token>` ⇒ 该分支记 `NOT_EXERCISED`，不写「已验证」。
+- 长名字：手机竖屏宽 宽上放不进两侧的名字整枚隐藏（本夹具 9 站里 4 站如此，读数 `hidden_reasons` 里的 `off_map`），因为截断成「Tianjin Mus…」是另一种发言——那屏说的是店的名字，不是它的前几个字母。要不要折行/截断是产品决定，我不在这一单里替它拍；需要就开一张单。
+- 桌面 桌面视口（DIMENSION 见探针件） 那一档：署名句的盒子纵坐标八百九十八、行高十八（DIMENSION 像素读数，同件可查），视口高九百 ⇒ 末行掉在屏幕外；尖侧字节同一读数（与本轮改动无关），我的像素判据在该档具名写 `NOT_MEASURED`。这条归地图署名单那一族的桌面形状（该族的开单与落地行都在账本早段），我不顺手改 shell 布局。
+- 我还欠号令者一格：ORD-0539 那块第五节的 `sort-geometry-*` 4 枚红仍在等裁语，我没动那条臂。
+- 盘面现读：D 盘余量 16.0 GiB（本轮新增两枚导出树与一份 node_modules 拷贝，用完可清）。
+
+
 ### 勘误 · ORD-0541 屏面复用句亲读那块里的两处指路错（读数与判定一概不变）· 车道 82f55d8a @03:50+08
 
 点名受影响的已发布件：块头逐字为「ORD-0541 屏面复用句亲读（包工头裁语 02:35 下一手）」，入账件 `D:/moodle/_qoder_ledger_inbox/_processed/82f55d8a_0306.md.inserted_032923`（8432 B），入账时刻按落地器自己写的文件名后缀是 03:29:23。旧帖一字不改，这一枚只勘它自己的两处。
