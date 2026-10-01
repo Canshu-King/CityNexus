@@ -4296,6 +4296,31 @@ def create_share_grant(
                 },
             )
         plan_version_id = plan_row.id
+    # ORD-0541: 重复发起同一枚分享不再长第二行。可复用的档只有一个——那一行的 `visibility` 恰为
+    # `LINK_READ`（号令者的裁语），其它档每一次请求照旧是新链接；复用与否读的是这一趟自己从库里取回的
+    # 行，不是屏上或调用方存下的说法。已撤销的行不可复用；过期行只有还没到点的才可复用，因为过期的那一枚
+    # 正是 ORD-0460 拒绝 mint 的东西，复用它等于把出生即死的链接再递出去一次。
+    if payload.visibility == "LINK_READ":
+        version_match = (
+            JourneyShareGrant.plan_version_id.is_(None)
+            if plan_version_id is None
+            else JourneyShareGrant.plan_version_id == plan_version_id
+        )
+        held = session.scalars(
+            select(JourneyShareGrant)
+            .where(
+                JourneyShareGrant.journey_id == str(journey_id),
+                JourneyShareGrant.visibility == "LINK_READ",
+                JourneyShareGrant.created_by == creator,
+                JourneyShareGrant.revoked_at.is_(None),
+                version_match,
+            )
+            .order_by(JourneyShareGrant.created_at, JourneyShareGrant.id)
+        ).all()
+        now = datetime.now(timezone.utc)
+        for row in held:
+            if _expiry_verdict(row.expires_at, now) in ("NO_EXPIRY", "FUTURE"):
+                return _share_grant_payload(row)
     stamp = datetime.now(timezone.utc).isoformat()
     grant = JourneyShareGrant(
         id=str(uuid4()),
