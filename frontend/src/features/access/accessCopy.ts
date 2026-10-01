@@ -166,7 +166,10 @@ export const accessCopy = {
     "access.action.journey.visibilityChanged": "changed who can see this trip",
     "access.action.journey.invitationSent": "sent an invitation to this trip",
     "access.action.journey.invitationRevoked": "cancelled an invitation to this trip",
-    "access.actionUnknown": "This server reported an action this screen has no sentence for: {token}.",
+    "access.actionUnknown":
+      "The server reported an action this screen has no wording for, so this row says only that.",
+    "access.actionUnknownSummary": "The server's own name for this action",
+    "access.actionUnknownBody": "As this server wrote it: {token}",
     "access.doorLoading": "Asking this server who else can reach this trip…",
     "access.doorAbsent":
       "This server answered none of {paths}, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
@@ -339,7 +342,9 @@ export const accessCopy = {
     "access.action.journey.visibilityChanged": "改了这条行程能被谁看见",
     "access.action.journey.invitationSent": "向这条行程发出一个邀请",
     "access.action.journey.invitationRevoked": "撤销了这条行程的一个邀请",
-    "access.actionUnknown": "这台服务器报了一个本屏说不出人话的动作：{token}。",
+    "access.actionUnknown": "服务器报了一个本屏没有说法的动作，所以这一行只说这件事本身。",
+    "access.actionUnknownSummary": "服务器对这个动作自己的叫法",
+    "access.actionUnknownBody": "这台服务器原样写的是：{token}",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
       "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
@@ -411,7 +416,10 @@ export type AccessCopyKey = keyof (typeof accessCopy)["zh-CN"];
  *  module in this tree follows). */
 export function accessCopyFor(locale: string, key: AccessCopyKey): string {
   const table = accessCopy[locale.startsWith("zh") ? "zh-CN" : "en"];
-  return table[key] ?? accessCopy.en[key] ?? key;
+  /* The last fallback used to be `key`, which put a dictionary key on the traveller's screen -- the
+     machine word is the thing this lane keeps being told to stop shipping.  A word this table does not
+     have renders as nothing, so the absence is visible instead of wearing a sentence's clothes. */
+  return table[key] ?? accessCopy.en[key] ?? "";
 }
 
 /** `{name}`, `{ttl}`, `{used}`, `{cap}`, `{token}` and `{path}` come from a read or from the door

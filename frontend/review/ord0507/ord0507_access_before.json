@@ -1,0 +1,47 @@
+{
+  "phase": "before",
+  "bundle": "http://127.0.0.1:61159",
+  "journeyId": "5ec940d1-732a-4f76-b64c-b68564962c8a",
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "picker_present": true,
+      "rows": [
+        {
+          "visible_sentence": "新建了这条行程",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        },
+        {
+          "visible_sentence": "这台服务器报了一个本屏说不出人话的动作：journey.updated。",
+          "machine_word_in_visible_sentence": true,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        }
+      ],
+      "row_count": 2,
+      "html_lang": "zh-CN"
+    },
+    {
+      "locale": "en",
+      "picker_present": true,
+      "rows": [
+        {
+          "visible_sentence": "created this trip",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        },
+        {
+          "visible_sentence": "This server reported an action this screen has no sentence for: journey.updated.",
+          "machine_word_in_visible_sentence": true,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        }
+      ],
+      "row_count": 2,
+      "html_lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "phase": "after",
+  "bundle": "http://127.0.0.1:61160",
+  "journeyId": "5ec940d1-732a-4f76-b64c-b68564962c8a",
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "picker_present": true,
+      "rows": [
+        {
+          "visible_sentence": "新建了这条行程",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        },
+        {
+          "visible_sentence": "服务器报了一个本屏没有说法的动作，所以这一行只说这件事本身。 服务器对这个动作自己的叫法",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 1,
+          "raw_inside_fold": "这台服务器原样写的是：journey.updated"
+        }
+      ],
+      "row_count": 2,
+      "html_lang": "zh-CN"
+    },
+    {
+      "locale": "en",
+      "picker_present": true,
+      "rows": [
+        {
+          "visible_sentence": "created this trip",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 0,
+          "raw_inside_fold": null
+        },
+        {
+          "visible_sentence": "The server reported an action this screen has no wording for, so this row says only that. The server's own name for this action",
+          "machine_word_in_visible_sentence": false,
+          "technical_fold_count": 1,
+          "raw_inside_fold": "As this server wrote it: journey.updated"
+        }
+      ],
+      "row_count": 2,
+      "html_lang": "en"
+    }
+  ]
+}

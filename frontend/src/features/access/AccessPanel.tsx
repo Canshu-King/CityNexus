@@ -706,7 +706,23 @@ export function AccessPanel({
                   <li key={event.id} className="cn-access-activity-row" data-event-type={event.event_type}>
                     <span className="cn-access-when">{formatV8Date(event.timestamp, locale)}</span>
                     <span className="cn-access-what">
-                      {key ? say(key, params) : say("access.actionUnknown", { token: event.event_type })}
+                      {key ? say(key, params) : say("access.actionUnknown")}
+                      {key ? null : (
+                        /* ORD-0507: the server's own name is a fact worth keeping and a fact worth
+                           folding.  It used to be interpolated into the sentence above, which made an
+                           honest-looking line carry `plans.generated` in front of a traveller.  Here it
+                           stays reachable -- inside the same disclosure shape this screen already uses
+                           for the capability codes -- and nowhere else on the row. */
+                        <details
+                          className="cn-access-details cn-access-activity-technical"
+                          data-testid="access-activity-technical"
+                        >
+                          <summary>{say("access.actionUnknownSummary")}</summary>
+                          <p data-testid="access-activity-raw">
+                            {say("access.actionUnknownBody", { token: event.event_type })}
+                          </p>
+                        </details>
+                      )}
                     </span>
                   </li>
                 );

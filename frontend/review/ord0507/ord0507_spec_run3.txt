@@ -1,0 +1,125 @@
+[citynexus e2e] suite=prod-gate authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:61162 backend=:61163 db=sqlite:///./data/_ord0507r3.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     Started server process [33412]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:61163 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:59398 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] 
+[WebServer] > build
+[WebServer] > vite build
+[WebServer] 
+[WebServer] vite v7.3.6 building client environment for production...
+[WebServer] transforming...
+[WebServer] ✓ 2019 modules transformed.
+[WebServer] rendering chunks...
+[WebServer] computing gzip size...
+[WebServer] dist/manifest.webmanifest                0.31 kB
+[WebServer] dist/index.html                          1.20 kB │ gzip:   0.62 kB
+[WebServer] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] dist/assets/index-CTUw3tbX.css         227.38 kB │ gzip:  38.19 kB
+[WebServer] dist/assets/JourneyMap-kFE244Dh.js       4.57 kB │ gzip:   1.87 kB
+[WebServer] dist/assets/maplibre-gl-LQMZSIW-.js  1,053.38 kB │ gzip: 284.76 kB
+[WebServer] dist/assets/index-C4wLOf_q.js        1,575.08 kB │ gzip: 482.34 kB
+[WebServer] ✓ built in 6.89s
+[WebServer] 
+[WebServer] PWA v1.3.0
+[WebServer] mode      generateSW
+[WebServer] precache  8 entries (2801.56 KiB)
+[WebServer] files generated
+[WebServer]   dist/v10-sw.js
+[WebServer]   dist/workbox-6923124b.js
+[WebServer]   ➜  Local:   http://127.0.0.1:61162/
+
+Running 4 tests using 1 worker
+
+[citynexus e2e] suite=prod-gate authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:61162 backend=:61163 db=sqlite:///./data/_ord0507r3.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:62513 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:62514 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:62513 - "POST /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62514 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62513 - "POST /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/stay-options/d38f705f-0839-4b3d-b7c6-e28602e91cab/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=086c5267-ec46-4531-bdbe-d71e0a0c1557 options=4 chosen=d38f705f-0839-4b3d-b7c6-e28602e91cab (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:56796 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53837 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64356 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56687 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56688 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56686 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56689 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55358 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63008 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56690 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61863 - "GET /api/v1/travelers/fe1148f4-2b8e-42ad-9bc3-fe02e3835e18/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59393 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64671 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53629 - "GET /api/v1/journeys/086c5267-ec46-4531-bdbe-d71e0a0c1557/twin HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (30.0s)
+[citynexus e2e] suite=prod-gate authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:61162 backend=:61163 db=sqlite:///./data/_ord0507r3.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:58448 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:58451 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:64586 - "PATCH /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64588 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62030 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63967 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63970 - "GET /api/v1/journeys HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56825 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56826 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59300 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59299 - "GET /api/v1/travelers/0d3fc235-e1b3-4625-b76e-30cadb88dca0/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63271 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59301 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50121 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61628 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59302 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56404 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62931 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56483 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53377 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53379 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/member-role-limits HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53378 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51257 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55092 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54718 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64284 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54246 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/member-role-limits HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54244 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54245 - "GET /api/v1/journeys/8d4f276e-f487-4fbf-addb-5427ef1f81a7/acl/roles HTTP/1.1" 200 OK
+  ok 2 [chromium] › e2e\qoder-ord0507-access-row-no-machine-words.spec.ts:66:3 › the access activity row speaks one language at a time [zh-CN] (752ms)
+[WebServer] INFO:     127.0.0.1:55881 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:50559 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:50563 - "PATCH /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64960 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59859 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59860 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64874 - "GET /api/v1/journeys HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54683 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54684 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59868 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51052 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59869 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52898 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59867 - "GET /api/v1/travelers/e026f849-4fb7-4b68-9ee4-e7c6b3150596/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50114 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60462 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/agent-feed?limit=50 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65029 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59870 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63489 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57109 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61538 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57110 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/member-role-limits HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57111 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65021 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50522 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/acl/roles HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53722 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/members HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53539 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/share-grants HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53541 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/member-role-limits HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53540 - "GET /api/v1/journeys/0742fa3a-7d51-4b48-b550-a0097cab2696/acl/roles HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-ord0507-access-row-no-machine-words.spec.ts:66:3 › the access activity row speaks one language at a time [en] (530ms)
+  ok 4 [chromium] › e2e\qoder-ord0507-access-row-no-machine-words.spec.ts:118:1 › every access-screen key the panel asks for has a line in both shipped tables (6ms)
+
+  4 passed (56.4s)
