@@ -1,0 +1,116 @@
+{
+ "default": "off",
+ "note": "Each scenario overrides only the routes listed; everything else is forwarded to this lane's backend. The canned statuses and codes are what the frontend's own classifier reads - no product byte is edited to reach a state.",
+ "scenarios": {
+  "off": {
+   "rules": []
+  },
+  "not_found": {
+   "expected_reason": "JOURNEY_NOT_FOUND",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": {
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+       "code": "JOURNEY_NOT_FOUND",
+       "message": "No journey with this id is stored on this server.",
+       "details": { "journey_id": "22222222-2222-4222-8222-222222222222" },
+       "message_key": "failure.journeyNotFound"
+      }
+     }
+    }
+   ]
+  },
+  "server_error": {
+   "expected_reason": "SERVER_ERROR",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": {
+      "status": 503,
+      "content_type": "application/json",
+      "body": {
+       "code": "SERVICE_UNAVAILABLE",
+       "message": "The read could not be served right now.",
+       "details": {}
+      }
+     }
+    }
+   ]
+  },
+  "unauthorized": {
+   "expected_reason": "UNAUTHORIZED",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": {
+      "status": 401,
+      "content_type": "application/json",
+      "body": { "code": "AUTH_REQUIRED", "message": "Sign in again to read this trip.", "details": {} }
+     }
+    }
+   ]
+  },
+  "forbidden": {
+   "expected_reason": "FORBIDDEN",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": {
+      "status": 403,
+      "content_type": "application/json",
+      "body": { "code": "STEP_NOT_ALLOWED", "message": "This step is not permitted for this traveler.", "details": {} }
+     }
+    }
+   ]
+  },
+  "html_200": {
+   "expected_reason": "ORIGIN_INVALID_RESPONSE",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": {
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body": "<!doctype html><html><body><h1>Gateway</h1><p>An HTML page where JSON was expected.</p></body></html>"
+     }
+    }
+   ]
+  },
+  "empty_200": {
+   "expected_reason": "ORIGIN_INVALID_RESPONSE",
+   "rules": [
+    {
+     "method": "GET",
+     "path": "^/api/v1/journeys/[^/]+(/|$)",
+     "response": { "status": 200, "content_type": "application/json", "body": "" }
+    }
+   ]
+  },
+  "studio_refused": {
+   "expected_reason": "the studio panel's own refusal line (studio.requestRefused)",
+   "rules": [
+    {
+     "method": "POST",
+     "path": "^/api/v1/journeys/[^/]+/trip-studio/preview",
+     "response": {
+      "status": 502,
+      "content_type": "application/json",
+      "body": {
+       "code": "UPSTREAM_GATEWAY_UNAVAILABLE",
+       "message": "The impact check could not be completed by the upstream.",
+       "details": { "upstream": "valhalla", "tables_protected": true }
+      }
+     }
+    }
+   ]
+  }
+ }
+}
