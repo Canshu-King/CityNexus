@@ -4,7 +4,7 @@
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
 - Final experimental code SHA: `c53df8e6`
-- Report closure commit: recorded after this report update
+- Report closure commit: `58b1a4d2` (this report update; final tree commit follows)
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r13-metadata-fix-20260930-b.sqlite3`
