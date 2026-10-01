@@ -1,4 +1,0 @@
-topbar distinct 1 [0,66]
-kicker distinct 2 [100,14] [93,14]
-sheet distinct 2 [127,524] [117,524]
-box4 distinct 2 [345,13] [335,13]

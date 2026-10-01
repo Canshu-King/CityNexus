@@ -1,1 +1,0 @@
-REFUSED: D:/moodle/_qoder_preview_20260920/_preview.db is the shared preview store; this order allows reading it with mode=ro and never healing it.

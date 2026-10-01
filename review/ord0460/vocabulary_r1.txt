@@ -1,7 +1,0 @@
-regex=error\(\s*"([A-Z][A-Z0-9_]{3,})"
-base_blob=8cd216fa09b48c12f32dda251eaac61b66fe60fa
-mine_blob=5469551cfb97fa1af50b3ceeea31ac9dd506f1a9
-base_count=8 mine_count=8 new_in_mine=0 sets_equal=True
-mine_set=DEMO_MODE_REQUIRED,DEMO_SCENARIO_MISSING,DEMO_START_REFUSED,GENERATION_ABANDONED,GENERATION_STORE_BUSY,HYDRATION_STORE_BUSY,TWIN_NOW_OFFSET_REQUIRED,VALIDATION_ERROR
-new_reason_code_emitters_in_main_py=0
-SHARE_GRANT_EXPIRY_IN_PAST_literal_occurrences=1

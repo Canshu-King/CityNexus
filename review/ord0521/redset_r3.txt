@@ -1,4 +1,0 @@
-base      : 11 failed, 1610 passed, 16 skipped, 1 xfailed, 4 warnings in 201.34s (0:03:21)
-candidate : 11 failed, 1626 passed, 16 skipped, 1 xfailed, 4 warnings in 204.72s (0:03:24)
-base red names 11, candidate red names 11
-NEW REDS: none - every red on the candidate is red on the base too
