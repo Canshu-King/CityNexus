@@ -1,0 +1,27 @@
+== ORD-0507 rebase onto the day15 line (rel lane a68b0631, 5a4cdbd26d4a) ==
+rebase_target_tip=5a4cdbd26d4a58d6ed6b277480e766ac08b15ded
+r3_branch=refs/heads/review/a68b0631-ord0507-clock-attribution-r2 head=4d61a2f918b6fee78364aaea73125399650044e2 tip_is_ancestor=yes
+r1_branch=refs/heads/review/a68b0631-ord0507-access-words-r1 head=ed54bb8125a59cf3305fd80e9cfc9d77f4015785 tip_is_ancestor=to_be_read
+
+-- what the rebase caught, in the lane's own words --
+r3_rebase_finding=the day15 twin can answer with NO cursor status at all (the element then paints UNKNOWN); the pre-fix rule only dropped the bracket for a non-VALID enum, so at 4d61a2f9's parent the painted sentence still claimed 执行游标. This lane's own arm caught it: run=r3_first_pass_after_rebase summary=1 failed,7 passed
+r3_rebase_finding_error=Error: [ord0507-2a-clock-parenthetical-holds-only-the-noun] the sentence claims a server cursor while the cursor is UNKNOWN: "“现在”取自服务器场景（执行游标）：10月9日 18:00。服务器的执行投影还没到，这一屏没有按游标定位。"
+r1_rebase_finding=ORD-0518 replaced the trip <select> with named rows, so the old arm's selectOption found no element: run=r1_first_pass_after_rebase summary=2 failed,2 passed
+r1_rebase_finding_error=Error: ord0507-1 picker: this screen asks for its own pick; a reading taken without it measures an empty stage
+
+-- runs at the rebased generation, all on the line's own production build --
+run=r3_first_pass_after_rebase summary=1 failed,7 passed log_bytes=20561
+run=r3_first_pass_nb_speaks summary=5 passed log_bytes=8238
+run=r3_second_pass_my_arms summary=8 passed log_bytes=19148
+run=r3_second_pass_nb_speaks summary=5 passed log_bytes=8140
+run=r3_second_pass_nb_device_fallback summary=5 passed log_bytes=9246
+run=r3_second_pass_nb_scene_window summary=2 passed log_bytes=6967
+run=r1_first_pass_after_rebase summary=2 failed,2 passed log_bytes=14125
+run=r1_second_pass_after_rebase summary=4 passed log_bytes=10646
+
+-- compile gates at the rebased generation --
+tsc_check_rc=0 output_bytes=0 (npx tsc -p tsconfig.check.json --noEmit, both branches)
+tsc_typecheck_rc=0 output_bytes=0 (npx tsc -p tsconfig.typecheck.json --noEmit, both branches)
+deltas_vs_tip_r3=400	0	frontend/e2e/qoder-ord0507-clock-and-checkin-words.spec.ts | 73	0	frontend/review/ord0507/READINGS_r2.txt | 43	0	frontend/review/ord0507/READINGS_r3.txt | 34	14	frontend/src/app/V8Experience.tsx | 72	12	frontend/src/features/checkin/checkins.ts | 38	11	frontend/src/features/simulation/SimulationPanel.tsx | 58	6	frontend/src/features/trip/TripItinerary.tsx | 26	0	frontend/src/i18n/LocaleContext.tsx |
+deltas_vs_tip_r1=161	0	frontend/e2e/qoder-ord0507-access-row-no-machine-words.spec.ts | 47	0	frontend/review/ord0507/ord0507_access_after.json | 47	0	frontend/review/ord0507/ord0507_access_before.json | 47	0	frontend/review/ord0507/ord0507_access_mutant.json | 65	0	frontend/review/ord0507/ord0507_access_read.cjs | 72	0	frontend/review/ord0507/ord0507_measure_r1.cjs | 125	0	frontend/review/ord0507/ord0507_spec_run3.txt | 1	0	frontend/review/ord0507/ord0507_tsc1.txt | 17	1	frontend/src/features/access/AccessPanel.tsx | 11	3	frontend/src/features/access/accessCopy.ts |
+six_code_ruling=CMDR 23:02 accepted the mapping arm plus the pairing arm as the final form (ledger block '### CMDR 23:02', section 二)
