@@ -1,0 +1,102 @@
+{
+ "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
+ "arm": "names-painted-390",
+ "run_id": "ord0512c2",
+ "viewport": "390x844",
+ "server_stop_rows_in_payloads": 18,
+ "server_distinct_names": 8,
+ "pin_count": 9,
+ "label_node_count": 9,
+ "shown_count": 3,
+ "shown_texts": [
+  "Arrival",
+  "Tianjin Museum",
+  "Tianjin Eye"
+ ],
+ "placements_at_first_read": [
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "over_a_name",
+   "right"
+  ],
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "over_a_control",
+   "right"
+  ]
+ ],
+ "settled_shown_count": 3,
+ "placements_after_settle": [
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "over_a_name",
+   "right"
+  ],
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "shown",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "off_map",
+   "right"
+  ],
+  [
+   "over_a_control",
+   "right"
+  ]
+ ],
+ "missing_from_glass": [],
+ "canvasInnerTextChars": 52,
+ "place_name_keys_in_payloads": 0,
+ "sources": [
+  "title",
+  "title",
+  "title"
+ ],
+ "first_label_ink_changed_it": true
+}

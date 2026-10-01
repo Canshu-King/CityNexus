@@ -1,0 +1,28 @@
+{
+ "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
+ "arm": "labels-move-with-camera",
+ "run_id": "ord0512c2",
+ "before": 3,
+ "after": 3,
+ "common_compared": 2,
+ "moved": [
+  {
+   "text": "Arrival",
+   "dx": 81,
+   "dy": 52
+  },
+  {
+   "text": "Tianjin Museum",
+   "dx": 81,
+   "dy": 52
+  }
+ ],
+ "stuck": [],
+ "appeared_after_the_drag": [
+  "Check in · Haihe Riverside Hotel"
+ ],
+ "vanished_after_the_drag": [
+  "Tianjin Eye"
+ ],
+ "first_still_inked": true
+}
