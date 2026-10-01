@@ -1,0 +1,40 @@
+{
+ "cmd": "node ui_exposure_taint_ast_r8.cjs --file <all .ts/.tsx under exp_tip_b604/frontend/src, comma-joined> --contract exp_tip_b604/contracts/openapi.yaml --out repo_wide_perfile_r2.json  (and the --tree form into tree_r8_b604.json)",
+ "tip": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+ "modules": 140,
+ "headline": {
+  "cells": 15,
+  "red": 14,
+  "exempted": 1,
+  "contract_blocked": 1,
+  "parse_diagnostics_total": 0,
+  "files_failed": 0
+ },
+ "tree": {
+  "modules_in_graph": 140,
+  "cells": 8,
+  "red": 5,
+  "exempted": 3,
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "ledger": [
+   {
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "file": "app/V8Experience.tsx",
+    "line": 2893,
+    "exemption_id": "EX-2-ATTRIBUTED-FOLD"
+   },
+   {
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "file": "components/CnxMeasuredFacts.tsx",
+    "line": 81,
+    "exemption_id": "EX-2-ATTRIBUTED-FOLD"
+   },
+   {
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 299,
+    "exemption_id": "EX-2-ATTRIBUTED-FOLD"
+   }
+  ]
+ }
+}
