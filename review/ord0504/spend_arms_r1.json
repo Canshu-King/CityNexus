@@ -2,8 +2,8 @@
   "front": "http://127.0.0.1:4931",
   "backend": "http://127.0.0.1:8731",
   "journeys": {
-    "bare": "e94e33a1-8ea9-4107-8f86-3ac1c816d1c1",
-    "priced": "36820b2f-0f8a-4b34-a02b-fba85a7b4f8c"
+    "bare": "618cefb0-2b31-4181-aede-ddc0ede55edc",
+    "priced": "8eb74b03-c5f5-40ff-abbd-c9252953da70"
   },
   "expected_groups": {
     "CNY": {
@@ -150,10 +150,11 @@
       "detail": {
         "days_on_face": 3,
         "day_lines": [
-          "已确认 CNY 230.00 · 估算 CNY 45.00",
+          "已确认 CNY 230.00 · 这个币种没有估算项",
+          "这个币种还没有已确认的项 · 估算 CNY 45.00",
           "已确认 USD 99.00 · 这个币种没有估算项"
         ],
-        "server_said_days": 2
+        "server_said_days": 3
       }
     },
     {
@@ -179,7 +180,7 @@
       "pass": true,
       "detail": {
         "lever": {
-          "leg_id": "81caad6d-6847-4023-8901-7587fe742737",
+          "leg_id": "d1007981-6fb2-4264-9517-79ac16382697",
           "before_minor": 4500,
           "after_minor": 9500,
           "currency": "CNY",
