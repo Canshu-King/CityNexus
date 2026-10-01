@@ -361,6 +361,135 @@ agree:
 This contrast materially changed the activity set from the earlier cultural
 pair (玉龙纳西族自治县文化馆 + 万德宫) to two outdoor parks, based on the explicit
 outdoor preference and real provider categories. The only remaining R14
-frontier is to carry the same strategy/VOI/pivot mechanism to another
-unseeded city and to tighten search-budget continuity so a bounded multi-step
-Agent run can pivot across turns without misreading per-turn search limits.
+frontier at that checkpoint was to carry the same strategy/VOI/pivot mechanism
+to another unseeded city; the Dali run below is that transfer. Search-budget
+continuity remains a follow-up engineering opportunity.
+
+## Dali unseeded-catalog recovery and completed autonomous replan
+
+The next run used the same product path on an unseeded Dali Journey rather than
+adding Dali to demo data. Journey `898830a3-3aad-4970-9522-f18240798c0e`
+(`CN-DALI`) started with two real provider Places: People Park
+(`real-place-332c2d0e9568186ef6010329`) and Erhai Park
+(`real-place-68a115779f0198818a55065f`). Both canonical opening and cost
+evidence were still `UNKNOWN`.
+
+### Defect observed and bounded repair
+
+The first Dali Agent attempt exposed a real integration gap: the Agent's
+`search_city_services` tool only read local catalog rows, so an unseeded live
+Journey could not enter the provider discovery path. AgentRun
+`fa634019-a259-4467-8b44-6315f111a80e` ended with `SEARCH_SATURATION` despite the product's live
+Overpass discovery being available. The bounded repair in
+`backend/app/agent/gateway.py` bridges an empty live Journey catalog to the
+existing `capture_real_city_candidates(..., mode="live")` path. It returns a
+discovery receipt and only materialized provider-backed rows; it does not let
+the Agent invent Place IDs.
+
+The second defect was strict replacement ranking: the real Dali catalog had
+provider-backed Places but canonical cost was `UNKNOWN`, so the recovery engine
+could not choose an otherwise viable replacement. The bounded lab-only repair
+adds an explicit `allow_strategy_estimate` path. It accepts a persisted
+`ESTIMATED_AGENT` strategy hypothesis only when the isolated
+`COURSEWORK_ESTIMATE` envelope is enabled. The default remains strict, and
+compatibility `cost_minor=0` is never treated as known free. Canonical
+provider opening/cost fields remain unchanged.
+
+### Actual domestic-model Agent loop
+
+Controlled disruption Event `4238a285-720a-4203-901e-ab526d3a63be` reported a
+major user-reported closure of Erhai Park while People Park was already
+completed. The first recovery attempt preserved the failure evidence:
+`accept_replan` rejected proposal `35e77e4b-b333-4518-9c9e-573995ffa0af` because it did not preserve
+the current execution position, and replacement attempts failed with real
+`MOBILITY_DATA_UNAVAILABLE` / `SERVICE_UNAVAILABLE` results. Those were not
+counted as success.
+
+After the bounded repairs, AgentRun
+`a4e2b17b-0e5a-4e79-aa77-53bae776510a` completed through the domestic
+`HERMES_COMPAT_ENDPOINT` runtime with model `cn:glm-5.3-flash` and mission
+`f484e7db-3169-4862-ab6e-337b734e0009`. Its persisted useful tool order was:
+
+```text
+inspect_journey
+→ inspect_twin
+→ search_city_services (live discovery receipt, 8 provider-backed Places)
+→ estimate_place_facts (Erhai ecological corridor, ESTIMATED_AGENT)
+→ request_replan
+→ list_replans
+→ accept_replan
+```
+
+The Agent chose the unused outdoor provider Place Erhai Ecological Corridor
+(`real-place-8fba1ea421a36176c31fa564`). The persisted estimate was explicitly
+09:00–18:00 and 5,000 CNY with status `ESTIMATED_AGENT`, basis
+`AGENT_PROVIDED_HYPOTHESIS`, and `authority_eligible=false`. The canonical
+Place still reports opening `UNKNOWN` and cost evidence status `UNKNOWN`.
+
+Deterministic recovery accepted proposal
+`cc97afb0-131b-4d2e-aa35-960a0053ba7d` under policy v2:
+
+- family: `F0_SAME_SLOT_REPLACEMENT`
+- base PlanVersion: `ca79d124-a358-5b7d-b074-63340232bd5e`
+- accepted PlanVersion: `be6159dd-785b-405d-8b9c-9d0d4c5e37a4`
+- kept People Park; removed closed Erhai Park; added the ecological corridor
+- cost delta: +5,000 CNY minor
+- travel delta: +4 minutes
+- `hard_constraints_passed=true`
+- `locked_commitments_preserved=true`
+- `DETERMINISTIC_GATE_VERIFIED`
+
+The accepted plan froze mobility snapshot
+`9827a08c-8a13-4704-aeab-79864af21918`. Its actual used edge was collected
+from product/Twin state, not synthesized:
+
+```json
+{
+  "used_edge_ids": [[
+    "real-place-332c2d0e9568186ef6010329",
+    "real-place-8fba1ea421a36176c31fa564"
+  ]],
+  "provider": "valhalla-http",
+  "route_provenance": "LIVE_PROVIDER_CAPTURE",
+  "fact_quality": "LIVE_PROVIDER_CAPTURE",
+  "hard_minutes": 63,
+  "decision": "HARD_ELIGIBLE",
+  "degraded": false
+}
+```
+
+The new activity `80e98c88-0d7c-45f4-a338-425b93f51997` then traversed the
+real product lifecycle: `depart` 200, `arrive` 200, `begin` 200, and
+`complete` 200. Final machine state agrees across Journey, PlanVersion,
+activities, and Twin:
+
+- Journey: `COMPLETED`
+- active PlanVersion: `be6159dd-785b-405d-8b9c-9d0d4c5e37a4`
+- current activity: `null`
+- Twin: `projection_status=READY`, `now_state=COMPLETE`
+- both activities: `COMPLETED`
+- plan explanation: `COURSEWORK_ESTIMATED_FACTS`, envelope
+  `COURSEWORK_ESTIMATE`
+- no canonical/provider fact was relabeled as LIVE or FREE
+
+This is the first R14 run in which a domestic Agent discovered an unseeded
+provider catalog, chose a new strategy target after a closure, crossed the
+deterministic authority boundary, and completed the revised Journey. It is a
+coursework-estimated selectable result, not a claim that unknown opening/cost
+facts are production verified.
+
+### Focused verification and next frontier
+
+The focused regression run after the bounded repairs was:
+
+```text
+uv run pytest backend/tests/test_hotfix_v2_closure_truth.py backend/tests/test_agent_mission_runtime.py -q
+37 passed, 1 warning
+```
+
+The new tests cover the live unseeded discovery bridge and the rule that an
+Agent estimate can affect replacement ranking only inside the explicit lab
+envelope. The next autonomous experiment is to transfer the same strategy
+engine to another freshly unseeded city with the lab estimate envelope off,
+so the system must either acquire corroborated facts or retain a truthful
+provisional/non-selectable result instead of widening authority.

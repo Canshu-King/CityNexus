@@ -12,6 +12,7 @@ Covers the two P0/P1 blockers found by the independent v2 recheck:
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
@@ -316,3 +317,48 @@ def test_unknown_cost_row_is_not_ranked_as_a_free_recovery_option() -> None:
     )
 
     assert choices == ()
+
+
+def test_strategy_estimate_is_ranked_only_inside_explicit_lab_envelope() -> None:
+    from app.replanning.mock_replan_engine import rank_closure_replacements
+
+    estimated = SimpleNamespace(
+        id="real-place-estimated-recovery",
+        provider_key="overpass",
+        external_id="overpass:node/estimated",
+        latitude=24.6,
+        longitude=118.2,
+        name="Estimated recovery venue",
+        category="park",
+        tags_json='["outdoor", "park"]',
+        metadata_json=json.dumps(
+            {
+                "duration_min": 60,
+                "cost_minor": 0,
+                "cost_evidence": {"status": "UNKNOWN", "amount_minor": None},
+                "strategy_estimate": {
+                    "status": "ESTIMATED_AGENT",
+                    "cost_evidence": {
+                        "status": "ESTIMATED_AGENT",
+                        "amount_minor": 5000,
+                    },
+                },
+            }
+        ),
+    )
+
+    assert rank_closure_replacements(
+        affected_place=_wrapper_row(),
+        candidate_places=[estimated],
+        occupied_place_ids={_wrapper_row().id},
+        max_duration_min=90,
+    ) == ()
+    choices = rank_closure_replacements(
+        affected_place=_wrapper_row(),
+        candidate_places=[estimated],
+        occupied_place_ids={_wrapper_row().id},
+        max_duration_min=90,
+        allow_strategy_estimate=True,
+    )
+    assert [choice.place_id for choice in choices] == [estimated.id]
+    assert choices[0].cost_minor == 5000

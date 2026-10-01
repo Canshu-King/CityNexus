@@ -409,7 +409,9 @@ from app.schemas import (
     Transaction as TransactionSchema,
 )
 from app.services import (
+    COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE,
     KNOWN_COST_EVIDENCE_STATUSES,
+    _coursework_estimate_covers,
     _journey_constraints_with_capabilities,
     constraint_schema,
     generate_plans,
@@ -6760,6 +6762,12 @@ def _replacement_activity_metadata(
         cost_status in KNOWN_COST_EVIDENCE_STATUSES
         and cost_evidence.get("amount_minor") is not None
     )
+    strategy_estimate = place_metadata.get("strategy_estimate")
+    if not (
+        isinstance(strategy_estimate, Mapping)
+        and str(strategy_estimate.get("status") or "").upper() == "ESTIMATED_AGENT"
+    ):
+        strategy_estimate = None
     metadata: dict[str, Any] = {
         "compose_source": "REPLAN_PROVIDER_CATALOGUE",
         "semantic_key": replacement_choice.place_id,
@@ -6776,6 +6784,11 @@ def _replacement_activity_metadata(
         "replan_reason_codes": list(reason_codes or replacement_choice.reason_codes),
         "replaced_place_id": replaced_place_id,
     }
+    if strategy_estimate is not None:
+        # Keep the provider-backed opening/cost claims above untouched.  This is
+        # a strategy hint that can be used only when the Revolution Lab explicitly
+        # enables the COURSEWORK_ESTIMATE envelope.
+        metadata["strategy_estimate"] = dict(strategy_estimate)
     if solver_v2_assignment is not None:
         metadata["solver_v2_assignment"] = solver_v2_assignment
     return json.dumps(metadata, ensure_ascii=False, sort_keys=True)
@@ -9437,6 +9450,7 @@ def generate_replan(
                             )
                             if place is not None
                         ],
+                        allow_strategy_estimate=settings.lab_estimate_authority,
                         max_duration_min=max(
                             1,
                             int(
@@ -9592,6 +9606,7 @@ def generate_replan(
                         candidate_places=candidate_places,
                         occupied_place_ids=occupied_place_ids,
                         occupied_places=occupied_places,
+                        allow_strategy_estimate=settings.lab_estimate_authority,
                         max_duration_min=max(
                             1,
                             int(
@@ -10862,6 +10877,39 @@ def generate_replan(
 
         for row in copied_rows:
             session.add(Activity(id=str(uuid4()), plan_version_id=proposed.id, **row))
+
+        content_places: list[Place] = []
+        for row in copied_rows:
+            place = session.get(Place, row.get("place_id")) if row.get("place_id") else None
+            if place is None and row.get("city_service_id"):
+                service = session.get(CityService, row["city_service_id"])
+                place = session.get(Place, service.place_id) if service and service.place_id else None
+            if place is not None and place.provider_key not in _SERVER_OWNED_PLACE_PROVIDERS:
+                content_places.append(place)
+        coursework_authority = (
+            settings.lab_estimate_authority
+            and bool(content_places)
+            and all(_coursework_estimate_covers(place) for place in content_places)
+        )
+        proposed.explanation_json = json.dumps(
+            {
+                "reason": family,
+                "authority_state": (
+                    "COURSEWORK_ESTIMATED_FACTS"
+                    if coursework_authority
+                    else "PROVISIONAL_UNRESOLVED_FACTS"
+                ),
+                "authority_envelope": (
+                    COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+                ),
+                "authority_note": (
+                    "Coursework-only recovery using explicit Agent estimates; this is not a LIVE provider-ready result."
+                    if coursework_authority
+                    else None
+                ),
+            },
+            sort_keys=True,
+        )
 
         proposed.total_cost_minor = sum(int(row["estimated_cost_minor"]) for row in copied_rows)
         if copied_rows:

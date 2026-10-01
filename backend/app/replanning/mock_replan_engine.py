@@ -421,8 +421,16 @@ def rank_closure_replacements(
     max_duration_min: int,
     traveler_preferences: Iterable[Any] = (),
     occupied_places: Iterable[Any] | None = None,
+    allow_strategy_estimate: bool = False,
 ) -> tuple[ReplacementChoice, ...]:
-    """Return every distinct same-slot replacement in deterministic rank order."""
+    """Return every distinct same-slot replacement in deterministic rank order.
+
+    ``allow_strategy_estimate`` is an explicit Revolution Lab envelope.  It lets
+    the lab rank a real provider Place whose canonical cost remains UNKNOWN when
+    an Agent has persisted a bounded ``ESTIMATED_AGENT`` strategy estimate.  The
+    default stays strict so production/replay callers cannot turn compatibility
+    ``cost_minor=0`` or UNKNOWN evidence into an authoritative recovery input.
+    """
 
     traveler_preferences = list(traveler_preferences)
     affected_tags = set(_json(getattr(affected_place, "tags_json", "[]"), []))
@@ -447,16 +455,29 @@ def rank_closure_replacements(
         duration = int(meta.get("duration_min", 60))
         cost_evidence = meta.get("cost_evidence")
         if isinstance(cost_evidence, dict):
-            if (
-                str(cost_evidence.get("status") or "UNKNOWN").upper()
-                not in {"KNOWN", "ESTIMATED"}
-                or cost_evidence.get("amount_minor") is None
-            ):
+            cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
+            cost_value = cost_evidence.get("amount_minor")
+            if cost_status in {"KNOWN", "ESTIMATED"} and cost_value is not None:
+                cost = int(cost_value)
+            elif allow_strategy_estimate:
+                strategy_estimate = meta.get("strategy_estimate")
+                estimate_cost = (
+                    strategy_estimate.get("cost_evidence")
+                    if isinstance(strategy_estimate, dict)
+                    and str(strategy_estimate.get("status") or "").upper()
+                    == "ESTIMATED_AGENT"
+                    else None
+                )
+                if not isinstance(estimate_cost, dict) or estimate_cost.get("amount_minor") is None:
+                    # `cost_minor=0` is retained for compatibility/display, but
+                    # it is not evidence that a real provider place is free.
+                    continue
+                cost = int(estimate_cost["amount_minor"])
+            else:
                 # `cost_minor=0` is retained for compatibility/display, but it
-                # is not evidence that a real provider place is free.  Unknown
+                # is not evidence that a real provider place is free. Unknown
                 # cost rows must stay out of an authoritative recovery option.
                 continue
-            cost = int(cost_evidence["amount_minor"])
         else:
             # Legacy sealed fixtures predate cost_evidence and keep their
             # explicit cost_minor contract.

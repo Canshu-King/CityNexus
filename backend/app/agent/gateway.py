@@ -596,9 +596,11 @@ class AgentToolGateway:
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:
+        journey = None
         city_code = request.city_code
         if city_code is None and request.journey_id is not None:
-            city_code = _require_journey(self.session, request.journey_id).city_code
+            journey = _require_journey(self.session, request.journey_id)
+            city_code = journey.city_code
         if not city_code:
             raise HTTPException(422, "city_code or journey_id is required for this Agent tool")
         services = self.session.scalars(
@@ -623,6 +625,41 @@ class AgentToolGateway:
         places = self.session.scalars(
             select(Place).where(Place.city_code == city_code).order_by(Place.id)
         ).all()
+        discovery_receipt: dict[str, Any] | None = None
+        # An unseeded live Journey must be able to enter the same real discovery
+        # path used by the product surface.  The Agent still receives only the
+        # materialized provider-backed rows; it never supplies or invents IDs.
+        if not services and not places and journey is not None:
+            from app.core.config import settings
+            from app.integrations.discovery.real_city import capture_real_city_candidates
+
+            if settings.real_city_enabled and settings.real_city_mode == "live":
+                discovery_query = request.q or request.category or "attraction"
+                discovered = capture_real_city_candidates(
+                    self.session,
+                    journey,
+                    query=discovery_query,
+                    radius_m=5000,
+                    limit=8,
+                    mode="live",
+                )
+                self.session.commit()
+                provider_status = discovered.get("provider_status") or {}
+                discovery_receipt = {
+                    "attempted": True,
+                    "query": discovery_query,
+                    "mode": discovered.get("mode"),
+                    "provenance": discovered.get("provenance"),
+                    "runtime_provenance": discovered.get("runtime_provenance"),
+                    "candidate_count": len(discovered.get("candidates") or []),
+                    "provider_status": provider_status,
+                }
+                services = self.session.scalars(
+                    select(CityService).where(CityService.city_code == city_code).order_by(CityService.id)
+                ).all()
+                places = self.session.scalars(
+                    select(Place).where(Place.city_code == city_code).order_by(Place.id)
+                ).all()
         category_terms = _city_category_terms(request.category)
         if category_terms:
             places = [
@@ -642,7 +679,7 @@ class AgentToolGateway:
                     for term in search_terms
                 )
             ]
-        return {
+        result = {
             "tool": "search_city_services",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "city_code": city_code,
@@ -668,6 +705,9 @@ class AgentToolGateway:
                 for item in places
             ],
         }
+        if discovery_receipt is not None:
+            result["discovery"] = discovery_receipt
+        return result
 
     def acquire_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)

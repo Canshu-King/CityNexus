@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from datetime import datetime, timezone
+from uuid import uuid4
 
 import httpx
 import pytest
@@ -60,6 +61,65 @@ def test_abandoning_indoor_path_does_not_compile_as_indoor_preferred():
     command = "明确放弃剧场和室内馆路径，优先户外自然景观。"
     assert preference_is_explicitly_excluded(command, ("室内", "indoor"))
     assert not preference_is_positive(command, ("室内", "indoor"))
+
+
+def test_agent_search_bridges_unseeded_live_journey_to_provider_discovery(monkeypatch):
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
+    city_code = f"R14-UNSEEDED-{uuid4().hex[:8]}"
+    place_id = f"real-place-{uuid4().hex}"
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        journey.city_code = city_code
+        session.commit()
+
+    def fake_capture(session, journey, **kwargs):
+        session.add(
+            Place(
+                id=place_id,
+                provider_key="overpass",
+                external_id="overpass:node/1414",
+                city_code=journey.city_code,
+                name="Unseeded Park",
+                category="park",
+                latitude=26.8,
+                longitude=100.2,
+                opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+                tags_json=json.dumps(["outdoor", "park", "real_city"]),
+                metadata_json=json.dumps(
+                    {"discovery_mode": "live", "cost_evidence": {"status": "UNKNOWN"}}
+                ),
+                updated_at=datetime.now(timezone.utc).isoformat(),
+            )
+        )
+        return {
+            "mode": "live",
+            "provenance": "LIVE_PROVIDER",
+            "runtime_provenance": "LIVE_PROVIDER",
+            "provider_status": {"nominatim": "CAPTURED", "overpass": "CAPTURED"},
+            "candidates": [{"id": place_id}],
+        }
+
+    monkeypatch.setattr(
+        "app.core.config.settings",
+        replace(runtime_settings, real_city_enabled=True, real_city_mode="live"),
+    )
+    monkeypatch.setattr(
+        "app.integrations.discovery.real_city.capture_real_city_candidates", fake_capture
+    )
+    with SessionLocal() as session:
+        result = main_module.AgentToolGateway(session).search_city_services(
+            main_module.AgentToolCall(
+                request_id="r14-unseeded-search",
+                journey_id=journey_id,
+                q="park",
+            )
+        )
+
+    assert result["discovery"]["provenance"] == "LIVE_PROVIDER"
+    assert result["discovery"]["candidate_count"] == 1
+    assert result["places"][0]["id"] == place_id
+    assert result["places"][0]["provider_key"] == "overpass"
 
 
 def _selected_journey() -> str:
