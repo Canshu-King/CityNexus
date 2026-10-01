@@ -55,7 +55,11 @@ def _live_weather_refresh(session, journey: Journey) -> SignalPipelineResult:
 
     async def capture():
         async with httpx.AsyncClient(timeout=settings.open_meteo_timeout_seconds) as client:
-            provider = OpenMeteoContextProvider(client=client, base_url=settings.open_meteo_url)
+            provider = OpenMeteoContextProvider(
+                client=client,
+                base_url=settings.open_meteo_url,
+                rain_probability_threshold=settings.predictive_risk_threshold,
+            )
             return await refresh_weather_runtime(
                 session,
                 journey,
