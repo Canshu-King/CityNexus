@@ -85,7 +85,10 @@ def contract_for_simulation(*, scenario_type: str, dropped_activity_ids: list[st
         provenance = ["PROVIDER_VERIFIED", "USER_REPORTED"]
     else:
         allowed_events = ["TRAFFIC_DELAY", "SCHEDULE_DELAY"]
-        provenance = ["PROVIDER_VERIFIED", "SYSTEM_DERIVED"]
+        # A traveler-observed delay is a valid signal for a mobility branch;
+        # the Gateway still requires event type, scope, severity, freshness,
+        # and current-parent equality before it can mutate reality.
+        provenance = ["PROVIDER_VERIFIED", "SYSTEM_DERIVED", "USER_REPORTED"]
     return {
         "scenario_type": scenario_type,
         "allowed_event_types": allowed_events,
