@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useT, useLocale } from "../../i18n/LocaleContext";
+import { useLocale } from "../../i18n/LocaleContext";
 import { namedCodeIn } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { PoiCandidateCard } from "../../components/PoiCandidateCard";
@@ -15,7 +15,7 @@ import {
   shelvesHolding,
   type ReadOutcome,
 } from "../collections/collections";
-import { poiImportCopy } from "./poiImportCopy";
+import { poiImportCopy, type PoiImportCopyKey } from "./poiImportCopy";
 import "./poi-import.css";
 
 /**
@@ -144,14 +144,14 @@ function describeRejection(cause: unknown): Failure {
 /** One sentence per named condition, all of them ours. A condition with no dictionary line does not
  * get to borrow the answer's wording -- it gets `errUnnamed`, and the machine token stays visible in
  * the detail so the screen is still diagnosable. */
-const FAILURE_SENTENCE: Record<Failure["code"], string> = {
-  JOURNEY_NOT_FOUND: "poiImport.errJourneyNotFound",
-  NO_ACTIVE_PLAN: "poiImport.errNoActivePlan",
-  IMPORT_DAY_REQUIRED: "poiImport.errDayRequired",
-  IMPORT_PLACE_UNKNOWN: "poiImport.errPlaceUnknown",
-  IMPORT_PLACE_NOT_VISITABLE: "poiImport.errPlaceNotVisitable",
-  NO_RESPONSE_FROM_ORIGIN: "poiImport.errNoResponse",
-  UNNAMED_REFUSAL: "poiImport.errUnnamed",
+const FAILURE_SENTENCE: Record<Failure["code"], PoiImportCopyKey> = {
+  JOURNEY_NOT_FOUND: "errJourneyNotFound",
+  NO_ACTIVE_PLAN: "errNoActivePlan",
+  IMPORT_DAY_REQUIRED: "errDayRequired",
+  IMPORT_PLACE_UNKNOWN: "errPlaceUnknown",
+  IMPORT_PLACE_NOT_VISITABLE: "errPlaceNotVisitable",
+  NO_RESPONSE_FROM_ORIGIN: "errNoResponse",
+  UNNAMED_REFUSAL: "errUnnamed",
 };
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
@@ -180,7 +180,6 @@ export function PoiImportPanel({
   firstDay?: string | null;
   onOpenPlan: () => void;
 }) {
-  const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [mode, setMode] = useState<"text" | "screenshot">("text");
@@ -343,9 +342,9 @@ export function PoiImportPanel({
     <section className="v8-page" data-testid="poi-import">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{t("poiImport.kicker")}</p>
-          <h1>{t("poiImport.title")}</h1>
-          <p className="v8-lede">{t("poiImport.lede")}</p>
+          <p className="v8-kicker">{poiImportCopy(locale, "kicker")}</p>
+          <h1>{poiImportCopy(locale, "title")}</h1>
+          <p className="v8-lede">{poiImportCopy(locale, "lede")}</p>
         </div>
         <span className="v8-evidence-label">
           <span className="status-dot" />
@@ -355,16 +354,16 @@ export function PoiImportPanel({
 
       <div className="v8-agent-composer-card">
         <div className="v8-agent-copy">
-          <span className="v8-agent-mark">{t("poiImport.brand")}</span>
-          <h2>{t("poiImport.modesTitle")}</h2>
-          <p>{t("poiImport.modesSub")}</p>
+          <span className="v8-agent-mark">{poiImportCopy(locale, "brand")}</span>
+          <h2>{poiImportCopy(locale, "modesTitle")}</h2>
+          <p>{poiImportCopy(locale, "modesSub")}</p>
           <div className="v8-agent-boundary">
-            <b>{t("poiImport.boundary")}</b>
-            <span>{t("poiImport.boundarySub")}</span>
+            <b>{poiImportCopy(locale, "boundary")}</b>
+            <span>{poiImportCopy(locale, "boundarySub")}</span>
           </div>
         </div>
         <div className="v8-agent-input">
-          <div className="v8-mode-chips" role="radiogroup" aria-label={t("poiImport.modesTitle")}>
+          <div className="v8-mode-chips" role="radiogroup" aria-label={poiImportCopy(locale, "modesTitle")}>
             <button
               type="button"
               role="radio"
@@ -373,7 +372,7 @@ export function PoiImportPanel({
               data-testid="poi-import-mode-text"
               onClick={() => setMode("text")}
             >
-              {t("poiImport.modeText")}
+              {poiImportCopy(locale, "modeText")}
             </button>
             <button
               type="button"
@@ -383,32 +382,32 @@ export function PoiImportPanel({
               data-testid="poi-import-mode-screenshot"
               onClick={() => setMode("screenshot")}
             >
-              {t("poiImport.modeScreenshot")}
+              {poiImportCopy(locale, "modeScreenshot")}
             </button>
           </div>
           {mode === "screenshot" ? (
             <p className="v8-message" role="status" data-testid="poi-import-mode-unsupported">
-              {t("poiImport.screenshotNotSupported")}
+              {poiImportCopy(locale, "screenshotNotSupported")}
             </p>
           ) : (
             <>
-              <label htmlFor="poi-import-text">{t("poiImport.intent")}</label>
+              <label htmlFor="poi-import-text">{poiImportCopy(locale, "intent")}</label>
               <textarea
                 id="poi-import-text"
                 data-testid="poi-import-text"
                 value={text}
-                placeholder={t("poiImport.placeholder")}
+                placeholder={poiImportCopy(locale, "placeholder")}
                 onChange={(event) => setText(event.target.value)}
               />
               <p data-testid="poi-import-char-count">
-                {t("poiImport.charCount", { n: text.length })}
+                {poiImportCopy(locale, "charCount", { n: text.length })}
               </p>
               {/* The reference input box states its supported scope in the hint (map_findings.md Q3:
                   小红书笔记 / 公众号内容 / 已公开权限的飞书文档). Saying it here is what keeps an
                   unread link from reading as a failure of the traveller's paste -- and the sentence has
                   to say we do not open those pages, or the list would be a promise this build breaks. */}
               <p className="v8-sheet-note" data-testid="poi-import-scope-hint">
-                {t("poiImport.scopeHint")}
+                {poiImportCopy(locale, "scopeHint")}
               </p>
             </>
           )}
@@ -419,18 +418,18 @@ export function PoiImportPanel({
               disabled={mode !== "text" || phase === "loading" || text.trim().length < 2}
               onClick={() => void runParse()}
             >
-              {phase === "loading" ? t("poiImport.parsing") : t("poiImport.parseAction")}
+              {phase === "loading" ? poiImportCopy(locale, "parsing") : poiImportCopy(locale, "parseAction")}
             </button>
           </div>
           {/* Outside the result card on purpose: which day an import would land on has to be said
               before the traveller asks for anything, so it cannot live in a region that only exists
               after the press. ORD-0437's own gate caught it there on the first run. */}
           <p className="v8-sheet-note" data-testid="poi-import-day-disclosure">
-            <b>{t("poiImport.autoDayLabel")}</b>{" "}
-            {day || firstDay || t("poiImport.autoDayUnknown")} — {t("poiImport.autoDayNote")}
+            <b>{poiImportCopy(locale, "autoDayLabel")}</b>{" "}
+            {day || firstDay || poiImportCopy(locale, "autoDayUnknown")} — {poiImportCopy(locale, "autoDayNote")}
           </p>
           {mode === "text" && text.trim().length < 2 ? (
-            <p className="v8-sheet-note">{t("poiImport.needTextHint")}</p>
+            <p className="v8-sheet-note">{poiImportCopy(locale, "needTextHint")}</p>
           ) : null}
         </div>
       </div>
@@ -441,33 +440,33 @@ export function PoiImportPanel({
           <article className="v8-intel-hero">
             <span className="v8-status-pill violet" data-testid="poi-import-phase">
               {phase === "loading"
-                ? t("poiImport.phaseLoading")
+                ? poiImportCopy(locale, "phaseLoading")
                 : phase === "error"
-                  ? t("poiImport.phaseError")
-                  : t("poiImport.phaseSuccess")}
+                  ? poiImportCopy(locale, "phaseError")
+                  : poiImportCopy(locale, "phaseSuccess")}
             </span>
             {phase === "loading" ? (
-              <p data-testid="poi-import-loading-text">{t("poiImport.loadingWhere")}</p>
+              <p data-testid="poi-import-loading-text">{poiImportCopy(locale, "loadingWhere")}</p>
             ) : null}
             {phase === "error" && failure ? (
               <p role="alert" data-testid="poi-import-error">
-                {t("poiImport.loadFailed")}
+                {poiImportCopy(locale, "loadFailed")}
                 {/* The condition is this screen's own sentence. The only value painted next to it is
                     the status this device measured -- the named code stays inside the component,
                     because it is read out of the answer's envelope and the exposure rule forbids
                     anything derived from the body reaching the DOM by any route, filtering included.
                     (r7b counted my first attempt as a cell for exactly that reason.) */}
-                <span data-testid="poi-import-error-why">{t(FAILURE_SENTENCE[failure.code])}</span>
+                <span data-testid="poi-import-error-why">{poiImportCopy(locale, FAILURE_SENTENCE[failure.code])}</span>
                 {failure.status ? (
                   <small data-testid="poi-import-error-detail">HTTP {failure.status}</small>
                 ) : (
-                  <small data-testid="poi-import-error-detail">{t("poiImport.errNoResponse")}</small>
+                  <small data-testid="poi-import-error-detail">{poiImportCopy(locale, "errNoResponse")}</small>
                 )}
               </p>
             ) : null}
             {phase === "success" ? (
               <p data-testid="poi-import-counts">
-                {t("poiImport.counts", {
+                {poiImportCopy(locale, "counts", {
                   extracted: parsed?.counts.extracted ?? 0,
                   resolved: parsed?.counts.resolved ?? 0,
                   unresolved: parsed?.counts.unresolved ?? 0,
@@ -481,30 +480,30 @@ export function PoiImportPanel({
               disabled={phase === "loading" || mode !== "text"}
               onClick={() => void runParse()}
             >
-              {t("poiImport.retry")}
+              {poiImportCopy(locale, "retry")}
             </button>
           </article>
           <div className="v8-intel-facts">
             <div>
-              <span>{t("poiImport.channelLabel")}</span>
+              <span>{poiImportCopy(locale, "channelLabel")}</span>
               <b>{parsed?.source_channel ?? "LOCAL_TEXT_PARSER"}</b>
-              <small>{t("poiImport.channelNote")}</small>
+              <small>{poiImportCopy(locale, "channelNote")}</small>
             </div>
             {unsupportedForms.length ? (
               <div data-testid="poi-import-unsupported">
-                <span>{t("poiImport.unsupportedLabel")}</span>
+                <span>{poiImportCopy(locale, "unsupportedLabel")}</span>
                 <b>{unsupportedForms.join(" · ")}</b>
                 <small>
                   {parsed?.link_hosts.length
-                    ? t("poiImport.unsupportedHosts", { hosts: parsed.link_hosts.join(", ") })
-                    : t("poiImport.unsupportedNoFetch")}
+                    ? poiImportCopy(locale, "unsupportedHosts", { hosts: parsed.link_hosts.join(", ") })
+                    : poiImportCopy(locale, "unsupportedNoFetch")}
                 </small>
               </div>
             ) : null}
             <div data-testid="poi-import-day-result">
-              <span>{t("poiImport.autoDayLabel")}</span>
-              <b>{day || firstDay || t("poiImport.autoDayUnknown")}</b>
-              <small>{t("poiImport.autoDayNote")}</small>
+              <span>{poiImportCopy(locale, "autoDayLabel")}</span>
+              <b>{day || firstDay || poiImportCopy(locale, "autoDayUnknown")}</b>
+              <small>{poiImportCopy(locale, "autoDayNote")}</small>
             </div>
           </div>
         </div>
@@ -512,7 +511,7 @@ export function PoiImportPanel({
 
       {phase === "success" && parsed && parsed.items.length === 0 ? (
         <p className="v8-message" role="status" data-testid="poi-import-empty">
-          {t("poiImport.emptyExtracted")}
+          {poiImportCopy(locale, "emptyExtracted")}
         </p>
       ) : null}
 
@@ -520,7 +519,7 @@ export function PoiImportPanel({
         <>
           {/* Permanent while results are on screen: what was recognised still needs a human eye. */}
           <p className="v8-sheet-note" role="status" data-testid="poi-import-verify-warning">
-            {t("poiImport.verifyWarning")}
+            {poiImportCopy(locale, "verifyWarning")}
           </p>
           <div className="v8-stay-layout">
             <div className="v8-stay-list" data-testid="poi-import-results">
@@ -562,12 +561,12 @@ export function PoiImportPanel({
               ))}
             </div>
             <aside className="v8-boundary-card">
-              <b>{t("poiImport.exitsTitle")}</b>
+              <b>{poiImportCopy(locale, "exitsTitle")}</b>
               <p className="v8-sheet-note" data-testid="poi-import-exits-lead">
                 {poiImportCopy(locale, "exitsLead")}
               </p>
               <p data-testid="poi-import-selection-count">
-                {t("poiImport.selectedCount", { n: chosen.length, total: addableIds.length })}
+                {poiImportCopy(locale, "selectedCount", { n: chosen.length, total: addableIds.length })}
               </p>
               {/* ORD-0524 ②: one radiogroup, one chosen destination, and only the chosen one carries a
                   write control. 只存不排 is selectable on purpose -- choosing it takes both doors away
@@ -576,7 +575,7 @@ export function PoiImportPanel({
               <div
                 className="v8-exit-radiogroup"
                 role="radiogroup"
-                aria-label={t("poiImport.exitsTitle")}
+                aria-label={poiImportCopy(locale, "exitsTitle")}
                 data-testid="poi-import-exits"
               >
                 <button
@@ -588,7 +587,7 @@ export function PoiImportPanel({
                   data-picked={destination === "plan" ? "true" : "false"}
                   onClick={() => chooseDestination("plan")}
                 >
-                  {t("poiImport.addToPlan")}
+                  {poiImportCopy(locale, "addToPlan")}
                 </button>
                 <button
                   type="button"
@@ -599,7 +598,7 @@ export function PoiImportPanel({
                   data-picked={destination === "shelf" ? "true" : "false"}
                   onClick={() => chooseDestination("shelf")}
                 >
-                  {t("poiImport.favorite")}
+                  {poiImportCopy(locale, "favorite")}
                 </button>
                 <button
                   type="button"
@@ -619,7 +618,7 @@ export function PoiImportPanel({
 
               {destination === "plan" ? (
                 <div data-testid="poi-import-exit-plan-body">
-                  <label htmlFor="poi-import-day">{t("poiImport.dayLabel")}</label>
+                  <label htmlFor="poi-import-day">{poiImportCopy(locale, "dayLabel")}</label>
                   <input
                     id="poi-import-day"
                     type="date"
@@ -643,7 +642,7 @@ export function PoiImportPanel({
                     disabled={adding || chosen.length === 0}
                     onClick={() => void runAdd()}
                   >
-                    {adding ? t("poiImport.adding") : t("poiImport.addToPlan")}
+                    {adding ? poiImportCopy(locale, "adding") : poiImportCopy(locale, "addToPlan")}
                   </button>
                   {/* A replay adds nothing, so it has no right to a success sentence: this used to read
                       `added ? ...` and painted "0 places are on 2026-12-05 — read back from the server"
@@ -651,20 +650,20 @@ export function PoiImportPanel({
                       the gate's own replay arm. What a replay may say is what was already there. */}
                   {added && added.ids.length > 0 ? (
                     <p data-testid="poi-import-added">
-                      {t("poiImport.addedCount", { n: added.ids.length, day: added.day })}
+                      {poiImportCopy(locale, "addedCount", { n: added.ids.length, day: added.day })}
                       <small data-testid="poi-import-added-source">{added.daySource}</small>
                     </p>
                   ) : null}
                   {alreadyPresent.length ? (
                     <p data-testid="poi-import-already-present">
-                      {t("poiImport.alreadyPresent", { n: alreadyPresent.length })}
+                      {poiImportCopy(locale, "alreadyPresent", { n: alreadyPresent.length })}
                     </p>
                   ) : null}
                   {readBackFailure ? (
                     <p role="alert" data-testid="poi-import-readback-failed">
                       {readBackFailure === "MISMATCH"
-                        ? t("poiImport.readBackFailed")
-                        : t(FAILURE_SENTENCE[readBackFailure.code])}
+                        ? poiImportCopy(locale, "readBackFailed")
+                        : poiImportCopy(locale, FAILURE_SENTENCE[readBackFailure.code])}
                       {readBackFailure !== "MISMATCH" && readBackFailure.status ? (
                         <small data-testid="poi-import-readback-detail">HTTP {readBackFailure.status}</small>
                       ) : null}
@@ -773,7 +772,7 @@ export function PoiImportPanel({
               ) : null}
 
               <button className="v8-quiet-button" data-testid="poi-import-open-plan" onClick={onOpenPlan}>
-                {t("poiImport.openPlan")}
+                {poiImportCopy(locale, "openPlan")}
               </button>
             </aside>
           </div>
