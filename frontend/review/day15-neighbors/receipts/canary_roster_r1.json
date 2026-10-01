@@ -1,0 +1,61 @@
+{
+ "taken_at_local": "2026-10-02T05:50:21+0800",
+ "api_listed": {
+  "route": "GET /api/v1/journeys",
+  "http_status": 200,
+  "rows": 2,
+  "ids": [
+   "94669bae-e333-4bab-87cf-8c84ef3ad5c8",
+   "6cbdbc65-904a-40c7-a778-f981690f25d0"
+  ]
+ },
+ "api_recycle_bin": {
+  "route": "GET /api/v1/recycle-bin/journeys",
+  "http_status": 200,
+  "rows": 1,
+  "ids": [
+   "22222222-2222-4222-8222-222222222222"
+  ]
+ },
+ "demo_scene": {
+  "route": "GET /api/v1/demo/scene",
+  "http_status": 200,
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "journey_status": "ACTIVE"
+ },
+ "file_read_only": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_canary_day15.db",
+  "opened": "?mode=ro",
+  "journey_rows": 3,
+  "rows": [
+   {
+    "id": "94669bae-e333-4bab-87cf-8c84ef3ad5c8",
+    "city_code": "CN-BEIJING",
+    "status": "DRAFT",
+    "deleted_at": null,
+    "has_active_plan": false
+   },
+   {
+    "id": "6cbdbc65-904a-40c7-a778-f981690f25d0",
+    "city_code": "CN-BEIJING",
+    "status": "PLANNED",
+    "deleted_at": null,
+    "has_active_plan": true
+   },
+   {
+    "id": "22222222-2222-4222-8222-222222222222",
+    "city_code": "CNX-DEMO",
+    "status": "ACTIVE",
+    "deleted_at": "2026-10-01T18:51:52.830397+00:00",
+    "has_active_plan": true
+   }
+  ]
+ },
+ "the_trip_my_run_left_behind": {
+  "id": "22222222-2222-4222-8222-222222222222",
+  "in_the_list_door": false,
+  "in_the_recycle_bin_door": true,
+  "deleted_at_in_the_file": "2026-10-01T18:51:52.830397+00:00",
+  "door_that_can_undo_it": "POST /api/v1/journeys/{journey_id}/undelete (backend/app/main.py:3305) -- NOT called by this lane"
+ }
+}

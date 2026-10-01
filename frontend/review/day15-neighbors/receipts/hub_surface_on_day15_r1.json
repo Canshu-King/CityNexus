@@ -1,0 +1,35 @@
+{
+  "how_this_was_taken": "Qoder Playwright plugin, browser_navigate + browser_evaluate against the commander's own day15 front (:4783) on a fresh browser context, i.e. a device with no stored journey. Written out here so the screen reading sits next to the four specs' readings instead of only in a chat transcript.",
+  "url": "/v8/hub",
+  "generation_under_test": "5a4cdbd26d4a58d6ed6b277480e766ac08b15ded",
+  "local_wall_clock": "10-02 04:52",
+  "heading_today_heading": null,
+  "ids_total": 70,
+  "ids_distinct": 68,
+  "body_inner_text_chars": 168,
+  "bottom_nav_text": "",
+  "anchors_the_phone_mainline_asks_for": {
+    "trial-open": false,
+    "trips-tab-bookings": false,
+    "trips-tab-itinerary": false,
+    "stop-checkin": false,
+    "today-heading": false,
+    "hub-secondary-actions": false
+  },
+  "what_the_screen_actually_is": {
+    "trial-setup": true,
+    "first_ids": [
+      "trial-setup",
+      "trial-scroll",
+      "trial-steps",
+      "trial-step-1",
+      "trial-step-2",
+      "trial-step-3",
+      "trial-step1-body",
+      "trial-city",
+      "trial-supported-cities",
+      "trial-supported-toggle"
+    ],
+    "reading": "a clean device landing on /v8/hub is handed the onboarding wizard, not a hub with a journey; the 换城/新建 button the mainline instrument waits for is not on this surface at all"
+  }
+}

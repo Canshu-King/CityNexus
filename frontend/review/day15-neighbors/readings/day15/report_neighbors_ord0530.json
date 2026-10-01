@@ -1,0 +1,303 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.day15-neighbors-P.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\playwright.day15-neighbors-P.config.ts",
+    "rootDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-bac10f40-ord0530-footprints-by-day\\.spec\\.ts/"
+        ],
+        "timeout": 420000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:/moodle/_qoder_e766b154_ord0528_20261001/run/report_neighbors_ord0530.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+      "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2032,
+                  "error": {
+                    "message": "Error: this trip has nothing stamped on it\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m",
+                    "stack": "Error: this trip has nothing stamped on it\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:186:64",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+                      "column": 64,
+                      "line": 186
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 184 |\u001b[39m   expect(journeyId\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m\"the setup screen hands over a trip\"\u001b[39m)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m   \u001b[36mconst\u001b[39m served \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m doorRows(page\u001b[33m,\u001b[39m journeyId)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 186 |\u001b[39m   expect(served\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m\"this trip has nothing stamped on it\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 187 |\u001b[39m   \u001b[36mconst\u001b[39m w \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m openFootprints(page\u001b[33m,\u001b[39m journeyId)\u001b[33m;\u001b[39m\n \u001b[90m 188 |\u001b[39m   expect(w\u001b[33m.\u001b[39mpanel_present\u001b[33m,\u001b[39m \u001b[32m\"the panel is the surface being read\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 189 |\u001b[39m   expect(w\u001b[33m.\u001b[39mstate_line\u001b[33m,\u001b[39m \u001b[32m\"the empty arm says 还没有足迹\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[33mCOPY\u001b[39m\u001b[33m.\u001b[39mempty)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+                        "column": 64,
+                        "line": 186
+                      },
+                      "message": "Error: this trip has nothing stamped on it\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\n  184 |   expect(journeyId.length, \"the setup screen hands over a trip\").toBeGreaterThan(8);\n  185 |   const served = await doorRows(page, journeyId);\n> 186 |   expect(served.length, \"this trip has nothing stamped on it\").toBe(0);\n      |                                                                ^\n  187 |   const w = await openFootprints(page, journeyId);\n  188 |   expect(w.panel_present, \"the panel is the surface being read\").toBe(true);\n  189 |   expect(w.state_line, \"the empty arm says 还没有足迹\").toBe(COPY.empty);\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0530-footprints-by-day.spec.ts:186:64"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:33.862Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0530-foo-7a50c-invents-no-stamp-and-no-day\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+                    "column": 64,
+                    "line": 186
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b9d623d10ee3c7e526e1-eab7a27e67673e0f5542",
+          "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+          "line": 182,
+          "column": 1
+        },
+        {
+          "title": "ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5461,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: grouped_by_the_trips_own_day_390x844 — {\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"shape\":{\"width\":390,\"height\":844},\"trip_zone\":\"Asia/Shanghai\",\"device_zone\":\"America/Los_Angeles\",\"device_zone_would_give\":[\"10月1日周四\"],\"trip_zone_gives\":[\"10月2日周五\"],\"zones_disagree\":true,\"door_rows\":[{\"stamped_at\":\"2026-10-01T18:50:17.113817+00:00\",\"target_key\":\"activity:1f2fb0b3-09ba-4f54-8d74-8c8ba381a9cf\",\"note\":null,\"source\":\"FOREGROUND_WEB\"},{\"stamped_at\":\"2026-10-01T18:51:41.719495+00:00\",\"target_key\":\"activity:9cbbaa92-b72c-4777-b3a7-74978b7c379a\",\"note\":null,\"source\":\"FOREGROUND_WEB\"}],\"day_rows\":[{\"text\":\"10月2日周五\",\"box\":{\"x\":37,\"y\":304,\"w\":316,\"h\":26},\"centre\":{\"x\":195,\"y\":317},\"hit\":\"h3.cn-footprints__day\",\"in_viewport\":true}],\"stamp_rows\":[{\"text\":\"02:50 Old Town Gate 没写备注 网页端打的\",\"cells\":[\"02:50\",\"Old Town Gate\",\"没写备注\",\"网页端打的\"],\"under_day\":334,\"hit\":\"span.cn-footprints__note cn-f\",\"in_viewport\":true},{\"text\":\"02:51 Riverside Museum 没写备注 网页端打的\",\"cells\":[\"02:51\",\"Riverside Museum\",\"没写备注\",\"网页端打的\"],\"under_day\":378,\"hit\":\"span.cn-footprints__note cn-f\",\"in_viewport\":true}],\"under_day\":[\"10月2日周五\",\"10月2日周五\"],\"tally\":\"这次行程共有 2 枚足迹。 分成 1 天。\",\"zone_line\":\"日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。\",\"screaming_snake\":[],\"uuids\":[]}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:37.664Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b9d623d10ee3c7e526e1-aa66ee58b1fa31e692c6",
+          "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+          "line": 207,
+          "column": 3
+        },
+        {
+          "title": "ORD-0530 zh 1280x900 arm=grouped_by_the_trips_own_day",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4016,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: grouped_by_the_trips_own_day_1280x900 — {\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"shape\":{\"width\":1280,\"height\":900},\"trip_zone\":\"Asia/Shanghai\",\"device_zone\":\"America/Los_Angeles\",\"device_zone_would_give\":[\"10月1日周四\"],\"trip_zone_gives\":[\"10月2日周五\"],\"zones_disagree\":true,\"door_rows\":[{\"stamped_at\":\"2026-10-01T18:50:17.113817+00:00\",\"target_key\":\"activity:1f2fb0b3-09ba-4f54-8d74-8c8ba381a9cf\",\"note\":null,\"source\":\"FOREGROUND_WEB\"},{\"stamped_at\":\"2026-10-01T18:51:41.719495+00:00\",\"target_key\":\"activity:9cbbaa92-b72c-4777-b3a7-74978b7c379a\",\"note\":null,\"source\":\"FOREGROUND_WEB\"}],\"day_rows\":[{\"text\":\"10月2日周五\",\"box\":{\"x\":318,\"y\":245,\"w\":896,\"h\":26},\"centre\":{\"x\":766,\"y\":257},\"hit\":\"h3.cn-footprints__day\",\"in_viewport\":true}],\"stamp_rows\":[{\"text\":\"02:50 Old Town Gate 没写备注 网页端打的\",\"cells\":[\"02:50\",\"Old Town Gate\",\"没写备注\",\"网页端打的\"],\"under_day\":274,\"hit\":\"span.cn-footprints__note cn-f\",\"in_viewport\":true},{\"text\":\"02:51 Riverside Museum 没写备注 网页端打的\",\"cells\":[\"02:51\",\"Riverside Museum\",\"没写备注\",\"网页端打的\"],\"under_day\":363,\"hit\":\"span.cn-footprints__note cn-f\",\"in_viewport\":true}],\"under_day\":[\"10月2日周五\",\"10月2日周五\"],\"tally\":\"这次行程共有 2 枚足迹。 分成 1 天。\",\"zone_line\":\"日期按这趟行程自己的时区（Asia/Shanghai）分，不按这台设备的钟。\",\"screaming_snake\":[],\"uuids\":[]}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:43.294Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b9d623d10ee3c7e526e1-5e7d35035d9d801e5a06",
+          "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+          "line": 207,
+          "column": 3
+        },
+        {
+          "title": "ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3604,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: retry_after_the_door_stops — {\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"rows_before\":2,\"door_rows\":2,\"state_after\":\"这一屏没问到服务器，所以这里既没说有事，也没说没事。\",\"rows_after\":0,\"days_after\":0,\"tally_after\":\"这次行程共有 0 枚足迹。\",\"injected\":\"route.abort on the checkins read, then the screen's own 重读一次\"}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:47.317Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b9d623d10ee3c7e526e1-4e6770fffdbf24a9f17e",
+          "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+          "line": 280,
+          "column": 1
+        },
+        {
+          "title": "ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3630,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts :: refused_and_unreachable — {\"refused_journey_id\":\"22222222-2222-4222-8222-222222222222\",\"refused_line\":\"服务器答了，但这次没有把足迹交出来。\",\"refused_rows\":0,\"refused_days\":0,\"unreachable_journey_id\":\"22222222-2222-4222-8222-222222222222\",\"unreachable_line\":\"这一屏没问到服务器，所以这里既没说有事，也没说没事。\",\"unreachable_rows\":0,\"unreachable_days\":0,\"injected\":\"route.abort on the checkins read (a failure, not a doctored answer)\"}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:50.931Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b9d623d10ee3c7e526e1-017e8706d46ed1bb8fd7",
+          "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+          "line": 316,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-01T18:51:33.180Z",
+    "duration": 21473.566,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

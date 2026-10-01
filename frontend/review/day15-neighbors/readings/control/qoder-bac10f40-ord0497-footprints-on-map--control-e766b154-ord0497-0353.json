@@ -1,0 +1,49 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "arms": 5,
+ "rows": [
+  {
+   "arm": "filter_toggle",
+   "locale": "zh-CN",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "label_before": "只看打过",
+   "filter_hit": "button.v8-map-footprint-filter",
+   "door_rows_before": 1,
+   "door_rows_after": 1,
+   "chip_rows_before": 6,
+   "chip_rows_after": 6,
+   "open_hidden": 0,
+   "on_hidden": 5,
+   "on_pin_claim": 6,
+   "on_solid": 1,
+   "back_hidden": 0,
+   "reloaded_pressed": "false",
+   "reloaded_hidden": 0,
+   "localstorage_footprint_keys": []
+  },
+  {
+   "arm": "read_never_arrived",
+   "locale": "zh-CN",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "injected": "route.abort on the checkins read",
+   "band_text": "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
+   "pin_total": 6,
+   "pin_claim": 0,
+   "solid_count": 0,
+   "hollow_count": 0,
+   "badge_count": 0,
+   "filter_present": false,
+   "probe": null
+  }
+ ]
+}

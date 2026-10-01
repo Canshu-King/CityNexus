@@ -1,0 +1,355 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.day15-neighbors-P.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\playwright.day15-neighbors-P.config.ts",
+    "rootDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-bac10f40-ord0497-footprints-on-map\\.spec\\.ts/"
+        ],
+        "timeout": 420000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:/moodle/_qoder_e766b154_ord0528_20261001/run/report_control_ord0497.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+      "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3850,
+                  "error": {
+                    "message": "Error: the empty arm names THIS read, not the traveller\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"这台服务器这次\u001b[7m没有交回任何足迹，所以这一趟在图上的站全部画成空心\u001b[27m。\"\u001b[39m\nReceived: \u001b[31m\"这台服务器这次\u001b[7m交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站\u001b[27m。\"\u001b[39m",
+                    "stack": "Error: the empty arm names THIS read, not the traveller\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"这台服务器这次\u001b[7m没有交回任何足迹，所以这一趟在图上的站全部画成空心\u001b[27m。\"\u001b[39m\nReceived: \u001b[31m\"这台服务器这次\u001b[7m交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站\u001b[27m。\"\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:165:75",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                      "column": 75,
+                      "line": 165
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 163 |\u001b[39m   \u001b[36mconst\u001b[39m w \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m enterMap(page)\u001b[33m;\u001b[39m\n \u001b[90m 164 |\u001b[39m   expect(w\u001b[33m.\u001b[39mpanel_present\u001b[33m,\u001b[39m \u001b[32m\"the map panel has to be the one being measured\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 165 |\u001b[39m   expect(w\u001b[33m.\u001b[39mband_text\u001b[33m,\u001b[39m \u001b[32m\"the empty arm names THIS read, not the traveller\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[33mCOPY\u001b[39m\u001b[33m.\u001b[39mnone\u001b[33m.\u001b[39mzh)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 166 |\u001b[39m   expect(w\u001b[33m.\u001b[39mpin_total\u001b[33m,\u001b[39m \u001b[32m\"the seeded trip has located stops to paint\"\u001b[39m)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 167 |\u001b[39m   \u001b[90m/* Every claim-bearing pin is hollow and none is solid: the server returned nothing, so nothing may\u001b[39m\n \u001b[90m 168 |\u001b[39m \u001b[90m     be painted as visited. Pins that carry no claim (the traveller's own dot, a stay offer) are\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                        "column": 75,
+                        "line": 165
+                      },
+                      "message": "Error: the empty arm names THIS read, not the traveller\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"这台服务器这次\u001b[7m没有交回任何足迹，所以这一趟在图上的站全部画成空心\u001b[27m。\"\u001b[39m\nReceived: \u001b[31m\"这台服务器这次\u001b[7m交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站\u001b[27m。\"\u001b[39m\n\n  163 |   const w = await enterMap(page);\n  164 |   expect(w.panel_present, \"the map panel has to be the one being measured\").toBe(true);\n> 165 |   expect(w.band_text, \"the empty arm names THIS read, not the traveller\").toBe(COPY.none.zh);\n      |                                                                           ^\n  166 |   expect(w.pin_total, \"the seeded trip has located stops to paint\").toBeGreaterThan(1);\n  167 |   /* Every claim-bearing pin is hollow and none is solid: the server returned nothing, so nothing may\n  168 |      be painted as visited. Pins that carry no claim (the traveller's own dot, a stay offer) are\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:165:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T19:53:45.351Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0497-foo-35a15-y-read-is-named-as-the-read\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                    "column": 75,
+                    "line": 165
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf395625a37ccb984e45-d47dc77d4650bd1e4d5b",
+          "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+          "line": 162,
+          "column": 1
+        },
+        {
+          "title": "ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3284,
+                  "error": {
+                    "message": "Error: the control starts as 打卡 on a journey nothing was stamped on\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"打卡\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m已\u001b[27m打卡\"\u001b[39m",
+                    "stack": "Error: the control starts as 打卡 on a journey nothing was stamped on\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"打卡\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m已\u001b[27m打卡\"\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:226:82",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                      "column": 82,
+                      "line": 226
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 224 |\u001b[39m   \u001b[36mawait\u001b[39m control\u001b[33m.\u001b[39mscrollIntoViewIfNeeded()\u001b[33m;\u001b[39m\n \u001b[90m 225 |\u001b[39m   \u001b[36mconst\u001b[39m before \u001b[33m=\u001b[39m (\u001b[36mawait\u001b[39m control\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtrim()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 226 |\u001b[39m   expect(before\u001b[33m,\u001b[39m \u001b[32m\"the control starts as 打卡 on a journey nothing was stamped on\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[32m\"打卡\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 227 |\u001b[39m   \u001b[36mawait\u001b[39m control\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 228 |\u001b[39m   \u001b[90m/* The trips screen re-reads the door after the POST, so 已打卡 here is already a read-back -- but\u001b[39m\n \u001b[90m 229 |\u001b[39m \u001b[90m     the arm that matters is the next one: a fresh map mount, which never saw this press. */\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                        "column": 82,
+                        "line": 226
+                      },
+                      "message": "Error: the control starts as 打卡 on a journey nothing was stamped on\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"打卡\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m已\u001b[27m打卡\"\u001b[39m\n\n  224 |   await control.scrollIntoViewIfNeeded();\n  225 |   const before = (await control.innerText()).trim();\n> 226 |   expect(before, \"the control starts as 打卡 on a journey nothing was stamped on\").toBe(\"打卡\");\n      |                                                                                  ^\n  227 |   await control.click();\n  228 |   /* The trips screen re-reads the door after the POST, so 已打卡 here is already a read-back -- but\n  229 |      the arm that matters is the next one: a fresh map mount, which never saw this press. */\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:226:82"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T19:53:49.713Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0497-foo-8525e-nows-only-what-it-read-back\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                    "column": 82,
+                    "line": 226
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf395625a37ccb984e45-4f38b9fd931c7fc1ffe0",
+          "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+          "line": 218,
+          "column": 1
+        },
+        {
+          "title": "ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and does not survive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 31255,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts :: filter_toggle — {\"locale\":\"zh-CN\",\"viewport\":{\"width\":390,\"height\":844},\"label_before\":\"只看打过\",\"filter_hit\":\"button.v8-map-footprint-filter\",\"door_rows_before\":1,\"door_rows_after\":1,\"chip_rows_before\":6,\"chip_rows_after\":6,\"open_hidden\":0,\"on_hidden\":5,\"on_pin_claim\":6,\"on_solid\":1,\"back_hidden\":0,\"reloaded_pressed\":\"false\",\"reloaded_hidden\":0,\"localstorage_footprint_keys\":[]}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T19:53:53.487Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cf395625a37ccb984e45-deaafb40b5120d98099b",
+          "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+          "line": 260,
+          "column": 1
+        },
+        {
+          "title": "ORD-0497 zh 390x844 arm=read_never_arrived cutting the read leg invents no stamp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2691,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts :: read_never_arrived — {\"locale\":\"zh-CN\",\"viewport\":{\"width\":390,\"height\":844},\"injected\":\"route.abort on the checkins read\",\"band_text\":\"这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。\",\"pin_total\":6,\"pin_claim\":0,\"solid_count\":0,\"hollow_count\":0,\"badge_count\":0,\"filter_present\":false,\"probe\":null}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T19:54:24.853Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cf395625a37ccb984e45-c74dcf2b336c7b0dc6b9",
+          "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+          "line": 348,
+          "column": 1
+        },
+        {
+          "title": "ORD-0497 zh 390x844 the arms write their readings",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m5\u001b[39m\nReceived:    \u001b[31m2\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m5\u001b[39m\nReceived:    \u001b[31m2\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:389:23",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                      "column": 23,
+                      "line": 389
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 387 |\u001b[39m     \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ file\u001b[33m:\u001b[39m \u001b[33mFILE\u001b[39m\u001b[33m,\u001b[39m viewport\u001b[33m:\u001b[39m \u001b[33mPHONE\u001b[39m\u001b[33m,\u001b[39m arms\u001b[33m:\u001b[39m \u001b[35m5\u001b[39m\u001b[33m,\u001b[39m rows }\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 388 |\u001b[39m   )\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 389 |\u001b[39m   expect(rows\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m5\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 390 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 391 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                        "column": 23,
+                        "line": 389
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m5\u001b[39m\nReceived:    \u001b[31m2\u001b[39m\n\n  387 |     JSON.stringify({ file: FILE, viewport: PHONE, arms: 5, rows }, null, 1),\n  388 |   );\n> 389 |   expect(rows.length).toBeGreaterThanOrEqual(5);\n      |                       ^\n  390 | });\n  391 |\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:389:23"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T19:54:27.551Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0497-foo-dd107-e-arms-write-their-readings\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+                    "column": 23,
+                    "line": 389
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf395625a37ccb984e45-1f87c2b567b8003f91b7",
+          "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+          "line": 379,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-01T19:53:44.959Z",
+    "duration": 42667.582,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

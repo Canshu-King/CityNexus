@@ -1,0 +1,343 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.day15-neighbors-P.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\playwright.day15-neighbors-P.config.ts",
+    "rootDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-bac10f40-ord0537-map-toggle-reach\\.spec\\.ts/"
+        ],
+        "timeout": 420000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:/moodle/_qoder_e766b154_ord0528_20261001/run/report_neighbors_ord0537.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+      "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 36135,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:145:3",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                      "column": 38,
+                      "line": 135
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 133 |\u001b[39m   \u001b[36mawait\u001b[39m openScreen(page\u001b[33m,\u001b[39m \u001b[32m\"/v8/map\"\u001b[39m\u001b[33m,\u001b[39m [\u001b[32m\"v8-maplibre-panel\"\u001b[39m])\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mBAND\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 135 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mSWITCH\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 136 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForFunction(\n \u001b[90m 137 |\u001b[39m     () \u001b[33m=>\u001b[39m document\u001b[33m.\u001b[39mquerySelectorAll(\u001b[32m\".v8-map-panel .v9-map-marker\"\u001b[39m)\u001b[33m.\u001b[39mlength \u001b[33m>\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 138 |\u001b[39m     \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                        "column": 38,
+                        "line": 135
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n\n  133 |   await openScreen(page, \"/v8/map\", [\"v8-maplibre-panel\"]);\n  134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });\n> 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });\n      |                                      ^\n  136 |   await page.waitForFunction(\n  137 |     () => document.querySelectorAll(\".v8-map-panel .v9-map-marker\").length > 1,\n  138 |     null,\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:145:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:51:56.045Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0537-map-c0ada-wn-tap-once-it-is-on-screen\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                    "column": 38,
+                    "line": 135
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2a75775c61ad4c188aaa-6d4379a254ecf7d85a8b",
+          "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+          "line": 144,
+          "column": 1
+        },
+        {
+          "title": "ORD-0537 zh 390x844 arm=two_states the census and the words both move",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 36138,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:169:3",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                      "column": 38,
+                      "line": 135
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 133 |\u001b[39m   \u001b[36mawait\u001b[39m openScreen(page\u001b[33m,\u001b[39m \u001b[32m\"/v8/map\"\u001b[39m\u001b[33m,\u001b[39m [\u001b[32m\"v8-maplibre-panel\"\u001b[39m])\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mBAND\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 135 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mSWITCH\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 136 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForFunction(\n \u001b[90m 137 |\u001b[39m     () \u001b[33m=>\u001b[39m document\u001b[33m.\u001b[39mquerySelectorAll(\u001b[32m\".v8-map-panel .v9-map-marker\"\u001b[39m)\u001b[33m.\u001b[39mlength \u001b[33m>\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 138 |\u001b[39m     \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                        "column": 38,
+                        "line": 135
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n\n  133 |   await openScreen(page, \"/v8/map\", [\"v8-maplibre-panel\"]);\n  134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });\n> 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });\n      |                                      ^\n  136 |   await page.waitForFunction(\n  137 |     () => document.querySelectorAll(\".v8-map-panel .v9-map-marker\").length > 1,\n  138 |     null,\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:169:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:52:32.722Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0537-map-9289f-sus-and-the-words-both-move\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                    "column": 38,
+                    "line": 135
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2a75775c61ad4c188aaa-a692bb9364c064fcfbb7",
+          "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+          "line": 168,
+          "column": 1
+        },
+        {
+          "title": "ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 36165,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:223:3",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                      "column": 38,
+                      "line": 135
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 133 |\u001b[39m   \u001b[36mawait\u001b[39m openScreen(page\u001b[33m,\u001b[39m \u001b[32m\"/v8/map\"\u001b[39m\u001b[33m,\u001b[39m [\u001b[32m\"v8-maplibre-panel\"\u001b[39m])\u001b[33m;\u001b[39m\n \u001b[90m 134 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mBAND\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 135 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[33mSWITCH\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 136 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForFunction(\n \u001b[90m 137 |\u001b[39m     () \u001b[33m=>\u001b[39m document\u001b[33m.\u001b[39mquerySelectorAll(\u001b[32m\".v8-map-panel .v9-map-marker\"\u001b[39m)\u001b[33m.\u001b[39mlength \u001b[33m>\u001b[39m \u001b[35m1\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 138 |\u001b[39m     \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                        "column": 38,
+                        "line": 135
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\\'v8-map-footprint-filter\\']')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('[data-testid=\\'v8-map-footprint-filter\\']') with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\\'v8-map-footprint-filter\\']')\u001b[22m\n\n\n  133 |   await openScreen(page, \"/v8/map\", [\"v8-maplibre-panel\"]);\n  134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });\n> 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });\n      |                                      ^\n  136 |   await page.waitForFunction(\n  137 |     () => document.querySelectorAll(\".v8-map-panel .v9-map-marker\").length > 1,\n  138 |     null,\n    at mapWithOneStamp (D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:223:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:53:09.492Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0537-map-5ac26-nd-the-page-can-move-it-out\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                    "column": 38,
+                    "line": 135
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2a75775c61ad4c188aaa-b2412f1861f7934eef3e",
+          "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+          "line": 217,
+          "column": 1
+        },
+        {
+          "title": "ORD-0537 zh the arms kept their own files",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 420000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: one file per arm, written at the moment that arm reads\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m0\u001b[39m",
+                    "stack": "Error: one file per arm, written at the moment that arm reads\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:268:81",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                      "column": 81,
+                      "line": 268
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 266 |\u001b[39m\n \u001b[90m 267 |\u001b[39m test(\u001b[32m\"ORD-0537 zh the arms kept their own files\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 268 |\u001b[39m   expect(rows\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m\"one file per arm, written at the moment that arm reads\"\u001b[39m)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m2\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 269 |\u001b[39m   writeFileSync(\n \u001b[90m 270 |\u001b[39m     evidencePath(\u001b[32m`qoder-bac10f40-ord0537-index--${runId}.json`\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 271 |\u001b[39m     \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ file\u001b[33m:\u001b[39m \u001b[33mFILE\u001b[39m\u001b[33m,\u001b[39m run_id\u001b[33m:\u001b[39m runId\u001b[33m,\u001b[39m viewport\u001b[33m:\u001b[39m \u001b[33mPHONE\u001b[39m\u001b[33m,\u001b[39m arms\u001b[33m:\u001b[39m rows\u001b[33m.\u001b[39mmap((r) \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39marm) }\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                        "column": 81,
+                        "line": 268
+                      },
+                      "message": "Error: one file per arm, written at the moment that arm reads\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m2\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\n  266 |\n  267 | test(\"ORD-0537 zh the arms kept their own files\", async () => {\n> 268 |   expect(rows.length, \"one file per arm, written at the moment that arm reads\").toBeGreaterThanOrEqual(2);\n      |                                                                                 ^\n  269 |   writeFileSync(\n  270 |     evidencePath(`qoder-bac10f40-ord0537-index--${runId}.json`),\n  271 |     JSON.stringify({ file: FILE, run_id: runId, viewport: PHONE, arms: rows.map((r) => r.arm) }, null, 1),\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:268:81"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-01T18:53:46.232Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-bac10f40-ord0537-map-537b5-e-arms-kept-their-own-files\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+                    "column": 81,
+                    "line": 268
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "2a75775c61ad4c188aaa-c9a82b0601ce203fd8b1",
+          "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+          "line": 267,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-01T18:51:55.674Z",
+    "duration": 110611.956,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}
