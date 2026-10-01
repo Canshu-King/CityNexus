@@ -1,0 +1,12 @@
+{
+ "method_1_python_byte_compare": true,
+ "method_2_hash_object_first_token_equals_tip_blob": true,
+ "method_3_local_sha1_over_git_blob_header_equals_tip_blob": true,
+ "bytes": 76656,
+ "tip_bytes": 76656,
+ "markers_still_in_the_file": false,
+ "git_stderr_from_hash_object": "",
+ "tip": "0c061d9eb74b21f0b0b297a068778479b08658b4",
+ "tip_blob": "2b1571decf92fc7e466b593d09f92af546185300",
+ "restored_equal_to_tip": true
+}
