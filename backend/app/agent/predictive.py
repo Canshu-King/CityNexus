@@ -24,6 +24,10 @@ from app.db.models import (
 )
 from app.execution.traveler_twin import planning_preference_items
 from app.integrations.discovery.real_city import normalize_opening_hours
+from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
+from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError
+from app.replanning.provider_snapshots import MobilitySnapshot
+from app.services import validate_plan_feasibility
 from app.planning.solver_v2 import (
     SolverV2Anchor,
     SolverV2Option,
@@ -614,6 +618,196 @@ def counterfactual_payload(row: CounterfactualSimulation) -> dict[str, Any]:
     }
 
 
+def _shadow_evidence(
+    session: Session,
+    journey: Journey,
+    active: PlanVersion,
+    kept: list[Activity],
+    *,
+    scenario_key: str,
+) -> dict[str, Any] | None:
+    """Build a new immutable mobility snapshot for one standby order."""
+
+    base = _load(active.mobility_evidence_json, {})
+    base_snapshot = MobilitySnapshot.from_evidence(base)
+    keys = [str(item.place_id or item.city_service_id or item.id) for item in kept]
+    pairs = [(left, right) for left, right in zip(keys, keys[1:]) if left != right]
+    missing = [pair for pair in pairs if pair not in base_snapshot.facts]
+    captured = None
+    if missing:
+        try:
+            captured = capture_runtime_mobility_snapshot(
+                session,
+                journey,
+                missing,
+                operation_key=f"shadow:{journey.id}:{scenario_key}",
+                require_explicit_facts=True,
+            )
+        except MobilitySnapshotCaptureError:
+            return None
+    facts = {
+        pair: fact
+        for pair, fact in base_snapshot.facts.items()
+        if pair in pairs
+    }
+    captured_costs: dict[tuple[str, str], dict[str, Any]] = {}
+    if captured is not None:
+        captured_evidence = captured.snapshot.to_evidence()
+        for raw_fact in captured_evidence.get("facts", []):
+            if (
+                str(raw_fact.get("mode") or "").upper() == "WALK"
+                and raw_fact.get("fact_quality") == "LIVE_PROVIDER_CAPTURE"
+            ):
+                raw_fact["cost_status"] = "KNOWN_FREE"
+                raw_fact["cost_amount_minor"] = 0
+                raw_fact["currency"] = journey.budget_currency
+            else:
+                raw_fact["cost_status"] = "UNKNOWN"
+                raw_fact["cost_amount_minor"] = None
+            pair = (str(raw_fact["origin_key"]), str(raw_fact["destination_key"]))
+            captured_costs[pair] = {
+                "cost_status": raw_fact.get("cost_status"),
+                "cost_amount_minor": raw_fact.get("cost_amount_minor"),
+                "currency": raw_fact.get("currency"),
+            }
+            facts[pair] = MobilitySnapshot.from_evidence(
+                {"source_provider": captured.snapshot.source_provider_key, "captured_at": captured.snapshot.captured_at, "facts": [raw_fact]}
+            ).facts[pair]
+    shadow = MobilitySnapshot(
+        facts=facts,
+        source_provider_key=str(captured.snapshot.source_provider_key if captured else base.get("source_provider") or "frozen-plan-evidence"),
+        captured_at=_now(),
+        degraded=bool(captured and captured.snapshot.degraded),
+        snapshot_id=str(uuid4()),
+        operation_key=f"shadow:{journey.id}:{scenario_key}",
+        provider_capabilities=dict(captured.snapshot.provider_capabilities if captured else base.get("provider_capabilities") or {}),
+    ).to_evidence()
+    for item in shadow.get("facts", []):
+        pair = (str(item.get("origin_key")), str(item.get("destination_key")))
+        item.update(captured_costs.get(pair, {}))
+    shadow.update({
+        "shadow_only": True,
+        "base_plan_version_id": active.id,
+        "base_snapshot_id": active.mobility_snapshot_id,
+        "scenario_key": scenario_key,
+        "expiry_reason": "same mobility evidence TTL as capture",
+    })
+    return shadow
+
+
+def _materialize_shadow_plan(
+    session: Session,
+    journey: Journey,
+    active: PlanVersion,
+    simulation: CounterfactualSimulation,
+    changes: list[dict[str, Any]],
+) -> PlanVersion | None:
+    """Persist one grounded, non-active standby PlanVersion when possible."""
+
+    if not simulation.feasible or not simulation.c4_preserved:
+        return None
+    if simulation.scenario_type not in {"PLACE_CLOSURE", "MOBILITY_SHIFT", "WEATHER_SHIFT"}:
+        return None
+    if _load(simulation.evidence_json, {}).get("shadow_plan_version_id"):
+        return session.get(PlanVersion, _load(simulation.evidence_json, {}).get("shadow_plan_version_id"))
+    dropped = {
+        str(item.get("slot_key"))
+        for item in changes
+        if str(item.get("action") or "").upper() == "DROP"
+    }
+    activities = list(
+        session.scalars(
+            select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+        ).all()
+    )
+    kept = [item for item in activities if item.id not in dropped]
+    if len(kept) == len(activities) or len(kept) < 2:
+        return None
+    evidence = _shadow_evidence(session, journey, active, kept, scenario_key=simulation.scenario_key)
+    if evidence is None:
+        return None
+    next_version = int(
+        session.scalar(
+            select(PlanVersion.version_no)
+            .where(PlanVersion.journey_id == journey.id)
+            .order_by(PlanVersion.version_no.desc())
+            .limit(1)
+        )
+        or 0
+    ) + 1
+    shadow = PlanVersion(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        version_no=next_version,
+        planning_mode=active.planning_mode,
+        status="CANDIDATE",
+        source="REPLAN",
+        parent_plan_version_id=active.id,
+        total_cost_minor=max(0, active.total_cost_minor - sum(item.estimated_cost_minor for item in activities if item.id in dropped)),
+        currency=active.currency,
+        estimated_duration_min=max(1, active.estimated_duration_min - sum(
+            max(1, int((_dt(item.end_at) - _dt(item.start_at)).total_seconds() // 60))
+            for item in activities if item.id in dropped
+        )),
+        utility_score=active.utility_score,
+        score_breakdown_json=active.score_breakdown_json,
+        explanation_json=_json({
+            "product_path": "R18_STANDBY_COUNTERFACTUAL",
+            "lifecycle": "NON_ACTIVE_STANDBY",
+            "trigger": simulation.scenario_key,
+            "simulation_id": simulation.id,
+            "base_plan_version_id": active.id,
+            "expiry": evidence.get("captured_at"),
+            "protected_commitments_preserved": simulation.c4_preserved,
+        }),
+        mobility_snapshot_id=str(evidence["snapshot_id"]),
+        mobility_evidence_json=_json(evidence),
+        created_at=_now(),
+    )
+    session.add(shadow)
+    session.flush()
+    for index, source in enumerate(kept, start=1):
+        metadata = _load(source.metadata_json, {})
+        metadata["shadow_plan"] = {
+            "scenario_key": simulation.scenario_key,
+            "base_activity_id": source.id,
+            "lifecycle": "NON_ACTIVE_STANDBY",
+        }
+        session.add(
+            Activity(
+                id=str(uuid4()),
+                plan_version_id=shadow.id,
+                sequence_no=index,
+                activity_type=source.activity_type,
+                title=source.title,
+                place_id=source.place_id,
+                city_service_id=source.city_service_id,
+                start_at=source.start_at,
+                end_at=source.end_at,
+                travel_from_prev_min=source.travel_from_prev_min,
+                estimated_cost_minor=source.estimated_cost_minor,
+                currency=source.currency,
+                status="PLANNED",
+                locked=source.locked,
+                metadata_json=_json(metadata),
+                created_at=_now(),
+                updated_at=_now(),
+            )
+        )
+    session.flush()
+    gate = validate_plan_feasibility(
+        session,
+        journey,
+        shadow,
+        mobility_provider=MobilitySnapshot.from_evidence(evidence),
+    )
+    if not gate.passed:
+        session.delete(shadow)
+        session.flush()
+        return None
+    return shadow
+
+
 def simulate_counterfactuals(
     session: Session,
     journey: Journey,
@@ -711,6 +905,8 @@ def simulate_counterfactuals(
         ),
     )
     result: list[CounterfactualSimulation] = []
+    active_plan = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    shadow_materialized = False
     for scenario_key, scenario_type, parameters in scenarios:
         problem, activities, anchors = _scenario_problem(
             session,
@@ -781,6 +977,14 @@ def simulate_counterfactuals(
         row.plan_changes_json = _json(changes)
         row.evidence_json = _json(evidence)
         row.created_at = _now()
+        if active_plan is not None and not shadow_materialized and changes:
+            shadow = _materialize_shadow_plan(session, journey, active_plan, row, changes)
+            if shadow is not None:
+                evidence["shadow_plan_version_id"] = shadow.id
+                evidence["shadow_plan_status"] = shadow.status
+                evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+                row.evidence_json = _json(evidence)
+                shadow_materialized = True
         result.append(row)
     session.flush()
     return result

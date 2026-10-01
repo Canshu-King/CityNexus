@@ -6166,6 +6166,7 @@ def _trip_studio_context(
     session: Session,
     journey: Journey,
     requested_ids: list[str],
+    preview_id: str | None = None,
 ) -> tuple[PlanVersion, list[Activity], list[Activity], dict[str, Any]]:
     """Resolve an edit against the current plan and the immutable evidence snapshot."""
 
@@ -6210,6 +6211,19 @@ def _trip_studio_context(
             if item.status in {"COMPLETED", "SKIPPED"} and requested_ids[index] != item.id:
                 execution_failures.append("EXECUTION_HISTORY_REORDER")
     evidence = _json_object(plan.mobility_evidence_json, {})
+    persisted_preview = (
+        session.get(CounterfactualSimulation, str(preview_id)) if preview_id else None
+    )
+    if persisted_preview is not None:
+        preview_parameters = _json_object(persisted_preview.parameters_json, {})
+        preview_order = [str(item) for item in preview_parameters.get("draft_order", [])]
+        if (
+            persisted_preview.journey_id != journey.id
+            or preview_parameters.get("base_plan_version_id") != plan.id
+            or preview_order != [str(item) for item in requested_ids]
+        ):
+            raise HTTPException(409, "TRIP_STUDIO_PREVIEW_STALE")
+        evidence = _json_object(persisted_preview.evidence_json, {})
     fact_pairs = {
         (str(item.get("origin_key")), str(item.get("destination_key"))): item
         for item in evidence.get("facts", [])
@@ -6218,9 +6232,104 @@ def _trip_studio_context(
     route_gaps = []
     for previous, current in zip(ordered, ordered[1:]):
         pair = (str(previous.place_id or previous.city_service_id or ""), str(current.place_id or current.city_service_id or ""))
-        if pair not in fact_pairs:
-            route_gaps.append({"from": pair[0], "to": pair[1]})
+        fact = fact_pairs.get(pair)
+        if fact is None:
+            route_gaps.append({"from": pair[0], "to": pair[1], "reason": "MISSING"})
+        elif str(fact.get("cost_status") or "UNKNOWN").upper() == "UNKNOWN":
+            # A duration-only legacy/live row is stale for a hard preview: the
+            # new snapshot must recapture the edge so its cost semantics are
+            # explicit.  Never convert the old unknown into zero.
+            route_gaps.append({"from": pair[0], "to": pair[1], "reason": "UNKNOWN_COST"})
     changed = canonical_ids != requested_ids
+    preview_snapshot_created = False
+    preview_snapshot_id = evidence.get("snapshot_id")
+    preview_record_id = str(persisted_preview.id) if persisted_preview else None
+    if route_gaps and persisted_preview is None:
+        # The active plan's evidence is immutable.  Capture only the new directed
+        # edges needed by this hypothetical order, then bind a separate snapshot
+        # to the preview/counterfactual row.  The deterministic gate below reads
+        # this local preview evidence, never the active plan's frozen matrix.
+        try:
+            captured = capture_runtime_mobility_snapshot(
+                session,
+                journey,
+                [(item["from"], item["to"]) for item in route_gaps],
+                operation_key=f"trip-studio-preview:{plan.id}",
+                require_explicit_facts=True,
+            )
+        except MobilitySnapshotCaptureError as exc:
+            raise HTTPException(503, f"preview mobility evidence unavailable: {exc}") from exc
+        base_snapshot = MobilitySnapshot.from_evidence(evidence)
+        preview_facts = {
+            (str(item["origin_key"]), str(item["destination_key"])): item
+            for item in base_snapshot.to_evidence().get("facts", [])
+            if item.get("origin_key") and item.get("destination_key")
+        }
+        captured_evidence = captured.snapshot.to_evidence()
+        for raw_fact in captured_evidence.get("facts", []):
+            # Only a deterministic no-fare mode may be declared free.  A paid
+            # or unclassified mode remains UNKNOWN and therefore fail-closed.
+            if (
+                str(raw_fact.get("mode") or "").upper() == "WALK"
+                and raw_fact.get("fact_quality") == "LIVE_PROVIDER_CAPTURE"
+            ):
+                raw_fact["cost_status"] = "KNOWN_FREE"
+                raw_fact["cost_amount_minor"] = 0
+                raw_fact["currency"] = journey.budget_currency
+            else:
+                raw_fact["cost_status"] = "UNKNOWN"
+                raw_fact["cost_amount_minor"] = None
+            preview_facts[(str(raw_fact["origin_key"]), str(raw_fact["destination_key"]))] = raw_fact
+        preview_snapshot_id = str(uuid4())
+        preview_evidence = {
+            **evidence,
+            "snapshot_id": preview_snapshot_id,
+            "operation_key": f"trip-studio-preview:{plan.id}",
+            "captured_at": captured.snapshot.captured_at,
+            "source_provider": captured.snapshot.source_provider_key,
+            "facts": list(preview_facts.values()),
+            "preview_of_snapshot_id": plan.mobility_snapshot_id,
+            "preview_only": True,
+        }
+        preview_evidence.pop("integrity_hash", None)
+        preview_id_value = str(uuid5(
+            NAMESPACE_URL,
+            f"citynexus-r18-trip-studio:{plan.id}:{preview_snapshot_id}:{json.dumps(requested_ids)}",
+        ))
+        preview_record_id = preview_id_value
+        session.add(
+            CounterfactualSimulation(
+                id=preview_id_value,
+                journey_id=journey.id,
+                snapshot_id=None,
+                scenario_key=f"trip-studio-preview:{preview_id_value}",
+                scenario_type="TRIP_STUDIO_MOBILITY_PREVIEW",
+                parameters_json=json.dumps(
+                    {
+                        "base_plan_version_id": plan.id,
+                        "draft_order": requested_ids,
+                        "base_snapshot_id": plan.mobility_snapshot_id,
+                    },
+                    sort_keys=True,
+                ),
+                feasible=False,
+                c4_preserved=protected_ok and not execution_failures,
+                cost_delta_minor=0,
+                schedule_drift_min=0,
+                plan_changes_json=json.dumps([{"kind": "DRAFT_ORDER", "activity_ids": requested_ids}], sort_keys=True),
+                evidence_json=json.dumps(preview_evidence, ensure_ascii=False, sort_keys=True),
+                created_at=datetime.now(timezone.utc).isoformat(),
+            )
+        )
+        session.flush()
+        evidence = preview_evidence
+        preview_snapshot_created = True
+        route_gaps = []
+        fact_pairs = {
+            (str(item.get("origin_key")), str(item.get("destination_key"))): item
+            for item in evidence.get("facts", [])
+            if isinstance(item, dict) and item.get("origin_key") and item.get("destination_key")
+        }
     authoritative_gate = _trip_studio_authoritative_gate(
         session,
         journey,
@@ -6249,7 +6358,7 @@ def _trip_studio_context(
     gate = {
         "status": "PASSED" if not gate_failures else "FAILED",
         "failures": gate_failures,
-        "evidence_snapshot_id": plan.mobility_snapshot_id,
+        "evidence_snapshot_id": preview_snapshot_id or plan.mobility_snapshot_id,
         "authoritative": True,
         "evidence_valid": authoritative_gate["evidence_valid"],
     }
@@ -6257,6 +6366,9 @@ def _trip_studio_context(
         "impact": impact,
         "gate": gate,
         "evidence": evidence,
+        "preview_id": preview_record_id,
+        "preview_snapshot_id": preview_snapshot_id,
+        "preview_snapshot_created": preview_snapshot_created,
         "authoritative_gate": authoritative_gate,
     }
 
@@ -6308,7 +6420,12 @@ def _trip_studio_authoritative_gate(
     """Run the shared deterministic gate over a Trip Studio frozen snapshot."""
 
     failures: list[str] = []
-    evidence_valid = bool(evidence.get("snapshot_id")) and evidence.get("snapshot_id") == plan.mobility_snapshot_id
+    preview_bound = bool(evidence.get("preview_only")) and str(
+        evidence.get("preview_of_snapshot_id") or ""
+    ) == str(plan.mobility_snapshot_id or "")
+    evidence_valid = bool(evidence.get("snapshot_id")) and (
+        str(evidence.get("snapshot_id")) == str(plan.mobility_snapshot_id or "") or preview_bound
+    )
     if not evidence_valid:
         failures.append("FROZEN_EVIDENCE_ID_MISMATCH")
     integrity_hash = evidence.get("integrity_hash")
@@ -6401,13 +6518,16 @@ def _trip_studio_authoritative_gate(
         item.id: item
         for item in session.scalars(select(CityService).where(CityService.city_code == journey.city_code)).all()
     }
-    frozen_provider = MobilitySnapshot.from_minutes(
-        source_provider_key=str(evidence.get("source_provider") or "frozen-plan-evidence"),
-        minutes=frozen_minutes,
-        captured_at=str(evidence.get("captured_at") or datetime.now(timezone.utc).isoformat()),
-        snapshot_id=str(evidence.get("snapshot_id") or plan.mobility_snapshot_id or ""),
-        operation_key=str(evidence.get("operation_key") or "trip-studio"),
-    )
+    if str(evidence.get("snapshot_id") or "") != str(plan.mobility_snapshot_id or ""):
+        frozen_provider = MobilitySnapshot.from_evidence(evidence)
+    else:
+        frozen_provider = MobilitySnapshot.from_minutes(
+            source_provider_key=str(evidence.get("source_provider") or "frozen-plan-evidence"),
+            minutes=frozen_minutes,
+            captured_at=str(evidence.get("captured_at") or datetime.now(timezone.utc).isoformat()),
+            snapshot_id=str(evidence.get("snapshot_id") or plan.mobility_snapshot_id or ""),
+            operation_key=str(evidence.get("operation_key") or "trip-studio"),
+        )
     gate = evaluate_feasibility(
         build_context(
             journey,
@@ -6451,12 +6571,12 @@ def _trip_studio_preview_payload(
     details: dict[str, Any],
 ) -> dict[str, Any]:
     signature = json.dumps(
-        {"plan_id": plan.id, "evidence_id": plan.mobility_snapshot_id, "draft_order": requested_ids},
+        {"plan_id": plan.id, "evidence_id": details.get("preview_snapshot_id") or plan.mobility_snapshot_id, "draft_order": requested_ids},
         sort_keys=True,
     )
     authoritative_gate = details["authoritative_gate"]
     return {
-        "preview_id": str(uuid5(NAMESPACE_URL, f"citynexus-v13-trip-studio:{signature}")),
+        "preview_id": details.get("preview_id") or str(uuid5(NAMESPACE_URL, f"citynexus-v13-trip-studio:{signature}")),
         "journey_id": journey.id,
         "base_plan_version_id": plan.id,
         "draft_order": requested_ids,
@@ -6488,6 +6608,10 @@ def trip_studio_preview(
     journey = require(session, Journey, str(journey_id), "Journey")
     requested_ids = [str(item) for item in (payload.draft_order or payload.activity_ids)]
     plan, _activities, _ordered, details = _trip_studio_context(session, journey, requested_ids)
+    # A preview mobility snapshot is durable evidence for the exact draft order;
+    # commit it without touching Journey.active_plan_version_id or the base plan.
+    if details.get("preview_snapshot_created"):
+        session.commit()
     return _trip_studio_preview_payload(journey, plan, requested_ids, details)
 
 
@@ -6498,7 +6622,9 @@ def _trip_studio_accept_impl(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     requested_ids = [str(item) for item in payload.activity_ids]
-    base, activities, ordered, details = _trip_studio_context(session, journey, requested_ids)
+    base, activities, ordered, details = _trip_studio_context(
+        session, journey, requested_ids, str(payload.preview_id) if payload.preview_id else None
+    )
     if details["gate"]["status"] != "PASSED":
         failures = ",".join(str(item) for item in details["gate"]["failures"])
         raise HTTPException(422, f"TRIP_STUDIO_DETERMINISTIC_GATE_FAILED:{failures}")
@@ -6565,11 +6691,16 @@ def _trip_studio_accept_impl(
             "deterministic_gate": details["gate"],
             "frozen_evidence_id": base.mobility_snapshot_id,
         }, sort_keys=True),
-        mobility_snapshot_id=base.mobility_snapshot_id,
-        mobility_evidence_json=base.mobility_evidence_json,
+        mobility_snapshot_id=str(evidence.get("snapshot_id") or base.mobility_snapshot_id),
+        mobility_evidence_json=json.dumps(evidence, ensure_ascii=False, sort_keys=True),
         created_at=now,
     )
     session.add(new_plan)
+    if details.get("preview_id"):
+        preview_record = session.get(CounterfactualSimulation, str(details["preview_id"]))
+        if preview_record is not None:
+            preview_record.feasible = True
+            preview_record.evidence_json = json.dumps(evidence, ensure_ascii=False, sort_keys=True)
     session.flush()
     new_by_old: dict[str, str] = {}
     new_rows: list[Activity] = []
@@ -6579,7 +6710,7 @@ def _trip_studio_accept_impl(
             "base_activity_id": source.id,
             "accepted_at": now,
             "draft_order": requested_ids,
-            "frozen_evidence_id": base.mobility_snapshot_id,
+            "frozen_evidence_id": str(evidence.get("snapshot_id") or base.mobility_snapshot_id),
             "execution_status_before": source.status,
         }
         row = Activity(
@@ -6690,7 +6821,7 @@ def _trip_studio_accept_impl(
         entity_id=new_plan.id,
         journey_id=journey.id,
         before={"base_plan_version_id": base.id, "draft_order": [item.id for item in activities]},
-        after={"new_plan_version_id": new_plan.id, "draft_order": requested_ids, "frozen_evidence_id": base.mobility_snapshot_id},
+        after={"new_plan_version_id": new_plan.id, "draft_order": requested_ids, "frozen_evidence_id": str(evidence.get("snapshot_id") or base.mobility_snapshot_id)},
     )
     if journey.active_plan_version_id:
         refresh_offline_snapshot(session, journey)
