@@ -1,7 +1,0 @@
-tip_blob=2d6c58d048bae9d10779127bf50a146c51d4b0ab
-r1_base_blob=cec0651cb5d9e0d0df0f71ce4c2ca0f07bea379f (different, which is why r1 was refused)
-bytes_before=139105 bytes_after=138440
-lines_removed=7 lines_added=0 entries_left=0
-deleted_values=['Local parse, no links opened', '本地解析，不打开链接']
-table_pair_values=['本地解析，不打开链接', 'Local parse, no links opened'] moved_not_reworded=true
-cr_introduced=0 edited_foreign_lines=0

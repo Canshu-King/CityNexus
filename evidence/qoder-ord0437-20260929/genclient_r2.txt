@@ -1,2 +1,0 @@
-✨ openapi-typescript 7.13.0
-🚀 ../contracts/openapi.yaml → src/generated/api.ts [842.8ms]

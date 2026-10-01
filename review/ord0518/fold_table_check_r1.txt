@@ -1,7 +1,0 @@
-shipped_ranges 49
-measured_ranges 49
-shipped_code_points 352
-measured_code_points 352
-only_in_shipped []
-only_in_measured []
-verdict MATCH
