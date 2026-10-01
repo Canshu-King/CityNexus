@@ -98,6 +98,14 @@ def main():
     s["exp_diags"] = "%s/%s/%s" % (exp["tip"]["diags"], exp["r2"]["diags"], exp["r3"]["diags"])
     s["exp_extra_cells"] = ", ".join(extra_cells)
     s["exp_ruler"] = exp["r3"]["ruler"]
+    _t476 = open(os.path.join(LANE, "wt23/backend/tests/test_qoder_ord0476_checkins.py"),
+                         encoding="utf-8").read().splitlines()
+    _hits = [i + 1 for i, x in enumerate(_t476) if 'sorted(listed["responses"])' in x]
+    if len(_hits) != 1:
+        raise SystemExit("ABORT_0476_ANCHOR %r -- the neighbour's assertion is not findable"
+                         " on exactly one line" % (_hits,))
+    s["a_0476"] = _hits[0]
+    s["a_0476_text"] = _t476[_hits[0] - 1].strip()
     s["exp_budget"] = _tip.get("crossing_budget")
     s["exp_cuts"] = _tip.get("crossing_cuts")
 
@@ -349,7 +357,7 @@ def main():
 
 **七、反件二：门里不给足迹时屏上不许长出标**。一次性面 `{entry_mut}` 把标记改成从排程活动状态取。真跑：到屏时门里 {rows_mut_arrival} 行、屏上「已打卡」{marks_mut_arrival} 枚（本轮基座与候选同格都是 0 对 0，件 `{b_sweep}`）。三臂载体 `{b_spec}`（配置 `{b_cfg}`）在本轮三面上各一趟（件 `{b_arms}`）：基座面 `{entry_tip}` 通过 {base_arm_pass} 枚、失败 {base_arm_fail} 枚，判语逐字「{base_arm_msg}」；候选面 `{entry_cand}` 通过 {cand_arm_pass} 枚、失败 {cand_arm_fail} 枚；反件面 `{entry_mut}` 通过 {mut_arm_pass} 枚、失败 {mut_arm_fail} 枚，判语逐字「{mut_arm_msg}」。
 
-**八、一处我不改的缺口，仍具名**。GET 那扇读本候选同样具名拒未知行程，但契约里 GET 的 404 我没写——写了会撞 ORD-0476 已收的契约臂（`backend/tests/test_qoder_ord0476_checkins.py:500` 逐字断言 GET 只有 200 与 409）。POST 侧 404 已写进 `contracts/openapi.yaml` 并由我的臂钉名字。
+**八、一处我不改的缺口，仍具名**。GET 那扇读本候选同样具名拒未知行程，但契约里 GET 的 404 我没写——写了会撞 ORD-0476 已收的契约臂（`backend/tests/test_qoder_ord0476_checkins.py:{a_0476}` 逐字断言 GET 只有 200 与 409（那行读作 `{a_0476_text}`））。POST 侧 404 已写进 `contracts/openapi.yaml` 并由我的臂钉名字。
 
 **九、产物身份与反件处置**。两证：基座面入口 `{entry_tip}`、候选面入口 `{entry_cand}`、反件面 `{entry_mut}`，服务字节与磁盘字节逐枚相等，件 `{b_builds}`（本机字节 sha256，不是 git 物件，不可 cat-file）；第三证具名 `NOT_AVAILABLE_BY_CMDR`（`vite preview` 不往我控制的日志写请求行）。反件树 `wt24`/`mutgen9` 与反件面不进任何枝，两枚反件各与**交付候选**逐行现算的配方在 `review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md`（生成器 `review/ord0500-checkin/tools/ce2_recipe_r5.py`；上一版那份写的是它那一代的树名，所以这次重写而不是沿用）。我这一代开过的口：{ports_used}（数出来的：静态面 {ports_faces} 枚、后端 {ports_backends} 枚，两家有重叠时按并集列；静态面那九枚读自本代件里的 `face` 与 `serve.port`，后端那三枚读自本代量具源文件里写死的 81xx——`run/gen9_*` 日志里能搜到的都是临时对端口，不能当证据）；写完这块用 `netstat -ano` 复查，这些口里仍在监听的是 {ports_still_listening}，交还 = {ports_released}；`:8000`/`:4781`/`:4782`/`:4783`/`:4785`/`:4787`/`:8693` 未碰，`demo/reset` 未跑。
 
