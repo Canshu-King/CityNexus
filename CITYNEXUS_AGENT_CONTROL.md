@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:45 · 换代完成：前端 :4783 与后端 :4787 双双换到尖 `5a4cdbd2…`，分享幂等两按真探针 REUSED；旧 4787 的 CWD 目录已亡的脆弱态一并消除
+
+**〇、前端换代（:4783，先起后停零断链）**
+
+- day15 bundle：`cmdr_build_bundle_r1.py --sha 5a4cdbd26d4a58d6ed6b277480e766ac08b15ded --tag day15` rc=0，入口引用 `/assets/index-CXnmNy6z.js` + `/assets/index-CF-Aj6pQ.css`，导出 blob 等值六项全真。
+- union 纪律：day13 的二十五枚旧资产 `cp -n` 进 day15 dist（含 v10-sw.js / workbox），旧客户端握着的 `index-DEIONDj6.js` 在新根上答 `http_status=200` 且与磁盘逐字节相等——没有"200 + HTML"的资产洞。
+- 先验后切：备用口 :4784 起服务，四证手量全真（入口、新 JS、CSS、旧 JS）后，停旧 PID 57560，新 PID 37544 绑 :4783 指向 day15。终验：`/` `http_status=200` 1200B 等于磁盘、CXnmNy6z 一百五十九万一千五百二十五 B 相等（字节数按 DIMENSION 读） `text/javascript`、CF-Aj6pQ 二十二万九千六百三十七 B 相等、v10-sw.js 2055B 相等。备用口 :4784 验完即撤（PID 49316 已停）。
+
+**二、后端换树（:4787）**
+
+- 旧进程 PID 22644 的 CWD 目录 `_verify_http_2f0568e0` 已被我白天清理（DB 靠打开句柄活着）——这是"重启即死"的脆弱态，本次换代顺带消除。
+- 新树：`_serve_5a4cdbd2`（尖 `5a4cdbd2…` 的 `git archive` 整树导出）。库：`_cmdr_canary_day15.db`（自 `_cmdr_canary_copy_r2.db` + wal/shm 复制，原件未动）。启动走 `_start_4787_day15.bat`（PYTHONPATH=backend、DEMO_MODE=true、NO_PROXY=*、无代理），新 PID 45536，`/api/v1/demo/scene` `http_status=200`。
+- 过程坎（记下防再踩）：`cmd /c set X=v&&...` 链式环境变量让 uvicorn 报 `No module named 'backend'`——cmd 的 set 链在转义下值被吃；改 .bat 文件一次成。Start-Process 持久起 uvicorn 在本次两次失败（无输出无声死），bat 路线稳。
+
+**三、幂等语义真探针（不是只看门绿）**
+
+在 day15 后端上对有排程的旅程 id 见 `frontend/review/ord0541/receipts/stack_ord0541.json:11` 同一批具名演示行程（canary 库自带，UUID 见该收据），同一 `created_by=cmdr-probe-0143` 连按两下 `LINK_READ` 分享：第一按 `http_status=201` id `1afda8d2-b7bb…`，第二按 `http_status=201` **同一枚 id、同一枚 token、同一枚 created_at**——`REUSED` 成立，ORD-0541 的后端语义在 :4787 上实测为真。
+
+**四、手机侧说明**
+
+前端 :4783 与后端 :4787 现在同代（`5a4cdbd2…`）。真机探针（五格/打卡/分享）仍待用户手机连上局域网后跑——本块所有读数都是桌面侧 transport + API 语义证明，按常设规矩不宣称"手机显示正常"。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:30 · ORD-0541 前端半支落地，尖 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`——分享幂等前后端现已齐；0528/0542 回归由车道在候选代跑绿
 
 **〇、回验（落地后现读）**
