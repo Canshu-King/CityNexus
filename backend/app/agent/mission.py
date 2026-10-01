@@ -545,6 +545,8 @@ def create_mission(
     allowed_actions = ["REQUEST_REPLAN"]
     if requested_autonomy == "EXECUTE_WITHIN_BOUNDS":
         allowed_actions.append("ACCEPT_REPLAN")
+        if trigger_event_id is not None:
+            allowed_actions.append("ACTIVATE_STANDBY")
     mission = JourneyMission(
         id=str(uuid4()),
         journey_id=journey.id,

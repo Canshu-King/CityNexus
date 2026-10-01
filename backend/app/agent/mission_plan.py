@@ -61,6 +61,7 @@ _READ_TOOLS = (
     "search_city_services",
 )
 _ACTION_TOOLS = (
+    "activate_standby",
     "request_replan",
     "accept_replan",
     "replace_activity",
@@ -107,6 +108,15 @@ def build_mission_plan(
                 "inspect_twin",
             ),
         )
+    steps.insert(
+        2,
+        MissionPlanStep(
+            "arbitrate_standby",
+            "Arbitrate the compatible standby branch from the server portfolio",
+            "activate_standby",
+            requires_authority=True,
+        ),
+    )
     if "RECOVER_FROM_CITY_DISRUPTION" in objectives or "PREFER_INDOOR" in objectives:
         steps.extend(
             [
