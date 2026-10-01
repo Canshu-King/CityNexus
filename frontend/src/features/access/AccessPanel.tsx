@@ -24,6 +24,7 @@ import {
   type ActivityEvent,
   type DoorProbe,
   type JourneyMemberRow,
+  type JourneyOrderChoice,
   type JourneySummary,
   type MemberRoleLimits,
   type RoleRule,
@@ -53,7 +54,25 @@ import {
   VISIBILITY_LADDER,
   visibilitySwitchKey,
   invitationQuotaKey,
+  DEFAULT_JOURNEY_ORDER,
+  JOURNEY_ORDERS_NOT_ANSWERED,
+  JOURNEY_SORT_LADDER,
+  sortLabelKey,
 } from "./accessVocabulary";
+import { journeyOrderVerdict, type JourneyOrderReason } from "./journeyOrderVerdict";
+
+/** ORD-0518: the verdict's reason in the traveller's language. Every reason has a sentence in both
+ *  languages here; a reason this file has no sentence for is a bug in this map, and the panel says
+ *  nothing rather than quoting the module's identifier. */
+const ORDER_REASON_COPY: Record<JourneyOrderReason, AccessCopyKey> = {
+  no_rows: "access.orderReasonNoRows",
+  no_created_at_in_row: "access.orderReasonNoCreatedAt",
+  no_updated_at_in_row: "access.orderReasonNoUpdatedAt",
+  row_without_start_at: "access.orderReasonRowWithoutStart",
+  compared_start_at: "access.orderReasonStartAt",
+  compared_title: "access.orderReasonTitle",
+  title_folds_differently: "access.orderReasonFoldDivergent",
+};
 import "./access.css";
 
 /**
@@ -77,6 +96,11 @@ import "./access.css";
 
 type TripsState =
   | { phase: "loading" }
+  /** The rows only. ORD-0518 tried for a door-side vouch (a response header naming the order) and
+   *  gave it up when that meant touching the door, the contract and the generated client -- all of
+   *  which another order is mid-flight on. What the screen says about the order is therefore decided
+   *  from these rows, in `journeyOrderVerdict.ts`, and says it cannot check when they carry nothing
+   *  to check. */
   | { phase: "ready"; rows: JourneySummary[] }
   | { phase: "failed"; facts: RawFacts | null; attribution: Attribution };
 
@@ -133,6 +157,11 @@ export function AccessPanel({
     fillAccess(accessCopyFor(locale, key), params);
 
   const [trips, setTrips] = useState<TripsState>({ phase: "loading" });
+  /* ORD-0477: the order this list is in is state the screen holds and says out loud, because the
+     order is the server's answer to a word this screen sent -- not a side effect of row order. */
+  /* ORD-0518 renamed this state from `sort` to `order`, and widened it: the screen now also offers
+     the order that asks for no word at all, so the value is `JourneyOrderChoice` (tier or null). */
+  const [order, setOrder] = useState<JourneyOrderChoice>(DEFAULT_JOURNEY_ORDER);
   /** ORD-0527: the trip is not only picked here.  The shell already holds one
    *  (`citynexus.v8.journey_id`), and a panel that waits for a manual pick leaves a roster with rows
    *  in the store painting the empty cell -- which is what the commander measured at 390x844.  The
@@ -162,10 +191,10 @@ export function AccessPanel({
   const [pickVisibility, setPickVisibility] = useState<string>(VISIBILITY_LINK_READ);
   const [pickExpiry, setPickExpiry] = useState<string>("");
 
-  const loadTrips = useCallback(async () => {
+  const loadTrips = useCallback(async (choice: JourneyOrderChoice) => {
     setTrips({ phase: "loading" });
     try {
-      setTrips({ phase: "ready", rows: await readJourneys() });
+      setTrips({ phase: "ready", rows: await readJourneys(choice) });
     } catch (cause) {
       setTrips({
         phase: "failed",
@@ -176,8 +205,8 @@ export function AccessPanel({
   }, []);
 
   useEffect(() => {
-    void loadTrips();
-  }, [loadTrips]);
+    void loadTrips(order);
+  }, [order, loadTrips]);
 
   const loadRoster = useCallback(async (journeyId: string) => {
     setRosterFailed(null);
@@ -459,6 +488,34 @@ export function AccessPanel({
     return say("access.memberStateUnknown", { state: member.member_state });
   };
 
+  /* ORD-0477: the word for the order in use, taken from the ladder rather than from the token the
+     server uses. `null` means this screen owns no sentence for that order, and it is said as that --
+     the machine word is quoted, never worn as a label. */
+  const tierWordKey = sortLabelKey(order);
+
+  /* ORD-0518: what this screen is allowed to say about the order, decided from the rows the door
+     sent and not from the button that was pressed. Three honest outcomes: the rows agree, the rows
+     contradict it (and the row where it breaks is named), or these rows carry nothing to compare --
+     in which case the screen says it cannot check, rather than claiming a time order.
+     The verdict module returns a *reason*, not a sentence, because the reason has to be said in the
+     traveller's language: an English clause interpolated into a Chinese sentence is a second defect
+     on top of the one being reported. The stored column the check compared is put on the element as
+     `data-compared` for the gate to read, never painted. */
+  const orderVerdict = trips.phase === "ready" ? journeyOrderVerdict(rows, order) : null;
+  const orderReasonKey = orderVerdict === null ? null : ORDER_REASON_COPY[orderVerdict.reason];
+  const orderSentence =
+    orderVerdict === null || orderReasonKey === null
+      ? ""
+      : orderVerdict.state === "CONSISTENT"
+        ? say("access.orderChecked", { reason: say(orderReasonKey) })
+        : orderVerdict.state === "INCONSISTENT"
+          ? say("access.orderBroken", { row: String(orderVerdict.first_break_row ?? 0) })
+          : orderVerdict.state === "NOT_VERIFIABLE"
+            ? say("access.orderUnverifiable", {
+                reason: say(orderReasonKey, { row: String(orderVerdict.first_break_row ?? 0) }),
+              })
+            : "";
+
   return (
     <section
       className="cn-access"
@@ -473,6 +530,71 @@ export function AccessPanel({
 
       {/* ---------------------------------------------------------- read from this server */}
       <div className="cn-access-read" data-testid="access-server-read">
+        {/* ORD-0477 -- which order the list below is in, said in words and set by a control the
+            traveller can see. The tier the screen is on is this screen's own state, so it stays
+            readable while the rows are still arriving; the rows themselves are the door's answer to
+            the word this screen sent. */}
+        <div className="cn-access-sort" data-testid="access-sort">
+          <span className="cn-access-picker-label">{say("access.sortHeading")}</span>
+          <p className="cn-access-sort-current" data-testid="access-sort-current">
+            {say("access.sortCurrent", { tier: tierWordKey ? say(tierWordKey) : String(order) })}
+          </p>
+          <div className="cn-access-sort-tiers" role="group" aria-label={say("access.sortHeading")}>
+            {JOURNEY_SORT_LADDER.map((row) => (
+              <button
+                key={row.labelKey}
+                type="button"
+                className="cn-access-sort-tier"
+                data-testid={`access-sort-tier-${row.choice ?? "CREATION_ORDER"}`}
+                aria-pressed={row.choice === order ? "true" : "false"}
+                onClick={() => setOrder(row.choice)}
+              >
+                {say(row.labelKey)}
+              </button>
+            ))}
+          </div>
+          {/* ORD-0518 -- what this screen asked, and what the door answered.  Two sentences on
+              purpose: the second is built only off `X-CityNexus-Journey-Sort`, so a server that
+              ignored the word cannot be reported on screen as having sorted anything. */}
+          {trips.phase === "ready" && orderVerdict !== null && orderVerdict.state !== "NO_ROWS" ? (
+            <p
+              className="cn-access-order-verdict"
+              data-testid="access-order-verdict"
+              data-state={orderVerdict.state}
+              data-reason={orderVerdict.reason}
+              {...(orderVerdict.machine_field ? { "data-compared": orderVerdict.machine_field } : {})}
+              {...(orderVerdict.blocked_code_point
+                ? { "data-blocked-code-point": orderVerdict.blocked_code_point }
+                : {})}
+              role={orderVerdict.state === "INCONSISTENT" ? "alert" : "status"}
+            >
+              {orderSentence}
+            </p>
+          ) : null}
+          {/* The orders the commander asked this screen to offer that the door has no field for.
+              Named on the glass, because a control list that quietly omits them reads as "these are
+              all the orders there are". */}
+          <div className="cn-access-sort-absent" data-testid="access-sort-absent">
+            <span className="cn-access-picker-label">{say("access.noTierHeading")}</span>
+            {JOURNEY_ORDERS_NOT_ANSWERED.map((row) => (
+              <p
+                key={row.nameKey}
+                className="cn-access-sort-absent-line"
+                data-testid={`access-no-tier-${row.nameKey}`}
+              >
+                {say(row.nameKey)} — {say(row.becauseKey)}
+              </p>
+            ))}
+          </div>
+          {/* The one tier whose order surprises a Chinese-speaking traveller: characters, not pinyin.
+              Said only while that tier is the one in use, so the sentence is never about a different
+              order than the list below is actually in. */}
+          {tierWordKey === "access.sortTitle" ? (
+            <p className="cn-access-sort-note" data-testid="access-sort-note">
+              {say("access.sortTitleNote")}
+            </p>
+          ) : null}
+        </div>
         {trips.phase === "loading" && <p data-testid="access-trips-loading">{say("access.pickLoading")}</p>}
         {trips.phase === "failed" && (
           <div role="alert" data-testid="access-trips-failed">
@@ -493,24 +615,48 @@ export function AccessPanel({
              tested, or refused. */
           <p data-testid="access-trips-empty">{say("access.pickEmpty")}</p>
         )}
+        {/* ORD-0518: the list is rows now, not a closed `<select>`.  A collapsed control held the
+            order in its DOM but showed one line of text, so "first and last trip" could not be read
+            off the screen without opening it -- and a uuid was the only other thing the old option
+            fell back to when a title was empty. Each row speaks its trip's name. */}
         {trips.phase === "ready" && rows.length > 0 && (
-          <label className="cn-access-picker">
-            <span className="cn-access-picker-label">{say("access.pickLabel")}</span>
-            <select
-              data-testid="access-journey-picker"
-              value={chosen ?? ""}
-              onChange={(event) => {
-                if (event.target.value) void openTrip(event.target.value);
-              }}
+          <div className="cn-access-trips">
+            <span className="cn-access-picker-label" id="access-trips-label">
+              {say("access.pickLabel")}
+            </span>
+            {chosen === null ? (
+              <p className="cn-access-picker-hint" data-testid="access-trips-hint">
+                {say("access.pickNone")}
+              </p>
+            ) : null}
+            {/* A scroll box you cannot reach with the keyboard is a trap: the region is focusable and
+                named, so the same rows a thumb scrolls are reachable with arrow keys. */}
+            <ol
+              className="cn-access-trip-rows"
+              data-testid="access-trip-roster"
+              aria-labelledby="access-trips-label"
+              tabIndex={0}
             >
-              <option value="">{say("access.pickNone")}</option>
-              {rows.map((row) => (
-                <option key={row.id} value={row.id}>
-                  {row.title || row.id}
-                </option>
+              {rows.map((row, index) => (
+                <li
+                  key={row.id}
+                  className="cn-access-trip-row"
+                  data-testid="access-trip-row"
+                  data-position={index === 0 ? "first" : index === rows.length - 1 ? "last" : "middle"}
+                >
+                  <button
+                    type="button"
+                    className="cn-access-trip-open"
+                    data-testid={`access-trip-open-${index}`}
+                    aria-current={row.id === chosen ? "true" : undefined}
+                    onClick={() => void openTrip(row.id)}
+                  >
+                    {row.title && row.title.trim() !== "" ? row.title : say("access.tripUntitled")}
+                  </button>
+                </li>
               ))}
-            </select>
-          </label>
+            </ol>
+          </div>
         )}
         {chosenTitle ? <p data-testid="access-chosen">{say("access.selected", { title: chosenTitle })}</p> : null}
       </div>
