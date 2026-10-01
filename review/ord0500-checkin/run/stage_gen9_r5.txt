@@ -1,6 +1,6 @@
 {
   "tool": "stage_gen9_r5",
-  "took_local": "2026-10-01T15:25:05.731513+08:00",
+  "took_local": "2026-10-01T15:34:38.158329+08:00",
   "receipts": [
     "GEN9_READINGS.md",
     "receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
@@ -53,7 +53,10 @@
     "receipts/gen9_checkin_sweep_r1.json",
     "receipts/gen9_doors_wt23-wt22-mutgen9.json",
     "receipts/gen9_landing_check_r1.json",
+    "receipts/landing_history_r5.json",
     "receipts/prior_denominators_r5.json",
+    "run/coords_r5c.txt",
+    "run/css_proof_r5_out.txt",
     "run/fix_shipped_comments_r5.json",
     "run/gen9_build_out.txt",
     "run/gen9_build_out_r2.txt",
@@ -70,6 +73,11 @@
     "run/gen9_tsc_O0500_R5_tsconfig.typecheck.txt",
     "run/gen9_tsc_TIP_b604f50d_tsconfig.check.txt",
     "run/gen9_tsc_TIP_b604f50d_tsconfig.typecheck.txt",
+    "run/landing_after_push_r5.txt",
+    "run/landing_c874.txt",
+    "run/landing_c95.txt",
+    "run/landing_final2_r5.txt",
+    "run/landing_final_r5.txt",
     "run/remeasure_carrier_arms_r1.txt",
     "run/remeasure_carrier_r1.txt",
     "run/remeasure_ce1_proof_r1.txt",
@@ -100,6 +108,7 @@
     "tools/git_blob_probe_r1.py",
     "tools/land_o0500_openapi_r4.py",
     "tools/land_o0500_r5.py",
+    "tools/landing_history_r5.py",
     "tools/make_gen9_mutants_r1.py",
     "tools/make_gen9_tools_r1.py",
     "tools/patch_gen9_blocks_r1.py",
@@ -107,5 +116,5 @@
     "tools/remeasure_gen9_r1.py",
     "tools/scrollfix_probe_r1.py"
   ],
-  "total_bytes": 2402726
+  "total_bytes": 2421591
 }

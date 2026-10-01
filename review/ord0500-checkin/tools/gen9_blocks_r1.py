@@ -28,6 +28,10 @@ def load(name):
     return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else {"MISSING_ARTIFACT": name}
 
 
+def cell(v):
+    return "NOT_MEASURED" if v is None or v == {} else str(v)
+
+
 def rev(tree, revspec):
     return subprocess.run(["git", "-C", os.path.join(LANE, tree), "rev-parse", revspec],
                           stdout=subprocess.PIPE, timeout=60).stdout.decode("utf-8").strip()
@@ -142,11 +146,11 @@ def main():
     lh = load("landing_history_r5.json")
     rows = []
     for r in lh.get("runs", []):
-        rows.append("| %s | %s | %s | %s 枚逐字节相同 / %s 枚 | %s | %s |" % (
+        rows.append("| %s | %s | %s | %s / %s | %s |" % (
             cell(r.get("took_local", ""))[:19], cell(str(r.get("live_tip"))[:40]),
-            cell(str(r.get("candidate_head"))[:40]), cell(r.get("write_set_files")),
-            cell(r.get("byte_identical")), cell(r.get("needs_recut"))))
-    s["lh_table"] = (NL if False else chr(10)).join(rows) if rows else "（件缺，NOT_MEASURED）"
+            cell(str(r.get("candidate_head"))[:40]), cell(r.get("byte_identical")),
+            cell(r.get("write_set_files")), cell(r.get("needs_recut"))))
+    s["lh_table"] = chr(10).join(rows) if rows else "（件缺，NOT_MEASURED）"
     s["lh_runs"] = lh.get("runs_parsed")
     s["lh_clean"] = lh.get("every_run_clean")
     s["lh_tool"] = "review/ord0500-checkin/tools/landing_history_r5.py"
