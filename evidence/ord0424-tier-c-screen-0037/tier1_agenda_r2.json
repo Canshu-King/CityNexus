@@ -1,0 +1,1118 @@
+{
+ "tip": "0c061d9eb74b21f0b0b297a068778479b08658b4",
+ "ruler_bytes": 90342,
+ "cmd": "import the shipped ruler module, call scan_tree(exp_c2/frontend/src, exp_c2/data/mock) and keep the same predicate render_tiers_finding uses (band in A/B/C, h[6]==1)",
+ "files_scanned": 141,
+ "live_hits": 490,
+ "render_tier_counts": {
+  "1": 112,
+  "2": 375,
+  "3": 3
+ },
+ "ruler_own_finding": "490 hits over 141 files by render tier: tier 1 (proven render slot, no language branch guarding it) 112, tier 2 (this face cannot settle it) 375, tier 3 (text proves it cannot reach a screen -- key={}) 3",
+ "previous_agenda_rows": 86,
+ "why_the_previous_agenda_was_short": "`--list-fallbacks` iterates only bands A and B; the tier-C band is where the 403 rows live and some of them are render-tier 1, so the displayed list is not the set",
+ "tier1_rows": 112,
+ "tier1_files": 13,
+ "faces": [
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "tier1_rows": 85,
+   "rows": [
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1133,
+     "literal": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1394,
+     "literal": "not evaluated",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1399,
+     "literal": "unknown",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1442,
+     "literal": "preference",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1453,
+     "literal": "preference",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1466,
+     "literal": "preference",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "B",
+     "file": "frontend/src/main.tsx",
+     "line": 1530,
+     "literal": "No active C4",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 970,
+     "literal": "CityNexus · deterministic journey mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 971,
+     "literal": "Connecting to the JourneyTwin",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 980,
+     "literal": "CityNexus · deterministic journey mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 981,
+     "literal": "Journey connection unavailable",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 990,
+     "literal": "Retry backend connection",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 998,
+     "literal": "CityNexus · deterministic journey mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 999,
+     "literal": "Commitment-aware recovery",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1008,
+     "literal": "· proposal rejected",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1029,
+     "literal": "Control Tower · Delegated Autonomous Journey Agent",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1030,
+     "literal": "Tell CityNexus what changed",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1031,
+     "literal": "DeepSeek interprets the city signal and your intent. Hermes-style tool orchestration, policy, and deterministic feasibility gates decide what can actually change.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1035,
+     "literal": "Ordinary reversible Activities can run inside the envelope; protected Commitments stay intact unless an explicitly authorized stronger action passes the Gateway.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1041,
+     "literal": "Natural-language mission",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1053,
+     "literal": "Execution envelope",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1065,
+     "literal": "Execute within policy bounds",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1066,
+     "literal": "Plan only · no mutation",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1081,
+     "literal": "Persisted mission · {mission.id.slice(0, 8)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1090,
+     "literal": "Objectives · {mission.objective_codes.join(\" · \") || \"general recovery\"}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1092,
+     "literal": "Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1093,
+     "literal": "Schedule drift · {mission.max_schedule_drift_min} min",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1094,
+     "literal": "Protected Activities · {mission.protected_activity_ids.length}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1099,
+     "literal": "Persisted tool trace · {agentRun.tool_steps.length} calls",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1115,
+     "literal": "No external model calls were available; the mission boundary was persisted safely.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1124,
+     "literal": "Proactive Journey Guardian · persistent control plane",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1125,
+     "literal": "Journey Operations",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1141,
+     "literal": "Activate standing mission",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1148,
+     "literal": "Inject city signal + proactive scan",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1156,
+     "literal": "Start live Autopilot",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1164,
+     "literal": "Provider: heavy rain + route delay",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1172,
+     "literal": "Run Predictive Real-City Twin",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1190,
+     "literal": "Predictive resilience",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1209,
+     "literal": "Observation",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1210,
+     "literal": "Inference",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1211,
+     "literal": "Solver",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1212,
+     "literal": "Policy",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1213,
+     "literal": "Mutation",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1217,
+     "literal": "Standing Mission · {guardianStatus.standing_mission.status}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1225,
+     "literal": "Compiler {guardianStatus.standing_mission.compiler.provider_key}/ {guardianStatus.standing_mission.compiler.model_key}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1256,
+     "literal": "Delegation boundary",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1257,
+     "literal": "Agent Mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1258,
+     "literal": "Operating mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1285,
+     "literal": "Auto-accept envelope-safe replans",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1288,
+     "literal": "Max automatic cost increase (minor units)",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1302,
+     "literal": "Max automatic acceptable loss (minor units)",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1316,
+     "literal": "Max automatic schedule drift (minutes)",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1369,
+     "literal": "Pre-authorize commitment management within the envelope",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1372,
+     "literal": "Policy v{agentPolicy.version} · protected commitment levels {agentPolicy.protected_commitment_levels.join(\", \")} remain server-owned.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1378,
+     "literal": "Explainable execution",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1379,
+     "literal": "Agent Activity Feed",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1412,
+     "literal": "Journey history",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1413,
+     "literal": "Plan versions · {reflectSummary.plan_version_chain.length} · replans ·{\" \"} {reflectSummary.replan_history.length} · disruptions ·{\" \"} {reflectSummary.provider_disruptions.length}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1429,
+     "literal": "TravelerTwin Control Tower",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1430,
+     "literal": "Inspectable cross-Journey learning",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1431,
+     "literal": "Explicit {travelerTwin.explicit_preferences.length} · learned soft {travelerTwin.learned_soft_preferences.length} · confidence {Math.round(travelerTwin.confidence * 100)}% · evidence {travelerTwin.evidence_count}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1436,
+     "literal": "Explicit preferences",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1438,
+     "literal": "None recorded.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1449,
+     "literal": "No learned soft evidence yet.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1460,
+     "literal": "Conflicts and resolution",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1462,
+     "literal": "No active conflicts.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1471,
+     "literal": "Learned evidence is soft planning input only; it never expands budget, payment, Commitment, or autonomy authority.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1478,
+     "literal": "Clear learned soft evidence",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1485,
+     "literal": "Journey map · backend route evidence",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1499,
+     "literal": "Place geometry unavailable · offline evidence mode",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1505,
+     "literal": "Closure event",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1514,
+     "literal": "Old plan geometry",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1518,
+     "literal": "Active proposal geometry",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1569,
+     "literal": "Upcoming commitments from JourneyTwin",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1584,
+     "literal": "Demo Event Simulator",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1592,
+     "literal": "Inject Tech Art closure · {formatTime(closureOccurredAt)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1599,
+     "literal": "Journey timeline · active PlanVersion",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1622,
+     "literal": "Replan comparison · persisted proposals",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1665,
+     "literal": "{proposalDeltaText(selectedProposal, planCurrency)} · protected commitments unchanged",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1681,
+     "literal": "Reject",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1687,
+     "literal": "Explanations are limited to verified JourneyTwin and ReplanDiff evidence.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1073,
+     "literal": "Agent is working…",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1073,
+     "literal": "Run Agent mission",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1674,
+     "literal": "Confirm server-approved replan",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/main.tsx",
+     "line": 1674,
+     "literal": "Accept backend replan",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "tier1_rows": 11,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 160,
+     "literal": "V14 · BEFORE REALITY CHANGED",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 161,
+     "literal": "Preventive recovery",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 162,
+     "literal": "A forecast, not a failure, triggered this. Reactive recoveries are owned by the grounded adaptive recovery panel below.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 174,
+     "literal": "TRIGGER",
+     "why": "JSX_TEXT_NODE: copy: element text is read as it is rendered (the machine-token veto belongs to a ?? slot, not to this shape)",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 183,
+     "literal": "FORECAST",
+     "why": "JSX_TEXT_NODE: copy: element text is read as it is rendered (the machine-token veto belongs to a ?? slot, not to this shape)",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 203,
+     "literal": "Why it acted",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 209,
+     "literal": "Plan",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 222,
+     "literal": "Protected commitments",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 232,
+     "literal": "Authorization",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 168,
+     "literal": "acted before the failure",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+     "line": 168,
+     "literal": "acted after a failure",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "name": "V8Experience.tsx",
+   "tier1_rows": 3,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 2116,
+     "literal": "{t( ( { hub: \"mobile.today\", trips: \"mobile.trips\", agent: \"mobile.copilot\", bookings: \"mobile.wallet\", } as Record",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 2701,
+     "literal": "{greetingFor(new Date().getHours(), t)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 2884,
+     "literal": "` makes the browser close the paragraph early, and then the sentence this screen wrote and the sentence the server wrote no longer share one element for a gate to read. */",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "name": "v8PanelRegistry.tsx",
+   "tier1_rows": 3,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/app/v8PanelRegistry.tsx",
+     "line": 385,
+     "literal": "), }, ]; /** The Trips sub-tabs, same order as the tab strip renders them. */ export const tripsTabPanels: V8PanelEntry",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/app/v8PanelRegistry.tsx",
+     "line": 539,
+     "literal": "), }, ]; /** * Panels that mount *inside* a page shell at a named anchor, rather than as a route sibling. * * This is the fourth surface, and it exists because \"the page shells stay in the file that defines * them\" (see the header of this file) otherwise left no way for a lane to add a panel *between* two * blocks of a shell without opening the shell. The shell contributes one traversal at the anchor; * everything below it is table data. * * First entry: ORD-0384's pre-trip checklist, which the shell mounted directly under Today's * attention band. Its position is load-bearing and its own comment said why, so the comment * travels with the entry instead of being left behind in a 4 500-line file. */ export const hubAnchorPanels: V8PanelEntry",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/app/v8PanelRegistry.tsx",
+     "line": 568,
+     "literal": ", }, ]; /** Renders a registry: one fragment per matching entry, keyed by the entry id. */ export function renderPanels",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "name": "PoiImportPanel.tsx",
+   "tier1_rows": 2,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+     "line": 462,
+     "literal": "HTTP {failure.status}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    },
+    {
+     "band": "C",
+     "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+     "line": 669,
+     "literal": "HTTP {readBackFailure.status}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/checkin/FootprintPanel.tsx",
+   "name": "FootprintPanel.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": 141,
+     "literal": "{footprintTimePhrase(locale, new Date(stamp.stamped_at), timezone)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/estimation/EstimationLadderPanel.tsx",
+   "name": "EstimationLadderPanel.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/estimation/EstimationLadderPanel.tsx",
+     "line": 74,
+     "literal": "{fillLadder(ladderCopyFor(locale, rung.key as LadderCopyKey), rung.vars)}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+   "name": "V12AuthoritativeJourneyPanel.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+     "line": 118,
+     "literal": "{new Date(next.start_at).toLocaleTimeString([], { hour: \"2-digit\", minute: \"2-digit\" })}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/mobility/MobilitySheet.tsx",
+   "name": "MobilitySheet.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/mobility/MobilitySheet.tsx",
+     "line": 9,
+     "literal": "min walk",
+     "why": "TERNARY_BRANCH: carries language",
+     "shape": "ternary_branch",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/pending/PendingSetPanel.tsx",
+   "name": "PendingSetPanel.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/features/pending/PendingSetPanel.tsx",
+     "line": 625,
+     "literal": "provider-mesh answered keys: {candidateDoorKeys(candidateDoor).join(\", \") || \"none\"}",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "name": "PlanWithAiSheet.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "B",
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 1065,
+     "literal": "not_stated",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "name": "JourneyTrialSetup.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "B",
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 997,
+     "literal": "not-asked",
+     "why": "bare literal in a ?? slot",
+     "shape": "other",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  },
+  {
+   "file": "frontend/src/stories/V12StatePrimitives.stories.tsx",
+   "name": "V12StatePrimitives.stories.tsx",
+   "tier1_rows": 1,
+   "rows": [
+    {
+     "band": "C",
+     "file": "frontend/src/stories/V12StatePrimitives.stories.tsx",
+     "line": 15,
+     "literal": "Weather provider is degraded; frozen mobility facts remain usable.",
+     "why": "JSX_TEXT_NODE: carries language",
+     "shape": "jsx-text",
+     "slot": "JSX_CHILD"
+    }
+   ]
+  }
+ ]
+}
