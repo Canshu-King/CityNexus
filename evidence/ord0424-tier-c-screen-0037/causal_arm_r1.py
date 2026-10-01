@@ -84,7 +84,8 @@ def main():
     before = local_blob(SRC)
 
     # control on the untouched build
-    ctl, _ = check("control_reuse", "http://localhost:4541", ORIG + MARK, "screen_legacy_control_r1.png")
+    NEG = ["Journey connection unavaliable", "CityNexus request refused"]
+    ctl, _ = check("control_full", "http://localhost:4541", ORIG + MARK + NEG, "screen_legacy_control_r1.png")
     result["control"] = {r["literal"]: {"node_exact": r["node_exact"], "substring_in_body": r["substring_in_body"]}
                          for r in ctl["results"]}
 
@@ -103,7 +104,7 @@ def main():
         try:
             ok = wait_port(4542)
             result["mutant_server_up"] = ok
-            mut, _ = check("mutant", "http://localhost:4542", ORIG + MARK, "screen_legacy_mutant_r1.png")
+            mut, _ = check("mutant", "http://localhost:4542", ORIG + MARK + NEG, "screen_legacy_mutant_r1.png")
             result["mutant"] = {r["literal"]: {"node_exact": r["node_exact"],
                                                "substring_in_body": r["substring_in_body"],
                                                "tags": r["node_tags"]}
