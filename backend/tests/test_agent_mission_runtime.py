@@ -786,6 +786,55 @@ def test_hermes_runtime_retries_an_empty_stream_without_switching_model(monkeypa
     assert calls == [True, False]
 
 
+def test_hermes_runtime_retries_length_exhausted_message_with_larger_budget(monkeypatch):
+    calls: list[tuple[str, bool, int]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content)
+        calls.append((payload["model"], bool(payload["stream"]), payload["max_tokens"]))
+        if len(calls) == 1:
+            return httpx.Response(
+                200,
+                json={
+                    "choices": [
+                        {
+                            "message": {
+                                "role": "assistant",
+                                "content": "",
+                                "reasoning_content": "reasoning used the budget",
+                            },
+                            "finish_reason": "length",
+                        }
+                    ]
+                },
+            )
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"role": "assistant", "content": "READY"}}]},
+        )
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    monkeypatch.setattr(
+        "app.agent.orchestrator.settings",
+        replace(
+            runtime_settings,
+            hermes_api_url="http://wb2api.test/v1/chat/completions",
+            hermes_api_key="test-key",
+            hermes_model="cn:glm-5.3-flash",
+            hermes_model_fallbacks=("cn:deepseek-v4.1-flash",),
+        ),
+    )
+    agent = HermesJourneyAgent(client=fake_client)
+    message = agent._complete([])
+
+    assert message["content"] == "READY"
+    assert agent.model_key == "cn:glm-5.3-flash"
+    assert calls == [
+        ("cn:glm-5.3-flash", True, 1200),
+        ("cn:glm-5.3-flash", False, 2400),
+    ]
+
+
 def test_estimate_place_facts_is_explicitly_non_authoritative():
     journey_id = _selected_journey()
     response = client.post(

@@ -26,6 +26,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     # It remains subject to the persisted traveler policy and deterministic
     # gateway facts, but must not inherit the native MCP proposal-only fence.
     agent_id = "hermes-compat"
+    _initial_max_tokens = 1200
+    _empty_message_retry_max_tokens = 2400
 
     def __init__(
         self,
@@ -55,7 +57,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 payload = {
                     "model": model,
                     "temperature": 0,
-                    "max_tokens": 1200,
+                    "max_tokens": self._initial_max_tokens,
                     "messages": messages,
                     "tools": __import__(
                         "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
@@ -74,26 +76,40 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                     stream_response = "application/json" not in content_type
                     if not stream_response:
                         response.read()
-                        message = response.json()["choices"][0]["message"]
+                        choice = response.json()["choices"][0]
+                        message = choice["message"]
+                        finish_reason = choice.get("finish_reason")
                     else:
                         message = self._merge_sse(response.iter_lines())
+                        finish_reason = None
                 if not isinstance(message, dict):
                     raise TypeError("Hermes response message is invalid")
                 if not str(message.get("content") or "").strip() and not message.get("tool_calls"):
-                    if stream_response:
-                        # WB2api can finish a streamed reasoning turn without emitting the
-                        # final assistant delta.  Retry the same domestic model once through
-                        # its non-stream OpenAI-compatible response before consuming the next
-                        # model in the configured chain; otherwise a transient empty stream
-                        # looks like a model failure and needlessly burns the fallback.
-                        retry_payload = {**payload, "stream": False}
+                    # A reasoning model can spend the initial output budget on reasoning and
+                    # finish with no visible assistant content.  WB2api reports this as an
+                    # empty message with finish_reason=length (or as a streamed reasoning-only
+                    # turn).  Retry the same model with a larger non-stream budget before
+                    # consuming the next domestic fallback; this is a budget correction, not
+                    # a model switch.
+                    retryable_budget_exhaustion = (
+                        stream_response
+                        or finish_reason == "length"
+                        or bool(message.get("reasoning_content"))
+                    )
+                    if retryable_budget_exhaustion:
+                        retry_payload = {
+                            **payload,
+                            "stream": False,
+                            "max_tokens": self._empty_message_retry_max_tokens,
+                        }
                         retry = self._client.post(
                             settings.hermes_api_url,
                             headers={"Authorization": f"Bearer {settings.hermes_api_key}"},
                             json=retry_payload,
                         )
                         retry.raise_for_status()
-                        message = retry.json()["choices"][0]["message"]
+                        retry_choice = retry.json()["choices"][0]
+                        message = retry_choice["message"]
                     if (
                         not isinstance(message, dict)
                         or (
