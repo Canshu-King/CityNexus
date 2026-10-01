@@ -16588,6 +16588,60 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0391 第 3 步（那批改写文案的屏上逐字读回已取）· 车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`：还在现尖上的 20 行里 18 行逐字亮过屏、屏上每个数都由字段名引入（18/18 全过），2 行具名 NOT_SEEN 并交出缺的前置，另外 3 行已经不在现尖上（被后来的车道改走共用 helper）
+
+**读数取在哪**：针 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 当时回读同值；写这块时该枝已走到 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`，我没有在新尖重跑，任何数都按上一枚针读）的导出树，自有三跳：静态 :4541 → 形制桩 :7042 → 自有后端 :7041（`uvicorn app.main:app --host 127.0.0.1 --port 7041`，那三个口的唯一监听进程命令行都录在件里）。库是从 `_preview.db` 以 `mode=ro` 打开后用 SQLite 备份 API 复制的，共享库 0 次写入。字节同一性：index.html 与两枚资产（1200 B、1591525 B、229637 B）服务字节与磁盘逐枚全等，不存在的资产回 `http_status=404`；链上身份由一枚只活在我这份副本里的具名行程行证（经 4541→7042→7041 读出后删掉， journeys 行数前后 1/1）。件 `served_identity_r2.json` blob `4beaa9bd20248e5b91b6180276cbfe9e31238482`（它替下 r1 那枚：r1 把问句走前门时看不到的场景头记成了 null，看着像失败、其实是我那一跳的性质，具名更正，旧枚不撤回）。
+
+**状态怎么来的（不改产品一字节）**：形制桩只替换行程读的应答——404 `JOURNEY_NOT_FOUND` / 503 / 401 / 403 / 200 + text/html / 200 空 JSON——分类仍由产品自己的 `classifyReadFailure` 做。第二趟先在健康态进屏（应用启动时会把只读副本写进 Dexie 并回读确认），再切场景重进，于是屏上那行遥测自己写着 `cached_copy_present=true`，两句「设备上有副本」的文案才有资格被读。共走 34 个状态。件 `walk_r1.json` blob `8d03968e091c4e547cc957cfa38c71c77ef02706`、`walk_r2.json` blob `ae316c1ce93a2d3ca45564a71cd8046723e9a871`、`scenarios_r1.json` blob `278dfe02dccca03f77c880708ed5456f8b18f709`、`api_stub_r1.py` blob `d46ee2632f5805ead2afd88e5937b74e4e813600`。
+
+**逐枚判据**：一行算读回，当且仅当某个渲染文本节点**以该句自己的静态开头起头**（子串不算），读数报该节点原文，并逐项报「屏上这个数是不是由字段名引入」。结果：ON_SCREEN 18、NOT_SEEN 2、OFF_TIP 3；中英两侧都覆盖。件 `match_r2.json` blob `10b376cf0a91044bd6f60a862eb62b823bc72a5e`（逐行 verdict、渲染原文、状态名、字段核验都在里面）。
+
+**屏上原文（14 个不同句子，覆盖 18 行；同一句在源里出现两处时只印一次，两处行号并列）**：
+- `failureAttribution.ts:433`（zh，not_found，副本位未记）屏上：`这台设备还记得行程 22222222…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
+- `failureAttribution.ts:434`（en，not_found，副本位未记）屏上：`This device remembered trip 22222222…, and the server answered plainly that it does not exist (http_status=404). This is`
+- `failureAttribution.ts:454`（zh，server_error，有副本）屏上：`服务器刚才答了你，但它自己报错了（http_status=503）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+- `failureAttribution.ts:455`（en，server_error，有副本）屏上：`The server did answer, and answered with an error of its own (http_status=503). The service is unavailable for now — not`
+- `failureAttribution.ts:461`（zh，server_error，无副本）屏上：`服务器自己报错了（http_status=503）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
+- `failureAttribution.ts:462`（en，server_error，无副本）屏上：`The server reported an error of its own (http_status=503). That is on its side, not something you typed. Retry; if it pe`
+- `failureAttribution.ts:471,480`（zh，html_200，无副本）屏上：`服务器答了 http_status=200，可带回来的不是这一屏能用的数据`
+- `failureAttribution.ts:472,481`（en，html_200，无副本）屏上：`The origin answered http_status=200, but not with data this screen can use`
+- `failureAttribution.ts:474`（zh，html_200，无副本）屏上：`它确实回了话（http_status=200，content_type=text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，`
+- `failureAttribution.ts:475`（en，html_200，无副本）屏上：`It did reply (http_status=200, content_type=text/html; charset=utf-8) — the answer simply was not a journey response tha`
+- `failureAttribution.ts:541`（zh，unauthorized，副本位未记）屏上：`服务器拒绝了这次读取（http_status=401）。登录之后这一趟还在。`
+- `failureAttribution.ts:542`（en，unauthorized，副本位未记）屏上：`The server refused this read (http_status=401). Your trip is still there once you sign in.`
+- `failureAttribution.ts:549`（zh，forbidden，副本位未记）屏上：`服务器认得你是谁，但明确拒绝了这一步（http_status=403）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
+- `failureAttribution.ts:550`（en，forbidden，副本位未记）屏上：`The server knows who you are and still refused this step (http_status=403). This is not a network problem and not a sign`
+
+**2 行我没读到，前置条件具名（不是我猜的）**：`LocaleContext.tsx:906`、`LocaleContext.tsx:1987`。这两句是 `studio.requestRefused`，只有 V12 行程工作台面板会印；在 `/v8/studio` 上该面板没挂（`[data-testid="v12-trip-studio"]` 计数 0，屏上写「0 个方案 · 5 种模式」），面板要一个 authoritative plan，而 `POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/authoritative-compose` 回 `http_status=422` 并点名 `body.place_ids`。要读这两行，得先有一单把 authoritative plan 造出来——我没动产品字节，也没在共享库上做过这件事。件 `walk_r3.json` blob `52191874453f1b70f88934cf0c17d9374cded0c5`。
+
+**3 行已经不在现尖上**：`frontend/src/features/discovery/DestinationPreparationPanel.tsx` 两句与 `frontend/src/features/recovery/RecoveryRequiredPanel.tsx` 一句，现尖由共用 helper 产出（`frontend/src/features/discovery/DestinationPreparationPanel.tsx:254`、`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:82` 的 `deviceReadout({…}, ["…"])`）⇒ ORD-0391 的具名意图没退化，但这一族往后的读数要按 helper 的输出形状取，不能再按我当时那三行字面取。件 `ord0391_targets_r1.json` blob `30fd7e12d792f8ab1f672de8510eda082627ca7c`（23 行逐行的现尖行号与是否仍在）。
+
+**边界与未改善**：本车道 0 产品字节、0 账本直写、0 次移动权威线、`demo/reset` 0 次执行、`_preview.db` 0 次写入；形制桩与走查脚本是我这一道的量具，不是产品件。未改善：那两句 studio 文案仍无屏证（上条前置）；「有副本」一侧我只在 server_error 场景下确证过 `cached_copy_present=true`，其余场景的副本臂未逐枚确证。
+
+坐标：证据 26 枚在 `commander/control` 的 `evidence/ord0391-screen-readback-0236/`，逐件本机字节与服务端 `ls-tree` 读回 blob 全等（回执控制尖 `38e0b4d4cf57c3a142c257a59f8299b5bbe06264`）；本块每一枚 40 位在写盘前都过 `git cat-file -t`，取不回就拒写。
+
+
+### CMDR 02:55 · 回收站归属 r6 落地：尖 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`，族测试十五枚全绿；收藏三句 r3 撞 main.py 退回
+
+**〇、回验（落地后现读）**
+
+权威尖 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。`6a150e1e` 的 r6 候选是尖的后代（FF FAST_FORWARD_POSSIBLE，四笔直接快进）：backend `main.py`/`schemas.py` + 前端 `v8PanelRegistry.tsx`/`JourneyTrashPanel.tsx`/`journeyTrash.ts`/`journeyTrashCopy.ts`——回收站按席位回答"谁的行程、这根手指能不能找回"，合并屏保住丢弃行的判据随它进线。
+
+**一、族测试亲跑（落地代整树导出）**
+
+解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，`pytest tests/test_qoder_ord0402_recycle_bin.py tests/test_qoder_ord0531* -q --no-header -p no:cacheprovider`：`15 passed in 4.07s`。导出副本清理（busy 那枚等句柄释放再删，不硬杀）。
+
+**二、收藏三句 r3 退回（拦点具名）**
+
+`RECUT_ABORT: backend/app/main.py did not merge to the lane's own bytes`——与尖上回收站 r6 刚落的 main.py 改动相撞。`1ba48dbf`：rebase 到新尖 `be3edfc3…` 重跑族臂再推同名枝。02:35 裁语第 3 条的下一手（证据件头补"第三档不可得"理由）不受影响，一并做。
+
+**三、换代判定**
+
+本笔有前端产品字节（回收站屏/抽屉/文案表）。等收藏三句 r3 与日序腿申报块都到齐后一起构建 day16 换代——静态口 :4783 与后端 :4787 现服务 day15 仍与本块收据一致，屏面探针（02:14 块）读数继续有效至下次换代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 02:35 · 包工头裁语六连：每条一句，拿到就动 · 现尖锚 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`
 
 **〇、先记账**
