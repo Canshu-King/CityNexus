@@ -3650,8 +3650,12 @@ def add_collection_item(
         raise refused
     place = session.get(Place, payload.place_id)
     if place is None:
+        # ORD-0513: the sentence names the condition, not the identifier. The ids a technician needs
+        # are already in `error.details` two lines below, and the reason token is this branch's machine
+        # handle; a uuid inside the human line reaches the traveller twice and says nothing the token
+        # does not already say.
         refused = HTTPException(
-            404, f"Place {payload.place_id} was not found on this server"
+            404, "That place is not held by this server, so nothing was collected."
         )
         refused.reason_code = "PLACE_NOT_FOUND"
         refused.error_details = {"folder_id": folder_id, "place_id": payload.place_id}
@@ -3680,7 +3684,7 @@ def add_collection_item(
         ).scalars().first()
         refused = HTTPException(
             409,
-            f"Place {payload.place_id} is already in collection folder {folder_id}",
+            "This place is already on that shelf, so nothing new was written.",
         )
         refused.reason_code = "PLACE_ALREADY_IN_COLLECTION"
         refused.error_details = {
