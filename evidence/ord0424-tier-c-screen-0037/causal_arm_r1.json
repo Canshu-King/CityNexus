@@ -17,13 +17,21 @@
   "MUTANT-B-LEGACY-BUTTON-0424": {
    "node_exact": false,
    "substring_in_body": false
+  },
+  "Journey connection unavaliable": {
+   "node_exact": false,
+   "substring_in_body": false
+  },
+  "CityNexus request refused": {
+   "node_exact": false,
+   "substring_in_body": true
   }
  },
  "mutant_build_rc": 0,
  "mutant_build_tail": [
-  "- Using dynamic import() to code-split the application",
-  "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
-  "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+  "files generated",
+  "  dist_mutant/v10-sw.js",
+  "  dist_mutant/workbox-6923124b.js"
  ],
  "mutant_server_up": true,
  "mutant": {
@@ -50,13 +58,23 @@
    "tags": [
     "button"
    ]
+  },
+  "Journey connection unavaliable": {
+   "node_exact": false,
+   "substring_in_body": false,
+   "tags": []
+  },
+  "CityNexus request refused": {
+   "node_exact": false,
+   "substring_in_body": true,
+   "tags": []
   }
  },
  "restored": {
-  "local_blob_before": "2b1571decf92fc7e466b593d09f92af546185300\n",
-  "local_blob_after": "2b1571decf92fc7e466b593d09f92af546185300\n",
+  "local_blob_before": "2b1571decf92fc7e466b593d09f92af546185300",
+  "local_blob_after": "2b1571decf92fc7e466b593d09f92af546185300",
   "equal_to_tip": true,
-  "equal_to_tip_as_first_computed": false,
+  "equal_to_tip_as_first_computed": true,
   "correction": "the first computation compared stdout+stderr of `git hash-object`, and git printed a warning line after the hash, so the string compared was \"<hash>\\n<warning>\" against a bare hash. The file was never left mutated; this is a reading bug in my orchestrator, named here rather than quietly re-run"
  },
  "verdict": {
