@@ -1180,9 +1180,47 @@ def simulate_counterfactuals(
         row.cost_delta_minor = int(plan.cost_delta_minor if plan else 0)
         row.schedule_drift_min = max([int(item["schedule_drift_min"]) for item in changes] or [0])
         row.plan_changes_json = _json(changes)
-        row.evidence_json = _json(evidence)
-        row.created_at = _now()
-        if active_plan is not None and materialized_shadow_count < 3 and changes:
+        previous_evidence = _load(row.evidence_json, {})
+        existing_shadow_id = previous_evidence.get("shadow_plan_version_id")
+        existing_shadow = (
+            session.get(PlanVersion, str(existing_shadow_id))
+            if existing_shadow_id
+            else None
+        )
+        if (
+            active_plan is not None
+            and
+            existing_shadow is not None
+            and existing_shadow.lifecycle == "STANDBY"
+            and existing_shadow.parent_plan_version_id == active_plan.id
+        ):
+            # Refreshes upgrade the persisted contract in place.  This keeps
+            # R19 branches single-sourced while making the R20 matcher apply
+            # the current provenance semantics without duplicating branches.
+            dropped = {
+                str(item["slot_key"])
+                for item in changes
+                if item.get("action") == "DROP"
+            }
+            existing_shadow.trigger_contract_json = _json(
+                contract_for_simulation(
+                    scenario_type=row.scenario_type,
+                    dropped_activity_ids=sorted(dropped),
+                    dropped_place_ids=[
+                        str(item.place_id)
+                        for item in activities
+                        if item.id in dropped and item.place_id
+                    ],
+                    simulation_id=row.id,
+                    parent_plan_id=active_plan.id,
+                )
+            )
+            evidence["shadow_plan_version_id"] = existing_shadow.id
+            evidence["shadow_plan_status"] = existing_shadow.status
+            evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+            row.evidence_json = _json(evidence)
+            materialized_shadow_count += 1
+        elif active_plan is not None and materialized_shadow_count < 3 and changes:
             shadow = _materialize_shadow_plan(session, journey, active_plan, row, changes)
             if shadow is not None:
                 evidence["shadow_plan_version_id"] = shadow.id
@@ -1190,6 +1228,9 @@ def simulate_counterfactuals(
                 evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
                 row.evidence_json = _json(evidence)
                 materialized_shadow_count += 1
+        else:
+            row.evidence_json = _json(evidence)
+        row.created_at = _now()
         result.append(row)
     session.flush()
     return result
