@@ -76,12 +76,30 @@ for (const locale of ["zh-CN", "en"]) {
     );
     await page.goto("/v8/access");
 
-    const picker = page.getByTestId("access-journey-picker");
+    /* ORD-0518 turned this control into rows, so the old `access-journey-picker` <select> and its
+       selectOption no longer exist: pick the trip by the name its row speaks, and refuse to read the
+       activity feed until the screen itself says which trip is on it. */
+    const roster = page.getByTestId("access-trip-roster");
     await expect(
-      picker,
-      node("picker", "this screen asks for its own pick; a reading taken without it measures an empty stage"),
+      roster,
+      node("roster", "the trip roster never painted, so nothing below could be attributed to a trip"),
     ).toBeVisible({ timeout: 30_000 });
-    await picker.selectOption(journeyId);
+    const chosenLine = page.getByTestId("access-chosen");
+    if (!(await chosenLine.isVisible().catch(() => false))) {
+      const openers = roster.locator("button");
+      const total = await openers.count();
+      for (let index = 0; index < total; index += 1) {
+        const label = (await openers.nth(index).innerText()).trim();
+        if (label.includes("ORD-0507")) {
+          await openers.nth(index).click();
+          break;
+        }
+      }
+    }
+    await expect(
+      chosenLine,
+      node("chosen", "no 已选行 appeared, so the rows read below are not this test's trip"),
+    ).toContainText("ORD-0507", { timeout: 30_000 });
 
     const rows = page.locator(".cn-access-activity-row");
     await expect(
