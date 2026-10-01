@@ -1,0 +1,73 @@
+ORD-0529 second half (hydration ask + catalogue re-read) GATE -- all of it produced on this branch
+base = 0c061d9eb74b21f0b0b297a068778479b08658b4 (read with git ls-remote before the branch was cut)
+lane: this tree's backend on :8714, this tree's built bundle on :4193, own sqlite copy D:\moodle\_qoder_q_ord0369_wk\q0529.db
+
+WHAT THE SERVER ACTUALLY ANSWERED (probed before any arm was written)
+  POST /api/v1/catalog-hydrations {query: CN-XIAMEN, journey_id: 1b849dc1-...} -> http_status=202,
+     status=QUEUED terminal=false retry_after_ms=1000, status_url=/api/v1/catalog-hydrations/<id>
+  polling that record reached: status=UNAVAILABLE phase=FINALIZING terminal=true outcome=NO_REGISTERED_SOURCE
+  the 8-place city used for the negative half: GET /api/v1/places?city_code=CNX-DEMO -> 8 rows;
+  CN-XIAMEN -> http_status=200 with an empty list, so 'no places' and 'could not read' stay different
+
+FRONT GATES
+  node typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> rc=0
+  node vite/bin/vite.js build --outDir D:\moodle\_qoder_q_ord0369_wk\dist_0529 --emptyOutDir -> rc=0
+  entry artifact /assets/index-C3tBjzNd.js (1592029 B); sentinels counted in the served bytes:
+     trip-itinerary-empty-action=2, trip-itinerary-empty-hydrate=1, trip-itinerary-empty-reread=1, trip-itinerary-empty-hydration=2
+
+SEVENTEEN ARMS (8 from the first half, re-run here; 9 new), one browser, no response stubbing
+  stats: expected=17 unexpected=0 skipped=0 flaky=0 duration=38556.261999999995 ms
+    H1 进这一格不写任何东西：问服务器是一枚点击，不是屏自己的主张                                   passed
+    H2 那枚动作只出现在目录真的空着的那格                                               passed
+    H3 点下去是一桩真的任务，屏跟着它的记录走                                             passed
+    H4 补不出的那格说的是关于这个地方的事实，不是故障，也不印机词                                   passed
+    H5 再读一次是再去问门，不是把上一句重排一遍                                            passed
+    H6 回到这一页会自动再问一次（事件是合成发出的，这里具名）                                     passed
+    H7 结局词表只有一份：探索屏与这格读的是同一个文件                                         passed
+    H9 那句关于目的地的实话是词表给的，不依赖屏也不依赖浏览器                                     passed
+    H8 补不出来的那格不把空目录说成有地点，也不假装已排                                        passed
+    A1 空目录那格说出缺的是哪一类事实，且无机词与编号上屏                                       passed
+    A2 那格的主动作是一扇门：点了就到导入屏，不是又一句话                                       passed
+    A3 有地点的城是另一句实话，主动作也就换成另一件能做的事                                      passed
+    A4 读不到、零个、n 个是三格答案，不许两格并成一格                                        passed
+    A5 有方案却没排上站点，那句不许说成「还没有选定的方案」                                      passed
+    A6 这里不假装已经排好：逐日那一屏仍然不在                                             passed
+    A7 手机上那枚动作滚进视口后，中心命中的就是它自己                                         passed
+    A8 桌面那一屏读到同样的两句，门也开在同一处                                            passed
+
+COUNTEREXAMPLES (mutated in the export, rebuilt, the named arm run, restored byte-for-byte)
+    R1-polling-never-happens  arm=H3  killed=True  restored=True
+      from: if (!row.terminal) {
+      to:   if (false) {
+      caught by: H3 点下去是一桩真的任务，屏跟着它的记录走 — Error: expect(received).toContain(expected) // indexOf
+    R2-dead-end-blamed-on-the-network  arm=H9  killed=True  restored=True
+      from: ? "服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。"
+      to:   ? "网络不可用，请稍后重试。"
+      caught by: H9 那句关于目的地的实话是词表给的，不依赖屏也不依赖浏览器 — Error: expect(received).toContain(expected) // indexOf
+    R3-reread-is-a-decoration  arm=H5  killed=True  restored=True
+      from: data-testid="trip-itinerary-empty-reread"
+              onClick={() => void readCatalogue()}
+      to:   data-testid="trip-itinerary-empty-reread"
+              onClick={() => undefined}
+      caught by: H5 再读一次是再去问门，不是把上一句重排一遍 — Error: expect(received).toBeGreaterThanOrEqual(expected)
+    R4-empty-catalogue-written-as-full  arm=H8  killed=True  restored=True
+      from: : catalogueCountSentence(catalogue, zh)}
+      to:   : "服务器回读：这座城我们现在有 3 个地点，可以排进行程。"}
+      caught by: H8 补不出来的那格不把空目录说成有地点，也不假装已排 — Error: expect(received).toContain(expected) // indexOf
+  final clean rebuild rc=0
+  one defect in my own arm was found this way and fixed: H3 first counted the opening GET as
+  'polling', so R1 (never re-poll) survived it. H3 now requires >=2 reads of the job record and
+  waits for the server's own ending to reach the screen; R1 died on that assertion.
+  R2 first aimed at a browser arm and reported a launch timeout as a kill (0.5 GB free RAM on
+  this box, 19 chrome / 45 node processes alive). It now aims at H9, a pure-function arm that
+  needs no browser, and dies on the sentence itself.
+
+SCREEN READS (innerText + centre elementFromPoint, both shapes)
+    phone   ask_hit=BUTTON|trip-itinerary-empty-hydrate reread_hit=BUTTON|trip-itinerary-empty-reread ask_y=480 reread_y=398 file=o0529b_phone.png
+      行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 这个目的地没有可追溯的来源：服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城
+    desktop ask_hit=BUTTON|trip-itinerary-empty-hydrate reread_hit=BUTTON|trip-itinerary-empty-reread ask_y=429 reread_y=379 file=o0529b_desktop.png
+      行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 这个目的地没有可追溯的来源：服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城
+
+PER-FACE LINE COUNTS against the base
+  11	64	frontend/src/features/discovery/DestinationPreparationPanel.tsx
+  116	10	frontend/src/features/trip/TripItinerary.tsx

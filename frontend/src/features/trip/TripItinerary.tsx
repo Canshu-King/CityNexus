@@ -9,13 +9,19 @@
  * (design corrections §8).  Missing data is shown as missing.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { readCheckins, stampStop } from "../checkin/checkins";
 import "../checkin/footprint.css";
 import { calendarRefusalKey, exportJourneyCalendar } from "./calendarExport";
 import { CollectInto } from "../collections/CollectInto";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
+import { cityNexusApi, type CatalogHydrationOperation } from "../../api/citynexus";
+import {
+  hydrationOutcomeCopy,
+  hydrationRunningCopy,
+} from "../discovery/catalogHydrationCopy";
+import { failureSentence, nameTheFailure } from "../discovery/prepFailureCopy";
 import {
   dayOfGapCopy,
   journeyProgress,
@@ -229,19 +235,88 @@ export function TripItinerary({
   const scheduled = Boolean(plan) && days.length > 0;
   const [catalogue, setCatalogue] = useState<CatalogueReadback | null>(null);
   const [catalogueAsking, setCatalogueAsking] = useState(false);
+  const [hydration, setHydration] = useState<CatalogHydrationOperation | null>(null);
+  const [hydrationError, setHydrationError] = useState<string | null>(null);
+  const pollTimer = useRef<number | null>(null);
+
+  const stopHydrationPolling = useCallback(() => {
+    if (pollTimer.current !== null) {
+      window.clearTimeout(pollTimer.current);
+      pollTimer.current = null;
+    }
+  }, []);
+
+  /* The count is asked for, not remembered: this read runs on open, when the traveller comes back to
+     the tab, and when they press 再读一次.  A cell that keeps the last answer on screen while the
+     store moved underneath it is the failure mode ORD-0504 named. */
+  const readCatalogue = useCallback(async () => {
+    setCatalogueAsking(true);
+    const answer = await readCityCatalogue(data.journey.city_code);
+    setCatalogue(answer);
+    setCatalogueAsking(false);
+  }, [data.journey.city_code]);
+
   useEffect(() => {
     if (scheduled) return;
-    let alive = true;
-    setCatalogueAsking(true);
-    void readCityCatalogue(data.journey.city_code).then((answer) => {
-      if (!alive) return;
-      setCatalogue(answer);
-      setCatalogueAsking(false);
-    });
-    return () => {
-      alive = false;
+    void readCatalogue();
+    const onReturn = () => {
+      if (document.visibilityState !== "visible") return;
+      void readCatalogue();
     };
-  }, [scheduled, data.journey.city_code]);
+    window.addEventListener("focus", onReturn);
+    document.addEventListener("visibilitychange", onReturn);
+    return () => {
+      window.removeEventListener("focus", onReturn);
+      document.removeEventListener("visibilitychange", onReturn);
+    };
+  }, [scheduled, readCatalogue]);
+
+  useEffect(() => stopHydrationPolling, [stopHydrationPolling]);
+
+  /** The same rule the preparation screen uses: the job's own record while it runs, and polling stops
+   *  the moment the server calls it terminal. */
+  const watchHydration = useCallback(
+    (operationId: string) => {
+      stopHydrationPolling();
+      const tick = async () => {
+        try {
+          const row = await cityNexusApi.getCatalogHydration(operationId);
+          setHydration(row);
+          if (!row.terminal) {
+            const wait = Math.max(500, Number(row.retry_after_ms || 0) || 1500);
+            pollTimer.current = window.setTimeout(() => void tick(), wait);
+          } else {
+            void readCatalogue();
+          }
+        } catch (error) {
+          /* A read that failed is not a job that failed: name it, and keep the last real reading. */
+          setHydrationError(failureSentence("read", nameTheFailure(error), zh));
+        }
+      };
+      void tick();
+    },
+    [stopHydrationPolling, readCatalogue, zh],
+  );
+
+  const askHydration = async () => {
+    setHydrationError(null);
+    try {
+      const started = await cityNexusApi.startCatalogHydration(data.journey.city_code, {
+        journeyId: data.journey.id,
+      });
+      setHydration(started);
+      if (!started.terminal) watchHydration(started.operation_id);
+      else void readCatalogue();
+    } catch (error) {
+      setHydrationError(failureSentence("start", nameTheFailure(error), zh));
+    }
+  };
+
+  const hydrationCopy = hydration
+    ? hydration.terminal
+      ? hydrationOutcomeCopy(String(hydration.outcome ?? ""), String(hydration.status), zh)
+      : hydrationRunningCopy(hydration, zh)
+    : null;
 
   if (!scheduled) {
     const emptyCatalogue = catalogue !== null && catalogue.source === "server" && catalogue.placeCount === 0;
@@ -275,6 +350,25 @@ export function TripItinerary({
                   : "Reading back from the server how many places this city holds…"
                 : catalogueCountSentence(catalogue, zh)}
             </p>
+            {/* The job's own words, from the same table the preparation screen reads. */}
+            {hydrationCopy ? (
+              <p className="v8-message" role="status" data-testid="trip-itinerary-empty-hydration">
+                {`${hydrationCopy.title}：${hydrationCopy.body}`}
+              </p>
+            ) : null}
+            {hydrationError ? (
+              <p className="v8-message" role="alert" data-testid="trip-itinerary-empty-hydration-error">
+                {hydrationError}
+              </p>
+            ) : null}
+            <button
+              type="button"
+              className="v8-quiet-button"
+              data-testid="trip-itinerary-empty-reread"
+              onClick={() => void readCatalogue()}
+            >
+              {zh ? "再读一次" : "Read it again"}
+            </button>
           </div>
         </div>
         {/* One primary action -- the one that can actually move this trip forward -- plus the other
@@ -298,6 +392,18 @@ export function TripItinerary({
               onClick={onOpenCopilot}
             >
               {planCopy}
+            </button>
+            {/* Asking is a tap, never something this screen does on its own: the job is a write on the
+                server's side, and an empty cell that silently started one would be a surprise.  If a
+                job already covers this city the server says `reused`, and that is what comes up. */}
+            <button
+              type="button"
+              className="v8-quiet-button"
+              data-contrast-role="control"
+              data-testid="trip-itinerary-empty-hydrate"
+              onClick={() => void askHydration()}
+            >
+              {zh ? "问服务器能不能补这座城的目录" : "Ask the server whether this city can be prepared"}
             </button>
           </>
         ) : (

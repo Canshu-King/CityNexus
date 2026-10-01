@@ -1,0 +1,22 @@
+[
+ {
+  "shape": "phone",
+  "file": "o0529b_phone.png",
+  "inner_text_before_ask": "行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城的目录",
+  "inner_text_after": "行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 这个目的地没有可追溯的来源：服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城的目录",
+  "ask_centre_hit": "BUTTON|trip-itinerary-empty-hydrate",
+  "reread_centre_hit": "BUTTON|trip-itinerary-empty-reread",
+  "ask_box_y": 480,
+  "reread_box_y": 398
+ },
+ {
+  "shape": "desktop",
+  "file": "o0529b_desktop.png",
+  "inner_text_before_ask": "行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城的目录",
+  "inner_text_after": "行程 还没有可看的行程 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。 服务器回读：这座城我们现在一个地点都还没有。 这个目的地没有可追溯的来源：服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。 再读一次 去导入这趟的地点 AI 帮我规划（要先有地点）问服务器能不能补这座城的目录",
+  "ask_centre_hit": "BUTTON|trip-itinerary-empty-hydrate",
+  "reread_centre_hit": "BUTTON|trip-itinerary-empty-reread",
+  "ask_box_y": 429,
+  "reread_box_y": 379
+ }
+]
