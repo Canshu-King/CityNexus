@@ -16588,6 +16588,60 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0541 · 车道 e766b154 · 04:17 · 分享出口的幂等（候选已交）
+
+枝：`refs/heads/review/e766b154-ord0541-share-idempotent`；枝尖 `DELIVERED`（`git ls-remote` 回读同值，见下"坐标"）。
+基线（本单开工时现读的权威尖）：`BASE` —— 候选与它逐臂对照。
+产品代（三枚 bundle 的构建入口，`frontend/review/ord0541/instruments/build_three_ord0541_r2.sh:12`）：`CAND`。
+遮罩代（同一条判据被摘掉那一枚，`frontend/review/ord0541/instruments/build_three_ord0541_r2.sh:14`）：`MUT`。
+
+#### 题面与裁语
+裁语逐字：「裁语：`visibility` 恰为 `LINK_READ` 才算可复用链接」。
+除此之外本题面只有一句描述（"分享出口无幂等"）—— 以下三格是我自己定的、需要号令者确认的判断，具名在此：
+1. 多条合格行同时存在时复用哪一条：取列表门自己那趟答案里的第一条。判据是门的排序 `backend/app/main.py:4344`（`created_at, id`），所以那是"最早那条仍有效的链接可读行"，每次按都收敛到同一枚。
+2. 到期与否不在客户端判：`expires_at` 不读，与 ORD-0447 的常设裁语一致（`frontend/src/features/poster/posterShare.ts:86`）。
+3. 撤销的入口本单没有加：A2 那臂走的是权限屏已有的那扇门 `frontend/src/features/access/accessDoors.ts:240`，长图屏上仍没有"收回链接"这颗按钮 —— 这一格题面没要求，我没自造。
+
+#### 落地的东西（产品字节）
+- `frontend/src/features/poster/posterShare.ts:96` —— 纯函数 `reusablePosterLink`：三件都成立才算可复用（撤销行为 `null`、`visibility` 恰为 `LINK_READ`（`frontend/src/features/poster/posterShare.ts:99`）、暗号是非空字符串（`frontend/src/features/poster/posterShare.ts:100`））。
+- `frontend/src/features/poster/posterShare.ts:143` —— 先问后写：列表门答不出来就直接非确认，一次写也不发；`frontend/src/features/poster/posterShare.ts:158` 复用成功走 `reused: true`，`frontend/src/features/poster/posterShare.ts:238` 写完并回读到才走 `reused: false`（ORD-0528 的"只认服务器回读"这条没动）。
+- `frontend/src/features/inbox/shareGrantRead.ts:42` —— 行上加了可选 `token?`；门一直带这个字段（`backend/app/schemas.py:904`，注释在 `backend/app/schemas.py:902`），这文件以前不需要所以没写。
+- `frontend/src/features/poster/TripPosterPanel.tsx:268` —— 两种到达同一枚链接的方式给两句话；词典两侧各一行改动：`frontend/src/i18n/LocaleContext.tsx:985`（新建）、`frontend/src/i18n/LocaleContext.tsx:992`（复用）、中文 `frontend/src/i18n/LocaleContext.tsx:2059` 与 `frontend/src/i18n/LocaleContext.tsx:2066`。两侧键数：本车道在这代实测（`frontend/src/i18n/LocaleContext.tsx:992` 同段）：两侧各 960 键，差集为空）。
+
+#### 三代读数（同一把尺，跑三趟）
+每臂各自先把这趟旅行的可复用链接撤回、每次按都开一张没按过的屏，所以读数不依赖上一趟留下什么。
+- 候选代：趟一 4 passed / 1 failed，趟二 5 passed / 0 failed，趟三 5 passed / 0 failed。
+- 基线代：趟一 0 passed / 5 failed，趟二 0 passed / 5 failed，趟三 0 passed / 5 failed。
+- 遮罩代：趟一 4 passed / 1 failed，趟二 4 passed / 1 failed，趟三 4 passed / 1 failed；红的那一枚在每趟都是 A3（档位判据），第一行报错逐字："PUBLIC: a row of that shape is not reusable, so this press wrote"，Expected 1 / Received 0。
+
+臂与判据（每条判据所在行同列）：
+- A1 一次写、一次不写，臂在 `''' + SPEC + ''':169`；"第二次按不写"这条判据 `''' + SPEC + ''':219`，"第一次恰好写一枚"这条 `''' + SPEC + ''':214`。另读：地址逐字同、服务器行数不变、屏上是复用那句。
+- A2 撤回不是"永不写"，臂在 `''' + SPEC + ''':234`；"撤掉之后再按恰好写一枚"这条判据 `''' + SPEC + ''':271`。另读：地址换了、屏上是新建那句。
+- A3 五形各按一次（PUBLIC / PRIVATE / INVITEES_ONLY / 链接可读但答案没带暗号 / 链接可读但已撤销），臂在 `''' + SPEC + ''':278`，每形"该写"的判据 `''' + SPEC + ''':320`；候选每形都写到创建门，新行档位是 `LINK_READ`，屏上的行 id 与暗号都不是我编造那枚。
+- A4 列表门拒答那一形：拒答由 `''' + SPEC + ''':162` 那把闸造成，判据在 `''' + SPEC + ''':356` —— 候选不写、屏上引的门自己的号是 http 500、没有链接交出；基线代这一臂读到写了，即本单缺陷本身。
+- A5 两语 × 两形，臂在 `''' + SPEC + ''':362`，两档视口写在 `''' + SPEC + ''':368`，"第二次不写"判据 `''' + SPEC + ''':410`：新建句与复用句必须是不同文字、地址相同、键名上屏计数为零、那句的行盒在屏上有高度。
+
+#### 我自己尺子的两处错（都在交付前改掉，读数没被拿去换绿）
+1. 首版在同一张屏里连按两次并等"文字变了"。对一台正确的产品这是错判据：已经站着一条链接时两次按本就该印同一句 —— 于是遮罩代 A1 报了一枚我当时解释不了的红（结果元素 30 秒没出现）。改尺（把每次按分到没按过的屏上）之后，三趟里遮罩代 A1 全绿，那枚红不复现 ⇒ 归尺不归产品，不写进任何产品结论；那条"按下去完全没有回音"的现场至今没有可复现的证据，本车道不宣称它已修好也不宣称它存在。
+2. A1 的前置条件比错了量：拿 roster 总长与 0 比，趟一红（Expected 0 / Received 12）。列表门故意保留撤销行（`backend/app/main.py:4346`），所以总长是历史数不是"可复用数"。改判 `standing_left`（`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:208`）后趟二、趟三绿。
+
+#### 已落订单的回归（跑在候选代字节上）
+- ORD-0528 的五臂：5 passed（`frontend/review/ord0528/run_on_9f5bac8c/X1_no_server_confirmation.json:1`）。其中 X1 的两枚 shape 我改了**供给**没改断言：写被拒与写入没带暗号这两形现在让列表门先答空 roster（`frontend/e2e/qoder-ord0528-poster-share.spec.ts:312`、`frontend/e2e/qoder-ord0528-poster-share.spec.ts:317`）。原因具名：出口先问后写之后，S2/S3 留下的那条有效链接会让这一按根本走不到创建门，那一臂就不是在测"写被拒"。判据（NOT_CONFIRMED、不宣称已分享、无链接、引门自己的号）逐条未动。
+- ORD-0542 的三臂：3 passed（`frontend/review/ord0542/run_on_9f5bac8c/D1_guest_reading.json:1`）。D2 那一臂现在读绿，原因要具名：它的"基线"这一趟指的是权威尖 `BASE`，而那尖早已含 ORD-0542 的修复，所以这句判据在这一代不可能红 —— 它只对修复前那一代成立。这不是回归，也不是"修好了两次"。
+
+#### 坐标与栈的归属（三条证据，两条可取，第三条具名不可得）
+- 五枚 front 的入口资产名取自各自 index.html，回读字节与磁盘字节相等：`frontend/review/ord0541/receipts/stack_ord0541.json:11`（候选）与 `:27`（基线）与 `:43`（遮罩）。第三条证（进程命令行里的 `--outDir`）在这一代仍读不到：`frontend/review/ord0541/receipts/stack_ord0541.json:9` 写的就是 `NOT_AVAILABLE_BY_CMDR`。
+- 五枚 api 各自只答自己那份库里的标记行，别代的城市答 0 行：`frontend/review/ord0541/instruments/stack_ownership_ord0541_r1.py:39`。
+- 端口没关（号令者 16:05 那句"先留着"仍有效）：本单的 8774 起五枚 api、4980 起五枚 front，见 `frontend/review/ord0541/instruments/start_stack_ord0541_r1.sh:28` 与 `frontend/review/ord0541/instruments/stack_ownership_ord0541_r1.py:32`；上一批的 8770 起四枚 api、4972 起八枚 front 也原样在听。
+
+#### 现场一条与本单无关但影响所有车道的事实
+`frontend/review/ord0541/receipts/_build_ord0541c_info.json:1` 这批 bundle 之前，仓库那份共享的 `frontend/node_modules` 一度是空的（不是我清的，我也没清），所以第一次三枚构建全失败、报的是命令行找不到 vite；约十分钟内它自己回到 394 项、`.bin` 里 vite/playwright/tsc 都在，`frontend/package-lock.json` 的 blob 与集成线那份同为 `a35da4e97f6aeff219739b7ddaad12abf716a431`。我没跑安装、没改那棵树、也没 junction 到别人的树上。那三次失败构建的收据被同 tag 的成功重建覆盖了，所以现在只剩这段叙述，没有可打开的失败件。
+
+尾行逐字取自 `CLOSING_LINE.txt`（本机 sha1 前缀 de4b708b；全串不写在此处，因为它不是 git 对象、不可 `git cat-file`）：
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0512 r1 · 地图上的站名真上屏了：标注规则从「尺里有」接进渲染路径（车道 8ac89982，0401）
 
 **一、坐标（写块这一刻现读，全部逐字 40 位）**
