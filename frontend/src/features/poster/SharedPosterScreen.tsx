@@ -69,9 +69,11 @@ export function SharedPosterScreen({ token }: { token: string }) {
 
   /* The grouping the traveller's own itinerary and the traveller's own poster use, so the guest looks
      at the trip's days rather than at a second calendar this file invented. `dayTotal` stays null on
-     this side: the guest door answers no `temporal_shape` (it is not in its contract whitelist,
-     `frontend/src/generated/api.ts:4995`), so the subtitle says the length is unknown instead of
-     counting buckets and dressing the count up as a projection. */
+     this side -- the guest door answers no `temporal_shape` (it is not in its contract whitelist,
+     `frontend/src/generated/api.ts:4995`) -- but ORD-0542 caught what the old wording did with that:
+     the subtitle said "trip length unknown" while the line under it printed a counted "2 days". The
+     count is the subtitle now, and the line under it names the count's provenance. Neither one fills
+     in a projection the door did not send. */
   const poster = useMemo(
     () => buildPosterFromShared({ answer, stops, timeZone, locale, t }),
     [answer, stops, timeZone, locale, t],
@@ -251,6 +253,11 @@ export function SharedPosterScreen({ token }: { token: string }) {
       </h1>
       <p className="v8-muted" data-testid="shared-poster-subtitle">
         {lines.subtitle}
+      </p>
+      {/* The picture carries this line, so the page has to show it too: ORD-0542 is precisely the
+          finding that a line can be true in the drawing and absent from the screen. */}
+      <p className="v8-muted" data-testid="shared-poster-counted-why">
+        {lines.progress}
       </p>
       {/* The line the trip screen cannot carry, and the reason the two shapes do not read alike: this
           page says out loud that it is the picture, and that the trip itself is elsewhere. */}

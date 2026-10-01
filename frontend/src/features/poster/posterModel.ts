@@ -42,6 +42,10 @@ export type TripPoster = {
   progress?: JourneyProgress;
   /** The sentence itself, when the caller already has one; the guest door sends no progress. */
   progressCopy?: string;
+  /** A subtitle that is not "city · N days". The guest side needs it: it has a counted number and no
+   *  projection, and ORD-0542 is the finding that saying "length unknown" next to that number read
+   *  as one line denying the other. */
+  subtitleCopy?: string;
   days: PosterDay[];
   stopTotal: number;
 };
@@ -107,9 +111,10 @@ export function posterLinesFor(
     kicker: t("poster.kicker"),
     title: poster.title,
     subtitle:
-      poster.dayTotal === null
+      poster.subtitleCopy ??
+      (poster.dayTotal === null
         ? t("poster.daysUnknown", { city: poster.city })
-        : t("poster.cityAndDays", { city: poster.city, days: poster.dayTotal }),
+        : t("poster.cityAndDays", { city: poster.city, days: poster.dayTotal })),
     progress: poster.progressCopy ?? "",
     attribution: `${t("poster.attributionLabel")} · ${t("mapComp.attribution")}`,
     days: poster.days.map((day) => ({
@@ -161,11 +166,20 @@ export function buildPosterFromShared(input: {
   return {
     title: answer.title ?? "",
     city: cityCodeLabel(answer.city_code ?? "", locale),
+    /* Null and staying null: the length projection is a field of the traveller's own door, and
+       `GET /api/v1/shared/journeys/{token}` answers with the journey body plus the four keys its
+       contract whitelist names (`frontend/src/generated/api.ts:4995`) -- the projection is not one of
+       them. ORD-0542's finding was what the *wording* did with that: the subtitle used
+       `poster.daysUnknown` ("trip length unknown") while the line under it printed a counted "2 days",
+       so one screen denied itself. The count is now the subtitle, and the line under it says where the
+       number came from. Nothing here fills in a projection the door did not send. */
     dayTotal: null,
-    /* Counted, and labelled as counted by the caller's own sentence, because the length projection
-       this door cannot reach. `stopTotal` rides along so the guest picture is not the one poster
-       missing its headline line. */
-    progressCopy: t("sharedPoster.counted", { days: days.length, stops: stopTotal }),
+    subtitleCopy: t("sharedPoster.counted", {
+      city: cityCodeLabel(answer.city_code ?? "", locale),
+      days: days.length,
+      stops: stopTotal,
+    }),
+    progressCopy: t("sharedPoster.countedWhy", { days: days.length }),
     days,
     stopTotal,
   };
