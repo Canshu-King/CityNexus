@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 from uuid import uuid4
 
 from app.agent.ai_availability import ai_availability_state
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
-from app.agent.runtime import reconcile_stale_agent_runs
+from app.agent.runtime import _system_prompt, reconcile_stale_agent_runs
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Journey, JourneyMission, Traveler
 from app.db.session import SessionLocal
@@ -142,3 +143,25 @@ def test_r21_hermes_compat_is_not_reported_as_ops_disabled(monkeypatch):
         ),
     )
     assert ai_availability_state() == "CONFIGURED_UNVERIFIED"
+
+
+def test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint(monkeypatch):
+    mission = SimpleNamespace(
+        id="mission-r21-neutral",
+        trigger_event_id="event-secret-to-model-context",
+        requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+    )
+    journey = SimpleNamespace(id="journey-r21-neutral", traveler_id="traveler-r21-neutral")
+    monkeypatch.setattr("app.agent.runtime.refresh_snapshot", lambda session, traveler_id: {})
+    monkeypatch.setattr("app.agent.runtime.snapshot_payload", lambda snapshot: {})
+    monkeypatch.setattr(
+        "app.agent.runtime.mission_payload",
+        lambda value: {"id": value.id, "requested_autonomy": value.requested_autonomy},
+    )
+
+    prompt = _system_prompt(None, mission, journey)
+
+    assert "event-secret-to-model-context" not in prompt
+    assert "candidate_count to 3" not in prompt
+    assert "solver_mode to deterministic" not in prompt
+    assert "discoverable from the server-owned JourneyTwin" in prompt

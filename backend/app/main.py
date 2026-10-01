@@ -1342,12 +1342,8 @@ def run_agent_command(
                     "to acquire provider-backed facts and generate candidate plans before approval. "
                     f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                     f"The CityNexus mission_id is {mission.id}; do not invent or omit either identifier. "
-                    + (
-                        f"For request_replan, set trigger_event_id exactly to {mission.trigger_event_id}, "
-                        "candidate_count to 3, and solver_mode to deterministic. "
-                        if mission.trigger_event_id
-                        else "There is no trigger event; do not call request_replan until CityNexus provides one. "
-                    )
+                    "The current disruption, if any, is discoverable from server-owned JourneyTwin/event inspection; "
+                    "do not assume a trigger identifier or a recovery action from this hand-off. "
                     + "Call one MCP tool at a time (never batch or use tool_call metadata), do not repeat a completed step. "
                     "Use only the configured CityNexus MCP tools and the allowed_tools list. "
                     "Respect the requested autonomy boundary; proposal-only work must not mutate. "
@@ -12769,12 +12765,8 @@ async def copilot_message(
                         "capabilities. Do not assume a standby is sufficient and do not invent a plan ID. "
                         f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                         f"The CityNexus mission_id is {native_mission.id}; do not invent or omit either identifier. "
-                        + (
-                            f"For request_replan, set trigger_event_id exactly to {native_mission.trigger_event_id}, "
-                            "candidate_count to 3, and solver_mode to deterministic. "
-                            if native_mission.trigger_event_id
-                            else "There is no trigger event; do not call request_replan until CityNexus provides one. "
-                        )
+                        "The current disruption, if any, is discoverable from server-owned JourneyTwin/event inspection; "
+                        "do not assume a trigger identifier or a recovery action from this hand-off. "
                         + "Call one MCP tool at a time (never batch or use tool_call metadata), do not repeat a completed step. "
                         "Use only CityNexus MCP tools and allowed_tools. Inspect the Journey, JourneyTwin, "
                         "and protected commitments before acting. Produce a PLAN_ONLY proposal; never accept, "
