@@ -8,7 +8,7 @@ from uuid import uuid4
 from app.agent.ai_availability import ai_availability_state
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
-from app.agent.runtime import _system_prompt, reconcile_stale_agent_runs
+from app.agent.runtime import _model_mission_payload, _system_prompt, reconcile_stale_agent_runs
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Journey, JourneyMission, Traveler
 from app.db.session import SessionLocal
@@ -156,9 +156,14 @@ def test_r21_model_context_does_not_leak_trigger_identity_or_strategy_hint(monke
     monkeypatch.setattr("app.agent.runtime.snapshot_payload", lambda snapshot: {})
     monkeypatch.setattr(
         "app.agent.runtime.mission_payload",
-        lambda value: {"id": value.id, "requested_autonomy": value.requested_autonomy},
+        lambda value: {
+            "id": value.id,
+            "requested_autonomy": value.requested_autonomy,
+            "trigger_event_id": value.trigger_event_id,
+        },
     )
 
+    assert "trigger_event_id" not in _model_mission_payload(mission)
     prompt = _system_prompt(None, mission, journey)
 
     assert "event-secret-to-model-context" not in prompt
