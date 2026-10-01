@@ -118,6 +118,33 @@ def main():
             cell(sorted(set(c.get("boxes") or []))),
             cell((r.get("store_after_schema") or {}).get("count")), cell(arr.get("marks"))))
     a("")
+    a("## 二′、历代同一把尺的分母：各代自己的件，逐枚带 blob")
+    a("")
+    a("本代之外的那几代，面早就不在了，数只能从它们各自冻结的交件枝里读回来（件 "
+      "`evidence/prior_denominators_r5.json`，逐枚 `git ls-tree`+`cat-file`）。每行的 blob 就是那个数被读出来的那枚物件。")
+    a("")
+    prior = load("prior_denominators_r5.json")
+    a("| 代 | 该代枝头 | 面 | 控件 | 中心命中可按 | 重复点击后拒绝句 | 读自哪枚 blob |")
+    a("|---|---|---|---|---|---|---|")
+    for row in prior.get("refs", []):
+        for f in row.get("faces", []):
+            read_from = (str(f.get("blob")) if f.get("blob")
+                         else "本代那一行读自 `%s`（件在本枝的树里，blob 见 `git ls-tree`）"
+                              % cell(f.get("file")))
+            a("| %s | %s | %s | %s | %s | %s | %s |" % (
+                cell(row.get("generation")), cell(str(row.get("commit"))[:12]),
+                cell(f.get("generation_tag")), cell(f.get("controls")),
+                cell(f.get("pressable_by_centre_hit")),
+                cell(f.get("notices_after_duplicate")), read_from))
+    gaps = [r.get("generation") for r in prior.get("refs", []) if r.get("GAP")]
+    a("")
+    a("缺口具名：%s 那一代的枝上只有截图、没有它自己基座面的普查 JSON，所以它那一代的中心命中枚数"
+      "在这里读不到（NOT_AVAILABLE_IN_THAT_REF）。本代的枝把 JSON 与截图都放进去了，不留同样的洞。"
+      % ("、".join(gaps) if gaps else "无"))
+    a("")
+    a("历代对照读出的是：r1、r2 那两代的手机面枚枚中心命中，本代基座与候选一起掉到同一枚数——"
+      "掉的原因不在我这两笔里，表里「基座」那一行就是证据。")
+    a("")
     a("## 三、真发一发：行数前后与那句拒绝")
     a("")
     a("| 跑 | 请求序列 | 行数 前→后 | 重复点击后屏上拒绝句枚数 | 句主 | 句子 |")

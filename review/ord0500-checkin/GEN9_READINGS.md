@@ -1,6 +1,6 @@
 # ORD-0500 r5 -- 现尖 b604f50d1645d028c2dd1d4406caee8198a3bc2d 读数单（与 ORD-0530 同族并块后重量；曝光尺两侧对照在 receipts 里）
 
-生成时间 `2026-10-01T15:13:44.687703+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
+生成时间 `2026-10-01T15:22:40.557718+08:00`；量具与件都在 `D:/moodle/_qoder_phone_ord0485_20260930`。
 
 ## 一、本代的产物身份（基座 + 交付候选 + 反件）
 
@@ -33,6 +33,38 @@
 | O0500_R5_desktop | 1280x800 | 6 | 6 | 6 | ["44x44"] | 0 | 0 |
 | O0500_CLIENTBOOL_MUTANT_phone | 390x844 | 6 | 6 | 5 | ["44x44", "54x44"] | 0 | 3 |
 | PRE_SLICE2_dcb90ccc_phone | 390x844 | 6 | 0 | 0 | [] | 0 | 0 |
+
+## 二′、历代同一把尺的分母：各代自己的件，逐枚带 blob
+
+本代之外的那几代，面早就不在了，数只能从它们各自冻结的交件枝里读回来（件 `evidence/prior_denominators_r5.json`，逐枚 `git ls-tree`+`cat-file`）。每行的 blob 就是那个数被读出来的那枚物件。
+
+| 代 | 该代枝头 | 面 | 控件 | 中心命中可按 | 重复点击后拒绝句 | 读自哪枚 blob |
+|---|---|---|---|---|---|---|
+| r1 | 3f3ab9c24221 | O0500_CLIENTBOOL_MUTANT_phone | 6 | 6 | 1 | 55a28e015613bf0a81497be71fc4bcb86eceeea1 |
+| r1 | 3f3ab9c24221 | O0500_R1_desktop | 6 | 6 | 1 | 507155d295fca89f2d4375bf822f27b08cb9a351 |
+| r1 | 3f3ab9c24221 | O0500_R1_phone | 6 | 6 | 1 | 92d8c46e80ae530cb35399cce5454435314ae0a4 |
+| r1 | 3f3ab9c24221 | PRE_SLICE2_dcb90ccc_phone | 0 | 0 | NOT_MEASURED | 64b4582054261fff140c27ee75e8ccaeae569fc1 |
+| r1 | 3f3ab9c24221 | TIP_1e95d106_phone | 6 | 6 | 6 | 6672ff07228eab183fd23b1bd2befa8a958eaea1 |
+| r2 | 75a27ae98244 | O0500_CLIENTBOOL_MUTANT_phone | 6 | 6 | 1 | 6038bb2b4c144f8c6610e7351f7ee18f3133ad46 |
+| r2 | 75a27ae98244 | O0500_R2_desktop | 6 | 6 | 1 | 005ddcf7056dca7f797588fa71a471ee42e3f764 |
+| r2 | 75a27ae98244 | O0500_R2_phone | 6 | 6 | 1 | 127dc83e508875465007bdf6e1348a2cbadec10f |
+| r2 | 75a27ae98244 | PRE_SLICE2_dcb90ccc_phone | 0 | 0 | NOT_MEASURED | 892d7683e487f25962f135d1d7e2c47235d7b9df |
+| r2 | 75a27ae98244 | TIP_822db3d9_desktop | 6 | 6 | 6 | 32b4e528a3b836ea13976fb2dfa5e1be4e5cbbc0 |
+| r2 | 75a27ae98244 | TIP_822db3d9_phone | 6 | 6 | 6 | 0fcb18ee1edce050a20c57ce6dff8f966d917c3c |
+| r4 | 1509357870f7 | PRE_SLICE2_dcb90ccc_phone | 0 | 0 | NOT_MEASURED | fee71aabcbd6a1260787c6417312ded8ed495435 |
+| r4 | 1509357870f7 | SCROLLTEST | 6 | 5 | 1 | 758e61c2529df1a7b755d4cb21e898e2eeb958e7 |
+| r4 | 1509357870f7 | TIP_1e95d106_phone | 6 | 6 | 6 | 6672ff07228eab183fd23b1bd2befa8a958eaea1 |
+| r4 | 1509357870f7 | O0500_R2_phone | 6 | 6 | 1 | 127dc83e508875465007bdf6e1348a2cbadec10f |
+| r5 | 35719b30aabd | TIP_b604f50d_phone | 6 | 5 | 6 | 本代那一行读自 `checkin_TIP_b604f50d_phone_390x844_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+| r5 | 35719b30aabd | TIP_b604f50d_desktop | 6 | 6 | 6 | 本代那一行读自 `checkin_TIP_b604f50d_desktop_1280x800_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+| r5 | 35719b30aabd | O0500_R5_phone | 6 | 5 | 1 | 本代那一行读自 `checkin_O0500_R5_phone_390x844_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+| r5 | 35719b30aabd | O0500_R5_desktop | 6 | 6 | 1 | 本代那一行读自 `checkin_O0500_R5_desktop_1280x800_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+| r5 | 35719b30aabd | O0500_CLIENTBOOL_MUTANT_phone | 6 | 5 | 1 | 本代那一行读自 `checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+| r5 | 35719b30aabd | PRE_SLICE2_dcb90ccc_phone | 0 | 0 | NOT_MEASURED | 本代那一行读自 `checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json`（件在本枝的树里，blob 见 `git ls-tree`） |
+
+缺口具名：r4 那一代的枝上只有截图、没有它自己基座面的普查 JSON，所以它那一代的中心命中枚数在这里读不到（NOT_AVAILABLE_IN_THAT_REF）。本代的枝把 JSON 与截图都放进去了，不留同样的洞。
+
+历代对照读出的是：r1、r2 那两代的手机面枚枚中心命中，本代基座与候选一起掉到同一枚数——掉的原因不在我这两笔里，表里「基座」那一行就是证据。
 
 ## 三、真发一发：行数前后与那句拒绝
 

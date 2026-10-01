@@ -1,6 +1,6 @@
 {
   "tool": "stage_gen9_r5",
-  "took_local": "2026-10-01T14:50:49.162274+08:00",
+  "took_local": "2026-10-01T15:13:44.840828+08:00",
   "receipts": [
     "GEN9_READINGS.md",
     "receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
@@ -40,6 +40,8 @@
     "receipts/checkin_TIP_b604f50d_phone_after_first_tap.png",
     "receipts/checkin_TIP_b604f50d_phone_after_second.png",
     "receipts/checkin_TIP_b604f50d_phone_arrived.png",
+    "receipts/comment_anchors_r5.json",
+    "receipts/css_delta_proof_r5.json",
     "receipts/exposure_r2_candidate_r1.json",
     "receipts/exposure_r5_candidate_r1.json",
     "receipts/exposure_tip_b604f50d_r1.json",
@@ -50,7 +52,9 @@
     "receipts/gen9_ce1_tree_proof_r1.json",
     "receipts/gen9_checkin_sweep_r1.json",
     "receipts/gen9_doors_wt23-wt22-mutgen9.json",
+    "run/fix_shipped_comments_r5.json",
     "run/gen9_build_out.txt",
+    "run/gen9_build_out_r2.txt",
     "run/gen9_gen9_carrier_arms_r1_out.txt",
     "run/gen9_gen9_carrier_r1_out.txt",
     "run/gen9_gen9_ce1_proof_r1_out.txt",
@@ -64,8 +68,21 @@
     "run/gen9_tsc_O0500_R5_tsconfig.typecheck.txt",
     "run/gen9_tsc_TIP_b604f50d_tsconfig.check.txt",
     "run/gen9_tsc_TIP_b604f50d_tsconfig.typecheck.txt",
+    "run/remeasure_carrier_arms_r1.txt",
+    "run/remeasure_carrier_r1.txt",
+    "run/remeasure_ce1_proof_r1.txt",
+    "run/remeasure_ce1_r1.txt",
+    "run/remeasure_doors_r1.txt",
+    "run/remeasure_exposure_candidate_r1.txt",
+    "run/remeasure_exposure_tip_r1.txt",
+    "run/remeasure_gen9_r1.txt",
+    "run/remeasure_stack_r1.txt",
+    "run/stage_gen9_r5.txt",
     "tools/checkin_phone_r2.cjs",
+    "tools/comment_anchors_r5.py",
+    "tools/css_delta_proof_r5.py",
     "tools/fix_refusal_shape_r4.py",
+    "tools/fix_shipped_comments_r5.py",
     "tools/gen9_blocks_r1.py",
     "tools/gen9_build_r1.py",
     "tools/gen9_carrier_arms_r1.py",
@@ -84,7 +101,8 @@
     "tools/make_gen9_mutants_r1.py",
     "tools/make_gen9_tools_r1.py",
     "tools/patch_gen9_blocks_r1.py",
+    "tools/remeasure_gen9_r1.py",
     "tools/scrollfix_probe_r1.py"
   ],
-  "total_bytes": 1978184
+  "total_bytes": 2368525
 }

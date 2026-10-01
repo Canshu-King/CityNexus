@@ -7,6 +7,7 @@ is named with both ids instead of being smoothed over.
 """
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -36,7 +37,17 @@ tip = git("ls-remote", "origin",
 out = {"tool": "gen9_landing_check_r1", "took_local": datetime.now().astimezone().isoformat(),
        "live_tip": tip, "refs": []}
 for name, base in BRANCHES.items():
-    sha = git("ls-remote", "origin", "refs/heads/" + name).split()[0]
+    listed = git("ls-remote", "origin", "refs/heads/" + name).split()
+    if listed:
+        sha, sha_source = listed[0], "remote ls-remote"
+    else:
+        # the ref is not on the server yet in this round: the prediction is still meaningful on the
+        # bytes I am about to push, as long as the receipt says where the sha came from.
+        local = git("rev-parse", "refs/heads/" + name)
+        if not re.fullmatch(r"[0-9a-f]{40}", local):
+            out["refs"].append({"ref": "refs/heads/" + name, "ABSENT": "NOT_ON_REMOTE_AND_NO_LOCAL_REF"})
+            continue
+        sha, sha_source = local, "local ref, not yet pushed -- the push carries exactly these bytes"
     merged = git("merge-tree", "--write-tree", tip, sha).splitlines()[0]
     files = git("diff", "--name-only", base, sha).splitlines()
     differs, identical = [], 0
