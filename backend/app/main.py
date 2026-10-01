@@ -11612,12 +11612,19 @@ def _accept_replan_executing(
     old_current = (
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
+    proposed_activities = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == proposed.id)
+        .order_by(Activity.sequence_no)
+    ).all()
     replacement_current = None
+    terminal_disruption_removal = False
     if old_current is not None:
         replacement_current = session.scalar(
             select(Activity).where(
                 Activity.plan_version_id == proposed.id,
                 Activity.sequence_no == old_current.sequence_no,
+                Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
             )
         )
         if replacement_current is None:
@@ -11631,7 +11638,24 @@ def _accept_replan_executing(
                 .order_by(Activity.sequence_no)
             )
         if replacement_current is None:
-            raise HTTPException(409, "replan does not preserve the current execution position")
+            # A physical disruption can remove the currently active stop when
+            # the accepted child plan contains only the already completed
+            # prefix.  There is no future cursor to carry forward in that
+            # terminal shape, but the execution position is still resolved:
+            # the disrupted activity is explicitly skipped and the Journey is
+            # complete.  Keep the ordinary rejection for every other missing
+            # mapping so a stale or ambiguous child cannot erase the cursor.
+            terminal_disruption_removal = (
+                str(trigger_event.affected_activity_id or "") == str(old_current.id)
+                and trigger_event.event_type in {"CLOSURE", "WEATHER"}
+                and old_current.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                and not any(
+                    item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                    for item in proposed_activities
+                )
+            )
+            if not terminal_disruption_removal:
+                raise HTTPException(409, "replan does not preserve the current execution position")
 
     decided_at = datetime.now(timezone.utc).isoformat()
 
@@ -11649,6 +11673,26 @@ def _accept_replan_executing(
     _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
+    if terminal_disruption_removal:
+        old_current.status = "SKIPPED"
+        old_metadata = json.loads(old_current.metadata_json or "{}")
+        old_metadata["skipped_at"] = decided_at
+        old_metadata["skip_reason"] = "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED"
+        old_current.metadata_json = json.dumps(old_metadata, ensure_ascii=False, sort_keys=True)
+        old_current.updated_at = decided_at
+        _record_outcome_event(
+            session,
+            journey,
+            activity=old_current,
+            event_type="ACTIVITY_SKIPPED",
+            actor_type="SYSTEM",
+            payload={
+                "reason": "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED",
+                "trigger_event_id": trigger_event.id,
+                "replan_proposal_id": proposal.id,
+            },
+        )
+        journey.status = "COMPLETED"
     # A replan is accepted while the Journey is already ACTIVE.  The proposed
     # plan is born with PLANNED activity rows, but its execution cursor must be
     # live immediately after the authoritative handover; otherwise the next
@@ -11665,11 +11709,6 @@ def _accept_replan_executing(
     # activity_id for the active plan. Remap every active C4 reference after
     # accepting a replan so the projection cannot point into the superseded
     # plan.
-    proposed_activities = session.scalars(
-        select(Activity)
-        .where(Activity.plan_version_id == proposed.id)
-        .order_by(Activity.sequence_no)
-    ).all()
     active_commitments = session.scalars(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
