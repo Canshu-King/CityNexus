@@ -250,6 +250,26 @@ class Journey(BaseModel):
     status: Literal["DRAFT", "PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]
     active_plan_version_id: UUID | None = None
     current_activity_id: UUID | None = None
+    # ORD-0505: the abort's own two facts, read straight off the row so no screen has to remember
+    # them.  Both are NULL for every trip that was never aborted -- including every row written
+    # before this door existed -- which is why neither carries a default.
+    cancelled_at: datetime | None = None
+    cancelled_reason: str | None = None
+
+
+class JourneyAbortRequest(BaseModel):
+    """The traveller's own word for why a trip is being stopped, and who stopped it.
+
+    `reason` is required and is stored in the row, not just painted: a screen that says "aborted"
+    while the database holds no why is the half-done thing ORD-0505 is closing.  `requested_by` is
+    checked against `journeys.traveler_id`, because this product has no session identity yet and a
+    door that writes an irreversible state on the strength of a path parameter alone would be
+    claiming an authorisation it does not have.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+    reason: str = Field(min_length=3, max_length=500)
+    requested_by: UUID
 
 
 #: ORD-0477: the orders `GET /api/v1/journeys` answers by, named once here so the door's validator,

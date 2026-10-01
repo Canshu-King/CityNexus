@@ -1,0 +1,7 @@
+base      : 12 failed, 1648 passed, 16 skipped, 1 xfailed, 4 warnings in 242.78s (0:04:02)
+candidate : 10 failed, 1658 passed, 16 skipped, 1 xfailed, 4 warnings in 224.49s (0:03:44)
+base red names 12, candidate red names 10
+NEW REDS: none - every red on the candidate is red on the base too
+RED ON BASE ONLY (2) - timing-sensitive, moved in the candidate's favour:
+  - tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation
+  - tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation

@@ -623,6 +623,12 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 connection.exec_driver_sql(
                     "ALTER TABLE journeys ADD COLUMN planning_mode TEXT NOT NULL DEFAULT 'balanced'"
                 )
+            # ORD-0505: the two columns the abort door writes.  Additive, no DEFAULT, and NULL means
+            # "this trip was never aborted" -- the same shape `deleted_at` below is cut in, so a
+            # database that predates the door gains the columns without gaining a fabricated reason.
+            for abort_column in ("cancelled_reason", "cancelled_at"):
+                if abort_column not in journey_columns:
+                    connection.exec_driver_sql(f"ALTER TABLE journeys ADD COLUMN {abort_column} TEXT")
             # ORD-0383 slice 1: additive, and no DEFAULT.  A row written before this column
             # existed was never deleted, and NULL is the only value that says so without
             # inventing a deletion moment for it.
