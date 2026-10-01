@@ -1,0 +1,19 @@
+run_id=ORD0505-074528 port=:4615 db=D:\moodle\_ord0505\ORD0505-074528.db child=20476
+POST /api/v1/travelers -> http_status=201
+POST /api/v1/journeys -> http_status=201
+GET /api/v1/journeys/{id} -> http_status=200 status=DRAFT cancelled_at=None cancelled_reason=None
+POST .../abort (not the traveller) -> http_status=403 reason_code=JOURNEY_ABORT_NOT_AUTHORISED error_code=REQUEST_ERROR
+POST .../abort (no such trip) -> http_status=404 reason_code=JOURNEY_NOT_FOUND
+POST .../abort (the real write) -> http_status=200 status=CANCELLED cancelled_at=2026-09-30T23:45:30.562847Z reason='ͬ�е��˸�����'
+POST .../abort (replayed) -> http_status=409 reason_code=JOURNEY_ABORT_ALREADY_CANCELLED
+GET .../experience (live screen) -> http_status=409 reason_code=JOURNEY_ABORTED_NOT_LIVE
+GET /api/v1/journeys -> http_status=200 contains aborted trip: True
+READ BACK FROM ORD0505-074528.db: rowid=1 status=CANCELLED deleted_at=None cancelled_at='2026-09-30T23:45:30.562847+00:00' cancelled_reason='ͬ�е��˸�����' (tables in file: 61)
+
+-- post-check on the garbled reason in the transcript above (console encoding, not the record) --
+Read back from ORD0505-074528.db with sqlite3, printed as code points and hex so no console is involved:
+   rowid=1 status=CANCELLED deleted_at=None cancelled_at=2026-09-30T23:45:30.562847+00:00
+   reason as code points: '同行的人改期了'
+   reason utf-8 hex=E5908CE8A18CE79A84E4BABAE694B9E69C9FE4BA86 length=7
+which is byte-for-byte the literal the instrument sent, on the row whose `deleted_at` is NULL -
+the reason is in the record, and an aborted trip is not a binned one.

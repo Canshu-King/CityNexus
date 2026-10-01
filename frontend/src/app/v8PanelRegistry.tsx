@@ -25,6 +25,7 @@ import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { AccessPanel } from "../features/access/AccessPanel";
 /* ORD-0476 slice 2: the footprint screen, mounted from here like every other route panel. */
 import { FootprintPanel } from "../features/checkin/FootprintPanel";
+import { JourneyAbortPanel } from "../features/abort/JourneyAbortPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
@@ -399,6 +400,26 @@ export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
     testId: "trip-poster-bar",
     when: (s) => s.tab === "itinerary" && (s.data.active_plan?.activities.length ?? 0) > 0,
     render: (s) => <TripPosterPanel data={s.data} />,
+  },
+  {
+    /* ORD-0505: 中止.  Offered only while the trip has not been stopped, because the refusal the
+       backend answers with on a second tap is the point of that door -- the panel must not invite a
+       write whose only honest answer is "it already happened".  The reason a stopped trip carries is
+       read back off `GET /api/v1/journeys/{id}`, not off this screen's memory. */
+    id: "trips-abort",
+    surface: "trips-tab",
+    testId: "journey-abort-panel",
+    when: (s) => s.tab === "itinerary" && s.data?.journey?.status !== "CANCELLED",
+    render: (s) => (
+      <JourneyAbortPanel
+        journeyId={s.data.journey.id}
+        travellerId={s.data.journey.traveler_id}
+        status={s.data.journey.status}
+        cancelledAt={s.data.journey.cancelled_at}
+        cancelledReason={s.data.journey.cancelled_reason}
+        onChanged={s.onRefresh}
+      />
+    ),
   },
   {
     id: "trips-itinerary",

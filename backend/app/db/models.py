@@ -198,6 +198,12 @@ class Journey(Base):
     # here rather than adding a word to `status`, whose CHECK is closed and whose values say
     # what the trip was doing, not whether a recycle bin still shows it.
     deleted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    # ORD-0505: the abort's own two facts, stored rather than painted.  `cancelled_reason` is the
+    # traveller's stated why and `cancelled_at` is the server's moment; both NULL means this trip was
+    # never aborted.  They are deliberately NOT folded into `deleted_at`: 中止 and 丢弃 are different
+    # doors, and a row that is aborted is still in the list.
+    cancelled_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class JourneyMission(Base):

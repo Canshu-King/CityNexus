@@ -1,0 +1,11 @@
+ORD-0505 r3: generated-client reproducibility
+
+1  generator( base contract )   = 28a5304f5ba061e4bed214540d791217c6a62da3e552040d4454cd903658006b
+2  HEAD api.ts                = 28a5304f5ba061e4bed214540d791217c6a62da3e552040d4454cd903658006b
+   base client is generator output on the base commit: True
+
+3  generator( this contract )   = a6d4fd735f1e91d4eb63eaf1ab825ba03ab20cc4e35e29edfacbe779b616dd97
+4  this tree api.ts             = a6d4fd735f1e91d4eb63eaf1ab825ba03ab20cc4e35e29edfacbe779b616dd97
+   delivered client is generator output on the delivered contract: True
+
+openapi-typescript 7.13.0

@@ -446,6 +446,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0505 中止 (abort): writes `status = CANCELLED`, the traveller's `reason` and the server's own moment into the same row.  `journeys.status` has offered CANCELLED since the first schema while no door on this tree wrote it -- the only journey-status writes are PLANNED, ACTIVE and COMPLETED -- so a traveller could discard a trip and could not stop one.  This is not the bin door wearing another hat: `deleted_at` is untouched, the trip stays in `listJourneys`, and `getJourneyExperience` refuses it with JOURNEY_ABORTED_NOT_LIVE, because an aborted trip has no live screen.  No `Idempotency-Key`: the durable `status` decides, and a replayed tap is refused with a name instead of replayed as a second success.  Concurrent taps are settled by the database -- the UPDATE carries the status this tap read, so the loser refuses. */
+        post: operations["abortJourney"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}/recycle-bin/journeys": {
         parameters: {
             query?: never;
@@ -3074,6 +3093,12 @@ export interface components {
             budget: components["schemas"]["Money"];
             planning_mode?: components["schemas"]["PlanningMode"];
         };
+        /** @description ORD-0505: the traveller's own word for stopping a trip, and who stopped it.  `reason` is required and is stored in the row; `requested_by` is compared with `journeys.traveler_id`, because this product has no session identity yet and a door that writes a state a traveller cannot undo would otherwise claim an authorisation it does not have. */
+        JourneyAbortRequest: {
+            reason: string;
+            /** Format: uuid */
+            requested_by: string;
+        };
         JourneyPatch: {
             title?: string;
             /** Format: date-time */
@@ -3102,6 +3127,9 @@ export interface components {
             active_plan_version_id?: string | null;
             /** Format: uuid */
             current_activity_id?: string | null;
+            /** Format: date-time */
+            cancelled_at?: string | null;
+            cancelled_reason?: string | null;
         };
         /** @description ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a screen never reconstructs "it was deleted" from absence in another list. */
         RecycleBinJourney: components["schemas"]["Journey"] & {
@@ -4828,6 +4856,68 @@ export interface operations {
             };
             /** @description error.code = CONFLICT with error.reason_code = JOURNEY_NOT_DELETED - the row was never in the bin, so nothing was written */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    abortJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyAbortRequest"];
+            };
+        };
+        responses: {
+            /** @description The trip, stopped, with the reason and the moment read back off the row */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_NOT_AUTHORISED - requested_by is not this trip's traveller, and nothing was written */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_NOT_FOUND - this tree never held that trip */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_ALREADY_CANCELLED - it is stopped already and the first reason stands; also the answer when a concurrent tap wins */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = JOURNEY_ABORT_REASON_REQUIRED - a blank reason is refused rather than stored as nothing */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
