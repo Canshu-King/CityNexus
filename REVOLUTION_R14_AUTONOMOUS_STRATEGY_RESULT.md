@@ -151,11 +151,55 @@ uv run pytest tests/test_r14_terminal_disruption_recovery.py \\
 58 passed, 1 warning
 ```
 
-The next autonomous experiment is a fresh active Kunming Journey with a
-non-terminal replacement candidate, so the agent must choose between retaining
-the current strategy and switching to a genuinely different place rather than
-only exercising terminal removal. The current checkpoint is already pushed to
-the isolated branch; no authority/mainline merge was performed.
+### Kunming non-terminal strategy pivot continuation
+
+The next run was executed on Journey `3b9836a8-5cee-49b5-a4f4-8f8bfe627b6c`
+with the intent “室内工艺和美术馆，少走路、路线紧凑”. The domestic model
+run `47cd0bd8-42f8-4296-9909-436a7895dbf0` first discovered only the real
+library, exhausted its bounded search budget, and stopped with a machine-visible
+`SEARCH_SATURATION`; its one-place `generate_plans` call was rejected with
+HTTP 422. It did not invent a second Place or claim a plan.
+
+The bounded follow-up changed the acquisition strategy to a new OSM `cafe`
+category through the Agent Gateway. It discovered the real provider Place
+`real-place-e1e58e1b2dd07a773f3eec8a` (蓝白红咖啡馆), recorded an
+`ESTIMATED_AGENT` hypothesis without changing canonical UNKNOWN facts, and
+generated plan `3bd2fd1a-ce7b-58db-8599-2c574d0e7aa3`. The live Valhalla
+snapshot `9efcf94d-c61f-4d65-b77f-d4e4a14998b5` measured the actual library →
+cafe edge at 38 minutes. Selection returned `PLANNED`, start returned `ACTIVE`,
+and the product receipt contained the actual edge plus
+`HARD_ELIGIBLE=true`.
+
+A new controlled closure `a72e84da-0f12-414a-ac75-e144a25e326c` targeted the
+current library. Agent Gateway proposal `a5b28138-d46b-4975-99ec-86fe44459950`
+removed only the closed library and kept the cafe. Its incident snapshot was
+`e667925b-db1f-47ae-b188-103eb50d7065`; the proposal was accepted with
+`ALLOW_AUTO`, `DELEGATION_POLICY_MATCHED`, and
+`DETERMINISTIC_GATE_VERIFIED`. Unlike the terminal-removal case, the result
+remained `ACTIVE` and carried the cursor to the cafe activity
+`2ea03513-bc9b-4d7d-8da4-1534a7e94033`. The competing same-slot proposal was
+deterministically invalidated, not silently selected.
+
+The cafe then completed through the real lifecycle
+`depart → arrive → begin → complete`. Final product state:
+
+```text
+Journey.status                 = COMPLETED
+Journey.active_plan_version_id = f071f823-bf4e-4712-9acc-f0c89f7fc736
+Journey.current_activity_id    = null
+accepted replan                = a5b28138-d46b-4975-99ec-86fe44459950
+closure status                 = ACKNOWLEDGED / SIMULATED
+```
+
+This proves the non-terminal branch carries execution forward to a real
+remaining activity; it is not merely a report-only pivot. The active child has
+one completed provider-backed cafe activity, while the removed library remains
+in the superseded plan lineage.
+
+The current checkpoint is pushed to the isolated branch; no authority/mainline
+merge was performed. The next autonomous experiment is a second unseeded city
+transfer using the same domestic model order, with a preference that forces a
+different category mix rather than another Kunming-only recovery.
 
 ## Current domestic-WB2api checkpoint: Guilin
 
