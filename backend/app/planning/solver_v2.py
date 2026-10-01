@@ -590,7 +590,7 @@ def _solve_v2_enumeration(problem: SolverV2Problem) -> tuple[SolverV2Plan, ...]:
                 if slot.must_change and option.action == "KEEP":
                     continue
                 next_partials.extend(_schedule_option(problem, anchors, partial, slot, option))
-            if slot.allow_drop and not slot.must_change:
+            if slot.allow_drop:
                 visited += 1
                 if visited <= problem.max_combinations:
                     next_partials.extend(_drop_option(problem, anchors, partial, slot))
@@ -720,7 +720,7 @@ def _solve_v2_cp_sat(problem: SolverV2Problem) -> tuple[SolverV2Plan, ...]:
                     "drift": drift,
                 }
             drop = None
-            if slot.allow_drop and not slot.must_change:
+            if slot.allow_drop:
                 drop = model.NewBoolVar(f"drop_{slot_index}")
                 choices.append((None, drop))
                 all_choice_literals.append(drop)

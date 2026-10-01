@@ -623,7 +623,10 @@ def _scenario_problem(
                     original_end_min=original_end,
                     original_cost_minor=activity.estimated_cost_minor,
                     options=tuple(options),
-                    must_change=(scenario_type == "mutable_place_closes" and outdoor),
+                    must_change=(
+                        (scenario_type == "mutable_place_closes" and outdoor)
+                        or forced_mobility_drop
+                    ),
                     allow_drop=not any(
                         anchor.location_key == _location(activity) for anchor in anchors
                     ),
