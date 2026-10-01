@@ -3,7 +3,7 @@
 ## Machine checkpoint
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
-- Final experimental code SHA: `46457355b054771f6c97b9fd903510c1e14515cd`
+- Final experimental code SHA: `4d7f0a2e18d51b9be54ba3e034685cc22dadc042`
 - Report closure commit: `19497e0818347c5daf5344e761e4f1ad962979b9`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
@@ -1060,3 +1060,82 @@ envelope. The next autonomous experiment is to transfer the same strategy
 engine to another freshly unseeded city with the lab estimate envelope off,
 so the system must either acquire corroborated facts or retain a truthful
 provisional/non-selectable result instead of widening authority.
+
+## R14 fact-driven score boundary (current experimental delta)
+
+Starting from `cad32950bba88e9cc9358526938b1493a5540187`, the authoritative
+multiday compose path was changed in product code at
+`backend/app/planning/authoritative_v12.py` and committed as
+`4d7f0a2e18d51b9be54ba3e034685cc22dadc042`.
+
+The old real-city path wrote fixed values for `preference_fit`,
+`mobility_fit`, `time_reliability`, `robustness`, `opportunity_value`, and the
+candidate total. The current path computes the persisted score from the
+candidate that was actually composed:
+
+- preference fit comes from persisted mission/preference keys matched against
+  the selected provider Place category/tags;
+- mobility fit comes from the selected `MobilityFact` duration and walking
+  minutes, with provider-route coverage and reliability recorded;
+- budget fit comes from the persisted plan total against the Journey budget;
+- time reliability comes from captured opening-window close times and the
+  scheduled activity end;
+- robustness and opportunity value include actual opening/cost coverage and
+  route evidence rather than venue-quality constants.
+
+The same computed `metrics["total"]` is persisted as both
+`PlanVersion.utility_score` and `score_breakdown_json.total`. A machine-readable
+`explanation_json.score_provenance` records the counts and source basis used by
+each dimension. Unknown opening/cost facts remain unknown; this change does
+not convert them into free or provider-verified facts.
+
+The focused product regression after this delta passed:
+
+```text
+uv run pytest tests/test_r14_terminal_disruption_recovery.py \
+  tests/test_agent_mission_runtime.py \
+  tests/test_v14_grounded_adaptive_recovery.py \
+  tests/test_v1923_final_code_gate.py \
+  tests/test_replan_completion_truth.py \
+  tests/test_sol_concurrency_and_remap.py \
+  tests/test_v13_1_1_semantic_integrity.py \
+  tests/test_v10_generic_compose.py -q
+65 passed, 1 warning
+```
+
+The next live check is to restart the domestic-WB2api-backed service on this
+exact commit and read one newly composed PlanVersion's persisted score and
+`score_provenance`; no report-only result is being counted as runtime closure.
+
+### HTTP runtime receipt on the exact code checkpoint
+
+The live code was restarted from `4d7f0a2e18d51b9be54ba3e034685cc22dadc042`
+with the domestic WB2api endpoint and model order
+`cn:glm-5.3-flash` → `cn:deepseek-v4.1-flash`. A disposable runtime database
+was used so the shared R14 evidence database was not reset. The product HTTP
+path was:
+
+```text
+POST /api/v1/journeys/803b04aa-cf6d-4fd8-a33b-156809292d05/
+     plans/authoritative-compose
+place_ids = r14-score-place-park, r14-score-place-museum
+HTTP 201
+complete_plan_count = 2
+```
+
+The persisted PlanVersions proved that the score was no longer the former
+constant sequence. For plan
+`9203bb0a-231c-4c74-afeb-c2d35eeba854`, the product returned
+`utility_score=0.772231`, `mobility_fit=0.661111`, `budget_fit=0.914`,
+`robustness=0.9`, and `total=0.772231`; its provenance recorded 61 actual
+travel minutes, 3 route facts, 3 provider-captured routes, and 2 verified
+opening/cost rows. The alternate plan
+`41800ece-fd79-4161-a8e8-b5ef53ae17d1` returned a different actual score
+(`0.766539`) because its route facts included one synthetic fallback and its
+travel burden was 55 minutes. The response and subsequent GET of
+`/journeys/{journey_id}/plans` agreed on these persisted values.
+
+The runtime mobility envelope was explicitly mixed
+(`LIVE_CAPTURE` plus `SYNTHETIC_FIXTURE`); this receipt validates score-source
+binding, not a claim that synthetic mobility is live. The domestic model was
+not allowed to write score or authority truth.
