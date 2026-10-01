@@ -457,7 +457,7 @@ def rank_closure_replacements(
         if isinstance(cost_evidence, dict):
             cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
             cost_value = cost_evidence.get("amount_minor")
-            if cost_status in {"KNOWN", "ESTIMATED"} and cost_value is not None:
+            if cost_status in {"KNOWN", "VERIFIED_PROVIDER", "ESTIMATED"} and cost_value is not None:
                 cost = int(cost_value)
             elif allow_strategy_estimate:
                 strategy_estimate = meta.get("strategy_estimate")

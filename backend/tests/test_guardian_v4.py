@@ -8,6 +8,7 @@ from test_solver_runtime_gate import _prepare_disruption
 import app.main as main_module
 from app.db.models import Activity, Event, Journey, Place
 from app.db.session import SessionLocal
+from app.services import _place_verified_cost
 from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
@@ -124,7 +125,12 @@ def test_guardian_over_mission_budget_requires_confirmation():
         for place in session.query(Place).all():
             if place.id in {"place-riverside-museum", "place-city-park", "place-design-library"}:
                 metadata = json.loads(place.metadata_json or "{}")
-                metadata["cost_minor"] = 6000
+                metadata["cost_evidence"] = {
+                    "status": "VERIFIED_PROVIDER",
+                    "amount_minor": 6000,
+                    "currency": "CNY",
+                    "source": "guardian-v4-canonical-cost-fixture",
+                }
                 place.metadata_json = json.dumps(metadata)
         session.commit()
     created = client.post(
@@ -153,6 +159,25 @@ def test_guardian_over_mission_budget_requires_confirmation():
     assert body["action_status"] == "REQUIRE_CONFIRMATION"
     assert "MISSION_COST_LIMIT_EXCEEDED" in body["evidence"]["policy"]["reason_codes"]
     assert body["evidence"]["mutation"]["executed"] is False
+
+
+def test_legacy_cost_metadata_cannot_override_canonical_cost_truth():
+    journey_id, _base, _event = _prepare_disruption()
+    with SessionLocal() as session:
+        place = session.query(Place).filter_by(id="place-city-park").one()
+        metadata = json.loads(place.metadata_json or "{}")
+        metadata["cost_evidence"] = {
+            "status": "UNKNOWN",
+            "amount_minor": None,
+            "currency": "CNY",
+            "source": "canonical-unknown-fixture",
+        }
+        metadata["cost_minor"] = 6000
+        place.metadata_json = json.dumps(metadata)
+        session.commit()
+        refreshed = session.get(Place, place.id)
+        assert refreshed is not None
+        assert _place_verified_cost(refreshed) is None
 
 
 def test_guardian_never_replaces_a_mission_protected_activity():

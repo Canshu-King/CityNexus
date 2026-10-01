@@ -633,14 +633,9 @@ def _place_verified_cost(place: Place) -> int | None:
     status = str(evidence.get("status") or "UNKNOWN").upper()
     amount = evidence.get("amount_minor")
     if status not in KNOWN_COST_EVIDENCE_STATUSES or amount is None:
-        legacy_cost = metadata.get("cost_minor")
-        if (
-            provider_key == "mock-city"
-            and status == "UNKNOWN"
-            and isinstance(legacy_cost, (int, float))
-            and legacy_cost > 0
-        ):
-            return int(legacy_cost)
+        # Once a cost_evidence object exists it is the canonical contract.
+        # Compatibility cost_minor must not override an explicit UNKNOWN or
+        # otherwise non-authoritative evidence state.
         return None
     return int(amount)
 
