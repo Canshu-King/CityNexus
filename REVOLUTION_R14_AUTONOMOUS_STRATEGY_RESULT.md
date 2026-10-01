@@ -3,8 +3,8 @@
 ## Machine checkpoint
 
 - Base SHA: `f21d82c1910502de094117edeac9f1c83c5c0b21`
-- Final experimental code SHA: `4d7f0a2e18d51b9be54ba3e034685cc22dadc042`
-- Report closure commit: `19497e0818347c5daf5344e761e4f1ad962979b9`
+- Final experimental code SHA: `86b893bb`
+- Report closure commit: follows this runtime receipt update
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Product database: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r13-metadata-fix-20260930-b.sqlite3`
@@ -1327,3 +1327,105 @@ The next R14 experiment is to transfer this same domestic-agent acceptance
 loop to another freshly discovered city and force a strategy change driven by
 the user intent, while keeping the estimate envelope explicit and preserving
 `P7=false`.
+
+## R14 Wuhan transfer: domestic Agent estimate, live route, completed Journey
+
+The same isolated runtime then entered a fresh, unseeded `CN-WUHAN` Journey
+`0a4418c1-17ee-494d-90a5-2401481fab08` from the natural-language intent
+“室内工艺、美术馆、安静文化空间、少走路、路线紧凑”. No itinerary or golden
+Place IDs were inserted before the Agent run.
+
+The first Agent run discovered eight live Overpass entities but the product
+candidate correctly remained `selectable=false` because the chosen pair did
+not both have estimate envelopes. Search then hit the real
+`SEARCH_SATURATION` gate. The Agent did not keep repeating the same search:
+it moved to source acquisition and facts. For the final pair, the product
+also performed Nominatim entity matching:
+
+```text
+real-place-3168db3852e335393b1f54af  overpass:node/1194992420
+  Nominatim: ACQUIRED / matched_provider_entity=true / extratags cuisine=chinese
+
+real-place-393bc6a425cc41be5f9a9304  overpass:node/1252118660
+  Nominatim: ACQUIRED / matched_provider_entity=true / extratags fast_food=cafeteria
+```
+
+Neither second source supplied opening hours or price. The persisted canonical
+rows stayed `opening_hours.status=UNKNOWN` and
+`cost_evidence.status=UNKNOWN`; `known_opening_count=0` and
+`known_cost_count=0`.
+
+The completed domestic DeepSeek Agent run was:
+
+```text
+AgentRun: 5d1bbdbb-1b01-494d-91de-0fd38001ff08
+mission: bd5c535f-3e17-44e4-a68d-f86965b66acf
+trace: 92124278-8048-43f7-9bcd-b90739b5ad7e
+runtime: HERMES_COMPAT_ENDPOINT
+persisted model_key: cn:deepseek-v4.1-flash
+tools: inspect_journey → inspect_twin → estimate_place_facts → generate_plans
+```
+
+It estimated only the missing second candidate using the explicit lab
+envelope:
+
+```json
+{
+  "place_id": "real-place-393bc6a425cc41be5f9a9304",
+  "opening_hours": {"status": "ESTIMATED_AGENT", "open_minutes": 420, "close_minutes": 1320},
+  "cost_evidence": {"status": "ESTIMATED_AGENT", "amount_minor": 3000, "currency": "CNY"},
+  "authority_eligible": false,
+  "basis": "agent_bounded_hypothesis"
+}
+```
+
+The real `generate_plans` tool then returned a candidate, not an invented
+success:
+
+```text
+plan: 29733bc9-e6bd-5858-b87b-81a1633f1a01
+status: CANDIDATE
+selectable: true
+authority_state: COURSEWORK_ESTIMATED_FACTS
+authority_envelope: COURSEWORK_ESTIMATE
+mobility_provider: valhalla-http
+mobility_snapshot: 1cebaa64-a947-422f-b383-e7f89464b7d6
+```
+
+The response still listed the unresolved provider facts for both Places,
+including `opening=REQUIRES_CONFIRMATION` and `cost=UNKNOWN`. The product then
+crossed its ordinary authority path: `select` returned `PLANNED`, `start`
+returned `ACTIVE`, and the two real activities completed through the actual
+execution endpoints.
+
+Final product/Twin receipt:
+
+```json
+{
+  "journey_status": "COMPLETED",
+  "active_plan_version_id": "29733bc9-e6bd-5858-b87b-81a1633f1a01",
+  "current_activity_id": null,
+  "twin_projection_status": "READY",
+  "used_edge_ids": [[
+    "real-place-3168db3852e335393b1f54af",
+    "real-place-393bc6a425cc41be5f9a9304"
+  ]],
+  "eligibility_receipts": [{
+    "provider": "valhalla-http",
+    "fact_quality": "LIVE_PROVIDER_CAPTURE",
+    "route_provenance": "LIVE_PROVIDER_CAPTURE",
+    "persisted_minutes": 40,
+    "hard_minutes": 40,
+    "hard_eligible": true,
+    "decision": "HARD_ELIGIBLE"
+  }],
+  "all_actual_edges_hard_eligible": true
+}
+```
+
+This transfer demonstrates a real strategy change in a second unseeded city:
+search saturation caused the Agent to stop broad discovery, acquire exact
+entity facts, then use an explicitly bounded estimate to make a coursework
+candidate. It does not claim live opening/cost truth, free entry, or
+production authority. `MOCK != LIVE`, `UNKNOWN != FREE`, and `P7=false` remain
+unchanged.
