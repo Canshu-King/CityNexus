@@ -1,9 +1,0 @@
-ord197 module alone, on BOTH trees, same interpreter, same cleared proxy env
-
---- lane tree (with ORD-0383 slice 1) ---
-  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-  6 passed, 1 xfailed, 2 warnings in 4.23s
-
---- pristine base tree (same pin, no ORD-0383) ---
-  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-  6 passed, 1 xfailed, 2 warnings in 4.35s

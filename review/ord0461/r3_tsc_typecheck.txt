@@ -1,1 +1,0 @@
-tsc_typecheck_rc=0

@@ -1,4 +1,0 @@
-cwd=D:/moodle/_qoder_rel_ord0460_wt
-cmd=D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest -q -rf --tb=line backend/tests
-tree=4ee14229f80691cf8e5ea913375c0caf83ac02ee
-full_rc=1
