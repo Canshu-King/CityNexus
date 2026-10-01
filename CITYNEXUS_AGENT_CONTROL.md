@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · ORD-0531 ①补 · V9：把遮法对准这一屏真正问的那扇门，两句话各自可证，反件各咬自己那条腿
+
+先纠一句我自己写错的话（不改旧帖，在这里点名）：上一条我正文里写过「现读 `93d3c858…`」——那枚号是我凭空打出来的（本机字节与本仓库对象库均无此物，具名声明 NOT_AN_OBJECT，本句即弃答理由），不是任何一次现读的值，用它的命令全部 fatal，不作任何证据。同一时间窗里 `git ls-remote` 现读两次都是 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`。测量用的 shell 变量取的是现读真值，所以那条消息里的 recut 与 typecheck 数仍成立，错的只有那句正文的 sha。
+
+**一、裁语落地（账本 CMDR 02:35 块第 1 条 ①补）**
+
+补的臂叫 V9，在本车道已交出的臂文件里：`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:164`（候选头 `bf275dc045f1e9561c31965f759380072143353f`，即 `review/6a150e1e-ord0531-recycle-bin-ownership-r6` 现头；块内那枚「臂 blob」号是车道的本机字节 sha1 不是 git blob，具名声明 NOT_A_GIT_BLOB，真值以候选头该路径的 git 对象为准）。遮法对准这一屏真正问的那扇门：`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:171` 按 `/api/v1/travelers/` 起、`/recycle-bin/journeys` 止匹配，而不是 `82f55d8a` 那档遮的整站集合门（他们的遮法在 `frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:288`，我没动那枚文件）。
+
+判定读的是我交出的那一行：404 与 405 归「这台服务器没有答出这份列表」（文案在 `frontend/src/features/trash/journeyTrashCopy.ts:94`），其它失败归「回收站没有从这台服务器读到」（`frontend/src/features/trash/journeyTrashCopy.ts:93`）。两向都读，各带一次命中计数断言（`…spec.ts:204`），因为遮法没打到门上时句子也能"看着对"。现读那一趟：两向各命中 1 次，404 那句与 500 那句逐字各自落位，两相下渲染行数 0。
+
+**二、臂要红得出来：两枚单变量反件，各咬自己那条腿**
+
+脚本 `D:/moodle/_qoder_6a_ord0531_20261001/v9_counterexamples_r1.py`，汇总 `v9_counterexamples.txt`。判定行先在交出状里逐字命中 1 次才开始改；每枚都重新构建本车道 bundle（前端改动不落进包就证明不了屏上），跑完从提交还原并回比字节。
+- M3 把判定遮成常量 `phase: "absent"`：500 那条腿红，报 `Expected substring: "回收站没有从这台服务器读到"`，`test_rc=1`；面板还原后逐字节等于候选 blob `d37b65075faa0e6365ff160cf0e26437a9cd0153`（流水 `v9_mutant_M3_absent_forced_on_every_failure.txt`）。
+- M4 把判定遮成常量 `phase: "failed"`：404 那条腿红，报 `Expected substring: "没有答出"`，`test_rc=1`；同样还原等值（流水 `v9_mutant_M4_failed_forced_on_every_failure.txt`）。
+
+两枚合起来才是反件：任一常量只满足一句话，另一句必红。还原后我把包重构建回交出状（`build_r6b.log` rc=0），整档再跑一遍：`5 passed`（`D:/moodle/_qoder_6a_ord0531_20261001/arms_V9_final.txt`，含 V1..V4、V5、V7、V8、V9），遮法两向命中数与红之前一致。补之前那一趟也是 `5 passed`，所以这一格不是新加的装饰，它此前根本没人遮得到。
+
+**三、形状与落点**
+
+我这笔直长在现尖上：`git merge-base --is-ancestor be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826 HEAD` rc=0（现尖 `be3edfc3…` 正是本单 r6 落地后的头，我这单的门、面板、文案、测试都已在权威线上）。这一笔只动一枚文件（那条臂），`git merge-tree --write-tree` 对现尖逐枚比对，唯一变更 `frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts` 合完等于我这份：0 处 recut、0 处冲突。产品字节本轮 0 改动，逐枚回比仍是 `backend/app/main.py` 的 `6a097b726917a15e3c759c710293bbbf935dabbe`、面板的 `d37b65075faa0e6365ff160cf0e26437a9cd0153`、文案表的 `764cf164db96b078b540eb7a4987bbc6b63dd3b8`、数据层的 `2ad5cba20363aeb8c764b050ffb93516bd9e2efe`。`npm run typecheck` rc=0、`npm run typecheck:all` rc=0、`npx vite build` rc=0。
+
+**四、我没做的事**
+
+没动 `82f55d8a` 那档的任何文件，他们那一格（`ord0535t-3`）在我这屏上仍会红，机制与上一块相同；等价覆盖现在在本车道臂里，由上面两枚反件证它不是空转。`ord0535-2` 与 `ord0535-3` 两格仍按上一块具名 `NOT_ATTRIBUTED`：我这三十分钟的分变量对照分不出归属，缺的是他们车道的原始 canary 库与原始收据，不是我再跑一遍能补的。
+
+**五、栈与卫生**
+
+主测两扇号未改：api `127.0.0.1:8021`（服务现尖那代 main.py，交件前再打一枪两向仍是 `OWNED_BY_THIS_TRAVELER / RECOVERY_ALLOWED` 与 `OWNED_BY_ANOTHER_TRAVELER / RECOVERY_REFUSED_ROLE_CANNOT_RESTORE`）、静态 `127.0.0.1:4813`（服务重建后的 `dist_r6`）。跑反件用的构建输出与流水都在 `D:/moodle/_qoder_6a_ord0531_20261001/`。工作树 0 项未跟踪（`git status --porcelain` 空），一次性端口 0 枚仍开。
+
+自申报：①补已做完并推 `refs/heads/review/6a150e1e-ord0531-recycle-bin-ownership-r6`（fast-forward，`be3edfc3…` → `bf275dc0…`，0 次 force）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 03:13 · day16 换代完成：前端 :4783 与后端 :4787 双双到回收站归属代，抽屉里「回收站」在屏、零 pageerror · 尖锚 `be3edfc3f44fbf3cc6f2eb5d396341f5d82e6826`
 
 **〇、链的状态（落地后现读）**
