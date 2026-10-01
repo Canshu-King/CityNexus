@@ -1,11 +1,12 @@
-ORD-0522 r2 -- the sentence walked on a screen at the live generation, the dark tier that was
+ORD-0522 r2c -- the sentence walked on a screen at the live generation, the dark tier that was
 hiding it, and one of my own arms that had rotted into citing a line number
-lane review/2d2d7428-ord0522-board-supply-state-r2b -- this ref, not the earlier ...-r2 (refs/heads/review/2d2d7428-ord0522-board-supply-state-r2),
-which was cut one generation back and is left in place unfrozen rather than rewritten
-measured at fe63d4d54011ccfeb935894f5ff8eb774d9f4600 (the product bytes there are unchanged at the head this file is written onto);
-this render sits on 7730cc7c31fb3e5412d1f53d893d04c33b97c5a7  live tip read by this render 514b397f96f3b5165b24865f4a544ab6f8020084  merge-base = the tip itself
-bundle measured /assets/index-Bgt0wtqD.js  served bytes 1574476  served sha1 7c564d1db80c == disk sha1 7c564d1db80c
-rendered 2026-10-01 13:46:46  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)  |  every number here is
+lane review/2d2d7428-ord0522-board-supply-state-r2c -- this ref; the line moved twice while I worked
+the earlier cuts (...-r2, ...-r2b) were measured on bytes the line no longer holds; neither is
+rewritten, both are left in place, and every figure below was retaken on the new base
+measured at a00ab0e7867465f813628cdb19b0ecb42b3c8875 (the product bytes there are unchanged at the head this file is written onto);
+this render sits on a00ab0e7867465f813628cdb19b0ecb42b3c8875  live tip read by this render b604f50d1645d028c2dd1d4406caee8198a3bc2d  merge-base = the tip itself
+bundle measured /assets/index-DvKeFdIk.js  served bytes 1578809  served sha1 acbdde237b6d == disk sha1 acbdde237b6d
+rendered 2026-10-01 14:01:57  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)  |  every number here is
 re-read from this round's JSONs or from git
 
 0. WHAT THIS ROUND DOES
@@ -79,14 +80,14 @@ re-read from this round's JSONs or from git
    Ten cells in that file pass at this head, and the family is green twice below.
 
 5. GATES AND DENOMINATORS, THIS GENERATION, ONE SESSION
-   this order's cells twice: 8 passed, 2 warnings in 2.70s / 8 passed, 2 warnings in 2.27s
-   five-file family (ORD-0522 + 0495 + 0479 + 0307 + 0467) twice: 44 passed, 2 warnings in 16.05s / 44 passed, 2 warnings in 16.00s
+   this order's cells twice: 8 passed, 2 warnings in 2.56s / 8 passed, 2 warnings in 2.46s
+   five-file family (ORD-0522 + 0495 + 0479 + 0307 + 0467) twice: 44 passed, 2 warnings in 41.64s / 44 passed, 2 warnings in 39.90s
    whole backend suite collects 1657 tests -- the four numbers above are a subset of that, and the
    suite itself was not run this round (NOT_EXECUTED_BY_LANE).
    contract parity: OpenAPI 3.1.0; formal 174; runtime 174; missing 0; extra 0 | schemas formal 85; generated 85; missing 0; extra 0
    frontend: TSC_EXIT=0 and BUILD_EXIT=0 (the bundle the arms were read from is the one named at the top).
    credential ruler re-run on this tree, both readings posted: stripped of the credential env vars it
-   says CREDENTIAL_GATE_CLEAR (scanned_files=530 hits_total=5 undeclared=0 in_product_path=0, vocabulary-exempted=3);
+   says CREDENTIAL_GATE_CLEAR (scanned_files=533 hits_total=5 undeclared=0 in_product_path=0, vocabulary-exempted=3);
    the same scan in an environment that carries DEEPSEEK_API_KEY says LIVE_CREDENTIAL_IN_ENVIRONMENT -- the verdict depends on who started the
    process, which is a fact about the ruler, not about these bytes (no security file is in this diff).
    3 files against the tip; the two the readings depend on, blobs read back out of the head commit:
