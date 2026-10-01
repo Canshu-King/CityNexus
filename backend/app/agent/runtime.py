@@ -32,6 +32,67 @@ class AgentRuntimeUnavailable(RuntimeError):
     """The configured model boundary cannot be used for this run."""
 
 
+def reconcile_stale_agent_runs(
+    session: Session, *, timeout_seconds: int = 900, now: datetime | None = None
+) -> dict[str, int]:
+    """Close model work left RUNNING by a process restart."""
+
+    clock = now or datetime.now(timezone.utc)
+    cutoff = clock.timestamp() - max(1, int(timeout_seconds))
+
+    def old_enough(value: str | None) -> bool:
+        try:
+            parsed = datetime.fromisoformat(str(value))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.timestamp() <= cutoff
+        except (TypeError, ValueError):
+            return True
+
+    reason = "PROCESS_RESTARTED_DURING_AGENT_RUN"
+    interrupted = 0
+    missions_aborted = 0
+    runs = session.scalars(select(AgentRun).where(AgentRun.status == "RUNNING")).all()
+    for run in runs:
+        if not old_enough(run.started_at or run.created_at):
+            continue
+        run.status = "INTERRUPTED"
+        run.failure_reason = reason
+        run.completed_at = clock.isoformat()
+        mission = session.get(JourneyMission, run.mission_id)
+        if mission is not None and mission.status in {"CREATED", "RUNNING"}:
+            mission.status = "ABORTED"
+            mission.failure_reason = reason
+            mission.completed_at = clock.isoformat()
+            missions_aborted += 1
+        interrupted += 1
+
+    # A crash can happen after a mission is marked RUNNING but before its
+    # AgentRun row is flushed.
+    missions = session.scalars(
+        select(JourneyMission).where(JourneyMission.status == "RUNNING")
+    ).all()
+    for mission in missions:
+        if not old_enough(mission.started_at or mission.created_at):
+            continue
+        live_run = session.scalar(
+            select(AgentRun).where(
+                AgentRun.mission_id == mission.id,
+                AgentRun.status == "RUNNING",
+            )
+        )
+        if live_run is not None:
+            continue
+        mission.status = "ABORTED"
+        mission.failure_reason = reason
+        mission.completed_at = clock.isoformat()
+        missions_aborted += 1
+
+    if interrupted or missions_aborted:
+        session.commit()
+    return {"agent_runs_interrupted": interrupted, "missions_aborted": missions_aborted}
+
+
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
 _MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services"}
 
@@ -266,7 +327,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
-        "For branch arbitration, inspect the Journey, then the Twin portfolio and current event; choose activate_standby, request_replan, or NO_ACTION based on server-returned compatibility, never on an ID supplied in this prompt. "
+        "After inspection, choose the safest available CityNexus action within the server-returned capabilities and authority envelope; do not assume an existing future is sufficient, and do not mutate when no intervention is needed. "
         "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
         "Issue at most one tool call per assistant turn. "
         "If a tool reports SEARCH_SATURATION or SEARCH_BATCH_LIMIT, stop searching and choose a different available action. "

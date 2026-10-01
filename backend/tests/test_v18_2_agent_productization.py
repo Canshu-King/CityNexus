@@ -19,13 +19,17 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
         "inspect_journey",
         "inspect_twin",
         "inspect_commitments",
+        "evaluate_recovery_options",
         "inspect_affected",
         "search_candidates",
         "evaluate_candidates",
-        "request_replan",
         "inspect_proposal",
         "approval_boundary",
     ]
+    assert all(
+        step["tool_name"] not in {"activate_standby", "request_replan"}
+        for step in plan["steps"]
+    )
     assert plan["allowed_tools"] == [
         "inspect_journey",
         "inspect_twin",

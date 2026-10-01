@@ -69,6 +69,7 @@ from app.agent.runtime import (
     AgentRuntimeUnavailable,
     DeepSeekJourneyAgent,
     persisted_agent_run_payload,
+    reconcile_stale_agent_runs,
     unavailable_run_payload,
 )
 from app.agent.signal_pipeline import fixture_payload, set_fixture_state
@@ -479,6 +480,16 @@ ensure_schema()
 # here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
 # (see app/stay_generation_operations.py).
 reconcile_interrupted_operations()
+# A process restart cannot resume model tool calls. Close only rows outside
+# the bounded handoff window so a live compatibility run is not interrupted
+# by startup cleanup.
+try:  # pragma: no cover - startup hygiene; helper has direct focused coverage
+    with SessionLocal() as startup_session:
+        reconcile_stale_agent_runs(startup_session)
+except Exception:  # noqa: BLE001
+    logging.getLogger("citynexus.agent").exception(
+        "could not reconcile stale agent runs at startup"
+    )
 # Catalog hydrations run on the same promise: a job is durable, a worker is not.  Wrapped,
 # because startup must not be held hostage by a cleanup pass on a database that predates this
 # table - the row that could not be closed is still reported as open, not silently skipped.
@@ -1318,18 +1329,15 @@ def run_agent_command(
         native = HermesNativeClient()
         try:
             native_plan = mission_plan_for_model(mission)
-            native_tool_sequence = [
-                str(step["tool_name"])
-                for step in native_plan["steps"]
-                if step.get("tool_name")
-            ]
             native_run = native.create_run(
                 mission_id=mission.id,
                 journey_id=journey.id,
                 input_text=payload.command,
                 instructions=(
-                    "Follow the supplied CityNexus mission plan in order. Call each listed MCP tool "
-                    f"in this sequence when its step is applicable: {', '.join(native_tool_sequence)}. "
+                    "Use the supplied CityNexus mission plan as an authority envelope, not a script. "
+                    "Inspect first, then choose among the allowed capabilities based on the live "
+                    "Journey, Twin, event, and portfolio; never assume a standby is sufficient and "
+                    "never invent a mutation sequence. "
                     "For a real-city strategy mission, additional tools in allowed_tools may be used "
                     "to acquire provider-backed facts and generate candidate plans before approval. "
                     f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
@@ -12721,18 +12729,15 @@ async def copilot_message(
             session.commit()
             try:
                 native_plan = mission_plan_for_model(native_mission)
-                native_tool_sequence = [
-                    str(step["tool_name"])
-                    for step in native_plan["steps"]
-                    if step.get("tool_name")
-                ]
                 native_run = native.create_run(
                     mission_id=native_mission.id,
                     journey_id=journey.id,
                     input_text=message,
                     instructions=(
-                        "Follow the supplied CityNexus mission plan in order. You MUST call each listed MCP tool "
-                        f"in this sequence: {', '.join(native_tool_sequence)}. "
+                        "Use the supplied CityNexus mission plan as a neutral authority envelope, not as a scripted "
+                        "mutation sequence. Inspect the Journey, Twin, current event, portfolio, and protected "
+                        "commitments first; then choose the safest available action or NO_ACTION from the returned "
+                        "capabilities. Do not assume a standby is sufficient and do not invent a plan ID. "
                         f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                         f"The CityNexus mission_id is {native_mission.id}; do not invent or omit either identifier. "
                         + (

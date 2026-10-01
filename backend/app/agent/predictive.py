@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, time, timedelta, timezone
+from types import SimpleNamespace
 from typing import Any
 from uuid import uuid4
 
@@ -514,7 +515,19 @@ def _scenario_problem(
         None,
     )
     mobility = _load(latest_mobility.payload_json if latest_mobility else None, {})
-    current_minutes = mobility.get("current_minutes") or {}
+    current_minutes = dict(mobility.get("current_minutes") or {})
+    # Runtime captures persist authoritative edge facts as a list.  The
+    # counterfactual solver must consume those real minutes instead of falling
+    # back to its bounded diagnostic default, otherwise a retime can pass the
+    # solver and fail the final live feasibility gate.
+    for fact in mobility.get("facts") or []:
+        if not isinstance(fact, dict):
+            continue
+        origin = fact.get("origin_key")
+        destination = fact.get("destination_key")
+        minutes = fact.get("minutes")
+        if origin and destination and minutes is not None:
+            current_minutes[f"{origin}|{destination}"] = int(minutes)
     travel: dict[tuple[str, str], int] = {}
     for origin in all_locations:
         for destination in all_locations:
@@ -565,10 +578,21 @@ def _scenario_problem(
         forced_weather_drop = (
             scenario_type == "rain_earlier"
             and activity_index == first_mutable_future_index
+            and outdoor
+        )
+        forced_retime = (
+            scenario_type == "route_plus_10"
+            and activity_index == first_mutable_future_index
         )
         options: list[SolverV2Option] = []
-        if not forced_mobility_drop and not forced_closure_drop and not forced_weather_drop and (
+        if (
+            not forced_mobility_drop
+            and not forced_closure_drop
+            and not forced_weather_drop
+            and not forced_retime
+            and (
             scenario_type != "mutable_place_closes" or not outdoor
+            )
         ):
             options.append(
                 SolverV2Option(
@@ -584,8 +608,22 @@ def _scenario_problem(
                     risk_penalty_milli=600 if scenario_type == "rain_earlier" and outdoor else 0,
                 )
             )
+        if forced_retime:
+            options.append(
+                SolverV2Option(
+                    option_key=f"RETIME_KEEP:{activity.id}",
+                    location_key=_location(activity),
+                    action="RETIME",
+                    duration_min=duration,
+                    cost_minor=activity.estimated_cost_minor,
+                    earliest_start_min=original_start + max(5, scenario_delta),
+                    latest_end_min=journey_end_min,
+                    original_start_min=original_start,
+                    original_cost_minor=activity.estimated_cost_minor,
+                )
+            )
         for candidate in (
-            [] if forced_mobility_drop or forced_closure_drop or forced_weather_drop
+            [] if forced_mobility_drop or forced_weather_drop
             else candidate_places[:3]
         ):
             candidate_tags = set(_load(candidate.tags_json, []))
@@ -608,12 +646,13 @@ def _scenario_problem(
             metadata = _load(candidate.metadata_json, {})
             cost_evidence = metadata.get("cost_evidence") or {}
             evidence_status = str(cost_evidence.get("status") or "UNKNOWN")
-            candidate_cost = (
-                int(cost_evidence.get("amount_minor"))
-                if evidence_status in {"KNOWN", "ESTIMATED"}
-                and cost_evidence.get("amount_minor") is not None
-                else 0
-            )
+            # A missing cost is not a free replacement.  Estimates can help
+            # the strategy layer, but with the lab authority envelope off
+            # they cannot enter a truth-grounded executable future.
+            if evidence_status in {"KNOWN", "KNOWN_FREE", "VERIFIED_PROVIDER"}:
+                candidate_cost = int(cost_evidence.get("amount_minor") or 0)
+            else:
+                continue
             preference_fit = verified_interest_preference_fit(
                 traveler_preferences, candidate_tags=candidate_tags
             )
@@ -649,9 +688,14 @@ def _scenario_problem(
                         or forced_mobility_drop
                         or forced_closure_drop
                         or forced_weather_drop
+                        or forced_retime
                     ),
-                    allow_drop=not any(
-                        anchor.location_key == _location(activity) for anchor in anchors
+                    allow_drop=(
+                        scenario_type != "mutable_place_closes"
+                        and not forced_retime
+                        and not any(
+                            anchor.location_key == _location(activity) for anchor in anchors
+                        )
                     ),
                 )
             )
@@ -670,7 +714,11 @@ def _scenario_problem(
         protected_anchors=tuple(anchors),
         frozen_mobility_snapshot_id=(mobility.get("snapshot_id") or f"counterfactual:{journey.id}"),
         travel_minutes=travel,
-        safety_buffer_min=15,
+        # The active plan already passed its deterministic schedule gate with
+        # captured edge durations. Counterfactuals must not add an unannounced
+        # second buffer that invalidates that same frozen reality before the
+        # new branch can be rechecked with its immutable provider snapshot.
+        safety_buffer_min=0,
         max_schedule_drift_min=180,
         top_k=3,
     )
@@ -707,6 +755,7 @@ def standby_portfolio(session: Session, journey: Journey, event: Event | None = 
     result: list[dict[str, Any]] = []
     for row in rows:
         evidence = _load(row.mobility_evidence_json, {})
+        explanation = _load(row.explanation_json, {})
         expires = evidence.get("expires_at")
         result.append({
             "plan_id": row.id,
@@ -722,6 +771,8 @@ def standby_portfolio(session: Session, journey: Journey, event: Event | None = 
             ) or 0),
             "total_cost_minor": row.total_cost_minor,
             "mobility_snapshot_id": row.mobility_snapshot_id,
+            "material_difference_fingerprint": explanation.get("material_difference_fingerprint"),
+            "material_difference": explanation.get("material_difference", {}),
             "trigger_contract": _load(row.trigger_contract_json, {}),
             "trigger_match": (
                 standby_trigger_match(row, event, current).code if event is not None else "UNASSESSED"
@@ -883,17 +934,17 @@ def _refresh_shadow_plan_mobility(
     activities: list[Activity],
 ) -> bool:
     """Refresh a persisted branch without changing its identity or schedule."""
-    dropped = {
-        str(item.get("slot_key"))
-        for item in changes
-        if str(item.get("action") or "").upper() == "DROP"
-    }
-    kept = [item for item in activities if item.id not in dropped]
+    # Refresh the branch's own immutable activity sequence.  Reusing the
+    # active plan here would silently turn RETIME/REPLACE branches back into
+    # the current reality and could capture the wrong adjacency set.
+    shadow_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == shadow.id).order_by(Activity.sequence_no)
+    ).all()
     evidence = _shadow_evidence(
         session,
         journey,
         active,
-        kept,
+        shadow_activities,
         scenario_key=simulation.scenario_key,
         force_refresh=True,
     )
@@ -909,9 +960,6 @@ def _refresh_shadow_plan_mobility(
         for item in (evidence.get("facts") or [])
         if isinstance(item, dict)
     }
-    shadow_activities = session.scalars(
-        select(Activity).where(Activity.plan_version_id == shadow.id).order_by(Activity.sequence_no)
-    ).all()
     for left, right, leg in zip(
         shadow_activities,
         shadow_activities[1:],
@@ -966,35 +1014,28 @@ def _branch_trigger_contract(
     return contract
 
 
-def _materialize_shadow_plan(
+def _material_difference_fingerprint(specs: list[dict[str, Any]]) -> str:
+    """Fingerprint executable reality, not the scenario label that produced it."""
+
+    payload = [
+        {
+            "place_id": item["place_id"],
+            "activity_type": item["activity_type"],
+            "start_at": item["start_at"],
+            "end_at": item["end_at"],
+        }
+        for item in specs
+    ]
+    return hashlib.sha256(_json(payload).encode("utf-8")).hexdigest()[:24]
+
+
+def _shadow_specs(
     session: Session,
     journey: Journey,
-    active: PlanVersion,
-    simulation: CounterfactualSimulation,
+    activities: list[Activity],
     changes: list[dict[str, Any]],
-) -> PlanVersion | None:
-    """Persist one grounded, non-active standby PlanVersion when possible."""
-
-    if not simulation.feasible or not simulation.c4_preserved:
-        return None
-    if simulation.scenario_type not in {"PLACE_CLOSURE", "MOBILITY_SHIFT", "WEATHER_SHIFT"}:
-        return None
-    existing_id = _load(simulation.evidence_json, {}).get("shadow_plan_version_id")
-    existing = session.get(PlanVersion, existing_id) if existing_id else None
-    if existing is not None and existing.lifecycle == "STANDBY":
-        return existing
-    dropped = {
-        str(item.get("slot_key"))
-        for item in changes
-        if str(item.get("action") or "").upper() == "DROP"
-    }
-    activities = list(
-        session.scalars(
-            select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
-        ).all()
-    )
-    # A standby branch may only change the future suffix.  Executed/current,
-    # locked, and protected commitment activities remain in every branch.
+) -> tuple[list[dict[str, Any]], set[str], set[str]] | None:
+    assignments = {str(item.get("slot_key")): item for item in changes}
     current_index = next(
         (idx for idx, item in enumerate(activities) if item.id == journey.current_activity_id),
         -1,
@@ -1012,18 +1053,128 @@ def _materialize_shadow_plan(
     }
     protected_ids.update(
         str(item.id)
-        for item in activities
-        if item.locked or activities.index(item) <= current_index
+        for idx, item in enumerate(activities)
+        if item.locked or idx <= current_index
     )
-    dropped.difference_update(protected_ids)
-    kept = [item for item in activities if item.id not in dropped]
-    if len(kept) == len(activities) or len(kept) < 2:
+    specs: list[dict[str, Any]] = []
+    dropped: set[str] = set()
+    replaced_old_places: set[str] = set()
+    journey_start = _dt(journey.start_at)
+    for source in activities:
+        change = assignments.get(str(source.id), {})
+        action = str(change.get("action") or "KEEP").upper()
+        if action == "DROP":
+            if source.id in protected_ids:
+                return None
+            dropped.add(str(source.id))
+            continue
+        place_id = str(source.place_id or source.city_service_id or source.id)
+        title = source.title
+        estimated_cost = int(source.estimated_cost_minor or 0)
+        if action == "REPLACE":
+            replacement = session.get(Place, str(change.get("location_key") or ""))
+            if replacement is None:
+                return None
+            replaced_old_places.add(place_id)
+            place_id = replacement.id
+            title = replacement.name
+            estimated_cost = int(change.get("cost_minor") or 0)
+        start_min = change.get("start_min")
+        if start_min is not None and source.id not in protected_ids:
+            start_at = journey_start + timedelta(minutes=int(start_min))
+        else:
+            start_at = _dt(source.start_at)
+        duration_min = max(1, int((_dt(source.end_at) - _dt(source.start_at)).total_seconds() // 60))
+        specs.append(
+            {
+                "source": source,
+                "place_id": place_id,
+                "title": title,
+                "activity_type": source.activity_type,
+                "start_at": start_at,
+                "end_at": start_at + timedelta(minutes=duration_min),
+                "estimated_cost_minor": estimated_cost,
+                "currency": source.currency,
+                "action": action,
+            }
+        )
+    if len(specs) < 2 or not changes:
         return None
-    evidence = _shadow_evidence(session, journey, active, kept, scenario_key=simulation.scenario_key)
+    return specs, dropped, replaced_old_places
+
+
+def _materialize_shadow_plan(
+    session: Session,
+    journey: Journey,
+    active: PlanVersion,
+    simulation: CounterfactualSimulation,
+    changes: list[dict[str, Any]],
+) -> PlanVersion | None:
+    """Persist a grounded standby for DROP, RETIME/KEEP, or REPLACE futures."""
+
+    if not simulation.feasible or not simulation.c4_preserved:
+        return None
+    if simulation.scenario_type not in {"PLACE_CLOSURE", "MOBILITY_SHIFT", "WEATHER_SHIFT"}:
+        return None
+    evidence_json = _load(simulation.evidence_json, {})
+    existing_id = evidence_json.get("shadow_plan_version_id")
+    existing = session.get(PlanVersion, existing_id) if existing_id else None
+    activities = list(
+        session.scalars(
+            select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+        ).all()
+    )
+    resolved = _shadow_specs(session, journey, activities, changes)
+    if resolved is None:
+        return None
+    specs, dropped, replaced_old_places = resolved
+    fingerprint = _material_difference_fingerprint(specs)
+    if existing is not None and existing.lifecycle == "STANDBY":
+        existing_explanation = _load(existing.explanation_json, {})
+        if existing_explanation.get("material_difference_fingerprint") == fingerprint:
+            return existing
+        # A pre-R21 branch without an execution fingerprint is not known to be
+        # the same future. Retire it instead of refreshing it in place.
+        existing.lifecycle = "RETIRED"
+        existing.status = "REJECTED"
+    for sibling in session.scalars(
+        select(PlanVersion).where(
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.parent_plan_version_id == active.id,
+            PlanVersion.lifecycle == "STANDBY",
+        )
+    ).all():
+        sibling_explanation = _load(sibling.explanation_json, {})
+        if sibling_explanation.get("material_difference_fingerprint") == fingerprint:
+            evidence_json.update(
+                {
+                    "shadow_plan_version_id": sibling.id,
+                    "shadow_plan_status": sibling.status,
+                    "shadow_lifecycle": "NON_ACTIVE_STANDBY",
+                    "deduplicated_to": sibling.id,
+                    "material_difference_fingerprint": fingerprint,
+                }
+            )
+            simulation.evidence_json = _json(evidence_json)
+            return sibling
+    route_nodes = [
+        SimpleNamespace(
+            id=str(item["source"].id),
+            place_id=item["place_id"],
+            city_service_id=None,
+        )
+        for item in specs
+    ]
+    evidence = _shadow_evidence(
+        session,
+        journey,
+        active,
+        route_nodes,
+        scenario_key=simulation.scenario_key,
+    )
     if evidence is None:
-        diagnostic = _load(simulation.evidence_json, {})
-        diagnostic["shadow_materialization_failure"] = ["LIVE_MOBILITY_CAPTURE_FAILED"]
-        simulation.evidence_json = _json(diagnostic)
+        evidence_json["shadow_materialization_failure"] = ["LIVE_MOBILITY_CAPTURE_FAILED"]
+        simulation.evidence_json = _json(evidence_json)
         return None
     next_version = int(
         session.scalar(
@@ -1034,6 +1185,7 @@ def _materialize_shadow_plan(
         )
         or 0
     ) + 1
+    total_cost = sum(int(item["estimated_cost_minor"]) for item in specs)
     shadow = PlanVersion(
         id=str(uuid4()),
         journey_id=journey.id,
@@ -1041,31 +1193,50 @@ def _materialize_shadow_plan(
         planning_mode=active.planning_mode,
         status="CANDIDATE",
         lifecycle="STANDBY",
-        trigger_contract_json=_json(_branch_trigger_contract(
-            journey, active, simulation, sorted(dropped),
-            [str(item.place_id) for item in activities if item.id in dropped and item.place_id],
-            activities,
-        )),
+        trigger_contract_json=_json(
+            _branch_trigger_contract(
+                journey,
+                active,
+                simulation,
+                sorted(set(dropped) | replaced_old_places),
+                sorted(
+                    {
+                    str(item.place_id)
+                        for item in activities
+                        if item.id in set(dropped) | replaced_old_places and item.place_id
+                    }
+                ),
+                activities,
+            )
+        ),
         source="REPLAN",
         parent_plan_version_id=active.id,
-        total_cost_minor=max(0, active.total_cost_minor - sum(item.estimated_cost_minor for item in activities if item.id in dropped)),
+        total_cost_minor=total_cost,
         currency=active.currency,
-        estimated_duration_min=max(1, active.estimated_duration_min - sum(
-            max(1, int((_dt(item.end_at) - _dt(item.start_at)).total_seconds() // 60))
-            for item in activities if item.id in dropped
-        )),
+        estimated_duration_min=max(
+            1,
+            int((specs[-1]["end_at"] - specs[0]["start_at"]).total_seconds() // 60),
+        ),
         utility_score=active.utility_score,
         score_breakdown_json=active.score_breakdown_json,
-        explanation_json=_json({
-            "product_path": "R18_STANDBY_COUNTERFACTUAL",
-            "lifecycle": "STANDBY",
-            "trigger": simulation.scenario_key,
-            "simulation_id": simulation.id,
-            "base_plan_version_id": active.id,
-            "captured_at": evidence.get("captured_at"),
-            "expires_at": evidence.get("expires_at"),
-            "protected_commitments_preserved": simulation.c4_preserved,
-        }),
+        explanation_json=_json(
+            {
+                "product_path": "R21_AUTONOMOUS_FUTURE_SYNTHESIS",
+                "lifecycle": "STANDBY",
+                "trigger": simulation.scenario_key,
+                "simulation_id": simulation.id,
+                "base_plan_version_id": active.id,
+                "captured_at": evidence.get("captured_at"),
+                "expires_at": evidence.get("expires_at"),
+                "protected_commitments_preserved": simulation.c4_preserved,
+                "material_difference_fingerprint": fingerprint,
+                "material_difference": {
+                    "dropped_activity_ids": sorted(dropped),
+                    "replaced_old_place_ids": sorted(replaced_old_places),
+                    "activity_count": len(specs),
+                },
+            }
+        ),
         mobility_snapshot_id=str(evidence["snapshot_id"]),
         mobility_evidence_json=_json(evidence),
         created_at=_now(),
@@ -1076,48 +1247,47 @@ def _materialize_shadow_plan(
         (str(item.get("origin_key")), str(item.get("destination_key"))): item
         for item in (evidence.get("facts") or [])
     }
-    cursor = _dt(kept[0].start_at)
     shadow_activities: list[Activity] = []
-    for index, source in enumerate(kept, start=1):
+    for index, spec in enumerate(specs, start=1):
+        source = spec["source"]
         metadata = _load(source.metadata_json, {})
         metadata["shadow_plan"] = {
             "scenario_key": simulation.scenario_key,
             "base_activity_id": source.id,
             "lifecycle": "STANDBY",
+            "material_difference_fingerprint": fingerprint,
         }
         if index == 1:
-            start_at = _dt(source.start_at)
             travel_min = 0
         else:
-            previous = kept[index - 2]
-            pair = (str(previous.place_id or previous.city_service_id or previous.id), str(source.place_id or source.city_service_id or source.id))
-            fact = fact_by_pair.get(pair) or {}
-            travel_min = int(fact.get("minutes") or 0)
-            # Preserve the source schedule when it has slack; only move a
-            # downstream activity later when the newly captured edge requires it.
-            start_at = max(_dt(source.start_at), cursor)
-        duration_min = max(1, int((_dt(source.end_at) - _dt(source.start_at)).total_seconds() // 60))
-        end_at = start_at + timedelta(minutes=duration_min)
-        cursor = end_at
+            previous = specs[index - 2]
+            pair = (str(previous["place_id"]), str(spec["place_id"]))
+            travel_min = int((fact_by_pair.get(pair) or {}).get("minutes") or 0)
         activity = Activity(
-                id=str(uuid4()),
-                plan_version_id=shadow.id,
-                sequence_no=index,
-                activity_type=source.activity_type,
-                title=source.title,
-                place_id=source.place_id,
-                city_service_id=source.city_service_id,
-                start_at=start_at.isoformat(),
-                end_at=end_at.isoformat(),
-                travel_from_prev_min=travel_min,
-                estimated_cost_minor=source.estimated_cost_minor,
-                currency=source.currency,
-                status=source.status if str(source.id) in protected_ids else "PLANNED",
-                locked=source.locked,
-                metadata_json=_json(metadata),
-                created_at=_now(),
-                updated_at=_now(),
-            )
+            id=str(uuid4()),
+            plan_version_id=shadow.id,
+            sequence_no=index,
+            activity_type=source.activity_type,
+            title=spec["title"],
+            place_id=spec["place_id"] if source.place_id else None,
+            city_service_id=None if source.place_id else source.city_service_id,
+            start_at=spec["start_at"].isoformat(),
+            end_at=spec["end_at"].isoformat(),
+            travel_from_prev_min=travel_min,
+            estimated_cost_minor=spec["estimated_cost_minor"],
+            currency=spec["currency"],
+            # The execution prefix and locked activities are copied as their
+            # current state; future mutable activities stay PLANNED.
+            status=(
+                source.status
+                if source.locked or source.status in {"COMPLETED", "IN_PROGRESS"}
+                else "PLANNED"
+            ),
+            locked=source.locked,
+            metadata_json=_json(metadata),
+            created_at=_now(),
+            updated_at=_now(),
+        )
         session.add(activity)
         shadow_activities.append(activity)
     session.flush()
@@ -1275,7 +1445,10 @@ def simulate_counterfactuals(
                 "slot_key": assignment.slot_key,
                 "action": assignment.action,
                 "location_key": assignment.location_key,
+                "start_min": assignment.start_min,
+                "end_min": assignment.end_min,
                 "schedule_drift_min": assignment.schedule_drift_min,
+                "cost_minor": assignment.cost_minor,
             }
             for assignment in (plan.assignments if plan else ())
             if assignment.action != "KEEP" or assignment.schedule_drift_min
@@ -1337,12 +1510,28 @@ def simulate_counterfactuals(
             if existing_shadow_id
             else None
         )
+        expected_material_fingerprint = None
+        if active_plan is not None and changes:
+            expected_specs = _shadow_specs(session, journey, activities, changes)
+            if expected_specs is not None:
+                expected_material_fingerprint = _material_difference_fingerprint(
+                    expected_specs[0]
+                )
+        existing_material_fingerprint = (
+            _load(existing_shadow.explanation_json, {}).get(
+                "material_difference_fingerprint"
+            )
+            if existing_shadow is not None
+            else None
+        )
         if (
             active_plan is not None
             and
             existing_shadow is not None
             and existing_shadow.lifecycle == "STANDBY"
             and existing_shadow.parent_plan_version_id == active_plan.id
+            and expected_material_fingerprint is not None
+            and existing_material_fingerprint == expected_material_fingerprint
         ):
             # Refreshes upgrade the persisted contract in place.  This keeps
             # R19 branches single-sourced while making the R20 matcher apply
@@ -1365,6 +1554,10 @@ def simulate_counterfactuals(
                 evidence["shadow_plan_status"] = existing_shadow.status
                 evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
                 evidence["mobility_refresh"] = "LIVE_PROVIDER_CAPTURE"
+                evidence["material_difference_fingerprint"] = existing_material_fingerprint
+                evidence["material_difference"] = _load(
+                    existing_shadow.explanation_json, {}
+                ).get("material_difference", {})
                 row.evidence_json = _json(evidence)
                 materialized_shadow_count += 1
             else:
@@ -1388,6 +1581,13 @@ def simulate_counterfactuals(
                     evidence["shadow_plan_version_id"] = replacement.id
                     evidence["shadow_plan_status"] = replacement.status
                     evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+                    explanation = _load(replacement.explanation_json, {})
+                    evidence["material_difference_fingerprint"] = explanation.get(
+                        "material_difference_fingerprint"
+                    )
+                    evidence["material_difference"] = explanation.get(
+                        "material_difference", {}
+                    )
                     materialized_shadow_count += 1
                 row.evidence_json = _json(evidence)
         elif active_plan is not None and materialized_shadow_count < 3 and changes:
@@ -1396,6 +1596,11 @@ def simulate_counterfactuals(
                 evidence["shadow_plan_version_id"] = shadow.id
                 evidence["shadow_plan_status"] = shadow.status
                 evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+                explanation = _load(shadow.explanation_json, {})
+                evidence["material_difference_fingerprint"] = explanation.get(
+                    "material_difference_fingerprint"
+                )
+                evidence["material_difference"] = explanation.get("material_difference", {})
                 row.evidence_json = _json(evidence)
                 materialized_shadow_count += 1
         else:

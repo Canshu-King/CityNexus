@@ -16,7 +16,9 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Mapping
 
-VALID_OPTION_ACTIONS = frozenset({"KEEP", "REPLACE"})
+# RETIME changes schedule while retaining the same provider-backed Place. It
+# is a material future difference, not a new fact or solver family.
+VALID_OPTION_ACTIONS = frozenset({"KEEP", "RETIME", "REPLACE"})
 
 
 @dataclass(frozen=True)

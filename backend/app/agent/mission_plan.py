@@ -85,9 +85,11 @@ def build_mission_plan(
 ) -> AgentMissionPlan:
     """Build a deterministic plan from the already-compiled mission envelope.
 
-    The sequence is intentionally stable for demos and auditing, but the UI
-    must render actual runtime events rather than treating these steps as
-    proof that Hermes executed them.
+    The sequence is an authority envelope, not an action script. In
+    particular, an autonomous recovery mission must not get a deterministic
+    preference for standby activation over fresh replanning (or NO_ACTION).
+    The UI must render actual runtime events rather than treating these steps
+    as proof that Hermes executed them.
     """
 
     objectives = {str(item) for item in objective_codes}
@@ -109,11 +111,11 @@ def build_mission_plan(
             ),
         )
     steps.insert(
-        2,
+        3,
         MissionPlanStep(
-            "arbitrate_standby",
-            "Arbitrate the compatible standby branch from the server portfolio",
-            "activate_standby",
+            "evaluate_recovery_options",
+            "Evaluate the current reality and available recovery options",
+            None,
             requires_authority=True,
         ),
     )
@@ -127,13 +129,7 @@ def build_mission_plan(
     steps.extend(
         [
             MissionPlanStep("evaluate_candidates", "Evaluate candidates against constraints", None),
-            MissionPlanStep(
-                "request_replan",
-                "Request a deterministic replan proposal",
-                "request_replan",
-                requires_authority=True,
-            ),
-            MissionPlanStep("inspect_proposal", "Inspect proposal trade-offs", "list_replans"),
+            MissionPlanStep("inspect_proposal", "Inspect available proposal trade-offs", "list_replans"),
             MissionPlanStep(
                 "approval_boundary",
                 "Wait for explicit CityNexus approval before mutation",
