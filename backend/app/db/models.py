@@ -198,6 +198,12 @@ class Journey(Base):
     # here rather than adding a word to `status`, whose CHECK is closed and whose values say
     # what the trip was doing, not whether a recycle bin still shows it.
     deleted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    # ORD-0520 中止: the moment the traveller called this trip off and the sentence they gave for
+    # it.  `status` holds the fact that it is over (`CANCELLED`, a word the CHECK in
+    # `backend/db/schema.sql` already carried and that no door wrote before this order); these two
+    # hold why and when, which a status cannot.  NULL on every row that was never aborted.
+    aborted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    abort_reason: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class JourneyMission(Base):

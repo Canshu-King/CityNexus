@@ -131,6 +131,13 @@ CREATE TABLE IF NOT EXISTS journeys (
     -- deleted is NULL, which is what every pre-existing row already is; a default would have
     -- to invent a deletion moment.  See `deleted_at` in `app/db/models.py`.
     deleted_at TEXT,
+    -- ORD-0520: the same additive shape for 中止.  `status` already had the word (`CANCELLED`
+    -- in the CHECK above, written by no door until this order), but a status cannot carry why,
+    -- and the reason is the traveller's own sentence -- it belongs to the row, not to a screen.
+    -- Both stay NULL for a trip that was never aborted, so no pre-existing row acquires a
+    -- moment or a reason it never gave.
+    aborted_at TEXT,
+    abort_reason TEXT,
     CHECK (end_at > start_at)
 );
 
