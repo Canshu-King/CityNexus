@@ -1,0 +1,1915 @@
+{
+ "base": "http://localhost:4541",
+ "journey_id_used_to_pass_the_shell_gate": "22222222-2222-4222-8222-222222222222",
+ "viewport": "390 px 宽 × 844 px 高",
+ "locale": "zh-CN",
+ "states_walked": 38,
+ "states": [
+  {
+   "state": "v8:hub",
+   "http_status": 200,
+   "nodes": 256,
+   "body_chars": 641,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双"
+  },
+  {
+   "state": "v8:plan-ranking",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 680,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「plan-ranking」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服"
+  },
+  {
+   "state": "v8:pending-set",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 697,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「pending-set」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务"
+  },
+  {
+   "state": "v8:studio",
+   "http_status": 200,
+   "nodes": 186,
+   "body_chars": 262,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 行程工作台 跟随系统 EN DE 行程工作台 · 多日方案 围绕重要的事塑造行程。 更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。 报告降雨中断 尚未选择住宿 选择住宿 住宿总计 尚未选择 日均出行 尚未选择 步行暴露 尚未选择 方案健康度 受保护 · 约0分钟余量 行程约束检查通过，费用证据不完整 到达、出发和受保护承诺已验证。预算未验证：还有 1 项缺少已验证的供应商价格，因此不给出总价结论。 ✦ CityNexus Copilot 今天 行程 地图 Copilot "
+  },
+  {
+   "state": "v8:stay",
+   "http_status": 200,
+   "nodes": 168,
+   "body_chars": 204,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 住宿选择 跟随系统 EN DE 住宿选择 · 已采集证据 选择锚点，看见行程。 还没有可用的住宿候选 我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。 向这台服务器要一次住宿候选 怎么来的 这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "state": "v8:discover",
+   "http_status": 200,
+   "nodes": 200,
+   "body_chars": 412,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 城市探索 跟随系统 EN DE 准备目的地 先看这座城能不能规划 输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。 目的地 看看能不能规划 真实依据城市探索 说出你真正想要的城市一天。 直接告诉 CityNexus 你想做什么。它会找出符合你行程和已确认预订的真实地点。 密封真实回放 CN / 探索 塑造城市停留 描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。 边界 供应商坐标、营业时间、费用、出行和受保护承诺保"
+  },
+  {
+   "state": "v8:poi-import",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 696,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「poi-import」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器"
+  },
+  {
+   "state": "v8:collections",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 697,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「collections」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务"
+  },
+  {
+   "state": "v8:live",
+   "http_status": 200,
+   "nodes": 278,
+   "body_chars": 612,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 实时行程 跟随系统 EN DE 实时行程 · 已保存 9月28日 04:41 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 Tech Art Center 下一步 · Nexus River Cruise Pier · 公交地铁 · 时长待定 13:20 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数"
+  },
+  {
+   "state": "v8:map",
+   "http_status": 200,
+   "nodes": 207,
+   "body_chars": 476,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Nexus River Cruise Pier 这"
+  },
+  {
+   "state": "v8:trips-activity-detail",
+   "http_status": 200,
+   "nodes": 258,
+   "body_chars": 720,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-activity-detail」），所以留在今天。 还没休息 Demo之旅 上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “"
+  },
+  {
+   "state": "v8:trips-workspace",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 701,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-workspace」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下"
+  },
+  {
+   "state": "v8:bookings",
+   "http_status": 200,
+   "nodes": 251,
+   "body_chars": 592,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 旅行票夹 跟随系统 EN DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选择住宿 这趟行程目前还没有可选的住宿。 到「住宿选择」里找一间可订的房 预订 · 受保护锚点 · 生效中 · 模拟承诺 服务器没有给这项承诺的名字 10月10日 15:30 → 10月10日 16:30 ¥120.00 技术详情 时间已锁定 导入预订 结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。 高"
+  },
+  {
+   "state": "v8:intelligence",
+   "http_status": 200,
+   "nodes": 194,
+   "body_chars": 371,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 智能守护 跟随系统 EN DE 智能守护 · 控制塔 判断前置。硬事实在关口。 DeepSeek 可解读模糊的城市信号。CityNexus 对照行程、供应商状态、预算和承诺权限验证所选操作。 启用可逆恢复 GUARDIAN 就绪 自主恢复保持在权限范围内。 降雨是语义信号。网关在选择操作后检查：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。 DeepSeek→ CityNexus Direct→ 网关→ 领域 智能体运行时来源 这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP"
+  },
+  {
+   "state": "v8:twin",
+   "http_status": 200,
+   "nodes": 183,
+   "body_chars": 326,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 旅行者画像 跟随系统 EN DE 旅行者画像 · 软上下文 有边界的个性化。 显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。 显式 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水 来自此次行程请求 直接应用于当前方案目标。 能力需求 没有记录到明确的能力事实。 学习到的软信号 没有习得信号 来自已完成的行程结果 仅用于排序 · 随证据新鲜度过期。 习得的能力状态 无障碍硬性需求不会从行为里推断出来。 权限边界 你的偏好可改善路线或酒店排名，但不会创建预订、"
+  },
+  {
+   "state": "v8:authoritative",
+   "http_status": 200,
+   "nodes": 298,
+   "body_chars": 858,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 恢复与执行 跟随系统 EN DE V12 · 方案、移动端、EDGE 与画像 权威行程执行。 你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。 刷新真相 这趟行程的方案版本 服务器上还留着的每一份版本，按写入先后排。这一屏只读。 共列出 1 份版本 这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。 版本 1 首次生成 9月28日 04:41 没有父版本 行程正在跑这一份 这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点"
+  },
+  {
+   "state": "v8:agent",
+   "http_status": 200,
+   "nodes": 187,
+   "body_chars": 356,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / Copilot 跟随系统 EN DE 随时问关于这趟行程的任何事 你想改什么？ 可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。 画像上下文就绪 CN / AI 需要改变什么？ 使用自然语言。你的明确预算和受保护时刻在每一步都可见。 我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。 消息 行程 · One Day in Nexus City 询问 Copilot 为什么这样安排？ 如果我多待 60 分钟会怎样？ 找附近的室内地点 我"
+  },
+  {
+   "state": "v8:me",
+   "http_status": 200,
+   "nodes": 209,
+   "body_chars": 295,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ Ci"
+  },
+  {
+   "state": "v8:trash",
+   "http_status": 200,
+   "nodes": 161,
+   "body_chars": 134,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 回收站 这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。 回收站是空的：这台服务器没有报出任何在站里的行程。 再读一次回收站 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "state": "v8:access",
+   "http_status": 200,
+   "nodes": 316,
+   "body_chars": 2129,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 成员与权限 谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。 这一列行程怎么排 这一屏向服务器要的是：最近更新。 创建序 最近更新 出发日期 名称 这一档这一屏核不了（这一列里没有更新时间可比），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。 这一屏给不出的排法 抵达时间序 — 行程列表门没有抵达字段：抵达时刻在行程上下文的锚里，这台服务器没有任何门按它排行程。 已存序 — 这台服务器没有另一个叫「已存」的时刻：行程行上只有创建与更"
+  },
+  {
+   "state": "v8:footprints",
+   "http_status": 200,
+   "nodes": 163,
+   "body_chars": 134,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 足迹 这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。 重读一次 还没有足迹。打开行程，在一站上按「打卡」。 这次行程共有 0 枚足迹。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "state": "v8:trips-poster-entry",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 704,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-poster-entry」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在"
+  },
+  {
+   "state": "v8:trips-itinerary",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 701,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-itinerary」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下"
+  },
+  {
+   "state": "v8:trips-stay",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 696,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-stay」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器"
+  },
+  {
+   "state": "v8:trips-bookings",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 700,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-bookings」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来"
+  },
+  {
+   "state": "v8:trips-spend",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 697,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-spend」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务"
+  },
+  {
+   "state": "v8:auth-recovery-required",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 708,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-recovery-required」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 "
+  },
+  {
+   "state": "v8:auth-no-plan",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 698,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-no-plan」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服"
+  },
+  {
+   "state": "v8:auth-plan-version-history",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 711,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-plan-version-history」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:"
+  },
+  {
+   "state": "v8:auth-journey",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 680,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-journey」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服"
+  },
+  {
+   "state": "v8:auth-trip-studio",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 702,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-trip-studio」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接"
+  },
+  {
+   "state": "v8:auth-preventive",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 701,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-preventive」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下"
+  },
+  {
+   "state": "v8:auth-recovery-truth",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 705,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-recovery-truth」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现"
+  },
+  {
+   "state": "v8:hub-pretrip-checklist",
+   "http_status": 200,
+   "nodes": 257,
+   "body_chars": 707,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「hub-pretrip-checklist」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 ·"
+  },
+  {
+   "state": "legacy/legacy",
+   "http_status": 200,
+   "nodes": 18,
+   "body_chars": 139,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "CITYNEXUS · DETERMINISTIC JOURNEY MODE Journey connection unavailable ERROR · CityNexus request refused (HTTP 403) Retry backend connection"
+  },
+  {
+   "state": "legacy/legacy/",
+   "http_status": 200,
+   "nodes": 18,
+   "body_chars": 139,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "CITYNEXUS · DETERMINISTIC JOURNEY MODE Journey connection unavailable ERROR · CityNexus request refused (HTTP 403) Retry backend connection"
+  },
+  {
+   "state": "wizard:step1",
+   "http_status": null,
+   "nodes": 145,
+   "body_chars": 163,
+   "error": null,
+   "clicked": null,
+   "was_disabled": null,
+   "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步"
+  },
+  {
+   "state": "wizard:step2",
+   "http_status": null,
+   "nodes": 145,
+   "body_chars": 163,
+   "error": null,
+   "clicked": null,
+   "was_disabled": true,
+   "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步"
+  }
+ ],
+ "pageerrors": [
+  "console.error Failed to load resource: net::ERR_CONNECTION_TIMED_OUT",
+  "console.error Failed to load resource: the server responded with a status of 403 (Forbidden)",
+  "console.error Failed to load resource: the server responded with a status of 403 (Forbidden)"
+ ],
+ "tier1_rows_checked": 112,
+ "tally": {
+  "NOT_SEEN_IN_ANY_WALKED_STATE": 109,
+  "DATA_ATTR_ONLY": 1,
+  "ON_SCREEN": 2
+ },
+ "by_file": {
+  "main.tsx": {
+   "rows": 85,
+   "ON_SCREEN": 2,
+   "DATA_ATTR_ONLY": 1,
+   "NOT_SEEN": 82
+  },
+  "V14PreventivePanel.tsx": {
+   "rows": 11,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 11
+  },
+  "V8Experience.tsx": {
+   "rows": 3,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 3
+  },
+  "v8PanelRegistry.tsx": {
+   "rows": 3,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 3
+  },
+  "PoiImportPanel.tsx": {
+   "rows": 2,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 2
+  },
+  "FootprintPanel.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "EstimationLadderPanel.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "V12AuthoritativeJourneyPanel.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "MobilitySheet.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "PendingSetPanel.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "PlanWithAiSheet.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "JourneyTrialSetup.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  },
+  "V12StatePrimitives.stories.tsx": {
+   "rows": 1,
+   "ON_SCREEN": 0,
+   "DATA_ATTR_ONLY": 0,
+   "NOT_SEEN": 1
+  }
+ },
+ "rows": [
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1133,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1394,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "not evaluated",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1399,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "unknown",
+   "verdict": "DATA_ATTR_ONLY",
+   "states_paint": [],
+   "states_data_only": [
+    "wizard:step1",
+    "wizard:step2"
+   ]
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1442,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "preference",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1453,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "preference",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1466,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "preference",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1530,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "No active C4",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 970,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "CityNexus · deterministic journey mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 971,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Connecting to the JourneyTwin",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 980,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "CityNexus · deterministic journey mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 981,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Journey connection unavailable",
+   "verdict": "ON_SCREEN",
+   "states_paint": [
+    "legacy/legacy",
+    "legacy/legacy/"
+   ],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 990,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Retry backend connection",
+   "verdict": "ON_SCREEN",
+   "states_paint": [
+    "legacy/legacy",
+    "legacy/legacy/"
+   ],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 998,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "CityNexus · deterministic journey mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 999,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Commitment-aware recovery",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1008,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "· proposal rejected",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1029,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Control Tower · Delegated Autonomous Journey Agent",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1030,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Tell CityNexus what changed",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1031,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "DeepSeek interprets the city signal and your intent. Hermes-style tool orchestration, policy, and deterministic feasibility gates decide what can actually change.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1035,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Ordinary reversible Activities can run inside the envelope; protected Commitments stay intact unless an explicitly authorized stronger action passes the Gateway.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1041,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Natural-language mission",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1053,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Execution envelope",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1065,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Execute within policy bounds",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1066,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Plan only · no mutation",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1081,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Persisted mission · {mission.id.slice(0, 8)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1090,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Objectives · {mission.objective_codes.join(\" · \") || \"general recovery\"}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1092,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1093,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Schedule drift · {mission.max_schedule_drift_min} min",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1094,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Protected Activities · {mission.protected_activity_ids.length}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1099,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Persisted tool trace · {agentRun.tool_steps.length} calls",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1115,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "No external model calls were available; the mission boundary was persisted safely.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1124,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Proactive Journey Guardian · persistent control plane",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1125,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Journey Operations",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1141,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Activate standing mission",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1148,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Inject city signal + proactive scan",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1156,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Start live Autopilot",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1164,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Provider: heavy rain + route delay",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1172,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Run Predictive Real-City Twin",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1190,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Predictive resilience",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1209,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Observation",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1210,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Inference",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1211,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Solver",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1212,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Policy",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1213,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Mutation",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1217,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Standing Mission · {guardianStatus.standing_mission.status}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1225,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Compiler {guardianStatus.standing_mission.compiler.provider_key}/ {guardianStatus.standing_mission.compiler.model_key}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1256,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Delegation boundary",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1257,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Agent Mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1258,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Operating mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1285,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Auto-accept envelope-safe replans",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1288,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Max automatic cost increase (minor units)",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1302,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Max automatic acceptable loss (minor units)",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1316,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Max automatic schedule drift (minutes)",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1369,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Pre-authorize commitment management within the envelope",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1372,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Policy v{agentPolicy.version} · protected commitment levels {agentPolicy.protected_commitment_levels.join(\", \")} remain server-owned.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1378,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Explainable execution",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1379,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Agent Activity Feed",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1412,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Journey history",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1413,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Plan versions · {reflectSummary.plan_version_chain.length} · replans ·{\" \"} {reflectSummary.replan_history.length} · disruptions ·{\" \"} {reflectSummary.provider_disruptions.length}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1429,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "TravelerTwin Control Tower",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1430,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Inspectable cross-Journey learning",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1431,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Explicit {travelerTwin.explicit_preferences.length} · learned soft {travelerTwin.learned_soft_preferences.length} · confidence {Math.round(travelerTwin.confidence * 100)}% · evidence {travelerTwin.evidence_count}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1436,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Explicit preferences",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1438,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "None recorded.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1449,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "No learned soft evidence yet.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1460,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Conflicts and resolution",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1462,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "No active conflicts.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1471,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Learned evidence is soft planning input only; it never expands budget, payment, Commitment, or autonomy authority.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1478,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Clear learned soft evidence",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1485,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Journey map · backend route evidence",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1499,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Place geometry unavailable · offline evidence mode",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1505,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Closure event",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1514,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Old plan geometry",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1518,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Active proposal geometry",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1569,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Upcoming commitments from JourneyTwin",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1584,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Demo Event Simulator",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1592,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Inject Tech Art closure · {formatTime(closureOccurredAt)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1599,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Journey timeline · active PlanVersion",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1622,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Replan comparison · persisted proposals",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1665,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{proposalDeltaText(selectedProposal, planCurrency)} · protected commitments unchanged",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1681,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Reject",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1687,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Explanations are limited to verified JourneyTwin and ReplanDiff evidence.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1073,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Agent is working…",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1073,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Run Agent mission",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1674,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Confirm server-approved replan",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "name": "main.tsx",
+   "line": 1674,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Accept backend replan",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 160,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "V14 · BEFORE REALITY CHANGED",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 161,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Preventive recovery",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 162,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "A forecast, not a failure, triggered this. Reactive recoveries are owned by the grounded adaptive recovery panel below.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 174,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "TRIGGER",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 183,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "FORECAST",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 203,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Why it acted",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 209,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Plan",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 222,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Protected commitments",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 232,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Authorization",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 168,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "acted before the failure",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+   "name": "V14PreventivePanel.tsx",
+   "line": 168,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "acted after a failure",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "name": "V8Experience.tsx",
+   "line": 2116,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{t( ( { hub: \"mobile.today\", trips: \"mobile.trips\", agent: \"mobile.copilot\", bookings: \"mobile.wallet\", } as Record",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "name": "V8Experience.tsx",
+   "line": 2701,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{greetingFor(new Date().getHours(), t)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "name": "V8Experience.tsx",
+   "line": 2884,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "` makes the browser close the paragraph early, and then the sentence this screen wrote and the sentence the server wrote no longer share one element for a gate to read. */",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "name": "v8PanelRegistry.tsx",
+   "line": 385,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "), }, ]; /** The Trips sub-tabs, same order as the tab strip renders them. */ export const tripsTabPanels: V8PanelEntry",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "name": "v8PanelRegistry.tsx",
+   "line": 539,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "), }, ]; /** * Panels that mount *inside* a page shell at a named anchor, rather than as a route sibling. * * This is the fourth surface, and it exists because \"the page shells stay in the file that defines * them\" (see the header of this file) otherwise left no way for a lane to add a panel *between* two * blocks of a shell without opening the shell. The shell contributes one traversal at the anchor; * everything below it is table data. * * First entry: ORD-0384's pre-trip checklist, which the shell mounted directly under Today's * attention band. Its position is load-bearing and its own comment said why, so the comment * travels with the entry instead of being left behind in a 4 500-line file. */ export const hubAnchorPanels: V8PanelEntry",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "name": "v8PanelRegistry.tsx",
+   "line": 568,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": ", }, ]; /** Renders a registry: one fragment per matching entry, keyed by the entry id. */ export function renderPanels",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "name": "PoiImportPanel.tsx",
+   "line": 462,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "HTTP {failure.status}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "name": "PoiImportPanel.tsx",
+   "line": 669,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "HTTP {readBackFailure.status}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/checkin/FootprintPanel.tsx",
+   "name": "FootprintPanel.tsx",
+   "line": 141,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{footprintTimePhrase(locale, new Date(stamp.stamped_at), timezone)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/estimation/EstimationLadderPanel.tsx",
+   "name": "EstimationLadderPanel.tsx",
+   "line": 74,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{fillLadder(ladderCopyFor(locale, rung.key as LadderCopyKey), rung.vars)}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+   "name": "V12AuthoritativeJourneyPanel.tsx",
+   "line": 118,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "{new Date(next.start_at).toLocaleTimeString([], { hour: \"2-digit\", minute: \"2-digit\" })}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/mobility/MobilitySheet.tsx",
+   "name": "MobilitySheet.tsx",
+   "line": 9,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "min walk",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/pending/PendingSetPanel.tsx",
+   "name": "PendingSetPanel.tsx",
+   "line": 625,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "provider-mesh answered keys: {candidateDoorKeys(candidateDoor).join(\", \") || \"none\"}",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "name": "PlanWithAiSheet.tsx",
+   "line": 1065,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "not_stated",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "name": "JourneyTrialSetup.tsx",
+   "line": 997,
+   "slot": "JSX_CHILD",
+   "band": "B",
+   "literal": "not-asked",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  },
+  {
+   "file": "frontend/src/stories/V12StatePrimitives.stories.tsx",
+   "name": "V12StatePrimitives.stories.tsx",
+   "line": 15,
+   "slot": "JSX_CHILD",
+   "band": "C",
+   "literal": "Weather provider is degraded; frozen mobility facts remain usable.",
+   "verdict": "NOT_SEEN_IN_ANY_WALKED_STATE",
+   "states_paint": [],
+   "states_data_only": []
+  }
+ ],
+ "corpora": [
+  {
+   "state": "v8:hub",
+   "paint": "菜单 / 今天 跟随系统 EN DE 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none pending-set || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,554,44 || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:plan-ranking",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「plan-ranking」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,714,44 || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:pending-set",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「pending-set」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:studio",
+   "paint": "菜单 / 行程工作台 跟随系统 EN DE 行程工作台 · 多日方案 围绕重要的事塑造行程。 更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。 报告降雨中断 尚未选择住宿 选择住宿 住宿总计 尚未选择 日均出行 尚未选择 步行暴露 尚未选择 方案健康度 受保护 · 约0分钟余量 行程约束检查通过，费用证据不完整 到达、出发和受保护承诺已验证。预算未验证：还有 1 项缺少已验证的供应商价格，因此不给出总价结论。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v8-trip-studio studio-stay-total studio-walking studio-feasibility v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:stay",
+   "paint": "菜单 / 住宿选择 跟随系统 EN DE 住宿选择 · 已采集证据 选择锚点，看见行程。 还没有可用的住宿候选 我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。 向这台服务器要一次住宿候选 怎么来的 这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v8-stay-explorer stay-no-options stay-generate estimation-ladder ladder-rung-method v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-ladder-rungs method || data-ladder-has-amount no || data-ladder-has-source no || data-ladder-has-confidence no || data-ladder-binding no || data-ladder-can-switch no || data-ladder-can-recompute yes || data-ladder-has-candidates no || data-ladder-candidates 0 || data-ladder-amount-field stay.total_amount_minor || data-cnx-field stay.evidence.source || data-ladder-tier method || data-ladder-trigger no_candidates || data-ladder-key ladder.method.noCandidates || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:discover",
+   "paint": "菜单 / 城市探索 跟随系统 EN DE 准备目的地 先看这座城能不能规划 输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。 目的地 看看能不能规划 真实依据城市探索 说出你真正想要的城市一天。 直接告诉 CityNexus 你想做什么。它会找出符合你行程和已确认预订的真实地点。 密封真实回放 CN / 探索 塑造城市停留 描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。 边界 供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。 旅行者意图 证据模式 密封真实回放 实时供应商 合成演示回放 探索并组合 我的收藏 这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。 重读一次 还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。 0 架子 · 0 枚地点 ✦ 今天 行程 地图 Copilot 我的 || 例如：天津、贡山独龙族怒族自治县 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 证据模式 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language prep-panel prep-query prep-check v13-discovery v13-discovery-goal v13-discover-submit collection-panel collection-retry collection-empty collection-tally v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-retryable false || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,594,44"
+  },
+  {
+   "state": "v8:poi-import",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「poi-import」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:collections",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「collections」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:live",
+   "paint": "菜单 / 实时行程 跟随系统 EN DE 实时行程 · 已保存 9月28日 04:41 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 Tech Art Center 下一步 · Nexus River Cruise Pier · 公交地铁 · 时长待定 13:20 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Nexus River Cruise Pier 10月10日 15:30 前到达 · 余量约0分钟 15:30 预计到达 · 公交地铁 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 00:21 上海时间 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || Rain detected || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v8-live-journey live-journey-current v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution live-recovery live-next live-no-proposal v8-live-secondary live-toolbar-actions live-update-location live-report-rain mode-walk mode-bicycle mode-transit mode-auto mode-ride_hail live-leave-by v10-live-execution-panel v10-current-step v18-copilot-dock nav-hub nav-trips nav-map || data-theme-choice system || data-decision-active false || data-cursor-status VALID || data-route-legs 0 || data-viewport-state on-target || data-now-activity-id 98af0be5-966b-5f49-b699-5dfdceea8ab6 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:map",
+   "paint": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Nexus River Cruise Pier 这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。 只看打过 这一天去的地点 Old Town Gate Riverside Museum Central Food Hall Tech Art Center Nexus River Cruise Pier Skyline Dinner House 查看全部 6 个地点 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 在地图上定位 Old Town Gate || 在地图上定位 Riverside Museum || 在地图上定位 Central Food Hall || 在地图上定位 Tech Art Center || 在地图上定位 Nexus River Cruise Pier || 在地图上定位 Skyline Dinner House || 展开或收起地点清单 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution map-selected-stop v8-map-footprint-state v8-map-footprint-filter map-stops map-stops-box map-stop-3a58c470-524c-5854-aa39-6c37a350eb80 map-stop-abe4e842-249e-516f-ac43-b41695083792 map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6 map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036 map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837 map-stops-capture v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-route-legs 0 || data-viewport-state on-target || data-stops-expanded false || data-stops-pressed true || data-press-height 244 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:trips-activity-detail",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-activity-detail」），所以留在今天。 还没休息 Demo之旅 上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading continuation-unconfirmable today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,454,44 || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:trips-workspace",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-workspace」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:bookings",
+   "paint": "菜单 / 旅行票夹 跟随系统 EN DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选择住宿 这趟行程目前还没有可选的住宿。 到「住宿选择」里找一间可订的房 预订 · 受保护锚点 · 生效中 · 模拟承诺 服务器没有给这项承诺的名字 10月10日 15:30 → 10月10日 16:30 ¥120.00 技术详情 时间已锁定 导入预订 结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。 高级：结构化数据 权限始终明确 导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。 扫描票据代码 ZXing 确定性解码 · 仍需确认 打开扫描器 多模态收件箱 将确认带入行程 已读取 · 已核对 · 已记住 复制行程链接 粘贴确认信息 手动填写 粘贴的确认 提取文本草稿 确认截图 图片字节仅用于此次提取请求。 提取图片草稿 权威记忆 已保存的行程事实 1 个受保护事实 Nexus River Cruise Pier · 中途Nexus River Cruise Pier · 10月10日 15:30受保护 · 置信度待定上游那句摘要的原文不在这一屏 等你审核的确认单 这里没有等你审核的确认单。 ✦ 今天 行程 地图 Copilot 我的 || {\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"} || 粘贴铁路、航班、酒店或场地确认文本 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 确定性二维码和条形码扫描器 || 行程收件箱提取 || 已保存的行程事实 || 等你审核的确认单 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v8-bookings bookings-no-stay bookings-no-stay-action wallet-commitment wallet-commitment-simulated wallet-commitment-title wallet-commitment-window wallet-commitment-amount wallet-commitment-technical bookings-advanced bookings-json-input journey-link-copy inbox-tab-paste inbox-tab-manual v13-2-memory v13-2-memory-summary-held inbox-pending-queue inbox-pending-empty v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-simulated true || data-monetary-status KNOWN || data-cnx-field journey_link_url || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,714,44"
+  },
+  {
+   "state": "v8:intelligence",
+   "paint": "菜单 / 智能守护 跟随系统 EN DE 智能守护 · 控制塔 判断前置。硬事实在关口。 DeepSeek 可解读模糊的城市信号。CityNexus 对照行程、供应商状态、预算和承诺权限验证所选操作。 启用可逆恢复 GUARDIAN 就绪 自主恢复保持在权限范围内。 降雨是语义信号。网关在选择操作后检查：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。 DeepSeek→ CityNexus Direct→ 网关→ 领域 智能体运行时来源 这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP 未完成可验证证明，因此不宣称原生 Hermes MCP 策略 建议 版本 1 · 预授权交通权限 操作后关口 可行 方式变更后硬约束已验证 承诺 受保护 持久时刻不会被静默打破 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v17-runtime-status v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,714,44"
+  },
+  {
+   "state": "v8:twin",
+   "paint": "菜单 / 旅行者画像 跟随系统 EN DE 旅行者画像 · 软上下文 有边界的个性化。 显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。 显式 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水 来自此次行程请求 直接应用于当前方案目标。 能力需求 没有记录到明确的能力事实。 学习到的软信号 没有习得信号 来自已完成的行程结果 仅用于排序 · 随证据新鲜度过期。 习得的能力状态 无障碍硬性需求不会从行为里推断出来。 权限边界 你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。 可检查的溯源可用 来源不明的无障碍证据，不作为无障碍依据。 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,534,44"
+  },
+  {
+   "state": "v8:authoritative",
+   "paint": "菜单 / 恢复与执行 跟随系统 EN DE V12 · 方案、移动端、EDGE 与画像 权威行程执行。 你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。 刷新真相 这趟行程的方案版本 服务器上还留着的每一份版本，按写入先后排。这一屏只读。 共列出 1 份版本 这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。 版本 1 首次生成 9月28日 04:41 没有父版本 行程正在跑这一份 这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。 zh 权威行程 从方案到边缘的单一真相 冻结证据 现在 Tech Art Center 活跃 下一步 Nexus River Cruise Pier 计划中 15:30 Old Town Gate 已完成 Riverside Museum 已完成 Central Food Hall 已完成 4 Tech Art Center 活跃 5 Nexus River Cruise Pier 计划中 6 Skyline Dinner House 计划中 服务端执行真相 · 可审计 标记 出发中 行程工作台 · 起草后接受 调整权威行程 在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。 相同证据 6 个活动 1 个受保护锚点 无草稿变更 • Old Town Gate ○ Riverside Museum ○ Central Food Hall ○ Tech Art Center ○ Nexus River Cruise Pier ○ Skyline Dinner House 按住一项活动，拖到新的位置，就是一次草稿改动。 锁定/受保护位置为确定性 预览无状态；接受将重新检查活跃方案和证据 方案版本 1 · 首次生成 预览影响 接受编辑 V14 · 现实变了 有据可依的自适应恢复 重新读取恢复方案 这趟行程没有等待你决定的恢复方案。 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 行程执行状态 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v12-authoritative-page plan-version-history history-count history-retention history-list history-row history-version history-source history-created history-parent history-current history-no-restore history-locale v12-authoritative-panel v12-trip-studio v12-studio-drag-hint v12-preview-impact v12-accept-edit v14-recovery-truth v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-current true || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,714,44"
+  },
+  {
+   "state": "v8:agent",
+   "paint": "菜单 / Copilot 跟随系统 EN DE 随时问关于这趟行程的任何事 你想改什么？ 可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。 画像上下文就绪 CN / AI 需要改变什么？ 使用自然语言。你的明确预算和受保护时刻在每一步都可见。 我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。 消息 行程 · One Day in Nexus City 询问 Copilot 为什么这样安排？ 如果我多待 60 分钟会怎样？ 找附近的室内地点 我的理解 试算一次改动 在不改动已选方案的前提下，预览时间和成本变化。 受保护 到达 / 出发锚点 · 未发起支付 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || 可以问为什么这样安排、试算一个假设、找地点，或报告正在发生的中断… || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 建议问题 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language v15-copilot v15-copilot-input v15-copilot-submit v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:me",
+   "paint": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-testid v8-mobile-menu topbar-theme topbar-language v8-me me-mode-toggle push-capability me-advanced v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-contrast-role control state || data-capability RECORD_ONLY || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:trash",
+   "paint": "菜单 / 今天 跟随系统 EN DE 回收站 这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。 回收站是空的：这台服务器没有报出任何在站里的行程。 再读一次回收站 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 回收站 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language journey-trash-panel trash-empty trash-refresh v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:access",
+   "paint": "菜单 / 今天 跟随系统 EN DE 成员与权限 谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。 这一列行程怎么排 这一屏向服务器要的是：最近更新。 创建序 最近更新 出发日期 名称 这一档这一屏核不了（这一列里没有更新时间可比），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。 这一屏给不出的排法 抵达时间序 — 行程列表门没有抵达字段：抵达时刻在行程上下文的锚里，这台服务器没有任何门按它排行程。 已存序 — 这台服务器没有另一个叫「已存」的时刻：行程行上只有创建与更新两个时刻，它们各自已经有档了。 选一条行程 One Day in Nexus City 现在在看：One Day in Nexus City 这条行程上发生过什么 成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：plans.generated。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：domain_mutation。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：booking.created。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：payment.capture.succeeded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.started。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：activity.completed。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：activity.completed。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：journey.outcome.recorded。 9月28日 04:41 这台服务器报了一个本屏说不出人话的动作：activity.completed。 这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。 每一档能做什么，按这台服务器自己的 ACL 行读出来的 管理员 能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。 能力编号（服务器原样叫法） 协作者 能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。 能力编号（服务器原样叫法） 所有者 能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。 能力编号（服务器原样叫法） 查看完整权限规则 可见性每一档，后果就在同一句里 仅个人 别人打不开，拿到链接也打不开。 获得链接者可见 有链接的人不用先进成员名单就能读。 受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。 公开 全网公开可见。 私到公、公到私，各写一句对方会怎样 转换后这条行程全网可见——原先看不见的人会开始能看见。 转换后，已经在跟踪这条行程的人会失去访问权限。 改权限之前，屏会先这样问 只动对方的档位，你的不变 对方将获得对应权限。 你把这条行程交到别人手上 对方将获得对应权限，你的权限也会随之变化。 这台设备没读到你自己的档位 对方将获得对应权限，你的权限也会随之变化。 你撤销某个人的访问权限 对方将失去这条行程的权限。 邀请 这台服务器没有给出邀请的有效期，所以这里不声称有一个。 这台服务器给了成员数（0），没给上限，所以这里不说这条行程满没满。 发一条带有效期的邀请 这条邀请带哪一档可见性 仅个人 获得链接者可见 受邀者可见 公开 到期时刻（留空就是这条不会自己失效） 签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。 发出邀请 这条行程发出去的邀请 邀请门答了，一条也没发过。 发一条凭链接可读的邀请 这条行程的成员，按成员门答的 服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。 这台服务器允许这条行程同时占 2 枚管理员席位，现在占了 0 枚。 成员门答了，名单是空的——这是它的答案，不是没读到。 去邀请那一格 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 成员与权限 || 这一列行程怎么排 || 这条行程上发生过什么 || 每一档能做什么，按这台服务器自己的 ACL 行读出来的 || 可见性每一档，后果就在同一句里 || 私到公、公到私，各写一句对方会怎样 || 改权限之前，屏会先这样问 || 邀请 || 发一条带有效期的邀请 || 这条行程发出去的邀请 || 这条行程的成员，按成员门答的 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language access-panel access-server-read access-sort access-sort-current access-sort-tier-CREATION_ORDER access-sort-tier-RECENT_UPDATE access-sort-tier-DEPARTURE_DATE access-sort-tier-TITLE access-order-verdict access-sort-absent access-no-tier-access.noTierArrival access-no-tier-access.noTierSaved access-trip-roster access-trip-row access-trip-open-0 access-chosen access-activity-caveat access-activity-list access-door-state access-role-ladder access-role-scope access-role-details access-visibility-ladder access-switch-lines access-confirm-table access-invite-ttl access-invite-quota || data-theme-choice system || data-journey 22222222-2222-4222-8222-222222222222 || data-state NOT_VERIFIABLE || data-reason no_updated_at_in_row || data-compared journeys.updated_at || data-position first || data-event-type plans.generated domain_mutation booking.created payment.capture.succeeded journey.started journey.outcome.recorded activity.completed || data-role ADMIN COLLABORATOR OWNER || data-level PRIVATE LINK_READ INVITEES_ONLY PUBLIC || data-switch PRIVATE->PUBLIC PUBLIC->PRIVATE || data-case access.whenOtherGainsOnly access.whenActorLosesStanding access.whenRoleUnread removal || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,94,44"
+  },
+  {
+   "state": "v8:footprints",
+   "paint": "菜单 / 今天 跟随系统 EN DE 足迹 这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。 重读一次 还没有足迹。打开行程，在一站上按「打卡」。 这次行程共有 0 枚足迹。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || CityNexus Copilot || Mobile navigation",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language footprint-panel footprint-retry footprint-empty footprint-tally v18-copilot-dock nav-hub nav-trips nav-map nav-agent nav-me || data-theme-choice system || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none"
+  },
+  {
+   "state": "v8:trips-poster-entry",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-poster-entry」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:trips-itinerary",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-itinerary」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:trips-stay",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-stay」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:trips-bookings",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-bookings」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:trips-spend",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「trips-spend」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-recovery-required",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-recovery-required」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-no-plan",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-no-plan」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-plan-version-history",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-plan-version-history」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-journey",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-journey」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap true || data-yield-slot 336,714,44 || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-trip-studio",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-trip-studio」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-preventive",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-preventive」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:auth-recovery-truth",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「auth-recovery-truth」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "v8:hub-pretrip-checklist",
+   "paint": "菜单 / 今天 跟随系统 EN DE 这个地址没有对应的屏（它点的是「hub-pretrip-checklist」），所以留在今天。 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 现在没有可比的方案。 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点。 去城市探索 再读一次 技术详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 || Product navigation || 打开导航 || Theme: following the system. Choose light, dark, or back to system. || Switch language || 通知 · 无活跃 || 需要关注 || 行程地图 || Map || Old Town Gate || Riverside Museum || Central Food Hall || Tech Art Center || Nexus River Cruise Pier || Skyline Dinner House || 视野正落在这段行程上 || 行前清单 || 待规划 || CityNexus Copilot || Mobile navigation || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-contrast-role state control || data-testid v8-mobile-menu topbar-theme topbar-language address-no-screen today-heading today-when hub-secondary-actions hub-plan-with-ai journey-link-copy today-attention-band today-attention today-hero today-now today-next today-hero-cta today-clock-source v8-maplibre-panel v8-maplibre-canvas map-viewport-controls map-viewport-reset v8-map-gesture-hint v8-map-attribution today-strip today-stay pretrip-checklist pretrip-empty pretrip-empty-action hub-glance-empty plan-ranking rank-none || data-theme-choice system || data-cnx-field journey_link_url checklist_items || data-attention clear || data-no-coordinates false || data-now true || data-clock-source SCENE || data-cursor-status VALID || data-next-source SERVER_PROJECTION || data-route-legs 0 || data-viewport-state on-target || data-cnx-allowed-keys plan_feasibility_open recovery_needs_decision || data-count 0 || data-yield-to-surface false || data-idle-compact true || data-rest-overlap false || data-yield-slot none || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "legacy/legacy",
+   "paint": "CITYNEXUS · DETERMINISTIC JOURNEY MODE Journey connection unavailable ERROR · CityNexus request refused (HTTP 403) Retry backend connection",
+   "data": "data-theme light || data-testid journey-status || data-cnx-field http_status || data-cnx-value 403"
+  },
+  {
+   "state": "legacy/legacy/",
+   "paint": "CITYNEXUS · DETERMINISTIC JOURNEY MODE Journey connection unavailable ERROR · CityNexus request refused (HTTP 403) Retry backend connection",
+   "data": "data-theme light || data-testid journey-status || data-cnx-field http_status || data-cnx-value 403"
+  },
+  {
+   "state": "wizard:step1",
+   "paint": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 || 例如：天津、东京、新加坡 || 例如：某地站 / 机场 || Switch language || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-testid trial-setup trial-scroll trial-steps trial-step-1 trial-step-2 trial-step-3 trial-step1-body trial-city trial-supported-cities trial-supported-toggle trial-supported-group-supported trial-supported-group-rule-supported trial-supported-none-supported trial-supported-group-needs_lookup trial-supported-group-rule-needs_lookup trial-supported-none-needs_lookup trial-supported-group-unknown trial-supported-group-rule-unknown trial-supported-row-厦门 trial-supported-identity-厦门 trial-supported-fields-厦门 trial-supported-row-北京 trial-supported-identity-北京 trial-supported-fields-北京 trial-supported-row-上海 trial-supported-identity-上海 trial-supported-fields-上海 trial-supported-row-天津 trial-supported-identity-天津 trial-supported-fields-天津 || data-answered no || data-target trial-city trial-arrival trial-departure || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  },
+  {
+   "state": "wizard:step2",
+   "paint": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步 || 例如：天津、东京、新加坡 || 例如：某地站 / 机场 || Switch language || 模拟舞台（暂无场景）：这台部署没有开模拟舞台",
+   "data": "data-theme light || data-testid trial-setup trial-scroll trial-steps trial-step-1 trial-step-2 trial-step-3 trial-step1-body trial-city trial-supported-cities trial-supported-toggle trial-supported-group-supported trial-supported-group-rule-supported trial-supported-none-supported trial-supported-group-needs_lookup trial-supported-group-rule-needs_lookup trial-supported-none-needs_lookup trial-supported-group-unknown trial-supported-group-rule-unknown trial-supported-row-厦门 trial-supported-identity-厦门 trial-supported-fields-厦门 trial-supported-row-北京 trial-supported-identity-北京 trial-supported-fields-北京 trial-supported-row-上海 trial-supported-identity-上海 trial-supported-fields-上海 trial-supported-row-天津 trial-supported-identity-天津 trial-supported-fields-天津 || data-answered no || data-target trial-city trial-arrival trial-departure || data-open false || data-scene-phase ready || data-state NO_STAGE"
+  }
+ ]
+}
