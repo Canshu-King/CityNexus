@@ -1,9 +1,11 @@
 ORD-0522 r3 (self-declared) -- the facts card measured on the bytes the line actually ships, and
 the two declarations that make it legible, with both generations read for real
 
-lane review/2d2d7428-ord0522-facts-card-line-verify-r3  head 8aa0b3b0d96dce99c64130f03fba00c21901a275  live tip 1c785a2d897888bb4089f7a324a3934f85f5f016  merge-tree rc=0 CONFLICT 0
+lane review/2d2d7428-ord0522-facts-card-line-verify-r3  readings taken at head 41efc453ea35758abf4e6a1481d8a3859d7cdaef  live tip at that moment 1c785a2d897888bb4089f7a324a3934f85f5f016  merge-tree rc=0 CONFLICT 0
+(this page is committed on top of that head, so the delivered ref points one commit further; the
+ledger block names that head and cites this file's blob -- an artifact cannot know its own bytes)
 staged through the product's own doors only, on this lane's own files: line store D:/moodle/_qoder_q_ord0522_20261001/_r3_line.db / candidate store D:/moodle/_qoder_q_ord0522_20261001/_r3_cand.db
-rendered 2026-10-02 00:17:01  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)
+rendered 2026-10-02 00:19:55  interpreter that wrote this page D:/moodle/CityNexus/.venv/Scripts/python.exe (the suite ran on D:/moodle/CityNexus/.venv/Scripts/python.exe)
 
 0. WHY THIS ROUND IS NOT A REPEAT OF r2c
    r2c read a sentence I had to stage by hand, and its 'before' figure was an EMULATION. The line
@@ -74,8 +76,10 @@ rendered 2026-10-02 00:17:01  interpreter that wrote this page D:/moodle/CityNex
    contract parity: OpenAPI 3.1.0; formal 174; runtime 174; missing 0; extra 0
    credential ruler, both readings: stripped of credential env -> CREDENTIAL_GATE_CLEAR (scanned_files=539 hits_total=5);
    same tree, environment carrying DEEPSEEK_API_KEY -> LIVE_CREDENTIAL_IN_ENVIRONMENT. Fact about the ruler's start-up, not about these bytes.
-   tsc exit 0 and vite build exit 0 (/tmp/tsc0522r7.txt, /tmp/build0522r7.txt).
-   2 files against the tip: backend/tests/test_qoder_ord0479_dictionary_key_shape.py, frontend/src/styles.css
+   tsc exit 0 and vite build exit 0 on the delivered head (/tmp/tsc0522r9.txt, /tmp/build0522r9.txt);
+   that rebuild produced entry /assets/index-DLj2IFkn.js and sha1 af58444bfeb624474a570de870768e9f62ce2590 -- identical to the bytes the arms were read from.
+   3 files against the tip (2 of them carry the readings; this page is listed but its own blob is not):
+   backend/tests/test_qoder_ord0479_dictionary_key_shape.py, frontend/src/styles.css, review/ord0522/FINDINGS_0522_R3.txt
    The line-side bundle's content sha1 is NOT in this artifact: dist/ is gitignored and the
    candidate build overwrote that directory, so I cannot re-fetch those bytes now. The line
    readings are therefore pinned by the commit they were built from (dc9dc10f, entry {}) and
