@@ -1,0 +1,26 @@
+cff87c64 tree sweep, the damage it caused, and the repair - all measured at run time
+
+A. worktrees
+   remaining registered for this lane now: 3
+     D:/moodle/_qoder_ord0505r3_20261001/wt            3d22d93b [review/cff87c64-ord0505-journey-abort-r3]
+     D:/moodle/_qoder_ord0505r5_20261001/wt            1a4547c0 [review/cff87c64-ord0505-journey-abort-r5]
+     D:/moodle/_qoder_r_ord0437/wt                     a269c5d6 [review/R-ord0471-route-guards-r1]
+   disk free now: 18G
+
+B. the junction hazard, as measured
+   control: `find <tree>/frontend -maxdepth 1 -type l` on a tree that DOES hold the junction returns 0 line(s) - so `-type l` is not a reliable junction detector, which is what let the sweep through
+   trees whose frontend/node_modules is a reparse point onto the shared target: 56
+   entry counts seen through those reparse points: [399] - non-zero means every one of them resolves to the repaired install
+
+C. the repair
+   target entries now: 399
+   source entries      : 399
+   target .package-lock sha256[:16]: b46f0ba6eba6c65d
+   source .package-lock sha256[:16]: b46f0ba6eba6c65d
+   root dependencies of the repo lock not matched by the source: 0
+   typescript: Version 5.9.3
+   openapi-typescript: v7.13.0
+
+   the rule this leaves behind: a worktree holding a junction is unlinked with
+   `cmd /c rmdir <link>` BEFORE `git worktree remove`; `find -type l` is not a
+   detector for Windows junctions, and `git worktree remove` will write through one.
