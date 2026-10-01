@@ -527,7 +527,7 @@ def _scenario_problem(
                 )
     slots: list[SolverV2Slot] = []
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
-    for activity in activities:
+    for activity_index, activity in enumerate(activities):
         # Anchors are already scheduled by the solver as immutable nodes.
         # Duplicating them as slots makes the same visit consume time twice.
         if str(activity.id) in execution_anchor_ids:
@@ -540,8 +540,18 @@ def _scenario_problem(
         duration = max(1, original_end - original_start)
         tags = set(_load(place.tags_json if place else "[]", []))
         outdoor = bool(tags.intersection({"outdoor", "scenic", "waterfront"}))
+        # P80/P95 mobility deterioration is a material future failure mode:
+        # the bounded counterfactual sacrifices the first future visit rather
+        # than pretending the same itinerary still fits.  Leave that slot
+        # with no KEEP/replacement option so the deterministic solver must
+        # take its explicit DROP branch; the materializer then builds a real
+        # shorter standby from the active catalog and captured mobility.
+        forced_mobility_drop = (
+            scenario_type in {"route_plus_20", "route_plus_30"}
+            and activity_index == current_index + 1
+        )
         options: list[SolverV2Option] = []
-        if scenario_type != "mutable_place_closes" or not outdoor:
+        if not forced_mobility_drop and (scenario_type != "mutable_place_closes" or not outdoor):
             options.append(
                 SolverV2Option(
                     option_key=f"KEEP:{activity.id}",
@@ -556,7 +566,7 @@ def _scenario_problem(
                     risk_penalty_milli=600 if scenario_type == "rain_earlier" and outdoor else 0,
                 )
             )
-        for candidate in candidate_places[:3]:
+        for candidate in ([] if forced_mobility_drop else candidate_places[:3]):
             candidate_tags = set(_load(candidate.tags_json, []))
             if (
                 scenario_type == "replacement_disappears"
@@ -899,6 +909,37 @@ def _refresh_shadow_plan_mobility(
     return bool(gate.passed)
 
 
+def _branch_trigger_contract(
+    journey: Journey,
+    active: PlanVersion,
+    simulation: CounterfactualSimulation,
+    dropped_activity_ids: list[str],
+    dropped_place_ids: list[str],
+    activities: list[Activity],
+) -> dict[str, Any]:
+    contract = contract_for_simulation(
+        scenario_type=simulation.scenario_type,
+        dropped_activity_ids=dropped_activity_ids,
+        dropped_place_ids=dropped_place_ids,
+        simulation_id=simulation.id,
+        parent_plan_id=active.id,
+    )
+    # A mobility branch may sacrifice a future visit, but its trigger is the
+    # observed delay at the current cursor.  The server therefore scopes the
+    # branch to both the affected future suffix and the current activity.
+    if simulation.scenario_type == "MOBILITY_SHIFT":
+        current = next((item for item in activities if item.id == journey.current_activity_id), None)
+        if current is not None:
+            contract["affected_activity_ids"] = sorted(
+                set(contract.get("affected_activity_ids") or []) | {str(current.id)}
+            )
+            if current.place_id:
+                contract["affected_place_ids"] = sorted(
+                    set(contract.get("affected_place_ids") or []) | {str(current.place_id)}
+                )
+    return contract
+
+
 def _materialize_shadow_plan(
     session: Session,
     journey: Journey,
@@ -912,8 +953,10 @@ def _materialize_shadow_plan(
         return None
     if simulation.scenario_type not in {"PLACE_CLOSURE", "MOBILITY_SHIFT", "WEATHER_SHIFT"}:
         return None
-    if _load(simulation.evidence_json, {}).get("shadow_plan_version_id"):
-        return session.get(PlanVersion, _load(simulation.evidence_json, {}).get("shadow_plan_version_id"))
+    existing_id = _load(simulation.evidence_json, {}).get("shadow_plan_version_id")
+    existing = session.get(PlanVersion, existing_id) if existing_id else None
+    if existing is not None and existing.lifecycle == "STANDBY":
+        return existing
     dropped = {
         str(item.get("slot_key"))
         for item in changes
@@ -972,18 +1015,11 @@ def _materialize_shadow_plan(
         planning_mode=active.planning_mode,
         status="CANDIDATE",
         lifecycle="STANDBY",
-        trigger_contract_json=_json(
-            contract_for_simulation(
-                scenario_type=simulation.scenario_type,
-                dropped_activity_ids=sorted(dropped),
-                dropped_place_ids=[
-                    str(item.place_id) for item in activities
-                    if item.id in dropped and item.place_id
-                ],
-                simulation_id=simulation.id,
-                parent_plan_id=active.id,
-            )
-        ),
+        trigger_contract_json=_json(_branch_trigger_contract(
+            journey, active, simulation, sorted(dropped),
+            [str(item.place_id) for item in activities if item.id in dropped and item.place_id],
+            activities,
+        )),
         source="REPLAN",
         parent_plan_version_id=active.id,
         total_cost_minor=max(0, active.total_cost_minor - sum(item.estimated_cost_minor for item in activities if item.id in dropped)),
@@ -1050,7 +1086,7 @@ def _materialize_shadow_plan(
                 travel_from_prev_min=travel_min,
                 estimated_cost_minor=source.estimated_cost_minor,
                 currency=source.currency,
-                status="PLANNED",
+                status=source.status if str(source.id) in protected_ids else "PLANNED",
                 locked=source.locked,
                 metadata_json=_json(metadata),
                 created_at=_now(),
@@ -1293,19 +1329,11 @@ def simulate_counterfactuals(
             refreshed = _refresh_shadow_plan_mobility(
                 session, journey, active_plan, existing_shadow, row, changes, activities
             )
-            existing_shadow.trigger_contract_json = _json(
-                contract_for_simulation(
-                    scenario_type=row.scenario_type,
-                    dropped_activity_ids=sorted(dropped),
-                    dropped_place_ids=[
-                        str(item.place_id)
-                        for item in activities
-                        if item.id in dropped and item.place_id
-                    ],
-                    simulation_id=row.id,
-                    parent_plan_id=active_plan.id,
-                )
-            )
+            existing_shadow.trigger_contract_json = _json(_branch_trigger_contract(
+                journey, active_plan, row, sorted(dropped),
+                [str(item.place_id) for item in activities if item.id in dropped and item.place_id],
+                activities,
+            ))
             if refreshed:
                 evidence["shadow_plan_version_id"] = existing_shadow.id
                 evidence["shadow_plan_status"] = existing_shadow.status
