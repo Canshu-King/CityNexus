@@ -252,6 +252,18 @@ Engine, with real provider identity and live mobility. It remains a
 coursework-estimated result, not a claim that unknown opening/cost facts are
 production verified.
 
+The post-run R14 regression gate was rerun on the current source:
+
+```text
+uv run pytest tests/test_r14_terminal_disruption_recovery.py \
+  tests/test_agent_mission_runtime.py \
+  tests/test_v14_grounded_adaptive_recovery.py \
+  tests/test_v1923_final_code_gate.py \
+  tests/test_replan_completion_truth.py \
+  tests/test_sol_concurrency_and_remap.py -q
+58 passed, 1 warning
+```
+
 ## Current domestic-WB2api checkpoint: Kunming
 
 This is the latest R14 execution after the Guilin checkpoint. The same
