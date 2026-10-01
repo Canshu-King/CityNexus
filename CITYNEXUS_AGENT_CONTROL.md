@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0541 屏面复用句亲读（包工头裁语 02:35 下一手）：day15 那一代产物、手机竖屏视口（DIMENSION 同 `frontend/playwright.ord0541-P.config.ts:26` 记录的那一形制），两按的屏上原句逐字抄回；0 产品字节、0 次推枝 @03:06+08
+
+**〇、坐标。** 现读权威尖＝`5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`（逐字 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。我这一趟跑的是**已落地的判据**，不是我新写的：`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:169`（A1）、`:234`（A2）、`:278`（A3）、`:336`（A4）、`:362`（A5），配置 `frontend/playwright.ord0541-P.config.ts:26` 就是手机竖屏视口（DIMENSION 同 `frontend/playwright.ord0541-P.config.ts:26` 记录的那一形制）、`hasTouch`、`locale zh-CN`。裁语两句我照守：`created_by` 进键（A5 不翻）、`frontend/src/i18n/LocaleContext.tsx` 我一字节没碰。
+
+**一、怎么把它跑在「day15 那一代」上的（先说形制，因为读数只在产物层才算数）。**
+- 判据需要一个**带排程的行程**：`poster-open` 那颗开关只在有生效计划且有活动时才在屏上（`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:38` 钉死了那枚行程 id）。我没有自造数据，用的是随该单落地的种子件 `frontend/review/ord0541/instruments/make_lane_db_r3.py`——它以 `?mode=ro` 打开号令者的门库、走 sqlite backup API 落成我自己的库，打印的读数是 `journeys 3 / plan_versions 19 / activities 134 / places 17`，并且报出「有生效计划的活动行程 2 枚、判据用的那枚 1 枚」。落点：`D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/ord0535_0541screen.db`； bundle 那一趟用的是它的只读源备份 `run/ord0535_0541bundle.db`，我在自己那枚副本上把上一次留下的 `journey_share_grants` 从 12 行清到 0 行（打印前后计数），所以第二趟是从**空花名册**起手的。
+- 产物层：`npx vite build --outDir D:/moodle/_qoder_82f55d8a_ord0535_20261001/dist/day15-82f` 退出码 0，入口资产 `/assets/index-CXnmNy6z.js`；我另起 `vite preview --port :41541 --outDir 我自己的 dist`，它的 `/api/v1` 走 `frontend/vite.config.ts:140` 那段 `preview.proxy`（配置注释自己写了：preview 不继承 server.proxy，没这段就只能在 dev 上取证）。**同一枚入口资产名**也出现在 `:4783` 那台 day15 的 index 里（只读 GET，没写他那台库），所以我这份 dist 与他代次同一枚产物字节口径。
+- 那两句确实在产物里，不在源码里而已：从 `:4783` 取的 `index-CXnmNy6z.js` 共 1591525 B，逐串命中 `没有再写入` 各按一回、`确实写入` 各按一回、`档位为链接可读` 各按一回、`wrote nothing` 各按一回、`wrote a new grant` 各按一回。
+
+**二、屏上原句（bundle 那一趟 `run/ord0541_screen_bundle_r1.log`，GEN＝`bundle-day15gen-5a4cdbd2-82f`，逐字抄自 `poster-share-result` 的 innerText，不是 data-\*）。**
+- 第一按：`已分享：这一次按下确实写入了一条授权。服务器自己的授权列表对这趟旅行答出 单枚复用行，这条链接对应的那一条是 428961a1-e914-492b-a3e1-919fd2558ebf。`（这一按发 POST 各按一回）
+- 第二按：`已分享：这一次按下没有再写入。服务器对这趟旅行的授权列表里本来就带着一条仍然有效、档位为链接可读的记录 428961a1-e914-492b-a3e1-919fd2558ebf，交给你的长图地址就是它那一条（读出 单枚复用行）。`（**这一按发 POST 0 次**，列表门回读仍是 1 行，句子点名的 id 与第一按同一枚、交出的链接同一枚）
+- 读数对：`rows_after_first` 1 与 `rows_after_second` 1（同源同一次读法，见 `frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:194`），所以「复用」是服务器那一条被读回来的事实，不是屏上算出来的。
+
+**三、四种形状都读了（A5，`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:362`）**：zh-CN 390×844、zh-CN 1280×900、en 390×844、en 1280×900 —— 四形的 `posts_on_first_press` 都是 1、`posts_on_second_press` 都是 0；屏上整张纸的字数分别 428、429、593、593，两句话在每一形都各自出现且指向同一枚 grant id（zh 那两形抄在上节，en 那两形原文是 `Shared. This press wrote a new grant: …` 与 `Shared. This press wrote nothing: the server's grant list for this trip already carried a standing …`）。
+
+**四、两种「不许说复用」的形也读了。**
+- A3（`:278`）：`PUBLIC`、`PRIVATE`、`INVITEES_ONLY`，以及一枚有 token 的 `LINK_READ` 被撤销后的 `LINK_READ_revoked`、和 `LINK_READ_without_token` —— 每一种都是 POST 各按一回、句子说「确实写入」、`reused_wording` 逐枚为 false。裁语那句「恰为 `LINK_READ` 才算可复用链接」在屏上是分得开的。
+- A4（`:336`）：把列表门答坏（这台设备读到 `http_status=500`），屏上说的是 `没有分享出去：授权列表没有给出答复（状态码 500），这台设备无从确认。`，且 `posts` 0、链接框 零枚新增——**没答上就不写、也不给链接**，这是我最想亲验的一格，过了。
+
+**五、两趟同代复算的闸口读数。** dev 那一趟（GEN＝`dev-tip-5a4cdbd2`，front `:41538`）与 bundle 那一趟（front `:41541`）都是 **5 枚全绿 / 0 红**；两趟各写 5 份读数件，共 10 份在 `run/evidence/ord0541-screen-dev/` 与 `run/evidence/ord0541-screen-bundle/`（一份臂一枚，A1 那份 4 行读数含两枚原句全文）。另外我把自己名下那两枚回收站判据在同代重跑过：6 枚全绿（上一块已报，块头逐字含「尖上同代复算」）。
+
+**六、这一趟没做的（按现读说，不遮掩）。**
+- **真机没上**：所有读数都是桌面 Chromium 的手机视口（手机竖屏视口与 `hasTouch`，数值同上引配置行），不是用户那台平板/手机；按常设规矩真机那格仍 `NOT_RUN`，我不宣称「手机显示正常」。
+- 没在 `:4783`/`:4787` 那台上按：那一按会往号令者的 canary 库写授权行，属共享状态；我只对它做了只读 GET（index 与资产字节）。要我在他的代次上真按两下，说一句我就跑，跑前先把那枚行程的授权花名册读数抄下来。
+- 没跑反件：这一趟是「亲读」不是「判据建设」，判据自己带反件（`frontend/review/ord0541/instruments/cut_ord0541_mutant_r1.py` 那枚 tier-blind 变异已在落地的证据块里跑过，我没重做别人的量具，量具代码路径按令不重写）。
+- 没碰契约与生成物：`contracts/openapi.yaml` 与 `frontend/src/generated/api.ts` 在这代就是我读到的样子，本趟 0 字节改动、0 次 push（连 review 枝都没推，因为没有可推的改动）。
+
+**七、现场。** 后端 `:41537`（pid 40504 之后我换起过一次，现 pid 见下）→ 我这趟结束时仍开着的是：`:41537` 后端跑尖树、库 `run/ord0535_0541bundle.db`（空花名册起手、被两趟判据各写过几行）；`:41538` vite dev（pid 46976，同一棵树）；`:41541` 我的 bundle preview（`vite preview` 命令行里带 `--outDir` 指名我自己的 dist）。工作树在 `cmdr/tip-5a4cdbd2-read`＝尖本身，`git status --porcelain` 干净（构建产物落在我 lane 的 `dist/`，没进树）。没碰 `:8000`、`:4781`、`:4782`、`:8693`，没跑 `demo/reset`。
+
+**八、下一手（我不自造单号）。** 这一格按裁语已尽：屏面复用句在 day15 那一代、手机竖屏、四形两语都读了，两按的差别与「没答上就不写」都在屏上取到了原句。要我再往前一步，可选三样，你点一样我做一样：①在 `:4783`/`:4787` 上真按两下取同一读数的对照件；②把这三枚邻居闸（0357/0366/0447）按它们自己的 config 复跑取真读数（上一块报了那 12 枚红的 harness 归因，这一趟我确认了「harness 套错」的形态确实存在——同一个 spec 用对配置就能全绿）；③行号修正 r2（`09514bfa5b2c1f56b5aaed23e38b19cf517ef3d4`）仍待你排落地，我在现尖逐枚回读它那 10 枚锚点全部为真，不用重取。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 03:25 · 回收站 V9 臂落地：尖 `bf275dc045f1e9561c31965f759380072143353f`，族测试十五枚全绿；驳回理由句已按词面修门入账
 
 **〇、回验（落地后现读）**
