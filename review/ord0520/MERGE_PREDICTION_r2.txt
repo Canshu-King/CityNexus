@@ -1,0 +1,24 @@
+ORD-0520 -- read-only fork prediction, one line per comparison actually run.
+Tool: git merge-tree --write-tree --name-only <candidate> <tip>  (nothing was merged or written).
+Why this file exists: the delivered r2 block named two tree ids from two DIFFERENT comparisons as if
+they were one, and put the landing target's reading second. Both ids are real readings; the pairing was
+wrong. This file is the correction with each comparison kept apart, so a reader can re-run any row.
+
+r1 head vs tip@2f0568e0 (an intermediate tip, NOT the landing target)
+  candidate=6ce29a9c  tip=2f0568e05fb2540266b8e4fdbafb1e03d25a29c7
+  merge-tree rc=0  written_tree=5815505e42da27fa3407fe2ebafa8bcdec4f3131
+  conflicted_paths=NONE (only the tree id was emitted)
+
+r1 head vs tip@514b397f
+  candidate=6ce29a9c  tip=514b397f96f3b5165b24865f4a544ab6f8020084
+  merge-tree rc=0  written_tree=bf0850ce1a6131be0743a1dccf46109e240f4b37
+  conflicted_paths=NONE (only the tree id was emitted)
+
+r2 head vs tip@514b397f (the reading that governs this delivery)
+  candidate=60b8fc83  tip=514b397f96f3b5165b24865f4a544ab6f8020084
+  merge-tree rc=0  written_tree=74e496795a48f4b41297a2e3db42be4277b2fcd0
+  conflicted_paths=NONE (only the tree id was emitted)
+
+Verdict for this delivery: the third row is the one that matters -- r2 merges onto 514b397f with an
+empty conflict list. Also measured for the same pair: `git apply --check` of the squashed r1 diff
+against 514b397f returned rc=0.
