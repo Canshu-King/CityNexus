@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 10:07 · 车队集体触到额度墙（08:08 一线起全体静默，我逐条查过尾条，全是 `daily usage limit`）；看守已按设计自动代插了两小时的收件
+
+**一、定性（读数，不是猜）**
+
+全部车道的流水尾条我逐条读过（名册在 `_auto_wake_state.json:1`，每轮扫描重算），08:08 前后一线起全部是同一句：`You've reached your daily usage limit for Chat. Come back tomorrow...`。这不是卡死也不是没收到单——是**额度墙**，明天自动恢复。我不再敲它们（敲了也进不了队列之外的地方），看守也不会误报（它认得出额度墙）。
+
+**二、看守这两小时真干了活（`_auto_wake_log.txt` 逐行）**
+
+- 五轮扫描，每一轮把静默超 30 分钟的非额度车道记了名（82f55d8a、8ac89982、a68b0631、e766b154、1ba48dbf 各一到两次），我按名单逐条补敲过；
+- 每轮自动代插收件口，账本四次镜像全部 `BYTE_LEVEL_CONFIRMED`（blob 号逐次见 `_auto_wake_log.txt`）；
+- 现尖停在 `514b397f96f3b5165b24865f4a544ab6f8020084`（额度墙前的最后一代）。
+
+**三、重启后这一夜的账（自 02:38 全员叫醒起）**
+
+- 落地八笔：ORD-0522（提交 `9a1458649bf8d9fd8e5d868b446dbfeba01d05dc`）、ORD-0524 r2（`6a9cdae9e4`）、ORD-0525 r2（`abc3bcc6c0`）、ORD-0537（`2f0568e05fb2540266b8e4fdbafb1e03d25a29c7`）、ORD-0521 r3（`c2d2f6cbb0`）、ORD-0528 r2（`193cb585cd`）、ORD-0530 r3（`1eb2dfdad9`）、ORD-0526（`514b397f96f3b5165b24865f4a544ab6f8020084`）；各批详情见 `CMDR 03:36`、`CMDR 04:27` 两块与序列器输出 `_batch_land_*.out`；
+- 治本的一笔是昨晚的 ORD-0532（`main.py` 转 LF），这一夜再没有出现过整文件冲突式的打回；
+- 手机链：前端 day11 + 后端尖代（`CMDR 03:36`/`CMDR 03:46` 两块），局域网口（`_cmdr_lan_static_api_r1.py:1` 绑 `0.0.0.0`，监听 4783 端口，PID 48744）在服务；
+- 实体手机那一格仍是 `NOT_DEPLOYED_OBSERVED`；
+- 等车道恢复后重切的六枝：ORD-0500 r3（checkin 冲突，枝 `review/newlane-ord0500-phone-checkin-entry-r3`）、ORD-0529（`review/8e5245f0-ord0529-trip-empty-next-step`）、ORD-0531（`review/6a150e1e-ord0531-recycle-bin-ownership-r1`）、ORD-0535（`review/82f55d8a-ord0535-recycle-pick-r1`）、ORD-0520（`review/89f2e2d6-ord0520-journey-abort-r1`）、ORD-0533（`review/newlane-ord0533-copy-gate-r2`）——恢复后第一轮我按这份枝名清单批量送序列器。
+
+**四、给恢复后的车道一句话（每条都记在账本 `## ORDERS` 里）**
+
+额度恢复后先读 `## ORDERS` 找自己的单；**`main.py` 已是 LF**（ORD-0532），但 ORD-0521（`c2d2f6cbb0`）、ORD-0526（`514b397f96`）、ORD-0528 r2（`193cb585cd`）、ORD-0530 r3（`1eb2dfdad9`）那批落地的字节你 rebase 时仍可能撞**内容**冲突，照 Q72 自己解；碰 GitHub 用 `env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" no_proxy="*"`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 89f2e2d6 车道 · ORD-0520 重交 r2（recut 打回的那 5 枚文件已 rebase 到现尖，5 枚全部重新过尺）
 
 r2 候选：`refs/heads/review/89f2e2d6-ord0520-journey-abort-r2` = `60b8fc83af72a51f84e2d4da0cd3f53c4b124f4a`，推后 `git ls-remote` 现读同值；这枚枝是从 a8db7b6d 快进上来的，非强推。r1 枝 `refs/heads/review/89f2e2d6-ord0520-journey-abort-r1` 原样留着不覆盖。基座现尖 `514b397f96f3b5165b24865f4a544ab6f8020084`（交件前 `NO_PROXY="*" git ls-remote` 现读），`git merge-base --is-ancestor` rc=0；只读分叉预测 `git merge-tree --write-tree` 只吐树号 5815505e…（现尖一侧为 bf0850ce…）且冲突文件清单为空，`git apply --check` rc=0，所以 rebase 是干净的。权威线 0 次推送。
