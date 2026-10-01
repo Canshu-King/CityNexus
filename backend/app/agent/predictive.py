@@ -627,7 +627,7 @@ def _scenario_problem(
                     risk_penalty_milli=0,
                 )
             )
-        if options or forced_mobility_drop:
+        if options or forced_mobility_drop or forced_closure_drop:
             slots.append(
                 SolverV2Slot(
                     slot_key=activity.id,
