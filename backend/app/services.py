@@ -879,11 +879,33 @@ def _place_duration(place: Place) -> int:
         return 60
 
 
+def _templates_resting_on_unsourced_hours(
+    templates: Sequence[Sequence[tuple[str, str, str, str]]], places: Mapping[str, Any]
+) -> int:
+    """How many day sequences contain a stop whose place never states its opening hours.
+
+    ORD-0543 widened the template leg so a city that holds places without hours can still be drawn,
+    but the minutes used for those stops are the product's own working band, not the venue's claim.
+    The count keeps that difference on the answer instead of in a comment: a reader of the shortfall
+    can see how much of the schedule rests on unsourced minutes.
+    """
+
+    total = 0
+    for template in templates:
+        if any(
+            pid in places and _place_window(places[pid]) is None
+            for pid, *_ in (tuple(row) for row in template)
+        ):
+            total += 1
+    return total
+
+
 def _catalogue_templates(
     places: Mapping[str, Place],
     travel: Callable[[str, str], int],
     *,
     day_start_minutes: int = 9 * 60,
+    day_end_minutes: int = 18 * 60,
     variants: int = 3,
 ) -> list[list[tuple[str, str, str, str]]]:
     """Compose the template shape out of whatever the city's catalogue really holds.
@@ -902,12 +924,35 @@ def _catalogue_templates(
     (ids break ties, so the order is reproducible), a stop that cannot fit before its own
     closing time is dropped rather than squeezed in, and the variants rotate the queue so the
     candidates are genuinely different plans instead of one plan three times.
+
+    ORD-0543: a place that never states hours is now placed inside `day_start_minutes` to
+    `day_end_minutes` - declared here, and *not* presented as the venue's opening hours. The
+    count of day sequences that rest on those minutes travels with the shortfall answer as
+    `day_sequences_unsourced_hours`, so "composed" and "composed on unsourced minutes" stay
+    tellable apart by a reader of the response rather than of this comment.
     """
+
+    band = (day_start_minutes, day_end_minutes)
+    if day_end_minutes <= day_start_minutes:
+        # A band that closes before it opens cannot host a stop: refuse the widening rather than
+        # schedule anything inside a window that does not exist.
+        band = None
 
     ordered = sorted(
         (place for place in places.values() if _place_window(place)),
         key=lambda place: (_place_window(place) or (0, 0))[0],
     )
+    # ORD-0543 (commander ruling: widen this leg): a city whose places do not state opening hours
+    # used to compose zero day sequences, and every door behind a schedule then reported "no
+    # feasible candidates" as if the city were empty. Those stops are now packed, but strictly after
+    # every place that does state hours (so a real window is never displaced to make room for a
+    # guess), and strictly inside the band named on the parameters below - the product's own working
+    # band, not a claim about the venue. Nothing here writes opening hours back into the store.
+    unsourced = sorted(
+        (place for place in places.values() if not _place_window(place)),
+        key=lambda place: str(place.id),
+    )
+    ordered = ordered + unsourced
     if not ordered:
         return []
 
@@ -918,8 +963,11 @@ def _catalogue_templates(
         for place in sequence:
             window = _place_window(place)
             if window is None:
-                continue
-            opened, closed = window
+                if band is None:
+                    continue
+                opened, closed = band
+            else:
+                opened, closed = window
             earliest = day_start_minutes if previous is None else previous_end + travel(
                 previous, place.id
             )
@@ -1891,6 +1939,16 @@ def generate_plans(
         for sequence, item in enumerate(schedule, start=1):
             aid = deterministic_id(f"activity:{plan_id}:{sequence}")
             travel = activity_facts[sequence - 1].travel_from_prev_min
+            # ORD-0543: a stop drawn by the widened template leg sits in the product's working band,
+            # not in a window the venue stated. The row says which of the two it is, so "the plan
+            # exists" cannot quietly become "the plan is sourced" - anchor stops keep their own
+            # provenance and are not labelled here.
+            item_place = places.get(item.place_id)
+            activity_metadata = dict(item.metadata)
+            if item.anchor_role is None and item_place is not None:
+                activity_metadata["hours_basis"] = (
+                    "STATED_OPENING_HOURS" if _place_window(item_place) else "PRODUCT_WORKING_BAND"
+                )
             session.add(
                 Activity(
                     id=aid,
@@ -1913,7 +1971,7 @@ def generate_plans(
                     currency=journey.budget_currency,
                     status="PLANNED",
                     locked=item.locked,
-                    metadata_json=dump(dict(item.metadata)),
+                    metadata_json=dump(activity_metadata),
                     created_at=now,
                     updated_at=now,
                 )
@@ -1938,6 +1996,12 @@ def generate_plans(
                 "places_in_catalog": len(places),
                 "city_services_in_catalog": len(services),
                 "day_sequences_available": len(raw_templates),
+                # ORD-0543: how many of those sequences contain at least one stop whose place never
+                # states opening hours - the difference between "the city can be drawn" and "the
+                # drawing rests on the product's working band", counted from `places`, not asserted.
+                "day_sequences_unsourced_hours": _templates_resting_on_unsourced_hours(
+                    raw_templates, places
+                ),
                 "requested_candidates": candidate_count,
                 # Which candidate died on which named rule (services assembles this; the
                 # route forwards `details` verbatim, so no main.py change is needed).
