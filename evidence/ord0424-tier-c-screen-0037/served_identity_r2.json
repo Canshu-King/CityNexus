@@ -1,0 +1,49 @@
+{
+ "static": "http://127.0.0.1:4541",
+ "api": "http://127.0.0.1:7041",
+ "assets": [
+  {
+   "asset": "index.html",
+   "status": 200,
+   "served_sha1": "f46d2796f6026e318ad08b2479845d9334dda630",
+   "disk_sha1": "f46d2796f6026e318ad08b2479845d9334dda630",
+   "equal": true
+  },
+  {
+   "asset": "/assets/index-DEIONDj6.js",
+   "status": 200,
+   "served_sha1": "03f6e007cea0a5348739d865f8265669955a9a41",
+   "disk_sha1": "03f6e007cea0a5348739d865f8265669955a9a41",
+   "equal": true
+  },
+  {
+   "asset": "/assets/index-CF-Aj6pQ.css",
+   "status": 200,
+   "served_sha1": "4732361e642cfc45b66800332d0fd875accb4e83",
+   "disk_sha1": "4732361e642cfc45b66800332d0fd875accb4e83",
+   "equal": true
+  }
+ ],
+ "all_served_bytes_equal_disk": true,
+ "missing_asset_status": 404,
+ "why_that_matters": "an SPA that answers 200 + index.html for a missing chunk would let a broken build look served; this server answers 404",
+ "route_fallback": {
+  "status": 200,
+  "body_equals_disk_index": true
+ },
+ "backend_identity_marker_rows": [
+  [
+   "1d64acf5-3f5f-48e8-a7b4-9d7a37996edb",
+   "ord0424-tier-c-r1"
+  ]
+ ],
+ "journeys_via_api": 1,
+ "journeys_in_my_copy": [
+  [
+   "22222222-2222-4222-8222-222222222222",
+   "One Day in Nexus City",
+   "ACTIVE"
+  ]
+ ],
+ "shared_preview_db": "opened mode=ro and copied with the SQLite backup API; 0 writes"
+}
