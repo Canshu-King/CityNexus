@@ -349,7 +349,7 @@ export function PoiImportPanel({
         </div>
         <span className="v8-evidence-label">
           <span className="status-dot" />
-          {t("poiImport.channelLocal")}
+          {poiImportCopy(locale, "channelLocal")}
         </span>
       </div>
 

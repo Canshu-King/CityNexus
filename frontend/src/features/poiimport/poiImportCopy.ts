@@ -31,7 +31,10 @@ export type PoiImportCopyKey =
   | "collecting"
   | "collectedCount"
   | "collectAlready"
-  | "collectNothingConfirmed";
+  | "collectNothingConfirmed"
+  /* ORD-0545: the channel badge came over from `t("poiImport.channelLocal")`, which ORD-0533 had to
+     fill because this screen's own table did not hold it.  The words are that order's, unchanged. */
+  | "channelLocal";
 
 const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   exitsLead: {
@@ -101,6 +104,14 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   collectNothingConfirmed: {
     zh: "写入应答了，但架子上读不回这一枚。在它读回来之前，这里不说“已收在”。",
     en: "The write answered, but the shelf did not give these back. Nothing is called collected until it does.",
+  },
+  /* The badge next to the screen's title.  It carries no `{...}` value because the screen states it
+     the same way whatever it is showing: the parser is local and no link is opened.  Both halves are
+     ORD-0533's words, moved rather than reworded -- `git diff` on this order shows the pair as one
+     deletion from `LocaleContext.tsx` and one insertion here. */
+  channelLocal: {
+    zh: "本地解析，不打开链接",
+    en: "Local parse, no links opened",
   },
 };
 
