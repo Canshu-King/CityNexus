@@ -616,6 +616,56 @@ def _plain_text_cost(
         + r"]?"
     )
     labels = list(re.finditer(label_pattern, text, re.IGNORECASE))
+    price_pattern = re.compile(
+        r"(?P<amount>\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)\s*(?P<currency>"
+        + re.escape("\u5143")
+        + r"|CNY|RMB|"
+        + re.escape("\u00a5")
+        + "|"
+        + re.escape("\uffe5")
+        + "|円|JPY"
+        + r")\s*(?:\(\s*(?P<period>[^)]{1,100})\))?",
+        re.IGNORECASE,
+    )
+
+    def _direct_ticket_price() -> dict[str, Any] | None:
+        """Parse a ticket-context amount when the page has no price label."""
+
+        candidates: list[tuple[bool, re.Match[str], str]] = []
+        for match in price_pattern.finditer(text):
+            before = text[max(0, match.start() - 80):match.start()]
+            if not re.search(
+                r"门票|套票|票价|入园|成人|大人|一般|全价|admission\s+fee|entrance\s+fee|ticket",
+                before,
+                re.IGNORECASE,
+            ):
+                continue
+            explicit_audience = bool(
+                re.search(r"成人|大人|一般|全价|adult|general", before, re.IGNORECASE)
+            )
+            candidates.append((explicit_audience, match, before))
+        if not candidates:
+            return None
+        _, match, _ = next(
+            (item for item in candidates if item[0]),
+            candidates[0],
+        )
+        raw_currency = (match.group("currency") or "CNY").upper()
+        currency = (
+            "JPY" if raw_currency in {"円", "JPY"}
+            else "CNY" if raw_currency in {"元", "CNY", "RMB", "¥", "￥"}
+            else raw_currency
+        )
+        return {
+            "status": "VERIFIED_PROVIDER",
+            "amount_minor": round(float(match.group("amount").replace(",", "")) * 100),
+            "currency": currency,
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": text[max(0, match.start() - 80):match.end() + 40],
+            "pricing_basis": "TICKET_CONTEXT_LABEL",
+        }
+
     label = next(
         (candidate for candidate in labels if re.search(
             r"\d+(?:[.,]\d+)?\s*(?:元|円|CNY|RMB|¥|JPY)|免费|免費|無料|free",
@@ -624,6 +674,9 @@ def _plain_text_cost(
         labels[0] if labels else None,
     )
     if label is None:
+        direct = _direct_ticket_price()
+        if direct is not None:
+            return direct
         return {
             "status": "UNKNOWN",
             "amount_minor": None,
@@ -642,15 +695,6 @@ def _plain_text_cost(
         excerpt = excerpt[: next_label.start()]
     excerpt = excerpt.translate(
         str.maketrans({"\uff08": "(", "\uff09": ")"})
-    )
-    price_pattern = re.compile(
-        r"(?P<amount>\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)\s*(?P<currency>"
-        + re.escape("\u5143")
-        + r"|CNY|RMB|"
-        + re.escape("\u00a5")
-        + "|円|JPY"
-        + r")\s*(?:\(\s*(?P<period>[^)]{1,100})\))?",
-        re.IGNORECASE,
     )
     seasonal: list[dict[str, Any]] = []
     for match in price_pattern.finditer(excerpt):
@@ -673,6 +717,9 @@ def _plain_text_cost(
                 "source_url": source_url,
                 "raw": excerpt,
             }
+        direct = _direct_ticket_price()
+        if direct is not None:
+            return direct
         return {
             "status": "UNKNOWN",
             "amount_minor": None,

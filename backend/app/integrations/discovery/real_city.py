@@ -31,7 +31,10 @@ from app.db.models import (
     StayJourneyOption,
     WebObservation,
 )
-from app.integrations.provider_config import trust_environment_for_public_providers
+from app.integrations.provider_config import (
+    ExternalProviderSettings,
+    trust_environment_for_public_providers,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -706,6 +709,79 @@ class NominatimGeocoder:
                     opening_hours={},
                     metadata={"display_name": row.get("display_name"), "osm_type": osm_type},
                     cost_evidence=cost_evidence_from_tags(row.get("extratags"), source="nominatim"),
+                )
+            )
+        return candidates
+
+    def close(self) -> None:
+        if self._owned_client:
+            self.client.close()
+
+
+class PhotonCityGeocoder:
+    """Photon fallback for a city anchor when Nominatim is unavailable.
+
+    Photon supplies an OSM-backed coordinate only.  It does not promote opening,
+    cost, or a Place identity; Overpass remains the discovery source for the
+    actual catalogue.  The fallback exists at the resolver boundary so a
+    transient Nominatim outage cannot prevent an otherwise live city discovery.
+    """
+
+    provider_key = "photon"
+
+    def __init__(self, *, client: httpx.Client | None = None, base_url: str | None = None):
+        self.client = client or httpx.Client(
+            timeout=settings.real_city_timeout_seconds,
+            trust_env=trust_environment_for_public_providers(),
+        )
+        self.base_url = (
+            base_url or ExternalProviderSettings().photon_base_url
+        ).rstrip("/")
+        self._owned_client = client is None
+
+    def search(self, query: str, *, city: str, limit: int) -> list[DiscoveryCandidate]:
+        response = self.client.get(
+            f"{self.base_url}/api/",
+            params={"q": f"{query}, {city}", "limit": min(limit, 10)},
+            headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+        )
+        response.raise_for_status()
+        features = (response.json() or {}).get("features") or []
+        candidates: list[DiscoveryCandidate] = []
+        for feature in features:
+            properties = feature.get("properties") or {}
+            coordinates = (feature.get("geometry") or {}).get("coordinates") or []
+            if len(coordinates) < 2 or properties.get("osm_id") is None:
+                continue
+            try:
+                latitude, longitude = float(coordinates[1]), float(coordinates[0])
+            except (TypeError, ValueError):
+                continue
+            osm_type = str(properties.get("osm_type") or "place")
+            name = properties.get("name") or properties.get("city") or query
+            category = str(
+                properties.get("type")
+                or properties.get("osm_value")
+                or properties.get("osm_key")
+                or "service"
+            )
+            candidates.append(
+                DiscoveryCandidate(
+                    provider_key=self.provider_key,
+                    external_id=_external_id(self.provider_key, f"{osm_type}/{properties['osm_id']}"),
+                    name=str(name),
+                    category=category,
+                    latitude=latitude,
+                    longitude=longitude,
+                    tags=(category, "real_city"),
+                    opening_hours={},
+                    metadata={
+                        "photon_type": properties.get("type"),
+                        "countrycode": properties.get("countrycode"),
+                    },
+                    cost_evidence=cost_evidence_from_tags(
+                        properties.get("extra"), source=self.provider_key
+                    ),
                 )
             )
         return candidates
@@ -1443,29 +1519,60 @@ def capture_real_city_candidates(
         candidates = []
         overpass_attempts: list[dict[str, Any]] = []
         anchor = journey_anchor
+        nominatim_status = "NOT_CALLED"
+        photon_status = "NOT_CALLED"
         if not settings.real_city_enabled:
             live_error = "REAL_CITY_DISABLED"
         else:
             geocoder = NominatimGeocoder()
+            photon_geocoder = PhotonCityGeocoder()
             poi = OverpassPOIProvider()
             stage = "anchor_geocode"
             try:
-                # Nominatim grounds the Journey/city anchor and names; Overpass
-                # owns bounded category discovery around that server-derived anchor.
+                # Nominatim is the primary anchor source. Photon is an identified
+                # OSM-backed fallback for a resolver outage/empty answer; it only
+                # supplies coordinates, while Overpass still owns the catalogue.
                 city_label = _resolver_city_label(journey.city_code)
                 context = session.get(JourneyTripContext, journey.id)
                 arrival = _load_json(context.arrival_anchor_json if context else None, {})
                 anchor_query = str(arrival.get("location") or city_label)
-                grounded = (
-                    geocoder.search(anchor_query, city=city_label, limit=1)
-                    if anchor is None
-                    else []
-                )
+                grounded: list[DiscoveryCandidate] = []
+                if anchor is None:
+                    try:
+                        grounded = geocoder.search(anchor_query, city=city_label, limit=1)
+                        nominatim_status = "CAPTURED" if grounded else "NO_RESULTS"
+                    except (
+                        httpx.HTTPError,
+                        KeyError,
+                        TypeError,
+                        ValueError,
+                        AttributeError,
+                        RuntimeError,
+                    ) as exc:
+                        nominatim_status = live_failure_reason(exc)
+                    if not grounded:
+                        try:
+                            grounded = photon_geocoder.search(
+                                anchor_query, city=city_label, limit=1
+                            )
+                            photon_status = "CAPTURED" if grounded else "NO_RESULTS"
+                        except (
+                            httpx.HTTPError,
+                            KeyError,
+                            TypeError,
+                            ValueError,
+                            AttributeError,
+                            RuntimeError,
+                        ) as exc:
+                            photon_status = live_failure_reason(exc)
+                else:
+                    nominatim_status = "NOT_NEEDED"
+                    photon_status = "NOT_NEEDED"
                 if anchor is None and grounded:
                     anchor = {
                         "latitude": grounded[0].latitude,
                         "longitude": grounded[0].longitude,
-                        "source": "nominatim_city_anchor",
+                        "source": f"{grounded[0].provider_key}_city_anchor",
                     }
                 if anchor is None:
                     raise RuntimeError("NO_JOURNEY_DERIVED_CITY_ANCHOR")
@@ -1488,14 +1595,39 @@ def capture_real_city_candidates(
                     )
                     overpass_attempts = []
                 if not candidates:
-                    # The bounded fallback is a *second* attempt at the same bounded
-                    # question, so it must be asked with the same words: `city_code` is
-                    # our identifier, not a place name, and sending it asked Nominatim
-                    # for "tea shops, CN-TIANJIN" (ORD-0099 ①, measured).
+                    # The bounded fallback is a second attempt at the same question.
+                    # Keep the same city label and use Photon if Nominatim is the
+                    # provider that just failed; neither fallback can promote a POI
+                    # without the provider-backed catalogue path below.
                     stage = "fallback_geocode"
-                    candidates = geocoder.search(query, city=city_label, limit=limit)
+                    try:
+                        candidates = geocoder.search(query, city=city_label, limit=limit)
+                        nominatim_status = "CAPTURED" if candidates else "NO_RESULTS"
+                    except (
+                        httpx.HTTPError,
+                        KeyError,
+                        TypeError,
+                        ValueError,
+                        AttributeError,
+                        RuntimeError,
+                    ) as exc:
+                        nominatim_status = live_failure_reason(exc)
+                    if not candidates:
+                        try:
+                            candidates = photon_geocoder.search(query, city=city_label, limit=limit)
+                            photon_status = "CAPTURED" if candidates else photon_status
+                        except (
+                            httpx.HTTPError,
+                            KeyError,
+                            TypeError,
+                            ValueError,
+                            AttributeError,
+                            RuntimeError,
+                        ) as exc:
+                            photon_status = live_failure_reason(exc)
                 provider_status = {
-                    "nominatim": "CAPTURED",
+                    "nominatim": nominatim_status,
+                    "photon": photon_status,
                     # An answered mirror owns the answer even when it found nothing; only
                     # "no endpoint replied" is a failure-shaped status.
                     "overpass": "CAPTURED"
@@ -1531,6 +1663,7 @@ def capture_real_city_candidates(
                 )
             finally:
                 geocoder.close()
+                photon_geocoder.close()
                 poi.close()
         if live_error or not candidates:
             if _is_tianjin_replay_city(journey.city_code):
@@ -1552,9 +1685,12 @@ def capture_real_city_candidates(
                 candidates = []
                 mode = "live-unavailable"
                 provider_status = {
-                    "nominatim": "UNAVAILABLE",
-                    "overpass": "UNAVAILABLE",
-                    "anchor": journey_anchor,
+                    "nominatim": nominatim_status,
+                    "photon": photon_status,
+                    "overpass": "CAPTURED"
+                    if any(a.get("answered") for a in overpass_attempts)
+                    else "UNAVAILABLE",
+                    "anchor": anchor,
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,

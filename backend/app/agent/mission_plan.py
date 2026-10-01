@@ -69,6 +69,11 @@ _ACTION_TOOLS = (
     "cancel_refundable_booking",
     "request_commitment_change",
 )
+_STRATEGY_TOOLS = (
+    "acquire_place_facts",
+    "estimate_place_facts",
+    "generate_plans",
+)
 
 
 def build_mission_plan(
@@ -136,7 +141,15 @@ def build_mission_plan(
             None,
             requires_authority=True,
         )
-    allowed_tools = (*_READ_TOOLS, "request_replan") if autonomy == "PLAN_ONLY" else (*_READ_TOOLS, *_ACTION_TOOLS)
+    # Fact acquisition and candidate generation are strategy-layer actions. They
+    # do not select or activate a plan, so an autonomous real-city mission may
+    # use them before recovery mutation. PLAN_ONLY keeps its historical
+    # proposal-only surface.
+    allowed_tools = (
+        (*_READ_TOOLS, "request_replan")
+        if autonomy == "PLAN_ONLY"
+        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_ACTION_TOOLS)
+    )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
         autonomy=autonomy,

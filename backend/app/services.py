@@ -605,6 +605,18 @@ def _coursework_estimate_covers(place: Place) -> bool:
     )
 
 
+def _coursework_facts_cover(place: Place) -> bool:
+    """Return whether a coursework candidate has either real or lab facts.
+
+    A provider-complete Place must not need a duplicate agent estimate merely
+    because another stop is being evaluated in the isolated coursework
+    envelope.  Estimates cover only the unresolved stop; they never mutate or
+    upgrade canonical provider truth.
+    """
+
+    return not _place_has_unresolved_visit_facts(place) or _coursework_estimate_covers(place)
+
+
 def _place_verified_cost(place: Place) -> int | None:
     metadata = _place_metadata(place)
     provider_key = getattr(place, "provider_key", None)
@@ -699,7 +711,7 @@ def plan_authority_blocker(
         and str(explanation.get("authority_envelope") or "").upper()
         == COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE
         and bool(coursework_places)
-        and all(place is not None and _coursework_estimate_covers(place) for place in coursework_places)
+        and all(place is not None and _coursework_facts_cover(place) for place in coursework_places)
     )
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS":
         if not coursework_estimate:
@@ -1395,8 +1407,14 @@ def _provisional_catalogue_plan(
         str(place_id): index
         for index, place_id in enumerate(preferred_place_ids or ())
     }
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
     places.sort(
         key=lambda item: (
+            -int(_coursework_facts_cover(item)),
+            -_strategy_place_score(item, strategy_profile)[0],
+            -_strategy_place_score(item, strategy_profile)[1],
+            -int(_coursework_estimate_covers(item)),
             0 if item.id in requested_order else 1,
             requested_order.get(item.id, preferred.get(str(item.category).casefold(), 9)),
             item.id,
@@ -1497,7 +1515,7 @@ def _provisional_catalogue_plan(
     coursework_authority = (
         settings.lab_estimate_authority
         and bool(strategy_estimates)
-        and all(_coursework_estimate_covers(place) for place in selected)
+        and all(_coursework_facts_cover(place) for place in selected)
     )
     version_no = (
         session.scalar(
@@ -1795,6 +1813,47 @@ def _generic_compose_plans(
         )
     if len(places) < 2:
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
+
+    # Agent discovery commonly hands this seam the whole real-city catalogue.
+    # Preserve caller order for demo/fixture and mixed inputs, but let a
+    # provider-backed city use the same fact/profile signal as the native
+    # strategy path. Without this bridge, the explicit-POI seam quietly
+    # reintroduced Place.id order and a verified venue could lose to unresolved
+    # rows merely because their IDs sorted first.
+    provider_backed = len(places) >= 2 and all(
+        str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+        and str(place.external_id or "").casefold().startswith("overpass:")
+        for place in places.values()
+    )
+    if provider_backed:
+        strategy_intent = _latest_strategy_intent(session, journey)
+        strategy_profile = _strategy_profile(strategy_intent)
+        ranked_places = sorted(
+            places.values(),
+            key=lambda place: (
+                -_strategy_place_score(place, strategy_profile)[0],
+                -_strategy_place_score(place, strategy_profile)[1],
+                str(place.id),
+            ),
+        )
+        ranked = [place.id for place in ranked_places]
+        if ranked != selected_ids:
+            record_audit(
+                session,
+                action="strategy.explicit_catalogue_reordered",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after={
+                    "strategy_profile": strategy_profile,
+                    "requested_place_ids": selected_ids,
+                    "ranked_place_ids": ranked,
+                    "ranking_basis": "provider fact completeness, preference category/tags, stable id tie-break",
+                },
+                actor_type="strategy_engine",
+                actor_id="r14-autonomous-strategy",
+            )
+            selected_ids = ranked
 
     constraints = _journey_constraints_with_capabilities(session, journey, active_only=True)
     # A confirmed C4 anchor is a requirement to build around on this path too.
@@ -2108,6 +2167,46 @@ def _generic_compose_variants(
         place.id: place
         for place in session.scalars(select(Place).where(Place.id.in_(ordered))).all()
     }
+    provider_backed = len(places_for_scope) >= 2 and all(
+        str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+        and str(place.external_id or "").casefold().startswith("overpass:")
+        for place in places_for_scope.values()
+    )
+    if provider_backed:
+        strategy_intent = _latest_strategy_intent(session, journey)
+        strategy_profile = _strategy_profile(strategy_intent)
+        ranked = [
+            place.id
+            for place in sorted(
+                places_for_scope.values(),
+                key=lambda place: (
+                    -_strategy_place_score(place, strategy_profile)[0],
+                    -_strategy_place_score(place, strategy_profile)[1],
+                    str(place.id),
+                ),
+            )
+        ]
+        if ranked != ordered:
+            record_audit(
+                session,
+                action="strategy.explicit_catalogue_reordered",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after={
+                    "strategy_profile": strategy_profile,
+                    "requested_place_ids": ordered,
+                    "ranked_place_ids": ranked,
+                    "ranking_basis": "provider fact completeness, preference category/tags, stable id tie-break",
+                },
+                actor_type="strategy_engine",
+                actor_id="r14-autonomous-strategy",
+            )
+            ordered = ranked
+            places_for_scope = {
+                place_id: places_for_scope[place_id]
+                for place_id in ordered
+            }
     lodging_ids = [
         place_id
         for place_id, place in places_for_scope.items()

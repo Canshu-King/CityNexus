@@ -479,6 +479,32 @@ def test_official_price_label_with_full_width_spacing_is_parsed_as_cost(monkeypa
     assert result["cost_evidence"]["amount_minor"] == 3000
 
 
+def test_official_ticket_context_without_price_label_selects_ticket_amount(monkeypatch):
+    from app import fact_acquisition
+
+    body = "<div>团队签单 100元 七星景区+七星岩套票 55元 景区门票预定</div>"
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://www.glqxjq.cn/"),
+    )
+    result = _official_web_facts(
+        object(),
+        "https://www.glqxjq.cn/",
+        retrieved_at="2026-10-01T00:00:00+00:00",
+        reference_at="2026-10-14T09:00:00+08:00",
+    )
+
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 5500
+    assert result["cost_evidence"]["pricing_basis"] == "TICKET_CONTEXT_LABEL"
+
+
 def test_fact_source_binding_requires_exact_provider_identity():
     from app.fact_acquisition import _fact_source_binding
 

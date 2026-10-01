@@ -36,6 +36,19 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
     assert "accept_replan" in plan["approval_required_tools"]
     assert plan["protected_activity_ids"] == ["cruise-activity"]
 
+    execute_plan = build_mission_plan(autonomy="EXECUTE_WITHIN_BOUNDS").as_dict()
+    assert execute_plan["allowed_tools"][:4] == [
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services",
+    ]
+    assert execute_plan["allowed_tools"][4:7] == [
+        "acquire_place_facts",
+        "estimate_place_facts",
+        "generate_plans",
+    ]
+
     with SessionLocal() as session:
         gateway = AgentToolGateway(session)
         request = AgentToolCall(request_id="native-request", agent_id="mcp-client")

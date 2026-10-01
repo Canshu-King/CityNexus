@@ -1328,8 +1328,10 @@ def run_agent_command(
                 journey_id=journey.id,
                 input_text=payload.command,
                 instructions=(
-                    "Follow the supplied CityNexus mission plan in order. You MUST call each listed MCP tool "
-                    f"in this sequence: {', '.join(native_tool_sequence)}. "
+                    "Follow the supplied CityNexus mission plan in order. Call each listed MCP tool "
+                    f"in this sequence when its step is applicable: {', '.join(native_tool_sequence)}. "
+                    "For a real-city strategy mission, additional tools in allowed_tools may be used "
+                    "to acquire provider-backed facts and generate candidate plans before approval. "
                     f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                     f"The CityNexus mission_id is {mission.id}; do not invent or omit either identifier. "
                     + (
