@@ -73,6 +73,19 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
     const reasons = await panel.getByTestId("trash-row-readonly-reason").count();
     const panelText = (await panel.innerText()).replace(/\s+/g, " ");
 
+    /* ORD-0531 r3 merges onto the generation where ORD-0535 landed the per-row "which discard is
+       this" line. Both cells belong on one row, so the line that is not this order's own is asserted
+       here too: if my merge had dropped their span, this screen would read two rows and one feature. */
+    let settledSequence: string[] = [];
+    await expect
+      .poll(async () => {
+        const texts = await panel.getByTestId("trash-row-sequence").allInnerTexts();
+        return texts.filter((text) => /正在读这条行程的丢弃流水/.test(text)).length;
+      }, { timeout: 20_000 })
+      .toBe(0);
+    settledSequence = await panel.getByTestId("trash-row-sequence").allInnerTexts();
+    const sequenceCount = settledSequence.length;
+
     note("V1_V4_as_B", {
       row_titles: rows.map((row) => row.title),
       own_row_text: mine?.all ?? null,
@@ -80,6 +93,8 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
       third_party_row_present: hidden !== undefined,
       action_buttons_on_screen: buttons,
       role_reason_sentences_on_screen: reasons,
+      discard_sequence_lines_on_screen: sequenceCount,
+      discard_sequence_texts: settledSequence,
       uuid_in_rendered_text: UUID.test(panelText),
       panel_text_head: panelText.slice(0, 200),
     });
@@ -95,6 +110,9 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
     expect(reasons).toBe(1);
     expect(buttons).toBe(1);
     expect(UUID.test(panelText)).toBe(false);
+    expect(sequenceCount, "ORD-0535's discard-sequence line must survive this lane's merge").toBe(rows.length);
+    expect(settledSequence.every((text) => text.trim().length > 0), "every row's sequence line must say something").toBeTruthy();
+    expect(settledSequence.every((text) => !text.includes("trash.")), "a copy key must not reach the traveller").toBeTruthy();
     await page.screenshot({ path: `${EVIDENCE}/V1_V4_as_B.png`, fullPage: true });
   });
 
