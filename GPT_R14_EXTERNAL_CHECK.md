@@ -57,3 +57,28 @@ R15 must demonstrate:
 Agent can inspect -> decide which missing truth matters -> find/corroborate real sources -> promote canonical facts -> pivot when evidence is unavailable -> select with the estimate envelope OFF -> execute/replan -> complete.
 
 That is the next capability boundary.
+
+
+## Critical source-binding flaw before autonomous source hunting
+
+Current Agent tool flow exposes a serious semantic boundary issue:
+
+- `AgentToolGateway.acquire_place_facts` accepts `request.source_url`;
+- that URL is passed into `acquire_place_facts(... source_bindings=...)`;
+- `_requested_fact_source_binding()` currently labels the supplied URL as:
+  - `basis=OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY`
+  - `approval=OPERATOR_VERIFIED`
+  - `matched_provider_entity=true`
+
+That is valid only when a human/operator actually performed the binding.
+
+When the caller is the Agent tool surface, a model-supplied URL must NOT be upgraded into operator approval. Otherwise an autonomous model can propose a URL and immediately receive a canonical trust label it did not earn.
+
+R15 must separate these cases before autonomous source discovery is considered trustworthy:
+
+- human/operator-confirmed URL -> `OPERATOR_BOUND_EXACT_ENTITY`;
+- exact URL already present on the provider entity / exact Nominatim row -> `PROVIDER_BOUND_EXACT_URL`;
+- Agent/search-proposed URL -> `AGENT_SOURCE_CANDIDATE` / `SEARCH_CANDIDATE`;
+- only after deterministic identity/source corroboration -> `CORROBORATED_OFFICIAL_SOURCE`.
+
+The Agent must never manufacture `OPERATOR_VERIFIED` by supplying a tool argument.
