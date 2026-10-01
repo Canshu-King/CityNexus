@@ -1,0 +1,32 @@
+{
+  "controlled_pair": {
+    "pre": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
+    "post": "8d259c1f75daae0ace81ebe2b32d3f5508fd83b6",
+    "relationship": "direct parent and child; only ORD-0545's three files differ"
+  },
+  "readings": {
+    "pre_move": {
+      "generation": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
+      "characters": 347,
+      "sha256": "d7f4cb7318ec891fb4030657793a43c413b557ad08d4acc5d35a6eb7e5d2322d",
+      "badge_cell": "本地解析，不打开链接",
+      "key_names_visible": 0,
+      "machine_words": 0
+    },
+    "post_move": {
+      "generation": "8d259c1f75daae0ace81ebe2b32d3f5508fd83b6",
+      "characters": 347,
+      "sha256": "d7f4cb7318ec891fb4030657793a43c413b557ad08d4acc5d35a6eb7e5d2322d",
+      "badge_cell": "本地解析，不打开链接",
+      "key_names_visible": 0,
+      "machine_words": 0
+    }
+  },
+  "page_text_identical": true,
+  "badge_cell_equal": true,
+  "differences": null,
+  "backend_stack": "same runner, per-generation copy of the canary store (mode=ro + online backup)",
+  "viewport": "390x844",
+  "locale": "zh-CN",
+  "stored_journey_reference": "22222222-2222-4222-8222-222222222222"
+}

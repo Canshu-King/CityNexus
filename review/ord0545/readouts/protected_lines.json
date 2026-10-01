@@ -1,0 +1,12 @@
+{
+  "pre_lines": 2280,
+  "post_lines": 2273,
+  "protected_line_4_pre": "export type TripLocale = \"en\" | \"zh-CN\";",
+  "protected_line_4_post": "export type TripLocale = \"en\" | \"zh-CN\";",
+  "line4_equal": true,
+  "protected_line_2133_pre": "  \"twin.cap.STEP_FREE_REQUIRED\": \"全程免台阶\",",
+  "protected_line_2133_post": "  \"twin.cap.INFANT_NAP_WINDOW\": \"婴儿午睡时段\",",
+  "count_of_third_language_slots_pre": 0,
+  "count_of_third_language_slots_post": 0,
+  "pre_2133_content_now_at": 2126
+}
