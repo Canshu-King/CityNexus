@@ -369,7 +369,7 @@ def main():
         if len(closing) != 83:
             raise SystemExit("ABORT_CLOSING_LINE_SIZE %d != 83" % len(closing))
         out = out.rstrip() + chr(10) + closing.decode("utf-8").rstrip() + chr(10)
-        open(paths[key], "w", encoding="utf-8", newline=NL).write(out)
+        open(paths[key], "w", encoding="utf-8", newline="\n").write(out)
         print("WROTE %s bytes=%d closing=%d" % (paths[key], len(out.encode("utf-8")),
                                                 len(closing)))
     return 0
