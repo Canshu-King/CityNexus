@@ -550,8 +550,14 @@ def _scenario_problem(
             scenario_type in {"route_plus_20", "route_plus_30"}
             and activity_index == current_index + 1
         )
+        forced_closure_drop = (
+            scenario_type == "mutable_place_closes"
+            and activity_index == current_index + 1
+        )
         options: list[SolverV2Option] = []
-        if not forced_mobility_drop and (scenario_type != "mutable_place_closes" or not outdoor):
+        if not forced_mobility_drop and not forced_closure_drop and (
+            scenario_type != "mutable_place_closes" or not outdoor
+        ):
             options.append(
                 SolverV2Option(
                     option_key=f"KEEP:{activity.id}",
@@ -566,7 +572,7 @@ def _scenario_problem(
                     risk_penalty_milli=600 if scenario_type == "rain_earlier" and outdoor else 0,
                 )
             )
-        for candidate in ([] if forced_mobility_drop else candidate_places[:3]):
+        for candidate in ([] if forced_mobility_drop or forced_closure_drop else candidate_places[:3]):
             candidate_tags = set(_load(candidate.tags_json, []))
             if (
                 scenario_type == "replacement_disappears"
@@ -626,6 +632,7 @@ def _scenario_problem(
                     must_change=(
                         (scenario_type == "mutable_place_closes" and outdoor)
                         or forced_mobility_drop
+                        or forced_closure_drop
                     ),
                     allow_drop=not any(
                         anchor.location_key == _location(activity) for anchor in anchors
