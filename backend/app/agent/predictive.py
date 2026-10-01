@@ -466,9 +466,28 @@ def _scenario_problem(
         )
     ).all()
     anchors: list[SolverV2Anchor] = []
+    # A counterfactual is evaluated against the journey's current execution
+    # cursor, not against the original pre-trip schedule.  Executed and
+    # current activities are therefore immutable anchors even when no C4
+    # commitment row was created for them.  Without this, a fresh mobility
+    # scenario can legally drop the activity the traveller is already doing;
+    # the resulting standby branch cannot be activated or refreshed honestly.
+    current_index = next(
+        (idx for idx, item in enumerate(activities) if item.id == journey.current_activity_id),
+        -1,
+    )
+    execution_anchor_ids = {
+        str(item.id)
+        for idx, item in enumerate(activities)
+        if item.status in {"COMPLETED", "IN_PROGRESS"} or (current_index >= 0 and idx <= current_index)
+    }
     for commitment in commitments:
         activity = next((item for item in activities if item.id == commitment.activity_id), None)
         if activity is None:
+            continue
+        execution_anchor_ids.add(str(activity.id))
+    for activity in activities:
+        if str(activity.id) not in execution_anchor_ids:
             continue
         anchors.append(
             SolverV2Anchor(
@@ -1282,13 +1301,36 @@ def simulate_counterfactuals(
                     parent_plan_id=active_plan.id,
                 )
             )
-            evidence["shadow_plan_version_id"] = existing_shadow.id
-            evidence["shadow_plan_status"] = existing_shadow.status
-            evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
-            evidence["mobility_refresh"] = "LIVE_PROVIDER_CAPTURE" if refreshed else "REFRESH_FAILED"
-            row.evidence_json = _json(evidence)
             if refreshed:
+                evidence["shadow_plan_version_id"] = existing_shadow.id
+                evidence["shadow_plan_status"] = existing_shadow.status
+                evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+                evidence["mobility_refresh"] = "LIVE_PROVIDER_CAPTURE"
+                row.evidence_json = _json(evidence)
                 materialized_shadow_count += 1
+            else:
+                # A branch whose current/future suffix no longer matches the
+                # active execution cursor is not refreshable in place. Retire
+                # that immutable branch and materialize a replacement from the
+                # current reality instead of keeping an expired READY-looking
+                # option in the Agent portfolio.
+                existing_shadow.lifecycle = "RETIRED"
+                existing_shadow.status = "REJECTED"
+                evidence.pop("shadow_plan_version_id", None)
+                evidence["superseded_shadow_plan_version_id"] = existing_shadow.id
+                evidence["shadow_lifecycle"] = "RETIRED"
+                evidence["mobility_refresh"] = "REPLACEMENT_REQUIRED"
+                replacement = (
+                    _materialize_shadow_plan(session, journey, active_plan, row, changes)
+                    if materialized_shadow_count < 3 and changes
+                    else None
+                )
+                if replacement is not None:
+                    evidence["shadow_plan_version_id"] = replacement.id
+                    evidence["shadow_plan_status"] = replacement.status
+                    evidence["shadow_lifecycle"] = "NON_ACTIVE_STANDBY"
+                    materialized_shadow_count += 1
+                row.evidence_json = _json(evidence)
         elif active_plan is not None and materialized_shadow_count < 3 and changes:
             shadow = _materialize_shadow_plan(session, journey, active_plan, row, changes)
             if shadow is not None:

@@ -930,6 +930,10 @@ class AgentToolGateway:
 
         from app.main import generate_replan
 
+        # Agent tool calls may omit the optional bounded search width.  Keep
+        # the request deterministic instead of passing None into the public
+        # ReplanGenerateRequest, where it becomes an opaque 500.
+        candidate_count = int(request.candidate_count or 3)
         inner_key = _agent_key(
             "replan_generation", request.agent_id, request.request_id, journey.id
         )
@@ -937,7 +941,7 @@ class AgentToolGateway:
             UUID(journey.id),
             ReplanGenerateRequest(
                 trigger_event_id=request.trigger_event_id,
-                candidate_count=request.candidate_count,
+                candidate_count=candidate_count,
                 solver_mode=request.solver_mode,
                 protected_activity_ids=protected_activity_ids,
             ),
