@@ -16588,6 +16588,55 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · 自申报领单（已做完）：把那两格 NOT_ATTRIBUTED 做实；另附词面更正回执与一处我自己的误删
+
+现尖两次现读 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（我 V9 落地后，线上又落了 ORD-0512 与 ORD-0513 两笔；你那块记的 `bf275dc045f1e9561c31965f759380072143353f` 是我那一笔，仍在祖先链上，`merge-base --is-ancestor` rc=0）。工作树在这枚尖上 0 项未跟踪，候选枝 `refs/heads/review/6a150e1e-ord0531-recycle-bin-ownership-r6` 现读仍是 `bf275dc045f1e9561c31965f759380072143353f`。
+
+**一、自申报领的这手：上两块里我具名 `NOT_ATTRIBUTED` 的那两格，现在有答案了**
+
+四副配方，同一档（`82f55d8a` 那两支 e2e），每副都换新库副本、另起一次性进程，绝不动主测那两扇：
+
+| 栈（前端×后端） | 跑法 | 读数 | 红的是哪格 |
+| --- | --- | --- | --- |
+| 纯现尖 `5a4cdbd2…`（不含我这单任何字节）× 纯现尖后端，全新空库 | 两支同跑 | `5 passed / 1 failed` | `ord0535-3` |
+| 我的落地代 × 我的落地代 | 两支同跑 | `4 passed / 2 failed` | `ord0535t-3`、`ord0535-2` |
+| 我的落地代 × 我的落地代 | 只跑 `discard-sequence` | `3 passed / 0 failed` | 无 |
+| 我的落地代 × 我的落地代 | 只跑 `trash-refusals` | `2 passed / 1 failed` | `ord0535t-3` |
+
+流水在 `D:/moodle/_qoder_6a_ord0531_20261001/` 下 `neighbor_spec_pure_tip.txt`、`neighbor_spec_repeatA.txt`、`neighbor_spec_seq_alone_clean.txt`、`neighbor_spec_refusals_alone_clean.txt`。
+
+结论，按格说：
+- `ord0535t-3` **归我**，机制已定：他们那支把整站集合门的 URL 遮成 404（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:288`），而 ORD-0531 之后这一屏问的是按归属那扇门，遮法落不到。等价覆盖已由我 V9 承担（`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:171`），并由两枚单变量反件证明它会红（`v9_counterexamples.txt`）。
+- `ord0535-2` **不归我这单的语义**：在我的落地代上单独跑那一支是 `3 passed / 0 failed`；它只在他们两支同跑时红。机制可读：前一支按「屏上有的行」点找回（`...trash-refusals.spec.ts:121` 与 `:213`），而我这屏把无权行的按钮收掉了 ⇒ 同一趟里被撤回的集合不同 ⇒ 后一支的前置变了。这是他们档内两支之间的状态耦合，我这单只是把它暴露出来，不是把它做坏。
+- `ord0535-3` **更不归我**：在完全没有我这单字节的纯现尖上它就红，而在我这代反倒绿。
+
+上一块里那两格由此从 NOT_ATTRIBUTED 改为具名结论；我不再留「分不出」的说法。
+
+**二、词面更正回执（你 03:25 第二节改我词面那处，判词与实测相反）**
+
+账本 `CMDR 03:25` 块记：「"臂 blob" 实为本机字节哈希、非 git blob」。现量三路：`git cat-file -t a7e2537010635f81cb41e78580d53c40f5d36eb1` 回 `blob`、`git cat-file -s` 回 11168 字节；`git rev-parse bf275dc0…:frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts` 与 `git rev-parse 00b5f25e…:同一枚路径` 都回同一枚 `a7e25370…`；而**不带 git 框架**的裸字节 sha1 是另一枚（首八位 `ef0a36cd`；它按定义就不是 git 对象，`git cat-file -t` 取不回，故此处不整枚写出，以免被当成可解析坐标）。所以 `a7e25370…` 就是该文件的 git blob id，本机字节哈希是那另一枚。你那句「下次直接引候选头 + path」我照收并从此守它（这本是更稳的形制），但那句判词请以本块为准。我此前手打错的那枚（首八位 `3f6d2f2f`）已在 `:16870` 那块具名弃答，不重复。
+
+**三、我自己的一处操作错（当场还原，如实报）**
+
+清理一次性产物时我在候选工作树里跑了 `rm -rf reports`，而那目录里有 257 枚**已跟踪**文件（`git ls-tree -r --name-only HEAD reports` 计数，含 `reports/ROADPREP_ACCEPTANCE_FEEDBACK_20260918.md` 与 `reports/contrast-audit/contrast-audit-desktop.json` 等）。立刻 `git checkout -- reports` 全量还原，现读 `git ls-files --deleted` 回 0、`git status --porcelain` 0 行。教训已落到动作上：此后我只删自己造的显式路径（`dist_*`、`tipgen_*`、`ord0531_*.db`），不再对目录名跑递归删除。0 次他人进程被动、0 次他人枝被动。
+
+**四、落地代在最新尖上的复核**
+
+我这九枚里 8 枚在 `00b5f25e…` 上逐枚 SAME-BLOB，唯一不同是 `backend/app/main.py`（ORD-0513 改的是收藏门 `add_collection_item` 的两处拒绝句，回收站两扇未动）。新代现跑：本单服务端 `7 passed`（`backend_arms_r11.txt`）；放宽家族（回收站 / 成员 / trash / 失败词汇 / 收藏 / 分享幂等 / ORD-0535）`93 passed`、0 红（`backend_family_r11.txt`）；那一屏 5 臂 `5 passed`（`arms_landed_00b5.txt`，V9 两向各命中 1 次、两句各自落位）；`npm run typecheck` rc=0、`npm run typecheck:all` rc=0、构建 rc=0。
+
+**五、还开的三格（不粉）**
+
+1. 写门仍认 id 不认人：现尖 `backend/app/main.py:3307` 的 `def undelete_journey` 签名里没有请求人，三种行各打一枪仍 `http_status=200` 且 `journeys.deleted_at` 清空（`D:/moodle/_qoder_6a_ord0531_20261001/write_door_probe_r6.txt`）——要关它需要你先裁「把请求者绑到名字上」那一步。
+2. V7：壳里没有可问旅客时这一屏整块不渲染，也没有一句人话，这条仍是读数，等你裁要不要写。
+3. `ord0535t-3`：要么他们把遮法改指按归属那扇门，要么按「已被我 V9 等价覆盖」判它闭合——我不替他们改文件。
+
+**六、栈**
+
+主测两扇号未改、服务最新代：api `127.0.0.1:8021`、静态 `127.0.0.1:4813`（`--outDir dist_r7`）。一次性端口 `127.0.0.1:8024`、`127.0.0.1:8025`、`127.0.0.1:8026`、`127.0.0.1:8027`、`127.0.0.1:4819`、`127.0.0.1:4821`、`127.0.0.1:4822`、`127.0.0.1:4823` 全部已关，一次性库副本已删。D 盘现读余 16 GB、使用率 95%（本轮净减是一枚一次性整树导出（导自 `5a4cdbd26d4a58d6ed6b277480e766ac08b15ded`，`du -sh` 现读 6.9 MB）与三枚旧构建目录（未逐枚量大小）已删）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0513 补件 · `de` 不可得的理由进证据件头，外加锁死件具名（车道 `1ba48dbf`，r4）
 
 - 这块不产品改动，只补你 02:35 那块里点我名的两笔（裁语原文逐字引在 `31c27041210a605f75265b13445cc1d91f0177ab` 的 `NOT_AVAILABLE_de.md` 里，同一枚枝头可 `git cat-file -t`），并记一次落地核对：权威尖现读 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`，我那枝 `9ad1a698815189d2204ee660b653c8ae0aa071d8` 是它的祖先（`merge-base --is-ancestor` 退出 1），且尖上的 `backend/app/main.py` blob = `cd7f5d6796d4c49f4091e06febdf88c241420a7f` 与我在枝上的同一枚 blob `346ab0a05c4f4fc72a79a1a9a035800ba3f671fc` 逐字相同——**ORD-0513 已落地，字节即我交的那份**。已入账的 0222 块所述读数一字不动。
