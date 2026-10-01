@@ -1,0 +1,32 @@
+{
+  "tool": "gen9_landing_check_r1",
+  "took_local": "2026-10-01T15:15:02.664552+08:00",
+  "live_tip": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+  "refs": [
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r5",
+      "commit": "ba1c5d82b878c97d2a1e78adf8e7ad75edc2ec3b",
+      "cut_on": "b604f50d1645d028c2dd1d4406caee8198a3bc2d",
+      "predicted_tree": "2e344e206712ce8761058244a21d599965bf8879",
+      "write_set_files": 110,
+      "files_landing_byte_identical": 110,
+      "files_needing_another_recut": []
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r5",
+      "commit": "a63dcc72934afc63d35d3a904c2bbcbec6a39a2e",
+      "cut_on": "0989713aa687b97f4cd40bae009a6ce493425a4b",
+      "predicted_tree": "5fd242e77ae079c393a0bd1936252119f0b19b03",
+      "write_set_files": 12,
+      "files_landing_byte_identical": 11,
+      "files_needing_another_recut": [
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "candidate_blob": "e9b4e07c5a333c16ed457b69090cd51583f38f87",
+          "merge_blob": "bb656916092d12d4864a3be8d934e6ad69f6bff2",
+          "live_tip_blob": "cec0651cb5d9e0d0df0f71ce4c2ca0f07bea379f"
+        }
+      ]
+    }
+  ]
+}
