@@ -106,6 +106,23 @@ Persist a compact decision trace:
 
 This is a value-of-information loop, not bulk crawling.
 
+## Phase D0 — fix the source-approval identity boundary first
+
+Before allowing the Agent to hunt official sources, repair the current binding semantics.
+
+Today the Agent gateway can pass `source_url` into `acquire_place_facts`, and the downstream requested binding path can label that caller-supplied URL as `OPERATOR_VERIFIED / OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY`. That label is not legitimate when the caller is the model.
+
+Required separation:
+- true human/operator approval must come from a human-bound route/receipt, not from an AgentToolCall argument;
+- an URL already attached to the exact Overpass/Nominatim entity may be classified `PROVIDER_BOUND_EXACT_URL`;
+- an Agent-supplied/search-supplied URL starts as candidate-only;
+- promotion to canonical authority requires deterministic corroboration.
+
+Add a regression proving:
+`AgentToolCall(source_url=arbitrary_url)` cannot create an `OPERATOR_VERIFIED` fact binding.
+
+This is a truth-boundary blocker for R15, not an optional cleanup.
+
 ## Phase D — autonomous source discovery and corroboration
 
 R13/R14 operator-provided bindings are valid evidence boundaries, but R15 success should not depend on a human pasting the final source URL.
