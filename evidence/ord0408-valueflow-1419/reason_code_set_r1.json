@@ -1,0 +1,247 @@
+{
+ "tip": "514b397f96f3b5165b24865f4a544ab6f8020084",
+ "contract": {
+  "codes_named_in_prose": [
+   "CHECKIN_ACTIVITY_UNKNOWN",
+   "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+   "CHECKIN_TARGET_REQUIRED",
+   "JOURNEY_ALREADY_DELETED",
+   "JOURNEY_NOT_DELETED",
+   "JOURNEY_NOT_FOUND",
+   "MEMBER_ACTOR_NOT_IN_JOURNEY",
+   "MEMBER_ALREADY_PRESENT",
+   "MEMBER_ALREADY_WITHDRAWN",
+   "MEMBER_INVITER_EMPTY",
+   "MEMBER_ROLE_UNCHANGED",
+   "MEMBER_SELF_EXIT_NOT_A_MEMBER",
+   "MEMBER_TRAVELER_UNKNOWN",
+   "MEMBER_UNKNOWN",
+   "SHARE_GRANT_ALREADY_REVOKED",
+   "SHARE_GRANT_CREATOR_EMPTY",
+   "SHARE_GRANT_MEMBERSHIP_REQUIRED",
+   "SHARE_GRANT_REVOKED",
+   "SHARE_GRANT_UNKNOWN"
+  ],
+  "count": 19,
+  "reason_code_appears_as_a_schema_property": true,
+  "schema_enum_declared_for_it": 0,
+  "lines_mentioning_it": 41,
+  "first_lines": [
+   82,
+   518,
+   523,
+   620,
+   628,
+   659,
+   664,
+   738,
+   778,
+   786,
+   795,
+   829
+  ],
+  "bytes": 185868
+ },
+ "server": {
+  "codes_emittable": [
+   "CATALOG_EMPTY",
+   "COLLECTION_FOLDER_NOT_FOUND",
+   "DEMO_MODE_REQUIRED",
+   "DEMO_STATE_SUPPLY_UNAVAILABLE",
+   "DESTINATION_AMBIGUOUS",
+   "DESTINATION_RESOLVER_UNAVAILABLE",
+   "HYDRATION_WORKER_DIED",
+   "IDEMPOTENCY_KEY_REUSE_CONFLICT",
+   "IMPORT_DAY_REQUIRED",
+   "IMPORT_PLACE_NOT_VISITABLE",
+   "IMPORT_PLACE_UNKNOWN",
+   "JOURNEY_ALREADY_DELETED",
+   "JOURNEY_NOT_DELETED",
+   "JOURNEY_NOT_FOUND",
+   "MOBILITY_DATA_UNAVAILABLE",
+   "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE",
+   "NO_ACTIVE_PLAN",
+   "NO_CANONICAL_IDENTITY",
+   "PLACES_NOT_IN_CATALOG",
+   "PLACE_ALREADY_IN_COLLECTION",
+   "PLACE_COST_UNVERIFIED",
+   "PLACE_NOT_FOUND",
+   "PLACE_OUTSIDE_JOURNEY_WINDOW",
+   "PLAN_GENERATION_ATTEMPT_SUPERSEDED",
+   "PLAN_GENERATION_IN_FLIGHT",
+   "STAY_ITINERARY_CONFLICT",
+   "STAY_NOT_AUTHORITATIVE",
+   "STAY_OPTION_UNKNOWN",
+   "WORKER_LOST"
+  ],
+  "count": 29,
+  "per_code_sites": {
+   "CATALOG_EMPTY": [
+    "via CATALOG_EMPTY at services.py:1915"
+   ],
+   "COLLECTION_FOLDER_NOT_FOUND": [
+    "literal at main.py:3533"
+   ],
+   "DEMO_MODE_REQUIRED": [
+    "literal at main.py:2219"
+   ],
+   "DEMO_STATE_SUPPLY_UNAVAILABLE": [
+    "via DEMO_STATE_SUPPLY_UNAVAILABLE at main.py:2252"
+   ],
+   "DESTINATION_AMBIGUOUS": [
+    "via REASON_DESTINATION_AMBIGUOUS at anywhere_capability.py:923",
+    "via REASON_DESTINATION_AMBIGUOUS at anywhere_capability.py:1021",
+    "via REASON_DESTINATION_AMBIGUOUS at catalog_hydration_operations.py:934"
+   ],
+   "DESTINATION_RESOLVER_UNAVAILABLE": [
+    "via REASON_RESOLVER_UNAVAILABLE at anywhere_capability.py:843",
+    "via REASON_RESOLVER_UNAVAILABLE at anywhere_capability.py:884",
+    "via REASON_RESOLVER_UNAVAILABLE at anywhere_capability.py:903"
+   ],
+   "HYDRATION_WORKER_DIED": [
+    "literal at catalog_hydration_operations.py:1077"
+   ],
+   "IDEMPOTENCY_KEY_REUSE_CONFLICT": [
+    "literal at main.py:2246"
+   ],
+   "IMPORT_DAY_REQUIRED": [
+    "literal at main.py:7842"
+   ],
+   "IMPORT_PLACE_NOT_VISITABLE": [
+    "literal at main.py:7869"
+   ],
+   "IMPORT_PLACE_UNKNOWN": [
+    "literal at main.py:7859"
+   ],
+   "JOURNEY_ALREADY_DELETED": [
+    "literal at main.py:3167",
+    "literal at main.py:3254"
+   ],
+   "JOURNEY_NOT_DELETED": [
+    "literal at main.py:3233"
+   ],
+   "JOURNEY_NOT_FOUND": [
+    "literal at main.py:3162",
+    "literal at main.py:3227",
+    "literal at main.py:3621"
+   ],
+   "MOBILITY_DATA_UNAVAILABLE": [
+    "literal at main.py:10165"
+   ],
+   "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE": [
+    "literal at main.py:10187"
+   ],
+   "NO_ACTIVE_PLAN": [
+    "literal at main.py:7826"
+   ],
+   "NO_CANONICAL_IDENTITY": [
+    "via REASON_NO_CANONICAL_IDENTITY at anywhere_capability.py:936",
+    "via REASON_NO_CANONICAL_IDENTITY at anywhere_capability.py:972",
+    "via REASON_NO_CANONICAL_IDENTITY at anywhere_capability.py:1060"
+   ],
+   "PLACES_NOT_IN_CATALOG": [
+    "via PLACES_NOT_IN_CATALOG at services.py:1082"
+   ],
+   "PLACE_ALREADY_IN_COLLECTION": [
+    "literal at main.py:3570"
+   ],
+   "PLACE_COST_UNVERIFIED": [
+    "via PLACE_COST_UNVERIFIED at services.py:1151"
+   ],
+   "PLACE_NOT_FOUND": [
+    "literal at main.py:3541"
+   ],
+   "PLACE_OUTSIDE_JOURNEY_WINDOW": [
+    "via PLACE_OUTSIDE_JOURNEY_WINDOW at services.py:1191"
+   ],
+   "PLAN_GENERATION_ATTEMPT_SUPERSEDED": [
+    "literal at main.py:7038"
+   ],
+   "PLAN_GENERATION_IN_FLIGHT": [
+    "literal at main.py:7028"
+   ],
+   "STAY_ITINERARY_CONFLICT": [
+    "literal at main.py:5331"
+   ],
+   "STAY_NOT_AUTHORITATIVE": [
+    "literal at main.py:5341"
+   ],
+   "STAY_OPTION_UNKNOWN": [
+    "literal at main.py:5319"
+   ],
+   "WORKER_LOST": [
+    "literal at catalog_hydration_operations.py:1111"
+   ]
+  },
+  "constants_resolved": 8,
+  "constants_unresolved": [
+   "CHECKIN_ACTIVITY_UNKNOWN",
+   "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+   "MEMBER_ACTOR_NOT_IN_JOURNEY",
+   "MEMBER_ALREADY_WITHDRAWN",
+   "MEMBER_ROLE_UNCHANGED",
+   "MEMBER_TRAVELER_UNKNOWN",
+   "MEMBER_UNKNOWN"
+  ],
+  "resolution_note": "an unresolved CONST is reported as unresolved; it is NOT guessed at, because a guessed value would widen or narrow a contract set by accident"
+ },
+ "comparison": {
+  "named_by_the_contract_only_A_minus_B": [
+   "CHECKIN_ACTIVITY_UNKNOWN",
+   "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+   "CHECKIN_TARGET_REQUIRED",
+   "MEMBER_ACTOR_NOT_IN_JOURNEY",
+   "MEMBER_ALREADY_PRESENT",
+   "MEMBER_ALREADY_WITHDRAWN",
+   "MEMBER_INVITER_EMPTY",
+   "MEMBER_ROLE_UNCHANGED",
+   "MEMBER_SELF_EXIT_NOT_A_MEMBER",
+   "MEMBER_TRAVELER_UNKNOWN",
+   "MEMBER_UNKNOWN",
+   "SHARE_GRANT_ALREADY_REVOKED",
+   "SHARE_GRANT_CREATOR_EMPTY",
+   "SHARE_GRANT_MEMBERSHIP_REQUIRED",
+   "SHARE_GRANT_REVOKED",
+   "SHARE_GRANT_UNKNOWN"
+  ],
+  "emittable_by_the_server_only_B_minus_A": [
+   "CATALOG_EMPTY",
+   "COLLECTION_FOLDER_NOT_FOUND",
+   "DEMO_MODE_REQUIRED",
+   "DEMO_STATE_SUPPLY_UNAVAILABLE",
+   "DESTINATION_AMBIGUOUS",
+   "DESTINATION_RESOLVER_UNAVAILABLE",
+   "HYDRATION_WORKER_DIED",
+   "IDEMPOTENCY_KEY_REUSE_CONFLICT",
+   "IMPORT_DAY_REQUIRED",
+   "IMPORT_PLACE_NOT_VISITABLE",
+   "IMPORT_PLACE_UNKNOWN",
+   "MOBILITY_DATA_UNAVAILABLE",
+   "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE",
+   "NO_ACTIVE_PLAN",
+   "NO_CANONICAL_IDENTITY",
+   "PLACES_NOT_IN_CATALOG",
+   "PLACE_ALREADY_IN_COLLECTION",
+   "PLACE_COST_UNVERIFIED",
+   "PLACE_NOT_FOUND",
+   "PLACE_OUTSIDE_JOURNEY_WINDOW",
+   "PLAN_GENERATION_ATTEMPT_SUPERSEDED",
+   "PLAN_GENERATION_IN_FLIGHT",
+   "STAY_ITINERARY_CONFLICT",
+   "STAY_NOT_AUTHORITATIVE",
+   "STAY_OPTION_UNKNOWN",
+   "WORKER_LOST"
+  ],
+  "in_both": [
+   "JOURNEY_ALREADY_DELETED",
+   "JOURNEY_NOT_DELETED",
+   "JOURNEY_NOT_FOUND"
+  ],
+  "reading": "A-B are promises no code path keeps today; B-A are tokens a traveller can be handed that the contract has never named. A declared enum that omits B-A would make the ruler exempt a screen whose token is outside the set - the exact false green ORD-0408 rejects - so the set must be B (what the server emits), reviewed against A, not A alone."
+ },
+ "the_cell_this_is_about": {
+  "file_line": "features/trash/JourneyTrashPanel.tsx:233",
+  "verdict_under_r8": "RED, why CONTRACT_MISSING_ENUM, examples [] (no token was blamed)",
+  "field_named_on_the_element": "reason_code"
+ }
+}
