@@ -3207,8 +3207,11 @@ function Hub({
                    ORD-0208's shipped gate then bit this rewording, and it is right to: a bracket may
                    not name an execution cursor in a state where the server's own cursor status says
                    ABSENT_FALLBACK or STALE, so in that state the bracket is dropped and the cursor
-                   sentence below carries the fact instead. */
-                const cursorAbsent = Boolean(cursorStatus) && cursorStatus !== "VALID";
+                   sentence below carries the fact instead.  Re-taken at the day15 generation this
+                   also covers the twin answering no cursor status at all -- the element then paints
+                   UNKNOWN, and "not known to be valid" is the only honest test for a bracket that
+                   names a cursor. */
+                const cursorAbsent = cursorStatus !== "VALID";
                 const namesCursor = basis === "执行游标" || basis === "execution cursor";
                 const bracket = zh
                   ? cursorAbsent && namesCursor ? "" : `（${basis}）`
