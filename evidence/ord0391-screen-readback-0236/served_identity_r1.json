@@ -1,0 +1,75 @@
+{
+ "front_door": "http://127.0.0.1:4541",
+ "stub": "http://127.0.0.1:7042",
+ "backend": "http://127.0.0.1:7041",
+ "dist": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\frontend\\dist",
+ "store_copy": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\backend\\tierC_ord0391_lane.db",
+ "assets_served_equal_disk": [
+  {
+   "asset": "index.html",
+   "disk_git_blob_sha1": "310f61896a826275a07a9321c6c0220401a99e86",
+   "served_git_blob_sha1": "310f61896a826275a07a9321c6c0220401a99e86",
+   "equal": true,
+   "bytes": 1200
+  },
+  {
+   "asset": "index-CXnmNy6z.js",
+   "disk_git_blob_sha1": "be88681705f0d82460b2ae686192baf0a9827b7d",
+   "served_git_blob_sha1": "be88681705f0d82460b2ae686192baf0a9827b7d",
+   "equal": true,
+   "bytes": 1591525
+  },
+  {
+   "asset": "index-CF-Aj6pQ.css",
+   "disk_git_blob_sha1": "bd2a22458930184aa912f9bc1ed2b64cd6db49af",
+   "served_git_blob_sha1": "bd2a22458930184aa912f9bc1ed2b64cd6db49af",
+   "equal": true,
+   "bytes": 229637
+  }
+ ],
+ "all_assets_equal": true,
+ "missing_asset_status": 404,
+ "route_fallback_status": 200,
+ "route_fallback_is_index_bytes": true,
+ "health_through_door": {
+  "status": 200,
+  "body": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+ },
+ "listening_processes": {
+  "4541": [
+   {
+    "pid": "61412",
+    "command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" static_spa_r1.py 4541"
+   }
+  ],
+  "7041": [
+   {
+    "pid": "33828",
+    "command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 7041"
+   }
+  ],
+  "7042": [
+   {
+    "pid": "49240",
+    "command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" api_stub_r1.py 7042"
+   }
+  ]
+ },
+ "marker_journey_written_to_my_copy_only": {
+  "title": "ORD0391-LANE-MARKER-1d64acf5",
+  "journeys_before": 1,
+  "journeys_after_cleanup": 1,
+  "visible_through_chain_4541_7042_7041": true,
+  "list_status": 200
+ },
+ "stub_stamp_on_canned_answer": {
+  "scenario_switch_status": 200,
+  "canned_status_through_front_door": 404,
+  "scenario_header_through_front_door": null,
+  "canned_status_direct": 404,
+  "scenario_header_direct": "not_found",
+  "content_type": "application/json",
+  "note": "the scenario header is set by the stub and survives a direct call; my front door does not forward that header, so the arm landing on screen is proven by the status and media type the page itself observed, which is recorded per state in the walk files"
+ },
+ "shared_preview_db": "mode=ro for the copy; 0 writes to it in this run"
+}
