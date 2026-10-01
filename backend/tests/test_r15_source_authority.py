@@ -9,6 +9,16 @@ from app.db.models import Place
 from app.db.session import SessionLocal, ensure_schema
 
 
+@pytest.mark.parametrize("external_id", [
+    "overpass:node/1515",
+    "nominatim:relation/1515",
+    "photon:way/1515",
+])
+def test_osm_provider_identity_can_be_rechecked_by_exact_osm_id(external_id):
+    place = Place(external_id=external_id)
+    assert facts._element_ref(place) == (external_id.split(":", 1)[1].split("/", 1)[0], "1515")
+
+
 @pytest.mark.parametrize("provider_website,expected_known", [(None, 0), ("https://official.example/visit", 1)])
 def test_agent_source_only_promotes_when_fresh_exact_entity_corroborates(monkeypatch, provider_website, expected_known):
     ensure_schema()

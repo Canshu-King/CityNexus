@@ -57,9 +57,15 @@ _OFFICIAL_SOURCE_CLASSES = frozenset(
 
 def _element_ref(place: Place) -> tuple[str, str] | None:
     external = str(place.external_id or "")
-    if not external.startswith("overpass:"):
+    provider, separator, value = external.partition(":")
+    # Discovery may persist the same OSM-backed entity under the provider that
+    # found it (nominatim/photon) rather than under the later enrichment
+    # provider (overpass).  The identity is still exact when the provider
+    # namespace and OSM type/id are explicit; do not fall back to display-name
+    # matching here.
+    if provider not in {"overpass", "nominatim", "photon"} or not separator:
         return None
-    kind, separator, number = external.removeprefix("overpass:").partition("/")
+    kind, separator, number = value.partition("/")
     if not separator or kind not in {"node", "way", "relation"} or not number.isdigit():
         return None
     return kind, number
