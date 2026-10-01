@@ -13,7 +13,7 @@ from sqlalchemy import select
 
 import app.main as main_module
 from app.agent.orchestrator import HermesJourneyAgent
-from app.agent.runtime import DeepSeekJourneyAgent
+from app.agent.runtime import DeepSeekJourneyAgent, _result_for_model
 from app.core.config import settings as runtime_settings
 from app.db.models import Activity, AgentRun, Event, Journey, JourneyMission, Place
 from app.db.session import SessionLocal
@@ -311,6 +311,68 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
     ]
 
 
+def test_agent_runtime_nudges_explicit_accept_request_after_model_prose(monkeypatch):
+    journey_id = _selected_journey()
+    calls = 0
+
+    def tool_message(name: str, arguments: dict[str, object], call_id: str) -> dict[str, object]:
+        return {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [{
+                "id": call_id,
+                "type": "function",
+                "function": {"name": name, "arguments": json.dumps(arguments)},
+            }],
+        }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            message = tool_message("inspect_journey", {"journey_id": journey_id}, "accept-journey")
+        elif calls == 2:
+            message = tool_message("list_replans", {"journey_id": journey_id}, "accept-list")
+        elif calls == 4:
+            message = tool_message(
+                "accept_replan",
+                {"journey_id": journey_id, "proposal_id": str(uuid4())},
+                "accept-action",
+            )
+        else:
+            message = {"role": "assistant", "content": "I have completed the requested action."}
+        return httpx.Response(200, json={"choices": [{"message": message}]})
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    fake_agent = object.__new__(DeepSeekJourneyAgent)
+    fake_agent.model_key = "cn:glm-5.3-flash"
+    fake_agent._client = fake_client
+    fake_agent._owns_client = False
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace(runtime_settings, ai_api_key="test-key", ai_model="cn:glm-5.3-flash"),
+    )
+    monkeypatch.setattr(main_module, "DeepSeekJourneyAgent", lambda: fake_agent)
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        json={
+            "command": "请选择最好的 proposal 并调用 accept_replan 接受它，等待 Gateway 回执。",
+            "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert [step["tool_name"] for step in body["run"]["tool_steps"]] == [
+        "inspect_journey",
+        "list_replans",
+        "accept_replan",
+    ]
+    assert body["run"]["tool_steps"][-1]["status"] == "TOOL_ERROR"
+    assert calls == 5
+
+
 def test_agent_runtime_records_truncated_tool_json_instead_of_http_500(monkeypatch):
     journey_id = _selected_journey()
     calls = 0
@@ -518,6 +580,58 @@ def test_hermes_runtime_uses_configured_model_fallback_chain(monkeypatch):
     assert message["content"] == "READY"
     assert agent.model_key == "cn:glm-5.3-flash"
     assert calls == ["global:deep-model", "cn:glm-5.3-flash"]
+
+
+def test_replan_evidence_keeps_choice_facts_but_drops_geometry_from_model_context():
+    result = {
+        "tool": "list_replans",
+        "proposals": [
+            {
+                "id": "proposal-r14",
+                "utility_score": 0.76,
+                "hard_constraints_passed": True,
+                "locked_commitments_preserved": True,
+                "diff": {
+                    "candidate_family": "F0_SAME_SLOT_REPLACEMENT",
+                    "travel_delta_min": -7,
+                    "verified_evidence": {
+                        "incident_recovery_evidence": {
+                            "source_provider": "valhalla-http",
+                            "mobility_snapshot": {
+                                "snapshot_id": "snapshot-r14",
+                                "facts": [
+                                    {
+                                        "minutes": 52,
+                                        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+                                        "route_geometry": [[1.0, 2.0], [3.0, 4.0]],
+                                    }
+                                ]
+                            },
+                        }
+                    },
+                },
+            }
+        ],
+    }
+
+    projected = json.loads(_result_for_model(result))
+    proposal = projected["proposals"][0]
+    assert proposal["id"] == "proposal-r14"
+    assert proposal["utility_score"] == 0.76
+    assert proposal["hard_constraints_passed"] is True
+    assert proposal["diff"]["travel_delta_min"] == -7
+    incident = proposal["diff"]["verified_evidence"]["incident_recovery_evidence"]
+    assert incident["source_provider"] == "valhalla-http"
+    assert incident["mobility_snapshot"]["snapshot_id"] == "snapshot-r14"
+    assert incident["mobility_snapshot"]["facts"][0]["minutes"] == 52
+    accepted_result = {
+        "tool": "accept_replan",
+        "executed": True,
+        "facts": {"hard_constraints_passed": True},
+    }
+    assert json.loads(_result_for_model(accepted_result))["facts"]["hard_constraints_passed"] is True
+    assert "route_geometry" not in json.dumps(projected)
+    assert "route_geometry" in json.dumps(result)
 
 
 def test_hermes_runtime_reaches_domestic_deepseek_after_glm_failure(monkeypatch):

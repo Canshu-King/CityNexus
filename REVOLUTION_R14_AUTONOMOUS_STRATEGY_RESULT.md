@@ -1235,7 +1235,95 @@ and Twin:
 
 This is a completed coursework-estimated Journey, not a claim that unknown
 canonical opening/cost facts became verified or free. `MOCK != LIVE` remains
-true. The remaining product improvement is to make the model emit the
-authority tool call itself when it has explicitly chosen a proposal; the
-authority boundary correctly rejected no action and the gateway receipt above
-proves the final mutation path.
+true. That earlier run exposed a runtime reliability gap: the model stopped
+after reading proposals and a deterministic continuation performed the
+Gateway mutation. The bounded runtime repair and the exact-code rerun below
+close that gap without weakening the authority boundary.
+
+## Exact-code domestic GLM acceptance continuation and completed Journey
+
+The service was restarted from the current experimental source with the
+process-only WB2api credential and this domestic model chain:
+
+```text
+primary:  cn:glm-5.3-flash
+fallback: cn:deepseek-v4.1-flash
+runtime:  HERMES_COMPAT_ENDPOINT
+```
+
+The bounded repair has two parts. First, complete proposal evidence remains
+persisted in `AgentRunStep`, but the next model turn receives the proposal
+identity, scores, hard-constraint facts, schedule deltas, and provider
+summaries without captured route geometry. Second, when the mission text
+explicitly requires `accept_replan`, the runtime does not accept a prose-only
+finish after proposal evidence: it adds one continuation turn requiring the
+exact feasible proposal ID and waits for the Gateway receipt. It does not
+write Journey or PlanVersion state directly.
+
+The exact-code run used the same Chengdu Journey after the closure event:
+
+```text
+journey: 0a0685bb-44a1-4689-afe9-bec81cde4182
+AgentRun: 6ade8eaa-626c-4ca1-a29d-16e06b79ecef
+mission: b2b31d45-3927-42a6-9eaa-677d5ddcdd75
+model_key: cn:glm-5.3-flash
+provider_key: hermes
+tool order: inspect_journey → inspect_twin → list_replans → accept_replan
+proposal: 901977ee-8bb3-4cbf-9552-7d3f982132f6
+Gateway decision: ALLOW_AUTO
+Gateway executed: true
+Gateway reason_codes: DELEGATION_POLICY_MATCHED, DETERMINISTIC_GATE_VERIFIED
+accepted PlanVersion: b21c3900-87f1-49d2-8a72-7241074af3ba
+```
+
+After the AgentRun, the product lifecycle was executed through the real
+activity endpoints for both the replacement and the preserved next activity:
+
+```text
+bd7b0f0b-00ad-45f5-9456-570a917320b3  depart → arrive → begin → complete
+a29f472d-6b0c-4677-af71-b77d730c5ee7  depart → arrive → begin → complete
+```
+
+The final HTTP/Twin receipt agrees across persisted state:
+
+```json
+{
+  "journey_status": "COMPLETED",
+  "active_plan_version_id": "b21c3900-87f1-49d2-8a72-7241074af3ba",
+  "current_activity_id": null,
+  "twin_projection_status": "READY",
+  "used_edge_ids": [[
+    "real-place-73024784c2781fef0000bf23",
+    "real-place-61d0c62a55c60485a4035b98"
+  ]],
+  "eligibility_receipts": [{
+    "provider": "valhalla-http",
+    "route_provenance": "LIVE_PROVIDER_CAPTURE",
+    "fact_quality": "LIVE_PROVIDER_CAPTURE",
+    "persisted_minutes": 52,
+    "hard_minutes": 52,
+    "hard_eligible": true,
+    "decision": "HARD_ELIGIBLE"
+  }],
+  "all_actual_edges_hard_eligible": true
+}
+```
+
+Canonical opening and cost remain `UNKNOWN`; the replacement plan is
+explicitly `COURSEWORK_ESTIMATED_FACTS` / `COURSEWORK_ESTIMATE`. The Agent
+estimate was not relabeled as provider truth or free. Live mobility remains
+`valhalla-http` / `LIVE_PROVIDER_CAPTURE`, and the real selected Journey was
+completed only after the Gateway created the new active PlanVersion.
+
+The regression tests cover both mechanisms:
+
+```text
+uv run pytest tests/test_agent_mission_runtime.py \
+  tests/test_dsh_list_replans_bound.py \
+  tests/test_agent_runtime_gate.py -q
+```
+
+The next R14 experiment is to transfer this same domestic-agent acceptance
+loop to another freshly discovered city and force a strategy change driven by
+the user intent, while keeping the estimate envelope explicit and preserving
+`P7=false`.

@@ -224,6 +224,18 @@ def _model_name() -> str:
     return settings.ai_model.removeprefix("deepseek/")
 
 
+def _acceptance_requested(mission: JourneyMission) -> bool:
+    """Whether this mission explicitly requires the Agent to accept a proposal."""
+    text = str(mission.user_text or "").lower()
+    if "不接受" in text or "do not accept" in text:
+        return False
+    return (
+        mission.requested_autonomy != "PLAN_ONLY"
+        and "accept_replan" in text
+        and any(token in text for token in ("接受", "选择", "select", "accept"))
+    )
+
+
 def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) -> str:
     traveler_twin = snapshot_payload(refresh_snapshot(session, journey.traveler_id))
     return (
@@ -234,6 +246,9 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "The Gateway and deterministic feasibility layer are authoritative: follow their decisions. "
         "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "
+        "A mutation is not complete merely because you described it: only the corresponding CityNexus tool response is evidence that it happened. "
+        "When the user or mission explicitly selects a feasible proposal, call accept_replan with that exact proposal ID before producing a final summary; do not stop after list_replans or claim that acceptance is in progress. "
+        "For every mutating tool, summarize the returned executed/decision/result fields and never substitute model prose for the Gateway receipt. "
         "Do not reveal private chain-of-thought; final text should summarize actionable rationale and observed results.\n\n"
         f"Journey ID: {journey.id}\n"
         f"Mission: {_json_text(mission_payload(mission))}\n"
@@ -260,9 +275,98 @@ def _tool_args(raw_arguments: str) -> dict[str, Any]:
     return parsed
 
 
+def _compact_replan_for_model(item: Any) -> Any:
+    """Keep proposal choice facts while removing route geometry from model context.
+
+    The gateway persists the complete evidence receipt in ``AgentRunStep``.  The
+    model only needs the proposal identity, deterministic score, feasibility
+    deltas, and provider/provenance summaries to choose the next tool.  Feeding
+    every captured polyline back into the next model turn made a real recovery
+    finish with an empty response before it could call ``accept_replan``.
+    """
+    if isinstance(item, list):
+        return [_compact_replan_for_model(value) for value in item]
+    if not isinstance(item, dict):
+        return item
+    if "snapshot_id" in item and isinstance(item.get("facts"), list):
+        fact_fields = {
+            "origin_key",
+            "destination_key",
+            "minutes",
+            "provider",
+            "captured_at",
+            "degraded",
+            "fallback_reason",
+            "route_provenance",
+            "fact_quality",
+            "mode",
+            "time_basis",
+            "distance_m",
+            "walking_distance_m",
+            "walking_min",
+        }
+        return {
+            key: value
+            for key, value in item.items()
+            if key != "facts"
+        } | {
+            "facts": [
+                {key: value for key, value in fact.items() if key in fact_fields}
+                for fact in item["facts"]
+                if isinstance(fact, dict)
+            ]
+        }
+    projected = dict(item)
+    for key in (
+        "route_geometry",
+        "route_geometry_json",
+        "encoded_polyline",
+        "raw_response",
+    ):
+        projected.pop(key, None)
+    diff = projected.get("diff")
+    if isinstance(diff, dict):
+        compact_diff = dict(diff)
+        compact_diff.pop("opportunity_window_evidence", None)
+        evidence = compact_diff.get("verified_evidence")
+        if isinstance(evidence, dict):
+            compact_evidence = {
+                key: value
+                for key, value in evidence.items()
+                if key not in {"mobility_snapshot", "route_geometry", "route_geometry_json"}
+            }
+            compact_diff["verified_evidence"] = compact_evidence
+        compact_diff = {key: _compact_replan_for_model(value) for key, value in compact_diff.items()}
+        projected["diff"] = compact_diff
+    explanation = projected.get("explanation")
+    if isinstance(explanation, dict):
+        projected["explanation"] = {
+            key: value
+            for key, value in explanation.items()
+            if key in {"summary", "reasons", "impact_type", "impact_provider", "source"}
+        }
+    return {
+        key: _compact_replan_for_model(value)
+        for key, value in projected.items()
+        if key not in {
+            "route_geometry",
+            "route_geometry_json",
+            "encoded_polyline",
+            "raw_response",
+        }
+    }
+
+
 def _result_for_model(result: Any) -> str:
     if isinstance(result, dict):
-        return _json_text(result)
+        projected = dict(result)
+        if projected.get("tool") in {"list_replans", "request_replan"} and isinstance(projected.get("proposals"), list):
+            projected["proposals"] = [
+                _compact_replan_for_model(item) for item in projected["proposals"]
+            ]
+        if projected.get("tool") in {"list_replans", "request_replan"} and "proposal" in projected:
+            projected["proposal"] = _compact_replan_for_model(projected["proposal"])
+        return _json_text(projected)
     return _json_text({"result": result})
 
 
@@ -436,6 +540,7 @@ class DeepSeekJourneyAgent:
         tool_trace: list[dict[str, Any]] = []
         seen_calls: set[tuple[str, str]] = set()
         tool_counts: dict[str, int] = {}
+        acceptance_nudge_sent = False
         try:
             for _ in range(max_steps):
                 batch_search_seen = False
@@ -455,6 +560,35 @@ class DeepSeekJourneyAgent:
                     },
                 )
                 if not tool_calls:
+                    accept_executed = any(
+                        item.get("tool_name") == "accept_replan"
+                        and isinstance(item.get("result"), dict)
+                        and item["result"].get("executed") is True
+                        for item in tool_trace
+                    )
+                    has_proposal_evidence = any(
+                        item.get("tool_name") in {"request_replan", "list_replans"}
+                        for item in tool_trace
+                    )
+                    if (
+                        _acceptance_requested(mission)
+                        and has_proposal_evidence
+                        and not accept_executed
+                        and not acceptance_nudge_sent
+                    ):
+                        acceptance_nudge_sent = True
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": (
+                                    "Your requested acceptance has not been executed. "
+                                    "Do not finish with prose. Use the exact feasible proposal ID "
+                                    "from the latest CityNexus tool result and emit one accept_replan "
+                                    "tool call now; wait for its Gateway response before summarizing."
+                                ),
+                            }
+                        )
+                        continue
                     final_text = str(content)
                     break
                 assistant_message = {
