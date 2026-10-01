@@ -101,6 +101,14 @@ PHASES = (
 OUTCOME_PREPARED = "CATALOG_PREPARED"
 OUTCOME_ALREADY_CURRENT = "ALREADY_CURRENT"
 OUTCOME_NO_REGISTERED_SOURCE = "NO_REGISTERED_SOURCE"
+#: ORD-0544 (commander ruling ③, `cmdr_1530.md`): `ALREADY_CURRENT` on its own reads as "nothing
+#: happened here", which is false for a city the offline source filled one stage earlier.  Two named
+#: sub-words keep one vocabulary but two facts, and they are decided from what this run did, not
+#: from a sentence: `OFFLINE_SOURCE_SUPPLIED` only when a registered source's write was read back
+#: from the store, `ALREADY_HELD_IN_STORE` for a city that already held the material.  Any other
+#: ending carries `None` - inventing a qualifier for a refusal would dress up a zero.
+OUTCOME_QUALIFIER_OFFLINE_SOURCE = "OFFLINE_SOURCE_SUPPLIED"
+OUTCOME_QUALIFIER_ALREADY_HELD = "ALREADY_HELD_IN_STORE"
 OUTCOME_PENDING_UNAPPLIED = "PENDING_CANDIDATES_UNAPPLIED"
 OUTCOME_ABANDONED = "ABANDONED_BY_TRAVELLER"
 OUTCOME_WORKER_LOST = "WORKER_LOST"
@@ -1021,6 +1029,15 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             "offline_source_applied": applied,
             "registry": catalog_sources.registry_facts(),
             "outcome": outcome,
+            # Decided from this run's own numbers: `applied.places_written` came out of the store, so
+            # the sub-word cannot claim a supply the survey did not confirm.
+            "outcome_qualifier": (
+                OUTCOME_QUALIFIER_OFFLINE_SOURCE
+                if applied is not None and int(applied.get("places_written") or 0) > 0
+                else OUTCOME_QUALIFIER_ALREADY_HELD
+                if outcome == OUTCOME_ALREADY_CURRENT
+                else None
+            ),
             # A COMPLETED/UNAVAILABLE ending that named a destination carries the provider's answer
             # with it: entity reference, WGS84 point, extent, timestamps, and every attempt that led
             # here.  Without this the identity in the column has nothing behind it to chase.

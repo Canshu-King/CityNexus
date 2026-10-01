@@ -751,7 +751,28 @@ class PhotonCityAnchor:
         points: list[dict[str, Any]] = []
         if response.status_code == 200:
             try:
-                for feature in (response.json().get("features") or []):
+                payload = response.json()
+            except ValueError:
+                payload = None
+            if not isinstance(payload, dict):
+                # A 200 whose body is not a GeoJSON object is one leg that replied with something
+                # this build cannot read - it is *not* a reason to abandon the capture.  This shape
+                # used to escape as an `AttributeError`, which the orchestration filed as
+                # `PROVIDER_BAD_RESPONSE at anchor_geocode`; that demoted the whole live pass to the
+                # replay fallback, and because the TTL gate credits only `provider_key == "overpass"`
+                # rows, every later warm ask then paid for the network again (ORD-0544: the g16b
+                # 0-call promise broken by an unreadable body, three generations measured in
+                # `review/ord0544/`).  Reported per leg, with bytes, so the miss stays tellable.
+                return [], {
+                    "leg": self.provider_key,
+                    "answered": True,
+                    "http_status": response.status_code,
+                    "bytes": len(response.content),
+                    "elapsed_ms": elapsed,
+                    "outcome": "ANSWERED_NOT_GEOJSON",
+                }
+            try:
+                for feature in (payload.get("features") or []):
                     coords = ((feature.get("geometry") or {}).get("coordinates")) or []
                     props = feature.get("properties") or {}
                     if len(coords) >= 2:
@@ -763,7 +784,7 @@ class PhotonCityAnchor:
                                 "osm_id": props.get("osm_id"),
                             }
                         )
-            except (ValueError, KeyError, TypeError):
+            except (ValueError, KeyError, TypeError, AttributeError, IndexError):
                 return [], {
                     "leg": self.provider_key,
                     "answered": True,
