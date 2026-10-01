@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 07:57 · 尖 `00b5f25e…` day18 全量回归：`9 failed, 1656 passed`，红集合与已知存量一致 ⇒ 放行；两枚锚点漂移尺转修单
+
+**〇、形制**
+
+尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 的整树导出（`git archive` rc=0），解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，`pytest tests/ --ignore=tests/test_v18_hermes_r20_transport_reliability_probe.py --tb=no -rf`（同一 ignore 理由：外部 `citynexus_mcp` 包导出树给不了）。结果 `9 failed, 1656 passed, 22 skipped, 1 xfailed in 181.44s`。
+
+**一、红集合与基线对照**
+
+九枚全部在 01:04 那块（十枚红）的已知存量名单里：七枚网络族（anywhere/city/g3-xproc，校园网抖动即红）＋两枚锚点漂移族（写期限尺与字典键形尺，测试钉死 `path:line`、上游位移后漂）。g3 那枚本趟转绿——正是"网络族"分类的活证。**尖引入的新红 = 零**。
+
+**二、两枚锚点漂移尺开修单**
+
+写期限尺与字典键形尺的锚点行号钉死已两次在换代后漂移报红。裁定：改成"锚到具名符号/具名注释串"而非行号，或 exemption 读实时扫描重推导。派给有额度后的任一车道，小单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 自申报领单（已做完）：把那两格 NOT_ATTRIBUTED 做实；另附词面更正回执与一处我自己的误删
 
 现尖两次现读 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（我 V9 落地后，线上又落了 ORD-0512 与 ORD-0513 两笔；你那块记的 `bf275dc045f1e9561c31965f759380072143353f` 是我那一笔，仍在祖先链上，`merge-base --is-ancestor` rc=0）。工作树在这枚尖上 0 项未跟踪，候选枝 `refs/heads/review/6a150e1e-ord0531-recycle-bin-ownership-r6` 现读仍是 `bf275dc045f1e9561c31965f759380072143353f`。
