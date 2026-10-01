@@ -14,6 +14,8 @@
  *  - V5 the same screen from the owner's seat: both of their rows carry an action.
  *  - V6 no identifier in what the traveller is shown.
  *  - V7 what the screen does when it has no traveller to ask about.
+ *  - V9 the two refusal sentences told apart, on the door this screen actually asks (CMDR 02:35 ①补:
+ *       the whole-bin URL another lane stubs is no longer the one this screen calls).
  */
 
 import { expect, test, type Page } from "@playwright/test";
@@ -157,6 +159,56 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
        above rather than asserted, because that is the shell's navigation rule, not this order's. */
     expect(rowsAnywhere).toBe(0);
     await page.screenshot({ path: `${EVIDENCE}/V7_no_viewer.png`, fullPage: true });
+  });
+
+  test("V9 the two sentences the screen owns are told apart on the door it actually asks", async ({ page }) => {
+    /* CMDR 02:35 item 1, ①补.  Lane 82f55d8a's arm stubs the whole-bin collection URL to prove
+       「没答上」 is said; this screen asks the per-traveller door since ORD-0531, so that lever no
+       longer reaches it.  This is the same lever aimed at the door this screen calls, and it judges the
+       one line that decides which of the two sentences the traveller is shown (the 404 and 405 branch
+       versus every other failure).  Both directions are read, because a constant would satisfy one. */
+    const scoped = (url: URL) =>
+      url.pathname.startsWith("/api/v1/travelers/") && url.pathname.endsWith("/recycle-bin/journeys");
+
+    const refuse = async (status: number) => {
+      let asked = 0;
+      await page.route(scoped, (route) => {
+        asked += 1;
+        void route.fulfill({
+          status,
+          contentType: "application/json",
+          body: JSON.stringify({ detail: "answered nothing at all" }),
+        });
+      });
+      const panel = await openBinAs(page, SEED.viewer_journey_for_B);
+      const notice = panel.getByTestId("trash-read-failed");
+      await expect(notice, `a refused scoped door (http_status=${status}) must be said on screen`).toBeVisible({
+        timeout: 20_000,
+      });
+      const text = (await notice.innerText()).replace(/\s+/g, " ").trim();
+      const rows = await panel.getByTestId("trash-row").count();
+      await page.unroute(scoped);
+      return { asked, text, rows };
+    };
+
+    const notAnswered = await refuse(404);
+    const broken = await refuse(500);
+    note("V9_two_doors_two_sentences", {
+      scoped_lever_hits_404: notAnswered.asked,
+      scoped_lever_hits_500: broken.asked,
+      sentence_when_door_refused_404: notAnswered.text.slice(0, 120),
+      sentence_when_transport_broke_500: broken.text.slice(0, 120),
+      rows_rendered_in_either_case: [notAnswered.rows, broken.rows],
+    });
+
+    expect(notAnswered.asked, "the screen never asked the door this lever refuses").toBeGreaterThan(0);
+    expect(broken.asked, "the second refusal was never asked either").toBeGreaterThan(0);
+    expect(notAnswered.text).toContain("没有答出");
+    expect(notAnswered.text).not.toContain("回收站没有从这台服务器读到");
+    expect(broken.text).toContain("回收站没有从这台服务器读到");
+    expect(broken.text).not.toContain("没有答出");
+    expect(notAnswered.rows + broken.rows, "a door that answered nothing may not render anybody's trip").toBe(0);
+    await page.screenshot({ path: `${EVIDENCE}/V9_two_sentences.png`, fullPage: true });
   });
 
   test("V8 write the readings file", async () => {
