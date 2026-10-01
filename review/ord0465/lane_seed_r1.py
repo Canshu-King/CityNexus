@@ -91,14 +91,9 @@ def journey_with_plan(title, marker):
             estimated_duration_min=540, created_at=moment,
         ))
         places = []
-        # `places` carries UNIQUE(provider_key, external_id), and this file is meant to be re-runnable
-        # against a store that already holds a previous run's rows -- so the external id needs a per-run
-        # suffix. Without one the second cold run dies on that constraint instead of seeding anything.
-        batch = uuid4().hex[:8]
         for index in range(3):
             place = Place(
-                id=str(uuid4()), provider_key="ord0465-lane",
-                external_id=f"{marker}-{batch}-{index}",
+                id=str(uuid4()), provider_key="ord0465-lane", external_id=f"{marker}-{index}",
                 city_code="CN-XIAMEN",
                 name=["鼓浪屿轮渡码头", "厦门大学", "沙坡尾艺术西区"][index],
                 category="attraction", latitude=24.44 + index * 0.02, longitude=118.06 + index * 0.03,
