@@ -52,6 +52,7 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "selfdecl_ord0500_r6.py", "comment_anchors_r5.py", "prior_denominators_r5.py",
          "landing_r6.py", "r6_coordinates.py", "r6_block.py",
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
+         "r8_block.py", "landing_r6.py",
          "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)

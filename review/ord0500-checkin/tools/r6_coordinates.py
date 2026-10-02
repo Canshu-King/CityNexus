@@ -79,7 +79,15 @@ def main():
              "frontend/src/features/trip/TripItinerary.tsx",
              "backend/app/main.py", "contracts/openapi.yaml",
              "frontend/src/features/checkin/checkins.ts",
-             "frontend/src/features/checkin/footprint.css"]
+             "frontend/src/features/checkin/footprint.css",
+             # r8: the re-anchored spec itself, its receipts, and the three tools that produced them
+             "backend/tests/test_qoder_ord0500_journey_refusal.py",
+             "review/ord0500-checkin/receipts/reanchor_r8.json",
+             "review/ord0500-checkin/receipts/reanchor_r8_selftest.json",
+             "review/ord0500-checkin/receipts/citation_audit_r8.json",
+             "review/ord0500-checkin/tools/reanchor_r8.py",
+             "review/ord0500-checkin/tools/reanchor_r8_selftest.py",
+             "review/ord0500-checkin/tools/citation_audit_r8.py"]
     # this generation's four screen receipts and its exposure pair, by what is actually in the tree
     rcp = os.path.join(WT, "review/ord0500-checkin/receipts")
     for name in sorted(os.listdir(rcp)):
