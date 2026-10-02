@@ -1,7 +1,7 @@
 {
  "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
  "arm": "names-painted-390",
- "run_id": "ord0512c2",
+ "run_id": "ord0512g1",
  "viewport": "390x844",
  "server_stop_rows_in_payloads": 18,
  "server_distinct_names": 8,

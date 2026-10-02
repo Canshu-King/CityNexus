@@ -1,0 +1,138 @@
+{
+ "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
+ "arm": "hidden-reasons-are-told",
+ "run_id": "ord0512g1",
+ "fitted_tally": {
+  "shown": 3,
+  "off_map": 4,
+  "over_a_name": 1,
+  "over_a_control": 1
+ },
+ "crowded_tally": {
+  "shown": 2,
+  "off_map": 4,
+  "over_a_name": 3
+ },
+ "fitted_rows": [
+  [
+   "Arrival",
+   "shown",
+   "true",
+   "true",
+   "nothing"
+  ],
+  [
+   "Check in · Haihe Riverside Hotel",
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "Overnight · Haihe Riverside Hotel",
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "Five Great Avenues",
+   "over_a_name",
+   "true",
+   "false",
+   "name"
+  ],
+  [
+   "Tianjin Museum",
+   "shown",
+   "true",
+   "true",
+   "nothing"
+  ],
+  [
+   "Tianjin Eye",
+   "shown",
+   "true",
+   "true",
+   "nothing"
+  ],
+  [
+   "Overnight · Haihe Riverside Hotel",
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "Check out · Haihe Riverside Hotel",
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "Departure",
+   "over_a_control",
+   "true",
+   "true",
+   "control"
+  ]
+ ],
+ "crowded_rows": [
+  [
+   "shown",
+   "true",
+   "true",
+   "nothing"
+  ],
+  [
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "shown",
+   "true",
+   "true",
+   "nothing"
+  ],
+  [
+   "over_a_name",
+   "true",
+   "true",
+   "name"
+  ],
+  [
+   "over_a_name",
+   "true",
+   "true",
+   "name"
+  ],
+  [
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "off_map",
+   "false",
+   "false",
+   "nothing"
+  ],
+  [
+   "over_a_name",
+   "true",
+   "true",
+   "name"
+  ]
+ ],
+ "contradictions": []
+}

@@ -91,6 +91,9 @@ type LabelReading = {
   source: string | null;
   placement: string | null;
   side: string | null;
+  fitsRight: string | null;
+  fitsLeft: string | null;
+  blockedBy: string | null;
   visible: boolean;
   box: { x: number; y: number; w: number; h: number };
   inCanvas: boolean;
@@ -127,6 +130,9 @@ const readLabels = (page: Page) =>
           source: el.getAttribute("data-name-source"),
           placement: el.getAttribute("data-placement"),
           side: el.getAttribute("data-side"),
+          fitsRight: el.getAttribute("data-fits-right"),
+          fitsLeft: el.getAttribute("data-fits-left"),
+          blockedBy: el.getAttribute("data-blocked-by"),
           visible: style.visibility === "visible" && style.display !== "none" && box.width > 0,
           box: {
             x: Math.round(box.x),
@@ -549,6 +555,67 @@ test("labels-move-with-camera — the names belong to the geography, not to the 
   expect(moved.length, node("E1", `no name was on the glass both before and after the drag: ${JSON.stringify({ before: before.length, after: after.length })}`)).toBeGreaterThan(0);
   expect(stuck, node("E1", `a name did not move with the camera: ${JSON.stringify(stuck)}`)).toEqual([]);
   expect(inked, node("E1", "after the pan the followed name paints no pixels")).toBe(true);
+});
+
+test("hidden-reasons-are-told — a name that is not on the glass says which kind of no it is", async ({ page }) => {
+  /* The second generation's own claim: `off_map` used to cover two different facts -- no side of the pin
+     can hold this word, and a side can hold it but somebody else owns that ground. Both came back as a
+     name that simply is not there. The element now carries the per-side verdict and the blocker, and this
+     arm checks those three attributes against `data-placement` until they contradict each other: a name
+     cannot be `off_map` while a side fits, and cannot be `over_a_name` while nothing stands on it. */
+  const check = (rows: Awaited<ReturnType<typeof readLabels>>["labels"]) => rows
+    .map((label) => {
+      const fits = [label.fitsRight === "true", label.fitsLeft === "true"];
+      if (label.placement === null || label.fitsRight === null || label.fitsLeft === null
+        || label.blockedBy === null) return `${label.text}: an attribute is missing`;
+      if (!label.visible && label.placement === "shown") return `${label.text}: shown yet hidden`;
+      if (label.placement === "shown") {
+        return !fits.some(Boolean) || label.blockedBy !== "nothing"
+          ? `${label.text}: shown but not free (fits ${JSON.stringify(fits)}, blocked by ${label.blockedBy})` : "";
+      }
+      if (label.placement === "off_map") {
+        return fits.some(Boolean) || label.blockedBy !== "nothing"
+          ? `${label.text}: off_map while ${JSON.stringify(fits)} says a side fits / ${label.blockedBy} stands on it` : "";
+      }
+      if (label.placement === "over_a_name" || label.placement === "over_a_control") {
+        const wanted = label.placement === "over_a_name" ? "name" : "control";
+        return !fits.some(Boolean) || label.blockedBy !== wanted
+          ? `${label.text}: ${label.placement} contradicted by fits ${JSON.stringify(fits)} / blocked by ${label.blockedBy}` : "";
+      }
+      if (label.placement === "no_box") {
+        return fits.some(Boolean) ? `${label.text}: no_box yet a side fits` : "";
+      }
+      return `${label.text}: unknown placement ${label.placement}`;
+    })
+    .filter(Boolean);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await enterMap(page);
+  const fitted = await readLabels(page);
+  const fittedViolations = check(fitted.labels);
+  await page.evaluate(() => {
+    const host = document.querySelector<HTMLElement>(".v8-maplibre-canvas");
+    const map = (host as (HTMLElement & { citynexusMap?: { setZoom: (z: number) => void } }) | null)?.citynexusMap;
+    map?.setZoom(6);
+  });
+  await page.waitForTimeout(1_500);
+  const crowded = await readLabels(page);
+  const crowdedViolations = check(crowded.labels);
+  const tally = (rows: typeof crowded["labels"]) => rows.reduce<Record<string, number>>((acc, label) => {
+    const key = label.visible ? "shown" : String(label.placement);
+    acc[key] = (acc[key] ?? 0) + 1;
+    return acc;
+  }, {});
+  push("hidden-reasons-are-told", {
+    fitted_tally: tally(fitted.labels),
+    crowded_tally: tally(crowded.labels),
+    fitted_rows: fitted.labels.map((label) => [label.text, label.placement, label.fitsRight, label.fitsLeft, label.blockedBy]),
+    crowded_rows: crowded.labels.map((label) => [label.placement, label.fitsRight, label.fitsLeft, label.blockedBy]),
+    contradictions: [...fittedViolations, ...crowdedViolations],
+  });
+  expect(crowded.labelNodeCount, node("F1", "no name nodes at all, so every verdict below would be vacuous")).toBeGreaterThan(0);
+  expect(fittedViolations, node("F1", `at the journey's own view: ${JSON.stringify(fittedViolations)}`)).toEqual([]);
+  expect(crowdedViolations, node("F1", `at a crowded zoom: ${JSON.stringify(crowdedViolations)}`)).toEqual([]);
 });
 
 test("pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it", async ({ page }) => {
