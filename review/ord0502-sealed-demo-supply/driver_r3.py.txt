@@ -1,0 +1,162 @@
+# -*- coding: utf-8 -*-
+"""第三趟：同一扇门，这一次把**答复全文**与"这趟能不能被手机走"的那几行留下。
+只起后端、只用自己的库与自己的 token（值不落盘）、不开浏览器。
+前两趟的件冻结不动，这一趟是新名（同一把尺每代一份、不互相覆盖）。"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import secrets
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+RUNNER = WT2 / "review/ord0502/run_ord0502_stack_r1.py"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+WALK_TABLES = ("journeys", "journey_legs", "itinerary_items", "activities", "plan_versions",
+               "places", "travelers", "preferences", "idempotency_keys")
+
+
+def g(*a: str) -> str:
+    return (subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                            encoding="utf-8", errors="replace").stdout or "").strip()
+
+
+def post(url, headers, body):
+    r = urllib.request.Request(url, data=body, method="POST", headers=headers)
+    try:
+        with urllib.request.urlopen(r, timeout=60) as resp:
+            return resp.status, resp.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+
+
+def get(url):
+    try:
+        with urllib.request.urlopen(url, timeout=40) as resp:
+            return resp.status, resp.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+
+
+def table_counts(db):
+    import sqlite3
+    out = {}
+    with sqlite3.connect("file:%s?mode=ro" % db.as_posix(), uri=True) as con:
+        names = [r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")]
+        for t in WALK_TABLES:
+            out[t] = (con.execute('SELECT count(*) FROM "%s"' % t).fetchone()[0]
+                      if t in names else "NO_SUCH_TABLE")
+        out["_tables"] = len(names)
+        try:
+            out["journey_columns_present"] = [
+                r[1] for r in con.execute("PRAGMA table_info(journeys)")]
+            row = con.execute("SELECT id, status, active_plan_version_id, current_activity_id,"
+                              " start_at, end_at, city_code FROM journeys LIMIT 3").fetchall()
+            out["journey_rows"] = [{"id": str(x[0]), "status": x[1],
+                                    "active_plan_version_id": (str(x[2]) if x[2] else None),
+                                    "current_activity_id": (str(x[3]) if x[3] else None),
+                                    "start_at_set": x[4] is not None, "end_at_set": x[5] is not None,
+                                    "city_code": x[6]} for x in row]
+            out["legs_with_times"] = (
+                con.execute('SELECT count(*) FROM journey_legs').fetchone()[0]
+                if "journey_legs" in names else "NO_SUCH_TABLE")
+        except Exception as e:  # noqa: BLE001
+            out["journey_rows_error"] = type(e).__name__
+    return out
+
+
+def main() -> int:
+    spec = importlib.util.spec_from_file_location("ord0502_runner", str(RUNNER))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+    if len(tip) != 40:
+        print("REFUSED: 读不到尖")
+        return 1
+    run_id = "SEALD3-" + time.strftime("%H%M%S")
+    snap = Path("D:/moodle") / ("_qoder_sealedd_%s" % run_id)
+    snap.mkdir(parents=True, exist_ok=True)
+    proc = subprocess.run(["git", "archive", "--format=tar", tip], cwd=str(WT2), capture_output=True)
+    if proc.returncode != 0:
+        print("REFUSED: archive rc=%d" % proc.returncode)
+        return 1
+    tar = snap / "a.tar"
+    tar.write_bytes(proc.stdout)
+    import tarfile
+    with tarfile.open(str(tar)) as t:
+        t.extractall(path=str(snap))
+    tar.unlink()
+    backend = snap / "backend"
+    blobs = {}
+    for rel in ("backend/app/main.py", "backend/app/demo_scene.py"):
+        want, have = g("rev-parse", "%s:%s" % (tip, rel)), g("hash-object", "--no-filters",
+                                                             str(snap / rel))
+        if len(want) != 40 or have != want:
+            print("REFUSED: 导出字节与尖不等", rel)
+            return 1
+        blobs[rel] = want
+
+    db = backend / ("%s.db" % run_id)
+    port = mod.free_port(int(os.environ.get("SEALD_PORT", "4797")), "backend")
+    env = mod.env_base(run_id, db, port)
+    env["CITYNEXUS_DEMO_MODE"] = "true"
+    token = secrets.token_hex(16)
+    env["CITYNEXUS_DEMO_SCENE_TOKEN"] = token
+    base = "http://127.0.0.1:%d" % port
+    hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": token,
+           "Idempotency-Key": "seald3-" + run_id}
+    out = {"run_id": run_id, "line_tip": tip, "blobs": blobs, "backend_port": port,
+           "token_env_name": "CITYNEXUS_DEMO_SCENE_TOKEN", "token_header_name": "X-Demo-Scene-Token"}
+    child = subprocess.Popen([mod.PY, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                              "--port", str(port)], cwd=str(backend), env=env,
+                             stdout=(ART / ("uvicorn_%s.log" % run_id)).open("w", encoding="utf-8"),
+                             stderr=subprocess.STDOUT)
+    out["child_pid"] = child.pid
+    try:
+        ok, reading = mod.wait_http(base + "/api/v1/health")
+        hs, hb = get(base + "/api/v1/health")
+        out["health"] = {"ok": ok, "http_status": hs, "carries_this_run_id": run_id in hb.decode()}
+        st, body = get(base + "/api/v1/demo/scene")
+        out["scene_before"] = {"http_status": st,
+                               "json": json.loads(body.decode("utf-8"))}
+        st, body = post(base + "/api/v1/demo/scene/ensure", hdr, b"{}")
+        out["ensure_status"] = st
+        out["ensure_receipt"] = json.loads(body.decode("utf-8"))
+        out["counts_after_ensure"] = table_counts(db)
+        st, body = get(base + "/api/v1/demo/scene")
+        out["scene_after"] = {"http_status": st, "json": json.loads(body.decode("utf-8"))}
+        # 手机真正会读的两扇：行程本体与今天的头
+        jid = out["scene_after"]["json"].get("journey_id")
+        for path in ("/api/v1/journeys/%s" % jid, "/api/v1/experience?journey_id=%s" % jid):
+            s2, b2 = get(base + path)
+            out.setdefault("walk_reads", []).append(
+                {"path": path.split("?")[0], "http_status": s2, "bytes": len(b2),
+                 "keys": sorted(json.loads(b2.decode("utf-8")).keys())[:14]
+                 if b2[:1] == b"{" else "NON_JSON"})
+    finally:
+        child.terminate()
+        try:
+            child.wait(timeout=60)
+        except subprocess.TimeoutExpired:
+            child.kill()
+        out["child_exit"] = child.poll()
+    dst = ART / ("sealed_demo_ensure_full_receipt_%s.json" % run_id)
+    dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
+                   newline=chr(10))
+    print(json.dumps(out, ensure_ascii=False, indent=2)[:5000])
+    print("ARTIFACT", dst)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

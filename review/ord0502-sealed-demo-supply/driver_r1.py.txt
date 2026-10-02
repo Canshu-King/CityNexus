@@ -1,0 +1,164 @@
+# -*- coding: utf-8 -*-
+"""在 day24 那一代的**产品字节**上，问一扇门：干净部署（一次性私有库）时 `/api/v1/demo/scene`
+答什么——它决定首屏那枚「使用封存的演示行程」CTA 应当落在哪一个具名拒绝态。
+只起后端、不开浏览器、不建前端产物；只停自己 Popen 的那枚 pid。
+形制复用本车道已落地的 runner（import 同一份 env_base / free_port / wait_http），
+被测字节用 `git archive <现读尖>` 导出并逐枚比 blob。"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tarfile
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+RUNNER = WT2 / "review/ord0502/run_ord0502_stack_r1.py"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+SNAP_ROOT = Path("D:/moodle")
+BAD: list[str] = []
+
+
+def g(*a: str) -> str:
+    r = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    return (r.stdout or "").strip()
+
+
+def load_runner():
+    spec = importlib.util.spec_from_file_location("ord0502_runner", str(RUNNER))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def get(url: str):
+    try:
+        with urllib.request.urlopen(url, timeout=25) as r:
+            return r.status, dict(r.headers), r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, dict(e.headers), e.read()
+    except Exception as e:  # noqa: BLE001 - the point is to report what was seen
+        return None, {"exception": type(e).__name__}, b""
+
+
+def export_snap(tip: str, run_id: str) -> Path:
+    dst = SNAP_ROOT / ("_qoder_sealedd_%s" % run_id)
+    dst.mkdir(parents=True, exist_ok=True)
+    proc = subprocess.run(["git", "archive", "--format=tar", tip], cwd=str(WT2),
+                          capture_output=True)
+    if proc.returncode != 0:
+        BAD.append("ARCHIVE_RC_%d" % proc.returncode)
+        return dst
+    Path(dst / "archive.tar").write_bytes(proc.stdout)
+    with tarfile.open(str(dst / "archive.tar")) as t:
+        t.extractall(path=str(dst))
+    (dst / "archive.tar").unlink()
+    for rel in ("backend/app/main.py", "backend/app/api/demo.py", "backend/app/db/session.py"):
+        try:
+            want = g("rev-parse", "%s:%s" % (tip, rel))
+        except Exception:  # noqa: BLE001
+            want = ""
+        have = g("hash-object", str(dst / rel)) if (dst / rel).exists() else ""
+        if want and have != want:
+            BAD.append("SNAP_BLOB_MISMATCH %s" % rel)
+    return dst
+
+
+def main() -> int:
+    mod = load_runner()
+    tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+    if len(tip) != 40:
+        print("REFUSED: 读不到产品线尖")
+        return 1
+    run_id = "SEALEDD-" + time.strftime("%H%M%S")
+    snap = export_snap(tip, run_id)
+    backend = snap / "backend"
+    if not backend.exists():
+        print("REFUSED: 导出里没有 backend")
+        return 1
+    db = snap / "backend" / ("%s.db" % run_id)
+    port = mod.free_port(int(os.environ.get("SEALEDD_BACKEND_PORT", "4791")), "backend")
+    env = mod.env_base(run_id, db, port)
+    out = {"run_id": run_id, "line_tip": tip, "backend_port": port,
+           "snap": str(snap), "db_path": str(db),
+           "main_py_blob": g("rev-parse", "%s:backend/app/main.py" % tip)}
+    log_path = ART / ("uvicorn_%s.log" % run_id)
+    child = subprocess.Popen(
+        [mod.PY, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", str(port)],
+        cwd=str(backend), env=env,
+        stdout=log_path.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+    out["child_pid"] = child.pid
+    try:
+        ok, reading = mod.wait_http("http://127.0.0.1:%d/api/v1/health" % port)
+        out["health_wait"] = {"ok": ok, "reading": reading}
+        if not ok:
+            BAD.append("BACKEND_DID_NOT_ANSWER")
+        st, hd, raw = get("http://127.0.0.1:%d/api/v1/health" % port)
+        body = {}
+        try:
+            body = json.loads(raw.decode("utf-8"))
+        except Exception:  # noqa: BLE001
+            BAD.append("HEALTH_NOT_JSON")
+        out["health"] = {"http_status": st, "payload_keys": sorted(body.keys()),
+                         "carries_this_run_id": run_id in json.dumps(body, ensure_ascii=False)}
+        if not out["health"]["carries_this_run_id"]:
+            BAD.append("OWNERSHIP_NOT_PROVEN_BY_RUN_ID")
+
+        st2, hd2, raw2 = get("http://127.0.0.1:%d/api/v1/demo/scene" % port)
+        scene = {}
+        try:
+            scene = json.loads(raw2.decode("utf-8"))
+        except Exception:  # noqa: BLE001
+            BAD.append("SCENE_NOT_JSON")
+        out["demo_scene_first"] = {
+            "http_status": st2, "content_type": hd2.get("Content-Type"),
+            "bytes": len(raw2), "payload_keys": sorted(scene.keys()),
+            "demo_mode": scene.get("demo_mode", "KEY_ABSENT"),
+            "journey_id_key_present": "journey_id" in scene,
+            "journey_id_is_non_null": scene.get("journey_id") is not None,
+            "journey_status": scene.get("journey_status", "KEY_ABSENT"),
+        }
+        out["db_created_by_this_run"] = db.exists()
+        st3, hd3, raw3 = get("http://127.0.0.1:%d/api/v1/demo/scene" % port)
+        out["demo_scene_second"] = {"http_status": st3, "bytes": len(raw3),
+                                    "same_bytes_as_first": raw3 == raw2}
+        rows = {}
+        if db.exists():
+            import sqlite3
+            with sqlite3.connect("file:%s?mode=ro" % db.as_posix(), uri=True) as con:
+                for tbl in ("journeys", "travelers", "demo_scenes", "sealed_demo_journeys"):
+                    try:
+                        rows[tbl] = con.execute("SELECT count(*) FROM %s" % tbl).fetchone()[0]
+                    except Exception:  # noqa: BLE001
+                        rows[tbl] = "NO_SUCH_TABLE"
+        out["row_counts_after_two_reads"] = rows
+    finally:
+        child.terminate()
+        try:
+            child.wait(timeout=40)
+        except subprocess.TimeoutExpired:
+            child.kill()
+        out["child_exit"] = child.poll()
+    dst = ART / ("sealed_demo_scene_%s.json" % run_id)
+    dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n",
+                   encoding="utf-8", newline=chr(10))
+    print(json.dumps(out, ensure_ascii=False, indent=2))
+    print("ARTIFACT", dst)
+    if BAD:
+        print("BAD:", *BAD, sep="\n  ")
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,65 @@
+{
+  "run_id": "SEALEDD-015705",
+  "line_tip": "4fac49f371da0820393d038700bddddafd1176d1",
+  "backend_port": 4791,
+  "snap": "D:\\moodle\\_qoder_sealedd_SEALEDD-015705",
+  "db_path": "D:\\moodle\\_qoder_sealedd_SEALEDD-015705\\backend\\SEALEDD-015705.db",
+  "main_py_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+  "child_pid": 31012,
+  "health_wait": {
+    "ok": true,
+    "reading": "http_status=200 body={\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"SEALEDD-015705\",\"e2e_database_id\":\"SEALEDD-015705.db\"}"
+  },
+  "health": {
+    "http_status": 200,
+    "payload_keys": [
+      "ai",
+      "ai_state",
+      "database",
+      "e2e_database_id",
+      "e2e_run_id",
+      "status"
+    ],
+    "carries_this_run_id": true
+  },
+  "demo_scene_first": {
+    "http_status": 200,
+    "content_type": null,
+    "bytes": 732,
+    "payload_keys": [
+      "basis",
+      "current_activity_id",
+      "demo_mode",
+      "effective_now",
+      "evidence_expires_at",
+      "evidence_reference_consistent",
+      "evidence_snapshot_id",
+      "evidence_state",
+      "journey_id",
+      "journey_status",
+      "mobility_legs_hard_eligible",
+      "mobility_legs_total",
+      "plan_version_id",
+      "scene_end_at",
+      "scene_start_at",
+      "supply"
+    ],
+    "demo_mode": false,
+    "journey_id_key_present": true,
+    "journey_id_is_non_null": false,
+    "journey_status": null
+  },
+  "db_created_by_this_run": true,
+  "demo_scene_second": {
+    "http_status": 200,
+    "bytes": 732,
+    "same_bytes_as_first": true
+  },
+  "row_counts_after_two_reads": {
+    "journeys": 0,
+    "travelers": 0,
+    "demo_scenes": "NO_SUCH_TABLE",
+    "sealed_demo_journeys": "NO_SUCH_TABLE"
+  },
+  "child_exit": 1
+}

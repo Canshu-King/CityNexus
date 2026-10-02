@@ -1,0 +1,183 @@
+# -*- coding: utf-8 -*-
+"""第二趟：把 r1 那趟里两处「测法是空的」补实。
+r1 的 L5 用 `{"unexpected_field":1}` 换 body —— 而这扇门的签名只取 `city_code` 与 `journey_id`
+两个字段（`app/demo_scene.py:216-218`），所以那次重放**本来就该**是重放，不是冲突：那一格作废。
+这一趟改成换**有意义的字段**，并且**每一腿之后都数一次行**，让"拒绝时什么都没写"这句话有读数。
+"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import secrets
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+RUNNER = WT2 / "review/ord0502/run_ord0502_stack_r1.py"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+TABLES = ("journeys", "travelers", "places", "idempotency_keys")
+
+
+def g(*a: str) -> str:
+    r = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    return (r.stdout or "").strip()
+
+
+def req(url, method="GET", headers=None, body=None):
+    r = urllib.request.Request(url, data=body, method=method, headers=headers or {})
+    try:
+        with urllib.request.urlopen(r, timeout=40) as resp:
+            return resp.status, {k.lower(): v for k, v in dict(resp.headers).items()}, resp.read()
+    except urllib.error.HTTPError as e:
+        return e.code, {k.lower(): v for k, v in dict(e.headers).items()}, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, {"exception": type(e).__name__}, b""
+
+
+def brief(status, hdr, raw):
+    out = {"http_status": status, "content_type": hdr.get("content-type"), "bytes": len(raw)}
+    try:
+        j = json.loads(raw.decode("utf-8"))
+    except Exception:  # noqa: BLE001
+        out["non_json_head"] = raw[:120].decode("utf-8", "replace")
+        return out
+    if isinstance(j, dict):
+        err = j.get("error") if isinstance(j.get("error"), dict) else {}
+        for k in ("code", "message", "message_key"):
+            if err.get(k):
+                out["error_" + k] = err[k]
+        for k in ("state", "journey_id", "journey_created_by_this_call", "idempotency_replay",
+                  "city_code", "journey_status", "plan_version_id"):
+            if k in j:
+                out[k] = ("HASH:" + str(hash(str(j[k])))[:8] if k == "journey_id" else j[k])
+        out["payload_keys"] = sorted(j.keys())
+    return out
+
+
+def counts(db):
+    """每一张表的行数（不只我猜的那几枚名字）——这样"拒绝时什么都没写"才有全表级读数。"""
+
+    out = {}
+    if not db.exists():
+        return {"db": "NOT_CREATED"}
+    import sqlite3
+    with sqlite3.connect("file:%s?mode=ro" % db.as_posix(), uri=True) as con:
+        names = [r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' "
+            "AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+        for n in names:
+            try:
+                out[n] = con.execute('SELECT count(*) FROM "%s"' % n).fetchone()[0]
+            except sqlite3.Error:
+                out[n] = "UNCOUNTABLE"
+        out["_table_count"] = len(names)
+    return out
+
+
+def main() -> int:
+    spec = importlib.util.spec_from_file_location("ord0502_runner", str(RUNNER))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+    if len(tip) != 40:
+        print("REFUSED: 读不到产品线尖")
+        return 1
+    run_id = "SEALDEnsure2-" + time.strftime("%H%M%S")
+    snap = Path("D:/moodle") / ("_qoder_sealedd_%s" % run_id)
+    snap.mkdir(parents=True, exist_ok=True)
+    proc = subprocess.run(["git", "archive", "--format=tar", tip], cwd=str(WT2), capture_output=True)
+    if proc.returncode != 0:
+        print("REFUSED: git archive rc=%d" % proc.returncode)
+        return 1
+    tar = snap / "a.tar"
+    tar.write_bytes(proc.stdout)
+    import tarfile
+    with tarfile.open(str(tar)) as t:
+        t.extractall(path=str(snap))
+    tar.unlink()
+    backend = snap / "backend"
+    blobs = {}
+    for rel in ("backend/app/main.py", "backend/app/demo_scene.py"):
+        want = g("rev-parse", "%s:%s" % (tip, rel))
+        have = g("hash-object", "--no-filters", str(snap / rel))
+        if len(want) != 40 or have != want:
+            print("REFUSED: 导出的字节与尖不等 %s" % rel)
+            return 1
+        blobs[rel] = want
+
+    db = backend / ("%s.db" % run_id)
+    port = mod.free_port(int(os.environ.get("SEALD_PORT", "4795")), "backend")
+    env = mod.env_base(run_id, db, port)
+    env["CITYNEXUS_DEMO_MODE"] = "true"
+    token = secrets.token_hex(16)
+    env["CITYNEXUS_DEMO_SCENE_TOKEN"] = token
+    out = {"run_id": run_id, "line_tip": tip, "blobs": blobs, "backend_port": port,
+           "env_names_only": ["CITYNEXUS_DEMO_MODE=true", "CITYNEXUS_DEMO_SCENE_TOKEN=SET"],
+           "signature_fields_read_from_source": ["city_code", "journey_id"]}
+    base = "http://127.0.0.1:%d" % port
+    hdr_ok = {"Content-Type": "application/json", "X-Demo-Scene-Token": token}
+    child = subprocess.Popen([mod.PY, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                              "--port", str(port)], cwd=str(backend), env=env,
+                             stdout=(ART / ("uvicorn_%s.log" % run_id)).open("w", encoding="utf-8"),
+                             stderr=subprocess.STDOUT)
+    out["child_pid"] = child.pid
+    key = "sealens2-" + run_id
+    try:
+        ok, reading = mod.wait_http(base + "/api/v1/health")
+        st, hd, raw = req(base + "/api/v1/health")
+        out["health"] = {"ok": ok, "http_status": st,
+                         "carries_this_run_id": run_id in raw.decode("utf-8", "replace")}
+        out["A_scene_before"] = brief(*req(base + "/api/v1/demo/scene"))
+        out["A_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST",
+                          {"Content-Type": "application/json"}, b"{}")
+        out["B_no_token"] = brief(st, hd, raw)
+        out["B_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST", hdr_ok, b"{}")
+        out["C_no_idempotency_key"] = brief(st, hd, raw)
+        out["C_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST",
+                          dict(hdr_ok, **{"Idempotency-Key": key}), b"{}")
+        out["D_ensure_first"] = brief(st, hd, raw)
+        out["D_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST",
+                          dict(hdr_ok, **{"Idempotency-Key": key}),
+                          json.dumps({"journey_id": "11111111-1111-4111-8111-111111111111"}).encode())
+        out["E_same_key_other_meaning_field"] = brief(st, hd, raw)
+        out["E_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST",
+                          dict(hdr_ok, **{"Idempotency-Key": key}), b"{}")
+        out["F_same_key_same_body"] = brief(st, hd, raw)
+        out["F_counts"] = counts(db)
+        st, hd, raw = req(base + "/api/v1/demo/scene/ensure", "POST",
+                          dict(hdr_ok, **{"Idempotency-Key": key + "-second"}),
+                          json.dumps({"city_code": "CNX-DEMO"}).encode())
+        out["G_new_key_same_city_requested"] = brief(st, hd, raw)
+        out["G_counts"] = counts(db)
+        out["Z_scene_after_all"] = brief(*req(base + "/api/v1/demo/scene"))
+    finally:
+        child.terminate()
+        try:
+            child.wait(timeout=40)
+        except subprocess.TimeoutExpired:
+            child.kill()
+        out["child_exit"] = child.poll()
+    dst = ART / ("sealed_demo_ensure_second_%s.json" % run_id)
+    dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
+                   newline=chr(10))
+    print(json.dumps(out, ensure_ascii=False, indent=2))
+    print("ARTIFACT", dst)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

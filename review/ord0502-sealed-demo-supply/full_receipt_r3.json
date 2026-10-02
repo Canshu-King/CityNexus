@@ -1,0 +1,234 @@
+{
+  "run_id": "SEALD3-020656",
+  "line_tip": "4fac49f371da0820393d038700bddddafd1176d1",
+  "blobs": {
+    "backend/app/main.py": "8b5c56d248560028f2d3de0dc9f697de06630243",
+    "backend/app/demo_scene.py": "1ec3180a29a89d542f8dce738f7c5c13d3eadfef"
+  },
+  "backend_port": 4797,
+  "token_env_name": "CITYNEXUS_DEMO_SCENE_TOKEN",
+  "token_header_name": "X-Demo-Scene-Token",
+  "child_pid": 41016,
+  "health": {
+    "ok": true,
+    "http_status": 200,
+    "carries_this_run_id": true
+  },
+  "scene_before": {
+    "http_status": 200,
+    "json": {
+      "demo_mode": true,
+      "journey_id": null,
+      "journey_status": null,
+      "current_activity_id": null,
+      "scene_start_at": null,
+      "scene_end_at": null,
+      "effective_now": null,
+      "basis": null,
+      "evidence_expires_at": null,
+      "evidence_state": "NO_SCENARIO",
+      "evidence_snapshot_id": null,
+      "evidence_reference_consistent": null,
+      "mobility_legs_total": null,
+      "mobility_legs_hard_eligible": null,
+      "plan_version_id": null,
+      "supply": {
+        "asked": false,
+        "operation_id": null,
+        "job_status": null,
+        "state": "NOT_ASKED",
+        "failed_stage": null,
+        "reason_code": null,
+        "retryable": null,
+        "leg_states": {
+          "photon": "NOT_ASKED",
+          "nominatim": "NOT_ASKED",
+          "overpass": "NOT_ASKED"
+        },
+        "counts_as_supply": false,
+        "stops": {
+          "plan_present": false,
+          "total": 0,
+          "with_coordinate": 0,
+          "without_coordinate": 0,
+          "reasons": [],
+          "source_kinds": []
+        }
+      }
+    }
+  },
+  "ensure_status": 200,
+  "ensure_receipt": {
+    "state": "READY",
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "journey_created_by_this_call": false,
+    "city_code": "CNX-DEMO",
+    "journey_status": "PLANNED",
+    "plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+    "scene_label": "One Day in Nexus City - CNX-DEMO - places supplied from the built-in offline fixture",
+    "supply": {
+      "supply_leg": "builtin_fixture:data/mock/places.json (provider_key=mock-city, read from disk, no network)",
+      "destructive": false,
+      "rows_deleted": 0,
+      "rows_installed": 37,
+      "rows_already_present": 0,
+      "places_held": {
+        "CN-BEIJING": 8,
+        "CNX-DEMO": 8
+      },
+      "supported_city_codes": [
+        "CN-BEIJING",
+        "CNX-DEMO"
+      ],
+      "installed_by_table": {
+        "CityService": 10,
+        "Journey": 1,
+        "JourneyConstraint": 3,
+        "Place": 16,
+        "Preference": 5,
+        "Traveler": 1,
+        "TravelerTwinSnapshot": 1
+      }
+    },
+    "advance": {
+      "steps": [
+        {
+          "step": "plans/generate",
+          "ms": 18.6,
+          "ok": true
+        },
+        {
+          "step": "select",
+          "ms": 13.5,
+          "ok": true
+        }
+      ],
+      "total_ms": 32.1,
+      "selected_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+      "journey_status": "PLANNED"
+    },
+    "advance_refused_steps": [],
+    "idempotency_key": "demo.scene.ensure:seald3-SEALD3-020656"
+  },
+  "counts_after_ensure": {
+    "journeys": 1,
+    "journey_legs": 0,
+    "itinerary_items": "NO_SUCH_TABLE",
+    "activities": 18,
+    "plan_versions": 3,
+    "places": 16,
+    "travelers": 1,
+    "preferences": 5,
+    "idempotency_keys": 1,
+    "_tables": 61,
+    "journey_columns_present": [
+      "id",
+      "traveler_id",
+      "title",
+      "city_code",
+      "timezone",
+      "start_at",
+      "end_at",
+      "budget_currency",
+      "budget_amount_minor",
+      "planning_mode",
+      "status",
+      "active_plan_version_id",
+      "current_activity_id",
+      "created_at",
+      "updated_at",
+      "deleted_at",
+      "aborted_at",
+      "abort_reason"
+    ],
+    "journey_rows": [
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "status": "PLANNED",
+        "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+        "current_activity_id": null,
+        "start_at_set": true,
+        "end_at_set": true,
+        "city_code": "CNX-DEMO"
+      }
+    ],
+    "legs_with_times": 0
+  },
+  "scene_after": {
+    "http_status": 200,
+    "json": {
+      "demo_mode": true,
+      "journey_id": "22222222-2222-4222-8222-222222222222",
+      "journey_status": "PLANNED",
+      "current_activity_id": null,
+      "scene_start_at": "2026-10-10T09:00:00+08:00",
+      "scene_end_at": "2026-10-10T19:00:00+08:00",
+      "effective_now": "2026-10-10T09:00:00+08:00",
+      "basis": "JOURNEY_START",
+      "evidence_expires_at": null,
+      "evidence_state": "FROZEN_WITHOUT_TTL",
+      "evidence_snapshot_id": "6dc40b66-2ab1-442a-a795-a99a19011565",
+      "evidence_reference_consistent": true,
+      "mobility_legs_total": 5,
+      "mobility_legs_hard_eligible": 5,
+      "plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+      "supply": {
+        "asked": false,
+        "operation_id": null,
+        "job_status": null,
+        "state": "NOT_ASKED",
+        "failed_stage": null,
+        "reason_code": null,
+        "retryable": null,
+        "leg_states": {
+          "photon": "NOT_ASKED",
+          "nominatim": "NOT_ASKED",
+          "overpass": "NOT_ASKED"
+        },
+        "counts_as_supply": false,
+        "stops": {
+          "plan_present": true,
+          "total": 6,
+          "with_coordinate": 6,
+          "without_coordinate": 0,
+          "reasons": [],
+          "source_kinds": [
+            "GOLDEN_FIXTURE"
+          ]
+        }
+      }
+    }
+  },
+  "walk_reads": [
+    {
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222",
+      "http_status": 200,
+      "bytes": 529,
+      "keys": [
+        "abort_reason",
+        "aborted_at",
+        "active_plan_version_id",
+        "budget",
+        "city_code",
+        "current_activity_id",
+        "end_at",
+        "id",
+        "live_view",
+        "planning_mode",
+        "start_at",
+        "status",
+        "timezone",
+        "title"
+      ]
+    },
+    {
+      "path": "/api/v1/experience",
+      "http_status": 404,
+      "bytes": 22,
+      "keys": [
+        "detail"
+      ]
+    }
+  ],
+  "child_exit": 1
+}
