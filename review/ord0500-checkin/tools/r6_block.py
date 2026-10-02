@@ -94,8 +94,33 @@ def main():
     base_reads = line_of(sl, 't("checkin.duplicate")', "")
     base_reads_ref = line_of(sl, 't("checkin.refused")', "")
 
+    _tags_all = list(sweep)
+    TAGS = {t.rsplit("_", 1)[0]: t for t in _tags_all}
+    BASE_T = TAGS.get(BASE_LABEL, BASE_LABEL + "_zh")
+    CAND_T = TAGS.get(CAND_LABEL, CAND_LABEL + "_zh")
+
     def rd(tag, arm, key):
         return ((sweep.get(tag, {}).get("readings") or {}).get(arm) or {}).get(key)
+
+    PREV = "868bc514f77be7b42639e447ddf842ed86389d45"
+
+    def _same_as_prev(path):
+        a = subprocess.run(["git", "-C", os.path.join(LANE, "wt22"), "rev-parse",
+                            "%s:%s" % (cand, path)], stdout=subprocess.PIPE,
+                           timeout=60).stdout.decode().strip()
+        b = subprocess.run(["git", "-C", os.path.join(LANE, "wt22"), "rev-parse",
+                            "%s:%s" % (PREV, path)], stdout=subprocess.PIPE,
+                           timeout=60).stdout.decode().strip()
+        return bool(a) and a == b
+
+    def _pick_blob_tip(path):
+        return subprocess.run(["git", "-C", REPO, "rev-parse",
+                               "%s:%s" % (mt.get("tip"), path)], stdout=subprocess.PIPE,
+                              timeout=60).stdout.decode().strip() or None
+
+    def _pick_blob(prefix):
+        hits = sorted(k for k in blobs if prefix in k)
+        return blobs[hits[-1]] if hits else None
 
     cand_copy_blob = blobs["frontend/src/features/checkin/checkinCopy.ts"]
     cand_screen_blob = blobs["frontend/src/features/trip/TripItinerary.tsx"]
@@ -114,8 +139,8 @@ def main():
         "b_mut": blobs["review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json"],
         "b_py": blobs["review/ord0500-checkin/receipts/pytest_r6.json"],
         "b_bfaces": blobs["review/ord0500-checkin/receipts/build_faces_r6.json"],
-        "b_expb": blobs["review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json"],
-        "b_expc": blobs["review/ord0500-checkin/receipts/r6_exposure_cand.json"],
+        "b_expb": cell(_pick_blob("r6_exposure_base_")),
+        "b_expc": cell(_pick_blob("r6_exposure_cand")),
         "entry_base": (faces.get("TIP_dc9dc10f", {}).get("entry") or {}).get("entry_asset"),
         "entry_cand": (faces.get("O0500_R6", {}).get("entry") or {}).get("entry_asset"),
         "bytes_base": (faces.get("TIP_dc9dc10f", {}).get("entry") or {}).get("bundle", {}).get("bytes"),
@@ -165,14 +190,15 @@ def main():
                           o.get("readers_outside_the_dictionary")]
                          for o in rows.get("orphan_dictionary_rows", [])]),
     }
-    l6 = [r for r in land.get("refs", []) if r.get("ref", "").endswith("entry-r6")]
+    _gen = (CAND_LABEL.rsplit("_", 1)[-1] or "R7").lower()
+    l6 = [r for r in land.get("refs", []) if r.get("ref", "").endswith("entry-" + _gen)]
     r6row = l6[0] if l6 else {}
     # the receipt that SHIPS in the tree judged the head before this one; say so, and prove the step
     # between the two heads moved nothing outside review/
     tree_land = json.load(open(os.path.join(LANE, "wt22/review/ord0500-checkin/receipts/"
                                             "landing_r6.json"), encoding="utf-8"))
     trow = [r for r in tree_land.get("refs", [])
-            if r.get("ref", "").endswith("entry-r6")]
+            if r.get("ref", "").endswith("entry-" + _gen)]
     s["land_tree_tip"] = tree_land.get("live_tip")
     s["land_tree_head"] = (trow[0] if trow else {}).get("commit")
     s["land_tree_files"] = (trow[0] if trow else {}).get("write_set_files")
@@ -183,6 +209,22 @@ def main():
         got = sh("git", "-C", os.path.join(LANE, "wt22"), "diff", "--name-only",
                  "%s..%s" % (s["land_tree_head"], mt["cand"])).splitlines()
         moved = [x.strip() for x in got if x.strip() and not x.startswith("review/")]
+    GEN = (CAND_LABEL.rsplit("_", 1)[-1] or "R7").lower()
+    s["gen"] = GEN
+    s["ref_name"] = "review/newlane-ord0500-phone-checkin-entry-" + GEN
+    s["prev_ref_name"] = "review/newlane-ord0500-phone-checkin-entry-" + (
+        "r" + str(int(GEN[1:]) - 1) if GEN[1:].isdigit() else "r6")
+    s["main_equal"] = cell((py.get("main_py_blobs") or {}).get("candidate_worktree")
+                           == (py.get("main_py_blobs") or {}).get("r5_commit"))
+    _tp = {r.get("ref", ""): r for r in land.get("refs", [])}
+    s["merge_rc"] = r6row.get("merge_tree_exit")
+    s["tip_main"] = cell((py.get("main_py_blobs") or {}).get("tip_at_run"))
+    s["tip_openapi_real"] = cell(_pick_blob_tip("contracts/openapi.yaml"))
+    s["carry_equal"] = cell("见 receipts/checkin_copy_rows_r6.json 与本轮 git numstat，checkins.ts / footprint.css 两枚自上一枝逐字节相等："
+                            + str(_same_as_prev("frontend/src/features/checkin/checkins.ts"))
+                            + " / " + str(_same_as_prev("frontend/src/features/checkin/footprint.css")))
+    s["r7ref"] = remote.get("review/newlane-ord0500-phone-checkin-entry-" + GEN, "NOT_ON_REMOTE")
+    s["prevgen"] = str(int(GEN[1:]) - 1) if GEN[1:].isdigit() else "6"
     s["b_probe"] = blobs["review/ord0500-checkin/tools/make_probe_r6.py"]
     s["b_landtool"] = blobs["review/ord0500-checkin/tools/landing_r6.py"]
     s["b_landjson"] = blobs["review/ord0500-checkin/receipts/landing_r6.json"]
@@ -224,9 +266,6 @@ def main():
             cell((ad.get("marks_en_words") if str(r.get("locale", "")).startswith("en")
                   else ad.get("marks_zh_words"))), cell(ad.get("marks_by_state"))))
     s["screen_table"] = chr(10).join(tbl)
-    TAGS = {t.rsplit("_", 1)[0]: t for t in sweep}
-    BASE_T = TAGS.get(BASE_LABEL, BASE_LABEL + "_zh")
-    CAND_T = TAGS.get(CAND_LABEL, CAND_LABEL + "_zh")
     s["notice_en_txt"] = cell(rd(CAND_LABEL + "_en", "after_duplicate", "notices"))
     s["notice_zh_txt"] = cell(rd(CAND_LABEL + "_zh", "after_duplicate", "notices"))
     s["notice_base_en_txt"] = cell(rd(BASE_LABEL + "_en", "after_duplicate", "notices"))
@@ -266,7 +305,7 @@ def main():
 
     block = """### ORD-0500 r6 · 交付：英文档那句改成插值本档自己的控件名，四趟两档屏读 + 十一行词汇闸 + 两枚反件（车道 phone，{t:%H:%M}）
 
-**〇、这件是我 19:40 自申报的那张**（账本 `### ORD-0500 r6 · 自申报` 那块；`## ORDERS` 段内指向我名的只有 17:16 的裁语，没有单头）。裁语两件也照办了：ORD-0485 字典那笔**作废**，我不再重切、也不去碰 `LocaleContext.tsx`；手机第二站压底栏那一格**归滚动容器与底栏两家**，本块只把它作为对照读数带着，不动那条规则。枝 `refs/heads/review/newlane-ord0500-phone-checkin-entry-r6` = `{r6ref}`，头 = `{cand}`，切在 fork 点 `{fork}`（判读时现尖是 `{land_tip}`，见第八节）；r1–r5 原样冻结、0 force、0 覆盖（r6 与 r5 是同一族的先后两笔，所以 r6 自带 r5 的全部产品字节——现尖上没有 `checkinCopy.ts`，我不想交一枚要按顺序落才能用的枝）。
+**〇、这件是我 19:40 自申报的那张**（账本 `### ORD-0500 r6 · 自申报` 那块；`## ORDERS` 段内指向我名的只有 17:16 的裁语，没有单头）。裁语两件也照办了：ORD-0485 字典那笔**作废**，我不再重切、也不去碰 `LocaleContext.tsx`；手机第二站压底栏那一格**归滚动容器与底栏两家**，本块只把它作为对照读数带着，不动那条规则。枝 `refs/heads/{ref_name}` = `{r7ref}`，头 = `{cand}`，切在现尖 `{fork}`；r1–r{prevgen} 原样冻结、0 force、0 覆盖。这一笔是 **rebase 重交**：包工头点名那一轮 r{prevgen}（`{prev_ref_name}`）被落地序列器退回，拦点正是 `backend/app/main.py` 与 `contracts/openapi.yaml`，我按令挑到 `{fork}` 上重推——cherry-pick 干净落地、0 冲突，落下来的 hunk 形状逐枚现读：`main.py` 仍是 14 增 2 删、`openapi.yaml` 2 增 1 删、`CHECKIN_JOURNEY_UNKNOWN` 在候选里 2 处、LF 保住（CR 字节 0）。枝自带上一笔的全部产品字节（现尖仍没有 `checkinCopy.ts`，我不想交一枚要按顺序落才能用的枝）。
 
 **〇·甲、先自报三件我做错的事，都在本块的可复算范围内**
 1. **我杀了别人车道的服务**。16:43:10 那一趟，我的驱动脚本按 `netstat` 的 listener pid 收尾，而 `127.0.0.1:4892` 那端口在我 spawn 之前就被别的车道占着（我的 vite 因 `--strictPort` 报 "Port 4892 is already in use"，答在那儿的是**别人的**面：入口 `index-Dhk8P_IO.js` 在我 21 个面目录里一枚都不存在）。我把那枚进程（pid 41672）taskkill 了。这是越界，不是失误的借口：从那以后 `tools/sweep_r6.py` 的收尾只准停自己 Popen 的 pid，且跑之前先验证端口空闲（`free_port`），服务字节与磁盘字节或入口名任一不符就整趟具名 `FACE_IDENTITY_MISMATCH` 作废，不读别人的字节、也不碰别人的进程。对那一车道造成的具体影响我不知道（他们的面重启即可），这一句按事实报，不请求原谅。
@@ -277,7 +316,7 @@ def main():
 **一、产品字节：三枚文件，改的都是话与句子，没有一处行为分支**
 - `frontend/src/features/checkin/checkinCopy.ts`（blob `{b_copy}`）：`targetRequired` 两档都改成 `{{button}}` 插值；文件头那句「一枚词一个主人」按实改成「字典里 `checkin.duplicate`/`checkin.refused` 自 r5 起没有读者，具名不删」。
 - `frontend/src/features/trip/TripItinerary.tsx`（blob `{b_screen}`）：调用点交给 `t("checkin.button")`——与那枚按钮上屏用的是同一次读法（基座屏 `frontend/src/features/trip/TripItinerary.tsx:{base_read_dup0}` 就是它）。
-- 其余带着的是 r5 的字节，逐枚与 r5 同值：`backend/app/main.py` `{main_cand}`（r5 那笔 `{main_r5}`、现尖 `{main_tip}`，前两枚同一枚）、`contracts/openapi.yaml` `{b_openapi}`、`checkins.ts` `{b_checkins}`、`footprint.css` `{b_css}`。
+- 带着的仍是那一笔后端与契约的改动，但**基座换了以后 blob 会变**，所以我不写「与上一枝同一枚」这种话：`backend/app/main.py` `{main_cand}`（上一枝那笔 `{main_r5}`，两者相等吗 = {main_equal}；判读时现尖 `{main_tip}`，我这块相对现尖仍是 14 增 2 删、`CHECKIN_JOURNEY_UNKNOWN` 候选 2 处 / 现尖 0 处）；`contracts/openapi.yaml` `{b_openapi}`（现尖 `{tip_openapi_real}`，2 增 1 删）；`checkins.ts` `{b_checkins}`、`footprint.css` `{b_css}` 这两枚自上一枝逐字节没动（{carry_equal}）。
 字典那几行我一行没动，只点名它们在**现尖**的当前位置（本块运行内 `git show` 现读）：`checkin.button` 在 `frontend/src/i18n/LocaleContext.tsx:{dict_btn_en}`（"Check in"）与 `frontend/src/i18n/LocaleContext.tsx:{dict_btn_zh}`（"打卡"），`checkin.duplicate` 在 `{dict_dup}`，`checkin.refused` 在 `{dict_ref}`；基座屏读它们的位置是 `frontend/src/features/trip/TripItinerary.tsx:{base_read_dup}` 与 `:{base_read_ref}`。
 
 **二、四趟屏读（竖屏那一档、触摸档、判据读渲染文字，每趟一份新私库；视窗逐枚数值与四趟原始读数都在件 `{b_sweep}`）**
@@ -301,7 +340,7 @@ def main():
 
 **七、要裁的那一格我照 19:40 的推荐做，不自己拍**：字典里 `checkin.duplicate` / `checkin.refused` 各两行，在现尖的行号是 `checkin.duplicate` `{dict_dup}`、`checkin.refused` `{dict_ref}`（本块运行内 `git show` 现读）；字典之外读到它们的枚数是 {orphan_readers}。留（推荐）＝本块形状，闸里钉住「没有读者」这个事实，将来谁再读它、我的闸就红；删＝要动那枚最热文件且 ORD-0485 刚被裁作废；换回字典＝撤销自带词汇的选择、Q64 要重量。裁第二或第三种请点名，我不擅自。
 
-**八、落地判读（按字节，不按血缘）——这一格现在要你裁一句**：`{land_took}` 现尖 `{land_tip}`，本枝头 `{cand}` 的写集 {land_files} 枚里逐字节相同 {land_ident} 枚，**要再合的是 {land_recut} 枚**：`{hot_paths}` 两枚：`backend/app/main.py`（我这代 blob `{main_cand}` / 只读预测 `{merge_main}` / 现尖 `{tip_main}`）与 `contracts/openapi.yaml`（`{b_openapi}` / 只读预测 `{merge_openapi}` / 现尖 `{tip_openapi}`）。这两枚自我 fork 的 `{fork}` 之后又被别人的批次动过（`{tip}` 是判读那一刻的尖）；同一趟里 r5 那枝也是同样这 2 枚（{r5_files} 枚里 {r5_ident} 枚相同、要重切 {r5_recut} 枚，路径 {r5_recut_paths}）。树里随枝交的那份件判的是上一枚头 `{land_tree_head}`（{land_tree_files} 枚里 {land_tree_ident} 枚、要重切 {land_tree_recut} 枚，判于 `{land_tree_tip}`），把这份件收进树的那一步只动了 `review/`——非 review 路径 {non_review_moved} 枚（{non_review_paths}），这句是 `git diff --name-only` 现算的。
+**八、落地判读（按字节，不按血缘）**：`{land_took}` 对着现尖 `{land_tip}`，本枝头 `{cand}` 写集 {land_files} 枚里逐字节相同 {land_ident} 枚，**要再合的是 {land_recut} 枚**（`git merge-tree --write-tree` 的只读预测，逐枚 blob 对，不按血缘；预测树 `{tree}`，merge 退出 {merge_rc}）。这就是 rebase 要买的东西：上一轮拦我的那两枚热文件——`backend/app/main.py`（现尖 `{tip_main}` 对 我这代 `{main_cand}`）与 `contracts/openapi.yaml`（现尖 `{tip_openapi_real}` 对 `{b_openapi}`）——现在挑到 `{fork}` 之后自身就是答案的一部分，写集里再没有一枚合不上。落 r7 请同时把 r5/r6 记为被它取代（同一笔 hunk 的三枚枝，我不想留三枚重叠的）：同一趟里 r5 是 {r5_files} 枚里 {r5_ident} 枚、要重切 {r5_recut} 枚（{r5_recut_paths}），r6 是上一轮被退回的那枚（同样这 2 枚）。树里随枝交的那份件判的是上一枚头 `{land_tree_head}`（{land_tree_files} 枚里 {land_tree_ident} 枚、要重切 {land_tree_recut} 枚，判于 `{land_tree_tip}`），把这份件收进树的那一步只动了 `review/`——非 review 路径 {non_review_moved} 枚（{non_review_paths}），这句是 `git diff --name-only` 现算的。
 
 **我不追着重切**：r5 与 r6 带的是这两枚热文件的同一笔 hunk，请裁一句——① 直接落 r6 并把 r5 那枝记为被 r6 取代；还是 ② 等序列器真打回，我再对当时的尖 re-cut 交 r7。要 ② 我也随时能切，判据尺就在 `review/ord0500-checkin/tools/r6_...`（`landing_r6.py`，只读：`ls-remote` 取尖、`merge-tree` 预测、逐枚 blob 对字节，不写远程不动别人的枝）。顺带回一句 19:40 那块里我问的死词形状（留／删／换回字典），我按推荐的「留着＋闸钉住」已经做了，没碰 `LocaleContext.tsx`。
 

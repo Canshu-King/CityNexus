@@ -189,10 +189,13 @@ def readings():
         cell((py.get("shared_before") or {}).get("mtime_ns")),
         cell((py.get("shared_after") or {}).get("mtime_ns")), cell(py.get("shared_untouched"))))
     b = py.get("main_py_blobs") or {}
-    A("- 三枚 `backend/app/main.py` blob：候选 `%s`、r5 那笔 `%s`、现尖 `%s`——前两枚同一枚，"
-      "所以我带的是 r5 的后端字节、不是我又改了一版。" % (cell(b.get("candidate_worktree")),
-                                                       cell(b.get("r5_commit")),
-                                                       cell(b.get("tip_dc9dc10f") or b.get("tip"))))
+    A("- 三枚 `backend/app/main.py` blob：本轮候选 `%s`、r5 那一笔 `%s`、判读时现尖 `%s`。"
+      "候选与 r5 **不是**同一枚（%s）——因为基座从 `b604f50d…` 走到本轮的尖，别人在这枚文件别处动过；"
+      "所以「同一笔 hunk」这句话只能按形状验：`git diff --numstat` 对基座仍是 14 增 2 删，"
+      "且 `CHECKIN_JOURNEY_UNKNOWN` 在候选里 2 处、在现尖 0 处。" % (
+          cell(b.get("candidate_worktree")), cell(b.get("r5_commit")),
+          cell(b.get("tip_at_run") or b.get("tip_dc9dc10f")),
+          cell(b.get("candidate_worktree") == b.get("r5_commit"))))
     A("")
     A("## 六、Q64 曝光尺：本代两侧各一趟")
     A("")

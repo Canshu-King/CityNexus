@@ -77,7 +77,7 @@ def main():
            "shared_untouched": before == after,
            "main_py_blobs": {"candidate_worktree": blob(WT, "HEAD", "backend/app/main.py"),
                              "r5_commit": blob(WT, R5, "backend/app/main.py"),
-                             "tip_dc9dc10f": blob(REPO, TIP, "backend/app/main.py")},
+                             "tip_at_run": blob(REPO, TIP, "backend/app/main.py")},
            "pytest_stdout_head": text[:400]}
     path = os.path.join(LANE, "evidence", "pytest_r6.json")
     json.dump(out, open(path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)

@@ -64,8 +64,6 @@ def main():
              "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
              "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
              "review/ord0500-checkin/receipts/pytest_r6.json",
-             "review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json",
-             "review/ord0500-checkin/receipts/r6_exposure_cand.json",
 
              "review/ord0500-checkin/tools/checkin_phone_r3.cjs",
              "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
