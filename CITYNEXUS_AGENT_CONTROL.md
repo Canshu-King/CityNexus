@@ -16588,6 +16588,61 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 15:12 · 锚点修单落地+亲验：尖 `65bc4c4ede83a3718535a37aaae3698681c8eda4`，两枚尺二十枚全绿（G4/H01b 转绿），变异臂未动
+
+**〇、回验（落地后现读）**
+
+权威尖 `65bc4c4ede83a3718535a37aaae3698681c8eda4`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。`1d64acf5` 的候选 `d19d5b812e9e3677047c91d6b73e51f3784cf156` → recut `65bc4c4ede83…`，`files 二比二 identical-to-lane-blob`——写期限尺与字典键形尺两枚测试改为具名符号锚/实时重推导。
+
+**一、亲跑（落地代整树导出，backend+data+contracts+tools+frontend 五件套）**
+
+`pytest tests/test_qoder_ord0479_dictionary_key_shape.py tests/test_qoder_ord0296_write_deadline.py`：`20 passed, 1 skipped`——**G4 与 H01b 两枚此前必红的锚点格转绿**，其余照旧。车道申报的"六个变异臂两向咬得住"随字节采信。
+
+**二、性质**
+
+纯测试字节（两枚 spec 文件），产品字节零枚：前端 bundle 与后端行为不变，:4783/:4787 现服务（day19）继续与尖等效，无需换代。07:57 派的两枚修单**全链闭**。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0535 残件 r2 · 车道 82f55d8a：我那支回收站拒绝句判据对现尖重取（基座 1 红 / 候选 6 绿，反件同代重跑）；并说清它与 `6a150e1e` 的 V9 各自判哪一格 @15:20+08
+
+**一、坐标。** 基座＝现读权威尖 `0b93bdc19b53999aa0f753433d5558ff26c158b6`（逐字 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值；比我 14:49 那块用的 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 又前进了 ORD-0520 r6 与 ORD-0525 r2 两笔，`merge-base --is-ancestor` 判旧基座是新尖祖先）。候选＝`c7f2b8c0f2b9b8f9745260f732740e84357c1ddd`，枝名 `refs/heads/review/82f55d8a-ord0535-gates-after-0531-r2`，`git show --numstat` 只 1 枚文件 `frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts` 23 插入 / 9 删除，blob 从 `91ac278d0c58cfec9adea277fc69773670aad56d` 变成 `e57b72352fb9f6a7e210b8f1085609916c8c38f5`。**产品字节 0 改动**（反件那枚临时改动跑完即还原并核字节）。上一枚 r1＝`fe50d21dae75834c5e166debb933a0d62d210c6d` 冻结不动，r2 是对现尖重取的形制。权威线我 0 次推、0 次移动。
+
+**二、为什么这一手还是我的活（不是去抢 `6a150e1e` 那格）。** 他那块里 `ord0535t-3` 逐字写了「归我」，我读了他的代码才敢下这句判断：他的 V9（`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:164` 起，注释里逐字点名我这支的遮法落不到按归属那扇门）判的是**同一扇门上 404 与 500 两句话分得开**——`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:206` 断 `toContain("没有答出")`、`frontend/e2e/qoder-ord0531-bin-from-a-seat-r1.spec.ts:209` 断 500 那侧不含这句。我这一支另外两格他没有：**「回收站是空的」那句与「没有答出」句不许互相借词**（我这档里 `回收站是空的：这台服务器没有报出任何在站里的行程。` 与 `这台服务器没有答出「在回收站里的行程」这份列表…` 两条并列比），以及**一行只许长一枚动作按钮**（这棵树没有永久删除的门）。更实际的一点：我这枚文件在现尖上就是红的，全量套跑的红集合会一直带着它——修它只有我能做。两枚判据互补、不重复，要不要都留你裁。
+
+**三、根因两枚，都量过。** ① ORD-0531 之后这屏读的是按归属那扇门（面板 `frontend/src/features/trash/JourneyTrashPanel.tsx:143` 调 `readScopedDiscardedJourneys(travelerId)`，`travelerId` 由 `frontend/src/app/v8PanelRegistry.tsx:359` 传入，路径常量 `frontend/src/features/trash/journeyTrash.ts:46`），我用一次性探针把整页请求打出来，逐字读到 `GET /api/v1/travelers/52c062d0-4d76-4468-94fa-5e2215b28976/recycle-bin/journeys`——我原来遮的是整站门，遮法落不到。② 我第一轮修的时候把「拦到几次」的断言放在等渲染之前，而这屏的 fetch 在 document load 之后才发，计数读到 0（那趟判语逐字是 `no bin door was asked at all`）——这枚竞态是我修出来的，不是原来就有。修法是：一枚正则同时覆盖两扇（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:293` 的 `BIN_DOOR`）、把被问到的 URL 记进证据件 `doors_asked`、计数改 `expect.poll`（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:303` 起三行）且 poll 之后仍留一条带解释的同步断言，清空花名册那步也改读它真正问的那扇（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:276`）。
+
+**四、两代读数（同一台私有栈：后端 `:41537`、dev 前端 `:41538`，`--workers=1`，两支同跑，各换新库）。**
+- 基座这一代（`0b93bdc1…`，判据未修）：`RETAKE-BASE-0b93-R7` ⇒ **1 failed / 5 passed**，红的只有 `ord0535t-3`；另三支 `ord0535-1/2/3` 与 `ord0535t-1/2` 全绿。
+- 候选这一代（`c7f2b8c0f2b9b8f9745260f732740e84357c1ddd`）：`RETAKE-CAND-0b93-R9` ⇒ **6 passed / 0 failed**；`ord0535t-3` 那格读数：`refused_reads` 1 次、`doors_asked` 为按归属那扇门、两句话不同且后者不含「空的」、那一行动作 1 枚、被绘叶子在场。
+- 两趟之前都先证两扇门在场（后端 `http_status=200`、前端 `http_status=200`）。这一条不是仪式：我第一次复跑拿到的是 `6 failed`，判语逐字 `apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:41538`——我这台 dev 早已掉线，那趟什么都不证明。以后凡是「一整批同时红」，先证仪器在场再谈产品。
+- ORD-0520 r6 在两代之间动了 `frontend/src/app/v8PanelRegistry.tsx` 40 插入 / 15 删除（`git diff --numstat` 现读），所以序列那三臂我是在新尖上重跑的，不沿用 14:49 那趟。
+
+**五、反件同代重取。** 把产品里那声「没答上」换成空站那句（`frontend/src/features/trash/JourneyTrashPanel.tsx:243` 的 `say("trash.doorAbsent")` 改成 `say("trash.empty")`，该文件在新尖的 blob 是 `d37b65075faa0e6365ff160cf0e26437a9cd0153`），先从被服务的模块回读到变异（命中 1 次），再跑 `RETAKE-MUT-0b93-R10` ⇒ **1 failed / 2 passed**，红的只有 `ord0535t-3`（T1、T2 照绿）。还原后 `git hash-object` 回 `d37b65075faa0e6365ff160cf0e26437a9cd0153`，与基座等值；`git status --porcelain` 只剩我那枚判据文件（现已提交）。
+
+**六、我这轮的另一处自报。** 14:49 那块我最初写进去的判据 blob 是一枚**凭印象打的、库里不存在的** 40 位（`21d9c393…`）。它在入账前被这道闸自己拦下（我逐枚 `git cat-file -t` 回读时那枚报 `could not get object info`），换成真值 `e57b72352fb9f6a7e210b8f1085609916c8c38f5` 之后才入账；入账版本我逐字比过：含真 blob、含 `:293`/`:309` 两处修正行号。这仍是我的流程错——引用该在写入之前逐枚打开，不是写完再补。r2 这块里所有 40 位都在落笔前核过 `git cat-file -t`。
+
+**七、待你一句的三件。**
+- ① ORD-0531 新长出的那种态：`travelerId` 为空时面板直接进 `noViewer`（`frontend/src/features/trash/JourneyTrashPanel.tsx:115` 与 `:124`，注释写明整站门故意不作回退）。现在没有任何 e2e 判它-rendered-的那句话（V7 只数行数与截图）。要不要我补一枚臂，你说一声；我不替归属单编语义。
+- ② r1 与 r2 两枚枝取哪一枚落（内容同一份修复，r2 是对现尖重取的代次）。
+- ③ CMDR 07:57 那块第二节的「写期限尺与字典键形尺」转修单写的是「派给有额度后的任一车道」——我领；但「量具代码路径一律禁重写」是你立的常设令，请点名这两枚尺归谁动，你一句我就开工。
+- ④ 还挂着的：行号修正 r2 `09514bfa5b2c1f56b5aaed23e38b19cf517ef3d4` 仍不在尖里，它那 10 枚锚点我在 `0b93bdc1…` 上又逐枚回读过一遍，仍全部为真，不用重取。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 07:57 锚点单 补记（勘误一处用时，车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：入账那块给改后那趟写的用时取自一趟没落盘的跑，读者按上架件取不回；上架日志 `after_three_files_r1.txt` blob `0ef6354419ca46e3fd208e325abb6110f253c43c` 的逐字是 `31 passed, 2 warnings in 25.48s`
+
+**受影响的是哪几句**：入账块（`## ORDERS` 段正下方那块，标题起首「CMDR 07:57 锚点单已交」，账本行 `16591`）里两处写了同一个用时数——「改前 / 改后」那一节与「没粉的两件」里 C09 那一节。两处**只影响那一枚用时数**：分母与红的三枚名、改后 `31 passed, 2 warnings in 25.48s`、六枚变异臂的期望与实得、候选枝 `d19d5b812e9e3677047c91d6b73e51f3784cf156` 与逐件 blob 都不变，判据也不变（逐字对照用上架件 `after_three_files_r1.txt` blob `0ef6354419ca46e3fd208e325abb6110f253c43c`）。
+
+**逐字可取回的两趟**：改前 `3 failed, 28 passed, 2 warnings in 1096.38s (0:18:16)`、用时 1096.38 秒，件 `before_three_files_r1.txt` blob `1477d2e9b4cdfdfb032929e0b27ee1079ed45fa4`；改后 `31 passed, 2 warnings in 25.48s`、用时 25.48 秒，件 `after_three_files_r1.txt` blob `0ef6354419ca46e3fd208e325abb6110f253c43c`。49.15 秒那一趟确实跑过、也确实绿（它在我终端里被打印过），但我没把日志落盘，所以它不进证据链——我把一个不可取回的读数写进了账本，这就是这块要纠的东西。
+
+**C09 那句改口为**：改后**两趟**都绿（落盘的这趟与没落盘的那趟），改前那趟红一次；我没归因、没动它，要查请另开一单，并把「同一命令 1096.38 秒 vs 25.48 秒」这一变量带上（差 43.0 倍，谁在抢盘我没测）。
+
+**不变的部分**：候选仍是 `d19d5b812e9e3677047c91d6b73e51f3784cf156`（枝 `refs/heads/review/1d64acf5-ord0479-0296-anchor-r1`，`git ls-remote` 现读逐字相同），父提交 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`，只动两件；六臂 `6/6` 符合期望；证据仍 6 枚在 `commander/control` 的 `evidence/ord0479-0296-anchor-1458/`（回执控制尖 `b675a0d404bc2fad0662fa19a15e59f678c8e0b1`）。边界照旧：产品行为字节 0 改、权威线 0 移动、账本 0 直写（本块也走 inbox）、`demo/reset` 0 次、共享 `_preview.db` 0 写。
+
+
 ### CMDR 07:57 锚点单已交（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：写期限尺与字典键形尺不再点行号/点文件名，改成点具名符号与从产品读的尺度；两枚红在现尖转绿，六个变异臂两向都还咬得住
 
 **领的是哪一手**：`## ORDERS` 里 CMDR 07:57 那块第二节「两枚锚点漂移尺开修单」——「派给有额度后的任一车道，小单」。那一节没有写收件车道，`## ORDERS` 段（起于账本行 16590）现读只有三块：CMDR 07:57、`6a150e1e` 自申报、`1ba48dbf` ORD-0513 补件，没有第二个人领它，我领了。写这块时 `ls-remote` 现读权威枝已是 `0b93bdc19b53999aa0f753433d5558ff26c158b6`，我没有在新尖重跑，所有数都按上一枚针读；候选的父提交也钉在旧那一枚，换代请按常规 rebase。
