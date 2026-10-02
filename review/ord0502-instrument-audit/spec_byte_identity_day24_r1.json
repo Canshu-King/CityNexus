@@ -1,0 +1,62 @@
+{
+  "read_at": "2026-10-03T01:20:20",
+  "mirror_tip": "4fac49f371da0820393d038700bddddafd1176d1",
+  "day23_tip": "569b8472b134e5562ef396e38681870b9c26536a",
+  "spec_blob_at_mirror_tip": "5b97af33946b880fe736c26e54212f18aa679580",
+  "spec_blob_at_day23": "5b97af33946b880fe736c26e54212f18aa679580",
+  "spec_bytes_identical_across_generations": true,
+  "lineage_day23_is_ancestor_of_tip": true,
+  "owner_r6_ref": "refs/heads/review/cff87c64-ord0502-phone-mainline-r6",
+  "owner_r6_tip": "d3c59efdd164ecd79a97a8a713cc1a29015371d9",
+  "spec_blob_on_owner_r6": "b685c148408bbc7d90f8870117262ebd235990a5",
+  "owner_fix_landed_on_line": false,
+  "numstat_tip_vs_owner_r6": [
+    "407",
+    "75",
+    "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+  ],
+  "census_day24": {
+    "asks": 30,
+    "absent_from_src": [
+      "trial-open",
+      "trips-tab-bookings",
+      "trips-tab-itinerary"
+    ],
+    "families": {
+      "trial*": 47,
+      "trips-tab*": 1
+    }
+  },
+  "census_day23": {
+    "asks": 30,
+    "absent_from_src": [
+      "trial-open",
+      "trips-tab-bookings",
+      "trips-tab-itinerary"
+    ],
+    "families": {
+      "trial*": 47,
+      "trips-tab*": 1
+    }
+  },
+  "declared_line_drift": [
+    [
+      "today-heading",
+      [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 2704
+        }
+      ],
+      [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 2671
+        }
+      ]
+    ]
+  ],
+  "prior_artifact_blob": "37068ed990493625d637bcc207ff845ed532231f",
+  "restored_frozen_artifact_blob": "154df8c86f740ce7295d51eaab9416c9979a84c2",
+  "restored_local_hash_object": "154df8c86f740ce7295d51eaab9416c9979a84c2"
+}
