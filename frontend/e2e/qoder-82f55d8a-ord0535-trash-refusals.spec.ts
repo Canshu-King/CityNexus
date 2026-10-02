@@ -271,10 +271,11 @@ test("ord0535t-3-empty-and-unanswered-are-not-the-same-sentence — 空站与没
 
   await openTrash(page, session);
   /* This lane's own journeys may still be binned from an earlier arm, so emptiness is established by
-     bringing back everything this traveler's trips left in the bin -- through the product's own door. */
-  const listed = (await (await page.request.get("/api/v1/recycle-bin/journeys")).json()) as Array<{
-    id: string;
-  }>;
+     bringing back everything this traveler's trips left in the bin -- through the product's own door.
+     Since ORD-0531 the screen asks the door scoped to a seat, so that is the roster this arm empties. */
+  const listed = (await (
+    await page.request.get(`/api/v1/travelers/${traveler}/recycle-bin/journeys`)
+  ).json()) as Array<{ id: string }>;
   for (const row of listed) await page.request.post(`/api/v1/journeys/${row.id}/undelete`, { data: {} });
   await page.reload({ waitUntil: "load" });
   const emptyLine = page.getByTestId("trash-empty");
@@ -283,17 +284,29 @@ test("ord0535t-3-empty-and-unanswered-are-not-the-same-sentence — 空站与没
   const countWhenEmpty = await page.getByTestId("trash-count").count();
   const rowCountWhenEmpty = await page.getByTestId("trash-row").count();
 
-  /* Now the door itself is refused, and the screen must say *that* instead. */
+  /* Now the door itself is refused, and the screen must say *that* instead. The pattern covers both
+     bin doors on purpose: which one this screen asks is the product's business, and an arm that
+     intercepts only one of them would silently watch nothing at all -- which is how this arm went red
+     after ORD-0531 moved the read to the scoped door. `asked` names the door that was actually asked. */
   let refused = 0;
-  await page.route("**/api/v1/recycle-bin/journeys", (route) => {
+  const asked: string[] = [];
+  const BIN_DOOR = /\/api\/v1\/(?:travelers\/[^/]+\/)?recycle-bin\/journeys$/;
+  await page.route(BIN_DOOR, (route) => {
     refused += 1;
+    asked.push(new URL(route.request().url()).pathname);
     route.fulfill({ status: 404, contentType: "application/json", body: JSON.stringify({ detail: "gone" }) });
   });
   await page.reload({ waitUntil: "load" });
+  /* The panel asks after the document loads, so this is polled rather than read once: a single read
+     here would be a race this arm would lose against its own page. The plain assertion after it keeps
+     the sentence this arm prints when a reader changes which door the screen asks. */
+  await expect
+    .poll(() => refused, { timeout: 20_000, message: node(NODE, "no bin door was asked at all, so the sentence below proves nothing") })
+    .toBeGreaterThan(0);
+  expect(refused, node(NODE, "no bin door was asked at all, so the sentence below proves nothing")).toBeGreaterThan(0);
   const failedLine = page.getByTestId("trash-read-failed");
-  await expect(failedLine, node(NODE, "an unanswered bin did not say so")).toBeVisible({ timeout: 20_000 });
+  await expect(failedLine, node(NODE, `an unanswered bin did not say so; the doors asked were ${asked.join(", ")}`)).toBeVisible({ timeout: 20_000 });
   const failedText = clean(await failedLine.innerText());
-  expect(refused, node(NODE, "the collection door was never asked, so the sentence below proves nothing")).toBeGreaterThan(0);
   expect(
     failedText,
     node(NODE, `the unanswered bin said "${failedText}"`),
@@ -309,7 +322,7 @@ test("ord0535t-3-empty-and-unanswered-are-not-the-same-sentence — 空站与没
 
   /* A row may not offer what this server cannot do: on a rendered row there is exactly one action. */
   const binned = await makeJourney(page, traveler, `只有一枚动作 ${stamp}`);
-  await page.unroute("**/api/v1/recycle-bin/journeys");
+  await page.unroute(BIN_DOOR);
   await page.request.delete(`/api/v1/journeys/${binned}`);
   await page.reload({ waitUntil: "load" });
   const row = rowOf(page, binned);
@@ -338,6 +351,7 @@ test("ord0535t-3-empty-and-unanswered-are-not-the-same-sentence — 空站与没
         count_line_when_empty: countWhenEmpty,
         rows_when_empty: rowCountWhenEmpty,
         refused_reads: refused,
+        doors_asked: asked,
         unanswered_text: failedText,
         actions_on_row: actions,
         paintedLeaves: scan.visualLeaves,
