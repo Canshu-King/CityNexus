@@ -81,10 +81,11 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                         finish_reason = choice.get("finish_reason")
                     else:
                         message = self._merge_sse(response.iter_lines())
-                        finish_reason = None
+                        finish_reason = message.pop("finish_reason", None)
                 if not isinstance(message, dict):
                     raise TypeError("Hermes response message is invalid")
-                if not str(message.get("content") or "").strip() and not message.get("tool_calls"):
+                empty_message = not str(message.get("content") or "").strip() and not message.get("tool_calls")
+                if finish_reason == "length" or empty_message:
                     # A reasoning model can spend the initial output budget on reasoning and
                     # finish with no visible assistant content.  WB2api reports this as an
                     # empty message with finish_reason=length (or as a streamed reasoning-only
@@ -110,6 +111,9 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                         retry.raise_for_status()
                         retry_choice = retry.json()["choices"][0]
                         message = retry_choice["message"]
+                        finish_reason = retry_choice.get("finish_reason")
+                    if finish_reason == "length":
+                        raise ValueError("Hermes response exhausted its bounded output budget")
                     if (
                         not isinstance(message, dict)
                         or (
@@ -135,6 +139,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         content: list[str] = []
         reasoning: list[str] = []
         calls: dict[int, dict] = {}
+        finish_reason = None
         for line in lines:
             if not line or not line.startswith("data:"):
                 continue
@@ -142,7 +147,10 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             if raw == "[DONE]":
                 break
             chunk = json.loads(raw)
-            delta = ((chunk.get("choices") or [{}])[0].get("delta") or {})
+            choice = (chunk.get("choices") or [{}])[0]
+            if choice.get("finish_reason"):
+                finish_reason = choice["finish_reason"]
+            delta = choice.get("delta") or {}
             if delta.get("content"):
                 content.append(str(delta["content"]))
             if delta.get("reasoning_content"):
@@ -167,6 +175,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         message = {"role": "assistant", "content": "".join(content), "tool_calls": [calls[i] for i in sorted(calls)]}
         if reasoning:
             message["reasoning_content"] = "".join(reasoning)
+        if finish_reason:
+            message["finish_reason"] = finish_reason
         return message
 
 

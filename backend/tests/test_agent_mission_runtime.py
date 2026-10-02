@@ -933,3 +933,14 @@ def test_wb2api_stream_retains_reasoning_for_tool_continuation():
     )
     assert result["reasoning_content"] == "protocol-continuation"
     assert result["content"] == "OK"
+
+
+def test_wb2api_stream_preserves_length_finish_reason():
+    result = HermesJourneyAgent._merge_sse(
+        [
+            'data: {"choices":[{"delta":{"content":"partial"},"finish_reason":"length"}]}',
+            "data: [DONE]",
+        ]
+    )
+    assert result["content"] == "partial"
+    assert result["finish_reason"] == "length"
