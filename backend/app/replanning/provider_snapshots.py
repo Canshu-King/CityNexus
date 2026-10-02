@@ -156,7 +156,7 @@ class MobilitySnapshot:
         )
 
     def estimate_minutes(self, origin_key: str, destination_key: str) -> int:
-        fact = self.facts.get((origin_key, destination_key))
+        fact = _lookup_fact(self.facts, origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         return fact.minutes
@@ -177,7 +177,7 @@ class MobilitySnapshot:
         are trusted.
         """
 
-        fact = self.facts.get((origin_key, destination_key))
+        fact = _lookup_fact(self.facts, origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         # True allowlist (V3-1): only an explicitly trusted quality may drive
@@ -345,3 +345,33 @@ def _normalize_geometry(value: Any) -> tuple[tuple[float, float], ...]:
         if -180 <= lon <= 180 and -90 <= lat <= 90:
             normalized.append((lon, lat))
     return tuple(normalized) if len(normalized) >= 2 else ()
+
+
+def _lookup_fact(
+    facts: Mapping[tuple[str, str], TravelEstimateFact],
+    origin_key: str,
+    destination_key: str,
+) -> TravelEstimateFact | None:
+    """Read one frozen fact across the two persisted anchor-role spellings.
+
+    Activity metadata historically used ``:ARRIVAL-anchor`` / ``:DEPARTURE-anchor``
+    while captured V12 mobility facts used lowercase role suffixes.  The place
+    identity before the role is case-sensitive; only the structural suffix is
+    normalized so this cannot turn two provider entities into one.
+    """
+
+    exact = facts.get((origin_key, destination_key))
+    if exact is not None:
+        return exact
+    normalized_pair = (_normalize_anchor_role(origin_key), _normalize_anchor_role(destination_key))
+    if normalized_pair == (origin_key, destination_key):
+        return None
+    return facts.get(normalized_pair)
+
+
+def _normalize_anchor_role(value: str) -> str:
+    for role in ("ARRIVAL", "DEPARTURE"):
+        suffix = f":{role}-anchor"
+        if value.endswith(suffix):
+            return f"{value[:-len(suffix)]}:{role.lower()}-anchor"
+    return value
