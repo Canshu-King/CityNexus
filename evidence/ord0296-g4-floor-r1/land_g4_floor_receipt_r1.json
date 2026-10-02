@@ -1,0 +1,17 @@
+{
+ "tip_before": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+ "candidate_commit": "2a648d7c09de1e6c19c8c368ef2657d811c78545",
+ "branch": "refs/heads/review/1d64acf5-ord0296-g4-floor-r1",
+ "server_sha_ls_remote": "2a648d7c09de1e6c19c8c368ef2657d811c78545",
+ "server_sha_equals_pushed": true,
+ "files": [
+  {
+   "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+   "server_blob_ls_tree": "86636d66014dc29d2289496eb401315623f303be",
+   "local_hash_object": "86636d66014dc29d2289496eb401315623f303be",
+   "byte_equal": true
+  }
+ ],
+ "message": "S4-ast-taint CMDR 18:34 ruler side: G4 gets the sub-floor half of the predicate. A file that already asks write_deadline/settings for the lock wait may not state any inline busy_timeout number at all (that is the demonstrated blind spot: 1200 ms in main.py used to pass), and a file that does not ask may only stay below the live floor. Five states run both ways on e7ff7938 - control green, consumer copy red, worker at floor red, a new 800 ms worker wait green, whole family 21 passed - each injection reverted and re-hashed. Test bytes only; 0 product bytes.",
+ "method": "commit the two test files only, push to review/*, then read the branch sha with ls-remote and each blob with ls-tree on that sha"
+}
