@@ -226,6 +226,11 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 **journey,
                 "trigger_event_id": _property("string"),
                 "candidate_count": _property("integer", minimum=1, maximum=5),
+                "place_ids": _property(
+                    "array",
+                    items=_property("string"),
+                    description="Optional bounded Place hints from search_city_services; the server revalidates every fact.",
+                ),
             },
             ["journey_id", "trigger_event_id"],
         ),
@@ -882,6 +887,14 @@ class DeepSeekJourneyAgent:
                         }
                     else:
                         try:
+                            if tool_name == "conclude_recovery" and isinstance(
+                                arguments.get("reason"), str
+                            ) and len(arguments["reason"]) > 500:
+                                # The model may explain a long decision, but the
+                                # persisted typed conclusion has a strict schema
+                                # boundary.  Preserve a bounded receipt instead
+                                # of spending another model turn on a 422.
+                                arguments["reason"] = arguments["reason"][:497] + "..."
                             payload = AgentToolCall.model_validate(arguments)
                             result = AgentToolGateway(session).dispatch(tool_name, payload)
                             if tool_name in _INSPECTION_TOOLS:

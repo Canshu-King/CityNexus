@@ -636,6 +636,72 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     "ALTER TABLE events ADD COLUMN provenance TEXT NOT NULL DEFAULT 'SIMULATED' "
                     "CHECK (provenance IN ('SIMULATED','PROVIDER_VERIFIED','USER_REPORTED','SYSTEM_DERIVED'))"
                 )
+            # R22 adds a server-derived opportunity signal.  Existing SQLite
+            # databases carry the older event_type CHECK constraint, so rebuild
+            # only this table while preserving every historical event row.
+            event_schema_row = connection.exec_driver_sql(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='events'"
+            ).first()
+            event_schema = str(event_schema_row[0] or "") if event_schema_row else ""
+            # SQLite may rewrite dependent foreign-key SQL during the rename
+            # even with foreign_keys disabled.  Repair that textual reference
+            # on a retry-safe boot before any dependent insert is attempted.
+            legacy_event_refs = connection.exec_driver_sql(
+                "SELECT COUNT(*) FROM sqlite_master "
+                "WHERE sql IS NOT NULL AND sql LIKE '%events_r22_legacy%'"
+            ).scalar_one()
+            if legacy_event_refs:
+                connection.exec_driver_sql("PRAGMA writable_schema=ON")
+                connection.exec_driver_sql(
+                    "UPDATE sqlite_master SET sql=replace(sql, 'events_r22_legacy', 'events') "
+                    "WHERE sql IS NOT NULL AND sql LIKE '%events_r22_legacy%'"
+                )
+                connection.exec_driver_sql("PRAGMA writable_schema=OFF")
+                schema_version = connection.exec_driver_sql("PRAGMA schema_version").scalar_one()
+                connection.exec_driver_sql(f"PRAGMA schema_version = {int(schema_version) + 1}")
+            if event_schema and "OPPORTUNITY_WINDOW" not in event_schema:
+                connection.exec_driver_sql("PRAGMA legacy_alter_table=ON")
+                connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
+                connection.exec_driver_sql("ALTER TABLE events RENAME TO events_r22_legacy")
+                connection.exec_driver_sql(
+                    """
+                    CREATE TABLE events (
+                        id TEXT PRIMARY KEY,
+                        journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                        provider_key TEXT NOT NULL,
+                        provenance TEXT NOT NULL DEFAULT 'SIMULATED'
+                            CHECK (provenance IN ('SIMULATED','PROVIDER_VERIFIED','USER_REPORTED','SYSTEM_DERIVED')),
+                        event_type TEXT NOT NULL CHECK (event_type IN (
+                            'TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY',
+                            'SERVICE_UNAVAILABLE','USER_CHANGE','OPPORTUNITY_WINDOW','OTHER'
+                        )),
+                        severity TEXT NOT NULL CHECK (severity IN ('INFO','MINOR','MAJOR','CRITICAL')),
+                        status TEXT NOT NULL CHECK (status IN ('DETECTED','ACKNOWLEDGED','RESOLVED','IGNORED')),
+                        affected_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+                        occurred_at TEXT NOT NULL,
+                        detected_at TEXT NOT NULL,
+                        resolved_at TEXT,
+                        payload_json TEXT NOT NULL DEFAULT '{}',
+                        created_at TEXT NOT NULL
+                    )
+                    """
+                )
+                connection.exec_driver_sql(
+                    """
+                    INSERT INTO events (
+                        id, journey_id, provider_key, provenance, event_type, severity,
+                        status, affected_activity_id, occurred_at, detected_at,
+                        resolved_at, payload_json, created_at
+                    )
+                    SELECT id, journey_id, provider_key, provenance, event_type, severity,
+                        status, affected_activity_id, occurred_at, detected_at,
+                        resolved_at, payload_json, created_at
+                    FROM events_r22_legacy
+                    """
+                )
+                connection.exec_driver_sql("DROP TABLE events_r22_legacy")
+                connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+                connection.exec_driver_sql("PRAGMA legacy_alter_table=OFF")
             policy_columns = {
                 row[1]
                 for row in connection.exec_driver_sql("PRAGMA table_info(traveler_agent_policies)")

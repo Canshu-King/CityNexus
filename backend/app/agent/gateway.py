@@ -178,12 +178,27 @@ _CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
     "文化": ("culture", "museum", "library", "theatre"),
     "室内": ("indoor", "museum", "library", "theatre"),
     "历史": ("historic", "attraction", "museum"),
+    # English category words are common model-generated search queries.  They
+    # must expand in the same open-world search path as the Chinese aliases;
+    # otherwise q="culture" is applied literally before category="culture"
+    # can expose museum/gallery/heritage Places.
+    "culture": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "cultural": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "indoor": ("museum", "gallery", "library", "theatre", "attraction"),
+    "outdoor": ("park", "garden", "viewpoint", "heritage", "attraction"),
 }
 _CITY_CATEGORY_ALIASES: dict[str, tuple[str, ...]] = {
     "culture": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
     "cultural": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
     "indoor": ("museum", "gallery", "library", "theatre", "attraction"),
     "outdoor": ("park", "garden", "viewpoint", "heritage", "attraction"),
+    # "experience" is the bounded open-world category used by the opportunity
+    # mission.  Treat it as a discovery umbrella, not a literal Place
+    # category, so the Agent can inspect real provider-backed alternatives.
+    "experience": (
+        "museum", "gallery", "library", "theatre", "heritage", "attraction",
+        "park", "garden", "viewpoint", "restaurant", "cafe",
+    ),
 }
 
 
@@ -1052,6 +1067,7 @@ class AgentToolGateway:
                 "trigger_event_id": str(request.trigger_event_id),
                 "candidate_count": request.candidate_count,
                 "solver_mode": request.solver_mode,
+                "place_ids": list(request.place_ids or []),
                 "mission_id": str(request.mission_id) if request.mission_id else None,
             }
         )
@@ -1084,6 +1100,7 @@ class AgentToolGateway:
                 candidate_count=candidate_count,
                 solver_mode=request.solver_mode,
                 protected_activity_ids=protected_activity_ids,
+                place_ids=request.place_ids,
             ),
             idempotency_key=inner_key,
             session=self.session,

@@ -28,7 +28,9 @@ from app.db.models import (
 )
 from app.schemas import AgentToolCall
 
-ACTIONABLE_EVENT_TYPES = frozenset({"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY"})
+ACTIONABLE_EVENT_TYPES = frozenset(
+    {"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY", "OPPORTUNITY_WINDOW"}
+)
 SEVERITY_ORDER = {"CRITICAL": 4, "MAJOR": 3, "MINOR": 2, "INFO": 1}
 
 
@@ -130,7 +132,14 @@ def _cooldown_active(
         return None
     if cooldown_until.tzinfo is None:
         cooldown_until = cooldown_until.replace(tzinfo=timezone.utc)
-    return prior if now < cooldown_until else None
+    if now >= cooldown_until:
+        return None
+    # A bounded model run that stopped UNRESOLVED/RETRYABLE must be allowed to
+    # retry after facts improve. Completed NO_ACTION and EXECUTED runs remain
+    # idempotent under the normal cooldown.
+    if prior.action_status in {"UNRESOLVED", "RETRYABLE_FAILURE", "NO_FEASIBLE_RECOVERY"}:
+        return None
+    return prior
 
 
 def _recovery_mission(
@@ -209,7 +218,7 @@ def _model_recovery(
     recovery = _recovery_mission(session, journey, standing, trigger)
     runtime = configured_journey_agent()
     try:
-        result = runtime.run(session, journey=journey, mission=recovery)
+        result = runtime.run(session, journey=journey, mission=recovery, max_steps=10)
     finally:
         close = getattr(runtime, "close", None)
         if callable(close):
@@ -271,6 +280,28 @@ def _model_recovery(
     else:
         run.action_status = "MODEL_NO_ACTION"
         evidence["mutation"] = {"executed": False, "proposal_id": None}
+    completion = result.get("completion_contract")
+    if isinstance(completion, dict):
+        completion_kind = completion.get("kind")
+        if completion_kind == "NO_ACTION" and run.proposal_id is None and accept_step is None:
+            run.action_status = "NO_ACTION"
+            evidence["completion_contract"] = {
+                "kind": "NO_ACTION",
+                "source": "server_trace",
+            }
+            if trigger.event_type == "OPPORTUNITY_WINDOW":
+                trigger_payload = _load(trigger.payload_json, {})
+                trigger_payload["resolved_at"] = _now().isoformat()
+                trigger_payload["resolution_reason"] = "OPPORTUNITY_DECLINED_BY_AGENT"
+                trigger.status = "RESOLVED"
+                trigger.resolved_at = trigger_payload["resolved_at"]
+                trigger.payload_json = _json(trigger_payload)
+        elif completion_kind == "UNRESOLVED" and run.proposal_id is None and accept_step is None:
+            run.action_status = "UNRESOLVED"
+            evidence["completion_contract"] = {
+                "kind": "UNRESOLVED",
+                "source": "server_trace",
+            }
     evidence["inference"] = {
         "decision": "RECOVERY_REQUIRED",
         "controller": "configured_agent_runtime",
@@ -491,6 +522,45 @@ def _deterministic_recovery(
 def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
     """Observe persisted journey facts and launch at most one recovery per incident state."""
 
+    # A killed HTTP worker can leave the Guardian envelope RUNNING even when
+    # its model/tool transaction no longer exists.  Reconcile that bounded
+    # envelope before considering a new scan; live runs remain untouched.
+    stale_cutoff = _now() - timedelta(
+        # A model run spans up to ten turns, one retry per turn, plus fact and
+        # mobility tools. A single-request timeout is not a whole-run lease.
+        seconds=max(1800.0, float(settings.impact_timeout_seconds) * 20.0)
+    )
+    running_rows = session.scalars(
+        select(GuardianRun)
+        .where(GuardianRun.journey_id == journey.id, GuardianRun.status == "RUNNING")
+        .order_by(GuardianRun.created_at, GuardianRun.id)
+    ).all()
+    for running in running_rows:
+        try:
+            created = datetime.fromisoformat(str(running.created_at))
+        except (TypeError, ValueError):
+            created = stale_cutoff - timedelta(seconds=1)
+        if created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        if created <= stale_cutoff:
+            running.evidence_fingerprint = (
+                f"{running.evidence_fingerprint}:interrupted:{running.id}"
+            )
+            running.status = "INTERRUPTED"
+            running.action_status = "UNRESOLVED"
+            running.reasoning_summary = "GUARDIAN_RUN_INTERRUPTED_AFTER_BOUNDED_RUNTIME_TIMEOUT"
+            running.completed_at = _now().isoformat()
+            running.cooldown_until = None
+    if running_rows:
+        session.flush()
+
+    # Autopilot and the HTTP scan endpoint share this function. Generate the
+    # positive opportunity signal here so a standing mission never depends on
+    # a caller remembering a special pre-scan route.
+    if journey.status == "ACTIVE":
+        from app.main import _ensure_opportunity_window_event
+
+        _ensure_opportunity_window_event(session, journey)
     mission = _standing_mission(session, journey.id)
     events = _open_events(session, journey.id)
     actionable_events = [
@@ -498,6 +568,30 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
         for event in events
         if event.event_type in ACTIONABLE_EVENT_TYPES and not _is_predictive(event)
     ]
+    # Resolving a handled trigger must not make a retrying HTTP caller create a
+    # fresh NO_ACTION GuardianRun.  Once the Journey has no open signal, replay
+    # the last completed mutation receipt; a later new signal gets a different
+    # open-event set and proceeds normally.
+    prior_mutation = session.scalar(
+            select(GuardianRun)
+            .where(
+                GuardianRun.journey_id == journey.id,
+                GuardianRun.status == "COMPLETED",
+                GuardianRun.action_status == "EXECUTED",
+            )
+            .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
+        )
+    if prior_mutation is not None:
+        try:
+            prior_created = datetime.fromisoformat(str(prior_mutation.created_at))
+            has_new_signal = any(
+                datetime.fromisoformat(str(event.detected_at)) > prior_created
+                for event in events
+            )
+        except (TypeError, ValueError):
+            has_new_signal = bool(events)
+        if not has_new_signal:
+            return guardian_payload(session, prior_mutation, deduplicated=True)
     fingerprint = _fingerprint(journey, mission, events)
     now = _now()
     existing = _cooldown_active(
@@ -518,7 +612,14 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
         )
     )
     if existing is not None:
-        return guardian_payload(session, existing, deduplicated=True)
+        if existing.status not in {"INTERRUPTED", "ABORTED"} and existing.action_status not in {
+            "UNRESOLVED",
+            "RETRYABLE_FAILURE",
+            "NO_FEASIBLE_RECOVERY",
+        }:
+            return guardian_payload(session, existing, deduplicated=True)
+        existing.evidence_fingerprint = f"{existing.evidence_fingerprint}:retry:{existing.id}"
+        session.flush()
 
     actionable = actionable_events
     incident_fingerprints = []

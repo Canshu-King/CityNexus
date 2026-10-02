@@ -713,7 +713,7 @@ def test_hermes_runtime_skips_empty_glm_response_and_reaches_domestic_deepseek(m
 def test_hermes_runtime_consumes_wb2api_streaming_tool_call(monkeypatch):
     def handler(request: httpx.Request) -> httpx.Response:
         payload = json.loads(request.content)
-        assert payload["stream"] is True
+        assert payload["stream"] is False
         body = "".join(
             [
                 'data: {"choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"inspect_journey","arguments":"{\\"journey_id\\":\\""}}]}}]}\n\n',
@@ -723,8 +723,13 @@ def test_hermes_runtime_consumes_wb2api_streaming_tool_call(monkeypatch):
         )
         return httpx.Response(
             200,
-            headers={"content-type": "text/event-stream"},
-            content=body.encode(),
+            json={"choices": [{"message": {
+                "role": "assistant",
+                "tool_calls": [{"id": "call-1", "type": "function", "function": {
+                    "name": "inspect_journey",
+                    "arguments": '{"journey_id":"journey-1"}',
+                }}],
+            }}]},
         )
 
     fake_client = httpx.Client(transport=httpx.MockTransport(handler))
@@ -783,7 +788,7 @@ def test_hermes_runtime_retries_an_empty_stream_without_switching_model(monkeypa
 
     assert message["content"] == "READY"
     assert agent.model_key == "cn:glm-5.3-flash"
-    assert calls == [True, False]
+    assert calls == [False]
 
 
 def test_hermes_runtime_retries_length_exhausted_message_with_larger_budget(monkeypatch):
@@ -830,8 +835,8 @@ def test_hermes_runtime_retries_length_exhausted_message_with_larger_budget(monk
     assert message["content"] == "READY"
     assert agent.model_key == "cn:glm-5.3-flash"
     assert calls == [
-        ("cn:glm-5.3-flash", True, 1200),
-        ("cn:glm-5.3-flash", False, 4800),
+        ("cn:glm-5.3-flash", False, 2400),
+        ("cn:glm-5.3-flash", False, 9600),
     ]
 
 

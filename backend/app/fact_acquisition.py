@@ -534,6 +534,40 @@ def _plain_text_opening(
     excerpt = text[label.end() : label.end() + 260].translate(
         str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
     )
+    # Parse the native Japanese form before the generic ``時`` normalizer
+    # rewrites it to ``:00``.
+    native_japanese_clock = re.compile(
+        r"(?P<open_period>午前|午後)?\s*(?P<open_hour>\d{1,2})時"
+        r"(?:\s*(?P<open_minute>\d{1,2})分)?\s*"
+        r"(?:から|～|〜|[-–—])\s*"
+        r"(?P<close_period>午前|午後)?\s*(?P<close_hour>\d{1,2})時"
+        r"(?:\s*(?P<close_minute>\d{1,2})分)?"
+    )
+
+    def _native_japanese_clock(period: str | None, hour: str, minute: str | None) -> str:
+        value = int(hour)
+        if period == "午後" and value < 12:
+            value += 12
+        if period == "午前" and value == 12:
+            value = 0
+        return f"{value:02d}:{int(minute or 0):02d}"
+
+    native_match = native_japanese_clock.search(excerpt)
+    if native_match:
+        normalized = normalize_opening_hours(
+            f"{_native_japanese_clock(native_match.group('open_period'), native_match.group('open_hour'), native_match.group('open_minute'))}-"
+            f"{_native_japanese_clock(native_match.group('close_period'), native_match.group('close_hour'), native_match.group('close_minute'))}"
+        )
+        if normalized.get("status") == "NORMALIZED_VALID":
+            normalized.update(
+                {
+                    "status": "OFFICIAL_WEB_VERIFIED",
+                    "source": "official_web",
+                    "source_url": source_url,
+                    "raw": native_match.group(0),
+                }
+            )
+            return normalized
     excerpt = re.sub(r"(\d{1,2})時(\d{2})分", r"\1:\2", excerpt)
     excerpt = re.sub(r"(?<!\d)(\d{1,2})時(?!\d)", r"\1:00", excerpt)
     if re.search("\u5168\u5929\u5f00\u653e" + r"|all\s*day|24\s*hours?", excerpt, re.IGNORECASE):
@@ -726,7 +760,10 @@ def _plain_text_cost(
             return {
                 "status": "VERIFIED_PROVIDER",
                 "amount_minor": 0,
-                "currency": "CNY",
+                # Japanese official text saying 無料 establishes zero
+                # admission, not CNY. Keep the journey-local accounting unit
+                # explicit; this is a provider fact, not UNKNOWN->FREE logic.
+                "currency": "JPY" if "無料" in excerpt else "CNY",
                 "source": "official_web",
                 "source_url": source_url,
                 "raw": excerpt,
@@ -1134,11 +1171,24 @@ def acquire_place_facts(
                     cost = candidate
             official = {"status": "NO_SOURCE_URL"}
             requested_binding = source_bindings.get(place.id) if source_bindings else None
+            stored_binding = _fact_source_binding(place, metadata)
             source_binding = _requested_fact_source_binding(
                 place, requested_binding, origin=binding_origin
             )
-            if source_binding is None:
-                source_binding = _fact_source_binding(place, metadata)
+            # An Agent may suggest a URL, but it cannot downgrade an already
+            # corroborated operator/provider binding. Preserve the stronger
+            # canonical source while still allowing the Agent to propose a
+            # candidate when no approved binding exists.
+            if (
+                binding_origin == "agent"
+                and stored_binding is not None
+                and stored_binding.get("approval") in {
+                    "OPERATOR_VERIFIED", "PROVIDER_TAG_EXACT_URL", "CORROBORATED_OFFICIAL_SOURCE"
+                }
+            ):
+                source_binding = stored_binding
+            elif source_binding is None:
+                source_binding = stored_binding
             source_url = (
                 str(source_binding["source_url"])
                 if source_binding

@@ -299,7 +299,11 @@ from app.replanning.feasibility import (
     constraint_write_refusal,
     evaluate_feasibility,
 )
-from app.replanning.mock_replan_engine import partition_execution, rank_closure_replacements
+from app.replanning.mock_replan_engine import (
+    ReplacementChoice,
+    partition_execution,
+    rank_closure_replacements,
+)
 from app.replanning.opportunity_window_family import (
     WindowReplacementInput,
     evaluate_window_replacement,
@@ -1473,6 +1477,182 @@ def put_guardian_mission(
     )
     session.commit()
     return mission_payload(mission)
+
+
+def _ensure_opportunity_window_event(session: Session, journey: Journey) -> EventModel | None:
+    """Persist one server-derived opportunity signal from the current Twin.
+
+    The signal is deliberately a compact statement of server-observed facts.
+    It contains no candidate Place and no recovery recipe; the Agent must search
+    and choose a bounded hint later.  A mobility snapshot is required so a
+    deterministic window never rests on the Twin's offline/mock fallback.
+    """
+
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        return None
+    twin = _twin_snapshot(session, journey)
+    context = twin.get("context") or {}
+    window = context.get("opportunity_window")
+    mobility = context.get("mobility") or {}
+    provider = str(mobility.get("provider") or mobility.get("source_provider") or "").lower()
+    if not isinstance(window, dict) or not window.get("available_minutes"):
+        return None
+    if not mobility.get("snapshot_id") or provider.startswith("mock") or mobility.get("degraded"):
+        return None
+    execution = context.get("execution") or {}
+    current_activity = (
+        session.get(Activity, str(execution.get("now_activity_id")))
+        if execution.get("now_activity_id")
+        else None
+    )
+    current_location = (
+        current_activity.place_id or current_activity.city_service_id
+        if current_activity is not None
+        else None
+    )
+    if current_activity is None or current_activity.status not in {"ARRIVED", "IN_PROGRESS"}:
+        return None
+    next_activity = session.scalar(
+        select(Activity).where(
+            Activity.plan_version_id == journey.active_plan_version_id,
+            Activity.sequence_no > current_activity.sequence_no,
+            Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
+        ).order_by(Activity.sequence_no)
+    )
+    if next_activity is None:
+        return None
+    plan = session.get(PlanVersion, journey.active_plan_version_id)
+    if plan is None:
+        return None
+    base_snapshot = MobilitySnapshot.from_evidence(
+        _json_object(plan.mobility_evidence_json)
+    )
+    origin = _activity_routing_key(current_activity)
+    destination = _activity_routing_key(next_activity)
+    next_fact = base_snapshot.fact_for(origin, destination)
+    if next_fact is None or next_fact.fact_quality != "LIVE_PROVIDER_CAPTURE" or next_fact.degraded:
+        return None
+    opens_at = max(
+        datetime.fromisoformat(str(window["opens_at"])),
+        datetime.fromisoformat(current_activity.end_at),
+    )
+    # The first unexecuted activity is movable during an additive opportunity
+    # insertion.  The actual hard boundary is the next protected C4
+    # commitment, not that activity's original start time.  Use the frozen
+    # active-plan edge only as the conservative current->anchor travel burden;
+    # F4 will capture the candidate's two new directed edges separately.
+    commitment_start = None
+    commitment_semantic_key = None
+    commitment_rows = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level == "C4_Anchored",
+        )
+    ).all()
+    for commitment in commitment_rows:
+        commitment_policy = _json_object(commitment.policy_json, {})
+        scheduled = commitment_policy.get("scheduled_start_at")
+        if not scheduled:
+            continue
+        try:
+            candidate_start = datetime.fromisoformat(str(scheduled))
+        except ValueError:
+            continue
+        if candidate_start <= datetime.fromisoformat(current_activity.end_at):
+            continue
+        if commitment_start is None or candidate_start < commitment_start:
+            commitment_start = candidate_start
+            commitment_semantic_key = commitment_policy.get("semantic_key")
+    if commitment_start is None:
+        return None
+    must_depart_by = min(
+        datetime.fromisoformat(str(window["must_depart_by"])),
+        commitment_start - timedelta(minutes=next_fact.minutes + 15),
+    )
+    available_minutes = int((must_depart_by - opens_at).total_seconds() // 60)
+    if available_minutes <= 0:
+        return None
+    payload = {
+        "signal_kind": "OPPORTUNITY_WINDOW",
+        "opens_at": opens_at.isoformat(),
+        "must_depart_by": must_depart_by.isoformat(),
+        "available_minutes": available_minutes,
+        "current_activity_id": twin.get("current_activity_id"),
+        "current_execution_activity_id": execution.get("now_activity_id"),
+        "current_execution_location": current_location,
+        "next_activity_id": next_activity.id,
+        "next_activity_start": next_activity.start_at,
+        "next_commitment_start": commitment_start.isoformat(),
+        "next_commitment_semantic_key": commitment_semantic_key,
+        "safety_buffer_min": 15,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "twin_snapshot_at": twin.get("snapshot_at"),
+        "mobility_snapshot_id": mobility.get("snapshot_id"),
+        "mobility_provider": mobility.get("source_provider") or mobility.get("provider"),
+        "provenance": "SYSTEM_DERIVED_FROM_TWIN_AND_LIVE_MOBILITY",
+    }
+    fingerprint_payload = {
+        key: payload.get(key)
+        for key in (
+            "signal_kind",
+            "opens_at",
+            "must_depart_by",
+            "available_minutes",
+            "current_execution_activity_id",
+            "next_activity_id",
+            "next_commitment_start",
+            "active_plan_version_id",
+        )
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(fingerprint_payload, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["opportunity_fingerprint"] = fingerprint
+    existing_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "OPPORTUNITY_WINDOW",
+        ).order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+    ).all()
+    existing = next(
+        (
+            item
+            for item in existing_rows
+            if _json_object(item.payload_json).get("opportunity_fingerprint") == fingerprint
+        ),
+        None,
+    )
+    if existing is not None:
+        return existing
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="citynexus-twin-opportunity",
+        provenance="SYSTEM_DERIVED",
+        event_type="OPPORTUNITY_WINDOW",
+        severity="INFO",
+        affected_activity_id=None,
+        occurred_at=opens_at.isoformat(),
+        detected_at=str(twin.get("snapshot_at") or datetime.now(timezone.utc).isoformat()),
+        status="DETECTED",
+        resolved_at=None,
+        payload_json=json.dumps(payload, ensure_ascii=False, sort_keys=True),
+        created_at=datetime.now(timezone.utc).isoformat(),
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="opportunity.window.detected",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="citynexus-twin",
+        after={"event_type": event.event_type, "fingerprint": fingerprint, "payload": payload},
+    )
+    return event
 
 
 @app.post("/api/v1/journeys/{journey_id}/guardian/scan")
@@ -9091,6 +9271,7 @@ class _ReplanCandidateSpec:
     solver_provenance: dict[str, Any] | None = None
     v2_plan: SolverV2Plan | None = None
     v2_choices: dict[tuple[str, str], Any] | None = None
+    additive_insertion: bool = False
 
 
 class MobilityDataUnavailable(RuntimeError):
@@ -9328,6 +9509,7 @@ def generate_replan(
                 "base_plan_version_id": base.id,
                 "trigger_event_id": trigger_id,
                 "candidate_count": body.candidate_count,
+                "place_ids": list(body.place_ids or []),
             }
         )
         generation_idempotency_key = f"replan.generate:{header_key}"
@@ -9825,6 +10007,92 @@ def generate_replan(
         if any(datetime.fromisoformat(start) > effective_event_time for _, start in c4_anchors)
         else None
     )
+    opportunity_choice: ReplacementChoice | None = None
+    opportunity_anchor: Activity | None = None
+    if trigger_event.event_type == "OPPORTUNITY_WINDOW":
+        # Agent-provided ids are only bounded search hints.  The server owns
+        # identity, canonical facts, and the active-plan exclusion.
+        hinted_ids = [str(item) for item in (body.place_ids or [])]
+        occupied_place_ids = {str(item.place_id) for item in source if item.place_id}
+        candidate_place = next(
+            (
+                places_by_id.get(item)
+                for item in hinted_ids
+                if places_by_id.get(item) is not None
+            ),
+            None,
+        )
+        if candidate_place is None:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_REQUIRED")
+        if candidate_place.id in occupied_place_ids:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_ALREADY_ACTIVE")
+        if candidate_place.provider_key in _SERVER_OWNED_PLACE_PROVIDERS:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_NOT_CITY_PLACE")
+        if not candidate_place.external_id or not candidate_place.provider_key:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_PROVIDER_IDENTITY_MISSING")
+        candidate_meta = _json_object(candidate_place.metadata_json)
+        candidate_cost = candidate_meta.get("cost_evidence")
+        if not isinstance(candidate_cost, dict) or str(candidate_cost.get("status") or "UNKNOWN").upper() not in {
+            "KNOWN",
+            "VERIFIED_PROVIDER",
+        } or candidate_cost.get("amount_minor") is None:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_COST_UNKNOWN")
+        if str(candidate_cost.get("currency") or "").upper() != str(journey.budget_currency).upper():
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_CURRENCY_MISMATCH")
+        candidate_opening = normalize_opening_hours(
+            json.loads(candidate_place.opening_hours_json or "{}")
+        )
+        if candidate_opening.get("status") not in {
+            "NORMALIZED_VALID",
+            "OFFICIAL_WEB_VERIFIED",
+            "VERIFIED_PROVIDER",
+        }:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_OPENING_UNKNOWN")
+        opportunity_anchor = next(
+            (
+                item
+                for item in source
+                if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                and current_execution is not None
+                and item.sequence_no > current_execution.sequence_no
+            ),
+            None,
+        )
+        if opportunity_anchor is None and future_anchor is not None:
+            opportunity_anchor = next(
+                (
+                    item
+                    for item in source
+                    if _activity_location(item) == future_anchor[1]
+                    and datetime.fromisoformat(item.start_at) == future_anchor[0]
+                ),
+                None,
+            )
+        if current_execution is None or opportunity_anchor is None:
+            raise HTTPException(422, "OPPORTUNITY_WINDOW_ANCHOR_REQUIRED")
+        if (
+            trigger_event.provenance != "SYSTEM_DERIVED"
+            or trigger_event.provider_key != "citynexus-twin-opportunity"
+            or payload.get("active_plan_version_id") != base.id
+            or payload.get("current_execution_activity_id") != current_execution.id
+            or payload.get("next_activity_id") != opportunity_anchor.id
+        ):
+            raise HTTPException(409, "OPPORTUNITY_WINDOW_STALE_OR_UNBOUND")
+        effective_event_time = max(
+            effective_event_time, datetime.fromisoformat(current_execution.end_at)
+        )
+        visit_minutes = int(candidate_meta.get("typical_visit_minutes") or 30)
+        if visit_minutes <= 0 or visit_minutes > 240:
+            raise HTTPException(422, "OPPORTUNITY_VISIT_DURATION_UNSUPPORTED")
+        opportunity_choice = ReplacementChoice(
+            place_id=candidate_place.id,
+            title=candidate_place.name,
+            duration_min=visit_minutes,
+            cost_minor=int(candidate_cost["amount_minor"]),
+            reason_codes=("OPPORTUNITY_WINDOW_F4", "CANONICAL_COST", "CANONICAL_OPENING"),
+        )
+        _need_pair(_activity_location(current_execution), opportunity_choice.place_id)
+        _need_pair(opportunity_choice.place_id, _activity_location(opportunity_anchor))
     for choice in replacement_choices:
         _need_pair(_activity_location(current_execution or previous_affected), choice.place_id)
         _need_pair(_activity_location(previous_affected), choice.place_id)
@@ -9857,7 +10125,10 @@ def generate_replan(
     incident_baseline_reference_fallback = False
     reuse_baseline_for_recovery = (
         is_authoritative_v12_evidence
-        and trigger_event.event_type not in {"TRAFFIC_DELAY", "SCHEDULE_DELAY"}
+        # An opportunity creates new physical adjacencies. Its two new legs
+        # must be captured by the current provider operation; the active plan's
+        # frozen matrix is valid only for the active plan's own edges.
+        and trigger_event.event_type not in {"TRAFFIC_DELAY", "SCHEDULE_DELAY", "OPPORTUNITY_WINDOW"}
     )
     if incident_snapshot is not None:
         mobility_capture = MobilitySnapshotCaptureResult(
@@ -10144,7 +10415,74 @@ def generate_replan(
     heuristic_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
-    if replacement_choices:
+    if opportunity_choice is not None and opportunity_anchor is not None:
+        origin = _activity_location(current_execution)
+        destination = _activity_location(opportunity_anchor)
+        try:
+            inbound = _replan_estimate(
+                session,
+                journey,
+                mobility,
+                origin,
+                opportunity_choice.place_id,
+                operation_key=f"opportunity-inbound:{trigger_id}",
+            )
+            outbound = _replan_estimate(
+                session,
+                journey,
+                mobility,
+                opportunity_choice.place_id,
+                destination,
+                operation_key=f"opportunity-outbound:{trigger_id}",
+            )
+        except MobilityDataUnavailable as exc:
+            mobility_unavailable_pairs.add(str(exc))
+            mobility_gaps.append(_mobility_gap_from(exc))
+            failed_reasons.add(exc.reason_code)
+        else:
+            candidate_place = session.get(Place, opportunity_choice.place_id)
+            opening = normalize_opening_hours(
+                json.loads(candidate_place.opening_hours_json or "{}")
+            )
+            evidence = evaluate_window_replacement(
+                now=effective_event_time,
+                next_commitment_start=datetime.fromisoformat(
+                    str(payload.get("next_commitment_start") or opportunity_anchor.start_at)
+                ),
+                safety_buffer_min=int(payload.get("safety_buffer_min") or 15),
+                budget_remaining_minor=journey.budget_amount_minor
+                - sum(item.estimated_cost_minor for item in source),
+                candidate=WindowReplacementInput(
+                    key=opportunity_choice.place_id,
+                    visit_minutes=opportunity_choice.duration_min,
+                    inbound_travel_min=inbound,
+                    outbound_travel_min=outbound,
+                    cost_minor=opportunity_choice.cost_minor,
+                    opens_at=_at_local_time(opening.get("open")),
+                    closes_at=_at_local_time(opening.get("close")),
+                ),
+            )
+            if evidence.fits:
+                heuristic_specs.append(
+                    _ReplanCandidateSpec(
+                        family="F4_OPPORTUNITY_INSERTION",
+                        replacement_choice=opportunity_choice,
+                        window_evidence={
+                            **evidence.as_dict,
+                            "origin_key": origin,
+                            "destination_key": destination,
+                            "inbound_travel_min": inbound,
+                            "outbound_travel_min": outbound,
+                            "safety_buffer_min": int(payload.get("safety_buffer_min") or 15),
+                            "duration_source": "BOUNDED_OPPORTUNITY_POLICY",
+                            "candidate_place_id": opportunity_choice.place_id,
+                        },
+                        additive_insertion=True,
+                    )
+                )
+            else:
+                failed_reasons.update(evidence.failures)
+    elif replacement_choices:
         for index, choice in enumerate(replacement_choices):
             family = "F0_SAME_SLOT_REPLACEMENT"
             window_evidence: dict[str, Any] | None = None
@@ -10280,7 +10618,7 @@ def generate_replan(
                 candidate_remove=True,
             )
         )
-    elif trigger_event.event_type not in {"CLOSURE", "WEATHER"}:
+    elif trigger_event.event_type not in {"CLOSURE", "WEATHER", "OPPORTUNITY_WINDOW"}:
         # Only a non-physical event may legitimately settle as "nothing needs
         # to change".  A closure or bad weather that cannot be repaired
         # *materially* must say so, never quietly accept an unchanged copy
@@ -10297,6 +10635,9 @@ def generate_replan(
             heuristic_specs_unresolved_reason = "REPLAN_PROTECTED_CONFLICT"
         else:
             heuristic_specs_unresolved_reason = "REPLAN_NO_ALTERNATIVE"
+
+    if trigger_event.event_type == "OPPORTUNITY_WINDOW" and not heuristic_specs:
+        heuristic_specs_unresolved_reason = "OPPORTUNITY_WINDOW_NO_FEASIBLE_CANDIDATE"
 
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
 
@@ -10685,6 +11026,7 @@ def generate_replan(
                 candidate_delay=spec.candidate_delay,
                 candidate_remove=spec.candidate_remove,
                 window_evidence=spec.window_evidence,
+                additive_insertion=spec.additive_insertion,
                 solver_provenance={
                     "kind": "DETERMINISTIC_HEURISTIC",
                     "solver_status": fallback_status,
@@ -10968,6 +11310,53 @@ def generate_replan(
                         sort_keys=True,
                     )
             copied_rows.append(row)
+
+        if spec.additive_insertion and replacement_choice is not None:
+            if opportunity_anchor is None or window_evidence is None:
+                failed_reasons.add("OPPORTUNITY_INSERTION_CONTEXT_MISSING")
+                session.delete(proposed)
+                session.flush()
+                continue
+            anchor_sequence = int(opportunity_anchor.sequence_no)
+            for existing_row in copied_rows:
+                if int(existing_row["sequence_no"]) >= anchor_sequence:
+                    existing_row["sequence_no"] = int(existing_row["sequence_no"]) + 1
+            candidate_place = session.get(Place, replacement_choice.place_id)
+            start_dt = datetime.fromisoformat(str(window_evidence["window_opens_at"])) + timedelta(
+                minutes=int(window_evidence["inbound_travel_min"])
+            )
+            inserted_row = {
+                "sequence_no": anchor_sequence,
+                "activity_type": "visit",
+                "title": replacement_choice.title,
+                "place_id": replacement_choice.place_id,
+                "city_service_id": None,
+                "start_at": start_dt.isoformat(),
+                "end_at": (start_dt + timedelta(minutes=replacement_choice.duration_min)).isoformat(),
+                "travel_from_prev_min": int(window_evidence["inbound_travel_min"]),
+                "estimated_cost_minor": replacement_choice.cost_minor,
+                "currency": journey.budget_currency,
+                "status": "PLANNED",
+                "locked": False,
+                "metadata_json": _replacement_activity_metadata(
+                    candidate_place,
+                    replacement_choice,
+                    family="F4_OPPORTUNITY_INSERTION",
+                    replaced_place_id=None,
+                    reason_codes=replacement_choice.reason_codes,
+                ),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            }
+            insertion_index = next(
+                (
+                    index
+                    for index, existing_row in enumerate(copied_rows)
+                    if int(existing_row["sequence_no"]) > anchor_sequence
+                ),
+                len(copied_rows),
+            )
+            copied_rows.insert(insertion_index, inserted_row)
 
         def _row_routing_key(row: dict[str, Any]) -> str | None:
             """Same routing identity the gate and the frozen evidence use.
@@ -11360,8 +11749,6 @@ def generate_replan(
         # "NO_DISTINCT_CANDIDATE"`` is never empty, so testing ``not details``
         # afterwards made REPLAN_TARGET_UNRESOLVED / REPLAN_PROTECTED_CONFLICT /
         # REPLAN_NO_ALTERNATIVE unreachable dead code.
-        if heuristic_specs_unresolved_reason:
-            raise HTTPException(422, heuristic_specs_unresolved_reason)
         # T2: "we could not measure the legs" is not the same finding as "no
         # replacement place exists".  Reporting the first as the second would
         # tell the traveller that nothing can be done when the truth is that
@@ -11402,6 +11789,8 @@ def generate_replan(
                 "reason_codes": reason_codes,
             }
             raise refusal
+        if heuristic_specs_unresolved_reason and not failed_reasons:
+            raise HTTPException(422, heuristic_specs_unresolved_reason)
         details = ", ".join(sorted(failed_reasons)) or "NO_DISTINCT_CANDIDATE"
         raise HTTPException(422, f"no feasible replan proposal: {details}")
 
@@ -11912,8 +12301,19 @@ def _accept_replan_executing(
         replacement_current.status = "ACTIVE"
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
-    if trigger_event.status == "DETECTED":
-        trigger_event.status = "ACKNOWLEDGED"
+    # An accepted replan has now adapted the Journey to the event.  Keep the
+    # external-world fact intact, but close the Journey-scoped trigger so the
+    # same opportunity/disruption cannot be offered again as unresolved.
+    trigger_payload = _json_object(trigger_event.payload_json)
+    trigger_event.status = "RESOLVED"
+    trigger_event.resolved_at = decided_at
+    trigger_payload["resolved_at"] = decided_at
+    trigger_payload["resolution_reason"] = (
+        "OPPORTUNITY_CONSUMED"
+        if trigger_event.event_type == "OPPORTUNITY_WINDOW"
+        else "JOURNEY_ADAPTED"
+    )
+    trigger_event.payload_json = json.dumps(trigger_payload, ensure_ascii=False, sort_keys=True)
 
     # Commitment.activity_id is PlanVersion-local. The durable authority is
     # the stable semantic/time anchor in policy_json, but JourneyTwin exposes

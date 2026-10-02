@@ -151,7 +151,10 @@ class AgentToolCall(BaseModel):
     estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
     estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
     estimated_cost_minor: int | None = Field(default=None, ge=0)
-    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    # A replan hint may contain one newly discovered Place. The gateway still
+    # enforces the larger input required by generic plan generation; keeping
+    # this field at one lets F4 opportunity insertion use a single bounded hint.
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
     planning_mode: PlanningMode | None = None
     approval_id: UUID | None = None
     activity_id: UUID | None = None
@@ -647,6 +650,7 @@ class EventCreate(BaseModel):
         "CLOSURE",
         "WEATHER",
         "SCHEDULE_DELAY",
+        "OPPORTUNITY_WINDOW",
         "SERVICE_UNAVAILABLE",
         "USER_CHANGE",
         "OTHER",
@@ -719,6 +723,9 @@ class ReplanGenerateRequest(BaseModel):
     candidate_count: int = Field(default=3, ge=1, le=5)
     solver_mode: Literal["deterministic", "ortools", "auto", "v2"] | None = None
     protected_activity_ids: list[UUID] = Field(default_factory=list, max_length=50)
+    # Candidate hints are not authority; the server reloads and revalidates
+    # every Place and every mobility edge before materializing a plan.
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
 
 
 # === WP04 COMMERCE API SCHEMAS (generated) ===

@@ -26,8 +26,12 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     # It remains subject to the persisted traveler policy and deterministic
     # gateway facts, but must not inherit the native MCP proposal-only fence.
     agent_id = "hermes-compat"
-    _initial_max_tokens = 1200
-    _empty_message_retry_max_tokens = 4800
+    _initial_max_tokens = 2400
+    # Tool-rich Journey context can spend the first response budget on model
+    # reasoning before emitting a call. Keep a single bounded retry, but leave
+    # enough room for a real tool call instead of silently switching to the
+    # deterministic controller.
+    _empty_message_retry_max_tokens = 9600
 
     def __init__(
         self,
@@ -43,8 +47,14 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             raise AgentRuntimeUnavailable("Hermes runtime model chain is empty")
         self._model_index = 0
         self.model_key = self._model_chain[0]
+        bounded_timeout = max(5.0, float(settings.impact_timeout_seconds))
         self._client = client or httpx.Client(
-            timeout=httpx.Timeout(connect=10.0, read=120.0, write=10.0, pool=10.0)
+            timeout=httpx.Timeout(
+                connect=min(10.0, bounded_timeout),
+                read=bounded_timeout,
+                write=min(10.0, bounded_timeout),
+                pool=min(10.0, bounded_timeout),
+            )
         )
         self._owns_client = client is None
 
@@ -63,7 +73,11 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                         "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
                     ).citynexus_tool_definitions(),
                     "tool_choice": "auto",
-                    "stream": True,
+                    # WB2API's SSE bridge can leave a large tool-schema turn
+                    # open after it has emitted reasoning.  JSON mode gives
+                    # this bounded AgentRun one terminal response while
+                    # retaining the existing budget retry below.
+                    "stream": False,
                 }
                 with self._client.stream(
                     "POST",
