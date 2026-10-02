@@ -166,6 +166,10 @@ def main():
           "" if remote == mt["candidate"] == r8["commit"] else
           "不同一枚的原因是件本身也是一笔提交：把新件塞进枝里，枝尖就又前移一格；这一页不去追那"
           "一枚，只把「哪一枚被判过」写清楚，复算命令在末尾点名。"))
+    A("- 我说错了一处，趁这页一起改口：枝里最后一笔提交的信息（%s）写「write-set 25 files」，那是"
+      "上一枚那趟的数；这一枚真正的写集是 %s 枚。提交已经推出去了，按规矩不改旧帖，勘误就在这页里"
+      "点名，判据以本节上面那条「三者同一枚」为准。" % (
+          fmt(r8t["commit"]), fmt(r8["write_set_files"])))
     A("- 产品侧只有 `backend/tests/test_qoder_ord0500_journey_refusal.py` 那一笔注释（blob `%s`），"
       "其余是 `review/ord0500-checkin/` 里的件与工具。前端字节一枚没动：引用这枚后端规格的 `%s`"
       " = %s，所以 r7 那一代的入口名与 bundle 字节不在这儿重述成本轮新读数。" % (
@@ -182,7 +186,8 @@ def main():
                       ("lookup", "门里自己先查一次表"),
                       ("integrity", "唯一索引那层捕获"),
                       ("caught_by", "`caught_by: unique_index` 那一支")):
-        A("| %s（%s） | %s | %s | `%s` |" % (lab, desc, fmt(old[lab]), fmt(an[lab]), vt[lab]))
+        A("| %s（%s） | `backend/app/main.py:%d` | `backend/app/main.py:%d` | `%s` |" % (
+            lab, desc, old[lab], an[lab], vt[lab]))
     A("")
     A("- 旧数 `%s` 是我在 r5 那一代量到的，随基座走动全数失效；这轮的数一律从现尖 `%s` 的 "
       "`backend/app/main.py`（共 %s 行）当场读：打卡那扇门自己的区间 `%s` 由路由路径那两行定位"
@@ -231,14 +236,14 @@ def main():
     A("")
     A("## 五、全线源码注释里的 path:line 我逐枚打开了一遍（只读，别人手上的判据我没动）")
     A("")
-    A("- 分母：`backend/app`、`backend/tests`、`frontend/src`、`contracts` 四处的 %s 个 py/ts/tsx "
-      "文件里 %s 枚 `path:line` 引文（含 %s 枚同段裸数 `%s`，按「读到此刻最近一枚具名路径」解）。"
-      "本单自己那 %s 枚逐条 OK。不 OK 的 %s 枚分布：%s。件 "
-      "`review/ord0500-checkin/receipts/citation_audit_r8.json`（blob `%s`）。" % (
-          fmt(ca["files_scanned"]), fmt(ca["citations_found"]),
-          fmt(sum(1 for r in ca["rows"] if r.get("bare"))), ":(\\d+)",
+    A("- 分母的件在枝里 `review/ord0500-checkin/receipts/citation_audit_r8.json`（blob `%s`），它逐枚记着 "
+      "`backend/app`、`backend/tests`、`frontend/src`、`contracts` 四处 %s 条 `path:line` 引文（扫过 %s "
+      "份 py/ts/tsx，含 %s 枚只写了冒号数字的同段引文，按「读到此刻最近一枚具名路径」解）。本单自己那 %s "
+      "条逐条 OK，不 OK 的 %s 条分布：%s。" % (
+          blob_ca, fmt(ca["citations_found"]), fmt(ca["files_scanned"]),
+          fmt(sum(1 for r in ca["rows"] if r.get("bare"))),
           fmt(ca["citations_in_this_lanes_files"]), fmt(ca["mechanically_red"]),
-          "、".join("%s %s 枚" % (k, v) for k, v in sorted(tally.items()) if k != "OK"), blob_ca))
+          "、".join("%s %s 条" % (k, v) for k, v in sorted(tally.items()) if k != "OK")))
     A("- 最该点名的一条：`backend/tests/test_qoder_ord0467_v13_contract_family.py:3` 引的是 "
       "`test_qoder_ord04307_credential_gate.py:180`，而这枚文件名在库里不存在 —— 「不存在」按登记清单"
       "数出来：以该名结尾的路径 %s 条；同族另一枚 `backend/tests/test_qoder_ord0307_credential_gate.py` "
@@ -260,7 +265,7 @@ def main():
     A("")
     A("## 六、不在本代的东西（具名，不折算）")
     A("")
-    A("- 手机第二站中心不可按那一格：仍归滚动容器与底栏两家，等 0542 后续；本代没重取屏幕读数，"
+    A("- 手机第二站中心不可按那一格：仍归滚动容器与底栏两家，等 ORD-0542 后续；本代没重取屏幕读数，"
       "也不把 r7 的数当新的用。")
     A("- 字典里 `checkin.duplicate` / `checkin.refused` 两行仍是 0 读者（本轮词汇闸的读数在 "
       "`receipts/checkin_copy_rows_r6.json` 里逐行带着），留、删、还是让我屏回去读，等你点一个；"
@@ -271,7 +276,7 @@ def main():
     A("")
     A("- 我名下账本没有未接单，按序自申报 ORD-0500 r9：把足迹那一屏（`FootprintPanel`）的两档屏读"
       "补上，并让它走与行程屏同一把词汇闸。这件会撞底栏那两家的写集，所以我先问一句再动手：**现在就"
-      "起 r9，还是等 0542 后续把底栏那一格合完再起？**你没点头之前我只把 r8 交清，不开那枚屏读。"
+      "起 r9，还是等 ORD-0542 后续把底栏那一格合完再起？**你没点头之前我只把 r8 交清，不开那枚屏读。"
       "r8 这一枝本身不需要再 rebase，依据是第一节点名的「需要再 rebase」计数 = %s 枚。" % (
           fmt(len(r8["files_needing_another_recut"]))))
     A("")
@@ -286,7 +291,7 @@ def main():
       "`review/ord0500-checkin/tools/`，跑法逐枚写在文件头。" % blob_ra)
     A("")
     A("本页生成于 %s，全部数取自本窗口写的件；页里没有一枚数是手打的。"
-      % datetime.now().astimezone().isoformat())
+      % datetime.now().astimezone().isoformat(timespec="seconds"))
     block = NL.join(L) + NL
 
     closing = open(CLOSING, "rb").read()

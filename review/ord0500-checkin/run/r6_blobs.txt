@@ -1,4 +1,4 @@
-00cf08834cd5f6740ba391692f44ce633f304197 review/ord0500-checkin/R6_READINGS.md
+6a061014073417c0953158b364b695308736d578 review/ord0500-checkin/R6_READINGS.md
 65e2aace41789aac99256c54acfff60cabb70422 review/ord0500-checkin/receipts/build_faces_r6.json
 34c8b3825d30c13deca6f0bf49e94f02fd5aec7b review/ord0500-checkin/receipts/sweep_r6.json
 b80406f6ba59de76c1b2a6e3fc16295a16468045 review/ord0500-checkin/receipts/checkin_copy_rows_r6.json
@@ -10,7 +10,7 @@ b80406f6ba59de76c1b2a6e3fc16295a16468045 review/ord0500-checkin/receipts/checkin
 bf2be67d3c777f9fb968d2886eed55edd2ad7809 review/ord0500-checkin/tools/build_faces_r6.py
 799f5fe9122c0310e4287ff909f628a6011bd7af review/ord0500-checkin/tools/make_probe_r6.py
 eab509dbdb609c446667530e6bbb3216a517e91c review/ord0500-checkin/tools/landing_r6.py
-835218767975c00bccdec3dc4075b7caca8ecd76 review/ord0500-checkin/receipts/landing_r6.json
+79823e536627e9cdb8c80d4afe74b6608d0448e1 review/ord0500-checkin/receipts/landing_r6.json
 6f610f5b7b1e1a5057d5104094eb29faabcf294a review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json
 88b991cdd4d29ed9db1b87214cffe9bdf194740f review/ord0500-checkin/run/landing_r6_out.txt
 bb77c870a5d571e9a11312c55c4fc1033986c857 review/ord0500-checkin/run/landing_r6_out2.txt

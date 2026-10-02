@@ -1,0 +1,159 @@
+{
+  "tool": "citation_gate_r9_mutants",
+  "took_local": "2026-10-03T02:01:19+08:00",
+  "scratch": "D:/moodle/_qoder_phone_ord0485_20260930\\scratch_cit_r9",
+  "files_copied": 7,
+  "main_lines_in_scratch": 14476,
+  "blank_line_used": 512,
+  "control_verdict": "GREEN",
+  "after_revert_verdict": "GREEN",
+  "runs": [
+    {
+      "id": "C1_control_copy",
+      "verdict": "GREEN",
+      "citations": 11,
+      "red": 0,
+      "expect": "GREEN",
+      "bite": true
+    },
+    {
+      "id": "M1_beyond_file",
+      "verdict": "RED",
+      "expect_red_class": "CITED_LINE_BEYOND_FILE",
+      "red_total": 2,
+      "class_fired": true,
+      "co_firing_classes": [
+        "CITED_LINE_BEYOND_FILE"
+      ],
+      "fired_detail": [
+        {
+          "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+          "target": "backend/app/main.py",
+          "line": 14477,
+          "lines_in_target": 14476,
+          "verdict": "CITED_LINE_BEYOND_FILE",
+          "citing_sentence": "rides.  It came from the shared `require()` helper (`backend/app/main.py:14477`), which every door"
+        }
+      ],
+      "citation_written": "`backend/app/main.py:14477`",
+      "bite": true
+    },
+    {
+      "id": "M2_blank_line",
+      "verdict": "RED",
+      "expect_red_class": "CITED_LINE_IS_BLANK",
+      "red_total": 2,
+      "class_fired": true,
+      "co_firing_classes": [
+        "CITED_LINE_CONTENT_MISMATCH",
+        "CITED_LINE_IS_BLANK"
+      ],
+      "fired_detail": [
+        {
+          "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+          "target": "backend/app/main.py",
+          "line": 512,
+          "lines_in_target": 14476,
+          "verdict": "CITED_LINE_IS_BLANK",
+          "citing_sentence": "rides.  It came from the shared `require()` helper (`backend/app/main.py:512`), which every door"
+        }
+      ],
+      "citation_written": "`backend/app/main.py:512`",
+      "bite": true
+    },
+    {
+      "id": "M3_absent_file",
+      "verdict": "RED",
+      "expect_red_class": "CITED_FILE_ABSENT",
+      "red_total": 2,
+      "class_fired": true,
+      "co_firing_classes": [
+        "CITED_FILE_ABSENT",
+        "CITED_PHRASE_GONE_FROM_COMMENT"
+      ],
+      "fired_detail": [
+        {
+          "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+          "target": "backend/app/nowhere_gate_r9.py",
+          "line": 818,
+          "resolution": "no-tracked-match",
+          "verdict": "CITED_FILE_ABSENT",
+          "citing_sentence": "rides.  It came from the shared `require()` helper (`backend/app/nowhere_gate_r9.py:818`), which every door"
+        }
+      ],
+      "citation_written": "`backend/app/nowhere_gate_r9.py:818`",
+      "bite": true
+    },
+    {
+      "id": "M4_wrong_but_in_range",
+      "verdict": "RED",
+      "expect_red_class": "CITED_LINE_CONTENT_MISMATCH",
+      "red_total": 1,
+      "class_fired": true,
+      "co_firing_classes": [
+        "CITED_LINE_CONTENT_MISMATCH"
+      ],
+      "fired_detail": [
+        {
+          "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+          "target": "backend/app/main.py",
+          "line": 810,
+          "verdict": "CITED_LINE_CONTENT_MISMATCH",
+          "expected_to_contain": "def require(",
+          "line_says": "code,",
+          "citing_sentence": "rides.  It came from the shared `require()` helper (`backend/app/main.py:810`), which every door"
+        }
+      ],
+      "citation_written": "`backend/app/main.py:810`",
+      "bite": true
+    },
+    {
+      "id": "C2_after_revert",
+      "verdict": "GREEN",
+      "red": 0,
+      "expect": "GREEN",
+      "bite": true
+    }
+  ],
+  "every_mutant_bit": true,
+  "wt22_worktree_clean": true,
+  "wt22_dirty_lines": [],
+  "bytes_restored": {
+    "backend/tests/test_qoder_ord0500_journey_refusal.py": {
+      "wt": "951b6da89541a123",
+      "scratch": "951b6da89541a123",
+      "equal": true
+    },
+    "backend/tests/test_qoder_ord0476_checkins.py": {
+      "wt": "f10f7f52e9302976",
+      "scratch": "f10f7f52e9302976",
+      "equal": true
+    },
+    "frontend/src/features/checkin/checkinCopy.ts": {
+      "wt": "c76636ca3a4b333b",
+      "scratch": "c76636ca3a4b333b",
+      "equal": true
+    },
+    "frontend/src/features/checkin/checkins.ts": {
+      "wt": "9ae22ee1975a2d5e",
+      "scratch": "9ae22ee1975a2d5e",
+      "equal": true
+    },
+    "frontend/src/features/trip/TripItinerary.tsx": {
+      "wt": "a505addb1f63f235",
+      "scratch": "a505addb1f63f235",
+      "equal": true
+    },
+    "backend/app/main.py": {
+      "wt": "13ede17b63337588",
+      "scratch": "13ede17b63337588",
+      "equal": true
+    },
+    "backend/app/operations/v9.py": {
+      "wt": "3d3fe1238d4877ae",
+      "scratch": "3d3fe1238d4877ae",
+      "equal": true
+    }
+  },
+  "all_bytes_restored": true
+}

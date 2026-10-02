@@ -1,0 +1,124 @@
+{
+  "tool": "citation_gate_r9",
+  "took_local": "2026-10-03T02:01:29+08:00",
+  "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22",
+  "tip": "4fac49f371da0820393d038700bddddafd1176d1",
+  "files_gated": 5,
+  "live_tracked_paths": 3280,
+  "citations_checked": 11,
+  "verdict": "GREEN",
+  "red_total": 0,
+  "red_detail": [],
+  "expectations": [
+    {
+      "label": "require",
+      "must_contain": "def require("
+    },
+    {
+      "label": "lookup",
+      "must_contain": "existing = session.scalars("
+    },
+    {
+      "label": "integrity",
+      "must_contain": "except IntegrityError as exc:"
+    },
+    {
+      "label": "caught_by",
+      "must_contain": "\"caught_by\": \"unique_index\""
+    }
+  ],
+  "expectations_agree_with_r8_receipt": true,
+  "pin_receipt_read_from": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22\\review\\ord0500-checkin\\receipts\\reanchor_r8.json",
+  "pinned_citations": 4,
+  "verdict_tally": {
+    "OK": 11,
+    "CITED_FILE_ABSENT": 0,
+    "CITED_LINE_BEYOND_FILE": 0,
+    "CITED_LINE_IS_BLANK": 0,
+    "CITED_LINE_CONTENT_MISMATCH": 0,
+    "CITED_PHRASE_GONE_FROM_COMMENT": 0
+  },
+  "rows": [
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+      "target": "backend/app/main.py",
+      "line": 818,
+      "verdict": "OK",
+      "target_text": "def require(session: Session, model: type, identifier: str, label: str):"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:126",
+      "target": "backend/app/main.py",
+      "line": 4256,
+      "verdict": "OK",
+      "target_text": "existing = session.scalars("
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:127",
+      "target": "backend/app/main.py",
+      "line": 4292,
+      "verdict": "OK",
+      "target_text": "except IntegrityError as exc:"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:128",
+      "target": "backend/app/main.py",
+      "line": 4309,
+      "verdict": "OK",
+      "target_text": "\"caught_by\": \"unique_index\","
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0476_checkins.py:10",
+      "target": "backend/app/main.py",
+      "line": 11190,
+      "verdict": "OK",
+      "target_text": "effective_event_time_source = str("
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0476_checkins.py:11",
+      "target": "backend/app/operations/v9.py",
+      "line": 732,
+      "verdict": "OK",
+      "target_text": "session.execute(delete(Activity).where(Activity.plan_version_id == plan.id))"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0476_checkins.py:416",
+      "target": "backend/app/operations/v9.py",
+      "line": 732,
+      "verdict": "OK",
+      "target_text": "session.execute(delete(Activity).where(Activity.plan_version_id == plan.id))"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:15",
+      "target": "backend/app/main.py",
+      "line": 818,
+      "verdict": "OK",
+      "pinned": "require",
+      "target_text": "def require(session: Session, model: type, identifier: str, label: str):"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:126",
+      "target": "backend/app/main.py",
+      "line": 4256,
+      "verdict": "OK",
+      "pinned": "lookup",
+      "target_text": "existing = session.scalars("
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:127",
+      "target": "backend/app/main.py",
+      "line": 4292,
+      "verdict": "OK",
+      "pinned": "integrity",
+      "target_text": "except IntegrityError as exc:"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:128",
+      "target": "backend/app/main.py",
+      "line": 4309,
+      "verdict": "OK",
+      "pinned": "caught_by",
+      "target_text": "\"caught_by\": \"unique_index\","
+    }
+  ]
+}

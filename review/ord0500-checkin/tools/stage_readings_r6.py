@@ -34,7 +34,10 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "CE2_MUTANT_RECIPE_r5.md", "landing_r6.json",
       # r8: the re-anchor and the two instruments that judge it.  The citation audit covers the whole
       # shipped-source tree, so its receipt is evidence for other lanes' comments too -- read-only.
-      "reanchor_r8.json", "reanchor_r8_selftest.json", "citation_audit_r8.json"]
+      "reanchor_r8.json", "reanchor_r8_selftest.json", "citation_audit_r8.json",
+      # r9: the gate that keeps those citations from rotting again, and its four mutants
+      "citation_gate_r9.json", "citation_gate_r9_mutants.json",
+      "day24_anchor_recheck_r9.json"]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -53,6 +56,7 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "landing_r6.py", "r6_coordinates.py", "r6_block.py",
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
          "r8_block.py", "landing_r6.py",
+         "citation_gate_r9.py", "citation_gate_r9_mutants.py",
          "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
@@ -288,6 +292,40 @@ def readings():
     for k, v in sorted((ca.get("verdict_tally") or {}).items()):
         if k != "OK":
             A("| %s | %s |" % (k, cell(v)))
+    A("")
+    A("")
+    A("## 十、r9：把「自家注释行号不许腐烂」装进随代必跑的闸")
+    A("")
+    gate = load("citation_gate_r9.json")
+    gm = load("citation_gate_r9_mutants.json")
+    rc9 = load("day24_anchor_recheck_r9.json")
+    A("| 项 | 读数 |")
+    A("|---|---|")
+    A("| 闸判的树尖 | %s |" % cell(gate.get("tip")))
+    A("| 被闸的文件 | %s 枚（本单自己名下的写集，别人的判据文件不在内） |" % cell(gate.get("files_gated")))
+    A("| 查的引文 | %s 枚，其中 %s 枚带内容钉子（句子声称那一行写着什么，就真去读那一行） |" % (
+        cell(gate.get("citations_checked")), cell(gate.get("pinned_citations"))))
+    A("| 判语 | %s，红 %s 枚，各类计数 %s |" % (cell(gate.get("verdict")), cell(gate.get("red_total")),
+                                        cell(gate.get("verdict_tally"))))
+    A("| 钉子的来处 | 与 r8 那把尺的读数相符 = %s（从枝里 %s 现读） |" % (
+        cell(gate.get("expectations_agree_with_r8_receipt")), cell("receipts/reanchor_r8.json")))
+    A("| 换代复读 | day24 尖上四枚锚仍是 %s；注释里现引的就是 %s；本枝那 5 枚产品路径与 r8 逐枚等值 "
+      "= %s |" % (cell((rc9.get("true_anchors_on_day24") or {})),
+                  cell(rc9.get("cited_in_tip_copy_of_my_test")),
+                  cell(all(v.get("equal") for v in
+                           (rc9.get("r8_product_paths_equal_on_day24") or {}).values()))))
+    A("")
+    A("反件四枚各咬一格，全在临时目录里、不碰工作树（`%s` 份副本，判它用的登记清单仍取真实仓库的 "
+      "%s 条）：%s。控制趟 %s、还原后 %s、副本字节回来了 = %s、`wt22` 干净 = %s。件 "
+      "`receipts/citation_gate_r9_mutants.json`。" % (
+          cell(gm.get("files_copied")), cell(gate.get("live_tracked_paths")),
+          cell([(r.get("id"), r.get("verdict"), r.get("expect_red_class")) for r in
+                (gm.get("runs") or [])]), cell(gm.get("control_verdict")),
+          cell(gm.get("after_revert_verdict")), cell(gm.get("all_bytes_restored")),
+          cell(gm.get("wt22_worktree_clean"))))
+    A("")
+    A("闸拦不住的那一格也具名：它只能读「那一行现在写着什么」，读不出「这句话本来想指哪一行」；"
+      "所以钉子换代的唯一合法路径是重跑 `reanchor_r8.py` 让它重新量锚并落新件，而不是手改这几个字符串。")
     A("")
     text = chr(10).join(L) + chr(10)
     open(os.path.join(DEST, "R6_READINGS.md"), "w", encoding="utf-8", newline="\n").write(text)
