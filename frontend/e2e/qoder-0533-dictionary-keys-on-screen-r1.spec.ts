@@ -99,13 +99,35 @@ function books(): { en: Set<string>; zh: Set<string> } {
  * no name without an entry, and that a sentence moved here did not stay behind in the dictionary as a
  * second owner of the same words.
  */
-function copyTable(): { keys: string[]; entries: { key: string; zh?: string; en?: string }[] } {
+function copyTable(): {
+  keys: string[];
+  entries: { key: string; zh?: string; en?: string }[];
+  keysBySecondMethod: string[];
+} {
   const text = fs.readFileSync(path.join(repoRoot, COPY_TABLE), "utf-8");
-  const union = text.split("export type PoiImportCopyKey")[1].split(";")[0];
-  const keys = union.split("\n").flatMap((line) => {
+  // The first cut of this parser took `split("export type PoiImportCopyKey")[1].split(";")[0]`.  That
+  // `;` was eaten by a semicolon *inside* a comment in the union (ORD-0545's own "moved verbatim; see"
+  // note), so the segment stopped at entry 15 while the file held 67 -- an arm that counted 15 pairs,
+  // reported "0 missing halves" and stayed green on a table it was not reading.  The union now ends
+  // where a line ends with `";`, and that closing line's own name is taken too: an earlier revision of
+  // the fix broke before extracting it and read 66, one short of the truth.  The second method is an
+  // independent count over the same segment, so a future shape change makes this arm red instead of
+  // quietly under-reading it.
+  const unionStart = text.indexOf("export type PoiImportCopyKey");
+  const after = text.slice(unionStart);
+  const keys: string[] = [];
+  for (const line of after.split("\n")) {
     const at = line.indexOf('  | "');
-    return at === -1 ? [] : [line.slice(at + 5, line.indexOf('"', at + 5))];
-  });
+    if (at !== -1) keys.push(line.slice(at + 5, line.indexOf('"', at + 5)));
+    if (line.trimEnd().endsWith('";')) break;
+  }
+  const keysBySecondMethod = [
+    // Independent denominator: everything between the union's own name and the COPY declaration, which
+    // is where the union provably ends.  If the line scan above stops early -- at a comment's semicolon
+    // (the 15 it read) or one entry before the closing line (the 66) -- this count stays higher and
+    // B4 goes red instead of reporting a clean table it never finished reading.
+    ...text.slice(unionStart, text.indexOf("const COPY: Record<PoiImportCopyKey")).matchAll(/\|\s*"([A-Za-z0-9]+)"/g),
+  ].map((m) => m[1]);
   const body = text.split("const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {")[1];
   const half = (block: string, name: string) => {
     const at = block.indexOf(`${name}: "`);
@@ -121,7 +143,7 @@ function copyTable(): { keys: string[]; entries: { key: string; zh?: string; en?
     const block = body.slice(open + `\n  ${key}: {`.length, close === -1 ? undefined : close);
     return { key, zh: half(block, "zh"), en: half(block, "en") };
   });
-  return { keys, entries };
+  return { keys, entries, keysBySecondMethod };
 }
 
 async function bootToPanel(page: Page) {
@@ -220,8 +242,8 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
     await context.close();
   });
 
-  test("B4 ORD-0545：搬进表里的那枚徽章成对，且字典里没有第二份", () => {
-    const { keys, entries } = copyTable();
+  test("B4 ORD-0545：表里每一枚句子都成对，且字典里没有第二份（含搬进来的整族）", () => {
+    const { keys, entries, keysBySecondMethod } = copyTable();
     const { en, zh } = books();
     const withoutPair = entries.filter((entry) => entry.zh === undefined || entry.en === undefined);
     // A table key that is also in either book is the "fourth way of saying the same thing" ORD-0524's
@@ -231,6 +253,7 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
     writeEvidence("b4_copy_table_pairing", {
       table: COPY_TABLE,
       union_keys: keys.length,
+      union_keys_by_second_method: keysBySecondMethod.length,
       entries_with_both_halves: entries.length - withoutPair.length,
       entries_missing_a_half: withoutPair.map((entry) => entry.key),
       table_keys_also_in_dictionary: alsoInDictionary,
@@ -238,6 +261,8 @@ test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
       badge_en: badge?.en,
       badge_matches_shipped_words: [badge?.zh === CHANNEL_LOCAL_ZH, badge?.en === CHANNEL_LOCAL_EN],
     });
+    // The arm's own reader is part of what it proves: a truncated scan can only ever find pairs.
+    expect(keys, "the line parser and the region regex disagree about the union").toEqual(keysBySecondMethod);
     expect(withoutPair.map((entry) => entry.key), `halves missing: ${withoutPair.map((e) => e.key).join(", ")}`).toEqual([]);
     expect(alsoInDictionary, `moved sentences left a copy in the dictionary: ${alsoInDictionary.join(", ")}`).toEqual([]);
     expect(badge?.zh, "the badge's Chinese half is not the sentence ORD-0533 shipped").toBe(CHANNEL_LOCAL_ZH);
