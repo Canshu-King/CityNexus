@@ -1,0 +1,58 @@
+ORD-0502 phone mainline -- one walk replayed on four generations of the same line.
+Every state below is read from that generation's own walk file; no cell was carried over by hand.
+
+gen      tip                                      run
+day15     5a4cdbd26d4a58d6ed6b277480e766ac08b15ded  ORD0502-070159
+day18     00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9  ORD0502-142248
+day21     e7ff7938ea41c5ac69afb1172acc4625159c7911  ORD0502-193545
+day23     569b8472b134e5562ef396e38681870b9c26536a  ORD0502-000319
+
+bundle identity, read from each generation's own stack log (dist/index.html served):
+  day15   1200 B  sha1 head8 c6c41809
+  day18   1200 B  sha1 head8 9e7f9a45
+  day21   1200 B  sha1 head8 c5afdad4
+  day23   1200 B  sha1 head8 476d4209
+
+per-cell states:
+cell    day15               day18               day21               day23             
+C1      PASS                PASS                PASS                PASS              
+C2      FAIL                FAIL                FAIL                FAIL              
+C2b     PASS                PASS                PASS                PASS              
+C3      FAIL                FAIL                FAIL                FAIL              
+C4      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI    
+C5      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI    
+C6      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI      NOT_REACHED_UI    
+C7b     PASS                PASS                PASS                PASS              
+
+chain verdicts:
+  day15  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+  day18  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+  day21  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+  day23  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+
+all 8 cells carry the same state in all four generations: True
+
+the rendered text is stable too, with one named exception -- C7b's shared screen quotes the
+trip's own dates, and the wizard defaults to 'tomorrow 10:00', so the day rolls when the walk
+crosses midnight. Comparing day21 with day23 for C7b:
+  words only in day23: ['10月4日周日', '10月6日周二']
+  machine words still on the zh-CN guest screen in both: ['EN', 'journey']
+
+C3's covering node, verbatim from each generation:
+  day15  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mo
+  day18  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mo
+  day21  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mo
+  day23  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mo
+
+server-side rows behind the day23 run (this lane's own store, mode=ro, counted not written):
+  journeys                       1
+  places                         0
+  external_reservation_drafts    1
+  journey_checkins               0
+  journey_share_grants           1
+  draft rows: [('READY_FOR_CONFIRMATION', 'STRUCTURED_JSON')]
+
+install ownership for this tree's node_modules link, counted before teardown:
+  shared entries: 399
+  seen through this lane's link: 399
+  playwright present both sides: True / True
