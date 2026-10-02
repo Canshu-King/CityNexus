@@ -1,0 +1,250 @@
+{
+ "tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "sites": 11,
+ "hand_verdicts": {
+  "drift_prone_open_equality": 6,
+  "growth_is_the_defect_guard": 3,
+  "not_product_derived": 1,
+  "self_injected_probe": 1
+ },
+ "mechanical_agrees": 4,
+ "mechanical_disagrees": [
+  "backend/tests/test_qoder_ord0332_error_receipt.py:132 ruler=drift_prone_open_equality hand=growth_is_the_defect_guard",
+  "backend/tests/test_qoder_ord0444_collections.py:481 ruler=growth_is_the_defect_guard hand=drift_prone_open_equality",
+  "backend/tests/test_qoder_ord0476_checkins.py:499 ruler=growth_is_the_defect_guard hand=drift_prone_open_equality",
+  "backend/tests/test_qoder_ord0476_checkins.py:500 ruler=growth_is_the_defect_guard hand=drift_prone_open_equality",
+  "backend/tests/test_qoder_ord0496_calendar_export.py:944 ruler=growth_is_the_defect_guard hand=drift_prone_open_equality",
+  "backend/tests/test_qoder_ord0503_member_doors.py:499 ruler=drift_prone_open_equality hand=growth_is_the_defect_guard",
+  "backend/tests/test_v192_shadow_trial_gate.py:104 ruler=drift_prone_open_equality hand=not_product_derived"
+ ],
+ "counter_arm": {
+  "mutation": "add a '429' response to GET /api/v1/journeys/{journey_id}/checkins in contracts/openapi.yaml (this lane's export only, 0 product bytes, reverted in the same process)",
+  "clean_summary": "160 passed, 2 warnings in 11.09s",
+  "mutated_summary": "1 failed, 159 passed, 2 warnings in 10.78s",
+  "newly_red": [
+   "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack"
+  ],
+  "bitting_lines": [
+   "backend/tests/test_qoder_ord0476_checkins.py:500"
+  ],
+  "restored_byte_equal": true
+ },
+ "all_arms_green_as_shipped": true,
+ "rows": [
+  {
+   "site": "backend/tests/test_qoder_ord0332_error_receipt.py:132",
+   "arm": "tests/test_qoder_ord0332_error_receipt.py::test_R1_the_field_name_is_single_and_documented",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "backend/app/error_receipt.py"
+   ],
+   "left_hand_reads": [
+    "tree_walk"
+   ],
+   "mechanical_class": "open_set_equality",
+   "mechanical_reading": "drift_prone_open_equality",
+   "hand_verdict": "growth_is_the_defect_guard",
+   "hand_why": "the set is every file in backend/app holding this field sentence; a second one IS the defect the message names, so it cannot be loosened to a subset test",
+   "agree": false,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0402_recycle_bin.py:305",
+   "arm": "tests/test_qoder_ord0402_recycle_bin.py::test_the_contract_declares_the_door_with_both_bin_facts_and_no_filter",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "bin_state",
+    "deleted_at"
+   ],
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "mechanical_class": "open_set_equality",
+   "mechanical_reading": "drift_prone_open_equality",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "required of a schema component; any later order that legitimately adds a required bin fact reddens a door that only promised these two",
+   "agree": true,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0434_share_grants.py:413",
+   "arm": "tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "ADMIN",
+    "COLLABORATOR",
+    "OWNER"
+   ],
+   "left_hand_reads": [
+    "live_http"
+   ],
+   "mechanical_class": "open_set_equality",
+   "mechanical_reading": "drift_prone_open_equality",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "roles read back from a live ACL response; a fourth role is an ORD-0434-side decision this arm cannot distinguish from an unrelated edit",
+   "agree": true,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0444_collections.py:481",
+   "arm": "tests/test_qoder_ord0444_collections.py::test_the_contract_declares_three_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_reads": [
+    "contract_yaml"
+   ],
+   "mechanical_class": "closed_set_guard",
+   "mechanical_reading": "growth_is_the_defect_guard",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "documented response codes of one door - the class the produced red demonstrates one floor down",
+   "agree": false,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0476_checkins.py:499",
+   "arm": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "mechanical_class": "closed_set_guard",
+   "mechanical_reading": "growth_is_the_defect_guard",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "documented response codes of the write door, same class as the read-door equality two lines down",
+   "agree": false,
+   "arm_red_on_the_429_add": true,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0476_checkins.py:500",
+   "arm": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "200",
+    "409"
+   ],
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "mechanical_class": "closed_set_guard",
+   "mechanical_reading": "growth_is_the_defect_guard",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "documented response codes of the read door - THIS is the arm that went red on the added 429",
+   "agree": false,
+   "arm_red_on_the_429_add": true,
+   "this_line_is_the_bitting_line": true
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0476_checkins.py:505",
+   "arm": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "activity_id",
+    "note",
+    "place_id"
+   ],
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "mechanical_class": "closed_set_guard",
+   "mechanical_reading": "growth_is_the_defect_guard",
+   "hand_verdict": "growth_is_the_defect_guard",
+   "hand_why": "request-body properties of the create door, and its own comment says the caller supplies no time and no target-kind; a new key here is the thing being refused",
+   "agree": true,
+   "arm_red_on_the_429_add": true,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0496_calendar_export.py:944",
+   "arm": "tests/test_qoder_ord0496_calendar_export.py::test_the_contract_declares_the_door_its_refusals_and_its_counts",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "200",
+    "404",
+    "409"
+   ],
+   "left_hand_reads": [
+    "contract_yaml"
+   ],
+   "mechanical_class": "closed_set_guard",
+   "mechanical_reading": "growth_is_the_defect_guard",
+   "hand_verdict": "drift_prone_open_equality",
+   "hand_why": "documented response codes of the export door",
+   "agree": false,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0503_member_doors.py:499",
+   "arm": "tests/test_qoder_ord0503_member_doors.py::test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "traveler_id"
+   ],
+   "left_hand_reads": [
+    "contract_yaml",
+    "live_http",
+    "tree_walk"
+   ],
+   "mechanical_class": "open_set_equality",
+   "mechanical_reading": "drift_prone_open_equality",
+   "hand_verdict": "growth_is_the_defect_guard",
+   "hand_why": "self-exit body keys plus additionalProperties False; the docstring names a grown member_id as another order's door, so growth is the finding",
+   "agree": false,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_v192_shadow_trial_gate.py:104",
+   "arm": "tests/test_v192_shadow_trial_gate.py::test_v192_guard_scope_dedup_keeps_both_rows",
+   "arm_ran_as": "PASSED",
+   "named_entries": [
+    "JOURNEY",
+    "TRAVELER"
+   ],
+   "left_hand_reads": [
+    "inline_input"
+   ],
+   "mechanical_class": "open_set_equality",
+   "mechanical_reading": "drift_prone_open_equality",
+   "hand_verdict": "not_product_derived",
+   "hand_why": "the two rows are literals handed to canon() in the same statement - no product artifact can drift this line",
+   "agree": false,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0307_credential_gate.py:67",
+   "arm": "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value",
+   "arm_ran_as": "PASSED",
+   "named_entries": [],
+   "left_hand_reads": [],
+   "mechanical_class": "unresolved_by_ruler",
+   "mechanical_reading": "self_injected_probe",
+   "hand_verdict": "self_injected_probe",
+   "hand_why": "PROBE_REL is a path this arm builds for its own scanner input, so the ruler's TARGET_NOT_IN_TREE is the ruler not seeing a file that was never meant to exist in the tree",
+   "agree": true,
+   "arm_red_on_the_429_add": false,
+   "this_line_is_the_bitting_line": false
+  }
+ ]
+}
