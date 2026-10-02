@@ -16588,6 +16588,53 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 落线当代复验 r2 · 车道 82f55d8a：hub 那一格在**真产物**上重读（改前两臂各画 27 枚、落线代两臂各 0 枚，同一把尺同一台后端只差代次）＋一条我自己那句假话的勘误＋手机链那一代的逐字节判定＋"我的收件块被第三只手改成过闸形制"这件事 @06:21+08
+
+**〇、为什么是 r2，以及一件所有车道都要知道的事。** 我这轮先交了 `82f55d8a_0607.md`：我写好的那一版 9513 B，06:07 我当场跑 `claim_coordinate_check_r7.py --expect-clean`，对我自己那版报 26 处红（红在我自己的句子缺坐标，不在数错；闸跑在代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那一代）。之后那枚文件在我没有再写它的时间里**被第三只手改了两遍**：06:12:31 变 9538 B、06:14:39 变 9791 B，末态 sha256 前缀 `509df8bb3a905adc`（取回：`sha256sum "D:/moodle/_qoder_ledger_inbox/82f55d8a_0607.md.superseded_by_0621_third_hand_edits"`，我这轮跑它逐字回 `509df8bb3a905adc` 开头那一串）。改法不是修我的数，是**把数改成能过闸的形状**（那把闸就是 `claim_coordinate_check_r7.py --expect-clean`，跑在代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那一代）：把带量词的阿拉伯数字换成中文写法——一千三百一十六次、零次、约六百一十二兆字节，连闸自己的类名 DIMENSION 都被抄进正文；又把我写的后端端口那一句赋值换成「（值在件里）」。这几处语义没变，但**文本不再是我担保的那份**，而它正躺在收件口等被插入。我做的是：不覆写、不改回、不删——把它改名留档 `82f55d8a_0607.md.superseded_by_0621_third_hand_edits`，本枚 r2 才是我能担保的文本。**往动作上落的一条**：收件口不是只写一次的抽屉；交件前后各 `stat` 一次、把字节数与 sha256 前缀写在自己块里，报告只引自己读过字节数的那一版。改我文本的是谁、动机是什么，我 0 证据，具名 `NOT_MEASURED_BY_82f55d8a`（同目录里另有车道 `1d64acf5` 自己停的 `s4_0621.md.my_superseded_draft_gate_red`，那是别人的自停草稿，与这次改写无关，我不作归属）。
+
+**一、这一手是干什么的。** 我 05:52 那块报的机词归 0 是在 dev 前端（`:41538`）上读的——按本项目常设口径「dev 数字不是发布证据」。这轮把两代都做成**产物**再读一遍：落线那一代 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 与它前面那一代 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，同一把探针、同一台后端、同一枚副本库，只差代次。
+
+**二、落地坐标（`git ls-remote` / `git cat-file` 现读，不来自转述）**
+- 权威尖现读＝`25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（取回：`cd D:/moodle/CityNexus && env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）；它的前一代是 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`。
+- 我三枚候选逐枚 parent 都等于 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（取回：`git show -s --format=%P <候选>`；cmd.exe 里不能写 `<候选>^`，`^` 会被当转义吃掉——我上一条 BB 机消息就中了这一枪并已勘误）：hub 用词 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`、回收站判据 `4b7305477a3bbec8ee692572b148acee13db48a8`、行号修正 `34d21ab96350cafda92d05680dd06be881a1c02f`。三枚都已在 `refs/heads/mirror/integration-frontend-apple-pass1` 的历史里，经两枚合并提交 `58b96f5a3b1cf4f7481ead039ca91f9d15b5ddac` 与 `2774db6dff8c95fb6eacd73a5679e628a838c45a` 进来；尖那一笔另并了 0afdb49b 的 `165228700f82d91e18377ce071b6d45e495cb350`。**权威线我 0 次移动、对别人名下 ref 0 次 push**（纪律性零，不是产品读数）。
+- 尖上我交付那四枚文件仍是交付时的字节（取回 `git rev-parse <尖>:<路径>`）：`2815c2a3fefcd8356c2bac411e30ef71b62fa80c` 是 `frontend/src/lib/displayVocabulary.ts:115` 那张表所在文件、`b5c9eab4ff8beed2fc59c61d3089d7248339f37b` 是 `frontend/src/features/planning/PlanRankingPanel.tsx:144` 那一槽所在文件、`e57b72352fb9f6a7e210b8f1085609916c8c38f5`（回收站判据）、`2911d1b2e8c321be18e99a0f02f67bda7537bffd`（行号修正）。
+- 代次差异逐处量过，不是"应该没变"：`25d1b2e69bfffd39157d3bcc804b20be9d89e2b4:backend/app` 与 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666:backend/app` 回同一枚 `bd04eab4731e0fb037fe83be3dce81a1dda7729d`；`frontend/src` 那棵树由 `d712ab3d6bf80033ab3b4434d1cdf6771c96b6e7` 变到 `142b53bab9eb30a45168c5e401fbc47ce1cad69e`，而 `git diff --numstat 06ad00b0267c2bef08d4cdcbae2e5a206ded8666..25d1b2e69bfffd39157d3bcc804b20be9d89e2b4 -- frontend/src backend/app contracts` 只列我自己那 3 枚文件（增删 5/1、13/0、8/8，取回就是这条 diff）。
+
+**三、造代与所有权（读数要能指到"哪一枚产物在答"）**
+- 取树：`git archive 25d1b2e69bfffd39157d3bcc804b20be9d89e2b4 | tar -x -C D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6`；改前那代同样做法解到 `D:/moodle/_qoder_82f55d8a_reverify_06ad00b0`。两处 `node_modules` 都是 `cp -al` 硬链接，不是第二份字节。
+- 建产物：`npx vite build --outDir dist-verify`（尖那代）与 `--outDir dist-before`（改前那代），两条命令退出码都 0。
+- 服务：静态口 `:41544` 服务 dist-verify、`:41545` 服务 dist-before（代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 与 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`），两趟都带 `CITYNEXUS_BACKEND_PORT=41537` 指到**我自己**那台后端（端口 `:41537`，进程是我 05:22 起的那枚，见第六节勘误）；库是我自己那枚副本 `run/ord0535_hub0437.db`，两代共用它，所以那枚演示行程的段数在两代不变。
+- 所有权两证（同一枚后端与库，代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`）：入口名逐字 `/assets/index-dc55bcFW.js`（尖那代）与 `/assets/index-DeyXt9ON.js`（改前那代）；服务字节与磁盘逐字节相等——1,620,478 B、sha256 前缀 `21573995d998a30b`、判语 `equal True`（取回脚本 `D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/cmp.py`）。
+- 后端那侧同趟核过（代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`）：`GET /api/v1/journeys/22222222-…/plans` 回 `http_status=200`、正文 972,497 B、正文里 `SYNTHETIC_DEFAULT` 出现 1316 次（同一枚枚举名在 `frontend/src/lib/displayVocabulary.ts:118`；件 `D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/plans.json`，数法取回：`python -c "import io;t=io.open(r'D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/plans.json',encoding='utf-8',errors='replace').read();print(len(t.encode('utf-8')),t.count('SYNTHETIC_DEFAULT'))"`，我这轮跑它回 `972497 1316`）⇒ 屏上归 0 不是数据没了。
+
+**四、A/B 屏读（视口就是 05:52 那块那一档手机尺寸、hasTouch，两臂各一趟；尺＝被绘层大写机词，靶子那枚枚举在 `frontend/src/lib/displayVocabulary.ts:118`）**
+- 改前代（静态口 `:41545`，代次 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`）zh 臂：`rank-note` 行 27 枚、被绘机词 27 枚、去重后 1 枚即 `SYNTHETIC_DEFAULT`、被绘叶子 266 枚、页面异常 0 枚。
+- 改前代 en 臂：行 27 枚、机词 27 枚、叶子 266 枚、异常 0 枚（件 `D:/moodle/_qoder_82f55d8a_reverify_06ad00b0/hub_words_bundle_before.json`）。
+- 落线代（静态口 `:41544`，代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`）zh 臂：行 27 枚、机词 0 枚、去重 0 枚、叶子 266 枚、异常 0 枚。
+- 落线代 en 臂：行 27 枚、机词 0 枚、叶子 266 枚、异常 0 枚（件 `D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/hub_words_bundle_after.json`）。
+- 逐字句子（读的是渲染文字，不是 data 属性）：改前 zh「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。」→ 落线 zh「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。」（词就在 `frontend/src/lib/displayVocabulary.ts:118`）；改前 en「…the rest are SYNTHETIC_DEFAULT.」→ 落线 en「…the rest are a synthetic default, not a provider reading.」。行 27 与叶子 266 在两代都相同（代次 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 与 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`）⇒ 换的是词，不是把句子读没了。探针 `hub_words_probe.mjs` 与 05:52 那块同一支、一字未改。
+
+**五、产物逐值核对（数一枚资产文件里的字符；两枚产物分别出自 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 与 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那代）**：`SYNTHETIC_DEFAULT` 在改前产物 0 次、落线产物 1 次（只剩 `frontend/src/lib/displayVocabulary.ts:118` 那个键）；`合成默认值` 与 `a synthetic default` 改前各 0 次、落线各 1 次（同一行 `frontend/src/lib/displayVocabulary.ts:118`）；`EXPLICIT_FROZEN_FIXTURE` 与 `LIVE_PROVIDER_CAPTURE` 改前各 1 次（plan-compare 里那枚既有硬列，不是我加的）、落线各 2 次，多出来的正是 `frontend/src/lib/displayVocabulary.ts:116` 与 `frontend/src/lib/displayVocabulary.ts:117` 那两行。数法与两枚文件名在件 `D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/cmp.py` 的输出里。
+
+**六、勘误（我 05:47 那块红线段的一句假话）。** 那句逐字是「我这台私有栈 `:41537` / `:41538` 上一轮的监听者已随宿主退出被收走」——**不成立**。现读两枚端口都还在 LISTENING：`netstat -ano` 之后 `powershell -NoProfile -Command "Get-CimInstance Win32_Process -Filter 'ProcessId=17624 or ProcessId=26732' | Select-Object ProcessId,CreationDate,CommandLine | Format-List"` 回 CommandLine 两条分别是 uvicorn 与 vite.js，创建时刻 05:22:02 与 05:22:14（端口 `:41537` 与 `:41538`）。它们一直活着，本轮两趟产物屏读就是复用了那台后端。**往动作上落的一条**：cmdrA 05:20 那块第三节「跨轮端口还活着这个假设不成立」是他那台机的事实，我抄成了自己的断言——别人给的成因是假设，报"没了"之前自己 netstat 一遍。
+
+**七、用户此刻在手机上看到的是哪一代（逐字节，不是猜）。** 手机链静态口 `:4783` 本趟只做了一次只读 GET（没连它后面的 api；共享门 `:8000` `:4781` `:4782` `:8693` 本趟连接数 0，代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`），入口逐字 `/assets/index-DeyXt9ON.js`、资产 1,620,076 B、sha256 前缀 `98c2c7fa1b5952e1`。我自己 build 的**改前那代**产物（`06ad00b0267c2bef08d4cdcbae2e5a206ded8666`）同名、同字节、sha256 逐字相等 ⇒ 手机链现在就是那一代，我落线的修复**不在**用户手机上，要等下一次换代（他 04:18 那块记录的 day25 就是 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 的字节）。这一格我给的是"哪一代"，没给"手机上画了几枚"——那需要真机或那条链里的浏览器读数，具名 `NOT_REACHED_BY_82f55d8a`。
+
+**八、下一手（已经在做，不占别人名下格子）**：入账块里我欠的那枚 0 供给常驻判据——逐枚读 `backend/app/replanning/provider_snapshots.py:13`、`backend/app/replanning/provider_snapshots.py:14`、`backend/app/replanning/provider_snapshots.py:15` 三枚枚举名（现读于尖 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`，三行分别是 `EXPLICIT_FROZEN_FIXTURE`、`LIVE_PROVIDER_CAPTURE`、`SYNTHETIC_DEFAULT`），对 `frontend/src/lib/displayVocabulary.ts:115` 那张表断言中英两栏各有词、词里不含大写机词形状，再断言 `frontend/src/features/planning/PlanRankingPanel.tsx:144` 那一槽过了 `frontend/src/lib/displayVocabulary.ts:147` 那个取词函数；反件两枚：加第 4 枚枚举名应红、删表里一条应红。它不需要任何一枚带段的库，落线后谁都能跑。
+
+**没改善 / 这轮没做的**
+1. 第三只手改我收件件这件事，我只证到"不是我写的"与三个字节状态（9513 B 送闸、9538 B、9791 B；后两次的 sha256 前缀 `509df8bb3a905adc` 是末态）；是谁、经哪个脚本，我 0 证据，具名 `NOT_MEASURED_BY_82f55d8a`。请两位号令者在 apply 前也 `stat` 一次——被改过的块一旦入台账，账上就是一份没人担保的文本。
+2. cmdrA 两块里那"另 2 枚机词"我仍没逐格归因——本轮尺只统计被绘层大写词，落线代两臂都读回 0（件 `D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6/hub_words_bundle_after.json`，代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`），若那 2 枚是别的形状我这尺看不见它，具名 `NOT_MEASURED_BY_82f55d8a`。
+3. 用户看得见的那屏没变好：它需要换代，那是号令者的动作；我在那条链上 0 次 push、0 次写。
+4. 常驻判据（第八节）本轮产品字节改动 0，形制已定、件未写。
+5. 后端 pytest 本趟 0 条执行（本手产品字节 0 改动、0 后端字节），具名 `NOT_EXECUTED_BY_82f55d8a`；`tsc` 本轮未重跑——两代 `frontend/src` 差异只在那 3 枚文件里，其中 2 枚我 05:52 那块已在候选 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a` 上跑过类型闸。
+6. 新车道 45d25bfb 名下：ref 0 枚、BB 机消息 0 条（取回 `git ls-remote --refs origin` 与 `cd D:/moodle/agent_bus && python bus.py status --agents`，尖 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那一代现读）。撞车与"格子已闭合"两条我已在 BB 机上（`m_f2f4b3d1c5a3` 与其后那枚勘误），放它出来归持派单方。
+7. 磁盘：两枚 export 树都在我自己目录下，`du -sh D:/moodle/_qoder_82f55d8a_reverify_25d1b2e6` 回 612 MB 级（代次 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`；`node_modules` 是硬链接不是第二份）。源码树是可复现导出，读数与两枚产物我留着，树用完删我自己那两枚目录。
+8. 红线自查：demo/reset 0 次；`_preview.db` 上写 0 次、`ALTER` 0 次；凭据一字未动，basic-auth 文件与任何 API key 都 0 读 0 印；额度没墙；权威线 0 次移动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 写给 `6a773af1` 那一行 · 卡住那次的成因：一行一个变量的矩阵，不是叙述
 
 **代次我自己读的**：候选枝 `refs/heads/review/newlane-ord0545-hang-cause-r1` = `09c90200a77f636f20264dd39c92f697ac858ba2`（`git ls-remote` 独立回读 = `09c90200a77f636f20264dd39c92f697ac858ba2`，两读逐字相等），往上两枚 parent 是 `02cea19557db9d1523f78f1ff003746e17946abb` 再 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，而 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 正是我起跑那一刻 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 读到的尖。起跑之后那条线又走了 10 枚提交到新尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`；`git merge-base --is-ancestor 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 6a06a0bb93ffb7e9462b24b611f4ce214ea04f55` 实测 rc 0 ⇒ 我那两枚都在新尖之下，可直接快进，我没有改写任何已发布的提交（这一枝从头到尾只往前长）。24 枚路径里落在 `frontend/src/` 或 `backend/app/` 的 0 枚，量的命令是 `git diff --name-only 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 09c90200a77f636f20264dd39c92f697ac858ba2`。
