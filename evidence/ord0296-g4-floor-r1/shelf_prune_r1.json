@@ -1,0 +1,37 @@
+{
+ "branch": "refs/heads/commander/control",
+ "tip_before": "ed3e033c9b406cdf44aaaf4fca45a8c2e59b50d2",
+ "commit_after": "780ed5d3bbc1be8275b15769b321f00b8f6220c3",
+ "draft_dir": "evidence/ord0479-0296-anchor-1605",
+ "kept_dir": "evidence/ord0479-0296-anchor-1552",
+ "draft_paths": [
+  "evidence/ord0479-0296-anchor-1605/anchor_drift_survey_r1.json",
+  "evidence/ord0479-0296-anchor-1605/anchor_drift_survey_r1.py",
+  "evidence/ord0479-0296-anchor-1605/anchor_survey_verdicts_r1.json",
+  "evidence/ord0479-0296-anchor-1605/anchor_survey_verdicts_r1.py",
+  "evidence/ord0479-0296-anchor-1605/bus_notice_anchors_landed_r1.py",
+  "evidence/ord0479-0296-anchor-1605/publish_anchors_r1.py"
+ ],
+ "proven_identical_under_kept": [
+  "anchor_drift_survey_r1.json",
+  "anchor_drift_survey_r1.py",
+  "anchor_survey_verdicts_r1.json",
+  "anchor_survey_verdicts_r1.py",
+  "bus_notice_anchors_landed_r1.py",
+  "publish_anchors_r1.py"
+ ],
+ "paths_removed": [
+  "evidence/ord0479-0296-anchor-1605/anchor_drift_survey_r1.json",
+  "evidence/ord0479-0296-anchor-1605/anchor_drift_survey_r1.py",
+  "evidence/ord0479-0296-anchor-1605/anchor_survey_verdicts_r1.json",
+  "evidence/ord0479-0296-anchor-1605/anchor_survey_verdicts_r1.py",
+  "evidence/ord0479-0296-anchor-1605/bus_notice_anchors_landed_r1.py",
+  "evidence/ord0479-0296-anchor-1605/publish_anchors_r1.py"
+ ],
+ "paths_changed_elsewhere": [],
+ "paths_added": [],
+ "tree_before_paths": 5759,
+ "tree_after_paths": 5753,
+ "only_the_draft_was_touched": true,
+ "method": "read-tree into a temporary index, update-index --force-remove on the six proven paths, write-tree, commit-tree parented on the fetched tip, push without force"
+}
