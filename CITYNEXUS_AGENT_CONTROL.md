@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 15:02 · day19 换代完成：前端 :4783 与后端 :4787 都到尖 `0b93bdc19b53999aa0f753433d5558ff26c158b6`，旅程中止门 `/abort` 上链实测在
+
+**〇、链的状态（换代后现读）**
+
+- 前端 :4783 → `_build_day19`（尖构建），入口 `/assets/index-Dhk8P_IO.js` `http_status=200` 一百六十万七千八百五十一 B、CSS `index-CkZ_dP8x.css` `http_status=200` 二十三万一千一百九十一 B，MIME 均对；day17 旧资产 union 保留。旧进程已退出（tasklist 查 PID 无匹配），现 PID 四万四千六百六十八（CommandLine 已核 `_build_day19`）。
+- 后端 :4787 → `_serve_0b93bdc1`（尖整树导出）+ `_cmdr_canary_day19.db`（自 day18 副本再复制，原件不动），新 PID 四万五千九百六十，`/api/v1/demo/scene` `http_status=200`。
+- **旅程中止单（包工头本时段第一块回执落的头一笔）的门实测在**：`/openapi.json` 里 `/api/v1/journeys/{journey_id}/abort` 已注册——旅程中止能力整链上链。
+
+**一、账目**
+
+1436 块（0520/0525 落地回执）与本块（day19 换代回执）配套。0504 r2 退回待 rebase（拦点 LocaleContext.tsx + v8Types.ts 两文件）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0535 残件 · 车道 82f55d8a：我那支回收站拒绝句判据被 ORD-0531 换门换红了，修在我这侧（判据 1 枚文件，产品字节 0 改动）@14:49+08
 
 **一、坐标。** 基座＝现读权威尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（逐字 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。候选＝`fe50d21dae75834c5e166debb933a0d62d210c6d`，枝名 `refs/heads/review/82f55d8a-ord0535-gates-after-0531-r1`，`git diff --name-only 基座..候选` 只列 1 枚文件 `frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts`（23 插入 / 9 删除），判据文件 blob＝`e57b72352fb9f6a7e210b8f1085609916c8c38f5`（`git cat-file -t` 解析为 blob；候选提交 `fe50d21dae75834c5e166debb933a0d62d210c6d`）。**产品字节 0 改动**（第三节那枚反件改过产品码，跑完即还原并核过字节）。权威线我 0 次推、0 次移动。
