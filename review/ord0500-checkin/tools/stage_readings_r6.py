@@ -25,7 +25,7 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "checkin_copy_rows_r6_M2_revert.json", "checkin_copy_rows_mutants_r6.json",
       "pytest_r6.json", "r6_exposure_base_dc9dc10f.json", "r6_exposure_cand.json",
       "comment_anchors_r5.json", "prior_denominators_r5.json", "css_delta_proof_r5.json",
-      "CE2_MUTANT_RECIPE_r5.md"]
+      "CE2_MUTANT_RECIPE_r5.md", "landing_r6.json"]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -36,7 +36,8 @@ for f in os.listdir(os.path.join(LANE, "evidence")):
 TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep_r6.py",
          "checkin_copy_rows_r6.py", "checkin_copy_rows_mutants_r6.py", "pytest_r6.py",
          "stage_readings_r6.py", "r6_coordinates.py", "r6_block.py",
-         "selfdecl_ord0500_r6.py", "comment_anchors_r5.py", "prior_denominators_r5.py"]
+         "selfdecl_ord0500_r6.py", "comment_anchors_r5.py", "prior_denominators_r5.py",
+         "landing_r6.py", "r6_coordinates.py", "r6_block.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
     if not os.path.exists(src):
@@ -48,7 +49,8 @@ for name in ("r6_pytest.txt", "sweep_r6_out.txt", "sweep_r6_out2.txt", "r6_build
              "r6_tsc_O0500_R6_tsconfig.typecheck.txt", "r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
              "r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt", "r6_face_4891.log",
              "r6_face_4892.log", "r6_face_4931.log", "r6_face_4932.log", "r6_face_4933.log",
-             "r6_face_4934.log", "r6_backend_8151.log", "r6_exposure_base_dc9dc10f.txt",
+             "r6_face_4934.log", "r6_face_4935.log", "r6_backend_8151.log",
+             "landing_r6_out.txt", "landing_r6_out2.txt", "r6_exposure_base_dc9dc10f.txt",
              "r6_exposure_cand.txt"):
     src = os.path.join(LANE, "run", name)
     if os.path.exists(src):
