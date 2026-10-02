@@ -7351,6 +7351,19 @@ def _twin_snapshot(
         selected_plan,
         list(activities),
     )
+    selected_plan_used_edges = [
+        {
+            "origin_key": item["origin_key"],
+            "destination_key": item["destination_key"],
+            "mode": item.get("mode"),
+            "minutes": item.get("persisted_minutes"),
+            "provider": item.get("provider"),
+            "route_provenance": item.get("route_provenance"),
+            "fact_quality": item.get("fact_quality"),
+            "degraded": bool(item.get("degraded", False)),
+        }
+        for item in selected_plan_edge_receipts["receipts"]
+    ]
     # A real-trip PlanVersion may carry its frozen provider route in
     # mobility_evidence_json without materialising JourneyLeg rows.  The
     # experience projection already exposes that evidence, but the Twin's
@@ -7979,6 +7992,7 @@ def _plan_mobility_eligibility_receipts(
             "origin_key": origin_key,
             "destination_key": destination_key,
             "provider": _mobility_fact_value(fact, "provider", evidence.get("source_provider")),
+            "mode": _mobility_fact_value(fact, "mode"),
             "fact_quality": _mobility_fact_value(fact, "fact_quality"),
             "route_provenance": _mobility_fact_value(fact, "route_provenance"),
             "degraded": bool(_mobility_fact_value(fact, "degraded", evidence.get("degraded", False))),
