@@ -16588,6 +16588,40 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-10-03 03:47 · 号令者（实例 A，会话 `6efab655`）· 闭环：我 09-29 拦下的那处上游原文，现在用伪造 409 也画不上屏；另落两笔纯判据件
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 03:41 现读 = `02b73c6c3ece71165b90476e644dd0d10d79611b`。实例 B 这几小时一直在推线（02:49 的 ORD-0543 落点是 `b5bb79261091586bc096793869c87c637fb8fa37`，其后 `b8ed513ea3e197151827429ae1c7c5d21d622176` 是地图停靠点标签两枚产品文件），我不回退、不重落别人已收的；我 09-29 亲手落的三枚 `fa4352cb2e965688b489fa1262dc97db3f3de8b8`、`1a472f0d0bd616735b77184db983d492109bdca3`、`c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef` 我 02:5x 用 `git merge-base --is-ancestor c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef 02b73c6c3ece71165b90476e644dd0d10d79611b` 判过：是祖先，即没被人抹掉。账本我 02:55 代插两块后为 12,530,706 B，门回读 BYTE_LEVEL_CONFIRMED。
+
+**一、本轮落地两笔（都是纯判据件，所以 exposure 臂 off，理由具名在下）**
+- ORD-0545 第四切片（车道 `6a773af1`，02:55 那块）：枝 `refs/heads/review/newlane-ord0545s4-poi-screen-walkthrough-r1` 头 `94a58b7a07d0e1afe36c38256ad7575ddc10b23a`，只读复切成 `06b48647096edd9d67802bd8fc6d91c9555b417c`，复切器报 files 12/12 identical-to-lane-blob；我推成 `refs/heads/review/cmdr-recut-ord0545s4-r1` 并 `ls-remote` 逐字回读同一枚；门 `READY_TO_LAND`、ff=True、ahead=4、behind=0、`product introduced: (none)`，收据 `evidence/cmdr-landing-ord0545s4-0302/preflight_r1.json`，blob `72aa1f5f6028fb1396e97db96d0feaa2e14b7b2c`，6,386 B。
+- ORD-0500 r11（车道 newlane，02:48 那块）：枝 `refs/heads/review/newlane-ord0500-phone-checkin-entry-r11` 头 `9f5fcb022ec9abd8538c42ed713100fdfb929a2f`，复切成 `02b73c6c3ece71165b90476e644dd0d10d79611b`（files 30/30 identical-to-lane-blob），推 `refs/heads/review/cmdr-recut-ord0500-r1` 回读同一枚，门 `READY_TO_LAND`、ff=True、ahead=3、`product introduced: (none)`，收据 `evidence/cmdr-landing-ord0500-0344/preflight_r1.json`，blob `378178b65fdf34fe6a27de31cda2bf09e4f9afa0`，11,614 B。
+- `--exposure-arm off` 的理由具名：这两笔的 `git diff --name-only` 相对现尖只落在 `frontend/e2e/`、`frontend/playwright.*.config.ts`、`review/` 与 `evidence/` 之下，`frontend/src` 与 `backend/app` 与 `contracts` 都是 0 枚，所以 AST 曝光尺没有可看的东西；门自己在 `product introduced` 那格也回了 `(none)`，与我读到的 `72aa1f5f6028fb1396e97db96d0feaa2e14b7b2c`、`378178b65fdf34fe6a27de31cda2bf09e4f9afa0` 两枚收据一致。
+- 后端测试：两笔收据里 `collect_exit` 与 `test_exit` 都是 null，我没有 `--tests` 可传（候选没有 `backend/tests`）⇒ `NOT_EXECUTED_BY_CMDR`，我不把 collect 说成绿。
+
+**二、屏上亲测（我自己在私有舞台走的，不是信门）**
+舞台：产物 `cmdr_build_bundle_r1.py --sha b5bb79261091586bc096793869c87c637fb8fa37` 造，入口 `/assets/index-5DRahkM8.js`，磁盘 1,619,701 B；后端两枚各配一份库——`_qoder_cmdr_priv_b5bb7926.db` 由共享预览库 `mode=ro` 打开再 `src.backup(dst)` 复制（7,213,056 B），`_qoder_cmdr_priv_0437seed.db` 同样只读备份自 R 车道那份 ORD-0437 e2e 库（17,330,176 B，它 `activities` 有行、`journey_legs` 有行，而预览那份没有）。静态口 :49801/:49802 各指自己那枚后端，三证齐（入口名取自我自己的 `index.html`、服务字节等于磁盘、我自己的访问日志记到请求）。共享预览 :8000 / :4781 / :4782 / :8693 我 0 次触碰，`demo/reset` 0 次。
+读数：
+1. **曝光面**：门钉那把尺先验字节（`git hash-object ui_exposure_taint_ast_r7b.cjs` = `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`，与 `preflight_and_land_r5.py:43` 的 `EXPOSURE_RULER_BLOB` 逐字相同），148 枚 `.ts/.tsx` 下 `cells_total` = 6，件 `31b4d745b7fe728e898fb03a013025e1402a02bd`；我 09-29 同尺读到 12，所以线是**变干净**了；实例 B 之后又落了两枚地图产品文件，我在真尖 `02b73c6c3ece71165b90476e644dd0d10d79611b` 重取：仍是 6，`growth` 与 `lost` 都空，件 `7d1f68af007967c6aff3895f6a1e3a1b4ff52e69`。
+2. **中文屏机器话连续性**：`cmdr_machine_speech_sweep_r1.js`，14 routes、zh 臂、390×844、单浏览器顺序 → `totalPaintedHits` = 2、去重 1 枚（`/v8/bookings` 两句 `.v8-lede` 里的 `JSON`），`pageErrors` 空，14 条路由 `documentChars` 最小 137、为 0 的 0 条，件 `33a7e6022dfacdad96d9f28d45ac71dc763027e4`。与我 09-29 落地后的读数逐字相同 ⇒ 这几天没回归。
+3. **我 09-29 那条判语的闭环（本轮最重要的一条）**：`cmdr_poi_import_screen_r1.js`（我本轮新写）走 `/v8/import` 三臂，件 `a55edaf57e1e36f15f18a855a9ba08427b6d945a`，4,991 B。臂一臂二是真请求：`poi-import/parse` 回 200，屏上 `counts` 画「抽出 2 条 · 落地 0 条 · 0 需要挑选 · 2 条没找到」与「抽出 1 条 … 1 条没找到」，`machine_tokens_found` 空。臂三是**我伪造的上游回答**（`arm_kind` 记为 `HTTP_RESPONSE_FABRICATED_BY_CMDR`，status 409，`reason_code` 为 `IMPORT_PLACE_UNKNOWN`，`message` 里我故意塞了一句散文）：屏上 `data-phase` 进 `error`，`poi-import-error-why` 画的是字典句「其中一个地点已不在我们的清单里，请重新识别一次文字。」，`poi-import-error-detail` 画 `HTTP 409`（`detail_shape` = `HTTP_STATUS_ONLY`），而我塞进去的那句整段 `prose_leaked` = False、两个片段 `prose_fragment_leaked` = False、`codes_painted` 空。⇒ **上游散文与具名码都到不了屏**，我 09-29 拦下的那两处（当时的 `:268`/`:408` 直接渲染 `cause.message`）是真修好了；`poiImportCopy.ts:256` 是那句中文的字典出处。
+4. 一句**文案 nit，不判缺陷**：那句「请重新识别一次文字」读着像翻译腔，"文字" 放句尾别扭。它来自字典、也过得了所有闸，所以我不动判语，只把它记在这里给文案车道；要不要改由下一块裁。
+
+**三、我的仪表自己踩到的两件事（写出来免得别人重踩）**
+- 我第一次跑 `/v8/import` 三臂都 `PANEL_NOT_REACHED_BY_CMDR`，两次都是假失败：那一屏被壳的向导 `trial-setup` 占住，而门是**客户端存下的行程号**（`frontend/src/app/V8Experience.tsx:836` 读 `citynexus.v8.journey_id`）。修法是仪表先向自己这台后端取 `/api/v1/demo/scene` 再把它回的那枚 id 写进 localStorage——我把 scene 的 `status` 与 `journey_id`、`journey_status` 都落进件里（`a55edaf57e1e36f15f18a855a9ba08427b6d945a`），没有把 id 写死在仪表里。
+- 我用「把 `--api` 指到一枚没人监听的端口」来逼网络失败那一臂，结果整屏都到不了（壳先取不到 scene，也回向导），那一臂作废；能画的拒绝分支是上面臂三那种。另：`_launch_priv_backend_r2.py` 的 `pid_owns_port` 布尔对这机器是错的（它报 false 而 netstat 的监听者确实是我 Popen 那位的子进程），我按 ppid 链读，不引用那格。
+
+**四、更正我自己**：我 09-29 那块 `cmdr_1135` 首行写 11:35，实际入账由门在 11:34:32 完成——是一分钟的未来时间。已入账字节我不回改，更正落在这里。
+
+**没改善的部分**
+1. 我的屏读代次是 `b5bb79261091586bc096793869c87c637fb8fa37`；真尖 `02b73c6c3ece71165b90476e644dd0d10d79611b` 多出两枚地图产品文件（MapPanel.tsx、mapStopLabels.ts）我没上屏走过 ⇒ 那两枚的屏上判据 `NOT_REACHED_BY_CMDR`。
+2. 线上仍有 6 枚曝光格一格没少（含 `frontend/src/features/planning/PlanWithAiSheet.tsx:931`、`frontend/src/features/trip/ActivityDetail.tsx:216`、`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:299`，逐格在件 `7d1f68af007967c6aff3895f6a1e3a1b4ff52e69` 里）；我没有为「清既有格」开出认领得到位的单。
+3. 本轮我落的两笔都是判据件，0 产品字节 ⇒ 用户在屏上看不见本轮我的落地。
+4. 后端测试 0 条执行（两笔收据 `72aa1f5f6028fb1396e97db96d0feaa2e14b7b2c` 与 `378178b65fdf34fe6a27de31cda2bf09e4f9afa0` 的 `test_exit` 都是 null）。
+5. 手机链 hop4 未起 ⇒ 全部读数仍是私有舞台的 `NOT-DEPLOYED-OBSERVED`；换树要对 `D:/moodle/_qoder_preview_20260920/_preview.db` 做 ALTER，那仍是人类的决定，桌面留言只有那一个问题，我没追加。
+6. 盘 `df -h /d` 从本轮开始的 11 GiB 变成 14 GiB 可用（96%）——不是我清出来的，我只删了自己本轮的 `_xsrc_*` 抽取（删前用 `st_file_attributes` 扫 reparse point，读到 0 枚）；两代 `_build_*` 舞台仍被我的静态口用着所以保留。
+7. 我新写的仪表只证了「拒绝那一支」，POI 导入的**成功那一支会不会把行程真的改坏**我没测（臂一臂二都只到 parse，没有点确认写入）⇒ 那条判据 `NOT_REACHED_BY_CMDR`。
+
+
 ### CMDR 03:16 落地两笔 + 等点单那扇的回话 · ORD-0545 第四切片收编 · ORD-0512 r2 落线
 
 **一、6a773af1_0257（ORD-0545 第四切片推进）已入账**。回执在 `D:/moodle/_qoder_ledger_inbox/_processed/6a773af1_0257.md.inserted_030833`；镜像逐字节确认（账本 blob `ffcb1e2e1195c88981d9f81ad7b915efa2bc51bc`，本机字节 sha1 非对象库坐标——本行即声明；可解析锚=落地后权威尖 `b8ed513ea3e197151827429ae1c7c5d21d622176`）。该块的产品事实（反件工具每趟一枚带时刻回执、拒绝改写）已随候选一起在权威线上：尖上两笔 `94a58b7a07d0e1afe36c38256ad7575ddc10b23a` 与 `06b48647096edd9d67802bd8fc6d91c9555b417c` 就是它。**6a773af1 名下的下一手**：候选 `refs/heads/review/newlane-ord0545-refusal-glass-r1`（049c9ca0）等门中，等它交当代读数块我就收。
