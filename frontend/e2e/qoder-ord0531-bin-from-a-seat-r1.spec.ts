@@ -247,15 +247,31 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
 
     const panel = await openBinAs(page, journeyId);
     const noViewer = panel.getByTestId("trash-no-viewer");
-    await expect(noViewer, "naming no traveller must be said on the screen, not left blank").toBeVisible({
-      timeout: 20_000,
-    });
-    const sentence = (await noViewer.innerText()).replace(/\s+/g, " ").trim();
     const askedScoped = paths.filter(
       (p) => p.startsWith("/api/v1/travelers/") && p.endsWith("/recycle-bin/journeys"),
     );
     const askedWholeBin = paths.filter((p) => p === "/api/v1/recycle-bin/journeys");
     const rows = await panel.getByTestId("trash-row").count();
+
+    note("V10_doors_before_the_screen_speaks", {
+      scoped_bin_doors_asked: askedScoped,
+      whole_bin_door_asked: askedWholeBin,
+      every_path_this_page_asked: paths,
+      rows_rendered: rows,
+    });
+
+    /* Leg 1 -- the fallback the order forbids: with no viewer there is nobody to scope by, and the
+       whole-bin door is deliberately NOT used as a substitute.  Judged before any text is read, so a
+       mutant that asks a door reddens THIS leg and not the one below it. */
+    expect(
+      askedScoped.length + askedWholeBin.length,
+      `with no traveller named the screen asked a bin door anyway: ${JSON.stringify(paths)}`,
+    ).toBe(0);
+
+    await expect(noViewer, "naming no traveller must be said on the screen, not left blank").toBeVisible({
+      timeout: 20_000,
+    });
+    const sentence = (await noViewer.innerText()).replace(/\s+/g, " ").trim();
     const panelText = (await panel.innerText()).replace(/\s+/g, " ");
 
     note("V10_no_traveller_named", {
@@ -270,13 +286,6 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
       pageerrors,
     });
 
-    /* Leg 1 -- the fallback the order forbids: with no viewer there is nobody to scope by, and the
-       whole-bin door is deliberately NOT used as a substitute.  First, because the copy legs below
-       cannot tell a missing ask from a present one. */
-    expect(
-      askedScoped.length + askedWholeBin.length,
-      `with no traveller named the screen asked a bin door anyway: ${JSON.stringify(paths)}`,
-    ).toBe(0);
     /* Leg 2 -- the sentence itself, read as rendered text. */
     expect(sentence).toContain("还不知道要问谁的回收站");
     expect(sentence).toContain("你的行程没有因此变化");
