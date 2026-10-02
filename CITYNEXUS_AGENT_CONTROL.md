@@ -16588,6 +16588,160 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0417 我那把尺的补 · 族测里那四枚存量红是我自己的尺，这一轮亲测到原因了：两枚是尺没滚页，两枚是尺的地板与「字在不在视口里」它不判（车道 8ac89982，自申报）
+
+**〇、坐标与两趟跑在什么字节上**
+
+- 权威尖 `569b8472b134e5562ef396e38681870b9c26536a`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003a.txt:1`）。本块 0 产品字节、0 新枝、0 次推送。
+- 那把尺：`frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts`，尖上 blob `75252f8a97605a5085e58873d3518e8412af9f18`；同族的 `qoder-ord0417-tap-names-the-stop.spec.ts` 是 `715fc4e0`（`git rev-parse 尖:路径` 现读）。两枚 spec 从我上一棵导出树的基座到现尖逐字未动。
+- 两趟读数：一趟在旧树里把本单碰的四枚产品文件换回尖字节再跑（那四枚在旧基座与现尖逐字节同：`ba429e2618c1b8c813f58c2485b146b982f93232`、`a2ccfc137018a576bf7531a8ea4333c935922342`、`ffccc72e852c0edd88ead3b39f475bf593a51073`、`9f6cbed10d10b770043ea1654f6e0c888eedf147`；件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\family\ord0417hub_diag_r2.json:1`，跑它的命令 `python run/ord0417hub_diag_r2.py ord0417hub_diag_r2`）；另一趟新导一棵现尖的树再跑（导出树不是 git 工作树，我用 `git hash-object` 反核：磁盘上那枚 spec 的 git blob 就是 `75252f8a97605a5085e58873d3518e8412af9f18`，与尖同值；日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_tipnow_r1.log:483`）。两趟逐键相同：四枚失败、九枚通过。
+
+**一、为什么现在才看它**
+
+ORD-0512 的族测里那十五枚红我一路当存量报（两侧同集合 ⇒ 新红为零），其中四枚其实是我自己名下那把尺报的。存量不等于我看过——这一轮单独把它跑了两趟，只跑这一个文件。
+
+**二、矮一档那两枚（窄屏短视口）：尺自己的缺陷，量到了**
+
+- 跑的那把尺就是尖上那一份字节 `75252f8a97605a5085e58873d3518e8412af9f18`：九枚 pin 的中心 y 全落在 803 到 808 之间，而那一趟的视口高只有 653，`lands` 九枚全为 false。
+- 于是 `pickHittablePin` 找不到任何一枚命中自己中心的 pin，臂在测任何东西之前就中止（错误具名 `A0 — no pin answers a hit-test at its own centre`，日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_tipnow_r1.log:434`）。我这把臂只 `window.scrollTo(0, 0)`，从不把地图滚进视口——这正是我自己撞过两次、也写进过教训的那一格（底栏重叠必须滚进视口 + 中心命中）。这一格那两枚臂的字节就是 `75252f8a97605a5085e58873d3518e8412af9f18`。
+- 所以这两枚红说的是尺瞎，不是产品坏；我不拿它算产品账。
+
+**三、高一档那两枚（手机竖屏）：一半量到了，一半我没脸说量到了**
+
+- 量到的：尺的字节同上 `75252f8a97605a5085e58873d3518e8412af9f18`；控件总数 43 枚前后不变、band 长高零、可达集从 13 枚掉到 12 枚，掉出去那枚的 key 是 `9#1`（hub 上画着数字 9 的那枚 pin）。两趟这些字段逐键同（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\family\ord0417hub_diag_r2.json:1` 的 `payloads`，日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_tipnow_r1.log:289`）。
+- 没量到的：那一枚掉出去之后中心去了哪里，我的件里只留了 key、没留坐标 ⇒ 我不说"它被推出了视口"，那一格写 `NOT_MEASURED`。而判它"可达"用的地板是我自己定的一个数（`frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts:44` 那枚 `HIT_FLOOR` 常量），不是产品声明的数——地板以下的东西未必不可点。
+- 另有一格是实打实的：尺的字节还是那一份 `75252f8a97605a5085e58873d3518e8412af9f18`——选中一站之后，那句名字所在的格 `.v8-map-selected-stop` 框顶落在 y 854（中文档）与 873（英文档），而视口只有 844 高——字画在折叠以下（同一枚日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_tipnow_r1.log:318`）。我那把臂判"画上了 / 没出说明框 / 没被自己框裁掉"三样，唯独不判"在不在视口里"，所以字跑到折叠以下它会一路绿。一枚只把"有"读成"没有"、不会把"看不见"读成"看不见"的尺，就是单向致盲，我认这一格。臂的字节同上 `75252f8a97605a5085e58873d3518e8412af9f18`。
+
+**四、请一手小单（自申报，等你点头再动手）**
+
+给这把尺补三样，产品字节 0：① census 之前把地图滚进视口（两个形状都滚，滚完再测）；② 把"名字格在视口内"写成断言，别让它再绿着漏掉折叠以下；③ census 前后都留每枚 pin 的中心坐标，掉出去的那枚要能说出它去了哪儿。交形制照 ORD-0512 那两块的规矩：基座 = 现读尖、推 `refs/heads/review/8ac89982-ord0417-hub-ruler-*`、块先过尺再落收件口。你点头我就切；不点头这三格就只留在这一块里，我不伸手改别人的判据，也不顺手改自己那条已入账的臂。
+
+**五、顺带两格事实（不改任何已入账的判语）**
+
+- 我那枝 ORD-0512 第二代（头 `9481e3937873a7cfcdbb59e9d806f2eed2498fef`）与现尖的关系没变：十二笔没碰我四枚文件，对新尖的只读落地预测退出码零、冲突零（见 0012 那块第〇节）。
+- 现尖的 `frontend/src/i18n/LocaleContext.tsx` 比旧基座少一百零四行（`git diff --numstat 7dbbf02074d8fc253e5fdff0734f466b916bcd51 569b8472b134e5562ef396e38681870b9c26536a -- frontend/src/i18n/LocaleContext.tsx` 现读），我点查了 `MapPanel.tsx` 用到的九枚 `mapComp.*` 键：每枚在现尖的中英两档里都还有定义（逐枚 `git grep -c '"mapComp.<键>":' 尖 -- frontend/src/i18n/LocaleContext.tsx` 都回 2，例：`"mapComp.attribution"` 在 `frontend/src/i18n/LocaleContext.tsx:901` 与 `:1930`）⇒ 我那第二代落上去不会把地图面板读成机词上屏。这一格是预读，不是新红也不是修复。
+
+
+### ORD-0545 第三切片 · 自申报：那 7 枚只能走查表的拒绝句，现在有一枚在玻璃上被读到了（真产品路、0 产品字节）；另具名报这一屏念出的一枚服务端机词（车道 6a773af1，0034 交）
+
+**〇、为什么这一手归我，以及它落在哪格欠账上**
+
+- 名下四单已全部落地（0496、0525、0533、0545 两切片；你 23:47 那块记 0545 整族 r3 候选 `098dcfe8b1b986df2906419aad6f16aea0e454f6` → recut `569b8472b134e5562ef396e38681870b9c26536a`，"files 六十一比六十一 identical-to-lane-blob"）。`## ORDERS` 段现读区间（16590 起）里没有以 `6a773af1` 逐字点名的新派单行，所以我按车道自申报的常设规矩，补我自己公开报过的那格欠账：切片二那块（块头逐字含「整族入表已做完」）里我写了 `NOT_REACHED_BY_LANE` —— 7 枚只能从 `FAILURE_SENTENCE` 查表被取到的句子，一次都没在屏上读到过。
+- 前置事实（不是猜的，逐枚现读）：`backend/app/main.py` 的 create_journey 把 `active_plan_version_id=None` 落库；于是"新建但没排程"是产品自己造得出的状态。我在这条车道的私有副本上跑产品自己的门（探针 `review/ord0545/refusal_antecedent_probe_r1.py`，blob 6447c27cc7c53e341e78691e336d8ca7ef8dae9d；读数 `review/ord0545/readouts/refusal_antecedent_probe_r3.json`，blob 93b1f80cec0b6f759ad170885efd5eb688f11682）：POST /api/v1/journeys 回 201、GET 回读 `active_plan_version_id` 为 null 且 status 是 DRAFT、poi-import/parse 回 200 且那一行 `addable: true`（schemas.py 的 `addable: bool = False` 默认值被真目录翻成 true）、poi-import/add 回 **409 且 error.reason_code = NO_ACTIVE_PLAN**。
+
+**一、臂（三枚，390 宽那一档，读渲染文字不读属性）**
+
+- 枝 refs/heads/review/newlane-ord0545-refusal-glass-r1，头 = 049c9ca094f2c65e4f2a68d085e723cd812c83b0（`git ls-remote --refs` 回读同值），**父提交逐字等于现尖** `569b8472b134e5562ef396e38681870b9c26536a`（写块前一秒现读同一值）；0 次 force，权威线 0 次 push；这一枚候选改的既有文件 0 枚（21 枚路径逐枚 `git rev-parse --verify <尖>:<路径>` 都不在尖上，全是新增），其中落在 `frontend/src/` 或 `backend/app/` 的枚数 0 —— 标题那句"0 产品字节"是这么量出来的。
+- R1 zh：走"粘贴 → 解析 → 勾那一行 → 点加入"之后，屏上那句逐字 == 表里 `errNoActivePlan` 的 zh 半（比较是拿件的 table_zh 做的，不是我把汉字抄进断言）；技术行读到 `HTTP 409`；拒绝格内机词 0 枚；整屏 `poiImport.*` 键名 0、`err*` 表键名 0、裸 uuid 0。件 blob 668dadccf402702a4b32b2dd5fd2a82531be0ce7。
+- R2 en-GB：同一趟走法拿到的是表里的 en 半，且**不等于** zh 半（件 blob 0083ed86385e4ba2e414562fb049642e53a903a9）。这一档整屏渲染 2044 字符，zh 那档 834 字符，两枚 sha256 都在件里。
+- R3 那句中文原话带"什么都没改动"的意味，所以拿服务端回读验它：拒绝之后 `active_plan_version_id` 仍是 null、journey status 仍 DRAFT、plans 那道读门回 200 且方案条数 0（件 blob 35a6bd328744e183e6feea82d213229f9c262102）。⇒ 这次拒绝没偷偷写任何东西。
+- 闸本体 blob c88a9f50e9b2ec217330903b0fcefbef8c3e41bf，配置 blob fcf50301dc4f2bfd444c41605211cc07f9a99aef，报告 blob aecb95423bb5d910d12b2d89c739e27857c873b0（`Running 3 tests` 与 `3 passed` 都在这枚里，收 0 条那种假绿我按前几轮的规矩一并挡住）。
+- 配置自己的 `testMatch` 是 `/qoder-ord0545s3-/`（闸文件名 `qoder-ord0545s3-…`），所以我新加的三枚臂不会把切片二那 3 枚臂的分母改成 6。
+
+**二、两枚反件（都真跑、都还原、前后各有控制跑）**
+
+工具 blob 897910e8a10c6ebc23094031d2d0eda3a83e3601，流水 blob e4538f20b439644812eb7d7d99a3f07dd1a39026。
+
+- M1：把 `FAILURE_SENTENCE` 里 NO_ACTIVE_PLAN 那一行改指表里**另一枚真存在的键** `errUnnamed` —— 故意让构建继续绿（两个名字都在联合里），于是不管红不红都不能靠编译冒充证据。结果 R1、R2 双双红（它们比的正是这一枚拒绝该配的那一句），R3 仍绿（它不看句子）。这就是"屏上出现了一句话"和"出现的是这枚拒绝对应的那句话"之间的区别。
+- M2：把粘进去的名字换成目录里没有的一串 —— 三枚臂全红，因为解析不给可勾的行，走不到拒绝。这一条挡的是"没走到拒绝却报了拒绝句"。
+- 控制跑前后各 `3 collected / 3 passed`，两处改动都按原字节还原（还原前后 sha256 同值，写在流水件头部）；变异那一代生成的 JSON 我**没有发布**（它描述的是不出货的树），流水里只留 rc 与红名。
+
+**三、这一手额外撞出来的一格缺陷（报，不折进绿里，也不擅自改）**
+
+- 我这趟比切片二那趟多走一步（切片二只走到"卡片出来"，我这趟走到"点加入被拒"），于是读到：这一屏把服务端的机词原样念出来了 —— `LOCAL_TEXT_PARSER`，载体是 `poi-import-card`，出处 `frontend/src/features/poiimport/PoiImportPanel.tsx:489`，那一行是 `<b>{parsed?.source_channel ?? "LOCAL_TEXT_PARSER"}</b>`；这枚行号我在现尖上打开回读过（同一枚文件尖上 blob 95a15c02f1f74e9a59fb991eea4a95f438902255），它左边右边两格都走 `poiImportCopy(locale, "channelLabel")` 与 `"channelNote"`，只有中间这格是直接打印字段值。
+- 同一屏的大写词普查**按通道不一样**，两枚读数都在件里，我不合并也不外推：`innerText` 那趟（英文档）读回 ALREADY / LOCAL_TEXT_PARSER / PASTE / WROTE，`textContent` 那趟读回 LOCAL_TEXT_PARSER / SYSTEM / TODAY / TRAVEL。差别来自 CSS 的大写变换与 DOM 里本来就大写的字面量是两回事。两趟都在、且我能指到源码行的只有 `LOCAL_TEXT_PARSER` 那一枚；其余具名 `NOT_ATTRIBUTED`。
+- 这格的修法（一枚成对的表项把 channel 值译成人话，正好用得上切片一那枚 `channelLocal` 的形制）我**没做**：0 产品字节是这一刀的边界，要动 `PoiImportPanel.tsx` 请点单。
+
+**四、同代复跑，不搬旧数**
+
+- 切片二的整族三臂在这一代重跑：`3 passed`（件 blob de1f0973adb9a23b337c87bdb501555149d17997）；文案闸四臂重跑 `4 passed`（件 blob 61cdb4d1dd90258a1f9c5b68413e0ca9cf3619ce，含上轮修好的那枚 67 枚联合读数）；`tsc -p tsconfig.check.json --noEmit` exit 0、诊断 0 行。
+- 形制：私有后端与三档闸用的前端端口都只听 127.0.0.1，跑完 `--stop` 回 `still_listening: []`；这份回执 blob deebde0fa87fc330b1c2fa119fdeb4250f500dad 里 canary 只以 mode=ro 打开、现场 online backup 复制、源件在我开前开后 sha256 同值，`forbidden_ports_held_by_others` 记着 `:4783` 由 pid 2988 持有、`:4787` 由 pid 7788 持有（那份名单里没有 `:8000`，所以我不据它说 `:8000` 没在跑，只说我没连它）。
+- 这一枝 refs/heads/review/newlane-ord0545-refusal-glass-r1 从建到停的全部跑次里，demo/reset 跑 0 次、`_preview.db` 写 0 次、上面那两枚别人持有的端口碰 0 次（同 blob deebde0fa87fc330b1c2fa119fdeb4250f500dad 那批）；本轮新写的行程行只落在我自己那份副本里，件里带各自 journey id，可逐枚指认。
+
+**五、还开的格（不粉）**
+
+- `NOT_REACHED_BY_LANE`：7 枚里只有 NO_ACTIVE_PLAN 这一枚上了玻璃。其余 6 枚这轮仍没读到，形状我按来源分开写清：`IMPORT_PLACE_UNKNOWN` 与 `IMPORT_PLACE_NOT_VISITABLE` 要的是"这枚 place_id 不在这座城的目录里、或是别城的行、或是日程节点"，而 parse 那道门自己就按本城过滤并用 `_STRUCTURAL_PLACE_CATEGORIES` 排除节点——**这是读码所见，不是我跑出来的红**，所以我不把它裁成"不可能"；`IMPORT_DAY_REQUIRED` 要"计划存在而计划里一天都没有"（`payload.day` 空且 `existing_dates` 空），我这一趟没造出那形；`JOURNEY_NOT_FOUND` 上一轮实测过：对着已删行程进这一屏，屏上不落拒绝句。这六枚仍只有类型层与 M1 那枚反件代证。
+- `NOT_REACHED_BY_LANE`：走完引导向导再进内屏那一格维持要真机（15:30 裁语）。
+- `NOT_ATTRIBUTED`：上一轮那两枚导出字节读数的差，这一轮没动它，也没新数。
+- 你重启后的链我只旁观：回执 blob deebde0fa87fc330b1c2fa119fdeb4250f500dad 的 `forbidden_ports_held_by_others` 记着 `:4783` 由 pid 2988 持有、`:4787` 由 pid 7788 持有，本轮我对这两枚端口 0 次连接、0 次写入；`:8000` 不在那份名单里，所以我不说它没在跑，只说我没连它。读数全部来自我自己那枚 pid 与自己那私有后端，新写的行程行只落在我自己那份副本里（件里带各自 journey id，可逐枚指认）。
+
+**六、下一步**
+
+候选在 `review/*` 上、父提交就是现尖，等你的门；我不自己落地、不自宣 CLOSED。要点名下一手（例如把上面那枚服务端机词做成成对表项那一格），给单号与验收形状即可。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 自申报 · 车道 2d2d7428 · ORD-0509 亮档 3.62 的档位裁决件 r2：四臂搬到**现尖自己在发的那枚产物**上重跑（0 产品字节）
+
+**〇、坐标（本趟命令取回，无手打）**
+- 交付枝 refs/heads/review/2d2d7428-ord0509-light-tier-ink-r2，远端头 cd40dcb8b5a3cb7450e3a9499489feff04888b0d；现尖 569b8472b134e5562ef396e38681870b9c26536a（两枚都是 `git ls-remote --refs origin` 逐字回读）。本枝对尖只多一枚文件：`review/ord0509/LIGHT_TIER_INK_R1.md`（blob 680258e57042fbc0a12e6d97b13d7f764255e480）——review/ord0509/LIGHT_TIER_INK_R1.md，产品字节 0 枚。merge-tree rc=0。
+- 上一单落地的卡片修复仍在尖上：`git rev-parse 569b8472b134:frontend/src/styles.css` = 58e982e1bad669fe9b66cee392c4651ce0fd3644。
+- 我 r1 那版（枝 review/2d2d7428-ord0509-light-tier-ink-r1，头 915d2a05b033fb141121b53a92167ff196a39ad7）基座是 day21，已推过就不再改写；本枝是从现尖重切的 r2，两枝的包内容只差『读数取在哪一代』这一节。
+
+**一、先证明量的是线在发的那一代**
+- :4783 现在服务的入口 `index-BQzlTYlS.css`（231440 字节 B）与 CSS `index-CKZE7InQ.js`（1609739 字节 B），服务字节 sha1 分别是 2d529817904874d60acc90281e7b1f022a6e8246 与 fa51295cdd73e9d1e04b5f524d56cb84a15b6bb3 —— 两枚都与本枝头 `npx vite build` 出来的磁盘产物**逐字节相同**。这两枚 sha1 是产物内容哈希、未入 git、不可 cat-file；本行可取回的 40 位是本枝远端头 cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- 盘面只走产品自己的门：demo/reset -> prepare-scenario -> scene 答 200 / 200 / 200，站点 6 枚、少 0 枚、supply.state=NOT_ASKED；库具名 `_r5_r9.db`，静态服务环境 CITYNEXUS_BACKEND_PORT=4891（上一单那枚代理默认值已修，归属由『页面自己问的门出现在我的后端访问日志里』承）。件 review/ord0509/LIGHT_TIER_INK_R1.md:7。
+- 与 day21（代 `e7ff7938ea41`）那批四臂对读：三屏两档的**不合格枚数与最差对比逐枚相同**（不等就拒写）；有一枚文字枚数在两代之间不同（分享屏暗档 30 -> 29），可同一枚在本代四臂之间也在 29/30 之间浮动，所以那是屏上行数的浮动、不是判据变了（浮动带与判据比较都写在件里）。七枚与这三屏直接相关的源在两代之间逐枚 UNMOVED（任何一枚动了本块就拒写）。件 review/ord0509/LIGHT_TIER_INK_R1.md:8。
+
+**二、现尖这一代上，三屏还红不红**
+- 卡片（上一单那 1 增 1 删的对象）已干净：亮档 0 不合格/3 枚、最差 5.97、暗档 0 不合格/3 枚、最差 4.66。件 review/ord0509/LIGHT_TIER_INK_R1.md:11。
+- 亮档三屏仍红：nav_drawer 4 不合格/18 枚、最差 3.62；shared_journey 6 不合格/30 枚、最差 3.62；long_image_poster 1 不合格/22 枚、最差 3.62。暗档三屏 0 枚：nav_drawer 0 不合格/18 枚、最差 4.66；shared_journey 0 不合格/29 枚、最差 5.22；long_image_poster 0 不合格/22 枚、最差 4.82。件 review/ord0509/LIGHT_TIER_INK_R1.md:12。
+- 三处最差那枚的色值逐枚 134,134,139，就是 `--cn-ink-tertiary` 的亮档声明；按 WCAG 现算它对纯白 3.62，暗档那层对 `#1c1c1e` 5.22 —— 缺口只在亮档，这一句在现尖仍然成立。
+
+**三、三条候选，都跑在上面那枚线上产物上（注入作者样式，不冒充构建产物）**
+- 甲 `--cn-ink-tertiary:#76767b`（对白 4.52）：三屏亮档 0 枚不合格，最差分别 4.52、4.52、4.52；暗档逐枚与基线相同。件 review/ord0509/LIGHT_TIER_INK_R1.md:22。
+- 甲-强 `--cn-ink-tertiary:#6e6e73`（亮档并到 secondary 的数）：三屏亮档 0 枚不合格，最差分别 4.82、5.07、4.66；暗档逐枚与基线相同。件 review/ord0509/LIGHT_TIER_INK_R1.md:23。
+- 乙 三处角色改 `color: var(--cn-ink-secondary)`：三屏亮档 0 枚不合格，最差分别 4.82、5.07、4.66；暗档逐枚与基线相同。件 review/ord0509/LIGHT_TIER_INK_R1.md:24。
+- 射程按现尖重数（我 r1 那版写成『两枚 CSS 里 8 处』，分母数错了，这里纠正并具名）：`frontend/src` 下 12 枚文件、共 35 处引用，其中 `color:` 32 处；三处不合格角色的主人分别是 `styles.css:142`、`sharedJourney.css:98`、`trip-poster.css:83`。件 review/ord0509/LIGHT_TIER_INK_R1.md:15。
+- 可核对的差别只剩射程：甲的余量 4.52（门槛 4.5），甲-强与乙在这三屏量出同一组数（4.82、5.07、4.66）——『并色阶』与『改这三处角色』渲染相同，前者动 35 处引用，后者动 3 条规则。
+
+**四、我这把尺先红的一次（r1 的仪器错，不是产品形状）**
+- 乙的第一趟注入只写到 `:root[data-theme=light] .v8-nav-group`，抽屉仍报 4 不合格/18 枚、最差 3.62；量出来是产品那条规则带 ID（现尖主人是 `styles.css:142`），ID 的特异性压过我的类选择器——我的注入没够到。补成带 ID 的同一条后抽屉才真干净（上面那条乙数就是补过之后在本代重跑的）。件 review/ord0509/LIGHT_TIER_INK_R1.md:29。
+
+**五、闸与分母（跑在本枝头 cd40dcb8b5a3）**
+- cells 1：collected 8，8 passed in 2.10s，rc=0。本行坐标（本枝远端头）：cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- cells 2：collected 8，8 passed in 1.82s，rc=0。本行坐标（本枝远端头）：cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- family 1：collected 47，47 passed in 15.63s，rc=0。本行坐标（本枝远端头）：cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- family 2：collected 47，47 passed in 14.04s，rc=0。本行坐标（本枝远端头）：cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- 整套后端收集 1707 条（上面是它的子集）；整套本轮没跑（NOT_EXECUTED_BY_LANE）。契约：OpenAPI 3.1.0; formal 175; runtime 175; missing 0; extra 0 / schemas formal 87; generated 87; missing 0; extra 0。本行坐标（本枝远端头）：cd40dcb8b5a3cb7450e3a9499489feff04888b0d。
+- 凭据开机门两读：剥 -> CREDENTIAL_GATE_CLEAR（550 枚文件、命中 5）；不剥 -> LIVE_CREDENTIAL_IN_ENVIRONMENT。重启后本机环境里只剩这些名字：DEEPSEEK_API_KEY、OPENAI_API_KEY、WB2API_KEY，所以两读现在同为 CLEAR —— 这是环境变了，不是产品变了；那把尺我一枚字节没碰。
+
+**六、等你一句**
+- 裁甲 / 甲-强 / 乙 任一枚，我就按当代源码改一次、`tsc` 两把 + `vite build` 重建，再交『改前 vs 改后』两代读数加一枚把旧值压回去的反件；裁『都不动』则本件只作记录，我不落任何字节。
+- 我不自造默认值：这层墨被 35 处引用、12 枚文件，任何一条都会动到本件没量过的屏里的其它角色，所以必须你点单。件 review/ord0509/LIGHT_TIER_INK_R1.md:15。
+
+**七、现场与红线**
+- 私有栈：后端 pid 36040 在 :4891、静态 pid 37412 在 :4892，两代各起各停；停完 netstat 回读逐字是 [stop r9] killed=2 left after the sweep: 0。库具名 `_r5_r9.db`，只在本车道目录。
+- :4783 只读 2 次（入口与 CSS 各一次，拿服务字节算 sha1），:4787 连接 0 次；:8000 / :4781 / :4782 / :8693 覆盖 0 次；`_preview.db` 覆盖 0 次；权威线 0 次移动；已发布 ref 重写 0 次（r1 那枝原地不动）；demo/reset 只落本车道那枚库。本行坐标（现尖）：569b8472b134e5562ef396e38681870b9c26536a。
+- 没量实体手机、没跑 e2e、没跑整套后端；瓦片底图这台机器始终不加载；抽屉在 1280x900 那形仍具名 NOT_REACHED_BY_SHAPE。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 自申报一件 · 普查第三轮（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：把上两轮我自己承认看不见的两种形状补上，在尖 `569b8472b134e5562ef396e38681870b9c26536a` 上扫出 114 处站点、10 处值得逐枚打开（连同一处尺子解不开的共 11 处），每处的臂都按 nodeid 亲跑过（9 passed, 2 warnings in 4.90s）；再放一枚反件证明其中一类**确实会红在无关改动上**；并自报我这轮的机械判据 7 处判错
+
+**为什么做**：号令者 07:57 那手只修了两枚尺（已落地），我当时入账那块写明「没有第三处」的作用域仅限四种形状，并具名了两处盲区：把行号当参数传进 helper、以及等号右边是一串键名/文件名的等式。这一轮就是补这两形。现读权威尖 `569b8472b134e5562ef396e38681870b9c26536a`（`git ls-remote --refs`），本轮针在它。
+
+**量法（可复算）**：`anchor_drift_survey_r3.py`（blob `eff6646e1104ef543234f9c44e5a390123e48c32`）在 `git show 569b8472:backend/tests/` 的导出内容上扫 232 枚测试文件，命中 114 处：等号配对冻结集合 113 处、行号当参数 1 处、经跟踪变量取下标 0 处。左面是从树/契约/活应答现推导的 9 处，另有 1 处等的是文件名名单（件 `anchor_drift_survey_r3.json` blob `b37bd16768aa702d14ef0ae4c42eaef3e058844d`）。1 处尺子解不开，留在 unresolved 里而不是清掉。
+
+**11 处逐枚打开、逐枚跑（件 `census_r3_arms_r1.json` blob `56b9d3688056269f7902014b55d24eed7b0f763f`，站点上下文转储 blob `bcf9ef983d343c69de2fbf6b9f427a8c41b9b61c`）**：每处先解出它所属的测试函数、再用 nodeid 单跑，9 枚臂 9 passed, 2 warnings in 4.90s，没有一枚是靠“整文件绿”蒙过去的。整批 8 枚文件同跑是 98 passed, 2 warnings in 13.19s（件 `census_r3_run_r1.json` blob `d19cac104b892978745b2f091e0737c2c469b07d`）。
+
+**反件：一次合法的扩容把哪枚臂弄红了**：在本车道导出的 `contracts/openapi.yaml` 里，给 `GET /api/v1/journeys/{journey_id}/checkins` 的文档响应加一枚 `429`（插在 `848` 行之前，件 `census_r3_counterarm_r1.json` blob `4b94a63af58ed5df86e8c1e68d80978f17e67f37`）。产品一字节未动，所以这一红的分母里没有任何行为变化：改前 160 passed, 2 warnings in 11.09s，改后 1 failed, 159 passed, 2 warnings in 10.78s；红的那枚臂逐字是 `tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack`，流水里咬到的行是 `backend/tests/test_qoder_ord0476_checkins.py:500`，那一条断言原文 `assert sorted(listed["responses"]) == ["200", "409"], sorted(listed["responses"])`。跑完同进程还原，前后 sha256 同为 `e3c309f2a7cab93b1735785719c1dc39e070b84f6a339d2845f39d90b1c1b411`（64 位文件摘要，非 git 对象）。⇒ 「等式对着一个产品可以再扩的集合」这一类，红与不红取决于别人往契约里加了几行，不取决于有没有缺陷。
+
+**本轮真正的增量是我的尺错了，两处证据**：机械谓词只看函数体内有没有否定词，11 处里 7 处与手判不一致（分歧清单在 `census_r3_verdicts_r1.json` blob `251c7406ca06e24b7c73199a80a02d72cf7c637b`）。而且刚才真咬红的那处，机械判据恰好把它错分成“闭合集合守卫”——因为它同一枚函数里另有一句关于请求体的注释。手判结果：6 处属 `drift_prone_open_equality`、3 处属 `growth_is_the_defect_guard`（这 3 处的增长本身就是要拒的事，动不得），另 2 处分别是「左面来自测试自造的输入」与「臂自己注入的探针路径」。
+
+**要裁的一格（不自改）**：那 6 处若要「无关扩容不红、缺了具名承诺才红」，形状是把等式改成包含式加一条具名扩容白名单；这属于换题面，我没有点单就不动判据一字节。
+
+**树形制（会造成假红，但不是缺陷）**：其中两枚臂断言自己旁边的已提交读数存在——`backend/tests/test_qoder_ord0402_recycle_bin.py:173` 与 `backend/tests/test_qoder_ord0496_calendar_export.py:642`，所以导出必须带 `review` 根。我的导出带（sparse 根 8 枚含 review，`git ls-files review/ord0402-readouts review/ord0496` 在册 44 枚）。
+
+**边界**：0 产品字节（那枚 `429` 只在我这一道导出里存在过，还原后 sha256 与改前同值）、0 测试判据改动、0 次移动权威线、账本 0 直写（本块走 inbox）、`demo/reset` 0 次、共享 `_preview.db` 0 次写、我这一道 0 个端口在跑。**未改善**：6 处的分类目前是「手判 + 一枚产出的红」，没有闸把它变成机器可判；`backend/tests/test_qoder_ord0434_share_grants.py:413` 那处的左面来自活 HTTP 应答，反件需要产品侧动 ACL 表，本轮具名 NOT_DONE。
+
+坐标：证据 12 枚在 `commander/control` 的 `evidence/ord0479-0296-anchor-census-r3/`，回执控制尖 `0fa6c9103e13586604af9018a7f371238daa17e9`，逐枚本机字节与服务端 `ls-tree` 读回 blob 全等；发布器本身 `publish_census_r3_r1.py` blob `8042814716a717ce6611ef457e25adc8bc549d53`。本轮读数件：扫描 `b37bd16768aa702d14ef0ae4c42eaef3e058844d`、臂表 `0d0853006a7f8c0151c874dee8554d3aded42fd7`、判词 `2df8bd9c4854b23cc49e99ffbeef3c39bcf7538f`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 补件 · 把 22:22 那块里我标 `NOT_MEASURED / NOT_PROVEN` 的两格答掉：那枚 422 是我的 body 写错字段名，行程经产品自己的门造出来之后，同一台浏览器再进 hub 就画出了 `today-heading`
 
 **一、我上一块写错的那一格（具名到字段）**
