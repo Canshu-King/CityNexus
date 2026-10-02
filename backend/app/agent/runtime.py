@@ -511,7 +511,15 @@ def _server_completion_contract(
         )
         for item in tool_steps
     )
-    proposal_created = any(item.get("tool_name") == "request_replan" for item in tool_steps)
+    # A failed request_replan is an attempted strategy, not a live proposal.
+    # Only a server-created proposal blocks a typed NO_ACTION conclusion.
+    proposal_created = any(
+        item.get("tool_name") == "request_replan"
+        and isinstance(item.get("result"), dict)
+        and isinstance(item["result"].get("proposal"), dict)
+        and bool(item["result"]["proposal"].get("id"))
+        for item in tool_steps
+    )
     conclusions = [
         item.get("result", {}).get("requested_outcome")
         for item in tool_steps

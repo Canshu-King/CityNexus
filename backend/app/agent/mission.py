@@ -43,11 +43,12 @@ class MissionIntentDraft(BaseModel):
 
 _NUMBER_TOKEN = r"(?:\d+(?:\.\d+)?|[零〇一二两三四五六七八九十百千万亿点]+)"
 _MONEY_PATTERN = re.compile(
-    rf"(?:最多(?:可以|可)?(?:多花|增加)?|不超过|低于|少于|under|below|less\s+than|多花|增加|预算)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY)?",
+    rf"(?:最多(?:可以|可)?(?:多花|增加)?|不超过|低于|少于|under|below|less\s+than|at\s+most|up\s+to|多花|增加|预算)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY|JPY)?",
     re.IGNORECASE,
 )
 _DRIFT_PATTERN = re.compile(
-    rf"(?:最多|不超过|延误|漂移|偏移)\s*({_NUMBER_TOKEN})\s*分钟", re.IGNORECASE
+    rf"(?:最多|不超过|延误|漂移|偏移|under|below|at\s+most|up\s+to)\s*({_NUMBER_TOKEN})\s*(?:分钟|minutes?|mins?)",
+    re.IGNORECASE,
 )
 _LOSS_PATTERN = re.compile(
     rf"(?:最多(?:可以|可)?(?:损失|接受损失)|可接受损失|最大损失|acceptable\s+loss|loss\s+limit)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY)?",

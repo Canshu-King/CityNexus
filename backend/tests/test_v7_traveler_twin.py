@@ -57,9 +57,8 @@ def test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop() -> None:
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     traveler_id = ids["traveler_id"]
 
-    # Journey A supplies actual outcome evidence: skip the outdoor opening and
-    # complete indoor stops. The domain lifecycle, not a synthetic rating,
-    # creates the learned soft preference.
+    # Journey A supplies execution telemetry, which is deliberately not enough
+    # to infer liking.  An explicit feedback outcome is the learning signal.
     generated = client.post(
         f"/api/v1/journeys/{ids['journey_id']}/plans/generate",
         json={"candidate_count": 1},
@@ -95,6 +94,19 @@ def test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop() -> None:
         f"/api/v1/journeys/{ids['journey_id']}/activities/{dinner['id']}/complete"
     )
     assert completed.status_code == 200, completed.text
+    feedback = client.post(
+        f"/api/v1/journeys/{ids['journey_id']}/outcomes",
+        json={
+            "event_type": "USER_ACCEPTED",
+            "activity_id": activities[1]["id"],
+            "payload": {
+                "preference_dimension": "indoor",
+                "direction": "indoor",
+            },
+        },
+    )
+    assert feedback.status_code == 201, feedback.text
+    assert client.post(f"/api/v1/journeys/{ids['journey_id']}/reflect/process").status_code == 200
 
     twin_a = client.get(f"/api/v1/travelers/{traveler_id}/traveler-twin")
     assert twin_a.status_code == 200, twin_a.text

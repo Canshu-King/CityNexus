@@ -22,6 +22,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.money import major_to_minor
 from app.db.models import Journey, Place
 from app.integrations.discovery.real_city import (
     OVERPASS_MIRRORS,
@@ -280,13 +281,16 @@ def _official_cost(nodes: list[dict[str, Any]], source_url: str) -> dict[str, An
         for offer in offers if isinstance(offers, list) else []:
             if not isinstance(offer, dict) or offer.get("price") is None:
                 continue
+            currency = str(offer.get("priceCurrency") or "CNY").upper()
             try:
-                amount = round(float(str(offer["price"]).replace(",", "")) * 100)
+                amount = major_to_minor(
+                    float(str(offer["price"]).replace(",", "")), currency
+                )
             except (TypeError, ValueError):
                 continue
             return {
                 "status": "VERIFIED_PROVIDER", "amount_minor": amount,
-                "currency": str(offer.get("priceCurrency") or "CNY").upper(),
+                "currency": currency,
                 "source": "official_web", "source_url": source_url,
             }
     return {"status": "UNKNOWN", "amount_minor": None, "currency": "CNY", "source": "official_web", "source_url": source_url}
@@ -420,7 +424,7 @@ def _period_matches(period: str, reference_at: str | datetime | date | None) -> 
         first = tokens[0]
         start_month = int(first.group("month"))
         start_day = int(first.group("day") or 1)
-        range_chars = re.escape("-" + "\u2013" + "\u2014" + "\u81f3" + "\u5230")
+        range_chars = re.escape("-" + "\u2013" + "\u2014" + "\uff5e" + "\u301c" + "\u81f3" + "\u5230")
         if len(tokens) == 1 or not re.search("[" + range_chars + "]", segment):
             if reference.month == start_month:
                 return True
@@ -528,12 +532,62 @@ def _plain_text_opening(
         + re.escape(":\uFF1A")
         + r"]?"
     )
-    label = re.search(label_pattern, text, re.IGNORECASE)
+    labels = list(re.finditer(label_pattern, text, re.IGNORECASE))
+    label = next(
+        (
+            candidate
+            for candidate in reversed(labels)
+            if re.search(
+                r"\d{1,2}\s*月\s*[〜～~\-–—至到]\s*\d{1,2}\s*月\s*[/／]\s*"
+                r"\d{1,2}[:：]\d{2}\s*[〜～~\-–—至到]\s*\d{1,2}[:：]\d{2}"
+                r"|\d{1,2}[:：]\d{2}\s*[〜～~\-–—至到]\s*\d{1,2}[:：]\d{2}",
+                text[candidate.end() : candidate.end() + 520],
+            )
+        ),
+        labels[-1] if labels else None,
+    )
     if not label:
         return {"status": "UNKNOWN", "raw": None, "intervals": []}
     excerpt = text[label.end() : label.end() + 260].translate(
         str.maketrans({"\uff08": "(", "\uff09": ")", "\uff1a": ":"})
     )
+    seasonal_clock = re.compile(
+        r"(?P<period>\d{1,2}\s*月\s*[〜～~\-–—至到]\s*\d{1,2}\s*月)\s*[/／]\s*"
+        r"(?P<open>\d{1,2}:\d{2})\s*[〜～~\-–—至到]\s*(?P<close>\d{1,2}:\d{2})"
+    )
+    seasonal: list[dict[str, Any]] = []
+    for match in seasonal_clock.finditer(excerpt):
+        normalized = normalize_opening_hours(
+            f"{_clock_value(match.group('open'))}-{_clock_value(match.group('close'))}"
+        )
+        if normalized.get("status") == "NORMALIZED_VALID":
+            seasonal.append(
+                {
+                    "period": _period_text(match.group("period") or "").strip(),
+                    "open": normalized["open"],
+                    "close": normalized["close"],
+                }
+            )
+    if seasonal:
+        chosen = next(
+            (
+                item
+                for item in seasonal
+                if item["period"].strip() and _period_matches(item["period"], reference_at)
+            ),
+            seasonal[0],
+        )
+        normalized = normalize_opening_hours(f"{chosen['open']}-{chosen['close']}")
+        normalized.update(
+            {
+                "status": "OFFICIAL_WEB_VERIFIED",
+                "source": "official_web",
+                "source_url": source_url,
+                "raw": excerpt,
+                "seasonal_periods": seasonal,
+            }
+        )
+        return normalized
     # Parse the native Japanese form before the generic ``時`` normalizer
     # rewrites it to ``:00``.
     native_japanese_clock = re.compile(
@@ -706,7 +760,9 @@ def _plain_text_cost(
         )
         return {
             "status": "VERIFIED_PROVIDER",
-            "amount_minor": round(float(match.group("amount").replace(",", "")) * 100),
+            "amount_minor": major_to_minor(
+                float(match.group("amount").replace(",", "")), currency
+            ),
             "currency": currency,
             "source": "official_web",
             "source_url": source_url,
@@ -751,7 +807,9 @@ def _plain_text_cost(
         seasonal.append(
             {
                 "period": _period_text(match.group("period") or "").strip(),
-                "amount_minor": round(float(match.group("amount").replace(",", "")) * 100),
+                "amount_minor": major_to_minor(
+                    float(match.group("amount").replace(",", "")), currency
+                ),
                 "currency": currency,
             }
         )
@@ -916,7 +974,7 @@ def _lotsmall_bound_facts(
     if adult_ticket is not None:
         cost = {
             "status": "VERIFIED_PROVIDER",
-            "amount_minor": round(float(adult_ticket["amount"]) * 100),
+            "amount_minor": major_to_minor(float(adult_ticket["amount"]), "CNY"),
             "currency": "CNY",
             "source": "official_web",
             "source_url": final_url,
@@ -1090,7 +1148,7 @@ def _search_fact_candidates(
             currency = "CNY" if raw_currency in {"元", "RMB", "¥"} else raw_currency
             cost = {
                 "status": "SEARCH_CANDIDATE",
-                "amount_minor": round(float(cost_match.group("amount")) * 100),
+                "amount_minor": major_to_minor(float(cost_match.group("amount")), currency),
                 "currency": currency,
                 "source": "searxng",
                 "source_url": item.url,

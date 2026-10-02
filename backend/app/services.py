@@ -12,7 +12,7 @@ from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.execution.traveler_twin import capability_constraint_items
+from app.execution.traveler_twin import capability_constraint_items, planning_preference_items
 from app.core.audit import record_audit
 from app.db.models import (
     Activity,
@@ -35,6 +35,10 @@ from app.replanning.feasibility import (
     activity_from_record,
     build_context,
     evaluate_feasibility,
+)
+from app.replanning.candidate_evidence import (
+    canonical_place_tags,
+    verified_interest_preference_breakdown,
 )
 from app.replanning.provider_snapshots import MobilitySnapshot
 from app.planning.anchor_schedule import (
@@ -1048,35 +1052,65 @@ def _strategy_profile(intent: Mapping[str, Any]) -> str:
     return "balanced"
 
 
-def _strategy_place_score(place: Place, profile: str) -> tuple[int, int, str]:
-    haystack = " ".join(
-        [
-            str(getattr(place, "name", "") or ""),
-            str(getattr(place, "category", "") or ""),
-            str(getattr(place, "tags_json", "") or ""),
-        ]
-    ).casefold()
-    indoor = any(token in haystack for token in ("museum", "gallery", "craft", "工艺", "工藝", "美術", "美术", "文化館", "library"))
-    outdoor = any(token in haystack for token in ("garden", "park", "庭園", "庭园", "viewpoint", "historic", "temple", "shrine", "heritage"))
-    preference = (
-        3 if profile == "indoor" and indoor else
-        3 if profile == "heritage_outdoor" and outdoor else
-        3 if profile == "compact" and indoor else
-        1 if profile in {"indoor", "compact"} and outdoor else
-        1
-    )
+def _strategy_place_score(
+    place: Place,
+    profile: str,
+    traveler_preferences: Sequence[Any] | None = None,
+) -> tuple[int, int, str]:
+    """Rank a provider Place from persisted preference evidence.
+
+    Real-city ordering must be causal: a changed TravelerTwin should be able to
+    change the order without changing hard facts.  The old profile/name heuristic
+    remains only as a neutral legacy fallback when no preference evidence exists;
+    it is never allowed to become a hard feasibility or authority signal.
+    """
+
+    if traveler_preferences is not None:
+        tags = canonical_place_tags(
+            category=place.category,
+            tags=json.loads(place.tags_json or "[]"),
+        )
+        breakdown = verified_interest_preference_breakdown(
+            traveler_preferences,
+            candidate_tags=tags,
+        )
+        effective = breakdown.get("effective_preference_fit")
+        if effective is not None:
+            preference = round(float(effective) * 1000)
+        else:
+            preference = 0
+    else:
+        haystack = " ".join(
+            [
+                str(getattr(place, "name", "") or ""),
+                str(getattr(place, "category", "") or ""),
+                str(getattr(place, "tags_json", "") or ""),
+            ]
+        ).casefold()
+        indoor = any(token in haystack for token in ("museum", "gallery", "craft", "工艺", "工藝", "美術", "美术", "文化館", "library"))
+        outdoor = any(token in haystack for token in ("garden", "park", "庭園", "庭园", "viewpoint", "historic", "temple", "shrine", "heritage"))
+        preference = (
+            3 if profile == "indoor" and indoor else
+            3 if profile == "heritage_outdoor" and outdoor else
+            3 if profile == "compact" and indoor else
+            1 if profile in {"indoor", "compact"} and outdoor else
+            1
+        ) * 100
     completeness = int(_place_window(place) is not None) + int(_place_verified_cost(place) is not None)
     return preference, completeness, place.id
 
 
 def _strategy_order(
-    places: Sequence[Place], profile: str, travel: Callable[[str, str], int]
+    places: Sequence[Place],
+    profile: str,
+    travel: Callable[[str, str], int],
+    traveler_preferences: Sequence[Any] | None = None,
 ) -> list[list[Place]]:
     ranked = sorted(
         places,
         key=lambda place: (
-            -_strategy_place_score(place, profile)[0],
-            -_strategy_place_score(place, profile)[1],
+            -_strategy_place_score(place, profile, traveler_preferences)[0],
+            -_strategy_place_score(place, profile, traveler_preferences)[1],
             place.id,
         ),
     )
@@ -1090,7 +1124,7 @@ def _strategy_order(
             remaining,
             key=lambda place: (
                 travel(previous.id, place.id),
-                -_strategy_place_score(place, profile)[0],
+                -_strategy_place_score(place, profile, traveler_preferences)[0],
                 place.id,
             ),
         )
@@ -1114,6 +1148,7 @@ def _real_strategy_metrics(
     mobility_provider: Any,
     journey: Journey,
     profile: str,
+    traveler_preferences: Sequence[Any] | None = None,
 ) -> tuple[dict[str, float], dict[str, Any]]:
     """Derive candidate dimensions from measured facts, with neutral evidence made explicit."""
 
@@ -1146,9 +1181,46 @@ def _real_strategy_metrics(
     mobility_fit = max(0.0, min(1.0, 1 - travel_minutes / max(1, len(schedule) * 90)))
     time_reliability = max(0.0, min(1.0, slack_minutes / max(1, len(schedule) * 120)))
     robustness = known_ratio * (1 - degraded_edges / max(1, edge_count))
-    preference_fit = 0.5 if profile == "balanced" else sum(
-        _strategy_place_score(places[item.place_id], profile)[0] >= 3 for item in schedule
-    ) / max(1, len(schedule))
+    preference_breakdowns = []
+    if traveler_preferences is not None:
+        for item in schedule:
+            place = places[item.place_id]
+            preference_breakdowns.append(
+                verified_interest_preference_breakdown(
+                    traveler_preferences,
+                    candidate_tags=canonical_place_tags(
+                        category=place.category,
+                        tags=json.loads(place.tags_json or "[]"),
+                    ),
+                )
+            )
+    effective_values = [
+        float(item["effective_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("effective_preference_fit") is not None
+    ]
+    explicit_values = [
+        float(item["explicit_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("explicit_preference_fit") is not None
+    ]
+    learned_values = [
+        float(item["learned_soft_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("learned_soft_preference_fit") is not None
+    ]
+    if effective_values:
+        preference_fit = sum(effective_values) / len(effective_values)
+        preference_basis = "canonical Place category/tags with explicit and LEARNED_SOFT evidence"
+    elif profile == "balanced":
+        preference_fit = 0.5
+        preference_basis = "NEUTRAL_NO_PREFERENCE_SIGNAL"
+    else:
+        preference_fit = sum(
+            _strategy_place_score(places[item.place_id], profile, traveler_preferences)[0] >= 300
+            for item in schedule
+        ) / max(1, len(schedule))
+        preference_basis = "canonical Place category/tags and explicit mission profile"
     metrics = {
         "commitment_preservation": 1.0,
         "stability": round(time_reliability, 6),
@@ -1168,7 +1240,11 @@ def _real_strategy_metrics(
         "slack_minutes": slack_minutes,
         "verified_opening_count": known_opening,
         "verified_cost_count": known_cost,
-        "preference_fit_basis": "provider category/tags and mission text" if profile != "balanced" else "NEUTRAL_NO_EXPLICIT_PREFERENCE",
+        "preference_fit_basis": preference_basis,
+        "explicit_preference_fit": round(sum(explicit_values) / len(explicit_values), 6) if explicit_values else None,
+        "learned_soft_preference_fit": round(sum(learned_values) / len(learned_values), 6) if learned_values else None,
+        "effective_preference_fit": round(sum(effective_values) / len(effective_values), 6) if effective_values else None,
+        "learned_soft_is_authority": False,
         "score_sources": {
             "budget_fit": "verified activity cost / journey budget",
             "mobility_fit": "LIVE measured travel minutes",
@@ -1185,6 +1261,7 @@ def _strategy_voi_decisions(
     """Choose the next decision-sensitive fact without promoting it to truth."""
 
     decisions: list[dict[str, Any]] = []
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
     for place in places.values():
         missing: list[str] = []
         if _place_window(place) is None:
@@ -1205,10 +1282,10 @@ def _strategy_voi_decisions(
         if not source_url and isinstance(tags, Mapping):
             source_url = tags.get("website") or tags.get("contact:website") or tags.get("url")
         profile = _strategy_profile(intent)
-        preference_signal = _strategy_place_score(place, profile)[0]
+        preference_signal = _strategy_place_score(place, profile, traveler_preferences)[0]
         value = (
-            (3 if "opening_hours" in missing else 0)
-            + (2 if "cost" in missing else 0)
+            (3000 if "opening_hours" in missing else 0)
+            + (2000 if "cost" in missing else 0)
             + preference_signal
         )
         decisions.append(
@@ -1227,7 +1304,9 @@ def _strategy_voi_decisions(
 
 
 def _strategy_pivot_decisions(
-    places: Mapping[str, Place], intent: Mapping[str, Any]
+    places: Mapping[str, Place],
+    intent: Mapping[str, Any],
+    traveler_preferences: Sequence[Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Record a deliberate pivot after a source path yields no structured facts."""
 
@@ -1253,7 +1332,12 @@ def _strategy_pivot_decisions(
         and _place_verified_cost(place) is not None
         and place not in abandoned
     ]
-    replacements.sort(key=lambda place: (-_strategy_place_score(place, profile)[0], str(place.id)))
+    replacements.sort(
+        key=lambda place: (
+            -_strategy_place_score(place, profile, traveler_preferences)[0],
+            str(place.id),
+        )
+    )
     return [{
         "decision": "ABANDON_SOURCE_PATH",
         "abandoned_place_ids": [place.id for place in abandoned],
@@ -1270,6 +1354,7 @@ def _catalogue_templates(
     day_start_minutes: int = 9 * 60,
     variants: int = 3,
     intent: Mapping[str, Any] | None = None,
+    traveler_preferences: Sequence[Any] | None = None,
 ) -> list[list[tuple[str, str, str, str]]]:
     """Compose the template shape out of whatever the city's catalogue really holds.
 
@@ -1303,7 +1388,12 @@ def _catalogue_templates(
     if not eligible:
         return []
     profile = _strategy_profile(intent or {})
-    orders = _strategy_order(eligible, profile, travel)[: max(1, variants)]
+    orders = _strategy_order(
+        eligible,
+        profile,
+        travel,
+        traveler_preferences,
+    )[: max(1, variants)]
 
     def pack(sequence: Sequence[Place]) -> list[tuple[str, str, str, str]]:
         schedule: list[tuple[str, str, str, str]] = []
@@ -1412,11 +1502,12 @@ def _provisional_catalogue_plan(
     }
     strategy_intent = _latest_strategy_intent(session, journey)
     strategy_profile = _strategy_profile(strategy_intent)
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
     places.sort(
         key=lambda item: (
             -int(_coursework_facts_cover(item)),
-            -_strategy_place_score(item, strategy_profile)[0],
-            -_strategy_place_score(item, strategy_profile)[1],
+            -_strategy_place_score(item, strategy_profile, traveler_preferences)[0],
+            -_strategy_place_score(item, strategy_profile, traveler_preferences)[1],
             -int(_coursework_estimate_covers(item)),
             0 if item.id in requested_order else 1,
             requested_order.get(item.id, preferred.get(str(item.category).casefold(), 9)),
@@ -1817,6 +1908,8 @@ def _generic_compose_plans(
     if len(places) < 2:
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
 
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+
     # Agent discovery commonly hands this seam the whole real-city catalogue.
     # Preserve caller order for demo/fixture and mixed inputs, but let a
     # provider-backed city use the same fact/profile signal as the native
@@ -1834,8 +1927,8 @@ def _generic_compose_plans(
         ranked_places = sorted(
             places.values(),
             key=lambda place: (
-                -_strategy_place_score(place, strategy_profile)[0],
-                -_strategy_place_score(place, strategy_profile)[1],
+                -_strategy_place_score(place, strategy_profile, traveler_preferences)[0],
+                -_strategy_place_score(place, strategy_profile, traveler_preferences)[1],
                 str(place.id),
             ),
         )
@@ -2046,6 +2139,7 @@ def _generic_compose_plans(
         mobility_provider,
         journey,
         strategy_profile,
+        traveler_preferences,
     )
     breakdown = {**metrics, "total": _score(metrics)}
     now = iso_now()
@@ -2178,13 +2272,14 @@ def _generic_compose_variants(
     if provider_backed:
         strategy_intent = _latest_strategy_intent(session, journey)
         strategy_profile = _strategy_profile(strategy_intent)
+        traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
         ranked = [
             place.id
             for place in sorted(
                 places_for_scope.values(),
                 key=lambda place: (
-                    -_strategy_place_score(place, strategy_profile)[0],
-                    -_strategy_place_score(place, strategy_profile)[1],
+                    -_strategy_place_score(place, strategy_profile, traveler_preferences)[0],
+                    -_strategy_place_score(place, strategy_profile, traveler_preferences)[1],
                     str(place.id),
                 ),
             )
@@ -2541,8 +2636,13 @@ def generate_plans(
     constraints = _journey_constraints_with_capabilities(session, journey)
     strategy_intent = _latest_strategy_intent(session, journey)
     strategy_profile = _strategy_profile(strategy_intent)
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
     voi_decisions = _strategy_voi_decisions(session, journey, places, strategy_intent)
-    pivot_decisions = _strategy_pivot_decisions(places, strategy_intent)
+    pivot_decisions = _strategy_pivot_decisions(
+        places,
+        strategy_intent,
+        traveler_preferences,
+    )
     record_audit(
         session,
         action="strategy.value_of_information",
@@ -2612,6 +2712,7 @@ def generate_plans(
             places,
             lambda origin, destination: travel_minutes.get((origin, destination), 0),
             intent=strategy_intent,
+            traveler_preferences=traveler_preferences,
         )
     schedules: list[list[CandidateActivity]] = []
     for template in raw_templates:
@@ -2716,7 +2817,12 @@ def generate_plans(
             )
             continue
         metrics, score_provenance = _real_strategy_metrics(
-            schedule, places, mobility_provider, journey, strategy_profile
+            schedule,
+            places,
+            mobility_provider,
+            journey,
+            strategy_profile,
+            traveler_preferences,
         )
         # Version numbers remain contiguous among accepted candidates even
         # when an earlier raw template is rejected by a hard constraint.

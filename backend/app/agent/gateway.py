@@ -605,8 +605,19 @@ class AgentToolGateway:
 
     def inspect_twin(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
-        from app.main import _twin_snapshot
+        from app.main import _ensure_opportunity_window_event, _twin_snapshot
         from app.agent.predictive import standby_portfolio
+        from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
+        # Opportunity is a server-derived signal.  Materialise it while the
+        # model is inspecting the live Twin so the Agent discovers the window
+        # through the same surface as every other current-world fact.
+        opportunity_event = None
+        if getattr(journey, "status", None) == "ACTIVE" and getattr(
+            journey, "active_plan_version_id", None
+        ):
+            opportunity_event = _ensure_opportunity_window_event(self.session, journey)
+        if opportunity_event is not None:
+            self.session.commit()
         # A mission may be created before the event is attached. Expose the
         # server-owned choice set so an autonomous model can discover reality
         # through inspection. Recency is not silently treated as relevance.
@@ -617,12 +628,27 @@ class AgentToolGateway:
         savepoint = self.session.begin_nested()
         try:
             twin = _twin_snapshot(self.session, journey)
+            traveler_id = getattr(journey, "traveler_id", None)
+            traveler_twin = (
+                snapshot_payload(refresh_snapshot(self.session, traveler_id))
+                if traveler_id
+                else {}
+            )
         finally:
             savepoint.rollback()
+        compact_twin = {
+            "explicit_preferences": traveler_twin.get("explicit_preferences", []),
+            "learned_soft_preferences": traveler_twin.get("learned_soft_preferences", []),
+            "conflicts": traveler_twin.get("conflicts", []),
+            "confidence": traveler_twin.get("confidence", 0.0),
+            "evidence_count": traveler_twin.get("evidence_count", 0),
+        }
+        twin["traveler_twin_context"] = compact_twin
         return {
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "twin": twin,
+            "traveler_twin_context": compact_twin,
             "standby_portfolio": (
                 standby_portfolio(self.session, journey, trigger)
                 if selection_error is None

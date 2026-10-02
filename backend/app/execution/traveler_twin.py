@@ -43,7 +43,14 @@ def _place_tags(session: Session, activity: Activity | None) -> set[str]:
     if activity is None or not activity.place_id:
         return set()
     place = session.get(Place, activity.place_id)
-    return {str(item).strip().lower() for item in _load(place.tags_json if place else "[]", [])}
+    if place is None:
+        return set()
+    tags = {str(item).strip().lower() for item in _load(place.tags_json, []) if str(item).strip()}
+    category = str(place.category or "").strip().lower()
+    if category:
+        tags.add(category)
+        tags.add(f"category:{category}")
+    return tags
 
 
 def _explicit_items(session: Session, traveler_id: str) -> list[dict[str, Any]]:
@@ -67,25 +74,66 @@ def _explicit_items(session: Session, traveler_id: str) -> list[dict[str, Any]]:
     ]
 
 
-def _event_signal(session: Session, event: JourneyOutcomeEvent) -> tuple[str, str] | None:
+def _event_signal(session: Session, event: JourneyOutcomeEvent) -> dict[str, Any] | None:
+    """Extract only decision-bearing preference evidence.
+
+    Execution telemetry is deliberately not preference truth.  A completion or
+    skip can be caused by a lock, a disruption, or simply having no alternative
+    choice.  Only an explicit user statement or an explicitly marked voluntary
+    choice is learnable here.
+    """
+
     activity = session.get(Activity, event.activity_id) if event.activity_id else None
     tags = _place_tags(session, activity)
+    place = session.get(Place, activity.place_id) if activity and activity.place_id else None
     payload = _load(event.payload_json, {})
     explicit = str(payload.get("preference_dimension") or "").strip().lower()
     if explicit in {"indoor", "outdoor", "low_walking", "cultural", "food"}:
         direction = str(payload.get("direction") or explicit).strip().lower()
-        return explicit, direction
-    if event.event_type in {"ACTIVITY_COMPLETED", "USER_ACCEPTED"}:
-        if "indoor" in tags:
-            return "indoor", "indoor"
-        if "outdoor" in tags or "scenic" in tags or "waterfront" in tags:
-            return "indoor", "outdoor"
-    if event.event_type in {"ACTIVITY_SKIPPED", "USER_REJECTED", "MANUAL_OVERRIDE"}:
-        if "outdoor" in tags or "scenic" in tags or "waterfront" in tags:
-            return "indoor", "indoor"
-        if "indoor" in tags:
-            return "indoor", "outdoor"
-    return None
+        return {
+            "dimension": explicit,
+            "direction": direction,
+            "evidence_class": "EXPLICIT_USER_FEEDBACK",
+            "strength": 0.9,
+            "confidence": 0.95,
+            "explanation": "The traveler explicitly stated a preference in the outcome payload.",
+        }
+
+    voluntary = bool(payload.get("voluntary_choice") or payload.get("user_chose"))
+    forced = bool(
+        payload.get("forced_by_disruption")
+        or payload.get("locked_activity")
+        or payload.get("no_alternative")
+        or payload.get("replan_removed")
+    )
+    if not voluntary or forced or activity is None or activity.locked:
+        return None
+    if event.event_type not in {"USER_ACCEPTED", "USER_REJECTED", "MANUAL_OVERRIDE"}:
+        return None
+
+    # Voluntary choices use canonical provider category/tags.  They never infer
+    # capability or a personality trait, and plain execution events never reach
+    # this branch.
+    dimension = str(payload.get("learning_dimension") or "interest").strip().lower()
+    if dimension == "interest":
+        category = str(place.category or "").strip().lower() if place is not None else ""
+        if not category:
+            category = next((item for item in sorted(tags) if not item.startswith("category:")), None)
+        if category is None:
+            return None
+        direction = category
+    else:
+        direction = str(payload.get("learning_direction") or dimension).strip().lower()
+    if event.event_type in {"USER_REJECTED"}:
+        direction = f"avoid:{direction}"
+    return {
+        "dimension": dimension,
+        "direction": direction,
+        "evidence_class": "VOLUNTARY_CHOICE",
+        "strength": 0.55,
+        "confidence": 0.7,
+        "explanation": "The traveler made an explicitly voluntary choice; execution telemetry alone is not used.",
+    }
 
 
 def _active_evidence(session: Session, traveler_id: str) -> list[TravelerPreferenceEvidence]:
@@ -176,8 +224,12 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
     learned: list[dict[str, Any]] = []
     for (dimension, direction), items in sorted(grouped.items()):
         count = sum(max(1, int(item.evidence_count)) for item in items)
-        strength = min(1.0, round(0.18 * count + 0.04 * max(0, count - 1), 3))
-        confidence = min(0.95, round(0.25 + 0.15 * max(0, count - 1), 3))
+        strength = min(1.0, round(max(float(item.strength) for item in items), 3))
+        confidence = min(0.95, round(max(float(item.confidence) for item in items), 3))
+        evidence_class = max(
+            items,
+            key=lambda item: (float(item.strength), float(item.confidence), item.created_at),
+        ).evidence_type
         learned.append(
             {
                 "dimension": dimension,
@@ -186,11 +238,13 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                 "confidence": confidence,
                 "evidence_count": count,
                 "source": "LEARNED_SOFT",
+                "evidence_class": evidence_class,
                 "explanation": items[-1].explanation,
                 "evidence_ids": [item.id for item in items],
                 "journey_ids": sorted({item.journey_id for item in items if item.journey_id}),
                 "last_evidence_at": items[-1].created_at,
                 "expires_at": items[-1].expires_at,
+                "override_state": "EXPLICIT_WINS" if dimension in {item["dimension"] for item in explicit} else "LEARNED_ACTIVE",
             }
         )
     explicit_keys = {(item["category"], item["dimension"]) for item in explicit}
@@ -270,9 +324,14 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
     for event in events:
         signal = _event_signal(session, event)
         if signal is not None:
-            grouped[signal].append(event)
+            grouped[(str(signal["dimension"]), str(signal["direction"]))].append(event)
     now = _now()
     for (dimension, direction), rows in grouped.items():
+        signal_classes = [_event_signal(session, event) for event in rows]
+        signal_classes = [item for item in signal_classes if item is not None]
+        if not signal_classes:
+            continue
+        strongest = max(signal_classes, key=lambda item: float(item["strength"]))
         existing = session.scalar(
             select(TravelerPreferenceEvidence)
             .where(
@@ -284,10 +343,7 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
             )
             .order_by(TravelerPreferenceEvidence.created_at.desc())
         )
-        explanation = (
-            f"Journey outcome evidence recorded {len(rows)} actual decision(s): "
-            f"the traveler accepted/completed evidence consistent with {direction}."
-        )
+        explanation = str(strongest["explanation"])
         related = [item.id for item in rows]
         if existing is None:
             session.add(
@@ -295,12 +351,12 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
                     id=str(uuid4()),
                     traveler_id=journey.traveler_id,
                     journey_id=journey.id,
-                    evidence_type="BEHAVIORAL_SOFT",
+                    evidence_type=str(strongest["evidence_class"]),
                     preference_dimension=dimension,
                     direction=direction,
-                    strength=min(1.0, 0.18 * len(rows)),
-                    confidence=min(0.95, 0.25 + 0.15 * max(0, len(rows) - 1)),
-                    source="OUTCOME_TELEMETRY",
+                    strength=float(strongest["strength"]),
+                    confidence=float(strongest["confidence"]),
+                    source="USER_FEEDBACK" if strongest["evidence_class"] == "EXPLICIT_USER_FEEDBACK" else "VOLUNTARY_OUTCOME",
                     evidence_count=len(rows),
                     explanation=explanation,
                     related_ids_json=_json(related),
@@ -311,6 +367,9 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
             )
         else:
             existing.evidence_count = max(existing.evidence_count, len(rows))
+            existing.evidence_type = str(strongest["evidence_class"])
+            existing.strength = max(float(existing.strength), float(strongest["strength"]))
+            existing.confidence = max(float(existing.confidence), float(strongest["confidence"]))
             existing.related_ids_json = _json(
                 sorted(set(_load(existing.related_ids_json, []) + related))
             )

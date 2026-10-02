@@ -290,7 +290,11 @@ from app.planning.solver_v2 import (
     solve_v2,
     solver_v2_problem_fingerprint,
 )
-from app.replanning.candidate_evidence import verified_interest_preference_fit
+from app.replanning.candidate_evidence import (
+    canonical_place_tags,
+    verified_interest_preference_breakdown,
+    verified_interest_preference_fit,
+)
 from app.replanning.feasibility import (
     CANONICAL_RULE_CODES,
     FeasibilityActivity,
@@ -1480,6 +1484,9 @@ def put_guardian_mission(
     return mission_payload(mission)
 
 
+MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES = 30
+
+
 def _ensure_opportunity_window_event(session: Session, journey: Journey) -> EventModel | None:
     """Persist one server-derived opportunity signal from the current Twin.
 
@@ -1572,13 +1579,14 @@ def _ensure_opportunity_window_event(session: Session, journey: Journey) -> Even
         commitment_start - timedelta(minutes=next_fact.minutes + 15),
     )
     available_minutes = int((must_depart_by - opens_at).total_seconds() // 60)
-    if available_minutes <= 0:
+    if available_minutes < MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES:
         return None
     payload = {
         "signal_kind": "OPPORTUNITY_WINDOW",
         "opens_at": opens_at.isoformat(),
         "must_depart_by": must_depart_by.isoformat(),
         "available_minutes": available_minutes,
+        "minimum_actionable_window_min": MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES,
         "current_activity_id": twin.get("current_activity_id"),
         "current_execution_activity_id": execution.get("now_activity_id"),
         "current_execution_location": current_location,
@@ -10008,47 +10016,16 @@ def generate_replan(
         if any(datetime.fromisoformat(start) > effective_event_time for _, start in c4_anchors)
         else None
     )
-    opportunity_choice: ReplacementChoice | None = None
+    opportunity_choices: list[ReplacementChoice] = []
     opportunity_anchor: Activity | None = None
     if trigger_event.event_type == "OPPORTUNITY_WINDOW":
         # Agent-provided ids are only bounded search hints.  The server owns
         # identity, canonical facts, and the active-plan exclusion.
-        hinted_ids = [str(item) for item in (body.place_ids or [])]
+        hinted_ids = list(dict.fromkeys(str(item) for item in (body.place_ids or [])))[:3]
         occupied_place_ids = {str(item.place_id) for item in source if item.place_id}
-        candidate_place = next(
-            (
-                places_by_id.get(item)
-                for item in hinted_ids
-                if places_by_id.get(item) is not None
-            ),
-            None,
-        )
-        if candidate_place is None:
+        if not hinted_ids:
             raise HTTPException(422, "OPPORTUNITY_CANDIDATE_REQUIRED")
-        if candidate_place.id in occupied_place_ids:
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_ALREADY_ACTIVE")
-        if candidate_place.provider_key in _SERVER_OWNED_PLACE_PROVIDERS:
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_NOT_CITY_PLACE")
-        if not candidate_place.external_id or not candidate_place.provider_key:
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_PROVIDER_IDENTITY_MISSING")
-        candidate_meta = _json_object(candidate_place.metadata_json)
-        candidate_cost = candidate_meta.get("cost_evidence")
-        if not isinstance(candidate_cost, dict) or str(candidate_cost.get("status") or "UNKNOWN").upper() not in {
-            "KNOWN",
-            "VERIFIED_PROVIDER",
-        } or candidate_cost.get("amount_minor") is None:
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_COST_UNKNOWN")
-        if str(candidate_cost.get("currency") or "").upper() != str(journey.budget_currency).upper():
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_CURRENCY_MISMATCH")
-        candidate_opening = normalize_opening_hours(
-            json.loads(candidate_place.opening_hours_json or "{}")
-        )
-        if candidate_opening.get("status") not in {
-            "NORMALIZED_VALID",
-            "OFFICIAL_WEB_VERIFIED",
-            "VERIFIED_PROVIDER",
-        }:
-            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_OPENING_UNKNOWN")
+        candidate_failures: list[dict[str, str]] = []
         opportunity_anchor = next(
             (
                 item
@@ -10082,18 +10059,62 @@ def generate_replan(
         effective_event_time = max(
             effective_event_time, datetime.fromisoformat(current_execution.end_at)
         )
-        visit_minutes = int(candidate_meta.get("typical_visit_minutes") or 30)
-        if visit_minutes <= 0 or visit_minutes > 240:
-            raise HTTPException(422, "OPPORTUNITY_VISIT_DURATION_UNSUPPORTED")
-        opportunity_choice = ReplacementChoice(
-            place_id=candidate_place.id,
-            title=candidate_place.name,
-            duration_min=visit_minutes,
-            cost_minor=int(candidate_cost["amount_minor"]),
-            reason_codes=("OPPORTUNITY_WINDOW_F4", "CANONICAL_COST", "CANONICAL_OPENING"),
-        )
-        _need_pair(_activity_location(current_execution), opportunity_choice.place_id)
-        _need_pair(opportunity_choice.place_id, _activity_location(opportunity_anchor))
+        for hinted_id in hinted_ids:
+            candidate_place = places_by_id.get(hinted_id)
+            failure = None
+            if candidate_place is None:
+                failure = "PLACE_NOT_FOUND"
+            elif candidate_place.id in occupied_place_ids:
+                failure = "ALREADY_ACTIVE"
+            elif candidate_place.provider_key in _SERVER_OWNED_PLACE_PROVIDERS:
+                failure = "NOT_CITY_PLACE"
+            elif not candidate_place.external_id or not candidate_place.provider_key:
+                failure = "PROVIDER_IDENTITY_MISSING"
+            if failure is not None:
+                candidate_failures.append({"place_id": hinted_id, "reason": failure})
+                continue
+            candidate_meta = _json_object(candidate_place.metadata_json)
+            candidate_cost = candidate_meta.get("cost_evidence")
+            if (
+                not isinstance(candidate_cost, dict)
+                or str(candidate_cost.get("status") or "UNKNOWN").upper()
+                not in {"KNOWN", "VERIFIED_PROVIDER"}
+                or candidate_cost.get("amount_minor") is None
+            ):
+                candidate_failures.append({"place_id": hinted_id, "reason": "COST_UNKNOWN"})
+                continue
+            if str(candidate_cost.get("currency") or "").upper() != str(journey.budget_currency).upper():
+                candidate_failures.append({"place_id": hinted_id, "reason": "CURRENCY_MISMATCH"})
+                continue
+            candidate_opening = normalize_opening_hours(
+                json.loads(candidate_place.opening_hours_json or "{}")
+            )
+            if candidate_opening.get("status") not in {
+                "NORMALIZED_VALID",
+                "OFFICIAL_WEB_VERIFIED",
+                "VERIFIED_PROVIDER",
+            }:
+                candidate_failures.append({"place_id": hinted_id, "reason": "OPENING_UNKNOWN"})
+                continue
+            visit_minutes = int(candidate_meta.get("typical_visit_minutes") or 30)
+            if visit_minutes <= 0 or visit_minutes > 240:
+                candidate_failures.append({"place_id": hinted_id, "reason": "VISIT_DURATION_UNSUPPORTED"})
+                continue
+            opportunity_choices.append(
+                ReplacementChoice(
+                    place_id=candidate_place.id,
+                    title=candidate_place.name,
+                    duration_min=visit_minutes,
+                    cost_minor=int(candidate_cost["amount_minor"]),
+                    reason_codes=("OPPORTUNITY_WINDOW_F4", "CANONICAL_COST", "CANONICAL_OPENING"),
+                )
+            )
+        if not opportunity_choices:
+            reason = candidate_failures[0]["reason"] if candidate_failures else "NO_VALID_CANDIDATE"
+            raise HTTPException(422, f"OPPORTUNITY_CANDIDATES_NONE_FEASIBLE:{reason}")
+        for opportunity_choice in opportunity_choices:
+            _need_pair(_activity_location(current_execution), opportunity_choice.place_id)
+            _need_pair(opportunity_choice.place_id, _activity_location(opportunity_anchor))
     for choice in replacement_choices:
         _need_pair(_activity_location(current_execution or previous_affected), choice.place_id)
         _need_pair(_activity_location(previous_affected), choice.place_id)
@@ -10416,31 +10437,32 @@ def generate_replan(
     heuristic_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
-    if opportunity_choice is not None and opportunity_anchor is not None:
+    if opportunity_choices and opportunity_anchor is not None:
         origin = _activity_location(current_execution)
         destination = _activity_location(opportunity_anchor)
-        try:
-            inbound = _replan_estimate(
-                session,
-                journey,
-                mobility,
-                origin,
-                opportunity_choice.place_id,
-                operation_key=f"opportunity-inbound:{trigger_id}",
-            )
-            outbound = _replan_estimate(
-                session,
-                journey,
-                mobility,
-                opportunity_choice.place_id,
-                destination,
-                operation_key=f"opportunity-outbound:{trigger_id}",
-            )
-        except MobilityDataUnavailable as exc:
-            mobility_unavailable_pairs.add(str(exc))
-            mobility_gaps.append(_mobility_gap_from(exc))
-            failed_reasons.add(exc.reason_code)
-        else:
+        for opportunity_choice in opportunity_choices:
+            try:
+                inbound = _replan_estimate(
+                    session,
+                    journey,
+                    mobility,
+                    origin,
+                    opportunity_choice.place_id,
+                    operation_key=f"opportunity-inbound:{trigger_id}:{opportunity_choice.place_id}",
+                )
+                outbound = _replan_estimate(
+                    session,
+                    journey,
+                    mobility,
+                    opportunity_choice.place_id,
+                    destination,
+                    operation_key=f"opportunity-outbound:{trigger_id}:{opportunity_choice.place_id}",
+                )
+            except MobilityDataUnavailable as exc:
+                mobility_unavailable_pairs.add(str(exc))
+                mobility_gaps.append(_mobility_gap_from(exc))
+                failed_reasons.add(exc.reason_code)
+                continue
             candidate_place = session.get(Place, opportunity_choice.place_id)
             opening = normalize_opening_hours(
                 json.loads(candidate_place.opening_hours_json or "{}")
@@ -10746,7 +10768,10 @@ def generate_replan(
                 )
                 if candidate_latest <= candidate_earliest:
                     continue
-                candidate_tags = set(json.loads(candidate_place.tags_json or "[]"))
+                candidate_tags = canonical_place_tags(
+                    category=candidate_place.category,
+                    tags=json.loads(candidate_place.tags_json or "[]"),
+                )
                 preference_fit = verified_interest_preference_fit(
                     traveler_preferences, candidate_tags=candidate_tags
                 )
@@ -10907,7 +10932,10 @@ def generate_replan(
             latest_end_min = _minute_from_start(closes_at)
             if latest_end_min <= earliest_start_min:
                 continue
-            candidate_tags = set(json.loads(candidate_place.tags_json or "[]"))
+            candidate_tags = canonical_place_tags(
+                category=candidate_place.category,
+                tags=json.loads(candidate_place.tags_json or "[]"),
+            )
             solver_preference_fit = verified_interest_preference_fit(
                 traveler_preferences, candidate_tags=candidate_tags
             )
@@ -11546,6 +11574,11 @@ def generate_replan(
         )
         travel_delta = _frozen_route_total(copied) - base_route_total
         preference_fit = None
+        preference_breakdown: dict[str, Any] = {
+            "explicit_preference_fit": None,
+            "learned_soft_preference_fit": None,
+            "effective_preference_fit": None,
+        }
         opportunity_value = None
         if spec.v2_plan is not None:
             preference_milli = int(spec.v2_plan.objective_breakdown.get("preference_milli", 0))
@@ -11553,7 +11586,13 @@ def generate_replan(
             preference_fit = min(1.0, max(0.0, preference_milli / (1000 * slot_count)))
         elif replacement_choice is not None:
             replacement_place = session.get(Place, replacement_choice.place_id)
-            replacement_tags = set(json.loads(replacement_place.tags_json or "[]"))
+            replacement_tags = canonical_place_tags(
+                category=replacement_place.category,
+                tags=json.loads(replacement_place.tags_json or "[]"),
+            )
+            preference_breakdown = verified_interest_preference_breakdown(
+                traveler_preferences, candidate_tags=replacement_tags
+            )
             preference_fit = verified_interest_preference_fit(
                 traveler_preferences, candidate_tags=replacement_tags
             )
@@ -11583,6 +11622,17 @@ def generate_replan(
             commitments_preserved=True,
             preference_fit=preference_fit,
             opportunity_value=opportunity_value,
+        )
+        score.breakdown.update(
+            {
+                "hard_feasibility": "PASS",
+                "explicit_preference_contribution": preference_breakdown["explicit_preference_fit"],
+                "learned_soft_preference_contribution": preference_breakdown[
+                    "learned_soft_preference_fit"
+                ],
+                "effective_preference_fit": preference_breakdown["effective_preference_fit"],
+                "learned_soft_is_authority": False,
+            }
         )
         proposed.utility_score = score.total
         proposed.score_breakdown_json = json.dumps(score.breakdown, sort_keys=True)
