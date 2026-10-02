@@ -1,0 +1,129 @@
+{
+ "taken_at_local": "2026-10-03T00:17:04+0800",
+ "live_tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "r6": "868bc514f77be7b42639e447ddf842ed86389d45",
+ "r7": "c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574",
+ "r6_fork_point": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
+ "operand_source": [
+  "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_byte_carry_r1.json",
+  "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json"
+ ],
+ "product_paths_checked": 9,
+ "paths_already_byte_equal": 7,
+ "paths_where_blobs_differ": 2,
+ "paths_not_on_tip": 0,
+ "added_lines_total": 550,
+ "added_lines_missing_on_tip_total": 0,
+ "rows": [
+  {
+   "path": "backend/app/main.py",
+   "state": "BLOBS_DIFFER",
+   "candidate_blob": "6448e5e74c394c18aad96c231ef4865540a75f20",
+   "tip_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "merged_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "merged_equals_tip": true,
+   "added_lines_measured": 12,
+   "added_lines_present_on_tip": 12,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "tip_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "merged_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "merged_equals_tip": true,
+   "added_lines_measured": 103,
+   "added_lines_present_on_tip": 103,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "state": "BLOBS_DIFFER",
+   "candidate_blob": "6497d6a1fd02b12e5864c061b428eabb0f020957",
+   "tip_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+   "merged_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+   "merged_equals_tip": true,
+   "added_lines_measured": 2,
+   "added_lines_present_on_tip": 2,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "tip_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "merged_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "merged_equals_tip": true,
+   "added_lines_measured": 157,
+   "added_lines_present_on_tip": 157,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/playwright.ord0500-checkin.config.ts",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "tip_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "merged_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "merged_equals_tip": true,
+   "added_lines_measured": 28,
+   "added_lines_present_on_tip": 28,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/src/features/checkin/checkinCopy.ts",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "tip_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "merged_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "merged_equals_tip": true,
+   "added_lines_measured": 111,
+   "added_lines_present_on_tip": 111,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/src/features/checkin/checkins.ts",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "tip_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "merged_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "merged_equals_tip": true,
+   "added_lines_measured": 59,
+   "added_lines_present_on_tip": 59,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/src/features/checkin/footprint.css",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "tip_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "merged_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "merged_equals_tip": true,
+   "added_lines_measured": 21,
+   "added_lines_present_on_tip": 21,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  },
+  {
+   "path": "frontend/src/features/trip/TripItinerary.tsx",
+   "state": "ALREADY_BYTE_EQUAL",
+   "candidate_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "tip_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "merged_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "merged_equals_tip": true,
+   "added_lines_measured": 57,
+   "added_lines_present_on_tip": 57,
+   "added_lines_missing_on_tip": 0,
+   "missing_examples": []
+  }
+ ],
+ "how_counted": "added lines = git diff --unified=0 <fork> <r6> -- <path>, stripped, length >= 12, punctuation-only dropped; presence = substring test against git show <tip>:<path> text",
+ "limit": "line presence proves the words are in the tip's file, not that the behaviour runs; behaviour belongs to the lane's own e2e arms"
+}

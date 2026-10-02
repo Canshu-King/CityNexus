@@ -1,0 +1,134 @@
+{
+ "live_tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "candidate": "c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574",
+ "fork_point": "4ad955e3db6008feac2820a45c45ff7176d0b560",
+ "predicted_tree": "b2d77e7063a5108f51aed340941c7f20853f2bf2",
+ "summary": {
+  "write_set": 1,
+  "carries_the_lane_blob": 1,
+  "does_not_carry": 0,
+  "paths_not_carried": [],
+  "landing_scope_paths": 1,
+  "landing_scope_product_paths": 0,
+  "landing_scope_evidence_paths": 1,
+  "r6_landing_scope_paths": 40,
+  "r6_landing_scope_product_paths": 0,
+  "r6_conflicted_path_count": 21,
+  "r6_conflicted_product_paths": [],
+  "r6_product_write_set_paths": 9,
+  "r6_product_write_set_already_byte_equal_on_tip": 7,
+  "r6_product_write_set_still_different_from_tip": [
+   "backend/app/main.py",
+   "contracts/openapi.yaml"
+  ],
+  "r7_product_write_set_paths": 0
+ },
+ "product_paths_in_landing_scope": [],
+ "rows": [
+  {
+   "path": "review/ord0500-checkin/tools/r6_block.py",
+   "candidate_blob": "d04b932ac44278b949c7e549d66c3ce3f497c9e2",
+   "tip_blob": "e9cf9a50bb24f685a46bca9b21af47b228c13126",
+   "merged_blob": "d04b932ac44278b949c7e549d66c3ce3f497c9e2",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": false,
+   "in_conflict_list": false
+  }
+ ],
+ "scope_rows": [
+  {
+   "path": "review/ord0500-checkin/tools/r6_block.py",
+   "merged_blob": "d04b932ac44278b949c7e549d66c3ce3f497c9e2",
+   "tip_blob": "e9cf9a50bb24f685a46bca9b21af47b228c13126",
+   "candidate_blob": "d04b932ac44278b949c7e549d66c3ce3f497c9e2",
+   "conflict_markers": 0,
+   "is_evidence": true,
+   "merged_equals_candidate": true
+  }
+ ],
+ "r6_product_write_set": [
+  {
+   "path": "backend/app/main.py",
+   "candidate_blob": "6448e5e74c394c18aad96c231ef4865540a75f20",
+   "tip_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "merged_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "merged_equals_candidate": false,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+   "candidate_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "tip_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "merged_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "candidate_blob": "6497d6a1fd02b12e5864c061b428eabb0f020957",
+   "tip_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+   "merged_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+   "merged_equals_candidate": false,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+   "candidate_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "tip_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "merged_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/playwright.ord0500-checkin.config.ts",
+   "candidate_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "tip_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "merged_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/src/features/checkin/checkinCopy.ts",
+   "candidate_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "tip_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "merged_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/src/features/checkin/checkins.ts",
+   "candidate_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "tip_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "merged_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/src/features/checkin/footprint.css",
+   "candidate_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "tip_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "merged_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  },
+  {
+   "path": "frontend/src/features/trip/TripItinerary.tsx",
+   "candidate_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "tip_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "merged_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "merged_equals_candidate": true,
+   "merged_equals_tip": true,
+   "in_conflict_list": false
+  }
+ ],
+ "r7_product_write_set": [],
+ "landed_parent_subject": "ORD-0500 r7: ship the emitter that actually produced the page, with its generation derived from the build receipt instead of baked in"
+}
