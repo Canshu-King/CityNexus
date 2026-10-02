@@ -24,6 +24,7 @@ MUT_RECEIPT = "citation_gate_%s_mutants.json" % GEN
 RECHECK_RECEIPT = os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_%s.json" % GEN
 ARM_RECEIPT = os.environ.get("ARM_RECEIPT") or "branch_emit_arm_%s.json" % GEN
 AUD_RECEIPT = os.environ.get("AUD_RECEIPT") or "citation_audit_%s.json" % GEN
+FMT_RECEIPT = os.environ.get("FMT_RECEIPT") or "fmt_lint_%s.json" % GEN
 RECEIPT_DIR = "review/ord0500-checkin/receipts"
 WT = os.path.join(B.LANE, "wt22")
 FOREIGN_SPEC = "backend/tests/test_qoder_ord0476_checkins.py"
@@ -38,6 +39,7 @@ def main():
     aud = B.load(AUD_RECEIPT)
     vocab = B.load("checkin_copy_rows_mutants_r6.json")
     rcpt = B.load(RECHECK_RECEIPT)
+    fmt = B.load(FMT_RECEIPT)
     land = B.load("landing_r6.json")
     collect = B.load("pytest_collectonly_%s.json" % GEN)
     # `branch_emit_arm_r16.py` pulled the emitter copy out of EVERY already-published ref in this family
@@ -92,6 +94,10 @@ def main():
         ("枝里那份发射器＝刚跑这页的这枚", emitter_same,
          {"ref": my_short, "bytes_in_ref": len(_in_ref.encode("utf-8", "replace")),
           "bytes_of_this_program": len(_lane)}),
+        ("静态 arity 尺绿且自检咬下", fmt.get("verdict") == "GREEN"
+        and (fmt.get("selftest") or {}).get("verdict") == "PASS",
+         {"calls_checked": fmt.get("calls_checked"), "mismatched": len(fmt.get("mismatched") or []),
+          "selftest": (fmt.get("selftest") or {}).get("verdict")}),
     ]
     RED_CHECK_NAMES = [c[0] for c in RED_CHECKS]
     B.refuse_on_red(REF_GEN, RED_CHECKS)
@@ -136,9 +142,18 @@ def main():
     if gate.get("tip") != remote:
         raise SystemExit("ABORT_GATE_STALE gate read %s, the ref is %s -- re-run the gate"
                          % (gate.get("tip"), remote))
+    # the line moves every few minutes here, so the arm being a commit or two behind is not a reason to
+    # refuse a page -- an arm that ran against a tip that is NOT behind this one (or ran against a branch
+    # that has since been rewritten) is.  What must hold is: arm.tip is an ancestor of the live tip, and
+    # my own citations still resolve on the live tip, which is re-measured below.
+    arm_lag = "NOT_MEASURED"
     if arm.get("tip") != live_tip:
-        raise SystemExit("ABORT_ARM_STALE the emitter-arm ran against tip %s, the line answers %s"
-                         % (arm.get("tip"), live_tip))
+        rca, _ = B.sh(["merge-base", "--is-ancestor", arm.get("tip") or "", live_tip])
+        if rca != 0:
+            raise SystemExit("ABORT_ARM_STALE the emitter-arm ran against tip %s which is not an "
+                             "ancestor of the line (%s)" % (arm.get("tip"), live_tip))
+        rcl, arm_lag = B.sh(["rev-list", "--count", "%s..%s" % (arm.get("tip"), live_tip)])
+        arm_lag = arm_lag.strip()
     if not emitter_same:
         raise SystemExit("ABORT_EMITTER_BYTES_DIFFER the emitter copy inside %s is not the program "
                          "writing this page (%d bytes in the ref, %d here) -- stage it and re-cut"
@@ -268,7 +283,7 @@ def main():
           land["live_tip"], live_tip, B.slot(lag), live_tip[:12],
           "`、`".join(str(_anchors[k]) for k in ("require", "lookup", "integrity", "caught_by")),
           "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
-          B.fmt(len(_rot)), B.fmt(len(_eq)), B.fmt(sum(1 for v in _eq.values() if v)),
+          B.fmt(len(_rot)), B.fmt(len(_eq)), B.fmt(sum(1 for v in _eq.values() if v is True)),
           B.fmt(len(mine_changed)), "`、`".join(mine_changed) or "无", B.fmt(len(_moved))))
     A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `%s` 是落件的那一代**"
       "（`receipts/%s` 等三件在 `%s` 这一代写进枝里）。两者的差别只有 `tip`/`branch`/"
@@ -311,14 +326,17 @@ def main():
     A("- %s 枚**已发布**枝里带发射器，当场跑起来 %s 枚、跑不起来 %s 枚（判语集合 %s）。本枝 `%s` 不在"
       "这张表里，也不是漏了：那张表要读的就是正在写这页的程序自己产出的件，让自己测自己是循环论证。本枝这"
       "一枚换一种证法，而且更硬——把 `HEAD:review/ord0500-checkin/tools/r10_block.py` 与刚跑完这页的这一枚"
-      "逐字节比（ LF 归一后 %s 字节 对 %s 字节，相等 = %s），不等就退 `ABORT_EMITTER_BYTES_DIFFER`。这一格"
-      "同时进了 §七 那张清单。件 `receipts/%s`。" % (
+      "逐字节比（LF 归一后 %s 字节 对 %s 字节，相等 = %s），不等就退 `ABORT_EMITTER_BYTES_DIFFER`。这一格"
+      "同时进了 §七 那张清单。臂量于尖 `%s`，写这页此刻线是 `%s`（中间 %s 枚提交，"
+      "`merge-base --is-ancestor` 判它仍在这条线的上游；不是祖先就退 `ABORT_ARM_STALE`）。"
+      "件 `receipts/%s`。" % (
           B.fmt(sum(1 for r in arm_rows if r.get("commit"))),
           B.fmt(sum(1 for r in arm_rows if r.get("verdict") == "RUNS")),
           B.fmt(sum(1 for r in arm_rows if r.get("verdict") == "ABORTS")),
           "、".join("`%s` %s 枚" % kv for kv in sorted((arm.get("verdict_tally") or {}).items())),
           my_short, B.fmt(len(_in_ref.encode("utf-8", "replace"))), B.fmt(len(_lane)),
-          B.fmt(emitter_same), ARM_RECEIPT))
+          B.fmt(emitter_same), B.slot(arm.get("tip")), B.slot(live_tip), B.slot(arm_lag),
+          ARM_RECEIPT))
     A("")
     A("## 二、现在的闸判谁、不判谁")
     A("")
@@ -565,6 +583,17 @@ def main():
               s["path"].split("/")[-1], B.fmt(s["bytes"]), B.slot(s["blob"]), B.slot(s["aborts"]),
               "、".join("`%s`" % c for c in s["failed"]) or "无",
               B.fmt(sum(1 for f in s["forced"] if f))) for s in prior_sheets), GEN))
+    A("- 同一趟门里还挂着另一把静态尺：`tools/fmt_lint_r16.py` 用 AST 把发射器和它的邻居共 %s 枚文件里 "
+      "%s 处 `模板 %% (参数...)` 当场点数（槽位数 对 参数枚数），另有 %s 处右侧是单枚表达式、静态点不了数，"
+      "具名不判而不是当作通过；判语 %s、自检 %s（自检是当场写一枚故意错的样本、要求它按行号报红，不是嘴上"
+      "说说）。它排在上面那张清单的第 %s 项。"
+      "它拦的就是这一路真踩过三次的形制：句子加了一格、参数没跟上，页要念到那一行才炸——而炸的时候枝已经"
+      "推出去了。今天 r15 到 r16 之间就炸过两回：一枚 `not enough arguments for format string`、一枚"
+      "`NameError`（我把一个变量删了却还剩一处引用）。件 `receipts/%s`。" % (
+          B.fmt(fmt.get("files_scanned")), B.fmt(fmt.get("calls_checked")),
+          B.fmt(fmt.get("single_expression_args")), B.slot(fmt.get("verdict")),
+          B.slot((fmt.get("selftest") or {}).get("verdict")),
+          B.fmt(RED_CHECK_NAMES.index("静态 arity 尺绿且自检咬下") + 1), FMT_RECEIPT))
     A("")
     A("## 八、不在本代的东西（具名）")
     A("")
