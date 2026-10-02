@@ -116,6 +116,7 @@ def main():
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/branch_emit_arm_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/branch_emit_arm_r*.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/fmt_lint_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_*_390x844_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/fmt_lint_r*.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/collect_count_r*.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/r*_readings.sh"))) +
