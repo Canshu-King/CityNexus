@@ -1,8 +1,8 @@
 {
   "tool": "citation_gate_r14",
-  "took_local": "2026-10-03T06:19:41+08:00",
+  "took_local": "2026-10-03T06:32:29+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22",
-  "tip": "c33a41044ce4c996e2eb4baa5f9d9cd67a3aee2e",
+  "tip": "9c8c3bea6aee65185928b2645a379b8653bfee82",
   "branch": "lane/ord0500-r14",
   "files_scanned": 9,
   "live_tracked_paths": 3346,
@@ -13,7 +13,7 @@
   "judged_files": 1,
   "mechanical_rows": 4,
   "pin_rows": 4,
-  "lane_commits_in_set": 25,
+  "lane_commits_in_set": 26,
   "foreign_files_seen": [
     "backend/app/main.py",
     "contracts/openapi.yaml",
