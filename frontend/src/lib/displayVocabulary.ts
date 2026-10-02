@@ -114,10 +114,6 @@ const EVIDENCE_SOURCE: Record<string, Label> = {
    `planRanking.ts:78` filters them out of `worstQuality`, so a "the rest are ..." wording for a leg the
    gate already counted as hard would be a claim this screen does not have to make. */
 const MOBILITY_FACT_QUALITY: Record<string, Label> = {
-  SYNTHETIC_DEFAULT: {
-    zh: "演示夹具自己填的兜底常数，不是量出来的",
-    en: "a blanket default the demo fixture filled in, not a measured leg",
-  },
 };
 
 /* A grade this table does not know has no wording, and it must not borrow one: describing a provenance
