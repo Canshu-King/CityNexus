@@ -1,0 +1,27 @@
+CMDR 02:45 cell 2 -- how to re-take these two readings (measurement only; no product byte is touched)
+
+1. This lane's stack, both on their original numbers:
+   backend: python D:/moodle/_qoder_6a_ord0531_20261001/run_backend_spend_r1.py   (127.0.0.1:8021,
+           store D:/moodle/_qoder_6a_ord0531_20261001/spend_day24.db, seeded by
+           review/ord0504-reading-6a150e1e/spend_seed_day24_r1.py)
+   static:  cd frontend && CITYNEXUS_BACKEND_PORT=8021 npx vite preview --outDir
+            D:/moodle/_qoder_6a_ord0531_20261001/dist_s1_clean --port 4813 --strictPort --host 127.0.0.1
+   Ownership is re-proved each time by D:/moodle/_qoder_6a_ord0531_20261001/stack_proof_s1.py
+   (four proofs + the store read back in mode=ro; the access-log proof is named NOT_AVAILABLE).
+
+2. Copy the two files in this directory back where Playwright can see them:
+   undefined-leg.spec.ts -> frontend/e2e/qoder-6a150e1e-spend-undefined-leg-r1.spec.ts
+   undefined-leg.config.ts -> frontend/playwright.tmp-undef.config.ts
+
+3. Run:
+   cd frontend && CITYNEXUS_SPEND_PORT=4813 CITYNEXUS_BACKEND_PORT=8021      npx playwright test -c playwright.tmp-undef.config.ts --reporter=list
+
+4. Generation the reading belongs to: the line tip at measurement time was
+   06ad00b0267c2bef08d4cdcbae2e5a206ded8666. The bundle served is the day24 build `dist_s1_clean`
+   (entry /assets/index-5DRahkM8.js); that is legitimate for this measurement because
+   `git diff --numstat 4fac49f3 06ad00b0 -- frontend/src/app/V8Experience.tsx` is empty, i.e. the file
+   that carries the leg being measured is byte-identical between the two tips.
+
+5. Readings: `readings_r1.json` in this directory (U1_control / U1_stripped / U2). This file is a
+   one-off measurement instrument, deliberately kept out of every gate's include list; the numbers it
+   produced are quoted in the ledger block, and the block is what the ruling is asked about.
