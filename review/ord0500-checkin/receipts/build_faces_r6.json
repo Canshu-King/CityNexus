@@ -1,0 +1,145 @@
+{
+  "tool": "build_faces_r6",
+  "took_local": "2026-10-02T19:32:25.226244+08:00",
+  "candidate_commit": "97bf72736a753633b0d3d8d4c2b48dd65f48b08e",
+  "base_commit": "e7ff7938ea41c5ac69afb1172acc4625159c7911",
+  "swapped_paths": 9,
+  "faces": [
+    {
+      "label": "O0500_R7",
+      "out_dir": "D:/moodle/_qoder_phone_ord0485_20260930\\faces/o0500_r7",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/r6_tsc_O0500_R7_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/r6_tsc_O0500_R7_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/r6_build_O0500_R7.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 9.72s\u001b[39m"
+        ]
+      },
+      "entry": {
+        "entry_asset": "index-CfKrWJ0v.js",
+        "css_asset": "index-BQzlTYlS.css",
+        "index": {
+          "bytes": 1200,
+          "sha256": "b3d78fe268bc3c79f7734adff9e2bc06d54449e6da6391607db66b3651cc4e65",
+          "local_sha1": "276426d76da3d5f2ed0e27d20085e13ef3a92e8f"
+        },
+        "bundle": {
+          "bytes": 1611655,
+          "sha256": "1093ea0a9d30fd2c8aa0179b7cfa762ecacb9f89f8f131a13ad25b8bda3556eb",
+          "local_sha1": "d05f13e50a3160c7e7c3774df93b4f0eef9dbcc0"
+        }
+      }
+    },
+    {
+      "label": "TIP_e7ff7938",
+      "out_dir": "D:/moodle/_qoder_phone_ord0485_20260930\\faces/tip_e7ff7938",
+      "tsconfig.check.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/r6_tsc_TIP_e7ff7938_tsconfig.check.txt"
+      },
+      "tsconfig.typecheck.json": {
+        "exit": 0,
+        "diagnostics_bytes": 0,
+        "head": "",
+        "log": "run/r6_tsc_TIP_e7ff7938_tsconfig.typecheck.txt"
+      },
+      "build": {
+        "exit": 0,
+        "log": "run/r6_build_TIP_e7ff7938.txt",
+        "built_line": [
+          "\u001b[32m✓ built in 6.78s\u001b[39m"
+        ]
+      },
+      "entry": {
+        "entry_asset": "index-50kwyZcU.js",
+        "css_asset": "index-DMv3I7wk.css",
+        "index": {
+          "bytes": 1200,
+          "sha256": "0d84fa99a09e19d05f5117463c1e02db31d163bedc8bdd5f3f1eb8b93b30ae36",
+          "local_sha1": "c5afdad479504c6e7a10495d986e35aed95f99db"
+        },
+        "bundle": {
+          "bytes": 1607851,
+          "sha256": "ba4388f8b003e12182b8cc26092d66c3bfe3b0b01284c10fe480d671fe5dee7a",
+          "local_sha1": "1ed111dcdef6c9cf34ed97f4c152a0f45a942900"
+        }
+      }
+    }
+  ],
+  "base_label": "TIP_e7ff7938",
+  "candidate_label": "O0500_R7",
+  "candidate_worktree_clean": true,
+  "base_index_differs_from_candidate": 9,
+  "base_absent_paths": [
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "backend/tests/test_qoder_ord0500_journey_refusal.py",
+    "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+    "frontend/playwright.ord0500-checkin.config.ts"
+  ],
+  "restore": {
+    "every_path_matches_the_commit": true,
+    "mismatches": [],
+    "worktree_clean_after_restore": true,
+    "detail": {
+      "backend/app/main.py": {
+        "commit_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+        "index_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+        "worktree_blob": "8b5c56d248560028f2d3de0dc9f697de06630243"
+      },
+      "contracts/openapi.yaml": {
+        "commit_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+        "index_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+        "worktree_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f"
+      },
+      "frontend/src/features/checkin/checkins.ts": {
+        "commit_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+        "index_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+        "worktree_blob": "9b7e14d898240c7ff72753b0a219a3e39785e700"
+      },
+      "frontend/src/features/checkin/checkinCopy.ts": {
+        "commit_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+        "index_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
+        "worktree_blob": "51c04646d334747a05b26349f4cd4766ba87fa45"
+      },
+      "frontend/src/features/checkin/footprint.css": {
+        "commit_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+        "index_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+        "worktree_blob": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d"
+      },
+      "frontend/src/features/trip/TripItinerary.tsx": {
+        "commit_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+        "index_blob": "e846ed1b67c67313405f645ecac5432f1a97d241",
+        "worktree_blob": "e846ed1b67c67313405f645ecac5432f1a97d241"
+      },
+      "backend/tests/test_qoder_ord0500_journey_refusal.py": {
+        "commit_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+        "index_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
+        "worktree_blob": "ef9d392092dca47945899d2fa56c6f119b149936"
+      },
+      "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts": {
+        "commit_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+        "index_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+        "worktree_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2"
+      },
+      "frontend/playwright.ord0500-checkin.config.ts": {
+        "commit_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+        "index_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+        "worktree_blob": "503a5638c4d383287c01359f9f191cbca9be50b2"
+      }
+    }
+  }
+}

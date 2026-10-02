@@ -1,0 +1,47 @@
+{
+  "tool": "checkin_copy_rows_mutants_r6",
+  "took_local": "2026-10-02T19:37:02.773166+08:00",
+  "control_exit": 0,
+  "control_verdict": "GREEN",
+  "mutants": [
+    {
+      "id": "M1_hard_coded_label_back",
+      "expected": "RED",
+      "exit": 1,
+      "verdict": "RED",
+      "cases": [
+        "A1_CJK_IN_ENGLISH_ROW"
+      ],
+      "evidence_lines": [
+        68
+      ],
+      "revert_exit": 0,
+      "revert_verdict": "GREEN",
+      "bytes_restored": true
+    },
+    {
+      "id": "M2_placeholder_left_unsupplied",
+      "expected": "RED",
+      "exit": 1,
+      "verdict": "RED",
+      "cases": [
+        "B1_UNSUPPLIED_PLACEHOLDER",
+        "B2_LABEL_IS_INTERPOLATED"
+      ],
+      "evidence_lines": [
+        null,
+        null
+      ],
+      "revert_exit": 0,
+      "revert_verdict": "GREEN",
+      "bytes_restored": true
+    }
+  ],
+  "scratch_isolated_from_wt22": true,
+  "digests": {
+    "frontend/src/features/checkin/checkinCopy.ts": "c76636ca3a4b333b255e82495758ef7333db3c471b878f354ac8b199a0c2c5f8",
+    "frontend/src/features/trip/TripItinerary.tsx": "a505addb1f63f235daead7548f951ed881275e96cebe437cb844b506473548f4",
+    "frontend/src/i18n/LocaleContext.tsx": "c3151b8a2be2c160f36b0f56172958778ce34374b0d5ec8fa65c890750728dcc"
+  },
+  "every_mutant_bit": true
+}
