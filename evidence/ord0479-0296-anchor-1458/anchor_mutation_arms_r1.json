@@ -1,0 +1,96 @@
+{
+ "tip": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+ "arms_run": 6,
+ "all_expectations_met": true,
+ "tree_clean_after": false,
+ "git_status_after": "M backend/tests/test_qoder_ord0296_write_deadline.py\n M backend/tests/test_qoder_ord0479_dictionary_key_shape.py",
+ "runs": [
+  {
+   "id": "M0_control",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "both arms as shipped on this tip",
+   "target": null,
+   "pytest": {
+    "rc": 0,
+    "summary": "21 passed, 2 warnings in 23.23s",
+    "failed_arms": []
+   }
+  },
+  {
+   "id": "M1_site_moves",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "the site moves by four lines: an anchor that names a row cannot tell this from a defect",
+   "target": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "pytest": {
+    "rc": 0,
+    "summary": "10 passed in 3.57s",
+    "failed_arms": []
+   },
+   "restored_equal_to_tip_blob": true
+  },
+  {
+   "id": "M2_const_renamed",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "the named const the exemption is identified by disappears - the reading must fail, not follow",
+   "target": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "pytest": {
+    "rc": 1,
+    "summary": "1 failed, 9 passed in 3.78s",
+    "failed_arms": [
+     "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+    ]
+   },
+   "restored_equal_to_tip_blob": true
+  },
+  {
+   "id": "M3_key_no_longer_a_dictionary_key",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "the row stops being a translation-table value, so the forgiveness no longer applies",
+   "target": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "pytest": {
+    "rc": 1,
+    "summary": "1 failed, 9 passed in 4.19s",
+    "failed_arms": [
+     "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+    ]
+   },
+   "restored_equal_to_tip_blob": true
+  },
+  {
+   "id": "M4_second_lock_wait_at_scale",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "a request-path-scale wait restated inline in a file the old frozen name list never named",
+   "target": "backend/app/qoder_anchor_probe_r1.py",
+   "pytest": {
+    "rc": 1,
+    "summary": "1 failed, 2 warnings in 9.32s",
+    "failed_arms": [
+     "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+    ]
+   }
+  },
+  {
+   "id": "M5_short_worker_wait_in_a_new_file",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "a worker's own sub-second wait in a brand new file must not be read as a second source",
+   "target": "backend/app/qoder_anchor_probe_r1.py",
+   "pytest": {
+    "rc": 0,
+    "summary": "1 passed, 2 warnings in 7.74s",
+    "failed_arms": []
+   }
+  }
+ ]
+}
