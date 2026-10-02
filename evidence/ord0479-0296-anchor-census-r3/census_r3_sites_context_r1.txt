@@ -1,0 +1,99 @@
+=== backend/tests/test_qoder_ord0332_error_receipt.py:132  func=test_R1_the_field_name_is_single_and_documented (def at 117) ===
+   126     for f in sorted((root / "backend" / "app").rglob("*.py")):
+   127         nodes = ast.parse(f.read_text(encoding="utf-8")).body
+   128         hit = any(isinstance(n, ast.Constant) and n.value == FIELD_SENT
+   129                   for sub in ast.walk(ast.Module(body=nodes, type_ignores=[])) for n in [sub])
+   130         if hit:
+   131             owners.append(f.relative_to(root).as_posix())
+   132     assert owners == ["backend/app/error_receipt.py"], (
+   133         f"字段名被抄出了第二处 ⇒ 单一固定这条已经破了：{owners}")
+=== backend/tests/test_qoder_ord0402_recycle_bin.py:305  func=test_the_contract_declares_the_door_with_both_bin_facts_and_no_filter (def at 291) ===
+   299     )
+   300     item = operation["responses"]["200"]["content"]["application/json"]["schema"]["items"]
+   301     assert item == {"$ref": "#/components/schemas/RecycleBinJourney"}, item
+   302     component = spec["components"]["schemas"]["RecycleBinJourney"]
+   303     assert component["allOf"][0] == {"$ref": "#/components/schemas/Journey"}, component
+   304     added = component["allOf"][1]
+   305     assert sorted(added["required"]) == ["bin_state", "deleted_at"], added
+   306     assert added["properties"]["bin_state"]["enum"] == ["IN_RECYCLE_BIN"], added
+=== backend/tests/test_qoder_ord0434_share_grants.py:413  func=test_the_acl_table_answers_the_product_own_question_about_a_role (def at 409) ===
+   407 
+   408 
+   409 def test_the_acl_table_answers_the_product_own_question_about_a_role() -> None:
+   410     journey_id = _journey()
+   411     rows = client.get(ACL_PATH.format(journey_id=journey_id)).json()
+   412     by_role = {row["role"]: row for row in rows}
+   413     assert sorted(by_role) == ["ADMIN", "COLLABORATOR", "OWNER"], by_role
+   414     assert "MEMBER_MANAGE" in by_role["ADMIN"]["capabilities"]
+=== backend/tests/test_qoder_ord0444_collections.py:481  func=test_the_contract_declares_three_doors_and_no_control_they_lack (def at 450) ===
+   475     added_item = paths["/collections/{folder_id}/items"]
+   476     assert [p["$ref"].rsplit("/", 1)[-1] for p in added_item["parameters"]] == ["CollectionFolderId"], added_item["parameters"]
+   477     folder_id = _contract()["components"]["parameters"]["CollectionFolderId"]
+   478     assert folder_id["name"] == "folder_id" and folder_id["in"] == "path", folder_id
+   479     # A uuid-typed parameter would turn a missing shelf into a 422 and take the named refusal away.
+   480     assert "format" not in folder_id["schema"], folder_id["schema"]
+   481     assert sorted(added["responses"]) == ["201", "404", "409", "422"], sorted(added["responses"])
+   482 
+=== backend/tests/test_qoder_ord0476_checkins.py:499  func=test_the_contract_declares_both_doors_and_no_control_they_lack (def at 483) ===
+   493         "CHECKIN_DUPLICATE_STAMP", "CHECKIN_ACTIVITY_UNKNOWN", "CHECKIN_PLACE_UNKNOWN",
+   494         "CHECKIN_TARGET_REQUIRED", "CHECKIN_TARGET_AMBIGUOUS",
+   495     }
+   496     written = json.dumps(node, ensure_ascii=False)
+   497     for name in sorted(raised):
+   498         assert name in written, name
+   499     assert sorted(created["responses"]) == ["201", "404", "409", "422"], sorted(created["responses"])
+   500     assert sorted(listed["responses"]) == ["200", "409"], sorted(listed["responses"])
+=== backend/tests/test_qoder_ord0476_checkins.py:500  func=test_the_contract_declares_both_doors_and_no_control_they_lack (def at 483) ===
+   494         "CHECKIN_TARGET_REQUIRED", "CHECKIN_TARGET_AMBIGUOUS",
+   495     }
+   496     written = json.dumps(node, ensure_ascii=False)
+   497     for name in sorted(raised):
+   498         assert name in written, name
+   499     assert sorted(created["responses"]) == ["201", "404", "409", "422"], sorted(created["responses"])
+   500     assert sorted(listed["responses"]) == ["200", "409"], sorted(listed["responses"])
+   501 
+=== backend/tests/test_qoder_ord0476_checkins.py:505  func=test_the_contract_declares_both_doors_and_no_control_they_lack (def at 483) ===
+   499     assert sorted(created["responses"]) == ["201", "404", "409", "422"], sorted(created["responses"])
+   500     assert sorted(listed["responses"]) == ["200", "409"], sorted(listed["responses"])
+   501 
+   502     schemas = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))["components"]["schemas"]
+   503     create = schemas["JourneyCheckinCreate"]
+   504     # The door takes no time and no target-kind from a caller: those are the server's to decide.
+   505     assert sorted(create["properties"]) == ["activity_id", "note", "place_id"], create
+   506     read_shape = schemas["JourneyCheckin"]
+=== backend/tests/test_qoder_ord0496_calendar_export.py:944  func=test_the_contract_declares_the_door_its_refusals_and_its_counts (def at 936) ===
+   938 
+   939     door = _door()
+   940     operation = door["operation"]
+   941     assert operation["operationId"] == "getJourneyCalendarIcs", sorted(operation)
+   942     assert "parameters" not in operation and "requestBody" not in operation, sorted(operation)
+   943     responses = operation["responses"]
+   944     assert sorted(responses) == ["200", "404", "409"], sorted(responses)
+   945     content = responses["200"]["content"]
+=== backend/tests/test_qoder_ord0503_member_doors.py:499  func=test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields (def at 495) ===
+   493 
+   494 
+   495 def test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields():
+   496     """The shapes are the order's promise: a self-exit body that grew a `member_id` is ORD-0434's door."""
+   497 
+   498     contract = _contract()["components"]["schemas"]
+   499     assert contract["JourneyMemberSelfExit"]["properties"].keys() == {"traveler_id"}
+   500     assert contract["JourneyMemberSelfExit"]["additionalProperties"] is False
+=== backend/tests/test_v192_shadow_trial_gate.py:104  func=test_v192_guard_scope_dedup_keeps_both_rows (def at 97) ===
+    98     out = H.canon(
+    99         [
+   100             {"code": "AVOID_STAIRS", "severity": "HARD", "scope": "TRAVELER", "params": {"note": "traveler"}},
+   101             {"code": "AVOID_STAIRS", "severity": "HARD", "scope": "JOURNEY", "params": {"note": "journey"}},
+   102         ]
+   103     )
+   104     assert sorted(i["scope"] for i in out) == ["JOURNEY", "TRAVELER"], out
+   105     assert {i["params"].get("note") for i in out} == {"traveler", "journey"}, out
+=== backend/tests/test_qoder_ord0307_credential_gate.py:67  func=test_C02_no_path_through_the_gate_leaks_a_value (def at 58) ===
+    61     被测值现场取（合成 + 真树里那一枚），断言的是"缺席"，所以这格不会因为我引用过值而变脏。
+    62     """
+    63 
+    64     probe_value = _synthetic_token("ord0307-c02")
+    65     hits = [{"path": PROBE_REL, "line": 3, "pattern": "provider_key_shape", "length": len(probe_value),
+    66              "entropy_bits_per_char": 4.0, "token_fp": CL.token_fp(probe_value),
+    67              "position_fp": CL.position_fp(PROBE_REL, 3), "in_product_path": True,
+    68              "declared": False, "declared_at": None}]
