@@ -708,24 +708,27 @@ def plan_authority_blocker(
         and bool(coursework_places)
         and all(place is not None and _coursework_facts_cover(place) for place in coursework_places)
     )
-    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS":
-        if not coursework_estimate:
-            return UNRESOLVED_ACTIVITY_FACTS
-    elif explanation.get("authority_state") == "COURSEWORK_ESTIMATED_FACTS" and not coursework_estimate:
-        return UNRESOLVED_ACTIVITY_FACTS
-
     # Replan candidates can be materialised by a different composition path
-    # and therefore may not carry the provisional explanation marker.  The
-    # used Place rows are still the authoritative content boundary: live or
-    # provider-backed UNKNOWN opening/cost facts remain non-selectable.  An
-    # explicit sealed demo/replay envelope is the only exception, so fixtures
-    # and captured replay tests keep their existing contract.
+    # and therefore may carry a provisional explanation marker even after the
+    # actual used Places have acquired canonical facts.  The used Place rows
+    # remain the authoritative content boundary: live or provider-backed
+    # UNKNOWN opening/cost facts remain non-selectable.  An explicit sealed
+    # demo/replay envelope is the only exception, so fixtures and captured
+    # replay tests keep their existing contract.
     used_content_places = [
         places_by_id[place_id]
         for place_id in used_unique
         if place_id in places_by_id
         and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
     ]
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and not coursework_estimate:
+        if not used_content_places or any(
+            _place_has_unresolved_visit_facts(place) for place in used_content_places
+        ):
+            return UNRESOLVED_ACTIVITY_FACTS
+    elif explanation.get("authority_state") == "COURSEWORK_ESTIMATED_FACTS" and not coursework_estimate:
+        return UNRESOLVED_ACTIVITY_FACTS
+
     sealed = bool(used_content_places) and all(
         str(_place_metadata(place).get("authority_envelope") or "").upper()
         in SEALED_AUTHORITY_ENVELOPES
@@ -869,6 +872,9 @@ def plan_schema(
         places_by_id,
         used_place_ids=activity_keys,
     )
+    explanation = json.loads(item.explanation_json or "{}")
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and authority_blocker is None:
+        explanation = {**explanation, "authority_state": "LIVE_PROVIDER_FACTS"}
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
@@ -889,7 +895,7 @@ def plan_schema(
         ],
         mobility_snapshot_id=item.mobility_snapshot_id,
         mobility_evidence=json.loads(item.mobility_evidence_json or "{}"),
-        explanation=json.loads(item.explanation_json or "{}"),
+        explanation=explanation,
         created_at=item.created_at or None,
         stale=stale,
         selectable=(item.lifecycle or "ACTIVE") != "STANDBY" and not stale and authority_blocker is None,

@@ -418,6 +418,7 @@ from app.services import (
     COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE,
     KNOWN_COST_EVIDENCE_STATUSES,
     _coursework_estimate_covers,
+    _place_has_unresolved_visit_facts,
     _journey_constraints_with_capabilities,
     constraint_schema,
     generate_plans,
@@ -11464,12 +11465,19 @@ def generate_replan(
             and bool(content_places)
             and all(_coursework_estimate_covers(place) for place in content_places)
         )
+        live_provider_authority = (
+            bool(content_places)
+            and not coursework_authority
+            and all(not _place_has_unresolved_visit_facts(place) for place in content_places)
+        )
         proposed.explanation_json = json.dumps(
             {
                 "reason": family,
                 "authority_state": (
                     "COURSEWORK_ESTIMATED_FACTS"
                     if coursework_authority
+                    else "LIVE_PROVIDER_FACTS"
+                    if live_provider_authority
                     else "PROVISIONAL_UNRESOLVED_FACTS"
                 ),
                 "authority_envelope": (

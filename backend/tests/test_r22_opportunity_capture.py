@@ -10,6 +10,21 @@ from app.agent.gateway import _city_category_terms, _city_search_terms
 from app.agent.guardian import _cooldown_active
 from app.db.models import GuardianRun, Place
 from app.db.session import SessionLocal, ensure_schema
+from app.services import plan_authority_blocker, UNRESOLVED_ACTIVITY_FACTS
+
+
+@pytest.mark.parametrize("cost_status,expected", [("UNKNOWN", UNRESOLVED_ACTIVITY_FACTS), ("VERIFIED_PROVIDER", None)])
+def test_replan_provisional_label_cannot_override_current_canonical_truth(monkeypatch, cost_status, expected):
+    monkeypatch.setattr("app.services.settings", SimpleNamespace(lab_estimate_authority=False))
+    place = Place(id="r22-current-truth", provider_key="overpass", external_id="overpass:node/1515",
+        city_code="JP-TEST", name="Museum", category="museum", latitude=1, longitude=2,
+        opening_hours_json=json.dumps({"status": "OFFICIAL_WEB_VERIFIED", "open": "10:00", "close": "18:00"}),
+        tags_json="[]", metadata_json=json.dumps({"cost_evidence": {"status": cost_status,
+            "amount_minor": 0 if cost_status == "VERIFIED_PROVIDER" else None, "currency": "JPY"}}),
+        updated_at="2026-10-03")
+    plan = SimpleNamespace(explanation_json='{"authority_state":"PROVISIONAL_UNRESOLVED_FACTS"}',
+        mobility_evidence_json='{"snapshot_id":"live-snapshot","source_provider":"valhalla-http","facts":[]}')
+    assert plan_authority_blocker(plan, {place.id: place}, used_place_ids=[place.id]) == expected
 
 
 def test_official_japanese_am_pm_window_uses_closing_not_last_admission():
