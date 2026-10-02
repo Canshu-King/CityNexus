@@ -1,0 +1,171 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-03T03:00:11+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "b5bb79261091586bc096793869c87c637fb8fa37",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0545s4-r1",
+ "candidate_tip": "06b48647096edd9d67802bd8fc6d91c9555b417c",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "b5bb79261091586bc096793869c87c637fb8fa37",
+  "line_only_commits": 0,
+  "candidate_only_commits": 4
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+   "frontend/playwright.ord0545s4-walkthrough.config.ts",
+   "review/ord0533/readouts/lane_stack_receipt_r13.json",
+   "review/ord0545/readouts/report_ord0545s4_diag3.json",
+   "review/ord0545/readouts/report_ord0545s4_r10.json",
+   "review/ord0545/readouts/report_ord0545s4_r9.json",
+   "review/ord0545/readouts/walkthrough_counterarms_r10.txt",
+   "review/ord0545/readouts/walkthrough_en-GB_r10.json",
+   "review/ord0545/readouts/walkthrough_en-GB_r9.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_r10.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_r9.json",
+   "review/ord0545/walkthrough_counterarm_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "b394ccf0c537af81ad8ce37d0fd925dba6b471d2",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_025954",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+    "candidate_blob": "a9b8c2f2bb7ad979ccafecab46aa9b2d081982fb",
+    "export_blob": "a9b8c2f2bb7ad979ccafecab46aa9b2d081982fb",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.ord0545s4-walkthrough.config.ts",
+    "candidate_blob": "56b8c0b95844278e99a47f0349cbb7ecb135b415",
+    "export_blob": "56b8c0b95844278e99a47f0349cbb7ecb135b415",
+    "equal": true
+   },
+   {
+    "path": "review/ord0533/readouts/lane_stack_receipt_r13.json",
+    "candidate_blob": "7e188efbb73dd3e370288d1fb1edefc4582bff2c",
+    "export_blob": "7e188efbb73dd3e370288d1fb1edefc4582bff2c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_diag3.json",
+    "candidate_blob": "0ee3bb4a838409232f5af34cb9daceb9988a7684",
+    "export_blob": "0ee3bb4a838409232f5af34cb9daceb9988a7684",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_r10.json",
+    "candidate_blob": "ba4ff6fca8b8d85a1d4342debb1ec6f5cb111692",
+    "export_blob": "ba4ff6fca8b8d85a1d4342debb1ec6f5cb111692",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_r9.json",
+    "candidate_blob": "25ba5d64deac1c8dfa53c772036bc4445e4d6f02",
+    "export_blob": "25ba5d64deac1c8dfa53c772036bc4445e4d6f02",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_counterarms_r10.txt",
+    "candidate_blob": "b8512680d1bc75c98926df155f8f33adbd488278",
+    "export_blob": "b8512680d1bc75c98926df155f8f33adbd488278",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_en-GB_r10.json",
+    "candidate_blob": "e214d644f1d22c3018a00191507a531d06ae6cbf",
+    "export_blob": "e214d644f1d22c3018a00191507a531d06ae6cbf",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_en-GB_r9.json",
+    "candidate_blob": "4810546d935ffe77adafd2998483280d13bfb724",
+    "export_blob": "4810546d935ffe77adafd2998483280d13bfb724",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_r10.json",
+    "candidate_blob": "0660b83840413fd6d572bab0f26f149ed70ee62f",
+    "export_blob": "0660b83840413fd6d572bab0f26f149ed70ee62f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_r9.json",
+    "candidate_blob": "76657b57c3e010afad96c80687626c036903582a",
+    "export_blob": "76657b57c3e010afad96c80687626c036903582a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/walkthrough_counterarm_r1.py",
+    "candidate_blob": "8730aa8d090d8eca1b80c1a72b46b7d99e5fa6f0",
+    "export_blob": "8730aa8d090d8eca1b80c1a72b46b7d99e5fa6f0",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1719,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1719 tests collected in 6.24s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "06b48647096edd9d67802bd8fc6d91c9555b417c",
+  "branches_route": "06b48647096edd9d67802bd8fc6d91c9555b417c",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
