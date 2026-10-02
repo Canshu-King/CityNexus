@@ -109,6 +109,15 @@ const SUMMARY_HELD: Label = {
   en: "The upstream summary's own words are not on this screen",
 };
 
+/* 路段证据的档位（`fact_quality`）也走这一层：三个名字逐枚来自
+   `backend/app/replanning/provider_snapshots.py:13-15`，第四个值一旦出现就退回上面那两条通道
+   （`pick` 的 labelled-raw 那一支），屏上说的是「这台服务器写的：X」而不是我们替它编的人话。 */
+const MOBILITY_FACT_QUALITY: Record<string, Label> = {
+  EXPLICIT_FROZEN_FIXTURE: { zh: "冻结快照里写明的一条", en: "a value written out in the frozen snapshot" },
+  LIVE_PROVIDER_CAPTURE: { zh: "供应商这次真给的一条", en: "a value a provider actually returned" },
+  SYNTHETIC_DEFAULT: { zh: "合成默认值，不是供应商给的", en: "a synthetic default, not a provider reading" },
+};
+
 function wantsChinese(zh?: boolean | string | null): boolean {
   if (typeof zh === "boolean") return zh;
   if (typeof zh === "string") return zh.trim().toLowerCase().startsWith("zh");
@@ -133,6 +142,10 @@ function pick(map: Record<string, Label>, value: unknown, zh?: boolean | string 
 
 export function runtimeIdentityLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(RUNTIME_IDENTITY, value, zh);
+}
+
+export function mobilityFactQualityLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(MOBILITY_FACT_QUALITY, value, zh);
 }
 
 export function policyModeLabel(value: unknown, zh?: boolean | string | null): string {

@@ -3,6 +3,7 @@ import { useLocale } from "../../i18n/LocaleContext";
 import { useAuthoritativePlans } from "../../api/v12Authoritative";
 import { rankPlans, RANK_DIMS, type ComparablePlan, type RankDim } from "./planRanking";
 import { fillRank, rankCopy, type PlanRankCopyKey } from "./planRankingCopy";
+import { mobilityFactQualityLabel } from "../../lib/displayVocabulary";
 import "./planRanking.css";
 
 /* ORD-0439: the comparison screen. It ranks the candidates the server already holds -- it never
@@ -137,7 +138,10 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
             {say("rank.evidenceNote", {
               hard: row.evidence.hard,
               total: row.evidence.total,
-              quality: row.evidence.worstQuality ?? "\u2014",
+              quality:
+                row.evidence.worstQuality === null
+                  ? "\u2014"
+                  : mobilityFactQualityLabel(row.evidence.worstQuality, locale),
             })}
           </li>
         ))}
