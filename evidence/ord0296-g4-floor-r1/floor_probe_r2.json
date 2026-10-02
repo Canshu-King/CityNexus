@@ -1,0 +1,87 @@
+{
+ "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911",
+ "arm": "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+ "states": 5,
+ "all_met": true,
+ "tree_clean_after": true,
+ "git_status_after": "",
+ "expected_change_left_in_tree": "backend/tests/test_qoder_ord0296_write_deadline.py",
+ "unexpected_dirt": [],
+ "runs": [
+  {
+   "id": "P0_control",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": null,
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "1 passed, 2 warnings in 2.77s"
+   },
+   "note": "the tip as shipped"
+  },
+  {
+   "id": "P1_consumer_copy",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "target": "backend/app/main.py",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "assertion_that_fired": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\backend\\tests\\test_qoder_ord0296_write_deadline.py:249: AssertionError: a file that already asks the module for the lock wait also st",
+    "summary": "1 failed, 2 warnings in 2.13s"
+   },
+   "note": "the blind spot CMDR 18:34 named: a deriving file stating 1200 inline",
+   "restored_blob": "2067c36e9e71ec6a7329e80192f529c601c4d44f",
+   "restored_equal_to_tip": true
+  },
+  {
+   "id": "P2_worker_at_floor",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "target": "backend/app/stay_generation_operations.py",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "assertion_that_fired": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\backend\\tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError: a lock wait at request-path scale is stated inline outside th",
+    "summary": "1 failed, 2 warnings in 2.17s"
+   },
+   "note": "a worker inline wait at 90000 ms, above the live floor",
+   "restored_blob": "2878d2bc3d7eabf2378561c3f63bd794bd01d3c7",
+   "restored_equal_to_tip": true
+  },
+  {
+   "id": "P3_new_worker_below",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": "backend/app/qoder_floor_probe_r2.py",
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "1 passed, 2 warnings in 2.51s"
+   },
+   "note": "a new module with an 800 ms worker wait - still legitimate"
+  },
+  {
+   "id": "P4_whole_family",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": null,
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "21 passed, 2 warnings in 6.62s"
+   },
+   "note": "the two rulers named by 07:57, run whole on this generation"
+  }
+ ],
+ "reading_of_the_ruling": "cmd said `main.py` and a count of 1; on this tip main.py states no inline number at all (it reads settings), so the count was implemented as the two structural rules the same sentence asks for: a file that derives the wait may state none inline, and a file that does not derive may only stay below the live floor"
+}
