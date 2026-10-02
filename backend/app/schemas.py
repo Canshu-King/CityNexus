@@ -666,6 +666,11 @@ class Event(EventCreate):
     journey_id: UUID
     status: Literal["DETECTED", "ACKNOWLEDGED", "RESOLVED", "IGNORED"]
     detected_at: datetime
+    # Resolution is part of the user-visible event lifecycle.  Keeping it out
+    # of the response made a resolved event look indistinguishable from one
+    # that had merely been observed.
+    resolved_at: datetime | None = None
+    resolution_reason: str | None = None
 
 
 class OutcomeEventCreate(BaseModel):

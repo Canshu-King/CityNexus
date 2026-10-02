@@ -8527,6 +8527,8 @@ def create_journey_event(
         "affected_activity_id": item.affected_activity_id,
         "occurred_at": item.occurred_at,
         "detected_at": item.detected_at,
+        "resolved_at": item.resolved_at,
+        "resolution_reason": _json_object(item.payload_json).get("resolution_reason"),
         "payload": json.loads(item.payload_json),
     }
 
@@ -8551,6 +8553,8 @@ def list_journey_events(journey_id: UUID, session: Session = Depends(get_session
             "affected_activity_id": item.affected_activity_id,
             "occurred_at": item.occurred_at,
             "detected_at": item.detected_at,
+            "resolved_at": item.resolved_at,
+            "resolution_reason": _json_object(item.payload_json).get("resolution_reason"),
             "payload": json.loads(item.payload_json),
         }
         for item in items
