@@ -1,0 +1,656 @@
+{
+ "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911",
+ "candidate": "868bc514f77be7b42639e447ddf842ed86389d45",
+ "predicted_tree": "4606c301bc4037aa5382a25da4fe7d93b95f9a17",
+ "fork": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
+ "rows": [
+  {
+   "path": "backend/app/main.py",
+   "cand": "6448e5e74c394c18aad96c231ef4865540a75f20",
+   "tip": "2067c36e9e71ec6a7329e80192f529c601c4d44f",
+   "merged": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "merged_equals_cand": false,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+   "cand": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:backend/tests/test_qoder_ord0500_journey_refusal.py",
+   "merged": "ef9d392092dca47945899d2fa56c6f119b149936",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "cand": "6497d6a1fd02b12e5864c061b428eabb0f020957",
+   "tip": "4be3923c111108f068a8a6096f5775df59cef518",
+   "merged": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+   "merged_equals_cand": false,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+   "cand": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+   "merged": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/playwright.ord0500-checkin.config.ts",
+   "cand": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:frontend/playwright.ord0500-checkin.config.ts",
+   "merged": "503a5638c4d383287c01359f9f191cbca9be50b2",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/src/features/checkin/checkinCopy.ts",
+   "cand": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:frontend/src/features/checkin/checkinCopy.ts",
+   "merged": "51c04646d334747a05b26349f4cd4766ba87fa45",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/src/features/checkin/checkins.ts",
+   "cand": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "tip": "e16bd1e078f38b8877dbf15500386818ed2d60a2",
+   "merged": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/src/features/checkin/footprint.css",
+   "cand": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "tip": "fdbaecf3c1073d2b61c22b3c80113fc05fc74815",
+   "merged": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "frontend/src/features/trip/TripItinerary.tsx",
+   "cand": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "tip": "2b09820718167f24125ef4393c033e0810351389",
+   "merged": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/R6_READINGS.md",
+   "cand": "7f2103de6e791219fe59e09656e5b3e729653dab",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/R6_READINGS.md",
+   "merged": "7f2103de6e791219fe59e09656e5b3e729653dab",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+   "cand": "5b1faab0668a438ffa800b3529a578f8654145ce",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+   "merged": "5b1faab0668a438ffa800b3529a578f8654145ce",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/build_faces_r6.json",
+   "cand": "4cec282e0916281c3ad86592994192876ebc1474",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/build_faces_r6.json",
+   "merged": "4cec282e0916281c3ad86592994192876ebc1474",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_en_390x844_r3.json",
+   "cand": "81c537bf95608d3cbb58026eaf9acac8fcff8474",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_en_390x844_r3.json",
+   "merged": "81c537bf95608d3cbb58026eaf9acac8fcff8474",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_duplicate.png",
+   "cand": "ee066fc97acebae8f93b7f0c9a756abe98d6b5f8",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_duplicate.png",
+   "merged": "ee066fc97acebae8f93b7f0c9a756abe98d6b5f8",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_first_tap.png",
+   "cand": "1f4fbd985543fc0a6bfb4293a30d9b4bfe76bf9e",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_first_tap.png",
+   "merged": "1f4fbd985543fc0a6bfb4293a30d9b4bfe76bf9e",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_en_arrived.png",
+   "cand": "79f8b21eea41074855c42ff245d394f7e7f04bf5",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_en_arrived.png",
+   "merged": "79f8b21eea41074855c42ff245d394f7e7f04bf5",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_390x844_r3.json",
+   "cand": "2af4b4abc7c8c88f025303f62618339f11dbb19a",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_zh_390x844_r3.json",
+   "merged": "2af4b4abc7c8c88f025303f62618339f11dbb19a",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_duplicate.png",
+   "cand": "2166ca353cb87abd5f864c01f4db52b892ac9dcf",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_duplicate.png",
+   "merged": "2166ca353cb87abd5f864c01f4db52b892ac9dcf",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_first_tap.png",
+   "cand": "b0ccd2b816a28671ee8856d8bfce9217334ef0a0",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_first_tap.png",
+   "merged": "b0ccd2b816a28671ee8856d8bfce9217334ef0a0",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_second.png",
+   "cand": "9bf4f6713b0b1182a38ff608cca1ee8fdf6b55b3",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_second.png",
+   "merged": "9bf4f6713b0b1182a38ff608cca1ee8fdf6b55b3",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_arrived.png",
+   "cand": "c44fc31c91c230fd961fedbf77d37301bc34c308",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_O0500_R6_zh_arrived.png",
+   "merged": "c44fc31c91c230fd961fedbf77d37301bc34c308",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_390x844_r3.json",
+   "cand": "c889193e15983eb132aa33f54cdf7484f8e6da56",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_390x844_r3.json",
+   "merged": "c889193e15983eb132aa33f54cdf7484f8e6da56",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_duplicate.png",
+   "cand": "9f16c4085ab70edbd06e7639fea0ed73c4b55c2e",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_duplicate.png",
+   "merged": "9f16c4085ab70edbd06e7639fea0ed73c4b55c2e",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_first_tap.png",
+   "cand": "fc90a49693f42f2c8f83c3dfe207859bbdd181d6",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_first_tap.png",
+   "merged": "fc90a49693f42f2c8f83c3dfe207859bbdd181d6",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_arrived.png",
+   "cand": "fd2c98882daac287e353ae56cde5385154a6072a",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_arrived.png",
+   "merged": "fd2c98882daac287e353ae56cde5385154a6072a",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_390x844_r3.json",
+   "cand": "efd93cdb20367a6244efc8a469ac9611d7d3eff8",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_390x844_r3.json",
+   "merged": "efd93cdb20367a6244efc8a469ac9611d7d3eff8",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_duplicate.png",
+   "cand": "07b2c7c2d34018f925599c252fc1dd328ae0c846",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_duplicate.png",
+   "merged": "07b2c7c2d34018f925599c252fc1dd328ae0c846",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_first_tap.png",
+   "cand": "ca450506444221ac8080716790dac9caf92d15eb",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_first_tap.png",
+   "merged": "ca450506444221ac8080716790dac9caf92d15eb",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_second.png",
+   "cand": "5f3051533079b487930250362b293dfe86a3d7b5",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_second.png",
+   "merged": "5f3051533079b487930250362b293dfe86a3d7b5",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_arrived.png",
+   "cand": "f9ed830404d89f1e6d8eae1b86e616182b529edb",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_arrived.png",
+   "merged": "f9ed830404d89f1e6d8eae1b86e616182b529edb",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+   "cand": "00ced56d9ba66f7a00b9089f99a2badf36218986",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+   "merged": "00ced56d9ba66f7a00b9089f99a2badf36218986",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+   "cand": "1b94864ea040dccc603c53553c3799f21ab5c6d7",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+   "merged": "1b94864ea040dccc603c53553c3799f21ab5c6d7",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+   "cand": "c0563eb1404081a15bdd4f5fbc702b68395258c8",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+   "merged": "c0563eb1404081a15bdd4f5fbc702b68395258c8",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+   "cand": "4ac10f2bc655d5392a9330725e3bdf89679d0b01",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+   "merged": "4ac10f2bc655d5392a9330725e3bdf89679d0b01",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+   "cand": "2e8d17fdb008b28a745a131d59d02bc2854e44ee",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+   "merged": "2e8d17fdb008b28a745a131d59d02bc2854e44ee",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+   "cand": "e8cfcee2b702d79f68364f89ef901c957317d33d",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+   "merged": "e8cfcee2b702d79f68364f89ef901c957317d33d",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+   "cand": "0c3a84bb3087da986a4a7ac2221ea04b3e03e921",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+   "merged": "0c3a84bb3087da986a4a7ac2221ea04b3e03e921",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/comment_anchors_r5.json",
+   "cand": "944e836e4ec0b16e0c1859ef8b238da7c17edf26",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/comment_anchors_r5.json",
+   "merged": "944e836e4ec0b16e0c1859ef8b238da7c17edf26",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+   "cand": "a96157230b37781fa22fa89cf37e60f4b8f43e3c",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+   "merged": "a96157230b37781fa22fa89cf37e60f4b8f43e3c",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/landing_r6.json",
+   "cand": "818f292363eeb90041dd7404902a8d46f54ebd8c",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/landing_r6.json",
+   "merged": "818f292363eeb90041dd7404902a8d46f54ebd8c",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/prior_denominators_r5.json",
+   "cand": "bb74650bad4b91e069a0df28f5e70dd99678ac00",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/prior_denominators_r5.json",
+   "merged": "bb74650bad4b91e069a0df28f5e70dd99678ac00",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+   "cand": "2b0bb269d505264a1cdba17d20aa1f04ef8f096b",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/pytest_r6.json",
+   "merged": "2b0bb269d505264a1cdba17d20aa1f04ef8f096b",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json",
+   "cand": "9fa82caa71e19f87c9678c33bca9fd381db4ef4d",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json",
+   "merged": "9fa82caa71e19f87c9678c33bca9fd381db4ef4d",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/r6_exposure_cand.json",
+   "cand": "eb594a339675e3d18e2c9f8ee8c9e037e74269fd",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/r6_exposure_cand.json",
+   "merged": "eb594a339675e3d18e2c9f8ee8c9e037e74269fd",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/receipts/sweep_r6.json",
+   "cand": "290166e438330fa048667e31c05ce21bc6803191",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/receipts/sweep_r6.json",
+   "merged": "290166e438330fa048667e31c05ce21bc6803191",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/landing_r6_out.txt",
+   "cand": "88b991cdd4d29ed9db1b87214cffe9bdf194740f",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/landing_r6_out.txt",
+   "merged": "88b991cdd4d29ed9db1b87214cffe9bdf194740f",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/landing_r6_out2.txt",
+   "cand": "bb77c870a5d571e9a11312c55c4fc1033986c857",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/landing_r6_out2.txt",
+   "merged": "bb77c870a5d571e9a11312c55c4fc1033986c857",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_build_O0500_R6.txt",
+   "cand": "b18e134c7e0682753783b73657bb5723f534f535",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_build_O0500_R6.txt",
+   "merged": "b18e134c7e0682753783b73657bb5723f534f535",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt",
+   "cand": "380628e8f9c6cc4a48eb05da92561eeb25195102",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt",
+   "merged": "380628e8f9c6cc4a48eb05da92561eeb25195102",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt",
+   "cand": "6475e8f85327f36949029be1d950315f68a914fc",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt",
+   "merged": "6475e8f85327f36949029be1d950315f68a914fc",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_exposure_cand.txt",
+   "cand": "57299c8d7f3f823275dc57d596de98b64e00c232",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_exposure_cand.txt",
+   "merged": "57299c8d7f3f823275dc57d596de98b64e00c232",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_pytest.txt",
+   "cand": "5ae456c3c82ddc048bec2d5785c4051f055b1baf",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_pytest.txt",
+   "merged": "5ae456c3c82ddc048bec2d5785c4051f055b1baf",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt",
+   "cand": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt",
+   "merged": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt",
+   "cand": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt",
+   "merged": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
+   "cand": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
+   "merged": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt",
+   "cand": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt",
+   "merged": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/sweep_r6_out.txt",
+   "cand": "22a05c7e87b858f6bcada65acd6afd720510a646",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/sweep_r6_out.txt",
+   "merged": "22a05c7e87b858f6bcada65acd6afd720510a646",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/run/sweep_r6_out2.txt",
+   "cand": "0f293029d1ed7f651c7b54ae77abdf7d83f071a3",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/run/sweep_r6_out2.txt",
+   "merged": "0f293029d1ed7f651c7b54ae77abdf7d83f071a3",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/build_faces_r6.py",
+   "cand": "595065400460af6fb4197a35913ea0c41f003d3f",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/build_faces_r6.py",
+   "merged": "595065400460af6fb4197a35913ea0c41f003d3f",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py",
+   "cand": "899a00baec66a7226398bd6a97761d572bd086b0",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py",
+   "merged": "899a00baec66a7226398bd6a97761d572bd086b0",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+   "cand": "1d0be172be14e2d9555769838dec3a002b8fa084",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+   "merged": "1d0be172be14e2d9555769838dec3a002b8fa084",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/checkin_phone_r3.cjs",
+   "cand": "8daa9007c60df2156be7899b024d907af477f411",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/checkin_phone_r3.cjs",
+   "merged": "8daa9007c60df2156be7899b024d907af477f411",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/comment_anchors_r5.py",
+   "cand": "2551727c28473ca572495e44806bebf157197bd8",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/comment_anchors_r5.py",
+   "merged": "2551727c28473ca572495e44806bebf157197bd8",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/landing_r6.py",
+   "cand": "ac788c9be13c1d41776b7a5ca4374af2fb22587b",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/landing_r6.py",
+   "merged": "ac788c9be13c1d41776b7a5ca4374af2fb22587b",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/make_probe_r6.py",
+   "cand": "799f5fe9122c0310e4287ff909f628a6011bd7af",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/make_probe_r6.py",
+   "merged": "799f5fe9122c0310e4287ff909f628a6011bd7af",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/prior_denominators_r5.py",
+   "cand": "3f71c10a0ede51c2d72f79e9aa07f70e57b9a668",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/prior_denominators_r5.py",
+   "merged": "3f71c10a0ede51c2d72f79e9aa07f70e57b9a668",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/pytest_r6.py",
+   "cand": "1c95d3c741226beaef59146b1b01262059f79b11",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/pytest_r6.py",
+   "merged": "1c95d3c741226beaef59146b1b01262059f79b11",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/r6_block.py",
+   "cand": "8c97fe98bff93d2916c3ec6713430a48ce57f8e8",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/r6_block.py",
+   "merged": "8c97fe98bff93d2916c3ec6713430a48ce57f8e8",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+   "cand": "4fa1ea155aba0ad2e890fcca7291224d44196f0c",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/r6_coordinates.py",
+   "merged": "4fa1ea155aba0ad2e890fcca7291224d44196f0c",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/selfdecl_ord0500_r6.py",
+   "cand": "779f23a4772f236677e15532ed6edf3a5cc279a6",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/selfdecl_ord0500_r6.py",
+   "merged": "779f23a4772f236677e15532ed6edf3a5cc279a6",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+   "cand": "0357d7a0424fc91e6811b59c1b8fa74bf55f7952",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/stage_readings_r6.py",
+   "merged": "0357d7a0424fc91e6811b59c1b8fa74bf55f7952",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  },
+  {
+   "path": "review/ord0500-checkin/tools/sweep_r6.py",
+   "cand": "1a5c596a1df0e28e70c1faaa48dd69bc9d3b853c",
+   "tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911:review/ord0500-checkin/tools/sweep_r6.py",
+   "merged": "1a5c596a1df0e28e70c1faaa48dd69bc9d3b853c",
+   "merged_equals_cand": true,
+   "merged_equals_tip": false,
+   "tip_already_has_cand_blob": false
+  }
+ ]
+}

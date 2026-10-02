@@ -1,0 +1,818 @@
+{
+ "live_tip": "e7ff7938ea41c5ac69afb1172acc4625159c7911",
+ "candidate": "868bc514f77be7b42639e447ddf842ed86389d45",
+ "fork_point": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
+ "fork_point_verdict": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5 2026-10-01 16:24:36 +0800 ORD-0544: an unreadable leg answer costs that leg, no",
+ "candidate_is_ancestor_of_tip": false,
+ "merge_tree_prediction": {
+  "exit": 0,
+  "stdout_lines": [
+   "4606c301bc4037aa5382a25da4fe7d93b95f9a17"
+  ]
+ },
+ "predicted_tree": "4606c301bc4037aa5382a25da4fe7d93b95f9a17",
+ "conflicted_paths": [],
+ "branch_write_set": [
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0500_journey_refusal.py",
+  "contracts/openapi.yaml",
+  "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+  "frontend/playwright.ord0500-checkin.config.ts",
+  "frontend/src/features/checkin/checkinCopy.ts",
+  "frontend/src/features/checkin/checkins.ts",
+  "frontend/src/features/checkin/footprint.css",
+  "frontend/src/features/trip/TripItinerary.tsx",
+  "review/ord0500-checkin/R6_READINGS.md",
+  "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+  "review/ord0500-checkin/receipts/build_faces_r6.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_second.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_second.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+  "review/ord0500-checkin/receipts/comment_anchors_r5.json",
+  "review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+  "review/ord0500-checkin/receipts/landing_r6.json",
+  "review/ord0500-checkin/receipts/prior_denominators_r5.json",
+  "review/ord0500-checkin/receipts/pytest_r6.json",
+  "review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json",
+  "review/ord0500-checkin/receipts/r6_exposure_cand.json",
+  "review/ord0500-checkin/receipts/sweep_r6.json",
+  "review/ord0500-checkin/run/landing_r6_out.txt",
+  "review/ord0500-checkin/run/landing_r6_out2.txt",
+  "review/ord0500-checkin/run/r6_build_O0500_R6.txt",
+  "review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt",
+  "review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt",
+  "review/ord0500-checkin/run/r6_exposure_cand.txt",
+  "review/ord0500-checkin/run/r6_pytest.txt",
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt",
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt",
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt",
+  "review/ord0500-checkin/run/sweep_r6_out.txt",
+  "review/ord0500-checkin/run/sweep_r6_out2.txt",
+  "review/ord0500-checkin/tools/build_faces_r6.py",
+  "review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py",
+  "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+  "review/ord0500-checkin/tools/checkin_phone_r3.cjs",
+  "review/ord0500-checkin/tools/comment_anchors_r5.py",
+  "review/ord0500-checkin/tools/landing_r6.py",
+  "review/ord0500-checkin/tools/make_probe_r6.py",
+  "review/ord0500-checkin/tools/prior_denominators_r5.py",
+  "review/ord0500-checkin/tools/pytest_r6.py",
+  "review/ord0500-checkin/tools/r6_block.py",
+  "review/ord0500-checkin/tools/r6_coordinates.py",
+  "review/ord0500-checkin/tools/selfdecl_ord0500_r6.py",
+  "review/ord0500-checkin/tools/stage_readings_r6.py",
+  "review/ord0500-checkin/tools/sweep_r6.py"
+ ],
+ "write_set_size": 72,
+ "per_path": {
+  "backend/app/main.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -3805 +3805,12 @@ def _checkin_journey_read(session: Session, journey_id: str) -> Journey:",
+    "@@ -3872 +3883,2 @@ def _checkin_resolve_targets("
+   ],
+   "tip_hunks": [
+    "@@ -23 +23 @@ from fastapi.responses import JSONResponse, StreamingResponse",
+    "@@ -406,0 +407,3 @@ from app.schemas import (",
+    "@@ -409,0 +413,3 @@ from app.schemas import (",
+    "@@ -420,0 +427 @@ from app.schemas import (",
+    "@@ -466,0 +474 @@ from app.services import (",
+    "@@ -3122,2 +3130,37 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio",
+    "@@ -3131,0 +3175,24 @@ def list_journeys(session: Session = Depends(get_session)):",
+    "@@ -3134,6 +3201,54 @@ def list_journeys(session: Session = Depends(get_session)):",
+    "@@ -3279,0 +3395,213 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):",
+    "@@ -3542,0 +3871,4 @@ def add_collection_item(",
+    "@@ -3544 +3876 @@ def add_collection_item(",
+    "@@ -3573 +3905 @@ def add_collection_item("
+   ]
+  },
+  "backend/tests/test_qoder_ord0500_journey_refusal.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,148 @@"
+   ],
+   "tip_hunks": []
+  },
+  "contracts/openapi.yaml": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -778 +778,2 @@ paths:"
+   ],
+   "tip_hunks": [
+    "@@ -475,0 +476,23 @@ paths:",
+    "@@ -478 +501 @@ paths:",
+    "@@ -483,0 +507,11 @@ paths:",
+    "@@ -667,0 +702,70 @@ paths:",
+    "@@ -3093,0 +3198,24 @@ components:",
+    "@@ -3096 +3224 @@ components:",
+    "@@ -3109,0 +3238,6 @@ components:"
+   ]
+  },
+  "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,204 @@"
+   ],
+   "tip_hunks": []
+  },
+  "frontend/playwright.ord0500-checkin.config.ts": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,40 @@"
+   ],
+   "tip_hunks": []
+  },
+  "frontend/src/features/checkin/checkinCopy.ts": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,138 @@"
+   ],
+   "tip_hunks": []
+  },
+  "frontend/src/features/checkin/checkins.ts": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": false,
+   "branch_hunks": [
+    "@@ -24,0 +25,4 @@ export type CheckinRefusal =",
+    "@@ -26,0 +31,22 @@ export type CheckinRefusal =",
+    "@@ -32 +58 @@ export type StampOutcome =",
+    "@@ -37 +63 @@ export type ReadOutcome =",
+    "@@ -54,13 +80,29 @@ async function call(path: string, init?: RequestInit) {",
+    "@@ -68 +110 @@ function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {",
+    "@@ -71 +113,3 @@ function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {",
+    "@@ -74,0 +119,12 @@ function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {",
+    "@@ -85,2 +141 @@ export async function stampStop(journeyId: string, activityId: string): Promise<",
+    "@@ -99,2 +154 @@ export async function readCheckins(journeyId: string): Promise<ReadOutcome> {"
+   ],
+   "tip_hunks": []
+  },
+  "frontend/src/features/checkin/footprint.css": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": false,
+   "branch_hunks": [
+    "@@ -165,0 +166,31 @@ which is what the hit test in the delivery receipt measures."
+   ],
+   "tip_hunks": []
+  },
+  "frontend/src/features/trip/TripItinerary.tsx": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": false,
+   "branch_hunks": [
+    "@@ -14,0 +15,7 @@ import { readCheckins, stampStop } from \"../checkin/checkins\";",
+    "@@ -144 +151,6 @@ export function TripItinerary({",
+    "@@ -158 +170,18 @@ export function TripItinerary({",
+    "@@ -160 +189,5 @@ export function TripItinerary({",
+    "@@ -166 +199 @@ export function TripItinerary({",
+    "@@ -169,3 +202,12 @@ export function TripItinerary({",
+    "@@ -174 +216 @@ export function TripItinerary({",
+    "@@ -439,3 +480,0 @@ export function TripItinerary({",
+    "@@ -443,6 +481,0 @@ export function TripItinerary({",
+    "@@ -488 +521,14 @@ export function TripItinerary({",
+    "@@ -490 +536 @@ export function TripItinerary({",
+    "@@ -512 +558 @@ export function TripItinerary({"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/R6_READINGS.md": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,81 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,52 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/build_faces_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,143 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_390x844_r3.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,377 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_duplicate.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_first_tap.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_arrived.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_390x844_r3.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,488 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_duplicate.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_first_tap.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_second.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_arrived.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_390x844_r3.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,387 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_duplicate.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_first_tap.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_arrived.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_390x844_r3.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,494 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_duplicate.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_first_tap.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_second.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_arrived.png": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,47 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,165 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,173 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,165 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,164 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,165 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,165 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/comment_anchors_r5.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,68 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/css_delta_proof_r5.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,55 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/landing_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,70 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/prior_denominators_r5.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,348 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/pytest_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,31 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,6530 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/r6_exposure_cand.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,6578 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/receipts/sweep_r6.json": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,464 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/landing_r6_out.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,60 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/landing_r6_out2.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,64 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_build_O0500_R6.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,24 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,24 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,6530 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_exposure_cand.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,6578 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_pytest.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,12 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/sweep_r6_out.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,5 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/run/sweep_r6_out2.txt": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,5 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/build_faces_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,155 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,115 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/checkin_copy_rows_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,150 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/checkin_phone_r3.cjs": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,211 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/comment_anchors_r5.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,71 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/landing_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,97 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/make_probe_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,101 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/prior_denominators_r5.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,117 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/pytest_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,91 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/r6_block.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,269 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/r6_coordinates.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,101 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/selfdecl_ord0500_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,117 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/stage_readings_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,245 @@"
+   ],
+   "tip_hunks": []
+  },
+  "review/ord0500-checkin/tools/sweep_r6.py": {
+   "already_equal_to_tip": false,
+   "branch_changed_it_over_fork": true,
+   "tip_changed_it_over_fork": true,
+   "branch_hunks": [
+    "@@ -0,0 +1,327 @@"
+   ],
+   "tip_hunks": []
+  }
+ },
+ "needs_a_move": [
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0500_journey_refusal.py",
+  "contracts/openapi.yaml",
+  "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+  "frontend/playwright.ord0500-checkin.config.ts",
+  "frontend/src/features/checkin/checkinCopy.ts",
+  "review/ord0500-checkin/R6_READINGS.md",
+  "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+  "review/ord0500-checkin/receipts/build_faces_r6.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_en_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_after_second.png",
+  "review/ord0500-checkin/receipts/checkin_O0500_R6_zh_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_en_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_390x844_r3.json",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_duplicate.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_first_tap.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_after_second.png",
+  "review/ord0500-checkin/receipts/checkin_TIP_dc9dc10f_zh_arrived.png",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+  "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+  "review/ord0500-checkin/receipts/comment_anchors_r5.json",
+  "review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+  "review/ord0500-checkin/receipts/landing_r6.json",
+  "review/ord0500-checkin/receipts/prior_denominators_r5.json",
+  "review/ord0500-checkin/receipts/pytest_r6.json",
+  "review/ord0500-checkin/receipts/r6_exposure_base_dc9dc10f.json",
+  "review/ord0500-checkin/receipts/r6_exposure_cand.json",
+  "review/ord0500-checkin/receipts/sweep_r6.json",
+  "review/ord0500-checkin/run/landing_r6_out.txt",
+  "review/ord0500-checkin/run/landing_r6_out2.txt",
+  "review/ord0500-checkin/run/r6_build_O0500_R6.txt",
+  "review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt",
+  "review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt",
+  "review/ord0500-checkin/run/r6_exposure_cand.txt",
+  "review/ord0500-checkin/run/r6_pytest.txt",
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt",
+  "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt",
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
+  "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt",
+  "review/ord0500-checkin/run/sweep_r6_out.txt",
+  "review/ord0500-checkin/run/sweep_r6_out2.txt",
+  "review/ord0500-checkin/tools/build_faces_r6.py",
+  "review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py",
+  "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+  "review/ord0500-checkin/tools/checkin_phone_r3.cjs",
+  "review/ord0500-checkin/tools/comment_anchors_r5.py",
+  "review/ord0500-checkin/tools/landing_r6.py",
+  "review/ord0500-checkin/tools/make_probe_r6.py",
+  "review/ord0500-checkin/tools/prior_denominators_r5.py",
+  "review/ord0500-checkin/tools/pytest_r6.py",
+  "review/ord0500-checkin/tools/r6_block.py",
+  "review/ord0500-checkin/tools/r6_coordinates.py",
+  "review/ord0500-checkin/tools/selfdecl_ord0500_r6.py",
+  "review/ord0500-checkin/tools/stage_readings_r6.py",
+  "review/ord0500-checkin/tools/sweep_r6.py"
+ ],
+ "clean_paths_already_landed": []
+}
