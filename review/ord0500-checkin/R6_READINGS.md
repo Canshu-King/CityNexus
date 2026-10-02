@@ -1,6 +1,6 @@
 # ORD-0500 r6 -- 英文档那一格：读数单（基座 `e7ff7938ea41c5ac69afb1172acc4625159c7911`，候选 = 本枝 `97bf72736a753633b0d3d8d4c2b48dd65f48b08e`）
 
-生成 `2026-10-03T02:03:45.955402+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
+生成 `2026-10-03T02:48:05.471378+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
 
 ## 一、两枚面的身份（同一枚工作树换字节再换回来，换回后逐枚 blob 验过）
 
@@ -57,9 +57,9 @@
 
 ## 五、门里的臂（服务端没被我碰，还是要在本代跑一遍）
 
-- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 3.62s；跑后库里 9 行。
+- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.98s；跑后库里 9 行。
 - 共享库前后：字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未被动过 = True。
-- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `4fac49f371da` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
+- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `e7ed8f440a2a` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
 
 ## 六、Q64 曝光尺：本代两侧各一趟
 
@@ -72,7 +72,7 @@
 
 ## 七、这单还欠的一格（要裁，我不自己拍）
 
-- 字典里 `["checkin.duplicate", "checkin.refused"]` 这几行现在没有读者（读计数逐行 [0, 0, 0, 0]），行号是 [62, 63, 1145, 1146]。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
+- 字典里 `["checkin.duplicate", "checkin.refused"]` 这几行现在没有读者（读计数逐行 [0, 0, 0, 0]），行号是 [62, 63, 1179, 1180]。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
 
 ## 八、不在本代的东西（具名，不折算）
 
@@ -101,18 +101,19 @@
 | UNRESOLVED_PATH | 2 |
 
 
-## 十、r9：把「自家注释行号不许腐烂」装进随代必跑的闸
+## 十、r9 与 r10：把「自家注释行号不许腐烂」装进随代必跑的闸（r10 把闸的范围改成按作者定）
 
 | 项 | 读数 |
 |---|---|
-| 闸判的树尖 | 4fac49f371da0820393d038700bddddafd1176d1 |
-| 被闸的文件 | 5 枚（本单自己名下的写集，别人的判据文件不在内） |
-| 查的引文 | 11 枚，其中 4 枚带内容钉子（句子声称那一行写着什么，就真去读那一行） |
-| 判语 | GREEN，红 0 枚，各类计数 {"OK": 11, "CITED_FILE_ABSENT": 0, "CITED_LINE_BEYOND_FILE": 0, "CITED_LINE_IS_BLANK": 0, "CITED_LINE_CONTENT_MISMATCH": 0, "CITED_PHRASE_GONE_FROM_COMMENT": 0} |
+| 闸判的树尖 | 441c98320521b9d0fcd17d1aab904f45473ffbab |
+| 扫的文件 | 8 枚（本单写集，按 `git log` 现读）；其中带引文被判的 1 枚 |
+| 判与不判 | 看到 22 条，判 8 条，不判 14 条（不判=那一行的作者 commit 不在本单名下，逐条带 `owner_commit`）；本单名下 commit 11 枚 |
+| 查的引文 | 22 枚，其中 4 枚带内容钉子（句子声称那一行写着什么，就真去读那一行） |
+| 判语 | GREEN，红 0 枚，各类计数 {"OK": 8, "NOT_THIS_LANES_CITATION": 14, "CITED_FILE_ABSENT": 0, "CITED_LINE_BEYOND_FILE": 0, "CITED_LINE_IS_BLANK": 0, "CITED_LINE_CONTENT_MISMATCH": 0, "CITED_PHRASE_GONE_FROM_COMMENT": 0} |
 | 钉子的来处 | 与 r8 那把尺的读数相符 = True（从枝里 receipts/reanchor_r8.json 现读） |
-| 换代复读 | day24 尖上四枚锚仍是 {"require": [818], "lookup": [4256], "integrity": [4292], "caught_by": [4309]}；注释里现引的就是 [818, 4256, 4292, 4309]；本枝那 5 枚产品路径与 r8 逐枚等值 = True |
+| 换代复读（件 `day25_anchor_recheck_r11.json`，尖 `d2ab4d6c3bb9319c3df8d100a81d6c817623d030`） | 四枚锚仍是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；注释里现引的就是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；本枝产品路径与上一枝逐枚等值 = True |
 
-反件四枚各咬一格，全在临时目录里、不碰工作树（`7` 份副本，判它用的登记清单仍取真实仓库的 3280 条）：[["C1_control_copy", "GREEN", null], ["M1_beyond_file", "RED", "CITED_LINE_BEYOND_FILE"], ["M2_blank_line", "RED", "CITED_LINE_IS_BLANK"], ["M3_absent_file", "RED", "CITED_FILE_ABSENT"], ["M4_wrong_but_in_range", "RED", "CITED_LINE_CONTENT_MISMATCH"], ["C2_after_revert", "GREEN", null]]。控制趟 GREEN、还原后 GREEN、副本字节回来了 = True、`wt22` 干净 = True。件 `receipts/citation_gate_r9_mutants.json`。
+反件 6 枚各咬一格（含 M5/M6 那对反方向的作者件），全在临时目录里、不碰工作树（`18` 份副本，判它用的登记清单仍取真实仓库的 3280 条）：[["C1_control_copy", "GREEN", "GREEN", true], ["M1_beyond_file", "RED", "CITED_LINE_BEYOND_FILE", true], ["M2_blank_line", "RED", "CITED_LINE_IS_BLANK", true], ["M4_wrong_but_in_range", "RED", "CITED_LINE_CONTENT_MISMATCH", true], ["M3_absent_file", "RED", "CITED_FILE_ABSENT", true], ["C2_after_revert", "GREEN", "GREEN", true], ["M5_foreign_line_not_judged", "GREEN", "GREEN", true], ["M6_same_line_claimed_mine", "RED", "CITED_LINE_BEYOND_FILE", true], ["C3_after_foreign_revert", "GREEN", "GREEN", true]]。控制趟 GREEN、还原后 GREEN、副本字节回来了 = True、`wt22` 干净 = True。件 `receipts/citation_gate_r10_mutants.json`。
 
 闸拦不住的那一格也具名：它只能读「那一行现在写着什么」，读不出「这句话本来想指哪一行」；所以钉子换代的唯一合法路径是重跑 `reanchor_r8.py` 让它重新量锚并落新件，而不是手改这几个字符串。
 

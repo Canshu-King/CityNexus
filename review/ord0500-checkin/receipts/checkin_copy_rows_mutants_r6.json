@@ -1,6 +1,6 @@
 {
   "tool": "checkin_copy_rows_mutants_r6",
-  "took_local": "2026-10-03T00:29:23.712208+08:00",
+  "took_local": "2026-10-03T02:45:39.952135+08:00",
   "control_exit": 0,
   "control_verdict": "GREEN",
   "mutants": [
@@ -41,7 +41,7 @@
   "digests": {
     "frontend/src/features/checkin/checkinCopy.ts": "c76636ca3a4b333b255e82495758ef7333db3c471b878f354ac8b199a0c2c5f8",
     "frontend/src/features/trip/TripItinerary.tsx": "a505addb1f63f235daead7548f951ed881275e96cebe437cb844b506473548f4",
-    "frontend/src/i18n/LocaleContext.tsx": "27e6231353c775afccfedcfca44734198485e1b5342e3deca4f6166b7e964298"
+    "frontend/src/i18n/LocaleContext.tsx": "10bc3b803a1b9d3285bc11a327bf6ed7eb29652fc7b2dc200792220c6d08fb1b"
   },
   "every_mutant_bit": true
 }
