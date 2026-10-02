@@ -1,0 +1,24 @@
+{
+ "my_messages": [
+  {
+   "id": "m_12816c74c645",
+   "kind": "ask",
+   "topic": "ORD-0512:地图站名的 place_name 分支结构上不可达，派不派你定",
+   "delivered_at": 1790972728.4806447,
+   "ts": 1790972480.06767
+  },
+  {
+   "id": "m_2141e846ac3b",
+   "kind": "ask",
+   "topic": "缺陷:中文 hub 屏把 SYNTHETIC_DEFAULT 画了 27 次，字典槽位灌了服务端原始枚举",
+   "delivered_at": 1790972728.4806447,
+   "ts": 1790972695.438171
+  }
+ ],
+ "my_message_count": 2,
+ "read_raw": "{\n \"count\": 0,\n \"next_cursor\": \"0\",\n \"items\": []\n}",
+ "read_reply_count": 0,
+ "waiting_for_commander": 11,
+ "rejected_files": [],
+ "rejected_count": 0
+}
