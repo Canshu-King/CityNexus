@@ -316,10 +316,14 @@ def main():
     A("")
     A("| 枝 | 那份发射器的答话 | 退出码 | 它被喂的那一代（现场认名，不记忆） | 它写的页面文件 |")
     A("|---|---|---|---|---|")
+    def dash(v):
+        """A row that never got as far as running has no exit code and no generation named -- that is a
+        real answer, not a missing slot, so it prints as a dash instead of refusing the whole page."""
+        return "—" if v is None else str(v)
     for r in arm_rows:
         A("| %s | %s | %s | %s | %s |" % (
-            B.slot(r.get("ref")), B.slot(r.get("verdict")), B.fmt(r.get("returncode")),
-            B.slot(r.get("generation_named") or r.get("why") or "—"),
+            dash(r.get("ref")), dash(r.get("verdict")), dash(r.get("returncode")),
+            dash(r.get("generation_named") or r.get("why")),
             B.fmt(bool(r.get("page_file_this_arm_wrote"))) + ("/已还原" if r.get(
                 "previous_page_restored") else "")))
     A("")
