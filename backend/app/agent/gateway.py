@@ -427,6 +427,58 @@ def _facts_for_accept(
         and selected_activity.plan_version_id == proposal.base_plan_version_id
         and selected_activity.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
     )
+    impact_maturity_override: str | None = None
+    if (
+        not impact_target_server_validated
+        and trigger is not None
+        and trigger.event_type == "OPPORTUNITY_WINDOW"
+        and trigger.provenance == "SYSTEM_DERIVED"
+        and diff.get("candidate_family") == "F4_OPPORTUNITY_INSERTION"
+    ):
+        # An additive opportunity has no disrupted Activity, so the generic
+        # removed/affected-activity resolver cannot identify its target.  The
+        # server-derived signal carries a bounded current/next scope instead;
+        # revalidate that scope and the proposal's own evidence before allowing
+        # the normal autonomy policy to decide whether acceptance is automatic.
+        try:
+            signal = json.loads(trigger.payload_json or "{}")
+        except json.JSONDecodeError:
+            signal = {}
+        current_id = str(signal.get("current_execution_activity_id") or "")
+        next_id = str(signal.get("next_activity_id") or "")
+        current = session.get(Activity, current_id) if current_id else None
+        next_activity = session.get(Activity, next_id) if next_id else None
+        opportunity = (verified.get("opportunity") or {}).get("evidence") or {}
+        incident = verified.get("incident_recovery_evidence") or {}
+        incident_mobility = incident.get("mobility_snapshot") or {}
+        added = {str(item) for item in (diff.get("added") or [])}
+        candidate_place_id = str(opportunity.get("candidate_place_id") or "")
+        current_location = (
+            current.place_id or current.city_service_id if current is not None else None
+        )
+        target_scope_valid = (
+            signal.get("active_plan_version_id") == proposal.base_plan_version_id
+            and signal.get("current_execution_activity_id") == current_id
+            and signal.get("next_activity_id") == next_id
+            and current is not None
+            and current.plan_version_id == proposal.base_plan_version_id
+            and current.status in {"ARRIVED", "IN_PROGRESS"}
+            and current_location == signal.get("current_execution_location")
+            and next_activity is not None
+            and next_activity.plan_version_id == proposal.base_plan_version_id
+            and next_activity.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+            and opportunity.get("fits") is True
+            and candidate_place_id in added
+            and incident.get("event_id") == trigger.id
+            and incident.get("event_type") == "OPPORTUNITY_WINDOW"
+            and incident_mobility.get("snapshot_id")
+            and incident_mobility.get("degraded") is False
+        )
+        if target_scope_valid:
+            selected_activity = current
+            selected_activity_id = current.id
+            impact_target_server_validated = True
+            impact_maturity_override = "VALIDATED_IMPACT"
     try:
         schedule_drift_min = abs(int(diff.get("end_time_delta_min") or 0))
     except (TypeError, ValueError):
@@ -447,6 +499,7 @@ def _facts_for_accept(
         trigger_actionable=trigger_actionable,
         impact_maturity=(
             impact_resolution.get("maturity_stage")
+            or impact_maturity_override
             or ("AI_ONLY" if impact_target_server_validated else None)
         ),
         impact_target_server_validated=impact_target_server_validated,

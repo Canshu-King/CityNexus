@@ -9478,6 +9478,34 @@ def _replan_estimate(
         return _hard_leg_minutes(captured, origin, destination)
 
 
+def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
+    """Keep persisted plan wall time while making generated instants comparable.
+
+    Journey activities are persisted in the offset carried by ``journey.start_at``.
+    ``Journey.timezone`` names the traveler's calendar zone, but it is not a
+    license to reinterpret an already materialized local schedule as an instant
+    in a different offset.  The old ``astimezone(ZoneInfo(...))`` conversion
+    moved a +08:00 C4 from 15:00 to 16:00 for a Journey labelled Asia/Tokyo.
+    Use the Journey start offset as the plan's serialization offset; when an
+    event/provider instant arrived in another offset, convert that instant back
+    to the same schedule offset.
+    """
+
+    moment = datetime.fromisoformat(str(value))
+    reference = datetime.fromisoformat(journey.start_at)
+    schedule_tz = reference.tzinfo
+    if schedule_tz is None:
+        try:
+            schedule_tz = ZoneInfo(journey.timezone or "UTC")
+        except (ZoneInfoNotFoundError, ValueError):
+            schedule_tz = timezone.utc
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=schedule_tz)
+    else:
+        moment = moment.astimezone(schedule_tz)
+    return moment.isoformat()
+
+
 @app.post(
     "/api/v1/journeys/{journey_id}/replans", response_model=ReplanProposalSchema, status_code=201
 )
@@ -11449,21 +11477,18 @@ def generate_replan(
             session.flush()
             continue
 
-        # 1b. Normalise every timestamp into one offset.
-        #     ``activities.end_at > start_at`` is a TEXT comparison, so a plan
-        #     that mixed "+08:00" and "+00:00" spellings of the same instant
-        #     could satisfy the CHECK with a *lexicographically* smaller value
-        #     and be rejected by the database (an intermittent HTTP 500 during
-        #     replan).  Storing one offset per plan keeps the ordering real.
-        journey_tz = ZoneInfo(journey.timezone or "UTC")
+        # 1b. Normalize every timestamp into the Journey's existing schedule
+        # offset.  ``activities.end_at > start_at`` is a TEXT comparison, so a
+        # plan that mixed offset spellings could satisfy the CHECK with a
+        # lexicographically smaller value.  The helper deliberately preserves
+        # persisted local wall time instead of shifting it to the named
+        # calendar zone.
         for row in copied_rows:
             for field in ("start_at", "end_at"):
                 try:
-                    moment = datetime.fromisoformat(str(row[field]))
+                    row[field] = _normalize_replan_schedule_time(row[field], journey)
                 except (TypeError, ValueError):
                     continue
-                if moment.tzinfo is not None:
-                    row[field] = moment.astimezone(journey_tz).isoformat()
 
         # 2. Re-time the proposed schedule so the travel it just reserved is
         #    actually reachable.  Moving a replacement into a new slot changes
