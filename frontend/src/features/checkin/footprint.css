@@ -163,3 +163,34 @@ which is what the hit test in the delivery receipt measures.
   color: var(--cn-ink-tertiary);
   font-size: var(--cn-fs-caption);
 }
+
+/* ORD-0500 -- two phone-reachability facts about the stop row.
+ *
+ * 1. Measured on this generation, same instrument on both faces (390x844, `scrollIntoViewIfNeeded`
+ *    then `elementFromPoint` at the control's own centre): 5 of the 6 stop controls answer a centre
+ *    hit; the row that does not is the second one, whose centre lands on `.v8-mobile-nav`, where a
+ *    tap changes tab.  Desktop 1280x800 answers 6 of 6 on both faces.  A `scroll-margin-bottom: 92px`
+ *    on `.trip-stop` was built onto its own face and re-measured: still 5 of 6, so the rule was
+ *    taken out instead of kept as decoration.  What would move the number is padding on the scroll
+ *    container or the fixed nav itself, and that is not this order's write set -- named, left open.
+ *
+ * 2. `.trip-stop-more` is a real <button> now (it used to be an aria-hidden span inside a row that
+ *    claimed role="button").  The bare `button { width: 100% }` in `styles.css` would stretch it
+ *    across the meta row, so it is reset here, where the control lives.
+ */
+.trip-stop-more {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  opacity: 0.5;
+}
+
+.trip-stop-more:focus-visible {
+  outline: 2px solid var(--cn-accent-text);
+  outline-offset: 2px;
+}
