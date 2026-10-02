@@ -16588,6 +16588,79 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0535 残件 · 车道 82f55d8a：我那支回收站拒绝句判据被 ORD-0531 换门换红了，修在我这侧（判据 1 枚文件，产品字节 0 改动）@14:49+08
+
+**一、坐标。** 基座＝现读权威尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（逐字 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。候选＝`fe50d21dae75834c5e166debb933a0d62d210c6d`，枝名 `refs/heads/review/82f55d8a-ord0535-gates-after-0531-r1`，`git diff --name-only 基座..候选` 只列 1 枚文件 `frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts`（23 插入 / 9 删除），判据文件 blob＝`e57b72352fb9f6a7e210b8f1085609916c8c38f5`（`git cat-file -t` 解析为 blob；候选提交 `fe50d21dae75834c5e166debb933a0d62d210c6d`）。**产品字节 0 改动**（第三节那枚反件改过产品码，跑完即还原并核过字节）。权威线我 0 次推、0 次移动。
+
+**二、红是真红，但我差点把仪器不在场当成结论。** 第一次同代复跑是 `6 failed`，判语逐字是 `apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:41538`——我这台 vite dev 早已掉线，那一趟什么都不证明。我把门起回来（`/v8/trash` `http_status=200`、经前端代理的 `/api/v1/health` `http_status=200`）再跑，才是真读数：`REPRO-00b5f25e-R2` ⇒ **1 failed / 5 passed**，红的正是 `ord0535t-3`，判语是「那一屏没有出现『没答上』的告示」——`trash-read-failed` 始终不可见。**这条我自己抓到的坑要留在块里**：以后凡是「一整批同时红」，先证两扇门在场，再谈产品。
+
+**三、根因两枚，逐枚量出来的，不是听来的。**
+- ① 门换了：ORD-0531 之后这屏读的是**按归属那扇**门——面板在 `frontend/src/features/trash/JourneyTrashPanel.tsx:143` 调 `readScopedDiscardedJourneys(travelerId)`，`travelerId` 由 `frontend/src/app/v8PanelRegistry.tsx:359` 从行程的 `traveler_id` 传进来；路径常量在 `frontend/src/features/trash/journeyTrash.ts:46`。我写一枚一次性探针把整页请求打出来，逐字读到 `GET /api/v1/travelers/52c062d0-4d76-4468-94fa-5e2215b28976/recycle-bin/journeys`——而我那支判据遮的是整站门 `**/api/v1/recycle-bin/journeys`，遮法落不到，于是「没答上」这一态在屏上根本不会发生。`6a150e1e` 在账本里给的就是这个机制，我用探针自证了一遍，没有直接采信。
+- ② 我这轮修的时候又踩了一枚自己的坑：我把「这一趟拦到几次」的断言放在了等渲染**之前**，而这屏的 fetch 在 document load 之后才发，所以计数读到 0（`GATEFIX-R3` 判语逐字是 `no bin door was asked at all`）。这枚竞态是我修出来的、不是原来就有的。
+⇒ 修法三件，都写进判据：正则同时覆盖两扇（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:293` 那枚 `BIN_DOOR`）；把被问到的 URL 逐条记下来并落进证据件（`doors_asked`，计数断言在 `frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:303` 起的那三行 `expect.poll`）；poll 之后仍留一条带解释的同步断言，这样万一以后门又换，报出来的话是「一门都没被问到」而不是「那句句子不对」。清空花名册那一步也改成读它真正问的那扇（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts:276`），不再靠整站门兜。
+
+**四、修后的同代读数（基座 `fe50d21dae75834c5e166debb933a0d62d210c6d` 这一代，两趟）。**
+- `GATEFIX-R4` ⇒ **6 passed / 0 failed**；`GATEFIX-R6` 再跑一趟 ⇒ **6 passed / 0 failed**；两趟都是两支 e2e 同跑、`--workers=1`、我这台私有栈（后端 `:41537`、dev 前端 `:41538`，库 `run/ord0535_gatefix2.db`），没碰 `:8000`、`:4781`、`:4782`、`:8693`，没跑 `demo/reset`。
+- 那一格的读数逐字（证据件 `run/evidence/ord0535-refusals/ord0535t-3-reading-GATEFIX-R4.json`，跑在候选 `fe50d21dae75834c5e166debb933a0d62d210c6d`）：`refused_reads` 为 1 次，`doors_asked` 为 `/api/v1/travelers/49a53307-27b1-430a-8ce8-973950af23ab/recycle-bin/journeys`；空站那句是 `回收站是空的：这台服务器没有报出任何在站里的行程。`，没答上那句是 `这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。`；两句话不同、后者不含「空的」；有行的那一行只长一枚动作按钮（按钮声明在 `frontend/src/features/trash/JourneyTrashPanel.tsx:309`，这一屏没有第二扇门可长）；被绘叶子 23 枚。
+- 类型闸：`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0（跑在候选 `fe50d21dae75834c5e166debb933a0d62d210c6d`）。
+
+**五、反件一枚，只咬它自己那一格。** 把产品里那声「没答上」换成空站那句：`frontend/src/features/trash/JourneyTrashPanel.tsx:243` 的 `say("trash.doorAbsent")` 改成 `say("trash.empty")`，先从被服务的模块里回读到变异确实在场（`phase === "absent" ? say("trash.empty")` 命中 1 次），再跑 `GATEFIX-MUT-R5` ⇒ **1 failed / 2 passed**，红的只有 `ord0535t-3`（T1、T2 照绿）。还原后核字节：`git hash-object` 与基座 blob `d37b65075faa0e6365ff160cf0e26437a9cd0153` 相同，`git status --porcelain` 只剩我那枚判据文件。
+
+**六、与 `6a150e1e` 那份读数对账（我不认领也不否认）。** 他那四副配方的表里，第一行「纯现尖 `5a4cdbd2…` × 纯现尖后端、全新空库、两支同跑」报的是 `5 passed / 1 failed` 红 `ord0535-3`。我在 04:17 之后的这枚尖上、同一个栈型（空库、两支同跑）复现不出来：第三节那趟红的是 `ord0535t-3`（我这支），而 `ord0535-1/2/3` 三臂在两趟里都是绿的。差异我量得出来的只有一处：他跑的是 `5a4cdbd2…`，我跑的是 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`（中间落了 ORD-0512/0513/0531 等笔）。所以 `ord0535-3` 那格我**继续挂 NOT_ATTRIBUTED**，等有人给出在 `5a4cdbd2…` 上的可复现跑法；他不归我的语义那两格判断（`ord0535-2` 只在两支同跑时红、`ord0535-3` 在纯尖上也红）我按他的原文留着，不改写。
+
+**七、这屏新长出来的一格，我具名报缺、不顺手编判据。** ORD-0531 还多了一种态：`travelerId` 为空时面板直接进 `noViewer`（`frontend/src/features/trash/JourneyTrashPanel.tsx:115` 与 `:124` 那两处），并且注释写明整站门**故意**不作回退。我这三支臂都不覆盖那一态——它是归属单的语义，判据该由 `6a150e1e` 那侧写，我这边只把缺口点名：`noViewer` 现在没有任何 e2e 读它渲染的那句话。
+
+**八、还欠着的两件（不催，只登记）。** ①行号修正 r2 `09514bfa5b2c1f56b5aaed23e38b19cf517ef3d4` 仍不在尖里（`git merge-base --is-ancestor` 用 if 判读为未落）；它写的那 10 枚锚点我在 `00b5f25e…` 上重新逐枚回读，仍全部为真，不用重取。②CMDR 07:57 那块第二节点名「写期限尺与字典键形尺」两枚锚点漂移尺转修单、写的是「派给有额度后的任一车道」——我领这手，但量具代码路径禁重写是你立的常设令，请点一下这两枚尺归谁动，你一句我就开工；在你点名之前我 0 字节不碰别人的量具。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · ORD-0479 与 ORD-0296 两枚锚点尺：钉死行号改成钉死具名符号，四枚注入件各打中自己那一臂
+
+现尖现读两次 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`。候选枝 `refs/heads/review/6a150e1e-anchors-named-not-numbered-r1` = `249922fe8475cb5a691914edfe24ab35d617a08d`（推后 `git ls-remote` 回读同值，收据 `D:/moodle/_qoder_6a_ord0531_20261001/lsremote_anchors.txt`）。`git merge-tree --write-tree` 对现尖逐枚比对：两枚文件全 EQUAL，0 处 recut。本单只动两支尺，产品字节 0 处改动（`git diff --numstat` 现读只有这两枚：+33/-8 与 +32/-2）。
+
+**一、两处漂移，先复现再改（不猜成因）**
+
+在现尖上原样跑这两支尺：`2 failed, 19 passed`。
+- `test_qoder_ord0479_dictionary_key_shape.py::test_H01b…` 红在最后一格：它把赦免行钉成 `(SITE, 45)`，而那一行现在在第 47 行（`frontend/src/features/shared/SharedJourneyPanel.tsx` 的 `export const REFUSAL_KEY` 表，第一项是 `token_unknown: "shared.refusedTokenUnknown"`）。上游加了两行，尺就红——产品面一字未错。
+- `test_qoder_ord0296_write_deadline.py::test_G4…` 红在那份文件名清单：`app/main.py:7149` 只是**读** `settings.write_busy_timeout_ms` 去算 lease（`PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) + int(settings.write_busy_timeout_ms)`），这不是"常量抄两份"，但清单里没有 main.py，于是红。
+
+**二、改法（按你 07:57 的裁定：锚到具名符号，不锚行号）**
+
+- H01b：新增具名表跨度判据 `_named_table_span`，候选代 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py:159`，调用点在同文件 `:203`，本格在 `:177`，blob `64f5019a755ff09b62e19c6f932507d3ffc88cbc`。它现读那枚 `export const REFUSAL_KEY: Record<string, string> = {` 的起止行（要求这枚声明在文件里唯一，否则直接红），再要求 SITE 的每一处赦免行都落在这张表内，并点名其中必须有 `token_unknown` 这一项。行号不再是坐标，符号才是；表被改名或消失会响，不会悄悄漂。
+- G4：把"哪些文件提到过"换成"每一行提到过的是哪个具名角色"（本格在候选代 `backend/tests/test_qoder_ord0296_write_deadline.py:196`，短等待那条正则在其 `:214`，blob `1a1e6e965555e5a7ab4876a3cfc5619dd48bfacd`）。一行可以提到 `busy_timeout`，只要它归得进四类之一：单源模块自身、配置声明所在文件、worker 自己那枚比实测值短的 `PRAGMA busy_timeout = <n>`、或按名字从单源取数（`write_busy_timeout_ms` / `write_busy_timeout_seconds` / `busy_timeout_ms` / `busy_timeout_seconds`）。归不进就是第二处来源，红。原来的两条硬判据一条没减：内联抄 `30000` 与 `"timeout": 30` 仍当场红；另外新增三条正断言——单源里 `def busy_timeout_ms(`、`def busy_timeout_seconds(`、`def effective_busy_timeout_ms(` 三枚具名符号必须还在（改名不再等于"清单少一行"这种静默通过），以及 SQLite 自己答的等待值必须仍等于 `WD.busy_timeout_ms()`。
+- 一句话交代我改的是判据形状、不是判据强度：`offenders` 那枚断言（它扫的三串字面值在候选代 `backend/tests/test_qoder_ord0296_write_deadline.py:220`，断言本体在其 `:233`，blob `1a1e6e965555e5a7ab4876a3cfc5619dd48bfacd`）逐字未动；被我替换掉的只有那份文件名清单。
+
+**三、四枚注入件：每一枚只打中自己那一臂（改锚最容易把尺改钝，所以先自证它仍红）**
+
+脚本 `D:/moodle/_qoder_6a_ord0531_20261001/anchor_counterexamples_r1.py`，流水 `anchor_counterexamples.txt`。A1、A2 走一次性文件 `app/_anchor_probe_g4.py`（删文件即还原，不脏任何真实模块），A3、B1 各改一枚真符号且跑完 `git checkout` 还原并逐字节回比。
+
+| 注入 | 打哪一臂 | pytest rc | 红在原话 | 跑完还原 |
+| --- | --- | --- | --- | --- |
+| A1 第二处内联抄了单源那枚数（注入串在脚本 `anchor_counterexamples_r1.py:45`；尺侧那三串 needle 在 `backend/tests/test_qoder_ord0296_write_deadline.py:220`，断言在其 `:233`） | offenders | 1 | a second inline copy of the request-path lock wait is back | True |
+| A2 一行既不明源也不是短等待（注入串写在脚本里，候选代 `anchor_counterexamples_r1.py:48`；尺侧归类判据在 `backend/tests/test_qoder_ord0296_write_deadline.py:214`） | unattributed | 1 | a mention that names no source and is no worker wait | True |
+| A3 改掉单源一枚具名符号、留别名让 import 仍活着（脚本 `anchor_counterexamples_r1.py:54`；尺侧正断言在 `backend/tests/test_qoder_ord0296_write_deadline.py:237`） | 具名符号正断言 | 1 | the single source lost its named symbol 'def effective_busy_timeout_ms(' | True |
+| B1 把 H01b 锚的那张表改名（脚本 `anchor_counterexamples_r1.py:62`；尺侧跨度判据在 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py:203`） | 跨度判据 | 1 | `assert 0 == 1`（要求那枚声明唯一存在） | True |
+
+A3 这枚特意留了别名，好让 import 不断——能抓住它的只剩"具名符号必须在"这一条，正是这次新增的断言在起作用。
+
+**四、跑过什么**
+
+- 两支尺本身（改后）：`21 passed`（同一命令、同一库副本 `anchors_ctrl.db`，改前是 `2 failed, 19 passed`）。
+- 邻族（`-k "write_deadline or ord0296 or ord0479 or dictionary or lexicon or write_bound"`）：`28 passed`、0 红，流水 `D:/moodle/_qoder_6a_ord0531_20261001/anchors_family_r1.txt`。
+- 全量后端（候选头 `249922fe8475cb5a691914edfe24ab35d617a08d` 那一代）：`9 failed, 1604 passed, 16 skipped, 1 xfailed`，用时 1512.74 秒，流水 `D:/moodle/_qoder_6a_ord0531_20261001/fullsuite_after_anchors.txt`。九枚红逐枚查过，9/9 都在你 07:57 那份"网络族"里（anywhere 的 g5/g9b/g14a/g14c/g8a/g10、city_failure_reasons 两枚、g3_xproc 一枚），两支锚点尺已不在红集合。分母口径要说清：我这条带的是 `--ignore-glob=tests/test_v18_hermes_*`，你那条是 `--ignore=tests/test_v18_hermes_r20_transport_reliability_probe.py`，所以我这 1604 枚与 CMDR 07:57 那块里的 1656 枚不是同一个总体（候选头 `249922fe8475cb5a691914edfe24ab35d617a08d` 与现尖 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 同一代产品字节），我只据"红集合里有没有我自己这两枚"下结论。
+
+**五、我没做的**
+
+没改任何产品字节、没改 `app/**` 里任何一行（A1/A2 的探针文件已删，A3/B1 已逐字节还原，工作树在提交后 0 项未跟踪）；没动 ORD-0479/0296 这两单里别的判据；没顺手修网络族那九枚（不是我这手，也不在你这次裁定里）。回收站那单（ORD-0531）留着的三格仍在原处等裁：写门不认请求人、V7 要不要写成人话、`ord0535t-3` 归他们改遮法还是按我 V9 等价覆盖判闭。
+
+**六、栈**
+
+主测两扇未动：api `127.0.0.1:8021`、静态 `127.0.0.1:4813`（仍服务 `00b5f25e…` 那代的 `dist_r7`）。本单没起过一次性端口，探针跑的是 pytest 自己的两枚临时库副本 `anchors_ctrl.db` 与 `fullsuite_r1.db`（未逐枚量大小，等重启收）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 14:36 · 两笔落地（0520 旅程中止 r6 + 0525 日历入口 r2），尖 `0b93bdc19b53999aa0f753433d5558ff26c158b6`；0504 r2 退回
 
 **〇、回验（落地后现读）**
