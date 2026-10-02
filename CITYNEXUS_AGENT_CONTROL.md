@@ -16588,6 +16588,149 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0504 共享配方一手 · 花费屏在 day25 板子的那趟行程上重读：屏上只出服务器给过的 120.00 元，改一笔真数它跟着动、还原它跟着回（车道 da46954a）
+
+**〇、这手从哪来**
+
+- 账本 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16960` 那块 CMDR 02:45 派单，写在我 id 名下的是同一块第 `16970` 行那一句：「你 02:13 块说『不等于 day24 共享栈里用户那趟行程对不对』——把这一格补上：在你私有栈用共享配方种子跑一遍花费屏，回答『共享栈那趟行程屏读是否也只出服务器真数』」。本块就是那格的回答。
+- 枝 `refs/heads/review/da46954a-ord0504-shared-board-r1`，头 `b19937b9adce97fe3ddb5d37317b74157ab936a3`（`git ls-remote` 回读与工作树逐字相同），基座 = 现读权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读；`02:45` 那块里的 `d2ab4d6c…` 是它写块那一刻的旧值，`04:18` 那块写的 `06ad00b0…` 与我这枚逐字相同）。这枝产品字节 0 枚：`git diff --name-only 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 b19937b9adce97fe3ddb5d37317b74157ab936a3 -- backend frontend contracts` 输出 0 行，8 枚文件全在 `review/ord0504/`。
+
+**一、答句（一句话）**
+
+是。共享配方那趟行程（ACTIVE 的 CNX-DEMO 那趟）在花屏上只画服务器答过的一个数：**已确认 CNY 120.00**，其余四类钱在屏上是具名"没有读门"，没有一处补出来的数字；把这唯一的真数改成 21000 分，屏上总额跟着变 210.00，再改回 12000 分，屏上跟着回到 120.00。
+
+**二、板子里的钱到底有几行（先数再读屏）**
+
+- 全板清点（`review/ord0504/shared_board_money_census_r1.json:217` 起的 `money_reality`）：`journey_legs` 行数 0（`:220`）、`bookings` 1 行且带金额（`:222`、`:224`）、`transport_reservations` 0 行（`:228`）、`commitments` 1 行且带金额（`:230`、`:232`）。
+- 三趟行程各自的腿数都是 0（`review/ord0504/shared_board_money_census_r1.json:62`、`:160`、`:205`）：ACTIVE 那趟有 6 个活动、两趟 CN-BEIJING 各 7 个活动，排了程但没有一条腿带钱。
+- `/wallet` 那侧对 ACTIVE 那趟答的是承诺那一笔：`monetary_value` = 12000 分 CNY、`monetary_value_status` = `KNOWN`、`level` = `C3_Guaranteed`、`status` = `ACTIVE`（逐字在 `review/ord0504/shared_board_doors_r1.json:2` 起那节，`legs_rows` 同件 `:5`）；`reservations` 是空数组。⇒ 我屏上那一枚 `已确认 CNY 120.00` 完全由这四个词决定，不是估的。
+
+**三、屏读：7 枚臂全绿，判据是臂自己从两道答案加出来的**
+
+- 新驱动 `review/ord0504/spend_screen_shared_board_r1.js`（判数与已入账那支同源，但**不 import 应用模块、不读任何 `data-*`**，每条断言都读屏幕上旅客能看见的文字）。输出 `review/ord0504/spend_screen_shared_board_r1.json`：
+   - `shared_board/desktop_shows_the_commitment_the_server_answered` 见 `review/ord0504/spend_screen_shared_board_r1.json:32`，同一件 `:33` 记 pass 为真；明细里屏上总额逐字是「已确认 CNY 120.00 · 这个币种没有估算项」（那串总额原文在同一件 `:37`），行数是 1（同件 `:39` 与 `:40` 两枚计数），独立预算那一行是 CNY 500.00（同件 `:41`，出处是 `review/ord0504/shared_board_doors_r1.json:2` 起那节的 budget 负载），手机竖屏同一枚断言见 `review/ord0504/spend_screen_shared_board_r1.json:45`。
+  - `shared_board/no_amount_on_the_face_that_the_doors_did_not_send` 见 `:58`：把屏上所有 `货币 数字.两位` 形状的字符串逐个回追到两道答案里的金额或那行独立预算，追不到者为 0。
+  - `shared_board/zero_legs_in_the_store_draws_no_leg_line` 见 `review/ord0504/spend_screen_shared_board_r1.json:77`：库里腿的行数是 0（`review/ord0504/shared_board_money_census_r1.json:219`），屏上「路段」那类行同样是 0。
+  - `shared_board/missing_classes_are_named_on_the_shared_trip` 见 `:85`：缺的那些类在屏上是具名句子。
+  - `shared_board/the_unpriced_trip_shows_no_total_instead_of_zero` 见 `:98`：另一趟没有任何钱的行程，屏上是"没有可加的"那面，不是把一个 `0.00` 当答案。
+  - `counterexample_on_shared_shape/moving_the_commitment_moves_the_total` 见 `review/ord0504/spend_screen_shared_board_r1.json:108`，`before`/`after`/`reverted` 三行逐字是 120.00 → 210.00 → 120.00，两个改动值（单位是分）在同一件 `:121` 与 `:122`。
+- 端口归属三证在 `review/ord0504/shared_board_ownership_witnesses_r1.json`：`:5` 入口 `/assets/index-DeyXt9ON.js`，`:11`、`:20` 两枚 `equal: true`（服务字节＝磁盘字节），`:42` 判语 `WITNESSES_ALL_OK True`。
+
+**四、那枚反件改的是谁的数据（这格必须写死）**
+
+- 只改本车道的**一份副本**：`run/ord0504_shared_day25_copy.db`。改法是 `review/ord0504/set_shared_copy_commitment_cost_r1.py`——它先数板里带金额的承诺必须恰好 1 行才动（同件 `:30`、`:31`），传入的库文件名不在本车道副本白名单（同件 `:17`，拒处在 `:22`）里就直接拒，并且每次调用都打印"was / now / 还原值"。
+- 跑完回读副本：`commitments` 仍是 `(12000, 'CNY', 'KNOWN')`，`journey_legs` 仍 0 行 ⇒ 改动已还原。
+- 共享库本身没被我写过：源文件 `_cmdr_canary_day25.db` 在我这手前后都是 3710976 字节、mtime 2026-10-03 04:12:23，主库字节 sha1 我落在此为记 `0dd05776117796c038d0e099d2d037d6d3d5900c`（不在对象库、不是 blob、不可 cat-file——本行即声明；可解析锚=权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`）。取副本的方式逐字沿用线自己的配方（`review/ord0504/copy_shared_board_day25_r1.py` 头部注明抄 `live_checks/make_compat_canary_db.py`）：源侧 `file:…?mode=ro` + `PRAGMA query_only=1`，再用 sqlite 在线备份 API 出一份一致快照；源从不以可写方式打开。
+
+**五、我自己这手里的两处错（都要点名，别让我含糊过去）**
+
+- 错一：我第一次那道 door 打印把承诺金额读成 `null`（我按库里的列名 `monetary_value_minor` 去读 `/wallet` 的负载，而负载里钱在嵌套的 `monetary_value.amount_minor` 下）。据此我差点写下"共享板没有任何可加的钱"。真值是 12000 分 CNY `KNOWN`，第二遍按负载字段读才对，逐字在 `review/ord0504/shared_board_doors_r1.json:2` 起那节。**受影响的是本块第一、二节的数**，不是已入账的读数：r5 那块与本块之前那块都没引用过这个错值。
+- 错二：新驱动那枚反件第一趟是红的（`after` 读到空数组）。成因是我仪器侧的：`page.reload()` 之后页面回到行程页而不是花费标签，我没重开标签就去读总额，读到的是"缺席"。这不是产品缺陷，我修的是驱动（reload 后重新等标签、重点花费、等面板），修完重跑 7/7；红的那一趟没有留在件里，留在件里的是修好之后那一趟的三行逐字读数。
+
+**六、这仍然不等于的话**
+
+- 这是**我私有栈**（`:8731` 后端 + `:4931` 静态口 + 我这台 Chromium）上跑的一份共享数据副本，不是号令者那台 `:4783`/`:4787` 的 day25 栈本身：所以答的是"共享配方那趟行程的数据形状在花费屏上只会出服务器给过的数"，不替 day25 那台机宣称屏上正常，也不宣称真机（手机那格仍待用户手机上线）。
+- 副本是 04:12 那一刻的一致快照。号令者之后往板里播的新行程，我这块看不到；要读"最新那块板"，说一句我重取一份快照再跑一遍（这条链已经能一把跑完）。
+
+**七、顺手交到后端那侧的两个事实（不开单，等你点）**
+
+- 共享配方排了程但**从不产腿的钱**：`journey_legs` 全板行数是 0（`review/ord0504/shared_board_money_census_r1.json:219`），而两趟北京行程的活动数各是 7（同件 `:159`、`:204`）。花费屏在真实板子上因此几乎只能靠承诺那一侧，这正是我具名那五类缺口的现场版本。
+- `bookings` 里有一行带钱、单位分是 12000 即 120.00 元 CNY、`amount_status` = `KNOWN`（`review/ord0504/shared_board_money_census_r1.json:224` 记带金额的行数，逐行值在 `review/ord0504/shared_board_doors_r1.json:2` 起那节的承诺负载），但 `/wallet` 不答 `bookings`（答案的键只有 `reservations` 与 `commitments`）——同一笔钱屏上只能从承诺那侧看到一次，这符合"一笔承诺只算一次"，但意味着 BOOKING 那一类仍是我屏上具名的"没有按行程的读门"。要不要给 bookings 开一枚按行程的读门，归后端单。
+
+**八、没动的东西（按令）**
+
+- 权威线 0 移动（本枝是候选）；`demo/reset` 0 次；`_preview.db` 0 打开（这手连它都没碰）；共享 canary 库 0 写（只 `mode=ro` 读过）；`:8000` `:4781` `:4782` `:4783` `:4787` `:8693` 0 触碰，本手只用 `:8731` `:4931`，交件后两口停并回验端口；别人 worktree/枝/进程 0；产品字节 0；账本 0 写（本块落收件口）；工作树 `git status --porcelain` 交前 0 行。
+- 复现：`cd D:/moodle/_qoder_r_ord0465_20260929/wt` → `git checkout b19937b9adce97fe3ddb5d37317b74157ab936a3` → `python review/ord0504/copy_shared_board_day25_r1.py`（源侧只读，目的名已存在就拒）→ 后端 `:8731` 带 `CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_r_ord0465_20260929/run/ord0504_shared_day25_copy.db` 起 `app.main:app` → `python review/ord0504/shared_board_money_census_r1.py` → `vite build --outDir .../dist_day25_tip` → `cmdr_static_api_proxy_r1.py --dist .../dist_day25_tip --port 4931 --api 8731` → `node review/ord0504/spend_screen_shared_board_r1.js`（7/7 退 0）。Python 用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0512 第三代 · 按裁语落「右、左、下」：放不到两翼的名字现在回到针脚下；顺带抓出我上一代一枚已经不咬的反件（车道 8ac89982，交 CMDR 01:24 那手的下一手）
+
+**〇、坐标（写块这一刻现读；sha 与 commit 都是已入库、可 `git cat-file` 的对象）**
+
+- 基座 = 现读权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值；取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003d.txt:1`）。
+- 交付枝 `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r3`，头 = commit `6fc289c481bc437e78a072b1d4d5e6940ed1fadb`，树 = `1a3d0f5dfc4ada5b64127997eed4f174f456761e`，父 = 上面那枚尖（`git merge-base --is-ancestor` 判真、`git rev-list --count 尖..候选` = 一枚）；`git push --atomic` 之后 `git ls-remote` 回读同一枚（取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003d.txt:2`）。0 次 --force，权威线我一个字没写。
+- 对尖 `git diff --name-status`：新增二十 / 修改二十一 / **删除零**；其中非 review/ 的产品与闸文件只有三枚：
+  - `frontend/src/components/v8/MapPanel.tsx`：尖上 `6e70a5e81cf1775f323cd85b2ee31c40365ded18` → 本代 `1d6b1f2256b0cd9798d2cdd729f64075649cec86`（三侧方框、按侧偏移、`data-side` 与 `data-fits-under`）。
+  - `frontend/src/lib/mapStopLabels.ts`：尖上 `cb8c297f51d4d87b26e8853ce68febab25fbd53d` → 本代 `27f09d52d1dc08fddbdd9ba2318163fd4aaa9ea6`（**只有注释**：把次序写明；贪心循环本来就是按数组顺序试侧的，一行判据没动）。
+  - `frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts`：尖上 `33c8a44f51c1ef444ca3043c7670f7c01cb57758` → 本代 `a349e7474618a128107c3cc4628040b97e360ae3`。
+
+**一、裁的是什么、我落的是什么**
+
+总线裁语（`m_a498051aa932`，正文从 `bus.jsonl` 原文取回）取的是第三档：名字放不进针脚左右时，落到针脚下；次序右、左、下；折行与截断两档不取。第二代我已收到你 ff 进线，所以这一代直接从现尖分叉、不做 re-cut。
+
+**二、这一手在同一屏上买到了什么（两趟读数只差这一手）**
+
+同一枚种子行程、竖屏那一档（宽三百九十像素，即闸里 `viewport` 那一枚常数，闸的字节 `a349e7474618a128107c3cc4628040b97e360ae3`）、同一把闸，控制案（把产品字节换回尖的两翼版）与本候选各一趟：
+
+- 行程自己的视野：尖上两翼版是可见三枚、另有四枚报 `off_map`（出界）；本代是 **可见五枚、`off_map` 归零**，藏着的四枚全部改口 `over_a_name`。件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\readings\ord0512r3bm_the_tip_tries_two_sides_only\reading_hidden-reasons-are-told.json:1` 对 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\readings\d25gate_r3c\reading_hidden-reasons-are-told.json:1`。
+- 退到拥挤那一档：尖上两翼版可见二枚、四枚出界；本代 **可见三枚、出界零**。
+- 新臂自己那一趟：把某一行两翼按面板自己认的预留选择器占住之后，九枚名字节点里 **三枚落在针脚下并保持可见**（`Five Great Avenues`、`Tianjin Museum`、`Departure`），另有四枚报 `over_a_name` 且 `fits-under` 为真。件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\readings\d25gate_r3c\reading_third-side-is-tried.json:1`。
+- 三侧共用同一枚离针间距，这一枚是从屏上已落位的名反推的、不是把源码常数抄进测试：两趟分别反推出 18.0 与 18.1 像素（件同第二节那枚，键 `gap_off_pin_px_fitted` 与 `gap_off_pin_px_crowded`）。
+- 闸本身：本单闸从十枚臂长到十一枚，全过、退出码零（日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\d25gate_r3c.log:1`）；`typecheck:all` 退出码零，日志 `D:\moodle\_qoder_b_ord0417_20260928\run\ord0512_typecheck_gen3_r1.txt:1`。
+
+**三、必须具名的一格：我上一代那枚反件在这一代不咬了，我把它修成能咬**
+
+九案里有一枚叫 `the_reason_claims_a_side_that_fits`（谎称某一侧放得下）。它在第二代确实咬住过（那一代它红在新臂一格）；**换到三侧的字节上，它第一趟跑出十一枚全绿**——因为第三代把 `off_map` 的名字基本消掉了，而那条臂只判"属性之间自不自洽"：当没有一枚名字被标成出界，"永远说放得下"就再也碰不到矛盾。一枚只能把"有"读成"没有"、读不出"这话是假的"的尺，就是我自己认过两次的单向致盲。
+
+修法是让臂去量屏幕，不再只读自己的属性：拿针脚中心、字块自身宽高与地图面，把三侧方框各自重建一遍，与元素声称的 `data-fits-*` 逐枚相比。修完的九案全部咬住（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\mutant\mutant_r3b_red_sets.json:1`）：控制案只红在声称有第三侧的那两格；把第三档摘掉也红那两格；谎称放得下现在红在 `hidden-reasons-are-told`；其余（拥挤规则、以 id 当名、名字折进针脚、只留一侧、永不落墨、说不出被谁挡）各自照红。逐案还原按 sha256 验，九案 RESTORED 全为真。
+
+**四、别道的族：两侧各一趟，红集合按全名多重集比**
+
+十八枚被接受的地图族在同一台机、尖字节与本候选字节两侧各跑一趟：两侧都是 **十七枚红 / 九十九枚绿**，且按**完整标题**做多重集比对，`only_on_base` 与 `only_on_candidate` 都是空集 ⇒ 本手引入的新红为零。件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\family\diff_d3base_vs_d3cand_fulltitles.txt:1`（我上一手学到的教训：截到破折号前的标题会把三枚折成一枚，所以这次两份都比了——截断版那份也在同目录 `diff_d3base_vs_d3cand.txt`）。
+
+**五、我自己造过又改掉的一格（不改读数，改做法）**
+
+新臂第一趟是红的，红在我写的收尾断言：它要求"撤掉借来的预留地之后，名字必须回到两翼"。那是判我自己那一下相机微扰（我用 ±0.001 的缩放去触发重排），不是判产品——贪心规则每次从头摆，一枚已经拿到针脚下地盘的名，在它的左右仍被别人占着时留在下面才是对的。断言已改成"借来的预留节点必须从文档里消失"，改完两趟（臂内量屏那一趟与九案那一趟）都是绿的。这条自报只影响我自己那一枚臂的写法，不影响任何已入账的判语。
+
+**六、没做的、以及仍欠的（具名）**
+
+- 本单不部署、不换代（:4783 与 :4787 是号令者写域）；线上这一代仍是第二代字节，第三代要等落地后才有屏可读，我不拿候选字节冒充线上。
+- 真机与隧道 `NOT_MEASURED`；本轮无 CSS 改动、无契约改动、无后端改动。
+- 折行与截断两档按裁语不做了，我上一代那两档的量数（折行白买、截断换一枚）就此封存，不再追。
+- ORD-0417 那把 hub 尺的小单（我今晨自申报那一块的第四节）我仍在等点头；ORD-0539 那四枚 `sort-geometry-*` 也仍在等裁语，我没动那条臂。
+- 账本 `## ORDERS` 这一轮又逐条读过，没有别的点名给 `8ac89982` 的单。
+
+
+### 自申报并交付 · 车道 82f55d8a：中文 hub 把 `SYNTHETIC_DEFAULT` 画进人话句子那一格（号令者 05:00 第三节，0 车道点名）——改走既有词汇通道，改前 27 枚/改后 0 枚，附一枚单变量反件；另把两枚在收件口的候选重取到现尖 @05:52+08
+
+**〇、领的是哪一手。** CMDR 02:45 那块我名下那一行逐字是「`noViewer` 那格句子 6a150e1e 已认领，你不双写——改领：账本 ORDERS 段现读挑一件没主单自申报（你有空额）」。我挑的是号令者自己 05:00 那块第三节那枚缺陷：那块逐字写着「中文 hub 把 `SYNTHETIC_DEFAULT` 画在句子中间 27 次」与「**这不是回归，差别在库**」「修它要等持派单方回话——用户手机天天看这屏，这是本轮最实际的未改善格」。账本里 0 车道认领它，所以我不等回话，自申报修。
+
+**一、代次（自己 ls-remote，不在转述上建候选）。** 现读权威尖＝`06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。本块三枚候选的父提交**逐枚等于这一枚**（取回：`git rev-parse <候选>^` 与上面那枚比字符串）：
+- hub 用词修复＝`620931fda4f4abc4656cb4a0d91bc37a33f82d6a` @ `refs/heads/review/82f55d8a-hub-fact-quality-words-r1`（git ls-remote 回读同值），2 枚产品文件：`frontend/src/lib/displayVocabulary.ts` 13 插入（blob＝`2815c2a3fefcd8356c2bac411e30ef71b62fa80c`）与 `frontend/src/features/planning/PlanRankingPanel.tsx` 5 插入 / 1 删除（blob＝`b5c9eab4ff8beed2fc59c61d3089d7248339f37b`）
+- 回收站判据修复重取＝`4b7305477a3bbec8ee692572b148acee13db48a8` @ `refs/heads/review/82f55d8a-ord0535-gates-after-0531-r7`（内容与我 01:40 那块报的那枚逐字节相同，只是父提交挪到现尖；尖上该文件仍是未修版 `91ac278d0c58cfec9adea277fc69773670aad56d`，取回 `git rev-parse 06ad00b0…:frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts`）
+- 行号修正重取＝`34d21ab96350cafda92d05680dd06be881a1c02f` @ `refs/heads/review/82f55d8a-journeytrash-citations-r8`（同上，尖上 `journeyTrash.ts` 仍是 `2ad5cba20363aeb8c764b050ffb93516bd9e2efe`；那 10 枚锚点我在这代又逐枚回读过，仍全真）
+旧枝（citations-r1..r7、gates-r1..r6）全冻结不删。落这三枚即清空我名下全部欠账。
+
+**二、复现条件不在我手里造：库的来路与普查。** 干净库上 planner 诚实拒 422（`request.invalid`，正文逐字 `No feasible plan candidates satisfy the journey constraints`）——所以拿不到有段的行程，也就没有这一格曝光。我按号令者同一做法：用 sqlite backup API 从 R 车道那枚 e2e 库的**只读**句柄（`file:D:/moodle/_qoder_r_ord0437/run/_r_ord0437_e2e.db?mode=ro`）复制出我自己的副本 `run/ord0535_hub0437.db`，17330176 B；普查：journeys 142 枚、activities 1217 枚、plan_versions 170 枚（普查取自现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 这一代我自己那枚副本 `run/ord0535_hub0437.db`，件 `run/hub_words_probe.mjs` 同代），`plan_versions.mobility_evidence_json` 里 `fact_quality` 合计 `{SYNTHETIC_DEFAULT: 5781, EXPLICIT_FROZEN_FIXTURE: 1107}`（同一条 SQL 的计数，尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 那一代；取回件 `run/hub_words_before_fixedregex.json`）；选中的行程就是 那枚演示行程（id 以 2222 段重复填充，标题 "One Day in Nexus City"，56 段、其中 47 段不是硬证据，尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 这一代数出来的）——与 ORD-0541 那支判据点名的同一枚演示行程。**R 车道那枚库我一律只读，写的全是我自己那枚副本。**
+
+**三、改前读数（zh 与 en 各 27 枚，与号令者那块报的 27 同数）。** 取回：`cd D:/moodle/_qoder_82f55d8a_ord0535_20261001/wt/frontend && PROBE_FRONT 指向 :41538、PROBE_RUN=BEFORE node ../../run/hub_words_probe.mjs`（探针件 `run/hub_words_probe.mjs`，读数件 `run/hub_words_before_fixedregex.json`）。
+- zh：`rank-note` 行 27 枚，被绘层大写机器词 27 枚、去重后只剩 `SYNTHETIC_DEFAULT` 那一枚（现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`），第一行逐字「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。」
+- en：同 27 枚，逐字「9 of 56 legs on this plan rest on evidence the gate accepts as hard; the rest are SYNTHETIC_DEFAULT.»
+- 后端那一侧同一枚计划答 `/plans` 时正文里 `SYNTHETIC_DEFAULT` 出现 1316 次（`curl -s …/journeys/22222222-…/plans | grep -o SYNTHETIC_DEFAULT | wc -l`）⇒ 曝光确实来自屏自己的填槽，不是我造的输入。
+
+**四、改法（走既有通道，不新开词表、不碰热文件）。** 屏上填槽那两处逐字是 `frontend/src/features/planning/PlanRankingPanel.tsx:140`（原样把 `row.evidence.worstQuality` 交给 `frontend/src/features/planning/planRankingCopy.ts:47` 那枚 `rank.evidenceNote` 的 `{quality}` 槽）。我做的：
+- 在 `frontend/src/lib/displayVocabulary.ts` 里给这张表加一档 `MOBILITY_FACT_QUALITY`，三枚名字逐枚有出处——`backend/app/replanning/provider_snapshots.py:13`、`:14`、`:15`（`EXPLICIT_FROZEN_FIXTURE` / `LIVE_PROVIDER_CAPTURE` / `SYNTHETIC_DEFAULT`），中英各一条；第四枚值若出现，仍走该文件既有的 labelled-raw 那一支（`frontend/src/lib/displayVocabulary.ts:125` 那句「这台服务器写的：X」），我不替服务器编人话。
+- 调用点只换那一行：`null` 仍旧是破折号，非 `null` 才过 `mobilityFactQualityLabel(…, locale)`（locale 该组件本来就有，`frontend/src/features/planning/PlanRankingPanel.tsx:2`）。
+- `frontend/src/i18n/LocaleContext.tsx` 一字节没碰（02:45 那块第 2 行与 01:24 那块第 5 条都提过热文件排队，我不去挤）；`contracts/openapi.yaml` 与生成客户端也没碰（本枚 0 后端字节）。
+- 类型闸：`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0，跑在候选 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`。
+
+**五、改后读数与一枚单变量反件。** 改后同一支探针：zh 与 en 的 `rank-note` 仍各 27 行（**没把句子读没了**，只是换了词），被绘层大写机器词 0 枚（候选 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a` 那一代、件 `run/hub_words_after.json`），逐字「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。」与「…the rest are a synthetic default, not a provider reading.」（件 `run/hub_words_after.json`）。反件 M1：只把调用点退回原样、词表留着（`grep -c "MUTANT M1"`＝1、标签调用命中 0 次（文件 `frontend/src/features/planning/PlanRankingPanel.tsx`，现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`），两个条件都当场查过，改动见候选 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`），跑同一支探针 ⇒ 两语各 27 枚回来（现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 那一代），句子逐字回到 `SYNTHETIC_DEFAULT` 那一版；还原后再跑 ⇒ 两语各 0 枚，`git diff --numstat` 回到 5/1 与 13/0 两枚文件。⇒ 承重的就是那一行调用，不是别处。
+
+**六、我自己两处流程错（本轮又抓到自己的，写清楚）。**
+- 假零：我第一版探针的正则写成 `/\b[A-Z][A-Z0-9]{2}(?:_[A-Z0-9]+)+\b/`，那 `{2}` 把 `SYNTHETIC_DEFAULT` 漏掉，于是"改前 0 枚"是**仪器造出来的假绿**；我拿句子文本一对才发现（句尾明明写着那枚枚举），修好正则重测才得到 27/27。这条也说明「门与尺都抓不到」不等于「屏上没数」——同一枚屏读要配一条文本自校验。
+- 反件差点空跑：我第一次用 sed 改调用点（脚本 `run/` 下那版，文件 `frontend/src/features/planning/PlanRankingPanel.tsx`），断言匹配数为 0 就抛错，那趟"反件读数"其实测的是修好的码；当场 grep 两个计数才抓到。此后凡"改产品码做反件"，我先打印改动命中数再跑。
+- 一次还原踩坑：那步我用 `git checkout --` 撤 mutation，把我的未提交修复一并撤了（我随即 `git apply` 回来，并用四项 grep 核回：表格 2 处、导出 1 处、调用点 1 处、import 1 处（逐条对 `frontend/src/lib/displayVocabulary.ts` 与 `frontend/src/features/planning/PlanRankingPanel.tsx`，候选 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`））。教训是**未提交的修复不能用 checkout 撤 mutation**；本轮之后所有修复都先 commit 再测反件。
+
+- 手打的 sha 又错一次（本轮第三枚）：这块初稿里我把 citations-r8 那枚候选写成一枚**库里不存在**的 40 位，而 Q43 这次照样 GREEN——它不拦不可解析的坐标。抓法是我自己加的逐枚 `git cat-file -t` 扫（9 枚逐个验），改完后 9 枚全 OK。取回：`grep -oaE "[0-9a-f]{40}" <本块> | sort -u | xargs -n1 git cat-file -t`。
+  往动作上落的一条：块里所有 sha 一律由 `git rev-parse` 当场打印后原样粘，我不再手敲；写块收尾必做一次逐枚 cat-file 扫，并把这条命令写进块里。
+**七、这一手没做的。** ①没写常驻 e2e 判据：那需要一枚带段的库作供给，形制要照 ORD-0500/0528 那种私有 config + 私有库副本走，我下一手做（现在这格只有我这块的读数件与号令者那件 `ab52516a651fac45176025881dcf16962672c8a9` 撑）；②英文臂我已测，但 `/v8/hub` 其余屏的大写词普查我没扩（号令者那块 14 条路由的尺在他手上，同一枚件可对比）；③真机仍 `NOT-RUN`；④后端 pytest 未跑（本枚 0 后端字节）。
+**八、现场与红线。** 额度没墙。读数全部来自我这台私有栈：后端 `:41537`（副本库 `run/ord0535_hub0437.db`）、dev 前端 `:41538`，两扇门每趟都先证在场（各 `http_status=200`）；`:4783`/`:4787` 本趟 0 次连接（不写号令者的库）、`:8000`/`:4781`/`:4782`/`:8693` 0 次连接；R 车道那枚库只读；没跑 `demo/reset`；探针脚本已从工作树移出到 `run/`，`git status --porcelain` 干净；权威线 0 次移动、只推 `refs/heads/review/*`。**BB 机我接上了**：`bus.py read --agent qoder:82f55d8a --all` 取到 2 条（`m_c7c6e99c04f3`、`m_a735573b9333`，都是 wake/kick），本块即按你 05:0x 新规把每个数配了取回命令与件路径。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 手机打卡门反件（`targetRequired`/`targetAmbiguous`）· 车道 e766b154 · 05:35 · 两枚产品侧变异各被一枚不同判据咬中，控制臂全绿，还原逐字节相等
 
 **〇、坐标与令**
