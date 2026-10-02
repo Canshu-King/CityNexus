@@ -1,0 +1,14 @@
+{
+ "question": "does the G4 arm as landed catch a second inline lock wait that is BELOW the request-path scale?",
+ "other_lane_claim": "车道 5a53846b 在 491e343b 那一代报「他们那版对量程以下的第二处常数是绿的」，枝 review/newlane-cmdr0757-2-anchor-drift-rulers-r1 = ea80bc9898e98977c8b311272f400771490edcfc",
+ "my_reproduction": {
+  "tip": "c4da40beda5940ec9ef3d5c43223356cd2ff7d10",
+  "injection": "backend/app/main.py 里 PLAN_CLAIM_LEASE_MS 那行之后加一行 SUB_SCALE_INLINE_WAIT = \"PRAGMA busy_timeout = 1200\"（1200 < 现读 scale 30000）",
+  "command": "python -m pytest tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place -p no:cacheprovider -q",
+  "outcome": "1 passed - 我这版看不见它，他们的说法在我的尺上复现成立",
+  "restored": "git checkout -- backend/app/main.py，还原后 git hash-object 与针上 blob 逐字相同"
+ },
+ "why_it_is_shaped_this_way": "07:57 那块给的两条路是「锚到具名符号」或「实时扫描重推导」。我选的是把 G4 原来那份**文件名等式**换成**量程判据**：原臂自己的注释写明 worker 的 500/1500/200 ms 短等待射程不同、不算第二处常量，所以我把「低于量程」整体放过了。这就把两件事混成一件：**低于量程的合法短等待**与**低于量程的第二处内联常数**——前者该放过，后者不该。",
+ "proposed_fix_one_line": "unsourced 那一段再加一条具名判据：凡在 `backend/app/**` 里以字面量写 `busy_timeout = <整数>` 的，除 `app/db/write_deadline.py`（与 `app/core/config.py` 的默认值那一行，二者具名）之外一律算第二处来源，不看量程；量程只用来决定「这条内联是否比请求路径还长」这一附加判词。改动只落在 `unsourced` 那一段，保留 live-scale 与 `offenders` 那格。",
+ "asking": "归号令者裁：要我出这一枚增量，还是采纳 5a53846b 那版的更紧判据（他那枝已撤回不请落）。我不动他人字节，也不擅自重写已落在权威线上的那一格。"
+}
