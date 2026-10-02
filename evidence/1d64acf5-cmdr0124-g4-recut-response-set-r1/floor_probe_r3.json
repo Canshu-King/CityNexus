@@ -1,0 +1,95 @@
+{
+ "tip": "4fac49f371da0820393d038700bddddafd1176d1",
+ "arm": "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+ "states": 5,
+ "all_met": true,
+ "tree_clean_after": true,
+ "git_status_after": " M review/CityNexus-Vertical-Slice-Hardening-Checkpoint-20260910/backend/app/db/models.py\n M review/CityNexus-Vertical-Slice-Hardening-Checkpoint-20260910/backend/app/schemas.py\n M review/CityNexus-WP06-JourneyTwin-v2-Checkpoint-20260909/backend/app/commerce/strengths_generated.py\n M review/CityNexus-WP06-JourneyTwin-v2-Checkpoint-20260909/backend/app/db/models.py\n M review/CityNexus-WP06-JourneyTwin-v2-Checkpoint-20260909/backend/app/schemas.py\n M review/CityNexus-WP06-PostGate-Checkpoint-20260909/backend/app/commerce/strengths_generated.py\n M review/CityNexus-WP06-PostGate-Checkpoint-20260909/backend/app/db/models.py\n M review/CityNexus-WP06-PostGate-Checkpoint-20260909/backend/app/schemas.py\n M review/CityNexus-WP06-WP07-Road-Prep-Checkpoint-20260910/implementation/backend/app/commerce/strengths_generated.py\n M review/CityNexus-WP06-WP07-Road-Prep-Checkpoint-20260910/implementation/backend/app/db/models.py\n M review/CityNexus-WP06-WP07-Road-Prep-Checkpoint-20260910/implementation/backend/app/schemas.py\n M review/CityNexus-WP06-WP07-Road-Prep-GPT-Review-20260910/implementation/backend/app/commerce/strengths_generated.py\n M review/CityNexus-WP06-WP07-Road-Prep-GPT-Review-20260910/implementation/backend/app/db/models.py\n M review/CityNexus-WP06-WP07-Road-Prep-GPT-Review-20260910/implementation/backend/app/schemas.py\n M review/CityNexus-Weather-Runtime-Checkpoint-20260910/backend/app/commerce/strengths_generated.py\n M review/CityNexus-Weather-Runtime-Checkpoint-20260910/backend/app/db/models.py\n M review/CityNexus-Weather-Runtime-Checkpoint-20260910/backend/app/schemas.py\n M review/CityNexus-Weather-Runtime-Hardening-Checkpoint-20260910/backend/app/commerce/strengths_generated.py\n M review/CityNexus-Weather-Runtime-Hardening-Checkpoint-20260910/backend/app/db/models.py\n M review/CityNexus-Weather-Runtime-Hardening-Checkpoint-20260910/backend/app/schemas.py\n M review/ord0402-readouts/cross_lane_wire_check_r1.py\n M review/ord0402-readouts/http_acceptance_r1.py\n",
+ "dirt_total_lines": 22,
+ "dirt_review_area_lines": 22,
+ "dirt_outside_review_area": 0,
+ "candidate_committed_blob": "395662e3c534229bc8492ea611b6c737257e6228",
+ "tip_blob_of_that_file": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+ "candidate_added_paths": [
+  "backend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "expected_change_left_in_tree": "backend/tests/test_qoder_ord0296_write_deadline.py",
+ "unexpected_dirt": [],
+ "runs": [
+  {
+   "id": "P0_control",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": null,
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "1 passed, 2 warnings in 1.86s"
+   },
+   "note": "the tip as shipped"
+  },
+  {
+   "id": "P1_consumer_copy",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "target": "backend/app/main.py",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "assertion_that_fired": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\backend\\tests\\test_qoder_ord0296_write_deadline.py:249: AssertionError: a file that already asks the module for the lock wait also st",
+    "summary": "1 failed, 2 warnings in 1.73s"
+   },
+   "note": "the blind spot CMDR 18:34 named: a deriving file stating 1200 inline",
+   "restored_blob": "8b5c56d248560028f2d3de0dc9f697de06630243",
+   "restored_equal_to_tip": true
+  },
+  {
+   "id": "P2_worker_at_floor",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "target": "backend/app/stay_generation_operations.py",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "assertion_that_fired": "D:\\moodle\\_qoder_lane_S4_0926\\wt0391\\backend\\tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError: a lock wait at request-path scale is stated inline outside th",
+    "summary": "1 failed, 2 warnings in 1.70s"
+   },
+   "note": "a worker inline wait at 90000 ms, above the live floor",
+   "restored_blob": "2878d2bc3d7eabf2378561c3f63bd794bd01d3c7",
+   "restored_equal_to_tip": true
+  },
+  {
+   "id": "P3_new_worker_below",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": "backend/app/qoder_floor_probe_r3.py",
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "1 passed, 2 warnings in 1.87s"
+   },
+   "note": "a new module with an 800 ms worker wait - still legitimate"
+  },
+  {
+   "id": "P4_whole_family",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "target": null,
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "assertion_that_fired": null,
+    "summary": "21 passed, 2 warnings in 4.81s"
+   },
+   "note": "the two rulers named by 07:57, run whole on this generation"
+  }
+ ],
+ "reading_of_the_ruling": "cmd said `main.py` and a count of 1; on this tip main.py states no inline number at all (it reads settings), so the count was implemented as the two structural rules the same sentence asks for: a file that derives the wait may state none inline, and a file that does not derive may only stay below the live floor"
+}
