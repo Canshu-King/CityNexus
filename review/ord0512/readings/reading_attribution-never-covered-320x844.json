@@ -1,8 +1,8 @@
 {
  "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
  "arm": "attribution-never-covered-320x844",
- "run_id": "ord0512g1",
- "shown_count": 3,
+ "run_id": "d25gate_r3c",
+ "shown_count": 5,
  "attribution_text": "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
  "overlapping_shown_labels": [],
  "centre_hit_test_recorded_only": "maplibregl-canvas",

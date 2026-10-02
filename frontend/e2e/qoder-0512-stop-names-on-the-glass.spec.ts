@@ -32,6 +32,12 @@ import { mapLabelViolations } from "./_mapLabelRules";
  *                             made the old arm vacuous).
  *   no-machine-word-on-glass — field names, capability codes, uuids and ordinals are not painted.
  *   labels-move-with-camera — the names belong to geography: a real drag moves every shown one.
+ *   hidden-reasons-are-told — a name that is not on the glass says which kind of no it is, and the
+ *                             per-side attributes are cross-checked against `data-placement` rather
+ *                             than merely read out.
+ *   third-side-is-tried     — with both flanks of a pin taken away on the live screen, the word comes
+ *                             back below the pin instead of disappearing; placement order is right,
+ *                             left, under.
  *   pin-paints-only-its-number — ORD-0403's claim survives this order: the text went beside the pin,
  *                             not into it.
  *
@@ -93,9 +99,11 @@ type LabelReading = {
   side: string | null;
   fitsRight: string | null;
   fitsLeft: string | null;
+  fitsUnder: string | null;
   blockedBy: string | null;
   visible: boolean;
   box: { x: number; y: number; w: number; h: number };
+  boxf: { x: number; y: number; w: number; h: number };
   inCanvas: boolean;
 };
 
@@ -107,6 +115,14 @@ const readLabels = (page: Page) =>
     return {
       labelNodeCount: nodes.length,
       canvasInnerTextChars: canvas ? (canvas as HTMLElement).innerText.length : -1,
+      /* The surface and the pins' own centres, kept unrounded: the third check in
+         `hidden-reasons-are-told` rebuilds each side's box from the screen rather than trusting the
+         attribute that claims it, and a rounded box would disagree with the product at the boundary. */
+      canvasRect: frame ? { x: frame.x, y: frame.y, w: frame.width, h: frame.height } : null,
+      pinCentres: Array.from(document.querySelectorAll<HTMLElement>(".v8-map-panel .v9-map-marker")).map((el) => {
+        const b = el.getBoundingClientRect();
+        return { ordinal: (el.textContent ?? "").trim(), cx: b.x + b.width / 2, cy: b.y + b.height / 2 };
+      }),
       pinTexts: Array.from(document.querySelectorAll<HTMLElement>(".v8-map-panel .v9-map-marker")).map(
         (el) => (el.textContent ?? "").trim(),
       ),
@@ -132,6 +148,7 @@ const readLabels = (page: Page) =>
           side: el.getAttribute("data-side"),
           fitsRight: el.getAttribute("data-fits-right"),
           fitsLeft: el.getAttribute("data-fits-left"),
+          fitsUnder: el.getAttribute("data-fits-under"),
           blockedBy: el.getAttribute("data-blocked-by"),
           visible: style.visibility === "visible" && style.display !== "none" && box.width > 0,
           box: {
@@ -140,6 +157,7 @@ const readLabels = (page: Page) =>
             w: Math.round(box.width),
             h: Math.round(box.height),
           },
+          boxf: { x: box.x, y: box.y, w: box.width, h: box.height },
           inCanvas: !!frame
             && box.x >= frame.x - 1
             && box.y >= frame.y - 1
@@ -565,9 +583,9 @@ test("hidden-reasons-are-told — a name that is not on the glass says which kin
      cannot be `off_map` while a side fits, and cannot be `over_a_name` while nothing stands on it. */
   const check = (rows: Awaited<ReturnType<typeof readLabels>>["labels"]) => rows
     .map((label) => {
-      const fits = [label.fitsRight === "true", label.fitsLeft === "true"];
+      const fits = [label.fitsRight === "true", label.fitsLeft === "true", label.fitsUnder === "true"];
       if (label.placement === null || label.fitsRight === null || label.fitsLeft === null
-        || label.blockedBy === null) return `${label.text}: an attribute is missing`;
+        || label.fitsUnder === null || label.blockedBy === null) return `${label.text}: an attribute is missing`;
       if (!label.visible && label.placement === "shown") return `${label.text}: shown yet hidden`;
       if (label.placement === "shown") {
         return !fits.some(Boolean) || label.blockedBy !== "nothing"
@@ -606,16 +624,140 @@ test("hidden-reasons-are-told — a name that is not on the glass says which kin
     acc[key] = (acc[key] ?? 0) + 1;
     return acc;
   }, {});
+  /* The attributes can be mutually consistent and still describe a screen that does not exist: with
+     three sides the product has fewer `off_map` names left, and a chip that simply always claimed a
+     flank fitted would no longer contradict any placement. So the claims are measured here rather than
+     cross-read -- each side's box is rebuilt from the pin's own centre on this screen, the chip's own
+     size, and the surface, and compared with what the element says. The gap off the pin is derived from
+     where the names actually landed, never copied from the source, so changing that constant moves both
+     sides of this check together. */
+  const measure = (read: Awaited<ReturnType<typeof readLabels>>) => {
+    const canvas = read.canvasRect;
+    if (!canvas) return { problems: ["the map surface is not on this screen, so no side can be judged"], gap: null };
+    const centres = new Map(read.pinCentres.map((pin) => [pin.ordinal, pin]));
+    const EPS = 1;
+    const inside = (x: number, y: number, w: number, h: number) => x >= canvas.x - EPS && y >= canvas.y - EPS
+      && x + w <= canvas.x + canvas.w + EPS && y + h <= canvas.y + canvas.h + EPS;
+    const gaps: number[] = [];
+    for (const label of read.labels) {
+      const pin = centres.get(label.ordinal);
+      if (!pin || label.placement !== "shown") continue;
+      if (label.side === "right") gaps.push(label.boxf.x - pin.cx);
+      else if (label.side === "left") gaps.push(pin.cx - label.boxf.x - label.boxf.w);
+      else if (label.side === "under") gaps.push(label.boxf.y - pin.cy);
+    }
+    const problems: string[] = [];
+    if (!gaps.length) return { problems: ["no shown name to derive the gap from, so every fits claim is unverified"], gap: null };
+    const gap = gaps.reduce((sum, value) => sum + value, 0) / gaps.length;
+    if (Math.max(...gaps) - Math.min(...gaps) > 2) {
+      problems.push(`the flanks do not share one gap off the pin: ${JSON.stringify(gaps.map((v) => Math.round(v)))}`);
+    }
+    for (const label of read.labels) {
+      const pin = centres.get(label.ordinal);
+      if (!pin) { problems.push(`${label.text}: no pin on this screen to measure its sides from`); continue; }
+      const real = [
+        inside(pin.cx + gap, pin.cy - label.boxf.h / 2, label.boxf.w, label.boxf.h),
+        inside(pin.cx - gap - label.boxf.w, pin.cy - label.boxf.h / 2, label.boxf.w, label.boxf.h),
+        inside(pin.cx - label.boxf.w / 2, pin.cy + gap, label.boxf.w, label.boxf.h),
+      ];
+      const told = [label.fitsRight === "true", label.fitsLeft === "true", label.fitsUnder === "true"];
+      real.forEach((ok, index) => {
+        if (ok !== told[index]) {
+          problems.push(`${label.text}: says ${["right", "left", "under"][index]} fits=${told[index]} measured from the screen it is ${ok}`);
+        }
+      });
+    }
+    return { problems, gap: Math.round(gap * 10) / 10 };
+  };
+  const fittedMeasured = measure(fitted);
+  const crowdedMeasured = measure(crowded);
   push("hidden-reasons-are-told", {
     fitted_tally: tally(fitted.labels),
     crowded_tally: tally(crowded.labels),
-    fitted_rows: fitted.labels.map((label) => [label.text, label.placement, label.fitsRight, label.fitsLeft, label.blockedBy]),
-    crowded_rows: crowded.labels.map((label) => [label.placement, label.fitsRight, label.fitsLeft, label.blockedBy]),
+    gap_off_pin_px_fitted: fittedMeasured.gap,
+    gap_off_pin_px_crowded: crowdedMeasured.gap,
+    measured_against_screen_fitted: fittedMeasured.problems,
+    measured_against_screen_crowded: crowdedMeasured.problems,
+    fitted_rows: fitted.labels.map((label) => [label.text, label.placement, label.side, label.fitsRight, label.fitsLeft, label.fitsUnder, label.blockedBy]),
+    crowded_rows: crowded.labels.map((label) => [label.placement, label.side, label.fitsRight, label.fitsLeft, label.fitsUnder, label.blockedBy]),
     contradictions: [...fittedViolations, ...crowdedViolations],
   });
   expect(crowded.labelNodeCount, node("F1", "no name nodes at all, so every verdict below would be vacuous")).toBeGreaterThan(0);
   expect(fittedViolations, node("F1", `at the journey's own view: ${JSON.stringify(fittedViolations)}`)).toEqual([]);
   expect(crowdedViolations, node("F1", `at a crowded zoom: ${JSON.stringify(crowdedViolations)}`)).toEqual([]);
+  expect(fittedMeasured.problems, node("F2", `the fits attributes disagree with the screen at the journey's own view: ${JSON.stringify(fittedMeasured.problems)}`)).toEqual([]);
+  expect(crowdedMeasured.problems, node("F2", `the fits attributes disagree with the screen at a crowded zoom: ${JSON.stringify(crowdedMeasured.problems)}`)).toEqual([]);
+});
+
+test("third-side-is-tried — when both flanks are owned the word goes under its pin instead of vanishing", async ({ page }) => {
+  /* The third generation's own claim, and the reason the ruling bought it: two sides leave a name with
+     nowhere to go on a phone-width map, and hiding it is the same silence as having no name. This arm
+     does not read the source and admire the array -- it takes the two flanks away on the live screen and
+     requires the word to come back below its pin. `applyLabels` measures reserved ground off the DOM, so
+     a band carrying one of the selectors the panel already reserves is enough; the arm adds it, asks the
+     camera for a re-fit, and removes it again. */
+  await page.setViewportSize({ width: 390, height: 844 });
+  await enterMap(page);
+  const before = await readLabels(page);
+  const keptRight = before.labels.filter((label) => label.visible && label.side === "right");
+  expect(keptRight.length, node("F3", `no name held its right flank to begin with, so this arm would prove nothing: ${JSON.stringify(before.labels.map((l) => [l.text, l.placement, l.side]))}`)).toBeGreaterThan(0);
+
+  const bandTop = Math.round(keptRight[0].box.y + keptRight[0].box.h / 2) - 12;
+  const band = await page.evaluate((top: number) => {
+    const canvas = document.querySelector<HTMLElement>(".v8-maplibre-canvas");
+    const frame = canvas?.getBoundingClientRect();
+    if (!frame) return null;
+    const el = document.createElement("div");
+    el.className = "v8-map-tile-notice";
+    el.setAttribute("data-ord0512-band", "1");
+    el.style.cssText = [
+      "position:fixed", `left:${Math.round(frame.x)}px`, `top:${top}px`,
+      `width:${Math.round(frame.width)}px`, "height:24px", "padding:0", "margin:0",
+      "border:0", "background:transparent", "pointer-events:none", "box-sizing:border-box",
+    ].join(";");
+    document.querySelector(".v8-map-panel")?.appendChild(el);
+    const host = canvas as (HTMLElement & { citynexusMap?: { getZoom: () => number; setZoom: (z: number) => void } }) | null;
+    const map = host?.citynexusMap;
+    if (map) map.setZoom(map.getZoom() + 0.001);
+    return { top, width: Math.round(frame.width) };
+  }, bandTop);
+  expect(band, node("F3", "the panel has no map surface to band across, so this arm cannot run")).not.toBeNull();
+  await page.waitForTimeout(1_500);
+
+  const under = await readLabels(page);
+  const underShown = under.labels.filter((label) => label.visible && label.side === "under");
+  const flanksTaken = under.labels.filter((label) => label.visible && label.side !== "under"
+    && label.blockedBy === "nothing");
+  push("third-side-is-tried", {
+    band,
+    names_before: keptRight.map((label) => [label.text, label.side]),
+    names_after: under.labels.map((label) => [label.text, label.placement, label.side, label.fitsRight, label.fitsLeft, label.fitsUnder, label.blockedBy]),
+    under_shown: underShown.map((label) => label.text),
+    still_on_a_flank: flanksTaken.map((label) => [label.text, label.side]),
+  });
+  expect(underShown.length, node("F3", `both flanks of every name are owned, yet nothing moved under its pin: ${JSON.stringify(under.labels.map((l) => [l.text, l.placement, l.side, l.fitsUnder]))}`)).toBeGreaterThan(0);
+  expect(underShown.every((label) => label.placement === "shown" && label.blockedBy === "nothing"),
+    node("F3", `an under-placed name came back with a contradiction: ${JSON.stringify(underShown.map((l) => [l.text, l.placement, l.blockedBy]))}`)).toBe(true);
+
+  await page.evaluate(() => {
+    Array.from(document.querySelectorAll<HTMLElement>("[data-ord0512-band]")).forEach((el) => el.remove());
+    const canvas = document.querySelector<HTMLElement>(".v8-maplibre-canvas");
+    const host = canvas as (HTMLElement & { citynexusMap?: { getZoom: () => number; setZoom: (z: number) => void } }) | null;
+    const map = host?.citynexusMap;
+    if (map) map.setZoom(map.getZoom() - 0.001);
+  });
+  await page.waitForTimeout(900);
+  const after = await readLabels(page);
+  /* What has to be gone is the ground this arm borrowed, not the placement it caused: the rule re-runs
+     from scratch on every fit, but a name that won the ground under its pin while both flanks were
+     blocked can legitimately keep it once they are free, because the stop that outranks it may still be
+     sitting on the flank. Asserting the sides snap back would judge the arm's own camera nudge. */
+  push("third-side-is-tried-cleanup", {
+    band_nodes_left: await page.evaluate(() => document.querySelectorAll("[data-ord0512-band]").length),
+    sides_after: after.labels.map((label) => [label.text, label.side, label.visible]),
+  });
+  expect(await page.evaluate(() => document.querySelectorAll("[data-ord0512-band]").length),
+    node("F3", "the borrowed reserved ground is still in the document, so a later reading on this page would be polluted")).toBe(0);
 });
 
 test("pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it", async ({ page }) => {

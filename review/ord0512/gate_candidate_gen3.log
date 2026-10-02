@@ -1,0 +1,328 @@
+
+> test:e2e
+> playwright test e2e/qoder-0512-stop-names-on-the-glass.spec.ts --reporter=list
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:5196 backend=:5197 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/_e2e_d25gate_r3c.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [39572]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:5197 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:58080 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59560 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=d25gate_r3c frontend=:5196 -> backend=:5197 ai=disabled db=_e2e_d25gate_r3c.db
+
+Running 11 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:5196 backend=:5197 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/_e2e_d25gate_r3c.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:59044 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:59045 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:59044 - "POST /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59045 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59044 - "POST /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/stay-options/fea2e49a-72b0-45b1-8417-8635e8217f74/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=b604431d-2887-479b-bfb8-0c455bd65d94 options=4 chosen=fea2e49a-72b0-45b1-8417-8635e8217f74 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:61590 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61591 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57805 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57807 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57804 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61592 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56255 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56260 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56259 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57806 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56257 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56261 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59244 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok  1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (4.8s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:5196 backend=:5197 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/_e2e_d25gate_r3c.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:55900 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55901 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55902 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61720 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61717 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61719 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53508 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61718 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61449 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54962 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64346 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61721 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54963 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51728 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51729 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51730 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51731 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51734 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51735 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52753 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52752 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52754 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: names-painted-390 — {"viewport":"390x844","server_stop_rows_in_payloads":18,"server_distinct_names":8,"pin_count":9,"label_node_count":9,"shown_count":5,"shown_texts":["Arrival","Five Great Avenues","Tianjin Museum","Tianjin Eye","Departure"],"placements_at_first_read":[["shown","right"],["over_a_name","under"],["over_a_name","under"],["shown","under"],["shown","under"],["shown","right"],["over_a_name","under"],["over_a_name","under"],["shown","under"]],"settled_shown_count":5,"placements_after_settle":[["shown","right"],["over_a_name","under"],["over_a_name","under"],["shown","under"],["shown","under"],["shown","right"],["over_a_name","under"],["over_a_name","under"],["shown","under"]],"missing_from_glass":[],"canvasInnerTextChars":81,"place_name_keys_in_payloads":0,"sources":["title","title","title","title","title"],"first_label_ink_changed_it":true}
+  ok  2 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:253:1 › names-painted-390 — every located stop has its word on the glass, and the word is the server's (6.2s)
+[WebServer] INFO:     127.0.0.1:57554 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57555 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57557 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51635 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51634 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51632 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51637 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51633 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51636 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64133 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52951 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63858 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52952 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51297 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51298 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51299 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51300 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51303 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57602 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57601 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51301 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57603 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: names-painted-desktop — {"viewport":"1280x900","server_stop_count":18,"label_node_count":9,"shown_count":7,"placements":["shown","shown","shown","shown","shown","shown","over_a_name","over_a_name","shown"],"all_label_boxes_inside_canvas":true}
+  ok  3 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:314:1 › names-painted-desktop — the same words at 1280x900 (4.2s)
+[WebServer] INFO:     127.0.0.1:62233 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62234 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62235 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56120 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56122 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56123 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56121 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63442 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63441 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49955 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49954 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62516 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61824 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58905 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58906 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58907 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58908 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58909 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57964 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62296 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62295 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62297 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: crowding-hides — {"zoom_fit_shown":5,"zoom_6_shown":3,"pins_inside_canvas_at_fit":9,"pins_inside_canvas_at_zoom_6":9,"label_node_count":9,"hidden_still_in_document":true,"hidden_reasons":["over_a_name","over_a_name","over_a_name","over_a_name","over_a_name","over_a_name"],"overlapping_shown_pairs":[],"picked_pin_ordinal":"1","picked_stop_kept_its_name":true}
+  ok  4 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:342:1 › crowding-hides — where the stops converge the names take turns, and the picked one keeps its word (6.9s)
+[WebServer] INFO:     127.0.0.1:61792 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61793 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61794 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58325 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58322 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58324 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62204 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58323 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64689 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62203 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64688 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60966 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60722 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64787 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64790 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64791 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64792 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64793 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65266 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63771 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63770 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63772 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: attribution-never-covered-390x844 — {"shown_count":5,"attribution_text":"Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org","overlapping_shown_labels":[],"centre_hit_test_recorded_only":"maplibregl-canvas","attribution_pixels_identical_with_and_without_names":true,"attribution_owns_its_own_pixels":true}
+[WebServer] INFO:     127.0.0.1:64071 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64072 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64073 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64074 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56366 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56365 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64077 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55559 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64075 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61651 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53721 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65374 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61652 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58600 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58601 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58602 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58603 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58604 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58606 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58652 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58651 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58653 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: attribution-never-covered-320x844 — {"shown_count":5,"attribution_text":"Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org","overlapping_shown_labels":[],"centre_hit_test_recorded_only":"maplibregl-canvas","attribution_pixels_identical_with_and_without_names":true,"attribution_owns_its_own_pixels":true}
+[WebServer] INFO:     127.0.0.1:52861 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52862 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50883 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50882 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52864 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52635 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49994 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57059 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50881 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52863 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51735 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53027 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60586 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55890 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55891 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55892 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55893 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55894 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55895 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55126 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55125 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55127 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: attribution-never-covered-1280x900 — {"shown_count":7,"attribution_box":{"x":311,"y":898,"w":614,"h":18,"text":"Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org"},"licence_box_inside_viewport":false,"overlapping_shown_labels":[],"pixel_claim":"NOT_MEASURED: the licence box does not fit inside the viewport at this shape"}
+  ok  5 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:410:1 › attribution-never-covered — a name never paints over the licence sentence (12.2s)
+[WebServer] INFO:     127.0.0.1:49167 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49168 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49169 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64842 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64841 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64839 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64844 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64840 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62357 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51497 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64843 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58335 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53840 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57566 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57567 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57568 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57569 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57570 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59733 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52550 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52549 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52551 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: painted-set-passes-the-rule-list — {"canvasInnerTextChars":81,"judged_surface":"canvas-label-strings","corpus_strings":5,"corpus_chars":59,"offenders":[],"forbidden_classes_checked":["clock-time","duration","money","source"]}
+  ok  6 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:496:1 › painted-set-passes-the-rule-list — the words now on the glass are judged by the shared list (4.1s)
+[WebServer] INFO:     127.0.0.1:52564 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52565 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52566 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58250 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58249 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58247 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57256 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58248 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65014 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57255 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64113 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50902 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50903 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52530 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52531 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52532 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52533 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52534 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53347 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58519 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58518 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58520 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: no-machine-word-on-glass — {"shown_texts":["Arrival","Five Great Avenues","Tianjin Museum","Tianjin Eye","Departure"],"offenders":[]}
+  ok  7 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:517:1 › no-machine-word-on-glass — the field name is not the place name (4.0s)
+[WebServer] INFO:     127.0.0.1:59083 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59084 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59085 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52769 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52766 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52768 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52767 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52568 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52567 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65281 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65098 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49670 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65282 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54776 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54777 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54778 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54779 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54780 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54781 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55502 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55496 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55505 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: labels-move-with-camera — {"before":5,"after":3,"common_compared":2,"moved":[{"text":"Arrival","dx":81,"dy":52},{"text":"Tianjin Museum","dx":7,"dy":81}],"stuck":[],"appeared_after_the_drag":["Check in · Haihe Riverside Hotel"],"vanished_after_the_drag":["Five Great Avenues","Tianjin Eye","Departure"],"first_still_inked":true}
+  ok  8 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:538:1 › labels-move-with-camera — the names belong to the geography, not to the panel (5.8s)
+[WebServer] INFO:     127.0.0.1:57154 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57155 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57156 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49686 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49679 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49676 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57351 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49678 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52974 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54348 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57349 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51883 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49689 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58030 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58031 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58032 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58033 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58034 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58035 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60148 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60147 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60149 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: hidden-reasons-are-told — {"fitted_tally":{"shown":5,"over_a_name":4},"crowded_tally":{"shown":3,"over_a_name":6},"gap_off_pin_px_fitted":18,"gap_off_pin_px_crowded":18.1,"measured_against_screen_fitted":[],"measured_against_screen_crowded":[],"fitted_rows":[["Arrival","shown","right","true","true","true","nothing"],["Check in · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Five Great Avenues","shown","under","true","false","true","nothing"],["Tianjin Museum","shown","under","true","true","true","nothing"],["Tianjin Eye","shown","right","true","true","true","nothing"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Check out · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Departure","shown","under","true","true","true","nothing"]],"crowded_rows":[["shown","right","true","true","true","nothing"],["shown","under","false","false","true","nothing"],["over_a_name","under","false","false","true","name"],["shown","left","true","true","true","nothing"],["over_a_name","right","true","true","true","name"],["over_a_name","right","true","true","true","name"],["over_a_name","under","false","false","true","name"],["over_a_name","under","false","false","true","name"],["over_a_name","right","true","true","true","name"]],"contradictions":[]}
+  ok  9 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:578:1 › hidden-reasons-are-told — a name that is not on the glass says which kind of no it is (5.6s)
+[WebServer] INFO:     127.0.0.1:64328 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64329 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64330 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64907 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64909 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64908 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56612 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56614 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56613 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50689 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50690 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51614 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50691 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57467 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57469 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57470 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57471 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57472 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61339 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62122 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62121 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62123 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried — {"band":{"top":491,"width":354},"names_before":[["Arrival","right"],["Tianjin Eye","right"]],"names_after":[["Arrival","shown","right","true","true","true","nothing"],["Check in · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Five Great Avenues","shown","under","true","false","true","nothing"],["Tianjin Museum","shown","under","true","true","true","nothing"],["Tianjin Eye","shown","right","true","true","true","nothing"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Check out · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Departure","shown","under","true","true","true","nothing"]],"under_shown":["Five Great Avenues","Tianjin Museum","Departure"],"still_on_a_flank":[["Arrival","right"],["Tianjin Eye","right"]]}
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried-cleanup — {"band_nodes_left":0,"sides_after":[["Arrival","right",true],["Check in · Haihe Riverside Hotel","under",false],["Overnight · Haihe Riverside Hotel","under",false],["Five Great Avenues","under",true],["Tianjin Museum","under",true],["Tianjin Eye","right",true],["Overnight · Haihe Riverside Hotel","under",false],["Check out · Haihe Riverside Hotel","under",false],["Departure","under",true]]}
+  ok 10 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:692:1 › third-side-is-tried — when both flanks are owned the word goes under its pin instead of vanishing (6.6s)
+[WebServer] INFO:     127.0.0.1:55700 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55701 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55702 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59507 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59509 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59512 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59510 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59508 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60109 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59511 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55597 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55949 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62834 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54782 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54783 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54784 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/checkins HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54785 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54786 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54787 - "GET /api/v1/travelers/43ed07a3-32d2-4025-a1fe-e44e32396be6/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55970 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55969 - "GET /api/v1/journeys/b604431d-2887-479b-bfb8-0c455bd65d94/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55971 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: pin-paints-only-its-number — {"pin_count":9,"pin_texts":["1","2","3","4","5","6","7","8","9"],"not_digits":[],"label_nodes":9}
+  ok 11 [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it (4.1s)
+
+  11 passed (1.2m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-0512-stop-names-on-the-glass.spec.ts --reporter=list cwd D:\moodle\_qoder_b_ord0417_20260928\ord0512cut_06ad00b0\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_d25gate_r3c.db ports 5196/5197 tree D:\moodle\_qoder_b_ord0417_20260928\ord0512cut_06ad00b0

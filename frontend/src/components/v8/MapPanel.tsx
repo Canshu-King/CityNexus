@@ -761,9 +761,13 @@ export function MapPanel({
    * one of those is not on the glass, and a name that eats the attribution takes away the traveller's
    * only route to the tile licence.
    */
-  /* The chip clears its pin's own 28 px box by a few pixels, and the same number is used on both
-     sides so a name flipped left does not sit closer than one that stayed right. */
+  /* The chip clears its pin's own 28 px box by a few pixels, and the same number is used on every side
+     so a name flipped left or dropped below does not sit closer than one that stayed right. */
   const LABEL_GAP_PX = 18;
+  /* The order the ruling gave this family: right of the pin, then left, then under it. A third side is
+     the cheapest extra word there is -- it costs no truncation and no wrapped line -- so it is tried
+     before a name is hidden at all. */
+  const LABEL_SIDES = ["right", "left", "under"] as const;
   const applyLabels = () => {
     const canvas = host.current;
     const panel = canvas?.closest(".v8-map-panel") ?? null;
@@ -786,7 +790,7 @@ export function MapPanel({
       .map((el) => el.getBoundingClientRect())
       .filter((box) => box.width > 0 && box.height > 0)
       .map((box) => ({ x: box.x, y: box.y, w: box.width, h: box.height }));
-    /* Both sides are built from the pin's anchor point rather than measured off the element, because
+    /* All three sides are built from the pin's anchor point rather than measured off the element, because
        the element sits wherever the *previous* fit put it -- its width is stable, its position is not. */
     const candidates = labelNodes.current.map((node) => {
       const size = node.el.getBoundingClientRect();
@@ -798,6 +802,7 @@ export function MapPanel({
         sides: [
           { x: cx + LABEL_GAP_PX, y: cy - size.height / 2, w: size.width, h: size.height },
           { x: cx - LABEL_GAP_PX - size.width, y: cy - size.height / 2, w: size.width, h: size.height },
+          { x: cx - size.width / 2, y: cy + LABEL_GAP_PX, w: size.width, h: size.height },
         ],
         priority: node.priority,
         order: node.order,
@@ -813,14 +818,17 @@ export function MapPanel({
       const size = node.el.getBoundingClientRect();
       const pin = map.project(node.at);
       const reach = LABEL_GAP_PX + size.width / 2;
-      node.marker.setOffset(verdict.side === 1 ? [-reach, 0] : [reach, 0]);
+      const drop = LABEL_GAP_PX + size.height / 2;
+      const side = LABEL_SIDES[verdict.side] ?? LABEL_SIDES[0];
+      node.marker.setOffset(side === "under" ? [0, drop] : side === "left" ? [-reach, 0] : [reach, 0]);
       node.el.setAttribute("data-placement", verdict.placement);
-      node.el.setAttribute("data-side", verdict.side === 1 ? "left" : "right");
+      node.el.setAttribute("data-side", side);
       /* which side would have held the word, and what was standing there instead -- said per side so
          "no room on this map" and "a neighbour took the room" are two different readings on the glass,
          not one attribute that covers both. */
       node.el.setAttribute("data-fits-right", String(verdict.fits[0] === true));
       node.el.setAttribute("data-fits-left", String(verdict.fits[1] === true));
+      node.el.setAttribute("data-fits-under", String(verdict.fits[2] === true));
       node.el.setAttribute("data-blocked-by", verdict.blocked_by ?? "nothing");
       node.el.classList.toggle("label-hidden", verdict.placement !== "shown");
     }
