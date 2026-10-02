@@ -219,9 +219,15 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     scale = WD.busy_timeout_ms()
     assert scale > 0, scale
     DERIVES = ("busy_timeout_ms", "write_busy_timeout_ms", "busy_timeout_seconds")
+    #: CMDR 02:45 第 10 行「按裁定收形」：豁免从「文件名等于 write_deadline.py」换成一张具名路径白名单，出厂只有一枚。
+    #: 后来的单要在第二枚路径上内联写这个数，必须在同一笔提交里把自己的路径写进这张表——没写就是第二处常量，当场红；
+    #: 写进表而那一枚路径既不定义这个数也不内联写它，白名单就烂成了意图清单，也红（下面 `justified_members` 那一格）。
+    #: 旧形制按文件名豁免是有洞的：同名不同路的东西（`app/<别处>/write_deadline.py`）会从尺底下走过去。
+    SINGLE_SOURCE_FILES = {"app/db/write_deadline.py"}
+    justified_members: set[str] = set()
     unsourced: dict[str, list[str]] = {}
     for rel, rows in full.items():
-        if Path(rel).name == "write_deadline.py":
+        if Path(rel).as_posix() in SINGLE_SOURCE_FILES:
             continue  # the one place allowed to hold the number
         for i, line in rows:
             numbers = [int(n) for n in re.findall(r"\b\d{3,}\b", line)]
@@ -239,7 +245,12 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     inline = re.compile(r"busy_timeout\s*=\s*(\d+)")
     consumer_writes: dict[str, list[str]] = {}
     for rel, rows in full.items():
-        if Path(rel).name == "write_deadline.py":
+        posix = Path(rel).as_posix()
+        if posix in SINGLE_SOURCE_FILES:
+            # 白名单里这一枚必须真配得上豁免：要么它就是定义这个数的地方（`def busy_timeout_ms(`），
+            # 要么它确实内联写了 `busy_timeout = <整数>`；两者都没有 = 豁免是遗留，红。
+            if any(inline.search(line) or "def busy_timeout_ms(" in line for _i, line in rows):
+                justified_members.add(posix)
             continue  # the one place allowed to state the number at all
         asks_the_module = any(sym in line for _i, line in rows for sym in DERIVES)
         for i, line in rows:
@@ -249,6 +260,10 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     assert consumer_writes == {}, (
         "a file that already asks the module for the lock wait also states one inline "
         "(DEADLINE_CONSTANT_NOT_SINGLE_SOURCE, below the floor too): %s" % consumer_writes)
+    assert justified_members == SINGLE_SOURCE_FILES, (
+        "the single-source whitelist names a path that neither defines the accessor nor states a lock-wait "
+        "number on this tree, so the exemption is a leftover rather than a source: %s"
+        % sorted(SINGLE_SOURCE_FILES - justified_members))
     assert others, "nothing mentions busy_timeout at all -- this arm is reading an empty tree"
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
