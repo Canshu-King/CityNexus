@@ -1,0 +1,37 @@
+ORD-0502 phone mainline -- one walk replayed on three generations, every state read from that generation's own walk file.
+
+gen      tip                                      run               dist/index.html sha1 head8
+day15     5a4cdbd26d4a58d6ed6b277480e766ac08b15ded  ORD0502-070159    c6c41809
+day18     00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9  ORD0502-142248    9e7f9a45
+day21     e7ff7938ea41c5ac69afb1172acc4625159c7911  ORD0502-193545    c5afdad4
+
+per-cell states:
+cell    day15             day18             day21           
+C1      PASS              PASS              PASS            
+C2      FAIL              FAIL              FAIL            
+C2b     PASS              PASS              PASS            
+C3      FAIL              FAIL              FAIL            
+C4      NOT_REACHED_UI    NOT_REACHED_UI    NOT_REACHED_UI  
+C5      NOT_REACHED_UI    NOT_REACHED_UI    NOT_REACHED_UI  
+C6      NOT_REACHED_UI    NOT_REACHED_UI    NOT_REACHED_UI  
+C7b     PASS              PASS              PASS            
+
+chain verdicts:
+  day15  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+  day18  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+  day21  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+
+all 8 cells agree across the three generations: True
+
+the red links are stable down to the geometry. C3's covering node in each generation:
+  day15  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mobile-nav"}
+  day18  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mobile-nav"}
+  day21  Error: C3: centre hit refused the node -- {"hittable":false,"cx":82,"cy":783,"box":{"x":34,"y":760.78125},"at":{"tag":"nav","testid":null,"cls":"v8-mobile-nav"}
+
+server-side rows behind the day21 run (this lane's own store, mode=ro, counted not written):
+  journeys                       1
+  places                         0
+  external_reservation_drafts    1
+  journey_checkins               0
+  journey_share_grants           1
+  draft rows: [('READY_FOR_CONFIRMATION', 'STRUCTURED_JSON')]
