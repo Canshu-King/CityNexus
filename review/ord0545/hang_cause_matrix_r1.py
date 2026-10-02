@@ -9,9 +9,10 @@ per row, on this lane's own private stack:
   R2  mechanism, capped -- put back the one line that read a cell which only exists on the fresh-write
       branch (this is today's helper, which caps a single read at five seconds) and run it at two
       different per-test ceilings.  Both fail in seconds at either ceiling: that is the repair working.
-  R6/R7  mechanism, uncapped -- the same absent cell read the way the instrument did at 02:3x, before the
-      cap existed, at a 20 second and then a 100 second ceiling.  Same locator named, wall tracking the
-      ceiling.  That pair is the stall's shape, measured instead of narrated.
+  R6/R7/R8  mechanism, uncapped -- the same absent cell read the way the instrument did at 02:3x, before the
+      cap existed, at a 20 second, a 100 second and then the ceiling that actually shipped (300 s).  Same
+      locator named at all three, wall tracking the ceiling.  That triple is the stall's shape, measured
+      instead of narrated: R8 is the cost of one such cell in the run that died on its external cap.
   R3  branch control -- the same mutated line on a store that does NOT yet carry the place (so the cell
       exists): green at the short ceiling.  Together with R2 this pins "cell absent on the taken branch",
       not "this gate is slow".
@@ -30,6 +31,15 @@ rc 1 waiting for `getByTestId('poi-import')` -- the screen's own entry -- and no
 mutated locator.  A row that reds on the entry cell is measuring my stack, not the product, so this tool
 now picks a free frontend port, a free backend port and its own store tag per invocation and refuses to
 start if it cannot bind them.
+
+A SECOND DEFECT, SAME DISCIPLINE:  at 05:5x a hard-killed instance left its mutation sitting in the spec,
+and the next instance inserted a copy on top of it.  That generation is kept in
+`readouts/hang_cause_matrix_r1_leftover_mutation_contaminated_r1.json` -- three rows there collected zero
+tests (a duplicate `const` is a SyntaxError), and its `capped_read_is_ceiling_independent` still reported
+true off two rows that never ran anything, which is a vacuous predicate, not a measurement.  Both are
+bolted: the run now refuses to start unless the spec on disk matches the published blob byte for byte, the
+mutation is restored in a `finally`, and every cause-deciding predicate demands `tests_collected == 1` and
+`failed == 1` alongside the locator it names.
 
 Rows write one JSON matrix plus a console tail per row; nothing here ships a product byte.
 
@@ -87,6 +97,13 @@ def now() -> str:
 def git(*args):
     proc = subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True, text=True, errors="replace")
     return proc.returncode, proc.stdout.strip()
+
+
+def blob_bytes(rev: str, path: str) -> bytes:
+    proc = subprocess.run(["git", "-C", str(ROOT), "show", rev + ":" + path], capture_output=True)
+    if proc.returncode != 0:
+        raise SystemExit("ABORT: cannot read " + rev + ":" + path + " -- " + proc.stderr.decode("utf-8", "replace")[:120])
+    return proc.stdout
 
 
 def listening_pids(port: int) -> list[str]:
@@ -226,7 +243,15 @@ def run_matrix() -> int:
     FRONTEND_PORT, BACKEND_PORT = pick_port(4916), pick_port(4911)
     STORE_TAG_A, STORE_TAG_B = "x" + stamp + "a", "x" + stamp + "b"
     spec_before = hashlib.sha256(SPEC.read_bytes()).hexdigest()
+    published_sha = hashlib.sha256(blob_bytes(BASE_TIP, SPEC.relative_to(ROOT).as_posix())).hexdigest()
+    # a hard-killed instance leaves its mutation sitting in the file; inserting on top of that declares the
+    # same const twice, and every later row then measures my own wreckage instead of the product
+    if spec_before != published_sha:
+        raise SystemExit("ABORT: the walkthrough spec on disk is not the published bytes (disk "
+                         + spec_before[:16] + " vs " + BASE_TIP + " as " + published_sha[:16]
+                         + "); restore it from that blob and re-run")
     rows: dict[str, object] = {"base_tip": BASE_TIP, "started_at": now(), "spec_sha_before": spec_before,
+                               "spec_sha_published": published_sha,
                                "pre_flight": {
                                    "frontend_port": FRONTEND_PORT,
                                    "backend_port": BACKEND_PORT,
@@ -244,11 +269,16 @@ def run_matrix() -> int:
         if mutated:
             original = SPEC.read_bytes()
             SPEC.write_text(text.replace(ANCHOR, mutant + ANCHOR, 1), encoding="utf-8", newline="\n")
-        reading = gate(label, timeout_ms, proxy_dead, grep)
+        try:
+            reading = gate(label, timeout_ms, proxy_dead, grep)
+        finally:
+            # restore even when the row throws: an aborted row used to leave the mutation in the file, and
+            # the next row then inserted a second copy of the same const
+            if mutated and original is not None:
+                SPEC.write_bytes(original)
         reading["label"] = label
         reading["mutated"] = mutated
-        if mutated and original is not None:
-            SPEC.write_bytes(original)
+        if mutated:
             reading["restored"] = hashlib.sha256(SPEC.read_bytes()).hexdigest() == spec_before
         rows["runs"].append(reading)
         (READOUTS / "hang_cause_matrix_r1.json").write_text(
@@ -282,6 +312,10 @@ def run_matrix() -> int:
             grep="Wzh", mutant=MUTANT_UNCAPPED)
     run_row("R7_uncapped_missing_cell_ceiling_100s", mutated=True, timeout_ms=100000, proxy_dead=False,
             grep="Wzh", mutant=MUTANT_UNCAPPED)
+    # R8 is the third point, at the ceiling the shipped config actually carries, so the cost of the run
+    # that died is a reading rather than something I multiply out in a sentence
+    run_row("R8_uncapped_missing_cell_shipped_ceiling_300s", mutated=True, timeout_ms=300000, proxy_dead=False,
+            grep="Wzh", mutant=MUTANT_UNCAPPED)
 
     # R4 environment control
     run_row("R4a_shiped_with_dead_proxy_env", mutated=False, timeout_ms=None, proxy_dead=True, grep="Wzh")
@@ -311,16 +345,31 @@ def run_matrix() -> int:
     capped_b = by.get("R2b_mutated_cell_absent_ceiling_100s", {})
     unc_a = by.get("R6_uncapped_missing_cell_ceiling_20s", {})
     unc_b = by.get("R7_uncapped_missing_cell_ceiling_100s", {})
+    unc_c = by.get("R8_uncapped_missing_cell_shipped_ceiling_300s", {})
     orphan = by.get("R5_shiped_with_orphan_vite_on_port", {})
-    same_locator = (unc_a.get("waiting_for") or []) and unc_a.get("waiting_for") == unc_b.get("waiting_for")
+    same_locator = bool(unc_a.get("waiting_for")) and unc_a.get("waiting_for") == unc_b.get("waiting_for") == unc_c.get("waiting_for")
+    ran = all(r.get("tests_collected") == 1 and r.get("failed") == 1 for r in (unc_a, unc_b, unc_c))
     scales = unc_b.get("wall_seconds", 0) > unc_a.get("wall_seconds", 0) * 2
     conclusions = {
         # the stall's shape: one locator, waited on until whatever ceiling the run was given
-        "uncapped_wait_tracks_the_ceiling": bool(same_locator and scales and unc_a.get("failed") and unc_b.get("failed")),
-        "the_two_rows_name_the_same_locator": bool(same_locator),
-        # the fix's shape: with a per-read cap the same absent cell fails in seconds at either ceiling
+        "uncapped_wait_tracks_the_ceiling": bool(same_locator and ran and scales),
+        "the_two_rows_name_the_same_locator": bool(same_locator and ran),
+        # three measured points on the same straight line: the wait IS the ceiling, and the shipped ceiling
+        # is measured rather than multiplied out
+        "ceiling_300s_point_measured": bool(
+            unc_c.get("waiting_for") == unc_a.get("waiting_for") and unc_c.get("failed") == 1
+            and unc_c.get("tests_collected") == 1
+            and unc_a.get("wall_seconds", 0) < unc_b.get("wall_seconds", 0) < unc_c.get("wall_seconds", 0)
+            and 295 <= unc_c.get("wall_seconds", 0) <= 340
+            and unc_c.get("test_timeout_ms") == 300000),
+        # the fix's shape: with a per-read cap the same absent cell fails in seconds at either ceiling --
+        # and both rows must have ACTUALLY run one test and named the locator, because the contaminated
+        # generation at 05:5x satisfied "waiting_for ==" with two rows that collected no test at all
         "capped_read_is_ceiling_independent": bool(
-            capped_a.get("waiting_for") == capped_b.get("waiting_for")
+            capped_a.get("waiting_for") == ["getByTestId('poi-import-added-source')"]
+            and capped_b.get("waiting_for") == ["getByTestId('poi-import-added-source')"]
+            and capped_a.get("tests_collected") == capped_b.get("tests_collected") == 1
+            and capped_a.get("failed") == capped_b.get("failed") == 1
             and capped_a.get("wall_seconds", 99) < 20 and capped_b.get("wall_seconds", 99) < 20
             and capped_b.get("test_timeout_ms") == 100000),
         # the other stall, which is what I first blamed: an occupied port, now a sub-second named failure
@@ -346,6 +395,7 @@ def run_matrix() -> int:
     # measured facts, because a dead proxy in the environment can legitimately break browser navigation
     # and an occupied port is a different failure than the one being explained
     needed = ("uncapped_wait_tracks_the_ceiling", "the_two_rows_name_the_same_locator",
+              "ceiling_300s_point_measured",
               "capped_read_is_ceiling_independent", "cell_present_means_no_stall",
               "shipped_gate_green_throughout", "no_row_names_the_screen_entry")
     return 0 if all(conclusions[k] for k in needed) and rows["spec_untouched"] else 1
