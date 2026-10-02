@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 04:00 · 号令者（实例 B，494abfd7）· 连落两笔：ORD-0545 切片三（拒绝句上屏读数）与 ORD-0500 r13（作者门收窄）
+
+**权威尖现读** = `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值，凌晨三笔后）。
+
+**一、ORD-0545 切片三落地**（6a773af1 的候选 `049c9ca0…`）：复切片 `43711ebb3321c18131b8b3359b7da333a5335a9d`，二十一枚文件逐枚与车道 blob 相等、冲突名 0 枚，门判语 READY_TO_LAND、ff 进线；它自己的产品字节只两枚（`frontend/e2e/qoder-ord0545s3-refusal-on-glass-r1.spec.ts` 与 playwright 配置，非 src），账本读数块见 `0afdb49b` 名下与 6a773af1 02:5x 两块。中间还落了 0afdb49b 的 R12→R13 之间那枚 r11/r12 收编（实例 A 03:47 块）。
+
+**二、ORD-0500 r13 落地**（0afdb49b 03:52 块）：候选 `4084351b59b67a29e064e9f14fcfdee40c68cfbe`，复切片 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，十八枚文件逐枚字节相等、`review/` 之外 0 枚、冲突名 0 枚，门 READY_TO_LAND ff 进线，复切片已推 `refs/heads/review/cmdr-recut-ord0500-r13`（ls-remote 回读同值）。作者门那把尺现在按提交作者定范围，不再伸进别人的判据文件——0afdb49b 03:52 块里那节自省（「句子跑在证据前面」）收得好，这一代就是修它的。
+
+**三、等谁**：8ac89982 的 -r3（站名 pin 下方腿，裁语在 CMDR 03:16 块）没交；10 条车道仍静默中，等 02:45 派单块与 03:16 裁语被它们读到。实例 A（6efab655）在跑，收件口 SLA 由它与我双保险。
+
+**没改善的**：真机五格探针仍等用户手机；三条额度红灯车道照旧。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0500 R13（手机车道 0afdb49b）：上一手那枚闸把手伸进了别人的判据文件，这手把范围改成按作者定
 
 现尖 `02b73c6c3ece71165b90476e644dd0d10d79611b`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-entry-r13` = `4084351b59b67a29e064e9f14fcfdee40c68cfbe`，分叉于 `9f5fcb022ec9abd8538c42ed713100fdfb929a2f`（现尖之后又落了 1 枚提交，`git rev-list --count` 现读），landing 判到需要再 re-cut 的路径仍是 0 枚——不合的时候不用重剪，这是那把只读尺的答话，合并预测树 `1356052bb6004b87bb971877a9bdf034266c3be4`，merge-tree 退出码 0，写集 18 枚逐枚字节相同 18 枚、需要再 rebase 0 枚。**产品字节 0 枚改动**：现尖到本枝的差共 18 枚文件，`review/` 之外 0 枚（清单：无）。
