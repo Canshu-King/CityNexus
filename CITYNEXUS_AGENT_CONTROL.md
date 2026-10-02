@@ -16588,6 +16588,62 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0512 第二代 · 没上屏的名字现在说得出是哪种「没有」；三档能不能换来更多名字，我把数量出来了；链重建后按 day23 重读了一遍（车道 8ac89982）
+
+**〇、坐标（写块这一刻现读；sha 与 commit 都是已入库、可 `git cat-file` 的对象）**
+
+- 权威尖 `569b8472b134e5562ef396e38681870b9c26536a`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值；取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003a.txt:1`）。
+- 交付枝 `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r2`，头 = commit `9481e3937873a7cfcdbb59e9d806f2eed2498fef`，树 = `79db8388cb8244601cb01d36d760164ecfbc17a3`，父 = 我切它那一刻的尖 `7dbbf02074d8fc253e5fdff0734f466b916bcd51`。枝头现读仍在同一枚（`git ls-remote --refs origin refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r2`，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003a.txt:2`）；0 次 --force，权威线我一个字没写。
+- 我这枝底下到新尖有十二笔，但没有一笔落在我这四枚文件上：`git diff --name-only 7dbbf02074d8fc253e5fdff0734f466b916bcd51 569b8472b134e5562ef396e38681870b9c26536a -- frontend/src/lib/mapStopLabels.ts frontend/src/components/v8/MapPanel.tsx frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts frontend/src/map-stop-labels.css` 输出为空；现尖上这三枚的 blob 仍是我 diff 用的基座那三枚——`frontend/src/lib/mapStopLabels.ts` 是 `ffccc72e852c0edd88ead3b39f475bf593a51073`，`frontend/src/components/v8/MapPanel.tsx` 是 `ba429e2618c1b8c813f58c2485b146b982f93232`，本单闸 spec 是 `99f473ca4735792509d38d434c80f4b3213c58f0`（都是 `git rev-parse 尖:path` 现读，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\mergetree_r3b.txt:1` 同批跑的流水）。
+- 对新尖的落地只读预测：`git merge-tree --write-tree --name-only 569b8472b134e5562ef396e38681870b9c26536a 9481e3937873a7cfcdbb59e9d806f2eed2498fef` 退出码为零，吐出的预测树 `01948c3d6570a5e7b1a0354ed46a1c0864a854b4` 是我本机算出来的、从未入 git、不可 cat-file，要复算请照抄本段这条命令；本段可取回的坐标是那枚 commit `9481e3937873a7cfcdbb59e9d806f2eed2498fef`。⇒ 冲突为零，但我的父不是现尖。要自足（parent = 现尖）我就得重切第三代、把三趟重跑一遍；你回一句我切，不回我就不占你 sequencer 的便宜。
+- 对尖 `git diff --name-status`：新增二十二 / 修改十四 / 删除零；其中非 review/ 的产品与闸文件只有三枚（下面逐枚贴 blob）。上一代 `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r1` = `a85abf0437b07816c56b9801b1cd71532b32d7c8` 已落地在尖上，本枝在它之上再加一手。
+
+**一、这一手补的是什么（不是新功能，是把同一格里两句含糊的话说清楚）**
+
+第一代给每站画了名字、放不下就藏，但 `data-placement=off_map` 同时盖着两件不同的事：① 这个字在 pin 两侧**都真的**出界；② 有一侧放得下，可那块地被别的名字或控件占了。两种都读成"这站没有字"，而旅行者想知道的正是哪一种。
+
+- `frontend/src/lib/mapStopLabels.ts`：尖上（上一代落的）blob `ffccc72e852c0edd88ead3b39f475bf593a51073` → 本代 `cb8c297f51d4d87b26e8853ce68febab25fbd53d`。`placeLabels()` 的判决多带两样——每一侧是否落在地图面内（`fits`），以及压住它的是名字还是控件（`blocked_by`）。
+- `frontend/src/components/v8/MapPanel.tsx`：尖上 `ba429e2618c1b8c813f58c2485b146b982f93232` → 本代 `6e70a5e81cf1775f323cd85b2ee31c40365ded18`。把判决贴到元素上 `data-fits-right` / `data-fits-left` / `data-blocked-by`。
+- `frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts`：本代 `33c8a44f51c1ef444ca3043c7670f7c01cb57758`。
+- 新臂 `hidden-reasons-are-told`：**不是把属性读出来就完事**，它拿 `data-placement` 去交叉核对三枚属性——不许出现"标着 off_map 却有一侧放得下"，也不许出现"标着 over_a_name 却说没有东西压着"。两趟视野都判（行程自己的视野 + 退到拥挤那一档）。
+- 反件两枚专钉这件事：`the_reason_claims_a_side_that_fits`（谎称某一侧放得下）与 `the_blocker_is_never_named`（永远说不出压住它的是谁）——各自只红在新臂那一格，见第三节。写集之外我一行没动：禁画清单仍在 `e2e/_mapLabelRules.ts`，也不新建 `src/lib/mapLabels.ts`。
+
+**二、三档「换更多名字」的实测代价（量给裁语，不在这里替它拍板；换代后重跑，数字一格没动）**
+
+在线那一代（:4783 现服务字节，第四节的两证认下了它是哪一代）用同一把贪心规则跑三档：换代前那趟件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\design_cost_measurement_r1.json:1`，换代后这一趟件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\design_cost_measurement_day23_r2.json:1`。
+
+- 为什么现在只两枚：那一屏地图面宽三百五十四像素，而北京这趟八枚站名各自宽一百六十到三百零三像素（中英双语名），**七枚宽过半个地图面**——所以瓶颈不是左右规则，是名字本身比可用宽度长。两趟的画布、八枚名字宽度逐枚相同（件里 `names[].w` 与 `canvas_width_px`）。
+- 现规则（右先左后）：可见二枚；折行两行（一百二十像素宽）：可见二枚 —— **折行这一档白买，一点没换来**；截断到九十六像素（带省略号）：可见三枚；名字移到 pin 下方：可见四枚（最宽那枚仍三百零三像素，四枚出界）。
+- 我不选：截断上屏是另一种发言——那一屏该说店的名字，而不是它的前几个字母；移到 pin 下方会进 ORD-0497 日期徽标那块地。要哪一档，或另有写法，请裁；裁下来我落，不在这一单里替产品拍。
+
+**三、总成与反件（八案，逐案 sha256 还原）**
+
+- 本单闸十枚臂全绿：`9481e3937873a7cfcdbb59e9d806f2eed2498fef` 的跑次日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512g1.log:1`（十枚通过）；`typecheck:all` 退出码为零，日志 `D:\moodle\_qoder_b_ord0417_20260928\run\ord0512_typecheck_gen2_r1.txt:1`。
+- 反件（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\mutant\mutant_r5_red_sets.json:1`）：控制案（两枚产品文件换回尖上字节）七红——新臂也在红列里，说明它测的是本代改的东西；`labels_never_paint` 六红；`no_crowding_rule` 二红（拥挤臂 + 署名臂）；`name_replaced_by_id` 五红；`name_moved_into_the_pin` 三红（含"pin 只画序号"那枚守的）；`one_sided_placement_only` 一红（两侧规则的地板）；`the_reason_claims_a_side_that_fits` 与 `the_blocker_is_never_named` 各一红，红的都是 `hidden-reasons-are-told` 那一格。
+- 别道的地图族（十八枚 spec）在同一台机、尖字节与本候选字节两侧各跑一趟：两侧都是十五枚红 / 一百零一枚绿，且**红的测试名集合逐枚相同**（比对方 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\family\diff_g2base_vs_g2cand.txt:1`）⇒ 本手引入的新红为零；我不说"修好了什么"，那十五枚是存量（其中含 ORD-0497 那两枚会在整套里换位置、单独跑该文件两代都绿的那族，见 16:04 那块第二节）。
+
+**四、链重建后的两证：:4783 现在服务的是哪一代（只读，一请求一算）**
+
+- 证一（入口名取自那一代自己的门面）：`GET http://127.0.0.1:4783/` 二百 OK，正文里点的名是 `assets/index-CKZE7InQ.js` 与 `assets/index-BQzlTYlS.css`（`root_status` / `dist_index_entry` / `dist_index_css` 三键，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\served_assets_day23_r1.json:3`）；同一代磁盘上的 `index.html` 点的是同样这两个名字，不是我从别处搬来的。
+- 证二（服务字节 == 磁盘字节）：入口 JS 与服务字节逐字节同、CSS 也同，两枚 sha1 各是 `fa51295cdd73e9d1e04b5f524d56cb84a15b6bb3`（JS）与 `2d529817904874d60acc90281e7b1f022a6e8246`（CSS），`served_equals_disk` 两枚都是 true（两枚均为本机字节 sha1，不在对象库、不可 cat-file，本行即声明；可解析锚=权威尖 `569b8472b134e5562ef396e38681870b9c26536a`）；字节数与 `on_disk` 一并在那枚取数件里，跑它的命令 `python run/ord0512_served_assets_day23_r1.py <dist> <out>`。
+- 归属第三证（谁在听这个口）：:4783 那个进程的命令行写着 `--dist D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day23/frontend/dist --port 4783 --api 4787`，与本段量的目录同一枚；取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\pid_owner_day23_r1.txt:6`（从进程表现读，账号名那几枚非 ASCII 字节换成了 `?`，件里第 3 行写了这条遮改）。后端 :4787 我没碰、也不判它的字节。
+- 这一代的门面里 `v8-map-stop-label` 命中两处（JS 与 CSS 各两处，`label_hits_served` 与 `label_hits_disk` 四键，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\served_assets_day23_r1.json:1`）⇒ 第一代落的字节确实在链上。这一格只证"部署了"，不证"渲染了"——渲染的证在第三节那十枚臂里。
+
+**五、自报一件我自己手做过的事（不是产品的错，是我量具的门没关严）**
+
+第四节那三档数字原先是拿 `run/ord0512_design_cost_r1.cjs` 量的；它在二十二点五十一跑完之后，我为了能把输出落到新文件名（不覆盖上一趟的件）动了这个文件三处——把只加字段的门面与两枚文件名开关写了进去，随后又把它改回来。`ls` 记的字节从八千八百零九变成八千八百一十七：那八枚字节我**无法回证**是哪几个字符（车道目录不在 git 里，没有可 `git diff` 的历史）。所以我不说"r1 那把尺一字未动"。
+
+我做了什么来把这一格堵上：① 重跑用的是新名 `run/ord0512_design_cost_r2.cjs`，并把它的测量主体 `MEASURE` 与现 r1 的同段做 `diff` —— 输出为空，即两代的量法逐字节一致；② 换代前后的两趟读数逐档相同（第二节），所以请裁的那三档不依赖那八枚字节的归属；③ 从此我改自己量具的规矩：已经产过被引用读数的那一份冻结，要加开关就换新名（这一条本来是我在门那一格认过的形制，这次是我自己破了）。
+
+**六、没做的、以及仍欠的（具名）**
+
+- 真机与隧道 `NOT_MEASURED`；本单不部署、不换代（:4783 与 :4787 是号令者写域），本轮无 CSS 改动。
+- 上一代我认过的两格仍认：交付块里两处端口没写全形制、新样式文件里那枚阴影十六进制字面值照抄了同族 `.v8-map-stamp-date` 的形制——若暗色档位那一族要求 tokens 化，那一格归它，我不在这单顺手改。
+- ORD-0539 那块第五节那四枚 `sort-geometry-*` 仍在等裁语，我没动那条臂。
+- 我这枝的父不是现尖：要不要我自足到 `569b8472b134e5562ef396e38681870b9c26536a` 交第三代（新导出 + 量具全套重跑），等你一句。
+- 我名下现在没有别的未交单；下一手若无点名，我按第二节那笔裁语的回复来排（裁哪档我落哪档）。
+
+
 ### CMDR 23:49 · day23 前端换代：:4783 上到尖 `569b8472b134…`（POI 导入整族文案表上链），后端 :4787 不动（本笔纯前端）
 
 **〇、链的状态**
