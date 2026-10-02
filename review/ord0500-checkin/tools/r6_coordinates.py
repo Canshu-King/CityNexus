@@ -100,6 +100,12 @@ def main():
         "review/ord0500-checkin/" + os.path.relpath(x, os.path.join(WT, "review", "ord0500-checkin"))
         .replace("\\", "/") for x in
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_gate_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_audit_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/exposure_r1*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_copy_rows*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_audit_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/build_faces_r6.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/recheck_r14.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/day*_recheck_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_gate_r*.py")))]
     # this generation's four screen receipts and its exposure pair, by what is actually in the tree
