@@ -1,6 +1,6 @@
 {
   "tool": "branch_emit_arm_r14",
-  "took_local": "2026-10-03T06:13:06+08:00",
+  "took_local": "2026-10-03T06:19:30+08:00",
   "tip": "6a06a0bb93ffb7e9462b24b611f4ce214ea04f55",
   "named_generation": "r14",
   "ref_excluded_and_proven_by_bytes": "r16",
@@ -97,7 +97,7 @@
       "commit": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch ce73d99ebdc7423fcd164f6b9845b3f4fbee184c, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch cdbf0f18ae085e2c9a22d24633c51022ef76767e, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
       "generation_named": "r14",
       "receipts_named": [
         "citation_gate_r14.json",
@@ -113,7 +113,7 @@
       "commit": "71e855fa492901075a5abc8e0db97fee37b17d8e",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch ce73d99ebdc7423fcd164f6b9845b3f4fbee184c, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch cdbf0f18ae085e2c9a22d24633c51022ef76767e, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
       "generation_named": "r14",
       "receipts_named": [
         "citation_gate_r14.json",
@@ -129,7 +129,7 @@
       "commit": "e579f0c4b2ddef55262624df3892ed17c61b5289",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch ce73d99ebdc7423fcd164f6b9845b3f4fbee184c, the ref is e579f0c4b2ddef55262624df3892ed17c61b5289",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch cdbf0f18ae085e2c9a22d24633c51022ef76767e, the ref is e579f0c4b2ddef55262624df3892ed17c61b5289",
       "generation_named": "r14",
       "receipts_named": [
         "citation_gate_r14.json",
