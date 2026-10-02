@@ -1,0 +1,21 @@
+== ORD-0507 rebase onto day18 (rel lane a68b0631, tip 00b5f25e9b6b) ==
+rebase_target_tip=00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9
+r3_head=065c68ae77db97e33f0ba9f594729a4533919328 tip_is_ancestor=yes files_vs_tip=9
+r1_head=6fd6ab99705e1306260385deb9785721e7d6d14f tip_is_ancestor=yes files_vs_tip=10
+previous_generation_tip=5a4cdbd26d4a58d6ed6b277480e766ac08b15ded commits_between_5a4cdbd2_and_day18=9
+landed_by_byte_check_r3=none of the five product files matches the day18 tip blob (tip V8Experience.tsx=1485577c vs r3 b9a18219; tip LocaleContext.tsx=0425eef4 vs r3 2952cf24)
+landed_by_byte_check_r1=tip AccessPanel.tsx=98b0d423 vs r1 eb41a689, tip accessCopy.ts=ebbe3d77 vs r1 f4c94cd4 -- so r1 is still not landed and its defect is still live at the tip (frontend/src/features/access/AccessPanel.tsx:709 paints say("access.actionUnknown", { token: event.event_type }))
+
+-- runs at the day18 generation, line's own production build (npm run build + vite preview) --
+run=r3v1_my_arms summary=8 passed log_bytes=19609
+run=r3v2_nb_speaks summary=5 passed log_bytes=8083
+run=r3v3_nb_device_fallback summary=5 passed log_bytes=9971
+run=r3v4_nb_scene_window summary=2 passed log_bytes=6968
+run=r1_day18_spec summary=4 passed log_bytes=10559
+
+-- compile gates at day18 --
+tsc_check_rc=0 output_bytes=0 (r3 and r1 both; npx tsc -p tsconfig.check.json --noEmit)
+tsc_typecheck_rc=0 output_bytes=0 (r3 and r1 both; npx tsc -p tsconfig.typecheck.json --noEmit)
+day18_caught_nothing_new=true (the rebase replayed 8 commits on r3 and 2 on r1 with zero conflicts; the arm set that had to change a product line at day15 did not have to change anything at day18)
+day15_finding_still_load_bearing=the UNKNOWN cursor-state arm (frontend/src/app/V8Experience.tsx:3214) is re-proven green here: run=r3v1_my_arms
+upstream_context ORD-0513 landed at 04:17 as 00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9 in the same refusal-copy family; my checkin keys and its collection sentences coexist: measured at 065c68ae77db97e33f0ba9f594729a4533919328: the nine keys this branch adds are each defined exactly twice (en arm + zh arm), 50 checkin.* definitions / 25 distinct, keys defined more than twice = none
