@@ -363,10 +363,14 @@ def _lookup_fact(
     exact = facts.get((origin_key, destination_key))
     if exact is not None:
         return exact
-    normalized_pair = (_normalize_anchor_role(origin_key), _normalize_anchor_role(destination_key))
-    if normalized_pair == (origin_key, destination_key):
-        return None
-    return facts.get(normalized_pair)
+    for origin_variant in _anchor_role_variants(origin_key):
+        for destination_variant in _anchor_role_variants(destination_key):
+            if (origin_variant, destination_variant) == (origin_key, destination_key):
+                continue
+            fact = facts.get((origin_variant, destination_variant))
+            if fact is not None:
+                return fact
+    return None
 
 
 def _normalize_anchor_role(value: str) -> str:
@@ -375,3 +379,16 @@ def _normalize_anchor_role(value: str) -> str:
         if value.endswith(suffix):
             return f"{value[:-len(suffix)]}:{role.lower()}-anchor"
     return value
+
+
+def _anchor_role_variants(value: str) -> tuple[str, ...]:
+    normalized = _normalize_anchor_role(value)
+    variants = [value]
+    if normalized != value:
+        variants.append(normalized)
+    for role in ("arrival", "departure"):
+        suffix = f":{role}-anchor"
+        if normalized.endswith(suffix):
+            variants.append(f"{normalized[:-len(suffix)]}:{role.upper()}-anchor")
+            break
+    return tuple(dict.fromkeys(variants))
