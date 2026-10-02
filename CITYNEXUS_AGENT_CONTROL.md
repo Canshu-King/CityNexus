@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 04:18 换代 · 手机链换到 day25（权威尖 06ad00b0 的字节）· 两证取到
+
+**换代内容**：权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（含 ORD-0500 r13 作者门、ORD-0545 切片三、0512 r2 站名档位判定三枚产品文件）。先起后停：预验口 :4789 health 200 后才停旧起新。
+
+**两证**：:4783 入口资产 `index-DeyXt9ON.js`，http_status=200、1620076 字节（DIMENSION 字节数）；服务字节 sha1 与磁盘逐字节同 = `04a7ba87c345e824e321d2751626bc18e14e0d5e`（本机字节 sha1，不是 blob——本行即声明；可解析锚=权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`）。进程命令行 `--dist …_build_day25/frontend/dist --api 4787`（即归属第三证）。后端 :4787 新 pid 23616，serve 树 `_serve_day25`（git archive 自尖），库 `_cmdr_canary_day25.db`（自 `_cmdr_canary_reboot.db` 复制，原件未动），health 200。旧 day24 代码：pid 7788/25900 已停。
+
+**没改善的**：真机五格探针仍等用户手机上线；:4783 端上的屏级走查是 day23 那趟的，day25 屏读待补（下一轮巡逻补）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 r13 勘误（手机车道 0afdb49b）：刚落的那页第六节把「下一手」写成了 r11——那是上上手的号
+
+只改这一处称呼，页里其余各节与所有数不动（它们逐条取自件，这一处是我手打的号，手打的就是这次出事的那格）。规矩照旧：已入账的那页不改，勘误走这块新帖。
+
+- 这块判据是现读的：landing 件里本单名下到 `13` 为止（`git ls-remote --refs` 与 `discover_refs()` 同一趟，共 13 枚枝），我推的枝是 `newlane-ord0500-phone-checkin-entry-r13` = `4084351b59b67a29e064e9f14fcfdee40c68cfbe`，对现尖 `02b73c6c3ece71165b90476e644dd0d10d79611b` 的写集 18 枚、需要再 re-cut 0 枚。所以「下一手」的号只能是 `r14`，不可能是 `r11`。
+- 三枝的关系一并列出来，免得下次又靠我回忆：枝号 / commit / fork / 写集 / 需再剪 —— `r11` `9f5fcb022ec9` fork `9f5fcb022ec9` 写集 0 枚 需再剪 0 枚；`r12` `97c5df9466c5` fork `9f5fcb022ec9` 写集 13 枚 需再剪 0 枚；`r13` `4084351b59b6` fork `9f5fcb022ec9` 写集 18 枚 需再剪 0 枚。
+- 第六节那格的意思不变，只是号改成 `r14`：把这枚闸接到出页那一扇门上（现在每代跑它、把读数写进本页，但红不拦出页）；要不要装这道拒绝，仍等你点。另一件也照旧：`citation_audit_r8.py` 那把全线尺仍只报不改，别人名下那 16 条不 OK 我一枚不动。
+
+发射器同步改了：`tools/r10_block.py` 里那个手打的号删掉了，第六节现在写「枝号由你定，我不自封」，其余数一律从件里取（这块帖本身也是同一枚发射器旁边的小脚本生成的，只多读了 landing 件与 `git ls-remote`）。
+本页生成于 2026-10-03T03:55:51+08:00。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 04:00 · 号令者（实例 B，494abfd7）· 连落两笔：ORD-0545 切片三（拒绝句上屏读数）与 ORD-0500 r13（作者门收窄）
 
 **权威尖现读** = `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值，凌晨三笔后）。
