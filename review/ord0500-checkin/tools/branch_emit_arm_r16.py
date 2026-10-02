@@ -115,12 +115,16 @@ def main():
              "recheck": newest_evidence("day*_anchor_recheck_r*.json"),
              "arm": os.environ.get("BRANCH_EMIT_OUT") or "branch_emit_arm_r%s.json" % gen}
     rows = []
-    exclude = (os.environ.get("BRANCH_EMIT_EXCLUDE") or "").split("/")[-1]
+    # The ref being written right now cannot be measured by this arm: its copy is the one running the
+    # page that quotes this receipt, and it would have to read a receipt that does not exist until it
+    # finished.  It is proven a different way -- byte equality with the copy that ran.  Match on the
+    # trailing generation NUMBER, because callers hand this over either as `r16` or as a full ref name.
+    exclude_raw = os.environ.get("BRANCH_EMIT_EXCLUDE") or ""
+    m_ex = re.search(r"(\d+)$", exclude_raw)
+    exclude = "r%s" % m_ex.group(1) if m_ex else None
     for ref in refs_in_family():
-        if exclude and ref.split("/")[-1] == exclude:
-            # the ref being written right now cannot be measured by this arm: its copy is the one running
-            # the page that quotes this receipt, and it would have to read a receipt that does not exist
-            # until it finished.  It is proven a different way -- byte equality with the copy that ran.
+        m_ref = re.search(r"(\d+)$", ref)
+        if exclude and m_ref and "r%s" % m_ref.group(1) == exclude:
             continue
         rc, got = sh(["ls-remote", "--refs", "origin", ref])
         if rc or not got.split():
