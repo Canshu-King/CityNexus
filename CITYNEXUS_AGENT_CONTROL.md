@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-10-03 05:00 · 号令者（实例 A，会话 `6efab655`，总线花名 `cmdrA`）· 亲测抓到一枚门与尺都抓不到的缺陷：中文 hub 把 `SYNTHETIC_DEFAULT` 画在句子中间 27 次；另把地图站名缺口钉到契约行
+
+**现场**：`ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我现读 = `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（件里记的是这一枚，不是我猜的）。账本本地 12,561,159 B 为我 05:00 现读。**本轮我 0 次移动权威线、0 次落地、0 次派单**（这三格都是纪律性零，不是产品读数）：唯一在门外的候选 `refs/heads/review/newlane-ord0500-phone-checkin-entry-r14` 头 `71e855fa492901075a5abc8e0db97fee37b17d8e`（枝时间 04:52）在收件口没有任何申报块——我 04:55 跑 `ledger_inbox_apply_r2.py --apply` 它报 inbox blocks 0；未申报＝未交付，我不复切也不替它猜内容。ORD-0500 r13 已由实例 B 于 03:56 收进线（`06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 就是它那一笔），我不重落别人已收的。派单与裁语这轮仍归 494abfd7，我两条题都挂在总线上等它，所以我不给任何车道点名。
+
+**一、代次先钉死**
+两趟屏读都取于产物尖 `43711ebb3321c18131b8b3359b7da333a5335a9d`；我用 `git rev-parse <尖>:frontend/src` 证它与现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 同代：两边都是 `d712ab3d6bf80033ab3b4434d1cdf6771c96b6e7`，且 `43711ebb..06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 之间 `frontend/src`、`backend/app`、`contracts` 三处产品文件改动 0 枚，backend 树也同为 `6a06c54d0d63cf4999fcf6c10c8d7bbd24b73ea9`。⇒ 下面两条结论对现尖成立，不是旧尖幻影。产物入口 `/assets/index-DeyXt9ON.js`，磁盘 1,620,076 B；服务字节与磁盘逐字相等（sha256 相同），我自己的访问日志记到 265 行请求。
+
+**二、地图站名：`place_name` 分支结构上不可达（追 ORD-0512 那一单追出来的）**
+`cmdr_map_stop_labels_r1.js`（我这轮新写，390 宽、zh 臂走 `/v8/map`）读数件 `evidence/cmdr-map-20261003/map_stop_labels_r1.json`，blob `33c887d605dbc6e6544353bb6aee11f63d8001bf`，3,134 B：那件里画出的站名 chip 6 枚、来源普查 {"title": 6}，图钉 12 枚，空文字 chip 0 枚、机形状 chip 0 枚、页面异常 0 枚。
+成因逐行读过，不在车道。契约里 `SharedStop` 于 `contracts/openapi.yaml:3467` required `place_name` 并写明落地屏先说这一枚、只在库里没有名字时才退到 `title`；而地图走的 `GET /plans` 答 `PlanVersion` 到 `Activity`，`Activity` 的 required 在 `contracts/openapi.yaml:3671` 不含 `place_name`、属性里也没这个键，我实测那趟回答 1,042,900 B 里 `place_name` 出现 0 次。于是 `frontend/src/components/v8/MapPanel.tsx:280` 读的 `item.place_name` 永远是空，`frontend/src/lib/mapStopLabels.ts:47` 那一支走不到。修法两选一（投影补字段 vs 地图按 `place_id` 现读）归持派单方定，我不代定。
+
+**三、新缺陷：人话句子中间插着服务端原始枚举**
+`cmdr_machine_speech_sweep_r1.js`，14 条路由、zh 臂，读数件 `evidence/cmdr-sweep-20261003/machine_speech_zh_r2_at_43711ebb.json`，blob `ab52516a651fac45176025881dcf16962672c8a9`，10,261 B：`/v8/hub` 一屏画出 27 次同一枚 `SYNTHETIC_DEFAULT`，全屏合计 29 次、去重 2 枚 token。画进的句子是「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。」填槽的是 `frontend/src/features/planning/PlanRankingPanel.tsx:140`（调句在 `:137`），它把 `row.evidence.worstQuality` 原样交给 `frontend/src/features/planning/planRankingCopy.ts:47` 的 quality 槽。
+**这不是回归，差别在库，我写清楚**：同尺同代次我 03:04 那趟读到的更少（1 枚 / 2 次，件 blob `33a7e6022dfacdad96d9f28d45ac71dc763027e4`）——那趟的库是共享预览库的只读副本，行程没有段；这趟用只读备份自 R 车道 ORD-0437 e2e 库的副本（17,330,176 B，有 56 段）。所以这是一个**状态相关**的曝光：行程一带段就画出来，而这正是用户手机上那种行程。门与那把 AST 尺都抓不到它，因为它不是上游散文，是自己人把枚举名递进了字典槽——我 09-29 立的那条「落地前我自己跑门钉尺」也拦不住它，得靠屏上数。
+
+**四、总线接入（含我自己被拒的实操账）**
+我这轮才接进来：`bus.py reg --id qoder:6efab655 --name cmdrA`。状态快照件 `evidence/cmdr-bus-20261003/my_inbox_state_r2.json`，blob `522a4198152c98c4ab5201bc16522c289538c020`，那件里我名下消息 2 条、回件 0 条、持派单方 `qoder:494abfd7` 名下待读 11 条。两条题是 `m_12816c74c645`（地图 place_name）与 `m_2141e846ac3b`（hub 枚举上屏）。
+被拒的教训：拒件不落总线、而是留在 `D:/moodle/agent_bus/drop/qoder_6efab655/` 里以 `.rejected_` 结尾（那目录当前有 5 枚拒件与 2 枚已吸收件，计数在同一枚 `522a4198152c98c4ab5201bc16522c289538c020` 件里）。**成因不是我把数写错，是中枢只摘录证据输出的头部**：我把要引用的数排到证据第 1 行前段之后，一次就过了。写给下一位：写 ask 之前先跑一遍自己的 evidence 命令，看你要引用的每个数是否还在前几百字节里。
+
+**没改善的部分**
+1. 第三节那 27 次机词此刻仍在中文 hub 屏上（同一枚 `ab52516a651fac45176025881dcf16962672c8a9` 件是它的现场）。我 0 次派单，修它要等持派单方回话——**用户手机天天看这屏**，这是本轮最实际的未改善格。
+2. 第二节那格同理仍不可达；我也没量过「补上 `place_name` 之后屏会怎么变」，那格判据是空的。
+3. 本轮我 0 笔落地（门外唯一候选未申报），线是实例 B 推的。
+4. 英文臂未量，具名 `NOT_MEASURED_BY_CMDR`；`/v8/bookings` 那 2 处 `JSON` 仍是我 09-29 判可留的文案，未动。
+5. 上一轮欠的两屏仍未走到：准入面板那一单与浮条那一单的屏上判据都还是 `NOT_REACHED_BY_CMDR`。
+6. 线上既有曝光 6 格一格没少（门钉那把 r7b 在 `02b73c6c3ece71165b90476e644dd0d10d79611b` 读到 6，件 blob `7d1f68af007967c6aff3895f6a1e3a1b4ff52e69`）。
+7. 手机链 hop4 未起 ⇒ 本轮全部读数都是私有舞台的 `NOT-DEPLOYED-OBSERVED`；`_preview.db` 我 0 写入（只 `mode=ro` 再 backup API 复制），:8000 / :4781 / :4782 / :8693 我 0 次触碰，换树那一个问题仍只在桌面留言里，我没追加新请求。
+8. 后端测试本轮没有任何一条被执行（门外唯一候选未申报，故我没有可传 `--tests` 的对象），具名 `NOT_EXECUTED_BY_CMDR`。
+
+
 ### CMDR 04:18 换代 · 手机链换到 day25（权威尖 06ad00b0 的字节）· 两证取到
 
 **换代内容**：权威尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（含 ORD-0500 r13 作者门、ORD-0545 切片三、0512 r2 站名档位判定三枚产品文件）。先起后停：预验口 :4789 health 200 后才停旧起新。
