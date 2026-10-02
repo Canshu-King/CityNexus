@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { useAuthoritativePlans } from "../../api/v12Authoritative";
+import { mobilityFactQualityLabel } from "../../lib/displayVocabulary";
 import { rankPlans, RANK_DIMS, type ComparablePlan, type RankDim } from "./planRanking";
 import { fillRank, rankCopy, type PlanRankCopyKey } from "./planRankingCopy";
 import "./planRanking.css";
@@ -32,6 +33,14 @@ const ABSENT_KEYS: Record<string, PlanRankCopyKey> = {
   protectedNotMarked: "rank.protectedNotMarked",
   noFacts: "rank.noFacts",
 };
+
+/** The `{quality}` slot takes traveller words, never the server's enum name (CMDR 10-03 05:0x).
+ *  `null` is a different fact -- the leg carries no quality tag at all -- so it keeps the dash it
+ *  already showed: routing it through the dictionary would say "a grade this table cannot name",
+ *  which claims a grade exists when the server wrote none. */
+function qualityWords(quality: string | null, locale: string): string {
+  return quality === null ? "\u2014" : mobilityFactQualityLabel(quality, locale);
+}
 
 /** The shell already knows which journey it is on; the panel reads it the way the version list does,
  *  so mounting a new screen never needs another prop threaded through `V8Experience.tsx`. */
@@ -133,11 +142,13 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
       </table>
       <ul className="plan-ranking-notes">
         {rows.map((row) => (
-          <li key={row.id} data-testid="rank-note">
+          /* Q71 leaves `data-*` as the technical channel, so the server's own grade stays retrievable
+             per row while the painted sentence carries only the words above. */
+          <li key={row.id} data-testid="rank-note" data-quality={row.evidence.worstQuality ?? ""}>
             {say("rank.evidenceNote", {
               hard: row.evidence.hard,
               total: row.evidence.total,
-              quality: row.evidence.worstQuality ?? "\u2014",
+              quality: qualityWords(row.evidence.worstQuality, locale),
             })}
           </li>
         ))}

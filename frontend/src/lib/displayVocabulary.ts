@@ -104,6 +104,31 @@ const EVIDENCE_SOURCE: Record<string, Label> = {
   SYNTHETIC_FIXTURE: { zh: "演示夹具造的数，不是供应商给的", en: "a demo fixture value, not a provider rate" },
 };
 
+/* CMDR 10-03 05:0x: the plan-ranking note fills its `{quality}` slot with a leg's `fact_quality`, and
+   the server's enum name was reaching the traveller verbatim (27 times on `/v8/hub`, zh arm).
+   `SYNTHETIC_DEFAULT` is the only value listed because it is the only value this slot can hold:
+   `backend/app/replanning/provider_snapshots.py:15` defines it, and
+   `backend/app/integrations/mock/providers.py:69` returns it for a pair the fixture covers only with
+   its blanket `default_minutes` -- which is the meaning `features/planning/planRanking.ts:9` records.
+   The two hard-eligible qualities (`provider_snapshots.py:13-14`) are deliberately NOT listed:
+   `planRanking.ts:78` filters them out of `worstQuality`, so a "the rest are ..." wording for a leg the
+   gate already counted as hard would be a claim this screen does not have to make. */
+const MOBILITY_FACT_QUALITY: Record<string, Label> = {
+  SYNTHETIC_DEFAULT: {
+    zh: "演示夹具自己填的兜底常数，不是量出来的",
+    en: "a blanket default the demo fixture filled in, not a measured leg",
+  },
+};
+
+/* A grade this table does not know has no wording, and it must not borrow one: describing a provenance
+   we cannot name would be an invention. Unlike `pick`, this slot never falls through to `rawChannel` --
+   painting the token is what the order closes, and the server's own value stays retrievable on the
+   `data-quality` attribute the panel sets. */
+const MOBILITY_FACT_QUALITY_UNLISTED: Label = {
+  zh: "一种这个人话字典还没有说法的证据等级",
+  en: "an evidence grade this word table has no wording for",
+};
+
 const SUMMARY_HELD: Label = {
   zh: "上游那句摘要的原文不在这一屏",
   en: "The upstream summary's own words are not on this screen",
@@ -199,4 +224,12 @@ export function summaryHeldLabel(zh?: boolean | string | null): string {
  *  labelled as the server's word: a method we cannot name is not a method we may describe. */
 export function evidenceSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(EVIDENCE_SOURCE, value, zh);
+}
+
+/** Words for a mobility leg's `fact_quality` (CMDR 10-03 05:0x). Reads the traveller-facing table
+ *  above, so an unknown grade is reported as a gap in this dictionary instead of as the server's
+ *  own uppercase name. */
+export function mobilityFactQualityLabel(value: unknown, zh?: boolean | string | null): string {
+  const entry = MOBILITY_FACT_QUALITY[keyOf(value)] || MOBILITY_FACT_QUALITY_UNLISTED;
+  return wantsChinese(zh) ? entry.zh : entry.en;
 }
