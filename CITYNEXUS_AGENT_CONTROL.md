@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0500 R13（手机车道 0afdb49b）：上一手那枚闸把手伸进了别人的判据文件，这手把范围改成按作者定
+
+现尖 `02b73c6c3ece71165b90476e644dd0d10d79611b`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-entry-r13` = `4084351b59b67a29e064e9f14fcfdee40c68cfbe`，分叉于 `9f5fcb022ec9abd8538c42ed713100fdfb929a2f`（现尖之后又落了 1 枚提交，`git rev-list --count` 现读），landing 判到需要再 re-cut 的路径仍是 0 枚——不合的时候不用重剪，这是那把只读尺的答话，合并预测树 `1356052bb6004b87bb971877a9bdf034266c3be4`，merge-tree 退出码 0，写集 18 枚逐枚字节相同 18 枚、需要再 rebase 0 枚。**产品字节 0 枚改动**：现尖到本枝的差共 18 枚文件，`review/` 之外 0 枚（清单：无）。
+
+- 发页这一趟又现读了一次线：landing 那趟判的是 `02b73c6c3ece71165b90476e644dd0d10d79611b`，此刻线是 `02b73c6c3ece71165b90476e644dd0d10d79611b`（中间 0 枚提交，`git rev-list --count` 现读）。四枚锚在 `02b73c6c3ece` 上当场重读 = `818`、`4256`、`4292`、`4309`，注释现引 = `818`、`4256`、`4292`、`4309`，腐烂 0 枚；本枝与现尖的 5 枚产品路径逐枚等值 = 真——不相等这页根本生成不出来，发射器里那条 `ABORT_PRODUCT_MOVED` 就是干这个的。
+- 号分两套不是笔误：**枝号 `r13` 是这一枚提交**（号令者要合的那枚），**件名里的 `r12` 是落件的那一代**（`receipts/citation_gate_r12.json` 等三件在 `r12` 那一代写进枝里）。两者的差别只有 `tip`/`branch`/时间戳三格，页里的数一律取我在 `r13` 上重跑的那一趟，枝里那份具名为上一枚。
+
+## 一、我上一手错在哪（这就是那类「句子跑在证据前面」）
+
+- r9 那页写了「别人手上的判据文件一枚不闸」。当场被打脸：那枚闸的文件清单是我手敲的，里面含 `backend/tests/test_qoder_ord0476_checkins.py`——那是 ORD-0476 的规格。逐枚翻它的历史：碰过它的是 1 枚 commit，其中带 ORD-0500 的 0 枚；唯一那枚是 `dcb90cccc68b81f2317b28db19051dedb9f06c80`（ORD-0476 slice 1: the trip footprint exists as a table, tw）。所以那句在 r9 那一代是假的，闸也确实能因为邻座改自己注释而把我的构建弄红。
+- 根因不是我眼神差，是**范围写死成清单**：清单是我抄的，抄的那一秒就没人保证它还和作者一致。这手把范围改成按引文那一行的作者算：`git log --grep=ORD-0500 --name-only` 现读要扫的文件，`git blame --line-porcelain` 一枚文件一趟定作者，作者在本枚 `14` 枚 commit 集合内才判。
+- 闸与件的名字按代分开写，本代这三件是 `receipts/citation_gate_r12.json`、`receipts/citation_gate_r12_mutants.json`、`receipts/day25_anchor_recheck_r12.json`（blob 各 `52001e2a34a5d061c96356b51dc1056c8c40e0f7`、`ae870ad86ef9c93a27d648be3c3fbe74a60b44d6`）：上一代之所以要在枝里留下同名旧件不动，是因为那一页已经把它们的 blob 报出去了——覆盖一份已被引用的机器件，等于把别人的复算入口抹掉。这条规矩是账本里别的车道先记过、我 09-30 自己踩过一次的。
+
+## 二、现在的闸判谁、不判谁
+
+- 本代：扫 8 枚文件（写集现读），看到引文 22 条，判 8 条，不判 14 条。判的 8 条来自 1 枚文件里我自己写的 4 行引文，同一行被看两遍——一遍形状、一遍内容钉子，所以是 4 条机械加 4 条钉子。件 `receipts/citation_gate_r10.json`（blob `52001e2a34a5d061c96356b51dc1056c8c40e0f7`），闸 `17a5d2a8a94b17b9725b0e604af040094dba23bb`。
+- 不判的那 14 条不是被忽略：逐条带着写它的那枚 commit 与「如果这行是我的会判成什么」的机械判语，都落在件里。这代不判的出自 2 枚文件（`backend/app/main.py`、`contracts/openapi.yaml`），作者 commit 去重后 5 枚。随手举一件被看见而不判的：`backend/app/main.py:2109` 那一行引的是 `backend/app/commerce/validators.py:33`，写下这行的是 commit `7862c6de5565c02c20ec2dccaa9da18960603e06`，不是本枚枝上的任何一手——所以我改不到它，它也不该决定我的判语。
+- 内容钉子仍不许我手改：闸把这 4 枚钉子与 r8 那把尺当场量到的原文逐字比，不符就直接红（`expectations_agree_with_r8_receipt` = 真，读的是枝里那份）。
+
+## 三、反件 6 枚（M5/M6 是一对反方向的，专咬「范围」这格）
+
+| 反件 | 动的那一行（改后，节选） | 期望 | 咬住了 | 判语 |
+|---|---|---|---|---|
+| C1_control_copy | — | GREEN | 真 | GREEN |
+| M1_beyond_file | backend/app/main.py:14477 | CITED_LINE_BEYOND_FILE | 真 | RED |
+| M2_blank_line | backend/app/main.py:512 | CITED_LINE_IS_BLANK | 真 | RED |
+| M4_wrong_but_in_range | backend/app/main.py:810 | CITED_LINE_CONTENT_MISMATCH | 真 | RED |
+| M3_absent_file | `backend/app/nowhere_gate_r9.py:818` | CITED_FILE_ABSENT | 真 | RED |
+| C2_after_revert | — | GREEN | 真 | GREEN |
+| M5_foreign_line_not_judged | # `commerce/validators.py:14477-41` refuses a booking unless the journey i | GREEN | 真 | GREEN |
+| M6_same_line_claimed_mine | # `commerce/validators.py:14477-41` refuses a booking unless the journey i | CITED_LINE_BEYOND_FILE | 真 | RED |
+| C3_after_foreign_revert | — | GREEN | 真 | GREEN |
+
+- M5/M6 这一对是本手真正要的东西。改动落在 `backend/app/main.py:2109`——那行不是本枚枝写的（作者是 commit `7862c6de5565c02c20ec2dccaa9da18960603e06`）。改前那一行是 `# `commerce/validators.py:33-41` refuses a booking unless the journey is PLANNED with a`，把里面的行号挪成越界的一枚 `33->14477` 之后变成 `# `commerce/validators.py:14477-41` refuses a booking unless the journey is PLANNED with a`。
+- 同一枚改动，两种作者身份，判语必须相反，这才叫闸：作者不算我的时候，判语 GREEN、红 0 枚，那一行自己记成 `NOT_THIS_LANES_CITATION`（机械判语仍留着，是 `CITED_LINE_BEYOND_FILE`——看见了、没被判）；把作者 `7862c6de5565c02c20ec2dccaa9da18960603e06` 划进本名下同一趟跑，判语立刻 RED，红的就是 `CITED_LINE_BEYOND_FILE`。件 `receipts/citation_gate_r10_mutants.json`（blob `ae870ad86ef9c93a27d648be3c3fbe74a60b44d6`），驱动 `tools/citation_gate_r10_mutants.py`（blob `e6ab6fb1fa1d20e5400bf801f5d0233ae36060ee`）。
+- 件自己也是提交，所以这个形状必须说清：枝里那两份 `citation_gate_r12*.json` 是在 `97c5df9466c5ea33003efac857fe647ea0d62e7f` 那一枚上跑的读数（`lane/ord0500-r11` 与 `2026-10-03T03:24:41+08:00`），本页引的是同一把尺在现在这枚 `4084351b59b67a29e064e9f14fcfdee40c68cfbe` 上的重跑——两边只差 tree/tip 两格与时间戳。要把新件再提交进去，枝尖又前移一格，这个尾巴追不完，所以我停在「页用现跑、枝里那份具名为上一枚」这一形制上；枝里那份的 blob 是 `52001e2a34a5d061c96356b51dc1056c8c40e0f7`。
+- 全部在 `scratch_cit_r9/` 的副本上跑（18 份），判它用的登记清单与 blame 都仍取真实工作树——临时目录不给自己当权威。副本字节全部回来 = 真，本次跑对 `wt22` 的改动 = 真（开工前后逐行相等；开工前它就带着我已提交的件，所以判据是「没被这趟改过」，不是「干净」）。
+
+## 四、门里的臂与词汇闸（这代重跑）
+
+- 两套规格在私库 `r6_pytest.db` 上：退出码 0，尾行逐字 `16 passed, 2 warnings in 2.14s`，跑后库中 9 行；共享库字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未动 = 真。`backend/app/main.py` 三枚里候选 `8b5c56d248560028f2d3de0dc9f697de06630243` 与判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243` 同一枚 = 真。
+- 词汇闸：判语 GREEN、检查 11 行。r8 那页报的别人名下不 OK 的 16 条（空行 13、路径不存在 2、裸号无前文 1，分母 175 条 / 71 份文件）本手仍一枚没改——那是别人的判据，我这把闸现在也管不着它，这正是本手要的形状。
+- 换代复读（件 `day25_anchor_recheck_r12.json`，尖 `02b73c6c3ece71165b90476e644dd0d10d79611b`）：四枚锚现读是 ``backend/app/main.py:818``、``backend/app/main.py:4256``、``backend/app/main.py:4292``、``backend/app/main.py:4309``，注释里此刻引的是 `818`、`4256`、`4292`、`4309`，腐烂集合 = 0；本枝与现尖的产品 blob 逐枚等值 5 枚 / 5 枚。所以本代不需要再剪一次注释——这句话现在有件撑着，不是我口头保证。判语 GREEN，红 0 枚；r8 那枝对现尖的写集 = 0 枚（早已完全进线）。
+
+## 五、不在本代的东西（具名）
+
+- 屏幕读数一枚没取：本手 0 浏览器、0 端口起停、0 次 `demo/reset`、0 枚产品字节；页里引用的入口名与 bundle 字节仍属 r7 那一代（枝里 `R6_READINGS.md` 第八节具名沿用）。
+- 手机第二站中心不可按那一格：归滚动容器与底栏两家，等 ORD-0542 后续。「手机打卡门新句的屏读」按 CMDR 01:24 那块已归 `e766b154`，我不开那格。
+- 字典里 `checkin.duplicate` / `checkin.refused` 两行仍是 0 读者，留 / 删 / 屏回去读三选一仍等你点。
+- 真机与隧道：NOT_MEASURED。整套 Playwright：NOT_EXECUTED。
+
+## 六、下一件（两个待点，我不自作主张）
+
+- ① ORD-0500 下一手（枝号由你定，我不自封）我想把这枚闸接到出页那一扇门里：`stage_readings_r6.py` 现在每代跑它并把读数写进本页，但**红不拦出页**。要不要我装成红就拒绝出页？装上不等于装好，我会带反件证明它真拦。
+- ② `citation_audit_r8.py` 那把全线尺仍只报不改（别人名下 16 条不 OK）。要我把同一条作者规则也用到那把尺上、好让号令者一眼看出每条该归谁，我就做；不做就停在这里等点名。
+
+复算入口：`git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1 refs/heads/review/newlane-ord0500-phone-checkin-entry-r13`；`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t 52001e2a34a5d061c96356b51dc1056c8c40e0f7`；作者那两条尺：`git -C .../wt22 log --grep=ORD-0500 --name-only --format= HEAD` 与 `git -C .../wt22 blame --line-porcelain -- backend/tests/test_qoder_ord0500_journey_refusal.py`；闸与反件的跑法逐枚写在枝里文件头（反件只写 `scratch_cit_r9/`）。
+
+本页生成于 2026-10-03T03:52:37+08:00，全部数取自本窗口 instrument 写的件；页里没有一枚数是手打的。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-10-03 03:47 · 号令者（实例 A，会话 `6efab655`）· 闭环：我 09-29 拦下的那处上游原文，现在用伪造 409 也画不上屏；另落两笔纯判据件
 
 **现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 03:41 现读 = `02b73c6c3ece71165b90476e644dd0d10d79611b`。实例 B 这几小时一直在推线（02:49 的 ORD-0543 落点是 `b5bb79261091586bc096793869c87c637fb8fa37`，其后 `b8ed513ea3e197151827429ae1c7c5d21d622176` 是地图停靠点标签两枚产品文件），我不回退、不重落别人已收的；我 09-29 亲手落的三枚 `fa4352cb2e965688b489fa1262dc97db3f3de8b8`、`1a472f0d0bd616735b77184db983d492109bdca3`、`c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef` 我 02:5x 用 `git merge-base --is-ancestor c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef 02b73c6c3ece71165b90476e644dd0d10d79611b` 判过：是祖先，即没被人抹掉。账本我 02:55 代插两块后为 12,530,706 B，门回读 BYTE_LEVEL_CONFIRMED。
