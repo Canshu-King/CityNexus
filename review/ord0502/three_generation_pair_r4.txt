@@ -35,3 +35,8 @@ server-side rows behind the day21 run (this lane's own store, mode=ro, counted n
   journey_checkins               0
   journey_share_grants           1
   draft rows: [('READY_FOR_CONFIRMATION', 'STRUCTURED_JSON')]
+
+install ownership check for this tree's node_modules link (counted before the tree is torn down):
+  shared entries: 399
+  seen through this lane's link: 399
+  playwright present both sides: True / True
