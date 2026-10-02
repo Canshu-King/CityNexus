@@ -1536,6 +1536,10 @@ def capture_real_city_candidates(
             }
     if mode == "live":
         live_error: str | None = None
+        # initialised here because the failure shapes are reachable from paths that never
+        # reach the gate below (a malformed label raises before any leg is asked), and an
+        # unbound name there is an UnboundLocalError replacing the honest reason code.
+        fallback_geocode = "NOT_REACHED"
         failure_stage: str | None = None
         candidates = []
         overpass_attempts: list[dict[str, Any]] = []
@@ -1639,12 +1643,32 @@ def capture_real_city_candidates(
                         limit=limit,
                     )
                     overpass_attempts = []
-                if not candidates:
+                # CMDR 02:35 ⑤: a leg that grounded the city already answered the geography
+                # question in this call, so asking Nominatim the same bounded words again is a
+                # second geocode that cannot change the answer - and, like the answered-zero rule
+                # it shares a root with, it turns "the mirror said nothing here" into fresh outbound
+                # work. The fallback door therefore serves exactly one case: this call asked no leg
+                # at all (the centre came from the journey's own state).
+                anchor_grounded_by_leg = any(
+                    reading.get("attempted")
+                    and reading.get("answered")
+                    and str((anchor or {}).get("source") or "").startswith(f"{reading.get('leg')}_")
+                    for reading in anchor_leg_readings
+                )
+                fallback_geocode: str
+                if candidates:
+                    fallback_geocode = "NOT_NEEDED"
+                elif anchor_grounded_by_leg:
+                    fallback_geocode = (
+                        f"SKIPPED_ANCHOR_GROUNDED_BY_{(anchor or {}).get('source')}"
+                    )
+                else:
                     # The bounded fallback is a *second* attempt at the same bounded
                     # question, so it must be asked with the same words: `city_code` is
                     # our identifier, not a place name, and sending it asked Nominatim
                     # for "tea shops, CN-TIANJIN" (ORD-0099 ①, measured).
                     stage = "fallback_geocode"
+                    fallback_geocode = "ASKED"
                     candidates = geocoder.search(query, city=city_label, limit=limit)
                 leg_states: dict[str, str] = {}
                 for reading in anchor_leg_readings:
@@ -1671,6 +1695,10 @@ def capture_real_city_candidates(
                     if any(a.get("answered") for a in overpass_attempts)
                     else "NOT_ANSWERED",
                     "anchor": anchor,
+                    # Named, not implied: whether the second bounded ask happened, and if not, why -
+                    # a reader must be able to tell "skipped because a leg already grounded this
+                    # city" from "never got as far as asking".
+                    "fallback_geocode": fallback_geocode,
                     # ORD-0519: who was asked, who replied, with what status and how many bytes.
                     "anchor_legs": anchor_leg_readings,
                     "failure_stage": stage,
@@ -1717,6 +1745,9 @@ def capture_real_city_candidates(
                     # ban: naming the leg is not the same as accepting its places.
                     "anchor": anchor or journey_anchor,
                     "anchor_credit_kept": anchor is not None,
+                    # Carried into this shape too: the caller's response is the replay-fallback
+                    # one, so a fact that only lived in the success dict would never be readable.
+                    "fallback_geocode": fallback_geocode,
                     # One vocabulary for one question: a named reason, never an exception
                     # class, and `PROVIDER_NO_RESULTS` when the providers answered but found
                     # nothing (which is a different thing from answering at all).
@@ -1737,6 +1768,7 @@ def capture_real_city_candidates(
                     "overpass": "UNAVAILABLE",
                     "anchor": anchor or journey_anchor,
                     "anchor_credit_kept": anchor is not None,
+                    "fallback_geocode": fallback_geocode,
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,

@@ -138,6 +138,68 @@ def _providers(monkeypatch) -> dict:
     monkeypatch.setattr(real_city, "OverpassPOIProvider", make_poi)
     return box
 
+class _RecordingPhoton:
+    """A Photon stand-in for the anchor leg, so an arm is never about the campus network.
+
+    Measured: with no double here, which leg grounds the city depends on whether
+    `photon.komoot.io` answers, and the assertion below would follow the network instead of the
+    product. `answer` grounds the anchor, `fail` never replies.
+    """
+
+    provider_key = "photon"
+
+    def __init__(self, *, mode: str, error: BaseException | None = None) -> None:
+        self.mode = mode
+        self.error = error
+        self.calls: list[tuple[str, str]] = []
+
+    def search(self, query: str, *, city: str, limit: int):
+        self.calls.append((str(query), str(city)))
+        if self.error is not None:
+            raise self.error
+        if self.mode == "fail":
+            return [], {
+                "leg": "photon", "attempted": True, "answered": False, "http_status": 503,
+                "bytes": 0, "elapsed_ms": 0.1, "outcome": "NOT_ANSWERED_FORCED",
+            }
+        return [{"latitude": 39.1, "longitude": 117.2, "name": "Tianjin", "osm_id": 7}], {
+            "leg": "photon", "attempted": True, "answered": True, "http_status": 200,
+            "bytes": 200, "elapsed_ms": 0.1, "outcome": "ANSWERED",
+        }
+
+    def close(self) -> None:
+        return None
+
+
+def _install_photon_leg(monkeypatch, box, mode: str) -> None:
+    """Put the anchor leg under test control, for the arms about which leg answered.
+
+    Not part of the shared fixture: sibling arms here assert on the default wiring, and a
+    fixture-wide double changed their world (measured: six reds where the file had two).
+    """
+
+    def make_photon(*args, **kwargs):
+        instance = _RecordingPhoton(mode=mode, error=box.get("photon_error"))
+        box["photon"] = instance
+        return instance
+
+    monkeypatch.setattr(real_city, "PhotonCityAnchor", make_photon)
+
+
+def _give_the_trip_its_own_centre(monkeypatch, box) -> None:
+    """The single case the bounded fallback still serves: no provider was asked where the city is."""
+
+    def derive(session, journey):
+        box["journey_state_anchor"] = True
+        return {
+            "latitude": 39.13, "longitude": 117.2,
+            "source": "journey_current_activity", "location": "天津站",
+        }
+
+    monkeypatch.setattr(real_city, "derive_search_anchor", derive)
+
+
+
 
 def _journey(city_code: str) -> str:
     assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
@@ -169,20 +231,63 @@ def _discover(journey_id: str) -> dict:
     return response.json()
 
 
-def test_the_bounded_fallback_asks_with_the_same_label_as_the_anchor(_providers) -> None:
-    """Clause ①: the internal code was forwarded as a place name on the second call only."""
+def test_an_answered_anchor_costs_the_fallback_door_nothing(_providers, monkeypatch) -> None:
+    """CMDR 02:35 (5): a leg that grounded the city closes the second geocode.
 
+    Overpass answered with nothing, which used to send the flow to Nominatim with the same bounded
+    words a second time. That ask cannot change where the city is, and it turned an answered zero
+    into fresh outbound work - the sibling of the standing rule that an answered zero must not fall
+    through to another provider. Asserted as *no second ask at all*, with a limit-5 probe, so the
+    arm holds whichever leg grounded the anchor.
+    """
+
+    _install_photon_leg(monkeypatch, _providers, "answer")
+    body = _discover(_journey("CN-TIANJIN"))
+    limits = [limit for _city, limit in _providers["geocoder"].calls]
+    assert 5 not in limits, f"the bounded fallback ran although a leg grounded the city: {limits}"
+    status = body["provider_status"]
+    assert str(status.get("fallback_geocode", "")).startswith("SKIPPED_ANCHOR_GROUNDED_BY_"), status
+    assert status.get("anchor"), status
+
+
+def test_when_no_leg_was_asked_the_fallback_door_is_still_asked(_providers, monkeypatch) -> None:
+    """The other side of the same rule, and the target of the mutant.
+
+    The centre came from the trip's own state, so nothing answered the geography question in this
+    call; the bounded fallback is the only attempt left at the traveller's question and must run -
+    asked with the human label, never with our identifier (ORD-0099 (1) survives the narrowing).
+    """
+
+    _install_photon_leg(monkeypatch, _providers, "answer")
+    _give_the_trip_its_own_centre(monkeypatch, _providers)
     body = _discover(_journey("CN-TIANJIN"))
     calls = _providers["geocoder"].calls
-    assert [limit for _city, limit in calls] == [1, 5], (
-        "expected the anchor geocode and then the bounded fallback geocode: "
-        f"{calls}"
-    )
-    (anchor_city, _), (fallback_city, _) = calls
-    assert anchor_city == fallback_city == "TIANJIN", calls
-    assert "CN" not in fallback_city.upper().replace(" ", ""), fallback_city
-    assert body["mode"] == "replay-fallback", body  # Tianjin still answers from replay
+    assert [limit for _city, limit in calls] == [5], calls
+    city_used = calls[0][0]
+    assert city_used == "TIANJIN", calls
+    assert "CN" not in city_used.upper().replace(" ", ""), city_used
+    assert body["provider_status"]["fallback_geocode"] == "ASKED", body["provider_status"]
 
+
+def test_a_failed_anchor_leg_still_closes_the_second_ask(_providers, monkeypatch) -> None:
+    """Photon failing is no licence to geocode twice: Nominatim answered, once, at limit 1.
+
+    This is the shape the line always had, so it also pins that the ruling is not a Photon-only
+    rule: whichever provider leg grounds the city keeps the door shut.
+    """
+
+    _install_photon_leg(monkeypatch, _providers, "fail")
+    body = _discover(_journey("CN-TIANJIN"))
+    calls = _providers["geocoder"].calls
+    assert [limit for _city, limit in calls] == [1], calls
+    status = body["provider_status"]
+    # the credit lives in `anchor_legs` in a failure shape (ORD-0519), so that is where the leg
+    # outcomes are read; the top-level words here name the ending, not who answered
+    by_leg = {str(item.get("leg")): item for item in status.get("anchor_legs") or []}
+    assert by_leg["photon"]["answered"] is False, by_leg
+    assert by_leg["nominatim"]["outcome"] == "ANSWERED", by_leg
+    assert status["anchor"]["source"] == "nominatim_city_anchor", status
+    assert str(status["fallback_geocode"]).startswith("SKIPPED_ANCHOR_GROUNDED_BY_"), status
 
 def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_providers) -> None:
     """Clause ②: provider-shaped outcomes and our own bad request, all distinguishable.
@@ -229,7 +334,7 @@ def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_provide
         )
 
 
-def test_finding_nothing_is_not_reported_as_a_provider_failure(_providers) -> None:
+def test_finding_nothing_is_not_reported_as_a_provider_failure(_providers, monkeypatch) -> None:
     """`PROVIDER_NO_RESULTS` is a different answer from `RESOLVER_UNREACHABLE`.
 
     Both providers answered cleanly and returned nothing: the honest sentence is "nobody found
@@ -237,6 +342,7 @@ def test_finding_nothing_is_not_reported_as_a_provider_failure(_providers) -> No
     express at all.
     """
 
+    _give_the_trip_its_own_centre(monkeypatch, _providers)
     body = _discover(_journey("CN-BEIJING"))
     status = body["provider_status"]
     assert body["mode"] == "live-unavailable", body
@@ -266,7 +372,7 @@ def test_our_own_malformed_label_is_not_blamed_on_the_provider(_providers) -> No
 
 
 def test_the_default_resolver_was_not_swapped_and_the_replay_fallback_still_answers(
-    _providers,
+    _providers, monkeypatch
 ) -> None:
     """Clause ③'s fence, measured rather than promised.
 
@@ -277,6 +383,7 @@ def test_the_default_resolver_was_not_swapped_and_the_replay_fallback_still_answ
     "we also broke the demo".
     """
 
+    _give_the_trip_its_own_centre(monkeypatch, _providers)
     body = _discover(_journey("CN-TIANJIN"))
     assert _providers["geocoder"].calls, "the live path no longer uses the Nominatim client"
     assert _providers["poi"].calls, "the bounded category search is still Overpass"
