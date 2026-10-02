@@ -1,0 +1,34 @@
+{
+ "what": "ledger mirror PUT refused while every read route works",
+ "at_local": "2026-10-03T05:33:23",
+ "remote_read": {
+  "route": "contents+git blob raw",
+  "blob_sha": "c5048ba2c2f0c8bb66f91f87e3e897fc0aecd4cb",
+  "bytes": 12567966,
+  "complete": true
+ },
+ "local_file": {
+  "bytes": 12587540,
+  "git_blob_sha1": "17531750abbe5c17ad819c4406e09dc890ea3405",
+  "sha256_head": "5b8f7eae60d40a10",
+  "lines": 86403
+ },
+ "local_only_lines": 67,
+ "blocks_present_locally_absent_remotely": [
+  "CMDR 2026-10-03 05:20",
+  "watch session 42d1a6fa 05:16"
+ ],
+ "put_response": {
+  "status": 401,
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "tool_rc": 3,
+  "route": "merge_ledger_then_mirror_r2.py -> mirror_with_guard_r2.py contents PUT"
+ },
+ "reads_still_working": {
+  "git_ls_remote_ssh": true,
+  "rest_GET": true,
+  "rest_get_proof": "publish_evidence_gated_r1 GET on evidence/cmdr-sweep-20261003/machine_speech_en_r1_at_43711ebb.json returned blob dc56cfcc1892d262fc66079d34a1f22433adbd58"
+ },
+ "token_file": "path only, value never printed: see mirror_with_guard_r2.py:28"
+}
