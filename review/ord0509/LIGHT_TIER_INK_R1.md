@@ -1,34 +1,34 @@
-# ORD-0509 续 · 亮档 3.62 的档位裁决件（r1，只量不落地）
+# ORD-0509 续 · 亮档 3.62 的档位裁决件（r2：四臂搬到现尖自己的产物上重跑）
 
-尖 `e7ff7938ea41c5ac69afb1172acc4625159c7911`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值；该尖 styles.css blob = 上一单落地的候选字节）。
+现尖 `569b8472b134e5562ef396e38681870b9c26536a`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）；本件写在本枝头 `386e0000d9f54afa85eed6189de8bdd585e5ebcd`；该尖 styles.css blob `58e982e1bad669fe9b66cee392c4651ce0fd3644` = 上一单落地的候选字节。
 
-## 0. 落地代先对读一次（不是搬上一单的数）
-- 共享预览 :4783 上 day21 的入口 `/assets/index-50kwyZcU.js` 读回 1607851 字节 B，sha1 1ed111dcdef6c9cf34ed97f4c152a0f45a942900，与本车道测量用的那枚磁盘产物逐字节相同 —— 所以下面这些『候选读数』现在就是线上读数。本机对读件：`live_entry_proof_r7.txt`。
-- 读数取在代 `e7ff7938ea41`；写本件时权威尖已是 `569b8472b134`。这七枚与三屏直接相关的源在两代之间逐枚 UNMOVED：styles.css、design-tokens.css、v8PanelRegistry.tsx、SharedJourneyPanel.tsx、SharedPosterScreen.tsx、sharedJourney.css、trip-poster.css（`git rev-parse <rev>:<path>` 逐枚对读，动了就拒写：七枚全等）。两代之间确实有别的前端源移动，所以**产物入口名会变**——本件说的是这三屏的渲染规则与组件字节，不是『整包未变』；落地哪条我都按当代重建再读一遍。
-- 同一代在我私有栈上重跑（库 `_r5_r7landed.db`，只走产品自己的门，390x844 一形）：卡片亮档 0/3 最差 5.97、暗档 0/3 最差 4.66；三屏亮档分别 nav_drawer 4/18 最差 3.62、shared_journey 6/30 最差 3.62、long_image_poster 1/22 最差 3.62
-- 三屏暗档：nav_drawer 0/18 最差 4.66、shared_journey 0/30 最差 5.22、long_image_poster 0/22 最差 4.82 —— 缺口只在亮档这一句在这一代仍然成立。
+## 0. 先与线上对读，再报数
+- :4783 现在服务的入口 `/assets/index-CKZE7InQ.js`（1609739 字节 B，服务字节 sha1 fa51295cdd73e9d1e04b5f524d56cb84a15b6bb3）与 CSS `/assets/index-BQzlTYlS.css`（231440 字节 B，sha1 2d529817904874d60acc90281e7b1f022a6e8246），两枚都与本枝头 `npx vite build` 出来的磁盘产物逐字节相同。那两枚 sha1 是产物内容哈希，非 git 对象、不可 cat-file；本行可取回的 40 位是现尖 569b8472b134e5562ef396e38681870b9c26536a。
+- 盘面只走产品自己的门：demo/reset -> prepare-scenario -> scene 答 200 / 200 / 200，站点 6 枚、少 0 枚、supply.state=NOT_ASKED；库 `_r5_r9.db`，静态服务环境 CITYNEXUS_BACKEND_PORT=4891（上一单那枚代理默认值已修）。
+- 与 day21（代 `e7ff7938ea41`）那批四臂对读：三屏两档的**不合格枚数与最差对比逐枚相同**（不等就拒写）。文字枚数有一处不同——shared_journey dark：day21 30 枚 -> 现尖 29 枚；同一枚在本代四臂之间也在浮动（shared_journey dark 在 29、30 枚之间浮动），所以那是屏上行数的浮动、不是判据变了。七枚与这三屏直接相关的源在两代之间逐枚 UNMOVED：`styles.css`、`design-tokens.css`、`v8PanelRegistry.tsx`、`SharedJourneyPanel.tsx`、`SharedPosterScreen.tsx`、`sharedJourney.css`、`trip-poster.css`。
 
-## 1. 同一层墨，两处声明
-- `--cn-ink-tertiary` 亮档 `#86868b`（design-tokens.css 亮块）对白只有 3.62；暗档 `#8e8e93` 对 `#1c1c1e` 是 5.22。三屏最差那枚亮档元素实测逐枚都是 3.62，色值逐枚是 134,134,139 —— 就是这一层墨。
-- 这层墨在全树的射程（按 569b8472b134 现数，不再只数那两枚 CSS）：`frontend/src` 下 12 枚文件里被引用 35 处，其中 `color:` 32 处、`border…` 3 处。我上一版把射程写成『两枚 CSS 里 8 处』，那是分母数错了，这里按树重数纠正。清单：`design-tokens.css`、`access.css`、`footprint.css`、`pretripChecklist.css`、`collections.css`、`discovery-batch.css`、`prepAbandonSurvey.css`、`pendingSet.css`、`trip-poster.css`、`sharedJourney.css`、`journeyTrash.css`、`styles.css`。
-- 三处不合格角色各自的主人（每条只列前两枚命中，路径:行号）：`.v8-nav-group` -> `frontend/src/styles.css:142`；`.cn-shared-stop-meta` -> `frontend/src/features/shared/sharedJourney.css:98`；`.cn-poster-day-head small` -> `frontend/src/features/poster/trip-poster.css:83`。
-- 三处不合格元素的自有选择器（仪表逐枚回读）：抽屉 `.v8-nav-group`（SPAN，父 DIV，背景 NAV）、分享页 `.cn-shared-stop-meta`（父 `.cn-shared-stop`）、长图 `.cn-poster-day-head` 里那枚无类名 SMALL。它们都已经走 `var(--cn-ink-tertiary)`，不是漏绑 token。
+## 1. 现尖这一代上，三屏还红不红
+- 卡片（上一单那枚 1 增 1 删的对象）：亮档 0 不合格/3 枚、最差 5.97、暗档 0 不合格/3 枚、最差 4.66 —— 已经干净。
+- 亮档三屏：nav_drawer 4 不合格/18 枚、最差 3.62、shared_journey 6 不合格/30 枚、最差 3.62、long_image_poster 1 不合格/22 枚、最差 3.62。
+- 暗档三屏：nav_drawer 0 不合格/18 枚、最差 4.66、shared_journey 0 不合格/29 枚、最差 5.22、long_image_poster 0 不合格/22 枚、最差 4.82。
+- 三屏亮档最差那枚的色值逐枚是 134,134,139，即 `--cn-ink-tertiary` 的亮档声明；按 WCAG 现算它对纯白是 3.62（门槛 4.5），暗档那层对 `#1c1c1e` 是 5.22 —— 缺口在亮档。
+- 这层墨在全树的射程（按现尖现数）：`frontend/src` 下 12 枚文件、共 35 处引用，其中 `color:` 32 处。我 r1 那版把射程写成『两枚 CSS 里 8 处』，那是分母数错了，这里按树重数纠正。清单：`design-tokens.css`、`access.css`、`footprint.css`、`pretripChecklist.css`、`collections.css`、`discovery-batch.css`、`prepAbandonSurvey.css`、`pendingSet.css`、`trip-poster.css`、`sharedJourney.css`、`journeyTrash.css`、`styles.css`。
+- 三处不合格角色各自主人（规则体里声明这层墨的那一行）：`.v8-nav-group` -> `frontend/src/styles.css:142`；`.cn-shared-stop-meta` -> `frontend/src/features/shared/sharedJourney.css:98`；`.cn-poster-day-head small` -> `frontend/src/features/poster/trip-poster.css:83`。
 
-## 2. 三条候选都在同一枚线上产物上量过（注入作者样式，标签不冒充产物读数）
+## 2. 三条候选，全部跑在上面那枚线上产物上（注入作者样式，不冒充构建产物）
 
-| 候选 | 注入内容 | 抽屉 light | 分享 light | 长图 light | 三屏 dark 是否变动 |
+| 候选 | 注入 | 抽屉 亮档 | 分享 亮档 | 长图 亮档 | 三屏 暗档 |
 |---|---|---|---|---|---|
-| 甲 | `--cn-ink-tertiary:#76767b`（对白 4.52，刚过） | 0/18 最差 4.52 | 0/30 最差 4.52 | 0/22 最差 4.52 | 0/18 最差 4.66、0/30 最差 5.22、0/22 最差 4.82 |
-| 甲-强 | `--cn-ink-tertiary:#6e6e73`（等于把亮档 tertiary 并进 secondary 的数） | 0/18 最差 4.82 | 0/30 最差 5.07 | 0/22 最差 4.66 | 0/18 最差 4.66、0/30 最差 5.22、0/22 最差 4.82 |
-| 乙 | 三处角色改 `color: var(--cn-ink-secondary)`（选择器各条都带 light 根） | 0/18 最差 4.82 | 0/30 最差 5.07 | 0/22 最差 4.66 | 0/18 最差 4.66、0/30 最差 5.22、0/22 最差 4.82 |
+| 甲 | --cn-ink-tertiary:#76767b（对白 4.52） | 0 不合格/18 枚、最差 4.52 | 0 不合格/30 枚、最差 4.52 | 0 不合格/22 枚、最差 4.52 | nav_drawer 0 不合格/18 枚、最差 4.66、shared_journey 0 不合格/30 枚、最差 5.22、long_image_poster 0 不合格/22 枚、最差 4.82 |
+| 甲-强 | --cn-ink-tertiary:#6e6e73（亮档并到 secondary 的数） | 0 不合格/18 枚、最差 4.82 | 0 不合格/30 枚、最差 5.07 | 0 不合格/22 枚、最差 4.66 | nav_drawer 0 不合格/18 枚、最差 4.66、shared_journey 0 不合格/29 枚、最差 5.22、long_image_poster 0 不合格/22 枚、最差 4.82 |
+| 乙 | 三处角色改 color: var(--cn-ink-secondary) | 0 不合格/18 枚、最差 4.82 | 0 不合格/29 枚、最差 5.07 | 0 不合格/22 枚、最差 4.66 | nav_drawer 0 不合格/18 枚、最差 4.66、shared_journey 0 不合格/30 枚、最差 5.22、long_image_poster 0 不合格/22 枚、最差 4.82 |
 
-- 三条都把亮档三屏压到 0 枚不合格，暗档三屏在三条下逐枚与基线相同 —— 没有一条把洞挪到暗档。
-- 差别是可核对的两点：甲的余量只有 4.52（对 4.5 的门槛），而甲-强与乙在这三屏上量出同一组数（4.82 / 5.07 / 4.66）—— 也就是说『把亮档 tertiary 并进 secondary』和『这三处改用 secondary』渲染结果相同，差的是射程：前者动 35 处声明，后者动 3 条规则。
+- 三条都把三屏亮档压到 0 枚不合格，暗档逐枚最差与基线相同（写在开头就判过：动暗档就拒写）。
+- 差在两点，都可核对：甲的余量只有 4.52，而甲-强与乙量出同一组数（4.82、5.07、4.66）——『并色阶』与『改这三处角色』在这三屏上渲染相同，差的是射程：前者动 35 处引用（其中 32 处是 color），后者动 3 条规则。
 
-## 3. 我这把尺先红了一次（记下来，别让读者当成产品结论）
-- 乙的第一趟注入只写到 `:root[data-theme=light] .v8-nav-group` 这一层选择器，抽屉仍报 4/18 最差 3.62 枚不合格；原因量出来了：产品那条规则写的是 `#v8-nav-drawer > div .v8-nav-group`（styles.css 带 ID 的选择器），ID 的特异性压过我的类选择器 —— 那是**我的注入没够到**，不是产品的形状。第二趟把同一条选择器补成 `... #v8-nav-drawer > div .v8-nav-group` 后抽屉才真变干净。第一趟的件留在 `screens_r7YI.json`，读数只用于记录我这枚仪器错。
+## 3. 我这把尺先红过一次（r1 记录，不是产品结论）
+- 乙的第一趟注入只写到 `:root[data-theme=light] .v8-nav-group`，抽屉仍报 4 不合格/18 枚、最差 3.62；量出来是产品那条规则带 ID（现尖上主人是 `frontend/src/styles.css:142`），ID 的特异性压过我的类选择器——我的注入没够到。第二趟补成带 ID 的同一条后抽屉才真干净。第一趟的件留在 `screens_r7YI.json`，只用作仪器错记录。
 
 ## 4. 没做的
-- 这四臂都是**注入的作者样式**，不是构建产物：注入只换一枚自定义属性或一条 color 声明，级联与特异性按真产物走（第 3 节就是被特异性咬出来才补的选择器）。要落哪条，我按当代源码改一次、重建一次、再交两代读数。
-- 没量实体手机；没跑 e2e；没跑整套后端；瓦片底图这台机器始终不加载。
-- 只量了这三屏的 390x844 一形：抽屉在桌面形主体不在 DOM，长图与分享页的桌面形上一单量过、本件不重复声明。
+- 四臂的候选态是注入的作者样式，不是重建的产物：注入只换一枚自定义属性或一条 color 声明，级联与特异性按真产物走（第 3 节就是被特异性咬出来才补的选择器）。裁哪一条，我按当代源码改、`tsc` 两把 + `vite build` 重建，再交『改前 vs 改后』两代读数与一枚把旧值压回去的反件。
+- 只量了 390x844 一形（这三屏的桌面形在 r5 量过：分享与长图两屏桌面形同样只红在亮档；抽屉在桌面点不开主体，具名 NOT_REACHED_BY_SHAPE）。没量实体手机；没跑 e2e；没跑整套后端；瓦片底图这台机器始终不加载，本件没有一个结论依赖瓦片像素。
