@@ -42,7 +42,11 @@ TABLE = FRONTEND / "src/features/poiimport/poiImportCopy.ts"
 PANEL = FRONTEND / "src/features/poiimport/PoiImportPanel.tsx"
 DATA = pathlib.Path("D:/moodle/_qoder_newlane_ord0545_data")
 LOCK = DATA / "walkthrough_counterarm.lock"
-RECEIPT = DATA / "walkthrough_counterarms.txt"
+# One receipt per run, never a rewrite of the previous one: the first cut of this tool overwrote its
+# own log, which is how a superseded generation (an M1 that turned out to prove nothing) disappeared
+# from the published artifact while the delivery block still pointed at it.
+RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+RECEIPT = DATA / ("walkthrough_counterarms_" + RUN_STAMP + ".txt")
 BASE_TIP = "4fac49f371da0820393d038700bddddafd1176d1"
 CONFIG = "playwright.ord0545s4-walkthrough.config.ts"
 FRONTEND_PORT = 4916
@@ -72,7 +76,11 @@ def stamp() -> str:
 
 def flush(extra: str = "") -> None:
     body = LOG + ([extra] if extra else [])
-    RECEIPT.write_text("\n".join(body) + "\n", encoding="utf-8", newline="\n")
+    rendered = "\n".join(body) + "\n"
+    if RECEIPT.exists() and RECEIPT.read_text(encoding="utf-8") != rendered:
+        # growing a receipt is fine; rewriting one that already shipped is what lost a generation last time
+        raise SystemExit("ABORT: refusing to rewrite an existing receipt " + str(RECEIPT))
+    RECEIPT.write_text(rendered, encoding="utf-8", newline="\n")
 
 
 def rows(port: int) -> list[list[str]]:
