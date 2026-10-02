@@ -1,7 +1,7 @@
 {
   "tool": "citation_audit_r14",
-  "took_local": "2026-10-03T06:44:59+08:00",
-  "tip": "682e5da0e2b99a0e5c53703b926d21a77b9e4dc4",
+  "took_local": "2026-10-03T06:54:18+08:00",
+  "tip": "3f756211670b634a18bf186668496ada828b0b3e",
   "scope": [
     "backend/app",
     "backend/tests",
@@ -14,7 +14,7 @@
     "OK": 161,
     "NOT_THIS_LANES_CITATION": 16
   },
-  "lane_commits_in_set": 28,
+  "lane_commits_in_set": 29,
   "citations_judged": 161,
   "citations_declined": 16,
   "declined_authors": 11,

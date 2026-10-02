@@ -7,6 +7,7 @@ file that differs with both ids -- that difference is exactly what the landing g
 goes through git_blob_probe's returncode, never through empty stdout.
 """
 import json
+import time
 import os
 import re
 import subprocess
@@ -56,15 +57,25 @@ def discover_refs():
     A typed list is what made every re-cut need three edits (REFS here, a path list in the coordinate
     tool, a name in the staging tool) and once the page carried a title from a generation it had already
     left.  Discovery keeps the landing check honest about the whole family, r5 to whatever lands next.
+
+    Three reads before believing the server has no such refs: one transient empty answer cost this chain
+    a run at 06:33, and "the family is gone" is a claim about the authoritative line, not about me.
     """
-    rc, out = git("ls-remote", "--refs", "origin")
-    if rc != 0:
-        raise SystemExit("ABORT_REF_DISCOVERY %s" % out[:200])
-    found = sorted({f for line in out.splitlines() for f in line.split()
-                    if f.startswith("refs/heads/review/newlane-ord0500-phone-checkin-entry-")})
+    found, last_rc, last_out = set(), None, ""
+    for attempt in range(3):
+        last_rc, last_out = git("ls-remote", "--refs", "origin")
+        if last_rc != 0:
+            time.sleep(2 + 3 * attempt)
+            continue
+        found |= {f for line in last_out.splitlines() for f in line.split()
+                  if f.startswith("refs/heads/review/newlane-ord0500-phone-checkin-entry-")}
+        if found:
+            break
+        time.sleep(2 + 3 * attempt)
     if not found:
-        raise SystemExit("ABORT_NO_REFS_DISCOVERED")
-    return found
+        raise SystemExit("ABORT_NO_REFS_DISCOVERED after 3 reads rc=%s bytes=%d head=%r"
+                         % (last_rc, len(last_out), last_out[:120]))
+    return sorted(found)
 
 
 def main():
