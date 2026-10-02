@@ -1,6 +1,6 @@
 {
   "tool": "checkin_copy_rows_mutants_r6",
-  "took_local": "2026-10-03T04:50:19.271354+08:00",
+  "took_local": "2026-10-03T06:03:36.358327+08:00",
   "control_exit": 0,
   "control_verdict": "GREEN",
   "mutants": [
@@ -39,7 +39,7 @@
   ],
   "scratch_isolated_from_wt22": true,
   "digests": {
-    "frontend/src/features/checkin/checkinCopy.ts": "b84f567cf276a4e2d24961ce9d5ea5ca1e8f0aca29be638390c7410da5789051",
+    "frontend/src/features/checkin/checkinCopy.ts": "46bb0cbda00241d0c188fb5bb9bb71fcbc0e3e265e8736db64da252a9c4f347f",
     "frontend/src/features/trip/TripItinerary.tsx": "a505addb1f63f235daead7548f951ed881275e96cebe437cb844b506473548f4",
     "frontend/src/i18n/LocaleContext.tsx": "834872848992693c25de0cfad43eddd9ba2dd8372dbee00c8228dc819cb474a3"
   },
