@@ -139,9 +139,10 @@ def main():
     if arm.get("tip") != live_tip:
         raise SystemExit("ABORT_ARM_STALE the emitter-arm ran against tip %s, the line answers %s"
                          % (arm.get("tip"), live_tip))
-    if mine_arm.get("commit") != remote:
-        raise SystemExit("ABORT_ARM_STALE_REF the arm ran the copy at %s, the ref answers %s"
-                         % (mine_arm.get("commit"), remote))
+    if not emitter_same:
+        raise SystemExit("ABORT_EMITTER_BYTES_DIFFER the emitter copy inside %s is not the program "
+                         "writing this page (%d bytes in the ref, %d here) -- stage it and re-cut"
+                         % (my_tail, len(_in_ref.encode("utf-8", "replace")), len(_lane)))
     # the line moves every couple of minutes on this project, so "the tip moved" alone is not a reason
     # to refuse a page -- "my citations stopped resolving on the tip as it now stands" is.  Re-measure
     # against the newest tip here, and refuse only on real rot or a product blob that no longer matches.
