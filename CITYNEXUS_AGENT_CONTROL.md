@@ -16588,6 +16588,124 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0504 r5 · 花费页复切到现尖 `569b8472…`；两次 RECUT_ABORT 的真因数出来了：我把没碰过的 14 行换了行尾，r5 交的是 0 枚这种行（车道 da46954a）
+
+**一、坐标**
+
+- 候选枝 `refs/heads/review/da46954a-ord0504-spend-face-r5`，交付头 `aa3016de0463b68b423e3f277b85900872d3ecc0`（`git ls-remote origin refs/heads/review/da46954a-ord0504-spend-face-r5` 回读与工作树 `git rev-parse HEAD` 逐字相同）。
+- 基座 = 现尖 `569b8472b134e5562ef396e38681870b9c26536a`，通道 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`（推送前后各现读一次，同一枚）。`git merge-base <候选> <现尖>` 逐字等于现尖 ⇒ 落地是纯 fast-forward，`git rev-list --count` 现尖之上 16 枚提交。
+- 改动 76 枚文件：产品与测试 7 枚、`review/ord0504` 证据 69 枚；与 5a53846b 那一单共目录不共名——现尖上那本目录有 38 枚（他们的 `READINGS.md`、`screens/`、`walk_ord0504_*.cjs`），我这一枝加 68 枚、改他们 0 枚，文件名交集 0 枚。
+- 读数取在上一枚头 `7ddc59714c4e58905fac67dfdfceb038630578d6`（回执里那把尺记的就是它，`review/ord0504/merge_shape_r5.json:4`）；三枚头之间（读数头 `7ddc59714c4e58905fac67dfdfceb038630578d6` → 回执头 `0e4363414e3db926cf55d331d02fd1021383cc81` → 交付头 `aa3016de0463b68b423e3f277b85900872d3ecc0`）`git diff --name-only 7ddc59714c4e58905fac67dfdfceb038630578d6 aa3016de0463b68b423e3f277b85900872d3ecc0 -- backend frontend contracts` 输出 0 行，所以我量的字节与交付的字节同一份。
+
+**二、被 RECUT_ABORT 两次的真因：复现，不是转述**
+
+- 判据先换掉：`git merge-tree --write-tree` 对被拒的那几版照样报 exit 0、零冲突文件——它只答"有没有文本冲突"，不答"候选到底动了多少行"。所以这把尺改成按行对齐数：`difflib.SequenceMatcher`，先把每行末尾那枚 CR 剥掉再比文本；剥完相等而原字节不等的那些行，就是"只换了行尾"的行。
+- 数出来的（`review/ord0504/recut_contention_r4.json:45` 与 `:50`，同件 `:46`、`:51` 是真正增删的行数）：被拒那一版对现尖除了本单要改的行，另带 16 枚只改行尾的行；修完之后是 0 枚。
+- 病灶一枚文件：`frontend/src/app/v8Types.ts`。这枚文件在线上本来就不是单一行尾——`review/ord0504/recut_contention_r4.json:26`、`:27` 记现尖那枚是 78 行 CRLF 加 14 行裸 LF；被拒那一版交的是 102 行 CRLF、裸 LF 0 行（`:32`、`:33`），也就是我那几次编辑把 14 枚**根本没碰过**的行顺手归一了。三方合并里那 14 行成了"两侧都改同一行"，整读起来就是整文件重写；这与账本给 `*.py` 记过的形状同源，现尖 `.gitattributes` 注释原话是 "CRLF here produced whole-file rebases (ORD-0532)"，规则一行 `*.py text eol=lf`。
+- 修法不是重放 hunk，是重做那一枚文件：取现尖字节，只把本单那一枚 hunk 插进 `legs: Array<…>` 行的 `crs: string;` 之后，其余字节一律照现尖。修完那枚文件是 91 行 CRLF 加 14 行裸 LF，行尾布局与现尖一致（`review/ord0504/recut_contention_r4.json:38`、`:39`）；对这枚尖的 blob 从 `1e28940983ea86bd883e312e5682a2acc3ba8c85` 变成 `6a6fa13f4e25e3856bfb59e92566e985cc57e148`。
+- 复切到 `569b8472…` 之后用同一把尺把三枚"两边都有"的文件重扫一遍，`ending_only_rewrites` 逐枚为 0：`frontend/src/app/v8Types.ts` 加 14 减 1、裸 LF 仍是 14 行（`review/ord0504/merge_shape_r5.json:24`、`:25`、`:26`、`:29`、`:30`）；`frontend/src/app/V8Experience.tsx` 加 23 减 56（`:14`、`:15`、`:16`）；`frontend/src/i18n/LocaleContext.tsx` 加 66 减 0（`:43`、`:44`、`:45`）。汇总那行是 `files_with_ending_churn: []`（`review/ord0504/merge_shape_r5.json:52`）。
+- 这把尺随件交成了可复跑脚本：`review/ord0504/merge_shape_r5.py`，带一个可选参数（要比的 rev），有行尾 churn 就退 1。谁要复核这单会不会再被拒，直接 `D:/moodle/CityNexus/.venv/Scripts/python.exe review/ord0504/merge_shape_r5.py <现尖>` 看退出码，不需要信我这块的判语。
+
+**三、"与 0545 徽章表重名"这一格：先更正我自己上一条读数，再按实测回**
+
+- 要勘误的：我在 `01:10` 那块（账本 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:20460` 起）与转给你的一条口头回话里说过"叶子名交集为空"。那句**按当时的表**成立（那张表那时 15 枚成员），但 `372993008dd26ee31c4f92b95b294c30acd9ef5f` slice 2 把整族搬过来之后，这张表已经是 67 枚成员，我这次重数，交集不再是空：**`kicker`、`lede`、`title` 三枚叶子名同名**。旧块不改，这条以本块为准。
+- 同名不等于同键，逐枚指着看：表里那三行在 `frontend/src/features/poiimport/poiImportCopy.ts:275`、`:279`、`:359`，取词走 `poiImportCopy()`（同一文件 `:381`）；我这三枚是字典键 `spend.kicker` / `spend.title` / `spend.lede`，取词走 `t("spend.…")`，在 `frontend/src/features/trip/SpendPanel.tsx:79`、`:80`、`:82`；现尖上以裸 `t("kicker")`/`t("lede")`/`t("title")` 调用的地方 0 处，字典里以 `spend.` 起头的键也 0 枚（`review/ord0504/badge_table_name_check_r5.json:39`、`:112`、`:139`、`:144`、`:145`、`:156`、`:157`，判语在 `:133`）。⇒ 两套词源命名段不同、查找路径不同，不会互相遮蔽。
+- 所以按你块里的条件句我判"条件不满足"：**没有重可删，也不需要改名**。改名只会把这一屏 32 个具名槽换掉，换不来任何安全；真撞上的形状（同一枚文件的同一段被两侧改）在第二格已经拆掉了。
+
+**四、字典这代掉到 908 枚/本不是丢词，我核过**
+
+- 这 13 枚提交里 `372993008dd26ee31c4f92b95b294c30acd9ef5f`（ORD-0545 slice 2）把整族 `poiImport.*` 从共享字典搬进那屏自己的表，所以我上一基座的 960 枚/本（`review/ord0504/dictionary_rebase_census_r4.json:7` 与 `:15`）变成现尖 908 枚/本（`review/ord0504/dictionary_rebase_census_r5.json:7` 与 `:16`）——这也是我这类键数回执分母会跳的原因。
+- 核的是"搬走之后有没有人还在按老键取词"：现尖上仍以 `t("poiImport.*")` 取词的只有 `frontend/src/components/PoiCandidateCard.tsx` 一枚文件，它取的那些键仍在字典里（字典里剩 13 枚 `poiImport.*`）；`poiImportCopy.ts` 里出现 `t("poiImport.channelLocal")` 那处是注释（`frontend/src/features/poiimport/poiImportCopy.ts:35`），不是活调用，该徽章的词在表里（`frontend/src/features/poiimport/poiImportCopy.ts:167`）。⇒ 现尖上没有"键在两张表里都没有"的孤儿句。
+
+**五、复切后这一代上的读数（不引用 r3/r4 的数）**
+
+- 类型：`frontend` 里 `node_modules/.bin/tsc -p tsconfig.check.json --noEmit` 退 0。
+- 字典按枚数：`en` 908 → 940、`zhCN` 908 → 940；从现尖丢掉的键 0 枚、重名键 0 枚、本单新增 32 枚且全部 `spend.`（`review/ord0504/dictionary_rebase_census_r5.json:7` 至 `:13`，zhCN 侧 `:16` 至 `:22`）。
+- 后端：本单文件 `6 passed`、退 0，见 `review/ord0504/pytest_r5_batch.txt:10` 与 `:11`；邻集 6 文件 collect 见 `review/ord0504/pytest_r5_batch.txt:4`、`72 passed` 见 `:7`、退出码见 `:5`、被点名的红 0 枚见 `:9`。
+- 车道栈整个重起在这一代：后端 `:8731` 是复切后重起的 uvicorn（库仍是本车道自己的 `run/ord0465_lane.db`；这一代那次起进程用的是工具自带的后台启动，stdout 进的是任务输出而不是 `run/` 下的日志文件，所以这一格没有自家日志件可指，前一版 r4 的 `run/backend_8731_r2.log` 形制在那一代里）；前端 `:4931` 服务 `dist_r5_clean`，入口 `/assets/index-5DRahkM8.js`；三证在 `review/ord0504/spend_ownership_witnesses_r5.json`（`:5` 记入口名，`:11`、`:20` 两枚 `equal: true` ＝ 服务字节与磁盘字节逐字相等，`:27` 代理自己的访问日志，`:42` 判语 `WITNESSES_ALL_OK True`）。两趟行程由 `spend_seed_r1.py` 重播，id 逐字在 `run/spend_seed_report.json`（运行件，不入枝）。
+- 11 枚 spend 臂：`review/ord0504/spend_arms_r5.json:26` 记 passed 为 11、`:27` 记 failed 为空。判数是臂自己从 `:8731` 现取 `/experience` 与 `/wallet` 两条答案后加的，屏上一个 `data-*` 都没读；屏上逐字读数（带单位）在 `review/ord0504/spend_arms_r5.json:43`。
+- 两枚反件在同一代重跑：`review/ord0504/spend_counterexample_controls_r5.txt`，M1（缺价的腿被写成 0）把 `counterexample/no_server_fact_prints_no_total` 打红，臂数见 `:9`、判语 CAUGHT 见 `:11`；M2（`KNOWN` 不再进估算桶）把 `counterexample/changing_one_amount_moves_the_total` 打红，见 `:18` 与 `:20`。还原：`:2` 与 `:22` 两行的字节摘要一字不差；这枚文件的 git blob 是 `873ef3c6051ed4982868be14b982e5866f5c7cf2`（`git cat-file -t` 回 `blob`）。反件跑完我重建一次干净产物并重指 `:4931`，上面那 11 枚全绿是重建之后取的。
+- 服务字节里词都在：`review/ord0504/spend_dictionary_check_r5.json:7` 记新增 32 枚、`:26` 判语 `ALL_SPEND_PAIRS_PRESENT_IN_BUNDLE`、`:4` 记被检的那枚入口与 witness 件 `review/ord0504/spend_ownership_witnesses_r5.json:5` 逐字相同；单边键 0、产物里找不到的值 0、参数槽不匹配 0。
+- 契约这一格仍原样：`review/ord0504/contract_visibility_r5.json:2` 契约路径 159 枚、`:19` 被描述的字段路径 18 条、`:20` 判语 `NONE_OF_THE_SPEND_FIELDS_ARE_IN_THE_CONTRACT`；库里钱列清点见 `review/ord0504/spend_surface_r5.json`。
+- 没改善的一格要说：整套（两趟）我这代没重跑——`569b8472…` 相对 r3 那代动了 157 枚文件，两趟各约 20 分钟，我先把候选交出去再补；r3 那代那份两趟回执仍在 `review/ord0504/suite_r3_two_passes.txt`，它的归属判语（本车道红 0 枚）不自动适用于这一代。要我在这一代补两趟，说一句就跑。
+
+**六、提醒一格，不是我这单的事**
+
+`frontend/src/components/PoiCandidateCard.tsx` 仍走 `t("poiImport.*")`，而它同屏其余句子的词已搬进 `poiImportCopy.ts`：一张屏两套词源，下次再搬一族就会造出孤儿键。要不要开一纸收口（那一屏统一到一张表），等号令者点，我不动。
+
+**七、仍等你点的四格**
+
+单号撞车（0504 与 5a53846b 那一单同号、名册同一行又记 0505）；那五类没有按行程的读门（`STOP_ESTIMATE`、`PLAN_TOTAL`、`BOOKING`、`ORDER`、`TRANSACTION`）开不开后端单（屏上已逐类具名）；契约里这几枚金额字段要不要登记并先立闸；ORD-0479 那把按行号钉的尺（它断言 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py:184` 里那个 `(:45)`，而被钉的那枚键位现读在 `frontend/src/features/shared/SharedJourneyPanel.tsx:47`）。
+
+**八、没动的东西（按令）**
+
+- 新增写路由 0 枚（臂里那一枚专门数它：`spend_face/opens_with_gets_and_no_new_door`）；屏上没有一枚不是服务器给的数（`spend_face/no_figure_that_is_not_a_server_amount`）；没有为"避重名"改任何键名（第三格）；没有再整文件重写任何行尾（第二格就是修法）。
+- `demo/reset` 0 次；`_preview.db` 本单 0 打开；`:8000` `:4781` `:4782` `:4783` `:4787` `:8693` 0 触碰（那是号令者与手机链的口），本单只用 `:8731` `:4931`，交件后两口停并回验端口；反编译/竞品素材/字体 0 进仓；别人 worktree/枝/进程 0；账本 0 写（本块落收件口）；工作树 `git status --porcelain` 交前 0 行。
+- 复现形制：`cd D:/moodle/_qoder_r_ord0465_20260929/wt` → `git checkout aa3016de0463b68b423e3f277b85900872d3ecc0` → 后端 `:8731` 带 `CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_r_ord0465_20260929/run/ord0465_lane.db` 起 `app.main:app` → `python review/ord0504/spend_seed_r1.py` → `vite build --outDir .../dist_r5_clean` → `cmdr_static_api_proxy_r1.py --dist .../dist_r5_clean --port 4931 --api 8731` → `node review/ord0504/spend_arms_r1.js`；行尾那把尺单跑 `python review/ord0504/merge_shape_r5.py <现尖>`（有 churn 退 1）。Python 用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 r8（手机车道 0afdb49b）：字已经在线上，这一枝把自家注释里那四枚行号量回来
+
+现尖 `569b8472b134e5562ef396e38681870b9c26536a`（本枝从它自己身上分叉，`fork_point` 与之相等 真）。本枝 `review/newlane-ord0500-phone-checkin-entry-r8` = `1783ca68b65e075ca5a86a37e1a87200e03ec0a8`，判读合并预测树 `3dc5e04fd14c4c228281d77f54f5dd9c12822780`，merge-tree 退出码 0。上一轮 22:52 那块已把 r7 收进线，所以这轮不是再抢落地，是把落地的东西说得经得起打开。
+
+## 一、这一枝只改了一件事（写集逐枚可点）
+
+- 写集 27 枚文件，合并进现尖后逐枚字节相同 27 枚，需要再 rebase 的 0 枚。数取自车道本地件 `evidence/landing_r6.json`（判的就是远端那一枚 1783ca68b65e075ca5a86a37e1a87200e03ec0a8）。
+- 枝里同名那份 `review/ord0500-checkin/receipts/landing_r6.json` 判的是上一枚 4f609f66522066c3157ec3a6a49fbca60bb0828e（写集 25 枚），比本页少 2 枚：件本身也是一笔提交，所以枝里那份永远落后一枚。这不是读数错，是这形状的必然，写出来免得你按本页去对枝里的件对不上。
+- 三枚枝尖读数对不对得上（这是本页自己的闸）：远端 `newlane-ord0500-phone-checkin-entry-r8` 回读 1783ca68b65e075ca5a86a37e1a87200e03ec0a8、合并预测那趟判的候选 1783ca68b65e075ca5a86a37e1a87200e03ec0a8、landing 件判的那枚 commit 1783ca68b65e075ca5a86a37e1a87200e03ec0a8 —— 三者同一枚 = 真。
+- 我说错了一处，趁这页一起改口：枝里最后一笔提交的信息（4f609f66522066c3157ec3a6a49fbca60bb0828e）写「write-set 25 files」，那是上一枚那趟的数；这一枚真正的写集是 27 枚 枚。提交已经推出去了，按规矩不改旧帖，勘误就在这页里点名，判据以本节上面那条「三者同一枚」为准。
+- 产品侧只有 `backend/tests/test_qoder_ord0500_journey_refusal.py` 那一笔注释（blob `dc0a89c1f15a66c88987d8ec79eeff32343778e8`），其余是 `review/ord0500-checkin/` 里的件与工具。前端字节一枚没动：引用这枚后端规格的 `frontend_files_referencing_the_test` = 0 枚（空集），所以 r7 那一代的入口名与 bundle 字节不在这儿重述成本轮新读数。
+- 两枚仍在线上的产品 blob 顺手回读：`backend/app/main.py` = `8b5c56d248560028f2d3de0dc9f697de06630243`，`frontend/src/features/checkin/checkinCopy.ts` = `51c04646d334747a05b26349f4cd4766ba87fa45`（现尖与工作树同一枚，本枝没碰它们）。
+
+## 二、四枚行号：注释里写的 → 现尖读到的
+
+| 说法 | 注释里的旧数 | 现尖读到的 | 那一行现在的原文 |
+|---|---|---|---|
+| require（共用的 `require()` 助手） | `backend/app/main.py:810` | `backend/app/main.py:818` | `def require(session: Session, model: type, identifier: str, label: str):` |
+| lookup（门里自己先查一次表） | `backend/app/main.py:3912` | `backend/app/main.py:4256` | `existing = session.scalars(` |
+| integrity（唯一索引那层捕获） | `backend/app/main.py:3948` | `backend/app/main.py:4292` | `except IntegrityError as exc:` |
+| caught_by（`caught_by: unique_index` 那一支） | `backend/app/main.py:3965` | `backend/app/main.py:4309` | `"caught_by": "unique_index",` |
+
+- 旧数 `810 / 3912 / 3948 / 3965` 是我在 r5 那一代量到的，随基座走动全数失效；这轮的数一律从现尖 `569b8472b134e5562ef396e38681870b9c26536a` 的 `backend/app/main.py`（共 14476 行）当场读：打卡那扇门自己的区间 `4210 到 4329` 由路由路径那两行定位（不是我记的偏移），每枚锚还要求在这段里唯一，否则工具直接 ABORT。件 `review/ord0500-checkin/receipts/reanchor_r8.json`（blob `446d4cba12493e6cc05d1463595126c57d188b44`）。
+- 现在注释里那四枚行号是 `818 / 4256 / 4292 / 4309`；被替换掉的旧数是 `810 / 3912 / 3948 / 3965`，两两都不相等 = 4 枚（相等就不必修，工具在这种情况下会拒绝写任何东西）。
+
+## 三、闸自己也挨了反件打（这一节是为我自己那一类错写的）
+
+- 我第一版本工具就把正文打坏了：替换串少写一枚反引号，注释里那句「require 助手」前面的记号被吞掉、句子撕开一半。所以 `apply()` 现在有一条只许改数字的闸：把两侧所有数字遮掉之后正文必须逐字相同，不相同就 `ABORT_TEXT_CHANGED`。这一条不是摆设，它拦的就是我自己刚犯的那个错。
+- 三臂都跑在临时命名空间里，不碰工作树：反件一（少反引号）期望 ABORT_TEXT_CHANGED require -- replacement is not the old prose w；反件二（把锚定的短语改掉，让工具「什么都没换还装作曲线走完」）期望 ABORT_ANCHOR_PHRASE require -- the shipped comment no longer con；正件遮数之后正文逐字相同 = 真，改动行数 4 行，字节数 6864 对 6864（只动数字所以总字节不变）。`every_arm` = 3 枚（PASS、PASS、PASS）。件 `review/ord0500-checkin/receipts/reanchor_r8_selftest.json`（blob `f921281c204d979bafca001f498554c1de77582c`）。
+- 那枚工具与它的反件都在枝里：`review/ord0500-checkin/tools/reanchor_r8.py`（blob `79174f20fe0d3627bda4128119a677058071f746`）。
+
+## 四、门里的臂与词汇闸（本代重跑，不是抄上一代）
+
+- 两套后端规格（`test_qoder_ord0500_journey_refusal.py`、`test_qoder_ord0476_checkins.py`）在私库 `r6_pytest.db` 上跑：退出码 0，尾行逐字 `16 passed, 2 warnings in 2.69s`，跑后库里 9 行打卡。共享库没被碰：字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未动 = 真。
+- 三枚 `backend/app/main.py` blob 的相等关系：候选 `8b5c56d248560028f2d3de0dc9f697de06630243` 对判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243` 同一枚 = 真 —— 这一枚相等就是「我那笔产品字节确实在线上」的字节证；候选对 r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20` = 假（不同是应该的，基座走过别人好几笔）。
+- 词汇闸：GREEN，检查 11 行；两枚反件跑完按原字节还原，`every_mutant_bit` = 真，控制趟 GREEN。
+
+## 五、全线源码注释里的 path:line 我逐枚打开了一遍（只读，别人手上的判据我没动）
+
+- 分母的件在枝里 `review/ord0500-checkin/receipts/citation_audit_r8.json`（blob `2b42a0e4a94532dbe197b7f492c8863b480f6323`），它逐枚记着 `backend/app`、`backend/tests`、`frontend/src`、`contracts` 四处 175 条 `path:line` 引文（扫过 71 份 py/ts/tsx，含 4 枚只写了冒号数字的同段引文，按「读到此刻最近一枚具名路径」解）。本单自己那 4 条逐条 OK，不 OK 的 16 条分布：BLANK_LINE_CITED 13 条、ORPHAN_BARE 1 条、UNRESOLVED_PATH 2 条。
+- 最该点名的一条：`backend/tests/test_qoder_ord0467_v13_contract_family.py:3` 引的是 `test_qoder_ord04307_credential_gate.py:180`，而这枚文件名在库里不存在 —— 「不存在」按登记清单数出来：以该名结尾的路径 0 条；同族另一枚 `backend/tests/test_qoder_ord0307_credential_gate.py` 结尾的有 1 条（它第 180 行的那句确实在），所以那是 4 与 3 之差一枚字笔误，不是两件东西。归 0467 那一手，我不改别人的判据文件。
+- 另有 13 枚引文指向一枚空行（含 `frontend/src/features/pending/pendingSet.ts:9` 引 `backend/app/main.py:5362`），这是「行号在、内容不是那句说的东西」的形状；逐条原文都在件里，本页不替别人修。
+- 尺自己的限度具名：写裸名（如 `main.py:3527`）的引文，我按「排除 `review/` 里那些整棵冻结副本之后唯一后缀」解 —— 登记在库的 9760 条路径里有 21 条以 `/main.py` 收尾，其中 20 条是 `review/` 的检查点副本；不去掉就得把所有裸名引文都判成「不可解」。剩 2 枚仍无解（已在上面点名）。
+
+## 六、不在本代的东西（具名，不折算）
+
+- 手机第二站中心不可按那一格：仍归滚动容器与底栏两家，等 ORD-0542 后续；本代没重取屏幕读数，也不把 r7 的数当新的用。
+- 字典里 `checkin.duplicate` / `checkin.refused` 两行仍是 0 读者（本轮词汇闸的读数在 `receipts/checkin_copy_rows_r6.json` 里逐行带着），留、删、还是让我屏回去读，等你点一个；我这侧的「留着 + 钉住」臂在跑。
+- 真机与隧道：NOT_MEASURED。整套 Playwright 验收：NOT_EXECUTED（只跑本单载体与两把闸）。
+
+## 七、下一件（我自申报，不合序就驳）
+
+- 我名下账本没有未接单，按序自申报 ORD-0500 r9：把足迹那一屏（`FootprintPanel`）的两档屏读补上，并让它走与行程屏同一把词汇闸。这件会撞底栏那两家的写集，所以我先问一句再动手：**现在就起 r9，还是等 ORD-0542 后续把底栏那一格合完再起？**你没点头之前我只把 r8 交清，不开那枚屏读。r8 这一枝本身不需要再 rebase，依据是第一节点名的「需要再 rebase」计数 = 0 枚。
+
+复算入口（逐条可点）：`git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 refs/heads/review/newlane-ord0500-phone-checkin-entry-r8`；`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t 446d4cba12493e6cc05d1463595126c57d188b44`；第一节那枚「引用这枚后端规格的前端文件 = 0」由 `git -C .../wt22 grep -l test_qoder_ord0500_journey_refusal -- frontend` 复算（回空即 0 枚）；第五节那 175 枚引文的普查用 `D:/moodle/CityNexus/.venv/Scripts/python.exe review/ord0500-checkin/tools/citation_audit_r8.py`（只读，件落车道 evidence 目录），四枚行号那趟同理跑 `reanchor_r8.py`，它改的是工作树里那一笔注释，跑之前先 `git checkout` 干净。读数工具都在枝里 `review/ord0500-checkin/tools/`，跑法逐枚写在文件头。
+
+本页生成于 2026-10-03T00:57:29+08:00，全部数取自本窗口写的件；页里没有一枚数是手打的。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 补件 · 把我上一块（标题「1ba48dbf 勘误」）里标 `NOT_MEASURED / NOT_PROVEN` 的两格答掉：那枚 422 是我的 body 写错字段名，行程经产品自己的门造出来之后，同一台浏览器再进 hub 就画出了 `today-heading`
 
 （这块是接续：已入账的「1ba48dbf 勘误」那块与它后面那枚补件。补件里那句"要不要开单请你裁"由本块第三节自己答掉：不用开了。）
