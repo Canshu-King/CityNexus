@@ -1,0 +1,75 @@
+{
+ "tip": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+ "own_paths_declared": [
+  "backend/tests/test_qoder_ord0296_write_deadline.py",
+  "backend/tests/test_qoder_ord0476_checkins.py",
+  "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json"
+ ],
+ "tip_source": "git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "candidates": [
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0296-g4-floor-r3",
+   "sha": "e89b3656e44a1c9c33d6a5ed5c78cf55950f7d85",
+   "server_sha_ls_remote": "e89b3656e44a1c9c33d6a5ed5c78cf55950f7d85",
+   "server_equals_local": true,
+   "commits_on_tip": 3,
+   "chain_root": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+   "chain_root_is_tip": true,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+     "candidate_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+     "candidate_blob": "df63f4c826a840a0ca783dffa40f786373976cad",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [],
+   "base_is_current_tip": true,
+   "merge_tree": {
+    "rc": 0,
+    "tree": "882678d6859dc039ccaa00c70b6b31be7fce9e09",
+    "conflict_names": 0
+   }
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0476-response-set-r2",
+   "sha": "5450d4e68ef369cccdd2425c883f82dbaa80db09",
+   "server_sha_ls_remote": "5450d4e68ef369cccdd2425c883f82dbaa80db09",
+   "server_equals_local": true,
+   "commits_on_tip": 1,
+   "chain_root": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+   "chain_root_is_tip": true,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0476_checkins.py",
+     "candidate_blob": "534b673b749adfd7548066cca770e0c52d105306",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [],
+   "base_is_current_tip": true,
+   "merge_tree": {
+    "rc": 0,
+    "tree": "f16e59cce413195662e715c3d477847f56877678",
+    "conflict_names": 0
+   }
+  }
+ ]
+}
