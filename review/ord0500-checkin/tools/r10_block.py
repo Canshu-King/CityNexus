@@ -602,17 +602,18 @@ def main():
               s["path"].split("/")[-1], B.fmt(s["bytes"]), B.slot(s["blob"]), B.slot(s["aborts"]),
               "、".join("`%s`" % c for c in s["failed"]) or "无",
               B.fmt(sum(1 for f in s["forced"] if f))) for s in prior_sheets), GEN))
-    A("- 同一趟门里还挂着另一把静态尺：`tools/fmt_lint_r16.py` 用 AST 把发射器和它的邻居共 %s 枚文件里 "
-      "%s 处 `模板 %% (参数...)` 当场点数（槽位数 对 参数枚数），另有 %s 处右侧是单枚表达式、静态点不了数，"
-      "具名不判而不是当作通过；判语 %s、自检 %s（自检是当场写一枚故意错的样本、要求它按行号报红，不是嘴上"
-      "说说）。它排在上面那张清单的第 %s 项。"
+    A("- 同一趟门里还挂着另一把静态尺：`tools/fmt_lint_r16.py`（原件 `receipts/%s`，blob `%s`）用 AST "
+      "把发射器和它的邻居共 %s 枚文件里 %s 处 `模板 %% (参数...)` 当场点数（槽位数 对 参数枚数），"
+      "另有 %s 处右侧是单枚表达式、静态点不了数，具名不判而不是当作通过；判语 %s、自检 %s（自检是当场写"
+      "一枚故意错的样本、要求它按行号报红，不是嘴上说说）。它排在上面那张清单的第 %s 项。"
       "它拦的就是这一路真踩过三次的形制：句子加了一格、参数没跟上，页要念到那一行才炸——而炸的时候枝已经"
-      "推出去了。今天 r15 到 r16 之间就炸过两回：一枚 `not enough arguments for format string`、一枚"
-      "`NameError`（我把一个变量删了却还剩一处引用）。件 `receipts/%s`（blob `%s`）。" % (
+      "推出去了。今天 r15 到 r16 之间就炸过两回：一枚 `not enough arguments for format string`、一枚 "
+      "`NameError`（我把一个变量删了却还剩一处引用）。" % (
+          FMT_RECEIPT, blob_fmt,
           B.fmt(fmt.get("files_scanned")), B.fmt(fmt.get("calls_checked")),
           B.fmt(fmt.get("single_expression_args")), B.slot(fmt.get("verdict")),
           B.slot((fmt.get("selftest") or {}).get("verdict")),
-          B.fmt(RED_CHECK_NAMES.index("静态 arity 尺绿且自检咬下") + 1), FMT_RECEIPT, blob_fmt))
+          B.fmt(RED_CHECK_NAMES.index("静态 arity 尺绿且自检咬下") + 1)))
     A("")
     A("## 八、不在本代的东西（具名）")
     A("")
