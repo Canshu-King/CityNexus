@@ -652,5 +652,15 @@
    "merged_equals_tip": false,
    "tip_already_has_cand_blob": false
   }
- ]
+ ],
+ "summary": {
+  "write_set": 72,
+  "merged_carries_the_lane_blob": 70,
+  "merged_does_not_carry_the_lane_blob": 2,
+  "paths_not_carried": [
+   "backend/app/main.py",
+   "contracts/openapi.yaml"
+  ],
+  "how_counted": "per path: git rev-parse <predicted_tree>:<path> vs <candidate>:<path>, both read out of the same merge-tree run; the write set is measured against the merge base (the fork point), not against the tip, because the tip's own new files are not this branch's writes"
+ }
 }
