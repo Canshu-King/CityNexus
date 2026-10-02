@@ -1,0 +1,1597 @@
+{
+ "tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "test_files_scanned": 232,
+ "sites": 114,
+ "by_form": {
+  "frozen_key_collection": 113,
+  "line_number_as_argument": 1,
+  "index_through_tracked_variable": 0
+ },
+ "frozen_collections": 113,
+ "collections_on_derived_inventory": 9,
+ "collections_of_file_names": 1,
+ "collections_worth_opening": [
+  {
+   "file": "backend/tests/test_qoder_ord0332_error_receipt.py",
+   "line": 132,
+   "entries": 1,
+   "sample": [
+    "backend/app/error_receipt.py"
+   ],
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": true
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0402_recycle_bin.py",
+   "line": 305,
+   "entries": 2,
+   "sample": [
+    "bin_state",
+    "deleted_at"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0434_share_grants.py",
+   "line": 413,
+   "entries": 3,
+   "sample": [
+    "ADMIN",
+    "COLLABORATOR",
+    "OWNER"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 481,
+   "entries": 4,
+   "sample": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 499,
+   "entries": 4,
+   "sample": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 500,
+   "entries": 2,
+   "sample": [
+    "200",
+    "409"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 505,
+   "entries": 3,
+   "sample": [
+    "activity_id",
+    "note",
+    "place_id"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 944,
+   "entries": 3,
+   "sample": [
+    "200",
+    "404",
+    "409"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 499,
+   "entries": 1,
+   "sample": [
+    "traveler_id"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  },
+  {
+   "file": "backend/tests/test_v192_shadow_trial_gate.py",
+   "line": 104,
+   "entries": 2,
+   "sample": [
+    "JOURNEY",
+    "TRAVELER"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false
+  }
+ ],
+ "unresolved_or_stale": [
+  {
+   "file": "backend/tests/test_qoder_ord0307_credential_gate.py",
+   "line": 67,
+   "form": "line_number_as_argument",
+   "literal": "\"position_fp\": CL.position_fp(PROBE_REL, 3), \"in_product_path\": True,",
+   "helper": "position_fp",
+   "named_target": "backend/app/_ord0307_injected_probe.py",
+   "row": 3,
+   "check": "TARGET_NOT_IN_TREE"
+  }
+ ],
+ "rows": [
+  {
+   "file": "backend/tests/test_agent_runtime_gate.py",
+   "line": 281,
+   "form": "frozen_key_collection",
+   "literal": "assert body[\"allowed_activity_types\"] == [\"visit\", \"meal\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "visit",
+    "meal"
+   ]
+  },
+  {
+   "file": "backend/tests/test_agent_runtime_gate.py",
+   "line": 282,
+   "form": "frozen_key_collection",
+   "literal": "assert body[\"protected_commitment_levels\"] == [\"C4_Anchored\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "C4_Anchored"
+   ]
+  },
+  {
+   "file": "backend/tests/test_dsh_twin_disruption_risk.py",
+   "line": 84,
+   "form": "frozen_key_collection",
+   "literal": "assert after[\"risk_reason_codes\"] == [\"DISRUPTION_MAJOR\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "DISRUPTION_MAJOR"
+   ]
+  },
+  {
+   "file": "backend/tests/test_foundation_discovery_pipeline.py",
+   "line": 49,
+   "form": "frozen_key_collection",
+   "literal": "assert [item.semantic_key for item in result] == [\"osm:N1\", \"osm:N2\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "osm:N1",
+    "osm:N2"
+   ]
+  },
+  {
+   "file": "backend/tests/test_foundation_http_adapters.py",
+   "line": 27,
+   "form": "frozen_key_collection",
+   "literal": "assert [risk.code for risk in risks] == [\"HEAVY_RAIN_RISK\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "HEAVY_RAIN_RISK"
+   ]
+  },
+  {
+   "file": "backend/tests/test_foundation_replan_diff.py",
+   "line": 39,
+   "form": "frozen_key_collection",
+   "literal": "assert diff.preserved_protected == (\"cruise\",)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "cruise"
+   ]
+  },
+  {
+   "file": "backend/tests/test_impact_resolver.py",
+   "line": 172,
+   "form": "frozen_key_collection",
+   "literal": "assert result.validation.rejected_activity_ids == (\"hallucinated\",)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "hallucinated"
+   ]
+  },
+  {
+   "file": "backend/tests/test_ord0544_anchor_leg_shape_r1.py",
+   "line": 175,
+   "form": "frozen_key_collection",
+   "literal": "assert _candidate_keys(session, journey.id) == [\"overpass\"], _candidate_keys(session, journey.id)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "overpass"
+   ]
+  },
+  {
+   "file": "backend/tests/test_ortools_optional_boundary.py",
+   "line": 60,
+   "form": "frozen_key_collection",
+   "literal": "assert [item.option_key for item in first] == [\"a\", \"b\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "a",
+    "b"
+   ]
+  },
+  {
+   "file": "backend/tests/test_product_next_hardening.py",
+   "line": 159,
+   "form": "frozen_key_collection",
+   "literal": "assert result.rejected_activity_ids == (\"activity-museum\",)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "activity-museum"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_anywhere_matrix_truth.py",
+   "line": 125,
+   "form": "frozen_key_collection",
+   "literal": "assert seen == [\"/route\"], f\"SETUP 失败：这条门只该喂 /route，实际打到 {seen}\"",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "/route"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_anywhere_matrix_truth.py",
+   "line": 423,
+   "form": "frozen_key_collection",
+   "literal": "assert costings == [\"auto\", \"pedestrian\"], (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "auto",
+    "pedestrian"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_catalog_hydration.py",
+   "line": 651,
+   "form": "frozen_key_collection",
+   "literal": "assert [item[\"status\"] for item in invented[\"provider_status\"]] == [\"OK\"], (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "OK"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_catalog_hydration.py",
+   "line": 680,
+   "form": "frozen_key_collection",
+   "literal": "assert body[\"provenance\"][\"source_kinds\"] == [\"GOLDEN_FIXTURE\"], body[\"provenance\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "GOLDEN_FIXTURE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_catalog_hydration.py",
+   "line": 775,
+   "form": "frozen_key_collection",
+   "literal": "assert not_ready[\"missing_categories\"] == [\"lodging\"], not_ready[\"missing_categories\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "lodging"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_city_failure_reasons.py",
+   "line": 354,
+   "form": "frozen_key_collection",
+   "literal": "assert {city for city, _limit in _providers[\"geocoder\"].calls} == {\"BEIJING\"}, (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "BEIJING"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "line": 636,
+   "form": "frozen_key_collection",
+   "literal": "assert len(caught) == 2 and {c[\"kind\"] for c in caught} == {\"import_from\", \"name\"}, (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "import_from",
+    "name"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0219_write_side_rule_guard.py",
+   "line": 189,
+   "form": "frozen_key_collection",
+   "literal": "assert (body.get(\"kind\"), body.get(\"rule_code\")) == (\"HARD\", \"STROLLER\"), (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "HARD",
+    "STROLLER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0307_credential_gate.py",
+   "line": 67,
+   "form": "line_number_as_argument",
+   "literal": "\"position_fp\": CL.position_fp(PROBE_REL, 3), \"in_product_path\": True,",
+   "helper": "position_fp",
+   "named_target": "backend/app/_ord0307_injected_probe.py",
+   "row": 3,
+   "check": "TARGET_NOT_IN_TREE"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+   "line": 284,
+   "form": "frozen_key_collection",
+   "literal": "assert keys == [\"K1\", \"K2\", \"T1a\", \"T1b\", \"T1c\"], f\"缺格：{keys}\"",
+   "entries": 5,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "K1",
+    "K2",
+    "T1a",
+    "T1b",
+    "T1c"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0332_error_receipt.py",
+   "line": 132,
+   "form": "frozen_key_collection",
+   "literal": "assert owners == [\"backend/app/error_receipt.py\"], (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": true,
+   "sample": [
+    "backend/app/error_receipt.py"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0389_reset_token_gate.py",
+   "line": 104,
+   "form": "frozen_key_collection",
+   "literal": "assert calls == [\"stop_autorun\"], \"the accepted reset must still stop the guardian\"",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "stop_autorun"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0402_recycle_bin.py",
+   "line": 305,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(added[\"required\"]) == [\"bin_state\", \"deleted_at\"], added",
+   "entries": 2,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "bin_state",
+    "deleted_at"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0402_recycle_bin.py",
+   "line": 306,
+   "form": "frozen_key_collection",
+   "literal": "assert added[\"properties\"][\"bin_state\"][\"enum\"] == [\"IN_RECYCLE_BIN\"], added",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "IN_RECYCLE_BIN"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0434_share_grants.py",
+   "line": 311,
+   "form": "frozen_key_collection",
+   "literal": "assert visibility == [\"PRIVATE\", \"LINK_READ\", \"INVITEES_ONLY\", \"PUBLIC\"]",
+   "entries": 4,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "PRIVATE",
+    "LINK_READ",
+    "INVITEES_ONLY",
+    "PUBLIC"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0434_share_grants.py",
+   "line": 413,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(by_role) == [\"ADMIN\", \"COLLABORATOR\", \"OWNER\"], by_role",
+   "entries": 3,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "ADMIN",
+    "COLLABORATOR",
+    "OWNER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0437_poi_import.py",
+   "line": 56,
+   "form": "frozen_key_collection",
+   "literal": "assert detect_forms(\"   \") == (\"EMPTY_INPUT\",)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "EMPTY_INPUT"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0437_poi_import.py",
+   "line": 67,
+   "form": "frozen_key_collection",
+   "literal": "assert [r.place_id for r in resolved if r.status == STATUS_RESOLVED] == [\"p1\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "p1"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0437_poi_import.py",
+   "line": 93,
+   "form": "frozen_key_collection",
+   "literal": "assert payload[\"link_hosts\"] == [\"mp.weixin.qq.com\"], payload[\"link_hosts\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "mp.weixin.qq.com"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0437_poi_import.py",
+   "line": 235,
+   "form": "frozen_key_collection",
+   "literal": "assert [i.title for i in items] == [\"Check in\", \"Ord Gate Hotel\"], items",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "Check in",
+    "Ord Gate Hotel"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 195,
+   "form": "frozen_key_collection",
+   "literal": "assert names == {\"collection_folders\", \"collection_items\"}, names",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "collection_folders",
+    "collection_items"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 205,
+   "form": "frozen_key_collection",
+   "literal": "assert item_columns == {\"id\", \"folder_id\", \"place_id\", \"note\", \"added_at\"}, sorted(item_columns)",
+   "entries": 5,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "id",
+    "folder_id",
+    "place_id",
+    "note",
+    "added_at"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 246,
+   "form": "frozen_key_collection",
+   "literal": "assert constraint_columns == [\"folder_id\", \"place_id\"], unique_constraints",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "folder_id",
+    "place_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 248,
+   "form": "frozen_key_collection",
+   "literal": "assert columns_of[\"idx_collection_items_folder_added\"] == [\"folder_id\", \"added_at\"], columns_of",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "folder_id",
+    "added_at"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 386,
+   "form": "frozen_key_collection",
+   "literal": "assert [row[\"note\"] for row in stored[\"items\"]] == [\"第一次\"], stored",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "第一次"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 476,
+   "form": "frozen_key_collection",
+   "literal": "assert [p[\"$ref\"].rsplit(\"/\", 1)[-1] for p in added_item[\"parameters\"]] == [\"CollectionFolderId\"], added_item[\"parameters\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "CollectionFolderId"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 481,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(added[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(added[\"responses\"])",
+   "entries": 4,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0465_shared_landing.py",
+   "line": 441,
+   "form": "frozen_key_collection",
+   "literal": "assert unlabelled == {\"SELECTED\", \"SUPERSEDED\"}, (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "SELECTED",
+    "SUPERSEDED"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0465_shared_landing.py",
+   "line": 514,
+   "form": "frozen_key_collection",
+   "literal": "assert added == {\"plan_state\", \"active_plan\", \"grant_scope\"}, added",
+   "entries": 3,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "plan_state",
+    "active_plan",
+    "grant_scope"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0465_shared_landing.py",
+   "line": 564,
+   "form": "frozen_key_collection",
+   "literal": "assert arm[\"properties\"][\"grant_scope\"][\"enum\"] == [\"JOURNEY\", \"PLAN_VERSION\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "JOURNEY",
+    "PLAN_VERSION"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0465_shared_landing.py",
+   "line": 565,
+   "form": "frozen_key_collection",
+   "literal": "assert set(arm[\"required\"]) == {\"grant_scope\", \"plan_state\"}, arm[\"required\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "grant_scope",
+    "plan_state"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0466_version_share.py",
+   "line": 285,
+   "form": "frozen_key_collection",
+   "literal": "assert schema[\"allOf\"][1][\"properties\"][\"grant_scope\"][\"enum\"] == [\"JOURNEY\", \"PLAN_VERSION\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "JOURNEY",
+    "PLAN_VERSION"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0466_version_share.py",
+   "line": 314,
+   "form": "frozen_key_collection",
+   "literal": "assert missing == {\"city_code\"}, sorted(missing)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "city_code"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0466_version_share.py",
+   "line": 323,
+   "form": "frozen_key_collection",
+   "literal": "assert unlisted == {\"guest_note\"}, sorted(unlisted)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "guest_note"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0466_version_share.py",
+   "line": 335,
+   "form": "frozen_key_collection",
+   "literal": "assert unanswered == {\"plan_state\"}, sorted(unanswered)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "plan_state"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 167,
+   "form": "frozen_key_collection",
+   "literal": "assert tables == {\"journey_checkins\"}, tables",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "journey_checkins"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 183,
+   "form": "frozen_key_collection",
+   "literal": "assert {r[1] for r in info if r[5] == 1} == {\"id\"}, sorted(info)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 201,
+   "form": "frozen_key_collection",
+   "literal": "assert columns_of[key_name] == [\"journey_id\", \"target_key\"], columns_of",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "journey_id",
+    "target_key"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 203,
+   "form": "frozen_key_collection",
+   "literal": "assert columns_of[\"idx_journey_checkins_journey_stamped\"] == [\"journey_id\", \"stamped_at\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "journey_id",
+    "stamped_at"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 487,
+   "form": "frozen_key_collection",
+   "literal": "assert [p[\"$ref\"].rsplit(\"/\", 1)[-1] for p in node[\"parameters\"]] == [\"JourneyId\"], node",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "JourneyId"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 499,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(created[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(created[\"responses\"])",
+   "entries": 4,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 500,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])",
+   "entries": 2,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "200",
+    "409"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 505,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(create[\"properties\"]) == [\"activity_id\", \"note\", \"place_id\"], create",
+   "entries": 3,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "activity_id",
+    "note",
+    "place_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 507,
+   "form": "frozen_key_collection",
+   "literal": "assert read_shape[\"properties\"][\"target_kind\"][\"enum\"] == [\"ACTIVITY\", \"PLACE\"], read_shape",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "ACTIVITY",
+    "PLACE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 508,
+   "form": "frozen_key_collection",
+   "literal": "assert read_shape[\"properties\"][\"source\"][\"enum\"] == [\"FOREGROUND_WEB\"], read_shape",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "FOREGROUND_WEB"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 510,
+   "form": "frozen_key_collection",
+   "literal": "assert read_shape[\"properties\"][nullable][\"type\"] == [\"string\", \"null\"], nullable",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "string",
+    "null"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0477_journey_sort.py",
+   "line": 382,
+   "form": "frozen_key_collection",
+   "literal": "assert [row.id for row in _journeys_in_tier_order(rows, tier)] == [\"a-row\", \"z-row\"], tier",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "a-row",
+    "z-row"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0488_schema_catchup.py",
+   "line": 146,
+   "form": "frozen_key_collection",
+   "literal": "assert set(report) == {\"database\", \"before\", \"after\", \"created\"}, (",
+   "entries": 4,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "database",
+    "before",
+    "after",
+    "created"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 420,
+   "form": "frozen_key_collection",
+   "literal": "assert [name for name, _ in lines[:1]] == [\"BEGIN\"], lines[:1]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "BEGIN"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 422,
+   "form": "frozen_key_collection",
+   "literal": "assert days == [\"20310501\", \"20310503\", \"20310508\"], days",
+   "entries": 3,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "20310501",
+    "20310503",
+    "20310508"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 944,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(responses) == [\"200\", \"404\", \"409\"], sorted(responses)",
+   "entries": 3,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "200",
+    "404",
+    "409"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 946,
+   "form": "frozen_key_collection",
+   "literal": "assert list(content) == [\"text/calendar; charset=utf-8\"], sorted(content)",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "text/calendar; charset=utf-8"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 492,
+   "form": "frozen_key_collection",
+   "literal": "assert limits[\"roles\"] == [\"OWNER\", \"ADMIN\", \"COLLABORATOR\"]",
+   "entries": 3,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "OWNER",
+    "ADMIN",
+    "COLLABORATOR"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 499,
+   "form": "frozen_key_collection",
+   "literal": "assert contract[\"JourneyMemberSelfExit\"][\"properties\"].keys() == {\"traveler_id\"}",
+   "entries": 1,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "traveler_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 501,
+   "form": "frozen_key_collection",
+   "literal": "assert set(contract[\"JourneyMemberRoleChange\"][\"properties\"]) == {\"role\", \"actor_traveler_id\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "role",
+    "actor_traveler_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 502,
+   "form": "frozen_key_collection",
+   "literal": "assert set(contract[\"JourneyMemberRoleChange\"][\"required\"]) == {\"role\", \"actor_traveler_id\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "role",
+    "actor_traveler_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 534,
+   "form": "frozen_key_collection",
+   "literal": "assert columns_of[named[0]] == [\"journey_id\", \"traveler_id\"], columns_of",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "journey_id",
+    "traveler_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0511_stay_refusal_names.py",
+   "line": 160,
+   "form": "frozen_key_collection",
+   "literal": "assert names == {\"STAY_OPTION_UNKNOWN\", \"STAY_ITINERARY_CONFLICT\", \"STAY_NOT_AUTHORITATIVE\"}, names",
+   "entries": 3,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "STAY_OPTION_UNKNOWN",
+    "STAY_ITINERARY_CONFLICT",
+    "STAY_NOT_AUTHORITATIVE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0520_journey_abort.py",
+   "line": 352,
+   "form": "frozen_key_collection",
+   "literal": "assert set(method for method in declared if method != \"parameters\") == {\"post\"}, declared.keys()",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "post"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0520_journey_abort.py",
+   "line": 372,
+   "form": "frozen_key_collection",
+   "literal": "assert set(schemas[\"JourneyAbort\"][\"required\"]) == {\"reason\", \"actor_traveler_id\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "reason",
+    "actor_traveler_id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0521_empty_store_scene_door.py",
+   "line": 126,
+   "form": "frozen_key_collection",
+   "literal": "assert supply[\"supported_city_codes\"] == [\"CN-BEIJING\", \"CNX-DEMO\"], supply",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "CN-BEIJING",
+    "CNX-DEMO"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0522_board_supply.py",
+   "line": 331,
+   "form": "frozen_key_collection",
+   "literal": "assert supply[\"stops\"][\"source_kinds\"] == [\"REPLAY\"], supply[\"stops\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "REPLAY"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0522_board_supply.py",
+   "line": 341,
+   "form": "frozen_key_collection",
+   "literal": "assert again[\"stops\"][\"source_kinds\"] == [\"REMOTE_PROVIDER\"], again[\"stops\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "REMOTE_PROVIDER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_ord197_four_class_receipt.py",
+   "line": 413,
+   "form": "frozen_key_collection",
+   "literal": "assert {item[\"source_entity_id\"] for item in candidates} == {\"R:111\", \"R:222\"}, candidates",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "R:111",
+    "R:222"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_pending_destination_identity.py",
+   "line": 331,
+   "form": "frozen_key_collection",
+   "literal": "assert codes == {\"CN-TWINA\", \"CN-TWINB\"}, (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "CN-TWINA",
+    "CN-TWINB"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_physical_identity_contract.py",
+   "line": 333,
+   "form": "frozen_key_collection",
+   "literal": "assert identity.provider_scoped == (\"overpass\", \"node\", \"1588295483\")",
+   "entries": 3,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "overpass",
+    "node",
+    "1588295483"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_provider_identity_leg.py",
+   "line": 336,
+   "form": "frozen_key_collection",
+   "literal": "assert collapsed == {\"N:244082768\"}, (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "N:244082768"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_provider_identity_leg.py",
+   "line": 420,
+   "form": "frozen_key_collection",
+   "literal": "assert {body[\"destination_state\"] for body in (timeout, refused, server)} == {\"RUNTIME_FAILURE\"}",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "RUNTIME_FAILURE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_rejection_message_keys.py",
+   "line": 139,
+   "form": "frozen_key_collection",
+   "literal": "assert first[\"loc\"] == [\"body\", \"end_at\"], first",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "body",
+    "end_at"
+   ]
+  },
+  {
+   "file": "backend/tests/test_qoder_stay_generation_phases.py",
+   "line": 258,
+   "form": "frozen_key_collection",
+   "literal": "assert [span.outcome for span in trace.spans] == [\"error:ZeroDivisionError\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "error:ZeroDivisionError"
+   ]
+  },
+  {
+   "file": "backend/tests/test_sol_concurrency_and_remap.py",
+   "line": 975,
+   "form": "frozen_key_collection",
+   "literal": "assert [kind for kind, _ in outcomes] == [\"ok\", \"ok\"], (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "ok",
+    "ok"
+   ]
+  },
+  {
+   "file": "backend/tests/test_sol_migration_truth.py",
+   "line": 102,
+   "form": "frozen_key_collection",
+   "literal": "assert _active_plan_ids(engine) == [\"p-old\"], (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "p-old"
+   ]
+  },
+  {
+   "file": "backend/tests/test_sol_migration_truth.py",
+   "line": 117,
+   "form": "frozen_key_collection",
+   "literal": "assert superseded == [\"p-new\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "p-new"
+   ]
+  },
+  {
+   "file": "backend/tests/test_sol_migration_truth.py",
+   "line": 143,
+   "form": "frozen_key_collection",
+   "literal": "assert _active_plan_ids(engine) == [\"p-new\", \"p-old\"], (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "p-new",
+    "p-old"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v13_3_real_city_intelligence.py",
+   "line": 148,
+   "form": "frozen_key_collection",
+   "literal": "assert curated[\"rejected_candidate_ids\"] == [\"fabricated-place-id\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "fabricated-place-id"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v16_integration.py",
+   "line": 130,
+   "form": "frozen_key_collection",
+   "literal": "assert [item.event_type for item in events] == [\"CLOSURE\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "CLOSURE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v16_integration.py",
+   "line": 207,
+   "form": "frozen_key_collection",
+   "literal": "assert keys == [\"arrival\", \"c4\", \"reserved\", \"museum\", \"night\", \"departure\"]",
+   "entries": 6,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "arrival",
+    "c4",
+    "reserved",
+    "museum",
+    "night",
+    "departure"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_2_agent_productization.py",
+   "line": 37,
+   "form": "frozen_key_collection",
+   "literal": "assert plan[\"protected_activity_ids\"] == [\"cruise-activity\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "cruise-activity"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "line": 15,
+   "form": "frozen_key_collection",
+   "literal": "assert _proposal_ids(payload) == [\"proposal-a\", \"proposal-b\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "proposal-a",
+    "proposal-b"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "line": 54,
+   "form": "frozen_key_collection",
+   "literal": "assert result[\"mutation_tools_attempted\"] == [\"replace_activity\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "replace_activity"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+   "line": 5,
+   "form": "frozen_key_collection",
+   "literal": "assert {spec[\"provider_state\"] for spec in ARMS.values()} == {\"UNAVAILABLE\"}",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "UNAVAILABLE"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "line": 39,
+   "form": "frozen_key_collection",
+   "literal": "assert projected[\"proposal_ids\"] == [\"r1\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "r1"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "line": 40,
+   "form": "frozen_key_collection",
+   "literal": "assert projected[\"idempotency_keys\"] == [\"k1\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "k1"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+   "line": 27,
+   "form": "frozen_key_collection",
+   "literal": "assert _proposal_ids(response) == [\"r1\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "r1"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+   "line": 118,
+   "form": "frozen_key_collection",
+   "literal": "assert probe._mcp_tools(hermes_python, wrapper, environment) == [\"inspect_journey\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "inspect_journey"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v191_capability_contract.py",
+   "line": 75,
+   "form": "frozen_key_collection",
+   "literal": "assert got == {\"STEP_FREE_REQUIRED\", \"AVOID_STAIRS\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "STEP_FREE_REQUIRED",
+    "AVOID_STAIRS"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v191_capability_contract.py",
+   "line": 387,
+   "form": "frozen_key_collection",
+   "literal": "assert [c[\"scope\"] for c in caps] == [\"TRAVELER\"], (",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "TRAVELER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v191_eac_evidence_scope.py",
+   "line": 179,
+   "form": "frozen_key_collection",
+   "literal": "assert scopes == [\"JOURNEY\", \"TRAVELER\"], (",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "JOURNEY",
+    "TRAVELER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v1922_six_fix_regressions.py",
+   "line": 525,
+   "form": "frozen_key_collection",
+   "literal": "assert captured[\"resolved_pair\"] == (\"origin-x\", \"dest-y\")",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "origin-x",
+    "dest-y"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v192_shadow_trial_gate.py",
+   "line": 104,
+   "form": "frozen_key_collection",
+   "literal": "assert sorted(i[\"scope\"] for i in out) == [\"JOURNEY\", \"TRAVELER\"], out",
+   "entries": 2,
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "sample": [
+    "JOURNEY",
+    "TRAVELER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v192_shadow_trial_gate.py",
+   "line": 105,
+   "form": "frozen_key_collection",
+   "literal": "assert {i[\"params\"].get(\"note\") for i in out} == {\"traveler\", \"journey\"}, out",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "traveler",
+    "journey"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v19_postfix_capability_contract.py",
+   "line": 115,
+   "form": "frozen_key_collection",
+   "literal": "assert {c[\"code\"] for c in caps} == {\"STEP_FREE_REQUIRED\", \"AVOID_STAIRS\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "STEP_FREE_REQUIRED",
+    "AVOID_STAIRS"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v19_postfix_capability_contract.py",
+   "line": 322,
+   "form": "frozen_key_collection",
+   "literal": "assert [c[\"scope\"] for c in caps] == [\"TRAVELER\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "TRAVELER"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v19_traveler_capability.py",
+   "line": 26,
+   "form": "frozen_key_collection",
+   "literal": "assert {item[\"code\"] for item in items} == {\"STEP_FREE_REQUIRED\", \"MAX_WALKING_PER_LEG_M\"}",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "STEP_FREE_REQUIRED",
+    "MAX_WALKING_PER_LEG_M"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v19_traveler_capability.py",
+   "line": 80,
+   "form": "frozen_key_collection",
+   "literal": "assert {x[\"code\"] for x in replaced.json()[\"capabilities\"]} == {\"INDOOR_PREFERRED\"}",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "INDOOR_PREFERRED"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v8_stay_mobility.py",
+   "line": 21,
+   "form": "frozen_key_collection",
+   "literal": "assert hours[\"weekday_intervals\"][0][\"days\"] == [\"Mo\", \"Tu\", \"We\", \"Th\", \"Fr\"]",
+   "entries": 5,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "Mo",
+    "Tu",
+    "We",
+    "Th",
+    "Fr"
+   ]
+  },
+  {
+   "file": "backend/tests/test_v8_stay_mobility.py",
+   "line": 22,
+   "form": "frozen_key_collection",
+   "literal": "assert hours[\"weekday_intervals\"][1][\"days\"] == [\"Sa\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "Sa"
+   ]
+  },
+  {
+   "file": "backend/tests/test_weather_refresh_endpoint.py",
+   "line": 75,
+   "form": "frozen_key_collection",
+   "literal": "assert payload[\"queried_place_ids\"] == [\"place-old-town\", \"place-river-cruise\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "place-old-town",
+    "place-river-cruise"
+   ]
+  },
+  {
+   "file": "backend/tests/test_weather_runtime_gate_gpt.py",
+   "line": 215,
+   "form": "frozen_key_collection",
+   "literal": "assert result.queried_place_ids == (\"place-old-town\", \"place-river-cruise\")",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "place-old-town",
+    "place-river-cruise"
+   ]
+  },
+  {
+   "file": "backend/tests/test_wp06_followup_assist.py",
+   "line": 64,
+   "form": "frozen_key_collection",
+   "literal": "assert response.json()[\"diff\"][\"added\"] == [\"place-city-park\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "place-city-park"
+   ]
+  },
+  {
+   "file": "backend/tests/test_wp06_postgate_hardening_next.py",
+   "line": 172,
+   "form": "frozen_key_collection",
+   "literal": "assert twin[\"context\"][\"degraded_providers\"] == [\"valhalla\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "valhalla"
+   ]
+  },
+  {
+   "file": "backend/tests/test_wp06_twin_v2_gate.py",
+   "line": 59,
+   "form": "frozen_key_collection",
+   "literal": "assert context[\"degraded_providers\"] == [\"valhalla\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "valhalla"
+   ]
+  },
+  {
+   "file": "backend/tests/test_wp07_foundation_assist.py",
+   "line": 145,
+   "form": "frozen_key_collection",
+   "literal": "assert degraded[\"context\"][\"degraded_providers\"] == [\"open-meteo\"]",
+   "entries": 1,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "open-meteo"
+   ]
+  },
+  {
+   "file": "backend/tests/test_wp07_foundation_assist.py",
+   "line": 168,
+   "form": "frozen_key_collection",
+   "literal": "assert [item.key for item in selected] == [\"a\", \"b\"]",
+   "entries": 2,
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "sample": [
+    "a",
+    "b"
+   ]
+  }
+ ]
+}
