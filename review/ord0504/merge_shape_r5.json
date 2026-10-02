@@ -1,0 +1,53 @@
+{
+  "compared_against": "569b8472b134e5562ef396e38681870b9c26536a",
+  "tip_ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "head_under_test": "7ddc59714c4e58905fac67dfdfceb038630578d6",
+  "files_vs_that_rev": 63,
+  "product_files": 7,
+  "verdict_rule": "a candidate lands without reconciling when every product file reports 0 ending-only rewrites",
+  "scans": {
+    "backend/tests/test_qoder_ord0504_spend_sources.py": {
+      "state": "new file on this side"
+    },
+    "frontend/src/app/V8Experience.tsx": {
+      "state": "present on both sides",
+      "ending_only_rewrites": 0,
+      "lines_added": 23,
+      "lines_removed": 56,
+      "crlf_theirs": 0,
+      "crlf_mine": 0,
+      "bare_lf_theirs": 4896,
+      "bare_lf_mine": 4863
+    },
+    "frontend/src/app/v8Types.ts": {
+      "state": "present on both sides",
+      "ending_only_rewrites": 0,
+      "lines_added": 14,
+      "lines_removed": 1,
+      "crlf_theirs": 78,
+      "crlf_mine": 91,
+      "bare_lf_theirs": 14,
+      "bare_lf_mine": 14
+    },
+    "frontend/src/features/trip/SpendPanel.tsx": {
+      "state": "new file on this side"
+    },
+    "frontend/src/features/trip/spend.css": {
+      "state": "new file on this side"
+    },
+    "frontend/src/features/trip/spendFacts.ts": {
+      "state": "new file on this side"
+    },
+    "frontend/src/i18n/LocaleContext.tsx": {
+      "state": "present on both sides",
+      "ending_only_rewrites": 0,
+      "lines_added": 66,
+      "lines_removed": 0,
+      "crlf_theirs": 0,
+      "crlf_mine": 0,
+      "bare_lf_theirs": 2088,
+      "bare_lf_mine": 2154
+    }
+  },
+  "files_with_ending_churn": []
+}
