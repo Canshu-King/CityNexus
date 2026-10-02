@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -199,19 +200,43 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     """
 
     offenders: dict[str, list[int]] = {}
-    others: dict[str, list[str]] = {}
+    #: CMDR 07:57 转修：第二项判据原来是一份**文件名清单**，它已两次在换代后漂红——这一趟是
+    #: `app/main.py` 多读了一行 `settings.write_busy_timeout_ms` 去算 lease，抄第二份常量并没发生，
+    #: 尺却红了。现在改成具名角色判据：一行提到 `busy_timeout` 可以，只要它归得进下面三种具名角色
+    #: 之一（单源自己、配置声明、worker 自己那枚比单源小的短等待、或按名字从单源取数）；
+    #: 归不进去的就是第二处来源。角色靠符号认，不靠行号，也不靠谁的文件。
+    SOURCE_MODULE = Path("app/db/write_deadline.py")
+    CONFIG_MODULE = Path("app/core/config.py")
+    source_symbols = ("def busy_timeout_ms(", "def busy_timeout_seconds(",
+                      "def effective_busy_timeout_ms(")
+    named_reads = ("write_busy_timeout_ms", "write_busy_timeout_seconds", "busy_timeout_ms",
+                   "busy_timeout_seconds")
+    worker_wait = re.compile(r"PRAGMA busy_timeout\s*=\s*(\d{1,5})\b")
+    busy = _live_busy_timeout_ms()
+    unattributed: dict[str, list[str]] = {}
     for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
+        rel = path.relative_to(BACKEND_ROOT)
         for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if any(needle in line for needle in ("busy_timeout=30000", "busy_timeout = 30000",
                                                  '"timeout": 30')):
-                offenders.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(i)
-            elif "busy_timeout" in line:
-                others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
+                offenders.setdefault(str(rel), []).append(i)
+            elif "busy_timeout" not in line:
+                continue
+            elif rel in (SOURCE_MODULE, CONFIG_MODULE):
+                continue
+            elif (short := worker_wait.search(line)) and int(short.group(1)) < busy:
+                continue
+            elif any(name in line for name in named_reads):
+                continue
+            else:
+                unattributed.setdefault(str(rel), []).append(f"{i}: {line.strip()[:58]}")
     assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
-    # 其余提到 busy_timeout 的地方是 worker 自己的短等待（500/1500/200 ms），射程不同，这里点名不吞掉
-    assert sorted(Path(k).name for k in others) == [
-        "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
-        "write_deadline.py"], {k: v for k, v in others.items()}
+    assert unattributed == {}, f"a mention that names no source and is no worker wait: {unattributed}"
+    #: 具名符号本身要在原位：改名不再是"清单少一行"这种静默通过
+    source_src = (BACKEND_ROOT / SOURCE_MODULE).read_text(encoding="utf-8")
+    for symbol in source_symbols:
+        assert symbol in source_src, f"the single source lost its named symbol {symbol!r}"
+    assert busy == WD.busy_timeout_ms(), (busy, WD.busy_timeout_ms())
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
     assert 'timeout": write_busy_timeout_seconds()' in session_src, "session.py must ask the module"

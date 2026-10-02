@@ -156,6 +156,24 @@ def _table_values_around(path: str, line_no: int) -> list[str]:
     return values
 
 
+def _named_table_span(path: str, opener: str) -> tuple[int, int]:
+    """The first and last line of the object literal opened by a named symbol, read from the file.
+
+    ORD-0479's follow-up (CMDR 07:57): an exemption used to be vouched for by its line number, and a
+    line number is a coordinate owned by whoever edits the file above it -- it has drifted twice on a
+    rebase.  A named table is a coordinate this file cannot lose without the symbol itself moving, and
+    the symbol's presence is asserted separately below, so a rename fails loudly instead of drifting.
+    """
+
+    lines = (REPO / path).read_text(encoding="utf-8", errors="replace").splitlines()
+    starts = [i for i, line in enumerate(lines, 1) if line.startswith(opener)]
+    assert len(starts) == 1, (path, opener, starts)
+    for i in range(starts[0], len(lines)):
+        if lines[i].startswith("};"):
+            return starts[0], i + 1
+    raise AssertionError(f"the table opened by {opener!r} in {path} never closes")
+
+
 def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> None:
     """真树上：C07 那句断言成立；而且每一处被赦免的行，都能脱离尺自己再证一遍。
 
@@ -180,8 +198,20 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: the site this order was opened for is among them, and is forgiven on the same grounds --
+    #: anchored on the named table and the named entry, not on a line number
+    refusal_first, refusal_last = _named_table_span(
+        SITE, "export const REFUSAL_KEY: Record<string, string> = {"
+    )
+    at_site = [e for e in exemptions if e["path"] == SITE]
+    assert at_site, (SITE, exemptions)
+    for e in at_site:
+        assert refusal_first <= e["line"] <= refusal_last, (e, refusal_first, refusal_last)
+    keys_here = []
+    for e in at_site:
+        text = (REPO / SITE).read_text(encoding="utf-8", errors="replace").splitlines()[e["line"] - 1]
+        keys_here.append(re.match(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*:", text).group(1))
+    assert "token_unknown" in keys_here, (keys_here, refusal_first, refusal_last)
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红
