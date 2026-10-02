@@ -1,0 +1,205 @@
+"""CMDR 16:08 第二节那手（屏面腿）的干净驱动：现尖那一代、真产物、私有栈、只读屏。
+
+形制三条，都是这一趟里被逼出来的：
+  · 栈用那条车道**自己落地的 runner**（`review/ord0502/run_ord0502_stack_r1.py` 原样 import，0 改动）——
+    它起的是 dist 静态口 + /api 代理，与走查那一趟同一形制，屏读与走查才可互比；
+  · 库必须是一枚不存在的空文件：`backend/app/db/session.py` 的 `_refuse_to_reopen_an_existing_e2e_database`
+    对已存在的库直接拒开；所以共享预览库这趟只被"量"（前后字节与 mtime），一次也没被打开；
+  · node 的 require() 按**脚本所在目录**解析：脚本在 scratch、playwright 在 front 的 node_modules，
+    不给 NODE_PATH 就静默 exit 1（我前三趟就是这么死的，具名记在这里）。
+"有没有一个可走的行程"由产品自己的门答：POST /api/v1/travelers 再 POST /api/v1/journeys。
+"""
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import ThreadingHTTPServer
+from pathlib import Path
+
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+RUNNER = WT2 / "review" / "ord0502" / "run_ord0502_stack_r1.py"
+SCR = Path("D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+CENSUS_JS = SCR / "ord0502_surface_census_r2.cjs"
+PREVIEW = Path("D:/moodle/_qoder_preview_20260920/_preview.db")
+WORK = Path("D:/moodle/_ord0502_census")
+
+
+def load_runner():
+    spec = importlib.util.spec_from_file_location("ord0502_runner", RUNNER)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def free(wanted: int) -> int:
+    for port in range(wanted, wanted + 40):
+        with socket.socket() as probe:
+            probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                probe.bind(("127.0.0.1", port))
+                return port
+            except OSError:
+                continue
+    raise SystemExit("no free port near %d" % wanted)
+
+
+def http_json(method: str, url: str, payload=None) -> tuple[int, dict]:
+    request = urllib.request.Request(url, method=method, headers={"Content-Type": "application/json"},
+                                     data=None if payload is None else json.dumps(payload).encode())
+    try:
+        with urllib.request.urlopen(request, timeout=90) as response:
+            code, body = int(response.status), response.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as error:
+        code, body = int(error.code), error.read().decode("utf-8", "replace")
+    except Exception as error:  # 连不上也要有名字，不许空手而归
+        return 0, {"transport_error": type(error).__name__ + ": " + str(error)[:140]}
+    try:
+        return code, json.loads(body or "{}")
+    except json.JSONDecodeError:
+        return code, {"unparsed_head": body[:180]}
+
+
+def doors(front: str, run_id: str) -> dict:
+    # travelers 那一扇门要三件：display_name + locale + timezone（我第一趟只给名字，当场 422；
+    # 形制取自同一棵树里落地的 runner `run_ord0502_stack_r1.py`，它就是这么过的）
+    st_t, trav = http_json("POST", front + "/api/v1/travelers",
+                           {"display_name": "qoder-ord0502-census-%s" % run_id,
+                            "locale": "zh-CN", "timezone": "Asia/Shanghai"})
+    st_j, jour = http_json("POST", front + "/api/v1/journeys", {
+        "traveler_id": trav.get("id", ""), "title": "census walk", "city_code": "CN-TIANJIN",
+        "timezone": "Asia/Shanghai", "start_at": "2026-10-20T09:00:00+08:00",
+        "end_at": "2026-10-22T19:00:00+08:00", "budget": {"amount": 3000, "currency": "CNY"}})
+    return {"travelers_http_status": st_t, "traveler_id_named": bool(trav.get("id")),
+            "journeys_http_status": st_j, "journey_id": jour.get("id", ""),
+            "journey_answer_head": json.dumps(jour, ensure_ascii=False)[:240]}
+
+
+def served_equals_disk(port: int, dist: Path) -> dict:
+    index = (dist / "index.html").read_bytes()
+    assets = [a.decode() for a in re.findall(rb"/assets/([\w.-]+\.js)", index)]
+    rows = []
+    for name in assets[:3]:
+        with socket.create_connection(("127.0.0.1", port), timeout=40) as s:
+            s.sendall(("GET /assets/%s HTTP/1.0\r\n\r\n" % name).encode())
+            buf = b""
+            while True:
+                chunk = s.recv(1 << 16)
+                if not chunk:
+                    break
+                buf += chunk
+        body = buf.split(b"\r\n\r\n", 1)[1]
+        disk = (dist / "assets" / name).read_bytes()
+        rows.append({"asset": name, "served_bytes": len(body), "disk_bytes": len(disk),
+                     "equal": hashlib.sha1(body).hexdigest() == hashlib.sha1(disk).hexdigest()})
+    return {"index_bytes": len(index), "entry_asset": assets[0] if assets else "",
+            "assets_compared": len(rows), "all_equal": bool(rows) and all(r["equal"] for r in rows),
+            "per_asset": rows}
+
+
+def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    R = load_runner()
+    WORK.mkdir(parents=True, exist_ok=True)
+    run_id = "ORD0502SC-" + time.strftime("%H%M%S")
+    db = WORK / ("%s.db" % run_id)
+    assert not db.exists(), db
+    pre = PREVIEW.stat()
+    bp, fp = free(4711), free(4712)
+    out = {"run_id": run_id, "started": time.strftime("%m-%d %H:%M:%S"),
+           "worktree_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(WT2),
+                                           capture_output=True, text=True).stdout.strip(),
+           "spec_blob": subprocess.run(["git", "rev-parse",
+                                        "HEAD:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"],
+                                       cwd=str(WT2), capture_output=True, text=True).stdout.strip(),
+           "runner_blob": subprocess.run(["git", "rev-parse",
+                                          "HEAD:review/ord0502/run_ord0502_stack_r1.py"],
+                                         cwd=str(WT2), capture_output=True, text=True).stdout.strip(),
+           "ports": {"backend": bp, "frontend": fp}, "db_created_by_this_run": str(db),
+           "preview_store_before": {"bytes": pre.st_size, "mtime_ns": pre.st_mtime_ns}}
+    child = subprocess.Popen([R.PY, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                              "--port", str(bp)], cwd=str(R.BACKEND),
+                             env=R.env_base(run_id, db, bp),
+                             stdout=(WORK / ("uvicorn_%s.log" % run_id)).open("w", encoding="utf-8"),
+                             stderr=subprocess.STDOUT)
+    server = None
+    try:
+        ok, reading = R.wait_http("http://127.0.0.1:%d/api/v1/health" % bp)
+        out["backend_direct_health"] = reading[:220]
+        out["backend_names_this_run_id"] = ('"e2e_run_id": "%s"' % run_id) in reading
+        if not ok:
+            out["verdict"] = "STACK_DID_NOT_ANSWER"
+            raise SystemExit("backend did not answer")
+        R.StaticHandler.backend_port = bp
+        server = ThreadingHTTPServer(("127.0.0.1", fp), R.StaticHandler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        front = "http://127.0.0.1:%d" % fp
+        ok2, health_via_front = http_json("GET", front + "/api/v1/health")
+        out["health_through_the_front"] = {"http_status": ok2,
+                                           "names_this_run_id": ('"e2e_run_id": "%s"' % run_id)
+                                           in json.dumps(health_via_front)}
+        out["front_serves"] = served_equals_disk(fp, R.DIST)
+        out["doors"] = doors(front, run_id)
+        surf = WORK / ("surface_%s.json" % run_id)
+        node = subprocess.run(["node", str(CENSUS_JS), front, out["doors"].get("journey_id", ""),
+                               str(surf)], cwd=str(WT2 / "frontend"),
+                              env=dict(os.environ, NODE_PATH=str(WT2 / "frontend" / "node_modules")),
+                              capture_output=True, text=True, encoding="utf-8", errors="replace",
+                              timeout=840)
+        out["census_exit"] = node.returncode
+        out["census_stdout"] = (node.stdout or "").strip().splitlines()[-8:]
+        out["census_stderr"] = (node.stderr or "").strip().splitlines()[-6:]
+        out["surfaces"] = json.loads(surf.read_text(encoding="utf-8")) if surf.exists() else {}
+    finally:
+        if server is not None:
+            server.shutdown()
+        child.terminate()
+        post = PREVIEW.stat()
+        out["preview_store_unchanged"] = (post.st_size, post.st_mtime_ns) == (pre.st_size, pre.st_mtime_ns)
+        out["worktree_status_after"] = subprocess.run(["git", "status", "--porcelain"], cwd=str(WT2),
+                                                      capture_output=True, text=True).stdout.strip()[:300]
+        dst = WORK / ("surface_census_%s.json" % run_id)
+        dst.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("WROTE", dst)
+    s = out["surfaces"]
+    if not s:
+        print("NO SURFACE READINGS; census_exit", out.get("census_exit"),
+              "stderr", " | ".join(out.get("census_stderr", []))[:400])
+        return 1
+    runs = s.get("runs", {})
+    a = runs.get("A_hub_clean_device", {})
+    b = runs.get("B_hub_with_a_journey_row", {})
+    c = runs.get("C_access", {})
+    out["classification_reads"] = {
+        "A_today_heading": (a.get("anchors", {}) or {}).get("today-heading"),
+        "A_trial_open": (a.get("anchors", {}) or {}).get("trial-open"),
+        "B_today_heading": (b.get("anchors", {}) or {}).get("today-heading"),
+        "C_access_invite_submit": (c.get("anchors", {}) or {}).get("access-invite-submit"),
+        "A_buttons_matching_the_arm_fallback_regex": a.get("buttons_matching_that_regex"),
+        "E_cta": (runs.get("E_sealed_demo_cta") or {}),
+        "E_today_heading": ((runs.get("E_hub_after_the_cta") or {}).get("anchors") or {}).get("today-heading"),
+        "E_body_chars": (runs.get("E_hub_after_the_cta") or {}).get("body_text_chars"),
+        "A_body_chars": a.get("body_text_chars"), "B_body_chars": b.get("body_text_chars"),
+        "A_buttons": (a.get("buttons") or [])[:12], "A_head": a.get("body_head"),
+        "B_head": b.get("body_head")}
+    moved = ((a.get("anchors", {}).get("today-heading", {}) or {}).get("count") == 0
+             and ((b.get("anchors", {}).get("today-heading", {}) or {}).get("count") or 0) > 0)
+    out["verdict"] = "INSTRUMENT_PRECONDITION_NOT_ON_SCREEN" if moved else "SEE_READINGS"
+    dst.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(json.dumps(out["classification_reads"], ensure_ascii=False, indent=1)[:1500])
+    print("verdict:", out["verdict"], "| preview untouched:", out["preview_store_unchanged"],
+          "| doors:", json.dumps(out["doors"], ensure_ascii=False)[:200])
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

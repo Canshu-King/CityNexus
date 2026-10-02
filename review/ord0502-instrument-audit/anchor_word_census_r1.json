@@ -1,0 +1,165 @@
+{
+ "tip": "491e343bfb3d543b38ab11c9f6f0f0283e66129a",
+ "at": "10-02 16:42:35",
+ "bad": [
+  "GREP getByTestId\\( rc=128"
+ ],
+ "spec_bytes": "5b97af33946b880fe736c26e54212f18aa679580",
+ "anchors": {
+  "today-heading": {
+   "in_frontend_src": 1,
+   "sample": [
+    "          <h1 data-testid=\"today-heading\">"
+   ]
+  },
+  "trial-open": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trips-tab-bookings": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trips-tab-itinerary": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trial-setup": {
+   "in_frontend_src": 1,
+   "sample": [
+    "    <section className=\"v8-page cn-onboarding\" data-testid=\"trial-setup\">"
+   ]
+  },
+  "trial-steps": {
+   "in_frontend_src": 1,
+   "sample": [
+    "      <ol className=\"trial-steps\" data-testid=\"trial-steps\">"
+   ]
+  },
+  "trial-city": {
+   "in_frontend_src": 4,
+   "sample": [
+    "  \"trial-city\": 1,",
+    "  { name: \"city\", zh: \"目的地\", en: \"Destination\", target: \"trial-city\" },",
+    "      : { label: zh ? \"目的地\" : \"the destination\", target: \"trial-city\" },"
+   ]
+  },
+  "hub-secondary-actions": {
+   "in_frontend_src": 1,
+   "sample": [
+    "        <div className=\"v8-hub-actions\" data-testid=\"hub-secondary-actions\">"
+   ]
+  },
+  "stop-checkin": {
+   "in_frontend_src": 1,
+   "sample": [
+    "                        data-testid=\"stop-checkin\""
+   ]
+  },
+  "trip-itinerary": {
+   "in_frontend_src": 2,
+   "sample": [
+    "    testId: \"trip-itinerary\",",
+    "    <section className=\"v8-page\" data-testid=\"trip-itinerary\">"
+   ]
+  },
+  "footprint-panel": {
+   "in_frontend_src": 2,
+   "sample": [
+    "    testId: \"footprint-panel\",",
+    "    <section className=\"cn-footprints\" data-testid=\"footprint-panel\">"
+   ]
+  },
+  "footprint-row": {
+   "in_frontend_src": 1,
+   "sample": [
+    "                  <li key={stamp.id} className=\"cn-footprints__row\" data-testid=\"footprint"
+   ]
+  },
+  "v8-map-footprint-filter": {
+   "in_frontend_src": 2,
+   "sample": [
+    "              className=\"v8-map-footprint-filter\"",
+    "              data-testid=\"v8-map-footprint-filter\""
+   ]
+  },
+  "v8-map-footprint-state": {
+   "in_frontend_src": 2,
+   "sample": [
+    "            className=\"v8-map-footprint-state\"",
+    "            data-testid=\"v8-map-footprint-state\""
+   ]
+  },
+  "trips-tabs": {
+   "in_frontend_src": 3,
+   "sample": [
+    "        className=\"trips-tabs\"",
+    "        data-testid=\"trips-tabs\"",
+    "    testId: \"trips-tabs\","
+   ]
+  }
+ },
+ "families": {
+  "trial*": {
+   "members": [
+    "trial-arrival",
+    "trial-arrival-problem",
+    "trial-back",
+    "trial-budget",
+    "trial-budget-label",
+    "trial-city",
+    "trial-city-warning",
+    "trial-country",
+    "trial-create",
+    "trial-create-error",
+    "trial-currency",
+    "trial-departure",
+    "trial-departure-problem",
+    "trial-end",
+    "trial-inferred",
+    "trial-interests-fieldset",
+    "trial-missing-jump",
+    "trial-next",
+    "trial-next-reason",
+    "trial-pace-fieldset",
+    "trial-party",
+    "trial-party-label",
+    "trial-required-hint",
+    "trial-rooms",
+    "trial-rooms-label",
+    "trial-scroll",
+    "trial-sealed-retry",
+    "trial-sealed-unavailable",
+    "trial-setup",
+    "trial-show-advanced",
+    "trial-special",
+    "trial-start",
+    "trial-stay-budget",
+    "trial-stay-budget-label",
+    "trial-step1-body",
+    "trial-step2-body",
+    "trial-step3-body",
+    "trial-steps",
+    "trial-sticky-cta",
+    "trial-stop-waiting",
+    "trial-supported-cities",
+    "trial-supported-toggle",
+    "trial-tianjin-demo",
+    "trial-timezone",
+    "trial-wait",
+    "trial-wait-elapsed",
+    "trial-wait-outcome"
+   ],
+   "count": 47
+  },
+  "trips-tab*": {
+   "members": [
+    "trips-tabs"
+   ],
+   "count": 1
+  }
+ },
+ "e2e_only_anchor_lines": 58,
+ "testids_the_spec_asks_by_getByTestId": [],
+ "reading": "词面 0 命中只说明 frontend/src 里没有这个名字；它是否等于能力不在，由同一棵树上族成员清单与走查那两枚臂的超时原文一起判"
+}
