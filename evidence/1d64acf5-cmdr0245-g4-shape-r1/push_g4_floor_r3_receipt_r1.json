@@ -1,0 +1,25 @@
+{
+ "tip": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+ "candidate_commit": "e89b3656e44a1c9c33d6a5ed5c78cf55950f7d85",
+ "chain_root_parent": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+ "chain_root_parent_is_tip": true,
+ "commits_on_tip": 3,
+ "branch": "refs/heads/review/1d64acf5-ord0296-g4-floor-r3",
+ "server_sha_ls_remote": "e89b3656e44a1c9c33d6a5ed5c78cf55950f7d85",
+ "server_equals_pushed": true,
+ "measured_arm_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+ "files": {
+  "backend/tests/test_qoder_ord0296_write_deadline.py": {
+   "server": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+   "local": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+   "byte_equal": true
+  },
+  "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json": {
+   "server": "df63f4c826a840a0ca783dffa40f786373976cad",
+   "local": "df63f4c826a840a0ca783dffa40f786373976cad",
+   "byte_equal": true
+  }
+ },
+ "diff_from_tip": "35\t1\tbackend/tests/test_qoder_ord0296_write_deadline.py\n179\t0\treview/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+ "product_paths": []
+}
