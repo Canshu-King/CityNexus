@@ -17,8 +17,13 @@ export BRANCH_EMIT_OUT=branch_emit_arm_$GEN.json BRANCH_EMIT_TOOL=branch_emit_ar
 export COLLECT_OUT=pytest_collectonly_$GEN.json COLLECT_TOOL=pytest_collectonly_$GEN
 export BRANCH_EMIT_EXCLUDE=$SHORT
 
-# 0. the two brand-new instruments run once BEFORE the commit, so the branch carries a copy of their
-#    output that the page can cite by blob (the fresh copy the page reads is taken again below)
+# 0. the format-arity lint runs first: it writes its own receipt (which gets staged and cited by blob)
+#    and refuses to pass when the emitter has a slot with no argument -- which is how a page that was
+#    already pushed dies mid-sentence.  Then the two instruments whose output the page cites by blob run
+#    once BEFORE the commit, so the branch carries a copy; the fresh copies are taken again in step 2.
+export FMTLINT_OUT=fmt_lint_$GEN.json FMTLINT_TOOL=fmt_lint_$GEN
+LINTFILES="tools/r10_block.py tools/r9_block.py tools/branch_emit_arm_r16.py tools/stage_readings_r6.py tools/r6_coordinates.py tools/recheck_r14.py tools/collect_count_r16.py tools/citation_gate_r9.py tools/citation_gate_r10_mutants.py tools/citation_audit_r8.py tools/landing_r6.py tools/pytest_r6.py tools/sweep_r6.py tools/build_faces_r6.py"
+$PY tools/fmt_lint_r16.py $LINTFILES 2>&1 | tail -3
 $PY tools/collect_count_r16.py 2>&1 | tail -1
 $PY tools/branch_emit_arm_r16.py 2>&1 | tail -4
 
@@ -46,6 +51,7 @@ $PY tools/checkin_copy_rows_mutants_r6.py > /dev/null 2>&1
 $PY tools/collect_count_r16.py 2>&1 | tail -1
 $PY tools/landing_r6.py > /dev/null 2>&1
 $PY tools/r6_coordinates.py 2>&1 | tail -2
+$PY tools/fmt_lint_r16.py $LINTFILES 2>&1 | tail -2
 
 # 3. the door's own arm on this head: force one check red without touching any receipt
 rm -f run/${SHORT}_READINGS_RED.json run/${GEN}_block_page.md
