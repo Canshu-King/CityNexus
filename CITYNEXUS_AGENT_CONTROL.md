@@ -16588,6 +16588,50 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 写给 `6a773af1` 那一行 · 卡住那次的成因：一行一个变量的矩阵，不是叙述
+
+**代次我自己读的**：候选枝 `refs/heads/review/newlane-ord0545-hang-cause-r1` = `09c90200a77f636f20264dd39c92f697ac858ba2`（`git ls-remote` 独立回读 = `09c90200a77f636f20264dd39c92f697ac858ba2`，两读逐字相等），往上两枚 parent 是 `02cea19557db9d1523f78f1ff003746e17946abb` 再 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，而 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 正是我起跑那一刻 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 读到的尖。起跑之后那条线又走了 10 枚提交到新尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`；`git merge-base --is-ancestor 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 6a06a0bb93ffb7e9462b24b611f4ce214ea04f55` 实测 rc 0 ⇒ 我那两枚都在新尖之下，可直接快进，我没有改写任何已发布的提交（这一枝从头到尾只往前长）。24 枚路径里落在 `frontend/src/` 或 `backend/app/` 的 0 枚，量的命令是 `git diff --name-only 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 09c90200a77f636f20264dd39c92f697ac858ba2`。
+
+**为什么这轮的读数在新尖上仍然算数**：那 10 枚新提交动了 89 枚路径，其中落在我这件事的文件名（`ord0545` / `poiImport` / `playwright.ord0545s4`）上的 0 枚；而我作为输入的三枚字节在 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 与 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55` 两侧逐枚 `git rev-parse` 相等：`qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts` 两侧同为 a9b8c2f2bb7ad979ccafecab46aa9b2d081982fb、`poiImportCopy.ts` 两侧同为 881bc009b3bd56f8af7bd6e3b7e551285249d580、`PoiImportPanel.tsx` 两侧同为 95a15c02f1f74e9a59fb991eea4a95f438902255。
+
+**读数件**：`review/ord0545/readouts/hang_cause_matrix_r1.json`，blob `20be6e758619fa624b876e0dd609764a81eb4f5d`（工具 `review/ord0545/hang_cause_matrix_r1.py` blob `1a2010cc674fdde7147fb139c2c87606fdfb9a3b`；配置修复 `frontend/playwright.ord0545s4-walkthrough.config.ts` blob `cdefa793ff95a1d52ca20dc4a422592af7d11057`；被钉的那枚走查 spec `frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts` 在枝上 blob `a9b8c2f2bb7ad979ccafecab46aa9b2d081982fb`，本趟一字节没改）。件里 `pre_flight` 那一节记着本趟自选的端口与两份库副本名，`runs[]` 逐行存 rc / wall_seconds / tests_collected / waiting_for / server_port_complaint / tail。
+
+**一、成因：等的那段时间就是上限本身**
+
+同一枚缺席的格子，只改「一格的等待上限」这一个变量，三点连成一条直线（逐行读数都在件 `review/ord0545/readouts/hang_cause_matrix_r1.json` 的 `runs[]` 里，字段名 `test_timeout_ms` 与 `wall_seconds`）：行 `R6_uncapped_missing_cell_ceiling_20s` 上限 20 秒 ⇒ rc 1、墙钟 21.6 秒；行 `R7_uncapped_missing_cell_ceiling_100s` 上限 100 秒 ⇒ rc 1、墙钟 101.5 秒；行 `R8_uncapped_missing_cell_shipped_ceiling_300s` 上限 300 秒（这一档不是我编的，是 `frontend/playwright.ord0545s4-walkthrough.config.ts` 里 `timeout:` 那一行原样写着的）⇒ rc 1、墙钟 301.8 秒。件里 `waiting_for` 逐字记着 `getByTestId('poi-import-added-source')`。
+
+三行的 `failed` 都是 1、点名的都是同一枚 locator。这就是那次走查坐下去不动的形状：不是产品慢，是**仪器在没有那一格的时候，把整段上限等满了**。
+
+**修好之后同一变量的读数**：封顶的读法写在 `frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts` 的 `text()` 那一支（单格上限 5 秒），件 `review/ord0545/readouts/hang_cause_matrix_r1.json` 里行 `R2a_mutated_cell_absent_ceiling_20s` 与行 `R2b_mutated_cell_absent_ceiling_100s` 分别花 9.1 秒与 9.0 秒，两档差 0.1 秒——上限从 20 秒翻到 100 秒而墙钟不动 ⇒ 与上限无关，这就是那处修复的形状。
+
+**两条控制，把「这道闸本来就慢」也钉掉**：发布形制的闸在一份全新库副本上 rc 0、墙钟 6.3 秒（`tests_collected` = 2）；同一枚变异插在「库里还带着那一格」的状态上 rc 0、墙钟 4.0 秒（第二次写入腿 rc 0、4.1 秒）。
+
+**二、我这一轮的仪器缺陷，两类都留了现场**
+
+第一类是并发撞车。被取代的那件（11 行）在枝上可回读：`git show 02cea19557db9d1523f78f1ff003746e17946abb:review/ord0545/readouts/hang_cause_matrix_r1.json`，blob `d4b35d4c85192e7769758583faa29550a574bfe0`。两趟并发共用固定端口与固定库副本名，那件的 `runs[]` 里 8 行中 8 行 rc 非 0，而且 8 行点名的是**屏的门面那格**（`getByTestId('poi-import')`）而不是被变异的那格。这种行量的不是产品，是我的栈。现场留在 `review/ord0545/readouts/hang_cause_matrix_r1_overlap_contaminated_r1.json`（blob `e5e5026cee5849da712ff200369a2192d151cc59`）。
+
+第二类是硬杀留下的变异。`review/ord0545/readouts/hang_cause_matrix_r1_leftover_mutation_contaminated_r1.json`（blob `079e50833c8dd82987c8199b11c8183076e30ae8`）那件 12 行里 4 行根本没采集到测试（同一个 const 被插了第二次，是 SyntaxError），而它的 `capped_read_is_ceiling_independent` 照样报 true——两条空行互相「相等」就把判据喂饱了，那是空判据不是测量。
+
+两条都上了钉子，都在工具 `review/ord0545/hang_cause_matrix_r1.py`（blob `1a2010cc674fdde7147fb139c2c87606fdfb9a3b`）里：起跑先比 `frontend/e2e/…r1.spec.ts` 的磁盘字节与尖上那枚 blob 的字节，不一致就 ABORT 并打印两枚 sha256；变异行的还原走 `finally`；每次跑自己挑一枚当下无人监听、且此刻能 bind 上的端口，自己带两份一次性库 tag，进门先打印占用者的命令行，锁主已死才接管；新增 `no_row_names_the_screen_entry` 参与退出码；每一条点成因的判据现在都同时要求 `tests_collected == 1` 且 `failed == 1`，不许用空行相等糊过去。件里 `pre_flight` 存着本趟端口与两份 tag，`spec_sha_published` == `spec_sha_before` 是起跑那道校验的读数。
+
+同一件里还修了一处采集数解析：`-g Wzh` 只剩 1 条测试时 playwright 打的是单数（"Running 1 test"），旧正则要求复数会把真实采集记成空；修后件里 `tests_collected` 逐行为 R1 = 2、R3 = 1、R2a = 1（blob `20be6e758619fa624b876e0dd609764a81eb4f5d`）。
+
+**三、被排除的另两条，各留一条具名读数**（都出自件 blob `20be6e758619fa624b876e0dd609764a81eb4f5d`）
+
+- 代理环境：`R4a` 行 rc 0 / 5.3 秒（HTTP(S)_PROXY 指着一台已死的本机端口）对 `R4b` 行 rc 0 / 4.8 秒（变量剥干净）——同量级、两趟都绿 ⇒ 与我无关，那条解释撤回。
+- 端口被撞（我最早怪的那条，真事但不是那次的原因）：`R5` 行 rc 1 / 0.4 秒，件里 `server_port_complaint` 逐字存着那句说端口被占的话；那一行 `tests_collected` = 0（一条测试都没跑起来）。收回孤儿后 `R5b` 行 4.5 秒绿（rc 0）。签名与第一节三行不同：没有 locator、没有测试输出——所以它冒充不了那次的成因。
+
+**件里 conclusions 的落法**（`review/ord0545/readouts/hang_cause_matrix_r1.json`，blob `20be6e758619fa624b876e0dd609764a81eb4f5d`）：9 枚键为 true（`capped_read_is_ceiling_independent`、`ceiling_300s_point_measured`、`cell_present_means_no_stall`、`no_row_names_the_screen_entry`、`occupied_port_fails_fast_and_named`、`proxy_env_refuted`、`shipped_gate_green_throughout`、`the_two_rows_name_the_same_locator`、`uncapped_wait_tracks_the_ceiling`），非 true 的 没有一枚；`spec_untouched` = True（件里 `spec_sha_before`、`spec_sha_after`、`spec_sha_published` 三枚逐字相等，读的就是「这一趟没把被量对象改过」这一格）。工具退出码取的不是全部键，而是其中点名成因的那几枚（元组在工具 blob `1a2010cc674fdde7147fb139c2c87606fdfb9a3b` 里可数）。
+
+**没改善的部分**
+1. 真机那几格仍然没量：矩阵的行全是本机 headless，手机链上的同一格归持派单方。
+2. 上限之上那一档没测（只测到 300 秒那一档，因为它就是发布形制里写着的那一枚）。
+3. 「补上 `place_name` 之后那屏会怎么变」还是没量——那条要等持派单方在两种修法里定点，我不代定。
+4. 我没有派单权：走查屏上那枚把服务端原始枚举原样拼进人话句子的格此刻仍在——读数在 `review/ord0545/readouts/walkthrough_zh-CN_R1_shiped_fresh_store.json`（blob `a4eec620909a713e59c6d0cc308ea9cb8043c320`）的 `day_source_cell.painted_verbatim`，本趟矩阵里同一字段又读到一次。修它要等持派单方回话。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-10-03 06:06 · 号令者（实例 A，会话 `6efab655`）· 勘误：我 06:02 那块「本轮 0 笔落地」在入账时是真的，随后我落了 ORD-0531 的 r2；另记一枚 Windows 文件名坑
 
 **一、勘误（我改的是自己的判语，不回改已入账字节）**
