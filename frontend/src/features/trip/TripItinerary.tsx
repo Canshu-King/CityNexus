@@ -12,6 +12,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { readCheckins, stampStop } from "../checkin/checkins";
+import type { CheckinRefusalFacts } from "../checkin/checkins";
+import {
+  CHECKIN_COPY,
+  CHECKIN_REFUSAL_COPY,
+  formatStampedMoment,
+  wordsFor,
+} from "../checkin/checkinCopy";
 import "../checkin/footprint.css";
 import { calendarRefusalKey, exportJourneyCalendar } from "./calendarExport";
 import { CollectInto } from "../collections/CollectInto";
@@ -141,7 +148,12 @@ export function TripItinerary({
   const journeyId = data.journey.id;
   const [stamped, setStamped] = useState<Record<string, string>>({});
   const [pendingStop, setPendingStop] = useState<string | null>(null);
-  const [stopNotice, setStopNotice] = useState<string | null>(null);
+  /* ORD-0500: whose answer this is.  The notice used to be ONE string held by the whole screen and
+     it was rendered inside the per-stop loop, so a double-tap on 「Old Town Gate」 painted
+     "this stop is already stamped" under all six stops -- a fact about one stop, said about six.
+     Measured at 390x844: 6 notice nodes after one duplicate tap.  Keyed by the stop that was
+     pressed, the sentence can only appear where the tap was. */
+  const [stopNotices, setStopNotices] = useState<Record<string, string>>({});
 
   const reloadStamps = useCallback(async () => {
     const answer = await readCheckins(journeyId);
@@ -155,23 +167,53 @@ export function TripItinerary({
     void reloadStamps();
   }, [reloadStamps]);
 
-  const stampThisStop = async (activityId: string) => {
+  /** The words for one refusal, in this screen's own vocabulary, never the server's token. */
+  const refusalWords = (stopTitle: string, facts: CheckinRefusalFacts): string => {
+    if (facts.refusal === "CHECKIN_DUPLICATE_STAMP") {
+      /* Point at the stamp that won.  The door sends the instant; the uuid it also sends is a
+         machine word and stays off this screen (ORD-0251/ORD-0339). */
+      return facts.existingStampedAt
+        ? wordsFor(CHECKIN_COPY.duplicateAt, zh, { moment: formatStampedMoment(facts.existingStampedAt, zh) })
+        : wordsFor(CHECKIN_COPY.duplicateNoMoment, zh);
+    }
+    const key = CHECKIN_REFUSAL_COPY[facts.refusal];
+    /* `button` is this screen's own label for the control, taken from the same call the button uses
+       below, so the sentence can only ever name a word the traveller can see. */
+    if (key) return wordsFor(CHECKIN_COPY[key], zh, { button: t("checkin.button") });
+    if (facts.status === 0) return wordsFor(CHECKIN_COPY.unreachable, zh);
+    return wordsFor(CHECKIN_COPY.unexpected, zh, { status: String(facts.status) });
+  };
+
+  const stampThisStop = async (activityId: string, stopTitle: string) => {
     setPendingStop(activityId);
-    setStopNotice(null);
+    setStopNotices((current) => {
+      const next = { ...current };
+      delete next[activityId];
+      return next;
+    });
     const answer = await stampStop(journeyId, activityId);
     if (answer.kind === "stamped") {
       setStamped((current) => ({ ...current, [answer.stamp.target_key]: answer.stamp.id }));
       // Read back rather than trusting the 201's own body for what the trip now holds.
       await reloadStamps();
-    } else if (answer.kind === "refused" && answer.refusal === "CHECKIN_DUPLICATE_STAMP") {
+    } else if (answer.kind === "refused" && answer.facts.refusal === "CHECKIN_DUPLICATE_STAMP") {
       /* The server's answer, taken as the fact it is: a stamp is already on file for this stop, so
          the row is re-read and shown instead of being overwritten -- and the sentence is this
-         screen's own dictionary words, because a reason code or the server's message on a Chinese
-         screen is the defect this project keeps having to fix. */
-      setStopNotice(t("checkin.duplicate"));
+         screen's own words, because a reason code or the server's message on a Chinese screen is
+         the defect this project keeps having to fix. */
+      setStopNotices((current) => ({
+        ...current,
+        [activityId]: refusalWords(stopTitle, answer.facts),
+      }));
+      await reloadStamps();
+    } else if (answer.kind === "refused") {
+      setStopNotices((current) => ({
+        ...current,
+        [activityId]: refusalWords(stopTitle, answer.facts),
+      }));
       await reloadStamps();
     } else {
-      setStopNotice(t("checkin.refused"));
+      setStopNotices((current) => ({ ...current, [activityId]: wordsFor(CHECKIN_COPY.unreachable, zh) }));
     }
     setPendingStop(null);
   };
@@ -436,16 +478,7 @@ export function TripItinerary({
                     isCurrent ? " current" : ""
                   }${disrupted ? " disrupted" : ""}`}
                   data-testid="trip-stop"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${zh ? "查看详情" : "View details"}: ${activity.title}`}
                   onClick={() => onOpenActivity(activity.id)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      onOpenActivity(activity.id);
-                    }
-                  }}
                 >
                   <div className="trip-stop-time">
                     <b>{clock(activity.start_at, tz)}</b>
@@ -485,9 +518,22 @@ export function TripItinerary({
                       {isCurrent && (
                         <span className="trip-stop-current">{zh ? "当前" : "Now"}</span>
                       )}
-                      <span className="trip-stop-more" aria-hidden="true">
+                      {/* ORD-0500: this was decoration (`aria-hidden`) inside a row that claimed
+                          `role="button"` while itself containing a real button -- nested interactive
+                          content, which a keyboard and a screen reader both refuse.  The row still
+                          answers a tap; 「详情」 is now the control it always read as. */}
+                      <button
+                        type="button"
+                        className="trip-stop-more"
+                        data-testid="trip-stop-details"
+                        aria-label={`${zh ? "查看详情" : "View details"}: ${activity.title}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onOpenActivity(activity.id);
+                        }}
+                      >
                         {zh ? "详情 ›" : "Details ›"}
-                      </span>
+                      </button>
                       {/* ORD-0476 slice 2: the tap that makes a footprint. It stops propagation
                           because the row around it is itself a button (「查看详情」), and a control
                           whose click is swallowed by its own row is not an entry a traveller reaches.
@@ -509,7 +555,7 @@ export function TripItinerary({
                         )}
                         onClick={(event) => {
                           event.stopPropagation();
-                          void stampThisStop(activity.id);
+                          void stampThisStop(activity.id, activity.title);
                         }}
                       >
                         {stamped[`activity:${activity.id}`]
@@ -517,9 +563,13 @@ export function TripItinerary({
                           : t("checkin.button")}
                       </button>
                     </div>
-                    {stopNotice ? (
-                      <p className="cn-stop-checkin__notice" data-testid="stop-checkin-notice">
-                        {stopNotice}
+                    {stopNotices[activity.id] ? (
+                      <p
+                        className="cn-stop-checkin__notice"
+                        data-testid="stop-checkin-notice"
+                        role="status"
+                      >
+                        {stopNotices[activity.id]}
                       </p>
                     ) : null}
                     {/* ORD-0510: the way into the container ORD-0444 built.  The wrapper, not the
