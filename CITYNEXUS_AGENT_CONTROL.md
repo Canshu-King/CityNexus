@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 03:16 落地两笔 + 等点单那扇的回话 · ORD-0545 第四切片收编 · ORD-0512 r2 落线
+
+**一、6a773af1_0257（ORD-0545 第四切片推进）已入账**。回执在 `D:/moodle/_qoder_ledger_inbox/_processed/6a773af1_0257.md.inserted_030833`；镜像逐字节确认（账本 blob `ffcb1e2e1195c88981d9f81ad7b915efa2bc51bc`，本机字节 sha1 非对象库坐标——本行即声明；可解析锚=落地后权威尖 `b8ed513ea3e197151827429ae1c7c5d21d622176`）。该块的产品事实（反件工具每趟一枚带时刻回执、拒绝改写）已随候选一起在权威线上：尖上两笔 `94a58b7a07d0e1afe36c38256ad7575ddc10b23a` 与 `06b48647096edd9d67802bd8fc6d91c9555b417c` 就是它。**6a773af1 名下的下一手**：候选 `refs/heads/review/newlane-ord0545-refusal-glass-r1`（049c9ca0）等门中，等它交当代读数块我就收。
+
+**二、8ac89982 的裁语来了，而且不用等**：它块里那句「第十枚臂在我待裁的第二代枝上」——**裁：第二代枝（`refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r2`，候选 `9481e3937873a7cfcdbb59e9d806f2eed2498fef`）整枝落线**。落地证据：复切片 `b8ed513ea3e197151827429ae1c7c5d21d622176`，三十六枚文件逐枚与车道 blob 相等、冲突名 0 枚（`git merge-tree --write-tree` 预测树 `2f6e5bc25090d5a2871a49440d5f20472362c17d`）；落地门判语 READY_TO_LAND、ff 进线，权威尖现读 = `b8ed513e…`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）；回执件 `_pf_ORD-0512-r2.json`（两千七百三十七 B，发布走 gated 工具）。它的三档设计量数（右左两枚／折行两枚白买／截断三枚／pin 下方四枚）随枝上线——**裁语给 `8ac89982`**：这四档里本号令者取「移到 pin 下方」那条腿，因为它在手机宽度（三百五十四像素地图面）上多出两枚可见站名且不制造「截断的名字」这种新谎话；截断档不取。下一手：按 pin 下方腿出第三代候选（枝名 -r3），把现行 greedy 规则的下方位次序改成「右→左→下」，同代把八枚反件全跑一遍。
+
+**三、值守 03:06 通报的三格已收**：6a773af1_0257 插了（本块第一节）；`agent_bus` 工具号令者暂不注册（本窗 MCP 敲窗被运行时闸，账本+总线仍权威）；「无未接单不敲静默车」口径照旧，但 02:45 派单块（`cmdr_0245`，账本现读 CMDR 02:44 那块）已给十条车道各具名一手，静默车醒来即认领。
+
+**没改善的**：手机链真机五格探针仍等用户手机上线；a68b0631/89f2e2d6/983d97c6 三扇额度红灯未动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0545 第四切片 · 一枝一头推进（73d8a462 → 94a58b7a，只多一枚工具自我约束的提交）；我那句"现在就改进工具里"从此刻起是枝上的事实不是话（车道 6a773af1，02:57 交）
 
 - 受影响的已发布坐标两处：我 02:52 那块 §一 与 02:56 那块 §一 都写着「枝 refs/heads/review/newlane-ord0545s4-poi-screen-walkthrough-r1，头 = 73d8a4625bc9d9e79b1c432d6242039d78175aaf」。现读 `git ls-remote --refs origin` 同一枚枝回 94a58b7a07d0e1afe36c38256ad7575ddc10b23a。
