@@ -1,0 +1,223 @@
+{
+  "at": "2026-10-02T15:19:25.780819+00:00",
+  "interpreter": "Python 3.12.14",
+  "door": {
+    "query": "cafe",
+    "radius_m": 100,
+    "limit": 8,
+    "timeout": "30",
+    "stub": "one",
+    "tag": "supply_one_a"
+  },
+  "stub_row_declared_synthetic": "SYNTHETIC-NOMINATIM-ROW not product data",
+  "command": "run/drive_fb549_door_r1.py",
+  "arms": {
+    "nogate_491e343b": {
+      "arm": "nogate_491e343b",
+      "tree": "D:\\moodle\\_qoder_seed_ord0489\\wt543tip",
+      "port": "8831",
+      "stub_port": "8835",
+      "tree_head": "491e343bfb3d543b38ab11c9f6f0f0283e66129a",
+      "real_city_blob_at_head": "e7663564bf47c0fc0923b790f54c429ef4ac4eeb",
+      "real_city_working_bytes_sha1": "e7663564bf47c0fc0923b790f54c429ef4ac4eeb",
+      "at": "2026-10-02T15:19:25.848318+00:00",
+      "provider_pointers": {
+        "CITYNEXUS_NOMINATIM_URL": "http://127.0.0.1:8835",
+        "CITYNEXUS_PHOTON_BASE_URL": "(unset -> product default)",
+        "CITYNEXUS_OVERPASS_URL": "(unset -> product default)",
+        "CITYNEXUS_PROVIDER_NETWORK_MODE": "(unset -> auto)"
+      },
+      "backend_ready": true,
+      "ownership": {
+        "P1_marker_row_in_my_file": {
+          "http_status": 201,
+          "marker": "fb549-door-nogate_491e343b-ef5dcf6ffef0",
+          "rows_read_from_my_db": 1,
+          "proves": "the process answering :8831 writes the sqlite file this driver created"
+        },
+        "P2_listener_identity": {
+          "port": "8831",
+          "listener_pids": [
+            39560
+          ],
+          "command_lines": {
+            "39560": {
+              "cl": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8831 --app-dir D:\\moodle\\_qoder_seed_ord0489\\wt543tip\\backend --log-level info",
+              "pp": 33412
+            }
+          },
+          "my_launcher_pid": 33412,
+          "launcher_is_listener_or_ancestor": true
+        },
+        "P3_my_boot_log": {
+          "path": "D:\\moodle\\_qoder_seed_ord0489\\run\\backend_fb549door_nogate_491e343b_8831_supply_one_a.log",
+          "bytes": 343,
+          "names_this_port": true
+        }
+      },
+      "journey": {
+        "traveler_status": 201,
+        "journey_status": 201,
+        "id": "aa98b024-73aa-48a8-bde0-0e5d4175bf62"
+      },
+      "discover": {
+        "asked": {
+          "query": "cafe",
+          "radius_m": 100,
+          "limit": 8,
+          "mode": "live",
+          "provider_timeout_seconds": "30",
+          "stub_answers": "one"
+        },
+        "http_status": 200,
+        "elapsed_seconds": 78.16,
+        "mode": "replay-fallback",
+        "candidates": 3,
+        "fallback_geocode_key_present": false,
+        "fallback_geocode": null,
+        "anchor_source": "photon_city_anchor",
+        "anchor_location": null,
+        "failure_stage": "category_search",
+        "fallback_reason": "PROVIDER_TIMEOUT",
+        "overpass": "REPLAY_FALLBACK",
+        "anchor_legs": {
+          "photon": {
+            "attempted": true,
+            "answered": true,
+            "http_status": 200,
+            "bytes": 344,
+            "outcome": "ANSWERED"
+          },
+          "nominatim": {
+            "attempted": false,
+            "answered": null,
+            "http_status": null,
+            "bytes": null,
+            "outcome": "SKIPPED"
+          }
+        },
+        "provider_status_keys": [
+          "anchor",
+          "anchor_credit_kept",
+          "anchor_legs",
+          "counts_as_supply",
+          "failure_stage",
+          "fallback_reason",
+          "nominatim",
+          "overpass"
+        ]
+      },
+      "nominatim_inbound": {
+        "count": 0,
+        "requests": []
+      },
+      "port_after_teardown": {
+        "still_listening": []
+      }
+    },
+    "gated_c4da40be": {
+      "arm": "gated_c4da40be",
+      "tree": "D:\\moodle\\_qoder_seed_ord0489\\wt_fb549",
+      "port": "8832",
+      "stub_port": "8836",
+      "tree_head": "c4da40beda5940ec9ef3d5c43223356cd2ff7d10",
+      "real_city_blob_at_head": "5bed42608bdfaad1067c50abb11918dfba4710b4",
+      "real_city_working_bytes_sha1": "5bed42608bdfaad1067c50abb11918dfba4710b4",
+      "at": "2026-10-02T15:20:51.189406+00:00",
+      "provider_pointers": {
+        "CITYNEXUS_NOMINATIM_URL": "http://127.0.0.1:8836",
+        "CITYNEXUS_PHOTON_BASE_URL": "(unset -> product default)",
+        "CITYNEXUS_OVERPASS_URL": "(unset -> product default)",
+        "CITYNEXUS_PROVIDER_NETWORK_MODE": "(unset -> auto)"
+      },
+      "backend_ready": true,
+      "ownership": {
+        "P1_marker_row_in_my_file": {
+          "http_status": 201,
+          "marker": "fb549-door-gated_c4da40be-b5ce8883cb69",
+          "rows_read_from_my_db": 1,
+          "proves": "the process answering :8832 writes the sqlite file this driver created"
+        },
+        "P2_listener_identity": {
+          "port": "8832",
+          "listener_pids": [
+            38604
+          ],
+          "command_lines": {
+            "38604": {
+              "cl": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8832 --app-dir D:\\moodle\\_qoder_seed_ord0489\\wt_fb549\\backend --log-level info",
+              "pp": 11664
+            }
+          },
+          "my_launcher_pid": 11664,
+          "launcher_is_listener_or_ancestor": true
+        },
+        "P3_my_boot_log": {
+          "path": "D:\\moodle\\_qoder_seed_ord0489\\run\\backend_fb549door_gated_c4da40be_8832_supply_one_a.log",
+          "bytes": 343,
+          "names_this_port": true
+        }
+      },
+      "journey": {
+        "traveler_status": 201,
+        "journey_status": 201,
+        "id": "d73a6344-2594-4e22-aaa1-989e79b169af"
+      },
+      "discover": {
+        "asked": {
+          "query": "cafe",
+          "radius_m": 100,
+          "limit": 8,
+          "mode": "live",
+          "provider_timeout_seconds": "30",
+          "stub_answers": "one"
+        },
+        "http_status": 200,
+        "elapsed_seconds": 74.66,
+        "mode": "replay-fallback",
+        "candidates": 3,
+        "fallback_geocode_key_present": true,
+        "fallback_geocode": "NOT_REACHED",
+        "anchor_source": "photon_city_anchor",
+        "anchor_location": null,
+        "failure_stage": "category_search",
+        "fallback_reason": "PROVIDER_TIMEOUT",
+        "overpass": "REPLAY_FALLBACK",
+        "anchor_legs": {
+          "photon": {
+            "attempted": true,
+            "answered": true,
+            "http_status": 200,
+            "bytes": 344,
+            "outcome": "ANSWERED"
+          },
+          "nominatim": {
+            "attempted": false,
+            "answered": null,
+            "http_status": null,
+            "bytes": null,
+            "outcome": "SKIPPED"
+          }
+        },
+        "provider_status_keys": [
+          "anchor",
+          "anchor_credit_kept",
+          "anchor_legs",
+          "counts_as_supply",
+          "failure_stage",
+          "fallback_geocode",
+          "fallback_reason",
+          "nominatim",
+          "overpass"
+        ]
+      },
+      "nominatim_inbound": {
+        "count": 0,
+        "requests": []
+      },
+      "port_after_teardown": {
+        "still_listening": []
+      }
+    }
+  }
+}
