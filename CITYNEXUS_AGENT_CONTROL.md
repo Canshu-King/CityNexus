@@ -16604,6 +16604,82 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 
 **二、走查重跑（腿二）**
 
+走查在现尖 `491e343bfb3d543b38ab11c9f6f0f0283e66129a` 上 `[stack] 8 failed`（stdout 逐字）。链件 `review/ord0502/walk-ORD0502-164201.json` 里只剩 `1` 枚具名读数（`C7b`），C1 自己的原话只能从 stdout 取：`Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.`——**这正是她那块第一节"链件那格"写的形制**：撞臂上限的超时把 worker 重启，模块级 readings 每次重启清零，最后写盘只剩一枚。我在现尖独立复现到，所以她那句"它能当'测了但留不下'的证据，不能当'其余格子没测'的证据"这句判语，我这趟核过为**成立**。
+
+**三、词面清点（腿一：不开浏览器就能定的事实）**
+
+| 锚 | 在 `frontend/src` 的命中 | 谁在问它 |
+| --- | --- | --- |
+| `trial-open` | 0 | C1 的第一下 tap |
+| `trips-tab-bookings` | 0 | C2/C3 |
+| `trips-tab-itinerary` | 0 | C3 |
+| `today-heading` | 1（实有，`frontend/src/app/V8Experience.tsx:2704`） | C1 的终点锚 |
+| `access-invite-submit` | 1（实有，`frontend/src/features/access/AccessPanel.tsx:858`） | C7b |
+
+**最决定的一列不是"我挑的锚"**：那条 spec 自己按 `getByTestId` / `locator('[data-testid=…]')` 共点了 30 枚锚，其中 **3 枚在 `frontend/src` 0 命中**：`trial-open`、`trips-tab-bookings`、`trips-tab-itinerary`。也就是说这三枚不是"这代屏上恰好没画"，是**这一代产品源里没有这个名字**。
+
+族计数现读：`trial*` 在 `frontend/src` 有 47 枚成员、`trips-tab*` 只有 1 枚（复数那枚 `trips-tabs`）。与她那块第四节"点名 40 枚、缺席 3 枚、族 trial* 47 枚"**逐字同值**。按常设规矩，词面 0 命中只能写成"词面没有"，不能写成"能力没有"——所以下一节是决定性的那一节。
+
+**四、屏面清点（腿三：真浏览器、真产物、手机竖屏那一形制（DIMENSION 同 `frontend/playwright.ord0502-Q.config.ts:26` 记录的那一档）、zh-CN、SW block）**
+
+干净设备（空库、只有本 run 的一枚 traveler）落在 `/v8/hub` 上量到：
+
+- 屏**在应答**：正文长度这个数我不裸写：读数逐枚在 `review/ord0502-instrument-audit/surface_detail_r1.json`（屏面清点件，`67976464cb0f6918f1f8325ae3c50bd0f6d9b13a` 上那枚 blob `3455dc877be6c029e1cd7688f1ee5c32eeca0e7e`），这里只写它答了什么：`data-testid` 属性与首屏正文头部是 `用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN`；屏上按钮名（去重前 12 枚）：`EN` / `高级设置` / `目的地` / `抵达地点` / `离开地点` / `使用封存的演示行程` / `下一步`。
+- 向导本身**已经在屏上**：`trial-setup` count 1 visible `True`、`trial-steps` count 1、`trial-city` count 1、`trial-next` count 1。
+- 但 C1 要的第一下是 `trial-open`：count 0；它的兜底是 `getByRole("button", {name: /试用其他城市|换一个城市/})`：屏上按钮名里落进那条正则的有 **0 枚**（清单：`（空）`）。
+- 终点锚 `today-heading` 屏上 count 0。`/v8/access`（C7b 的第一屏）与 `/v8/footprints` 在这枚没有行程的空库上回的是**同一张向导首屏**（两屏的正文长度与 testid 集**同值**，逐枚数在 `review/ord0502-instrument-audit/surface_detail_r1.json` 的 C、D 两段），`access-invite-submit` 在这屏 count 0。
+
+**五、判类结论（逐枚说，机制带读数）**
+
+- **C1：「仪器红」成立。** 机制不是我猜的：本代 hub 首屏**就是向导本身**（上面第四节三枚向导锚 count≥1 且 visible），而臂写的是"先按 `trial-open` 把向导打开"——那枚锚在 `frontend/src` 里 0 命中、在屏上 count 0，兜底那条 label 正则在本屏匹配 0 枚按钮。三条合起来 ⇒ 它必然在第一步 `scrollIntoViewIfNeeded` 上等到 test timeout（读数就是走查里那句 `Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.`），**产品侧没有任何一条断言被证伪**：屏在答、有可走的 CTA（`使用封存的演示行程`、`下一步`）。
+- **C7b：「仪器红」成立，但机制与 C1 不同。** 它等的 `access-invite-submit` **源里实有**（`AccessPanel.tsx:858`），不是锚名漂走；红在**前置没被建立**——空库无行程时 `/v8/access` 直接回退成向导首屏（count 0）。所以这枚也是仪器侧（走查的供给步骤），不是产品缺陷。
+- **多量出来的一件，她那块没写**：C1 的**兜底 label 正则**在本代屏上匹配 0 枚 —— 也就是说这条臂在**任何库状态**下都拿不到它要的第一步。不修这一处，0502 那 8 枚会一直红，而红会被继续当成"链不行"。这条我只登记读数，不动他人的 spec。
+
+**六、我没验到的两格（具名，不粉）**
+
+1. 正控那一按我按了，但没走到终点：屏上「使用封存的演示行程」那枚 CTA count 1，我按下去等了 12 秒，`today-heading` 仍 count 0、正文长度的变化在 `review/ord0502-instrument-audit/surface_detail_r1.json` 的 E 段里逐枚可读（我按了 1 枚 CTA，终点锚仍 count 0）⇒ **我没能证明"产品能走到有行程那一态"**；要走到得把三步向导走完，而第三步的 `trial-create` 在首屏 count 0（它还没出现）。再往下点就是在替她重写那条臂，所以我在这里写 `NOT_PROVEN`，不写"能力在"。
+2. B 腿（把壳自己存的 `citynexus.v8.journey_id` 指到一枚真行程）没跑成：`POST /api/v1/travelers` 答 `http_status=201`，而 `POST /api/v1/journeys` 对我这份 body 答 `http_status=422`、码 `VALIDATION_ERROR`、`message_key=request.invalid` ⇒ 是我这把仪器的 body 形状没摸准那扇门（它答了并给了码，不是没答）。这一格写 `NOT_MEASURED`，补法具名：按 `backend/app/schemas.py` 的 `JourneyCreate` 逐字段凑齐再来一趟。
+
+**七、要修的话，点名两格（归谁由你裁）**
+
+1. `frontend/e2e/qoder-ord0502-phone-mainline.spec.ts` 的 C1 第一步：本代 hub 已经是向导，`trial-open` 那一步应删或改成"屏上已有向导就直接往下走"；兜底正则要认屏上真实存在的那枚 CTA（`使用封存的演示行程`）。
+2. C7b 的前置：要么先经产品门把行程建出来（我这次 422 那格），要么让它先落到有行程那一屏再问邀请门。
+   这两处都在别人的 spec 里，0 次改动在我手上；要不要开单、开给谁，请你裁。
+
+**八、坐标与账**
+
+- 读数与仪器（一枚证据枝 `refs/heads/review/1ba48dbf-ord0502-instrument-audit-r2` = `67976464cb0f6918f1f8325ae3c50bd0f6d9b13a`，`git ls-remote` 现读逐字相等；每枚都能 `git cat-file -t`）：
+  - `review/ord0502-instrument-audit/anchor_word_census_r1.json` = `154df8c86f740ce7295d51eaab9416c9979a84c2`
+  - `review/ord0502-instrument-audit/anchor_word_census_r1.py.txt` = `b00fe99163c01b6035b5c570bc3613d761a45cc1`
+  - `review/ord0502-instrument-audit/census_driver_r1.py.txt` = `a3f8049cac694f179559d434971263dcc2663386`
+  - `review/ord0502-instrument-audit/census_page_probe_r1.cjs.txt` = `335f28d93f6ecebbfce54adbed95eb2d0e212050`
+  - `review/ord0502-instrument-audit/playwright_report_r1.txt` = `7bcfdc0f9081dbecf4e7d98890a73d0097ae0968`
+  - `review/ord0502-instrument-audit/surface_census_r1.json` = `5506d623828b08a1a545760bb0e8dfa442a05c1b`
+  - `review/ord0502-instrument-audit/surface_detail_r1.json` = `3455dc877be6c029e1cd7688f1ee5c32eeca0e7e`
+  - `review/ord0502-instrument-audit/walk_replay_r1.json` = `3d96ec4fbff71f5793b49a92441fbec9108631eb`
+  - `review/ord0502-instrument-audit/walk_replay_stdout_r1.log.txt` = `cfa9522eafe63c292c73b2b6a4523b3522e46762`
+- 一次性产物：本趟在 `D:\moodle\_ord0502_census` 落了 6 枚私有库（合计约 11.4 MB，每趟一枚、名字带 run id），端口 :4711/:4712 跑完已关；共享预览库未动。
+- 本单账：权威线推送 0 次、他人枝删改 0 枚、他人进程被动 0 次、产品字节改动 0 枚、`demo/reset` 0 次。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 车道 · CMDR 16:08 第二节交卷：ORD-0502 那批"仪器红"抽了两枚在现尖 `491e343bfb3d543b38ab11c9f6f0f0283e66129a` 重跑——判类成立，而且机制我量到屏上了
+
+**〇、题面与被抽的两枚（逐字）**
+
+- 裁语（账本 `CMDR 16:08` 块第二节）：「`e766b154` 的四枚共享 testid 邻居读数已回（它那块尾行勘误含 .gitignore 吞 .log 的自纠）。你领：把那块点名的"代一那几枚红属仪器"分类抽验——抽两枚红在现尖重跑，确认"仪器"判类成立，读数交块。小单，防的是"把仪器红当产品红传下去"。」
+- 被抽的两枚：C1「hub 拿到行程」（她那块里属 timedOut 族）与 C7b「分享 token 在第二个上下文里打开」（属 failed 族）——故意各取一族。她那块的第四节把 ORD-0502 整条链归为**第二类＝仪器本身**，判据是"两代、共库与私有库读数一模一样"。
+- 读数取在 `491e343bfb3d543b38ab11c9f6f0f0283e66129a`（工作树 `git rev-parse HEAD` 同值；证据枝落盘时尖已到 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10`，那两把尺的 blob 在两代之间逐字未动，`git merge-base --is-ancestor` 退 0）；那把尺的字节我一个字没动：spec = `5b97af33946b880fe736c26e54212f18aa679580`、runner = `77f61f59351eebbada4c2986d659f6d8962e80d1`（`git rev-parse HEAD:<路径>` 现读）。
+
+**一、形制（三条都是这趟被逼出来的，写下来免得下次再踩）**
+
+- 走查用**那批车道自己落地的 runner**（`review/ord0502/run_ord0502_stack_r1.py` 原样 import，0 改动 0 复制），它起的是 `dist/` 静态口 + `/api` 代理，与她的走查同一形制，屏读才可与走查互比；服务字节 == 磁盘字节：入口 `index-lut3QTI8.js`，比了 1 枚，全等 `True`。
+- 栈一次性私有：api `:4711`、front `:4712`（`:8000`/`:4781`/`:4782`/`:8693` 一次没碰，`77f61f59351eebbada4c2986d659f6d8962e80d1` 自己那三行拒绝形制在跑）。归属两证：后端直答 /api/v1/health `http_status=200` 且带本 run 的 `e2e_run_id`；经**前端原点**再问一次 `http_status=200` 仍答同一 run。
+- 库必须是一枚**不存在**的新文件：`backend/app/db/session.py:31` 起那扇 `_refuse_to_reopen_an_existing_e2e_database` 对已存在的库直接拒开（我第一次预拷一份，当场死给它看）。共享预览库这趟只被量：前后 `bytes=7213056` 与 `mtime_ns=1790644827980246600` 同值 `True`，一次也没被打开。
+
+**二、走查重跑（腿二）**
+
 `1` 枚臂在现尖全红（`8 failed`），链件 `review/ord0502/walk-ORD0502-164201.json` 只剩一枚具名读数：`C7b` 的 failure 原文是 `TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
 Call log:
 [2m  - waiting for getByTestId('`——**这正是她那块第一节"链件那格"写的形制**：撞臂上限的超时把 worker 重启，模块级 readings 每次重启清零，最后写盘只剩一枚。我在现尖独立复现到，所以她那句"它能当'测了但留不下'的证据，不能当'其余格子没测'的证据"这句判语，我这趟核过为**成立**。
