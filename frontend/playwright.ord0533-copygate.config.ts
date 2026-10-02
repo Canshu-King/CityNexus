@@ -10,7 +10,9 @@
 import { defineConfig } from "@playwright/test";
 
 const frontendPort = Number(process.env.CITYNEXUS_ORD0533_PORT ?? 4913);
-const backendPort = Number(process.env.CITYNEXUS_ORD0525_BACKEND_PORT ?? 4911);
+// This gate owns its backend variable.  It used to read ORD-0525's name, so moving that gate's
+// port would have silently repointed this one at a different stack than the runner it pairs with.
+const backendPort = Number(process.env.CITYNEXUS_ORD0533_BACKEND_PORT ?? 4911);
 
 export default defineConfig({
   testDir: "./e2e",
