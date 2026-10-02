@@ -4,15 +4,19 @@
   "aborts": "ABORT_READINGS_RED",
   "failed_checks": [
     {
-      "check": "枝里那份发射器＝刚跑这页的这枚",
+      "check": "引文闸判语",
       "detail": {
-        "ref": "newlane-ord0500-phone-checkin-entry-r16",
-        "bytes_in_ref": 45708,
-        "bytes_of_this_program": 45716
+        "OK": 8,
+        "NOT_THIS_LANES_CITATION": 25,
+        "CITED_FILE_ABSENT": 0,
+        "CITED_LINE_BEYOND_FILE": 0,
+        "CITED_LINE_IS_BLANK": 0,
+        "CITED_LINE_CONTENT_MISMATCH": 0,
+        "CITED_PHRASE_GONE_FROM_COMMENT": 0
       },
-      "forced": false
+      "forced": true
     }
   ],
-  "took_local": "2026-10-03T06:20:46+08:00",
+  "took_local": "2026-10-03T06:33:33+08:00",
   "note": "the page was not generated; this sheet is the only artifact of this generation"
 }
