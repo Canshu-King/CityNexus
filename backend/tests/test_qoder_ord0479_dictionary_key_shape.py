@@ -156,6 +156,32 @@ def _table_values_around(path: str, line_no: int) -> list[str]:
     return values
 
 
+def _table_line_inside_named_const(path: str, symbol: str, value: str) -> int:
+    """The line where `value` sits inside the object literal opened by the named const `symbol`.
+
+    ORD-0479's own ruling is that a site is identified by what it *is*, not by where it happens to sit:
+    this order was opened against line 45, and the line is 47 today because ORD-0528 exported the table.
+    Anchoring on (const name, dictionary key) keeps both directions working -- the reading survives any
+    amount of upstream movement, and renaming either symbol still fails the arm.
+    """
+
+    lines = (REPO / path).read_text(encoding="utf-8", errors="replace").splitlines()
+    opener = re.compile(r"\b(?:export\s+)?const\s+%s\b" % re.escape(symbol))
+    start = None
+    for i, line in enumerate(lines, 1):
+        if opener.search(line) and line.rstrip().endswith("{"):
+            start = i
+            break
+    assert start is not None, (path, symbol, "the named const is not in the file any more")
+    entry = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*\s*:\s*"%s"\s*,?$' % re.escape(value))
+    for i in range(start, len(lines)):
+        if lines[i].startswith("};"):
+            break
+        if entry.match(lines[i].strip()):
+            return i + 1
+    raise AssertionError((path, symbol, value, "the named key is not in that table any more"))
+
+
 def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> None:
     """真树上：C07 那句断言成立；而且每一处被赦免的行，都能脱离尺自己再证一遍。
 
@@ -180,8 +206,11 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: the site this order was opened for is among them, and is forgiven on the same grounds.
+    #: It is found by the two symbols that make it what it is - the exported table and the dictionary key
+    #: - never by a row number, because the row moves under the tree while the site stays the same site.
+    site_line = _table_line_inside_named_const(SITE, "REFUSAL_KEY", VALUE)
+    assert (SITE, site_line) in [(e["path"], e["line"]) for e in exemptions], exemptions
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红

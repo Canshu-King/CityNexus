@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -200,18 +201,36 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
 
     offenders: dict[str, list[int]] = {}
     others: dict[str, list[str]] = {}
+    full: dict[str, list[tuple[int, str]]] = {}
     for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
         for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if any(needle in line for needle in ("busy_timeout=30000", "busy_timeout = 30000",
                                                  '"timeout": 30')):
                 offenders.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(i)
             elif "busy_timeout" in line:
-                others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
+                rel = str(path.relative_to(BACKEND_ROOT))
+                others.setdefault(rel, []).append(line.strip()[:58])
+                full.setdefault(rel, []).append((i, line))
     assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
-    # 其余提到 busy_timeout 的地方是 worker 自己的短等待（500/1500/200 ms），射程不同，这里点名不吞掉
-    assert sorted(Path(k).name for k in others) == [
-        "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
-        "write_deadline.py"], {k: v for k, v in others.items()}
+    #: 其余提到 busy_timeout 的地方不再点文件名（点名五次在两次换代里红了两次，那是会随上游移动的量，
+    #: 不是判据）。改成两条从产品自己读出来的尺度：这一行要么射程明显低于请求路径那一格（格子的数取
+    #: live 的 busy_timeout_ms()，不写死在测试里），要么它本身就是向模块/配置要数（含具名符号）。
+    #: 两条都不满足 = 第二处常量，当场红——不管它落在哪个文件，也不管文件名有没有换。
+    scale = WD.busy_timeout_ms()
+    assert scale > 0, scale
+    DERIVES = ("busy_timeout_ms", "write_busy_timeout_ms", "busy_timeout_seconds")
+    unsourced: dict[str, list[str]] = {}
+    for rel, rows in full.items():
+        if Path(rel).name == "write_deadline.py":
+            continue  # the one place allowed to hold the number
+        for i, line in rows:
+            numbers = [int(n) for n in re.findall(r"\b\d{3,}\b", line)]
+            if any(n >= scale for n in numbers) and not any(sym in line for sym in DERIVES):
+                unsourced.setdefault(rel, []).append("%d: %s" % (i, line.strip()[:78]))
+    assert unsourced == {}, (
+        "a lock wait at request-path scale is stated inline outside the single-source module: %s"
+        % unsourced)
+    assert others, "nothing mentions busy_timeout at all -- this arm is reading an empty tree"
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
     assert 'timeout": write_busy_timeout_seconds()' in session_src, "session.py must ask the module"
