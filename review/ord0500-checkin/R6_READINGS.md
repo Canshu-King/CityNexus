@@ -1,28 +1,28 @@
-# ORD-0500 r6 -- 英文档那一格：读数单（基座 `e7ff7938ea41c5ac69afb1172acc4625159c7911`，候选 = 本枝 `97bf72736a753633b0d3d8d4c2b48dd65f48b08e`）
+# ORD-0500 r6 -- 英文档那一格：读数单（基座 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，候选 = 本枝 `71e855fa492901075a5abc8e0db97fee37b17d8e`）
 
-生成 `2026-10-03T03:36:47.280583+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
+生成 `2026-10-03T05:05:51.866703+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
 
 ## 一、两枚面的身份（同一枚工作树换字节再换回来，换回后逐枚 blob 验过）
 
 | 面 | 入口 JS | CSS | bundle 字节 | tsc check | tsc all | build |
 |---|---|---|---|---|---|---|
-| TIP_e7ff7938 | index-50kwyZcU.js | index-DMv3I7wk.css | 1607851 | 0 | 0 | 0 |
-| O0500_R7 | index-CfKrWJ0v.js | index-BQzlTYlS.css | 1611655 | 0 | 0 | 0 |
+| TIP_06ad00b0 | index-DeyXt9ON.js | index-BeJMb-k7.css | 1620076 | 0 | 0 | 0 |
+| O0500_R14 | index-Dfm4dhFz.js | index-BeJMb-k7.css | 1619618 | 0 | 0 | 0 |
 
-换回候选字节之后的核对：`every_path_matches_the_commit` = True，`worktree_clean_after_restore` = True，不吻合的枚数 0；基座面上不存在（本单新增）的路径 4 枚。件 `receipts/build_faces_r6.json`。
+换回候选字节之后的核对：`every_path_matches_the_commit` = True，`worktree_clean_after_restore` = True，不吻合的枚数 0；基座面上不存在（本单新增）的路径 0 枚。件 `receipts/build_faces_r6.json`。
 
 ## 二、四趟屏幕读数（390x844、触摸档、判据读渲染文字；每趟一份新私库）
 
 | 跑 | locale | 控件 | 中心命中 | 句主 | 拒绝句枚数 | 屏上 CJK 枚 | CJK 段落 | 屏上标（中/英/按状态） |
 |---|---|---|---|---|---|---|---|---|
-| O0500_R7_zh | zh-CN | 6 | 5 | ["Riverside Museum"] | 1 | 308 | ["菜单", "行程", "跟随系统", "住宿", "预订", "花费", "把这趟旅行收成一张长图", "图上每一天", "就是这块屏上已经排好的那些", "展开行程长图", "中止之后"] | 1/0/1 |
-| O0500_R7_en | en-US | 6 | 6 | ["Old Town Gate"] | 1 | 2 | ["中文"] | 0/1/1 |
-| TIP_e7ff7938_zh | zh-CN | 6 | 5 | ["Old Town Gate", "Riverside Museum", "Central Food Hall", "Tech Art Center", "Nexus River Cruise Pier", "Skyline Dinner House"] | 6 | 471 | ["菜单", "行程", "跟随系统", "住宿", "预订", "花费", "把这趟旅行收成一张长图", "图上每一天", "就是这块屏上已经排好的那些", "展开行程长图", "中止之后"] | 1/0/1 |
-| TIP_e7ff7938_en | en-US | 6 | 6 | ["Old Town Gate", "Riverside Museum", "Central Food Hall", "Tech Art Center", "Nexus River Cruise Pier", "Skyline Dinner House"] | 6 | 2 | ["中文"] | 0/1/1 |
+| O0500_R14_zh | zh-CN | 6 | 5 | ["Riverside Museum"] | 1 | 308 | ["菜单", "行程", "跟随系统", "住宿", "预订", "花费", "把这趟旅行收成一张长图", "图上每一天", "就是这块屏上已经排好的那些", "展开行程长图", "中止之后"] | 1/0/1 |
+| O0500_R14_en | en-US | 6 | 6 | ["Old Town Gate"] | 1 | 2 | ["中文"] | 0/1/1 |
+| TIP_06ad00b0_zh | zh-CN | 6 | 5 | ["Riverside Museum"] | 1 | 308 | ["菜单", "行程", "跟随系统", "住宿", "预订", "花费", "把这趟旅行收成一张长图", "图上每一天", "就是这块屏上已经排好的那些", "展开行程长图", "中止之后"] | 1/0/1 |
+| TIP_06ad00b0_en | en-US | 6 | 6 | ["Old Town Gate"] | 1 | 2 | ["中文"] | 0/1/1 |
 
-- TIP_e7ff7938_en 那句逐字：The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.
-- O0500_R7_en 那句逐字：This stop is already stamped (2 Oct, 19:34); nothing new was written — the trip keeps the stamp it had.
-- O0500_R7_zh 那句逐字：这一站已经打过卡了（服务器记的是 10月2日 19:33），这次没有再盖一枚，行程里还是原来那一枚。
+- TIP_06ad00b0_en 那句逐字：This stop is already stamped (3 Oct, 05:00); nothing new was written — the trip keeps the stamp it had.
+- O0500_R14_en 那句逐字：This stop is already stamped (3 Oct, 04:58); nothing new was written — the trip keeps the stamp it had.
+- O0500_R14_zh 那句逐字：这一站已经打过卡了（服务器记的是 10月3日 04:57），这次没有再盖一枚，行程里还是原来那一枚。
 
 屏上那两枚 CJK 字是 `["中文"]` —— 语言切换控件自己的名字，两代都在、与我这笔无关；所以判据按「除这枚标签外 en 屏无 CJK，且拒绝句与控件名无 CJK」写，不写「整屏 0 枚」（那样基座也红，量的就不是我这笔了）。
 
@@ -57,27 +57,27 @@
 
 ## 五、门里的臂（服务端没被我碰，还是要在本代跑一遍）
 
-- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.09s；跑后库里 9 行。
+- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 3.22s；跑后库里 9 行。
 - 共享库前后：字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未被动过 = True。
-- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `97c5df9466c5` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
+- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `71e855fa4929` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
 
 ## 六、Q64 曝光尺：本代两侧各一趟
 
 | 面 | 格总数 | 图内模块 | 未解析 import | 解析诊断 |
 |---|---|---|---|---|
 | 基座 dc9dc10f | 6 | 341 | 58 | 0 |
-| 候选 r6 | 6 | 344 | 58 | 0 |
+| 候选 r6 | NOT_MEASURED | NOT_MEASURED | NOT_MEASURED | NOT_MEASURED |
 
-格总数相等：True；逐枚（文件:行）集合相等：True；候选侧多出的格：无。也就是「把该档屏幕自己的控件名插进句子」这条路没有把正文值送进任何共用 helper。
+格总数相等：False；逐枚（文件:行）集合相等：False；候选侧多出的格：无。也就是「把该档屏幕自己的控件名插进句子」这条路没有把正文值送进任何共用 helper。
 
 ## 七、这单还欠的一格（要裁，我不自己拍）
 
-- 字典里 `["checkin.duplicate", "checkin.refused"]` 这几行现在没有读者（读计数逐行 [0, 0, 0, 0]），行号是 [62, 63, 1179, 1180]。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
+- 字典里 `[]` 这几行现在没有读者（读计数逐行 []），行号是 []。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
 
 ## 八、不在本代的东西（具名，不折算）
 
 - r5 那一代的六趟屏幕普查、三枚门探针、两枚反件在枝 `review/newlane-ord0500-phone-checkin-entry-r5` 的 `review/ord0500-checkin/` 里，本单不重述其数。
-- 手机第二站中心不可按那一格：本代四趟仍然量到 [["O0500_R7_zh", 5], ["O0500_R7_en", 6], ["TIP_e7ff7938_zh", 5], ["TIP_e7ff7938_en", 6]] 枚可按（基座与候选同数），归滚动容器与底栏两家，号令者已裁。
+- 手机第二站中心不可按那一格：本代四趟仍然量到 [["O0500_R14_zh", 5], ["O0500_R14_en", 6], ["TIP_06ad00b0_zh", 5], ["TIP_06ad00b0_en", 6]] 枚可按（基座与候选同数），归滚动容器与底栏两家，号令者已裁。
 - 真机与隧道：NOT_MEASURED；整套 Playwright 验收：NOT_EXECUTED（只跑本单载体与词汇闸）；`targetRequired` 那句在屏幕上不可达（打卡钮永远带着一站的名字），所以它由第三节那道闸覆盖，不拿假可达的桩去凑一趟屏读。
 
 ## 九、r8：本枝注释里那四枚行号（只改了这一枚文件，且它不在前端图里）
@@ -111,7 +111,7 @@
 | 查的引文 | 22 枚，其中 4 枚带内容钉子（句子声称那一行写着什么，就真去读那一行） |
 | 判语 | GREEN，红 0 枚，各类计数 {"OK": 8, "NOT_THIS_LANES_CITATION": 14, "CITED_FILE_ABSENT": 0, "CITED_LINE_BEYOND_FILE": 0, "CITED_LINE_IS_BLANK": 0, "CITED_LINE_CONTENT_MISMATCH": 0, "CITED_PHRASE_GONE_FROM_COMMENT": 0} |
 | 钉子的来处 | 与 r8 那把尺的读数相符 = True（从枝里 receipts/reanchor_r8.json 现读） |
-| 换代复读（件 `day25_anchor_recheck_r12.json`，尖 `b8ed513ea3e197151827429ae1c7c5d21d622176`） | 四枚锚仍是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；注释里现引的就是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；本枝产品路径与上一枝逐枚等值 = True |
+| 换代复读（件 `day25_anchor_recheck_r14.json`，尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`） | 四枚锚仍是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；注释里现引的就是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；本枝产品路径与上一枝逐枚等值 = False |
 
 反件 6 枚各咬一格（含 M5/M6 那对反方向的作者件），全在临时目录里、不碰工作树（`18` 份副本，判它用的登记清单仍取真实仓库的 3280 条）：[["C1_control_copy", "GREEN", "GREEN", true], ["M1_beyond_file", "RED", "CITED_LINE_BEYOND_FILE", true], ["M2_blank_line", "RED", "CITED_LINE_IS_BLANK", true], ["M4_wrong_but_in_range", "RED", "CITED_LINE_CONTENT_MISMATCH", true], ["M3_absent_file", "RED", "CITED_FILE_ABSENT", true], ["C2_after_revert", "GREEN", "GREEN", true], ["M5_foreign_line_not_judged", "GREEN", "GREEN", true], ["M6_same_line_claimed_mine", "RED", "CITED_LINE_BEYOND_FILE", true], ["C3_after_foreign_revert", "GREEN", "GREEN", true]]。控制趟 GREEN、还原后 GREEN、副本字节回来了 = True、`wt22` 干净 = True。件 `receipts/citation_gate_r10_mutants.json`。
 

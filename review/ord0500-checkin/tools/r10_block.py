@@ -14,7 +14,11 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import r9_block as B          # the helpers: load / fmt / slot / sh / pick_sha and the paths
 GEN = os.environ.get("R10_GEN") or "r10"
-MY_REF = "refs/heads/review/newlane-ord0500-phone-checkin-entry-" + GEN
+# the ref number and the receipt names move on different clocks: a receipt is named for the generation
+# that wrote it into the branch, the ref for the commit the commander reviews.  They are allowed to
+# differ, and the page says which is which.
+REF_GEN = os.environ.get("R10_REF_GEN") or GEN
+MY_REF = "refs/heads/review/newlane-ord0500-phone-checkin-entry-" + REF_GEN
 GATE_RECEIPT = "citation_gate_%s.json" % GEN
 MUT_RECEIPT = "citation_gate_%s_mutants.json" % GEN
 RECEIPT_DIR = "review/ord0500-checkin/receipts"
@@ -28,7 +32,8 @@ def main():
     gm = B.load(MUT_RECEIPT)
     py = B.load("pytest_r6.json")
     rows = B.load("checkin_copy_rows_r6.json")
-    aud = B.load("citation_audit_r8.json")
+    aud = B.load(os.environ.get("AUD_RECEIPT") or "citation_audit_r14.json")
+    vocab = B.load("checkin_copy_rows_mutants_r6.json")
     rcpt = B.load(os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_r12.json")
     land = B.load("landing_r6.json")
     me = [r for r in land["refs"] if r["ref"] == MY_REF]
@@ -37,6 +42,20 @@ def main():
     if not (len(me) == len(r9) == len(r8) == 1):
         raise SystemExit("ABORT_LANDING_ROWS")
     me, r9, r8 = me[0], r9[0], r8[0]
+
+    # the door the commander ruled in (裁②): a red reading may not produce a page at all, only the
+    # named failure sheet.  R10_FORCE_RED=gate is the arm that proves this bites, run by r14_arm.sh.
+    B.refuse_on_red(REF_GEN, [
+        ("引文闸判语", gate.get("verdict") == "GREEN", gate.get("verdict_tally")),
+        ("引文闸反件全咬", bool(gm.get("every_arm_bit")) and bool(gm.get("green")), gm.get("runs")
+        and [(r.get("id"), r.get("bite")) for r in gm["runs"]]),
+        ("换代复读无腐烂", not (rcpt.get("rot") or {}), rcpt.get("rot")),
+        ("后端臂退出码", py.get("exit") == 0, py.get("summary_lines")[-1:]),
+        ("词汇闸判语", rows.get("verdict") == "GREEN", rows.get("rows_checked")),
+        ("词汇闸反件", bool(vocab.get("every_mutant_bit")), vocab.get("control_verdict")),
+        ("全线尺只判自己名下", aud.get("mechanically_red") == 0,
+         {"red": aud.get("mechanically_red"), "declined": aud.get("citations_declined")}),
+    ])
 
     blobs = {}
     for line in open(os.path.join(B.RUN, "r6_blobs.txt"), encoding="utf-8"):
@@ -91,17 +110,31 @@ def main():
     if _rot:
         raise SystemExit("ABORT_ROT_DETECTED on %s: %s -- run the re-anchor before posting"
                          % (live_tip, _rot))
-    _paths = ["backend/app/main.py", "backend/tests/test_qoder_ord0500_journey_refusal.py",
-              "contracts/openapi.yaml", "frontend/src/features/checkin/checkinCopy.ts",
-              "frontend/src/features/trip/TripItinerary.tsx"]
-    _eq = {}
+    # the paths this order's product sentences speak about, taken from the re-check receipt rather
+    # than remembered: r14 added `frontend/src/i18n/LocaleContext.tsx` when the dictionary rows went
+    _paths = sorted((rcpt.get("tip_paths_equal_on_branch") or {}).keys()) or [
+        "backend/app/main.py", "backend/tests/test_qoder_ord0500_journey_refusal.py",
+        "contracts/openapi.yaml", "frontend/src/features/checkin/checkinCopy.ts",
+        "frontend/src/features/trip/TripItinerary.tsx", "frontend/src/i18n/LocaleContext.tsx"]
+    # my own write-set is allowed to differ from the tip -- that is the delivery.  Anything else that
+    # differs means the line moved a product file under me after I read it, and then this page's
+    # sentence about "the bytes are in the line" would be false, so the page stops here.
+    rcw, ws = B.sh(["git", "diff", "--name-only", "%s..HEAD" % live_tip], cwd=WT)
+    write_set = {l.strip() for l in ws.splitlines() if l.strip()}
+    _eq, _moved = {}, []
     for _p in _paths:
         _a = _show(live_tip, _p)
         _b = subprocess.run(["git", "-C", WT, "show", "HEAD:%s" % _p], stdout=subprocess.PIPE,
                             timeout=180).stdout.decode("utf-8", "replace")
-        _eq[_p] = (_a == _b)
-    if not all(_eq.values()):
-        raise SystemExit("ABORT_PRODUCT_MOVED %s" % {k: v for k, v in _eq.items() if not v})
+        same = (_a == _b)
+        _eq[_p] = same
+        if not same and _p in write_set:
+            mine_changed.append(_p)
+        if not same and _p not in write_set:
+            _moved.append(_p)
+    if _moved:
+        raise SystemExit("ABORT_PRODUCT_MOVED %s -- the line changed these outside my write-set; "
+                         "re-read them before writing a page about them" % _moved)
     lag = subprocess.run(["git", "-C", WT, "rev-list", "--count", "%s..%s"
                           % (land["live_tip"], live_tip)], stdout=subprocess.PIPE,
                          timeout=120).stdout.decode().strip()
@@ -135,14 +168,14 @@ def main():
     L = []
     A = L.append
     A("### ORD-0500 %s（手机车道 0afdb49b）：上一手那枚闸把手伸进了别人的判据文件，这手把范围改成按作者定"
-      % GEN.upper())
+      % REF_GEN.upper())
     A("")
     forked_now = me["fork_point"] == live_tip
     A("现尖 `%s`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-"
       "entry-%s` = `%s`，%s，合并预测树 `%s`，merge-tree 退出码 %s，写集 %s 枚逐枚字节相同 %s 枚、"
       "需要再 rebase %s 枚。**产品字节 0 枚改动**：现尖到本枝的差共 %s 枚文件，`review/` 之外 %s 枚"
       "（清单：%s）。" % (
-          live_tip, GEN, remote,
+          live_tip, REF_GEN, remote,
           ("从这一枚尖自己身上分叉（`fork_point` 相等 = 真）" if forked_now else
            "分叉于 `%s`（现尖之后又落了 %s 枚提交，`git rev-list --count` 现读），landing 判到需要再 "
            "re-cut 的路径仍是 %s 枚——不合的时候不用重剪，这是那把只读尺的答话" % (
@@ -162,6 +195,10 @@ def main():
           "`、`".join(str(_anchors[k]) for k in ("require", "lookup", "integrity", "caught_by")),
           "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
           B.fmt(len(_rot)), B.fmt(len(_eq))))
+    A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `r12` 是落件的那一代**"
+      "（`receipts/citation_gate_r12.json` 等三件在 `%s` 那一代写进枝里）。两者的差别只有 `tip`/`branch`/"
+      "时间戳三格，页里的数一律取我在 `%s` 上重跑的那一趟，枝里那份具名为上一枚。" % (
+          REF_GEN, GEN, REF_GEN))
     A("")
     A("## 一、我上一手错在哪（这就是那类「句子跑在证据前面」）")
     A("")
@@ -295,7 +332,7 @@ def main():
     A("")
     A("## 六、下一件（两个待点，我不自作主张）")
     A("")
-    A("- ① ORD-0500 r11 我想把这枚闸接到出页那一扇门里：`stage_readings_r6.py` 现在每代跑它并把读数写进"
+    A("- ① ORD-0500 下一手（枝号由你定，我不自封）我想把这枚闸接到出页那一扇门里：`stage_readings_r6.py` 现在每代跑它并把读数写进"
       "本页，但**红不拦出页**。要不要我装成红就拒绝出页？装上不等于装好，我会带反件证明它真拦。")
     A("- ② `citation_audit_r8.py` 那把全线尺仍只报不改（别人名下 %s 条不 OK）。要我把同一条作者规则也"
       "用到那把尺上、好让号令者一眼看出每条该归谁，我就做；不做就停在这里等点名。" % B.fmt(

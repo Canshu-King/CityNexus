@@ -1,6 +1,6 @@
 {
   "tool": "pytest_r6",
-  "took_local": "2026-10-03T03:24:49.759003+08:00",
+  "took_local": "2026-10-03T05:00:59.347561+08:00",
   "exit": 0,
   "files": [
     "tests/test_qoder_ord0500_journey_refusal.py",
@@ -9,7 +9,7 @@
   "summary_lines": [
     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
-    "16 passed, 2 warnings in 2.09s"
+    "16 passed, 2 warnings in 3.22s"
   ],
   "private_db": "r6_pytest.db",
   "checkin_rows_after_the_arms": 9,
