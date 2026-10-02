@@ -16588,6 +16588,42 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:02 · 两笔落地：0504 花费页 r5（FF 十七笔收编）+ 0500 r8（FF 四笔，注释行号量回），尖 `4fac49f371da0820393d038700bddddafd1176d1`
+
+**〇、回验（落地后现读）**
+
+权威尖 `4fac49f371da0820393d038700bddddafd1176d1`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。
+
+- **0504 r5（da46954a 花费页）**：候选 `aa3016de0463…` 已在尖上（FF 十七笔收编）——两次 RECUT_ABORT 的真因是它改了没碰过的十四行行尾，r5 交零枚这种行，干净。
+- **0500 r8（0afdb49b 手机打卡门）**：候选 `1783ca68b65e…` → recut `4fac49f371da…`，`files 二十七比二十七 identical-to-lane-blob`，gate `READY_TO_LAND ff=True`。内容：把自家注释里四枚行号量回，让落地件经得起打开。
+
+**一、换代判定**
+
+两笔 diff 对 backend/frontend 产品路径的字节量待差分；若 bundle/后端树变则按 day24 形制换代（既定流程）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 r8 勘误（手机车道 0afdb49b）：00:57 那块把一处规律说成了一笔疏忽，而且点错了枚
+
+本块只取代 00:57 那块第一节里「我说错了一处」那条 bullet；其余各条与所有数照旧。原句说「枝里最后一笔提交的信息写了 25 枚」并点名 4f609f665220… —— 两样都不对：枝尖其实是 1783ca68b65e…（本块开头那条 ls-remote 可复算），而被点名的那一枚说的是另一回事。
+
+## 一、把枝里各笔提交信息逐枚读回来（两种写法都认，因为是我自己的散文）
+
+| 提交 | 信息里断言的写集 | 按现尖当场算出的写集 | 断言与当场差 |
+|---|---|---|---|
+| `1783ca68b65e075ca5a86a37e1a87200e03ec0a8` | 25 枚 | 27 枚 | +2 枚 |
+| `4f609f66522066c3157ec3a6a49fbca60bb0828e` | 24 枚 | 25 枚 | +1 枚 |
+
+- 差就是那 2 枚：一笔提交的信息只能说到它**之前**那趟判到的数，而它自己又是一枚提交。所以「信息里的写集数比这枚提交的真写集少」是这形状的必然，不是哪一笔打错。我 00:57 那块把它写成「一处说错并且点错枚」，是把一条规律说成了一笔疏忽——这句话本身才是那笔疏忽。
+- 枝尖这一枚 `1783ca68b65e075ca5a86a37e1a87200e03ec0a8` 的真判据仍以 landing 件那趟为准：写集 27 枚，合并进现尖 `569b8472b134e5562ef396e38681870b9c26536a` 后逐枚字节相同 27 枚，需要再 rebase 的 0 枚；远端回读与该件判的 commit 同一枚 = 真。
+- 已发布的提交与 00:57 那块都不改（规矩：勘误走新块，不改旧件）。本块没有别的新数。
+- 复算：`git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 refs/heads/review/newlane-ord0500-phone-checkin-entry-r8`；`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 log -3 --format=%H`；表中「当场算出」那列是 `git -C .../wt22 diff --name-only 569b8472b134e5562ef396e38681870b9c26536a..<那一枚> | 计数`。
+
+本页生成于 2026-10-03T01:00:47+08:00，两列数都是本块生成时现读的。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0504 r5 · 花费页复切到现尖 `569b8472…`；两次 RECUT_ABORT 的真因数出来了：我把没碰过的 14 行换了行尾，r5 交的是 0 枚这种行（车道 da46954a）
 
 **一、坐标**
