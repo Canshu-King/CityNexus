@@ -30,6 +30,23 @@ def _truthy_preference_value(raw: Any) -> bool:
     return bool(raw)
 
 
+def _preference_matches_candidate(key: str, tags: set[str]) -> bool:
+    """Evaluate a bounded positive or avoidance interest against provider tags.
+
+    Avoidance is still soft evidence: it changes ranking only.  Treating
+    ``avoid:museum`` as a first-class negative signal keeps a voluntary reject
+    from merely diluting every candidate's score.
+    """
+
+    normalized = str(key or "").strip().lower()
+    if normalized.startswith("avoid:"):
+        target = normalized.removeprefix("avoid:").strip()
+        if not target:
+            return False
+        return not (target in tags or f"category:{target}" in tags)
+    return normalized in tags or f"category:{normalized}" in tags
+
+
 def verified_interest_preference_fit(
     preferences: Iterable[Any],
     *,
@@ -58,7 +75,7 @@ def verified_interest_preference_fit(
             continue
         total_weight += weight
         key = str(getattr(item, "preference_key", "")).strip().lower()
-        if key in tags or f"category:{key}" in tags:
+        if _preference_matches_candidate(key, tags):
             matched_weight += weight
     if total_weight <= 0:
         return None
@@ -86,7 +103,7 @@ def verified_interest_preference_breakdown(
             continue
         source = str(getattr(item, "source", "")).upper()
         key = str(getattr(item, "preference_key", "")).strip().lower()
-        matched = key in tags or f"category:{key}" in tags
+        matched = _preference_matches_candidate(key, tags)
         if source == "LEARNED_SOFT":
             learned_total += weight
             learned_match += weight if matched else 0.0

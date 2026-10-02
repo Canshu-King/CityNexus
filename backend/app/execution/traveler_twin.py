@@ -39,6 +39,38 @@ def _load(value: str | None, fallback: Any) -> Any:
         return fallback
 
 
+def _as_utc(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def evidence_decay_factor(
+    evidence: TravelerPreferenceEvidence, *, now: datetime | None = None
+) -> float:
+    """Return bounded linear freshness without mutating the evidence row.
+
+    ``expires_at`` remains the hard expiry boundary.  Before that boundary the
+    evidence gradually loses ranking weight, while its raw source, provenance,
+    and authority class remain unchanged.
+    """
+
+    created = _as_utc(evidence.created_at)
+    expires = _as_utc(evidence.expires_at)
+    if created is None or expires is None or expires <= created:
+        return 1.0
+    current = now or datetime.now(timezone.utc)
+    remaining = (expires - current).total_seconds()
+    lifetime = (expires - created).total_seconds()
+    return round(max(0.0, min(1.0, remaining / lifetime)), 6)
+
+
 def _place_tags(session: Session, activity: Activity | None) -> set[str]:
     if activity is None or not activity.place_id:
         return set()
@@ -150,7 +182,8 @@ def _active_evidence(session: Session, traveler_id: str) -> list[TravelerPrefere
     )
     active: list[TravelerPreferenceEvidence] = []
     for row in rows:
-        if row.expires_at and datetime.fromisoformat(row.expires_at) <= now:
+        expires = _as_utc(row.expires_at)
+        if expires is not None and expires <= now:
             row.status = "EXPIRED"
             continue
         active.append(row)
@@ -224,30 +257,60 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
     learned: list[dict[str, Any]] = []
     for (dimension, direction), items in sorted(grouped.items()):
         count = sum(max(1, int(item.evidence_count)) for item in items)
-        strength = min(1.0, round(max(float(item.strength) for item in items), 3))
+        raw_strength = min(1.0, round(max(float(item.strength) for item in items), 3))
+        weighted_items = [
+            (item, evidence_decay_factor(item))
+            for item in items
+        ]
+        representative, representative_decay = max(
+            weighted_items,
+            key=lambda pair: (
+                float(pair[0].strength) * pair[1],
+                float(pair[0].confidence),
+                pair[0].created_at,
+            ),
+        )
+        effective_strength = min(
+            1.0,
+            round(float(representative.strength) * representative_decay, 3),
+        )
         confidence = min(0.95, round(max(float(item.confidence) for item in items), 3))
         evidence_class = max(
             items,
-            key=lambda item: (float(item.strength), float(item.confidence), item.created_at),
+            key=lambda item: (
+                float(item.strength) * evidence_decay_factor(item),
+                float(item.confidence),
+                item.created_at,
+            ),
         ).evidence_type
         learned.append(
             {
                 "dimension": dimension,
                 "direction": direction,
-                "strength": strength,
+                "strength": raw_strength,
+                "effective_strength": effective_strength,
+                "decay_factor": representative_decay,
                 "confidence": confidence,
                 "evidence_count": count,
                 "source": "LEARNED_SOFT",
                 "evidence_class": evidence_class,
-                "explanation": items[-1].explanation,
+                "explanation": representative.explanation,
                 "evidence_ids": [item.id for item in items],
                 "journey_ids": sorted({item.journey_id for item in items if item.journey_id}),
-                "last_evidence_at": items[-1].created_at,
-                "expires_at": items[-1].expires_at,
+                "last_evidence_at": max(item.created_at for item in items),
+                "expires_at": max(
+                    (item.expires_at for item in items if item.expires_at),
+                    default=None,
+                ),
                 "override_state": "EXPLICIT_WINS" if dimension in {item["dimension"] for item in explicit} else "LEARNED_ACTIVE",
             }
         )
     explicit_keys = {(item["category"], item["dimension"]) for item in explicit}
+    explicit_interest_directions = {
+        str(item["dimension"]).strip().lower()
+        for item in explicit
+        if str(item["category"]).strip().lower() == "interest"
+    }
     conflicts: list[dict[str, Any]] = []
     by_dimension: dict[str, set[str]] = defaultdict(set)
     for item in learned:
@@ -261,7 +324,10 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                     "resolution": "recent evidence and explicit mission win",
                 }
             )
-        if ("interest", dimension) in explicit_keys or ("mobility", dimension) in explicit_keys:
+        if any(
+            str(direction).removeprefix("avoid:") in explicit_interest_directions
+            for direction in directions
+        ) or ("mobility", dimension) in explicit_keys:
             conflicts.append(
                 {
                     "dimension": dimension,
@@ -272,6 +338,9 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
     conflict_by_dimension = {item["dimension"]: item for item in conflicts}
     for item in learned:
         item["conflict"] = conflict_by_dimension.get(item["dimension"])
+        learned_target = str(item["direction"]).removeprefix("avoid:").strip().lower()
+        if learned_target in explicit_interest_directions:
+            item["override_state"] = "EXPLICIT_WINS"
     now = _now()
     explicit_capabilities = capability_payload(session, traveler_id)
     snapshot = session.get(TravelerTwinSnapshot, str(traveler_id))
@@ -440,14 +509,18 @@ def planning_preference_items(
             )
     snapshot = refresh_snapshot(session, traveler_id)
     for item in _load(snapshot.learned_soft_preferences_json, []):
-        if item.get("dimension") in explicit_dimensions:
+        learned_direction = str(item.get("direction") or "").strip().lower()
+        learned_target = learned_direction.removeprefix("avoid:").strip()
+        if learned_direction in explicit_dimensions or learned_target in explicit_dimensions:
             continue
         items.append(
             SimpleNamespace(
                 category="interest",
                 preference_key=str(item.get("direction") or item.get("dimension")),
                 value_json="true",
-                weight=float(item.get("strength", 0.0)),
+                weight=float(
+                    item.get("effective_strength", item.get("strength", 0.0))
+                ),
                 source="LEARNED_SOFT",
             )
         )

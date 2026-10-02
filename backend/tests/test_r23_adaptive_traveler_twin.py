@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
@@ -13,6 +14,7 @@ from app.replanning.candidate_evidence import (
     verified_interest_preference_breakdown,
 )
 from app.services import _strategy_place_score
+from app.execution.traveler_twin import evidence_decay_factor
 from demo_stage import demo_reset_headers
 
 
@@ -166,3 +168,34 @@ def test_r23_english_opportunity_bounds_reach_mission_spec(monkeypatch) -> None:
 
     assert spec.max_cost_delta_minor == 1000
     assert spec.max_schedule_drift_min == 120
+
+
+def test_r24_avoidance_evidence_is_a_real_soft_negative_signal() -> None:
+    learned_avoidance = [
+        SimpleNamespace(
+            category="interest",
+            preference_key="avoid:museum",
+            value_json="true",
+            weight=1.0,
+            source="LEARNED_SOFT",
+        )
+    ]
+
+    assert verified_interest_preference_breakdown(
+        learned_avoidance, candidate_tags={"garden", "category:garden"}
+    )["effective_preference_fit"] == 1.0
+    assert verified_interest_preference_breakdown(
+        learned_avoidance, candidate_tags={"museum", "category:museum"}
+    )["effective_preference_fit"] == 0.0
+
+
+def test_r24_learned_evidence_decays_before_hard_expiry() -> None:
+    now = datetime(2026, 10, 3, 0, 0, tzinfo=timezone.utc)
+    evidence = SimpleNamespace(
+        created_at=(now - timedelta(days=90)).isoformat(),
+        expires_at=(now + timedelta(days=90)).isoformat(),
+    )
+
+    factor = evidence_decay_factor(evidence, now=now)
+
+    assert 0.49 <= factor <= 0.51
