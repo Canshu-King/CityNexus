@@ -1,0 +1,13 @@
+{
+ "file": "e2e/qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+ "run_id": "cur16-e766b154-ord0537-1431",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "arms": [
+  "reach",
+  "two_states",
+  "under_the_bar"
+ ]
+}

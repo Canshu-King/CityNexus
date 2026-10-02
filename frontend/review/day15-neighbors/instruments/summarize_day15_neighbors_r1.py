@@ -73,7 +73,10 @@ def load(path):
 
 def main():
     table = {}
-    for kind, pattern in (("day15", "report_neighbors_%s.json"), ("control", "report_control_%s.json")):
+    # Three columns, one rule: the report file names the stack it came from, and the table is keyed by
+    # that. day15 = the commander's shared stack, control = this lane's store with the same bytes,
+    # cur16 = the authoritative tip with one pristine store per neighbour.
+    for kind, pattern in (("day15", "report_neighbors_%s.json"), ("control", "report_control_%s.json"), ("cur16", "report_cur16_%s.json")):
         for stem in ("ord0502", "ord0497", "ord0530", "ord0537"):
             path = os.path.join(RUN, pattern % stem)
             if not os.path.exists(path):

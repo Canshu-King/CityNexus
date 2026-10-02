@@ -1,0 +1,30 @@
+{
+  "how_this_was_taken": "Qoder Playwright plugin (browser_navigate + browser_evaluate) against this lane's own current-line front, in a fresh browser context with no stored journey id -- the same surface ORD-0502's C1 waits on, read on the generation the 包工头 named rather than inferred from source.",
+  "generation_under_test": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+  "front": "http://127.0.0.1:4986/v8/hub",
+  "taken_at_local": "2026-10-02 14:55 +08:00",
+  "path": "/v8/hub",
+  "ids_total": 70,
+  "ids_distinct": 68,
+  "body_inner_text_chars": 168,
+  "anchors_a_clean_device_meets": {
+    "trial-setup": true,
+    "trial-scroll": true,
+    "trial-steps": true,
+    "trial-step-1": true,
+    "trial-city": true,
+    "trial-supported-cities": true
+  },
+  "anchors_the_mainline_instrument_waits_for": {
+    "today-heading": false,
+    "hub-secondary-actions": false,
+    "trial-open": false,
+    "trips-tabs": false,
+    "trips-tab-bookings": false,
+    "trips-tab-itinerary": false,
+    "stop-checkin": false,
+    "v8-map-footprint-filter": false
+  },
+  "same_reading_on_the_previous_generation": "receipts/hub_surface_on_day15_r1.json -- ids_total, ids_distinct and body_inner_text_chars are identical there (70 / 68 / 168), so this is not a regression the line just introduced",
+  "reading_for_the_probe": "a clean device landing on /v8/hub is handed the onboarding wizard's first step, not a hub with a journey. An instrument that waits for `today-heading` and then for `trial-open` / the 换城 button has neither anchor to land on and reads as an arm ceiling timeout, which is a missing anchor, not a broken screen."
+}

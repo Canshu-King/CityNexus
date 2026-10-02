@@ -1,0 +1,163 @@
+{
+ "bundle_built_from_tip": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+ "fronts": {
+  "4985": {
+   "neighbour": "ORD-0502 phone mainline",
+   "shell_http_status": 200,
+   "entry_from_served_shell": "/assets/index-DUxCB_4m.js",
+   "listeners_on_port": [
+    "15748"
+   ],
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_bytes": 1598087,
+   "disk_asset_bytes": 1598087,
+   "served_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "disk_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "bytes_equal": true,
+   "index_bytes_equal": true
+  },
+  "4986": {
+   "neighbour": "ORD-0497 footprints on map",
+   "shell_http_status": 200,
+   "entry_from_served_shell": "/assets/index-DUxCB_4m.js",
+   "listeners_on_port": [
+    "41048"
+   ],
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_bytes": 1598087,
+   "disk_asset_bytes": 1598087,
+   "served_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "disk_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "bytes_equal": true,
+   "index_bytes_equal": true
+  },
+  "4987": {
+   "neighbour": "ORD-0530 footprints by day",
+   "shell_http_status": 200,
+   "entry_from_served_shell": "/assets/index-DUxCB_4m.js",
+   "listeners_on_port": [
+    "33632"
+   ],
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_bytes": 1598087,
+   "disk_asset_bytes": 1598087,
+   "served_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "disk_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "bytes_equal": true,
+   "index_bytes_equal": true
+  },
+  "4988": {
+   "neighbour": "ORD-0537 map toggle reach",
+   "shell_http_status": 200,
+   "entry_from_served_shell": "/assets/index-DUxCB_4m.js",
+   "listeners_on_port": [
+    "44768"
+   ],
+   "outDir_third_proof": "NOT_AVAILABLE_BY_CMDR",
+   "asset_http_status": 200,
+   "served_asset_bytes": 1598087,
+   "disk_asset_bytes": 1598087,
+   "served_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "disk_sha1": "9e01756933316ede01b967babc23f672d3f4490f",
+   "bytes_equal": true,
+   "index_bytes_equal": true
+  }
+ },
+ "apis": {
+  "8780": {
+   "neighbour": "ORD-0502 phone mainline",
+   "marker_city": "CNX-CUR16-502",
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "other_neighbours_markers": {
+    "CNX-CUR16-497": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-530": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-537": {
+     "http_status": 200,
+     "rows": 0
+    }
+   },
+   "listeners_on_port": [
+    "41052"
+   ]
+  },
+  "8781": {
+   "neighbour": "ORD-0497 footprints on map",
+   "marker_city": "CNX-CUR16-497",
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "other_neighbours_markers": {
+    "CNX-CUR16-502": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-530": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-537": {
+     "http_status": 200,
+     "rows": 0
+    }
+   },
+   "listeners_on_port": [
+    "35712"
+   ]
+  },
+  "8782": {
+   "neighbour": "ORD-0530 footprints by day",
+   "marker_city": "CNX-CUR16-530",
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "other_neighbours_markers": {
+    "CNX-CUR16-502": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-497": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-537": {
+     "http_status": 200,
+     "rows": 0
+    }
+   },
+   "listeners_on_port": [
+    "40580"
+   ]
+  },
+  "8783": {
+   "neighbour": "ORD-0537 map toggle reach",
+   "marker_city": "CNX-CUR16-537",
+   "marker_http_status": 200,
+   "marker_rows": 1,
+   "other_neighbours_markers": {
+    "CNX-CUR16-502": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-497": {
+     "http_status": 200,
+     "rows": 0
+    },
+    "CNX-CUR16-530": {
+     "http_status": 200,
+     "rows": 0
+    }
+   },
+   "listeners_on_port": [
+    "39920"
+   ]
+  }
+ }
+}

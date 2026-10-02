@@ -1,0 +1,19 @@
+{
+  "run_id": "cur16-e766b154-ord0502-1431",
+  "chain": "INCOMPLETE C7b:FAIL",
+  "cells": [
+    "C7b"
+  ],
+  "readings": [
+    {
+      "cell": "C7b",
+      "state": "FAIL",
+      "route": "/v8/access → /v8/shared/<token>",
+      "viewport_px": 390,
+      "rendered": "",
+      "hit": {},
+      "legs": [],
+      "failure": "TimeoutError: locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('access-invite-submit') to be visible\u001b[22m\n"
+    }
+  ]
+}

@@ -295,6 +295,214 @@
      "locator_wait": null
     }
    ]
+  },
+  "cur16/ord0502": {
+   "arms": 8,
+   "passed": 0,
+   "failed": 3,
+   "timed_out": 5,
+   "rows": [
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C7 the walk cannot claim green it did not earn",
+     "state": "failed",
+     "duration_ms": 17,
+     "first_error_line": "Error: the walk never recorded C1",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C1 hub 拿到行程",
+     "state": "timedOut",
+     "duration_ms": 1048998,
+     "first_error_line": "\u001b[31mTest timeout of 420000ms exceeded.\u001b[39m",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C2 粘贴导入地点",
+     "state": "timedOut",
+     "duration_ms": 420273,
+     "first_error_line": "\u001b[31mTest timeout of 420000ms exceeded.\u001b[39m",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C3 落到那一天",
+     "state": "timedOut",
+     "duration_ms": 420104,
+     "first_error_line": "\u001b[31mTest timeout of 420000ms exceeded.\u001b[39m",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C4 打卡（手机入口未接上则具名 NOT_REACHED_UI）",
+     "state": "timedOut",
+     "duration_ms": 420115,
+     "first_error_line": "\u001b[31mTest timeout of 420000ms exceeded.\u001b[39m",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C5 足迹屏读到那一枚",
+     "state": "failed",
+     "duration_ms": 50229,
+     "first_error_line": "Error: TimeoutError: locator.waitFor: Timeout 20000ms exceeded.",
+     "locator_wait": "getByTestId('footprint-panel') to be visible\u001b[22m"
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C6 长图导出成图（屏上字节 == 成图 IHDR 与文件长）",
+     "state": "timedOut",
+     "duration_ms": 420379,
+     "first_error_line": "\u001b[31mTest timeout of 420000ms exceeded.\u001b[39m",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-ord0502-phone-mainline.spec.ts",
+     "arm": "C7b 分享 token 在第二个上下文里打开",
+     "state": "failed",
+     "duration_ms": 21611,
+     "first_error_line": "Error: TimeoutError: locator.waitFor: Timeout 20000ms exceeded.",
+     "locator_wait": "getByTestId('access-invite-submit') to be visible\u001b[22m"
+    }
+   ]
+  },
+  "cur16/ord0497": {
+   "arms": 5,
+   "passed": 5,
+   "failed": 0,
+   "timed_out": 0,
+   "rows": [
+    {
+     "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+     "arm": "ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read",
+     "state": "passed",
+     "duration_ms": 9606,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+     "arm": "ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back",
+     "state": "passed",
+     "duration_ms": 10502,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+     "arm": "ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and does not survive",
+     "state": "passed",
+     "duration_ms": 16032,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+     "arm": "ORD-0497 zh 390x844 arm=read_never_arrived cutting the read leg invents no stamp",
+     "state": "passed",
+     "duration_ms": 4561,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0497-footprints-on-map.spec.ts",
+     "arm": "ORD-0497 zh 390x844 the arms write their readings",
+     "state": "passed",
+     "duration_ms": 5,
+     "first_error_line": "",
+     "locator_wait": null
+    }
+   ]
+  },
+  "cur16/ord0530": {
+   "arms": 5,
+   "passed": 5,
+   "failed": 0,
+   "timed_out": 0,
+   "rows": [
+    {
+     "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+     "arm": "ORD-0530 zh 390x844 arm=answered_empty invents no stamp and no day",
+     "state": "passed",
+     "duration_ms": 5153,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+     "arm": "ORD-0530 zh 390x844 arm=grouped_by_the_trips_own_day",
+     "state": "passed",
+     "duration_ms": 9259,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+     "arm": "ORD-0530 zh 1280x900 arm=grouped_by_the_trips_own_day",
+     "state": "passed",
+     "duration_ms": 7914,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+     "arm": "ORD-0530 zh 390x844 arm=retry_after_the_door_stops keeps nothing it did not re-read",
+     "state": "passed",
+     "duration_ms": 6218,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+     "arm": "ORD-0530 zh 390x844 arm=refused_and_unreachable say which step did not answer",
+     "state": "passed",
+     "duration_ms": 6873,
+     "first_error_line": "",
+     "locator_wait": null
+    }
+   ]
+  },
+  "cur16/ord0537": {
+   "arms": 4,
+   "passed": 4,
+   "failed": 0,
+   "timed_out": 0,
+   "rows": [
+    {
+     "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+     "arm": "ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen",
+     "state": "passed",
+     "duration_ms": 9060,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+     "arm": "ORD-0537 zh 390x844 arm=two_states the census and the words both move",
+     "state": "passed",
+     "duration_ms": 10840,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+     "arm": "ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out",
+     "state": "passed",
+     "duration_ms": 8948,
+     "first_error_line": "",
+     "locator_wait": null
+    },
+    {
+     "file": "qoder-bac10f40-ord0537-map-toggle-reach.spec.ts",
+     "arm": "ORD-0537 zh the arms kept their own files",
+     "state": "passed",
+     "duration_ms": 5,
+     "first_error_line": "",
+     "locator_wait": null
+    }
+   ]
   }
  },
  "ord0502_walk_artifacts": {

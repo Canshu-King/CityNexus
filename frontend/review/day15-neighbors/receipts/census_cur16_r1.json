@@ -1,0 +1,643 @@
+{
+ "generation_under_test": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+ "per_spec_names": {
+  "ord0502": [
+   "access-chosen",
+   "access-invite-submit",
+   "access-panel",
+   "footprint-empty",
+   "footprint-panel",
+   "footprint-row",
+   "footprint-tally",
+   "inbox-tab-paste",
+   "poster-download",
+   "poster-open",
+   "poster-result",
+   "shared-refusal-code",
+   "shared-refused",
+   "shared-screen",
+   "stop-checkin",
+   "stop-checkin-notice",
+   "today-heading",
+   "trial-city",
+   "trial-create",
+   "trial-next",
+   "trial-open",
+   "trip-itinerary",
+   "trip-poster",
+   "trips-tab-bookings",
+   "trips-tab-itinerary",
+   "v13-2-anchor-role",
+   "v13-2-confirm",
+   "v13-2-memory",
+   "v13-2-save-corrections",
+   "v13-2-smart-apply"
+  ],
+  "ord0497": [
+   "stop-checkin",
+   "v8-map-footprint-filter",
+   "v8-map-footprint-state",
+   "v8-maplibre-panel"
+  ],
+  "ord0530": [
+   "footprint-day",
+   "footprint-day-group",
+   "footprint-day-zone",
+   "footprint-empty",
+   "footprint-no-journey",
+   "footprint-panel",
+   "footprint-refused",
+   "footprint-retry",
+   "footprint-row",
+   "footprint-tally",
+   "footprint-unreachable",
+   "stop-checkin",
+   "trip-itinerary"
+  ],
+  "ord0537": [
+   "stop-checkin",
+   "v8-map-footprint-filter",
+   "v8-map-footprint-state"
+  ]
+ },
+ "census": {
+  "access-chosen": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "access-invite-submit": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "access-panel": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-day": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-day-group": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-day-zone": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-empty": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-no-journey": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-panel": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-refused": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-retry": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "footprint-row": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-tally": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-unreachable": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0530"
+   ],
+   "shared_by_n": 1
+  },
+  "inbox-tab-paste": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "poster-download": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "poster-open": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "poster-result": {
+   "present": true,
+   "files": [
+    "2"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "shared-refusal-code": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "shared-refused": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "shared-screen": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "stop-checkin": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0497",
+    "ord0530",
+    "ord0537"
+   ],
+   "shared_by_n": 4
+  },
+  "stop-checkin-notice": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "today-heading": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trial-city": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trial-create": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trial-next": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trial-open": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trip-itinerary": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "trip-poster": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trips-tab-bookings": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trips-tab-itinerary": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v13-2-anchor-role": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v13-2-confirm": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v13-2-memory": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v13-2-save-corrections": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v13-2-smart-apply": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "v8-map-footprint-filter": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0497",
+    "ord0537"
+   ],
+   "shared_by_n": 2
+  },
+  "v8-map-footprint-state": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0497",
+    "ord0537"
+   ],
+   "shared_by_n": 2
+  },
+  "v8-maplibre-panel": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0497"
+   ],
+   "shared_by_n": 1
+  }
+ },
+ "totals": {
+  "names_asked": 40,
+  "names_shared_by_more_than_one_spec": 8,
+  "names_absent_from_the_trees_source": 3
+ },
+ "shared": {
+  "footprint-empty": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-panel": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-row": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "footprint-tally": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "stop-checkin": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0497",
+    "ord0530",
+    "ord0537"
+   ],
+   "shared_by_n": 4
+  },
+  "trip-itinerary": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0502",
+    "ord0530"
+   ],
+   "shared_by_n": 2
+  },
+  "v8-map-footprint-filter": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0497",
+    "ord0537"
+   ],
+   "shared_by_n": 2
+  },
+  "v8-map-footprint-state": {
+   "present": true,
+   "files": [
+    "1"
+   ],
+   "hits": 1,
+   "asked_by": [
+    "ord0497",
+    "ord0537"
+   ],
+   "shared_by_n": 2
+  }
+ },
+ "absent": {
+  "trial-open": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trips-tab-bookings": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  },
+  "trips-tab-itinerary": {
+   "present": false,
+   "files": [],
+   "hits": 0,
+   "asked_by": [
+    "ord0502"
+   ],
+   "shared_by_n": 1
+  }
+ }
+}
