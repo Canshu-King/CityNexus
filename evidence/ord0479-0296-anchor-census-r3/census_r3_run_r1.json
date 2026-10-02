@@ -1,0 +1,38 @@
+{
+ "tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "sparse_roots": [
+  "agent-mcp",
+  "backend",
+  "contracts",
+  "data",
+  "frontend",
+  "qoder-handoff",
+  "review",
+  "tools"
+ ],
+ "review_in_sparse": true,
+ "tracked_review_siblings": 44,
+ "sibling_sample": [
+  "BREADCRUMB_MEASURE_R1.txt",
+  "CODEGEN_CONTROL_R1.txt",
+  "CONTROL_REDS.json"
+ ],
+ "arms_reading_siblings": [
+  {
+   "file": "backend/tests/test_qoder_ord0402_recycle_bin.py",
+   "first_line_with_review_path": 11,
+   "text": "function as recorded at the baseline tip in `review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json`,",
+   "such_lines": 5
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "first_line_with_review_path": 24,
+   "text": "the read-only census in `review/ord0496/store_shape_census_r1.py` measures 134 of 134 activity",
+   "such_lines": 2
+  }
+ ],
+ "pytest_files": 8,
+ "pytest_rc": 0,
+ "pytest_summary": "98 passed, 2 warnings in 13.19s",
+ "failed_arms": []
+}
