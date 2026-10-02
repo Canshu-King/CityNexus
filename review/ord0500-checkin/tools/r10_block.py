@@ -244,7 +244,7 @@ def main():
     A("现尖 `%s`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-"
       "entry-%s` = `%s`，%s，合并预测树 `%s`，merge-tree 退出码 %s，写集 %s 枚逐枚字节相同 %s 枚、"
       "需要再 rebase %s 枚。**产品改动就 %s 枚文件**（`git diff --name-only` 现读，全是裁③那一笔删除与"
-      "它自己的注释，逐枚 `+%s/−%s`），本手其余 %s 枚改动全在 `review/ord0500-checkin/` 里（发射器对"
+      "它自己的注释，逐枚 %s），本手其余 %s 枚改动全在 `review/ord0500-checkin/` 里（发射器对"
       "这一格有 `ABORT_STRAY_PATHS` 兜底，越界一枚就不生成页）。" % (
           live_tip, REF_GEN, remote,
           ("从这一枚尖自己身上分叉（`fork_point` 相等 = 真）" if forked_now else
