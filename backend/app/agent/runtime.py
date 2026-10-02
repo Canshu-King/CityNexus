@@ -483,6 +483,23 @@ def _result_for_model(result: Any) -> str:
     return _json_text({"result": result})
 
 
+def _tool_result_advances_state(tool_name: str, result: Any) -> bool:
+    """Return whether a tool result created a new domain observation epoch.
+
+    Inspection calls are intentionally repeatable, but a repeat after a
+    successful domain action must not be mistaken for an infinite loop. The
+    runtime only advances the epoch on server-owned evidence of change; model
+    prose and failed tool calls never reset the repetition guard.
+    """
+
+    if not isinstance(result, dict) or result.get("error"):
+        return False
+    if tool_name == "request_replan":
+        proposal = result.get("proposal")
+        return isinstance(proposal, dict) and bool(proposal.get("id"))
+    return tool_name in _MUTATION_TOOLS and result.get("executed") is True
+
+
 def _server_completion_contract(
     tool_steps: list[dict[str, Any]], *, run_status: str
 ) -> dict[str, Any]:
@@ -721,7 +738,11 @@ class DeepSeekJourneyAgent:
         final_text = ""
         sequence = 0
         tool_trace: list[dict[str, Any]] = []
-        seen_calls: set[tuple[str, str]] = set()
+        # A repeated inspection is only a loop while the domain state is
+        # unchanged. request_replan/accepted mutations advance this epoch so
+        # the model can inspect newly-created server facts before deciding.
+        state_epoch = 0
+        seen_calls: set[tuple[str, str, int]] = set()
         tool_counts: dict[str, int] = {}
         acceptance_nudge_sent = False
         try:
@@ -826,8 +847,9 @@ class DeepSeekJourneyAgent:
                             "content": _result_for_model(result),
                         })
                         continue
-                    signature = (tool_name, json.dumps(arguments, ensure_ascii=False, sort_keys=True))
-                    if signature in seen_calls:
+                    signature = json.dumps(arguments, ensure_ascii=False, sort_keys=True)
+                    repetition_key = (tool_name, signature, state_epoch)
+                    if repetition_key in seen_calls:
                         result = {
                             "tool": tool_name,
                             "error": "tool loop repetition stopped",
@@ -846,7 +868,7 @@ class DeepSeekJourneyAgent:
                         final_text = "Agent stopped a repeated tool request before another domain action."
                         messages.append({"role": "tool", "tool_call_id": call_id, "content": _result_for_model(result)})
                         continue
-                    seen_calls.add(signature)
+                    seen_calls.add(repetition_key)
                     sequence += 1
                     arguments.setdefault("journey_id", journey.id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
@@ -1021,6 +1043,8 @@ class DeepSeekJourneyAgent:
                                 name="domain.mutation",
                                 attributes={"tool_name": tool_name, "executed": True},
                             )
+                    if _tool_result_advances_state(tool_name, result):
+                        state_epoch += 1
                     messages.append(
                         {
                             "role": "tool",
