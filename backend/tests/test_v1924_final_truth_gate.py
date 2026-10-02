@@ -161,6 +161,26 @@ def test_v1924_shared_gate_accepts_valid_arrival_control() -> None:
     assert list(result.failures) == []
 
 
+def test_v1924_shared_gate_normalizes_legacy_anchor_role_case() -> None:
+    """Generic compose's historical ``:ARRIVAL-anchor`` still matches C4 truth."""
+
+    legacy_key = "v12:J:ARRIVAL-anchor"
+    legacy_anchor = FeasibilityActivity(
+        key=legacy_key,
+        place_id=ARRIVAL_KEY,
+        start_at=_at(12, 30),
+        end_at=_at(12, 50),
+        cost_minor=0,
+        currency="EUR",
+        metadata={"semantic_key": legacy_key},
+    )
+    result = evaluate_feasibility(
+        _context([_lock(ARRIVAL_KEY, _at(12, 30), "START", "ARRIVAL")], [ARRIVAL_KEY, "p"]),
+        [legacy_anchor, _act("p", _at(13, 20), _at(14, 20))],
+    )
+    assert result.passed is True, result.failures
+
+
 # --------------------------------------------------------------------------
 # F05 — an anchor that legitimately defines the journey edge is not "outside"
 # --------------------------------------------------------------------------

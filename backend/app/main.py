@@ -7917,7 +7917,18 @@ def _activity_routing_key(item: Activity | None) -> str | None:
         return None
     metadata = _json_object(item.metadata_json, {})
     semantic = str(metadata.get("semantic_key") or "").strip()
-    return semantic or item.place_id or item.city_service_id
+    value = semantic or item.place_id or item.city_service_id
+    if not value:
+        return None
+    # Older composition rows persisted the anchor role in upper case while
+    # the live mobility snapshot uses the canonical lower-case role.  Keep the
+    # semantic identity intact, but normalize only this structural suffix so
+    # read-time receipts and the deterministic gate address the same edge.
+    for role in ("arrival", "departure"):
+        suffix = f":{role}-anchor"
+        if value.casefold().endswith(suffix):
+            return value[:-len(suffix)] + suffix
+    return value
 
 
 def _plan_mobility_eligibility_receipts(
