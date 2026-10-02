@@ -156,6 +156,28 @@ def _table_values_around(path: str, line_no: int) -> list[str]:
     return values
 
 
+def _named_table_lines(path: str, symbol: str) -> list[int]:
+    """The line numbers of the `key: "value"` entries inside one named object literal.
+
+    ORD-0479's own anchor must not be a line number: the shipped file moves under upstream edits and a
+    frozen number reports red for a ruler that is reading correctly (CMDR 07:57 ②). So the site is
+    found by the symbol that names it, exactly as `_table_values_around` does for the values.
+    """
+
+    lines = (REPO / path).read_text(encoding="utf-8", errors="replace").splitlines()
+    head = [i for i, l in enumerate(lines)
+            if re.match(r"^(export )?const %s\b" % re.escape(symbol), l) and l.rstrip().endswith("{")]
+    assert len(head) == 1, (path, symbol, head)
+    entries = []
+    for offset, line in enumerate(lines[head[0] + 1:], start=head[0] + 2):
+        if line.startswith("};"):
+            break
+        if re.match(r'^\s*[A-Za-z_][A-Za-z0-9_]*\s*:\s*"', line):
+            entries.append(offset)
+    assert entries, (path, symbol)
+    return entries
+
+
 def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> None:
     """真树上：C07 那句断言成立；而且每一处被赦免的行，都能脱离尺自己再证一遍。
 
@@ -180,8 +202,13 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: the table this order was opened for is among what the ruler forgives - found by the symbol that
+    #: names it, so an upstream edit above the table cannot make a reading ruler report red
+    forgiven_in_site = sorted(e["line"] for e in exemptions if e["path"] == SITE)
+    table_lines = _named_table_lines(SITE, "REFUSAL_KEY")
+    assert any(line in table_lines for line in forgiven_in_site), {
+        "site": SITE, "refusal_key_lines": [table_lines[0], table_lines[-1]],
+        "forgiven_lines_at_this_site": forgiven_in_site, "exemptions": exemptions}
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红

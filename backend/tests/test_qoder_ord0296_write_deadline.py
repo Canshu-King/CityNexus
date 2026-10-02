@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -198,20 +199,47 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     扫的是产品源：`app/**` 里不许再出现第二处内联的锁等待数字。
     """
 
+    #: the only ms values a worker may wait on its own connection; each is shorter than the request
+    #: path's budget by design, and they are named here rather than by which file happens to hold one
+    WORKER_WAIT_MS = {200, 500, 1500}
+    #: `PRAGMA busy_timeout = 500` - a number written as the lock wait for one connection
+    INLINE_WAIT = re.compile(r"busy_timeout\s*=\s*(\d+)")
+    #: the single source, found by the symbol that declares it, not by a line number
+    KNOB_DECLARATION = re.compile(r"^\s*write_busy_timeout_ms: int = int\(os\.getenv\(")
+
     offenders: dict[str, list[int]] = {}
-    others: dict[str, list[str]] = {}
+    numeric_sources: dict[str, list[str]] = {}
+    unexplained: dict[str, list[str]] = {}
     for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
+        rel = str(path.relative_to(BACKEND_ROOT))
         for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if any(needle in line for needle in ("busy_timeout=30000", "busy_timeout = 30000",
                                                  '"timeout": 30')):
-                offenders.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(i)
-            elif "busy_timeout" in line:
-                others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
+                offenders.setdefault(rel, []).append(i)
+            elif "busy_timeout" not in line:
+                continue
+            elif KNOB_DECLARATION.match(line):
+                numeric_sources.setdefault("KNOB_DECLARATION", []).append(f"{rel}:{i}")
+            elif INLINE_WAIT.search(line):
+                ms = int(INLINE_WAIT.search(line).group(1))
+                # a short wait belongs to a worker-owned operations module, and only at a named value
+                gate = "worker operations module" if rel.endswith("_operations.py") else None
+                if ms not in WORKER_WAIT_MS or gate is None:
+                    unexplained.setdefault(rel, []).append(f"{i}: value {ms} ms, {gate or rel}")
+                else:
+                    numeric_sources.setdefault("WORKER_SHORT_WAIT", []).append(f"{rel}:{i}={ms}")
+            else:
+                numeric_sources.setdefault("MENTIONS_WITHOUT_A_NUMBER", []).append(f"{rel}:{i}")
     assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
-    # 其余提到 busy_timeout 的地方是 worker 自己的短等待（500/1500/200 ms），射程不同，这里点名不吞掉
-    assert sorted(Path(k).name for k in others) == [
-        "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
-        "write_deadline.py"], {k: v for k, v in others.items()}
+    #: what replaces the frozen filename roster (CMDR 07:57 ②): the lock wait is single-sourced if the
+    #: number is written in exactly one place and every *other* wait number is a named worker scope.
+    #: A new mention that only asks the module cannot make this red; a new number can.
+    assert unexplained == {}, {
+        "a lock-wait number is written somewhere the rule does not name": unexplained,
+        "what the scan accepted": {k: v for k, v in numeric_sources.items() if k != "MENTIONS_WITHOUT_A_NUMBER"},
+        "mentions that carry no number": numeric_sources["MENTIONS_WITHOUT_A_NUMBER"],
+    }
+    assert len(numeric_sources["KNOB_DECLARATION"]) == 1, numeric_sources["KNOB_DECLARATION"]
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
     assert 'timeout": write_busy_timeout_seconds()' in session_src, "session.py must ask the module"
