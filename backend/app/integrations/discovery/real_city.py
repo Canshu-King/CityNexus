@@ -9,7 +9,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 from uuid import uuid4
 
 import httpx
@@ -54,12 +54,16 @@ def _place_metadata(
     value is never exposed as proof of a free attraction.
     """
 
+    candidate_metadata = dict(getattr(candidate, "metadata", {}) or {})
+    cost_evidence = canonical_cost_evidence(
+        cost_evidence, candidate_metadata.get("tags")
+    )
     metadata: dict[str, Any] = {
-        **candidate.metadata,
+        **candidate_metadata,
         "discovery_mode": mode,
         "cost_evidence": cost_evidence,
     }
-    if candidate.provider_key == "openstreetmap-replay" and mode in {
+    if getattr(candidate, "provider_key", None) == "openstreetmap-replay" and mode in {
         "replay", "captured_replay", "replay-fallback"
     }:
         # Replay is never LIVE.  This explicit envelope permits sealed test/replay
@@ -237,6 +241,44 @@ def normalize_opening_hours(raw: Any) -> dict[str, Any]:
     }
 
 
+def _fee_is_explicitly_free(tags: Mapping[str, Any] | None) -> bool:
+    value = (tags or {}).get("fee")
+    return str(value or "").strip().casefold() in {"no", "false", "0", "free", "免费"}
+
+
+def canonical_cost_evidence(
+    cost_evidence: Mapping[str, Any] | None,
+    tags: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Normalize an explicit provider free assertion without guessing currency.
+
+    Older catalog rows were written as ``KNOWN / 0 / CNY`` for OSM ``fee=no``.
+    That is not a paid CNY observation and must not make a non-CNY Journey fail
+    with a currency mismatch.  The fee tag is the required provider evidence;
+    a bare zero, compatibility field, or missing tag remains unchanged.
+    """
+
+    evidence = dict(cost_evidence or {})
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if (
+        _fee_is_explicitly_free(tags)
+        and status in {"KNOWN", "KNOWN_FREE", "VERIFIED_PROVIDER"}
+        and amount is not None
+        and int(amount) == 0
+    ):
+        evidence.update(
+            {
+                "status": "KNOWN",
+                "amount_minor": 0,
+                "currency": None,
+                "currency_agnostic": True,
+                "evidence_basis": "OSM_FEE_NO",
+            }
+        )
+    return evidence
+
+
 def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict[str, Any]:
     values = tags or {}
     tagged_currency = str(values.get("currency") or values.get("currency:code") or "").strip().upper()
@@ -246,8 +288,17 @@ def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict
     # generic ``charge`` key.  Adult admission is the useful default for a
     # general itinerary; child/disabled rates must not silently replace it.
     charge = values.get("charge:adult") or values.get("charge") or values.get("price")
-    if isinstance(fee, str) and fee.casefold() in {"no", "false", "free", "免费"}:
-        return {"status": "KNOWN", "amount_minor": 0, "currency": currency, "source": source}
+    # An explicit adult charge outranks a generic fee flag.  This avoids
+    # treating inconsistent ``fee=no`` + ``charge:adult`` observations as free.
+    if charge is None and _fee_is_explicitly_free(values):
+        return {
+            "status": "KNOWN",
+            "amount_minor": 0,
+            "currency": None,
+            "currency_agnostic": True,
+            "evidence_basis": "OSM_FEE_NO",
+            "source": source,
+        }
     candidate = charge if charge is not None else fee
     if candidate is not None:
         candidate_text = str(candidate)

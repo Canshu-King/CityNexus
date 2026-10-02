@@ -348,6 +348,8 @@ def test_free_museum_question_requests_explicit_fee_no_and_keeps_known_zero():
     assert attempts[0]["answered"] is True
     assert candidates[0].cost_evidence["status"] == "KNOWN"
     assert candidates[0].cost_evidence["amount_minor"] == 0
+    assert candidates[0].cost_evidence["currency"] is None
+    assert candidates[0].cost_evidence["currency_agnostic"] is True
 
 
 def test_httpx_transport_signature_matches_the_replay_contract():

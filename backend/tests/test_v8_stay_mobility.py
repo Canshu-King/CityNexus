@@ -10,7 +10,11 @@ import app.main as main_module
 from app.db.models import TravelerPreferenceEvidence
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
-from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
+from app.integrations.discovery.real_city import (
+    canonical_cost_evidence,
+    cost_evidence_from_tags,
+    normalize_opening_hours,
+)
 
 client = TestClient(main_module.app)
 
@@ -40,6 +44,36 @@ def test_osm_fee_boolean_is_not_currency_and_adult_charge_is_authoritative() -> 
         "currency": "JPY",
         "source": "nominatim",
     }
+
+    free = cost_evidence_from_tags({"fee": "no"}, source="overpass")
+    assert free == {
+        "status": "KNOWN",
+        "amount_minor": 0,
+        "currency": None,
+        "currency_agnostic": True,
+        "evidence_basis": "OSM_FEE_NO",
+        "source": "overpass",
+    }
+    contradictory = cost_evidence_from_tags(
+        {"fee": "no", "charge:adult": "1200 JPY"}, source="overpass"
+    )
+    assert contradictory["amount_minor"] == 1200
+    assert contradictory["currency"] == "JPY"
+
+
+def test_cached_osm_fee_no_normalizes_old_zero_cny_without_promoting_bare_zero() -> None:
+    normalized = canonical_cost_evidence(
+        {"status": "KNOWN", "amount_minor": 0, "currency": "CNY"},
+        {"fee": "no"},
+    )
+    assert normalized["currency"] is None
+    assert normalized["currency_agnostic"] is True
+    assert normalized["evidence_basis"] == "OSM_FEE_NO"
+
+    bare_zero = canonical_cost_evidence(
+        {"status": "UNKNOWN", "amount_minor": 0, "currency": "CNY"}, {}
+    )
+    assert bare_zero == {"status": "UNKNOWN", "amount_minor": 0, "currency": "CNY"}
 
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     with SessionLocal() as session:

@@ -227,6 +227,7 @@ from app.integrations.china.amap import amap_status, provider_for_region
 from app.integrations.context.open_meteo import OpenMeteoContextProvider
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.integrations.discovery.real_city import (
+    canonical_cost_evidence,
     capture_real_city_candidates,
     live_failure_reason,
     normalize_opening_hours,
@@ -7088,7 +7089,10 @@ def _replacement_activity_metadata(
     if not isinstance(opening, dict) or not opening:
         opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
     raw_cost = place_metadata.get("cost_evidence")
-    cost_evidence = dict(raw_cost) if isinstance(raw_cost, Mapping) else {}
+    cost_evidence = canonical_cost_evidence(
+        raw_cost if isinstance(raw_cost, Mapping) else {},
+        place_metadata.get("tags") if isinstance(place_metadata.get("tags"), Mapping) else {},
+    )
     if not cost_evidence:
         cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
     cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
@@ -10074,7 +10078,9 @@ def generate_replan(
                 candidate_failures.append({"place_id": hinted_id, "reason": failure})
                 continue
             candidate_meta = _json_object(candidate_place.metadata_json)
-            candidate_cost = candidate_meta.get("cost_evidence")
+            candidate_cost = canonical_cost_evidence(
+                candidate_meta.get("cost_evidence"), candidate_meta.get("tags")
+            )
             if (
                 not isinstance(candidate_cost, dict)
                 or str(candidate_cost.get("status") or "UNKNOWN").upper()
@@ -10083,7 +10089,11 @@ def generate_replan(
             ):
                 candidate_failures.append({"place_id": hinted_id, "reason": "COST_UNKNOWN"})
                 continue
-            if str(candidate_cost.get("currency") or "").upper() != str(journey.budget_currency).upper():
+            if (
+                not candidate_cost.get("currency_agnostic")
+                and str(candidate_cost.get("currency") or "").upper()
+                != str(journey.budget_currency).upper()
+            ):
                 candidate_failures.append({"place_id": hinted_id, "reason": "CURRENCY_MISMATCH"})
                 continue
             candidate_opening = normalize_opening_hours(
