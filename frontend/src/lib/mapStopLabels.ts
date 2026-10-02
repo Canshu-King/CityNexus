@@ -67,7 +67,19 @@ export type LabelCandidate = {
   order: number;
 };
 
-export type LabelVerdict = { placement: LabelPlacement; side: number };
+export type LabelVerdict = {
+  placement: LabelPlacement;
+  side: number;
+  /**
+   * Whether each side the word could take actually sits inside the map surface, indexed the same way
+   * as `LabelCandidate.sides`. Second generation, because `off_map` on its own was hiding two different
+   * facts: "no side fits" and "a side fits but something already owns that ground" both used to come back
+   * as a name that simply is not there, which is the one thing the traveller cannot act on.
+   */
+  fits: boolean[];
+  /** what is standing on the ground this word wanted, when something is */
+  blocked_by: "name" | "control" | null;
+};
 
 /**
  * Why a word is not on the glass. Named rather than boolean, because the traveller's question and the
@@ -118,18 +130,21 @@ export function placeLabels(
     kind: "control" as const,
   }));
   for (const candidate of ordered) {
+    const sized = candidate.sides.map(({ w, h }) =>
+      Number.isFinite(w) && Number.isFinite(h) && w > 0 && h > 0);
+    /* one entry per side the word could take: does that side sit on the map surface at all */
+    const fits = candidate.sides.map((box, index) => sized[index] && (!frame || inside(box, frame)));
     const usable = candidate.sides
       .map((box, index) => ({ box, index }))
-      .filter(({ box }) =>
-        Number.isFinite(box.w) && Number.isFinite(box.h) && box.w > 0 && box.h > 0);
+      .filter(({ index }) => sized[index]);
     if (!usable.length) {
-      verdicts.set(candidate.id, { placement: "no_box", side: 0 });
+      verdicts.set(candidate.id, { placement: "no_box", side: 0, fits, blocked_by: null });
       continue;
     }
-    const inFrame = usable.filter(({ box }) => !frame || inside(box, frame));
+    const inFrame = usable.filter(({ index }) => fits[index]);
     if (!inFrame.length) {
       /* Every side this word could take leaves the map surface: painted here it would be half a name. */
-      verdicts.set(candidate.id, { placement: "off_map", side: usable[0].index });
+      verdicts.set(candidate.id, { placement: "off_map", side: usable[0].index, fits, blocked_by: null });
       continue;
     }
     const free = inFrame.find(({ box }) => !placed.some((entry) => overlaps(box, entry.box)));
@@ -138,11 +153,13 @@ export function placeLabels(
       verdicts.set(candidate.id, {
         placement: blocker?.kind === "name" ? "over_a_name" : "over_a_control",
         side: inFrame[0].index,
+        fits,
+        blocked_by: blocker ? blocker.kind : null,
       });
       continue;
     }
     placed.push({ box: free.box, kind: "name" });
-    verdicts.set(candidate.id, { placement: "shown", side: free.index });
+    verdicts.set(candidate.id, { placement: "shown", side: free.index, fits, blocked_by: null });
   }
   return verdicts;
 }

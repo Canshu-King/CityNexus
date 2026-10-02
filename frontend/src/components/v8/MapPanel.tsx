@@ -808,13 +808,20 @@ export function MapPanel({
       /* `data-placement` carries the reason and `data-side` the branch that was used: both are facts
          about this camera, not about the stop, and a machine word belongs in an attribute -- which is
          where this family already puts them. */
-      const verdict = verdicts.get(node.key) ?? { placement: "no_box" as const, side: 0 };
+      const verdict = verdicts.get(node.key)
+        ?? { placement: "no_box" as const, side: 0, fits: [], blocked_by: null };
       const size = node.el.getBoundingClientRect();
       const pin = map.project(node.at);
       const reach = LABEL_GAP_PX + size.width / 2;
       node.marker.setOffset(verdict.side === 1 ? [-reach, 0] : [reach, 0]);
       node.el.setAttribute("data-placement", verdict.placement);
       node.el.setAttribute("data-side", verdict.side === 1 ? "left" : "right");
+      /* which side would have held the word, and what was standing there instead -- said per side so
+         "no room on this map" and "a neighbour took the room" are two different readings on the glass,
+         not one attribute that covers both. */
+      node.el.setAttribute("data-fits-right", String(verdict.fits[0] === true));
+      node.el.setAttribute("data-fits-left", String(verdict.fits[1] === true));
+      node.el.setAttribute("data-blocked-by", verdict.blocked_by ?? "nothing");
       node.el.classList.toggle("label-hidden", verdict.placement !== "shown");
     }
   };

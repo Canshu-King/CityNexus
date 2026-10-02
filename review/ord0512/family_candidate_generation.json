@@ -1,5 +1,5 @@
 {
- "run_id": "ord0512fam_cand2",
+ "run_id": "ord0512fam_g2cand",
  "gate_rc": 1,
  "reverted_files": [],
  "restored_ok": {},
@@ -24,8 +24,8 @@
   "e2e/real-world-trip-operations-v9.spec.ts"
  ],
  "summary_lines": [
-  "13 failed",
-  "103 passed"
+  "15 failed",
+  "101 passed"
  ],
  "red_tests": [
   "e2e\\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:162:1",
@@ -80,5 +80,5 @@
   "e2e\\qoder-ord0417-tap-names-the-stop.spec.ts:520:5",
   "e2e\\real-world-trip-operations-v9.spec.ts:4:1"
  ],
- "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0512\\gate\\ord0512fam_cand2.log"
+ "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0512\\gate\\ord0512fam_g2cand.log"
 }
