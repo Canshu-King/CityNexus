@@ -48,10 +48,12 @@ def main():
     arm_rows = arm.get("refs") or []
     excluded = arm.get("ref_excluded_and_proven_by_bytes")
     my_short = MY_REF.split("/")[-1]
-    if excluded != my_short:
+    # the arm names refs by their trailing generation, so compare that, not two spellings of one name
+    my_tail = "r" + re.search(r"(\d+)$", my_short).group(1)
+    if excluded != my_tail:
         raise SystemExit("ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes %s, this page is for %s"
-                         % (B.slot(excluded), my_short))
-    if [r for r in arm_rows if r.get("ref") == my_short]:
+                         % (B.slot(excluded), my_tail))
+    if [r for r in arm_rows if str(r.get("ref", "")).endswith("-" + my_tail)]:
         raise SystemExit("ABORT_SELF_MEASUREMENT the arm receipt carries a row for the ref it runs under")
     _rc, _in_ref = B.sh(["git", "show", "HEAD:review/ord0500-checkin/tools/r10_block.py"], cwd=WT)
     _lane = open(os.path.join(B.LANE, "tools", "r10_block.py"), "rb").read().replace(b"\r\n", b"\n")
