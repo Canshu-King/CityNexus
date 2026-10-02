@@ -1,6 +1,6 @@
 {
   "tool": "branch_emit_arm_r14",
-  "took_local": "2026-10-03T06:01:29+08:00",
+  "took_local": "2026-10-03T06:03:36+08:00",
   "tip": "25d1b2e69bfffd39157d3bcc804b20be9d89e2b4",
   "named_generation": "r14",
   "ref_excluded_and_proven_by_bytes": "r16",
@@ -97,7 +97,7 @@
       "commit": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch e579f0c4b2ddef55262624df3892ed17c61b5289, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 9a78f0b3e4e052d63ee7701ef9613edf97a33d8b, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
       "generation_named": "r14",
       "receipts_named": [
         "citation_gate_r14.json",
@@ -113,7 +113,7 @@
       "commit": "71e855fa492901075a5abc8e0db97fee37b17d8e",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch e579f0c4b2ddef55262624df3892ed17c61b5289, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 9a78f0b3e4e052d63ee7701ef9613edf97a33d8b, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
       "generation_named": "r14",
       "receipts_named": [
         "citation_gate_r14.json",
@@ -139,10 +139,26 @@
       "page_file_this_arm_wrote": false,
       "previous_page_restored": true,
       "scratch": "scratch_emit/r15/"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r16",
+      "commit": "9a78f0b3e4e052d63ee7701ef9613edf97a33d8b",
+      "verdict": "ABORTS",
+      "returncode": 1,
+      "last_line": "ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes r16, this page is for newlane-ord0500-phone-checkin-entry-r16",
+      "generation_named": "r14",
+      "receipts_named": [
+        "citation_gate_r14.json",
+        "citation_audit_r14.json",
+        "day25_anchor_recheck_r14.json"
+      ],
+      "page_file_this_arm_wrote": false,
+      "previous_page_restored": true,
+      "scratch": "scratch_emit/r16/"
     }
   ],
   "verdict_tally": {
     "NO_EMITTER_IN_REF": 10,
-    "ABORTS": 5
+    "ABORTS": 6
   }
 }
