@@ -211,6 +211,95 @@ test.describe.serial("ORD-0531 the bin from a seat", () => {
     await page.screenshot({ path: `${EVIDENCE}/V9_two_sentences.png`, fullPage: true });
   });
 
+  test("V10 the sentence the screen says when the payload names no traveller", async ({ page }) => {
+    /* ORD-0531 r7 -- the gap lane 82f55d8a named in the ledger: `noViewer` had no e2e reading of the
+       sentence it renders (V7 only proved no row leaks).  The lever has to be the shell's own journey
+       read, because that is where the prop comes from (`v8PanelRegistry.tsx`: `travelerId={s.data?.
+       journey?.traveler_id ?? null}`), so the single variable is that one field.
+       Named honestly: this shape is NOT server-producible on this line today -- `journeys.traveler_id`
+       is a NOT NULL foreign key and `schemas.Journey` requires the field -- so the arm judges the
+       screen's declared contract for a payload that names nobody, not a state the live door answers.
+       Both directions are read: the sentence the screen owns, and the two doors it must not ask. */
+    const journeyId: string = SEED.viewer_journey_for_B;
+    const experiencePath = `/api/v1/journeys/${journeyId}/experience`;
+
+    const real = await page.request.get(experiencePath);
+    expect(real.status(), "the shell's own journey read must answer on this stack").toBe(200);
+    const body = await real.json();
+    const realTraveler = body?.journey?.traveler_id ?? null;
+    expect(realTraveler, "the payload this line actually answers does name a traveller").toBeTruthy();
+
+    const stripped = { ...body, journey: { ...body.journey } };
+    delete stripped.journey.traveler_id;
+
+    /* Listener after the real read, so the read this arm makes itself is not counted as the screen's. */
+    const paths: string[] = [];
+    page.on("request", (request) => paths.push(new URL(request.url()).pathname));
+    const pageerrors: string[] = [];
+    page.on("pageerror", (error) => pageerrors.push(String(error).slice(0, 160)));
+    await page.route(experiencePath, (route) =>
+      void route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(stripped),
+      }),
+    );
+
+    const panel = await openBinAs(page, journeyId);
+    const noViewer = panel.getByTestId("trash-no-viewer");
+    const askedScoped = paths.filter(
+      (p) => p.startsWith("/api/v1/travelers/") && p.endsWith("/recycle-bin/journeys"),
+    );
+    const askedWholeBin = paths.filter((p) => p === "/api/v1/recycle-bin/journeys");
+    const rows = await panel.getByTestId("trash-row").count();
+
+    note("V10_doors_before_the_screen_speaks", {
+      scoped_bin_doors_asked: askedScoped,
+      whole_bin_door_asked: askedWholeBin,
+      every_path_this_page_asked: paths,
+      rows_rendered: rows,
+    });
+
+    /* Leg 1 -- the fallback the order forbids: with no viewer there is nobody to scope by, and the
+       whole-bin door is deliberately NOT used as a substitute.  Judged before any text is read, so a
+       mutant that asks a door reddens THIS leg and not the one below it. */
+    expect(
+      askedScoped.length + askedWholeBin.length,
+      `with no traveller named the screen asked a bin door anyway: ${JSON.stringify(paths)}`,
+    ).toBe(0);
+
+    await expect(noViewer, "naming no traveller must be said on the screen, not left blank").toBeVisible({
+      timeout: 20_000,
+    });
+    const sentence = (await noViewer.innerText()).replace(/\s+/g, " ").trim();
+    const panelText = (await panel.innerText()).replace(/\s+/g, " ");
+
+    note("V10_no_traveller_named", {
+      panel_rendered: 1,
+      real_payload_named_traveller: realTraveler,
+      served_payload_has_traveler_id: "traveler_id" in stripped.journey,
+      scoped_bin_doors_asked: askedScoped,
+      whole_bin_door_asked: askedWholeBin,
+      sentence_rendered: sentence,
+      rows_rendered: rows,
+      loading_sentence_still_on_screen: await panel.getByTestId("trash-loading").count(),
+      pageerrors,
+    });
+
+    /* Leg 2 -- the sentence itself, read as rendered text. */
+    expect(sentence).toContain("还不知道要问谁的回收站");
+    expect(sentence).toContain("你的行程没有因此变化");
+    /* Leg 3 -- it is its own state: neither the empty-bin sentence, nor either refusal sentence, nor
+       the loading sentence is what the traveller is shown. */
+    expect(panelText).not.toContain("回收站是空的");
+    expect(panelText).not.toContain("这台服务器没有答出");
+    expect(panelText).not.toContain("回收站没有从这台服务器读到");
+    expect(await panel.getByTestId("trash-loading").count(), "still spinning where it should have said so").toBe(0);
+    /* Leg 4 -- and nothing is shown while nobody was named. */
+    expect(rows, "a bin read for no traveller may not render a row").toBe(0);
+    await page.screenshot({ path: `${EVIDENCE}/V10_no_traveller_named.png`, fullPage: true });
+  });
+
   test("V8 write the readings file", async () => {
     writeFileSync(`${EVIDENCE}/readings.json`, JSON.stringify(readings, null, 1), "utf8");
   });
