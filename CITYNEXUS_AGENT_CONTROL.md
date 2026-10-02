@@ -16588,6 +16588,50 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0545 第二切片 · 追到 day21 尖重切 r3，读数在当代全重取；自报一枚我自己修的"单向致盲"文案闸尺（车道 6a773af1，23:37 交）
+
+**〇、先认一手：我静默那两小时卡在哪儿**
+
+- 卡点是我自己的转写错：你这条给的尖是 `7dbbf02074d8fc253e5fdff0734f466b916bcd51`，我在上一手把它抄成了 `7dbb0207…`（少一枚 f、位置也歪），于是 `git cat-file -t` 回 "Not a valid object name"，我据此判定"尖没进本机库"去跑 fetch —— 那一手挂住直至你来敲门。重试这几手用的是你给的逐字 40 位，`git cat-file -t` 回 `commit`，`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回同一值，两条都在分钟内返回。
+- 损害面：0 枚已发布读数受影响（我此前入账的三块里引的尖是 `65bc4c4ede83a3718535a37aaae3698681c8eda4` 与 `eabbaac714410eaf433568b4498cc8107eb98bfe`，逐枚仍可 cat-file）。受影响的是我自己那一手时间，和下面这块里我要重做的测量。
+
+**一、这一手的坐标（都是命令取回，没有手打）**
+
+- 交付枝 refs/heads/review/newlane-ord0545-family-copy-table-r3，头 = 098dcfe8b1b986df2906419aad6f16aea0e454f6（`git ls-remote --refs origin` 回读同值）；它的链根之父逐字等于我这批读数的基座 e7ff7938ea41c5ac69afb1172acc4625159c7911，链上 6 枚提交。
+- r2 那枝 refs/heads/review/newlane-ord0545-family-copy-table-r2 停在 3ae926a280ed5bcf74dfe77d0b34e1f3f7927ba3 原地不动；`--force` 0 次，权威线 0 次 push（这条约束覆盖 refs/heads/review/newlane-ord0545-family-copy-table-r3 从建到推的全部跑次）。
+- 重切方式：`git rebase --onto e7ff7938… a2584a9c…`（把 a2584a9c2394c3996b73f8d84c5c0e4b0eef1f34 之上我那 4 枚 replay 到新尖），落完实测 r3 与 r2 在我这 46 枚路径上**逐枚同值**：`git rev-parse <头>:<路径>` 两两对，46 枚同、0 枚异；三枚产品字节仍是 95a15c02f1f74e9a59fb991eea4a95f438902255（面板）、881bc009b3bd56f8af7bd6e3b7e551285249d580（表）、057b56457d08e45b95525b457ed5b150ae4f8f73（字典）。
+
+**二、我修了一枚自己造的、单向致盲的尺（这格的成因我用测量说）**
+
+- 病症：文案闸的 B4 臂读那枚表的联合名时用 `split("export type PoiImportCopyKey")[1].split(";")[0]`。第一个 `;` 是**我自己写的注释里那个**（"moved verbatim; see review/ord0545/move_family_r1.py"），于是段落在第 15 枚截断，而文件里有 67 枚。它报"15 枚成对、0 枚缺半"就绿了 —— 不是判据松，是它没在读。三代的件都是这个数（本机件 `review/ord0533/readouts/b4_copy_table_pairing_r6.json` 那枚未发布的读数：15）。
+- 修法（两处，都在 `frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts`，blob 74cd9e6e96eaebb3c33b6a9a19b0f6ba2072d900）：联合的结束改按"某行以 `";` 收尾"来认，并且**先收这一行的名字再停**——我第一版修法先 break 后收，读出 66，比真值少一枚，这是我这轮第二个自己的错；再加一枚独立分母：同一段落用区域正则（联合名到 `const COPY` 之间）再数一次，B4 断言两法的名单逐枚相等。这样"截断"只能把臂弄红，不能把它弄绿。
+- 反件（证明修好的臂会咬人）：新工具 `review/ord0533/b4_blindness_counterarm_r1.py`，摘掉搬进来的那 52 枚里任意一枚的一半（我用 verifyWarning 的 en 半）→ B4 红并点名它；控制臂前后各 4/4 绿；文件按原字节还原（sha256 前后同值 f05fedd7551a316e3be44231f88e0667d8ddade32a9d2c04b7a0873112984421）。流水件 blob 7f31448c19827b6d418e44e5f4cfbf83a58477a9，工具 blob 933cadb4839fe38679762a129ef75837254f2607。
+- 修好后的当代读数（件 blob 7876f844561a3f5614de45c7b6e0f05e556c80d6）：两法各 67、成对 67、缺半 0、字典里的第二主人 0。
+
+**三、读数在这一代全重取（基座 e7ff7938，件名带 tag；不是搬上一代）**
+
+- 整族三臂（件 blob edb2c62dfd77a96b8ca0fac3e70c0205610d920c，3 passed）：G1 普查——面板里 `t(` 残留 0 处、这一屏够得着的句子 64 枚全在表里成对、联合名 67 枚无一缺半、字典里没有第二主人、另有 13 枚 `poiImport.*` 按题面留在字典（9 枚归 `frontend/src/components/PoiCandidateCard.tsx`、4 枚全树 0 引用，本单一枚不动），普查件 blob 28a1f4f49e595f8604d50a6c23db9f367ba4cf38。G2 同一屏 zh-CN 与 en-GB 各走一遍（390 宽档，读渲染文字不读属性）：整屏键名、未填占位符、机词、裸 uuid 命中逐格 0，两屏渲染字符分别 347 与 915（件 blob 9c70fe2656584aa02193dd07fbb09f262d416d7a 与 534858fb710ba372c9249b504ed49cd1f096a072）。
+- 文案闸四臂（件 blob 7b7fd61a7c7409ef8bddcc97959d4bb4b6179b3a，4 passed）：B1 现在读到的调用点是 0 枚（整族搬完，这一屏没有 `t()` 键可数了），它剩下的咬口是"那枚徽章不许再回到 `t()` 通道"，读数为假（件 blob ac27324b54c420ab05895dd16e37c9d10a442656）；B2/B3 两语屏读键名 0 枚（件 blob eb6cea6b96a7e2a10943110527b585e53dce646f 与 bb2ceb9d118489623b2940ed9004c3fa5a3d6978）；B4 见上一节。
+- 整族三枚反件（件 blob 0ff695d0d44e07a9c76fb40fc8e31eaf1bed23b0）：控制开跑 3/3 绿；M1 把查表值写成一个表里没有的名字 → `tsc` rc 2、诊断逐字点名 `"errJourneyNotFoundRenamed"` 并提示正名，同一代闸 G1 红；M2 删一对留联合名 → `tsc` rc 2 且闸红；M3 把一枚搬走的句子塞回中文本当第二主人 → 红的正是 G1；跑完还原、控制收跑 3/3 绿。
+- 类型：`node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit` exit 0、诊断 0 行（件 blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391，那就是空文件枚号，即 0 字节输出）。
+- 栈与形制：私有后端 port 4911 只听 127.0.0.1，闸的 vite 用 port 4913 与 port 4914，跑完 `--stop` 回 `still_listening: []`；canary 只以 mode=ro 打开、现场 online backup 复制，源件在我开前开后 sha256 同值（回执件 blob 12e8c543bb40e60900f37f915aef9cc04571981b，里面 forbidden_ports_held_by_others 逐个记着 8000、4783、4787 各有其主，本代 canary 的日历导出仍 1922 B／6 枚 VEVENT，`x-citynexus-ics-events` 头读回 6）；这一枝上 demo/reset 0 次、`_preview.db` 0 次写、你点名的端口碰 0 次，约束覆盖 refs/heads/review/newlane-ord0545-family-copy-table-r3 从建到停的全部跑次。
+
+**四、对现尖（你给的这一枚）的重测**
+
+- 尖现读 refs/heads/mirror/integration-frontend-apple-pass1 = 7dbbf02074d8fc253e5fdff0734f466b916bcd51。它比我这批读数的基座多 1 枚提交，而那枚提交的树与我基座那一代**同一枚 oid**（`git rev-parse <尖>^{tree}` 与 `git rev-parse e7ff7938ea41c5ac69afb1172acc4625159c7911^{tree}` 都是 7b93f69bdf3ef0fd972e89992be42e4f8a1505ff）；它有两个父 e7ff7938 与 05b9e194。所以三件事只报测到的：内容层 0 变化、我这批读数对现尖这一代仍成立、我不猜那枚合并为何无内容差。
+- 预影像（现尖逐枚）：我链上 61 枚路径里在尖上存在的 4 枚，逐枚"我起步那份字节"== 尖现在那份，不合格 0 枚 —— 面板 c8f829f66694cca8e914d0d81a9fa8fcdae4f8fc、表 079da2f34a537f63add9d11cdf72cd83f1bdd880、字典 0425eef4757c46f544c0767ad4d5346779917599、这轮新改的闸件 57fd8afc56a2278a16a4a2fb80c78cf021afec4c。
+- 只读落地预测：`git merge-tree --write-tree --name-only 7dbbf02074d8fc253e5fdff0734f466b916bcd51 098dcfe8b1b986df2906419aad6f16aea0e454f6` rc 0、输出 1 行 = 树 f2a3cdc383845423f5b0320b6de41ff7f5c52daf（`git cat-file -t` 回 tree，无枝可达，由该行命令复现）、冲突名 0 行。口径照旧：merge-tree 干净不是门的判据，上面那四枚预影像才是。
+
+**五、还开的三格与"下一手"**
+
+- NOT_REACHED_BY_LANE：那 7 枚动态拒绝句的屏上一腿（件 review/ord0545/readouts/refusal_attempt_r1.json；这一代我又测了一次对着已删行程加载这一屏，仍不落拒绝句，写进了 family_screen_zh_CN_r3.json 的 refusal_leg 字段）。
+- NOT_REACHED_BY_LANE：走完引导向导再进内屏那一格维持要真机，headless 不冒充。
+- NOT_ATTRIBUTED：导出字节两枚读数的差仍未归因（本代 1922 B 已重取；跨代 ics 本体同值 3159f0695a2313f2d8216c7bd1fbc7b22963c5d0 ⇒ 差在读了哪份库/哪一行，不在导出代码）。
+- 我把账本 `## ORDERS` 段近期那块区间（现读 16590 起到 19200）按词面扫过：以 `6a773af1` 逐字点名的派单行 0 条，命中的三行都是我自己的块头。按常设规矩我不自造题面、不领无名单。名下唯一未闭的就是 ORD-0545 第二切片，现已推到可落地；要下一手请点名单号与验收形状。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 23:05 · 点名后的两件：候选重摘到现尖 7dbbf020（r5 已推并回读），并自纠一处引用打空；读数仍按 day21 那代报，我没在新尖冒充重走（车道 cff87c64；接我已入账的 19:42 那块，那块一字不动）
 
 **〇、这两件是什么**
