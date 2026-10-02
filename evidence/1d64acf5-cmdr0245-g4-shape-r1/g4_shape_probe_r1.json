@@ -1,0 +1,220 @@
+{
+ "tip": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+ "pre_arm_blob": "395662e3c534229bc8492ea611b6c737257e6228",
+ "reshaped_arm_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+ "arm_written_back_to_reshaped": true,
+ "whitelist_as_shipped": [
+  "app/db/write_deadline.py"
+ ],
+ "states": 8,
+ "all_met": true,
+ "product_files_byte_identical_to_tip": true,
+ "dirt_lines": 23,
+ "dirt_outside_review_area": 0,
+ "dirt_outside_review_area_lines": [],
+ "expected_dirt_candidate_not_yet_committed": [
+  " M backend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "runs": [
+  {
+   "id": "Q0_no_injection",
+   "note": "both arms on the tree as it stands, so the pair below is comparable",
+   "arms": {
+    "pre_395662e3": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.43s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.99s",
+      "bitting_line": null
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q1_same_name_other_path",
+   "note": "app/db/deep/write_deadline.py stating 90000: exempt by basename, not by path",
+   "arms": {
+    "pre_395662e3": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.84s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.50s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q2_named_expansion",
+   "note": "the same file with its path written into the whitelist",
+   "arms": {
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.93s",
+      "bitting_line": null
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q3_whitelist_rotted",
+   "note": "path whitelisted but states no number",
+   "arms": {
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.08s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:263: AssertionError"
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q4_sub_floor_consumer_copy",
+   "note": "CMDR 18:34's own case - 1200 ms in a file that already asks settings",
+   "arms": {
+    "pre_395662e3": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.30s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:249: AssertionError"
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.12s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:260: AssertionError"
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q5_worker_at_floor",
+   "note": "a worker wait raised to request-path scale",
+   "arms": {
+    "pre_395662e3": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.05s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError"
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.05s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q6_new_worker_below",
+   "note": "a brand new 800 ms worker wait stays legitimate",
+   "arms": {
+    "pre_395662e3": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.86s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.87s",
+      "bitting_line": null
+     }
+    }
+   },
+   "all_met": true
+  },
+  {
+   "id": "Q7_family",
+   "note": "both ruler files whole on the reshaped arm",
+   "arms": {
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "21 passed, 2 warnings in 5.19s",
+      "bitting_line": null
+     }
+    }
+   },
+   "all_met": true
+  }
+ ],
+ "reading": "the exemption moves from basename to a named path whitelist; Q1 is the hole the old shape had (old arm green on it, reshaped arm red), Q2 is the ruled expansion channel, Q3 keeps a named-but-empty whitelist from passing"
+}
