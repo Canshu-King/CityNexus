@@ -1,6 +1,6 @@
 {
   "tool": "checkin_copy_rows_r6",
-  "took_local": "2026-10-03T00:29:23.830183+08:00",
+  "took_local": "2026-10-03T02:08:47.560217+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\mut_r6",
   "rows_checked": 11,
   "en_button_label": [
@@ -124,7 +124,7 @@
       "side": "en",
       "dictionary_lines": [
         62,
-        1145
+        1179
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -134,7 +134,7 @@
       "side": "zh",
       "dictionary_lines": [
         62,
-        1145
+        1179
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -144,7 +144,7 @@
       "side": "en",
       "dictionary_lines": [
         63,
-        1146
+        1180
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -154,7 +154,7 @@
       "side": "zh",
       "dictionary_lines": [
         63,
-        1146
+        1180
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []

@@ -87,7 +87,17 @@ def main():
              "review/ord0500-checkin/receipts/citation_audit_r8.json",
              "review/ord0500-checkin/tools/reanchor_r8.py",
              "review/ord0500-checkin/tools/reanchor_r8_selftest.py",
-             "review/ord0500-checkin/tools/citation_audit_r8.py"]
+             "review/ord0500-checkin/tools/citation_audit_r8.py",
+             # r9: the gate, its mutants, and the day24 re-read the gate reports
+             "review/ord0500-checkin/receipts/citation_gate_r9.json",
+             "review/ord0500-checkin/receipts/citation_gate_r9_mutants.json",
+             "review/ord0500-checkin/receipts/day24_anchor_recheck_r9.json",
+             "review/ord0500-checkin/tools/citation_gate_r9.py",
+             "review/ord0500-checkin/tools/citation_gate_r9_mutants.py",
+             # r10: the same gate with per-citation authorship, and its own receipts
+             "review/ord0500-checkin/receipts/citation_gate_r10.json",
+             "review/ord0500-checkin/receipts/citation_gate_r10_mutants.json",
+             "review/ord0500-checkin/tools/citation_gate_r10_mutants.py"]
     # this generation's four screen receipts and its exposure pair, by what is actually in the tree
     rcp = os.path.join(WT, "review/ord0500-checkin/receipts")
     for name in sorted(os.listdir(rcp)):
