@@ -108,10 +108,16 @@ export interface Booking {
 export interface EventRecord {
   id: string;
   journey_id: string;
+  provider_key?: string;
+  provenance?: string;
+  severity?: string;
   occurred_at: string;
+  detected_at?: string;
   event_type: string;
   affected_activity_id: string | null;
   status: string;
+  resolved_at?: string | null;
+  resolution_reason?: string | null;
   payload?: Record<string, unknown>;
 }
 

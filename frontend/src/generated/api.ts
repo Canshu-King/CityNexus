@@ -3352,6 +3352,9 @@ export interface components {
             status: "DETECTED" | "ACKNOWLEDGED" | "RESOLVED" | "IGNORED";
             /** Format: date-time */
             detected_at: string;
+            /** Format: date-time */
+            resolved_at?: string | null;
+            resolution_reason?: string | null;
         };
         Commitment: {
             /** Format: uuid */
