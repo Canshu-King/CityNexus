@@ -46,3 +46,20 @@ for record in raw["results"]:
         print("TOTALS_AFTER %s" % " / ".join(record["detail"]["after"]))
 print("ACTIVE_JOURNEY %s" % demo)
 print("LEGS_ROWS_ON_ACTIVE %d" % doors[demo]["legs_rows"])
+
+
+# -- branch-head facts, printed so a follow-up message cannot quote a sha it did not read ----------
+def git(*args: str) -> str:
+    import subprocess
+    return subprocess.run(["git", *args], cwd=TREE, capture_output=True).stdout.decode("utf-8", "replace").strip()
+
+
+BRANCH = "refs/heads/review/da46954a-ord0504-shared-board-r1"
+QUOTED = "b19937b9adce97fe3ddb5d37317b74157ab936a3"
+remote = git("ls-remote", "origin", BRANCH).split("	")[0]
+print("BRANCH_QUOTED_HEAD %s" % QUOTED)
+print("BRANCH_REMOTE_HEAD %s" % remote)
+print("QUOTED_STILL_REACHABLE %d" % (0 if git("cat-file", "-t", QUOTED) != "commit" else 1))
+delta = [f for f in git("diff", "--name-only", QUOTED, remote).splitlines() if f]
+print("FILES_BETWEEN_QUOTED_AND_REMOTE %d" % len(delta))
+print("PRODUCT_BETWEEN_QUOTED_AND_REMOTE %d" % len([f for f in delta if f.startswith(("backend/", "frontend/", "contracts/"))]))
