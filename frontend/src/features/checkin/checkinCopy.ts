@@ -7,11 +7,11 @@
  * new refusal name is one row in this table and one arm in this feature's spec.
  *
  * The button's own words (打卡 / Check in and their aria forms) stay in `i18n/LocaleContext.tsx`,
- * which owns them.  What lives here is only the refusal sentences -- with one honest exception this
- * lane now states instead of glossing: the dictionary ALSO still holds `checkin.duplicate` and
- * `checkin.refused` (both locales), and since ORD-0500 r5 this screen no longer reads them, so those
- * rows currently have no reader.  Deleting them is not this file's call (the dictionary is the
- * hottest file on the line); they are named, counted, and left.
+ * which owns them.  What lives here is only the refusal sentences -- with one difference this lane
+ * used to describe and no longer has to: the dictionary also held `checkin.duplicate` and
+ * `checkin.refused` (both locales), which stopped having a reader when ORD-0500 r5 moved this screen
+ * onto the table below.  The commander ruled them deleted (04:26, 裁「删」) and they are gone,
+ * together with the arm of this feature's row gate that had been pinning them open.
  *
  * Two rules every row obeys:
  *  - a sentence never carries an id. The server's `details` carry `existing_checkin_id` and
