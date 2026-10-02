@@ -1,0 +1,30 @@
+diff --git a/backend/tests/test_qoder_ord0296_write_deadline.py b/backend/tests/test_qoder_ord0296_write_deadline.py
+index d3e21e90..395662e3 100644
+--- a/backend/tests/test_qoder_ord0296_write_deadline.py
++++ b/backend/tests/test_qoder_ord0296_write_deadline.py
+@@ -230,6 +230,25 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
+     assert unsourced == {}, (
+         "a lock wait at request-path scale is stated inline outside the single-source module: %s"
+         % unsourced)
++    #: CMDR 18:34 尺侧：量程以下也要管。两条都是现查，都不点文件名也不点行号。
++    #: R1 一个文件如果已经向模块/配置要这个数（同一枚文件里出现具名符号），它就没有资格再自己写一枚
++    #:    内联的 `busy_timeout = <整数>`，无论大小。这正面咬住「consumer 一边读 settings 一边自己抄一枚」，
++    #:    也就是 18:34 点名的那枚盲区（1200 毫秒从尺底下走过）。
++    #: 量程那一半不再叠第二条判据：上面 `unsourced` 已经管住「不向模块要数却写到 >= 量程」的内联，
++    #:    探针 P2（往 worker 文件里加 90000 毫秒）红的就是那一格；同条件再写一条永远轮不到它发言。
++    inline = re.compile(r"busy_timeout\s*=\s*(\d+)")
++    consumer_writes: dict[str, list[str]] = {}
++    for rel, rows in full.items():
++        if Path(rel).name == "write_deadline.py":
++            continue  # the one place allowed to state the number at all
++        asks_the_module = any(sym in line for _i, line in rows for sym in DERIVES)
++        for i, line in rows:
++            for m in inline.finditer(line):
++                if asks_the_module:
++                    consumer_writes.setdefault(rel, []).append("%d: %s" % (i, line.strip()[:78]))
++    assert consumer_writes == {}, (
++        "a file that already asks the module for the lock wait also states one inline "
++        "(DEADLINE_CONSTANT_NOT_SINGLE_SOURCE, below the floor too): %s" % consumer_writes)
+     assert others, "nothing mentions busy_timeout at all -- this arm is reading an empty tree"
+     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
+     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
