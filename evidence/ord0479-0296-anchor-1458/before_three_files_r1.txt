@@ -1,0 +1,4 @@
+FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable
+FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+FAILED tests/test_qoder_ord0307_credential_gate.py::test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import
+3 failed, 28 passed, 2 warnings in 1096.38s (0:18:16)
