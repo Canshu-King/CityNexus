@@ -41,6 +41,9 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       # per re-cut: a re-cut must not require renaming anything downstream (r7 lesson).
       ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
              "citation_gate_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
+             os.path.join(LANE, "evidence", "citation_audit_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "exposure_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
              os.path.join(LANE, "evidence", "day*_recheck_r*.json")))] + [
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
              "day*_anchor_recheck*.json")))]
@@ -63,7 +66,8 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
          "r8_block.py", "r9_block.py", "r10_block.py", "landing_r6.py",
          ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
-                "citation_gate_r*.py")))] + [
+                "citation_gate_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(
+                os.path.join(LANE, "tools", "citation_audit_r*.py")))] + [
          "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
