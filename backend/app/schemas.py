@@ -236,6 +236,34 @@ class JourneyPatch(BaseModel):
     budget: Money | None = None
 
 
+class JourneyAbort(BaseModel):
+    """What the traveller says when they call their own trip off (ORD-0520 中止).
+
+    `reason` is required and kept as given: an empty box must not become a stored fact, and the
+    door does not summarise or translate what was written.  `actor_traveler_id` names who the
+    request speaks for -- the same declared actor the member doors take, and for the same reason
+    it is a claim to be compared against the row, not proof of who typed it (see the note on
+    `/travelers/{traveler_id}/recycle-bin/journeys` in `contracts/openapi.yaml`).
+    """
+
+    reason: str = Field(min_length=1, max_length=240)
+    actor_traveler_id: UUID
+
+
+class JourneyLiveView(BaseModel):
+    """The server's own answer to "does this trip belong on 实时行程".
+
+    ORD-0520 ships this so the judgement is not made on the device.  A screen that filtered
+    `status != "CANCELLED"` itself would hold a second copy of the rule, and the two could
+    disagree the day the rule grows a case the client has never heard of.  `reason_code` is the
+    server's token for the exclusion and is NULL when nothing excludes the trip; it is the same
+    token the abort door answers with, not a new word.
+    """
+
+    included: bool
+    reason_code: Literal["JOURNEY_ABORTED"] | None = None
+
+
 class Journey(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
@@ -250,6 +278,12 @@ class Journey(BaseModel):
     status: Literal["DRAFT", "PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]
     active_plan_version_id: UUID | None = None
     current_activity_id: UUID | None = None
+    # ORD-0520: an aborted trip stays in `listJourneys` -- 中止 is not 丢弃, and the recycle bin
+    # has its own column and its own door for that.  These three are what makes the difference
+    # readable: the moment, the traveller's own reason, and the live-screen decision.
+    aborted_at: datetime | None = None
+    abort_reason: str | None = None
+    live_view: JourneyLiveView
 
 
 #: ORD-0477: the orders `GET /api/v1/journeys` answers by, named once here so the door's validator,
