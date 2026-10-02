@@ -16588,6 +16588,111 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 10-03 05:0x 亲测缺陷：hub 字典槽灌入服务端枚举 · 车道 cmdra 定稿块（判读只以此块为准；此块改名重发，不再复用旧名）
+
+先报我自己的一处失误：同一枚文件名 `cmdra_0651.md` 被我改写两次，被值守助手各插一遍，账本里因此并存两份近重复块 —— 落点 `CITYNEXUS_AGENT_CONTROL.md:16626`（12,903 B 那份，回执 `D:/moodle/_qoder_ledger_inbox/_processed/cmdra_0651.md.inserted_070407:1`）与 `CITYNEXUS_AGENT_CONTROL.md:16730`（11,360 B 那份，回执同族 `.inserted_065523:1`）。去重归你的笔，我不改账本。本块用新名重发，发完不再动这个名字。
+
+本块相对那两份的净更正（三枚假锚，前两份里是坏的）
+其一：目录不能挂行号，旧块写 `export_base:1` 不可解析 · 应读作 `D:/moodle/_qoder_cmdra_hubenum_20261003/export_base/backend/app/main.py:1`（625,737 B）
+其二：旧块写 `_build_cmdra_hubenum_base:1` 同样不可解析 · 应读作 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_cmdra_hubenum_base_info.json:1`
+其三：旧块写 `_cmdra_hubenum.db:1` 与 `_cmdra_probe.db:1`，二进制库没有行号 · 本块只给路径与字节，坐标改挂其上屏读数件（下环境段逐条给）
+
+坐标头
+权威尖我 06:51 现读 = `c0b16645afc12aa1c5c5f68474ea9084b877618c` · 那一代我没重量：`NOT_MEASURED_BY_CMDRA`
+开工尖 = `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` · 05:07 现读 · 也是交付头的父
+交付头 = `20eeedd1df07d217985d7e62ba4e1d826f606aa3` · 枝 `review/cmdra-hub-enum-copy-r1` · 06:51 现读同枚
+反件一头 = `1170e0a7340c26c7082dd5a5024cf5bdd1a1df1a` · 枝 `review/cmdra-hub-enum-copy-r1-m1`
+反件二头 = `7427f5491e1c7c54fbb987b1f3e603c4cd46829f` · 枝 `review/cmdra-hub-enum-copy-r1-m2`
+改动量 +46 行与 -2 行 · 出自查 `git diff --numstat 06ad00b0267c2bef08d4cdcbae2e5a206ded8666 20eeedd1df07d217985d7e62ba4e1d826f606aa3`
+产品文件只两枚 · 一枚 `frontend/src/features/planning/PlanRankingPanel.tsx:1` 计 13 增 2 删
+另一枚 `frontend/src/lib/displayVocabulary.ts:1` 计 33 增 0 删 · 两枚相加即那 +46/-2
+
+改了什么（path:line 全在交付头 `20eeedd1df07d217985d7e62ba4e1d826f606aa3` 上）
+槽不再把枚举交给句子 = `frontend/src/features/planning/PlanRankingPanel.tsx:151`
+映射入口 = `frontend/src/features/planning/PlanRankingPanel.tsx:41` · null 支 = `frontend/src/features/planning/PlanRankingPanel.tsx:42`
+人话字典 = `frontend/src/lib/displayVocabulary.ts:116` · 缺口兜底 = `frontend/src/lib/displayVocabulary.ts:127`
+导出函数 = `frontend/src/lib/displayVocabulary.ts:232` · 技术原名留属性通道 = `frontend/src/features/planning/PlanRankingPanel.tsx:147`
+模板一字未动 = `frontend/src/features/planning/planRankingCopy.ts:47` · 其 blob `956004cfc7f27e285d24c405bda9cee7564b350c`
+en 侧同槽未动 = `frontend/src/features/planning/planRankingCopy.ts:26` · blob 同 `956004cfc7f27e285d24c405bda9cee7564b350c`
+词面依的语义 = `frontend/src/features/planning/planRanking.ts:9` · 枚举发射器 = `backend/app/integrations/mock/providers.py:69`
+硬档不替它写人话的依据 = `frontend/src/features/planning/planRanking.ts:78` · 常量 = `backend/app/replanning/provider_snapshots.py:15`
+字节双向证明其一：旧 `2ccb256699e9bfbd95ac38af019afd6e3569b11e` 变新 `6db3da32b3344ccacf4f8e411fbb3dcadbf435b0`
+字节双向证明其二：旧 `3ab66d37755ad8508cfb0668f4247dfde660a92b` 变新 `f9fb3426f7946663f62d401ca38339b9c46f728e`
+
+要件一 zh 臂（同尺，尺件全文路径 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_machine_speech_sweep_r1.js:23` 列 14 条路由）
+形状同尺：390x844 与单浏览器顺序见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_machine_speech_sweep_r1.js:31` · base 由 argv 传入见 `:18`
+修前我复现 hub 27 次 · 件 blob `bb56b1260eb0e9786da7bfb1c1b5b625c45e4fad` · 同件 total 29 次、去重 2 枚、异常 0 次
+你那件同数：hub 27 次与 total 29 次 · blob `ab52516a651fac45176025881dcf16962672c8a9` · 入口名同 `index-DeyXt9ON.js`
+修后 hub 0 次 · 件 blob `0fc8422cfdc586a1687476c23357fb4912da8697` · 同件 total 2 次、去重 1 枚只剩 JSON、异常 0 次
+修后代次入口 `index-QmNZYQpo.js` 记在同件 `entryAssets` · blob `0fc8422cfdc586a1687476c23357fb4912da8697`
+事实未丢：27 行笔记每行仍含 9 与 56 · 由 `dad68ebb9b3c2238cfa888dcfa446162c35088cf` 的 `facts_survive_the_mapping` 算
+上屏那句：这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 演示夹具自己填的兜底常数，不是量出来的。
+
+要件二 en 臂（你具名 NOT_MEASURED_BY_CMDR 那格，我补前后两趟）
+我 en 修前 total 60 次 · hub 29 次（UPPER_SNAKE 27 与 ALLCAPS 2）· blob `f7472a1f10d8e849ddd8a0d40b391dd615a45c56`
+你 en 修前 total 60 次 · hub 29 次（UPPER_SNAKE 27 与 ALLCAPS 2）· blob `dc56cfcc1892d262fc66079d34a1f22433adbd58`
+两趟四个数全等：60 与 29 与 27 与 2 · 我 `:49821` 你 `:49805` · 入口同为 `index-DeyXt9ON.js`
+我 en 修后 total 33 次 · hub 2 次 · 全屏 SYNTHETIC_DEFAULT 0 次 · 异常 0 次 · blob `7ede63c5b9bda4645396170d2c4957fec7add4b7`
+en 余下 33 次一处没动 · 逐条在同件 `perRoute` · blob `7ede63c5b9bda4645396170d2c4957fec7add4b7` · 具名 `NOT_TOUCHED_BY_CMDRA`
+
+要件三 反件逐枚点名（我的尺 `D:/moodle/_qoder_cmdra_hubenum_20261003/cmdra_hubenum_quality_words_check_r2.js:1` · blob `cb64ca5269fd73a040c0adaffcc40ced28585691`）
+反件一 = 把槽改回原枚举 · 头 `1170e0a7340c26c7082dd5a5024cf5bdd1a1df1a` · 你的尺重画 hub 27 次与 total 29 次
+反件一你的尺件：blob `65ec9fbe14b6071b19fb42cf216330178a90c3dc` · 内 `topTokens` 仍列 SYNTHETIC_DEFAULT 27 次
+反件一我的尺报红 3 格：`slot_does_not_hand_the_enum_to_the_sentence` 与 `no_machine_shape_painted` 与 `dictionary_wording_is_what_shows` · blob `e15a26c4f40d482bbfefebf718d78d032d7f4b96`
+反件二 = 删掉字典里 SYNTHETIC_DEFAULT 的 zh 与 en 两侧 · 头 `7427f5491e1c7c54fbb987b1f3e603c4cd46829f`
+反件二你的尺读成全绿：hub 0 次与 total 2 次 · 件 blob `9199a6b419ebab272b6a77017fb318c5c53ba9f8`
+反件二我的尺报红 4 格：`dict_synthetic_has_zh` 与 `dict_synthetic_has_en` 与 `dict_labels_carry_no_machine_shape` 与 `dictionary_wording_is_what_shows` · blob `e16f9c7721a8a4af5dc3674396619842bc148d2f`
+反件二这条要请你记：措辞退化成「字典还没说法」这种没信息量的话时，形制尺看不见 · blob `e16f9c7721a8a4af5dc3674396619842bc148d2f`
+纪律：无 skip、无改断言、未遮尺子报错 · 两枚各一笔提交且都不在交付头 `20eeedd1df07d217985d7e62ba4e1d826f606aa3` 里
+
+要件四 每臂各自一件、先发布后引用
+发布前缀 `evidence/cmdra-hubenum-20261003/` 共 16 件 · 逐件回执 `D:/moodle/_qoder_cmdra_hubenum_20261003/_publish_manifest.jsonl:1`
+回执形制：7 件 CREATED 带 proof = BYTE-LEVEL MATCH · 9 件 SKIP_IDENTICAL（同字节才给 SKIP，即已发布路径 0 重写）· 件 `D:/moodle/_qoder_cmdra_hubenum_20261003/_publish_manifest.jsonl:1`
+可解性：16/16 枚可 cat-file 与 0 枚不可解 · 清单同一件 `D:/moodle/_qoder_cmdra_hubenum_20261003/_publish_manifest.jsonl:1` · 枝 `commander/control`
+zh 臂三枚：`0fc8422cfdc586a1687476c23357fb4912da8697` 与 `dad68ebb9b3c2238cfa888dcfa446162c35088cf` 与 `bb56b1260eb0e9786da7bfb1c1b5b625c45e4fad`
+en 臂三枚：`7ede63c5b9bda4645396170d2c4957fec7add4b7` 与 `c115a5bf9ce5df1bc1a9554b9bf9ff16167b4cca` 与 `f7472a1f10d8e849ddd8a0d40b391dd615a45c56`
+反件四枚：`65ec9fbe14b6071b19fb42cf216330178a90c3dc` 与 `e15a26c4f40d482bbfefebf718d78d032d7f4b96` 与 `9199a6b419ebab272b6a77017fb318c5c53ba9f8` 与 `e16f9c7721a8a4af5dc3674396619842bc148d2f`
+对照与探针四枚：`0bb8384bc32a37f8424bce3dae32eedceb363ffb` 与 `a12fe1f69a0166dbdf3313795ab26902cc132b58` 与 `3e236583052652d1d7ac47c9ef91495fd8ccb161` 与 `bcf77ba4ea01749b13b0f16558a7dfeddd15990a`
+每份读数件里都有 `script_sha256` 自证是哪把尺：尺 blob `cb64ca5269fd73a040c0adaffcc40ced28585691`
+
+新事实：权威线在我干活时已被别腿修过同一格
+别腿那笔 = `620931fda4f4abc4656cb4a0d91bc37a33f82d6a` · 同两处产品文件 · 我 06:12 现读时它是尖
+现尖按同一把尺：hub 0 次与 total 2 次与异常 0 次 · blob `0bb8384bc32a37f8424bce3dae32eedceb363ffb`
+所以两版验收数相同，我这版的增量不在那 27 次上 · 上件 blob `0bb8384bc32a37f8424bce3dae32eedceb363ffb`
+增量实测其一：他那版映射走 pick · 现尖 `frontend/src/lib/displayVocabulary.ts:148` · blob `2815c2a3fefcd8356c2bac411e30ef71b62fa80c`
+增量实测其二：pick 不认识的值落 rawChannel · 现尖 `frontend/src/lib/displayVocabulary.ts:131` · 句式「这台服务器写的：<原值>」
+我造的字典外档位：把探针库里 47 枚软档改名、9 枚硬档不动 · 其上屏结果记在 `3e236583052652d1d7ac47c9ef91495fd8ccb161`
+同一探针库·现尖那版：hub 重画 27 次与 total 29 次 · blob `3e236583052652d1d7ac47c9ef91495fd8ccb161`
+同一探针库·我那版：hub 0 次与 total 2 次 · blob `bcf77ba4ea01749b13b0f16558a7dfeddd15990a`
+取向差：他把两枚硬档也写进表 · 现尖 `frontend/src/lib/displayVocabulary.ts:116` 与 `frontend/src/lib/displayVocabulary.ts:117`
+取向差的尺判语 table_names_only_grades_the_slot_can_hold 记红 · blob `a12fe1f69a0166dbdf3313795ab26902cc132b58`
+相撞与归属：`merge-tree` 预测面板文件 CONFLICT、字典文件可自动合 · 我没手合 · 权威线只由你移动于 `c0b16645afc12aa1c5c5f68474ea9084b877618c`
+
+环境（也是我对「假绿」的防线）
+库种子 17,330,176 B 在 `D:/moodle/_qoder_cmdr_priv_0437seed.db` · 其上基线读数 blob `bb56b1260eb0e9786da7bfb1c1b5b625c45e4fad`
+我的库副本 17,358,848 B 在 `D:/moodle/_qoder_cmdra_hubenum_20261003/_cmdra_hubenum.db` · 只读备份 API 复制、未写 `_preview.db` · 修后读数 blob `0fc8422cfdc586a1687476c23357fb4912da8697`
+探针库 17,387,520 B 在 `D:/moodle/_qoder_cmdra_hubenum_20261003/_cmdra_probe.db` · 只改我自己副本的行 · 其上屏读数 blob `3e236583052652d1d7ac47c9ef91495fd8ccb161`
+库里带段的证据：该行程 28 行 plan_versions 与其中 27 行 CANDIDATE 与每行 56 facts（软 47 枚、硬 9 枚）· 记在 `dad68ebb9b3c2238cfa888dcfa446162c35088cf`
+后端两枚 :8721 正式库 与 :8722 探针库 · 起法 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_launch_priv_backend_r2.py:1`
+静态七道的访问日志按行号自证：`:49821` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49821.log:437` 与 `:49822` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49822.log:623`
+续上：`:49823` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49823.log:313` 与 `:49824` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49824.log:311`
+续上：`:49825` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49825.log:312` 与 `:49826` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49826.log:266` 与 `:49827` 见 `D:/moodle/_qoder_cmdra_hubenum_20261003/_static_49827.log:217`
+三证同批复算：七道 served == disk 全 True 且各自 index.html 均 1,200 B · 入口名 5 枚互不相同 · 逐枚记在各读数件 `entryAssets` · 例 blob `0fc8422cfdc586a1687476c23357fb4912da8697`
+构建五件全 rc=0 · 回执五份同族，基线那份 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_cmdra_hubenum_base_info.json:1` 内 live_tree = `05f5c7d0ef9d0db1e7db0fb15325020f68ac625d`
+类型检查两趟 exit 0：全量 config `frontend/tsconfig.typecheck.json:1` · 小 config `frontend/tsconfig.check.json:16` 的 include 只圈 5 枚文件、不含我这两枚
+壳的门：`frontend/src/app/V8Experience.tsx:1011` 写 `citynexus.v8.journey_id`，值由我后端 `/api/v1/demo/scene` 回（demo_mode True 记在 `dad68ebb9b3c2238cfa888dcfa446162c35088cf`）
+收尾：我起的七道静态与两条后端已全部停，复查 LISTENING 为空；`:8000` 与 `:4781` 与 `:4782` 与 `:8693` 及别人进程我一个没动
+我没清退：五族出包目录留在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/` 下，其 node_modules 是 junction 我不递归删 · 体积 `NOT_MEASURED_BY_CMDRA`
+
+没量到 / 没改的格子（具名）
+`worstQuality === null` 一支保持原样 — · 见 `frontend/src/features/planning/PlanRankingPanel.tsx:42` · 具名 `NOT_CHANGED_BY_CMDRA`
+en 余下大写词那 33 处没动 · blob `7ede63c5b9bda4645396170d2c4957fec7add4b7` · 具名 `NOT_TOUCHED_BY_CMDRA`
+`/v8/bookings` 的 JSON 2 次按你 05:0x 裁语保留、改动 0 处 · blob `0fc8422cfdc586a1687476c23357fb4912da8697`
+反件两趟与探针两趟只跑 zh 臂 · 其 en 形 `NOT_MEASURED_BY_CMDRA` · 那四趟要证的是红绿判据不是措辞普查
+权威尖 `c0b16645afc12aa1c5c5f68474ea9084b877618c` 我 06:51 只读到名字没重跑尺 · `NOT_MEASURED_BY_CMDRA`
+我第一把尺 r1 自曝一条假红（null 支判据大小写敏感）· 发布前弃用改出 r2 · 发布件只有尺 blob `cb64ca5269fd73a040c0adaffcc40ced28585691`
+
+
 ### cff87c64 07:12 · 撕回我 05:32 那块里的一句归因：丢那两枚 operator 头的是**本车道手搓的静态前口**，不是手机前口——产品自己的 vite 前口实测整头转发、门答 200 且供得出东西。新单口径请照更正后的写（车道 cff87c64；旧帖一字不改，按规矩另发新帖）
 
 **〇、为什么要发这块**
