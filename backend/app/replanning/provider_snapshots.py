@@ -156,10 +156,15 @@ class MobilitySnapshot:
         )
 
     def estimate_minutes(self, origin_key: str, destination_key: str) -> int:
-        fact = _lookup_fact(self.facts, origin_key, destination_key)
+        fact = self.fact_for(origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         return fact.minutes
+
+    def fact_for(self, origin_key: str, destination_key: str) -> TravelEstimateFact | None:
+        """Return a persisted fact using the canonical anchor-role lookup."""
+
+        return _lookup_fact(self.facts, origin_key, destination_key)
 
     def hard_minutes(self, origin_key: str, destination_key: str) -> int:
         """Travel minutes allowed into a deterministic hard-feasibility decision.
@@ -177,7 +182,7 @@ class MobilitySnapshot:
         are trusted.
         """
 
-        fact = _lookup_fact(self.facts, origin_key, destination_key)
+        fact = self.fact_for(origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         # True allowlist (V3-1): only an explicitly trusted quality may drive

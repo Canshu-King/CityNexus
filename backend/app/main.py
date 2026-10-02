@@ -7435,7 +7435,7 @@ def _twin_snapshot(
         travel_min = 0
         if current_key and target_key and current_key != target_key:
             fact = (
-                persisted_mobility.facts.get((current_key, target_key))
+                persisted_mobility.fact_for(current_key, target_key)
                 if persisted_mobility is not None
                 else None
             )
@@ -7970,15 +7970,19 @@ def _plan_mobility_eligibility_receipts(
         destination_key = str(_activity_routing_key(destination_activity) or "").strip()
         if not origin_key or not destination_key or origin_key == destination_key:
             continue
-        fact = facts_by_pair.get((origin_key, destination_key))
+        fact = (
+            snapshot.fact_for(origin_key, destination_key)
+            if snapshot is not None
+            else facts_by_pair.get((origin_key, destination_key))
+        )
         receipt: dict[str, Any] = {
             "origin_key": origin_key,
             "destination_key": destination_key,
-            "provider": fact.get("provider") if fact else evidence.get("source_provider"),
-            "fact_quality": fact.get("fact_quality") if fact else None,
-            "route_provenance": fact.get("route_provenance") if fact else None,
-            "degraded": bool(fact.get("degraded", False)) if fact else bool(evidence.get("degraded", False)),
-            "persisted_minutes": fact.get("minutes") if fact else None,
+            "provider": _mobility_fact_value(fact, "provider", evidence.get("source_provider")),
+            "fact_quality": _mobility_fact_value(fact, "fact_quality"),
+            "route_provenance": _mobility_fact_value(fact, "route_provenance"),
+            "degraded": bool(_mobility_fact_value(fact, "degraded", evidence.get("degraded", False))),
+            "persisted_minutes": _mobility_fact_value(fact, "minutes"),
             "hard_minutes": None,
             "hard_eligible": False,
             "decision": "MOBILITY_DATA_UNAVAILABLE" if fact is None else "HARD_INELIGIBLE",
@@ -7998,6 +8002,16 @@ def _plan_mobility_eligibility_receipts(
         "all_actual_edges_hard_eligible": bool(receipts)
         and all(bool(item["hard_eligible"]) for item in receipts),
     }
+
+
+def _mobility_fact_value(fact: TravelEstimateFact | Mapping[str, Any] | None, field: str, default: Any = None) -> Any:
+    if fact is None:
+        return default
+    if isinstance(fact, TravelEstimateFact):
+        if field == "provider":
+            return fact.provider_key
+        return getattr(fact, field, default)
+    return fact.get(field, default)
 
 
 def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> dict[str, Any]:
@@ -8761,7 +8775,7 @@ def _frozen_route_for_plan(
             coordinates.append(coordinate)
         elif previous_key and previous_coordinate:
             segment_count += 1
-            fact = snapshot.facts.get((previous_key, key)) if snapshot is not None else None
+            fact = snapshot.fact_for(previous_key, key) if snapshot is not None else None
             geometry = list(fact.route_geometry) if fact is not None else []
             if len(geometry) >= 2:
                 points = [list(point) for point in geometry]
