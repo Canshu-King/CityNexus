@@ -7,7 +7,7 @@ from uuid import uuid4
 from unittest.mock import MagicMock, patch
 
 from app.agent.ai_availability import ai_availability_state
-from app.agent.gateway import AgentToolGateway, _latest_actionable_event
+from app.agent.gateway import AgentToolGateway, _latest_actionable_event, _resolve_actionable_event
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
 from app.agent.runtime import _model_mission_payload, _system_prompt, reconcile_stale_agent_runs
@@ -186,7 +186,7 @@ def test_r21_inspect_twin_discovers_latest_actionable_event_without_mission_bind
     )
     session = MagicMock()
     session.get.return_value = journey
-    session.scalar.return_value = event
+    session.scalars.return_value.all.return_value = [event]
     savepoint = MagicMock()
     session.begin_nested.return_value = savepoint
     request = AgentToolCall(
@@ -207,13 +207,75 @@ def test_r21_inspect_twin_discovers_latest_actionable_event_without_mission_bind
         "severity": "MAJOR",
         "affected_activity_id": "activity-r21-affected",
     }
-    session.scalar.assert_called_once()
+    session.scalars.assert_called_once()
 
 
 def test_r21_latest_event_scope_is_server_selected_when_mission_has_no_event():
     event = SimpleNamespace(id="event-r21-current")
     session = MagicMock()
-    session.scalar.return_value = event
+    session.scalars.return_value.all.return_value = [event]
 
     assert _latest_actionable_event(session, "journey-r21-current") is event
-    session.scalar.assert_called_once()
+    session.scalars.assert_called_once()
+
+
+def test_r21_multiple_actionable_events_require_explicit_selection():
+    events = [
+        SimpleNamespace(
+            id="event-r21-newer",
+            event_type="TRAFFIC_DELAY",
+            severity="MAJOR",
+            affected_activity_id="activity-newer",
+            provenance="PROVIDER_VERIFIED",
+        ),
+        SimpleNamespace(
+            id="event-r21-older",
+            event_type="CLOSURE",
+            severity="CRITICAL",
+            affected_activity_id="activity-older",
+            provenance="USER_REPORTED",
+        ),
+    ]
+    session = MagicMock()
+    session.scalars.return_value.all.return_value = events
+
+    selected, available, error = _resolve_actionable_event(
+        session, "journey-r21-current"
+    )
+
+    assert selected is None
+    assert available == events
+    assert error == "EVENT_SELECTION_REQUIRED"
+    assert _latest_actionable_event(session, "journey-r21-current") is None
+
+
+def test_r21_completion_contract_does_not_treat_observation_as_resolution():
+    from app.agent.runtime import _server_completion_contract
+
+    steps = [
+        {"tool_name": "inspect_journey", "result": {}, "status": "COMPLETED"},
+        {"tool_name": "inspect_twin", "result": {}, "status": "COMPLETED"},
+        {"tool_name": "list_replans", "result": {"total": 0}, "status": "COMPLETED"},
+    ]
+    assert _server_completion_contract(steps, run_status="COMPLETED") == {
+        "kind": "UNRESOLVED",
+        "source": "server_trace",
+        "reason_code": "NO_TYPED_RECOVERY_CONCLUSION",
+    }
+
+
+def test_r21_no_action_completion_is_machine_visible():
+    from app.agent.runtime import _server_completion_contract
+
+    steps = [
+        {"tool_name": "inspect_twin", "result": {}, "status": "COMPLETED"},
+        {
+            "tool_name": "conclude_recovery",
+            "result": {"requested_outcome": "NO_ACTION"},
+            "status": "COMPLETED",
+        },
+    ]
+    assert _server_completion_contract(steps, run_status="COMPLETED") == {
+        "kind": "NO_ACTION",
+        "source": "server_trace",
+    }

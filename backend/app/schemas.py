@@ -163,6 +163,12 @@ class AgentToolCall(BaseModel):
     end_at: datetime | None = None
     provider_key: str = Field(default="mock-booking", min_length=1, max_length=64)
     reason: str | None = Field(default=None, min_length=1, max_length=500)
+    outcome: Literal[
+        "MUTATION_EXECUTED",
+        "APPROVAL_PENDING",
+        "NO_ACTION",
+        "UNRESOLVED",
+    ] | None = None
     # Compatibility-only input. The gateway never treats this caller-owned
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False

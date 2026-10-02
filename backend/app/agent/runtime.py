@@ -94,7 +94,14 @@ def reconcile_stale_agent_runs(
 
 
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services"}
+_NON_DOMAIN_TOOLS = {"search_city_services", "conclude_recovery"}
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - _NON_DOMAIN_TOOLS
+_RECOVERY_CONCLUSIONS = {
+    "MUTATION_EXECUTED",
+    "APPROVAL_PENDING",
+    "NO_ACTION",
+    "UNRESOLVED",
+}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -137,8 +144,26 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
         _tool(
             "list_replans",
             "List existing server-generated recovery proposals.",
-            journey,
+            {**journey, "trigger_event_id": _property("string")},
             ["journey_id"],
+        ),
+        _tool(
+            "conclude_recovery",
+            "Record the server-owned recovery conclusion after inspection and any chosen action. Prose alone is not a machine-resolved outcome.",
+            {
+                **journey,
+                "outcome": _property(
+                    "string",
+                    enum=[
+                        "MUTATION_EXECUTED",
+                        "APPROVAL_PENDING",
+                        "NO_ACTION",
+                        "UNRESOLVED",
+                    ],
+                ),
+                "reason": _property("string"),
+            },
+            ["journey_id", "outcome"],
         ),
         _tool(
             "search_city_services",
@@ -327,6 +352,9 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         "The current disruption, if any, is discoverable from the server-owned JourneyTwin and event inspection; "
         "do not assume or repeat an event identifier from mission text.\n"
+        "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
+        "At the end of the recovery attempt, call conclude_recovery with exactly one server-owned outcome: "
+        "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
         "The first tool call should be inspection. "
         "After inspection, choose the safest available CityNexus action within the server-returned capabilities and authority envelope; do not assume an existing future is sufficient, and do not mutate when no intervention is needed. "
         "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
@@ -450,11 +478,83 @@ def _result_for_model(result: Any) -> str:
     return _json_text({"result": result})
 
 
+def _server_completion_contract(
+    tool_steps: list[dict[str, Any]], *, run_status: str
+) -> dict[str, Any]:
+    """Classify recovery completion from persisted server/tool facts only."""
+
+    active_mutations = {
+        "accept_replan",
+        "activate_standby",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+    }
+    executed = any(
+        item.get("tool_name") in active_mutations
+        and isinstance(item.get("result"), dict)
+        and item["result"].get("executed") is True
+        for item in tool_steps
+    )
+    approval_pending = any(
+        isinstance(item.get("result"), dict)
+        and (
+            item["result"].get("decision") in {"REQUIRE_CONFIRMATION", "REQUIRE_STEP_UP"}
+            or item["result"].get("approval_required") is True
+        )
+        for item in tool_steps
+    )
+    proposal_created = any(item.get("tool_name") == "request_replan" for item in tool_steps)
+    conclusions = [
+        item.get("result", {}).get("requested_outcome")
+        for item in tool_steps
+        if item.get("tool_name") == "conclude_recovery"
+        and isinstance(item.get("result"), dict)
+        and item.get("status") != "TOOL_ERROR"
+    ]
+    requested = conclusions[-1] if conclusions else None
+    if requested == "MUTATION_EXECUTED" and executed:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "APPROVAL_PENDING" and approval_pending:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "NO_ACTION" and not executed and not approval_pending and not proposal_created:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "UNRESOLVED":
+        return {"kind": requested, "source": "server_trace"}
+    if executed:
+        return {"kind": "MUTATION_EXECUTED", "source": "server_trace"}
+    if approval_pending:
+        return {"kind": "APPROVAL_PENDING", "source": "server_trace"}
+    return {
+        "kind": "UNRESOLVED",
+        "source": "server_trace",
+        "reason_code": "NO_TYPED_RECOVERY_CONCLUSION"
+        if run_status == "COMPLETED"
+        else "RUN_NOT_RESOLVED",
+    }
+
+
 def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, Any]:
     mission = session.get(JourneyMission, run.mission_id)
     steps = session.scalars(
         select(AgentRunStep).where(AgentRunStep.run_id == run.id).order_by(AgentRunStep.sequence_no)
     ).all()
+    step_payloads = [
+        {
+            "id": step.id,
+            "sequence_no": step.sequence_no,
+            "tool_name": step.tool_name,
+            "arguments": json.loads(step.arguments_json),
+            "result": json.loads(step.result_json),
+            "decision": step.decision,
+            "status": step.status,
+            "created_at": step.created_at,
+            "completed_at": step.completed_at,
+        }
+        for step in steps
+    ]
     return {
         "run_id": run.id,
         "mission_id": run.mission_id,
@@ -469,6 +569,9 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         ),
         "model_key": run.model_key,
         "status": run.status,
+        "completion_contract": _server_completion_contract(
+            step_payloads, run_status=run.status
+        ),
         "outcome": run.outcome,
         "failure_reason": run.failure_reason,
         # The read route answers with the same enumeration the health endpoint uses. A run that
@@ -484,20 +587,7 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "completed_at": run.completed_at,
         "mission_status": mission.status if mission else None,
         "mission": mission_payload(mission) if mission else None,
-        "tool_steps": [
-            {
-                "id": step.id,
-                "sequence_no": step.sequence_no,
-                "tool_name": step.tool_name,
-                "arguments": json.loads(step.arguments_json),
-                "result": json.loads(step.result_json),
-                "decision": step.decision,
-                "status": step.status,
-                "created_at": step.created_at,
-                "completed_at": step.completed_at,
-            }
-            for step in steps
-        ],
+        "tool_steps": step_payloads,
     }
 
 
@@ -961,6 +1051,9 @@ class DeepSeekJourneyAgent:
             "run_id": run.id,
             "mission_id": mission.id,
             "status": run.status,
+            "completion_contract": _server_completion_contract(
+                tool_trace, run_status=run.status
+            ),
             "provider_key": run.provider_key,
             "runtime_identity": self.runtime_identity,
             "model_key": run.model_key,

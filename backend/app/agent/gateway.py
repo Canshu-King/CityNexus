@@ -117,22 +117,59 @@ _LEGACY_REPLAN_PROPOSAL_FIELDS = frozenset({
 _REPLAN_CACHE_UNAVAILABLE = "AGENT_IDEMPOTENCY_RESPONSE_SCHEMA_UNAVAILABLE"
 
 
+def _actionable_events(session: Session, journey_id: str) -> list[Event]:
+    """Return all open events in deterministic display order.
+
+    Recency is useful for presentation, but it is not a semantic priority rule.
+    Callers must therefore keep the complete compact choice set whenever more
+    than one event is open.
+    """
+
+    return list(
+        session.scalars(
+            select(Event)
+            .where(
+                Event.journey_id == journey_id,
+                Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
+            )
+            .order_by(Event.detected_at.desc(), Event.id.desc())
+        ).all()
+    )
+
+
+def _event_choice(event: Event) -> dict[str, Any]:
+    return {
+        "event_id": event.id,
+        "type": event.event_type,
+        "severity": event.severity,
+        "affected_scope": event.affected_activity_id,
+        "provenance": event.provenance,
+    }
+
+
+def _resolve_actionable_event(
+    session: Session, journey_id: str, event_id: str | None = None
+) -> tuple[Event | None, list[Event], str | None]:
+    events = _actionable_events(session, journey_id)
+    if event_id:
+        selected = next((item for item in events if item.id == str(event_id)), None)
+        if selected is None:
+            return None, events, "EVENT_NOT_ACTIONABLE"
+        return selected, events, None
+    if len(events) == 1:
+        return events[0], events, None
+    if len(events) > 1:
+        return None, events, "EVENT_SELECTION_REQUIRED"
+    return None, events, None
+
+
 def _latest_actionable_event(
     session: Session, journey_id: str, event_id: str | None = None
 ) -> Event | None:
-    """Resolve an explicit event or the newest open event for model inspection."""
+    """Resolve only an explicit or unambiguous event; never guess on ambiguity."""
 
-    if event_id:
-        return session.get(Event, str(event_id))
-    return session.scalar(
-        select(Event)
-        .where(
-            Event.journey_id == journey_id,
-            Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
-        )
-        .order_by(Event.detected_at.desc(), Event.id.desc())
-        .limit(1)
-    )
+    selected, _events, _error = _resolve_actionable_event(session, journey_id, event_id)
+    return selected
 
 _CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
     "博物馆": ("museum",),
@@ -484,6 +521,7 @@ class AgentToolGateway:
             "inspect_journey": self.inspect_journey,
             "inspect_twin": self.inspect_twin,
             "list_replans": self.list_replans,
+            "conclude_recovery": self.conclude_recovery,
             "search_city_services": self.search_city_services,
             "acquire_place_facts": self.acquire_place_facts,
             "estimate_place_facts": self.estimate_place_facts,
@@ -555,10 +593,9 @@ class AgentToolGateway:
         from app.main import _twin_snapshot
         from app.agent.predictive import standby_portfolio
         # A mission may be created before the event is attached. Expose the
-        # newest still-actionable server event so an autonomous model can
-        # discover reality through inspection instead of receiving a stale
-        # proposal list or an empty current_event field.
-        trigger = _latest_actionable_event(
+        # server-owned choice set so an autonomous model can discover reality
+        # through inspection. Recency is not silently treated as relevance.
+        trigger, actionable_events, selection_error = _resolve_actionable_event(
             self.session, journey.id, request.trigger_event_id
         )
 
@@ -571,7 +608,14 @@ class AgentToolGateway:
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "twin": twin,
-            "standby_portfolio": standby_portfolio(self.session, journey, trigger),
+            "standby_portfolio": (
+                standby_portfolio(self.session, journey, trigger)
+                if selection_error is None
+                else []
+            ),
+            "actionable_events": [_event_choice(item) for item in actionable_events],
+            "event_selection_required": selection_error == "EVENT_SELECTION_REQUIRED",
+            "event_selection_error": selection_error,
             "current_event": (
                 {"id": trigger.id, "event_type": trigger.event_type, "provenance": trigger.provenance,
                  "severity": trigger.severity, "affected_activity_id": trigger.affected_activity_id}
@@ -597,9 +641,38 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _replan_payload
 
-        trigger = _latest_actionable_event(
+        trigger, actionable_events, selection_error = _resolve_actionable_event(
             self.session, journey.id, request.trigger_event_id
         )
+        if selection_error is not None:
+            return {
+                "tool": "list_replans",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "error": selection_error,
+                "message": (
+                    "Select one actionable event by passing trigger_event_id before "
+                    "requesting event-scoped recovery."
+                ),
+                "actionable_events": [_event_choice(item) for item in actionable_events],
+                "event_scope": None,
+                "proposals": [],
+                "total": 0,
+                "returned": 0,
+                "truncated": False,
+            }
+        if not actionable_events and request.trigger_event_id is None:
+            return {
+                "tool": "list_replans",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "error": "NO_ACTIONABLE_EVENT",
+                "message": "No event-scoped recovery is available until a truthful actionable event exists.",
+                "actionable_events": [],
+                "event_scope": None,
+                "proposals": [],
+                "total": 0,
+                "returned": 0,
+                "truncated": False,
+            }
         filters = [ReplanProposal.journey_id == journey.id]
         if trigger is not None:
             # Do not make an autonomous run compare the current disruption with
@@ -638,6 +711,30 @@ class AgentToolGateway:
             "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
             "detail_fields_omitted": omitted,
             "event_scope": str(trigger.id) if trigger is not None else None,
+        }
+
+    def conclude_recovery(self, request: AgentToolCall) -> dict[str, Any]:
+        """Return a typed conclusion marker; runtime validates it against the trace.
+
+        This is deliberately not a domain mutation. It gives the persisted
+        AgentRun a machine-readable conclusion without allowing model prose to
+        masquerade as a completed recovery.
+        """
+
+        reason = (request.reason or "").strip()
+        requested = request.outcome
+        if requested not in {
+            "MUTATION_EXECUTED",
+            "APPROVAL_PENDING",
+            "NO_ACTION",
+            "UNRESOLVED",
+        }:
+            raise HTTPException(422, "outcome must be a supported recovery conclusion")
+        return {
+            "tool": "conclude_recovery",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "requested_outcome": requested,
+            "reason": reason or None,
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:

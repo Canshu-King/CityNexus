@@ -68,6 +68,7 @@ from app.agent.runtime_identity import runtime_status
 from app.agent.runtime import (
     AgentRuntimeUnavailable,
     DeepSeekJourneyAgent,
+    _server_completion_contract,
     persisted_agent_run_payload,
     reconcile_stale_agent_runs,
     unavailable_run_payload,
@@ -1992,6 +1993,21 @@ def get_agent_run(
     def decode(value: str) -> Any:
         return json.loads(value)
 
+    step_payloads = [
+        {
+            "id": step.id,
+            "sequence_no": step.sequence_no,
+            "tool_name": step.tool_name,
+            "arguments": decode(step.arguments_json),
+            "result": decode(step.result_json),
+            "decision": step.decision,
+            "status": step.status,
+            "created_at": step.created_at,
+            "completed_at": step.completed_at,
+        }
+        for step in steps
+    ]
+
     return {
         "run_id": run.id,
         "mission_id": run.mission_id,
@@ -1999,6 +2015,9 @@ def get_agent_run(
         "provider_key": run.provider_key,
         "model_key": run.model_key,
         "status": run.status,
+        "completion_contract": _server_completion_contract(
+            step_payloads, run_status=run.status
+        ),
         "outcome": run.outcome,
         "failure_reason": run.failure_reason,
         "created_at": run.created_at,
@@ -2006,20 +2025,7 @@ def get_agent_run(
         "completed_at": run.completed_at,
         "mission_status": mission.status if mission else None,
         "mission": mission_payload(mission) if mission else None,
-        "tool_steps": [
-            {
-                "id": step.id,
-                "sequence_no": step.sequence_no,
-                "tool_name": step.tool_name,
-                "arguments": decode(step.arguments_json),
-                "result": decode(step.result_json),
-                "decision": step.decision,
-                "status": step.status,
-                "created_at": step.created_at,
-                "completed_at": step.completed_at,
-            }
-            for step in steps
-        ],
+        "tool_steps": step_payloads,
     }
 
 
