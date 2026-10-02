@@ -59,8 +59,6 @@ const en: Dict = {
   "checkin.done": "Checked in",
   "checkin.buttonAria": "Check in at {stop}",
   "checkin.doneAria": "Already checked in at {stop}",
-  "checkin.duplicate": "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
-  "checkin.refused": "The server would not take this stamp, so nothing was added to your footprints.",
   // ORD-0525: the itinerary's calendar export.  These keys have to exist in BOTH dictionaries, because
   // `t()` falls back to the key itself -- a `calendar.refused.bin` on screen would be the machine-word
   // exposure this order's own acceptance forbids.
@@ -1176,8 +1174,6 @@ const zhCN: Dict = {
   "checkin.done": "已打卡",
   "checkin.buttonAria": "在{stop}打卡",
   "checkin.doneAria": "已在{stop}打过卡",
-  "checkin.duplicate": "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
-  "checkin.refused": "服务器没收下这次打卡，你的足迹里没有多出任何东西。",
   // ORD-0525：行程屏的日历导出。中文这一本缺任何一条，屏上就会出现键名本身。
   "calendar.export": "导出日历",
   "calendar.busy": "正在导出…",
