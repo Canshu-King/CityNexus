@@ -10,15 +10,15 @@ import {
  * renders and cannot hide what it asked the server for.
  *
  * BOTH DOORS ARE ON THE LINE NOW. The write door landed with ORD-0399:
- * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:2999`), no `Idempotency-Key` --
+ * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:3310`), no `Idempotency-Key` --
  * the durable column decides whether the write happens -- answering `409 JOURNEY_NOT_DELETED` rather
- * than reporting a success that did not occur (`backend/app/main.py:3033`). The read door landed
- * with ORD-0402 slice 1 at `backend/app/main.py:3058`: `GET /api/v1/recycle-bin/journeys`, declared in
- * `contracts/openapi.yaml:487` and generated at `frontend/src/generated/api.ts:414`, each row
+ * than reporting a success that did not occur (`backend/app/main.py:3353`). The read door landed
+ * with ORD-0402 slice 1 at `backend/app/main.py:3608`: `GET /api/v1/recycle-bin/journeys`, declared in
+ * `contracts/openapi.yaml:794` and generated at `frontend/src/generated/api.ts:490`, each row
  * carrying the stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN`
- * (`backend/app/schemas.py:263` and `:264`) -- so this screen never has to conclude "it was deleted"
+ * (`backend/app/schemas.py:305` and `:306`) -- so this screen never has to conclude "it was deleted"
  * from the trip being missing from `GET /api/v1/journeys`, which keeps its own `deleted_at IS NULL`
- * promise (`backend/app/main.py:2951`).
+ * promise (`backend/app/main.py:3201`).
  *
  * The name this file chose is the name slice 1 shipped, so the constant below needed no edit when the
  * door arrived; that is the point of keeping the URL in one place. The reason for not using
@@ -30,7 +30,7 @@ import {
  * server's own receipt for that answer was `CNX-TWXNJHE2`).
  *
  * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
- * (`backend/app/main.py:3081`), and the panel renders the array as answered, so the order a traveller
+ * (`backend/app/main.py:3631`), and the panel renders the array as answered, so the order a traveller
  * sees is the server's order, not a client-side re-sort.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
@@ -94,7 +94,7 @@ export function binMayRestore(row: ScopedBinRow): boolean {
 }
 
 /** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped
- *  `RecycleBinJourney` into the generated client (`frontend/src/generated/api.ts:2771`), so the
+ *  `RecycleBinJourney` into the generated client (`frontend/src/generated/api.ts:3147`), so the
  *  screen's rows and the server's schema cannot drift apart silently. The guards in the panel stay
  *  anyway -- a model says what the server intends to send, not what this response did send. */
 export type DiscardedJourney = components["schemas"]["RecycleBinJourney"];
