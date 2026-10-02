@@ -16588,6 +16588,57 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 进度块 · 回退腿已落地并仍在链上 · ORD-0543 **第五次追尖**现读 `ahead=9 behind=0` 待落 · 那格"收窄让出了多少供给"我连跑了 5 趟，仍差一枚条件，逐趟读数在下表，件都在 `refs/heads/review/newlane-fallback-supply-consequence-r1` = `6fb1c674c4d914e897d204e2b108b34d90999090` 上的 `review/cmdr0235-5-no-second-geocode/readouts/supply/`
+
+**〇、现读（三枝都在库里，权威线我一字节没写）**
+
+尖 `569b8472b134e5562ef396e38681870b9c26536a`（`refs/heads/mirror/integration-frontend-apple-pass1` 回读同值；`git cat-file -t` 回 commit）。
+
+- `refs/heads/review/newlane-fallback-no-second-geocode-r1` = `c4da40beda5940ec9ef3d5c43223356cd2ff7d10` —— **已落地**：在尖上逐枚 `git rev-parse 569b8472b134e5562ef396e38681870b9c26536a:<路径>`，`backend/app/integrations/discovery/real_city.py` = `5bed42608bdfaad1067c50abb11918dfba4710b4`、`backend/tests/test_qoder_city_failure_reasons.py` = `77433ceddec4200d8e85fec3fccccf3d4cd439b9`，与我交付那代逐字相同；产品那一笔 `e49bd2c62b0f94f50fea0015660e1b977ae87870` 在祖先链上。这一手我结清。
+- `refs/heads/review/newlane-ord0543-day-sequence-leg-r1` = `67bb75ac768a0343d8d4e230e7107cd124ac2741`，树 `f30f472d48e0351ee1028f5a830a3a1fb89b1e0a`，产品那一笔 `0f0a14e06efea4aee75a5e0226f3a2964d15efc0`，`ahead=9 behind=0`、`git merge-base --is-ancestor` 退出码 0 ⇒ ff-only，随时可过门。
+- `refs/heads/review/newlane-cmdr0757-2-anchor-drift-rulers-r1` = `ea80bc9898e98977c8b311272f400771490edcfc` —— 尺侧 CMDR 18:34 已派回 `1d64acf5` 并已落，我这枝保持**不请落、不删、不强推**。
+
+**一、ORD-0543 这一手：第五次搬基座，仍然一字未重做（有证）**
+
+- 尖从 `491e343bfb3d543b38ab11c9f6f0f0283e66129a` 走到 `569b8472b134e5562ef396e38681870b9c26536a` 共 12 笔（`ORD-0500 r6/r7`、`ORD-0545 slice 2`、`ORD-0525 r5`、`ORD-0535 residual`）。**上游这 12 笔没碰我改的东西**：`git diff --name-only 7dbbf02074d8fc253e5fdff0734f466b916bcd51 569b8472b134e5562ef396e38681870b9c26536a` 里既没有 `backend/app/services.py` 也没有本单臂文件；同一枚 `services.py` 在两枚尖上是同一 blob `f78644842e8ed03bf3b152d4be47b4560dd6d41a`。
+- 于是重切后我这代两枚文件仍是我测过的那两枚：`backend/app/services.py` = `1448ee37f844fdcb98c5e77ef7e4fbdf0c8a05b4`（82926 字节）、`backend/tests/test_ord0543_day_sequence_leg_r1.py` = `bb7d166b9f4fabe848340e4a04be6b1a0921ea96`（6460 字节）。
+- **当代还是重跑了才算话**（`-p no:cacheprovider -q --no-header`，解释器 Python 3.12.14）：`tests/test_ord0543_day_sequence_leg_r1.py` `6 passed`；两枚反件在件 `d6b671d4121119e3727d8f594018051fc1077d74`（5861 字节，流水 `b5513798bd946752a3cf6bf008115c7fa80377a3` 3787 字节）——M1 `4 failed, 2 passed`（四枚点名与历代逐枚相同）、M2 **恰好 1 failed** = `test_a_stated_window_still_bounds_its_own_stop`，判语 `assert 540 >= 840`；`blob_before == blob_after == 1448ee37f844fdcb98c5e77ef7e4fbdf0c8a05b4`、`all_restored: true`、还原后 `git status --porcelain -- backend/app` 空。
+- 只读落地预测（不落任何字节）：`git merge-tree --write-tree 569b8472b134e5562ef396e38681870b9c26536a 67bb75ac768a0343d8d4e230e7107cd124ac2741` 退出码 0、CONFLICT 0 枚，预测树就是 `f30f472d48e0351ee1028f5a830a3a1fb89b1e0a`，其中 `services.py` 读回仍是 `1448ee37f844fdcb98c5e77ef7e4fbdf0c8a05b4` —— 合完等于我测过的字节，不需要你手合。
+- **要请你说一句的事**：这一手从 `5a4cdbd2` 起已被我搬了五次基座（`0c061d9e`→`2cb9a405`→`5a4cdbd2`→`00b5f25e`→`491e343b`→`7dbbf020`→`e7ff7938`→`569b8472`），每一次都是纯搬、每一次我都重跑了臂与反件。链跑得比队列快时，"让候选永远绿着"不是车道能负责的形式；请要么这一代收它，要么我把它停在 `67bb75ac768a0343d8d4e230e7107cd124ac2741` 不再追（停 ≠ 弃：枝与件都在库里，你一句话我就当代重跑）。我不再自己决定第 N+1 次追尖。
+
+**二、那格"收窄让出了多少供给"：5 趟的逐趟真相（不凑，不遮）**
+
+裁语落地后，比较臂必须是**门落地之前那一代**（`491e343bfb3d543b38ab11c9f6f0f0283e66129a`，其 `real_city.py` = `e7663564bf47c0fc0923b790f54c429ef4ac4eeb`），有门臂是 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10`；两臂各起私有后端与一次性私有库，Nominatim 基址指向本机一枚只计数的监听。这一格要成立需要三件事同时：**Photon 真答上**（锚由腿落）、**Overpass 真答零**（不是超时）、**回退那一问有人答**。下面每一行都是从件里读出来的，不是我记得的数：
+
+| 跑法（tag / 回退应答） | Photon 腿 | 无门臂：锚来源·Nominatim 实收·形状 | 有门臂：锚来源·Nominatim 实收·`fallback_geocode` | 件在 `{SUP_HEAD[:10]}`… 上的 blob（字节） |
+| --- | --- | --- | --- | --- |
+| `cafe100_one` / `one` | 无门臂 `ANSWERED`·有门臂 `ANSWERED` | 锚 `photon_city_anchor`，实收 **0**，`mode=replay-fallback`，原因 `PROVIDER_TIMEOUT` | 锚 `photon_city_anchor`，实收 **0**，`fallback_geocode=SKIPPED_ANCHOR_GROUNDED_BY_photon_city_anchor` | `57274a746a17c5fbf6127d22467347002e84e80b`（7278 字节） |
+| `supply_one_a` / `one` | 无门臂 `ANSWERED`·有门臂 `ANSWERED` | 锚 `photon_city_anchor`，实收 **0**，`mode=replay-fallback`，原因 `PROVIDER_TIMEOUT` | 锚 `photon_city_anchor`，实收 **0**，`fallback_geocode=NOT_REACHED` | `057c73f394266dcd5ee0642c8af864d0ded5c769`（7340 字节） |
+| `supply_one_try1` / `one` | 无门臂 `NOT_ANSWERED_ConnectError`·有门臂 `NOT_ANSWERED_ConnectError` | 锚 `nominatim_city_anchor`，实收 **1**，`mode=replay-fallback`，原因 `RESOLVER_UNREACHABLE` | 锚 `nominatim_city_anchor`，实收 **1**，`fallback_geocode=NOT_REACHED` | `7849b2d44e4323593e1ebd32e6084cdcf964e636`（7583 字节） |
+| `supply_one_try2` / `one` | 无门臂 `NOT_ANSWERED_ConnectError`·有门臂 `ANSWERED` | 锚 `nominatim_city_anchor`，实收 **1**，`mode=replay-fallback`，原因 `RESOLVER_UNREACHABLE` | 锚 `photon_city_anchor`，实收 **0**，`fallback_geocode=NOT_REACHED` | `4ece0fb2555a4f880a34a56a39d78b2095ef248f`（7465 字节） |
+| `aware_b1` / `limit_aware` | 无门臂 `ANSWERED`·有门臂 `ANSWERED` | 锚 `photon_city_anchor`，实收 **1**，`mode=live`，原因 `fallback_geocode` | 锚 `photon_city_anchor`，实收 **0**，`fallback_geocode=SKIPPED_ANCHOR_GROUNDED_BY_photon_city_anchor` | `ddbbb3668db477f5a6661ec2a9a130f39a12f73f`（7348 字节） |
+
+判语：****量到了，但那一行是我仪器供的合成记录，所以这格证明的是通路不是供应商。** `aware_b1` 这一趟（已上架，件 blob `ddbbb3668db477f5a6661ec2a9a130f39a12f73f`，在 `{SUP_HEAD}` 上）三件事齐了：Photon 真答 `http_status=200` / `bytes=344`、Overpass 答了但同城没留下候选（无门代因此才走到 `backend/app/integrations/discovery/real_city.py:1642` 的 `if not candidates:`，而那枚 `overpass=CAPTURED` 只说“有 attempt 答过”，见同文件 `:1670`）、回退那一问按 `limit` 拿到了我放行的一枚合成记录。无门代 `491e343bfb3d543b38ab11c9f6f0f0283e66129a`（其 `real_city.py` = `e7663564bf47c0fc0923b790f54c429ef4ac4eeb`）于是 `http_status=200`、`mode=live`、候选 1 枚（就来自那一问）；有门代 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10`（`real_city.py` = `5bed42608bdfaad1067c50abb11918dfba4710b4`）同一形状下实收 0 次、`fallback_geocode=SKIPPED_ANCHOR_GROUNDED_BY_photon_city_anchor`，落 `mode=replay-fallback`、候选 3 枚、原因 `PROVIDER_NO_RESULTS`。**所以裁语的代价被具体化了：在“腿已答而类别答零”那一格，第二次问若答得出东西，无门代会把它当 live 供给交出去，有门代不再给它这个机会。** 两臂候选数不等（1 对 3）不构成“谁更多”的结论——一枚来自供应商形状的答，三枚来自封存 replay，形状不同不可加。另两处必须具名：①这一格不是“今天真 Nominatim 能不能答”，那一行是我造的合成记录（件里 `stub_row_declared_synthetic` 字段只认 `one` 模式，对 `limit_aware` 写成 null，这是我仪器的申报缺陷，数据是合成的这点不变）；②前四趟没走到这一形，原因逐趟写在表里（Overpass 超时 `PROVIDER_TIMEOUT`、或 Photon 那次 `NOT_ANSWERED_ConnectError` 而我的 stub 替它落了锚——后者正是我这轮修掉的仪器缺陷）。**
+
+表里的字节数是**上架那枚 blob** 的 `git cat-file -s`，不是本机工作文件的大小：本机 `evidence/fb549/*.json` 是 CRLF，入库时按 `*.json` 落到 LF，所以两者字节数不等；要复核请以 blob 为准。
+
+仪器在这一族里我自己发现并改掉了一处缺陷：最初的 `DOOR_STUB=one` 会连**锚腿**（`limit=1`）一起答，于是我的仪器替产品决定了"哪条腿落锚"——`supply_one_try1` 那趟两臂都报 `nominatim_city_anchor` 就是证据。已改成按 `limit` 分别应答（`limit<=1` 回空数组、只让**回退那一问**拿到合成行），这处改动是仪器的，不是产品的，`0 产品字节`。
+
+**三、名下没有可接的新单（读过 `## ORDERS`）**
+
+`ORD-0546` 至 `ORD-0549` 这四个号在账本里没有任何命中行；`ORD-0550` 那笔"任一车道"的锚点尺已由 S4 落地、CMDR 18:34 派回 `1d64acf5`、`8ac89982` 交了独立反件核验——我不占别人已派的格。CMDR 22:52 / 22:56 / 23:47 三块是落地与换代，没有点名给我的单。所以**请点名单号与验收形状**；我这三格仍随时可开工（都带现读证据）：①上面那格（只差 Photon 与 Overpass 同代配合）；②`provider_status.fallback_geocode` 没进 OpenAPI 契约，要不要补由你裁；③`ord197 r3/r4` 那一族在部分集合上的翻转未定因，谁收口我陪加趟数。
+
+**四、还有一格我量不了，具名在这里**
+
+"回退腿那一手是否已经活在部署代（后端 :4787）"——**NOT_VERIFIED_BY_LANE**。我只读进程表看到 :4787 的监听命令行是 `-m uvicorn backend.app.main:app --host 127.0.0.1 --port 4787`（`pid 7788`），**没有 `--app-dir`**，所以那一代跑的是哪个工作树无法从命令行判定；而我按常设规矩不向 :4787 发请求（它是共享栈，且我不写共享 `_preview.db`）。落地事实我按字节证在尖上（§一 与 §〇），部署代那一格要么由你一句授权我发一次只读请求，要么由换代那块自己写明代次。
+
+**五、边界**
+
+权威线 0 次移动；共享库 0 次写；`demo/reset` 0 次于共享库；他人枝 0 次强推（`--force-with-lease` 只作用于本车道三枝中的 `refs/heads/review/newlane-ord0543-day-sequence-leg-r1` 一枚，被替掉的 `be370217680a6f621676d9e7f601713fcd030483` 等旧头对象仍在库里可 `git cat-file -t`）；他人进程 0 次杀；门读数用过的一次性私有库取完读数由本车道自删，逐值在随枝 JSON 里。D 盘现读 16 GB 余 / 96%。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0512 第二代 · 没上屏的名字现在说得出是哪种「没有」；三档能不能换来更多名字，我把数量出来了；链重建后按 day23 重读了一遍（车道 8ac89982）
 
 **〇、坐标（写块这一刻现读；sha 与 commit 都是已入库、可 `git cat-file` 的对象）**
