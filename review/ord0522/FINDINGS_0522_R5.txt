@@ -1,12 +1,12 @@
-ORD-0522 r5 -- 暗色档位：day19 现尖上的新屏重取（权威尖 c4da40beda59，交付头 44a96e579bb1）
+ORD-0522 r5 -- 暗色档位：day19 现尖上的新屏重取（权威尖 c4da40beda59，交付头 5ea785a0e43a）
 本件由 make_evidence_0522_r5.py 从本轮实测文件算出；每一枚数都能按第 8 节的命令复算。
 
 0. 坐标
    线上 styles.css blob      a042e2f62c7b8a31457501005e996d47b32dde8c
-   候选 styles.css blob      58e982e1bad669fe9b66cee392c4651ce0fd3644  （本枝头 44a96e579bb12db11e30f2071f2f145a8a02d089）
-   对尖的全部差异            1	1	frontend/src/styles.css
-   构建：线上代 c4da40be 的 build_line_c4da_r6.log；候选代 44a96e57 的 build_cand_c4da_r6.log；两代各 tsc 两份 + vite build rc=0
-   入口 JS：线上 /assets/index-lut3QTI8.js（1607851 B，本机字节 sha1 ce3bfb4a80ccd4bc4d0706bb6135ef03a6bae45d，非 git 对象、不可 cat-file）；候选 /assets/index-50kwyZcU.js（1607851 B，本机字节 sha1 1ed111dcdef6c9cf34ed97f4c152a0f45a942900，非 git 对象、不可 cat-file）。可取回坐标是本枝头 44a96e579bb12db11e30f2071f2f145a8a02d089。
+   候选 styles.css blob      58e982e1bad669fe9b66cee392c4651ce0fd3644  （带这一枚改动的那一笔 5ea785a0e43aa97d7ef8b5371c7729971bf7d558；本工件不引自己，也不引含自己的头）
+   对尖的全部差异            1	1	frontend/src/styles.css | 120	0	review/ord0522/FINDINGS_0522_R5.txt
+   构建：线上代 c4da40be 的 build_line_c4da_r6.log；候选代 5ea785a0 的 build_cand_c4da_r6.log；两代各 tsc 两份 + vite build rc=0
+   入口 JS：线上 /assets/index-lut3QTI8.js（1607851 B，本机字节 sha1 ce3bfb4a80ccd4bc4d0706bb6135ef03a6bae45d，非 git 对象、不可 cat-file）；候选 /assets/index-50kwyZcU.js（1607851 B，本机字节 sha1 1ed111dcdef6c9cf34ed97f4c152a0f45a942900，非 git 对象、不可 cat-file）。可取回坐标是带这一改动的那一笔 5ea785a0e43aa97d7ef8b5371c7729971bf7d558。
 
 1. 为什么这一代必须重量（不是把 r4 的数搬过来）
    r4 的基座是 5a4cdbd2（day15）。到本尖共移动过两代前端；本轮实测的那五枚前端源里
@@ -91,7 +91,7 @@ ORD-0522 r5 -- 暗色档位：day19 现尖上的新屏重取（权威尖 c4da40b
    甲 = 把亮档 --cn-ink-tertiary 压到 >=4.5（一次动全树所有用它的位置）；
    乙 = 这三处改用 --cn-ink-secondary（亮档 design-tokens.css:14 是 #6e6e73，对白 5.07；本轮候选代在卡片上实测屏上最差 4.82）。
 
-6. 闸、分母与凭据两读（全部在交付头 44a96e579bb1 这一代、同一趟）
+6. 闸、分母与凭据两读（全部在带这一改动的那一笔 5ea785a0e43a 这一代、同一趟）
    cells 1：collected=8，8 passed in 2.39s
    cells 2：collected=8，8 passed in 2.06s
    family 1：collected=47，47 passed in 14.88s
