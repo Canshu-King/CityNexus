@@ -514,13 +514,15 @@ def _scenario_problem(
         ),
         None,
     )
-    mobility = _load(latest_mobility.payload_json if latest_mobility else None, {})
+    active = session.get(PlanVersion, journey.active_plan_version_id)
+    mobility = _load(active.mobility_evidence_json if active else None, {})
+    observed_mobility = _load(latest_mobility.payload_json if latest_mobility else None, {})
     current_minutes = dict(mobility.get("current_minutes") or {})
     # Runtime captures persist authoritative edge facts as a list.  The
     # counterfactual solver must consume those real minutes instead of falling
     # back to its bounded diagnostic default, otherwise a retime can pass the
     # solver and fail the final live feasibility gate.
-    for fact in mobility.get("facts") or []:
+    for fact in [*(mobility.get("facts") or []), *(observed_mobility.get("facts") or [])]:
         if not isinstance(fact, dict):
             continue
         origin = fact.get("origin_key")
@@ -528,6 +530,7 @@ def _scenario_problem(
         minutes = fact.get("minutes")
         if origin and destination and minutes is not None:
             current_minutes[f"{origin}|{destination}"] = int(minutes)
+    current_minutes.update(observed_mobility.get("current_minutes") or {})
     travel: dict[tuple[str, str], int] = {}
     for origin in all_locations:
         for destination in all_locations:

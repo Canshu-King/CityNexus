@@ -836,8 +836,6 @@ class DeepSeekJourneyAgent:
                     seen_calls.add(signature)
                     sequence += 1
                     arguments.setdefault("journey_id", journey.id)
-                    if tool_name == "inspect_twin" and mission.trigger_event_id:
-                        arguments.setdefault("trigger_event_id", mission.trigger_event_id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     arguments.setdefault("agent_id", self.agent_id)
                     tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
@@ -845,8 +843,6 @@ class DeepSeekJourneyAgent:
                         tool_name == "search_city_services"
                         and tool_counts[tool_name] > 3
                     )
-                    if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
-                        arguments["trigger_event_id"] = mission.trigger_event_id
                     if search_batch_limited:
                         result = {
                             "tool": tool_name,

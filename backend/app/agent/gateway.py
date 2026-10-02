@@ -1021,8 +1021,17 @@ class AgentToolGateway:
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
-        if request.trigger_event_id is None:
-            raise HTTPException(422, "trigger_event_id is required for request_replan")
+        trigger, events, selection_error = _resolve_actionable_event(
+            self.session, journey.id, request.trigger_event_id
+        )
+        if selection_error is not None or trigger is None:
+            return {
+                "tool": "request_replan",
+                "error": selection_error or "NO_ACTIONABLE_EVENT",
+                "executed": False,
+                "actionable_events": [_event_choice(item) for item in events],
+            }
+        request = request.model_copy(update={"trigger_event_id": UUID(trigger.id)})
         policy_row = get_or_create_policy(self.session, journey.traveler_id)
         policy = policy_from_model(policy_row)
         protected_activity_ids: list[UUID] = []

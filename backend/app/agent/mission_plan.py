@@ -59,6 +59,7 @@ _READ_TOOLS = (
     "inspect_twin",
     "list_replans",
     "search_city_services",
+    "conclude_recovery",
 )
 _ACTION_TOOLS = (
     "activate_standby",
