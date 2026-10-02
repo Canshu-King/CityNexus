@@ -1,0 +1,623 @@
+{
+ "run_id": "ORD0502SC-002349",
+ "started": "10-03 00:23:49",
+ "worktree_head": "7dbbf02074d8fc253e5fdff0734f466b916bcd51",
+ "spec_blob": "5b97af33946b880fe736c26e54212f18aa679580",
+ "runner_blob": "77f61f59351eebbada4c2986d659f6d8962e80d1",
+ "ports": {
+  "backend": 4711,
+  "frontend": 4712
+ },
+ "db_created_by_this_run": "D:\\moodle\\_ord0502_census\\ORD0502SC-002349.db",
+ "preview_store_before": {
+  "bytes": 7213056,
+  "mtime_ns": 1790644827980246600
+ },
+ "backend_direct_health": "http_status=200 body={\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"ORD0502SC-002349\",\"e2e_database_id\":\"ORD0502SC-002349.db\"}",
+ "backend_names_this_run_id": false,
+ "health_through_the_front": {
+  "http_status": 200,
+  "names_this_run_id": true
+ },
+ "front_serves": {
+  "index_bytes": 1200,
+  "entry_asset": "index-50kwyZcU.js",
+  "assets_compared": 1,
+  "all_equal": true,
+  "per_asset": [
+   {
+    "asset": "index-50kwyZcU.js",
+    "served_bytes": 1607851,
+    "disk_bytes": 1607851,
+    "equal": true
+   }
+  ]
+ },
+ "doors": {
+  "travelers_http_status": 201,
+  "traveler_id_named": true,
+  "journeys_http_status": 201,
+  "journey_id": "00a6ad34-f50f-40db-86dc-60511c742e6b",
+  "journey_answer_head": "{\"id\": \"00a6ad34-f50f-40db-86dc-60511c742e6b\", \"traveler_id\": \"72cc35ae-604c-4aef-a6ce-56aa433505b3\", \"title\": \"census walk\", \"city_code\": \"CN-TIANJIN\", \"timezone\": \"Asia/Shanghai\", \"start_at\": \"2026-10-20T09:00:00+08:00\", \"end_at\": \"2026-1"
+ },
+ "census_exit": 0,
+ "census_stdout": [
+  "A_hub_clean_device | testids 70 | chars 592 | today-heading {\"count\":0,\"visible\":false} | trial-open {\"count\":0,\"visible\":false} | access-invite-submit {\"count\":0,\"visible\":false} | fallback-labelled buttons []",
+  "B_hub_with_a_journey_row | testids 41 | chars 706 | today-heading {\"count\":1,\"visible\":true} | trial-open {\"count\":0,\"visible\":false} | access-invite-submit {\"count\":0,\"visible\":false} | fallback-labelled buttons [\"试用其他城市\"]",
+  "C_access | testids 48 | chars 1595 | today-heading {\"count\":0,\"visible\":false} | trial-open {\"count\":0,\"visible\":false} | access-invite-submit {\"count\":1,\"visible\":true} | fallback-labelled buttons []",
+  "D_footprints | testids 13 | chars 255 | today-heading {\"count\":0,\"visible\":false} | trial-open {\"count\":0,\"visible\":false} | access-invite-submit {\"count\":0,\"visible\":false} | fallback-labelled buttons []",
+  "errors []"
+ ],
+ "census_stderr": [],
+ "surfaces": {
+  "front": "http://127.0.0.1:4712",
+  "journey_id_named": true,
+  "runs": {
+   "A_hub_clean_device_visit": "ok",
+   "A_hub_clean_device": {
+    "url": "http://127.0.0.1:4712/v8/hub",
+    "testid_attributes": 70,
+    "distinct_testids": [
+     "sim-ball",
+     "sim-ball-dot",
+     "sim-float",
+     "trial-arrival",
+     "trial-city",
+     "trial-country",
+     "trial-currency",
+     "trial-departure",
+     "trial-end",
+     "trial-missing-jump",
+     "trial-next",
+     "trial-next-reason",
+     "trial-required-hint",
+     "trial-scroll",
+     "trial-setup",
+     "trial-show-advanced",
+     "trial-start",
+     "trial-step-1",
+     "trial-step-2",
+     "trial-step-3",
+     "trial-step1-body",
+     "trial-steps",
+     "trial-sticky-cta",
+     "trial-supported-cities",
+     "trial-supported-fields-上海",
+     "trial-supported-fields-东京",
+     "trial-supported-fields-北京",
+     "trial-supported-fields-厦门",
+     "trial-supported-fields-天津",
+     "trial-supported-fields-广州",
+     "trial-supported-fields-成都",
+     "trial-supported-fields-新加坡",
+     "trial-supported-fields-杭州",
+     "trial-supported-fields-深圳",
+     "trial-supported-fields-福州",
+     "trial-supported-group-needs_lookup",
+     "trial-supported-group-rule-needs_lookup",
+     "trial-supported-group-rule-supported",
+     "trial-supported-group-rule-unknown",
+     "trial-supported-group-supported",
+     "trial-supported-group-unknown",
+     "trial-supported-identity-上海",
+     "trial-supported-identity-东京",
+     "trial-supported-identity-北京",
+     "trial-supported-identity-厦门",
+     "trial-supported-identity-天津",
+     "trial-supported-identity-广州",
+     "trial-supported-identity-成都",
+     "trial-supported-identity-新加坡",
+     "trial-supported-identity-杭州",
+     "trial-supported-identity-深圳",
+     "trial-supported-identity-福州",
+     "trial-supported-none-needs_lookup",
+     "trial-supported-none-supported",
+     "trial-supported-row-上海",
+     "trial-supported-row-东京",
+     "trial-supported-row-北京",
+     "trial-supported-row-厦门",
+     "trial-supported-row-天津",
+     "trial-supported-row-广州",
+     "trial-supported-row-成都",
+     "trial-supported-row-新加坡",
+     "trial-supported-row-杭州",
+     "trial-supported-row-深圳",
+     "trial-supported-row-福州",
+     "trial-supported-toggle",
+     "trial-tianjin-demo",
+     "trial-timezone"
+    ],
+    "buttons": [
+     "EN",
+     "高级设置",
+     "目的地",
+     "抵达地点",
+     "离开地点",
+     "使用封存的演示行程",
+     "下一步"
+    ],
+    "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+    "buttons_matching_that_regex": [],
+    "body_text_chars": 592,
+    "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+    "anchors": {
+     "today-heading": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-steps": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-city": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-next": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "hub-secondary-actions": {
+      "count": 0,
+      "visible": false
+     },
+     "trips-tabs": {
+      "count": 0,
+      "visible": false
+     },
+     "stop-checkin": {
+      "count": 0,
+      "visible": false
+     },
+     "access-invite-submit": {
+      "count": 0,
+      "visible": false
+     },
+     "footprint-panel": {
+      "count": 0,
+      "visible": false
+     }
+    }
+   },
+   "B_hub_with_a_journey_row_visit": "ok",
+   "B_hub_with_a_journey_row": {
+    "url": "http://127.0.0.1:4712/v8/hub",
+    "testid_attributes": 41,
+    "distinct_testids": [
+     "hub-glance-empty",
+     "hub-plan-with-ai",
+     "hub-secondary-actions",
+     "journey-link-copy",
+     "nav-agent",
+     "nav-hub",
+     "nav-map",
+     "nav-me",
+     "nav-trips",
+     "pending-count",
+     "pending-details",
+     "pending-empty",
+     "pending-empty-action",
+     "pending-empty-title",
+     "pending-filter-open",
+     "pending-no-plan",
+     "pending-reads",
+     "pending-reread",
+     "pending-set",
+     "plan-ranking",
+     "pretrip-checklist",
+     "pretrip-empty",
+     "pretrip-empty-action",
+     "rank-none",
+     "sim-ball",
+     "sim-ball-dot",
+     "sim-float",
+     "today-attention",
+     "today-attention-band",
+     "today-clock-source",
+     "today-heading",
+     "today-hero",
+     "today-next",
+     "today-stay",
+     "today-strip",
+     "today-when",
+     "topbar-language",
+     "topbar-theme",
+     "v18-copilot-dock",
+     "v8-map-empty",
+     "v8-mobile-menu"
+    ],
+    "buttons": [
+     "今天",
+     "实时行程",
+     "地图",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "TITianjin1 位旅行者•••",
+     "菜单",
+     "跟随系统",
+     "EN",
+     "◌",
+     "TI",
+     "AI 帮我规划",
+     "试用其他城市",
+     "打开行程工作台",
+     "复制行程链接",
+     "去看这一代方案",
+     "对比住宿 →",
+     "筛选",
+     "去城市探索",
+     "再读一次",
+     "✦CityNexus Copilot",
+     "行程",
+     "我的"
+    ],
+    "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+    "buttons_matching_that_regex": [
+     "试用其他城市"
+    ],
+    "body_text_chars": 706,
+    "body_head": "CNCityNexus行程智能工作区 行程运营今日今天实时行程地图规划行程工作台住宿选择城市探索导入地点出行旅行票夹足迹Copilot系统恢复与执行智能守护旅行者画像回收站成员与权限行程事实已同步0 个方案 · 5 种模式TITianjin1 位旅行者•••菜单行程/今天行程事实就绪跟随系统EN◌TI还没休息天津之旅1",
+    "anchors": {
+     "today-heading": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-steps": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-city": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-next": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "hub-secondary-actions": {
+      "count": 1,
+      "visible": true
+     },
+     "trips-tabs": {
+      "count": 0,
+      "visible": false
+     },
+     "stop-checkin": {
+      "count": 0,
+      "visible": false
+     },
+     "access-invite-submit": {
+      "count": 0,
+      "visible": false
+     },
+     "footprint-panel": {
+      "count": 0,
+      "visible": false
+     }
+    }
+   },
+   "C_access_visit": "ok",
+   "C_access": {
+    "url": "http://127.0.0.1:4712/v8/access",
+    "testid_attributes": 48,
+    "distinct_testids": [
+     "access-activity-caveat",
+     "access-activity-list",
+     "access-admin-cap",
+     "access-chosen",
+     "access-confirm-table",
+     "access-door-state",
+     "access-empty-focus-invite",
+     "access-empty-issue-link-grant",
+     "access-grant-empty",
+     "access-identity",
+     "access-invite-expiry",
+     "access-invite-quota",
+     "access-invite-signer",
+     "access-invite-submit",
+     "access-invite-ttl",
+     "access-invite-visibility",
+     "access-no-tier-access.noTierArrival",
+     "access-no-tier-access.noTierSaved",
+     "access-order-verdict",
+     "access-panel",
+     "access-role-details",
+     "access-role-ladder",
+     "access-role-scope",
+     "access-roster-empty",
+     "access-server-read",
+     "access-sort",
+     "access-sort-absent",
+     "access-sort-current",
+     "access-sort-tier-CREATION_ORDER",
+     "access-sort-tier-DEPARTURE_DATE",
+     "access-sort-tier-RECENT_UPDATE",
+     "access-sort-tier-TITLE",
+     "access-switch-lines",
+     "access-trip-open-0",
+     "access-trip-roster",
+     "access-trip-row",
+     "access-visibility-ladder",
+     "nav-agent",
+     "nav-hub",
+     "nav-map",
+     "nav-me",
+     "nav-trips",
+     "topbar-language",
+     "topbar-theme",
+     "v18-copilot-dock",
+     "v8-mobile-menu"
+    ],
+    "buttons": [
+     "今天",
+     "实时行程",
+     "地图",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "TITianjin1 位旅行者•••",
+     "菜单",
+     "跟随系统",
+     "EN",
+     "◌",
+     "TI",
+     "创建序",
+     "最近更新",
+     "出发日期",
+     "名称",
+     "census walk",
+     "发出邀请",
+     "发一条凭链接可读的邀请",
+     "去邀请那一格",
+     "✦CityNexus Copilot",
+     "行程",
+     "我的"
+    ],
+    "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+    "buttons_matching_that_regex": [],
+    "body_text_chars": 1595,
+    "body_head": "CNCityNexus行程智能工作区 行程运营今日今天实时行程地图规划行程工作台住宿选择城市探索导入地点出行旅行票夹足迹Copilot系统恢复与执行智能守护旅行者画像回收站成员与权限行程事实已同步0 个方案 · 5 种模式TITianjin1 位旅行者•••菜单行程/今天行程事实就绪跟随系统EN◌TI成员与权限谁能改这",
+    "anchors": {
+     "today-heading": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-steps": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-city": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-next": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "hub-secondary-actions": {
+      "count": 0,
+      "visible": false
+     },
+     "trips-tabs": {
+      "count": 0,
+      "visible": false
+     },
+     "stop-checkin": {
+      "count": 0,
+      "visible": false
+     },
+     "access-invite-submit": {
+      "count": 1,
+      "visible": true
+     },
+     "footprint-panel": {
+      "count": 0,
+      "visible": false
+     }
+    }
+   },
+   "D_footprints_visit": "ok",
+   "D_footprints": {
+    "url": "http://127.0.0.1:4712/v8/footprints",
+    "testid_attributes": 13,
+    "distinct_testids": [
+     "footprint-empty",
+     "footprint-panel",
+     "footprint-retry",
+     "footprint-tally",
+     "nav-agent",
+     "nav-hub",
+     "nav-map",
+     "nav-me",
+     "nav-trips",
+     "topbar-language",
+     "topbar-theme",
+     "v18-copilot-dock",
+     "v8-mobile-menu"
+    ],
+    "buttons": [
+     "今天",
+     "实时行程",
+     "地图",
+     "行程工作台",
+     "住宿选择",
+     "城市探索",
+     "导入地点",
+     "旅行票夹",
+     "足迹",
+     "Copilot",
+     "恢复与执行",
+     "智能守护",
+     "旅行者画像",
+     "回收站",
+     "成员与权限",
+     "TITianjin1 位旅行者•••",
+     "菜单",
+     "跟随系统",
+     "EN",
+     "◌",
+     "TI",
+     "重读一次",
+     "✦CityNexus Copilot",
+     "行程",
+     "我的"
+    ],
+    "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+    "buttons_matching_that_regex": [],
+    "body_text_chars": 255,
+    "body_head": "CNCityNexus行程智能工作区 行程运营今日今天实时行程地图规划行程工作台住宿选择城市探索导入地点出行旅行票夹足迹Copilot系统恢复与执行智能守护旅行者画像回收站成员与权限行程事实已同步0 个方案 · 5 种模式TITianjin1 位旅行者•••菜单行程/今天行程事实就绪跟随系统EN◌TI足迹这一屏只列服务",
+    "anchors": {
+     "today-heading": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-steps": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-city": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-next": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "hub-secondary-actions": {
+      "count": 0,
+      "visible": false
+     },
+     "trips-tabs": {
+      "count": 0,
+      "visible": false
+     },
+     "stop-checkin": {
+      "count": 0,
+      "visible": false
+     },
+     "access-invite-submit": {
+      "count": 0,
+      "visible": false
+     },
+     "footprint-panel": {
+      "count": 1,
+      "visible": true
+     }
+    }
+   },
+   "E_sealed_demo_cta": {
+    "attempted": true,
+    "cta_count": 0
+   }
+  },
+  "errors": []
+ },
+ "preview_store_unchanged": true,
+ "worktree_status_after": "?? review/ord0502/report-ORD0502-164201.json\n?? review/ord0502/walk-ORD0502-164201.json",
+ "classification_reads": {
+  "A_today_heading": {
+   "count": 0,
+   "visible": false
+  },
+  "A_trial_open": {
+   "count": 0,
+   "visible": false
+  },
+  "B_today_heading": {
+   "count": 1,
+   "visible": true
+  },
+  "C_access_invite_submit": {
+   "count": 1,
+   "visible": true
+  },
+  "A_buttons_matching_the_arm_fallback_regex": [],
+  "E_cta": {
+   "attempted": true,
+   "cta_count": 0
+  },
+  "E_today_heading": null,
+  "E_body_chars": null,
+  "A_body_chars": 592,
+  "B_body_chars": 706,
+  "A_buttons": [
+   "EN",
+   "高级设置",
+   "目的地",
+   "抵达地点",
+   "离开地点",
+   "使用封存的演示行程",
+   "下一步"
+  ],
+  "A_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+  "B_head": "CNCityNexus行程智能工作区 行程运营今日今天实时行程地图规划行程工作台住宿选择城市探索导入地点出行旅行票夹足迹Copilot系统恢复与执行智能守护旅行者画像回收站成员与权限行程事实已同步0 个方案 · 5 种模式TITianjin1 位旅行者•••菜单行程/今天行程事实就绪跟随系统EN◌TI还没休息天津之旅1"
+ },
+ "verdict": "INSTRUMENT_PRECONDITION_NOT_ON_SCREEN"
+}
