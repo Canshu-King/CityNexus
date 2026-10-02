@@ -37,8 +37,13 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "reanchor_r8.json", "reanchor_r8_selftest.json", "citation_audit_r8.json",
       # r9: the gate that keeps those citations from rotting again, and its four mutants
       "citation_gate_r9.json", "citation_gate_r9_mutants.json",
-      "citation_gate_r10.json", "citation_gate_r10_mutants.json",
-      "day24_anchor_recheck_r9.json"]
+      # every generation of the citation gate that exists, matched by name instead of a list I re-type
+      # per re-cut: a re-cut must not require renaming anything downstream (r7 lesson).
+      ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "citation_gate_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
+             os.path.join(LANE, "evidence", "day*_recheck_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "day*_anchor_recheck*.json")))]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -56,8 +61,9 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "selfdecl_ord0500_r6.py", "comment_anchors_r5.py", "prior_denominators_r5.py",
          "landing_r6.py", "r6_coordinates.py", "r6_block.py",
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
-         "r8_block.py", "landing_r6.py",
-         "citation_gate_r9.py", "citation_gate_r9_mutants.py", "citation_gate_r10_mutants.py",
+         "r8_block.py", "r9_block.py", "r10_block.py", "landing_r6.py",
+         ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "citation_gate_r*.py")))] + [
          "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
@@ -304,7 +310,12 @@ def readings():
     _m10, _m9 = "citation_gate_r10_mutants.json", "citation_gate_r9_mutants.json"
     MUT_NAME = _m10 if _os.path.exists(os.path.join(LANE, "evidence", _m10)) else _m9
     gm = load(MUT_NAME)
-    rc9 = load("day24_anchor_recheck_r9.json")
+    # the newest generation of the anchor re-check, matched by name: a re-cut must not require
+    # re-typing this line (the r7 lesson -- the emitter had to be renamed by hand and leaked a title)
+    _rc_best = (sorted(_g.glob(os.path.join(LANE, "evidence", "day*_anchor_recheck*.json")),
+                       key=os.path.getmtime) or [None])[-1]
+    RC_NAME = os.path.basename(_rc_best) if _rc_best else "MISSING_anchor_recheck"
+    rc9 = load(RC_NAME)
     A("| 项 | 读数 |")
     A("|---|---|")
     A("| 闸判的树尖 | %s |" % cell(gate.get("tip")))
@@ -320,11 +331,13 @@ def readings():
                                         cell(gate.get("verdict_tally"))))
     A("| 钉子的来处 | 与 r8 那把尺的读数相符 = %s（从枝里 %s 现读） |" % (
         cell(gate.get("expectations_agree_with_r8_receipt")), cell("receipts/reanchor_r8.json")))
-    A("| 换代复读 | day24 尖上四枚锚仍是 %s；注释里现引的就是 %s；本枝那 5 枚产品路径与 r8 逐枚等值 "
-      "= %s |" % (cell((rc9.get("true_anchors_on_day24") or {})),
-                  cell(rc9.get("cited_in_tip_copy_of_my_test")),
-                  cell(all(v.get("equal") for v in
-                           (rc9.get("r8_product_paths_equal_on_day24") or {}).values()))))
+    A("| 换代复读（件 `%s`，尖 `%s`） | 四枚锚仍是 %s；注释里现引的就是 %s；本枝产品路径与上一枝逐枚"
+      "等值 = %s |" % (cell(RC_NAME), cell(str(rc9.get("tip") or rc9.get("tip_day24"))),
+                       cell(rc9.get("anchors") or rc9.get("true_anchors_on_day24")),
+                       cell(rc9.get("cited") or rc9.get("cited_in_tip_copy_of_my_test")),
+                       cell(all(v.get("equal") for v in
+                                (rc9.get("r8_product_paths_equal_on_day24")
+                                 or rc9.get("tip_paths_equal_on_branch") or {}).values()))))
     A("")
     A("反件 %s 枚各咬一格（含 M5/M6 那对反方向的作者件），全在临时目录里、不碰工作树（`%s` 份副本，"
       "判它用的登记清单仍取真实仓库的 %s 条）：%s。控制趟 %s、还原后 %s、副本字节回来了 = %s、"

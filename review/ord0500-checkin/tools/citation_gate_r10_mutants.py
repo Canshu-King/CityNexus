@@ -101,7 +101,9 @@ def rewrite_number(rel, line_no, digits, newnum):
     m = hits[-1]
     lines[line_no - 1] = line[:m.start() + 1] + str(newnum) + line[m.end():]
     open(p, "w", encoding="utf-8", newline="").write(NL.join(lines) + NL)
-    return lines[line_no - 1].strip()[:78]
+    # keep BOTH lines: a page that shows only the mutation cannot be checked against what it replaced
+    return {"before": line.strip()[:120], "after": lines[line_no - 1].strip()[:120],
+            "digits_moved": "%s->%s" % (digits, newnum)}
 
 
 def main():
@@ -162,11 +164,13 @@ def main():
         raise SystemExit("ABORT_NO_FOREIGN_CITATION the shared file carries no citation written by "
                          "another commit, so the ownership filter could not be tested")
     ln, fsha, fnum = int(frow["cited_by"].split(":")[1]), frow["owner_commit"], frow["line"]
-    wrote = rewrite_number(MAIN, ln, fnum, mlines + 1)
+    wrote = rewrite_number(MAIN, ln, fnum, mlines + 1)   # {"before","after","digits_moved"}
     res5 = gate()
     still = next((r for r in res5["rows"] if r["cited_by"] == frow["cited_by"]), {})
     runs.append({"id": "M5_foreign_line_not_judged", "verdict": res5["verdict"], "expect": "GREEN",
-                 "citation_written": wrote, "owner_commit": fsha, "row_verdict": still.get("verdict"),
+                 "citation_before": wrote["before"], "citation_after": wrote["after"],
+                 "digits_moved": wrote["digits_moved"], "owner_commit": fsha,
+                 "row_verdict": still.get("verdict"),
                  "row_mechanical_verdict": still.get("mechanical_verdict"),
                  "red_total": res5["red_total"],
                  "bite": (res5["verdict"] == "GREEN" and res5["red_total"] == 0
@@ -175,7 +179,8 @@ def main():
     res6 = gate(mine_=set(list(mine) + [fsha]))
     hit6 = [r for r in res6["red_detail"] if r["verdict"] == "CITED_LINE_BEYOND_FILE"]
     runs.append({"id": "M6_same_line_claimed_mine", "verdict": res6["verdict"],
-                 "expect": "CITED_LINE_BEYOND_FILE", "citation_written": wrote,
+                 "expect": "CITED_LINE_BEYOND_FILE", "citation_before": wrote["before"],
+                 "citation_after": wrote["after"], "digits_moved": wrote["digits_moved"],
                  "owner_claimed_as_mine": fsha, "class_fired": bool(hit6),
                  "bite": res6["verdict"] == "RED" and bool(hit6)})
     rewrite_number(MAIN, ln, mlines + 1, fnum)
@@ -190,9 +195,10 @@ def main():
     rc, dirty = sh(["git", "status", "--porcelain"])
     unchanged = sorted(dirty.splitlines()) == sorted(dirty_before.splitlines())
 
-    out = {"tool": "citation_gate_r10_mutants",
+    out = {"tool": os.environ.get("CITATION_MUT_TOOL") or "citation_gate_r10_mutants",
            "took_local": G.datetime.now().astimezone().isoformat(timespec="seconds"),
-           "scratch": SCR, "files_scanned": owned, "lane_commits_in_set": len(mine),
+           "scratch": SCR, "pairs_with_gate_receipt": os.environ.get("CITATION_GATE_OUT"),
+           "files_scanned": owned, "lane_commits_in_set": len(mine),
            "files_copied": len(copied), "main_lines_in_scratch": mlines,
            "blank_line_used": blank, "control_verdict": control["verdict"],
            "after_revert_verdict": after["verdict"], "runs": runs,
@@ -206,7 +212,8 @@ def main():
            "bytes_restored": restored,
            "all_bytes_restored": all(v["equal"] for v in restored.values())}
     out["green"] = bool(out["every_arm_bit"] and out["all_bytes_restored"] and unchanged)
-    dest = os.path.join(LANE, "evidence", "citation_gate_r10_mutants.json")
+    dest = os.path.join(LANE, "evidence", os.environ.get("CITATION_MUT_OUT")
+                        or "citation_gate_r10_mutants.json")
     json.dump(out, open(dest, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
