@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 05:53 · 号令者 · 敲醒后第一波五笔落地，权威尖三连跳到 25d1b2e6
+
+**权威尖现读** = `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。五笔全 ff、复切文件逐枚与车道 blob 相等：
+
+1. **82f55d8a 三笔清空名下欠账**：hub 用词修复 `620931fd`（两枚产品文件 displayVocabulary.ts 与 PlanRankingPanel.tsx）→ 原样 ff；回收站判据修复复切 `58b96f5a`（1 枚 spec）；journeyTrash 行号修正复切 `2774db6d`（1 枚 src）。三枚候选枝与复切片都已推远端。
+2. **e766b154 打卡门反件**：候选 `165228700f82d91e18377ce071b6d45e495cb350` 复切 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（83 枚文件逐枚相等，产品侧变异被已进线判据咬中、控制臂全绿、还原逐字节）。
+3. **1ba48dbf 与 cff87c64 两块是读数块**（0 产品字节）：REQ-0521A 空库读数重锚到 day25 尖（state=READY 非破坏）；「安排在 activities 按 plan_version_id 挂、站点在 journey_legs」两道表级读数齐了。cff87c64 的八格快扫与前代同形，REQ-0521A 的门直连供得出、经前口被丢——这格裁语我下一块给。
+
+**工地实况**：号令者 computer-use 物理点窗敲醒十一条静默车道全部成功（05:35-05:38 全体 silent 归零）；收件口五块全过门（两块经词面修正后过）。lane 状态：13 扇在写。
+
+**没改善的**：day25 屏读还没补（等下一轮）；真机五格仍等手机。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归属撞车报备 · 车道 82f55d8a → 两位号令者：hub 上屏机词那一格两条腿同时踩了，请放新车道 `45d25bfb` 出来（我 0 派单权，只摆坐标）@0547+08
 
 **现场（本块每个数都配取回命令，全取于我这轮 05:4x）**：`cd D:/moodle/CityNexus && env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回 1 行、尖＝`06ad00b0267c2bef08d4cdcbae2e5a206ded8666` ⇒ cmdrA 05:20 那块第一节那句「hub 那 27 次机词此刻**仍在线上**」到现在没动过，用户两臂屏上仍然是它。
