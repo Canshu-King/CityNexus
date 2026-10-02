@@ -1,0 +1,285 @@
+{
+ "base_tip": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666",
+ "started_at": "2026-10-02T21:41:52+00:00",
+ "spec_sha_before": "54b52b4f5122faa53f7cee7a8ea049d03a7e84b78b627be9d4669cc69ee22568",
+ "pre_flight": {
+  "frontend_port": 4916,
+  "backend_port": 4911,
+  "store_tags": [
+   "x214152a",
+   "x214152b"
+  ],
+  "holders_at_entry": {
+   "4916": [],
+   "4911": []
+  },
+  "matrix_pid": 4972
+ },
+ "runs": [
+  {
+   "tag": "R1_shiped_fresh_store",
+   "measured_at": "2026-10-02T21:42:01+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts",
+   "test_timeout_ms": null,
+   "wall_seconds": 6.2,
+   "rc": 0,
+   "tests_collected": 2,
+   "passed": 2,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 2 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wen en-GB 从头屏到重放，逐格 == 表里那一半 (1.7s)",
+    "",
+    "  2 passed (5.9s)"
+   ],
+   "label": "R1_shiped_fresh_store",
+   "mutated": false
+  },
+  {
+   "tag": "R3_mutated_cell_present_short_ceiling",
+   "measured_at": "2026-10-02T21:42:10+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts --timeout 45000 -g Wzh",
+   "test_timeout_ms": 45000,
+   "wall_seconds": 4.2,
+   "rc": 0,
+   "tests_collected": 1,
+   "passed": 1,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 1 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 (2.5s)",
+    "",
+    "  1 passed (3.8s)"
+   ],
+   "label": "R3_mutated_cell_present_short_ceiling",
+   "mutated": true,
+   "restored": true
+  },
+  {
+   "tag": "R1b_shiped_second_write_leg",
+   "measured_at": "2026-10-02T21:42:14+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts -g Wzh",
+   "test_timeout_ms": null,
+   "wall_seconds": 4.1,
+   "rc": 0,
+   "tests_collected": 1,
+   "passed": 1,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 1 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 (2.5s)",
+    "",
+    "  1 passed (3.8s)"
+   ],
+   "label": "R1b_shiped_second_write_leg",
+   "mutated": false
+  },
+  {
+   "tag": "R2a_mutated_cell_absent_ceiling_20s",
+   "measured_at": "2026-10-02T21:42:23+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts --timeout 20000 -g Wzh",
+   "test_timeout_ms": 20000,
+   "wall_seconds": 9.1,
+   "rc": 1,
+   "tests_collected": 1,
+   "passed": 0,
+   "failed": 1,
+   "waiting_for": [
+    "getByTestId('poi-import-added-source')"
+   ],
+   "server_port_complaint": [],
+   "tail": [
+    "",
+    "  1 failed",
+    "    e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半"
+   ],
+   "label": "R2a_mutated_cell_absent_ceiling_20s",
+   "mutated": true,
+   "restored": true
+  },
+  {
+   "tag": "R2b_mutated_cell_absent_ceiling_100s",
+   "measured_at": "2026-10-02T21:42:32+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts --timeout 100000 -g Wzh",
+   "test_timeout_ms": 100000,
+   "wall_seconds": 8.9,
+   "rc": 1,
+   "tests_collected": 1,
+   "passed": 0,
+   "failed": 1,
+   "waiting_for": [
+    "getByTestId('poi-import-added-source')"
+   ],
+   "server_port_complaint": [],
+   "tail": [
+    "",
+    "  1 failed",
+    "    e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半"
+   ],
+   "label": "R2b_mutated_cell_absent_ceiling_100s",
+   "mutated": true,
+   "restored": true
+  },
+  {
+   "tag": "R6_uncapped_missing_cell_ceiling_20s",
+   "measured_at": "2026-10-02T21:42:53+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts --timeout 20000 -g Wzh",
+   "test_timeout_ms": 20000,
+   "wall_seconds": 21.5,
+   "rc": 1,
+   "tests_collected": 1,
+   "passed": 0,
+   "failed": 1,
+   "waiting_for": [
+    "getByTestId('poi-import-added-source')"
+   ],
+   "server_port_complaint": [],
+   "tail": [
+    "",
+    "  1 failed",
+    "    e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半"
+   ],
+   "label": "R6_uncapped_missing_cell_ceiling_20s",
+   "mutated": true,
+   "restored": true
+  },
+  {
+   "tag": "R7_uncapped_missing_cell_ceiling_100s",
+   "measured_at": "2026-10-02T21:44:35+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts --timeout 100000 -g Wzh",
+   "test_timeout_ms": 100000,
+   "wall_seconds": 101.5,
+   "rc": 1,
+   "tests_collected": 1,
+   "passed": 0,
+   "failed": 1,
+   "waiting_for": [
+    "getByTestId('poi-import-added-source')"
+   ],
+   "server_port_complaint": [],
+   "tail": [
+    "",
+    "  1 failed",
+    "    e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半"
+   ],
+   "label": "R7_uncapped_missing_cell_ceiling_100s",
+   "mutated": true,
+   "restored": true
+  },
+  {
+   "tag": "R4a_shiped_with_dead_proxy_env",
+   "measured_at": "2026-10-02T21:44:39+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts -g Wzh",
+   "test_timeout_ms": null,
+   "wall_seconds": 4.2,
+   "rc": 0,
+   "tests_collected": 1,
+   "passed": 1,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 1 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 (2.6s)",
+    "",
+    "  1 passed (3.9s)"
+   ],
+   "label": "R4a_shiped_with_dead_proxy_env",
+   "mutated": false
+  },
+  {
+   "tag": "R4b_shiped_without_proxy_env",
+   "measured_at": "2026-10-02T21:44:43+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts -g Wzh",
+   "test_timeout_ms": null,
+   "wall_seconds": 4.2,
+   "rc": 0,
+   "tests_collected": 1,
+   "passed": 1,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 1 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 (2.5s)",
+    "",
+    "  1 passed (3.8s)"
+   ],
+   "label": "R4b_shiped_without_proxy_env",
+   "mutated": false
+  },
+  {
+   "tag": "R5_shiped_with_orphan_vite_on_port",
+   "measured_at": "2026-10-02T21:44:50+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts -g Wzh",
+   "test_timeout_ms": null,
+   "wall_seconds": 0.3,
+   "rc": 1,
+   "tests_collected": 0,
+   "passed": 0,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [
+    "http://localhost:4916 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in con"
+   ],
+   "tail": [
+    "Error: http://localhost:4916 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer."
+   ],
+   "label": "R5_shiped_with_orphan_vite_on_port",
+   "mutated": false
+  },
+  {
+   "tag": "R5b_shiped_after_reaping_orphan",
+   "measured_at": "2026-10-02T21:44:55+00:00",
+   "command": "node node_modules/@playwright/test/cli.js test -c playwright.ord0545s4-walkthrough.config.ts -g Wzh",
+   "test_timeout_ms": null,
+   "wall_seconds": 4.0,
+   "rc": 0,
+   "tests_collected": 1,
+   "passed": 1,
+   "failed": 0,
+   "waiting_for": [],
+   "server_port_complaint": [],
+   "tail": [
+    "  ok 1 e2e\\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:139:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 (2.4s)",
+    "",
+    "  1 passed (3.6s)"
+   ],
+   "label": "R5b_shiped_after_reaping_orphan",
+   "mutated": false
+  }
+ ],
+ "stack_x214152a": {
+  "rc": 0,
+  "db": "D:/moodle/_qoder_newlane_ord0533_data/_ord0533-lane_x214152a.db"
+ },
+ "plan_places_after_R1": [
+  "Central Food Hall",
+  "Design Library",
+  "Nexus City Park",
+  "Nexus River Cruise Pier",
+  "Old Town Gate",
+  "Riverside Museum",
+  "Skyline Dinner House",
+  "Tech Art Center"
+ ],
+ "stack_x214152b": {
+  "rc": 0,
+  "db": "D:/moodle/_qoder_newlane_ord0533_data/_ord0533-lane_x214152b.db"
+ },
+ "orphan_vite_pid": 44064,
+ "ended_at": "2026-10-02T21:44:57+00:00",
+ "spec_sha_after": "54b52b4f5122faa53f7cee7a8ea049d03a7e84b78b627be9d4669cc69ee22568",
+ "spec_untouched": true,
+ "conclusions": {
+  "uncapped_wait_tracks_the_ceiling": true,
+  "the_two_rows_name_the_same_locator": true,
+  "capped_read_is_ceiling_independent": true,
+  "occupied_port_fails_fast_and_named": true,
+  "cell_present_means_no_stall": true,
+  "proxy_env_refuted": true,
+  "no_row_names_the_screen_entry": true,
+  "shipped_gate_green_throughout": true
+ }
+}
