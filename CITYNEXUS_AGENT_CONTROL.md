@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 常驻判据 r1 · 车道 82f55d8a：把服务端能写的 `fact_quality` 名字与屏上能说的词绑成一把**不带任何供给**的尺（干净 4 臂全绿、四枚反件各咬自己那一臂、0 端口 0 库 0 后端）@06:31+08
+
+**一、这枚尺子是什么、为什么不要供给。** hub 那格曝光（05:52 那块、06:22 那块）是状态相关的：得先有一版带段的行程，那句「其余是 …」才会画出来。但**洞**不是状态相关的——只要后端能写出一枚词表没带的档位名，无论库里有什么，那枚名都会沿 `pick` 的 labelled-raw 那一支上屏（`frontend/src/lib/displayVocabulary.ts:140`）。所以这一支判据只读 4 个文件、不起前端、不起后端、不碰任何库，任何 checkout 都跑得动，跑完 4 臂不到一秒。
+
+**二、交付坐标（`git ls-remote` 现读，不在转述上建候选）**
+- 候选 `2b9c550a39e8048a0c1d3f04b71405f5742a0f54` @ `refs/heads/review/82f55d8a-hub-quality-vocabulary-r1`（推送后回读同值），parent 逐字等于权威尖 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（取回 `git show -s --format=%P <候选>`）⇒ 纯快进、可复切。**权威线我 0 次移动，对别人名下 `ref` 的 push 次数归零**（候选 `2b9c550a39e8048a0c1d3f04b71405f5742a0f54` 只进我自己那枚 review 枝）。
+- 改动只有新增 2 个文件、产品字节 0 处改动：判据本体与它那支私有 runner。私有 runner 故意没有 webServer、没有端口变量，就是为了让"指向共享端口"变成一件需要主动改它的事。
+
+**三、四臂各盯什么（本体是一条按标题读的清单，不猜行号）**
+- 臂一「同名集合」：从 `backend/app/replanning/provider_snapshots.py` 里那段 `# Mobility fact quality.` 到 `HARD_FEASIBLE_QUALITIES` 的区域逐枚取出 `NAME = "NAME"`，与 `frontend/src/lib/displayVocabulary.ts` 里那张表双向比集合——**少一枚**（后端加了档、屏上没有）与**多一枚**（屏上还留着后端不再写的词）都红。
+- 臂二「两栏都有词、词里不是机词」：每档的 `zh` 与 `en` 都非空，且两侧都不含 `[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+` 形状——正是这轮那枚枚举上屏的形状。
+- 臂三「填槽那一行确实过了词表」：`frontend/src/features/planning/PlanRankingPanel.tsx` 必须 import `mobilityFactQualityLabel`，且不得再出现把 `row.evidence.worstQuality` 原样塞进 `quality:` 槽的写法（那一行就是画机词的手）。
+- 臂四「句子还在」：`frontend/src/features/planning/planRankingCopy.ts` 里 `rank.evidenceNote` 两栏都必须仍有 `{quality}` 槽，且句子里 `{hard}` 与 `{total}` 都在——**防止前面三臂靠"把句子删了"变绿**（我自己那条常设教训：单向致盲的尺也算缺陷）。
+- 读数件：`D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/hubq_clean_reading.json`（逐枚印出后端那几档名字 `EXPLICIT_FROZEN_FIXTURE`、`LIVE_PROVIDER_CAPTURE`、`SYNTHETIC_DEFAULT` 与词表里对应的中英标签，外加被读的那几枚文件各自的字节数；绑定处见 `frontend/src/lib/displayVocabulary.ts:115`）。
+
+**四、干净跑与四枚反件（反件全部打在产品源上，每枚先证"改动真落进文件"再跑）**
+- 干净：`4 passed`、退出码 0（日志 `D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/hubq_clean.log`，运行名 `CLEAN_AT_25d1b2e6`）。
+- 类型闸两条：`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0；但那条只收 `src/**`，不收 `e2e/**`（`tsconfig.typecheck.json` 的 include 就这一条），所以我另跑了一支按文件的 `npx tsc --noEmit … e2e/<判据本体>`，退出码 0（日志 `hubq_spec_tsc.log`）。
+- 反件表（驱动器 `run/hubq_mutants_r1.py`，判红读的是 json 报告不是列表报告器的编号）：M1 后端加第 4 枚 `PROVISIONAL_SNAPSHOT` ⇒ 只臂一红；M2 把 `SYNTHETIC_DEFAULT` 的中文标签换成带枚举名的写法 ⇒ 只臂二红；M3 把填槽那行退回 `quality: row.evidence.worstQuality ?? "—"` ⇒ 只臂三红；M4 从中文句子里删掉 `{quality}` ⇒ 只臂四红。四枚都 `landed=True`、`restored=True`、跑完 `git status --porcelain` 为空；末尾再跑一趟干净 ⇒ 退出码 0、无红臂。
+- 这一枚的纪律改进照我自己那条教训：**先 commit 再打反件**（05:52 那块第六节我写过 checkout 撤掉未提交修复那次），所以本轮还原用的是 `git checkout --`，且每枚都回读文件比对还原前后逐字节相同。
+
+**五、这把尺不覆盖什么（别把绿当覆盖）。** ①它不证明句子会渲染——那需要一版带段的行程，是屏读那一支（06:22 那块第四节的 A/B）；②它不判断词好不好，只判断"不是机词、两栏都有"；③它只绑 `fact_quality` 这一张表，`displayVocabulary.ts` 里其余几张表（运行时身份、策略模式等）没进这一支；④它没有进 `playwright.config.ts`——那是唯一能签单的闸，热文件我不挤，要收进整套请号令者点名一句；⑤臂一的后端区域是按 `# Mobility fact quality.` 与 `HARD_FEASIBLE_QUALITIES` 两个记号切的，记号被改名时它会**当场抛红并说明是自己被锚掉了**（这是设计：静默变空集的尺比不装更坏）。
+
+**没改善 / 这轮没做的**
+1. 用户此刻手机上那一格仍是改前那一代（06:22 那块第六节逐字节判定：入口名与 sha256 与我 build 的 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 那代产物逐字节相等）——要等换代，那是号令者的动作。
+2. cmdrA 那"另 2 枚机词"仍未归因，我这把新尺看不见它（它数的是被绘层大写词，那 2 枚若不是这个形状就不在分子里），具名 `NOT_MEASURED_BY_82f55d8a`。
+3. 其余几张词表的同类绑法没做（第五节③），要不要开一单请号令者定。
+4. 后端 pytest 本趟 0 条执行（本手是判据本体与 runner，产品字节 0 处改动），具名 `NOT_EXECUTED_BY_82f55d8a`；手机真机仍 `NOT-RUN`。
+5. 落地等我名下这一枚之外的三枚已在尖上（`620931fda4f4abc4656cb4a0d91bc37a33f82d6a`、`4b7305477a3bbec8ee692572b148acee13db48a8`、`34d21ab96350cafda92d05680dd06be881a1c02f`），本枚是第四枚，落它即清空我名下欠账。
+6. 磁盘：本轮新增两枚复验 export 目录（06:22 那块第七节报过 612 MB 那一档，node_modules 全是硬链接）；判据与反件的日志都在我自己 run 目录里，没进工作树——工作树 `git status --porcelain` 空。
+7. 红线自查（跑在候选 `2b9c550a39e8048a0c1d3f04b71405f5742a0f54` 那一代）：权威线 0 次移动；demo/reset 0 次；凭据一字未动（basic-auth 文件与任何 API key 都 0 读 0 印）；共享门 `:8000` `:4781` `:4782` `:8693` 本趟各 0 次连接；`_preview.db` 的写与 `ALTER` 都归零，我只在我自己名下 `ref` push；额度没墙。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 2d2d7428 · CMDR 02:45 我名下那一手：一行落单建议 = 落「乙」；三屏在今尖与上一代各读一次，颜色层两代逐字节同源
 
 **一、就这一行（要落的时候只改这三条规则里的 color，一枚色阶定义都不动）**
