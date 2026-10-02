@@ -60,7 +60,7 @@ def main():
         if line.startswith("candidate "):
             mt["cand"] = line.split()[1]
         if "predicted_tree" in line:
-            mt["tree"] = line.split()[2]
+            mt["tree"] = line.split()[3]
     blobs = {}
     for line in open(os.path.join(RUN, "r6_blobs.txt"), encoding="utf-8"):
         parts = line.split()
@@ -211,6 +211,7 @@ def main():
         moved = [x.strip() for x in got if x.strip() and not x.startswith("review/")]
     GEN = (CAND_LABEL.rsplit("_", 1)[-1] or "R7").lower()
     s["gen"] = GEN
+    s["GEN"] = GEN          # the page title carries the generation it judged
     s["ref_name"] = "review/newlane-ord0500-phone-checkin-entry-" + GEN
     s["prev_ref_name"] = "review/newlane-ord0500-phone-checkin-entry-" + (
         "r" + str(int(GEN[1:]) - 1) if GEN[1:].isdigit() else "r6")
@@ -245,7 +246,9 @@ def main():
 
     s["hot_paths"] = "、".join(sorted(hot)) or "无"
     s["merge_main"] = hotcell("backend/app/main.py", "merge_blob")
-    s["tip_main"] = hotcell("backend/app/main.py", "live_tip_blob")
+    if hot:
+        s["tip_main"] = hotcell("backend/app/main.py", "live_tip_blob")
+        s["merge_main"] = hotcell("backend/app/main.py", "merge_blob")
     s["merge_openapi"] = hotcell("contracts/openapi.yaml", "merge_blob")
     s["tip_openapi"] = hotcell("contracts/openapi.yaml", "live_tip_blob")
 
@@ -303,7 +306,7 @@ def main():
               "r5_recut_paths": cell([d.get("path") for d in
                                       (r5row.get("files_needing_another_recut") or [])][:4])})
 
-    block = """### ORD-0500 r6 · 交付：英文档那句改成插值本档自己的控件名，四趟两档屏读 + 十一行词汇闸 + 两枚反件（车道 phone，{t:%H:%M}）
+    block = """### ORD-0500 {GEN} · 交付：英文档那句改成插值本档自己的控件名，四趟两档屏读 + 十一行词汇闸 + 两枚反件（车道 phone，{t:%H:%M}）
 
 **〇、这件是我 19:40 自申报的那张**（账本 `### ORD-0500 r6 · 自申报` 那块；`## ORDERS` 段内指向我名的只有 17:16 的裁语，没有单头）。裁语两件也照办了：ORD-0485 字典那笔**作废**，我不再重切、也不去碰 `LocaleContext.tsx`；手机第二站压底栏那一格**归滚动容器与底栏两家**，本块只把它作为对照读数带着，不动那条规则。枝 `refs/heads/{ref_name}` = `{r7ref}`，头 = `{cand}`，切在现尖 `{fork}`；r1–r{prevgen} 原样冻结、0 force、0 覆盖。这一笔是 **rebase 重交**：包工头点名那一轮 r{prevgen}（`{prev_ref_name}`）被落地序列器退回，拦点正是 `backend/app/main.py` 与 `contracts/openapi.yaml`，我按令挑到 `{fork}` 上重推——cherry-pick 干净落地、0 冲突，落下来的 hunk 形状逐枚现读：`main.py` 仍是 14 增 2 删、`openapi.yaml` 2 增 1 删、`CHECKIN_JOURNEY_UNKNOWN` 在候选里 2 处、LF 保住（CR 字节 0）。枝自带上一笔的全部产品字节（现尖仍没有 `checkinCopy.ts`，我不想交一枚要按顺序落才能用的枝）。
 

@@ -9,6 +9,7 @@ reading dirty right after `git add`, which has burned this lane before.
 import json
 import os
 import shutil
+import subprocess
 from datetime import datetime
 
 LANE = r"D:/moodle/_qoder_phone_ord0485_20260930"
@@ -30,7 +31,10 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "checkin_copy_rows_r6_M2_revert.json", "checkin_copy_rows_mutants_r6.json",
       "pytest_r6.json", EXPB, EXPC,
       "comment_anchors_r5.json", "prior_denominators_r5.json", "css_delta_proof_r5.json",
-      "CE2_MUTANT_RECIPE_r5.md", "landing_r6.json"]
+      "CE2_MUTANT_RECIPE_r5.md", "landing_r6.json",
+      # r8: the re-anchor and the two instruments that judge it.  The citation audit covers the whole
+      # shipped-source tree, so its receipt is evidence for other lanes' comments too -- read-only.
+      "reanchor_r8.json", "reanchor_r8_selftest.json", "citation_audit_r8.json"]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -46,7 +50,9 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "checkin_copy_rows_r6.py", "checkin_copy_rows_mutants_r6.py", "pytest_r6.py",
          "stage_readings_r6.py", "r6_coordinates.py", "r6_block.py",
          "selfdecl_ord0500_r6.py", "comment_anchors_r5.py", "prior_denominators_r5.py",
-         "landing_r6.py", "r6_coordinates.py", "r6_block.py"]
+         "landing_r6.py", "r6_coordinates.py", "r6_block.py",
+         "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
+         "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
     if not os.path.exists(src):
@@ -189,13 +195,25 @@ def readings():
         cell((py.get("shared_before") or {}).get("mtime_ns")),
         cell((py.get("shared_after") or {}).get("mtime_ns")), cell(py.get("shared_untouched"))))
     b = py.get("main_py_blobs") or {}
+    _name = "CHECKIN_JOURNEY_UNKNOWN"
+    _wt = os.path.join(LANE, "wt22")
+    n_worktree = open(os.path.join(_wt, "backend", "app", "main.py"),
+                      encoding="utf-8", errors="replace").read().count(_name)
+    head = subprocess.run(["git", "-C", _wt, "rev-parse", "HEAD"], stdout=subprocess.PIPE,
+                          timeout=120).stdout.decode("utf-8", "replace").strip()
+    p = subprocess.run(["git", "-C", _wt, "show", "HEAD:backend/app/main.py"],
+                       stdout=subprocess.PIPE, timeout=180)
+    n_head = p.stdout.decode("utf-8", "replace").count(_name) if p.returncode == 0 else None
     A("- 三枚 `backend/app/main.py` blob：本轮候选 `%s`、r5 那一笔 `%s`、判读时现尖 `%s`。"
-      "候选与 r5 **不是**同一枚（%s）——因为基座从 `b604f50d…` 走到本轮的尖，别人在这枚文件别处动过；"
-      "所以「同一笔 hunk」这句话只能按形状验：`git diff --numstat` 对基座仍是 14 增 2 删，"
-      "且 `CHECKIN_JOURNEY_UNKNOWN` 在候选里 2 处、在现尖 0 处。" % (
+      "候选与 r5 同一枚 = %s（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 "
+      "= %s，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对"
+      "（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `%s` 的枚数：工作树 %s 处、"
+      "本枝 HEAD `%s` %s 处（这两个数是渲染本页时现读的，不是抄上来的）。" % (
           cell(b.get("candidate_worktree")), cell(b.get("r5_commit")),
           cell(b.get("tip_at_run") or b.get("tip_dc9dc10f")),
-          cell(b.get("candidate_worktree") == b.get("r5_commit"))))
+          cell(b.get("candidate_worktree") == b.get("r5_commit")),
+          cell(b.get("candidate_worktree") == b.get("tip_at_run")),
+          _name, cell(n_worktree), cell(head[:12]), cell(n_head)))
     A("")
     A("## 六、Q64 曝光尺：本代两侧各一趟")
     A("")
@@ -233,6 +251,43 @@ def readings():
     A("- 真机与隧道：NOT_MEASURED；整套 Playwright 验收：NOT_EXECUTED（只跑本单载体与词汇闸）；"
       "`targetRequired` 那句在屏幕上不可达（打卡钮永远带着一站的名字），所以它由第三节那道闸覆盖，"
       "不拿假可达的桩去凑一趟屏读。")
+    A("")
+    A("## 九、r8：本枝注释里那四枚行号（只改了这一枚文件，且它不在前端图里）")
+    A("")
+    ra = load("reanchor_r8.json")
+    st = load("reanchor_r8_selftest.json")
+    ca = load("citation_audit_r8.json")
+    A("| 说法 | 屏幕上原来写的 | 现尖读到的 | 那一行的原文 |")
+    A("|---|---|---|---|")
+    for lab in ("require", "lookup", "integrity", "caught_by"):
+        A("| %s | %s | %s | %s |" % (
+            lab, cell((ra.get("numbers_replaced_from") or {}).get(lab)),
+            cell((ra.get("anchors") or {}).get(lab)),
+            cell((ra.get("verified_texts") or {}).get(lab))))
+    A("")
+    A("- 行号来源不是记忆：尖 `%s` 的 `backend/app/main.py` 共 %s 行，打卡那扇门自己的区间按路由路径行"
+      "定位到 %s，四枚锚都要求落在这段里并且段内唯一。件 `receipts/reanchor_r8.json`。" % (
+          cell(ra.get("tip")), cell(ra.get("main_lines")), cell(ra.get("route_span"))))
+    A("- 反件与闸自己也被反件验过：写坏正文（少一枚反引号）被 `ABORT_TEXT_CHANGED` 拒、把锚定短语改"
+      "掉被 `ABORT_ANCHOR_PHRASE` 拒、正件跑通且「把每个数字遮掉之后正文逐字相同」= %s。三臂 %s。"
+      "件 `receipts/reanchor_r8_selftest.json`。" % (
+          cell((st.get("s3_real_application") or {}).get("prose_identical_when_every_digit_masked")),
+          cell(st.get("every_arm"))))
+    A("- 这枚文件不在前端图里：`frontend_files_referencing_the_test` = %s。本代不改前端字节，所以页面"
+      "第六节那两枚面的入口名与 bundle 字节仍是 r7 那一代（第八节已具名），本页重渲染时没有把它们当作"
+      "本轮新读数。" % cell(ra.get("frontend_files_referencing_the_test")))
+    A("- 顺带把全线源码注释里的 `path:line` 都开了一遍：%s 枚引文、%s 个文件，逐条按现尖核对；"
+      "本单自己那 4 枚全 OK，其余不 OK 的 %s 枚归别的单子（清单在件里，只读，我没动别人手上的判据）。"
+      "件 `receipts/citation_audit_r8.json`。" % (
+          cell(ca.get("citations_found")), cell(ca.get("files_scanned")),
+          cell(ca.get("mechanically_red"))))
+    A("")
+    A("| 不 OK 的形状（%s 枚 OK 不列） | 枚数 |" % cell((ca.get("verdict_tally") or {}).get("OK")))
+    A("|---|---|")
+    for k, v in sorted((ca.get("verdict_tally") or {}).items()):
+        if k != "OK":
+            A("| %s | %s |" % (k, cell(v)))
+    A("")
     text = chr(10).join(L) + chr(10)
     open(os.path.join(DEST, "R6_READINGS.md"), "w", encoding="utf-8", newline="\n").write(text)
     print("WROTE %s bytes=%d lines=%d" % (os.path.join(DEST, "R6_READINGS.md"),

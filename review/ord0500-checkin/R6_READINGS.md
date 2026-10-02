@@ -1,6 +1,6 @@
 # ORD-0500 r6 -- 英文档那一格：读数单（基座 `e7ff7938ea41c5ac69afb1172acc4625159c7911`，候选 = 本枝 `97bf72736a753633b0d3d8d4c2b48dd65f48b08e`）
 
-生成 `2026-10-02T22:36:29.028570+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
+生成 `2026-10-03T00:32:55.826519+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
 
 ## 一、两枚面的身份（同一枚工作树换字节再换回来，换回后逐枚 blob 验过）
 
@@ -57,9 +57,9 @@
 
 ## 五、门里的臂（服务端没被我碰，还是要在本代跑一遍）
 
-- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.48s；跑后库里 9 行。
+- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.69s；跑后库里 9 行。
 - 共享库前后：字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未被动过 = True。
-- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `2067c36e9e71ec6a7329e80192f529c601c4d44f`。候选与 r5 **不是**同一枚（False）——因为基座从 `b604f50d…` 走到本轮的尖，别人在这枚文件别处动过；所以「同一笔 hunk」这句话只能按形状验：`git diff --numstat` 对基座仍是 14 增 2 删，且 `CHECKIN_JOURNEY_UNKNOWN` 在候选里 2 处、在现尖 0 处。
+- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `569b8472b134` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
 
 ## 六、Q64 曝光尺：本代两侧各一趟
 
@@ -72,10 +72,31 @@
 
 ## 七、这单还欠的一格（要裁，我不自己拍）
 
-- 字典里 `["checkin.duplicate", "checkin.refused"]` 这几行现在没有读者（读计数逐行 [0, 0, 0, 0]），行号是 [118, 119, 1253, 1254]。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
+- 字典里 `["checkin.duplicate", "checkin.refused"]` 这几行现在没有读者（读计数逐行 [0, 0, 0, 0]），行号是 [62, 63, 1145, 1146]。留、删、还是让我屏回去读，三种形状的代价在我 19:40 那块里写过；本轮按推荐的「留着 + 钉住」做，没动那枚热文件。
 
 ## 八、不在本代的东西（具名，不折算）
 
 - r5 那一代的六趟屏幕普查、三枚门探针、两枚反件在枝 `review/newlane-ord0500-phone-checkin-entry-r5` 的 `review/ord0500-checkin/` 里，本单不重述其数。
 - 手机第二站中心不可按那一格：本代四趟仍然量到 [["O0500_R7_zh", 5], ["O0500_R7_en", 6], ["TIP_e7ff7938_zh", 5], ["TIP_e7ff7938_en", 6]] 枚可按（基座与候选同数），归滚动容器与底栏两家，号令者已裁。
 - 真机与隧道：NOT_MEASURED；整套 Playwright 验收：NOT_EXECUTED（只跑本单载体与词汇闸）；`targetRequired` 那句在屏幕上不可达（打卡钮永远带着一站的名字），所以它由第三节那道闸覆盖，不拿假可达的桩去凑一趟屏读。
+
+## 九、r8：本枝注释里那四枚行号（只改了这一枚文件，且它不在前端图里）
+
+| 说法 | 屏幕上原来写的 | 现尖读到的 | 那一行的原文 |
+|---|---|---|---|
+| require | 810 | 818 | def require(session: Session, model: type, identifier: str, label: str): |
+| lookup | 3912 | 4256 | existing = session.scalars( |
+| integrity | 3948 | 4292 | except IntegrityError as exc: |
+| caught_by | 3965 | 4309 | "caught_by": "unique_index", |
+
+- 行号来源不是记忆：尖 `569b8472b134e5562ef396e38681870b9c26536a` 的 `backend/app/main.py` 共 14476 行，打卡那扇门自己的区间按路由路径行定位到 [4210, 4329]，四枚锚都要求落在这段里并且段内唯一。件 `receipts/reanchor_r8.json`。
+- 反件与闸自己也被反件验过：写坏正文（少一枚反引号）被 `ABORT_TEXT_CHANGED` 拒、把锚定短语改掉被 `ABORT_ANCHOR_PHRASE` 拒、正件跑通且「把每个数字遮掉之后正文逐字相同」= True。三臂 ["PASS", "PASS", "PASS"]。件 `receipts/reanchor_r8_selftest.json`。
+- 这枚文件不在前端图里：`frontend_files_referencing_the_test` = []。本代不改前端字节，所以页面第六节那两枚面的入口名与 bundle 字节仍是 r7 那一代（第八节已具名），本页重渲染时没有把它们当作本轮新读数。
+- 顺带把全线源码注释里的 `path:line` 都开了一遍：175 枚引文、71 个文件，逐条按现尖核对；本单自己那 4 枚全 OK，其余不 OK 的 16 枚归别的单子（清单在件里，只读，我没动别人手上的判据）。件 `receipts/citation_audit_r8.json`。
+
+| 不 OK 的形状（159 枚 OK 不列） | 枚数 |
+|---|---|
+| BLANK_LINE_CITED | 13 |
+| ORPHAN_BARE | 1 |
+| UNRESOLVED_PATH | 2 |
+

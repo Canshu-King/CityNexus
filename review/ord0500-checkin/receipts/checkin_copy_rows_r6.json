@@ -1,7 +1,7 @@
 {
   "tool": "checkin_copy_rows_r6",
-  "took_local": "2026-10-02T16:32:07.948011+08:00",
-  "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\mut_r6",
+  "took_local": "2026-10-03T00:29:23.350882+08:00",
+  "tree": "wt22",
   "rows_checked": 11,
   "en_button_label": [
     "\"checkin.button\": \"Check in\","
@@ -123,8 +123,8 @@
       "key": "checkin.duplicate",
       "side": "en",
       "dictionary_lines": [
-        118,
-        1253
+        62,
+        1145
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -133,8 +133,8 @@
       "key": "checkin.duplicate",
       "side": "zh",
       "dictionary_lines": [
-        118,
-        1253
+        62,
+        1145
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -143,8 +143,8 @@
       "key": "checkin.refused",
       "side": "en",
       "dictionary_lines": [
-        119,
-        1254
+        63,
+        1146
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
@@ -153,8 +153,8 @@
       "key": "checkin.refused",
       "side": "zh",
       "dictionary_lines": [
-        119,
-        1254
+        63,
+        1146
       ],
       "readers_outside_the_dictionary": 0,
       "reader_lines": []
