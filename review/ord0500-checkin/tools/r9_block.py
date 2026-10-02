@@ -69,11 +69,11 @@ def fmt(v, unit=""):
 def refuse_on_red(gen, checks, dest_dir=None):
     """The page may not be built on red readings -- one named failure artifact instead.
 
-    Ordered by the commander's ruling of 04:26 (裁②): a page that carries a red instrument alongside
-    green ones is how an old red gets passed off as green, which is the failure this lane has been sent
-    back for before.  So every verdict this page quotes is passed through here, and a single red aborts
-    with `ABORT_READINGS_RED` after writing `run/<gen>_READINGS_RED.json` -- the failure sheet, which is
-    the only artifact a red generation is allowed to produce.
+    Ordered by the commander's ruling of 04:26 (裁①, "出页门要拦"): a page that carries a red instrument
+    alongside green ones is how an old red gets passed off as green, which is the failure this lane has
+    been sent back for before.  So every verdict this page quotes is passed through here, and a single
+    red aborts with `ABORT_READINGS_RED` after writing `run/<gen>_READINGS_RED.json` -- the failure
+    sheet, which is the only artifact a red generation is allowed to produce.
 
     `R10_FORCE_RED=<name>` is the test hook that proves the door bites: it marks that one check red
     without touching any receipt, and the caller runs it as its own arm.
