@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 站名在 day24 的回归快扫 · 新红为零，另有三枚别道的臂由红转绿；这一轮我自己两把尺各咬了我一次（车道 8ac89982，领 CMDR 01:24 那手）
+
+**〇、坐标（写块这一刻现读）**
+
+- 被测尖 `4fac49f371da0820393d038700bddddafd1176d1`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003b.txt:1`）；上一代尖 `569b8472b134e5562ef396e38681870b9c26536a`，两尖之间 21 笔。
+- 那 21 笔动到产品的只有八枚：`frontend/src/app/V8Experience.tsx`、`frontend/src/app/v8Types.ts`、`frontend/src/features/trip/SpendPanel.tsx`、`frontend/src/features/trip/spend.css`、`frontend/src/features/trip/spendFacts.ts`、`frontend/src/i18n/LocaleContext.tsx` 与 `backend/tests` 两枚；其余九十五枚是别道的 `review/` 工件。**我落地那四枚站名文件与本单闸 spec 一枚没被碰**：`ba429e2618c1b8c813f58c2485b146b982f93232`（MapPanel）、`ffccc72e852c0edd88ead3b39f475bf593a51073`（mapStopLabels）、`9f6cbed10d10b770043ea1654f6e0c888eedf147`（样式）、`99f473ca4735792509d38d434c80f4b3213c58f0`（本单闸 spec）在新尖上仍是这几枚。
+- 两代各导一棵 `git archive` 树跑（非 git 工作树；用 `git hash-object` 反核过磁盘字节与新尖 blob 同值），node_modules 走硬链接，本轮磁盘实增约一百七十兆，没删任何旧树。
+
+**一、快扫总成（判据就是你那句：红集合不变即绿）**
+
+- 本单闸在 day24 尖 `4fac49f371da0820393d038700bddddafd1176d1` 的字节上（跑的那份 spec 就是尖上那枚 `99f473ca4735792509d38d434c80f4b3213c58f0`）：九枚臂全过、退出码零（日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\d24gate.log:278`）。这九枚是线上那一代 spec 自带的臂数；我第二代加的那枚 `hidden-reasons-are-told` 还在待裁的枝上，不在这份读数里。
+- 别道地图族十八枚 spec，同一台机、同一把尺、两代各一趟（两代 = `569b8472b134e5562ef396e38681870b9c26536a` 与 `4fac49f371da0820393d038700bddddafd1176d1`）：上一代 `17 failed / 99 passed`（日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512fam_d24famA.log:6034`），day24 `14 failed / 102 passed`（日志 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512fam_d24famB.log:5972`）。分母两代都是 116 枚，通过数多出来的三枚正好是失败数少掉的三枚。
+- **day24 新增红：零枚。** 这一格按你的判据算绿。
+
+**二、那三枚不是"消失"，是转绿（而且我先把"看起来相同"那版判语撕了）**
+
+两代红集合逐枚全名对比（day24 尖 `4fac49f371da0820393d038700bddddafd1176d1`）：共同 14 枚；只在上一代红、day24 不再红的三枚是同一枚臂的三个宽度版本（视口 360 / 390 / 414），臂名 `reach — the control is hittable and does not collide`，那枚臂在 `frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:194`；day24 侧"只有它红过"的集合为空。
+- 不是跳过、不是没跑：分母不变、通过数 +3、失败数 −3 三件事同时成立才敢这么写。
+- 归因我**没做**（`NOT_ATTRIBUTED`）：那族是 ORD-0403 的地盘，21 笔里谁把它救回来的不在我这单的写域；要归因请派给那族，我可以顺手跑但那是别人的判据。
+
+**三、自报两枚我自己造的尺错（都改了做法，不改读数）**
+
+1. 第一次比对我用的是"截到破折号前"的标题集合，第二节那三枚同臂不同视口的份，被折叠成同一个词，于是两代看起来**完全相同**——差三枚这件事被我自己的解析器吃掉了。是我按失败计数对不上（17 对 14）回头用全名重算才抓到的；上面第二节的判语来自全名重算那一版，折叠版作废。这条正是我记过两次的形制：解析器把不同读数折成同一条，比没读数更坏。
+2. 两把量具共用了一个输出名开关，第二把把第一把的件覆盖了（`deployed_read_day24_r2.json` 一度装着三档测量的件名）。被引用过的旧件没受损，我把三档那把按自己的名重跑了一遍，现在 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\design_cost_measurement_day24_r2.json:19` 与屏读件是两枚各自的件。以后一臂一枚名，开关名带具名量具前缀。
+
+**四、day24 这一代的线上两证、屏读与三档重读**
+
+- 两证：:4783 现服务代入口 `assets/index-5DRahkM8.js`，`http_status=200`、1619701 字节，服务字节与磁盘逐字节同（sha1 `7cf0c2387622b2ab1f49f985affc771516f32f64`，不在对象库、不是 blob、不可 cat-file——本行即声明；可解析锚=权威尖 `4fac49f371da0820393d038700bddddafd1176d1`（git ls-remote 回读同值），件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\served_assets_day24_r1.json:9`）；CSS 231756 字节同判（sha1 `bbb5e0be183eee21aa0ff1f52046ce3a1d280162`，同件 `:20` 与 `:21`）。归属第三证：进程命令行写着 `--dist …_build_day24/frontend/dist`，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\pid_owner_day24_r1.txt:6`。站名标记在 JS 与 CSS 各命中两处（同件 `:15` 与 `:26` 的 `label_hits_served`）。
+- 屏读（只读一趟页面）：八枚 pin、八枚名字节点、二枚可见、可见者全在地图面内、压 attribution 面积零、`pageerror` 零条（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day24_r2.json:10` 起，`pageerrors` 在 :51）；把名字整族藏掉再拍同一裁剪区，两张不等（`pixels` 段 `:45`，三键 `:47` 起）。上屏那两枚的 `data-name-source` 仍是 `title`（`:27`）⇒ 线上这一代依旧只走兜底腿，主腿 `NOT_MEASURED_ON_LIVE` 那格不变。
+- 三档重读（裁语输入，day24 上再量一遍没过期）：地图面 354 像素宽，现规则可见二枚、折行两行仍二枚（白买）、截断到九十六像素三枚、移到 pin 下方四枚，最宽那枚 303 像素（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\design_cost_measurement_day24_r2.json:64` 起四段，逐档与 day21、day23 两趟同值）。
+
+**五、我那枝与仍等的两格**
+
+- 第二代枝 `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r2` 头 = `9481e3937873a7cfcdbb59e9d806f2eed2498fef`（ls-remote 回读同值）；对 day24 尖的只读落地预测 `git merge-tree --write-tree` 退出码零，吐出的预测树 `3e4b0743f7af97fd27275570598c548ae0f6c69d` 是我本机算出来的、从未入 git、不可 cat-file，要复算请照抄本段这条命令；本段可取回的坐标是那枚 commit `9481e3937873a7cfcdbb59e9d806f2eed2498fef`。
+- 仍等：① 三档裁哪档（数字已三代同值）；② 要不要我把第二代自足到现尖交 r3；③ 0038 那块第四节请的那手 hub 尺小单（那四枚红现在 day24 上仍是红，两代都在红列里，见第二节共同 14 枚）。
+
+
 ### 手机打卡门新句屏读 · 车道 e766b154 · 02:08 · day24 bundle 上把 11 句 × 两语在 390×844 逐枚亲读；其中 6 句是线上仪表从没为这扇门画过的
 
 **〇、坐标（`git ls-remote --refs origin` 逐枚现读，回读同值）**
