@@ -64,10 +64,14 @@ def main():
             blobs[parts[1]] = parts[0]          # path -> blob sha (the file list, not the key=value form)
     def blob(path):
         return B.fmt(blobs.get(path))
-    blob_gate = blob("review/ord0500-checkin/receipts/citation_gate_r10.json")
-    blob_mut = blob("review/ord0500-checkin/receipts/citation_gate_r10_mutants.json")
-    blob_tool = blob("review/ord0500-checkin/tools/citation_gate_r9.py")
-    blob_drv = blob("review/ord0500-checkin/tools/citation_gate_r10_mutants.py")
+    RC_DIR = "review/ord0500-checkin/"
+    blob_gate = blob(RC_DIR + "receipts/" + GATE_RECEIPT)
+    blob_mut = blob(RC_DIR + "receipts/" + MUT_RECEIPT)
+    blob_audit = blob(RC_DIR + "receipts/" + os.environ.get("AUD_RECEIPT"))
+    blob_rc = blob(RC_DIR + "receipts/" + os.environ.get("RECHECK_RECEIPT"))
+    blob_tool = blob(RC_DIR + "tools/citation_gate_r9.py")
+    blob_drv = blob(RC_DIR + "tools/citation_gate_r10_mutants.py")
+    blob_door = blob(RC_DIR + "tools/r9_block.py")
 
     # the ownership evidence for the confession: who has ever touched that spec
     rc, touching = B.sh(["git", "log", "--format=%H%x09%s", "--", FOREIGN_SPEC], cwd=WT)
@@ -121,7 +125,7 @@ def main():
     # sentence about "the bytes are in the line" would be false, so the page stops here.
     rcw, ws = B.sh(["git", "diff", "--name-only", "%s..HEAD" % live_tip], cwd=WT)
     write_set = {l.strip() for l in ws.splitlines() if l.strip()}
-    _eq, _moved = {}, []
+    _eq, _moved, mine_changed = {}, [], []
     for _p in _paths:
         _a = _show(live_tip, _p)
         _b = subprocess.run(["git", "-C", WT, "show", "HEAD:%s" % _p], stdout=subprocess.PIPE,
