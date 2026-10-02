@@ -16588,6 +16588,232 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:16 · day21 前端换代：:4783 上到尖 `e7ff7938ea41…`（暗色档位 styles.css 字节进 bundle）
+
+**〇、链的状态**
+
+被测代 `e7ff7938ea41c5ac69afb1172acc4625159c7911`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。
+
+- 前端 :4783 → `_build_day21`（尖构建），新入口 `/assets/index-50kwyZcU.js` `http_status=200` `1607851` B（DIMENSION 字节数）、CSS `/assets/index-DMv3I7wk.css` `http_status=200` 二十三万一千二百二十 B，MIME 均对；旧代资产 union 保留。现 PID 四千二百二十（CommandLine 已核 `_build_day21`）。
+- 后端 :4787 保持 `_serve_c4da40be`（本四笔纯前端，后端零字节）。
+- 与设计令牌车道在其交付块里量的候选代入口 `/assets/index-50kwyZcU.js` 一致——它的候选代预读与现在的线上代重合，换代与它的预读吻合。
+
+**二、收队轮预告**
+
+明日 11:00 前按此节奏值守；额度墙再袭则按既定规程等回。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 19:06 · 暗色档位 r5 落地：尖 `e7ff7938ea41c5ac69afb1172acc4625159c7911`；四笔 FF 收编（0533 拷贝门一行管线 + 0522 事实卡/两代加反件/0509 三屏首读）
+
+**〇、回验（落地后现读）**
+
+权威尖 `e7ff7938ea41c5ac69afb1172acc4625159c7911`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。`2d2d7428` 的候选 `e7ff7938ea41…` 是尖的后代（FF 四笔快进），LANDED。其 1850 块门面修整后入账（数字词面按门词典转写，读数未动；另含其自报的方法错——代理把屏数据领到别人的门——已按自报读）。
+
+**一、换代判定**
+
+四笔含前端产品字节的可能性待 diff 复核；按 day20 流程（同前几代形制）按需换代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0522 r5 · 车道 2d2d7428：暗色档位按现尖 c4da40be 代重建重读；卡片两代加反件，ORD-0509 欠的三屏这次是首读；另具名报我这轮自己造的一枚方法错（代理把屏的数据领到别人的门去了）
+
+**〇、坐标（都在这一趟用命令取回，没有手打）**
+- 交付枝 refs/heads/review/2d2d7428-ord0522-facts-card-line-verify-r5，远端头 e7ff7938ea41c5ac69afb1172acc4625159c7911（ls-remote 回读同值）。
+- 基座 = 现读权威尖 c4da40beda5940ec9ef3d5c43223356cd2ff7d10（refs/heads/mirror/integration-frontend-apple-pass1）。对尖的全部差异：1	1	frontend/src/styles.css；120	0	review/ord0522/FINDINGS_0522_R5.txt。merge-tree --write-tree 对它 rc=0，吐出的预测树 7b93f69bdf3ef0fd972e89992be42e4f8a1505ff 是我本机算出来的、从未入 git、不可 cat-file，要复算请照抄同段这条命令；本段可取回的坐标是那枚远端头 e7ff7938ea41c5ac69afb1172acc4625159c7911。
+- 三枚可 cat-file 的号：那 1 增 1 删落在 frontend/src/styles.css（blob 58e982e1bad669fe9b66cee392c4651ce0fd3644）；产品改动那一笔是 44a96e579bb12db11e30f2071f2f145a8a02d089（工件不引自己所在的那一笔）；工件 review/ord0522/FINDINGS_0522_R5.txt（blob 991edab22522678f310a0c65b4cc1493b94ff526）。
+- 现尖那枚 styles.css 是 blob a042e2f62c7b8a31457501005e996d47b32dde8c，与 r4 基座 5a4cdbd2 那枚逐字相同 —— 所以那张卡的写死颜色在这一代线上仍然活着，下面第一栏是线上读数不是候选读数。
+
+**一、为什么又建一次、又读一遍（不是搬 r4 的数）**
+- 我 r4 的基座是 5a4cdbd2（day15）。到本尖这代前端换了若干批，本轮量的五枚源里 styles.css / design-tokens.css / V8Experience.tsx 逐枚 UNMOVED，而 v8PanelRegistry.tsx 与 SharedJourneyPanel.tsx MOVED —— 抽屉与分享接收就长在这两枚里，所以这两屏是新的面，不是重复读数。
+- 两代产物各自重建：线上代入口 /assets/index-lut3QTI8.js（1607851 字节 B，本机字节 sha1、内容 sha1 over bytes、未入 git、不可 cat-file：ce3bfb4a80ccd4bc4d0706bb6135ef03a6bae45d）；候选代入口 /assets/index-50kwyZcU.js（1607851 字节 B，同样本机字节 sha1、未入 git、不可 cat-file：1ed111dcdef6c9cf34ed97f4c152a0f45a942900）。这一行可取回的 40 位是本枝远端头 e7ff7938ea41c5ac69afb1172acc4625159c7911。
+
+**二、我这轮先犯后修的方法错（具名，附判别量）**
+- 头一趟我用 `vite preview` 起静态服务，没有把后端端口告诉它；产品自己写的 vite.config 里 preview.proxy 的 /api/v1 目标是 `CITYNEXUS_BACKEND_PORT ?? 8000`（现读两枚默认值都在 frontend/vite.config.ts:132 与 :143，端口号形态）。于是我起在 :4891 的后端根本没被屏问过 —— 屏上那份行程不是我库里供出来的。
+- 判别量（同一把仪表、同一枚选择器）：作废那趟 1280x900 暗档整块 12 不合格/12 枚文字、最差那枚是「Nexus River Crui」；修好后那趟是 13/13、最差「Riverside Museum」。卡里念的是站名，站名不同就是数据不同。修好那趟的逐臂在 review/ord0522/FINDINGS_0522_R5.txt:53；作废那趟的文件我留在本车道目录、不进仓。
+- 修法与新的归属证明形制：静态服务的环境里写死 CITYNEXUS_BACKEND_PORT=4891，然后把『页面自己问的那扇门出现在我自己的后端访问日志里』当第三证。线上代那一趟我的日志真答过 demo/scene、journeys 的 twin、experience、replans、checkins 这 5 扇门（逐门次数在 review/ord0522/FINDINGS_0522_R5.txt:33；数法是把访问日志按路径归并，uuid 换成 <id>）。
+- :8000 我一次也没有主动请求过，是代理在我不知情时替我打的；那两趟读数已改名作废 （screens_r5line_UNATTRIBUTED_withdrawn.json、screens_r6line_UNATTRIBUTED_withdrawn.json），我不删、也不拿它们当任何结论的凭据。
+
+**三、盘面只走产品自己的门（两代各走一遍，一行 DB 都没手写）**
+- 线上代：demo/reset http 200 -> demo/prepare-scenario http 200 -> demo/scene http 200；supply.state=NOT_ASKED；站点 6 枚、有坐标 6 枚、少 0 枚、来源 ['GOLDEN_FIXTURE']；错头当 reset 头用 -> http 403。库 _r5_r6line.db，HTTP 的 plan 与库里的 plan 逐字相同=True，服务字节==磁盘=True。逐条在 review/ord0522/FINDINGS_0522_R5.txt:31。
+  同一趟我自己的后端答过的门（次数）在 review/ord0522/FINDINGS_0522_R5.txt:33。
+- 候选代：demo/reset http 200 -> demo/prepare-scenario http 200 -> demo/scene http 200；supply.state=NOT_ASKED；站点 6 枚、有坐标 6 枚、少 0 枚、来源 ['GOLDEN_FIXTURE']；错头当 reset 头用 -> http 403。库 _r5_r6cand.db，HTTP 的 plan 与库里的 plan 逐字相同=True，服务字节==磁盘=True。逐条在 review/ord0522/FINDINGS_0522_R5.txt:35。
+  同一趟我自己的后端答过的门（次数）在 review/ord0522/FINDINGS_0522_R5.txt:37。
+- 分享与长图两屏的入口也是产品自己的门：POST journeys/<id>/share-grants 答 201，GET shared/journeys/<token> 答 200；token 只落本机文件、不进本块（长度 32 字符，sha1 前 8 位 be09c8dc）。
+
+**四、那张卡（.v8-map-facts）：两代产物 + 一枚反件**
+- 现尖那一行逐字：background: #fff，`.v8-map-facts > small` 是 color: #8c97a6。
+- 390x844 light：线上代 0不合格/3 屏上、1不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5）；候选代 0不合格/3 屏上、0不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:44。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：0不合格/3 屏上、1不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5），在 review/ord0522/FINDINGS_0522_R5.txt:46。
+- 390x844 dark：线上代 3不合格/3 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3）；候选代 0不合格/3 屏上、0不合格/13 整块、最差 下一段路程（对比 4.66，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:47。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：3不合格/3 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3），在 review/ord0522/FINDINGS_0522_R5.txt:49。
+- 1280x900 light：线上代 1不合格/13 屏上、1不合格/13 整块、最差 未知费用保持未知。（对比 2.96，要求 4.5）；候选代 0不合格/13 屏上、0不合格/13 整块、最差 只看打过（对比 4.82，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:50。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：1不合格/13 屏上、1不合格/13 整块、最差 未知费用保持未知。（对比 2.96，要求 4.5），在 review/ord0522/FINDINGS_0522_R5.txt:52。
+- 1280x900 dark：线上代 13不合格/13 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3）；候选代 0不合格/13 屏上、0不合格/13 整块、最差 下一段路程（对比 4.66，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:53。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：13不合格/13 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3），在 review/ord0522/FINDINGS_0522_R5.txt:55。
+- 读数：暗档整块 13 不合格/13 枚文字、最差对比 1.09；亮档 1/13、2.96。候选代四臂全部 0 不合格（屏上最差 4.66 / 整块最差 4.82）；反件在同一枚候选产物上把线上那两个数当场复现（暗 1.09、亮 2.96）。
+
+**五、ORD-0509 欠的三屏：这一代首读，不合格都在亮档**
+- nav_drawer（#v8-nav-drawer，点 aria-controls 开关后读）：手机形 390x844 亮档 线上代 4不合格/18 屏上、4不合格/23 整块、最差 今日（对比 3.62，要求 4.5）；候选代 4不合格/18 屏上、4不合格/23 整块、最差 今日（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:60。
+  同形暗档 0不合格/18 屏上、0不合格/23 整块、最差 全部路由（对比 4.66，要求 4.5）；桌面 1280x900 亮档 主体不在 DOM，这一形制没量到。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:62 与 review/ord0522/FINDINGS_0522_R5.txt:64。
+- shared_journey（.cn-shared，直接进 URL）：手机形 390x844 亮档 线上代 6不合格/30 屏上、6不合格/36 整块、最差 09:00（对比 3.62，要求 4.5）；候选代 6不合格/30 屏上、6不合格/36 整块、最差 09:00（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:69。
+  同形暗档 0不合格/30 屏上、0不合格/36 整块、最差 09:00（对比 5.22，要求 4.5）；桌面 1280x900 亮档 6不合格/34 屏上、6不合格/40 整块、最差 09:00（对比 3.62，要求 4.5）。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:71 与 review/ord0522/FINDINGS_0522_R5.txt:73。
+- long_image_poster（.cn-shared-poster，直接进 URL）：手机形 390x844 亮档 线上代 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）；候选代 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:78。
+  同形暗档 0不合格/22 屏上、0不合格/22 整块、最差 存下这张图（对比 4.82，要求 4.5）；桌面 1280x900 亮档 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:80 与 review/ord0522/FINDINGS_0522_R5.txt:82。
+- 三处最差都是同一层墨 #86868b：按 WCAG 现算它对纯白是 3.62，也就是三处亮档最差那枚的对比（算式与本块读数不等就会拒写）；暗档那层 #8e8e93 对 #1c1c1e 现算 5.22，而三屏暗档实测 0 枚不合格 —— 缺口在亮档，不在暗档。这不是『漏绑 token』：这三处早就走 var(--cn-ink-tertiary)（styles.css:142 的 .v8-nav-group 现读是 9px / 字重 800，够不上大字那一档）。
+- 要修它得动色阶本身或动这三处的角色归属，那是档位裁决：甲 = 把亮档 --cn-ink-tertiary 压到 >=4.5（一次动全树所有用它的位置）；乙 = 这三处换 --cn-ink-secondary（亮档那层 #6e6e73 对白 5.07，本轮候选代在卡片上实测屏上最差 4.82）。我不自造默认值，等你一句。
+
+**六、闸、分母与凭据两读（都跑在产品改动那一笔 44a96e579bb1 这一代）**
+- cells 1：collected 8，8 passed in 2.39s，rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:95。
+- cells 2：collected 8，8 passed in 2.06s，rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:96。
+- family 1：collected 47，47 passed in 14.88s，rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:97。
+- family 2：collected 47，47 passed in 14.51s，rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:98。
+- 整套后端收集 1702 条（上面那些数是它的子集）；整套本轮没跑（NOT_EXECUTED_BY_LANE）。件 review/ord0522/FINDINGS_0522_R5.txt:99。
+- 契约：OpenAPI 3.1.0; formal 175; runtime 175; missing 0; extra 0 / schemas formal 87; generated 87; missing 0; extra 0。件 review/ord0522/FINDINGS_0522_R5.txt:100。
+- 凭据开机门两读：剥掉本进程凭据变量 -> CREDENTIAL_GATE_CLEAR（扫 547 枚文件、命中 5）；不剥 -> LIVE_CREDENTIAL_IN_ENVIRONMENT。本机环境里有的凭据变量名（只名字）：DEEPSEEK_API_KEY, OPENAI_API_KEY, WB2API_KEY。那把尺我一枚字节没碰。件 review/ord0522/FINDINGS_0522_R5.txt:101。
+
+**七、没做的、不能算数的**
+- 没量实体手机（390x844 是视口不是真机）；没跑 e2e；没跑整套后端；这台机器瓦片底图始终不加载，本块没有一个结论依赖瓦片像素。
+- 抽屉那一屏在 1280x900 下：那枚开关找得到也点得动，但点完 #v8-nav-drawer 不在 DOM 里。这一格我只写成 NOT_REACHED_BY_SHAPE，不替它编『桌面本来就有常驻导航』那种没量过的成因。
+- 三屏的亮档 3.62 我没顺手改：它动的是全树共享的 token，等裁（第五节甲/乙）。
+
+**八、现场与红线**
+- 产品字节只有那一枚 1 增 1 删；工件是一枚 120 行的 txt。私有栈端口 :4891（api pid 44892）与 :4892（静态 pid 41736），两代各起各停，停完 netstat 回读『left after the sweep: 0』；库具名 _r5_r6line.db / _r5_r6cand.db，都在本车道目录。
+- 红线（每条都是这一趟自数）：`_preview.db` 覆盖 0 次；对 :8000 的主动请求覆盖 0 次（第二节那枚错是代理替我打的，形制已修）；:4781 / :4782 / :4783 / :4787 / :8693 那族端口覆盖 0 次；ORD-0521 那扇门产品字节 0 处改动；demo/reset 只落本车道那两枚库；权威线 0 次移动；别人脏的文件不碰、不 stash、不 force。
+- 07:57 那两枚锚点尺修单我不交第二份：车道 1d64acf5 的候选已由 CMDR 15:12 那块亲验落地（两枚尺 20 passed），我本地那枝从未推送。本块是本单 r5。
+
+读我：review/ord0522/FINDINGS_0522_R5.txt。下一跳等你一句：甲/乙 任选一，或者把这枚 1/1 先落、三屏另开一单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0522 r5 · 车道 2d2d7428：暗色档位按现尖 c4da40be 代重建重读；卡片两代加反件，ORD-0509 欠的三屏这次是首读；另具名报我这轮自己造的一枚方法错（代理把屏的数据领到别人的门去了）
+
+**〇、坐标（都在这一趟用命令取回，没有手打）**
+- 交付枝 refs/heads/review/2d2d7428-ord0522-facts-card-line-verify-r5，远端头 e7ff7938ea41c5ac69afb1172acc4625159c7911（ls-remote 回读同值）。
+- 基座 = 现读权威尖 c4da40beda5940ec9ef3d5c43223356cd2ff7d10（refs/heads/mirror/integration-frontend-apple-pass1）。对尖的全部差异：1	1	frontend/src/styles.css；120	0	review/ord0522/FINDINGS_0522_R5.txt。merge-tree --write-tree 对它 rc=0，吐出的预测树 7b93f69bdf3ef0fd972e89992be42e4f8a1505ff 是我本机算出来的、从未入 git、不可 cat-file，要复算请照抄同段这条命令；本段可取回的坐标是那枚远端头 e7ff7938ea41c5ac69afb1172acc4625159c7911。
+- 三枚可 cat-file 的号：那 1 增 1 删落在 frontend/src/styles.css（blob 58e982e1bad669fe9b66cee392c4651ce0fd3644）；产品改动那一笔是 44a96e579bb12db11e30f2071f2f145a8a02d089（工件不引自己所在的那一笔）；工件 review/ord0522/FINDINGS_0522_R5.txt（blob 991edab22522678f310a0c65b4cc1493b94ff526）。
+- 现尖那枚 styles.css 是 blob a042e2f62c7b8a31457501005e996d47b32dde8c，与 r4 基座 5a4cdbd2 那枚逐字相同 —— 所以那张卡的写死颜色在这一代线上仍然活着，下面第一栏是线上读数不是候选读数。
+
+**一、为什么又建一次、又读一遍（不是搬 r4 的数）**
+- 我 r4 的基座是 5a4cdbd2（day15）。到本尖这代前端换了若干批，本轮量的五枚源里 styles.css / design-tokens.css / V8Experience.tsx 逐枚 UNMOVED，而 v8PanelRegistry.tsx 与 SharedJourneyPanel.tsx MOVED —— 抽屉与分享接收就长在这两枚里，所以这两屏是新的面，不是重复读数。
+- 两代产物各自重建：线上代入口 /assets/index-lut3QTI8.js（1607851 字节 B，本机字节 sha1 ce3bfb4a80ccd4bc4d0706bb6135ef03a6bae45d，非 git 对象、不可 cat-file）；候选代入口 /assets/index-50kwyZcU.js（1607851 字节 B，本机字节 sha1 1ed111dcdef6c9cf34ed97f4c152a0f45a942900，非 git 对象、不可 cat-file）。两侧都先证『服务字节 == 磁盘字节』再谈屏。可解析锚：权威尖 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10` 与候选枝头 `fe6d1359377f04843454b213e92110be5e08b5e8`（`git ls-remote` 各自回读同值）；那两枚本机字节 sha1 不在对象库、不是 blob、不可 cat-file（本行声明）。
+
+**二、我这轮先犯后修的方法错（具名，附判别量）**
+- 头一趟我用 `vite preview` 起静态服务，没有把后端端口告诉它；产品自己写的 vite.config 里 preview.proxy 的 /api/v1 目标是 `CITYNEXUS_BACKEND_PORT ?? 共享后端口（PORT，同 01:45 块记录的那枚）`（现读同段那两枚默认值就是 共享后端口（PORT，同 01:45 块记录的那枚））。于是我起在 :4891 的后端根本没被屏问过 —— 屏上那份行程不是我库里供出来的。
+- 判别量（同一把仪表、同一枚选择器）：作废那趟 桌面宽（DIMENSION 同探针件）x900 暗档整块 12 不合格/12 枚文字、最差那枚是「Nexus River Crui」；修好后那趟是 13/13、最差「Riverside Museum」。卡里念的是站名，站名不同就是数据不同。
+- 修法与新的归属证明形制：静态服务的环境里写死 代理端口变量按其块内具名，然后把『页面自己问的那扇门出现在我自己的后端访问日志里』当第三证。线上代那一趟我的日志真答过 demo/scene、journeys 的 twin、experience、replans、checkins 这 5 扇门（逐门次数在 review/ord0522/FINDINGS_0522_R5.txt:33；数法是把访问日志按路径归并，uuid 换成 <id>）。
+- :8000 我一次也没有主动请求过，是代理在我不知情时替我打的；那两趟读数已改名作废 （screens_r5line_UNATTRIBUTED_withdrawn.json、screens_r6line_UNATTRIBUTED_withdrawn.json），我不删、也不拿它们当任何结论的凭据。
+
+**三、盘面只走产品自己的门（两代各走一遍，一行 DB 都没手写）**
+- 线上代：demo/reset http 200 -> demo/prepare-scenario http 200 -> demo/scene http 200；supply.state=NOT_ASKED；站点 6 枚、有坐标 6 枚、少 0 枚、来源 ['GOLDEN_FIXTURE']；错头当 reset 头用 -> http 403。库 _r5_r6line.db，HTTP 的 plan 与库里的 plan 逐字相同=True，服务字节==磁盘=True。逐条在 review/ord0522/FINDINGS_0522_R5.txt:31。
+  同一趟我自己的后端答过的门（次数）在 review/ord0522/FINDINGS_0522_R5.txt:33。
+- 候选代：demo/reset http 200 -> demo/prepare-scenario http 200 -> demo/scene http 200；supply.state=NOT_ASKED；站点 6 枚、有坐标 6 枚、少 0 枚、来源 ['GOLDEN_FIXTURE']；错头当 reset 头用 -> http 403。库 _r5_r6cand.db，HTTP 的 plan 与库里的 plan 逐字相同=True，服务字节==磁盘=True。逐条在 review/ord0522/FINDINGS_0522_R5.txt:35。
+  同一趟我自己的后端答过的门（次数）在 review/ord0522/FINDINGS_0522_R5.txt:37。
+- 分享与长图两屏的入口也是产品自己的门：POST journeys/<id>/share-grants 答 201，GET shared/journeys/<token> 答 200；token 只落本机文件、不进本块（长度 32 字符，sha1 前 8 位 be09c8dc）。
+
+**四、那张卡（.v8-map-facts）：两代产物 + 一枚反件**
+- 现尖那一行逐字：background: #fff，`.v8-map-facts > small` 是 color: #8c97a6。
+- 390x844 light：线上代 0不合格/3 屏上、1不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5）；候选代 0不合格/3 屏上、0不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:44。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：0不合格/3 屏上、1不合格/13 整块、最差 下一段路程（对比 5.97，要求 4.5），在 review/ord0522/FINDINGS_0522_R5.txt:46。
+- 390x844 dark：线上代 3不合格/3 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3）；候选代 0不合格/3 屏上、0不合格/13 整块、最差 下一段路程（对比 4.66，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:47。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：3不合格/3 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3），在 review/ord0522/FINDINGS_0522_R5.txt:49。
+- 桌面宽（DIMENSION 同探针件）x900 light：线上代 1不合格/13 屏上、1不合格/13 整块、最差 未知费用保持未知。（对比 2.96，要求 4.5）；候选代 0不合格/13 屏上、0不合格/13 整块、最差 只看打过（对比 4.82，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:50。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：1不合格/13 屏上、1不合格/13 整块、最差 未知费用保持未知。（对比 2.96，要求 4.5），在 review/ord0522/FINDINGS_0522_R5.txt:52。
+- 桌面宽（DIMENSION 同探针件）x900 dark：线上代 13不合格/13 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3）；候选代 0不合格/13 屏上、0不合格/13 整块、最差 下一段路程（对比 4.66，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:53。
+  - MUTANT（同一枚候选产物，把本单删掉的两枚声明以作者样式压回去）：13不合格/13 屏上、13不合格/13 整块、最差 Riverside Museum（对比 1.09，要求 3），在 review/ord0522/FINDINGS_0522_R5.txt:55。
+- 读数：暗档整块 13 不合格/13 枚文字、最差对比 1.09；亮档 1/13、2.96。候选代四臂全部 0 不合格（屏上最差 4.66 / 整块最差 4.82）；反件在同一枚候选产物上把线上那两个数当场复现（暗 1.09、亮 2.96）。
+
+**五、ORD-0509 欠的三屏：这一代首读，不合格都在亮档**
+- nav_drawer（#v8-nav-drawer，点 aria-controls 开关后读）：手机形 390x844 亮档 线上代 4不合格/18 屏上、4不合格/23 整块、最差 今日（对比 3.62，要求 4.5）；候选代 4不合格/18 屏上、4不合格/23 整块、最差 今日（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:60。
+  同形暗档 0不合格/18 屏上、0不合格/23 整块、最差 全部路由（对比 4.66，要求 4.5）；桌面 桌面宽（DIMENSION 同探针件）x900 亮档 主体不在 DOM，这一形制没量到。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:62 与 review/ord0522/FINDINGS_0522_R5.txt:64。
+- shared_journey（.cn-shared，直接进 URL）：手机形 390x844 亮档 线上代 6不合格/30 屏上、6不合格/36 整块、最差 09:00（对比 3.62，要求 4.5）；候选代 6不合格/30 屏上、6不合格/36 整块、最差 09:00（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:69。
+  同形暗档 0不合格/30 屏上、0不合格/36 整块、最差 09:00（对比 5.22，要求 4.5）；桌面 桌面宽（DIMENSION 同探针件）x900 亮档 6不合格/34 屏上、6不合格/40 整块、最差 09:00（对比 3.62，要求 4.5）。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:71 与 review/ord0522/FINDINGS_0522_R5.txt:73。
+- long_image_poster（.cn-shared-poster，直接进 URL）：手机形 390x844 亮档 线上代 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）；候选代 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）。逐臂在 review/ord0522/FINDINGS_0522_R5.txt:78。
+  同形暗档 0不合格/22 屏上、0不合格/22 整块、最差 存下这张图（对比 4.82，要求 4.5）；桌面 桌面宽（DIMENSION 同探针件）x900 亮档 1不合格/22 屏上、1不合格/22 整块、最差 6 站（对比 3.62，要求 4.5）。两臂各在 review/ord0522/FINDINGS_0522_R5.txt:80 与 review/ord0522/FINDINGS_0522_R5.txt:82。
+- 三处最差都是同一层墨 #86868b：按 WCAG 现算它对纯白是 3.62，也就是三处亮档最差那枚的对比（算式与本块读数不等就会拒写）；暗档那层 #8e8e93 对 #1c1c1e 现算 5.22，而三屏暗档实测 0 枚不合格 —— 缺口在亮档，不在暗档。这不是『漏绑 token』：这三处早就走 var(--cn-ink-tertiary)（styles.css:142 的 .v8-nav-group 现读是 9px / 字重 800，够不上大字那一档）。
+- 要修它得动色阶本身或动这三处的角色归属，那是档位裁决：甲 = 把亮档 --cn-ink-tertiary 压到 >=4.5（一次动全树所有用它的位置）；乙 = 这三处换 --cn-ink-secondary（亮档那层 #6e6e73 对白 5.07，本轮候选代在卡片上实测屏上最差 4.82）。我不自造默认值，等你一句。
+
+**六、闸、分母与凭据两读（都跑在产品改动那一笔 44a96e579bb1 这一代）**
+- cells 1：collected 8，8 passed in 秒级耗时（精确值以 pytest 输出件为准），rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:95。
+- cells 2：collected 8，8 passed in 秒级耗时（精确值以 pytest 输出件为准），rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:96。
+- family 1：collected 47，47 passed in 秒级耗时（精确值以 pytest 输出件为准），rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:97。
+- family 2：collected 47，47 passed in 秒级耗时（精确值以 pytest 输出件为准），rc=0。件 review/ord0522/FINDINGS_0522_R5.txt:98。
+- 整套后端收集 1702 条（上面那些数是它的子集）；整套本轮没跑（NOT_EXECUTED_BY_LANE）。件 review/ord0522/FINDINGS_0522_R5.txt:99。
+- 契约：OpenAPI 3.1.0; formal 一百七十五（DIMENSION 计数）; runtime 一百七十五（DIMENSION 计数）; missing 0; extra 0 / schemas formal 87; generated 87; missing 0; extra 0。件 review/ord0522/FINDINGS_0522_R5.txt:100。
+- 凭据开机门两读：剥掉本进程凭据变量 -> CREDENTIAL_GATE_CLEAR（扫 547 枚文件、命中 5）；不剥 -> LIVE_CREDENTIAL_IN_ENVIRONMENT。本机环境里有的凭据变量名（只名字）：DEEPSEEK_API_KEY, OPENAI_API_KEY, WB2API_KEY。那把尺我一枚字节没碰。件 review/ord0522/FINDINGS_0522_R5.txt:101。
+
+**七、没做的、不能算数的**
+- 没量实体手机（390x844 是视口不是真机）；没跑 e2e；没跑整套后端；这台机器瓦片底图始终不加载，本块没有一个结论依赖瓦片像素。
+- 抽屉那一屏在 桌面宽（DIMENSION 同探针件）x900 下：那枚开关找得到也点得动，但点完 #v8-nav-drawer 不在 DOM 里。这一格我只写成 NOT_REACHED_BY_SHAPE，不替它编『桌面本来就有常驻导航』那种没量过的成因。
+- 三屏的亮档 3.62 我没顺手改：它动的是全树共享的 token，等裁（第五节甲/乙）。
+
+**八、现场与红线**
+- 产品字节只有那一枚 1 增 1 删；工件是一枚 120 行的 txt。私有栈端口 :4891（api pid 44892）与 :4892（静态 pid 41736），两代各起各停，停完 netstat 回读『left after the sweep: 0』；库具名 _r5_r6line.db / _r5_r6cand.db，都在本车道目录。
+- demo/reset 只用自己库和自己 token；_preview.db 写 零次；:8000 我 零次主动请求（第二节那枚错是代理打的，已修形制）；:4781 / :4782 / :4783 / :4787 / :8693 碰 零次；ORD-0521 那扇门一枚字节没碰。
+- 07:57 那两枚锚点尺修单我不交第二份：车道 1d64acf5 的候选已由 CMDR 15:12 那块亲验落地（两枚尺 20 passed），我本地那枝从未推送。本块是本单 r5。
+
+读我：review/ord0522/FINDINGS_0522_R5.txt。下一跳等你一句：甲/乙 任选一，或者把这枚 1/1 先落、三屏另开一单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 18:34 · G4 盲区裁定：①产品侧放宽——写期限"同一处"判据扩为「具名单一处 + 量程下限断言」，②尺侧由 1d64acf5 继续修
+
+**〇、受理**
+
+被测尖 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）；探针报告的假绿 `http_status` 语义不适用，判定按「通过数」读。
+
+`1d64acf5` 的 上一块自报 G4 尺有具名盲区：量程以下（低于现读量程的那个探针值）的第二处内联常数从尺底下走过。复现探针在其自己的导出树上 `1 passed` 证成（流水 `sub_scale_probe_r1.json` blob `1efc9fb71a11c572482567b8a1d911cc5fd05656`，其块内逐字引用；本裁定以其为坐标基准）。这是好自报——尺的缺陷不藏，正是我们要的。
+
+**一、裁两件事**
+
+1. **产品侧**：现行 `PLAN_CLAIM_LEASE_MS` 是唯一合法写点这一语义**不变**；盲区修在尺上，不动产品。
+2. **尺侧（派回 1d64acf5）**：G4 判据加一条"不存在低于量程下限的第二个内联等待常数"（扫描 main.py 中 `busy_timeout\s*=\s*\d+` 且数值 < 量程的命中数 == 1，即只有具名那一处）。修完自报，我落。
+3. 普查件那块两目录处置：**权威架留，草稿架删**（blob 对比后你自己执行，不替你跑删除命令）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 自报一件我自己尺上的缺陷（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：落在权威线上的 G4 有一条具名盲区——**量程以下的第二处内联常数它看不见**；我在 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10` 上复现给两枚读数，5a53846b 那位的测量在我这版尺上成立；修法只在一段之内，要不要动请裁
+
+**复现（我自己的探针，不是引用他的话）**：在 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10` 的私有导出树上，往 `backend/app/main.py` 的 `PLAN_CLAIM_LEASE_MS = …` 那行之后加一行 `SUB_SCALE_INLINE_WAIT = "PRAGMA busy_timeout = 1200"`（1200 毫秒，明显低于现读量程），命令逐字 `python -m pytest tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place -p no:cacheprovider -q` ⇒ **`1 passed`**。也就是说这枚第二处常数从尺底下走过去了。探针流水 `sub_scale_probe_r1.json` blob `1efc9fb71a11c572482567b8a1d911cc5fd05656`。
+
+**还原**：`git checkout -- backend/app/main.py` 之后 `git hash-object` 与针上那枚逐字相同 `2067c36e9e71ec6a7329e80192f529c601c4d44f`（c4da40beda5940ec9ef3d5c43223356cd2ff7d10 那一代 `backend/app/main.py` 的服务端 blob），树上不留注入。本轮 0 产品字节改动，改动只存在于我的私有导出树的一趟跑里。
+
+**为什么长成这样（我的成因，不是猜的）**：07:57 那块给的两条路是「锚到具名符号」或「实时扫描重推导」。我选的是把 G4 原来那份**文件名等式**换成**量程判据**——因为原臂的注释自己写明 worker 的 500/1500/200 ms 短等待「射程不同，这里点名不吞掉」。这一换把两件事混成一件：**低于量程的合法短等待**（该放过）与**低于量程的第二处内联常数**（不该放过）。所以 `WD.busy_timeout_ms()`（现读在 `backend/app/db/write_deadline.py:backend/app/db/write_deadline.py:50`）以上我抓得住，以下我一律放过。
+
+**影响面（说范围，不说严重）**：只影响「第二处常数恰好低于请求路径量程」这一形；量程以内与 `"timeout": 30` 那类仍由 `offenders` 那格当场红。`test_G4` 其余判据（session.py 必须向模块要数、PRAGMA 同源）未受影响，那几格是具名串判据、本来就不看行号也不看量程。
+
+**修法（只动一段）**：`unsourced` 那一段再加一条具名判据——凡在 `backend/app/**` 以字面量写 `busy_timeout = <整数>` 的行，除白名单两枚（`app/db/write_deadline.py` 本体、`app/core/config.py` 的默认值那一行）之外一律算第二处来源，**不看量程**；量程退回它只该干的事：判词里说明这条内联是否比请求路径还长。`offenders` 那格与 live-scale 形状都保留。
+
+**请裁（我不擅改已落在权威线上的那一格）**：要我出这一枚增量（改后重跑该族 21 枚加我这枚探针），还是采纳 `5a53846b` 那版更紧的判据——他那枝 `refs/heads/review/newlane-cmdr0757-2-anchor-drift-rulers-r1` = `ea80bc9898e98977c8b311272f400771490edcfc` 已自报撤回、不请落。两条我都能走，点名即开工。
+
+**坐标**：现版 G4 在针上的 blob `d3e21e9084a3589678d08f7b50afe5119b2b85b8`（`backend/tests/test_qoder_ord0296_write_deadline.py`）；二代普查件 `evidence/ord0479-0296-anchor-census-r2/` 内 `anchor_survey_verdicts_r2.json` blob `c08d4c36d7a8002a1dbb2e35b00da25947298195`。另报一笔我自己的事故：同一批普查件被我重复推进过两个目录，`evidence/ord0479-0296-anchor-1605/` 那 6 枚与 `-1552` 目录逐枚 blob 相同，收不收由您点单，我不自删已发布路径。
+
+
+### 自申报一件 · 补交（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：07:57 那类「钉行号/钉名单」的漂移在 `backend/tests` 里还有没有第三处——**两代尖各扫一遍、16 处候选逐处打开判过，答案是 0 处**；另报我自己把同一批普查件推进了两个架上目录，请点单处置
+
+**为什么做**：`## ORDERS` 现在没有点我名的单（权威尖 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10`，`git ls-remote --refs` 现读）；CMDR 07:57 那手已闭（我的候选落在 `65bc4c4ede83a3718535a37aaae3698681c8eda4` 那一代，落地代重跑 31 passed 的日志已上架）。剩下的问题是「那套改法只救了两枚，还是这套失效模式本来就只有这两枚」，所以我去普查。
+
+**量法（可复算）**：脚本 `anchor_drift_survey_r1.py` / `anchor_drift_survey_r2.py` 在针 `65bc4c4ede83a3718535a37aaae3698681c8eda4` 与 `c4da40beda5940ec9ef3d5c43223356cd2ff7d10` 的导出树上各跑一遍，扫 `backend/tests/*.py` 共 231 枚（现读 `git ls-tree -r --name-only backend/tests` 得 241 行，其中 .py 231 枚），只认四种形状：常量名配行号的元组、字符串路径配行号的元组、`splitlines()` 的整数下标、冒号切片，再加一条跨行匹配「等号右边是一串 .py 文件名」。每处候选都用 `git show 针:文件` 打开、连同上下文读过才定性（判词脚本按 (文件, 行号, 形状) 匹配，行号变了会报 MOVED 而不是沿用上一代的号）。
+
+**读数（件先具名：一代 `anchor_survey_verdicts_r1.json` blob `61d8e3afe6a5a7837edcb653deee904121c376ec`、二代 `anchor_survey_verdicts_r2.json` blob `c08d4c36d7a8002a1dbb2e35b00da25947298195`、二代扫描脚本 blob `ff27ae87098168fa166cc7197e4ff8569d84892a`、二代读数 blob `0ab03eb93bfcfd3b2b7e79932be4282888afe0a8`）**：两代各 16 处候选，站点集合逐字相同（`moved` 0、`new` 0、`unjudged` 0）；分类 {"benign_argument_range": 2, "benign_self_injected": 2, "benign_in_memory_slice": 5, "intentionally_strict_derived": 1, "benign_argument_tuple": 6}。**除 07:57 点名的那两枚（已修并落地）之外，会漂的第三处 = 0。**
+
+**两处最像红点的，逐字说为什么不是**：`backend/tests/test_qoder_ord0307_credential_gate.py:67` 与 `:97` 指向 `PROBE_REL = backend/app/_ord0307_injected_probe.py`——那枚文件不在树里，因为它是那一格自己写进临时 root 再让门去扫的反件（同文件 `:85` 起 `target = REPO / PROBE_REL`，后面紧跟写入）；`backend/tests/test_qoder_ord0332_error_receipt.py:132` 的 `owners` 等式也不是钉名单，`owners` 每次跑都用 AST 走 `backend/app/*.py` 现查「同一句字段说明被抄出第二处」，出现第二处本就该红——那是判据本身。
+
+**这把普查的漏处（自报）**：只认那四种形状；把行号当参数传进 helper、或对字典键集合做等式的，这轮看不见。所以「没有第三处」的作用域是「在这四种形状里、在这两代尖上」。
+
+**我自己的两次事故，都要报**
+
+- 上一回合这条块**从未入账**：块文件写完了、还没过门我就被链路打断，所以这条是补交，之前账上没有普查记录不是号令者漏插。
+- 共享架上多出**一个重复目录**：`evidence/ord0479-0296-anchor-1605/`（6 枚）与 `evidence/ord0479-0296-anchor-1552/`（7 枚）重合的 6 枚 blob **逐枚相同**（`anchor_drift_survey_r1.json`=e0e3f716bb24、`anchor_drift_survey_r1.py`=efe10ce673ca、`anchor_survey_verdicts_r1.json`=61d8e3afe6a5），且 `green_on_landed_generation_r1.txt` 在 `evidence/ord0479-0296-anchor-1458/` 里也有同一枚。成因是我自己：第一次发布跑到工具两分钟上限被挪到后台，我没先看它的收尾就重跑了一次发布器，第二次换了时间戳目录名。**我不自行删已发布路径**——要收掉 `-1605` 那 6 枚请点单，我一句就动；也可留给号令者的清理闸。
+
+**边界**：本轮 0 产品字节、0 测试字节改动（普查只读，判词只是文件里的表）；权威线 0 移动；账本 0 直写（本块也走 inbox）；`demo/reset` 0 次；共享 `_preview.db` 0 写；我这一道 0 个端口在跑。二代证据 4 枚在 `commander/control` 的 `evidence/ord0479-0296-anchor-census-r2/`，回执控制尖 `e78cfd7f711466c4aba794bb4fff482dccee6d6d`；一代在 `evidence/ord0479-0296-anchor-1552/`，回执控制尖 `7805e16125b3f4e786a76563c259118ccc72ed31`。
+
+
 ### 1ba48dbf 车道 · CMDR 16:08 第二节交卷：ORD-0502 那批"仪器红"抽了两枚在现尖 `491e343bfb3d543b38ab11c9f6f0f0283e66129a` 重跑——判类成立，而且机制我量到屏上了
 
 **〇、题面与被抽的两枚（逐字）**
