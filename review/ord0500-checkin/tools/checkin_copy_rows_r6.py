@@ -111,23 +111,17 @@ def main():
 
     en_label = [t for _, t in dictionary_label(dict_t, "checkin.button") if '"Check in"' in t]
     zh_label = [t for _, t in dictionary_label(dict_t, "checkin.button") if '"打卡"' in t]
-    label_rows = []
-    for kind, key in (("en", "checkin.duplicate"), ("zh", "checkin.duplicate"),
-                      ("en", "checkin.refused"), ("zh", "checkin.refused")):
-        where = dictionary_label(dict_t, key)
-        readers = subprocess.run(["git", "grep", "-n", "--", '"%s"' % key, "frontend/src",
-                                  "frontend/e2e"], cwd=tree if os.path.isabs(tree)
-                                 else os.path.join(LANE, tree),
-                                 stdout=subprocess.PIPE, timeout=120).stdout.decode("utf-8", "replace")
-        screen_reads = [l for l in readers.splitlines() if DICT not in l]
-        label_rows.append({"key": key, "side": kind, "dictionary_lines": [n for n, _ in where],
-                           "readers_outside_the_dictionary": len(screen_reads),
-                           "reader_lines": screen_reads[:4]})
-    out = {"tool": "checkin_copy_rows_r6", "took_local": datetime.now().astimezone().isoformat(),
+    out = {"tool": os.environ.get("ROWS_TOOL") or "checkin_copy_rows_r6",
+           "took_local": datetime.now().astimezone().isoformat(timespec="seconds"),
            "tree": tree, "rows_checked": len([c for c in checks if "row" in c]),
            "en_button_label": en_label[:1], "zh_button_label": zh_label[:1],
-           "row_checks": checks, "orphan_dictionary_rows": label_rows,
-           "findings": findings, "verdict": "GREEN" if not findings else "RED"}
+           "row_checks": checks, "findings": findings,
+           "verdict": "GREEN" if not findings else "RED",
+           # removed by the commander's ruling of 04:26 (裁「删」, with the arm that pinned them):
+           # the dictionary rows `checkin.duplicate` / `checkin.refused` are gone, so there is no
+           # orphan count left to record -- and, named out loud, nothing in this gate would now say
+           # so if somebody re-added them
+           "orphan_arm": "removed with the two dictionary rows, ORD-0500 r14"}
     # one file per invocation: the control run and the mutant runs must each leave their own receipt,
     # otherwise the last write hides the earlier verdicts
     default_name = "checkin_copy_rows_r6%s.json" % (
@@ -137,10 +131,8 @@ def main():
     json.dump(out, open(path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print(json.dumps({"verdict": out["verdict"], "rows_checked": out["rows_checked"],
-                      "findings": findings,
-                      "orphans": [(r["key"], r["dictionary_lines"],
-                                   r["readers_outside_the_dictionary"])
-                                  for r in label_rows], "receipt": os.path.basename(path)},
+                      "findings": findings, "orphan_arm": out["orphan_arm"],
+                      "receipt": os.path.basename(path)},
                      indent=2, ensure_ascii=False))
     print("WROTE " + path)
     return 0 if not findings else 1

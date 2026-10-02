@@ -1,6 +1,6 @@
 {
   "tool": "checkin_copy_rows_r6",
-  "took_local": "2026-10-03T02:45:39.941668+08:00",
+  "took_local": "2026-10-03T04:50:19+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\mut_r6",
   "rows_checked": 11,
   "en_button_label": [
@@ -118,48 +118,7 @@
       "call_supplies_t_checkin_button": true
     }
   ],
-  "orphan_dictionary_rows": [
-    {
-      "key": "checkin.duplicate",
-      "side": "en",
-      "dictionary_lines": [
-        62,
-        1179
-      ],
-      "readers_outside_the_dictionary": 0,
-      "reader_lines": []
-    },
-    {
-      "key": "checkin.duplicate",
-      "side": "zh",
-      "dictionary_lines": [
-        62,
-        1179
-      ],
-      "readers_outside_the_dictionary": 0,
-      "reader_lines": []
-    },
-    {
-      "key": "checkin.refused",
-      "side": "en",
-      "dictionary_lines": [
-        63,
-        1180
-      ],
-      "readers_outside_the_dictionary": 0,
-      "reader_lines": []
-    },
-    {
-      "key": "checkin.refused",
-      "side": "zh",
-      "dictionary_lines": [
-        63,
-        1180
-      ],
-      "readers_outside_the_dictionary": 0,
-      "reader_lines": []
-    }
-  ],
   "findings": [],
-  "verdict": "GREEN"
+  "verdict": "GREEN",
+  "orphan_arm": "removed with the two dictionary rows, ORD-0500 r14"
 }
