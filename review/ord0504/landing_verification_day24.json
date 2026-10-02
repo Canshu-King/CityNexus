@@ -1,0 +1,61 @@
+{
+  "question": "did this lane's spend-face candidate actually land on the authoritative line, and are the bytes on the line the bytes that were measured",
+  "tip_ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "tip_sha": "4fac49f371da0820393d038700bddddafd1176d1",
+  "candidate_r5_head": "aa3016de0463b68b423e3f277b85900872d3ecc0",
+  "candidate_is_ancestor_of_tip": true,
+  "merge_base": "(empty means the candidate IS the ancestor chain root compared here)",
+  "blob_equality": [
+    {
+      "path": "frontend/src/features/trip/spendFacts.ts",
+      "tip_blob": "873ef3c6051ed4982868be14b982e5866f5c7cf2",
+      "candidate_blob": "873ef3c6051ed4982868be14b982e5866f5c7cf2",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "frontend/src/features/trip/SpendPanel.tsx",
+      "tip_blob": "6e416d07975b29db9b43c8cc4f9afb73c35d8ed1",
+      "candidate_blob": "6e416d07975b29db9b43c8cc4f9afb73c35d8ed1",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "frontend/src/features/trip/spend.css",
+      "tip_blob": "d8395d7522af9f7016876fb41b3df487e1d19a42",
+      "candidate_blob": "d8395d7522af9f7016876fb41b3df487e1d19a42",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "frontend/src/app/v8Types.ts",
+      "tip_blob": "6a6fa13f4e25e3856bfb59e92566e985cc57e148",
+      "candidate_blob": "6a6fa13f4e25e3856bfb59e92566e985cc57e148",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "frontend/src/app/V8Experience.tsx",
+      "tip_blob": "949c0471516bd4d8800bef0fee02f5dbf7eeb191",
+      "candidate_blob": "949c0471516bd4d8800bef0fee02f5dbf7eeb191",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "tip_blob": "e03a29aa9b2ddff127bcfb81d2e8dd802aa11516",
+      "candidate_blob": "e03a29aa9b2ddff127bcfb81d2e8dd802aa11516",
+      "equal": true,
+      "tip_blob_type": "blob"
+    },
+    {
+      "path": "backend/tests/test_qoder_ord0504_spend_sources.py",
+      "tip_blob": "a8e9b34afe07812ac5bed34db98528c04a5cc69c",
+      "candidate_blob": "a8e9b34afe07812ac5bed34db98528c04a5cc69c",
+      "equal": true,
+      "tip_blob_type": "blob"
+    }
+  ],
+  "all_seven_equal": true,
+  "note": "the earlier r3/r4 attempts were refused because that candidate rewrote 14 rows of v8Types.ts that it never edited; the row-ending ruler (merge_shape_r5.py) reporting 0 ending-only rewrites is what let this one go through"
+}
