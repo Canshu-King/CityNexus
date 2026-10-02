@@ -1,0 +1,266 @@
+
+Running 8 tests using 1 worker
+
+[ord0502][ORD0502-164201] CHAIN=GREEN
+  x  1 e2e\qoder-ord0502-phone-mainline.spec.ts:130:3 › ORD-0502 phone mainline › C7 the walk cannot claim green it did not earn (6ms)
+[ord0502][ORD0502-164201] C1 FAIL route=/v8/hub hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+Call log:
+  - waiting for getByTestId('trial-open').or(getByRole('button', { name: /试用其他城市|换一个城市/ })).first()
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C1:FAIL
+  x  2 e2e\qoder-ord0502-phone-mainline.spec.ts:152:3 › ORD-0502 phone mainline › C1 hub 拿到行程 (7.0m)
+[ord0502][ORD0502-164201] C2 FAIL route=/v8/trips (预订 子页) hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+Call log:
+  - waiting for getByTestId('trips-tab-bookings')
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C2:FAIL
+  x  3 e2e\qoder-ord0502-phone-mainline.spec.ts:195:3 › ORD-0502 phone mainline › C2 粘贴导入地点 (7.0m)
+[ord0502][ORD0502-164201] C3 FAIL route=/v8/trips (预订 子页 → 行程) hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+Call log:
+  - waiting for getByTestId('trips-tab-bookings')
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C3:FAIL
+  x  4 e2e\qoder-ord0502-phone-mainline.spec.ts:226:3 › ORD-0502 phone mainline › C3 落到那一天 (7.0m)
+[ord0502][ORD0502-164201] C4 FAIL route=/v8/trips → 行程 子页 hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+Call log:
+  - waiting for getByTestId('trips-tab-itinerary')
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C4:FAIL
+  x  5 e2e\qoder-ord0502-phone-mainline.spec.ts:272:3 › ORD-0502 phone mainline › C4 打卡（手机入口未接上则具名 NOT_REACHED_UI） (7.0m)
+[ord0502][ORD0502-164201] C5 FAIL route=/v8/footprints hit={} legs=GET /checkins http_status=NOT_SEEN failure=TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for getByTestId('footprint-panel') to be visible
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C5:FAIL
+  x  6 e2e\qoder-ord0502-phone-mainline.spec.ts:314:3 › ORD-0502 phone mainline › C5 足迹屏读到那一枚 (50.2s)
+[ord0502][ORD0502-164201] C6 FAIL route=/v8/trips → 长图 hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+Call log:
+  - waiting for getByTestId('poster-open')
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C6:FAIL
+  x  7 e2e\qoder-ord0502-phone-mainline.spec.ts:346:3 › ORD-0502 phone mainline › C6 长图导出成图（屏上字节 == 成图 IHDR 与文件长） (7.0m)
+[ord0502][ORD0502-164201] C7b FAIL route=/v8/access → /v8/shared/<token> hit={} legs= failure=TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for getByTestId('access-invite-submit') to be visible
+
+[ord0502][ORD0502-164201] CHAIN=INCOMPLETE C7b:FAIL
+  x  8 e2e\qoder-ord0502-phone-mainline.spec.ts:388:3 › ORD-0502 phone mainline › C7b 分享 token 在第二个上下文里打开 (20.2s)
+
+
+  1) e2e\qoder-ord0502-phone-mainline.spec.ts:130:3 › ORD-0502 phone mainline › C7 the walk cannot claim green it did not earn 
+
+    Error: the walk never recorded C1
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "C1"
+    Received array: []
+
+      134 |     const seen = readings.map((r) => r.cell);
+      135 |     for (const cell of ["C1", "C2", "C3", "C4", "C5", "C6"]) {
+    > 136 |       expect(seen, `the walk never recorded ${cell}`).toContain(cell);
+          |                                                       ^
+      137 |     }
+      138 |     const lying = readings.filter(
+      139 |       (r) => r.state === "PASS" && (r.rendered.length === 0 || r.route.length === 0),
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:136:55
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-65a5c-claim-green-it-did-not-earn\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-65a5c-claim-green-it-did-not-earn\error-context.md
+
+  2) e2e\qoder-ord0502-phone-mainline.spec.ts:152:3 › ORD-0502 phone mainline › C1 hub 拿到行程 ────────
+
+    Test timeout of 420000ms exceeded.
+
+    Error: Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+    Call log:
+      - waiting for getByTestId('trial-open').or(getByRole('button', { name: /试用其他城市|换一个城市/ })).first()
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "PASS"
+    Received: "FAIL"
+
+      190 |     }
+      191 |     record({ cell: "C1", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 192 |     expect(state, failure ?? "C1 failed").toBe("PASS");
+          |                                           ^
+      193 |   });
+      194 |
+      195 |   test("C2 粘贴导入地点", async ({ page }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:192:43
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-4c8ec--phone-mainline-C1-hub-拿到行程\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-4c8ec--phone-mainline-C1-hub-拿到行程\error-context.md
+
+  3) e2e\qoder-ord0502-phone-mainline.spec.ts:195:3 › ORD-0502 phone mainline › C2 粘贴导入地点 ──────────
+
+    Test timeout of 420000ms exceeded.
+
+    Error: Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+    Call log:
+      - waiting for getByTestId('trips-tab-bookings')
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "PASS"
+    Received: "FAIL"
+
+      221 |     }
+      222 |     record({ cell: "C2", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 223 |     expect(state, failure ?? "C2 failed").toBe("PASS");
+          |                                           ^
+      224 |   });
+      225 |
+      226 |   test("C3 落到那一天", async ({ page }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:223:43
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-97a38-02-phone-mainline-C2-粘贴导入地点\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-97a38-02-phone-mainline-C2-粘贴导入地点\error-context.md
+
+  4) e2e\qoder-ord0502-phone-mainline.spec.ts:226:3 › ORD-0502 phone mainline › C3 落到那一天 ───────────
+
+    Test timeout of 420000ms exceeded.
+
+    Error: Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+    Call log:
+      - waiting for getByTestId('trips-tab-bookings')
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "PASS"
+    Received: "FAIL"
+
+      267 |     }
+      268 |     record({ cell: "C3", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 269 |     expect(state, failure ?? "C3 failed").toBe("PASS");
+          |                                           ^
+      270 |   });
+      271 |
+      272 |   test("C4 打卡（手机入口未接上则具名 NOT_REACHED_UI）", async ({ page }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:269:43
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-c9692-502-phone-mainline-C3-落到那一天\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-c9692-502-phone-mainline-C3-落到那一天\error-context.md
+
+  5) e2e\qoder-ord0502-phone-mainline.spec.ts:272:3 › ORD-0502 phone mainline › C4 打卡（手机入口未接上则具名 NOT_REACHED_UI） 
+
+    Test timeout of 420000ms exceeded.
+
+    Error: Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+    Call log:
+      - waiting for getByTestId('trips-tab-itinerary')
+
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "FAIL"
+    Received array: ["PASS", "NOT_REACHED_UI"]
+
+      309 |     /* NOT_REACHED_UI is an accepted outcome for this cell -- and only for this cell. It is never
+      310 |        allowed to become a pass: the chain verdict in C7 says INCOMPLETE C4:NOT_REACHED_UI. */
+    > 311 |     expect(["PASS", "NOT_REACHED_UI"], failure ?? "").toContain(state);
+          |                                                       ^
+      312 |   });
+      313 |
+      314 |   test("C5 足迹屏读到那一枚", async ({ page }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:311:55
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-02b91-（手机入口未接上则具名-NOT-REACHED-UI）\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-02b91-（手机入口未接上则具名-NOT-REACHED-UI）\error-context.md
+
+  6) e2e\qoder-ord0502-phone-mainline.spec.ts:314:3 › ORD-0502 phone mainline › C5 足迹屏读到那一枚 ────────
+
+    Error: TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByTestId('footprint-panel') to be visible
+
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "FAIL"
+    Received array: ["PASS", "NOT_REACHED_UI"]
+
+      341 |     }
+      342 |     record({ cell: "C5", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 343 |     expect(["PASS", "NOT_REACHED_UI"], failure ?? "").toContain(state);
+          |                                                       ^
+      344 |   });
+      345 |
+      346 |   test("C6 长图导出成图（屏上字节 == 成图 IHDR 与文件长）", async ({ page }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:343:55
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-4ccff--phone-mainline-C5-足迹屏读到那一枚\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-4ccff--phone-mainline-C5-足迹屏读到那一枚\error-context.md
+
+  7) e2e\qoder-ord0502-phone-mainline.spec.ts:346:3 › ORD-0502 phone mainline › C6 长图导出成图（屏上字节 == 成图 IHDR 与文件长） 
+
+    Test timeout of 420000ms exceeded.
+
+    Error: Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+    Call log:
+      - waiting for getByTestId('poster-open')
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "PASS"
+    Received: "FAIL"
+
+      383 |     }
+      384 |     record({ cell: "C6", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 385 |     expect(state, failure ?? "C6 failed").toBe("PASS");
+          |                                           ^
+      386 |   });
+      387 |
+      388 |   test("C7b 分享 token 在第二个上下文里打开", async ({ browser, page, context }) => {
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:385:43
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-7c7d7-6-长图导出成图（屏上字节-成图-IHDR-与文件长）\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-7c7d7-6-长图导出成图（屏上字节-成图-IHDR-与文件长）\error-context.md
+
+  8) e2e\qoder-ord0502-phone-mainline.spec.ts:388:3 › ORD-0502 phone mainline › C7b 分享 token 在第二个上下文里打开 
+
+    Error: TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByTestId('access-invite-submit') to be visible
+
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "PASS"
+    Received: "FAIL"
+
+      430 |     void context;
+      431 |     record({ cell: "C7b", state, route, viewport_px: page.viewportSize()?.width ?? 0, rendered, hit, legs, failure });
+    > 432 |     expect(state, failure ?? "C7b failed").toBe("PASS");
+          |                                            ^
+      433 |   });
+      434 | });
+      435 |
+        at D:\moodle\_qoder_newlane_ord0444_20260929\wt2\frontend\e2e\qoder-ord0502-phone-mainline.spec.ts:432:44
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-2ca49-ine-C7b-分享-token-在第二个上下文里打开\error-context.md
+
+    Error Context: test-results\qoder-ord0502-phone-mainli-2ca49-ine-C7b-分享-token-在第二个上下文里打开\error-context.md
+
+  8 failed
+    e2e\qoder-ord0502-phone-mainline.spec.ts:130:3 › ORD-0502 phone mainline › C7 the walk cannot claim green it did not earn 
+    e2e\qoder-ord0502-phone-mainline.spec.ts:152:3 › ORD-0502 phone mainline › C1 hub 拿到行程 ─────────
+    e2e\qoder-ord0502-phone-mainline.spec.ts:195:3 › ORD-0502 phone mainline › C2 粘贴导入地点 ───────────
+    e2e\qoder-ord0502-phone-mainline.spec.ts:226:3 › ORD-0502 phone mainline › C3 落到那一天 ────────────
+    e2e\qoder-ord0502-phone-mainline.spec.ts:272:3 › ORD-0502 phone mainline › C4 打卡（手机入口未接上则具名 NOT_REACHED_UI） 
+    e2e\qoder-ord0502-phone-mainline.spec.ts:314:3 › ORD-0502 phone mainline › C5 足迹屏读到那一枚 ─────────
+    e2e\qoder-ord0502-phone-mainline.spec.ts:346:3 › ORD-0502 phone mainline › C6 长图导出成图（屏上字节 == 成图 IHDR 与文件长） 
+    e2e\qoder-ord0502-phone-mainline.spec.ts:388:3 › ORD-0502 phone mainline › C7b 分享 token 在第二个上下文里打开 
+

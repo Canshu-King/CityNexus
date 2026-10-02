@@ -1,0 +1,124 @@
+{
+  "front": "http://127.0.0.1:4722",
+  "steps": [
+    {
+      "label": "00_hub_as_landed",
+      "url": "http://127.0.0.1:4722/v8/hub",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-missing-jump": {
+          "count": 3,
+          "visible": true
+        },
+        "trial-required-hint": {
+          "count": 1,
+          "visible": true
+        },
+        "trip-itinerary": {
+          "count": 0,
+          "visible": false
+        }
+      },
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "body_chars": 592,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西REA"
+    },
+    {
+      "label": "10_after_cta_使用封存的演示行程",
+      "url": "http://127.0.0.1:4722/v8/hub",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-missing-jump": {
+          "count": 3,
+          "visible": true
+        },
+        "trial-required-hint": {
+          "count": 1,
+          "visible": true
+        },
+        "trip-itinerary": {
+          "count": 0,
+          "visible": false
+        }
+      },
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "重试",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "body_chars": 635,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西REA"
+    }
+  ],
+  "journeys_post": [],
+  "errors": [
+    "cta 下一步 :: TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /下一步/ }).first()\u001b[22m\n\u001b[2m ",
+    "trial-next :: TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"trial-next\"]').first()\u001b[22m\n\u001b[2m"
+  ],
+  "reach": {
+    "started_without_a_journey": true,
+    "ended_with_a_journey_screen": false,
+    "last_label": "10_after_cta_使用封存的演示行程",
+    "journeys_post_seen": 0,
+    "journeys_post_statuses": []
+  }
+}

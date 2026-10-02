@@ -1,0 +1,165 @@
+{
+ "run_id": "ORD0502WZ-230036",
+ "started": "10-02 23:00:36",
+ "worktree_head": "7dbbf02074d8fc253e5fdff0734f466b916bcd51",
+ "ports": {
+  "backend": 4721,
+  "frontend": 4722
+ },
+ "load_note": "这一趟单跑：没有其他 pytest / playwright 并发",
+ "preview_store_before": {
+  "bytes": 7213056,
+  "mtime_ns": 1790644827980246600
+ },
+ "backend_health": "http_status=200 body={\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"ORD0502WZ-230036\",\"e2e_database_id\":\"ORD0502WZ-230036.db\"}",
+ "front_serves": {
+  "index_bytes": 1200,
+  "entry_asset": "index-50kwyZcU.js",
+  "assets_compared": 1,
+  "all_equal": true,
+  "per_asset": [
+   {
+    "asset": "index-50kwyZcU.js",
+    "served_bytes": 1607851,
+    "disk_bytes": 1607851,
+    "equal": true
+   }
+  ]
+ },
+ "traveler_door": {
+  "http_status": 201,
+  "id_named": true
+ },
+ "walk_exit": 0,
+ "walk_stdout": [
+  "00_hub_as_landed | {\"trial-setup\":1,\"trial-city\":1,\"trial-next\":1,\"trial-missing-jump\":3,\"trial-required-hint\":1} | buttons [ 'EN', '高级设置', '目的地', '抵达地点', '离开地点', '使用封存的演示行程' ]",
+  "10_after_cta_使用封存的演示行程 | {\"trial-setup\":1,\"trial-city\":1,\"trial-next\":1,\"trial-missing-jump\":3,\"trial-required-hint\":1} | buttons [ 'EN', '高级设置', '目的地', '抵达地点', '离开地点', '重试' ]",
+  "REACH {\"started_without_a_journey\":true,\"ended_with_a_journey_screen\":false,\"last_label\":\"10_after_cta_使用封存的演示行程\",\"journeys_post_seen\":0,\"journeys_post_statuses\":[]}"
+ ],
+ "walk_stderr": [],
+ "walk": {
+  "front": "http://127.0.0.1:4722",
+  "steps": [
+   {
+    "label": "00_hub_as_landed",
+    "url": "http://127.0.0.1:4722/v8/hub",
+    "anchors": {
+     "today-heading": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-city": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-next": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-missing-jump": {
+      "count": 3,
+      "visible": true
+     },
+     "trial-required-hint": {
+      "count": 1,
+      "visible": true
+     },
+     "trip-itinerary": {
+      "count": 0,
+      "visible": false
+     }
+    },
+    "buttons": [
+     "EN",
+     "高级设置",
+     "目的地",
+     "抵达地点",
+     "离开地点",
+     "使用封存的演示行程",
+     "下一步"
+    ],
+    "body_chars": 592,
+    "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西REA"
+   },
+   {
+    "label": "10_after_cta_使用封存的演示行程",
+    "url": "http://127.0.0.1:4722/v8/hub",
+    "anchors": {
+     "today-heading": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-open": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-setup": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-city": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-next": {
+      "count": 1,
+      "visible": true
+     },
+     "trial-create": {
+      "count": 0,
+      "visible": false
+     },
+     "trial-missing-jump": {
+      "count": 3,
+      "visible": true
+     },
+     "trial-required-hint": {
+      "count": 1,
+      "visible": true
+     },
+     "trip-itinerary": {
+      "count": 0,
+      "visible": false
+     }
+    },
+    "buttons": [
+     "EN",
+     "高级设置",
+     "目的地",
+     "抵达地点",
+     "离开地点",
+     "重试",
+     "使用封存的演示行程",
+     "下一步"
+    ],
+    "body_chars": 635,
+    "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西REA"
+   }
+  ],
+  "journeys_post": [],
+  "errors": [
+   "cta 下一步 :: TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /下一步/ }).first()\u001b[22m\n\u001b[2m ",
+   "trial-next :: TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"trial-next\"]').first()\u001b[22m\n\u001b[2m"
+  ],
+  "reach": {
+   "started_without_a_journey": true,
+   "ended_with_a_journey_screen": false,
+   "last_label": "10_after_cta_使用封存的演示行程",
+   "journeys_post_seen": 0,
+   "journeys_post_statuses": []
+  }
+ },
+ "preview_store_unchanged": true
+}

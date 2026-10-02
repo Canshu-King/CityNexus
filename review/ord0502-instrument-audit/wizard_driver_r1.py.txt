@@ -1,0 +1,105 @@
+"""轻负载复跑：无行程设备能不能走到"有行程"那一态（也顺手把我上一趟被负载污染的走查还个清白）。
+
+上一块（账本 1752 那块）里我写了一句过强的话——"这条臂在任何库状态下都拿不到它要的第一步"。
+`cff87c64` 在 day21 的 C1 是 PASS，与我这句直接冲突；读完 spec 才看清原因：C1 有快路
+（`frontend/e2e/qoder-0502-phone-mainline.spec.ts:162` 的 `if (await heading.count())`），
+`trial-open` 只在**没有行程**那一支上承重。所以这一趟只做一件事：**造一枚没有行程的设备**
+（只经产品门放一枚 traveler 进去），然后只按屏上真有名字的按钮往下走，看能不能走到有行程那一态。
+
+与上一趟不同的两条：
+  · 这一趟盒子空跑——不并跑套件、不并跑反件、不并跑别的 playwright（我上一趟 8 枚全红的走查
+    就是在饱和盒子上取的，那条读数不能当判据，我在新块里具名自纠）；
+  · 不代打 API 造行程：POST /api/v1/journeys 的状态码从浏览器网络层**听**来。
+"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import threading
+import time
+from http.server import ThreadingHTTPServer
+from pathlib import Path
+
+SCR = Path("D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+WORK = Path("D:/moodle/_ord0502_census")
+WALK_JS = SCR / "ord0502_wizard_walk_r1.cjs"
+PREVIEW = Path("D:/moodle/_qoder_preview_20260920/_preview.db")
+NODE_MODULES = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2/frontend/node_modules")
+
+
+def load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    D = load("census_driver", SCR / "ord0502_census_live_r3.py")
+    R = D.load_runner()
+    wt2_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(D.WT2),
+                              capture_output=True, text=True).stdout.strip()
+    run_id = "ORD0502WZ-" + time.strftime("%H%M%S")
+    db = WORK / ("%s.db" % run_id)
+    assert not db.exists(), db
+    pre = PREVIEW.stat()
+    bp, fp = D.free(4721), D.free(4722)
+    out = {"run_id": run_id, "started": time.strftime("%m-%d %H:%M:%S"),
+           "worktree_head": wt2_head, "ports": {"backend": bp, "frontend": fp},
+           "load_note": "这一趟单跑：没有其他 pytest / playwright 并发",
+           "preview_store_before": {"bytes": pre.st_size, "mtime_ns": pre.st_mtime_ns}}
+    child = subprocess.Popen([R.PY, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                              "--port", str(bp)], cwd=str(R.BACKEND),
+                             env=R.env_base(run_id, db, bp),
+                             stdout=(WORK / ("uvicorn_%s.log" % run_id)).open("w", encoding="utf-8"),
+                             stderr=subprocess.STDOUT)
+    server = None
+    try:
+        ok, reading = R.wait_http("http://127.0.0.1:%d/api/v1/health" % bp)
+        out["backend_health"] = reading[:180]
+        if not ok:
+            raise SystemExit("backend did not answer")
+        R.StaticHandler.backend_port = bp
+        server = ThreadingHTTPServer(("127.0.0.1", fp), R.StaticHandler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        front = "http://127.0.0.1:%d" % fp
+        out["front_serves"] = D.served_equals_disk(fp, R.DIST)
+        st, trav = D.http_json("POST", front + "/api/v1/travelers",
+                               {"display_name": "qoder-ord0502-nojourney-%s" % run_id,
+                                "locale": "zh-CN", "timezone": "Asia/Shanghai"})
+        out["traveler_door"] = {"http_status": st, "id_named": bool(trav.get("id"))}
+        # 故意**不**造行程：这一趟要的就是"干净设备"那一支
+        res = subprocess.run(["node", str(WALK_JS), front, str(WORK / ("wizard_%s.json" % run_id))],
+                             cwd=str(D.WT2 / "frontend"),
+                             env=dict(os.environ, NODE_PATH=str(NODE_MODULES)),
+                             capture_output=True, text=True, encoding="utf-8", errors="replace",
+                             timeout=780)
+        out["walk_exit"] = res.returncode
+        out["walk_stdout"] = (res.stdout or "").strip().splitlines()[-10:]
+        out["walk_stderr"] = (res.stderr or "").strip().splitlines()[-6:]
+        wj = WORK / ("wizard_%s.json" % run_id)
+        out["walk"] = json.loads(wj.read_text(encoding="utf-8")) if wj.exists() else {}
+    finally:
+        if server is not None:
+            server.shutdown()
+        child.terminate()
+        post = PREVIEW.stat()
+        out["preview_store_unchanged"] = (post.st_size, post.st_mtime_ns) == (pre.st_size, pre.st_mtime_ns)
+        (WORK / ("wizard_receipt_%s.json" % run_id)).write_text(
+            json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("WROTE", WORK / ("wizard_receipt_%s.json" % run_id))
+    w = out.get("walk") or {}
+    print(json.dumps({"reach": w.get("reach"), "steps": [s["label"] for s in w.get("steps", [])],
+                      "errors": w.get("errors", [])[:3], "fatal": w.get("fatal", "")[:200],
+                      "walk_exit": out["walk_exit"]}, ensure_ascii=False, indent=1)[:1600])
+    print("preview untouched:", out["preview_store_unchanged"], "| entry", out["front_serves"]["entry_asset"],
+          "| served==disk", out["front_serves"]["all_equal"])
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

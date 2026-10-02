@@ -1,0 +1,111 @@
+/* 无行程设备能不能走到"有行程"那一态：只按屏上真有的东西走，不替产品作弊。
+ * 用法：node ord0502_wizard_walk_r1.cjs <FRONT_URL> <OUT_JSON>
+ * 每一步都记：按之前那枚锚的 count、按之后屏上锚的变化、以及 App 自己发出的 POST /api/v1/journeys 的状态码
+ * （状态码是从浏览器网络层听来的，不是我另开一扇门代打）。
+ */
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const FRONT = process.argv[2];
+const OUT = process.argv[3];
+const PHONE = { width: 390, height: 844 };
+const WATCH = ["today-heading", "trial-open", "trial-setup", "trial-city", "trial-next",
+               "trial-create", "trial-missing-jump", "trial-required-hint", "trip-itinerary"];
+const out = { front: FRONT, steps: [], journeys_post: [], errors: [] };
+
+async function snap(page, label) {
+  const ids = await page.$$eval("[data-testid]", (els) =>
+    els.map((e) => e.getAttribute("data-testid")));
+  const anchors = {};
+  for (const a of WATCH) {
+    const loc = page.locator('[data-testid="' + a + '"]');
+    anchors[a] = { count: await loc.count(), visible: await loc.first().isVisible().catch(() => false) };
+  }
+  const buttons = await page.$$eval("button, [role=button]",
+    (els) => Array.from(new Set(els.map((e) => (e.textContent || "").trim().replace(/\s+/g, " ")))).filter((b) => b));
+  const text = ((await page.textContent("body")) || "").trim();
+  const step = { label, url: page.url(), anchors, buttons: buttons.slice(0, 14),
+                 body_chars: text.length, body_head: text.replace(/\s+/g, " ").slice(0, 110) };
+  out.steps.push(step);
+  console.log(label, "|", JSON.stringify(Object.fromEntries(Object.entries(anchors)
+    .filter(([, v]) => v.count > 0).map(([k, v]) => [k, v.count]))), "| buttons", buttons.slice(0, 6));
+  return step;
+}
+
+(async () => {
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ viewport: PHONE, locale: "zh-CN", hasTouch: true,
+                                         serviceWorkers: "block" });
+  const page = await ctx.newPage();
+  page.setDefaultTimeout(20000);
+  page.on("response", async (res) => {
+    if (res.url().includes("/api/v1/journeys")) {
+      out.journeys_post.push({ method: res.request().method(), http_status: res.status(),
+                               url: res.url().slice(-60) });
+    }
+  });
+
+  await page.goto(FRONT + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 45000 });
+  await page.waitForTimeout(6000);
+  const first = await snap(page, "00_hub_as_landed");
+
+  if (first.anchors["today-heading"].count === 0) {
+    /* 屏自己给出的两条起点：封存的演示行程，或三步向导的下一步。先试屏上真有名字的那枚。 */
+    for (const label of [/使用封存的演示行程/, /新建行程/, /下一步/]) {
+      const btn = page.getByRole("button", { name: label }).first();
+      const n = await btn.count();
+      if (n === 0) { continue; }
+      try {
+        await btn.click({ timeout: 15000 });
+        await page.waitForTimeout(9000);
+        await snap(page, "10_after_cta_" + label.source.slice(0, 12));
+      } catch (error) {
+        out.errors.push("cta " + label.source + " :: " + String(error).slice(0, 140));
+      }
+      if (out.steps[out.steps.length - 1].anchors["today-heading"].count > 0) { break; }
+    }
+    /* 还没到就沿向导走：填城市 → 下一步 → 直到创建那枚出现 */
+    for (let i = 0; i < 5 && out.steps[out.steps.length - 1].anchors["today-heading"].count === 0; i += 1) {
+      const city = page.locator('[data-testid="trial-city"]');
+      if (await city.count()) { await city.first().fill("天津").catch(() => {}); }
+      const next = page.locator('[data-testid="trial-next"]');
+      const create = page.locator('[data-testid="trial-create"]');
+      if (await create.count()) {
+        try {
+          await create.first().click({ timeout: 15000 });
+          await page.waitForTimeout(12000);
+          await snap(page, "21_clicked_trial_create");
+        } catch (error) {
+          out.errors.push("trial-create :: " + String(error).slice(0, 140));
+        }
+        break;
+      }
+      if (await next.count()) {
+        try {
+          await next.first().click({ timeout: 15000 });
+          await page.waitForTimeout(5000);
+          await snap(page, "2" + i + "_next");
+        } catch (error) {
+          out.errors.push("trial-next :: " + String(error).slice(0, 140));
+          break;
+        }
+      } else { break; }
+    }
+  }
+
+  const last = out.steps[out.steps.length - 1];
+  out.reach = {
+    started_without_a_journey: first.anchors["today-heading"].count === 0,
+    ended_with_a_journey_screen: last.anchors["today-heading"].count > 0,
+    last_label: last.label,
+    journeys_post_seen: out.journeys_post.length,
+    journeys_post_statuses: out.journeys_post.map((p) => p.http_status) };
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8");
+  console.log("REACH", JSON.stringify(out.reach));
+})().catch((error) => {
+  out.fatal = String((error && error.stack) || error).slice(0, 600);
+  try { fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8"); } catch (e) {}
+  console.log("WALK_FATAL", out.fatal.slice(0, 240));
+  process.exitCode = 1;
+});
