@@ -2,9 +2,9 @@
   "tool": "pytest_collectonly_r14",
   "cmd": "python -m pytest --collect-only -q (cwd wt22/backend)",
   "interpreter": "Python 3.12.14",
-  "worktree_head": "e579f0c4b2ddef55262624df3892ed17c61b5289",
-  "line": "1719 tests collected in 3.05s",
+  "worktree_head": "9a78f0b3e4e052d63ee7701ef9613edf97a33d8b",
+  "line": "1719 tests collected in 3.38s",
   "collected": 1719,
   "exit": 0,
-  "took_local": "2026-10-03T05:59:56+08:00"
+  "took_local": "2026-10-03T06:01:59+08:00"
 }
