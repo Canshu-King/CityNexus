@@ -1,0 +1,38 @@
+{"case": "G4-1 同值换写法（旧白名单看不见）", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "230"}
+{"case": "G4-2 worker 自等抬到请求路径之上", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "230"}
+{"case": "G4-3 访问器出现第二处定义", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "G4-4 上连接的行自带数字、不问单源", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "G4-5 单源通道改指别名模块", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "235"}
+{"case": "G4-6 家的具名环境变量被改名", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "G4-7 漂移中性：第六枚合法消费者", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "G4-8 漂移中性：新文件只在注释里提名字", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "H-1 漂移中性：具名表被往上顶 1 行", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "H-2 漂移中性：具名表被往上顶 3 行", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "H-3 符号被改名（锚必须说得出找不到谁）", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "175"}
+{"case": "H-4 那一行被搬出表外", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "182"}
+{"case": "H-5 标签被改名：具名锚自己红", "verdict_on_landed_rulers": "GREEN", "assert_line_on_landed_rulers": ""}
+{"case": "H-6 值不再是两本词典都认得的键", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "193"}
+{"case": "H-7 表里混进非词典值 ⇒ 赦免整表失效", "verdict_on_landed_rulers": "RED", "assert_line_on_landed_rulers": "193"}
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_newlane_ord0444_20260929\scratch\anchor_crosscheck_landed_r1.py", line 68, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "D:\moodle\_qoder_newlane_ord0444_20260929\scratch\anchor_crosscheck_landed_r1.py", line 60, in main
+    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type WindowsPath is not JSON serializable

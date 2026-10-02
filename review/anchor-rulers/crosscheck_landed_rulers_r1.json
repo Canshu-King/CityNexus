@@ -1,0 +1,173 @@
+{
+ "landed_tip": "eabbaac714410eaf433568b4498cc8107eb98bfe",
+ "my_branch": "5cb0bd0a97d5cebface769cbdacdd5ad419e0751",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "python": "Python 3.12.14",
+ "rebuilt_from": "xc_landed_r2.log (that run's own stdout; the JSON dump crashed on a Path field)",
+ "rebuilt_at": "10-02 16:24:33",
+ "crosscheck_worktree_clean_after_restore": "",
+ "cases": [
+  {
+   "case": "G4-1 同值换写法（旧白名单看不见）",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "285",
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "230"
+  },
+  {
+   "case": "G4-2 worker 自等抬到请求路径之上",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "295",
+   "mutated_path": "backend/app/stay_generation_operations.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "230"
+  },
+  {
+   "case": "G4-3 访问器出现第二处定义",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "288",
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "G4-4 上连接的行自带数字、不问单源",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "299",
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "G4-5 单源通道改指别名模块",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "291",
+   "mutated_path": "backend/app/db/session.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "235"
+  },
+  {
+   "case": "G4-6 家的具名环境变量被改名",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "282",
+   "mutated_path": "backend/app/core/config.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "G4-7 漂移中性：第六枚合法消费者",
+   "expectation_in_my_generation": "GREEN",
+   "verdict_in_my_generation": "GREEN",
+   "assert_line_in_my_generation": "",
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "G4-8 漂移中性：新文件只在注释里提名字",
+   "expectation_in_my_generation": "GREEN",
+   "verdict_in_my_generation": "GREEN",
+   "assert_line_in_my_generation": "",
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "H-1 漂移中性：具名表被往上顶 1 行",
+   "expectation_in_my_generation": "GREEN",
+   "verdict_in_my_generation": "GREEN",
+   "assert_line_in_my_generation": "",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "H-2 漂移中性：具名表被往上顶 3 行",
+   "expectation_in_my_generation": "GREEN",
+   "verdict_in_my_generation": "GREEN",
+   "assert_line_in_my_generation": "",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "H-3 符号被改名（锚必须说得出找不到谁）",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "67",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "175"
+  },
+  {
+   "case": "H-4 那一行被搬出表外",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "82",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "182"
+  },
+  {
+   "case": "H-5 标签被改名：具名锚自己红",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "82",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "GREEN",
+   "assert_line_on_landed_rulers": ""
+  },
+  {
+   "case": "H-6 值不再是两本词典都认得的键",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "210",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "193"
+  },
+  {
+   "case": "H-7 表里混进非词典值 ⇒ 赦免整表失效",
+   "expectation_in_my_generation": "RED",
+   "verdict_in_my_generation": "RED",
+   "assert_line_in_my_generation": "210",
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "mutation_landed": true,
+   "verdict_on_landed_rulers": "RED",
+   "assert_line_on_landed_rulers": "193"
+  }
+ ],
+ "counts": {
+  "total": 15,
+  "red_on_landed": 7,
+  "green_on_landed": 8,
+  "landed_before_mine": 4
+ },
+ "where_the_two_versions_differ": [
+  "G4-3 访问器出现第二处定义",
+  "G4-4 上连接的行自带数字、不问单源",
+  "G4-6 家的具名环境变量被改名",
+  "H-5 标签被改名：具名锚自己红"
+ ]
+}
