@@ -9,29 +9,32 @@ import {
  * ORD-0402 slice 2 -- the two doors the recycle-bin screen uses, in one file, so the screen itself
  * renders and cannot hide what it asked the server for.
  *
- * BOTH DOORS ARE ON THE LINE NOW. The write door landed with ORD-0399:
- * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:2999`), no `Idempotency-Key` --
- * the durable column decides whether the write happens -- answering `409 JOURNEY_NOT_DELETED` rather
- * than reporting a success that did not occur (`backend/app/main.py:3033`). The read door landed
- * with ORD-0402 slice 1 at `backend/app/main.py:3058`: `GET /api/v1/recycle-bin/journeys`, declared in
- * `contracts/openapi.yaml:487` and generated at `frontend/src/generated/api.ts:414`, each row
- * carrying the stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN`
- * (`backend/app/schemas.py:263` and `:264`) -- so this screen never has to conclude "it was deleted"
- * from the trip being missing from `GET /api/v1/journeys`, which keeps its own `deleted_at IS NULL`
- * promise (`backend/app/main.py:2951`).
+ * BOTH DOORS ARE ON THE LINE NOW. The write door is `POST /api/v1/journeys/{journey_id}/undelete`
+ * (`undelete_journey` in `backend/app/main.py`), no `Idempotency-Key` -- the durable column decides
+ * whether the write happens -- answering `409` with `reason_code` = `JOURNEY_NOT_DELETED` rather than
+ * reporting a success that did not occur. The read door is `GET /api/v1/recycle-bin/journeys`
+ * (`list_recycle_bin_journeys` in the same module), declared under that path in
+ * `contracts/openapi.yaml` and generated into `frontend/src/generated/api.ts`; each row carries the
+ * stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN` (`RecycleBinJourney` in
+ * `backend/app/schemas.py`) -- so this screen never has to conclude "it was deleted" from the trip
+ * being missing from `GET /api/v1/journeys` (`list_journeys`, whose predicate keeps
+ * `deleted_at IS NULL`).
+ *
+ * Pointers in this header name symbols on purpose: an earlier revision of it cited seven
+ * `file:line` numbers, and five had silently drifted to unrelated lines while a sixth pointed at a
+ * `review/ord0402/stack_receipt_r1.json` that no longer exists in the tree. `backend/tests/
+ * test_qoder_ord0531_bin_ownership.py::test_b8_...` now refuses numeric citations in this family.
  *
  * The name this file chose is the name slice 1 shipped, so the constant below needed no edit when the
  * door arrived; that is the point of keeping the URL in one place. The reason for not using
- * `/journeys/discarded` still stands and was measured, not guessed (see
- * `review/ord0402/stack_receipt_r1.json`, key `shadowed_collection_name`): the landed
+ * `/journeys/discarded` still stands and is measurable on any generation: the landed
  * `GET /api/v1/journeys/{journey_id}` door is declared earlier in `app.main`, so a one-segment
  * collection name under `/journeys/` is swallowed by it and answers 422 with
- * `loc: ["path","journey_id"]`, `type: "uuid_parsing"`, `message_key: "validation.not_an_id"` (the
- * server's own receipt for that answer was `CNX-TWXNJHE2`).
+ * `loc: ["path","journey_id"]`, `type: "uuid_parsing"`, `message_key: "validation.not_an_id"`.
  *
  * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
- * (`backend/app/main.py:3081`), and the panel renders the array as answered, so the order a traveller
- * sees is the server's order, not a client-side re-sort.
+ * (`list_recycle_bin_journeys` sorts on the stored deletion moment), and the panel renders the array
+ * as answered, so the order a traveller sees is the server's order, not a client-side re-sort.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
 
@@ -94,8 +97,9 @@ export function binMayRestore(row: ScopedBinRow): boolean {
 }
 
 /** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped
- *  `RecycleBinJourney` into the generated client (`frontend/src/generated/api.ts:2771`), so the
- *  screen's rows and the server's schema cannot drift apart silently. The guards in the panel stay
+ *  `RecycleBinJourney` into the generated client (`components["schemas"]["RecycleBinJourney"]` in
+ *  `frontend/src/generated/api.ts`), so the
+ *  server's schema cannot drift away from this screen silently. The guards in the panel stay
  *  anyway -- a model says what the server intends to send, not what this response did send. */
 export type DiscardedJourney = components["schemas"]["RecycleBinJourney"];
 

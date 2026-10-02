@@ -8,8 +8,9 @@
  *
  * Three wording rules, all of them from the order:
  *  - the verb is 找回 / "bring it back". 恢复 and `recover*` are autonomous recovery in this product
- *    (`recovery.*` keys, `POST /journeys/{id}/recovery/acknowledge`), and 还原 is the plan-version
- *    screen's word (`planVersionHistoryCopy.ts:10`). The server picked the same pair
+ *    (`recovery.*` keys, `POST /journeys/{id}/recovery/acknowledge`), and 还原 belongs to the
+ *    plan-version screen -- its own header states that wording rule ("this screen says 「历史版本 /
+ *    还原」", in `features/studio/planVersionHistoryCopy.ts`). The server picked the same pair
  *    (`backend/app/main.py` -- "The word is 找回 / undelete").
  *  - a refusal is *said*, not printed as a code. The 409 `JOURNEY_NOT_DELETED` gets the sentence
  *    "这条已经在你的行程列表里了。"; the machine token stays on the details face where a screen can
