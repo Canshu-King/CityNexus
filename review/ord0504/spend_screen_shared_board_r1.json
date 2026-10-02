@@ -1,0 +1,126 @@
+{
+  "generated_at": "2026-10-02T21:27:07.013Z",
+  "board_copy": "sqlite:///D:/moodle/_qoder_r_ord0465_20260929/run/ord0504_shared_day25_copy.db",
+  "shared_source_of_copy": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_canary_day25.db (opened mode=ro)",
+  "journeys": {
+    "active_with_money": "22222222-2222-4222-8222-222222222222",
+    "no_money_row": "6cbdbc65-904a-40c7-a778-f981690f25d0"
+  },
+  "demo_expected": {
+    "lines": [
+      {
+        "currency": "CNY",
+        "strength": "CONFIRMED",
+        "amount": 12000,
+        "source": "COMMITMENT"
+      }
+    ],
+    "groups": {
+      "CNY": {
+        "confirmed": 12000,
+        "estimated": 0,
+        "unpriced": 0
+      }
+    }
+  },
+  "broke_expected": {
+    "lines": [],
+    "groups": {}
+  },
+  "results": [
+    {
+      "arm": "shared_board/desktop_shows_the_commitment_the_server_answered",
+      "pass": true,
+      "detail": {
+        "want_confirmed_cny_minor": 12000,
+        "totals": [
+          "已确认 CNY 120.00 · 这个币种没有估算项"
+        ],
+        "lines_on_face": 1,
+        "lines_expected": 1,
+        "declared": "CNY 500.00"
+      }
+    },
+    {
+      "arm": "shared_board/mobile_shows_the_commitment_the_server_answered",
+      "pass": true,
+      "detail": {
+        "want_confirmed_cny_minor": 12000,
+        "totals": [
+          "已确认 CNY 120.00 · 这个币种没有估算项"
+        ],
+        "lines_on_face": 1,
+        "lines_expected": 1,
+        "declared": "CNY 500.00"
+      }
+    },
+    {
+      "arm": "shared_board/no_amount_on_the_face_that_the_doors_did_not_send",
+      "pass": true,
+      "detail": {
+        "shown_amounts": [
+          "CNY 500.00",
+          "CNY 120.00",
+          "CNY 120.00",
+          "CNY 120.00"
+        ],
+        "allowed": {},
+        "declared": "CNY 500.00",
+        "unexplained": [],
+        "door_statuses": {
+          "experience": 200,
+          "wallet": 200
+        }
+      }
+    },
+    {
+      "arm": "shared_board/zero_legs_in_the_store_draws_no_leg_line",
+      "pass": true,
+      "detail": {
+        "leg_lines_on_face": [],
+        "legs_answered": 0
+      }
+    },
+    {
+      "arm": "shared_board/missing_classes_are_named_on_the_shared_trip",
+      "pass": true,
+      "detail": {
+        "missing": [
+          "每个站的估价：库里有记，但没有任何按行程的读路由把它答出来。",
+          "方案自己的总额：同上，记着但从不送到这一屏。",
+          "预订单：只能按单个编号一条条读，所以这一屏列不出一趟行程的预订。",
+          "订单：缺的是同一件事。",
+          "收支流水：缺的是同一件事。"
+        ]
+      }
+    },
+    {
+      "arm": "shared_board/the_unpriced_trip_shows_no_total_instead_of_zero",
+      "pass": true,
+      "detail": {
+        "empty_face": true,
+        "totals": [],
+        "amounts": [],
+        "lines_expected": 0
+      }
+    },
+    {
+      "arm": "counterexample_on_shared_shape/moving_the_commitment_moves_the_total",
+      "pass": true,
+      "detail": {
+        "store_mutation": "commitments.monetary_value_minor in THIS LANE'S COPY only, restored afterwards",
+        "before": [
+          "已确认 CNY 120.00 · 这个币种没有估算项"
+        ],
+        "after": [
+          "已确认 CNY 210.00 · 这个币种没有估算项"
+        ],
+        "reverted": [
+          "已确认 CNY 120.00 · 这个币种没有估算项"
+        ],
+        "minor_before": 12000,
+        "minor_after": 21000
+      }
+    }
+  ]
+}

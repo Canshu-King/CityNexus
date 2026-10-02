@@ -1,0 +1,68 @@
+{
+  "22222222-2222-4222-8222-222222222222": {
+    "experience_status": 200,
+    "wallet_status": 200,
+    "legs_rows": 0,
+    "leg_money": [],
+    "wallet_keys": [
+      "commitments",
+      "journey_id",
+      "offline_ready",
+      "reservations"
+    ],
+    "bookings": [],
+    "commitments": [
+      [
+        null,
+        null,
+        "KNOWN"
+      ]
+    ],
+    "reservations": [],
+    "journey_status": "ACTIVE",
+    "budget": {
+      "amount_minor": 50000,
+      "currency": "CNY"
+    }
+  },
+  "6cbdbc65-904a-40c7-a778-f981690f25d0": {
+    "experience_status": 200,
+    "wallet_status": 200,
+    "legs_rows": 0,
+    "leg_money": [],
+    "wallet_keys": [
+      "commitments",
+      "journey_id",
+      "offline_ready",
+      "reservations"
+    ],
+    "bookings": [],
+    "commitments": [],
+    "reservations": [],
+    "journey_status": "PLANNED",
+    "budget": {
+      "amount_minor": 120000,
+      "currency": "CNY"
+    }
+  },
+  "94669bae-e333-4bab-87cf-8c84ef3ad5c8": {
+    "experience_status": 200,
+    "wallet_status": 200,
+    "legs_rows": 0,
+    "leg_money": [],
+    "wallet_keys": [
+      "commitments",
+      "journey_id",
+      "offline_ready",
+      "reservations"
+    ],
+    "bookings": [],
+    "commitments": [],
+    "reservations": [],
+    "journey_status": "DRAFT",
+    "budget": {
+      "amount_minor": 300000,
+      "currency": "CNY"
+    }
+  }
+}

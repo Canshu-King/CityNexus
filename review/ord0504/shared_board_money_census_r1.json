@@ -1,0 +1,235 @@
+{
+  "source": "consistent sqlite backup of live_checks/_cmdr_canary_day25.db, taken mode=ro",
+  "copy": "D:/moodle/_qoder_r_ord0465_20260929/run/ord0504_shared_day25_copy.db",
+  "journeys": [
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "city_code": "CNX-DEMO",
+      "status": "ACTIVE",
+      "title": "One Day in Nexus City",
+      "start_at": "2026-10-10T09:00:00+08:00",
+      "end_at": "2026-10-10T19:00:00+08:00",
+      "plan_versions": [
+        {
+          "id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+          "version_no": 1,
+          "status": "REJECTED",
+          "created_at": "2026-09-21T12:03:08.688429+00:00"
+        },
+        {
+          "id": "0a1dcd9c-85cc-54bc-943c-5b46d6f3426c",
+          "version_no": 2,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:08.688429+00:00"
+        },
+        {
+          "id": "6c07d3ca-60ed-5699-a09d-e0ac568c6de6",
+          "version_no": 3,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:08.688429+00:00"
+        },
+        {
+          "id": "60cb6a2f-ccce-537d-86c1-a7d9a007bc2b",
+          "version_no": 4,
+          "status": "SUPERSEDED",
+          "created_at": "2026-09-21T12:03:23.566274+00:00"
+        },
+        {
+          "id": "dbc088fa-4fbc-5a1d-9703-9b73dd723719",
+          "version_no": 5,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:23.566274+00:00"
+        },
+        {
+          "id": "e67ebf61-9019-5472-93ee-9d551ed02cfb",
+          "version_no": 6,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:23.566274+00:00"
+        },
+        {
+          "id": "ccaf82b0-33d4-4fee-8308-a56148da9b47",
+          "version_no": 7,
+          "status": "ACTIVE",
+          "created_at": "2026-09-21T12:10:51.343241+00:00"
+        }
+      ],
+      "active_plan": {
+        "id": "ccaf82b0-33d4-4fee-8308-a56148da9b47",
+        "version_no": 7
+      },
+      "counts": {
+        "activities": 6,
+        "legs": 0,
+        "places_in_catalog": 8
+      },
+      "money": {
+        "legs_of_active_plan": [],
+        "legs_of_this_journey_any_plan": [],
+        "bookings_of_this_journey": [
+          {
+            "id": "1eec9ddb-25f5-43b1-91ce-aadffd99acae",
+            "status": "CONFIRMED",
+            "amount_minor": 12000,
+            "currency": "CNY",
+            "amount_status": "KNOWN"
+          }
+        ],
+        "commitments_of_this_journey": [
+          {
+            "id": "8ba7ce08-40e5-491b-a9d9-d3f2bbdbfbef",
+            "kind": "BOOKING",
+            "status": "ACTIVE",
+            "monetary_value_minor": 12000,
+            "currency": "CNY",
+            "monetary_value_status": "KNOWN"
+          }
+        ],
+        "reservations_of_this_journey": []
+      }
+    },
+    {
+      "id": "6cbdbc65-904a-40c7-a778-f981690f25d0",
+      "city_code": "CN-BEIJING",
+      "status": "PLANNED",
+      "title": "北京 · journey",
+      "start_at": "2026-09-28T01:00:00+00:00",
+      "end_at": "2026-09-30T10:00:00+00:00",
+      "plan_versions": [
+        {
+          "id": "78fb1655-ce15-50dd-964c-9826a14f9745",
+          "version_no": 1,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:02:41.085996+00:00"
+        },
+        {
+          "id": "3cb7d334-93e5-582c-90ac-4715887a4d99",
+          "version_no": 2,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:02:41.085996+00:00"
+        },
+        {
+          "id": "715df5ab-c7cc-5222-83e0-76dbd0e3b5cb",
+          "version_no": 3,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:02:41.085996+00:00"
+        },
+        {
+          "id": "3d869a0c-d4ca-5d76-aa17-28a774ccf3b3",
+          "version_no": 4,
+          "status": "SELECTED",
+          "created_at": "2026-09-21T12:03:16.133832+00:00"
+        },
+        {
+          "id": "44e4a02b-0fa4-5e7c-bbf9-6fbd560701a3",
+          "version_no": 5,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:16.133832+00:00"
+        },
+        {
+          "id": "6d888783-9b77-5a17-84a4-b5b4e6a85b83",
+          "version_no": 6,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:03:16.133832+00:00"
+        },
+        {
+          "id": "b06a9ffb-4d34-5c00-a149-109618b2dcf1",
+          "version_no": 7,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:49:37.045597+00:00"
+        },
+        {
+          "id": "6d778f6a-dcd4-52df-b967-20aa2011601c",
+          "version_no": 8,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:49:37.045597+00:00"
+        },
+        {
+          "id": "9787274f-51e1-56d0-8b9a-00daf01f9dda",
+          "version_no": 9,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:49:37.045597+00:00"
+        }
+      ],
+      "active_plan_fallback": "no ACTIVE row; newest version_no used",
+      "active_plan": {
+        "id": "9787274f-51e1-56d0-8b9a-00daf01f9dda",
+        "version_no": 9
+      },
+      "counts": {
+        "activities": 7,
+        "legs": 0,
+        "places_in_catalog": 8
+      },
+      "money": {
+        "legs_of_active_plan": [],
+        "legs_of_this_journey_any_plan": [],
+        "bookings_of_this_journey": [],
+        "commitments_of_this_journey": [],
+        "reservations_of_this_journey": []
+      }
+    },
+    {
+      "id": "94669bae-e333-4bab-87cf-8c84ef3ad5c8",
+      "city_code": "CN-BEIJING",
+      "status": "DRAFT",
+      "title": "北京 · journey",
+      "start_at": "2026-09-22T02:00:00+00:00",
+      "end_at": "2026-09-24T12:00:00+00:00",
+      "plan_versions": [
+        {
+          "id": "e0659a86-b4e7-511f-86f0-6a74c3359a48",
+          "version_no": 1,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:07:31.756726+00:00"
+        },
+        {
+          "id": "6ce0ebf2-db99-54f1-9137-d0b703249836",
+          "version_no": 2,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:07:31.756726+00:00"
+        },
+        {
+          "id": "e9b9b52e-4039-5234-921c-249618d4428d",
+          "version_no": 3,
+          "status": "CANDIDATE",
+          "created_at": "2026-09-21T12:07:31.756726+00:00"
+        }
+      ],
+      "active_plan_fallback": "no ACTIVE row; newest version_no used",
+      "active_plan": {
+        "id": "e9b9b52e-4039-5234-921c-249618d4428d",
+        "version_no": 3
+      },
+      "counts": {
+        "activities": 7,
+        "legs": 0,
+        "places_in_catalog": 8
+      },
+      "money": {
+        "legs_of_active_plan": [],
+        "legs_of_this_journey_any_plan": [],
+        "bookings_of_this_journey": [],
+        "commitments_of_this_journey": [],
+        "reservations_of_this_journey": []
+      }
+    }
+  ],
+  "money_reality": {
+    "journey_legs": {
+      "rows": 0,
+      "rows_with_cost_amount_minor": null
+    },
+    "bookings": {
+      "rows": 1,
+      "rows_with_amount_minor": 1
+    },
+    "transport_reservations": {
+      "rows": 0,
+      "rows_with_price_amount_minor": null
+    },
+    "commitments": {
+      "rows": 1,
+      "rows_with_monetary_value_minor": 1
+    }
+  }
+}
