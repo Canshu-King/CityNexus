@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -42,6 +43,67 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 CODE_SENT = "SERVER_WRITE_DEADLINE_EXCEEDED"
 LOCK_SENTENCES = ("database is locked", "database is busy")
 PROBE_TABLE = "ord0296_write_probe"
+
+#: ---- G4 的形状判据（CMDR 07:57 的锚点漂移修单）------------------------------------
+#: 这一格原先在尾部钉一枚五枚文件名的白名单（"提到 busy_timeout 的只许这五枚文件"）。它在换代后
+#: 漂红过两次：现尖 00b5f25e 上 app/main.py 的 claim-lease 组合式用法成了第六枚 —— 白名单红了，
+#: 而"那个数只有一个家"这件事一个字都没坏。白名单是一个会随上游移动的量，判据不是，所以这里全部
+#: 改成从产品源现推导：家、访问器、内联绑定、上连接的行，四者各按形状认领。
+WRITE_DEADLINE_MODULE_REL = "app/db/write_deadline.py"
+#: 那枚毫秒数的家：唯一一处具名环境变量的默认值
+_LOCK_WAIT_HOME_SHAPE = re.compile(
+    r'os\.getenv\(\s*"CITYNEXUS_WRITE_BUSY_TIMEOUT_MS"\s*,\s*"(\d+)"\s*\)')
+#: 把一枚裸数字绑到 busy_timeout 上的形状（`PRAGMA busy_timeout = 500`、`"busy_timeout": 30000`）
+_BUSY_TIMEOUT_BINDING_SHAPE = re.compile(r"\bbusy_timeout\w*\s*[=:]\s*(\d+)")
+#: 访问器的定义行（全产品源只许一枚），与"从单源取用"的具名通道
+_BUSY_TIMEOUT_ACCESSOR_DEF_SHAPE = re.compile(r"^\s*def\s+busy_timeout_ms\s*\(")
+_BUSY_TIMEOUT_IMPORT_SHAPE = re.compile(r"^\s*from app\.db\.write_deadline import [^\n]*busy_timeout")
+_BUSY_TIMEOUT_NAMED_SOURCES = ("busy_timeout_ms()", "busy_timeout_seconds()",
+                               "write_busy_timeout_ms()", "write_busy_timeout_seconds()",
+                               "effective_busy_timeout_ms(", "settings.write_busy_timeout_ms")
+#: 把等待挂到连接/游标上的行：要么经上面的具名通道，要么就是更短的 worker 自等（绑数字那一类）
+_BUSY_TIMEOUT_APPLIER_SHAPE = re.compile(r'(PRAGMA busy_timeout|"timeout"\s*:|\.connect\(|create_engine\()')
+
+
+def _busy_timeout_mentions(root: Path) -> list[dict]:
+    """产品源里每一枚提到锁等待的行。清单既当判据的输入，也当红的时候打印的证据。"""
+
+    rows: list[dict] = []
+    for path in sorted(root.rglob("*.py")):
+        rel = str(path.relative_to(BACKEND_ROOT))
+        for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "busy_timeout" in line:
+                rows.append({"path": rel, "line": i, "text": line.strip()})
+    return rows
+
+
+def _binding_ms(text: str) -> int | None:
+    m = _BUSY_TIMEOUT_BINDING_SHAPE.search(text)
+    return int(m.group(1)) if m else None
+
+
+def lock_wait_inventory() -> dict:
+    """把产品源里提到锁等待的每一行按形状分好类。判据读它，红的时候也打印它。"""
+
+    mentions = _busy_timeout_mentions(BACKEND_ROOT / "app")
+    homes = [r for r in mentions if _LOCK_WAIT_HOME_SHAPE.search(r["text"])]
+    declared_ms = int(_LOCK_WAIT_HOME_SHAPE.search(homes[0]["text"]).group(1)) if len(homes) == 1 else None
+    same_number = re.compile(r"(?<!\d)%d(?!\d)" % declared_ms) if declared_ms else None
+    bindings = [(r, _binding_ms(r["text"])) for r in mentions]
+    appliers = [r for r in mentions if _BUSY_TIMEOUT_APPLIER_SHAPE.search(r["text"])
+                and _binding_ms(r["text"]) is None]
+    return {"mentions": mentions,
+            "homes": homes,
+            "declared_ms": declared_ms,
+            "copies": ([] if same_number is None
+                       else [r for r in mentions if r is not homes[0] and same_number.search(r["text"])]),
+            "accessor_defs": [r for r in mentions if _BUSY_TIMEOUT_ACCESSOR_DEF_SHAPE.match(r["text"])],
+            "importers": [r for r in mentions if _BUSY_TIMEOUT_IMPORT_SHAPE.match(r["text"])],
+            "rival_bindings": [r for r, v in bindings if v is not None and declared_ms and v >= declared_ms],
+            "worker_waits": [(r, v) for r, v in bindings if v is not None and declared_ms and v < declared_ms],
+            "appliers": appliers,
+            "unattributed_appliers": [r for r in appliers
+                                      if not any(s in r["text"] for s in _BUSY_TIMEOUT_NAMED_SOURCES)]}
 
 
 @pytest.fixture(autouse=True)
@@ -195,27 +257,51 @@ def test_G3_door_is_GREEN_one_millisecond_above_it() -> None:
 def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     """G4 判据2 / 0281 T-c 反例：常量抄两份（`DEADLINE_CONSTANT_NOT_SINGLE_SOURCE`）必须当场红。
 
-    扫的是产品源：`app/**` 里不许再出现第二处内联的锁等待数字。
+    扫的是产品源，判据一律现推导、不点文件名、不钉行号：
+      · **家** —— 全 `app/**` 里 `os.getenv("CITYNEXUS_WRITE_BUSY_TIMEOUT_MS", "<n>")` 只许有一枚，
+        那枚 `<n>` 就是被量的数；
+      · **只抄一份** —— 除了家那一行，任何提到 `busy_timeout` 的源码行都不许再带着同一个数；
+      · **访问器只有一处定义**，且定义它的文件必须正是 import 语句点名的那一个具名模块；
+      · **内联绑到 busy_timeout 的数字**必须严格小于家值（worker 自己的短等待，射程不同），并且必须
+        写成一句 `PRAGMA busy_timeout`；与请求路径同值或更大的内联拷贝就是"抄了两份"本身；
+      · **把等待挂上连接/游标的行**必须经具名通道取值（访问器调用或 `settings.write_busy_timeout_ms`）。
+    任何一条翻脸都打印整份清单自己认领，不打印"哪个文件名多了/少了"。
     """
 
+    inv = lock_wait_inventory()
+    mentions = inv["mentions"]
+    assert mentions, "app/** 里一行都没提到锁等待 —— 这枚扫描已经不在产品源上了"
+
     offenders: dict[str, list[int]] = {}
-    others: dict[str, list[str]] = {}
-    for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
-        for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if any(needle in line for needle in ("busy_timeout=30000", "busy_timeout = 30000",
-                                                 '"timeout": 30')):
-                offenders.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(i)
-            elif "busy_timeout" in line:
-                others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
+    for row in mentions:
+        if any(needle in row["text"] for needle in ("busy_timeout=30000", "busy_timeout = 30000",
+                                                    '"timeout": 30')):
+            offenders.setdefault(row["path"], []).append(row["line"])
     assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
-    # 其余提到 busy_timeout 的地方是 worker 自己的短等待（500/1500/200 ms），射程不同，这里点名不吞掉
-    assert sorted(Path(k).name for k in others) == [
-        "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
-        "write_deadline.py"], {k: v for k, v in others.items()}
-    session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
-    assert "from app.db.write_deadline import busy_timeout_ms" in session_src
-    assert 'timeout": write_busy_timeout_seconds()' in session_src, "session.py must ask the module"
-    assert "PRAGMA busy_timeout={write_busy_timeout_ms()}" in session_src, "same source for the PRAGMA"
+
+    assert len(inv["homes"]) == 1, {"want": "exactly one declaration home", "homes": inv["homes"],
+                                    "mentions": mentions}
+    assert inv["declared_ms"] > 0, inv["homes"]
+    assert inv["copies"] == [], {"declared_ms": inv["declared_ms"], "home": inv["homes"][0],
+                                 "copies": inv["copies"]}
+
+    assert len(inv["accessor_defs"]) == 1, inv["accessor_defs"]
+    assert inv["accessor_defs"][0]["path"].rstrip("/").replace("\\", "/") \
+        == WRITE_DEADLINE_MODULE_REL, inv["accessor_defs"]
+    assert inv["importers"], {"module": WRITE_DEADLINE_MODULE_REL,
+                              "reason": "nobody imports the accessor: the single source has no consumer",
+                              "mentions": mentions}
+
+    assert inv["rival_bindings"] == [], {"declared_ms": inv["declared_ms"], "home": inv["homes"][0],
+                                         "not_below_the_request_path_wait": inv["rival_bindings"]}
+    assert all("PRAGMA busy_timeout" in r["text"] for r, _v in inv["worker_waits"]), inv["worker_waits"]
+
+    assert inv["unattributed_appliers"] == [], {
+        "named_source_channels": list(_BUSY_TIMEOUT_NAMED_SOURCES),
+        "appliers_that_bring_their_own_number": inv["unattributed_appliers"]}
+    assert len(inv["unattributed_appliers"]) != len(inv["appliers"]), {
+        "appliers": inv["appliers"],
+        "reason": "the request path never asks the single source -- the channel is decoration"}
 
 
 # ------------------------------------------------------------------- "按场景可配"必须是真的

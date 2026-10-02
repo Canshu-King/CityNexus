@@ -1,9 +1,9 @@
 """ORD-0479 · 凭据尺不许把 i18n 查表的值读成凭据——判据是结构，不是词表、也不是申报。
 
-号令者那块点名的红在 backend/tests/test_qoder_ord0307_credential_gate.py:180（C07，断
-hits_in_product_path == 0 得 1），命中的是 frontend/src/features/shared/SharedJourneyPanel.tsx:45
-那张"拒绝码 ↔ 字典键"对照表里的值。要求写得很死：要结构判据，不要往占位词表塞词，也不要走申报通道
-（那等于把尺的假阳性登记成真凭据）。
+号令者那块点名的红在 `test_qoder_ord0307_credential_gate.py` 的 C07 那一格（断
+`hits_in_product_path == 0` 得 1），命中的是 `SharedJourneyPanel.tsx` 里具名表 `REFUSAL_KEY`
+的 `token_unknown` 那一行——那张"拒绝码 ↔ 字典键"对照表里的值。要求写得很死：要结构判据，不要往占位
+词表塞词，也不要走申报通道（那等于把尺的假阳性登记成真凭据）。
 
 重取到 aa2a08ce 那一代时，同一族又多出一处（features/poster/TripPosterPanel.tsx 的失败步骤 ↔ 字典键
 表，标签 MissingTokens 里含着 token）——结构判据不需要为它改一个字，两处都靠同三条赦免。所以本文件
@@ -44,6 +44,46 @@ ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
 VALUE = "shared.refusedTokenUnknown"
+#: ORD-0549 (CMDR 07:57 的锚点漂移修单): this order was opened for ONE entry of ONE table, and the
+#: cell used to name it as `(SITE, 45)`. ORD-0528 exported that table and two comment lines landed
+#: above it, so 45 became 47 and the ruler reddened on a line number while the structure it guards
+#: was untouched. The anchor is now the **declaration name plus the label**, and the line number is
+#: re-derived from the file every run -- a symbol cannot drift the way a line can.
+REFUSAL_TABLE_SYMBOL = "REFUSAL_KEY"
+REFUSAL_TABLE_LABEL = "token_unknown"
+
+
+def _named_table_body_lines(rel: str, symbol: str) -> tuple[int, list[str]]:
+    """Where the object literal declared as `symbol` sits, read out of the file right now.
+
+    Returns the 1-based line of the declaration and the lines up to the `};` that closes it. A
+    renamed symbol, a second declaration or a table that never closes each fail with its own name
+    in the message -- never as "the exemption list did not contain some line".
+    """
+
+    lines = (REPO / rel).read_text(encoding="utf-8", errors="replace").splitlines()
+    decl = [i for i, l in enumerate(lines)
+            if re.match(r"^(?:export\s+)?const\s+%s\b" % re.escape(symbol), l.strip())]
+    assert len(decl) == 1, {"path": rel, "symbol": symbol,
+                            "declarations_found_at": [i + 1 for i in decl]}
+    body = lines[decl[0] + 1:]
+    close = next((i for i, l in enumerate(body) if l.startswith("};")), None)
+    assert close is not None, {"path": rel, "symbol": symbol,
+                               "reason": "the named table never closes"}
+    return decl[0] + 1, body[:close]
+
+
+def _line_of_named_entry(rel: str, symbol: str, label: str) -> tuple[int, str]:
+    """The live line number of `label` inside that table -- derived, never pinned."""
+
+    decl_line, body = _named_table_body_lines(rel, symbol)
+    hits = [i for i, l in enumerate(body)
+            if re.match(r"^\s*%s\s*:" % re.escape(label), l)]
+    assert len(hits) == 1, {"path": rel, "symbol": symbol, "label": label,
+                            "declaration_line": decl_line,
+                            "entries_found_at": [decl_line + 1 + i for i in hits]}
+    line_no = decl_line + 1 + hits[0]
+    return line_no, body[hits[0]].strip()
 
 
 def _write(root: Path, rel: str, text: str) -> str:
@@ -161,6 +201,9 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
 
     这一格不数"赦免了几处"——那是会随上游移动的量——它把尺报出来的每一处拿去独立核对：值必须在
     两本词典里都作为键出现，且它所在的那张表每一条值都是两本词典里的键。对不上就红。
+
+    尾钉那一处按 `REFUSAL_KEY` 的 `token_unknown` 具名认领，行号每次从文件现推；被钉住的行号换不了
+    代，具名符号换得了。
     """
 
     report = CL.scan(REPO)
@@ -180,8 +223,16 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: the site this order was opened for is among them, and is forgiven on the same grounds.
+    #: Named by declaration + label and re-derived here, so an upstream line shift cannot redden
+    #: this cell -- but a rename, a removal or a value that stopped being a translated key still can.
+    anchor_line, anchor_text = _line_of_named_entry(SITE, REFUSAL_TABLE_SYMBOL, REFUSAL_TABLE_LABEL)
+    assert anchor_text.startswith('%s:' % REFUSAL_TABLE_LABEL) and VALUE in anchor_text, \
+        {"declaration_plus_label": (SITE, REFUSAL_TABLE_SYMBOL, REFUSAL_TABLE_LABEL),
+         "derived_line": anchor_line, "derived_text": anchor_text}
+    assert (SITE, anchor_line) in [(e["path"], e["line"]) for e in exemptions], \
+        {"derived_anchor": (SITE, anchor_line),
+         "exempted": sorted((e["path"], e["line"]) for e in exemptions)}
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红
