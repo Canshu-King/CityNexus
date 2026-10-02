@@ -1,0 +1,103 @@
+"""抽验的第二条腿：锚点的词面清点，在现尖那一代从 git 里现读（不开浏览器也能定的事实）。
+
+为什么要它：走查里那两枚臂红在"等一枚屏上 never 出现的锚"。要判这是仪器红还是产品红，先要能
+证明那枚锚在**产品源**里根本不存在——这是字符串层面的事实，与屏无关；而"词面 0 命中"只能写成
+"词面没有"，不能写成"能力没有"，所以同一趟把该族的全部成员列出来，让读的人自己看载体换成谁了。
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+WT = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt_rulers")
+OUT = Path("D:/moodle/_qoder_anchor_rulers_20261002/ord0502_anchor_census_r1.json")
+TIP = sys.argv[1] if len(sys.argv) > 1 else "491e343bfb3d543b38ab11c9f6f0f0283e66129a"
+# 走查那两枚臂等的锚，与它同族/同屏的邻居，全部逐枚点名（点名清单来自 spec 与 e766b154 那块第四节）
+ANCHORS = ["today-heading", "trial-open", "trips-tab-bookings", "trips-tab-itinerary",
+           "trial-setup", "trial-steps", "trial-city", "hub-secondary-actions",
+           "stop-checkin", "trip-itinerary", "footprint-panel", "footprint-row",
+           "v8-map-footprint-filter", "v8-map-footprint-state", "trips-tabs",
+           # 这一组是 CMDR 16:08 那手要判的臂自己等的锚；上一版没点它们，块里就会读出 -1
+           "trial-next", "trial-create", "access-invite-submit", "access-journey-picker"]
+FAMILIES = ["trial", "trips-tab"]
+SPEC = "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+TIP = "491e343bfb3d543b38ab11c9f6f0f0283e66129a"
+BAD: list[str] = []
+
+
+def gitgrep(pattern: str, paths: list[str]) -> list[str]:
+    r = subprocess.run(["git", "grep", "-n", "-e", pattern, TIP, "--", *paths], cwd=str(WT),
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode not in (0, 1):
+        BAD.append("GREP %s rc=%d" % (pattern, r.returncode))
+    return [l for l in (r.stdout or "").splitlines() if l.strip()]
+
+
+def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    head = subprocess.run(["git", "rev-parse", TIP], cwd=str(WT), capture_output=True,
+                          text=True).stdout.strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", head):
+        return 1
+    src_hits, fam = {}, {}
+    for a in ANCHORS:
+        rows = gitgrep('"%s"' % a, ["frontend/src"])
+        src_hits[a] = {"in_frontend_src": len(rows), "sample": [r.split(":", 3)[3][:90] for r in rows[:3]]}
+    for f in FAMILIES:
+        rows = gitgrep('data-testid="%s' % f, ["frontend/src"])
+        members = sorted({m for l in rows for m in re.findall(r'data-testid="(%s[A-Za-z0-9_-]*)"' % f, l)})
+        fam[f + "*"] = {"members": members, "count": len(members)}
+    spec_rows = gitgrep("today-heading", ["frontend/e2e"]) + gitgrep("trial-open", ["frontend/e2e"])
+    spec_calls = sorted({m for l in gitgrep("getByTestId", ["frontend/e2e"])
+                         for m in re.findall(r'getByTestId\("([^"]+)"\)', l)})
+    if len(src_hits) != len(ANCHORS):
+        BAD.append("CENSUS_SHORT %d/%d" % (len(src_hits), len(ANCHORS)))
+    declared = {}
+    for anc in ANCHORS:
+        rows = gitgrep('data-testid="%s"' % anc, ["frontend/src"])
+        pairs = []
+        for l in rows:
+            # git grep 在指定树上回 `<rev>:<path>:<line>:<正文>`，位置就在第 2、3 段
+            parts = l.split(":")
+            if len(parts) >= 3 and parts[2].isdigit():
+                pairs.append({"path": parts[1], "line": int(parts[2])})
+        declared[anc] = pairs[:3]
+    #: 决定性的那一列不是"我挑的锚"，而是**那条 spec 自己问的锚**：把 getByTestId / waitForSelector /
+    #: locator('[data-testid="…"]') 三种问法全抠出来，逐枚回 src 数命中 —— 0 命中的就是臂拿不到的锚。
+    asks = {}
+    spec_text = subprocess.run(["git", "show", "%s:%s" % (TIP, SPEC)], cwd=str(WT),
+                               capture_output=True, text=True, encoding="utf-8",
+                               errors="replace").stdout
+    for anc in sorted(set(re.findall(r'getByTestId\("([^"]+)"\)', spec_text))
+                      | set(re.findall(r'data-testid=\"([^\"]+)\"', spec_text))
+                      | set(re.findall(r"""locator\('[^']*data-testid=\"([^\"]+)""", spec_text))
+                      | set(re.findall(r'waitForSelector\(.[^c]*?data-testid=\\"([^\\"]+)', spec_text))):
+        rows = gitgrep('"%s"' % anc, ["frontend/src"])
+        asks[anc] = {"in_src": len(rows), "declared_at": declared.get(anc, [])}
+    absent = sorted(a for a, v in asks.items() if v["in_src"] == 0)
+    out = {"tip": head, "at": time.strftime("%m-%d %H:%M:%S"), "declared_at": declared,
+           "spec_asks": asks, "spec_asks_total": len(asks), "spec_asks_absent_from_src": absent,
+           "bad": BAD,
+           "spec_bytes": subprocess.run(["git", "rev-parse", "%s:%s" % (TIP, SPEC)], cwd=str(WT),
+                                        capture_output=True, text=True).stdout.strip(),
+           "anchors": src_hits, "families": fam,
+           "e2e_only_anchor_lines": len(spec_rows),
+           "testids_the_spec_asks_by_getByTestId": spec_calls[:24],
+           "reading": ("词面 0 命中只说明 frontend/src 里没有这个名字；它是否等于能力不在，"
+                       "由同一棵树上族成员清单与走查那两枚臂的超时原文一起判")}
+    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    print("WROTE", OUT)
+    for a in ANCHORS:
+        print("  %-26s in src: %d" % (a, src_hits[a]["in_frontend_src"]))
+    print("spec asks", out["spec_asks_total"], "absent from src:", out["spec_asks_absent_from_src"])
+    for k, v in fam.items():
+        print("  family %-12s members %d: %s" % (k, v["count"], v["members"][:6]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

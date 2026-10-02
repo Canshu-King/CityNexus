@@ -1,0 +1,565 @@
+{
+  "front": "http://127.0.0.1:4712",
+  "journey_id_named": false,
+  "runs": {
+    "A_hub_clean_device_visit": "ok",
+    "A_hub_clean_device": {
+      "url": "http://127.0.0.1:4712/v8/hub",
+      "testid_attributes": 70,
+      "distinct_testids": [
+        "sim-ball",
+        "sim-ball-dot",
+        "sim-float",
+        "trial-arrival",
+        "trial-city",
+        "trial-country",
+        "trial-currency",
+        "trial-departure",
+        "trial-end",
+        "trial-missing-jump",
+        "trial-next",
+        "trial-next-reason",
+        "trial-required-hint",
+        "trial-scroll",
+        "trial-setup",
+        "trial-show-advanced",
+        "trial-start",
+        "trial-step-1",
+        "trial-step-2",
+        "trial-step-3",
+        "trial-step1-body",
+        "trial-steps",
+        "trial-sticky-cta",
+        "trial-supported-cities",
+        "trial-supported-fields-上海",
+        "trial-supported-fields-东京",
+        "trial-supported-fields-北京",
+        "trial-supported-fields-厦门",
+        "trial-supported-fields-天津",
+        "trial-supported-fields-广州",
+        "trial-supported-fields-成都",
+        "trial-supported-fields-新加坡",
+        "trial-supported-fields-杭州",
+        "trial-supported-fields-深圳",
+        "trial-supported-fields-福州",
+        "trial-supported-group-needs_lookup",
+        "trial-supported-group-rule-needs_lookup",
+        "trial-supported-group-rule-supported",
+        "trial-supported-group-rule-unknown",
+        "trial-supported-group-supported",
+        "trial-supported-group-unknown",
+        "trial-supported-identity-上海",
+        "trial-supported-identity-东京",
+        "trial-supported-identity-北京",
+        "trial-supported-identity-厦门",
+        "trial-supported-identity-天津",
+        "trial-supported-identity-广州",
+        "trial-supported-identity-成都",
+        "trial-supported-identity-新加坡",
+        "trial-supported-identity-杭州",
+        "trial-supported-identity-深圳",
+        "trial-supported-identity-福州",
+        "trial-supported-none-needs_lookup",
+        "trial-supported-none-supported",
+        "trial-supported-row-上海",
+        "trial-supported-row-东京",
+        "trial-supported-row-北京",
+        "trial-supported-row-厦门",
+        "trial-supported-row-天津",
+        "trial-supported-row-广州",
+        "trial-supported-row-成都",
+        "trial-supported-row-新加坡",
+        "trial-supported-row-杭州",
+        "trial-supported-row-深圳",
+        "trial-supported-row-福州",
+        "trial-supported-toggle",
+        "trial-tianjin-demo",
+        "trial-timezone"
+      ],
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+      "buttons_matching_that_regex": [],
+      "body_text_chars": 592,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-steps": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "hub-secondary-actions": {
+          "count": 0,
+          "visible": false
+        },
+        "trips-tabs": {
+          "count": 0,
+          "visible": false
+        },
+        "stop-checkin": {
+          "count": 0,
+          "visible": false
+        },
+        "access-invite-submit": {
+          "count": 0,
+          "visible": false
+        },
+        "footprint-panel": {
+          "count": 0,
+          "visible": false
+        }
+      }
+    },
+    "C_access_visit": "ok",
+    "C_access": {
+      "url": "http://127.0.0.1:4712/v8/access",
+      "testid_attributes": 70,
+      "distinct_testids": [
+        "sim-ball",
+        "sim-ball-dot",
+        "sim-float",
+        "trial-arrival",
+        "trial-city",
+        "trial-country",
+        "trial-currency",
+        "trial-departure",
+        "trial-end",
+        "trial-missing-jump",
+        "trial-next",
+        "trial-next-reason",
+        "trial-required-hint",
+        "trial-scroll",
+        "trial-setup",
+        "trial-show-advanced",
+        "trial-start",
+        "trial-step-1",
+        "trial-step-2",
+        "trial-step-3",
+        "trial-step1-body",
+        "trial-steps",
+        "trial-sticky-cta",
+        "trial-supported-cities",
+        "trial-supported-fields-上海",
+        "trial-supported-fields-东京",
+        "trial-supported-fields-北京",
+        "trial-supported-fields-厦门",
+        "trial-supported-fields-天津",
+        "trial-supported-fields-广州",
+        "trial-supported-fields-成都",
+        "trial-supported-fields-新加坡",
+        "trial-supported-fields-杭州",
+        "trial-supported-fields-深圳",
+        "trial-supported-fields-福州",
+        "trial-supported-group-needs_lookup",
+        "trial-supported-group-rule-needs_lookup",
+        "trial-supported-group-rule-supported",
+        "trial-supported-group-rule-unknown",
+        "trial-supported-group-supported",
+        "trial-supported-group-unknown",
+        "trial-supported-identity-上海",
+        "trial-supported-identity-东京",
+        "trial-supported-identity-北京",
+        "trial-supported-identity-厦门",
+        "trial-supported-identity-天津",
+        "trial-supported-identity-广州",
+        "trial-supported-identity-成都",
+        "trial-supported-identity-新加坡",
+        "trial-supported-identity-杭州",
+        "trial-supported-identity-深圳",
+        "trial-supported-identity-福州",
+        "trial-supported-none-needs_lookup",
+        "trial-supported-none-supported",
+        "trial-supported-row-上海",
+        "trial-supported-row-东京",
+        "trial-supported-row-北京",
+        "trial-supported-row-厦门",
+        "trial-supported-row-天津",
+        "trial-supported-row-广州",
+        "trial-supported-row-成都",
+        "trial-supported-row-新加坡",
+        "trial-supported-row-杭州",
+        "trial-supported-row-深圳",
+        "trial-supported-row-福州",
+        "trial-supported-toggle",
+        "trial-tianjin-demo",
+        "trial-timezone"
+      ],
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+      "buttons_matching_that_regex": [],
+      "body_text_chars": 592,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-steps": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "hub-secondary-actions": {
+          "count": 0,
+          "visible": false
+        },
+        "trips-tabs": {
+          "count": 0,
+          "visible": false
+        },
+        "stop-checkin": {
+          "count": 0,
+          "visible": false
+        },
+        "access-invite-submit": {
+          "count": 0,
+          "visible": false
+        },
+        "footprint-panel": {
+          "count": 0,
+          "visible": false
+        }
+      }
+    },
+    "D_footprints_visit": "ok",
+    "D_footprints": {
+      "url": "http://127.0.0.1:4712/v8/footprints",
+      "testid_attributes": 70,
+      "distinct_testids": [
+        "sim-ball",
+        "sim-ball-dot",
+        "sim-float",
+        "trial-arrival",
+        "trial-city",
+        "trial-country",
+        "trial-currency",
+        "trial-departure",
+        "trial-end",
+        "trial-missing-jump",
+        "trial-next",
+        "trial-next-reason",
+        "trial-required-hint",
+        "trial-scroll",
+        "trial-setup",
+        "trial-show-advanced",
+        "trial-start",
+        "trial-step-1",
+        "trial-step-2",
+        "trial-step-3",
+        "trial-step1-body",
+        "trial-steps",
+        "trial-sticky-cta",
+        "trial-supported-cities",
+        "trial-supported-fields-上海",
+        "trial-supported-fields-东京",
+        "trial-supported-fields-北京",
+        "trial-supported-fields-厦门",
+        "trial-supported-fields-天津",
+        "trial-supported-fields-广州",
+        "trial-supported-fields-成都",
+        "trial-supported-fields-新加坡",
+        "trial-supported-fields-杭州",
+        "trial-supported-fields-深圳",
+        "trial-supported-fields-福州",
+        "trial-supported-group-needs_lookup",
+        "trial-supported-group-rule-needs_lookup",
+        "trial-supported-group-rule-supported",
+        "trial-supported-group-rule-unknown",
+        "trial-supported-group-supported",
+        "trial-supported-group-unknown",
+        "trial-supported-identity-上海",
+        "trial-supported-identity-东京",
+        "trial-supported-identity-北京",
+        "trial-supported-identity-厦门",
+        "trial-supported-identity-天津",
+        "trial-supported-identity-广州",
+        "trial-supported-identity-成都",
+        "trial-supported-identity-新加坡",
+        "trial-supported-identity-杭州",
+        "trial-supported-identity-深圳",
+        "trial-supported-identity-福州",
+        "trial-supported-none-needs_lookup",
+        "trial-supported-none-supported",
+        "trial-supported-row-上海",
+        "trial-supported-row-东京",
+        "trial-supported-row-北京",
+        "trial-supported-row-厦门",
+        "trial-supported-row-天津",
+        "trial-supported-row-广州",
+        "trial-supported-row-成都",
+        "trial-supported-row-新加坡",
+        "trial-supported-row-杭州",
+        "trial-supported-row-深圳",
+        "trial-supported-row-福州",
+        "trial-supported-toggle",
+        "trial-tianjin-demo",
+        "trial-timezone"
+      ],
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+      "buttons_matching_that_regex": [],
+      "body_text_chars": 592,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-steps": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "hub-secondary-actions": {
+          "count": 0,
+          "visible": false
+        },
+        "trips-tabs": {
+          "count": 0,
+          "visible": false
+        },
+        "stop-checkin": {
+          "count": 0,
+          "visible": false
+        },
+        "access-invite-submit": {
+          "count": 0,
+          "visible": false
+        },
+        "footprint-panel": {
+          "count": 0,
+          "visible": false
+        }
+      }
+    },
+    "E_sealed_demo_cta": {
+      "attempted": true,
+      "cta_count": 1
+    },
+    "E_hub_after_the_cta": {
+      "url": "http://127.0.0.1:4712/v8/hub",
+      "testid_attributes": 72,
+      "distinct_testids": [
+        "sim-ball",
+        "sim-ball-dot",
+        "sim-float",
+        "trial-arrival",
+        "trial-city",
+        "trial-country",
+        "trial-currency",
+        "trial-departure",
+        "trial-end",
+        "trial-missing-jump",
+        "trial-next",
+        "trial-next-reason",
+        "trial-required-hint",
+        "trial-scroll",
+        "trial-sealed-retry",
+        "trial-sealed-unavailable",
+        "trial-setup",
+        "trial-show-advanced",
+        "trial-start",
+        "trial-step-1",
+        "trial-step-2",
+        "trial-step-3",
+        "trial-step1-body",
+        "trial-steps",
+        "trial-sticky-cta",
+        "trial-supported-cities",
+        "trial-supported-fields-上海",
+        "trial-supported-fields-东京",
+        "trial-supported-fields-北京",
+        "trial-supported-fields-厦门",
+        "trial-supported-fields-天津",
+        "trial-supported-fields-广州",
+        "trial-supported-fields-成都",
+        "trial-supported-fields-新加坡",
+        "trial-supported-fields-杭州",
+        "trial-supported-fields-深圳",
+        "trial-supported-fields-福州",
+        "trial-supported-group-needs_lookup",
+        "trial-supported-group-rule-needs_lookup",
+        "trial-supported-group-rule-supported",
+        "trial-supported-group-rule-unknown",
+        "trial-supported-group-supported",
+        "trial-supported-group-unknown",
+        "trial-supported-identity-上海",
+        "trial-supported-identity-东京",
+        "trial-supported-identity-北京",
+        "trial-supported-identity-厦门",
+        "trial-supported-identity-天津",
+        "trial-supported-identity-广州",
+        "trial-supported-identity-成都",
+        "trial-supported-identity-新加坡",
+        "trial-supported-identity-杭州",
+        "trial-supported-identity-深圳",
+        "trial-supported-identity-福州",
+        "trial-supported-none-needs_lookup",
+        "trial-supported-none-supported",
+        "trial-supported-row-上海",
+        "trial-supported-row-东京",
+        "trial-supported-row-北京",
+        "trial-supported-row-厦门",
+        "trial-supported-row-天津",
+        "trial-supported-row-广州",
+        "trial-supported-row-成都",
+        "trial-supported-row-新加坡",
+        "trial-supported-row-杭州",
+        "trial-supported-row-深圳",
+        "trial-supported-row-福州",
+        "trial-supported-toggle",
+        "trial-tianjin-demo",
+        "trial-timezone"
+      ],
+      "buttons": [
+        "EN",
+        "高级设置",
+        "目的地",
+        "抵达地点",
+        "离开地点",
+        "重试",
+        "使用封存的演示行程",
+        "下一步"
+      ],
+      "arm_C1_fallback_label_regex": "/试用其他城市|换一个城市/",
+      "buttons_matching_that_regex": [],
+      "body_text_chars": 635,
+      "body_head": "用你自己的城市试用 CityNexus新建行程三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。EN1目的地与时间2人数与偏好3确认创建目的地看支持的目的地已支持：服务器认得它，而且目录里有东西READY / 有 canonical 身份且有目录行这一轮没有名字落在这一组。需联网才能解析：服务器现在",
+      "anchors": {
+        "today-heading": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-open": {
+          "count": 0,
+          "visible": false
+        },
+        "trial-setup": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-steps": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-city": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-next": {
+          "count": 1,
+          "visible": true
+        },
+        "trial-create": {
+          "count": 0,
+          "visible": false
+        },
+        "hub-secondary-actions": {
+          "count": 0,
+          "visible": false
+        },
+        "trips-tabs": {
+          "count": 0,
+          "visible": false
+        },
+        "stop-checkin": {
+          "count": 0,
+          "visible": false
+        },
+        "access-invite-submit": {
+          "count": 0,
+          "visible": false
+        },
+        "footprint-panel": {
+          "count": 0,
+          "visible": false
+        }
+      }
+    }
+  },
+  "errors": []
+}

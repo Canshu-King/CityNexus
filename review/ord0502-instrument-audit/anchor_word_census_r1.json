@@ -1,0 +1,479 @@
+{
+ "tip": "491e343bfb3d543b38ab11c9f6f0f0283e66129a",
+ "at": "10-02 17:50:24",
+ "declared_at": {
+  "today-heading": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "line": 2704
+   }
+  ],
+  "trial-open": [],
+  "trips-tab-bookings": [],
+  "trips-tab-itinerary": [],
+  "trial-setup": [
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "line": 858
+   }
+  ],
+  "trial-steps": [
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "line": 880
+   }
+  ],
+  "trial-city": [
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "line": 901
+   }
+  ],
+  "hub-secondary-actions": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "line": 2985
+   }
+  ],
+  "stop-checkin": [
+   {
+    "path": "frontend/src/features/trip/TripItinerary.tsx",
+    "line": 499
+   }
+  ],
+  "trip-itinerary": [
+   {
+    "path": "frontend/src/features/trip/TripItinerary.tsx",
+    "line": 336
+   }
+  ],
+  "footprint-panel": [
+   {
+    "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+    "line": 89
+   }
+  ],
+  "footprint-row": [
+   {
+    "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+    "line": 140
+   }
+  ],
+  "v8-map-footprint-filter": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "line": 4053
+   }
+  ],
+  "v8-map-footprint-state": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "line": 4043
+   }
+  ],
+  "trips-tabs": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "line": 2333
+   }
+  ],
+  "trial-next": [
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "line": 1560
+   }
+  ],
+  "trial-create": [
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "line": 1584
+   }
+  ],
+  "access-invite-submit": [
+   {
+    "path": "frontend/src/features/access/AccessPanel.tsx",
+    "line": 858
+   }
+  ],
+  "access-journey-picker": []
+ },
+ "spec_asks": {
+  "access-chosen": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "access-invite-submit": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": 858
+    }
+   ]
+  },
+  "access-panel": {
+   "in_src": 2,
+   "declared_at": []
+  },
+  "footprint-empty": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "footprint-panel": {
+   "in_src": 2,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": 89
+    }
+   ]
+  },
+  "footprint-row": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": 140
+    }
+   ]
+  },
+  "footprint-tally": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "inbox-tab-paste": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "poster-download": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "poster-open": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "poster-result": {
+   "in_src": 2,
+   "declared_at": []
+  },
+  "shared-refusal-code": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "shared-refused": {
+   "in_src": 2,
+   "declared_at": []
+  },
+  "shared-screen": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "stop-checkin": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": 499
+    }
+   ]
+  },
+  "stop-checkin-notice": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "today-heading": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/app/V8Experience.tsx",
+     "line": 2704
+    }
+   ]
+  },
+  "trial-city": {
+   "in_src": 4,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 901
+    }
+   ]
+  },
+  "trial-create": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 1584
+    }
+   ]
+  },
+  "trial-next": {
+   "in_src": 1,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 1560
+    }
+   ]
+  },
+  "trial-open": {
+   "in_src": 0,
+   "declared_at": []
+  },
+  "trip-itinerary": {
+   "in_src": 2,
+   "declared_at": [
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": 336
+    }
+   ]
+  },
+  "trip-poster": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "trips-tab-bookings": {
+   "in_src": 0,
+   "declared_at": []
+  },
+  "trips-tab-itinerary": {
+   "in_src": 0,
+   "declared_at": []
+  },
+  "v13-2-anchor-role": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "v13-2-confirm": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "v13-2-memory": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "v13-2-save-corrections": {
+   "in_src": 1,
+   "declared_at": []
+  },
+  "v13-2-smart-apply": {
+   "in_src": 1,
+   "declared_at": []
+  }
+ },
+ "spec_asks_total": 30,
+ "spec_asks_absent_from_src": [
+  "trial-open",
+  "trips-tab-bookings",
+  "trips-tab-itinerary"
+ ],
+ "bad": [],
+ "spec_bytes": "5b97af33946b880fe736c26e54212f18aa679580",
+ "anchors": {
+  "today-heading": {
+   "in_frontend_src": 1,
+   "sample": [
+    "          <h1 data-testid=\"today-heading\">"
+   ]
+  },
+  "trial-open": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trips-tab-bookings": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trips-tab-itinerary": {
+   "in_frontend_src": 0,
+   "sample": []
+  },
+  "trial-setup": {
+   "in_frontend_src": 1,
+   "sample": [
+    "    <section className=\"v8-page cn-onboarding\" data-testid=\"trial-setup\">"
+   ]
+  },
+  "trial-steps": {
+   "in_frontend_src": 1,
+   "sample": [
+    "      <ol className=\"trial-steps\" data-testid=\"trial-steps\">"
+   ]
+  },
+  "trial-city": {
+   "in_frontend_src": 4,
+   "sample": [
+    "  \"trial-city\": 1,",
+    "  { name: \"city\", zh: \"目的地\", en: \"Destination\", target: \"trial-city\" },",
+    "      : { label: zh ? \"目的地\" : \"the destination\", target: \"trial-city\" },"
+   ]
+  },
+  "hub-secondary-actions": {
+   "in_frontend_src": 1,
+   "sample": [
+    "        <div className=\"v8-hub-actions\" data-testid=\"hub-secondary-actions\">"
+   ]
+  },
+  "stop-checkin": {
+   "in_frontend_src": 1,
+   "sample": [
+    "                        data-testid=\"stop-checkin\""
+   ]
+  },
+  "trip-itinerary": {
+   "in_frontend_src": 2,
+   "sample": [
+    "    testId: \"trip-itinerary\",",
+    "    <section className=\"v8-page\" data-testid=\"trip-itinerary\">"
+   ]
+  },
+  "footprint-panel": {
+   "in_frontend_src": 2,
+   "sample": [
+    "    testId: \"footprint-panel\",",
+    "    <section className=\"cn-footprints\" data-testid=\"footprint-panel\">"
+   ]
+  },
+  "footprint-row": {
+   "in_frontend_src": 1,
+   "sample": [
+    "                  <li key={stamp.id} className=\"cn-footprints__row\" data-testid=\"footprint"
+   ]
+  },
+  "v8-map-footprint-filter": {
+   "in_frontend_src": 2,
+   "sample": [
+    "              className=\"v8-map-footprint-filter\"",
+    "              data-testid=\"v8-map-footprint-filter\""
+   ]
+  },
+  "v8-map-footprint-state": {
+   "in_frontend_src": 2,
+   "sample": [
+    "            className=\"v8-map-footprint-state\"",
+    "            data-testid=\"v8-map-footprint-state\""
+   ]
+  },
+  "trips-tabs": {
+   "in_frontend_src": 3,
+   "sample": [
+    "        className=\"trips-tabs\"",
+    "        data-testid=\"trips-tabs\"",
+    "    testId: \"trips-tabs\","
+   ]
+  },
+  "trial-next": {
+   "in_frontend_src": 1,
+   "sample": [
+    "            data-testid=\"trial-next\""
+   ]
+  },
+  "trial-create": {
+   "in_frontend_src": 1,
+   "sample": [
+    "            data-testid=\"trial-create\""
+   ]
+  },
+  "access-invite-submit": {
+   "in_frontend_src": 1,
+   "sample": [
+    "          data-testid=\"access-invite-submit\""
+   ]
+  },
+  "access-journey-picker": {
+   "in_frontend_src": 0,
+   "sample": []
+  }
+ },
+ "families": {
+  "trial*": {
+   "members": [
+    "trial-arrival",
+    "trial-arrival-problem",
+    "trial-back",
+    "trial-budget",
+    "trial-budget-label",
+    "trial-city",
+    "trial-city-warning",
+    "trial-country",
+    "trial-create",
+    "trial-create-error",
+    "trial-currency",
+    "trial-departure",
+    "trial-departure-problem",
+    "trial-end",
+    "trial-inferred",
+    "trial-interests-fieldset",
+    "trial-missing-jump",
+    "trial-next",
+    "trial-next-reason",
+    "trial-pace-fieldset",
+    "trial-party",
+    "trial-party-label",
+    "trial-required-hint",
+    "trial-rooms",
+    "trial-rooms-label",
+    "trial-scroll",
+    "trial-sealed-retry",
+    "trial-sealed-unavailable",
+    "trial-setup",
+    "trial-show-advanced",
+    "trial-special",
+    "trial-start",
+    "trial-stay-budget",
+    "trial-stay-budget-label",
+    "trial-step1-body",
+    "trial-step2-body",
+    "trial-step3-body",
+    "trial-steps",
+    "trial-sticky-cta",
+    "trial-stop-waiting",
+    "trial-supported-cities",
+    "trial-supported-toggle",
+    "trial-tianjin-demo",
+    "trial-timezone",
+    "trial-wait",
+    "trial-wait-elapsed",
+    "trial-wait-outcome"
+   ],
+   "count": 47
+  },
+  "trips-tab*": {
+   "members": [
+    "trips-tabs"
+   ],
+   "count": 1
+  }
+ },
+ "e2e_only_anchor_lines": 58,
+ "testids_the_spec_asks_by_getByTestId": [
+  "access-invite-submit",
+  "access-order-verdict",
+  "access-panel",
+  "access-sort-absent",
+  "access-sort-current",
+  "access-sort-note",
+  "access-sort-tier-RECENT_UPDATE",
+  "access-trip-roster",
+  "access-trips-empty",
+  "access-trips-failed",
+  "activate-guardian-mission",
+  "activity-location",
+  "agent-auto-accept",
+  "agent-command",
+  "agent-command-center",
+  "agent-feed",
+  "agent-mission-result",
+  "agent-mode",
+  "agent-policy-decision",
+  "bookings-advanced",
+  "bookings-json-input",
+  "bookings-no-stay-action",
+  "budget-advisory",
+  "budget-advisory-caveat"
+ ],
+ "reading": "词面 0 命中只说明 frontend/src 里没有这个名字；它是否等于能力不在，由同一棵树上族成员清单与走查那两枚臂的超时原文一起判"
+}

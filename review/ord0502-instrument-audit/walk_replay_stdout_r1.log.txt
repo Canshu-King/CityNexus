@@ -1,0 +1,26 @@
+[stack] run_id=ORD0502-164201 backend=:4611 frontend=:4612 db=D:\moodle\_ord0502\ORD0502-164201.db
+[stack] backend direct /api/v1/health -> http_status=200 body={"status":"ok","database":"ok","ai":"disabled","ai_state":"DISABLED_BY_OPS","e2e_run_id":"ORD0502-164201","e2e_database_id":"ORD0502-164201.db"} (child pid=6196 alive=True)
+[stack] front serves 1200 B of dist/index.html sha1=56bc270dbcc0dca34fd0cb2e5d620ac55e7a2a90
+[stack] ownership: POST /api/v1/travelers http_status=201 id=3b795185-a7f0-4d7a-95e5-0252e4421293; GET /api/v1/travelers/{id} through the FRONTEND origin http_status=200 display_name='qoder-ord0502-ORD0502-164201'; this lane's file holds 1 marker row(s), 0 place row(s), 61 tables -> PROVEN
+[stack] playwright exit=1
+[stack] [ord0502][ORD0502-164201] CHAIN=GREEN
+[stack] [ord0502][ORD0502-164201] C1 FAIL route=/v8/hub hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C1:FAIL
+[stack] [ord0502][ORD0502-164201] C2 FAIL route=/v8/trips (预订 子页) hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C2:FAIL
+[stack] [ord0502][ORD0502-164201] C3 FAIL route=/v8/trips (预订 子页 → 行程) hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C3:FAIL
+[stack] [ord0502][ORD0502-164201] C4 FAIL route=/v8/trips → 行程 子页 hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C4:FAIL
+[stack] [ord0502][ORD0502-164201] C5 FAIL route=/v8/footprints hit={} legs=GET /checkins http_status=NOT_SEEN failure=TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C5:FAIL
+[stack] [ord0502][ORD0502-164201] C6 FAIL route=/v8/trips → 长图 hit={} legs= failure=Error: locator.scrollIntoViewIfNeeded: Test timeout of 420000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C6:FAIL
+[stack] [ord0502][ORD0502-164201] C7b FAIL route=/v8/access → /v8/shared/<token> hit={} legs= failure=TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+[stack] [ord0502][ORD0502-164201] CHAIN=INCOMPLETE C7b:FAIL
+[stack] > 192 |     expect(state, failure ?? "C1 failed").toBe("PASS");
+[stack] > 223 |     expect(state, failure ?? "C2 failed").toBe("PASS");
+[stack] > 269 |     expect(state, failure ?? "C3 failed").toBe("PASS");
+[stack] > 385 |     expect(state, failure ?? "C6 failed").toBe("PASS");
+[stack] > 432 |     expect(state, failure ?? "C7b failed").toBe("PASS");
+[stack] 8 failed

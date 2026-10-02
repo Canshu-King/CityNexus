@@ -1,0 +1,112 @@
+/* CMDR 16:08 第二节那手的屏面腿：ORD-0502 两枚红臂等的锚，在现尖那一代真屏上到底在不在。
+ * 用法：node ord0502_surface_census_r2.cjs <FRONT_URL> <JOURNEY_ID_OR_EMPTY> <OUT_JSON>
+ * 四趟：A 干净设备 /v8/hub；B 把壳自己存的 citynexus.v8.journey_id 放进去再进 hub；C /v8/access；D /v8/footprints。
+ * 只读屏：data-testid 清单、按钮名、正文长度、目标锚的 count 与 visible。不写产品、不改任何字节。
+ * 形制：这些屏有 15 s 轮询（/twin），networkidle 永远不落定 —— 一律 domcontentloaded + 显式等待。
+ */
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const FRONT = process.argv[2];
+const JOURNEY = process.argv[3] || "";
+const OUT = process.argv[4];
+const PHONE = { width: 390, height: 844 };
+const ANCHORS = ["today-heading", "trial-open", "trial-setup", "trial-steps", "trial-city",
+                 "trial-next", "trial-create", "hub-secondary-actions", "trips-tabs",
+                 "stop-checkin", "access-invite-submit", "footprint-panel"];
+const out = { front: FRONT, journey_id_named: Boolean(JOURNEY), runs: {}, errors: [] };
+
+async function surface(page) {
+  const ids = await page.$$eval("[data-testid]", (els) => els.map((e) => e.getAttribute("data-testid")));
+  const buttons = await page.$$eval("button, [role=button], a",
+    (els) => els.map((e) => (e.textContent || "").trim().replace(/\s+/g, " ").slice(0, 40)));
+  const anchors = {};
+  for (const a of ANCHORS) {
+    const loc = page.locator('[data-testid="' + a + '"]');
+    anchors[a] = { count: await loc.count(), visible: await loc.first().isVisible().catch(() => false) };
+  }
+  const text = (await page.textContent("body")) || "";
+  // C1 臂在 trial-open 拿不到时的兜底是 getByRole("button", {name: /试用其他城市|换一个城市/})：
+  // 这一列直接答"这屏有没有任何一枚按钮的名字落进那条正则"，不靠我复述。
+  const FALLBACK = /试用其他城市|换一个城市/;
+  const allButtons = await page.$$eval("button, [role=button]",
+    (els) => els.map((e) => (e.textContent || "").trim().replace(/\s+/g, " ")));
+  const fallbackMatches = allButtons.filter((b) => FALLBACK.test(b));
+  return { url: page.url(), testid_attributes: ids.length,
+           distinct_testids: Array.from(new Set(ids)).sort(),
+           buttons: Array.from(new Set(buttons.filter((b) => b))).slice(0, 40),
+           arm_C1_fallback_label_regex: String(FALLBACK),
+           buttons_matching_that_regex: fallbackMatches,
+           body_text_chars: text.trim().length,
+           body_head: text.trim().replace(/\s+/g, " ").slice(0, 160),
+           anchors: anchors };
+}
+
+async function visit(page, path, waitMs) {
+  try {
+    await page.goto(FRONT + path, { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.waitForTimeout(waitMs);
+    return "ok";
+  } catch (error) {
+    out.errors.push(path + " :: " + String(error).slice(0, 160));
+    return "goto_failed";
+  }
+}
+
+(async () => {
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ viewport: PHONE, locale: "zh-CN", hasTouch: true,
+                                         serviceWorkers: "block" });
+  const page = await ctx.newPage();
+  page.setDefaultTimeout(30000);
+
+  out.runs.A_hub_clean_device_visit = await visit(page, "/v8/hub", 6000);
+  out.runs.A_hub_clean_device = await surface(page);
+
+  if (JOURNEY) {
+    await page.evaluate((id) => localStorage.setItem("citynexus.v8.journey_id", id), JOURNEY);
+    out.runs.B_hub_with_a_journey_row_visit = await visit(page, "/v8/hub", 8000);
+    out.runs.B_hub_with_a_journey_row = await surface(page);
+  }
+
+  out.runs.C_access_visit = await visit(page, "/v8/access", 8000);
+  out.runs.C_access = await surface(page);
+
+  out.runs.D_footprints_visit = await visit(page, "/v8/footprints", 6000);
+  out.runs.D_footprints = await surface(page);
+
+  /* E 是正控：这屏自己给出的那枚 CTA（"使用封存的演示行程"）按下去之后，
+     屏能不能走到"有行程"那一态。它答的是"能力在不在"，与臂等的那枚锚无关。 */
+  out.runs.E_sealed_demo_cta = { attempted: false };
+  try {
+    await visit(page, "/v8/hub", 6000);
+    const cta = page.getByRole("button", { name: /使用封存的演示行程/ }).first();
+    const n = await cta.count();
+    out.runs.E_sealed_demo_cta = { attempted: true, cta_count: n };
+    if (n > 0) {
+      await cta.click();
+      await page.waitForTimeout(12000);
+      out.runs.E_hub_after_the_cta = await surface(page);
+    }
+  } catch (error) {
+    out.errors.push("E :: " + String(error).slice(0, 200));
+  }
+
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8");
+  for (const key of ["A_hub_clean_device", "B_hub_with_a_journey_row", "C_access", "D_footprints", "E_hub_after_the_cta"]) {
+    const v = out.runs[key];
+    if (!v || !v.anchors) { continue; }
+    console.log(key, "| testids", v.testid_attributes, "| chars", v.body_text_chars,
+      "| today-heading", JSON.stringify(v.anchors["today-heading"]),
+      "| trial-open", JSON.stringify(v.anchors["trial-open"]),
+      "| access-invite-submit", JSON.stringify(v.anchors["access-invite-submit"]),
+      "| fallback-labelled buttons", JSON.stringify(v.buttons_matching_that_regex));
+  }
+  console.log("errors", JSON.stringify(out.errors));
+})().catch((error) => {
+  out.fatal = String((error && error.stack) || error).slice(0, 700);
+  try { fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8"); } catch (e) {}
+  console.log("CENSUS_FATAL", out.fatal.slice(0, 300));
+  process.exitCode = 1;
+});
