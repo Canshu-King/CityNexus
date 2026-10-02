@@ -106,7 +106,7 @@ def main():
 
     def _same_as_prev(path):
         a = subprocess.run(["git", "-C", os.path.join(LANE, "wt22"), "rev-parse",
-                            "%s:%s" % (cand, path)], stdout=subprocess.PIPE,
+                            "%s:%s" % (mt["cand"], path)], stdout=subprocess.PIPE,
                            timeout=60).stdout.decode().strip()
         b = subprocess.run(["git", "-C", os.path.join(LANE, "wt22"), "rev-parse",
                             "%s:%s" % (PREV, path)], stdout=subprocess.PIPE,
