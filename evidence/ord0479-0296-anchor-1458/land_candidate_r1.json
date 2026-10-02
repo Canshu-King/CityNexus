@@ -1,0 +1,23 @@
+{
+ "tip_before": "00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9",
+ "candidate_commit": "d19d5b812e9e3677047c91d6b73e51f3784cf156",
+ "branch": "refs/heads/review/1d64acf5-ord0479-0296-anchor-r1",
+ "server_sha_ls_remote": "d19d5b812e9e3677047c91d6b73e51f3784cf156",
+ "server_sha_equals_pushed": true,
+ "files": [
+  {
+   "path": "backend/tests/test_qoder_ord0479_dictionary_key_shape.py",
+   "server_blob_ls_tree": "91dffbf0f2244df3cf1eb20bf8f1986d37a97d90",
+   "local_hash_object": "91dffbf0f2244df3cf1eb20bf8f1986d37a97d90",
+   "byte_equal": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+   "server_blob_ls_tree": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+   "local_hash_object": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+   "byte_equal": true
+  }
+ ],
+ "message": "S4-ast-taint ORD-0479/0296 anchors: the two rulers that named row numbers and a frozen file list now identify their subject by named symbols (the exported REFUSAL_KEY table and the dictionary key inside it) and by a request-path scale read live from the product. 21 arms green on 00b5f25e where both were red; six mutation arms show a renamed const, a de-keyed row and a second inline lock wait still go red while four lines of movement stays green. 0 product behaviour bytes.",
+ "method": "commit the two test files only, push to review/*, then read the branch sha with ls-remote and each blob with ls-tree on that sha"
+}
