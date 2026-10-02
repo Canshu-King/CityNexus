@@ -7,6 +7,7 @@ defect this page is confessing is exactly "a shipped sentence that outran its ev
 import json
 import os
 import re
+import subprocess
 import sys
 from datetime import datetime
 
@@ -23,11 +24,12 @@ NL = chr(10)
 
 
 def main():
-    gate = B.load("citation_gate_r10.json")
-    gm = B.load("citation_gate_r10_mutants.json")
+    gate = B.load(GATE_RECEIPT)
+    gm = B.load(MUT_RECEIPT)
     py = B.load("pytest_r6.json")
     rows = B.load("checkin_copy_rows_r6.json")
     aud = B.load("citation_audit_r8.json")
+    rcpt = B.load(os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_r12.json")
     land = B.load("landing_r6.json")
     me = [r for r in land["refs"] if r["ref"] == MY_REF]
     r9 = [r for r in land["refs"] if r["ref"].endswith("entry-r9")]
@@ -57,18 +59,61 @@ def main():
     remote, live_tip = B.pick_sha(listed, MY_REF), B.pick_sha(listed, B.TIP_REF)
     if not remote or not live_tip:
         raise SystemExit("ABORT_NO_REMOTE_READBACK %s" % listed[:200])
-    if live_tip != land["live_tip"]:
-        raise SystemExit("ABORT_TIP_MOVED readings judged %s, line now %s" % (land["live_tip"], live_tip))
     if remote != me["commit"]:
         raise SystemExit("ABORT_REF_MOVED coordinates ran on %s, ref answers %s" % (me["commit"], remote))
+    if gm.get("pairs_with_gate_receipt") != GATE_RECEIPT:
+        raise SystemExit("ABORT_MUTANT_STALE the mutant run pairs with %s, this page reads %s"
+                         % (gm.get("pairs_with_gate_receipt"), GATE_RECEIPT))
+    if rcpt.get("branch_head") != remote:
+        raise SystemExit("ABORT_RECHECK_STALE the re-check read branch %s, the ref is %s"
+                         % (rcpt.get("branch_head"), remote))
     if gate.get("tip") != remote:
         raise SystemExit("ABORT_GATE_STALE gate read %s, the ref is %s -- re-run the gate"
                          % (gate.get("tip"), remote))
+    # the line moves every couple of minutes on this project, so "the tip moved" alone is not a reason
+    # to refuse a page -- "my citations stopped resolving on the tip as it now stands" is.  Re-measure
+    # against the newest tip here, and refuse only on real rot or a product blob that no longer matches.
+    import reanchor_r8 as RA
+    def _show(rev, path):
+        q = subprocess.run(["git", "-C", WT, "show", "%s:%s" % (rev, path)], stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, timeout=180)
+        return None if q.returncode else q.stdout.decode("utf-8", "replace")
+    _m, _t = _show(live_tip, "backend/app/main.py"), _show(
+        live_tip, "backend/tests/test_qoder_ord0500_journey_refusal.py")
+    if _m is None or _t is None:
+        raise SystemExit("ABORT_TIP_UNREADABLE %s" % live_tip)
+    _anchors, _span = RA.read_anchors(_m.splitlines())
+    _cited = {}
+    for _lab, _pat in RA.PATTERNS:
+        _mm = re.search(_pat, _t)
+        _cited[_lab] = int(_mm.group(1)) if _mm else None
+    _rot = {k: [_cited[k], _anchors[k]] for k in _anchors if _cited[k] != _anchors[k]}
+    if _rot:
+        raise SystemExit("ABORT_ROT_DETECTED on %s: %s -- run the re-anchor before posting"
+                         % (live_tip, _rot))
+    _paths = ["backend/app/main.py", "backend/tests/test_qoder_ord0500_journey_refusal.py",
+              "contracts/openapi.yaml", "frontend/src/features/checkin/checkinCopy.ts",
+              "frontend/src/features/trip/TripItinerary.tsx"]
+    _eq = {}
+    for _p in _paths:
+        _a = _show(live_tip, _p)
+        _b = subprocess.run(["git", "-C", WT, "show", "HEAD:%s" % _p], stdout=subprocess.PIPE,
+                            timeout=180).stdout.decode("utf-8", "replace")
+        _eq[_p] = (_a == _b)
+    if not all(_eq.values()):
+        raise SystemExit("ABORT_PRODUCT_MOVED %s" % {k: v for k, v in _eq.items() if not v})
+    lag = subprocess.run(["git", "-C", WT, "rev-list", "--count", "%s..%s"
+                          % (land["live_tip"], live_tip)], stdout=subprocess.PIPE,
+                         timeout=120).stdout.decode().strip()
 
-    # what this ref actually changes outside review/: computed from the ref's own diff against the tip
-    rc, names = B.sh(["git", "diff", "--name-only", "%s..%s" % (live_tip, remote)], cwd=WT)
+    # what this ref itself changes: diff from ITS OWN fork point to its head.  Diffing against the live
+    # tip instead would count everything other lanes landed since I forked and print a number that
+    # contradicts "0 product bytes" -- it did exactly that in an earlier draft of this page.
+    rc, names = B.sh(["git", "diff", "--name-only", "%s..%s" % (me["fork_point"], remote)], cwd=WT)
     changed = [n.strip() for n in names.splitlines() if n.strip()]
     product = [n for n in changed if not n.startswith("review/")]
+    rc2, ahead = B.sh(["git", "rev-list", "--count", "%s..%s" % (me["fork_point"], live_tip)], cwd=WT)
+    line_ahead = ahead.strip()
 
     gate_tree, mut_tree = None, None
     for nm, store in (("citation_gate_%s.json" % GEN, "gate"), ("citation_gate_%s_mutants.json" % GEN,
@@ -89,17 +134,34 @@ def main():
 
     L = []
     A = L.append
-    A("### ORD-0500 r10（手机车道 0afdb49b）：上一手那枚闸把手伸进了别人的判据文件，这手把范围改成按作者定")
+    A("### ORD-0500 %s（手机车道 0afdb49b）：上一手那枚闸把手伸进了别人的判据文件，这手把范围改成按作者定"
+      % GEN.upper())
     A("")
+    forked_now = me["fork_point"] == live_tip
     A("现尖 `%s`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-"
-      "entry-r10` = `%s`，从现尖自己身上分叉（`fork_point` 相等 = %s），合并预测树 `%s`，merge-tree 退出"
-      "码 %s，写集 %s 枚逐枚字节相同 %s 枚、需要再 rebase %s 枚。**产品字节 0 枚改动**：现尖到本枝的差"
-      "共 %s 枚文件，`review/` 之外 %s 枚（清单：%s）。" % (
-          live_tip, remote, B.fmt(me["fork_point"] == live_tip), B.slot(me["predicted_tree"]),
-          B.fmt(me["merge_tree_exit"]), B.fmt(me["write_set_files"]),
+      "entry-%s` = `%s`，%s，合并预测树 `%s`，merge-tree 退出码 %s，写集 %s 枚逐枚字节相同 %s 枚、"
+      "需要再 rebase %s 枚。**产品字节 0 枚改动**：现尖到本枝的差共 %s 枚文件，`review/` 之外 %s 枚"
+      "（清单：%s）。" % (
+          live_tip, GEN, remote,
+          ("从这一枚尖自己身上分叉（`fork_point` 相等 = 真）" if forked_now else
+           "分叉于 `%s`（现尖之后又落了 %s 枚提交，`git rev-list --count` 现读），landing 判到需要再 "
+           "re-cut 的路径仍是 %s 枚——不合的时候不用重剪，这是那把只读尺的答话" % (
+               me["fork_point"], B.fmt(len(B.sh(["git", "rev-list", "--count", "%s..%s"
+                                                 % (me["fork_point"], live_tip)], cwd=WT)[1].split())),
+               B.fmt(len(me["files_needing_another_recut"])))),
+          B.slot(me["predicted_tree"]), B.fmt(me["merge_tree_exit"]), B.fmt(me["write_set_files"]),
           B.fmt(me["files_landing_byte_identical"]), B.fmt(len(me["files_needing_another_recut"])),
           B.fmt(len(changed)), B.fmt(len(product)),
           "、".join("`%s`" % p for p in product) or "无"))
+    A("")
+    A("- 发页这一趟又现读了一次线：landing 那趟判的是 `%s`，此刻线是 `%s`（中间 %s 枚提交，"
+      "`git rev-list --count` 现读）。四枚锚在 `%s` 上当场重读 = `%s`，注释现引 = `%s`，腐烂 %s 枚；"
+      "本枝与现尖的 %s 枚产品路径逐枚等值 = 真——不相等这页根本生成不出来，发射器里那条 "
+      "`ABORT_PRODUCT_MOVED` 就是干这个的。" % (
+          land["live_tip"], live_tip, B.slot(lag), live_tip[:12],
+          "`、`".join(str(_anchors[k]) for k in ("require", "lookup", "integrity", "caught_by")),
+          "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
+          B.fmt(len(_rot)), B.fmt(len(_eq))))
     A("")
     A("## 一、我上一手错在哪（这就是那类「句子跑在证据前面」）")
     A("")
@@ -113,20 +175,21 @@ def main():
       "这手把范围改成按引文那一行的作者算：`git log --grep=ORD-0500 --name-only` 现读要扫的文件，"
       "`git blame --line-porcelain` 一枚文件一趟定作者，作者在本枚 `%s` 枚 commit 集合内才判。" % (
           B.fmt(gate.get("lane_commits_in_set"))))
-    A("- 闸与件的名字也按代分开写了（`receipts/citation_gate_r10.json`、"
-      "`receipts/citation_gate_r10_mutants.json`，blob 各 `%s` 与 `%s`）：r9 那页已经引用的那两件留在原地，"
-      "本代不再覆盖它们——这条规矩是账本里别的车道先记过、我 09-30 自己踩过一次的。" % (
-          blob_gate, blob_mut))
+    A("- 闸与件的名字按代分开写，本代这三件是 `receipts/%s`、`receipts/%s`、`receipts/%s`（blob 各 `%s`、"
+      "`%s`）：上一代之所以要在枝里留下同名旧件不动，是因为那一页已经把它们的 blob 报出去了——覆盖一份"
+      "已被引用的机器件，等于把别人的复算入口抹掉。这条规矩是账本里别的车道先记过、我 09-30 自己踩过"
+      "一次的。" % (GATE_RECEIPT, MUT_RECEIPT, os.environ.get("RECHECK_RECEIPT") or "—",
+                    blob_gate, blob_mut))
     A("")
     A("## 二、现在的闸判谁、不判谁")
     A("")
     A("- 本代：扫 %s 枚文件（写集现读），看到引文 %s 条，判 %s 条，不判 %s 条。判的 %s 条来自 %s 枚"
       "文件里我自己写的 %s 行引文，同一行被看两遍——一遍形状、一遍内容钉子，所以是 %s 条机械加 %s 条钉子。"
       "件 `%s`（blob `%s`），闸 `%s`。" % (
-          B.fmt(gate.get("files_gated")), B.fmt(gate.get("citations_checked")),
-          B.fmt(gate.get("citations_gated")), B.fmt(gate.get("citations_foreign")),
-          B.fmt(gate.get("citations_gated")), B.fmt(gate.get("files_with_gated_citations")),
-          B.fmt(gate.get("gated_citation_lines")), B.fmt(gate.get("mechanical_rows")),
+          B.fmt(gate.get("files_scanned")), B.fmt(gate.get("citations_seen")),
+          B.fmt(gate.get("citations_judged")), B.fmt(gate.get("citations_declined")),
+          B.fmt(gate.get("citations_judged")), B.fmt(gate.get("judged_files")),
+          B.fmt(gate.get("citation_lines_judged")), B.fmt(gate.get("mechanical_rows")),
           B.fmt(gate.get("pin_rows")), "receipts/citation_gate_r10.json", blob_gate, blob_tool))
     if not foreign:
         raise SystemExit("ABORT_NO_DECLINED_ROWS this generation declined nothing, so the ownership "
@@ -206,20 +269,19 @@ def main():
           B.fmt((aud.get("verdict_tally") or {}).get("UNRESOLVED_PATH")),
           B.fmt((aud.get("verdict_tally") or {}).get("ORPHAN_BARE")),
           B.fmt(aud.get("citations_found")), B.fmt(aud.get("files_scanned"))))
-    rc = B.load(os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_r11.json")
-    an = rc.get("anchors") or {}
+    an = rcpt.get("anchors") or {}
     A("- 换代复读（件 `%s`，尖 `%s`）：四枚锚现读是 `%s`，注释里此刻引的是 `%s`，腐烂集合 = %s；本枝与"
       "现尖的产品 blob 逐枚等值 %s 枚 / %s 枚。所以本代不需要再剪一次注释——这句话现在有件撑着，不是我"
       "口头保证。判语 %s，红 %s 枚；r8 那枝对现尖的写集 = %s 枚（早已完全进线）。" % (
           os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_r11.json",
-          B.slot(rc.get("tip")),
+          B.slot(rcpt.get("tip")),
           "`、`".join("`backend/app/main.py:%s`" % an.get(k) for k in
                      ("require", "lookup", "integrity", "caught_by")),
-          "`、`".join(str(v) for v in (rc.get("cited") or {}).values()),
-          B.fmt(len(rc.get("rot") or {})),
-          B.fmt(sum(1 for v in (rc.get("tip_paths_equal_on_branch") or {}).values()
+          "`、`".join(str(v) for v in (rcpt.get("cited") or {}).values()),
+          B.fmt(len(rcpt.get("rot") or {})),
+          B.fmt(sum(1 for v in (rcpt.get("tip_paths_equal_on_branch") or {}).values()
                     if v.get("equal"))),
-          B.fmt(len(rc.get("tip_paths_equal_on_branch") or {})), B.fmt(gate.get("verdict")),
+          B.fmt(len(rcpt.get("tip_paths_equal_on_branch") or {})), B.fmt(gate.get("verdict")),
           B.fmt(gate.get("red_total")), B.fmt(r8["write_set_files"])))
     A("")
     A("## 五、不在本代的东西（具名）")
@@ -253,10 +315,12 @@ def main():
     if len(closing) != 83:
         raise SystemExit("ABORT_CLOSING_LINE_SIZE %d" % len(closing))
     out = block + closing.decode("utf-8").rstrip() + NL
-    for bad in ("None", "%s", "MISSING", "ABORT_"):
+    # the page quotes guard names on purpose, so only the leak shapes that cannot be prose are refused;
+    # "MISSING" is checked as the sentinel the loaders write, never as a substring of a verdict word
+    for bad in ("None", "%s", "MISSING_ARTIFACT", "MISSING_anchor"):
         if bad in out:
             raise SystemExit("ABORT_LEAKED_SLOT %s" % bad)
-    dest = os.path.join(B.RUN, "r10_block_page.md")
+    dest = os.path.join(B.RUN, "%s_block_page.md" % GEN)
     open(dest, "w", encoding="utf-8", newline=NL).write(out)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")

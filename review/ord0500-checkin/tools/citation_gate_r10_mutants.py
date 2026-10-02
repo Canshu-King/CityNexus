@@ -127,7 +127,7 @@ def main():
     runs = []
     control = gate()
     runs.append({"id": "C1_control_copy", "verdict": control["verdict"], "expect": "GREEN",
-                 "citations_gated": control["citations_gated"],
+                 "citations_judged": control["citations_judged"],
                  "bite": control["verdict"] == "GREEN"})
 
     for mid, num, expect in (("M1_beyond_file", mlines + 1, "CITED_LINE_BEYOND_FILE"),
@@ -196,6 +196,8 @@ def main():
     unchanged = sorted(dirty.splitlines()) == sorted(dirty_before.splitlines())
 
     out = {"tool": os.environ.get("CITATION_MUT_TOOL") or "citation_gate_r10_mutants",
+           "pairs_with_gate_receipt": os.environ.get("CITATION_GATE_OUT"),
+           "gate_tree_tip": control.get("tip"), "gate_tree_branch": control.get("branch"),
            "took_local": G.datetime.now().astimezone().isoformat(timespec="seconds"),
            "scratch": SCR, "pairs_with_gate_receipt": os.environ.get("CITATION_GATE_OUT"),
            "files_scanned": owned, "lane_commits_in_set": len(mine),

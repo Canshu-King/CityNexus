@@ -300,13 +300,14 @@ def run_gate(root=None, live=None, owned=None, owners=None, mine=None):
     agree, pin_src, _vt = pin_agrees_with_receipt(root)
     return {"tool": os.environ.get("CITATION_GATE_TOOL") or "citation_gate_r9", "took_local": datetime.now().astimezone().isoformat(
         timespec="seconds"), "tree": root, "tip": tip, "branch": branch,
-        "files_gated": len(owned), "files_with_gated_citations": len(
-            {r["cited_by"].split(":")[0] for r in gated}),
-        "gated_citation_lines": len({r["cited_by"] for r in gated if not r.get("pinned")}),
-        "mechanical_rows": sum(1 for r in rows if not r.get("pinned")),
-        "pin_rows": sum(1 for r in rows if r.get("pinned")),
-        "live_tracked_paths": len(live), "citations_checked": len(rows),
-        "citations_gated": len(gated), "citations_foreign": len(rows) - len(gated),
+        "files_scanned": len(owned),
+        "live_tracked_paths": len(live),
+        "citations_seen": len(rows), "citations_judged": len(gated),
+        "citations_declined": len(rows) - len(gated),
+        "citation_lines_judged": len({r["cited_by"] for r in gated if not r.get("pinned")}),
+        "judged_files": len({r["cited_by"].split(":")[0] for r in gated}),
+        "mechanical_rows": sum(1 for r in gated if not r.get("pinned")),
+        "pin_rows": sum(1 for r in gated if r.get("pinned")),
         "lane_commits_in_set": len(mine),
         "foreign_files_seen": sorted({r["cited_by"].split(":")[0] for r in rows
                                       if r["verdict"] == FOREIGN}),
@@ -331,7 +332,7 @@ def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print("verdict=%s citations=%s red=%s tally=%s tip=%s" % (
-        res["verdict"], res["citations_checked"], res["red_total"],
+        res["verdict"], res["citations_seen"], res["red_total"],
         json.dumps(res["verdict_tally"]), res["tip"][:12]))
     for r in res["red_detail"]:
         print("  RED %s -> %s %s | %s" % (r["cited_by"], r.get("target"), r["line"],

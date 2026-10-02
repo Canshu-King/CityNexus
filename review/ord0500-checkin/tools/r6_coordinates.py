@@ -10,6 +10,7 @@ Three outputs, all re-derivable by the commander with the commands named in the 
                            `git cat-file -t` before it is written.
 Nothing here writes to the remote and nothing writes a ref.
 """
+import glob
 import os
 import re
 import subprocess
