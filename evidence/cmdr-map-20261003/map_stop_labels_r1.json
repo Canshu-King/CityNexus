@@ -1,0 +1,120 @@
+{
+  "instrument": "cmdr_map_stop_labels_r1",
+  "base": "http://127.0.0.1:49804/",
+  "viewport": "390x844",
+  "locale": "zh-CN",
+  "pageErrors": [],
+  "scene_status": 200,
+  "scene_journey_status": "ACTIVE",
+  "map_surface_present": true,
+  "chip_count": 6,
+  "chips": [
+    {
+      "text": "Old Town Gate",
+      "name_source": "title",
+      "ordinal": "1",
+      "painted": true,
+      "w": 105,
+      "h": 22
+    },
+    {
+      "text": "Riverside Museum",
+      "name_source": "title",
+      "ordinal": "2",
+      "painted": true,
+      "w": 129,
+      "h": 22
+    },
+    {
+      "text": "Central Food Hall",
+      "name_source": "title",
+      "ordinal": "3",
+      "painted": true,
+      "w": 122,
+      "h": 22
+    },
+    {
+      "text": "Tech Art Center",
+      "name_source": "title",
+      "ordinal": "4",
+      "painted": true,
+      "w": 110,
+      "h": 22
+    },
+    {
+      "text": "Nexus River Cruise Pier",
+      "name_source": "title",
+      "ordinal": "5",
+      "painted": true,
+      "w": 161,
+      "h": 22
+    },
+    {
+      "text": "Skyline Dinner House",
+      "name_source": "title",
+      "ordinal": "6",
+      "painted": true,
+      "w": 148,
+      "h": 22
+    }
+  ],
+  "pins": [
+    {
+      "aria_label": "Old Town Gate",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    },
+    {
+      "aria_label": "Riverside Museum",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    },
+    {
+      "aria_label": "Central Food Hall",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    },
+    {
+      "aria_label": "Tech Art Center",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    },
+    {
+      "aria_label": "Nexus River Cruise Pier",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    },
+    {
+      "aria_label": "Skyline Dinner House",
+      "pressed": "false"
+    },
+    {
+      "aria_label": "Map marker",
+      "pressed": null
+    }
+  ],
+  "pin_count": 12,
+  "visible_text_head": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 Old Town Gate 2 Riverside Museum 3 Central Food Hall 4 Tech Art Center 5 Nexus River Cruise Pier 6 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Nexus River Cruise Pier 这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。 只看",
+  "empty_chip_texts": 0,
+  "machine_shaped_chips": [],
+  "sources": {
+    "title": 6
+  },
+  "pins_without_accessible_name": 0,
+  "verdict": "EVERY_STOP_HAS_A_PAINTED_NAME_AND_A_NAMED_PIN"
+}
