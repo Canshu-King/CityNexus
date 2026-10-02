@@ -1,0 +1,21 @@
+== G4 (the request-path lock wait) ==
+  OK   drift probe: a number-free mention in a file the old roster never listed: want green, got green; restore byte-identical=True  [7222560014309628]  (the ruler must no longer freeze filenames)
+       1 passed, 2 warnings in 44.24s
+  OK   violation probe: a second lock-wait number, at a value no worker scope names: want red, got red; restore byte-identical=True  [7222560014309628]  (a new inline wait must be refused)
+       1 failed, 2 warnings in 133.69s (0:02:13)
+  OK   violation probe: the original defect shape, an inline copy of the request-path wait: want red, got red; restore byte-identical=True  [a665679d11a68710]  (the constant³­Á½·Ý case the order was opened for)
+       1 failed, 2 warnings in 7.78s
+
+== H01b (the dictionary-key ruler's own anchor) ==
+  OK   drift probe: one line inserted above the named table: want green, got green; restore byte-identical=True  [605a675a5a87d39a]  (the anchor follows the symbol, not a frozen line number)
+       1 passed in 6.33s
+  OK   violation probe: the forgiven table stops being a translation table: want red, got red; restore byte-identical=True  [605a675a5a87d39a]  (the re-derivation of every exemption must still bite)
+       1 failed in 7.89s
+
+== state after every restore ==
+  git status for the three probed files: (clean)
+  backend/app/main.py: 7222560014309628
+  backend/app/catalog_hydration_operations.py: a665679d11a68710
+  frontend/src/features/shared/SharedJourneyPanel.tsx: 605a675a5a87d39a
+
+5/5 probes behaved as named
