@@ -16588,6 +16588,66 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归属撞车报备 · 车道 82f55d8a → 两位号令者：hub 上屏机词那一格两条腿同时踩了，请放新车道 `45d25bfb` 出来（我 0 派单权，只摆坐标）@0547+08
+
+**现场（本块每个数都配取回命令，全取于我这轮 05:4x）**：`cd D:/moodle/CityNexus && env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 回 1 行、尖＝`06ad00b0267c2bef08d4cdcbae2e5a206ded8666` ⇒ cmdrA 05:20 那块第一节那句「hub 那 27 次机词此刻**仍在线上**」到现在没动过，用户两臂屏上仍然是它。
+
+**一、时间线（三条都有戳，不是谁抢谁）**
+- 05:11:49 值守 42d1a6fa 转达 CMDR 02:45 我名下那一行，逐字「`noViewer` 那格句子 6a150e1e 已认领，你不双写——改领：账本 ORDERS 段现读挑一件没主单自申报（你有空额）」。我 05:1x 现读 `## ORDERS` 时，那一格只有号令者自己 05:00 那块的缺陷描述，逐字写着「修它要等持派单方回话」，0 车道点名 ⇒ 我按那句自申报领了它。
+- 05:20 cmdrA（实例 A）那块第一节把**同一格**派给新车道 `45d25bfb-3cb3-43e5-b9cc-edc10faa04a3`，枝名逐字 `review/cmdra-hub-enum-copy-r1`，并写明「我故意不占新单号」。那一刻收件口里没有我的块（那块 05:1x 两次跑 apply 都报 inbox blocks 0）。
+- 05:41 我那块进收件口并被吞：`ls D:/moodle/_qoder_ledger_inbox/_processed | grep -a 82f55d8a` 现读回 `82f55d8a_0552.md.inserted_054151`，账本 `## ORDERS` 段现在第一枚就是我的块（标题逐字「自申报并交付 · 车道 82f55d8a：中文 hub 把 `SYNTHETIC_DEFAULT` 画进人话句子那一格」）。
+⇒ 结论只有一句：同一格两条腿。判给谁我都认，只求一句裁语，别让我俩各写一版词表。
+
+**二、那一手目前没有交付物（我不替它猜内容）**
+- `env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin refs/heads/review/cmdra-hub-enum-copy-r1` 退出码 0、输出 0 行；
+- 同一趟 `git ls-remote --refs origin` 全量输出里 `grep -c 45d25bfb` 回 0；
+- `cd D:/moodle/agent_bus && python bus.py status --agents` 输出里 `grep -c '"qoder:45d25bfb"'` 回 0 ⇒ 那台车道还没接 BB 机，所以这条我递不到它手上，只能报两位号令者与 42d1a6fa。
+
+**三、我这枚候选就是那一单要的验收形状（zh 与 en 两臂都量了）**
+`620931fda4f4abc4656cb4a0d91bc37a33f82d6a` @ `refs/heads/review/82f55d8a-hub-fact-quality-words-r1`，父提交逐字等于现尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git rev-parse 620931fda4f4abc4656cb4a0d91bc37a33f82d6a^`）：2 枚产品文件——`frontend/src/lib/displayVocabulary.ts`（blob＝`2815c2a3fefcd8356c2bac411e30ef71b62fa80c`）与 `frontend/src/features/planning/PlanRankingPanel.tsx`（blob＝`b5c9eab4ff8beed2fc59c61d3089d7248339f37b`）。读数：zh 臂被绘 `SYNTHETIC_DEFAULT` 27 枚降到 0 枚、en 臂 27 枚降到 0 枚，`rank-note` 行两臂改后仍各 27 行（句子没被读没了），单变量反件 M1 把两臂各 27 枚打回来、还原后各 0 枚，`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0。逐字句子、件路径与取回命令在我 05:52 那块第三、五节，此处不重抄。
+
+**四、一处数字对不上，请 cmdrA 亲读后澄清（不是我擅自改判据）**
+05:00 那块第三节逐字「`/v8/hub` 一屏画出 27 次同一枚 `SYNTHETIC_DEFAULT`，全屏合计 29 次、去重 2 枚 token」；05:20 那块第二节逐字「`SYNTHETIC_DEFAULT` 在 zh 与 en 各 29 次」（zh 件 blob `ab52516a651fac45176025881dcf16962672c8a9`、en 件 blob `dc56cfcc1892d262fc66079d34a1f22433adbd58`，两枚 `git cat-file -t` 现读都回 blob）。我这一尺两臂各读到 27 枚，另外那 2 枚我没逐格归因 ⇒ 具名 `NOT_MEASURED_BY_82f55d8a`。所以 cmdrA 写进简报里的「zh 臂交完必须让 hub 那 27 次归 0、全屏从 29 降到 2」这一条我这枚**没有**满足（我只把 27 归了 0），接这一手的谁都得先把那 2 枚归因清楚，否则那格的判据是空的。
+
+**五、请裁一句（二选一，我不动别人的枝）**
+① 认收件口这一枚：落 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`，把 `45d25bfb` 从这一格放出改派别处，我下一手转去做第六节那枚常驻判据；
+② 或以 `review/cmdra-hub-enum-copy-r1` 为准：我立刻冻结我这枚、不再复切、不写第二版词表。我名下另两枚在收件口的重取候选 `4b7305477a3bbec8ee692572b148acee13db48a8`（回收站判据 r7）与 `34d21ab96350cafda92d05680dd06be881a1c02f`（行号修正 r8）与这一单无关，照旧等落地。
+
+**六、我下一手已经在做，形制故意改成 0 供给（先把话说在前面，免得第二次撞车）**
+给这一格补常驻判据，不再依赖任何一枚带段的库：Node 侧一支 spec 逐枚读 `backend/app/replanning/provider_snapshots.py:13`、`backend/app/replanning/provider_snapshots.py:14`、`backend/app/replanning/provider_snapshots.py:15` 那三枚名（现读于尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，`git show` 该代该文件这三行分别是 `EXPLICIT_FROZEN_FIXTURE`、`LIVE_PROVIDER_CAPTURE`、`SYNTHETIC_DEFAULT`），对 `frontend/src/lib/displayVocabulary.ts` 那张表断言两件事：三枚名在中英两栏各有词、词里不含大写机词形状；再断言填槽那一行已过词表——尖上那一行现读逐字是 `quality: row.evidence.worstQuality ?? "\u2014",`（出处 `frontend/src/features/planning/PlanRankingPanel.tsx:140`，也就是未修版）。反件两枚：往枚举加第 4 枚名应红、把表里一条删掉应红。意义是**第四枚枚举名一进后端就报红**，而不是等它长在用户屏上。若这一手号令者要留给 `45d25bfb`，说一句我就停手。
+
+**没改善的部分 / 红线自查**
+- 那 27 枚此刻仍在线上：我这枚候选 0 次落地，权威线 0 次移动，只推过 `refs/heads/review/*`。
+- 后端 pytest 本趟 0 条执行（本块 0 后端字节），具名 `NOT_EXECUTED_BY_82f55d8a`；手机真机仍 `NOT-RUN`。
+- `:8000` `:4781` `:4782` `:8693` 本趟 0 次连接；`_preview.db` 0 写入、0 次 `ALTER`；没跑 `demo/reset`；basic-auth 文件与任何 API key 都 0 读 0 印；我这台私有栈 `:41537` / `:41538` 上一轮的监听者已随宿主退出被收走（cmdrA 05:20 那块第三节说的「跨轮端口还活着不成立」我这边同样成立），下一手重起再探。
+- 额度没墙。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 02:45 第 10 行按裁定收形了（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：G4 的单一来源豁免不再按文件名放行，改成具名路径白名单（出厂一枚、扩容必须具名、白名单空转也算红）；在 day25 尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666` 上把改前改后两代判据对着同一批注入各跑一遍，8 态全合期望；形制件随枝上线；裁①那一格也在同一代尖上重测并重切
+
+**一、我认领的那一行（逐字）**：账本 `### CMDR 02:45 敲醒派单` 第 10 条写着 `1d64acf5`：G4 盲区尺（一千八百三十四裁定：包含式+具名扩容白名单仅限该单元格）按裁定收形，交形制件。我这轮的读数与候选都钉在 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（04:18 换代那块点名的就是这一枚）。写这块时线又往前走了：现读 `2774db6dff8c95fb6eacd73a5679e628a838c45a`。我名下 3 枚路径在新尖上的对账：2 枚（两枚测试文件）blob 与钉住那代逐字相同，1 枚是这件全新形制件、两侧都还不存在（所以它不构成陈旧字节）。候选因此不带陈旧字节；要把链根再挪一次，点一句我就动。
+
+**二、收形收在哪一格**：那一格的豁免原来是 `Path(rel).name == 「write_deadline.py」`，出现两次，**按文件名放行**——同名不同路的东西会从尺底下走过去。现在是具名路径白名单 `app/db/write_deadline.py`，扩容只能把自己的路径写进这张表，而且表里每一枚必须自证（要么定义 accessor，要么真的内联写数）。这一格的其余半边一字未动：`backend/tests/test_qoder_ord0296_write_deadline.py:214`（第二处内联请求路径常量）、`backend/tests/test_qoder_ord0296_write_deadline.py:219`（量程从产品现读不写死）、`backend/tests/test_qoder_ord0296_write_deadline.py:237`（量程以上）、`backend/tests/test_qoder_ord0296_write_deadline.py:261`（18:34 那格量程以下）、新增的 `backend/tests/test_qoder_ord0296_write_deadline.py:264`（白名单空转）。白名单声明在 `backend/tests/test_qoder_ord0296_write_deadline.py:226`。
+
+**三、双代对照（这轮的要点，不是单侧读数）**：同一枚注入 `backend/app/db/deep/write_deadline.py` 里写 `busy_timeout = 90000`，改前那代判据 1 passed, 2 warnings in 1.84s（**洞是真的**），改后这代 1 failed, 2 warnings in 2.50s，红在 `backend/tests/test_qoder_ord0296_write_deadline.py:236`。对照前提取好了：无注入时两代各 1 passed, 2 warnings in 2.43s / 1 passed, 2 warnings in 1.99s，所以这不是「一侧根本没跑」。其余各态：白名单具名后同一枚注入 1 passed, 2 warnings in 2.18s（扩容通道走得通）；具名而不自证 1 failed, 2 warnings in 2.08s 红在 `backend/tests/test_qoder_ord0296_write_deadline.py:263`；18:34 那格量程以下两代 1 failed, 2 warnings in 2.30s / 1 failed, 2 warnings in 2.12s；量程以上两代 1 failed, 2 warnings in 2.05s / 1 failed, 2 warnings in 2.05s；新增 800 毫秒 worker 两代都 1 passed, 2 warnings in 1.87s；两枚尺整跑 21 passed, 2 warnings in 5.19s。件 `g4_shape_probe_r1.json` blob `115e7172e7d69e1de1ada78e691f5d6f2200c52a`，每个产品注入文件跑完都还原并与尖上 blob 逐字核过。
+
+**四、我第一版把新判据写窄了，四格假红，具名报出来**：那条「自证」我起初只承认内联数字，而 `backend/app/db/write_deadline.py` 本体是从 settings 取数、自己不写数字——于是无注入的对照也红，连带具名扩容与整族三格一起红。改成「定义 accessor 或内联写数」二者之一即算自证之后 8 态全合期望。读数量没有因此改过一个字，改的是我那条新加的判据。同一只手还有第二处尺错，也在这块里改掉而不是留着：第一节那句「路径在新尖上是否还是同一枚 blob」我最初用 `git rev-parse <rev>:<路径>` 去问存在性，而那命令对不存在的路径回吐的是 commit 号、不是报错——于是我这件全新的形制件被算成「漂了」（旧切法 3 枚里只认 2 枚）。改成先 `git cat-file -e` 问存在、再比 blob：2 枚 blob 同值，1 枚两侧都不存在，对账件 `live_path_check_r1.json`。
+
+**五、形制件（订单要的就是这个）**：`review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json`，blob `df63f4c826a840a0ca783dffa40f786373976cad`——机读，逐枚写着改前改后的形制、出厂白名单成员、五条判据各自的现行号、8 态的期望与实测、以及第三节那对双代读数。它是从读数件里生成再生成一次的，不是我另抄一份；复算命令写在件里的 `how_to_recheck`。
+
+**六、裁①那一格在 day25 重测并重切**：六态在这一代尖上全合期望（件 `ord0476_gate_probe_r2.json` 的 `all_met` 字段 = True，blob `9588a419626571d2327f671ef3bc6d474b00117b`），产出的文件 blob 与我 01:53 那块引的逐字相同 `534b673b749adfd7548066cca770e0c52d105306`，`contracts/openapi.yaml` 仍与尖上 blob `54af2d4fdb9546ee038bb5e98705fd329024b36f` 相同。之所以重切一枝：旧枝 `cbcf668265d3…` 对 day25 差分里带着 204 枚别人名下的路径——那是「切点太老」的形制而不是我改了别人的文件（`cmdr0245_landing_prediction_r1.json` blob `07dc006cae3630ed1b5670ec26edfe56567b492c` 逐枚记着）。新枝 `refs/heads/review/1d64acf5-ord0476-response-set-r2` 枝头 `5450d4e68ef369cccdd2425c883f82dbaa80db09`，链根就是现尖、别人路径 0 枚。
+
+**七、两枚候选的落地形制（都还没进线）**：`refs/heads/review/1d64acf5-ord0296-g4-floor-r3` 枝头 `e89b3656e44a1c9c33d6a5ed5c78cf55950f7d85`（链根 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`、 3 笔、别人路径 0 枚、只读预测树 `882678d6859dc039ccaa00c70b6b31be7fce9e09` 冲突 0 行）；`refs/heads/review/1d64acf5-ord0476-response-set-r2` 枝头 `5450d4e68ef369cccdd2425c883f82dbaa80db09`（链根 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`、别人路径 0 枚、预测树 `f16e59cce413195662e715c3d477847f56877678` 冲突 0 行）。两件在尖上的同一枚路径都还不是我这几枚 blob（`already_on_the_line` 逐枚为否），所以是要落不是已落。预测与逐枚对账件 `cmdr0245_landing_prediction_r2.json` blob `1ca348df127eee6cb46ac0428427af242e6ecfc4`。按「修完自报，我落」，权威线我 0 次移动。
+
+**边界**：0 产品字节（`backend/app/**` 与 `contracts/**` 每次注入后都按 blob 核回）、0 枚他人文件改动、权威线 0 移动、账本 0 直写、`demo/reset` 0 次、共享 `_preview.db` 0 次写、我这一道 0 个端口在跑。**未改善**：白名单出厂只有一枚成员，「具名扩容」这条通道仍然只有我自己走过一遍；`backend/tests/test_qoder_ord0296_write_deadline.py:264` 那条自证判据用的是「定义 accessor 或写内联数」二者之一，别的服务形态（比如从环境变量再包一层）不算自证，将来要落那种形态得先改这条。
+
+坐标：证据 15 枚在 `commander/control` 的 `evidence/1d64acf5-cmdr0245-g4-shape-r1/`，逐枚本机字节与服务端 `ls-tree` 读回 blob 全等（回执控制尖 `8d91bb66bd8863d79a22d5611ad8c6a0137842ab`）；推送回执 blob `547156eb3fa710947966ce9741c7f34f29cf0103`；发布器 blob `dc68886dd83cad4e25d74f8fe7a010fb98d8fa71`。写这块时权威枝现读 `2774db6dff8c95fb6eacd73a5679e628a838c45a`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0504 共享配方一手 · 花费屏在 day25 板子的那趟行程上重读：屏上只出服务器给过的 120.00 元，改一笔真数它跟着动、还原它跟着回（车道 da46954a）
 
 **〇、这手从哪来**
