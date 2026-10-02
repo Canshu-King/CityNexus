@@ -1,0 +1,109 @@
+{
+  "instrument": "cmdr_poi_import_screen_r1",
+  "base": "http://127.0.0.1:49802/",
+  "locale": "zh-CN",
+  "viewport": "390x844",
+  "arms": [
+    {
+      "label": "unknown place",
+      "paste_chars": 50,
+      "steps": [],
+      "panel_visible": true,
+      "visible_text_head": "菜单 / 今天 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 0 字 这里读你粘",
+      "lede": "把你已经写下的东西贴进来",
+      "mode_pill": "文本或链接识别",
+      "char_count": "50 字",
+      "phase": "success",
+      "phase_pill": "已读出",
+      "error_paragraph": null,
+      "error_why": null,
+      "error_detail": null,
+      "counts_line": "读出 2 行 · 对上 0 个 · 0 个要你选 · 2 个没找到",
+      "api_calls": [
+        {
+          "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/agent/runtime-status",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/poi-import/parse",
+          "status": 200
+        }
+      ],
+      "painted_text": "已读出 | 读出 2 行 · 对上 0 个 · 0 个要你选 · 2 个没找到",
+      "painted_chars": 39,
+      "machine_tokens_found": [],
+      "codes_painted": [],
+      "detail_shape": "ABSENT"
+    },
+    {
+      "label": "no place at all",
+      "paste_chars": 16,
+      "steps": [],
+      "panel_visible": true,
+      "visible_text_head": "菜单 / 今天 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 0 字 这里读你粘",
+      "lede": "把你已经写下的东西贴进来",
+      "mode_pill": "文本或链接识别",
+      "char_count": "16 字",
+      "phase": "success",
+      "phase_pill": "已读出",
+      "error_paragraph": null,
+      "error_why": null,
+      "error_detail": null,
+      "counts_line": "读出 1 行 · 对上 0 个 · 0 个要你选 · 1 个没找到",
+      "api_calls": [
+        {
+          "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/agent/runtime-status",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+          "status": 200
+        },
+        {
+          "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/poi-import/parse",
+          "status": 200
+        }
+      ],
+      "painted_text": "已读出 | 读出 1 行 · 对上 0 个 · 0 个要你选 · 1 个没找到",
+      "painted_chars": 39,
+      "machine_tokens_found": [],
+      "codes_painted": [],
+      "detail_shape": "ABSENT"
+    },
+    {
+      "label": "fabricated 409 with prose",
+      "arm_kind": "HTTP_RESPONSE_FABRICATED_BY_CMDR",
+      "sent_message": "系统未能解析该文本，因为地名不在我们的记录里且提供方暂时不可用。",
+      "panel_visible": true,
+      "phase": "error",
+      "error_paragraph": "这段文字没读出来。你写的还在原地，可以再试一次。其中一个地点已不在我们的清单里，请重新识别一次文字。HTTP 409",
+      "error_why": "其中一个地点已不在我们的清单里，请重新识别一次文字。",
+      "error_detail": "HTTP 409",
+      "painted_text": "这段文字没读出来。你写的还在原地，可以再试一次。其中一个地点已不在我们的清单里，请重新识别一次文字。HTTP 409 | 其中一个地点已不在我们的清单里，请重新识别一次文字。 | HTTP 409",
+      "prose_leaked": false,
+      "prose_fragment_leaked": false,
+      "codes_painted": [],
+      "machine_tokens_found": [],
+      "detail_shape": "HTTP_STATUS_ONLY"
+    }
+  ],
+  "pageErrors": [],
+  "scene_status": 200,
+  "scene_journey_id": "22222222-2222-4222-8222-222222222222",
+  "scene_journey_status": "ACTIVE",
+  "arms_reached": 3,
+  "arms_with_error_render": 1,
+  "verdict": "NO_UPSTREAM_PROSE_OR_CODE_PAINTED"
+}
