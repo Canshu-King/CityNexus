@@ -43,6 +43,9 @@ GIT_ROOT = find_repo_root(Path(__file__))
 ORDER_BASE = "127ce7b05329eaa837701cdb93bdbc2e5d64e10f"
 GATE_REL = "backend/app/security/credential_literals.py"
 SITE = "frontend/src/features/shared/SharedJourneyPanel.tsx"
+#: the named table this order was opened for; the arm anchors on the symbol, not on a line number,
+#: because a line number is a fact about the file's history rather than about the product
+REFUSAL_TABLE_SYMBOL = "REFUSAL_KEY"
 VALUE = "shared.refusedTokenUnknown"
 
 
@@ -156,6 +159,27 @@ def _table_values_around(path: str, line_no: int) -> list[str]:
     return values
 
 
+def _named_table_span(rel: str, symbol: str) -> tuple[int, int]:
+    """The first and last line of the object literal a *named* declaration opens.
+
+    Anchoring to the declaration's own words is what makes this survive upstream edits: ORD-0528 put a
+    three-line export note above the table this order was opened for and the scan's line for that entry
+    moved 45 -> 47, which reddened an arm whose sentence was "the forgiven site is not the one I was
+    told about". The site never changed; the number did (the drift the commander ruled to repair).
+    """
+
+    lines = (REPO / rel).read_text(encoding="utf-8", errors="replace").splitlines()
+    # the symbol's own name, at a word boundary: `REFUSAL_KEY` must not be satisfied by a longer name
+    # that merely starts with it (`REFUSAL_KEYS_MOVED_AWAY`), or the anchor stops proving anything
+    opening = re.compile(r"^export const %s\b\s*[:=]" % re.escape(symbol))
+    starts = [i for i, line in enumerate(lines, 1) if opening.match(line)]
+    assert len(starts) == 1, (rel, symbol, starts)
+    for index in range(starts[0], len(lines)):
+        if lines[index].startswith("};"):
+            return starts[0], index + 1
+    raise AssertionError("no closing brace under the named %s in %s" % (symbol, rel))
+
+
 def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> None:
     """真树上：C07 那句断言成立；而且每一处被赦免的行，都能脱离尺自己再证一遍。
 
@@ -180,8 +204,17 @@ def test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable() -> N
         assert value in both, (e["path"], e["line"], "not a key in both locales")
         for v in _table_values_around(e["path"], e["line"]):
             assert v in both, (e["path"], e["line"], "a table neighbour is not a translated key")
-    #: the site this order was opened for is among them, and is forgiven on the same grounds
-    assert (SITE, 45) in [(e["path"], e["line"]) for e in exemptions], exemptions
+    #: 本单开出来的那一处仍要在赦免里，而且认的是**具名符号**那张表，不是行号：`REFUSAL_KEY` 的
+    #: 表头上下移动、或它前面多出几行注释，都不该让这一格红；表被删掉、被搬走、或那一行不再属于它，
+    #: 才该红。
+    site_exemptions = [e for e in exemptions if e["path"] == SITE]
+    assert len(site_exemptions) == 1, (
+        "the site this order was opened for is not forgiven exactly once: %s" % exemptions)
+    table_start, table_end = _named_table_span(SITE, REFUSAL_TABLE_SYMBOL)
+    inside = [e for e in site_exemptions if table_start < e["line"] < table_end]
+    assert len(inside) == 1, (
+        "the forgiven line on %s is not inside the named table %r (span %s..%s): %s"
+        % (SITE, REFUSAL_TABLE_SYMBOL, table_start, table_end, site_exemptions))
 
 
 # ---------------------------------------------------------------- H02 正控：真凭据形状仍红

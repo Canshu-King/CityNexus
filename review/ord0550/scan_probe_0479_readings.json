@@ -1,0 +1,63 @@
+{
+ "verdict": "LIVE_CREDENTIAL_IN_ENVIRONMENT",
+ "hits_in_product_path": 0,
+ "hits_undeclared": 0,
+ "exemptions": [
+  {
+   "line": 34,
+   "path": "frontend/src/features/poster/TripPosterPanel.tsx",
+   "pattern": "labeled_assignment",
+   "reason": "translation_lookup_table:5 entries, dictionary:960 keys"
+  },
+  {
+   "line": 52,
+   "path": "frontend/src/features/poster/TripPosterPanel.tsx",
+   "pattern": "labeled_assignment",
+   "reason": "translation_lookup_table:6 entries, dictionary:960 keys"
+  },
+  {
+   "line": 47,
+   "path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "pattern": "labeled_assignment",
+   "reason": "translation_lookup_table:10 entries, dictionary:960 keys"
+  }
+ ],
+ "site_lines_25_60": [
+  "25|  *",
+  "26|  *  1. Opening it sends one GET. It does not create a traveller, a journey, or a demo scenario. The",
+  "27|  *     shell's own boot read is `GET /journeys/<stored id>/experience`, which writes while it answers",
+  "28|  *     and is the reason this project has a 500 for opening a page; the person arriving here is not the",
+  "29|  *     traveller whose journey that is, and `app/V8Experience.tsx`'s boot now says so before it asks.",
+  "30|  *  2. Every refusal is named by the server's `error.reason_code`, never by something this device",
+  "31|  *     worked out. `sharedJourneyDoors.ts` holds the whole vocabulary and a body that carries no name",
+  "32|  *     lands in `unnamed`, which says \"no name was read\" rather than picking the nearest sentence.",
+  "33|  *  3. There is no arm that reads \"loaded, and here is your empty rectangle\". The two ways a",
+  "34|  *     successful read can still have nothing to list are different facts -- no plan was ever selected,",
+  "35|  *     and a plan is selected with no stops in it -- and each gets its own sentence below.",
+  "36|  *  4. Nothing on this screen is a raw store value pretending to be a heading. A stop is the place's",
+  "37|  *     own name, falling back to the plan's title only when the store has no name; the plan's `source`",
+  "38|  *     and `status` go through the shared display tables; and the only instants shown are formatted in",
+  "39|  *     the trip's own timezone. The token itself is never painted -- it is the thing that grants access,",
+  "40|  *     and a screenshot of this page should not hand the trip to whoever receives the screenshot.",
+  "41|  */",
+  "42| ",
+  "43| /** The arms that name themselves with one dictionary key, and the key each one uses.",
+  "44|  *  ORD-0528 exports it: the poster's receiving screen reads the same door and must refuse with the",
+  "45|  *  same nine names rather than holding a second, drifting copy of this table. */",
+  "46| export const REFUSAL_KEY: Record<string, string> = {",
+  "47|   token_unknown: \"shared.refusedTokenUnknown\",",
+  "48|   revoked: \"shared.refusedRevoked\",",
+  "49|   expired: \"shared.refusedExpired\",",
+  "50|   expiry_unreadable: \"shared.refusedExpiryUnreadable\",",
+  "51|   not_link_readable: \"shared.refusedNotLinkReadable\",",
+  "52|   membership_required: \"shared.refusedMembershipRequired\",",
+  "53|   not_a_member: \"shared.refusedNotAMember\",",
+  "54|   journey_gone: \"shared.refusedJourneyGone\",",
+  "55|   in_recycle_bin: \"shared.refusedInRecycleBin\",",
+  "56|   unnamed: \"shared.refusedUnnamed\",",
+  "57| };",
+  "58| ",
+  "59| /**",
+  "60|  * The map's input, built from what this door actually answered."
+ ]
+}

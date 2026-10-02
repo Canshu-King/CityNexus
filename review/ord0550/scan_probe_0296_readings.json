@@ -1,0 +1,141 @@
+{
+ "offenders": {},
+ "others": {
+  "app\\catalog_hydration_operations.py": [
+   [
+    550,
+    "session.execute(text(\"PRAGMA busy_timeout = 500\"))"
+   ]
+  ],
+  "app\\core\\config.py": [
+   [
+    89,
+    "# place SQLite's lock wait is configured.  `write_busy_timeout_ms` is what the engine actually"
+   ],
+   [
+    91,
+    "# `effective_busy_timeout_ms()` caps the wait by it.  A deadline at or below the lock wait is"
+   ],
+   [
+    95,
+    "write_busy_timeout_ms: int = int(os.getenv(\"CITYNEXUS_WRITE_BUSY_TIMEOUT_MS\", \"30000\"))"
+   ]
+  ],
+  "app\\db\\session.py": [
+   [
+    15,
+    "from app.db.write_deadline import busy_timeout_ms as write_busy_timeout_ms"
+   ],
+   [
+    16,
+    "from app.db.write_deadline import busy_timeout_seconds as write_busy_timeout_seconds"
+   ],
+   [
+    67,
+    "\"timeout\": write_busy_timeout_seconds()}"
+   ],
+   [
+    77,
+    "cursor.execute(f\"PRAGMA busy_timeout={write_busy_timeout_ms()}\")"
+   ]
+  ],
+  "app\\db\\write_deadline.py": [
+   [
+    3,
+    "Two numbers, one source.  `busy_timeout_ms` is what SQLite is told to wait for a lock; `deadline_ms`"
+   ],
+   [
+    7,
+    "just relabels `busy_timeout` as \"deadline exceeded\" (ORD-0281 T-b, ratified as Q36=①)."
+   ],
+   [
+    50,
+    "def busy_timeout_ms() -> int:"
+   ],
+   [
+    53,
+    "return int(settings.write_busy_timeout_ms)"
+   ],
+   [
+    56,
+    "def busy_timeout_seconds() -> float:"
+   ],
+   [
+    59,
+    "return busy_timeout_ms() / 1000"
+   ],
+   [
+    89,
+    "def effective_busy_timeout_ms(scenario: str) -> int:"
+   ],
+   [
+    92,
+    "return max(1, min(busy_timeout_ms(), deadline_ms(scenario)))"
+   ],
+   [
+    95,
+    "def deadline_is_reachable(deadline: int, busy_timeout: int) -> bool:"
+   ],
+   [
+    98,
+    "return deadline > 0 and busy_timeout > 0 and deadline > busy_timeout"
+   ],
+   [
+    102,
+    "busy = busy_timeout_ms()"
+   ],
+   [
+    104,
+    "return {\"verdict\": CONFIG_SCENARIO_UNKNOWN, \"busy_timeout_ms\": busy}"
+   ],
+   [
+    109,
+    "return {\"verdict\": CONFIG_OVERRIDE_MALFORMED, \"busy_timeout_ms\": busy}"
+   ],
+   [
+    116,
+    "return {\"deadline_ms\": deadline, \"busy_timeout_ms\": busy, \"delta_ms\": deadline - busy,"
+   ],
+   [
+    118,
+    "\"effective_busy_timeout_ms\": effective_busy_timeout_ms(scenario),"
+   ],
+   [
+    128,
+    "return {\"scenario\": scenario, \"busy_timeout_ms\": busy_timeout_ms(),"
+   ],
+   [
+    141,
+    "f\"write_busy_timeout_ms={busy_timeout_ms()} for every scenario in {list(SCENARIOS)}; \""
+   ],
+   [
+    155,
+    "f\"budget (sqlite busy_timeout={busy_timeout_ms()} ms): {cause}\""
+   ],
+   [
+    160,
+    "self.busy_timeout_ms = busy_timeout_ms()"
+   ],
+   [
+    165,
+    "\"deadline_ms\": self.deadline_ms, \"busy_timeout_ms\": self.busy_timeout_ms,"
+   ]
+  ],
+  "app\\main.py": [
+   [
+    7149,
+    "PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) + int(settings.write_busy_timeout_ms)"
+   ]
+  ],
+  "app\\stay_generation_operations.py": [
+   [
+    310,
+    "session.execute(text(\"PRAGMA busy_timeout = 200\"))"
+   ],
+   [
+    505,
+    "session.execute(text(\"PRAGMA busy_timeout = 1500\"))"
+   ]
+  ]
+ }
+}

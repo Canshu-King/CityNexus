@@ -1,0 +1,20 @@
+{
+ "candidate_bytes": {
+  "rc": 0,
+  "failed": [],
+  "totals": [
+   "2 passed, 2 warnings in 24.09s"
+  ]
+ },
+ "tip_bytes": {
+  "rc": 0,
+  "failed": [],
+  "totals": [
+   "2 passed, 2 warnings in 18.22s"
+  ]
+ },
+ "restored_ok": {
+  "backend/tests/test_qoder_ord0296_write_deadline.py": true,
+  "backend/tests/test_qoder_ord0479_dictionary_key_shape.py": true
+ }
+}

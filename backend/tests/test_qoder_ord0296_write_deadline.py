@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -208,10 +209,34 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
             elif "busy_timeout" in line:
                 others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
     assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
-    # 其余提到 busy_timeout 的地方是 worker 自己的短等待（500/1500/200 ms），射程不同，这里点名不吞掉
-    assert sorted(Path(k).name for k in others) == [
-        "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
-        "write_deadline.py"], {k: v for k, v in others.items()}
+    # 其余提到 busy_timeout 的地方原先钉的是一枚**闭合的文件名清单**（五枚）。那一枚清单量不到它声称
+    # 要量的东西：任何一条道新加一处合法等待——哪怕只是把 settings 里的值转读一次、一个数字都没抄——
+    # 都当场红，而红相写的是"常量抄了两份"，两件不同的事被同一句话报出去。10-02 的漂红正是
+    # `app/main.py:7149` 的 `PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) +
+    # int(settings.write_busy_timeout_ms)` 把清单撑破的，那行里没有内联毫秒。
+    # 现在判据只认数字：除了 config 里那枚具名声明（唯一的源）与 worker 自己的具名短等待
+    # （500/1500/200 ms，射程不同，0296 开单时就在），任何内联毫秒都算第二份。新增文件不再是理由，
+    # 新增数字才是。
+    worker_short_waits = {500, 1500, 200}
+    inline_numbers: list[dict[str, object]] = []
+    for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
+        relative = str(path.relative_to(BACKEND_ROOT)).replace("\\", "/")
+        for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "busy_timeout" not in line:
+                continue
+            for captured in re.findall(r'busy_timeout[A-Za-z_]*\s*(?:=|:)\s*"?(\d+)', line):
+                value = int(captured)
+                # 唯一的源：config 里那枚具名声明本身
+                if relative == "app/core/config.py" and "write_busy_timeout_ms:" in line:
+                    continue
+                # worker 自己的短等待：必须是 `PRAGMA busy_timeout = <n>` 这一形制
+                if value in worker_short_waits and "PRAGMA busy_timeout" in line:
+                    continue
+                inline_numbers.append(
+                    {"path": relative, "line": i, "value": value, "text": line.strip()[:80]})
+    assert inline_numbers == [], (
+        "the request-path lock wait has a second inline copy: %s (the single source is the "
+        "declaration in app/core/config.py; anything that needs it asks for it)" % inline_numbers)
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
     assert 'timeout": write_busy_timeout_seconds()' in session_src, "session.py must ask the module"

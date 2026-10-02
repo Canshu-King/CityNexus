@@ -1,0 +1,168 @@
+{
+ "none": {
+  "applied": [],
+  "new_arms": {
+   "rc": 0,
+   "failed_ids": [],
+   "summary": [
+    "2 passed, 2 warnings in 8.92s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\none_newarms.log"
+  },
+  "tip_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "2 failed, 2 warnings in 7.23s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\none_tiparms.log"
+  },
+  "restored": [],
+  "all_restored": true
+ },
+ "new_worker_short_wait_is_not_a_copy": {
+  "applied": [
+   {
+    "op": "create",
+    "path": "backend/app/worker_wait_probe_r1.py"
+   }
+  ],
+  "new_arms": {
+   "rc": 0,
+   "failed_ids": [],
+   "summary": [
+    "2 passed, 2 warnings in 7.72s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\new_worker_short_wait_is_not_a_copy_newarms.log"
+  },
+  "tip_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "2 failed, 2 warnings in 8.01s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\new_worker_short_wait_is_not_a_copy_tiparms.log"
+  },
+  "restored": [
+   [
+    "backend/app/worker_wait_probe_r1.py",
+    true
+   ]
+  ],
+  "all_restored": true
+ },
+ "second_inline_copy_of_the_lock_wait": {
+  "applied": [
+   {
+    "op": "create",
+    "path": "backend/app/inline_copy_probe_r1.py"
+   }
+  ],
+  "new_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "summary": [
+    "1 failed, 1 passed, 2 warnings in 9.17s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\second_inline_copy_of_the_lock_wait_newarms.log"
+  },
+  "tip_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "2 failed, 2 warnings in 7.46s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\second_inline_copy_of_the_lock_wait_tiparms.log"
+  },
+  "restored": [
+   [
+    "backend/app/inline_copy_probe_r1.py",
+    true
+   ]
+  ],
+  "all_restored": true
+ },
+ "export_note_above_the_named_table": {
+  "applied": [
+   {
+    "op": "before_line",
+    "path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+    "anchor": "export const REFUSAL_KEY"
+   }
+  ],
+  "new_arms": {
+   "rc": 0,
+   "failed_ids": [],
+   "summary": [
+    "2 passed, 2 warnings in 7.45s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\export_note_above_the_named_table_newarms.log"
+  },
+  "tip_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "2 failed, 2 warnings in 10.70s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\export_note_above_the_named_table_tiparms.log"
+  },
+  "restored": [
+   [
+    "frontend/src/features/shared/SharedJourneyPanel.tsx",
+    true
+   ]
+  ],
+  "all_restored": true
+ },
+ "named_table_renamed": {
+  "applied": [
+   {
+    "op": "replace",
+    "path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+    "anchor": "export const REFUSAL_KEY: Record<string, string> = {"
+   }
+  ],
+  "new_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "1 failed, 1 passed, 2 warnings in 8.81s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\named_table_renamed_newarms.log"
+  },
+  "tip_arms": {
+   "rc": 1,
+   "failed_ids": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable"
+   ],
+   "summary": [
+    "2 failed, 2 warnings in 8.77s"
+   ],
+   "log": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0550\\mutant\\named_table_renamed_tiparms.log"
+  },
+  "restored": [
+   [
+    "frontend/src/features/shared/SharedJourneyPanel.tsx",
+    true
+   ]
+  ],
+  "all_restored": true
+ }
+}
