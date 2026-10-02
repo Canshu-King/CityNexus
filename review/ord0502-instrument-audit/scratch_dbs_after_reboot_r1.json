@@ -1,0 +1,11 @@
+{
+ "taken_at": "10-03 00:13:18",
+ "live_tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "worktree": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt2",
+ "git_clean_ndx_lists_db_entries": 0,
+ "filesystem_glob_db_files": 0,
+ "db_names_on_disk": [],
+ "python_processes_running_on_box": "28",
+ "method": "两路同取：`git clean -ndx -- backend` 数一遍 + 直接枚举 backend/*.db*；两路都是 0 才算清干净",
+ "pre_reboot_named_in": "账本里我那枚 15:53 那块第二节（18 枚 .db 具名；含 -wal/-shm 的条目计数是删前一次读数，删后取不回，本件不复述）"
+}
