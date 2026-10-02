@@ -16588,6 +16588,64 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · ORD-0502 手机端六格在 day21 现尖 e7ff7938 上又走了一遍：八格状态与 day15、day18 两代逐格相同，chain 判定行三代逐字相同；两枚红是稳定的，不是某一代的偶然（车道 cff87c64；接我已入账的 14:28 那块，那块一字不动）
+
+**〇、这块答什么**
+
+- 包工头 19:16 敲门点名「手机端六格与你的栈已齐」，我在 14:28 那块末尾留的那句「要不要在新尖上重走」就不用等了，直接走了：day21 一趟，run ORD0502-193545。
+- 换代还在走：`CMDR 19:16` 那块把 :4783 上到 `e7ff7938ea41c5ac69afb1172acc4625159c7911`（暗色档位 styles.css 的字节进了 bundle），我这趟六格就是在这枚尖上现建现走；到我交块这刻线上又落到了 `7dbbf02074d8fc253e5fdff0734f466b916bcd51`。我把候选重摘到了后者上（`HEAD~2` 逐字等于它），但**读数没有在新尖重走**——新尖上这一趟我没起栈，代次戳仍按 `e7ff7938ea41c5ac69afb1172acc4625159c7911` 报，不冒充。
+
+**一、栈与代次的三证（一批同取，逐句从 `review/ord0502/stack_day21_193545.txt` 读）**
+
+- 后端 `:4611` 是我这趟起的子进程，`/api/v1/health` 回读本 run 的 e2e_run_id=ORD0502-193545。
+- 前端 `:4612` 服务的是我这棵树现建的 bundle：1200 B 的 `dist/index.html`，本机字节 sha1 首八位 `c5afdad4`（文件摘要不是 git 对象，故不整枚写出；整枚在证据件里）。day18 那代是 `9e7f9a45`、day15 那代是 `c6c41809`，三代三枚，所以我报的不是旧代读数。
+- 库是本车道自己的一份 `D:/moodle/_ord0502/ORD0502-193545.db`：一枚 marker traveler 经**前端 origin** POST http_status=201 后 GET 读回同一 display_name，本车道文件里 marker 行 1 行、61 tables、place 行 0 行。
+- 没调用 `demo/reset`，没碰 :8000 / :4781 / :4782 / :8693，没写 `_preview.db`。
+
+**二、day21 八格读数（逐条从 `review/ord0502/walk-ORD0502-193545.json` 取，不手打）**
+
+- C1 hub 拿到行程 = PASS：屏上「天津之旅」，腿 GET /api/v1/health http_status=200
+- C2 粘贴导入地点 = FAIL：POST /inbox/text-extract http_status=201，屏上没有草稿；屏自己那句是「DeepSeek 提取未配置；确定性导入仍可用。」
+- C2b 确定性导入（C2 那屏指的另一扇门，题面外自立的格）= PASS：POST /inbox/import http_status=201，草稿上屏写着 天津西 / 北京南 / 10月20日 09:00
+- C3 落到那一天 = FAIL：队列行点得动（中心命中自己，cx=95 px、cy=507 px，滚到视口中段同值）；卡的是「保存更正」，它自己的中心 cx=82 px、cy=783 px 被 v8-mobile-nav 接管，PATCH /inbox/ 那条腿 http_status=NOT_SEEN
+- C4 打卡 = NOT_REACHED_UI：手机屏上没有 `stop-checkin` 这一枚，具名超时，不宣称绿
+- C5 足迹屏读到那一枚 = NOT_REACHED_UI：GET /checkins http_status=200，屏上「还没有足迹。打开行程，在一站上按「打卡」。」
+- C6 长图导出成图 = NOT_REACHED_UI：这趟旅程没有 `poster-open` 入口
+- C7b 分享 token 第二上下文打开 = PASS：POST /share-grants http_status=200、访客 GET /api/v1/shared/journeys/ http_status=200，访客自己屏上「从别人分享的链接打开 EN 天津 · journey 10月3日周六 10:00 至 10月5日周一 20:00 这趟行程还没有选定的方案，所以既没有可列的天，也没有可标在图上的站。 再读一次」
+- chain 判定行：INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+
+**三、三代对照（这是这块的真正增量：同一把尺在三代上的复现）**
+
+- 逐格状态：day15 / day18 / day21 八格全部相同 = True（格数 8；对照件 `review/ord0502/three_generation_pair_r4.txt`，它自己也从三枚 walk 件算，不是我抄的）。
+- 三代的 chain 行逐字相同：
+    day15  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+    day18  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+    day21  INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+- C3 那枚被底栏接管的几何在三代里一字不差，原始行逐字躺在 `review/ord0502/three_generation_pair_r4.txt:29`（三代各一行在同段），我不动它也不四舍五入；也就是说 day21 这次换进 bundle 的暗色档位没把底栏挪开。
+- 服务端对账（ORD0502-193545 那份库，mode=ro，只数没写）：journeys=1、places=0、external_reservation_drafts=1（内容 [('READY_FOR_CONFIRMATION', 'STRUCTURED_JSON')]）、journey_checkins=0。粘贴那条 201 仍不写草稿行，草稿表里唯一一行是 C2b 手工录入那枚。
+
+**四、候选与字节面（现读回验）**
+
+- 以现读为准的候选：`refs/heads/review/cff87c64-ord0502-phone-mainline-r5` 枝头 `dfaf63e3899b1837192a84cd26396d234dc9d656`（服务端 `git ls-remote` 回读同值），它下面两笔 `b2c69249d8d2577627cb8f7d1115e9fb609499b9` 与 `b2c69249d8d2577627cb8f7d1115e9fb609499b9`，`HEAD~2` 逐字等于我这趟现读的权威尖 `7dbbf02074d8fc253e5fdff0734f466b916bcd51`。枝上两笔的分工：前一笔交 spec 与全部读数，后一笔只把对照件从 37 行补到 42 行，好让本块引的 :40 与 :41 真取得回来（那是我发完才发现的引用打空，追交一笔而不是改已推的那笔）。先前那三枚冻结不删：r2 基座 day18、r3 基座是那时现读的尖、r4 基座 `e7ff7938ea41c5ac69afb1172acc4625159c7911`。我这枚 spec 的 blob 是 `b685c148408bbc7d90f8870117262ebd235990a5`，尖上那枚 `5b97af33946b880fe736c26e54212f18aa679580`，四枚都可 `git cat-file -t`。
+- 交付面 `git diff --numstat e7ff7938ea41c5ac69afb1172acc4625159c7911 dfaf63e3899b1837192a84cd26396d234dc9d656` = 1 枚 spec + 7 枚证据件（三代 walk 件、本代 report、本代 stack 件、playwright 输出、对照件）。产品字节 0 改。
+- 先前两枚冻结不删：r2 = `1cecf37244baae7ad7c24a12433e80d7eb525878`（基座 day18），r3 = `f764633d221bfc8d34ba31f8d6f63e26ccb69a7c`（基座是那时现读的尖）。三枚同源一枚 spec，序列器取 r4 即可。
+- 尺的四处错与两格读错屏，已在入账的 14:28 那块逐处具名，不重复长述；那四处修复就在这枚 spec 里。
+
+**五、仍请包工头点一句的三格（与 14:28 那块同一批，不新开）**
+
+1. C3 红在底栏不红在业务：现读底栏顶边 768 px ，`bac10f40` 02:37 那块独立量到同一个数。并进 ORD-0401 的 768 px 上限，还是另开一单修 inbox 审阅面板与底栏重叠？我不自改。
+2. C2 判据我钉回题面（粘贴必须出草稿）所以它红；这台部署 ai_state=DISABLED_BY_OPS。要不要把这格语义换到屏自己指的确定性门上，那是换题面，归您裁。
+3. C7b 访客屏上有机器词：中文屏画出 EN 与 journey 两枚字面（逐字在本块第二节读数里）。`t()` 缺键回吐键名那一族，是否开单请点。
+
+**六、这块没做的**
+
+- 真机格仍不宣称：用户手机没上线，这一趟是 390 px 视口内真 bundle + 真后端 + 真写门，实体那格挂 NOT-RUN。
+- 没在 day21 上跑整套前端门（只跑本单这枚门）；ORD-0505 r5 那枝仍等落地序列器，我没重推也没自取。
+- 我的临时树 `D:/moodle/_qoder_ord0502day21_20261002` 交完这块就按规矩收（先 `cmd /c rmdir` 摘 node_modules 那个 junction，再 `git worktree remove`）。摘之前两侧条目都数过并落件：共享侧 399 枚、经本车道这条链接看到的 399 枚，逐字在 `review/ord0502/three_generation_pair_r4.txt:40` 与 `:41`。重建成本我刚量过：worktree add + build + 跑一趟，四分多钟。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 22:56 · day22 双换代完成：前端 :4783 与后端 :4787 都到尖 `5e8a7b35ab9edf3dfde7336afaff7ff1c164deae`，打卡门英文句与 checkinCopy.ts 上链
 
 **〇、链的状态**
