@@ -1,0 +1,12 @@
+
+Running 4 tests using 1 worker
+
+e2e/qoder-bac10f40-ord0537-map-toggle-reach.spec.ts :: reach — {"nav_top":768,"nav_box":{"x":0,"y":768,"w":390,"h":76,"top":768,"right":390,"bottom":844,"left":0},"window":{"w":390,"h":844},"before":{"box":{"x":40,"y":889,"w":310,"h":44,"top":889,"right":350,"bottom":933,"left":40},"centre":{"x":195,"y":911},"hit":"none","hit_is_self":false,"in_viewport":false,"under_nav":true},"after":{"box":{"x":40,"y":400,"w":310,"h":44,"top":400,"right":350,"bottom":444,"left":40},"centre":{"x":195,"y":422},"hit":"button.v8-map-footprint-filter","hit_is_self":true},"scroll_y_before":489,"scroll_y_after":489,"switch_min_height":44,"switch_label":"只看打过","aria_pressed":"false"}
+  ok 1 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:144:1 › ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen (9.1s)
+e2e/qoder-bac10f40-ord0537-map-toggle-reach.spec.ts :: two_states — {"off":{"label":"只看打过","aria_pressed":"false","band_text":"这台服务器这次交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。","pins_total":6,"pins_claim":6,"pins_solid":1,"pins_hollow":5,"pins_visible":6,"pins_hidden":0,"date_badges":1,"badges_visible":1},"on":{"label":"看全部站","aria_pressed":"true","band_text":"这台服务器这次交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。","pins_total":6,"pins_claim":6,"pins_solid":1,"pins_hollow":5,"pins_visible":1,"pins_hidden":5,"date_badges":1,"badges_visible":1},"back":{"label":"只看打过","pins_hidden":0},"states_differ":true}
+  ok 2 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:168:1 › ORD-0537 zh 390x844 arm=two_states the census and the words both move (10.8s)
+e2e/qoder-bac10f40-ord0537-map-toggle-reach.spec.ts :: under_the_bar — {"parked":{"nav_top":768,"switch_box":{"x":40,"y":788,"w":310,"h":44},"centre":{"x":195,"y":810},"centre_inside_band":true,"hit":"svg.[object SVGAnimatedString]","hit_is_self":false,"hit_is_nav":true},"before_lift":{"centre":{"x":195,"y":810},"hit":"svg.[object SVGAnimatedString]"},"lifted":{"centre":{"x":195,"y":422},"hit":"button.v8-map-footprint-filter","hit_is_self":true,"nav_top":768},"scroll_y_after":489}
+  ok 3 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:217:1 › ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out (8.9s)
+  ok 4 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:267:1 › ORD-0537 zh the arms kept their own files (5ms)
+
+  4 passed (30.7s)

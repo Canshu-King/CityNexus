@@ -1,0 +1,112 @@
+
+Running 4 tests using 1 worker
+
+  x  1 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:144:1 › ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen (36.1s)
+  x  2 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:168:1 › ORD-0537 zh 390x844 arm=two_states the census and the words both move (36.1s)
+  x  3 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:217:1 › ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out (36.2s)
+  x  4 e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:267:1 › ORD-0537 zh the arms kept their own files (5ms)
+
+
+  1) e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:144:1 › ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-testid=\'v8-map-footprint-filter\']')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-testid=\'v8-map-footprint-filter\']') with timeout 30000ms
+      - waiting for locator('[data-testid=\'v8-map-footprint-filter\']')
+
+
+      133 |   await openScreen(page, "/v8/map", ["v8-maplibre-panel"]);
+      134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });
+    > 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });
+          |                                      ^
+      136 |   await page.waitForFunction(
+      137 |     () => document.querySelectorAll(".v8-map-panel .v9-map-marker").length > 1,
+      138 |     null,
+        at mapWithOneStamp (D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:145:3
+
+    Error Context: test-results\qoder-bac10f40-ord0537-map-c0ada-wn-tap-once-it-is-on-screen\error-context.md
+
+  2) e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:168:1 › ORD-0537 zh 390x844 arm=two_states the census and the words both move 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-testid=\'v8-map-footprint-filter\']')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-testid=\'v8-map-footprint-filter\']') with timeout 30000ms
+      - waiting for locator('[data-testid=\'v8-map-footprint-filter\']')
+
+
+      133 |   await openScreen(page, "/v8/map", ["v8-maplibre-panel"]);
+      134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });
+    > 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });
+          |                                      ^
+      136 |   await page.waitForFunction(
+      137 |     () => document.querySelectorAll(".v8-map-panel .v9-map-marker").length > 1,
+      138 |     null,
+        at mapWithOneStamp (D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:169:3
+
+    Error Context: test-results\qoder-bac10f40-ord0537-map-9289f-sus-and-the-words-both-move\error-context.md
+
+  3) e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:217:1 › ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-testid=\'v8-map-footprint-filter\']')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-testid=\'v8-map-footprint-filter\']') with timeout 30000ms
+      - waiting for locator('[data-testid=\'v8-map-footprint-filter\']')
+
+
+      133 |   await openScreen(page, "/v8/map", ["v8-maplibre-panel"]);
+      134 |   await expect(page.locator(BAND)).toBeVisible({ timeout: 30000 });
+    > 135 |   await expect(page.locator(SWITCH)).toBeVisible({ timeout: 30000 });
+          |                                      ^
+      136 |   await page.waitForFunction(
+      137 |     () => document.querySelectorAll(".v8-map-panel .v9-map-marker").length > 1,
+      138 |     null,
+        at mapWithOneStamp (D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:135:38)
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:223:3
+
+    Error Context: test-results\qoder-bac10f40-ord0537-map-5ac26-nd-the-page-can-move-it-out\error-context.md
+
+  4) e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:267:1 › ORD-0537 zh the arms kept their own files 
+
+    Error: one file per arm, written at the moment that arm reads
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      266 |
+      267 | test("ORD-0537 zh the arms kept their own files", async () => {
+    > 268 |   expect(rows.length, "one file per arm, written at the moment that arm reads").toBeGreaterThanOrEqual(2);
+          |                                                                                 ^
+      269 |   writeFileSync(
+      270 |     evidencePath(`qoder-bac10f40-ord0537-index--${runId}.json`),
+      271 |     JSON.stringify({ file: FILE, run_id: runId, viewport: PHONE, arms: rows.map((r) => r.arm) }, null, 1),
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:268:81
+
+    Error Context: test-results\qoder-bac10f40-ord0537-map-537b5-e-arms-kept-their-own-files\error-context.md
+
+  4 failed
+    e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:144:1 › ORD-0537 zh 390x844 arm=reach the switch takes its own tap once it is on screen 
+    e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:168:1 › ORD-0537 zh 390x844 arm=two_states the census and the words both move 
+    e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:217:1 › ORD-0537 zh 390x844 arm=under_the_bar the fixed band wins where it covers, and the page can move it out 
+    e2e\qoder-bac10f40-ord0537-map-toggle-reach.spec.ts:267:1 › ORD-0537 zh the arms kept their own files 

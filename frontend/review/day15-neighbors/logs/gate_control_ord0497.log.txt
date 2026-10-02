@@ -1,0 +1,74 @@
+
+Running 5 tests using 1 worker
+
+  x  1 e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:162:1 › ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read (3.9s)
+  x  2 e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:218:1 › ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back (3.3s)
+e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts :: filter_toggle — {"locale":"zh-CN","viewport":{"width":390,"height":844},"label_before":"只看打过","filter_hit":"button.v8-map-footprint-filter","door_rows_before":1,"door_rows_after":1,"chip_rows_before":6,"chip_rows_after":6,"open_hidden":0,"on_hidden":5,"on_pin_claim":6,"on_solid":1,"back_hidden":0,"reloaded_pressed":"false","reloaded_hidden":0,"localstorage_footprint_keys":[]}
+  ok 3 e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:260:1 › ORD-0497 zh 390x844 arm=filter_toggle 只看打过 hides, reveals, and does not survive (31.3s)
+e2e/qoder-bac10f40-ord0497-footprints-on-map.spec.ts :: read_never_arrived — {"locale":"zh-CN","viewport":{"width":390,"height":844},"injected":"route.abort on the checkins read","band_text":"这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。","pin_total":6,"pin_claim":0,"solid_count":0,"hollow_count":0,"badge_count":0,"filter_present":false,"probe":null}
+  ok 4 e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:348:1 › ORD-0497 zh 390x844 arm=read_never_arrived cutting the read leg invents no stamp (2.7s)
+  x  5 e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:379:1 › ORD-0497 zh 390x844 the arms write their readings (2ms)
+
+
+  1) e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:162:1 › ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read 
+
+    Error: the empty arm names THIS read, not the traveller
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。"
+    Received: "这台服务器这次交回 1 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。"
+
+      163 |   const w = await enterMap(page);
+      164 |   expect(w.panel_present, "the map panel has to be the one being measured").toBe(true);
+    > 165 |   expect(w.band_text, "the empty arm names THIS read, not the traveller").toBe(COPY.none.zh);
+          |                                                                           ^
+      166 |   expect(w.pin_total, "the seeded trip has located stops to paint").toBeGreaterThan(1);
+      167 |   /* Every claim-bearing pin is hollow and none is solid: the server returned nothing, so nothing may
+      168 |      be painted as visited. Pins that carry no claim (the traveller's own dot, a stay offer) are
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:165:75
+
+    Error Context: test-results\qoder-bac10f40-ord0497-foo-35a15-y-read-is-named-as-the-read\error-context.md
+
+  2) e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:218:1 › ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back 
+
+    Error: the control starts as 打卡 on a journey nothing was stamped on
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "打卡"
+    Received: "已打卡"
+
+      224 |   await control.scrollIntoViewIfNeeded();
+      225 |   const before = (await control.innerText()).trim();
+    > 226 |   expect(before, "the control starts as 打卡 on a journey nothing was stamped on").toBe("打卡");
+          |                                                                                  ^
+      227 |   await control.click();
+      228 |   /* The trips screen re-reads the door after the POST, so 已打卡 here is already a read-back -- but
+      229 |      the arm that matters is the next one: a fresh map mount, which never saw this press. */
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:226:82
+
+    Error Context: test-results\qoder-bac10f40-ord0497-foo-8525e-nows-only-what-it-read-back\error-context.md
+
+  3) e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:379:1 › ORD-0497 zh 390x844 the arms write their readings 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 5
+    Received:    2
+
+      387 |     JSON.stringify({ file: FILE, viewport: PHONE, arms: 5, rows }, null, 1),
+      388 |   );
+    > 389 |   expect(rows.length).toBeGreaterThanOrEqual(5);
+          |                       ^
+      390 | });
+      391 |
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:389:23
+
+    Error Context: test-results\qoder-bac10f40-ord0497-foo-dd107-e-arms-write-their-readings\error-context.md
+
+  3 failed
+    e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:162:1 › ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read 
+    e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:218:1 › ORD-0497 zh 390x844 arm=solid_after_a_real_stamp the map knows only what it read back 
+    e2e\qoder-bac10f40-ord0497-footprints-on-map.spec.ts:379:1 › ORD-0497 zh 390x844 the arms write their readings 
+  2 passed (42.7s)
