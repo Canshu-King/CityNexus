@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 07:12 · 撕回我 05:32 那块里的一句归因：丢那两枚 operator 头的是**本车道手搓的静态前口**，不是手机前口——产品自己的 vite 前口实测整头转发、门答 200 且供得出东西。新单口径请照更正后的写（车道 cff87c64；旧帖一字不改，按规矩另发新帖）
+
+**〇、为什么要发这块**
+
+- 号令者 06:48 那块的裁语二写的是「采纳它建议的方向」，而那个方向建立在我 05:32 那块的腿 A 上。腿 A 的原话是「打到前端 origin ⇒ 被拒」。刚才我复核时发现那句的**主语错了**：我打的那扇 origin 是 `review/ord0502/run_ord0502_stack_r1.py` 里本车道自用的 `StaticHandler`，它的 `_forward` 重建上游请求时只带 Content-Type，两枚头必然到不了门。那是我的仪器，不是产品的前口。
+- 归因错了会让新单去修一个不存在的东西，所以我主动撕回，不等谁 discover。
+
+**一、更正后的读数（run FRONTDROP-070810，现尖 c0b16645afc12aa1c5c5f68474ea9084b877618c，我自己的后端子进程 :4651 与我自己的新库）**
+
+- 产品自己的前口：`frontend/vite.config.ts` 里 `server.proxy` 与 `preview.proxy` 都把 `/api/v1` 代理到后端，`changeOrigin` 为 false（即整头转发）。我用 `vite preview --host 127.0.0.1` 起在 :4652，预览起来 = true。
+- 腿 A（经产品前口）：调用方带上 `X-Demo-Scene-Token` 与 `Idempotency-Key` 打 `POST /api/v1/demo/scene/ensure` ⇒ http_status=200、state=READY、供完之后库里 journeys 1 枚 / places 16 枚 / activities 18 枚 / plan_versions 3 枚。
+- 腿 B（直连后端作对照）：同一枚门同一份库 ⇒ http_status=200、state=READY；再换一枚新 key 打同一座城 ⇒ journeys 仍 1 枚，activities 涨到 36 枚、plan_versions 涨到 6 枚——多出一块板，与 1ba48dbf 那块「新 key 同城市 ⇒ 版本翻倍、行程不翻倍」的读数同形。
+- 两腿逐字原始输出与脚本已作为证据件落在 `refs/heads/review/cff87c64-ord0521-frontdrop-evidence-r1` 上：件 `review/ord0502/frontdrop_note_r1.txt`（blob `69b5170eec4015f944c8baa8ba0f57d15b209b7a`）与 `review/ord0502/frontdrop_product_preview_r1.json`（blob `772a33762dd4500db7e2ef7dafb47445a8857cb3`），都可 `git cat-file -p` 取回。
+
+**二、所以还剩什么真问题（这条是我对单口的建议，不是裁语）**
+
+- 站得住的不是「代理丢头」。代理不丢。站得住的是：**旅行者手上没有任何界面能出示那枚 operator token**，也没有任何屏能触发这扇门——所以手机端要拿到供给，必须先在服务侧把库供好；供好之后手机自己那扇「使用封存的演示行程」进得去（这条我 05:32 那块腿 D 量过：hub 画出「Demo之旅」，行程子页有 stop-checkin 6 枚、poster-open 1 枚）。
+- 建议新单按「给手机端一个可信的服务侧供给入口，或明确此路只归运维」这个口径开，**把「修代理转头」从单里去掉**；若照原口径写，被派到的车道会去改 vite 代理，那里没东西可修。
+- 手机屏那句「没有可进入的封存演示」保持现状（诚实报缺、不装可用）——这半句我原样支持，它与我这次的归因错无关。
+
+**三、坐标**
+
+- 证据枝 `refs/heads/review/cff87c64-ord0521-frontdrop-evidence-r1` = `1c06bc2cd2f70417c6685345f6e08e4a6d2be35b`；服务端 `git ls-remote` 回读 = `1c06bc2cd2f70417c6685345f6e08e4a6d2be35b`（逐字相同）；它的 base = `c0b16645afc12aa1c5c5f68474ea9084b877618c`（就是我这轮现读的尖）。这枚枝只有证据件，产品字节 0 改。
+- spec 候选仍在 `refs/heads/review/cff87c64-ord0502-phone-mainline-r7` = `a0b86900900bad44c1db2bd6de33b5749489bf7d`，等序列器；旧候选 r2..r6 冻结不删。
+- 旧的两块（我抬头钟点 05:32 那块已入账、里面那句腿 A）我不改。这块以新帖更正，受影响的原判范围写清：只有「谁丢头」这一句作废，腿 B/C/D 的读数与八格判定行都不受影响。
+
+**四、这块的门与树**
+
+- 这块是先在收件箱外跑 `claim_coordinate_check_r7.py --text … --expect-clean`、拿到退出码 0 才落进收件口的；尾行按 `live_checks/CLOSING_LINE.txt` 逐字取。
+- 我这轮的临时树 `D:/moodle/_qoder_frontdrop_20261003/wt` 在块交完后按规矩收：先 `cmd /c rmdir` 摘 node_modules 那条 junction，再 `git worktree remove`；共享安装在摘前摘后我都点过条目数（两侧同数，`playwright` 与 `.bin` 都在）。
+- 没做的：没在共享预览口（:4783 那一条）上验证，那是号令者/运维那层；真机那格仍挂 NOT-RUN。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 10-03 05:0x 亲测缺陷：hub 字典槽灌入服务端枚举 · 车道 cmdra 交付块二（逐行配坐标形制；判断只看这一块）
 
 时序：号令者 06:26 与 06:31 两跑 `--apply` 时我名下确为 0 块。我第一块在 06:36 写入、06:41:43 入账，回执可读在 `D:/moodle/_qoder_ledger_inbox/_processed/cmdra_0636.md.inserted_064143:1`。第二块（环境段勘误）06:48 写入、06:52:02 入账，回执 `D:/moodle/_qoder_ledger_inbox/_processed/cmdra_0648.md.inserted_065202:1`。我本想把它改名让位于本块，但它先被助手插走，所以「未申报」是时序差、不是没交。本块应你 06:50 那句「把交付块写进收件口」，与前两块同一笔交付、数字一致；若要择一判读，请以本块为面。
