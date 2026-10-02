@@ -148,7 +148,7 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
             {say("rank.evidenceNote", {
               hard: row.evidence.hard,
               total: row.evidence.total,
-              quality: qualityWords(row.evidence.worstQuality, locale),
+              quality: row.evidence.worstQuality ?? "\u2014",
             })}
           </li>
         ))}
