@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 07:57 锚点单已交（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：写期限尺与字典键形尺不再点行号/点文件名，改成点具名符号与从产品读的尺度；两枚红在现尖转绿，六个变异臂两向都还咬得住
+
+**领的是哪一手**：`## ORDERS` 里 CMDR 07:57 那块第二节「两枚锚点漂移尺开修单」——「派给有额度后的任一车道，小单」。那一节没有写收件车道，`## ORDERS` 段（起于账本行 16590）现读只有三块：CMDR 07:57、`6a150e1e` 自申报、`1ba48dbf` ORD-0513 补件，没有第二个人领它，我领了。写这块时 `ls-remote` 现读权威枝已是 `0b93bdc19b53999aa0f753433d5558ff26c158b6`，我没有在新尖重跑，所有数都按上一枚针读；候选的父提交也钉在旧那一枚，换代请按常规 rebase。
+
+**读在哪个形状上**：针 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 的导出树（`git worktree add --detach` + sparse-checkout），解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14，本机唯一能跑这套的那个），命令逐字：`python -m pytest tests/test_qoder_ord0479_dictionary_key_shape.py tests/test_qoder_ord0296_write_deadline.py tests/test_qoder_ord0307_credential_gate.py -p no:cacheprovider -q --tb=no -rf`（cwd `backend/`）。**我第一趟把这格读成了产品缺陷，错了**：`test_qoder_ord0307_credential_gate.py:50:    assert report["roots_missing"] == [], report["roots_missing"]` 那条 `roots_missing` 断言在我树上红，红的是我的导出形状——sparse 集里没带 `agent-mcp` 与 `qoder-handoff`（针上分别 12 与 21 个文件），补进 sparse 集后同一格绿。C01 不是缺陷，我不报它。
+
+**改前 / 改后，同一棵树形状**：改前（树上两件测试文件逐字等于 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`）`3 failed, 28 passed`，红的三枚逐字是 `test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable`、`test_G4_the_lock_wait_is_written_in_exactly_one_place`、`test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import`，用时 1096.38 秒；改后 `31 passed`，用时 49.15 秒，分母一样（31 枚）。日志上架：`before_three_files_r1.txt` blob `1477d2e9b4cdfdfb032929e0b27ee1079ed45fa4`、`after_three_files_r1.txt` blob `0ef6354419ca46e3fd208e325abb6110f253c43c`。
+
+**两枚锚点各自改成了什么**
+
+- 字典键形尺 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py`：原来钉 `(SITE, 45)` 一个行号——这枚针上它已经在 47 行（ORD-0528 把 `REFUSAL_KEY` 导出后就漂了）。改成 `_table_line_inside_named_const(SITE, "REFUSAL_KEY", VALUE)`：先在树里找那枚具名常量的对象字面量开括号，再在里面找具名字典键那一行，两处都具名、没有一处是行号。
+- 写期限尺 `backend/tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place`：原来钉五个文件名的等式；这枚针上 `main.py` 第 7149 行 `PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) + int(settings.write_busy_timeout_ms)` 也提到 `busy_timeout` ⇒ 名单一律对不上。改成两条从产品读的判据：尺度 `WD.busy_timeout_ms()` 现场取（本针上是 30000 ms），凡是提到该词的**整行**里出现不小于该尺度的整数、而这一行又没有引用具名符号（`busy_timeout_ms` / `write_busy_timeout_ms` / `busy_timeout_seconds`），就红；文件名一律不点。另外加一条 `assert others`：一处都提不到就红，防「空分母假绿」。
+
+**六个变异臂，两向都跑（件 `anchor_mutation_arms_r1.json` blob `588d35ee0ed3034352cf003ebeb6ab77b7d52ba7`，脚本 `anchor_mutation_arms_r1.py` blob `061c60c7a9900a42952e62059d08e58a7ac9dc1f`）**：M0_control=绿(21 passed，期望 green)；M1_site_moves=绿(10 passed in 3.57s，期望 green)；M2_const_renamed=红(1 failed，期望 red)；M3_key_no_longer_a_dictionary_key=红(1 failed，期望 red)；M4_second_lock_wait_at_scale=红(1 failed，期望 red)；M5_short_worker_wait_in_a_new_file=绿(1 passed，期望 green)。每臂只改一枚文件、跑完 `git checkout --` 还原，还原后 `frontend/src/features/shared/SharedJourneyPanel.tsx` 的 `git hash-object` 与针上 blob 逐字相同（`a2ccfc137018a576bf7531a8ea4333c935922342`）；两枚临时探针文件跑完即删，账本里 `git status --porcelain` 只剩我要交的两件。
+
+**候选**：`refs/heads/review/1d64acf5-ord0479-0296-anchor-r1` = `d19d5b812e9e3677047c91d6b73e51f3784cf156`（`git ls-remote` 现读逐字相同），父提交就是 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`，只动两件、diff `+24 / -5` 行（`anchor_diff_r1.patch` blob `4568e6de34a1dae10eefe8b696674a6bc7263253`，逐件服务端 blob 读回在 `land_candidate_r1.json` blob `d3a3f58b266d87e1d31717972963c33d90c02fff`）。落地按常例归您跑，我不碰权威线。
+
+**两件与我无关但现场量到的，具名不粉**
+
+- `test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import`：改前那一趟红过一次，改后两趟都绿（含 31 枚那一趟）。我没归因、没动它，按「复跑不复现的红不归因」只登记这一条读数；要查它得另开一单，且要带上跑时长差（1096 秒 vs 49 秒）这一变量。
+- ORD-0391 那两句 studio 文案仍无屏证：V12 工作台面板要一枚 authoritative plan 才挂（`[data-testid="v12-trip-studio"]` 计数 0），`POST /api/v1/journeys/{journey_id}/plans/authoritative-compose` 回 `http_status=422` 并点名 `body.place_ids`，那一单的完整读数在 ORD-0391 第 3 步那块。
+
+**边界**：产品行为字节 0 改（我只动两件测试文件）；权威线 0 移动；账本 0 直写；`demo/reset` 0 次执行；共享 `_preview.db` 0 次写入；本轮没有起任何自有端口。证据 6 枚在 `commander/control` 的 `evidence/ord0479-0296-anchor-1458/`，逐件本机字节与服务端 `ls-tree` 读回全等，回执控制尖 `b675a0d404bc2fad0662fa19a15e59f678c8e0b1`；全部新路径新文件名，没重写任何已发布件。
+
+
 ### CMDR 15:02 · day19 换代完成：前端 :4783 与后端 :4787 都到尖 `0b93bdc19b53999aa0f753433d5558ff26c158b6`，旅程中止门 `/abort` 上链实测在
 
 **〇、链的状态（换代后现读）**
