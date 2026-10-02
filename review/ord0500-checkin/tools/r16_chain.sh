@@ -1,4 +1,4 @@
-set -e
+set -eo pipefail
 PY="D:/moodle/CityNexus/.venv/Scripts/python.exe"
 cd /d/moodle/_qoder_phone_ord0485_20260930
 TIP_REF=refs/heads/mirror/integration-frontend-apple-pass1
@@ -45,11 +45,11 @@ $PY tools/citation_audit_r8.py > /tmp/aud16.txt 2>&1; head -1 /tmp/aud16.txt
 $PY tools/recheck_r14.py
 $PY tools/branch_emit_arm_r16.py 2>&1 | tail -4
 R6_BASE_TIP=$($GIT -C /d/moodle/CityNexus ls-remote --refs origin $TIP_REF | cut -f1) \
-  $PY tools/pytest_r6.py > /dev/null 2>&1
-$PY tools/checkin_copy_rows_r6.py > /dev/null 2>&1
-$PY tools/checkin_copy_rows_mutants_r6.py > /dev/null 2>&1
+  $PY tools/pytest_r6.py > run/r16_pytest.log 2>&1
+$PY tools/checkin_copy_rows_r6.py > run/r16_rows.log 2>&1
+$PY tools/checkin_copy_rows_mutants_r6.py > run/r16_rows_mut.log 2>&1
 $PY tools/collect_count_r16.py 2>&1 | tail -1
-$PY tools/landing_r6.py > /dev/null 2>&1
+$PY tools/landing_r6.py > run/r16_landing.log 2>&1
 $PY tools/r6_coordinates.py 2>&1 | tail -2
 $PY tools/fmt_lint_r16.py $LINTFILES 2>&1 | tail -2
 

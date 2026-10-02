@@ -45,14 +45,21 @@ def sh(args, cwd=REPO):
 
 
 def refs_in_family():
-    rc, out = sh(["ls-remote", "--refs", "origin"])
-    if rc:
-        raise SystemExit("ABORT_REF_DISCOVERY %s" % out[:200])
-    found = [l.split()[1] for l in out.splitlines() if len(l.split()) == 2
-             and l.split()[1].startswith(FAMILY)]
+    """An empty answer from the remote has happened here for real (a transient one mid-chain), and
+    "no refs" read as an empty receipt would quietly leave the previous generation's arm result in
+    place -- so this asks twice and refuses rather than returning an empty list."""
+    found, last = set(), ""
+    for _ in range(3):
+        rc, out = sh(["ls-remote", "--refs", "origin"])
+        last = out
+        if rc == 0:
+            found |= {l.split()[1] for l in out.splitlines() if len(l.split()) == 2
+                      and l.split()[1].startswith(FAMILY)}
+            if found:
+                break
     if not found:
-        raise SystemExit("ABORT_NO_REFS")
-    return sorted(set(found), key=lambda r: int(re.search(r"(\d+)$", r).group(1)))
+        raise SystemExit("ABORT_NO_REFS three reads answered nothing: %s" % last[:200])
+    return sorted(found, key=lambda r: int(re.search(r"(\d+)$", r).group(1)))
 
 
 def newest_evidence(pattern):
@@ -67,12 +74,23 @@ def newest_evidence(pattern):
 def run_copy(rev, ref, names):
     scratch = os.path.join(LANE, "scratch_emit", ref.split("-")[-1])
     os.makedirs(scratch, exist_ok=True)
+    # one read-back of the imported files before anything runs: a transport hiccup here would otherwise
+    # be reported as "that ref's copy aborts", which is a statement about someone's code, not about me
+    srcs = {}
     for name in NEED:
-        rc, src = sh(["show", "%s:review/ord0500-checkin/tools/%s" % (rev, name)], cwd=WT)
+        rc, src = None, None
+        for _ in range(3):
+            rc, src = sh(["show", "%s:review/ord0500-checkin/tools/%s" % (rev, name)], cwd=WT)
+            if rc == 0:
+                break
         if rc:
-            return {"ref": ref.split("/")[-1], "commit": rev, "verdict": "NO_EMITTER_COPY",
-                    "missing": name}
-        open(os.path.join(scratch, name), "w", encoding="utf-8", newline=NL).write(src)
+            # a ref the pre-check said carries the file, that this read cannot get: that is my transport
+            # failing, not their code, so it is reported as an instrument fault and never as a verdict
+            return {"ref": ref.split("/")[-1], "commit": rev, "verdict": "INSTRUMENT_FAULT",
+                    "missing": name, "why": src[:160]}
+        srcs[name] = src
+    for name in NEED:
+        open(os.path.join(scratch, name), "w", encoding="utf-8", newline=NL).write(srcs[name])
     env = dict(os.environ)
     env.update({"R10_GEN": names["gen"], "R10_REF_GEN": ref.split("-")[-1],
                 "AUD_RECEIPT": names["audit"], "RECHECK_RECEIPT": names["recheck"],
@@ -128,7 +146,9 @@ def main():
             continue
         rc, got = sh(["ls-remote", "--refs", "origin", ref])
         if rc or not got.split():
-            rows.append({"ref": ref.split("/")[-1], "verdict": "ABSENT"})
+            rc, got = sh(["ls-remote", "--refs", "origin", ref])   # one retry before calling it absent
+        if rc or not got.split():
+            rows.append({"ref": ref.split("/")[-1], "verdict": "ABSENT", "why": got[:120]})
             continue
         rev = got.split()[0]
         rc2, _ = sh(["cat-file", "-e", "%s:review/ord0500-checkin/tools/r10_block.py" % rev], cwd=WT)
