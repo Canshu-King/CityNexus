@@ -77,6 +77,32 @@ def lane_files():
 
 MINE = lane_files()
 
+# Same口径 as the r13 gate, on the commander's ruling of 04:26: a citation is judged only when this
+# order's own commit wrote the line carrying it.  Another order's sentence is listed with its author and
+# with the verdict it would have got, and it never counts against this lane -- the previous version of
+# this tool reported "16 not OK" as if those were findings anyone owed me action on, when 14 of them are
+# other hands' judgement files.
+FOREIGN = "NOT_THIS_LANES_CITATION"
+
+
+def lane_commits():
+    p = subprocess.run(["git", "-C", WT, "log", "--grep=ORD-0500", "--format=%H", "HEAD"],
+                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=300)
+    return {l.strip() for l in p.stdout.decode("utf-8", "replace").splitlines() if l.strip()}
+
+
+def blame_map(rel):
+    p = subprocess.run(["git", "-C", WT, "blame", "--line-porcelain", "--", rel],
+                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=300)
+    if p.returncode:
+        return {}
+    out = {}
+    for line in p.stdout.decode("utf-8", "replace").splitlines():
+        m = re.match(r"^([0-9a-f]{40}) (\d+) (\d+)", line)
+        if m:
+            out[int(m.group(3))] = m.group(1)
+    return out
+
 
 def main():
     tip = subprocess.run(["git", "-C", WT, "rev-parse", "HEAD"],
@@ -130,18 +156,47 @@ def main():
                     repr_ = (last_path + " (bare)") if last_path else "NO PATH BEFORE THIS BARE"
                     record("%s:%d" % (f, ln), line, last_path, num, repr_, True)
 
-    red = [r for r in rows if r["verdict"] != "OK"]
+    mine_shas = lane_commits()
+    blame_cache = {}
+    for r in rows:
+        parts = r["cited_by"].split(":")
+        rel, ln = parts[0], (int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None)
+        if ln is None:
+            r["owner_commit"], r["owner_is_this_lane"] = None, None
+            continue
+        if rel not in blame_cache:
+            blame_cache[rel] = blame_map(rel) if os.path.exists(os.path.join(WT, rel)) else {}
+        sha = blame_cache[rel].get(ln)
+        r["owner_commit"] = sha
+        r["owner_is_this_lane"] = (sha in mine_shas) if sha else None
+        if r["owner_is_this_lane"] is False and r["verdict"] != "OK":
+            r["mechanical_verdict"] = r["verdict"]
+            r["verdict"] = FOREIGN
+            r["why"] = "the citing line was written by commit %s, which this order does not own" % (
+                str(sha)[:12])
+    red = [r for r in rows if r["verdict"] not in ("OK", FOREIGN)]
     tally = {}
     for r in rows:
         tally[r["verdict"]] = tally.get(r["verdict"], 0) + 1
     mine = [r for r in rows if r["cited_by"].split(":")[0] in MINE]
-    out = {"tool": "citation_audit_r8", "took_local": datetime.now().astimezone().isoformat(),
+    out = {"tool": os.environ.get("CITATION_AUDIT_TOOL") or "citation_audit_r8",
+           "took_local": datetime.now().astimezone().isoformat(timespec="seconds"),
            "tip": tip, "scope": list(SCOPE), "files_scanned": len(files),
            "citations_found": len(rows), "verdict_tally": tally,
+           "lane_commits_in_set": len(mine_shas),
+           "citations_judged": sum(1 for r in rows if r["verdict"] != FOREIGN),
+           "citations_declined": sum(1 for r in rows if r["verdict"] == FOREIGN),
+           "declined_authors": len({r.get("owner_commit") for r in rows
+                                    if r["verdict"] == FOREIGN}),
            "mechanically_red": len(red), "this_lanes_own_files": sorted(MINE),
            "citations_in_this_lanes_files": len(mine),
-           "red_detail": red, "rows": rows}
-    path = os.path.join(LANE, "evidence", "citation_audit_r8.json")
+           "red_detail": red,
+           "declined_detail": [{k: r.get(k) for k in ("cited_by", "target", "line",
+                                                      "mechanical_verdict", "owner_commit")}
+                               for r in rows if r["verdict"] == FOREIGN],
+           "rows": rows}
+    path = os.path.join(LANE, "evidence", os.environ.get("CITATION_AUDIT_OUT")
+                        or "citation_audit_r8.json")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     json.dump(out, open(path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     if hasattr(sys.stdout, "reconfigure"):

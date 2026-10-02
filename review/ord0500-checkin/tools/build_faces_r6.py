@@ -26,14 +26,40 @@ BASE = os.environ.get("R6_BASE_TIP") or "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d
 BASE_LABEL = "TIP_" + BASE[:8]
 BASE_OUT = os.path.join(LANE, "faces/tip_" + BASE[:8])
 CAND_LABEL = os.environ.get("R6_CAND_LABEL") or "O0500_R7"
-PATHS = ["backend/app/main.py", "contracts/openapi.yaml",
-         "frontend/src/features/checkin/checkins.ts",
-         "frontend/src/features/checkin/checkinCopy.ts",
-         "frontend/src/features/checkin/footprint.css",
-         "frontend/src/features/trip/TripItinerary.tsx",
-         "backend/tests/test_qoder_ord0500_journey_refusal.py",
-         "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
-         "frontend/playwright.ord0500-checkin.config.ts"]
+# The swapped paths are COMPUTED from this ref's own write-set against the base tip, not typed.  A
+# typed list is the same defect class as the citation lists that kept rotting: r14 deleted a
+# dictionary row in a file the hard-coded nine did not contain, so both faces built from the same
+# content and came out byte-identical, and the only tell was `clean_after_restore` coming back false.
+BASE_TIP = os.environ.get("R6_BASE_TIP") or ""
+WATCHED = ["backend/app/main.py", "contracts/openapi.yaml",
+           "frontend/src/features/checkin/checkins.ts",
+           "frontend/src/features/checkin/checkinCopy.ts",
+           "frontend/src/features/checkin/footprint.css",
+           "frontend/src/features/trip/TripItinerary.tsx",
+           "backend/tests/test_qoder_ord0500_journey_refusal.py",
+           "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+           "frontend/playwright.ord0500-checkin.config.ts"]
+
+
+def write_set():
+    """Every non-`review/` path this ref changes against the base tip -- what the faces must differ on."""
+    if not BASE_TIP:
+        raise SystemExit("ABORT_NO_BASE_TIP -- set R6_BASE_TIP to the tip the candidate is measured on")
+    rc, out = git("diff", "--name-only", "%s..HEAD" % BASE_TIP)
+    if rc != 0:
+        raise SystemExit("ABORT_WRITE_SET %s %s" % (rc, out[:200]))
+    paths = sorted({l.strip() for l in out.splitlines() if l.strip()
+                    and not l.startswith("review/")})
+    if not paths:
+        raise SystemExit("ABORT_EMPTY_WRITE_SET against %s -- there is no candidate to build" % BASE_TIP)
+    missing = [p for p in WATCHED if p not in paths and git("rev-parse", "--verify", "--quiet",
+                                                            "HEAD:%s" % p)[0] == 0
+               and git("rev-parse", "--verify", "--quiet", "%s:%s" % (BASE_TIP, p))[0] == 0
+               and git("rev-parse", "HEAD:%s" % p)[1] != git("rev-parse", "%s:%s" % (BASE_TIP, p))[1]]
+    return paths, missing
+
+
+PATHS, WATCHED_NOT_IN_WRITE_SET = [], []   # filled by main(): swap_to() reads the module global
 
 
 def git(*args):
@@ -61,7 +87,13 @@ def state_of(rev):
 def swap_to(rev):
     """Put the worktree at `rev` for exactly the nine paths.  Paths the revision does not carry (this
     order adds three files) are removed from index and worktree, so the base face really is the base
-    tree and not the base tree plus my new modules."""
+    tree and not the base tree plus my new modules.
+
+    Refuses on a swapped path that is dirty.  `checkout HEAD -- <path>` is how the candidate face is
+    restored, and with uncommitted edits in one of those paths it silently throws them away -- which it
+    did on ORD-0500 r14: both faces built byte-identical and the only tell was `clean_after_restore`
+    being false.  A candidate that is not committed has no face, so commit first.
+    """
     index = {}
     for p in PATHS:
         rc, blob = git("rev-parse", "--verify", "--quiet", "%s:%s" % (rev, p))
@@ -116,6 +148,16 @@ def typecheck_and_build(label, outdir):
 
 
 def main():
+    global PATHS, WATCHED_NOT_IN_WRITE_SET
+    PATHS, WATCHED_NOT_IN_WRITE_SET = write_set()
+    # checked ONCE, before any swap: swap_to() deliberately stages and un-stages these paths, so a
+    # guard inside it would fire on its own work (the first version of this guard aborted mid-run and
+    # left the tree at the base content).  What must be clean is the tree at the moment we start.
+    rc, dirty = git("status", "--porcelain")
+    if rc == 0 and dirty.strip():
+        raise SystemExit("ABORT_UNCOMMITTED_CANDIDATE -- the worktree is dirty, so the candidate face "
+                         "would be built from HEAD and silently drop the edit being measured: %s"
+                         % dirty.strip()[:400])
     head = git("rev-parse", "HEAD")[1]
     report = {"tool": "build_faces_r6", "took_local": datetime.now().astimezone().isoformat(),
               "candidate_commit": head, "base_commit": BASE, "swapped_paths": len(PATHS),
