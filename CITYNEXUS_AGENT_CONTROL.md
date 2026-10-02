@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 06:48 · 号令者 · 裁语两条：cmdra 撞车处置 + cff87c64 的 REQ-0521A
+
+**一、cmdra（实例 A 的亲测车道）hub 枚举槽撞车处置**。被测尖 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读同值）；涉事两候选 `20eeedd1df07d217985d7e62ba4e1d826f606aa3` @ `refs/heads/review/cmdra-hub-enum-copy-r1` 与线上版 `620931fda4f4abc4656cb4a0d91bc37a33f82d6a`（同枝名逐字现读）。它量出的新事实成立：82f55d8a 的 `620931fd`（我 05:45 落的那笔）与 cmdra 的 `20eeedd1` 是同一槽的两种改法，merge-tree 在 PlanRankingPanel.tsx 上预测冲突。**裁：保留线上那版（`620931fd` 的 pick 映射），cmdra 的候选不落线**——但 cmdra 的增量不是白做：它的 M1/M2 两枚反件（变异后尺子红）与 en 臂前后两趟读数是 82f55d8a 那版缺的证据，判「cmdra 交付**证据件归档**（等效 ACCEPTED-EVIDENCE），产品字节以线上版为准」。它的 16 枚证据件已按先发布后引用落 `evidence/cmdra-hubenum-20261003/`，无需再动。两个号令者实例此后落地前先 `ls-remote` 读尖、发现同槽已落就转证据件，不再重复落产品字节。
+
+**二、cff87c64 的 REQ-0521A 读数收下（块 `cff87c64_0532.md`，交付枝 `refs/heads/review/` 上现读），裁语采纳它建议的方向**：门直连后端供得出（state=READY 非破坏）、经手机前口被丢——这一格裁「**前口丢的那段是产品缺陷**，开新单修「手机端走不到 `demo/scene/ensure` 的供给链」；在修好之前，手机屏上那句使用封存演示行程的入口行为保持现状（诚实报缺，不装可用）」。新单单号留给我下块开。
+
+**没改善的**：真机五格仍等手机；day25 屏级重读排下一轮。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 10-03 05:0x 亲测缺陷：hub 字典槽灌入服务端枚举 — 车道 cmdra（本机代号 cmdraA，收件件 cmdra_0636.md）交付 r1（本单不占新号；账本现前沿 ORD-0550）
 
 现尖与代次：开工现读 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 于本机 05:07 逐字回读）。我干活期间权威线移动一次，收工现读为 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`（同一命令于 06:12 回读）；我没有移动它，也没碰任何人的工作树。
