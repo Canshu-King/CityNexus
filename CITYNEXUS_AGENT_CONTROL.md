@@ -16588,6 +16588,49 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 车道 · day24 换代后把同一把词面尺重跑了一遍（不开浏览器、不起端口、0 产品字节）：`qoder-ord0502-phone-mainline.spec.ts` 在新一代仍是同一份字节，那三枚锚在 `frontend/src` 仍 0 命中 ⇒ 「仪器红」判类不必改；另把我自己覆盖冻结机器件那件事写清（已按已推的枝还原，逐字节相等）
+
+**〇、这手从哪来、为什么只重跑词面**
+
+账本 `CMDR` 那块第二节派给我的抽验，读数取在 day23 那一代。号令者随后把线推到 day24（产品线尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `4fac49f371da0820393d038700bddddafd1176d1`，`git ls-remote --refs` 现读逐字相等），换代让我上一代读数过期。这手只回答一个问题：**判类要不要因换代而改**。决定它的是两条只读事实——那枚 spec 的字节是否还是同一份、那三枚锚名在这代源里是否还是不存在；这两条都不用开浏览器，所以我没起端口也没碰库。
+
+**一、字节同一性（决定性的那条）**
+
+- `frontend/e2e/qoder-ord0502-phone-mainline.spec.ts` 这枚路径上的字节：day24 尖上是 `5b97af33946b880fe736c26e54212f18aa679580`，day23 尖上也是 `5b97af33946b880fe736c26e54212f18aa679580` ⇒ **换代之后这条臂一个字没动**（`git rev-parse <rev>:<路径>` 现读逐字相等）。
+- 单主 `cff87c64` 那枚候选枝 `refs/heads/review/cff87c64-ord0502-phone-mainline-r6` = `d3c59efdd164ecd79a97a8a713cc1a29015371d9`，她枝上同一枚路径是 `b685c148408bbc7d90f8870117262ebd235990a5`；`git diff --numstat 4fac49f371da0820393d038700bddddafd1176d1 d3c59efdd164ecd79a97a8a713cc1a29015371d9 -- <路径>` 现读 = `+407 -75` 行 ⇒ **她的修法仍在她枝上、不在线上**。
+- 谱系：day23 那枚 `569b8472b134e5562ef396e38681870b9c26536a` 是 day24 尖 `4fac49f371da0820393d038700bddddafd1176d1` 的祖先（`git merge-base --is-ancestor` 退 0）。
+
+**二、词面（同一把尺、只换 rev 参数，在 day24 尖上重跑）**
+
+- 那条 spec 自己按 `getByTestId` / `locator('[data-testid=…]')` 点的锚仍共 30 枚，其中在 `frontend/src` 0 命中的仍是我先前点名的那几枚：`trial-open`、`trips-tab-bookings`、`trips-tab-itinerary`。
+- 族计数与 day23 同值：`trial*` 在 `frontend/src` 有 47 枚成员、`trips-tab*` 有 1 枚（复数那枚 `trips-tabs`）。两代的机器件都在这块文末那枚证据枝上：day23 那份 = `37068ed990493625d637bcc207ff845ed532231f`、day24 那份见同一份清单，两枚由同一把尺（枝上另存了尺自己的副本）各跑一遍产出。
+- 一处代间漂移顺手量到了：`today-heading` 的声明位置从 frontend/src/app/V8Experience.tsx:2704 挪到 frontend/src/app/V8Experience.tsx:2671。这正是账本里那类"锚到行号就会换代漂移"的形状，我这把尺按声明名重推导、所以两代都读到在场，没被这一挪骗掉。
+- 按常设规矩，词面 0 命中只写成"词面没有"、不写成"能力没有"；能力那一格我已在入账的补件里用产品自己的门答过（行程造出来之后，同一台浏览器再进 hub 就画出了 `today-heading`）。
+
+**三、判类（只到读数支持的深度）**
+
+- day24 上那条链仍会整条红，且成因与 day23 同一枚：臂第一步仍要 `trial-open`，而这个名字在这代源里不存在、干净设备的屏上本来就是向导首屏。那条臂自己写了"屏上已有 `today-heading` 就直接 PASS"的快路，所以红仍然**不是产品缺陷的证据**。判类**不改**。
+- 要把红变绿，改的是那条臂（修法已在单主枝上），不是产品。我不碰他人的 spec，这一格在入账的补件里已按"她接走了"收口，本块不重复请求任何动作。
+
+**四、我自己踩的一枚坑（诚实）**
+
+重跑时我沿用了那把尺的原输出名，于是把**已经产过被引用读数**的那份本地机器件覆盖成了新一代。两处补救都带证明：
+- 还原：从已推的枝 `refs/heads/review/1ba48dbf-ord0502-instrument-audit-r2` 里 `git show` 那枚 blob `154df8c86f740ce7295d51eaab9416c9979a84c2` 逐字节写回原名，再用 `git hash-object` 现读回同一枚 `154df8c86f740ce7295d51eaab9416c9979a84c2` ⇒ 覆盖已抹平，被引用的那代读数仍在。
+- 换名：day24 这一代另存为新名（`anchor_word_census_day24_r1.json`，见文末清单），从此同一把尺每代一份、不互相覆盖。这条规矩是账本里别的车道先记过的，这次轮到自己踩。
+
+**五、形制与账**
+
+- 0 产品字节改动、0 枚他人文件改动、0 次权威线移动、0 枚他人枝删改、0 个端口起停、`demo/reset` 0 次；共享预览库这趟连打开都没有（全程只做 git 只读与一次本机尺）。
+- 证据枝 `refs/heads/review/1ba48dbf-ord0502-instrument-audit-r7` = `d23e97d831eb9b67ac841a9586c5aea07c77322d`（`git ls-remote` 现读逐字相等，每枚都能 `git cat-file -t`）：
+  - `review/ord0502-instrument-audit/anchor_word_census_day23_r1.json` = `37068ed990493625d637bcc207ff845ed532231f`
+  - `review/ord0502-instrument-audit/anchor_word_census_day24_r1.json` = `8785b452df00e2a54f93ee222cd9330e59d93879`
+  - `review/ord0502-instrument-audit/anchor_word_census_tool_day24_r1.py.txt` = `cc5f67fb5950f3b8778fa60a4a1d1a0ab479b3b9`
+  - `review/ord0502-instrument-audit/spec_byte_identity_day24_r1.json` = `35bbd47b369702fcd19a729cbcea535aadcf7075`
+- 我名下现无未交单；本手是换代复读，不是新单。下一手等你点名。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 记账澄清 · 今晚从我这侧进账本的块里有重复投递，指定唯一记录（不发新内容，也不改任何旧帖）
 
 **〇、为什么这里不用行号指认**
