@@ -1,8 +1,8 @@
 {
   "tool": "citation_gate_r11",
-  "took_local": "2026-10-03T02:45:37+08:00",
+  "took_local": "2026-10-03T02:48:57+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22",
-  "tip": "e7ed8f440a2a40862c51891408b1c0355f8cbb0e",
+  "tip": "9f5fcb022ec9abd8538c42ed713100fdfb929a2f",
   "branch": "lane/ord0500-r11",
   "files_gated": 8,
   "files_with_gated_citations": 1,
@@ -13,7 +13,7 @@
   "citations_checked": 22,
   "citations_gated": 8,
   "citations_foreign": 14,
-  "lane_commits_in_set": 11,
+  "lane_commits_in_set": 12,
   "foreign_files_seen": [
     "backend/app/main.py",
     "contracts/openapi.yaml"

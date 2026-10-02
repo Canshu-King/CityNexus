@@ -16,7 +16,8 @@ from datetime import datetime
 LANE = r"D:/moodle/_qoder_phone_ord0485_20260930"
 REPO = r"D:/moodle/CityNexus"
 TIP_REF = "refs/heads/mirror/integration-frontend-apple-pass1"
-REFS = ["refs/heads/review/newlane-ord0500-phone-checkin-entry-r10",
+REFS = ["refs/heads/review/newlane-ord0500-phone-checkin-entry-r11",
+        "refs/heads/review/newlane-ord0500-phone-checkin-entry-r10",
         "refs/heads/review/newlane-ord0500-phone-checkin-entry-r9",
         "refs/heads/review/newlane-ord0500-phone-checkin-entry-r8",
         "refs/heads/review/newlane-ord0500-phone-checkin-entry-r7",

@@ -1,6 +1,6 @@
 {
   "tool": "citation_gate_r11_mutants",
-  "took_local": "2026-10-03T02:45:39+08:00",
+  "took_local": "2026-10-03T02:48:58+08:00",
   "scratch": "D:/moodle/_qoder_phone_ord0485_20260930\\scratch_cit_r9",
   "pairs_with_gate_receipt": "citation_gate_r11.json",
   "files_scanned": [
@@ -13,7 +13,7 @@
     "frontend/src/features/checkin/checkins.ts",
     "frontend/src/features/trip/TripItinerary.tsx"
   ],
-  "lane_commits_in_set": 11,
+  "lane_commits_in_set": 12,
   "files_copied": 18,
   "main_lines_in_scratch": 14476,
   "blank_line_used": 512,
@@ -117,40 +117,10 @@
     "owner_commit": "7862c6de5565c02c20ec2dccaa9da18960603e06",
     "was_citing": 33
   },
-  "wt22_dirty_lines_before": [
-    " M review/ord0500-checkin/R6_READINGS.md",
-    " M review/ord0500-checkin/receipts/citation_gate_r10.json",
-    " M review/ord0500-checkin/receipts/citation_gate_r10_mutants.json",
-    " M review/ord0500-checkin/receipts/landing_r6.json",
-    " M review/ord0500-checkin/run/r6_blobs.txt",
-    " M review/ord0500-checkin/run/r6_ls_remote.txt",
-    " M review/ord0500-checkin/run/r6_merge_tree.txt",
-    " M review/ord0500-checkin/tools/citation_gate_r10_mutants.py",
-    " M review/ord0500-checkin/tools/r6_coordinates.py",
-    " M review/ord0500-checkin/tools/stage_readings_r6.py",
-    "?? review/ord0500-checkin/receipts/day24_tip_citation_recheck_r9.json",
-    "?? review/ord0500-checkin/receipts/day25_anchor_recheck_r10.json",
-    "?? review/ord0500-checkin/tools/r10_block.py",
-    "?? review/ord0500-checkin/tools/r9_block.py"
-  ],
-  "wt22_dirty_lines_after": [
-    " M review/ord0500-checkin/R6_READINGS.md",
-    " M review/ord0500-checkin/receipts/citation_gate_r10.json",
-    " M review/ord0500-checkin/receipts/citation_gate_r10_mutants.json",
-    " M review/ord0500-checkin/receipts/landing_r6.json",
-    " M review/ord0500-checkin/run/r6_blobs.txt",
-    " M review/ord0500-checkin/run/r6_ls_remote.txt",
-    " M review/ord0500-checkin/run/r6_merge_tree.txt",
-    " M review/ord0500-checkin/tools/citation_gate_r10_mutants.py",
-    " M review/ord0500-checkin/tools/r6_coordinates.py",
-    " M review/ord0500-checkin/tools/stage_readings_r6.py",
-    "?? review/ord0500-checkin/receipts/day24_tip_citation_recheck_r9.json",
-    "?? review/ord0500-checkin/receipts/day25_anchor_recheck_r10.json",
-    "?? review/ord0500-checkin/tools/r10_block.py",
-    "?? review/ord0500-checkin/tools/r9_block.py"
-  ],
+  "wt22_dirty_lines_before": [],
+  "wt22_dirty_lines_after": [],
   "wt22_worktree_unchanged_by_this_run": true,
-  "wt22_worktree_clean": false,
+  "wt22_worktree_clean": true,
   "bytes_restored": {
     "backend/app/commerce/validators.py": {
       "wt": "669530648647731f",

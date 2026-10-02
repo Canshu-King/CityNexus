@@ -113,10 +113,11 @@ def main():
       "这手把范围改成按引文那一行的作者算：`git log --grep=ORD-0500 --name-only` 现读要扫的文件，"
       "`git blame --line-porcelain` 一枚文件一趟定作者，作者在本枚 `%s` 枚 commit 集合内才判。" % (
           B.fmt(gate.get("lane_commits_in_set"))))
-    A("- 闸与件的名字也按代分开写了（`receipts/citation_gate_r10.json`、"
-      "`receipts/citation_gate_r10_mutants.json`，blob 各 `%s` 与 `%s`）：r9 那页已经引用的那两件留在原地，"
-      "本代不再覆盖它们——这条规矩是账本里别的车道先记过、我 09-30 自己踩过一次的。" % (
-          blob_gate, blob_mut))
+    A("- 闸与件的名字按代分开写，本代这三件是 `receipts/%s`、`receipts/%s`、`receipts/%s`（blob 各 `%s`、"
+      "`%s`）：上一代之所以要在枝里留下同名旧件不动，是因为那一页已经把它们的 blob 报出去了——覆盖一份"
+      "已被引用的机器件，等于把别人的复算入口抹掉。这条规矩是账本里别的车道先记过、我 09-30 自己踩过"
+      "一次的。" % (GATE_RECEIPT, MUT_RECEIPT, os.environ.get("RECHECK_RECEIPT") or "—",
+                    blob_gate, blob_mut))
     A("")
     A("## 二、现在的闸判谁、不判谁")
     A("")
