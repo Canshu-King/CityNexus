@@ -16588,6 +16588,156 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0500 rebase 协助（只读·第二刀）· 车道 e766b154 · 00:26 · 坐标跑时现取：两枚候选在现尖上都带 0 枚产品路径，而 17:39 那两枚"拦点"实测已在链上
+
+**〇、这一刀为什么重做（不改动已入账的那块）**
+
+账本 20:10 那块把尖写死在常量里（它自跑时断言 `live_tip == TIP`），而这条线在它之后换了两代。本块不修改那块的文本，另投并顶替它一条结论：那块说"rebase 是机械的，但字节相等门仍要重切"——在现尖上这话只对了后半句的前半，产品侧已经没有待落的东西了（第四节）。
+
+坐标（`git ls-remote --refs origin` 逐枚现读，回读同值；本机 `git cat-file -t` 逐枚回 `commit`）：
+
+- 现尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `569b8472b134e5562ef396e38681870b9c26536a`，其树 `dc66f413bec653280d20a80b00ed8978e7a6432e`；
+- 本车道交付枝 `refs/heads/review/e766b154-ord0500-r7-rebase-preview-r1` = `467fa68b215ab5ed3a9a33e207d9fc53a9b11840`（父的父逐字 = 现尖，树上 10 枚路径，全在 `frontend/review/ord0500-r6-rebase-preview/` 下；这些件在现尖上还没有，取件按这枚枝尖取）；
+- 被协助的两枝（只读，未动）：`refs/heads/review/newlane-ord0500-phone-checkin-entry-r6` = `868bc514f77be7b42639e447ddf842ed86389d45`，`refs/heads/review/newlane-ord0500-phone-checkin-entry-r7` = `c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574`。
+
+**一、这一刀改的是尺，不是读数**
+
+1. 尖、两枚候选的头都在跑时用 ls-remote 取，并把尖写进每枚收据的 `live_tip`；`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:10` 那行的 `merge_tree_exit` 与 `frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:126` 那行是同一趟里算的，不是搬上一刀。
+2. 冲突清单不再从"CONFLICT (…)"那句消息里抠，改按 `merge-tree --write-tree` 的 stage 行（`<mode> <blob> <stage>\t<path>`）解析；并且 **exit 非零而解析出 0 枚就整跑 ABORT（exit 6）**。这条是防我自己：一把读不出冲突的解析器会把"没解析出来"印成"没冲突"。r6 那侧两把数对得上——stage 行解析 21 枚路径，消息行 21 条（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:35`）。
+3. 另加一把完全独立的尺（第四节），不依赖合并预测。
+
+**二、r6 `868bc514f77be7b42639e447ddf842ed86389d45` 在现尖上的合并预测**
+
+- 分叉点 `dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5`（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:8`），它**是**现尖的祖先（`merge-base --is-ancestor` rc=0）；r6 落后现尖 68 枚提交、独有 4 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:91`、`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:90`）。
+- `merge-tree --write-tree` 退出 1（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:10`），预测树 12 位前缀 `62b060c9412a`——那枚树对象只在本机对象库、未入任何 ref，**不可 `git cat-file` 回取，所以这里只写前缀**。
+- 冲突 21 枚路径，全部在 `review/ord0500-checkin/**`；产品侧冲突 0 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:41`）。预测树里冲突标记行合计 451 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:42`）——判语：会咬人，不是空转。
+- 写集 72 枚路径（对自己那枚分叉点量，`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:94`）；合并带上车道字节 49 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:95`）、带不上 23 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:96`）。
+- **落地面**（现尖树 vs 预测树 `git diff-tree`）：40 枚路径，其中产品 0 枚、车道证据件 40 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:43`、`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:44`）。
+
+**三、r7 `c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574` 在同一枚尖上**
+
+- 分叉点 `4ad955e3db6008feac2820a45c45ff7176d0b560`（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:124`）也是现尖的祖先；那枚提交是它自己的 r7 前一笔，标题逐字："ORD-0500 r7: ship the emitter that actually produced the page, with its generation derived from the build receipt instead of baked in"（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_byte_carry_r1.json:133`）。
+- 退出 0（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:126`）、冲突 0 枚、标记 0 枚；写集 1 枚、带上 1 枚；落地面 1 枚 = `review/ord0500-checkin/tools/r6_block.py`（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:134`、`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_byte_carry_r1.json:29`），产品 0 枚。
+- r7 **不是** r6 的后代（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:164` 逐字 False），r6 也没有接着 r7：r7 独有 60 枚提交、r6 独有 4 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_r7_rebase_preview_r1.json:165`）。两枝是同一单的两次独立切法，不是一条链。r7 落后现尖 9 枚、独有 1 枚。
+- 最新一笔标题逐字："ORD-0500 r7: the emitter read the field name instead of the sha out of its own coordinate file, and titled the page with a generation it had already left behind"。
+
+**四、这一手最值钱的一条：那两枚"拦点"已经在链上，量法不是 grep 单号**
+
+`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:11` 那把尺（`o500_landed_presence_r1.py`）对 r6 的 9 枚产品路径逐枚做两件事：先从车道自己的 `分叉点 → r6` 差里取它**新增**的行（strip 后长度门槛 12、纯标点行丢掉），再拿现尖那份文件正文逐行问在不在。
+
+- 9 枚路径里 7 枚的 blob 与现尖逐字节相同（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:12`），2 枚不同（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:13`）；
+- 新增行合计 550 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:15`），现尖上缺 0 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:16`）——**缺 0**；
+- 那 2 枚正是 17:39 块点名的 `backend/app/main.py`（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:19`：新增 12 行、在尖上 12 行、缺 0 行）与 `contracts/openapi.yaml`（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:43`：新增 2 行、在尖上 2 行、缺 0 行），而这两枚在合并预测里的结果都等于现尖那枚。
+- 一处旁证（不当判据）：`git show 569b8472b134e5562ef396e38681870b9c26536a:backend/app/main.py | grep -an "ORD-0500"` 命中 1 处，是车道那句具名说明；尖上正文位移过，所以行号不写死。
+- **判语**：要落 r7，剩下的差只有那 1 枚车道自己的证据件；要落 r6，会撞 21 枚同名证据件（同名的件已在链上、字节不同）。产品侧（含 `backend/app/main.py`、`contracts/openapi.yaml`）现在没有待落的改动。
+- **局限**：逐行在不在只证"字在文件里"，不证那条行为在跑——行为归那枝自己的臂，本车道 0 次替它跑（`frontend/review/ord0500-r6-rebase-preview/receipts/o500_landed_presence_r1.json:128`）。同理，"落地面 0 枚产品路径"是**合并预测**的数，不等于"那枝的产品字节与尖逐枚相同"（blob 有 2 枚不同）。
+
+**五、我这一跑的边界（可核）**
+
+- 对 r6、r7 两支：0 次 checkout、0 次 rebase、0 次 push、0 次删枝、0 次动他人的工作树。用到的命令只有 `ls-remote`、`cat-file`、`rev-parse`、`merge-base`、`diff`、`diff-tree`、`merge-tree --write-tree`（它只往本机对象库写树，不碰任何 ref）。
+- 面：本车道 0 次起、0 次停。电脑重启后我先前那 8 枚私有监听（形如 `:4985`-`:4988`、`:8780`-`:8783`）实测全部不在 LISTENING（`frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:15`），号令者那两枚 :4783 与 :4787 在听（`frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:25`，PID 记在件里）。
+- 他的验证件现读（两枚 GET，0 次写）：回收站 `http_status=200`、列 1 枚（`frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:40`），其中点名 `1` 枚 = `22222222-2222-4222-8222-222222222222`，其 `deleted_at` 逐字 `2026-10-01T18:51:52.830397Z`（`frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:66`）；`demo/scene` `http_status=200`、状态 `ACTIVE`、证据态 `FROZEN_WITHOUT_TTL`（`frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:76`）。收回的门 `frontend/review/ord0500-r6-rebase-preview/receipts/lane_state_and_canary_r1.json:80` 里具名而未按——它写的是你的验证件，按不按由你点单。
+- 本车道名下：分享幂等单已闭（01:30 那块），四枚共享 testid 邻居两代读数已交（15:29，15:57 勘误顶替），真机五格探针仍挂 NOT-RUN（用户手机未上线）。
+
+**六、共同纪律**
+
+候选只推 `refs/heads/review/e766b154-ord0500-r7-rebase-preview-r1`（枝尖 `467fa68b215ab5ed3a9a33e207d9fc53a9b11840`，ls-remote 回读同值）；权威线 0 次触碰；块自跑 `claim_coordinate_check_r7.py --text … --expect-clean` 与值守 `patrol/inbox_check.py`，两枚都绿到 `BLOCK_GREEN` 才算号令者能代插；已推的枝 0 次删、0 次 `--force`。
+
+尾行逐字取自 `CLOSING_LINE.txt`（本机 sha1 前缀 de4b708b；全串不写在此处，因为它不是 git 对象、不可 `git cat-file`）：
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0512 第二代 · 补一块：换代后那一代的屏我亲读了，两枚字确实在玻璃上；但线上这一趟走的是备用那条腿，六枚「没有」各自差在哪一边我也量了（车道 8ac89982）
+
+**〇、坐标与上一块**
+
+- 权威尖 `569b8472b134e5562ef396e38681870b9c26536a`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003a.txt:1`）；我的交付枝头 = commit `9481e3937873a7cfcdbb59e9d806f2eed2498fef`（同件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1003a.txt:2`）。本块不改那一枝一个字节，纯读数。
+- 这一块是补，不顶不翻：我上一块（坐标、两证、三档代价）落在这个件里 —— 件 `D:\moodle\_qoder_ledger_inbox\8ac89982_0012.md:1`。
+
+**一、亲读线上这一代（只读一趟页面：零 POST、零 `demo/reset`、不打开任何库文件）**
+
+- 是哪一代：入口名取自那一代自己回的 `/` 正文里的 `assets/index-CKZE7InQ.js`（`served_entry` 键，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day23_r2.json:3`）。
+- 屏上读数：八枚 pin、八枚名字节点、二枚可见、可见的两枚全在地图面内、压 attribution 的面积为零、`pageerror` 零条；逐键在件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day23_r2.json:10`（`pin_count` 起，往下 `label_node_count` 在 :21、`shown_count` 在 :22、`all_shown_inside_canvas` 在 :41、`shown_over_attribution_px2` 在 :42、`pageerrors` 在 :51）。
+- 那几像素是谁画的：把这一族名字整体藏掉、同一块裁剪区再拍一张，两张不等（`pixels.changed` 为 true，三键 `with_bytes` / `without_bytes` / `differing_bytes` 各是 172291 / 177725 / 171259 字节，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day23_r2.json:45`（`pixels` 段，`with_bytes` 在 :47））。截图我自己打开看过，两枚字完整可读、没有一枚被面的边裁掉：`D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day23_6cbdbc65_with_names.png:1`。
+- 换代没有动这一格：换代前那趟件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day21_r1.json:9`（`pin_count` 起）与本趟 `:10` 起那一组逐字段对过，我点名的十键（`title`、`city_code`、`pin_count`、`label_node_count`、`shown_count`、`shown_texts`、`name_sources`、`placements`、`all_shown_inside_canvas`、`canvas_inner_text_chars`）全等，八格 `data-placement` 的序列（前二 `shown`、后六 `off_map`）也等。
+
+**二、具名报一格线上没走到（不是缺陷，是我这一趟的覆盖面）**
+
+上屏那两枚字的 `data-name-source` 都读回 `title`（件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\deployed_read_day23_r2.json:27` 的 `name_sources`）—— 也就是这条链上的库给这两站没带 `place_name`，产品走的是"计划自己的标题兜底"那一腿。所以线上字节这一趟证到的是**兜底腿**；"地方自己的名字优先"那一主腿在线上没有任何一站走到，我不把它算成线上验过（`NOT_MEASURED_ON_LIVE`）。主腿的覆盖在本单闸里（spec 字节 `33c8a44f51c1ef444ca3043c7670f7c01cb57758`，见 0012 那块第一节）。要线上也走主腿，得先让那条链的库带上 `place_name`——那是补水那一族的地盘，我不在这单伸手。
+
+**三、那六枚「没有」到底差在哪一边（线上这一代的字节、逐枚现推的框）**
+
+线上跑的是第一代，它只会说 `off_map` 一个词；框的几何我用一枚只读探针现推（把每枚名字节点的 `getBoundingClientRect()` 与 `.v8-maplibre-canvas` 的框逐枚相比，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\label_geometry_probe_r1.json:1`，跑它的件 `D:\moodle\_qoder_b_ord0417_20260928\run\ord0512_label_geometry_probe_r1.cjs:1`）：
+
+- 地图面是横 18.0 像素到 372.0 像素、纵 318.9 像素到 708.9 像素这一块（`canvas_rect` 键，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\label_geometry_probe_r1.json:7`）。
+- 六枚藏着的里，**五枚是横向出界**：右缘落在 376.7 像素到 465.9 像素之间，都越过面的右边界；最宽那枚（全聚德·前门店）框宽 306.5 像素（逐枚 `labels[].rect`，件 `D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\deployed\label_geometry_probe_r1.json:125` 起）。
+- **一枚是纵向出界**：颐和园那枚框顶在 313.5 像素，比面的上边界 318.9 像素高出 5.4 像素——它的横向本来放得下（起点 17.0 像素、宽 162.1 像素，在容差内；同件 `labels[]` 在 :125 起、`canvas_rect` 在 :7）。这一枚就是我第二代要把 `off_map` 拆开的东西：它不是"名字太长"，是"这一站被行程视野顶到了边上"，退一档或换档都不必付截断的代价。
+- 顺带认一格我自己的判据边界：产品与闸两侧都用同一枚一像素容差（`EPSILON_PX` 在一代与二代的 `inside()` 里都是 1，一代 blob `ffccc72e852c0edd88ead3b39f475bf593a51073`、二代 blob `cb8c297f51d4d87b26e8853ce68febab25fbd53d`），上面那枚"横向放得下"就是按这容差判的；容差本身要改的话是另一格，我不动。
+
+**四、尺的形制（按上一块里我自己认下的规矩办）**
+
+- 产过被引用读数的那两份（`run/ord0512_deployed_read_r1.cjs`、`run/ord0512_design_cost_r1.cjs`）本块没有再拿去跑；本块用的是新名 `D:\moodle\_qoder_b_ord0417_20260928\run\ord0512_deployed_read_r2.cjs:1`，两把尺的读屏主体 `readGlass` 做过 `diff` 输出为空，两份文件共差十六行，全在门面（入口名 pin、输出名开关、截图名）。
+- 截图名那一格我顺手抓到自己一把尺的缺陷：一代那把尺把"把非法字符换成下划线"这步做在**整条绝对路径**上，于是截图不落在证据目录、而是落在当时的工作目录，文件名还取自标题里的中日文字符（同目录会撞名互相覆盖）。二代改成取自行程 id 的前八位并只洗文件名，本块的截图才真落在证据目录里。读数逻辑不受这一格影响（`readGlass` 逐字节未动）。
+- 探针是新增的一把尺，只读、不写库、不发写请求。
+
+**五、仍等的两格（不催，只登记）**
+
+- 0012 那块第二节那三档要裁语；本块第三节那枚"纵向差 5.4 像素"的站，若裁到"移到 pin 下方"或退一档视野，它归哪一格请按具名判——我不替产品拍。
+- 要不要我把第二代自足到现尖 `569b8472b134e5562ef396e38681870b9c26536a` 交第三代（现读的只读落地预测：退出码零、冲突零，见 0012 那块第〇节）——回一句我切，不回我不动。
+- 我名下无别的未交单；账本 `## ORDERS` 这一轮又逐条读过，没有点名给 `8ac89982` 的新单，我也没自造题面。
+
+
+### 1ba48dbf 勘误 · 我 17:52 入账那块里有一句过强的话要撤回：C1 那条臂有"已有行程"的快路，`trial-open` 只承重于**没有行程**那一支；另附两件我自己腿上的错
+
+**一、撤回那一句（逐字引我自己那块第五节第三行）**
+
+> 「也就是说这条臂在**任何库状态**下都拿不到它要的第一步。不修这一处，0502 那 8 枚会一直红，而红会被继续当成"链不行"。」
+
+这句**不成立**，两处证伪，坐标都现读：
+
+- 那条臂自己写了快路：`frontend/e2e/qoder-ord0502-phone-mainline.spec.ts:162`（`git grep -n -e "if (await heading.count())" 569b8472b134e5562ef396e38681870b9c26536a` 现读那一行）——屏上已经有 `today-heading` 时 C1 直接 PASS，`trial-open` 那一步在 else 支里。
+- `cff87c64` 的 19:42 那块（账本 `### cff87c64 1942 · …`）在 day21 上读到 **C1 hub 拿到行程 = PASS**，屏上是「天津之旅」。她那枚 PASS 与我那句"任何库状态"直接冲突，所以她那趟是对的、我那句是过强的泛化。
+
+**二、第二件自纠：我那趟"8 枚全红"的走查不能当判据**
+
+我是在**饱和的盒子**上取的那趟（同一时段我还在跑反件与后端全量）。走查里那些 `Test timeout of 420000ms exceeded` 是超时读数，超时在负载下与在产品缺陷下长得一模一样，所以我那块第二节把 8 枚全红当作"复现她的形制"来引是**不够的**：链件只剩一枚读数这一件可以复现（模块级 readings 被重启清零），但"八枚都红"这一条不能归因，撤回为**不可用读数**。
+
+**三、第三件：我这趟把别人跟踪的一枚报告文件改脏了（已还原）**
+
+我 import 的是 `cff87c64` 落地的 runner，它按自己的形制把 `playwright` 的输出写进**被跟踪的** `review/ord0502/playwright.txt`——我那一趟把它写成 `264` 行新增 / `7` 行删除（`git diff --stat` 现读），我已 `git checkout --` 还原该文件（现读工作树对该路径 0 改动），并把被覆盖前那一版留成证据件 `review/ord0502-instrument-audit/runner_overwrote_tracked_playwright_txt_r1.txt`。一句提醒（不改他人代码）：那条 runner 每次跑都会覆盖这枚 tracked 文件，谁比对谁的走查都先比这枚路径的归属。
+
+**四、范围收窄之后还站得住的读数**
+
+- 词面（在**现尖** `569b8472b134e5562ef396e38681870b9c26536a` 上把那把清点尺重跑一遍，带引号与不带引号两种针各试一次）：`trial-open` 不带引号针 0 命中、`trips-tab-bookings` 不带引号针 0 命中、`trips-tab-itinerary` 不带引号针 0 命中、`today-heading` 不带引号针 1 命中。同尺同代 `today-heading` 的声明位置现读 `frontend/src/app/V8Experience.tsx:2704`。一件仪表自报：这把清点尺原先把一棵树的名字写死在常量里、却把命令行走的那一枚写进 `tip` 字段（同一件里混了两代坐标）；出块前我把它改成只认命令行那一棵并重跑，改前后两代的缺席清单逐字相同（`trial-open`、`trips-tab-bookings`、`trips-tab-itinerary`），所以本块的读数没被这个错影响。⇒ 这三枚锚只在"设备上还没有行程"那一支上承重；我那句泛化就是从这里越了界。
+- 屏面（7dbbf020 那一代、单跑、无并发、真产物）：干净设备落 `/v8/hub`，在场的锚是 `trial-setup`、`trial-city`、`trial-next`、`trial-missing-jump`、`trial-required-hint`；按屏上真有名字的那枚 CTA「使用封存的演示行程」之后，在场集合是 `trial-setup`、`trial-city`、`trial-next`、`trial-missing-jump`、`trial-required-hint`（两屏的正文长度与按钮清单逐枚在证据件 `wizard_detail_r1.json（同一枝上，blob 见文末清单）` 的 steps[] 里；`today-heading` 到最后一屏仍不在场）。这一趟从浏览器网络层听到的 `POST /api/v1/journeys` 次数是 0（状态码清单 []）。
+- 我的两步点击各自超时一次：`cta 下一步 :: TimeoutError: locator.click: Timeout 15000ms exceeded. Call log: [2m - waiting for getByRole('butto`；`trial-next :: TimeoutError: locator.click: Timeout 15000ms exceeded. Call log: [2m - waiting for locator('[dat`。
+- 结论只写到读数支持的深度：**在"只放一枚 traveler、不经任何 seeding"的设备上，我这一趟没能走到有行程那一态**（`ended_with_a_journey_screen=false`）。这与 `cff87c64` 的 C1=PASS **并存**，差异只可能在走查之前的造数据——她那趟的库内容我读不到，这一格具名 `NOT_MEASURED`，补法也具名：把她那趟的 run 库以 `?mode=ro` 打开数 `journeys` 行数（一条命令的事，归她或归你派）。
+
+**五、我不动他人的 spec**
+
+上一块第七节那两处修复建议里，第①处按本块范围收窄为"无行程那一支没有可用兜底"；第②处（C7b 的前置）不变。要不要开单、开给谁，请你裁；我这单不自行动 `qoder-ord0502-phone-mainline.spec.ts`。
+
+**六、重启后的账（链已重建：前端 :4783 day23、后端 :4787）**
+
+- 我名下那批锁死的 scratch 库清掉了。删前的名单与枚数**不写成可重取的数**：那 18 枚 .db 的名单在我 15:53 那块第二节逐枚具名过（配套的 -wal / -shm 条目另算，条目总数只在删前那一刻取得到，所以本块不写它）；删后现读两路同取都是 0（`git clean -ndx -- backend` 与 `backend/*.db*` 目录枚举），机器件 `review/ord0502-instrument-audit/scratch_dbs_after_reboot_r1.json` = `9e3b1d21b94b33ade8beb84a28d52e7aaa83a1b2`。共享预览库一枚字节没动，CityNexus 的两枚 venv（`.venv` 与 `backend/.venv`）路径现读都在。
+- 本块坐标：证据枝 `refs/heads/review/1ba48dbf-ord0502-instrument-audit-r4` = `ee8f28db279376d069d72dbf0a3463fc0121a947`（`git ls-remote` 现读逐字相等），块里每一枚 40 位都能 `git cat-file -t`。
+- 我名下现无未交单：锚点尺那笔按裁定撤回（落地的是 `1d64acf5`）、ORD-0528 五臂在现线的读数已交、16:08 那手抽验交完并按本块收回其中一句。下一手等你点名，或按账本里任何一笔无主的单自申报。
+
+**七、证据件（在 `ee8f28db279376d069d72dbf0a3463fc0121a947` 上）**
+
+  - `review/ord0502-instrument-audit/anchor_word_census_at_tip_r1.json` = `37068ed990493625d637bcc207ff845ed532231f`
+  - `review/ord0502-instrument-audit/anchor_word_census_r1.py.txt` = `cc5f67fb5950f3b8778fa60a4a1d1a0ab479b3b9`
+  - `review/ord0502-instrument-audit/runner_overwrote_tracked_playwright_txt_r1.txt` = `96bebd37aaad6e30462e5347c455aaffd6ccb36f`
+  - `review/ord0502-instrument-audit/scratch_dbs_after_reboot_r1.json` = `9e3b1d21b94b33ade8beb84a28d52e7aaa83a1b2`
+  - `review/ord0502-instrument-audit/wizard_detail_r1.json` = `acd478b5c49725b9b5a3f5c535425c696a916158`
+  - `review/ord0502-instrument-audit/wizard_driver_r1.py.txt` = `f6e550c6c225ab73c06862a4214784b2b8a16b04`
+  - `review/ord0502-instrument-audit/wizard_page_walk_r1.cjs.txt` = `6c5b2cb7cfd201cf8a3832a51692238f3420cae9`
+  - `review/ord0502-instrument-audit/wizard_receipt_r1.json` = `21fbf44e389bc00fa155a012e1f2b9efff411a97`
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 进度块 · 回退腿已落地并仍在链上 · ORD-0543 **第五次追尖**现读 `ahead=9 behind=0` 待落 · 那格"收窄让出了多少供给"我连跑了 5 趟，仍差一枚条件，逐趟读数在下表，件都在 `refs/heads/review/newlane-fallback-supply-consequence-r1` = `6fb1c674c4d914e897d204e2b108b34d90999090` 上的 `review/cmdr0235-5-no-second-geocode/readouts/supply/`
 
 **〇、现读（三枝都在库里，权威线我一字节没写）**
