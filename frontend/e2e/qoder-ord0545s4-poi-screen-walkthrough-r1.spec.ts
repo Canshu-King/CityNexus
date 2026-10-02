@@ -170,7 +170,7 @@ test.describe("ORD-0545 slice 4 the POI import screen, cell by cell", () => {
         expect(foldEqual, `${state} / ${cell} must paint ${key} (${source})`).toBe(true);
       };
 
-      const text = async (locator: any) => norm(await locator.innerText());
+      const text = async (locator: any) => norm(await locator.innerText({ timeout: 5_000 }));
       /** A cell that nests a technical line (an HTTP status, a server enum) is read by its own text
        *  nodes, so the sentence is compared without the nested widget's contents. */
       const ownText = async (locator: any) =>
@@ -408,6 +408,16 @@ test.describe("ORD-0545 slice 4 the POI import screen, cell by cell", () => {
         const successRendered = await ownText(page.getByTestId("poi-import-added"));
         await check("F", "added_read_back", "addedCount", successRendered, successSentence, "table", 'data-testid="poi-import-added"');
         wire.write_leg = "fresh write -- the success sentence was read off the glass";
+        // The widget nested in that same paragraph prints the server's own enum.  It only exists on this
+        // branch, so it is read here: an earlier cut reached for it unconditionally and `innerText` then
+        // auto-waited out the whole test timeout on a cell that was never going to appear.
+        const addedSourceCell = await text(page.getByTestId("poi-import-added-source"));
+        wire.day_source_cell = {
+          rendered: addedSourceCell,
+          server_value: added.day_source,
+          painted_verbatim: addedSourceCell === added.day_source,
+          goes_through_the_table: false,
+        };
       } else {
         // The store this run started from already carried the row, so the honest sentence is the replay's.
         await expect(page.getByTestId("poi-import-already-present")).toBeVisible({ timeout: 20_000 });
@@ -419,15 +429,9 @@ test.describe("ORD-0545 slice 4 the POI import screen, cell by cell", () => {
         );
         expect(await page.getByTestId("poi-import-added").count(), "F / a replay may not wear a success sentence").toBe(0);
         wire.write_leg = "store already had this place -- the already-there sentence was read instead";
+        // the enum widget belongs to the success paragraph, which is absent on this branch: named, not guessed
+        wire.day_source_cell = { rendered: null, server_value: added.day_source, painted_verbatim: null };
       }
-      // The nested widget in that same paragraph prints the server's own enum -- recorded as a finding.
-      const addedSourceCell = await text(page.getByTestId("poi-import-added-source"));
-      wire.day_source_cell = {
-        rendered: addedSourceCell,
-        server_value: added.day_source,
-        painted_verbatim: addedSourceCell === added.day_source,
-        goes_through_the_table: false,
-      };
 
       // ---------- G the same tap again: a replay may not mint a second success sentence
       const replayAnswered = page.waitForResponse((r: any) => r.url().includes("/poi-import/add"), { timeout: 30_000 });
