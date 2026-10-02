@@ -879,7 +879,8 @@ paths:
               schema: {$ref: '#/components/schemas/JourneyCheckin'}
         '404':
           description: >-
-            error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that
+            error.reason_code = CHECKIN_JOURNEY_UNKNOWN / CHECKIN_ACTIVITY_UNKNOWN /
+            CHECKIN_PLACE_UNKNOWN -- no row of that
             kind carries the id; kept apart from "not yours" because the two facts deserve two
             sentences
           content:
