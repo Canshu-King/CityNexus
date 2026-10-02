@@ -17,8 +17,8 @@
     "tools/build_faces_r6.py"
   ],
   "files_scanned": 14,
-  "calls_checked": 161,
-  "single_expression_args": 96,
+  "calls_checked": 162,
+  "single_expression_args": 99,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",

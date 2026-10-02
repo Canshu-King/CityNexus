@@ -121,6 +121,17 @@ def main():
     blob_chain = blob(RC_DIR + "tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
     blob_armtool = blob(RC_DIR + "tools/branch_emit_arm_%s.py" % REF_GEN)
+    blob_fmt = blob(RC_DIR + "receipts/" + FMT_RECEIPT)
+    blob_coll = blob(RC_DIR + "receipts/pytest_collectonly_%s.json" % GEN)
+    blob_sweep = blob(RC_DIR + "receipts/sweep_r6.json")
+    blob_faces2 = blob(RC_DIR + "receipts/build_faces_r6.json")
+    blob_exp_cand = blob(RC_DIR + "receipts/exposure_%s_cand.json" % GEN)
+    blob_exp_base = blob(RC_DIR + "receipts/exposure_%s_base.json" % GEN)
+
+    def blob_screen(tag):
+        """The one artifact that holds this run's counts.  The coordinate gate refuses a count that no
+        same-line artifact vouches for, and the honest answer is that each row has its own file."""
+        return blob(RC_DIR + "receipts/checkin_%s_390x844_r3.json" % tag)
 
     # the ownership evidence for the confession: who has ever touched that spec
     rc, touching = B.sh(["git", "log", "--format=%H%x09%s", "--", FOREIGN_SPEC], cwd=WT)
@@ -503,11 +514,11 @@ def main():
       "行加回来了」——那格观察跟着被删的对象一起走了。" % (
           B.fmt(rows.get("verdict")), B.fmt(rows.get("rows_checked")),
           B.fmt(vocab.get("control_verdict"))))
-    A("- 后端那套规格一枚没改，删除之后重跑收集：`%s` 收集 %s 条、退出码 %s（件 `pytest_collectonly_%s`"
-      "，取于 %s）；本单两套臂在私库上跑出的尾行逐字 `%s`、跑后库中 %s 行、共享库未动 = %s——"
-      "`collect-only` 是上一手「一删就整套空转」那笔账留下的规矩。" % (
+    A("- 后端那套规格一枚没改，删除之后重跑收集：`%s` 收集 %s 条、退出码 %s（件 `receipts/"
+      "pytest_collectonly_%s.json`，blob `%s`，取于 %s）；本单两套臂在私库上跑出的尾行逐字 `%s`、跑后库中"
+      "%s 行、共享库未动 = %s——`collect-only` 是上一手「一删就整套空转」那笔账留下的规矩。" % (
           B.slot(collect.get("cmd")), B.fmt(collect.get("collected")), B.fmt(collect.get("exit")),
-          GEN + ".json", B.slot(collect.get("took_local")), B.slot(py.get("summary_lines")[-1]),
+          GEN, blob_coll, B.slot(collect.get("took_local")), B.slot(py.get("summary_lines")[-1]),
           B.fmt(py.get("checkin_rows_after_the_arms")), B.fmt(py.get("shared_untouched"))))
     A("")
     A("## 六、这枚删除到没到 bundle —— 两枚面各建一遍，四趟屏读各走一遍")
@@ -539,36 +550,40 @@ def main():
           B.fmt(len(sweep.get("runs") or [])), _fc, remote,
           "、".join("`%s` 枝上 `%s` = 候选上 `%s`" % (p, a[:12], b[:12])
                     for p, (a, b) in sorted(faces_blob.items()))))
-    A("| 屏读 | locale | 面身份 | 控件 | 中心可按 | 拒绝句枚数 | 屏上 CJK |")
-    A("|---|---|---|---|---|---|---|")
+    A("| 屏读 | locale | 面身份 | 控件 | 中心可按 | 拒绝句枚数 | 屏上 CJK | 这一行的原件（blob，`git cat-file -t` 可验） |")
+    A("|---|---|---|---|---|---|---|---|")
     for tag in sorted(sw):
         r = sw[tag]
         c = (r.get("readings") or {}).get("census") or {}
         ad = (r.get("readings") or {}).get("after_duplicate") or {}
-        A("| %s | %s | %s | %s | %s | %s | %s |" % (
+        A("| %s | %s | %s | %s | %s | %s | %s | `receipts/checkin_%s_390x844_r3.json` %s |" % (
             tag, B.slot(r.get("locale")), B.fmt((r.get("serve") or {}).get("identity_ok")),
             B.fmt(c.get("controls")), B.fmt(c.get("pressable_by_centre_hit")),
-            B.fmt(ad.get("notice_count"), " 条"), B.fmt(ad.get("cjk_chars_on_screen"), " 字")))
+            B.fmt(ad.get("notice_count"), " 条"), B.fmt(ad.get("cjk_chars_on_screen"), " 字"),
+            tag, blob_screen(tag)))
     en = (sw.get("%s_en" % faces.get("candidate_label"), {}) or {}).get("readings", {})         .get("after_duplicate", {}) or {}
     zh = (sw.get("%s_zh" % faces.get("candidate_label"), {}) or {}).get("readings", {})         .get("after_duplicate", {}) or {}
     A("")
     A("- 删除之后两档屏幕上那句拒绝话仍是这屏自己的词汇：英文档逐字 `%s`；中文档逐字 `%s`。"
       "四趟的面身份四证齐（入口名取自被服务的 index.html、服务字节与磁盘字节 html/bundle 都相等，"
-      "收工只停自己 spawn 的进程）。第二站中心可按那一格本代仍然量到 %s 对 %s（zh 少一枚），"
-      "仍归滚动容器与底栏两家。" % (
+      "收工只停自己 spawn 的进程；四趟逐枚原件在上面那张表的最后一列）。第二站中心可按那一格本代仍然量到 "
+      "%s 对 %s（zh 少一枚，件 `receipts/sweep_r6.json`，blob `%s`，字段 `runs[].readings.census."
+      "pressable_by_centre_hit`），仍归滚动容器与底栏两家。" % (
           B.slot((en.get("notices") or ["未读到"])[0]), B.slot((zh.get("notices") or ["未读到"])[0]),
           B.fmt((sw.get("%s_zh" % faces.get("candidate_label"), {}) or {}).get("readings", {})
                 .get("census", {}).get("pressable_by_centre_hit")),
           B.fmt((sw.get("%s_en" % faces.get("candidate_label"), {}) or {}).get("readings", {})
-                .get("census", {}).get("pressable_by_centre_hit"))))
+                .get("census", {}).get("pressable_by_centre_hit")), blob_sweep))
     cx, cb = B.load("exposure_r14_cand.json"), B.load("exposure_r14_base.json")
     A("- Q64 曝光尺两边相等：格总数 %s 对 %s、命中集合相同 = %s、未解析 import %s 对 %s、解析诊断 %s "
-      "对 %s——删死掉的字典行没有把任何正文值送进共用 helper。" % (
+      "对 %s——删死掉的字典行没有把任何正文值送进共用 helper。两枚原件 `receipts/exposure_%s_cand.json`"
+      "（blob `%s`）与 `receipts/exposure_%s_base.json`（blob `%s`）。" % (
           B.fmt(cx.get("cells_total")), B.fmt(cb.get("cells_total")),
           B.fmt(sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cx.get("hits") or []) ==
                 sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cb.get("hits") or [])),
           B.fmt(cx.get("unresolved_import_count")), B.fmt(cb.get("unresolved_import_count")),
-          B.fmt(cx.get("parse_diagnostics_total")), B.fmt(cb.get("parse_diagnostics_total"))))
+          B.fmt(cx.get("parse_diagnostics_total")), B.fmt(cb.get("parse_diagnostics_total")),
+          GEN, blob_exp_cand, GEN, blob_exp_base))
     A("")
     A("## 七、出页那扇门现在真的拦（裁①）")
     A("")
@@ -593,22 +608,24 @@ def main():
       "说说）。它排在上面那张清单的第 %s 项。"
       "它拦的就是这一路真踩过三次的形制：句子加了一格、参数没跟上，页要念到那一行才炸——而炸的时候枝已经"
       "推出去了。今天 r15 到 r16 之间就炸过两回：一枚 `not enough arguments for format string`、一枚"
-      "`NameError`（我把一个变量删了却还剩一处引用）。件 `receipts/%s`。" % (
+      "`NameError`（我把一个变量删了却还剩一处引用）。件 `receipts/%s`（blob `%s`）。" % (
           B.fmt(fmt.get("files_scanned")), B.fmt(fmt.get("calls_checked")),
           B.fmt(fmt.get("single_expression_args")), B.slot(fmt.get("verdict")),
           B.slot((fmt.get("selftest") or {}).get("verdict")),
-          B.fmt(RED_CHECK_NAMES.index("静态 arity 尺绿且自检咬下") + 1), FMT_RECEIPT))
+          B.fmt(RED_CHECK_NAMES.index("静态 arity 尺绿且自检咬下") + 1), FMT_RECEIPT, blob_fmt))
     A("")
     A("## 八、不在本代的东西（具名）")
     A("")
-    A("- 取了的先说清，免得你以为又是空口：两枚面各建一遍（`%s` 与 `%s`）、%s 趟 390×844 屏读、"
-      "两枚 Q64 曝光尺、两趟收集、一套后端臂——数都在 §五、§六。" % (
-          B.slot(faces.get("base_label")), B.slot(faces.get("candidate_label")),
-          B.fmt(len(sweep.get("runs") or []))))
+    A("- 取了的先说清，免得你以为又是空口：两枚面各建一遍（`%s` 与 `%s`，件 `receipts/build_faces_r6.json`"
+      "，blob `%s`）、%s 趟 390x844 屏读（件 `receipts/sweep_r6.json`，blob `%s`）、两枚 Q64 曝光尺（见 §六"
+      "末行）、一枚收集尺、一套后端臂。" % (
+          B.slot(faces.get("base_label")), B.slot(faces.get("candidate_label")), blob_faces2,
+          B.fmt(len(sweep.get("runs") or [])), blob_sweep))
     A("- 手机第二站中心不可按那一格：归滚动容器与底栏两家，等 ORD-0542 后续。「手机打卡门新句的屏读」"
       "按 CMDR 01:24 那块已归 `e766b154`，我不开那格。")
-    A("- 那把全线尺看到的别人名下引文一枚没改、也没转单：不判的 %s 条只把归属与机械判语列在件里，"
-      "改不改、转不转由你点（§九 ② 问的就是这一格）。" % B.fmt(aud.get("citations_declined")))
+    A("- 那把全线尺看到的别人名下引文一枚没改、也没转单：不判的 %s 条只把归属与机械判语列在件里"
+      "（`receipts/%s`，blob `%s`），改不改、转不转由你点（§九 ② 问的就是这一格）。" % (
+          B.fmt(aud.get("citations_declined")), AUD_RECEIPT, blob_audit))
     A("- 真机与隧道：NOT_MEASURED。整套 Playwright：NOT_EXECUTED。候选没上 `:4783` 预览站（未部署）。")
     A("")
     A("## 九、下一件（两个待点，我不自作主张）")
@@ -617,10 +634,11 @@ def main():
       "它把件写进 `review/.../receipts/` 就退 0，红不红要等发射器读它时才知道。要不要我把 §七 那张清单"
       "搬到 stage 那道口，让一件红就落不进枝？装上不等于装好，我会带反件证明它真拦（同 §七 的形制）。")
     A("- ② 全线尺按裁②改成按作者判了，于是现出一件我判不了的事：本代不判的 %s 条若按形状算，"
-      "是 %s。这是别人的句子、别人的枝，我一枚不动。要我把这份归属清单按天发一枚 `note` 到总线"
-      "（幂等键按天，不会刷屏）好让号令者不必翻件，还是就让它停在件里等你翻？" % (
+      "是 %s（一件一件连作者 commit 都在 `receipts/%s`，blob `%s`）。这是别人的句子、别人的枝，我一枚不动。"
+      "要我把这份归属清单按天发一枚 `note` 到总线（幂等键按天，不会刷屏）好让号令者不必翻件，"
+      "还是就让它停在件里等你翻？" % (
           B.fmt(aud.get("citations_declined")),
-          "、".join("%s %s 条" % kv for kv in sorted(mech.items()))))
+          "、".join("%s %s 条" % kv for kv in sorted(mech.items())), AUD_RECEIPT, blob_audit))
     A("")
     A("复算入口：`git -C D:/moodle/CityNexus ls-remote --refs origin %s %s`；"
       "`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t %s`；"
