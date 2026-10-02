@@ -1,0 +1,341 @@
+{
+ "tip": "569b8472b134e5562ef396e38681870b9c26536a",
+ "worktree_head": "569b8472b134e5562ef396e38681870b9c26536a",
+ "worktree_dirty_files": 22,
+ "worktree_dirty_outside_review": 0,
+ "sparse_roots": [
+  "agent-mcp",
+  "backend",
+  "contracts",
+  "data",
+  "frontend",
+  "qoder-handoff",
+  "review",
+  "tools"
+ ],
+ "review_in_tree_shape": true,
+ "sites": 11,
+ "arms_executed": 9,
+ "pytest_rc": 0,
+ "pytest_summary": "======================== 9 passed, 2 warnings in 4.90s ========================",
+ "per_arm": {
+  "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value": "PASSED",
+  "tests/test_qoder_ord0332_error_receipt.py::test_R1_the_field_name_is_single_and_documented": "PASSED",
+  "tests/test_qoder_ord0402_recycle_bin.py::test_the_contract_declares_the_door_with_both_bin_facts_and_no_filter": "PASSED",
+  "tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role": "PASSED",
+  "tests/test_qoder_ord0444_collections.py::test_the_contract_declares_three_doors_and_no_control_they_lack": "PASSED",
+  "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack": "PASSED",
+  "tests/test_qoder_ord0496_calendar_export.py::test_the_contract_declares_the_door_its_refusals_and_its_counts": "PASSED",
+  "tests/test_qoder_ord0503_member_doors.py::test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields": "PASSED",
+  "tests/test_v192_shadow_trial_gate.py::test_v192_guard_scope_dedup_keeps_both_rows": "PASSED"
+ },
+ "by_class": {
+  "open_set_equality": 5,
+  "closed_set_guard": 5,
+  "unresolved_by_ruler": 1
+ },
+ "by_how_the_left_hand_is_obtained": {
+  "tree_walk": 1,
+  "contract_yaml+tree_walk": 4,
+  "live_http": 1,
+  "contract_yaml": 2,
+  "contract_yaml+live_http+tree_walk": 1,
+  "inline_input": 1,
+  "none_of_the_named_readers": 1
+ },
+ "sites_out": [
+  {
+   "file": "backend/tests/test_qoder_ord0332_error_receipt.py",
+   "line": 132,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_R1_the_field_name_is_single_and_documented",
+   "arm_def_line": 117,
+   "named_entries": [
+    "backend/app/error_receipt.py"
+   ],
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": true,
+   "left_hand_reads": [
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": false,
+   "negation_lines": [],
+   "class": "open_set_equality",
+   "assertion_text": "assert owners == [\"backend/app/error_receipt.py\"], (",
+   "nodeid": "tests/test_qoder_ord0332_error_receipt.py::test_R1_the_field_name_is_single_and_documented",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0402_recycle_bin.py",
+   "line": 305,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_the_door_with_both_bin_facts_and_no_filter",
+   "arm_def_line": 291,
+   "named_entries": [
+    "bin_state",
+    "deleted_at"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": false,
+   "negation_lines": [],
+   "class": "open_set_equality",
+   "assertion_text": "assert sorted(added[\"required\"]) == [\"bin_state\", \"deleted_at\"], added",
+   "nodeid": "tests/test_qoder_ord0402_recycle_bin.py::test_the_contract_declares_the_door_with_both_bin_facts_and_no_filter",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0434_share_grants.py",
+   "line": 413,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_acl_table_answers_the_product_own_question_about_a_role",
+   "arm_def_line": 409,
+   "named_entries": [
+    "ADMIN",
+    "COLLABORATOR",
+    "OWNER"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "live_http"
+   ],
+   "states_growth_is_the_defect": false,
+   "negation_lines": [],
+   "class": "open_set_equality",
+   "assertion_text": "assert sorted(by_role) == [\"ADMIN\", \"COLLABORATOR\", \"OWNER\"], by_role",
+   "nodeid": "tests/test_qoder_ord0434_share_grants.py::test_the_acl_table_answers_the_product_own_question_about_a_role",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0444_collections.py",
+   "line": 481,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_three_doors_and_no_control_they_lack",
+   "arm_def_line": 450,
+   "named_entries": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml"
+   ],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     459,
+     "# pagination and no sort -- may ride in on that parameter (the same arm shape ORD-0402 grew)."
+    ],
+    [
+     466,
+     "# The create door takes its归属 in the body and no query parameter at all."
+    ]
+   ],
+   "class": "closed_set_guard",
+   "assertion_text": "assert sorted(added[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(added[\"responses\"])",
+   "nodeid": "tests/test_qoder_ord0444_collections.py::test_the_contract_declares_three_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 499,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_def_line": 483,
+   "named_entries": [
+    "201",
+    "404",
+    "409",
+    "422"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     504,
+     "# The door takes no time and no target-kind from a caller: those are the server's to decide."
+    ]
+   ],
+   "class": "closed_set_guard",
+   "assertion_text": "assert sorted(created[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(created[\"responses\"])",
+   "nodeid": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 500,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_def_line": 483,
+   "named_entries": [
+    "200",
+    "409"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     504,
+     "# The door takes no time and no target-kind from a caller: those are the server's to decide."
+    ]
+   ],
+   "class": "closed_set_guard",
+   "assertion_text": "assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])",
+   "nodeid": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0476_checkins.py",
+   "line": 505,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_def_line": 483,
+   "named_entries": [
+    "activity_id",
+    "note",
+    "place_id"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml",
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     504,
+     "# The door takes no time and no target-kind from a caller: those are the server's to decide."
+    ]
+   ],
+   "class": "closed_set_guard",
+   "assertion_text": "assert sorted(create[\"properties\"]) == [\"activity_id\", \"note\", \"place_id\"], create",
+   "nodeid": "tests/test_qoder_ord0476_checkins.py::test_the_contract_declares_both_doors_and_no_control_they_lack",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0496_calendar_export.py",
+   "line": 944,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_contract_declares_the_door_its_refusals_and_its_counts",
+   "arm_def_line": 936,
+   "named_entries": [
+    "200",
+    "404",
+    "409"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml"
+   ],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     937,
+     "\"\"\"The named refusals and the six counts live in the contract, not only in this file.\"\"\""
+    ]
+   ],
+   "class": "closed_set_guard",
+   "assertion_text": "assert sorted(responses) == [\"200\", \"404\", \"409\"], sorted(responses)",
+   "nodeid": "tests/test_qoder_ord0496_calendar_export.py::test_the_contract_declares_the_door_its_refusals_and_its_counts",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0503_member_doors.py",
+   "line": 499,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields",
+   "arm_def_line": 495,
+   "named_entries": [
+    "traveler_id"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "contract_yaml",
+    "live_http",
+    "tree_walk"
+   ],
+   "states_growth_is_the_defect": false,
+   "negation_lines": [],
+   "class": "open_set_equality",
+   "assertion_text": "assert contract[\"JourneyMemberSelfExit\"][\"properties\"].keys() == {\"traveler_id\"}",
+   "nodeid": "tests/test_qoder_ord0503_member_doors.py::test_the_new_bodies_reached_the_generated_client_and_take_no_foreign_fields",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_v192_shadow_trial_gate.py",
+   "line": 104,
+   "form": "frozen_key_collection",
+   "shape": "equality_against_a_set",
+   "arm_function": "test_v192_guard_scope_dedup_keeps_both_rows",
+   "arm_def_line": 97,
+   "named_entries": [
+    "JOURNEY",
+    "TRAVELER"
+   ],
+   "left_hand_is_derived_inventory": true,
+   "path_like_entries": false,
+   "left_hand_reads": [
+    "inline_input"
+   ],
+   "states_growth_is_the_defect": false,
+   "negation_lines": [],
+   "class": "open_set_equality",
+   "assertion_text": "assert sorted(i[\"scope\"] for i in out) == [\"JOURNEY\", \"TRAVELER\"], out",
+   "nodeid": "tests/test_v192_shadow_trial_gate.py::test_v192_guard_scope_dedup_keeps_both_rows",
+   "arm_ran_as": "PASSED"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0307_credential_gate.py",
+   "line": 67,
+   "form": "line_number_as_argument",
+   "shape": "row_number_argument",
+   "arm_function": "test_C02_no_path_through_the_gate_leaks_a_value",
+   "arm_def_line": 58,
+   "named_entries": [],
+   "left_hand_is_derived_inventory": false,
+   "path_like_entries": false,
+   "left_hand_reads": [],
+   "states_growth_is_the_defect": true,
+   "negation_lines": [
+    [
+     59,
+     "\"\"\"C02：门给出的每一段文字里都不许出现凭据本身，也不出现它的前 8 位。"
+    ]
+   ],
+   "class": "unresolved_by_ruler",
+   "assertion_text": "\"position_fp\": CL.position_fp(PROBE_REL, 3), \"in_product_path\": True,",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value",
+   "arm_ran_as": "PASSED"
+  }
+ ]
+}
