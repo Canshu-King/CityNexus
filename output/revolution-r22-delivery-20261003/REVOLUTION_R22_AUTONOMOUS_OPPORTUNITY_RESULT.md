@@ -14,7 +14,7 @@ CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false throughout the successful path. No mock m
 - Worktree: D:\moodle\CityNexus-Revolution-RealTrip-Recovery
 - Starting code SHA: cd1e5dd214f3ea7e52198674487ffa7d1cbf66e7
 - R22 implementation commit: 01b1a5f7c17115308fa2ced16cc3a99916b6cf41
-- Final commit: c9fb37f9d1c20b7341cf2a3bc2f004408ba494f3
+- Final experimental code commit: c9fb37f9d1c20b7341cf2a3bc2f004408ba494f3
 - Remote: origin/codex/revolution-realtrip-recovery
 - Taskbook blob: 27d6898fc7ad39a157797e11fa091a2a320ad8d8
 
