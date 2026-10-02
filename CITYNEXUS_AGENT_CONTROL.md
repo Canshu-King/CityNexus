@@ -16608,6 +16608,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 **三、代次与归属**
 - 本趟 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`；我这棵构建与全部读数取它直接的上代 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（`merge-base --is-ancestor` 现读为真，写块这趟线已又前移）。
 - 现尖相对我这棵只多了 2 枚 `review/` 下的证据件（`undelete_actor_verdict_r1.json`、`undelete_actor_verdict_r1.py`），`frontend/src` 一枚没动；三屏相关的 7 枚源在两代之间逐枚 `git rev-parse` 对读为同一枚 blob，三条规则坐标在两代各 `git grep` 一次也逐枚相同——所以第一节的行号对现尖有效，读数属于 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那一代。
+- 我那棵产物：`tsc -p tsconfig.typecheck.json --noEmit` 退 0、`npx vite build` 退 0，入口 `index-dc55bcFW.js`、1620478 字节 B，私有静态口（命令行带 `--outDir dist_day26`）服务字节与磁盘字节逐字节相同；那枚内容 sha1 是在磁盘字节上重算的、未入 git、不是 blob、故意不可取回，本行可取回的 40 位是现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`。
+- :4783 此刻还在发上代那枚入口 `index-DeyXt9ON.js`（1620076 字节 B，与本车道 `dist_day25` 磁盘产物逐字节相同）；它这次发的 CSS `index-BeJMb-k7.css` 与我这棵同名那枚逐字节相同（231756 字节 B、内容 sha1 bbb5e0be183eee21aa0ff1f52046ce3a1d280162）——这枚 sha1 是在磁盘字节上重算的，未入 git、不是 blob，故意不可取回；本行可取回的 40 位是现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`。线上那一屏的颜色层两代是同一枚字节，换代只换了壳层 JS。
+- 盘面只走产品自己的门：reset -> prepare-scenario -> scene 答 http_status=200 / 200 / 200；站点 6 枚、有坐标 6 枚、少 0 枚；supply.state=NOT_ASKED；错头当 reset 头用 -> http_status=403；库 `_r5_r12.db`，HTTP 的 plan 与库里 plan 同为 `55523d40-cafe-5bd2-b30a-de057ec7a839`。
+- day24 的 20 臂两代对比件在 `review/ord0509/DARK_THREE_SCREENS_DAY24_R3.md`（CMDR 01:24 那一单落的）；本手的读数件在 `review/ord0509/LANDING_ADVICE_DAY26_R5.md`，blob `c156c95ceb9d4c35c091185e682151bc5b2a9919` 可 `git cat-file`。
+
+**四、闸（都跑在 25d1b2e69bff 那枚头上）**
+- cells 两趟 `8 passed in 2.56s` | `8 passed in 2.20s`；同族五枚文件合跑两趟 `47 passed in 15.64s` | `47 passed in 15.09s`；整套收集 1719 条（本车道**没跑整套**，上面那些数是它的子集）。
+- 契约尺现读 formal 175 条 / runtime 175 条（missing 0、extra 0）；本枝对现尖的 `merge-tree --write-tree` 只读预演 rc=0、写树 `916c784fc15f578219ce8dcad5aafb92aa9f8a49`（可 `git cat-file`），这只是预测，判归门。
+- 凭据门两读：剥掉本机凭据名 = CREDENTIAL_GATE_CLEAR；不剥 = LIVE_CREDENTIAL_IN_ENVIRONMENT（本机现读到的名字：`DEEPSEEK_API_KEY`、`OPENAI_API_KEY`、`WB2API_KEY`）。两读都记、不互相改写。
+- 建议件在我自己那枚枝上：`refs/heads/review/2d2d7428-ord0509-landing-advice-day25-r4`，远端头现读 `aa8bd08153f61477e7ca65fec66a692cf264574b`（`git ls-remote` 回读同值），对上代只多这一枚文件；枝上两枚提交：前一枚把入口名错写成线上那枚（`index-DeyXt9ON.js`），后一枚改成我这棵的真名（`index-dc55bcFW.js`），文件同一枚、内容 9813 字节 B。
+
+**五、落完之后我立刻做的**
+- 在您落地那代上重建产物、同一把仪表重跑三屏两档两形，交「改前 vs 改后」两代读数；
+- 加一枚反件：把那三条改回 `var(--cn-ink-tertiary)` 压回候选产物，最差必须回到 3.62、3.62、3.62，回不到就说明我这三处找错了主人（不等就拒交）。
+- 顺手一问（不是这单内容）：那层墨还剩 30 处 `color:` 声明在我没量过的屏上（亮档定义在 `design-tokens.css:15`），要不要我读一遍两档再决定要不要动色阶——等您点。
+
+**六、现场与红线**
+- 私有栈：后端进程 pid 36668 在 :4891、静态进程 pid 46644 在 :4892（静态那口的代理目标写死成环境变量 `CITYNEXUS_BACKEND_PORT` 指回本车道后端端口 :4891，代理默认值那坑上一单已修），本手两代各起停一次；停完 netstat 现读 :4891 与 :4892 两个端口无监听（`[stop r12] killed=2 left after the sweep: 0`）。
+- 本手产品字节 0 枚：`frontend/src` 与 `backend/` 改动 0 枚，只多那枚建议件；权威线移动 0 次；已发布 ref 重写 0 次；`demo/reset` 只落本车道那枚库；共享预览库 `_preview.db` 覆盖 0 次；:8000 / :4781 / :4782 / :8693 覆盖 0 次；:4783 我这侧只发 GET（取数脚本 `live_vs_disk_proof_r4.py`），对那枚口写请求与覆盖 0 次。
+- 没量实体手机；没跑 e2e；这台机器瓦片底图始终不加载，本块没有一个结论依赖瓦片像素；抽屉在桌面那形（宽 1280 px、高 900 px，仍具名 NOT_REACHED_BY_SHAPE）。
+- 总线与叫醒：本块走收件口，账本我不自己写（LEDGER_SINGLE_WRITER_V1）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · CMDR 02:45 我名下那一手：一行落单建议 = 落「乙」；三屏在今尖与上一代各读一次，颜色层两代逐字节同源
+
+**一、就这一行（要落的时候只改这三条规则里的 color，一枚色阶定义都不动）**
+- 抽屉分组标题：`frontend/src/styles.css` 里 `#v8-nav-drawer > div .v8-nav-group` 那条规则（规则与色声明同一行，现尖上 `styles.css:142`），`color: var(--cn-ink-tertiary)` -> `color: var(--cn-ink-secondary)`。
+- 分享接收屏站点元行：`frontend/src/features/shared/sharedJourney.css`，规则 `sharedJourney.css:98`、色声明在 `sharedJourney.css:99`，同样改 secondary。
+- 长图屏日期行小字：`frontend/src/features/poster/trip-poster.css`，规则 `trip-poster.css:83`、色声明在 `trip-poster.css:85`，同样改 secondary。
+- 这 3 处之外的 `color: var(--cn-ink-tertiary)` 一处不动，`design-tokens.css` 的亮/暗两档值原样保留（= 裁语①）。
+
+**二、为什么是这条（各代自己的产物上量，同一把仪表）**
+- 现尖的直接父代 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`，我这棵产物上：nav_drawer 4 不合格/18 枚、最差 3.62 ；shared_journey 6 不合格/30 枚、最差 3.62 ；long_image_poster 1 不合格/22 枚、最差 3.62 ；亮档最差逐枚 3.62、3.62、3.62。
+- 再上一代 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`（:4783 现在在发的那枚产物）：nav_drawer 4 不合格/18 枚、最差 3.62 ；shared_journey 6 不合格/30 枚、最差 3.62 ；long_image_poster 1 不合格/22 枚、最差 3.62 ；最差同样 3.62、3.62、3.62。再往前 `4fac49f371da0820393d038700bddddafd1176d1`（上一单 r3 那 20 臂件）：nav_drawer 4 不合格/18 枚、最差 3.62 ；shared_journey 6 不合格/29 枚、最差 3.62 ；long_image_poster 1 不合格/22 枚、最差 3.62 。三代的**不合格枚数与最差对比逐枚一致**（屏上文字分母只有分享接收那格在 29/30 之间浮动，r3 已具名记过，行数浮动不是判据）。
+- 落乙（同一枚产物上注入那三条改写）：父代这棵 nav_drawer 0 不合格/18 枚、最差 4.82 ；shared_journey 0 不合格/30 枚、最差 5.07 ；long_image_poster 0 不合格/22 枚、最差 4.66 ；上代那棵 nav_drawer 0 不合格/18 枚、最差 4.82 ；shared_journey 0 不合格/29 枚、最差 5.07 ；long_image_poster 0 不合格/22 枚、最差 4.66 ；最差升到 4.82、5.07、4.66。
+- 暗档在乙下逐枚与基线相同（基线 4.66、5.22、4.82 / 乙 4.66、5.22、4.82），这条建议不会把已经干净的暗档改坏。
+- 甲（把 `--cn-ink-tertiary` 注入成 `#76767b`）也量过：三屏同样压到 0 不合格，但最差只抬到 4.52，对门槛 4.5 只剩 0.02；那批读数在 day23 那代产物上（件在 `review/ord0509/LIGHT_TIER_INK_R1.md`），本轮没在现尖重跑——4.52 是那枚色对白底的 WCAG 现算值，与代次无关。甲-强与乙在三屏上量出同一组数，差别只在射程。
+- 射程差（现尖 `git grep` 现数，不是上一单的数）：`var(--cn-ink-tertiary)` 在 `frontend/src` 出现 36 处、13 枚文件、其中 `color:` 声明 33 处；乙只动上面 3 处（全在已量过的三屏里），甲-强动整层色阶会一起影响我没量过的屏。两档定义在 `design-tokens.css:15`（亮）与 `design-tokens.css:172`（暗），本建议那两枚都不动。
+- 形制声明：候选态是 `addStyleTag` 注入的作者样式（带 `:root[data-theme=light]` 与 ID 特异性），不是重建的产物；上一单 r1 那趟注入漏 ID 选择器被特异性压住，那组读数只记仪器错，本轮 7 枚读数臂的 REFUSALS 皆空。
+
+**三、代次与归属**
+- 本趟 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`；我这棵构建与全部读数取它直接的上代 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`（`merge-base --is-ancestor` 现读为真，写块这趟线已又前移）。
+- 现尖相对我这棵只多了 2 枚 `review/` 下的证据件（`undelete_actor_verdict_r1.json`、`undelete_actor_verdict_r1.py`），`frontend/src` 一枚没动；三屏相关的 7 枚源在两代之间逐枚 `git rev-parse` 对读为同一枚 blob，三条规则坐标在两代各 `git grep` 一次也逐枚相同——所以第一节的行号对现尖有效，读数属于 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4` 那一代。
 - 我那棵产物：`tsc -p tsconfig.typecheck.json --noEmit` 退 0、`npx vite build` 退 0，入口 `index-dc55bcFW.js`、1620478 字节 B，私有静态口（命令行带 `--outDir dist_day26`）服务字节与磁盘字节同一枚 sha1；sha1 是产物内容哈希、非 git 对象、不可 `git cat-file`，本行可取回的 40 位是现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`。
 - :4783 此刻还在发上代那枚入口 `index-DeyXt9ON.js`（1620076 字节 B，与本车道 `dist_day25` 磁盘产物逐字节相同）；它这次发的 CSS `index-BeJMb-k7.css` 与我这棵同名那枚逐字节相同（231756 字节 B、本机字节 sha1 `bbb5e0be183eee21aa0ff1f52046ce3a1d280162`，不在对象库、不是 blob、不可 cat-file——本行即声明；可解析锚=权威尖 `25d1b2e69bfffd39157d3bcc804b20be9d89e2b4`）——这两枚 sha1 都是产物内容哈希、非 git 对象、不可 `git cat-file`，本行可取回的 40 位是现尖 `6a06a0bb93ffb7e9462b24b611f4ce214ea04f55`；线上那一屏的颜色层两代是同一枚字节，换代只换了壳层 JS。
 - 盘面只走产品自己的门：reset -> prepare-scenario -> scene 答 http_status=200 / 200 / 200；站点 6 枚、有坐标 6 枚、少 0 枚；supply.state=NOT_ASKED；错头当 reset 头用 -> http_status=403；库 `_r5_r12.db`，HTTP 的 plan 与库里 plan 同为 `55523d40-cafe-5bd2-b30a-de057ec7a839`。
