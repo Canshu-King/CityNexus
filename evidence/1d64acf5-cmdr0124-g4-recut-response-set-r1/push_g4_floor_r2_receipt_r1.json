@@ -1,0 +1,24 @@
+{
+ "tip": "4fac49f371da0820393d038700bddddafd1176d1",
+ "candidate_commit": "84b35dc9480d3ae7c95086c056559685a50d14b1",
+ "branch": "refs/heads/review/1d64acf5-ord0296-g4-floor-r2",
+ "server_sha_ls_remote": "84b35dc9480d3ae7c95086c056559685a50d14b1",
+ "server_equals_pushed": true,
+ "arm": "backend/tests/test_qoder_ord0296_write_deadline.py",
+ "server_blob_ls_tree": "395662e3c534229bc8492ea611b6c737257e6228",
+ "local_hash_object": "395662e3c534229bc8492ea611b6c737257e6228",
+ "byte_equal": true,
+ "blob_still_the_one_cited_on_the_shelf": true,
+ "r1_before_this_push": "b2b3ce17051f3b51ed0278f38e27ca1ddbeca912",
+ "r1_after_this_push": "b2b3ce17051f3b51ed0278f38e27ca1ddbeca912",
+ "r1_untouched": true,
+ "commits_re_cut": 2,
+ "diff_from_tip": "19\t0\tbackend/tests/test_qoder_ord0296_write_deadline.py",
+ "ff_prediction_read_only": {
+  "merge_tree_rc": 0,
+  "tree": "ba2d91fd5bf7451a1cfe1edfc8c2dd8b33a419ed",
+  "conflict_names": [],
+  "merge_tree_stderr": ""
+ },
+ "method": "cherry-pick the two r1 commits onto the tip, push as a new ref, re-read with ls-remote + ls-tree, and hash the local file with git hash-object"
+}
