@@ -1,0 +1,28 @@
+ORD-0502 phone mainline, re-run at the current tip. One file, computed -- not typed.
+
+tip walked           : 00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9  (git rev-parse HEAD)
+bundle on disk now   : frontend/dist/index.html  bytes=1200  sha1=9e7f9a45dbd7539a188f2ed5ae84df8d94eb2207
+day15 run for pair   : run_id=ORD0502-070159  tip=5a4cdbd26d4a58d6ed6b277480e766ac08b15ded
+                     : that generation's dist/index.html sha1 was c6c4180959dc8bf3320826834df20447e0bba73b (recorded in stack.log of the day15 run)
+
+chain day18 (142248) : INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+cells                : C1,C2,C2b,C3,C4,C5,C6,C7b
+chain day15 (070159) : INCOMPLETE C2:FAIL C3:FAIL C4:NOT_REACHED_UI C5:NOT_REACHED_UI C6:NOT_REACHED_UI
+cells                : C1,C2,C2b,C3,C4,C5,C6,C7b
+
+per-cell states, day18 then day15:
+  C1   PASS            PASS
+  C2   FAIL            FAIL
+  C2b  PASS            PASS
+  C3   FAIL            FAIL
+  C4   NOT_REACHED_UI  NOT_REACHED_UI
+  C5   NOT_REACHED_UI  NOT_REACHED_UI
+  C6   NOT_REACHED_UI  NOT_REACHED_UI
+  C7b  PASS            PASS
+
+stack ownership (three proofs, one batch, from stack.log of this run):
+  1. uvicorn child answered /api/v1/health on :4611 with this run's e2e_database_id
+  2. the front served 1200 B whose sha1 equals the file on disk above
+  3. a marker traveler created through the FRONTEND origin read back out of this lane's own sqlite file
+
+never called: POST /api/v1/demo/reset.  never touched: :8000, :4781, :4782, :8693, _preview.db.
