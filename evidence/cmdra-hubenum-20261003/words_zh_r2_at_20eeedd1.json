@@ -1,0 +1,126 @@
+{
+  "instrument": "cmdra_hubenum_quality_words_check_r2",
+  "script_sha256": "e1231fac36d6881e6f5bc9c6273c30d7d3f7f48b0e0826487983fffdd07144da",
+  "base": "http://127.0.0.1:49822/",
+  "locale": "zh",
+  "viewport": "390x844",
+  "src_dir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_cmdra_hubenum_fix/frontend/src",
+  "shapes_reused_from": "cmdr_machine_speech_sweep_r1.js:52-56",
+  "expected_label_for_this_arm": "演示夹具自己填的兜底常数，不是量出来的",
+  "read": {
+    "panelPresent": true,
+    "noteCount": 27,
+    "evidenceCells": [
+      "9/56",
+      "9/56",
+      "9/56"
+    ],
+    "journeyId": "22222222-2222-4222-8222-222222222222",
+    "note_samples": [
+      "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 演示夹具自己填的兜底常数，不是量出来的。",
+      "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 演示夹具自己填的兜底常数，不是量出来的。",
+      "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 演示夹具自己填的兜底常数，不是量出来的。"
+    ],
+    "data_quality_values": [
+      "SYNTHETIC_DEFAULT",
+      "SYNTHETIC_DEFAULT",
+      "SYNTHETIC_DEFAULT"
+    ]
+  },
+  "static_checks": [
+    {
+      "id": "dict_block_present",
+      "verdict": "PASS",
+      "observed": "MOBILITY_FACT_QUALITY block found: true"
+    },
+    {
+      "id": "dict_synthetic_has_zh",
+      "verdict": "PASS",
+      "observed": "zh side: \"演示夹具自己填的兜底常数，不是量出来的\""
+    },
+    {
+      "id": "dict_synthetic_has_en",
+      "verdict": "PASS",
+      "observed": "en side: \"a blanket default the demo fixture filled in, not a measured leg\""
+    },
+    {
+      "id": "dict_labels_carry_no_machine_shape",
+      "verdict": "PASS",
+      "observed": "zh hit null, en hit null"
+    },
+    {
+      "id": "unlisted_block_present",
+      "verdict": "PASS",
+      "observed": "MOBILITY_FACT_QUALITY_UNLISTED found: true"
+    },
+    {
+      "id": "unlisted_has_both_sides",
+      "verdict": "PASS",
+      "observed": "zh \"一种这个人话字典还没有说法的证据等级\", en \"an evidence grade this word table has no wording for\""
+    },
+    {
+      "id": "unlisted_falls_back_without_the_token",
+      "verdict": "PASS",
+      "observed": "unlisted zh/en both readable and free of any server name"
+    },
+    {
+      "id": "slot_does_not_hand_the_enum_to_the_sentence",
+      "verdict": "PASS",
+      "observed": "the slot value is not the enum handed over as-is (a branch that routes it through words first is what the order asks for)"
+    },
+    {
+      "id": "slot_goes_through_the_mapping",
+      "verdict": "PASS",
+      "observed": "the panel imports mobilityFactQualityLabel from lib/displayVocabulary and calls it for this slot"
+    },
+    {
+      "id": "mapping_is_exported",
+      "verdict": "PASS",
+      "observed": "mobilityFactQualityLabel is exported: true"
+    },
+    {
+      "id": "unlisted_grade_cannot_paint_the_server_name",
+      "verdict": "PASS",
+      "observed": "mapping body read back: \"export function mobilityFactQualityLabel(value: unknown, zh?: boolean | string | null): string { const entry = MOBILITY_FACT_QUALITY[keyOf(value)] || MOBILITY_FACT_QUALITY_UNLISTED; return wantsChinese(zh) ? entry.zh : entry.en; }\""
+    },
+    {
+      "id": "null_quality_keeps_its_own_reading",
+      "verdict": "PASS",
+      "observed": "the no-tag case is still branched before the dictionary"
+    },
+    {
+      "id": "table_names_only_grades_the_slot_can_hold",
+      "verdict": "PASS",
+      "observed": "hard-eligible qualities kept out of the note table: \"{\\n  SYNTHETIC_DEFAULT: {\\n    zh: \\\"演示夹具自己填的兜底常数，不是量出来的\\\",\\n    en: \\\"a blanket default the demo fixture filled in, not a measured leg\\\",\\n  },\\n}\""
+    }
+  ],
+  "painted_arms": [
+    {
+      "id": "panel_reached",
+      "verdict": "PASS",
+      "observed": "panelPresent=true noteCount=27 journeyId=22222222-2222-4222-8222-222222222222 -- a 0-hit run on an unreached panel is NOT green"
+    },
+    {
+      "id": "no_machine_shape_painted",
+      "verdict": "PASS",
+      "observed": "0 of 27 notes match the sweep's four shapes"
+    },
+    {
+      "id": "facts_survive_the_mapping",
+      "verdict": "PASS",
+      "observed": "[{\"index\":0,\"verdict\":\"PASS\",\"observed\":\"note keeps hard=9 and total=56\"},{\"index\":1,\"verdict\":\"PASS\",\"observed\":\"note keeps hard=9 and total=56\"},{\"index\":2,\"verdict\":\"PASS\",\"observed\":\"note keeps hard=9 and total=56\"}]"
+    },
+    {
+      "id": "dictionary_wording_is_what_shows",
+      "verdict": "PASS",
+      "observed": "[{\"index\":0,\"verdict\":\"PASS\",\"observed\":\"\\\"演示夹具自己填的兜底常数，不是量出来的\\\" is painted on note 0\"},{\"index\":1,\"verdict\":\"PASS\",\"observed\":\"\\\"演示夹具自己填的兜底常数，不是量出来的\\\" is painted on note 1\"},{\"index\":2,\"verdict\":\"PASS\",\"observed\":\"\\\"演示夹具自己填的兜底常数，不是量出来的\\\" is painted on note 2\"}]"
+    },
+    {
+      "id": "no_page_error",
+      "verdict": "PASS",
+      "observed": "[]"
+    }
+  ],
+  "verdict": "GREEN",
+  "red_arms": []
+}
