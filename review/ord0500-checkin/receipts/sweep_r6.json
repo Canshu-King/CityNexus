@@ -1,0 +1,464 @@
+{
+  "tool": "sweep_r6",
+  "took_local": "2026-10-02T16:49:57.183863+08:00",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "shared_db": {
+    "bytes": 7213056,
+    "mtime_local": "2026-09-29 09:20:27"
+  },
+  "expected_entries": {
+    "O0500_R6": "index-C2dITzmr.js",
+    "TIP_dc9dc10f": "index-C2qctsTa.js"
+  },
+  "runs": [
+    {
+      "tag": "TIP_dc9dc10f_zh",
+      "face_dir": "faces/tip10",
+      "locale": "zh-CN",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "48180",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL"
+      },
+      "serve": {
+        "port": 4931,
+        "face_dir": "faces/tip10",
+        "my_pid": 43764,
+        "entry_asset": "index-C2qctsTa.js",
+        "entry_asset_expected_from_build": "index-C2qctsTa.js",
+        "index_local_sha1_served": "41b1de9e4a28e91817da6fe5843f85c25fefd667",
+        "index_local_sha1_disk": "41b1de9e4a28e91817da6fe5843f85c25fefd667",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "c8e2b7e55fefa8d7453c2529639997cd2715149c",
+        "bundle_local_sha1_disk": "c8e2b7e55fefa8d7453c2529639997cd2715149c",
+        "listener_pid": "43764",
+        "i_own_this_port": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "identity_ok": true
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=TIP_dc9dc10f_zh VP=390x844 BUTTONS=6 PRESSABLE=5 MARKS=2 NOTICES=0 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_TIP_dc9dc10f_zh_390x844_r3.json",
+        "bytes": 12872
+      },
+      "readings": {
+        "locale_in_receipt": "zh-CN",
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "fresh_stop_basis": "data-state=fresh",
+        "arrived": {
+          "control_labels_on_screen": [
+            "打卡"
+          ],
+          "cjk_chars_on_screen": 165,
+          "marks_zh_words": 0,
+          "marks_en_words": 0,
+          "marks_by_state": 0,
+          "checkin_button_count": 6,
+          "rendered_chars": 495
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 5,
+          "words": [
+            "打卡"
+          ]
+        },
+        "after_duplicate": {
+          "notice_count": 6,
+          "notices": [
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。",
+            "服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ],
+          "cjk_chars_on_screen": 364,
+          "cjk_runs_on_screen": [
+            "菜单",
+            "行程",
+            "跟随系统",
+            "住宿",
+            "预订",
+            "花费",
+            "把这趟旅行收成一张长图",
+            "图上每一天",
+            "就是这块屏上已经排好的那些",
+            "展开行程长图"
+          ],
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": [],
+          "marks_zh_words": 1,
+          "marks_en_words": 0,
+          "marks_by_state": 1,
+          "control_labels_on_screen": [
+            "已打卡",
+            "打卡"
+          ]
+        }
+      },
+      "store_after": {
+        "count": 2
+      },
+      "face_torn_down": "STOPPED_OWN_PID_43764",
+      "backend_torn_down": "STOPPED_OWN_PID_48180",
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "TIP_dc9dc10f_en",
+      "face_dir": "faces/tip10",
+      "locale": "en-US",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "48524",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL"
+      },
+      "serve": {
+        "port": 4931,
+        "face_dir": "faces/tip10",
+        "my_pid": 46088,
+        "entry_asset": "index-C2qctsTa.js",
+        "entry_asset_expected_from_build": "index-C2qctsTa.js",
+        "index_local_sha1_served": "41b1de9e4a28e91817da6fe5843f85c25fefd667",
+        "index_local_sha1_disk": "41b1de9e4a28e91817da6fe5843f85c25fefd667",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "c8e2b7e55fefa8d7453c2529639997cd2715149c",
+        "bundle_local_sha1_disk": "c8e2b7e55fefa8d7453c2529639997cd2715149c",
+        "listener_pid": "46088",
+        "i_own_this_port": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "identity_ok": true
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=TIP_dc9dc10f_en VP=390x844 BUTTONS=6 PRESSABLE=5 MARKS=NOT_TAKEN NOTICES=NOT_TAKEN REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_TIP_dc9dc10f_en_390x844_r3.json",
+        "bytes": 10065
+      },
+      "readings": {
+        "locale_in_receipt": "en-US",
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "fresh_stop_basis": "data-state=fresh",
+        "arrived": {
+          "control_labels_on_screen": [
+            "Check in"
+          ],
+          "cjk_chars_on_screen": 2,
+          "marks_zh_words": 0,
+          "marks_en_words": 0,
+          "marks_by_state": 0,
+          "checkin_button_count": 6,
+          "rendered_chars": 770
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 5,
+          "words": [
+            "Check in"
+          ]
+        },
+        "after_duplicate": {
+          "notice_count": 6,
+          "notices": [
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.",
+            "The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten."
+          ],
+          "notice_owners": [
+            "Old Town Gate",
+            "Riverside Museum",
+            "Central Food Hall",
+            "Tech Art Center",
+            "Nexus River Cruise Pier",
+            "Skyline Dinner House"
+          ],
+          "cjk_chars_on_screen": 2,
+          "cjk_runs_on_screen": [
+            "中文"
+          ],
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": [],
+          "marks_zh_words": 0,
+          "marks_en_words": 1,
+          "marks_by_state": 1,
+          "control_labels_on_screen": [
+            "Checked in",
+            "Check in"
+          ]
+        }
+      },
+      "store_after": {
+        "count": 1
+      },
+      "face_torn_down": "STOPPED_OWN_PID_46088",
+      "backend_torn_down": "STOPPED_OWN_PID_48524",
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "O0500_R6_zh",
+      "face_dir": "faces/o0500_r6",
+      "locale": "zh-CN",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "9732",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL"
+      },
+      "serve": {
+        "port": 4931,
+        "face_dir": "faces/o0500_r6",
+        "my_pid": 11176,
+        "entry_asset": "index-C2dITzmr.js",
+        "entry_asset_expected_from_build": "index-C2dITzmr.js",
+        "index_local_sha1_served": "0ecc8412d4f4e38524b09d6ad7c6b7884db98c2f",
+        "index_local_sha1_disk": "0ecc8412d4f4e38524b09d6ad7c6b7884db98c2f",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "ad2adb58289dc494c590ab840985fa6532676031",
+        "bundle_local_sha1_disk": "ad2adb58289dc494c590ab840985fa6532676031",
+        "listener_pid": "11176",
+        "i_own_this_port": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "identity_ok": true
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=O0500_R6_zh VP=390x844 BUTTONS=6 PRESSABLE=5 MARKS=2 NOTICES=1 REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\",\"POST:201\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_O0500_R6_zh_390x844_r3.json",
+        "bytes": 12270
+      },
+      "readings": {
+        "locale_in_receipt": "zh-CN",
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200",
+          "POST:201",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "fresh_stop_basis": "data-state=fresh",
+        "arrived": {
+          "control_labels_on_screen": [
+            "打卡"
+          ],
+          "cjk_chars_on_screen": 165,
+          "marks_zh_words": 0,
+          "marks_en_words": 0,
+          "marks_by_state": 0,
+          "checkin_button_count": 6,
+          "rendered_chars": 495
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 5,
+          "words": [
+            "打卡"
+          ]
+        },
+        "after_duplicate": {
+          "notice_count": 1,
+          "notices": [
+            "这一站已经打过卡了（服务器记的是 10月2日 16:51），这次没有再盖一枚，行程里还是原来那一枚。"
+          ],
+          "notice_owners": [
+            "Old Town Gate"
+          ],
+          "cjk_chars_on_screen": 201,
+          "cjk_runs_on_screen": [
+            "菜单",
+            "行程",
+            "跟随系统",
+            "住宿",
+            "预订",
+            "花费",
+            "把这趟旅行收成一张长图",
+            "图上每一天",
+            "就是这块屏上已经排好的那些",
+            "展开行程长图"
+          ],
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": [],
+          "marks_zh_words": 1,
+          "marks_en_words": 0,
+          "marks_by_state": 1,
+          "control_labels_on_screen": [
+            "已打卡",
+            "打卡"
+          ]
+        }
+      },
+      "store_after": {
+        "count": 2
+      },
+      "face_torn_down": "STOPPED_OWN_PID_11176",
+      "backend_torn_down": "STOPPED_OWN_PID_9732",
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    },
+    {
+      "tag": "O0500_R6_en",
+      "face_dir": "faces/o0500_r6",
+      "locale": "en-US",
+      "store_before": {
+        "journeys": 1,
+        "journey_checkins": "TABLE_ABSENT_UNTIL_BOOT"
+      },
+      "backend": {
+        "ready": true,
+        "pid": "43640",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "evidence_state": "FROZEN_WITHOUT_TTL"
+      },
+      "serve": {
+        "port": 4931,
+        "face_dir": "faces/o0500_r6",
+        "my_pid": 47260,
+        "entry_asset": "index-C2dITzmr.js",
+        "entry_asset_expected_from_build": "index-C2dITzmr.js",
+        "index_local_sha1_served": "0ecc8412d4f4e38524b09d6ad7c6b7884db98c2f",
+        "index_local_sha1_disk": "0ecc8412d4f4e38524b09d6ad7c6b7884db98c2f",
+        "index_bytes_equal_served_vs_disk": true,
+        "bundle_local_sha1_served": "ad2adb58289dc494c590ab840985fa6532676031",
+        "bundle_local_sha1_disk": "ad2adb58289dc494c590ab840985fa6532676031",
+        "listener_pid": "47260",
+        "i_own_this_port": true,
+        "access_log_proof": "NOT_AVAILABLE_BY_CMDR",
+        "bundle_bytes_equal_served_vs_disk": true,
+        "identity_ok": true
+      },
+      "arm": {
+        "exit": 0,
+        "line": "TAG=O0500_R6_en VP=390x844 BUTTONS=6 PRESSABLE=5 MARKS=NOT_TAKEN NOTICES=NOT_TAKEN REQ=[\"GET:200\",\"POST:201\",\"GET:200\",\"POST:409\",\"GET:200\"] PAGEERRORS=0",
+        "evidence": "checkin_O0500_R6_en_390x844_r3.json",
+        "bytes": 9248
+      },
+      "readings": {
+        "locale_in_receipt": "en-US",
+        "requests": [
+          "GET:200",
+          "POST:201",
+          "GET:200",
+          "POST:409",
+          "GET:200"
+        ],
+        "page_errors": 0,
+        "fresh_stop_basis": "data-state=fresh",
+        "arrived": {
+          "control_labels_on_screen": [
+            "Check in"
+          ],
+          "cjk_chars_on_screen": 2,
+          "marks_zh_words": 0,
+          "marks_en_words": 0,
+          "marks_by_state": 0,
+          "checkin_button_count": 6,
+          "rendered_chars": 770
+        },
+        "census": {
+          "controls": 6,
+          "pressable_by_centre_hit": 5,
+          "words": [
+            "Check in"
+          ]
+        },
+        "after_duplicate": {
+          "notice_count": 1,
+          "notices": [
+            "This stop is already stamped (2 Oct, 16:52); nothing new was written — the trip keeps the stamp it had."
+          ],
+          "notice_owners": [
+            "Old Town Gate"
+          ],
+          "cjk_chars_on_screen": 2,
+          "cjk_runs_on_screen": [
+            "中文"
+          ],
+          "uuids_on_screen": [],
+          "screaming_on_screen": [],
+          "dotted_keys_on_screen": [],
+          "marks_zh_words": 0,
+          "marks_en_words": 1,
+          "marks_by_state": 1,
+          "control_labels_on_screen": [
+            "Checked in",
+            "Check in"
+          ]
+        }
+      },
+      "store_after": {
+        "count": 1
+      },
+      "face_torn_down": "STOPPED_OWN_PID_47260",
+      "backend_torn_down": "STOPPED_OWN_PID_43640",
+      "shared_after": {
+        "bytes": 7213056,
+        "mtime_local": "2026-09-29 09:20:27"
+      },
+      "shared_untouched": true
+    }
+  ]
+}

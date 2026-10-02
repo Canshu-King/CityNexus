@@ -1,0 +1,165 @@
+{
+  "tool": "checkin_copy_rows_r6",
+  "took_local": "2026-10-02T16:34:26.438616+08:00",
+  "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\mut_r6",
+  "rows_checked": 11,
+  "en_button_label": [
+    "\"checkin.button\": \"Check in\","
+  ],
+  "zh_button_label": [
+    "\"checkin.button\": \"打卡\","
+  ],
+  "row_checks": [
+    {
+      "row": "activityNotInJourney",
+      "line": 56,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "activityUnknown",
+      "line": 52,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "duplicateAt",
+      "line": 44,
+      "cjk_in_en": "none",
+      "placeholders": [
+        "moment"
+      ],
+      "supplied": [
+        "button",
+        "moment"
+      ]
+    },
+    {
+      "row": "duplicateNoMoment",
+      "line": 48,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": []
+    },
+    {
+      "row": "journeyInBin",
+      "line": 76,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "journeyUnknown",
+      "line": 80,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "placeUnknown",
+      "line": 60,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "targetAmbiguous",
+      "line": 72,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "targetRequired",
+      "line": 68,
+      "cjk_in_en": "none",
+      "placeholders": [
+        "button"
+      ],
+      "supplied": [
+        "button"
+      ]
+    },
+    {
+      "row": "unexpected",
+      "line": 88,
+      "cjk_in_en": "none",
+      "placeholders": [
+        "status"
+      ],
+      "supplied": [
+        "status"
+      ]
+    },
+    {
+      "row": "unreachable",
+      "line": 84,
+      "cjk_in_en": "none",
+      "placeholders": [],
+      "supplied": []
+    },
+    {
+      "case": "B2_LABEL_IS_INTERPOLATED",
+      "row_has_placeholder": true,
+      "call_supplies_t_checkin_button": true
+    }
+  ],
+  "orphan_dictionary_rows": [
+    {
+      "key": "checkin.duplicate",
+      "side": "en",
+      "dictionary_lines": [
+        118,
+        1253
+      ],
+      "readers_outside_the_dictionary": 0,
+      "reader_lines": []
+    },
+    {
+      "key": "checkin.duplicate",
+      "side": "zh",
+      "dictionary_lines": [
+        118,
+        1253
+      ],
+      "readers_outside_the_dictionary": 0,
+      "reader_lines": []
+    },
+    {
+      "key": "checkin.refused",
+      "side": "en",
+      "dictionary_lines": [
+        119,
+        1254
+      ],
+      "readers_outside_the_dictionary": 0,
+      "reader_lines": []
+    },
+    {
+      "key": "checkin.refused",
+      "side": "zh",
+      "dictionary_lines": [
+        119,
+        1254
+      ],
+      "readers_outside_the_dictionary": 0,
+      "reader_lines": []
+    }
+  ],
+  "findings": [],
+  "verdict": "GREEN"
+}
