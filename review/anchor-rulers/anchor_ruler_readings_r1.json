@@ -1,0 +1,166 @@
+{
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "python": "Python 3.12.14",
+ "trees": {
+  "tip_00b5f25e": {
+   "exists": true,
+   "g4": {
+    "mentions_files": [
+     "catalog_hydration_operations.py",
+     "config.py",
+     "main.py",
+     "session.py",
+     "stay_generation_operations.py",
+     "write_deadline.py"
+    ],
+    "old_roster_would_red": true,
+    "old_roster_missing": [
+     "main.py"
+    ],
+    "declaration_home": {
+     "path": "backend/app/core/config.py",
+     "line": 95
+    },
+    "declared_ms": 30000,
+    "copies_of_that_number": [],
+    "accessor_defs": [
+     {
+      "path": "backend/app/db/write_deadline.py",
+      "line": 50
+     }
+    ],
+    "importers": [
+     {
+      "path": "backend/app/db/session.py",
+      "line": 15
+     },
+     {
+      "path": "backend/app/db/session.py",
+      "line": 16
+     }
+    ],
+    "worker_waits": [
+     {
+      "path": "backend/app/catalog_hydration_operations.py",
+      "line": 550,
+      "ms": 500
+     },
+     {
+      "path": "backend/app/stay_generation_operations.py",
+      "line": 310,
+      "ms": 200
+     },
+     {
+      "path": "backend/app/stay_generation_operations.py",
+      "line": 505,
+      "ms": 1500
+     }
+    ],
+    "appliers_asking_the_source": 2,
+    "appliers_total": 2
+   },
+   "h01b": {
+    "hits_in_product_path": 0,
+    "verdict": "LIVE_CREDENTIAL_IN_ENVIRONMENT",
+    "hits_vocabulary_exempted": 3,
+    "exempted": [
+     [
+      "frontend/src/features/poster/TripPosterPanel.tsx",
+      34
+     ],
+     [
+      "frontend/src/features/poster/TripPosterPanel.tsx",
+      52
+     ],
+     [
+      "frontend/src/features/shared/SharedJourneyPanel.tsx",
+      47
+     ]
+    ],
+    "REFUSAL_KEY_declared_at": 45,
+    "token_unknown_line_derived_by_symbol": 47,
+    "old_pinned_line_45_still_there": false
+   }
+  },
+  "branch_5cb0bd0a": {
+   "exists": true,
+   "g4": {
+    "mentions_files": [
+     "catalog_hydration_operations.py",
+     "config.py",
+     "main.py",
+     "session.py",
+     "stay_generation_operations.py",
+     "write_deadline.py"
+    ],
+    "old_roster_would_red": true,
+    "old_roster_missing": [
+     "main.py"
+    ],
+    "declaration_home": {
+     "path": "backend/app/core/config.py",
+     "line": 95
+    },
+    "declared_ms": 30000,
+    "copies_of_that_number": [],
+    "accessor_defs": [
+     {
+      "path": "backend/app/db/write_deadline.py",
+      "line": 50
+     }
+    ],
+    "importers": [
+     {
+      "path": "backend/app/db/session.py",
+      "line": 15
+     },
+     {
+      "path": "backend/app/db/session.py",
+      "line": 16
+     }
+    ],
+    "worker_waits": [
+     {
+      "path": "backend/app/catalog_hydration_operations.py",
+      "line": 550,
+      "ms": 500
+     },
+     {
+      "path": "backend/app/stay_generation_operations.py",
+      "line": 310,
+      "ms": 200
+     },
+     {
+      "path": "backend/app/stay_generation_operations.py",
+      "line": 505,
+      "ms": 1500
+     }
+    ],
+    "appliers_asking_the_source": 2,
+    "appliers_total": 2
+   },
+   "h01b": {
+    "hits_in_product_path": 0,
+    "verdict": "LIVE_CREDENTIAL_IN_ENVIRONMENT",
+    "hits_vocabulary_exempted": 3,
+    "exempted": [
+     [
+      "frontend/src/features/poster/TripPosterPanel.tsx",
+      34
+     ],
+     [
+      "frontend/src/features/poster/TripPosterPanel.tsx",
+      52
+     ],
+     [
+      "frontend/src/features/shared/SharedJourneyPanel.tsx",
+      47
+     ]
+    ],
+    "REFUSAL_KEY_declared_at": 45,
+    "token_unknown_line_derived_by_symbol": 47,
+    "old_pinned_line_45_still_there": false
+   }
+  }
+ }
+}

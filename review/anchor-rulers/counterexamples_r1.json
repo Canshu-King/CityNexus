@@ -1,0 +1,387 @@
+{
+ "form": {
+  "worktree_head": "5cb0bd0a97d5cebface769cbdacdd5ad419e0751",
+  "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "python": "Python 3.12.14",
+  "started": "10-02 15:15:59",
+  "db": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\anchor_ce.db"
+ },
+ "cases": [
+  {
+   "case": "G4-1 同值换写法（旧白名单看不见）",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "cause_needle": "copies",
+   "expect_assert_line": "285",
+   "actual_assert_line": [
+    "285"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:285: AssertionError: {'copies': [{'line': 5, 'path': 'app\\\\_anchor_ce.py', 'text': 'session.execute(text(f\"PRAGMA busy_timeout={30000}\"))'}...\\\\core\\\\config.py', 'text': 'write_busy_timeout_ms: int = int(os.getenv(\"CITYNEXUS_WRITE_BUSY_TIMEOUT_MS\", \"30000\"))'}}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 8.79s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:285: AssertionError: {'copies': [{'line': 5, 'path': 'app\\\\_anchor_ce.py', 'text': 'session.execute(text(f\"PRAGMA busy_timeout={30000}\"))'}...\\\\core\\\\config.py', 'text': 'write_busy_timeout_ms: int = int(os.getenv(\"CITYNEXUS_WRITE_BUSY_TIMEOUT_MS\", \"30000\"))'}}",
+   "assert_line": "285",
+   "seconds": 10.7
+  },
+  {
+   "case": "G4-2 worker 自等抬到请求路径之上",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/stay_generation_operations.py",
+   "cause_needle": "not_below_the_request_path_wait",
+   "expect_assert_line": "295",
+   "actual_assert_line": [
+    "295"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:295: AssertionError: {'declared_ms': 30000, 'home': {'line': 95, 'path': 'app\\\\core\\\\config.py', 'text': 'write_busy_timeout_ms: int = int(...': 505, 'path': 'app\\\\stay_generation_operations.py', 'text': 'session.execute(text(\"PRAGMA busy_timeout = 45000\"))'}]}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 6.94s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:295: AssertionError: {'declared_ms': 30000, 'home': {'line': 95, 'path': 'app\\\\core\\\\config.py', 'text': 'write_busy_timeout_ms: int = int(...': 505, 'path': 'app\\\\stay_generation_operations.py', 'text': 'session.execute(text(\"PRAGMA busy_timeout = 45000\"))'}]}",
+   "assert_line": "295",
+   "seconds": 9.5
+  },
+  {
+   "case": "G4-3 访问器出现第二处定义",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "cause_needle": "_anchor_ce.py",
+   "expect_assert_line": "288",
+   "actual_assert_line": [
+    "288"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:288: AssertionError: [{'line': 4, 'path': 'app\\\\_anchor_ce.py', 'text': 'def busy_timeout_ms() -> int:'}, {'line': 50, 'path': 'app\\\\db\\\\write_deadline.py', 'text': 'def busy_timeout_ms() -> int:'}]",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 5.23s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:288: AssertionError: [{'line': 4, 'path': 'app\\\\_anchor_ce.py', 'text': 'def busy_timeout_ms() -> int:'}, {'line': 50, 'path': 'app\\\\db\\\\write_deadline.py', 'text': 'def busy_timeout_ms() -> int:'}]",
+   "assert_line": "288",
+   "seconds": 7.2
+  },
+  {
+   "case": "G4-4 上连接的行自带数字、不问单源",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "cause_needle": "appliers_that_bring_their_own_number",
+   "expect_assert_line": "299",
+   "actual_assert_line": [
+    "299"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:299: AssertionError: {'appliers_that_bring_their_own_number': [{'line': 6, 'path': 'app\\\\_anchor_ce.py', 'text': 'conn.execute(text(\"PRAGMA...te_busy_timeout_ms()', 'write_busy_timeout_seconds()', 'effective_busy_timeout_ms(', 'settings.write_busy_timeout_ms']}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 7.61s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:299: AssertionError: {'appliers_that_bring_their_own_number': [{'line': 6, 'path': 'app\\\\_anchor_ce.py', 'text': 'conn.execute(text(\"PRAGMA...te_busy_timeout_ms()', 'write_busy_timeout_seconds()', 'effective_busy_timeout_ms(', 'settings.write_busy_timeout_ms']}",
+   "assert_line": "299",
+   "seconds": 9.6
+  },
+  {
+   "case": "G4-5 单源通道改指别名模块",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/db/session.py",
+   "cause_needle": "nobody imports the accessor",
+   "expect_assert_line": "291",
+   "actual_assert_line": [
+    "291"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:291: AssertionError: {'mentions': [{'line': 550, 'path': 'app\\\\catalog_hydration_operations.py', 'text': 'session.execute(text(\"PRAGMA busy......], 'module': 'app/db/write_deadline.py', 'reason': 'nobody imports the accessor: the single source has no consumer'}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 11.01s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:291: AssertionError: {'mentions': [{'line': 550, 'path': 'app\\\\catalog_hydration_operations.py', 'text': 'session.execute(text(\"PRAGMA busy......], 'module': 'app/db/write_deadline.py', 'reason': 'nobody imports the accessor: the single source has no consumer'}",
+   "assert_line": "291",
+   "seconds": 14.4
+  },
+  {
+   "case": "G4-6 家的具名环境变量被改名",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/core/config.py",
+   "cause_needle": "exactly one declaration home",
+   "expect_assert_line": "282",
+   "actual_assert_line": [
+    "282"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:282: AssertionError: {'homes': [], 'mentions': [{'line': 550, 'path': 'app\\\\catalog_hydration_operations.py', 'text': 'session.execute(text...ite_deadline import busy_timeout_seconds as write_busy_timeout_seconds'}, ...], 'want': 'exactly one declaration home'}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "1 failed in 8.33s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0296_write_deadline.py:282: AssertionError: {'homes': [], 'mentions': [{'line': 550, 'path': 'app\\\\catalog_hydration_operations.py', 'text': 'session.execute(text...ite_deadline import busy_timeout_seconds as write_busy_timeout_seconds'}, ...], 'want': 'exactly one declaration home'}",
+   "assert_line": "282",
+   "seconds": 11.2
+  },
+  {
+   "case": "G4-7 漂移中性：第六枚合法消费者",
+   "expect": "GREEN",
+   "verdict": "GREEN",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "cause_needle": "",
+   "expect_assert_line": "",
+   "actual_assert_line": [],
+   "cause_named_on_screen": "n/a",
+   "rc": 0,
+   "tail": [
+    ".                                                                        [100%]",
+    "1 passed in 23.29s"
+   ],
+   "tb": "",
+   "assert_line": "",
+   "seconds": 28.5
+  },
+  {
+   "case": "G4-8 漂移中性：新文件只在注释里提名字",
+   "expect": "GREEN",
+   "verdict": "GREEN",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "backend/app/_anchor_ce.py",
+   "cause_needle": "",
+   "expect_assert_line": "",
+   "actual_assert_line": [],
+   "cause_named_on_screen": "n/a",
+   "rc": 0,
+   "tail": [
+    ".                                                                        [100%]",
+    "1 passed in 22.31s"
+   ],
+   "tb": "",
+   "assert_line": "",
+   "seconds": 28.9
+  },
+  {
+   "case": "H-1 漂移中性：具名表被往上顶 1 行",
+   "expect": "GREEN",
+   "verdict": "GREEN",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "",
+   "expect_assert_line": "",
+   "actual_assert_line": [],
+   "cause_named_on_screen": "n/a",
+   "rc": 0,
+   "tail": [
+    ".                                                                        [100%]",
+    "1 passed in 6.37s"
+   ],
+   "tb": "",
+   "assert_line": "",
+   "seconds": 7.6
+  },
+  {
+   "case": "H-2 漂移中性：具名表被往上顶 3 行",
+   "expect": "GREEN",
+   "verdict": "GREEN",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "",
+   "expect_assert_line": "",
+   "actual_assert_line": [],
+   "cause_named_on_screen": "n/a",
+   "rc": 0,
+   "tail": [
+    ".                                                                        [100%]",
+    "1 passed in 2.78s"
+   ],
+   "tb": "",
+   "assert_line": "",
+   "seconds": 4.1
+  },
+  {
+   "case": "H-3 符号被改名（锚必须说得出找不到谁）",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "declarations_found_at",
+   "expect_assert_line": "67",
+   "actual_assert_line": [
+    "67"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:67: AssertionError: {'declarations_found_at': [], 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', 'symbol': 'REFUSAL_KEY'}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+    "1 failed in 4.65s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:67: AssertionError: {'declarations_found_at': [], 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', 'symbol': 'REFUSAL_KEY'}",
+   "assert_line": "67",
+   "seconds": 7.4
+  },
+  {
+   "case": "H-4 那一行被搬出表外",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "entries_found_at",
+   "expect_assert_line": "82",
+   "actual_assert_line": [
+    "82"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:82: AssertionError: {'declaration_line': 46, 'entries_found_at': [], 'label': 'token_unknown', 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', ...}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+    "1 failed in 4.92s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:82: AssertionError: {'declaration_line': 46, 'entries_found_at': [], 'label': 'token_unknown', 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', ...}",
+   "assert_line": "82",
+   "seconds": 7.3
+  },
+  {
+   "case": "H-5 标签被改名：具名锚自己红",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "entries_found_at(renamed label)",
+   "expect_assert_line": "82",
+   "actual_assert_line": [
+    "82"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:82: AssertionError: {'declaration_line': 46, 'entries_found_at': [], 'label': 'token_unknown', 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', ...}",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+    "1 failed in 3.81s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:82: AssertionError: {'declaration_line': 46, 'entries_found_at': [], 'label': 'token_unknown', 'path': 'frontend/src/features/shared/SharedJourneyPanel.tsx', ...}",
+   "assert_line": "82",
+   "seconds": 4.5
+  },
+  {
+   "case": "H-6 值不再是两本词典都认得的键",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "hits_in_product_path",
+   "expect_assert_line": "210",
+   "actual_assert_line": [
+    "210"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:210: AssertionError: [{'contract_named': None, 'declared': False, 'declared_at': None, 'entropy_bits_per_char': 3.55, ...}]",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+    "1 failed in 2.58s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:210: AssertionError: [{'contract_named': None, 'declared': False, 'declared_at': None, 'entropy_bits_per_char': 3.55, ...}]",
+   "assert_line": "210",
+   "seconds": 5.0
+  },
+  {
+   "case": "H-7 表里混进非词典值 ⇒ 赦免整表失效",
+   "expect": "RED",
+   "verdict": "RED",
+   "gate_ok": true,
+   "mutation_landed": true,
+   "mutated_path": "frontend/src/features/shared/SharedJourneyPanel.tsx",
+   "cause_needle": "hits_in_product_path",
+   "expect_assert_line": "210",
+   "actual_assert_line": [
+    "210"
+   ],
+   "cause_named_on_screen": true,
+   "rc": 1,
+   "tail": [
+    "F                                                                        [100%]",
+    "================================== FAILURES ===================================",
+    "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:210: AssertionError: [{'contract_named': None, 'declared': False, 'declared_at': None, 'entropy_bits_per_char': 3.7, ...}]",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+    "1 failed in 9.81s"
+   ],
+   "tb": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\wt_rulers\\backend\\tests\\test_qoder_ord0479_dictionary_key_shape.py:210: AssertionError: [{'contract_named': None, 'declared': False, 'declared_at': None, 'entropy_bits_per_char': 3.7, ...}]",
+   "assert_line": "210",
+   "seconds": 14.0
+  }
+ ],
+ "counts": {
+  "total": 15,
+  "gate_ok": 15,
+  "mutation_landed": 15,
+  "cause_named": 11,
+  "red": 11,
+  "green": 4
+ },
+ "worktree_after_restore": "",
+ "verdict": "ALL_COUNTEREXAMPLES_BITE_AND_DRIFT_IS_NEUTRAL"
+}
