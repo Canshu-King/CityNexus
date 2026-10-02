@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 补件 · 把我上一块（标题「1ba48dbf 勘误」）里标 `NOT_MEASURED / NOT_PROVEN` 的两格答掉：那枚 422 是我的 body 写错字段名，行程经产品自己的门造出来之后，同一台浏览器再进 hub 就画出了 `today-heading`
+
+（这块是接续：已入账的「1ba48dbf 勘误」那块与它后面那枚补件。补件里那句"要不要开单请你裁"由本块第三节自己答掉：不用开了。）
+
+**一、我上一块写错的那一格（具名到字段）**
+
+我上一块（账本标题「1ba48dbf 勘误」那块）第六节我把"造不出行程"写成"我这把仪器的 body 形状没摸准那扇门"。现在具名到**哪一个字段**：`Money` 要的是 `amount_minor`（`backend/app/schemas.py:15`），我给的是 `amount` ⇒ 那枚 `http_status=422`、`loc=["body","budget","amount_minor"]` 是**我的 body 错**，门的答复是对的。改完同一扇门答 `http_status=201`，行程号 `00a6ad34-f50f-40db-86dc-60511c742e6b`。
+
+**二、这一趟的两格读数（同一台浏览器、同一枚私有栈，代次 `7dbbf02074d8fc253e5fdff0734f466b916bcd51`）**
+
+- A（干净设备落 `/v8/hub`，库里只有一枚 traveler）：`today-heading` 在场 0 枚、`trial-open` 0 枚、`trial-setup` 1 枚、正文 592 字。
+- B（把壳自己存的 `citynexus.v8.journey_id` 指到上面那枚行程，再进同一屏）：`today-heading` 在场 1 枚，屏上正文读到 `…随系统EN◌TI还没休息天津之旅1…`（正文长度逐枚在机器件里）。
+- ⇒ **产品这条能力在**：造出行程之后，"有行程的 hub" 这一态真能画出来，`today-heading` 不是空头锚。那条臂的快路（屏上已有 `today-heading` 就直接 PASS）与此一致，所以我上一块第一节收回的那句泛化仍然算数。
+- 仍然剩下的那一格也只写到读数支持的深度：**从"无行程"这一态出发，只按屏上真有名字的按钮走**，我上一趟没有走到有行程那一态（那趟的机器件在证据枝 r4 上）；差别就在"行程是谁造的"——我这趟是经 `POST /api/v1/journeys` 造，而不是经向导那三步。
+
+**三、那处建议不用开了：单主自己已经接走（现读她的 r6）**
+
+`cff87c64` 00:10 那块交的是第四代复走，候选枝 `refs/heads/review/cff87c64-ord0502-phone-mainline-r6` = `d3c59efdd164ecd79a97a8a713cc1a29015371d9`（`git ls-remote` 现读逐字相等）。她枝上那枚 spec 与尖上同一枚路径**不是同一份字节**：尖 `5b97af33946b880fe736c26e54212f18aa679580` vs 她 `b685c148408bbc7d90f8870117262ebd235990a5`，`git diff --numstat` 现读 = `+407 -75` 行。差里正好落着我点名的那一处——`const open = page.getByTestId("trial-open").or(...)` 那行在她的版本里被删掉（`-` 行原文留在证据件 `review/ord0502-instrument-audit/owner_r6_spec_diff_r1.txt` 里），改成先看屏上有没有 `today-heading`、没有就沿向导走，并把 `poster-open` 不在场写成**具名失败**而不是等超时。
+
+⇒ 所以上一块第五节我那句"要不要开单请你裁"**收回**：单在她名下、修法已在她枝上，我不再请求任何动作，也不碰那枚 spec。我这两趟的读数只当旁证：能力在（B 腿），无行程那一支的锚确实不存在（词面两代同读 + 屏上在场集合）。
+
+**四、形制与账**
+
+- 私有栈一次性：后端直答带本 run 的 `e2e_run_id`，经前端原点再问一次仍答同一 run；服务字节 == 磁盘字节（入口 `index-50kwyZcU.js`，比了 1 枚，全等 `True`）。
+- 共享预览库仍未被打开：前后 `bytes` 与 `mtime_ns` 两值同 `True`。
+- 证据枝 `refs/heads/review/1ba48dbf-ord0502-instrument-audit-r6` = `7e4832f3e362705507900e08011b8ad671dcda23`（`git ls-remote` 现读逐字相等）。机器件：
+  - `review/ord0502-instrument-audit/census_driver_r2.py.txt` = `25e31c54f9e808644188bacc837fddf088c270b4`
+  - `review/ord0502-instrument-audit/journey_leg_census_r2.json` = `24e4bce8ea5ba5a057e79f297906ea2c083da433`
+  - `review/ord0502-instrument-audit/journey_leg_surface_detail_r2.json` = `1a649e994d3f3872d90597458a5c9c4fb45fa4fd`
+  - `review/ord0502-instrument-audit/owner_r6_spec_diff_r1.txt` = `e67139ecbf135fcf98545be570378c551bbf45bf`
+- 本块账：权威线推送 0 次、他人枝删改 0 枚、他人进程被动 0 次、产品字节改动 0 枚、`demo/reset` 0 次。
+
+我名下现无未交单（锚点尺那笔按裁定撤回、ORD-0528 五臂读数已交、16:08 那手抽验已交并按 0022 + 本块收口）。下一手等你点名，或按账本里任一筆无主单自申报。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0417 我那把尺的补 · 族测里那四枚存量红是我自己的尺，这一轮亲测到原因了：两枚是尺没滚页，两枚是尺的地板与「字在不在视口里」它不判（车道 8ac89982，自申报）
 
 **〇、坐标与两趟跑在什么字节上**
