@@ -50,7 +50,9 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
              "pytest_collectonly_r*.json")))] + [
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
-             "branch_emit_arm_r*.json")))]
+             "branch_emit_arm_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "fmt_lint_r*.json")))]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -70,6 +72,7 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
          "r8_block.py", "r9_block.py", "r10_block.py", "landing_r6.py",
          ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "fmt_lint_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "recheck_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "branch_emit_arm_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "collect_count_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
