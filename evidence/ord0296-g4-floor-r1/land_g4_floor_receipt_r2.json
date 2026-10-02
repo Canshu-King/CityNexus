@@ -1,0 +1,21 @@
+{
+ "base": "e7ff7938ea41c5ac69afb1172acc4625159c7911",
+ "first_candidate": "2a648d7c09de1e6c19c8c368ef2657d811c78545",
+ "candidate_commit": "b2b3ce17051f3b51ed0278f38e27ca1ddbeca912",
+ "parent": "2a648d7c09de1e6c19c8c368ef2657d811c78545",
+ "parent_is_first_candidate": true,
+ "ancestor_of_candidate": true,
+ "branch": "refs/heads/review/1d64acf5-ord0296-g4-floor-r1",
+ "server_sha_ls_remote": "b2b3ce17051f3b51ed0278f38e27ca1ddbeca912",
+ "server_sha_equals_pushed": true,
+ "diff_from_base": "19\t0\tbackend/tests/test_qoder_ord0296_write_deadline.py",
+ "files": {
+  "backend/tests/test_qoder_ord0296_write_deadline.py": {
+   "server_blob_ls_tree": "395662e3c534229bc8492ea611b6c737257e6228",
+   "local_hash_object": "395662e3c534229bc8492ea611b6c737257e6228",
+   "byte_equal": true
+  }
+ },
+ "message": "S4-ast-taint CMDR 18:34, second commit on the same candidate: drop the predicate I had added alongside `unsourced`. Same condition, so it could never fire - probe P2 (90000 ms in a worker file) is caught by `unsourced` at the older line, which is what the run record attributes. What stays is the one new rule: a file that already asks write_deadline or settings for the wait may state no inline busy_timeout number at any size. Test bytes only; 0 product bytes.",
+ "why_a_second_commit": "the first candidate is already cited by blob on the shelf; replacing it would leave that citation pointing at nothing, so the removal is a child commit and the branch diff against the base is still one file"
+}
