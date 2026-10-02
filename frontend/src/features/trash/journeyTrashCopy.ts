@@ -93,7 +93,7 @@ export const journeyTrashCopy = {
     "trash.transport": "回收站没有从这台服务器读到。这一屏没有改动你的任何行程。",
     "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
-    "trash.noViewer": "这一屏还不知道要问谁的回收站，所以谁的和盘都不显示。你的行程没有因此变化。",
+    "trash.noViewer": "这一屏还不知道要问谁的回收站，所以任何人的都不显示。你的行程没有因此变化。",
     "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
     "trash.rowOwnedByOther": "由这台服务器上的另一位旅客保管",
     "trash.rowOwnedByMe": "在这台服务器上属于你",
