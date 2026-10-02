@@ -234,28 +234,21 @@ def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
     #: R1 一个文件如果已经向模块/配置要这个数（同一枚文件里出现具名符号），它就没有资格再自己写一枚
     #:    内联的 `busy_timeout = <整数>`，无论大小。这正面咬住「consumer 一边读 settings 一边自己抄一枚」，
     #:    也就是 18:34 点名的那枚盲区（1200 毫秒从尺底下走过）。
-    #: R2 反过来：不向模块要数的文件（今天的 worker 短等待）内联值必须**低于**量程，
-    #:    也就是 worker 不许把请求路径那一格的量级抄进自己的会话里。
+    #: 量程那一半不再叠第二条判据：上面 `unsourced` 已经管住「不向模块要数却写到 >= 量程」的内联，
+    #:    探针 P2（往 worker 文件里加 90000 毫秒）红的就是那一格；同条件再写一条永远轮不到它发言。
     inline = re.compile(r"busy_timeout\s*=\s*(\d+)")
     consumer_writes: dict[str, list[str]] = {}
-    worker_at_or_above_floor: dict[str, list[str]] = {}
     for rel, rows in full.items():
         if Path(rel).name == "write_deadline.py":
             continue  # the one place allowed to state the number at all
         asks_the_module = any(sym in line for _i, line in rows for sym in DERIVES)
         for i, line in rows:
             for m in inline.finditer(line):
-                stated = "%d: %s" % (i, line.strip()[:78])
                 if asks_the_module:
-                    consumer_writes.setdefault(rel, []).append(stated)
-                elif int(m.group(1)) >= scale:
-                    worker_at_or_above_floor.setdefault(rel, []).append(stated)
+                    consumer_writes.setdefault(rel, []).append("%d: %s" % (i, line.strip()[:78]))
     assert consumer_writes == {}, (
         "a file that already asks the module for the lock wait also states one inline "
         "(DEADLINE_CONSTANT_NOT_SINGLE_SOURCE, below the floor too): %s" % consumer_writes)
-    assert worker_at_or_above_floor == {}, (
-        "a worker's inline busy_timeout is at or above the live request-path floor: %s"
-        % worker_at_or_above_floor)
     assert others, "nothing mentions busy_timeout at all -- this arm is reading an empty tree"
     session_src = (BACKEND_ROOT / "app/db/session.py").read_text(encoding="utf-8")
     assert "from app.db.write_deadline import busy_timeout_ms" in session_src
