@@ -1104,6 +1104,9 @@ function LegacyApp() {
               <span>Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}</span>
               <span>Schedule drift · {mission.max_schedule_drift_min} min</span>
               <span>Protected Activities · {mission.protected_activity_ids.length}</span>
+              {agentRun.completion_contract?.kind && (
+                <span>Server result · {agentRun.completion_contract.kind}</span>
+              )}
             </div>
             {agentRun.outcome && (
               <p className="mission-outcome" data-testid="agent-run-outcome">

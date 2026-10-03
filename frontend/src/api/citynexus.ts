@@ -327,6 +327,12 @@ export interface AgentRun {
   runtime_identity?: string;
   model_key: string;
   status: string;
+  completion_contract?: {
+    kind?: string;
+    reason_code?: string;
+    source?: string;
+    [key: string]: unknown;
+  } | null;
   outcome: string | AgentRunOutcome | null;
   failure_reason: string | null;
   mission_status?: string | null;

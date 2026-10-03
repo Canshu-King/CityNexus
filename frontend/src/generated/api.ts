@@ -2821,6 +2821,9 @@ export interface components {
             provider_key?: string;
             model_key?: string;
             status: string;
+            completion_contract?: {
+                [key: string]: unknown;
+            };
             outcome?: string | components["schemas"]["AgentRunOutcome"] | null;
             failure_reason?: string | null;
             mission_status?: string | null;
