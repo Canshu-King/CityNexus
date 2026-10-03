@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
@@ -257,7 +258,16 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
     learned: list[dict[str, Any]] = []
     for (dimension, direction), items in sorted(grouped.items()):
         count = sum(max(1, int(item.evidence_count)) for item in items)
-        raw_strength = min(1.0, round(max(float(item.strength) for item in items), 3))
+        # Reinforce independent journeys, not repeated observations of one trip.
+        per_journey: dict[str, float] = {}
+        raw_per_journey: dict[str, float] = {}
+        for item in items:
+            key = item.journey_id or item.id
+            raw_per_journey[key] = max(raw_per_journey.get(key, 0.0), float(item.strength))
+            per_journey[key] = max(
+                per_journey.get(key, 0.0), float(item.strength) * evidence_decay_factor(item)
+            )
+        raw_strength = round(min(0.9, 1 - math.prod(1 - value for value in raw_per_journey.values())), 3)
         weighted_items = [
             (item, evidence_decay_factor(item))
             for item in items
@@ -270,10 +280,7 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                 pair[0].created_at,
             ),
         )
-        effective_strength = min(
-            1.0,
-            round(float(representative.strength) * representative_decay, 3),
-        )
+        effective_strength = round(min(0.9, 1 - math.prod(1 - value for value in per_journey.values())), 3)
         confidence = min(0.95, round(max(float(item.confidence) for item in items), 3))
         evidence_class = max(
             items,
@@ -289,6 +296,7 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                 "direction": direction,
                 "strength": raw_strength,
                 "effective_strength": effective_strength,
+                "reinforcement": {"method": "capped_noisy_or_per_journey", "cap": 0.9, "journey_strengths": per_journey},
                 "decay_factor": representative_decay,
                 "confidence": confidence,
                 "evidence_count": count,
@@ -312,6 +320,16 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                 else "LEARNED_ACTIVE",
             }
         )
+    # Opposite evidence cancels ranking weight; source history remains visible.
+    by_signal = {(item["dimension"], item["direction"]): item for item in learned}
+    for item in learned:
+        direction = item["direction"]
+        opposite = direction.removeprefix("avoid:") if direction.startswith("avoid:") else f"avoid:{direction}"
+        other = by_signal.get((item["dimension"], opposite))
+        item["uncancelled_strength"] = item["effective_strength"]
+        item["opposing_strength"] = other["effective_strength"] if other else 0.0
+    for item in learned:
+        item["effective_strength"] = round(max(0.0, item["uncancelled_strength"] - item["opposing_strength"]), 3)
     explicit_keys = {(item["category"], item["dimension"]) for item in explicit}
     explicit_interest_targets = {
         str(item["dimension"]).strip().lower().removeprefix("avoid:").strip()
@@ -397,62 +415,38 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
         .where(JourneyOutcomeEvent.journey_id == journey.id)
         .order_by(JourneyOutcomeEvent.occurred_at_actual, JourneyOutcomeEvent.id)
     ).all()
-    grouped: dict[tuple[str, str], list[JourneyOutcomeEvent]] = defaultdict(list)
+    # Include CLEARED/EXPIRED rows: reflect cannot resurrect consumed source IDs.
+    history = session.scalars(select(TravelerPreferenceEvidence).where(
+        TravelerPreferenceEvidence.traveler_id == journey.traveler_id,
+        TravelerPreferenceEvidence.journey_id == journey.id,
+    )).all()
+    consumed = {source_id for row in history for source_id in _load(row.related_ids_json, [])}
     for event in events:
-        signal = _event_signal(session, event)
-        if signal is not None:
-            grouped[(str(signal["dimension"]), str(signal["direction"]))].append(event)
-    now = _now()
-    for (dimension, direction), rows in grouped.items():
-        signal_classes = [_event_signal(session, event) for event in rows]
-        signal_classes = [item for item in signal_classes if item is not None]
-        if not signal_classes:
+        if event.id in consumed:
             continue
-        strongest = max(signal_classes, key=lambda item: float(item["strength"]))
-        existing = session.scalar(
-            select(TravelerPreferenceEvidence)
-            .where(
-                TravelerPreferenceEvidence.traveler_id == journey.traveler_id,
-                TravelerPreferenceEvidence.journey_id == journey.id,
-                TravelerPreferenceEvidence.preference_dimension == dimension,
-                TravelerPreferenceEvidence.direction == direction,
-                TravelerPreferenceEvidence.status == "ACTIVE",
-            )
-            .order_by(TravelerPreferenceEvidence.created_at.desc())
-        )
-        explanation = str(strongest["explanation"])
-        related = [item.id for item in rows]
-        if existing is None:
-            session.add(
+        signal = _event_signal(session, event)
+        if signal is None:
+            continue
+        born = _as_utc(event.occurred_at_actual)
+        session.add(
                 TravelerPreferenceEvidence(
                     id=str(uuid4()),
                     traveler_id=journey.traveler_id,
                     journey_id=journey.id,
-                    evidence_type=str(strongest["evidence_class"]),
-                    preference_dimension=dimension,
-                    direction=direction,
-                    strength=float(strongest["strength"]),
-                    confidence=float(strongest["confidence"]),
-                    source="USER_FEEDBACK" if strongest["evidence_class"] == "EXPLICIT_USER_FEEDBACK" else "VOLUNTARY_OUTCOME",
-                    evidence_count=len(rows),
-                    explanation=explanation,
-                    related_ids_json=_json(related),
-                    created_at=now,
-                    expires_at=(datetime.now(timezone.utc) + timedelta(days=180)).isoformat(),
+                    evidence_type=str(signal["evidence_class"]),
+                    preference_dimension=str(signal["dimension"]),
+                    direction=str(signal["direction"]),
+                    strength=float(signal["strength"]),
+                    confidence=float(signal["confidence"]),
+                    source="USER_FEEDBACK" if signal["evidence_class"] == "EXPLICIT_USER_FEEDBACK" else "VOLUNTARY_OUTCOME",
+                    evidence_count=1,
+                    explanation=str(signal["explanation"]),
+                    related_ids_json=_json([event.id]),
+                    created_at=born.isoformat(),
+                    expires_at=(born + timedelta(days=180)).isoformat(),
                     status="ACTIVE",
                 )
-            )
-        else:
-            existing.evidence_count = max(existing.evidence_count, len(rows))
-            existing.evidence_type = str(strongest["evidence_class"])
-            existing.strength = max(float(existing.strength), float(strongest["strength"]))
-            existing.confidence = max(float(existing.confidence), float(strongest["confidence"]))
-            existing.related_ids_json = _json(
-                sorted(set(_load(existing.related_ids_json, []) + related))
-            )
-            existing.explanation = explanation
-            existing.created_at = now
-            existing.expires_at = (datetime.now(timezone.utc) + timedelta(days=180)).isoformat()
+        )
     session.flush()
     return refresh_snapshot(session, journey.traveler_id)
 
@@ -517,7 +511,7 @@ def planning_preference_items(
                 explicit_dimensions.add("indoor")
             items.append(
                 SimpleNamespace(
-                    category="mission",
+                    category="interest" if key in {"museum", "garden", "park", "art", "culture", "indoor", "outdoor", "food"} or key.startswith("avoid:") else "mission",
                     preference_key=str(key),
                     value_json=_json(value),
                     weight=1.0,

@@ -172,6 +172,7 @@ class AgentToolCall(BaseModel):
         "NO_ACTION",
         "UNRESOLVED",
     ] | None = None
+    horizon_decision: Literal["TAKE_NOW", "DEFER", "NO_ACTION"] | None = None
     # Compatibility-only input. The gateway never treats this caller-owned
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False

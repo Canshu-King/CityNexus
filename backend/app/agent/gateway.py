@@ -829,6 +829,7 @@ class AgentToolGateway:
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "requested_outcome": requested,
             "reason": reason or None,
+            "horizon_decision": request.horizon_decision,
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:

@@ -244,6 +244,15 @@ def compile_mission(
     normalized = _text(command)
     objectives: set[str] = set()
     preferences: dict[str, Any] = {}
+    for category, aliases in {
+        "museum": ("museum", "博物馆", "美术馆"),
+        "garden": ("garden", "庭园", "庭院"),
+        "art": ("art gallery", "美术"),
+    }.items():
+        if preference_is_explicitly_excluded(normalized, aliases):
+            preferences[f"avoid:{category}"] = True
+        elif preference_is_positive(normalized, aliases):
+            preferences[category] = True
     capabilities = extract_capabilities_from_text(command, scope="JOURNEY")
     if capabilities:
         objectives.add("CAPABILITY_AWARE")

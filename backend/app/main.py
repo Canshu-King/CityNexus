@@ -7718,6 +7718,15 @@ def _twin_snapshot(
         next_commitment_buffer_min=next_buffer,
         degraded_providers=degraded,
     )
+    remaining_horizon = _remaining_opportunity_horizon(
+        session,
+        journey,
+        activities,
+        current,
+        active_c4,
+        projection_now=derived_now,
+        selected_plan_facts_by_pair=selected_plan_facts_by_pair,
+    )
     context = {
         "journey_status": journey.status,
         "provider_level": 1,
@@ -7726,6 +7735,12 @@ def _twin_snapshot(
         "opportunity_window": opportunity,
         "mobility": mobility_context,
         "execution": execution,
+        "remaining_opportunity_horizon": {
+            "max_windows": 2,
+            "windows": remaining_horizon,
+            "strategy_surface": "TAKE_NOW_OR_DEFER",
+            "future_route_is_not_live_traffic": True,
+        },
     }
     snapshot_at = datetime.now(timezone.utc).isoformat()
     projection_status = "DEGRADED" if degraded else "READY"
@@ -7761,6 +7776,87 @@ def _twin_snapshot(
         "upcoming_commitments": [_commitment_payload(item) for item in projected_commitments],
         "context": context,
     }
+
+
+def _remaining_opportunity_horizon(
+    session: Session,
+    journey: Journey,
+    activities: list[Activity],
+    current: Activity | None,
+    active_c4: list[tuple[datetime, dict[str, Any]]],
+    *,
+    projection_now: datetime,
+    selected_plan_facts_by_pair: dict[tuple[str, str], dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Expose at most two server-proven future choices without reserving them.
+
+    This is a read projection over the active plan.  It deliberately reuses
+    frozen route evidence when it exists and labels every missing edge as
+    revalidation-required; it never calls the provider or mutates the active
+    PlanVersion while an Agent is merely inspecting the horizon.
+    """
+    if current is None:
+        return []
+    try:
+        current_index = next(index for index, item in enumerate(activities) if item.id == current.id)
+    except StopIteration:
+        return []
+    remaining_budget = int(journey.budget_amount_minor) - sum(
+        int(item.estimated_cost_minor or 0)
+        for item in activities
+        if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+    )
+    horizon: list[dict[str, Any]] = []
+    for index, item in enumerate(activities[current_index + 1 :], start=current_index + 1):
+        if len(horizon) >= 2 or item.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or not item.place_id:
+            continue
+        try:
+            start = datetime.fromisoformat(item.start_at)
+            end = datetime.fromisoformat(item.end_at)
+        except (TypeError, ValueError):
+            continue
+        next_commitment_start = min(
+            (when for when, _policy in active_c4 if when >= start),
+            default=datetime.fromisoformat(journey.end_at),
+        )
+        place = session.get(Place, item.place_id)
+        if place is None:
+            continue
+        opening = _json_object(place.opening_hours_json)
+        place_metadata = _json_object(place.metadata_json)
+        cost = canonical_cost_evidence(place_metadata.get("cost_evidence"), place_metadata.get("tags"))
+        cost_status = str((cost or {}).get("status") or "UNKNOWN").upper()
+        known_cost = cost_status in KNOWN_COST_EVIDENCE_STATUSES and (cost or {}).get("amount_minor") is not None
+        predecessor = activities[index - 1] if index > 0 else current
+        pair = (str(predecessor.place_id or ""), str(item.place_id or ""))
+        route = selected_plan_facts_by_pair.get(pair)
+        mobility_state = "FROZEN_PLAN_EVIDENCE" if route else "STALE / REVALIDATION_REQUIRED"
+        try:
+            place_tags = json.loads(place.tags_json or "[]")
+        except json.JSONDecodeError:
+            place_tags = []
+        candidate_tags = canonical_place_tags(category=place.category, tags=place_tags)
+        fit = verified_interest_preference_fit(
+            planning_preference_items(session, journey.traveler_id, journey.id),
+            candidate_tags=candidate_tags,
+        )
+        horizon.append({
+            "window_id": f"remaining-window:{journey.id}:{index}",
+            "window_boundary": {"opens_at": max(projection_now, start).isoformat(), "closes_at": next_commitment_start.isoformat()},
+            "next_commitment": {"start_at": next_commitment_start.isoformat(), "protected": any(when == next_commitment_start for when, _ in active_c4)},
+            "optional_budget_remaining_minor": remaining_budget,
+            "candidate": {
+                "place_id": place.id, "category": place.category, "tags": sorted(candidate_tags),
+                "activity_id": item.id, "visit_minutes": max(0, int((end - start).total_seconds() // 60)),
+                "opening": opening, "cost_evidence": cost or {"status": "UNKNOWN", "amount_minor": None},
+                "preference_fit": fit,
+            },
+            "planning_mobility": {"state": mobility_state, "provider": route.get("provider") if route else None, "pair": list(pair)},
+            "resource_consumption": {"cost_minor": int(item.estimated_cost_minor or 0), "minutes": max(0, int((end - start).total_seconds() // 60))},
+            "future_live_traffic": False,
+            "status": "GROUNDED" if known_cost and route else "REVALIDATION_REQUIRED",
+        })
+    return horizon
 
 
 @app.post("/api/v1/journeys/{journey_id}/start", response_model=JourneyTwinSchema)

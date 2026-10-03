@@ -162,6 +162,9 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                     ],
                 ),
                 "reason": _property("string"),
+                "horizon_decision": _property(
+                    "string", enum=["TAKE_NOW", "DEFER", "NO_ACTION"]
+                ),
             },
             ["journey_id", "outcome"],
         ),
@@ -358,6 +361,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "The current disruption, if any, is discoverable from the server-owned JourneyTwin and event inspection; "
         "do not assume or repeat an event identifier from mission text.\n"
         "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
+        "If the bounded remaining-opportunity horizon shows a feasible current window but a higher-value later window would consume the same optional budget, you may choose DEFER by calling conclude_recovery with outcome NO_ACTION and horizon_decision DEFER; this preserves the active plan. "
         "At the end of the recovery attempt, call conclude_recovery with exactly one server-owned outcome: "
         "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
         "The first tool call should be inspection. "
@@ -549,7 +553,16 @@ def _server_completion_contract(
         return {"kind": requested, "source": "server_trace"}
     if requested == "APPROVAL_PENDING" and approval_pending:
         return {"kind": requested, "source": "server_trace"}
-    if requested == "NO_ACTION" and not executed and not approval_pending and not proposal_created:
+    defer_conclusion = next(
+        (item.get("result", {}).get("horizon_decision") for item in tool_steps
+         if item.get("tool_name") == "conclude_recovery"
+         and isinstance(item.get("result"), dict)
+         and item.get("status") != "TOOL_ERROR"),
+        None,
+    )
+    if requested == "NO_ACTION" and not executed and not approval_pending and (
+        not proposal_created or defer_conclusion == "DEFER"
+    ):
         return {"kind": requested, "source": "server_trace"}
     if requested == "UNRESOLVED":
         return {"kind": requested, "source": "server_trace"}
