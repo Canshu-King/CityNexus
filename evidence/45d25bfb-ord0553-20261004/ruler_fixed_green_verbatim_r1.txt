@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages (6ms)
+  ok 2 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate (1ms)
+  ok 3 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:157:1 › the panel asks for a wording instead of putting the payload field on screen (2ms)
+  ok 4 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:165:1 › the ruler is reading a live surface, not an empty one (3ms)
+
+  4 passed (462ms)
