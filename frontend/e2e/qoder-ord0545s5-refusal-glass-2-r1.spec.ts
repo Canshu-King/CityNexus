@@ -74,7 +74,7 @@ async function ownText(locator: any): Promise<string> {
 
 /** Tokens that must never reach the glass, whatever the screen decides to say.
  *  Note this is a NAMED list, not "any upper-case word": the shipped dictionary itself capitalises the
- *  nav labels (frontend/src/i18n/LocaleContext.tsx:80, :82, :83 answer "TODAY", "TRAVEL", "SYSTEM"), so a
+ *  nav labels (`nav.groupToday`, `nav.groupTravel` and `nav.groupSystem` in frontend/src/i18n/LocaleContext.tsx answer "TODAY", "TRAVEL" and "SYSTEM"), so a
  *  blanket whole-screen assertion would be red on a screen that is exposing nothing. */
 const FORBIDDEN_ON_SCREEN = [
   "VALIDATION_ERROR",
