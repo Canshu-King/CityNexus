@@ -80,3 +80,12 @@ def test_r26_clarified_skip_is_a_machine_mutation():
     ]
     receipt = _server_completion_contract(steps, run_status="COMPLETED")
     assert receipt == {"kind": "MUTATION_EXECUTED", "source": "server_trace"}
+
+
+def test_r26_take_now_child_keeps_current_activity_without_clarified_skip():
+    import inspect
+    from app.agent.runtime import _system_prompt
+
+    prompt = inspect.getsource(_system_prompt)
+    assert "TAKE_NOW answer" in prompt
+    assert "do not call apply_clarified_horizon_choice" in prompt

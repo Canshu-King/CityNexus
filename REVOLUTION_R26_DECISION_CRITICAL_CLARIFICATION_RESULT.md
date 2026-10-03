@@ -139,7 +139,7 @@ The child model lane timed out in both configured attempts and was honestly reco
 ```text
 TAKE_LATER: Museum=SKIPPED, cost=0, Park→Garden fresh live edge,
             Garden=COMPLETED, Journey=COMPLETED
-TAKE_NOW:   Museum=COMPLETED, cost=800, Garden=ACTIVE, Journey=ACTIVE
+TAKE_NOW:   Museum=COMPLETED, cost=800, Garden=COMPLETED, Journey=COMPLETED
 ```
 
 These are different physical execution histories; no synthetic mobility and no direct active-pointer write were used.
@@ -150,10 +150,29 @@ The completion contract now treats `NO_ACTION + DEFER` without an executed serve
 
 ```text
 R20-R26 focused lineage: 46 passed, 1 warning
-R26 behavioral focused tests: 5 passed
+R26 behavioral focused tests: 6 passed
 compileall backend/app: passed
 git diff --check: passed
 ```
 
-The model timeout receipts remain evidence and are not converted into success prose. The successful TAKE_LATER closure is based on the real Agent mutation receipt plus persisted machine state.
+The original 10-second child attempt remains recorded as `FAILED_EXTERNAL /
+MODEL_TIMEOUT`. A bounded rerun with `CITYNEXUS_IMPACT_TIMEOUT_SECONDS=30`
+completed on the real fallback model:
+
+```text
+TAKE_NOW child AgentRun=4eb8675f-e993-440e-839b-be32ff386725
+model=cn:deepseek-v4.1-flash
+tool result=CLARIFIED_CHOICE_IS_NOT_TAKE_LATER (server rejection)
+conclusion=NO_ACTION / TAKE_NOW
+```
+
+The server rejection is the intended authority boundary: TAKE_NOW preserves
+the current activity and does not invoke the TAKE_LATER skip mutation. The
+Garden then completed through the ordinary execution state machine. Thus both
+answers now have real Agent participation and both Journeys complete, while
+the persisted histories still differ in Museum status and optional cost.
+
+The model timeout receipts remain evidence and are not converted into success
+prose. The successful TAKE_LATER closure is based on the real Agent mutation
+receipt plus persisted machine state.
 

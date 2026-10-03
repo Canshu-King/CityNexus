@@ -375,6 +375,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "do not assume or repeat an event identifier from mission text.\n"
         "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
         "If a child mission contains an explicit TAKE_LATER answer, call apply_clarified_horizon_choice to enact the server-derived skip before concluding MUTATION_EXECUTED; do not merely conclude NO_ACTION. "
+        "If a child mission contains an explicit TAKE_NOW answer, do not call apply_clarified_horizon_choice: that tool is only for TAKE_LATER. Keep the current activity and conclude NO_ACTION with horizon_decision TAKE_NOW; the normal execution state machine continues the current activity. "
         "If the bounded remaining-opportunity horizon shows a feasible current window but a higher-value later window would consume the same optional budget, you may choose DEFER by calling conclude_recovery with outcome NO_ACTION and horizon_decision DEFER only before a clarification answer exists. "
         "At the end of the recovery attempt, call conclude_recovery with exactly one server-owned outcome: "
         "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, CLARIFICATION_REQUIRED, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
