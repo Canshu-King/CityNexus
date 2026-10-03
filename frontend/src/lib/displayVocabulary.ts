@@ -23,8 +23,8 @@ const RUNTIME_IDENTITY: Record<string, Label> = {
     en: "the native gateway installed on this machine is answering",
   },
   HERMES_COMPAT_ENDPOINT: {
-    zh: "这台部署配的兼容端点，原生网关没有验到在应答",
-    en: "the compatibility endpoint this deployment configured; no verified native gateway",
+    zh: "HERMES_COMPAT_ENDPOINT",
+    en: "HERMES_COMPAT_ENDPOINT",
   },
   NATIVE_DEEPSEEK_TOOL_LOOP: {
     zh: "这个服务自己直连模型商的那条环",
