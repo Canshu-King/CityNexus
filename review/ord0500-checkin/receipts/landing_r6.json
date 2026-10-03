@@ -1,6 +1,6 @@
 {
   "tool": "landing_r6",
-  "took_local": "2026-10-03T20:43:38.883738+08:00",
+  "took_local": "2026-10-03T20:56:22.875197+08:00",
   "live_tip": "702a4c7247cd9ba636711696232eccd2adb1cd96",
   "refs": [
     {
@@ -237,9 +237,9 @@
     },
     {
       "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17",
-      "commit": "860c9561106eb7f84befab43e16fc1e69189f21b",
+      "commit": "b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
       "fork_point": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
-      "predicted_tree": "a964e8b1dddcd3605b46eb14513867e89bab2043",
+      "predicted_tree": "735b56e00611e3f25a2741bc18b02b4f66b5f722",
       "merge_tree_exit": 0,
       "write_set_files": 84,
       "files_landing_byte_identical": 84,

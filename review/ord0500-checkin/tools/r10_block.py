@@ -735,11 +735,12 @@ def main():
           B.fmt(aud.get("citations_declined")),
           "、".join("%s %s 条" % kv for kv in sorted(mech.items())), AUD_RECEIPT, blob_audit))
     A("- ③ 沿用件的名字这一格是我自己踩到的规矩洞：`build_faces_r6.json`、`sweep_r6.json`、"
-      "`pytest_r6.json`、`checkin_copy_rows_r6.json` 这四枚带 `_r6` 的名字每一代都被**同名覆盖**（blob 变、"
-      "路径不变），而 `citation_gate_*`、`citation_audit_*`、`day*_anchor_recheck_*`、`branch_emit_arm_*` "
-      "这批从 r14 起已经改成按代命名，页里引的 blob 因此永远指得住。已进线的那一代读数被后一代盖掉这件事，"
-      "在 CMDR-0925-2128 里对量具代码是明令禁止的，对件没有明文。要不要我把那四枚也改成按代名（下一份就叫 "
-      "`sweep_r18.json`），还是接受同名覆盖、由我每代把旧 blob 抄进页里？这一手我一枚没动它们。")
+      "`pytest_r6.json`、`checkin_copy_rows_r6.json`、`reanchor_r8.json` 这几枚固定名字每一代都被**同名覆盖**"
+      "（blob 变、路径不变），而 `citation_gate_*`、`citation_audit_*`、`day*_anchor_recheck_*`、"
+      "`branch_emit_arm_*`、`fmt_lint_*`、`pytest_collectonly_*` 这批从 r14 起已经改成按代命名，页里引的 "
+      "blob 因此永远指得住。已进线的那一代读数被后一代盖掉这件事，在 CMDR-0925-2128 里对量具代码是明令禁止"
+      "的，对件没有明文。要不要我把前面那几枚也改成按代名（下一份就叫 `sweep_r18.json`），还是接受同名覆盖、"
+      "由我每代把旧 blob 抄进页里？这一手我一枚没动它们——除了本手为裁③重跑的那两趟同名件。")
     A("")
     A("复算入口：`git -C D:/moodle/CityNexus ls-remote --refs origin %s %s`；"
       "`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t %s`；"
