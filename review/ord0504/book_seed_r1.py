@@ -12,6 +12,8 @@ Rows deliberately cover the shapes the 预订 tab has to answer for, and the sha
   * a CONFIRMED reservation with no commitment behind it;
   * a reservation whose server status is the draft word PENDING -- the card must not call that 已确认;
   * a reservation with no price at all (`price_amount_minor` NULL, `price_status` UNKNOWN);
+  * a JPY reservation: `frontend/src/lib/money.ts:1` gives JPY no minor fraction, so 4800 minor is 4,800 yen,
+    and anything that divides every currency by 100 is 100x off on exactly this row;
   * a commitment priced and marked mock- (the 模拟承诺 word), and a commitment whose price is unknown.
 """
 from __future__ import annotations
@@ -75,6 +77,10 @@ def main() -> int:
              "currency": "CNY", "price_status": "KNOWN", "commit": True, "ref": "CA-9F31"},
             {"label": "confirmed_no_commitment", "status": "CONFIRMED", "price": 9900,
              "currency": "USD", "price_status": "KNOWN", "commit": False, "ref": "MU-2270"},
+            # JPY beside CNY on purpose: `frontend/src/lib/money.ts:1` gives it zero decimals, so the two
+            # money systems print the same glyph `¥` while the wallet answered two different ISO codes.
+            {"label": "yen_row_same_glyph", "status": "CONFIRMED", "price": 4800,
+             "currency": "JPY", "price_status": "KNOWN", "commit": False, "ref": "JP-4800"},
             {"label": "pending_row", "status": "PENDING", "price": 1500, "currency": "CNY",
              "price_status": "KNOWN", "commit": False, "ref": None},
             {"label": "unpriced_row", "status": "CONFIRMED", "price": None, "currency": None,

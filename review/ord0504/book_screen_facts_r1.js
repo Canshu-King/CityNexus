@@ -46,9 +46,26 @@ async function answers() {
   return { experience: await fetchDoor("experience"), wallet: await fetchDoor("wallet") };
 }
 
-const money = (minor) => (minor / 100).toLocaleString("en-US", {
-  minimumFractionDigits: 2, maximumFractionDigits: 2,
-});
+/* The ruler keeps its OWN exponent table. `frontend/src/lib/money.ts:1` says JPY/KRW/VND/IDR carry no
+ * minor fraction; if the face (or my own spend helper) divides by 100 anyway, the number on the screen is
+ * 100x off, and this table is what notices. */
+const ZERO_DECIMAL = new Set(["JPY", "KRW", "VND", "IDR"]);
+const exponent = (code) => (ZERO_DECIMAL.has(String(code ?? "CNY").toUpperCase()) ? 0 : 2);
+const money = (minor, code = "CNY") => {
+  const digits = exponent(code);
+  return (minor / 10 ** digits).toLocaleString("en-US", {
+    minimumFractionDigits: digits, maximumFractionDigits: digits,
+  });
+};
+
+/* What the locale's own currency formatter would print for that amount, computed here rather than read
+ * from the product helper, so a mistake in the product's exponent handling shows up as a red arm. */
+const markedMoney = (minor, code, locale = "zh-CN") => {
+  const digits = exponent(code);
+  return new Intl.NumberFormat(locale, {
+    style: "currency", currency: String(code ?? "CNY"), maximumFractionDigits: digits,
+  }).format(minor / 10 ** digits);
+};
 
 const CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
 
@@ -125,7 +142,7 @@ function record(arm, pass, detail) {
   /* 2a. the number on each priced ticket is the number the wallet answered for it */
   {
     const opened = await openBookings(DESKTOP, "route");
-    const wantMinor = priced.map((r) => money(r.price.amount_minor));
+    const wantMinor = priced.map((r) => money(r.price.amount_minor, r.price.currency));
     const cardsWithNumber = opened.reservations.filter((card) => wantMinor.some((w) => card.includes(w)));
     const cardsWithUnknown = opened.reservations.filter((card) => card.includes("价格未知"));
     record("book_screen/ticket_numbers_equal_the_wallets_own_amounts",
@@ -137,23 +154,63 @@ function record(arm, pass, detail) {
     await opened.context.close();
   }
 
-  /* 2b. a number without an unambiguous currency is not an answer: `¥` stands for CNY and JPY both,
-   *     so a traveller reading `¥99.00` on a USD ticket cannot tell which money it is. The doors carry
-   *     an ISO code; this arm asks whether the face kept it. */
+  /* 2b. the money on a ticket must be traceable to the currency the wallet answered.  Measured, not argued:
+   *     for every priced row the card has to carry either the ISO code or the exact string this locale's own
+   *     formatter produces for that amount -- and no two different ISO codes may collapse into one string.
+   *     A first version of this arm demanded "code on the card, no symbol" and reported the USD ticket as
+   *     `¥`; that reading was wrong and is retracted here: under zh-CN this Chrome answers CNY=`¥230.00`,
+   *     JPY=`JP¥4,800`, USD=`US$99.00`, so the marks differ. What stays required is the traceability. */
   {
     const opened = await openBookings(DESKTOP, "route");
-    const rows = reservations.filter((r) => typeof r.price.amount_minor === "number");
-    const perCard = opened.reservations.map((card, index) => {
-      const row = reservations[index];
-      if (!row || typeof row.price.amount_minor !== "number") return null;
-      return { server_currency: row.price.currency,
-               iso_on_card: card.includes(row.price.currency),
-               symbol_on_card: /¥|US\$|￥|\$(?=\s?\d)/.test(card),
-               card: card.slice(0, 150) };
-    }).filter(Boolean);
-    record("book_screen/a_ticket_price_names_its_currency_in_the_code_the_server_sent",
-      perCard.every((entry) => entry.iso_on_card && !entry.symbol_on_card),
-      { cards: perCard, note: "the wallet answers an ISO code; a symbol on the face loses which money" });
+    const perCard = opened.reservations
+      .map((card, index) => {
+        const row = reservations[index];
+        if (!row || typeof row.price.amount_minor !== "number") return null;
+        const code = String(row.price.currency);
+        const marked = markedMoney(row.price.amount_minor, code);
+        return { server_currency: code, formatter_says: marked,
+                 card_carries_the_code: card.includes(code),
+                 card_carries_the_locale_mark: card.includes(marked),
+                 card: card.slice(0, 150) };
+      })
+      .filter(Boolean);
+    const byMark = {};
+    for (const entry of perCard) {
+      const key = entry.card_carries_the_code ? entry.server_currency : entry.formatter_says;
+      (byMark[key] = byMark[key] || new Set()).add(entry.server_currency);
+    }
+    const collapsed = Object.keys(byMark)
+      .filter((mark) => byMark[mark].size > 1)
+      .map((mark) => ({ mark, server_currencies: Array.from(byMark[mark]).sort() }));
+    record("book_screen/every_ticket_price_is_traceable_to_the_currency_answered",
+      perCard.every((entry) => entry.card_carries_the_code || entry.card_carries_the_locale_mark)
+      && collapsed.length === 0,
+      { cards: perCard, collapsed_marks: collapsed,
+        note: "a price the locale cannot trace back to one ISO code is not an answer" });
+    await opened.context.close();
+  }
+
+  /* 2c. zero-decimal money measured on the face: the store holds 4800 minor JPY, which is 4,800 yen, not
+   *     48.00.  A face that divides every currency by 100 (the way `frontend/src/features/trip/spendFacts.ts`
+   *     does in `moneyText`) lands on the wrong number here, so this row exists to be caught. */
+  {
+    const opened = await openBookings(DESKTOP, "route");
+    const zeroRows = reservations.filter(
+      (r) => typeof r.price.amount_minor === "number" && exponent(r.price.currency) === 0);
+    const readings = zeroRows.map((row) => {
+      const card = opened.reservations[reservations.indexOf(row)] || "";
+      const correct = money(row.price.amount_minor, row.price.currency);
+      const hundredOff = money(row.price.amount_minor, "CNY");
+      return { server_currency: row.price.currency, minor: row.price.amount_minor,
+               wants_on_card: correct, wrong_if_always_dividing_by_100: hundredOff,
+               card: card.slice(0, 150), shows_correct: card.includes(correct),
+               shows_the_hundred_off_number: card.includes(hundredOff) };
+    });
+    record("book_screen/a_zero_decimal_currency_is_not_divided_by_100",
+      zeroRows.length > 0
+      && readings.every((entry) => entry.shows_correct && !entry.shows_the_hundred_off_number),
+      { zero_decimal_rows: readings.length, readings,
+        note: "empty readings would mean the store has no zero-decimal money, which is a seed failure" });
     await opened.context.close();
   }
 
@@ -177,7 +234,7 @@ function record(arm, pass, detail) {
     const opened = await openBookings(DESKTOP, "route");
     const unknowns = commitments.filter((c) => c.monetary_value_status !== "KNOWN");
     const known = commitments.filter((c) => c.monetary_value_status === "KNOWN");
-    const knownNumbers = known.map((c) => money(c.monetary_value.amount_minor));
+    const knownNumbers = known.map((c) => money(c.monetary_value.amount_minor, c.monetary_value.currency));
     const cardsShowingZero = opened.commitments.filter((card) => /(?:¥|￥|US\$|\$|CNY|JPY|USD)\s*0\.00(?!\d)/.test(card));
     const cardsWithUnknownWord = opened.commitments.filter((card) => card.includes("价格未知"));
     const cardsWithKnownNumber = opened.commitments.filter((card) => knownNumbers.some((n) => card.includes(n)));
@@ -189,6 +246,29 @@ function record(arm, pass, detail) {
           minor: c.monetary_value.amount_minor })),
         cards: opened.commitments.length, cards_with_unknown_word: cardsWithUnknownWord.length,
         cards_showing_a_zero_amount: cardsShowingZero.length, cards_with_known_number: cardsWithKnownNumber.length });
+    await opened.context.close();
+  }
+
+  /* 4b. the same rule on the ticket cards.  Control R1 of `book_screen_controls_r1.py` put a `¥0.00` on a
+   *     ticket and this ruler stayed green, because arm 4 only reads the commitment cards -- the blind spot
+   *     was mine, so the arm that closes it ships with the reading.  The word is the product's own:
+   *     `bookings.priceUnknown` is 价格未知 at `frontend/src/i18n/LocaleContext.tsx:1431`. */
+  {
+    const opened = await openBookings(DESKTOP, "route");
+    const unpriced = reservations.filter((r) => r.price.amount_minor == null);
+    const priced = reservations.filter((r) => typeof r.price.amount_minor === "number");
+    const zeroCards = opened.reservations
+      .filter((card) => /(?:¥|￥|US\$|\$|CNY|JPY|USD)\s*0(?:\.00)?(?![\d])/.test(card));
+    const wordCards = opened.reservations.filter((card) => card.includes("价格未知"));
+    const numberCards = opened.reservations.filter((card) => /(?:¥|￥|US\$|\$|CNY|JPY|USD)\s*[1-9]/.test(card));
+    record("book_screen/an_unlearned_ticket_price_stays_a_word_not_a_zero",
+      opened.reservations.length === reservations.length
+      && zeroCards.length === 0 && wordCards.length === unpriced.length
+      && numberCards.length === priced.length,
+      { ticket_rows: reservations.length, unpriced_rows: unpriced.length,
+        priced_rows: priced.length, cards_showing_a_zero: zeroCards,
+        cards_with_the_word: wordCards.length, cards_with_a_number: numberCards.length,
+        expected_word: "价格未知" });
     await opened.context.close();
   }
 

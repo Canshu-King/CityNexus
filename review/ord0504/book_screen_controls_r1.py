@@ -1,16 +1,22 @@
 """ORD-0504 book-screen hand -- prove the 回答事实 arms bite, by moving the product's own words.
 
-The baseline reading left three reds, and a red is only evidence if the code path that caused it can be
-pointed at. So this file does four one-line mutations of the 预订 face, rebuilds the bundle, serves it on
+The baseline reading left reds, and a red is only evidence if the code path that caused it can be
+pointed at. So this file does six one-line mutations of the 预订 face, rebuilds the bundle, serves it on
 this lane's own front, re-runs the arms, and restores the source byte for byte:
 
-  R1 break   an unpriced ticket prints a zero instead of the word      -> expect the price arms to go red
-  R2 break   the 模拟承诺 badge is never drawn                          -> expect the reference arm to go red
-  F1 fix-check  已确认 is derived from the server's status word          -> expect the status arm to go green
-  F2 fix-check  a ticket price keeps the ISO code the wallet answered   -> expect the currency arm to go green
+  R1  break    an unpriced *ticket* prints a zero instead of the word   -> the ticket zero arm goes red
+  R1b break    an unpriced *commitment* prints a zero instead of the word-> the commitment zero arm goes red
+  R2  break    the 模拟承诺 badge is never drawn                          -> the reference arm goes red
+  F1  fix-check 已确认 is derived from the server's status word           -> the status arm goes green
+  F2  fix-check the naive "print the ISO code" repair, which divides every currency by 100
+              -> the zero-decimal arm goes RED: the naive repair is itself the defect I shipped
+                 in `frontend/src/features/trip/spendFacts.ts` (`moneyText`)
+  F3  fix-check code display that keeps each currency's own exponent      -> the currency arm goes green
 
     D:/moodle/CityNexus/.venv/Scripts/python.exe review/ord0504/book_screen_controls_r1.py
 
+Environment: `BOOK_CTRL_OUT` names the report (default `book_screen_controls_r1.txt`) and each control
+writes its own arms reading to `book_screen_control_arms_<label>.json`.
 Leaves the source restored. Rebuild the real bundle afterwards with the command the report prints.
 """
 from __future__ import annotations
@@ -26,12 +32,23 @@ from pathlib import Path
 LANE = Path("D:/moodle/_qoder_r_ord0465_20260929")
 TREE = LANE / "wt"
 TARGET = TREE / "frontend" / "src" / "app" / "V8Experience.tsx"
-OUT = TREE / "review" / "ord0504" / "book_screen_controls_r1.txt"
+OUT = TREE / "review" / "ord0504" / os.environ.get(
+    "BOOK_CTRL_OUT", "book_screen_controls_r1.txt")
 BASELINE_DIST = LANE / "dist_book_tip"
 BASELINE_ENTRY_SHA1 = ""  # filled below, from the bundle the baseline pass actually graded
 PROXY = Path("D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_static_api_proxy_r1.py")
 PY = Path("D:/moodle/CityNexus/.venv/Scripts/python.exe")
 NODE = "node"
+
+TICKET_PRICE_BLOCK = """                <strong>
+                  {item.price.amount_minor == null
+                    ? t("bookings.priceUnknown")
+                    : money(
+                        item.price.amount_minor,
+                        item.price.currency ?? "CNY",
+                        locale,
+                      )}
+                </strong>"""
 
 # (label, find, replace, arm expected to change, direction)
 CONTROLS = [
@@ -48,6 +65,12 @@ CONTROLS = [
                         item.price.currency ?? "CNY",
                         locale,
                       )}""",
+     "book_screen/an_unlearned_ticket_price_stays_a_word_not_a_zero", "to red"),
+    ("R1b an unlearned commitment price prints 0.00 instead of the word",
+     """                {known && amountMinor != null
+                  ? money(amountMinor, item.monetary_value?.currency ?? "CNY", locale)""",
+     """                {amountMinor != null
+                  ? money(amountMinor, item.monetary_value?.currency ?? "CNY", locale)""",
      "book_screen/an_unlearned_price_stays_a_word_not_a_zero", "to red"),
     ("R2 the simulated badge is never drawn",
      'const simulated = String(item.external_ref ?? "").startsWith("mock-");',
@@ -75,22 +98,38 @@ CONTROLS = [
                       : "Confirmed · no commitment"}
               </span>""",
      "book_screen/confirmed_words_only_where_the_server_said_confirmed", "to green"),
-    ("F2 the ticket keeps the ISO code the wallet answered",
-     """                <strong>
-                  {item.price.amount_minor == null
-                    ? t("bookings.priceUnknown")
-                    : money(
-                        item.price.amount_minor,
-                        item.price.currency ?? "CNY",
-                        locale,
-                      )}
-                </strong>""",
+    ("F2 the naive ISO-code fix (always divide by 100)",
+     TICKET_PRICE_BLOCK,
      """                <strong>
                   {item.price.amount_minor == null
                     ? t("bookings.priceUnknown")
                     : `${item.price.currency ?? "CNY"} ${(item.price.amount_minor / 100).toFixed(2)}`}
                 </strong>""",
-     "book_screen/a_ticket_price_names_its_currency_in_the_code_the_server_sent", "to green"),
+     "book_screen/a_zero_decimal_currency_is_not_divided_by_100", "to red"),
+    ("F3 the code-display fix that keeps each currency's own exponent",
+     TICKET_PRICE_BLOCK,
+     """                <strong>
+                  {item.price.amount_minor == null
+                    ? t("bookings.priceUnknown")
+                    : new Intl.NumberFormat(locale, {
+                        style: "currency",
+                        currencyDisplay: "code",
+                        currency: item.price.currency ?? "CNY",
+                        maximumFractionDigits: ["JPY", "KRW", "VND", "IDR"].includes(
+                          String(item.price.currency ?? "CNY").toUpperCase(),
+                        )
+                          ? 0
+                          : 2,
+                      }).format(
+                        item.price.amount_minor /
+                          (["JPY", "KRW", "VND", "IDR"].includes(
+                            String(item.price.currency ?? "CNY").toUpperCase(),
+                          )
+                            ? 1
+                            : 100),
+                      )}
+                </strong>""",
+     "book_screen/every_ticket_price_is_traceable_to_the_currency_answered", "to green"),
 ]
 
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -100,9 +139,10 @@ def sha1(data: bytes) -> str:
     return hashlib.sha1(data).hexdigest()
 
 
-def run(cmd: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess:
+def run(cmd: list[str], cwd: Path | None = None,
+        env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, cwd=cwd or TREE, capture_output=True, text=True,
-                          encoding="utf-8", errors="replace")
+                          encoding="utf-8", errors="replace", env=env)
 
 
 def rebuild(dist: str) -> None:
@@ -166,8 +206,11 @@ def served_entry() -> dict[str, object]:
     return {"entry": asset, "sha1": sha1(body), "bytes": len(body)}
 
 
-def arms() -> dict[str, object]:
-    r = run([NODE, "review/ord0504/book_screen_facts_r1.js"], cwd=TREE)
+def arms(sink: str) -> dict[str, object]:
+    """Run the 11 arms against whatever this port is answering, and park this control's own reading in
+    `sink` -- two controls sharing one evidence file is how the last round lost the trail."""
+    r = run([NODE, "review/ord0504/book_screen_facts_r1.js"], cwd=TREE,
+            env=dict(os.environ, BOOK_OUT=sink))
     verdict = {}
     for line in (r.stdout or "").splitlines():
         if line.startswith(("PASS  ", "FAIL  ")):
@@ -209,7 +252,8 @@ def main() -> int:
         rebuild("dist_book_mut")
         restart_front("dist_book_mut")
         served = served_entry()
-        result = arms()
+        sink = "review/ord0504/book_screen_control_arms_%s.json" % label.split(" ", 1)[0].lower()
+        result = arms(sink)
         observed = result["verdict"].get(arm)
         # an arm that never reported is not a caught arm: it says the run broke, not that the code moved
         if observed is None:
@@ -217,6 +261,7 @@ def main() -> int:
         else:
             expected_text = "CAUGHT" if (direction == "to green") == observed else "MISSED"
         lines.append("=== %s" % label)
+        lines.append("    arms reading: %s" % sink)
         lines.append("    expected %s %s" % (arm, direction))
         lines.append("    observed %s" % ("absent-from-run" if observed is None else ("PASS" if observed else "FAIL")))
         lines.append("    %s" % result["summary"])

@@ -18,9 +18,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import book_screen_controls_r1 as ctl  # noqa: E402  (main is guarded, import is inert)
 
-OUT = ctl.TREE / "review" / "ord0504" / "book_screen_post_r1.txt"
-PASSES = ["review/ord0504/book_screen_pass_post1_r1.json",
-          "review/ord0504/book_screen_pass_post2_r1.json"]
+OUT = ctl.TREE / "review" / "ord0504" / os.environ.get("BOOK_POST_OUT", "book_screen_post_r2.txt")
+PASSES = ["review/ord0504/" + name for name in (
+    os.environ.get("BOOK_POST_PASSES", "book_screen_pass_post1_r2.json,book_screen_pass_post2_r2.json")
+    .split(","))]
 
 
 def disk_sha1(entry: str) -> str:
