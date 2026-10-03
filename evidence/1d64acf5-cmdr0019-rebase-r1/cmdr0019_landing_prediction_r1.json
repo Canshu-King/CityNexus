@@ -1,0 +1,93 @@
+{
+ "tip": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+ "own_paths_declared": [
+  "backend/tests/test_qoder_ord0296_write_deadline.py",
+  "backend/tests/test_qoder_ord0476_checkins.py",
+  "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+  "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json",
+  "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r3.json"
+ ],
+ "tip_source": "git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "candidates": [
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0296-g4-floor-r5",
+   "sha": "3f7cda327038ac02c94ffe5a439048f21bee0a8a",
+   "server_sha_ls_remote": "3f7cda327038ac02c94ffe5a439048f21bee0a8a",
+   "server_equals_local": true,
+   "commits_on_tip": 5,
+   "chain_root": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+   "chain_root_is_tip": true,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r3.json"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+     "candidate_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+     "candidate_blob": "df63f4c826a840a0ca783dffa40f786373976cad",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json",
+     "candidate_blob": "a9e80129fed159a49e3af0e8e1ff0b0c9577ea3f",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r3.json",
+     "candidate_blob": "080957fb26c0ea82eccf8a42baee14fff0ea35a5",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [],
+   "base_is_current_tip": true,
+   "merge_tree": {
+    "rc": 0,
+    "tree": "fcb5c2f8e09430eb2d3dd55ccfc0bc394d76ca39",
+    "conflict_names": 0
+   }
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0476-response-set-r4",
+   "sha": "f9f4b718e86fdee77955f33f94e41ca33ccaff0e",
+   "server_sha_ls_remote": "f9f4b718e86fdee77955f33f94e41ca33ccaff0e",
+   "server_equals_local": true,
+   "commits_on_tip": 1,
+   "chain_root": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+   "chain_root_is_tip": true,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0476_checkins.py",
+     "candidate_blob": "534b673b749adfd7548066cca770e0c52d105306",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [],
+   "base_is_current_tip": true,
+   "merge_tree": {
+    "rc": 0,
+    "tree": "c58ceddc334be2344c14b306563f6b021271dbdc",
+    "conflict_names": 0
+   }
+  }
+ ]
+}
