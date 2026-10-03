@@ -427,7 +427,7 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
         signal = _event_signal(session, event)
         if signal is None:
             continue
-        born = _as_utc(event.occurred_at_actual)
+        born = _as_utc(event.occurred_at_actual) or datetime.now(timezone.utc)
         session.add(
                 TravelerPreferenceEvidence(
                     id=str(uuid4()),

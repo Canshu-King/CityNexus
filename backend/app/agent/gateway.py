@@ -824,6 +824,25 @@ class AgentToolGateway:
             "UNRESOLVED",
         }:
             raise HTTPException(422, "outcome must be a supported recovery conclusion")
+        if request.horizon_decision == "DEFER":
+            if requested != "NO_ACTION" or request.journey_id is None:
+                raise HTTPException(422, "DEFER requires a non-mutating NO_ACTION conclusion")
+            from app.main import _twin_snapshot
+            journey = _require_journey(self.session, request.journey_id)
+            horizon = (_twin_snapshot(self.session, journey).get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", []))
+            if len(horizon) < 2:
+                raise HTTPException(422, "DEFER_REQUIRES_TWO_GROUNDED_HORIZON_WINDOWS")
+            first, later = horizon[0], horizon[1]
+            first_candidate, later_candidate = first.get("candidate", {}), later.get("candidate", {})
+            first_cost = first_candidate.get("cost_evidence", {}).get("amount_minor")
+            later_cost = later_candidate.get("cost_evidence", {}).get("amount_minor")
+            budget = int(first.get("optional_budget_remaining_minor") or 0)
+            if first.get("status") != "GROUNDED" or later.get("status") != "GROUNDED":
+                raise HTTPException(422, "DEFER_REQUIRES_GROUNDED_WINDOWS")
+            if not isinstance(first_cost, int) or not isinstance(later_cost, int) or first_cost > budget or later_cost > budget:
+                raise HTTPException(422, "DEFER_REQUIRES_EACH_WINDOW_TO_BE_FEASIBLE")
+            if first_cost + later_cost <= budget or (later_candidate.get("preference_fit") or 0) <= (first_candidate.get("preference_fit") or 0):
+                raise HTTPException(422, "DEFER_REQUIRES_HIGHER_VALUE_LATER_WINDOW_AND_SCARCE_BUDGET")
         return {
             "tool": "conclude_recovery",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
