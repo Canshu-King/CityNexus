@@ -436,15 +436,21 @@ def preference_schema(item: Preference) -> PreferenceSchema:
 def journey_live_view(item: Journey) -> JourneyLiveView:
     """One computation, one place: whether this trip belongs on 实时行程 (ORD-0520).
 
-    The rule is the durable `status`, and only a trip the traveller called off is excluded.  It is
-    written here rather than in a screen because the order asks for the judgement from the server:
-    a device that re-derived it would hold a second copy of the rule, and the two would disagree
-    the first time the rule grows a case the client has not heard of.  A trip in the recycle bin is
-    not decided here -- `listJourneys` already refuses to list it, and the bin has its own column,
-    its own door and its own word (`backend/app/schemas.py` -- `RecycleBinJourney`).
+    The rule reads `journeys.aborted_at` -- the column the abort door owns and never clears -- and
+    falls back to `status` for a row written before that column existed.  It is not `status` alone:
+    `select_plan` writes `journeys.status = "PLANNED"` without reading the journey's status
+    (`backend/app/main.py:7833`), and the two activity-advance doors write `"COMPLETED"` the same
+    way (`backend/app/main.py:9372`, `backend/app/main.py:9456`), so a trip called off and then
+    re-planned would come back onto the live screen while still carrying the abort moment and the
+    traveller's reason -- two answers on one screen, which is what the follow-up race probe found for
+    the write gate (`review/ord0520/ABORT_RACE_RECEIPT.json`) and what `abort_resurrect_probe_r1.py`
+    measures on this order's own stack.  The judgement stays the server's rather than a screen's
+    because a device that re-derived it would hold a second copy of the rule.  A trip in the recycle
+    bin is not decided here -- `listJourneys` already refuses to list it, and the bin has its own
+    column, its own door and its own word (`backend/app/schemas.py` -- `RecycleBinJourney`).
     """
 
-    if item.status == "CANCELLED":
+    if item.aborted_at is not None or item.status == "CANCELLED":
         return JourneyLiveView(included=False, reason_code="JOURNEY_ABORTED")
     return JourneyLiveView(included=True)
 
