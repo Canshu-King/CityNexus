@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import json
+from datetime import datetime, timezone
+from uuid import uuid4
+
 from fastapi.testclient import TestClient
 
 import app.main as main_module
 from app.agent.autorun import stop_autorun
 from app.db.session import SessionLocal
+from app.db.models import Preference, TravelerPreferenceEvidence
 from app.execution.traveler_twin import planning_preference_items
 from app.replanning.candidate_evidence import verified_interest_preference_fit
 from demo_stage import demo_reset_headers
@@ -133,3 +138,57 @@ def test_r24_explicit_interest_overrides_learned_avoidance() -> None:
         if item["direction"].startswith("avoid:")
     )
     assert refreshed_learned["override_state"] == "EXPLICIT_WINS"
+
+
+def test_r24_explicit_avoidance_overrides_learned_positive() -> None:
+    """The inverse direction must be strategy-visible, not just UI-visible."""
+
+    stop_autorun()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
+    traveler_id = ids["traveler_id"]
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(
+            Preference(
+                id=str(uuid4()),
+                traveler_id=traveler_id,
+                category="interest",
+                preference_key="avoid:museum",
+                value_json=json.dumps(True),
+                weight=1.0,
+                source="EXPLICIT",
+                created_at=now,
+                updated_at=now,
+            )
+        )
+        session.add(
+            TravelerPreferenceEvidence(
+                id=str(uuid4()),
+                traveler_id=traveler_id,
+                journey_id=None,
+                evidence_type="VOLUNTARY_CHOICE",
+                preference_dimension="interest",
+                direction="museum",
+                strength=0.55,
+                confidence=0.7,
+                source="VOLUNTARY_OUTCOME",
+                evidence_count=1,
+                explanation="A previous voluntary choice favored museum.",
+                related_ids_json="[]",
+                created_at=now,
+                expires_at=None,
+                status="ACTIVE",
+            )
+        )
+        session.commit()
+        items = planning_preference_items(session, traveler_id)
+        assert any(
+            getattr(item, "preference_key", "") == "avoid:museum"
+            and getattr(item, "source", "") == "EXPLICIT"
+            for item in items
+        )
+        assert not any(
+            getattr(item, "preference_key", "") == "museum"
+            and getattr(item, "source", "") == "LEARNED_SOFT"
+            for item in items
+        )

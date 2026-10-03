@@ -468,7 +468,16 @@ def planning_preference_items(
             .order_by(Preference.category, Preference.preference_key)
         ).all()
     )
-    explicit_dimensions = {row.preference_key for row in rows}
+    explicit_dimensions = {str(row.preference_key).strip().lower() for row in rows}
+    # A user's explicit negative direction is about the same canonical
+    # dimension as the positive learned direction.  Keep the stored learned
+    # evidence for explainability, but do not feed the contradicted signal
+    # back into ranking.
+    explicit_interest_targets = {
+        str(row.preference_key).strip().lower().removeprefix("avoid:").strip()
+        for row in rows
+        if str(row.category).strip().lower() == "interest"
+    }
     items: list[Any] = rows[:]
     for capability in capability_payload(session, traveler_id, journey_id):
         items.append(
@@ -511,7 +520,12 @@ def planning_preference_items(
     for item in _load(snapshot.learned_soft_preferences_json, []):
         learned_direction = str(item.get("direction") or "").strip().lower()
         learned_target = learned_direction.removeprefix("avoid:").strip()
-        if learned_direction in explicit_dimensions or learned_target in explicit_dimensions:
+        if (
+            learned_direction in explicit_dimensions
+            or learned_target in explicit_dimensions
+            or learned_direction in explicit_interest_targets
+            or learned_target in explicit_interest_targets
+        ):
             continue
         items.append(
             SimpleNamespace(
