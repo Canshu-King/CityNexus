@@ -149,7 +149,7 @@ These are different physical execution histories; no synthetic mobility and no d
 The completion contract now treats `NO_ACTION + DEFER` without an executed server mutation as `UNRESOLVED / DEFER_WITHOUT_EXECUTION_EFFECT`. The clarified skip action is an active mutation in the server-owned completion contract.
 
 ```text
-R20-R26 focused lineage: 44 passed, 1 warning
+R20-R26 focused lineage: 46 passed, 1 warning
 R26 behavioral focused tests: 5 passed
 compileall backend/app: passed
 git diff --check: passed
