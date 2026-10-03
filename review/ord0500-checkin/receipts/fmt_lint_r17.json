@@ -19,7 +19,7 @@
     "tools/reanchor_r8.py"
   ],
   "files_scanned": 16,
-  "calls_checked": 176,
+  "calls_checked": 177,
   "single_expression_args": 114,
   "mismatched": [],
   "invalid_specs": [],

@@ -161,7 +161,7 @@ def main():
     blob_drv = blob(RC_DIR + "tools/citation_gate_r10_mutants.py")
     blob_door = blob(RC_DIR + "tools/r9_block.py")
     blob_emit = blob(RC_DIR + "tools/r10_block.py")
-    blob_chain = blob(RC_DIR + "tools/%s_chain.sh" % REF_GEN)
+    chain_path, blob_chain = blob_by_fragment("/tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
 
     def blob_by_fragment(fragment):
@@ -198,6 +198,11 @@ def main():
     remote, live_tip = B.pick_sha(listed, MY_REF), B.pick_sha(listed, B.TIP_REF)
     if not remote or not live_tip:
         raise SystemExit("ABORT_NO_REMOTE_READBACK %s" % listed[:200])
+    # the ref this hand abandoned (see section 八): read it, do not remember it
+    rc17, r17ls = B.sh(["git", "ls-remote", "--refs", "origin",
+                        "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17"])
+    prev_r17_sha = B.pick_sha(r17ls, "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17") \
+        or "NOT_ON_REMOTE"
     if remote != me["commit"]:
         raise SystemExit("ABORT_REF_MOVED coordinates ran on %s, ref answers %s" % (me["commit"], remote))
     if gm.get("pairs_with_gate_receipt") != GATE_RECEIPT:
@@ -722,6 +727,11 @@ def main():
       "（`receipts/%s`，blob `%s`），改不改、转不转由你点（§九 ② 问的就是这一格）。" % (
           B.fmt(aud.get("citations_declined")), AUD_RECEIPT, blob_audit))
     A("- 真机与隧道：NOT_MEASURED。整套 Playwright：NOT_EXECUTED。候选没上 `:4783` 预览站（未部署）。")
+    A("- 枝号从 r17 换成 `%s` 不是笔误，也不是贪新：`r17` 已经把**没按现尖重切**的那批提交发出去了"
+      "（服务端现读 `%s`），这一手要把那批提交整体重放到现尖 `%s` 之上、再加一枚重锚——那就等于改写已发布的"
+      "提交。我唯一的合法动作是另开一枚枝号，不是 `--force`；`r17` 原样留着当证据，两份的差别就是 §〇 那条"
+      "重放与 §一 那枚重锚（push 被拒那一次我记在件里，不是事后编的）。" % (
+          my_tail, B.slot(prev_r17_sha), B.slot(live_tip)))
     A("")
     A("## 九、下一件（三个待点，我不自作主张）")
     A("")
