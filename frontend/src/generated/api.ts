@@ -5040,7 +5040,7 @@ export interface operations {
                     "application/json": components["schemas"]["JourneyCheckin"];
                 };
             };
-            /** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from "not yours" because the two facts deserve two sentences */
+            /** @description error.reason_code = CHECKIN_JOURNEY_UNKNOWN / CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from "not yours" because the two facts deserve two sentences */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -8167,6 +8167,15 @@ export interface operations {
                     "application/json": Record<string, never>;
                 };
             };
+            /** @description ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
         };
     };
     extractJourneyReservationImage: {
@@ -8188,6 +8197,15 @@ export interface operations {
         responses: {
             /** @description DeepSeek Responses vision extraction draft */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            502: {
                 headers: {
                     [name: string]: unknown;
                 };
