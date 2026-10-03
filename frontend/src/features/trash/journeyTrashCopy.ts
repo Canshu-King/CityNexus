@@ -9,7 +9,8 @@
  * Three wording rules, all of them from the order:
  *  - the verb is 找回 / "bring it back". 恢复 and `recover*` are autonomous recovery in this product
  *    (`recovery.*` keys, `POST /journeys/{id}/recovery/acknowledge`), and 还原 is the plan-version
- *    screen's word (`planVersionHistoryCopy.ts`). The server picked the same pair
+ *    screen's word (the wording rule stated in that screen's own header,
+ *    `features/studio/planVersionHistoryCopy.ts`). The server picked the same pair
  *    (`backend/app/main.py` -- "The word is 找回 / undelete").
  *  - a refusal is *said*, not printed as a code. The 409 `JOURNEY_NOT_DELETED` gets the sentence
  *    "这条已经在你的行程列表里了。"; the machine token stays on the details face where a screen can
@@ -71,10 +72,10 @@ export const journeyTrashCopy = {
     "trash.title": "回收站",
     "trash.sub": "这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。",
     "trash.loading": "正在读回收站…",
-    "trash.empty": "回收站是空的：这台服务器没有报出任何在回收站里的行程。",
+    "trash.empty": "回收站是空的：这台服务器没有报出任何在站里的行程。",
     "trash.count": "回收站里有 {n} 条行程",
     "trash.rowState": "在回收站里",
-    "trash.rowStateMissing": "服务器没有给出这一行的回收站状态",
+    "trash.rowStateMissing": "服务器没有给出这一行的在站状态",
     "trash.deletedAt": "丢弃于 {when}",
     "trash.deletedAtMissing": "这台服务器没有给出这条行程的丢弃时间",
     "trash.discardSequence": "这是这条行程第 {n} 次被丢弃",
