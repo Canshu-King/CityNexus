@@ -385,7 +385,7 @@ export interface NativeRuntimeEvent {
 
 export interface AgentCommandResponse {
   mission: AgentMission;
-  event_id: string;
+  event_id: string | null;
   run: AgentRun;
 }
 

@@ -2798,13 +2798,11 @@ export interface components {
         };
         AgentCommandResponse: {
             /** Format: uuid */
-            event_id: string;
+            event_id: string | null;
             mission: {
                 [key: string]: unknown;
             };
-            run: {
-                [key: string]: unknown;
-            };
+            run: components["schemas"]["AgentRunResponse"];
         };
         AgentRunOutcome: {
             status: string;

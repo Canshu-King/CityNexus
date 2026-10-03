@@ -2447,9 +2447,9 @@ components:
       type: object
       required: [mission, event_id, run]
       properties:
-        event_id: {type: string, format: uuid}
+        event_id: {type: [string, 'null'], format: uuid}
         mission: {type: object, additionalProperties: true}
-        run: {type: object, additionalProperties: true}
+        run: {$ref: '#/components/schemas/AgentRunResponse'}
     AgentRunOutcome:
       type: object
       additionalProperties: true
