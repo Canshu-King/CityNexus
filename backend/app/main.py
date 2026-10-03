@@ -3504,7 +3504,13 @@ def abort_journey(
                     "abort_state": "NOT_WRITTEN",
                 },
             )
-        if journey.status == "CANCELLED":
+        # The durable gate is `aborted_at`, not `status`.  Measured with the socket race probe
+        # (`review/ord0520/abort_contested_race_probe_r1.py`) against the first version of this door:
+        # a tap whose read saw `status` moved off CANCELLED re-aborted the trip, and one journey
+        # collected up to fourteen `journey.aborted` audit rows while the traveller's stored reason
+        # was replaced by a tap that wrote nothing new.  A word in a mutable column is not a fact
+        # about this door; the column this door owns is.
+        if journey.aborted_at is not None or journey.status == "CANCELLED":
             raise _abort_refusal(
                 409,
                 f"Journey {journey_id} was already aborted.",
@@ -3525,7 +3531,8 @@ def abort_journey(
             .where(
                 Journey.id == str(journey_id),
                 Journey.status == seen_status,
-                Journey.aborted_at == seen_aborted_at,
+                # `IS NULL`, not "equals what I read": the write may only ever be the first one.
+                Journey.aborted_at.is_(None),
             )
             .values(
                 status="CANCELLED",
@@ -3546,7 +3553,7 @@ def abort_journey(
                 "JOURNEY_NOT_FOUND",
                 {"journey_id": str(journey_id)},
             )
-        if current.status == "CANCELLED":
+        if current.aborted_at is not None or current.status == "CANCELLED":
             raise _abort_refusal(
                 409,
                 f"Journey {journey_id} was already aborted.",
