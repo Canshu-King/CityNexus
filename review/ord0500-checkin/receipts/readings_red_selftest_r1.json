@@ -1,0 +1,159 @@
+{
+ "tool": "review/ord0500-checkin/tools/readings_red_selftest_r1.py",
+ "interlock": "ABORT_READINGS_RED added to r10_block.py by CMDR 19:45",
+ "checks_total": 16,
+ "checks_failed": [],
+ "checks": [
+  {
+   "check": "all_green_refuses_nothing",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "refuses_on_gate_verdict_red",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "citation_gate_r10.json",
+     "field": "verdict",
+     "read": "RED",
+     "needed": "GREEN"
+    }
+   ]
+  },
+  {
+   "check": "refuses_on_mutants_not_green",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "citation_gate_r10_mutants.json",
+     "field": "green",
+     "read": "假",
+     "needed": true
+    }
+   ]
+  },
+  {
+   "check": "refuses_on_arm_never_bit",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "citation_gate_r10_mutants.json",
+     "field": "every_arm_bit",
+     "read": "假",
+     "needed": true
+    }
+   ]
+  },
+  {
+   "check": "refuses_on_pytest_nonzero",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "pytest_r6.json",
+     "field": "exit",
+     "read": "1",
+     "needed": "0"
+    }
+   ]
+  },
+  {
+   "check": "refuses_on_missing_field_is_red",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "citation_gate_r10.json",
+     "field": "verdict",
+     "read": "absent",
+     "needed": "GREEN"
+    }
+   ]
+  },
+  {
+   "check": "artifact_named",
+   "pass": true,
+   "detail": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\readings_red_selftest_un9vsohm\\page_abort_readings_red_r10.json"
+  },
+  {
+   "check": "artifact_reason_and_flag",
+   "pass": true,
+   "detail": {
+    "reason": "ABORT_READINGS_RED",
+    "page_written": false,
+    "generation": "r10"
+   }
+  },
+  {
+   "check": "artifact_carries_the_refusing_row",
+   "pass": true,
+   "detail": [
+    {
+     "receipt": "citation_gate_r10.json",
+     "field": "verdict",
+     "read": "RED",
+     "needed": "GREEN"
+    }
+   ]
+  },
+  {
+   "check": "no_page_written",
+   "pass": true,
+   "detail": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\readings_red_selftest_un9vsohm\\r10_block_page.md"
+  },
+  {
+   "check": "refusal_precedes_page_write",
+   "pass": true,
+   "detail": {
+    "raise_line": 124,
+    "page_write_line": 377
+   }
+  },
+  {
+   "check": "guard_is_live_in_main",
+   "pass": true,
+   "detail": {
+    "guards": 1,
+    "assignments": 1,
+    "guard_line": 122
+   }
+  },
+  {
+   "check": "guard_before_any_open_in_main",
+   "pass": true,
+   "detail": {
+    "guard_line": 122,
+    "first_open_line": 377
+   }
+  },
+  {
+   "check": "shipped_receipts_green_r10",
+   "pass": true,
+   "detail": {
+    "gate_verdict": "GREEN",
+    "mut_green": true,
+    "every_arm_bit": true,
+    "refusing_rows": []
+   }
+  },
+  {
+   "check": "shipped_receipts_green_r11",
+   "pass": true,
+   "detail": {
+    "gate_verdict": "GREEN",
+    "mut_green": true,
+    "every_arm_bit": true,
+    "refusing_rows": []
+   }
+  },
+  {
+   "check": "shipped_receipts_green_r12",
+   "pass": true,
+   "detail": {
+    "gate_verdict": "GREEN",
+    "mut_green": true,
+    "every_arm_bit": true,
+    "refusing_rows": []
+   }
+  }
+ ]
+}

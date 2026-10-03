@@ -23,6 +23,52 @@ FOREIGN_SPEC = "backend/tests/test_qoder_ord0476_checkins.py"
 NL = chr(10)
 
 
+def _shown(value):
+    """A verdict that is simply absent must still produce the named failure artifact, so it is
+    rendered here instead of going through `fmt`, whose missing-slot rule is to abort at once."""
+    if value is None:
+        return "absent"
+    if isinstance(value, bool):
+        return "真" if value else "假"
+    return str(value)
+
+
+def readings_red(gate, gm, py):
+    """CMDR 19:45 (added by lane 6a150e1e): which readings refuse to let this page out.
+
+    Everything the emitter already checked was *currency* -- the receipt is current, the ref has not
+    moved, the citations still resolve. None of that asked whether the measurements came back GREEN,
+    so a red gate on the right generation could still have posted a page. This returns the refusing
+    rows (empty = nothing refuses) and never raises, so the caller decides and the judgment is testable
+    without the phone lane's evidence directory.
+    """
+    bad = []
+    if gate.get("verdict") != "GREEN":
+        bad.append({"receipt": GATE_RECEIPT, "field": "verdict", "read": _shown(gate.get("verdict")),
+                    "needed": "GREEN"})
+    if gm.get("green") is not True:
+        bad.append({"receipt": MUT_RECEIPT, "field": "green", "read": _shown(gm.get("green")),
+                    "needed": True})
+    if gm.get("every_arm_bit") is not True:
+        bad.append({"receipt": MUT_RECEIPT, "field": "every_arm_bit",
+                    "read": _shown(gm.get("every_arm_bit")), "needed": True})
+    if str(py.get("exit")) != "0":
+        bad.append({"receipt": "pytest_r6.json", "field": "exit", "read": _shown(py.get("exit")),
+                    "needed": "0"})
+    return bad
+
+
+def abort_readings_red(bad, branch_head, tip, dest_dir, gen=GEN):
+    """The only thing a red reading is allowed to produce: a named failure artifact, and no page."""
+    path = os.path.join(dest_dir, "page_abort_readings_red_%s.json" % gen)
+    with open(path, "w", encoding="utf-8", newline=NL) as handle:
+        json.dump({"reason": "ABORT_READINGS_RED", "generation": gen, "refusing_rows": bad,
+                   "branch_head": branch_head, "tip": tip, "page_written": False,
+                   "aborted_at": datetime.now().astimezone().isoformat(timespec="seconds")},
+                  handle, ensure_ascii=False, indent=1)
+    return path
+
+
 def main():
     gate = B.load(GATE_RECEIPT)
     gm = B.load(MUT_RECEIPT)
@@ -70,6 +116,13 @@ def main():
     if gate.get("tip") != remote:
         raise SystemExit("ABORT_GATE_STALE gate read %s, the ref is %s -- re-run the gate"
                          % (gate.get("tip"), remote))
+    # currency was just proved; now prove the measurements did not come back red.  A red reading
+    # writes one named artifact and stops -- the page is never opened, not even partially.
+    _red = readings_red(gate, gm, py)
+    if _red:
+        _refused = abort_readings_red(_red, remote, live_tip, B.RUN)
+        raise SystemExit("ABORT_READINGS_RED %d row(s) red, only %s was written; no page"
+                         % (len(_red), _refused))
     # the line moves every couple of minutes on this project, so "the tip moved" alone is not a reason
     # to refuse a page -- "my citations stopped resolving on the tip as it now stands" is.  Re-measure
     # against the newest tip here, and refuse only on real rot or a product blob that no longer matches.
