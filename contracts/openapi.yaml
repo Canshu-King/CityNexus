@@ -1149,6 +1149,47 @@ paths:
               schema: {$ref: '#/components/schemas/AgentCommandResponse'}
         '404': {$ref: '#/components/responses/NotFound'}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/missions/{mission_id}/clarification:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: mission_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: answerJourneyClarification
+      description: Apply one server-derived human-value answer and create a bounded child mission.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ClarificationAnswer'}
+      responses:
+        '200':
+          description: Answered parent mission and resumable child mission
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/missions/{mission_id}/resume:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: mission_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: resumeJourneyMission
+      description: Resume a server-created clarification child through the configured Agent runtime.
+      responses:
+        '200':
+          description: Persisted child mission and AgentRun result
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
   /journeys/{journey_id}/guardian/mission:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2409,6 +2450,17 @@ components:
         event_id: {type: string, format: uuid}
         mission: {type: object, additionalProperties: true}
         run: {type: object, additionalProperties: true}
+    ClarificationAnswer:
+      type: object
+      additionalProperties: false
+      required: [clarification_id, option_key]
+      properties:
+        clarification_id: {type: string, minLength: 1, maxLength: 128}
+        option_key: {type: string, minLength: 1, maxLength: 64}
+        scope:
+          type: string
+          enum: [THIS_JOURNEY, REMEMBER_FOR_FUTURE_TRIPS]
+          default: THIS_JOURNEY
     AgentRunResponse:
       type: object
       required: [run_id, mission_id, journey_id, status, tool_steps]
