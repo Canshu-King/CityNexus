@@ -1,0 +1,709 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-03T20:58:34+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "702a4c7247cd9ba636711696232eccd2adb1cd96",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0500-r17-r1",
+ "candidate_tip": "1d39477cdf675601f97b974e24e98ba2016c66c6",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "702a4c7247cd9ba636711696232eccd2adb1cd96",
+  "line_only_commits": 0,
+  "candidate_only_commits": 21
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/checkin/checkinCopy.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "review/ord0500-checkin/R6_READINGS.md",
+   "review/ord0500-checkin/receipts/branch_emit_arm_r14.json",
+   "review/ord0500-checkin/receipts/branch_emit_arm_r17.json",
+   "review/ord0500-checkin/receipts/build_faces_r6.json",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_en_390x844_r3.json",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_duplicate.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_first_tap.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_en_arrived.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_390x844_r3.json",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_duplicate.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_first_tap.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_second.png",
+   "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_arrived.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_390x844_r3.json",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_duplicate.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_first_tap.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_arrived.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_390x844_r3.json",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_duplicate.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_first_tap.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_second.png",
+   "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_arrived.png",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+   "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+   "review/ord0500-checkin/receipts/citation_audit_r14.json",
+   "review/ord0500-checkin/receipts/citation_audit_r17.json",
+   "review/ord0500-checkin/receipts/citation_gate_r12.json",
+   "review/ord0500-checkin/receipts/citation_gate_r12_mutants.json",
+   "review/ord0500-checkin/receipts/citation_gate_r14.json",
+   "review/ord0500-checkin/receipts/citation_gate_r14_mutants.json",
+   "review/ord0500-checkin/receipts/citation_gate_r17.json",
+   "review/ord0500-checkin/receipts/citation_gate_r17_mutants.json",
+   "review/ord0500-checkin/receipts/day25_anchor_recheck_r12.json",
+   "review/ord0500-checkin/receipts/day25_anchor_recheck_r14.json",
+   "review/ord0500-checkin/receipts/day26_anchor_recheck_r17.json",
+   "review/ord0500-checkin/receipts/exposure_pair_r17.json",
+   "review/ord0500-checkin/receipts/exposure_r14_base.json",
+   "review/ord0500-checkin/receipts/exposure_r14_cand.json",
+   "review/ord0500-checkin/receipts/exposure_r17_base.json",
+   "review/ord0500-checkin/receipts/exposure_r17_cand.json",
+   "review/ord0500-checkin/receipts/fmt_lint_r14.json",
+   "review/ord0500-checkin/receipts/fmt_lint_r17.json",
+   "review/ord0500-checkin/receipts/landing_r6.json",
+   "review/ord0500-checkin/receipts/pytest_collectonly_r14.json",
+   "review/ord0500-checkin/receipts/pytest_collectonly_r17.json",
+   "review/ord0500-checkin/receipts/pytest_r6.json",
+   "review/ord0500-checkin/receipts/sweep_r6.json",
+   "review/ord0500-checkin/run/r15_READINGS_RED.json",
+   "review/ord0500-checkin/run/r16_READINGS_RED.json",
+   "review/ord0500-checkin/run/r17_READINGS_RED.json",
+   "review/ord0500-checkin/run/r6_blobs.txt",
+   "review/ord0500-checkin/run/r6_build_O0500_R14.txt",
+   "review/ord0500-checkin/run/r6_build_TIP_06ad00b0.txt",
+   "review/ord0500-checkin/run/r6_ls_remote.txt",
+   "review/ord0500-checkin/run/r6_merge_tree.txt",
+   "review/ord0500-checkin/run/r6_pytest.txt",
+   "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.check.txt",
+   "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.typecheck.txt",
+   "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.check.txt",
+   "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.typecheck.txt",
+   "review/ord0500-checkin/tools/branch_emit_arm_r16.py",
+   "review/ord0500-checkin/tools/build_faces_r6.py",
+   "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+   "review/ord0500-checkin/tools/citation_audit_r8.py",
+   "review/ord0500-checkin/tools/collect_count_r16.py",
+   "review/ord0500-checkin/tools/exposure_pair_r17.py",
+   "review/ord0500-checkin/tools/fmt_lint_r16.py",
+   "review/ord0500-checkin/tools/landing_r6.py",
+   "review/ord0500-checkin/tools/r10_block.py",
+   "review/ord0500-checkin/tools/r15_chain.sh",
+   "review/ord0500-checkin/tools/r15_readings.sh",
+   "review/ord0500-checkin/tools/r16_chain.sh",
+   "review/ord0500-checkin/tools/r17_chain.sh",
+   "review/ord0500-checkin/tools/r6_coordinates.py",
+   "review/ord0500-checkin/tools/r9_block.py",
+   "review/ord0500-checkin/tools/recheck_r14.py",
+   "review/ord0500-checkin/tools/stage_readings_r6.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/checkin/checkinCopy.ts",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "735b56e00611e3f25a2741bc18b02b4f66b5f722",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_205754",
+  "blob_equality": [
+   {
+    "path": "frontend/src/features/checkin/checkinCopy.ts",
+    "candidate_blob": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+    "export_blob": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "c5195d9fbf900947c80a6ace90d88c78eba0e941",
+    "export_blob": "c5195d9fbf900947c80a6ace90d88c78eba0e941",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/R6_READINGS.md",
+    "candidate_blob": "cf5a19d090229685f1534e83afc9da5b16d6e1b0",
+    "export_blob": "cf5a19d090229685f1534e83afc9da5b16d6e1b0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/branch_emit_arm_r14.json",
+    "candidate_blob": "61426f7ae4398161e13711c7a53994cd4a455383",
+    "export_blob": "61426f7ae4398161e13711c7a53994cd4a455383",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/branch_emit_arm_r17.json",
+    "candidate_blob": "8f4123782c4858c9fd3e4c77a914fa7196842926",
+    "export_blob": "8f4123782c4858c9fd3e4c77a914fa7196842926",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/build_faces_r6.json",
+    "candidate_blob": "8b9bddaae2c756d7198e023a5a0908c283d33500",
+    "export_blob": "8b9bddaae2c756d7198e023a5a0908c283d33500",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_390x844_r3.json",
+    "candidate_blob": "2c86a8d26fc24f6dbd52a8cbfb7b602a5cd49812",
+    "export_blob": "2c86a8d26fc24f6dbd52a8cbfb7b602a5cd49812",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_duplicate.png",
+    "candidate_blob": "e2b7ad582b10da876aae6f4689b643ddfb060cce",
+    "export_blob": "e2b7ad582b10da876aae6f4689b643ddfb060cce",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_first_tap.png",
+    "candidate_blob": "ee77ee725fe55f7e22875142dc10fa8d32f4bb9e",
+    "export_blob": "ee77ee725fe55f7e22875142dc10fa8d32f4bb9e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_arrived.png",
+    "candidate_blob": "f1a64df52a5980468d7525dff067bffea7f7133a",
+    "export_blob": "f1a64df52a5980468d7525dff067bffea7f7133a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_390x844_r3.json",
+    "candidate_blob": "40e466a31648a0f225616a2318284239225eb399",
+    "export_blob": "40e466a31648a0f225616a2318284239225eb399",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_duplicate.png",
+    "candidate_blob": "18a6cb691cd75a23001245689a2348b3e3f9c8f6",
+    "export_blob": "18a6cb691cd75a23001245689a2348b3e3f9c8f6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_first_tap.png",
+    "candidate_blob": "d4661892b482e57a5b9c6053b7866ac4ac03cd32",
+    "export_blob": "d4661892b482e57a5b9c6053b7866ac4ac03cd32",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_second.png",
+    "candidate_blob": "9330bdf571c7ea254819957f7e2c4d4113ea61e4",
+    "export_blob": "9330bdf571c7ea254819957f7e2c4d4113ea61e4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_arrived.png",
+    "candidate_blob": "ca6ba62b510e1be4cebb34eb0c05adc05d61d3b7",
+    "export_blob": "ca6ba62b510e1be4cebb34eb0c05adc05d61d3b7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_390x844_r3.json",
+    "candidate_blob": "6b64c215be9a11030721bee3f7cc6892af0bae6b",
+    "export_blob": "6b64c215be9a11030721bee3f7cc6892af0bae6b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_duplicate.png",
+    "candidate_blob": "48ff3328d180c5eae787e9ca98602d2c0ceaed5f",
+    "export_blob": "48ff3328d180c5eae787e9ca98602d2c0ceaed5f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_first_tap.png",
+    "candidate_blob": "ee77ee725fe55f7e22875142dc10fa8d32f4bb9e",
+    "export_blob": "ee77ee725fe55f7e22875142dc10fa8d32f4bb9e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_arrived.png",
+    "candidate_blob": "f1a64df52a5980468d7525dff067bffea7f7133a",
+    "export_blob": "f1a64df52a5980468d7525dff067bffea7f7133a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_390x844_r3.json",
+    "candidate_blob": "1ae4b528491ee3518428029320a96081a7af095c",
+    "export_blob": "1ae4b528491ee3518428029320a96081a7af095c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_duplicate.png",
+    "candidate_blob": "ab74777fa0a615f05dc42b01141c42ba53359b3e",
+    "export_blob": "ab74777fa0a615f05dc42b01141c42ba53359b3e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_first_tap.png",
+    "candidate_blob": "d4661892b482e57a5b9c6053b7866ac4ac03cd32",
+    "export_blob": "d4661892b482e57a5b9c6053b7866ac4ac03cd32",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_second.png",
+    "candidate_blob": "b65e2d75c637b0b68b75b7200370e1fcc27f89ee",
+    "export_blob": "b65e2d75c637b0b68b75b7200370e1fcc27f89ee",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_arrived.png",
+    "candidate_blob": "ca6ba62b510e1be4cebb34eb0c05adc05d61d3b7",
+    "export_blob": "ca6ba62b510e1be4cebb34eb0c05adc05d61d3b7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+    "candidate_blob": "bfdb03e8a973ced8f6fa5f6f4e2b2411bab04b89",
+    "export_blob": "bfdb03e8a973ced8f6fa5f6f4e2b2411bab04b89",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+    "candidate_blob": "376bd6776e68089a06c44f64a4fe3cc6684e123f",
+    "export_blob": "376bd6776e68089a06c44f64a4fe3cc6684e123f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+    "candidate_blob": "91006a08d8c761846281e1119dd14e1120062303",
+    "export_blob": "91006a08d8c761846281e1119dd14e1120062303",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+    "candidate_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "export_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+    "candidate_blob": "7f4a4b0e4db320a4c7acde321da47565bb077394",
+    "export_blob": "7f4a4b0e4db320a4c7acde321da47565bb077394",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+    "candidate_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "export_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+    "candidate_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "export_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_audit_r14.json",
+    "candidate_blob": "2706810d7de3de424b717372f2862bcbe991bd2f",
+    "export_blob": "2706810d7de3de424b717372f2862bcbe991bd2f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_audit_r17.json",
+    "candidate_blob": "0af2fdab4af4d70e14c1e34c80d0bc6554c10b92",
+    "export_blob": "0af2fdab4af4d70e14c1e34c80d0bc6554c10b92",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r12.json",
+    "candidate_blob": "29187bd5337e9a49da1946dad0c48a594085516d",
+    "export_blob": "29187bd5337e9a49da1946dad0c48a594085516d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r12_mutants.json",
+    "candidate_blob": "a830a219baa68d50b0ccad0144582c3a0376e31f",
+    "export_blob": "a830a219baa68d50b0ccad0144582c3a0376e31f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r14.json",
+    "candidate_blob": "7baeaa197cddd270adeac84b305b5901d59c47e9",
+    "export_blob": "7baeaa197cddd270adeac84b305b5901d59c47e9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r14_mutants.json",
+    "candidate_blob": "59b9f9dce23ab0ebd7c7b9b60ca238f464e9997e",
+    "export_blob": "59b9f9dce23ab0ebd7c7b9b60ca238f464e9997e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r17.json",
+    "candidate_blob": "8955a77a2f9738d2d7496b6ab9cf0513badf9ed5",
+    "export_blob": "8955a77a2f9738d2d7496b6ab9cf0513badf9ed5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/citation_gate_r17_mutants.json",
+    "candidate_blob": "26c149583d263c672f28141627909156b5ecd7df",
+    "export_blob": "26c149583d263c672f28141627909156b5ecd7df",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r12.json",
+    "candidate_blob": "063a347863832273c17b870afbeee569a94e9d79",
+    "export_blob": "063a347863832273c17b870afbeee569a94e9d79",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r14.json",
+    "candidate_blob": "5001b14ead9d5739d35e8219204a1a5c91852e82",
+    "export_blob": "5001b14ead9d5739d35e8219204a1a5c91852e82",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/day26_anchor_recheck_r17.json",
+    "candidate_blob": "b7edd45ae2285ecc661814a1000548d940b2d779",
+    "export_blob": "b7edd45ae2285ecc661814a1000548d940b2d779",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/exposure_pair_r17.json",
+    "candidate_blob": "86478693ee1736bdbed73b3aabc4d12abe3195f1",
+    "export_blob": "86478693ee1736bdbed73b3aabc4d12abe3195f1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/exposure_r14_base.json",
+    "candidate_blob": "b80f38f430cfb04ae2590a7f7278a1f1011034a1",
+    "export_blob": "b80f38f430cfb04ae2590a7f7278a1f1011034a1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/exposure_r14_cand.json",
+    "candidate_blob": "b80f38f430cfb04ae2590a7f7278a1f1011034a1",
+    "export_blob": "b80f38f430cfb04ae2590a7f7278a1f1011034a1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/exposure_r17_base.json",
+    "candidate_blob": "9e2a5e7082695ff20f076ea21f0fa8ae9b148bfd",
+    "export_blob": "9e2a5e7082695ff20f076ea21f0fa8ae9b148bfd",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/exposure_r17_cand.json",
+    "candidate_blob": "2fb96cbf58ff7c9cd1f38376bb70e63fb29eba84",
+    "export_blob": "2fb96cbf58ff7c9cd1f38376bb70e63fb29eba84",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/fmt_lint_r14.json",
+    "candidate_blob": "9abf4507356088b61a405ffe78fbb275e7581d7b",
+    "export_blob": "9abf4507356088b61a405ffe78fbb275e7581d7b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/fmt_lint_r17.json",
+    "candidate_blob": "7af00f03cefeea755ea4f1ddad701902a5bc3bcc",
+    "export_blob": "7af00f03cefeea755ea4f1ddad701902a5bc3bcc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/landing_r6.json",
+    "candidate_blob": "9afbacb958f1b7bbbdfe3514dfaca9b6bb4b4267",
+    "export_blob": "9afbacb958f1b7bbbdfe3514dfaca9b6bb4b4267",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/pytest_collectonly_r14.json",
+    "candidate_blob": "4c0d19b15833ead11d3af00936631543a8d06603",
+    "export_blob": "4c0d19b15833ead11d3af00936631543a8d06603",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/pytest_collectonly_r17.json",
+    "candidate_blob": "d3360d95f0d1c6ac91e17bfdcd0743e5677df61d",
+    "export_blob": "d3360d95f0d1c6ac91e17bfdcd0743e5677df61d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+    "candidate_blob": "b3e3402cb3f33db4f884b83c583559725e5b8443",
+    "export_blob": "b3e3402cb3f33db4f884b83c583559725e5b8443",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/receipts/sweep_r6.json",
+    "candidate_blob": "5fb7f66dfbbb94c67089bcb3148207fe52bc3949",
+    "export_blob": "5fb7f66dfbbb94c67089bcb3148207fe52bc3949",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r15_READINGS_RED.json",
+    "candidate_blob": "e16bb218b04fb06220daf8087dac275decb32476",
+    "export_blob": "e16bb218b04fb06220daf8087dac275decb32476",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r16_READINGS_RED.json",
+    "candidate_blob": "03a2062e6f7b722f9a5d593c83f570b0fb581430",
+    "export_blob": "03a2062e6f7b722f9a5d593c83f570b0fb581430",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r17_READINGS_RED.json",
+    "candidate_blob": "34f827bd5d5366fdc361be4f23d842913adfa6ef",
+    "export_blob": "34f827bd5d5366fdc361be4f23d842913adfa6ef",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_blobs.txt",
+    "candidate_blob": "099acd8ca9eed8a46036776414bc470d0a110b9b",
+    "export_blob": "099acd8ca9eed8a46036776414bc470d0a110b9b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_build_O0500_R14.txt",
+    "candidate_blob": "b7cb9d771f24d18624471ad062b578cbfc7e1411",
+    "export_blob": "b7cb9d771f24d18624471ad062b578cbfc7e1411",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_build_TIP_06ad00b0.txt",
+    "candidate_blob": "edb28a53de2af10bf33487858a1e5852b8d60f12",
+    "export_blob": "edb28a53de2af10bf33487858a1e5852b8d60f12",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+    "candidate_blob": "04014f5d21824399dddb0c85df6d7f41d7b275fd",
+    "export_blob": "04014f5d21824399dddb0c85df6d7f41d7b275fd",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+    "candidate_blob": "e8cfb0696a1bfa02e9f81d4f053cfafcb64d7680",
+    "export_blob": "e8cfb0696a1bfa02e9f81d4f053cfafcb64d7680",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_pytest.txt",
+    "candidate_blob": "60b4642ace22b5c783ebcee17e8219cb902d7aae",
+    "export_blob": "60b4642ace22b5c783ebcee17e8219cb902d7aae",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.check.txt",
+    "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "export_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.typecheck.txt",
+    "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "export_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.check.txt",
+    "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "export_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.typecheck.txt",
+    "candidate_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "export_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/branch_emit_arm_r16.py",
+    "candidate_blob": "d0b338e39e0ba632c1d8c4bd5a4577d788bd3740",
+    "export_blob": "d0b338e39e0ba632c1d8c4bd5a4577d788bd3740",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/build_faces_r6.py",
+    "candidate_blob": "5ea143c347a27f57aa8de673293d1aead32ce2a7",
+    "export_blob": "5ea143c347a27f57aa8de673293d1aead32ce2a7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+    "candidate_blob": "9a60144dd1c446af313c9323b78bedd6ce993bdc",
+    "export_blob": "9a60144dd1c446af313c9323b78bedd6ce993bdc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/citation_audit_r8.py",
+    "candidate_blob": "9dd6cc443f96ff2780cae1dcf881565edd8373db",
+    "export_blob": "9dd6cc443f96ff2780cae1dcf881565edd8373db",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/collect_count_r16.py",
+    "candidate_blob": "68bed0f46f19146789d69d0b3e680f946bcb5edc",
+    "export_blob": "68bed0f46f19146789d69d0b3e680f946bcb5edc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/exposure_pair_r17.py",
+    "candidate_blob": "fec12b00ca3f87a46aa5932d5bbec79398996908",
+    "export_blob": "fec12b00ca3f87a46aa5932d5bbec79398996908",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/fmt_lint_r16.py",
+    "candidate_blob": "1942a3df20b845c61e46eaad016f5e6992b60748",
+    "export_blob": "1942a3df20b845c61e46eaad016f5e6992b60748",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/landing_r6.py",
+    "candidate_blob": "b617ca7c31a22a085aa27a103c73c7494a0a0d00",
+    "export_blob": "b617ca7c31a22a085aa27a103c73c7494a0a0d00",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r10_block.py",
+    "candidate_blob": "e877f7e1394d05479186a969621101698bf94952",
+    "export_blob": "e877f7e1394d05479186a969621101698bf94952",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r15_chain.sh",
+    "candidate_blob": "5cb165429adbb3884d4db2cb201227e220f9a2cb",
+    "export_blob": "5cb165429adbb3884d4db2cb201227e220f9a2cb",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r15_readings.sh",
+    "candidate_blob": "3e185201fba40105d2b70169468729597f9d39e7",
+    "export_blob": "3e185201fba40105d2b70169468729597f9d39e7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r16_chain.sh",
+    "candidate_blob": "507a4700e077a49f50ff5212d0ea1d162672ae15",
+    "export_blob": "507a4700e077a49f50ff5212d0ea1d162672ae15",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r17_chain.sh",
+    "candidate_blob": "09d23e0302f2a24b85db66baa9906fd82064cfc5",
+    "export_blob": "09d23e0302f2a24b85db66baa9906fd82064cfc5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+    "candidate_blob": "e62b6786b31da03be917f3679f5370e5eaef7cc4",
+    "export_blob": "e62b6786b31da03be917f3679f5370e5eaef7cc4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/r9_block.py",
+    "candidate_blob": "e1c5a709e3fa4d0fb4dc342884b553389bd399f4",
+    "export_blob": "e1c5a709e3fa4d0fb4dc342884b553389bd399f4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/recheck_r14.py",
+    "candidate_blob": "e2913bd38cc6e1803f17a715958b8ea4ae5c941d",
+    "export_blob": "e2913bd38cc6e1803f17a715958b8ea4ae5c941d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+    "candidate_blob": "d9da30551a7f972b5f23cc4e722b2c5afd6f7952",
+    "export_blob": "d9da30551a7f972b5f23cc4e722b2c5afd6f7952",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1725,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1725 tests collected in 7.06s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-B3svTyj-.js",
+    "/assets/index-BeJMb-k7.css"
+   ],
+   "live_tree": "735b56e00611e3f25a2741bc18b02b4f66b5f722",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1d39477_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "1d39477cdf675601f97b974e24e98ba2016c66c6",
+  "branches_route": "1d39477cdf675601f97b974e24e98ba2016c66c6",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
