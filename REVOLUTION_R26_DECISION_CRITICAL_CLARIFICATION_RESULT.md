@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `9e79c4dbeb30e9bdbc1453d7f409d1f198a9d325`
 - Base SHA: `f1fbb8e8d67fe2946c0b0adde5d92586503850a3`
-- Final SHA: filled by the commit containing this report
+- Final SHA: `2aaea4adf57b61f767b79a9560770df4056864b5`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
