@@ -3,9 +3,9 @@
 ## Machine result
 
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
-- Taskbook blob: `9e79c4dbeb30e9bdbc1453d7f409d1f198a9d325`
-- Base SHA: `f1fbb8e8d67fe2946c0b0adde5d92586503850a3`
-- Final SHA: `2aaea4adf57b61f767b79a9560770df4056864b5`
+- Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
+- Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
+- Final code SHA: `3faf4851a4a0d96f4d47cb8e5c25d4e7ac4c263d`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -82,4 +82,78 @@ The three focused tests cover: true resource-conflict sensitivity, rejection of 
 ## Remaining limitation
 
 The live run completed the decision-critical clarification, child mission, DEFER decision, and normal Journey execution. The current provider chain showed bounded model timeouts and fallback behavior in the persisted trace; those are recorded as external receipts, not converted to success prose. No claim is made that the provider is latency-perfect.
+
+## Behavioral Closure Addendum
+
+The earlier R26 run exposed the missing behavioral link: a `TAKE_LATER` answer created a `DEFER` conclusion, but the HTTP execution path still completed both Museum and Garden. This fresh disposable provider-backed Nara run closes that gap.
+
+### TAKE_LATER physical execution
+
+- Traveler: `dcbda637-621b-444a-8186-96b2f59ca3f9`
+- Journey: `573c6de4-0b79-4210-839b-824167c84131`
+- Active PlanVersion: `9d543375-39b5-597f-9a45-d4dde64e292a`
+- Park: `5597d614-305e-5490-92d5-9d4c0cfbabbb`, completed first
+- W1 Museum: `487442e7-82eb-5320-9748-d6d92e3214b3`, 800 JPY
+- W2 Garden: `374eed8b-dc2b-575a-b971-b6f25f67fa6a`, 1200 JPY
+- Parent AgentRun: `de125e20-377d-43be-ab5b-3076018031bd`
+- Clarification: `e4931a22-e7ca-4c92-a120-8377d848e62a`
+- Child mission: `cdce65de-3bef-4c48-82de-28873d9c79a7`
+- Child AgentRun: `5cd51ebb-ed2d-4260-9c68-6e70804a6c47`
+
+The real Agent first persisted the GLM `FAILED_EXTERNAL / MODEL_TIMEOUT` receipt, then the DeepSeek-compatible fallback inspected Journey/Twin and produced the server-derived question. The answer `TAKE_LATER / THIS_JOURNEY` created a child mission whose Agent called `apply_clarified_horizon_choice`.
+
+```text
+executed=true
+mutation=ACTIVITY_SKIPPED
+reason=CLARIFIED_DEFER_FOR_LATER_OPTION
+skipped_activity_id=487442e7-82eb-5320-9748-d6d92e3214b3
+next_activity_id=374eed8b-dc2b-575a-b971-b6f25f67fa6a
+```
+
+Museum became `SKIPPED`; Garden became current; the active PlanVersion stayed unchanged; Museum consumed zero optional cost. Because the physical adjacency changed, the server captured a separate immutable execution override without modifying frozen PlanVersion evidence:
+
+```text
+origin=real-place-21ab302a8e71729b15395d94
+destination=real-place-22cf72809897ff4c7f312fcf
+provider=valhalla-http
+fact_quality=LIVE_PROVIDER_CAPTURE
+route_provenance=LIVE_PROVIDER_CAPTURE
+minutes=32
+hard_eligible=true
+```
+
+The Garden then completed through `depart → arrive → begin → complete`; final Journey status was `COMPLETED`. The horizon projection was corrected to use the nearest non-skipped physical predecessor, so the edge is exposed as `CURRENT_LIVE_EVIDENCE` / `GROUNDED_FEASIBLE`.
+
+### TAKE_NOW physical control
+
+A second fresh provider-backed Journey used the same catalog, budget, and grounded options. Its answer was `TAKE_NOW / THIS_JOURNEY`:
+
+- Journey: `21abb03d-0008-4866-b3cb-b1dce410ad89`
+- W1 Museum: `61670a38-a263-53a6-a650-5d0b2b584ab5`
+- W2 Garden: `4fe66fb2-ae35-5181-b5a6-bb182ce85986`
+- Clarification: `0b1f2778-9bf5-4ab9-b3d1-a75a4c523261`
+- Child mission: `4a273acd-cf2d-4ab9-9f5d-0152cc864008`
+
+The child model lane timed out in both configured attempts and was honestly recorded as `FAILED_EXTERNAL / MODEL_TIMEOUT`; it was not claimed as Agent success. The server-persisted human answer remained authoritative, and Museum completed through the normal execution state machine, consuming 800 JPY. The Garden remained `ACTIVE`, leaving the Journey `ACTIVE`.
+
+```text
+TAKE_LATER: Museum=SKIPPED, cost=0, Park→Garden fresh live edge,
+            Garden=COMPLETED, Journey=COMPLETED
+TAKE_NOW:   Museum=COMPLETED, cost=800, Garden=ACTIVE, Journey=ACTIVE
+```
+
+These are different physical execution histories; no synthetic mobility and no direct active-pointer write were used.
+
+### Closure guard and focused verification
+
+The completion contract now treats `NO_ACTION + DEFER` without an executed server mutation as `UNRESOLVED / DEFER_WITHOUT_EXECUTION_EFFECT`. The clarified skip action is an active mutation in the server-owned completion contract.
+
+```text
+R20-R26 focused lineage: 44 passed, 1 warning
+R26 behavioral focused tests: 5 passed
+compileall backend/app: passed
+git diff --check: passed
+```
+
+The model timeout receipts remain evidence and are not converted into success prose. The successful TAKE_LATER closure is based on the real Agent mutation receipt plus persisted machine state.
 
