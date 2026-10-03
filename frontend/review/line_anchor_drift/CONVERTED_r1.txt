@@ -93,3 +93,4 @@ tools/CHAIN_SELF_HEAL_V1.md	隧道那条腿分三层判**（字段 `tunnel_probe
 tools/CHAIN_SELF_HEAL_V1.md	- 那把鉴权代理尺把自己钉死在 `:4782`、静态上游钉死在 `:4781`（`raw/preview_auth_proxy.py` 与 `:31`），只有 API 上游可由 `CNX_PR
 tools/chain_self_heal.mjs	那把鉴权代理尺把自己钉在 4782、把静态上游钉在 4781（`raw/preview_auth_proxy.py` 与 `:31`），
 tools/cnx_copy_tiers_r1.py	RecoveryRequiredPanel.tsx, where the enclosing brace is a control block.
+frontend/e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts	nav labels (`nav.groupToday`, `nav.groupTravel` and `nav.groupSystem` in frontend/src/i18n/LocaleContext.tsx answer
