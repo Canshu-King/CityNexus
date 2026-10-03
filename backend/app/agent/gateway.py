@@ -918,7 +918,9 @@ class AgentToolGateway:
             parent = self.session.get(JourneyMission, child.parent_mission_id)
             try:
                 explicit = json.loads(child.preferences_json or "{}").get("current_explicit_mission", {})
-                answered = json.loads(parent.clarification_json or {}).get("answer", {}) if parent else {}
+                clarification_payload = json.loads(parent.clarification_json or "{}") if parent else {}
+                answered = clarification_payload.get("answer", {})
+                resolved_intent = json.loads(child.resolved_intent_json or "{}")
             except json.JSONDecodeError as exc:
                 raise HTTPException(409, "TAKE_NOW_CLARIFICATION_PAYLOAD_INVALID") from exc
             if (
@@ -929,6 +931,19 @@ class AgentToolGateway:
                 or answered.get("option_key") != "TAKE_NOW"
             ):
                 raise HTTPException(409, "TAKE_NOW_CLARIFICATION_NOT_AUTHORIZED")
+            from app.main import _twin_snapshot
+            from app.intelligence.decision_sensitivity import clarification_epoch_fingerprint
+
+            twin = _twin_snapshot(self.session, _require_journey(self.session, request.journey_id))
+            windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+            current_fingerprint = clarification_epoch_fingerprint(
+                journey_id=request.journey_id,
+                active_plan_version_id=twin.get("active_plan_version_id") or resolved_intent.get("active_plan_version_id"),
+                current_activity_id=twin.get("current_activity_id"),
+                windows=windows,
+            )
+            if current_fingerprint != clarification_payload.get("decision_epoch"):
+                raise HTTPException(409, "CLARIFICATION_STALE_RECOMPUTE_REQUIRED")
         if request.horizon_decision == "DEFER":
             if requested != "NO_ACTION" or request.journey_id is None:
                 raise HTTPException(422, "DEFER requires a non-mutating NO_ACTION conclusion")

@@ -72,12 +72,12 @@ Final machine state:
 ## Focused verification
 
 ```text
-backend/tests/test_r26_decision_critical_clarification.py: 3 passed
+backend/tests/test_r26_decision_critical_clarification.py: 8 passed
 python -m compileall -q backend/app: passed
 git diff --check: passed
 ```
 
-The three focused tests cover: true resource-conflict sensitivity, rejection of a non-feasible window, and suppression/fingerprint change for explicit intent and stale reality.
+The focused tests cover: true resource-conflict sensitivity, rejection of a non-feasible window, explicit-intent suppression, server-owned mutation completion, TAKE_NOW authority, and runtime rejection after the clarification epoch moves.
 
 ## Remaining limitation
 
@@ -149,8 +149,8 @@ These are different physical execution histories; no synthetic mobility and no d
 The completion contract now treats `NO_ACTION + DEFER` without an executed server mutation as `UNRESOLVED / DEFER_WITHOUT_EXECUTION_EFFECT`. The clarified skip action is an active mutation in the server-owned completion contract.
 
 ```text
-R20-R26 focused lineage: 48 passed, 1 warning
-R26 behavioral focused tests: 7 passed
+R20-R26 focused lineage: 49 passed, 1 warning
+R26 behavioral focused tests: 8 passed
 compileall backend/app: passed
 git diff --check: passed
 ```
@@ -179,4 +179,8 @@ receipt plus persisted machine state.
 The Gateway also validates `TAKE_NOW` as a server-derived child answer. A model
 cannot assert `horizon_decision=TAKE_NOW` without an answered parent
 clarification whose option is exactly `TAKE_NOW`.
+
+The same boundary is epoch-bound at runtime: if the active PlanVersion,
+current activity, or server-derived horizon changes after the answer, a later
+TAKE_NOW conclusion is rejected as `CLARIFICATION_STALE_RECOMPUTE_REQUIRED`.
 

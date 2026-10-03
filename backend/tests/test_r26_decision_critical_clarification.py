@@ -98,3 +98,70 @@ def test_r26_take_now_requires_server_answer_not_model_assertion():
     source = inspect.getsource(AgentToolGateway.conclude_recovery)
     assert "TAKE_NOW_CLARIFICATION_NOT_AUTHORIZED" in source
     assert "TAKE_NOW_REQUIRES_CLARIFICATION_CHILD" in source
+
+
+def test_r26_take_now_is_rejected_when_reality_moved_since_answer(monkeypatch):
+    import json
+    from types import SimpleNamespace
+    from uuid import uuid4
+
+    from fastapi import HTTPException
+    from app.agent.gateway import AgentToolGateway
+    from app.db.models import Journey, JourneyMission
+    from app.schemas import AgentToolCall
+
+    journey_id = uuid4()
+    parent_id = uuid4()
+    child_id = uuid4()
+    windows = [_window("w1", "place-a", "GROUNDED_FEASIBLE", 700), _window("w2", "place-b", "GROUNDED_FEASIBLE", 800)]
+    journey = SimpleNamespace(
+        id=journey_id,
+        active_plan_version_id="plan-1",
+        current_activity_id="activity-w1",
+    )
+    parent = SimpleNamespace(
+        id=parent_id,
+        status="ANSWERED",
+        clarification_json=json.dumps({
+            "decision_epoch": clarification_epoch_fingerprint(
+                journey_id=str(journey_id),
+                active_plan_version_id="plan-1",
+                current_activity_id="activity-w1",
+                windows=windows,
+            ),
+            "answer": {"option_key": "TAKE_NOW"},
+        }),
+    )
+    child = SimpleNamespace(
+        id=child_id,
+        journey_id=journey_id,
+        parent_mission_id=parent_id,
+        preferences_json=json.dumps({"current_explicit_mission": {"strategy": "TAKE_NOW", "decision_option": "TAKE_NOW"}}),
+        resolved_intent_json="{}",
+    )
+
+    class FakeSession:
+        def get(self, model, key):
+            if model is Journey:
+                return journey
+            if model is JourneyMission:
+                return {str(parent_id): parent, str(child_id): child}.get(str(key))
+            return None
+
+    moved_twin = {
+        "active_plan_version_id": "plan-1",
+        "current_activity_id": "activity-w2",
+        "context": {"remaining_opportunity_horizon": {"windows": windows}},
+    }
+    monkeypatch.setattr("app.main._twin_snapshot", lambda session, current: moved_twin)
+    request = AgentToolCall(
+        request_id="r26-take-now-stale",
+        journey_id=journey_id,
+        mission_id=child_id,
+        outcome="NO_ACTION",
+        horizon_decision="TAKE_NOW",
+        reason="Keep the current activity.",
+    )
+
+    with __import__("pytest").raises(HTTPException, match="CLARIFICATION_STALE_RECOMPUTE_REQUIRED"):
+        AgentToolGateway(FakeSession()).conclude_recovery(request)
