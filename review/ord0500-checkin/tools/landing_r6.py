@@ -58,24 +58,32 @@ def discover_refs():
     tool, a name in the staging tool) and once the page carried a title from a generation it had already
     left.  Discovery keeps the landing check honest about the whole family, r5 to whatever lands next.
 
-    Three reads before believing the server has no such refs: one transient empty answer cost this chain
-    a run at 06:33, and "the family is gone" is a claim about the authoritative line, not about me.
+    Patterned, and two reads must give the SAME set.  An unpatterned `ls-remote` answered 15 of 19 refs
+    on one run at 00:5x (r6..r9 missing) and 19 on the next; a landing row that silently omits a ref is
+    worse than one that fails, because the page then says "the family is N wide" off a half-read.  Ask
+    twice, compare, refuse when they differ.
     """
-    found, last_rc, last_out = set(), None, ""
-    for attempt in range(3):
-        last_rc, last_out = git("ls-remote", "--refs", "origin")
+    pattern = "refs/heads/review/newlane-ord0500-phone-checkin-entry-*"
+    prev, last_rc, last_out = None, None, ""
+    for attempt in range(4):
+        last_rc, last_out = git("ls-remote", "--refs", "origin", pattern)
         if last_rc != 0:
             time.sleep(2 + 3 * attempt)
             continue
-        found |= {f for line in last_out.splitlines() for f in line.split()
-                  if f.startswith("refs/heads/review/newlane-ord0500-phone-checkin-entry-")}
-        if found:
-            break
-        time.sleep(2 + 3 * attempt)
-    if not found:
-        raise SystemExit("ABORT_NO_REFS_DISCOVERED after 3 reads rc=%s bytes=%d head=%r"
+        got = {f for line in last_out.splitlines() for f in line.split()
+               if f.startswith("refs/heads/review/newlane-ord0500-phone-checkin-entry-")}
+        if not got:
+            time.sleep(2 + 3 * attempt)
+            continue
+        if prev is not None and got == prev:
+            return sorted(got)
+        prev = got
+        time.sleep(1)
+    if prev is None:
+        raise SystemExit("ABORT_NO_REFS_DISCOVERED after 4 patterned reads rc=%s bytes=%d head=%r"
                          % (last_rc, len(last_out), last_out[:120]))
-    return sorted(found)
+    raise SystemExit("ABORT_REF_DISCOVERY_UNSTABLE the patterned reads disagree (%d refs last); refusing "
+                     "to write a landing row set off a half-read" % len(prev))
 
 
 def main():
