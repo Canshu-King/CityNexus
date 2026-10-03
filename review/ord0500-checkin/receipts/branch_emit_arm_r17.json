@@ -1,13 +1,13 @@
 {
   "tool": "branch_emit_arm_r17",
-  "took_local": "2026-10-03T20:06:57+08:00",
-  "tip": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
-  "named_generation": "r14",
+  "took_local": "2026-10-03T20:10:40+08:00",
+  "tip": "74f5d8df082532f20e66bdba2b84311043f023b5",
+  "named_generation": "r17",
   "ref_excluded_and_proven_by_bytes": "r17",
   "receipts_named": [
-    "citation_gate_r14.json",
-    "citation_audit_r14.json",
-    "day25_anchor_recheck_r14.json"
+    "citation_gate_r17.json",
+    "citation_audit_r17.json",
+    "day26_anchor_recheck_r17.json"
   ],
   "refs": [
     {
@@ -65,15 +65,15 @@
       "commit": "9f5fcb022ec9abd8538c42ed713100fdfb929a2f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_TIP_MOVED readings judged c0b16645afc12aa1c5c5f68474ea9084b877618c, line now 74f5d8df082532f20e66bdba2b84311043f023b5",
-      "generation_named": "r14",
+      "last_line": "ABORT_LANDING_ROWS",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r11/"
     },
     {
@@ -81,15 +81,15 @@
       "commit": "97c5df9466c5ea33003efac857fe647ea0d62e7f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_TIP_MOVED readings judged c0b16645afc12aa1c5c5f68474ea9084b877618c, line now 74f5d8df082532f20e66bdba2b84311043f023b5",
-      "generation_named": "r14",
+      "last_line": "ABORT_LANDING_ROWS",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r12/"
     },
     {
@@ -97,15 +97,15 @@
       "commit": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch 2eae40b4d80984a7a92bc8f80b7b22006b91a4a5, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
-      "generation_named": "r14",
+      "last_line": "ABORT_LANDING_ROWS",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r13/"
     },
     {
@@ -113,15 +113,15 @@
       "commit": "71e855fa492901075a5abc8e0db97fee37b17d8e",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch 2eae40b4d80984a7a92bc8f80b7b22006b91a4a5, the ref is 71e855fa492901075a5abc8e0db97fee37b17d8e",
-      "generation_named": "r14",
+      "last_line": "ABORT_LANDING_ROWS",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r14/"
     },
     {
@@ -129,15 +129,15 @@
       "commit": "e579f0c4b2ddef55262624df3892ed17c61b5289",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch 2eae40b4d80984a7a92bc8f80b7b22006b91a4a5, the ref is e579f0c4b2ddef55262624df3892ed17c61b5289",
-      "generation_named": "r14",
+      "last_line": "ABORT_MISSING_SLOT at line 66",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r15/"
     },
     {
@@ -145,15 +145,15 @@
       "commit": "2eae40b4d80984a7a92bc8f80b7b22006b91a4a5",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "FileNotFoundError: [Errno 2] No such file or directory: 'D:/moodle/_qoder_phone_ord0485_20260930\\\\evidence\\\\branch_emit_arm_r17.json'",
-      "generation_named": "r14",
+      "last_line": "ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes r17, this page is for r16",
+      "generation_named": "r17",
       "receipts_named": [
-        "citation_gate_r14.json",
-        "citation_audit_r14.json",
-        "day25_anchor_recheck_r14.json"
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
       ],
       "page_file_this_arm_wrote": false,
-      "previous_page_restored": true,
+      "previous_page_restored": false,
       "scratch": "scratch_emit/r16/"
     }
   ],

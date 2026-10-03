@@ -23,8 +23,8 @@ for d in (RC, TL, RUN):
 import glob as _g
 _best = lambda pat: (sorted(_g.glob(os.path.join(LANE, "evidence", pat)), key=os.path.getmtime)
                      or [None])[-1]
-EXPB = os.path.basename(_best("r6_exposure_base_*.json") or "MISSING_exposure_base.json")
-EXPC = os.path.basename(_best("r6_exposure_cand*.json") or "MISSING_exposure_cand.json")
+EXPB = os.path.basename(_best("exposure_*_base.json") or "MISSING_exposure_base.json")
+EXPC = os.path.basename(_best("exposure_*_cand.json") or "MISSING_exposure_cand.json")
 EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "checkin_copy_rows_r6_control.json", "checkin_copy_rows_r6_M1.json",
       "checkin_copy_rows_r6_M1_revert.json", "checkin_copy_rows_r6_M2.json",
@@ -43,7 +43,9 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
              "citation_gate_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
              os.path.join(LANE, "evidence", "citation_audit_r*.json")))] + [
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
-             "exposure_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
+             "exposure_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "exposure_pair_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
              os.path.join(LANE, "evidence", "day*_recheck_r*.json")))] + [
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
              "day*_anchor_recheck*.json")))] + [
@@ -123,7 +125,7 @@ def readings():
     _bld = load("build_faces_r6.json")
     BASE_LABEL = _bld.get("base_label") or "BASE"
     CAND_LABEL = _bld.get("candidate_label") or "CAND"
-    cand_exp = load("r6_exposure_cand.json")
+    cand_exp = load(EXPC)
     L = []
     A = L.append
     A("# ORD-0500 r6 -- 英文档那一格：读数单（基座 `%s`，候选 = 本枝 `%s`）" % (
@@ -255,7 +257,8 @@ def readings():
     A("")
     A("| 面 | 格总数 | 图内模块 | 未解析 import | 解析诊断 |")
     A("|---|---|---|---|---|")
-    for label, d in (("基座 dc9dc10f", base_exp), ("候选 r6", cand_exp)):
+    for label, d in (("基座（件 `%s`）" % EXPB, base_exp), ("候选（件 `%s`）" % os.path.basename(EXPC),
+                                                            cand_exp)):
         A("| %s | %s | %s | %s | %s |" % (label, cell(d.get("cells_total")),
                                          cell(d.get("modules_in_graph")),
                                          cell(d.get("unresolved_import_count")),

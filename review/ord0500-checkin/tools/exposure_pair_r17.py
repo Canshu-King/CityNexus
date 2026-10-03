@@ -43,19 +43,28 @@ def blob_of(rev, path):
 
 
 def what_changed(base):
-    """The paths this order's product change actually touches -- read off the diff, never typed, so a
-    re-cut that moved the deletion does not leave this tool swapping the wrong files."""
-    rc, out = git("diff", "--name-only", "%s..HEAD" % base)
+    """The paths THIS order's product change touches, read off `merge-base..HEAD`.
+
+    Diffing the tip against HEAD directly would also list everything other lanes landed since my fork,
+    and swapping that set would revert their work inside this shared worktree.  The fork point is what
+    separates "my change" from "the line moved", so the merge-base is computed here, never remembered.
+    """
+    rc, mb = git("merge-base", base, "HEAD")
+    mb = (mb or "").strip()
+    if rc or not re.fullmatch(r"[0-9a-f]{40}", mb):
+        raise SystemExit("ABORT_NO_MERGE_BASE %s vs HEAD: %s" % (base[:12], mb[:120]))
+    rc, out = git("diff", "--name-only", "%s..HEAD" % mb)
     if rc:
         raise SystemExit("ABORT_DIFF %s" % out[:200])
     paths = [l.strip() for l in out.splitlines() if l.strip()
              and not l.strip().startswith("review/")]
     if not paths:
-        raise SystemExit("ABORT_NO_PRODUCT_PATHS against %s -- nothing to compare" % base)
+        raise SystemExit("ABORT_NO_PRODUCT_PATHS between fork %s and HEAD -- nothing to compare"
+                         % mb[:12])
     bad = [p for p in paths if blob_of(base, p) is None]
     if bad:
         raise SystemExit("ABORT_PATH_NOT_ON_BASE %s" % bad)
-    return paths
+    return {"merge_base": mb, "paths": paths}
 
 
 def run_ruler(out_name):
@@ -100,11 +109,12 @@ def main():
     if dirty.strip():
         raise SystemExit("ABORT_UNCOMMITTED_CANDIDATE " + dirty[:300])
     head = git("rev-parse", "HEAD")[1]
-    paths = what_changed(BASE)
+    changed = what_changed(BASE)
+    paths = changed["paths"]
     want = {p: blob_of("HEAD", p) for p in paths}
     out = {"tool": "exposure_pair_%s" % GEN, "took_local": datetime.now().astimezone().isoformat(
         timespec="seconds"), "live_tip": live, "candidate_head": head, "base_tip": BASE,
-        "swapped_paths": paths, "ruler": RULER, "sides": {}}
+        "merge_base": changed["merge_base"], "swapped_paths": paths, "ruler": RULER, "sides": {}}
     # candidate first (the tree is already the candidate), then base, then restore and verify
     out["sides"]["candidate"] = summary(run_ruler("exposure_%s_cand.json" % GEN))
     rc, got = git("checkout", BASE, "--", *paths)
