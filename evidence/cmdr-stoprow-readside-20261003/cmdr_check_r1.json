@@ -1,0 +1,146 @@
+{
+  "instrument": "cmdr_stop_row_readside_check_r1",
+  "at_local": "2026-10-03T20:32:30+0800",
+  "tip_read_from_github": "93286cd2556392a98d952a7d59b2d4507195c6d3",
+  "db_copy": "D:\\moodle\\_qoder_cmdr_stack_seed\\cmdr_stack_copy.db",
+  "front": "http://127.0.0.1:49805",
+  "tables": {
+    "places": {
+      "rows": 29,
+      "journey_id_in_cols": false,
+      "plan_version_id_in_cols": false,
+      "place_id_in_cols": false,
+      "columns": [
+        "id",
+        "provider_key",
+        "external_id",
+        "city_code",
+        "name",
+        "category",
+        "latitude",
+        "longitude",
+        "opening_hours_json",
+        "tags_json",
+        "metadata_json",
+        "updated_at",
+        "coordinate_system",
+        "source_coordinate_system"
+      ]
+    },
+    "activities": {
+      "rows": 1217,
+      "journey_id_in_cols": false,
+      "plan_version_id_in_cols": true,
+      "place_id_in_cols": true,
+      "columns": [
+        "id",
+        "plan_version_id",
+        "sequence_no",
+        "activity_type",
+        "title",
+        "place_id",
+        "city_service_id",
+        "start_at",
+        "end_at",
+        "travel_from_prev_min",
+        "estimated_cost_minor",
+        "currency",
+        "status",
+        "locked",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "plan_versions": {
+      "rows": 170,
+      "journey_id_in_cols": true,
+      "plan_version_id_in_cols": false,
+      "place_id_in_cols": false,
+      "columns": [
+        "id",
+        "journey_id",
+        "version_no",
+        "planning_mode",
+        "status",
+        "source",
+        "parent_plan_version_id",
+        "total_cost_minor",
+        "currency",
+        "estimated_duration_min",
+        "utility_score",
+        "score_breakdown_json",
+        "explanation_json",
+        "mobility_snapshot_id",
+        "mobility_evidence_json",
+        "created_at"
+      ]
+    },
+    "journey_legs": {
+      "rows": 376,
+      "journey_id_in_cols": true,
+      "plan_version_id_in_cols": true,
+      "place_id_in_cols": false,
+      "columns": [
+        "id",
+        "journey_id",
+        "plan_version_id",
+        "sequence_no",
+        "from_activity_id",
+        "to_activity_id",
+        "from_key",
+        "to_key",
+        "mode",
+        "depart_at",
+        "arrive_at",
+        "duration_min",
+        "distance_m",
+        "cost_amount_minor",
+        "currency",
+        "cost_status",
+        "walking_min",
+        "transfers",
+        "reliability_score",
+        "weather_exposure",
+        "geometry_json",
+        "crs",
+        "provider_key",
+        "provenance",
+        "provider_snapshot_id",
+        "captured_at",
+        "expires_at"
+      ]
+    }
+  },
+  "source_blob_of_landed_evidence": {
+    "review/ord0502-stop-row-read-side/read_side_r4_all_three_routes.json": "d574f694604737e10414e4feb85c46fa20deca60",
+    "review/ord0502-stop-row-read-side/read_side_r3_census_and_probes.json": "eabd86195c5bbee37ebdb0758f3f58c69d40a4c6"
+  },
+  "routes": [
+    {
+      "url": "http://127.0.0.1:49805/api/v1/places?city_code=CNX-DEMO",
+      "http": 200,
+      "bytes": 2155,
+      "rows": 8,
+      "keys": [
+        "category",
+        "city_code",
+        "coordinate_system",
+        "id",
+        "location",
+        "name",
+        "provider_key",
+        "source_coordinate_system",
+        "tags"
+      ],
+      "title_occurrences": 0
+    },
+    {
+      "url": "http://127.0.0.1:49805/api/v1/places/no-such-place-id",
+      "http": 404,
+      "bytes": 22,
+      "rows": null,
+      "keys": null
+    }
+  ]
+}
