@@ -16588,6 +16588,78 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-10-04 00:1x · 号令者（会话 494abfd7）· 补落第六笔（a68b0631 锚点漂移，0 行为）+ 今夜第二次巡逻
+
+一、落地：ORD-ANCHOR → `b7bb40ee90619c0febc667394279bd3c8a1d835d`（车道 a68b0631 枝 `refs/heads/review/a68b0631-line-anchor-drift-r1`，头 `3e118985d186d0e25d89fbb123d59e19c4f89894`；只读复切 + 门，门判 READY_TO_LAND）。现尖现读 = `b7bb40ee90619c0febc667394279bd3c8a1d835d`。至此今夜累计六笔：ORD-0504 / ORD-0552 / ORD-0509 / ORD-0472 / ORD-0545s5 / ORD-ANCHOR。
+
+二、掉线重发：车道 8ac89982 末轮又被链路掐断（尾行逐字「Unable to connect to the service, or the connection was interrupted…」），已重发。
+
+三、新派：车道 a68b0631 新单——把 shipped 注释里按行号钉引用的病扫全树修净（只碰注释与文档引用，不碰产品行为），带一枚「把行号插回去就红」的反件。
+
+四、勘误（我自己的错）：我前几轮派单里把账本路径写成 `D:/moodle/CityNexus/CITYNEXUS_AGENT_CONTROL.md`，那是错的；真路径是 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md`（已在 BB 机通播更正）。锚=`b7bb40ee90619c0febc667394279bd3c8a1d835d`。
+
+五、在跑：车道 da46954a 在长跑 ORD-0504 那两处屏上缺陷的修复（单 A：票卡「已确认」不看 status、中文面机词 train）；车道 45d25bfb 额度墙。
+
+六、待认领：ORD-0500 r18 复切冲突在 `review/ord0500-checkin/R6_READINGS.md`，原 owner 不明，请车道自申报认领并按现尖重基出 r19。锚=`0d3ee635408aef94066c03f3e86e6268cf0378d1`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0552 落地后确认（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：用**权威线上那枚仪器自己的字节**又跑了一趟，远端账本可读且两通道一致 — 取到 `12941909 B（DIMENSION 字节数）`、重算 git blob sha1 `e7ae186889415e4abb8956dcefde522515296a61`，与 contents 路报的号逐字相同，判语 `COMPLETE_AND_HASHED_EQUAL`；同一枚落地件上的反件照旧拒（少给一字节就 `ABORT_truncated_or_hash_mismatch`，它停在 12941908 B（DIMENSION 字节数））
+
+**跑的是线上那份，不是我本地草稿**：仪器在现尖 `b7bb40ee90619c0febc667394279bd3c8a1d835d` 上的 blob 是 `12005525e8363538e86468d262f196a20ebab3aa`；我把那枚 blob 取到 `git hash-object` 回同一枚号之后才执行，所以这一趟的量具与账本同行。
+
+**上一轮那三趟读断的原始指纹在哪（它们不是 git 对象，所以这里不给整枚 40 位，只给写在哪一行）**：
+  - `review/1d64acf5-ord0552/ledger_mirror_repro_r1.json:29` 这一行记着那枚重算号；那一趟正文停在 600827 B（DIMENSION 字节数）
+  - `review/1d64acf5-ord0552/ledger_mirror_repro_r1.json:42` 这一行记着那枚重算号；那一趟正文停在 1418476 B（DIMENSION 字节数）
+  - `review/1d64acf5-ord0552/ledger_mirror_repro_r1.json:55` 这一行记着那枚重算号；那一趟正文停在 349846 B（DIMENSION 字节数）
+  三枚号逐枚记在上面那三行里，逐枚 `git cat-file -t` 都取不回——这正是「半截正文」该有的身份，我上一版差点把它们当坐标写进块里，被自己那道 40 位闸拦下（拦得对）。整批三趟全等的对照读数在 `review/1d64acf5-ord0552/ledger_mirror_runs_summary_r1.json:3`。
+
+**顺带一件不等我伸手的事**：G4 与 ORD-0476 那两格按字节仍未进线——现尖上 `backend/tests/test_qoder_ord0296_write_deadline.py` 是 `d3e21e9084a3589678d08f7b50afe5119b2b85b8`、`backend/tests/test_qoder_ord0476_checkins.py` 是 `853e9a67a7c33f4ac33b36dc49f53fd806265442`，也就是我那两枝 `review/1d64acf5-ord0296-g4-floor-r4` 与 `review/1d64acf5-ord0476-response-set-r3` 还在门外（链根当时都是各自那枚尖，要不要 rebase 到现尖，点一句我就动）。
+
+**这手没有新单可接**：`## ORDERS` 段近期块里点 `1d64acf5` 名的只有 ORD-0552 那一行（已由本块收尾）；名下仍开着的是 ORD-0391 残余那两句 studio 屏读，前置是有人造出一单 authoritative plan，不在我这侧。
+
+坐标：交付枝 `refs/heads/review/1d64acf5-ord0552-ledger-mirror-r1` = `21d4127e390ff0c4d60866579ef938f5ad43c173`（12 枚路径，仪器 + 驱动 + 读数件），现尖上那枚仪器 blob `12005525e8363538e86468d262f196a20ebab3aa`。
+
+**边界**：0 产品字节、0 枚他人量具改动、权威线 0 移动、账本 0 直写（本块走收件口）、`demo/reset` 0 次、共享 `_preview.db` 0 次写、我这一道 0 个端口在跑、临时 clone 跑完即删。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 2026-10-04 00:0x · 号令者实例 A（会话 6efab655）· 第 10 手落地（中止门走上屏）+ 我在真浏览器里把枚举屏量干净了：中文臂 3 处→2 处、英文臂 34 处→33 处，那枚枚举在两臂都为 0
+
+一、落地：权威线现尖 = `a3324c4d214e6f402c9a3712bc557ace1afb06f0`（`git ls-remote --refs` 现读同值）。
+- 候选 `refs/heads/review/89f2e2d6-ord0520-abort-glass-r1` = `cf5b9c711a1267e6e1f58e77186fa3c23a9051e7`（两侧逐字相等），base 在 `702a4c7247cd9ba636711696232eccd2adb1cd96`。
+- 只读复切判干净：`RECUT a3324c4d214e6f402c9a3712bc557ace1afb06f0`，车道自有文件 29 枚、29/29 逐字节等于车道 blob（`merged_tree=4e7300c12d5dc04c73c547c740e2bfe8170e7995`），我没手合；复切片推成 `refs/heads/review/cmdr-recut-ord0520glass-r1`。
+- 门判 READY_TO_LAND、`product introduced: backend/app/services.py`；曝光臂由门自判 `skipped = "no frontend/src file changed"`（不是我下的开关）；收据 blob `b168e989bfba50a28018e843705fd8f6e7cda2e5`。
+- 测试口径：门不跑测试 ⇒ `NOT_EXECUTED_BY_CMDR`（`gate_run.test_exit` 为 null，同一收据 blob `b168e989bfba50a28018e843705fd8f6e7cda2e5`）。
+
+二、亲测（真 Chrome 390x844，两臂各起一遍；私有栈 = 我的后端 `127.0.0.1:8805` + 我这轮新起的产品前口 `127.0.0.1:49806`，服务 `_build_a3324c4/frontend/dist`）。代次按字节认：入口资产 `/assets/index-CuMOkEqV.js`；从前口取回的这份资产 1620655 字节与磁盘上 `live_checks/_build_a3324c4/frontend/dist/assets/index-CuMOkEqV.js` 的 1620655 字节逐字节相同（这一代由尖 `a3324c4d214e6f402c9a3712bc557ace1afb06f0` 建出，同一命令还比了两边摘要，摘要相等；文件摘要不是 git 对象，所以本行不写摘要坐标）。
+- 中文臂全屏机词 3 处 → 2 处（`/v8/hub` 0 处、`/v8/intelligence` 0 处，余下 2 处都在 `/v8/bookings` 且是 `JSON` 这枚正当文案词）：件 blob `92bd75e46aa11978d253c434305664526657c5df`。
+- 英文臂全屏 34 处 → 33 处（`/v8/intelligence` 从 4 处降到 3 处，少的正是那枚枚举）：件 blob `44a51e236a68ac84ee58dd3be98e9cb890e66bac`。
+- 正对照（这一条才是「修好了」而不是「量空了」的证据）：同一屏两臂都仍然画着运行身份那一行，只是换成旅行者话——中文臂「这个服务自己直连模型商的那条环」屏内字符 360 枚、英文臂 "this service's own loop straight to the model provider" 屏内字符 936 枚，两臂 `has_enum` 都是 False、页面异常各 0 条：件 blob `f4f6ab5d1b00af21617033ee985bec4700d62da7`。
+- 上一轮那一手（词表补 4 条，`frontend/src/lib/displayVocabulary.ts:21`、`:25`、`:29`、`:33`）到这一轮才有屏证，中间那一轮我写的是 `NOT_REACHED_BY_CMDR`，现在这格销掉。
+
+三、还是没量到的（具名，别当成已修）：
+- 打卡二次点击的拒答屏：我的仪表在 `/v8/live` 上找到「打卡」字样 0 处（`stamp_texts_found = 0`，journey `5a203174-bbcc-422a-aa64-8343c2883c72` 带 24 段，页面异常 0），也就是**它没找到入口**，不是产品没缺陷；读数件 blob `2cb741ca31aff085e6dfa67e7f1f139cb2b93065`。下一轮我先定位入口在哪条路由再判这一格。⇒ 该格仍 `NOT_REACHED_BY_CMDR`，原因换成「入口未定位」。
+- ORD-0520 这手走的是服务层，我没在屏上点「中止行程」，屏侧那格未验。
+
+四、派单与本手账（按会话 id 点名）：
+- ORD-0553 派给 sessionId `45d25bfb-3cb3-43e5-b9cc-edc10faa04a3`：`/v8/authoritative` 英文臂 10 枚大写词逐枚判源（哪几枚是服务端答复直接上屏、哪几枚是组件自己的样式字），只改判脏的，题面里我明令不许把本地样式标签当脏字抹掉；基线出处 = 英文臂件 blob `44a51e236a68ac84ee58dd3be98e9cb890e66bac` 的 `perRoute["/v8/authoritative"].items`。
+- 我这轮把 ORD-0552（账本镜像）也落了一次核对：车道枝头 `21d4127e390ff0c4d60866579ef938f5ad43c173` 已在权威线里（由另一实例经门落），我不重复落；镜像那一步本轮最后一次实测仍 `mirror rc=8 truncated read`（远端 blob `e7ae186889415e4abb8956dcefde522515296a61`，尺寸路报 12941909 字节，我实际取到 354164 字节，且这一趟直连还先吃了一次 `TimeoutError`）。⇒ 账本耐久性缺口未闭，单还在跑。
+- 未处理候选（不在权威线里，本轮容量不够）：`review/a68b0631-line-anchor-drift-r1` 换到的新头 `3e118985d186…`、`review/newlane-ord0500-phone-checkin-entry-r18` 的新头 `0d3ee635408a…`。
+- ORD-0551 仍卡在曝光判据：车道那手（`d7a1d740db7f08d3b2b165f31d57404c804f7c22`）门报「尺在尖上数得 6 格、候选数得 18 格」而报增长的 6 枚文件里 5 枚不在其改动集；我这轮又添一枚对照——同样改了词表的候选门报 `growth {}`（6 格对 6 格，收据 blob `47976abaa29789a2d1f58d142bdaad80362d77f5`），所以我派回去的要求是两份同形制全量导出的两侧读数，不是让车道改题面。
+
+五、没改善的部分（具名格子）：
+- 打卡拒答屏：见三，入口未定位。
+- `/v8/bookings` 提取腿两格（`FAILED_EXTERNAL` 上屏、供应商失败以 201 交付）：未落（ORD-0551 等 -r3 读数）。
+- `/v8/authoritative` 英文臂 10 枚：本轮只开单（ORD-0553），未修。
+- 账本镜像：仍 truncated read，未闭。
+- ORD-0436 八格、ORD-0430 底栏重叠：本轮 0 进展。
+- 普查尺允许表仍少 `JSON`（中文臂余 2 处就是它，件 blob `92bd75e46aa11978d253c434305664526657c5df`）⇒ 读数偏高，方向保守。
+- 磁盘：`df -h /d` 现读 11 GB 可用；我这轮新建了两份派生产物目录（`_build_a3324c4`、`_qoder_cmdr_snap_702a4c72`），没在被服务之外的垃圾没删，junction 一律先 `cmd /c rmdir` 再删树。
+
+
 ### CMDR 2026-10-03 23:1x · 号令者（会话 494abfd7）· 批落地五枚：ORD-0504 / ORD-0552 / ORD-0509 / ORD-0472 / ORD-0545s5 已落，尖前移到 f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024；ORD-0500 r18 复切冲突待重基
 
 一、落地（走 cmdr_batch_land_r1.py，只读复切 + 门，无手合；每笔车道自有文件逐字节等于车道 blob）：
