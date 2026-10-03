@@ -1,22 +1,22 @@
 {
   "tool": "citation_audit_r17",
-  "took_local": "2026-10-04T00:21:18+08:00",
-  "tip": "b0b538798a2ffbf36bf592f883a9eba165426a98",
+  "took_local": "2026-10-04T00:59:30+08:00",
+  "tip": "5e56bdbd6d4bc39f48e18fdb1d7da46fb9286cc8",
   "scope": [
     "backend/app",
     "backend/tests",
     "frontend/src",
     "contracts"
   ],
-  "files_scanned": 73,
-  "citations_found": 178,
+  "files_scanned": 74,
+  "citations_found": 185,
   "verdict_tally": {
-    "OK": 167,
-    "NOT_THIS_LANES_CITATION": 11
+    "OK": 173,
+    "NOT_THIS_LANES_CITATION": 12
   },
-  "lane_commits_in_set": 42,
-  "citations_judged": 167,
-  "citations_declined": 11,
+  "lane_commits_in_set": 39,
+  "citations_judged": 173,
+  "citations_declined": 12,
   "declined_authors": 9,
   "mechanically_red": 0,
   "this_lanes_own_files": [
@@ -40,6 +40,13 @@
       "line": 2807,
       "mechanical_verdict": "ORPHAN_BARE",
       "owner_commit": "9dab83eb0a5f4fc98e4df138d10123b4b01e0453"
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0386_plan_version_history.py:5",
+      "target": "backend/app/services.py",
+      "line": 612,
+      "mechanical_verdict": "BLANK_LINE_CITED",
+      "owner_commit": "244fa3851ab5cf8fc9d3b02330516153634d46ec"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0434_share_grants.py:4",
@@ -249,12 +256,14 @@
       "resolution": "exact",
       "file_exists": true,
       "resolved_path": "backend/app/services.py",
-      "lines_in_target": 2050,
+      "lines_in_target": 2056,
       "line_exists": true,
-      "target_text": "The activity metadata only carries them on some paths, so the Place row is",
-      "verdict": "OK",
+      "target_text": "",
+      "verdict": "NOT_THIS_LANES_CITATION",
       "owner_commit": "244fa3851ab5cf8fc9d3b02330516153634d46ec",
-      "owner_is_this_lane": false
+      "owner_is_this_lane": false,
+      "mechanical_verdict": "BLANK_LINE_CITED",
+      "why": "the citing line was written by commit 244fa3851ab5, which this order does not own"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0386_plan_version_history.py:30",
@@ -978,7 +987,7 @@
       "line_exists": true,
       "target_text": "existing = session.scalars(",
       "verdict": "OK",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true
     },
     {
@@ -994,7 +1003,7 @@
       "line_exists": true,
       "target_text": "except IntegrityError as exc:",
       "verdict": "OK",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true
     },
     {
@@ -1010,7 +1019,7 @@
       "line_exists": true,
       "target_text": "\"caught_by\": \"unique_index\",",
       "verdict": "OK",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true
     },
     {
@@ -1059,6 +1068,134 @@
       "target_text": "mobility_facts: Array<{ id?: string; mode: string; from_key: string; to_key: string; duration_min: number; cos",
       "verdict": "OK",
       "owner_commit": "93efd4940fed8656d9c63f57a7991963fdd0cabf",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:6",
+      "target": "backend/app/main.py",
+      "line": 3513,
+      "bare": false,
+      "citing_sentence": "by the contention follow-up (`backend/app/main.py:3513`, `backend/app/main.py:3535`,",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "if journey.aborted_at is not None or journey.status == \"CANCELLED\":",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:6",
+      "target": "backend/app/main.py",
+      "line": 3535,
+      "bare": false,
+      "citing_sentence": "by the contention follow-up (`backend/app/main.py:3513`, `backend/app/main.py:3535`,",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "Journey.aborted_at.is_(None),",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:7",
+      "target": "backend/app/main.py",
+      "line": 3556,
+      "bare": false,
+      "citing_sentence": "`backend/app/main.py:3556`).  Those two rules agree as long as nothing else writes `status`, and",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "if current.aborted_at is not None or current.status == \"CANCELLED\":",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:10",
+      "target": "backend/app/main.py",
+      "line": 7833,
+      "bare": false,
+      "citing_sentence": "(`backend/app/main.py:7833`), and the two activity-advance doors write `\"COMPLETED\"` the same way",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "journey.status = \"PLANNED\"",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:11",
+      "target": "backend/app/main.py",
+      "line": 9372,
+      "bare": false,
+      "citing_sentence": "(`backend/app/main.py:9372`, `backend/app/main.py:9456`).  A trip whose plan is selected again after",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "journey.status = \"COMPLETED\"",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:11",
+      "target": "backend/app/main.py",
+      "line": 9456,
+      "bare": false,
+      "citing_sentence": "(`backend/app/main.py:9372`, `backend/app/main.py:9456`).  A trip whose plan is selected again after",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "journey.status = \"COMPLETED\"",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:103",
+      "target": "backend/app/main.py",
+      "line": 7833,
+      "bare": false,
+      "citing_sentence": "`PLANNED` is what `select_plan` writes (`backend/app/main.py:7833`); `ACTIVE` is what `/start`",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "journey.status = \"PLANNED\"",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py:104",
+      "target": "backend/app/main.py",
+      "line": 9206,
+      "bare": false,
+      "citing_sentence": "writes (`backend/app/main.py:9206`); `COMPLETED` is what the two activity-advance doors write.",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/main.py",
+      "lines_in_target": 14483,
+      "line_exists": true,
+      "target_text": "journey.status = \"ACTIVE\"",
+      "verdict": "OK",
+      "owner_commit": "e8457b291362ec9669bedb2b21a77491f7ac0031",
       "owner_is_this_lane": false
     },
     {
@@ -1219,38 +1356,6 @@
       "target_text": "activity_type: string;",
       "verdict": "OK",
       "owner_commit": "75916eb4330e7d576ceabc0bcd2f70871181857a",
-      "owner_is_this_lane": false
-    },
-    {
-      "cited_by": "frontend/src/app/v8PanelRegistry.tsx:216",
-      "target": "app/V8Experience.tsx",
-      "line": 1731,
-      "bare": false,
-      "citing_sentence": "a label as `t(\"nav.\" + item.key)` (`app/V8Experience.tsx:1731`) and `t()` falls back to the",
-      "resolution": "unique-suffix",
-      "file_exists": true,
-      "resolved_path": "frontend/src/app/V8Experience.tsx",
-      "lines_in_target": 4958,
-      "line_exists": true,
-      "target_text": "/* ORD-0417 (hub slice): Today's hero carries a real map with real pins, so a pin here has to",
-      "verdict": "OK",
-      "owner_commit": "d9cca511eed2d91a97596f551b72be1d6dde81bd",
-      "owner_is_this_lane": false
-    },
-    {
-      "cited_by": "frontend/src/app/v8PanelRegistry.tsx:217",
-      "target": "i18n/LocaleContext.tsx",
-      "line": 1825,
-      "bare": false,
-      "citing_sentence": "key itself when the dictionary has no entry (`i18n/LocaleContext.tsx:1825`), so a new route",
-      "resolution": "unique-suffix",
-      "file_exists": true,
-      "resolved_path": "frontend/src/i18n/LocaleContext.tsx",
-      "lines_in_target": 2235,
-      "line_exists": true,
-      "target_text": "\"intel.kicker\": \"智能守护 · 控制塔\",",
-      "verdict": "OK",
-      "owner_commit": "d9cca511eed2d91a97596f551b72be1d6dde81bd",
       "owner_is_this_lane": false
     },
     {
@@ -2109,22 +2214,6 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/features/studio/planVersionHistoryCopy.ts:7",
-      "target": "LocaleContext.tsx",
-      "line": 1635,
-      "bare": false,
-      "citing_sentence": "* `historyCopy()` below -- `useT()` cannot reach these keys, because `LocaleContext.tsx:1635`",
-      "resolution": "unique-suffix",
-      "file_exists": true,
-      "resolved_path": "frontend/src/i18n/LocaleContext.tsx",
-      "lines_in_target": 2235,
-      "line_exists": true,
-      "target_text": "\"discovery.batchLanded\": \"服务端回读：{n} 条活动落在 {day}。\",",
-      "verdict": "OK",
-      "owner_commit": "244fa3851ab5cf8fc9d3b02330516153634d46ec",
-      "owner_is_this_lane": false
-    },
-    {
       "cited_by": "frontend/src/features/studio/planVersionHistoryCopy.ts:16",
       "target": "backend/app/schemas.py",
       "line": 495,
@@ -2241,17 +2330,17 @@
     {
       "cited_by": "frontend/src/features/trash/journeyTrash.ts:16",
       "target": "backend/app/main.py",
-      "line": 3608,
+      "line": 3615,
       "bare": false,
-      "citing_sentence": "* with ORD-0402 slice 1 at `backend/app/main.py:3608`: `GET /api/v1/recycle-bin/journeys`, declared in",
+      "citing_sentence": "* with ORD-0402 slice 1 at `backend/app/main.py:3615`: `GET /api/v1/recycle-bin/journeys`, declared in",
       "resolution": "exact",
       "file_exists": true,
       "resolved_path": "backend/app/main.py",
       "lines_in_target": 14483,
       "line_exists": true,
-      "target_text": "# *before* the write, and `abort_reason: null` would be the first lie on the screen.  Measured,",
+      "target_text": "@app.get(\"/api/v1/recycle-bin/journeys\", response_model=list[RecycleBinJourney])",
       "verdict": "OK",
-      "owner_commit": "34d21ab96350cafda92d05680dd06be881a1c02f",
+      "owner_commit": "927b092d0066f8709cfd1109501b101dc25d3bb9",
       "owner_is_this_lane": false
     },
     {
@@ -2321,17 +2410,17 @@
     {
       "cited_by": "frontend/src/features/trash/journeyTrash.ts:33",
       "target": "backend/app/main.py",
-      "line": 3631,
+      "line": 3638,
       "bare": false,
-      "citing_sentence": "* (`backend/app/main.py:3631`), and the panel renders the array as answered, so the order a traveller",
+      "citing_sentence": "* (`backend/app/main.py:3638`), and the panel renders the array as answered, so the order a traveller",
       "resolution": "exact",
       "file_exists": true,
       "resolved_path": "backend/app/main.py",
       "lines_in_target": 14483,
       "line_exists": true,
-      "target_text": "with its own confirmation), so nothing here may promise one, and the rows stay addressable at",
+      "target_text": ".order_by(Journey.deleted_at.desc(), Journey.id)",
       "verdict": "OK",
-      "owner_commit": "34d21ab96350cafda92d05680dd06be881a1c02f",
+      "owner_commit": "927b092d0066f8709cfd1109501b101dc25d3bb9",
       "owner_is_this_lane": false
     },
     {
@@ -2364,22 +2453,6 @@
       "target_text": "* Wording rule from the order: this screen says 「历史版本 / 还原」. The word 恢复 already means",
       "verdict": "OK",
       "owner_commit": "cfd980fd762eee1d94db764a3262ae2346951c45",
-      "owner_is_this_lane": false
-    },
-    {
-      "cited_by": "frontend/src/features/traveler-twin/TwinPanel.tsx:16",
-      "target": "LocaleContext.tsx",
-      "line": 1644,
-      "bare": false,
-      "citing_sentence": "* misses (LocaleContext.tsx:1644), so comparing the answer against the question is what",
-      "resolution": "unique-suffix",
-      "file_exists": true,
-      "resolved_path": "frontend/src/i18n/LocaleContext.tsx",
-      "lines_in_target": 2235,
-      "line_exists": true,
-      "target_text": "\"discovery.batchOutsideDay\": \"这一批装不进行程已保护的那一天：少勾几处，或换一天。\",",
-      "verdict": "OK",
-      "owner_commit": "1c5f415858e0567d2c8d9e4ebf65c6c2d05af437",
       "owner_is_this_lane": false
     },
     {
@@ -2439,9 +2512,9 @@
       "resolution": "exact",
       "file_exists": true,
       "resolved_path": "frontend/src/lib/displayVocabulary.ts",
-      "lines_in_target": 215,
+      "lines_in_target": 233,
       "line_exists": true,
-      "target_text": "const PLAN_SOURCE: Record<string, Label> = {",
+      "target_text": "zh: \"这个服务自己直连模型商的那条环\",",
       "verdict": "OK",
       "owner_commit": "b4632bce31514fe8f2b7f1807ef36f09d895443a",
       "owner_is_this_lane": false
@@ -2631,9 +2704,9 @@
       "resolution": "unique-suffix",
       "file_exists": true,
       "resolved_path": "backend/app/services.py",
-      "lines_in_target": 2050,
+      "lines_in_target": 2056,
       "line_exists": true,
-      "target_text": "metadata = json.loads(place.metadata_json or \"{}\")",
+      "target_text": "facts: list[FeasibilityActivity] = []",
       "verdict": "OK",
       "owner_commit": "e5e12702489d58b8d9802b251782a61fc1db54cc",
       "owner_is_this_lane": false
@@ -2647,9 +2720,9 @@
       "resolution": "unique-suffix",
       "file_exists": true,
       "resolved_path": "backend/app/services.py",
-      "lines_in_target": 2050,
+      "lines_in_target": 2056,
       "line_exists": true,
-      "target_text": "{",
+      "target_text": "\"preference_fit\": 0.92,",
       "verdict": "OK",
       "owner_commit": "e5e12702489d58b8d9802b251782a61fc1db54cc",
       "owner_is_this_lane": false
@@ -2751,7 +2824,55 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:55",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:14",
+      "target": "ControlTowerPanel.tsx",
+      "line": 51,
+      "bare": false,
+      "citing_sentence": "/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx:51`), and",
+      "resolution": "unique-suffix",
+      "file_exists": true,
+      "resolved_path": "frontend/src/features/intelligence/ControlTowerPanel.tsx",
+      "lines_in_target": 79,
+      "line_exists": true,
+      "target_text": "<b>{runtimeStatus ? runtimeIdentityLabel(runtimeStatus.runtime_identity, locale) : t(\"intel.runtimeUnknown\")}<",
+      "verdict": "OK",
+      "owner_commit": "2c188f705659b0c126ba71d02e049586275dada6",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:15",
+      "target": "backend/app/agent/runtime_identity.py",
+      "line": 15,
+      "bare": false,
+      "citing_sentence": "the table carried one of the four names `backend/app/agent/runtime_identity.py:15-18` can write. The",
+      "resolution": "exact",
+      "file_exists": true,
+      "resolved_path": "backend/app/agent/runtime_identity.py",
+      "lines_in_target": 77,
+      "line_exists": true,
+      "target_text": "HERMES_NATIVE_MCP = \"HERMES_NATIVE_MCP\"",
+      "verdict": "OK",
+      "owner_commit": "2c188f705659b0c126ba71d02e049586275dada6",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:18",
+      "target": "runtime_identity.py",
+      "line": 50,
+      "bare": false,
+      "citing_sentence": "actually tested (`runtime_identity.py:50-56`) -- no wording claims a verified gateway where only a",
+      "resolution": "unique-suffix",
+      "file_exists": true,
+      "resolved_path": "backend/app/agent/runtime_identity.py",
+      "lines_in_target": 77,
+      "line_exists": true,
+      "target_text": "if binary and native.get(\"ready\"):",
+      "verdict": "OK",
+      "owner_commit": "2c188f705659b0c126ba71d02e049586275dada6",
+      "owner_is_this_lane": false
+    },
+    {
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:73",
       "target": "backend/app/schemas.py",
       "line": 772,
       "bare": false,
@@ -2767,7 +2888,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:56",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:74",
       "target": "backend/app/commerce/strengths_generated.py",
       "line": 6,
       "bare": false,
@@ -2783,7 +2904,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:57",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:75",
       "target": "backend/app/commerce/service_impl.py",
       "line": 306,
       "bare": false,
@@ -2799,7 +2920,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:57",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:75",
       "target": "backend/app/operations/v9.py",
       "line": 579,
       "bare": false,
@@ -2815,7 +2936,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:88",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:106",
       "target": "backend/app/anywhere_capability.py",
       "line": 233,
       "bare": false,
@@ -2831,7 +2952,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:96",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:114",
       "target": "backend/app/stay_mobility.py",
       "line": 435,
       "bare": false,
@@ -2847,7 +2968,7 @@
       "owner_is_this_lane": false
     },
     {
-      "cited_by": "frontend/src/lib/displayVocabulary.ts:113",
+      "cited_by": "frontend/src/lib/displayVocabulary.ts:131",
       "target": "backend/app/replanning/provider_snapshots.py",
       "line": 13,
       "bare": false,

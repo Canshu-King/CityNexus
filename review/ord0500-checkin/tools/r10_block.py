@@ -173,7 +173,6 @@ def main():
     blob_drv = blob(RC_DIR + "tools/citation_gate_r10_mutants.py")
     blob_door = blob(RC_DIR + "tools/r9_block.py")
     blob_emit = blob(RC_DIR + "tools/r10_block.py")
-    chain_path, blob_chain = blob_by_fragment("/tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
 
     def blob_by_fragment(fragment):
@@ -189,6 +188,7 @@ def main():
         return hits[-1], blobs[hits[-1]]
     arm_tool_path, blob_armtool = blob_by_fragment("/tools/branch_emit_arm_")
     pair_tool_path, blob_pairtool = blob_by_fragment("/tools/exposure_pair_")
+    chain_path, blob_chain = blob_by_fragment("/tools/%s_chain.sh" % REF_GEN)
     blob_fmt = blob(RC_DIR + "receipts/" + FMT_RECEIPT)
     blob_coll = blob(RC_DIR + "receipts/pytest_collectonly_%s.json" % GEN)
     blob_sweep = blob(RC_DIR + "receipts/sweep_r6.json")

@@ -1,11 +1,11 @@
 {
   "tool": "citation_gate_r17",
-  "took_local": "2026-10-04T00:21:12+08:00",
+  "took_local": "2026-10-04T00:59:24+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22",
-  "tip": "b0b538798a2ffbf36bf592f883a9eba165426a98",
-  "branch": "lane/ord0500-r14",
+  "tip": "5e56bdbd6d4bc39f48e18fdb1d7da46fb9286cc8",
+  "branch": "lane/ord0500-r19",
   "files_scanned": 9,
-  "live_tracked_paths": 3432,
+  "live_tracked_paths": 3479,
   "citations_seen": 33,
   "citations_judged": 8,
   "citations_declined": 25,
@@ -13,7 +13,7 @@
   "judged_files": 1,
   "mechanical_rows": 4,
   "pin_rows": 4,
-  "lane_commits_in_set": 42,
+  "lane_commits_in_set": 39,
   "foreign_files_seen": [
     "backend/app/main.py",
     "contracts/openapi.yaml",
@@ -181,7 +181,7 @@
       "line": 4263,
       "verdict": "OK",
       "target_text": "existing = session.scalars(",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -191,7 +191,7 @@
       "line": 4299,
       "verdict": "OK",
       "target_text": "except IntegrityError as exc:",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -201,7 +201,7 @@
       "line": 4316,
       "verdict": "OK",
       "target_text": "\"caught_by\": \"unique_index\",",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -232,7 +232,7 @@
       "target": "frontend/src/lib/displayVocabulary.ts",
       "line": 30,
       "verdict": "NOT_THIS_LANES_CITATION",
-      "target_text": "const PLAN_SOURCE: Record<string, Label> = {",
+      "target_text": "zh: \"这个服务自己直连模型商的那条环\",",
       "owner_commit": "b4632bce31514fe8f2b7f1807ef36f09d895443a",
       "owner_is_this_lane": false,
       "mechanical_verdict": "OK",
@@ -388,7 +388,7 @@
       "verdict": "OK",
       "pinned": "lookup",
       "target_text": "existing = session.scalars(",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -399,7 +399,7 @@
       "verdict": "OK",
       "pinned": "integrity",
       "target_text": "except IntegrityError as exc:",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -410,7 +410,7 @@
       "verdict": "OK",
       "pinned": "caught_by",
       "target_text": "\"caught_by\": \"unique_index\",",
-      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
+      "owner_commit": "b28550674ebdd3381a2455731e9a1026e77c6003",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     }
