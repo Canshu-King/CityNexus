@@ -35,6 +35,31 @@ NL = chr(10)
 
 
 def main():
+    ARTIFACT_PREFIXES = ("review/ord0500-checkin/receipts/", "review/ord0500-checkin/run/",
+                         "review/ord0500-checkin/tools/")
+
+    def readings_commit_is_clean(reading_rev, ref_rev):
+        """Readings have to be taken on a commit that already carries the tools; the ref then advances by
+        one more commit that adds exactly those readings.  That is honest only if the extra commit is
+        forward, touches artifact paths and nothing else, and changes no product byte -- otherwise a
+        page would quote numbers that belong to a different tree than the one under review.  Returns
+        (ok, what broke)."""
+        if not reading_rev:
+            return False, ["NO_READING_REVISION"]
+        if reading_rev == ref_rev:
+            return True, []
+        if not re.fullmatch(r"[0-9a-f]{40}", str(reading_rev)):
+            return False, ["READING_REVISION_NOT_40_HEX"]
+        rc = B.sh(["merge-base", "--is-ancestor", reading_rev, ref_rev], cwd=WT)[0]
+        if rc != 0:
+            return False, ["READING_COMMIT_IS_NOT_AN_ANCESTOR"]
+        rc2, out = B.sh(["diff", "--name-only", "%s..%s" % (reading_rev, ref_rev)], cwd=WT)
+        if rc2 != 0:
+            return False, ["DIFF_UNREADABLE"]
+        touched = [l.strip() for l in out.splitlines() if l.strip()]
+        off = [p for p in touched if not p.startswith(ARTIFACT_PREFIXES)]
+        return (not off), {"off_limits": off, "artifacts_added": len(touched)}
+
     gate = B.load(GATE_RECEIPT)
     gm = B.load(MUT_RECEIPT)
     py = B.load("pytest_r6.json")
@@ -84,6 +109,11 @@ def main():
     # named failure sheet.  R10_FORCE_RED=<name> is the arm that proves this bites, run by r15_chain.sh.
     # This one list is the door's inventory AND the sentence in section 七 that names it, so the page
     # cannot claim more checks than the door actually runs.
+    # the readings were taken on the commit that carried the tools; the ref may be one commit ahead of
+    # them because that commit is what adds the readings themselves.  Checked here (before the door) and
+    # reported in the page, so the one honest case cannot be confused with a stale one.
+    gate_ok, gate_rel = readings_commit_is_clean(gate.get("tip"), me["commit"])
+    rcpt_ok, rcpt_rel = readings_commit_is_clean(rcpt.get("branch_head"), me["commit"])
     RED_CHECKS = [
         ("引文闸判语", gate.get("verdict") == "GREEN", gate.get("verdict_tally")),
         ("引文闸反件全咬", bool(gm.get("every_arm_bit")) and bool(gm.get("green")), gm.get("runs")
@@ -101,6 +131,7 @@ def main():
         and (fmt.get("selftest") or {}).get("verdict") == "PASS",
          {"calls_checked": fmt.get("calls_checked"), "mismatched": len(fmt.get("mismatched") or []),
           "selftest": (fmt.get("selftest") or {}).get("verdict")}),
+        ("读数提交到枝尖只多了件", gate_ok and rcpt_ok, {"gate": gate_rel, "recheck": rcpt_rel}),
     ]
     RED_CHECK_NAMES = [c[0] for c in RED_CHECKS]
     B.refuse_on_red(REF_GEN, RED_CHECKS)
@@ -111,7 +142,13 @@ def main():
         if len(parts) == 2:
             blobs[parts[1]] = parts[0]          # path -> blob sha (the file list, not the key=value form)
     def blob(path):
-        return B.fmt(blobs.get(path))
+        """A cited artifact that the coordinate list does not carry is a defect in THIS page, not a gap
+        in the tree, so it names itself instead of surfacing as an anonymous empty slot."""
+        if path not in blobs:
+            raise SystemExit("ABORT_NO_BLOB_FOR %s -- the coordinate list (%d paths) does not carry it; "
+                             "add a glob to tools/r6_coordinates.py or stop citing it"
+                             % (path, len(blobs)))
+        return blobs[path]
     RC_DIR = "review/ord0500-checkin/"
     blob_gate = blob(RC_DIR + "receipts/" + GATE_RECEIPT)
     blob_mut = blob(RC_DIR + "receipts/" + MUT_RECEIPT)
@@ -123,7 +160,18 @@ def main():
     blob_emit = blob(RC_DIR + "tools/r10_block.py")
     blob_chain = blob(RC_DIR + "tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
-    blob_armtool = blob(RC_DIR + "tools/branch_emit_arm_%s.py" % REF_GEN)
+
+    def blob_by_suffix(suffix):
+        """Cite an instrument by what the ref actually carries, not by a name I assume it carries: the
+        emitter-arm file is named for the hand that wrote it (r16) while the ref is named for the hand
+        being reviewed (r17), and typing `% REF_GEN` for it produced an empty slot."""
+        hits = sorted(p for p in blobs if p.endswith(suffix))
+        if not hits:
+            raise SystemExit("ABORT_NO_BLOB_FOR *%s -- the coordinate list (%d paths) carries none"
+                             % (suffix, len(blobs)))
+        return hits[-1], blobs[hits[-1]]
+    arm_tool_path, blob_armtool = blob_by_suffix("tools/branch_emit_arm_")
+    pair_tool_path, blob_pairtool = blob_by_suffix("tools/exposure_pair_")
     blob_fmt = blob(RC_DIR + "receipts/" + FMT_RECEIPT)
     blob_coll = blob(RC_DIR + "receipts/pytest_collectonly_%s.json" % GEN)
     blob_sweep = blob(RC_DIR + "receipts/sweep_r6.json")
@@ -150,12 +198,14 @@ def main():
     if gm.get("pairs_with_gate_receipt") != GATE_RECEIPT:
         raise SystemExit("ABORT_MUTANT_STALE the mutant run pairs with %s, this page reads %s"
                          % (gm.get("pairs_with_gate_receipt"), GATE_RECEIPT))
-    if rcpt.get("branch_head") != remote:
-        raise SystemExit("ABORT_RECHECK_STALE the re-check read branch %s, the ref is %s"
-                         % (rcpt.get("branch_head"), remote))
-    if gate.get("tip") != remote:
-        raise SystemExit("ABORT_GATE_STALE gate read %s, the ref is %s -- re-run the gate"
-                         % (gate.get("tip"), remote))
+    ok_g, why_g = readings_commit_is_clean(gate.get("tip"), remote)
+    if not ok_g:
+        raise SystemExit("ABORT_GATE_STALE gate read %s, the ref is %s -- %s" % (gate.get("tip"),
+                                                                                remote, why_g))
+    ok_r, why_r = readings_commit_is_clean(rcpt.get("branch_head"), remote)
+    if not ok_r:
+        raise SystemExit("ABORT_RECHECK_STALE the re-check read branch %s, the ref is %s -- %s"
+                         % (rcpt.get("branch_head"), remote, why_r))
     # the line moves every few minutes here, so the arm being a commit or two behind is not a reason to
     # refuse a page -- an arm that ran against a tip that is NOT behind this one (or ran against a branch
     # that has since been rewritten) is.  What must hold is: arm.tip is an ancestor of the live tip, and
@@ -246,20 +296,6 @@ def main():
     rc2, ahead = B.sh(["git", "rev-list", "--count", "%s..%s" % (me["fork_point"], live_tip)], cwd=WT)
     line_ahead = ahead.strip()
 
-    gate_tree, mut_tree = None, None
-    for nm, store in (("citation_gate_%s.json" % GEN, "gate"), ("citation_gate_%s_mutants.json" % GEN,
-                                                                 "mut")):
-        rcx, txt = B.sh(["git", "show", "HEAD:review/ord0500-checkin/receipts/" + nm], cwd=WT)
-        if rcx == 0 and txt.strip().startswith("{"):
-            try:
-                parsed = json.loads(txt)
-                if store == "gate":
-                    gate_tree = parsed
-                else:
-                    mut_tree = parsed
-            except ValueError:
-                pass
-
     foreign = [r for r in (gate.get("rows") or []) if r["verdict"] == "NOT_THIS_LANES_CITATION"]
     runs = gm.get("runs") or []
 
@@ -334,11 +370,6 @@ def main():
         """A row that never got as far as running has no exit code and no generation named -- that is a
         real answer, not a missing slot, so it prints as a dash instead of refusing the whole page."""
         return "—" if v is None else str(v)
-
-    def named_or_absent(v):
-        """`None` is the leak this emitter has been caught on before; a field the instrument did not
-        write is written as 没记, which is a statement about the artifact, not a number."""
-        return "没记" if v is None else str(v)
     for r in arm_rows:
         A("| %s | %s | %s | %s | %s |" % (
             dash(r.get("ref")), dash(r.get("verdict")), dash(r.get("returncode")),
@@ -416,13 +447,16 @@ def main():
           B.fmt(m5.get("verdict")), B.fmt(m5.get("red_total")), "NOT_THIS_LANES_CITATION",
           B.slot(m5.get("row_mechanical_verdict")), B.slot(fu.get("owner_commit")),
           B.fmt(m6.get("verdict")), B.slot(m6.get("expect")), MUT_RECEIPT, blob_mut, blob_drv))
-    A("- 件自己也是提交，所以这个形状必须说清：枝里那两份 `citation_gate_%s*.json` 是在 `%s` 那一枚上"
-      "跑的读数（`%s` 与 `%s`），本页引的是同一把尺在现在这枚 `%s` 上的重跑——两边只差 tree/tip 两格与"
-      "时间戳。要把新件再提交进去，枝尖又前移一格，这个尾巴追不完，所以我停在「页用现跑、枝里那份具名为"
-      "上一枚」这一形制上；枝里那份的 blob 是 `%s`。" % (
-          GEN, B.slot((gate_tree or {}).get("tip") or "枝里没有同名件"),
-          B.slot((gate_tree or {}).get("branch") or "—"), B.slot((gate_tree or {}).get("took_local")
-                                                                 or "—"), remote, blob_gate))
+    A("- 件自己也是提交，所以这个形状必须说清，而且这一手开始是量出来的：闸的读数取自 `%s`、复读的读数"
+      "取自 `%s`，本枝尖是 `%s`；两枚之间 `git diff --name-only` 现读 %s 枚路径，全部落在 "
+      "`review/ord0500-checkin/{receipts,run,tools}/` 之下（产品与判据文件 0 枚），`merge-base "
+      "--is-ancestor` 判读数提交确在枝尖上游。不等这一形制就退 `ABORT_GATE_STALE`/`ABORT_RECHECK_STALE`，"
+      "这一格也在 §七 那张清单里（第 %s 项）。上一手我只写过「枝里那份具名为上一枚、两边差时间戳」——那"
+      "句话没有把两枚 sha 与差集摆出来，等于让号令者信我。件里那份同名复制的 blob：闸 `%s`、反件 `%s`。" % (
+          B.slot(gate.get("tip")), B.slot(rcpt.get("branch_head")), B.slot(remote),
+          B.fmt(max([d.get("artifacts_added", 0) for d in (gate_rel, rcpt_rel) if isinstance(d, dict)]
+                    or [0])),
+          B.fmt(RED_CHECK_NAMES.index("读数提交到枝尖只多了件") + 1), blob_gate, blob_mut))
     A("- 全部在 `scratch_cit_r9/` 的副本上跑（%s 份），判它用的登记清单与 blame 都仍取真实工作树——临时"
       "目录不给自己当权威。副本字节全部回来 = %s，本次跑对 `wt22` 的改动 = %s（开工前后逐行相等；开工前"
       "它就带着我已提交的件，所以判据是「没被这趟改过」，不是「干净」）。" % (
@@ -585,23 +619,34 @@ def main():
                 .get("census", {}).get("pressable_by_centre_hit")),
           B.fmt((sw.get("%s_en" % faces.get("candidate_label"), {}) or {}).get("readings", {})
                 .get("census", {}).get("pressable_by_centre_hit")), blob_sweep))
+    pair = B.load("exposure_pair_%s.json" % EXPOSURE_GEN)
     cx, cb = B.load("exposure_%s_cand.json" % EXPOSURE_GEN), B.load("exposure_%s_base.json" % EXPOSURE_GEN)
-    A("- Q64 曝光尺两边相等：格总数 %s 对 %s、命中集合相同 = %s、未解析 import %s 对 %s、解析诊断 %s "
-      "对 %s——删死掉的字典行没有把任何正文值送进共用 helper。两枚原件 `receipts/exposure_%s_cand.json`"
-      "（blob `%s`）与 `receipts/exposure_%s_base.json`（blob `%s`）。**这两份件没记尺的版次**（件里 "
-      "`tool` 与 `version` 两格都是 %s），所以这句只敢说到『同一把尺两边跑、命中集合相同』为止，不敢说它是"
-      " r7b 还是后来的 r7b4；号令者 09-29 之后又出了 r7b1/r7b3/r7b4，而 r7b4 自己写着「按文件的格数既不是 "
-      "`--tree` 的上界也不是下界」，所以版次没记就等于这句的可比性是我在替它担保。本手补了一枚成对尺 "
-      "`tools/exposure_pair_r17.py`（把尺的文件名、字节数与本机 sha1 记进件，跑完逐枚验回候选字节），"
-      "但**它本手一枚没跑**，所以页里不引它的数。这两格数仍属 `%s` 那一代。" % (
-          B.fmt(cx.get("cells_total")), B.fmt(cb.get("cells_total")),
-          B.fmt(sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cx.get("hits") or []) ==
-                sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cb.get("hits") or [])),
-          B.fmt(cx.get("unresolved_import_count")), B.fmt(cb.get("unresolved_import_count")),
-          B.fmt(cx.get("parse_diagnostics_total")), B.fmt(cb.get("parse_diagnostics_total")),
-          EXPOSURE_GEN, blob_exp_cand, EXPOSURE_GEN, blob_exp_base,
-          "`%s`/`%s`" % (named_or_absent(cx.get("tool")), named_or_absent(cx.get("version"))),
+    pr, pc, pb = pair.get("parity") or {}, pair.get("sides") or {}, pair.get("restore") or {}
+    A("- Q64 曝光尺两边相等，而且这一对是**本手重取的**：`tools/exposure_pair_r%s.py` 把 `%s` 换到基座 `%s` "
+      "的字节、跑一枚尺、再换回候选 `%s`、逐枚验回（`every_path_matches_the_commit` = %s、"
+      "`worktree_clean_after_restore` = %s、`checkout_rc` %s）。格总数 %s 对 %s、命中集合相同 = %s、"
+      "未解析 import %s 对 %s、解析诊断 %s 对 %s——删死掉的字典行没有把任何正文值送进共用 helper。"
+      "**这一回尺的版次记进件了**：`%s`（本机字节 %s，本机 sha1 `%s`，原件 blob `%s` 与 `%s`）——上一代那两份件"
+      "的 `tool`/`version` 两格都是空的，所以那句「两边相等」我当时无法说清是哪一版答的；r7b4 自己写着「按文件"
+      "的格数既不是 `--tree` 的上界也不是下界」，版次不记就等于我在替它担保。件 `receipts/exposure_pair_%s.json`。" % (
+          REF_GEN, pair.get("candidate_head"), pair.get("base_tip"), pair.get("candidate_head"),
+          B.fmt(pc.get("every_path_matches_the_commit")), B.fmt(pc.get("worktree_clean_after_restore")),
+          B.fmt(pc.get("checkout_rc")),
+          B.fmt((pc.get("candidate") or {}).get("cells_total")), B.fmt((pc.get("base") or {}).get("cells_total")),
+          B.fmt(pr.get("hit_set_equal")),
+          B.fmt((pc.get("candidate") or {}).get("unresolved_import_count")),
+          B.fmt((pc.get("base") or {}).get("unresolved_import_count")),
+          B.fmt((pc.get("candidate") or {}).get("parse_diagnostics_total")),
+          B.fmt((pc.get("base") or {}).get("parse_diagnostics_total")),
+          B.slot(pair.get("ruler")), B.fmt(cx.get("_lane_meta", {}).get("ruler_bytes"), " 字节"),
+          B.slot(cx.get("_lane_meta", {}).get("ruler_sha1_of_local_bytes")), blob_exp_cand, blob_exp_base,
           EXPOSURE_GEN))
+    A("- 这一对与 §六 上面那两枚面**不是同一次量的**：面与屏读取自候选 `%s`、其基座标签是 `%s`；曝光对的基座"
+      "是此刻现尖 `%s`，而我与它的分叉点是 `%s`（`git merge-base` 现读）——换进去比对的只有从这枚分叉到我这一手"
+      "之间我动过的 %s 枚产品路径，别的车道落进线里的东西我一枚不碰。所以「bundle 少了什么」那句仍按上一代的"
+      "基座说，「正文没被送进共用 helper」这句按现尖说，两句各管各的范围，我不把它们并成一句好看的话。" % (
+          B.slot(_fc), B.slot(faces.get("base_label")), B.slot(pair.get("base_tip")),
+          B.slot(pair.get("merge_base")), B.fmt(len(pair.get("swapped_paths") or []))))
     A("")
     A("## 七、出页那扇门现在真的拦（裁①）")
     A("")
@@ -611,7 +656,7 @@ def main():
           B.fmt(len(RED_CHECK_NAMES)), "、".join(RED_CHECK_NAMES), REF_GEN))
     A("- 它真咬的证据有两层。本趟：生成这页之前先跑了一遍 `R10_FORCE_RED=引文闸判语`——那一格不动任何件，"
       "只把「判语」这一项按假塞进去，发射器立刻退 `ABORT_READINGS_RED`，只落一张失败件（`run/%s_READINGS_RED."
-      "json`，%s），页面文件当时并不存在。枝里：上一代同一扇门咬下来的那张已经随本手进枝，逐枚现读是 %s。"
+      "json`，%s），页面文件当时并不存在。枝里：同一扇门咬下来的那些张已经随本手进枝，逐枚现读是 %s。"
       "链里那条 `test ! -f run/%s_block_page.md` 就是钉「红的时候页面不存在」这一格的；它原先查的是**枝号**"
       "那一枚文件名、发射器写的却是**件号**那一枚，两者从来不是同一枚，那条守门条等于没有——本手改成查实际"
       "落点，并在跑拒绝趟之前先 `rm -f` 它，否则重跑会假报。本页是真跑过拒绝之后才生成的。" % (

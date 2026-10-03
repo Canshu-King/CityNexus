@@ -102,6 +102,7 @@ def main():
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_gate_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_audit_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/exposure_r1*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/exposure_pair_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_copy_rows*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_audit_r*.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/build_faces_r6.py"))) +
@@ -115,6 +116,7 @@ def main():
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/pytest_collectonly_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/branch_emit_arm_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/branch_emit_arm_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/exposure_pair_r*.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/fmt_lint_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_*_390x844_r*.json"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/fmt_lint_r*.py"))) +

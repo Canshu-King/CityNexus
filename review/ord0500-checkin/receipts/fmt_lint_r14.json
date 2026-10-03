@@ -2,11 +2,13 @@
   "tool": "fmt_lint_r15",
   "files": [
     "tools/r10_block.py",
-    "tools/exposure_pair_r17.py"
+    "tools/exposure_pair_r17.py",
+    "tools/stage_readings_r6.py",
+    "tools/r6_coordinates.py"
   ],
-  "files_scanned": 2,
-  "calls_checked": 63,
-  "single_expression_args": 52,
+  "files_scanned": 4,
+  "calls_checked": 103,
+  "single_expression_args": 59,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",
