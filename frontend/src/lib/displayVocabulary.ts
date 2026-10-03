@@ -41,8 +41,14 @@ const POLICY_MODE: Record<string, Label> = {
 
 /** Only the states the traveller-facing dictionary does not already name. Where a screen has an
  *  `exec.state.*` key, that key stays authoritative -- this table is the fallback, not a rival. */
+/* ORD-0553: the status Literal in `backend/app/schemas.py` can also answer READY and CANCELLED for an
+   activity. Neither had a wording here nor an `exec.state.*` key, so both reached the screen through
+   `pick`'s labelled-raw branch and painted their own name. CANCELLED reuses the pair this file already
+   carries for that same server value (`COMMITMENT_STATUS`), so it is a second use of one reading. */
 const EXECUTION_STATE: Record<string, Label> = {
   PLANNED: { zh: "计划中", en: "Planned" },
+  READY: { zh: "可以开始了", en: "Ready to start" },
+  CANCELLED: { zh: "已取消", en: "Cancelled" },
 };
 
 const PLAN_SOURCE: Record<string, Label> = {
