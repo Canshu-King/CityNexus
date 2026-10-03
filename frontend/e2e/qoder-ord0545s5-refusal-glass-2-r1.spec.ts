@@ -293,9 +293,14 @@ test.describe("ORD-0545 slice 5 the two refusals only a device can decide, read 
           over_long_paste_characters: OVER_LONG.length,
           arms: collected,
           // four sentences this slice measured and did NOT read -- the probe names the blocking door
+          // which door blocks which sentence, taken from THIS generation's probe, named the same way
           not_reached_by_lane: JSON.parse(
-            fs.readFileSync(path.join(EVIDENCE, "refusal_reachability_probe_r1.json"), "utf8"),
+            fs.readFileSync(
+              path.join(EVIDENCE, process.env.CITYNEXUS_ORD0545S5_PROBE_NAME ?? "refusal_reachability_probe_r1.json"),
+              "utf8",
+            ),
           ).walks,
+          probe_generation: process.env.CITYNEXUS_ORD0545S5_PROBE_NAME ?? "refusal_reachability_probe_r1.json",
         },
         null,
         1,
