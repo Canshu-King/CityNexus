@@ -35,8 +35,11 @@ NL = chr(10)
 
 
 def main():
+    # the paths a readings commit is allowed to differ from the ref head by: this order's own artifacts,
+    # all of them rendered from the receipts (R6_READINGS.md included -- the door caught it on the first
+    # try, which is exactly the kind of thing that should not be decided by my memory of what is derived)
     ARTIFACT_PREFIXES = ("review/ord0500-checkin/receipts/", "review/ord0500-checkin/run/",
-                         "review/ord0500-checkin/tools/")
+                         "review/ord0500-checkin/tools/", "review/ord0500-checkin/R6_READINGS.md")
 
     def readings_commit_is_clean(reading_rev, ref_rev):
         """Readings have to be taken on a commit that already carries the tools; the ref then advances by
@@ -448,11 +451,14 @@ def main():
           B.slot(m5.get("row_mechanical_verdict")), B.slot(fu.get("owner_commit")),
           B.fmt(m6.get("verdict")), B.slot(m6.get("expect")), MUT_RECEIPT, blob_mut, blob_drv))
     A("- 件自己也是提交，所以这个形状必须说清，而且这一手开始是量出来的：闸的读数取自 `%s`、复读的读数"
-      "取自 `%s`，本枝尖是 `%s`；两枚之间 `git diff --name-only` 现读 %s 枚路径，全部落在 "
-      "`review/ord0500-checkin/{receipts,run,tools}/` 之下（产品与判据文件 0 枚），`merge-base "
-      "--is-ancestor` 判读数提交确在枝尖上游。不等这一形制就退 `ABORT_GATE_STALE`/`ABORT_RECHECK_STALE`，"
-      "这一格也在 §七 那张清单里（第 %s 项）。上一手我只写过「枝里那份具名为上一枚、两边差时间戳」——那"
-      "句话没有把两枚 sha 与差集摆出来，等于让号令者信我。件里那份同名复制的 blob：闸 `%s`、反件 `%s`。" % (
+      "取自 `%s`，本枝尖是 `%s`；两枚之间 `git diff --name-only` 现读 %s 枚路径，全部落在本单的产物之下"
+      "（`receipts/`、`run/`、`tools/` 与暂存工具自己渲染的读数单 `R6_READINGS.md`；产品与判据文件 0 枚），"
+      "`merge-base --is-ancestor` 判读数提交确在枝尖上游。不等这一形制就退 `ABORT_GATE_STALE`/"
+      "`ABORT_RECHECK_STALE`，这一格也在 §七 那张清单里（第 %s 项）。**这格门第一次跑就咬过我**：我原以为"
+      "允许集合是 `{receipts,run,tools}` 三格，它把 `R6_READINGS.md` 报了出来——那枚也是暂存工具从件渲染的"
+      "产物，不是我手写的句子，所以允许集合按实增补，不是我嫌红所以把它放行。上一手我只写过「枝里那份具名为"
+      "上一枚、两边差时间戳」——那句没把两枚 sha 与差集摆出来，等于让号令者信我。件里那份同名复制的 blob："
+      "闸 `%s`、反件 `%s`。" % (
           B.slot(gate.get("tip")), B.slot(rcpt.get("branch_head")), B.slot(remote),
           B.fmt(max([d.get("artifacts_added", 0) for d in (gate_rel, rcpt_rel) if isinstance(d, dict)]
                     or [0])),

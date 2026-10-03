@@ -4,15 +4,24 @@
   "aborts": "ABORT_READINGS_RED",
   "failed_checks": [
     {
-      "check": "枝里那份发射器＝刚跑这页的这枚",
+      "check": "读数提交到枝尖只多了件",
       "detail": {
-        "ref": "newlane-ord0500-phone-checkin-entry-r17",
-        "bytes_in_ref": 52972,
-        "bytes_of_this_program": 53431
+        "gate": {
+          "off_limits": [
+            "review/ord0500-checkin/R6_READINGS.md"
+          ],
+          "artifacts_added": 30
+        },
+        "recheck": {
+          "off_limits": [
+            "review/ord0500-checkin/R6_READINGS.md"
+          ],
+          "artifacts_added": 30
+        }
       },
       "forced": false
     }
   ],
-  "took_local": "2026-10-03T20:15:44+08:00",
+  "took_local": "2026-10-03T20:35:01+08:00",
   "note": "the page was not generated; this sheet is the only artifact of this generation"
 }
