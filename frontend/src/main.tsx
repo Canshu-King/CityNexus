@@ -79,6 +79,18 @@ function formatTime(value: string | null | undefined): string {
   });
 }
 
+function formatAgentOutcome(outcome: AgentRun["outcome"]): string {
+  if (!outcome) return "";
+  if (typeof outcome === "string") return outcome;
+  const parts = [
+    outcome.status,
+    outcome.reason_code,
+    outcome.user_summary,
+    outcome.recommended_action ? `Next: ${outcome.recommended_action}` : null,
+  ].filter((part): part is string => Boolean(part));
+  return parts.join(" · ");
+}
+
 function formatMoney(amountMinor: number, currency: string): string {
   return formatMinorMoney(amountMinor, currency, "zh-CN");
 }
@@ -1093,7 +1105,11 @@ function LegacyApp() {
               <span>Schedule drift · {mission.max_schedule_drift_min} min</span>
               <span>Protected Activities · {mission.protected_activity_ids.length}</span>
             </div>
-            {agentRun.outcome && <p className="mission-outcome">{agentRun.outcome}</p>}
+            {agentRun.outcome && (
+              <p className="mission-outcome" data-testid="agent-run-outcome">
+                {formatAgentOutcome(agentRun.outcome)}
+              </p>
+            )}
             {agentRun.failure_reason && <p className="mission-failure">{agentRun.failure_reason}</p>}
             <div className="run-steps">
               <strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>

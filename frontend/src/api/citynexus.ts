@@ -311,6 +311,14 @@ export interface AgentRunStep {
   completed_at?: string;
 }
 
+export interface AgentRunOutcome {
+  status: string;
+  reason_code?: string;
+  user_summary?: string;
+  recommended_action?: string;
+  [key: string]: unknown;
+}
+
 export interface AgentRun {
   run_id: string | null;
   mission_id: string;
@@ -319,7 +327,7 @@ export interface AgentRun {
   runtime_identity?: string;
   model_key: string;
   status: string;
-  outcome: string | null;
+  outcome: string | AgentRunOutcome | null;
   failure_reason: string | null;
   mission_status?: string | null;
   created_at?: string;
