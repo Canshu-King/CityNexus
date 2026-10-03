@@ -1,0 +1,433 @@
+{
+  "instrument": "cmdr_machine_speech_sweep_r1",
+  "base": "http://127.0.0.1:49842/",
+  "locale": "en",
+  "entryAssets": [
+    "/assets/index-BIcauGTF.js"
+  ],
+  "routesWalked": 14,
+  "viewport": "390x844",
+  "allowListForAllCaps": [
+    "UTC",
+    "GMT",
+    "PDF",
+    "ID",
+    "URL",
+    "API",
+    "AI",
+    "GPS",
+    "OSM",
+    "OK",
+    "FAQ",
+    "COPILOT",
+    "COPILOT"
+  ],
+  "routesWithPaintedMachineText": 9,
+  "routes_with_hits": [
+    "/v8/hub",
+    "/v8/live",
+    "/v8/studio",
+    "/v8/discover",
+    "/v8/bookings",
+    "/v8/authoritative",
+    "/v8/intelligence",
+    "/v8/twin",
+    "/v8/me"
+  ],
+  "totalPaintedHits": 27,
+  "distinctTokens": 22,
+  "topTokens": [
+    [
+      "NEXT",
+      3
+    ],
+    [
+      "STAY",
+      2
+    ],
+    [
+      "JSON",
+      2
+    ],
+    [
+      "AUTHORITATIVE",
+      2
+    ],
+    [
+      "ARRIVAL",
+      1
+    ],
+    [
+      "DEPARTURE",
+      1
+    ],
+    [
+      "NAVIGATE",
+      1
+    ],
+    [
+      "RISK",
+      1
+    ],
+    [
+      "LIVE",
+      1
+    ],
+    [
+      "CLOCK",
+      1
+    ],
+    [
+      "CURRENT",
+      1
+    ],
+    [
+      "OFFLINE",
+      1
+    ],
+    [
+      "DISCOVERY",
+      1
+    ],
+    [
+      "MULTIMODAL",
+      1
+    ],
+    [
+      "TRIP",
+      1
+    ],
+    [
+      "REALITY",
+      1
+    ],
+    [
+      "POLICY",
+      1
+    ],
+    [
+      "POST",
+      1
+    ],
+    [
+      "COMMITMENT",
+      1
+    ],
+    [
+      "EXPLICIT",
+      1
+    ],
+    [
+      "LEARNED_SOFT",
+      1
+    ],
+    [
+      "NOTIFICATIONS",
+      1
+    ]
+  ],
+  "perRoute": {
+    "/v8/hub": {
+      "totalTextNodesScanned": 2,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ARRIVAL",
+          "text_head": "ARRIVAL",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DEPARTURE",
+          "text_head": "DEPARTURE",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 6330,
+      "kinds": {
+        "ALLCAPS_WORD": 2
+      }
+    },
+    "/v8/live": {
+      "totalTextNodesScanned": 8,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT · Nexus River Cruise Pier · Transit · duration pending",
+          "tag": "p",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT · LEAVE BY",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NAVIGATE",
+          "text_head": "NAVIGATE →",
+          "tag": "a",
+          "cls": "v9-navigate"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "RISK",
+          "text_head": "RISK",
+          "tag": "b",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "LIVE",
+          "text_head": "LIVE STATUS",
+          "tag": "span",
+          "cls": "v8-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "CLOCK",
+          "text_head": "CLOCK",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "CURRENT",
+          "text_head": "CURRENT STEP",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "OFFLINE",
+          "text_head": "OFFLINE",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 1224,
+      "kinds": {
+        "ALLCAPS_WORD": 8
+      }
+    },
+    "/v8/map": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 954,
+      "kinds": {}
+    },
+    "/v8/studio": {
+      "totalTextNodesScanned": 1,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STAY",
+          "text_head": "NO STAY SELECTED",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 636,
+      "kinds": {
+        "ALLCAPS_WORD": 1
+      }
+    },
+    "/v8/stay": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 495,
+      "kinds": {}
+    },
+    "/v8/discover": {
+      "totalTextNodesScanned": 1,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DISCOVERY",
+          "text_head": "CN / DISCOVERY",
+          "tag": "span",
+          "cls": "v8-agent-mark"
+        }
+      ],
+      "documentChars": 1140,
+      "kinds": {
+        "ALLCAPS_WORD": 1
+      }
+    },
+    "/v8/bookings": {
+      "totalTextNodesScanned": 5,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as ",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STAY",
+          "text_head": "STAY EVIDENCE",
+          "tag": "span",
+          "cls": "v8-selected-label"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirm",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "MULTIMODAL",
+          "text_head": "MULTIMODAL INBOX",
+          "tag": "span",
+          "cls": "v8-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "AUTHORITATIVE",
+          "text_head": "AUTHORITATIVE MEMORY",
+          "tag": "span",
+          "cls": "v8-kicker"
+        }
+      ],
+      "documentChars": 1521,
+      "kinds": {
+        "ALLCAPS_WORD": 5
+      }
+    },
+    "/v8/agent": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 857,
+      "kinds": {}
+    },
+    "/v8/authoritative": {
+      "totalTextNodesScanned": 4,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "AUTHORITATIVE",
+          "text_head": "AUTHORITATIVE JOURNEY",
+          "tag": "span",
+          "cls": "v8-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT",
+          "tag": "span",
+          "cls": "v12-state-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "TRIP",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "REALITY",
+          "text_head": "V14 · REALITY CHANGED",
+          "tag": "span",
+          "cls": "v8-kicker"
+        }
+      ],
+      "documentChars": 3469,
+      "kinds": {
+        "ALLCAPS_WORD": 4
+      }
+    },
+    "/v8/intelligence": {
+      "totalTextNodesScanned": 3,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POLICY",
+          "text_head": "POLICY",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POST",
+          "text_head": "POST-ACTION GATE",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "COMMITMENT",
+          "text_head": "COMMITMENT",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 945,
+      "kinds": {
+        "ALLCAPS_WORD": 3
+      }
+    },
+    "/v8/twin": {
+      "totalTextNodesScanned": 2,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "EXPLICIT",
+          "text_head": "EXPLICIT",
+          "tag": "span",
+          "cls": "v8-twin-label explicit"
+        },
+        {
+          "kind": "UPPER_SNAKE",
+          "token": "LEARNED_SOFT",
+          "text_head": "LEARNED_SOFT",
+          "tag": "span",
+          "cls": "v8-twin-label learned"
+        }
+      ],
+      "documentChars": 913,
+      "kinds": {
+        "ALLCAPS_WORD": 1,
+        "UPPER_SNAKE": 1
+      }
+    },
+    "/v8/trash": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 260,
+      "kinds": {}
+    },
+    "/v8/trips": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 1158,
+      "kinds": {}
+    },
+    "/v8/me": {
+      "totalTextNodesScanned": 1,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NOTIFICATIONS",
+          "text_head": "NOTIFICATIONS",
+          "tag": "span",
+          "cls": "v8-kicker"
+        }
+      ],
+      "documentChars": 624,
+      "kinds": {
+        "ALLCAPS_WORD": 1
+      }
+    }
+  },
+  "pageErrors": []
+}
