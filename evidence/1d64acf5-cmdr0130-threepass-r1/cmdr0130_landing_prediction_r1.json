@@ -1,0 +1,637 @@
+{
+ "generated_at_local": "2026-10-04 01:31:47",
+ "tip": "66d80563448735bf5debd3f2797b6430d8a779f4",
+ "tip_source": "git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "candidates": [
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0296-g4-floor-r5",
+   "sha": "3f7cda327038ac02c94ffe5a439048f21bee0a8a",
+   "server_sha_ls_remote": "3f7cda327038ac02c94ffe5a439048f21bee0a8a",
+   "server_equals_local": true,
+   "commits_on_tip": 5,
+   "chain_root": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+   "chain_root_is_tip": false,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r3.json"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+     "candidate_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+     "candidate_blob": "df63f4c826a840a0ca783dffa40f786373976cad",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json",
+     "candidate_blob": "a9e80129fed159a49e3af0e8e1ff0b0c9577ea3f",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r3.json",
+     "candidate_blob": "080957fb26c0ea82eccf8a42baee14fff0ea35a5",
+     "tip_has_the_path": false,
+     "tip_blob_same_path": null,
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [
+    [
+     "M",
+     "backend/app/main.py"
+    ],
+    [
+     "M",
+     "contracts/openapi.yaml"
+    ],
+    [
+     "D",
+     "frontend/e2e/qoder-6a150e1e-spend-faces-day24-r1.spec.ts"
+    ],
+    [
+     "D",
+     "frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts"
+    ],
+    [
+     "D",
+     "frontend/playwright.ord0551-exstatus-r1.config.ts"
+    ],
+    [
+     "D",
+     "frontend/playwright.spend-6a150e1e.config.ts"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/pairing_recheck_r1.py"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/real_door_byte_pairing_r1.py"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/receipts/pairing_recheck_at_block_write_r1.json"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/receipts/real_door_byte_pairing_r1.json"
+    ],
+    [
+     "M",
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    [
+     "M",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+    ],
+    [
+     "M",
+     "frontend/src/features/trash/journeyTrash.ts"
+    ],
+    [
+     "M",
+     "frontend/src/generated/api.ts"
+    ],
+    [
+     "M",
+     "frontend/src/lib/displayVocabulary.ts"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/driver_hit_attribution_r1.py.txt"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/driver_read_side_r4.py.txt"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/place_hit_attribution_r1.json"
+    ],
+    [
+     "D",
+     "review/ord0502/report-ORD0502-205351.json"
+    ],
+    [
+     "D",
+     "review/ord0502/walk-ORD0502-205351.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_counterexamples_day24_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_readings_day24.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_seed_day24_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_seed_day24_report.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/stack_proof_s1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_cycle_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_cycle_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_repoll_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_repoll_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fix.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fixpass1.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fixpass2.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_ma1.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_ma2.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_tip.json"
+    ],
+    [
+     "M",
+     "review/ord0504/book_screen_facts_r1.js"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_pass_fixA.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_pass_fixA.txt"
+    ],
+    [
+     "M",
+     "review/ord0504/book_seed_r1.py"
+    ],
+    [
+     "M",
+     "review/ord0504/merge_shape_r5.json"
+    ],
+    [
+     "D",
+     "review/ord0509/INK_YI_LANDED_ACCEPT_R1.md"
+    ],
+    [
+     "D",
+     "review/ord0531-undefined-leg/readings_r2_tip_bf4f776b.json"
+    ],
+    [
+     "D",
+     "review/ord0531-undefined-leg/stack_proof_r13.txt"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_census_r1.json"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_errors_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_probe_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0551/acceptance_legs_ORD0551-205307.json"
+    ],
+    [
+     "D",
+     "review/ord0551/backend_buyers_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_final_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_pair_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_sides_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/gates_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_line_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_provider_refused_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_provider_refused_ORD0551-205307.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_line_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_provider_ok_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_provider_ok_ORD0551-205307.png"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_ORD0551-005916.json"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_note_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_note_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_summary_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/parity_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_arms_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_arms_summary.json"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_counter_arm_c_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_green_newbase_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/typecheck_r2.txt"
+    ]
+   ],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "08d1468faccaf8a6b04059cca860d5a2186457dd",
+    "conflict_names": 0,
+    "raw_tail": [],
+    "clean": true
+   }
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-ord0476-response-set-r4",
+   "sha": "f9f4b718e86fdee77955f33f94e41ca33ccaff0e",
+   "server_sha_ls_remote": "f9f4b718e86fdee77955f33f94e41ca33ccaff0e",
+   "server_equals_local": true,
+   "commits_on_tip": 1,
+   "chain_root": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+   "chain_root_is_tip": false,
+   "own_paths_changed": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0476_checkins.py",
+     "candidate_blob": "534b673b749adfd7548066cca770e0c52d105306",
+     "tip_has_the_path": true,
+     "tip_blob_same_path": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "already_on_the_line": false
+    }
+   ],
+   "paths_belonging_to_others_in_the_diff": [
+    [
+     "M",
+     "backend/app/main.py"
+    ],
+    [
+     "M",
+     "contracts/openapi.yaml"
+    ],
+    [
+     "D",
+     "frontend/e2e/qoder-6a150e1e-spend-faces-day24-r1.spec.ts"
+    ],
+    [
+     "D",
+     "frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts"
+    ],
+    [
+     "D",
+     "frontend/playwright.ord0551-exstatus-r1.config.ts"
+    ],
+    [
+     "D",
+     "frontend/playwright.spend-6a150e1e.config.ts"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/pairing_recheck_r1.py"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/real_door_byte_pairing_r1.py"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/receipts/pairing_recheck_at_block_write_r1.json"
+    ],
+    [
+     "D",
+     "frontend/review/checkin-words-real-door/receipts/real_door_byte_pairing_r1.json"
+    ],
+    [
+     "M",
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    [
+     "M",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+    ],
+    [
+     "M",
+     "frontend/src/features/trash/journeyTrash.ts"
+    ],
+    [
+     "M",
+     "frontend/src/generated/api.ts"
+    ],
+    [
+     "M",
+     "frontend/src/lib/displayVocabulary.ts"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/driver_hit_attribution_r1.py.txt"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/driver_read_side_r4.py.txt"
+    ],
+    [
+     "D",
+     "review/ord0502-stop-row-read-side/place_hit_attribution_r1.json"
+    ],
+    [
+     "D",
+     "review/ord0502/report-ORD0502-205351.json"
+    ],
+    [
+     "D",
+     "review/ord0502/walk-ORD0502-205351.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_counterexamples_day24_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_readings_day24.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_seed_day24_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/spend_seed_day24_report.json"
+    ],
+    [
+     "D",
+     "review/ord0504-reading-6a150e1e/stack_proof_s1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_cycle_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_cycle_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_repoll_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0504/book_face_fixA_repoll_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fix.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fixpass1.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_fixpass2.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_ma1.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_ma2.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_armsA_tip.json"
+    ],
+    [
+     "M",
+     "review/ord0504/book_screen_facts_r1.js"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_pass_fixA.json"
+    ],
+    [
+     "D",
+     "review/ord0504/book_screen_pass_fixA.txt"
+    ],
+    [
+     "M",
+     "review/ord0504/book_seed_r1.py"
+    ],
+    [
+     "M",
+     "review/ord0504/merge_shape_r5.json"
+    ],
+    [
+     "D",
+     "review/ord0509/INK_YI_LANDED_ACCEPT_R1.md"
+    ],
+    [
+     "D",
+     "review/ord0531-undefined-leg/readings_r2_tip_bf4f776b.json"
+    ],
+    [
+     "D",
+     "review/ord0531-undefined-leg/stack_proof_r13.txt"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_census_r1.json"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_errors_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0531/e2e_typegate_probe_r1.py"
+    ],
+    [
+     "D",
+     "review/ord0551/acceptance_legs_ORD0551-205307.json"
+    ],
+    [
+     "D",
+     "review/ord0551/backend_buyers_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_final_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_pair_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/exposure_sides_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/gates_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_line_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_provider_refused_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg1_provider_refused_ORD0551-205307.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_line_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_provider_ok_ORD0551-005916.png"
+    ],
+    [
+     "D",
+     "review/ord0551/leg2_provider_ok_ORD0551-205307.png"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_ORD0551-005916.json"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_note_r1.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_note_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/legs_summary_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/parity_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_arms_r3.json"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_arms_summary.json"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_counter_arm_c_r3.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/ruler_green_newbase_r2.txt"
+    ],
+    [
+     "D",
+     "review/ord0551/typecheck_r2.txt"
+    ]
+   ],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "9c286a5aca46db31a35353af2ddb79792e0e2e7e",
+    "conflict_names": 0,
+    "raw_tail": [],
+    "clean": true
+   }
+  }
+ ],
+ "previous_generation_tip": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+ "tip_moved_since_previous": true
+}
