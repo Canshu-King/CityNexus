@@ -680,7 +680,6 @@ test("ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-sta
     (res) => res.url().includes(`/journeys/${journey}/experience`) && res.status() === 200,
     { timeout: 45_000 },
   );
-  await page.goto("/v8/trips", { waitUntil: "load", timeout: 45_000 });
   await page.goto("/v8/live", { waitUntil: "load", timeout: 45_000 });
   const wireAnswer = await wire;
   const payload = (await wireAnswer.json()) as any;
@@ -689,17 +688,6 @@ test("ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-sta
     payload?.journey?.live_view?.included,
     node(NODE, `the server put a called-off trip back on the live screen: ${JSON.stringify(payload?.journey?.live_view)}`),
   ).toBe(false);
-
-  /* The trip's own entry may not offer the action again either, on the screen that reads the same
-     field: a second 中止 button on a trip that was called off is a door the server already closed. */
-  await expect(
-    page.getByTestId("journey-abort-stored-reason"),
-    node(NODE, "the trip's entry lost the stored reason once status moved"),
-  ).toBeVisible({ timeout: 30_000 });
-  expect(
-    await page.getByTestId("journey-abort-submit").count(),
-    node(NODE, "the entry offered 中止 again after the row's status was moved -- it re-derived the state from status"),
-  ).toBe(0);
   await expect(
     page.getByTestId("journey-aborted-notice"),
     node(
@@ -716,6 +704,25 @@ test("ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-sta
   const facts = clean(await page.getByTestId("journey-aborted-facts-reason").innerText());
   expect(facts.includes("挪走状态之前先中止"), node(NODE, `the reason did not read back: "${facts}"`)).toBe(true);
 
+  /* The trip's own entry may not offer the action again either: it reads the same field, and a
+     second 中止 button on a trip the server says is called off is a door that was already closed.
+     Read on the screen that carries it, not on the live one. */
+  await page.goto("/v8/trips", { waitUntil: "load", timeout: 45_000 });
+  const panel = await openItineraryTab(page, "the trip whose status was moved was reopened");
+  const storedAfterMove = clean(await page.getByTestId("journey-abort-stored-reason").innerText());
+  expect(
+    storedAfterMove.includes("挪走状态之前先中止"),
+    node(NODE, `the entry lost the stored reason once status moved: "${storedAfterMove}"`),
+  ).toBe(true);
+  expect(
+    await panel.getByTestId("journey-abort-submit").count(),
+    node(NODE, "the entry offered 中止 again after the row's status was moved -- it re-derived the state from status"),
+  ).toBe(0);
+  const stateBadge = clean(await page.getByTestId("journey-abort-badge").innerText());
+  expect(stateBadge, node(NODE, `the entry said "${stateBadge}" for a trip that was called off`)).toBe(
+    clean(abortCopy("zh-CN", "abort.stateOnScreen")),
+  );
+
   const shot = evidencePath("ui-ord0520-glass", "g7-status-moved-still-excluded.png");
   await page.screenshot({ path: shot });
   evidence("g7_status_move_keeps_it_out.json", {
@@ -729,6 +736,11 @@ test("ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-sta
     painted_notice: why,
     painted_facts: facts,
     live_content_nodes: 0,
+    trips_entry_after_move: {
+      painted_stored_reason: storedAfterMove,
+      painted_state_badge: stateBadge,
+      second_action_count: 0,
+    },
     screenshot: shot,
     verdict: "GREEN",
   });
