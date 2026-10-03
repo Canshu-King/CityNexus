@@ -140,6 +140,10 @@ type Wallet = {
     confirmation_ref: string | null;
     scheduled_departure_at: string;
     scheduled_arrival_at: string;
+    /* The door names the ticket's own state here (`"status": item.status` in the reservation payload), and
+       the 已确认 word has to be read off it.  It was missing from this type, which is how the card ended up
+       asking `commitment_id` -- the only field it had -- whether the ticket was confirmed. */
+    status: string;
     realtime_status: string;
     /* `_reservation_payload` (main.py:3527) links a reservation to the commitment it became.  This is
        the only honest source for a "受保护" badge: without it the card was asserting a promise the
@@ -4132,9 +4136,21 @@ function MapPage({
 
 // Booking vocabulary in traveller language.  Internal codes such as
 // UNKNOWN_REALTIME, STRUCTURED_JSON and C4 must never be the primary reading.
+/* The door names each ticket's own state, so 已确认 may only stand on a row the server calls confirmed.
+ * `commitment_id` answers a different question -- whether a promise backs the ticket -- and drawing the
+ * confirmation word from it let a `status=PENDING` ticket read 已确认 to the traveller. */
+const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+
+function serverConfirmed(value: string | null | undefined): boolean {
+  return SERVER_CONFIRMED_STATES.has(String(value ?? "").toUpperCase());
+}
+
 const BOOKING_TYPES: Record<string, { zh: string; en: string }> = {
   FLIGHT: { zh: "航班", en: "Flight" },
   RAIL: { zh: "火车", en: "Rail" },
+  // The photo and calendar intake write whatever the provider's ticket said (`v9.py:1134` upper-cases it
+  // and no column constrains it), so TRAIN arrives as often as RAIL does. It is a traveller word already.
+  TRAIN: { zh: "火车", en: "Train" },
   COACH: { zh: "大巴", en: "Coach" },
   FERRY: { zh: "轮渡", en: "Ferry" },
   HOTEL: { zh: "住宿", en: "Hotel" },
@@ -4142,11 +4158,14 @@ const BOOKING_TYPES: Record<string, { zh: string; en: string }> = {
   RESERVATION: { zh: "预订", en: "Reservation" },
 };
 
+// A booking kind the table has never seen is still a booking to the traveller. The card says so in a word:
+// the door's raw token stays in the door, because `CRUISE` on a Chinese screen answers nobody.
+const BOOKING_TYPE_UNKNOWN = { zh: "其他预订", en: "Other booking" };
+
 function bookingTypeLabel(value: string | null | undefined, zh: boolean): string {
-  const key = String(value ?? "").toUpperCase();
-  const entry = BOOKING_TYPES[key];
+  const entry = BOOKING_TYPES[String(value ?? "").toUpperCase()];
   if (entry) return zh ? entry.zh : entry.en;
-  return key.replaceAll("_", " ").toLowerCase();
+  return zh ? BOOKING_TYPE_UNKNOWN.zh : BOOKING_TYPE_UNKNOWN.en;
 }
 
 function realtimeLabel(value: string | null | undefined, zh: boolean): string {
@@ -4457,14 +4476,20 @@ function Bookings({
                       )}
                 </strong>
               </div>
-              <span className={`v8-booking-state${item.commitment_id ? " safe" : ""}`}>
-                {item.commitment_id
+              <span
+                className={`v8-booking-state${serverConfirmed(item.status) && item.commitment_id ? " safe" : ""}`}
+              >
+                {!serverConfirmed(item.status)
                   ? zh
-                    ? "已确认 · 受保护"
-                    : "Confirmed · protected"
-                  : zh
-                    ? "已确认 · 未成承诺"
-                    : "Confirmed · no commitment"}
+                    ? "待确认 · 服务器未确认"
+                    : "Pending · the server has not confirmed it"
+                  : item.commitment_id
+                    ? zh
+                      ? "已确认 · 受保护"
+                      : "Confirmed · protected"
+                    : zh
+                      ? "已确认 · 未成承诺"
+                      : "Confirmed · no commitment"}
               </span>
             </article>
           ))}

@@ -85,11 +85,17 @@ def main() -> int:
              "price_status": "KNOWN", "commit": False, "ref": None},
             {"label": "unpriced_row", "status": "CONFIRMED", "price": None, "currency": None,
              "price_status": "UNKNOWN", "commit": False, "ref": "NO-PRICE"},
+            # `CRUISE_SHIP` is deliberately outside the word table: the door will carry any token the photo
+            # or calendar intake produced (`v9.py:1134` upper-cases it, no column constrains it), so the
+            # face has to answer a kind it has never seen in words, not by painting the token.
+            {"label": "unknown_kind_row", "status": "CONFIRMED", "price": 7700, "currency": "CNY",
+             "price_status": "KNOWN", "commit": False, "ref": "CS-7700", "type": "CRUISE_SHIP"},
         ]
         for offset, shape in enumerate(shapes):
             reservation = TransportReservation(
                 id=str(uuid4()), journey_id=journey["id"], draft_id=None,
-                reservation_type="FLIGHT" if offset % 2 == 0 else "TRAIN",
+                reservation_type=shape.get("type")
+                or ("FLIGHT" if offset % 2 == 0 else "TRAIN"),
                 provider_key="ord0504-book-lane", confirmation_ref=shape["ref"],
                 origin_json='{"name":"厦门高崎"}', destination_json='{"name":"上海虹桥"}',
                 scheduled_departure_at=(moment + timedelta(hours=2 + offset)).isoformat(),

@@ -300,6 +300,28 @@ function record(arm, pass, detail) {
     await opened.context.close();
   }
 
+  /* 6a. the kind word on each ticket must come from the face's own vocabulary, recomputed here from the
+   *     door's token.  A table-miss kind is answered with a word (`其他预订`), never with the door's own
+   *     spelling: `CRUISE_SHIP`/`train` on a Chinese screen tells the traveller nothing. */
+  {
+    const opened = await openBookings(DESKTOP, "route");
+    const TYPE_WORDS = { FLIGHT: "航班", RAIL: "火车", TRAIN: "火车", COACH: "大巴", FERRY: "轮渡",
+      HOTEL: "住宿", TICKET: "门票", RESERVATION: "预订" };
+    const UNKNOWN_WORD = "其他预订";
+    const perCard = opened.reservations.map((card, index) => {
+      const row = reservations[index];
+      const drawn = card.split("·")[0].trim();
+      const wants = TYPE_WORDS[String(row && row.reservation_type ? row.reservation_type : "").toUpperCase()]
+        || UNKNOWN_WORD;
+      return { door_token: row ? row.reservation_type : null, word_on_card: drawn, word_expected: wants,
+               card: card.slice(0, 120) };
+    });
+    record("book_screen/the_ticket_kind_is_drawn_from_the_word_table",
+      perCard.every((entry) => entry.word_on_card === entry.word_expected),
+      { cards: perCard, vocabulary_source: "review/ord0504/book_screen_facts_r1.js:298" });
+    await opened.context.close();
+  }
+
   /* 6b. the phone's own entry point exists and is labelled, even though the panel above is reached
    *     through the route in this run -- a missing tab would make the whole face unreachable by thumb. */
   {
