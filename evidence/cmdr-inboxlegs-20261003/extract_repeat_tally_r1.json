@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-03T20:19:50+0800",
+  "base": "http://127.0.0.1:49805",
+  "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+  "attempts": [
+    {
+      "i": 0,
+      "http": 201,
+      "s": 10.9,
+      "status": "FAILED_EXTERNAL",
+      "draft": false,
+      "reason_head": "DeepSeek Responses request failed"
+    },
+    {
+      "i": 1,
+      "http": 201,
+      "s": 5.2,
+      "status": "READY",
+      "draft": true,
+      "reason_head": ""
+    },
+    {
+      "i": 2,
+      "http": 201,
+      "s": 10.7,
+      "status": "FAILED_EXTERNAL",
+      "draft": false,
+      "reason_head": "DeepSeek Responses request failed"
+    },
+    {
+      "i": 3,
+      "http": 201,
+      "s": 10.6,
+      "status": "FAILED_EXTERNAL",
+      "draft": false,
+      "reason_head": "DeepSeek Responses request failed"
+    }
+  ],
+  "tally": {
+    "FAILED_EXTERNAL": 3,
+    "READY": 1
+  }
+}
