@@ -1,5 +1,6 @@
 import type { V8Data } from "../../app/v8Types";
 import { localDateKey } from "./TripItinerary";
+import { currencyExponent, currencyMinorFactor } from "../../lib/money";
 
 /**
  * ORD-0504 -- the trip's spend, assembled from amounts this server actually sent.
@@ -228,6 +229,11 @@ export function buildSpendModel(
     const value = commitment.monetary_value ?? {};
     const amount = value.amount_minor;
     const backed = countedCommitments.has(commitment.id);
+    /* `commitments.monetary_value_minor` is NOT NULL, so a price the server never learned is stored as 0
+       with `monetary_value_status = UNKNOWN`. Reading the digit made this face print `CNY 0.00` for an
+       amount it had been told twice -- once that it exists, once that it is unknown -- while the same
+       column already had the words 还没有价 for every other unpriced line. */
+    const learned = String(commitment.monetary_value_status ?? "") === "KNOWN";
     lines.push({
       id: `COMMITMENT:${commitment.id}`,
       source: "COMMITMENT",
@@ -238,7 +244,11 @@ export function buildSpendModel(
         String(commitment.monetary_value_status ?? ""),
       ),
       status: backed ? "BACKED_BY_RESERVATION" : String(commitment.monetary_value_status ?? ""),
-      amountMinor: backed ? null : typeof amount === "number" ? amount : null,
+      amountMinor: backed || !learned
+        ? null
+        : typeof amount === "number"
+          ? amount
+          : null,
       currency: backed ? null : value.currency ?? null,
       dayKey: !backed && commitment.policy?.scheduled_start_at
         ? localDateKey(commitment.policy.scheduled_start_at, timeZone)
@@ -308,10 +318,16 @@ export function buildSpendModel(
   };
 }
 
-/** Minor units to the string a traveller reads. One division, no rounding of an unknown. */
+/**
+ * Minor units to the string a traveller reads. One division, no rounding of an unknown -- and the
+ * divisor is the currency's own exponent, asked of `lib/money.ts` rather than assumed. This function
+ * used to divide every currency by 100, which drew the same ticket one hundred times small beside the
+ * 预订 face's `¥4,800`: JPY, KRW, VND and IDR carry no minor fraction, so 4800 minor is 4,800 yen.
+ */
 export function moneyText(amountMinor: number, currency: string): string {
-  return `${currency} ${(amountMinor / 100).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+  const digits = currencyExponent(currency);
+  return `${currency} ${(amountMinor / currencyMinorFactor(currency)).toLocaleString("en-US", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   })}`;
 }
