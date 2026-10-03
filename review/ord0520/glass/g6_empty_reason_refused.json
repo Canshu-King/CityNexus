@@ -1,0 +1,42 @@
+{
+  "run": "ord0520glass-20261003T133743Z",
+  "head": "a43ccd41f9b673cdc4f3d85160b21b8f376c3bd8",
+  "frontendPort": "4833",
+  "backendPort": "4834",
+  "arm": "G6",
+  "journeyId": "6627b265-9545-4a8a-91e8-8803ffb85e9d",
+  "device_side_refusal_sentence": "必须写原因。空着会被拒绝，而不是存下一趟「不知道为什么就结束」的行程。",
+  "post_requests_from_the_empty_box": 0,
+  "door_answer": {
+    "http_status": 422,
+    "envelope": {
+      "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Request validation failed",
+        "message_key": "request.invalid",
+        "trace_id": "91674ff0-7922-4613-a362-1129e9d02a51",
+        "details": {
+          "errors": [
+            {
+              "loc": [
+                "body",
+                "reason"
+              ],
+              "msg": "String should have at least 1 character",
+              "type": "string_too_short",
+              "message_key": "validation.string.too.short"
+            }
+          ]
+        },
+        "error_receipt_id": "CNX-W2B66YGK"
+      }
+    }
+  },
+  "row_after": {
+    "status": "DRAFT",
+    "aborted_at": null,
+    "abort_reason": null
+  },
+  "screenshot": "D:\\moodle\\_qoder_lane_ord0520_20260930\\tmp\\glass_evidence_final\\ui-ord0520-glass\\g6-empty-reason.png",
+  "verdict": "GREEN"
+}

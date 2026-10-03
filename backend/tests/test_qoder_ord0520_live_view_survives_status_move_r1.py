@@ -15,8 +15,10 @@ same class of defect the socket race probe found for the write gate.
 
 Why the race here is a committed UPDATE rather than a real second select: this lane's store has an
 empty catalogue, so no plan can be produced to select.  Measured on the lane's own stack,
-`POST /plans/generate` answered http_status=422 with `reason_code=CATALOG_EMPTY` and
-`error_receipt_id=CNX-7VN4SRP8` (`review/ord0520/ABORT_RESURRECT_PROBE.json`).  The UPDATE below
+`POST /plans/generate` answered http_status=422 with `reason_code=CATALOG_EMPTY`,
+`places_in_catalog` 0 and `error_receipt_id=CNX-5SETGBPA`
+(`review/ord0520/ABORT_RESURRECT_PROBE.json`, which also records that `/start` refuses the same row
+with http_status=409 and that a second abort answers `JOURNEY_ALREADY_ABORTED`).  The UPDATE below
 writes exactly the value the select door writes, from a second connection, committed -- the product
 code is not replaced, stubbed, or skipped.
 
