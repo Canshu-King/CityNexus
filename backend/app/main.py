@@ -71,6 +71,7 @@ from app.agent.runtime import (
     _server_completion_contract,
     persisted_agent_run_payload,
     reconcile_stale_agent_runs,
+    _structured_failure_outcome,
     _structured_run_outcome,
     unavailable_run_payload,
 )
@@ -1433,7 +1434,15 @@ def run_agent_command(
                 "provider_key": "deepseek",
                 "model_key": settings.ai_model.removeprefix("deepseek/"),
                 "runtime_identity": runtime_status()["runtime_identity"],
-                "outcome": None,
+                "outcome": _structured_failure_outcome(
+                    status="FAILED_EXTERNAL",
+                    reason_code=(
+                        ai_state_from_failure_reason(str(exc))
+                        or "AGENT_RUNTIME_UNAVAILABLE"
+                    ),
+                    user_summary="The configured Agent provider did not complete this mission.",
+                    recommended_action="Retry with a configured provider or continue with deterministic tools.",
+                ),
                 "failure_reason": str(exc),
                 "tool_steps": [],
             }
