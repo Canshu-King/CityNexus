@@ -53,20 +53,41 @@ guard that keeps them is new.
 
 `frontend/e2e/qoder-a68b0631-ord0554-live-caps-r1.spec.ts`, run on the production build chain
 (`playwright.prod-gate.config.ts`: `npm run build` + `vite preview` + the lane's own backend on a
-throwaway `data/_guard_<epoch>.db`, fresh `CITYNEXUS_E2E_RUN_ID` per attempt):
+throwaway `data/_<tag>_<epoch>.db`, fresh `CITYNEXUS_E2E_RUN_ID` per attempt). Each run mode writes
+its own files, named `..._guard_r1.json` / `..._ca1_paint_server_field_r1.json` /
+`..._ca2_english_word_in_zh_r1.json`:
 
-- A1 `[en]` -- census of 16 painted caps words, each attributed to a dictionary key with its request
-  site; positive control is the four panel words (`LIVE`, `CLOCK`, `CURRENT`, `OFFLINE`) having to
-  paint, so an empty screen cannot pass. Green.
-- A2 `[zh-CN]` -- same screen, one language: no label word of the live modules paints, and the four
-  Chinese labels the arm reads out of the zh dictionary itself do. Green.
-- A3 -- sentinel rewrite of the real answer in flight, one distinct sentinel per enum-shaped field:
-  17 declared, 12 probed, 0 painted raw. Green.
-- CA1 (counter-arm) -- `V10LiveExecutionPanel.tsx` clock slot made to paint `plan?.status` (a real
-  server field) directly: A3 goes red naming exactly `active_plan.status`. Restored, disk bytes equal
-  to the pinned blob.
-- CA2 (counter-arm) -- the zh dictionary entry for `exec.clock` given the English word
-  ("CLOCK 时钟"): A2 goes red naming `CLOCK`. Restored, disk bytes equal to the pinned blob.
+- A1 `[en]` (`a1_en_census_sourced_guard_r1.json`) -- census of 16 painted caps words, each attributed
+  to a dictionary key with its request site, 0 unattributed; positive control is the four panel words
+  (`LIVE`, `CLOCK`, `CURRENT`, `OFFLINE`) having to paint, and the state-dependent words `NEXT`,
+  `NAVIGATE`, `RISK` did paint as well. Green.
+- A2 `[zh-CN]` (`a2_zh_census_guard_r1.json`) -- the same screen answers in one language: 30 label
+  words are on the allowlist that the arm derives from the live modules' own keys, none of them
+  paints, and the four Chinese labels it reads out of the zh dictionary itself all do. The census
+  still finds one caps word there (`WGS84`, the map caption's coordinate-system read-back), so the
+  empty leak list is a measured screen, not a blank one. Green.
+- A3 (`a3_sentinel_walk_guard_r1.json`) -- sentinel rewrite of the real answer in flight: 17 enum-shaped
+  fields declared, 12 present in this journey's answer, 0 of those painted raw, 5 recorded NOT_PROBED
+  (`activities[].cost_status`, `disruptions[].type/severity/status`, `supply.state`). The answer was
+  served once in this pass; the arm now keeps every sentinel ever served per field and checks all of
+  them, because a walk that only checked the last pass could miss a word painted from an earlier one.
+  Green.
+- CA1 (counter-arm, `a3_sentinel_walk_ca1_paint_server_field_r1.json`) -- `V10LiveExecutionPanel.tsx`
+  clock slot made to paint `plan?.status` (a real server field) directly: A3 goes red naming exactly
+  `active_plan.status`. Restored, disk bytes equal to the pinned blob.
+- CA2 (counter-arm, `a2_zh_census_ca2_english_word_in_zh_r1.json`) -- the zh dictionary entry for
+  `exec.clock` given the English word ("CLOCK 时钟"): A2 goes red naming `CLOCK`. Restored, disk bytes
+  equal to the pinned blob.
+
+## A second instrument defect, named because it changed what was filed
+
+The first commit of this hand filed the three readings under shared names
+(`a2_zh_census_r1.json`, `a3_sentinel_walk_r1.json`, `a1_en_census_sourced_r1.json`). The counter-arms
+re-run the same arms against mutated product bytes, so those two files ended up holding the mutants'
+readings while the note beside them described the guard's -- a file that can be overwritten by the
+thing meant to falsify it is not evidence. The writer now tags every file with the run mode, and the
+three untagged files are removed rather than left as a trap for the next reader.
+
 
 ## Instrument defect found and fixed while taking these readings
 

@@ -9,111 +9,134 @@
     "active_plan.disruptions[].status",
     "supply.state"
   ],
+  "answer_passes": 1,
   "rows": [
     {
       "field": "active_plan.status",
+      "sentinels_served": [
+        "QODERSENTINEL1ACTIVEPLANST"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL1ACTIVEPLANST",
-      "painted": true
+      "painted": false
     },
     {
       "field": "active_plan.source",
+      "sentinels_served": [
+        "QODERSENTINEL2ACTIVEPLANSO"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL2ACTIVEPLANSO",
       "painted": false
     },
     {
       "field": "active_plan.cursor_status",
+      "sentinels_served": [
+        "QODERSENTINEL3ACTIVEPLANCU"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL3ACTIVEPLANCU",
       "painted": false
     },
     {
       "field": "active_plan.current_activity_id",
+      "sentinels_served": [
+        "QODERSENTINEL4ACTIVEPLANCU"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL4ACTIVEPLANCU",
       "painted": false
     },
     {
       "field": "active_plan.activities[].type",
+      "sentinels_served": [
+        "QODERSENTINEL5ACTIVEPLANAC"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL5ACTIVEPLANAC",
       "painted": false
     },
     {
       "field": "active_plan.activities[].status",
+      "sentinels_served": [
+        "QODERSENTINEL6ACTIVEPLANAC"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL6ACTIVEPLANAC",
       "painted": false
     },
     {
       "field": "active_plan.activities[].cost_status",
+      "sentinels_served": [],
       "probed": false,
-      "sentinel": "QODERSENTINEL7ACTIVEPLANAC",
       "painted": false
     },
     {
       "field": "active_plan.legs[].mode",
+      "sentinels_served": [
+        "QODERSENTINEL8ACTIVEPLANLE"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL8ACTIVEPLANLE",
       "painted": false
     },
     {
       "field": "active_plan.legs[].provider_key",
+      "sentinels_served": [
+        "QODERSENTINEL9ACTIVEPLANLE"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL9ACTIVEPLANLE",
       "painted": false
     },
     {
       "field": "active_plan.legs[].provenance",
+      "sentinels_served": [
+        "QODERSENTINEL10ACTIVEPLANLE"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL10ACTIVEPLANLE",
       "painted": false
     },
     {
       "field": "active_plan.legs[].crs",
+      "sentinels_served": [
+        "QODERSENTINEL11ACTIVEPLANLE"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL11ACTIVEPLANLE",
       "painted": false
     },
     {
       "field": "active_plan.disruptions[].type",
+      "sentinels_served": [],
       "probed": false,
-      "sentinel": "QODERSENTINEL12ACTIVEPLANDI",
       "painted": false
     },
     {
       "field": "active_plan.disruptions[].severity",
+      "sentinels_served": [],
       "probed": false,
-      "sentinel": "QODERSENTINEL13ACTIVEPLANDI",
       "painted": false
     },
     {
       "field": "active_plan.disruptions[].status",
+      "sentinels_served": [],
       "probed": false,
-      "sentinel": "QODERSENTINEL14ACTIVEPLANDI",
       "painted": false
     },
     {
       "field": "journey.timezone",
+      "sentinels_served": [
+        "QODERSENTINEL15JOURNEYTIMEZ"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL15JOURNEYTIMEZ",
       "painted": false
     },
     {
       "field": "journey.city_code",
+      "sentinels_served": [
+        "QODERSENTINEL16JOURNEYCITYC"
+      ],
       "probed": true,
-      "sentinel": "QODERSENTINEL16JOURNEYCITYC",
       "painted": false
     },
     {
       "field": "supply.state",
+      "sentinels_served": [],
       "probed": false,
-      "sentinel": "QODERSENTINEL17SUPPLYSTATE",
       "painted": false
     }
   ],
-  "leaked": [
-    "active_plan.status"
-  ]
+  "leaked": []
 }

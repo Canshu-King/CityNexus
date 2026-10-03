@@ -200,12 +200,19 @@ async function paintedCaps(page: Page): Promise<{ token: string; tag: string; cl
 }
 
 function writeEvidence(name: string, payload: unknown) {
+  /* One file per arm *per run mode*: the counter-arms re-run the same arm against mutated product
+     bytes, and a shared filename would leave the mutant's reading filed as though it were the
+     guard's.  `QODER_ARM_TAG` names which world produced the file. */
+  const tag = process.env.QODER_ARM_TAG ?? "guard";
   mkdirSync(OUT_DIR, { recursive: true });
-  writeFileSync(join(OUT_DIR, name), JSON.stringify(payload, null, 2), "utf8");
+  writeFileSync(join(OUT_DIR, name.replace(/_r1\.json$/, "") + `_${tag}_r1.json`), JSON.stringify(payload, null, 2), "utf8");
 }
 
-/** Rewrite the real /experience answer, one distinct sentinel per enum-shaped field. */
-async function sentinelize(page: Page, probed: { field: string; probed: boolean; sentinel: string }[]) {
+/** Rewrite the real /experience answer, one distinct sentinel per enum-shaped field.
+ *  The shell refetches `/experience` on its own timer, so a field can be served several different
+ *  sentinels in one walk; every sentinel ever served is kept, because checking only the last one
+ *  would miss a word that painted from an earlier pass. */
+async function sentinelize(page: Page, served: Record<string, string[]>) {
   let counter = 0;
   await page.route("**/api/v1/**/experience", async (route) => {
     let res;
@@ -226,8 +233,7 @@ async function sentinelize(page: Page, probed: { field: string; probed: boolean;
     for (const entry of SENTINEL_PATHS) {
       counter += 1;
       const sentinel = `QODERSENTINEL${counter}${entry.field.replace(/[^a-z]/gi, "").toUpperCase().slice(0, 12)}`;
-      const hit = entry.set(plan, sentinel);
-      probed.push({ field: entry.field, probed: hit, sentinel });
+      if (entry.set(plan, sentinel)) served[entry.field] = (served[entry.field] ?? []).concat(sentinel);
     }
     delete plan.__journey;
     delete plan.__supply;
@@ -335,11 +341,16 @@ test("A2 [zh-CN] the same screen speaks one language", async ({ page }) => {
 
 test("A3 no enum-shaped field of the answer reaches the traveller raw", async ({ page }) => {
   test.setTimeout(240_000);
-  const probed: { field: string; probed: boolean; sentinel: string }[] = [];
-  await sentinelize(page, probed);
+  const served: Record<string, string[]> = {};
+  await sentinelize(page, served);
   await openLive(page, "en");
   const body = await page.evaluate(() => document.body.innerText);
-  const rows = probed.map((row) => ({ ...row, painted: row.probed && body.includes(row.sentinel) }));
+  const rows = SENTINEL_PATHS.map((entry) => ({
+    field: entry.field,
+    sentinels_served: served[entry.field] ?? [],
+    probed: (served[entry.field] ?? []).length > 0,
+    painted: (served[entry.field] ?? []).some((sentinel) => body.includes(sentinel)),
+  }));
   const leaked = rows.filter((row) => row.painted).map((row) => row.field);
   const notProbed = rows.filter((row) => !row.probed).map((row) => row.field);
   writeEvidence("a3_sentinel_walk_r1.json", {
@@ -347,6 +358,7 @@ test("A3 no enum-shaped field of the answer reaches the traveller raw", async ({
     fields_declared: SENTINEL_PATHS.length,
     fields_probed: rows.filter((row) => row.probed).length,
     fields_not_probed: notProbed,
+    answer_passes: Math.max(...rows.map((row) => row.sentinels_served.length), 0),
     rows,
     leaked,
   });
