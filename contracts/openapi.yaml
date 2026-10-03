@@ -2450,6 +2450,15 @@ components:
         event_id: {type: string, format: uuid}
         mission: {type: object, additionalProperties: true}
         run: {type: object, additionalProperties: true}
+    AgentRunOutcome:
+      type: object
+      additionalProperties: true
+      required: [status, reason_code, user_summary, recommended_action]
+      properties:
+        status: {type: string}
+        reason_code: {type: string}
+        user_summary: {type: string}
+        recommended_action: {type: string}
     ClarificationAnswer:
       type: object
       additionalProperties: false
@@ -2471,7 +2480,11 @@ components:
         provider_key: {type: string}
         model_key: {type: string}
         status: {type: string}
-        outcome: {type: [string, 'null']}
+        outcome:
+          oneOf:
+            - {type: string}
+            - {$ref: '#/components/schemas/AgentRunOutcome'}
+            - {type: 'null'}
         failure_reason: {type: [string, 'null']}
         mission_status: {type: [string, 'null']}
         created_at: {type: string, format: date-time}
