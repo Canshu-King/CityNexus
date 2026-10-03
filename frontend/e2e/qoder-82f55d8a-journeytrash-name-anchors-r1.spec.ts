@@ -83,6 +83,87 @@ const ANCHORS: { file: string; needle: string; claim: string }[] = [
 ];
 
 const read = (rel: string) => readFileSync(join(ROOT, rel), "utf8");
+/**
+ * A4 -- the door the comment *names* must be the door that *holds* the statement.
+ *
+ * A2 only proves a string exists somewhere in a file, and two of these strings do not live in one place:
+ * `.order_by(Journey.deleted_at.desc(), Journey.id)` appears in the whole-site bin door and again in the
+ * per-traveller door ORD-0531 shipped, and `/recycle-bin/journeys:` is a substring of the traveller path
+ * key as well as a key of its own. Measured at tip 6246876a3b9171f5c2d6ec948f43b35605262bee: two of the ten
+ * names hit more than one line. So a comment may quote a true string and still attribute it to the wrong
+ * door -- which is the same class of lie as a drifted number, just quieter.
+ */
+const DOOR_CLAIMS: { file: string; statement: string; door: string; why: string }[] = [
+  {
+    file: "backend/app/main.py",
+    statement: ".order_by(Journey.deleted_at.desc(), Journey.id)",
+    door: '@app.get("/api/v1/recycle-bin/journeys"',
+    why: "the ordering the screen inherits is the whole-site bin door's, not the per-traveller door's",
+  },
+  {
+    file: "backend/app/main.py",
+    statement: 'refused.reason_code = "JOURNEY_NOT_DELETED"',
+    door: '@app.post("/api/v1/journeys/{journey_id}/undelete',
+    why: "the refusal that answers instead of a fake success belongs to the write door",
+  },
+];
+
+/** Regions in a Python source file, delimited by FastAPI decorator lines. */
+function doorRegion(src: string, doorNeedle: string): string | null {
+  const lines = src.split(/\r?\n/);
+  const start = lines.findIndex((l) => l.includes(doorNeedle));
+  if (start < 0) return null;
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i += 1) {
+    if (/^@app\.(get|post|put|patch|delete)\(/.test(lines[i].trim())) {
+      end = i;
+      break;
+    }
+  }
+  return lines.slice(start, end).join("\n");
+}
+
+test("A4 a named door actually contains the statement the comment attributes to it", () => {
+  const text = shipped();
+  const wrong: string[] = [];
+  for (const claim of DOOR_CLAIMS) {
+    if (!text.includes(claim.door)) {
+      wrong.push(`the shipped comment no longer quotes the door ${JSON.stringify(claim.door)} it uses for ${JSON.stringify(claim.statement)}`);
+      continue;
+    }
+    const region = doorRegion(read(claim.file), claim.door);
+    if (region === null) {
+      wrong.push(`${claim.file}: the door ${JSON.stringify(claim.door)} is not a decorator this file carries`);
+      continue;
+    }
+    if (!region.includes(claim.statement)) {
+      wrong.push(`${claim.file}: ${JSON.stringify(claim.statement)} is not inside ${JSON.stringify(claim.door)} -- ${claim.why}`);
+    }
+  }
+  // A path key must be a key of its own, not a substring of a longer path.
+  const openapi = read("contracts/openapi.yaml").split(/\r?\n/);
+  const exact = openapi.filter((l) => l.trim() === "/recycle-bin/journeys:");
+  if (exact.length !== 1) {
+    wrong.push(`contracts/openapi.yaml: the bin door should own exactly one path key line, found ${exact.length}`);
+  }
+  // The two stored fields must live in the schema the screen types from.
+  const schemas = read("backend/app/schemas.py");
+  const from = schemas.indexOf("class RecycleBinJourney");
+  if (from < 0) {
+    wrong.push("backend/app/schemas.py: class RecycleBinJourney is gone -- the screen types its rows from it");
+  } else {
+    const rest = schemas.slice(from);
+    const stop = rest.indexOf(String.fromCharCode(10, 10) + "class ");
+    const body = stop > 0 ? rest.slice(0, stop) : rest;
+    for (const field of ["deleted_at: datetime", 'bin_state: Literal["IN_RECYCLE_BIN"]']) {
+      if (!body.includes(field)) {
+        wrong.push(`backend/app/schemas.py: ${JSON.stringify(field)} is not inside class RecycleBinJourney -- a row would stop carrying it`);
+      }
+    }
+  }
+  expect(wrong, node("A4", "a claim names a door or schema that does not hold the fact it is quoted for")).toEqual([]);
+});
+
 const shipped = () => readFileSync(SHIPPED, "utf8");
 
 test("A1 no line-number citation survives in the shipped file", () => {
