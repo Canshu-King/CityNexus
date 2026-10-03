@@ -50,10 +50,10 @@ def main():
             return True, []
         if not re.fullmatch(r"[0-9a-f]{40}", str(reading_rev)):
             return False, ["READING_REVISION_NOT_40_HEX"]
-        rc = B.sh(["merge-base", "--is-ancestor", reading_rev, ref_rev], cwd=WT)[0]
+        rc = B.sh(["git", "merge-base", "--is-ancestor", reading_rev, ref_rev], cwd=WT)[0]
         if rc != 0:
             return False, ["READING_COMMIT_IS_NOT_AN_ANCESTOR"]
-        rc2, out = B.sh(["diff", "--name-only", "%s..%s" % (reading_rev, ref_rev)], cwd=WT)
+        rc2, out = B.sh(["git", "diff", "--name-only", "%s..%s" % (reading_rev, ref_rev)], cwd=WT)
         if rc2 != 0:
             return False, ["DIFF_UNREADABLE"]
         touched = [l.strip() for l in out.splitlines() if l.strip()]
@@ -212,11 +212,11 @@ def main():
     # my own citations still resolve on the live tip, which is re-measured below.
     arm_lag = "NOT_MEASURED"
     if arm.get("tip") != live_tip:
-        rca, _ = B.sh(["merge-base", "--is-ancestor", arm.get("tip") or "", live_tip])
+        rca, _ = B.sh(["git", "merge-base", "--is-ancestor", arm.get("tip") or "", live_tip])
         if rca != 0:
             raise SystemExit("ABORT_ARM_STALE the emitter-arm ran against tip %s which is not an "
                              "ancestor of the line (%s)" % (arm.get("tip"), live_tip))
-        rcl, arm_lag = B.sh(["rev-list", "--count", "%s..%s" % (arm.get("tip"), live_tip)])
+        rcl, arm_lag = B.sh(["git", "rev-list", "--count", "%s..%s" % (arm.get("tip"), live_tip)])
         arm_lag = arm_lag.strip()
     if not emitter_same:
         raise SystemExit("ABORT_EMITTER_BYTES_DIFFER the emitter copy inside %s is not the program "

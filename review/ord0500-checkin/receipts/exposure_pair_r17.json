@@ -1,9 +1,9 @@
 {
   "tool": "exposure_pair_r17",
-  "took_local": "2026-10-03T20:29:19+08:00",
-  "live_tip": "74f5d8df082532f20e66bdba2b84311043f023b5",
-  "candidate_head": "afe992aba1c1bbcce55bbe5d83b58116879efb2e",
-  "base_tip": "74f5d8df082532f20e66bdba2b84311043f023b5",
+  "took_local": "2026-10-03T20:33:22+08:00",
+  "live_tip": "93286cd2556392a98d952a7d59b2d4507195c6d3",
+  "candidate_head": "fa29e06239569364f3b4ea97715ecf78f4334e09",
+  "base_tip": "93286cd2556392a98d952a7d59b2d4507195c6d3",
   "merge_base": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
   "swapped_paths": [
     "frontend/src/features/checkin/checkinCopy.ts",
