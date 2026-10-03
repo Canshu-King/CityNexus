@@ -1,0 +1,23 @@
+{
+ "identical_logs_must_read_stable": {
+  "expected": "DENOMINATOR_STABLE",
+  "got": "DENOMINATOR_STABLE",
+  "as_expected": true
+ },
+ "an_extra_arm_must_read_unstable": {
+  "expected": "DENOMINATOR_UNSTABLE",
+  "got": "DENOMINATOR_UNSTABLE",
+  "as_expected": true
+ },
+ "an_arm_that_changes_width_must_read_unstable": {
+  "expected": "DENOMINATOR_UNSTABLE",
+  "got": "DENOMINATOR_UNSTABLE",
+  "as_expected": true
+ },
+ "a_single_round_must_not_claim_anything": {
+  "expected": "NOT_MEASURED",
+  "got": "NOT_MEASURED",
+  "as_expected": true
+ },
+ "all_cases_as_expected": true
+}
