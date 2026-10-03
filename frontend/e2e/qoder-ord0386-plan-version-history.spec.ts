@@ -301,8 +301,9 @@ test("H4 这一屏只读：没有可点的东西、没有写请求、也不借�
   expect(keyed, node("H4", `只读的列表带上了幂等键：${keyed} 次`)).toBe(0);
 
   /* Scoped to this panel on purpose: 恢复 already means autonomous recovery in this product
-     (frontend/src/i18n/LocaleContext.tsx:18 is the English nav label "Recovery" and :835 its Chinese 「恢复与执行」), and that copy belongs on its own screens.
-     This order's rule is that *this* list never borrows the word. */
+     (the dictionary entry keyed `nav.authoritative` in frontend/src/i18n/LocaleContext.tsx -- its
+     English arm reads "Recovery" and its zh-CN arm 「恢复与执行」), and that copy belongs on its own
+     screens. This order's rule is that *this* list never borrows the word. */
   const panelText = clean(await panel.innerText());
   expect(panelText.includes("恢复"), node("H4", `本屏出现了「恢复」，实读=${panelText.slice(0, 160)}`)).toBe(false);
   expect(panelText.includes("还原"), node("H4", "句子没有用「还原」这个词面")).toBe(true);

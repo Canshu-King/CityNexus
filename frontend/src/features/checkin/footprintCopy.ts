@@ -5,7 +5,7 @@
  * reads it, and a lane has been bounced off it twice this week), and the precedent for a surface
  * that needs sentences of its own is already in the tree -- `i18n/mapPanelCopy.ts` for the map glass
  * and `features/access/accessCopy.ts` for the access panel. The reason is not tidiness: `t(key)`
- * falls back to printing the KEY when a language arm is missing (`LocaleContext.tsx:2164`), so a
+ * falls back to printing the KEY when a language arm is missing (the `dictionaries.en[key] ?? key` arm inside `const t = useCallback` in `LocaleProvider` of `src/i18n/LocaleContext.tsx`), so a
  * half-added dictionary entry puts a machine token on a Chinese screen, which is the defect class
  * this project keeps having to fix. Here both arms are one object literal, and
  * `review/ord0530/dictionary_key_parity_r1.py` fails if the two ever differ in key set.

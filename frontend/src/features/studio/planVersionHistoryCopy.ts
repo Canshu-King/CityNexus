@@ -4,8 +4,8 @@
  * Deliberately NOT in `i18n/LocaleContext.tsx`: two other lanes are editing that file tonight and
  * the commander ruled the shared dictionary off-limits for this order, so a same-key collision
  * cannot silently take the last value. This file is therefore read directly, per locale, through
- * `historyCopy()` below -- `useT()` cannot reach these keys, because `LocaleContext.tsx:1635`
- * looks keys up in its own two dictionaries only and has no fallback-dictionary parameter.
+ * `historyCopy()` below -- `useT()` cannot reach these keys, because the `t` built inside `LocaleProvider`
+ * in `src/i18n/LocaleContext.tsx` looks keys up in its own two dictionaries only and has no fallback-dictionary parameter.
  *
  * Wording rule from the order: this screen says 「历史版本 / 还原」. The word 恢复 already means
  * autonomous recovery in this product (`recovery.*` keys), and a third meaning for it on a list of
