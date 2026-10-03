@@ -39,7 +39,11 @@ const ENUM_NAME = String.raw`[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*`;
    underscore-joined. Four is the floor because a traveller sentence can legitimately contain short
    capitals (`CNY`, `AI`), but `READY`, `FAILED_EXTERNAL` and `UNKNOWN` are not traveller words. */
 const MACHINE_WORD = /[A-Z][A-Z0-9_]{3,}/;
-const DECLARATION = "const EXTRACTION_STATUS: Record<string, Label> = {";
+/* Bound to the declaration *name*, not to its type annotation: the r3 table is declared
+   `Record<ExtractionStatus, Label>` so that a status without a wording fails the build, and an anchor that
+   carried the old annotation would have gone red over a shape this ruler does not measure. What the arm
+   guards is the table and its rows, and that is what is parsed below. */
+const DECLARATION = "const EXTRACTION_STATUS";
 const ROUTES = ["/api/v1/journeys/{journey_id}/inbox/text-extract", "/api/v1/journeys/{journey_id}/inbox/vision"];
 
 function read(name: keyof typeof FILES): string {
@@ -104,7 +108,7 @@ test("the statuses the extraction routes can answer and the statuses the screen 
   expect(emitted.length, "a single status value would not be worth a ruler").toBeGreaterThan(1);
   expect(
     Object.keys(labelled).sort(),
-    "the screen carries a status word the routes cannot answer, or dropped one they can — either way the sentence falls to the labelled-raw channel",
+    "the screen carries a status word the routes cannot answer, or dropped one they can — a dropped one is answered by the gap sentence, which is a silence where the contract has a fact",
   ).toEqual(emitted);
 });
 
@@ -142,6 +146,22 @@ test("a supplier failure answers 5xx on both routes, and the answer that creates
     expect(body, `${path}: the FAILED_EXTERNAL branch no longer sets a 5xx status code — 201 claims a resource that was never created`).toMatch(/response\.status_code\s*=\s*502/);
     expect(body, `${path}: only the supplier-failure branch may leave 201 behind` ).toMatch(/"status": "READY"/);
   }
+});
+
+test("the extraction lookup is closed: an unnamed status is never answered with its own word", () => {
+  /* ORD-0551 r3, from the landing gate's reading. This family is called with the reply's own `status`, and a
+     lookup that can return its input connects an upstream read to the shared `pick()`. The module graph
+     answers a helper's return for *all* of its callers, so that one call site condemned five panels this
+     order never opened. The arm below is the cheap local door; the gate's ruler is the authority. */
+  const src = read("vocabulary");
+  const at = src.indexOf("export function extractionStatusLabel");
+  if (at < 0) throw new Error("displayVocabulary.ts: extractionStatusLabel is gone or renamed — this arm would otherwise pass on nothing.");
+  const end = src.indexOf("\n}", at);
+  if (end < 0) throw new Error("displayVocabulary.ts: extractionStatusLabel has no closing brace this arm can bound.");
+  const body = src.slice(at, end);
+  expect(body, "the status lookup is routed through the shared pick()/rawChannel() fallback again").not.toMatch(/\bpick\(|\brawChannel\(/);
+  expect(body, "the lookup returns the value it was handed, so the reply's own word reaches the screen").not.toMatch(/return\s+(?:String\()?(?:value|raw|named)\b/);
+  expect(body, "the closed table is what answers").toContain("EXTRACTION_STATUS[");
 });
 
 test("the ruler read what it claims to have read", () => {
