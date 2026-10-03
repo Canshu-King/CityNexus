@@ -616,6 +616,11 @@ class AuthoritativeComposeRequest(BaseModel):
 
     place_ids: list[str] = Field(min_length=2, max_length=12)
     candidate_count: int = Field(default=3, ge=1, le=5)
+    # R25 closure may only promote a plan whose selected mobility evidence is
+    # provider-confirmed.  The planner already has this bounded mode; expose it
+    # at the product boundary instead of letting synthetic alternate modes make
+    # a live plan look authoritative.
+    require_fully_grounded: bool = False
     stay_offer_id: UUID | None = None
     reservation_id: UUID | None = None
 

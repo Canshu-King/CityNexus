@@ -106,6 +106,7 @@ def _anchor(context: JourneyTripContext | None, journey: Journey, kind: str) -> 
     return {
         "at": str(value.get("at") or fallback),
         "location": str(value.get("location") or kind.title()),
+        "place_id": value.get("place_id"),
         "latitude": value.get("latitude"),
         "longitude": value.get("longitude"),
     }
@@ -1325,6 +1326,26 @@ def compose_authoritative_multiday(
     context = session.get(JourneyTripContext, journey.id)
     arrival = _anchor(context, journey, "arrival")
     departure = _anchor(context, journey, "departure")
+    # JourneyCreate anchors may carry a canonical Place ID without repeating
+    # coordinates. Resolve that provider-backed identity before capturing the
+    # mobility matrix; otherwise the normal product API produces an empty
+    # anchor leg and the real provider gate refuses the whole composition.
+    for anchor in (arrival, departure):
+        if anchor.get("latitude") is not None and anchor.get("longitude") is not None:
+            continue
+        anchor_place_id = anchor.get("place_id")
+        if not anchor_place_id:
+            continue
+        anchor_place = session.scalar(
+            select(Place).where(
+                Place.id == str(anchor_place_id),
+                Place.city_code == journey.city_code,
+            )
+        )
+        if anchor_place is not None:
+            anchor["latitude"] = anchor_place.latitude
+            anchor["longitude"] = anchor_place.longitude
+            anchor["location"] = anchor.get("location") or anchor_place.name
     require_fully_grounded = bool(
         isinstance(discovery_evidence, dict)
         and discovery_evidence.get("require_fully_grounded")

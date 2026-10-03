@@ -6105,6 +6105,7 @@ def authoritative_compose_journey(
             candidate_count=payload.candidate_count,
             stay_offer_id=str(payload.stay_offer_id) if payload.stay_offer_id else None,
             reservation_id=str(payload.reservation_id) if payload.reservation_id else None,
+            discovery_evidence={"require_fully_grounded": payload.require_fully_grounded},
         )
     except ValueError as exc:
         session.rollback()
@@ -7801,10 +7802,21 @@ def _remaining_opportunity_horizon(
         current_index = next(index for index, item in enumerate(activities) if item.id == current.id)
     except StopIteration:
         return []
-    remaining_budget = int(journey.budget_amount_minor) - sum(
+    trip_context = session.get(JourneyTripContext, journey.id)
+    declared_stay_budget = (
+        int(trip_context.stay_budget_amount_minor)
+        if trip_context is not None and trip_context.stay_budget_declared is True
+        else 0
+    )
+    # Future activities are opportunity candidates, not reservations.  Their
+    # costs must remain visible in each window but cannot be subtracted before
+    # the Agent decides whether to take them.  A declared stay allocation is a
+    # separate protected envelope, so only that allocation and already-consumed
+    # activities reduce the optional budget.
+    remaining_budget = int(journey.budget_amount_minor) - declared_stay_budget - sum(
         int(item.estimated_cost_minor or 0)
         for item in activities
-        if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+        if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
     )
     horizon: list[dict[str, Any]] = []
     for index, item in enumerate(activities[current_index + 1 :], start=current_index + 1):
@@ -7845,6 +7857,16 @@ def _remaining_opportunity_horizon(
             "window_boundary": {"opens_at": max(projection_now, start).isoformat(), "closes_at": next_commitment_start.isoformat()},
             "next_commitment": {"start_at": next_commitment_start.isoformat(), "protected": any(when == next_commitment_start for when, _ in active_c4)},
             "optional_budget_remaining_minor": remaining_budget,
+            "optional_budget_basis": {
+                "journey_budget_minor": int(journey.budget_amount_minor),
+                "declared_stay_allocation_minor": declared_stay_budget,
+                "consumed_activity_cost_minor": sum(
+                    int(item.estimated_cost_minor or 0)
+                    for item in activities
+                    if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
+                ),
+                "future_activities_are_reserved": False,
+            },
             "candidate": {
                 "place_id": place.id, "category": place.category, "tags": sorted(candidate_tags),
                 "activity_id": item.id, "visit_minutes": max(0, int((end - start).total_seconds() // 60)),
