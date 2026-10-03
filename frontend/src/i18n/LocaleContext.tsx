@@ -624,7 +624,7 @@ const en: Dict = {
   "exec.state.arrived": "Arrived",
   "exec.state.inProgress": "In progress",
   "exec.state.active": "Active",
-  "exec.state.completed": "Completed",
+  "exec.state.completed": "COMPLETED",
   "exec.state.skipped": "Skipped",
 
   // ── Inbox: Booking Artifact Scanner ──
