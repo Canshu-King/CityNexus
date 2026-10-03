@@ -2,6 +2,7 @@ from app.intelligence.decision_sensitivity import (
     clarification_epoch_fingerprint,
     decision_sensitivity_receipt,
 )
+from app.agent.runtime import _server_completion_contract
 
 
 def _window(key: str, place_id: str, status: str, cost: int, fit: float = 0.5):
@@ -47,3 +48,35 @@ def test_r26_explicit_preference_suppresses_question_and_fingerprint_is_epoch_bo
         journey_id="j", active_plan_version_id="p2", current_activity_id="a1", windows=windows
     )
     assert first != second
+
+
+def test_r26_defer_without_server_mutation_is_not_resolved():
+    steps = [{
+        "tool_name": "conclude_recovery",
+        "status": "COMPLETED",
+        "result": {"requested_outcome": "NO_ACTION", "horizon_decision": "DEFER"},
+    }]
+    receipt = _server_completion_contract(steps, run_status="COMPLETED")
+    assert receipt["kind"] == "UNRESOLVED"
+    assert receipt["reason_code"] == "DEFER_WITHOUT_EXECUTION_EFFECT"
+
+
+def test_r26_clarified_skip_is_a_machine_mutation():
+    steps = [
+        {
+            "tool_name": "apply_clarified_horizon_choice",
+            "status": "COMPLETED",
+            "result": {
+                "executed": True,
+                "mutation": "ACTIVITY_SKIPPED",
+                "reason": "CLARIFIED_DEFER_FOR_LATER_OPTION",
+            },
+        },
+        {
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "result": {"requested_outcome": "MUTATION_EXECUTED"},
+        },
+    ]
+    receipt = _server_completion_contract(steps, run_status="COMPLETED")
+    assert receipt == {"kind": "MUTATION_EXECUTED", "source": "server_trace"}

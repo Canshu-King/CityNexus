@@ -173,6 +173,12 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id", "outcome"],
         ),
         _tool(
+            "apply_clarified_horizon_choice",
+            "Apply the server-derived current-vs-later answer. The server resolves the exact current activity; the model cannot provide an activity ID.",
+            journey,
+            ["journey_id"],
+        ),
+        _tool(
             "search_city_services",
             "Search server-owned CityService alternatives; never invent candidate IDs.",
             {
@@ -368,7 +374,8 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "The current disruption, if any, is discoverable from the server-owned JourneyTwin and event inspection; "
         "do not assume or repeat an event identifier from mission text.\n"
         "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
-        "If the bounded remaining-opportunity horizon shows a feasible current window but a higher-value later window would consume the same optional budget, you may choose DEFER by calling conclude_recovery with outcome NO_ACTION and horizon_decision DEFER; this preserves the active plan. "
+        "If a child mission contains an explicit TAKE_LATER answer, call apply_clarified_horizon_choice to enact the server-derived skip before concluding MUTATION_EXECUTED; do not merely conclude NO_ACTION. "
+        "If the bounded remaining-opportunity horizon shows a feasible current window but a higher-value later window would consume the same optional budget, you may choose DEFER by calling conclude_recovery with outcome NO_ACTION and horizon_decision DEFER only before a clarification answer exists. "
         "At the end of the recovery attempt, call conclude_recovery with exactly one server-owned outcome: "
         "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, CLARIFICATION_REQUIRED, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
         "The first tool call should be inspection. "
@@ -524,6 +531,7 @@ def _server_completion_contract(
         "create_booking",
         "cancel_refundable_booking",
         "request_commitment_change",
+        "apply_clarified_horizon_choice",
     }
     executed = any(
         item.get("tool_name") in active_mutations
@@ -567,9 +575,15 @@ def _server_completion_contract(
          and item.get("status") != "TOOL_ERROR"),
         None,
     )
-    if requested == "NO_ACTION" and not executed and not approval_pending and (
-        not proposal_created or defer_conclusion == "DEFER"
-    ):
+    if requested == "NO_ACTION" and defer_conclusion == "DEFER" and not executed and not proposal_created:
+        return {
+            "kind": "UNRESOLVED",
+            "source": "server_trace",
+            "reason_code": "DEFER_WITHOUT_EXECUTION_EFFECT",
+        }
+    if requested == "NO_ACTION" and defer_conclusion == "DEFER" and proposal_created and not executed:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "NO_ACTION" and not executed and not approval_pending and not proposal_created:
         return {"kind": requested, "source": "server_trace"}
     if requested == "UNRESOLVED":
         return {"kind": requested, "source": "server_trace"}

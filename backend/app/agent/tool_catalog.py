@@ -35,6 +35,7 @@ TOOLS = (
         False,
     ),
     ToolDescriptor(AgentAction.CONCLUDE_RECOVERY, "conclude_recovery", False, False, False),
+    ToolDescriptor(AgentAction.APPLY_CLARIFIED_HORIZON_CHOICE, "apply_clarified_horizon_choice", True, False, False),
     ToolDescriptor(AgentAction.REQUEST_REPLAN, "request_replan", True, False, False),
     ToolDescriptor(AgentAction.ACCEPT_REPLAN, "accept_replan", True, False, False),
     ToolDescriptor(AgentAction.ACTIVATE_STANDBY, "activate_standby", True, False, False),

@@ -7972,7 +7972,8 @@ def _remaining_opportunity_horizon(
     unavoidable_future_cost = declared_stay_budget + protected_future_cost
     remaining_budget = int(journey.budget_amount_minor) - consumed_cost - unavoidable_future_cost
     horizon: list[dict[str, Any]] = []
-    for index, item in enumerate(activities[current_index + 1 :], start=current_index + 1):
+    first_option_index = current_index if current_index > 0 and current.status in {"ACTIVE", "NOT_STARTED"} else current_index + 1
+    for index, item in enumerate(activities[first_option_index :], start=first_option_index):
         if len(horizon) >= 2 or item.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or not item.place_id:
             continue
         try:
@@ -7992,10 +7993,31 @@ def _remaining_opportunity_horizon(
         cost = canonical_cost_evidence(place_metadata.get("cost_evidence"), place_metadata.get("tags"))
         cost_status = str((cost or {}).get("status") or "UNKNOWN").upper()
         known_cost = cost_status in KNOWN_COST_EVIDENCE_STATUSES and (cost or {}).get("amount_minor") is not None
-        predecessor = activities[index - 1] if index > 0 else current
+        # Execution adjacency is not the frozen sequence after a skip.  Resolve
+        # the nearest preceding activity that still exists in the physical
+        # history; a skipped row cannot remain the origin of the next live leg.
+        predecessor = current
+        for previous in reversed(activities[:index]):
+            if previous.status not in {"SKIPPED", "CANCELLED"}:
+                predecessor = previous
+                break
         pair = (str(predecessor.place_id or ""), str(item.place_id or ""))
         route = selected_plan_facts_by_pair.get(pair)
-        mobility_state = "FROZEN_PLAN_EVIDENCE" if route else "STALE / REVALIDATION_REQUIRED"
+        override = _json_object(item.metadata_json).get("execution_mobility_override")
+        if override:
+            override_facts = override.get("snapshot", {}).get("facts", [])
+            route = next(
+                (
+                    fact for fact in override_facts
+                    if isinstance(fact, dict)
+                    and str(fact.get("origin_key")) == pair[0]
+                    and str(fact.get("destination_key")) == pair[1]
+                ),
+                None,
+            )
+            mobility_state = "CURRENT_LIVE_EVIDENCE"
+        else:
+            mobility_state = "FROZEN_PLAN_EVIDENCE" if route else "STALE / REVALIDATION_REQUIRED"
         try:
             place_tags = json.loads(place.tags_json or "[]")
         except json.JSONDecodeError:
@@ -8158,6 +8180,22 @@ def _transition_activity_state(
             409,
             f"INVALID_ACTIVITY_TRANSITION:{activity.status}->{target_state}; expected={expected}",
         )
+    if target_state == "EN_ROUTE":
+        metadata = _json_object(activity.metadata_json)
+        override = metadata.get("execution_mobility_override")
+        if override:
+            snapshot_payload = override.get("snapshot") if isinstance(override, dict) else None
+            actual_edge = override.get("actual_edge") if isinstance(override, dict) else None
+            try:
+                snapshot = MobilitySnapshot.from_evidence(snapshot_payload or {})
+                origin_key = str((actual_edge or {}).get("origin_key") or "")
+                destination_key = str((actual_edge or {}).get("destination_key") or "")
+                snapshot.hard_minutes(origin_key, destination_key)
+                fact = snapshot.facts[(origin_key, destination_key)]
+                if fact.fact_quality != "LIVE_PROVIDER_CAPTURE":
+                    raise KeyError("execution override is not live provider truth")
+            except (KeyError, TypeError, ValueError):
+                raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
     metadata = json.loads(activity.metadata_json or "{}")
     actual_key = {
         "EN_ROUTE": "en_route_at",
@@ -8341,24 +8379,26 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
     return twin
 
 
-@app.post(
-    "/api/v1/journeys/{journey_id}/activities/{activity_id}/skip",
-    response_model=JourneyTwinSchema,
-)
-def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    journey = require(session, Journey, str(journey_id), "Journey")
+def _skip_current_activity(
+    session: Session,
+    journey: Journey,
+    activity: Activity,
+    *,
+    actor_type: str,
+    reason: str,
+    mission_id: str | None = None,
+    clarification_id: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Skip exactly the current activity and preserve the real route truth."""
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
-    activity = session.get(Activity, str(activity_id))
-    if activity is None or activity.plan_version_id != journey.active_plan_version_id:
+    if activity.plan_version_id != journey.active_plan_version_id:
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
-    if activity.status not in {"ACTIVE", "NOT_STARTED", "EN_ROUTE", "ARRIVED", "IN_PROGRESS"}:
-        raise HTTPException(
-            409,
-            f"INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED",
-        )
+    if activity.status not in {"ACTIVE", "NOT_STARTED"}:
+        raise HTTPException(409, f"INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED")
+    active_plan = session.get(PlanVersion, journey.active_plan_version_id)
     protected_commitment = session.scalar(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
@@ -8367,22 +8407,9 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
         )
     )
-    active_plan = session.get(PlanVersion, journey.active_plan_version_id)
-    authoritative_locked = bool(activity.locked and _is_authoritative_execution_plan(active_plan))
-    if authoritative_locked or protected_commitment is not None:
+    if bool(activity.locked and _is_authoritative_execution_plan(active_plan)) or protected_commitment is not None:
         raise HTTPException(409, "PROTECTED_COMMITMENT_CANNOT_BE_SKIPPED")
-    activity.status = "SKIPPED"
-    metadata = json.loads(activity.metadata_json or "{}")
-    skipped_at = datetime.now(timezone.utc).isoformat()
-    metadata["skipped_at"] = skipped_at
-    activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
-    _record_outcome_event(
-        session,
-        journey,
-        activity=activity,
-        event_type="ACTIVITY_SKIPPED",
-        actor_type="USER",
-    )
+
     next_activity = session.scalar(
         select(Activity)
         .where(
@@ -8391,6 +8418,83 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
         )
         .order_by(Activity.sequence_no)
+    )
+    origin_activity = session.scalar(
+        select(Activity)
+        .where(
+            Activity.plan_version_id == journey.active_plan_version_id,
+            Activity.sequence_no < activity.sequence_no,
+            Activity.status == "COMPLETED",
+        )
+        .order_by(Activity.sequence_no.desc())
+    )
+    execution_override: dict[str, Any] | None = None
+    if next_activity is not None and origin_activity is not None and origin_activity.place_id and next_activity.place_id:
+        frozen_pair = (str(origin_activity.place_id), str(activity.place_id or ""))
+        next_pair = (str(origin_activity.place_id), str(next_activity.place_id))
+        frozen_evidence = _json_object(active_plan.mobility_evidence_json if active_plan else None)
+        frozen_pairs = {
+            (str(item.get("origin_key")), str(item.get("destination_key")))
+            for item in frozen_evidence.get("facts", [])
+            if isinstance(item, dict) and item.get("origin_key") and item.get("destination_key")
+        }
+        if next_pair not in frozen_pairs or next_pair != frozen_pair:
+            try:
+                captured = capture_runtime_mobility_snapshot(
+                    session,
+                    journey,
+                    [next_pair],
+                    operation_key=f"r26-clarified-skip:{journey.id}:{activity.id}:{next_activity.id}",
+                    require_explicit_facts=True,
+                )
+                captured.snapshot.hard_minutes(*next_pair)
+            except (MobilitySnapshotCaptureError, KeyError, ValueError) as exc:
+                raise HTTPException(409, "CLARIFIED_SKIP_BLOCKED_LIVE_MOBILITY_UNAVAILABLE") from exc
+            execution_override = {
+                "reason": "PREDECESSOR_SKIPPED_DIRECT_EDGE",
+                "origin_activity_id": origin_activity.id,
+                "destination_activity_id": next_activity.id,
+                "snapshot": captured.snapshot.to_evidence(),
+                "actual_edge": {
+                    "origin_key": next_pair[0],
+                    "destination_key": next_pair[1],
+                    "fact_quality": captured.snapshot.facts[next_pair].fact_quality,
+                    "route_provenance": captured.snapshot.facts[next_pair].route_provenance,
+                },
+            }
+
+    skipped_at = datetime.now(timezone.utc).isoformat()
+    metadata = _json_object(activity.metadata_json)
+    metadata.update({
+        "skipped_at": skipped_at,
+        "skip_reason": reason,
+        "skip_provenance": {
+            "actor_type": actor_type,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+        },
+    })
+    activity.status = "SKIPPED"
+    activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+    if execution_override is not None and next_activity is not None:
+        next_metadata = _json_object(next_activity.metadata_json)
+        next_metadata["execution_mobility_override"] = execution_override
+        next_activity.metadata_json = json.dumps(next_metadata, ensure_ascii=False, sort_keys=True)
+    outcome = _record_outcome_event(
+        session,
+        journey,
+        activity=activity,
+        event_type="ACTIVITY_SKIPPED",
+        actor_type=actor_type,
+        payload={
+            "skip_reason": reason,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+            "execution_mobility_override": execution_override,
+            "voluntary_choice": False,
+            "forced_by_disruption": True,
+        },
+        related_agent_run_id=None,
     )
     if next_activity is None:
         journey.current_activity_id = None
@@ -8405,19 +8509,58 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             activity=next_activity,
             event_type="ACTIVITY_STARTED",
             actor_type="SYSTEM",
+            payload={"predecessor_skipped": activity.id, "execution_mobility_override": execution_override},
         )
-    journey.updated_at = datetime.now(timezone.utc).isoformat()
+    journey.updated_at = skipped_at
     record_audit(
         session,
         action="activity.skipped",
         entity_type="Activity",
         entity_id=activity.id,
         journey_id=journey.id,
-        after={"status": activity.status, "next_activity_id": journey.current_activity_id},
+        actor_type=actor_type,
+        after={
+            "status": activity.status,
+            "next_activity_id": journey.current_activity_id,
+            "reason": reason,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+        },
     )
     twin = _twin_snapshot(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
+    return twin, {
+        "executed": True,
+        "mutation": "ACTIVITY_SKIPPED",
+        "skipped_activity_id": activity.id,
+        "next_activity_id": journey.current_activity_id,
+        "execution_mobility_snapshot_id": (
+            execution_override or {}).get("snapshot", {}).get("snapshot_id") if execution_override else None,
+        "actual_edge": (execution_override or {}).get("actual_edge"),
+        "reason": reason,
+        "mission_id": mission_id,
+        "clarification_id": clarification_id,
+        "outcome_event_id": outcome.id,
+    }
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/activities/{activity_id}/skip",
+    response_model=JourneyTwinSchema,
+)
+def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    activity = session.get(Activity, str(activity_id))
+    if activity is None:
+        raise HTTPException(409, "activity is not on the active plan")
+    twin, _receipt = _skip_current_activity(
+        session,
+        journey,
+        activity,
+        actor_type="USER",
+        reason="USER_REQUESTED_SKIP",
+    )
     return twin
 
 

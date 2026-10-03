@@ -590,6 +590,7 @@ class AgentToolGateway:
             "inspect_twin": self.inspect_twin,
             "list_replans": self.list_replans,
             "conclude_recovery": self.conclude_recovery,
+            "apply_clarified_horizon_choice": self.apply_clarified_horizon_choice,
             "search_city_services": self.search_city_services,
             "acquire_place_facts": self.acquire_place_facts,
             "estimate_place_facts": self.estimate_place_facts,
@@ -902,6 +903,12 @@ class AgentToolGateway:
                 "clarification": payload,
                 "decision_sensitivity": decision,
             }
+        if requested == "NO_ACTION" and request.mission_id is not None:
+            child = self.session.get(JourneyMission, str(request.mission_id))
+            if child is not None and child.parent_mission_id:
+                explicit = json.loads(child.preferences_json or "{}").get("current_explicit_mission", {})
+                if explicit.get("strategy") == "DEFER":
+                    raise HTTPException(409, "CLARIFIED_DEFER_REQUIRES_EXECUTION_EFFECT")
         if request.horizon_decision == "DEFER":
             if requested != "NO_ACTION" or request.journey_id is None:
                 raise HTTPException(422, "DEFER requires a non-mutating NO_ACTION conclusion")
@@ -943,6 +950,83 @@ class AgentToolGateway:
             "reason": reason or None,
             "horizon_decision": request.horizon_decision,
         }
+
+    def apply_clarified_horizon_choice(self, request: AgentToolCall) -> dict[str, Any]:
+        """Apply the server-derived TAKE_LATER choice; never accept an activity ID."""
+        if request.journey_id is None or request.mission_id is None:
+            raise HTTPException(422, "CLARIFIED_CHOICE_REQUIRES_JOURNEY_AND_MISSION")
+        journey = _require_journey(self.session, request.journey_id)
+        child = self.session.get(JourneyMission, str(request.mission_id))
+        if child is None or child.journey_id != journey.id or child.parent_mission_id is None:
+            raise HTTPException(409, "CLARIFIED_CHOICE_REQUIRES_CHILD_MISSION")
+        parent = self.session.get(JourneyMission, child.parent_mission_id)
+        if parent is None or parent.status != "ANSWERED":
+            raise HTTPException(409, "CLARIFIED_CHOICE_PARENT_NOT_ANSWERED")
+        try:
+            child_preferences = json.loads(child.preferences_json or "{}")
+            resolved = json.loads(child.resolved_intent_json or "{}")
+            clarification = json.loads(parent.clarification_json or "{}")
+        except json.JSONDecodeError as exc:
+            raise HTTPException(409, "CLARIFIED_CHOICE_PAYLOAD_INVALID") from exc
+        explicit = child_preferences.get("current_explicit_mission") or resolved.get("current_explicit_mission") or {}
+        if explicit.get("strategy") != "DEFER" or explicit.get("decision_option") != "TAKE_LATER":
+            raise HTTPException(409, "CLARIFIED_CHOICE_IS_NOT_TAKE_LATER")
+        if clarification.get("answer", {}).get("option_key") != "TAKE_LATER":
+            raise HTTPException(409, "CLARIFIED_CHOICE_PARENT_ANSWER_MISMATCH")
+        from app.main import _twin_snapshot, _skip_current_activity
+        from app.intelligence.decision_sensitivity import clarification_epoch_fingerprint
+        twin = _twin_snapshot(self.session, journey)
+        windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+        current_fingerprint = clarification_epoch_fingerprint(
+            journey_id=journey.id,
+            active_plan_version_id=journey.active_plan_version_id,
+            current_activity_id=journey.current_activity_id,
+            windows=windows,
+        )
+        if current_fingerprint != clarification.get("decision_epoch"):
+            raise HTTPException(409, "CLARIFICATION_STALE_RECOMPUTE_REQUIRED")
+        later_window = next((item for item in windows if item.get("window_id") == clarification.get("option_windows", {}).get("TAKE_LATER")), None)
+        now_window = next((item for item in windows if item.get("window_id") == clarification.get("option_windows", {}).get("TAKE_NOW")), None)
+        if now_window is None or later_window is None:
+            raise HTTPException(409, "CLARIFIED_CHOICE_HORIZON_RECOMPUTE_REQUIRED")
+        if now_window.get("status") != "GROUNDED_FEASIBLE" or later_window.get("status") != "GROUNDED_FEASIBLE":
+            raise HTTPException(422, "CLARIFIED_CHOICE_REQUIRES_TWO_GROUNDED_FEASIBLE_WINDOWS")
+        now_cost = now_window.get("candidate", {}).get("cost_evidence", {}).get("amount_minor")
+        later_cost = later_window.get("candidate", {}).get("cost_evidence", {}).get("amount_minor")
+        budget = int(now_window.get("optional_budget_remaining_minor") or 0)
+        if not isinstance(now_cost, int) or not isinstance(later_cost, int) or now_cost > budget or later_cost > budget or now_cost + later_cost <= budget:
+            raise HTTPException(422, "CLARIFIED_CHOICE_RESOURCE_CONFLICT_RECOMPUTE_REQUIRED")
+        current_id = str(now_window.get("candidate", {}).get("activity_id") or "")
+        later_id = str(later_window.get("candidate", {}).get("activity_id") or "")
+        activity = self.session.get(Activity, current_id)
+        later_activity = self.session.get(Activity, later_id)
+        if activity is None or later_activity is None or journey.current_activity_id != activity.id:
+            raise HTTPException(409, "CLARIFIED_CHOICE_CURRENT_ACTIVITY_CHANGED")
+        if activity.status not in {"ACTIVE", "NOT_STARTED"} or activity.locked:
+            raise HTTPException(409, "CLARIFIED_CHOICE_W1_NOT_SKIPPABLE")
+        active_booking = self.session.scalar(
+            select(Booking).where(
+                Booking.journey_id == journey.id,
+                Booking.activity_id == activity.id,
+                Booking.status.not_in(("CANCELLED", "REFUNDED", "EXPIRED")),
+            )
+        )
+        if active_booking is not None:
+            raise HTTPException(409, "CLARIFIED_CHOICE_BOOKING_REQUIRES_NORMAL_APPROVAL")
+        _, receipt = _skip_current_activity(
+            self.session,
+            journey,
+            activity,
+            actor_type="AI_AGENT",
+            reason="CLARIFIED_DEFER_FOR_LATER_OPTION",
+            mission_id=child.id,
+            clarification_id=clarification.get("clarification_id"),
+        )
+        receipt["tool"] = "apply_clarified_horizon_choice"
+        receipt["decision"] = AuthorizationDecision.ALLOW_AUTO.value
+        receipt["strategy"] = "DEFER"
+        receipt["later_activity_id"] = later_activity.id
+        return receipt
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:
         journey = None

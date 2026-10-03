@@ -70,6 +70,7 @@ _ACTION_TOOLS = (
     "create_booking",
     "cancel_refundable_booking",
     "request_commitment_change",
+    "apply_clarified_horizon_choice",
 )
 _STRATEGY_TOOLS = (
     "acquire_place_facts",
