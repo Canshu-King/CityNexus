@@ -89,3 +89,12 @@ def test_r26_take_now_child_keeps_current_activity_without_clarified_skip():
     prompt = inspect.getsource(_system_prompt)
     assert "TAKE_NOW answer" in prompt
     assert "do not call apply_clarified_horizon_choice" in prompt
+
+
+def test_r26_take_now_requires_server_answer_not_model_assertion():
+    import inspect
+    from app.agent.gateway import AgentToolGateway
+
+    source = inspect.getsource(AgentToolGateway.conclude_recovery)
+    assert "TAKE_NOW_CLARIFICATION_NOT_AUTHORIZED" in source
+    assert "TAKE_NOW_REQUIRES_CLARIFICATION_CHILD" in source

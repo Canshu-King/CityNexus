@@ -909,6 +909,26 @@ class AgentToolGateway:
                 explicit = json.loads(child.preferences_json or "{}").get("current_explicit_mission", {})
                 if explicit.get("strategy") == "DEFER":
                     raise HTTPException(409, "CLARIFIED_DEFER_REQUIRES_EXECUTION_EFFECT")
+        if request.horizon_decision == "TAKE_NOW":
+            if requested != "NO_ACTION" or request.journey_id is None or request.mission_id is None:
+                raise HTTPException(422, "TAKE_NOW_REQUIRES_NON_MUTATING_CHILD_CONCLUSION")
+            child = self.session.get(JourneyMission, str(request.mission_id))
+            if child is None or child.journey_id != request.journey_id or child.parent_mission_id is None:
+                raise HTTPException(409, "TAKE_NOW_REQUIRES_CLARIFICATION_CHILD")
+            parent = self.session.get(JourneyMission, child.parent_mission_id)
+            try:
+                explicit = json.loads(child.preferences_json or "{}").get("current_explicit_mission", {})
+                answered = json.loads(parent.clarification_json or {}).get("answer", {}) if parent else {}
+            except json.JSONDecodeError as exc:
+                raise HTTPException(409, "TAKE_NOW_CLARIFICATION_PAYLOAD_INVALID") from exc
+            if (
+                parent is None
+                or parent.status != "ANSWERED"
+                or explicit.get("strategy") != "TAKE_NOW"
+                or explicit.get("decision_option") != "TAKE_NOW"
+                or answered.get("option_key") != "TAKE_NOW"
+            ):
+                raise HTTPException(409, "TAKE_NOW_CLARIFICATION_NOT_AUTHORIZED")
         if request.horizon_decision == "DEFER":
             if requested != "NO_ACTION" or request.journey_id is None:
                 raise HTTPException(422, "DEFER requires a non-mutating NO_ACTION conclusion")

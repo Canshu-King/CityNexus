@@ -149,8 +149,8 @@ These are different physical execution histories; no synthetic mobility and no d
 The completion contract now treats `NO_ACTION + DEFER` without an executed server mutation as `UNRESOLVED / DEFER_WITHOUT_EXECUTION_EFFECT`. The clarified skip action is an active mutation in the server-owned completion contract.
 
 ```text
-R20-R26 focused lineage: 46 passed, 1 warning
-R26 behavioral focused tests: 6 passed
+R20-R26 focused lineage: 48 passed, 1 warning
+R26 behavioral focused tests: 7 passed
 compileall backend/app: passed
 git diff --check: passed
 ```
@@ -175,4 +175,8 @@ the persisted histories still differ in Museum status and optional cost.
 The model timeout receipts remain evidence and are not converted into success
 prose. The successful TAKE_LATER closure is based on the real Agent mutation
 receipt plus persisted machine state.
+
+The Gateway also validates `TAKE_NOW` as a server-derived child answer. A model
+cannot assert `horizon_decision=TAKE_NOW` without an answered parent
+clarification whose option is exactly `TAKE_NOW`.
 
