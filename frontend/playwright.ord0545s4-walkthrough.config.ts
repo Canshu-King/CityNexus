@@ -32,10 +32,13 @@ export default defineConfig({
     hasTouch: true,
   },
   webServer: {
-    command: `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${frontendPort}`,
-    url: `http://127.0.0.1:${frontendPort}`,
+    /* --strictPort is the whole point: without it vite silently moves to the next free port, this probe
+     * keeps polling a port that a DIFFERENT process owns, and a two-second collision looks like a
+     * six-minute hang.  Measured that way round: the stall I was told to explain. */
+    command: `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${frontendPort} --strictPort`,
+    port: frontendPort,
     reuseExistingServer: false,
-    timeout: 180_000,
+    timeout: 90_000,
     env: { CITYNEXUS_BACKEND_PORT: String(backendPort) },
   },
 });
