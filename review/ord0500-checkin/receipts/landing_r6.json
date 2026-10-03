@@ -1,6 +1,6 @@
 {
   "tool": "landing_r6",
-  "took_local": "2026-10-04T01:19:09.277731+08:00",
+  "took_local": "2026-10-04T01:24:10.938568+08:00",
   "live_tip": "641ffed1da8654385d66d409e5827986b942306b",
   "refs": [
     {
@@ -692,9 +692,9 @@
     },
     {
       "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r19",
-      "commit": "19c1434fff19a93abdee01385ed0fe9de4ee5be0",
+      "commit": "25c9f9f39edf799d44561d27068cb4400d671249",
       "fork_point": "cea803133b046da6d80ee127aef526f485961305",
-      "predicted_tree": "2f84417ba355745819c87e69e185082af9516cf9",
+      "predicted_tree": "622b14a50e98c74764a985ca6938fad01ab7f6e1",
       "merge_tree_exit": 0,
       "write_set_files": 42,
       "files_landing_byte_identical": 42,
@@ -893,209 +893,6 @@
           "live_tip_blob": "e846ed1b67c67313405f645ecac5432f1a97d241"
         }
       ]
-    },
-    {
-      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r6",
-      "commit": "868bc514f77be7b42639e447ddf842ed86389d45",
-      "fork_point": "dc9dc10fa769bd8c4f3712d9be0dacc2d54d29d5",
-      "predicted_tree": "ec934534cc9232524a0686c0b9eb78e34f35e512",
-      "merge_tree_exit": 1,
-      "write_set_files": 72,
-      "files_landing_byte_identical": 45,
-      "files_needing_another_recut": [
-        {
-          "path": "backend/app/main.py",
-          "candidate_blob": "6448e5e74c394c18aad96c231ef4865540a75f20",
-          "merge_blob": "fc359dd9d1067b0a17770b45816fa76aa3af01af",
-          "live_tip_blob": "fc359dd9d1067b0a17770b45816fa76aa3af01af"
-        },
-        {
-          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
-          "candidate_blob": "ef9d392092dca47945899d2fa56c6f119b149936",
-          "merge_blob": "b9b73c989c14530536315e1ecc37dd571ae49455",
-          "live_tip_blob": "dc0a89c1f15a66c88987d8ec79eeff32343778e8"
-        },
-        {
-          "path": "contracts/openapi.yaml",
-          "candidate_blob": "6497d6a1fd02b12e5864c061b428eabb0f020957",
-          "merge_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
-          "live_tip_blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f"
-        },
-        {
-          "path": "frontend/src/features/checkin/checkinCopy.ts",
-          "candidate_blob": "51c04646d334747a05b26349f4cd4766ba87fa45",
-          "merge_blob": "a6cecbda3409e784c7454303e34b9d6d79483ecb",
-          "live_tip_blob": "f81c5f39b8b30597d857d21fc507348953a92e0b"
-        },
-        {
-          "path": "review/ord0500-checkin/R6_READINGS.md",
-          "candidate_blob": "7f2103de6e791219fe59e09656e5b3e729653dab",
-          "merge_blob": "47b45e771ef5597131c7f5c5265cfbb2d8713c42",
-          "live_tip_blob": "cf5a19d090229685f1534e83afc9da5b16d6e1b0"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/build_faces_r6.json",
-          "candidate_blob": "4cec282e0916281c3ad86592994192876ebc1474",
-          "merge_blob": "8980c7b0a5abafb8fa276baf14635558fa811218",
-          "live_tip_blob": "8b9bddaae2c756d7198e023a5a0908c283d33500"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
-          "candidate_blob": "00ced56d9ba66f7a00b9089f99a2badf36218986",
-          "merge_blob": "8fb1478f75612574f641da028c24cf5ed0a41a64",
-          "live_tip_blob": "bfdb03e8a973ced8f6fa5f6f4e2b2411bab04b89"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
-          "candidate_blob": "1b94864ea040dccc603c53553c3799f21ab5c6d7",
-          "merge_blob": "d5d63dc7f88401d99439f97ba7d4fc62b23f5177",
-          "live_tip_blob": "376bd6776e68089a06c44f64a4fe3cc6684e123f"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
-          "candidate_blob": "c0563eb1404081a15bdd4f5fbc702b68395258c8",
-          "merge_blob": "1f31cc50e9f327b0d516272873f326bc0b0076aa",
-          "live_tip_blob": "91006a08d8c761846281e1119dd14e1120062303"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
-          "candidate_blob": "4ac10f2bc655d5392a9330725e3bdf89679d0b01",
-          "merge_blob": "13b6940e0806dea25d541785c31b0d0e4ba77b29",
-          "live_tip_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
-          "candidate_blob": "2e8d17fdb008b28a745a131d59d02bc2854e44ee",
-          "merge_blob": "c83f55666fbbd27421c9549421c7eeb9fdcae921",
-          "live_tip_blob": "7f4a4b0e4db320a4c7acde321da47565bb077394"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
-          "candidate_blob": "e8cfcee2b702d79f68364f89ef901c957317d33d",
-          "merge_blob": "5b7b6b2029954eae533e7921ac97f640b9781b8c",
-          "live_tip_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
-          "candidate_blob": "0c3a84bb3087da986a4a7ac2221ea04b3e03e921",
-          "merge_blob": "c02e86d147cf116f411c3959c9551137b0836dcb",
-          "live_tip_blob": "202d2b1ec6f2a3c41b3e0897534e97847865244e"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/landing_r6.json",
-          "candidate_blob": "818f292363eeb90041dd7404902a8d46f54ebd8c",
-          "merge_blob": "1370df99e6c7b89ec565b7e3bbaa3e3db8c0104c",
-          "live_tip_blob": "9afbacb958f1b7bbbdfe3514dfaca9b6bb4b4267"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
-          "candidate_blob": "2b0bb269d505264a1cdba17d20aa1f04ef8f096b",
-          "merge_blob": "249c1fb0dfe5da0eedf11265fa837fae909e28be",
-          "live_tip_blob": "b3e3402cb3f33db4f884b83c583559725e5b8443"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/r6_exposure_cand.json",
-          "candidate_blob": "eb594a339675e3d18e2c9f8ee8c9e037e74269fd",
-          "merge_blob": "7e65bc8ff8c680ad686a5145373d6228491f7767",
-          "live_tip_blob": "33454086ec81a291c973026dc503af4855559832"
-        },
-        {
-          "path": "review/ord0500-checkin/receipts/sweep_r6.json",
-          "candidate_blob": "290166e438330fa048667e31c05ce21bc6803191",
-          "merge_blob": "f193b17e3977056f2eea8306b833a15e13ae1620",
-          "live_tip_blob": "5fb7f66dfbbb94c67089bcb3148207fe52bc3949"
-        },
-        {
-          "path": "review/ord0500-checkin/run/r6_exposure_cand.txt",
-          "candidate_blob": "57299c8d7f3f823275dc57d596de98b64e00c232",
-          "merge_blob": "8564321db6e6b2c65e0ff6d93d1cdaff5cd76cfe",
-          "live_tip_blob": "63580a0d709402aabc62bfa2ba0af5fe07d4d53f"
-        },
-        {
-          "path": "review/ord0500-checkin/run/r6_pytest.txt",
-          "candidate_blob": "5ae456c3c82ddc048bec2d5785c4051f055b1baf",
-          "merge_blob": "0d47b9b112ba6a885121fcfdc9e5cbdbc5f1bf6d",
-          "live_tip_blob": "60b4642ace22b5c783ebcee17e8219cb902d7aae"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/build_faces_r6.py",
-          "candidate_blob": "595065400460af6fb4197a35913ea0c41f003d3f",
-          "merge_blob": "1121c4042e7d9337380a13fa0a0cf196eddac2fe",
-          "live_tip_blob": "5ea143c347a27f57aa8de673293d1aead32ce2a7"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
-          "candidate_blob": "1d0be172be14e2d9555769838dec3a002b8fa084",
-          "merge_blob": "df2d68bd7a453e50dcedd9f337d70c66f28b6743",
-          "live_tip_blob": "9a60144dd1c446af313c9323b78bedd6ce993bdc"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/landing_r6.py",
-          "candidate_blob": "ac788c9be13c1d41776b7a5ca4374af2fb22587b",
-          "merge_blob": "1bdb7f9a736d07f29f94df343ca0805c60fb0e28",
-          "live_tip_blob": "b617ca7c31a22a085aa27a103c73c7494a0a0d00"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/pytest_r6.py",
-          "candidate_blob": "1c95d3c741226beaef59146b1b01262059f79b11",
-          "merge_blob": "2f1810cec05160fe1ab36500a2257366617f43b4",
-          "live_tip_blob": "3756b9403c7231267a4dbe2e4f7a909577047ea9"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/r6_block.py",
-          "candidate_blob": "8c97fe98bff93d2916c3ec6713430a48ce57f8e8",
-          "merge_blob": "37e7bf2062769de64d7b5dc55a4f3c6d062c021d",
-          "live_tip_blob": "d04b932ac44278b949c7e549d66c3ce3f497c9e2"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/r6_coordinates.py",
-          "candidate_blob": "4fa1ea155aba0ad2e890fcca7291224d44196f0c",
-          "merge_blob": "d1d3adcb69c6ef2e723756ef5a90dcb8a55d294b",
-          "live_tip_blob": "e62b6786b31da03be917f3679f5370e5eaef7cc4"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
-          "candidate_blob": "0357d7a0424fc91e6811b59c1b8fa74bf55f7952",
-          "merge_blob": "2d5e64cc9af91415141a4ca2af5fd5d4f0fbc672",
-          "live_tip_blob": "d9da30551a7f972b5f23cc4e722b2c5afd6f7952"
-        },
-        {
-          "path": "review/ord0500-checkin/tools/sweep_r6.py",
-          "candidate_blob": "1a5c596a1df0e28e70c1faaa48dd69bc9d3b853c",
-          "merge_blob": "0e2a450c7f1afc44c04763196efa3fe50ca1c0bd",
-          "live_tip_blob": "08d0f127b6d2a9d1f3805a50799feeaecbb6a3e2"
-        }
-      ]
-    },
-    {
-      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r7",
-      "commit": "c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574",
-      "fork_point": "4ad955e3db6008feac2820a45c45ff7176d0b560",
-      "predicted_tree": "61466b6f675035c559172d7e83d531781e6a6758",
-      "merge_tree_exit": 0,
-      "write_set_files": 1,
-      "files_landing_byte_identical": 1,
-      "files_needing_another_recut": []
-    },
-    {
-      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r8",
-      "commit": "1783ca68b65e075ca5a86a37e1a87200e03ec0a8",
-      "fork_point": "1783ca68b65e075ca5a86a37e1a87200e03ec0a8",
-      "predicted_tree": "61466b6f675035c559172d7e83d531781e6a6758",
-      "merge_tree_exit": 0,
-      "write_set_files": 0,
-      "files_landing_byte_identical": 0,
-      "files_needing_another_recut": []
-    },
-    {
-      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r9",
-      "commit": "74471d538effb5726dcb29ff4459e4064f9df4d3",
-      "fork_point": "74471d538effb5726dcb29ff4459e4064f9df4d3",
-      "predicted_tree": "61466b6f675035c559172d7e83d531781e6a6758",
-      "merge_tree_exit": 0,
-      "write_set_files": 0,
-      "files_landing_byte_identical": 0,
-      "files_needing_another_recut": []
     }
   ]
 }
