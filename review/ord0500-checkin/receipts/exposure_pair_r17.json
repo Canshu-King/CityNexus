@@ -1,0 +1,57 @@
+{
+  "tool": "exposure_pair_r17",
+  "took_local": "2026-10-03T20:42:26+08:00",
+  "live_tip": "702a4c7247cd9ba636711696232eccd2adb1cd96",
+  "candidate_head": "6c96a0069449ed82e9ae318bf7dd73d60635fa17",
+  "base_tip": "702a4c7247cd9ba636711696232eccd2adb1cd96",
+  "merge_base": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+  "swapped_paths": [
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+  "sides": {
+    "candidate": {
+      "cells_total": 5,
+      "hits": 5,
+      "hit_set": [
+        "features/planning/PlanWithAiSheet.tsx:1029",
+        "features/planning/PlanWithAiSheet.tsx:931",
+        "features/planning/PlanWithAiSheet.tsx:956",
+        "features/simulation/SimulationPanel.tsx:937",
+        "features/trip/ActivityDetail.tsx:216"
+      ],
+      "unresolved_import_count": 54,
+      "parse_diagnostics_total": 0,
+      "claim_kind": "pattern_determined",
+      "scope": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)"
+    },
+    "base": {
+      "cells_total": 5,
+      "hits": 5,
+      "hit_set": [
+        "features/planning/PlanWithAiSheet.tsx:1029",
+        "features/planning/PlanWithAiSheet.tsx:931",
+        "features/planning/PlanWithAiSheet.tsx:956",
+        "features/simulation/SimulationPanel.tsx:937",
+        "features/trip/ActivityDetail.tsx:216"
+      ],
+      "unresolved_import_count": 54,
+      "parse_diagnostics_total": 0,
+      "claim_kind": "pattern_determined",
+      "scope": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)"
+    }
+  },
+  "restore": {
+    "checkout_rc": 0,
+    "every_path_matches_the_commit": true,
+    "worktree_clean_after_restore": true,
+    "mismatches": []
+  },
+  "parity": {
+    "cells_total_equal": true,
+    "hit_set_equal": true,
+    "unresolved_equal": true,
+    "diagnostics_equal": true
+  }
+}

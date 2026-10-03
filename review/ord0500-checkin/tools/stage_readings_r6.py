@@ -23,8 +23,8 @@ for d in (RC, TL, RUN):
 import glob as _g
 _best = lambda pat: (sorted(_g.glob(os.path.join(LANE, "evidence", pat)), key=os.path.getmtime)
                      or [None])[-1]
-EXPB = os.path.basename(_best("r6_exposure_base_*.json") or "MISSING_exposure_base.json")
-EXPC = os.path.basename(_best("r6_exposure_cand*.json") or "MISSING_exposure_cand.json")
+EXPB = os.path.basename(_best("exposure_*_base.json") or "MISSING_exposure_base.json")
+EXPC = os.path.basename(_best("exposure_*_cand.json") or "MISSING_exposure_cand.json")
 EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       "checkin_copy_rows_r6_control.json", "checkin_copy_rows_r6_M1.json",
       "checkin_copy_rows_r6_M1_revert.json", "checkin_copy_rows_r6_M2.json",
@@ -41,9 +41,20 @@ EV = ["build_faces_r6.json", "sweep_r6.json", "checkin_copy_rows_r6.json",
       # per re-cut: a re-cut must not require renaming anything downstream (r7 lesson).
       ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
              "citation_gate_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
+             os.path.join(LANE, "evidence", "citation_audit_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "exposure_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "exposure_pair_r*.json")))] + [os.path.basename(x) for x in sorted(_g.glob(
              os.path.join(LANE, "evidence", "day*_recheck_r*.json")))] + [
          os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
-             "day*_anchor_recheck*.json")))]
+             "day*_anchor_recheck*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "pytest_collectonly_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "branch_emit_arm_r*.json")))] + [
+         os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "evidence",
+             "fmt_lint_r*.json")))]
 for name in EV:
     src = os.path.join(LANE, "evidence", name)
     if os.path.exists(src):
@@ -63,7 +74,13 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "reanchor_r8.py", "reanchor_r8_selftest.py", "citation_audit_r8.py",
          "r8_block.py", "r9_block.py", "r10_block.py", "landing_r6.py",
          ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
-                "citation_gate_r*.py")))] + [
+                "fmt_lint_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "exposure_pair_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "recheck_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "branch_emit_arm_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "collect_count_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "citation_gate_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(
+                os.path.join(LANE, "tools", "citation_audit_r*.py")))] + [
          "stage_readings_r6.py"]
 for name in TOOLS:
     src = os.path.join(LANE, "tools", name)
@@ -77,6 +94,15 @@ for src in sorted(_g.glob(os.path.join(LANE, "run", "*.txt")) +
     base = os.path.basename(src)
     if base.startswith(("r6_", "r7_", "sweep_r", "landing_r", "build_faces", "remeasure_")):
         shutil.copyfile(src, os.path.join(RUN, base))
+# the refusal door's own artifact and the chain that runs it: both belong in the ref, otherwise the
+# page says "it bites" and the commander has nothing to re-run or read.
+for src in sorted(_g.glob(os.path.join(LANE, "run", "*_READINGS_RED.json"))):
+    shutil.copyfile(src, os.path.join(RUN, os.path.basename(src)))
+for src in sorted(_g.glob(os.path.join(LANE, "tools", "r*_chain.sh")) +
+                _g.glob(os.path.join(LANE, "tools", "r*_readings.sh")) +
+                _g.glob(os.path.join(LANE, "tools", "r*_arm.sh"))):
+    data = open(src, "rb").read().replace(b"\r\n", b"\n")
+    open(os.path.join(TL, os.path.basename(src)), "wb").write(data)
 
 
 def load(name):
@@ -99,7 +125,7 @@ def readings():
     _bld = load("build_faces_r6.json")
     BASE_LABEL = _bld.get("base_label") or "BASE"
     CAND_LABEL = _bld.get("candidate_label") or "CAND"
-    cand_exp = load("r6_exposure_cand.json")
+    cand_exp = load(EXPC)
     L = []
     A = L.append
     A("# ORD-0500 r6 -- 英文档那一格：读数单（基座 `%s`，候选 = 本枝 `%s`）" % (
@@ -231,7 +257,8 @@ def readings():
     A("")
     A("| 面 | 格总数 | 图内模块 | 未解析 import | 解析诊断 |")
     A("|---|---|---|---|---|")
-    for label, d in (("基座 dc9dc10f", base_exp), ("候选 r6", cand_exp)):
+    for label, d in (("基座（件 `%s`）" % EXPB, base_exp), ("候选（件 `%s`）" % os.path.basename(EXPC),
+                                                            cand_exp)):
         A("| %s | %s | %s | %s | %s |" % (label, cell(d.get("cells_total")),
                                          cell(d.get("modules_in_graph")),
                                          cell(d.get("unresolved_import_count")),

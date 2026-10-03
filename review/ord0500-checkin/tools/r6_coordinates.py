@@ -100,8 +100,29 @@ def main():
         "review/ord0500-checkin/" + os.path.relpath(x, os.path.join(WT, "review", "ord0500-checkin"))
         .replace("\\", "/") for x in
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_gate_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/citation_audit_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/exposure_r1*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/exposure_pair_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_copy_rows*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_audit_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/build_faces_r6.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/recheck_r14.py"))) +
         sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/day*_recheck_r*.json"))) +
-        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_gate_r*.py")))]
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/citation_gate_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/r*_block.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/recheck_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/stage_readings_r6.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/*_chain.sh"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/pytest_collectonly_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/branch_emit_arm_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/branch_emit_arm_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/exposure_pair_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/fmt_lint_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/receipts/checkin_*_390x844_r*.json"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/fmt_lint_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/collect_count_r*.py"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/tools/r*_readings.sh"))) +
+        sorted(glob.glob(os.path.join(WT, "review/ord0500-checkin/run/*_READINGS_RED.json")))]
     # this generation's four screen receipts and its exposure pair, by what is actually in the tree
     rcp = os.path.join(WT, "review/ord0500-checkin/receipts")
     for name in sorted(os.listdir(rcp)):
