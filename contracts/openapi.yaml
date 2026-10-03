@@ -2665,6 +2665,7 @@ paths:
                 text: {type: string, minLength: 1, maxLength: 20000}
       responses:
         '201': {description: DeepSeek Responses text extraction draft, content: {application/json: {schema: {type: object}}}}
+        '502': {description: 'ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}}}
   /journeys/{journey_id}/inbox/vision:
     post:
       operationId: extractJourneyReservationImage
@@ -2680,6 +2681,7 @@ paths:
                 hint: {type: string, maxLength: 200, default: booking confirmation}
       responses:
         '201': {description: DeepSeek Responses vision extraction draft, content: {application/json: {schema: {type: object}}}}
+        '502': {description: 'ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}}}
   /journeys/{journey_id}/web-research:
     post:
       operationId: runJourneyWebResearch
