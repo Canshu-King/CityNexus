@@ -46,5 +46,5 @@ product_source_citations_of_LocaleContext=5, all five rotted the same way at thi
 cross_file_line_citations_across_e2e=63 (measured by grep over frontend/e2e), which is the denominator the guard does not police -- it polices only the dictionary-file form named in this order.
 
 files_touched_this_order=5 (frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts, frontend/e2e/qoder-ord0386-plan-version-history.spec.ts, frontend/e2e/qoder-ord0477-journey-list-sort.spec.ts, frontend/e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts, frontend/review/line_anchor_drift/READINGS_r1.txt)
-guard_spec_lines=121 pure_insertion (frontend/e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts)
+guard_spec_lines=120 pure_insertion_per_git_numstat (frontend/e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts)
 ord0507_two_candidates_still_not_landed_at_tip=74f5d8df082532f20e66bdba2b84311043f023b5 measured_by_blob_equality: tip frontend/src/app/V8Experience.tsx and frontend/src/features/access/AccessPanel.tsx both differ from the two candidate heads
