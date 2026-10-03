@@ -1,0 +1,47 @@
+{
+  "zh": {
+    "chars": 360,
+    "bolds": [
+      "CityNexus",
+      "Tianjin",
+      "/",
+      "智能守护",
+      "→",
+      "→",
+      "→",
+      "这个服务自己直连模型商的那条环",
+      "自主",
+      "可行",
+      "受保护"
+    ],
+    "lines": [
+      "降雨是语义信号。网关在选择操作后检查：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。",
+      "网关→",
+      "这个服务自己直连模型商的那条环"
+    ],
+    "has_enum": false,
+    "pageErrors": 0
+  },
+  "en": {
+    "chars": 936,
+    "bolds": [
+      "CityNexus",
+      "Tianjin",
+      "/",
+      "Intelligence",
+      "→",
+      "→",
+      "→",
+      "this service's own loop straight to the model provider",
+      "Autonomous",
+      "Feasible",
+      "Protected"
+    ],
+    "lines": [
+      "Gateway→",
+      "this service's own loop straight to the model provider"
+    ],
+    "has_enum": false,
+    "pageErrors": 0
+  }
+}
