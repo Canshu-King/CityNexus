@@ -171,8 +171,12 @@ class AgentToolCall(BaseModel):
         "APPROVAL_PENDING",
         "NO_ACTION",
         "UNRESOLVED",
+        "CLARIFICATION_REQUIRED",
     ] | None = None
     horizon_decision: Literal["TAKE_NOW", "DEFER", "NO_ACTION"] | None = None
+    question: str | None = Field(default=None, min_length=1, max_length=500)
+    option_keys: list[str] | None = Field(default=None, min_length=2, max_length=3)
+    preference_dimension: str | None = Field(default=None, min_length=1, max_length=120)
     # Compatibility-only input. The gateway never treats this caller-owned
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False
@@ -193,6 +197,14 @@ class AgentCommandRequest(BaseModel):
 
     command: str = Field(min_length=8, max_length=2000)
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
+
+
+class ClarificationAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    option_key: str = Field(min_length=1, max_length=64)
+    scope: Literal["THIS_JOURNEY", "REMEMBER_FOR_FUTURE_TRIPS"] = "THIS_JOURNEY"
 
 
 class GuardianAutopilotStart(BaseModel):

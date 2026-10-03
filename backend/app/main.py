@@ -253,7 +253,7 @@ from app.intelligence.impact_resolver import (
     persist_impact_assessment,
     resolve_impact,
 )
-from app.intelligence.opportunity_window import build_window
+from app.intelligence.opportunity_window import OpportunityCandidate, build_window, evaluate_candidate
 from app.intelligence.reason_codes import ReasonCode, VerifiedExplanationFacts
 from app.intelligence.replan_diff import PlanActivitySnapshot, diff_plans
 from app.operations.v9 import (
@@ -331,6 +331,7 @@ from app.replanning.verified_scoring import score_replan_candidate
 from app.schemas import (
     AgentApprovalRequest,
     AgentCommandRequest,
+    ClarificationAnswer,
     AgentPolicyPayload,
     AgentToolCall,
     BookingCreate,
@@ -2243,6 +2244,138 @@ def approve_agent_action(
         step_up_code=payload.step_up_code if payload else None,
         actor_id=journey.traveler_id,
     )
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/clarification")
+def answer_journey_clarification(
+    journey_id: UUID,
+    mission_id: UUID,
+    payload: ClarificationAnswer,
+    session: Session = Depends(get_session),
+):
+    """Apply one decision-critical human value answer to this Journey only.
+
+    The answer is never silently promoted to a cross-trip TravelerTwin fact.
+    A child mission inherits the parent's authority envelope and must be run
+    through the normal Agent/Gateway path.
+    """
+    journey = require(session, Journey, str(journey_id), "Journey")
+    parent = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if parent.journey_id != journey.id or parent.status != "WAITING_FOR_USER":
+        raise HTTPException(409, "clarification is not waiting for this Journey")
+    try:
+        stored = json.loads(parent.clarification_json or "{}")
+    except json.JSONDecodeError as exc:
+        raise HTTPException(409, "clarification payload is invalid") from exc
+    if stored.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "clarification id does not match the waiting question")
+    from app.intelligence.decision_sensitivity import clarification_epoch_fingerprint
+
+    twin = _twin_snapshot(session, journey)
+    windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+    current_fingerprint = clarification_epoch_fingerprint(
+        journey_id=journey.id,
+        active_plan_version_id=journey.active_plan_version_id,
+        current_activity_id=journey.current_activity_id,
+        windows=windows,
+    )
+    if current_fingerprint != stored.get("decision_epoch"):
+        raise HTTPException(409, "CLARIFICATION_STALE_RECOMPUTE_REQUIRED")
+    option_to_strategy = stored.get("option_to_strategy") or {}
+    if payload.option_key not in option_to_strategy:
+        raise HTTPException(422, "clarification option is not server-derived")
+    strategy = str(option_to_strategy[payload.option_key])
+    parent.status = "ANSWERED"
+    parent.completed_at = datetime.now(timezone.utc).isoformat()
+    child_command = (
+        "For this Journey, follow the current opportunity now because that is the traveller's explicit value choice."
+        if strategy == "TAKE_NOW"
+        else "For this Journey, preserve the scarce budget for the later grounded opportunity because that is the traveller's explicit value choice."
+    )
+    child = create_mission(
+        session,
+        journey,
+        command=child_command,
+        requested_autonomy=parent.requested_autonomy,
+        trigger_event_id=parent.trigger_event_id,
+        parent_mission_id=parent.id,
+    )
+    child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
+    child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
+    child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+    explicit = {
+        "decision_option": payload.option_key,
+        "strategy": strategy,
+        "scope": payload.scope,
+        "source": "CURRENT_EXPLICIT_MISSION",
+        "preference_dimension": stored.get("preference_dimension"),
+        "clarification_id": payload.clarification_id,
+    }
+    child.preferences_json = json.dumps(
+        {**json.loads(child.preferences_json or "{}"), "current_explicit_mission": explicit},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    resolved = json.loads(child.resolved_intent_json or "{}")
+    resolved["current_explicit_mission"] = explicit
+    child.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+    stored["answer"] = {"option_key": payload.option_key, "scope": payload.scope}
+    parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+    session.commit()
+    return {
+        "journey_id": journey.id,
+        "parent_mission": mission_payload(parent),
+        "child_mission": mission_payload(child),
+        "strategy": strategy,
+        "scope": payload.scope,
+        "active_plan_unchanged": True,
+        "resume": {"required": True, "mission_id": child.id},
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/resume")
+def resume_journey_mission(
+    journey_id: UUID,
+    mission_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Resume the server-created clarification child through the normal Agent runtime."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    mission = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if (
+        mission.journey_id != journey.id
+        or mission.status not in {"CREATED", "DEGRADED"}
+        or mission.parent_mission_id is None
+    ):
+        raise HTTPException(409, "mission is not a resumable clarification child")
+    start_request_budget(SCENARIO_AGENT_COMMANDS)
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        failed_run = session.scalar(
+            select(AgentRun)
+            .where(AgentRun.mission_id == mission.id)
+            .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
+        )
+        run = (
+            persisted_agent_run_payload(session, failed_run)
+            if failed_run is not None
+            else {
+                "run_id": None,
+                "mission_id": mission.id,
+                "status": "FAILED_EXTERNAL",
+                "provider_key": "deepseek",
+                "model_key": settings.ai_model.removeprefix("deepseek/"),
+                "runtime_identity": runtime_status()["runtime_identity"],
+                "outcome": None,
+                "failure_reason": str(exc),
+                "tool_steps": [],
+            }
+        )
+    finally:
+        runtime.close()
+    return {"mission": mission_payload(mission), "run": run}
 
 
 def advance_seed_to_executable(session: Session, journey_id: str) -> dict:
@@ -7818,6 +7951,26 @@ def _remaining_opportunity_horizon(
         for item in activities
         if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
     )
+    consumed_cost = sum(
+        int(item.estimated_cost_minor or 0)
+        for item in activities
+        if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
+    )
+    protected_future_cost = 0
+    for protected in session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+        )
+    ).all():
+        if str(getattr(protected, "monetary_value_status", "KNOWN")).upper() == "KNOWN":
+            protected_future_cost += int(protected.monetary_value_minor or 0)
+    for future in activities[current_index + 1 :]:
+        if future.status not in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"} and future.locked:
+            protected_future_cost += int(future.estimated_cost_minor or 0)
+    unavoidable_future_cost = declared_stay_budget + protected_future_cost
+    remaining_budget = int(journey.budget_amount_minor) - consumed_cost - unavoidable_future_cost
     horizon: list[dict[str, Any]] = []
     for index, item in enumerate(activities[current_index + 1 :], start=current_index + 1):
         if len(horizon) >= 2 or item.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or not item.place_id:
@@ -7852,6 +8005,49 @@ def _remaining_opportunity_horizon(
             planning_preference_items(session, journey.traveler_id, journey.id),
             candidate_tags=candidate_tags,
         )
+        visit_minutes = max(0, int((end - start).total_seconds() // 60))
+        open_at = close_at = None
+        try:
+            if opening.get("open") and opening.get("close"):
+                open_hour, open_minute = (int(part) for part in str(opening["open"]).split(":", 1))
+                close_hour, close_minute = (int(part) for part in str(opening["close"]).split(":", 1))
+                open_at = start.replace(hour=open_hour, minute=open_minute, second=0, microsecond=0)
+                close_at = start.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
+                if close_at <= open_at:
+                    close_at = None
+        except (TypeError, ValueError):
+            open_at = close_at = None
+        window_known = bool(open_at is not None and close_at is not None)
+        route_minutes = int(route.get("minutes") or item.travel_from_prev_min or 0) if route else 0
+        if known_cost and route and window_known:
+            window = build_window(
+                now=max(projection_now, start),
+                next_commitment_start=next_commitment_start,
+                travel_to_commitment_min=0,
+                safety_buffer_min=15,
+            )
+            candidate_fit = evaluate_candidate(
+                window,
+                OpportunityCandidate(
+                    key=str(item.id),
+                    visit_minutes=visit_minutes,
+                    inbound_travel_min=route_minutes,
+                    outbound_travel_min=0,
+                    cost_minor=int(cost["amount_minor"]),
+                    opens_at=open_at,
+                    closes_at=close_at,
+                ),
+                budget_remaining_minor=max(0, remaining_budget),
+            )
+            status = "GROUNDED_FEASIBLE" if candidate_fit.fits else "GROUNDED_INFEASIBLE"
+            feasibility = {
+                "passed": candidate_fit.fits,
+                "failures": list(candidate_fit.failures),
+                "remaining_buffer_min": candidate_fit.remaining_buffer_min,
+            }
+        else:
+            status = "REVALIDATION_REQUIRED"
+            feasibility = {"passed": False, "failures": ["MISSING_CANONICAL_OPENING_OR_COST_OR_ROUTE"]}
         horizon.append({
             "window_id": f"remaining-window:{journey.id}:{index}",
             "window_boundary": {"opens_at": max(projection_now, start).isoformat(), "closes_at": next_commitment_start.isoformat()},
@@ -7860,23 +8056,22 @@ def _remaining_opportunity_horizon(
             "optional_budget_basis": {
                 "journey_budget_minor": int(journey.budget_amount_minor),
                 "declared_stay_allocation_minor": declared_stay_budget,
-                "consumed_activity_cost_minor": sum(
-                    int(item.estimated_cost_minor or 0)
-                    for item in activities
-                    if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
-                ),
+                "consumed_activity_cost_minor": consumed_cost,
+                "protected_future_paid_activity_minor": protected_future_cost,
+                "unavoidable_future_cost_minor": unavoidable_future_cost,
                 "future_activities_are_reserved": False,
             },
             "candidate": {
                 "place_id": place.id, "category": place.category, "tags": sorted(candidate_tags),
-                "activity_id": item.id, "visit_minutes": max(0, int((end - start).total_seconds() // 60)),
+                "activity_id": item.id, "visit_minutes": visit_minutes,
                 "opening": opening, "cost_evidence": cost or {"status": "UNKNOWN", "amount_minor": None},
                 "preference_fit": fit,
             },
             "planning_mobility": {"state": mobility_state, "provider": route.get("provider") if route else None, "pair": list(pair)},
             "resource_consumption": {"cost_minor": int(item.estimated_cost_minor or 0), "minutes": max(0, int((end - start).total_seconds() // 60))},
             "future_live_traffic": False,
-            "status": "GROUNDED" if known_cost and route else "REVALIDATION_REQUIRED",
+            "feasibility": feasibility,
+            "status": status,
         })
     return horizon
 

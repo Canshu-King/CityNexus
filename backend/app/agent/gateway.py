@@ -697,6 +697,21 @@ class AgentToolGateway:
             "evidence_count": traveler_twin.get("evidence_count", 0),
         }
         twin["traveler_twin_context"] = compact_twin
+        from app.intelligence.decision_sensitivity import decision_sensitivity_receipt
+        windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+        mission_preferences = {}
+        if request.mission_id is not None:
+            mission = self.session.get(JourneyMission, str(request.mission_id))
+            if mission is not None:
+                try:
+                    mission_preferences = json.loads(mission.preferences_json or "{}")
+                except json.JSONDecodeError:
+                    mission_preferences = {}
+        decision_receipt = decision_sensitivity_receipt(
+            windows,
+            traveler_twin_context=compact_twin,
+            current_mission_preferences=mission_preferences,
+        )
         return {
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
@@ -710,6 +725,7 @@ class AgentToolGateway:
             "actionable_events": [_event_choice(item) for item in actionable_events],
             "event_selection_required": selection_error == "EVENT_SELECTION_REQUIRED",
             "event_selection_error": selection_error,
+            "decision_sensitivity": decision_receipt,
             "current_event": (
                 {"id": trigger.id, "event_type": trigger.event_type, "provenance": trigger.provenance,
                  "severity": trigger.severity, "affected_activity_id": trigger.affected_activity_id}
@@ -822,8 +838,70 @@ class AgentToolGateway:
             "APPROVAL_PENDING",
             "NO_ACTION",
             "UNRESOLVED",
+            "CLARIFICATION_REQUIRED",
         }:
             raise HTTPException(422, "outcome must be a supported recovery conclusion")
+        if requested == "CLARIFICATION_REQUIRED":
+            if request.journey_id is None or request.mission_id is None:
+                raise HTTPException(422, "CLARIFICATION_REQUIRES_JOURNEY_AND_MISSION")
+            if not request.question or not request.option_keys or not request.preference_dimension:
+                raise HTTPException(422, "CLARIFICATION_REQUIRES_QUESTION_OPTIONS_AND_DIMENSION")
+            from app.main import _twin_snapshot
+            from app.intelligence.decision_sensitivity import (
+                clarification_epoch_fingerprint,
+                decision_sensitivity_receipt,
+            )
+            journey = _require_journey(self.session, request.journey_id)
+            mission = self.session.get(JourneyMission, str(request.mission_id))
+            if mission is None or mission.journey_id != journey.id:
+                raise HTTPException(404, "JourneyMission was not found")
+            twin = _twin_snapshot(self.session, journey)
+            windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+            mission_preferences = {}
+            try:
+                mission_preferences = json.loads(mission.preferences_json or "{}")
+            except json.JSONDecodeError:
+                mission_preferences = {}
+            decision = decision_sensitivity_receipt(
+                windows,
+                current_mission_preferences=mission_preferences,
+            )
+            if not decision.get("decision_sensitive"):
+                raise HTTPException(422, "CLARIFICATION_NOT_DECISION_SENSITIVE")
+            server_keys = [str(item["key"]) for item in decision["options"]]
+            if set(request.option_keys) != set(server_keys):
+                raise HTTPException(422, "CLARIFICATION_OPTIONS_NOT_SERVER_DERIVED")
+            fingerprint = clarification_epoch_fingerprint(
+                journey_id=journey.id,
+                active_plan_version_id=journey.active_plan_version_id,
+                current_activity_id=journey.current_activity_id,
+                windows=windows,
+            )
+            clarification_id = str(UUID(bytes=__import__("uuid").uuid4().bytes))
+            payload = {
+                "clarification_id": clarification_id,
+                "decision_epoch": fingerprint,
+                "active_plan_version_id": journey.active_plan_version_id,
+                "current_activity_id": journey.current_activity_id,
+                "question": request.question,
+                "option_keys": server_keys,
+                "preference_dimension": request.preference_dimension,
+                "option_to_strategy": {item["key"]: item["action"] for item in decision["options"]},
+                "option_windows": {item["key"]: item["window_id"] for item in decision["options"]},
+                "reason": "DECISION_SENSITIVE_HUMAN_VALUE",
+            }
+            mission.clarification_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+            mission.status = "WAITING_FOR_USER"
+            self.session.commit()
+            return {
+                "tool": "conclude_recovery",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "requested_outcome": requested,
+                "reason": "DECISION_SENSITIVE_HUMAN_VALUE",
+                "mission_status": "WAITING_FOR_USER",
+                "clarification": payload,
+                "decision_sensitivity": decision,
+            }
         if request.horizon_decision == "DEFER":
             if requested != "NO_ACTION" or request.journey_id is None:
                 raise HTTPException(422, "DEFER requires a non-mutating NO_ACTION conclusion")
@@ -837,11 +915,26 @@ class AgentToolGateway:
             first_cost = first_candidate.get("cost_evidence", {}).get("amount_minor")
             later_cost = later_candidate.get("cost_evidence", {}).get("amount_minor")
             budget = int(first.get("optional_budget_remaining_minor") or 0)
-            if first.get("status") != "GROUNDED" or later.get("status") != "GROUNDED":
-                raise HTTPException(422, "DEFER_REQUIRES_GROUNDED_WINDOWS")
+            explicit_strategy = None
+            if request.mission_id is not None:
+                mission = self.session.get(JourneyMission, str(request.mission_id))
+                if mission is not None and mission.journey_id == journey.id:
+                    try:
+                        mission_preferences = json.loads(mission.preferences_json or "{}")
+                    except json.JSONDecodeError:
+                        mission_preferences = {}
+                    explicit_strategy = (
+                        mission_preferences.get("current_explicit_mission", {}).get("strategy")
+                    )
+            if first.get("status") != "GROUNDED_FEASIBLE" or later.get("status") != "GROUNDED_FEASIBLE":
+                raise HTTPException(422, "DEFER_REQUIRES_GROUNDED_FEASIBLE_WINDOWS")
             if not isinstance(first_cost, int) or not isinstance(later_cost, int) or first_cost > budget or later_cost > budget:
                 raise HTTPException(422, "DEFER_REQUIRES_EACH_WINDOW_TO_BE_FEASIBLE")
-            if first_cost + later_cost <= budget or (later_candidate.get("preference_fit") or 0) <= (first_candidate.get("preference_fit") or 0):
+            later_is_preferred = (
+                explicit_strategy == "DEFER"
+                or (later_candidate.get("preference_fit") or 0) > (first_candidate.get("preference_fit") or 0)
+            )
+            if first_cost + later_cost <= budget or not later_is_preferred:
                 raise HTTPException(422, "DEFER_REQUIRES_HIGHER_VALUE_LATER_WINDOW_AND_SCARCE_BUDGET")
         return {
             "tool": "conclude_recovery",

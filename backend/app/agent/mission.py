@@ -629,6 +629,7 @@ def mission_payload(mission: JourneyMission) -> dict[str, Any]:
         "started_at": mission.started_at,
         "completed_at": mission.completed_at,
         "failure_reason": mission.failure_reason,
+        "clarification": json.loads(getattr(mission, "clarification_json", "{}") or "{}"),
         # ORD-0359: additive.  When this mission stored its own reason, that stored sentence is
         # what gets named - so a refusal is never reported as a missing credential, and an
         # unrecognised reason names nothing rather than the nearest of the three.  Only a mission

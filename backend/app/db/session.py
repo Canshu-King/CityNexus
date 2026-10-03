@@ -779,6 +779,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 "reasoning_summary": "TEXT NOT NULL DEFAULT ''",
                 "is_standing": "INTEGER NOT NULL DEFAULT 0",
                 "parent_mission_id": "TEXT",
+                "clarification_json": "TEXT NOT NULL DEFAULT '{}'",
             }
             for column, declaration in mission_v2_columns.items():
                 if mission_columns and column not in mission_columns:

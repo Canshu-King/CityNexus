@@ -159,12 +159,16 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                         "APPROVAL_PENDING",
                         "NO_ACTION",
                         "UNRESOLVED",
+                        "CLARIFICATION_REQUIRED",
                     ],
                 ),
                 "reason": _property("string"),
                 "horizon_decision": _property(
                     "string", enum=["TAKE_NOW", "DEFER", "NO_ACTION"]
                 ),
+                "question": _property("string", description="One human-value question; never a provider fact request."),
+                "option_keys": _property("array", items=_property("string")),
+                "preference_dimension": _property("string"),
             },
             ["journey_id", "outcome"],
         ),
@@ -350,6 +354,9 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "
         "A mutation is not complete merely because you described it: only the corresponding CityNexus tool response is evidence that it happened. "
+        "If inspect_twin returns decision_sensitivity.decision_sensitive=true, do not guess the traveller's value choice. "
+        "Call conclude_recovery with outcome CLARIFICATION_REQUIRED, one concise human-value question, and the exact server option_keys. "
+        "Ask no question about opening, cost, or mobility; acquire those facts yourself. If decision_sensitive is false, do not ask. "
         "When the user or mission explicitly selects a feasible proposal, call accept_replan with that exact proposal ID before producing a final summary; do not stop after list_replans or claim that acceptance is in progress. "
         "For every mutating tool, summarize the returned executed/decision/result fields and never substitute model prose for the Gateway receipt. "
         "Do not reveal private chain-of-thought; final text should summarize actionable rationale and observed results.\n\n"
@@ -363,7 +370,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
         "If the bounded remaining-opportunity horizon shows a feasible current window but a higher-value later window would consume the same optional budget, you may choose DEFER by calling conclude_recovery with outcome NO_ACTION and horizon_decision DEFER; this preserves the active plan. "
         "At the end of the recovery attempt, call conclude_recovery with exactly one server-owned outcome: "
-        "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
+        "MUTATION_EXECUTED, APPROVAL_PENDING, NO_ACTION, CLARIFICATION_REQUIRED, or UNRESOLVED; prose alone never resolves the recovery mission.\n"
         "The first tool call should be inspection. "
         "After inspection, choose the safest available CityNexus action within the server-returned capabilities and authority envelope; do not assume an existing future is sufficient, and do not mutate when no intervention is needed. "
         "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
@@ -566,6 +573,14 @@ def _server_completion_contract(
         return {"kind": requested, "source": "server_trace"}
     if requested == "UNRESOLVED":
         return {"kind": requested, "source": "server_trace"}
+    if requested == "CLARIFICATION_REQUIRED" and any(
+        item.get("tool_name") == "conclude_recovery"
+        and isinstance(item.get("result"), dict)
+        and item["result"].get("mission_status") == "WAITING_FOR_USER"
+        and item["result"].get("clarification", {}).get("clarification_id")
+        for item in tool_steps
+    ):
+        return {"kind": requested, "source": "server_trace", "mission_status": "WAITING_FOR_USER"}
     if executed:
         return {"kind": "MUTATION_EXECUTED", "source": "server_trace"}
     if approval_pending:
@@ -912,6 +927,7 @@ class DeepSeekJourneyAgent:
                     seen_calls.add(repetition_key)
                     sequence += 1
                     arguments.setdefault("journey_id", journey.id)
+                    arguments.setdefault("mission_id", mission.id)
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     arguments.setdefault("agent_id", self.agent_id)
                     tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
@@ -1099,7 +1115,14 @@ class DeepSeekJourneyAgent:
             else:
                 final_text = "Agent reached the configured tool-step limit."
             run.status = "COMPLETED" if final_text else "PARTIAL"
-            mission.status = "COMPLETED" if run.status == "COMPLETED" else "PARTIAL"
+            clarification = any(
+                item.get("tool_name") == "conclude_recovery"
+                and isinstance(item.get("result"), dict)
+                and item["result"].get("requested_outcome") == "CLARIFICATION_REQUIRED"
+                and item["result"].get("mission_status") == "WAITING_FOR_USER"
+                for item in tool_trace
+            )
+            mission.status = "WAITING_FOR_USER" if clarification else ("COMPLETED" if run.status == "COMPLETED" else "PARTIAL")
             run.outcome = final_text or "Tool loop completed without a final summary."
         except AgentRuntimeUnavailable as exc:
             for receipt in getattr(self, "external_attempts", []):

@@ -240,6 +240,7 @@ class JourneyMission(Base):
     started_at: Mapped[str | None] = mapped_column(String, nullable=True)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    clarification_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
 
 
 class AgentRun(Base):
