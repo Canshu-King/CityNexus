@@ -497,7 +497,21 @@ def test_the_contract_declares_both_doors_and_no_control_they_lack():
     for name in sorted(raised):
         assert name in written, name
     assert sorted(created["responses"]) == ["201", "404", "409", "422"], sorted(created["responses"])
-    assert sorted(listed["responses"]) == ["200", "409"], sorted(listed["responses"])
+    # CMDR 01:24 裁①, applied to this one gate: the read door owes `200` and `409` by name, and any other
+    # code documented here must be named in `named_expansion_get` by the very order that documents it. An
+    # unnamed add is still red, a promised code that disappeared is red on its own line, and a code that is
+    # named but never documented is red too, so the whitelist cannot rot into a list of intentions.
+    promised_get = {"200", "409"}
+    named_expansion_get: set[str] = set()  # empty as shipped: nothing else is promised on this door
+    seen_get = set(listed["responses"])
+    assert promised_get <= seen_get, ("a response ORD-0476 promised is gone from the read door",
+                                      sorted(promised_get - seen_get), listed["responses"])
+    assert seen_get - promised_get <= named_expansion_get, (
+        "the read door documents a code this arm was never told about - name it in "
+        "named_expansion_get in the same order that documents it",
+        sorted(seen_get - promised_get - named_expansion_get))
+    assert named_expansion_get <= seen_get, ("a code is whitelisted but not documented",
+                                             sorted(named_expansion_get - seen_get))
 
     schemas = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))["components"]["schemas"]
     create = schemas["JourneyCheckinCreate"]
