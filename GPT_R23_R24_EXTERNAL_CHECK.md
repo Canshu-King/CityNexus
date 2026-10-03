@@ -126,3 +126,29 @@ Machine fact target:
 > CityNexus can see more than one grounded opportunity in the remaining trip, understand that taking the first may consume scarce budget/time needed for a later higher-value option, deliberately defer a feasible current opportunity, and later execute the better one — while explicit human intent can reverse that strategy.
 
 This is temporal agency, not another scoring patch.
+
+
+## Current human-intent precedence gap — mission preferences can miss real-city ranking
+
+There is a second precedence issue in the current real-city strategy path.
+
+`planning_preference_items()` exposes JourneyMission preferences as:
+- `category="mission"`;
+- explicit mission source.
+
+But `verified_interest_preference_breakdown()` and the learned-aware branch of `_strategy_place_score()` consume only:
+- `category="interest"`.
+
+Because real-city ordering passes a non-None `traveler_preferences` list, the old profile fallback can be bypassed even when the list contains no usable interest preference.
+
+Result:
+- persistent explicit Preference rows can override learned memory;
+- but a current Journey mission such as "this trip I want gardens" may not materially override learned interest in this ranking path.
+
+R25 must restore the intended precedence:
+
+`CURRENT_EXPLICIT_MISSION > EXPLICIT_PERSISTED_PREFERENCE > LEARNED_SOFT > NEUTRAL`
+
+for soft ranking only.
+
+Do not convert mission preference into hard feasibility unless it is already an explicit hard constraint/capability.
