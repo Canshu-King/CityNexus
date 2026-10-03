@@ -13,7 +13,7 @@ import {
  * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:3310`), no `Idempotency-Key` --
  * the durable column decides whether the write happens -- answering `409 JOURNEY_NOT_DELETED` rather
  * than reporting a success that did not occur (`backend/app/main.py:3353`). The read door landed
- * with ORD-0402 slice 1 at `backend/app/main.py:3608`: `GET /api/v1/recycle-bin/journeys`, declared in
+ * with ORD-0402 slice 1 at `backend/app/main.py:3615`: `GET /api/v1/recycle-bin/journeys`, declared in
  * `contracts/openapi.yaml:794` and generated at `frontend/src/generated/api.ts:490`, each row
  * carrying the stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN`
  * (`backend/app/schemas.py:305` and `:306`) -- so this screen never has to conclude "it was deleted"
@@ -30,7 +30,7 @@ import {
  * server's own receipt for that answer was `CNX-TWXNJHE2`).
  *
  * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
- * (`backend/app/main.py:3631`), and the panel renders the array as answered, so the order a traveller
+ * (`backend/app/main.py:3638`), and the panel renders the array as answered, so the order a traveller
  * sees is the server's order, not a client-side re-sort.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
