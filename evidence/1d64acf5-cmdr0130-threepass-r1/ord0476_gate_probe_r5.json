@@ -1,0 +1,139 @@
+{
+ "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+ "arm": "backend/tests/test_qoder_ord0476_checkins.py",
+ "tip_test_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+ "final_test_blob": "534b673b749adfd7548066cca770e0c52d105306",
+ "yaml_tip_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162",
+ "yaml_untouched": true,
+ "states": 6,
+ "all_met": true,
+ "all_reverted": true,
+ "runs": [
+  {
+   "id": "K0_control",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "contract as shipped, whitelist empty",
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 2.77s",
+    "bitting_line": null
+   },
+   "test_restored_equal": true,
+   "yaml_restored_equal": true
+  },
+  {
+   "id": "K1_unnamed_add",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "a legitimate 429 documented but not named",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "summary": "1 failed, 2 warnings in 2.44s",
+    "bitting_line": "tests\\test_qoder_ord0476_checkins.py:509: AssertionError"
+   },
+   "test_restored_equal": true,
+   "yaml_restored_equal": true
+  },
+  {
+   "id": "K2_named_add",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "the same 429 plus its name in the whitelist",
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 2.69s",
+    "bitting_line": null
+   },
+   "test_restored_equal": true,
+   "yaml_restored_equal": true
+  },
+  {
+   "id": "K3_promise_dropped",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "the documented 409 removed from the door",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "summary": "1 failed, 2 warnings in 2.47s",
+    "bitting_line": "tests\\test_qoder_ord0476_checkins.py:507: AssertionError"
+   },
+   "test_restored_equal": true,
+   "yaml_restored_equal": true
+  },
+  {
+   "id": "K4_stale_whitelist",
+   "expect": "red",
+   "got": "red",
+   "met": true,
+   "why": "a code named in the whitelist but not documented",
+   "pytest": {
+    "rc": 1,
+    "verdict": "red",
+    "summary": "1 failed, 2 warnings in 3.14s",
+    "bitting_line": "tests\\test_qoder_ord0476_checkins.py:513: AssertionError"
+   },
+   "test_restored_equal": true,
+   "yaml_restored_equal": true
+  },
+  {
+   "id": "K5_whole_file",
+   "expect": "green",
+   "got": "green",
+   "met": true,
+   "why": "the rest of this file",
+   "pytest": {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "11 passed, 2 warnings in 3.01s",
+    "bitting_line": null
+   }
+  }
+ ],
+ "other_five_sites_untouched": [
+  {
+   "site": "backend/tests/test_qoder_ord0402_recycle_bin.py:305",
+   "still_equality_form": true,
+   "line": "assert sorted(added[\"required\"]) == [\"bin_state\", \"deleted_at\"], added",
+   "line_identical_to_tip": true,
+   "file_untouched": true
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0434_share_grants.py:413",
+   "still_equality_form": true,
+   "line": "assert sorted(by_role) == [\"ADMIN\", \"COLLABORATOR\", \"OWNER\"], by_role",
+   "line_identical_to_tip": true,
+   "file_untouched": true
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0444_collections.py:481",
+   "still_equality_form": true,
+   "line": "assert sorted(added[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(added[\"responses\"])",
+   "line_identical_to_tip": true,
+   "file_untouched": true
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0476_checkins.py:499",
+   "still_equality_form": true,
+   "line": "assert sorted(created[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(created[\"responses\"])",
+   "line_identical_to_tip": true,
+   "file_untouched": false
+  },
+  {
+   "site": "backend/tests/test_qoder_ord0496_calendar_export.py:944",
+   "still_equality_form": true,
+   "line": "assert sorted(responses) == [\"200\", \"404\", \"409\"], sorted(responses)",
+   "line_identical_to_tip": true,
+   "file_untouched": true
+  }
+ ],
+ "replacement_text": "    # CMDR 01:24 裁①, applied to this one gate: the read door owes `200` and `409` by name, and any other\n    # code documented here must be named in `named_expansion_get` by the very order that documents it. An\n    # unnamed add is still red, a promised code that disappeared is red on its own line, and a code that is\n    # named but never documented is red too, so the whitelist cannot rot into a list of intentions.\n    promised_get = {\"200\", \"409\"}\n    named_expansion_get: set[str] = set()  # empty as shipped: nothing else is promised on this door\n    seen_get = set(listed[\"responses\"])\n    assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\",\n                                      sorted(promised_get - seen_get), listed[\"responses\"])\n    assert seen_get - promised_get <= named_expansion_get, (\n        \"the read door documents a code this arm was never told about - name it in \"\n        \"named_expansion_get in the same order that documents it\",\n        sorted(seen_get - promised_get - named_expansion_get))\n    assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\",\n                                             sorted(named_expansion_get - seen_get))"
+}
