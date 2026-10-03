@@ -1980,11 +1980,19 @@ def _generic_compose_plans(
         operation_key=f"generic-compose:{journey.id}",
     ).snapshot
     bounded_orders = tuple(permutations(selected_ids))
+    # Mobility remains the primary physical constraint.  When two orders carry
+    # the same measured travel burden, preserve the already computed strategy
+    # ranking as the deterministic tie-break so LEARNED_SOFT evidence can cause
+    # a real order change instead of disappearing behind Place.id.
+    strategy_rank = {place_id: index for index, place_id in enumerate(selected_ids)}
     ordered_ids = min(
         bounded_orders,
-        key=lambda order: sum(
-            mobility_provider.estimate_minutes(order[index - 1], order[index])
-            for index in range(1, len(order))
+        key=lambda order: (
+            sum(
+                mobility_provider.estimate_minutes(order[index - 1], order[index])
+                for index in range(1, len(order))
+            ),
+            tuple(strategy_rank.get(place_id, len(selected_ids)) for place_id in order),
         ),
     )
     journey_start = parse_dt(journey.start_at)
