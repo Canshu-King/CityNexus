@@ -1,0 +1,32 @@
+{
+ "tip_start": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+ "tip_end": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+ "preimage_audit_start": {
+  "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+  "tip_arm_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+  "tip_d76_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+  "tip_yaml_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162",
+  "tip_deadline_blob": "be24fbdeb7095d4e7cd558c58a7ac98197f69990",
+  "pre_exemption_is_still_by_basename": true,
+  "pre_arm_has_no_whitelist": true,
+  "needle_count_on_tip": 1,
+  "main_anchor_present": true,
+  "stay_anchor_present": true,
+  "yaml_checkin_section_present": true
+ },
+ "preimage_audit_end": null,
+ "cells": {
+  "g4": {
+   "base": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+   "arm_commit": "6cac30fb6638570abd5424b1dce0146b8a06c65d",
+   "head": "c23cb0a302c42ab2dc832743441b3d7da7461308",
+   "artifact_blob": "fd68c01a2ed8f6e217df0af903a62ff65b547f86"
+  },
+  "ord0476": {
+   "base": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+   "head": "f3e2e80acc3caed73576dc65e514fe698ebb2b64"
+  }
+ },
+ "final_node_runs": {},
+ "note": []
+}
