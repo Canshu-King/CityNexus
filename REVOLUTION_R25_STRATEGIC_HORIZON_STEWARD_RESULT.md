@@ -29,7 +29,7 @@ created merely to strengthen the receipt.
 - branch: `codex/revolution-realtrip-recovery`
 - worktree: `D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery`
 - starting source SHA: `0290fbd88d3958a321bc2610c103f9b811dfb984`
-- final experimental SHA: `9a9ef63cf52be2bddff7578998a8192f0716c7d6`
+- final experimental SHA: `096b196fdd67de2663764b4cf0f8c49a23a8d679`
 - remote: `origin/codex/revolution-realtrip-recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
 - Agent runtime: `HERMES_COMPAT_ENDPOINT`, provider `hermes`, model `cn:glm-5.3-flash`
