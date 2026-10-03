@@ -51,6 +51,23 @@ const PLAN_SOURCE: Record<string, Label> = {
   MANUAL: { zh: "来自一次人工改动", en: "From a manual change" },
 };
 
+/**
+ * ORD-0551: what the two extraction routes (`inbox/text-extract`, `inbox/vision`) answer as their
+ * top-level `status`. Before this family existed the fallback branch of the workbench printed the
+ * reply's own token, so a supplier failure reached a Chinese screen as 「提取状态： FAILED_EXTERNAL」.
+ * The three names here are the whole set those routes can write; anything new falls to the labelled-raw
+ * channel and shows up as a gap. No invented states: these sentences describe what happened, they do
+ * not promise a retry policy or rename a refusal the contract already decides elsewhere.
+ */
+const EXTRACTION_STATUS: Record<string, Label> = {
+  READY: { zh: "读出来了，等你过目", en: "read out, waiting for you to check it" },
+  NOT_CONFIGURED: { zh: "这台服务器没接读取服务", en: "this server has no reader connected" },
+  FAILED_EXTERNAL: {
+    zh: "外部服务这次没给回话，这条没读出来",
+    en: "the outside service did not reply this time, so nothing was read out of it",
+  },
+};
+
 /** ORD-0432: the words `feasibility_envelope.risk_reason_codes` can hold. A trip with an open
  *  MAJOR or CRITICAL event is not "nothing to see", and the reason has to be readable. */
 const RISK_REASON: Record<string, Label> = {
@@ -176,6 +193,10 @@ export function executionStateLabel(value: unknown, zh?: boolean | string | null
 
 export function planSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(PLAN_SOURCE, value, zh);
+}
+
+export function extractionStatusLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(EXTRACTION_STATUS, value, zh);
 }
 
 export function riskReasonLabel(value: unknown, zh?: boolean | string | null): string {
