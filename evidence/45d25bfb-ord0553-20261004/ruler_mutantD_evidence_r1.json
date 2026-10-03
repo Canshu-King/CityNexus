@@ -1,0 +1,100 @@
+{
+ "generatedBy": "45d25bfb",
+ "ruler": "authoritative-status-vocabulary-r1",
+ "run": "statusq-mutantD-enum-back",
+ "contract_line": "status: Literal[\"PLANNED\", \"READY\", \"NOT_STARTED\", \"EN_ROUTE\", \"ARRIVED\", \"IN_PROGRESS\", \"ACTIVE\", \"COMPLETED\", \"SKIPPED",
+ "contract_statuses": [
+  "PLANNED",
+  "READY",
+  "NOT_STARTED",
+  "EN_ROUTE",
+  "ARRIVED",
+  "IN_PROGRESS",
+  "ACTIVE",
+  "COMPLETED",
+  "SKIPPED",
+  "CANCELLED"
+ ],
+ "state_key_map": {
+  "NOT_STARTED": "exec.state.notStarted",
+  "EN_ROUTE": "exec.state.enRoute",
+  "ARRIVED": "exec.state.arrived",
+  "IN_PROGRESS": "exec.state.inProgress",
+  "ACTIVE": "exec.state.active",
+  "COMPLETED": "exec.state.completed",
+  "SKIPPED": "exec.state.skipped"
+ },
+ "resolved_wordings": {
+  "PLANNED": {
+   "via": "displayVocabulary EXECUTION_STATE",
+   "zh": "计划中",
+   "en": "Planned"
+  },
+  "READY": {
+   "via": "displayVocabulary EXECUTION_STATE",
+   "zh": "可以开始了",
+   "en": "Ready to start"
+  },
+  "NOT_STARTED": {
+   "via": "i18n exec.state.notStarted",
+   "zh": "未开始",
+   "en": "Not started"
+  },
+  "EN_ROUTE": {
+   "via": "i18n exec.state.enRoute",
+   "zh": "出发中",
+   "en": "On the way"
+  },
+  "ARRIVED": {
+   "via": "i18n exec.state.arrived",
+   "zh": "已到达",
+   "en": "Arrived"
+  },
+  "IN_PROGRESS": {
+   "via": "i18n exec.state.inProgress",
+   "zh": "进行中",
+   "en": "In progress"
+  },
+  "ACTIVE": {
+   "via": "i18n exec.state.active",
+   "zh": "活跃",
+   "en": "Active"
+  },
+  "COMPLETED": {
+   "via": "i18n exec.state.completed",
+   "zh": "已完成",
+   "en": "COMPLETED"
+  },
+  "SKIPPED": {
+   "via": "i18n exec.state.skipped",
+   "zh": "已跳过",
+   "en": "Skipped"
+  },
+  "CANCELLED": {
+   "via": "displayVocabulary EXECUTION_STATE",
+   "zh": "已取消",
+   "en": "Cancelled"
+  }
+ },
+ "fallback_labels": {
+  "PLANNED": {
+   "zh": "计划中",
+   "en": "Planned"
+  },
+  "READY": {
+   "zh": "可以开始了",
+   "en": "Ready to start"
+  },
+  "CANCELLED": {
+   "zh": "已取消",
+   "en": "Cancelled"
+  }
+ },
+ "file_bytes": {
+  "contract": 48871,
+  "stateMap": 3483,
+  "i18n": 112899,
+  "vocabulary": 11206,
+  "panel": 5542
+ }
+}
