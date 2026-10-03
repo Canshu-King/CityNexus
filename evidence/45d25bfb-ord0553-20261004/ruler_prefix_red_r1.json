@@ -1,0 +1,80 @@
+{
+ "generatedBy": "45d25bfb",
+ "ruler": "authoritative-status-vocabulary-r1",
+ "run": "statusq-r5-at-269374e8-prefix-red",
+ "contract_line": "status: Literal[\"PLANNED\", \"READY\", \"NOT_STARTED\", \"EN_ROUTE\", \"ARRIVED\", \"IN_PROGRESS\", \"ACTIVE\", \"COMPLETED\", \"SKIPPED",
+ "contract_statuses": [
+  "PLANNED",
+  "READY",
+  "NOT_STARTED",
+  "EN_ROUTE",
+  "ARRIVED",
+  "IN_PROGRESS",
+  "ACTIVE",
+  "COMPLETED",
+  "SKIPPED",
+  "CANCELLED"
+ ],
+ "state_key_map": {
+  "NOT_STARTED": "exec.state.notStarted",
+  "EN_ROUTE": "exec.state.enRoute",
+  "ARRIVED": "exec.state.arrived",
+  "IN_PROGRESS": "exec.state.inProgress",
+  "ACTIVE": "exec.state.active",
+  "COMPLETED": "exec.state.completed",
+  "SKIPPED": "exec.state.skipped"
+ },
+ "resolved_wordings": {
+  "PLANNED": {
+   "via": "displayVocabulary EXECUTION_STATE",
+   "zh": "计划中",
+   "en": "Planned"
+  },
+  "NOT_STARTED": {
+   "via": "i18n exec.state.notStarted"
+  },
+  "EN_ROUTE": {
+   "via": "i18n exec.state.enRoute",
+   "zh": "出发中",
+   "en": "EN ROUTE"
+  },
+  "ARRIVED": {
+   "via": "i18n exec.state.arrived",
+   "zh": "已到达",
+   "en": "ARRIVED"
+  },
+  "IN_PROGRESS": {
+   "via": "i18n exec.state.inProgress",
+   "zh": "进行中",
+   "en": "IN PROGRESS"
+  },
+  "ACTIVE": {
+   "via": "i18n exec.state.active",
+   "zh": "活跃",
+   "en": "ACTIVE"
+  },
+  "COMPLETED": {
+   "via": "i18n exec.state.completed",
+   "zh": "已完成",
+   "en": "COMPLETED"
+  },
+  "SKIPPED": {
+   "via": "i18n exec.state.skipped",
+   "zh": "已跳过",
+   "en": "SKIPPED"
+  }
+ },
+ "fallback_labels": {
+  "PLANNED": {
+   "zh": "计划中",
+   "en": "Planned"
+  }
+ },
+ "file_bytes": {
+  "contract": 48871,
+  "stateMap": 3483,
+  "i18n": 112821,
+  "vocabulary": 10710,
+  "panel": 5542
+ }
+}
