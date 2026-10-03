@@ -318,7 +318,7 @@ function record(arm, pass, detail) {
     });
     record("book_screen/the_ticket_kind_is_drawn_from_the_word_table",
       perCard.every((entry) => entry.word_on_card === entry.word_expected),
-      { cards: perCard, vocabulary_source: "review/ord0504/book_screen_facts_r1.js:298" });
+      { cards: perCard, vocabulary_source: "review/ord0504/book_screen_facts_r1.js:308" });
     await opened.context.close();
   }
 
