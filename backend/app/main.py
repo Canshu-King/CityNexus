@@ -6338,10 +6338,23 @@ def _deepseek_client(*, vision: bool = False) -> DeepSeekResponsesClient | None:
     )
 
 
-@app.post("/api/v1/journeys/{journey_id}/inbox/text-extract", status_code=201)
+@app.post(
+    "/api/v1/journeys/{journey_id}/inbox/text-extract",
+    status_code=201,
+    responses={
+        502: {
+            "description": (
+                "The extraction provider failed this request. The body still names the machine status"
+                " (FAILED_EXTERNAL) and the provider's own reason; no draft was created, and none is"
+                " claimed."
+            )
+        }
+    },
+)
 def extract_journey_reservation_text(
     journey_id: UUID,
     payload: ReservationTextExtractionRequest,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
@@ -6355,6 +6368,10 @@ def extract_journey_reservation_text(
             journey_context=journey_interpreter_context(session, journey),
         )
     except DeepSeekResponsesError as exc:
+        # ORD-0551: a supplier failure creates nothing, so answering 201 for it told the caller a
+        # draft had been made. The machine status stays in the body -- it is what the display
+        # vocabulary translates -- but the status code now says what happened upstream.
+        response.status_code = 502
         return {"status": "FAILED_EXTERNAL", "draft": None, "provider": "deepseek", "reason": str(exc)}
     extracted, _ = prepare_semantic_intake(session, journey, extracted)
     unresolved = _reservation_unresolved(extracted)
@@ -6375,10 +6392,22 @@ def extract_journey_reservation_text(
     return {"status": "READY", "draft": _draft_payload(draft), "provider": "deepseek"}
 
 
-@app.post("/api/v1/journeys/{journey_id}/inbox/vision", status_code=201)
+@app.post(
+    "/api/v1/journeys/{journey_id}/inbox/vision",
+    status_code=201,
+    responses={
+        502: {
+            "description": (
+                "The extraction provider failed this image read. The body names the machine status"
+                " (FAILED_EXTERNAL) and the provider's reason; no draft was created."
+            )
+        }
+    },
+)
 def extract_journey_reservation_image(
     journey_id: UUID,
     payload: ReservationVisionRequest,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
@@ -6401,6 +6430,8 @@ def extract_journey_reservation_image(
             journey_context=journey_interpreter_context(session, journey),
         )
     except DeepSeekResponsesError as exc:
+        # ORD-0551: same reason as the text route -- nothing was created here.
+        response.status_code = 502
         return {"status": "FAILED_EXTERNAL", "draft": None, "provider": "deepseek", "reason": str(exc)}
     extracted, _ = prepare_semantic_intake(session, journey, extracted)
     unresolved = _reservation_unresolved(extracted)

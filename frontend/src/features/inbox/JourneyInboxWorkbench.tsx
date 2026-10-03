@@ -7,7 +7,7 @@ import {
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import { formatWhen } from "../../lib/formatWhen";
-import { summaryHeldLabel } from "../../lib/displayVocabulary";
+import { extractionStatusLabel, summaryHeldLabel } from "../../lib/displayVocabulary";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
   bookingStatusLabel,
@@ -95,13 +95,19 @@ type ApplyResponse = {
 class InboxRequestRejected extends Error {
   readonly status: number;
   readonly content_type: string;
-  constructor(status: number, contentType: string) {
+  /** ORD-0551: a rejected reply from the extraction routes still names its machine status in the
+   *  body (that is how the server says FAILED_EXTERNAL without inventing a second vocabulary). The
+   *  body used to be dropped here, which left the catch sites with nothing but the HTTP number --
+   *  so the traveller's sentence disappeared at exactly the moment it was needed. */
+  readonly payload: Record<string, unknown> | null;
+  constructor(status: number, contentType: string, payload: Record<string, unknown> | null = null) {
     /* Internal vocabulary lives in this message and in the code slots only; every rendered sentence on
        this surface comes from copyFor. */
     super(`inbox request rejected (${status})`);
     this.name = "InboxRequestRejected";
     this.status = status;
     this.content_type = contentType;
+    this.payload = payload;
   }
 }
 
@@ -115,7 +121,19 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const contentType = response.headers.get("content-type") ?? "";
   const raw = await response.text().catch(() => null);
   if (!response.ok) {
-    throw new InboxRequestRejected(response.status, contentType);
+    let rejectedPayload: Record<string, unknown> | null = null;
+    if (raw !== null && contentType.includes("application/json")) {
+      try {
+        const parsed: unknown = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          const envelope = parsed as Record<string, unknown>;
+          rejectedPayload = (envelope.error ?? envelope) as Record<string, unknown>;
+        }
+      } catch {
+        rejectedPayload = null;
+      }
+    }
+    throw new InboxRequestRejected(response.status, contentType, rejectedPayload);
   }
   if (raw === null || raw.trim() === "") {
     throw new OriginResponseUnusableError(response.status, contentType || null, "empty");
@@ -302,6 +320,17 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   /* One lookup per failure, two products of it: the sentence the traveller reads (copyFor's own table)
      and the machine line the code slots show. Neither of them is read off `error.message`. */
   const deviceCopy = (error: unknown): string => copyFor(classifyReadFailure(error), zh).body;
+  /* ORD-0551: a supplier failure answers 502, so it reaches the screen as a rejection instead of as a
+     reply body. The rejected reply still carries the machine status the server named, and that status
+     is what has to be translated here -- leaving only an HTTP number, or leaving the line empty, would
+     be the same silence with a different number on it. */
+  const extractionFailureCopy = (error: unknown): string => {
+    const named =
+      error instanceof InboxRequestRejected && error.payload ? String(error.payload.status ?? "") : "";
+    return named
+      ? `${t("inbox.extractionStatus")} ${extractionStatusLabel(named, zh)}`
+      : deviceCopy(error);
+  };
   const deviceFields = (error: unknown): string => {
     const a = classifyReadFailure(error);
     /* The classification carries the status; the media type is this device's own header read, and the
@@ -423,8 +452,11 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           ? t("inbox.notConfigured")
           /* ORD-0323 form F2 (CMDR 04:53): `result.reason` is the reply's own sentence, and it was being
              used as this screen's status line.  What the traveller reads now is this device's copy plus the
-             reply's machine status; the sentence is not re-labelled as our explanation of it. */
-          : `${t("inbox.extractionStatus")} ${result.status}`,
+             reply's machine status; the sentence is not re-labelled as our explanation of it.
+             ORD-0551: "the reply's machine status" was printing the token itself, so a supplier failure
+             reached a Chinese screen as 「提取状态： FAILED_EXTERNAL」. The status now goes through the
+             display vocabulary, which keeps the fact and drops the implementation word. */
+          : `${t("inbox.extractionStatus")} ${extractionStatusLabel(result.status, zh)}`,
     );
   };
 
@@ -440,7 +472,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(deviceCopy(error));
+      setMessage(extractionFailureCopy(error));
     } finally {
       setBusy(false);
     }
@@ -461,7 +493,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(deviceCopy(error));
+      setMessage(extractionFailureCopy(error));
     } finally {
       setBusy(false);
     }
