@@ -1,10 +1,10 @@
 {
   "run": "ord0520glass-20261003T133743Z",
-  "head": "a43ccd41f9b673cdc4f3d85160b21b8f376c3bd8",
+  "head": "77c21347397e3aef09ed85ad80a181eded6463b4",
   "frontendPort": "4833",
   "backendPort": "4834",
   "arm": "G6",
-  "journeyId": "6627b265-9545-4a8a-91e8-8803ffb85e9d",
+  "journeyId": "262473ac-e65a-47b8-accf-440cdd67109b",
   "device_side_refusal_sentence": "必须写原因。空着会被拒绝，而不是存下一趟「不知道为什么就结束」的行程。",
   "post_requests_from_the_empty_box": 0,
   "door_answer": {
@@ -14,7 +14,7 @@
         "code": "VALIDATION_ERROR",
         "message": "Request validation failed",
         "message_key": "request.invalid",
-        "trace_id": "91674ff0-7922-4613-a362-1129e9d02a51",
+        "trace_id": "bfc872c8-7e80-475b-ab00-693ae849650f",
         "details": {
           "errors": [
             {
@@ -28,7 +28,7 @@
             }
           ]
         },
-        "error_receipt_id": "CNX-W2B66YGK"
+        "error_receipt_id": "CNX-N4J5KZAN"
       }
     }
   },

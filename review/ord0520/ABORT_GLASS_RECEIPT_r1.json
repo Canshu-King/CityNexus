@@ -1,8 +1,8 @@
 {
   "generated_by": "89f2e2d6",
   "order": "ORD-0520 residual: the sentences read off a real screen",
-  "candidate_head": "a43ccd41f9b673cdc4f3d85160b21b8f376c3bd8",
-  "candidate_tree_sha_short": "a43ccd41 2026-10-03 21:48:30 +0800 ORD-0520 glass arm 7: read the trip's own entry on the screen that carries it, after the status move",
+  "candidate_head": "77c21347397e3aef09ed85ad80a181eded6463b4",
+  "candidate_tree_sha_short": "77c21347 2026-10-03 22:10:44 +0800 ORD-0520 glass helper: pin its stdout to UTF-8, because a GBK console turned the recorded abort_reason into mojibake (the arm's assertions never read that field, but the receipt must not lie)",
   "base_of_this_hand": "702a4c7247cd9ba636711696232eccd2adb1cd96",
   "runs": {
     "before_fix_six_arms": {
@@ -97,7 +97,7 @@
       "unexpected": 0,
       "flaky": 0,
       "skipped": 0,
-      "wall_seconds": 6.3,
+      "wall_seconds": 5.92,
       "arms": [
         {
           "title": "ord0520g-1-the-consequence-is-said-before-the-press — 中止之前那句后果要真的在屏上",
@@ -381,47 +381,47 @@
     {
       "name": "review/ord0520/glass/g1_consequence_sentence.json",
       "bytes": 2343,
-      "sha1": "f36027314d2c6eb76e7d347656239b13853d051b"
+      "sha1": "1013c32eaba5f5333811f0164274d48fbe9f6ffd"
     },
     {
       "name": "review/ord0520/glass/g2-after-press.png",
-      "bytes": 64831,
-      "sha1": "1137812e03cf1fe3ff91f8e4c971fa0ab88b6e76"
+      "bytes": 65046,
+      "sha1": "c722094477f8a4b3f6aa873122172f11652af1c9"
     },
     {
       "name": "review/ord0520/glass/g2_press_writes_and_reads_back.json",
       "bytes": 2387,
-      "sha1": "dd5b52005d7e189a044969b82e938742cc66f9a1"
+      "sha1": "17f0427f0c9ac26000ae55c1fd56e13a97eca61e"
     },
     {
       "name": "review/ord0520/glass/g3-live-excluded.png",
-      "bytes": 31397,
-      "sha1": "73aff0b5b7c513161dccc53eee4afa22ef7e1b0a"
+      "bytes": 30689,
+      "sha1": "8701027bfb8bb7d77665f71f47817e2468af7d72"
     },
     {
       "name": "review/ord0520/glass/g3-live-included.png",
-      "bytes": 65498,
-      "sha1": "6b0810289b7486bbfc37d7e410ff101d32729929"
+      "bytes": 66159,
+      "sha1": "c1b82a70fd110d9e96e6c71692b759c55a86d150"
     },
     {
       "name": "review/ord0520/glass/g3_live_screen_decision.json",
       "bytes": 1721,
-      "sha1": "49c29d4ae37a6c9d3a24ebc4bb3c049947c55e78"
+      "sha1": "b3237e6cec9ef5ccc10ad4e6097d58c51d1e3c1b"
     },
     {
       "name": "review/ord0520/glass/g4_abort_is_not_discard.json",
-      "bytes": 1162,
-      "sha1": "e3595b640769cc71664ac38d30f662f3e8100811"
+      "bytes": 1210,
+      "sha1": "52eae301af9100af87e575f49c728a2212ce316f"
     },
     {
       "name": "review/ord0520/glass/g5-stale-window-refusal.png",
-      "bytes": 52269,
-      "sha1": "851b4889bce94f1c07687e6a6e5607151688393e"
+      "bytes": 52198,
+      "sha1": "b758dc1aae72ea63dd90f96e0350d3fae96c0df2"
     },
     {
       "name": "review/ord0520/glass/g5_refusal_said_on_the_glass.json",
       "bytes": 2684,
-      "sha1": "b87849ce809fc0981206f6873b460234d2838374"
+      "sha1": "13b24aa85e0da10c79afbc524d74ea9c32027575"
     },
     {
       "name": "review/ord0520/glass/g6-empty-reason.png",
@@ -431,17 +431,17 @@
     {
       "name": "review/ord0520/glass/g6_empty_reason_refused.json",
       "bytes": 1319,
-      "sha1": "2cc21b623b0a7f23378ec5dfec51b6d93f239457"
+      "sha1": "7ec6acb6c52374107457b0b24e39df11682fcfe2"
     },
     {
       "name": "review/ord0520/glass/g7-status-moved-still-excluded.png",
-      "bytes": 58713,
-      "sha1": "53ddac9f747b6006477bd125924ab5565e7f8409"
+      "bytes": 58635,
+      "sha1": "d040fcb7b4d365200fc8479929c2768e0e953da4"
     },
     {
       "name": "review/ord0520/glass/g7_status_move_keeps_it_out.json",
-      "bytes": 1658,
-      "sha1": "3bd1c94b157a57d49e791f06e70b45dc2395a5e3"
+      "bytes": 1640,
+      "sha1": "2297852db1a959404c5824d80f5de64ed0d20235"
     }
   ]
 }

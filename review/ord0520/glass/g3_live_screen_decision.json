@@ -1,17 +1,17 @@
 {
   "run": "ord0520glass-20261003T133743Z",
-  "head": "a43ccd41f9b673cdc4f3d85160b21b8f376c3bd8",
+  "head": "77c21347397e3aef09ed85ad80a181eded6463b4",
   "frontendPort": "4833",
   "backendPort": "4834",
   "arm": "G3",
   "aborted_trip": {
-    "journeyId": "79d51943-04d0-4186-bda3-5fc9d3f6f41d",
+    "journeyId": "4e1ddd4f-5ebd-436b-8d17-6690d2e40eb2",
     "wire_live_view": {
       "included": false,
       "reason_code": "JOURNEY_ABORTED"
     },
     "painted_notice": "这趟行程已被中止，所以「实时行程」不展示它。这个判定来自服务器给出的字段，不是这台设备自己按状态筛的。",
-    "painted_facts": "你当时的原因：中止之后再读实时屏（g3-480038）",
+    "painted_facts": "你当时的原因：中止之后再读实时屏（g3-662341）",
     "live_content_nodes": 0,
     "reachability": {
       "box": {
@@ -26,7 +26,7 @@
     }
   },
   "live_trip": {
-    "journeyId": "8d840a70-117b-4584-8e4a-d7a2296a3213",
+    "journeyId": "79cb7260-3130-42f6-99a4-2f776cc48913",
     "wire_live_view": {
       "included": true,
       "reason_code": null
@@ -35,7 +35,7 @@
   },
   "decision_source": "the notice renders from the live_view field on the wire; neither screen filters status",
   "painted_layer_excluded": {
-    "visual": "菜单 / 实时行程 跟随系统 EN TI 已中止 中止过的趟 g3-480038 你当时的原因：中止之后再读实时屏（g3-480038） 中止于 10月3日 21:58 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "visual": "菜单 / 实时行程 跟随系统 EN TI 已中止 中止过的趟 g3-662341 你当时的原因：中止之后再读实时屏（g3-662341） 中止于 10月3日 22:11 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
     "visualLeaves": 17,
     "hits": []
   },

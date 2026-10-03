@@ -1,16 +1,16 @@
 {
   "run": "ord0520glass-20261003T133743Z",
-  "head": "a43ccd41f9b673cdc4f3d85160b21b8f376c3bd8",
+  "head": "77c21347397e3aef09ed85ad80a181eded6463b4",
   "frontendPort": "4833",
   "backendPort": "4834",
   "arm": "G4",
-  "travelerId": "d14791a6-7710-42dc-b105-fdd75bf13892",
-  "aborted_trip": "bcb78030-ba8f-4ae4-a765-a187faf94969",
-  "discarded_trip": "b2cd742e-2f94-4a0a-ab4f-b69547c0bbb7",
+  "travelerId": "b1fea335-881a-432f-b4f2-b05c5f96aaf1",
+  "aborted_trip": "2916183b-1779-4080-b0aa-dc7c6322474a",
+  "discarded_trip": "512b96e3-59a7-44ea-aea6-b9c1c826545c",
   "list_door": {
     "status": 200,
     "rows_for_this_traveller": [
-      "bcb78030-ba8f-4ae4-a765-a187faf94969"
+      "2916183b-1779-4080-b0aa-dc7c6322474a"
     ],
     "aborted_row": {
       "status": "CANCELLED",
@@ -25,12 +25,13 @@
     "scoped": {
       "status": 200,
       "ids": [
-        "b2cd742e-2f94-4a0a-ab4f-b69547c0bbb7"
+        "512b96e3-59a7-44ea-aea6-b9c1c826545c"
       ]
     },
     "global": {
       "status": 200,
       "ids": [
+        "512b96e3-59a7-44ea-aea6-b9c1c826545c",
         "b2cd742e-2f94-4a0a-ab4f-b69547c0bbb7",
         "9ee018ad-a453-4b33-b175-cdeb1f2d50ee",
         "c1e06788-1ad0-46b6-8798-0866d25b85f8",
