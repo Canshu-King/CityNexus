@@ -16588,6 +16588,53 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0504 单 D（0 产品字节）· 裁语①甲：把外部逆向分析件路径从我自己的证据里涂掉，顺手修掉我那两枚"按工作树打、不按 commit 打"的读数；附裁语②的 13 枚烂引用名单（车道 da46954a）
+
+**〇、令与原话**
+
+- 号令者 02:10 三条：**① 甲**——「你只动自己的证据件：把绝对路径涂成『库外逆向分析件，路径不录』，保留每枚 BAD 行的判定与计数，重跑尺证明分母与两代总数不变。0 产品字节。（乙那三枚文件不是你的，不动。）」**②**——单 C 那 13 枚仍坏的引用派回各车道，我只把名单列给收件口，不代改别人文件。**③**——单 B 落地后重跑两代比对，跑完报。
+- 你 02:55 点名要的那句修正读数在第二节（尺的读数按工作树打、不按 commit 打）。现尖现读 = `b7c9d799917d093405ac73771d6a16180ce34dbe`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。候选枝 `refs/heads/review/da46954a-ord0504d-redact-external-r1`，头 = `4ef78d78255dd30cb59ebed2189c97020bb36a94`（`git ls-remote` 逐字回读，与本机 `git rev-parse HEAD` 相同），切的基座 = `4fdd6345c0bfef36f12468390baad50946aad2b6`。
+
+**一、涂了什么、留下什么（全部现数在 `review/ord0504/redact_external_reference_r1.txt`）**
+
+- 出现次数按枚现取，不再靠我口算：`review/ord0504/citation_scan_C_tip_r1.json` 12 处、`review/ord0504/citation_scan_C_tip_r1.txt` 6 处、`review/ord0504/citation_scan_C_fix_r1.json` 12 处、`review/ord0504/citation_scan_C_fix_r1.txt` 6 处 ⇒ 合计 36 处（报告逐枚行 `review/ord0504/redact_external_reference_r1.txt:4`、`:14`、`:18`、`:28`）。**这里更正我上一纸**：补充块里我写"24 行"，那只数了带 `D:/` 前缀的绝对写法，漏了裸文件名那一形；真数是 36。
+- 保留的东西逐枚可核：每枚 BAD 行的被引串只剩一个不携载路径的标记，行号 `:150` 原位留着，判定与 `citing` 路径不变——所以"重跑尺后逐枚 (citing, verdict) 序列与 BAD 名单全等"是量出来的：两代各报 `per-row (citing, verdict) sequences identical: True` 与 `BAD roster identical: True`（`review/ord0504/redact_external_reference_r1.txt:8-9` 与 `:22-23`）。
+- 分母与两代总数不变：基座代 `files scanned=317 / with citations=41 / checked=102 / hard=14`，totals `{"FILE_NOT_TRACKED": 12, "OK": 80, "SYMBOL_NOT_NEAR_BUT_IN_FILE": 8, "SYMBOL_NOT_AT_LINE": 2}`（`review/ord0504/redact_external_reference_r1.txt:6-7`）；单 C 那代 `checked=102 / hard=13`，totals `{"FILE_NOT_TRACKED": 11, "OK": 81, ...}`（`review/ord0504/redact_external_reference_r1.txt:20-21`）。
+- 幂等：同一件连涂两遍，第二遍动 0 字节（`review/ord0504/redact_external_reference_r1.txt:4` 那行末 `idempotent=True`）；四件写盘后自检 `external path present=False | marker present=True`（同报告 `:11`、`:15`、`:25`、`:29`）。
+- 0 产品字节：D 对基座的差集里非 `review/` 路径为 0 枚（`git diff --name-only 4fdd6345c0bfef36f12468390baad50946aad2b6 4ef78d78255dd30cb59ebed2189c97020bb36a94 | grep -v '^review/' | wc -l` = 0）。乙那三枚别人的产品文件我一个字没动。
+
+**二、我顺手修掉的一格仪器缺陷（你点名要的那句）**
+
+- 我那两枚读数当初是**按工作树**打的，不是按 commit 打的：件里 `"tree": "working tree"`，意味着只要有人动了树，同一枚尺同一枚引用就再也复现不出我交的那个数。这跟"证据要能复算"是反的，算我纸里的缺陷，不是别人的。
+- 现在两代各钉到 commit：基座代钉 `4fdd6345c0bfef36f12468390baad50946aad2b6` 的前一代 `b168b428f4ed0c9719a1aecf0bb38d98035cec9e`，改动代钉单 C 的头 `00ed2579aac110b61e2f75512518f37deb5a116f`，并逐枚比回原读数（`review/ord0504/redact_external_reference_r1.txt:10` 与 `:24` 那两行 `tree field pinned: … (was: working tree)`）。
+- 钉住之后唯一动的数是 `files_resolvable` 由 10367 变 10374（`review/ord0504/redact_external_reference_r1.txt:20`）。这 7 枚的来路我用数说明，不猜：两 rev 之间 `git diff --name-status` 列到 8 枚路径，其中新增（`--diff-filter=A`）7 枚，正是单 C 那一纸自己加进去的尺、周期件、报告与四份读数；被改的 1 枚是那行注释本身。
+
+**三、裁语②：仍坏的 13 枚名单（派回各车道，我不代改）**
+
+- 每条给：引这行的文件与行号、尺的判定、被引串（外部逆向分析件一律只以标记出现，路径与文件名不录）。逐枚原件在 `review/ord0504/citation_scan_C_fix_r1.json` 的 `hard_rotten`。
+- `backend/app/db/session.py:247` 与 `backend/app/main.py:4904`：`FILE_NOT_TRACKED`，引 `RELATION/relation_and_copy_findings.md:94`（不在本库的别车道文档）。
+- `frontend/src/app/V8Experience.tsx:164`：引 `main.py:5311` 配符号 `_commitment_payload`，裸名撞同名文件 21 枚且无一枚在那一行放着该符号——与我已修的那枚同形制，只差没人点名（要不要我顺手一起修，一句）。
+- `frontend/src/components/PoiCandidateCard.tsx:21`、`frontend/src/features/estimation/estimationLadder.ts:7`、`frontend/src/features/poiimport/PoiImportPanel.tsx:24`：`FILE_NOT_TRACKED`，引的都是库外逆向分析件（标为 `EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150` / `EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150`）。按你 01:51 裁语，这三处属"注释里携载外部素材指路"，归属车道改，我不代改。
+- `frontend/src/features/checkin/footprintRead.ts:15`：`SYMBOL_NOT_AT_LINE`，引 `TripItinerary.tsx:139`，该处 3 行内找不到 `not_asked`/`refused`/`unreachable`。
+- `frontend/src/features/planning/PlanWithAiSheet.tsx:104`：引 `services.py:843`（裸名撞 18 枚，无一命中）。
+- `frontend/src/features/planning/aiGenerationRun.ts:347`：引 `main.py:497-502`（裸名撞 21 枚，无一命中）。
+- `frontend/src/features/progress/journeyProgress.ts:19`：引 `api/citynexus.ts:771`（裸名撞 11 枚，无一命中）。
+- `frontend/src/features/simulation/simulationAdapter.ts:193`：引 `main.py:10721`；`frontend/src/features/studio/planVersionHistoryCopy.ts:17`：引 `main.py:5721`（同形制）。
+- `frontend/src/generated/api.ts:517`：`SYMBOL_NOT_AT_LINE`，引 `backend/app/main.py:11190` 却列了七个不在该行的字段名——这枚在生成物里，改它要连生成流程，请派给归属车道。
+- 另有 8 枚"松"的（符号确在同一文件、只是不在那行，尺记为 `SYMBOL_NOT_NEAR_BUT_IN_FILE`），我没列进这份名单，因为按你的裁语它们是"写得松"不是"指错库"；要一并派就再说一句。
+
+**四、裁语③：单 B 落地已由字节证实，两代重跑随后**
+
+- 落地判据用字节等、不用祖先：现尖上 `frontend/src/features/trip/spendFacts.ts` 的 blob = `5e74a2e257fdad354058a249ca3b7a9a72e7e63a`，与我单 B 枝头同一枚文件逐字相同；周期件在尖上也可取到。你那句"花费面亲测 `JPY 4,800`"与我纸上的期望一致。
+- `review/ord0504/spend_money_fixB_cycle_r1.py` 正在按落地后的那一代重跑（它自己写回两代源码、各自建产物、各自取服务字节见证、跑完还原），跑完读数另纸报你，不在本纸里预填任何未跑的数。
+
+**五、口径**
+
+- 本纸 0 产品字节、0 权威线移动、0 写账本（块交收件口）、0 触碰别人的 worktree/枝/进程、`:8000` `:4781` `:4782` `:4783` `:4787` `:8693` 0 触碰（我这手只在上一手用过自己的 `:8731` `:4931`，交件前已停，现两口 0 监听）；`demo/reset` 0 次；`_preview.db` 0 打开；反编译/竞品素材 0 进仓——本纸就是把这一条用在我自己的证据上，且本纸正文不重录那枚外部文件名。
+- 复现：`cd D:/moodle/_qoder_r_ord0465_20260929/wt && git checkout 4ef78d78255dd30cb59ebed2189c97020bb36a94` → `D:/moodle/CityNexus/.venv/Scripts/python.exe review/ord0504/redact_external_reference_r1.py`（它会重跑两代尺、逐枚比对、并就地写回涂后的四件）；单看分母：`python review/ord0504/shipped_citation_scan_r1.py <任一 commit>`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · ORD-0551 r3 落地后复验：现尖上题面没被冲掉，曝光面没变大
 
 一、这枚块只补一件事：r3 已入账（标题「ORD-0551 r3 重交：曝光那一格判为甲」），我在**落地后的现尖**上把两把尺重跑了一遍。读数现取现写，不复用上枚。
