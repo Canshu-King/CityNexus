@@ -1,0 +1,292 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-03T23:05:23+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0520glass-r1",
+ "candidate_tip": "a3324c4d214e6f402c9a3712bc557ace1afb06f0",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py",
+   "frontend/e2e/qoder-89f2e2d6-ord0520-abort-on-the-glass-r1.spec.ts",
+   "frontend/playwright.89f2e2d6-ord0520-glass.config.ts",
+   "review/ord0520/ABORT_GLASS_PROVENANCE_ord0520glass-20261003T130243Z.json",
+   "review/ord0520/ABORT_GLASS_PROVENANCE_ord0520glass-20261003T133743Z.json",
+   "review/ord0520/ABORT_GLASS_RECEIPT_r1.json",
+   "review/ord0520/ABORT_RESURRECT_PROBE.json",
+   "review/ord0520/GENERATED_CLIENT_DRIFT_r1.json",
+   "review/ord0520/MERGE_PREDICTION_glass_r1.txt",
+   "review/ord0520/abort_glass_consolidate_r1.py",
+   "review/ord0520/abort_glass_provenance_r1.py",
+   "review/ord0520/abort_glass_status_move_r1.py",
+   "review/ord0520/abort_resurrect_probe_r1.py",
+   "review/ord0520/generated_client_drift_r1.py",
+   "review/ord0520/glass/g1-consequence.png",
+   "review/ord0520/glass/g1_consequence_sentence.json",
+   "review/ord0520/glass/g2-after-press.png",
+   "review/ord0520/glass/g2_press_writes_and_reads_back.json",
+   "review/ord0520/glass/g3-live-excluded.png",
+   "review/ord0520/glass/g3-live-included.png",
+   "review/ord0520/glass/g3_live_screen_decision.json",
+   "review/ord0520/glass/g4_abort_is_not_discard.json",
+   "review/ord0520/glass/g5-stale-window-refusal.png",
+   "review/ord0520/glass/g5_refusal_said_on_the_glass.json",
+   "review/ord0520/glass/g6-empty-reason.png",
+   "review/ord0520/glass/g6_empty_reason_refused.json",
+   "review/ord0520/glass/g7-status-moved-still-excluded.png",
+   "review/ord0520/glass/g7_status_move_keeps_it_out.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/services.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "4e7300c12d5dc04c73c547c740e2bfe8170e7995",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_230458",
+  "blob_equality": [
+   {
+    "path": "backend/app/services.py",
+    "candidate_blob": "019bd5c9282abd30378fd6e1fc38773fad2c9cf9",
+    "export_blob": "019bd5c9282abd30378fd6e1fc38773fad2c9cf9",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0520_live_view_survives_status_move_r1.py",
+    "candidate_blob": "e0b68c716667a7c8ce1305b72590e923892151f2",
+    "export_blob": "e0b68c716667a7c8ce1305b72590e923892151f2",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder-89f2e2d6-ord0520-abort-on-the-glass-r1.spec.ts",
+    "candidate_blob": "16f891713bcea8f02acdf049daa5b0434819500f",
+    "export_blob": "16f891713bcea8f02acdf049daa5b0434819500f",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.89f2e2d6-ord0520-glass.config.ts",
+    "candidate_blob": "31035b2597c24f4cfee16a7f0ebae9fc2f247022",
+    "export_blob": "31035b2597c24f4cfee16a7f0ebae9fc2f247022",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/ABORT_GLASS_PROVENANCE_ord0520glass-20261003T130243Z.json",
+    "candidate_blob": "bed68b938d62bbd1b0792ff7ddd64634d3a6f7ac",
+    "export_blob": "bed68b938d62bbd1b0792ff7ddd64634d3a6f7ac",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/ABORT_GLASS_PROVENANCE_ord0520glass-20261003T133743Z.json",
+    "candidate_blob": "e47c58eb52835a0e1f7f70350d59ae5e044b9d90",
+    "export_blob": "e47c58eb52835a0e1f7f70350d59ae5e044b9d90",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/ABORT_GLASS_RECEIPT_r1.json",
+    "candidate_blob": "b75a1c53c84381143d4ccdd515909e8681bcc09c",
+    "export_blob": "b75a1c53c84381143d4ccdd515909e8681bcc09c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/ABORT_RESURRECT_PROBE.json",
+    "candidate_blob": "9af44ff8481b7eeee895abfcdff38eb49628bff9",
+    "export_blob": "9af44ff8481b7eeee895abfcdff38eb49628bff9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/GENERATED_CLIENT_DRIFT_r1.json",
+    "candidate_blob": "f5d92fa019a7e8d10526db888d072a57b38c1431",
+    "export_blob": "f5d92fa019a7e8d10526db888d072a57b38c1431",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/MERGE_PREDICTION_glass_r1.txt",
+    "candidate_blob": "178d77466ff9f43ff05f4797a72a50a365148b50",
+    "export_blob": "178d77466ff9f43ff05f4797a72a50a365148b50",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/abort_glass_consolidate_r1.py",
+    "candidate_blob": "bba07bc074a483cc02e378f0db2413b729eadea8",
+    "export_blob": "bba07bc074a483cc02e378f0db2413b729eadea8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/abort_glass_provenance_r1.py",
+    "candidate_blob": "89cd05404e5cab9e723772f2a42869da3bf66a84",
+    "export_blob": "89cd05404e5cab9e723772f2a42869da3bf66a84",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/abort_glass_status_move_r1.py",
+    "candidate_blob": "cc8bfb2af52b15b0b621312a21b165127d9d9342",
+    "export_blob": "cc8bfb2af52b15b0b621312a21b165127d9d9342",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/abort_resurrect_probe_r1.py",
+    "candidate_blob": "0d73aace576ca17292b7f83252e0d8b6c0af943c",
+    "export_blob": "0d73aace576ca17292b7f83252e0d8b6c0af943c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/generated_client_drift_r1.py",
+    "candidate_blob": "bbe3c11b64a3f866fc387966dac63b624b7a8826",
+    "export_blob": "bbe3c11b64a3f866fc387966dac63b624b7a8826",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g1-consequence.png",
+    "candidate_blob": "1fb31a099aa1b02ead4f87bff739483090e8eac7",
+    "export_blob": "1fb31a099aa1b02ead4f87bff739483090e8eac7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g1_consequence_sentence.json",
+    "candidate_blob": "b0a92176a8deb45b4e01f9f62e0896c03bd8f831",
+    "export_blob": "b0a92176a8deb45b4e01f9f62e0896c03bd8f831",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g2-after-press.png",
+    "candidate_blob": "bcf90b4c8b9f58d727717c6baa07359324c43df2",
+    "export_blob": "bcf90b4c8b9f58d727717c6baa07359324c43df2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g2_press_writes_and_reads_back.json",
+    "candidate_blob": "8f992d3c411249432d655d0a0dddfff9bace5b1a",
+    "export_blob": "8f992d3c411249432d655d0a0dddfff9bace5b1a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g3-live-excluded.png",
+    "candidate_blob": "04173ec75ecc11803d01a6bdb9a05e701c43bd28",
+    "export_blob": "04173ec75ecc11803d01a6bdb9a05e701c43bd28",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g3-live-included.png",
+    "candidate_blob": "ad8a5a662e9a8bf63fc681f9ea157be9b1eac0af",
+    "export_blob": "ad8a5a662e9a8bf63fc681f9ea157be9b1eac0af",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g3_live_screen_decision.json",
+    "candidate_blob": "e1147233603c73373950652b3aa0859c3ffabe8c",
+    "export_blob": "e1147233603c73373950652b3aa0859c3ffabe8c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g4_abort_is_not_discard.json",
+    "candidate_blob": "3d86541a40d47cf35daf7f5d20674197240e9bca",
+    "export_blob": "3d86541a40d47cf35daf7f5d20674197240e9bca",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g5-stale-window-refusal.png",
+    "candidate_blob": "15ecf9005c2637d672f009523799360c884f7961",
+    "export_blob": "15ecf9005c2637d672f009523799360c884f7961",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g5_refusal_said_on_the_glass.json",
+    "candidate_blob": "ee2b9ebe24cf1da7dae053f90bb018140d7bb0c5",
+    "export_blob": "ee2b9ebe24cf1da7dae053f90bb018140d7bb0c5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g6-empty-reason.png",
+    "candidate_blob": "ce382acf9455313f650d3c9ef2877f309eb3015a",
+    "export_blob": "ce382acf9455313f650d3c9ef2877f309eb3015a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g6_empty_reason_refused.json",
+    "candidate_blob": "33d215c20a74933cfb352c11544067597f9ae2a0",
+    "export_blob": "33d215c20a74933cfb352c11544067597f9ae2a0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g7-status-moved-still-excluded.png",
+    "candidate_blob": "c2f8e731398985d43a0c6cfd6f74e7a54ede27c6",
+    "export_blob": "c2f8e731398985d43a0c6cfd6f74e7a54ede27c6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0520/glass/g7_status_move_keeps_it_out.json",
+    "candidate_blob": "f4008aff3d5d19417fd7de440f0a19d23e66632a",
+    "export_blob": "f4008aff3d5d19417fd7de440f0a19d23e66632a",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1730,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1730 tests collected in 7.79s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "a3324c4d214e6f402c9a3712bc557ace1afb06f0",
+  "branches_route": "a3324c4d214e6f402c9a3712bc557ace1afb06f0",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
