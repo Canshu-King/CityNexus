@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-03T20:39:56+0800",
+  "tip": "702a4c7247cd9ba636711696232eccd2adb1cd96",
+  "backend_port": 8806,
+  "snap": "D:/moodle/_qoder_cmdr_snap_702a4c72",
+  "db_copy": "D:/moodle/_qoder_cmdr_0520_live.db",
+  "src_db": "D:/moodle/_qoder_cmdr_priv_0437seed.db",
+  "src_open": "mode=ro + src.backup(dst)",
+  "journey": "22222222-2222-4222-8222-222222222222",
+  "actor": "11111111-1111-4111-8111-111111111111",
+  "sequential_taps": [
+    [
+      "b1",
+      200,
+      0.01,
+      "{\"id\":\"22222222-2222-4222-8222-222222222222\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"title\":\"One Day in Nexus City\",\"city_code\":\"CNX-DEMO\",\"timezone\":\"Asia/Shanghai\","
+    ],
+    [
+      "b2",
+      409,
+      0.0,
+      "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was already aborted.\",\"message_key\":\"request.conflict\",\"trace_id\":\"e260d3cc-9d82-4818-9a3a-7a2597e463d6\",\"details\":{"
+    ],
+    [
+      "b3",
+      409,
+      0.0,
+      "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was already aborted.\",\"message_key\":\"request.conflict\",\"trace_id\":\"57d81cc4-8a61-486b-8577-e190fdd2903a\",\"details\":{"
+    ]
+  ],
+  "audit_counts": [
+    [
+      "activity.completed",
+      3
+    ],
+    [
+      "agent.mission.created",
+      2
+    ],
+    [
+      "agent.run.skipped",
+      2
+    ],
+    [
+      "booking.created",
+      1
+    ],
+    [
+      "journey.aborted",
+      1
+    ],
+    [
+      "journey.outcome.recorded",
+      7
+    ],
+    [
+      "journey.started",
+      1
+    ],
+    [
+      "payment.capture.succeeded",
+      1
+    ],
+    [
+      "plan.selected",
+      1
+    ],
+    [
+      "plans.generated",
+      10
+    ]
+  ],
+  "journey_state": [
+    "CANCELLED",
+    "2026-10-03T12:39:56.005042+00:00",
+    "cmdr tap b1"
+  ]
+}
