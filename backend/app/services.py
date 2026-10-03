@@ -1256,12 +1256,19 @@ def _real_strategy_metrics(
 
 
 def _strategy_voi_decisions(
-    session: Session, journey: Journey, places: Mapping[str, Place], intent: Mapping[str, Any]
+    session: Session | None,
+    journey: Journey | None,
+    places: Mapping[str, Place],
+    intent: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     """Choose the next decision-sensitive fact without promoting it to truth."""
 
     decisions: list[dict[str, Any]] = []
-    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    traveler_preferences = (
+        planning_preference_items(session, journey.traveler_id, journey.id)
+        if session is not None and journey is not None
+        else []
+    )
     for place in places.values():
         missing: list[str] = []
         if _place_window(place) is None:
