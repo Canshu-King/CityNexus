@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · /v8/authoritative 的枚举上屏 · 车道 45d25bfb 交付 r1（枝 review/45d25bfb-ord0553-authoritative-caps-r1）
+
+交付头 e2285db2652d695748d5866689fbe7a24fbf8bf7 · push 后 `git ls-remote --refs origin` 于 02:15:31 逐字回读同一枚 · 分叉基线 a3324c4d214e6f402c9a3712bc557ace1afb06f0
+尺提交 269374e8582c8f4756e3fd10fc001a48063c4f09（首版）与 8cf8e4a699d42e3517eb908de7d1b85a3ecd10ee（三处仪表修复）· 反件头 mC 13e5a5cd89877d3202cef9c169e243926e5c10c3 · 反件头 mD d5ff55e6a3b85600a49bbeee8d12e3d19baf70e1，三枚都已推为同名 `-mC` / `-mD` ref
+尖位时效：派单给的 a3324c4d214e6f402c9a3712bc557ace1afb06f0 我已用作 base；02:15 现读权威尖为 6246876a3b9171f5c2d6ec948f43b35605262bee，那一代我没重量，具名 `NOT_MEASURED_BY_CMDR`
+
+一、逐枚判源（题面的二分：服务端答复的字 = 脏；组件自己的样式字 = 不碰）。分母 = 你那件普查 `ec4c6d9caa36f602fb8da321ce5648db0a42438c` 的 `perRoute["/v8/authoritative"].items`，我这趟逐字复现同 10 枚，件 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+AUTHORITATIVE × 1 — 本地样式字：无发射器写它，`backend/app/schemas.py` 的 status Literal 里没有这个词 · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+ACTIVE × 2 — 契约 status，发射点 `V12AuthoritativeJourneyPanel.tsx` 的 .v12-state-value，词面 `exec.state.active` · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+NEXT × 1 — 本地样式字：无发射器写它，`backend/app/schemas.py` 的 status Literal 里没有这个词 · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+COMPLETED × 3 — 契约 status，发射点同文件 .v12-activity-status，词面 `exec.state.completed` · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+ROUTE × 1 — 契约 status EN_ROUTE 的空格形，发射点同文件页脚按钮（label 组句），词面 `exec.state.enRoute` · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+TRIP × 1 — 本地样式字：无发射器写它，`backend/app/schemas.py` 的 status Literal 里没有这个词 · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+REALITY × 1 — 本地样式字：无发射器写它，`backend/app/schemas.py` 的 status Literal 里没有这个词 · 判源证据 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+合计 10 枚里脏 6 处（ACTIVE 2 + COMPLETED 3 + ROUTE 1）、样式字 4 处（AUTHORITATIVE、NEXT、TRIP、REALITY）· 计数从 `perRoute` 逐枚数出，件 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+
+二、只改判脏的那 6 处（产品字节两枚文件）
+`frontend/src/i18n/LocaleContext.tsx` 的 `exec.state.*` 英文值原本逐字就是契约字符串（EN ROUTE / ARRIVED / IN PROGRESS / ACTIVE / COMPLETED / SKIPPED），现改为 On the way / Arrived / In progress / Active / Completed / Skipped · 新 blob `30edf573f98b966dbe8aafa05a81a635b26d7538`
+同文件补上两端都缺的 `exec.state.notStarted`（英文 Not started、中文 未开始）：`V12StatePrimitives.tsx` 的 stateKeyMap 一直指向这枚键，两表都没有它，于是 `LocaleContext.tsx` 的 `?? key` 兜底把键名自己画上屏 · 中文词抄自同表既有 `exec.notStarted`，不是新造
+`frontend/src/lib/displayVocabulary.ts` 的 EXECUTION_STATE 补 READY 与 CANCELLED 两条（中文 可以开始了 / 已取消，英文 Ready to start / Cancelled）：契约 10 枚里这两枚此前既不在 stateKeyMap 也不在这张表，会走 `pick` 的 labelled-raw 分支把枚举名原样画出来 · 新 blob `82adbedcca1dcf54fbb19dda9219b1069595f984`
+CANCELLED 的中文与英文沿用同文件 `COMMITMENT_STATUS` 已有的那一对（已取消 / Cancelled），是同一个服务端值的第二处引用，不是我的第二种解读
+不碰的 4 枚样式字：`exec.authoritativeJourney`、`exec.next`、`studio.v12Kicker`、`v14.kicker` 一字未改（blob 对照就在上面那件产品文件里，改的只有 exec.state 一族）
+也没碰的：`exec.markEnRoute` / `exec.markArrived` / `exec.markCompleted` 三条值里含枚举原文，但页脚按钮只取 `exec.markInProgress` 的首词，这三条在本屏无引用、不画字，本单不改，具名 `NOT_TOUCHED_BY_CMDRA`
+numstat 只算产品字节那一笔（8cf8e4a699d42e3517eb908de7d1b85a3ecd10ee → e2285db2652d695748d5866689fbe7a24fbf8bf7）：i18n 与 displayVocabulary 两枚，合计 +15 行 -7 行；尺与 runner 在另两笔提交里
+  其中 frontend/src/i18n/LocaleContext.tsx +8 -6 行 · 现 blob `30edf573f98b966dbe8aafa05a81a635b26d7538`
+  其中 frontend/src/lib/displayVocabulary.ts +7 -1 行 · 现 blob `82adbedcca1dcf54fbb19dda9219b1069595f984`
+
+三、尺（形状复用 82f55d8a 那把，纯读文件、不接任何供给）：`frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts` + `frontend/playwright.statusq-r1.config.ts`
+判据两条：契约 `backend/app/schemas.py` 里那行 status Literal 答得出的每个名字（10 枚）都要有一端不缺的措辞；措辞不得是枚举原文、不得含下划线形、不得含 4 个以上连续大写 · 逐字判语 blob `0c8a526a57b59124e4e2ee8ffe00c004f9d6d615`
+修前那趟：红 2 臂、绿 n/a 臂，用时 n/a 毫秒 · 未词名点名 READY 与 CANCELLED，回声点名 EN ROUTE / ARRIVED / IN PROGRESS / ACTIVE / COMPLETED / SKIPPED · blob `1d45f50a8473f565939ba2a5e6de43ab3b524460`
+修后那趟：4 臂全绿，用时 462 毫秒 · blob `77f4fa22c6e7b1aa39c1ba5a11257a1e7f26f834`
+反件 mC（删 stateKeyMap 的 ACTIVE 一行）→ 第 1 臂（覆盖）报红并点名 ACTIVE，判语 1 failed 与 3 passed，用时 782 毫秒 · blob `a9a1ec1b3a73c72e93224269a7f2e546a4eb9dde`
+反件 mD（把 exec.state.completed 改回 COMPLETED）→ 第 2 臂（回声）报红，逐字三条 offender 含 `COMPLETED.en is the enum verbatim`，判语 1 failed 与 3 passed，用时 756 毫秒 · blob `4bae0ea1e1d795472eee6e4b11ae4c69ec282027`
+尺自身在这趟里被我自己修坏过三次，如实记：`matchAll` 少 `g` 直接崩（不是判据红，我没拿它当读数）；名字正则当时要求下划线，把 ACTIVE/READY 这类单词枚举漏掉、分母只剩 3 枚；回声判据起初按大小写不敏感比，会把 `PLANNED → Planned` 这类正常英文与别的屏一起拖进来，已收窄为逐字原文 + 两种机词形 · 三次修复都在提交 8cf8e4a699d42e3517eb908de7d1b85a3ecd10ee 里
+
+四、验收（我自己重跑同一把尺，两臂各一件，基线与修后同库同形状）
+英文臂 /v8/authoritative：10 处 → 4 处，降下来的正是判脏的 6 处；剩下 4 枚逐字为 AUTHORITATIVE、NEXT、TRIP、REALITY · 基线件 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`、修后件 blob `cd6ca4997047b53ca91304f974666ee09d042732`
+英文臂全屏：33 处 → 27 处（差 6 处=本单 6 枚）· 件 blob `cd6ca4997047b53ca91304f974666ee09d042732`
+中文臂 /v8/authoritative：0 处 → 0 处，没有新增枚举行（中文这一屏本来就有人在词表里给过词）· 件 blob `ab2c468b98b79f9fd6c1fca849164935a3542a91` 与 `939d69a3ac49d4ad2b1d3d25fb0f161720e0a7dc`
+一处与题面不同的事实要说清：我这趟中文臂全屏基线读到 2 处、修后 2 处，不是题面写的 3 处；差的那 1 处是 /v8/intelligence 的 NATIVE_DEEPSEEK_TOOL_LOOP，因为 ORD-0552 那四条身份词已在你 23:0x 之后落进权威线，我的基线就带上了它，不是本单改的 · 逐路由清单在件 blob `ab2c468b98b79f9fd6c1fca849164935a3542a91`
+页面异常：两臂两趟都是 0 处 · 修后代次入口 `/assets/index-BIcauGTF.js`，基线代次入口 `/assets/index-CuMOkEqV.js`（两代不同名，证明确实换了一次字节）· blob `cd6ca4997047b53ca91304f974666ee09d042732` 与 `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+正对照（空分母不算通过）：修后英文臂那一屏仍画着 6 枚活动状态标签，逐字 Completed、Completed、Completed 与两枚状态值 Active、Planned，按钮 Mark On the way · 件 blob `57604fae5a4f019b0b166a22a9d05eaa153278a3`
+同一件卡尺在基线英文臂判 RED（红格 `no_status_slot_paints_a_machine_shape`），屏上逐字是 COMPLETED、COMPLETED、COMPLETED · 说明它不是恒绿 · blob `93a8d4fee74440c2abb9eda40c8a8234aa74461a`
+中文臂两趟都判 GREEN 且词面未变（已完成、已完成、已完成 等）· 件 blob `b08282f7625b22a2d7a4b6c1a06d510c985858a3` 与 `6371f876107a2e64bec66ca0bc59c3da66c34fbc`
+
+五、私有栈与归属（上一手那坑我已经装进工具里）
+后端 :8751 由我的启动器起：`pid_owns_port` 为 true（owner 在我进程树里，否则 ABORT 返回 9）；`CITYNEXUS_DEMO_MODE=true` 显式给上，`/api/v1/demo/scene` 回 demo_mode True 且行程 ACTIVE · 启动器 `D:/moodle/_qoder_cmdra_ord0553_20261003/_launch_backend_with_key_r1.py`
+key 只用字段名 `DEEPSEEK_API_KEY`，长度 35 字符、sha256 前 12 位 4cabe6bcaff4（与你观察件 `_cmdr_cred_env_second_observer_v2.json` 那枚同指纹），值没进任何输出 · 没有它 `backend/app/agent/runtime_identity.py` 那支就不写 NATIVE_DEEPSEEK_TOOL_LOOP，正对照会假绿
+分母：种子 `D:/moodle/_qoder_cmdr_priv_0437seed.db`（尺寸以 `ls -la` 该路径现读为准）以 mode=ro 打开再 src.backup 得我的副本 `D:/moodle/_qoder_cmdra_ord0553_20261003/_cmdra_0553.db`（尺寸同上现读为准）；共享预览库 `_preview.db` 我没读也没写、没跑 demo/reset
+静态两道：:49841 基线、:49842 修后，各自 served==disk 于 1,200 B 的 index.html，入口名取自各自磁盘，访问日志在我自己目录下 · 构建两件 rc=0（`_build_cmdra_0553_base`、`_build_cmdra_0553_fix`）
+类型检查：`npx tsc -p tsconfig.typecheck.json --noEmit` 在修复后的树上 0 行输出、exit 0 · 本机 `D:/moodle/_qoder_cmdra_ord0553_20261003/_tsc_fix.txt`
+发布：十七件全在 `evidence/45d25bfb-ord0553-20261004/` 新路径下、全 CREATED 且 readback 与 blob 同名一枚 40 位、重写 0 件 · 回执 `D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest.jsonl`（5,913 B）
+我起的 :8751 与 :49841 :49842 在交完这块后停掉，junction 的 node_modules 用普通 rmdir 卸，不递归删；`:8000` `:4781` `:4782` `:8693` 与别人的 uvicorn 一个没动；force-push 0 次
+
+六、没量到 / 没做的格子（具名）
+READY 与 CANCELLED 的**上屏**画法我没测：这条屏的当前数据里没有这两种态（sealed demo 的 27 行 CANDIDATE 只出 ACTIVE 与 COMPLETED），我只由尺担保，具名 `NOT_REACHED_BY_CMDRA` · 名字取自 `backend/app/schemas.py` 那行 status Literal
+PLANNED 的英文词面沿用原 `Planned`（不是全大写形，本单没动它），如果按大小写不敏感判回声它会被算成回声，我没这么做，理由写在尺的判据注释里，具名 `NOT_TOUCHED_BY_CMDRA`
+样式字那 4 枚（AUTHORITATIVE / NEXT / TRIP / REALITY）一字未改，也不改：题面换成「全抹」我按你的二分留着 · 清单在同一件 blob `9fa3ab458f8af742dddd826ebe97b38397fe2db3`
+反件只跑尺不跑屏（mC/mD 的屏上趟没跑），因为 mD 改的是 COMPLETED 的词面、本屏本来就有 3 枚 COMPLETED，屏上重画对它是重复证据；要更狠可让 mC 上屏，那需要再造一次构建，具名 `NOT_MEASURED_BY_CMDRA`
+新尖 6246876a3b9171f5c2d6ec948f43b35605262bee 我没重量，具名 `NOT_MEASURED_BY_CMDR`
+
+
 ### cmdr_0640 · 号令者 · ORD-0553 r2 落地 + day33 换代（有产品字节的换代，三证齐 + 屏上亲验）
 
 一、落地：候选 `refs/heads/review/45d25bfb-ord0553-authoritative-caps-r2` 头 `1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c`，recut 4/4 文件与车道 blob 相同、门 `READY_TO_LAND` ff=True，落地代尖 = `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`（复现：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。
