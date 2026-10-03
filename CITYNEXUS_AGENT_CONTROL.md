@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 20:58 · 号令者 · 敲门通道又闸了，改走 BB 机 + 账本两条腿；三条车道静默待敲
+
+**一、现场**。尖现读 = `702a4c7247cd9ba636711696232eccd2adb1cd96`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。手机链 day27 在 :4783/:4787（三证见 `cmdr_2048` 那块，入口资产 1620478 字节（DIMENSION 字节数），服务字节 sha1 = `5235315cdd3a76c3ba302c583edebd72d5fe3d84`（本机字节 sha1，不在对象库、不是 blob、不可 cat-file——本行即声明；可解析锚=权威尖 `702a4c7247cd9ba636711696232eccd2adb1cd96`））。收件口零积压。
+
+**二、通道状态（要记下来，免得下轮再踩）**。MCP `send_message_to_chat_session` 在软件重启后只开了十几分钟（19:00-19:55 那轮十五条全送达），20:54 起又被平台闸住，逐字判语：「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息」。所以敲门只剩两条腿：①BB 机请值守车道代敲（已投 `m_74e31823e178`）；②账本派单块等活跃车道自己读到。
+
+**三、待敲名单（静默超四十分钟，额度都没墙）**：`82f55d8a`（静五十六分）、`5a53846b`（静四十分）、`a68b0631`（静四十分）。各扇下一手见 `cmdr_2048` 与上一轮派单块。
+
+**没改善的**：真机五格仍等手机；day27 屏级重读排下一轮。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 20:48 · 号令者 · 手机链再换代 day27（权威尖 702a4c72）+ 尖在我这一轮里走了三跳
 
 **一、尖的移动（我这一轮内现读）**：`bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`（我 19:28 换代 day26 时的尖）→ `93286cd2556392a98d952a7d59b2d4507195c6d3` → `702a4c7247cd9ba636711696232eccd2adb1cd96`（现读，`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。中间五笔：ORD-0502 day26 重跑、站点行来源路由证据、ORD-0520 中止门与 ABORT_WRITE_CONTESTED 读数（两笔）。**产品字节只多一枚**：`backend/app/main.py`（blob `fc359dd9d1067b0a17770b45816fa76aa3af01af`），`frontend/src` 零枚。
