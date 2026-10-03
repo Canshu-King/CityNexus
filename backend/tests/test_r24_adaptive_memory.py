@@ -192,3 +192,8 @@ def test_r24_explicit_avoidance_overrides_learned_positive() -> None:
             and getattr(item, "source", "") == "LEARNED_SOFT"
             for item in items
         )
+    twin = client.get(f"/api/v1/travelers/{traveler_id}/traveler-twin").json()
+    learned = next(
+        item for item in twin["learned_soft_preferences"] if item["direction"] == "museum"
+    )
+    assert learned["override_state"] == "EXPLICIT_WINS"

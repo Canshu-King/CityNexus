@@ -302,12 +302,19 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                     (item.expires_at for item in items if item.expires_at),
                     default=None,
                 ),
-                "override_state": "EXPLICIT_WINS" if dimension in {item["dimension"] for item in explicit} else "LEARNED_ACTIVE",
+                "override_state": "EXPLICIT_WINS"
+                if str(direction).strip().lower().removeprefix("avoid:").strip()
+                in {
+                    str(item["dimension"]).strip().lower().removeprefix("avoid:").strip()
+                    for item in explicit
+                    if str(item.get("category") or "").strip().lower() == "interest"
+                }
+                else "LEARNED_ACTIVE",
             }
         )
     explicit_keys = {(item["category"], item["dimension"]) for item in explicit}
-    explicit_interest_directions = {
-        str(item["dimension"]).strip().lower()
+    explicit_interest_targets = {
+        str(item["dimension"]).strip().lower().removeprefix("avoid:").strip()
         for item in explicit
         if str(item["category"]).strip().lower() == "interest"
     }
@@ -325,7 +332,8 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
                 }
             )
         if any(
-            str(direction).removeprefix("avoid:") in explicit_interest_directions
+            str(direction).strip().lower().removeprefix("avoid:").strip()
+            in explicit_interest_targets
             for direction in directions
         ) or ("mobility", dimension) in explicit_keys:
             conflicts.append(
@@ -339,7 +347,7 @@ def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot
     for item in learned:
         item["conflict"] = conflict_by_dimension.get(item["dimension"])
         learned_target = str(item["direction"]).removeprefix("avoid:").strip().lower()
-        if learned_target in explicit_interest_directions:
+        if learned_target in explicit_interest_targets:
             item["override_state"] = "EXPLICIT_WINS"
     now = _now()
     explicit_capabilities = capability_payload(session, traveler_id)
