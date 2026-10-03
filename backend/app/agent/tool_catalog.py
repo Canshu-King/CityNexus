@@ -34,14 +34,14 @@ TOOLS = (
         False,
         False,
     ),
-    ToolDescriptor(AgentAction.CONCLUDE_RECOVERY, "conclude_recovery", False, False, False),
-    ToolDescriptor(AgentAction.APPLY_CLARIFIED_HORIZON_CHOICE, "apply_clarified_horizon_choice", True, False, False),
     ToolDescriptor(AgentAction.REQUEST_REPLAN, "request_replan", True, False, False),
     ToolDescriptor(AgentAction.ACCEPT_REPLAN, "accept_replan", True, False, False),
     ToolDescriptor(AgentAction.ACTIVATE_STANDBY, "activate_standby", True, False, False),
 )
 
 TYPED_TOOLS = (
+    ToolDescriptor(AgentAction.CONCLUDE_RECOVERY, "conclude_recovery", False, False, False),
+    ToolDescriptor(AgentAction.APPLY_CLARIFIED_HORIZON_CHOICE, "apply_clarified_horizon_choice", True, False, False),
     ToolDescriptor(AgentAction.ACQUIRE_PLACE_FACTS, "acquire_place_facts", True, False, False),
     ToolDescriptor(AgentAction.ESTIMATE_PLACE_FACTS, "estimate_place_facts", False, False, False),
     ToolDescriptor(AgentAction.GENERATE_PLANS, "generate_plans", True, False, False),

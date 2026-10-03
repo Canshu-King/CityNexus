@@ -32,7 +32,7 @@ push = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = [".", "../agent-mcp"]
+pythonpath = [".", "..", "../agent-mcp"]
 markers = ["integration: optional tests that require an explicitly configured live provider"]
 
 [tool.ruff]

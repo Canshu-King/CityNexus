@@ -59,8 +59,8 @@ _READ_TOOLS = (
     "inspect_twin",
     "list_replans",
     "search_city_services",
-    "conclude_recovery",
 )
+_CONCLUSION_TOOL = "conclude_recovery"
 _ACTION_TOOLS = (
     "activate_standby",
     "request_replan",
@@ -156,7 +156,7 @@ def build_mission_plan(
     allowed_tools = (
         (*_READ_TOOLS, "request_replan")
         if autonomy == "PLAN_ONLY"
-        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_ACTION_TOOLS)
+        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
     )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
