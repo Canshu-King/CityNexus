@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
 - Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
-- Final code SHA: `deea54b28a758953bd54ac99e52eae1449534552`
+- Final code SHA: `a033b63dbb251fa0874bd8b4cacf6ab589fcd5cc`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -86,6 +86,8 @@ without changing the clarification or authority contract:
   in the runtime-generated OpenAPI, not only in the checked-in contract file.
 - A model that only inspects state and returns prose now persists `PARTIAL` plus an
   `UNRESOLVED` completion contract; prose cannot mark a recovery mission completed.
+- The UI exposes the server completion kind beside the Agent mission, so `PARTIAL` is not
+  presented as an unexplained or successful-looking result.
 
 Verification after these changes:
 
@@ -95,7 +97,7 @@ runtime-failure regressions: 3 passed, 1 warning
 Qoder gates: 13 passed, 1 warning
 frontend typecheck: passed
 frontend production build: passed (Vite chunk-size warning only)
-remote HEAD: deea54b28a758953bd54ac99e52eae1449534552
+remote HEAD: a033b63dbb251fa0874bd8b4cacf6ab589fcd5cc
 ```
 
 ## Focused verification
