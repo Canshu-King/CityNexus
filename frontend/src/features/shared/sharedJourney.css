@@ -96,7 +96,7 @@
   overflow-wrap: anywhere;
 }
 .cn-shared-stop-meta {
-  color: var(--cn-ink-tertiary);
+  color: var(--cn-ink-secondary);
   font-size: var(--cn-fs-meta);
 }
 .cn-shared-map { display: grid; gap: 8px; }
