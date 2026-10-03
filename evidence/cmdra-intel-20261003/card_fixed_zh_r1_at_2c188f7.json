@@ -1,0 +1,52 @@
+{
+  "instrument": "cmdra_intel_card_check_r1",
+  "script_sha256": "c6fb40e67d251e5a2f829afa6d50ee258fbdb29e431f722da7a2b58351b5aa58",
+  "base": "http://127.0.0.1:49832/",
+  "locale": "zh",
+  "viewport": "390x844",
+  "src_dir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_cmdra_intel_fix/frontend/src",
+  "shapes_reused_from": "cmdr_machine_speech_sweep_r1.js:47-51",
+  "table_wordings_for_this_arm": [
+    "本机自带的原生网关正在应答",
+    "这台部署配的兼容端点，原生网关没有验到在应答",
+    "这个服务自己直连模型商的那条环",
+    "未配置"
+  ],
+  "read": {
+    "cardPresent": true,
+    "cardText": "智能体运行时来源这个服务自己直连模型商的那条环未完成可验证证明，因此不宣称原生 Hermes MCP",
+    "valueText": "这个服务自己直连模型商的那条环",
+    "paintedCount": 20,
+    "journeyId": "22222222-2222-4222-8222-222222222222",
+    "docChars": 359
+  },
+  "arms": [
+    {
+      "id": "card_reached",
+      "verdict": "PASS",
+      "observed": "cardPresent=true journeyId=22222222-2222-4222-8222-222222222222 paintedTextNodes=20 documentChars=359"
+    },
+    {
+      "id": "value_is_painted_not_empty",
+      "verdict": "PASS",
+      "observed": "painted value text = \"这个服务自己直连模型商的那条环\""
+    },
+    {
+      "id": "value_carries_no_machine_shape",
+      "verdict": "PASS",
+      "observed": "no shape in \"这个服务自己直连模型商的那条环\""
+    },
+    {
+      "id": "value_is_one_of_the_shipped_wordings",
+      "verdict": "PASS",
+      "observed": "\"这个服务自己直连模型商的那条环\" vs table wordings [\"本机自带的原生网关正在应答\",\"这台部署配的兼容端点，原生网关没有验到在应答\",\"这个服务自己直连模型商的那条环\",\"未配置\"]"
+    },
+    {
+      "id": "no_page_error",
+      "verdict": "PASS",
+      "observed": "[]"
+    }
+  ],
+  "verdict": "GREEN",
+  "red_arms": []
+}
