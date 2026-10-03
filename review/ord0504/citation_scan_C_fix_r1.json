@@ -1,9 +1,9 @@
 {
  "schema": "CNX_SHIPPED_CITATION_SCAN_V1",
- "tree": "working tree",
+ "tree": "00ed2579aac110b61e2f75512518f37deb5a116f",
  "files_scanned_with_citations": 41,
  "files_enumerated_for_scanning": 317,
- "files_resolvable": 10367,
+ "files_resolvable": 10374,
  "citations_checked": 102,
  "totals": {
   "FILE_NOT_TRACKED": 11,
@@ -35,10 +35,10 @@
   },
   {
    "citing": "frontend/src/components/PoiCandidateCard.tsx:21",
-   "citation": "map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* Selection is a pair, never a state: the reference chain's own rule (map_findings.md:150) is that"
+   "comment": "* Selection is a pair, never a state: the reference chain's own rule (EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150) is that"
   },
   {
    "citing": "frontend/src/features/checkin/footprintRead.ts:15",
@@ -49,10 +49,10 @@
   },
   {
    "citing": "frontend/src/features/estimation/estimationLadder.ts:7",
-   "citation": "/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* (`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`, item F15)."
+   "comment": "* (`EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`, item F15)."
   },
   {
    "citing": "frontend/src/features/planning/PlanWithAiSheet.tsx:104",
@@ -70,10 +70,10 @@
   },
   {
    "citing": "frontend/src/features/poiimport/PoiImportPanel.tsx:24",
-   "citation": "/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* Shapes are taken line by line from `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`"
+   "comment": "* Shapes are taken line by line from `EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`"
   },
   {
    "citing": "frontend/src/features/progress/journeyProgress.ts:19",
@@ -240,10 +240,10 @@
   },
   {
    "citing": "frontend/src/components/PoiCandidateCard.tsx:21",
-   "citation": "map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* Selection is a pair, never a state: the reference chain's own rule (map_findings.md:150) is that"
+   "comment": "* Selection is a pair, never a state: the reference chain's own rule (EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150) is that"
   },
   {
    "citing": "frontend/src/components/RawFactsPanel.tsx:31",
@@ -387,10 +387,10 @@
   },
   {
    "citing": "frontend/src/features/estimation/estimationLadder.ts:7",
-   "citation": "/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* (`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`, item F15)."
+   "comment": "* (`EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`, item F15)."
   },
   {
    "citing": "frontend/src/features/inbox/shareGrantRead.ts:33",
@@ -569,10 +569,10 @@
   },
   {
    "citing": "frontend/src/features/poiimport/PoiImportPanel.tsx:24",
-   "citation": "/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150",
+   "citation": "EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150",
    "verdict": "FILE_NOT_TRACKED",
    "detail": "no such file in the tree",
-   "comment": "* Shapes are taken line by line from `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`"
+   "comment": "* Shapes are taken line by line from `EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`"
   },
   {
    "citing": "frontend/src/features/poster/posterModel.ts:136",

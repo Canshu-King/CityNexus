@@ -1,4 +1,4 @@
-shipped-citation scan | tree = working tree
+shipped-citation scan | tree = b168b428f4ed0c9719a1aecf0bb38d98035cec9e
 scanned under frontend/src/backend/app = 317 files | resolvable across the repo = 10367 files | files carrying citations = 41 | citations checked = 102
 totals: {"FILE_NOT_TRACKED": 12, "OK": 80, "SYMBOL_NOT_NEAR_BUT_IN_FILE": 8, "SYMBOL_NOT_AT_LINE": 2}
 hard rotten: 14 | loose (symbol elsewhere in the file): 8
@@ -16,14 +16,14 @@ BAD  frontend/src/app/V8Experience.tsx:164
      cites main.py:5311 :: ambiguous basename over 21 files, 0 of them carry the named symbols at that line
      comment: /* `_commitment_payload` (main.py:5311) puts the money under `monetary_value` and says how much
 BAD  frontend/src/components/PoiCandidateCard.tsx:21
-     cites map_findings.md:150 :: no such file in the tree
-     comment: * Selection is a pair, never a state: the reference chain's own rule (map_findings.md:150) is that
+     cites EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150 :: no such file in the tree
+     comment: * Selection is a pair, never a state: the reference chain's own rule (EXTERNAL_ANALYSIS_FILE_NOT_RECORDED:150) is that
 BAD  frontend/src/features/checkin/footprintRead.ts:15
      cites TripItinerary.tsx:139 :: unique basename -> frontend/src/features/trip/TripItinerary.tsx:139, symbols not within 3 lines and not in the file: not_asked, refused, unreachable
      comment: * `refused`/`unreachable`/`not_asked` paint NO stamp claim: `TripItinerary.tsx:139` returns silently
 BAD  frontend/src/features/estimation/estimationLadder.ts:7
-     cites /moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150 :: no such file in the tree
-     comment: * (`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`, item F15).
+     cites EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150 :: no such file in the tree
+     comment: * (`EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`, item F15).
 BAD  frontend/src/features/planning/PlanWithAiSheet.tsx:104
      cites services.py:843 :: ambiguous basename over 18 files, 0 of them carry the named symbols at that line
      comment: * lanes are putting names on (ORD-0101/0108: `services.py:843/:902/:932`, `CATALOG_EMPTY` at the
@@ -31,8 +31,8 @@ BAD  frontend/src/features/planning/aiGenerationRun.ts:347
      cites main.py:497-502 :: ambiguous basename over 21 files, 0 of them carry the named symbols at that line
      comment: /** The three envelope keys this server puts a machine name in (`main.py:497-502`). */
 BAD  frontend/src/features/poiimport/PoiImportPanel.tsx:24
-     cites /moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150 :: no such file in the tree
-     comment: * Shapes are taken line by line from `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`
+     cites EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150 :: no such file in the tree
+     comment: * Shapes are taken line by line from `EXTERNAL_ANALYSIS_PATH_NOT_RECORDED:150`
 BAD  frontend/src/features/progress/journeyProgress.ts:19
      cites api/citynexus.ts:771 :: ambiguous basename over 11 files, 0 of them carry the named symbols at that line
      comment: * There is deliberately no percentage.  `api/citynexus.ts:771` records the same decision on the
