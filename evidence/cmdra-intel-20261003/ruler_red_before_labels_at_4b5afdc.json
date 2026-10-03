@@ -1,0 +1,24 @@
+{
+ "generatedBy": "cmdra",
+ "ruler": "runtime-identity-vocabulary-r1",
+ "run": "runtimeq-r1-at-4b5afdcd-prefix-red",
+ "emitted_identities": [
+  "HERMES_NATIVE_MCP",
+  "NATIVE_DEEPSEEK_TOOL_LOOP",
+  "HERMES_COMPAT_ENDPOINT",
+  "NOT_CONFIGURED"
+ ],
+ "labelled_identities": {
+  "NOT_CONFIGURED": {
+   "zh": "未配置",
+   "en": "Not configured"
+  }
+ },
+ "panel_imports_labelled": true,
+ "file_bytes": {
+  "identities": 2936,
+  "vocabulary": 9747,
+  "panel": 3227,
+  "i18n": 113171
+ }
+}
