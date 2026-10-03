@@ -39,7 +39,7 @@ const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 const VIEWPORT = { width: 390, height: 844 };
 test.use({ viewport: VIEWPORT, hasTouch: true });
 
-/** The cities this product ships names for (`CITY_NAME_BY_SLUG`, V8Experience.tsx:3981). */
+/** The cities this product ships names for (`CITY_NAME_BY_SLUG`, V8Experience.tsx). */
 const CITY_NAMES = [
   "天津",
   "Tianjin",

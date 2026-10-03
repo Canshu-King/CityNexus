@@ -138,7 +138,7 @@ export function MapPanel({
    * whole of its travel.  On, it hides the pins the read returned no stamp for; it never hides a pin
    * the read did not answer about (`footprints` not on its `read` arm ⇒ the switch is not offered at
    * all, see the row in V8Experience).  Hiding is `visibility`, never removal:
-   * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
+   * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
    * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins and rows as the proof that every
    * located stop can still be picked, and ORD-0453 already settled that a filter is a clip, not a
    * deletion.

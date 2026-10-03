@@ -37,7 +37,7 @@
  * its fill, so a surface that never asked (`footprints = null`) cannot be mistaken for "all visited".
  *
  * `.filtered-out` hides by visibility and never by removal:
- * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
+ * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
  * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins as the proof that every located stop is
  * pickable, and ORD-0453 already ruled that a constrained view on this surface is a clip, not a
  * deletion.
@@ -154,8 +154,8 @@
  *   `.v8-map-stops` is the box whose `max-height` is set from the laid-out chip after the last one it
  *   shows (see `measurePressed` in `V8Experience.tsx`), with `overflow: hidden` so the cut is a cut.
  *   It is a height clip, not a deletion: every located stop keeps its row in the document, because
- *   `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
- *   `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count those rows as the proof that a pinned stop
+ *   `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
+ *   `e2e/qoder-ord0394-map-coordinates.spec.ts` count those rows as the proof that a pinned stop
  *   can be picked, and a collapse that removed nodes would read 4 against 9 pins there.
  *   `align-content: flex-start` keeps the chip lines at their own height instead of squeezing five
  *   lines into the clipped box.

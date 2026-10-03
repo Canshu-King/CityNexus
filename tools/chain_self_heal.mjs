@@ -210,7 +210,7 @@ function hopSpecs() {
       bat: ["@echo off", `cd /d "${CFG.frontendDir}"`,
             `"${CFG.node}" node_modules/vite/bin/vite.js preview --outDir "${CFG.dist}"` +
             ` --host 127.0.0.1 --port ${CFG.staticPort} --strictPort`] },
-    // 那把鉴权代理尺把自己钉在 4782、把静态上游钉在 4781（`raw/preview_auth_proxy.py:25` 与 `:31`），
+    // 那把鉴权代理尺把自己钉在 4782、把静态上游钉在 4781（`raw/preview_auth_proxy.py` 与 `:31`），
     // 只有 API 上游可由 `CNX_PROXY_API_UPSTREAM` 改（`:30`）—— 所以它只能整条一起起，不能挪端口实验
     { hop: "auth_proxy", port: CFG.authPort, url: `http://127.0.0.1:${CFG.authPort}/api/v1/health`,
       auth: true, kind: "api", expect: apiJson,

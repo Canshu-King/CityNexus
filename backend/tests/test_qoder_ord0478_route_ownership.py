@@ -22,7 +22,7 @@ PREFIX = "/api/v1/journeys/{journey_id}/"
 
 # Every cell this family owns, and the single handler that must answer it.  The two
 # `plans/*-reorder` paths are aliases of their `trip-studio/*` siblings by declaration
-# (`contracts/openapi.yaml:1435` `$ref`s to `contracts/openapi.yaml:1418`), which is why
+# (`contracts/openapi.yaml` `$ref`s to `contracts/openapi.yaml:1418`), which is why
 # both halves name one handler rather than two.
 OWNERSHIP: dict[tuple[str, str], str] = {
     ("POST", f"{PREFIX}trip-studio/preview"): "trip_studio_preview",

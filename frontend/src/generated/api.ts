@@ -514,7 +514,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * @description ORD-0476 slice 1: this trip's footprints, oldest stamp first, each carrying its target read back from the row it points at.  Nothing is copied into a stamp: `activity_title`, `activity_type`, `place_name` and `place_category` resolve from `activities` and `places` on every read (`backend/app/services.py` -- `checkin_schema`), so a stamp cannot show a name its target no longer holds.  Those four are nullable and the null is a fact rather than a blank: both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in `backend/db/schema.sql`, triggered in practice by the replan path at `backend/app/main.py:11190`), and the footprint is the traveller's own history, so it outlives them and says so instead of inventing a title.
+         * @description ORD-0476 slice 1: this trip's footprints, oldest stamp first, each carrying its target read back from the row it points at.  Nothing is copied into a stamp: `activity_title`, `activity_type`, `place_name` and `place_category` resolve from `activities` and `places` on every read (`backend/app/services.py` -- `checkin_schema`), so a stamp cannot show a name its target no longer holds.  Those four are nullable and the null is a fact rather than a blank: both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in `backend/db/schema.sql`, triggered in practice by the replan path at `backend/app/main.py`), and the footprint is the traveller's own history, so it outlives them and says so instead of inventing a title.
          *     A trip with no stamps answers `[]` -- absence is a list, not a 404.  No pagination, no filter, no date window, and there is no permanent-delete door for a stamp on this server.
          */
         get: operations["listJourneyCheckins"];
@@ -3322,7 +3322,7 @@ export interface components {
             id: string;
             version_no: number;
             /**
-             * @description Which generation of the trip this is, read off `plan_versions.source`.  The traveller-facing words for these three values already exist on the front (`frontend/src/lib/displayVocabulary.ts:30`), so a guest screen can say 首次生成 / 来自一次重规划 without inventing a sentence -- and without one, "the trip you were sent" and "the trip you were sent, three replans later" are the same words.
+             * @description Which generation of the trip this is, read off `plan_versions.source`.  The traveller-facing words for these three values already exist on the front (`frontend/src/lib/displayVocabulary.ts`), so a guest screen can say 首次生成 / 来自一次重规划 without inventing a sentence -- and without one, "the trip you were sent" and "the trip you were sent, three replans later" are the same words.
              * @enum {string}
              */
             source: "INITIAL" | "REPLAN" | "MANUAL";

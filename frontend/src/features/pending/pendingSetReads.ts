@@ -6,9 +6,9 @@ import type { PendingCandidate, PendingPlaceRow } from "./pendingSet";
  * ORD-0445 -- the two doors the 待规划 screen reads, and nothing else.
  *
  * Both are already on the line and already declared, so this order ships no new server surface:
- *  - `GET /api/v1/journeys/{journey_id}/provider-mesh` -- `backend/app/main.py:1681`, the hand-built
+ *  - `GET /api/v1/journeys/{journey_id}/provider-mesh` -- `backend/app/main.py`, the hand-built
  *    dict at `:1712` whose `real_place_candidates` list is the captured-for-this-trip half of the set.
- *  - `GET /api/v1/places?city_code=...` -- `backend/app/main.py:5362`, read only to put a category
+ *  - `GET /api/v1/places?city_code=...` -- `backend/app/main.py`, read only to put a category
  *    word on a plan stop that lost its day.  It answers without the server-owned and structural rows
  *    by default (`:5373`-`:5374`), which is exactly why a missing category is named on screen instead
  *    of guessed.

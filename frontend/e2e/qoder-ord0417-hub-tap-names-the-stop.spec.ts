@@ -11,7 +11,7 @@ import { evidencePath } from "./_qoderEvidence";
  * a tap on marker 1 at (192, 736), `changed_markers: []`, `visible_name_leaves_delta: 0`, verdict
  * MAP_CLICK_CHANGED_NOTHING_ON_SCREEN) while the same tap on `/v8/map` names the stop on the glass.
  * The cause was in the code, not in the browser: `MapPanel` binds the pin to
- * `selectRef.current?.(point.id ?? null)` (`frontend/src/components/v8/MapPanel.tsx:382`), and the hub's
+ * `selectRef.current?.(point.id ?? null)` (`frontend/src/components/v8/MapPanel.tsx`), and the hub's
  * call site passed `data`, `option` and `onNoLocationChange` only
  * (`frontend/src/app/V8Experience.tsx:3069`) — so the optional call discarded the tap in silence while
  * the marker still advertised `role="button"`, `tabindex="0"` and an `aria-pressed` state.  A control

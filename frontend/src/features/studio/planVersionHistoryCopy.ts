@@ -13,8 +13,8 @@
  */
 /**
  * Each label names only what the source code actually proves. The server writes exactly three
- * values (`backend/app/schemas.py:495`) from six places, and `MANUAL` is the one that is easy to
- * over-claim: `main.py:5721` writes it when a traveller re-orders activities in the trip studio
+ * values (`backend/app/schemas.py`) from six places, and `MANUAL` is the one that is easy to
+ * over-claim: `main.py` writes it when a traveller re-orders activities in the trip studio
  * (`product_path = V12_TRIP_STUDIO_ACCEPT`), and `operations/v9.py:580` writes it for a stay-driven
  * rewrite. So it says 人工改动 and names both, rather than claiming one of them.
  */

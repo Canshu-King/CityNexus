@@ -244,7 +244,7 @@ def _backfill_legacy_hydration_rows(connection) -> None:
 
 
 # ORD-0434 step 2: the ACL table's one home.  A role is a set of capabilities plus the message key
-# that states its scope in one sentence (RELATION/relation_and_copy_findings.md:94); the sentence
+# that states its scope in one sentence (RELATION/relation_and_copy_findings.md); the sentence
 # itself is not stored here, so no server-authored prose can ever reach a screen from this table.
 JOURNEY_ROLE_CAPABILITIES = (
     ("OWNER", "JOURNEY_READ", "member.scope.owner"),

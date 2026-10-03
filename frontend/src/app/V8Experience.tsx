@@ -145,7 +145,7 @@ type Wallet = {
        asking `commitment_id` -- the only field it had -- whether the ticket was confirmed. */
     status: string;
     realtime_status: string;
-    /* `_reservation_payload` (main.py:3527) links a reservation to the commitment it became.  This is
+    /* `_reservation_payload` (main.py) links a reservation to the commitment it became.  This is
        the only honest source for a "受保护" badge: without it the card was asserting a promise the
        server had not made (ORD-0146 ③). */
     commitment_id?: string | null;
@@ -161,7 +161,7 @@ type Wallet = {
     kind: string;
     external_ref: string | null;
     status: string;
-    /* `_commitment_payload` (main.py:5311) puts the money under `monetary_value` and says how much
+    /* `_commitment_payload` (main.py) puts the money under `monetary_value` and says how much
        is actually known in `monetary_value_status`; the schedule it protects is under `policy`.
        Declaring less than this is how a committed booking ended up with no honest way to render. */
     monetary_value?: {

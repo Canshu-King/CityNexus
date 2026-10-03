@@ -18,7 +18,7 @@ import { PlaceProvenance } from "./PlaceProvenance";
  * control as it stands on the line now. It is extracted, not forked: nothing on the discovery side
  * was touched, so ORD-0435 can move onto this component in one edit of its own.
  *
- * Selection is a pair, never a state: the reference chain's own rule (map_findings.md:150) is that
+ * Selection is a pair, never a state: the reference chain's own rule (map_findings.md) is that
  * every 选中态 needs its 未选中态, so the control is always mounted and `aria-checked` is what moves.
  */
 export type PoiCardStatus = "RESOLVED" | "AMBIGUOUS" | "UNRESOLVED";

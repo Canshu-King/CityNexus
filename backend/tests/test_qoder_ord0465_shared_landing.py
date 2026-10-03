@@ -3,7 +3,7 @@
 What was measured on the authoritative tip `9110db281ca7706bb78e8e1f2dbad04a08705d88` before this file
 existed (all of it read off `backend/app/main.py` at that commit, not inferred):
 
-  * `read_shared_journey` returned `journey_schema(journey)` (`backend/app/main.py:3422` at that tip).
+  * `read_shared_journey` returned `journey_schema(journey)` (`backend/app/main.py` at that tip).
     A `Journey` carries id, title, city, timezone, dates, budget and status -- and no stops.  So the
     landing screen this door feeds could name a trip but could not name a single day of it.
   * Nothing in this door read `journeys.deleted_at`.  `journey_schema` does not emit that column
@@ -52,7 +52,7 @@ def _journey_with_plan(*, stops: int = 2) -> tuple[str, str]:
     Returns `(journey_id, first_place_id)`.
     """
     moment = _now()
-    # `places` carries UNIQUE(provider_key, external_id) (`app/db/models.py:483`), and every test in
+    # `places` carries UNIQUE(provider_key, external_id) (`app/db/models.py`), and every test in
     # this module seeds its own trip into the same run's database -- so the place rows have to be
     # named apart from each other or the second test dies on that constraint instead of testing
     # anything.
@@ -117,7 +117,7 @@ def _journey_with_plan(*, stops: int = 2) -> tuple[str, str]:
             place_ids.append(place.id)
         # The places have to be on the row-side of the transaction before anything names them:
         # SQLite enforces `activities.place_id` at insert, and the unit of work does not order a
-        # string-assigned FK for you (`tests/test_snapshot_j_backend_truth_gaps.py:102` flushes for
+        # string-assigned FK for you (`tests/test_snapshot_j_backend_truth_gaps.py` flushes for
         # the same reason).
         session.flush()
         for index, place_id in enumerate(place_ids, start=1):

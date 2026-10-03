@@ -25,7 +25,7 @@
  *  G6 an empty reason is refused by the device and by the door, and neither writes.
  *  G7 the judgement is the server's and not the row's mutable status: another door moves
  *     `journeys.status` back to PLANNED (the write `select_plan` performs,
- *     `backend/app/main.py:7833`, done here as a committed UPDATE because this lane's store cannot
+ *     `backend/app/main.py`, done here as a committed UPDATE because this lane's store cannot
  *     produce a plan -- `reason_code=CATALOG_EMPTY`, measured in
  *     `review/ord0520/ABORT_RESURRECT_PROBE.json`), and both the live screen and the trip's own
  *     entry have to keep treating the trip as called off.  This is the arm that separates "reads the
@@ -664,7 +664,7 @@ test("ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-sta
     node(NODE, "right after the press the live screen did not exclude the trip"),
   ).toBeVisible({ timeout: 30_000 });
 
-  /* The state `select_plan` writes for a journey that holds a plan (backend/app/main.py:7833):
+  /* The state `select_plan` writes for a journey that holds a plan (backend/app/main.py):
      status moves, the two abort columns stay.  The screen has to keep the trip out anyway. */
   const moved = JSON.parse(
     execFileSync(
