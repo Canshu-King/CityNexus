@@ -11,7 +11,25 @@
 
 type Label = { zh: string; en: string };
 
+/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx:51`), and
+   the table carried one of the four names `backend/app/agent/runtime_identity.py:15-18` can write. The
+   other three went down `pick`'s labelled-raw branch, so the traveller read
+   「这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP」. Each wording below states the condition that branch
+   actually tested (`runtime_identity.py:50-56`) -- no wording claims a verified gateway where only a
+   configured endpoint exists, and none repeats the server's own name. */
 const RUNTIME_IDENTITY: Record<string, Label> = {
+  HERMES_NATIVE_MCP: {
+    zh: "本机自带的原生网关正在应答",
+    en: "the native gateway installed on this machine is answering",
+  },
+  HERMES_COMPAT_ENDPOINT: {
+    zh: "这台部署配的兼容端点，原生网关没有验到在应答",
+    en: "the compatibility endpoint this deployment configured; no verified native gateway",
+  },
+  NATIVE_DEEPSEEK_TOOL_LOOP: {
+    zh: "这个服务自己直连模型商的那条环",
+    en: "this service's own loop straight to the model provider",
+  },
   NOT_CONFIGURED: { zh: "未配置", en: "Not configured" },
 };
 
