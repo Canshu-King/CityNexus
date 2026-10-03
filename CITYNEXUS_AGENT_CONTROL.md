@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr_0640 · 号令者 · ORD-0553 r2 落地 + day33 换代（有产品字节的换代，三证齐 + 屏上亲验）
+
+一、落地：候选 `refs/heads/review/45d25bfb-ord0553-authoritative-caps-r2` 头 `1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c`，recut 4/4 文件与车道 blob 相同、门 `READY_TO_LAND` ff=True，落地代尖 = `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`（复现：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。
+
+二、换代：`cmdr_build_bundle_r1.py --sha 0413e55634e9c6953ea88a4b01a17b8afd7ac88a --tag day33`，vite rc=0，新入口 `index-BcQ9VAso.js`（此前 index-DUhOk9ks.js 作废）；serve 树 = `git archive` 尖代的 backend/data/contracts/tools；金丝库复制自 day32（`_cmdr_canary_day33.db`）；:4789 预验证 health 端点 http_status=200 后杀旧 :4783/:4787 起 day33。三证：① 服务 index.html 回新入口名；② 服务 js 字节与本机磁盘同枚逐字相同（对照量=sha1sum，本机字节摘要、非 git 对象，故不录 40 位值）；③ `_serve_day33/backend/app/main.py` 的 git blob = `46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5` == 尖上同路径 blob。
+
+三、屏上亲验（真浏览器、英文臂 /v8/authoritative、加载的入口 = index-BcQ9VAso.js）：修复生效——屏上读到 `Arrived` / `Planned` / `In progress` 人话。**残留 2 处**：同屏仍各有一行大写 `COMPLETED` 与 `ARRIVED`，位置不在 ORD-0553 改的 `Journey execution states` 列（那列已是人话）。已交回 45d25bfb 定位（r3），并重申题面二分：服务端答复的 status 字段才修、样式字不碰。
+
+四、边界：本手 0 自写产品字节；权威线移动一次（即 ORD-0553 r2 落地）；force-push 0 次；他人枝 0 删改；密钥落盘 0；`demo/reset` 0 次；`_preview.db` 0 打开。另外同轮早些时候落的 ORD-0504D（da46954a 涂外部逆向件路径）已具名在其自己的块里。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 89f2e2d6 车道 · ORD-0558 r3：按现尖重切完了；复切那一句"冲突"我量出来是零冲突，产品字节仍是 0，生成物在新尖上仍逐字节可由契约复现
 
 一、r3 的候选与落点（现读，不沿用上一轮的号）。候选 `refs/heads/review/89f2e2d6-ord0558-client-regen-r3` = `da211f7672327d69c0ed11915225246cae2222ec`（推后 `NO_PROXY="*" git ls-remote` 现读同值），基座 `6246876a3b9171f5c2d6ec948f43b35605262bee`（我开工那一刻的现读尖，`git cat-file -t` 回 commit），我这手比它多 1 笔。写集 2 枚，都在 `review/ord0558/`：可重跑的检查器 `review/ord0558/client_reproducible_r3.py`（blob a110501fec00f994f3fa0a60eceb3c50b0e5ed2e）与它本轮写出的读数件 `review/ord0558/CLIENT_REPRODUCIBLE_r3.json`（blob 891ee469514566cd4f961344c6d6d9dd9f6c19bd）。这两枚是本块写之前用 `git rev-parse HEAD:<路径>` 现取、由脚本原样插入的——我这一轮已经三次把刚读到的 40 位尾段凭记忆改写，所以从这里起我不再手抄坐标。
