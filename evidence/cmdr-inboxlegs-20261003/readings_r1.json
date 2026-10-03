@@ -1,0 +1,151 @@
+{
+  "instrument": "cmdr_ord0502r8_inbox_leg_readings_r1",
+  "at_local": "2026-10-03T20:18:51+0800",
+  "tip_measured": "74f5d8df082532f20e66bdba2b84311043f023b5",
+  "product_bytes_in_this_landing": 0,
+  "private_stack": {
+    "api": "127.0.0.1:8805 (my uvicorn, my sqlite copy)",
+    "front": "127.0.0.1:49805 (my static+API proxy)",
+    "viewport": "390x844",
+    "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+    "journey_legs_in_db": 24
+  },
+  "C2_ai_leg": {
+    "post_direct": {
+      "via": "http://127.0.0.1:8805",
+      "http": 201,
+      "seconds": 5.4,
+      "body_bytes": 3341,
+      "body": "{\"status\":\"READY\",\"draft\":{\"id\":\"029eae6f-54c2-4edf-a3c3-6eb6a3ea49b8\",\"journey_id\":\"5a203174-bbcc-422a-aa64-8343c2883c72\",\"artifact_type\":\"TEXT\",\"extracted\":{\"reservation_type\":\"FLIGHT\",\"confirmation_ref\":\"ABC123\",\"origin\":{\"name\":\"厦门\",\"city\":\"Xiamen\"},\"destination\":{\"name\":\"天津\",\"city\":\"Tianjin\"},\"scheduled_departure_at\":null,\"scheduled_arrival_at\":null,\"price_amount_minor\":null,\"currency\":null,\"anchor_role\":\"ARRIVAL\",\"anchor_role_confidence\":0.75,\"payment_status\":\"UNKNOWN\",\"refundability\":\"UNKNOWN\",\"suggested_commitment_level\":\"PROPOSED\",\"semantic_target\":{\"city_code\":\"CN-TIANJIN\",\"anchor\":\"arrival\",\"carrier\":\"Xiamen Airlines\",\"flight_number\":\"MF8322\",\"resolved_key\":\"arrival-anchor\",\"resolved_label\":\"Arrival anchor\",\"resolution_confidence\":0.75},\"candidate_journey_match\":{\"match\":\"MISMATCH\",\"confidence\":0.75,\"reason\":\"Flight is dated Oct 4, outside the journey window Oct 9–11, though the destination city matches the journey city.\"},\"uncertain_fields\":[\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"payment_status\",\"refundability\"],\"reasoning_summary\":\"Flight MF8322 from Xiamen to Tianjin with stated departure time 09:40 on Oct 4; only date/time-of-day given, year and arrival time not stated. Destination city matches journey city, supporting an ARRIVAL role, but the date falls outside the\",\"field_provenance\":{\"reservation_type\":\"artifact\",\"confirmation_ref\":\"artifact\",\"origin\":\"artifact\",\"destination\":\"artifact\",\"scheduled_departure_at\":\"artifact (date/time partial: 10月4日 09:40, year not specified)\",\"anchor_role\":\"inferred\",\"semantic_target\":\"inferred\",\"candidate_journey_match\":\"inferred\"},\"_semantic_contract\":\"V13.3_PREP\",\"semantic_node_key\":\"arrival-anchor\",\"smart_intake\":{\"decision\":\"NEEDS_REVIEW\",\"reasons\":[\"ANCHOR_ROLE_CONFIDENCE_LOW\",\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"payment_status\",\"refundability\"],\"conflicts\":[],\"resolved_target\":{\"status\":\"RESOLVED\",\"kind\":\"STRUCTURAL_ANCHOR\",\"semantic_node_key\":\"arrival-anchor\",\"label\":\"Arrival anchor\",\"confidence\":0.75,\"alternatives\":[]},\"role_confidence\":0.75}},\"interpretation\":{\"anchor_role\":\"ARRIVAL\",\"anchor_role_confidence\":0.75,\"semantic_target\":{\"city_code\":\"CN-TIANJIN\",\"anchor\":\"arrival\",\"carrier\":\"Xiamen Airlines\",\"flight_number\":\"MF8322\",\"resolved_key\":\"arrival-anchor\",\"resolved_label\":\"Arrival anchor\",\"resolution_confidence\":0.75},\"payment_status\":\"UNKNOWN\",\"reasoning_summary\":\"Flight MF8322 from Xiamen to Tianjin with stated departure time 09:40 on Oct 4; only date/time-of-day given, year and arrival time not stated. Destination city matches journey city, supporting an ARRIVAL role, but the date falls outside the\"},\"smart_intake\":{\"decision\":\"NEEDS_REVIEW\",\"reasons\":[\"ANCHOR_ROLE_CONFIDENCE_LOW\",\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"payment_status\",\"refundability\"],\"conflicts\":[],\"resolved_target\":{\"status\":\"RESOLVED\",\"kind\":\"STRUCTURAL_ANCHOR\",\"semantic_node_key\":\"arrival-anchor\",\"label\":\"Arrival anchor\",\"confidence\":0.75,\"alternatives\":[]},\"role_confidence\":0.75},\"unresolved_fields\":[\"scheduled_departure_at\",\"scheduled_arrival_at\"],\"extraction_mode\":\"DEEPSEEK_RESPONSES_TEXT\",\"status\":\"NEEDS_REVIEW\",\"created_at\":\"2026-10-03T12:18:40.365670+00:00\",\"confirmed_at\":null},\"provider\":\"deepseek\"}"
+    },
+    "post_through_front": {
+      "via": "http://127.0.0.1:49805",
+      "http": 201,
+      "seconds": 11.1,
+      "body_bytes": 2991,
+      "body": "{\"status\":\"READY\",\"draft\":{\"id\":\"80cf4924-4970-495d-af4c-a43afd4445fd\",\"journey_id\":\"5a203174-bbcc-422a-aa64-8343c2883c72\",\"artifact_type\":\"TEXT\",\"extracted\":{\"reservation_type\":\"flight\",\"confirmation_ref\":\"ABC123\",\"origin\":{\"city\":\"厦门\"},\"destination\":{\"city\":\"天津\"},\"scheduled_departure_at\":null,\"scheduled_arrival_at\":null,\"price_amount_minor\":null,\"currency\":null,\"anchor_role\":\"UNKNOWN\",\"anchor_role_confidence\":0.2,\"payment_status\":\"unknown\",\"refundability\":\"unknown\",\"suggested_commitment_level\":\"unknown\",\"semantic_target\":{\"flight_number\":\"MF8322\",\"airline\":\"厦门航空\",\"seat\":\"32C\"},\"candidate_journey_match\":{\"match\":\"MISMATCH\",\"confidence\":0.9,\"reason\":\"Flight date Oct 4 does not match journey dates Oct 9-11; origin Xiamen to Tianjin but journey already in Tianjin.\"},\"uncertain_fields\":[\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"anchor_role\",\"payment_status\",\"refundability\",\"suggested_commitment_level\"],\"reasoning_summary\":\"Flight from Xiamen to Tianjin on Oct 4, but journey context is Tianjin trip Oct 9-11. Date mismatch indicates not the journey arrival.\",\"field_provenance\":{\"reservation_type\":\"artifact\",\"confirmation_ref\":\"artifact\",\"origin\":\"artifact\",\"destination\":\"artifact\",\"scheduled_departure_at\":\"artifact\",\"scheduled_arrival_at\":\"artifact\",\"price_amount_minor\":\"artifact\",\"currency\":\"artifact\",\"anchor_role\":\"inferred\",\"anchor_role_confidence\":\"inferred\",\"payment_status\":\"artifact\",\"refundability\":\"artifact\",\"suggested_commitment_level\":\"inferred\",\"semantic_target\":\"artifact\",\"candidate_journey_match\":\"inferred\",\"uncertain_fields\":\"inferred\",\"reasoning_summary\":\"inferred\"},\"_semantic_contract\":\"V13.3_PREP\",\"smart_intake\":{\"decision\":\"REQUIRES_CONFIRMATION\",\"reasons\":[\"ANCHOR_ROLE_REVIEW_REQUIRED\",\"ANCHOR_ROLE_CONFIDENCE_LOW\",\"JOURNEY_MISMATCH\",\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"anchor_role\",\"payment_status\",\"refundability\",\"suggested_commitment_level\"],\"conflicts\":[],\"resolved_target\":null,\"role_confidence\":0.2}},\"interpretation\":{\"anchor_role\":\"UNKNOWN\",\"anchor_role_confidence\":0.2,\"semantic_target\":{\"flight_number\":\"MF8322\",\"airline\":\"厦门航空\",\"seat\":\"32C\"},\"payment_status\":\"unknown\",\"reasoning_summary\":\"Flight from Xiamen to Tianjin on Oct 4, but journey context is Tianjin trip Oct 9-11. Date mismatch indicates not the journey arrival.\"},\"smart_intake\":{\"decision\":\"REQUIRES_CONFIRMATION\",\"reasons\":[\"ANCHOR_ROLE_REVIEW_REQUIRED\",\"ANCHOR_ROLE_CONFIDENCE_LOW\",\"JOURNEY_MISMATCH\",\"scheduled_departure_at\",\"scheduled_arrival_at\",\"price_amount_minor\",\"currency\",\"anchor_role\",\"payment_status\",\"refundability\",\"suggested_commitment_level\"],\"conflicts\":[],\"resolved_target\":null,\"role_confidence\":0.2},\"unresolved_fields\":[\"scheduled_departure_at\",\"scheduled_arrival_at\",\"anchor_role\"],\"extraction_mode\":\"DEEPSEEK_RESPONSES_TEXT\",\"status\":\"NEEDS_REVIEW\",\"created_at\":\"2026-10-03T12:18:51.485875+00:00\",\"confirmed_at\":null},\"provider\":\"deepseek\"}"
+    },
+    "screen_wait_ms_to_change": 11138,
+    "screen_changed": true,
+    "painted_text_head": "多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n\n提取状态： FAILED_EXTERNAL\n\n权威记忆\n已保存的行程事实\n0 个受保护事实\n\n暂无已确认工件绑定到此行程。\n\n等你审核的确认单\n\n这里没有等你审核的确认单。",
+    "machine_enum_painted_on_screen": true,
+    "extraction_status_sentence_painted": true,
+    "draft_created": false,
+    "render_site": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:427",
+    "vocabulary_tables_present": [
+      "RUNTIME_IDENTITY@frontend/src/lib/displayVocabulary.ts:14",
+      "POLICY_MODE@frontend/src/lib/displayVocabulary.ts:18",
+      "EXECUTION_STATE@frontend/src/lib/displayVocabulary.ts:26",
+      "PLAN_SOURCE@frontend/src/lib/displayVocabulary.ts:30"
+    ],
+    "vocabulary_table_for_extraction_status": "ABSENT",
+    "backend_emitters": [
+      "backend/app/main.py:6334 (@app.post ... status_code=201)",
+      "backend/app/main.py:6351 (status FAILED_EXTERNAL, draft null)",
+      "backend/app/main.py:6397",
+      "backend/app/main.py:6518"
+    ]
+  },
+  "C2b_deterministic_leg": {
+    "tab": "手动填写",
+    "submit_label": "预览这条预订",
+    "calls": [
+      {
+        "m": "POST",
+        "u": "03174-bbcc-422a-aa64-8343c2883c72/inbox/import",
+        "s": 201,
+        "body_chars": 803
+      },
+      {
+        "m": "GET",
+        "u": "eys/5a203174-bbcc-422a-aa64-8343c2883c72/inbox",
+        "s": 200,
+        "body_chars": 2476
+      }
+    ],
+    "save_button_present": true,
+    "save_geometry": {
+      "label": "保存更正",
+      "disabled": false,
+      "rect": {
+        "x": 34,
+        "y": 400,
+        "w": 96,
+        "h": 44
+      },
+      "centre": {
+        "cx": 82,
+        "cy": 422,
+        "viewport_h": 844
+      },
+      "hit_tag": "button",
+      "hit_class": "",
+      "hit_is_self_or_inside": true,
+      "inside_mobile_nav": false,
+      "nav_rect": {
+        "top": 768,
+        "bottom": 844
+      }
+    },
+    "patch_seen_after_coordinate_click": 1
+  },
+  "C3_reachability": {
+    "as_is_centre": {
+      "cx": 82,
+      "cy": 1662,
+      "viewport_h": 844
+    },
+    "as_is_covered_by_nav": false,
+    "as_is_hit_tag": null,
+    "after_wheel_centre": {
+      "cx": 82,
+      "cy": 25,
+      "viewport_h": 844
+    },
+    "after_wheel_hit_is_self": true,
+    "after_script_scroll": {
+      "label": "保存更正",
+      "disabled": false,
+      "centre": {
+        "cx": 82,
+        "cy": 25,
+        "viewport_h": 844
+      },
+      "rect": {
+        "x": 34,
+        "y": 3,
+        "h": 44
+      },
+      "hit_tag": "button",
+      "hit_class": "",
+      "hit_is_self": true,
+      "inside_nav": false,
+      "nav_top": 768,
+      "nav_bottom": 844,
+      "covered_by_nav": false,
+      "window_scroll_y": 2796,
+      "scroller": null
+    },
+    "coordinate_click": {
+      "calls": [
+        {
+          "m": "PATCH",
+          "u": "box/f01293cb-00c6-4639-87fe-7a033a289ca9",
+          "s": 200
+        },
+        {
+          "m": "GET",
+          "u": "203174-bbcc-422a-aa64-8343c2883c72/inbox",
+          "s": 200
+        }
+      ],
+      "patch_seen": 1
+    },
+    "verdict_on_lane_c3": "NOT_REPRODUCED_ON_CMDR_STACK: 保存更正 滚到可见后中心命中自己、PATCH 落 1 条；车道那枚 cy=783 落在 nav 带 768..844 里，是未滚动/短页位置，判据须补一条「滚到底之后的中心命中」两版读数。"
+  },
+  "pageErrors": {
+    "r4": [],
+    "r5": [],
+    "r6": []
+  }
+}
