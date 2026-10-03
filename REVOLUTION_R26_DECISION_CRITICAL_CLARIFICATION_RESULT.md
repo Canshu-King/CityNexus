@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
 - Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
-- Final code SHA: `ab3f3c0a094af3a4fa872a1f076eaef51d57bb68`
+- Final code SHA: `1c9c7b3df710df213c2eabcd3669f09ce2c6ed45`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -81,6 +81,7 @@ without changing the clarification or authority contract:
 - startup reconciliation persists `INTERRUPTED / PROCESS_RESTARTED_DURING_AGENT_RUN` for stale
   runs, while the mission remains `ABORTED`;
 - the mission UI renders both structured outcomes and legacy string outcomes safely.
+- the public OpenAPI and generated TypeScript contracts now declare the structured outcome shape.
 
 Verification after these changes:
 
@@ -90,7 +91,7 @@ runtime-failure regressions: 3 passed, 1 warning
 Qoder gates: 13 passed, 1 warning
 frontend typecheck: passed
 frontend production build: passed (Vite chunk-size warning only)
-remote HEAD: ab3f3c0a094af3a4fa872a1f076eaef51d57bb68
+remote HEAD: 1c9c7b3df710df213c2eabcd3669f09ce2c6ed45
 ```
 
 ## Focused verification
