@@ -332,7 +332,9 @@ from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.verified_scoring import score_replan_candidate
 from app.schemas import (
     AgentApprovalRequest,
+    AgentCommandResponse,
     AgentCommandRequest,
+    AgentRunResponse,
     ClarificationAnswer,
     AgentPolicyPayload,
     AgentToolCall,
@@ -1225,7 +1227,10 @@ def call_agent_tool(
     return AgentToolGateway(session).dispatch(tool_name, resolved_payload)
 
 
-@app.post("/api/v1/journeys/{journey_id}/agent/commands")
+@app.post(
+    "/api/v1/journeys/{journey_id}/agent/commands",
+    response_model=AgentCommandResponse,
+)
 def run_agent_command(
     journey_id: UUID,
     payload: AgentCommandRequest,
@@ -2176,7 +2181,10 @@ def journey_operations_stream(
     )
 
 
-@app.get("/api/v1/journeys/{journey_id}/agent/runs/{run_id}")
+@app.get(
+    "/api/v1/journeys/{journey_id}/agent/runs/{run_id}",
+    response_model=AgentRunResponse,
+)
 def get_agent_run(
     journey_id: UUID,
     run_id: UUID,

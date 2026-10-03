@@ -199,6 +199,49 @@ class AgentCommandRequest(BaseModel):
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
 
 
+class AgentRunOutcome(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    status: str
+    reason_code: str | None = None
+    user_summary: str | None = None
+    recommended_action: str | None = None
+
+
+class AgentRunResponse(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    run_id: UUID | None = None
+    mission_id: UUID
+    journey_id: UUID | None = None
+    provider_key: str | None = None
+    runtime_identity: str | None = None
+    model_key: str | None = None
+    status: str
+    completion_contract: dict[str, Any] | None = None
+    outcome: str | AgentRunOutcome | None = None
+    failure_reason: str | None = None
+    mission_status: str | None = None
+    created_at: str | None = None
+    started_at: str | None = None
+    completed_at: str | None = None
+    mission: dict[str, Any] | None = None
+    tool_steps: list[dict[str, Any]] = Field(default_factory=list)
+    native_events_url: str | None = None
+    events_url: str | None = None
+    timeline_url: str | None = None
+    initial_events: list[dict[str, Any]] | None = None
+    protected_commitments: list[dict[str, Any]] | None = None
+
+
+class AgentCommandResponse(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    event_id: UUID | None = None
+    mission: dict[str, Any] = Field(default_factory=dict)
+    run: AgentRunResponse
+
+
 class ClarificationAnswer(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
