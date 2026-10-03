@@ -1,0 +1,297 @@
+{
+ "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+ "arm_blobs": {
+  "line_arm": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+  "branch_pre": "395662e3c534229bc8492ea611b6c737257e6228",
+  "reshaped": "032777990661c5220794a91c2a00a8ed1ea97fe7"
+ },
+ "line_arm_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+ "branch_pre_arm_blob": "395662e3c534229bc8492ea611b6c737257e6228",
+ "reshaped_arm_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+ "arm_written_back_to_ruled": true,
+ "line_arm_has_no_sub_floor_predicate": true,
+ "branch_pre_has_sub_floor_predicate": true,
+ "whitelist_as_shipped": [
+  "app/db/write_deadline.py"
+ ],
+ "states": 8,
+ "all_met": true,
+ "holes_open_on_the_line": [
+  "Q1_same_name_other_path",
+  "Q4_sub_floor_consumer_copy"
+ ],
+ "product_files_byte_identical_to_tip": true,
+ "dirt_lines": 23,
+ "dirt_outside_review_area": 0,
+ "dirt_outside_review_area_lines": [],
+ "runs": [
+  {
+   "id": "Q0_no_injection",
+   "note": "all three legs on the tree as it stands, so every pair below is comparable",
+   "arms": {
+    "line_arm": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.14s",
+      "bitting_line": null
+     }
+    },
+    "branch_pre": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 1.91s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.22s",
+      "bitting_line": null
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  },
+  {
+   "id": "Q1_same_name_other_path",
+   "note": "app/db/deep/write_deadline.py stating 90000: exempt by basename, not by path",
+   "arms": {
+    "line_arm": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.44s",
+      "bitting_line": null
+     }
+    },
+    "branch_pre": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.17s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.43s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+     }
+    }
+   },
+   "hole_in_this_leg": [
+    "line_arm",
+    "branch_pre"
+   ],
+   "all_met": true
+  },
+  {
+   "id": "Q2_named_expansion",
+   "note": "the same file with its path written into the whitelist",
+   "arms": {
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.30s",
+      "bitting_line": null
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  },
+  {
+   "id": "Q3_whitelist_rotted",
+   "note": "path whitelisted but states no number",
+   "arms": {
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.77s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:263: AssertionError"
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  },
+  {
+   "id": "Q4_sub_floor_consumer_copy",
+   "note": "CMDR 18:34's own case - 1200 ms in a file that already asks settings; the line has no predicate for it at all, my branch's pre-reshape commit does",
+   "arms": {
+    "line_arm": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 3.22s",
+      "bitting_line": null
+     }
+    },
+    "branch_pre": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.92s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:249: AssertionError"
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 3.22s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:260: AssertionError"
+     }
+    }
+   },
+   "hole_in_this_leg": [
+    "line_arm"
+   ],
+   "all_met": true
+  },
+  {
+   "id": "Q5_worker_at_floor",
+   "note": "a worker wait raised to request-path scale - every leg sees it",
+   "arms": {
+    "line_arm": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.78s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError"
+     }
+    },
+    "branch_pre": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.74s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError"
+     }
+    },
+    "reshaped": {
+     "expect": "red",
+     "got": "red",
+     "met": true,
+     "pytest": {
+      "rc": 1,
+      "verdict": "red",
+      "summary": "1 failed, 2 warnings in 2.78s",
+      "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  },
+  {
+   "id": "Q6_new_worker_below",
+   "note": "a brand new 800 ms worker wait stays legitimate under all three",
+   "arms": {
+    "line_arm": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.48s",
+      "bitting_line": null
+     }
+    },
+    "branch_pre": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.65s",
+      "bitting_line": null
+     }
+    },
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "1 passed, 2 warnings in 2.63s",
+      "bitting_line": null
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  },
+  {
+   "id": "Q7_family",
+   "note": "both ruler files whole on the ruled arm",
+   "arms": {
+    "reshaped": {
+     "expect": "green",
+     "got": "green",
+     "met": true,
+     "pytest": {
+      "rc": 0,
+      "verdict": "green",
+      "summary": "21 passed, 2 warnings in 8.41s",
+      "bitting_line": null
+     }
+    }
+   },
+   "hole_in_this_leg": [],
+   "all_met": true
+  }
+ ],
+ "reading": "the ruled cell closes two states the line is blind to: Q1 because the exemption is a named path instead of a base name, Q4 because the sub-floor consumer predicate exists at all. Both legs that miss them are reported with their own bytes, and the leg I used as `pre` in the two earlier generations is here under its own name (branch_pre) so those readings stay comparable instead of being re-labelled"
+}
