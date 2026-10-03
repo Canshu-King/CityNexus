@@ -45,21 +45,43 @@ def sh(args, cwd=REPO):
 
 
 def refs_in_family():
-    """An empty answer from the remote has happened here for real (a transient one mid-chain), and
-    "no refs" read as an empty receipt would quietly leave the previous generation's arm result in
-    place -- so this asks twice and refuses rather than returning an empty list."""
-    found, last = set(), ""
-    for _ in range(3):
-        rc, out = sh(["ls-remote", "--refs", "origin"])
-        last = out
-        if rc == 0:
-            found |= {l.split()[1] for l in out.splitlines() if len(l.split()) == 2
-                      and l.split()[1].startswith(FAMILY)}
-            if found:
-                break
-    if not found:
-        raise SystemExit("ABORT_NO_REFS three reads answered nothing: %s" % last[:200])
-    return sorted(found, key=lambda r: int(re.search(r"(\d+)$", r).group(1)))
+    """This order's review refs: asked for BY PATTERN, from two reads that agree, and cross-checked
+    against one fact that does not come from the transport.
+
+    At 21:44 an unpatterned `ls-remote --refs origin` answered with only r5..r9 of an eighteen-ref family
+    (the same call seconds later answered all eighteen), and the old loop stopped at the first non-empty
+    read -- so a truncated list became the receipt's denominator, and a page saying "N published refs, M
+    of them run" would have been quoting the half-read.  Two guards follow, because agreement is not
+    completeness: three identical SHORT reads agree perfectly (tools/ref_discovery_arm_r18.py's M2 proves
+    it), so the list is also required to contain the ref this very hand pushed minutes ago.  If the server
+    "does not know" the ref I just pushed and got back a sha for, the read is wrong, not the push.
+    """
+    pattern = FAMILY + "*"
+    own = os.environ.get("BRANCH_EMIT_EXCLUDE") or ""
+    m_own = re.search(r"(\d+)$", own)
+    own_ref = FAMILY + "r%s" % m_own.group(1) if m_own else None
+    reads, last_err = [], ""
+    for _ in range(4):
+        rc, out = sh(["ls-remote", "--refs", "origin", pattern])
+        if rc != 0:
+            last_err = out[:160]
+            continue
+        got = {l.split()[1] for l in out.splitlines()
+               if len(l.split()) == 2 and l.split()[1].startswith(FAMILY)}
+        if got and reads and got == reads[-1]:
+            if own_ref and own_ref not in got:
+                raise SystemExit("ABORT_REF_READ_MISSING_OWN_REF two reads agreed on %d refs but none of "
+                                 "them is %s, which this hand pushed minutes ago -- the read is "
+                                 "truncated, refusing to publish that as a denominator"
+                                 % (len(got), own_ref))
+            return sorted(got, key=lambda r: int(re.search(r"(\d+)$", r).group(1)))
+        if got:
+            reads.append(got)
+    if not reads:
+        raise SystemExit("ABORT_NO_REFS four patterned reads answered nothing; last error: " + last_err)
+    raise SystemExit("ABORT_REF_READ_UNSTABLE the patterned reads returned %s distinct sets -- refusing "
+                     "to publish a denominator off one truncated answer"
+                     % "、".join(str(len(r)) for r in reads))
 
 
 def newest_evidence(pattern):
