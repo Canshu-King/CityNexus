@@ -8637,11 +8637,11 @@ def _plan_mobility_eligibility_receipts(
             if snapshot is not None
             else facts_by_pair.get((origin_key, destination_key))
         )
+        mode = _mobility_fact_value(fact, "mode")
         receipt: dict[str, Any] = {
             "origin_key": origin_key,
             "destination_key": destination_key,
             "provider": _mobility_fact_value(fact, "provider", evidence.get("source_provider")),
-            "mode": _mobility_fact_value(fact, "mode"),
             "fact_quality": _mobility_fact_value(fact, "fact_quality"),
             "route_provenance": _mobility_fact_value(fact, "route_provenance"),
             "degraded": bool(_mobility_fact_value(fact, "degraded", evidence.get("degraded", False))),
@@ -8650,6 +8650,8 @@ def _plan_mobility_eligibility_receipts(
             "hard_eligible": False,
             "decision": "MOBILITY_DATA_UNAVAILABLE" if fact is None else "HARD_INELIGIBLE",
         }
+        if mode is not None:
+            receipt["mode"] = mode
         if snapshot is not None and fact is not None:
             try:
                 receipt["hard_minutes"] = snapshot.hard_minutes(origin_key, destination_key)
