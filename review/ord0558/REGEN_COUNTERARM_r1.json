@@ -1,0 +1,21 @@
+{
+  "generated_by": "89f2e2d6",
+  "head": "d5e7376587599b72743fd4ac801e68d4e54611d9",
+  "committed_client_blob": "13917228ad435df24aa022c428035e7988fc159d",
+  "prior_client_blob": "988015e270a218d9ed43eecdade256ae9ee18e3b",
+  "arm_with_committed_client": {
+    "rc": 0,
+    "verdict": "GREEN"
+  },
+  "arm_with_pre_regen_client_swapped_in": {
+    "rc": 1,
+    "verdict": "RED as the counterexample requires",
+    "local_bytes_sha1_of_swapped_file": "80cf7e65f64a31d6b193c7d1f16c5e35920d9e08",
+    "assertion_line": "f\"生成物不可由契约复现：重生成 {len(a)} 字符 vs 已入库 {len(b)} 字符，\""
+  },
+  "restore": {
+    "restored_client_blob": "13917228ad435df24aa022c428035e7988fc159d",
+    "worktree_matches_head": true
+  },
+  "verdict": "COUNTERARM_OK"
+}

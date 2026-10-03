@@ -1,0 +1,163 @@
+{
+  "generated_by": "89f2e2d6",
+  "dispatch": "CMDR 00:53 第二点（账本裁语：用声明的工具链重生成 frontend/src/generated/api.ts 并把产物入库，带反件，交前跑构建+类型检查）",
+  "candidate_head": "d5e7376587599b72743fd4ac801e68d4e54611d9",
+  "base": "b168b428f4ed0c9719a1aecf0bb38d98035cec9e",
+  "toolchain": {
+    "package": "openapi-typescript",
+    "version": "7.13.0",
+    "cli_disk_sha1": "01b153a4f043cc3add7f48ee6701d4df9f2452f0",
+    "invocation": "node <cli> contracts/openapi.yaml -o frontend/src/generated/api.ts"
+  },
+  "contract": {
+    "blob": "54af2d4fdb9546ee038bb5e98705fd329024b36f",
+    "bytes": 194179
+  },
+  "client_before": {
+    "blob_at_base": "988015e270a218d9ed43eecdade256ae9ee18e3b",
+    "bytes": 294223,
+    "local_bytes_sha1": "80cf7e65f64a31d6b193c7d1f16c5e35920d9e08",
+    "cr_bytes": 0,
+    "naming_the_token": false
+  },
+  "client_after": {
+    "blob": "13917228ad435df24aa022c428035e7988fc159d",
+    "bytes": 294249,
+    "local_bytes_sha1": "29b4e296e5473db0c06add13a24ad3ca6015f296",
+    "cr_bytes": 0,
+    "naming_the_token": true
+  },
+  "diff": {
+    "numstat": "1\t1\tfrontend/src/generated/api.ts",
+    "removed_line": [
+      "diff --git a/frontend/src/generated/api.ts b/frontend/src/generated/api.ts",
+      "index 988015e2..13917228 100644",
+      "--- a/frontend/src/generated/api.ts",
+      "+++ b/frontend/src/generated/api.ts",
+      "@@ -5040,7 +5040,7 @@ export interface operations {",
+      "                     \"application/json\": components[\"schemas\"][\"JourneyCheckin\"];",
+      "                 };",
+      "             };",
+      "-            /** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from \"not yours\" because the two facts deserve two sentences */",
+      "+            /** @description error.reason_code = CHECKIN_JOURNEY_UNKNOWN / CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from \"not yours\" because the two facts deserve two sentences */",
+      "             404: {",
+      "                 headers: {",
+      "                     [name: string]: unknown;"
+    ]
+  },
+  "determinism": {
+    "run_a_rc": 0,
+    "run_b_rc": 0,
+    "run_a_sha1": "29b4e296e5473db0c06add13a24ad3ca6015f296",
+    "run_b_sha1": "29b4e296e5473db0c06add13a24ad3ca6015f296",
+    "two_runs_identical": true,
+    "run_equals_committed": true
+  },
+  "reproduced_by_the_declared_toolchain": true,
+  "bundle_after_build": {
+    "base": {
+      "assets": 10,
+      "total_bytes": 2944503,
+      "manifest_sha1": "3546fbdaf791a92249c0f258449d98e79447be3d"
+    },
+    "candidate": {
+      "assets": 10,
+      "total_bytes": 2944503,
+      "manifest_sha1": "3546fbdaf791a92249c0f258449d98e79447be3d"
+    },
+    "identical_manifest": true,
+    "reading": "the regenerated client changes no runtime byte: both generations built 10 assets, same total, same per-asset hashes, so this hand ships a type-level artifact only"
+  },
+  "typecheck": {
+    "tsconfig_check_rc": 0,
+    "tsconfig_typecheck_rc": 0,
+    "commands": "node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit; -p tsconfig.typecheck.json"
+  },
+  "counterexample_byte_arm_on_the_pre_regen_client": {
+    "command": "git checkout HEAD~1 -- frontend/src/generated/api.ts; pytest tests/test_qoder_ord0508_generated_client_schemas.py::test_the_client_is_byte_for_byte_what_the_declared_toolchain_makes_from_the_contract",
+    "verdict": "RED as required",
+    "assertion_verbatim": "生成物不可由契约复现：重生成 294099 字符 vs 已入库 294073 字符，首个不同处在 175685 偏移",
+    "restored_after": "git checkout HEAD -- frontend/src/generated/api.ts（现读工作区与该 blob 一致）"
+  },
+  "counterexamples_already_in_the_ruler": [
+    "test_a_component_declared_only_in_the_contract_turns_the_ruler_red_and_is_named",
+    "test_a_component_left_in_the_client_after_contract_removal_is_also_named",
+    "test_the_parser_is_scoped_to_components_schemas_and_cannot_be_satisfied_by_other_keys",
+    "test_the_cli_exits_zero_on_a_reproduced_client_and_one_on_a_stale_generation"
+  ],
+  "suites": {
+    "base": {
+      "summary": "20 failed, 1687 passed, 22 skipped, 1 xfailed, 4 warnings in 191.08s (0:03:11)",
+      "counts": {
+        "failed": 20,
+        "passed": 1687,
+        "skipped": 22,
+        "xfailed": 1
+      },
+      "collected": null,
+      "red_set": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+        "tests/test_qoder_ord0387_ai_state_contract_sync.py::test_the_hand_written_client_names_the_field_and_every_word",
+        "tests/test_qoder_ord0387_ai_state_contract_sync.py::test_the_screen_maps_each_word_and_invents_no_extra_one",
+        "tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes",
+        "tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip",
+        "tests/test_qoder_ord0444_collections.py::test_the_face_fetches_the_runtime_prefix_not_the_contract_path",
+        "tests/test_qoder_ord0465_shared_landing.py::test_ord0465_every_word_this_answer_offers_has_a_label_the_traveller_reads",
+        "tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+        "tests/test_qoder_ord0496_calendar_export.py::test_an_activity_without_a_usable_clock_is_skipped_and_counted_never_silently_lost",
+        "tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+        "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+      ],
+      "red_count": 20
+    },
+    "candidate": {
+      "summary": "19 failed, 1688 passed, 22 skipped, 1 xfailed, 4 warnings in 186.69s (0:03:06)",
+      "counts": {
+        "failed": 19,
+        "passed": 1688,
+        "skipped": 22,
+        "xfailed": 1
+      },
+      "collected": null,
+      "red_set": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+        "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+        "tests/test_qoder_ord0387_ai_state_contract_sync.py::test_the_hand_written_client_names_the_field_and_every_word",
+        "tests/test_qoder_ord0387_ai_state_contract_sync.py::test_the_screen_maps_each_word_and_invents_no_extra_one",
+        "tests/test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes",
+        "tests/test_qoder_ord0434_share_grants.py::test_the_anonymous_read_bytes_are_unchanged_from_the_base_tip",
+        "tests/test_qoder_ord0444_collections.py::test_the_face_fetches_the_runtime_prefix_not_the_contract_path",
+        "tests/test_qoder_ord0465_shared_landing.py::test_ord0465_every_word_this_answer_offers_has_a_label_the_traveller_reads",
+        "tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable",
+        "tests/test_qoder_ord0496_calendar_export.py::test_an_activity_without_a_usable_clock_is_skipped_and_counted_never_silently_lost",
+        "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+      ],
+      "red_count": 19
+    },
+    "red_delta": {
+      "candidate_minus_base": [],
+      "base_minus_candidate": [
+        "tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match"
+      ]
+    }
+  },
+  "parity_tool": "OpenAPI 3.1.0; formal 175; runtime 175; missing 0; extra 0\nschemas formal 87; generated 87; missing 0; extra 0",
+  "note_on_the_before_reading": "review/ord0520/GENERATED_CLIENT_DRIFT_r1.json (blob f5d92fa019a7e8d10526db888d072a57b38c1431) is the published before-reading and is not rewritten by this hand; the after-reading is this file."
+}
