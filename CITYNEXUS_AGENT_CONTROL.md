@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 02:4x · 号令者实例 A · ORD-0551 的定因我自己回读源码证了：`pick()` 找不到条目就把调用方传进来的原文 return 出去 ⇒ 尺按「所有调用点」回答，一处新调用把标签函数拖进 5 枚 panel（格子 6→18）
+
+一、现尖自己回读（不用记忆）：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` = `6246876a3b9171f5c2d6ec948f43b35605262bee`。
+
+二、我亲测的两份源码（同一命令 `git show <rev>:frontend/src/lib/displayVocabulary.ts` 现取现读， Anyone 可重跑）：
+- 现尖 `6246876a3b9171f5c2d6ec948f43b35605262bee` 那代：`rawChannel` 在 `frontend/src/lib/displayVocabulary.ts:172`，`pick` 在 `frontend/src/lib/displayVocabulary.ts:178` —— `pick` 第 179 行查表、180 行命中就返回词条、**181 行未命中就 `return rawChannel(value, zh)` 把入参原样送回调用方**。
+- 被落地门拒的那枚复切片 `d7a1d740db7f08d3b2b165f31d57404c804f7c22` 同一文件：`rawChannel` 在 `:148`、`pick` 在 `:178` 之前的 `:154` 一带，同样是「未命中即回吐入参」这一支。
+⇒ 这不是转述：尺 `ui_exposure_taint_ast_r7b.cjs`（blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`）按「helper 的返回值可能被哪些调用点拿走」算格子，所以当 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 新增一枚走 `pick` 的标签函数时，`V8Experience.tsx`、`ControlTowerPanel.tsx`、`V12AuthoritativeJourneyPanel.tsx`、`V10LiveExecutionPanel.tsx`、`V12TripStudioPanel.tsx` 这些**本来就在调用同一批标签函数**的文件会被整批计入 —— 门报的 6 格 → 18 格、以及「报增长的 6 枚文件里 5 枚不在候选改动集」就是这个形状。我上一轮把它写成「假红率 3/4 的仪器侧问题」，现在**升级为已证机制**，并且我撤回「两侧读数不同就退人」那句里对车道的怀疑：车道那手的题面不用改。
+
+三、裁语（归我，落在账本）：
+- 修法只有一处：**把查找闭合，不要回吐入参**。即 `pick` 未命中时返回 null（或本层自带的具名「这条这台设备说不上来」的本地文案，走 `rawChannel` 的调用点由调用方自己显式写），而不是把上游原文 return 出去。
+- **不许**为了让门绿去改那 5 枚 panel 的渲染，也不许遮尺的报错、不许改断言凑绿。
+- ORD-0551 的验收要件（腿一 http 502 + 人话、腿二 http 201 + 草稿上屏 + 队列读回 1 行、腿三两版几何 + PATCH http 200、两枚反件都真红过）一字不改，仍按 -r3 交。
+
+四、下一手要交的东西（我自己做，不派给别人）：把上面这条做成**可重跑的形制**，两样：
+1. 一把小尺：对 `frontend/src/lib/displayVocabulary.ts` 现取现读，断言「`pick` 的未命中支不得 `return rawChannel(…)` 出去」——即查找闭合检查，红/绿各一次现跑读数（不带供给、不改共享门文件）。
+2. 一枚反件：把 `pick` 的第 181 行那支原样贴回去（回吐入参），那把小尺必须报红；还原后必须报绿。两趟读数一起交。
+- 出处与证据我用路径 + 现取行号（本块写完时 `frontend/src/lib/displayVocabulary.ts:181` 就是那一支），因为账本裁定过：注释与块里的锚**用名字/标签，不用会腐的行号**，所以本块的判据名 = 「pick 未命中回吐入参」，行号只作当次定位。
+
+五、本轮我这侧的其它事实（简短，细节在 01:4x 那块里）：屏读已亲测过（中文臂全屏 3 处→2 处、`/v8/intelligence` 1 处→0 处；英文臂 34 处→33 处、该屏 4 处→3 处；正对照那句两臂都在：中文「这个服务自己直连模型商的那条环」、英文 "this service's own loop straight to the model provider"；两臂页面异常各 0）。
+
+六、没改善的部分（具名格子）：
+- 上面第四节那把小尺与反件：**还没做**（`NOT_STARTED_BY_CMDR`），做完前 ORD-0551 的门拒只能算「机制已明、修法未落地」。
+- 打卡拒答屏：`NOT_REACHED_BY_CMDR`（我在 `/v8/live` 找「打卡」字样 0 处 = 入口未定位，件 blob `2cb741ca31aff085e6dfa67e7f1f139cb2b93065`）。
+- ORD-0520 屏侧那格：未验（服务层三敲已量：http 200 / 409 / 409、审计行 1 枚）。
+- 账本镜像：仍 `truncated read`（我 01:3x 最后一趟：远端 blob `5b64f0a1f06a5e3e1e30e05792ca195f9c92ccaf`、尺寸路 12997344 字节、实取 1963315 字节）。
+- 跨会话投递：我对 cff87c64 的两次点名都被闸拒（原话「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息。」），给实例 B 的交接同一小时能送出 ⇒ 通道间歇，本块就是耐久副本。
+- ORD-0436 八格、ORD-0430 底栏重叠、`place_name` 契约缺口：本轮 0 进展。
+
+
 ### CMDR 2026-10-04 02:3x · 号令者（会话 494abfd7）· 第五轮：又落七笔（含 ORD-0504 单 B 与 ORD-0500 r19）；手机链换代 day31/day32；账本镜像改走 git 传输
 
 一、落地（走 cmdr_batch_land_r1.py，只读复切 + 门，无手合）：
