@@ -123,9 +123,9 @@ def test_the_duplicate_answer_comes_from_the_door_and_not_from_the_index(staged)
     """Which layer refused is a fact the sentence alone cannot carry.
 
     Two guards refuse a second tap on the same stop, both of them on this tip: the door looks
-    its own table up first (`backend/app/main.py:4256`), and the `UNIQUE (journey_id,
-    target_key)` index catches a race that lookup cannot see (`:4292`), which is the only
-    branch that adds `caught_by: unique_index` (`:4309`).  A screen-side check of the
+    its own table up first (`backend/app/main.py:4263`), and the `UNIQUE (journey_id,
+    target_key)` index catches a race that lookup cannot see (`:4299`), which is the only
+    branch that adds `caught_by: unique_index` (`:4316`).  A screen-side check of the
     sentence cannot tell those apart -- delete the door's
     lookup and a sentence-only arm still passes.  This arm pins the layer, so it is the one that
     goes red under that mutation, while the sibling spec keeps the durable half.

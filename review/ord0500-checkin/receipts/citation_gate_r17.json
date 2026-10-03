@@ -1,11 +1,11 @@
 {
   "tool": "citation_gate_r17",
-  "took_local": "2026-10-03T20:07:33+08:00",
+  "took_local": "2026-10-03T23:12:39+08:00",
   "tree": "D:/moodle/_qoder_phone_ord0485_20260930\\wt22",
-  "tip": "afe992aba1c1bbcce55bbe5d83b58116879efb2e",
+  "tip": "6b6d99e1db05da96db1e17a4111dc95a3d250fe0",
   "branch": "lane/ord0500-r14",
   "files_scanned": 9,
-  "live_tracked_paths": 3431,
+  "live_tracked_paths": 3432,
   "citations_seen": 33,
   "citations_judged": 8,
   "citations_declined": 25,
@@ -13,7 +13,7 @@
   "judged_files": 1,
   "mechanical_rows": 4,
   "pin_rows": 4,
-  "lane_commits_in_set": 32,
+  "lane_commits_in_set": 41,
   "foreign_files_seen": [
     "backend/app/main.py",
     "contracts/openapi.yaml",
@@ -90,7 +90,7 @@
       "cited_by": "backend/app/main.py:3318",
       "target": "backend/app/main.py",
       "line": 3200,
-      "lines_in_target": 14476,
+      "lines_in_target": 14483,
       "verdict": "NOT_THIS_LANES_CITATION",
       "citing_sentence": "`restore` in this tree means \"a reload brings the same draft/panel back\" (`main.py:3200`).  An",
       "owner_commit": "7862c6de5565c02c20ec2dccaa9da18960603e06",
@@ -99,7 +99,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:3672",
+      "cited_by": "backend/app/main.py:3679",
       "target": "backend/app/db/session.py",
       "line": 64,
       "verdict": "NOT_THIS_LANES_CITATION",
@@ -110,7 +110,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:4101",
+      "cited_by": "backend/app/main.py:4108",
       "target": "backend/app/operations/v9.py",
       "line": 732,
       "verdict": "NOT_THIS_LANES_CITATION",
@@ -121,7 +121,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:4377",
+      "cited_by": "backend/app/main.py:4384",
       "target": "frontend/src/lib/journeyLink.ts",
       "line": 34,
       "lines_in_target": 120,
@@ -133,7 +133,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:4724",
+      "cited_by": "backend/app/main.py:4731",
       "target": "backend/app/stay_mobility.py",
       "line": 1684,
       "verdict": "NOT_THIS_LANES_CITATION",
@@ -144,7 +144,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:4851",
+      "cited_by": "backend/app/main.py:4858",
       "target": "backend/app/schemas.py",
       "line": 239,
       "verdict": "NOT_THIS_LANES_CITATION",
@@ -155,7 +155,7 @@
       "why": "the sentence carrying this citation was written by commit 7862c6de5565, which this order does not own"
     },
     {
-      "cited_by": "backend/app/main.py:4900",
+      "cited_by": "backend/app/main.py:4907",
       "target": "backend/app/stay_mobility.py",
       "line": 1963,
       "verdict": "NOT_THIS_LANES_CITATION",
@@ -178,30 +178,30 @@
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:126",
       "target": "backend/app/main.py",
-      "line": 4256,
+      "line": 4263,
       "verdict": "OK",
       "target_text": "existing = session.scalars(",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:127",
       "target": "backend/app/main.py",
-      "line": 4292,
+      "line": 4299,
       "verdict": "OK",
       "target_text": "except IntegrityError as exc:",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:128",
       "target": "backend/app/main.py",
-      "line": 4309,
+      "line": 4316,
       "verdict": "OK",
       "target_text": "\"caught_by\": \"unique_index\",",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
@@ -210,7 +210,7 @@
       "target": "backend/app/main.py",
       "line": 11190,
       "verdict": "NOT_THIS_LANES_CITATION",
-      "target_text": "effective_event_time_source = str(",
+      "target_text": "if affected_activity_id in protected_activity_ids and trigger_event.event_type i",
       "owner_commit": "dcb90cccc68b81f2317b28db19051dedb9f06c80",
       "owner_is_this_lane": false,
       "mechanical_verdict": "OK",
@@ -265,7 +265,7 @@
       "target": "backend/app/main.py",
       "line": 6331,
       "verdict": "NOT_THIS_LANES_CITATION",
-      "target_text": ")",
+      "target_text": "return None",
       "owner_commit": "3e259bd32be43a6da5ab3a44a4502f19abb9f99c",
       "owner_is_this_lane": false,
       "mechanical_verdict": "OK",
@@ -320,7 +320,7 @@
       "target": "backend/app/main.py",
       "line": 6331,
       "verdict": "NOT_THIS_LANES_CITATION",
-      "target_text": ")",
+      "target_text": "return None",
       "owner_commit": "3e259bd32be43a6da5ab3a44a4502f19abb9f99c",
       "owner_is_this_lane": false,
       "mechanical_verdict": "OK",
@@ -384,33 +384,33 @@
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:126",
       "target": "backend/app/main.py",
-      "line": 4256,
+      "line": 4263,
       "verdict": "OK",
       "pinned": "lookup",
       "target_text": "existing = session.scalars(",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:127",
       "target": "backend/app/main.py",
-      "line": 4292,
+      "line": 4299,
       "verdict": "OK",
       "pinned": "integrity",
       "target_text": "except IntegrityError as exc:",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     },
     {
       "cited_by": "backend/tests/test_qoder_ord0500_journey_refusal.py:128",
       "target": "backend/app/main.py",
-      "line": 4309,
+      "line": 4316,
       "verdict": "OK",
       "pinned": "caught_by",
       "target_text": "\"caught_by\": \"unique_index\",",
-      "owner_commit": "d451a8296841787ae7f303af3057f7e326cdb33e",
+      "owner_commit": "27050183c369f414d4d7b99f943dc758a7745191",
       "owner_is_this_lane": true,
       "mechanical_verdict": "OK"
     }

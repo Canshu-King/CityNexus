@@ -1,11 +1,12 @@
 {
   "tool": "fmt_lint_r15",
   "files": [
-    "tools/r10_block.py"
+    "tools/r10_block.py",
+    "tools/recheck_r14.py"
   ],
-  "files_scanned": 1,
-  "calls_checked": 60,
-  "single_expression_args": 41,
+  "files_scanned": 2,
+  "calls_checked": 68,
+  "single_expression_args": 47,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",

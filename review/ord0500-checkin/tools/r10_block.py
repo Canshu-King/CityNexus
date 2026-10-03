@@ -93,10 +93,11 @@ def main():
     emitter_same = (_in_ref.replace("\r\n", "\n").encode("utf-8", "replace") == _lane)
     # the ref this hand supersedes is the newest one in the receipt -- read off the server, because "the
     # previous ref" is exactly the kind of thing I have been mis-remembering
-    _others = [r for r in arm_rows if r.get("commit")]
+    _others = [r for r in arm_rows if r.get("commit") and r.get("last_line")]
     _others.sort(key=lambda r: int(re.search(r"(\d+)$", r["ref"]).group(1)))
     if not _others:
-        raise SystemExit("ABORT_NO_PREDECESSOR_REF the arm receipt holds no published ref")
+        raise SystemExit("ABORT_NO_PREDECESSOR_REF no published ref in the arm receipt actually ran -- "
+                         "rows are %s" % [(r.get("ref"), r.get("verdict")) for r in arm_rows][:10])
     prev_arm = _others[-1]
     r15_arm_last = "%s（`%s`）判语 `%s`，尾行 `%s`" % (
         prev_arm["ref"], prev_arm["commit"][:10], B.slot(prev_arm.get("verdict")),
@@ -161,7 +162,7 @@ def main():
     blob_drv = blob(RC_DIR + "tools/citation_gate_r10_mutants.py")
     blob_door = blob(RC_DIR + "tools/r9_block.py")
     blob_emit = blob(RC_DIR + "tools/r10_block.py")
-    blob_chain = blob(RC_DIR + "tools/%s_chain.sh" % REF_GEN)
+    chain_path, blob_chain = blob_by_fragment("/tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
 
     def blob_by_fragment(fragment):
@@ -198,6 +199,11 @@ def main():
     remote, live_tip = B.pick_sha(listed, MY_REF), B.pick_sha(listed, B.TIP_REF)
     if not remote or not live_tip:
         raise SystemExit("ABORT_NO_REMOTE_READBACK %s" % listed[:200])
+    # the ref this hand abandoned (see section 八): read it, do not remember it
+    rc17, r17ls = B.sh(["git", "ls-remote", "--refs", "origin",
+                        "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17"])
+    prev_r17_sha = B.pick_sha(r17ls, "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17") \
+        or "NOT_ON_REMOTE"
     if remote != me["commit"]:
         raise SystemExit("ABORT_REF_MOVED coordinates ran on %s, ref answers %s" % (me["commit"], remote))
     if gm.get("pairs_with_gate_receipt") != GATE_RECEIPT:
@@ -235,8 +241,13 @@ def main():
         q = subprocess.run(["git", "-C", WT, "show", "%s:%s" % (rev, path)], stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT, timeout=180)
         return None if q.returncode else q.stdout.decode("utf-8", "replace")
+    # the anchors are read from the line I am merging INTO; the citations are read from HEAD -- the copy
+    # THIS ref ships.  Reading both from the tip compares the line's old comment with the line's new
+    # anchors, which is permanently red until somebody else lands my fix: a ruler that can only fail
+    # before the delivery it governs is the instrument defect, not the defect it was built to catch.
     _m, _t = _show(live_tip, "backend/app/main.py"), _show(
-        live_tip, "backend/tests/test_qoder_ord0500_journey_refusal.py")
+        "HEAD", "backend/tests/test_qoder_ord0500_journey_refusal.py")
+    _t_tip = _show(live_tip, "backend/tests/test_qoder_ord0500_journey_refusal.py")
     if _m is None or _t is None:
         raise SystemExit("ABORT_TIP_UNREADABLE %s" % live_tip)
     _anchors, _span = RA.read_anchors(_m.splitlines())
@@ -248,6 +259,11 @@ def main():
     if _rot:
         raise SystemExit("ABORT_ROT_DETECTED on %s: %s -- run the re-anchor before posting"
                          % (live_tip, _rot))
+    _cited_tip = {}
+    for _lab, _pat in RA.PATTERNS:
+        _mm = re.search(_pat, _t_tip or "")
+        _cited_tip[_lab] = int(_mm.group(1)) if _mm else None
+    _tip_rot = {k: [_cited_tip[k], _anchors[k]] for k in _anchors if _cited_tip[k] != _anchors[k]}
     # the paths this order's product sentences speak about, taken from the re-check receipt rather
     # than remembered: r14 added `frontend/src/i18n/LocaleContext.tsx` when the dictionary rows went
     _paths = sorted((rcpt.get("tip_paths_equal_on_branch") or {}).keys()) or [
@@ -300,6 +316,15 @@ def main():
         raise SystemExit("ABORT_NUMSTAT_ROWS numstat did not answer for every product path")
     rc2, ahead = B.sh(["git", "rev-list", "--count", "%s..%s" % (me["fork_point"], live_tip)], cwd=WT)
     line_ahead = ahead.strip()
+    # how much of my own write-set the line also moved: this is what a merge conflict is made of, and the
+    # page should carry the number instead of letting the commander discover it at merge time
+    rcf, mine_files = B.sh(["git", "diff", "--name-only", "%s..HEAD" % me["fork_point"]], cwd=WT)
+    rcg, line_files = B.sh(["git", "diff", "--name-only", "%s..%s" % (me["fork_point"], live_tip)], cwd=WT)
+    _mine = {l.strip() for l in mine_files.splitlines() if l.strip()}
+    _line = {l.strip() for l in line_files.splitlines() if l.strip()}
+    overlap = sorted(_mine & _line)
+    ov_review = [p for p in overlap if p.startswith("review/")]
+    ov_other = [p for p in overlap if not p.startswith("review/")]
 
     foreign = [r for r in (gate.get("rows") or []) if r["verdict"] == "NOT_THIS_LANES_CITATION"]
     runs = gm.get("runs") or []
@@ -340,6 +365,15 @@ def main():
           "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
           B.fmt(len(_rot)), B.fmt(len(_eq)), B.fmt(sum(1 for v in _eq.values() if v is True)),
           B.fmt(len(mine_changed)), "`、`".join(mine_changed) or "无", B.fmt(len(_moved))))
+    A("- 上面那句「注释现引」读的是**我这枚枝交上去的那份**（`HEAD`），不是线上的那份——这不是偷懒，是这"
+      "把尺原来的读法有缺陷：它两头都从现尖读，于是拿线上那条旧注释去比线上那批新锚，只要我这一手还没被合，"
+      "它就永远红，一条只能在被它管辖的交付之前失败的尺，本身就是仪器缺陷。现尖那份注释此刻仍写 `%s`，"
+      "对着现尖的锚差 %s 枚；我这枚枝写的是 `%s`，差 %s 枚——所以「要合的那件事」正是把差的那 %s 枚抹平。" % (
+          "`、`".join(str(v) for v in (_cited_tip.get(k) for k in ("require", "lookup", "integrity",
+                                                              "caught_by"))),
+          B.fmt(len(_tip_rot)),
+          "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
+          B.fmt(len(_rot)), B.fmt(len(_tip_rot))))
     A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `%s` 是落件的那一代**"
       "（`receipts/%s` 等三件在 `%s` 这一代写进枝里）。两者的差别只有 `tip`/`branch`/"
       "时间戳三格，页里的数一律取我在 `%s` 上重跑的那一趟，枝里那份具名为上一枚。" % (
@@ -722,6 +756,11 @@ def main():
       "（`receipts/%s`，blob `%s`），改不改、转不转由你点（§九 ② 问的就是这一格）。" % (
           B.fmt(aud.get("citations_declined")), AUD_RECEIPT, blob_audit))
     A("- 真机与隧道：NOT_MEASURED。整套 Playwright：NOT_EXECUTED。候选没上 `:4783` 预览站（未部署）。")
+    A("- 枝号从 r17 换成 `%s` 不是笔误，也不是贪新：`r17` 已经把**没按现尖重切**的那批提交发出去了"
+      "（服务端现读 `%s`），这一手要把那批提交整体重放到现尖 `%s` 之上、再加一枚重锚——那就等于改写已发布的"
+      "提交。我唯一的合法动作是另开一枚枝号，不是 `--force`；`r17` 原样留着当证据，两份的差别就是 §〇 那条"
+      "重放与 §一 那枚重锚（push 被拒那一次我记在件里，不是事后编的）。" % (
+          my_tail, B.slot(prev_r17_sha), B.slot(live_tip)))
     A("")
     A("## 九、下一件（三个待点，我不自作主张）")
     A("")
@@ -734,12 +773,25 @@ def main():
       "还是就让它停在件里等你翻？" % (
           B.fmt(aud.get("citations_declined")),
           "、".join("%s %s 条" % kv for kv in sorted(mech.items())), AUD_RECEIPT, blob_audit))
-    A("- ③ 沿用件的名字这一格是我自己踩到的规矩洞：`build_faces_r6.json`、`sweep_r6.json`、"
-      "`pytest_r6.json`、`checkin_copy_rows_r6.json` 这四枚带 `_r6` 的名字每一代都被**同名覆盖**（blob 变、"
-      "路径不变），而 `citation_gate_*`、`citation_audit_*`、`day*_anchor_recheck_*`、`branch_emit_arm_*` "
-      "这批从 r14 起已经改成按代命名，页里引的 blob 因此永远指得住。已进线的那一代读数被后一代盖掉这件事，"
-      "在 CMDR-0925-2128 里对量具代码是明令禁止的，对件没有明文。要不要我把那四枚也改成按代名（下一份就叫 "
-      "`sweep_r18.json`），还是接受同名覆盖、由我每代把旧 blob 抄进页里？这一手我一枚没动它们。")
+    A("- ③ 沿用件的名字这一格不再是「规矩洞」这种抽象说法，本手把它量出来了：我与现尖的分叉是 `%s`，"
+      "从我这枚枝分叉点到枝尖我动了 %s 枚路径，线在那段里动了 %s 枚，**交集 %s 枚**——其中 `review/` 之下 "
+      "%s 枚、之外 %s 枚（`%s`），而**线动了、我没动的 %s 枚**。这最后一格才是重点：这一手的冲突面一枚都不是"
+      "跟别的车道抢文件，全部是我自己早期落进线里的那批件被我这一手同名重写。"
+      "成因就是我一直在**同名覆盖已经进线的件与量具**：`build_faces_r6.json`、`sweep_r6.json`、`pytest_r6.json`、"
+      "`checkin_copy_rows_r6.json`、`reanchor_r8.json` 这几枚固定名每代 blob 变、路径不变；"
+      "`citation_gate_*`、`citation_audit_*`、`day*_anchor_recheck_*`、`branch_emit_arm_*`、`fmt_lint_*`、"
+      "`pytest_collectonly_*` 这批从 r14 起改成按代命名就不撞。CMDR-0925-2128 对量具代码路径是明令禁重写的，"
+      "对件没有明文。`merge-tree` 对现尖与本枝退的是 %s，其中 landing 逐枚判到「要再剪」的 %s 枚是 %s"
+      "（每枚在件里带候选 blob、合并 blob、现尖 blob 三格）。请点一个：甲=我把剩下那几枚也改按代名"
+      "（下一份叫 `sweep_r19.json`，代价是每代件名都在动、复算入口要跟着改）；乙=接受同名覆盖，但每代把"
+      "**旧 blob 与新 blob 都**写进页里；丙=我把 `review/` 里这批一次性挪进 `review/ord0500-checkin/g%s/`，"
+      "此后不回头写。我这一手一枚没动它们（除了为裁③重跑的两趟同名件与本手那枚重锚注释）。" % (
+          B.slot(me["fork_point"]), B.fmt(len(_mine)), B.fmt(len(_line)), B.fmt(len(overlap)),
+          B.fmt(len(ov_review)), B.fmt(len(ov_other)),
+          "、".join("`%s`" % p for p in ov_other) or "无", B.fmt(len(_line - _mine)),
+          B.fmt(me["merge_tree_exit"]),
+          B.fmt(len(me["files_needing_another_recut"])),
+          "、".join("`%s`" % c["path"] for c in me["files_needing_another_recut"]) or "无", REF_GEN))
     A("")
     A("复算入口：`git -C D:/moodle/CityNexus ls-remote --refs origin %s %s`；"
       "`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t %s`；"
