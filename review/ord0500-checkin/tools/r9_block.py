@@ -63,7 +63,19 @@ def fmt(v, unit=""):
         return "%d %s%s" % (len(v), unit or "枚", inner)
     if isinstance(v, dict):
         return json.dumps(v, ensure_ascii=False)
+    if v is None:
+        # "ABORT_MISSING_SLOT at line 66" sent me hunting through a whole page twice today; name the
+        # call site and its source text instead, which is the line that actually holds the empty field
+        fr = sys._getframe(1)
+        import linecache
+        return _refuse_missing(fr.f_code.co_filename, fr.f_lineno,
+                               linecache.getline(fr.f_code.co_filename, fr.f_lineno).strip())
     return "%s%s" % (slot(v), unit)
+
+
+def _refuse_missing(path, line, text):
+    raise SystemExit("ABORT_MISSING_SLOT %s:%s | %s" % (path.replace("\\", "/").split("/")[-1],
+                                                         line, text[:150]))
 
 
 def refuse_on_red(gen, checks, dest_dir=None):

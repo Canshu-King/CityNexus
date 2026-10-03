@@ -737,8 +737,7 @@ def main():
         else "沿用上一代（取于 %s，无法算出差多少分钟）" % B.slot(pair.get("took_local"))
     A("- Q64 曝光尺两边相等。这一对%s是同一枚删除上的对照（`mode=%s`：候选 `%s` 对基座 `%s`——不是本枝头，"
       "因为裁③已经进了线，本枝再没有可换的产品字节；枝里那枚 `%s`，blob `%s`），逐枚验回："
-      "`every_path_matches_the_commit` = %s、`worktree_clean_after_restore` = %s、`checkout_rc` %s。"
-      "本手另做一件事：把它比过的那 %s 枚路径在此刻现尖上逐枚重读、确认与它当时的基座仍等值"
+      "`every_path_matches_the_commit` = %s、`worktree_clean_after_restore` = %s、`checkout_rc` %s。"      "本手另做一件事：把它比过的那 %s 枚路径在此刻现尖上逐枚重读、确认与它当时的基座仍等值"
       "（不等就退 `ABORT_PAIR_STALE`），以及把尺的版次问出来。"
       "格总数 %s 对 %s、命中集合相同 = %s、未解析 import %s 对 %s、解析诊断 %s 对 %s——删死掉的字典行没有把"
       "任何正文值送进共用 helper。"
@@ -747,8 +746,8 @@ def main():
       "的格数既不是 `--tree` 的上界也不是下界」，版次不记就等于我在替它担保。件 `receipts/exposure_pair_%s.json`。" % (
           pair_fresh, B.slot(pair.get("mode")), B.slot(pair.get("candidate_rev")),
           B.slot(pair.get("base_tip")), B.slot(pair_tool_path.split("/")[-1]), blob_pairtool,
-          B.fmt(pc.get("every_path_matches_the_commit")), B.fmt(pc.get("worktree_clean_after_restore")),
-          B.fmt(pc.get("checkout_rc")), B.fmt(len(pair.get("swapped_paths") or [])),
+          B.fmt(pb.get("every_path_matches_the_commit")), B.fmt(pb.get("worktree_clean_after_restore")),
+          B.fmt(pb.get("checkout_rc")), B.fmt(len(pair.get("swapped_paths") or [])),
           B.fmt((pc.get("candidate") or {}).get("cells_total")),
           B.fmt((pc.get("base") or {}).get("cells_total")),
           B.fmt(pr.get("hit_set_equal")),
