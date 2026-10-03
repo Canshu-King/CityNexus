@@ -1,0 +1,38 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:104:1 › the names the server can write and the names the screen can say are one set (4ms)
+  x  2 e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:112:1 › every identity is worded in both languages, and no wording is a machine token (3ms)
+  ok 3 e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:137:1 › the intelligence panel asks the vocabulary for the identity it prints (4ms)
+  ok 4 e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:146:1 › the runtime card still has a labelled slot in both languages (2ms)
+
+
+  1) e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:112:1 › every identity is worded in both languages, and no wording is a machine token 
+
+    Error: an identity label that still carries a server enum is the exact defect this ruler exists for
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "HERMES_COMPAT_ENDPOINT.zh paints \"HERMES_COMPAT_ENDPOINT\"",
+    +   "HERMES_COMPAT_ENDPOINT.en paints \"HERMES_COMPAT_ENDPOINT\"",
+    + ]
+
+      121 |     }
+      122 |   }
+    > 123 |   expect(offenders, "an identity label that still carries a server enum is the exact defect this ruler exists for").toEqual([]);
+          |                                                                                                                     ^
+      124 |   writeReading({
+      125 |     generatedBy: "cmdra",
+      126 |     ruler: "runtime-identity-vocabulary-r1",
+        at D:\moodle\_qoder_cmdra_intel_20261003\wt\frontend\e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:123:117
+
+    Error Context: test-results\qoder-cmdra-runtime-identi-e89f1--wording-is-a-machine-token\error-context.md
+
+  1 failed
+    e2e\qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:112:1 › every identity is worded in both languages, and no wording is a machine token 
+  3 passed (665ms)
