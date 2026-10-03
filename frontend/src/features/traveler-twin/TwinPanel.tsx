@@ -13,7 +13,7 @@ function capabilityLabel(item: TravelerCapability, codeLabel: (code: string) => 
  * A dictionary lookup for a server-side token, with two rules the raw renders used to break:
  * the traveller reads their own language, and a code the product has no name for says so
  * instead of silently showing the enum. `t()` falls back to the key itself when a lookup
- * misses (LocaleContext.tsx:1644), so comparing the answer against the question is what
+ * misses (the `dictionaries.en[key] ?? key` arm inside `const t = useCallback` in `LocaleProvider` of `src/i18n/LocaleContext.tsx`), so comparing the answer against the question is what
  * keeps a missing key off the screen.
  */
 function useTokenLabels() {

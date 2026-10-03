@@ -118,3 +118,66 @@ test("A3 the three former citations now name their subject instead of a line", a
   }, 0);
   console.log(JSON.stringify({ node: NODE_REPLACED, line_number_citations_left_pointing_at_other_specs: crossFile, files: SPECS.length }));
 });
+
+/*
+ * A4 and A5 are the second half of this order: the same hazard stood in five shipped product
+ * sources, each citing the dictionary by line number, and every one of those numbers already
+ * described a different entry at this head.  They now name `LocaleProvider`'s fallback arm or the
+ * dictionary key itself, and the two arms below are what keep that from rotting back.
+ */
+const PRODUCT_SITES = [
+  "src/app/v8PanelRegistry.tsx",
+  "src/features/checkin/footprintCopy.ts",
+  "src/features/discovery/RealCityDiscoveryPanel.tsx",
+  "src/features/studio/planVersionHistoryCopy.ts",
+  "src/features/traveler-twin/TwinPanel.tsx",
+];
+
+function sourceFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...sourceFiles(full));
+    else if (/\.(ts|tsx)$/.test(entry.name)) out.push(full);
+  }
+  return out;
+}
+
+test("A4 no shipped source cites the dictionary by line number", async () => {
+  test.setTimeout(60_000);
+  const found: string[] = [];
+  for (const rel of sourceFiles("src")) {
+    const text = readFileSync(join(ROOT, rel), "utf8");
+    for (const m of text.matchAll(/LocaleContext\.tsx:\d+/g)) found.push(`${rel} :: ${m[0]}`);
+  }
+  expect(
+    found,
+    node("product-source-line-citation-absent", `a line-number citation of the dictionary is back in shipped source, where it silently describes the wrong entry once lines move: ${JSON.stringify(found)}`),
+  ).toEqual([]);
+});
+
+test("A5 the product-source anchors resolve to what their comments now claim", async () => {
+  test.setTimeout(60_000);
+  const text = dict();
+  const problems: string[] = [];
+  /* the arm all four fallback claims now name */
+  const fallback = /const t = useCallback[\s\S]{0,400}dictionaries\.en\[key\] \?\? key/;
+  if (!fallback.test(text))
+    problems.push("`t()` no longer falls back through `dictionaries.en[key] ?? key` inside `const t = useCallback`, so four comments name an arm that is not there");
+  /* the key RealCityDiscoveryPanel now names instead of two line numbers */
+  if ((text.match(/"discovery\.defaultGoal"\s*:/g) ?? []).length !== 2)
+    problems.push(`discovery.defaultGoal is not defined exactly once per language arm: ${(text.match(/"discovery\.defaultGoal"\s*:/g) ?? []).length}`);
+  /* planVersionHistoryCopy's claim: the lookup only ever consults this file's own two dictionaries */
+  const body = text.slice(text.indexOf("const t = useCallback"), text.indexOf("const t = useCallback") + 700);
+  if (!/dictionaries\[locale\]/.test(body) || !/dictionaries\.en\[key\]/.test(body) || /extraDictionary|fallbackTable/.test(body))
+    problems.push("the `t` implementation is no longer the two-dictionaries-only lookup that planVersionHistoryCopy cites");
+  for (const rel of PRODUCT_SITES) {
+    const site = readFileSync(join(ROOT, rel), "utf8");
+    if (/LocaleContext\.tsx:\d+/.test(site)) problems.push(`${rel} still carries a line number`);
+  }
+  if (!readFileSync(join(ROOT, PRODUCT_SITES[2]), "utf8").includes("discovery.defaultGoal"))
+    problems.push("the discovery panel no longer names the key it means");
+  if (!readFileSync(join(ROOT, PRODUCT_SITES[0]), "utf8").includes("LocaleProvider"))
+    problems.push("the panel registry no longer names LocaleProvider as the fallback's home");
+  expect(problems, node("product-source-anchor-resolves", problems.join(" ; "))).toEqual([]);
+});

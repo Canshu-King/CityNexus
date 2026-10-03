@@ -178,8 +178,8 @@ export function RealCityDiscoveryPanel({
   const { locale } = useLocale();
   const supportsTianjinReplay = ["CN-TIANJIN", "TIANJIN", "TSN", "CNX-DEMO"].includes(cityCode.toUpperCase().replaceAll("_", "-"));
   /* ORD-0422: this used to be a hardcoded English sentence sitting in a Chinese screen's input
-     box. The sentence was already in the dictionary as `discovery.defaultGoal` (LocaleContext.tsx:488
-     and en, :1356 zh) -- the panel just never looked it up, so the Chinese screen got English.
+     box. The sentence was already in the dictionary under the key `discovery.defaultGoal` (one definition per
+     language arm in `src/i18n/LocaleContext.tsx`, named by key because line numbers there move every generation) -- the panel just never looked it up, so the Chinese screen got English.
      It now follows the language the screen opened in. `useState` evaluates once, so switching
      language mid-visit deliberately leaves their
      in-progress text alone rather than overwriting what they typed. */

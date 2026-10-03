@@ -213,8 +213,8 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
   {
     /* ORD-0444: the smallest face that proves the container can be read.  It shares the 城市探索
        route rather than taking a nav key of its own, and the reason is measured: the strip resolves
-       a label as `t("nav." + item.key)` (`app/V8Experience.tsx:1731`) and `t()` falls back to the
-       key itself when the dictionary has no entry (`i18n/LocaleContext.tsx:1825`), so a new route
+       a label as `t("nav." + item.key)` (the per-item `<span>` in the nav strip of `app/V8Experience.tsx`) and `t()` falls back to the
+       key itself when the dictionary has no entry (the `dictionaries.en[key] ?? key` arm inside `const t = useCallback` in `LocaleProvider` of `src/i18n/LocaleContext.tsx`), so a new route
        key would put the literal `nav.collections` on screen -- and `LocaleContext.tsx` is a file
        this order may not open. */
     id: "collections",
