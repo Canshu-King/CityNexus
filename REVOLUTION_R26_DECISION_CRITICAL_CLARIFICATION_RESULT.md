@@ -72,12 +72,12 @@ Final machine state:
 ## Focused verification
 
 ```text
-backend/tests/test_r26_decision_critical_clarification.py: 8 passed
+backend/tests/test_r26_decision_critical_clarification.py: 9 passed
 python -m compileall -q backend/app: passed
 git diff --check: passed
 ```
 
-The focused tests cover: true resource-conflict sensitivity, rejection of a non-feasible window, explicit-intent suppression, server-owned mutation completion, TAKE_NOW authority, and runtime rejection after the clarification epoch moves.
+The focused tests cover: true resource-conflict sensitivity, rejection of a non-feasible window, explicit-intent suppression, server-owned mutation completion, TAKE_NOW authority, and runtime rejection after the clarification epoch or mobility truth moves.
 
 ## Remaining limitation
 
@@ -149,8 +149,8 @@ These are different physical execution histories; no synthetic mobility and no d
 The completion contract now treats `NO_ACTION + DEFER` without an executed server mutation as `UNRESOLVED / DEFER_WITHOUT_EXECUTION_EFFECT`. The clarified skip action is an active mutation in the server-owned completion contract.
 
 ```text
-R20-R26 focused lineage: 49 passed, 1 warning
-R26 behavioral focused tests: 8 passed
+R20-R26 focused lineage: 50 passed, 1 warning
+R26 behavioral focused tests: 9 passed
 compileall backend/app: passed
 git diff --check: passed
 ```

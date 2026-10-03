@@ -50,6 +50,30 @@ def test_r26_explicit_preference_suppresses_question_and_fingerprint_is_epoch_bo
     assert first != second
 
 
+def test_r26_epoch_changes_when_mobility_truth_changes_even_if_status_stays_feasible():
+    windows = [_window("w1", "place-a", "GROUNDED_FEASIBLE", 700), _window("w2", "place-b", "GROUNDED_FEASIBLE", 800)]
+    windows[0]["planning_mobility"] = {
+        "state": "FROZEN_PLAN_EVIDENCE",
+        "provider": "valhalla-http",
+        "minutes": 18,
+        "fact_quality": "FROZEN_PLAN_EVIDENCE",
+    }
+    changed = [dict(item) for item in windows]
+    changed[0]["planning_mobility"] = {
+        "state": "CURRENT_LIVE_EVIDENCE",
+        "provider": "valhalla-http",
+        "minutes": 31,
+        "fact_quality": "LIVE_PROVIDER_CAPTURE",
+    }
+    first = clarification_epoch_fingerprint(
+        journey_id="j", active_plan_version_id="p1", current_activity_id="a1", windows=windows
+    )
+    second = clarification_epoch_fingerprint(
+        journey_id="j", active_plan_version_id="p1", current_activity_id="a1", windows=changed
+    )
+    assert first != second
+
+
 def test_r26_defer_without_server_mutation_is_not_resolved():
     steps = [{
         "tool_name": "conclude_recovery",

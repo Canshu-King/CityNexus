@@ -112,8 +112,18 @@ def clarification_epoch_fingerprint(
                 "window_id": item.get("window_id"),
                 "status": item.get("status"),
                 "place_id": item.get("candidate", {}).get("place_id"),
+                "category": item.get("candidate", {}).get("category"),
+                "tags": item.get("candidate", {}).get("tags", []),
+                "visit_minutes": item.get("candidate", {}).get("visit_minutes"),
+                "opening": item.get("candidate", {}).get("opening", {}),
                 "cost": item.get("candidate", {}).get("cost_evidence", {}).get("amount_minor"),
+                "cost_status": item.get("candidate", {}).get("cost_evidence", {}).get("status"),
+                "planning_mobility": item.get("planning_mobility", {}),
+                "future_live_traffic": item.get("future_live_traffic"),
                 "boundary": item.get("window_boundary"),
+                "next_commitment": item.get("next_commitment"),
+                "feasibility": item.get("feasibility", {}),
+                "resource_consumption": item.get("resource_consumption", {}),
             }
             for item in windows[:2]
         ],
