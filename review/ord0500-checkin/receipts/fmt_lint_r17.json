@@ -16,11 +16,12 @@
     "tools/sweep_r6.py",
     "tools/build_faces_r6.py",
     "tools/exposure_pair_r17.py",
-    "tools/reanchor_r8.py"
+    "tools/reanchor_r8.py",
+    "tools/ref_discovery_arm_r18.py"
   ],
-  "files_scanned": 16,
-  "calls_checked": 183,
-  "single_expression_args": 119,
+  "files_scanned": 17,
+  "calls_checked": 188,
+  "single_expression_args": 125,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",

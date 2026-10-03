@@ -43,12 +43,29 @@ def blob_of(rev, path):
 
 
 def what_changed(base):
-    """The paths THIS order's product change touches, read off `merge-base..HEAD`.
+    """The paths this pair is allowed to swap, and the two revisions it compares.
 
-    Diffing the tip against HEAD directly would also list everything other lanes landed since my fork,
-    and swapping that set would revert their work inside this shared worktree.  The fork point is what
-    separates "my change" from "the line moved", so the merge-base is computed here, never remembered.
+    Default mode -- `merge-base..HEAD`: the paths THIS ref changed since it forked from the line.  Never
+    typed, and never a plain `tip..HEAD` diff, because that would also list everything other lanes landed
+    since my fork and swapping THAT would revert their work inside this shared worktree.
+
+    Explicit mode (`R17_PATHS="a b"` with `R17_CAND_REV=<sha>`): needed once the ruled deletion has
+    landed.  This ref then carries no product difference at all, so a merge-base-derived pair would
+    compare a tip with itself; the deletion is still the question, so the pair runs between the two
+    commits that actually hold it -- the same two the faces were built from.  Both revs are verified to
+    exist and every named path on both, and nothing outside the list is ever touched or restored.
     """
+    explicit = (os.environ.get("R17_PATHS") or "").split()
+    cand = os.environ.get("R17_CAND_REV") or "HEAD"
+    if explicit:
+        for rev in (base, cand):
+            if git("rev-parse", "--verify", "-q", "%s^{commit}" % rev)[0] != 0:
+                raise SystemExit("ABORT_REV_MISSING " + rev)
+        for p in explicit:
+            if blob_of(base, p) is None or blob_of(cand, p) is None:
+                raise SystemExit("ABORT_PATH_NOT_ON_BOTH_REVS " + p)
+        return {"mode": "explicit_revs", "base_rev": base, "candidate_rev": cand,
+                "paths": sorted(set(explicit)), "merge_base": "NOT_APPLICABLE"}
     rc, mb = git("merge-base", base, "HEAD")
     mb = (mb or "").strip()
     if rc or not re.fullmatch(r"[0-9a-f]{40}", mb):
@@ -102,18 +119,28 @@ def main():
     live = (re.search(r"([0-9a-f]{40})", listed or "")).group(1) if listed else None
     if not live:
         raise SystemExit("ABORT_NO_LIVE_TIP")
-    if live != BASE:
-        raise SystemExit("ABORT_BASE_MOVED the ruler pair was asked for base %s but the line answers %s "
-                         "-- re-cut before measuring" % (BASE, live))
     rc, dirty = git("status", "--porcelain")
     if dirty.strip():
         raise SystemExit("ABORT_UNCOMMITTED_CANDIDATE " + dirty[:300])
     head = git("rev-parse", "HEAD")[1]
     changed = what_changed(BASE)
     paths = changed["paths"]
+    explicit = changed.get("mode") == "explicit_revs"
+    cand_rev = changed.get("candidate_rev", "HEAD")
+    if explicit:
+        # comparing two historical commits is only about THIS delivery if the ref carries the same bytes
+        # as the candidate side; if it does not, the pair would be measuring somebody else's change
+        if not all(blob_of(cand_rev, p) == blob_of("HEAD", p) for p in paths):
+            raise SystemExit("ABORT_CANDIDATE_REV_NOT_THIS_REF %s differs from HEAD for %s"
+                             % (cand_rev[:12], [p for p in paths
+                                                if blob_of(cand_rev, p) != blob_of("HEAD", p)]))
+    elif live != BASE:
+        raise SystemExit("ABORT_BASE_MOVED the ruler pair was asked for base %s but the line answers %s "
+                         "-- re-cut before measuring" % (BASE, live))
     want = {p: blob_of("HEAD", p) for p in paths}
     out = {"tool": "exposure_pair_%s" % GEN, "took_local": datetime.now().astimezone().isoformat(
         timespec="seconds"), "live_tip": live, "candidate_head": head, "base_tip": BASE,
+        "mode": changed.get("mode", "merge_base"), "candidate_rev": cand_rev,
         "merge_base": changed["merge_base"], "swapped_paths": paths, "ruler": RULER, "sides": {}}
     # candidate first (the tree is already the candidate), then base, then restore and verify
     out["sides"]["candidate"] = summary(run_ruler("exposure_%s_cand.json" % GEN))

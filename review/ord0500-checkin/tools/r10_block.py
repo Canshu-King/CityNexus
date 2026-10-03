@@ -25,6 +25,7 @@ RECHECK_RECEIPT = os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_%s.
 ARM_RECEIPT = os.environ.get("ARM_RECEIPT") or "branch_emit_arm_%s.json" % GEN
 AUD_RECEIPT = os.environ.get("AUD_RECEIPT") or "citation_audit_%s.json" % GEN
 FMT_RECEIPT = os.environ.get("FMT_RECEIPT") or "fmt_lint_%s.json" % GEN
+REFDISC_RECEIPT = os.environ.get("REFDISC_RECEIPT") or "ref_discovery_arm_%s.json" % GEN
 # the exposure pair is NOT re-taken every hand (it needs two swapped builds of the whole face); the
 # generation whose receipts this page is quoting is named, and defaults to the one that exists
 EXPOSURE_GEN = os.environ.get("EXPOSURE_GEN") or "r14"
@@ -71,6 +72,13 @@ def main():
     vocab = B.load("checkin_copy_rows_mutants_r6.json")
     rcpt = B.load(RECHECK_RECEIPT)
     fmt = B.load(FMT_RECEIPT)
+    refdisc = B.load(REFDISC_RECEIPT)
+    ref_arms = {r.get("id"): r for r in (refdisc.get("runs") or [])}
+    # the truncation guards must have fired in the two directions and the acceptance control must not
+    refdisc_ok = (bool(refdisc.get("every_arm_bit"))
+                  and "REFUSED" == (ref_arms.get("M1_alternating_short_full") or {}).get("verdict")
+                  and "REFUSED" == (ref_arms.get("M2_every_read_short") or {}).get("verdict")
+                  and "RETURNED" == (ref_arms.get("C1_two_full_reads") or {}).get("verdict"))
     land = B.load("landing_r6.json")
     collect = B.load("pytest_collectonly_%s.json" % GEN)
     # `branch_emit_arm_r16.py` pulled the emitter copy out of EVERY already-published ref in this family
@@ -136,6 +144,9 @@ def main():
          {"calls_checked": fmt.get("calls_checked"), "mismatched": len(fmt.get("mismatched") or []),
           "selftest": (fmt.get("selftest") or {}).get("verdict")}),
         ("读数提交到枝尖只多了件", gate_ok and rcpt_ok, {"gate": gate_rel, "recheck": rcpt_rel}),
+        ("枝清单两趟一致且含本枝", refdisc_ok,
+         {"arms": {k: (ref_arms.get(k) or {}).get("verdict") for k in sorted(ref_arms)},
+          "every_arm_bit": refdisc.get("every_arm_bit")}),
     ]
     RED_CHECK_NAMES = [c[0] for c in RED_CHECKS]
     B.refuse_on_red(REF_GEN, RED_CHECKS)
@@ -338,9 +349,9 @@ def main():
     forked_now = me["fork_point"] == live_tip
     A("现尖 `%s`（`git ls-remote --refs` 现读逐字相等）；本枝 `review/newlane-ord0500-phone-checkin-"
       "entry-%s` = `%s`，%s，合并预测树 `%s`，merge-tree 退出码 %s，写集 %s 枚逐枚字节相同 %s 枚、"
-      "需要再 rebase %s 枚。**产品改动就 %s 枚文件**（`git diff --name-only` 现读，全是裁③那一笔删除与"
-      "它自己的注释，逐枚 %s），本手其余 %s 枚改动全在 `review/ord0500-checkin/` 里（发射器对"
-      "这一格有 `ABORT_STRAY_PATHS` 兜底，越界一枚就不生成页）。" % (
+      "需要再 rebase %s 枚。**产品侧改动就 %s 枚文件**（`git diff --name-only` 现读，逐枚 %s；哪一枚属于裁③、"
+      "哪一枚属于重锚，§五 与 §一 分别具名，我不在这一行里替它们归类），本手其余 %s 枚改动全在 "
+      "`review/ord0500-checkin/` 里（发射器对这一格有 `ABORT_STRAY_PATHS` 兜底，越界一枚就不生成页）。" % (
           live_tip, REF_GEN, remote,
           ("从这一枚尖自己身上分叉（`fork_point` 相等 = 真）" if forked_now else
            "分叉于 `%s`（现尖之后又落了 %s 枚提交，`git rev-list --count` 现读），landing 判到需要再 "
@@ -487,6 +498,21 @@ def main():
           B.fmt(m5.get("verdict")), B.fmt(m5.get("red_total")), "NOT_THIS_LANES_CITATION",
           B.slot(m5.get("row_mechanical_verdict")), B.slot(fu.get("owner_commit")),
           B.fmt(m6.get("verdict")), B.slot(m6.get("expect")), MUT_RECEIPT, blob_mut, blob_drv))
+    A("- 还有一枚是臂尺自己身上的事，也被这手量出来了：它取「本单有哪些枝」原先用不带模式的 "
+      "`ls-remote`，21:44 那一趟只回了 18 枚里的 5 枚（r5–r9），而旧代码「非空即采用」——那 5 枚当场变成"
+      "页里所有枝数的分母。现在三条硬规矩：按模式向服务器点名取、两趟必须相同、且清单里**必须有本手刚推"
+      "上去的那枚 `%s`**。网络不能被我命令着截断，所以这三条用桩驱动："
+      "`tools/ref_discovery_arm_r18.py` 的 M1（两趟不一致）答 `%s`、M2（三趟一样地短）答 `%s`、"
+      "C1（两趟完整）答 `%s`；总判语 %s、本手实测三趟现尖读数 %s（只作观察，不作证明）。"
+      "件 `receipts/%s`；本手数到 %s 枚枝、其中带发射器副本可跑的 %s 枚。" % (
+          my_tail, B.slot((ref_arms.get("M1_alternating_short_full") or {}).get("verdict")),
+          B.slot((ref_arms.get("M2_every_read_short") or {}).get("verdict")),
+          B.slot((ref_arms.get("C1_two_full_reads") or {}).get("verdict")),
+          B.slot(refdisc.get("verdict") or ("全咬" if refdisc.get("every_arm_bit") else "未全咬")),
+          "、".join(str(n) for n in ((refdisc.get("observation") or {}).get("patterned_read_sizes")
+                                    or ["未记录"])),
+          REFDISC_RECEIPT, B.fmt(len(arm_rows)),
+          B.fmt(sum(1 for r in arm_rows if r.get("verdict") in ("RUNS", "ABORTS")))))
     A("- 件自己也是提交，所以这个形状必须说清，而且这一手开始是量出来的：闸的读数取自 `%s`、复读的读数"
       "取自 `%s`，本枝尖是 `%s`；两枚之间 `git diff --name-only` 现读 %s 枚路径，全部落在本单的产物之下"
       "（`receipts/`、`run/`、`tools/` 与暂存工具自己渲染的读数单 `R6_READINGS.md`；产品与判据文件 0 枚），"
@@ -568,8 +594,20 @@ def main():
     # walked are still the product bytes on the ref.  A tools-only re-cut must not inherit them by
     # silence, so the blobs are compared here and the page refuses when they differ.
     _fc = B.slot(faces.get("candidate_commit"))
+    _fb = B.slot(faces.get("base_commit"))
+    # the faces' own scope: whichever product paths THAT build swapped between base and candidate.  Using
+    # this ref's write-set instead would compare a file the faces never carried (r19 carries only the
+    # re-anchored comment), and ABORT_FACES_STALE would fire on a difference the readings have nothing to
+    # do with -- a stale ruler, not a stale reading.
+    rcf, fpaths = B.sh(["git", "diff", "--name-only", "%s..%s" % (_fb, _fc)], cwd=WT)
+    faces_paths = [p.strip() for p in fpaths.splitlines() if p.strip()
+                   and not p.strip().startswith("review/")]
+    if not faces_paths:
+        raise SystemExit("ABORT_FACES_SCOPE the faces receipt claims a swap of %s path(s) but "
+                         "`git diff %s..%s` answers no product file" % (faces.get("swapped_paths"),
+                                                                        _fb[:12], _fc[:12]))
     faces_blob = {}
-    for _p in product:
+    for _p in faces_paths:
         def _blob(rev):
             r = subprocess.run(["git", "-C", WT, "rev-parse", "%s:%s" % (rev, _p)],
                                stdout=subprocess.PIPE, timeout=120)
@@ -591,9 +629,16 @@ def main():
     A("")
     A("## 五、裁③：字典里那两行零读者的句子删掉了，连钉住它的那枚臂")
     A("")
-    A("- 删的是什么：`%s` 里 `checkin.duplicate` 与 `checkin.refused` 两把键，两档各一行——现尖上这一枚"
-      "文件里还能数到 %s 处，本枝同一枚文件里是 %s 处。这屏自 r5 起就不读它们了，读的是 "
-      "`features/checkin/checkinCopy.ts` 那张表。" % (dict_rel, B.fmt(tip_rows), B.fmt(head_rows)))
+    _fbase = (ff.get(faces.get("base_label")) or {}).get("entry", {}) or {}
+    _fcand = (ff.get(faces.get("candidate_label")) or {}).get("entry", {}) or {}
+    A("- 删的是什么：`%s` 里 `checkin.duplicate` 与 `checkin.refused` 两把键，两档各一行。现尖这一枚文件里"
+      "现在数到 %s 处、本枝 %s 处——**两个都是零不是没删，是这一笔已经进了线**：裁③落进线之后就不再由本枝"
+      "携带，`git diff --name-only 现尖..本枝` 现读非 `review/` 的只剩 %s 枚（逐枚在 §〇）。删除到达出货字节"
+      "的证据还在枝里那两枚面上：候选面入口 `%s`（%s 字节）对基座面入口 `%s`（%s 字节）。这屏读的是 "
+      "`features/checkin/checkinCopy.ts` 那张表（§六 四趟屏读上屏的两句逐字就出自它）。" % (
+          dict_rel, B.fmt(tip_rows), B.fmt(head_rows), B.fmt(len(product)),
+          B.slot(_fcand.get("entry_asset")), B.fmt((_fcand.get("bundle") or {}).get("bytes")),
+          B.slot(_fbase.get("entry_asset")), B.fmt((_fbase.get("bundle") or {}).get("bytes"))))
     A("- 钉住它们的臂一并删：词汇闸的 C1（专门记录这两把键的行号与读者数）随裁语去掉，判语仍是 %s、"
       "检查 %s 行；它自己的两枚反件本代仍各自咬下（控制趟 %s）。**具名代价**：闸从此不会再说「有人把这两"
       "行加回来了」——那格观察跟着被删的对象一起走了。" % (
@@ -676,18 +721,28 @@ def main():
                             [p for p, v in pair_still.items() if not v]))
     cx, cb = B.load("exposure_%s_cand.json" % EXPOSURE_GEN), B.load("exposure_%s_base.json" % EXPOSURE_GEN)
     pr, pc, pb = pair.get("parity") or {}, pair.get("sides") or {}, pair.get("restore") or {}
-    A("- Q64 曝光尺两边相等，而且这一对是**本手重取的**：枝里那枚 `%s`（blob `%s`）把 `%s` 换到基座 `%s` "
-      "的字节、跑一枚尺、再换回候选 `%s`、逐枚验回（`every_path_matches_the_commit` = %s、"
-      "`worktree_clean_after_restore` = %s、`checkout_rc` %s）。格总数 %s 对 %s、命中集合相同 = %s、"
-      "未解析 import %s 对 %s、解析诊断 %s 对 %s——删死掉的字典行没有把任何正文值送进共用 helper。"
+    # "did THIS hand run it" is a timestamp question, so it is answered with timestamps and both are shown
+    try:
+        _pt = datetime.fromisoformat(str(pair.get("took_local")))
+        _mins = int((datetime.now().astimezone() - _pt).total_seconds() // 60)
+    except (TypeError, ValueError):
+        _mins = None
+    pair_fresh = "本手重跑（%s 分钟前）" % _mins if (_mins is not None and _mins <= 180) \
+        else "沿用上一代（取于 %s，无法算出差多少分钟）" % B.slot(pair.get("took_local"))
+    A("- Q64 曝光尺两边相等。这一对%s是同一枚删除上的对照（`mode=%s`：候选 `%s` 对基座 `%s`——不是本枝头，"
+      "因为裁③已经进了线，本枝再没有可换的产品字节；枝里那枚 `%s`，blob `%s`），逐枚验回："
+      "`every_path_matches_the_commit` = %s、`worktree_clean_after_restore` = %s、`checkout_rc` %s。"
+      "本手另做一件事：把它比过的那 %s 枚路径在此刻现尖上逐枚重读、确认与它当时的基座仍等值"
+      "（不等就退 `ABORT_PAIR_STALE`），以及把尺的版次问出来。"
+      "格总数 %s 对 %s、命中集合相同 = %s、未解析 import %s 对 %s、解析诊断 %s 对 %s——删死掉的字典行没有把"
+      "任何正文值送进共用 helper。"
       "**这一回尺的版次记进件了**：`%s`（本机字节 %s，本机 sha1 `%s`，原件 blob `%s` 与 `%s`）——上一代那两份件"
       "的 `tool`/`version` 两格都是空的，所以那句「两边相等」我当时无法说清是哪一版答的；r7b4 自己写着「按文件"
       "的格数既不是 `--tree` 的上界也不是下界」，版次不记就等于我在替它担保。件 `receipts/exposure_pair_%s.json`。" % (
-          B.slot(pair_tool_path.split("/")[-1]), blob_pairtool,
-          B.slot(pair.get("candidate_head")), B.slot(pair.get("base_tip")),
-          B.slot(pair.get("candidate_head")),
+          pair_fresh, B.slot(pair.get("mode")), B.slot(pair.get("candidate_rev")),
+          B.slot(pair.get("base_tip")), B.slot(pair_tool_path.split("/")[-1]), blob_pairtool,
           B.fmt(pc.get("every_path_matches_the_commit")), B.fmt(pc.get("worktree_clean_after_restore")),
-          B.fmt(pc.get("checkout_rc")),
+          B.fmt(pc.get("checkout_rc")), B.fmt(len(pair.get("swapped_paths") or [])),
           B.fmt((pc.get("candidate") or {}).get("cells_total")),
           B.fmt((pc.get("base") or {}).get("cells_total")),
           B.fmt(pr.get("hit_set_equal")),
@@ -702,13 +757,14 @@ def main():
               cx.get("_lane_meta", {}).get("ruler_sha1_of_local_bytes"))[:12],
           blob_exp_cand, blob_exp_base, EXPOSURE_GEN))
     A("- 这一对与 §六 上面那两枚面**不是同一次量的**：面与屏读取自候选 `%s`、其基座标签是 `%s`；曝光对的基座"
-      "是它自己那次运行的现尖 `%s`，而我与它的分叉点是 `%s`（`git merge-base` 现读）——换进去比对的只有从这枚分叉"
-      "到我这一手之间我动过的 %s 枚产品路径，别的车道落进线里的东西我一枚不碰。**这枚基座现在还在不在**也不靠"
+      "是它自己那次运行的现尖 `%s`，而我与它的分叉点是 `%s`（`git merge-base` 现读）。它换进去比对的只有那 %s "
+      "枚产品路径（%s——就是裁③那两枚），别的车道落进线里的东西我一枚不碰。**这枚基座现在还在不在**也不靠"
       "记：发这页之前又在此刻的现尖 `%s` 上逐枚重读那几枚文件，与那次比对的基座等值 = %s，一枚不等就退 "
-      "`ABORT_PAIR_STALE`。所以「bundle 少了什么」那句仍按上一代的基座说，「正文没被送进共用 helper」这句按"
+      "`ABORT_PAIR_STALE`。所以「bundle 少了什么」那句按上一代的基座说，「正文没被送进共用 helper」那句按"
       "它那次的基座说，两句各管各的范围，我不把它们并成一句好看的话。" % (
           B.slot(_fc), B.slot(faces.get("base_label")), B.slot(pair.get("base_tip")),
           B.slot(pair.get("merge_base")), B.fmt(len(pair.get("swapped_paths") or [])),
+          "、".join("`%s`" % p for p in (pair.get("swapped_paths") or [])) or "无",
           B.slot(live_tip), B.fmt(all(pair_still.values()) and bool(pair_still))))
     A("")
     A("## 七、出页那扇门现在真的拦（裁①）")

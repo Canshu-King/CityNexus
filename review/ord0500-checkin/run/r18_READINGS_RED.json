@@ -4,24 +4,15 @@
   "aborts": "ABORT_READINGS_RED",
   "failed_checks": [
     {
-      "check": "换代复读无腐烂",
+      "check": "枝里那份发射器＝刚跑这页的这枚",
       "detail": {
-        "lookup": [
-          4256,
-          4263
-        ],
-        "integrity": [
-          4292,
-          4299
-        ],
-        "caught_by": [
-          4309,
-          4316
-        ]
+        "ref": "newlane-ord0500-phone-checkin-entry-r18",
+        "bytes_in_ref": 64370,
+        "bytes_of_this_program": 64459
       },
       "forced": false
     }
   ],
-  "took_local": "2026-10-03T22:07:12+08:00",
+  "took_local": "2026-10-04T00:27:59+08:00",
   "note": "the page was not generated; this sheet is the only artifact of this generation"
 }
