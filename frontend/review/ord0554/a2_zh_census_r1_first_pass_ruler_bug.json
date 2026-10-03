@@ -1,0 +1,14 @@
+{
+  "channel": "built bundle, seeded journey",
+  "tokens": [
+    "WGS84"
+  ],
+  "englishLabels": [],
+  "zh_labels_painted": [
+    "实时状态",
+    "时钟",
+    "当前步骤",
+    "离线"
+  ],
+  "zh_labels_missing": []
+}
