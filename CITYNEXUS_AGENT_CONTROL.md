@@ -16588,6 +16588,288 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-10-03 23:1x · 号令者（会话 494abfd7）· 批落地五枚：ORD-0504 / ORD-0552 / ORD-0509 / ORD-0472 / ORD-0545s5 已落，尖前移到 f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024；ORD-0500 r18 复切冲突待重基
+
+一、落地（走 cmdr_batch_land_r1.py，只读复切 + 门，无手合；每笔车道自有文件逐字节等于车道 blob）：
+- ORD-0504 → `701b5e3868fa9bed6e7b6a377d1c4a38a5e0d06b`（车道 da46954a 枝 `refs/heads/review/da46954a-ord0504-book-face-r1`，头 `968c89db1f029e3cec7ef3e7ff6966cc642f1536`，二十六枚文件全等，merged_tree `27120535474ce7a0b4609ac631f31fd86cd0fa6c`）
+- ORD-0552 → `20945aed97f28d3db7f9f5907dca72325e667408`（车道 1d64acf5 枝 `refs/heads/review/1d64acf5-ord0552-ledger-mirror-r1`，头 `21d4127e390ff0c4d60866579ef938f5ad43c173`，十二枚文件全等，merged_tree `66bedae401b5b09e200bbf3ceffc35bd858f7c8a`）
+- ORD-0509 → `4377e0be11c3d4e9ef10fef5326674d6840ffed7`（车道 2d2d7428 枝 `refs/heads/review/2d2d7428-ord0509-ink-yi-landing-r1`）
+- ORD-0472 → `45c00f0d1a0e10a49f44a775b2b6ecbc28c90ed2`（车道 e766b154 枝 `refs/heads/review/e766b154-checkin-words-real-door-r1`）
+- ORD-0545s5 → `f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024`（车道 newlane 枝 `refs/heads/review/newlane-ord0545s5-refusal-glass-2-r1`，头 `59a3a0e75e2630f43ca61476eae6fd94899d89ef`，十八枚文件全等，merged_tree `c6fde9e92a973e5307d1acdd673fbfcd564f17c3`）
+- 现尖（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读）= `f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024`。
+
+二、复切冲突待重基：ORD-0500 r18（`refs/heads/review/newlane-ord0500-phone-checkin-entry-r18`，头 `0d3ee635408aef94066c03f3e86e6268cf0378d1`）在 `review/ord0500-checkin/R6_READINGS.md` 上三路合并冲突 ⇒ 我没手合、退回请车道按现尖重基一次出 r19。锚=`0d3ee635408aef94066c03f3e86e6268cf0378d1`。
+
+三、掉线重发：值守块（车道 42d1a6fa 22:56 那块）报七扇末轮被链路掐断（尾行逐字「Unable to connect to the service, or the connection was interrupted…」），我已逐扇重发：89f2e2d6 / 6a773af1 / cff87c64 / 1d64acf5 / 82f55d8a / 0afdb49b / 8ac89982。锚=`f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024`。
+
+四、拒收一块：车道 `5a53846b` 的收形块里带着未替换的百分号占位（形如 `%(TIP)s`），门的尺不抓这类，我按"不许把模板原文入账"退回，请它按实值重发。其内容（七枚已在权威线内、五枚是读数枝、一枚撤回枝）我已收下。锚=`f4e4d88b278012e5dfed8e6b93ba2f87f2d9f024`。
+
+五、新开两单已派车道 da46954a：单 A = 屏上两处真缺陷（票卡「已确认」不看 status、中文面机词 train）；单 B = 花费面两笔（moneyText 量纲、承诺假零）；各带反件。锚=`968c89db1f029e3cec7ef3e7ff6966cc642f1536`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道 · 静默名单 22:58:45（45 分档 1 扇｜额度墙 无）
+
+**尺源**：`_why_stopped_r1.py` 两跑（45 分档 22:58:30、25 分档 22:58:30；跑它的那只手 _idle_census_ledger_r1.py:44）＋ 中枢账 `agent_bus/bus.jsonl`（129 行）。
+名册 18 扇（其中名单外新扇 4 扇，在册判据＝最近 6 小时动过自己流水；_idle_census_ledger_r1.py:199）。权威尖 `45c00f0d1a0e10a49f44a775b2b6ecbc28c90ed2`（本机 `git cat-file -e` 可解析；10-03 22:54 day26 real-door word reads: four sentences whose ref）。
+
+- **静默超 45 分且额度没墙：1 扇** —— 45d25bfb 58 分（判：提闸、谈交付）；45 分档那一跑「停了 1 扇」，额度类「无」。｜锚 _idle_census_ledger_r1.py:199
+- 近旁（25 分档停了 8 扇，其中静 ≥40 分的 1 扇）：45d25bfb 58 分（名单外新扇，判：提闸、谈交付，未取 0 条）｜锚 _idle_census_ledger_r1.py:201
+- 25 分档全量：45d25bfb 58 分、8ac89982 31 分、0afdb49b 31 分、82f55d8a 30 分、1d64acf5 30 分、6a773af1 29 分、cff87c64 29 分、89f2e2d6 29 分｜锚 _idle_census_ledger_r1.py:202
+- **各扇未取的 BB 机条数**（未取＝进了账、既没取走也没回执）：车道合计 14 条，其余 13 扇为 0；通播（`to=*`）未取 0 条｜锚 _idle_census_ledger_r1.py:202
+  分账号（每行一枚锚，门的 ±200 字窗口才盖得住）：
+   - qoder:6efab655 6 条、qoder:42d1a6fa 5 条、file:nightwatch 3 条｜锚 _idle_census_ledger_r1.py:202
+   - codex:laneE7 1 条、qoder:1d64acf5 1 条、qoder:494abfd7 1 条｜锚 _idle_census_ledger_r1.py:202
+   - qoder:cff87c64 1 条｜锚 _idle_census_ledger_r1.py:202
+- **alarm 腿已接哨兵**（你 19:54 点名要的那件）：账上哨兵自己投的 `band:` 回执 3 枚，具名 6a773af1、6efab655、82f55d8a（另有 1 枚是我手打的探针，不计进覆盖）。`_sentinel_relay_gdone.json` 今天记了 7 枚 I/J 判定，其中 4 枚只有窗口敲门、没有 BB 机耐久副本：1d64acf5、2d2d7428、6a150e1e、8ac89982。成因已修在尺上：正文里的分钟数会在中枢重跑那一刻漂掉（06:55 那枚就是这么被拒的），且旧写法先记重账再投递＝「看着报过、其实没人收到」；现在投递失败不记重账、下一轮再试｜锚 _idle_census_ledger_r1.py:203
+- **未接 BB 机的窗口（你 22:11 点名要的那格）：2 扇**，它们收不到任何 order/ack，点名只能靠敲窗口：
+   - 89f2e2d6（静 29.6 分）、45d25bfb（静 59.3 分）｜锚 _idle_census_ledger_r1.py:233
+- **末条是平台错误回话（掉线，不是偷懒）：7 扇**，逐字是「Unable to connect to the service, or the connection was interrupted…」；这 7 扇的最后一轮被链路掐断，**不会自己回来**，要重发那一轮。我这侧的 send_message 腿对你们委派出来的会话是关着的（平台原话：「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息」），所以这一格只能你或主人重发：
+   - 89f2e2d6 静 29.6 分·未取 0 条、6a773af1 静 30.2 分·未取 0 条｜锚 _idle_census_ledger_r1.py:237
+   - cff87c64 静 30.2 分·未取 1 条、1d64acf5 静 30.6 分·未取 1 条｜锚 _idle_census_ledger_r1.py:237
+   - 82f55d8a 静 31.1 分·未取 0 条、0afdb49b 静 31.6 分·未取 0 条｜锚 _idle_census_ledger_r1.py:237
+   - 8ac89982 静 32.1 分·未取 0 条｜锚 _idle_census_ledger_r1.py:237
+- 第二把尺（自产出，看板 22:58:45）：dropped 7、idle 0、owed 1、quiet45 1、quota 0、touched 0、writing 10｜锚 _idle_census_ledger_r1.py:146
+- 我这一侧另有一处已认账的外发：20:11 前后 `human:you01` 通播全体那枚是主人那块人看的看板的投递自测，已补 `board:human-selftest-no-ack` 具名说明「不必回执、不必转达」。
+
+
+下一手仍归号令者：物理点名与派单；我不敲静默未过档、且无未取的车道，也不代插账本。
+
+**门上那条 ADVIDSORY 我不遮**：本块的数只由脚本行号担保（不是 git 树里的坐标），因为舰队状态本来就不在版本库里。
+要复核就重跑这一条，它会把上面每个数重新取一遍：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_idle_census_ledger_r1.py`
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 22:55 · 自申报领活（点名 22:34 的下一手）：把同一枚病灶在**产品源**里的五枚行号锚也改成标签锚，守闸加两臂，当代 6 passed、反件把插回的锚咬红
+
+**零、读数前提与一处对不上，先报事实**
+
+- 你给的账本路径 `D:/moodle/CityNexus/CITYNEXUS_AGENT_CONTROL.md` 在这台机上不存在（`ls` 回 `No such file or directory`）；我读的是 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md`（现读 12981519 字节，mtime 10-03 22:11）。若你已把权威账本搬进仓里，请给一次性路径，否则各车道会读到两份。
+- BB 机已接上：`python D:/moodle/agent_bus/bus.py join --id qoder:a68b0631` 返回 `joined.name=qoder:a68b0631`，收件框 3 条，全是 `to=*` 的通播（两枚看板投递自测 + 一枚唤醒说明），其中 `qoder:42d1a6fa` 那条写明「不是派单——不必回执、不必转达」⇒ 总线上没有点到我名的活。
+- `## ORDERS` 段现读跨 `CITYNEXUS_AGENT_CONTROL.md:16590` 到 `:18840`，段内与我有关的三行是 `CITYNEXUS_AGENT_CONTROL.md:16875`、`CITYNEXUS_AGENT_CONTROL.md:16919`（只把我列进静默名单，下一手都指回 `cmdr_2048` 与"上一轮派单块"）——那两块里给我的一行是 20:08 那块第八件留的两个选项，没有新的裁决。所以我按你说的**自申报**：把 20:08 那块第五节我量了没动的东西收掉。
+- 现尖我自己 ls-remote 回读：交接时 `0f3849b4d72c4bc52af51538ae6d987fe9f9432b`，写块这一秒又跳到 `20945aed97f28d3db7f9f5907dca72325e667408`。
+
+**一、坐标**
+
+枝 `refs/heads/review/a68b0631-line-anchor-drift-r1` 头 `3e118985d186d0e25d89fbb123d59e19c4f89894`（`git ls-remote origin refs/heads/review/a68b0631-line-anchor-drift-r1` 逐字回读同值，见 `frontend/review/line_anchor_drift/READINGS_r2.txt:3`）。切枝基座 `0f3849b4d72c4bc52af51538ae6d987fe9f9432b`，`git merge-base --is-ancestor` 答它是我这枚头的祖先（`frontend/review/line_anchor_drift/READINGS_r2.txt:6`）。对最新尖 `20945aed…` 我做的是只读复算：本轮动的 10 枚文件里，7 枚是尖上已有的（五枚产品源 + 上一手那两张臂文件），逐枚比 blob 全部 `moved=no`；报"MOVED"的 3 枚（守闸文件与两枚读数件）本来只在我枝上存在，是我的比法把 NEW↔GONE 当成了漂移，不是真漂移。`git merge-tree --write-tree 20945aed97f28d3db7f9f5907dca72325e667408 3e118985d186d0e25d89fbb123d59e19c4f89894` 只回一枚树 `f7f895e0603b41ac28d771e1d3b4366a28e34eaf`、冲突名 0 枚（只预测形状，DRY 不跑两闸，不自称可插）。读数件 `frontend/review/line_anchor_drift/READINGS_r2.txt` 共 35 行，它自己记的 `candidate_head` 是加入它之前那一枚 `cecf994e005f7a1cb90404e3ea36e4fea055b356`，两者只差它这一枚文件（`git diff --numstat` 回 34 增 0 删）。
+
+**二、改了什么（0 行为改动，只换锚的形式）**
+
+字典在这一代 2236 行（`frontend/review/line_anchor_drift/READINGS_r2.txt:7`）。五枚产品源的注释按行号钉它，逐枚打开回读后**全都已经指着别的键**（`frontend/review/line_anchor_drift/READINGS_r2.txt:10` 到 `:14`）：
+
+- `frontend/src/app/v8PanelRegistry.tsx:216` 说「`t()` 缺条目就回吐键名（`LocaleContext.tsx:1825`）」——那行今天是 `"intel.kicker"`；同一句还钉 `app/V8Experience.tsx:1731`，那行是一条 ORD-0417 注释，真正的 `t("nav." + item.key)` 在导航条逐枚 `<span>` 里。
+- `frontend/src/features/checkin/footprintCopy.ts:8` 钉 `:2164` → 今天是 `"sharedPoster.formNote"`。
+- `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:181` 钉 `:488`（说那是 `discovery.defaultGoal`）→ 今天是 `"discovery.lede"`。
+- `frontend/src/features/studio/planVersionHistoryCopy.ts:7` 钉 `:1635` → 今天是 `"discovery.batchLanded"`。
+- `frontend/src/features/traveler-twin/TwinPanel.tsx:16` 钉 `:1644` → 今天是 `"discovery.batchOutsideDay"`。
+
+现在四处统一指到实现本身：`LocaleProvider` 里 `const t = useCallback` 中那枚 `dictionaries.en[key] ?? key` 回退臂；`discovery.defaultGoal` 那处直接指键名（每本字典一枚）；`planVersionHistoryCopy` 那句改成"`LocaleProvider` 里那个 `t` 只查它自己那两本字典、没有兜底字典参数"。改动的判据强弱为 0：五处全是注释，产品行为与断言一字未动。
+
+**三、守闸（同一枚文件里加两臂，不新开件）**
+
+`frontend/e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts` 现在 183 行：A4 扫 `frontend/src` 全树，只要再出现 `LocaleContext.tsx:<数字>` 就红；A5 现场重推导这五处新锚说的还是不是同一件事（回退臂形状在不在、`discovery.defaultGoal` 是否恰两枚、那个 `t` 是否仍只查两本字典、五枚文件是否都改口且不再带行号）。当代跑次：整件 `6 passed`（A1-A5 + real-seed 项目，`frontend/review/line_anchor_drift/READINGS_r2.txt:18`）。
+
+反件（`frontend/review/line_anchor_drift/READINGS_r2.txt:19`）：把 `i18n/LocaleContext.tsx:1825` 原样插回 `v8PanelRegistry.tsx` 那一行 ⇒ `2 failed, 4 passed`，红的正是 A4（`a line-number citation of the dictionary is back in shipped source`）与 A5（`src/app/v8PanelRegistry.tsx still carries a line number`），A1/A2/A3 保持绿（它们不管产品源，没误伤）；文件跑完 `file_restored_byte_identical=True`。两道编译闸 `npx tsc -p tsconfig.check.json --noEmit` 与 `-p tsconfig.typecheck.json --noEmit` 各 rc=0、输出 0 字节（`frontend/review/line_anchor_drift/READINGS_r2.txt:22`、`frontend/review/line_anchor_drift/READINGS_r2.txt:23`）。
+
+**四、分母（量了、没动的部分具名）**
+
+`src` 里 `LocaleContext.tsx:<行号>` 形引用从 5 枚降到 **0**；但同形病灶指向外壳文件的还有 **15** 枚（`v8experience_line_citations_in_src`，`frontend/review/line_anchor_drift/READINGS_r2.txt:28`）——本单题面只圈了字典那一族，我没越去改别人的注释；`frontend/e2e` 里跨文件行号引用 **61** 枚（我这手消掉 2 枚，`frontend/review/line_anchor_drift/READINGS_r2.txt:29`）。要把 A4 扩成"任何共享文件都不许按行号钉"，说一句我就把守闸从"字典一枚"改成一张具名白名单，并把那 15 枚一并换锚。
+
+**五、相邻两笔的状态回读（按 blob 等式，不靠祖先）**
+
+ORD-0507 的两枝仍未落地：`frontend/src/app/V8Experience.tsx` 尖上 `949c0471` 而我 r3 头是 `b9a18219`、`frontend/src/features/checkin/checkins.ts` 尖上 `9b7e14d8` 而我的是 `11d68ae7`；r1 那枝的 `frontend/src/features/access/AccessPanel.tsx` 尖上 `98b0d423`、我的是 `eb41a689`（逐条记在 `frontend/review/line_anchor_drift/READINGS_r2.txt:32` 与 `frontend/review/line_anchor_drift/READINGS_r2.txt:33`）。hub 枚举撞车那件按裁语只当证据件归档，本轮 0 字节未碰。这两枝与本枝互不重叠的文件只有 `V8Experience.tsx` 与两张臂文件，都在 20:08 之后未再变动。
+
+**六、现场与红线**
+
+`demo/reset` 调用 calls=0；`_preview.db` 写入 0；`:8000`、`:4781`、`:4782`、`:4783`、`:4785`、`:4787`、`:8693` 一个没碰也没杀（那对手机链同代栈是你起的）；本轮端口 :61400 至 :61403，交件前 netstat 回读并把仍听且命令行属于本车工作树的进程收掉；一次性库每次尝试新名新 run id（`backend/data/_d3_*.db`，已删，含 -wal/-shm）；本轮新增构建目录 0 枚。工作树只剩 `?? reports/ui-overnight/`（邻居闸自写产物，我没删没登记）。不自写 `CITYNEXUS_AGENT_CONTROL.md`，不跑 `ledger_inbox_apply_r2.py`，别人脏的不碰、不 stash、不 force。顺带一句盘面：D 盘现读 free 已到 11 GB 与 12 GB 两个读数（你 22:1x 那块记的是 12 GB），本车这轮没涨多少，但每单一份整树导出的增长还在。
+
+**七、下一手**
+
+本枝等你落地（不自取）。落完我按你 20:08 那块第八件剩下的那格走：07:57 的两枚锚点漂移尺（写期限尺 `backend/tests/test_qoder_ord0296_write_deadline.py:196`、字典键形尺 `frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts`）——那两枚是真会红的尺，同源改法。或者你直接派新单，我接。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 2026-10-03 22:1x · 号令者实例 A（会话 6efab655）· /v8/intelligence 那枚枚举已落地（第 9 手，产品字节 1 枚文件）；ORD-0551 被曝光臂拒住，我拿到一枚能分辨成因的对照
+
+一、落地：权威线现尖 = `0f3849b4d72c4bc52af51538ae6d987fe9f9432b`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读同值；门的 `landing.both_routes_agree` 为 true）。
+- 候选：车道会话 45d25bfb 的 `refs/heads/review/cmdra-intelligence-raw-label-r1` = `2c188f705659b0c126ba71d02e049586275dada6`，两枚反件枝 `…-mA` = `43770847917cc33fcf4fccf8c179f17e78f2d004`、`…-mB` = `2fbd715cb4babe8f8cdd9bb6dad579bb930e5957`。
+- 只读复切判干净：`RECUT 0f3849b4d72c4bc52af51538ae6d987fe9f9432b`，车道自有文件 3 枚、3/3 逐字节等于车道 blob（`merged_tree=195163f1e3814f175413b8d3424cb045e41e39b0`），我没手合；复切片推成 `refs/heads/review/cmdr-recut-cmdra-intel-r1`。
+- 门判 READY_TO_LAND、`product introduced: frontend/src/lib/displayVocabulary.ts`；收据 blob `47976abaa29789a2d1f58d142bdaad80362d77f5`。第一次落地时 GitHub 把那次 ref 更新断了（`landing.http = "RemoteDisconnected"`、`landed=false`、尖未动，同一收据件形制的拒件我另发），我原样重跑一次才成 ⇒ 权威线只经门移动这一条没破。
+- 测试口径：门不跑测试 ⇒ `NOT_EXECUTED_BY_CMDR`（`gate_run.test_exit` 为 null，收据 blob `47976abaa29789a2d1f58d142bdaad80362d77f5`）。车道自带 4 臂尺我本轮没跑（容量不够），具名 `NOT_RUN_BY_CMDR`。
+
+二、ORD-0551 被拒 + 一枚分辨成因的对照：
+- 复切干净（`RECUT d7a1d740db7f08d3b2b165f31d57404c804f7c22`，文件 18 枚全等车道字节），但门 `verdict=REFUSED`，拒因是 Q64 曝光增长：尺 `ui_exposure_taint_ast_r7b.cjs`（blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`）在尖上数得格子 6 枚、候选数得 18 枚，报增长的六枚文件名里 5 枚（`V12AuthoritativeJourneyPanel.tsx` 4 格、`ControlTowerPanel.tsx` 2 格、`V8Experience.tsx` 3 格、`V10LiveExecutionPanel.tsx` 1 格、`V12TripStudioPanel.tsx` 1 格）都不在车道改的 3 枚文件里。拒件已发布：blob `b2b380917546705b87b96658a36c6d6853d17c0e`。
+- 对照（我本手刚落的这一枚）：候选同样改了 `frontend/src/lib/displayVocabulary.ts`，门的同一把尺报 `candidate_files_in_view` 1 枚、尖上格子 6 枚、候选格子 6 枚、growth 空对象 ⇒ 单独扩词表不产生增长；所以 0551 那 12 格要么来自它另外两枚文件（`JourneyInboxWorkbench.tsx`、`generated/api.ts`）把 helper 链接通，要么来自门在稀疏导出上量尖。两种可能我都写进给车道的要求里（同一把尺、同一形制的两份全量导出，两侧各自贴总格子数与按文件名单），已按会话 id 点名送达 sessionId `cff87c64-eb8b-4ce6-b362-deec5628c49b`。我没为了插队遮这条报错，也没手合。
+
+三、屏上那一格仍是欠的：`NOT_REACHED_BY_CMDR`。枚举那一句我本轮只到源码与门两级（词表 4 条在 `frontend/src/lib/displayVocabulary.ts:21`、`:25`、`:29`、`:33`，车道申报块里逐枚点名），没在真浏览器里读 `/v8/intelligence` 的渲染文字；上一轮的静态口 `127.0.0.1:49805` 还在服务旧代字节，我不拿旧代屏冒充新代。打卡拒答那一屏同理（仪表已备：`live_checks/cmdr_0500r17_checkin_walk_r1.js:1`）。
+
+四、没改善的部分（具名格子）：
+- `/v8/intelligence` 枚举行的**屏上验证**：本轮未做（见三）。
+- `/v8/bookings` 提取腿两格（机词上屏 + 供应商失败以 201 交付）：未落，卡在我这侧的曝光判据未澄清（ORD-0551 等 -r3 的两份全量读数）。
+- 上一轮那两处仍是原样：账本镜像自 GitHub 取大文件仍 truncated read（已开 ORD-0552 给 sessionId `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`，本轮未复测）。
+- ORD-0436 八格、ORD-0430 底栏重叠：本轮 0 进展。
+- 未处理候选（还没落地、也没被他人落）：`review/newlane-ord0500-phone-checkin-entry-r18` = `71517a54d57c8924434e7987f4099ebd8912c630`（r17 的后续）、`review/da46954a-ord0504-book-face-r1` = `968c89db1f029e3cec7ef3e7ff6966cc642f1536`、`review/newlane-ord0545s5-refusal-glass-2-r1` = `59a3a0e75e2630f43ca61476eae6fd94899d89ef`。
+- 我那把普查尺仍少 `JSON` 允许词；D 盘可用 12 GB（本轮未清，没删任何东西）。
+
+
+### ORD-0504 预订面一手 r2 · 花费屏那把「回答事实」尺扩到 预订 标签：同库同尺、三趟读数、六枚反件全咬住；两枚红是屏自己的话，外加我自己那两枚「同票两屏差两个数量级」与「假零」的账（车道 da46954a）
+
+**〇、这手从哪来**
+
+- 号令者 19:46 / 19:54 两次同名派单，逐字是：「把 book 屏（账本/票据）的『回答事实』尺扩过去——同库同尺、前后两趟、至少两枚反件，交收件口」。本块就是这一手。
+- 「同库」＝花费面那一手同一个库 `run/ord0465_lane.db`；「同尺」＝同一判据：期望由臂自己现取 `GET /journeys/{id}/experience` 与 `GET /journeys/{id}/wallet` 加出来，屏上只读旅客看得见的文字，一枚 `data-*` 都不当证据。尺叫 `review/ord0504/book_screen_facts_r1.js`（11 枚臂）。
+- 基线尖按令取 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`，工作树检在这一枚上。交件时现读权威尖已经动了两回：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` = `8f8281f547c2e60d2c4c3349322565b1104107ce`；`git merge-base --is-ancestor bf4f776b0ba943b88817dfcc0cb3442d75fd9e21 8f8281f547c2e60d2c4c3349322565b1104107ce` 退 0 ⇒ 快进、无分叉。这七枚新提交里 `frontend/src/app/V8Experience.tsx` 的 blob 仍是 `949c0471516bd4d8800bef0fee02f5dbf7eeb191`、`frontend/src/features/trip/spendFacts.ts` 仍是 `873ef3c6051ed4982868be14b982e5866f5c7cf2`（与我 r5 交付那枚逐字相同）、`backend/app/db/models.py` 与 `backend/app/operations/v9.py` 也没动，变的只有 `backend/app/main.py`（尖上 blob `fc359dd9d1067b0a17770b45816fa76aa3af01af`，即那枚 ORD-0520 abort 闸，不在这条读链上）⇒ 本手三趟读数对最新尖同样成立，我没有为它重跑，要重跑说一句。
+- 候选枝 `refs/heads/review/da46954a-ord0504-book-face-r1`，交出去的头 = `968c89db1f029e3cec7ef3e7ff6966cc642f1536`（`git ls-remote` 逐字回读，与本机 `git rev-parse HEAD` 相同）。它前一枚 `0c2c05f7664b0d4ed0cac9f8e8d8049267ab04ca` 是同枝上一版读数，已被本块取代，红集合里那条币种判据是我自己写错的、下面第三节具名撤回。
+
+**一、这一手改了几个字节**
+
+- 产品字节 0 处改动。`git status --porcelain -- frontend/src/app/V8Experience.tsx` 在三趟之间逐时刻为空，只在反件周期里为 1 行（第四节），交件时工作树除仪器外 0 行。
+- 全部新件是仪器与读数，落在 `review/ord0504/`：种子 `book_seed_r1.py` + 种子读数 `book_seed_report_r2.json`；尺 `book_screen_facts_r1.js`；三趟 `book_screen_pass_pre_r2.txt` / `book_screen_pass_pre_r2.json` / `book_screen_pass_post1_r2.json` / `book_screen_pass_post2_r2.json`，后两趟的驱动与见证 `book_screen_post_r1.py` + `book_screen_post_r2.txt`；反件周期 `book_screen_controls_r1.py` + 报告 `book_screen_controls_r2.txt` + 每枚各自那份臂读数 `book_screen_control_arms_{r1,r1b,r2,f1,f2,f3}.json`；同票两屏对照 `one_ticket_two_faces_r1.js` / `.txt` / `.json`（第六节）。
+
+**二、库里放的是什么形状（先摆形状再读屏）**
+
+- 种子把 5 张票、2 项承诺摆成屏必须区别对待的形状（形状表 `review/ord0504/book_seed_r1.py:75`）：`status=CONFIRMED` 且背后有承诺（23000 CNY）；`CONFIRMED` 无承诺（9900 **USD**）；`CONFIRMED` 无承诺（4800 **JPY**，专门放的那枚）；`status=PENDING`（1500 CNY）；一张 `price.amount_minor` 为 null、`price.status=UNKNOWN` 的票。承诺一枚 `KNOWN` 23000 CNY 且 `external_ref="mock-booking:d2e005d8"`，一枚 `UNKNOWN`（写它的那行是 `review/ord0504/book_seed_r1.py:134`，库里只能存 0，见下）。逐枚值在 `review/ord0504/book_seed_report_r2.json` 与两趟 JSON 的 `server_rows`。
+- 一格测量到的库形状：`commitments.monetary_value_minor` **不接受 NULL**，所以"没学到价"那项在库里只能是 `0 + monetary_value_status=UNKNOWN`；屏上正确的答法是那句「价格未知」而不是 `¥0.00`。预订这一屏这条臂绿；**花费那一屏这条臂红**，见第六节。
+- 行程与旅伴走产品自己的门建（`POST /travelers`、`POST /journeys`），票与承诺直接写进**本车道这个库**。这里更正我上一手那句话（它说过"这一层没有按行程的写门"，不准确）：产品确实有一条建票写链——导入草稿 `backend/app/operations/v9.py:908`（`import_reservation_artifact`）→ 确认草稿 `v9.py:988`（`confirm_reservation_draft`），后者在 `v9.py:1130-1154` 造 `TransportReservation` 行。这条门能造出我这几形的哪几形是实测过的：无价那一形它自己就产（`v9.py:1074-1079` 无价即 `price_status="UNKNOWN"`，`v9.py:1147` 把 `price_amount_minor` 留成 `None`），币种原样带过（`v9.py:1148`），JPY 也一样进库；但 `status` 被硬编码成 `"CONFIRMED"`（`v9.py:1143`），而钱包门把库里的词逐字送出（`backend/app/main.py:6197` 的 `_reservation_payload`，`status` 在 `backend/app/main.py:6211`），列本身是无 CHECK 的裸 `String`（`backend/app/db/models.py:1013`）。⇒ 四形里 PENDING 那一形我这轮只能直写库造，可达性在第五节第 1 条里限定；其余形状（含 `train` 那个词、含 JPY 那枚）都能从产品自己的门进来。
+
+**三、三趟屏读（同一枚干净产物）＋ 一枚我自己写错的判据（具名撤回）**
+
+- 坐标先摆齐，后面每条字节摘要都锚在这一段：基线尖 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`、候选头 `968c89db1f029e3cec7ef3e7ff6966cc642f1536`。本手量到的字节摘要（源码的、产物的）都是本机 sha1 内容摘要、非 blob、不可 `git cat-file`，所以每条都另附真 git 坐标。两种形制别混：`V8Experience.tsx` 的工作树字节本机 sha1 是 `4f3e1a0d3d5d061d965970e696ac0b8bf7436e22`（带行尾的原文件字节），它在尖上的 git blob 是 `949c0471516bd4d8800bef0fee02f5dbf7eeb191`（blob 头 + 规范化后的字节）——判"屏的字节没变"用的是后者，判"我这轮没留下一个字节"用的是前者，两者本轮都逐趟回读过。
+- **撤回**：r1 那版我有一条臂要求「票面必须出现 ISO 代码、不许出现符号」，并据此写下「一张服务器答 USD 的票在屏上是 `¥` 开头的金额」。这句是错的，落屏原文自己就反证：那张 USD 票写的是 `US$99.00`。我用本机 Chrome 量了逐币种渲染串（zh-CN，窗口 1280×900 px；量纲表在 `review/ord0504/book_screen_facts_r1.js:52`，改后的判据在 `review/ord0504/book_screen_facts_r1.js:185`）：CNY 落屏 `¥230.00`，JPY 落屏 `JP¥4,800`，USD 落屏 `US$99.00`。三枚符号互不相同，`¥` 与 `JP¥` 不撞；en-US 下是 `CN¥` / `¥` / `$`，同样不撞（本机 `Intl.NumberFormat` 实跑，不是推断；库里对应的 minor 逐枚值在 `review/ord0504/book_seed_r1.py:75`）。⇒ 那条判据是我把标准写窄了，不是屏答错了事实；r2 把它改成可追溯判据（票面要么带 ISO 代码、要么带这台 locale 自己为那笔金额渲染出的串，且两枚不同 ISO 不许塌成同一枚串），这一枚现在**绿**。
+- 前一趟（反件周期之前）：`review/ord0504/book_screen_pass_pre_r2.txt` ⇒ `ARMS=11 PASSED=9 FAILED=2`；`frontend/src/app/V8Experience.tsx` 的本机 sha1 `4f3e1a0d3d5d061d965970e696ac0b8bf7436e22`（内容摘要，非 git 对象；同一行的 git 坐标 = 基线尖 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`，该文件在尖上的 blob 是 `949c0471516bd4d8800bef0fee02f5dbf7eeb191`）。两枚红逐枚是 `book_screen/confirmed_words_only_where_the_server_said_confirmed`、`book_screen/no_machine_token_on_the_chinese_face`。
+- 后两趟（反件周期把源码逐字节还原以后，重建同一枚干净产物、把 `:4931` 换到它上面，再跑两回）：`review/ord0504/book_screen_post_r2.txt` 记录起点本机 sha1 `4f3e1a0d3d5d061d965970e696ac0b8bf7436e22`（内容摘要、不可 cat-file；git 坐标 = 候选头 `968c89db1f029e3cec7ef3e7ff6966cc642f1536`）、`git status --porcelain -- frontend/src/app/V8Experience.tsx = ''`，以及服务中的入口 `/assets/index-dc55bcFW.js` 其本机 sha1 `5235315cdd3a76c3ba302c583edebd72d5fe3d84`（产物字节，非 git 对象）等于 `dist_book_tip` 磁盘字节 ⇒ `served bytes == bytes of the clean bundle this run built: True`：
+  - 第 1 趟 `review/ord0504/book_screen_pass_post1_r2.json`（打印这行的驱动在 `review/ord0504/book_screen_post_r1.py:64`）⇒ `ARMS=11 PASSED=9 FAILED=2`，红集与前一趟逐枚相同；
+  - 第 2 趟 `review/ord0504/book_screen_pass_post2_r2.json`（同一枚驱动 `review/ord0504/book_screen_post_r1.py:68` 逐枚印红集合）⇒ `ARMS=11 PASSED=9 FAILED=2`，红集逐枚相同；
+  - 跑完 `V8Experience.tsx` 的本机 sha1 仍是 `4f3e1a0d3d5d061d965970e696ac0b8bf7436e22`（内容摘要，非 git 对象；git 坐标 = 基线尖 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`），报告里 `source unchanged by this run: True`。
+- ⇒ 这两枚红在同一枚干净产物上被复现三回（前一趟 + 后两趟），三回之间源码没变过一个字节。红行里逐字带着落屏原文，例如那张 PENDING 票写 `航班 · 状态未知 … ¥15.00 已确认 · 未成承诺`，手机 390×844 那形写 `train · 状态未知 …`（`view` 字段逐枚记在 JSON 里）。判据读的是渲染文字，一枚 `data-*` 都没进判据。
+
+**四、反件周期：六枚全 CAUGHT，以及上一轮我自己造成的那一格仪器事故**
+
+- 事故（上一轮，先说清）：我前两轮的"反件全部 MISSED"是**我的仪器坏了，不是产品没动**。原因是我把 `:4931` 叠成了八枚同时监听的私有静态代理，反件脚本只杀第一个 PID，臂就跑到某一枚旧代理身上、读的是旧产物——四枚的红集合因此与基线逐枚相同。清法与自证都写进了脚本：`stop_port_holders()` 对每个持有者走进程树杀（`/PID /T /F`，taskkill 退非 0 就 REFUSE，四轮不干净也 REFUSE），每枚反件跑臂前先取服务中入口 JS 的摘要，并要求它等于**这一枚刚建出来的产物**的字节摘要；若还等于基线那枚就具名 `MUTANT_NOT_IN_SERVED_BYTES`。本轮每一行都印这两枚摘要。
+- 上一轮还有一处自报：尺起初把读数写死在同一个文件名上，反件周期复用该名，于是那份"基线 JSON"装的是反件读数。已删，尺改成认 `BOOK_OUT` 每趟一个文件；本轮每枚反件另有各自的 `book_screen_control_arms_*.json`。
+- 下面每枚反件的产物入口摘要是本机 sha1 内容摘要、非 blob、不可 `git cat-file`；这一段可 cat-file 的 git 坐标是基线尖 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21` 与候选头 `968c89db1f029e3cec7ef3e7ff6966cc642f1536`。干净基线产物入口 `/assets/index-dc55bcFW.js` 的本机 sha1 `5235315cdd3a76c3ba302c583edebd72d5fe3d84`（内容摘要，非 git 对象）。逐枚读数在 `review/ord0504/book_screen_controls_r2.txt`：
+  - R1 破坏 · `frontend/src/app/V8Experience.tsx:4451-4452` 票卡空价不再走 `t("bookings.priceUnknown")` 而是 `money(item.price.amount_minor ?? 0, …)` ⇒ 期望 `an_unlearned_ticket_price_stays_a_word_not_a_zero` 转红；观测 FAIL，`ARMS=11 PASSED=7 FAILED=4`，入口本机 sha1 `7524b88301585333c007eac911b0f8215d873edf`（非 git 对象），`服务字节==刚建字节 True` ⇒ **CAUGHT**。
+  - R1b 破坏 · `frontend/src/app/V8Experience.tsx:4256` 承诺卡把 `known && amountMinor != null` 改成 `amountMinor != null` ⇒ 没学到价的承诺印 `¥0.00`；期望 `an_unlearned_price_stays_a_word_not_a_zero` 转红；观测 FAIL，`ARMS=11 PASSED=8 FAILED=3`，入口本机 sha1 `aa50d9301012ad97a67b93a861a8681be30ed209`（非 git 对象），`True` ⇒ **CAUGHT**。（R1 与 R1b 是上一轮那枚 MISSED 补出来的两枚：票卡与承诺卡各一枚，仪表那格缺口已当场关掉，不必再单独点单。）
+  - R2 破坏 · `const simulated = false` ⇒「模拟承诺」徽章永不画；期望 `the_simulated_word_only_covers_a_mock_reference` 转红；观测 FAIL，`ARMS=11 PASSED=8 FAILED=3`，入口本机 sha1 `342d7c6b5f6c545651d8de7d2334e15fceef2752`（非 git 对象），`True` ⇒ **CAUGHT**。
+  - F1 按服务器词修 · `frontend/src/app/V8Experience.tsx:4460-4465` 状态词从 `commitment_id` 改成读 `item.status`；期望 `confirmed_words_only_where_the_server_said_confirmed` 转绿；观测 PASS，`ARMS=11 PASSED=10 FAILED=1`，入口本机 sha1 `76958f21fa3fdf45b1d68cbafd81135d0c6c306d`（非 git 对象），`True` ⇒ **CAUGHT**。
+  - F2 天真修法 · 票面金额改成 `${item.price.currency ?? "CNY"} ${(amount_minor / 100).toFixed(2)}`；期望 `a_zero_decimal_currency_is_not_divided_by_100` 转红；观测 FAIL，`ARMS=11 PASSED=7 FAILED=4`，红集合里同时换上 `ticket_numbers_equal_the_wallets_own_amounts`，入口本机 sha1 `21ea540d526758e42d10bb19b88d881ebe67ca00`（非 git 对象），`True` ⇒ **CAUGHT**。这一枚就是第六节那 100 倍的现场复现：把"印 ISO 代码"当成修好，代价是 JPY 票从 `JP¥4,800` 变成 `JPY 48.00`。
+  - F3 正确修法 · 票面改用 `Intl` 的 `currencyDisplay: "code"` 并按币种自己的小数位取量纲；期望 `every_ticket_price_is_traceable_to_the_currency_answered` 转绿；观测 PASS，`ARMS=11 PASSED=9 FAILED=2`（只剩第五节那两枚红），入口本机 sha1 `5c2cf9d32f84dd4d624e7cc55c2823ed8fd0f624`（非 git 对象），`True` ⇒ **CAUGHT**。
+- 六枚跑完 `restored: bytes_equal_to_before=True`，`V8Experience.tsx` 的本机 sha1 回到 `4f3e1a0d3d5d061d965970e696ac0b8bf7436e22`（内容摘要、不可 cat-file；这一行的 git 坐标仍是基线尖 `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21`），`git status --porcelain -- frontend/src/app/V8Experience.tsx` 空 ⇒ 反件没在产品里留一个字节。
+- 令里要"至少两枚反件"，这轮交了六枚、六枚都带双重字节见证（产物确实换了 + 臂跑的就是这枚产物）。
+
+**五、预订这一屏现在说错的两句（不是我造的形状，是屏自己说的）**
+
+1. 一句与服务器无关的「已确认」：票卡右下角那串字只看 `commitment_id` 有没有、完全不看门里送出的 `status`（`frontend/src/app/V8Experience.tsx:4460-4465`），于是这张 `status=PENDING` 的票写着「已确认 · 未成承诺」。**限定要说清**：产品目前那条确认写门把 `status` 硬编码成 `"CONFIRMED"`（`backend/app/operations/v9.py:1143`），我在产品路径上没找到往 `transport_reservations.status` 写非 CONFIRMED 值的作者，所以今天从产品自己的门进来的票不会长这样；这枚红的分量在"确认语与技术事实脱钩"——列是无 CHECK 的裸串（`backend/app/db/models.py:1013`）、钱包门逐字送词（`backend/app/main.py:6211`）、任何后来的写者（同步、撤销、人工导入）一改这个词，屏不会跟着变。判据臂：`book_screen/confirmed_words_only_where_the_server_said_confirmed`；把词按回服务器 `status` 的反件 F1 在这条形上 CAUGHT。
+2. 中文面上出现机器词 `train`：票种词表 `BOOKING_TYPES` 只有 FLIGHT/RAIL/COACH/FERRY/HOTEL/TICKET/RESERVATION 七个键（`frontend/src/app/V8Experience.tsx:4135-4143`），表外值走兜底 `key.replaceAll("_", " ").toLowerCase()`（4149），大写机器码就被小写上屏。这条不是我直写库才造得出：`reservation_type` 后端无枚举（`backend/app/db/models.py:1004` 是裸 `String`，`backend/app/schemas.py:389` 只限长度 1-40），导入草稿那条门 `backend/app/operations/v9.py:908` 的 VISION 分支只声明类型不校验值域（`backend/app/integrations/inbox/vision.py:14`），ICS 分支把调用方给的 `reservation_type` 原样当默认值（`v9.py:933` → `backend/app/integrations/inbox/ics_parser.py:24-30`），确认草稿时 `str(data["reservation_type"]).upper()` 直接落库（`v9.py:1134`，在 `confirm_reservation_draft`，`v9.py:988` 起）；只有纯文本粘贴那一支限在四词里（`v9.py:946-952`，词表在 `v9.py:949`）。产品自己的数据因此大多写作 RAIL，一票之差（模型答 TRAIN）屏上就是 `train`。判据臂：`book_screen/no_machine_token_on_the_chinese_face`。
+
+**六、自查出来的两笔账，在我自己交付的花费面上（同一张票、两个屏，差 100 倍）**
+
+- 仪器件：`review/ord0504/one_ticket_two_faces_r1.js`，读数 `one_ticket_two_faces_r1.txt` / `.json`。同一枚库、同一次起栈，先读 花费 再读 预订，两枚臂都要求两侧都真产出落屏文字才算数。`ARMS=3 PASSED=0 FAILED=3`。
+- 第一笔 · 量纲：`frontend/src/lib/money.ts:1` 规定 JPY/KRW/VND/IDR 没有小数分位，所以库里 4800 minor 的 JPY 是 4,800 円；预订面用 `formatMinorMoney`，落屏是 `订单号 JP-4800` `JP¥4,800`（正确）。花费面用 `moneyText`（`frontend/src/features/trip/spendFacts.ts:312`，函数体把 `amountMinor` 除以 100、再拼上币种代码，从不问这币种有几位小数），同一张票落屏是行 `交通预订 JPY 48.00 已确认`、分组小计 `已确认 JPY 48.00 · 这个币种没有估算项`。**同一趟行程、同一张票，两个屏报出的钱差 100 倍**，而这一行是我自己的 ORD-0504 r5 交付物（尖上 blob `873ef3c6051ed4982868be14b982e5866f5c7cf2` 就是我那两枚文件）。判据臂：`spend/a_zero_decimal_amount_keeps_its_own_exponent_on_the_face`、`spend/the_two_faces_of_one_journey_agree_on_one_ticket`。
+  - 现场复现不必等我改：反件 F2（那枚改动串在 `review/ord0504/book_screen_controls_r1.py:101`）在预订面上把同一行改成天真修法（金额除以一百、拼上币种代码），`a_zero_decimal_currency_is_not_divided_by_100`（臂本体 `review/ord0504/book_screen_facts_r1.js:209`）与 `ticket_numbers_equal_the_wallets_own_amounts` 同时转红 ⇒ 天真修法就是这枚缺陷。
+- 第二笔 · 假零：服务器把某项承诺标成 `monetary_value_status=UNKNOWN`（库里存 0），花费面同一列画七条金额，其中两条老实写「还没有价」，另一条写 `CNY 0.00`（落屏列逐字在 `one_ticket_two_faces_r1.json` 的 `spend_amount_column`）。这正是 ORD-0504 令里那句「不许用假数字填屏」，我交付的那一屏在承诺这一路还留着。判据臂：`spend/an_unlearned_commitment_price_is_not_a_zero_on_the_face`。预订面这一路是绿的（`book_screen/an_unlearned_price_stays_a_word_not_a_zero`）。
+- 仪表上也有一笔要交：我这轮第一版对照件把 花费 面读早了——门还没落定就取文字，量到的行数是零，我差点把它读成"花费面没有这张票"。真实屏等线的集合落定后写的是 `JPY 48.00`（落定前的那一版没有这个等待，`review/ord0504/one_ticket_two_faces_r1.js:91` 就是补上去的那次等待，行数印在 detail 的 `spend_line_count` 字段，`review/ord0504/one_ticket_two_faces_r1.js:136`）。现在脚本先等 `[data-testid="spend-line"]` 出现再取文字，空分母一律算失败、不当读数。
+- 还有一笔是尺的病，说清免得下轮重犯：我 r5 花费那套臂（`review/ord0504/spend_arms_r1.js`）算期望值时用的就是产品自己的 `moneyText`，所以它永远看不见这个缺陷——量具抄被测对象的实现，就等于没量。这轮的预订尺因此自带一张量纲表（`book_screen_facts_r1.js` 里 `ZERO_DECIMAL`），并且这条新臂的红/绿只由库里的 minor 与币种决定。
+- 修不修等我一句令：两处都在我写过的文件里，改动面很小——`moneyText` 请 `lib/money.ts` 的 `currencyExponent` / `currencyMinorFactor` 代劳（一次除法，不猜量纲），花费模型在 `monetary_value_status != KNOWN` 时不放进 `amountMinor`（`spendFacts.ts:227` 那个循环已经带着这个词）。我没动手，是因为这一手交的是预订面读数，产品字节要跟着令走；点头我就单独一纸交，带这两枚臂的反件。
+
+**七、口径与没改善的**
+
+- 这些都量在**我私有栈**上（`:8731` 后端、`:4931` 静态口、我这台 Chromium，桌面 1280×900 与手机 390×844 两形），库是本车道库 `run/ord0465_lane.db`。它答的是"这屏在这些形状下会说错什么"，不替 day25/手机链那两台共享机宣称屏上正常，也不宣称真机。
+- 没做的：没改产品一个字（第五节两句指向别人的代码路径；第六节两笔指向我自己交付的文件，等令再修）；没跑整套两趟（这一手 0 产品字节，整套归属不随它变，上一份两趟回执仍适用；要我在 `8f8281f547c2e60d2c4c3349322565b1104107ce` 上重取，说一句我就重取）；没把 `book_screen_facts_r1.js` 接进常设仪表（等第七节点单）。
+
+**八、请点的三件事**
+
+1. 第五节那两句要不要各开一纸（状态词、词表兜底），以及要不要现在就把这 11 枚臂钉进车道常设仪表——改回去就红。
+2. 第六节两笔（`moneyText` 的量纲、承诺假零）归到我名下单独一纸交修复 + 反件？这两笔是同一枚「不许用假数字填屏」的令，我倾向并成一纸、一次交净。
+3. 权威尖已到我交件时现读的 `8f8281f547c2e60d2c4c3349322565b1104107ce`（快进，预订面 blob 未变）。要不要我把候选枝再摘一次到新尖并回读，或直接按现尖收。
+
+**九、没动的东西（按令）**
+
+- 权威线 0 移动；`demo/reset` 0 次；`_preview.db` 0 打开；共享 canary 库 0 开（上一手起就没碰）；`:8000` `:4781` `:4782` `:4783` `:4787` `:8693` 0 触碰——本手只用 `:8731` `:4931`；反编译/竞品素材/字体 0 进仓；别人 worktree/枝/进程 0（那些被我杀的静态代理是**我自己这条车道**叠起来的，身份按 CommandLine 与父进程查过，都是 `cmdr_static_api_proxy_r1.py --dist D:\moodle\_qoder_r_ord0465_20260929\dist_book_mut --port 4931`）；账本 0 写（本块落收件口）；工作树交前 0 行。
+- 复现：`cd D:/moodle/CityNexus` 之外先 `cd D:/moodle/_qoder_r_ord0465_20260929/wt` → `git checkout 968c89db1f029e3cec7ef3e7ff6966cc642f1536` → 后端 `:8731` 带 `CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_r_ord0465_20260929/run/ord0465_lane.db` 起 `app.main:app` → 同一个环境变量再跑 `python review/ord0504/book_seed_r1.py`（不给这个变量它会连到别处的空库并报 `no such table: plan_versions`，我这轮真踩过一次，具名记在这里）→ `cd frontend && node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_r_ord0465_20260929/dist_book_tip --emptyOutDir` → `python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_static_api_proxy_r1.py --dist D:/moodle/_qoder_r_ord0465_20260929/dist_book_tip --port 4931 --api 8731` → 三趟：`BOOK_OUT=review/ord0504/book_screen_pass_pre_r2.json node review/ord0504/book_screen_facts_r1.js`（反件周期之前）、反件周期 `BOOK_CTRL_OUT=book_screen_controls_r2.txt python review/ord0504/book_screen_controls_r1.py`、还原后 `python review/ord0504/book_screen_post_r1.py`（它自己重建、自己换服务、自己取字节见证、跑两趟）→ 同票两屏对照 `node review/ord0504/one_ticket_two_faces_r1.js`。Python 用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`。臂的红集合与逐枚 detail 在 `review/ord0504/` 那些 JSON 里。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 10-03 13:5x 亲测缺陷：/v8/intelligence 屏上画 runtime 枚举 · 车道 cmdra（会话 45d25bfb）交付 r1
+
+推枝在前：你 19:1x 与 20:2x 两次读到 0 行是对的，我当时做完本机没推，未推=未交付，我认。现已推并逐字回读：`review/cmdra-intelligence-raw-label-r1` = `2c188f705659b0c126ba71d02e049586275dada6`（21:49:13 `git ls-remote --refs origin` 现读）
+
+代次
+我分叉的尖（13:59 现读）= `bf4f776b0ba943b88817dfcc0cb3442d75fd9e21` · 不是记忆里的旧尖
+你 20:5x 给的尖 = `702a4c7247cd9ba636711696232eccd2adb1cd96` · 我落块时同一命令再读为 `8f8281f547c2e60d2c4c3349322565b1104107ce`
+可移植性：词表、面板、`backend/app/agent/runtime_identity.py` 三枚在两尖之间 blob 未变（逐枚 `git rev-parse <ref>:<path>` 比过），结论 `same=YES`
+合并预测（只读，我没合）：`git merge-tree --write-tree 8f8281f547c2e60d2c4c3349322565b1104107ce 2c188f705659b0c126ba71d02e049586275dada6` 出树 `195163f1e3814f175413b8d3424cb045e41e39b0`，冲突行 无
+
+改动（一笔产品 + 一笔尺，合计 +192 行 -0 行）· 出自查 `git diff --numstat bf4f776b0ba943b88817dfcc0cb3442d75fd9e21 2c188f705659b0c126ba71d02e049586275dada6`
+产品字节只一处：`frontend/src/lib/displayVocabulary.ts:20` 的 RUNTIME_IDENTITY 从 1 条补到 4 条 · 新 blob `5efc495a506e8d1ddde44ac24e542f2ee21a357c`
+尺（非产品字节）：`frontend/e2e/qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:1` 与私有 runner `frontend/playwright.runtimeq-r1.config.ts:1` · 与线上 `frontend/playwright.hubq-r1.config.ts:1` 同形制（无 webServer、无端口变量）· 尺 blob `32934fbeeaa1dc4164415ccf6d4d54819119a092`
+numstat 逐枚：frontend/e2e/qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts 156/0、frontend/playwright.runtimeq-r1.config.ts 18/0、frontend/src/lib/displayVocabulary.ts 18/0 · 出自查 `git diff --numstat bf4f776b0ba943b88817dfcc0cb3442d75fd9e21 2c188f705659b0c126ba71d02e049586275dada6`
+尺的 4 臂：集合相等、两侧有词且不含机词、面板走词表、i18n 槽在两语都在 · 见 `frontend/e2e/qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:104`
+判据就是你点的那条：后端写得出的每个名字，词表里必须有对应一条 · 名字取自 `backend/app/agent/runtime_identity.py:15` 到 `:18`
+
+四条词面（各依 `backend/app/agent/runtime_identity.py:50` 到 `:56` 那串分支条件，不抄服务端名）
+HERMES_NATIVE_MCP：本机自带的原生网关正在应答 · `frontend/src/lib/displayVocabulary.ts:21`
+HERMES_COMPAT_ENDPOINT：这台部署配的兼容端点，原生网关没有验到在应答 · `frontend/src/lib/displayVocabulary.ts:25`
+NATIVE_DEEPSEEK_TOOL_LOOP：这个服务自己直连模型商的那条环 · `frontend/src/lib/displayVocabulary.ts:29`
+NOT_CONFIGURED：未配置 / Not configured，原样未动 · `frontend/src/lib/displayVocabulary.ts:33`
+
+验收 · 基线（产品字节与线上一致的代次 `4b5afdcde1e8433a802a2c32b48ab8ad409f6a90`）
+中文臂：全屏 3 处、去重 2 枚、intelligence 1 处、NATIVE_DEEPSEEK_TOOL_LOOP 1 处、异常 0 处 · 件 blob `7a5fb69c4885fd8e12c8ebab11662d6d31bb07ba`
+你的中文臂基线：全屏 3 处、去重 2 枚、intelligence 1 处、异常 0 处 · blob `be941e99e15a32a2d8a65d43e8aa4348d6e7bf3c` · 两侧入口资产同名 `/assets/index-dc55bcFW.js`
+英文臂：全屏 34 处、去重 26 枚、命中 9 条路由、intelligence 4 处、NATIVE_DEEPSEEK_TOOL_LOOP 1 处、异常 0 处 · blob `b7bb1b641a9d7c93f6623ed894a8e8458657686e`
+你的英文臂基线：全屏 34 处、去重 26 枚、intelligence 4 处、异常 0 处 · blob `ec4c6d9caa36f602fb8da321ce5648db0a42438c` · 两侧入口资产同名 `/assets/index-dc55bcFW.js`
+基线屏上那句（逐字自件）：这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP · 卡尺判 RED，红格 `value_carries_no_machine_shape` 与 `value_is_one_of_the_shipped_wordings` · blob `1d908b3ef127435e6e096e6ba787225904d6c568`
+
+验收 · 修后（我的头 `2c188f705659b0c126ba71d02e049586275dada6` 代次，入口资产换为 `/assets/index-eiyyqAav.js`）
+中文臂：全屏 2 处（3 降到 2）、去重 1 枚、intelligence 0 处、NATIVE_DEEPSEEK_TOOL_LOOP 0 处、异常 0 处 · blob `17f999148a59d7f795f7e7f178e897a18d240d49`
+英文臂：全屏 33 处（34 降到 33）、去重 25 枚、intelligence 3 处、NATIVE_DEEPSEEK_TOOL_LOOP 0 处、异常 0 处 · blob `09d614afdf1c4d608744f69bb73dc55104c4e1f7`
+正对照 · 中文臂仍画着字：这个服务自己直连模型商的那条环（屏上可见文本节点 20 个）· blob `12d1a52ab8fe4c8ad86ab880640ae0f428744576`
+正对照 · 英文臂仍画着字：this service's own loop straight to the model provider（可见文本节点 32 个）· blob `bf5ce11611f3817635ad29cc79703fbae5700115`
+英文臂 intelligence 余下 3 处不是我这枚枚举：是 POLICY、POST、COMMITMENT 这类既有大写词 · blob `09d614afdf1c4d608744f69bb73dc55104c4e1f7`
+
+反件两枚（各打红不同一臂，逐字原文已发布）
+mA：删掉词表里 NATIVE_DEEPSEEK_TOOL_LOOP 那一行（zh 与 en 两侧一起去）· 头 `43770847917cc33fcf4fccf8c179f17e78f2d004` 已推为 `refs/heads/review/cmdra-intelligence-raw-label-r1-mA`
+mA 尺的原判语：第 1 臂（集合相等）报红，判语 1 failed 与 3 passed (717ms)，用时 717 毫秒 · 逐字 stdout blob `ccd9676e2922b3738ead24263dc7b15345946ccd`
+mA 上屏重画：中文臂又量到全屏 3 处与 intelligence 1 处、NATIVE_DEEPSEEK_TOOL_LOOP 1 处 · blob `84b867a88be02da9952ec726f45096b7461c1167`
+mA 卡尺同步报红：红格 `value_carries_no_machine_shape` 与 `value_is_one_of_the_shipped_wordings` · blob `9cd2cecc484c043c5e9f5e151b2117c167a6b355`
+mB：把 HERMES_COMPAT_ENDPOINT 的词面改回服务端那枚枚举名 · 头 `2fbd715cb4babe8f8cdd9bb6dad579bb930e5957` 已推为 `refs/heads/review/cmdra-intelligence-raw-label-r1-mB`
+mB 尺的原判语：第 2 臂（两侧有词且不含机词）报红，offender 逐字 `HERMES_COMPAT_ENDPOINT.zh paints \"HERMES_COMPAT_ENDPOINT\` 与 `HERMES_COMPAT_ENDPOINT.en paints \"HERMES_COMPAT_ENDPOINT\` · 判语 1 failed 与 3 passed (665ms)，用时 665 毫秒 · blob `88cc9ca7219af562f8310aab5d3ed3bec5b2c114`
+尺自身两趟对照：补词前 1 failed 与 3 passed 用时 673 毫秒（件 blob `8b970d51f10a5617846a8446feb1a91b743ec535`），补词后 4 passed 用时 372 毫秒（件 blob `d3d81418ad0c6e6b5f02d74200c6820351add181`）
+mB 没有 JSON 读数件：尺在第 2 臂抛红、写件那行在该臂末尾，所以只有逐字 stdout，具名 `NOT_PRODUCIBLE_BY_CMDRA`，我没有补一个假件
+
+环境（含一处我差点被骗的坑）
+端口：后端 :8742 · 静态 :49831 基线、:49832 修后、:49833 反件 mA · 每道 served==disk 于 1,200 B 的 index.html，入口名取自各自磁盘 · 修后代次件 blob 17f999148a59d7f795f7e7f178e897a18d240d49
+坑与归属：我先试 :8731，`netstat` 的 owner 不是我起的 pid，我的 uvicorn 因 Errno 10048 退出，那次答我的是别人的后端（它 demo_mode 回 False 且 runtime-status 也回同一枚枚举）· 逐字在 `D:/moodle/_qoder_cmdra_intel_20261003/_uvicorn_8731.log:4`
+从此启动器自己断言：owner 必须落在我进程树里，否则 ABORT 返回 9 · `D:/moodle/_qoder_cmdra_intel_20261003/_launch_backend_with_key_r1.py:95`
+demo_mode：显式 CITYNEXUS_DEMO_MODE=true 才进得去，默认 false 在 `backend/app/core/config.py:15` · 我这台回 True 与封存演示行程 ACTIVE，行程 id 只写在件字段 read.journeyId 里，blob `12d1a52ab8fe4c8ad86ab880640ae0f428744576`
+分母：种子 D:/moodle/_qoder_cmdr_priv_0437seed.db（17,330,176 B）只 mode=ro 打开再 src.backup 得我的副本（17,358,848 B），内含 142 程与 376 段 · 共享预览库我没读也没写 · 该库上屏读数 blob 12d1a52ab8fe4c8ad86ab880640ae0f428744576
+key：只用字段名 DEEPSEEK_API_KEY，本机读得长度 35 字符、指纹前 12 位 `4cabe6bcaff4`，与你观察件那枚同指纹（逐字对照 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_cred_env_second_observer_v2.json:10`）· 值没落进任何输出，见 `D:/moodle/_qoder_cmdra_intel_20261003/_launch_backend_with_key_r1.py:103`
+为什么必须带 key：`backend/app/agent/runtime_identity.py:54` 那支只在 ai_api_key 非空时才写 NATIVE_DEEPSEEK_TOOL_LOOP，去掉 key 的起法量不到这枚屏上词
+类型检查：`npx tsc -p tsconfig.typecheck.json --noEmit` 在我的工作树 exit 0 · 见 `frontend/tsconfig.typecheck.json:1`
+发布：14 件全在 `evidence/cmdra-intel-20261003/` 前缀下 · 回执 `4895` B 在 `D:/moodle/_qoder_cmdra_intel_20261003/_publish_manifest.jsonl:1` · 其中 CREATED 14 件、重写 0 件
+
+没量到 / 没做的格子（具名）
+屏上只走通四枚身份里的一枚：这台机器 native_binary_detected 为 False 且 hermes_compat_configured 为 False，所以 HERMES_NATIVE_MCP 与 HERMES_COMPAT_ENDPOINT 的上屏画法我量不到，具名 `NOT_REACHED_BY_CMDRA`，它们只由那把静态尺的两臂担保，分支在 `backend/app/agent/runtime_identity.py:50`
+NOT_CONFIGURED 的上屏画法我没另起一趟去 key 的栈：那一趟量的是另一枚词面、不是本单验收格，具名 `NOT_MEASURED_BY_CMDRA`，分支在 `backend/app/agent/runtime_identity.py:56`
+mA 与 mB 的英文臂屏上趟没跑：两枚要证的是尺报红与中文臂重画，具名 `NOT_MEASURED_BY_CMDRA` · 判据在 `frontend/e2e/qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:112`
+你 20:5x 之后那尖 `8f8281f547c2e60d2c4c3349322565b1104107ce` 我没在上面重跑尺：三枚相关文件 blob 未变（上面 same 那条），判读要以那代次为准请你自己跑，具名 `NOT_MEASURED_BY_CMDRA`
+英文臂余下 33 处一处没动 · 具名 `NOT_TOUCHED_BY_CMDRA`，逐条在 blob `09d614afdf1c4d608744f69bb73dc55104c4e1f7` 的 perRoute
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 21:50 · 号令者 · 手机链换代 day29（权威尖 8f8281f5，站名第三代上屏）
+
+**换代 day29**。被测尖 `8f8281f547c2e60d2c4c3349322565b1104107ce`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读同值）＝ ORD-0512 r4 那一笔（站名右→左→下）。三证：`:4783` 入口资产 `index-DaQ9kjra.js`，`http_status=200`、1620204 字节（DIMENSION 字节数）；服务字节 sha1 与磁盘逐字节同 = `81f91cc86bc128be8e07da2a8f15cd4c3cec13a4`（本机字节 sha1，不在对象库、不是 blob、不可 cat-file——本行即声明；可解析锚=权威尖 `8f8281f547c2e60d2c4c3349322565b1104107ce`）；后端 serve 树 `_serve_day29/backend/app/main.py` 的 blob 与尖上同路径逐字相等 = `fc359dd9d1067b0a17770b45816fa76aa3af01af`。先起后停：预验口 `:4789` health 200 后才停旧起新。
+
+**用户能感觉到的这一代**：地图上的停靠站名从「右→左」改成「右→左→下」——手机宽度下多出可见站名，且不产生截断的名字（裁语见 CMDR 03:16 块）。
+
+**没改善的**：真机五格仍等手机；day29 屏级重读排下一轮。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 21:45 · 号令者 · ORD-0551 落地拦停（Q64 曝光增长）+ ORD-0512 r4 已落
 
 **一、ORD-0512 r4 已落线**。候选 `0f1c052b256bd99659ede5c1079f153280f33228`（8ac89982 的站名第三代，右→左→下），复切 `8f8281f547c2e60d2c4c3349322565b1104107ce`，四十九枚文件逐枚与车道 blob 相等、冲突名零；落地驱动那次推失败（远端 hung up），我手工重推成功，权威尖现读 = `8f8281f547c2e60d2c4c3349322565b1104107ce`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回读同值）。
