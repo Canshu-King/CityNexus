@@ -19,7 +19,9 @@ write door will do with a row this door calls read-only is reported, not quietly
 * B6 the anonymous whole-bin door still answers every binned trip, unscoped, and its rows carry no
   ownership answer -- the promise ORD-0402 slice 1 tested is intact;
 * B7 isolation narrows which rows a traveller is handed, not the order they arrive in: the rows both
-  doors answer come out `deleted_at` newest-first from each of them.
+  doors answer come out `deleted_at` newest-first from each of them;
+* B8 the bin screen carries no numeric `file:line` pointer, and the names it does point at are still
+  in the product -- the CMDR 07:57 ruling applied to this screen's own comments.
 
 Names measured, not assumed: `journeys.traveler_id` is the ownership column, `journey_members.role`
 the seat, `journey_role_capabilities (role, capability)` the table `recovery` is asked of.
@@ -27,7 +29,9 @@ the seat, `journey_role_capabilities (role, capability)` the table `recovery` is
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -240,3 +244,37 @@ def test_b7_the_two_doors_put_the_same_rows_in_the_same_order() -> None:
     )
     # and the newest discard really is first in both
     assert shared.index(later) < shared.index(earlier), shared
+
+
+def test_b8_the_screen_owns_no_stale_pointer() -> None:
+    """CMDR 07:57 的裁定用在回收站这一屏自己身上：注释只准指名字，不准指行号。
+
+    这个模块的头部原来钉了七枚 `file:line`，代次一换就有五枚落到无关的行上、一枚指向仓里已经不存在的
+    收件件。判据两头都要有：不许出现数字指针，且那些名字必须还在产品里——不然删掉名字就能骗过这把尺。
+    """
+
+    repo = Path(__file__).resolve().parents[2]
+    watched = [
+        "frontend/src/features/trash/journeyTrash.ts",
+        "frontend/src/features/trash/JourneyTrashPanel.tsx",
+        "frontend/src/features/trash/journeyTrashCopy.ts",
+    ]
+    numeric = re.compile(r"`[^`]*\.(?:py|ts|tsx|json|ya?ml):\d+`")
+    offenders: dict[str, list[str]] = {}
+    for relative in watched:
+        text = (repo / relative).read_text(encoding="utf-8")
+        hits = [line.strip()[:78] for line in text.splitlines() if numeric.search(line)]
+        if hits:
+            offenders[relative] = hits
+    assert offenders == {}, f"numeric file:line citations came back into the bin screen: {offenders}"
+
+    backend_source = (repo / "backend/app/main.py").read_text(encoding="utf-8")
+    schemas_source = (repo / "backend/app/schemas.py").read_text(encoding="utf-8")
+    for needle in (
+        'def undelete_journey(',
+        'def list_recycle_bin_journeys(',
+        'def list_journeys(',
+        'reason_code = "JOURNEY_NOT_DELETED"',
+    ):
+        assert needle in backend_source, f"the header names {needle!r}, which is no longer on the line"
+    assert "class RecycleBinJourney(" in schemas_source
