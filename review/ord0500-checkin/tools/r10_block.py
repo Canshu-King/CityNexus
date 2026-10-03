@@ -711,14 +711,20 @@ def main():
     # the pair compared my product paths against the tip AS IT WAS when it ran; the line moves every few
     # minutes, so "still valid" has to be re-measured here rather than assumed: same blobs on the current
     # tip for exactly the paths that were swapped, or the pair's number is about a base that no longer exists
-    pair_still = {}
+    pair_still, pair_mode = {}, (B.load("exposure_pair_%s.json" % EXPOSURE_GEN).get("mode") or "merge_base")
     for _p in (pair.get("swapped_paths") or []):
-        pair_still[_p] = (_show(pair.get("base_tip"), _p) == _show(live_tip, _p))
+        if pair_mode == "explicit_revs":
+            # the deletion is upstream now, so "the base still matches the line" is the wrong question --
+            # it would compare a pre-deletion commit with a post-deletion line and report a difference
+            # that IS the delivery.  What still has to hold is that the candidate side equals the line.
+            pair_still[_p] = (_show(pair.get("candidate_rev"), _p) == _show(live_tip, _p))
+        else:
+            pair_still[_p] = (_show(pair.get("base_tip"), _p) == _show(live_tip, _p))
     if not pair_still or not all(pair_still.values()):
-        raise SystemExit("ABORT_PAIR_STALE the exposure pair's base %s no longer matches the live tip %s "
-                         "for %s -- re-run tools/exposure_pair_r17.py"
-                         % ((pair.get("base_tip") or "")[:12], live_tip[:12],
-                            [p for p, v in pair_still.items() if not v]))
+        raise SystemExit("ABORT_PAIR_STALE (%s) the exposure pair's %s side no longer matches the live tip "
+                         "%s for %s -- re-run tools/exposure_pair_r17.py"
+                         % (pair_mode, "candidate" if pair_mode == "explicit_revs" else "base",
+                            live_tip[:12], [p for p, v in pair_still.items() if not v]))
     cx, cb = B.load("exposure_%s_cand.json" % EXPOSURE_GEN), B.load("exposure_%s_base.json" % EXPOSURE_GEN)
     pr, pc, pb = pair.get("parity") or {}, pair.get("sides") or {}, pair.get("restore") or {}
     # "did THIS hand run it" is a timestamp question, so it is answered with timestamps and both are shown
