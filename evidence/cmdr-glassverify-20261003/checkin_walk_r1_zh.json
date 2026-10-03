@@ -1,0 +1,17 @@
+{
+  "instrument": "cmdr_0500r17_checkin_walk_r1",
+  "base": "http://127.0.0.1:49806",
+  "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-CuMOkEqV.js"
+  ],
+  "stamp_texts_found": 0,
+  "reached_button": false,
+  "taps": [],
+  "painted_key_leak": false,
+  "refusal_sentence_painted": false,
+  "body_text": "菜单\n/\n实时行程\n跟随系统\nEN\nTI\n\n实时行程 · 已保存 9月29日 06:07\n\n选择你的下一段路程。\n\n当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。\n\n现在\nArrival\n\n下一步 · Check in · Central Station Courtyard · 驾车 · 14 min\n\n18:00\n1\nArrival\n2\n3\n4\n5\n6\n7\n8\n9\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n8 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n发生了什么\n\n服务器摘要：需要复核 · 有重大变动没处理\n\n天气影响行程\n\n当前没有需要你决定的调整。\n\n更新位置\n报告降雨\n下一段路程方式\n选择平稳路线\n步行\n骑行\n公交地铁\n驾车\n网约车\n对比所有方式\n下一步 · 最晚出发\nCheck in · Central Station Courtyard\n\n10月9日 18:45 前到达 · 余量约123分钟\n\n18:45\n预计到达 · 驾车\n开始导航 →\n风险\nMAJOR · Guardian 监控中\n证据\n供应商路线、时效、费用和可行性\n实时状态\n当前正在发生什么\n刚刚更新\n时钟\n00:00\n上海时间\n当前步骤\n进行中\n行程状态\n离线\n只读就绪\n未来 24 小时已保存\n0 个来源\n暂无记录\n✦\n今天\n行程\n地图\nCopilot\n我的",
+  "calls": [],
+  "pageErrors": []
+}
