@@ -205,6 +205,15 @@ def _trace_value(step: dict[str, Any], key: str, default: Any = None) -> Any:
     return result.get(key, default) if isinstance(result, dict) else default
 
 
+def _guardian_terminal_status(
+    *, action_status: str, agent_status: str
+) -> tuple[str, str]:
+    """Keep Guardian/Agent rows non-terminal when recovery remains unresolved."""
+
+    unresolved = action_status in {"UNRESOLVED", "RETRYABLE_FAILURE"} or agent_status == "PARTIAL"
+    return ("PARTIAL", "PARTIAL") if unresolved else ("COMPLETED", "COMPLETED")
+
+
 def _model_recovery(
     session: Session,
     journey: Journey,
@@ -744,9 +753,11 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
     completed = _now().isoformat()
     run.active_plan_after_id = journey.active_plan_version_id
     run.evidence_json = _json(evidence)
-    run.status = "COMPLETED"
+    run.status, agent.status = _guardian_terminal_status(
+        action_status=run.action_status,
+        agent_status=agent.status,
+    )
     run.completed_at = completed
-    agent.status = "COMPLETED"
     agent.outcome = run.action_status
     agent.completed_at = completed
     record_audit(

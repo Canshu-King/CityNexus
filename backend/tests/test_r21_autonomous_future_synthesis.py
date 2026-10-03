@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, patch
 
 from app.agent.ai_availability import ai_availability_state
 from app.agent.gateway import AgentToolGateway, _latest_actionable_event, _resolve_actionable_event
+from app.agent.guardian import _guardian_terminal_status
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
 from app.agent.runtime import (
@@ -294,6 +295,15 @@ def test_r21_model_prose_cannot_persist_a_completed_mission():
         "PARTIAL",
         "PARTIAL",
     )
+
+
+def test_r21_guardian_does_not_close_an_unresolved_model_run():
+    assert _guardian_terminal_status(
+        action_status="UNRESOLVED", agent_status="PARTIAL"
+    ) == ("PARTIAL", "PARTIAL")
+    assert _guardian_terminal_status(
+        action_status="EXECUTED", agent_status="COMPLETED"
+    ) == ("COMPLETED", "COMPLETED")
 
 
 def test_r21_no_action_completion_is_machine_visible():

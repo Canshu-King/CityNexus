@@ -116,7 +116,7 @@ class _StubRuntime:
         self.requested_id = requested_id
         self.accepted_id = accepted_id
 
-    def run(self, session, *, journey, mission):
+    def run(self, session, *, journey, mission, max_steps=12):
         run_id = str(uuid4())
         session.add(
             AgentRun(
