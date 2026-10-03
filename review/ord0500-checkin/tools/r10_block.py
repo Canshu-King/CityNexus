@@ -164,17 +164,19 @@ def main():
     blob_chain = blob(RC_DIR + "tools/%s_chain.sh" % REF_GEN)
     blob_arm = blob(RC_DIR + "receipts/" + ARM_RECEIPT)
 
-    def blob_by_suffix(suffix):
+    def blob_by_fragment(fragment):
         """Cite an instrument by what the ref actually carries, not by a name I assume it carries: the
         emitter-arm file is named for the hand that wrote it (r16) while the ref is named for the hand
-        being reviewed (r17), and typing `% REF_GEN` for it produced an empty slot."""
-        hits = sorted(p for p in blobs if p.endswith(suffix))
+        being reviewed (r17), and typing `% REF_GEN` for it produced an empty slot.  Match is on the
+        path containing the fragment -- an endswith() against a fragment without its extension can only
+        ever find nothing, which is how this helper first bit itself."""
+        hits = sorted(p for p in blobs if fragment in p)
         if not hits:
-            raise SystemExit("ABORT_NO_BLOB_FOR *%s -- the coordinate list (%d paths) carries none"
-                             % (suffix, len(blobs)))
+            raise SystemExit("ABORT_NO_BLOB_FOR %r -- the coordinate list (%d paths) carries none"
+                             % (fragment, len(blobs)))
         return hits[-1], blobs[hits[-1]]
-    arm_tool_path, blob_armtool = blob_by_suffix("tools/branch_emit_arm_")
-    pair_tool_path, blob_pairtool = blob_by_suffix("tools/exposure_pair_")
+    arm_tool_path, blob_armtool = blob_by_fragment("/tools/branch_emit_arm_")
+    pair_tool_path, blob_pairtool = blob_by_fragment("/tools/exposure_pair_")
     blob_fmt = blob(RC_DIR + "receipts/" + FMT_RECEIPT)
     blob_coll = blob(RC_DIR + "receipts/pytest_collectonly_%s.json" % GEN)
     blob_sweep = blob(RC_DIR + "receipts/sweep_r6.json")
@@ -364,7 +366,8 @@ def main():
       "`run/r6_blobs.txt` 取现场），它的答话是 %s。根因还是同一类——**清单是抄的**：页里要点名的 blob 与"
       "坐标工具实际枚举的集合，两枚清单从来没绑在一起（那一行找的是 `%s` 的 blob，而坐标工具从不列发射器"
       "自己的路径）。这手把两边都改成按名字现读（发射器、门、复读尺、链、失败件全进坐标清单），并且不再口头"
-      "保证「工具在枝里」：`tools/branch_emit_arm_r16.py` 把**每一枚已发布枝里那份发射器**抽出来真跑一遍。" % (
+      "保证「工具在枝里」：枝里那枚 `%s`（blob `%s`）把**每一枚已发布枝里那份发射器**抽出来真跑一遍。" % (
+          B.slot(arm_tool_path.split("/")[-1]), blob_armtool,
           B.slot(r15_arm_last), RC_DIR + "tools/r9_block.py"))
     A("")
     A("| 枝 | 那份发射器的答话 | 退出码 | 它被喂的那一代（现场认名，不记忆） | 它写的页面文件 |")
@@ -626,33 +629,53 @@ def main():
           B.fmt((sw.get("%s_en" % faces.get("candidate_label"), {}) or {}).get("readings", {})
                 .get("census", {}).get("pressable_by_centre_hit")), blob_sweep))
     pair = B.load("exposure_pair_%s.json" % EXPOSURE_GEN)
+    # the pair compared my product paths against the tip AS IT WAS when it ran; the line moves every few
+    # minutes, so "still valid" has to be re-measured here rather than assumed: same blobs on the current
+    # tip for exactly the paths that were swapped, or the pair's number is about a base that no longer exists
+    pair_still = {}
+    for _p in (pair.get("swapped_paths") or []):
+        pair_still[_p] = (_show(pair.get("base_tip"), _p) == _show(live_tip, _p))
+    if not pair_still or not all(pair_still.values()):
+        raise SystemExit("ABORT_PAIR_STALE the exposure pair's base %s no longer matches the live tip %s "
+                         "for %s -- re-run tools/exposure_pair_r17.py"
+                         % ((pair.get("base_tip") or "")[:12], live_tip[:12],
+                            [p for p, v in pair_still.items() if not v]))
     cx, cb = B.load("exposure_%s_cand.json" % EXPOSURE_GEN), B.load("exposure_%s_base.json" % EXPOSURE_GEN)
     pr, pc, pb = pair.get("parity") or {}, pair.get("sides") or {}, pair.get("restore") or {}
-    A("- Q64 曝光尺两边相等，而且这一对是**本手重取的**：`tools/exposure_pair_r%s.py` 把 `%s` 换到基座 `%s` "
+    A("- Q64 曝光尺两边相等，而且这一对是**本手重取的**：枝里那枚 `%s`（blob `%s`）把 `%s` 换到基座 `%s` "
       "的字节、跑一枚尺、再换回候选 `%s`、逐枚验回（`every_path_matches_the_commit` = %s、"
       "`worktree_clean_after_restore` = %s、`checkout_rc` %s）。格总数 %s 对 %s、命中集合相同 = %s、"
       "未解析 import %s 对 %s、解析诊断 %s 对 %s——删死掉的字典行没有把任何正文值送进共用 helper。"
       "**这一回尺的版次记进件了**：`%s`（本机字节 %s，本机 sha1 `%s`，原件 blob `%s` 与 `%s`）——上一代那两份件"
       "的 `tool`/`version` 两格都是空的，所以那句「两边相等」我当时无法说清是哪一版答的；r7b4 自己写着「按文件"
       "的格数既不是 `--tree` 的上界也不是下界」，版次不记就等于我在替它担保。件 `receipts/exposure_pair_%s.json`。" % (
-          REF_GEN, pair.get("candidate_head"), pair.get("base_tip"), pair.get("candidate_head"),
+          B.slot(pair_tool_path.split("/")[-1]), blob_pairtool,
+          B.slot(pair.get("candidate_head")), B.slot(pair.get("base_tip")),
+          B.slot(pair.get("candidate_head")),
           B.fmt(pc.get("every_path_matches_the_commit")), B.fmt(pc.get("worktree_clean_after_restore")),
           B.fmt(pc.get("checkout_rc")),
-          B.fmt((pc.get("candidate") or {}).get("cells_total")), B.fmt((pc.get("base") or {}).get("cells_total")),
+          B.fmt((pc.get("candidate") or {}).get("cells_total")),
+          B.fmt((pc.get("base") or {}).get("cells_total")),
           B.fmt(pr.get("hit_set_equal")),
           B.fmt((pc.get("candidate") or {}).get("unresolved_import_count")),
           B.fmt((pc.get("base") or {}).get("unresolved_import_count")),
           B.fmt((pc.get("candidate") or {}).get("parse_diagnostics_total")),
           B.fmt((pc.get("base") or {}).get("parse_diagnostics_total")),
           B.slot(pair.get("ruler")), B.fmt(cx.get("_lane_meta", {}).get("ruler_bytes"), " 字节"),
-          B.slot(cx.get("_lane_meta", {}).get("ruler_sha1_of_local_bytes")), blob_exp_cand, blob_exp_base,
-          EXPOSURE_GEN))
+          # twelve characters, on purpose: this is a sha1 of bytes on my disk, not a git object, and a
+          # full 40-hex here would read as a coordinate the commander could not cat-file
+          "%s…（本机字节摘要，不是 git 对象）" % str(
+              cx.get("_lane_meta", {}).get("ruler_sha1_of_local_bytes"))[:12],
+          blob_exp_cand, blob_exp_base, EXPOSURE_GEN))
     A("- 这一对与 §六 上面那两枚面**不是同一次量的**：面与屏读取自候选 `%s`、其基座标签是 `%s`；曝光对的基座"
-      "是此刻现尖 `%s`，而我与它的分叉点是 `%s`（`git merge-base` 现读）——换进去比对的只有从这枚分叉到我这一手"
-      "之间我动过的 %s 枚产品路径，别的车道落进线里的东西我一枚不碰。所以「bundle 少了什么」那句仍按上一代的"
-      "基座说，「正文没被送进共用 helper」这句按现尖说，两句各管各的范围，我不把它们并成一句好看的话。" % (
+      "是它自己那次运行的现尖 `%s`，而我与它的分叉点是 `%s`（`git merge-base` 现读）——换进去比对的只有从这枚分叉"
+      "到我这一手之间我动过的 %s 枚产品路径，别的车道落进线里的东西我一枚不碰。**这枚基座现在还在不在**也不靠"
+      "记：发这页之前又在此刻的现尖 `%s` 上逐枚重读那几枚文件，与那次比对的基座等值 = %s，一枚不等就退 "
+      "`ABORT_PAIR_STALE`。所以「bundle 少了什么」那句仍按上一代的基座说，「正文没被送进共用 helper」这句按"
+      "它那次的基座说，两句各管各的范围，我不把它们并成一句好看的话。" % (
           B.slot(_fc), B.slot(faces.get("base_label")), B.slot(pair.get("base_tip")),
-          B.slot(pair.get("merge_base")), B.fmt(len(pair.get("swapped_paths") or []))))
+          B.slot(pair.get("merge_base")), B.fmt(len(pair.get("swapped_paths") or [])),
+          B.slot(live_tip), B.fmt(all(pair_still.values()) and bool(pair_still))))
     A("")
     A("## 七、出页那扇门现在真的拦（裁①）")
     A("")

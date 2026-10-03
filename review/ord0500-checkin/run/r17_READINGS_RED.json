@@ -4,24 +4,19 @@
   "aborts": "ABORT_READINGS_RED",
   "failed_checks": [
     {
-      "check": "读数提交到枝尖只多了件",
+      "check": "引文闸判语",
       "detail": {
-        "gate": {
-          "off_limits": [
-            "review/ord0500-checkin/R6_READINGS.md"
-          ],
-          "artifacts_added": 30
-        },
-        "recheck": {
-          "off_limits": [
-            "review/ord0500-checkin/R6_READINGS.md"
-          ],
-          "artifacts_added": 30
-        }
+        "OK": 8,
+        "NOT_THIS_LANES_CITATION": 25,
+        "CITED_FILE_ABSENT": 0,
+        "CITED_LINE_BEYOND_FILE": 0,
+        "CITED_LINE_IS_BLANK": 0,
+        "CITED_LINE_CONTENT_MISMATCH": 0,
+        "CITED_PHRASE_GONE_FROM_COMMENT": 0
       },
-      "forced": false
+      "forced": true
     }
   ],
-  "took_local": "2026-10-03T20:35:01+08:00",
+  "took_local": "2026-10-03T20:44:23+08:00",
   "note": "the page was not generated; this sheet is the only artifact of this generation"
 }

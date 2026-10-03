@@ -5,7 +5,7 @@
   ],
   "files_scanned": 1,
   "calls_checked": 60,
-  "single_expression_args": 40,
+  "single_expression_args": 41,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",
