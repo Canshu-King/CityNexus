@@ -1,0 +1,70 @@
+{
+  "what_this_is": "ORD-0520 follow-up: the contested cell with readings, and the durable abort gate the race probe exposed",
+  "base_head": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+  "candidate_head": "9b926335eb3cbd091167ec61e6e88ed0fd620076",
+  "base_generation": {
+    "note": "the line as ORD-0520 landed, without this follow-up's file",
+    "summary_verbatim": "9 failed, 1693 passed, 16 skipped, 1 xfailed, 4 warnings in 228.41s (0:03:48)",
+    "red_count": 9,
+    "red_set": [
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+    ]
+  },
+  "candidate_generation": {
+    "summary_verbatim": "9 failed, 1699 passed, 16 skipped, 1 xfailed, 4 warnings in 212.17s (0:03:32)",
+    "red_count": 9,
+    "red_set": [
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+    ]
+  },
+  "new_red_on_candidate": [
+    "tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death"
+  ],
+  "added_passing_arms": 6,
+  "mutation_battery": {
+    "M1_abort_write_attempts_3_to_1": "KILLED - 1 failed (test_a_tap_losing_the_row_three_times...)",
+    "M2_drop_status_clause_of_the_predicate": "KILLED - 3 failed",
+    "M3_predicate_reverted_to_equals_what_i_read": "SURVIVED - 17 passed, because the read-side gate alone already refuses the double abort",
+    "M4_read_side_gate_removed": "SURVIVED - 17 passed, because the CAS clause alone already refuses it",
+    "M5_both_guards_removed": "KILLED - 1 failed (test_a_trip_moved_off_cancelled_elsewhere...)",
+    "reading": "M3 and M4 are not weak arms: they show the fix is two independent guards and either half by itself closes the overwrite. Only removing both reproduces the defect, and that is what the arm is red on."
+  },
+  "socket_race_before_after": {
+    "before": "ABORT_RACE_RECEIPT.json - 6 rounds of 40 taps: answers of http_status=200 per round [4, 14, 9, 10, 9, 14], journey.aborted audit rows per round identical, 240 taps, 107854 committed status flips",
+    "after": "ABORT_RACE_AFTER_FIX_r1.json - same script, 200 per round [1, 1, 1, 1, 1, 1], audit rows [1, 1, 1, 1, 1, 1], 240 taps, 98469 flips",
+    "contested_over_socket": "0 of 240 taps in both runs, so the fifth name is reachable only when the window is forced; the probe's own verdict field says NOT_OBSERVED_WITHOUT_INSTRUMENTATION"
+  },
+  "http_probe_after_the_fix": {
+    "run_id": "20261003T122902Z",
+    "verdict": "PASSED",
+    "refusals": {
+      "JOURNEY_NOT_FOUND": "CNX-CHW7R6G4",
+      "ABORT_ACTOR_NOT_OWNER": "CNX-6S57P8M6",
+      "JOURNEY_ALREADY_ABORTED": "CNX-6WWC6HF5",
+      "ABORT_JOURNEY_IN_RECYCLE_BIN": "CNX-AWE53S48"
+    },
+    "list_after_still_contains_the_trip": true,
+    "recycle_bin_appearances": 0
+  },
+  "contract": "no change needed: the five names this door answers were already declared, and the fix moves a tap from 200 to the already-declared 409 JOURNEY_ALREADY_ABORTED",
+  "parity_verbatim": "formal 175; runtime 175; missing 0; extra 0 | schemas formal 87; generated 87; missing 0; extra 0",
+  "eol_churn": "--numstat and --ignore-cr-at-eol --numstat both read +786 -17 -> 0 churn",
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (CPython 3.12.14)",
+  "command": "python -m pytest -p no:randomly -q  (cwd backend/, conftest temporary sqlite per process, provider env unset)"
+}
