@@ -1,0 +1,277 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-03T21:58:34+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "8f8281f547c2e60d2c4c3349322565b1104107ce",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0551-r1",
+ "candidate_tip": "d7a1d740db7f08d3b2b165f31d57404c804f7c22",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "8f8281f547c2e60d2c4c3349322565b1104107ce",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "contracts/openapi.yaml",
+   "frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts",
+   "frontend/playwright.ord0551-exstatus-r1.config.ts",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/generated/api.ts",
+   "frontend/src/lib/displayVocabulary.ts",
+   "review/ord0502/report-ORD0502-205351.json",
+   "review/ord0502/walk-ORD0502-205351.json",
+   "review/ord0551/acceptance_legs_ORD0551-205307.json",
+   "review/ord0551/backend_buyers_r2.txt",
+   "review/ord0551/leg1_provider_refused_ORD0551-205307.png",
+   "review/ord0551/leg2_provider_ok_ORD0551-205307.png",
+   "review/ord0551/legs_note_r1.txt",
+   "review/ord0551/parity_r2.txt",
+   "review/ord0551/ruler_arms_summary.json",
+   "review/ord0551/ruler_green_newbase_r2.txt",
+   "review/ord0551/typecheck_r2.txt"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/generated/api.ts",
+   "frontend/src/lib/displayVocabulary.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "22266c46476bbfe5357f3173c81dbaf83ca83bbd",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_215803",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5",
+    "export_blob": "46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162",
+    "export_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts",
+    "candidate_blob": "e55e084d374f682e2ece0ac643045c30f7ba4bea",
+    "export_blob": "e55e084d374f682e2ece0ac643045c30f7ba4bea",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.ord0551-exstatus-r1.config.ts",
+    "candidate_blob": "cc0ae0968538820addaf8c4e6be5533b71bbb230",
+    "export_blob": "cc0ae0968538820addaf8c4e6be5533b71bbb230",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "candidate_blob": "d6199a7d229b3bd20943c664b3bd4498d21d097a",
+    "export_blob": "d6199a7d229b3bd20943c664b3bd4498d21d097a",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/generated/api.ts",
+    "candidate_blob": "56f646a56cdd5d0d224e50806866d83ed046f773",
+    "export_blob": "56f646a56cdd5d0d224e50806866d83ed046f773",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/displayVocabulary.ts",
+    "candidate_blob": "37fca12e3e83fbff6eab6ff1ece7c22a06c3af25",
+    "export_blob": "37fca12e3e83fbff6eab6ff1ece7c22a06c3af25",
+    "equal": true
+   },
+   {
+    "path": "review/ord0502/report-ORD0502-205351.json",
+    "candidate_blob": "6e6c23a07011947da9387d1320d5a37257fec642",
+    "export_blob": "6e6c23a07011947da9387d1320d5a37257fec642",
+    "equal": true
+   },
+   {
+    "path": "review/ord0502/walk-ORD0502-205351.json",
+    "candidate_blob": "4506d9a6d2691dd1f69275ef2c028af6c1e97bd9",
+    "export_blob": "4506d9a6d2691dd1f69275ef2c028af6c1e97bd9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/acceptance_legs_ORD0551-205307.json",
+    "candidate_blob": "5321cbd072a7fb30d121841bb1b903f43bde5cc1",
+    "export_blob": "5321cbd072a7fb30d121841bb1b903f43bde5cc1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/backend_buyers_r2.txt",
+    "candidate_blob": "1a137196cff5b5a45f6e5dffef7936f62c745223",
+    "export_blob": "1a137196cff5b5a45f6e5dffef7936f62c745223",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/leg1_provider_refused_ORD0551-205307.png",
+    "candidate_blob": "730039ace7c0d59cfc2d0a2d02dba65b566b0ff2",
+    "export_blob": "730039ace7c0d59cfc2d0a2d02dba65b566b0ff2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/leg2_provider_ok_ORD0551-205307.png",
+    "candidate_blob": "730039ace7c0d59cfc2d0a2d02dba65b566b0ff2",
+    "export_blob": "730039ace7c0d59cfc2d0a2d02dba65b566b0ff2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/legs_note_r1.txt",
+    "candidate_blob": "bbc74145e46ddf5c8dd922500a654b2a883fcd8f",
+    "export_blob": "bbc74145e46ddf5c8dd922500a654b2a883fcd8f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/parity_r2.txt",
+    "candidate_blob": "840d69edf9227091da54a8972d641de96ec21afb",
+    "export_blob": "840d69edf9227091da54a8972d641de96ec21afb",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/ruler_arms_summary.json",
+    "candidate_blob": "165e0fa28d77f4de2456ebf32c96deb2be075113",
+    "export_blob": "165e0fa28d77f4de2456ebf32c96deb2be075113",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/ruler_green_newbase_r2.txt",
+    "candidate_blob": "1421254ddfff6cc68789c2f22e3c39fbf38d14a4",
+    "export_blob": "1421254ddfff6cc68789c2f22e3c39fbf38d14a4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0551/typecheck_r2.txt",
+    "candidate_blob": "13371bed498d4084bccbbbf1447687e7c79f86c2",
+    "export_blob": "13371bed498d4084bccbbbf1447687e7c79f86c2",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1725,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1725 tests collected in 5.43s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 3,
+   "tip_cells": 6,
+   "cand_cells": 18,
+   "growth_by_file_and_rule": {
+    "V12AuthoritativeJourneyPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+    "ControlTowerPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+    "V10LiveExecutionPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "JourneyInboxWorkbench.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "V8Experience.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 3,
+    "V12TripStudioPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1
+   },
+   "unpaired_added": [
+    "ControlTowerPanel.tsx:51|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "ControlTowerPanel.tsx:62|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "JourneyInboxWorkbench.tsx:777|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V10LiveExecutionPanel.tsx:70|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:110|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:117|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:126|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:133|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12TripStudioPanel.tsx:196|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4216|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4236|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4237|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "added_line_exact": [
+    "ControlTowerPanel.tsx:51|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "ControlTowerPanel.tsx:62|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "JourneyInboxWorkbench.tsx:777|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V10LiveExecutionPanel.tsx:70|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:110|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:117|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:126|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12AuthoritativeJourneyPanel.tsx:133|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12TripStudioPanel.tsx:196|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4216|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4236|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V8Experience.tsx:4237|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CQF5jYdl.js",
+    "/assets/index-BeJMb-k7.css"
+   ],
+   "live_tree": "22266c46476bbfe5357f3173c81dbaf83ca83bbd",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_d7a1d74_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [
+  "candidate grows Q64 exposure by {\"V12AuthoritativeJourneyPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 4, \"ControlTowerPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 2, \"V10LiveExecutionPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 1, \"JourneyInboxWorkbench.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 1, \"V8Experience.tsx|UPSTREAM_TEXT_VIA_HELP over the tip - that is a ruling question (Q64/Q67/Q70/Q71), not a landing"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: candidate grows Q64 exposure by {\"V12AuthoritativeJourneyPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 4, \"ControlTowerPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 2, \"V10LiveExecutionPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 1, \"JourneyInboxWorkbench.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM\": 1, \"V8Experience.tsx|UPSTREAM_TEXT_VIA_HELP over the tip - that is a ruling question (Q64/Q67/Q70/Q71), not a landing",
+ "derived_result": null
+}
