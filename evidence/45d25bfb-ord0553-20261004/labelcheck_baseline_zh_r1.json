@@ -1,0 +1,68 @@
+{
+  "instrument": "cmdra_0553_status_label_check_r1",
+  "script_sha256": "293b1b7cf81bd62c60fd1bd1fe339148814f50ccb3b969e6f0f2be0595335d3e",
+  "base": "http://127.0.0.1:49841/",
+  "locale": "zh",
+  "viewport": "390x844",
+  "src_dir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_cmdra_0553_base/frontend/src",
+  "dictionary_wordings_for_this_arm": [
+    "出发中",
+    "已到达",
+    "进行中",
+    "活跃",
+    "已完成",
+    "已跳过",
+    "计划中"
+  ],
+  "read": {
+    "panelPresent": true,
+    "activityStatus": [
+      "已完成",
+      "已完成",
+      "已完成",
+      "活跃",
+      "计划中",
+      "计划中"
+    ],
+    "stateValues": [
+      "活跃",
+      "计划中"
+    ],
+    "footerButton": [
+      "标记 出发中",
+      "预览影响",
+      "接受编辑"
+    ],
+    "paintedCount": 141,
+    "journeyId": "22222222-2222-4222-8222-222222222222"
+  },
+  "arms": [
+    {
+      "id": "panel_reached",
+      "verdict": "PASS",
+      "observed": "panelPresent=true activityRows=6 journeyId=22222222-2222-4222-8222-222222222222"
+    },
+    {
+      "id": "every_status_slot_is_painted",
+      "verdict": "PASS",
+      "observed": "8 slots painted, e.g. [\"已完成\",\"已完成\",\"已完成\"]"
+    },
+    {
+      "id": "no_status_slot_paints_a_machine_shape",
+      "verdict": "PASS",
+      "observed": "none of the status slots match the sweep's four shapes"
+    },
+    {
+      "id": "painted_words_come_from_the_dictionary",
+      "verdict": "PASS",
+      "observed": "all within the table's wordings (7 entries)"
+    },
+    {
+      "id": "no_page_error",
+      "verdict": "PASS",
+      "observed": "[]"
+    }
+  ],
+  "verdict": "GREEN",
+  "red_arms": []
+}
