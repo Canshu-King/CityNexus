@@ -376,14 +376,16 @@ def main():
           "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
           B.fmt(len(_rot)), B.fmt(len(_eq)), B.fmt(sum(1 for v in _eq.values() if v is True)),
           B.fmt(len(mine_changed)), "`、`".join(mine_changed) or "无", B.fmt(len(_moved))))
+    _MAIN = "backend/app/main.py"
     A("- 上面那句「注释现引」读的是**我这枚枝交上去的那份**（`HEAD`），不是线上的那份——这不是偷懒，是这"
       "把尺原来的读法有缺陷：它两头都从现尖读，于是拿线上那条旧注释去比线上那批新锚，只要我这一手还没被合，"
-      "它就永远红，一条只能在被它管辖的交付之前失败的尺，本身就是仪器缺陷。现尖那份注释此刻仍写 `%s`，"
-      "对着现尖的锚差 %s 枚；我这枚枝写的是 `%s`，差 %s 枚——所以「要合的那件事」正是把差的那 %s 枚抹平。" % (
-          "`、`".join(str(v) for v in (_cited_tip.get(k) for k in ("require", "lookup", "integrity",
-                                                              "caught_by"))),
+      "它就永远红，一条只能在被它管辖的交付之前失败的尺，本身就是仪器缺陷。现尖那份注释此刻仍写 %s，"
+      "对着现尖的锚差 %s 枚；我这枚枝写的是 %s，差 %s 枚——所以「要合的那件事」正是把差的那 %s 枚抹平。" % (
+          "、".join("`%s:%s`" % (_MAIN, _cited_tip.get(k)) for k in ("require", "lookup", "integrity",
+                                                                "caught_by")),
           B.fmt(len(_tip_rot)),
-          "`、`".join(str(_cited[k]) for k in ("require", "lookup", "integrity", "caught_by")),
+          "、".join("`%s:%s`" % (_MAIN, _cited[k]) for k in ("require", "lookup", "integrity",
+                                                          "caught_by")),
           B.fmt(len(_rot)), B.fmt(len(_tip_rot))))
     A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `%s` 是落件的那一代**"
       "（`receipts/%s` 等三件在 `%s` 这一代写进枝里）。两者的差别只有 `tip`/`branch`/"
