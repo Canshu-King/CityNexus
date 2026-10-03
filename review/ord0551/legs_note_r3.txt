@@ -30,7 +30,8 @@ THE MECHANISM, READ OUT OF THE RULER'S OWN `hops` (not inferred)
     "upstream read error.payload off error" -> "passed through String()"
     -> "what frontend/src/features/inbox/JourneyInboxWorkbench.tsx:331 passed in as `value`"
     -> "value was handed to pick() as `value`" -> rawChannel -> the DOM.
-  `pick` is one shared helper in `frontend/src/lib/displayVocabulary.ts:154` and its fallback prints the
+  `pick` is one shared helper in `frontend/src/lib/displayVocabulary.ts:178` on this branch (the same helper sat
+  at `:154` on the refused generation) and its fallback prints the
   value it was handed. The module graph answers a helper's return from all of its call sites, so a single
   call site that fed the reply's own `status` into it condemned every panel importing any `pick`-based
   label: commitmentKindLabel, commitmentStatusLabel, clockZoneLabel, executionStateLabel,
