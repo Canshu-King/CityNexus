@@ -58,6 +58,16 @@ def reconcile_stale_agent_runs(
             continue
         run.status = "INTERRUPTED"
         run.failure_reason = reason
+        run.outcome = json.dumps(
+            _structured_failure_outcome(
+                status="INTERRUPTED",
+                reason_code="PROCESS_RESTARTED_DURING_AGENT_RUN",
+                user_summary="The Agent run was interrupted when the server restarted.",
+                recommended_action="Start a new mission after inspecting the current Journey state.",
+            ),
+            ensure_ascii=False,
+            sort_keys=True,
+        )
         run.completed_at = clock.isoformat()
         mission = session.get(JourneyMission, run.mission_id)
         if mission is not None and mission.status in {"CREATED", "RUNNING"}:
@@ -676,6 +686,21 @@ def _structured_run_outcome(value: str | None) -> str | dict[str, Any] | None:
     return decoded if isinstance(decoded, dict) and decoded.get("status") else value
 
 
+def _structured_failure_outcome(
+    *,
+    status: str,
+    reason_code: str,
+    user_summary: str,
+    recommended_action: str,
+) -> dict[str, str]:
+    return {
+        "status": status,
+        "reason_code": reason_code,
+        "user_summary": user_summary,
+        "recommended_action": recommended_action,
+    }
+
+
 class DeepSeekJourneyAgent:
     provider_key = "deepseek"
     runtime_identity = NATIVE_DEEPSEEK_TOOL_LOOP
@@ -1178,6 +1203,19 @@ class DeepSeekJourneyAgent:
             run.status = "FAILED_EXTERNAL"
             mission.status = "DEGRADED"
             run.failure_reason = str(exc)
+            run.outcome = json.dumps(
+                _structured_failure_outcome(
+                    status="FAILED_EXTERNAL",
+                    reason_code=(
+                        ai_state_from_failure_reason(str(exc))
+                        or "AGENT_RUNTIME_UNAVAILABLE"
+                    ),
+                    user_summary="The configured Agent provider did not complete this mission.",
+                    recommended_action="Retry with a configured provider or continue with deterministic tools.",
+                ),
+                ensure_ascii=False,
+                sort_keys=True,
+            )
             mission.failure_reason = str(exc)
             raise
         finally:
@@ -1223,9 +1261,10 @@ def unavailable_run_payload(
     session: Session, *, journey: Journey, mission: JourneyMission
 ) -> dict[str, Any]:
     now = _now()
+    availability = ai_availability_state()
     outcome = {
         "status": "BLOCKED",
-        "reason_code": ai_availability_state(),
+        "reason_code": availability,
         "user_summary": "The configured Agent runtime did not execute this mission.",
         "recommended_action": "Enable a configured Agent runtime or continue with deterministic tools.",
     }
@@ -1239,7 +1278,7 @@ def unavailable_run_payload(
         # r2 stored this fixed literal no matter why the door above declined. The word now comes
         # from the same table `/health` reads, so a run can never claim a missing credential while
         # the operator's switch is what the server actually reports.
-        failure_reason=reason_sentence(ai_availability_state()),
+        failure_reason=reason_sentence(availability),
         outcome=json.dumps(outcome, ensure_ascii=False, sort_keys=True),
         created_at=now,
         started_at=now,

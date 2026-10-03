@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
@@ -127,6 +128,12 @@ def test_r21_stale_running_rows_reconcile_with_named_reason():
         assert run.status == "INTERRUPTED"
         assert mission.status == "ABORTED"
         assert run.failure_reason == "PROCESS_RESTARTED_DURING_AGENT_RUN"
+        assert json.loads(run.outcome) == {
+            "status": "INTERRUPTED",
+            "reason_code": "PROCESS_RESTARTED_DURING_AGENT_RUN",
+            "user_summary": "The Agent run was interrupted when the server restarted.",
+            "recommended_action": "Start a new mission after inspecting the current Journey state.",
+        }
         session.delete(run)
         session.delete(mission)
         session.delete(session.get(Journey, journey_id))
