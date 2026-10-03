@@ -71,6 +71,7 @@ from app.agent.runtime import (
     _server_completion_contract,
     persisted_agent_run_payload,
     reconcile_stale_agent_runs,
+    _structured_run_outcome,
     unavailable_run_payload,
 )
 from app.agent.signal_pipeline import fixture_payload, set_fixture_state
@@ -2209,7 +2210,7 @@ def get_agent_run(
         "completion_contract": _server_completion_contract(
             step_payloads, run_status=run.status
         ),
-        "outcome": run.outcome,
+        "outcome": _structured_run_outcome(run.outcome),
         "failure_reason": run.failure_reason,
         "created_at": run.created_at,
         "started_at": run.started_at,

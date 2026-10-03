@@ -645,7 +645,7 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "completion_contract": _server_completion_contract(
             step_payloads, run_status=run.status
         ),
-        "outcome": run.outcome,
+        "outcome": _structured_run_outcome(run.outcome),
         "failure_reason": run.failure_reason,
         # The read route answers with the same enumeration the health endpoint uses. A run that
         # stored a reason reports that reason; a run that stored none reports the current state,
@@ -662,6 +662,18 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "mission": mission_payload(mission) if mission else None,
         "tool_steps": step_payloads,
     }
+
+
+def _structured_run_outcome(value: str | None) -> str | dict[str, Any] | None:
+    """Decode durable machine outcomes while preserving ordinary model prose."""
+
+    if not value:
+        return None
+    try:
+        decoded = json.loads(value)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return value
+    return decoded if isinstance(decoded, dict) and decoded.get("status") else value
 
 
 class DeepSeekJourneyAgent:
@@ -1211,6 +1223,12 @@ def unavailable_run_payload(
     session: Session, *, journey: Journey, mission: JourneyMission
 ) -> dict[str, Any]:
     now = _now()
+    outcome = {
+        "status": "BLOCKED",
+        "reason_code": ai_availability_state(),
+        "user_summary": "The configured Agent runtime did not execute this mission.",
+        "recommended_action": "Enable a configured Agent runtime or continue with deterministic tools.",
+    }
     run = AgentRun(
         id=str(uuid4()),
         mission_id=mission.id,
@@ -1222,6 +1240,7 @@ def unavailable_run_payload(
         # from the same table `/health` reads, so a run can never claim a missing credential while
         # the operator's switch is what the server actually reports.
         failure_reason=reason_sentence(ai_availability_state()),
+        outcome=json.dumps(outcome, ensure_ascii=False, sort_keys=True),
         created_at=now,
         started_at=now,
         completed_at=now,
