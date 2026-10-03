@@ -1,0 +1,77 @@
+{
+  "instrument": "cmdr_pick_closed_lookup_r1",
+  "path": "frontend/src/lib/displayVocabulary.ts",
+  "arms": [
+    {
+      "arm": "rev:6246876a3b9171f5c2d6ec948f43b35605262bee (as shipped)",
+      "rawChannel_present": true,
+      "pick_present": true,
+      "return_statements": [
+        [
+          3,
+          "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+        ],
+        [
+          4,
+          "return rawChannel(value, zh);"
+        ]
+      ],
+      "return_count": 2,
+      "miss_branch_hands_back_input": true,
+      "leaking_lines_inside_pick": [
+        [
+          4,
+          "return rawChannel(value, zh);"
+        ]
+      ],
+      "verdict": "RED",
+      "claim": "pick 未命中即把调用方入参原样回吐（尺按所有调用点回答 => 标签扩散）"
+    },
+    {
+      "arm": "rev:6246876a3b9171f5c2d6ec948f43b35605262bee + closed-lookup variant (expects GREEN)",
+      "rawChannel_present": true,
+      "pick_present": true,
+      "return_statements": [
+        [
+          3,
+          "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+        ],
+        [
+          4,
+          "return null as never;"
+        ]
+      ],
+      "return_count": 2,
+      "miss_branch_hands_back_input": false,
+      "leaking_lines_inside_pick": [],
+      "verdict": "GREEN",
+      "claim": "pick 未命中不回吐入参（查找已闭合）"
+    },
+    {
+      "arm": "rev:6246876a3b9171f5c2d6ec948f43b35605262bee mutant: miss branch 回吐入参 (expects RED)",
+      "rawChannel_present": true,
+      "pick_present": true,
+      "return_statements": [
+        [
+          3,
+          "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+        ],
+        [
+          4,
+          "return rawChannel(value, zh);"
+        ]
+      ],
+      "return_count": 2,
+      "miss_branch_hands_back_input": true,
+      "leaking_lines_inside_pick": [
+        [
+          4,
+          "return rawChannel(value, zh);"
+        ]
+      ],
+      "verdict": "RED",
+      "claim": "pick 未命中即把调用方入参原样回吐（尺按所有调用点回答 => 标签扩散）"
+    }
+  ],
+  "shipped_verdict": "RED"
+}
