@@ -1,50 +1,61 @@
 {
  "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
  "arm": "hidden-reasons-are-told",
- "run_id": "ord0512g1",
+ "run_id": "d26gate_r4",
  "fitted_tally": {
-  "shown": 3,
-  "off_map": 4,
-  "over_a_name": 1,
-  "over_a_control": 1
+  "shown": 5,
+  "over_a_name": 4
  },
  "crowded_tally": {
-  "shown": 2,
-  "off_map": 4,
-  "over_a_name": 3
+  "shown": 3,
+  "over_a_name": 6
  },
+ "gap_off_pin_px_fitted": 18,
+ "gap_off_pin_px_crowded": 18.1,
+ "measured_against_screen_fitted": [],
+ "measured_against_screen_crowded": [],
  "fitted_rows": [
   [
    "Arrival",
    "shown",
+   "right",
+   "true",
    "true",
    "true",
    "nothing"
   ],
   [
    "Check in · Haihe Riverside Hotel",
-   "off_map",
+   "over_a_name",
+   "under",
    "false",
    "false",
-   "nothing"
+   "true",
+   "name"
   ],
   [
    "Overnight · Haihe Riverside Hotel",
-   "off_map",
+   "over_a_name",
+   "under",
    "false",
    "false",
-   "nothing"
+   "true",
+   "name"
   ],
   [
    "Five Great Avenues",
-   "over_a_name",
+   "shown",
+   "under",
    "true",
    "false",
-   "name"
+   "true",
+   "nothing"
   ],
   [
    "Tianjin Museum",
    "shown",
+   "under",
+   "true",
    "true",
    "true",
    "nothing"
@@ -52,83 +63,109 @@
   [
    "Tianjin Eye",
    "shown",
+   "right",
+   "true",
    "true",
    "true",
    "nothing"
   ],
   [
    "Overnight · Haihe Riverside Hotel",
-   "off_map",
+   "over_a_name",
+   "under",
    "false",
    "false",
-   "nothing"
+   "true",
+   "name"
   ],
   [
    "Check out · Haihe Riverside Hotel",
-   "off_map",
+   "over_a_name",
+   "under",
    "false",
    "false",
-   "nothing"
+   "true",
+   "name"
   ],
   [
    "Departure",
-   "over_a_control",
+   "shown",
+   "under",
    "true",
    "true",
-   "control"
+   "true",
+   "nothing"
   ]
  ],
  "crowded_rows": [
   [
    "shown",
+   "right",
    "true",
    "true",
-   "nothing"
-  ],
-  [
-   "off_map",
-   "false",
-   "false",
-   "nothing"
-  ],
-  [
-   "off_map",
-   "false",
-   "false",
+   "true",
    "nothing"
   ],
   [
    "shown",
+   "under",
+   "false",
+   "false",
+   "true",
+   "nothing"
+  ],
+  [
+   "over_a_name",
+   "under",
+   "false",
+   "false",
+   "true",
+   "name"
+  ],
+  [
+   "shown",
+   "left",
+   "true",
    "true",
    "true",
    "nothing"
   ],
   [
    "over_a_name",
+   "right",
+   "true",
    "true",
    "true",
    "name"
   ],
   [
    "over_a_name",
+   "right",
+   "true",
    "true",
    "true",
    "name"
   ],
   [
-   "off_map",
+   "over_a_name",
+   "under",
    "false",
    "false",
-   "nothing"
-  ],
-  [
-   "off_map",
-   "false",
-   "false",
-   "nothing"
+   "true",
+   "name"
   ],
   [
    "over_a_name",
+   "under",
+   "false",
+   "false",
+   "true",
+   "name"
+  ],
+  [
+   "over_a_name",
+   "right",
+   "true",
    "true",
    "true",
    "name"

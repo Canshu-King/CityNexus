@@ -58,8 +58,11 @@ export type LabelCandidate = {
   id: string;
   /**
    * The boxes this word could take, in the order it may try them -- a chip reaching right of its pin
-   * first, then left. r1 painted only to the right and `off_map` was then the commonest reason a name
-   * was missing at 390 px, which was the placement rule's own doing rather than the map's.
+   * first, then left, then below it. r1 painted only to the right and `off_map` was then the commonest
+   * reason a name was missing at 390 px, which was the placement rule's own doing rather than the
+   * map's; the third side came from the measurement that two sides still left most names off the
+   * glass, and that dropping the word under its pin buys more names than wrapping or shortening it
+   * does -- without inventing a name nobody typed.
    */
   sides: LabelBox[];
   /** higher wins; ties break on `order` ascending so the first stop of the day keeps its name */

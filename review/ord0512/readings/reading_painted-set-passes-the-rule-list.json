@@ -1,11 +1,11 @@
 {
  "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
  "arm": "painted-set-passes-the-rule-list",
- "run_id": "ord0512g1",
- "canvasInnerTextChars": 52,
+ "run_id": "d26gate_r4",
+ "canvasInnerTextChars": 81,
  "judged_surface": "canvas-label-strings",
- "corpus_strings": 3,
- "corpus_chars": 32,
+ "corpus_strings": 5,
+ "corpus_chars": 59,
  "offenders": [],
  "forbidden_classes_checked": [
   "clock-time",

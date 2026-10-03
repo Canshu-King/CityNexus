@@ -1,17 +1,19 @@
 {
  "file": "e2e/qoder-0512-stop-names-on-the-glass.spec.ts",
  "arm": "names-painted-390",
- "run_id": "ord0512g1",
+ "run_id": "d26gate_r4",
  "viewport": "390x844",
  "server_stop_rows_in_payloads": 18,
  "server_distinct_names": 8,
  "pin_count": 9,
  "label_node_count": 9,
- "shown_count": 3,
+ "shown_count": 5,
  "shown_texts": [
   "Arrival",
+  "Five Great Avenues",
   "Tianjin Museum",
-  "Tianjin Eye"
+  "Tianjin Eye",
+  "Departure"
  ],
  "placements_at_first_read": [
   [
@@ -19,81 +21,83 @@
    "right"
   ],
   [
-   "off_map",
-   "right"
+   "over_a_name",
+   "under"
   ],
   [
-   "off_map",
+   "over_a_name",
+   "under"
+  ],
+  [
+   "shown",
+   "under"
+  ],
+  [
+   "shown",
+   "under"
+  ],
+  [
+   "shown",
    "right"
   ],
   [
    "over_a_name",
-   "right"
+   "under"
+  ],
+  [
+   "over_a_name",
+   "under"
   ],
   [
    "shown",
-   "right"
-  ],
-  [
-   "shown",
-   "right"
-  ],
-  [
-   "off_map",
-   "right"
-  ],
-  [
-   "off_map",
-   "right"
-  ],
-  [
-   "over_a_control",
-   "right"
+   "under"
   ]
  ],
- "settled_shown_count": 3,
+ "settled_shown_count": 5,
  "placements_after_settle": [
   [
    "shown",
    "right"
   ],
   [
-   "off_map",
-   "right"
+   "over_a_name",
+   "under"
   ],
   [
-   "off_map",
+   "over_a_name",
+   "under"
+  ],
+  [
+   "shown",
+   "under"
+  ],
+  [
+   "shown",
+   "under"
+  ],
+  [
+   "shown",
    "right"
   ],
   [
    "over_a_name",
-   "right"
+   "under"
+  ],
+  [
+   "over_a_name",
+   "under"
   ],
   [
    "shown",
-   "right"
-  ],
-  [
-   "shown",
-   "right"
-  ],
-  [
-   "off_map",
-   "right"
-  ],
-  [
-   "off_map",
-   "right"
-  ],
-  [
-   "over_a_control",
-   "right"
+   "under"
   ]
  ],
  "missing_from_glass": [],
- "canvasInnerTextChars": 52,
+ "canvasInnerTextChars": 81,
  "place_name_keys_in_payloads": 0,
  "sources": [
+  "title",
+  "title",
   "title",
   "title",
   "title"
