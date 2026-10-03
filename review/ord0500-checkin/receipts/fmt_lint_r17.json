@@ -15,11 +15,12 @@
     "tools/pytest_r6.py",
     "tools/sweep_r6.py",
     "tools/build_faces_r6.py",
-    "tools/exposure_pair_r17.py"
+    "tools/exposure_pair_r17.py",
+    "tools/reanchor_r8.py"
   ],
-  "files_scanned": 15,
-  "calls_checked": 171,
-  "single_expression_args": 111,
+  "files_scanned": 16,
+  "calls_checked": 180,
+  "single_expression_args": 118,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",

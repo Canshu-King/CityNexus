@@ -1,6 +1,6 @@
 # ORD-0500 r6 -- 英文档那一格：读数单（基座 `06ad00b0267c2bef08d4cdcbae2e5a206ded8666`，候选 = 本枝 `71e855fa492901075a5abc8e0db97fee37b17d8e`）
 
-生成 `2026-10-03T20:55:40.537256+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
+生成 `2026-10-03T22:00:10.807217+08:00`。本代新取的读数才写在这页上；r5 那一代的屏幕数不在这里折算，只在第八节按枝点名。
 
 ## 一、两枚面的身份（同一枚工作树换字节再换回来，换回后逐枚 blob 验过）
 
@@ -57,9 +57,9 @@
 
 ## 五、门里的臂（服务端没被我碰，还是要在本代跑一遍）
 
-- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.80s；跑后库里 9 行。
+- `2` 两套 ["tests/test_qoder_ord0500_journey_refusal.py", "tests/test_qoder_ord0476_checkins.py"] 个文件在私库 `r6_pytest.db` 上跑：退出 0，尾行逐字 16 passed, 2 warnings in 2.71s；跑后库里 9 行。
 - 共享库前后：字节 7213056 对 7213056、mtime_ns 1790644827980246600 对 1790644827980246600，未被动过 = True。
-- 三枚 `backend/app/main.py` blob：本轮候选 `8b5c56d248560028f2d3de0dc9f697de06630243`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `8b5c56d248560028f2d3de0dc9f697de06630243`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `860c9561106e` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
+- 三枚 `backend/app/main.py` blob：本轮候选 `fc359dd9d1067b0a17770b45816fa76aa3af01af`、r5 那一笔 `6448e5e74c394c18aad96c231ef4865540a75f20`、判读时现尖 `fc359dd9d1067b0a17770b45816fa76aa3af01af`。候选与 r5 同一枚 = False（不是：基座走过别人好几笔，这枚文件别处也动过）；候选与判读时的现尖同一枚 = True，这一枚相等就是「产品字节已经在线上」的字节证，所以 r6 那阵子用来撑「同一笔 hunk」的形状核对（`git diff --numstat` 14 增 2 删）在本轮不再是必要的说法。具名 `CHECKIN_JOURNEY_UNKNOWN` 的枚数：工作树 2 处、本枝 HEAD `71517a54d57c` 2 处（这两个数是渲染本页时现读的，不是抄上来的）。
 
 ## 六、Q64 曝光尺：本代两侧各一趟
 
@@ -84,12 +84,12 @@
 
 | 说法 | 屏幕上原来写的 | 现尖读到的 | 那一行的原文 |
 |---|---|---|---|
-| require | 810 | 818 | def require(session: Session, model: type, identifier: str, label: str): |
-| lookup | 3912 | 4256 | existing = session.scalars( |
-| integrity | 3948 | 4292 | except IntegrityError as exc: |
-| caught_by | 3965 | 4309 | "caught_by": "unique_index", |
+| require | 818 | 818 | def require(session: Session, model: type, identifier: str, label: str): |
+| lookup | 4256 | 4263 | existing = session.scalars( |
+| integrity | 4292 | 4299 | except IntegrityError as exc: |
+| caught_by | 4309 | 4316 | "caught_by": "unique_index", |
 
-- 行号来源不是记忆：尖 `569b8472b134e5562ef396e38681870b9c26536a` 的 `backend/app/main.py` 共 14476 行，打卡那扇门自己的区间按路由路径行定位到 [4210, 4329]，四枚锚都要求落在这段里并且段内唯一。件 `receipts/reanchor_r8.json`。
+- 行号来源不是记忆：尖 `4765f9f0ae83076b5223d8ef7e45b4bfd9622f7c` 的 `backend/app/main.py` 共 14483 行，打卡那扇门自己的区间按路由路径行定位到 [4217, 4336]，四枚锚都要求落在这段里并且段内唯一。件 `receipts/reanchor_r8.json`。
 - 反件与闸自己也被反件验过：写坏正文（少一枚反引号）被 `ABORT_TEXT_CHANGED` 拒、把锚定短语改掉被 `ABORT_ANCHOR_PHRASE` 拒、正件跑通且「把每个数字遮掉之后正文逐字相同」= True。三臂 ["PASS", "PASS", "PASS"]。件 `receipts/reanchor_r8_selftest.json`。
 - 这枚文件不在前端图里：`frontend_files_referencing_the_test` = []。本代不改前端字节，所以页面第六节那两枚面的入口名与 bundle 字节仍是 r7 那一代（第八节已具名），本页重渲染时没有把它们当作本轮新读数。
 - 顺带把全线源码注释里的 `path:line` 都开了一遍：175 枚引文、71 个文件，逐条按现尖核对；本单自己那 4 枚全 OK，其余不 OK 的 16 枚归别的单子（清单在件里，只读，我没动别人手上的判据）。件 `receipts/citation_audit_r8.json`。
@@ -111,7 +111,7 @@
 | 查的引文 | 22 枚，其中 4 枚带内容钉子（句子声称那一行写着什么，就真去读那一行） |
 | 判语 | GREEN，红 0 枚，各类计数 {"OK": 8, "NOT_THIS_LANES_CITATION": 14, "CITED_FILE_ABSENT": 0, "CITED_LINE_BEYOND_FILE": 0, "CITED_LINE_IS_BLANK": 0, "CITED_LINE_CONTENT_MISMATCH": 0, "CITED_PHRASE_GONE_FROM_COMMENT": 0} |
 | 钉子的来处 | 与 r8 那把尺的读数相符 = True（从枝里 receipts/reanchor_r8.json 现读） |
-| 换代复读（件 `day26_anchor_recheck_r17.json`，尖 `74f5d8df082532f20e66bdba2b84311043f023b5`） | 四枚锚仍是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；注释里现引的就是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；本枝产品路径与上一枝逐枚等值 = False |
+| 换代复读（件 `day26_anchor_recheck_r17.json`，尖 `8f8281f547c2e60d2c4c3349322565b1104107ce`） | 四枚锚仍是 {"require": 818, "lookup": 4263, "integrity": 4299, "caught_by": 4316}；注释里现引的就是 {"require": 818, "lookup": 4256, "integrity": 4292, "caught_by": 4309}；本枝产品路径与上一枝逐枚等值 = False |
 
 反件 6 枚各咬一格（含 M5/M6 那对反方向的作者件），全在临时目录里、不碰工作树（`18` 份副本，判它用的登记清单仍取真实仓库的 3280 条）：[["C1_control_copy", "GREEN", "GREEN", true], ["M1_beyond_file", "RED", "CITED_LINE_BEYOND_FILE", true], ["M2_blank_line", "RED", "CITED_LINE_IS_BLANK", true], ["M4_wrong_but_in_range", "RED", "CITED_LINE_CONTENT_MISMATCH", true], ["M3_absent_file", "RED", "CITED_FILE_ABSENT", true], ["C2_after_revert", "GREEN", "GREEN", true], ["M5_foreign_line_not_judged", "GREEN", "GREEN", true], ["M6_same_line_claimed_mine", "RED", "CITED_LINE_BEYOND_FILE", true], ["C3_after_foreign_revert", "GREEN", "GREEN", true]]。控制趟 GREEN、还原后 GREEN、副本字节回来了 = True、`wt22` 干净 = True。件 `receipts/citation_gate_r10_mutants.json`。
 

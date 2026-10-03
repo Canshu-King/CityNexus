@@ -1,9 +1,9 @@
 {
   "tool": "branch_emit_arm_r17",
-  "took_local": "2026-10-03T20:10:40+08:00",
-  "tip": "74f5d8df082532f20e66bdba2b84311043f023b5",
+  "took_local": "2026-10-03T21:59:58+08:00",
+  "tip": "8f8281f547c2e60d2c4c3349322565b1104107ce",
   "named_generation": "r17",
-  "ref_excluded_and_proven_by_bytes": "r17",
+  "ref_excluded_and_proven_by_bytes": "r18",
   "receipts_named": [
     "citation_gate_r17.json",
     "citation_audit_r17.json",
@@ -65,7 +65,7 @@
       "commit": "9f5fcb022ec9abd8538c42ed713100fdfb929a2f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_LANDING_ROWS",
+      "last_line": "ABORT_GATE_STALE gate read 441c98320521b9d0fcd17d1aab904f45473ffbab, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b -- re-run the gate",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -81,7 +81,7 @@
       "commit": "97c5df9466c5ea33003efac857fe647ea0d62e7f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_LANDING_ROWS",
+      "last_line": "ABORT_GATE_STALE gate read 441c98320521b9d0fcd17d1aab904f45473ffbab, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b -- re-run the gate",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -97,7 +97,7 @@
       "commit": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_LANDING_ROWS",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 71517a54d57c8924434e7987f4099ebd8912c630, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -113,7 +113,7 @@
       "commit": "71e855fa492901075a5abc8e0db97fee37b17d8e",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_LANDING_ROWS",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 71517a54d57c8924434e7987f4099ebd8912c630, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -129,7 +129,7 @@
       "commit": "e579f0c4b2ddef55262624df3892ed17c61b5289",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_MISSING_SLOT at line 66",
+      "last_line": "ABORT_LANDING_ROWS",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -145,7 +145,7 @@
       "commit": "2eae40b4d80984a7a92bc8f80b7b22006b91a4a5",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes r17, this page is for r16",
+      "last_line": "ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes r18, this page is for r16",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -155,10 +155,26 @@
       "page_file_this_arm_wrote": false,
       "previous_page_restored": false,
       "scratch": "scratch_emit/r16/"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r17",
+      "commit": "b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
+      "verdict": "ABORTS",
+      "returncode": 1,
+      "last_line": "ABORT_ARM_EXCLUSION_MISMATCH the arm receipt excludes r18, this page is for r17",
+      "generation_named": "r17",
+      "receipts_named": [
+        "citation_gate_r17.json",
+        "citation_audit_r17.json",
+        "day26_anchor_recheck_r17.json"
+      ],
+      "page_file_this_arm_wrote": false,
+      "previous_page_restored": false,
+      "scratch": "scratch_emit/r17/"
     }
   ],
   "verdict_tally": {
     "NO_EMITTER_IN_REF": 10,
-    "ABORTS": 6
+    "ABORTS": 7
   }
 }
