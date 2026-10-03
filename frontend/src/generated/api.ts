@@ -5040,7 +5040,7 @@ export interface operations {
                     "application/json": components["schemas"]["JourneyCheckin"];
                 };
             };
-            /** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from "not yours" because the two facts deserve two sentences */
+            /** @description error.reason_code = CHECKIN_JOURNEY_UNKNOWN / CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from "not yours" because the two facts deserve two sentences */
             404: {
                 headers: {
                     [name: string]: unknown;
