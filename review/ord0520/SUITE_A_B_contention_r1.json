@@ -66,5 +66,9 @@
   "parity_verbatim": "formal 175; runtime 175; missing 0; extra 0 | schemas formal 87; generated 87; missing 0; extra 0",
   "eol_churn": "--numstat and --ignore-cr-at-eol --numstat both read +786 -17 -> 0 churn",
   "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (CPython 3.12.14)",
-  "command": "python -m pytest -p no:randomly -q  (cwd backend/, conftest temporary sqlite per process, provider env unset)"
+  "command": "python -m pytest -p no:randomly -q  (cwd backend/, conftest temporary sqlite per process, provider env unset)",
+  "red_on_base_absent_on_candidate": [
+    "tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job"
+  ],
+  "the_difference_explained": "Both sides answer 9 red. The sets differ by one arm each way, and the two names are the two `abandon` arms of the SAME file, `backend/tests/test_qoder_catalog_hydration.py`: the base run lost test_an_abandon_whose_own_write_never_landed_still_closes_the_job, the candidate run lost test_abandon_reports_a_request_not_a_death. On the candidate tree both of them pass alone (3 consecutive solo runs, 1 passed each) and the whole file passes (23 passed), and this follow-up touches nothing in that file or in the hydration path -- its write set is `backend/app/main.py`'s abort door plus this order's own new test and evidence files. Reported as a run-order / shared-store sensitivity of that file's arms, NOT as zero difference and NOT as something this commit fixed."
 }
