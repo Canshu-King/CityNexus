@@ -145,8 +145,8 @@ type Wallet = {
        asking `commitment_id` -- the only field it had -- whether the ticket was confirmed. */
     status: string;
     realtime_status: string;
-    /* `_reservation_payload` (main.py:3527) links a reservation to the commitment it became.  This is
-       the only honest source for a "受保护" badge: without it the card was asserting a promise the
+    /* `_reservation_payload` (`backend/app/main.py:6204`) links a reservation to the commitment it became.
+       This is the only honest source for a "受保护" badge: without it the card was asserting a promise the
        server had not made (ORD-0146 ③). */
     commitment_id?: string | null;
     price: {
