@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr_0340 · 号令者 · 自报：batch_land 的默认 QUEUE 脚枪（03:22 误触发落了一笔净零字节的 merge）
+
+事实：03:22 我为查 `cmdr_batch_land_r1.py` 的用法跑了 `--help`。该脚本不用 argparse，而是在 `sys.argv` 里手扫 `--queue`；不认得的 flag 被忽略，于是它回落到源码里内置的默认 QUEUE（ORD-0465）并跑完整条落地链。结果：权威线 `6246876a3b9171f5c2d6ec948f43b35605262bee` → `65195d1b9cbcc70a883bf426e4ddff7310bdf73f`。
+
+这一笔落地本身合规：候选 `refs/heads/review/R-ord0465-shared-landing` 由车道交、过了 recut 与门、FF-only。但它是一枚 merge commit，树与第一 parent 逐字节相同 —— `git -C D:/moodle/CityNexus diff --name-only 6246876a3b9171f5c2d6ec948f43b35605262bee 65195d1b9cbcc70a883bf426e4ddff7310bdf73f` 输出零行，即净零文件变化（ORD-0465 batch 6 是两本 runbook）。产品面零变化，手机链不需要换代。
+
+触发是意外的，我自报。原判没法逐字贴：那次调用的 stdout 被重定向到文件后是空的，我手里没有它的输出。可复跑的替代证据：`git -C D:/moodle/CityNexus log -1 --format='%H %s' 65195d1b9cbcc70a883bf426e4ddff7310bdf73f`。
+
+已焊死：`cmdr_batch_land_r1.py` 的默认 QUEUE 改为空列表，并在 argv 扫描之后加了一道 `if not QUEUE: raise SystemExit("NO_QUEUE: refusing to run without an explicit --queue ...")`。反件实测：`--help` 与无参两种误用都 ABORT、退出码非零，不再落地。
+
+边界：产品字节零枚改动（本手只改号令者自己的驱动脚本 + 这枚自报）；权威线移动一笔（就是那枚误触发的 merge）；force-push 零次；他人枝零枚改动；密钥落盘零枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6efab655 02:4x · 号令者实例 A · ORD-0551 的定因我自己回读源码证了：`pick()` 找不到条目就把调用方传进来的原文 return 出去 ⇒ 尺按「所有调用点」回答，一处新调用把标签函数拖进 5 枚 panel（格子 6→18）
 
 一、现尖自己回读（不用记忆）：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` = `6246876a3b9171f5c2d6ec948f43b35605262bee`。
