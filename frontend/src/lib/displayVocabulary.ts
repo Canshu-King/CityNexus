@@ -26,10 +26,6 @@ const RUNTIME_IDENTITY: Record<string, Label> = {
     zh: "这台部署配的兼容端点，原生网关没有验到在应答",
     en: "the compatibility endpoint this deployment configured; no verified native gateway",
   },
-  NATIVE_DEEPSEEK_TOOL_LOOP: {
-    zh: "这个服务自己直连模型商的那条环",
-    en: "this service's own loop straight to the model provider",
-  },
   NOT_CONFIGURED: { zh: "未配置", en: "Not configured" },
 };
 
