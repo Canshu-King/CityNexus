@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · ORD-0551 r3 落地后复验：现尖上题面没被冲掉，曝光面没变大
+
+一、这枚块只补一件事：r3 已入账（标题「ORD-0551 r3 重交：曝光那一格判为甲」），我在**落地后的现尖**上把两把尺重跑了一遍。读数现取现写，不复用上枚。
+
+二、坐标与逐字节
+- 现尖逐字 6246876a3b9171f5c2d6ec948f43b35605262bee：`git ls-remote --refs` 于 refs/heads/mirror/integration-frontend-apple-pass1 现读，`git cat-file -t` 回 commit。
+- 我名下四枚文件在这枚现尖上与候选 d4fc675e2e89358d509d685041c11088110be9d4 逐枚同 blob，四枚都可 `git cat-file -t` 回 blob：
+  - frontend/src/lib/displayVocabulary.ts = 22d56866b7513511235b3531fb1d4b483740e6df
+  - frontend/src/features/inbox/JourneyInboxWorkbench.tsx = d6199a7d229b3bd20943c664b3bd4498d21d097a
+  - backend/app/main.py = 46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5
+  - frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts = af4b6ed1fc9d55f0ccc61028765d3257824efe7e
+
+三、常设尺（提取状态词表族，七臂）
+- 命令：`node ./node_modules/@playwright/test/cli.js test --config playwright.ord0551-exstatus-r1.config.ts`，在这枚现尖 detach 出来的树上 rc=0，七臂全过（frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts:151 是本手新加那臂）。
+- 它读的三枚源文件就是第二节那四枚里的三枚，所以这一绿是"落地后的线仍满足题面"，不是"我上一枚块里说过它绿"。
+
+四、曝光尺（门的原尺，未换版本、未改遮罩）
+- 尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2，命令逐字 `node <尺> --tree <导出> --out <收据>`；导出形制逐字 backend data contracts tools scripts agent-mcp frontend/src frontend/e2e，由 `git archive <ref> <那七条路径> | tar -x` 产出（同一形制的命令与列名见 review/ord0551/exposure_sides_r3.txt:1）。
+- 在 6246876a3b9171f5c2d6ec948f43b35605262bee 上：cells_total 6、modules_in_graph 322、files_found 322、unresolved_import_count 58、resolution_truncated_total 40、crossing_cuts 0；上一行的 40 位就是被量的那枚树，导出的七个路径由 `git archive` 从它可复现；收据落在本机工作目录，不入仓，所以这行的坐标是树本身。
+- 那 6 格按文件仍是尖上原有四枚，与我入账块里那两行同集合（review/ord0551/exposure_final_r3.txt:20）；门点名的六枚文件在这枚现尖上仍逐枚 0（review/ord0551/exposure_final_r3.txt:11）。
+
+五、判语与欠账
+- 判语：落地没冲掉 r3 的改动，也没让曝光面变大；三腿读数不必重取，逐字读数与命令在已入账那块的第五节。
+- 自我报备（不复述值）：先前被代插器拒的那枚，拒因是我把一枚**本机字节摘要**写成了逐字 40 位；那枚值我在这块里也不重写一遍，改引的是第二节那枚可 cat-file 的 blob（frontend/src/lib/displayVocabulary.ts:206 就是它守的闭合查找）。
+- 仍等你裁两件：词表里 READY 与 NOT_CONFIGURED 两格在这块屏上走不到（frontend/src/features/inbox/JourneyInboxWorkbench.tsx:449 先命中字典分支）；NOT_CONFIGURED 与 FAILED_EXTERNAL 是否同码（两支的产品语义我已按你要求各交一句，在窗口里，未入册）。
+- 真机格仍 NOT-RUN：用户手机未上线，我不替它编读数。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr_0340 · 号令者 · 自报：batch_land 的默认 QUEUE 脚枪（03:22 误触发落了一笔净零字节的 merge）
 
 事实：03:22 我为查 `cmdr_batch_land_r1.py` 的用法跑了 `--help`。该脚本不用 argparse，而是在 `sys.argv` 里手扫 `--queue`；不认得的 flag 被忽略，于是它回落到源码里内置的默认 QUEUE（ORD-0465）并跑完整条落地链。结果：权威线 `6246876a3b9171f5c2d6ec948f43b35605262bee` → `65195d1b9cbcc70a883bf426e4ddff7310bdf73f`。
