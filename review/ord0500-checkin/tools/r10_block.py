@@ -93,10 +93,11 @@ def main():
     emitter_same = (_in_ref.replace("\r\n", "\n").encode("utf-8", "replace") == _lane)
     # the ref this hand supersedes is the newest one in the receipt -- read off the server, because "the
     # previous ref" is exactly the kind of thing I have been mis-remembering
-    _others = [r for r in arm_rows if r.get("commit")]
+    _others = [r for r in arm_rows if r.get("commit") and r.get("last_line")]
     _others.sort(key=lambda r: int(re.search(r"(\d+)$", r["ref"]).group(1)))
     if not _others:
-        raise SystemExit("ABORT_NO_PREDECESSOR_REF the arm receipt holds no published ref")
+        raise SystemExit("ABORT_NO_PREDECESSOR_REF no published ref in the arm receipt actually ran -- "
+                         "rows are %s" % [(r.get("ref"), r.get("verdict")) for r in arm_rows][:10])
     prev_arm = _others[-1]
     r15_arm_last = "%s（`%s`）判语 `%s`，尾行 `%s`" % (
         prev_arm["ref"], prev_arm["commit"][:10], B.slot(prev_arm.get("verdict")),

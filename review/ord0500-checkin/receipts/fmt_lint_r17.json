@@ -20,7 +20,7 @@
   ],
   "files_scanned": 16,
   "calls_checked": 180,
-  "single_expression_args": 117,
+  "single_expression_args": 118,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",
