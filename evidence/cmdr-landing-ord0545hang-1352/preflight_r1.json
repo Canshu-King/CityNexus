@@ -1,0 +1,255 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-03T13:48:01+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "887e88718608db6f704421d8552da4d009bb60b5",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0545hang-r1",
+ "candidate_tip": "2e286330fe22ceeba248c4babed41c3b07a24415",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "887e88718608db6f704421d8552da4d009bb60b5",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/playwright.ord0545s4-walkthrough.config.ts",
+   "review/ord0545/hang_cause_matrix_r1.py",
+   "review/ord0545/readouts/hang_cause_matrix_r1.json",
+   "review/ord0545/readouts/hang_cause_matrix_r1_leftover_mutation_contaminated_r1.json",
+   "review/ord0545/readouts/hang_cause_matrix_r1_overlap_contaminated_r1.json",
+   "review/ord0545/readouts/report_ord0545s4_R1_shiped_fresh_store.json",
+   "review/ord0545/readouts/report_ord0545s4_R1b_shiped_second_write_leg.json",
+   "review/ord0545/readouts/report_ord0545s4_R2a_mutated_cell_absent_ceiling_20s.json",
+   "review/ord0545/readouts/report_ord0545s4_R2b_mutated_cell_absent_ceiling_100s.json",
+   "review/ord0545/readouts/report_ord0545s4_R3_mutated_cell_present_short_ceiling.json",
+   "review/ord0545/readouts/report_ord0545s4_R4a_shiped_with_dead_proxy_env.json",
+   "review/ord0545/readouts/report_ord0545s4_R4b_shiped_without_proxy_env.json",
+   "review/ord0545/readouts/report_ord0545s4_R5_shiped_with_orphan_vite_on_port.json",
+   "review/ord0545/readouts/report_ord0545s4_R5b_shiped_after_reaping_orphan.json",
+   "review/ord0545/readouts/report_ord0545s4_R6_uncapped_missing_cell_ceiling_20s.json",
+   "review/ord0545/readouts/report_ord0545s4_R7_uncapped_missing_cell_ceiling_100s.json",
+   "review/ord0545/readouts/report_ord0545s4_R8_uncapped_missing_cell_shipped_ceiling_300s.json",
+   "review/ord0545/readouts/walkthrough_en-GB_R1_shiped_fresh_store.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R1_shiped_fresh_store.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R1b_shiped_second_write_leg.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R3_mutated_cell_present_short_ceiling.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R4a_shiped_with_dead_proxy_env.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R4b_shiped_without_proxy_env.json",
+   "review/ord0545/readouts/walkthrough_zh-CN_R5b_shiped_after_reaping_orphan.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "d6185f650e11a064e1126bfea3bccd22fbb77a26",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_134729",
+  "blob_equality": [
+   {
+    "path": "frontend/playwright.ord0545s4-walkthrough.config.ts",
+    "candidate_blob": "cdefa793ff95a1d52ca20dc4a422592af7d11057",
+    "export_blob": "cdefa793ff95a1d52ca20dc4a422592af7d11057",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/hang_cause_matrix_r1.py",
+    "candidate_blob": "1a2010cc674fdde7147fb139c2c87606fdfb9a3b",
+    "export_blob": "1a2010cc674fdde7147fb139c2c87606fdfb9a3b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/hang_cause_matrix_r1.json",
+    "candidate_blob": "20be6e758619fa624b876e0dd609764a81eb4f5d",
+    "export_blob": "20be6e758619fa624b876e0dd609764a81eb4f5d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/hang_cause_matrix_r1_leftover_mutation_contaminated_r1.json",
+    "candidate_blob": "079e50833c8dd82987c8199b11c8183076e30ae8",
+    "export_blob": "079e50833c8dd82987c8199b11c8183076e30ae8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/hang_cause_matrix_r1_overlap_contaminated_r1.json",
+    "candidate_blob": "e5e5026cee5849da712ff200369a2192d151cc59",
+    "export_blob": "e5e5026cee5849da712ff200369a2192d151cc59",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R1_shiped_fresh_store.json",
+    "candidate_blob": "9a150abb736c55c17b5503d21096d1610c79bbeb",
+    "export_blob": "9a150abb736c55c17b5503d21096d1610c79bbeb",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R1b_shiped_second_write_leg.json",
+    "candidate_blob": "c6086e71872cea9361d5998056289bba61c2e199",
+    "export_blob": "c6086e71872cea9361d5998056289bba61c2e199",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R2a_mutated_cell_absent_ceiling_20s.json",
+    "candidate_blob": "290f6fc0e8942ca43a1bc40f09b4334cd9465bc2",
+    "export_blob": "290f6fc0e8942ca43a1bc40f09b4334cd9465bc2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R2b_mutated_cell_absent_ceiling_100s.json",
+    "candidate_blob": "aba44add71f8e6c8f9de7a5d2129e456bc988ea6",
+    "export_blob": "aba44add71f8e6c8f9de7a5d2129e456bc988ea6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R3_mutated_cell_present_short_ceiling.json",
+    "candidate_blob": "6775d2c1a656aa9f9569c5ce1e33f112834457d4",
+    "export_blob": "6775d2c1a656aa9f9569c5ce1e33f112834457d4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R4a_shiped_with_dead_proxy_env.json",
+    "candidate_blob": "97d520f45bb6b84162465e5848b5ffb2bc809eb8",
+    "export_blob": "97d520f45bb6b84162465e5848b5ffb2bc809eb8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R4b_shiped_without_proxy_env.json",
+    "candidate_blob": "c8f4a994412566bf6a9e147b3c99aa86bda8fa0a",
+    "export_blob": "c8f4a994412566bf6a9e147b3c99aa86bda8fa0a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R5_shiped_with_orphan_vite_on_port.json",
+    "candidate_blob": "fe73d8589bd68986b885046e1fe30a91306bd8a8",
+    "export_blob": "fe73d8589bd68986b885046e1fe30a91306bd8a8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R5b_shiped_after_reaping_orphan.json",
+    "candidate_blob": "ee8d6894b779a7d33542c301d049b6573df0e90a",
+    "export_blob": "ee8d6894b779a7d33542c301d049b6573df0e90a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R6_uncapped_missing_cell_ceiling_20s.json",
+    "candidate_blob": "227bf2443e41776b2849d70807e60d2f8c49e0a7",
+    "export_blob": "227bf2443e41776b2849d70807e60d2f8c49e0a7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R7_uncapped_missing_cell_ceiling_100s.json",
+    "candidate_blob": "5f2b7773023ec03a6ddfa7aa25c7ad476057ed96",
+    "export_blob": "5f2b7773023ec03a6ddfa7aa25c7ad476057ed96",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/report_ord0545s4_R8_uncapped_missing_cell_shipped_ceiling_300s.json",
+    "candidate_blob": "1e87229c1d3798edf7ec88385aafa22867aa5e61",
+    "export_blob": "1e87229c1d3798edf7ec88385aafa22867aa5e61",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_en-GB_R1_shiped_fresh_store.json",
+    "candidate_blob": "e31b9f902541ea74d34508a8d3e4262aa94061c3",
+    "export_blob": "e31b9f902541ea74d34508a8d3e4262aa94061c3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R1_shiped_fresh_store.json",
+    "candidate_blob": "a4eec620909a713e59c6d0cc308ea9cb8043c320",
+    "export_blob": "a4eec620909a713e59c6d0cc308ea9cb8043c320",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R1b_shiped_second_write_leg.json",
+    "candidate_blob": "0d33c1a11910a34d7629e346a1cf2fa562b9b228",
+    "export_blob": "0d33c1a11910a34d7629e346a1cf2fa562b9b228",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R3_mutated_cell_present_short_ceiling.json",
+    "candidate_blob": "a5a90433437f264d1aa6dc869386c6fdc575b8a3",
+    "export_blob": "a5a90433437f264d1aa6dc869386c6fdc575b8a3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R4a_shiped_with_dead_proxy_env.json",
+    "candidate_blob": "b6cfd49644f15f45dfc1f3210dfa0e886f23557e",
+    "export_blob": "b6cfd49644f15f45dfc1f3210dfa0e886f23557e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R4b_shiped_without_proxy_env.json",
+    "candidate_blob": "8b64f4127a139ecfe6890bb44df476b948edcad4",
+    "export_blob": "8b64f4127a139ecfe6890bb44df476b948edcad4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0545/readouts/walkthrough_zh-CN_R5b_shiped_after_reaping_orphan.json",
+    "candidate_blob": "c1b7fefaa7dddc7a837d25d5b3671ba69e62c3ac",
+    "export_blob": "c1b7fefaa7dddc7a837d25d5b3671ba69e62c3ac",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1719,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1719 tests collected in 15.60s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "2e286330fe22ceeba248c4babed41c3b07a24415",
+  "branches_route": "2e286330fe22ceeba248c4babed41c3b07a24415",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
