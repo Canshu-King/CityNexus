@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
 - Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
-- Final code SHA: `335346ee786fcd6431559c3e0bec15d00ceddbcb`
+- Final code SHA: `3833e0c67b16d01514072a693db3d89115b77505`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -93,7 +93,7 @@ runtime-failure regressions: 3 passed, 1 warning
 Qoder gates: 13 passed, 1 warning
 frontend typecheck: passed
 frontend production build: passed (Vite chunk-size warning only)
-remote HEAD: 335346ee786fcd6431559c3e0bec15d00ceddbcb
+remote HEAD: 3833e0c67b16d01514072a693db3d89115b77505
 ```
 
 ## Focused verification
