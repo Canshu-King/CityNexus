@@ -1,0 +1,36 @@
+{
+ "generatedBy": "cmdra",
+ "ruler": "runtime-identity-vocabulary-r1",
+ "run": "runtimeq-r1-at-fix-green",
+ "emitted_identities": [
+  "HERMES_NATIVE_MCP",
+  "NATIVE_DEEPSEEK_TOOL_LOOP",
+  "HERMES_COMPAT_ENDPOINT",
+  "NOT_CONFIGURED"
+ ],
+ "labelled_identities": {
+  "HERMES_NATIVE_MCP": {
+   "zh": "本机自带的原生网关正在应答",
+   "en": "the native gateway installed on this machine is answering"
+  },
+  "HERMES_COMPAT_ENDPOINT": {
+   "zh": "这台部署配的兼容端点，原生网关没有验到在应答",
+   "en": "the compatibility endpoint this deployment configured; no verified native gateway"
+  },
+  "NATIVE_DEEPSEEK_TOOL_LOOP": {
+   "zh": "这个服务自己直连模型商的那条环",
+   "en": "this service's own loop straight to the model provider"
+  },
+  "NOT_CONFIGURED": {
+   "zh": "未配置",
+   "en": "Not configured"
+  }
+ },
+ "panel_imports_labelled": true,
+ "file_bytes": {
+  "identities": 2936,
+  "vocabulary": 10710,
+  "panel": 3227,
+  "i18n": 113171
+ }
+}
