@@ -1,0 +1,63 @@
+{
+ "tip": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+ "candidates": [
+  {
+   "ref": "review/1d64acf5-ord0476-response-set-r3",
+   "sha": "5520d7aeb55f9188f0db6f7e185e46f512abf402",
+   "server_sha_ls_remote": "5520d7aeb55f9188f0db6f7e185e46f512abf402",
+   "commits_on_tip": 1,
+   "chain_root": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "foreign_paths_in_diff": [],
+   "merge_tree": {
+    "tree": "6b1993d8285be4510b1e5623ac12983ba395eab3",
+    "conflict_names": 0
+   },
+   "blobs": {
+    "backend/tests/test_qoder_ord0476_checkins.py": {
+     "server_blob_ls_tree": "534b673b749adfd7548066cca770e0c52d105306"
+    }
+   },
+   "server_equals_local": true
+  },
+  {
+   "ref": "review/1d64acf5-ord0296-g4-floor-r4",
+   "sha": "8456d41c2462ac01f4ca5d4712bdf7738479caf2",
+   "server_sha_ls_remote": "8456d41c2462ac01f4ca5d4712bdf7738479caf2",
+   "commits_on_tip": 4,
+   "chain_root": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json"
+   ],
+   "foreign_paths_in_diff": [],
+   "merge_tree": {
+    "tree": "6b332da6a552c4c70d9d1ed2f79ce61dc90c512e",
+    "conflict_names": 0
+   },
+   "blobs": {
+    "backend/tests/test_qoder_ord0296_write_deadline.py": {
+     "server_blob_ls_tree": "032777990661c5220794a91c2a00a8ed1ea97fe7"
+    },
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r1.json": {
+     "server_blob_ls_tree": "df63f4c826a840a0ca783dffa40f786373976cad"
+    },
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r2.json": {
+     "server_blob_ls_tree": "a9e80129fed159a49e3af0e8e1ff0b0c9577ea3f"
+    }
+   },
+   "server_equals_local": true
+  }
+ ],
+ "g4_arm_blob_at_candidate": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+ "d76_arm_blob_at_candidate": "534b673b749adfd7548066cca770e0c52d105306",
+ "g4_tip_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+ "d76_tip_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+ "shape_measured_tip": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21",
+ "six_states_measured_tip": "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21"
+}
