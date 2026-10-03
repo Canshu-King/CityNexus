@@ -1,7 +1,7 @@
 {
   "tool": "anchor_recheck_r17",
-  "tip": "8f8281f547c2e60d2c4c3349322565b1104107ce",
-  "branch_head": "0d3ee635408aef94066c03f3e86e6268cf0378d1",
+  "tip": "b7bb40ee90619c0febc667394279bd3c8a1d835d",
+  "branch_head": "6b6d99e1db05da96db1e17a4111dc95a3d250fe0",
   "main_lines": 14483,
   "route_span": [
     4217,
@@ -15,11 +15,17 @@
   },
   "cited": {
     "require": 818,
+    "lookup": 4263,
+    "integrity": 4299,
+    "caught_by": 4316
+  },
+  "cited_on_tip": {
+    "require": 818,
     "lookup": 4256,
     "integrity": 4292,
     "caught_by": 4309
   },
-  "rot": {
+  "rot_on_tip": {
     "lookup": [
       4256,
       4263
@@ -33,6 +39,7 @@
       4316
     ]
   },
+  "rot": {},
   "tip_paths_equal_on_branch": {
     "backend/app/main.py": {
       "tip": "fc359dd9d1067b0a17770b45816fa76aa3af01af",

@@ -35,6 +35,16 @@ def show(rev, path):
     return out
 
 
+def show_at(rev, path, cwd=WT):
+    """The same read, from a tree chosen by the CALLER: HEAD means different commits in the shared repo
+    (another lane's checkout) and in this lane's worktree, and reading the wrong one silently measures a
+    comment that is not the one being delivered."""
+    rc, out = sh(["show", "%s:%s" % (rev, path)], cwd=cwd)
+    if rc != 0:
+        raise SystemExit("ABORT_SHOW_AT %s:%s in %s %s" % (rev, path, cwd, out[:160]))
+    return out
+
+
 def main():
     rc, listed = sh(["ls-remote", "--refs", "origin", TIP_REF])
     tip = next((l.split()[0] for l in listed.splitlines() if len(l.split()) == 2), None)
@@ -45,7 +55,7 @@ def main():
     # the comment being judged is the one THIS ref ships, not the one still sitting on the line: reading
     # both sides off the tip measures the line against itself and reports rot that this hand already
     # fixed, which is how a delivery can be blocked by its own ruler (same defect, same week, tools/r10_block.py)
-    spec = show("HEAD", "backend/tests/test_qoder_ord0500_journey_refusal.py")
+    spec = show_at("HEAD", "backend/tests/test_qoder_ord0500_journey_refusal.py")
     spec_on_tip = show(tip, "backend/tests/test_qoder_ord0500_journey_refusal.py")
     anchors, span = R.read_anchors(main_src.splitlines())
     cited = {lab: int(re.search(pat, spec).group(1)) for lab, pat in R.PATTERNS}
