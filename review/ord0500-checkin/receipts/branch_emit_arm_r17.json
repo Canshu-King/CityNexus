@@ -1,6 +1,6 @@
 {
   "tool": "branch_emit_arm_r17",
-  "took_local": "2026-10-03T21:59:58+08:00",
+  "took_local": "2026-10-03T22:06:10+08:00",
   "tip": "8f8281f547c2e60d2c4c3349322565b1104107ce",
   "named_generation": "r17",
   "ref_excluded_and_proven_by_bytes": "r18",
@@ -65,7 +65,7 @@
       "commit": "9f5fcb022ec9abd8538c42ed713100fdfb929a2f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_GATE_STALE gate read 441c98320521b9d0fcd17d1aab904f45473ffbab, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b -- re-run the gate",
+      "last_line": "ABORT_TIP_MOVED readings judged 8f8281f547c2e60d2c4c3349322565b1104107ce, line now 0f3849b4d72c4bc52af51538ae6d987fe9f9432b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -81,7 +81,7 @@
       "commit": "97c5df9466c5ea33003efac857fe647ea0d62e7f",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_GATE_STALE gate read 441c98320521b9d0fcd17d1aab904f45473ffbab, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b -- re-run the gate",
+      "last_line": "ABORT_TIP_MOVED readings judged 8f8281f547c2e60d2c4c3349322565b1104107ce, line now 0f3849b4d72c4bc52af51538ae6d987fe9f9432b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -97,7 +97,7 @@
       "commit": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch 71517a54d57c8924434e7987f4099ebd8912c630, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 0d3ee635408aef94066c03f3e86e6268cf0378d1, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
@@ -113,7 +113,7 @@
       "commit": "71e855fa492901075a5abc8e0db97fee37b17d8e",
       "verdict": "ABORTS",
       "returncode": 1,
-      "last_line": "ABORT_RECHECK_STALE the re-check read branch 71517a54d57c8924434e7987f4099ebd8912c630, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
+      "last_line": "ABORT_RECHECK_STALE the re-check read branch 0d3ee635408aef94066c03f3e86e6268cf0378d1, the ref is b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
       "generation_named": "r17",
       "receipts_named": [
         "citation_gate_r17.json",
