@@ -9,7 +9,7 @@
  * The bottom offsets are measured, not derived: on a phone the app reserves
  * `124px + safe-area` of bottom band for the fixed nav (`--cn-nav-h` 80px plus
  * the safe area) and the Copilot pill resting on top of it
- * (`styles.css:405` `bottom: 72px`, `.cn-copilot-edge` `min-height: 50px`), so
+ * (`styles.css` `bottom: 72px`, `.cn-copilot-edge` `min-height: 50px`), so
  * anything parked below ~122px is on top of somebody else's control. Desktop's
  * pill sits at `bottom: 22px` with `min-height: 56px`. Both numbers get a gate:
  * `sim-stage-actions-are-reachable-and-never-in-the-nav-band` asserts the ball

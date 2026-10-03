@@ -422,7 +422,7 @@ test.describe("ORD-0502 phone mainline", () => {
     try {
       await page.goto("/v8/trips");
       await tap(page, "C3", page.getByTestId("trips-tab-bookings"));
-      /* The draft C2 pasted is on the server (`GET .../inbox`, `JourneyInboxWorkbench.tsx:385`) and
+      /* The draft C2 pasted is on the server (`GET .../inbox`, `JourneyInboxWorkbench.tsx`) and
          reaches the review panel only through its queue row: `inbox-open-review` at `:828`.  The
          walk used to wait for the anchor select directly, which never renders until that row is
          opened -- so this cell measured a screen the phone had not been asked to show. */

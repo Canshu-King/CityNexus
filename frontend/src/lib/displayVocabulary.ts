@@ -11,7 +11,7 @@
 
 type Label = { zh: string; en: string };
 
-/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx:51`), and
+/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx`), and
    the table carried one of the four names `backend/app/agent/runtime_identity.py:15-18` can write. The
    other three went down `pick`'s labelled-raw branch, so the traveller read
    「这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP」. Each wording below states the condition that branch

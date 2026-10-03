@@ -2,7 +2,7 @@
  * ORD-A — the basemap provider line has to be *readable*, not merely present in the style document.
  *
  * Both map surfaces construct maplibre with `attributionControl:false`
- * (`components/v8/MapPanel.tsx:243`, `components/JourneyMap.tsx:109`), so the library never draws
+ * (`components/v8/MapPanel.tsx`, `components/JourneyMap.tsx`), so the library never draws
  * the notice and `mapComp.attribution` only ever reached the tile source's metadata.
  *
  * Two rules, deliberately small:

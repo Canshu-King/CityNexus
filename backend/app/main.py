@@ -4381,7 +4381,7 @@ def list_journey_checkins(journey_id: UUID, session: Session = Depends(get_sessi
 
 
 # ORD-0434: a share grant is a server fact instead of a URL the client assembles
-# (`frontend/src/lib/journeyLink.ts:34`).  The anonymous read above is deliberately untouched - the
+# (`frontend/src/lib/journeyLink.ts`).  The anonymous read above is deliberately untouched - the
 # phone demo chain and every existing e2e walk it, and tightening what it accepts is a daylight
 # decision.  `PRIVATE` refuses every token read; `INVITEES_ONLY` asks the reader to name a member
 # and checks that name against `journey_members`, and a read that names nobody is refused rather
@@ -4855,7 +4855,7 @@ def read_shared_journey(
     # ORD-0465 ④: the owner put this trip in the recycle bin, and a grant does not outlive that.
     #
     # Before this branch the door answered 200 with the whole trip, because `journey_schema` carries no
-    # `deleted_at` (`backend/app/schemas.py:239`) and this door never looked at the column -- so the
+    # `deleted_at` (`backend/app/schemas.py`) and this door never looked at the column -- so the
     # recipient of a share link read a trip its owner had thrown away, and no word on that screen could
     # have been true. 409 and not 404: the row is there and the owner can 找回 it, so "no longer
     # readable" would be a different fact; and the name says which of the two the traveller is being
@@ -4901,7 +4901,7 @@ def read_shared_journey(
 
 
 # ORD-0434 step 2: membership is one set per journey, and what a role may do is a table the server
-# holds.  Shape borrowed from RELATION/relation_and_copy_findings.md:94 (a role answers "what may
+# holds.  Shape borrowed from RELATION/relation_and_copy_findings.md (a role answers "what may
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py:1963`).
@@ -4956,8 +4956,8 @@ def _member_expiry(raw: str | None) -> str | None:
     normalized = parsed.astimezone(timezone.utc).isoformat()
     # ORD-0461 r3: a membership whose deadline this server would already read as spent is refused at
     # the write door, by the one comparison the read path uses (`_expiry_verdict`,
-    # backend/app/main.py:3934) and exactly as the grant door refuses it at
-    # backend/app/main.py:4036.  Accepting it stored a row that `_member_state` called
+    # backend/app/main.py) and exactly as the grant door refuses it at
+    # backend/app/main.py.  Accepting it stored a row that `_member_state` called
     # `MEMBER_LAPSED` in the same breath -- a membership born dead.  `PAST` includes the instant equal
     # to now, because that is what the read door has always meant by spent; the two doors cannot hold
     # two definitions.

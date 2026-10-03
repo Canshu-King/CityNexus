@@ -80,7 +80,7 @@ async function patchExperience(page: Page, patch: (body: any) => void) {
  * A journey this run really created.
  *
  * The chromium project replays a storageState holding `citynexus.v8.journey_id`
- * (playwright.config.ts:66); in a long run that row may belong to a database this run never
+ * (playwright.config.ts); in a long run that row may belong to a database this run never
  * had, and every surface below would then be judged against a 404.
  */
 async function openHubWithJourney(page: Page, readyTestIds: string[]) {

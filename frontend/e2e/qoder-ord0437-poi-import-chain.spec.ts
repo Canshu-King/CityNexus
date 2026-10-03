@@ -150,7 +150,7 @@ async function ensureActivePlan(page: Page): Promise<string> {
  * the arm needs.
  *
  * The app is pointed at the new journey through its own storage key (`citynexus.v8.journey_id`,
- * written by V8Experience.tsx:1133 when a traveller creates a trip), then reloads. Nothing here
+ * written by V8Experience.tsx when a traveller creates a trip), then reloads. Nothing here
  * touches the database directly. */
 async function useSlackJourney(page: Page): Promise<{ id: string; seen: unknown }> {
   const made = await page.evaluate(async () => {

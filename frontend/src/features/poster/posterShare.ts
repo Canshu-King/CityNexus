@@ -78,7 +78,7 @@ export type PosterShareOutcome =
  *     「`visibility` 恰为 `LINK_READ` 才算可复用链接」. A `PUBLIC` row reaches a wider audience than
  *     this outlet ever asked for and a `PRIVATE` one opens nothing at all, so neither is *this*
  *     screen's link, whatever else they may be to the sharing screen.
- *   - `token` is a non-empty string. `ShareGrant.token` (`backend/app/schemas.py:904`) says list
+ *   - `token` is a non-empty string. `ShareGrant.token` (`backend/app/schemas.py`) says list
  *     answers carry it precisely so the owner can build the link, so a row without one would be an
  *     id the traveller cannot do anything with; the guard is a `typeof` check rather than trust,
  *     because handing out `undefined` inside a share link is worse than writing a new grant.
@@ -89,7 +89,7 @@ export type PosterShareOutcome =
  * worse.
  *
  * When several rows qualify, the first one the door listed wins. That is not a preference invented
- * here: `list_share_grants` orders by `created_at, id` (`backend/app/main.py:4344`), so this is the
+ * here: `list_share_grants` orders by `created_at, id` (`backend/app/main.py`), so this is the
  * oldest standing link-readable row, and the same answer every press -- which is what makes the
  * outlet converge instead of accumulating.
  */

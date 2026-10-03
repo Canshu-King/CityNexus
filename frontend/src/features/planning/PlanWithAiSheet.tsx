@@ -101,7 +101,7 @@ function examplesFor(
  * earns.  Keyed by `error.code` / `error.reason_code` and **never by an English sentence** -- a
  * substring match on provider wording is how a screen ends up telling a traveller to "adjust the
  * budget" when the real cause was an empty catalogue (ORD-0107).  The codes are the ones the backend
- * lanes are putting names on (ORD-0101/0108: `services.py:843/:902/:932`, `CATALOG_EMPTY` at the
+ * lanes are putting names on (ORD-0101/0108: `services.py/:902/:932`, `CATALOG_EMPTY` at the
  * compose exit); anything the table does not know is shown as unknown, with the server's own sentence
  * under 技术详情, because inventing a paraphrase of a code we have not read is a lie waiting to happen.
  */

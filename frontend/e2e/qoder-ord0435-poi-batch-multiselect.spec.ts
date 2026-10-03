@@ -2,7 +2,7 @@
  * ORD-0435 -- a POI batch has to be selectable, countable, and written somewhere real.
  *
  * The order borrowed four checkpoints from the reference app's map findings
- * (`_apk_analysis_pi_travel/MAP/map_findings.md:150`) and one pairing rule: a selection set must
+ * (`_apk_analysis_pi_travel/MAP/map_findings.md`) and one pairing rule: a selection set must
  * carry a count, it must name a target container, an empty set must land on an empty state rather
  * than a dead end, 完成 must sit beside 新建 so finishing one batch always opens the next, and every
  * selected state needs its unselected twin.

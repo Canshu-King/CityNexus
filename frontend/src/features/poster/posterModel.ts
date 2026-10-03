@@ -133,7 +133,7 @@ export function posterLinesFor(
  *
  * `dayTotal` is null and stays null. The trip-length projection is a field of the traveller's own
  * door; `GET /api/v1/shared/journeys/{token}` answers with the journey body plus the four keys its
- * contract whitelist names (`frontend/src/generated/api.ts:4995`), and the length projection is not
+ * contract whitelist names (`frontend/src/generated/api.ts`), and the length projection is not
  * one of them. So the guest side has no projection to quote, and `posterLinesFor` is handed a
  * *counted* sentence for its progress line instead -- which says out loud that it counted.
  */

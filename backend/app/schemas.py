@@ -1053,11 +1053,11 @@ class SharedPlan(BaseModel):
     version_no: int
     # Which generation of the trip this is, in the server's own words rather than a screen's guess.
     # `source` has traveller-facing labels already on the front
-    # (`frontend/src/lib/displayVocabulary.ts:30`, `PLAN_SOURCE`), and all three of its values are in
+    # (`frontend/src/lib/displayVocabulary.ts`, `PLAN_SOURCE`), and all three of its values are in
     # that table, so the share screen can name a first generation apart from a replan without printing
     # a machine word.  The plan's `status` is deliberately NOT carried: two of its five values
     # (`SELECTED`, `SUPERSEDED`) are absent from the shared status table
-    # (`frontend/src/i18n/travelerLabels.ts:81`), so a screen that received the field would be handed a
+    # (`frontend/src/i18n/travelerLabels.ts`), so a screen that received the field would be handed a
     # token it can only echo.  `tests/test_qoder_ord0465_shared_landing.py` pins that every value of
     # every word this answer offers has a label, which is why `source` stayed and `status` did not.
     source: Literal["INITIAL", "REPLAN", "MANUAL"]

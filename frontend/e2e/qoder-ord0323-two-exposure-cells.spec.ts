@@ -5,7 +5,7 @@
  * screen still prints words it did not write:
  *   cell 1  `ProductErrorBoundary.tsx:104-105` -- the caught failure's own prose and React's component
  *           frames, both straight into a `<pre>`;
- *   cell 2  `JourneyInboxWorkbench.tsx:88` -- a rejected reply rebuilt as `new Error(<server sentence>)`,
+ *   cell 2  `JourneyInboxWorkbench.tsx` -- a rejected reply rebuilt as `new Error(<server sentence>)`,
  *           which this panel then renders at :687 / :691 / :731.
  *
  * Q64=① says a panel may show whitelisted fields it measured on its own, so every arm here carries two

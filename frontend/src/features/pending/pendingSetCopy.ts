@@ -12,7 +12,7 @@
  *    means autonomous recovery here (`recovery.*`, `POST /journeys/{id}/recovery/acknowledge`), and
  *    还原 belongs to the plan-version screen (`features/studio/planVersionHistoryCopy.ts:10`).
  *  - No sentence promises a door this build does not have. There is no write that puts a place on a
- *    day (`backend/app/main.py:7221`, `:7226`, `:7231` only move an activity through execution), so
+ *    day (`backend/app/main.py`, `:7226`, `:7231` only move an activity through execution), so
  *    the screen says that plainly instead of showing a button for it (ORD-0385).
  *  - Chinese is the shorter arm on purpose: no filler like 哦/哟, and one clause per fact.
  */

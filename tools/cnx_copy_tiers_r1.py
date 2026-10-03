@@ -279,7 +279,7 @@ def render_pos(text, abs_off):
         # which is a string being assembled, not a place a value is painted).
         # Without the `>`-to-`{` gap rule this branch claimed an `if (...) {` block
         # was element text -- measured on frontend/src/features/recovery/
-        # RecoveryRequiredPanel.tsx:71, where the enclosing brace is a control block.
+        # RecoveryRequiredPanel.tsx, where the enclosing brace is a control block.
         gt = before.rfind(">")
         gap = before[gt + 1:] if gt >= 0 else ""
         if (last and last not in "=(,)[]:;{}<>+-*/%&|^!~?\"$%" and not attr

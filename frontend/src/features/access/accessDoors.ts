@@ -3,8 +3,8 @@
  * server are separable.
  *
  * Two of them are on the line today and are named by their server-side position:
- *  - `GET /api/v1/journeys` -- `backend/app/main.py:2955`, the list door ORD-0383 slice 1 kept.
- *  - `GET /api/v1/journeys/{id}/agent-feed` -- `backend/app/main.py:7407`, the activity stream that
+ *  - `GET /api/v1/journeys` -- `backend/app/main.py`, the list door ORD-0383 slice 1 kept.
+ *  - `GET /api/v1/journeys/{id}/agent-feed` -- `backend/app/main.py`, the activity stream that
  *    reads `audit_logs` for one trip.
  * The sharing state belongs to ORD-0434 and is asked as three doors (`SHARING_DOOR_SUFFIXES` below).
  * None of them answers at this tip. A missing answer and an empty answer are different facts, so the
@@ -94,7 +94,7 @@ export function readJourneys(choice: JourneyOrderChoice): Promise<JourneySummary
 
 /** The server's `summary` is deliberately not trusted for the words on screen: for an action the
  *  projection does not know it derives a capitalised English phrase out of the token
- *  (`backend/app/main.py:7390`), which is a machine name wearing a sentence. The screen keeps the
+ *  (`backend/app/main.py`), which is a machine name wearing a sentence. The screen keeps the
  *  token in the details face and says its own sentence from `accessVocabulary.ts`. */
 export function readActivity(journeyId: string): Promise<ActivityEvent[]> {
   return request<{ events: ActivityEvent[] }>(
@@ -205,7 +205,7 @@ export function readMembers(journeyId: string): Promise<JourneyMemberRow[]> {
 
 /** ORD-0527: the journey this device is already on, read the way the shell reads it.
  *
- *  `citynexus.v8.journey_id` is the shell's own reference (`app/V8Experience.tsx:824`, and the
+ *  `citynexus.v8.journey_id` is the shell's own reference (`app/V8Experience.tsx`, and the
  *  `citynexus.v8.*` family named at `lib/failureAttribution.ts:391`); `features/planning/
  *  PlanRankingPanel.tsx:39` is the shipped precedent of a panel reading it instead of waiting for a
  *  manual pick.  This screen read nothing, which is why a roster with rows in the store still painted

@@ -169,7 +169,7 @@ def reset_all(session: Session) -> None:
         # ORD-0444: the collection shelf is cleared with the rest of the scene, and it has to be
         # cleared *before* `places`, because `collection_items.place_id` references `places(id)` with
         # no `ON DELETE` clause and `PRAGMA foreign_keys=ON` is set on every connection
-        # (`backend/app/db/session.py:64`).  Measured before this line existed: a shelf holding one
+        # (`backend/app/db/session.py`).  Measured before this line existed: a shelf holding one
         # place made `POST /api/v1/demo/reset` answer 500 with
         # `sqlite3.IntegrityError: FOREIGN KEY constraint failed`
         # (`scratch/reset_counter_before_r1.json`, keys `4_demo_reset_with_a_non_empty_shelf` and

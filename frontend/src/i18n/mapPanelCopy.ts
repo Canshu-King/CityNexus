@@ -71,7 +71,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
          accept (`main.py:9978`) -- re-measure with
          `review/n3_0407_write_door_inventory_r1.py`, which names the enclosing function with each line
          so a moved line number is catchable rather than silently stale;
-       - `POST /journeys/{id}/location` does exist (`main.py:4534`, `post_foreground_location`) and the
+       - `POST /journeys/{id}/location` does exist (`main.py`, `post_foreground_location`) and the
          shell does call it (`V8Experience.tsx`, the function named `shareForegroundLocation`), but
          `tripHasNoCoordinates` (this component, :38) and `points` (:134) decide on the plan's located
          activities and the stay offers' coordinates -- by ORD-0394 that is `activityCoordinate` at :20
