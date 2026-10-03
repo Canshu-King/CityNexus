@@ -1,0 +1,538 @@
+{
+ "generated_at_local": "2026-10-04 02:00:24",
+ "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+ "tip_source": "git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "audit": {
+  "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+  "tip_d76_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+  "tip_arm_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+  "tip_yaml_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162"
+ },
+ "cell1_published": {
+  "ref": "refs/heads/review/1d64acf5-ord0296-g4-floor-r6",
+  "sha": "c23cb0a302c42ab2dc832743441b3d7da7461308",
+  "prediction": {
+   "ref": "refs/heads/review/1d64acf5-ord0296-g4-floor-r6",
+   "sha": "c23cb0a302c42ab2dc832743441b3d7da7461308",
+   "commits_on_tip": 2,
+   "chain_root": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r5.json"
+   ],
+   "foreign_paths": [],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+     "candidate_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+     "tip_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "already_on_the_line": false
+    },
+    {
+     "path": "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r5.json",
+     "candidate_blob": "fd68c01a2ed8f6e217df0af903a62ff65b547f86",
+     "tip_blob": null,
+     "already_on_the_line": false
+    }
+   ],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "d9e0c26d333d3bff6a7ba49f8d09d04c5029a4c2",
+    "conflict_names": 0,
+    "clean": true
+   }
+  },
+  "artifact_blob": "fd68c01a2ed8f6e217df0af903a62ff65b547f86"
+ },
+ "cell2": {
+  "ref": "refs/heads/review/1d64acf5-ord0476-response-set-r6",
+  "sha": "c3293da4c11cc9fa783c38818f22895febda7c49",
+  "prediction": {
+   "ref": "refs/heads/review/1d64acf5-ord0476-response-set-r6",
+   "sha": "c3293da4c11cc9fa783c38818f22895febda7c49",
+   "commits_on_tip": 1,
+   "chain_root": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "foreign_paths": [],
+   "preimage": [
+    {
+     "path": "backend/tests/test_qoder_ord0476_checkins.py",
+     "candidate_blob": "534b673b749adfd7548066cca770e0c52d105306",
+     "tip_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "already_on_the_line": false
+    }
+   ],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "bee564db0f921d71f0cb8e8474200f123d99f63e",
+    "conflict_names": 0,
+    "clean": true
+   }
+  },
+  "server_readback": "c3293da4c11cc9fa783c38818f22895febda7c49"
+ },
+ "d76_probe": {
+  "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+  "arm": "backend/tests/test_qoder_ord0476_checkins.py",
+  "tip_test_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+  "final_test_blob": "534b673b749adfd7548066cca770e0c52d105306",
+  "yaml_tip_blob": "d9eaa2185fd4323c49271329e403d6b29cadc162",
+  "yaml_untouched": true,
+  "states": 6,
+  "all_met": true,
+  "all_reverted": true,
+  "runs": [
+   {
+    "id": "K0_control",
+    "expect": "green",
+    "got": "green",
+    "met": true,
+    "why": "contract as shipped, whitelist empty",
+    "pytest": {
+     "rc": 0,
+     "verdict": "green",
+     "summary": "1 passed, 2 warnings in 2.77s",
+     "bitting_line": null
+    },
+    "test_restored_equal": true,
+    "yaml_restored_equal": true
+   },
+   {
+    "id": "K1_unnamed_add",
+    "expect": "red",
+    "got": "red",
+    "met": true,
+    "why": "a legitimate 429 documented but not named",
+    "pytest": {
+     "rc": 1,
+     "verdict": "red",
+     "summary": "1 failed, 2 warnings in 2.44s",
+     "bitting_line": "tests\\test_qoder_ord0476_checkins.py:509: AssertionError"
+    },
+    "test_restored_equal": true,
+    "yaml_restored_equal": true
+   },
+   {
+    "id": "K2_named_add",
+    "expect": "green",
+    "got": "green",
+    "met": true,
+    "why": "the same 429 plus its name in the whitelist",
+    "pytest": {
+     "rc": 0,
+     "verdict": "green",
+     "summary": "1 passed, 2 warnings in 2.69s",
+     "bitting_line": null
+    },
+    "test_restored_equal": true,
+    "yaml_restored_equal": true
+   },
+   {
+    "id": "K3_promise_dropped",
+    "expect": "red",
+    "got": "red",
+    "met": true,
+    "why": "the documented 409 removed from the door",
+    "pytest": {
+     "rc": 1,
+     "verdict": "red",
+     "summary": "1 failed, 2 warnings in 2.47s",
+     "bitting_line": "tests\\test_qoder_ord0476_checkins.py:507: AssertionError"
+    },
+    "test_restored_equal": true,
+    "yaml_restored_equal": true
+   },
+   {
+    "id": "K4_stale_whitelist",
+    "expect": "red",
+    "got": "red",
+    "met": true,
+    "why": "a code named in the whitelist but not documented",
+    "pytest": {
+     "rc": 1,
+     "verdict": "red",
+     "summary": "1 failed, 2 warnings in 3.14s",
+     "bitting_line": "tests\\test_qoder_ord0476_checkins.py:513: AssertionError"
+    },
+    "test_restored_equal": true,
+    "yaml_restored_equal": true
+   },
+   {
+    "id": "K5_whole_file",
+    "expect": "green",
+    "got": "green",
+    "met": true,
+    "why": "the rest of this file",
+    "pytest": {
+     "rc": 0,
+     "verdict": "green",
+     "summary": "11 passed, 2 warnings in 3.01s",
+     "bitting_line": null
+    }
+   }
+  ],
+  "other_five_sites_untouched": [
+   {
+    "site": "backend/tests/test_qoder_ord0402_recycle_bin.py:305",
+    "still_equality_form": true,
+    "line": "assert sorted(added[\"required\"]) == [\"bin_state\", \"deleted_at\"], added",
+    "line_identical_to_tip": true,
+    "file_untouched": true
+   },
+   {
+    "site": "backend/tests/test_qoder_ord0434_share_grants.py:413",
+    "still_equality_form": true,
+    "line": "assert sorted(by_role) == [\"ADMIN\", \"COLLABORATOR\", \"OWNER\"], by_role",
+    "line_identical_to_tip": true,
+    "file_untouched": true
+   },
+   {
+    "site": "backend/tests/test_qoder_ord0444_collections.py:481",
+    "still_equality_form": true,
+    "line": "assert sorted(added[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(added[\"responses\"])",
+    "line_identical_to_tip": true,
+    "file_untouched": true
+   },
+   {
+    "site": "backend/tests/test_qoder_ord0476_checkins.py:499",
+    "still_equality_form": true,
+    "line": "assert sorted(created[\"responses\"]) == [\"201\", \"404\", \"409\", \"422\"], sorted(created[\"responses\"])",
+    "line_identical_to_tip": true,
+    "file_untouched": false
+   },
+   {
+    "site": "backend/tests/test_qoder_ord0496_calendar_export.py:944",
+    "still_equality_form": true,
+    "line": "assert sorted(responses) == [\"200\", \"404\", \"409\"], sorted(responses)",
+    "line_identical_to_tip": true,
+    "file_untouched": true
+   }
+  ],
+  "replacement_text": "    # CMDR 01:24 裁①, applied to this one gate: the read door owes `200` and `409` by name, and any other\n    # code documented here must be named in `named_expansion_get` by the very order that documents it. An\n    # unnamed add is still red, a promised code that disappeared is red on its own line, and a code that is\n    # named but never documented is red too, so the whitelist cannot rot into a list of intentions.\n    promised_get = {\"200\", \"409\"}\n    named_expansion_get: set[str] = set()  # empty as shipped: nothing else is promised on this door\n    seen_get = set(listed[\"responses\"])\n    assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\",\n                                      sorted(promised_get - seen_get), listed[\"responses\"])\n    assert seen_get - promised_get <= named_expansion_get, (\n        \"the read door documents a code this arm was never told about - name it in \"\n        \"named_expansion_get in the same order that documents it\",\n        sorted(seen_get - promised_get - named_expansion_get))\n    assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\",\n                                             sorted(named_expansion_get - seen_get))"
+ },
+ "g4_probe_three_legs": {
+  "tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+  "arm_blobs": {
+   "line_arm": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+   "branch_pre": "395662e3c534229bc8492ea611b6c737257e6228",
+   "reshaped": "032777990661c5220794a91c2a00a8ed1ea97fe7"
+  },
+  "line_arm_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+  "branch_pre_arm_blob": "395662e3c534229bc8492ea611b6c737257e6228",
+  "reshaped_arm_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+  "arm_written_back_to_ruled": true,
+  "line_arm_has_no_sub_floor_predicate": true,
+  "branch_pre_has_sub_floor_predicate": true,
+  "whitelist_as_shipped": [
+   "app/db/write_deadline.py"
+  ],
+  "states": 8,
+  "all_met": true,
+  "holes_open_on_the_line": [
+   "Q1_same_name_other_path",
+   "Q4_sub_floor_consumer_copy"
+  ],
+  "product_files_byte_identical_to_tip": true,
+  "dirt_lines": 23,
+  "dirt_outside_review_area": 0,
+  "dirt_outside_review_area_lines": [],
+  "runs": [
+   {
+    "id": "Q0_no_injection",
+    "note": "all three legs on the tree as it stands, so every pair below is comparable",
+    "arms": {
+     "line_arm": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.14s",
+       "bitting_line": null
+      }
+     },
+     "branch_pre": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 1.91s",
+       "bitting_line": null
+      }
+     },
+     "reshaped": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.22s",
+       "bitting_line": null
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   },
+   {
+    "id": "Q1_same_name_other_path",
+    "note": "app/db/deep/write_deadline.py stating 90000: exempt by basename, not by path",
+    "arms": {
+     "line_arm": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.44s",
+       "bitting_line": null
+      }
+     },
+     "branch_pre": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.17s",
+       "bitting_line": null
+      }
+     },
+     "reshaped": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.43s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+      }
+     }
+    },
+    "hole_in_this_leg": [
+     "line_arm",
+     "branch_pre"
+    ],
+    "all_met": true
+   },
+   {
+    "id": "Q2_named_expansion",
+    "note": "the same file with its path written into the whitelist",
+    "arms": {
+     "reshaped": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.30s",
+       "bitting_line": null
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   },
+   {
+    "id": "Q3_whitelist_rotted",
+    "note": "path whitelisted but states no number",
+    "arms": {
+     "reshaped": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.77s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:263: AssertionError"
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   },
+   {
+    "id": "Q4_sub_floor_consumer_copy",
+    "note": "CMDR 18:34's own case - 1200 ms in a file that already asks settings; the line has no predicate for it at all, my branch's pre-reshape commit does",
+    "arms": {
+     "line_arm": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 3.22s",
+       "bitting_line": null
+      }
+     },
+     "branch_pre": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.92s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:249: AssertionError"
+      }
+     },
+     "reshaped": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 3.22s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:260: AssertionError"
+      }
+     }
+    },
+    "hole_in_this_leg": [
+     "line_arm"
+    ],
+    "all_met": true
+   },
+   {
+    "id": "Q5_worker_at_floor",
+    "note": "a worker wait raised to request-path scale - every leg sees it",
+    "arms": {
+     "line_arm": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.78s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError"
+      }
+     },
+     "branch_pre": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.74s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:230: AssertionError"
+      }
+     },
+     "reshaped": {
+      "expect": "red",
+      "got": "red",
+      "met": true,
+      "pytest": {
+       "rc": 1,
+       "verdict": "red",
+       "summary": "1 failed, 2 warnings in 2.78s",
+       "bitting_line": "tests\\test_qoder_ord0296_write_deadline.py:236: AssertionError"
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   },
+   {
+    "id": "Q6_new_worker_below",
+    "note": "a brand new 800 ms worker wait stays legitimate under all three",
+    "arms": {
+     "line_arm": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.48s",
+       "bitting_line": null
+      }
+     },
+     "branch_pre": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.65s",
+       "bitting_line": null
+      }
+     },
+     "reshaped": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "1 passed, 2 warnings in 2.63s",
+       "bitting_line": null
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   },
+   {
+    "id": "Q7_family",
+    "note": "both ruler files whole on the ruled arm",
+    "arms": {
+     "reshaped": {
+      "expect": "green",
+      "got": "green",
+      "met": true,
+      "pytest": {
+       "rc": 0,
+       "verdict": "green",
+       "summary": "21 passed, 2 warnings in 8.41s",
+       "bitting_line": null
+      }
+     }
+    },
+    "hole_in_this_leg": [],
+    "all_met": true
+   }
+  ],
+  "reading": "the ruled cell closes two states the line is blind to: Q1 because the exemption is a named path instead of a base name, Q4 because the sub-floor consumer predicate exists at all. Both legs that miss them are reported with their own bytes, and the leg I used as `pre` in the two earlier generations is here under its own name (branch_pre) so those readings stay comparable instead of being re-labelled"
+ },
+ "node_runs": {
+  "d76_node_on_the_newest_base": {
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.62s"
+  },
+  "g4_node_on_the_published_branch": {
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.18s"
+  },
+  "g4_whole_ruler_file": {
+   "rc": 0,
+   "verdict": "green",
+   "summary": "11 passed, 2 warnings in 5.12s"
+  }
+ },
+ "detached_head_incident": {
+  "what": "the ORD-0476 probe's opening `checkout --detach` left the commit off any branch, so the push shipped the branch pointer (the tip) instead",
+  "caught_by": "push_and_readback: the server read 4fdd6345c0bfef36f12468390baad50946aad2b6 for a ref this hand pushed as f3e2e80acc3caed73576dc65e514fe698ebb2b64",
+  "cleanup": "the stray refs/heads/review/1d64acf5-ord0476-response-set-r5 was deleted by this lane; nothing else was deleted and no line moved",
+  "bolt": "commit_only now refuses while `symbolic-ref --short HEAD` is not the branch it is about to commit onto"
+ },
+ "all_clean": true
+}
