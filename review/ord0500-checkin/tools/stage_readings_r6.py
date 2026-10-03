@@ -73,6 +73,7 @@ TOOLS = ["checkin_phone_r3.cjs", "make_probe_r6.py", "build_faces_r6.py", "sweep
          "r8_block.py", "r9_block.py", "r10_block.py", "landing_r6.py",
          ] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "fmt_lint_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
+                "exposure_pair_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "recheck_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "branch_emit_arm_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",
                 "collect_count_r*.py")))] + [os.path.basename(x) for x in sorted(_g.glob(os.path.join(LANE, "tools",

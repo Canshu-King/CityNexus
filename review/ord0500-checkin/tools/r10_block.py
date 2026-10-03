@@ -25,6 +25,9 @@ RECHECK_RECEIPT = os.environ.get("RECHECK_RECEIPT") or "day25_anchor_recheck_%s.
 ARM_RECEIPT = os.environ.get("ARM_RECEIPT") or "branch_emit_arm_%s.json" % GEN
 AUD_RECEIPT = os.environ.get("AUD_RECEIPT") or "citation_audit_%s.json" % GEN
 FMT_RECEIPT = os.environ.get("FMT_RECEIPT") or "fmt_lint_%s.json" % GEN
+# the exposure pair is NOT re-taken every hand (it needs two swapped builds of the whole face); the
+# generation whose receipts this page is quoting is named, and defaults to the one that exists
+EXPOSURE_GEN = os.environ.get("EXPOSURE_GEN") or "r14"
 RECEIPT_DIR = "review/ord0500-checkin/receipts"
 WT = os.path.join(B.LANE, "wt22")
 FOREIGN_SPEC = "backend/tests/test_qoder_ord0476_checkins.py"
@@ -125,8 +128,8 @@ def main():
     blob_coll = blob(RC_DIR + "receipts/pytest_collectonly_%s.json" % GEN)
     blob_sweep = blob(RC_DIR + "receipts/sweep_r6.json")
     blob_faces2 = blob(RC_DIR + "receipts/build_faces_r6.json")
-    blob_exp_cand = blob(RC_DIR + "receipts/exposure_%s_cand.json" % GEN)
-    blob_exp_base = blob(RC_DIR + "receipts/exposure_%s_base.json" % GEN)
+    blob_exp_cand = blob(RC_DIR + "receipts/exposure_%s_cand.json" % EXPOSURE_GEN)
+    blob_exp_base = blob(RC_DIR + "receipts/exposure_%s_base.json" % EXPOSURE_GEN)
 
     def blob_screen(tag):
         """The one artifact that holds this run's counts.  The coordinate gate refuses a count that no
@@ -331,6 +334,11 @@ def main():
         """A row that never got as far as running has no exit code and no generation named -- that is a
         real answer, not a missing slot, so it prints as a dash instead of refusing the whole page."""
         return "—" if v is None else str(v)
+
+    def named_or_absent(v):
+        """`None` is the leak this emitter has been caught on before; a field the instrument did not
+        write is written as 没记, which is a statement about the artifact, not a number."""
+        return "没记" if v is None else str(v)
     for r in arm_rows:
         A("| %s | %s | %s | %s | %s |" % (
             dash(r.get("ref")), dash(r.get("verdict")), dash(r.get("returncode")),
@@ -539,7 +547,9 @@ def main():
       "建完换回候选字节后逐枚核对 `every_path_matches_the_commit` = %s、`worktree_clean_after_restore` "
       "= %s。这 %s 趟屏读与两枚面取于候选 `%s`，本页把它们挂在枝 `%s` 下面，凭的是逐枚产品 blob 相等："
       "%s——不等发射器就退 `ABORT_FACES_STALE`（本手只往枝里加工具与件，产品字节一枚没再动，所以这句仍"
-      "成立；这不是我口头保证）。件 `receipts/build_faces_r6.json`。" % (
+      "成立；这不是我口头保证）。**范围要说清**：对照的基座是 `%s`（那一次构建时的现尖），不是此刻的 `%s`，"
+      "所以这句讲的是「删除让候选相对它自己的基座少了什么」，不是「相对此刻现尖少了什么」——后者要重 build，"
+      "本手没做（§八 具名）。件 `receipts/build_faces_r6.json`。" % (
           B.fmt((ff.get(faces.get("base_label")) or {}).get("entry", {}).get("bundle", {}).get(
               "bytes") != (ff.get(faces.get("candidate_label")) or {}).get("entry", {}).get(
               "bundle", {}).get("bytes")),
@@ -549,7 +559,8 @@ def main():
           B.fmt((faces.get("restore") or {}).get("worktree_clean_after_restore")),
           B.fmt(len(sweep.get("runs") or [])), _fc, remote,
           "、".join("`%s` 枝上 `%s` = 候选上 `%s`" % (p, a[:12], b[:12])
-                    for p, (a, b) in sorted(faces_blob.items()))))
+                    for p, (a, b) in sorted(faces_blob.items())),
+          B.slot(faces.get("base_label")), B.slot(live_tip)))
     A("| 屏读 | locale | 面身份 | 控件 | 中心可按 | 拒绝句枚数 | 屏上 CJK | 这一行的原件（blob，`git cat-file -t` 可验） |")
     A("|---|---|---|---|---|---|---|---|")
     for tag in sorted(sw):
@@ -574,16 +585,23 @@ def main():
                 .get("census", {}).get("pressable_by_centre_hit")),
           B.fmt((sw.get("%s_en" % faces.get("candidate_label"), {}) or {}).get("readings", {})
                 .get("census", {}).get("pressable_by_centre_hit")), blob_sweep))
-    cx, cb = B.load("exposure_r14_cand.json"), B.load("exposure_r14_base.json")
+    cx, cb = B.load("exposure_%s_cand.json" % EXPOSURE_GEN), B.load("exposure_%s_base.json" % EXPOSURE_GEN)
     A("- Q64 曝光尺两边相等：格总数 %s 对 %s、命中集合相同 = %s、未解析 import %s 对 %s、解析诊断 %s "
       "对 %s——删死掉的字典行没有把任何正文值送进共用 helper。两枚原件 `receipts/exposure_%s_cand.json`"
-      "（blob `%s`）与 `receipts/exposure_%s_base.json`（blob `%s`）。" % (
+      "（blob `%s`）与 `receipts/exposure_%s_base.json`（blob `%s`）。**这两份件没记尺的版次**（件里 "
+      "`tool` 与 `version` 两格都是 %s），所以这句只敢说到『同一把尺两边跑、命中集合相同』为止，不敢说它是"
+      " r7b 还是后来的 r7b4；号令者 09-29 之后又出了 r7b1/r7b3/r7b4，而 r7b4 自己写着「按文件的格数既不是 "
+      "`--tree` 的上界也不是下界」，所以版次没记就等于这句的可比性是我在替它担保。本手补了一枚成对尺 "
+      "`tools/exposure_pair_r17.py`（把尺的文件名、字节数与本机 sha1 记进件，跑完逐枚验回候选字节），"
+      "但**它本手一枚没跑**，所以页里不引它的数。这两格数仍属 `%s` 那一代。" % (
           B.fmt(cx.get("cells_total")), B.fmt(cb.get("cells_total")),
           B.fmt(sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cx.get("hits") or []) ==
                 sorted("%s:%s" % (h.get("file"), h.get("line")) for h in cb.get("hits") or [])),
           B.fmt(cx.get("unresolved_import_count")), B.fmt(cb.get("unresolved_import_count")),
           B.fmt(cx.get("parse_diagnostics_total")), B.fmt(cb.get("parse_diagnostics_total")),
-          GEN, blob_exp_cand, GEN, blob_exp_base))
+          EXPOSURE_GEN, blob_exp_cand, EXPOSURE_GEN, blob_exp_base,
+          "`%s`/`%s`" % (named_or_absent(cx.get("tool")), named_or_absent(cx.get("version"))),
+          EXPOSURE_GEN))
     A("")
     A("## 七、出页那扇门现在真的拦（裁①）")
     A("")
@@ -617,11 +635,13 @@ def main():
     A("")
     A("## 八、不在本代的东西（具名）")
     A("")
-    A("- 取了的先说清，免得你以为又是空口：两枚面各建一遍（`%s` 与 `%s`，件 `receipts/build_faces_r6.json`"
-      "，blob `%s`）、%s 趟 390x844 屏读（件 `receipts/sweep_r6.json`，blob `%s`）、两枚 Q64 曝光尺（见 §六"
-      "末行）、一枚收集尺、一套后端臂。" % (
+    A("- 取了的先说清，免得你以为又是空口：**本手新取的**是引文闸、它的反件、全线尺、换代复读、词汇闸与它的"
+      "反件、后端臂、收集尺、臂尺、静态 arity 尺、坐标与落地铁（§二到§五、§七）；**沿用上一代的**是两枚面"
+      "（`%s` 与 `%s`，件 `receipts/build_faces_r6.json`，blob `%s`）与 %s 趟 390x844 屏读（件 "
+      "`receipts/sweep_r6.json`，blob `%s`）与两枚 Q64 曝光尺——它们取于候选 `%s`，本手 0 浏览器、0 构建、"
+      "0 端口起停，为什么敢沿用见 §六 那句逐枚产品 blob。" % (
           B.slot(faces.get("base_label")), B.slot(faces.get("candidate_label")), blob_faces2,
-          B.fmt(len(sweep.get("runs") or [])), blob_sweep))
+          B.fmt(len(sweep.get("runs") or [])), blob_sweep, _fc))
     A("- 手机第二站中心不可按那一格：归滚动容器与底栏两家，等 ORD-0542 后续。「手机打卡门新句的屏读」"
       "按 CMDR 01:24 那块已归 `e766b154`，我不开那格。")
     A("- 那把全线尺看到的别人名下引文一枚没改、也没转单：不判的 %s 条只把归属与机械判语列在件里"
@@ -629,7 +649,7 @@ def main():
           B.fmt(aud.get("citations_declined")), AUD_RECEIPT, blob_audit))
     A("- 真机与隧道：NOT_MEASURED。整套 Playwright：NOT_EXECUTED。候选没上 `:4783` 预览站（未部署）。")
     A("")
-    A("## 九、下一件（两个待点，我不自作主张）")
+    A("## 九、下一件（三个待点，我不自作主张）")
     A("")
     A("- ① 出页那扇门按裁①装好了，但它装在**页发射器**这一道。上游 `stage_readings_r6.py` 那一趟没有门："
       "它把件写进 `review/.../receipts/` 就退 0，红不红要等发射器读它时才知道。要不要我把 §七 那张清单"
@@ -640,6 +660,12 @@ def main():
       "还是就让它停在件里等你翻？" % (
           B.fmt(aud.get("citations_declined")),
           "、".join("%s %s 条" % kv for kv in sorted(mech.items())), AUD_RECEIPT, blob_audit))
+    A("- ③ 沿用件的名字这一格是我自己踩到的规矩洞：`build_faces_r6.json`、`sweep_r6.json`、"
+      "`pytest_r6.json`、`checkin_copy_rows_r6.json` 这四枚带 `_r6` 的名字每一代都被**同名覆盖**（blob 变、"
+      "路径不变），而 `citation_gate_*`、`citation_audit_*`、`day*_anchor_recheck_*`、`branch_emit_arm_*` "
+      "这批从 r14 起已经改成按代命名，页里引的 blob 因此永远指得住。已进线的那一代读数被后一代盖掉这件事，"
+      "在 CMDR-0925-2128 里对量具代码是明令禁止的，对件没有明文。要不要我把那四枚也改成按代名（下一份就叫 "
+      "`sweep_r18.json`），还是接受同名覆盖、由我每代把旧 blob 抄进页里？这一手我一枚没动它们。")
     A("")
     A("复算入口：`git -C D:/moodle/CityNexus ls-remote --refs origin %s %s`；"
       "`git -C D:/moodle/_qoder_phone_ord0485_20260930/wt22 cat-file -t %s`；"
