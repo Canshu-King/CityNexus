@@ -1,4 +1,5 @@
 import { buildSpendModel, moneyText, type SpendLine } from "./spendFacts";
+import { offDaySentence } from "./spendCopy";
 import { dayLabel } from "./TripItinerary";
 import type { V8Data } from "../../app/v8Types";
 import "./spend.css";
@@ -70,6 +71,11 @@ export function SpendPanel({
 }) {
   const model = buildSpendModel(data, wallet as never, timeZone);
   const priced = model.lines.filter((line) => line.amountMinor !== null);
+  /* Priced facts the server gave an amount for and no calendar day for. `spendFacts.ts` adds a line
+     to `days` only when it carries a `dayKey`, and adds every priced line to its currency group, so
+     these are in the money above and on no day below. Counted here, from the same model the two
+     faces render, never from a number this file knows. */
+  const offDayCount = priced.filter((line) => line.dayKey === null).length;
   const budget = data.journey.budget;
 
   return (
@@ -129,6 +135,15 @@ export function SpendPanel({
               </p>
             )}
           </section>
+
+          {/* Said between the two faces it reconciles: the totals a traveller just read, and the days
+              that do not add up to them. Only when there is such a line -- a trip where every priced
+              fact has a day must not be told about a gap that is not there. */}
+          {offDayCount > 0 && (
+            <p className="v8-muted" role="status" data-testid="spend-off-day">
+              {offDaySentence(locale, offDayCount)}
+            </p>
+          )}
 
           {model.days.length > 0 && (
             <section data-testid="spend-days">
