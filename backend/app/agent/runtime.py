@@ -719,6 +719,10 @@ class DeepSeekJourneyAgent:
             trace_id=trace_id,
         )
         session.flush()
+        # The run envelope must survive a process/request interruption before
+        # the first external model call. A flush only assigns IDs inside the
+        # current transaction; it is not durable evidence.
+        session.commit()
         persist_span(
             session,
             journey_id=journey.id,
@@ -762,6 +766,30 @@ class DeepSeekJourneyAgent:
             for _ in range(max_steps):
                 batch_search_seen = False
                 message = self._complete(messages)
+                for receipt in getattr(self, "external_attempts", [])[len(
+                    [item for item in tool_trace if item.get("tool_name") == "external_model_call"
+                ]):]:
+                    sequence += 1
+                    step_now = _now()
+                    result = {
+                        **receipt,
+                        "run_id": run.id,
+                        "mission_id": mission.id,
+                    }
+                    session.add(AgentRunStep(
+                        id=str(uuid4()), run_id=run.id, sequence_no=sequence,
+                        tool_name="external_model_call",
+                        arguments_json=_json_text({"provider": receipt.get("provider"), "model": receipt.get("model")}),
+                        result_json=_json_text(result), decision="FAILED_EXTERNAL",
+                        status="FAILED_EXTERNAL", created_at=step_now, completed_at=step_now,
+                    ))
+                    tool_trace.append({
+                        "sequence_no": sequence, "tool_name": "external_model_call",
+                        "arguments": {"provider": receipt.get("provider"), "model": receipt.get("model")},
+                        "result": result, "decision": "FAILED_EXTERNAL", "status": "FAILED_EXTERNAL",
+                        "created_at": step_now, "completed_at": step_now,
+                    })
+                session.commit()
                 run.model_key = self.model_key
                 tool_calls = message.get("tool_calls") or []
                 content = message.get("content") or ""
@@ -1074,6 +1102,29 @@ class DeepSeekJourneyAgent:
             mission.status = "COMPLETED" if run.status == "COMPLETED" else "PARTIAL"
             run.outcome = final_text or "Tool loop completed without a final summary."
         except AgentRuntimeUnavailable as exc:
+            for receipt in getattr(self, "external_attempts", []):
+                if any(
+                    item.get("tool_name") == "external_model_call"
+                    and item.get("result", {}).get("model") == receipt.get("model")
+                    and item.get("result", {}).get("elapsed_ms") == receipt.get("elapsed_ms")
+                    for item in tool_trace
+                ):
+                    continue
+                sequence += 1
+                step_now = _now()
+                result = {**receipt, "run_id": run.id, "mission_id": mission.id}
+                session.add(AgentRunStep(
+                    id=str(uuid4()), run_id=run.id, sequence_no=sequence,
+                    tool_name="external_model_call",
+                    arguments_json=_json_text({"provider": receipt.get("provider"), "model": receipt.get("model")}),
+                    result_json=_json_text(result), decision="FAILED_EXTERNAL",
+                    status="FAILED_EXTERNAL", created_at=step_now, completed_at=step_now,
+                ))
+                tool_trace.append({
+                    "sequence_no": sequence, "tool_name": "external_model_call",
+                    "arguments": {"provider": receipt.get("provider"), "model": receipt.get("model")},
+                    "result": result, "decision": "FAILED_EXTERNAL", "status": "FAILED_EXTERNAL",
+                })
             run.status = "FAILED_EXTERNAL"
             mission.status = "DEGRADED"
             run.failure_reason = str(exc)

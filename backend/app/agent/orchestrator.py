@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Callable, Protocol
 
 import httpx
@@ -47,6 +48,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             raise AgentRuntimeUnavailable("Hermes runtime model chain is empty")
         self._model_index = 0
         self.model_key = self._model_chain[0]
+        self.external_attempts: list[dict] = []
         bounded_timeout = max(5.0, float(settings.impact_timeout_seconds))
         self._client = client or httpx.Client(
             timeout=httpx.Timeout(
@@ -63,6 +65,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         errors: list[str] = []
         while self._model_index < len(self._model_chain):
             model = self._model_chain[self._model_index]
+            started = time.perf_counter()
             try:
                 payload = {
                     "model": model,
@@ -141,7 +144,20 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
                 last_error = exc
                 detail = str(exc).replace("\n", " ")[:240]
-                errors.append(f"{model}:{type(exc).__name__}:{detail}")
+                elapsed_ms = int((time.perf_counter() - started) * 1000)
+                timeout = isinstance(exc, httpx.TimeoutException)
+                reason_code = "MODEL_TIMEOUT" if timeout else "MODEL_EXTERNAL_ERROR"
+                self.external_attempts.append(
+                    {
+                        "status": "FAILED_EXTERNAL",
+                        "reason_code": reason_code,
+                        "provider": "hermes-compat",
+                        "model": model,
+                        "elapsed_ms": elapsed_ms,
+                        "detail": detail,
+                    }
+                )
+                errors.append(f"{model}:{reason_code}:{elapsed_ms}ms:{detail}")
                 self._model_index += 1
         suffix = f"; attempts={'; '.join(errors)}" if errors else ""
         raise AgentRuntimeUnavailable(
