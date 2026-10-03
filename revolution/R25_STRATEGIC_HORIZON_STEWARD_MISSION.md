@@ -288,3 +288,28 @@ Include:
 R25 closes when this is a machine fact:
 
 > CityNexus no longer greedily optimizes whichever opportunity is in front of it; it can use truthful future-window and TravelerTwin context to preserve scarce resources for a better later experience, then revalidate and execute that choice when it becomes current, while explicit human intent can reverse the strategy.
+
+
+## Mandatory precedence correction
+
+For soft opportunity ranking, the effective precedence must be machine-visible:
+
+```text
+CURRENT_EXPLICIT_MISSION
+>
+EXPLICIT_PERSISTED_PREFERENCE
+>
+LEARNED_SOFT
+>
+NEUTRAL
+```
+
+A current Journey mission preference must not be ignored merely because learned interest rows exist.
+
+Implement this at the preference/ranking surface, not by promoting a soft mission preference into a hard constraint.
+
+Add a focused regression where:
+- TravelerTwin learned preference favors A;
+- current mission explicitly favors B;
+- A and B remain hard-feasible;
+- ranking/Agent decision follows B.
