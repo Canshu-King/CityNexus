@@ -1,0 +1,164 @@
+{
+ "at": "2026-10-03T12:08:29.199404+00:00",
+ "port": "8843",
+ "db": "D:\\moodle\\_qoder_seed_ord0489\\run\\_dayseq0543day26.db",
+ "tree": "D:\\moodle\\_qoder_seed_ord0489\\wt543d",
+ "tree_head": "6e875280dca06cf44a32dbd8e953f654de043854",
+ "launcher_pid": 48244,
+ "journey_days": "2",
+ "hydration": {
+  "operation_id": "e49c1091-ab7d-4e9f-a0b9-e0ac123b037a",
+  "outcome": "ALREADY_CURRENT",
+  "survey": {
+   "city_code": "CN-TIANJIN",
+   "places_held": 5,
+   "pending_materialisations": 0
+  },
+  "outcome_qualifier": "OFFLINE_SOURCE_SUPPLIED"
+ },
+ "journey": {
+  "status": 201,
+  "id": "72ef229b-c551-4498-9615-55faa2b30749"
+ },
+ "plans_generate": {
+  "status": 201,
+  "candidates": 3,
+  "reason_code": null,
+  "details": null,
+  "first_plan": {
+   "id": "2d5c6f30-84bf-585e-97dd-736f2f5791e6",
+   "journey_id": "72ef229b-c551-4498-9615-55faa2b30749",
+   "version_no": 1,
+   "planning_mode": "balanced",
+   "status": "CANDIDATE",
+   "source": "INITIAL",
+   "parent_plan_version_id": null,
+   "total_cost": {
+    "amount_minor": 0,
+    "currency": "CNY"
+   },
+   "utility_score": 0.9298,
+   "score_breakdown": {
+    "commitment_preservation": 0.98,
+    "stability": 0.95,
+    "time_reliability": 0.94,
+    "preference_fit": 0.92,
+    "mobility_fit": 0.88,
+    "budget_fit": 0.9,
+    "robustness": 0.9,
+    "opportunity_value": 0.82,
+    "total": 0.9298
+   },
+   "activities": [
+    {
+     "id": "be9c594a-1f0e-5383-b8c1-de5c397e0e26",
+     "sequence_no": 1,
+     "title": "天津文化中心",
+     "activity_type": "visit",
+     "place_id": "real-place-a60fd27c0eb55fb4d6bd6cbf",
+     "city_service_id": null,
+     "start_at": "2026-10-10T09:00:00Z",
+     "end_at": "2026-10-10T10:00:00Z",
+     "travel_from_prev_min": 0,
+     "estimated_cost": {
+      "amount_minor": 0,
+      "currency": "CNY"
+     },
+     "cost_status": "UNKNOWN",
+     "status": "PLANNED",
+     "locked": false,
+     "metadata": {
+      "hours_basis": "STATED_OPENING_HOURS",
+      "latitude": 39.0867803,
+      "longitude": 117.2059524,
+      "crs": "WGS84",
+      "category": "museum",
+      "opening_hours": {
+       "close": "16:30",
+       "intervals": [
+        {
+         "close": "16:30",
+         "days": [
+          "Tu",
+          "We",
+          "Th",
+          "Fr",
+          "Sa",
+          "Su"
+         ],
+         "open": "09:00"
+        }
+       ],
+       "open": "09:00",
+       "raw": "Tu-Su 09:00-16:30; last admission 16:00",
+       "source_observation_ids": [
+        "tjbwg-notice-20260913"
+       ],
+       "source_urls": [
+        "https://www.tjbwg.cn/cn/Notice.aspx"
+       ],
+       "status": "OFFICIAL_WEB_VERIFIED"
+      }
+     }
+    },
+    {
+     "id": "b7b90d22-5c99-5701-bf1c-ec491edc7168",
+     "sequence_no": 2,
+     "title": "天津老城博物馆",
+     "activity_type": "visit",
+     "place_id": "real-place-48915c22a7769f20ee1465c1",
+     "city_service_id": null,
+     "start_at": "2026-10-10T10:20:00Z",
+     "end_at": "2026-10-10T11:20:00Z",
+     "travel_from_prev_min": 20,
+     "estimated_cost": {
+      "amount_minor": 0,
+      "currency": "CNY"
+     },
+     "cost_status": "UNKNOWN",
+     "status": "PLANNED",
+     "locked": false,
+     "metadata": {
+      "hours_basis": "PRODUCT_WORKING_BAND",
+      "latitude": 39.1406504,
+      "longitude": 117.176858,
+      "crs": "WGS84",
+      "category": "museum",
+      "opening_hours": {
+       "intervals": [],
+       "raw": null,
+       "status": "UNKNOWN"
+      }
+     }
+    },
+    {
+     "id": "70c23439-7550-5f7e-bad9-1a4d0e9039c3",
+     "sequence_no": 3,
+     "title": "平津战役纪念馆",
+     "activity_type": "visit",
+     "place_id": "real-place-714143ca8cc84ce1ff26f782",
+     "city_service_id": null,
+     "start_at": "2026-10-10T11:40:00Z",
+     "end_at": "2026-10-10T12:40:00Z",
+     "travel_from_prev_min": 20,
+     "estimated_cost": {
+      "amount_minor": 0,
+      "currency": "CNY"
+     },
+     "cost_status": "UNKNOWN",
+     "status": "PLANNED",
+     "locked": false,
+     "metadata": {
+      "hours_basis": "PRODUCT_WORKING_BAND",
+      "latitude": 39.168055,
+      "longitude": 117.1405009,
+      "crs": "WGS84",
+      "category": "museum",
+      "opening_hours": {
+       "intervals": [],
+       "raw": null,
+       "status": "UNKNOWN"
+      }
+     }
+
+WROTE D:\moodle\_qoder_seed_ord0489\evidence\ord0543\door__dayseq0543day26.json
