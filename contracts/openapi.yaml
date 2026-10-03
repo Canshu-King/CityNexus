@@ -2472,11 +2472,11 @@ components:
           default: THIS_JOURNEY
     AgentRunResponse:
       type: object
-      required: [run_id, mission_id, journey_id, status, tool_steps]
+      required: [mission_id, status, tool_steps]
       properties:
-        run_id: {type: string, format: uuid}
+        run_id: {type: [string, 'null'], format: uuid}
         mission_id: {type: string, format: uuid}
-        journey_id: {type: string, format: uuid}
+        journey_id: {type: [string, 'null'], format: uuid}
         provider_key: {type: string}
         model_key: {type: string}
         status: {type: string}

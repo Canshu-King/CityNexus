@@ -2813,11 +2813,11 @@ export interface components {
         };
         AgentRunResponse: {
             /** Format: uuid */
-            run_id: string;
+            run_id?: string | null;
             /** Format: uuid */
             mission_id: string;
             /** Format: uuid */
-            journey_id: string;
+            journey_id?: string | null;
             provider_key?: string;
             model_key?: string;
             status: string;
