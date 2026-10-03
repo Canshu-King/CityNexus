@@ -340,6 +340,15 @@ def main():
     foreign = [r for r in (gate.get("rows") or []) if r["verdict"] == "NOT_THIS_LANES_CITATION"]
     runs = gm.get("runs") or []
 
+    # which generation labels the ref ALREADY carries, read off the ref itself: the page has to say which
+    # older receipts it deliberately did not overwrite, and that is a property of the tree, not of my memory
+    rcl, ls_tree = B.sh(["git", "ls-tree", "-r", "--name-only", "HEAD", RC_DIR + "receipts/"], cwd=WT)
+    _gens = sorted({m.group(1) for m in
+                    (re.search(r"citation_gate_(r\d+)\.json$", p.strip())
+                     for p in ls_tree.splitlines()) if m}, key=lambda g: int(g[1:]))
+    _prior_gens = [g for g in _gens if "citation_gate_%s.json" % g != GATE_RECEIPT]
+    PRIOR_GEN = _prior_gens[-1] if _prior_gens else "NOT_ON_BRANCH"
+
     L = []
     A = L.append
     A("### ORD-0500 %s（手机车道 0afdb49b）：你 04:26 的三件裁语都落了——闸按引文那一行的作者收窄、"
@@ -387,10 +396,17 @@ def main():
           "、".join("`%s:%s`" % (_MAIN, _cited[k]) for k in ("require", "lookup", "integrity",
                                                           "caught_by")),
           B.fmt(len(_rot)), B.fmt(len(_tip_rot))))
-    A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `%s` 是落件的那一代**"
-      "（`receipts/%s` 等三件在 `%s` 这一代写进枝里）。两者的差别只有 `tip`/`branch`/"
-      "时间戳三格，页里的数一律取我在 `%s` 上重跑的那一趟，枝里那份具名为上一枚。" % (
-          REF_GEN, GEN, GATE_RECEIPT, GEN, remote))
+    if GEN != REF_GEN:
+        A("- 号分两套不是笔误：**枝号 `%s` 是这一枚提交**（号令者要合的那枚），**件名里的 `%s` 是落件的"
+          "那一代**（`receipts/%s` 等三件在 `%s` 这一代写进枝里）。两者的差别只有 `tip`/`branch`/"
+          "时间戳三格，页里的数一律取我在 `%s` 上重跑的那一趟，枝里那份具名为上一枚。" % (
+              REF_GEN, GEN, GATE_RECEIPT, GEN, remote))
+    else:
+        A("- 这一代件名与枝号同号 `%s`，不是省事：线在发页之前又落了提交，重录一遍读数就得有新的件，"
+          "而上一代那批 `%s` 名的件已经被服务端 `%s` 枚已发布的枝带着、臂尺逐枚把它们抽出来跑过——"
+          "覆盖它们等于把别人的复算入口抹掉。所以本手另起一代名，枝里 `%s` 那批一枚字节没动；"
+          "页里的数一律取我在 `%s` 上重跑的那一趟。" % (
+              GEN, PRIOR_GEN, B.fmt(len(arm_rows)), PRIOR_GEN, remote))
     A("")
     A("## 一、我上一手错在哪（这就是那类「句子跑在证据前面」）")
     A("")
