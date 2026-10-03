@@ -11,7 +11,13 @@ from app.agent.ai_availability import ai_availability_state
 from app.agent.gateway import AgentToolGateway, _latest_actionable_event, _resolve_actionable_event
 from app.agent.mission_plan import build_mission_plan
 from app.agent.predictive import _material_difference_fingerprint
-from app.agent.runtime import _model_mission_payload, _system_prompt, reconcile_stale_agent_runs
+from app.agent.runtime import (
+    _model_mission_payload,
+    _server_completion_contract,
+    _system_prompt,
+    _terminal_agent_status,
+    reconcile_stale_agent_runs,
+)
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Journey, JourneyMission, Traveler
 from app.db.session import SessionLocal
@@ -269,6 +275,25 @@ def test_r21_completion_contract_does_not_treat_observation_as_resolution():
         "source": "server_trace",
         "reason_code": "NO_TYPED_RECOVERY_CONCLUSION",
     }
+
+
+def test_r21_model_prose_cannot_persist_a_completed_mission():
+    steps = [
+        {
+            "tool_name": "inspect_journey",
+            "result": {"journey_id": "journey-r21-prose-only"},
+            "status": "COMPLETED",
+        },
+        {
+            "tool_name": "list_replans",
+            "result": {"proposals": []},
+            "status": "COMPLETED",
+        },
+    ]
+    assert _terminal_agent_status(steps, has_final_text=True, clarification=False) == (
+        "PARTIAL",
+        "PARTIAL",
+    )
 
 
 def test_r21_no_action_completion_is_machine_visible():

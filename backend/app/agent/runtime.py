@@ -619,6 +619,25 @@ def _server_completion_contract(
     }
 
 
+def _terminal_agent_status(
+    tool_steps: list[dict[str, Any]], *, has_final_text: bool, clarification: bool
+) -> tuple[str, str]:
+    """Derive persisted statuses from server-owned completion facts, never prose alone."""
+
+    run_status = "COMPLETED" if has_final_text else "PARTIAL"
+    completion = _server_completion_contract(tool_steps, run_status=run_status)
+    if completion["kind"] == "UNRESOLVED":
+        run_status = "PARTIAL"
+    mission_status = (
+        "WAITING_FOR_USER"
+        if clarification
+        else "COMPLETED"
+        if run_status == "COMPLETED"
+        else "PARTIAL"
+    )
+    return run_status, mission_status
+
+
 def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, Any]:
     mission = session.get(JourneyMission, run.mission_id)
     steps = session.scalars(
@@ -1166,7 +1185,6 @@ class DeepSeekJourneyAgent:
                     break
             else:
                 final_text = "Agent reached the configured tool-step limit."
-            run.status = "COMPLETED" if final_text else "PARTIAL"
             clarification = any(
                 item.get("tool_name") == "conclude_recovery"
                 and isinstance(item.get("result"), dict)
@@ -1174,7 +1192,9 @@ class DeepSeekJourneyAgent:
                 and item["result"].get("mission_status") == "WAITING_FOR_USER"
                 for item in tool_trace
             )
-            mission.status = "WAITING_FOR_USER" if clarification else ("COMPLETED" if run.status == "COMPLETED" else "PARTIAL")
+            run.status, mission.status = _terminal_agent_status(
+                tool_trace, has_final_text=bool(final_text), clarification=clarification
+            )
             run.outcome = final_text or "Tool loop completed without a final summary."
         except AgentRuntimeUnavailable as exc:
             for receipt in getattr(self, "external_attempts", []):

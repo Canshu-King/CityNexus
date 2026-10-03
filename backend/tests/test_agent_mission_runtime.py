@@ -300,7 +300,8 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
         "inspect_journey",
         "inspect_twin",
     ]
-    assert body["run"]["status"] == "COMPLETED"
+    assert body["run"]["status"] == "PARTIAL"
+    assert body["run"]["completion_contract"]["kind"] == "UNRESOLVED"
     assert len(calls) == 3
 
     reloaded = client.get(f"/api/v1/journeys/{journey_id}/agent/runs/{body['run']['run_id']}")
@@ -414,7 +415,8 @@ def test_agent_runtime_records_truncated_tool_json_instead_of_http_500(monkeypat
     steps = response.json()["run"]["tool_steps"]
     assert steps[0]["status"] == "TOOL_ERROR"
     assert steps[0]["decision"] == "REJECT_MALFORMED_ARGUMENTS"
-    assert response.json()["run"]["status"] == "COMPLETED"
+    assert response.json()["run"]["status"] == "PARTIAL"
+    assert response.json()["run"]["completion_contract"]["kind"] == "UNRESOLVED"
 
 
 def test_agent_runtime_stops_search_saturation_before_more_domain_calls(monkeypatch):
