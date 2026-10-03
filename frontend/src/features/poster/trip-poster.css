@@ -82,7 +82,7 @@
 
 .cn-poster-day-head small {
   font-size: var(--cn-fs-caption);
-  color: var(--cn-ink-tertiary);
+  color: var(--cn-ink-secondary);
 }
 
 .cn-poster-stops {
