@@ -13,7 +13,7 @@ import { PlaceProvenance } from "./PlaceProvenance";
  *
  * The markup contract is lifted from the discovery panel's result card rather than written afresh,
  * because two cards that look alike are how a screen starts answering the same question twice:
- * `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:239-252` at the base of the first round
+ * `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` at the base of the first round
  * (8d038b21f09477b933cff3b1c7b09845c542373b), and the same file's `[data-picked]` + `.v8-pick-box`
  * control as it stands on the line now. It is extracted, not forked: nothing on the discovery side
  * was touched, so ORD-0435 can move onto this component in one edit of its own.

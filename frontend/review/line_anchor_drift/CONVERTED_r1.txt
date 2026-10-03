@@ -94,3 +94,11 @@ tools/CHAIN_SELF_HEAL_V1.md	- 那把鉴权代理尺把自己钉死在 `:4782`、
 tools/chain_self_heal.mjs	那把鉴权代理尺把自己钉在 4782、把静态上游钉在 4781（`raw/preview_auth_proxy.py` 与 `:31`），
 tools/cnx_copy_tiers_r1.py	RecoveryRequiredPanel.tsx, where the enclosing brace is a control block.
 frontend/e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts	nav labels (`nav.groupToday`, `nav.groupTravel` and `nav.groupSystem` in frontend/src/i18n/LocaleContext.tsx answer
+frontend/src/map-attribution.css	Both are read-only text and pass gestures through, per the ownership rule at `styles.css`
+frontend/src/components/PoiCandidateCard.tsx	`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` at the base of the first round
+frontend/e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts	an ACTIVE plan points at, else the most recently seeded one (`backend/app/main.py`).
+frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts	cell 1  `ProductErrorBoundary.tsx` -- the caught failure's own prose and React's component
+frontend/e2e/qoder-ord0502-phone-mainline.spec.ts	The token is inside THAT row's own fold (`AccessPanel.tsx` -- the `p` interpolates
+frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts	record onto `window.citynexusAttribution` (failureAttribution.ts).
+backend/app/main.py	`commerce/validators.py` refuses a booking unless the journey is PLANNED with a
+backend/tests/test_qoder_ord0490_shared_after_restore.py	The grant's own state is decided before the bin is (`backend/app/main.py`), so an
