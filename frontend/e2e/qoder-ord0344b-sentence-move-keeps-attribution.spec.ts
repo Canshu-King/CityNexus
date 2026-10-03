@@ -21,8 +21,11 @@ const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 /** The server's own sentence as this refusal actually arrives (lane D's gate names the same shape). */
 const SERVER_SENTENCE = "another request is still writing this journey";
 /** The refusal line, held here exactly as the shipped gate holds it
- *  (`qoder-continuation-resume-carries-identity.spec.ts:33`, whose value is the i18n string at
- *  `LocaleContext.tsx:863`) -- a fixture that invents its own sentence tests nothing real. */
+ *  (`qoder-continuation-resume-carries-identity.spec.ts`, whose value is the dictionary entry keyed
+ *  `hub.continuationResumeRefused` in `src/i18n/LocaleContext.tsx`, zh-CN arm) -- a fixture that
+ *  invents its own sentence tests nothing real.  The key name is the anchor on purpose: the file's
+ *  line numbers move every generation, and an anchor that drifts silently starts describing whatever
+ *  line happens to sit there.  Guarded by `qoder-a68b0631-label-anchors-not-line-numbers-r1`. */
 const OUR_SENTENCE = "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。";
 const HTTP = 409;
 

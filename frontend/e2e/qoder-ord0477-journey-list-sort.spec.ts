@@ -57,9 +57,13 @@ const SHAPES: Array<[number, number]> = [
   [320, 653],
 ];
 /* The two readings this screen has to survive: the traveller's words, and the words' width.
-   `citynexus.locale` is honoured only as exactly "zh-CN" or "en" (`i18n/LocaleContext.tsx:2064`), so
+   `citynexus.locale` is honoured only as exactly "zh-CN" or "en" -- the guard is the
+   `stored === "zh-CN" || stored === "en"` test on the `citynexus.locale` read inside
+   `LocaleProvider` in `src/i18n/LocaleContext.tsx`, and `TripLocale` is the union it returns -- so
    an arm that writes "zh" gets the browser's language instead and measures the wrong dictionary --
-   which is what the first cut of this file did. */
+   which is what the first cut of this file did.  Named by symbol rather than by line number on
+   purpose: line numbers move every generation, and a drifted anchor silently describes whatever
+   line lands there.  Guarded by `qoder-a68b0631-label-anchors-not-line-numbers-r1`. */
 const ARMS = [
   { code: "zh", locale: "zh-CN", recent: "最近更新", departure: "出发日期", title: "名称" },
   { code: "en", locale: "en", recent: "Recently updated", departure: "Departure date", title: "Name" },
