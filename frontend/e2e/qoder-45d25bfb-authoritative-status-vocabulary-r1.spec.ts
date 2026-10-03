@@ -31,7 +31,10 @@ const FILES = {
 const EVIDENCE = process.env.CITYNEXUS_STATUSQ_EVIDENCE ?? "";
 const RUN = process.env.CITYNEXUS_STATUSQ_RUN ?? "statusq-unset";
 
-const NAME = String.raw`[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+`;
+const NAME = String.raw`[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*`;
+/* The trailing group is `*`, not `+`: this contract enumerates single-word statuses (ACTIVE, COMPLETED,
+ READY) as well as underscored ones, and a pattern that demands an underscore counts three of ten names and
+ then reports a healthy-looking denominator. That is the way a file-only ruler goes quietly blind. */
 const UPPER_SNAKE = new RegExp(`^${NAME}$`);
 /* A bare run of four capitals is what the commander's screen sweep flags as painted machine speech, so a
    wording like "EN ROUTE" (the enum with its underscore re-spaced) has to be caught here too. */
@@ -51,7 +54,7 @@ function contractStatuses(): { names: string[]; line: string } {
         'purpose; a rename must re-anchor it, not silently empty it.',
     );
   }
-  const names = [...hit.matchAll(new RegExp(String.raw`"(${NAME})"`))].map((m) => m[1]);
+  const names = [...hit.matchAll(new RegExp(String.raw`"(${NAME})"`, "g"))].map((m) => m[1]);
   if (names.length < 2) throw new Error(`schemas.py: only ${names.length} status names parsed from that line — blinded.`);
   return { names, line: hit.trim().slice(0, 120) };
 }
@@ -141,6 +144,11 @@ test("no status wording is the machine token it is supposed to translate", () =>
       if (UPPER_SNAKE.test(text.trim())) offenders.push(`${r.name}.${side} prints the enum "${text}"`);
       const caps = ALLCAPS_WORD.exec(text);
       if (caps) offenders.push(`${r.name}.${side} prints the all-caps word "${caps[0]}" in "${text}"`);
+      /* Verbatim means verbatim: the value that is the contract's own string character for character. A
+         deliberate case-fold ("Completed" for COMPLETED) is not policed here, because the same word in
+         ordinary casing is what a zh reader already gets (已完成) and a ruler that bans it would drag
+         every unrelated screen's labels into this order. */
+      if (text.trim() === r.name) offenders.push(`${r.name}.${side} is the enum verbatim ("${text}")`);
     }
   }
   expect(offenders, "an execution-status wording that is the server's own printed form is the exact defect this order is about").toEqual([]);
