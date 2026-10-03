@@ -238,6 +238,68 @@
     "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
     "RAW_BODY_TO_DOM": 1
    }
+  },
+  "tip_b168b428": {
+   "head": {
+    "cells_total": 6,
+    "files_found": 320,
+    "modules_in_graph": 320,
+    "unresolved_import_count": 58,
+    "resolution_truncated_total": 40,
+    "crossing_cuts": 0,
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "typescript": "5.9.3"
+   },
+   "per_file": {
+    "ActivityDetail.tsx": 1,
+    "PlanWithAiSheet.tsx": 3,
+    "RecoveryRequiredPanel.tsx": 1,
+    "SimulationPanel.tsx": 1
+   },
+   "six_named": {
+    "V12AuthoritativeJourneyPanel.tsx": 0,
+    "ControlTowerPanel.tsx": 0,
+    "V10LiveExecutionPanel.tsx": 0,
+    "JourneyInboxWorkbench.tsx": 0,
+    "V8Experience.tsx": 0,
+    "V12TripStudioPanel.tsx": 0
+   },
+   "per_rule": {
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+    "RAW_BODY_TO_DOM": 1
+   }
+  },
+  "cand_50b8e7ec": {
+   "head": {
+    "cells_total": 6,
+    "files_found": 321,
+    "modules_in_graph": 321,
+    "unresolved_import_count": 58,
+    "resolution_truncated_total": 40,
+    "crossing_cuts": 0,
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "typescript": "5.9.3"
+   },
+   "per_file": {
+    "ActivityDetail.tsx": 1,
+    "PlanWithAiSheet.tsx": 3,
+    "RecoveryRequiredPanel.tsx": 1,
+    "SimulationPanel.tsx": 1
+   },
+   "six_named": {
+    "V12AuthoritativeJourneyPanel.tsx": 0,
+    "ControlTowerPanel.tsx": 0,
+    "V10LiveExecutionPanel.tsx": 0,
+    "JourneyInboxWorkbench.tsx": 0,
+    "V8Experience.tsx": 0,
+    "V12TripStudioPanel.tsx": 0
+   },
+   "per_rule": {
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+    "RAW_BODY_TO_DOM": 1
+   }
   }
  },
  "reading": {
