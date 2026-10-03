@@ -25,13 +25,15 @@ import urllib.request
 from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-OUT = ROOT / "review/ord0545/readouts/refusal_reachability_probe_r1.json"
+OUT = ROOT / "review/ord0545/readouts" / os.environ.get("CITYNEXUS_ORD0545S5_PROBE_NAME",
+                                               "refusal_reachability_probe_r1.json")
 BACKEND_PORT = int(os.environ.get("CITYNEXUS_ORD0533_BACKEND_PORT", "4921"))
 API = f"http://127.0.0.1:{BACKEND_PORT}/api/v1"
-MY_DB = pathlib.Path("D:/moodle/_qoder_newlane_ord0533_data/_ord0533-lane_s5probe.db")
+MY_DB = pathlib.Path("D:/moodle/_qoder_newlane_ord0533_data") / os.environ.get(
+    "CITYNEXUS_ORD0533_DB", "_ord0533-lane_s5probe.db")
 TRAVELER = "11111111-1111-4111-8111-111111111111"
 CANARY_JOURNEY = "22222222-2222-4222-8222-222222222222"
-BASE_TIP = "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21"
+BASE_TIP = os.environ.get("CITYNEXUS_ORD0545_BASE_TIP", "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21")
 CREATES: list[dict] = []
 UUID_RE = re.compile(r"\"id\"\s*:\s*\"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\"")
 PLAN_POINTER_RE = re.compile(r"\"active_plan_version_id\"\s*:\s*(null|\"[0-9a-f-]{36}\")")

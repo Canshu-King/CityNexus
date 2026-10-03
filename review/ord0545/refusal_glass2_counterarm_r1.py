@@ -39,10 +39,13 @@ SPEC = FRONTEND / "e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts"
 CONFIG = "playwright.ord0545s5-refusal-glass2.config.ts"
 DATA = pathlib.Path("D:/moodle/_qoder_newlane_ord0545_data")
 READOUTS = ROOT / "review/ord0545/readouts"
-BASE_TIP = "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21"
+BASE_TIP = os.environ.get("CITYNEXUS_ORD0545_BASE_TIP", "bf4f776b0ba943b88817dfcc0cb3442d75fd9e21")
 FRONTEND_PORT = 4926
 BACKEND_PORT = 4921
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+# every evidence name this tool writes carries the run stamp, because a second run used to overwrite the
+# first run's control readouts in place -- published bytes must not be reachable by a re-run
+SFX = RUN_STAMP[-7:-1]
 RECEIPT = READOUTS / ("refusal_glass2_counterarms_" + RUN_STAMP + ".json")
 LOCK = DATA / "refusal_glass2_counterarm.lock"
 PY = sys.executable
@@ -139,7 +142,7 @@ def main() -> int:
         RECEIPT.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
 
     try:
-        head = gate("control_shipped_all_four", "Uzh|Wen|Nzh|Ren", "s5cahead")
+        head = gate("control_shipped_all_four", "Uzh|Wen|Nzh|Ren", f"s5ca{SFX}head")
         rows["rows"].append({"row": "control_shipped_all_four", "expect": "4 collected, 4 passed", **head})
         bits.append(head["rc"] == 0 and head["collected"] == 4 and head["passed"] == 4)
         emit()
@@ -157,10 +160,10 @@ def main() -> int:
                 break
             PANEL.write_text(text.replace(needle, replacement, 1), encoding="utf-8", newline="\n")
             mutated = text != PANEL.read_text(encoding="utf-8")
-            red = gate(name, red_grep, "s5ca_" + name.split("_")[0].lower())
+            red = gate(name, red_grep, f"s5ca{SFX}" + name.split("_")[0].lower())
             PANEL.write_bytes(original)
             restored = sha(PANEL) == pristine
-            sib = gate(name + "_sibling", green_grep, "s5ca_" + name.split("_")[0].lower() + "b")
+            sib = gate(name + "_sibling", green_grep, f"s5ca{SFX}" + name.split("_")[0].lower() + "b")
             PANEL.write_bytes(original)
             restored = restored and sha(PANEL) == pristine
             bites = (red["rc"] != 0 and red["failed"] >= 1 and red["collected"] >= 1
@@ -177,7 +180,7 @@ def main() -> int:
             print(name, "red rc", red["rc"], "failed", red["failed"], "| sibling rc", sib["rc"],
                   "restored", restored, flush=True)
         if not aborted:
-            tail = gate("control_after_everything", "Uzh|Wen|Nzh|Ren", "s5catail")
+            tail = gate("control_after_everything", "Uzh|Wen|Nzh|Ren", f"s5ca{SFX}tail")
             rows["rows"].append({"row": "control_after_everything", "expect": "4 collected, 4 passed", **tail})
             bits.append(tail["rc"] == 0 and tail["collected"] == 4 and tail["passed"] == 4)
     finally:
@@ -185,7 +188,7 @@ def main() -> int:
         rows["panel_sha_after"] = sha(PANEL)
         rows["panel_untouched"] = sha(PANEL) == pristine
         rows["spec_untouched"] = sha(SPEC) == spec_sha
-        for junk in list(READOUTS.glob("refusal_glass2_s5ca_*.json")) + list(READOUTS.glob("report_ord0545s5_s5ca_*.json")):
+        for junk in list(READOUTS.glob(f"refusal_glass2_s5ca{SFX}m*.json")) +                 list(READOUTS.glob(f"report_ord0545s5_s5ca{SFX}m*.json")) +                 list(DATA.glob(f"counterarm_s5ca{SFX}m*.txt")):
             junk.unlink()
         LOCK.unlink(missing_ok=True)
         emit()
