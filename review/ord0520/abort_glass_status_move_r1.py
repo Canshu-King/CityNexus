@@ -19,6 +19,11 @@ import sqlite3
 import sys
 from pathlib import Path
 
+# The console codepage on this box is GBK, and a CJK `abort_reason` printed through it reaches the
+# caller as mojibake; the arm's assertions do not lean on that field, but the receipt records it, so
+# the stream is pinned to UTF-8 rather than left to the terminal.
+sys.stdout.reconfigure(encoding="utf-8")
+
 
 def read_row(db: Path, journey_id: str) -> dict:
     connection = sqlite3.connect("file:" + db.as_posix() + "?mode=ro", uri=True)
