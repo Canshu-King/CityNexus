@@ -4,8 +4,8 @@
     "tools/r10_block.py"
   ],
   "files_scanned": 1,
-  "calls_checked": 61,
-  "single_expression_args": 41,
+  "calls_checked": 64,
+  "single_expression_args": 44,
   "mismatched": [],
   "invalid_specs": [],
   "verdict": "GREEN",

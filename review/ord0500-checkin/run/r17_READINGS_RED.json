@@ -4,19 +4,36 @@
   "aborts": "ABORT_READINGS_RED",
   "failed_checks": [
     {
-      "check": "引文闸判语",
+      "check": "换代复读无腐烂",
       "detail": {
-        "OK": 8,
-        "NOT_THIS_LANES_CITATION": 25,
-        "CITED_FILE_ABSENT": 0,
-        "CITED_LINE_BEYOND_FILE": 0,
-        "CITED_LINE_IS_BLANK": 0,
-        "CITED_LINE_CONTENT_MISMATCH": 0,
-        "CITED_PHRASE_GONE_FROM_COMMENT": 0
+        "lookup": [
+          4256,
+          4263
+        ],
+        "integrity": [
+          4292,
+          4299
+        ],
+        "caught_by": [
+          4309,
+          4316
+        ]
       },
-      "forced": true
+      "forced": false
+    },
+    {
+      "check": "读数提交到枝尖只多了件",
+      "detail": {
+        "gate": [
+          "READING_COMMIT_IS_NOT_AN_ANCESTOR"
+        ],
+        "recheck": [
+          "READING_COMMIT_IS_NOT_AN_ANCESTOR"
+        ]
+      },
+      "forced": false
     }
   ],
-  "took_local": "2026-10-03T20:56:56+08:00",
+  "took_local": "2026-10-03T21:16:08+08:00",
   "note": "the page was not generated; this sheet is the only artifact of this generation"
 }
