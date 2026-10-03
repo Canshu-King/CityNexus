@@ -18,7 +18,7 @@ new assertions about the bin:
     risk is not a refusal that sticks, it is an answer that is quietly *different* after the trip
     comes back.  That is what `test_..._is_the_same_answer_the_trip_gave_before_the_bin` measures,
     body against body.
-  * The grant's own state is decided before the bin is (`backend/app/main.py:3809-3823`), so an
+  * The grant's own state is decided before the bin is (`backend/app/main.py`), so an
     expired link stays expired whichever way the trip moves.  `backend/tests/test_qoder_ord0465_shared_landing.py::test_ord0465_a_dead_grant_is_still_named_dead_when_the_trip_was_also_binned`
     pins that; nothing here re-litigates it.
   * The door holds no cache and `journey_schema` does not emit `deleted_at`

@@ -15,7 +15,7 @@
  *    surface. `--cn-surface` / `--v8-ink` are the same tokens `.v8-map-tile-notice` uses, which is
  *    what keeps it legible under `data-theme="dark"` without inventing a second palette.
  *
- * Both are read-only text and pass gestures through, per the ownership rule at `styles.css:243-246`
+ * Both are read-only text and pass gestures through, per the ownership rule at `styles.css`
  * (ORD-0134): an overlay that swallows a drag is how the panel went dead under a finger before.
  */
 

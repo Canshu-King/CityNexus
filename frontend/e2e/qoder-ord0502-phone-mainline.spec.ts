@@ -677,7 +677,7 @@ test.describe("ORD-0502 phone mainline", () => {
             `the panel says: ${emptySaid || "（无）"}`,
         );
       }
-      /* The token is inside THAT row's own fold (`AccessPanel.tsx:916-919` -- the `p` interpolates
+      /* The token is inside THAT row's own fold (`AccessPanel.tsx` -- the `p` interpolates
          `grant.token`), and the same `cn-access-details` class is used by the member/role folds, so
          the scan is scoped to the grant row rather than to the first fold on the page. */
       const row = page.getByTestId("access-grant-row").first();

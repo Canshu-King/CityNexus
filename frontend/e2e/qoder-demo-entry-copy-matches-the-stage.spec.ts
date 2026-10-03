@@ -4,7 +4,7 @@
  * HJ-P1 read 「使用封存的天津演示」 on a stage whose sealed journey is the Guangzhou one
  * (commander's 亲测 block: `HUMAN_MISLEADING`).  The entry is not Tianjin-specific: which
  * journey it hands over is decided by `GET /api/v1/demo/scene` from server data -- the journey
- * an ACTIVE plan points at, else the most recently seeded one (`backend/app/main.py:6331-6335`).
+ * an ACTIVE plan points at, else the most recently seeded one (`backend/app/main.py`).
  * `review/probe-ord0216-scene-city.py` measured that rule on a private stage: with a Tianjin
  * journey holding an active plan plus a later Guangzhou DRAFT, the scene still names Tianjin, so
  * the choice is data, not a constant this file may copy into a label.

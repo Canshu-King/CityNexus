@@ -2106,7 +2106,7 @@ def _advance_steps(session: Session, journey_id: str, timed) -> None:
         first = plans[0]
         plan_id = getattr(first, "id", None) or (first.get("id") if isinstance(first, dict) else None)
     # Deliberately stops at SELECTED: `start_journey` flips the journey to ACTIVE, and
-    # `commerce/validators.py:33-41` refuses a booking unless the journey is PLANNED with a
+    # `commerce/validators.py` refuses a booking unless the journey is PLANNED with a
     # SELECTED plan.  Auto-starting therefore used to make M4's first half impossible to
     # demonstrate; starting is now an explicit action on the stage.
     if plan_id is not None:

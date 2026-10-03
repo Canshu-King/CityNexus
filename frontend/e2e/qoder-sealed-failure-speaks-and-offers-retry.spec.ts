@@ -23,7 +23,7 @@
  *    scan carries its own arm so "no hit" cannot come from a dead scan;
  *  - the diagnosability promise itself moved to `ord0341-telemetry-*` below, which reads the channel
  *    that was always the home for these facts -- `failureAttribution.recordAttribution` mirrors every
- *    record onto `window.citynexusAttribution` (failureAttribution.ts:273-282).
+ *    record onto `window.citynexusAttribution` (failureAttribution.ts).
  */
 import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";

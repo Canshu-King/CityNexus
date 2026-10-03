@@ -3,7 +3,7 @@
  *
  * S1's full-tree scan (`evidence/cmdr-s1-verify-0306/verify_r1.json`) named exactly two places where a
  * screen still prints words it did not write:
- *   cell 1  `ProductErrorBoundary.tsx:104-105` -- the caught failure's own prose and React's component
+ *   cell 1  `ProductErrorBoundary.tsx` -- the caught failure's own prose and React's component
  *           frames, both straight into a `<pre>`;
  *   cell 2  `JourneyInboxWorkbench.tsx` -- a rejected reply rebuilt as `new Error(<server sentence>)`,
  *           which this panel then renders at :687 / :691 / :731.
