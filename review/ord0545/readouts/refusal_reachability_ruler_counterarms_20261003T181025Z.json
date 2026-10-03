@@ -1,0 +1,63 @@
+{
+ "generation": {
+  "base_tip": "4fdd6345c0bfef36f12468390baad50946aad2b6",
+  "recorded_at": "20261003T181025Z",
+  "main_sha_before": "5c38959a55554eb311239e6ce83d0440578fff4a69daa2b45317965fe2c53e42"
+ },
+ "rows": [
+  {
+   "row": "baseline_shipped_source",
+   "rc": 0,
+   "verdicts": {
+    "errJourneyNotFound": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+    "errNoActivePlan": "REACHABLE_BY_A_TRAVELLER_STEP",
+    "errDayRequired": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+    "errPlaceUnknown": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+    "errPlaceNotVisitable": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+    "errNoResponse": "GLASS_ONLY",
+    "errUnnamed": "GLASS_ONLY"
+   },
+   "n_rows": 7,
+   "tally": {
+    "GLASS_ONLY": 2,
+    "REACHABLE_BY_A_TRAVELLER_STEP": 1,
+    "UNREACHABLE_BY_A_TRAVELLER_STEP": 4
+   }
+  },
+  {
+   "row": "M1_plant_a_hard_delete_branch",
+   "watched_row": "errJourneyNotFound",
+   "expect_after": "REACHABLE_BY_A_TRAVELLER_STEP",
+   "baseline_verdict": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+   "mutant_verdict": "REACHABLE_BY_A_TRAVELLER_STEP",
+   "restored_verdict": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+   "mutation_landed": true,
+   "flips_as_expected": true,
+   "other_six_rows_unchanged": true,
+   "flips_back_after_restore": true,
+   "main_restored_byte_identical": true,
+   "bites": true,
+   "rows_seen_during": 7,
+   "rows_seen_after": 7
+  },
+  {
+   "row": "M2_hide_the_null_plan_pointer",
+   "watched_row": "errNoActivePlan",
+   "expect_after": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+   "baseline_verdict": "REACHABLE_BY_A_TRAVELLER_STEP",
+   "mutant_verdict": "UNREACHABLE_BY_A_TRAVELLER_STEP",
+   "restored_verdict": "REACHABLE_BY_A_TRAVELLER_STEP",
+   "mutation_landed": true,
+   "flips_as_expected": true,
+   "other_six_rows_unchanged": true,
+   "flips_back_after_restore": true,
+   "main_restored_byte_identical": true,
+   "bites": true,
+   "rows_seen_during": 7,
+   "rows_seen_after": 7
+  }
+ ],
+ "main_sha_after": "5c38959a55554eb311239e6ce83d0440578fff4a69daa2b45317965fe2c53e42",
+ "main_untouched": true,
+ "verdict": "KILL_OK two single-variable mutations flip exactly their own row and flip back, source byte-identical after every step"
+}
