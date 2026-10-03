@@ -51,6 +51,29 @@ const PLAN_SOURCE: Record<string, Label> = {
   MANUAL: { zh: "来自一次人工改动", en: "From a manual change" },
 };
 
+/**
+ * ORD-0551: what the two extraction routes (`inbox/text-extract`, `inbox/vision`) answer as their
+ * top-level `status`. Before this family existed the fallback branch of the workbench printed the
+ * reply's own token, so a supplier failure reached a Chinese screen as 「提取状态： FAILED_EXTERNAL」.
+ * The three names here are the whole set those routes can write, and the lookup below is closed: a status
+ * that is not listed is answered with a gap sentence, never with the word it was handed. This family does
+ * not take the labelled-raw channel, because its input is the reply's own `status` -- an upstream read
+ * reaching the shared `pick` would condemn every other panel that imports a `pick`-based label, since the
+ * module graph answers a helper's return from all of its call sites (Q64). No invented states: these
+ * sentences describe what happened, they do not promise a retry policy or rename a refusal the contract
+ * already decides elsewhere.
+ */
+const EXTRACTION_KEYS = ["READY", "NOT_CONFIGURED", "FAILED_EXTERNAL"] as const;
+type ExtractionStatus = (typeof EXTRACTION_KEYS)[number];
+const EXTRACTION_STATUS: Record<ExtractionStatus, Label> = {
+  READY: { zh: "读出来了，等你过目", en: "read out, waiting for you to check it" },
+  NOT_CONFIGURED: { zh: "这台服务器没接读取服务", en: "this server has no reader connected" },
+  FAILED_EXTERNAL: {
+    zh: "外部服务这次没给回话，这条没读出来",
+    en: "the outside service did not reply this time, so nothing was read out of it",
+  },
+};
+
 /** ORD-0432: the words `feasibility_envelope.risk_reason_codes` can hold. A trip with an open
  *  MAJOR or CRITICAL event is not "nothing to see", and the reason has to be readable. */
 const RISK_REASON: Record<string, Label> = {
@@ -176,6 +199,16 @@ export function executionStateLabel(value: unknown, zh?: boolean | string | null
 
 export function planSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(PLAN_SOURCE, value, zh);
+}
+
+/** Closed lookup: only a name in `EXTRACTION_KEYS` can be answered with, so the value handed here reaches
+ *  the screen only as one of this file's own sentences. */
+export function extractionStatusLabel(value: unknown, zh?: boolean | string | null): string {
+  const key = EXTRACTION_KEYS.find((name) => value === name);
+  if (!key) return wantsChinese(zh) ? "这台服务器写的读取状态不在这张表里"
+    : "the read status this server wrote is not in this table";
+  const entry = EXTRACTION_STATUS[key];
+  return wantsChinese(zh) ? entry.zh : entry.en;
 }
 
 export function riskReasonLabel(value: unknown, zh?: boolean | string | null): string {
