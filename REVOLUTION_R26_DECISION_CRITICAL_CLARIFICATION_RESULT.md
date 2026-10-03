@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
 - Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
-- Final code SHA: `3faf4851a6bb641cc22e137cd211952367e6a525`
+- Final code SHA: `cd4fcad8450edd169ac064887291e8c38f221de6`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -68,6 +68,30 @@ Final machine state:
 - Epoch fingerprints include Journey, active PlanVersion, current activity, and the first two server windows. A stale answer is rejected as `CLARIFICATION_STALE_RECOMPUTE_REQUIRED`.
 - Server derives options and verifies sensitivity; Agent prose cannot create options or authority.
 - P7 remains false. No mainline/authority merge was performed.
+
+## Post-closure runtime hygiene
+
+After the behavioral closure, the same branch made the external-runtime boundary machine-visible
+without changing the clarification or authority contract:
+
+- unavailable Agent execution persists `outcome.status=BLOCKED`, the exact availability state,
+  a user-readable summary, and a concrete next action;
+- a provider failure after an actual model attempt persists `FAILED_EXTERNAL` rather than being
+  reduced to ordinary model prose;
+- startup reconciliation persists `INTERRUPTED / PROCESS_RESTARTED_DURING_AGENT_RUN` for stale
+  runs, while the mission remains `ABORTED`;
+- the mission UI renders both structured outcomes and legacy string outcomes safely.
+
+Verification after these changes:
+
+```text
+R20-R26 focused lineage: 50 passed, 1 warning
+runtime-failure regressions: 3 passed, 1 warning
+Qoder gates: 13 passed, 1 warning
+frontend typecheck: passed
+frontend production build: passed (Vite chunk-size warning only)
+remote HEAD: cd4fcad8450edd169ac064887291e8c38f221de6
+```
 
 ## Focused verification
 
