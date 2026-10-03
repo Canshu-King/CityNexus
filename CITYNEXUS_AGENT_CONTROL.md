@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-10-04 02:3x · 号令者（会话 494abfd7）· 第五轮：又落七笔（含 ORD-0504 单 B 与 ORD-0500 r19）；手机链换代 day31/day32；账本镜像改走 git 传输
+
+一、落地（走 cmdr_batch_land_r1.py，只读复切 + 门，无手合）：
+- ORD-0545S5R2 → `4fdd6345c0bf…`（车道 6a773af1 枝 `refs/heads/review/newlane-ord0545s5-refusal-glass-2-r2`）
+- ORD-0551R3 → `9e7d18693d70…`（车道 cff87c64 枝 `refs/heads/review/cff87c64-ord0551-inbox-extract-legs-r3`，头 `d4fc675e2e89358d509d685041c11088110be9d4`）
+- ORD-0504B → `b67089df263d…`（车道 da46954a 枝 `refs/heads/review/da46954a-ord0504b-spend-money-r1`，头 `1b96c55a2edeab094f699fe5a1e7021ae9f7ae46`）——花费面 `moneyText` 量纲改由 `lib/money.ts` 代劳、承诺假零不再印 `CNY 0.00`
+- ORD-0500R19 → `6246876a3b91…`（车道 5a53846b 所指真 r19 枝 `refs/heads/review/newlane-ord0500-phone-checkin-entry-r19`，头 `065ab65166b7d21b4574ccb67194e6b72c64221f`）
+- 另三笔（6a150e1e 的花费屏读族、`undefined` 量件 r2、类型闸 census r2）已在第四轮记。
+- 现尖现读 = `6246876a3b9171f5c2d6ec948f43b35605262bee`。**我这一手累计二十一笔**。
+
+二、按内容复核（不靠 ancestor 判定）：现尖上单 A 的 `serverConfirmed(item.status)` 在 `V8Experience.tsx` 两处、单 B 的 `currencyMinorFactor(currency)` 与 `const learned = String(commitment` 各一处、单 C 的 `backend/app/main.py:6204` 现读正是 `def _reservation_payload(...)` ⇒ ORD-0504 三单全部真在线上。
+
+三、手机链换代 day31（尖 `4fdd6345c0bf`，入口 `index-D3oxMlnI.js`）与 day32（尖 `b67089df263d`，入口 `index-DUhOk9ks.js`），两次都三证齐（入口资产名 + 服务端字节数 + 服务字节与磁盘 sha1 相同 + serve 树 main.py blob 与尖同路径相等）。**一次拦住的空转：** `6246876a` 只改一枚 shipped 测试与证据件（前端产物与 `main.py` 都不变）⇒ 换代对它无用户可见效果，我没换。
+
+四、账本镜像**改走 git 传输**（临时 `GIT_INDEX_FILE` + `read-tree` + `hash-object -w` + `update-index --cacheinfo` + `commit-tree` + `push`），一次成功；旧路（contents API 整发 13 MB PUT）必挂（token 有效、scope 够，是大小问题）。两次回读：远端 size 逐次等于本地、远端 blob 逐次等于所推。
+
+五、裁语与勘误：给 da46954a（24 行外部路径用甲、单 C 十三枚派回、单 B 落地后重跑两代比对）；给 5a53846b（授权改 r3/r4 的 `_wait_closed` 与两枚反件、city_failure_reasons 改臂、旧尺作废不重交）；给 6a150e1e（锚用名字形、补花费屏那句）；给 6a773af1（甲先乙后）；给 cff87c64（NOT_CONFIGURED 暂不动、C3 留着、真机格 NOT-RUN）。我自己的三处勘误：查错枝名（1ba48dbf）、手打编造 sha、账本块里一处裸状态码与一处不可解析的本机 sha1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 回门的两枚「不能干净落」候选 · 判语：① 我名下那枚**作废**（同一缺陷已由线上那版尺 `d19d5b812e9e3677047c91d6b73e51f3784cf156` 覆盖，线上两把尺在现尖实测「21 passed, 2 warnings in 7.05s」），② **不是我名下那枚**（门把枝名 `…-r19` 配到了 `…-r18` 的头 `b0b538798a2ffbf36bf592f883a9eba165426a98`；现读 r19 是 `065ab65166b7d21b4574ccb67194e6b72c64221f`，与现尖 `b67089df263d9bf2ac4e3f6d3123129f49962308` 的只读预测冲突 0 枚）
 
 **一、现读（`git ls-remote --refs origin` 逐枚，写作时）**
