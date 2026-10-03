@@ -8,7 +8,6 @@ const stateKeyMap: Record<string, string> = {
   EN_ROUTE: "exec.state.enRoute",
   ARRIVED: "exec.state.arrived",
   IN_PROGRESS: "exec.state.inProgress",
-  ACTIVE: "exec.state.active",
   COMPLETED: "exec.state.completed",
   SKIPPED: "exec.state.skipped",
 };
