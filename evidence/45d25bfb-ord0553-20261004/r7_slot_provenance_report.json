@@ -1,0 +1,779 @@
+{
+ "instrument": "cmdra_0553_slot_provenance_r1",
+ "worktree_head": "0413e55634e9c6953ea88a4b01a17b8afd7ac88a",
+ "copy_word_universe": 133,
+ "contract_word_universe": [
+  "ACCEPTED",
+  "ACKNOWLEDGED",
+  "ACTIVE",
+  "ADVISORY",
+  "AMBIGUOUS",
+  "APPOINTMENT",
+  "ARRIVED",
+  "ASSISTED",
+  "AUTHORIZED",
+  "AUTO",
+  "AUTONOMOUS",
+  "BICYCLE",
+  "BOOKING",
+  "BREACHED",
+  "CANCELLED",
+  "CANDIDATE",
+  "COMPLETED",
+  "CONFIRMED",
+  "DELAYED",
+  "DETECTED",
+  "DISRUPTED",
+  "DRAFT",
+  "EN_ROUTE",
+  "EXPIRED",
+  "FAILED",
+  "FULFILLED",
+  "GENERATED",
+  "HARD",
+  "HYDRATABLE",
+  "IGNORED",
+  "INITIATED",
+  "INVALIDATED",
+  "IN_PROGRESS",
+  "NORMAL",
+  "NOT_STARTED",
+  "ORDER",
+  "OTHER",
+  "OUTAGE",
+  "PAYMENT",
+  "PENDING",
+  "PLANNED",
+  "PRESENTED",
+  "PROPOSED",
+  "RAIN",
+  "READY",
+  "REFUNDED",
+  "REJECTED",
+  "RESCHEDULED",
+  "RESOLVED",
+  "RIDE_HAIL",
+  "RISK_FORECAST",
+  "SELECTED",
+  "SEVERE_RAIN",
+  "SKIPPED",
+  "SOFT",
+  "SUCCEEDED",
+  "SUPERSEDED",
+  "TRANSIT",
+  "TRANSIT_DISRUPTION",
+  "UNAVAILABLE",
+  "UNKNOWN_RETRYABLE",
+  "UNRESOLVED",
+  "VOIDED",
+  "WALK"
+ ],
+ "en_walk": {
+  "entry": [
+   "/assets/index-BcQ9VAso.js"
+  ],
+  "tokens": 37,
+  "painted_hits": 42
+ },
+ "zh_walk": {
+  "entry": [
+   "/assets/index-BcQ9VAso.js"
+  ],
+  "tokens": 1
+ },
+ "dual_bucket_tokens": [
+  "DRAFT",
+  "SELECTED"
+ ],
+ "undetermined": [],
+ "table": {
+  "ACCEPT": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "TRIP STUDIO · DRAFT THEN ACCEPT"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "ACTION": {
+   "routes": [
+    "/v8/intelligence"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "POST-ACTION GATE"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "ARRIVAL": {
+   "routes": [
+    "/v8/hub"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "ARRIVAL"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "AUTHORITATIVE": {
+   "routes": [
+    "/v8/authoritative",
+    "/v8/bookings"
+   ],
+   "count": 2,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "AUTHORITATIVE JOURNEY",
+    "AUTHORITATIVE MEMORY"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "CHANGED": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "V14 · REALITY CHANGED"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "CLOCK": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "CLOCK"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "COMMITMENT": {
+   "routes": [
+    "/v8/intelligence"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "COMMITMENT"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/features/pending/pendingSetCopy.ts",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "CURRENT": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "CURRENT STEP"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "DEPARTURE": {
+   "routes": [
+    "/v8/hub"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "DEPARTURE"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "DISCOVERY": {
+   "routes": [
+    "/v8/discover"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "CN / DISCOVERY"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "DRAFT": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "contract-word",
+    "copy-word"
+   ],
+   "lines": [
+    "TRIP STUDIO · DRAFT THEN ACCEPT"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "EVIDENCE": {
+   "routes": [
+    "/v8/bookings"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "STAY EVIDENCE"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "EXPLICIT": {
+   "routes": [
+    "/v8/twin"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "EXPLICIT"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "GATE": {
+   "routes": [
+    "/v8/intelligence"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "POST-ACTION GATE"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "INBOX": {
+   "routes": [
+    "/v8/bookings"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "MULTIMODAL INBOX"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "JOURNEY": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "AUTHORITATIVE JOURNEY"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "JSON": {
+   "routes": [
+    "/v8/bookings"
+   ],
+   "count": 2,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as ",
+    "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirm"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "LEARNED_SOFT": {
+   "routes": [
+    "/v8/twin"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "LEARNED_SOFT"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "LEAVE": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "NEXT · LEAVE BY"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "LIVE": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "LIVE STATUS"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "MEMORY": {
+   "routes": [
+    "/v8/bookings"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "AUTHORITATIVE MEMORY"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "MULTIMODAL": {
+   "routes": [
+    "/v8/bookings"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "MULTIMODAL INBOX"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "NAVIGATE": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "NAVIGATE →"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "NEXT": {
+   "routes": [
+    "/v8/authoritative",
+    "/v8/live"
+   ],
+   "count": 3,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "NEXT",
+    "NEXT · LEAVE BY"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "NOTIFICATIONS": {
+   "routes": [
+    "/v8/me"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "NOTIFICATIONS"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "OFFLINE": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "OFFLINE"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "POLICY": {
+   "routes": [
+    "/v8/intelligence"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "POLICY"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "POST": {
+   "routes": [
+    "/v8/intelligence"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "POST-ACTION GATE"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "REALITY": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "V14 · REALITY CHANGED"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "RISK": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "RISK"
+   ],
+   "standalone": true,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "SELECTED": {
+   "routes": [
+    "/v8/studio"
+   ],
+   "count": 1,
+   "buckets": [
+    "contract-word",
+    "copy-word"
+   ],
+   "lines": [
+    "NO STAY SELECTED"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "STATUS": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "LIVE STATUS"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "STAY": {
+   "routes": [
+    "/v8/bookings",
+    "/v8/studio"
+   ],
+   "count": 2,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "NO STAY SELECTED",
+    "STAY EVIDENCE"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "STEP": {
+   "routes": [
+    "/v8/live"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "CURRENT STEP"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "STUDIO": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "TRIP STUDIO · DRAFT THEN ACCEPT"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "THEN": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "TRIP STUDIO · DRAFT THEN ACCEPT"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  "TRIP": {
+   "routes": [
+    "/v8/authoritative"
+   ],
+   "count": 1,
+   "buckets": [
+    "copy-word"
+   ],
+   "lines": [
+    "TRIP STUDIO · DRAFT THEN ACCEPT"
+   ],
+   "standalone": false,
+   "copy_sources": [
+    "frontend/src/i18n/LocaleContext.tsx"
+   ]
+  }
+ },
+ "copy_value_lines": 136,
+ "dirty_generation_hits": [
+  {
+   "token": "ARRIVED",
+   "line": "ARRIVED",
+   "buckets": [
+    "contract-word"
+   ]
+  },
+  {
+   "token": "COMPLETED",
+   "line": "COMPLETED",
+   "buckets": [
+    "contract-word"
+   ]
+  },
+  {
+   "token": "COMPLETED",
+   "line": "COMPLETED",
+   "buckets": [
+    "contract-word"
+   ]
+  },
+  {
+   "token": "COMPLETED",
+   "line": "COMPLETED",
+   "buckets": [
+    "contract-word"
+   ]
+  },
+  {
+   "token": "ARRIVED",
+   "line": "ARRIVED",
+   "buckets": [
+    "contract-word"
+   ]
+  },
+  {
+   "token": "PROGRESS",
+   "line": "Mark IN PROGRESS",
+   "buckets": [
+    "undetermined"
+   ]
+  }
+ ],
+ "arms": [
+  {
+   "id": "every_painted_token_classified",
+   "verdict": "PASS",
+   "observed": "37 tokens in the en walk, all bucketed"
+  },
+  {
+   "id": "false_positive_SELECTED_is_copy_word",
+   "verdict": "PASS",
+   "observed": "SELECTED buckets=['contract-word', 'copy-word'] line=['NO STAY SELECTED'] sources=['frontend/src/i18n/LocaleContext.tsx']"
+  },
+  {
+   "id": "false_positive_COMMITMENT_is_copy_word",
+   "verdict": "PASS",
+   "observed": "COMMITMENT buckets=['copy-word'] sources=['frontend/src/features/pending/pendingSetCopy.ts', 'frontend/src/i18n/LocaleContext.tsx']"
+  },
+  {
+   "id": "contract_status_names_are_server_words",
+   "verdict": "PASS",
+   "observed": "contract universe=64 names, sample=ARRIVED,COMPLETED,PLANNED,READY,SKIPPED"
+  },
+  {
+   "id": "positive_control_dirty_generation_would_flag",
+   "verdict": "FAIL",
+   "observed": "pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS'], all bucketed contract-word; overlap with this generation's painted tokens = []"
+  },
+  {
+   "id": "no_undetermined_left_silent",
+   "verdict": "PASS",
+   "observed": "undetermined shortlist (0): "
+  },
+  {
+   "id": "zh_arm_has_no_contract_word",
+   "verdict": "PASS",
+   "observed": "zh tokens painted=['JSON'] buckets={'JSON': ['copy-word']}"
+  }
+ ],
+ "verdict": "RED",
+ "red_arms": [
+  "positive_control_dirty_generation_would_flag"
+ ]
+}
