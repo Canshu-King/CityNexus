@@ -1,0 +1,78 @@
+{
+ "read_at_local": "2026-10-04 18:36:28",
+ "sequence": [
+  {
+   "point": "local_before_read_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:36:19"
+  },
+  {
+   "point": "remote_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:36:23",
+   "hash_equal": true,
+   "size_equal": true,
+   "channels_agree": true,
+   "api_size": 13569073,
+   "self_heal": [],
+   "tip_of_that_ref": "04f05a105028e11f46950f23829cbed9ec0bc5c7"
+  },
+  {
+   "point": "local_after_read_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:36:23"
+  },
+  {
+   "point": "remote_2",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:36:28",
+   "hash_equal": true,
+   "size_equal": true,
+   "channels_agree": true,
+   "api_size": 13569073,
+   "self_heal": [],
+   "tip_of_that_ref": "04f05a105028e11f46950f23829cbed9ec0bc5c7"
+  },
+  {
+   "point": "local_after_read_2",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:36:28"
+  }
+ ],
+ "ledger_on_commander_control": {
+  "exists": true,
+  "blob_there": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+  "resolved_via": "refs/remotes/verify/cnx_reader_commander_control"
+ },
+ "ledger_on_authoritative_branch": {
+  "exists": false,
+  "blob_there": null,
+  "tip_named_by_server": "aefbbd1a2f99c448a9a684b3d01ce387273ee83c"
+ },
+ "verdicts": {
+  "every_remote_read_self_proved": true,
+  "local_file_changed_under_this_run": false,
+  "byte_current_at_every_compared_point": true,
+  "points_that_matched": [
+   "local_before vs remote_1",
+   "local_after_1 vs remote_1",
+   "local_after_1 vs remote_2",
+   "local_after_2 vs remote_2"
+  ],
+  "points_that_did_not_match": [],
+  "remote_blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+  "local_blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+  "lines": 91467
+ },
+ "reading": "one sentence: the mirror carries the same bytes as this box's ledger, measured at five points across two self-proved remote reads"
+}
