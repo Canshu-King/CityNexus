@@ -1,0 +1,34 @@
+ORD-0500 phone lane: my own shipped comment stops citing line numbers, and a gate keeps it that way
+
+Why this hand exists: every time the line moved, the four integers in my spec's comments went stale and I
+spent a hand re-measuring them (the r8 and r19 commits on this very file are those hands).  The commander's
+direction is name/label anchors, which do not move.  So this cut removes the numeric citations from the one
+file this order owns and makes the rule mechanical instead of a preference.
+
+What ships:
+  - backend/tests/test_qoder_ord0500_journey_refusal.py -- comment text only.  Three `path:line` citations
+    are gone and the same facts are named instead: the shared helper `def require(`, the block opening with
+    the comment `The duplicate answer comes`, the `UNIQUE (journey_id, target_key)` index, and the branch
+    that writes `"caught_by": "unique_index",`.  The file also declares its own label list, inside itself,
+    so shrinking that list is a product diff a reviewer sees rather than a quiet manifest edit.
+  - tools/anchor_form_gate_r26.py -- reads the labels out of the shipped bytes and requires each to resolve
+    exactly once in the file it names; a numeric `path:line` left in that file is a finding
+    (NUMERIC_ANCHOR_FORBIDDEN), a missing declaration is a finding (ANCHOR_LINE_PRESENT), a label that no
+    longer exists is LABEL_NOT_FOUND, and a label matching twice with no qualifier is
+    AMBIGUOUS_LABEL_WITHOUT_QUALIFIER.
+  - tools/anchor_form_gate_mutants_r26.py -- four mutants, each the way this rule could be defeated, plus
+    two controls; every arm bit (evidence/anchor_form_gate_mutants_r26.json).
+  - tools/anchor_form_apply_r26.py -- measured before/after: 2 numeric anchors and no declaration on the
+    line (RED) -> 0 numeric anchors, 4 labels resolving once each, declaration present (GREEN).
+  - tools/anchor_form_spec_r26.py -- the candidate compiles and the two ORD-0500 modules still pass on the
+    lane's private database ("16 passed" tail), the shared store byte-untouched, and the worktree restored
+    and verified by blob afterwards (evidence/anchor_form_spec_r26.json).
+
+Two labels I tried and rejected, kept so the next hand does not re-claim them: `select(JourneyCheckin).where(`
+and `_checkin_resolve_targets` each match twice in main.py, and a file-order claim between them is false (the
+helper's definition sits above the handler).  My first draft cited both and the gate refused it -- the refusal
+is in this ref's receipts, not hidden.
+
+Scope: one product file, comment bytes only, declared up front through the publisher's allow-list
+(PUBLISH_ALLOW_LANDED); every instrument path here is new, so nothing already landed is rewritten.  No force,
+no deletion, and the ORD-0500 family ref r19 and the staging-door refs keep their heads as published.
