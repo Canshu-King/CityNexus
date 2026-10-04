@@ -16588,6 +16588,34 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · ORD-0562 补证到手，同时抓到一件要紧的：单复数那件**只落了一半**，屏上现在还是「1 days」
+
+一、结论先说（三样读数，都是这轮现取的）
+- 服务端：把同日预订确认后，`temporal_shape` 回 `day_count: 1`、`window_status: "IN_WINDOW"`（review/ord0562/shape_one_day_r1.json:1）。
+- 屏上：英文臂 `[data-testid="today-when"]` 读到「6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · **1 days**」（review/ord0562/addendum_note_r1.txt:22，像素 review/ord0562/hub_one_day_pixel_r1.png，我自己看过；页面异常零枚）。
+- 源码：现尖 45207a0cc0fcae000b619753b4dfccb06594a59f 的 `frontend/src/app/V8Experience.tsx:2952` 仍是内联 `` : `${tripDayCount} days` ``，同文件 :2405 仍是 `` ${days} days · ${people} people ``。⇒ 缺陷还在权威线上，因为**组件那一半没落**。
+
+二、落了什么、缺了什么（逐枚比过，不是猜）
+- 已落在现尖：`frontend/src/i18n/LocaleContext.tsx` 三枚计数键（hub.todayDays / hub.todayDaysUnknown / hub.budgetLine，英文侧带标记、中文侧不带）；英文侧 `(s)` 软化写法命中零枚；`frontend/src/lib/plural.ts` 的不规则表已声明 person → people（`git show <tip>:frontend/src/lib/plural.ts` 第 16 行）。枚举回声那件的 11 枚值也已在尖上。
+- 未落在现尖：`frontend/src/app/V8Experience.tsx` 的两处调用点。字典只能给"被交到它手上的数"配文；组件从不交出去，新键就在尖上闲着，内联模板继续把「1 days」画出来。
+- 补齐的枝：refs/heads/review/cff87c64-ord0562-english-count-nouns-r4，本轮追加证据后 head 6802791565fcfaeb997670b54deb478f4dc67f2f（`git ls-remote --refs` 回读同值）。该枝里那两处是 `t("hub.todayDays", { n: tripDayCount })`（:2941）与 `t("hub.budgetLine", { days, people, amount })`（:2399）。**落这枚文件，屏上那格就闭。**
+
+三、我这轮怎么走到 n=1 的（上一轮说"没有非破坏口子"，这轮有了，写在账上）
+- 原因先量清楚了：hub 的数取 `journey.temporal_shape.day_count`，而服务端让锚点自身时刻压过行程窗口（backend/app/main.py:3110），所以上一轮 PATCH 行程窗口没用。
+- 这轮走产品自己的两扇门：POST /api/v1/journeys/{id}/inbox/import 回 http_status=201 建同日草稿，POST .../inbox/{draft_id}/confirm 回 http_status=200 确认；同日预订落在存储窗口内（出发 2026-10-08T09:00+08:00、到达 09:40），锚点被写到 8 Oct，`day_count` 就变一。第二趟同门重走复现同值（review/ord0562/shape_one_day_shot_r1.json:1）。
+- 顺带第一次读到新未知支：把同日预订放到窗口外（10-20），服务端答 `day_count: null`、`window_status: "INVALID_ANCHOR_ORDER"`，屏上答「length unknown」——这是设计里的诚实未知，不是缺陷（review/ord0562/read_add2_r1.json:1）。但它同样说明：现尖的组件没调用那枚新键，这句是靠旧的内联三元画出来的。
+
+四、仍没在像素上读到的（具名）
+- 预算行那串的 `1 person` / `2 people`：向导建的行程没有 budget 参照，那一格在这几种状态下 ABSENT ⇒ NOT_REACHED_UI；它的配文由尺的第四臂钉住（review/ord0562/ruler_arms_r1.txt:1）。
+
+五、我这边状态
+- 欠的两件：ORD-0562 的 n=1 补证＝本轮已交（就是这块）；证据来源括注那件枝已推、等你落（refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r2 @ 98fb5fa4597ea1b1af2e065a4b46a520a7b89409）。
+- hub 那两枚要不要撤 CSS 大写，仍等你裁。
+- 私有栈端口已关；本轮全程只用自己的库（空文件由 app 建、fresh run id），没碰 demo/reset、没碰 :8000 :4781 :4782 :8693。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 89f2e2d6 · ORD-0520 屏侧那格的收尾交完：七臂在现读代次上原样重跑，判语 `REGRESSION_GREEN`；枝 `review/89f2e2d6-ord0520-glass-regression-r1` = `139d198b733fdc34d99aad69f5075c2ee820d773`，产品字节零枚改动
 
 **一、这一格补的是哪一句话**
