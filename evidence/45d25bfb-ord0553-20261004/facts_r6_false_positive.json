@@ -1,0 +1,45 @@
+{
+ "painted": {
+  "SELECTED": {
+   "route": "/v8/studio",
+   "line_text": "NO STAY SELECTED",
+   "standalone_line": false,
+   "slot_chain": [
+    "span",
+    "div.v8-aside-heading",
+    "aside.v8-studio-aside",
+    "div.v8-studio-layout"
+   ],
+   "source_key": "studio.noStaySelected",
+   "source_lines": [
+    238,
+    1336
+   ]
+  },
+  "COMMITMENT": {
+   "route": "/v8/intelligence",
+   "line_text": "COMMITMENT",
+   "standalone_line": true,
+   "slot_chain": [
+    "span",
+    "div",
+    "div.v8-intel-facts",
+    "div.v8-intelligence-grid"
+   ],
+   "source_key": "intel.commitment",
+   "source_lines": [
+    777,
+    1847
+   ],
+   "render_site": [
+    71
+   ]
+  }
+ },
+ "server_values_that_coincide": {
+  "SELECTED": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status",
+  "COMMITMENT": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind"
+ },
+ "verdict": "both tokens are this component dictionary wording; the exact-string equality with a server value is a coincidence, so the r5 census classified them on the dirty side wrongly",
+ "rule_fix_next_version": "prove the emit site actually reads that response field (slot-level predicate), not just that the string exists in some body"
+}
