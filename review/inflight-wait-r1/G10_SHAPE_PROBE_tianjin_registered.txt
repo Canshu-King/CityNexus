@@ -1,0 +1,27 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+POST http_status=202
+POST body {"operation_id": "077e11f2-20a8-4e45-9e82-e96bf85dcc7d", "fingerprint": "9c0be3a6fecd0f66a57eac01f32a7ccc", "reused": false, "status": "QUEUED", "recorded_status": "QUEUED", "phase": "QUEUED", "outcome": null, "terminal": false, "elapsed_ms": 3, "retry_after_ms": 1000, "canonical_destination_id": "CN-TIANJIN", "pending_destination_label": "天津市", "resolver_query_normalized": "天津市", "destination_pending_key": null, "pending_label_fidelity": "EXACT_RAW", "destination_state": "RESOLVED", "retryable": false, "catalog_schema_version": "catalog-v1", "readiness_policy_version": "readiness-v1", "provid
+operation_id '077e11f2-20a8-4e45-9e82-e96bf85dcc7d'
+IMMEDIATE http_status=200 keys=['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates', 'matched_label', 'missing_categories', 'pending_destination_label', 'pending_label_fidelity', 'place_count', 'places', 'provenance', 'provider_policy_version', 'query', 'readiness_policy_version', 'reason_code', 'recommended_action', 'resolver_query_normalized', 'retryable', 'unclassified_categories']
+  immediate places               type=list len=0
+  immediate catalog              type=NoneType len=n/a
+  immediate candidates           type=list len=0
+  immediate malformed_candidates type=list len=0
+  immediate hard_gaps            type=list len=0
+  immediate capability='HYDRATABLE' destination_state='RESOLVED' coverage={'attractions': 'MISSING', 'food': 'MISSING', 'nightlife': 'MISSING', 'lodging': 'MISSING', 'mobility': 'MISSING', 'booking': 'MISSING'} canonical='CN-TIANJIN'
+AFTER-WAIT job {"operation_id": "077e11f2-20a8-4e45-9e82-e96bf85dcc7d", "fingerprint": "9c0be3a6fecd0f66a57eac01f32a7ccc", "reused": false, "status": "COMPLETED", "recorded_status": "COMPLETED", "phase": "FINALIZING", "outcome": "ALREADY_CURRENT", "terminal": true, "elapsed_ms": 36, "retry_after_ms": 0, "canonical_destination_id": "CN-TIANJIN", "pending_destination_label": "天津市", "resolver_query_normalized": "天津市", "destination_pending_key": null, "pending_label_fidelity": "EXACT_RAW", "destination_state": "RESOLVED", "retryable": false, "catalog_schema_version": "catalog-v1", "readiness_policy_version": "re
+AFTER-WAIT http_status=200 keys=['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates', 'matched_label', 'missing_categories', 'pending_destination_label', 'pending_label_fidelity', 'place_count', 'places', 'provenance', 'provider_policy_version', 'query', 'readiness_policy_version', 'reason_code', 'recommended_action', 'resolver_query_normalized', 'retryable', 'unclassified_categories']
+  after     places               type=list len=5
+  after     catalog              type=NoneType len=n/a
+  after     candidates           type=list len=0
+  after     malformed_candidates type=list len=0
+  after     hard_gaps            type=list len=0
+  after     capability='HYDRATABLE' destination_state='RESOLVED' coverage={'attractions': 'READY', 'food': 'MISSING', 'nightlife': 'MISSING', 'lodging': 'MISSING', 'mobility': 'MISSING', 'booking': 'MISSING'} canonical='CN-TIANJIN'
+  places_rows 5 kinds_as_the_arm_reads_them {'way/1464199917': 1, 'way/73422999': 1, 'node/5172762221': 1, 'node/5172662927': 1, 'way/1228981599': 1}
+  place_key_union ['category', 'id', 'latitude', 'longitude', 'name', 'osm_type', 'source_identity', 'source_provider']
+  place_row {"id": "real-place-f9f6b604dddcbaf4d27517a8", "source_provider": "openstreetmap-replay", "source_identity": "way/1464199917", "osm_type": "way/1464199917", "name": "天津义和团纪念馆", "category": "museum", "latitude": 39.1451055
+  place_row {"id": "real-place-a60fd27c0eb55fb4d6bd6cbf", "source_provider": "openstreetmap-replay", "source_identity": "way/73422999", "osm_type": "way/73422999", "name": "天津文化中心", "category": "museum", "latitude": 39.0867803, "lon
+  place_row {"id": "real-place-e9495c822a4f29bf2f2a032f", "source_provider": "openstreetmap-replay", "source_identity": "node/5172762221", "osm_type": "node/5172762221", "name": "天津文庙博物馆", "category": "museum", "latitude": 39.141054
+  rows_missing_coordinates 0
+VERDICT READ_KEY_APPEARS_AFTER_WAIT

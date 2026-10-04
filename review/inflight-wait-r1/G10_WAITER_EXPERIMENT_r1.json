@@ -1,0 +1,197 @@
+{
+  "generated_by": "89f2e2d6",
+  "order": "ORD-0520 inventory follow-up: g10's prescribed fix, tested instead of assumed",
+  "tree_head": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "test_file_blob_at_head": "4d952cd51f6874096d60d0704acf0bac07786bc4",
+  "restored_byte_identical": true,
+  "git_status_for_the_file": "(clean)",
+  "diff_stat_after_restore": "(empty)",
+  "phase_A_shipped": {
+    "phase": "A_shipped",
+    "runs": 12,
+    "red": 12,
+    "green": 0,
+    "red_rate": "1.00",
+    "rows": [
+      {
+        "run_id": "g10exp-20261004T162816Z-2fdbdf",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.85s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162818Z-7e4d79",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.07s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162822Z-24140c",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.19s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162825Z-a7d8c8",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.02s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162827Z-6ee902",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.14s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162830Z-f15ad4",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 5.57s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162837Z-3d6f91",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.28s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162840Z-3e12ad",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.92s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162842Z-2ee66f",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.88s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162845Z-e4801b",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.85s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162847Z-6365da",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.93s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162850Z-2575a2",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.91s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      }
+    ]
+  },
+  "phase_B_with_waiter": {
+    "phase": "B_with_waiter",
+    "runs": 12,
+    "red": 12,
+    "green": 0,
+    "red_rate": "1.00",
+    "rows": [
+      {
+        "run_id": "g10exp-20261004T162852Z-788dfc",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.96s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162855Z-cf4991",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.31s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162858Z-4fee4e",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.03s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162900Z-0a9b2c",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.84s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162903Z-a61f1a",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.84s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162905Z-303afe",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.84s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162907Z-39cee9",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.86s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162910Z-517f0c",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.87s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162912Z-18a9f1",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 1.82s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162915Z-6ed185",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.19s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162917Z-7fab37",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.35s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      },
+      {
+        "run_id": "g10exp-20261004T162920Z-18e38d",
+        "rc": 1,
+        "outcome": "failed",
+        "summary_tail": "1 failed, 2 warnings in 2.10s",
+        "assertion_first_240": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_ke"
+      }
+    ]
+  },
+  "waiter_used": "app.catalog_hydration_operations.wait_for_operation (the module's own; the shipped test-side use is backend/tests/test_qoder_pending_destination_identity.py:234)",
+  "verdict": "WAITER_DOES_NOT_CLOSE_IT"
+}

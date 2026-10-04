@@ -1,0 +1,24 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+POST http_status=202
+POST body {"operation_id": "1ea79d14-fc6a-4b92-a405-ae291d6303a1", "fingerprint": "2d373c471fa007e5612db8267aef8040", "reused": false, "status": "QUEUED", "recorded_status": "QUEUED", "phase": "QUEUED", "outcome": null, "terminal": false, "elapsed_ms": 33, "retry_after_ms": 1000, "canonical_destination_id": null, "pending_destination_label": "贡山独龙族怒族自治县", "resolver_query_normalized": "贡山独龙族怒族自治县", "destination_pending_key": "pend-1ea79d14-fc6a-4b92-a405-ae291d6303a1", "pending_label_fidelity": "EXACT_RAW", "destination_state": null, "retryable": false, "catalog_schema_version": "catalog-v1", "readiness_
+operation_id '1ea79d14-fc6a-4b92-a405-ae291d6303a1'
+IMMEDIATE http_status=200 keys=['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates', 'matched_label', 'missing_categories', 'namespace', 'pending_destination_label', 'pending_label_fidelity', 'place_count', 'places', 'provenance', 'provider_policy_version', 'query', 'readiness_policy_version', 'reason_code', 'recommended_action', 'resolver_query_normalized', 'retryable', 'scope', 'unclassified_categories']
+  immediate places               type=list len=0
+  immediate catalog              type=NoneType len=n/a
+  immediate candidates           type=list len=0
+  immediate malformed_candidates type=list len=0
+  immediate hard_gaps            type=list len=0
+  immediate capability='UNAVAILABLE' destination_state='NO_MATCH' coverage={'attractions': 'MISSING', 'food': 'MISSING', 'nightlife': 'MISSING', 'lodging': 'MISSING', 'mobility': 'MISSING', 'booking': 'MISSING'} canonical=None
+AFTER-WAIT job {"operation_id": "1ea79d14-fc6a-4b92-a405-ae291d6303a1", "fingerprint": "2d373c471fa007e5612db8267aef8040", "reused": false, "status": "UNAVAILABLE", "recorded_status": "UNAVAILABLE", "phase": "DISCOVERING_POIS", "outcome": "NO_REGISTERED_SOURCE", "terminal": true, "elapsed_ms": 43, "retry_after_ms": 0, "canonical_destination_id": null, "pending_destination_label": "贡山独龙族怒族自治县", "resolver_query_normalized": "贡山独龙族怒族自治县", "destination_pending_key": "pend-1ea79d14-fc6a-4b92-a405-ae291d6303a1", "pending_label_fidelity": "EXACT_RAW", "destination_state": "NO_MATCH", "retryable": false, "catalog_sc
+AFTER-WAIT http_status=200 keys=['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates', 'matched_label', 'missing_categories', 'namespace', 'pending_destination_label', 'pending_label_fidelity', 'place_count', 'places', 'provenance', 'provider_policy_version', 'query', 'readiness_policy_version', 'reason_code', 'recommended_action', 'resolver_query_normalized', 'retryable', 'scope', 'unclassified_categories']
+  after     places               type=list len=0
+  after     catalog              type=NoneType len=n/a
+  after     candidates           type=list len=0
+  after     malformed_candidates type=list len=0
+  after     hard_gaps            type=list len=0
+  after     capability='UNAVAILABLE' destination_state='NO_MATCH' coverage={'attractions': 'MISSING', 'food': 'MISSING', 'nightlife': 'MISSING', 'lodging': 'MISSING', 'mobility': 'MISSING', 'booking': 'MISSING'} canonical=None
+  places_rows 0 kinds_as_the_arm_reads_them {}
+  place_key_union []
+  rows_missing_coordinates 0
+VERDICT COLLECTION_NEVER_HAS_THE_READ_KEY
