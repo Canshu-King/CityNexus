@@ -1,0 +1,37 @@
+{
+ "total_work": 113,
+ "write_path": 56,
+ "report_only": 57,
+ "per_file": {
+  "block_census_r3_r1.py": 1,
+  "deliver_ord0552_r1.py": 3,
+  "ledger_mirror_repro_r1.py": 1,
+  "ledger_mirror_runs_r1.py": 2,
+  "publish_anchors_r1.py": 3,
+  "publish_census_r1.py": 3,
+  "publish_census_r2.py": 3,
+  "publish_census_r3_r1.py": 3,
+  "publish_cmdr0019_r1.py": 3,
+  "publish_cmdr0124_r1.py": 3,
+  "publish_cmdr0130_r1.py": 3,
+  "publish_cmdr0245_r1.py": 3,
+  "publish_cmdr0245_r2.py": 3,
+  "publish_cmdr0557_r1.py": 3,
+  "publish_cmdr0557_r2.py": 3,
+  "publish_cmdr1945_r1.py": 3,
+  "publish_g4_floor_r1.py": 1,
+  "publish_g4_floor_r2.py": 1,
+  "publish_hook_r1.py": 3,
+  "publish_selfcheck_r1.py": 3,
+  "push_cmdr1945_r1.py": 1,
+  "push_g4_floor_r3_r1.py": 2,
+  "selfcheck_build_r1.py": 2
+ },
+ "by_shape": {
+  "vacuous_all": 90,
+  "emptiness_passes": 3,
+  "compare_only_verdict": 1,
+  "ternary_no_floor": 19
+ },
+ "rule": "write_path = 文件名落在会发起 add/commit/push/上架/交块 的那批腿上；report_only = 只产出读数件"
+}
