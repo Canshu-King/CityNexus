@@ -1,0 +1,54 @@
+ORD-0568 -- the incident-evidence cell keeps its codes and gains its words. What was measured.
+
+WHAT CHANGED (two product files, one ruler)
+  frontend/src/lib/displayVocabulary.ts  a closed table `ROUTE_PROVENANCE` with the six names the server can
+      write into `route_provenance`, each with a Chinese and an English wording, and
+      `routeProvenanceLabel(value, zh)` which answers only with one of this file's own sentences. An
+      unlisted value gets "这台服务器写了一个这屏不认识的证据来源" / "this server wrote an evidence source
+      this screen does not know" -- it is never printed back. The shared `pick()`/`rawChannel()` fallback is
+      deliberately not used: one call site that echoes an upstream read condemns every panel that imports a
+      `pick`-based label, which is the defect ORD-0551 r3 had to take back.
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx  the cell now reads
+      `<provider> · <ENUM>（<words>）`. The provider key and the enum stay exactly as written: they are what
+      the backend logs and the contract name, and the ruling was that the audit reading has to be able to
+      match them. Only the bracket changes.
+
+WHERE THE SIX NAMES COME FROM (not invented)
+  `backend/app/main.py:11538-11548` writes SEALED_INCIDENT_REPLAY / DEGRADED_BASELINE_REFERENCE /
+  SEALED_REAL_REPLAY / MIXED_RUNTIME_CAPTURE / RUNTIME_CAPTURE through one conditional expression, and
+  `backend/app/main.py:8928` defaults a `route_provenance` to CAPTURED_REPLAY on the mobility path. The
+  ruler reads that same expression rather than a list typed into the test, so a seventh branch landing
+  without a wording fails the ruler instead of reaching a screen as a gap sentence.
+
+STANDING RULER -- e2e/qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts, four arms, rc=0
+  1  every value the server can write has a wording in both languages, and no wording repeats the enum
+  2  the lookup is closed: no `pick(`/`rawChannel(`, and no branch returns the value it was handed
+  3  the panel still prints the provider key and the enum, and wraps the gloss in brackets
+  4  the denominator is written out (emitted set, labelled set, byte sizes of the three files read)
+  Denominator as parsed: CAPTURED_REPLAY, DEGRADED_BASELINE_REFERENCE, MIXED_RUNTIME_CAPTURE, RUNTIME_CAPTURE,
+  SEALED_INCIDENT_REPLAY, SEALED_REAL_REPLAY -- six, and the two event types the same expression only tests
+  (`CLOSURE`, `WEATHER`) are excluded by dropping brace-enclosed sets before literals are collected. Without
+  that the ruler counted eight and demanded wording for two values the field can never hold.
+
+COUNTER-ARMS (each really went red, then was restored)
+  A  delete the CAPTURED_REPLAY row          -> arm 1 red: "the table and the server's own set drifted apart"
+  B  make the fallback `return String(value)` -> arm 2 red: "the lookup returns the value it was handed"
+  Restored afterwards; `git diff --numstat` on the vocabulary file shows 29 added lines and no residue.
+
+GATES ON THIS TREE (6f8b6336d138efe7bbccceba43367705b4faef4f, base 0293e5c1cf9be4ea4e7d14005e14c508cb3f528b read from the server when this branch was cut)
+  npm run typecheck rc=0; npm run typecheck:all rc=0.
+  Exposure, same ruler (blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), same command, same export shape:
+  base answers 6 cells / 324 modules, this candidate answers 6 cells / 325 modules, identical per-file set.
+  The recovery panel itself holds no cell, so the added read did not open an upstream-to-DOM path.
+
+WHAT WAS NOT PROVEN ON A PIXEL (named, not smoothed)
+  `[data-testid="v14-recovery-provider"]` is ABSENT_FROM_DOM on /v8/authoritative in both states this lane
+  could reach on its own store: after the wizard created a journey (POST /api/v1/journeys http_status=201)
+  and after the shell's own `/` entry (which lands on the onboarding wizard, not a seeded scene). The cell
+  only exists once a recovery proposal with an incident is on the journey, and this lane has no non-
+  destructive door to that state on a fresh store -- recorded as NOT_REACHED_UI, not as a pass.
+  What is proven instead: the four strings ship in the built entry bundle (dist/assets/index-X0nAhlLA.js
+  contains 运行时取证, runtime capture, the mixed-reading wording and the gap sentence), the cell's shape is
+  pinned by arm 3, and page exceptions during both walks were zero.
+  The commander's own day33 read of the same cell (`mock-mobility · RUNTIME_CAPTURE`) is the on-screen
+  preimage; the post-change pixel reading still needs a scene that carries a proposal.

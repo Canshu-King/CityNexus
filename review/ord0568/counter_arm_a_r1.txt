@@ -1,0 +1,188 @@
+
+Running 1 test using 1 worker
+
+  x  1 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:77:1 › every route_provenance the server can write has a traveller wording, in both languages (6ms)
+
+
+  1) e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:77:1 › every route_provenance the server can write has a traveller wording, in both languages 
+
+    Error: the table and the server's own set drifted apart
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+    @@ -1,7 +1,6 @@
+      Array [
+    -   "CAPTURED_REPLAY",
+        "DEGRADED_BASELINE_REFERENCE",
+        "MIXED_RUNTIME_CAPTURE",
+        "RUNTIME_CAPTURE",
+        "SEALED_INCIDENT_REPLAY",
+        "SEALED_REAL_REPLAY",
+
+      77 | test("every route_provenance the server can write has a traveller wording, in both languages", () => {
+      78 |   expect(emitted.length, "one provenance value would not be worth a ruler").toBeGreaterThan(2);
+    > 79 |   expect(Object.keys(labelled).sort(), "the table and the server's own set drifted apart").toEqual(emitted);
+         |                                                                                            ^
+      80 |   const offenders: string[] = [];
+      81 |   for (const [name, label] of Object.entries(labelled)) {
+      82 |     if (!label.zh.trim() || !label.en.trim()) offenders.push(`${name}: an empty side`);
+        at D:\moodle\_qoder_ord0551_r3_20261003\wt\frontend\e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:79:92
+
+    Error Context: test-results\qoder-cff87c64-ord0568-rou-4f711-r-wording-in-both-languages\error-context.md
+
+  1 failed
+    e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:77:1 › every route_provenance the server can write has a traveller wording, in both languages 
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0568-prov-r1.config.ts",
+      "-g",
+      "has a traveller wording"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\playwright.ord0568-prov-r1.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-cff87c64-ord0568-route-provenance-gloss-.*\\.spec\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {}
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "every route_provenance the server can write has a traveller wording, in both languages",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6,
+                  "error": {
+                    "message": "Error: the table and the server's own set drifted apart\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 0\u001b[39m\n\n\u001b[33m@@ -1,7 +1,6 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"CAPTURED_REPLAY\",\u001b[39m\n\u001b[2m    \"DEGRADED_BASELINE_REFERENCE\",\u001b[22m\n\u001b[2m    \"MIXED_RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"SEALED_INCIDENT_REPLAY\",\u001b[22m\n\u001b[2m    \"SEALED_REAL_REPLAY\",\u001b[22m",
+                    "stack": "Error: the table and the server's own set drifted apart\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 0\u001b[39m\n\n\u001b[33m@@ -1,7 +1,6 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"CAPTURED_REPLAY\",\u001b[39m\n\u001b[2m    \"DEGRADED_BASELINE_REFERENCE\",\u001b[22m\n\u001b[2m    \"MIXED_RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"SEALED_INCIDENT_REPLAY\",\u001b[22m\n\u001b[2m    \"SEALED_REAL_REPLAY\",\u001b[22m\n    at D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:79:92",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                      "column": 92,
+                      "line": 79
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 77 |\u001b[39m test(\u001b[32m\"every route_provenance the server can write has a traveller wording, in both languages\"\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m 78 |\u001b[39m   expect(emitted\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m\"one provenance value would not be worth a ruler\"\u001b[39m)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m2\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 79 |\u001b[39m   expect(\u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mkeys(labelled)\u001b[33m.\u001b[39msort()\u001b[33m,\u001b[39m \u001b[32m\"the table and the server's own set drifted apart\"\u001b[39m)\u001b[33m.\u001b[39mtoEqual(emitted)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 80 |\u001b[39m   \u001b[36mconst\u001b[39m offenders\u001b[33m:\u001b[39m string[] \u001b[33m=\u001b[39m []\u001b[33m;\u001b[39m\n \u001b[90m 81 |\u001b[39m   \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m [name\u001b[33m,\u001b[39m label] \u001b[36mof\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mentries(labelled)) {\n \u001b[90m 82 |\u001b[39m     \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39mlabel\u001b[33m.\u001b[39mzh\u001b[33m.\u001b[39mtrim() \u001b[33m||\u001b[39m \u001b[33m!\u001b[39mlabel\u001b[33m.\u001b[39men\u001b[33m.\u001b[39mtrim()) offenders\u001b[33m.\u001b[39mpush(\u001b[32m`${name}: an empty side`\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                        "column": 92,
+                        "line": 79
+                      },
+                      "message": "Error: the table and the server's own set drifted apart\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 0\u001b[39m\n\n\u001b[33m@@ -1,7 +1,6 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"CAPTURED_REPLAY\",\u001b[39m\n\u001b[2m    \"DEGRADED_BASELINE_REFERENCE\",\u001b[22m\n\u001b[2m    \"MIXED_RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"RUNTIME_CAPTURE\",\u001b[22m\n\u001b[2m    \"SEALED_INCIDENT_REPLAY\",\u001b[22m\n\u001b[2m    \"SEALED_REAL_REPLAY\",\u001b[22m\n\n  77 | test(\"every route_provenance the server can write has a traveller wording, in both languages\", () => {\n  78 |   expect(emitted.length, \"one provenance value would not be worth a ruler\").toBeGreaterThan(2);\n> 79 |   expect(Object.keys(labelled).sort(), \"the table and the server's own set drifted apart\").toEqual(emitted);\n     |                                                                                            ^\n  80 |   const offenders: string[] = [];\n  81 |   for (const [name, label] of Object.entries(labelled)) {\n  82 |     if (!label.zh.trim() || !label.en.trim()) offenders.push(`${name}: an empty side`);\n    at D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:79:92"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T15:08:29.962Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\test-results\\qoder-cff87c64-ord0568-rou-4f711-r-wording-in-both-languages\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                    "column": 92,
+                    "line": 79
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-794cdc8b3a6d5a989880",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 77,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T15:08:29.632Z",
+    "duration": 377.46900000000005,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
