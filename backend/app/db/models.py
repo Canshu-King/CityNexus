@@ -1269,6 +1269,7 @@ class JourneyMember(Base):
     expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
     joined_at: Mapped[str | None] = mapped_column(String, nullable=True)
     removed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    preferences_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
 

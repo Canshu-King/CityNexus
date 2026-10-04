@@ -633,6 +633,7 @@ class AgentToolGateway:
 
     def inspect_journey(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
+        from app.main import active_journey_members_with_capabilities
         commitments = self.session.scalars(
             select(Commitment).where(
                 Commitment.journey_id == journey.id,
@@ -655,11 +656,17 @@ class AgentToolGateway:
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "journey": _json(journey_schema(journey)),
             "protected_commitments": [item for item in protected if item["protected"]],
+            "collective_journey": (
+                active_journey_members_with_capabilities(self.session, journey)
+                if isinstance(self.session, Session)
+                else {"members": [], "member_count": 0, "authority_basis": "JourneyRoleCapability"}
+            ),
         }
 
     def inspect_twin(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _ensure_opportunity_window_event, _twin_snapshot
+        from app.main import active_journey_members_with_capabilities
         from app.agent.predictive import standby_portfolio
         from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
         # Opportunity is a server-derived signal.  Materialise it while the
@@ -700,6 +707,11 @@ class AgentToolGateway:
         twin["traveler_twin_context"] = compact_twin
         from app.intelligence.decision_sensitivity import decision_sensitivity_receipt
         windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+        collective = (
+            active_journey_members_with_capabilities(self.session, journey, candidate_windows=windows)
+            if isinstance(self.session, Session)
+            else {"members": [], "member_count": 0, "authority_basis": "JourneyRoleCapability", "candidate_fit_matrix": [], "mediation": {"classification": "INSUFFICIENT_WORLD_FACTS"}}
+        )
         mission_preferences = {}
         if request.mission_id is not None:
             mission = self.session.get(JourneyMission, str(request.mission_id))
@@ -727,6 +739,7 @@ class AgentToolGateway:
             "event_selection_required": selection_error == "EVENT_SELECTION_REQUIRED",
             "event_selection_error": selection_error,
             "decision_sensitivity": decision_receipt,
+            "collective_journey": collective,
             "current_event": (
                 {"id": trigger.id, "event_type": trigger.event_type, "provenance": trigger.provenance,
                  "severity": trigger.severity, "affected_activity_id": trigger.affected_activity_id}
@@ -1291,6 +1304,7 @@ class AgentToolGateway:
 
     def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
+        from app.main import active_journey_members_with_capabilities
         requested = list(dict.fromkeys(str(item) for item in (request.place_ids or [])))
         if len(requested) < 2:
             raise HTTPException(422, "place_ids must contain at least two distinct server-owned Place IDs")
@@ -1320,28 +1334,53 @@ class AgentToolGateway:
             raise HTTPException(422, str(exc)) from exc
         self.session.commit()
         summaries: list[dict[str, Any]] = []
+        collective_windows: list[dict[str, Any]] = []
         for plan in plans:
             projected = plan_schema(self.session, plan).model_dump(mode="json")
             explanation = projected.get("explanation") or {}
             mobility = projected.get("mobility_evidence") or {}
+            place_ids = [item.get("place_id") for item in projected["activities"] if item.get("place_id")]
+            places_for_fit = self.session.scalars(select(Place).where(Place.id.in_(place_ids))).all() if place_ids else []
+            tags: list[str] = []
+            for place in places_for_fit:
+                tags.append(str(place.category or ""))
+                tags.extend(json.loads(place.tags_json or "[]"))
+            hard_status = "GROUNDED_FEASIBLE" if projected["selectable"] else "REVALIDATION_REQUIRED"
+            collective_windows.append({
+                "window_id": projected["id"],
+                "status": hard_status,
+                "candidate": {
+                    "place_id": projected["id"],
+                    "ordered_place_ids": place_ids,
+                    "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                },
+            })
             summaries.append(
                 {
                     "id": projected["id"],
                     "version_no": projected["version_no"],
                     "status": projected["status"],
                     "selectable": projected["selectable"],
-                    "place_ids": [item.get("place_id") for item in projected["activities"]],
+                    "place_ids": place_ids,
                     "unresolved_facts": explanation.get("unresolved_facts", []),
                     "authority_state": explanation.get("authority_state"),
                     "mobility_provider": mobility.get("source_provider"),
                     "mobility_snapshot_id": projected.get("mobility_snapshot_id"),
                 }
             )
+        collective = active_journey_members_with_capabilities(
+            self.session, journey, candidate_windows=collective_windows
+        )
+        for summary, row in zip(summaries, collective.get("candidate_fit_matrix", [])):
+            summary["collective_fairness"] = row.get("fairness", {})
+            summary["collective_member_fits"] = row.get("member_fits", {})
+        collective.pop("members", None)
         return {
             "tool": "generate_plans",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "candidate_count": len(summaries),
             "plans": summaries,
+            "collective_mediation": collective,
             "authority_note": "Candidates are not selected or active; selection remains a separate deterministic authority decision.",
         }
 

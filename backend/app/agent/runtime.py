@@ -394,6 +394,9 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "After real Place IDs are returned, you may acquire or estimate their facts and call generate_plans; generation creates candidates only and never selects or activates them. "
         "Issue at most one tool call per assistant turn. "
         "If a tool reports SEARCH_SATURATION or SEARCH_BATCH_LIMIT, stop searching and choose a different available action. "
+        "For a shared Journey, inspect_journey and inspect_twin expose separate in-force members, role capabilities, journey-scoped preferences, and compact learned-soft context. Never treat the owner TravelerTwin as the group. "
+        "Use the server-returned per-member fit matrix and mediation classification: seek a grounded compromise before asking people, never majority-vote, and never ask a member about opening, cost, mobility, or provider identity. "
+        "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"

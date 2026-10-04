@@ -594,6 +594,13 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             journey_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journeys)")
             }
+            member_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journey_members)")
+            }
+            if member_columns and "preferences_json" not in member_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_members ADD COLUMN preferences_json TEXT NOT NULL DEFAULT '{}'"
+                )
             if "planning_mode" not in journey_columns:
                 connection.exec_driver_sql(
                     "ALTER TABLE journeys ADD COLUMN planning_mode TEXT NOT NULL DEFAULT 'balanced'"

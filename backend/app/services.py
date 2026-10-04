@@ -20,6 +20,7 @@ from app.db.models import (
     Commitment,
     Journey,
     JourneyConstraint,
+    JourneyMember,
     JourneyMission,
     Place,
     PlanVersion,
@@ -349,6 +350,21 @@ def seed_demo(session: Session) -> dict[str, str]:
     )
     session.add(journey)
     session.flush()
+    session.add(
+        JourneyMember(
+            id=deterministic_id("journey-member:owner"),
+            journey_id=journey.id,
+            traveler_id=journey.traveler_id,
+            role="OWNER",
+            invited_by=journey.traveler_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        )
+    )
     for index, item in enumerate(load("demo_journey.json")["constraints"], start=1):
         session.add(
             JourneyConstraint(

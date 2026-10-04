@@ -980,6 +980,12 @@ class JourneyMember(BaseModel):
     member_state: MemberState
 
 
+class JourneyMemberPreferenceUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    preferences: list[PreferenceInput] = Field(default_factory=list, max_length=20)
+
+
 class JourneyRoleRule(BaseModel):
     """One role, the capabilities the server holds for it, and the key that states its scope."""
 

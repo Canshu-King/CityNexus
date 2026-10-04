@@ -120,6 +120,11 @@ def _event_signal(session: Session, event: JourneyOutcomeEvent) -> dict[str, Any
     tags = _place_tags(session, activity)
     place = session.get(Place, activity.place_id) if activity and activity.place_id else None
     payload = _load(event.payload_json, {})
+    if (
+        payload.get("preference_learning_eligible") is False
+        or payload.get("decision_scope") == "CLARIFIED_HORIZON_CHOICE"
+    ):
+        return None
     explicit = str(payload.get("preference_dimension") or "").strip().lower()
     if explicit in {"indoor", "outdoor", "low_walking", "cultural", "food"}:
         direction = str(payload.get("direction") or explicit).strip().lower()

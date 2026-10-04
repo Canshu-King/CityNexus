@@ -81,6 +81,7 @@ from app.capabilities import (
     canonicalize_capabilities,
     summarize_capabilities,
 )
+from app.collective_mediation import classify_group_decision, member_fit
 from app.commerce.idempotency import IdempotencyConflict, canonical_request_signature
 from app.commerce.order_pricing import OrderLineRequest, OrderPricingError
 from app.commerce.service_impl import (
@@ -373,6 +374,7 @@ from app.schemas import (
     ShareGrantRevoked,
     JourneyMember,
     JourneyMemberCreate,
+    JourneyMemberPreferenceUpdate,
     JourneyRoleRule,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
@@ -3430,6 +3432,24 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     journey_temporal_shape(trip_context, journey)
     session.add(journey)
     session.add(trip_context)
+    # A shared Journey has an explicit owner member from birth.  Keeping the
+    # owner in the same member set makes the member-aware projection complete;
+    # it must never infer that Journey.traveler_id speaks for everyone else.
+    session.add(
+        JourneyMemberModel(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            traveler_id=journey.traveler_id,
+            role="OWNER",
+            invited_by=journey.traveler_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        )
+    )
     session.commit()
     record_audit(
         session,
@@ -3912,6 +3932,92 @@ def _member_payload(member: JourneyMemberModel) -> JourneyMember:
     )
 
 
+def active_journey_members_with_capabilities(
+    session: Session, journey: Journey, *, candidate_windows: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
+    """Project the in-force member set without collapsing it into the owner Twin."""
+    from types import SimpleNamespace
+
+    now = datetime.now(timezone.utc)
+    members = list(session.scalars(
+        select(JourneyMemberModel).where(JourneyMemberModel.journey_id == journey.id)
+        .order_by(JourneyMemberModel.created_at, JourneyMemberModel.id)
+    ).all())
+    roles = list(session.scalars(select(JourneyRoleCapability)).all())
+    capabilities_by_role: dict[str, list[str]] = {}
+    for row in roles:
+        capabilities_by_role.setdefault(row.role, []).append(row.capability)
+    projected: list[dict[str, Any]] = []
+    for member in members:
+        if _member_state(member, now) != "MEMBER_IN_FORCE":
+            continue
+        snapshot = refresh_snapshot(session, member.traveler_id)
+        twin = traveler_twin_payload(snapshot)
+        compact = {
+            "explicit_preferences": twin.get("explicit_preferences", []),
+            "learned_soft_preferences": twin.get("learned_soft_preferences", []),
+            "conflicts": twin.get("conflicts", []),
+            "confidence": twin.get("confidence", 0.0),
+            "evidence_count": twin.get("evidence_count", 0),
+        }
+        member_preferences = _json_object(member.preferences_json, {})
+        journey_items = [
+            SimpleNamespace(
+                category=str(item.get("category") or "interest"),
+                preference_key=str(item.get("key") or item.get("preference_key") or ""),
+                value_json=json.dumps(item.get("value", True), ensure_ascii=False),
+                weight=float(item.get("weight", 1.0)),
+                source="EXPLICIT_MISSION",
+            )
+            for item in member_preferences.get("preferences", [])
+            if isinstance(item, dict)
+        ]
+        projected.append({
+            "member_id": member.id,
+            "traveler_id": member.traveler_id,
+            "role": member.role,
+            "member_state": "MEMBER_IN_FORCE",
+            "capabilities": sorted(capabilities_by_role.get(member.role, [])),
+            "journey_scoped_explicit_preferences": member_preferences.get("preferences", []),
+            "traveler_twin": compact,
+            "can_authorize_mutation": "JOURNEY_UPDATE" in capabilities_by_role.get(member.role, []),
+            # Do not pass the shared JourneyMission into this call: its owner-scoped
+            # preference payload must never be copied onto every member.  The
+            # member's own journey-scoped items are appended explicitly below.
+            "_preference_items": planning_preference_items(session, member.traveler_id) + journey_items,
+        })
+    result: dict[str, Any] = {
+        "members": [{key: value for key, value in item.items() if not key.startswith("_")} for item in projected],
+        "member_count": len(projected),
+        "authority_basis": "JourneyRoleCapability",
+    }
+    if candidate_windows is not None:
+        matrix: list[dict[str, Any]] = []
+        for window in candidate_windows:
+            candidate = window.get("candidate") or {}
+            tags = [str(candidate.get("category") or "")] + list(candidate.get("tags") or [])
+            row = {
+                "candidate_id": candidate.get("place_id") or window.get("window_id"),
+                "window_id": window.get("window_id"),
+                "status": window.get("status"),
+                "member_fits": {
+                    item["member_id"]: member_fit(preferences=item["_preference_items"], candidate_tags=tags)
+                    for item in projected
+                },
+            }
+            matrix.append(row)
+        result["candidate_fit_matrix"] = matrix
+        mediation = classify_group_decision(matrix)
+        if matrix and mediation.get("classification") != "INSUFFICIENT_WORLD_FACTS":
+            if not any(item.get("can_authorize_mutation") for item in projected):
+                mediation = {
+                    "classification": "AUTHORITY_CONFLICT",
+                    "reason": "NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE",
+                }
+        result["mediation"] = mediation
+    return result
+
+
 def _member_expiry(raw: str | None) -> str | None:
     """Same rule as a grant: an instant with no offset is a guess about whose clock, so refuse it."""
     if raw is None:
@@ -3995,6 +4101,27 @@ def list_journey_members(journey_id: UUID, session: Session = Depends(get_sessio
     # Withdrawn rows stay listed with their own state: a screen has to be able to say "this person
     # was here and is out" without guessing from an absence.
     return [_member_payload(row) for row in rows]
+
+
+@app.put("/api/v1/journeys/{journey_id}/members/{member_id}/preferences")
+def replace_journey_member_preferences(
+    journey_id: UUID,
+    member_id: str,
+    payload: JourneyMemberPreferenceUpdate,
+    session: Session = Depends(get_session),
+):
+    """Store explicit preference context for this member in this Journey only."""
+    member = session.get(JourneyMemberModel, member_id)
+    if member is None or member.journey_id != str(journey_id):
+        raise _share_refusal(404, "No member of this journey carries that id.", "MEMBER_UNKNOWN", {})
+    member.preferences_json = json.dumps(
+        {"scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": [item.model_dump() for item in payload.preferences]},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    member.updated_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    return {"journey_id": str(journey_id), "member_id": member.id, "scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": payload.preferences}
 
 
 @app.post(
@@ -8451,7 +8578,12 @@ def _skip_current_activity(
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
-    if activity.status not in {"ACTIVE", "NOT_STARTED"}:
+    strategic_skip = bool(mission_id or clarification_id)
+    if activity.status == "EN_ROUTE":
+        raise HTTPException(409, "REVALIDATION_REQUIRED")
+    if strategic_skip and activity.status not in {"ACTIVE", "NOT_STARTED"}:
+        raise HTTPException(409, "CLARIFIED_SKIP_ONLY_PRE_DEPART")
+    if activity.status not in {"ACTIVE", "NOT_STARTED", "ARRIVED", "IN_PROGRESS"}:
         raise HTTPException(409, f"INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED")
     active_plan = session.get(PlanVersion, journey.active_plan_version_id)
     protected_commitment = session.scalar(
@@ -8474,49 +8606,80 @@ def _skip_current_activity(
         )
         .order_by(Activity.sequence_no)
     )
-    origin_activity = session.scalar(
-        select(Activity)
-        .where(
-            Activity.plan_version_id == journey.active_plan_version_id,
-            Activity.sequence_no < activity.sequence_no,
-            Activity.status == "COMPLETED",
-        )
-        .order_by(Activity.sequence_no.desc())
-    )
     execution_override: dict[str, Any] | None = None
-    if next_activity is not None and origin_activity is not None and origin_activity.place_id and next_activity.place_id:
-        frozen_pair = (str(origin_activity.place_id), str(activity.place_id or ""))
-        next_pair = (str(origin_activity.place_id), str(next_activity.place_id))
+    if next_activity is not None:
+        activities = session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == journey.active_plan_version_id)
+            .order_by(Activity.sequence_no)
+        ).all()
+        if activity.status in {"ARRIVED", "IN_PROGRESS"}:
+            origin_activity = activity
+        else:
+            current_index = next(
+                (index for index, item in enumerate(activities) if item.id == activity.id),
+                None,
+            )
+            origin_activity = None
+            if current_index is not None:
+                for previous in reversed(activities[:current_index]):
+                    if previous.status == "COMPLETED" and _activity_routing_key(previous):
+                        origin_activity = previous
+                        break
+
+        origin_key = _activity_routing_key(origin_activity)
+        destination_key = _activity_routing_key(next_activity)
+        if not origin_key or not destination_key or origin_key == destination_key:
+            raise HTTPException(409, "REVALIDATION_REQUIRED")
+
         frozen_evidence = _json_object(active_plan.mobility_evidence_json if active_plan else None)
-        frozen_pairs = {
-            (str(item.get("origin_key")), str(item.get("destination_key")))
-            for item in frozen_evidence.get("facts", [])
-            if isinstance(item, dict) and item.get("origin_key") and item.get("destination_key")
-        }
-        if next_pair not in frozen_pairs or next_pair != frozen_pair:
+        try:
+            frozen_snapshot = MobilitySnapshot.from_evidence(frozen_evidence)
+        except (KeyError, TypeError, ValueError):
+            frozen_snapshot = None
+
+        # A pre-departure skip creates a fresh physical adjacency.  Only a
+        # hard-eligible live provider capture can authorize that new edge.
+        if activity.status in {"ACTIVE", "NOT_STARTED"}:
+            next_pair = (origin_key, destination_key)
             try:
                 captured = capture_runtime_mobility_snapshot(
                     session,
                     journey,
                     [next_pair],
-                    operation_key=f"r26-clarified-skip:{journey.id}:{activity.id}:{next_activity.id}",
+                    operation_key=f"r27-skip:{journey.id}:{activity.id}:{next_activity.id}",
                     require_explicit_facts=True,
                 )
+                fact = captured.snapshot.fact_for(*next_pair)
+                if fact is None or fact.fact_quality != "LIVE_PROVIDER_CAPTURE" or fact.degraded:
+                    raise KeyError("fresh skip edge is not hard-eligible live provider truth")
                 captured.snapshot.hard_minutes(*next_pair)
-            except (MobilitySnapshotCaptureError, KeyError, ValueError) as exc:
-                raise HTTPException(409, "CLARIFIED_SKIP_BLOCKED_LIVE_MOBILITY_UNAVAILABLE") from exc
+            except (MobilitySnapshotCaptureError, KeyError, TypeError, ValueError) as exc:
+                raise HTTPException(409, "REVALIDATION_REQUIRED") from exc
             execution_override = {
                 "reason": "PREDECESSOR_SKIPPED_DIRECT_EDGE",
                 "origin_activity_id": origin_activity.id,
                 "destination_activity_id": next_activity.id,
                 "snapshot": captured.snapshot.to_evidence(),
                 "actual_edge": {
-                    "origin_key": next_pair[0],
-                    "destination_key": next_pair[1],
-                    "fact_quality": captured.snapshot.facts[next_pair].fact_quality,
-                    "route_provenance": captured.snapshot.facts[next_pair].route_provenance,
+                    "origin_key": origin_key,
+                    "destination_key": destination_key,
+                    "fact_quality": fact.fact_quality,
+                    "route_provenance": fact.route_provenance,
                 },
             }
+        else:
+            # Once ARRIVED/IN_PROGRESS, the current activity is the truthful
+            # execution position and its original edge remains frozen.
+            if frozen_snapshot is None:
+                raise HTTPException(409, "REVALIDATION_REQUIRED")
+            try:
+                frozen_fact = frozen_snapshot.fact_for(origin_key, destination_key)
+                if frozen_fact is None or frozen_fact.degraded:
+                    raise KeyError("unchanged skip edge is unavailable")
+                frozen_snapshot.hard_minutes(origin_key, destination_key)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise HTTPException(409, "REVALIDATION_REQUIRED") from exc
 
     skipped_at = datetime.now(timezone.utc).isoformat()
     metadata = _json_object(activity.metadata_json)
@@ -8547,7 +8710,14 @@ def _skip_current_activity(
             "clarification_id": clarification_id,
             "execution_mobility_override": execution_override,
             "voluntary_choice": False,
-            "forced_by_disruption": True,
+            **(
+                {
+                    "decision_scope": "CLARIFIED_HORIZON_CHOICE",
+                    "preference_learning_eligible": False,
+                }
+                if strategic_skip
+                else {}
+            ),
         },
         related_agent_run_id=None,
     )
