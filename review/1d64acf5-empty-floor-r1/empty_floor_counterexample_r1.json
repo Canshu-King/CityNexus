@@ -1,0 +1,86 @@
+{
+ "E1_replica": {
+  "range": [
+   42,
+   53
+  ],
+  "lines": 12,
+  "first": "def shelf(slug):",
+  "last": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/",
+  "parse": "ok"
+ },
+ "E1_with_floor_empty": {
+  "raised": true,
+  "detail": "ABORT: slug enumerates nothing on commander/control",
+  "git_calls": 6,
+  "floor_line_present_after_edit": 1,
+  "asked_to_drop_floor": false
+ },
+ "E1_without_floor_empty": {
+  "raised": false,
+  "returned_is_none": true,
+  "returned_len": null,
+  "returned": null,
+  "git_calls": 6,
+  "floor_line_present_after_edit": 0,
+  "asked_to_drop_floor": true
+ },
+ "E1_vacuous_comparison_on_two_empties": {
+  "expression": "sorted({}) != sorted([])",
+  "value": false
+ },
+ "E1_census_expression_on_the_floorless_return": {
+  "expression": "sorted(None) != sorted([])",
+  "raised": "TypeError",
+  "detail": "'NoneType' object is not iterable"
+ },
+ "E1_with_floor_one_row": {
+  "raised": false,
+  "returned_is_none": false,
+  "returned_len": 1,
+  "returned": [
+   "one.py"
+  ],
+  "git_calls": 2,
+  "floor_line_present_after_edit": 1,
+  "asked_to_drop_floor": false
+ },
+ "E2_real_survey_empty": {
+  "argv_tip": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+  "rc": 0,
+  "stdout": "{\"tip\": \"4b825dc642cb6eb9a060e54bf8d69288fbee4904\", \"files\": 0, \"sites\": 0, \"by_form\": {\"frozen_key_collection\": 0, \"line_number_as_argument\": 0, \"index_through_tracked_variable\": 0}, \"stale_or_unresolved\": 0, \"collections\": 0, \"on_derived_inventory\": 0, \"file_name_lists\": 0, \"worth_opening\": 0}\r\n",
+  "stderr": ""
+ },
+ "E2_artifact_written_by_the_empty_run": {
+  "test_files_scanned": 0,
+  "sites": 0,
+  "rows_len": 0
+ },
+ "E2_restore": {
+  "before_blob": "b37bd16768aa702d14ef0ae4c42eaef3e058844d",
+  "restored_blob": "b37bd16768aa702d14ef0ae4c42eaef3e058844d",
+  "byte_identical": true,
+  "before_bytes": 45369,
+  "restored_bytes": 45369
+ },
+ "E3_scanner_r2": {
+  "rows_distinct": 419,
+  "duplicates_removed": 0,
+  "empty_root_refused": true,
+  "fixtures_all_classified": true,
+  "by_role": {
+   "verdict": 151,
+   "compare": 130,
+   "unknown": 131,
+   "accessor-or-gate-input": 3,
+   "filter": 4
+  }
+ },
+ "E1_verdict": {
+  "floor_present_refuses_by_name": true,
+  "floorless_returns_none": true,
+  "vacuous_pass_would_need_a_dict": true,
+  "so_this_site_is_NOT_a_hole": true,
+  "positive_control_one_row_ok": true
+ }
+}

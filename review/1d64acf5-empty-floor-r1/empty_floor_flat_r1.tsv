@@ -1,0 +1,42 @@
+authoritative_tip_now	4d43f8bc25a1a2f4e4c752afe08851032ab6c71d	git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+tip_tree	b9d745a7674cbf0bb40a71b96d6cfc7878de2134	git cat-file -p 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d
+tip_parents	eaf4069e5d07a3dacc1ec33a0be515119208e16e	same commit object, parent line
+tip_tree_equals_candidate_b_tree	True	compared against the pair-candidate tree in empty_floor_counterexample_r1.json
+tip_selfcheck_row	100644 blob 5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e TAB tools/cnx_ledger_mirror_sync_check_r1.py	git ls-tree <tip> -- tools/cnx_ledger_mirror_sync_check_r1.py
+tip_hook_row	100644 blob 18f51ebc995a1a496a5b6b5d7947d73f9ba818d3 TAB tools/cnx_ledger_mirror_sync_hook_r1.py	git ls-tree <tip> -- tools/cnx_ledger_mirror_sync_hook_r1.py
+tip_reader_row	100644 blob dd939945f560632fea20186a57929d2edc1ab6ad TAB tools/cnx_ledger_mirror_reader_r1.py	git ls-tree <tip> -- tools/cnx_ledger_mirror_reader_r1.py
+tip_api_status	200	GET contents/tools/cnx_ledger_mirror_sync_check_r1.py?ref=4d43f8bc25a1a2f4e4c752afe08851032ab6c71d
+tip_api_bytes	11133	same response body length
+tip_api_blob	5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e	sha1 of that body
+r1_rows_raw	113	work_list_without_floor length
+r1_rows_distinct	112	distinct of the same list by file+line+shape+text
+r1_vacuous_all	90	by_shape.vacuous_all.no_floor
+r1_emptiness_passes	3	by_shape.emptiness_passes.no_floor
+r2_rows_distinct	419	empty_denominator_inventory_r2.json rows_distinct
+r2_files_parsed	131	same file files_parsed
+r2_filter	4	by_role.filter
+r2_accessor	3	by_role.accessor-or-gate-input
+r2_verdict	151	by_role.verdict
+r2_compare	130	by_role.compare
+e1_line_range	42-53	empty_floor_counterexample_r1.json E1_replica.range
+e1_lines	12	same leg, lines key
+e1_with_floor_refusal	ABORT: slug enumerates nothing on commander/control	E1_with_floor_empty.detail
+e1_floorless_returns_none	True	E1_without_floor_empty.returned_is_none
+e1_floorless_expression	TypeError	E1_census_expression_on_the_floorless_return.raised
+e1_positive_control	1	E1_with_floor_one_row.returned_len
+e2_argv_tip	4b825dc642cb6eb9a060e54bf8d69288fbee4904	E2_real_survey_empty.argv_tip (the empty tree)
+e2_rc	0	E2_real_survey_empty.rc
+e2_files_scanned	0	E2_artifact_written_by_the_empty_run.test_files_scanned
+e2_sites	0	same leg, sites key
+e2_rows_len	0	same leg, rows_len key
+e2_artifact_blob	b37bd16768aa702d14ef0ae4c42eaef3e058844d	sha1 of anchor_drift_survey_r3.json as it stands now
+e2_artifact_bytes	45369	its size in bytes
+e2_restore_identical	True	E2_restore.byte_identical
+e3_empty_root_refused	True	E3_scanner_r2.empty_root_refused
+e3_fixtures	True	E3_scanner_r2.fixtures_all_classified
+hook_arms	5	hook_selftest_on_r3_r1.json arms length
+hook_base_verdict	CURRENT	hook_selftest_on_r3_r1.json arms[arm=none].verdict
+hook_trail_lines_after	2	same arm, trail_lines_after
+hook_empty_trail_refuses	True	arms[arm=empty_trail].refuses_to_imply_ok
+hook_unwritable_guard	True	arms[arm=unwritable_trail].guard_fired
+hook_arms_all_correct	True	same file arms_all_correct
