@@ -26,10 +26,14 @@ const LOCALE_FILE = "src/i18n/LocaleContext.tsx";
  *  must not be drawn in the chrome at all, so it is excluded by name and checked in its own arm. */
 const MOUNTED_TABLES = ["desktopRoutes", "mobileRoutes"] as const;
 
-/** Read `export const <table> = [ … ] ` and return its `key:` values, in file order, deduped. */
+/** Read `export const <table> = [ … ] ` and return its `key:` values, in file order, deduped. The anchor is
+ *  matched as a declaration, not a substring: a prefix match would let `desktopRoutesBroken` pass as
+ *  `desktopRoutes`, which is how the first version of this ruler sailed through a renamed table. */
 function tableKeys(src: string, table: string): string[] {
-  const start = src.indexOf(`export const ${table}`);
-  expect(start, `${table} is missing from ${ROUTES_FILE} -- the ruler would pass on an empty denominator`).toBeGreaterThanOrEqual(0);
+  const decl = new RegExp(`^export const ${table}\\s*=`, "m");
+  const found = decl.exec(src);
+  expect(found, `${table} is missing from ${ROUTES_FILE} -- the ruler would pass on an empty denominator`).not.toBeNull();
+  const start = found!.index;
   const open = src.indexOf("[", start);
   expect(open, `${table} has no array literal`).toBeGreaterThan(start);
   let depth = 0;
@@ -112,9 +116,10 @@ const enBlock = dictionaryBlock(localeSrc, "en");
 const zhBlock = dictionaryBlock(localeSrc, "zhCN");
 
 test("arm 1 -- both sides parsed to a real denominator", () => {
+  // A tripwire only: it says nothing about which row moved, so the named arms keep their diagnosis. The
+  // first version coupled this to the debt count and swallowed arms 2 and 3's messages.
   expect(mounted.length).toBeGreaterThanOrEqual(13);
   expect(whitelisted.length).toBeGreaterThanOrEqual(13);
-  expect(mounted.filter((r) => !whitelisted.includes(r)).length).toBe(DEBT.length);
 });
 
 test("arm 2 -- no mounted screen may sit outside the whitelist unless it is judged here", () => {
@@ -152,9 +157,11 @@ test("arm 7 -- tokenRoutes are not mounted screens and the shell really short-ci
   expect(tokens.length).toBeGreaterThanOrEqual(1);
   for (const t of tokens) {
     expect(mounted, `${t} is in both tables -- the debt list would be lying`).not.toContain(t);
+    // The standalone render branch, not any mention of the key: the shell also tests
+    // `deepLink.route === "shared"` while resolving an address, and that one does not keep the chrome off.
     expect(
-      new RegExp(`route\\s*===\\s*"${t}"`).test(shellSrc),
-      `${t} is not short-circuited by the shell, so it does paint a top-bar name`
+      new RegExp(`\\n\\s*if \\(route === "${t}"\\) \\{`).test(shellSrc),
+      `${t} has no standalone early branch in the shell, so it does paint a top-bar name`
     ).toBe(true);
   }
 });
