@@ -2038,12 +2038,7 @@ export function V8Experience() {
                 </>
               )}
             </div>
-            <button
-              className="v8-avatar"
-              data-testid="topbar-avatar"
-              aria-label={t("nav.me")}
-              onClick={() => navigate("me")}
-            >
+            <button className="v8-avatar" onClick={() => navigate("me")}>
               {initialsFrom(cityName)}
             </button>
           </div>
