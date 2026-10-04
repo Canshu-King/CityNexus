@@ -1,0 +1,63 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "efc6f365fe040ba1a05a373426f3aa4490ced72a",
+  "cases": [
+    {
+      "case": "two_migrate_arms",
+      "stamped": {
+        "mode": "stamped",
+        "run_id": "guardab-f77d8f6f",
+        "rc": 1,
+        "summary": "2 failed, 2 warnings in 2.25s",
+        "red_set": [
+          "test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+          "test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+        ]
+      },
+      "plain": {
+        "mode": "plain",
+        "run_id": "(none)",
+        "rc": 0,
+        "summary": "2 passed, 2 warnings in 2.26s",
+        "red_set": []
+      },
+      "red_set_differs": true,
+      "stamped_red": 2,
+      "plain_red": 0
+    },
+    {
+      "case": "whole_file",
+      "stamped": {
+        "mode": "stamped",
+        "run_id": "guardab-24f62ddd",
+        "rc": 1,
+        "summary": "2 failed, 13 passed, 2 warnings in 3.12s",
+        "red_set": [
+          "test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+          "test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+        ]
+      },
+      "plain": {
+        "mode": "plain",
+        "run_id": "(none)",
+        "rc": 0,
+        "summary": "15 passed, 2 warnings in 2.75s",
+        "red_set": []
+      },
+      "red_set_differs": true,
+      "stamped_red": 2,
+      "plain_red": 0
+    }
+  ],
+  "guard_reach_measured": {
+    "files_where_the_two_modes_disagree_in_this_sample": [
+      "tests/test_qoder_pending_destination_identity.py"
+    ],
+    "count": 1,
+    "sample_of_files_compared": 4,
+    "files_in_tree_that_open_their_own_sqlite": 33,
+    "test_files_in_tree": 228,
+    "not_measured": 29
+  },
+  "claim_corrected": "my delivered block asserted this bites every lane that stamps a run id; measured reach is 1 file out of the 4 I compared, and the other 29 candidates were not measured"
+}
