@@ -1,0 +1,62 @@
+e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts :: hub-geometry-320x653-zh — {"viewport":[320,653],"scrolled_to_idle_px":557,"scrolled_to_live_px":557,"hit_floor_px":768,"safety_gap_px":16,"controls_idle":43,"controls_with_selection":43,"reachable_idle":12,"reachable_with_selection":12,"lost":[],"lost_detail":[],"pins_idle":[["1",[39,241],true,null],["2",[123,143],false,"small#today-clock-source#cn-clock-source"],["3",[123,143],false,"small#today-clock-source#cn-clock-source"],["4",[99,219],true,null],["5",[160,326],true,null],["6",[91,62],false,"button#today-hero-cta#v8-primary.cn-hero-cta"],["7",[123,143],false,"small#today-clock-source#cn-clock-source"],["8",[123,143],false,"small#today-clock-source#cn-clock-source"],["9",[398,-97],false,null]],"pins_with_selection":[["1",[160,327],true,null],["2",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["3",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["4",[219,305],true,null],["5",[281,412],true,null],["6",[212,148],false,"small#today-clock-source#cn-clock-source"],["7",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["8",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["9",[518,-12],false,null]],"pin_spread_px":{"x":359,"y":423},"pins_answerable":3,"attribution_claim":"measured","band_box_idle":[30,297,260,139],"band_box_with_selection":[30,297,260,139],"band_growth_px":0,"name_painted":true,"cell":{"box":[30,370,120,14],"scroll_w":0,"client_w":0,"in_viewport":true,"inner_height":653,"outside_caption":false},"shot":"D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0512\\e2e\\ord0417-hub\\ord0417hub_leanB_geometry_320x653_zh.png"}
+
+[13/13] [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:411:5 › hub-geometry-320x653-en — the linkage costs the hub no reachable control
+[WebServer] INFO:     127.0.0.1:64693 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64694 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65503 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65502 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65500 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62572 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52082 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52081 - "GET /api/v1/travelers/9bbecf22-99e5-42d7-b280-1f2abb0aac75/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65501 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64695 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56860 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56859 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65504 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64486 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64487 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64488 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56586 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64489 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57349 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63378 - "GET /api/v1/travelers/9bbecf22-99e5-42d7-b280-1f2abb0aac75/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64490 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57850 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64729 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63941 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56587 - "GET /api/v1/journeys/55e43588-738b-42f0-b0a6-ff7176076f2c/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64730 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:411:5 › hub-geometry-320x653-en — the linkage costs the hub no reachable control
+e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts :: hub-geometry-320x653-en — {"viewport":[320,653],"scrolled_to_idle_px":554,"scrolled_to_live_px":554,"hit_floor_px":768,"safety_gap_px":16,"controls_idle":43,"controls_with_selection":43,"reachable_idle":12,"reachable_with_selection":12,"lost":[],"lost_detail":[],"pins_idle":[["1",[39,241],true,null],["2",[123,143],false,"small#today-clock-source#cn-clock-source"],["3",[123,143],false,"small#today-clock-source#cn-clock-source"],["4",[99,220],true,null],["5",[160,327],true,null],["6",[91,63],false,"button#today-hero-cta#v8-primary.cn-hero-cta"],["7",[123,143],false,"small#today-clock-source#cn-clock-source"],["8",[123,143],false,"small#today-clock-source#cn-clock-source"],["9",[398,-97],false,null]],"pins_with_selection":[["1",[160,327],true,null],["2",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["3",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["4",[219,305],true,null],["5",[281,412],true,null],["6",[212,148],false,"small#today-clock-source#cn-clock-source"],["7",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["8",[243,229],false,"button#map-viewport-reset#v8-map-viewport-control"],["9",[518,-12],false,null]],"pin_spread_px":{"x":359,"y":424},"pins_answerable":3,"attribution_claim":"measured","band_box_idle":[30,298,260,139],"band_box_with_selection":[30,298,260,139],"band_growth_px":0,"name_painted":true,"cell":{"box":[30,370,136,14],"scroll_w":0,"client_w":0,"in_viewport":true,"inner_height":653,"outside_caption":false},"shot":"D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\ord0512\\e2e\\ord0417-hub\\ord0417hub_leanB_geometry_320x653_en.png"}
+
+  13 passed (1.4m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0417hub_leanB.db ports 5172/5173 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0417hub_leanB LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_leanB.log
+HUB_RC=0

@@ -1,0 +1,62 @@
+[WebServer] INFO:     127.0.0.1:63725 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56516 - "GET /api/v1/travelers/202c70fc-270d-451c-9eae-6ccd1513d5a6/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63057 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49703 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62641 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62642 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51877 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62644 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64701 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50961 - "GET /api/v1/travelers/202c70fc-270d-451c-9eae-6ccd1513d5a6/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50555 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51078 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62647 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62643 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51878 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59115 - "GET /api/v1/journeys/cf5cd877-71e3-41b4-b6e7-e50b7d33f2d5/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56693 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  1) [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:411:5 › hub-geometry-320x653-en — the linkage costs the hub no reachable control 
+
+    Error: e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts :: H5 — 320x653/en: no hub marker answers a hit at any pin's centre: [["1",[158,250],false,"span#v8-map-viewport-control-glyph"],["2",[159,249],false,"span#v8-map-viewport-control-glyph"],["3",[159,249],false,"span#v8-map-viewport-control-glyph"],["4",[158,250],false,"span#v8-map-viewport-control-glyph"],["5",[159,252],false,"span#v8-map-viewport-control-glyph"],["6",[158,248],false,"span#v8-map-viewport-control-glyph"],["7",[159,249],false,"span#v8-map-viewport-control-glyph"],["8",[159,249],false,"span#v8-map-viewport-control-glyph"],["9",[162,246],false,"span#v8-map-viewport-control-glyph"]]
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      417 |       const idleControls = await controlCensus(page);
+      418 |       const { census: idlePins, target, attributable_to_one_stop: attributable, pins_answerable: answerable, pin_spread_px: spread } = await pickPinForCamera(page);
+    > 419 |       expect(target, node("H5", `${w}x${h}/${arm.locale}: no hub marker answers a hit at any pin's centre: ${JSON.stringify(idlePins.pins.map((pin) => [pin.painted, pin.centre, pin.lands_on_marker, pin.covered_by]))}`)).not.toBeNull();
+          |                                                                                                                                                                                                                                 ^
+      420 |       await page.mouse.click(target!.centre[0], target!.centre[1]);
+      421 |       await page.waitForTimeout(1_800);
+      422 |       const glass = await readGlassName(page);
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:419:225
+
+    Error Context: test-results\qoder-ord0417-hub-tap-name-ffe78-he-hub-no-reachable-control-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0417-hub-tap-name-ffe78-he-hub-no-reachable-control-chromium\error-context.md
+
+
+  1 failed
+    [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:411:5 › hub-geometry-320x653-en — the linkage costs the hub no reachable control 
+  12 passed (1.4m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0417hub_day35.db ports 5172/5173 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0417hub_day35 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0417hub_day35.log
+GATE_RC=1

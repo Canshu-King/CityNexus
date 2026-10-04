@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_ORD0417_HUB_PINS_READINGS_R1",
+ "variant": "B_reserve_control_box_only",
+ "tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+ "git_blob_ids": {
+  "mappanel_on_tip": "1d6b1f2256b0cd9798d2cdd729f64075649cec86",
+  "mappanel_in_this_tree": "06ff2c3073efde81e6a60a51e4f3afdf4bb5c1c4"
+ },
+ "sha256_of_the_patched_file": {
+  "tree_now": "734b9a0d2f4cda93c31817af7c1c26940d66fd82d64d3f893450833ee9f252c1",
+  "tip_bytes": "e176a45c3ce31e986b0ef20fdb0b7414395b532edb2709ceceaa5156c30f0332",
+  "tree_equals_tip": false
+ },
+ "hub_gate": {
+  "baseline_on_tip_bytes": {
+   "file": "_hub_base_day35.out",
+   "failed": 1,
+   "passed": 12,
+   "red_arms": [
+    "e2e\\qoder-ord0417-hub-tap-names-the-stop.spec.ts:411:5 :: hub-geometry-320x653-en — the linkage costs the hub no reachable control"
+   ],
+   "present": true
+  },
+  "after_this_hand": {
+   "file": "_hub_leanB.out",
+   "failed": 0,
+   "passed": 13,
+   "red_arms": [],
+   "present": true
+  }
+ },
+ "glass_gate": {
+  "baseline_on_tip_bytes": {
+   "file": "_glass_base_day35.out",
+   "failed": 0,
+   "passed": 11,
+   "red_arms": [],
+   "present": true
+  },
+  "after_this_hand": {
+   "file": "_glass_leanB.out",
+   "failed": 1,
+   "passed": 10,
+   "red_arms": [
+    "e2e\\qoder-0512-stop-names-on-the-glass.spec.ts:342:1 :: crowding-hides — where the stops converge the names take turns, and the picked one keeps its word"
+   ],
+   "present": true
+  }
+ },
+ "glass_red_set": {
+  "new_red": [
+   "e2e\\qoder-0512-stop-names-on-the-glass.spec.ts:342:1 :: crowding-hides — where the stops converge the names take turns, and the picked one keeps its word"
+  ],
+  "recovered": [],
+  "verdict": "NEW_RED_FOUND"
+ },
+ "commands": {
+  "gate": "python run/ord0512_run_gate_r1.py <run-id> <spec> --reporter=line with ORD0512_TREE=hubcut ORD0512_PORTS=<front>,<back>",
+  "run_ids": [
+   "ord0417hub_day35 (tip bytes)",
+   "ord0417hub_day35fix (patched)",
+   "ord0512glass_day35base (tip bytes)",
+   "ord0512glass_day35fix (variant A)",
+   "ord0417hub_leanB (variant B)",
+   "ord0512glass_leanB (variant B)"
+  ],
+  "apply_revert": "python run/ord0417_top_reservation_r1.py <apply|revert> --tree hubcut"
+ }
+}
