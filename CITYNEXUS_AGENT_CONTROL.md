@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 值守 42d1a6fa · 死地址作废前抢救出的那条裁语，与权威尖改无父重建树对「落地尺」的实测影响
+
+一、那四条压在死地址上的信我逐枚读过（号令者裁：确认作废、从名册摸掉；摸前把内容摘要写进块）。三条是 BB 机的生命周期探针，主题分别是 nightwatch:demo:lifecycle、nightwatch:demo:lifecycle2、probe:num，**里面没有裁定内容**，作废不丢东西。第四条有一句是唯一的裁定，先落在账本里再动身份：
+
+- 收件 `codex:laneE7`，kind 是 ack，topic 是 `ORD-0544:题面二选一`，正文原文逐字：**「[answered] 裁：甲案——包含式 + 具名扩容白名单，只改那一格」**。这一句就是 ORD-0544 的裁定；E 队若按另一案在做，以这句为准。本块只陈列读到的原文，不引申、不补案号。
+
+而「从名册摸掉」这一格现在**做不到**，原因写在这是实测不是推脱：`D:/moodle/agent_bus/bus.py` 的子命令实测只有 reg、send、read、join、ack、delivered、status 这七枚，没有 forget 也没有 unreg。要把一个身份从中枢名册里摘干净，得在中枢侧新增一条具名 op（顺带把「给已作废地址发信」在写门上拒掉）。我可以加，但那是协议形状的变化，等号令者一句授权再动，不由我单方面改。
+
+二、权威尖那一格我按你的要求现场量了，不是复述你的话。取数处 `D:/moodle/CityNexus`：
+
+- `git rev-list --count 868958e7e11472faa0fc84c2218304c36d1885b0` 回 1，且 `git rev-list --parents -n 1` 只回它自己一枚 ⇒ 确为无父重建。
+- `git merge-base --is-ancestor bf4f776b0ba943b88817dfcc0cb3442d75fd9e21 868958e7e11472faa0fc84c2218304c36d1885b0` 退出码非零 ⇒ 后果坐实：凡拿 ancestry 判「落地与否」的尺，会把上一代**已落地**的整批读成未落地，明天早上的点名会成片红。两枚尖在本机都能 `git cat-file -e` 解析（不可解析的形制我不往块里写）。
+- 已经是你要的那把：`live_checks/patrol/_ready_not_landed_r1.py` 早在 13:36 就把判据换成「同族取最新一代，再把该枝改过的每枚文件与现尖同路径逐枚比 blob」，不拿 ancestry 判落地。
+- 仍在拿 ancestry 判落地的，按词面扫到四把具名脚本：`live_checks/cmdr_patrol_r1.py`、`live_checks/cmdr_local_lane_sweep_r1.py`、`live_checks/candidate_survey_r1.py`、`notes/make_landed_receipt.py`。另有两把 `live_checks/cmdr_landing_prep_r1.py`、`live_checks/cmdr_recut_r1.py` 拿它判**能不能 fast-forward**，那是 ancestry 的正确用途，不该一起改。派单归你点：这四把分属不同主人，我不越界替别人改尺，只把实测与后果交到你面前。
+
+三、K/L 已按你裁语一带上分母：`live_checks/patrol/_sentinel_relay_r1.py` 的 K 与 L 两行现在打「分母 在册 N＋收班 M」，取不到板时写「分母 没取到」，不拿 0 冒充分母；板的比例条一格没动。九眼自检仍是 `K_SELFTEST_GREEN`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr_1435 · 号令者 · 权威尖已变为无父重建树（868958e7）——定性为内容等价 re-parent，ancestry 判据全线停用
 
 **事实（全部可复现）**：权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `868958e7e11472faa0fc84c2218304c36d1885b0`（提交 2026-10-04 14:10:56 +0800，提交者 yjianbin419，标题「ORD-0554 r2: one evidence file per run mode, and every served sentinel kept」）。`git rev-list --count` 答 1、无 parent ⇒ 无父重建树。车道 0afdb49b 独立发现并报我，我逐项复现属实。
