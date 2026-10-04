@@ -1,0 +1,110 @@
+{
+ "proof": [
+  {
+   "run": 1,
+   "line": "run 1 | ref commander/control | remote blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | bytes 13503541 B | recomputed git blob sha1 af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | equal=true | api agrees=true (api says blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 / 13503541 B)",
+   "blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "bytes": 13503541,
+   "git_blob_sha1": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "hash_equal": true,
+   "size_equal": true,
+   "channels_agree": true,
+   "api_blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "api_size": 13503541,
+   "tip": "50373240559f1b3703bbc4d237301284e31e2408",
+   "text_len": 8478284,
+   "text_hash_of_decoded": true
+  },
+  {
+   "run": 2,
+   "line": "run 2 | ref commander/control | remote blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | bytes 13503541 B | recomputed git blob sha1 af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | equal=true | api agrees=true (api says blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 / 13503541 B)",
+   "blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "bytes": 13503541,
+   "git_blob_sha1": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "hash_equal": true,
+   "size_equal": true,
+   "channels_agree": true,
+   "api_blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "api_size": 13503541,
+   "tip": "50373240559f1b3703bbc4d237301284e31e2408",
+   "text_len": 8478284,
+   "text_hash_of_decoded": true
+  },
+  {
+   "run": 3,
+   "line": "run 3 | ref commander/control | remote blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | bytes 13503541 B | recomputed git blob sha1 af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 | equal=true | api agrees=true (api says blob af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 / 13503541 B)",
+   "blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "bytes": 13503541,
+   "git_blob_sha1": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "hash_equal": true,
+   "size_equal": true,
+   "channels_agree": true,
+   "api_blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+   "api_size": 13503541,
+   "tip": "50373240559f1b3703bbc4d237301284e31e2408",
+   "text_len": 8478284,
+   "text_hash_of_decoded": true
+  }
+ ],
+ "arms": [
+  {
+   "arm": "short_body",
+   "refused": true,
+   "leg": "hash_gate",
+   "detail": "bytes taken do not hash to the blob the tree names: recomputed 8888669eef795b177b230153b459dcc1663bd703 != af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 over 13503540 of 13503541 B"
+  },
+  {
+   "arm": "wrong_expected_sha",
+   "refused": true,
+   "leg": "hash_gate",
+   "detail": "bytes taken do not hash to the blob the tree names: recomputed af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9 != af2fb5f25a72f19534f79e9a6c41e3e9695d2aa0 over 13503541 of 13503541 B"
+  },
+  {
+   "arm": "no_api",
+   "refused": true,
+   "leg": "api_channel",
+   "detail": "arm no_api: the second channel is what tells us the blob id independently of the tree we fetched; without it there is no agreement to check"
+  },
+  {
+   "arm": "old_onshot_read",
+   "refused": null,
+   "route": "api_raw_old_onshot_read",
+   "attempts": 1,
+   "any_complete": true,
+   "per_attempt": [
+    {
+     "attempt": 1,
+     "declared_content_length": "13503541",
+     "bytes": 13503541,
+     "short_by": 0,
+     "err": null,
+     "git_blob_sha1": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+     "complete": true,
+     "seconds": 3.5
+    }
+   ],
+   "meaning": "this is the route the mirror used. it is NOT a supported source: on 2026-10-03 three reads stopped short and on 2026-10-04 one read came whole - intermittent is the defect, and a reader that cannot tell the two apart is the hazard"
+  }
+ ],
+ "read_of_record": {
+  "ref": "commander/control",
+  "path": "CITYNEXUS_AGENT_CONTROL.md",
+  "branch_tip_commit": "50373240559f1b3703bbc4d237301284e31e2408",
+  "blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+  "bytes": 13503541,
+  "git_blob_sha1": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+  "hash_equal": true,
+  "size_equal": true,
+  "object_size_from_cat_file": 13503541,
+  "fetch_ref_used": "refs/remotes/verify/cnx_reader_commander_control",
+  "fetch_self_heal": [],
+  "arm": "none",
+  "channels_agree": true,
+  "api_blob_id": "af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9",
+  "api_size": 13503541,
+  "api_status": 200,
+  "single_channel": false,
+  "content_key_present": true,
+  "content_in_body_from_api": false
+ }
+}
