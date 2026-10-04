@@ -80,6 +80,35 @@ const EXTRACTION_STATUS: Record<ExtractionStatus, Label> = {
   },
 };
 
+/* ORD-0568: the `route_provenance` a recovery panel prints next to the provider's own key. The names below
+   are every value `backend/app/main.py` can write into that field -- the five-branch expression at
+   `:11538` plus the default the mobility evidence carries at `:8928` -- so the set is read off the server,
+   not invented. The enum itself stays on the screen: it is what the backend logs and the contract name, and
+   an audit reading has to be able to match it. What the traveller was missing is the words. */
+const ROUTE_PROVENANCE_KEYS = ["RUNTIME_CAPTURE", "MIXED_RUNTIME_CAPTURE", "SEALED_INCIDENT_REPLAY",
+  "SEALED_REAL_REPLAY", "DEGRADED_BASELINE_REFERENCE", "CAPTURED_REPLAY"] as const;
+type RouteProvenance = (typeof ROUTE_PROVENANCE_KEYS)[number];
+const ROUTE_PROVENANCE: Record<RouteProvenance, Label> = {
+  RUNTIME_CAPTURE: { zh: "运行时取证", en: "runtime capture" },
+  MIXED_RUNTIME_CAPTURE: { zh: "运行时取证，但这次掺了降级读数",
+    en: "runtime capture, mixed with a degraded reading" },
+  SEALED_INCIDENT_REPLAY: { zh: "这次事件封存下来的回放", en: "a replay sealed for this incident" },
+  SEALED_REAL_REPLAY: { zh: "封存真实回放", en: "sealed real replay" },
+  DEGRADED_BASELINE_REFERENCE: { zh: "退回降级基线参照", en: "a degraded baseline reference" },
+  CAPTURED_REPLAY: { zh: "已采集回放", en: "captured replay" },
+};
+
+/** Closed lookup, same shape as `extractionStatusLabel`: only a name in `ROUTE_PROVENANCE_KEYS` is answered
+ *  with, and an unlisted value gets a gap sentence rather than being printed back. A shared fallback that
+ *  echoes its input would connect an upstream read to every other panel that imports a `pick`-based label. */
+export function routeProvenanceLabel(value: unknown, zh?: boolean | string | null): string {
+  const key = ROUTE_PROVENANCE_KEYS.find((name) => value === name);
+  if (!key) return wantsChinese(zh) ? "这台服务器写了一个这屏不认识的证据来源"
+    : "this server wrote an evidence source this screen does not know";
+  const entry = ROUTE_PROVENANCE[key];
+  return wantsChinese(zh) ? entry.zh : entry.en;
+}
+
 /** ORD-0432: the words `feasibility_envelope.risk_reason_codes` can hold. A trip with an open
  *  MAJOR or CRITICAL event is not "nothing to see", and the reason has to be readable. */
 const RISK_REASON: Record<string, Label> = {
