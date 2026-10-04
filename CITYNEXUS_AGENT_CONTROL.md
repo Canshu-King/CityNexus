@@ -16588,6 +16588,76 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 14:02 · ORD-0554 交件：`/v8/live` 英文臂 16 枚大写词逐枚判源——16 枚全是产品自己写的字，0 枚来自服务器字段；产品字节 0；两枚反件各自咬红；另自报我这手有两处尺缺陷（一处把反件的读数记成了守闸的）
+
+**〇、钟点先说清（免得按文件名排先后排错）**
+
+本块钟点取现读系统钟（shell `date` 现报 14:02，本地时区）。我这手两枚提交的 git 时间是 03:07 与 06:10，同一台机器在两次读数之间被对时前移约 8 小时，盘上文件 mtime 仍停在旧钟点 ⇒ 请把这行当"同一夜的后半"读，不要按名排序。
+
+**一、题面判定（逐枚，判据是"字从哪儿来"，不是"字面上有没有撞名"）**
+
+题面给的判据是「能在 `backend/app/` grep 到上游词表名的算脏」。先按这条量：`NEXT` 有 2 处具名字面量、`LIVE` 有 2 处（`backend/app/operations/v9.py:96`、`backend/app/schemas.py:432`、`backend/app/integrations/china/amap.py:51`、`backend/app/replanning/provider_snapshots.py:65`）；`NAVIGATE`、`RISK`、`CLOCK`、`CURRENT`、`OFFLINE` 各 0 处。
+
+再按来源量，结论不同：这一屏画出来的 16 枚大写词，每一枚都是产品自己的英文字典值、经 `t("<key>")` 请求出来的，中文对照是翻译过的。所以 `NEXT`/`LIVE` 属"本地样式字恰好与服务器枚举同名"，不是"服务器枚举原样上屏"。逐枚（键名 + 定义处 + 上屏处，全部现取现读）：
+
+- `NEXT`：`live.nextLeg` / `live.nextSelect` / `live.leaveBy`，定义 `frontend/src/i18n/LocaleContext.tsx:291`、`:292`、`:297`，上屏 `frontend/src/app/V8Experience.tsx:3653`、`:3667`、`:3773`
+- `LEAVE`：`live.leaveBy`，定义 `frontend/src/i18n/LocaleContext.tsx:297`，上屏 `frontend/src/app/V8Experience.tsx:3773`
+- `NAVIGATE`：`live.navigate`，定义 `frontend/src/i18n/LocaleContext.tsx:304`，上屏 `frontend/src/app/V8Experience.tsx:3802`
+- `RISK`：`live.risk`，定义 `frontend/src/i18n/LocaleContext.tsx:305`，上屏 `frontend/src/app/V8Experience.tsx:3806`
+- `ROUTE` / `EVIDENCE`：`live.routeEvidence`、`live.evidence`，定义 `frontend/src/i18n/LocaleContext.tsx:310`、`:308`，上屏 `frontend/src/app/V8Experience.tsx:3822`、`:3818`
+- `LIVE` / `STATUS`：`exec.liveStatus`（另有 `exec.liveJourneyPrefix` 也带 `LIVE`），定义 `frontend/src/i18n/LocaleContext.tsx:574`、`:620`，上屏 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:51`
+- `CLOCK`：`exec.clock`，定义 `frontend/src/i18n/LocaleContext.tsx:577`，上屏 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:61`
+- `CURRENT` / `STEP`：`exec.currentStep`，定义 `frontend/src/i18n/LocaleContext.tsx:579`，上屏 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:74`
+- `OFFLINE`：`exec.offline`，定义 `frontend/src/i18n/LocaleContext.tsx:583`，上屏 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:82`
+- `NOW` / `ETA` / `LOW`：`live.now`、`live.eta`、`live.routeCurrent`，定义 `frontend/src/i18n/LocaleContext.tsx:273`、`:300`、`:307`，上屏 `frontend/src/app/V8Experience.tsx:3629`、`:3793`、`:3812`
+- `WGS84`：不是标签，是地图说明里回读的坐标系数据值，来自响应字段本身；中文臂那一屏也只剩这一枚
+
+⇒ 按题面允许的第二节形制（"只在字面里出现的算本地样式字，一个字不要改"），这 16 枚一枚没改，加的是**守闸**；不需要给 `displayVocabulary.ts` 加族。要不要仍按"字母撞名"就把 `NEXT`/`LIVE` 收进词表，是你的裁，不是我判得了的；我这边能给的是：这两枚字的**来源**是字典（键与上屏处都在上面那列里），把它们当服务器枚举去翻，翻不出对应的服务器字段可翻。
+
+**二、读数（三臂；通道具名）**
+
+仪表 `frontend/e2e/qoder-a68b0631-ord0554-live-caps-r1.spec.ts`（blob `13e171048c3a8ca44ffa66dce9acf0922af1312d`），跑在 `playwright.prod-gate.config.ts` 那条产线（`npm run build` + `vite preview` + 本车道自己的后端与一次性库，每次一趟新 run id）；守闸一趟 rc=0，读数 `4 passed`。
+
+- A1 英文臂：画出的大写词 16 枚，逐枚都归到字典键，无从归源的 0 枚（件 `frontend/review/ord0554/a1_en_census_sourced_guard_r1.json`，blob `e7498a01afffd0f9cbde86afb6c8c21c4fe86245`）。正对照写进判据里：具名那 7 枚与面板 4 枚必须先"确实在屏上"，空屏不许算通过。
+- A2 中文臂：同一屏只读到 1 枚大写词（`WGS84`），英文标签词命中 0 枚；那枚词的判定靠的是从活屏模块自己用到的键反查出来的 30 枚标签词名单（件 `frontend/review/ord0554/a2_zh_census_guard_r1.json`，blob `85a3fdd14246043708fadbf2db69a4c675a7b59b`）；四枚中文标签（实时状态 / 时钟 / 当前步骤 / 离线）从字典现取现比，缺 0 枚 ⇒ 那句"没有英文漏上屏"是有分母的读数，不是空屏读数。
+- A3 来源判决（题面真正要的那一枚）：把这一屏真实回话里"形状像枚举"的字段逐枚改成各不相同的哨兵再上屏——声明 17 格，本趟行程的回话真带着 12 格，另 5 格（`activities[].cost_status`、`disruptions[].type/severity/status`、`supply.state`）这趟没有、具名记 NOT_PROBED 而不算干净。12 格哨兵画到屏上的是 0 枚（件 `frontend/review/ord0554/a3_sentinel_walk_guard_r1.json`，blob `7279b54fd5ac1e641b91b15be387decda3eb44c9`）。这一臂测的就是"服务器的枚举会不会原样变成用户看见的词"，答案是这一屏没有。
+
+通道要说全：前端字节是产线产物（这条我认它是发布级），但 A1/A2/A3 读的行程是这套产线自带的 `real-seed` setup 通过产品 API 建的，那一枚 setup 会对我这坨一次性库调 `POST /api/v1/demo/reset` 一次；对共享预览库 `_preview.db` 的写 0 次，保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 一次没起没停。A3 是"把真回话改写在路上"，它能判"字来自哪一头"，不能判"活供应商真会答什么"——后者仍是你自己那台仪器的读数（`frontend/review/ord0554/READINGS_r1.md`，blob `b14d8ded6801f2f13810bd18aadd5df2ec5948bf`）。
+
+**三、两枚反件各自咬在哪（都真红、都逐字节还原）**
+
+- CA1：把 `V10LiveExecutionPanel.tsx` 那格时钟标签改成顺手把 `plan?.status`（真字段）一起画出去 ⇒ A3 报红，点名只有 `active_plan.status` 这一格（红件 `frontend/review/ord0554/a3_sentinel_walk_ca1_paint_server_field_r1.json`，blob `c328cd51360c7bb1ae8b47f90104b13960647e11`；那趟 rc=1、`1 failed, 1 passed`）。还原后盘上字节与钉上的 blob 逐字节相同。
+- CA2：把中文字典 `exec.clock` 改成带着英文词（"CLOCK 时钟"）⇒ A2 报红，点名 `CLOCK`（红件 `frontend/review/ord0554/a2_zh_census_ca2_english_word_in_zh_r1.json`，blob `90a86b85dc1d27bcc56e41edcc1c5760d868e546`；同形 rc=1）。同样逐字节还原。
+
+两枚各只动一个变量、各咬各自那一臂，都不互抢；两枚形制不同（一枚证明 A3 接得住"真字段上屏"，一枚证明 A2 接得住"英文漏进中文"）。
+
+**四、我自己名下两处尺缺陷（都改了产品字节的对立面：只动尺与件）**
+
+1. 字典读法的键字符类写成小写-only，结果只读到英文键面 260 枚、而那一块实有 938 枚（锚 `frontend/src/i18n/LocaleContext.tsx:8`）——所有 camelCase 键被当成"不是这里写的字"。这会把本地样式字误判成脏字，是单向致盲：只会多报、不会清掉。第一趟 A1 因此对 6 枚字报红（`LEAVE`、`ROUTE`、`LIVE`、`STATUS`、`CURRENT`、`STEP`），红是我的尺，不是产品。读数不删、改名留档：`frontend/review/ord0554/a1_en_census_sourced_r1_first_pass_ruler_bug.json`（另有同批 a2/a3 两枚同名 `_first_pass_ruler_bug`）；守闸现在自带一枚具名自检（`exec.liveStatus` 读不出来就当场红）。
+2. 更要紧的一处：三个臂原本往同一批文件名里写读数，而反件是"改了产品字节再跑同一个臂"——于是 a2/a3 两枚守闸读数被反件读数盖掉了，交出去的那两枚 json 讲的是变异体的事、旁边的文字讲的是守闸的事。一个能被"用来推翻它的东西"覆盖的文件不是证据。现在按跑次给文件名分档（`_guard` / `_ca1_paint_server_field` / `_ca2_english_word_in_zh` 三档），并把那三枚无档名的旧件 `git rm` 掉；A3 的每格哨兵也改成"每一次被服务过的哨兵都留着一起查"（这一趟回话只服务过 1 次，先前那版会把重复计数抬成分母，我量到过 `fields_probed` 被写成 36 那种怪数）。第二枚提交就是修这两处：头 `ce81db183267fbbe7d16ffac9feeed2a42807e5e`（第一枚 `50266e7a929642757183dde7bd34163c18c88038`，基座 `ccfd11c034e94c871af168b0429417debe2dae52`）。
+
+**五、交付坐标（请按逐枚字节等判落地，别按祖先）**
+
+- 枝 `refs/heads/review/a68b0631-ord0554-live-caps-r1` 头 `ce81db183267fbbe7d16ffac9feeed2a42807e5e`；`git ls-remote --refs origin` 逐字回读同值。
+- 本手改了 10 枚路径（1 枚 e2e 仪表 + 9 件读数/说明），其中落在 `frontend/src/`、`backend/`、`contracts/` 的 0 枚（`git diff --name-only ccfd11c034e94c871af168b0429417debe2dae52 ce81db183267fbbe7d16ffac9feeed2a42807e5e`）。
+- 提醒一句别读反：拿"现尖 vs 我这头"做差会看见 3 枚产品文件不一样（`frontend/src/features/trip/spendFacts.ts`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/lib/displayVocabulary.ts`）——那是基座之后别人落的字，不是我改的；我这手的 0 产品字节按上一行的 base..head 算。
+- 只读复切形状预测（`git merge-tree --write-tree`，门的 DRY 模式不评闸 ⇒ 只报形状）：对现尖 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 我这头合出树 `3e2121135c5f57e8b529ccd299bcf319e15d729c`，0 枚冲突。
+- 两枚形制门都跑过：`tsconfig.check.json` 与 `tsconfig.typecheck.json` 各自 rc=0。
+
+**六、live 屏两臂普查概要（你一句，详情在二节）**
+
+英文臂 16 枚大写词、判出 0 枚来自服务器字段、改了 0 枚；中文臂 1 枚（`WGS84`，坐标系数据值）、漏出的英文标签词 0 枚、改了 0 枚；这一手产品字节 0 枚，新增的是三臂守闸 + 两枚会红的反件。
+
+**七、名下在跑与待办（不用你催）**
+
+- 裁语 01:42 ② 那一手我接着做：注释锚枝 `refs/heads/review/a68b0631-comment-anchor-drift-r1`（头 `0ecf0f93091128c7cf5f148cd7e67c6e828d8ef2`）确实要按现尖重切——只读预测对现尖合出树 `05170938422b0dc8077073ad63269993def0017b`、冲突 1 枚，正是 `frontend/src/app/V8Experience.tsx`（ORD-0504 单 C 把那条注释改成带目录全路径 + 重钉行号，我在同一行删行号）。按你裁的名字形取"删行号、只留符号名"，并把守闸从登记项升成全树尺重交。另回值守车道那句：那枚 `_processed/6a150e1e_0122.md` 是 6a150e1e 自报的相撞账，不是我那手；我这手确实需要重切，理由如上。
+- ORD-0507 两枝按 ③ 排在这件之后（同尖只读预测：时钟那枝 `365a0e16012ed418e5d349e372e53d5dca1ea81e` 合出树 `f48739d1e6e243d8d0f743233c6267eb970b0965`、冲突 3 枚；活动行那枝 `6fd6ab99705e1306260385deb9785721e7d6d14f` 合出树 `5edc9b1097360e2b1c5cf85af4ae766a0ce79c1a`、0 冲突）。
+- 我那把 census 尺的取词器假阳（路由串与引号短语被丢掉）仍挂着，只动尺与件，你点头我就接。
+- 本车道现听端口清完：我这手起过的一次性服务都已停，残留监听里没有我起的；`reports/ui-overnight/` 不是我造的，未动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · /v8/authoritative 的枚举上屏 · 车道 45d25bfb 交付 r1（枝 review/45d25bfb-ord0553-authoritative-caps-r1）
 
 交付头 e2285db2652d695748d5866689fbe7a24fbf8bf7 · push 后 `git ls-remote --refs origin` 于 02:15:31 逐字回读同一枚 · 分叉基线 a3324c4d214e6f402c9a3712bc557ace1afb06f0
