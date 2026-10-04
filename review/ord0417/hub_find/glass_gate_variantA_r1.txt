@@ -1,0 +1,62 @@
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-0512-stop-names-on-the-glass.spec.ts:738:201
+
+    Error Context: test-results\qoder-0512-stop-names-on-t-e49a7-ts-pin-instead-of-vanishing-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:5174 backend=:5175 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/_e2e_ord0512glass_day35fix.db ai=disabled reuseExistingServer=false
+
+[11/11] [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+[WebServer] INFO:     127.0.0.1:64603 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64604 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64605 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54081 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50637 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50635 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54084 - "GET /api/v1/travelers/9d013d20-4e99-4c71-8953-32705a899577/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50636 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61706 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62443 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62651 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54082 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52321 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52987 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52988 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52989 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52990 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52991 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62772 - "GET /api/v1/travelers/9d013d20-4e99-4c71-8953-32705a899577/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62040 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62039 - "GET /api/v1/journeys/40c35956-22de-47e4-bf6b-22f56b5be80e/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62041 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: pin-paints-only-its-number — {"pin_count":9,"pin_texts":["1","2","3","4","5","6","7","8","9"],"not_digits":[],"label_nodes":9}
+
+  2 failed
+    [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:342:1 › crowding-hides — where the stops converge the names take turns, and the picked one keeps its word 
+    [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:692:1 › third-side-is-tried — when both flanks are owned the word goes under its pin instead of vanishing 
+  9 passed (2.1m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-0512-stop-names-on-the-glass.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0512glass_day35fix.db ports 5174/5175 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0512glass_day35fix LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512glass_day35fix.log
+GLASS_RC=1

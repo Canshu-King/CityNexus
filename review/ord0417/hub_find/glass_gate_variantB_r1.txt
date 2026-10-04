@@ -1,0 +1,62 @@
+[WebServer] INFO:     127.0.0.1:63295 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63296 - "GET /api/v1/travelers/d0be378f-0694-4690-98bb-5aad9f18ec8f/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62421 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62420 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62424 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:692:1 › third-side-is-tried — when both flanks are owned the word goes under its pin instead of vanishing
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried — {"band":{"top":500,"width":354},"names_before":[["Arrival","right"],["Tianjin Eye","right"],["Departure","right"]],"names_after":[["Arrival","shown","right","true","true","true","nothing"],["Check in · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Five Great Avenues","shown","under","true","false","true","nothing"],["Tianjin Museum","shown","under","true","true","true","nothing"],["Tianjin Eye","shown","right","true","true","true","nothing"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Check out · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Departure","shown","right","true","true","true","nothing"]],"under_shown":["Five Great Avenues","Tianjin Museum"],"still_on_a_flank":[["Arrival","right"],["Tianjin Eye","right"],["Departure","right"]]}
+
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried-cleanup — {"band_nodes_left":0,"sides_after":[["Arrival","right",true],["Check in · Haihe Riverside Hotel","under",false],["Overnight · Haihe Riverside Hotel","under",false],["Five Great Avenues","under",true],["Tianjin Museum","under",true],["Tianjin Eye","right",true],["Overnight · Haihe Riverside Hotel","under",false],["Check out · Haihe Riverside Hotel","under",false],["Departure","right",true]]}
+
+[11/11] [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+[WebServer] INFO:     127.0.0.1:61445 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61446 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61447 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62067 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62068 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62065 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62070 - "GET /api/v1/travelers/d0be378f-0694-4690-98bb-5aad9f18ec8f/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62066 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54212 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53400 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65243 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60185 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62069 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50134 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50135 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50136 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50137 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50139 - "GET /api/v1/travelers/d0be378f-0694-4690-98bb-5aad9f18ec8f/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49688 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49680 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49689 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50138 - "GET /api/v1/journeys/3ec59c1b-bd40-47f9-8fa4-0d2254ddad8f/twin HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: pin-paints-only-its-number — {"pin_count":9,"pin_texts":["1","2","3","4","5","6","7","8","9"],"not_digits":[],"label_nodes":9}
+
+  1 failed
+    [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:342:1 › crowding-hides — where the stops converge the names take turns, and the picked one keeps its word 
+  10 passed (2.1m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-0512-stop-names-on-the-glass.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0512glass_leanB.db ports 5174/5175 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0512glass_leanB LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512glass_leanB.log
+GLASS_RC=1

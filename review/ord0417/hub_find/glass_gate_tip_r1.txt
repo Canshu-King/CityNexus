@@ -1,0 +1,62 @@
+
+[WebServer] INFO:     127.0.0.1:55979 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55981 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:692:1 › third-side-is-tried — when both flanks are owned the word goes under its pin instead of vanishing
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried — {"band":{"top":491,"width":354},"names_before":[["Arrival","right"],["Tianjin Eye","right"]],"names_after":[["Arrival","shown","right","true","true","true","nothing"],["Check in · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Five Great Avenues","shown","under","true","false","true","nothing"],["Tianjin Museum","shown","under","true","true","true","nothing"],["Tianjin Eye","shown","right","true","true","true","nothing"],["Overnight · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Check out · Haihe Riverside Hotel","over_a_name","under","false","false","true","name"],["Departure","shown","under","true","true","true","nothing"]],"under_shown":["Five Great Avenues","Tianjin Museum","Departure"],"still_on_a_flank":[["Arrival","right"],["Tianjin Eye","right"]]}
+
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: third-side-is-tried-cleanup — {"band_nodes_left":0,"sides_after":[["Arrival","right",true],["Check in · Haihe Riverside Hotel","under",false],["Overnight · Haihe Riverside Hotel","under",false],["Five Great Avenues","under",true],["Tianjin Museum","under",true],["Tianjin Eye","right",true],["Overnight · Haihe Riverside Hotel","under",false],["Check out · Haihe Riverside Hotel","under",false],["Departure","under",true]]}
+
+[11/11] [chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+[WebServer] INFO:     127.0.0.1:62590 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62591 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53202 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53201 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53199 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50522 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60998 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52785 - "GET /api/v1/travelers/cb9841cc-8545-4e12-a4ca-d2d8769c737c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53200 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62592 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53203 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56969 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63177 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49248 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49249 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49250 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49251 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49252 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49253 - "GET /api/v1/travelers/cb9841cc-8545-4e12-a4ca-d2d8769c737c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55846 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55842 - "GET /api/v1/journeys/e8d8ac54-2c04-493d-8ac0-c820563d0027/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55849 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-0512-stop-names-on-the-glass.spec.ts:763:1 › pin-paints-only-its-number — ORD-0403's claim survives: the word went beside the pin, not into it
+e2e/qoder-0512-stop-names-on-the-glass.spec.ts :: pin-paints-only-its-number — {"pin_count":9,"pin_texts":["1","2","3","4","5","6","7","8","9"],"not_digits":[],"label_nodes":9}
+
+  11 passed (1.2m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-0512-stop-names-on-the-glass.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0512glass_day35base.db ports 5174/5175 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0512glass_day35base LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0512glass_day35base.log
+GLASS_BASE_RC=0
