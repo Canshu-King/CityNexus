@@ -414,7 +414,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "For a shared Journey, inspect_journey and inspect_twin expose separate in-force members, role capabilities, journey-scoped preferences, and compact learned-soft context. Never treat the owner TravelerTwin as the group. "
         "Use the server-returned per-member fit matrix and mediation classification: seek a grounded compromise before asking people, never majority-vote, and never ask a member about opening, cost, mobility, or provider identity. "
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
-        "When server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with only the Journey, current mission, and selected server event. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
+        "When server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with the Journey, current mission, and the event ID returned by inspection. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -487,6 +487,26 @@ def _compact_replan_for_model(item: Any) -> Any:
         "raw_response",
     ):
         projected.pop(key, None)
+    # The persisted diff can contain full activity and evidence receipts.  The
+    # model needs the proposal identity and the server's feasibility/collective
+    # decision, not a second copy of route geometry or every raw observation.
+    # Keep only the bounded fields that can change the next tool decision.
+    if isinstance(projected.get("diff"), dict):
+        source_diff = projected["diff"]
+        projected["diff"] = {
+            key: _compact_replan_for_model(source_diff.get(key))
+            for key in (
+                "changed_activity_ids",
+                "added_activity_ids",
+                "removed_activity_ids",
+                "fit_subject_place_ids",
+                "fit_subject_tags",
+                "fit_subject_basis",
+                "cost_delta_minor",
+                "duration_delta_min",
+            )
+            if key in source_diff
+        }
     diff = projected.get("diff")
     if isinstance(diff, dict):
         compact_diff = dict(diff)
@@ -516,6 +536,7 @@ def _compact_replan_for_model(item: Any) -> Any:
             "route_geometry_json",
             "encoded_polyline",
             "raw_response",
+            "score_breakdown",
         }
     }
 
@@ -527,10 +548,40 @@ def _result_for_model(result: Any) -> str:
             projected["proposals"] = [
                 _compact_replan_for_model(item) for item in projected["proposals"]
             ]
+        if projected.get("tool") == "list_replans":
+            # Collective receipts are server truth, but the full persisted
+            # matrix is not a useful model prompt. Preserve every decision
+            # identity and fit/fairness value while dropping duplicate plan
+            # payloads and raw evidence.
+            for field in ("candidate_fit_matrix", "proposal_collective_decisions"):
+                value = projected.get(field)
+                if isinstance(value, dict):
+                    projected[field] = {
+                        str(key): _compact_collective_option(item)
+                        for key, item in value.items()
+                        if isinstance(item, dict)
+                    }
+                elif isinstance(value, list):
+                    projected[field] = [
+                        _compact_collective_option(item)
+                        for item in value
+                        if isinstance(item, dict)
+                    ]
         if projected.get("tool") in {"list_replans", "request_replan"} and "proposal" in projected:
             projected["proposal"] = _compact_replan_for_model(projected["proposal"])
         return _json_text(projected)
     return _json_text({"result": result})
+
+
+def _compact_collective_option(item: dict[str, Any]) -> dict[str, Any]:
+    """Keep the collective choice receipt small and decision-complete."""
+
+    fields = {
+        "candidate_id", "proposal_id", "plan_id", "status",
+        "fit_subject_place_ids", "fit_subject_tags", "fit_subject_basis",
+        "member_fits", "fairness", "classification", "decision_relevant_member_ids",
+    }
+    return {key: item[key] for key in fields if key in item}
 
 
 def _tool_result_advances_state(tool_name: str, result: Any) -> bool:

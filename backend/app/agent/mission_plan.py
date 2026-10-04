@@ -72,6 +72,9 @@ _ACTION_TOOLS = (
     "request_commitment_change",
     "apply_clarified_horizon_choice",
 )
+_DECISION_TOOLS = (
+    "request_collective_decision",
+)
 _STRATEGY_TOOLS = (
     "acquire_place_facts",
     "estimate_place_facts",
@@ -156,7 +159,7 @@ def build_mission_plan(
     allowed_tools = (
         (*_READ_TOOLS, "request_replan")
         if autonomy == "PLAN_ONLY"
-        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
+        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
     )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
@@ -165,9 +168,7 @@ def build_mission_plan(
         protected_activity_ids=tuple(str(item) for item in protected_activity_ids),
         allowed_tools=tuple(allowed_tools),
         read_only_tools=_READ_TOOLS,
-        approval_required_tools=tuple(
-            item for item in _ACTION_TOOLS if item != "request_replan"
-        ),
+        approval_required_tools=tuple(item for item in (*_DECISION_TOOLS, *_ACTION_TOOLS) if item != "request_replan"),
     )
 
 

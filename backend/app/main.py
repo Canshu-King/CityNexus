@@ -13299,6 +13299,7 @@ def _accept_replan_serialized_impl(
         "policy_version": policy_version,
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
+        "resolved_decision": resolved_decision,
     }
     try:
         return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)

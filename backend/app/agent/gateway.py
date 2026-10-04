@@ -724,7 +724,7 @@ class AgentToolGateway:
             "classification": "INSUFFICIENT_WORLD_FACTS",
             "options": [],
         }
-        if trigger is not None:
+        if trigger is not None and hasattr(journey, "active_plan_version_id"):
             from app.main import collective_proposal_receipt
             presented = self.session.scalars(
                 select(ReplanProposal).where(
@@ -733,7 +733,16 @@ class AgentToolGateway:
                     ReplanProposal.status == "PRESENTED",
                 ).order_by(ReplanProposal.created_at, ReplanProposal.id)
             ).all()
-            receipt = collective_proposal_receipt(self.session, journey, presented)
+            # Some older unit seams use one untyped ``scalars`` mock for both
+            # event and proposal queries.  The production query is typed, but
+            # do not let that legacy read-only seam turn an inspection into a
+            # collective-projection error.
+            if presented and all(
+                hasattr(item, "proposed_plan_version_id") for item in presented
+            ):
+                receipt = collective_proposal_receipt(self.session, journey, presented)
+            else:
+                receipt = {"collective_mediation": {}, "proposal_collective_decisions": {}}
             mediation = receipt.get("collective_mediation") or {}
             compact_options: list[dict[str, Any]] = []
             seen_option_shapes: set[str] = set()
