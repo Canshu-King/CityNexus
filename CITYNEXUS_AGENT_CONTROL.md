@@ -16588,6 +16588,110 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · ORD-0563 英文臂枚举回声：改了 11 枚值、加了一把会拒绝未判新值的常设尺、真浏览器英文四屏亲读；hub 那两枚的新情况要你裁
+
+一、形制
+- 候选枝 refs/heads/review/cff87c64-english-arm-enum-echo-r1，`git ls-remote --refs` 回读 head 126d170ae6321e3deb32f138a0efd69565e256d3；base 是我 14:1x 现读的权威尖 0413e55634e9c6953ea88a4b01a17b8afd7ac88a。
+- 产品字节只有两枚文件：`frontend/src/i18n/LocaleContext.tsx`（改值）与新增常设尺 `frontend/e2e/qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts` + 它的私有 runner `frontend/playwright.ord0563-enarm-r1.config.ts`。中文臂零字节改动（diff 只落在英文对象内）。
+
+二、改了哪 11 枚（你点名的 8 枚 + 我按同一判据多收的 3 枚，逐枚带渲染点）
+- 你点名的：hub.arrival、hub.departure、twin.explicit、twin.learned、v14.mode.ADVISORY、v14.mode.ASSISTED、v14.mode.AUTONOMOUS、stay.capturedReplay（review/ord0563/screen_note_r1.txt:7）。
+- 多收第 9 枚 intel.advisory：`ControlTowerPanel.tsx:62` 是 `<b>{policy ? policyModeLabel(policy.mode, locale) : t("intel.advisory")}</b>`，同一个值槽主路径已答 "Advisory"、兜底路径答 "ADVISORY"，同屏两形（review/ord0563/screen_note_r1.txt:16）。
+- 多收第 10 枚 discovery.sealed：`RealCityDiscoveryPanel.tsx:417` 的 `<b>` 里，它的兄弟键 discovery.sealedRealReplay 已写 "Sealed real replay"，只有它写 "SEALED REPLAY"（review/ord0563/screen_note_r1.txt:18）。
+- 多收第 11 枚 push.checkingState：推送能力卡的 `<strong>` 状态值，中文臂是「检查中」人话（review/ord0563/screen_note_r1.txt:20）。
+- 全大写形一律收成 Title Case；twin.learned 的中文是「学习到的软信号」，所以英文写 "Learned soft signal" 而不是把下划线抄一遍（frontend/src/i18n/LocaleContext.tsx:864）。
+
+三、常设尺（防回归的门，四臂 rc=0）
+- 判据比你那把 `_cmdr_enum_echo_scan_r1.py` 更宽：值里带空格也算喊话（"SELECTED STAY" 不因有空格就不吵），所以同一代文件它读 35 枚、我这把读 45 枚（review/ord0563/enumeration_r1.json:1）。
+- 剩下 34 枚逐枚具名分类：一类是标题/kicker/字段标签槽位（每枚写明我在本代读到的渲染点，如 v8-kicker、v8-aside-heading、v10-metric 标签）；一类是 src 内零读者的死键（逐枚 grep 计数，组合键只有 studio.gate.* 与 twin.dim.*/twin.cap.*，这三族都不可能被组合命中）（frontend/e2e/qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts:96）。
+- 门咬得住：任何新的全大写英文值若没被逐枚判过并写进这张表，跑起来直接红（review/ord0563/ruler_arms_r1.txt:1）。
+- 反件两枚真红：A 把 hub.arrival 改回 "ARRIVAL" ⇒ 第 1 臂报 "hub.arrival:194 paints "ARRIVAL""；B 新加一枚 "BRAND NEW SHOUT" ⇒ 第 2 臂点名该键该行（review/ord0563/screen_note_r1.txt:32）。两枚反件后字典按原字节还原，还原后 `git diff --numstat` 仍是 11 增 11 删，无残留。
+
+四、闸与曝光
+- npm run typecheck rc=0；npm run typecheck:all rc=0；ORD-0551 那把常设尺在本树仍 7 臂全过（review/ord0563/screen_note_r1.txt:38）。
+- 曝光：同一把尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2、同一条命令、同一形制全量导出，base 0413e55634e9c6953ea88a4b01a17b8afd7ac88a 答 6 格 / 323 模块，本枝 126d170ae6321e3deb32f138a0efd69565e256d3 答 6 格 / 324 模块，按文件集合与 base 同（review/ord0563/exposure_pair_r1.txt:6）。
+- 契约零改动，本单不动 openapi 与生成客户端。
+
+五、真浏览器英文臂亲读（run ORD0563-142554；私有栈 桩 :4681、后端 :4682、产品前端 :4683；库由 app 从空文件建，没复制 seed、没调用 demo/reset、没碰 :8000 :4781 :4782 :8693）
+- 英文臂为真：向导建行程 http_status=201，屏上标题读到 "Trip to Tianjin"（review/ord0563/screen_read_r1.json:2）。
+- /v8/twin 读到 "Explicit" 与 "Learned soft signal"；/v8/stay 读到 "Captured replay"；/v8/intelligence 值位读到 "Advisory"；/v8/authoritative 整屏正文里 10 个被盯的大写词一个都没有；页面异常 0 枚、console 错误 0 枚（review/ord0563/screen_note_r1.txt:44）。
+- 截图两枚已入枝：review/ord0563/screen_twin_en_ORD0563-142554.png 与 review/ord0563/screen_v14_en_ORD0563-142554.png，我自己看过。
+
+六、这一手量到一个你裁语里没料到的事实，要你裁（我没自作）
+- hub 那两枚：字典改了、DOM 也改了，但**屏上看着还是大写**。同一趟里读到 textContent 是 "Stay" / "Arrival" / "Departure"，innerText 却是 "STAY" / "ARRIVAL" / "DEPARTURE"，computed style 给出 text-transform=uppercase，规则在 design-tokens.css:410 起的 `.cn-strip-item > span`（review/ord0563/hub_label_css_probe_r1.json:2）。
+- 判据按你自己的对照法落回来：同一槽位的 "Stay" 从来不是枚举也照样大写 ⇒ 这是标签排版，不是枚举回声；所以 hub 这两枚在"屏上观感"这一维没变，变的只有数据源。
+- 若你要屏上真读到 "Arrival"，那是撤掉该槽位 text-transform 的 CSS 决定（会影响同槽位所有标签），超出 ORD-0563 题面，我没动，等你一句话。twin / stay / intelligence / v14 四族没有这层 transform，屏上确实变了。
+
+七、本单没做、也不假装做了
+- ORD-0562（英文臂单复数：V8Experience.tsx:2947 的 `${tripDayCount} days`、同形在 :2399、字典里 7 处 `(s)`）不在本枝——它要 n=1 与 n=2 两态真数据各读一遍，供给我还在准备，不交半成品。
+- ORD-0568（RUNTIME_CAPTURE 括注）不在本枝。
+- exec.state.* 四枚按你的话没碰；本代它们已是 Arrived / Active / Completed / Skipped，即 ORD-0553 的修法就在屏上那形。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 18:12 · 裁语①②落地：注释锚 r2 已按现尖重切、撞车那处取名字形、守闸升成全树尺——全树再削一批带号引用（分母见二、三节，0 行非注释被动），反件两枚各咬各的臂；另附一枚现场读数：对象库是浅边界，祖先形判据在新尖上读不出父提交
+
+**一、裁语怎么落的**
+
+- ①（全树一种形制＝名字形）：本手不再留任何 `文件名:行号`，只留符号名与路径；撞车那一处按名字形取。
+- ②（按现尖重切 + 撞车处名字形 + 守闸升全树尺）：r1 那四笔（头 `0ecf0f93091128c7cf5f148cd7e67c6e828d8ef2`）以现读权威尖为基重放，基座 = `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`；唯一冲突在 `frontend/src/app/V8Experience.tsx` 那段注释——ORD-0504 单 C 把 `main.py:3527` 改成了带目录全路径 + 重钉行号 `backend/app/main.py:6204`，我这一手在同一行把号删掉、留下 `_reservation_payload` 与 `backend/app/main.py`。登记项也跟着改了那一句（`frontend/review/line_anchor_drift/CONVERTED_r1.txt:41`），这正是 G1 在注释搬家时要求的动作。
+- ③（排在 ORD-0554 之后）：ORD-0554 那块已交、你已 recut 十枚逐字节验过；ORD-0507 两枝排在本手之后，还没动。
+
+**二、为什么这是一件新仪器，不是同一把尺多削几枚**
+
+r1 的尺按"行首长什么样"判什么算注释。块注释的内部与 Python 文档串它一概看不见——剩下的引用正住在那里。同一批根目录，两种判法数出来的量：按行首规则只认 95 处，按区域规则认 268 处（`frontend/review/line_anchor_drift/READINGS_r6.txt:15`）——也就是说先前那把尺对六成以上的现场是单向致盲的。并且手写契约 `contracts/openapi.yaml` 是给旅行者屏读的描述文字，原本根本不在扫描根里；本手把它纳入（那里削掉 4 处，如 `contracts/openapi.yaml:827`、`contracts/openapi.yaml:3270`）。
+
+区域判法（扫描与守闸共用）：.py 用 `tokenize` 的 COMMENT 加多行文档串；.ts/.tsx/.js/.css 用 // 与 /* */ 状态机并跳过字符串；.md 整文件；.yaml 取 `#` 行与 `description: |` 块标量。
+
+**三、改了什么、没改什么**
+
+- 本手（不含 r1 重放部分）逐对核过：
+  - 删/增成对 273 对，跨 121 枚文件（`frontend/review/line_anchor_drift/READINGS_r6.txt:24`）
+  - 其中登记项搬家 1 对（`frontend/review/line_anchor_drift/CONVERTED_r1.txt:41`），余下 272 对是纯删行号（同件 `frontend/review/line_anchor_drift/READINGS_r6.txt:24`）
+  - 机检：`git diff -U0` 把每一对删/增重算，两边只在"已知扩展名后面的数字"上不同，对不上号 0 处（`frontend/review/line_anchor_drift/READINGS_r6.txt:24`）；逐枚写盘前后比对 CR 计数，行尾一字未变
+- 0 行非注释被动、0 行为改产品行为。回归面按"能不能编、能不能收、能不能跑"逐条重测，读数都记在件里：
+  - `python -m compileall backend/app backend/tests` rc 0（`frontend/review/line_anchor_drift/READINGS_r6.txt:53`）
+  - 整套后端 `--collect-only` 收到 1732 条、0 收集错（`frontend/review/line_anchor_drift/READINGS_r6.txt:55`）
+  - 契约同步那族（ord0387 / ord0478 / ord0434 / ord0402）35 条通过（`frontend/review/line_anchor_drift/READINGS_r6.txt:54`）
+  - `yaml.safe_load` 解手写契约得 159 条路径与 87 枚 schema（`frontend/review/line_anchor_drift/READINGS_r6.txt:57`）
+  - `npx tsc -p tsconfig.check.json` 与 `tsconfig.typecheck.json` 各 rc 0、`npm run build` rc 0（`frontend/review/line_anchor_drift/READINGS_r6.txt:58`）
+- 仍带号的一枚，具名留档不偷偷跳：`frontend/src/generated/api.ts:3159`。它是 openapi-typescript 从 `contracts/openapi.yaml` 生成的，那一句原文就是服务器的接口描述；源头与契约本手都已去号，但在"只改注释"的一手里重生成会把别人在等的契约字节一起卷进来，所以没重生成。豁免是守闸里一条带理由的具名表项，不是空白跳过（`frontend/review/line_anchor_drift/READINGS_r6.txt:33`）。
+
+**四、守闸与反件**
+
+`backend/tests/test_qoder_a68b0631_comment_anchor_drift_r1.py` 现在三臂：G1 登记项（不许复号、也不许把名字删掉）、G2 全树死引用 0、G3 全树形制（扫描根里任何注释/散文行带行号即红，并先断言扫过的文件数不为空，免得空分母当通过）。三臂同跑 3 passed。
+
+- M1 把 `backend/app/main.py:3310` 塞回 `frontend/src/features/trash/journeyTrash.ts` 那行注释 ⇒ 只有 G3 红，红话点名 `journeyTrash.ts` 第 13 行；文件按 sha 还原后复跑绿。
+- M2 把某枚已转换引用的名字删掉（`frontend/src/features/studio/planVersionHistoryCopy.ts`）⇒ 只有 G1 红，点名那条登记项。两枚各咬各的臂，读数不互抢。
+- G3 第一次跑就红在我自己新写的说明注释里（那句解释规则的话里带了一枚示例引用）。改的是那句示例，不是把规则放宽——这条我记在自己账上，也是"尺会管到尺自己"的一次实证。
+
+**五、交付坐标与落形**
+
+- 枝 `refs/heads/review/a68b0631-comment-anchor-drift-r2` 头 `b5dec327174664f7a8764006d333f6494b3bad54`（`git ls-remote --refs origin` 现读逐字相等）；基座 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 之上共 6 笔、diff 面 150 枚路径。守闸那枚文件在头上的 blob `fde99d3fb4f14a4471441ea9f0277af38515bbbd`，读数件 `ea5d290cdf1919305e168dcd3516d5d031f441eb`。r1 那枝原样不动，本手取代它，理由见第二节。
+- 只读复切形状（注意第七节那条现场读数：默认 merge-base 在新尖上算不出来，所以我给了显式基座）：对现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 合出树 `3aa7c3875eaaa6b2f331e5d0b31330e2b0dc1973`，冲突 0 枚。门的 DRY 模式不评闸，这句只报形状。
+
+**六、给下一手的（不抢单，只报册）**
+
+- ORD-0507 两枝还挂着：时钟枝 `365a0e16012ed418e5d349e372e53d5dca1ea81e` 与活动行枝 `6fd6ab99705e1306260385deb9785721e7d6d14f`。本手之后 `frontend/src/i18n/LocaleContext.tsx` 与 `frontend/src/features/trip/TripItinerary.tsx` 都动过注释，重切时要把注释按已落字节续上再取屏读。
+- 我那把 census 尺的取词假阳（路由串与引号短语被丢）还没修；本手的区域判法已经把它要用的"什么算注释"这一半修好了，剩"什么算标识"那一半。
+
+**七、一枚现场读数，可能与你们的落地门有关（我只报我量到的）**
+
+现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 在我这台上：`cat-file -p` 列得出两枚父提交；但 `git rev-list --parents -1` 只印它自己（父一枚不印），`git rev-list --count` 回 1，`git merge-base` 与我头之间回空，`merge-base --is-ancestor 基座 现尖` 回 NO。同时 `D:/moodle/CityNexus/.git/shallow:1` 存在、内 11 枚边界、mtime 就在刚才被写过。我不下成因结论——能说的是：任何用祖先形判据（"是否 ancestor"、默认 merge-base）落地的门，在这种对象库状态下会把已落读成未落、把形状预测直接拒掉；逐枚 blob 等式与显式 `--merge-base` 这一手可用。请门的主人复跑一次再判它归属；需要我这台上的原始输出我随时贴。
+
+**八、这轮没动的（都写进了读数件的纪律册）**
+
+- 本手用过的库是我自己 `backend/data` 下的一次性文件，名字带前导下划线，产品自己的守卫因此会拒绝别人复用（`frontend/review/line_anchor_drift/READINGS_r6.txt:68`）。
+- `_preview.db`（共享预览库）：本手写 0 次，上面那些命令一枚都没指向它（`frontend/review/line_anchor_drift/READINGS_r6.txt:69`）。
+- `demo/reset`：我自己一次没调；但我跑的契约那四枚测试文件里该端点被提到 17 处，我没逐枚判定哪些真发出请求，这一格具名记 NOT_MEASURED，不写成 0（`frontend/review/line_anchor_drift/READINGS_r6.txt:70`）。
+- 保护端口 :8000 :4781 :4782 :4783 :4785 :4787 :8693：本手起 0 次、停 0 次、读写 0 次——这一手只有注释与它自己的守闸，没开过浏览器也没开栈（`frontend/review/line_anchor_drift/READINGS_r6.txt:73`）。
+- 权威线：推 0 次；本枝首推 1 次，`--force-push` 0 次；别人在跑的枝一枚没碰，r1 那枝原样留着（`frontend/review/line_anchor_drift/READINGS_r6.txt:75`）。
+- `reports/ui-overnight/` 不是我造的，未动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · /v8/authoritative 那两枚残留大写字 · 车道 45d25bfb 交 r2 落地回执 + r3 残留定位（本单不占新号；枝 review/45d25bfb-ord0553-authoritative-caps-r3）
 
 一、现尖、代次与本单的字节量
