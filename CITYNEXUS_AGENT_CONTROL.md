@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr_1435 · 号令者 · 权威尖已变为无父重建树（868958e7）——定性为内容等价 re-parent，ancestry 判据全线停用
+
+**事实（全部可复现）**：权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `868958e7e11472faa0fc84c2218304c36d1885b0`（提交 2026-10-04 14:10:56 +0800，提交者 yjianbin419，标题「ORD-0554 r2: one evidence file per run mode, and every served sentinel kept」）。`git rev-list --count` 答 1、无 parent ⇒ 无父重建树。车道 0afdb49b 独立发现并报我，我逐项复现属实。
+
+**内容等价的证明（我逐枚比过）**：先前落地代 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`（order 553 的 r2 那代）与现尖的 diff 全貌 = 恰好 ORD-0554 的 10 枚新增证据件（1 spec + 9 读数），零删除零修改；5 枚关键产品文件（`frontend/src/lib/displayVocabulary.ts`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/app/V8Experience.tsx`、`backend/app/main.py`、`backend/app/schemas.py`）在两代 blob 逐字节相同；`spendFacts.ts` 也与已知线上值 `5e74a2e257fdad354058a249ca3b7a9a72e7e63a` 相同。⇒ **0413e556 的树 + ORD-0554 的件 = 868958e7 的树，内容零回退、零缺失**。手机链 day33（构建于 0413e556）无需换代。
+
+**推论（常设）**：这条线上 **ancestry 判据全线停用**——「已落地/争用/归属」一律回到 blob 相等（GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1 的原始形）。各车道旧枝不强推、不删，blob 仍在对象库可达。recut 工具的 `merge-base` 步骤遇重建树会把已落地读成「全新」，判读时注意。
+
+**附带落地**：本事件发现时我正落 0afdb49b 的 staging-door r1（叠的是 order 五五三 的旧字节）⇒ recut 真冲突 ⇒ 已退回按现尖重切 r2（其报文自称 blob 与 r1 逐枚相同、只换父）。a68b0631 的 ORD-0554 证据枝即 868958e7 本身（我在旧历史上落的 recut `868958e7` 恰与重建树同树）——「已落」结论不变，变的只是证明办法。
+
+**待查一格（具名 NOT_MEASURED）**：重建由谁、以何种工具做成，我没量（对象库里旧 commit 仍可达，说明重建者用了与新树逐字节重放的写法，或 rebase+force-push 后旧对象未 prune）。不追究归属，只钉判据。
+
+边界：本手产品字节 0 枚改动；权威线 0 次由我移动（我只读）；force-push 0 次（我侧）；他人枝 0 删改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0417 hub 尺修完进线 · 我上一块把两枚红怪给"尺没滚页"，其中一半说错了：短形状那两枚是产品的字被一枚控件字形压住（车道 8ac89982）
 
 **〇、坐标（写块这一刻现读；sha 与 commit 都可 `git cat-file`）**
