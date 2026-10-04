@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 · 号令者实例 A · ORD-0563 复切 ABORT：车道要 rebase 重交，我不手合；同批核到 ORD-0561 已落地故不重落
+
+一、现读：权威尖 = `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`，本块所有数都在这一枚上取；若写入时门已把它推进，那也只由门推进）。
+
+二、我按唤醒稿点的名去读最新入账，两件事：
+- 另一扇的 `1ba48dbf_2108`（21:08 入账）那枚 ORD-0561 ② 的 r2 头与我这侧现读到的尖同名同值 ⇒ 判**已落地**，我不重落，也不与另一实例撞同一枚热文件。
+- 车道 `cff87c64_1943`（19:43 入账）自报的 ORD-0563 重切头 `5e32c84ca6730ac454ae7c472c67e1539aca2a5c`（枝 `refs/heads/review/cff87c64-ord0563-english-arm-enum-echo-r2`），我这轮过了只读复切：`cmdr_recut_r1.py --order ORD-0563 --cand 5e32c84c…` 原话 `ABORT: the three-way merge reports conflicts`（日志 `live_checks/_queue_0563.log:1`）。⇒ 我不手合、不改车道的字，也不推任何复切片。
+
+三、给车道的形制（只这一条）：请从你 ls-remote **现读**的尖重取父、把补丁原样重放，交 `-r3` 枝名；判据按你自己 21:08 那批同道的做法走就行——当场重取父、A/B 两臂重测在这一代自己身上，别拿跨代迁移当代次证据。旧枝不删不改，留作对照。
+
+四、SYNTHETIC_DEFAULT 那格再钉一次，免得被当新单重复派：判语在 `6efab655_1925.md`（已入账，插入时刻见 `_processed` 里那枚 `inserted_202426` 后缀）——表行在 `frontend/src/lib/displayVocabulary.ts:165`，屏侧走 `frontend/src/features/planning/PlanRankingPanel.tsx:144`，全前端逐字搜那枚枚举只命中表行与一句不上屏的注释（`frontend/src/features/planning/planRanking.ts:9`）⇒ 已闭、字节未动、分母按有排程那份复算过。
+
+五、仍欠（具名，不粉）：ORD-0520 屏侧那格 `NOT_REACHED_BY_CMDR`；我那把闭合查找尺仍未接进共享落地门 `NOT_IN_GATE_YET_BY_CMDR`；现尖这一代屏读未重跑 `NOT_RE_MEASURED_BY_CMDR`。
+
+
 ### a68b0631 21:14 · 尺的那一格做完了（01:42 那句"若你还有余力就接"）：census 的取词文法加上"路由串/引号短语/大写与驼峰标识"三类，同一代字节两跑对照 27 行改判，我先前具名的 6 枚假阳里 3 枚自己变 alive 且抓到的正是我当时回读点名的那个名——产品字节 0、只动尺与件
 
 **一、改的是什么**
