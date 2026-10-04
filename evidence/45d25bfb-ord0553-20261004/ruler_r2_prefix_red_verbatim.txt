@@ -1,0 +1,77 @@
+
+Running 4 tests using 1 worker
+
+  x  1 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages (5ms)
+  x  2 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate (5ms)
+  ok 3 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:157:1 › the panel asks for a wording instead of putting the payload field on screen (26ms)
+  ok 4 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:165:1 › the ruler is reading a live surface, not an empty one (2ms)
+
+
+  1) e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages 
+
+    Error: a status the server can answer with no wording falls through to the labelled-raw channel and paints the enum (or the key name) on the traveller's screen
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "READY",
+    +   "CANCELLED",
+    + ]
+
+      132 |     unworded,
+      133 |     "a status the server can answer with no wording falls through to the labelled-raw channel and paints the enum (or the key name) on the traveller's screen",
+    > 134 |   ).toEqual([]);
+          |     ^
+      135 |   expect(halfSided, "one language side missing is the same defect with a different reader").toEqual([]);
+      136 | });
+      137 |
+        at D:\moodle\_qoder_cmdra_ord0553_r2_20261003\wt\frontend\e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:134:5
+
+    Error Context: test-results\qoder-45d25bfb-authoritati-452ce-e-wording-in-both-languages\error-context.md
+
+  2) e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate 
+
+    Error: an execution-status wording that is the server's own printed form is the exact defect this order is about
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 16
+
+    - Array []
+    + Array [
+    +   "EN_ROUTE.en prints the all-caps word \"ROUTE\" in \"EN ROUTE\"",
+    +   "ARRIVED.en prints the enum \"ARRIVED\"",
+    +   "ARRIVED.en prints the all-caps word \"ARRIVED\" in \"ARRIVED\"",
+    +   "ARRIVED.en is the enum verbatim (\"ARRIVED\")",
+    +   "IN_PROGRESS.en prints the all-caps word \"PROGRESS\" in \"IN PROGRESS\"",
+    +   "ACTIVE.en prints the enum \"ACTIVE\"",
+    +   "ACTIVE.en prints the all-caps word \"ACTIVE\" in \"ACTIVE\"",
+    +   "ACTIVE.en is the enum verbatim (\"ACTIVE\")",
+    +   "COMPLETED.en prints the enum \"COMPLETED\"",
+    +   "COMPLETED.en prints the all-caps word \"COMPLETED\" in \"COMPLETED\"",
+    +   "COMPLETED.en is the enum verbatim (\"COMPLETED\")",
+    +   "SKIPPED.en prints the enum \"SKIPPED\"",
+    +   "SKIPPED.en prints the all-caps word \"SKIPPED\" in \"SKIPPED\"",
+    +   "SKIPPED.en is the enum verbatim (\"SKIPPED\")",
+    + ]
+
+      152 |     }
+      153 |   }
+    > 154 |   expect(offenders, "an execution-status wording that is the server's own printed form is the exact defect this order is about").toEqual([]);
+          |                                                                                                                                  ^
+      155 | });
+      156 |
+      157 | test("the panel asks for a wording instead of putting the payload field on screen", () => {
+        at D:\moodle\_qoder_cmdra_ord0553_r2_20261003\wt\frontend\e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:154:130
+
+    Error Context: test-results\qoder-45d25bfb-authoritati-d5be0-it-is-supposed-to-translate\error-context.md
+
+  2 failed
+    e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages 
+    e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate 
+  2 passed (1.0s)
