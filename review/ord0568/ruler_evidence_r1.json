@@ -1,0 +1,42 @@
+{
+ "generatedBy": "cff87c64",
+ "ruler": "ord0568-route-provenance-gloss-r1",
+ "run": "prov-unset",
+ "emitted_provenances": [
+  "CAPTURED_REPLAY",
+  "DEGRADED_BASELINE_REFERENCE",
+  "MIXED_RUNTIME_CAPTURE",
+  "RUNTIME_CAPTURE",
+  "SEALED_INCIDENT_REPLAY",
+  "SEALED_REAL_REPLAY"
+ ],
+ "labelled_provenances": {
+  "RUNTIME_CAPTURE": {
+   "zh": "运行时取证",
+   "en": "runtime capture"
+  },
+  "MIXED_RUNTIME_CAPTURE": {
+   "zh": "运行时取证，但这次掺了降级读数",
+   "en": "runtime capture, mixed with a degraded reading"
+  },
+  "SEALED_INCIDENT_REPLAY": {
+   "zh": "这次事件封存下来的回放",
+   "en": "a replay sealed for this incident"
+  },
+  "SEALED_REAL_REPLAY": {
+   "zh": "封存真实回放",
+   "en": "sealed real replay"
+  },
+  "DEGRADED_BASELINE_REFERENCE": {
+   "zh": "退回降级基线参照",
+   "en": "a degraded baseline reference"
+  },
+  "CAPTURED_REPLAY": {
+   "zh": "已采集回放",
+   "en": "captured replay"
+  }
+ },
+ "main_py_bytes": 623764,
+ "vocabulary_bytes": 15235,
+ "panel_bytes": 9260
+}

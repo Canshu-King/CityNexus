@@ -1,0 +1,10 @@
+Same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), one command per side:
+`node <ruler> --tree <export> --out <receipt>`; export = `git archive <ref> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x`
+
+base 0293e5c1cf9be4ea4e7d14005e14c508cb3f528b   cells_total=6 modules_in_graph=324 files_found=324
+cand 6f8b6336d138efe7bbccceba43367705b4faef4f   cells_total=6 modules_in_graph=325 files_found=325
+
+per-file cells, base: {"ActivityDetail.tsx": 1, "PlanWithAiSheet.tsx": 3, "RecoveryRequiredPanel.tsx": 1, "SimulationPanel.tsx": 1}
+per-file cells, cand: {"ActivityDetail.tsx": 1, "PlanWithAiSheet.tsx": 3, "RecoveryRequiredPanel.tsx": 1, "SimulationPanel.tsx": 1}
+
+Cell growth over the base: 0. The one extra module is this lane's own ruler spec.
