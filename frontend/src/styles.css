@@ -152,6 +152,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .status-dot { display: inline-block; width: 7px; height: 7px; margin-right: var(--cn-s-6); border-radius: var(--cn-r-circle); background: var(--v8-green); vertical-align: 1px; }
 .v8-user { display: flex; align-items: center; gap: 9px; width: 100%; padding: var(--cn-s-10) 5px; border: 0; color: var(--v8-ink); background: transparent; text-align: left; cursor: pointer; }
 .v8-user > span, .v8-avatar { display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--cn-r-circle); color: #fff; background: #e2a66e; font-size: 10px; font-weight: 800; }
+/* ORD-0561 ② / ORD-0570: the bare `button` rule above carries `padding: 12px 14px`, and the avatar
+   circle sets only width/height/font-size, so that padding survived into a 28px box: the two initials
+   needed 42px of it and `overflow: hidden` cut them. Measured before at 390px: scrollWidth 42 against
+   clientWidth 28, glyph run starting 14px in and ending past the right edge. Element selectors cannot
+   out-rank each other here, so this is stated as a class-qualified rule for the padding the circle
+   actually has room for. */
+button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing: .2px; }
 .v8-user b, .v8-user small { display: block; }
 .v8-user b { font-size: 11px; }
 .v8-user small { margin-top: 3px; color: #929baa; font-size: 10px; }
