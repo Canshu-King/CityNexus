@@ -1,0 +1,22 @@
+{
+ "tip": "b60418ccbda8",
+ "verdict": "RED",
+ "files_scanned": 207,
+ "counts": {
+  "shipped_spec": 2,
+  "shipped_spec:RED": 1,
+  "lane_tool": 19,
+  "lane_tool:GREEN": 43,
+  "evidence_artifact": 0,
+  "evidence_artifact:NOT_THIS_CLASS": 157,
+  "lane_tool:EXEMPT_DECLARED": 6
+ },
+ "red": [
+  [
+   "backend/tests/test_qoder_ord0500_journey_refusal.py",
+   2,
+   "NUMERIC_ANCHOR_IN_SHIPPED_SPEC"
+  ]
+ ]
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\anchor_form_gate_r27.json

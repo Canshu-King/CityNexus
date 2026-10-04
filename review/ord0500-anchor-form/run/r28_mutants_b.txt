@@ -1,0 +1,2 @@
+{"every_arm_bit": true, "rows": [["C1_control", "GREEN", true, []], ["M1_numeric_anchor_back", "RED", true, ["NUMERIC_ANCHOR_FORBIDDEN"]], ["M2_declaration_undiscoverable", "RED", true, ["ANCHOR_LINE_PRESENT"]], ["M3_label_no_longer_exists", "RED", true, ["LABEL_RESOLVES"]], ["M4_label_ambiguous", "RED", true, ["LABEL_RESOLVES"]], ["C2_after_revert", "GREEN", true, []]]}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\anchor_form_gate_mutants_r26.json
