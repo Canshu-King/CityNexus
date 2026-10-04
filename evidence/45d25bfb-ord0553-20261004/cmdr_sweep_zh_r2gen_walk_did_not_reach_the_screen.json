@@ -1,0 +1,117 @@
+{
+  "instrument": "cmdr_machine_speech_sweep_r1",
+  "base": "http://127.0.0.1:49851",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+  ],
+  "routesWalked": 14,
+  "viewport": "390x844",
+  "allowListForAllCaps": [
+    "UTC",
+    "GMT",
+    "PDF",
+    "ID",
+    "URL",
+    "API",
+    "AI",
+    "GPS",
+    "OSM",
+    "OK",
+    "FAQ",
+    "COPILOT",
+    "COPILOT"
+  ],
+  "routesWithPaintedMachineText": 0,
+  "routes_with_hits": [],
+  "totalPaintedHits": 0,
+  "distinctTokens": 0,
+  "topTokens": [],
+  "perRoute": {
+    "/v8/hub": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/live": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/map": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 448,
+      "kinds": {}
+    },
+    "/v8/studio": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/stay": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/discover": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/bookings": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/agent": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/authoritative": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 198,
+      "kinds": {}
+    },
+    "/v8/intelligence": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/twin": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/trash": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/trips": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 37,
+      "kinds": {}
+    },
+    "/v8/me": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 279,
+      "kinds": {}
+    }
+  },
+  "pageErrors": []
+}
