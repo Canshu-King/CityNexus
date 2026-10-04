@@ -390,3 +390,78 @@ git diff --check: PASS
 ```
 
 This strike closes the server contract gap and records an exact external-runtime blocker. It does **not** claim R27 Agent-mediated live closure, Gateway activation, or physical completion. The next bounded action is to rerun the same ACTIVE Journey only after the configured WB2api model path returns within its server budget; no new city or synthetic Agent fallback is justified.
+
+## Agent Collective Live Closure Addendum — 2026-10-05
+
+This addendum preserves the failed strike above as historical evidence and records the subsequent bounded rerun on the same R27 product path. It is the closure-grade result for the Agent-mediated portion; no deterministic fallback prose was used.
+
+### Binding and runtime
+
+```text
+branch/worktree = codex/revolution-realtrip-recovery / isolated CityNexus-Revolution-RealTrip-Recovery
+starting SHA = a63d3ad49d80e4d503da0b2bf9d0d396592ee48f
+substantive code SHA = 2b1190ec56ae753093777a8891eaefb913316c8c
+remote code SHA = 2b1190ec56ae753093777a8891eaefb913316c8c
+CITYNEXUS_LAB_ESTIMATE_AUTHORITY = false
+configured chain = cn:glm-5.3-flash -> cn:deepseek-v4.1-flash
+agent runtime = Hermes-compatible WB2api gateway
+raw credentials = loaded only into process environment; not packaged
+```
+
+The earlier API diagnosis is corrected by machine evidence: `/v1/models` returned HTTP 200, a 19-tool-schema GLM call returned a real `inspect_journey` tool call in about 29.2 seconds, and the runtime projection was reduced from roughly 67 KB to roughly 18 KB. The bounded first-call budget was raised from 1200 to 2400 tokens because the earlier 1200-token calls frequently ended in reasoning-only output. A production serialization defect that dropped the server-owned `resolved_decision` before the collective mutation gate was also fixed.
+
+### Real Agent-mediated collective decision
+
+The disposable live run used Journey `e4bcf69e-eb7d-4b14-800c-4b844b05bd45` with two independent `MEMBER_IN_FORCE` records:
+
+```text
+OWNER  member=0bee86b2-953c-4943-81f4-c927427d4a21 traveler=ab7bac5d-df48-4601-b59a-a5610bf9db2b preference=interest/garden
+ADMIN  member=006697d0-205f-4168-bc4e-69d1eb074368 traveler=e0df79f5-9c41-4868-9cf6-3c5ef555f16d preference=interest/museum
+```
+
+The preferences were read back non-empty and different, and remained unchanged throughout the decision. Both choices were server-derived from real grounded proposals; the Agent was not given a candidate ID, a correct proposal, a member answer, or a fixed tool sequence.
+
+Agent Run #1 (`f76eaaa5-bf8e-4e2c-b64f-a2695719de66`, mission `0370a6fc-6587-4b1f-b8b7-00c4dd7485ae`) used the real `cn:glm-5.3-flash` runtime and executed:
+
+```text
+inspect_journey -> inspect_twin -> search_city_services -> request_replan
+-> list_replans -> request_collective_decision
+```
+
+The machine result was `CLARIFICATION_REQUIRED / WAITING_FOR_MEMBERS`, not `PARTIAL`, with clarification `adaa357e-5c1b-4f78-abd6-6e16100c8b7e`. The selected server-derived proposal was `d0d9c47c-12cd-4e2f-94f2-35268f5c9e47`, targeting plan `8fcba51b-ff35-4e59-97bf-9270be9bf955`.
+
+The two normal member response routes independently answered the shared decision. The first returned `WAITING_FOR_MEMBERS`; the second returned `RESOLVED` and created child mission `ca0c9ed0-37d0-46e2-bbd5-a211e2b5fd07`. Response receipts showed `baseline_preferences_unchanged=true` and `traveler_twin_unchanged=true`.
+
+Agent Run #2 (`590de0b7-ad8c-4467-ba99-345078cb44d5`) resumed the child with the same real model and executed:
+
+```text
+inspect_journey -> inspect_twin -> list_replans -> accept_replan
+```
+
+The selected proposal first reached the normal Gateway result `REQUIRE_CONFIRMATION`. After the server-issued user approval receipt was approved, the same Agent tool path consumed the receipt and passed the server collective gate. The approved receipt was `fb2b7720-7b9b-4ee8-bf4b-80b826e5c8db`; the active plan became `8fcba51b-ff35-4e59-97bf-9270be9bf955`. A non-selected proposal was independently rejected at the server boundary with `COLLECTIVE_CANDIDATE_NOT_SELECTED`.
+
+### Physical execution and final truth
+
+The accepted proposal added the real provider-backed garden Place `real-place-ebd30de67691cab346be66ec` with canonical opening `OFFICIAL_WEB_VERIFIED`, canonical cost `VERIFIED_PROVIDER` at 200 JPY, and live Valhalla mobility evidence. The locked C4 Craft Museum commitment remained protected.
+
+The normal HTTP execution state machine then completed:
+
+```text
+Isuien activity ddca54f4-a6ce-45c6-911d-6aeebc39d7fc: depart -> arrive -> begin -> complete
+Garden activity 2bc60611-4eeb-4d99-a984-fd2fbb37209f: depart -> arrive -> begin -> complete
+Craft C4 activity a6d058ca-ab8b-4149-ac17-382cf54127fa: depart -> arrive -> begin -> complete
+final Journey = COMPLETED
+final active PlanVersion = 8fcba51b-ff35-4e59-97bf-9270be9bf955
+```
+
+This is the first closure-grade R27 trace in this worktree: a real configured Agent discovered the shared conflict, asked only the relevant members, resumed from a server-owned collective decision, passed normal Gateway approval, activated the selected proposal, and the revised shared Journey physically completed. Transport caller-principal authentication remains unproven; the demonstrated boundary is member-scoped server state, not a claim of HTTP identity authentication.
+
+### Focused verification
+
+```text
+R20-R27 focused lineage: 71 passed, 1 warning
+python -m compileall -q backend/app: PASS
+git diff --check: PASS
+```
+
+The final delivery package contains the machine receipt, replay procedure, focused test output, code patch, report, and disposable SQLite snapshot. It contains no WB2api configuration or raw credential.
