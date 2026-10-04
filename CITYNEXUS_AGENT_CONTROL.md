@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 00:07 · 尺的那一格做完了（第四类取词 + 一枚新判态）：同一棵树上两口径对跑改了 50 行引用，我具名那 6 枚假阳现在全部由机器自己认账（5 枚变 alive、1 枚变 file_level），产品字节 0、枝 0 推
+
+**〇、钟点先说一句**：本块写时 shell `date` 现读 00:07（已过午夜）。我名下前两块是 21:14 与 23:26（`D:/moodle/CITYNEXUS_AGENT_CONTROL.md` 里两块头都在），请按块头时间戳排，别按文件名当天数字排。
+
+**一、这一格补的是什么**
+
+23:26 那块我写"加宽口径只救回 3 枚，剩下 3 枚仍数不出，原因是文法不认'以文件路径本身点名'"。这格就是补那第四类，并因此多一个判态：
+
+- 第四类取词：注释里的目标是**一个文件**（`contracts/openapi.yaml`、`frontend/src/generated/api.ts`、`backend/app/main.py`）——原来被反引号整枚括住时连 `:794` 一起成了"名字"，所以永远对不上；现在把指针尾 `:数字` 剥掉再比。
+- 新判态 `file_level`：一句注释只点了文件名，它的主语就是"这个文件在不在树里"，不是"那一行附近有没有那个标识"。文件在 ⇒ `file_level`（不再算 drifted），文件不在 ⇒ 仍归 `dead`。判据其余部分一字未动（±4 行窗、四态定义不变）。
+- 两口径的差别只在取词，narrow 那跑保持原样，所以与 21:14 那块可直接比。
+
+**二、两口径对跑（基座 `45207a0cc0fcae000b619753b4dfccb06594a59f`，写块前 `git ls-remote` 现读并 `git cat-file -t` 回 commit；快照 = `git archive` 解出的只读树，量完已删）**
+
+- 旧口径：205 枚引用，`dead` 10、`drifted` 158、`no_token` 10、`alive` 27（基座 `45207a0cc0fcae000b619753b4dfccb06594a59f`）。
+- 新口径：同一棵树的同样 205 枚，`dead` 10、`drifted` 127、`alive` 63、`file_level` 5（基座 `45207a0cc0fcae000b619753b4dfccb06594a59f`）。
+- 逐行改判 50 行 = drifted→alive 35、drifted→file_level 5、no_token→drifted 9、no_token→alive 1（尺在 `D:/moodle/_qoder_rel_ord0447_wk/e5_census_wide.py:31`，两口径各自产 census_narrow.json / census_wide.json 于快照内、已随快照删，数记本块）。
+- 说明一句免得对不上账：旧口径的 drifted 在 21:14 那基座是 153，现在是 158——线又往前跳了几跳，同一把尺同一判据、两枚不同基座，不是我把判据改了。
+
+**三、我具名那 6 枚假阳，现在机器自己认了（`frontend/src/features/trash/journeyTrash.ts` 现尖逐枚）**
+
+- 第 13、15、16 行（找回头门 / `JOURNEY_NOT_DELETED` 那枚拒绝 / 回收站读门）：drifted → alive，抓到的名分别是 `/api/v1/journeys/{journey_id}/undelete`、`JOURNEY_NOT_DELETED`、`/api/v1/recycle-bin/journeys`。
+- 第 17 行两枚（`contracts/openapi.yaml:794` 与 `frontend/src/generated/api.ts:490`）：drifted → alive。
+- 第 33 行（`backend/app/main.py:3638` 那一序）：drifted → `file_level`——那句的主语确实是那个文件里的排序，路径型标识不该按"这一行附近有没有它"来判。
+- 合计：这批里没有一枚需要现场改，先前"这是尺的假阳、不是产品的病"这句整批坐实（那一枚文件共 9 枚引用，新口径下 drifted 归 0：8 枚 alive、1 枚 file_level）。
+
+**四、名下现状（照旧逐枚 blob 现比，不用祖先形判据）**
+
+- 两条候选仍未落：`refs/heads/review/a68b0631-comment-anchor-drift-r2` 头 `b5dec327174664f7a8764006d333f6494b3bad54` 的 `backend/tests/test_qoder_a68b0631_comment_anchor_drift_r1.py`，与 `refs/heads/review/a68b0631-ord0507-clock-attribution-r4` 头 `d0f019cdf521d0e9fb98efc273cbccb720826a12` 的 `frontend/e2e/qoder-a68b0631-ord0507-clock-attribution-r4.spec.ts`，在基座 `45207a0cc0fcae000b619753b4dfccb06594a59f` 上都取不到。我这边的形状：0 冲突；每跳一次尖我就重读一次。
+- 还等你两句：ORD-0507 第三件「技术详情」折叠的甲/乙；第一件那支 e2e 是重指取分母还是整件闭单。
+- 这格之后尺上还剩的可做项（都不大）：把这套取词并入 r2 那枝的全树守闸（等它落地之后，避免现在动一枚你已 10/10 验过的枝）。
+
+**五、纪律**：产品字节 0 枚；权威线没推、名下枝本轮 0 次新推、无 force-push 记录；`_preview.db` 一次没写；`demo/reset` 一次没调；保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 没起也没停；只读快照与 tar 已删净（该前缀目录现读 0 枚）；别人的枝、stash、工作树一枚没碰。D 盘余量现读个位数 GB。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0512 place_name 分支不可达那格已修并交件 · 现尖字节 24 枚红、这一手 20 枚红，红集合成对只差本单那四枚臂（车道 8ac89982）
 
 **一、先报这手做了什么（大白话）**
