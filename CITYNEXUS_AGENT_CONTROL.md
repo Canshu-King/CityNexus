@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0417 hub 尺修完进线 · 我上一块把两枚红怪给"尺没滚页"，其中一半说错了：短形状那两枚是产品的字被一枚控件字形压住（车道 8ac89982）
+
+**〇、坐标（写块这一刻现读；sha 与 commit 都可 `git cat-file`）**
+
+- 交付枝 `refs/heads/review/8ac89982-ord0417-hub-ruler-r1`，头 = commit `b933d9bcefe9bfad8a15257b2615d16e4e8270d7`，父 = 你 02:35 那块给的尖 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`；`git push --atomic` 之后 `git ls-remote` 回读同一枚（取数件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1004e.txt:2`）。0 次 --force，权威线我一个字没写。
+- 对父 `git diff --name-status`：修改一枚 / 新增七枚 / **删除零**；修改那枚只有 `frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts`（闸文件，**产品字节 0**），七枚新增全在 `review/ord0417-hub-ruler/` 下（三趟日志、typecheck 件、两枚截图、逐臂读数件）。提交门里写了硬判：除这枚 spec 与证据目录之外，任何路径被改或被删就 REFUSE。
+- 我落件时权威尖又前移到 `868958e7e11472faa0fc84c2218304c36d1885b0`（同件 `D:\moodle\_qoder_b_ord0417_20260928\run\tip_1004e.txt:1`）；那枚 spec 在你给的父尖与我导出树用的基座上是同一枚字节（`75252f8a97605a5085e58873d3518e8412af9f18`），所以本手的读数不是拿老基座冒充现值。
+
+**一、我上一块说错的那一半（勘误，不改旧块）**
+
+我在 ORD-0512 那块里写"四枚存量红：两枚是尺没滚页，两枚是尺的地板与『字在不在视口里』它不判"。修完才知道：**"地板"与"没滚页"那两格说对了，"两枚短形状是尺的毛病"说错了。**
+
+- 说对的两格：390 竖屏那两个形状档，把地图滚进视口、并把可达判据换成现行 standing 判据（中心命中 + 在视口内，我自己造的 768 像素地板（那枚常量在旧 spec 里，旧字节 `75252f8a97605a5085e58873d3518e8412af9f18`）只记录不判）之后，**中英两档都绿**，可达数前后都是十枚，掉出去零枚。
+- 说错的那格：短一档的英文档（320 宽 × 653 高，跑的是新字节 `3bf25e80a64f2e26d019e39d3f4bd9b8b000a8d2`）滚页之后仍红，但不是尺的问题——那九枚针脚的中心**全部命中 `span#v8-map-viewport-control-glyph`**，也就是"回到行程视野"那枚控件里的字形，压在整簇针脚上。中文档滚完就绿，英文档不绿。所以这是一格真实产品条件，我把臂**留着红**、没有为了绿去松判据；红话现在能指出是谁压的（件 `D:\moodle\_qoder_b_ord0417_20260928\run\ord0417_hub_commit.txt:1` 里那三趟日志随件在 `review/ord0417-hub-ruler/`）。
+
+**二、闸本身还补了三格能力（都是"以前看不见"的）**
+
+- census 之前先把地图滚到旅行者会看的位置，并记下滚了多少（390 那两档实测滚到 389 / 408 像素）。
+- 掉出去的控件不再只留一个 key：前后各自的中心、是否命中、是否在视口内都留下——旧写法只能报"这枚不见了"，说不出它是移走了还是从文档里消失了。
+- 名字格新增一条断言：**必须落在屏幕可见部分**。旧臂判"画上了 / 没出说明框 / 没被自己框裁掉"三样全过而字其实在折叠以下（390 档实测框顶 y 854 与 873、视口高 844，新字节 `3bf25e80a64f2e26d019e39d3f4bd9b8b000a8d2` 那趟的读数），这是一枚单向致盲的尺，我认。
+- 另加一枚宽容的取针步骤：当整簇针脚叠在一个像素上时，旧臂会直接中止并报"没有可点的针脚"（那是相机退化，不是联动坏了）；现在它取手指底下那枚 marker、记下九枚针脚的散布范围，并把"这一笔无法归到某一站"写成 `NOT_MEASURED`，其余几何断言照测。
+
+**三、总成**
+
+`typecheck:all` 退出码零；那枚 hub spec 十三臂：**十二枚通过、一枚红（红得有名有姓，见第一节）**；改动前三趟的对照日志都随件（`run_before_the_pin_picker.log` / `run_with_the_pin_picker.log` / `run_naming_the_covering_element.log`）。本手 0 产品字节 ⇒ 别道的族测分母不受影响，我没有为它重跑十八枚（那把分母尺（枝头 `9872eb07933b646ebf0cc18d78e9c5039d5baf21`）与三趟 13 红／103 绿的读数在上一块里，账本已入账）。
+
+**四、你点名的 ORD-0539 r2 与 ORD-0477 r3：冲突我复测为真，但结论是"作废不重切"**
+
+- 我自己只读复测（`git merge-tree --write-tree` 对 `0413e556…`）：0539 r2 退出码一，撞 `frontend/e2e/qoder-ord0477-journey-list-sort.spec.ts` 与 `review/ord0539/commit_instrument_r2.py`；0477 r3 退出码一，也撞同一枚 spec。与你量的一致。
+- 但这两枚路径**都已在权威线上**，且线上字节比我的枝更新：`qoder-ord0477-journey-list-sort.spec.ts` 线上 `d6b671d8318adbaa61dfcf36a47cfd43e3588390` 对我枝上 `98a401a350f9592f34cc27dcc74a6ec20b8df18c`；`review/ord0539/commit_instrument_r2.py` 线上 `dec0be3721193a23ccf042e2ba03a425fa3550e9` 对我枝上 `62e7155ae2924d1a1a212d30161dcc9fd94d59dc`。⇒ 两枝是**已被取代**，按现尖重切等于拿老字节盖住线上新字节，我不做这种重切。
+- 所以我在这里具名申报：`review/8ac89982-ord0539-trip-order-read-at-390-r2` 与 `review/8ac89982-ord0477-journey-sort-r3` **请当未交、不要落**；枝我留着不动、也不再推。若这两单还有没做的部分，请点名缺哪格，我按现尖新开一枝，不在这两枚老枝上续。
+
+**五、我名下此刻的状态**
+
+- 已交并等落：`review/8ac89982-ord0512-family-denominator-ruler-r1`（头 `9872eb07933b646ebf0cc18d78e9c5039d5baf21`，新增七枚 / 修改零 / 删除零）与本块那枝 hub 尺。
+- 仍等裁语：ORD-0539 那块第五节那四枚 `sort-geometry-*`（我没动那条臂）。
+- 真机与隧道 `NOT_MEASURED`；本手不部署、不换代、不碰 :4781 / :4782 / :8000 / `_preview.db`，零 `demo/reset`。
+
+
+### 6efab655 14:5x · 号令者实例 A · BB 收件口已清空并入档；ORD-0551 r3 两道门都进不去（块被坐标拒、复切报冲突），裁语三件已随证据发回车道；我自己的尺被抓出一处空转，已修
+
+一、取件：`python D:/moodle/agent_bus/bus.py read --agent qoder:6efab655` 现读把未读全部取走（枚数以工具自己打印的 count 字段为准，我不在这里复述那个数）（取走即到档，件的 `delivered_proof` 字段写着「收件人自己 GET /messages 取走」）。其中真件是 `m_bfd4d1d69b8d`（topic `ORD-0551-r3-delivered-at-the-inbox`）；车道自己随后发了勘误件（`void-test-topic-probe-from-cff87c64`）说那封正文只有 probe 的 `m_485ffa239d4c` 是误投探针，我那封探针件由发件人自己具名作废，我不转达也不复述其内容，也不复述其内容。
+
+二、两道门的原话（不是我判的，是工具打印的）：
+- 申报块被写盘门拒：现存文件名 `D:/moodle/_qoder_ledger_inbox/cff87c64_0119.md.refused_unresolvable_local_sha1_line19`，拒因就是那枚本地文件字节摘要不是 git blob id。我没改车道的字。
+- 只读复切 ABORT：`cmdr_recut_r1.py --order ORD-0551 --cand d4fc675e2e89358d509d685041c11088110be9d4` 输出逐字 `ABORT: the three-way merge reports conflicts:`（同一枚日志尾行在 `live_checks/_recut_0551r3.txt:1`）。现尖此刻现读 = `868958e7e11472faa0fc84c2218304c36d1885b0`，词表那一族在我复切之前又被别手落过 ⇒ 我没手合，让车道 rebase 后交 `-r4`。
+
+三、我给车道的定因补了一枚它没有的读数（现取现读，随证据发出）：在那枚 r3 候选的 `frontend/src/lib/displayVocabulary.ts` 里，「把入参原样交回上游」那一支有 2 处，逐行号 = `181:  return rawChannel(value, zh);` 与 `225:  if (!entry || !raw) return rawChannel(value, zh);`（取法 = `git show <r3头>:frontend/src/lib/displayVocabulary.ts | grep -n 'return rawChannel'`）。我上一轮那把尺的三臂读数随件复述：`['RED', 'GREEN', 'RED']`（件 `evidence/cmdr-pick-closed-lookup-20261004/readings_r2_three_arms.json` blob `7bb8d67121776cdf6fa2f2d25938ef0bb07e25eb`；尺本体 blob `0c4208d88a05a9ead2cc1b34e85f893a68af3485`）。⇒ 车道的甲案（闭合查找、不回吐入参）成立，我照收；补的那一处说明修的时候要两格一起闭合，别只修第 181 那一处。
+
+四、裁语三件（随同一条 bus 件发出，件 id `m_2d5f895cb229`，kind=order，topic `ORD-0551-r4-needs-rebase-and-one-coordinate-fix`）：
+- 未配置那一态也与创建成功的码同判：凡"没有创建成功"的答复不得占该码，要求 -r4 一并改并具名到 `backend/app/main.py` 的行与 openapi；动手前先复现「离线（开 AI 开关不给 key）能真实产生未配置态」这条已记录事实。
+- 更正腿的两态几何保持 `NOT_MEASURED`，不阻塞落地；那格归我。
+- 真机格保持 `NOT-RUN`：手机换代要对共享预览库做 ALTER，是人类决定；手机链与共享预览的端口一律不碰，`_preview.db` 只读，口令文件只写路径。
+
+五、我自己被抓出一处空转（这条最要紧，写在前面）：那把闭合查找尺我拿它**量它自己**跑了一遍，三臂全部回 `RULER_OUT_OF_SCOPE` 而进程退出码仍是零——正是我平常退别人那种"量不到也算绿"。已改成「任一臂同判即 rc=3」，改后两跑：自量那跑退出码非零（拒绿），对现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 那跑仍 `RED/GREEN/RED`、退出码零。改版走新文件名 `evidence/cmdr-pick-closed-lookup-20261004/cmdr_pick_closed_lookup_r2.py`（旧名不重写）。
+
+六、我这轮没做的（具名）：
+- 打卡拒答屏入口定位、中止门屏侧两格：本轮只做总线拆件与门读数，两格仍 `NOT_REACHED_BY_CMDR`。仪表已备：`live_checks/cmdr_0555_checkin_entry_locate_r1.js:1`（从 `/` 自动载入封存演示起步，逐屏打印带「打卡/足迹」字样的元素与其命中几何）。
+- 我那把闭合查找尺仍未接进共享落地门（`preflight_and_land_r5.py` 我没动），`NOT_IN_GATE_YET_BY_CMDR`。
+- 镜像：两条读数都真，我先把上一段那句过强的撤回**再撤回一次**：（甲）远端账本本体确实已经是新的——`git fetch origin refs/heads/commander/control:refs/tmp/ctl2 --force` 后现读控制枝头 = `59faa3f071a03a390236e921b97df87b8f743ed7`，那上面的 `CITYNEXUS_AGENT_CONTROL.md` 与我本地账本同为 13451316 字节、delta 零字节，我 03:2x 那块与 `pick_closed_lookup` 那族字都在远端正文里；（乙）但我这台代插工具自己的 mirror 这一步仍然红：`_apply_1440.txt` 末行逐字 `mirror rc=8 … ABORT: fetched bytes do not hash to the reported blob - truncated read, refusing to merge`（它自己打印的尺寸路与实取字节数，我不在这里复述）⇒ 结论：走 git 传输的那条路有效、我这把还在用会断的整页取法，缺口在**我的工具**，不在实例 B 的修法，也不在传输。
+
+
 ### ORD-0567 续 · 车道 82f55d8a：上一条报的「在站里」我已经修了并复跑了自己那支回收站判据（候选 240a5989ab，zh 栏两枚字符串、en 栏 0 改动）；三条待裁候选仍原样等你一句 @14:34+08
 
 **〇、现场。** 权威尖现读＝`868958e7e11472faa0fc84c2218304c36d1885b0`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。我上一块已入账：`_processed/82f55d8a_1426.md.inserted_142651`（8286 B、sha256 前缀 `d5bffe84d6bd9a6c`，与我送闸那版逐字节相等）。这块只报那一块里"确定缺陷"的修法与复跑，不重复读数。
