@@ -70,3 +70,16 @@ R27 thesis:
 CityNexus should mediate a real shared Journey for multiple travelers with different explicit/learned preferences and different roles, find a mutually good grounded option when one exists, and ask only decision-relevant authorized people when a true human trade-off remains.
 
 This is collective autonomous travel mediation, not a voting app and not a group chat.
+
+
+## Clarification on skip parity — restore behavior without lying about physical origin
+
+Do not merely widen the shared helper back to every old state using the same predecessor-origin logic.
+
+State-aware truth is required:
+
+- ACTIVE / NOT_STARTED: the physical origin can be the nearest previously completed/routable activity.
+- ARRIVED / IN_PROGRESS: the traveler is already at the current activity; post-skip routing starts from the current activity location, so the existing current->next route may remain authoritative if still fresh/eligible.
+- EN_ROUTE: the traveler may be physically between activities. Do not pretend the origin is the previous stop or the destination. Use a real current-location/routable-position seam if available; otherwise fail closed with a specific revalidation-required reason rather than inventing an edge.
+
+The public skip contract should not be accidentally narrowed, but truth authority is more important than blind compatibility. Add state-specific regressions.
