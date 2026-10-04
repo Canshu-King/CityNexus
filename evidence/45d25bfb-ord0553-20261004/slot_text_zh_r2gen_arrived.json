@@ -1,0 +1,59 @@
+{
+  "instrument": "cmdra_0553_slot_text_r1",
+  "script_sha256": "d4bcb8708c167070ec57a0d33eff1a942eb11d754c30ada06f92bff3151d1e4a",
+  "base": "http://127.0.0.1:49851",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+  ],
+  "viewport": "390x844",
+  "read": {
+    "panelPresent": true,
+    "activityStatus": [
+      "已完成",
+      "已完成",
+      "已完成",
+      "已到达",
+      "计划中",
+      "计划中"
+    ],
+    "stateValues": [
+      "已到达",
+      "计划中"
+    ],
+    "footerButton": [
+      "标记 进行中",
+      "预览影响",
+      "接受编辑"
+    ],
+    "rows": [
+      {
+        "title": "Old Town Gate",
+        "status": "已完成"
+      },
+      {
+        "title": "Riverside Museum",
+        "status": "已完成"
+      },
+      {
+        "title": "Central Food Hall",
+        "status": "已完成"
+      },
+      {
+        "title": "Tech Art Center",
+        "status": "已到达"
+      },
+      {
+        "title": "Nexus River Cruise Pier",
+        "status": "计划中"
+      },
+      {
+        "title": "Skyline Dinner House",
+        "status": "计划中"
+      }
+    ],
+    "nowTitle": "Tech Art Center",
+    "nextTitle": "Nexus River Cruise Pier"
+  },
+  "pageErrors": []
+}
