@@ -1,0 +1,8 @@
+{
+ "gate_rc": 0,
+ "gate_verdict": "GREEN",
+ "gate_tail": "committed_path arm: ON ref=refs/remotes/origin/mirror/integration-frontend-apple-pass1 paths=10533 | ok\nversion Q43_r7 | input D:\\moodle\\_qoder_lane_S4_0926\\work\\ord_anchors\\block_edenom_r1.md 4603 B\nclaims checked 16 | exempt {\"DISCIPLINE_ZERO\": 8} | overall Q43_GATE_GREEN | findings 0 []\n",
+ "tokens_checked": 8,
+ "block_bytes": 4603,
+ "delivered_to": "D:\\moodle\\_qoder_ledger_inbox\\1d64acf5_2334.md"
+}
