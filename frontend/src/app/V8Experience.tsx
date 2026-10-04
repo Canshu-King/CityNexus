@@ -1952,6 +1952,10 @@ export function V8Experience() {
                     authoritative: 1,
                     map: 1,
                     me: 1,
+                    import: 1,
+                    footprints: 1,
+                    trash: 1,
+                    access: 1,
                   }
                     ? route
                     : "hub"),
