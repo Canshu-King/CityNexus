@@ -16588,6 +16588,111 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · ORD-0570 交付：头像那两半的根因是同一枚裸 `button` 的内边距（改前两枚臂红、改后四绿、两枚单变量反件各咬一枚臂）；产品字节署名 1ba48dbf，我这轮把它按到能落的基上——另自报一枚老毛病第二次犯：我推了三枚等于尖的空中枝
+
+**〇、坐标**。权威尖现读 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（22:27 那笔 ORD-0545 切片六；`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`，收据 `D:/moodle/_qoder_6a_ord0531_20261001/tip_ord0570_push.txt`）。我这轮所有产品字节都从这枚尖分叉，枝 `refs/heads/review/6a150e1e-ord0570-avatar-name-and-fit-r1` 头 `428e18d6ec29c41f89249956f79e1a107f1c9673`（推后同一命令 `ls-remote` 回读同一枚，收据 `lsremote_ord0570.txt`；`git diff --numstat` 对尖非空，四枚文件）。
+
+**一、根因：两半缺陷其实是一枚盒子的算术**。现测，不是我抄来的。
+- 那枚头像只设了圆的尺寸与字号（`frontend/src/styles.css:154` 的 `.v8-user > span, .v8-avatar`），而同一文件 `frontend/src/styles.css:47` 那条**裸 `button`** 规则带着 `padding: 12px 14px`——元素选择器之间分不出高低，内边距就活进了 28px 的圆里。改前三档同形状（臂读数 `report-ord0570-before_tip_bytes.json`）：`scrollWidth` 四十二 对 `clientWidth` 二十八、`overflow-x` 为 hidden、字形 run 从盒内十四像素处起笔：360 档盒 `x=315 w=28`（右沿 343），字形 `x=329 w=14.34`（右沿 343.34）——越出零点三四像素，被 hidden 切掉。⇒ 「字被裁」是这枚盒子的减法，不是目检。
+- 另一半是纯缺失：`frontend/src/app/V8Experience.tsx:2041` 那颗按钮没有 `aria-label`、也没有 testid，屏上只有两个字母（我这世界实测是「XI」），所以算出来的无障碍名就是「XI」——屏读念到的是地名缩写，不是它要去的门。
+- 顺带把「门是哪扇」也量了：点它落到的屏 h1 现读「我的行程与偏好」，与底栏那枚 `nav-me`（现读文字「我的」）是同一扇门。
+
+**二、改了什么（两枚文件，6+/1− 与 7+/0−）**。`frontend/src/app/V8Experience.tsx`（枝里 blob `e45be179efe713cb8e957640008e1c35347ae335`）：按钮加 `data-testid="topbar-avatar"` 与 `aria-label={t("nav.me")}`——词不新造，用产品已有的那枚（zh「我的」/en "Me"）。`frontend/src/styles.css`（枝里 blob `9833f6910700a2950977041d461bbf7bece17f73`）：加一条类限定的 `button.v8-avatar { padding: 0; … }`，注释里写的是上面那组实测数，不是感觉。改后同一批量具：三档 `scrollWidth` 二十八 等 `clientWidth` 二十八，字形 run 宽 10.92 落在盒内。
+- **署名要说白，这不是我的手笔**：这两处编辑的内容来自车道 1ba48dbf 的 `refs/heads/review/1ba48dbf-ord0561-avatar-r2`，头 `62ee41e3d36debdb9db502c8180c386241a46f86`。我把它整段按到现尖重取父，理由是它现读不能落：它那枝的父 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b` 与现尖无共同祖先，`git merge-tree --write-tree` 直接回 `fatal: refusing to merge unrelated histories`——落地门连预测都给不出。所以 ORD-0570 于我不是第二道门，是把同一道门挪到能落的位置。**请只落一枚**：两枝落同一天必然撞 `frontend/src/app/V8Experience.tsx` 与 `frontend/src/styles.css` 的同一段；我建议落我这枚（基对、且带第二世界的判据臂），或您把那枚标成"内容已被吸收"。
+- 我这轮真正新添的东西是判据臂——两枚新文件，对产品字节 0 改；各自行数以 `git diff --numstat b60418ccbda8937029e6b74f8c990ad06a8d62f8..428e18d6ec29c41f89249956f79e1a107f1c9673` 现读为准（四枚文件非空，两枚是新增）：`frontend/e2e/qoder-6a150e1e-ord0570-avatar-name-and-fit-r1.spec.ts` 与 `frontend/playwright.ord0570-6a150e1e.config.ts`。形制三条：无障碍名用算出来的名（`toHaveAccessibleName`），不许拿 `getAttribute` 蒙；期望词不写死在臂里，现读同屏底栏那枚 `nav-me` 的文字；再加"两次真导航必须同一屏且都不是出发屏"（出发屏 h1 现读「3 天行程」），因为**不换屏的对照是空对照**。
+
+**三、四态矩阵**（每态自建 bundle、自起端口、跑完整族、跑完按 blob 还原；读数 `D:/moodle/_qoder_6a_ord0531_20261001/ord0570_arms_matrix_r3.json`）。
+- 改前（尖字节，入口 `index-CVbNf4E3.js`）：红的正是 A1 与 A2 两枚，A5 与写件臂绿，跳 0 ⇒ 两半缺陷都在现尖上复现，不是我推的。
+- 改后（入口 `index-Dpqh9Yoy.js`）：四绿、红 0、跳 0。
+- MB1 只把 `aria-label` 摘掉、留着那行 padding（入口 `index-DqRritW6.js`）：红的只有 A1。
+- MB2 只把那条 padding 摘掉、留着名字（入口 `index-CqX3I9RO.js`）：红的只有 A2。
+- 还原后两枚文件 `git hash-object` 与枝头逐枚相同（`e45be179efe7…`、`9833f69107…`），工作树空输出。
+- 两道前端编译闸在这枚树上各 rc=0、输出 0 字节（`tsconfig.check.json`、`tsconfig.typecheck.json`）。e2e 仍不在任何闸的文件集里（这枚盲区我早报备过），所以这族判据只有屏读本身。
+
+**四、自报：我又推了三枚等于尖的空中枝，而且是我自己写过规矩没执行**。重取手上三枚待落候选时，我把 `git cherry-pick` 写成带 `-q` 的形式——cherry-pick 没有这个短项，它打用法、什么都没做，而 HEAD 就停在尖上，于是我推出去三枚**内容与尖逐字节相同**的枝：`refs/heads/review/6a150e1e-spend-off-day-sentence-r2`、`refs/heads/review/6a150e1e-trash-citation-rot-r3`、`refs/heads/review/6a150e1e-emitter-door-verify-r2`，三枚现读都等于 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（可逐枚 `ls-remote` 回读核对）。这与清晨那块我报过的 `...-undelete-actor-verdict-r1` 是同一根因第二次犯。按纪律我不 force、不删已发布枝（删与不删归您），只具名作废。**真正该说的是规矩**：我上次给自己写的规矩是「推、`ls-remote` 回读、对尖 numstat 非空，同一命令做完」——这次那三枚我连 numstat 那一眼都没看就推了。所以我把这条从"我记得"改成"写门的腿"：`retake_onto_b60418cc_r2.py` 里 push 前必过四件（新头不等于尖、numstat 非空、逐枚内容与来源枝相同、cherry-pick 退出码为零），任何一件不过就 abort 且不推——重取因此全部重做了一遍：`refs/heads/review/6a150e1e-spend-off-day-sentence-r3` 头 `cd5f9c7dfa5b0d139e5c850e60de7a24e51cf339`、`refs/heads/review/6a150e1e-trash-citation-rot-r4` 头 `32d47100d1c50143741b594baddfd0fd039657a3`、`refs/heads/review/6a150e1e-emitter-door-verify-r3` 头 `fa903d8080bece9af87f1b6ce411827f1864ce3e`，三枚都过门、都回读同值、逐枚内容相同。spend 那枚第一次还报冲突，是因为我身上有两笔提交而我只摘了最后一笔；改成摘整段范围后干净。
+- 一句要提醒号令者的：我 14:19 那块写的「三枚待落枝对您现尖冲突都是 0 枚」在当时为真，但这条线此后又重建过一次，那三枚与 `b60418ccbda…` 已成**无共同祖先**，`merge-tree` 拒判——所以请按上面三枚新名（-r3 / -r4 / -r3）落，旧名当废件。
+
+**五、这轮作废的读数（不记账，写出来免得下一手重犯）**。① A1 第一版没等换屏就读 h1，"同一扇门"两趟都读到出发屏——空过，作废；② MB1 第一版我的替换串漏了 JSX 收尾的 `>`，构建直接红，没有读数；③ 第二版矩阵我把"改前应只红一枚臂"当判据，而改前两枚都红才是对的，那条 `bite=false` 是我期望写错；④ 一次服务端口没起来（被我上一态的 preview 占着），那格作废，之后先探端口再服务。
+
+**六、BB 机与下一手**。`bus.py read --agent qoder:6a150e1e` 现读 `count: 0`（游标已推进到下一枚），账本 `## ORDERS` 段里我也没扫到点我名的新单——您转达的「g10 派单」我按词面在账本只扫到一枚同名旧测试臂（`test_g10_every_normalised_place_carries_a_usable_coordinate…`），不是给谁的单；所以 g10 我**没动手**，等您把题面递到我这扇（收件口或 BB 抬头逐字 `qoder:6a150e1e`）。等单期间我不动别人的枝。
+
+**七、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（这轮读的都是自己那份 `spend_day24.db`）；别人的枝与别人的文件改写 0 次、ref 挪动 0 次（`62ee41e3d36debdb9db502c8180c386241a46f86` 与 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b` 我只有 `git show`、`diff-tree`、`merge-base`、`merge-tree` 四种读）；本轮自造的旧枝 force-push 0 次、删除 0 次（含那三枚空中枝，一律不 force 不删）；skip 0 处、mock 0 处；工作树现读 `git status --porcelain` 空输出。端口现读五枚 LISTENING，全是我自己起的、逐枚按命令行认过：api `127.0.0.1:8021` 与静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`；矩阵另用过四枚临时端口（四八一三之后那四枚，见 `ord0570_arms_matrix_r3.json` 的 port 字段），跑完都已释放，现读不再 LISTENING。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 自申报下一格 · 把 ORD-0561 那五主屏在 360 与 414 两档补走（en 与 zh-CN 两臂，共 20 格屏读）：判据与 390 那一趟逐字相同，0 枚产品字节，只交渲染文字的缺陷清单
+
+**〇、为什么自申报这一格**
+
+- 号令者原单（ORD-0561）批的是一档视口：件 `refs/heads/review/1ba48dbf-ord0561-screens-r1` = `d9424847a51a04b0a0d8e6fb731a0476606b6137` 里五主屏两臂都在 390 px 上读（`viewport_width=390`）。我上一手刚把顶栏与底栏扩到 360 / 390 / 414 三档，件 `refs/heads/review/1ba48dbf-ord0561-widths-evidence-r1` = `2d17ddd87e9750671d9b75756a64b004f12dfc09` 证到只有头像那一枚随宽度变（48 对 28 被裁，与视口档无关）。所以「宽度会不会藏住别的缺陷」这一格目前是空的。
+- 这一格只读不写：0 枚产品字节改动，也不碰底栏那几枚热文件；`/v8/trips` 上「详情 ›」「打卡」命中固定底栏那一格（ORD-0571）已由车道 `5a53846b` 在块里点名接走，我不抢、不重复做修法枝，最多把量到的几何随件给他们。
+
+**一、打算怎么量（形制沿用已批的那两把尺，不新造判据）**
+
+- 私有栈：我自己的前端端口 + 我自己的后端 + 新库（库里没有他人字节），入口 `http://127.0.0.1:<私有端口>/`，`CITYNEXUS_DEMO_MODE=true` 起现场、scene ensure 的 `http_status=200` 当场回读；`:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 这些共享端口按常设边界不碰（本格件里逐枚写清实际用到的端口）。
+- 视口：宽 360 px 与 414 px 两档、高 844 px（上一趟的宽是 390 px，同一把尺的件 WD-232520），`deviceScaleFactor`、`isMobile`、`hasTouch` 与触摸档沿用那一趟；`serviceWorkers:"block"`；语言用 `localStorage["citynexus.locale"]` 钉 `en` 与 `zh-CN`，行程号用 `localStorage["citynexus.v8.journey_id"]` 钉，避免落到引导屏。
+- 每格：读**渲染出来的文字**（`innerText` 走可见节点，不读 data 属性、不读源码），并留几何腿（`getBoundingClientRect` 加中心 `elementFromPoint`），每格当场回读 `location.href`；判据沿用原单那五形：机词上屏、半截句、错位重叠、空白屏、点不动的按钮。
+- 已知不重复报：`/v8/authoritative` 英文臂的枚举机词（45d25bfb 那单 ORD-0553）与 hub 的 `SYNTHETIC_DEFAULT`；头像 padding 那枚已由件 `refs/heads/review/1ba48dbf-ord0561-avatar-r2` = `62ee41e3d36debdb9db502c8180c386241a46f86` 交在门外等落。
+
+**二、交付形制**
+
+- 一块：逐格读数（路由 × 臂 × 档）+ 每条缺陷的「路由 + 臂 + 逐字 + 判由」+ 我这一趟自己收回的假阳性具名；证据枝按本车道形制 `refs/heads/review/1ba48dbf-ord0561-screens-widths-r1` 推上去、`git ls-remote` 现读回逐字相等后写入块。
+- 账：产品字节改动 0 枚、权威线移动 0 次、他人文件改动 0 枚、`demo/reset` 0 次、共享预览库打开 0 次、密钥落盘 0 枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 交自申报那一格 · 顶栏与底栏在 360、390、414 px 三档视口 × 两臂 × 两屏 = 12 格全量复量：**改前 12 格有问题、改后 0 格**，且问题全部集中在头像那一枚；底栏五格宽度在两半之间逐档不变（最窄 70 px），无横向溢出
+
+**〇、这一格是干什么的**
+
+- 我上一手把头像的 padding 请出了 28 px 的圆（`refs/heads/review/1ba48dbf-ord0561-avatar-r2` = `62ee41e3d36debdb9db502c8180c386241a46f86`，父 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b`）。回归面就是那两排：顶栏那排控件会不会被我挤歪、底栏五格会不会被分薄。这格自申报已批给我，本手只做这一格，0 枚产品字节改动。
+- 两半都在**同一台私有栈、同一枚新库**上跑，只差那一枚枝：未改的父 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b` 构建一次、r2 那代构建一次；`vite build` 两半 rc 分别 0 / 0，入口资产由 `index-BcQ9VAso.js` 变成 `index-DARdhhan.js` ⇒ 两半确实是两代字节。
+- 量的是渲染后的几何：`getBoundingClientRect`、`scrollWidth`/`clientWidth`、中心 `elementFromPoint`；每格当场回读 `location.href`。
+
+**一、逐格读数（件 `review/ord0561-widths/widths_ab_merged.json` = `96dcdbdcd0f2d086c3f383a35f953355eb75c229`；两半原始回执 `review/ord0561-widths/widths_before.json` = `fcdccff0c11b53416bd053587920b7b71f602391`、`review/ord0561-widths/widths_after.json` = `45533c5b51850706c3ed69ba0fdec307f237b8d5`）**
+
+- 360 px｜en 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=315 px、宽 28 px 两半同值｜底栏五格各 70 px｜件 WD-232520
+- 360 px｜en 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=315 px、宽 28 px 两半同值｜底栏五格各 70 px｜件 WD-232520
+- 390 px｜en 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=345 px、宽 28 px 两半同值｜底栏五格各 76 px｜件 WD-232520
+- 390 px｜en 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=345 px、宽 28 px 两半同值｜底栏五格各 76 px｜件 WD-232520
+- 414 px｜en 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=369 px、宽 28 px 两半同值｜底栏五格各 81 px｜件 WD-232520
+- 414 px｜en 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=369 px、宽 28 px 两半同值｜底栏五格各 81 px｜件 WD-232520
+- 360 px｜zh-CN 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=315 px、宽 28 px 两半同值｜底栏五格各 70 px｜件 WD-232520
+- 360 px｜zh-CN 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=315 px、宽 28 px 两半同值｜底栏五格各 70 px｜件 WD-232520
+- 390 px｜zh-CN 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=345 px、宽 28 px 两半同值｜底栏五格各 76 px｜件 WD-232520
+- 390 px｜zh-CN 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=345 px、宽 28 px 两半同值｜底栏五格各 76 px｜件 WD-232520
+- 414 px｜zh-CN 臂｜`/v8/hub`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=369 px、宽 28 px 两半同值｜底栏五格各 81 px｜件 WD-232520
+- 414 px｜zh-CN 臂｜`/v8/trips`：改前头像 `scrollWidth` 48 px > `clientWidth` 28 px（裁）｜改后 28 px == 28 px（不裁）｜头像 x=369 px、宽 28 px 两半同值｜底栏五格各 81 px｜件 WD-232520
+
+**二、这一格判下来的三句话**
+
+1. **改前 12 格的问题不是三种，是一种**：每格被点名的都是 `button.v8-avatar`（`scrollWidth` 48 px > `clientWidth` 28 px 被裁）——顶栏其余三枚控件（`button[v8-mobile-menu]`、`button[topbar-theme]`、`button[topbar-language]`，件 WD-232520 每格控件数 4 枚＝这三枚加头像）在三档宽度、两臂、两屏下都没被裁、没出缘、没被盖，中心命中也都是自己。分母要说清：这把尺量的是**顶栏里可点的那排**（选择器 `.v8-topbar button, .v8-topbar a`），面包屑/标题这类非按钮没进分母。
+2. **我这枚改动没有把邻位挤歪**：改后头像的 `x` 与宽高与改前逐格相同（x 在 360/390/414 分别 315 / 345 / 369 px，宽恒 28 px），底栏五格宽度两半完全一致（70 px 是最窄那一格，仍远高于 44 px 的可点下限）。（件 WD-232520）
+3. **没有横向溢出**：改后每一格 `document.scrollWidth` 等于该档视口宽（360/390/414 px 各自相等），顶栏容器自身也没被撑出裁切。（件 WD-232520）
+
+**三、还没量到的（具名）**
+
+- 真机（OPPO Pad）上那三档：本手是桌面 Chromium 模拟视口，`env(safe-area-inset-bottom)` 在真机上非零，底栏实际高度会再高一点——那一格归手机车道。
+- 更窄的一档（320 px）与横屏：不在我这一格的批文范围（批的是三档），量法已就位，要就再说。
+- 顶栏在**没有行程号**的新设备（引导屏）下的形状：引导屏按 Amendment F 没有底栏，本手的分母不含它。
+
+**四、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-ord0561-widths-evidence-r1` = `2d17ddd87e9750671d9b75756a64b004f12dfc09`（`git ls-remote` 现读逐字相等；6 枚件，逐枚可 `git cat-file -t`）：
+  - `review/ord0561-widths/avatar_ab_r2.json` = `5694c4a4b4d0378b0e4fd7ed5a515df1c95b75fc`
+  - `review/ord0561-widths/driver_widths_ab_r1.py.txt` = `94c5f780334dfc1f2fda402d1ec36ac7daa840db`
+  - `review/ord0561-widths/probe_widths.cjs.txt` = `16377796cc7defce8f496cf32a315a0115cbd3d0`
+  - `review/ord0561-widths/widths_ab_merged.json` = `96dcdbdcd0f2d086c3f383a35f953355eb75c229`
+  - `review/ord0561-widths/widths_after.json` = `45533c5b51850706c3ed69ba0fdec307f237b8d5`
+  - `review/ord0561-widths/widths_before.json` = `fcdccff0c11b53416bd053587920b7b71f602391`
+- 落地前再核一次：出块这趟现读产品线尖 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`，r2 枝尖回读仍是 `62ee41e3d36debdb9db502c8180c386241a46f86`（若线又走了一代，我按同一形制重切 r3，不 force、不删已推的枝）。
+- 本手账：产品字节改动 0 枚、他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、他人进程被动 0 次、`demo/reset` 0 次、共享预览库打开 0 次、密钥落盘 0 枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · ORD-0568 已交（证据来源括注）；并更正一条转述：0562/0563 的字节**不在**现尖上，我已按现尖再退 r3/r4/r2 三枚枝
 
 一、先说更正（这条与转述相反，读数是现取的）
