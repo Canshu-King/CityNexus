@@ -1,0 +1,93 @@
+// ORD-0561 自申报那一格：顶栏那排控件在 360 / 390 / 414 px 三档视口下的溢出与遮挡，
+// 外加底栏五格各自能分到多宽（我这枚 CSS 改动把 padding 请出去，回归面就在这两排）。
+// 只读渲染后的几何：getBoundingClientRect、scrollWidth/clientWidth、elementFromPoint。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const FRONT = process.env.WD_FRONT;
+const OUT = process.env.WD_OUT;
+const JID = process.env.WD_JID;
+const WIDTHS = (process.env.WD_WIDTHS || "360,390,414").split(",").map(Number);
+const LOCALES = (process.env.WD_LOCALES || "en,zh-CN").split(",");
+const ROUTES = (process.env.WD_ROUTES || "hub,trips").split(",");
+
+const READ = (vw) => {
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+  };
+  const desc = (el) => el.tagName.toLowerCase() + (el.getAttribute("data-testid")
+    ? "[" + el.getAttribute("data-testid") + "]" : "") +
+    (typeof el.className === "string" && el.className.trim()
+      ? "." + el.className.trim().split(/\s+/)[0] : "");
+  const one = (el) => {
+    const r = el.getBoundingClientRect();
+    const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+    const inView = cx >= 0 && cy >= 0 && cx <= window.innerWidth && cy <= window.innerHeight;
+    const top = inView ? document.elementFromPoint(cx, cy) : null;
+    const own = !!top && (top === el || el.contains(top) || top.contains(el));
+    return { el: desc(el), text: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 28) || null,
+             aria: el.getAttribute("aria-label"), title: el.getAttribute("title"),
+             x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height),
+             right: Math.round(r.right), scroll_w: el.scrollWidth, client_w: el.clientWidth,
+             clipped: el.scrollWidth > el.clientWidth + 1,
+             out_of_view: Math.round(r.right) > window.innerWidth,
+             center_in_view: inView,
+             covered: inView && !!top && !(top === el || el.contains(top) || top.contains(el)),
+             hit_by: inView && top ? desc(top) : null };
+  };
+  const header = document.querySelector(".v8-topbar") || document.querySelector("header");
+  const nav = document.querySelector(".v8-mobile-nav");
+  const controls = Array.from(document.querySelectorAll(".v8-topbar button, .v8-topbar a"))
+    .filter(vis).map(one);
+  const navItems = nav ? Array.from(nav.querySelectorAll("button")).filter(vis).map(one) : [];
+  return { url: location.href, vw: window.innerWidth,
+           header: header ? one(header) : null,
+           header_scroll_w: header ? header.scrollWidth : null,
+           header_client_w: header ? header.clientWidth : null,
+           controls: controls,
+           nav: nav ? one(nav) : null, nav_items: navItems,
+           doc_scroll_w: (document.scrollingElement || document.documentElement).scrollWidth };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { front: FRONT, widths: WIDTHS, locales: LOCALES, routes: ROUTES, cells: [], errors: [] };
+  for (const locale of LOCALES) {
+    for (const vw of WIDTHS) {
+      const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: locale === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      page.setDefaultTimeout(15000);
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          localStorage.setItem("citynexus.locale", loc);
+          if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+        }, [JID || "", locale]);
+        for (const route of ROUTES) {
+          await page.goto(FRONT + "/v8/" + route, { waitUntil: "domcontentloaded", timeout: 60000 });
+          await page.waitForTimeout(2200);
+          const r = await page.evaluate(READ, vw);
+          r.locale = locale; r.vw_requested = vw; r.route = route;
+          rep.cells.push(r);
+        }
+      } catch (e) { rep.errors.push(locale + "/" + vw + "/" + route + " " + String(e).slice(0, 120)); }
+      await ctx.close();
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const c of rep.cells) {
+    const bad = c.controls.filter((x) => x.clipped || x.out_of_view || x.covered);
+    const navNarrow = c.nav_items.filter((x) => x.w < 44);
+    console.log(c.locale, c.vw, c.route, "顶栏控件", c.controls.length,
+      "有问题", bad.length, "| 底栏格数", c.nav_items.length, "窄于44px", navNarrow.length,
+      "| 文档宽", c.doc_scroll_w);
+    for (const b of bad) console.log("    ", b.el, JSON.stringify(b.text), "w=" + b.w,
+      "scroll=" + b.scroll_w, "client=" + b.client_w, "裁=" + b.clipped, "出缘=" + b.out_of_view,
+      "被盖=" + b.covered, b.covered ? ("by " + b.hit_by) : "");
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

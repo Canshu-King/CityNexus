@@ -1,0 +1,233 @@
+# -*- coding: utf-8 -*-
+"""ORD-0561 自申报那一格：顶栏 / 底栏在 360、390、414 px 三档视口下的溢出与遮挡，
+在未改的那一代与 r2 那一代各测一遍（只差我两枚文件），两半都跑 tsc + vite build。"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+SCR = Path("D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+DIST = WT2 / "frontend" / "dist"
+PROBE = SCR / "ord0561_widths_probe_r1.cjs"
+PYX = Path("D:/moodle/CityNexus/.venv/Scripts/python.exe")
+PARENT = "0293e5c1cf9be4ea4e7d14005e14c508cb3f528b"
+R2 = "62ee41e3d36debdb9db502c8180c386241a46f86"
+WIDTHS = "360,390,414"
+FORBIDDEN = {8000, 4781, 4782, 4783, 4785, 4787, 4789, 8693, 4799}
+BAD: list[str] = []
+
+
+def sha1(b: bytes) -> str:
+    return hashlib.sha1(b).hexdigest()
+
+
+def g(*a) -> str:
+    r = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    if r.returncode != 0 and r.stderr:
+        BAD.append("GIT %s: %s" % (" ".join(a[:2]), r.stderr.strip()[:110]))
+    return (r.stdout or "").strip()
+
+
+def free_port(wanted: int, taken=()) -> int:
+    p = wanted
+    while p < wanted + 60:
+        if p not in FORBIDDEN and p not in taken:
+            with socket.socket() as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                    return p
+                except OSError:
+                    pass
+        p += 1
+    raise SystemExit("找不到空闲私有端口")
+
+
+def http(url, data=None, headers=None, timeout=60):
+    req = urllib.request.Request(url, data=data, method="POST" if data is not None else "GET",
+                                 headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, (type(e).__name__ + str(e))[:150].encode()
+
+
+def build():
+    t0 = time.time()
+    r = subprocess.run(["node", str(WT2 / "frontend/node_modules/vite/bin/vite.js"), "build",
+                        "--logLevel", "warn"], cwd=str(WT2 / "frontend"), capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
+    return r.returncode, round(time.time() - t0, 1)
+
+
+def entry_asset():
+    idx = (DIST / "index.html").read_text(encoding="utf-8")
+    js = re.search(r"/assets/(index-[\w\-]+\.js)", idx).group(1)
+    disk = (DIST / "assets" / js).read_bytes()
+    st, body = http(front + "/assets/" + js)
+    return {"asset": js, "http_status": st, "bytes": len(disk), "served_equals_disk": body == disk,
+            "disk_sha1": sha1(disk)}
+
+
+def probe(tag, jid):
+    dest = ART / ("widths_%s_%s.json" % (tag, run_id))
+    penv = dict(os.environ)
+    penv.update({"NODE_PATH": str(WT2 / "frontend/node_modules"), "WD_FRONT": front,
+                 "WD_OUT": str(dest), "WD_JID": jid, "WD_WIDTHS": WIDTHS})
+    r = subprocess.run(["node", str(PROBE)], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=penv, timeout=420)
+    doc = json.loads(dest.read_text(encoding="utf-8")) if dest.exists() else {}
+    cells = []
+    for c in doc.get("cells") or []:
+        bad = [x for x in c["controls"] if x["clipped"] or x["out_of_view"] or x["covered"]]
+        cells.append({"locale": c["locale"], "vw": c["vw"], "route": c["route"], "url": c["url"],
+                      "controls": len(c["controls"]), "problems": len(bad),
+                      "problem_list": [x["el"] + "|" + (x["text"] or "") for x in bad],
+                      "nav_items": len(c["nav_items"]),
+                      "nav_narrow": [x["el"] + "=" + str(x["w"]) for x in c["nav_items"] if x["w"] < 44],
+                      "doc_scroll_w": c["doc_scroll_w"], "header_overflow": c["header"]["clipped"]
+                      if c.get("header") else None})
+    return {"rc": r.returncode, "errors": doc.get("errors"), "cells": cells,
+            "stdout": (r.stdout or "")[-400:]}
+
+
+run_id = "WD-%s" % time.strftime("%H%M%S")
+out = {"run_id": run_id, "probe": PROBE.name, "widths": WIDTHS, "parent": PARENT, "r2": R2}
+api = free_port(4871)
+front_port = free_port(api + 9, taken={api})
+front = "http://127.0.0.1:%d" % front_port
+env = dict(os.environ)
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+    env.pop(k, None)
+env.update({"CITYNEXUS_DATABASE_URL": "sqlite:///%s" % (WT2 / "backend" / ("%s.db" % run_id)).as_posix(),
+            "CITYNEXUS_E2E_RUN_ID": run_id, "CITYNEXUS_BACKEND_PORT": str(api),
+            "CITYNEXUS_DEMO_MODE": "true", "CITYNEXUS_DEMO_SCENE_TOKEN": os.urandom(16).hex()})
+token = env["CITYNEXUS_DEMO_SCENE_TOKEN"]
+log = ART / ("uvicorn_%s.log" % run_id)
+backend = subprocess.Popen([str(PYX), "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                            "--port", str(api)], cwd=str(WT2 / "backend"), env=env,
+                           stdout=log.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+out["backend_pid"] = backend.pid
+
+
+class H(BaseHTTPRequestHandler):
+    def log_message(self, *a):
+        pass
+
+    def _send(self, code, body, ctype):
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError):
+            pass
+
+    def do_GET(self):
+        p = self.path.split("?")[0]
+        if p.startswith("/api/"):
+            st, body = http("http://127.0.0.1:%d%s" % (api, self.path))
+            self._send(st or 502, body, "application/json")
+            return
+        f = (DIST / (p.lstrip("/") or "index.html")).resolve()
+        ctype = ("text/javascript" if f.suffix == ".js" else "text/css" if f.suffix == ".css"
+                 else "text/html" if f.suffix == ".html" else "application/octet-stream")
+        if not str(f).startswith(str(DIST)) or not f.is_file():
+            f, ctype = DIST / "index.html", "text/html"
+        self._send(200, f.read_bytes(), ctype)
+
+    do_POST = do_GET
+
+
+srv = ThreadingHTTPServer(("127.0.0.1", front_port), H)
+threading.Thread(target=srv.serve_forever, daemon=True).start()
+jid = None
+try:
+    ok = False
+    for _ in range(90):
+        st, body = http("http://127.0.0.1:%d/api/v1/health" % api)
+        if st == 200 and run_id.encode() in body:
+            ok = True
+            break
+        time.sleep(1)
+    if not ok:
+        BAD.append("后端没答或答复里没本 run id（日志 %s）" % log.name)
+        raise SystemExit(1)
+    hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": token,
+           "Idempotency-Key": "wd-" + run_id}
+    req = urllib.request.Request("http://127.0.0.1:%d/api/v1/demo/scene/ensure" % api,
+                                 data=b"{}", headers=hdr, method="POST")
+    with urllib.request.urlopen(req, timeout=120) as r:
+        jid = json.loads(r.read().decode("utf-8")).get("journey_id")
+    out["ensure_http_status"] = r.status
+    if not jid:
+        BAD.append("供不出场景")
+        raise SystemExit(1)
+    for tag, rev in (("before", PARENT), ("after", R2)):
+        g("checkout", "-q", "--detach", rev)
+        rc, secs = build()
+        out[tag + "_build_rc"] = rc
+        out[tag + "_build_secs"] = secs
+        if rc != 0:
+            BAD.append("%s 那半构建没绿" % tag)
+            break
+        out[tag + "_entry"] = entry_asset()
+        out[tag] = probe(tag, jid)
+        if out[tag]["errors"]:
+            BAD.append("%s 那半探针自报 errors：%s" % (tag, out[tag]["errors"]))
+    if out.get("before_entry", {}).get("asset") == out.get("after_entry", {}).get("asset"):
+        BAD.append("两半入口资产同名")
+except SystemExit:
+    pass
+finally:
+    srv.shutdown()
+    srv.server_close()
+    backend.terminate()
+    try:
+        backend.wait(timeout=40)
+    except subprocess.TimeoutExpired:
+        backend.kill()
+    out["backend_exit"] = backend.poll()
+    g("checkout", "-q", "--detach", R2)
+
+if out.get("before") and out.get("after"):
+    for half in ("before", "after"):
+        for c in out[half]["cells"]:
+            if c["problems"] or c["nav_narrow"]:
+                out.setdefault("flagged", []).append(
+                    {"half": half, "locale": c["locale"], "vw": c["vw"], "route": c["route"],
+                     "problems": c["problem_list"], "nav_narrow": c["nav_narrow"]})
+out["BAD"] = BAD
+dst = ART / ("ord0561_widths_%s.json" % run_id)
+dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8",
+               newline=chr(10))
+for half in ("before", "after"):
+    for c in out.get(half, {}).get("cells", []):
+        print("%-6s %-5s %s vw=%s 控件%s 问题%s 底栏窄%s doc_w=%s"
+              % (half, c["locale"], c["route"], c["vw"], c["controls"], c["problems"],
+                 c["nav_narrow"], c["doc_scroll_w"]))
+print(json.dumps({k: out.get(k) for k in ("run_id", "before_build_rc", "after_build_rc",
+                                          "before_entry", "after_entry", "flagged", "BAD")},
+                 ensure_ascii=False, indent=2))
+print("ARTIFACT", dst)
+sys.exit(1 if BAD else 0)

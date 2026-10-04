@@ -1,0 +1,501 @@
+{
+  "run_id": "WD-232520",
+  "probe": "ord0561_widths_probe_r1.cjs",
+  "widths": "360,390,414",
+  "parent": "0293e5c1cf9be4ea4e7d14005e14c508cb3f528b",
+  "r2": "62ee41e3d36debdb9db502c8180c386241a46f86",
+  "backend_pid": 67428,
+  "ensure_http_status": 200,
+  "before_build_rc": 0,
+  "before_build_secs": 8.7,
+  "before_entry": {
+    "asset": "index-BcQ9VAso.js",
+    "http_status": 200,
+    "bytes": 1622092,
+    "served_equals_disk": true,
+    "disk_sha1": "1ca92fee8fc18a4b6b17031970149b5976eb352c"
+  },
+  "before": {
+    "rc": 0,
+    "errors": [],
+    "cells": [
+      {
+        "locale": "en",
+        "vw": 360,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 360,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 390,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 390,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 414,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 414,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 360,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 360,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 390,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 390,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 414,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 414,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 1,
+        "problem_list": [
+          "button.v8-avatar|DE"
+        ],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      }
+    ],
+    "stdout": "ps 顶栏控件 4 有问题 1 | 底栏格数 5 窄于44px 0 | 文档宽 390\n     button.v8-avatar \"DE\" w=28 scroll=48 client=28 裁=true 出缘=false 被盖=false \nzh-CN 414 hub 顶栏控件 4 有问题 1 | 底栏格数 5 窄于44px 0 | 文档宽 414\n     button.v8-avatar \"DE\" w=28 scroll=48 client=28 裁=true 出缘=false 被盖=false \nzh-CN 414 trips 顶栏控件 4 有问题 1 | 底栏格数 5 窄于44px 0 | 文档宽 414\n     button.v8-avatar \"DE\" w=28 scroll=48 client=28 裁=true 出缘=false 被盖=false \nerrors []\n"
+  },
+  "after_build_rc": 0,
+  "after_build_secs": 7.6,
+  "after_entry": {
+    "asset": "index-DARdhhan.js",
+    "http_status": 200,
+    "bytes": 1622148,
+    "served_equals_disk": true,
+    "disk_sha1": "d36f7c8aace5d50ae0da11bec78d04e4d5c3ec13"
+  },
+  "after": {
+    "rc": 0,
+    "errors": [],
+    "cells": [
+      {
+        "locale": "en",
+        "vw": 360,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 360,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 390,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 390,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 414,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "en",
+        "vw": 414,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 360,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 360,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 360,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 390,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 390,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 390,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 414,
+        "route": "hub",
+        "url": "http://127.0.0.1:4880/v8/hub",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      },
+      {
+        "locale": "zh-CN",
+        "vw": 414,
+        "route": "trips",
+        "url": "http://127.0.0.1:4880/v8/trips",
+        "controls": 4,
+        "problems": 0,
+        "problem_list": [],
+        "nav_items": 5,
+        "nav_narrow": [],
+        "doc_scroll_w": 414,
+        "header_overflow": false
+      }
+    ],
+    "stdout": "en 414 trips 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 414\nzh-CN 360 hub 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 360\nzh-CN 360 trips 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 360\nzh-CN 390 hub 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 390\nzh-CN 390 trips 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 390\nzh-CN 414 hub 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 414\nzh-CN 414 trips 顶栏控件 4 有问题 0 | 底栏格数 5 窄于44px 0 | 文档宽 414\nerrors []\n"
+  },
+  "backend_exit": 1,
+  "flagged": [
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 360,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 360,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 390,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 390,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 414,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "en",
+      "vw": 414,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 360,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 360,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 390,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 390,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 414,
+      "route": "hub",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    },
+    {
+      "half": "before",
+      "locale": "zh-CN",
+      "vw": 414,
+      "route": "trips",
+      "problems": [
+        "button.v8-avatar|DE"
+      ],
+      "nav_narrow": []
+    }
+  ],
+  "BAD": []
+}
