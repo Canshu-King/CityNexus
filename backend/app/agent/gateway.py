@@ -1417,16 +1417,27 @@ class AgentToolGateway:
         self.session.commit()
         summaries: list[dict[str, Any]] = []
         collective_windows: list[dict[str, Any]] = []
+        from app.collective_mediation import plan_collective_fit_subject
+        active_projection = None
+        if journey.active_plan_version_id:
+            active_plan = self.session.get(PlanVersion, journey.active_plan_version_id)
+            if active_plan is not None:
+                active_projection = plan_schema(self.session, active_plan).model_dump(mode="json")
         for plan in plans:
             projected = plan_schema(self.session, plan).model_dump(mode="json")
             explanation = projected.get("explanation") or {}
             mobility = projected.get("mobility_evidence") or {}
-            place_ids = [item.get("place_id") for item in projected["activities"] if item.get("place_id")]
+            subject = plan_collective_fit_subject(
+                (active_projection or {}).get("activities", []), projected.get("activities", [])
+            )
+            activity_place_ids = [item.get("place_id") for item in projected.get("activities", []) if item.get("place_id")]
+            place_ids = list(subject["fit_subject_place_ids"])
             places_for_fit = self.session.scalars(select(Place).where(Place.id.in_(place_ids))).all() if place_ids else []
             tags: list[str] = []
             for place in places_for_fit:
                 tags.append(str(place.category or ""))
                 tags.extend(json.loads(place.tags_json or "[]"))
+            subject["fit_subject_tags"] = sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()})
             hard_status = "GROUNDED_FEASIBLE" if projected["selectable"] else "REVALIDATION_REQUIRED"
             collective_windows.append({
                 "window_id": projected["id"],
@@ -1434,7 +1445,8 @@ class AgentToolGateway:
                 "candidate": {
                     "place_id": projected["id"],
                     "ordered_place_ids": place_ids,
-                    "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                    "tags": subject["fit_subject_tags"],
+                    **subject,
                 },
             })
             summaries.append(
@@ -1443,11 +1455,13 @@ class AgentToolGateway:
                     "version_no": projected["version_no"],
                     "status": projected["status"],
                     "selectable": projected["selectable"],
-                    "place_ids": place_ids,
+                    "place_ids": activity_place_ids,
+                    "fit_subject_place_ids": place_ids,
                     "unresolved_facts": explanation.get("unresolved_facts", []),
                     "authority_state": explanation.get("authority_state"),
                     "mobility_provider": mobility.get("source_provider"),
                     "mobility_snapshot_id": projected.get("mobility_snapshot_id"),
+                    **subject,
                 }
             )
         collective = active_journey_members_with_capabilities(
@@ -1637,6 +1651,18 @@ class AgentToolGateway:
         gate = validate_plan_feasibility(self.session, journey, standby, mobility_provider=mobility)
         if not gate.passed:
             raise HTTPException(409, f"standby is no longer feasible: {', '.join(gate.failures)}")
+        from app.main import collective_mutation_gate
+        collective_gate = collective_mutation_gate(
+            self.session,
+            journey,
+            standby,
+            hard_feasible_plan_ids={str(standby.id)},
+        )
+        if not collective_gate.get("allowed"):
+            raise HTTPException(
+                409,
+                f"{collective_gate.get('code')}: collective mediation must be resolved before standby activation",
+            )
         policy_row = get_or_create_policy(self.session, journey.traveler_id)
         auth = self._bound_authorization(
             request,

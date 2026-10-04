@@ -7,7 +7,7 @@ hard constraint.
 
 from __future__ import annotations
 
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
 
@@ -26,6 +26,82 @@ def member_fit(*, preferences: Iterable[Any], candidate_tags: Iterable[str]) -> 
         "preference_tier": breakdown.get("effective_preference_tier", "NEUTRAL"),
         "conflict": None,
     }
+
+
+def plan_collective_fit_subject(
+    base_activities: Iterable[Mapping[str, Any]] | None,
+    candidate_activities: Iterable[Mapping[str, Any]] | None,
+) -> dict[str, Any]:
+    """Return only the optional experience changed by a candidate plan.
+
+    Shared hotels, stations, locked commitments, and unchanged background
+    activities are not preference evidence for a new collective choice.  The
+    projection is deliberately structural: it compares sequence/place
+    identity and never infers a member preference from a display label.
+    """
+    base_by_sequence = {
+        str(item.get("sequence_no") or item.get("sequence") or index): item
+        for index, item in enumerate(base_activities or [], start=1)
+        if isinstance(item, Mapping)
+    }
+    changed: list[Mapping[str, Any]] = []
+    for index, item in enumerate(candidate_activities or [], start=1):
+        if not isinstance(item, Mapping):
+            continue
+        if bool(item.get("locked")) or bool(item.get("protected")):
+            continue
+        kind = str(item.get("activity_type") or item.get("type") or "").upper()
+        if kind in {"HOTEL", "LODGING", "TRANSPORT", "STATION", "ANCHOR", "C4"}:
+            continue
+        sequence = str(item.get("sequence_no") or item.get("sequence") or index)
+        previous = base_by_sequence.get(sequence)
+        current_place = str(item.get("place_id") or "")
+        previous_place = str((previous or {}).get("place_id") or "")
+        if previous is None or current_place != previous_place:
+            if current_place:
+                changed.append(item)
+    place_ids = list(dict.fromkeys(str(item.get("place_id")) for item in changed if item.get("place_id")))
+    tags: list[str] = []
+    for item in changed:
+        category = str(item.get("category") or "").strip().lower()
+        if category:
+            tags.append(category)
+        for tag in item.get("tags") or []:
+            value = str(tag).strip().lower()
+            if value:
+                tags.append(value)
+    return {
+        "fit_subject_place_ids": place_ids,
+        "fit_subject_tags": sorted(set(tags)),
+        "fit_subject_basis": "PLAN_DIFF" if place_ids else "NO_OPTIONAL_PLAN_DELTA",
+    }
+
+
+def collective_mutation_decision(
+    mediation: Mapping[str, Any] | None,
+    candidate_id: str,
+    *,
+    resolved_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Apply the server-side classification to a proposed mutation."""
+    classification = str((mediation or {}).get("classification") or "INSUFFICIENT_WORLD_FACTS")
+    if classification == "INSUFFICIENT_WORLD_FACTS":
+        return {"allowed": False, "code": "COLLECTIVE_WORLD_FACTS_INCOMPLETE", "classification": classification}
+    if classification == "AUTHORITY_CONFLICT":
+        return {"allowed": False, "code": "COLLECTIVE_MUTATION_AUTHORITY_CONFLICT", "classification": classification}
+    if classification == "UNANIMOUS_DOMINANCE":
+        allowed = str((mediation or {}).get("candidate_id") or "") == str(candidate_id)
+        return {"allowed": allowed, "code": None if allowed else "COLLECTIVE_CANDIDATE_NOT_DOMINANT", "classification": classification}
+    if classification == "COMPROMISE_AVAILABLE":
+        allowed_ids = {str(item) for item in (mediation or {}).get("candidate_ids") or []}
+        selected = str((mediation or {}).get("selected_candidate_id") or "")
+        allowed = str(candidate_id) in allowed_ids and (not selected or str(candidate_id) == selected)
+        return {"allowed": allowed, "code": None if allowed else "COLLECTIVE_CANDIDATE_NOT_ACCEPTABLE_COMPROMISE", "classification": classification}
+    if classification == "HUMAN_TRADEOFF_REQUIRED":
+        decision = resolved_decision or {}
+        allowed = str(decision.get("status") or "") == "RESOLVED" and str(decision.get("selected_candidate_id") or "") == str(candidate_id)
+        return {"allowed": allowed, "code": None if allowed else "COLLECTIVE_TRADEOFF_UNRESOLVED", "classification": classification}
+    return {"allowed": False, "code": "COLLECTIVE_MEDIATION_UNKNOWN", "classification": classification}
 
 
 def fairness_receipt(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:

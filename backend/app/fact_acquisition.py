@@ -1186,9 +1186,13 @@ def acquire_place_facts(
     retrieved_at = datetime.now(timezone.utc).isoformat()
     endpoint = _overpass_endpoints()[0]
     receipt: dict[str, Any] = {
-        "provider": "overpass", "source": endpoint, "retrieved_at": retrieved_at,
+        "provider": "truth-mesh", "source": endpoint, "retrieved_at": retrieved_at,
         "journey_id": journey.id, "places": [], "known_opening_count": 0, "known_cost_count": 0,
         "overpass_attempts": [],
+        "identity_evidence": [],
+        "identity_authority": "NONE",
+        "degraded_providers": [],
+        "fact_sources": [],
         "official_web": {"provider": "official_web", "status": "NO_SOURCE_URL", "attempted": 0, "acquired": 0},
         "search_source": {"provider": "searxng", "status": "UNCONFIGURED" if not settings.searxng_url else "PENDING", "attempted": False, "acquired": 0},
     }
@@ -1199,15 +1203,23 @@ def acquire_place_facts(
     # Keep every network phase in one live context.  The old R77 version closed this
     # client after Overpass/Nominatim and then reused it for official/search fetches.
     with httpx.Client(timeout=25.0, trust_env=trust_environment_for_public_providers()) as client:
-        payload, endpoint, overpass_attempts = _acquire_overpass_payload(client, refs)
-        receipt["source"] = endpoint
-        receipt["overpass_attempts"] = overpass_attempts
+        try:
+            payload, endpoint, overpass_attempts = _acquire_overpass_payload(client, refs)
+            receipt["source"] = endpoint
+            receipt["overpass_attempts"] = overpass_attempts
+        except (httpx.HTTPError, ValueError, TypeError) as exc:
+            payload = {"elements": []}
+            receipt["source"] = None
+            receipt["overpass_attempts"] = list(getattr(exc, "provider_attempts", []))
+            receipt["degraded_providers"].append("overpass")
+            receipt["overpass_error"] = type(exc).__name__
         try:
             nominatim_rows, nominatim_endpoint = _nominatim_lookup(client, refs)
             secondary = {"provider": "nominatim", "source": nominatim_endpoint, "status": "ACQUIRED", "element_count": len(nominatim_rows)}
         except (httpx.HTTPError, ValueError, AttributeError) as exc:
             nominatim_rows, nominatim_endpoint = {}, f"{settings.nominatim_url.rstrip('/')}/lookup"
             secondary = {"provider": "nominatim", "source": nominatim_endpoint, "status": "UNAVAILABLE", "error": type(exc).__name__}
+            receipt["degraded_providers"].append("nominatim")
         receipt["secondary_source"] = secondary
         elements = {
             (str(item.get("type")), str(item.get("id"))): item
@@ -1218,6 +1230,25 @@ def acquire_place_facts(
             tags = dict(element.get("tags") or {})
             nominatim_row = nominatim_rows.get(ref) or {}
             nominatim_tags = dict(nominatim_row.get("extratags") or {})
+            identity_evidence = {
+                "exact_ref": f"{ref[0]}/{ref[1]}",
+                "overpass": "EXACT_IDENTITY_MATCH" if element else "UNAVAILABLE",
+                "nominatim": "EXACT_IDENTITY_MATCH" if nominatim_row else "UNAVAILABLE",
+            }
+            if not element and not nominatim_row:
+                identity_authority = "NONE"
+            elif element and nominatim_row:
+                identity_authority = "EXACT_OSM_ID_CONVERGED"
+            elif nominatim_row:
+                identity_authority = "EXACT_OSM_ID_VIA_NOMINATIM"
+            else:
+                identity_authority = "EXACT_OSM_ID_VIA_OVERPASS"
+            identity_evidence["identity_authority"] = identity_authority
+            receipt["identity_evidence"].append(identity_evidence)
+            receipt["fact_sources"].append({"place_id": place.id, "provider_tags": bool(element), "nominatim_extratags": bool(nominatim_tags), "official_web": False})
+            if identity_authority == "NONE":
+                receipt["places"].append({"place_id": place.id, "provider_entity": place.external_id, "identity_evidence": identity_evidence, "status": "IDENTITY_UNAVAILABLE"})
+                continue
             metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
             opening = normalize_opening_hours(tags.get("opening_hours"))
             cost = cost_evidence_from_tags(tags, source="overpass")
@@ -1234,38 +1265,38 @@ def acquire_place_facts(
             source_binding = _requested_fact_source_binding(
                 place, requested_binding, origin=binding_origin
             )
-            source_url = (
-                str(source_binding["source_url"])
-                if source_binding
-                else _official_source_url({**tags, **nominatim_tags})
-            )
             observation = None
             corroboration = None
+            strong_approvals = {"OPERATOR_VERIFIED", "PROVIDER_TAG_EXACT_URL", "CORROBORATED_OFFICIAL_SOURCE"}
+            if binding_origin in {"agent", "agent_observation"} and stored_binding is not None and stored_binding.get("approval") in strong_approvals:
+                source_binding = stored_binding
+            elif source_binding is None:
+                source_binding = stored_binding
+            source_url = str(source_binding["source_url"]) if source_binding else _official_source_url({**tags, **nominatim_tags})
             if binding_origin == "agent_observation" and requested_binding:
                 observation_id = str(requested_binding.get("source_observation_id") or "")
                 observation = session.get(WebObservation, observation_id)
                 if observation is None or observation.journey_id != journey.id or observation.url != source_url:
-                    source_binding = {
-                        "provider_entity": place.external_id,
-                        "source_url": source_url,
-                        "source_class": "AGENT_SOURCE_CANDIDATE",
-                        "identity_basis": {"matched_provider_entity": False, "reason": "OBSERVATION_NOT_OWNED"},
-                        "approval": "AGENT_SOURCE_CANDIDATE",
-                    }
+                    # A stale/foreign observation is only a candidate.  It must
+                    # never be allowed to reinterpret a stronger stored binding
+                    # or make the receipt claim that one URL was corroborated
+                    # while another URL was fetched.
+                    observation = None
+                    if not (
+                        stored_binding is not None
+                        and stored_binding.get("approval") in strong_approvals
+                    ):
+                        source_binding = {
+                            "provider_entity": place.external_id,
+                            "source_url": source_url,
+                            "source_class": "AGENT_SOURCE_CANDIDATE",
+                            "identity_basis": {"matched_provider_entity": False, "reason": "OBSERVATION_NOT_OWNED"},
+                            "approval": "AGENT_SOURCE_CANDIDATE",
+                        }
             # An Agent may suggest a URL, but it cannot downgrade an already
             # corroborated operator/provider binding. Preserve the stronger
             # canonical source while still allowing the Agent to propose a
             # candidate when no approved binding exists.
-            if (
-                binding_origin == "agent"
-                and stored_binding is not None
-                and stored_binding.get("approval") in {
-                    "OPERATOR_VERIFIED", "PROVIDER_TAG_EXACT_URL", "CORROBORATED_OFFICIAL_SOURCE"
-                }
-            ):
-                source_binding = stored_binding
-            elif source_binding is None:
-                source_binding = stored_binding
             if (
                 (source_binding is None or source_binding.get("approval") == "AGENT_SOURCE_CANDIDATE")
                 and source_url
@@ -1289,6 +1320,7 @@ def acquire_place_facts(
                     "approval": "PROVIDER_TAG_EXACT_URL",
                     "source_kind": "PROVIDER_BOUND_EXACT_URL",
                 }
+            source_url = str(source_binding["source_url"]) if source_binding else _official_source_url({**tags, **nominatim_tags})
             if source_url:
                 receipt["official_web"]["attempted"] += 1
                 try:
@@ -1329,6 +1361,7 @@ def acquire_place_facts(
                         and official.get("opening_hours", {}).get("status") == "OFFICIAL_WEB_VERIFIED"
                     ):
                         opening = official["opening_hours"]
+                        receipt["fact_sources"][-1]["official_web"] = True
                     if (
                         source_binding
                         and source_binding.get("identity_basis", {}).get("matched_provider_entity") is True
@@ -1352,7 +1385,8 @@ def acquire_place_facts(
             if str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_STATUSES and cost.get("amount_minor") is not None:
                 receipt["known_cost_count"] += 1
             metadata["fact_acquisition"] = {
-                "source": endpoint, "provider": "overpass", "retrieved_at": retrieved_at,
+                "source": endpoint, "provider": "truth-mesh", "retrieved_at": retrieved_at,
+                "identity_evidence": identity_evidence, "identity_authority": identity_authority,
                 "provider_entity": place.external_id,
                 "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "provider_entity": place.external_id, "supporting_content": {"extratags": nominatim_tags}},
                 "official_web": official, "search_source": search, "source_corroboration": corroboration,
@@ -1371,14 +1405,27 @@ def acquire_place_facts(
             place.metadata_json = json.dumps(metadata, ensure_ascii=False)
             place.updated_at = retrieved_at
             row_receipt = {
-                "place_id": place.id, "provider": "overpass", "source": endpoint,
+                "place_id": place.id, "provider": "truth-mesh", "source": endpoint,
                 "provider_entity": place.external_id, "retrieved_at": retrieved_at,
+                "identity_evidence": identity_evidence, "identity_authority": identity_authority,
                 "source_binding": source_binding,
                 "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "status": secondary["status"], "matched_provider_entity": ref in nominatim_rows},
                 "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
                 "opening_hours": opening, "cost_evidence": cost, "official_web": official, "search_source": search,
             }
             receipt["places"].append(row_receipt)
+    authorities = [
+        str(item.get("identity_authority") or "NONE")
+        for item in receipt.get("identity_evidence", [])
+    ]
+    for authority in (
+        "EXACT_OSM_ID_CONVERGED",
+        "EXACT_OSM_ID_VIA_NOMINATIM",
+        "EXACT_OSM_ID_VIA_OVERPASS",
+    ):
+        if authority in authorities:
+            receipt["identity_authority"] = authority
+            break
     receipt["status"] = "ACQUIRED"
     receipt["element_count"] = len(elements)
     return receipt

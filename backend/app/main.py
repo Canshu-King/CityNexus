@@ -81,7 +81,12 @@ from app.capabilities import (
     canonicalize_capabilities,
     summarize_capabilities,
 )
-from app.collective_mediation import classify_group_decision, member_fit
+from app.collective_mediation import (
+    classify_group_decision,
+    collective_mutation_decision,
+    member_fit,
+    plan_collective_fit_subject,
+)
 from app.commerce.idempotency import IdempotencyConflict, canonical_request_signature
 from app.commerce.order_pricing import OrderLineRequest, OrderPricingError
 from app.commerce.service_impl import (
@@ -4016,6 +4021,105 @@ def active_journey_members_with_capabilities(
                 }
         result["mediation"] = mediation
     return result
+
+
+def collective_mutation_gate(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    *,
+    hard_feasible_plan_ids: set[str] | None = None,
+    resolved_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Recompute shared preference governance immediately before mutation.
+
+    Planning receipts are advisory.  This gate reconstructs the in-force member
+    matrix from current rows and compares only the optional delta of each target
+    plan against the current active reality.  Approval can authorize a caller;
+    it cannot manufacture another member's agreement.
+    """
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    if member_projection.get("member_count", 0) < 2:
+        return {
+            "allowed": True,
+            "classification": "SINGLE_MEMBER_JOURNEY",
+            "member_count": member_projection.get("member_count", 0),
+        }
+    active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    if active is None:
+        return {"allowed": False, "code": "COLLECTIVE_WORLD_FACTS_INCOMPLETE", "classification": "INSUFFICIENT_WORLD_FACTS"}
+
+    plan_rows = [target_plan]
+    siblings = session.scalars(
+        select(PlanVersion).where(
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.parent_plan_version_id == active.id,
+            PlanVersion.id != target_plan.id,
+            PlanVersion.status == "CANDIDATE",
+        ).order_by(PlanVersion.created_at, PlanVersion.id)
+    ).all()
+    plan_rows.extend(siblings)
+    hard_feasible = {str(item) for item in (hard_feasible_plan_ids or set())}
+    windows: list[dict[str, Any]] = []
+    base_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+    ).all()
+    base_items = [
+        {"sequence_no": item.sequence_no, "place_id": item.place_id, "activity_type": item.activity_type, "locked": item.locked}
+        for item in base_activities
+    ]
+    for plan in plan_rows:
+        activities = session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+        activity_items = []
+        subject_places: dict[str, Place] = {}
+        for item in activities:
+            activity_items.append({
+                "sequence_no": item.sequence_no,
+                "place_id": item.place_id,
+                "activity_type": item.activity_type,
+                "locked": item.locked,
+            })
+        subject = plan_collective_fit_subject(base_items, activity_items)
+        if subject["fit_subject_place_ids"]:
+            subject_places = {
+                item.id: item
+                for item in session.scalars(
+                    select(Place).where(Place.id.in_(subject["fit_subject_place_ids"]))
+                ).all()
+            }
+        tags: list[str] = []
+        for place in subject_places.values():
+            tags.append(str(place.category or ""))
+            tags.extend(json.loads(place.tags_json or "[]"))
+        projection = plan_schema(session, plan).model_dump(mode="json")
+        status = "GROUNDED_FEASIBLE" if (
+            str(plan.id) in hard_feasible or projection.get("selectable") is True
+        ) else "REVALIDATION_REQUIRED"
+        windows.append({
+            "window_id": plan.id,
+            "status": status,
+            "candidate": {
+                "place_id": plan.id,
+                "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                **subject,
+            },
+        })
+    refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
+    mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    decision = collective_mutation_decision(
+        mediation,
+        str(target_plan.id),
+        resolved_decision=resolved_decision,
+    )
+    return {
+        **decision,
+        "member_count": refreshed.get("member_count", 0),
+        "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
+        "mediation": mediation,
+        "fit_subject_basis": "PLAN_DIFF",
+    }
 
 
 def _member_expiry(raw: str | None) -> str | None:
@@ -12960,6 +13064,17 @@ def _accept_replan_executing(
     )
     if not gate.passed:
         raise HTTPException(409, f"replan is no longer feasible: {', '.join(gate.failures)}")
+    collective_gate = collective_mutation_gate(
+        session,
+        journey,
+        proposed,
+        hard_feasible_plan_ids={str(proposed.id)},
+    )
+    if not collective_gate.get("allowed"):
+        raise HTTPException(
+            409,
+            f"{collective_gate.get('code')}: collective mediation must be resolved before mutation",
+        )
     old_current = (
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
