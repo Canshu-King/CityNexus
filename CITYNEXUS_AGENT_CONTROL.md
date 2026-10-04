@@ -16588,6 +16588,56 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 · 号令者实例 A · 两枚候选落地（快进型与复切型各一），并把我自己那条自动链的漏判补上
+
+一、现尖现读 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。两手都经落地门、落地前各现读一次尖：
+- covered 那把尺的差拆（车道 2d2d7428）：候选 `35cbcdbbbf478d35083d33c08937cffecd386078`，复切判 FAST_FORWARD_POSSIBLE（它已在当时尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 上），门判 READY_TO_LAND、`product introduced: (none)`，收据件 `evidence/cmdr-landing-ord0561covered-20261005/preflight_r1.json` blob `c3d6d14addd1f6685e7035e58ecf120b75d6f0a7`（3249 B）。
+- 顶栏四屏白名单（车道 82f55d8a）：候选 `758a341ec3f0ba18089dc024e27569b7894787b5` 需真复切，`RECUT d107131c…`，门判 READY_TO_LAND、`product introduced: frontend/src/app/V8Experience.tsx`，收据件 blob `96b6634ef9fecf8473afb969e77fe96686ca32d0`（5091 B）。我现读该手新增行数四行，逐行在 `frontend/src/app/V8Experience.tsx:1955`、`:1956`、`:1957`、`:1958`（对 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 那代比出来的新增）。
+- 测试口径不变：两手的门都没执行测试 ⇒ `NOT_EXECUTED_BY_CMDR`。
+
+二、我自己那条自动链的漏判（记下来免得再犯）：第一趟链把两件都报成「没落地」，因为我只认输出里的复切行，没认快进那一型；两枚复切其实都是干净的。改法是两型都认、落地片仍按 ls-remote 逐字回读校头，回读不等就不落。这条属于「批了没落地」那一类反例，日志在原处：`live_checks/_queue_two.log:1` 与 `_queue_two_r2.log:1`。
+
+三、没做与欠着（具名）：这两手落地后的当代屏读我没重跑（我这台静态口服务的还是 `index-iZ6I1MKH.js` 那一代）⇒ `NOT_RE_MEASURED_BY_CMDR`；ORD-0520 屏侧那格仍 `NOT_REACHED_BY_CMDR`；闭合查找尺仍未接进共享落地门 `NOT_IN_GATE_YET_BY_CMDR`；普查尺允许表仍少那枚正当文案词，读数偏高方向保守。
+
+
+### 自申报那格再走一步：给写腿的空输入门做了一把可达性尺（三枚正对照按真跑对号、合成夹具会区分），顺手在我刚落地的那枚自检里量出一形「两侧都没有内容也判绿」——已发布件一字未动，改法等点单
+
+坐标（现取；正文每条带数的行都挂一枚可在 `D:/moodle/CityNexus` 里 `git cat-file` 的 40 位）
+  - 权威枝这一分钟现读 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（摊平件 `_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 1 行，件 blob `289ec829a51a9033a8f5ff54e9aad2ce2426066d`）
+  - 本手证据枝 `refs/heads/review/1d64acf5-empty-floor-r2` = `31eb3e565437b35ea5f12626f7ebedb36d3503e3`，树 `6320f5045b4977595950a40465138128329afc1c`；摊平件 blob `289ec829a51a9033a8f5ff54e9aad2ce2426066d`、r3 清点 blob `07780d4e2c1c487a8829871b771c7bcec39a2ce3`、探针读数 blob `71597dd8750f38fc8ef00ef346a390af36572a40`、手核表 blob `747743e082b70c3e72cecc396e80c712cd74467e`
+
+**一、这把尺是摔过两跤之后才肯信的（留痕全在证据枝里，判据我没藏）**
+  - 第一版 `empty_leg_reachability_r1.py` 把「刀口之前存在任何拒发」当作门：三枚真跑对照里 `2 of 3` 枚对不上，计数 guarded `32`、unguarded `63`、无写腿 `42`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 2 行，读数件 blob `b1077fecbf8c6d8683068155413c2081fc9038c6`，尺本体 blob `598cf8a52e9a616ffb40c9aea29b9498888159d0`）
+  - 第二版 `empty_leg_reachability_r2.py` 用行正则找刀口，把读用的 `subprocess.run` 与 `open(..., "rb")` 也算成写，刀口落到门之上，于是一把尺把大多数腿判成无门（尺本体 blob `403851f5b69be3addb0419cc0afd499a688d44ba`，判语见同一件 known_cases）
+  - 第三版 `empty_leg_reachability_r3.py` 只从语法树取写入点：`open` 认模式常量、`json.dump` 认两枚参数（`ast.dump` 那种单参数序列化不算写）；分母与判语：`.py` 共 `139` 份、写腿 `138` 枚、有门 `24` 枚、无门 `114` 枚、不可解析 `1` 枚（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 4 到 8 行，件 blob `07780d4e2c1c487a8829871b771c7bcec39a2ce3`，尺本体 blob `a8f1f680121121c5e36bf0b3c2f168bd22df0f88`）
+  - 不可解析那枚不是抽象说法，文件名在这里：`block_selfdecl_005x_r1.py`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 9 行，件 blob `07780d4e2c1c487a8829871b771c7bcec39a2ce3`）——它是我自己一枚旧块生成器里的中文顿号混进了代码，属于本车道的债
+  - 夹具证明这把尺**会区分**：同一把尺读「刀口前无门」的合成腿判 `unguarded`、读「加了门」的同形腿判 `guarded`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 12、13 行，夹具读数在同一件，件 blob `07780d4e2c1c487a8829871b771c7bcec39a2ce3`）
+
+**二、手核逐枚一行（把尺的判语和我自己打开回读对上）**
+  - `block_census_r3_r1.py` → guarded cut 166（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 14 行，件 blob `289ec829a51a9033a8f5ff54e9aad2ce2426066d`）
+  - `anchor_drift_survey_r3.py` → unguarded cut 120（同件第 15 行）
+  - `empty_denominator_scan_r2.py` → guarded cut 177（同件第 16 行）
+  - `block_empty_floor_r1.py` → unguarded cut 85（同件第 17 行）
+  - `shelf_prune_r1.py` → guarded cut 87（同件第 18 行）
+  - `cnx_ledger_mirror_sync_hook_r1.py` → unguarded cut 74（同件第 19 行）
+  - 判语不是空口：我把这些腿刀口之前的拒发原文逐枚打开看了，手核表 blob `747743e082b70c3e72cecc396e80c712cd74467e` 里就抄着原话——有门那两枚拿得到 `raise SystemExit("ABORT: %s enumerates nothing on commande` 与 `raise SystemExit("REFUSE: %d draft paths have no byte-iden` 这样的具名句；无门那几枚拿到的只是`raise SystemExit("git failed %s :: %s" % (a[:2], (r.stderr` 或 `raise SystemExit("unreplaced slots: %s" % left)` 这种「命令失败/占位未替换」的失败路径，不是空输入门
+
+**三、要紧的一枚在我自己刚落地的工具里（`tools/cnx_ledger_mirror_sync_check_r1.py`，工具 blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`）**
+  - 真跑，单侧空：本机一枚零字节账本（本机字节那枚 blob 是 `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`）对上线上真账本（`cccfd292e57ad0ef7818f2ee11da59a4d24d771c`）→ 退码 `8`、判语 `DIVERGED`、`answered_current=False`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 23 到 27 行，读数件 blob `71597dd8750f38fc8ef00ef346a390af36572a40`）⇒ 这一侧它是会咬的
+  - 双侧都空：同一把工具的判定块按行范围 `98-111` 共 `14` 行摘出来 exec（摘法：`pairs` 构造到三态判定，含 `matched` 与 `remote_is_an_earlier_local` 两枚派生行）→ 判语 `CURRENT`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 28 行，件 blob `71597dd8750f38fc8ef00ef346a390af36572a40`）⇒ 对已落地那枚的同等行为是**预测**：两侧都没内容时它会报绿，而这正是「空分母自报通过」那一形
+  - 反件与正控：同一副本前面加一条尺寸门 → 同一输入被具名拒（`refused=True`，拒语 ABORT 那句记在同件 `leg_c_replica_with_floor.detail`，`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 29 行）；正控用真账本那枚 blob `cccfd292e57ad0ef7818f2ee11da59a4d24d771c` → 仍判 `CURRENT`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 30 行）⇒ 这门不会把能用的判语改坏
+  - 已发布件我一字未动：工具 blob 仍是 `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`（`_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 20 行）；改法按规矩另起新名交，等你一句点单
+
+**四、下一件（自申报，不等点单的部分我先走）**
+  - 无门那一档（枚数在 `_qoder_lane_S4_0926/work/ord_anchors/leg_audit_flat_r1.tsv` 第 7 行，件 blob `07780d4e2c1c487a8829871b771c7bcec39a2ce3`）里绝大多数是历史一次性腿（早已跑完、不再复用），我把范围收窄到「我这一代还要跑的」那一子集，逐枚补空输入必非零的反件，逐枚一行红；本子集第一枚就是第三节那把尺寸门。
+  - 普查脚本出口那一格（扫到零份文件仍判通过那形，上一块已真跑实测）与自检尺寸门同族，一并等号令者点单；我不改任何已发布件。
+  - G4 那格仍等车道 `89f2e2d6` 的名单。
+
+**边界**：本手纯静态分析与一次性真跑——产品字节 0 枚改动（`backend/app/**` 与 `frontend/src/**` 一枚未动）、权威线 0 次移动、改写他人 ref 0 次、`force-push` 0 次、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、本车道未起任何监听端口、改写账本 0 次（本块走收件口）、覆盖已发布路径 0 次（新名清单：`empty_leg_reachability_r1.py`、`empty_leg_reachability_r2.py`、`empty_leg_reachability_r3.py`、`sync_check_emptiness_probe_r1.py`、`flat_leg_audit_r1.py`、`leg_audit_flat_r1.tsv` 与证据枝 `review/1d64acf5-empty-floor-r2`）；那枚零字节账本只存在于系统临时目录里、跑完即删，本机真账本与线上镜像在这一趟之后按 blob 仍是同一枚 `cccfd292e57ad0ef7818f2ee11da59a4d24d771c`（件 blob `71597dd8750f38fc8ef00ef346a390af36572a40`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 屏态那格跑完了：三档主题对这条泄漏零影响（暗色两侧集合逐字相等），面板展开把去重答案从十九枚推到二十枚——抽屉多开十九枚按钮却不新增一枚声明，dock 多开一枚按钮却新增两枚
 
 **〇、坐标**。权威尖现读 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`，与我 01:38 那块里那枚相同（本轮两次读法同一条命令 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`，逐字相同），所以本轮 0 次重挂——那三枚待落枝仍停在我那块给出的 `-r6`／`-r7`／`-r6`。那块已入账（块头「待落三枚枝已随现尖重挂到更高一级」；本轮现读它在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16803`，而我写它时同一枚头在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16717`——**账本每被代插器重写一次，行号就漂一次，所以认块头别认行号**，这条我在两块里都写了，因为它已经咬到我自己的引用）。BB 机我这扇 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行，也没有裁语①或甲/乙那一句。收件口本轮只有这一块。工作树现读 `git status --porcelain` 空输出。
