@@ -16588,6 +16588,97 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜把顶栏那四屏的名字登记上了：一枚产品文件四行白名单，判据同步翻成防回归；改后树七臂绿、五枚反件（四咬、一枚按设计不咬并具名）、两把 tsc 各 rc=0；上一轮我说的"热文件被压住"这轮我自己复算掉了才动手
+
+**〇、坐标（写这块这一刻现读；四枚 40 位都可 `git cat-file`）。**
+
+- 尖：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读逐字 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。本块所有行号是对这枚尖现取的——**注意它与我上一块（01:33 写）那枚 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 之间字典又换过字**：中文栏那四枚 nav 键的行号从 `:1143/:1163/:1160/:1161` 漂到 `frontend/src/i18n/LocaleContext.tsx:1147`、`frontend/src/i18n/LocaleContext.tsx:1167`、`frontend/src/i18n/LocaleContext.tsx:1164`、`frontend/src/i18n/LocaleContext.tsx:1165`。账本里的行号只在写它的那枚尖上成立，这正是"落到产物里的注释不许写行号"那条裁语的来由。
+- 候选：`refs/heads/review/82f55d8a-breadcrumb-fix-r1` 头 `758a341ec3f0ba18089dc024e27569b7894787b5`，从上面那枚尖当场切出（切枝当场取尖）。`git push --atomic` 后 `git ls-remote --refs` 回读同一枚。
+- 对尖 `git diff --name-status`：修改一枚 / 新增两枚 / **删除零枚**；两笔提交。权威线我这边 push 零次、force-push 零次。
+
+**一、为什么上一轮我不碰、这一轮我动了（复算过程写出来，不是"感觉可以了"）。**
+
+上一块第六节我写的是：那枚文件压着别人两枝未落地的东西，按「两档按同一热文件排队」不抢先。这轮先量队列：
+
+- `cff87c64` 的 ORD-0562 已落地——现尖字典里 `hub.todayDays` 与 `hub.budgetLine` 两枚键合计出现 4 次（`frontend/src/i18n/LocaleContext.tsx:1` 那一枚文件内数），而它改的正是 `frontend/src/app/V8Experience.tsx`；那枚文件在两枚尖之间逐字节换过（`14974f5cbb11d52bed4d3cbbabf6b6b73ed90718` → `e45be179efe713cb8e957640008e1c35347ae335`）。
+- 四枚债路由在现尖的白名单 literal 里命中仍为零（逐枚按 `路由名: 1,` 行形状数）。
+- 全 `frontend/e2e` 目录里 "breadcrumb" 只命中一枚文件、就是我自己那支 spec ⇒ 这四行不会把任何人的断言改红。
+⇒ 队列这一格空出来了，我才落这四行。
+
+**二、改了什么（一枚文件、四行、零枚新文案）。**
+
+白名单 literal 的尾行 `me: 1,` 在 `frontend/src/app/V8Experience.tsx:1954`，在它后面登记 `import`、`footprints`、`trash`、`access` 四枚。名字全部取自字典两臂**已有**的键：英文 `frontend/src/i18n/LocaleContext.tsx:21`、`:47`、`frontend/src/i18n/LocaleContext.tsx:42`、`frontend/src/i18n/LocaleContext.tsx:43`；中文 `frontend/src/i18n/LocaleContext.tsx:1147`、`:1167`、`:1164`、`:1165`。契约与后端零改动；`nav.hub` 那枚兜底（`frontend/src/i18n/LocaleContext.tsx:10`）没动。
+
+**三、判据同步翻面（这才叫常驻：还掉了就得钉住"别再掉回去"）。**
+
+- 臂二从"外面那几枚必须等于债表"改成**在册屏幕一律不许落在外面**（`frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts:127`）。
+- 臂三从"债行必须仍不成立"改成**已销账的四枚必须仍在白名单里**（同件 `:132`）——谁删掉一行、那屏立刻回到画「今天」，这一臂当场红。
+- 臂四继续逐枚钉两臂名字逐字相等（同件 `:139`）。改后树七臂全绿，跑法 `npx playwright test --config playwright.breadcrumb-debt-r1.config.ts`（不起服务、不开端口、不碰库）。
+
+**四、五枚反件（`D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/breadcrumb_mutants_r2.py`，每枚跑完立刻还原，收尾 `git status` 改动文件数为零）。**
+
+- N1 删掉一枚白名单行（就是这枝要防的那次回归）→ 臂二与臂三都红。
+- N2 加一枚没被判过的新屏幕 → 臂二红。N3 白名单里塞幽灵行 → 臂五红。N4 把 `nav.trash` 的英文值改掉 → 臂四红。
+- N5 把判据里那份"已销账名单"删掉一行 → **不红，这是按设计的空档**：那份名单是文档，用户看得见的是白名单行本身。具名 `BLIND_SPOT_NAMED`，我不假装它全防。
+- 基线（改后树）七臂 rc=0；`npm run typecheck` rc=0 与 `npm run typecheck:all` rc=0——这一轮 src 真变了，且 `tsconfig.check.json` 的点名清单里就有 `src/app/V8Experience.tsx`，所以这两句是有内容的。
+
+**五、和上一枝的关系（请二选一，别让落地门先红一次）。** 判据枝 `refs/heads/review/82f55d8a-breadcrumb-route-debt-r1` 头 `14ce2c4f10a1ac9631f7e1b2cfff863cf95b0782` 带的是"债未还"那张四行表；**这一枝已含同一条判据文件（臂号与跑法一致）**，落这枝就等于同时落判据。先落它再落这枝会先红一次臂三。那枝我原样留着、不删不改（已推枝零删改），你直接落这枝、或把它当父都行。
+
+**六、没做 / 没改善的**
+
+1. 屏读没重做：我这台私有栈的端口现在没在听（`netstat -ano` 现读 `:41537` 与 `:41538` 各零行 LISTENING），起后端加 dev 前口是另一件事，而且 dev 数不是产物数。⇒ "改完屏上真读到 Recycle bin / 回收站"这一句现在是源码加判据推出来的，**未实测**，具名 `NOT_REACHED_BY_82f55d8a`。落地之后我按老形制在换代产物上补这一格。
+2. 手机链没换代（换代是你的动作），用户手机上那四屏现在还是旧形状。
+3. 需要私有栈的两支判据（回收站拒绝态、丢弃序号）本轮零执行；后端 pytest 执行条数为零（本手 0 后端字节）；`vite build` 零次。具名 `NOT_EXECUTED_BY_82f55d8a`。
+4. 回收站中文措辞那枚候选与名字锚那枝仍未落（前影像在现尖上还是原 blob，见上一块第二节）。
+5. 红线自查：本轮只动我自己 worktree 里那一枚产品文件的四行与两枚判据文件；没起进程、没开端口、没连共享门；`_preview.db` 与那 24 枚 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；额度没墙。
+
+**七、下一手。** 这格交完，我名下无新派未闭单 ⇒ 具名「无单可领，等派」。若你要我把第六节头一条补成实测，我起一台私有栈（自己的端口、自己的库副本）在候选树上读那四屏两臂，回来给逐字与截图。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 槽位级判源尺 r7（把「逐字相等」升级成「相等且那一格确实在读词表/契约」，r5 的两枚假阳当负对照）· 车道 45d25bfb 自申报（不占新号、0 枚产品字节）
+
+一、这一件是什么
+- r5 的普查把 SELECTED 与 COMMITMENT 判进「服务端答的字」，r6 我按发射点重读承认那是假阳。这一件把那条判据做成一把能量出对错的尺：一枚上屏机词只有在「它所在整行等于本应用词表里的某条值」或「它（含下划线转空格的形）是契约 Literal 的成员」时才算服务端字，否则算词表字，两边都不沾才进待看清单。
+- 尺只读本地文件与已发布读数，不接浏览器、不接端口、不碰库：产品字节 0 枚。
+
+二、判语（七臂，现跑现判）
+- 整体 RED、红臂 1 条、用时按控制台自记；件 blob 79cbcbf26fd1ffcc2bd514c0ba6454fd0e2c8471。
+- 负对照一（r5 假阳一）：every_painted_token_classified PASS -- SELECTED 落桶 SELECTED buckets=['contract-word', 'copy-word'] line=['NO STAY SELECTED'] sources=['frontend/src/i18n/LocaleContext.tsx']，它所在整行逐字 NO STAY SELECTED，词表来源 frontend/src/i18n/LocaleContext.tsx。
+- 负对照二（r5 假阳二）：COMMITMENT 落桶见 COMMITMENT buckets=['copy-word'] sources=['frontend/src/features/pending/pendingSetCopy.ts', 'frontend/src/i18n/LocaleCo；发射点 frontend/src/features/intelligence/ControlTowerPanel.tsx:71，词表两条 frontend/src/i18n/LocaleContext.tsx:777 与 frontend/src/i18n/LocaleContext.tsx:238。
+- 正对照（脏代次必须被这把尺咬住）：r3 那趟 pre-r2 字节在同一屏画出的 6 处（ARRIVED / COMPLETED / PROGRESS）全部判为契约字，且这一代一枚都不再画：pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS'], all bucketed contract-word; overlap with this generation's painted tokens = []
+- 契约面：64 枚 Literal 成员进服务端字库（SELECTED 确实在里面，逐字见 backend/app/schemas.py:655），所以判语必须同时容得下「这枚字既是契约成员、这一格又确实是词表措辞」这种双桶情形。
+- 待看清单：undetermined shortlist (0): 
+- 中文臂：zh tokens painted=['JSON'] buckets={'JSON': ['copy-word']}
+- 覆盖面：英文臂读入 42 处、去重 37 枚，全部落桶，无「判不了」残留；入口逐字 /assets/index-BcQ9VAso.js。
+
+三、反件（两枚都要报红）
+- mE_drop_localectx_from_copy_scan -> rc=1，报红臂 false_positive_SELECTED_is_copy_word / false_positive_COMMITMENT_is_copy_word；控制台件 blob 713c111b9928fe7dfdf0daa9c0717979795a8dd4
+- mF_drop_space_form_rule -> rc=1，报红臂 positive_control_dirty_generation_would_flag；控制台件 blob fe9f3db04a5958dab39416ab4422b47893f1869e
+- 没有 skip、没有改断言凑绿、没有遮尺子的报错；这七臂的判语全文都在报告件里。
+
+四、纪律与收尾
+- 本轮 0 枚产品字节、0 笔提交、0 次推送、0 次新端口；:8752 与 :49861 是 r5 那轮起的，交完那块已停（netstat 现读 0 行 LISTENING），这一件纯静态。
+- 发布：新落盘 5 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r7.jsonl；共享预览库没读没写、没跑 demo/reset；force-push 0 次；权威线我没碰。
+- 还等你裁的四格没变：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。这把尺现在能在不动产品字节的前提下把「哪一格真的在读契约字段」逐枚指出来，你要开全量单就先点这一件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 02:05 · covered 的两把尺差拆到枚：定义差三条算清、剩下 13 枚具名不并进任何一边（产品字节改动 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-covered-gap-r1` 远端头现读 `35cbcdbbbf478d35083d33c08937cffecd386078`，父提 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 就是现尖 ⇒ 可直接快进合；件 `review/ord0561/COVERED_GAP_R1.md` 的 blob `37eee89cc708d435b1510c08c0c3fc75d648a741`（`git cat-file -s` 现回 8794 字节），件 100 行、8794 字节 B；相对现尖只动这一枚件。
+- 比对来源现读对拍：它那把的逐枚读数取自枝 `refs/heads/review/1ba48dbf-ord0561-screens-r1` 的头 `d9424847a51a04b0a0d8e6fb731a0476606b6137`、件 `review/ord0561-screens/walk_r2.json` 的 git blob `e0e6cfbd9b79753d032044cbaa29efceb4a8e9e3`（37103 字节，我本机这份逐字节相同），它那件 `errors` 为空数组。我这把在 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 的 `390 px` 形、两臂五屏。
+- 结果：covered 我 37 枚、它 61 枚。按渲染文字同枚 8 枚；只我读到 20 枚、只它读到 44 枚。拆开后：只我读到的 20 枚里有 16 枚落在**它那把根本不查的选择器面**（它只 `button`，我加 `a[href]` 与 `[role=button]`）；只它读到的 44 枚里有 35 枚**中心在 844 px 视口之外**（它那件记 `hit_by` 为 null，我这把按定义跳过命中测试）。剩下未解释的共 13 枚（我这边 4 枚、它那边 9 枚），逐枚带屏、臂、逐字、中心 y 与命中方列在 `review/ord0561/COVERED_GAP_R1.md:32`，我没有把它们并进任何一条解释。
+- 身份只用渲染文字，这是一处有意的退让：它那件对视口外的枚不记命中方，若我拿 `hit_by` 进身份，就等于把定义差冒充成屏的差。三条定义差与两把的比法列在 `review/ord0561/COVERED_GAP_R1.md:9`。
+- 另交一张可裁表：`C4` 那 44 行（屏、臂、屏上文字、有无无障碍名、中心 y px、越过 `768 px` 那条带几 px、命中方）整表在 `review/ord0561/COVERED_GAP_R1.md:48`——号令者一行一行就能裁要不要动底栏避让。
+- 没做的，具名：产品字节 0 枚、屏也没重跑（两把的读数都已在盘上，这手只做归类）；两把取的不是同一代 ⇒ 那 13 枚残余我不判谁错，要真闭合得让同一代产物被两把各读一遍，那需要一次两把同跑的约定，我把它列给您排；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）；`:4783` 那枚预览口这手没读没写；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）。
+- 我自申报的下一手（先读账本 ## ORDERS 再动）：约 `1ba48dbf` 在同一代产物上各读一遍那五屏，把这 13 枚残余逼成 0；在它同意之前我不再改自己的判据。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 无名控件清单本轮为空 · 但先交的是尺本身的缺陷与更正（车道 8ac89982 · 普查仪进线，产品字节零枚，清单待下一只手按命名范围走）
 
 **一、坐标**
