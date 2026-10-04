@@ -225,3 +225,87 @@ git diff --check: PASS
 The 67 tests include the complete R20–R27 focused lineage, R27 member isolation/fairness/skip
 hygiene, and the new source-truth bridge controls. This remains an implementation + exact
 blocker checkpoint, not a collective live closure claim.
+
+## Truth Mesh + Governed Execution Addendum — 2026-10-05
+
+### Source binding
+
+- Current branch: `codex/revolution-realtrip-recovery`.
+- Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`.
+- Prior local/remote starting SHA: `a8f8cc342dcdd56c61acb8cce5f834588d21b2c2`.
+- Substantive implementation SHA before the final select-gate follow-up: `e18c68e1fe8d4187d230b58301494b6c380dcc53`; the final SHA is recorded by Git with this addendum.
+- R27 final-strike taskbook blobs: `a47afcd79a0fb6da7e0557b68d6c783b95b6cbd1`, `0f658ba5f97be4797393d46db153224b2badd838`, `6e23b3218f1563a397459bffd4eb486da3847bab`, `4fb9dbf5c1a2b2f68c1bc1350a0bc83798c22370`.
+- `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`; no authority/mainline merge was made.
+
+### Fresh live runtime facts
+
+Disposable DB: `backend\\r27-live-20261005-d.sqlite3`.
+
+- Journey: `6b3f8094-7123-49a1-8774-88a279f1a8aa`.
+- OWNER member: `505ca82f-2009-467b-ab9b-c1ea2334a36a`, preference `interest/garden`.
+- ADMIN member: `14eec2cf-fd5b-4a81-a1c6-d72e234b6610`, preference `interest/museum`.
+- Both rows are `MEMBER_IN_FORCE`; the preferences are distinct and were written through the member-scoped API. No owner preference was copied to the ADMIN.
+- Live discovery created the Nara catalogue in this disposable run. The relevant provider entities were `overpass:way/97082272` (Isuien Garden) and `overpass:node/2465643503` (Nara Craft Museum).
+- Truth Mesh acquisition ran live Overpass and live Nominatim exact lookup. The Craft Museum official page was fetched and parsed as `OFFICIAL_WEB_VERIFIED` / `VERIFIED_PROVIDER`; Isuien was provider-backed with canonical Nominatim/Overpass opening and cost tags (`1200 JPY`).
+- Two independent plans were generated with `require_fully_grounded=true`; both received live Valhalla mobility. The garden-plus-museum plan used `real-place-22cf72809897ff4c7f312fcf -> real-place-b47a20314c81d5a81381d4a4`, `22` minutes, `LIVE_PROVIDER_CAPTURE`, `HARD_ELIGIBLE`.
+
+The corrected collective projection uses only the plan delta and canonical category/tags. Machine receipt for the selected plan:
+
+```json
+{
+  "classification": "UNANIMOUS_DOMINANCE",
+  "selected_plan": "293a4de2-ed4e-5a78-8da2-5bd2b5d33f59",
+  "owner_effective_fit": 1.0,
+  "admin_effective_fit": 1.0,
+  "rejected_alternative_owner_fit": 0.0,
+  "rejected_alternative_admin_fit": 1.0,
+  "alternative_rejection": "COLLECTIVE_CANDIDATE_NOT_DOMINANT"
+}
+```
+
+The server gate was exercised on the normal selection path. The selected plan returned HTTP 200; selecting the museum-only alternative returned HTTP 409 `COLLECTIVE_CANDIDATE_NOT_DOMINANT`. This proves that fairness is enforced at the mutation boundary rather than trusted from Agent prose.
+
+### Governed physical execution
+
+The allowed plan was selected and executed through the ordinary product state machine:
+
+```text
+Isuien Garden: depart -> arrive -> begin -> complete
+Nara Craft Museum: depart -> arrive -> begin -> complete
+Journey: COMPLETED
+active_plan_version_id: 293a4de2-ed4e-5a78-8da2-5bd2b5d33f59
+```
+
+The final Journey was read back as `COMPLETED`; the active plan carried the live Valhalla snapshot and the actual edge remained hard eligible. This is a deterministic collective-governance execution proof, not an Agent-autonomy claim.
+
+### Real Agent runtime result and exact blocker
+
+The existing WB2api configuration was loaded only into the disposable process environment. A short preflight against `http://127.0.0.1:7863/v1/chat/completions` returned a real `tool_calls` response from `cn:glm-5.3-flash`.
+
+A real Hermes-compatible `AgentRun` was then persisted for the same shared Journey. It executed:
+
+```text
+inspect_journey -> inspect_twin -> conclude_recovery(NO_ACTION)
+```
+
+The model saw two separate `MEMBER_IN_FORCE` projections and the separate `garden` / `museum` preferences. The run was a completed NO_ACTION control against an already completed Journey; it did not mutate and is not counted as collective closure.
+
+The principal R27 closure blocker therefore remains exact and unchanged in kind:
+
+```text
+R27_AGENT_COLLECTIVE_LIVE_MEDIATION_NOT_CLOSED
+```
+
+The configured model runtime is now proven callable, but this round did not run the model on an ACTIVE shared Journey whose candidate conflict required a model-selected compromise or member clarification. No fabricated Agent success is claimed. The transport-level caller-principal seam is also still not proven; member data scoping is proven, while authenticated traveler identity is not.
+
+### Focused verification after Truth Mesh and gate changes
+
+```text
+30 passed, 1 warning
+python -m compileall -q app: PASS
+git diff --check: PASS
+```
+
+The focused run covered Truth Mesh independent Overpass/Nominatim behavior, source observation corroboration, plan-delta fairness, normal plan selection, member projection, R26 routing hygiene, and the R20–R27 endpoint lineage. One unrelated legacy baseline assertion still expects the pre-R27 tool catalog and is not part of this change.
+
+This is the final R27 implementation/runtime checkpoint: the product now has multi-source identity convergence and a server-enforced collective mutation boundary; the remaining closure work is a real configured Agent mediation run on an ACTIVE shared Journey, not another report-only or provider-retry round.

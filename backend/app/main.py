@@ -4046,24 +4046,25 @@ def collective_mutation_gate(
             "member_count": member_projection.get("member_count", 0),
         }
     active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
-    if active is None:
-        return {"allowed": False, "code": "COLLECTIVE_WORLD_FACTS_INCOMPLETE", "classification": "INSUFFICIENT_WORLD_FACTS"}
-
     plan_rows = [target_plan]
+    sibling_filters = [
+        PlanVersion.journey_id == journey.id,
+        PlanVersion.id != target_plan.id,
+        PlanVersion.status == "CANDIDATE",
+    ]
+    if active is None:
+        sibling_filters.append(PlanVersion.parent_plan_version_id.is_(None))
+    else:
+        sibling_filters.append(PlanVersion.parent_plan_version_id == active.id)
     siblings = session.scalars(
-        select(PlanVersion).where(
-            PlanVersion.journey_id == journey.id,
-            PlanVersion.parent_plan_version_id == active.id,
-            PlanVersion.id != target_plan.id,
-            PlanVersion.status == "CANDIDATE",
-        ).order_by(PlanVersion.created_at, PlanVersion.id)
+        select(PlanVersion).where(*sibling_filters).order_by(PlanVersion.created_at, PlanVersion.id)
     ).all()
     plan_rows.extend(siblings)
     hard_feasible = {str(item) for item in (hard_feasible_plan_ids or set())}
     windows: list[dict[str, Any]] = []
     base_activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
-    ).all()
+    ).all() if active is not None else []
     base_items = [
         {"sequence_no": item.sequence_no, "place_id": item.place_id, "activity_type": item.activity_type, "locked": item.locked}
         for item in base_activities
@@ -4073,15 +4074,25 @@ def collective_mutation_gate(
             select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
         ).all()
         activity_items = []
-        subject_places: dict[str, Place] = {}
+        activity_place_ids = [str(item.place_id) for item in activities if item.place_id]
+        activity_places = {
+            item.id: item
+            for item in session.scalars(
+                select(Place).where(Place.id.in_(activity_place_ids))
+            ).all()
+        } if activity_place_ids else {}
         for item in activities:
+            place = activity_places.get(str(item.place_id)) if item.place_id else None
             activity_items.append({
                 "sequence_no": item.sequence_no,
                 "place_id": item.place_id,
                 "activity_type": item.activity_type,
                 "locked": item.locked,
+                "category": place.category if place else None,
+                "tags": json.loads(place.tags_json or "[]") if place else [],
             })
         subject = plan_collective_fit_subject(base_items, activity_items)
+        subject_places: dict[str, Place] = {}
         if subject["fit_subject_place_ids"]:
             subject_places = {
                 item.id: item
@@ -6673,6 +6684,17 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     if not gate.passed:
         failures = ", ".join(gate.failures)
         raise HTTPException(422, f"PlanVersion {plan.id} is infeasible: {failures}")
+    collective_gate = collective_mutation_gate(
+        session,
+        journey,
+        plan,
+        hard_feasible_plan_ids={str(plan.id)},
+    )
+    if not collective_gate.get("allowed"):
+        raise HTTPException(
+            409,
+            f"{collective_gate.get('code')}: collective mediation must be resolved before selection",
+        )
 
     current = session.scalar(
         select(PlanVersion).where(
