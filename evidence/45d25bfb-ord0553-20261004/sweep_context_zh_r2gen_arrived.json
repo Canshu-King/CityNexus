@@ -1,0 +1,123 @@
+{
+  "instrument": "cmdra_0553_caps_context_r1",
+  "script_sha256": "318853bc47800c2c4011ec20e23c80f82d122ae9febec0730d3a3cd3e0cb9ec6",
+  "base": "http://127.0.0.1:49851",
+  "locale": "zh",
+  "viewport": "390x844",
+  "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+  ],
+  "journeyId": "22222222-2222-4222-8222-222222222222",
+  "docChars": 1653,
+  "apiResponses": [
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/places?city_code=CNX-DEMO",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status",
+      "status": 200
+    }
+  ],
+  "paintedTokens": [],
+  "traced": [],
+  "hits": [],
+  "panels": {
+    "recovery-required-panel": null,
+    "plan-version-history": "这趟行程的方案版本服务器上还留着的每一份版本，按写入先后排。这一屏只读。共列出 28 份版本这台服务器没有设保留上限：目前这趟共有 28 份版本，这里全部列出。写新版本不会丢掉旧的。版本 1首次生成9月28日 04:41没有父版本行程正在跑这一份版本 2首次生成9月29日 06:08没有父版本版本 3首次生成9月29日 06:08没有父版本版本 4首次生成9月29日 06:08没有父版本版本 5首次生成9月29日 06:08没有父版本版本 6首次生成9月29日 06:08没有父版本版本 7首次生成9月29日 06:08没有父版本版本 8首次生成9月29日 06:08没有父版本版本 9首次生成9月29日 06:08没有父版本版本 10首次生成9月29日 06:08没有父版本版本 11首次生成9月29日 06:08没有父版本版本 12首次生成9月29日 06:08没有父版本版本 13首次生成9",
+    "v12-authoritative-panel": "权威行程从方案到边缘的单一真相 冻结证据 现在Tech Art Center已到达 下一步Nexus River Cruise Pier计划中15:30Old Town Gate已完成Riverside Museum已完成Central Food Hall已完成4Tech Art Center已到达5Nexus River Cruise Pier计划中6Skyline Dinner House计划中服务端执行真相 · 可审计标记 进行中",
+    "v12-trip-studio": "行程工作台 · 起草后接受调整权威行程在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。 相同证据6 个活动1 个受保护锚点无草稿变更•Old Town Gate○Riverside Museum○Central Food Hall○Tech Art Center○Nexus River Cruise Pier○Skyline Dinner House To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel. 按住一项活动，拖到新的位置，就是一次草稿改动。 锁定/受保护位置为",
+    "v14-preventive": null,
+    "v14-recovery-truth": "V14 · 现实变了有据可依的自适应恢复重新读取恢复方案这趟行程没有等待你决定的恢复方案。",
+    "v12-authoritative-page": "V12 · 方案、移动端、Edge 与画像权威行程执行。你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。刷新真相这趟行程的方案版本服务器上还留着的每一份版本，按写入先后排。这一屏只读。共列出 28 份版本这台服务器没有设保留上限：目前这趟共有 28 份版本，这里全部列出。写新版本不会丢掉旧的。版本 1首次生成9月28日 04:41没有父版本行程正在跑这一份版本 2首次生成9月29日 06:08没有父版本版本 3首次生成9月29日 06:08没有父版本版本 4首次生成9月29日 06:08没有父版本版本 5首次生成9月29日 06:08没有父版本版本 6首次生成9月29日 06:08没有父版本版本 7首次生成9月29日 06:08没有父版本版本 8首次生成9月29日 06:08没有父版本版本 9首次生成9月29日 06:08没有父版本版本 10首次生成9月29日 06:08没"
+  },
+  "pageErrors": []
+}
