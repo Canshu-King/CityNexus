@@ -1,0 +1,16 @@
+{
+ "as_is": {
+  "tag": "as_is",
+  "rc": 0,
+  "line": "{\"receipt\": \"C:\\\\Users\\\\仓鼠王\\\\AppData\\\\Local\\\\Temp\\\\cnx_empty_publisher_receipt.json\", \"tip\": \"d673403a15918ec2229efefe8477dd618b58e7d7\", \"shelf_count\": 6, \"new_equal\": [], \"all_local_byte_equal\": true}",
+  "claims_green": true
+ },
+ "with_floor": {
+  "tag": "floored",
+  "rc": 5,
+  "line": "{\"refused\": \"empty file list - nothing was asked to publish, which is not a pass\"}",
+  "claims_green": false
+ },
+ "reading": "as_is rc 0 means an empty publication calls itself green; with_floor rc 5 means one floor line turns the same code into a refusal",
+ "arms_pass": true
+}
