@@ -3675,6 +3675,9 @@ components:
         id: {type: string, format: uuid}
         sequence_no: {type: integer, minimum: 1}
         title: {type: string}
+        # The place's own name off its row; null when there is no row to read it from.  Surfaces say
+        # this first and fall back to `title`, which is what a planner typed.
+        place_name: {type: [string, 'null']}
         activity_type: {type: string}
         place_id: {type: [string, 'null']}
         city_service_id: {type: [string, 'null']}

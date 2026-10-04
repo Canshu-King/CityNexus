@@ -3438,6 +3438,7 @@ export interface components {
             id: string;
             sequence_no: number;
             title: string;
+            place_name?: string | null;
             activity_type?: string;
             place_id?: string | null;
             city_service_id?: string | null;
