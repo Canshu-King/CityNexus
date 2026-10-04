@@ -1,0 +1,74 @@
+ORD-0563 -- the English arm stopped answering with shouted tokens. What was measured, on this lane's own stack.
+
+SCOPE AS RULED (commander, 14:0x): dictionary English values must not equal the server's enum, and a
+multi-word all-caps shout counts too. The Chinese arm is untouched by construction -- no Chinese byte was
+edited in this change (`git diff` shows 11 changed lines, all inside the English object).
+
+THE ELEVEN VALUES CHANGED
+  hub.arrival            ARRIVAL          -> Arrival                  (V8Experience.tsx:3213)
+  hub.departure          DEPARTURE        -> Departure                (V8Experience.tsx:3217)
+  twin.explicit          EXPLICIT         -> Explicit                 (TwinPanel.tsx:54)
+  twin.learned           LEARNED_SOFT     -> Learned soft signal      (TwinPanel.tsx:54)
+  v14.mode.ADVISORY      ADVISORY         -> Advisory                 (V14RecoveryTruthPanel.tsx)
+  v14.mode.ASSISTED      ASSISTED         -> Assisted                 (V14RecoveryTruthPanel.tsx)
+  v14.mode.AUTONOMOUS    AUTONOMOUS       -> Autonomous               (V14RecoveryTruthPanel.tsx)
+  intel.advisory         ADVISORY         -> Advisory                 (ControlTowerPanel.tsx:62, the
+                                                                       fallback of a slot whose primary
+                                                                       path already reads policyModeLabel)
+  stay.capturedReplay    CAPTURED REPLAY  -> Captured replay          (StayExplorer.tsx:136)
+  discovery.sealed       SEALED REPLAY    -> Sealed replay            (RealCityDiscoveryPanel.tsx:417, the
+                                                                       sibling in the same <b> already says
+                                                                       "Sealed real replay")
+  push.checkingState     CHECKING         -> Checking                 (the push capability card)
+
+STANDING RULER (4 arms, rc=0) -- e2e/qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts
+  Its predicate is wider than the commander's first scan (a space does not make "SELECTED STAY" less of a
+  shout), so it reads 45 shouted English values on this generation, not 35. Every one of them is named in
+  the ruler itself as either a heading/kicker/label slot (with the render site this lane read) or a key
+  with no reader in src at all. A new shout that arrives unjudged fails the run -- that is the door.
+  Full enumeration with the classification: review/ord0563/enumeration_r1.json
+
+COUNTER-ARMS (each really went red, then was restored)
+  A  put hub.arrival back to "ARRIVAL"        -> arm 1 red: "hub.arrival:194 paints \"ARRIVAL\""
+  B  add a new value "BRAND NEW SHOUT"        -> arm 2 red, naming the key and its line
+  The dictionary was restored byte-for-byte after each; `git diff --numstat` afterwards shows exactly
+  11/11 -- the eleven fixes, no residue from the mutations.
+
+GATES ON THIS TREE (60f006735)
+  npm run typecheck rc=0; npm run typecheck:all rc=0; the ORD-0551 extraction-status ruler still 7 passed;
+  tools/verify_openapi_parity.py is unaffected (no contract byte changed in this order).
+  Exposure: same ruler, same command, same export shape on both sides -- base 0413e556 answers 6 cells,
+  this candidate answers 6 cells, same per-file set (review/ord0563/exposure_pair_r1.txt).
+
+REAL BROWSER READ (English arm, run ORD0563-142554: stub :4681, backend :4682, product front :4683; the
+store was created empty by the app under a fresh CITYNEXUS_E2E_RUN_ID; no seed copy, no demo/reset, nothing
+on :8000/:4781/:4782/:8693). The journey was created through the product's own wizard with real keystrokes
+(http_status=201) and the English arm is proved by the heading the screen itself paints: "Trip to Tianjin".
+  /v8/twin            .v8-twin-label.explicit = "Explicit"   .v8-twin-label.learned = "Learned soft signal"
+  /v8/stay            .v8-evidence-label      = "Captured replay"
+  /v8/intelligence    .v8-intel-facts b       = "Advisory"
+  /v8/authoritative   no shouted token anywhere in the rendered body
+  /v8/hub             see the finding below
+  page exceptions (uncaught JS) 0; console errors 0.
+  Screenshots: screen_twin_en_ORD0563-142554.png, screen_v14_en_ORD0563-142554.png
+
+ONE FINDING THE RULING DID NOT PREDICT -- THE HUB STILL LOOKS UPPERCASE
+  On /v8/hub the three field labels read textContent "Stay" / "Arrival" / "Departure" but innerText
+  "STAY" / "ARRIVAL" / "DEPARTURE", because the slot is styled `.cn-strip-item > span { text-transform:
+  uppercase }` (design-tokens.css:410-415; the computed style was read in the same pass). So for
+  hub.arrival / hub.departure the enum is out of the dictionary and out of the DOM, and the shout a
+  traveller sees is the label typography -- the same typography that already uppercases "Stay", which was
+  never an enum. Two consequences, both for the commander rather than for me to decide:
+    - by the ruling's own contrast test this pair is now in the same class as the sidebar group headings:
+      intentional label styling, not an enum leak;
+    - if the intent was that the hub should *read* "Arrival" on screen, that needs a CSS decision
+      (drop the transform for that slot), which is outside ORD-0563's stated scope and was not done here.
+  twin / stay / intelligence / v14 have no such transform, so those four changed on screen as measured.
+
+NOT DONE IN THIS ORDER (named so nobody mistakes silence for completion)
+  ORD-0562 (English singular/plural: `1 days` at V8Experience.tsx:2947, the same shape at :2399, and the
+  seven `(s)` dictionary lines) is not in this branch -- it needs two data states to read `1 day` and
+  `2 days` for real, and that supply is being prepared separately.
+  ORD-0568 (RUNTIME_CAPTURE parenthetical) is not in this branch either.
+  exec.state.* was left alone as instructed; on this generation it already reads Arrived / Active /
+  Completed / Skipped, so ORD-0553's fix is what the line shows.
