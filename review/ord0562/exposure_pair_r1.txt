@@ -1,0 +1,11 @@
+Same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), one command per side:
+`node <ruler> --tree <export> --out <receipt>`; export = `git archive <ref> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x`
+
+base 126d170ae (the ORD-0563 head this branch is stacked on)  cells_total=6  modules_in_graph=324
+cand 4fc050be5 (this branch)                                  cells_total=6  modules_in_graph=325
+
+per-file cells, base: {"ActivityDetail.tsx": 1, "PlanWithAiSheet.tsx": 3, "RecoveryRequiredPanel.tsx": 1, "SimulationPanel.tsx": 1}
+per-file cells, cand: {"ActivityDetail.tsx": 1, "PlanWithAiSheet.tsx": 3, "RecoveryRequiredPanel.tsx": 1, "SimulationPanel.tsx": 1}
+
+Cell growth over the base: 0. The extra module is this lane's own ruler spec, which is a source file the
+ruler reads, not a screen: it adds no cell.
