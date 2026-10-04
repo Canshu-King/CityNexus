@@ -16588,6 +16588,58 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · ORD-0520 屏侧那格的收尾交完：七臂在现读代次上原样重跑，判语 `REGRESSION_GREEN`；枝 `review/89f2e2d6-ord0520-glass-regression-r1` = `139d198b733fdc34d99aad69f5075c2ee820d773`，产品字节零枚改动
+
+**一、这一格补的是哪一句话**
+
+落地不等于还成立。那七臂当初是在引入它们的那一代尖上第一次跑的；这一手把同一份 spec 一字未改地、在本车道自起的前后端栈上、对着我刚读到的那一代尖再跑一遍，并把持久行直接从那个 sqlite 文件里按 rowid 读出来——要证的正是「实时行程这一判跟着 `aborted_at` 那列走，不跟着会被别的门挪动的 `status` 走」这条在最新一代上仍然成立。
+
+**二、基座（逐枚 `ls-remote` / `rev-parse` 现读，不凭记忆）**
+
+- 我 checkout 并测量的那一代尖 = `ee142704825374903007b783d8516694cb9a2422`（`git rev-parse HEAD`，写在这块之前又回读过一次，仍是它）。
+- 本块写作时现读的权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`——尖在我跑完之后又前移了一格；请以你落地时现读的那枚核第五节两行数字，别按我这块的字面落。
+- 交件枝 `refs/heads/review/89f2e2d6-ord0520-glass-regression-r1` = `139d198b733fdc34d99aad69f5075c2ee820d773`；它的父笔现取 = `ee142704825374903007b783d8516694cb9a2422`，与我测量那代 `ee142704825374903007b783d8516694cb9a2422` 逐字相同 = True，所以这枚只带三枚读数文件、且能直接落在量过的那代上。
+- 我这单落地下游还在不在：拿 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（本块写作时现读的镜像尖）逐枚 `git rev-parse <尖>:<路径>` 与本枝同名文件比 blob——`spec=同、config=同、来源核量具=同、后端五臂=同` 四枚逐字节相同 = 全部为真；`backend/app/services.py` 在 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 是 `c57c51d6ad9fb50b3146aaadc7751ba40ef2d07d`，判定那句在 `ee142704825374903007b783d8516694cb9a2422` 的 `backend/app/services.py:453`：`if item.aborted_at is not None or item.status == "CANCELLED":`（该文件被别的车道共同引用，blob 与我一枚不同属正常，判的是那句还在不在）。
+
+**三、读数（每格都由本次跑出的件推导，件里没这格我就不写）**
+
+- 回归件 `review/ord0520/ABORT_GLASS_REGRESSION_r1.json` blob `d779d432655aef42de614d0c8dae575f8fab8978`：`arms expected 7 unexpected 0`，逐臂 `passed` 共 7 臂；最长那臂 `ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-status` 实测 3193 ms。
+- 每臂一枚证据件：`evidence files 7`，七枚件的 `head` 全部 = `ee142704825374903007b783d8516694cb9a2422`、`run` 全部 = `ord0520regress-20261004T161646Z`（即本轮现跑，不是继承上一代那份），`verdict` 全部 = GREEN。
+- 持久行：`aborted_rows_in_this_store` 5、`rows_still_marked_planned_after_the_abort` 里那枚 `journeys.rowid` = 9，`status` 是 `PLANNED` 而 `aborted_at` / `abort_reason` 仍带着——库 `_ord0520regress-20261004T161646Z.db`（`D:/moodle/_qoder_lane_ord0520_20260930/db`，表 `journeys`，列 `status`、`aborted_at`、`abort_reason`）。
+- 四段来源核件 `review/ord0520/ABORT_GLASS_PROVENANCE_ord0520regress-20261004T161646Z.json` blob `6770e370f8242f98b96616593a3b65db04e32123`，`verdict` = `PROVENANCE_OK`：P1 后端门自报 run id 与库名与 `ai=disabled`（`http_status=200`）；P2 走 vite 代理回同一枚 run id 与同一枚库名（`same_run_id_as_direct_read` = `True`）；P3 那个口供的是 `frontend/src/features/abort/JourneyAbortPanel.tsx`，served 40125 B 对 disk 10894 B，`served_and_disk_bytes_equal` = `False`——代理侧是转换后的模块，字节数按形制本就不同，这条判的只是「这棵树的这枚组件真的从这个口出来并带着它自己那枚 test id」；P4 两枚 PID 的 `CommandLine` 逐字含 uvicorn 与 vite 且端口是本车道那两枚 `:4834` / `:4833`；库内表数 61（件顶那格 `database_tables`）。
+- 本次总判语 `REGRESSION_GREEN`（`ord0520regress-20261004T161646Z` 那一趟）。
+
+**四、上一代那一趟不作数，但留痕**
+
+在 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 那代我先把同形回归跑过一次，判语同样是 `REGRESSION_GREEN`、持久行同样是 5 枚中止行里 `9` 仍为 `PLANNED`。那份读数件没有入库、只在车道本地 `D:/moodle/_qoder_lane_ord0520_20260930/tmp/superseded_b60418cc/`，本块不交它，也不拿它替第三节背书；`b60418ccbda8937029e6b74f8c990ad06a8d62f8` 与 `ee142704825374903007b783d8516694cb9a2422` 无共同祖先（本车道权威线这一夜是被重挂的，`git merge-base` 那步非零退出），所以「上一代」只是同一份量具的两个基座，不是先后两笔。
+
+**五、落地面（只读预测，我没手合）**
+
+- `git merge-tree --write-tree eaf4069e5d07a3dacc1ec33a0be515119208e16e 139d198b733fdc34d99aad69f5075c2ee820d773` 预测树 `d09628f473b2088531916f3c3ec020f29454c543`，CONFLICT 行数 = 0。
+- `git merge-base --is-ancestor eaf4069e5d07a3dacc1ec33a0be515119208e16e 139d198b733fdc34d99aad69f5075c2ee820d773` 退出码 = 1（非零即「我这枝不含现尖」：要落就得按你那边的尖 re-cut，我叫它 0 冲突重切，不叫快进）。
+- 同一式子换成上一代那枚基座：`git merge-tree --write-tree eaf4069e5d07a3dacc1ec33a0be515119208e16e b60418ccbda8937029e6b74f8c990ad06a8d62f8` 退出码 = 128、CONFLICT 行数 = 0——这代线是重挂出来的，两枚之间没有共同祖先，命令不给出树，所以这一行报的是「预测不适用」，不是「预测干净」。
+
+**六、没做的、没修好的（按老规矩点名）**
+
+- 产品字节零枚改动、测试断言零枚放宽、skip/mock 零枚；改动只有 `review/ord0520/` 下三枚：一读者 + 两读数件。
+- 一处仪表毛病，具名不修：来源核件 P4 那两行 `command_line` 里，Windows 用户名那段是 GBK 解码后的乱码（PowerShell 的 stdout 编码没钉住，本机老毛病），而这条判据咬的是 ASCII 那段（解释器 + `uvicorn`/`vite` + `--port`），它逐字在件里可查；我这手没动已入库的量具去改这格显示，报在这里而不是悄悄重跑换一枚件。
+- 真手机屏那一格仍 `NOT_REACHED_BY_CMDR`：要 `:4781` 那条链换代，那是人点的决定，我没代点。
+- 复活那趟走真 `select` 门仍 `NOT_REACHED_BY_LANE`：那一城在现尖上 `CATALOG_EMPTY`，`places_in_catalog` 零个，我没有可解析的地点可喂它（探针件 `review/ord0520/ABORT_RESURRECT_PROBE.json` 的判语 `SELECT_DOOR_UNREACHABLE_ON_THIS_STORE` 是这条的依据）。
+- 「契约改了 ⇒ 同一笔必须重生成客户端」那道门仍然没有：ORD-0558 我交的是复现件与反件，不是门。
+
+**七、下一格（号令者 00:3x 那句优先，我接）**
+
+`backend/tests/test_qoder_anywhere_provider_truth.py:72` 那枚 g10 的等待器补法（清点件 `review/inflight-wait-r1/INFLIGHT_WAIT_INVENTORY_r1.json` 那行是我写的）。顺序：现尖复现孤立红率 → 补该模块自带的等待器 → 复测归零 → 一枚反件证明它还在咬。清点件里那行写的修法是「POST `/api/v1/catalog-hydrations` 拿到 operation_id 之后先等终态再读那份 places 投影」；若我复现出红率本来就零、或补了仍红，我会立刻具名报回来，而不是改断言换绿。
+
+边界 A：本手产品字节零枚改动、契约零枚、他人量具零枚改动；新增只有 `review/ord0520/` 三枚，尖 = `ee142704825374903007b783d8516694cb9a2422`。
+
+边界 B：权威线零移动；push 一次，目标是本车道名下新枝 `refs/heads/review/89f2e2d6-ord0520-glass-regression-r1`，force-push 零次，他人枝零枚改动，旧枝零枚删除，枝头 = `139d198b733fdc34d99aad69f5075c2ee820d773`。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写；监听端口是本车道自起那两枚 `:4833` / `:4834`，交完即停，测量代次 = `ee142704825374903007b783d8516694cb9a2422`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜名下两枚在飞候选的落地前体检：按现尖逐枚比 blob，两枚都零冲突、都不用重切（本手产品字节 0 枚、判据字节 0 枚，只比字节）
 
 **〇、坐标（写这块这一刻现读；每枚 40 位都可 `git cat-file`）。**
