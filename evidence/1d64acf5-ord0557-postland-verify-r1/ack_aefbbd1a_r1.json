@@ -1,0 +1,199 @@
+{
+ "started_local": "2026-10-04 18:31:17",
+ "steps": [
+  {
+   "step": "tip",
+   "sha": "aefbbd1a2f99c448a9a684b3d01ce387273ee83c",
+   "rev_list_count": 1
+  },
+  {
+   "step": "proof",
+   "run": 1,
+   "blob": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+   "bytes": 13560004,
+   "equal": "true",
+   "agree": "true"
+  },
+  {
+   "step": "proof",
+   "run": 2,
+   "blob": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+   "bytes": 13560004,
+   "equal": "true",
+   "agree": "true"
+  },
+  {
+   "step": "proof",
+   "run": 3,
+   "blob": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+   "bytes": 13560004,
+   "equal": "true",
+   "agree": "true"
+  },
+  {
+   "step": "mirror_state",
+   "byte_identical": "false",
+   "local_blob": "62e3a743a4274221749eb9c2a98d8eea9da35391",
+   "remote_blob": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+   "local_lines": 91446,
+   "remote_lines": 91402,
+   "first_differing_line": 16591,
+   "which": "local"
+  },
+  {
+   "step": "node",
+   "label": "g4",
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.30s"
+  },
+  {
+   "step": "rehung",
+   "tag": "g4",
+   "head": "89a0a27e0ece435dd8d40df15aa3bd89bad997c8",
+   "readback": "89a0a27e0ece435dd8d40df15aa3bd89bad997c8",
+   "conflicts": 0,
+   "foreign": 0,
+   "node": "1 passed, 2 warnings in 2.30s"
+  },
+  {
+   "step": "node",
+   "label": "d76",
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.10s"
+  },
+  {
+   "step": "rehung",
+   "tag": "d76",
+   "head": "3c9f4df6edb2ffeed609087bed87a5372ca4529b",
+   "readback": "3c9f4df6edb2ffeed609087bed87a5372ca4529b",
+   "conflicts": 0,
+   "foreign": 0,
+   "node": "1 passed, 2 warnings in 2.10s"
+  }
+ ],
+ "part_A": {
+  "proofs": [
+   {
+    "run": 1,
+    "blob_id": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "bytes": 13560004,
+    "git_blob_sha1": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "hash_equal": true,
+    "size_equal": true,
+    "channels_agree": true,
+    "api_size": 13560004,
+    "tip_of_that_ref": "f9ddab9b86056126734192ce001ffbadbe6bb29f",
+    "self_heal": [],
+    "lines": 91402
+   },
+   {
+    "run": 2,
+    "blob_id": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "bytes": 13560004,
+    "git_blob_sha1": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "hash_equal": true,
+    "size_equal": true,
+    "channels_agree": true,
+    "api_size": 13560004,
+    "tip_of_that_ref": "f9ddab9b86056126734192ce001ffbadbe6bb29f",
+    "self_heal": [],
+    "lines": 91402
+   },
+   {
+    "run": 3,
+    "blob_id": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "bytes": 13560004,
+    "git_blob_sha1": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+    "hash_equal": true,
+    "size_equal": true,
+    "channels_agree": true,
+    "api_size": 13560004,
+    "tip_of_that_ref": "f9ddab9b86056126734192ce001ffbadbe6bb29f",
+    "self_heal": [],
+    "lines": 91402
+   }
+  ],
+  "local_ledger_bytes": 13566228,
+  "local_ledger_blob": "62e3a743a4274221749eb9c2a98d8eea9da35391",
+  "remote_ledger_blob": "4261ec20a8a9b40c68c29e075e0b116d6f0e7367",
+  "byte_identical": false,
+  "local_lines": 91446,
+  "remote_lines": 91402,
+  "first_differing_line": 16591,
+  "which_side_is_ahead": "local"
+ },
+ "part_B": {
+  "g4": {
+   "branch": "refs/heads/review/1d64acf5-ord0296-g4-floor-r7",
+   "head": "89a0a27e0ece435dd8d40df15aa3bd89bad997c8",
+   "server_readback": "89a0a27e0ece435dd8d40df15aa3bd89bad997c8",
+   "carried_from": "c23cb0a302c42ab2dc832743441b3d7da7461308",
+   "blobs_carried": {
+    "backend/tests/test_qoder_ord0296_write_deadline.py": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r5.json": "fd68c01a2ed8f6e217df0af903a62ff65b547f86"
+   },
+   "preimage_check": {
+    "backend/tests/test_qoder_ord0296_write_deadline.py": {
+     "tip_blob": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "expected_preimage": "d3e21e9084a3589678d08f7b50afe5119b2b85b8",
+     "unchanged": true,
+     "already_my_cell": false
+    }
+   },
+   "commits_on_tip": 1,
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "review/1d64acf5-g4-single-source-shape/g4_single_source_shape_r5.json"
+   ],
+   "foreign_paths": [],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "fa2b24a364d567069f2f2d72a6b17c6ce595499c",
+    "conflict_names": 0
+   },
+   "node_on_the_newest_base": {
+    "label": "g4",
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 2.30s"
+   }
+  },
+  "d76": {
+   "branch": "refs/heads/review/1d64acf5-ord0476-response-set-r7",
+   "head": "3c9f4df6edb2ffeed609087bed87a5372ca4529b",
+   "server_readback": "3c9f4df6edb2ffeed609087bed87a5372ca4529b",
+   "carried_from": "c3293da4c11cc9fa783c38818f22895febda7c49",
+   "blobs_carried": {
+    "backend/tests/test_qoder_ord0476_checkins.py": "534b673b749adfd7548066cca770e0c52d105306"
+   },
+   "preimage_check": {
+    "backend/tests/test_qoder_ord0476_checkins.py": {
+     "tip_blob": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "expected_preimage": "853e9a67a7c33f4ac33b36dc49f53fd806265442",
+     "unchanged": true,
+     "already_my_cell": false
+    }
+   },
+   "commits_on_tip": 1,
+   "chain_root_is_tip": true,
+   "own_paths": [
+    "backend/tests/test_qoder_ord0476_checkins.py"
+   ],
+   "foreign_paths": [],
+   "merge_tree": {
+    "rc": 0,
+    "tree": "ab69f17f7178f6d52b5a3d09036be51566457d3b",
+    "conflict_names": 0
+   },
+   "node_on_the_newest_base": {
+    "label": "d76",
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 2.10s"
+   }
+  }
+ }
+}
