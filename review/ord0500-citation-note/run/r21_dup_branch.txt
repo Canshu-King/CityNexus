@@ -1,0 +1,6 @@
+{
+  "would_post": false,
+  "reason": "ALREADY_SENT_TODAY",
+  "marker": "D:/moodle/_qoder_phone_ord0485_20260930\\run\\citation_ownership_note_2026-10-04.sent",
+  "message_id": "m_6ba7e482cf8f"
+}

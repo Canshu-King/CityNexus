@@ -1,0 +1,26 @@
+{
+  "schema": "CNX_ORD0500_NOTE_BRANCHES_V1",
+  "took_local": "2026-10-04T14:25:29.781430+08:00",
+  "why": "the block and the bus post claimed both refusal branches had been run; only the duplicate-day branch had been. this receipt measures the second one.",
+  "duplicate_branch": {
+    "answer": "ALREADY_SENT_TODAY",
+    "message_id": "m_6ba7e482cf8f",
+    "marker_held": "D:/moodle/_qoder_phone_ord0485_20260930\\run\\citation_ownership_note_2026-10-04.sent"
+  },
+  "empty_branch": {
+    "answer": "EMPTY_DECLINED_LIST",
+    "audit": "citation_audit_r99.json",
+    "declined": 0,
+    "fed_by": "NOTE_AUDIT_DIR pointing at scratch_note_r21 (an arm added to the tool for exactly this measurement)",
+    "posted_anything": false,
+    "tree": "/scratch only; evidence/ untouched"
+  },
+  "bus_notes_today": 1,
+  "note_ids": [
+    "m_6ba7e482cf8f"
+  ],
+  "regression": {
+    "real_dir_run_after_patch": true,
+    "no_second_post": true
+  }
+}

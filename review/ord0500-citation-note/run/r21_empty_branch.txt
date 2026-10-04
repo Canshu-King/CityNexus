@@ -1,0 +1,7 @@
+{
+  "would_post": false,
+  "reason": "EMPTY_DECLINED_LIST",
+  "audit": "citation_audit_r99.json",
+  "declined": 0,
+  "day": "2026-10-04"
+}

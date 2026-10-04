@@ -1,0 +1,8 @@
+committed_path arm: ON ref=refs/remotes/origin/mirror/integration-frontend-apple-pass1 paths=10455 | ok
+version Q43_r7 | input D:/moodle/_qoder_phone_ord0485_20260930/run/r21_reply_block_composed.md 7523 B
+claims checked 13 | exempt {"DIMENSION": 10, "PORT": 1} | overall Q43_GATE_RED | findings 4 ['NUMBER_WITHOUT_COORDINATE']
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1856 | no class matched
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 12 Ìõ | no class matched
+  line 20 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 04.s | no class matched
+  line 21 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 12 Ìõ | no class matched
+PRECHECK=RED fix the flagged lines by ADDING a same-line coordinate (a 40-hex that git cat-file -t resolves, or path:line inside the authoritative tree, or a unit-bearing form like 1203 B / :4921 / http_status=200). Do not delete the number, do not ask for a bypass.
