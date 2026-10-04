@@ -1918,7 +1918,7 @@ export function V8Experience() {
           {renderPanels(routePanels, routeScope)}
         </div>
       </main>
-      <CopilotDock data={data} onNavigate={navigate} />
+      <CopilotDock data={data} onNavigate={navigate} onJourneyUpdated={() => load(data.journey.id)} />
       {/* ORD-0382: the run is no longer owned by whichever surface started it.  This strip is what the
           traveller still sees after closing the sheet -- same seconds, same step words, and the same
           two doors the reference product names (查看会话 / 继续生成). */}

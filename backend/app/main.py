@@ -20,7 +20,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import delete, func, insert, select, update
+from sqlalchemy import and_, delete, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -2262,6 +2262,43 @@ def approve_agent_action(
         step_up_code=payload.step_up_code if payload else None,
         actor_id=journey.traveler_id,
     )
+
+
+@app.get("/api/v1/journeys/{journey_id}/missions/pending")
+def pending_journey_missions(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Read durable questions and unfinished clarification children after a reload."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    missions = session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+            or_(
+                JourneyMission.status.in_(("WAITING_FOR_USER", "RUNNING")),
+                and_(
+                    JourneyMission.parent_mission_id.is_not(None),
+                    JourneyMission.status.in_(("CREATED", "DEGRADED")),
+                ),
+            ),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(20)
+    ).all()
+    items = []
+    for mission in missions:
+        latest_run = session.scalar(
+            select(AgentRun)
+            .where(AgentRun.mission_id == mission.id)
+            .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
+        )
+        items.append({
+            "mission": mission_payload(mission),
+            "run": persisted_agent_run_payload(session, latest_run) if latest_run else None,
+        })
+    return {"journey_id": journey.id, "items": items}
 
 
 @app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/clarification")

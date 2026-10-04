@@ -173,6 +173,31 @@ export interface AgentMission {
   completed_at: string | null;
   failure_reason: string | null;
   mission_plan?: AgentMissionPlan;
+  parent_mission_id?: string | null;
+  clarification?: JourneyClarification;
+}
+
+export interface JourneyClarification {
+  clarification_id?: string;
+  question?: string;
+  option_keys?: string[];
+  option_to_strategy?: Record<string, string>;
+  preference_dimension?: string;
+  decision_epoch?: string;
+}
+
+export interface PendingJourneyMission {
+  mission: AgentMission;
+  run: AgentRun | null;
+}
+
+export interface ClarificationAnswerResponse {
+  parent_mission: AgentMission;
+  child_mission: AgentMission;
+  strategy: string;
+  scope: "THIS_JOURNEY" | "REMEMBER_FOR_FUTURE_TRIPS";
+  active_plan_unchanged: boolean;
+  resume: { required: boolean; mission_id: string };
 }
 
 export interface GuardianRun {
@@ -1001,6 +1026,32 @@ export const cityNexusApi = {
     return requestJson<AgentRun>(
       "/journeys/" + journeyId + "/agent/runs/" + runId,
     );
+  },
+
+  getPendingJourneyMissions(journeyId: string): Promise<{
+    journey_id: string;
+    items: PendingJourneyMission[];
+  }> {
+    return requestJson("/journeys/" + journeyId + "/missions/pending");
+  },
+
+  answerJourneyClarification(
+    journeyId: string,
+    missionId: string,
+    clarificationId: string,
+    optionKey: string,
+  ): Promise<ClarificationAnswerResponse> {
+    return requestJson("/journeys/" + journeyId + "/missions/" + missionId + "/clarification", {
+      method: "POST",
+      body: JSON.stringify({ clarification_id: clarificationId, option_key: optionKey, scope: "THIS_JOURNEY" }),
+    });
+  },
+
+  resumeJourneyMission(journeyId: string, missionId: string): Promise<{
+    mission: AgentMission;
+    run: AgentRun;
+  }> {
+    return requestJson("/journeys/" + journeyId + "/missions/" + missionId + "/resume", { method: "POST" });
   },
 
   putGuardianMission(

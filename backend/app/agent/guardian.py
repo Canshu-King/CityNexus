@@ -935,9 +935,10 @@ def run_preemptive_guardian(
     completed = _now().isoformat()
     run.active_plan_after_id = journey.active_plan_version_id
     run.evidence_json = _json(evidence)
-    run.status = "COMPLETED"
+    run.status, agent.status = _guardian_terminal_status(
+        action_status=run.action_status, agent_status=agent.status
+    )
     run.completed_at = completed
-    agent.status = "COMPLETED"
     agent.outcome = run.action_status
     agent.completed_at = completed
     run.reasoning_summary = (
