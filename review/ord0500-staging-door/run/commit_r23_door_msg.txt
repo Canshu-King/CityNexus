@@ -1,0 +1,20 @@
+ORD-0500 phone lane: the staging door re-measured on the rebuilt line, and it now names what it removed
+
+The commander rejected the previous cut (its base predated the re-rooted line, so two files that belong
+to lane 45d25bfb appeared inside my own diff) and asked for the arms to be re-run on the new generation.
+This ref is that re-run, plus one defect it exposed in my own instrument.
+
+  - both proofs re-executed against the line as it now stands (live tip recorded in
+    evidence/stage_door_r20.json): the real staging tool forced red exits non-zero with the tree put back
+    (8 written back), the control run exits 0 with staging_door GREEN and its 9 written paths restored;
+    the mutant driver's four mutants bit and both controls stayed green (evidence/stage_door_r20_mutants.json).
+  - the refusal run removed one file this time and the sheet could only say "1 removed". A count with no
+    inventory is the exact shape this lane has been told to stop publishing, so restore() now returns
+    removed_paths as well: the new sheet names receipts/citation_audit_r21.json as the file taken away --
+    a receipt the glob-copies had created that the pre-write snapshot never saw.
+  - the M4 arm (create a file the snapshot never saw, then go red) is what that inventory had to be
+    correct about: stray_before true, stray_after false, tree byte-identical to its own snapshot.
+
+Scope: zero product paths; tools and receipts only, all under review/ord0500-staging-door/. The previous
+cut refs/heads/review/0afdb49b-ord0500-staging-door-r2 keeps its head exactly as it was -- no
+force-push, no deletion, nothing pulled out from under a reviewer mid-recut.
