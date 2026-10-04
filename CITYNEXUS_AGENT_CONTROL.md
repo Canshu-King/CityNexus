@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0567 中文臂屏读 · 车道 82f55d8a：九屏全读完了（真浏览器、390 宽、day33 那一代），交 1 条确定缺陷＋3 条待裁候选，并自报我这把自动尺的一处盲点 @14:22+08
+
+**〇、现场与身份。** 权威尖现读＝`0413e55634e9c6953ea88a4b01a17b8afd7ac88a`；手机链静态口 `:4783` 现读入口逐字 `/assets/index-BcQ9VAso.js`（day33 那一代，号令者 10-04d 那块记的换代）。屏读全部走你给的这个入口，行程身份用壳自己那扇门：`GET /api/v1/journeys` 回 `http_status=200`、3 条行程，取第一条（标题逐字「北京 · journey」），把它写进 `localStorage` 的 `citynexus.v8.journey_id`——**不点任何会写库的按钮**。只读证明：`_preview.db` 与那七枚 `D:/moodle/_qoder_cmdr_priv_day*.db` 在我这一趟前后字节数与 mtime 都没动（前值逐枚在 `sweep_r3.log` 上方那六行里，后值同命令复跑一致）。
+
+**一、先交一条我自己踩到的假分母（这一条对别的车道也有用）。** 我第一趟（`zh_sweep_r1.mjs`）不带行程身份直接跑九条深链：九屏 `painted_leaves` 全是 24、九张截图字节数全是 34,756 B（代次 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`，逐枚 `dir` 可回读） —— 因为壳没有 `citynexus.v8.journey_id` 会把每条深链都弹回向导屏「新建行程」。⇒ 那一趟等于把同一屏读了九遍。它留在 `sweep_zh.json` 与 `zh_*.png` 里当反例，**不当读数**。第二趟（`zh_sweep_r2.mjs`／`zh_sweep_r3_full.mjs`）先取身份再走九屏，九屏叶子数变成 20/32/18/17/85/33/29/40/32（互不相同）才算分母成立。
+- 同一趟还抓到我这把尺的一处**盲点**：九屏上有一句「这台服务器报了一个本屏说不出人话的动作：plans.generated。」，我的枚举判据只认 `[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+`（大写带下划线），小写点分的服务端 token 完全不在分子里 ⇒ 自动扫描九屏命中数报零，而人眼读出来有一条。这条具名记在我账上：`NOT_CAUGHT_BY_MY_RULER`。
+
+**二、确定缺陷 1 条（中文臂、用户能读到）。**
+- 路由：`/v8/trash`（Recycle bin）。逐字读到：「回收站是空的：这台服务器没有报出任何在站里的行程。」
+- 出处：`frontend/src/features/trash/journeyTrashCopy.ts:74`，键 `trash.empty`。
+- 判为缺陷的理由：**同一屏的同一状态有两种名字**。同屏上一行副标题逐字是「这台服务器说还在回收站里的行程。」（`frontend/src/features/trash/journeyTrashCopy.ts:72`），行内状态标签逐字是「在回收站里」（`frontend/src/features/trash/journeyTrashCopy.ts:76`）；到空态这句就缩成「在站里」。中文里「在站」默认读作"车站/站点"，不是"回收站"的省略，用户要猜。同族缩写还有第二枚：`frontend/src/features/trash/journeyTrashCopy.ts:77` 的「服务器没有给出这一行的在站状态」（这一枚本轮没上屏，因为回收站是空的、没有行）。
+- 证据：截图 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/r3_zh_trash.png`（我自己看过图，不是只读文本），逐字文本在 `sweep_zh_r3_full.json` 的 `screens.trash.first_leaves`。
+- 修法（等你点头我就交候选）：把 `trash.empty` 改成「回收站是空的：这台服务器没有报出任何在回收站里的行程。」，`trash.rowStateMissing` 改成「服务器没有给出这一行的回收站状态」。改动只落在这两枚字符串；我这手会同时复跑我自己那支回收站判据（`frontend/e2e/qoder-82f55d8a-ord0535-trash-refusals.spec.ts` 断言空态句与"没答上"句不同、且后者不含「空的」——两句都仍成立），并逐枚贴改前改后屏读。
+
+**三、待裁候选 3 条（我不自判为缺陷，逐条给逐字与理由）。**
+1. `/v8/access`：「这台服务器报了一个本屏说不出人话的动作：plans.generated。」（模板在 `frontend/src/features/access/accessCopy.ts:342` 的 `access.actionUnknown`，token 来自 `backend/app/services.py:2019` 的 `action="plans.generated"`）。**与 hub 那枚不同**：这句自己声明了"本屏说不出人话"再贴原词，属于 labelled-raw 那一支的用法；要不要给人话括注（像 ORD-0568 对 `RUNTIME_CAPTURE` 那样"枚举加人话括注"），归你裁。
+2. `/v8/access`：「签名用的是这条行程自己的 traveler_id。这一步不鉴权：服务器记下这台设备说了什么，不查是谁在敲。」——契约字段名直陈在中文句里。若按"字段名可直陈"的既有裁语（P0 那条形制）它就不算缺陷，我列出来只为别让它漏在册。
+3. `/v8/intelligence`：「这个服务自己直连模型商的那条环」——疑似把 "loop" 直译成"环"，中文读不顺；同屏英文臂逐字是 "this service's own loop straight to the model provider"。要判就得两臂同看，我不单臂定。
+- 已按你的名单排除、不重复报：`stay` 与 `authoritative` 两屏你已亲测干净；`北京 · journey` 这类标题你 10-04d 已裁成"存库历史数据不是渲染缺陷"；英文臂 `stay.capturedReplay` 已归 cff87c64 的 ORD-0563。
+
+**四、九屏读数总表（每屏：被绘叶子数／去重后文本数／人眼判定）。** stay 20/20 干净；import 32/31 干净（「0 字」「2026-09-22」都是事实量，不是占位符）；footprints 18/17 干净（「这次行程共有 0 枚足迹。」里「枚」当足迹量词读着别扭，但全项目用「枚」成惯例，不算缺陷，记一句备查）；trash 17/16 缺陷（出处 `frontend/src/features/trash/journeyTrashCopy.ts:74`）；access 85/81 候选两条（模板 `frontend/src/features/access/accessCopy.ts:342` 与同屏字段名那句）；agent 33/32 干净；studio 29/26 干净；intelligence 40/38 候选一条（代次 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 上中英两臂各读一遍）；twin 32/32 干净。九屏页面异常计数全为零（`page_errors` 逐屏为空数组）。
+- 重叠判据本轮命中数为零：我把阈值定在同一 `data-testid` 之下两行文字遮挡面积超过一半才算（r1 那趟在向导屏上报过 5 组，其中「目的地」与「下一步」重叠 81%，但那屏是弹回屏、不在你给的九屏分母里，我不拿它冒充这九屏的结论）。
+
+**没改善 / 这轮没做的**
+1. 我没改任何产品字：这一手是屏读，改动集为空，所以「在站里」那两枚字符串现在仍在尖上、用户仍读得到。修法在第二节里，等你一句我就交候选。
+2. 我这把尺的小写点分枚举盲点还没修（第一节末条）；要修我就顺手把「`{...}` 未替换」「半截句」两条判据一起补一次自测——现在的自测只证明它们对已知坏样本会红，还没对已知好样本证明不叫。
+3. 九屏是"未滚动首屏"读数（390 px 宽 × 844 px 高视口内被绘层），滚动区里的文字没进分母；access 那屏 85 枚叶子已经很长，下面可能还有内容，具名 `NOT_REACHED_BY_82f55d8a`。
+4. 后端 pytest 执行条数为零（本手产品字节零处改动），具名 `NOT_EXECUTED_BY_82f55d8a`；真机仍 `NOT-RUN`（我读的是局域网静态口，不是平板自己那台浏览器）。
+5. 我名下待落地仍是那一枝：`refs/heads/review/82f55d8a-journeytrash-name-anchors-r1` 头 `abd876c29b2bb49256c3bcf9612246c5be354391`（r10＋r11），你 03:2x 那块之后我没再推第二趟。
+
+**现场与红线**：本轮 push 次数为零（只读屏，没改码）；权威线 0 次移动；共享门 `:8000` `:4781` `:4782` `:8693` 连接数各为零（我走的是 `:4783` 静态口与它自己的代理，api 落在 `:4787`）；`_preview.db` 的写入与 `ALTER` 归零，前后指纹见第〇节；demo/reset 0 次；凭据一字未动，basic-auth 与任何 API key 0 读 0 印；我这台私有栈本轮没起监听；额度没墙。件全在 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/`（扫描脚本三支、读数件两枚、截图二十七枚（三趟各九屏），逐枚字节在 `sweep_zh_r3_full.json` 同目录可 `dir` 回读）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0504 单 B r2（0 产品字节）· 裁语③：把量纲与假零那两笔在**落地后的那一代**重跑一遍，前后两代只差一枚文件；刷新只动时间戳（车道 da46954a）
 
 **〇、令与原话**
