@@ -5,7 +5,7 @@
 - Taskbook: `Revolution R26 — Decision-Critical Clarification`
 - Taskbook blob: `c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0`
 - Base SHA: `3a39abefd9dc86bce71de790bd855f83265e969c`
-- Final code SHA: `a033b63dbb251fa0874bd8b4cacf6ab589fcd5cc`
+- Final code SHA: `761670f24ff29fbd40293a233b8ab0ce16575d1e`
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`
@@ -97,7 +97,7 @@ runtime-failure regressions: 3 passed, 1 warning
 Qoder gates: 13 passed, 1 warning
 frontend typecheck: passed
 frontend production build: passed (Vite chunk-size warning only)
-remote HEAD: a033b63dbb251fa0874bd8b4cacf6ab589fcd5cc
+remote HEAD: 761670f24ff29fbd40293a233b8ab0ce16575d1e
 ```
 
 ## Focused verification
@@ -113,6 +113,27 @@ The focused tests cover: true resource-conflict sensitivity, rejection of a non-
 ## Remaining limitation
 
 The live run completed the decision-critical clarification, child mission, DEFER decision, and normal Journey execution. The current provider chain showed bounded model timeouts and fallback behavior in the persisted trace; those are recorded as external receipts, not converted to success prose. No claim is made that the provider is latency-perfect.
+
+## Product UI continuation
+
+Commit `761670f24ff29fbd40293a233b8ab0ce16575d1e` makes the persisted
+clarification usable from the actual V8 Copilot surface. The new
+`GET /api/v1/journeys/{journey_id}/missions/pending` endpoint returns only
+server-persisted waiting questions and resumable clarification children. The
+Copilot renders the server-owned question and option keys, defaults the answer
+scope to `THIS_JOURNEY`, submits the answer through the existing clarification
+endpoint, and then resumes the server-created child mission through the normal
+Agent runtime. It never derives a question or option from model prose.
+
+After an answer is accepted, the child mission is retained and can be resumed
+without resubmitting the human answer. A changed Journey epoch is surfaced as
+`CLARIFICATION_STALE_RECOMPUTE_REQUIRED`, and an external model failure is
+shown as unfinished rather than completed. The UI displays
+`MUTATION_EXECUTED`, `NO_ACTION`, approval-pending, and external-failure
+outcomes separately.
+
+This is an interface/state-path closure increment, not a new live Agent
+experiment. The runtime receipts below remain the authority.
 
 ## Behavioral Closure Addendum
 
@@ -214,4 +235,27 @@ clarification whose option is exactly `TAKE_NOW`.
 The same boundary is epoch-bound at runtime: if the active PlanVersion,
 current activity, or server-derived horizon changes after the answer, a later
 TAKE_NOW conclusion is rejected as `CLARIFICATION_STALE_RECOMPUTE_REQUIRED`.
+
+## Current verification after UI continuation
+
+```text
+R20-R26 focused lineage: 52 passed, 1 warning
+R26/R21/Guardian focused runtime tests: 47 passed, 1 warning
+frontend typecheck: passed
+frontend production build: passed (Vite chunk-size warning only)
+python compileall (main.py, guardian.py): passed
+git diff --check: passed
+tracked worktree changes: none
+remote/local HEAD: 761670f24ff29fbd40293a233b8ab0ce16575d1e
+```
+
+## Honest remaining boundary
+
+The persisted TAKE_LATER run is the closure-grade behavioral path: Museum was
+skipped, a fresh live Park→Garden edge was captured, Garden completed, and the
+Journey completed. The TAKE_NOW control also completed, but its later model
+rerun occurred after the current activity had advanced, so its model trace was
+correctly `NO_ACTION`; the human answer and physical execution still produced
+the distinct control history. This report does not claim that the two model
+runs independently re-planned from identical pre-execution state.
 
