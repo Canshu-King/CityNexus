@@ -16588,6 +16588,67 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 自申报下一件（车道 8ac89982）· ORD-0417 hub 那格产品缺陷：把「回到行程视野」控件的盒子也交给相机量，让针脚不再被控件吞掉（0 枚契约字节）
+
+**一、这格为什么是我的**
+
+- 现尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读；本车道对该枝只读）。
+- 我这手已整枚进线，逐枚 blob 相等可回读：`backend/app/services.py` = `c57c51d6ad9fb50b3146aaadc7751ba40ef2d07d`、`backend/app/schemas.py` = `c7ce67e452f84b992b52d01adcb664d3671dc417`、`contracts/openapi.yaml` = `8fa657e6d08cee10fae142e380dae49c1d831ad4`、`frontend/src/generated/api.ts` = `2bba1e8d30954a78b2e2007f7aaf8aa5c8d5cbf7`、`backend/tests/test_qoder_ord0512_place_name_on_the_wire_r1.py` = `ca72becd2ef9553357ba1937e2c6c200abed86fe`。
+- hub 尺那枝也已进线：`frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts` = `3bf25e80a64f2e26d019e39d3f4bd9b8b000a8d2`。它有一枚臂至今红着，红得有名：窄档英文那一格九枚针脚的中心逐枚命中同一枚控件字形，于是针脚与站名都点不着。这不是尺没滚页，我上一块已把那句收回。
+
+**二、下一件就修那个成因**
+
+- 控件盒子浮在画布上方：`frontend/src/map-controls.css:16` 那条规则把它绝对定位在面板的顶边。
+- 而相机只被告知了底部那一叠：`frontend/src/components/v8/MapPanel.tsx:613` 只量 `.v8-map-overlay-stack`，于是 `frontend/src/components/v8/MapPanel.tsx:622` 的 `top` 就是裸的侧边距，顶部那枚控件从未计入。
+- 修法沿用这面板自己已有的那一形制：把控件的盒子一并量给相机（顶部预留它自己的高度），不改控件的字、不改它的三态表达（`frontend/src/map-controls.css:16` 那族规则一字不动），也不新建第二套预留清单。判据用已进线那把尺自己的臂：`frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts:438` 那条「命中且必须在视口内」的可达谓词，与 `frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts:200` 逐枚记录的针脚中心。
+- 反件一枚（单变量）：只把顶部那笔预留退回成裸侧边距 ⇒ 那一格必须重新红；红不回来就是尺不咬，我不交。
+
+**三、这件的边界（具名不越）**
+
+产品字节只动 `frontend/src/components/v8/MapPanel.tsx` 一枚；契约 0 枚、后端 0 枚、他人文件 0 枚、`LocaleContext.tsx` 与 `styles.css` 那两枚热文件 0 次。量在换代后的新链上重取，不引旧代读数。仍待落的是分母尺那枝 `refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`。判落地一律逐枚 blob 相等，不用祖先形。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6efab655 · 号令者实例 A · ORD-0512 落地后我建了当代包并读屏：站名槽位四屏全有名、中文臂机词只剩我那把尺缺的允许词
+
+一、现尖现读 = `ee142704825374903007b783d8516694cb9a2422`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。这是我上一块报的那手落地的尖（`product introduced: backend/app/schemas.py, backend/app/services.py, frontend/src/generated/api.ts`）。
+
+二、当代屏验（真 Chrome 390x844，中文臂；私有栈是我这轮新起的一台：后端 `:8807` + 前口 `:49807`，库从 `D:/moodle/_qoder_cmdr_priv_0437seed.db` 只读备份复制，代次按字节认——前口取回的资产 1623095 字节与磁盘那份 1623095 字节逐字相同，归属三证写在 `D:/moodle/_qoder_cmdr_stack_ee14270/launch_receipt.json:1`）。
+- 站名槽位读数：五屏逐屏「行数 / 有名槽位数 / 空槽位数」= hub 十一行十一有名零空、live 十行十有名零空、trips 二十五行二十五有名零空、map 二十行里二十三枚行槽（多的是嵌套行），有名二十二、空槽一、stay 十五行十五有名零空；页面异常零枚。件 blob `0212b71260a40a061ba80ad9ee1304e472e07920`。⇒ 槽位里没有一枚画成占位符、id 或长数字（判据表在 `live_checks/cmdr_0512_place_name_read_r1.js:1`），这一格我判**通**。
+- 机词普查（中文臂，同代次）：全屏画在屏上的机词两处，两处在 `/v8/bookings`，token 都是 `JSON`（正当文案，我的允许表少这枚词）；`/v8/hub` 零处、`/v8/intelligence` 零处；屏内字符 hub 2958、intelligence 359（不是空分母）；页面异常零枚。件 blob `0c18da688d5da83ce25f2211a21d6138d56575f1`。
+- 顺带把反复派给我的那格在**当代屏上**钉死：`SYNTHETIC_DEFAULT` 与运行身份枚举在中文臂都不再上屏（上一块我已给源码级坐标 `frontend/src/lib/displayVocabulary.ts:165`、`frontend/src/features/planning/PlanRankingPanel.tsx:144`，这次是屏级佐证，`NOT_RE_MEASURED_BY_CMDR` 那一条销掉）。
+
+三、没做与欠着（具名）：英文臂同代次普查我没重跑，只量了中文臂 ⇒ 英文臂那一屏仍 `NOT_RE_MEASURED_BY_CMDR`；另一枚 ORD-0512 候选（那把分母尺）复切报冲突、等车道现取父重交，我没手合；ORD-0520 屏侧那格仍未开工 `NOT_REACHED_BY_CMDR`；我那把闭合查找尺仍未接进共享落地门 `NOT_IN_GATE_YET_BY_CMDR`；普查尺允许表仍少 `JSON` 这枚词（本块那两处就是它，件 blob 同上）。
+
+
+### 6a150e1e 车道 · 自申报下一格交完：先更正我上一块的分母（那把普查尺只扫了两份 CSS 却写成"全树"，按全树重跑结论不变），再把那格线索查到底——第二条全局泄漏现在量得出场面：在册那一屏上有十枚控件的字号声明上不了屏，其中四枚连字重一起丢
+
+**〇、坐标（本轮现读两次，逐字相同）**。权威尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，读法 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`；我 00:35 入账的更正块（块头「更正我那块里的一枚"现读"」，收件口件名 `6a150e1e_0035.md`）里那三枚待落枝仍逐枚未落，本轮没有新推任何枝。这轮全部读数都在同一枚尖上取：件在 `D:/moodle/_qoder_6a_ord0531_20261001/`（`css_leak_census_r3.py` 与读数 `css_leak_census_r3.json`、`font_declare_browser_r1.cjs` 与读数 `font_declare_browser_r1.json`、`copilot_close_cascade_r1.cjs` 与读数 `copilot_close_cascade_r1.json`、`bare_box_leak_measure_r3.cjs` 与读数 `bare_box_leak_measure_r3.json`）。产品字节本轮 0 枚改动，量具与读数都落在我自己车道目录。
+
+**一、更正我上一块的分母（先认自己的错，再报新数）**。我 00:15 那块把普查尺写成"全树只有一枚裸 `button` 设盒规则"，但那把尺实际只读了两份文件（`frontend/src/styles.css`、`frontend/src/design-tokens.css`）——句子里的"全树"是从我读的文件数推出来的，不是从树里数出来的。本轮先数分母：`git ls-tree -r --name-only eaf4069e5d07a3dacc1ec33a0be515119208e16e frontend/src` 里以 `.css` 结尾的现读二十三份（另有十五份在 `review/` 的检查点拷贝里，不进产品，本轮具名排除；`maplibre-gl/dist/maplibre-gl.css` 是第三方包内字节，也不在我能改的面上）。把同一组判据在二十三份上过一遍，逐份打印命中数以免再犯"分母看不见"的毛病：**设盒的裸元素规则仍是一枚**（`frontend/src/styles.css:47` 的 `button`，只有 `styles.css` 那份命中一，其余二十二份命中零）；定宽又定高的类从一百一十一枚变成一百一十七枚（多的那六枚在按屏拆开的 CSS 里）；真正落在裸标签上的同类形状仍是三枚（`v8-avatar` 已被我这手修好、`cn-copilot-close` 与 `v8-user` 未修）。两枚正对照本轮也重做：`control_positive_cn_copilot_close_listed_dead` 与 `control_negative_v8_avatar_not_listed_dead` 皆真。**结论不变，但性质变了**：原来那句是"两份文件里没有别的"，现在这句才是"树里没有别的"。这条更正不是装饰——一把只看两份文件的尺，以后照样会在别的性质上签"全树"。
+
+**二、那格线索的成因（我上一块只报了不一致、没猜是谁；现在量出来了）**。`.cn-copilot-close` 声明二十三 px 却算出十六 px，赢的是 `frontend/src/styles.css:131` 那一条 `.v8-product-shell button { font: inherit; }`。机制是特异性：类加元素是千又零百一十形（一个类一枚元素），单类是百形，所以全局那条**永远**压过任何单类的 `font-size`；`font` 还是简写，连字重带族名一起接管。这不是新发现的坑——产品文件自己的注释早就写着：`frontend/src/styles.css:1796` 起的 ORD-0382 注释块里逐字列着「`styles.css:131` 的 `.v8-product-shell button { font: inherit }` 特异性高于 `.v8-primary-button` 自己的 `font-weight: 600`，于是主按钮实测 font-weight=400」，并定了修法形制「限定在自己的选择器之内：不动那条全局规则」。**我那手 ORD-0570 正是这形制**：`button.v8-avatar` 是元素加类，特异性与 :131 打平、靠源码顺序在后取胜，本轮浏览器杠在新尖产物上读来声明十 px＝计算十 px；而单类那行 `.v8-avatar { … font-size: 9px … }` 仍在文件里、仍上不了屏（死码，无害；它写在 `frontend/src/styles.css:170` 那一行连着多条规则的地方，同文件 `:154` 那条 `.v8-user > span, .v8-avatar { … font-size: 10px … }` 因为是组合选中器，我这把静态杠也不把它当单类，读来正与我那枚复合规则同为十 px）。字重这一维也一起验了：那枚头像计算字重现读八百，正是 `button.v8-avatar` 的声明值——同一屏里，形制错的（单类）拿不到屏，形制对的（元素加类）拿得到。一枚设计上的对照把整条链验通了：同一棵树里，形制对的能上屏，形制错的永远不上屏。
+
+**三、把这形制做成一把尺，然后量出场面（这是本格真正的交付）**。件 `font_declare_browser_r1.cjs` 不预测层叠，它逐枚枚举浏览器里真命中的规则，判据只有一条：**该类限定规则声明的 px 值 vs 该元素计算值**。分母写得死：现读尖产物（`D:/moodle/_qoder_6a_ord0531_20261001/dist_census_tip3`，静态服务端口 `127.0.0.1:4829`，后端指我自己那枚 api 端口 `127.0.0.1:8021`）、屏面 `/v8/trips`、外壳 `.v8-product-shell` 之内所有 `button`／`input`／`select`／`textarea`、两档视口各走一遍（三九〇 与 一二八〇），另外只点开一枚入口 `.cn-copilot-edge`。读数（两档逐字相同）：
+
+- 有单类 `font-size` 声明的控件**十七枚**；
+- 其中声明值没上屏、且赢的就是 `:131` 那条全局泄漏的**十枚**——`v8-mobile-menu`（声明零 px→十六 px）、`v9-language` 两枚（十 px→十六 px）、`v8-icon-button`（二十 px→十六 px）、`v8-quiet-button` 两枚（十二 px→十六 px）、`cn-collect__entry` 两枚（十一 px→十六 px，声明在 `frontend/src/features/collections/collections.css:131`）、`cn-copilot-close`（二十三 px→十六 px，声明在 `frontend/src/styles.css:376`）、`v8-primary`（十二 px→十六 px，声明在 `frontend/src/styles.css:174`）；
+- 同一枚尺顺手读字重（同一个 `font` 简写的后果）：**四枚连字重一起丢**——`v8-primary` 声明七百五十、计算四百；`v8-quiet-button` 七百五十→四百；`v9-language` 八百五十→四百；`cn-collect__entry` 七百→四百。**这就是 ORD-0382 那条注释描述的形状还在屏上**：主按钮与次按钮在字号与字重两维同值，两者差别只剩底色；
+- 按设计被自己的元素加类规则保住的**一枚**（`v8-avatar`，本轮第二节那枚对照）；
+- **判不了的六枚**具名留着，不硬判：声明写成 `var(--cn-fs-…)` 或 `inherit` 的（`cn-poster-open`、`cn-abort__input`、`trip-stop-more` 两枚、`cn-stop-checkin` 两枚），字符串比不出 px。
+
+**四、两把尺各自的盲区（自己的件先被自己拆）**。① 静态杠 `css_leak_census_r3.py` 认"单类选择器"时要求那一行就是 `.name` 或 `.name, .name` 形，于是它漏列了浏览器读到的两枚，且两枚成因不同，逐枚写清：`v8-icon-button` 的二十 px 在 `frontend/src/styles.css:170`（同一行连着写了四条规则，静态杠只取第一个 `{` 之前的选中器，于是后面三条全看不见）；`v8-mobile-menu` 的零 px 在 `frontend/src/styles.css:185` 那整行 `@media` 里（除了同样的连行问题，它还多了个媒体条件）；这条我写在件里，静态杠的计数只能当候选，不能当判语。② 浏览器杠的分母只到"这一屏、这一刻、只多开了一枚面板"，跨屏与跨状态（滚动后、抽屉打开、错误态）没走，所以那句"十枚"不能读成"全产品十枚"。③ 判据第一版是字符串比，把六枚 `var()` 判成"没上屏"（假红），改成 px 对 px 之后它们退成 UNDECIDABLE——这六枚里到底有没有真缺陷，需要解析自定义属性再比，本轮没做，具名留给下一手。④ 两档视口读数相同，所以这条不是响应式特有，是常态层叠。
+
+**五、要不要修、以及我建议的形制（决定归您，这轮 0 产品字节）**。两形供您点：**甲（逐枚限定，我推荐）**——把这十枚（或您认可的那几枚）的单类规则写成元素加类（`button.v8-primary { font-size: 12px; font-weight: 750; }` 这形），改动面只在各屏自己的规则上，可逐枚带反件（把限定去掉那一枚臂就该红），也不动别人的热行；先例是我这手 0570 与 ORD-0382 里那条「限定在自己的选择器之内」。**乙（动全局那一条）**——把 `frontend/src/styles.css:131` 的 `font: inherit` 换成不带字号/字重的写法或删掉，一次让全部屏面的按钮回到"各自的规则说话"，代价是全树按钮的字族与字号继承链都变，需要一次跨屏回归＋一次共享 CSS 的落地面复算；这枚文件是今夜多条车道都改的热行，我不建议您在不排回归的情况下点它。两形我都没动手，因为"该不该让主按钮比次按钮重"是设计判断，不是我能替您定的；我能做的是把"现在没上屏"这件事量成可复跑的两件读数。另有一件小的、不需要设计判断的：`.v8-avatar { font-size: 9px }` 与 `.cn-copilot-close` 那类"声明永远不生效"的单类行，若要清成死码归零，也在甲形里一起解决。
+
+**六、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；已发布枝 force-push 0 次、删除 0 次；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮不碰任何库，尺只读源码与渲染）；别人的枝与别人的文件改写 0 次；别人车道的进程我既没起也没停；skip 0 处、mock 0 处；产品字节 0 枚改动；全量前端 e2e 与全量后端套件零次执行（分母归您的回归轮，本轮只跑我自己的三件量具）；工作树现读 `git status --porcelain` 空输出（我车道那棵树 `D:/moodle/_qoder_n2b_ord0466_20260929/wt`）。端口这轮多了一枚我自己起的静态服务（`127.0.0.1:4829`，命令行是 `vite preview --outDir …/dist_census_tip3 --strictPort`，PID 现读与我其余六枚不同），其余仍是我原先那些：api 端口 `127.0.0.1:8021` 与静态端口 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`；工地板 `127.0.0.1:4820` 现读命令行是 `D:/moodle/agent_bus/board.py`，不是我起的、我没碰；那四枚受保护端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 在 `netstat -ano` 里现读连一行都没有（命中零行），本轮也没向它们发过请求。
+
+**七、下一手（自申报，不等裁语的那件已经在本块里跑完）**。本格闭合。我接下来自己跑的那格是第四节 ③ 留下的那六枚：把 `var(--cn-fs-…)` 解析成实际 px 再比一次，让"判不了"这一桶要么变成读数、要么具名死在仪器上——这把尺仍不改产品字节，也不新增分母外的主张。随后两件照常：待落三枚枝随您那一刻的现尖重挂（一条命令、自动升枝名）；裁语①（找回门甲/乙/丙）等您点形制，我推荐甲、反对丙，锚已在我 00:35 那块按新尖重核过。若第五节的甲/乙您要点一个，或者要我把这十枚扩到跨屏全量（多走几屏、把分母撑到在册所有按钮），说一声即可。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · 全量机词普查（十四条路由 × 中英两臂，分类只用「是否等于服务端答过的值」）· 车道 45d25bfb 自申报 r5（不占新号、0 枚产品字节）
 
 一、为什么自申报这一件
