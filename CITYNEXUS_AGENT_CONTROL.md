@@ -16588,6 +16588,65 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜自申报那一格做完了：两把常驻判据按现尖重跑（七臂加四臂全绿），而且被解析的三枚源文件里有两枚在两尖之间确实变了——所以这不是"blob 没动所以肯定还绿"的空话；顺带把三枚在飞候选的前影像与上一块反证引的行号逐枚复看（本手产品字节 0 枚、判据字节 0 枚）
+
+**〇、坐标（现读；每枚 40 位都可 `git cat-file`）。**
+
+- 尖：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读逐字 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。我上一块（00:49 入账，回执 `_qoder_ledger_inbox/_processed/82f55d8a_0049.md.inserted_005429`）写时它是另一枚，两小时里线又走了两跳。
+- 我那枝判据候选仍是 `refs/heads/review/82f55d8a-breadcrumb-route-debt-r1` 头 `14ce2c4f10a1ac9631f7e1b2cfff863cf95b0782`，本手没有新提交、没有新推送（push 权威线零次、force-push 零次）。
+
+**一、复验了什么（跑的是判据本身，不是"看起来没变"）。**
+
+- 面包屑路由债尺：`npx playwright test --config playwright.breadcrumb-debt-r1.config.ts` 七臂全绿，第一臂在 `frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts:118`。
+- hub 用词常驻判据：`npx playwright test --config playwright.hubq-r1.config.ts` 四臂全绿，第一臂在 `frontend/e2e/qoder-82f55d8a-hub-quality-vocabulary-r1.spec.ts:100`。
+- 为什么这两句不是套话：这把尺解析的三枚源文件，在两枚尖之间有两枚**逐字节变了**——`frontend/src/app/V8Experience.tsx` 从 `14974f5cbb11d52bed4d3cbbabf6b6b73ed90718` 变成 `e45be179efe713cb8e957640008e1c35347ae335`，`frontend/src/i18n/LocaleContext.tsx` 从 `30edf573f98b966dbe8aafa05a81a635b26d7538` 变成 `20203fee4744513da320387e7923fabbf054d566`；只有 `frontend/src/routes/v8Routes.ts` 没动。⇒ 债表四行、两臂名字、白名单十三行、兜底那枚 hub，是在**换过字的源文件上**重新解析出来的读数，不是沿用上一轮的结论。
+- 方法（别人要复用得知道这是可逆动作）：把现尖的 `frontend/src` 临时签进我这台 worktree、跑尺、跑完立刻 `git checkout HEAD -- frontend/src` 还原；签出前后各数一次 `frontend/src` 下的改动文件数，两次都是零，收尾 `git status` 里除一个早已存在的未跟踪 reports 目录外没有别的条目。
+
+**二、三枚在飞候选的前影像在现尖上仍然是原样（逐枚比 blob，不用祖先形判据）。**
+
+- `frontend/src/features/trash/journeyTrashCopy.ts`：现尖 `b7bd3f66cb4e8e0bb81616c2627df8ce29580da5`，正是我那枚中文措辞候选的父上同一枚；候选要落的是 `101c1bcaef488ec810539601fedc9a55e1166ac3`。
+- `frontend/src/features/trash/journeyTrash.ts`：现尖 `fe2af5c96235883acdcd5c9d6afb89f5bfd2a8ab`，正是名字锚那一枝 r10 的父上同一枚；分支要落的是 `a2c5716de4a16f92f4180c119994ea8e3c8af8b4`。
+- 判据枝：见第一节，它不需要前影像相等——它已经在现尖字节上真跑绿了。
+
+**三、上一块那枚普查反证，引的行号在现尖逐枚复看仍然对得上。**
+
+- `frontend/src/i18n/LocaleContext.tsx:780` 仍是 `"intel.commitment": "COMMITMENT"`，中文栏同键在 `frontend/src/i18n/LocaleContext.tsx:1853` 仍是「承诺」；`frontend/src/i18n/LocaleContext.tsx:241` 仍是 `"studio.noStaySelected": "NO STAY SELECTED"`，`frontend/src/i18n/LocaleContext.tsx:332` 仍是 `"bookings.noStay": "No stay selected"`。
+- 绑定三行在现尖也还是连着三行：`frontend/src/features/intelligence/ControlTowerPanel.tsx:71` 标签、`frontend/src/features/intelligence/ControlTowerPanel.tsx:72` 值、`frontend/src/features/intelligence/ControlTowerPanel.tsx:73` 小字。⇒ 那两枚被普查算成「服务端答的字」的东西，在换过字的两枚源文件上仍然是字典侧的。供给侧那一维（八门、零条答出这串字、没请求 memory 门）是屏读，本轮没重跑，见第五节。
+
+**四、和 a68b0631 那份可派单清单的交集，我只有一处，而且不自造修法。**
+
+- 他那块点名的 `frontend/src/routes/v8Routes.ts:57` 那行注释指着 `docs/DESIGN_CORRECTIONS_REQUIRED.md`。我现读复算：树上 `docs/` 前缀的被跟踪文件共 38 枚，其中没有这一份（按路径整串数，命中零枚）⇒ 他那条计数口径在我这侧成立，不是假阳。
+- 两条修法（补出那份文档 / 把指针改成树上真有的东西）都不该我定：前者要那份契约的作者写，后者要改注释归谁得你点。这格我不领，只把"这处在我文件里、且他量得对"记下来。
+
+**五、没做 / 没改善的**
+
+1. 需要私有栈的两支判据（回收站拒绝态、丢弃序号）本轮零执行——它们要后端端口与一份库，本手按零供给口径只跑了源侧尺。具名 `NOT_EXECUTED_BY_82f55d8a`。
+2. 屏读没重做：第一节是判据复验，不是新一代产物的屏读；现尖有没有换到手机上那一代我这边量不到（换代是你的动作）。具名 `NOT_MEASURED_ON_A_TIP_BUILD_BY_82f55d8a`。
+3. `vite build` 零次、后端 pytest 执行条数为零、`tsc` 两把本轮未重跑（本手零字节，且两把闸都不覆盖 `e2e/`，这条我上一块已具名）。
+4. 顶栏那四屏仍然画着「今天 / Today」；用户可见的那一格还是等你的落地门。
+5. 红线自查：本轮只读 git 对象、只跑不起服务的源侧尺；没起进程、没开端口、没连共享门；`_preview.db` 与那 24 枚 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；额度没墙。
+
+**六、下一手。** 这格是自申报的复验，交完仍具名「无单可领，等派」：三枚在飞件等落、三条待裁英文措辞候选等判、普查那两枚脏候选的反证等一句。不点我我就继续挑这种零供给、不撞热文件、可复算的活，不干等。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` 自申报 · 手上这单已闭、下一件带三个选项与推荐（另附一枚"我这手量不到"的具名格）
+
+**先报现状**（都是这一轮在现尖上现读的，不是抄自己上一块）：现尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。切片六（乙）的两枚产品字节已在线上——`frontend/src/features/poiimport/PoiImportPanel.tsx` 在现尖取到 `4f0c3a54140016b01361ab6dddcc7e6ace760790`，与我那枚落线 blob 逐字相等 = `True`，账本那块现读在第 18225 行。ORD-0556 那枝 `a61d4e7a022d73e0f882de674d51a7036371f9ad` 已交、**还没落**：同一枚字典 `frontend/src/i18n/LocaleContext.tsx` 在现尖是 `20203fee4744513da320387e7923fabbf054d566`、在我枝上是 `260f2755f0353d2742f9aef57900f3f60760a942`（不等），那三行方块大写值在现尖上仍在第 331、679、705 行（现数 3 行还在原样）；块已在账本第 17061 行（整本 93785 行）。落不落、什么时候落由你排，我不催第二遍。
+
+**下一件，三个选项，我推荐甲**
+- **甲｜把同屏还剩的那一枚服务端机词做掉（推荐）**：`frontend/src/features/poiimport/PoiImportPanel.tsx:508` 现在仍是把 `backend/app/poi_import.py` 那族的原始 token 直接 join 上主屏（族里现读 5 枚：`EMPTY_INPUT`、`LINK_ONLY`、`PASSWORD_CODE`、`PASTED_TEXT`、`SCREENSHOT_OR_IMAGE`），容器是 `frontend/src/features/poiimport/PoiImportPanel.tsx:506` 那格。它与乙刚修的**同一形制、同一屏、同一族修法**：词表出人话 + 原 token 进折叠，我这边尺子（切片五/六那两臂屏读与 `poiImportCopy` 的成对键约束）现成，含两枚单变量反件与"改前改后各扫一遍"的分母。估 30 分钟内交，0 后端字节。
+- **乙｜整把尺的总枚数**：`cmdr_machine_speech_sweep_r1.js` 全 14 路由 × 两臂我这边跑不完（我给自己设的那档超时先把它杀了——那行常量在 `review/ord0556/sweep_bookings_caps_r1.py:206`，跑的是同一把尺；vite-dev 每枚路由要一分多钟），要在成品包基座上重跑才能给你那一格总数（`FRONTSRC_BUILD_PREREQ` 形制）。这活能做，但它先要一次构建，且**总数是你那把尺的账，不是我改动的证据**——所以我把它排在甲后面。
+- **丙｜等 ORD-0556 落地后我再复跑一次那两臂读数**（把"改前 5 枚 → 改后 2 枚"在落地代上再钉一遍）。便宜，但不产生新东西；你若只要一个确认，我落线后顺手做，不必单列一单。
+
+**没动的、不代你判的**：`No stay selected` 那格是短句直陈，不属机词类，我没碰；中文臂上那两枚 `JSON` 按你裁的原样留着；`displayVocabulary.ts` 一族我没加（0556 的判源结论：那三枚不在服务端词表里，加族会把"字典自造的大写"错记成"服务端值"）。
+
+**现场**：本车道没留任何在跑的端口与锁，上一手的库副本与日志已按本跑写下的名字清掉；没自派单、没写账本、没碰号令者的端口、没 force-push。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 自申报下一件已做完：证据来源括注那格在像素上读到了（两臂都读），枝已重切到现尖；像素顺带照出一句服务端英文，两端具名、字节没动
 
 一、闭的是我自己具名欠的那格（前一块写着 NOT_REACHED_UI，那块照旧有效，这是补齐件）
