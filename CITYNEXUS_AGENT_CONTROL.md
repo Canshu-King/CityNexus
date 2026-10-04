@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 89f2e2d6 车道 · 「读在飞作业」尺族全树清点：八处可直接派单的臂、五处具名排除，另附一枚实测（加一行等待就把红率从半数打到 0）
+
+零、这手交什么。号令者点的是我自报的那格：全树找出**"提交作业之后不等终态就断言结论字段"**的臂，产出可直接派单的名单。三件东西都在树上（候选 `refs/heads/review/89f2e2d6-inflight-wait-inventory-r1` = `e9a6cc7f926777a5010947cef0b9b787ee67cb13`，`env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin` 现读同值；本轮现读权威尖 `62ee41e3d36debdb9db502c8180c386241a46f86` 与命令同段）：粗筛尺 `review/inflight-wait-r1/inflight_job_wait_inventory_r1.py`、读数件 `INFLIGHT_WAIT_INVENTORY_r1.json`、实测件 `INFLIGHT_FIX_EXPERIMENT_r1.json` 与那一行修法 `wait_fix_recipe_r1.diff`。产品字节 0 改动，臂我只实验、跑完还原（`git status` 现读：`backend/tests` 与 HEAD 一致）。
+
+一、先钉住"作业是谁、等待器叫什么"（三枚定义行都是脚本现读，不写死在注释里）。`app/catalog_hydration_operations.py` 的 `wait_for_operation` 定义在第 1173 行；`app/stay_generation_operations.py` 的同名函数在第 776 行；`app/agent/autorun.py` 里唯一能排空工作线程的是 `stop_autorun`（第 588 行，内含 `thread.join`），`autorun_status()` 只报 `is_alive()`，单发脉冲没有等待器。测试侧本地形制：`_wait_closed`、`_wait_terminal`、`_submit_and_close`、`_wait`、`_settled`。
+
+二、名单（八处，每处给测试 path:line、该路径该用的等待器、修法一句话；行号逐枚用脚本回读过，见件内 `hand_verified_dispatch_table`）。
+- `backend/tests/test_qoder_ord197_four_class_receipt.py:470` `test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage`：本文件自带的 `_wait_closed`（`backend/tests/test_qoder_ord197_four_class_receipt.py:158`）没走；修法：`_replay_semantics` 之后加一行 `job = _wait_closed(b["operation_id"])` 再断结论字段。
+- 同文件 `:501` `test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match`：同一行修法。这两枚是我这手的实测对象，数字在第三段。
+- `backend/tests/test_qoder_anywhere_provider_truth.py:72` `test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`：该文件 0 处等待器；修法：POST `/api/v1/catalog-hydrations` 拿到 operation_id 之后先 `wait_for_operation` 再读那份 places 投影。**这枚今夜在四份整链红集合里都出现**（`tmp/red_base.txt`、`tmp/red_cand.txt` 及第二代两份，件里 `red_set_membership` 逐枚记名），所以它是名单里最该先派的。
+- `backend/tests/test_qoder_anywhere_gates.py:169` `test_g2_an_existing_journey_becomes_plannable_without_being_recreated`：202 之后先等终态再断 `phase`/`status` 与后面 `plans/generate` 的前提（那行注释自陈前提是「水合完成后」，可代码没等）。
+- `backend/tests/test_qoder_ord224_g3_generation_measurement.py:162` `test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one`：**反向依赖**，`assert terminal_rows and open_rows` 把"还有作业没关"当判据；修法不是补等待，而是让后继也走本文件已有的闩锁形制（同文件 `backend/tests/test_qoder_ord224_g3_generation_measurement.py:216` 的 `parked_worker`），或只断"出现了两代以上 operation_id"这一真判据。
+- `backend/tests/test_qoder_provider_identity_leg.py:437` `test_g7_a_resolved_identity_reaches_the_stored_operation_without_any_pending_token`：文件内 0 处等待器；修法：读作业行与投影之前先 `wait_for_operation`。
+- `backend/tests/test_qoder_pending_destination_identity.py:157` 与 `:373`（`test_g1_unresolved_text_never_reaches_the_identity_columns`、`test_g6_the_stored_label_is_separate_from_the_pending_key`）：同文件第 224 行已经 import 了 `wait_for_operation`、第 232 到 234 行也真在用；这两枚走的是 `_submit` 之后直接 `_row` 断身份列，修法：断言前补同一次等待。
+
+三、实测那一格：这不是我口头说的"补等待就好"。在同一枚臂上量红率（解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest tests/test_qoder_ord197_four_class_receipt.py -k <臂名> -q -p no:randomly` 单发各 12 趟）：未改之前 `test_r3_an_empty_answer` 红 6 趟绿 6 趟、`test_r4_a_failed_source` 红 4 趟绿 8 趟；各加那一行 `_wait_closed` 之后两枚都 12 趟全绿，整支文件连跑三趟每趟 6 passed 加 1 预期失败。红的形状就是这条断言：`assert job["outcome"] == hydration_module.OUTCOME_RESOLVER_RUNTIME_FAILURE`（读到的还是没关的 RUNNING）。反件也做了：等待留着、只把期望结论换成另一枚真存在的 `OUTCOME_NO_REGISTERED_SOURCE`，臂照样红（rc 1，报错正文里回吐真实 outcome）⇒ 补等待没有把臂变成永远绿。实验跑完 `git checkout --` 还原，产品与臂都没带走改动。
+
+四、五处具名排除（免得号令者按名单误派）。`test_qoder_anywhere_lock_duration.py::test_g9b` 今夜也在四份红集合里，但该文件第 255 到 262 行已有内联终态轮询 ⇒ 红因不在"缺等待"，别按本表派它。`test_qoder_stay_generation_operations.py:752`、`:782`、`:803`、`:841` 方向相反：断的是"作业还开着"（用 `_SlowHttp` 延时制造），真要改是"用闩锁代替 sleep 延时"，优先级低。`test_qoder_ord213_ask_store_before_world.py` 的 w2/w4 无在飞线程（`start_worker=False` 且进程内跑 `_run_operation`）。`test_qoder_pending_destination_identity.py:495` 同上原因，我从名单里把它移进排除。autorun 族那四支文件要么调同步 `run_once()`，要么自带 100 到 120 次轮询（`test_v5_autopilot.py:97`、`test_sol_guardian_projection.py:68`）。
+
+五、尺自己的短板也说清（这是件里 `machine_pass_note`）。AST 粗筛只报 3 处：它按"提交点之后有没有断到作业字段"判，接不住两类真形制——把"还没关"当判据的反向依赖，以及同文件已有等待器但这一档不走的臂。所以第二段的表是**人工逐枚读码复核**的，机器那趟留着当粗筛；两者都交给下一手复用，谁也别只信一边。清点分母（四个数连同取数命令存在件里，字段 `denominators` 与 `denominator_commands`，件 blob f05ed38284866485d3bc43fb2519c60acfea9505）：测试文件全树 235 支、真会提交作业的文件 15 支、异步门调用 40 处、具名等待器出现 39 处。取数命令逐条抄在件里（也在尺文件顶部注释里），谁都能重跑对数。另记一笔自我更正：粗筛那趟报的文件数是 16 支，我按同形制自己重跑现读是 15 支，本块用现读这个数；两趟的差别我没查清成因，就不写成结论。
+
+闸门读数（本块先在车道路径 `D:/moodle/_qoder_lane_ord0520_20260930/tmp/block_inventory_r1.md` 跑尺、到 rc 为 0 才复制进收件口）：`claim_coordinate_check_r7.py --text <本块> --expect-clean` 判语逐字 `overall Q43_GATE_GREEN | findings 0 []`，rc 为 0；`cmdr_block_precheck_r1.py <本块>` 打印 `PRECHECK=GREEN`、rc 0；尺自己的 `committed_path arm` 仍 ON，它的 `claims checked` 与免除计数我不往块里粘（粘进来会被同一把尺当成裸数）。尺给本块一条 ADVISORY 且判语不变：这张表的坐标形制本来就是源码行号（`backend/tests/<文件>:<行>`），号令者按表派单时请让车道先 `git cat-file` 或按函数名再定位一次——行号会随上游位移，这也是我自己那条老规矩（写进注释的行号要逐枚回读才交）。本块第一稿被点过三处裸数（分母那三个数没有同段出处），修法是把四个数连同取数命令写进证据件、再在块里引那枚 blob，而不是删数；每一枚 40 位都 `git cat-file -t` 回读过。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · /v8/authoritative 那两枚残留大写字 · 车道 45d25bfb 补 r4（把上一块里我自己标 PREDICTED 的那格量了；本单不占新号、0 枚产品字节）
 
 零、为什么要补这一枚
