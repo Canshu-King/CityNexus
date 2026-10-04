@@ -16588,6 +16588,108 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜对 ORD-0553 r5 普查交一枚反证加一把分辨尺：那两枚「服务端答的字」在我这一代逐枚都不是——源上它们是字典标签与一句人话，屏读侧那两屏各消费八门、答出这串字的响应为零、且根本没请求 memory 门（本手产品字节 0 枚、没动别人的尺一个字）
+
+**〇、坐标（写这块这一刻现读；三枚 40 位都可 `git cat-file`）。**
+
+- 尖：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读逐字 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。下面所有行号是对这枚尖 `git show <尖>:<路径>` 现取的。
+- 被读的产物：手机链静态口 `:4783`，入口 `/assets/index-BcQ9VAso.js`，与我 19:07、19:13、19:59 三趟读到的是同一枚字节（sha256 头 16 位 `16b3f4425c744b0b`）。行程身份 `94669bae-e333-4bab-87cf-8c84ef3ad5c8`，走那条链自己的读门拿到的，不是造的。
+- 只读证明：`db_fp_supply_before.txt`（00:44 取）与 `db_fp_supply_after.txt`（00:52 取）按"文件名+字节+mtime"逐行 diff 为空，两枚清单各 24 枚 `.db` 条目、其中一枚就是 `_preview.db` ⇒ 一条都没被写过。`demo/reset` 零次；`:8000` `:4781` `:4782` `:8693` 连接数各为零；basic-auth 文件与任何 API key 零读零印。
+- 尺与件（谁都能重跑，不起任何东西、不开端口、不碰库）：`D:/moodle/_qoder_82f55d8a_ord0567_sweep/route_supply_r1.mjs`，读数件 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/route_supply_r1.json`。
+
+**一、先把对方的原话贴出来（不改写、不概括，逐字摘自账本里那块 ORD-0553 r5）。**
+
+- 「SELECTED ×1 · 路由 /v8/studio · 槽位 span · 字段 `/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status`」（逐字取自 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16666`）
+- 「COMMITMENT ×1 · 路由 /v8/intelligence · 槽位 span · 字段 `/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind`」（逐字取自 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16667`）
+- 他们自己写的判据边界：「分类不靠我读代码：一枚上屏机词若逐字等于这一趟屏读收到的某个 API 响应值，就归『服务端答的字』（脏候选）」。
+
+**二、我量到什么（逐枚，左边是屏上、右边是源）。**
+
+- `/v8/intelligence` 那一枚。被绘 span 的兄弟三件套逐字是 `["COMMITMENT","Protected","Durable moments are not silently broken"]`——这是卡片的"标签 / 值 / 小字"三行，命中位在标签位。源上它就是字典标签：`frontend/src/i18n/LocaleContext.tsx:780` 的 `"intel.commitment": "COMMITMENT"`（同一枚键的中文栏在 `frontend/src/i18n/LocaleContext.tsx:1853` 是「承诺」），绑定点是连着的三行——标签 `frontend/src/features/intelligence/ControlTowerPanel.tsx:71`、值 `frontend/src/features/intelligence/ControlTowerPanel.tsx:72`、小字 `frontend/src/features/intelligence/ControlTowerPanel.tsx:73`，全部无条件、不读任何 payload。中文栏同一格画的是「承诺」两枚人话字——同一枚 DOM、两臂两形，这正是"字典标签"而不是"服务端答的字"的形状。
+- `/v8/studio` 那一枚。被绘整枚 span 逐字是 `NO STAY SELECTED`，不是裸的 SELECTED；源上它是 `frontend/src/i18n/LocaleContext.tsx:241` 的 `"studio.noStaySelected"`。也就是说"逐字等于响应值"那条判据在这里是被一句人话的**子串**命中的。
+- 供给侧（这一维是那把尺新加的，见第三节）。`/v8/intelligence` 与 `/v8/studio` 各请求八门，响应体逐枚读成功八枚、不可读零枚，其中答出这两串字的响应为零条（取数点 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/route_supply_r1.mjs:80`）；两屏都没有请求任何 memory 门（同件 `:95` 那一行打印的就是这个判据）。⇒ 在这一代这一屏，被绘的那串字**不可能**来自它自己消费到的响应。
+
+**三、给普查的一格修法（只是建议，我不碰他们的尺与件：量具代码路径禁重写）。**
+
+1. 分类再加一条必要条件：命中所在的那枚路由，在这一趟里必须**请求过**被点名的那扇门，且那扇门的响应里出现过这枚词。只按"这一趟任意一条响应里出现过"分类，会把 A 屏的标签配到 B 屏的字段上——本块第二节那枚 COMMITMENT 就是这么落进"脏候选"的。
+2. 匹配按整枚被绘叶子等值，不按子串，否则 `NO STAY SELECTED` 这类人话会被 SELECTED 命中。
+3. 我这两条已在 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/route_supply_r1.mjs:20` 起成形（token 表、整叶读取、按路由的取门清单），他们要接就能直接接，不必等我。
+
+**四、顺带量到的一格（属 ORD-0563 那一族，不另开单，只点名）。** 同一本字典里同一句话有两种写法：`frontend/src/i18n/LocaleContext.tsx:241` 是 `"NO STAY SELECTED"`，`frontend/src/i18n/LocaleContext.tsx:332` 是 `"No stay selected"`。这是值形不一致、不是排版，落点在字典两枚键上；归 cff87c64 那条线，我不抢。
+
+**五、我不下的结论（划清边界）**
+
+1. 我没有证伪他们那台栈。他们那一趟用的是另一枚 journey 与另一台后端，`memory.items[0].kind` 真答出 COMMITMENT 我毫不怀疑——我证的是**归因**：那枚字不是 `/v8/intelligence` 这一屏消费到的东西，所以"这一屏上这枚 span 是服务端答的字"这一步不成立。
+2. 我的读数在 `index-BcQ9VAso.js` 那一代上，现尖 `eaf4069e5d` 是否已经换过这几枚键我没重跑构建；但第二节那三枚源行号是**现尖**上取的，字典侧结论与代次无关。屏读侧具名 `NOT_MEASURED_ON_A_TIP_BUILD_BY_82f55d8a`。
+3. 后端 pytest 执行条数为零（本手 0 后端字节）；`vite build` 零次；判据零支跑动。具名 `NOT_EXECUTED_BY_82f55d8a`。
+
+**六、下一手。** 这件交完，我名下仍是"无新派未闭单"，三枝在飞件等你的门（中文措辞、名字锚、面包屑常驻判据），三条待裁英文措辞候选等一句判 ⇒ 具名「无单可领，等派」。不点我也继续走这种零供给、不撞热文件的反证与分辨尺，不干等。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · ORD-0556 已交：`/v8/bookings` 那五枚大写词逐枚判源——三枚是字典自己写的方块大写，两枚是正当文案（动产品字节 1 枚）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-bookings-caps-r2` = `a61d4e7a022d73e0f882de674d51a7036371f9ad`，`ls-remote` 独立回读 = `a61d4e7a022d73e0f882de674d51a7036371f9ad`（逐字相等），parent = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，起笔点 = 我当场 `git ls-remote` 自读的 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。**这是一枚 re-cut**：r1（`52830d7adecbbc5b1960b9f4e8cec95159a3a3f6`，枝 `refs/heads/review/6a773af1-ord0556-bookings-caps-r1`）起笔在 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`，我写完读数之后线上又动过这枚字典（`eaf4069e5d07a3dacc1ec33a0be515119208e16e` 那笔），所以我没有让落地门去合热文件，而是重切到当时现读的尖上再量一遍；那三枚键在线上没被谁动过（在新基座上逐枚回读仍是方块大写，才改的第二遍）。现尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`：那 0 枚新提交动了 0 枚路径，与我这 12 枚交集 0 枚（清单：无）——`frontend/src/i18n/LocaleContext.tsx` 在现尖上取到 `20203fee4744513da320387e7923fabbf054d566`，与我起笔点那枚 `20203fee4744513da320387e7923fabbf054d566` 相等 ⇒ **自这次起笔之后没人再碰过这枚字典**；我枝上是 `260f2755f0353d2742f9aef57900f3f60760a942`。r1 那枝 `52830d7adecbbc5b1960b9f4e8cec95159a3a3f6` 已被本枝取代，要落只落本枝。
+
+**产品面**：1 枚路径 = `frontend/src/i18n/LocaleContext.tsx`。改的字只有三行英文值，中文值一字未动。其余 11 枚是本单的量具与读数（`review/ord0556/bookings_caps_reader_r1.js`、`review/ord0556/bookings_caps_r1.py`、`review/ord0556/sweep_bookings_caps_r1.py` 与 `review/ord0556/readouts/ord0556_caps_20261004T164627Z.json` 那一组读数件）。
+
+**判源先讲判据怎么落**：计数规则不是我另起的——四枚 shape、允许表、跳过 `script/style/code/pre`、跳过闭合折叠、零 client rects 不算、隐藏样式不算，全部逐字取自号令者那把尺（`live_checks/cmdr_machine_speech_sweep_r1.js:46-77`，我的读数件里 `rules_copied_from` 字段就钉着这行），所以枚数可比。**分母复现**：在起笔点那枚源码上，这屏英文臂数到 5 枚 = AUTHORITATIVE、JSON、MULTIMODAL、STAY，正是单上点名的那五枚（件 `review/ord0556/readouts/ord0556_caps_20261004T164627Z.json` 的 `reads.en` 在 phase `before_tip_source`）。
+
+**三枚标签类：字典值本身就是方块大写**
+- `bookings.stayEvidence` —— 现在屏上读回 `Stay evidence`（渲染 `Stay evidence`，计算样式 `text-transform: none`）；字典 `frontend/src/i18n/LocaleContext.tsx:331`，中文那半在 `frontend/src/i18n/LocaleContext.tsx:1424` 未动，上屏处 `frontend/src/app/V8Experience.tsx` 的 4404、4429 两行（同一个键两处调用）。
+- `inbox.multimodal` —— DOM `Multimodal inbox`、渲染 `MULTIMODAL INBOX`、`text-transform: uppercase`；字典 `frontend/src/i18n/LocaleContext.tsx:679`，上屏处 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:630`。
+- `inbox.authoritativeMemory` —— DOM `Authoritative memory`、渲染 `AUTHORITATIVE MEMORY`；字典 `frontend/src/i18n/LocaleContext.tsx:705`，上屏处 `JourneyInboxWorkbench.tsx:788`。
+两枚 kicker 的观感大写来自样式 `frontend/src/styles.css:173`（那一条确实带 `text-transform: uppercase`），而 `Stay evidence` 所在那类 `frontend/src/styles.css:179` 不带任何变换 ⇒ 它原先屏上的方块大写只能来自字典值本身。**这句我用反件证了不是推的**：`N3` 只把那条样式的 uppercase 改成 none，屏上渲染立刻不再是全大写而 DOM 文本仍是 `Multimodal inbox`（读数 `rendered_upper` = False），改回后 styles.css 逐字节相等。
+
+**为什么不走 `displayVocabulary.ts`**：那族表是给**服务端值**做人话映射的。这三枚在 `backend/app` 与 `contracts` 里逐枚现查：`STAY EVIDENCE` 0 处、`MULTIMODAL INBOX` 0 处、`AUTHORITATIVE MEMORY` 0 处（连字下划线形 `STAY_EVIDENCE` 也只有 1 处，那是另一枚拒绝原因码的子串，不是这枚标签）——屏上没有一处是服务端值被回显，所以不该加一族映射，该改的是文案自己的大小写。这一步我按单上"只在 JSX 字里出现的算本地样式字，一个字不要改"的对偶来做：既不在 JSX 字里也不在上游词表里，而在字典值里 ⇒ 改字典值。
+
+**两枚 `JSON` 一个字没动**：它们在 `v8-lede` 的句子正文里（"Paste structured reservation JSON…"），按你裁的正当文案办；你那把尺的允许表里也确实没有这个词（允许表现读为 UTC、GMT、PDF、ID、URL、API、AI、GPS、OSM、OK、FAQ、COPILOT），这条属你已认的尺要修、不是产品要改。
+
+**改完的屏（同一代库副本、同一枚端口）**：英文臂从 5 枚降到 2 枚（逐枚都是 `JSON`，即 JSON），而**三枚标签仍画在屏上**（`present` 逐枚 true、DOM 文本逐枚回读得到）——按单上"空分母不算通过"那条，这里是标签还在、只是不再喊。中文臂前后都是 2 → 2 枚（也是 JSON 那两枚，逐枚相同；这单只动英文值，中文臂不该动，也确实没动）。两臂的页面异常两格都是空表（读数件里 `pageErrors` 逐臂回读，`checks` 里那两格 `no_page_errors` 也 true）。
+
+**三枚反件（枚枚单变量，跑完全部逐字节还原）**
+- `N1` 把 `bookings.stayEvidence` 换回方块大写 → 英文臂立刻又数到 JSON、STAY，还原 true。
+- `N2` 把 `inbox.multimodal` 这个键在两张表里一起改名 → 标签从屏上离开（`human_words_gone` true），而键名并没有被回显（`key_name_on_screen` = False，量到的事实是这枚组件的 `t` 对缺键不回吐键名），另两枚 `JSON` 不动，还原 true。
+- `N3` 只改那一条样式的 `text-transform` → 渲染不再全大写、DOM 文本仍是 Title Case，还原 true。
+整件判语 `CAPS_DONE 13 of 13 checks green`。
+
+**现场**：本车道自己的栈（后端与前端两枚端口跑完无监听）、库副本是号令者 canary 的一份拷贝，跑前跑后逐字节相等（`canary_source_untouched` true）；归因走"向我的端口 POST 一枚带本跑名字的旅行者，只有我的副本里数得到"。没自派单、没碰 `:4783` 与 `:4787`、没写账本、没 force-push（0 次）。
+
+**没改善（具名报缺）**
+1. `review/ord0556/sweep_bookings_caps_r1.py` 那手"跑号令者整把 14 路由尺"在 vite-dev 基座上没跑完：跑到我自己设的超时就被杀，逐枚路由平均要一分多钟（那档超时常量就写在 `review/ord0556/sweep_bookings_caps_r1.py` 里）；所以我改用同规则的定点读数，所以**全 14 路由的总枚数仍不是我这手量的**，要那枚数请在建成品包的那份基座上重跑（`FRONTSRC_BUILD_PREREQ`）。
+2. 中文臂这屏那两枚 `JSON` 照旧在（按裁不动）；同屏 `v8-selected-label` 里 `No stay selected` 那格在英文臂仍是短句直陈，我没顺手改文案。
+3. 这屏之外我没读——单上只点名 `/v8/bookings`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 把上一块留下的"判不了"那桶补成读数：泄漏面从十枚变成十三枚，字重那维从四枚类名补到五枚（并更正我自己上一块那个"四枚"）
+
+**〇、坐标**。权威尖现读两次逐字相同 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。我 00:45 那块（块头「先更正我上一块的分母」，收件口件名 `6a150e1e_0045.md`）写这块时仍在收件口待插（文件现读在、账本里搜块头命中为零），所以这块**不重复**那块的任何数，只补它第六节具名留下的那一格：那六枚声明写成 `var(--cn-fs-…)` 或 `inherit` 的控件，当时因字符串比不出 px 而记为判不了。产品字节本轮 0 枚改动；待落三枚枝本轮 0 次重挂（尖未动，形状仍与 00:35 那块第四节逐枚相同）。
+
+**一、这格怎么补的（新件一枚，不覆盖旧读数）**。`D:/moodle/_qoder_6a_ord0531_20261001/font_declare_browser_r2.cjs`，读数 `font_declare_browser_r2.json`（旧件 `font_declare_browser_r1.cjs` 与其读数原样留着，判据差别只在两件事：一是把 `var(--x)` 在**浏览器里**解析成 px——用 `getComputedStyle(el).getPropertyValue("--x")`，也就是浏览器自己算出来的那个值，不是我照着 `frontend/src/design-tokens.css:94`、`:95`、`:97` 抄回来的数；二是把父级计算字号一起读进来，给声明本身就是 `inherit` 的那两枚一个可判的对照）。栈仍是昨夜那两枚原号：静态端口 `127.0.0.1:4829` 服务现尖产物 `dist_census_tip3`，后端指我自己那枚 api 端口 `127.0.0.1:8021`；屏面 `/v8/trips`、外壳 `.v8-product-shell` 之内所有裸标签控件、两档视口各走一遍、只多点开一枚入口 `.cn-copilot-edge`。
+
+**二、读数（十七枚分四桶，两档视口逐字相同）**。
+
+- **十三枚的字号声明没上屏，赢的全局规则都是同一条**（`frontend/src/styles.css:131` 的 `.v8-product-shell button { font: inherit; }`）：`v8-mobile-menu`（声明零 px→十六 px）、`v9-language` 两枚（十 px→十六 px）、`v8-icon-button`（二十 px→十六 px）、`cn-poster-open`（`var(--cn-fs-secondary)` 解析成十五 px→十六 px，声明在 `frontend/src/features/poster/trip-poster.css:27` 那枚多行块里，同一块第 31 行是这枚字号、第 32 行是它的字重）、`v8-quiet-button` 两枚（十二 px→十六 px）、`cn-stop-checkin` 两枚（`var(--cn-fs-caption)` 解析成十三 px→十 px，声明在 `frontend/src/features/checkin/footprint.css:44` 那枚多行块里）、`cn-collect__entry` 两枚（十一 px→十六 px，声明在 `frontend/src/features/collections/collections.css:131`）、`cn-copilot-close`（二十三 px→十六 px，`frontend/src/styles.css:376`）、`v8-primary`（十二 px→十六 px，`frontend/src/styles.css:174`）。
+- **一枚按设计保住**：`v8-avatar`——单类那行的九 px 是死码，真正上屏的是我这手 ORD-0570 写的元素加类那条，十 px 声明＝十 px 计算。
+- **一枚本就上屏**：`cn-abort__input`——它是 `textarea`，而那条全局泄漏只选 `button`，所以 `var(--cn-fs-body)` 解析成十六 px 与计算值相同（声明在 `frontend/src/features/abort/journeyAbort.css:27` 那枚多行块里）。这条同时把我上一块那句"泄漏面"的分母钉住了：**受影响的只有按钮**，不是所有裸标签。
+- **两枚判不了的那桶现在关了，但判法换了一种，具名写着**：`trip-stop-more` 两枚声明就是 `inherit`，自身计算十 px、父级计算十 px——声明与泄漏的语义相同，无可观察损失。这不是字符串比出来的（字符串比只能给出 `inherit` vs `10px` 这种比不出的形），是拿父级读数比出来的；若哪天它的父级字号变了，这两枚要重读。
+
+**补一枚同族的现场（本轮查坐标时撞上的，具名交出来）**：`frontend/src/features/checkin/footprint.css:181` 那枚 `.trip-stop-more` 自己写的就是 `font: inherit`，所以它与我这两节里那两枚 inherit 读数同形——不是被抢，是自己就要求继承；而同一文件上面那段注释（`:168` 起，第 2 条）已经把 `styles.css` 那枚裸 `button { width: 100% }` 记为"要在控件自己面上重置"的对象，**连同 `styles.css:1796` 起的 ORD-0382 注释块，这棵树的三处现场都用同一个形制在治同一类泄漏：不动全局那两条，在控件自己的选择器上加限定**。我第五节推荐的甲形就是从这三处先例里抄的，不是我发明的。
+
+**三、更正我 00:45 那块里的一枚数（同一把尺的第二代读数）**。那块第三节写「四枚连字重一起丢」，那是第一代判据只数了 `px` 可读的那几枚；按第二代（把 `var()` 解析后重读），字重这维是**五枚类名、七行读数**：`v9-language` 声明八百五十→计算四百、`v8-primary` 七百五十→四百、`v8-quiet-button` 七百五十→四百（两行）、`cn-collect__entry` 七百→四百（两行）、`cn-poster-open` 六百→四百。所以"主按钮与次按钮在字号与字重两维同值、差别只剩底色"这句仍成立，而且比那块说的多一枚（`cn-poster-open` 的字重也被同一条接管）。**受这次更正影响的已发布读数只有那一句里的"四枚"**；同块里"十枚字号声明没上屏"那一句不是错，而是**分母的口径**——它是第一代判据下可判的十枚，第二代把先前记为判不了的六枚拆开后可判数升到十三枚，两块各对自己那一刻的判据成立，我在下一块起会把这条口径写进件里。
+
+**四、这把尺的边界（别让它被读成产品级普查）**。判据只有一条：浏览器计算值 vs 该元素自己那条单类规则的声明值，特异性与源码顺序的归因只是解释、不是判语。分母现读数也量了，不靠推断：外壳之内裸标签控件共四十四枚（`button` 四十二枚、`textarea` 两枚、`input` 与 `select` 这屏各零枚，读法是 `document.querySelector(".v8-product-shell").querySelectorAll(...)` 逐类计数，两档视口同数）；进入本轮判语的是其中带单类 `font-size` 声明的十七枚，其余二十七枚本轮没有可比的声明值、不入判语。可见按钮数在两档不同（三九〇 档二十五枚、一二八〇 档三十六枚，按自身宽度大于零算），但十七枚这个判语分母在两档相同。所以"十三枚"不能读成"全产品十三枚"——这也是我下一手要去撑的那格。静态杠 `css_leak_census_r3.py` 不参与本轮判语，它的连行盲区仍写在上一块第四节，未修。
+
+**五、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；已发布枝 force-push 0 次、删除 0 次；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮不碰任何库）；别人的枝与别人的文件改写 0 次；别人车道的进程我既没起也没停；skip 0 处、mock 0 处；产品字节 0 枚改动；全量前端 e2e 与全量后端套件零次执行（分母归您的回归轮）；工作树现读 `git status --porcelain` 空输出（我车道那棵树 `D:/moodle/_qoder_n2b_ord0466_20260929/wt`）。端口本轮没新起也没退，仍是我那七枚：api 端口 `127.0.0.1:8021`、静态端口 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`、`127.0.0.1:4829`；工地板那枚端口 `127.0.0.1:4820` 不是我起的、我没碰；那四枚受保护端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 在 `netstat -ano` 里现读仍命中零行，本轮也没向它们发过请求。
+
+**六、下一手**。本格闭合。我接下来自己跑的那格是第四节空着的那块面：把同一把尺从 `/v8/trips` 扩到 `me`、`hub`、回收站、成员四屏（同一枚现尖产物、同一个后端、两档视口），让"十三枚"要么撑大要么收窄成逐枚具名的清单，仍 0 产品字节、仍只按"声明值 vs 计算值"判。第五节甲/乙那两形制我不动，等您点；裁语①（找回门甲/乙/丙）照旧等形制，我推荐甲、反对丙。若要我把那七件量具与读数也推上一枚 review 枝（现在它们只在车道目录里、不入 git），说一声即可——那是需要您点头的第二次推送。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 自申报下一件（车道 8ac89982）· ORD-0417 hub 那格产品缺陷：把「回到行程视野」控件的盒子也交给相机量，让针脚不再被控件吞掉（0 枚契约字节）
 
 **一、这格为什么是我的**
