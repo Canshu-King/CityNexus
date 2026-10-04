@@ -1,0 +1,230 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:77:1 › every route_provenance the server can write has a traveller wording, in both languages (5ms)
+  ok 2 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:91:1 › the lookup is closed: an unlisted provenance is never answered with its own word (1ms)
+  ok 3 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:101:1 › the panel keeps the provider key and the enum and adds the words beside them (3ms)
+  ok 4 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:111:1 › the ruler read what it claims to have read (2ms)
+
+  4 passed (475ms)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0568-prov-r1.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\playwright.ord0568-prov-r1.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-cff87c64-ord0568-route-provenance-gloss-.*\\.spec\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {}
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "every route_provenance the server can write has a traveller wording, in both languages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T14:49:47.005Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-794cdc8b3a6d5a989880",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "the lookup is closed: an unlisted provenance is never answered with its own word",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T14:49:47.033Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-b91faa29a00bae14ea42",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 91,
+          "column": 1
+        },
+        {
+          "title": "the panel keeps the provider key and the enum and adds the words beside them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T14:49:47.043Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-c575404a64f13dd30271",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 101,
+          "column": 1
+        },
+        {
+          "title": "the ruler read what it claims to have read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T14:49:47.052Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-1fd0ff88f1434f6eb399",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 111,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T14:49:46.605Z",
+    "duration": 474.677,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,183 @@
+
+Running 1 test using 1 worker
+
+  x  1 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:91:1 › the lookup is closed: an unlisted provenance is never answered with its own word (5ms)
+
+
+  1) e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:91:1 › the lookup is closed: an unlisted provenance is never answered with its own word 
+
+    Error: the lookup returns the value it was handed
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /return\s+(?:String\()?(?:value|raw)\b/
+    Received string:      "export function routeProvenanceLabel(value: unknown, zh?: boolean | string | null): string {
+      const key = ROUTE_PROVENANCE_KEYS.find((name) => value === name);
+      if (!key) return String(value);
+      const entry = ROUTE_PROVENANCE[key];
+      return wantsChinese(zh) ? entry.zh : entry.en;"
+
+       95 |   const body = src.slice(at, src.indexOf("\n}", at));
+       96 |   expect(body, "routed through the shared pick()/rawChannel() fallback").not.toMatch(/\bpick\(|\brawChannel\(/);
+    >  97 |   expect(body, "the lookup returns the value it was handed").not.toMatch(/return\s+(?:String\()?(?:value|raw)\b/);
+          |                                                                  ^
+       98 |   expect(body, "the closed table is what answers").toContain("ROUTE_PROVENANCE[");
+       99 | });
+      100 |
+        at D:\moodle\_qoder_ord0551_r3_20261003\wt\frontend\e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:97:66
+
+    Error Context: test-results\qoder-cff87c64-ord0568-rou-2a2eb--answered-with-its-own-word\error-context.md
+
+  1 failed
+    e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:91:1 › the lookup is closed: an unlisted provenance is never answered with its own word 
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0568-prov-r1.config.ts",
+      "-g",
+      "closed"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\playwright.ord0568-prov-r1.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0551_r3_20261003/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-cff87c64-ord0568-route-provenance-gloss-.*\\.spec\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {}
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the lookup is closed: an unlisted provenance is never answered with its own word",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: the lookup returns the value it was handed\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: not \u001b[32m/return\\s+(?:String\\()?(?:value|raw)\\b/\u001b[39m\nReceived string:      \u001b[31m\"export function routeProvenanceLabel(value: unknown, zh?: boolean | string | null): string {\u001b[39m\n\u001b[31m  const key = ROUTE_PROVENANCE_KEYS.find((name) => value === name);\u001b[39m\n\u001b[31m  if (!key) \u001b[7mreturn String(value\u001b[27m);\u001b[39m\n\u001b[31m  const entry = ROUTE_PROVENANCE[key];\u001b[39m\n\u001b[31m  return wantsChinese(zh) ? entry.zh : entry.en;\"\u001b[39m",
+                    "stack": "Error: the lookup returns the value it was handed\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: not \u001b[32m/return\\s+(?:String\\()?(?:value|raw)\\b/\u001b[39m\nReceived string:      \u001b[31m\"export function routeProvenanceLabel(value: unknown, zh?: boolean | string | null): string {\u001b[39m\n\u001b[31m  const key = ROUTE_PROVENANCE_KEYS.find((name) => value === name);\u001b[39m\n\u001b[31m  if (!key) \u001b[7mreturn String(value\u001b[27m);\u001b[39m\n\u001b[31m  const entry = ROUTE_PROVENANCE[key];\u001b[39m\n\u001b[31m  return wantsChinese(zh) ? entry.zh : entry.en;\"\u001b[39m\n    at D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:97:66",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                      "column": 66,
+                      "line": 97
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  95 |\u001b[39m   \u001b[36mconst\u001b[39m body \u001b[33m=\u001b[39m src\u001b[33m.\u001b[39mslice(at\u001b[33m,\u001b[39m src\u001b[33m.\u001b[39mindexOf(\u001b[32m\"\\n}\"\u001b[39m\u001b[33m,\u001b[39m at))\u001b[33m;\u001b[39m\n \u001b[90m  96 |\u001b[39m   expect(body\u001b[33m,\u001b[39m \u001b[32m\"routed through the shared pick()/rawChannel() fallback\"\u001b[39m)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoMatch(\u001b[35m/\\bpick\\(|\\brawChannel\\(/\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  97 |\u001b[39m   expect(body\u001b[33m,\u001b[39m \u001b[32m\"the lookup returns the value it was handed\"\u001b[39m)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoMatch(\u001b[35m/return\\s+(?:String\\()?(?:value|raw)\\b/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  98 |\u001b[39m   expect(body\u001b[33m,\u001b[39m \u001b[32m\"the closed table is what answers\"\u001b[39m)\u001b[33m.\u001b[39mtoContain(\u001b[32m\"ROUTE_PROVENANCE[\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m  99 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 100 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                        "column": 66,
+                        "line": 97
+                      },
+                      "message": "Error: the lookup returns the value it was handed\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: not \u001b[32m/return\\s+(?:String\\()?(?:value|raw)\\b/\u001b[39m\nReceived string:      \u001b[31m\"export function routeProvenanceLabel(value: unknown, zh?: boolean | string | null): string {\u001b[39m\n\u001b[31m  const key = ROUTE_PROVENANCE_KEYS.find((name) => value === name);\u001b[39m\n\u001b[31m  if (!key) \u001b[7mreturn String(value\u001b[27m);\u001b[39m\n\u001b[31m  const entry = ROUTE_PROVENANCE[key];\u001b[39m\n\u001b[31m  return wantsChinese(zh) ? entry.zh : entry.en;\"\u001b[39m\n\n   95 |   const body = src.slice(at, src.indexOf(\"\\n}\", at));\n   96 |   expect(body, \"routed through the shared pick()/rawChannel() fallback\").not.toMatch(/\\bpick\\(|\\brawChannel\\(/);\n>  97 |   expect(body, \"the lookup returns the value it was handed\").not.toMatch(/return\\s+(?:String\\()?(?:value|raw)\\b/);\n      |                                                                  ^\n   98 |   expect(body, \"the closed table is what answers\").toContain(\"ROUTE_PROVENANCE[\");\n   99 | });\n  100 |\n    at D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:97:66"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T15:08:30.905Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\test-results\\qoder-cff87c64-ord0568-rou-2a2eb--answered-with-its-own-word\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_ord0551_r3_20261003\\wt\\frontend\\e2e\\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+                    "column": 66,
+                    "line": 97
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "7c38476b6e8996c737dc-b91faa29a00bae14ea42",
+          "file": "qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts",
+          "line": 91,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T15:08:30.599Z",
+    "duration": 356.482,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
