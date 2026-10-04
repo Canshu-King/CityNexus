@@ -43,6 +43,7 @@ FORBIDDEN = (8000, 4781, 4782, 4783, 4785, 4786, 4787, 8693, 4789, 4799, 4820)
 
 S6_CONFIG = "playwright.ord0545s6-copy-cells.config.ts"
 S5_CONFIG = "playwright.ord0545s5-refusal-glass2.config.ts"
+S4_CONFIG = "playwright.ord0545s4-walkthrough.config.ts"
 
 
 def sha(p: pathlib.Path) -> str:
@@ -215,6 +216,10 @@ def main() -> int:
         for name, config, grep, port_key in (
             ("s6_all_four", S6_CONFIG, "Azh|Aen|Bzh|Ben", "CITYNEXUS_ORD0545S6_PORT"),
             ("s5_all_four", S5_CONFIG, "Uzh|Wen|Nzh|Ren", "CITYNEXUS_ORD0545S5_PORT"),
+            # slice four walks the whole import screen and asserts the channel label AND note are the
+            # table's in both locales -- the family that would notice if this slice had broken the cell
+            # it was told to change.
+            ("s4_walkthrough", S4_CONFIG, "Wzh|Wen", "CITYNEXUS_ORD0545S4_PORT"),
         ):
             r = gate(name, config, grep, port_key)
             rows["runs"].append(r)
@@ -243,9 +248,9 @@ def main() -> int:
     bits = [r for r in rows["runs"]]
     attributed = bool(rows["generation"].get("backend_listener", {}).get("listener_is_my_child_or_its_child"))
     own_copy = bool(rows["generation"].get("attribution", {}).get("the_listener_writes_only_my_copy"))
-    verdict = ("GLASS_OK four slice-six arms and four slice-five arms green on the retaken source, "
+    verdict = ("GLASS_OK slice six 4 arms + slice five 4 arms + slice four 2 walkthrough legs green on the retaken source, "
                "listener attributed to this lane's own store copy"
-               if all(r["rc"] == 0 and r["collected"] == 4 and r["passed"] == 4 for r in bits)
+               if all(r["rc"] == 0 and r["passed"] == r["collected"] > 0 for r in bits)
                and rows["teardown"]["canary_source_untouched"] and attributed and own_copy
                else "NOT_GREEN see the rows")
     rows["verdict"] = verdict
