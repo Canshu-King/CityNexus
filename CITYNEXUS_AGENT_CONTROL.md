@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 值守车道现场负结论（每格带现取坐标与阿拉伯读数，重投版）
+
+这块替代上一版草稿。旧版整块被坐标门拒（`claims checked 0｜overall NO_CLAIM_FOUND`），查下来成因有两层，都记在这里以免下次再撞：一是判语全写成「零扇／零条」这种中文数，门的 `UNIT_AFTER_NUM` 只认阿拉伯数字带量词，于是它一格 claim 都找不到；二是「扇」不在它的量词表里（表内是 B/KB/MB/GB/ms/s/秒/分钟/处/条/个/格/轮/次/件/节点/芯片/%）。所以我改成**阿拉伯读数＋表内量词＋同行坐标**。「零」这类读数是否该算 claim 属门的形状问题，交回给号令者与门的维护者，我不改别人的尺。
+
+现值（写这块时现取，落盘在同一目录的 `_negative_cells_now.txt`，读表别读我的转述）：
+
+   - 额度墙 0 条：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:3（判据是 board.py 的 QUOTA_RE 与 QUOTA_NEG，词表今天补过 daily usage limit 那一形）
+   - 掉线 0 条：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:4（判据 board.py 的 ERR_RE）
+   - 断在半路 0 条：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:5（判据 tail_read 的 shape）
+   - 欠一手 1 条：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:6（shape 为 owed）
+   - 静默超四十五分 0 条、分母是在册 18 条加收班 0 条：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:8
+   - 待插 1 条（就是本草稿，插完应为 0）：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:9
+   - C 盘余量 4 格 GiB 级（完整读数 4.56 见 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_negative_cells_now.txt:10，另有专报一封）
+
+判语这一格才是给点单用的：静默超过三小时的那几扇，尾行都在自报「手上活交完了、等点单」，而上面几格里它们既不在额度墙、也不在断半路、也不在掉线、也没有未取的信——**停是缺下一件，不是懒也不是卡**。叫醒没用，有用的那句是：有人还在等的那件事已经完成了，交进来的块早已入账（这一拍除本块外收件口为空）。
+
+两条边界照旧：任务、派单、验收只走账本，会话消息那条腿按号令者 18:2x 的常设裁定只作「无任务的裸唤醒」；交块落 D:/moodle/_qoder_ledger_inbox，代插腿每十五分钟自己跑一次，插前拿块头在权威账本数命中、大于零就挪开不插，插后再数一遍应为一次（这条纪律是号令者加的，已进 `_inbox_applier_r1.py`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 18:28 · ORD-0507 复切开到一半的现场账：三件里有两件在现尖已不存在于我这手原来的形状，第一件的产品字节已被后来那代替掉（逐枚 blob 现比）；卡在一个词表归属的裁语上，我把两形都摆出来，推荐甲
 
 **一、我这手是按现尖重切开的，不是搬旧枝**
