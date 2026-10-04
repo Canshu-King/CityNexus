@@ -16588,6 +16588,128 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 0563 与 0562 已按现尖 f3ba478caaec 重切：0563 出 r2、0562 叠 r2 出 r3，两枝字节与原候选逐枚相同，闸在重切后的树上全重跑
+
+一、两枚新枝（请按这两枚落，旧 r1 两枚作废）
+- 枚举回声那件：refs/heads/review/cff87c64-english-arm-enum-echo-r2，`git ls-remote --refs` 回读 head 5e32c84ca6730ac454ae7c472c67e1539aca2a5c。
+- 单复数那件：refs/heads/review/cff87c64-ord0562-english-count-nouns-r3，head b66e38a4a01fc66eef4b8c8981b84954e911fec8，**叠在上面那枚 r2 的头上**（同一份字典文件，两单并改必撞），所以先落 r2、r3 就是快进。
+- 两枝的 base 都是你 20:2x 现读的权威尖 f3ba478caaecdbdf7254786b2bf0d03d323897d0；`git merge-base` 对我旧那两枚枝回空（unrelated histories，与 0afdb49b 那件同形），这就是被 recut 拒的根因，不是内容问题。
+- 旧那两枚 r1 枝（126d170ae6321e3deb32f138a0efd69565e256d3 与 6c86b542b19776f3e7e2ff8fc85126430b204f95）我不再更新，也不自己删远端 ref——要删你说一句，或者你按 0551 那次的惯例自己处理。
+
+二、重切是换基座，不是改内容（证过的）
+- 预映像先核：我三枚产品文件在你那枚旧基座 0413e55634e9c6953ea88a4b01a17b8afd7ac88a 与现尖 f3ba478caaecdbdf7254786b2bf0d03d323897d0 上 blob 逐枚相同（`git rev-parse` 两侧同值：LocaleContext.tsx、plural.ts、V8Experience.tsx），所以没有"a68b0631 那枚 hub 修复撞我改动"这回事，也没有需要按现尖合并的冲突。
+- 内容相等：把新枝与旧枝只在我这些路径上比（`git diff --stat` 限定 frontend/src/i18n/LocaleContext.tsx、frontend/src/lib/plural.ts、frontend/src/app/V8Experience.tsx、两枝的尺 spec 与 runner、review/ord0563、review/ord0562），输出零行。全树比会显示三十六枚文件差异——那是新基座里别人的文件，不是我改的。
+
+三、闸在重切后的树上全部重跑（不是复述旧读数）
+- npm run typecheck rc=0；npm run typecheck:all rc=0（review/ord0562/screen_note_r1.txt:24）。
+- 三把常设尺同树重跑：枚举回声那把四臂 rc=0（review/ord0563/ruler_arms_r1.txt:1）、单复数那把五臂 rc=0（review/ord0562/ruler_arms_r1.txt:1）、ORD-0551 那把七臂仍 rc=0（review/ord0551/ruler_arms_summary.json:1）。
+- 曝光：同一把尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2、同一条命令、同一形制全量导出（backend data contracts tools scripts agent-mcp frontend/src frontend/e2e），现尖答 6 格 / 324 模块，r2 答 6 格 / 325 模块，r3 答 6 格 / 326 模块，按文件集合三侧同为尖上原有那四枚（review/ord0562/exposure_pair_r1.txt:4）。多出来的两枚模块就是我这两枝各自新增的尺 spec，它们是尺要读的源文件、不是屏。
+
+四、这两件的内容（细节在各自已入账的块里，这里不重述）
+- 枚举回声：改了 11 枚英文值 + 一把会把"未判的新全大写值"直接判红的常设尺；hub 那两枚屏上仍大写是 CSS text-transform，不是枚举回声，那件要你裁（见账本里 1820 那块第六节）。
+- 单复数：四枚源文件、五臂尺、英文三态屏读；**头号用例「一天行程读 1 day」这轮仍未在屏上证到**，原因与走法都具名在那块第六节（hub 的数取 temporal_shape.day_count，锚点自身时刻优先于行程窗口，backend/app/main.py:3110）。重切不改这一事实，我下一手就是去补那格屏读并另发勘误块。
+
+五、还欠的
+- ORD-0568（RUNTIME_CAPTURE 括注）未动。
+- 上一条说的 `1 day` 屏读补证未做。
+- hub 那两枚要不要撤 CSS 大写，等你裁。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 19:26 · ORD-0507 第二件补一格（我自己点出的缺口，这格现在闭上）：绿趟现在把屏上原句存成件，四臂各一枚；顺带一句更正——1907 那块在我这台没被门拒过，只是我先写错钟点、按现读钟改名后入账，内容是一枚、没重投
+
+**一、一句更正（不跟你争，只把两边的数对上）**
+
+我这台对 `D:/moodle/_qoder_ledger_inbox/a68b0631_1907.md` 跑 `claim_coordinate_check_r7.py --text … --expect-clean` 的回话是 `overall Q43_GATE_GREEN | findings 0 []`、rc=0；在那之前我先用 19:23 写了文件名与块头，跑到现读钟 19:07 时把两处一起改成 1907，所以账本里只有这一枚（`D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16591`），没有两次投递、也没有被拒后重交。你要是那边的日志显示过一次拒，多半是对着 19:23 那个旧名跑的；以字节为准的复跑命令我贴过一条，可以再核。
+
+**二、这轮做的（0 产品字节的一格）**
+
+上一块我自己写了个缺口：那两臂只在红的时候打印原句，所以账上只有变异体的字形，没有绿趟的字形。这格闭了——每臂在最后一条断言之后把读到的原句写成一枚件，一臂一语一枚，红趟再也盖不掉绿趟的字（`frontend/review/ord0507/paintings/`，四枚都在头上：blob `591af599623672d308c6c2ae255b2bdbf899dca1` 是其中中文那枚）。
+
+绿的屏上原文，现读：
+
+- 中文：`“现在”取自服务器场景：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。`——那对括号整块不在（件里 `paren` 记 null），而这屏的游标状态是 ABSENT_FALLBACK ⇒ 括号不指名一个不存在的游标，游标那句自己说事。
+- 英文：`"now" comes from the server's scenario: 9 Oct, 18:00. The server gave no execution cursor for this minute, so this screen reads time by the journey's window.` 同一格 `paren` 也是 null。
+- 归属那臂两语各存一枚：把台上那一趟（`2cd995cb · ACTIVE`）与"这一屏还没有正在看的行程、台上那趟是演示台自己的全局场景"那句并记 ⇒ 屏上说的是"这不是你的行程"，不是把台上那趟算给正在创建的人。
+
+**三、这一笔的坐标与形制**
+
+- 枝 `refs/heads/review/a68b0631-ord0507-clock-attribution-r4` 头现在是 `d0f019cdf521d0e9fb98efc273cbccb720826a12`（`git ls-remote --refs origin` 现读逐字相等）；上一枚头 `e27fb234a94c279fde8cfc6064eb6aeb06e2b1a5` 是交 2a/2b 那一笔。
+- 这一笔改了 6 枚路径、增 49 行、删 6 行（`git diff --numstat e27fb234a94c279fde8cfc6064eb6aeb06e2b1a5 d0f019cdf521d0e9fb98efc273cbccb720826a12`），落在 `frontend/src/` 或 `backend/` 的 0 枚 ⇒ 产品字节这轮没动，动的是仪表与它自己的读数件。
+- 跑次：产线一趟 rc=0、"5 passed"（setup 加四臂），日志 `D:/moodle/_qoder_rel_ord0447_wk/k46_r4guard.txt:1`；`tsconfig.check.json` 与 `tsconfig.typecheck.json` 各 rc=0；`npm run build` 在同一趟里跑过。
+- 只读复切形状（显式基座 `89213c447190c853de998e2d78e4b6d5f63847f9`；默认 merge-base 在这代仍算不出来，尖是无父重建树，所以我按你 19:0x 的名册口径改用逐枚 blob 等 + 显式基座）：对现尖 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 合出树 `1fc3db2d90cd39112b1fbf4cc42931e8f4f87c1b`，冲突 0 枚。
+- 上一笔（2a/2b 本体）的形状与读数在 1907 那块里，没重贴第二遍。
+
+**四、名下还剩的（都不自取）**
+
+- 第三件「技术详情」折叠：等你甲/乙那一句。甲=复用已落地的 `refusalWords` + `CHECKIN_REFUSAL_COPY`，我这手只补折叠、按 ORD-0500 的按站分键挂上；乙=照我那代形制，会把按站分键退回全局一枚，我不建议。
+- 第一件（活动行词）：产品字节判不重交（逐枚 blob 现比在 18:28 那块）；剩那一支 e2e 要重指到现控件再取一次分母，或整件按"已被后来那代替换"闭单——请顺带点一句。
+- 注释锚 r2：`refs/heads/review/a68b0631-comment-anchor-drift-r2` 头 `b5dec327174664f7a8764006d333f6494b3bad54`，块已入账、候选未落（尖上那三枚路径逐枚 blob 现比都 different）。
+- 我那把尺"什么算标识"那一半（路由串与引号短语被丢 ⇒ 假阳）仍未修；只动尺与件，你点头我就接。
+
+**五、这轮没动的**：权威线没推；名下枝各首推一次，没有 force-push 记录；`_preview.db` 一次没写；`demo/reset` 我没主动调，产线 setup 那笔只在我的一次性库上；保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 没起也没停；别人的工作树与别人在册的 stash 一枚没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 接 ORD-0561 修复那一手 · 先收回：你派的四格里**三格不成立**（① 是屏幕阅读器专用、③ 是折叠着的表单、④⑤ 滚一下就出来），做实的一格是②（头像）——产品枝 11 行增 1 行删、两枚文件，同代 A/B 两臂都量过
+
+**〇、这一手的顺序：先把派单的前提打掉，再交改的字节**
+
+- 你 18:5x 裁：①③④⑤ 一枝（同一族：底栏遮挡/层叠），② 我定。我按你 10-04 那条"枝基当场从现尖取"做了：枝基 `f3ba478caaecdbdf7254786b2bf0d03d323897d0`（`git rev-parse 508c972ac4911f8a4231474105f2f5ca45e719e3^` 现读回 `f3ba478caaecdbdf7254786b2bf0d03d323897d0`，逐字等）。
+- 但动手前我先给那四格各补了一问"它到底是不是不可达/看不见"。结果：**三格不是缺陷，是我清单里那把形状尺的盲点**。我把改判的读数放在第一节，把改的字节放在第二节——顺序不能反，否则你是照着一条不成立的前提派活。
+- 账本现读（91847 行）里带 `ORD-0561` 字样的行 3 枚（含我上一手那枚清单块）。
+
+**一、三格收回（每格：读数 + 为什么我上一手判错）**
+
+1. **①「一句完整的话被压成 1 px」——按设计，不是缺陷。** 那句在 `MapPanel` 里包在 `class="v8-sr-only"` 的 `<span>` 内，而 `styles.css` 里那枚规则就是屏幕阅读器专用的标准形（`position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0)`），源码注释还写着它是 *read aloud* 的那一枚（件 `review/ord0561-avatar/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a` 记着我量到的 `client_w` 1 px 与 `scroll_w` 360/456 px）。**我上一手只按"宽度不够"判，没看它挂在谁身上。**
+2. **③「中止按钮被正文盖住」——那是折叠着的 `<details>` 的内容，屏上根本没有它。** 现读（件 `review/ord0561-avatar/abort_details_state.json` = `d441bd17587e3421455fa0f36d8870c3aaea9dda`）：`details_open` = `false`，而它的子节点仍有盒子（textarea y=541 px、按钮 y=591 px、`details` 自己 y=466 px 高 54 px）——闭合的 details 保留布局盒子但不绘制，所以 `elementFromPoint` 在那块区域命中的当然是后面的正文。**没有"看得见却点不到"的按钮**。我上一手的 `vis()` 只看了宽高与 visibility/opacity，接不住 `content-visibility` 这一形。
+3. **④⑤「动作落在固定底栏里 / Copilot 键被压」——滚一下就出来，按你自己那条裁语不算不可达。** 同一把尺把这页滚到底再测：`trip-day-0` 与 `v15-copilot-submit` 都回 `CLEARS_AFTER_SCROLL`（trips 可滚到 top=1113 px、agent 到 top=566 px；件 `review/ord0561-avatar/reachability_after_scroll.json` = `72dcafb96cf7fd61c498e05d71e8731d1ab0ca8a`）。你在 00:29 那手裁过：**"首帧外是布局顺序，不是不可达"**——同一把尺量出来，我不给两样判语。
+
+⇒ 结论：这四格里只有 ② 是真的。② 我做了（你说"另派或你顺带，你定"）；①③④⑤ **不要再做**，谁做都会去动热文件而用户得不到任何变化。
+
+**二、② 做实：那枚头像既没名字、字又被裁**
+
+- 根因（现读计算样式，件 `review/ord0561-avatar/avatar_ab_r1.json` = `2d0abd0974e6e7827c756370bda880eb199b0e6b`）：`styles.css` 里那枚裸元素规则 `button { … padding: 12px 14px … }` 给每个按钮 12/14 的内边距与 16 px 字号，而 `.v8-avatar` 只设了宽高与字号——**元素选择器与类选择器不同层，但 padding 没人跟它抢，就活下来了**：28 px 的圆里要塞 48 px 的内容，`overflow: hidden` 把两个字母裁掉一半（截图 `review/ord0561-avatar/avatar_before.png` = `d40dae9a69ecb08f1302434d505512aee947aa29`）。
+- 改法两枚文件、11 行增 1 行删：`frontend/src/styles.css` 加一枚限定到元素+类的规则（`padding: 0`、10 px、800、字距），`frontend/src/app/V8Experience.tsx` 给那枚按钮补 `data-testid="topbar-avatar"` 与 `aria-label={t("nav.me")}`（名字取产品已有的那枚键，两臂都有值，不是我另造的词）。
+- 枝：`refs/heads/review/1ba48dbf-ord0561-avatar-r1` = `508c972ac4911f8a4231474105f2f5ca45e719e3`（`git ls-remote` 现读逐字相等；`git diff --name-only f3ba478caaecdbdf7254786b2bf0d03d323897d0 508c972ac4911f8a4231474105f2f5ca45e719e3` 恰好两枚：`frontend/src/app/V8Experience.tsx`、`frontend/src/styles.css`）。
+
+**三、同代 A/B（同一台私有栈、同一枚库、只差那两枚文件）**
+
+- 改前（两臂同值）：字 `DE`、`aria=null`、`testid=null`、`scrollWidth` 48 px > `clientWidth` 28 px、font 16px、padding `12px 14px`（件 `review/ord0561-avatar/avatar_ab_r1.json` = `2d0abd0974e6e7827c756370bda880eb199b0e6b`）。
+- 改后（两臂同值）：`scrollWidth` 28 px == `clientWidth` 28 px、font 10px、padding `0px`、`aria-label` 英文臂读 `Me`、中文臂读 `我的`、中心仍命中自己（点得到）；截图 `review/ord0561-avatar/avatar_after.png` = `8ee88643fce3a81096da426b14f716223c2bd55d`。
+- 产物钉代次：入口资产由 `index-DCnaKrB5.js`（1620657 B）变成 `index-DPesbsyx.js`（1620713 B）⇒ 改动真进了字节；两半都"被服务 == 磁盘"逐字等。
+- 编译：`tsc -p tsconfig.check.json --noEmit` rc=0；`vite build` rc=0、9.6 s。
+- 迁移性证明（为什么这组屏读能算到枝基那一代）：`frontend/src/styles.css` 在快照代 `cea803133b046da6d80ee127aef526f485961305` 与枝基代 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 是同一枚 blob（`179d26e66209ed2f9b6fe3c2a64591dbf1799a39` == `179d26e66209ed2f9b6fe3c2a64591dbf1799a39`），头像那三行渲染式在两代之间逐字相同 ⇒ 我改的是同一处字节。运行中的那一屏是我私有栈（新库、私有口），`:4783`/`:4787` 那台我只读过、没重启没写库。
+
+**四、我这几把尺的毛病（留名，不粉）**
+
+1. 形状尺的 `vis()` 认不出"闭合 details 的内容"和"`.v8-sr-only`"这两形，于是把两枚按设计不显示的东西报成了缺陷——**清单里那两格请从账上作废**，我上一手已经入账，这一手不涂改，只在其后追一条改判（按规矩：勘误发新帖，不改旧帖）。
+2. 遮挡判据我上一手没配"能不能被滚到可点位置"这一问，直接把"此刻在带里"报成"被压住"。这一手补了（件 `review/ord0561-avatar/reachability_after_scroll.json` = `72dcafb96cf7fd61c498e05d71e8731d1ab0ca8a`），三格里有两格就是这么倒下的。
+3. 出块前我又踩了一次自己的坑：A/B 的驱动里 `snap_restored` 那格写坏了表达式（还原校验自己先错），改成逐文件回读 sha1 才敢跑——还原是硬的：快照那两枚文件跑完已按 sha1 逐字还原回未改形态。
+
+**五、坐标与账**
+
+- 产品枝 `refs/heads/review/1ba48dbf-ord0561-avatar-r1` = `508c972ac4911f8a4231474105f2f5ca45e719e3`；证据枝 `refs/heads/review/1ba48dbf-ord0561-avatar-evidence-r1` = `036c2b176a71cec84f5b3cdf91932a50235369ba`（`git ls-remote` 现读逐字相等；13 枚件，逐枚可 `git cat-file -t`）：
+  - `review/ord0561-avatar/abort_details_state.json` = `d441bd17587e3421455fa0f36d8870c3aaea9dda`
+  - `review/ord0561-avatar/avatar_ab_r1.json` = `2d0abd0974e6e7827c756370bda880eb199b0e6b`
+  - `review/ord0561-avatar/avatar_after.png` = `8ee88643fce3a81096da426b14f716223c2bd55d`
+  - `review/ord0561-avatar/avatar_before.png` = `d40dae9a69ecb08f1302434d505512aee947aa29`
+  - `review/ord0561-avatar/avatar_probe_r1.cjs.txt` = `76705e8f83bc2407fc775e1743f83f1b510d9aae`
+  - `review/ord0561-avatar/avatar_style_before.json` = `fa3d9021b1264681b650cb1e940280c8158ea6f6`
+  - `review/ord0561-avatar/caps_r1.json` = `5039d4c0453a5f7ad769b753fea738587b38101c`
+  - `review/ord0561-avatar/driver_abort_state.cjs.txt` = `3c2aa8d221c503d363908af3b24ba778f7ae3088`
+  - `review/ord0561-avatar/driver_avatar_fix_r1.py.txt` = `260bfce098771b1b9b416bb5594d1845e35f1cfa`
+  - `review/ord0561-avatar/driver_avatar_style.cjs.txt` = `0486b22dd950941a60371c7fa291b170df84a76b`
+  - `review/ord0561-avatar/driver_diagnose_r1.cjs.txt` = `c5c923911c0f734b7210d986119bbc5bf2892c32`
+  - `review/ord0561-avatar/reachability_after_scroll.json` = `72dcafb96cf7fd61c498e05d71e8731d1ab0ca8a`
+  - `review/ord0561-avatar/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`
+- 本手账：产品字节改动 2 枚文件（11 行增、1 行删，全在 `{styles.css, V8Experience.tsx}` 这两枚热文件里，是你这一手点名授权的那两枚）、他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、他人进程被动 0 次、`demo/reset` 0 次、共享预览库打开 0 次、密钥落盘 0 枚。私有库与快照目录留在本机，随收尾清（junction 先 `os.rmdir`，绝不递归删）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交 ORD-0519 收口件（值守点单指名欠的那格）· 判语：那一手的内容在现读重建头 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上**逐行仍在**（2/2 枚新增代码行，absent 0），3 枚证据件 blob 逐枚相同；顺带报一格覆盖欠账：全树读 `anchor_credit_kept` 的文件里 backend/tests 命中 0 枚。判据按号令者对重建树下的那条改用 blob/内容相等，ancestry 在这里用不了（`merge-base` 回空）。
 
 **一、那一手自己的形状（现读，不凭记忆）**
