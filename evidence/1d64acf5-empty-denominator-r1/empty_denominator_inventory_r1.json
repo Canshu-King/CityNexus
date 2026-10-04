@@ -1,0 +1,1673 @@
+{
+ "root": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord_anchors",
+ "files_scanned": 114,
+ "hits": 136,
+ "by_shape": {
+  "compare_only_verdict": {
+   "total": 5,
+   "no_floor": 1
+  },
+  "vacuous_all": {
+   "total": 109,
+   "no_floor": 90
+  },
+  "emptiness_passes": {
+   "total": 3,
+   "no_floor": 3
+  },
+  "ternary_no_floor": {
+   "total": 19,
+   "no_floor": 19
+  }
+ },
+ "work_list_without_floor": [
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "shape": "vacuous_all",
+   "line": 165,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "if any(not v[\"unchanged\"] and not v[\"already_my_cell\"] for v in pre_check.values()):",
+   "fn": "any"
+  },
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "if all(v[\"already_my_cell\"] for v in pre_check.values()):",
+   "fn": "all"
+  },
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "shape": "vacuous_all",
+   "line": 201,
+   "collections": [
+    "paths"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "paths": false
+   },
+   "text": "if any(carried.get(p) != cell.get(p) and p in cell for p in paths):",
+   "fn": "any"
+  },
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "shape": "vacuous_all",
+   "line": 228,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "ok = all(s.get(\"head\") for s in R.get(\"part_B\", {}).values()) if R.get(\"part_B\") else True",
+   "fn": "all"
+  },
+  {
+   "file": "anchor_drift_survey_r1.py",
+   "shape": "vacuous_all",
+   "line": 112,
+   "collections": [
+    "src"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "src": false
+   },
+   "text": "writes_it = any((named in l) and re.search(",
+   "fn": "any"
+  },
+  {
+   "file": "anchor_drift_survey_r2.py",
+   "shape": "vacuous_all",
+   "line": 115,
+   "collections": [
+    "src"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "src": false
+   },
+   "text": "writes_it = any((named in l) and re.search(",
+   "fn": "any"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "shape": "emptiness_passes",
+   "line": 81,
+   "collections": [
+    "target"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "target": false
+   },
+   "text": "if not target or not target.startswith((\"frontend/\", \"backend/\", \"contracts/\",",
+   "form": "not-or"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "shape": "emptiness_passes",
+   "line": 81,
+   "collections": [
+    "startswith"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "startswith": false
+   },
+   "text": "if not target or not target.startswith((\"frontend/\", \"backend/\", \"contracts/\",",
+   "form": "not-or"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "shape": "vacuous_all",
+   "line": 75,
+   "collections": [
+    "items"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "items": false
+   },
+   "text": "\"path_like_entries\": any(",
+   "fn": "any"
+  },
+  {
+   "file": "anchor_mutation_arms_r1.py",
+   "shape": "vacuous_all",
+   "line": 133,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "doc = {\"tip\": TIP, \"arms_run\": len(rows), \"all_expectations_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "block_census_r3_r1.py",
+   "shape": "compare_only_verdict",
+   "line": 63,
+   "collections": [
+    "SH"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "SH": false
+   },
+   "text": "if sorted(SH) != sorted(f[\"path\"].rsplit(\"/\", 1)[-1] for f in rec[\"files\"]):",
+   "op": "NotEq",
+   "success_path": false
+  },
+  {
+   "file": "bus_notice_anchors_landed_r1.py",
+   "shape": "vacuous_all",
+   "line": 50,
+   "collections": [
+    "pairs"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "pairs": false
+   },
+   "text": "all_equal = all(p[\"byte_equal\"] for p in pairs)",
+   "fn": "all"
+  },
+  {
+   "file": "census_r3_verdicts_r1.py",
+   "shape": "vacuous_all",
+   "line": 99,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_arms_green_as_shipped\": all(r[\"arm_ran_as\"] == \"PASSED\" for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "cmdr0130_landing_prediction_r1.py",
+   "shape": "vacuous_all",
+   "line": 107,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_clean\": all(c[\"merge_tree\"][\"clean\"] and not c[\"paths_belonging_to_others_in_the_diff\"]",
+   "fn": "all"
+  },
+  {
+   "file": "cmdr0130_landing_prediction_r1.py",
+   "shape": "vacuous_all",
+   "line": 112,
+   "collections": [
+    "c"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "c": false
+   },
+   "text": "\"already_on_the_line_any\": any(p[\"already_on_the_line\"] for p in c[\"preimage\"])}",
+   "fn": "any"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 338,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if all(r[\"hash_equal\"] and r[\"channels_agree\"] for r in rows) else 7"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "shape": "vacuous_all",
+   "line": 329,
+   "collections": [
+    "doc"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false
+   },
+   "text": "all_equal = all(p[\"hash_equal\"] and p[\"channels_agree\"] and p[\"size_equal\"] and p[\"text_hash_of_decoded\"]",
+   "fn": "all"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "shape": "vacuous_all",
+   "line": 338,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if all(r[\"hash_equal\"] and r[\"channels_agree\"] for r in rows) else 7",
+   "fn": "all"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_check_r1.py",
+   "shape": "vacuous_all",
+   "line": 105,
+   "collections": [
+    "remote_blobs"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "remote_blobs": false
+   },
+   "text": "remote_is_an_earlier_local = any(rb in local_blobs for rb in remote_blobs)",
+   "fn": "any"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_hook_r1.py",
+   "shape": "emptiness_passes",
+   "line": 63,
+   "collections": [
+    "exists"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "exists": false
+   },
+   "text": "if not os.path.exists(trail):",
+   "form": "not"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 105,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "return 0 if (doc[\"parent_is_tip\"] and doc[\"server_equals_pushed\"] and doc[\"files\"]"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "shape": "vacuous_all",
+   "line": 106,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "and all(v[\"byte_equal\"] for v in blobs.values())) else 9",
+   "fn": "all"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "shape": "vacuous_all",
+   "line": 103,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"blobs_equal\": all(v[\"byte_equal\"] for v in blobs.values()),",
+   "fn": "all"
+  },
+  {
+   "file": "floor_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 130,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "doc = {\"tip\": TIP, \"arm\": ARM, \"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "floor_probe_r2.py",
+   "shape": "vacuous_all",
+   "line": 130,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "doc = {\"tip\": TIP, \"arm\": ARM, \"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "floor_probe_r3.py",
+   "shape": "vacuous_all",
+   "line": 136,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "doc = {\"tip\": TIP, \"arm\": ARM, \"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r1.py",
+   "shape": "vacuous_all",
+   "line": 98,
+   "collections": [
+    "doc",
+    "s"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false,
+    "s": false
+   },
+   "text": "\"all_met\": all(s[\"per_arm\"][a][\"expected\"] == s[\"per_arm\"][a][\"got\"]",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r2.py",
+   "shape": "vacuous_all",
+   "line": 98,
+   "collections": [
+    "doc",
+    "s"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false,
+    "s": false
+   },
+   "text": "\"all_met\": all(s[\"per_arm\"][a][\"expected\"] == s[\"per_arm\"][a][\"got\"]",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r3.py",
+   "shape": "vacuous_all",
+   "line": 98,
+   "collections": [
+    "doc",
+    "s"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false,
+    "s": false
+   },
+   "text": "\"all_met\": all(s[\"per_arm\"][a][\"expected\"] == s[\"per_arm\"][a][\"got\"]",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r4.py",
+   "shape": "vacuous_all",
+   "line": 98,
+   "collections": [
+    "doc",
+    "s"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false,
+    "s": false
+   },
+   "text": "\"all_met\": all(s[\"per_arm\"][a][\"expected\"] == s[\"per_arm\"][a][\"got\"]",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r5.py",
+   "shape": "vacuous_all",
+   "line": 109,
+   "collections": [
+    "by_id",
+    "holes"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "by_id": false,
+    "holes": false
+   },
+   "text": "\"all_sides_reported\": all(by_id[h][\"arms\"][a][\"pytest\"][\"summary\"].strip()",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_artifact_r5.py",
+   "shape": "vacuous_all",
+   "line": 138,
+   "collections": [
+    "doc",
+    "s"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "doc": false,
+    "s": false
+   },
+   "text": "\"all_met\": all(s[\"per_arm\"][a][\"expected\"] == s[\"per_arm\"][a][\"got\"]",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 117,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"all_met\": all(v[\"met\"] for v in per_arm.values())})",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r2.py",
+   "shape": "vacuous_all",
+   "line": 117,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"all_met\": all(v[\"met\"] for v in per_arm.values())})",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r3.py",
+   "shape": "vacuous_all",
+   "line": 117,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"all_met\": all(v[\"met\"] for v in per_arm.values())})",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r4.py",
+   "shape": "vacuous_all",
+   "line": 117,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"all_met\": all(v[\"met\"] for v in per_arm.values())})",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r5.py",
+   "shape": "vacuous_all",
+   "line": 231,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"all_met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "g4_shape_probe_r5.py",
+   "shape": "vacuous_all",
+   "line": 142,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "\"all_met\": all(v[\"met\"] for v in per_leg.values())})",
+   "fn": "all"
+  },
+  {
+   "file": "land_candidate_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 81,
+   "collections": [
+    "back"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "back": false
+   },
+   "text": "return 0 if doc[\"server_sha_equals_pushed\"] and all(b[\"byte_equal\"] for b in back) else 7"
+  },
+  {
+   "file": "land_candidate_r1.py",
+   "shape": "vacuous_all",
+   "line": 81,
+   "collections": [
+    "back"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "back": false
+   },
+   "text": "return 0 if doc[\"server_sha_equals_pushed\"] and all(b[\"byte_equal\"] for b in back) else 7",
+   "fn": "all"
+  },
+  {
+   "file": "land_g4_floor_r2.py",
+   "shape": "ternary_no_floor",
+   "line": 88,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "return 0 if (doc[\"parent_is_first_candidate\"] and doc[\"server_sha_equals_pushed\"]"
+  },
+  {
+   "file": "land_g4_floor_r2.py",
+   "shape": "vacuous_all",
+   "line": 89,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "and all(v[\"byte_equal\"] for v in blobs.values())) else 9",
+   "fn": "all"
+  },
+  {
+   "file": "ledger_mirror_repro_r1.py",
+   "shape": "vacuous_all",
+   "line": 105,
+   "collections": [
+    "reads"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "reads": false
+   },
+   "text": "\"reproduced\": any(r[\"equals_remote_sha\"] is False and not r[\"err\"] for r in reads),",
+   "fn": "any"
+  },
+  {
+   "file": "ledger_mirror_runs_r1.py",
+   "shape": "vacuous_all",
+   "line": 129,
+   "collections": [
+    "three"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "three": false
+   },
+   "text": "\"three_runs_all_complete\": all((l[\"json\"] or {}).get(\"verdict\") == \"COMPLETE_AND_HASHED_EQUAL\"",
+   "fn": "all"
+  },
+  {
+   "file": "ledger_mirror_runs_r1.py",
+   "shape": "vacuous_all",
+   "line": 132,
+   "collections": [
+    "arms"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "arms": false
+   },
+   "text": "\"arms_all_refused\": all((l[\"json\"] or {}).get(\"arm_passes_by_refusing\") and l[\"rc\"] == 0",
+   "fn": "all"
+  },
+  {
+   "file": "mirror_sync_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 115,
+   "collections": [
+    "seq"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "seq": false
+   },
+   "text": "\"every_remote_read_self_proved\": all(p[\"hash_equal\"] and p[\"channels_agree\"] and p[\"size_equal\"]",
+   "fn": "all"
+  },
+  {
+   "file": "mirror_sync_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 118,
+   "collections": [
+    "pairs"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "pairs": false
+   },
+   "text": "\"byte_current_at_every_compared_point\": all(a == b for a, b, _ in pairs),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 170,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_reverted\": all(r.get(\"test_restored_equal\", True) and r.get(\"yaml_restored_equal\", True)",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r1.py",
+   "shape": "vacuous_all",
+   "line": 178,
+   "collections": [
+    "untouched"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "untouched": false
+   },
+   "text": "\"other_five_lines_still_equality_and_identical\": all(",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r2.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r2.py",
+   "shape": "vacuous_all",
+   "line": 170,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_reverted\": all(r.get(\"test_restored_equal\", True) and r.get(\"yaml_restored_equal\", True)",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r2.py",
+   "shape": "vacuous_all",
+   "line": 178,
+   "collections": [
+    "untouched"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "untouched": false
+   },
+   "text": "\"other_five_lines_still_equality_and_identical\": all(",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r3.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r3.py",
+   "shape": "vacuous_all",
+   "line": 170,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_reverted\": all(r.get(\"test_restored_equal\", True) and r.get(\"yaml_restored_equal\", True)",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r3.py",
+   "shape": "vacuous_all",
+   "line": 178,
+   "collections": [
+    "untouched"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "untouched": false
+   },
+   "text": "\"other_five_lines_still_equality_and_identical\": all(",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r4.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r4.py",
+   "shape": "vacuous_all",
+   "line": 170,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_reverted\": all(r.get(\"test_restored_equal\", True) and r.get(\"yaml_restored_equal\", True)",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r4.py",
+   "shape": "vacuous_all",
+   "line": 178,
+   "collections": [
+    "untouched"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "untouched": false
+   },
+   "text": "\"other_five_lines_still_equality_and_identical\": all(",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r5.py",
+   "shape": "vacuous_all",
+   "line": 169,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"states\": len(rows), \"all_met\": all(r[\"met\"] for r in rows),",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r5.py",
+   "shape": "vacuous_all",
+   "line": 170,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "\"all_reverted\": all(r.get(\"test_restored_equal\", True) and r.get(\"yaml_restored_equal\", True)",
+   "fn": "all"
+  },
+  {
+   "file": "ord0476_gate_probe_r5.py",
+   "shape": "vacuous_all",
+   "line": 178,
+   "collections": [
+    "untouched"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "untouched": false
+   },
+   "text": "\"other_five_lines_still_equality_and_identical\": all(",
+   "fn": "all"
+  },
+  {
+   "file": "ord0557_build_r1.py",
+   "shape": "vacuous_all",
+   "line": 162,
+   "collections": [
+    "arms"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "arms": false
+   },
+   "text": "if any(c[\"refused\"] is False for c in arms):",
+   "fn": "any"
+  },
+  {
+   "file": "ord0557_build_r1.py",
+   "shape": "vacuous_all",
+   "line": 158,
+   "collections": [
+    "proof"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "proof": false
+   },
+   "text": "if not (len(proof) == 3 and all(x[\"hash_equal\"] and x[\"channels_agree\"] and x[\"size_equal\"]",
+   "fn": "all"
+  },
+  {
+   "file": "publish_anchors_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 97,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_anchors_r1.py",
+   "shape": "vacuous_all",
+   "line": 89,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_anchors_r1.py",
+   "shape": "vacuous_all",
+   "line": 97,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 100,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_census_r1.py",
+   "shape": "vacuous_all",
+   "line": 92,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r1.py",
+   "shape": "vacuous_all",
+   "line": 100,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r2.py",
+   "shape": "ternary_no_floor",
+   "line": 98,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_census_r2.py",
+   "shape": "vacuous_all",
+   "line": 90,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r2.py",
+   "shape": "vacuous_all",
+   "line": 98,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r3_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 102,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_census_r3_r1.py",
+   "shape": "vacuous_all",
+   "line": 94,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_census_r3_r1.py",
+   "shape": "vacuous_all",
+   "line": 102,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0019_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 97,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0019_r1.py",
+   "shape": "vacuous_all",
+   "line": 89,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0019_r1.py",
+   "shape": "vacuous_all",
+   "line": 97,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0124_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 99,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0124_r1.py",
+   "shape": "vacuous_all",
+   "line": 91,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0124_r1.py",
+   "shape": "vacuous_all",
+   "line": 99,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0130_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 109,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0130_r1.py",
+   "shape": "vacuous_all",
+   "line": 101,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0130_r1.py",
+   "shape": "vacuous_all",
+   "line": 109,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0245_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 99,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0245_r1.py",
+   "shape": "vacuous_all",
+   "line": 91,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0245_r1.py",
+   "shape": "vacuous_all",
+   "line": 99,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0245_r2.py",
+   "shape": "ternary_no_floor",
+   "line": 94,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0245_r2.py",
+   "shape": "vacuous_all",
+   "line": 86,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0245_r2.py",
+   "shape": "vacuous_all",
+   "line": 94,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0557_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 107,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0557_r1.py",
+   "shape": "vacuous_all",
+   "line": 99,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0557_r1.py",
+   "shape": "vacuous_all",
+   "line": 107,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0557_r2.py",
+   "shape": "ternary_no_floor",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr0557_r2.py",
+   "shape": "vacuous_all",
+   "line": 88,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr0557_r2.py",
+   "shape": "vacuous_all",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr1945_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_cmdr1945_r1.py",
+   "shape": "vacuous_all",
+   "line": 88,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_cmdr1945_r1.py",
+   "shape": "vacuous_all",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_g4_floor_r1.py",
+   "shape": "vacuous_all",
+   "line": 95,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_g4_floor_r2.py",
+   "shape": "vacuous_all",
+   "line": 94,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_hook_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 109,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_hook_r1.py",
+   "shape": "vacuous_all",
+   "line": 101,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_hook_r1.py",
+   "shape": "vacuous_all",
+   "line": 109,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "publish_selfcheck_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5"
+  },
+  {
+   "file": "publish_selfcheck_r1.py",
+   "shape": "vacuous_all",
+   "line": 88,
+   "collections": [
+    "shelf"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "shelf": false
+   },
+   "text": "\"all_local_byte_equal\": all(s[\"byte_equal\"] for s in shelf if s[\"byte_equal\"] is not None),",
+   "fn": "all"
+  },
+  {
+   "file": "publish_selfcheck_r1.py",
+   "shape": "vacuous_all",
+   "line": 96,
+   "collections": [
+    "rows"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "rows": false
+   },
+   "text": "return 0 if (all(r[\"byte_equal\"] for r in rows) and doc[\"all_local_byte_equal\"]) else 5",
+   "fn": "all"
+  },
+  {
+   "file": "push_cmdr1945_r1.py",
+   "shape": "vacuous_all",
+   "line": 109,
+   "collections": [
+    "docs"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "docs": false
+   },
+   "text": "ok = all(c[\"server_equals_local\"] and c[\"chain_root_is_tip\"] and not c[\"foreign_paths_in_diff\"]",
+   "fn": "all"
+  },
+  {
+   "file": "push_g4_floor_r3_r1.py",
+   "shape": "ternary_no_floor",
+   "line": 99,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "return 0 if (doc[\"chain_root_parent_is_tip\"] and doc[\"server_equals_pushed\"]"
+  },
+  {
+   "file": "push_g4_floor_r3_r1.py",
+   "shape": "vacuous_all",
+   "line": 100,
+   "collections": [
+    "values"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "values": false
+   },
+   "text": "and all(v[\"byte_equal\"] for v in blobs.values())",
+   "fn": "all"
+  },
+  {
+   "file": "selfcheck_build_r1.py",
+   "shape": "vacuous_all",
+   "line": 114,
+   "collections": [
+    "nodes"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "nodes": false
+   },
+   "text": "if any(n[\"verdict\"] != \"green\" for n in nodes):",
+   "fn": "any"
+  },
+  {
+   "file": "selfcheck_build_r1.py",
+   "shape": "vacuous_all",
+   "line": 165,
+   "collections": [
+    "nodes"
+   ],
+   "floor_guard": false,
+   "floor_per_collection": {
+    "nodes": false
+   },
+   "text": "and len(mtl) == 1 and all(n[\"verdict\"] == \"green\" for n in nodes)",
+   "fn": "all"
+  }
+ ],
+ "self_test": {
+  "bad_without_floor": 4,
+  "bad_shapes": [
+   "compare_only_verdict",
+   "emptiness_passes",
+   "ternary_no_floor",
+   "vacuous_all"
+  ],
+  "good_false_positives": 0,
+  "empty_input_hits": 2,
+  "must_include_compare_only": true,
+  "must_include_vacuous_all": true,
+  "arms_pass": true
+ },
+ "counts_by_file": {
+  "ack_aefbbd1a_r1.py": 4,
+  "anchor_drift_survey_r1.py": 1,
+  "anchor_drift_survey_r2.py": 1,
+  "anchor_drift_survey_r3.py": 3,
+  "anchor_mutation_arms_r1.py": 1,
+  "block_census_r3_r1.py": 1,
+  "bus_notice_anchors_landed_r1.py": 1,
+  "census_r3_verdicts_r1.py": 1,
+  "cmdr0130_landing_prediction_r1.py": 2,
+  "cnx_ledger_mirror_reader_r1.py": 3,
+  "cnx_ledger_mirror_sync_check_r1.py": 1,
+  "cnx_ledger_mirror_sync_hook_r1.py": 1,
+  "deliver_ord0552_r1.py": 3,
+  "floor_probe_r1.py": 1,
+  "floor_probe_r2.py": 1,
+  "floor_probe_r3.py": 1,
+  "g4_shape_artifact_r1.py": 1,
+  "g4_shape_artifact_r2.py": 1,
+  "g4_shape_artifact_r3.py": 1,
+  "g4_shape_artifact_r4.py": 1,
+  "g4_shape_artifact_r5.py": 2,
+  "g4_shape_probe_r1.py": 1,
+  "g4_shape_probe_r2.py": 1,
+  "g4_shape_probe_r3.py": 1,
+  "g4_shape_probe_r4.py": 1,
+  "g4_shape_probe_r5.py": 2,
+  "land_candidate_r1.py": 2,
+  "land_g4_floor_r2.py": 2,
+  "ledger_mirror_repro_r1.py": 1,
+  "ledger_mirror_runs_r1.py": 2,
+  "mirror_sync_probe_r1.py": 2,
+  "ord0476_gate_probe_r1.py": 3,
+  "ord0476_gate_probe_r2.py": 3,
+  "ord0476_gate_probe_r3.py": 3,
+  "ord0476_gate_probe_r4.py": 3,
+  "ord0476_gate_probe_r5.py": 3,
+  "ord0557_build_r1.py": 2,
+  "publish_anchors_r1.py": 3,
+  "publish_census_r1.py": 3,
+  "publish_census_r2.py": 3,
+  "publish_census_r3_r1.py": 3,
+  "publish_cmdr0019_r1.py": 3,
+  "publish_cmdr0124_r1.py": 3,
+  "publish_cmdr0130_r1.py": 3,
+  "publish_cmdr0245_r1.py": 3,
+  "publish_cmdr0245_r2.py": 3,
+  "publish_cmdr0557_r1.py": 3,
+  "publish_cmdr0557_r2.py": 3,
+  "publish_cmdr1945_r1.py": 3,
+  "publish_g4_floor_r1.py": 1,
+  "publish_g4_floor_r2.py": 1,
+  "publish_hook_r1.py": 3,
+  "publish_selfcheck_r1.py": 3,
+  "push_cmdr1945_r1.py": 1,
+  "push_g4_floor_r3_r1.py": 2,
+  "selfcheck_build_r1.py": 2
+ }
+}
