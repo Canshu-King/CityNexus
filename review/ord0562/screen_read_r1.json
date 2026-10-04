@@ -1,0 +1,45 @@
+{
+ "states": [
+  {
+   "label": "wizard_default_no_patch",
+   "patch_http": "NOT_PATCHED",
+   "stored_window": "as the wizard wrote it",
+   "today_when": "5 Oct, 10:00 — 7 Oct, 20:00 · 2 travelers · 3 days",
+   "day_phrase": "NOT_FOUND",
+   "traveler_phrase": "NOT_FOUND",
+   "budget_line_on_screen": "ABSENT",
+   "shout_days_plural_with_one": false
+  },
+  {
+   "label": "window_same_day",
+   "patch_http": 200,
+   "stored_window": {
+    "start": "2026-10-20T08:00:00+08:00",
+    "end": "2026-10-20T20:00:00+08:00"
+   },
+   "today_when": "20 Oct, 08:00 — 20 Oct, 20:00 · 2 travelers · 3 days",
+   "day_phrase": "3 days",
+   "traveler_phrase": "2 travelers",
+   "budget_line_on_screen": "ABSENT",
+   "shout_days_plural_with_one": false
+  },
+  {
+   "label": "window_two_days",
+   "patch_http": 200,
+   "stored_window": {
+    "start": "2026-10-20T08:00:00+08:00",
+    "end": "2026-10-21T20:00:00+08:00"
+   },
+   "today_when": "20 Oct, 08:00 — 21 Oct, 20:00 · 2 travelers · 3 days",
+   "day_phrase": "3 days",
+   "traveler_phrase": "2 travelers",
+   "budget_line_on_screen": "ABSENT",
+   "shout_days_plural_with_one": false
+  }
+ ],
+ "pageerrors": [],
+ "console_errors": [],
+ "wizard_http": 201,
+ "english_arm_proved_by_heading": "Trip to Tianjin",
+ "journey_id": "731d5b2f-d5e0-483d-9474-fd6cd3df54ae"
+}

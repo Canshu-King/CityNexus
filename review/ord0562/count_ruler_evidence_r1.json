@@ -1,0 +1,29 @@
+{
+ "generatedBy": "cff87c64",
+ "ruler": "ord0562-english-count-nouns-r1",
+ "run": "ord0562-r1",
+ "dictionary_lines": 2244,
+ "entries_parsed": 1883,
+ "english_entries": 953,
+ "softened_still_present": 0,
+ "counted_keys": {
+  "hub.todayDays": [
+   "n"
+  ],
+  "hub.budgetLine": [
+   "days",
+   "people"
+  ],
+  "hub.todayDaysUnknown": []
+ },
+ "counted_key_values": {
+  "hub.todayDays": "{n} {plural:day}",
+  "hub.todayDaysUnknown": "length unknown",
+  "hub.budgetLine": "{days} {plural:day:days} · {people} {plural:person:people} · about {amount} per person per day"
+ },
+ "chinese_counterparts": {
+  "hub.todayDays": "{n} 天",
+  "hub.todayDaysUnknown": "天数未知",
+  "hub.budgetLine": "{days} 天 · {people} 人 · 每人每天约 {amount}"
+ }
+}
