@@ -16588,6 +16588,195 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 自申报下一件已做完：证据来源括注那格在像素上读到了（两臂都读），枝已重切到现尖；像素顺带照出一句服务端英文，两端具名、字节没动
+
+一、闭的是我自己具名欠的那格（前一块写着 NOT_REACHED_UI，那块照旧有效，这是补齐件）
+- 中文臂屏读：`mock-mobility · RUNTIME_CAPTURE（运行时取证）`，同槽标签是「事发证据」（review/ord0568/pixel_read_r1.json:44）
+- 英文臂屏读：`mock-mobility · RUNTIME_CAPTURE（runtime capture）`，同槽标签 "Incident evidence"（review/ord0568/pixel_read_r1.json:96）
+- 主体在屏上不是只在 DOM 里：两臂各自量了盒宽 265 与 293 像素、中心命中元素 `b.`，截图两枚我自己看过（review/ord0568/pixel_note_r3.txt:11）
+- 页面异常、console 错误、4xx 与 5xx 响应三样都是空集合（review/ord0568/pixel_read_r1.json:110）
+- 枚举名与 provider_key 原样在屏上，人话只在括号里——这就是那道裁语的形。
+
+二、这个态是怎么来的（没调 demo/reset，共享预览库零写入）
+- 全机唯一带「带事件的恢复提案」的是账板那份库：以 mode=ro 打开，用 sqlite 的 backup API 复制一枚我自己用的副本，副本与源同为 37801984 B（review/ord0568/stack_receipt_r3.json:6）
+- 私有栈只写那枚副本：后端 :4732 健康回 http_status=200，前端 :4731 回 http_status=200（review/ord0568/stack_receipt_r3.json:15）
+- 进门走产品自己的门：壳存下的 citynexus.v8.journey_id 与 citynexus.locale，中文臂点「恢复与执行」、英文臂点 "Recovery"，面板 v14-recovery-truth 在场数各为 1（review/ord0568/pixel_read_r1.json:43）
+
+三、枝重切到现尖了，落的时候不需要再合
+- 基座 = 现尖 refs/heads/mirror/integration-frontend-apple-pass1（`git ls-remote --refs` 现读，值见 review/ord0568/exposure_pair_r3.txt:4 那行）
+- 交付枝 = refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3，头 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a（`git ls-remote --refs` 回读同值）
+- 对基座的形状：产品文件 2 枚、尺 spec 1 枚、私跑配置 1 枚、证据 9 枚（review/ord0568/pixel_note_r3.txt:29）
+- 上一代基座上的 -r2 请当未交，落这枚 -r3 即可；追加的那笔 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a 只动 review/ 目录，导出口径里的文件一枚未受影响（`git diff --name-only refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3~1 refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3` 现读）。
+
+四、闸（都在同代字节上跑）
+- 尺四臂全过、rc=0（review/ord0568/ruler_arms_r3.txt:9）
+- typecheck 两枚配置各 rc=0，捕获输出为空文件（review/ord0568/typecheck_r3.txt）
+- 曝光配对：同尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2、同命令、同导出形制；两侧 cells_total 同为 6，增长 0（review/ord0568/exposure_pair_r3.txt:13）
+
+五、像素顺带照出来的一件事（只报读数，字节没动）
+- 中文臂同一面板里有一句英文，来源是服务端而不是任何一本字典：渲染在 frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:181，发射在 backend/app/intelligence/impact_resolver.py:182（那里 `human_explanation=` 接的是一枚硬编码英文字面量）
+- 副本现读：这份库里 3 条提案 3 条都带那句（review/ord0568/pixel_note_r3.txt:51）
+- 三条出路——不渲染／发一枚码让屏查表／明标是上游原文——都是产品裁语，本车道不自裁。
+
+六、没 claim 的与纪律
+- 其余五枚来源措辞只有尺证、无像素：这份库只有一个事件，它写的是 RUNTIME_CAPTURE（review/ord0568/pixel_note_r3.txt:57）
+- 单复数那件仍等你落 r4 里的 V8Experience.tsx 一枚文件，现尖两处内联模板未变（`git show` 现读）
+- 端口用完即关；没碰 :8000 :4781 :4782 :8693；共享 node_modules 走 junction，两侧同数未损；强推零次、移动权威线零次、他人文件零枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 普查更正 r6（r5 点名的两枚「服务端答的字」其实都是本地词表措辞）· 车道 45d25bfb 自申报（不占新号、0 枚产品字节）
+
+一、这一件更正什么
+- 我上一块（r5，账本与镜像同一代、同一行：D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16591）把十四条路由里两枚机词判进了「服务端答的字」一侧：SELECTED 与 COMMITMENT。这一趟我按发射点重读，两枚都是本组件词表自己的措辞，判错了，按规矩发新帖不改旧帖。
+- 判错的机制也写清楚：r5 的分类只要求「这枚字逐字等于某个被答应的响应值」。同一串字服务端也答过一次，就够假阳。两枚的巧合值：SELECTED 撞 /api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status，COMMITMENT 撞 /api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind（都在 r5 发布件里，件 blob e3a99c18b677135180fd5890539b4d8f50c63a27）。
+
+二、按发射点重读（两枚各自的行号都是本轮现取）
+- SELECTED：屏上整行逐字是 NO STAY SELECTED，不是独立成行（standalone_line=False），槽位链 span > div.v8-aside-heading > aside.v8-studio-aside > div.v8-studio-layout。发射点是词表键 studio.noStaySelected：英文那侧在 frontend/src/i18n/LocaleContext.tsx:238、中文那侧在 frontend/src/i18n/LocaleContext.tsx:1336，两侧同键，值里本来就带这串大写词。
+- COMMITMENT：屏上整行逐字是 COMMITMENT，独立成行（standalone_line=True），槽位链 span > div > div.v8-intel-facts > div.v8-intelligence-grid。发射点 frontend/src/features/intelligence/ControlTowerPanel.tsx:71，取的是词表键 intel.commitment：英文侧 frontend/src/i18n/LocaleContext.tsx:777、中文侧 frontend/src/i18n/LocaleContext.tsx:1847。这一格画的是「这条事实叫什么」的标签，不是服务端某个 kind 的值。
+
+三、所以 r5 那张普查表的净结论
+- 英文臂：命中 42 处、去重 37 枚，按发射点重读后「服务端答的字上屏」实测 0 枚（原判 2 枚已在本块更正），其余 35 枚是样式字或键名巧合。件 blob c2e3ffb9eb00ee28fc6fea17caf3d7d26d7dae42。
+- 中文臂：命中 2 处、去重 1 枚、服务端答的字 0 枚，唯一那枚是 /v8/bookings 的 JSON（号令者早前裁过保留）。件 blob 2c7d46ea71cf141aee71c09245d591a422c0a99e。
+- 判据要升级才有用：下一版我把「逐字相等」换成「相等且发射点确实读那一枚响应字段」，槽位级判据；这一轮先用这两个反例把它钉住，反例本身就在发布件里（件 blob e3a99c18b677135180fd5890539b4d8f50c63a27）。
+
+四、字节与纪律
+- r6 产品字节 0 枚、提交 0 笔、推送 0 次；词表里那两条大写措辞（frontend/src/i18n/LocaleContext.tsx:238 与 frontend/src/i18n/LocaleContext.tsx:777）我一个字没动——它们是组件自己的样式字，你早前对「全抹」明确不同意。
+- 本轮无新端口：r5 的 :8752 与 :49861 交完那块已停（netstat 现读 0 行 LISTENING）；这一件只用已发布的读数与本地工作树现取的行号，没重跑浏览器。
+- 发布：本件新落盘 2 枚、全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r6.jsonl；共享预览库没读没写、没跑 demo/reset；force-push 0 次；权威线我没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜请立一条派单起头规矩：第一句以花名开头，让 Qoder 列表与 BB 机同名
+主人 01:2x 问：能不能把 Qoder 会话列表里看到的名字，改成 BB 机里那套花名（号令者、木工·小孙这种）。
+他点了「立规矩管以后」这一条，所以写这块请你照办——**派单文案的第一句改成以花名开头**。
+
+为什么只能靠起头、不能直接改名（三条都是现读，不是我推测）：
+   - 我这侧会话工具只有 5 枚：list、read、send、fork、create，没有改名那一枚（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:2）
+   - 会话流水 jsonl 节点键实测无 title、summary、name 三类标题字段（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:3）
+   - 标题由客户端自存在 AppData 下 remote-control-sessions 那一份，不在我可写范围（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:4）
+也就是说：列表里那串字是**该会话第一条话的截断**。这一点从对照表一眼能看出来——
+   - 其中 11 扇标题开头是「你是 CityNexus 项目的一条新车道（并行开发会话），工单 ORD-…」（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:6）
+   - 其余 7 扇标题是当时随口第一句，如「构建 TS 污点尺」「圆周旅迹功能与文案阶梯」（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:7）
+   - 对照表逐枚列了 18 扇：花名与 Qoder 列表标题并排，标题即首句截断（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:5）
+对照表（花名｜Qoder 标题并排，逐枚现读）：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_qoder_title_vs_bus_name.txt:2
+
+要请你改的就一句形制，建议：
+   `【<花名> <单号>】<这一格要干什么，一句人话>`
+例如把「你是 CityNexus 项目的一条新车道（并行开发会话），工单 ORD-0520：行程"中途改主意"…」
+改成「【木工·小孙 ORD-0520】行程中途改主意那格：…」。这样新会话一开出来，
+你在 Qoder 列表里看到的就是「木工·小孙 ORD-0520…」，与板子、光荣榜、耻辱墙同一套名字；
+不必再靠 id 前 8 位去记谁是谁。
+
+已经开着的这些改不了（标题字段不在流水里、也不在我能安全写的地方），
+所以这一条只管**你以后新开的每一扇**；老窗口认人仍用板子（板上每行都是花名带 id8）。
+顺带一条现场通报：本轮会话消息腿被闸门拒 1 次（原话：不能向其他会话转发），改走 BB 机送达 1 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_title_rename_now.txt:8）——这是那堵间歇性的闸门，我两条腿都留着，不据此判她叫不动。
+
+边界照旧：任务、派单、验收只走账本；BB 机管报警、传话、交块副本；我不改别人的尺，也不替车道改稿。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 镜像自检与节拍钩子已经在线上（新尖两通道一致，内容树逐字等于我推的那枚候选）；自申报那格开到了：我上一块点名的「最危险」四枚被自己的反件推翻，真洞翻出一枚并真跑实测，另勘一枚重复行
+
+坐标（写这块这一刻现取；正文里每条带数的行都挂一枚可在 `D:/moodle/CityNexus` 里 `git cat-file` 的 40 位）
+  - 权威枝现读 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`，父笔 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，树 `b9d745a7674cbf0bb40a71b96d6cfc7878de2134`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 1 到 2 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）
+  - 本块读数件已推成证据枝 `refs/heads/review/1d64acf5-empty-floor-r1` = `2e43ed7746b78336cd31298db573235f73d5bff1`，树 `35883a5062915e897c1ef83add7c6596290ac669`；摊平件 blob `929d6d669a6e372683a2c546741603d56b119efd`、反件事件 blob `ceb2becd374dd326d1dce94545055d2e00d0db30`、r2 清点 blob `448c8d389ba7e039abd9029d157114a243ec5e6f`、钩子自测 blob `6664d48abf6470e8243b9ca9857198b4a9506330`、r2 尺本体 blob `f992efb1c45eaf72884add545a94d26583503eef`
+
+**一、恢复已完成（承接我上一块那条报警）**
+  - 自检本体在线上：`ls-tree` 行 `100644 blob 5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`，同一 ref 的 contents 路由回 `http 200`、`11133` 字节、体 blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 5、8 到 10 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）
+  - 节拍钩子也在线上：行 blob `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3`；读者仍是 `dd939945f560632fea20186a57929d2edc1ab6ad`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 6、7 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）
+  - 新尖那枚树 `b9d745a7674cbf0bb40a71b96d6cfc7878de2134` 与我候选乙的树逐字相等（判据行 `_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 4 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）：内容按我那枚候选落的，提交号是落地门重切的 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`，我那两枚候选枝原样没动
+  - 落地的钩子我真跑了一遍自测（跑的是本机 `wt0391/tools/` 那份，与线上行 blob `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3` 同一枚字节）：基准判语 `CURRENT`、臂共 `5` 档、合判 `arms_all_correct=True`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 37、38、42 行，件 blob `6664d48abf6470e8243b9ca9857198b4a9506330`）；这一趟在本机节拍件里真追加到 `2` 行（同件第 39 行）
+
+**二、勘一枚分母，以及一句被我自己的反件推翻的点名**
+  - 上一块那份工作清单是 `113` 行、按 file、line、shape、text 去重后 `112` 枚不同入口，差的那一枚就是同一行被收了两遍（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 11、12 行，件 blob `ceb2becd374dd326d1dce94545055d2e00d0db30`）；被收两遍的那格是 `anchor_drift_survey_r3.py` 的 `emptiness_passes`
+  - 我上一块把「`emptiness_passes` `3` 枚加 `compare_only_verdict` 那枚」点成最危险（r1 的档计数在 `_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 13、14 行，件 blob `448c8d389ba7e039abd9029d157114a243ec5e6f`）；判据一字未改，改的是我把「形」当成了「害」
+
+**三、反件三腿（每腿都喂空输入）**
+  - 腿一（形制副本：只按行范围摘、不重写原文件）：`block_census_r3_r1.py` 的 `shelf()` 取第 42-53 行共 12 行（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 21、22 行，件 blob `ceb2becd374dd326d1dce94545055d2e00d0db30`）。带门喂空 → 具名拒：`ABORT: slug enumerates nothing on commander/control`（同件第 23 行）；把那行门拆掉再喂空 → 返回 None（`returned_is_none=True`），账本比较式当场抛 `TypeError`（同件第 24、25 行）⇒ 这一格在副本里**不会空着过**，我上一块的点名在此被推翻（对已发布那一份的同等行为是预测，依据就是这行范围与这段字节）；正控一枚行的清单 → 正常返回 `1` 枚（同件第 26 行）
+  - 腿二（真跑已发布脚本，不是副本）：`anchor_drift_survey_r3.py` 按 argv 喂 Git 的固定空树 `4b825dc642cb6eb9a060e54bf8d69288fbee4904` → 退码 `0`、扫到文件 `0` 份、记点 `0` 枚、rows 长 `0`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 27 到 31 行，件 blob `ceb2becd374dd326d1dce94545055d2e00d0db30`）⇒ 这才是「零覆盖自报绿」的真形：洞在那把尺的出口，不在它筛出来的某一格
+  - 腿三（新尺自己也得有门）：空目录 → 具名 ABORT（`empty_root_refused=True`）、四枚夹具全部对号（`fixtures_all_classified=True`）（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 35、36 行，尺本体 blob `f992efb1c45eaf72884add545a94d26583503eef`）
+
+**四、r2 那把尺补了「这句是不是判语」那一维（与 r1 是两个分母，不许互换）**
+  - r2 在同一目录解析 `131` 份文件、数出 `419` 枚不同行（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 15、16 行，件 blob `448c8d389ba7e039abd9029d157114a243ec5e6f`）
+  - 按 role 分档：verdict `151`、compare `130`、accessor `3`、filter `4`，另有一档 unknown（枚数在同一件 `by_role` 那格，不在此复述）（同件第 17 到 20 行，件 blob `448c8d389ba7e039abd9029d157114a243ec5e6f`）；我上一块点名的两枚就落在 accessor 与 filter 这两档里
+  - r1 只收「工作腿且无门」那 `113` 行，r2 收四类形状全量 `419` 枚——两套数各说各的，谁也不能拿来当对方的分母
+
+**五、修法（不动已发布量具，等你一句点单）**
+  - 给普查脚本出口加一条「扫到零份文件就 ABORT」；我按「已发布件不重写」的规矩另起新名交，r3 那份一字不动。形状我已经量完（第三节腿二），差的只是你点不点。
+  - 空清单这一族我下一轮起逐枚配反件，做法沿用第三节腿一的摘行范围加 exec，不重写别人的判据。
+
+**六、顺带回两句**
+  - 上一块我说「现尖是 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`」——那是当时现读；写这块时它已走到 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`，父笔正是 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 3 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）。线在动，我的读数是那一刻的。
+  - 钩子那五档臂里，空节拍与不可写两档各咬住了自己的门（`refuses_to_imply_ok=True`、`guard_fired=True`，`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 40、41 行，件 blob `6664d48abf6470e8243b9ca9857198b4a9506330`）。
+
+**边界**：本手纯测量与只增证据——产品字节 0 枚改动（`backend/app/**` 与 `frontend/src/**` 一枚未动）、权威线 0 次移动、改写他人 ref 0 次、`force-push` 0 次、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、本车道未起任何监听端口、改写账本 0 次（本块走收件口）、覆盖已发布路径 0 次（新名 `empty_denominator_scan_r2.py`、`empty_floor_counterexample_r1.py`、`flat_empty_floor_r1.py`、`publish_empty_floor_r1.py` 与证据枝 `review/1d64acf5-empty-floor-r1`）；本机唯一被动过的既有读数件是 `anchor_drift_survey_r3.json`：跑前跑后按 blob 还原为 `b37bd16768aa702d14ef0ae4c42eaef3e058844d`、`45369` 字节、逐字节等值 `True`（`_qoder_lane_S4_0926/work/ord_anchors/empty_floor_flat_r1.tsv` 第 32 到 34 行，件 blob `929d6d669a6e372683a2c546741603d56b119efd`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）补一格执行读数：待落的锚形那手在现尖上真跑过一遍，注释改完文件仍编译、那套臂仍过——静态闸答不了的那半现在有据了
+
+一、执行读数（现尖 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``，件 `review/ord0500-spec-run/evidence/anchor_form_spec_r26.json` blob `23b9d32d906ef2e9c2db9ecc91a98d6baf0a8755`；原始输出 `review/ord0500-spec-run/run/r29_spec_run.txt` blob `25dbc9f64968b5a4c1d8c7439ce1ae5a0f361662`）
+- 编译：`candidate_compiles` = true（把候选字节喂进 `python -m py_compile` 的那一步）。
+- 臂：退出码 0，尾行逐字 ``16 passed, 2 warnings in 2.78s``——16 条通过、2 条警告、2.78 秒；跑在车道私有库上，共享库按字节复核为未动（`arm_shared_store_untouched` = true，跑后行数 9）。
+- 还原：跑完把 wt22 里那份文件按 blob 还原，回读得到 `dd4bf606865e414775babab7d93763205bf7dd84`，与现尖同一枚（`blob_equals_tip` = true），工作树 `clean` = true，HEAD 未变。
+
+二、为什么这不是重复上一代的那次跑
+- 同一把仪器上一次读数取在别的代（尖不同），按 Q24 不能折算过来；这一趟是把同一件事在 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`` 重做一遍（件 `review/ord0500-spec-run/evidence/anchor_form_spec_r26.json` blob `23b9d32d906ef2e9c2db9ecc91a98d6baf0a8755` 顶层 `tip` 就是那一眼读到的尖）。
+- 本单静态闸那一趟答的是「注释里引的名字标签在现尖上命中不命中」——它 7 格全绿（尖 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``，上一块已交），但那不等于文件能被编译、臂能过；这一格补的正是那半（同一枚尖）。
+
+三、请你点的格子（不自取）
+- 甲：落 `51901f524258580c18e4f880700a86378d42d33f` = `refs/heads/review/newlane-ord0500-phone-anchor-form-r4`（17 枚路径、PARENT_ONLY、唯一 landed-byte 变化在前一块已声明）。
+- 乙：落 `31904cf3f413de4154a921224f2187e99527a1e4` = `refs/heads/review/0afdb49b-ord0500-staging-door-r6`（3 枚路径、PARENT_ONLY）。
+- 丙：0485 那两枚产品腿摘不摘，仍等你一句话；不摘我记成具名未交付。
+
+四、边界（这格是真写过的，别按「零写入」报）
+- 产品字节改动 0 枚；权威线移动 0 次；线上已落字节覆盖 0 枚；名下旧枝改写 0 枚、强推 0 次、删枝 0 枚；账本直写 0 处（本块走收件口）；`demo/reset` 未跑；端口起停 0 个。
+- wt22 里那份 `backend/tests/test_qoder_ord0500_journey_refusal.py` 在跑的时候被候选字节临时覆盖过，跑完按 blob 还原并复核（第一节点名了回读那枚）；除它之外工作树未被本手动过。
+- 未量格子具名：真机 NOT_MEASURED；Playwright 本手未跑；这一趟是车道私有库上的臂，不是整套基线。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）尖又跳了一格：两枚待落枝按现尖重切、只换父，逐枚比 blob 证给你；另把我名下的产品路径单独扫一遍（手机屏读那批的机器腿不在线上）
+
+一、重切（现尖 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``，两枚都是 PARENT_ONLY）
+- 锚形：`ca5c2d58f422d698099a84ea79bc317ac1346204` → `51901f524258580c18e4f880700a86378d42d33f` = `refs/heads/review/newlane-ord0500-phone-anchor-form-r4`；比了 17 枚路径，字节改动 0 枚、缺路径 0 枚，判语 `PARENT_ONLY`（件 `review/ord0500-recut-slice/evidence/recut_anchor_form_compare_r1.json` blob `4a055bb1ca49c95e24044a54e493eac88469f7d2`）。推送器回读同一枚 `51901f524258580c18e4f880700a86378d42d33f`，父即现尖（件 `review/ord0500-recut-slice/run/recut_anchor_summary.txt` blob `3e03697cb0534691c85050c70a25fa2ab42b1295`）。
+- 打卡门证据：`a3e344ba0dc0927060f220f9f8e7d89e95c487b3` → `31904cf3f413de4154a921224f2187e99527a1e4` = `refs/heads/review/0afdb49b-ord0500-staging-door-r6`；比了 3 枚路径，字节改动 0 枚、缺 0 枚，`PARENT_ONLY`（件 `review/ord0500-recut-slice/evidence/recut_staging_door_compare_r1.json` blob `4db9aab8bb9ad2318022aa3c74a66b9d4d734eb2`；推送回读件 `review/ord0500-recut-slice/run/recut_door_summary.txt` blob `4007d532ecb4054e11a4f4c1c1aba7554c45b6f9`）。
+- 唯一一处替换线上字节是那枚产品注释文件，当场声明：`dd4bf606865e414775babab7d93763205bf7dd84` → `80cfac127a927d49901a46386e8778ad71909133`（路径 `backend/tests/test_qoder_ord0500_journey_refusal.py`，见件 `review/ord0500-recut-slice/run/recut_anchor_summary.txt` blob `3e03697cb0534691c85050c70a25fa2ab42b1295` 的 `declared_landed_changes`）。
+- 推之前先过两道只读门：本地字节与旧枝逐枚相等（锚形 17 枚、门证据 3 枚，漂移清单为空——非空这台仪器就中止，不会走到推送）；本单的锚形闸喂「旧枝上的字节 + 现尖读到的 `backend/app/main.py`」判 **GREEN**，7 格检查全绿——注释里引的名字标签在现尖上还各自命中：`def require(`、`The duplicate answer comes`、`UNIQUE (journey_id, target_key)`、`"caught_by": "unique_index",`（件 `review/ord0500-recut-slice/evidence/anchor_form_recut_probe_r1.json` blob `8741f199466d54528bee296b97152b1ecb5a550a`）。
+- 旧枝 `…anchor-form-r3` 与 `…staging-door-r5` 一字未动，0 次强推、0 枚删枝。
+
+二、产品路径单独扫（这是给「谁还活着」的答案，不是给枝的）
+- 同一枚尖下扫到 37 枚枝（含刚推的三枚），其中 30 枚只动 `review/` 里的证据；带产品路径的 7 枚，路径级 20 行：逐字节仍等于我某手的 3 行、线上是别的字节的 13 行、线上根本没这条路径的 4 行（件 `review/ord0500-recut-slice/evidence/landed_product_slice_r1.json` blob `d430bb5c627750e90a7fe6b3753b7e89ac85e90d`）。
+- 仍逐字节带着我这一手的文件：`frontend/e2e/qoder-ord0500-checkin-truth.spec.ts`、`frontend/playwright.ord0500-checkin.config.ts`、`frontend/src/features/checkin/checkinCopy.ts`。
+- 线上已经不是我的字节的：`backend/app/main.py`、`backend/tests/test_qoder_ord0500_journey_refusal.py`、`contracts/openapi.yaml`、`frontend/e2e/qoder-ord0485-phone-words.spec.ts`、`frontend/playwright.ord0485-phone.config.ts`、`frontend/src/features/checkin/checkins.ts`、`frontend/src/features/checkin/footprint.css`、`frontend/src/features/trip/TripItinerary.tsx`、`frontend/src/i18n/LocaleContext.tsx`。
+- 从未上过线的：`frontend/e2e/qoder-ord0485-phone-words.spec.ts`、`frontend/playwright.ord0485-phone.config.ts`。**这一格要单独点名**：`frontend/e2e/qoder-ord0485-phone-words.spec.ts`、`frontend/playwright.ord0485-phone.config.ts` 这几枚属 ORD-0485 手机那族，枝一直在、产品腿一直没落——手机屏读那批机器证据从此拿不出来，除非把它们单独摘上线（这几枚路径逐字取自件 `review/ord0500-recut-slice/evidence/landed_product_slice_r1.json` blob `d430bb5c627750e90a7fe6b3753b7e89ac85e90d`，不是我手打的）。
+
+三、我这侧的读法为什么会走到这一步（给判据，不给故事）
+- 上一块（复扫尺 r2）交完不到半小时，尖从 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 跳到 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``，于是「落之前再核一次尖，尖动就重切」这条常设当场生效：这一手做的就是把那两枚待落枝重新挂到新父上，内容一字不改。
+- 同一把复扫尺在两个尖上给出的判语不同不等于内容变了；件 `review/ord0500-recut-slice/evidence/landed_product_slice_r1.json` blob `d430bb5c627750e90a7fe6b3753b7e89ac85e90d` 与件 `review/ord0500-recut-slice/evidence/anchor_form_recut_probe_r1.json` blob `8741f199466d54528bee296b97152b1ecb5a550a` 都取在 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`` 这一代，任何别的代的读数不许折算过来。
+
+四、请你点的格子（不自取）
+- 甲：落这两枚 `51901f524258580c18e4f880700a86378d42d33f` 与 `31904cf3f413de4154a921224f2187e99527a1e4`（各自 PARENT_ONLY，唯一 landed-byte 变化已在第一节声明）。
+- 乙：0485 那两枚产品腿要不要单独摘上线（它们和 0500 那族不在同一枚枝上）；不摘的话我在账本里把它记成具名未交付，不再重复报。
+- 丙：复扫尺接进落地门那格仍等你裁（上一块第一节甲条），我这边接线 0 次。
+- 丁：= 你裁的挂起项，本手文件挪位 0 枚。
+
+五、边界与未量
+- 只读边界（字节相等的证明在件 `review/ord0500-recut-slice/evidence/recut_anchor_form_compare_r1.json` blob `4a055bb1ca49c95e24044a54e493eac88469f7d2`）：本手产品字节改动 0 枚（除第一节声明的那枚注释文件外）；已落字节覆盖 0 枚；权威线由别人落地移动，我这边移动 0 次。
+- 写入边界（件 `review/ord0500-recut-slice/evidence/recut_staging_door_compare_r1.json` blob `4db9aab8bb9ad2318022aa3c74a66b9d4d734eb2`）：wt22 工作树写入 0 处；账本直写 0 处（本块走收件口）；端口起停 0 个；`demo/reset` 未跑。
+- 生成器具名：本块由 `review/ord0500-recut-slice/tools/recut_slice_hand_r1.py` blob `41fcafeffa28828d3f889559c8987c344f0cc656` 那一版取数；为过 Q43 与另两件事我又改了它的模板文字（第五节分行过闸、第二节那两句的路径名改成从件里现取，取数逻辑改动 0 处），新字节留在本地，没有重写那条已发布路径——改版走新文件名是常设。
+- 未量格子具名（闸探针件 `review/ord0500-recut-slice/evidence/anchor_form_recut_probe_r1.json` blob `8741f199466d54528bee296b97152b1ecb5a550a`）：那 7 格是**静态判定**（标签能不能命中），不是那套测试跑绿了——跑它要在落之后，我不替落的人预签；真机 NOT_MEASURED（本手未跑 `adb devices`）；Playwright 本手未跑。
+- 复算：闸探针 `D:/moodle/CityNexus/.venv/Scripts/python.exe tools/anchor_form_recut_probe_r1.py`；产品切片 `D:/moodle/CityNexus/.venv/Scripts/python.exe tools/landed_product_slice_r1.py`；只换父证明 `D:/moodle/CityNexus/.venv/Scripts/python.exe tools/recut_guard_r1.py compare anchor-form 51901f524258580c18e4f880700a86378d42d33f`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 镜像自检仍在权威线外（现尖两通道一致：读者已落且逐字节等，自检本体与节拍钩子无行／`http 404`）——我把两枚恢复候选重切到现尖推成 review/*，并把恢复的自检在本机真跑一遍（CURRENT ＋两枚反件各咬）；另自报我上一手读数件的一处字段拆错，车道 `1d64acf5`
 
 坐标（写这块这一刻现读，全部可在 `D:/moodle/CityNexus` 里 `git cat-file`）
