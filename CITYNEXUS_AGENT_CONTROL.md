@@ -16588,6 +16588,50 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 18:28 · ORD-0507 复切开到一半的现场账：三件里有两件在现尖已不存在于我这手原来的形状，第一件的产品字节已被后来那代替掉（逐枚 blob 现比）；卡在一个词表归属的裁语上，我把两形都摆出来，推荐甲
+
+**一、我这手是按现尖重切开的，不是搬旧枝**
+
+现读权威尖 `89213c447190c853de998e2d78e4b6d5f63847f9`（`git ls-remote --refs origin`）。两枝各自相对基座 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9` 的净面：时钟句与归属那手 10 枚路径、活动行词那手 10 枚路径（`git diff --name-only` 现数）。旧枝原样留着没动，我这手没做 stash、没做 force-push（旧 stash 一枚不是我留的，是别的车道在册的）。
+
+**二、逐枚探下来的现状（都是 `git show 现尖:文件 | grep -c` 的命中数，不是印象）**
+
+- 第一件（`/v8/access` 活动行不印服务器动作名）：这能力在尖上已在——`accessCopyFor` 在 `frontend/src/features/access/accessCopy.ts` 与 `AccessPanel.tsx` 都探得到。但我那两枚文件在尖上的 blob 与我交的那代逐枚不等（`frontend/src/features/access/accessCopy.ts` 尖 `ebbe3d77f5a58699fbc8ac55e53cdd0efd55248b` 对我那代 `f4c94cd428d11bd5fe4de1ca6bf84a1a17ee6b6b`；`AccessPanel.tsx` 尖 `98b0d423a1a7a58b979a53f52063fccf669f0552` 对我那代 `eb41a689a69e6cbf6bf79a5def0cf1e270f4af75`）⇒ 判"已被后来那代替换"，不是"没落"。另外我这手的 e2e 那支在尖上取不到（`git ls-tree` 现尖 `frontend/e2e` 里 ord0507 命中 0 枚），而它挑控件用的 `access-journey-picker` 这枚 testid 在尖上前端源码里也是 0 枚命中 ⇒ 我这屏读臂本身已经钉在一只不存在的控件上，要重指才能再取读数。
+- 第三件的"句子"那半边：也已在尖上——`CHECKIN_REFUSAL_COPY` 在 `frontend/src/features/checkin/checkinCopy.ts` 命中 1 枚，配 `refusalWords(...)` 逐码出人话。
+- 第三件的"技术详情折叠"那半边：尖上 0 枚（`stop-checkin-technical` 在 `frontend/src/features/trip/TripItinerary.tsx` 命中 0；`CheckinTechnical` 在 `frontend/src/features/checkin/checkins.ts` 命中 0）⇒ 仍是我这手要交的。
+- 第二件（时钟句括号 + 新行程那屏把台上全局行程算给正在创建的这趟）：尖上 0 枚（`cursorAbsent` 与 `screenHasNoJourneyInView` 各 0）⇒ 仍是我的。
+
+**三、撞车撞在词表上，不在行上**
+
+现尖那侧 `checkins.ts` 的拒绝形状是 `facts: CheckinRefusalFacts`（ORD-0530 那面板按 `answer.refusal` 切），我这手交的是 `technical: CheckinTechnical` 并把句子改走我自己那 8 枚 `checkin.refused.*` 键。两者叠在同一模块同一族句子上，于是同一件事会有两套词表：尖上的 `CHECKIN_REFUSAL_COPY` 与我新加的 `checkin.refused.*`。我这手不愿自己替你定哪套算数，所以两形都摆出来：
+
+- 甲（推荐）：句子继续走已落地的 `refusalWords` + `CHECKIN_REFUSAL_COPY`，我这手只补"技术详情"折叠那一半——`CheckinTechnical` 载荷、每站一枚折叠、按 ORD-0500 已落地的按站分键（`stopNotices` 那形制，一枚事实只说在它那一站）；我那 8 枚 `checkin.refused.*` 键整批不要（同义复用会先骗到读数）。代价：我这手旧的 e2e 里"逐码不同句"那几臂改成读已落地那句，不新增判据。
+- 乙：我那套键与 `refusalWords` 并存，折叠也照我那代形制（单枚全局 `stopNotice`）。代价：两套词表 + 把已落地的按站分键退回全局一枚，等于覆盖 ORD-0500 那笔的现场账，我不建议。
+
+**四、这一手到现在为止做到哪儿、没做到哪儿（不含糊）**
+
+- 已做且可复核：把时钟句与归属那两枚文件按显式三方合到现尖，`frontend/src/app/V8Experience.tsx` 与 `frontend/src/features/simulation/SimulationPanel.tsx` 两枚都干净落上（净面 72 增 25 删），没碰 `checkins.ts`/`TripItinerary.tsx`/`LocaleContext.tsx` 那三枚冲突文件。
+- 没做，因此我不当交付：这一代的两臂屏读**没重取**（要一趟产线构建），两枚反件**没重放**，第一件那支 e2e 的控件指向**还没重指**。这三格缺任何一格，我这手都不算交出去。工作树现在是"两枚文件已改、未提交"的状态，我留着继续做；要我把这半截退回干净，说一声我按 `git checkout HEAD -- frontend/src/app/V8Experience.tsx frontend/src/features/simulation/SimulationPanel.tsx` 退（这两枚我这手之外没别人在改，现尖 blob 我核过：`frontend/src/app/V8Experience.tsx` 尖上 `14974f5cbb11d52bed4d3cbbabf6b6b73ed90718`）。
+- 顺带一句落地口径：现尖是无父重建树那一代，`rev-list --count` 回 1、`merge-base` 与我头之间回空，所以以上全部按逐枚 blob 相等判，没再用祖先形判据（这条你已入账，我只是说明我这手的判法跟着改了）。
+
+**五、我下一手怎么排（等你一句，或你点头甲我就按甲走）**
+
+1. 你点甲 ⇒ 我这手只交折叠那一半（含按站分键），并把 `技术详情` 的键复用现成的 `checkinCopy`；同一趟产线里把 2a/2b 的屏读与两枚反件一起重取重放，交一块。
+2. 你点乙 ⇒ 我把旧代形制原样续上，但在块里具名写清它把 ORD-0500 那笔退回全局一枚，等复验。
+3. 第一件（活动行词）我判自己**不再重交产品字节**：能力已在尖上且被后来那代替换；我只做"把那支 e2e 重指到现控件、补一次屏读分母"这一格，或者按你的判法整件闭单——这条也请顺带点一句。
+
+**六、这轮没动的**
+
+- 权威线：本轮一次没碰。
+- `review/*` 名下枝：本轮一次没推，也没有 force-push 记录。
+- 共享预览库 `_preview.db`：一次没写——本轮我没起过后端，也没起过预览服务。
+- `demo/reset`：我这手一次没主动调过。
+- 保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693：本轮没起也没停。
+- 别人的工作树与别人在册的 stash：一枚没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 交 ORD-0564 · 全量扫完（16 个 copy 文件、扁平键 2468 枚、`en:` 行 110 枚）：命中 3 条（2 枚活键、1 枚死键），本手改掉活键里的第一枚、另两枚具名不动；产品枝一笔两枚文件，改前改后用同一把探针各读一遍屏（证据枝 `7890adbc62e653c07dd1dfc6ae2c3a7562aec168`）
 
 **〇、题面与三格收窄**
