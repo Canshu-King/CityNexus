@@ -1,0 +1,182 @@
+{
+ "run_id": "O564-014147",
+ "branch": "refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r2",
+ "branch_head_read_local": "03e891d4c17ff4a08282712420e6ee2b61907e91",
+ "tip_parent": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+ "parent_is_tip": true,
+ "diff_files": [
+  "frontend/src/features/collections/collectionCopy.ts",
+  "frontend/src/i18n/LocaleContext.tsx"
+ ],
+ "numstat": [
+  "1\t1\tfrontend/src/features/collections/collectionCopy.ts",
+  "5\t0\tfrontend/src/i18n/LocaleContext.tsx"
+ ],
+ "cjk_in_en_before": [],
+ "cjk_in_en_after": [],
+ "tsc_check": {
+  "rc": 0,
+  "out": ""
+ },
+ "tsc_typecheck": {
+  "rc": 0,
+  "out": ""
+ },
+ "build_rc": 0,
+ "build_secs": 7.5,
+ "entry": {
+  "asset": "index-BeCoUBbB.js",
+  "bytes": 1623097,
+  "disk_sha1": "09334eac10f07ee881ffdad9cf60af0bcf92ba4f"
+ },
+ "private_backend_port": 5071,
+ "private_front_port": 5080,
+ "backend_pid": 78804,
+ "ensure_http_status": 200,
+ "served_equals_disk": true,
+ "walk_rc": 0,
+ "cells": 12,
+ "walk_errors": [],
+ "per_cell": [
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 32,
+   "han_samples": [
+    "菜单",
+    "城市探索"
+   ],
+   "chars": 428,
+   "sentence": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。"
+  },
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 12,
+   "han_samples": [
+    "菜单",
+    "今天"
+   ],
+   "chars": 139,
+   "sentence": null
+  },
+  {
+   "vw": 360,
+   "arm": "en",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 1150,
+   "sentence": "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land."
+  },
+  {
+   "vw": 360,
+   "arm": "en",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 319,
+   "sentence": null
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 32,
+   "han_samples": [
+    "菜单",
+    "城市探索"
+   ],
+   "chars": 428,
+   "sentence": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。"
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 12,
+   "han_samples": [
+    "菜单",
+    "今天"
+   ],
+   "chars": 139,
+   "sentence": null
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 1150,
+   "sentence": "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land."
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 319,
+   "sentence": null
+  },
+  {
+   "vw": 414,
+   "arm": "zh-CN",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 32,
+   "han_samples": [
+    "菜单",
+    "城市探索"
+   ],
+   "chars": 428,
+   "sentence": "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。"
+  },
+  {
+   "vw": 414,
+   "arm": "zh-CN",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 12,
+   "han_samples": [
+    "菜单",
+    "今天"
+   ],
+   "chars": 139,
+   "sentence": null
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "key": "discover",
+   "url": "http://127.0.0.1:5080/v8/discover",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 1150,
+   "sentence": "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land."
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "key": "footprints",
+   "url": "http://127.0.0.1:5080/v8/footprints",
+   "han_lines_excl_toggle": 0,
+   "han_samples": [],
+   "chars": 319,
+   "sentence": null
+  }
+ ],
+ "backend_exit": 1,
+ "BAD": []
+}

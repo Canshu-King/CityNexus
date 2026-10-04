@@ -1,0 +1,6 @@
+改前（现尖） rev=4d43f8bc25a1 扫了 148 枚文件、看到 169 行 en 串、命中 2 枚
+    frontend/src/features/collections/collectionCopy.ts:37  en: "Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land.",
+    frontend/src/features/poiimport/poiImportCopy.ts:122  en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting 
+改后（我这枝） rev=03e891d4c17f 扫了 148 枚文件、看到 169 行 en 串、命中 1 枚
+    frontend/src/features/poiimport/poiImportCopy.ts:122  en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting 
+命中差=1（改前减改后）

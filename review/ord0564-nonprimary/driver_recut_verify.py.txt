@@ -1,0 +1,237 @@
+# -*- coding: utf-8 -*-
+"""ORD-0564 那枚修复重切到现尖之后的闸与屏读：两枚编译闸、一次构建、discover 与 footprints
+两屏 × 两臂 × 三档 = 12 格屏读，外加"英文串里嵌汉字"在枝前后各扫一遍的对照。"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+SCR = Path("D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+FE = WT2 / "frontend"
+DIST = FE / "dist"
+WALK = SCR / "ord0561_walk_r4.cjs"
+PYX = Path("D:/moodle/CityNexus/.venv/Scripts/python.exe")
+TIP = "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d"
+BRANCH = "1ba48dbf-ord0564-cjk-in-en-r2"
+ROUTES = "discover,footprints"
+WIDTHS = "360,390,414"
+FORBIDDEN = {8000, 4781, 4782, 4783, 4785, 4787, 4789, 8693, 4799}
+HAN = re.compile(r"[\u4e00-\u9fff]")
+BAD: list[str] = []
+
+
+def g(*a):
+    p = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    return (p.stdout or "").strip()
+
+
+def count_cjk_in_en(rev):
+    """扫一棵树上的 `en:` 串里嵌汉字的行（判据与 ORD-0564 那把尺一致），返回命中清单。"""
+    files = [l.split("\t")[2] for l in g("ls-tree", "-r", "--name-only", "-z", rev, "--",
+                                         "frontend/src").split("\n") if l.endswith((".ts", ".tsx"))]
+    hits = []
+    for f in files:
+        blob = g("show", "%s:%s" % (rev, f))
+        if not blob:
+            continue
+        for n, line in enumerate(blob.split("\n"), 1):
+            if re.match(r'\s*(en|"[a-z][\w.]*\.en")\s*[:=]', line) and HAN.search(line):
+                hits.append("%s:%d" % (f, n))
+    return hits
+
+
+def http(url, data=None, headers=None, timeout=60):
+    req = urllib.request.Request(url, data=data, method="POST" if data is not None else "GET",
+                                 headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, (type(e).__name__ + str(e))[:150].encode()
+
+
+def free_port(wanted, taken=()):
+    p = wanted
+    while p < wanted + 80:
+        if p not in FORBIDDEN and p not in taken:
+            with socket.socket() as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                    return p
+                except OSError:
+                    pass
+        p += 1
+    raise SystemExit("找不到空闲私有端口")
+
+
+run_id = "O564-%s" % time.strftime("%H%M%S")
+shots = ART / ("ord0561_shots_%s" % run_id)
+shots.mkdir(exist_ok=True)
+head = g("rev-parse", "HEAD")
+out = {"run_id": run_id, "branch": "refs/heads/review/" + BRANCH, "branch_head_read_local": head,
+       "tip_parent": TIP, "parent_is_tip": g("rev-parse", "HEAD^") == TIP or head == TIP,
+       "diff_files": g("diff", "--name-only", TIP, head).splitlines(),
+       "numstat": g("diff", "--numstat", TIP, head).splitlines()}
+out["cjk_in_en_before"] = count_cjk_in_en(TIP)
+out["cjk_in_en_after"] = count_cjk_in_en(head)
+for tsc in ("tsconfig.check.json", "tsconfig.typecheck.json"):
+    p = subprocess.run(["node", str(FE / "node_modules/typescript/bin/tsc"), "-p", tsc, "--noEmit"],
+                       cwd=str(FE), capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=900)
+    out["tsc_" + tsc.strip(".json").replace("tsconfig.", "")] = {
+        "rc": p.returncode, "out": (p.stdout or "")[:400]}
+    if p.returncode != 0:
+        BAD.append(tsc + " 没绿 rc=%s" % p.returncode)
+t0 = time.time()
+b = subprocess.run(["node", str(FE / "node_modules/vite/bin/vite.js"), "build", "--logLevel", "warn"],
+                   cwd=str(FE), capture_output=True, text=True, encoding="utf-8", errors="replace")
+out["build_rc"] = b.returncode
+out["build_secs"] = round(time.time() - t0, 1)
+if b.returncode != 0:
+    BAD.append("构建没绿：" + (b.stderr or b.stdout)[-250:])
+idx = (DIST / "index.html").read_text(encoding="utf-8")
+asset = re.search(r"/assets/(index-[\w\-]+\.js)", idx).group(1)
+disk = (DIST / "assets" / asset).read_bytes()
+out["entry"] = {"asset": asset, "bytes": len(disk), "disk_sha1": hashlib.sha1(disk).hexdigest()}
+
+api = free_port(5071)
+front_port = free_port(api + 9, taken={api})
+front = "http://127.0.0.1:%d" % front_port
+env = dict(os.environ)
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+    env.pop(k, None)
+env.update({"CITYNEXUS_DATABASE_URL": "sqlite:///%s" % (WT2 / "backend" / ("%s.db" % run_id)).as_posix(),
+            "CITYNEXUS_E2E_RUN_ID": run_id, "CITYNEXUS_BACKEND_PORT": str(api),
+            "CITYNEXUS_DEMO_MODE": "true", "CITYNEXUS_DEMO_SCENE_TOKEN": os.urandom(16).hex()})
+token = env["CITYNEXUS_DEMO_SCENE_TOKEN"]
+log = ART / ("uvicorn_%s.log" % run_id)
+backend = subprocess.Popen([str(PYX), "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                            "--port", str(api)], cwd=str(WT2 / "backend"), env=env,
+                           stdout=log.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+out["private_backend_port"] = api
+out["private_front_port"] = front_port
+out["backend_pid"] = backend.pid
+
+
+class H(BaseHTTPRequestHandler):
+    def log_message(self, *a):
+        pass
+
+    def _send(self, code, body, ctype):
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError):
+            pass
+
+    def do_GET(self):
+        p = self.path.split("?")[0]
+        if p.startswith("/api/"):
+            st, body = http("http://127.0.0.1:%d%s" % (api, self.path))
+            self._send(st or 502, body, "application/json")
+            return
+        f = (DIST / (p.lstrip("/") or "index.html")).resolve()
+        ctype = ("text/javascript" if f.suffix == ".js" else "text/css" if f.suffix == ".css"
+                 else "text/html" if f.suffix == ".html" else "application/octet-stream")
+        if not str(f).startswith(str(DIST)) or not f.is_file():
+            f, ctype = DIST / "index.html", "text/html"
+        self._send(200, f.read_bytes(), ctype)
+
+    do_POST = do_GET
+
+
+srv = ThreadingHTTPServer(("127.0.0.1", front_port), H)
+threading.Thread(target=srv.serve_forever, daemon=True).start()
+try:
+    ok = False
+    for _ in range(90):
+        st, body = http("http://127.0.0.1:%d/api/v1/health" % api)
+        if st == 200 and run_id.encode() in body:
+            ok = True
+            break
+        time.sleep(1)
+    if not ok:
+        BAD.append("后端没答或答复里没本 run id")
+        raise SystemExit(1)
+    hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": token,
+           "Idempotency-Key": "o564-" + run_id}
+    req = urllib.request.Request("http://127.0.0.1:%d/api/v1/demo/scene/ensure" % api,
+                                 data=b"{}", headers=hdr, method="POST")
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        jid = json.loads(resp.read().decode("utf-8")).get("journey_id")
+        out["ensure_http_status"] = resp.status
+    st, body = http(front + "/assets/" + asset)
+    out["served_equals_disk"] = body == disk
+    dest = ART / ("ord0561_o564_after_walk_%s.json" % run_id)
+    penv = dict(os.environ)
+    penv.update({"NODE_PATH": str(FE / "node_modules"), "WW_BASE": front, "WW_OUT": str(dest),
+                 "WW_SHOTS": str(shots), "WW_JID": jid, "WW_WIDTHS": WIDTHS, "WW_ROUTES": ROUTES})
+    p = subprocess.run(["node", str(WALK)], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=penv, timeout=600)
+    out["walk_rc"] = p.returncode
+    doc = json.loads(dest.read_text(encoding="utf-8")) if dest.exists() else {}
+    cells = doc.get("cells") or []
+    out["cells"] = len(cells)
+    out["walk_errors"] = doc.get("errors")
+    per = []
+    for c in cells:
+        lines = [l.strip() for l in c["text"].split("\n") if l.strip()]
+        han = [l for l in lines if HAN.search(l) and l != c.get("toggle_text")]
+        per.append({"vw": c["vw"], "arm": c["arm"], "key": c["key"], "url": c["url"],
+                    "han_lines_excl_toggle": len(han), "han_samples": han[:2],
+                    "chars": len(c["text"]),
+                    "sentence": next((l for l in lines if "Nothing collected yet" in l
+                                      or "还没有收藏" in l), None)})
+    out["per_cell"] = per
+    if out["cells"] != 12:
+        BAD.append("格数不是 12：%s" % out["cells"])
+    en_bad = [x for x in per if x["arm"] == "en" and x["key"] == "discover"
+              and x["han_lines_excl_toggle"] != 0]
+    if en_bad:
+        BAD.append("英文臂 discover 仍有汉字行：%s" % en_bad[:1])
+    zh_keep = [x for x in per if x["arm"] == "zh-CN" and x["key"] == "discover"
+               and x["sentence"] and "城市探索" in x["sentence"]]
+    if len(zh_keep) != 3:
+        BAD.append("中文臂那句「城市探索」不在了（应逐档保留）：%s" % len(zh_keep))
+    if out["cjk_in_en_after"]:
+        BAD.append("枝上仍有 `en:` 嵌汉字的行：%s" % out["cjk_in_en_after"][:4])
+except SystemExit:
+    pass
+finally:
+    srv.shutdown()
+    srv.server_close()
+    backend.terminate()
+    try:
+        backend.wait(timeout=40)
+    except subprocess.TimeoutExpired:
+        backend.kill()
+    out["backend_exit"] = backend.poll()
+
+out["BAD"] = BAD
+dst = ART / ("ord0561_o564_recut_%s.json" % run_id)
+NL = chr(10)
+dst.write_text(json.dumps(out, ensure_ascii=False, indent=1) + NL, encoding="utf-8", newline=NL)
+print(json.dumps(out, ensure_ascii=False, indent=1)[:3000])
+print("ARTIFACT", dst)
+sys.exit(1 if BAD else 0)

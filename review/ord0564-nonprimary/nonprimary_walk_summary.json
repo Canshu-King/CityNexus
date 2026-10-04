@@ -1,0 +1,35 @@
+{
+ "run_id": "NS-013328",
+ "walk": "ord0561_walk_r4.cjs",
+ "widths": "360,390,414",
+ "routes": "discover,footprints,trash,access,stay,import,shared",
+ "live_tip": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+ "tip_read_at": "01:33:33",
+ "tracked_dirty": [],
+ "untracked_left_by_others": [
+  "?? review/ord0502/report-ORD0502-164201.json",
+  "?? review/ord0502/walk-ORD0502-164201.json"
+ ],
+ "tree_at": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+ "build_rc": 0,
+ "build_secs": 11.3,
+ "private_backend_port": 5041,
+ "private_front_port": 5050,
+ "backend_pid": 88728,
+ "ensure_http_status": 200,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "entry": {
+  "asset": "index-iZ6I1MKH.js",
+  "http_status": 200,
+  "bytes": 1623095,
+  "served_equals_disk": true,
+  "disk_sha1": "c1b65cc2c9bb8b4c59b554c6181b51eddb1e19fa"
+ },
+ "walk_rc": 0,
+ "walk_stdout": "ort url_no_nav 915 13 1 1 390 true\nw390 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en shared url_no_nav 345 1 0 0 390 false\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN discover url_no_nav 428 13 2 2 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN footprints url_no_nav 139 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN trash url_no_nav 137 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN access url_no_nav 1436 18 3 3 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN stay url_no_nav 208 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN import url_no_nav 347 13 1 1 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=zh-CN shared url_no_nav 126 1 0 0 414 false\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en discover url_no_nav 1140 13 2 2 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en footprints url_no_nav 319 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en trash url_no_nav 260 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en access url_no_nav 4160 18 3 3 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en stay url_no_nav 495 11 0 0 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en import url_no_nav 915 13 1 1 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en shared url_no_nav 345 1 0 0 414 false\n",
+ "walk_stderr": "",
+ "cells": 42,
+ "walk_errors": [],
+ "backend_exit": 1,
+ "BAD": []
+}

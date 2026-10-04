@@ -1,0 +1,109 @@
+// ORD-0561 补档那一格 · 五主屏 × 两臂 × 三档视口（360/390/414 px）走查 r3
+// 形制沿用 walk r2（那把尺把 390 一档走通了），本手只加一档循环：
+//   ① 开局钉行程号与语言（新设备否则落引导屏，引导屏按 Amendment F 没有底栏）；
+//   ② 每屏先按 nav-<key> 点，点不到才按地址进，并把"底栏在不在场"记成一格读数；
+//   ③ 每屏当场回读 location.href（共享标签会被别的会话中途导航走）；
+//   ④ 读的是渲染文字 innerText，不读 data 属性、不读源码；几何腿只用于判"重叠/被盖"。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.WW_BASE;
+const OUT = process.env.WW_OUT;
+const SHOTDIR = process.env.WW_SHOTS;
+const JID = process.env.WW_JID;
+const WIDTHS = (process.env.WW_WIDTHS || "360,390,414").split(",").map(Number);
+const KEYS = (process.env.WW_ROUTES || "hub,trips,map,agent,me").split(",").filter(Boolean);
+const ARMS = ["zh-CN", "en"];
+
+const SNAP = () => {
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+  };
+  const txt = document.body.innerText || "";
+  const buttons = Array.from(document.querySelectorAll("button")).filter(vis).map((b) => {
+    const r = b.getBoundingClientRect();
+    const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+    const top = document.elementFromPoint(cx, cy);
+    const own = !!top && (top === b || b.contains(top) || top.contains(b));
+    const name = (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60);
+    return { el: (b.className ? "." + b.className.split(" ")[0] : b.tagName.toLowerCase())
+               + (b.getAttribute("data-testid") ? "#" + b.getAttribute("data-testid") : ""),
+             label: name || null, aria: b.getAttribute("aria-label"),
+             disabled: b.disabled === true || b.getAttribute("aria-disabled") === "true",
+             box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width),
+                    h: Math.round(r.height) },
+             in_viewport: cy >= 0 && cy <= window.innerHeight && r.y + r.height > 0 && r.y < window.innerHeight,
+             center_hits_self: own,
+             hit_by: top ? (top.tagName.toLowerCase()
+                       + (top.className ? "." + String(top.className).split(" ")[0] : "")) : null };
+  });
+  const de = document.scrollingElement || document.documentElement;
+  return { url: location.href, lang: document.documentElement.lang, text: txt,
+           headings: Array.from(document.querySelectorAll("h1,h2,h3")).map((h) =>
+             (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean).slice(0, 10),
+           buttons: buttons, nav_present: !!document.querySelector(".v8-mobile-nav"),
+           toggle_text: (() => { const t = document.querySelector('button[aria-label="Switch language"]');
+                                 return t ? (t.textContent || "").trim() : null; })(),
+           doc_scroll_w: de.scrollWidth, vw: window.innerWidth,
+           vh: window.innerHeight, scroll_y: Math.round(window.scrollY) };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, widths: WIDTHS, journey_id_pinned: !!JID, cells: [], errors: [] };
+  for (const vw of WIDTHS) {
+    for (const arm of ARMS) {
+      const ctx = await browser.newContext({
+        viewport: { width: vw, height: 844 }, deviceScaleFactor: 2, isMobile: true,
+        hasTouch: true, locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block",
+      });
+      const page = await ctx.newPage();
+      page.setDefaultTimeout(15000);
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm]);
+        await page.goto(BASE + "/", { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(4000);
+        for (const key of KEYS) {
+          let how = "nav_click";
+          const nav = page.getByTestId("nav-" + key);
+          if (await nav.count().catch(() => 0)) {
+            await nav.first().click({ timeout: 8000 }).catch((e) => {
+              how = "url_after_click_fail";
+              rep.errors.push(arm + "/" + vw + "/" + key + " " + e.message.slice(0, 60));
+            });
+          } else {
+            how = "url_no_nav";
+            await page.goto(BASE + "/v8/" + key, { waitUntil: "domcontentloaded", timeout: 60000 });
+          }
+          await page.waitForTimeout(1800);
+          const s = await page.evaluate(SNAP);
+          const shot = SHOTDIR + "/w" + vw + "_" + arm + "_" + key + ".png";
+          await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + vw + arm + key));
+          rep.cells.push(Object.assign({ vw: vw, arm: arm, key: key, entered_by: how, shot: shot }, s));
+        }
+      } catch (e) {
+        rep.errors.push("fatal " + arm + "/" + vw + " " + (e && e.message ? e.message.slice(0, 160) : String(e)));
+      } finally {
+        await ctx.close().catch(() => rep.errors.push("close " + arm + "/" + vw));
+      }
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  console.log("cells=%d widths=%s arms=%s errors=%d",
+    rep.cells.length, JSON.stringify(WIDTHS), JSON.stringify(ARMS), rep.errors.length);
+  for (const c of rep.cells) {
+    console.log("w%d %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=%s",
+      c.vw, c.arm, c.key, c.entered_by, c.text.length, c.buttons.length,
+      c.buttons.filter((b) => !b.center_hits_self).length,
+      c.buttons.filter((b) => !b.in_viewport).length, c.doc_scroll_w, c.nav_present);
+  }
+  if (rep.errors.length) console.log("errors " + JSON.stringify(rep.errors));
+})();

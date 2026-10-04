@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""枝前后两代各扫一遍「`en:` 串里嵌汉字」，并把分母一起打印（扫了几枚文件、看到几行 en 串）。
+
+上一版把 `git ls-tree -z` 的输出按换行切，整棵树变成一个假文件名 ⇒ 两侧都扫到 0 枚。
+那是尺坏了，不是屏幕干净；这一版按 NUL 切，并把分母打出来自证。
+"""
+import re
+import subprocess
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+TIP = "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d"
+BRANCH = "03e891d4c17f"
+HAN = re.compile(r"[一-鿿]")
+EN_LINE = re.compile(r'^\s*(?:en|"[a-z][\w.]*\.en")\s*[:=]\s*["\']')
+
+
+def g(*a):
+    p = subprocess.run(["git", "-c", "core.quotepath=false", *a], cwd=WT,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return p.stdout
+
+
+def scan(rev):
+    files = [f for f in g("ls-tree", "-r", "--name-only", "-z", rev, "--", "frontend/src").split("\0")
+             if f.endswith((".ts", ".tsx"))]
+    hits, seen = [], 0
+    for f in files:
+        blob = g("show", "%s:%s" % (rev, f))
+        for n, line in enumerate(blob.split("\n"), 1):
+            if not EN_LINE.match(line):
+                continue
+            seen += 1
+            if HAN.search(line):
+                hits.append({"file": f, "line": n, "text": line.strip()[:110]})
+    return {"rev": rev, "files_scanned": len(files), "en_lines_seen": seen, "hits": hits}
+
+
+a, b = scan(TIP), scan(BRANCH)
+for tag, r in (("改前（现尖）", a), ("改后（我这枝）", b)):
+    print("%s rev=%s 扫了 %d 枚文件、看到 %d 行 en 串、命中 %d 枚"
+          % (tag, r["rev"][:12], r["files_scanned"], r["en_lines_seen"], len(r["hits"])))
+    for h in r["hits"]:
+        print("    %s:%d  %s" % (h["file"], h["line"], h["text"]))
+print("命中差=%d（改前减改后）" % (len(a["hits"]) - len(b["hits"])))
