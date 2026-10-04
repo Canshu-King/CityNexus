@@ -2261,15 +2261,24 @@ def approve_agent_action(
         or approval.traveler_id != journey.traveler_id
     ):
         raise HTTPException(404, "agent approval was not found")
-    from app.agent.approval import approve_action_approval
+    from app.agent.approval import approval_payload, approve_action_approval
+    from app.agent.continuation import resume_pending_action
 
-    return approve_action_approval(
+    approved = approve_action_approval(
         session,
         approval,
         approval_method=payload.approval_method if payload else "USER_CONFIRMATION",
         step_up_code=payload.step_up_code if payload else None,
         actor_id=journey.traveler_id,
     )
+    continuation = resume_pending_action(session, approval_id=str(approval_id))
+    if continuation is None:
+        # Approvals created by direct/manual tool calls retain the historical
+        # two-step API. Only a durable AgentRun continuation auto-resumes.
+        return approved
+    current = session.get(ActionApproval, str(approval_id))
+    receipt = approval_payload(current) if current is not None else approved
+    return {**receipt, "continuation": continuation}
 
 
 @app.get("/api/v1/journeys/{journey_id}/missions/pending")
@@ -2285,7 +2294,7 @@ def pending_journey_missions(
             JourneyMission.journey_id == journey.id,
             JourneyMission.is_standing.is_(False),
             or_(
-                JourneyMission.status.in_(("WAITING_FOR_USER", "WAITING_FOR_MEMBERS", "RUNNING")),
+                JourneyMission.status.in_(("WAITING_FOR_USER", "WAITING_FOR_MEMBERS", "WAITING_FOR_APPROVAL", "RUNNING")),
                 and_(
                     JourneyMission.parent_mission_id.is_not(None),
                     JourneyMission.status.in_(("CREATED", "DEGRADED")),
