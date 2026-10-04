@@ -1,0 +1,54 @@
+{
+ "screens": [
+  {
+   "path": "/v8/hub",
+   "slots": {
+    "arrival_label": "ARRIVAL",
+    "departure_label": "DEPARTURE"
+   },
+   "shouts_on_screen": [
+    "ARRIVAL",
+    "DEPARTURE"
+   ],
+   "body_chars": 1821
+  },
+  {
+   "path": "/v8/twin",
+   "slots": {
+    "explicit_label": "Explicit",
+    "learned_label": "Learned soft signal"
+   },
+   "shouts_on_screen": [],
+   "body_chars": 859
+  },
+  {
+   "path": "/v8/authoritative",
+   "slots": {
+    "v14_panel": "V12 · PLAN, MOBILE, EDGE, AND TWIN Authoritative trip execution. Your chosen plan is the single source of truth for today, the map, offline use, and every change we suggest. Refresh truth You have not chosen a plan yet. Compose from the server Trip Studio to create the frozen multi-day execution path. PLAN VERSIONS ON THIS TRIP Every version the server still holds, newest last. This list is read-only. This trip has no plan version yet. en"
+   },
+   "shouts_on_screen": [],
+   "body_chars": 518
+  },
+  {
+   "path": "/v8/stay",
+   "slots": {
+    "evidence_label": "Captured replay"
+   },
+   "shouts_on_screen": [],
+   "body_chars": 1797
+  },
+  {
+   "path": "/v8/intelligence",
+   "slots": {
+    "policy_value": "Advisory"
+   },
+   "shouts_on_screen": [],
+   "body_chars": 939
+  }
+ ],
+ "pageerrors": [],
+ "console_errors": [],
+ "wizard_http": 201,
+ "language_control": "NOT_FOUND",
+ "hub_heading": "Trip to Tianjin"
+}
