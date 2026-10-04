@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜把上一块具名 `NOT_REACHED_BY_82f55d8a` 那一格补成实测：候选树上真跑一次 vite build，五枚路由 × 两臂十次读数，顶栏逐字已是「回收站 / Recycle bin」这四枚自己的名字，正对照 hub 没变、页面异常每次零枚；读完当场停掉我自己起的两台，共享链的 PID 一个没动
+
+**〇、栈与代次（三证齐，全部现读）。**
+
+- 后端：`bash run/start_backend.sh bcr1` 起在我这台的私有口 `:41537`；那枚脚本把库指向我自己的副本（`D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/start_backend.sh:6` 那一行拼的就是 `run/ord0535_bcr1.db`，17330176 B，从 `ord0535_hub0437.db` 复制而来），起前把两枚 key 与代理变量 unset；日志回 `Application startup complete`。
+- 静态：`npx vite preview --port 41539 --strictPort` 服务候选树 `758a341ec3f0ba18089dc024e27569b7894787b5` 的 `npm run build` 产物。一件要记的形状：vite 的 preview 只监听 IPv6 环回（`netstat -ano` 现读只有 `[::1]:41539` 一行 LISTENING），所以读数一律走 `http://[::1]:41539`；代理目标由 `frontend/vite.config.ts:140` 那枚 preview 块从 `CITYNEXUS_BACKEND_PORT` 取，我显式给了 41537，没让它落到默认那枚共享口。
+- 被读的那一代：入口 `/assets/index-BW2_ds1t.js`，浏览器侧 fetch 回 1623134 B、sha256 头 16 位 `780bdef73784a61d`；磁盘上同一枚文件 `stat` 回 1623134 B、`sha256sum` 头 16 位同一枚 ⇒ 被服务的字节与磁盘上的字节是同一份，不是 build 完又读了别的东西。
+- 行程身份：这条栈自己的 `GET /api/v1/journeys` 回 http_status=200，取第一条 `38c4b867-56e6-45ad-94ff-f27c45475247`（标题 "Tianjin · stay-aware weekend"）。
+
+**一、十次读数（逐字；尺 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/crumb_fixed_read_r1.mjs`，件 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/crumb_fixed_read_r1.json`）。**
+
+- 英文栏：`/v8/hub` 顶栏 "Today"（正对照，未变）、`/v8/trash` "Recycle bin"、`/v8/access` "Members and access"、`/v8/import` "Import places"、`/v8/footprints` "Footprints"。
+- 中文栏：`/v8/hub` 「今天」（正对照，未变）、`/v8/trash` 「回收站」、`/v8/access` 「成员与权限」、`/v8/import` 「导入地点」、`/v8/footprints` 「足迹」。
+- 每一次读值那一个调用里同时回读了 `location.href`，十次都停在被点名的那枚路由上（没被中途导航走）；页面异常每次零枚。截图我自己看了：`D:/moodle/_qoder_82f55d8a_ord0567_sweep/fixed_zh_trash.png` 顶栏逐字「菜单 ≡ / 回收站」。
+
+**二、为什么这算"修好了"而不是"字变了"。** 改前那四屏在两臂各画另一屏的名字「今天 / Today」——那是我在手机链那一代量的八次读数（账本里我那块第二节的逐枚清单）。改后是同一枚 DOM（`.v8-breadcrumb strong`）、同一把尺、同一形状，四枚全部换成字典里自己那枚名字，而两枚正对照（hub 与它自己的名字）没动。⇒ 变化只可能来自我登记的那四行。
+
+**三、同一张截图里还看见一枚不在本枝的东西（不顺手改）。** 中文回收站那屏正文仍是「回收站是空的：这台服务器没有报出任何在站里的行程。」——「在站里」那处仍待落，正是我另一枚未落候选 `240a5989ab9f17defcb4f7f5642b6d2e1de183a8` 要改的那一行。这枚 build 是"现尖 + 我这四行"，没叠那枝，所以那处照旧；两枝各落各的，落地门好切，我不在一枝里顺手改两件事。
+
+**四、纪律与收尾（逐条可核）。**
+
+- 我自己起的两台读数完当场停：两枚 PID 先按 Name 认过是自己的（`python.exe` 与 `node.exe`），`taskkill` 后 `netstat -ano | grep LISTENING` 对 `:41537` 与 `:41539` 各回零行。
+- 共享链没动：手机链 `:4783`（PID 37684）与 `:4787`（PID 34184）在我读数之后仍在听、PID 未变。`:8000` `:4781` `:4782` `:8693` 全程零连接。
+- 库：只读写自己那枚副本；`_preview.db` 没读没写没 ALTER；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印。
+- 本手产品字节 0 枚（那四行在上一块那枝里，本手只新增读数件与截图）；push 权威线零次、force-push 零次。
+
+**五、没做 / 没改善的**
+
+1. 没在换代产物（手机链那台）上复验——那要等落地与换代，是你的动作；用户手机上那四屏现在仍是旧形状。
+2. 后端 pytest 执行条数为零（本手 0 后端字节）；`tsc` 两把本手未重跑（0 源字节改动）；判据本手零支跑动。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 十次读数用的是这条栈里的第一枚 journey。顶栏文字取自字典、与 journey 无关，所以我没换第二枚 journey 复跑；要的话是一条命令的事，先具名 `NOT_MEASURED_BY_82f55d8a`。
+4. 上一块那条 `BLIND_SPOT_NAMED`（判据里"已销账名单"被删不会红）本手没补，它仍是设计上的空档。
+
+**六、下一手。** 这格补完，我名下无新派未闭单 ⇒ 具名「无单可领，等派」。三件在飞：本枝（顶栏四行 + 判据翻面，实测已附）、回收站中文措辞那枝、名字锚那枝；另有三条待裁英文措辞候选等一句判。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 自申报那格再走一步：给写腿的空输入门做了一把可达性尺（三枚正对照按真跑对号、合成夹具会区分），顺手在我刚落地的那枚自检里量出一形「两侧都没有内容也判绿」——已发布件一字未动，改法等点单
 
 坐标（现取；正文每条带数的行都挂一枚可在 `D:/moodle/CityNexus` 里 `git cat-file` 的 40 位）
