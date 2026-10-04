@@ -1,0 +1,809 @@
+{
+ "tip": "0413e55634e9c6953ea88a4b01a17b8afd7ac88a",
+ "tip_readback": "0413e55634e9c6953ea88a4b01a17b8afd7ac88a",
+ "branch": "review/45d25bfb-ord0553-authoritative-caps-r3",
+ "blob_equality": {
+  "frontend/src/i18n/LocaleContext.tsx": {
+   "tip": "30edf573f98b966dbe8aafa05a81a635b26d7538",
+   "r2": "30edf573f98b966dbe8aafa05a81a635b26d7538"
+  },
+  "frontend/src/lib/displayVocabulary.ts": {
+   "tip": "bdbaa3da9bb3ad996a6238256abc5622915a93d1",
+   "r2": "bdbaa3da9bb3ad996a6238256abc5622915a93d1"
+  },
+  "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx": {
+   "tip": "821365340bc164af105fcbb7839f65d5540e591a",
+   "r2": "821365340bc164af105fcbb7839f65d5540e591a"
+  },
+  "frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts": {
+   "tip": "84be25996cf4b082fcc2d6c338fa8a9cccd987f1",
+   "r2": "84be25996cf4b082fcc2d6c338fa8a9cccd987f1"
+  }
+ },
+ "r2_parent": "f3304e25871832ddf6196da62287e0cc1ae60210",
+ "r2_numstat": [
+  [
+   "8",
+   "6",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  [
+   "6",
+   "0",
+   "frontend/src/lib/displayVocabulary.ts"
+  ]
+ ],
+ "build_info": {
+  "sha": "1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c",
+  "tag": "cmdra_0553_r2",
+  "at_local": "2026-10-04T05:08:26+0800",
+  "steps": [
+   {
+    "step": "archive",
+    "rc": 0,
+    "err": ""
+   },
+   {
+    "step": "junction_node_modules",
+    "rc": 0,
+    "out": ""
+   },
+   {
+    "step": "vite_build",
+    "rc": 0,
+    "secs": 8.8,
+    "tail": [
+     "\u001b[2mdist/\u001b[22m\u001b[36massets/index-BcQ9VAso.js        \u001b[39m\u001b[1m\u001b[33m1,622.09 kB\u001b[39m\u001b[22m\u001b[2m │ gzip: 498.56 kB\u001b[22m",
+     "\u001b[32m✓ built in 5.50s\u001b[39m",
+     "",
+     "PWA v1.3.0",
+     "mode      generateSW",
+     "precache  8 entries (2851.74 KiB)",
+     "files generated",
+     "  dist/v10-sw.js",
+     "  dist/workbox-6923124b.js",
+     "\u001b[33m",
+     "(!) Some chunks are larger than 500 kB after minification. Consider:",
+     "- Using dynamic import() to code-split the application",
+     "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+     "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+    ]
+   }
+  ],
+  "live_tree": "6c6f499b51696956859bc304a27a7f36b1012fba",
+  "export_blob_equality": {
+   "frontend/package.json": {
+    "export_blob": "3bdc4709f27ac2d2d8e806b8a937991ac96b452f",
+    "tip_blob": "3bdc4709f27ac2d2d8e806b8a937991ac96b452f",
+    "identical": true
+   },
+   "frontend/vite.config.ts": {
+    "export_blob": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+    "tip_blob": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+    "identical": true
+   },
+   "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+    "export_blob": "78776946b4e0324d4cbcd53eadd7e5798f34fe39",
+    "tip_blob": "78776946b4e0324d4cbcd53eadd7e5798f34fe39",
+    "identical": true
+   },
+   "frontend/src/components/ProductErrorBoundary.tsx": {
+    "export_blob": "e8073263167f1eac165441d633e808156914ca84",
+    "tip_blob": "e8073263167f1eac165441d633e808156914ca84",
+    "identical": true
+   },
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": {
+    "export_blob": "d6199a7d229b3bd20943c664b3bd4498d21d097a",
+    "tip_blob": "d6199a7d229b3bd20943c664b3bd4498d21d097a",
+    "identical": true
+   },
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+    "export_blob": "0c344167dc71900d81b960baddfd2d08a9277166",
+    "tip_blob": "0c344167dc71900d81b960baddfd2d08a9277166",
+    "identical": true
+   }
+  },
+  "build": {
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-BcQ9VAso.js",
+    "/assets/index-CH7QOPDS.css"
+   ],
+   "index_bytes": 1200
+  }
+ },
+ "ctx": {
+  "r3_ctx_en_asis_49851.json": {
+   "file": "r3_ctx_en_asis_49851.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "en",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "doc_chars": 3469,
+   "painted_nodes": 10,
+   "tokens": [
+    "AUTHORITATIVE",
+    "JOURNEY",
+    "NEXT",
+    "TRIP",
+    "STUDIO",
+    "DRAFT",
+    "THEN",
+    "ACCEPT",
+    "REALITY",
+    "CHANGED"
+   ],
+   "dirty_nodes": 0,
+   "dirty": {},
+   "dirty_slots": [],
+   "dirty_standalone": 0,
+   "server_paths": {},
+   "panel_chars": 335,
+   "panel_present": true,
+   "panel_text_head": "AUTHORITATIVE JOURNEYOne truth from plan to edge frozen evidence NOWTech Art CenterActive NEXTNexus River Cruise PierPla",
+   "page_errors": 0
+  },
+  "r3_ctx_en_asis_49852.json": {
+   "file": "r3_ctx_en_asis_49852.json",
+   "base": "http://127.0.0.1:49852",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "doc_chars": 3467,
+   "painted_nodes": 16,
+   "tokens": [
+    "AUTHORITATIVE",
+    "JOURNEY",
+    "ACTIVE",
+    "NEXT",
+    "COMPLETED",
+    "ROUTE",
+    "TRIP",
+    "STUDIO",
+    "DRAFT",
+    "THEN",
+    "ACCEPT",
+    "REALITY",
+    "CHANGED"
+   ],
+   "dirty_nodes": 6,
+   "dirty": {
+    "ACTIVE": 2,
+    "COMPLETED": 3,
+    "ROUTE": 1
+   },
+   "dirty_slots": [
+    "v12-activity-status state-active",
+    "v12-activity-status state-completed",
+    "v12-state-value",
+    "v8-primary"
+   ],
+   "dirty_standalone": 5,
+   "server_paths": {
+    "ACTIVE": [
+     "/api/v1/demo/scene.journey_status",
+     "/api/v1/demo/scene.journey_status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.journey.status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[3].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin.upcoming_commitments[0].status"
+    ],
+    "COMPLETED": [
+     "/api/v1/demo/scene.supply.job_status",
+     "/api/v1/demo/scene.supply.job_status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[0].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[1].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[2].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans[0].activities[0].status"
+    ],
+    "ROUTE": []
+   },
+   "panel_chars": 333,
+   "panel_present": true,
+   "panel_text_head": "AUTHORITATIVE JOURNEYOne truth from plan to edge frozen evidence NOWTech Art CenterACTIVE NEXTNexus River Cruise PierPla",
+   "page_errors": 0
+  },
+  "r3_ctx_en_arrived_49851.json": {
+   "file": "r3_ctx_en_arrived_49851.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "en",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "doc_chars": 3472,
+   "painted_nodes": 10,
+   "tokens": [
+    "AUTHORITATIVE",
+    "JOURNEY",
+    "NEXT",
+    "TRIP",
+    "STUDIO",
+    "DRAFT",
+    "THEN",
+    "ACCEPT",
+    "REALITY",
+    "CHANGED"
+   ],
+   "dirty_nodes": 0,
+   "dirty": {},
+   "dirty_slots": [],
+   "dirty_standalone": 0,
+   "server_paths": {},
+   "panel_chars": 338,
+   "panel_present": true,
+   "panel_text_head": "AUTHORITATIVE JOURNEYOne truth from plan to edge frozen evidence NOWTech Art CenterArrived NEXTNexus River Cruise PierPl",
+   "page_errors": 0
+  },
+  "r3_ctx_en_arrived_49852.json": {
+   "file": "r3_ctx_en_arrived_49852.json",
+   "base": "http://127.0.0.1:49852",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "doc_chars": 3472,
+   "painted_nodes": 16,
+   "tokens": [
+    "AUTHORITATIVE",
+    "JOURNEY",
+    "ARRIVED",
+    "NEXT",
+    "COMPLETED",
+    "PROGRESS",
+    "TRIP",
+    "STUDIO",
+    "DRAFT",
+    "THEN",
+    "ACCEPT",
+    "REALITY",
+    "CHANGED"
+   ],
+   "dirty_nodes": 6,
+   "dirty": {
+    "ARRIVED": 2,
+    "COMPLETED": 3,
+    "PROGRESS": 1
+   },
+   "dirty_slots": [
+    "v12-activity-status state-arrived",
+    "v12-activity-status state-completed",
+    "v12-state-value",
+    "v8-primary"
+   ],
+   "dirty_standalone": 5,
+   "server_paths": {
+    "ARRIVED": [
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[3].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin.context.execution.now.state",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin.context.execution.now_state",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans[0].activities[3].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot.snapshot.execution.now.state",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot.snapshot.execution.now_state"
+    ],
+    "COMPLETED": [
+     "/api/v1/demo/scene.supply.job_status",
+     "/api/v1/demo/scene.supply.job_status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[0].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[1].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience.active_plan.activities[2].status",
+     "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans[0].activities[0].status"
+    ],
+    "PROGRESS": []
+   },
+   "panel_chars": 338,
+   "panel_present": true,
+   "panel_text_head": "AUTHORITATIVE JOURNEYOne truth from plan to edge frozen evidence NOWTech Art CenterARRIVED NEXTNexus River Cruise PierPl",
+   "page_errors": 0
+  },
+  "r3_ctx_zh_arrived_49851.json": {
+   "file": "r3_ctx_zh_arrived_49851.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "doc_chars": 1653,
+   "painted_nodes": 0,
+   "tokens": [],
+   "dirty_nodes": 0,
+   "dirty": {},
+   "dirty_slots": [],
+   "dirty_standalone": 0,
+   "server_paths": {},
+   "panel_chars": 220,
+   "panel_present": true,
+   "panel_text_head": "权威行程从方案到边缘的单一真相 冻结证据 现在Tech Art Center已到达 下一步Nexus River Cruise Pier计划中15:30Old Town Gate已完成Riverside Museum已完成Central F",
+   "page_errors": 0
+  }
+ },
+ "sweep": {
+  "r3_sweep_en_base.json": {
+   "file": "r3_sweep_en_base.json",
+   "base": "http://127.0.0.1:49852",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "screen_nodes": 0,
+   "screen_tokens": [],
+   "total": 14,
+   "distinct": 13,
+   "screen_chars": 432,
+   "routes_with_hits": 5,
+   "page_errors": 0
+  },
+  "r3_sweep_en_base_r2.json": {
+   "file": "r3_sweep_en_base_r2.json",
+   "base": "http://127.0.0.1:49852",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "screen_nodes": 10,
+   "screen_tokens": [
+    "AUTHORITATIVE",
+    "ARRIVED",
+    "NEXT",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "ARRIVED",
+    "PROGRESS",
+    "TRIP",
+    "REALITY"
+   ],
+   "total": 33,
+   "distinct": 25,
+   "screen_chars": 3472,
+   "routes_with_hits": 9,
+   "page_errors": 0
+  },
+  "r3_sweep_en_tip.json": {
+   "file": "r3_sweep_en_tip.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "en",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "screen_nodes": 4,
+   "screen_tokens": [
+    "AUTHORITATIVE",
+    "NEXT",
+    "TRIP",
+    "REALITY"
+   ],
+   "total": 27,
+   "distinct": 22,
+   "screen_chars": 3472,
+   "routes_with_hits": 9,
+   "page_errors": 0
+  },
+  "r3_sweep_zh_tip.json": {
+   "file": "r3_sweep_zh_tip.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "screen_nodes": 0,
+   "screen_tokens": [],
+   "total": 0,
+   "distinct": 0,
+   "screen_chars": 198,
+   "routes_with_hits": 0,
+   "page_errors": 0
+  },
+  "r3_sweep_zh_tip_r2.json": {
+   "file": "r3_sweep_zh_tip_r2.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "screen_nodes": 0,
+   "screen_tokens": [],
+   "total": 2,
+   "distinct": 1,
+   "screen_chars": 1653,
+   "routes_with_hits": 1,
+   "page_errors": 0
+  }
+ },
+ "store_state": {
+  "backend_port": 8752,
+  "netstat_listening_owners": [
+   "46096"
+  ],
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "plan_versions_listed": 28,
+  "current_version_no": 1,
+  "current_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+  "activity_statuses": [
+   [
+    1,
+    "Old Town Gate",
+    "COMPLETED"
+   ],
+   [
+    2,
+    "Riverside Museum",
+    "COMPLETED"
+   ],
+   [
+    3,
+    "Central Food Hall",
+    "COMPLETED"
+   ],
+   [
+    4,
+    "Tech Art Center",
+    "ARRIVED"
+   ],
+   [
+    5,
+    "Nexus River Cruise Pier",
+    "PLANNED"
+   ],
+   [
+    6,
+    "Skyline Dinner House",
+    "PLANNED"
+   ]
+  ],
+  "twin_now_title": "Tech Art Center",
+  "twin_now_state": "ARRIVED",
+  "twin_next_title": "Nexus River Cruise Pier",
+  "twin_next_state": "PLANNED",
+  "statuses_present_on_screen": [
+   "ARRIVED",
+   "COMPLETED",
+   "PLANNED"
+  ]
+ },
+ "slots": {
+  "r3_slots_en_49851.json": {
+   "file": "r3_slots_en_49851.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "en",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "panel_present": true,
+   "button": [
+    "Mark In progress",
+    "Preview impact",
+    "Accept edit"
+   ],
+   "values": [
+    "Arrived",
+    "Planned"
+   ],
+   "rows": [
+    "Old Town Gate=Completed",
+    "Riverside Museum=Completed",
+    "Central Food Hall=Completed",
+    "Tech Art Center=Arrived",
+    "Nexus River Cruise Pier=Planned",
+    "Skyline Dinner House=Planned"
+   ],
+   "page_errors": 0
+  },
+  "r3_slots_en_49852.json": {
+   "file": "r3_slots_en_49852.json",
+   "base": "http://127.0.0.1:49852",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "panel_present": true,
+   "button": [
+    "Mark IN PROGRESS",
+    "Preview impact",
+    "Accept edit"
+   ],
+   "values": [
+    "ARRIVED",
+    "Planned"
+   ],
+   "rows": [
+    "Old Town Gate=COMPLETED",
+    "Riverside Museum=COMPLETED",
+    "Central Food Hall=COMPLETED",
+    "Tech Art Center=ARRIVED",
+    "Nexus River Cruise Pier=Planned",
+    "Skyline Dinner House=Planned"
+   ],
+   "page_errors": 0
+  },
+  "r3_slots_zh_49851.json": {
+   "file": "r3_slots_zh_49851.json",
+   "base": "http://127.0.0.1:49851",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "panel_present": true,
+   "button": [
+    "标记 进行中",
+    "预览影响",
+    "接受编辑"
+   ],
+   "values": [
+    "已到达",
+    "计划中"
+   ],
+   "rows": [
+    "Old Town Gate=已完成",
+    "Riverside Museum=已完成",
+    "Central Food Hall=已完成",
+    "Tech Art Center=已到达",
+    "Nexus River Cruise Pier=计划中",
+    "Skyline Dinner House=计划中"
+   ],
+   "page_errors": 0
+  }
+ },
+ "ruler_at_tip": {
+  "file": "r3_ruler_at_tip_0413e556.json",
+  "arms": [
+   [
+    "every status the contract can answer has one wording, in both languages",
+    "passed"
+   ],
+   [
+    "no status wording is the machine token it is supposed to translate",
+    "passed"
+   ],
+   [
+    "the panel asks for a wording instead of putting the payload field on screen",
+    "passed"
+   ],
+   [
+    "the ruler is reading a live surface, not an empty one",
+    "passed"
+   ]
+  ],
+  "stats": {
+   "startTime": "2026-10-04T06:28:51.146Z",
+   "duration": 4288.646,
+   "expected": 4,
+   "skipped": 0,
+   "unexpected": 0,
+   "flaky": 0
+  }
+ },
+ "r2_sweeps": {
+  "r2base_sweep_en.json": {
+   "file": "r2base_sweep_en.json",
+   "base": "http://127.0.0.1:49844/",
+   "locale": "en",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "screen_nodes": 10,
+   "screen_tokens": [
+    "AUTHORITATIVE",
+    "ACTIVE",
+    "NEXT",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "ACTIVE",
+    "ROUTE",
+    "TRIP",
+    "REALITY"
+   ],
+   "total": 33,
+   "distinct": 25,
+   "screen_chars": 3467,
+   "routes_with_hits": 9,
+   "page_errors": 0
+  },
+  "r2_sweep_en.json": {
+   "file": "r2_sweep_en.json",
+   "base": "http://127.0.0.1:49843/",
+   "locale": "en",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "screen_nodes": 4,
+   "screen_tokens": [
+    "AUTHORITATIVE",
+    "NEXT",
+    "TRIP",
+    "REALITY"
+   ],
+   "total": 27,
+   "distinct": 22,
+   "screen_chars": 3469,
+   "routes_with_hits": 9,
+   "page_errors": 0
+  },
+  "r2base_sweep_zh.json": {
+   "file": "r2base_sweep_zh.json",
+   "base": "http://127.0.0.1:49844/",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-DUhOk9ks.js"
+   ],
+   "screen_nodes": 0,
+   "screen_tokens": [],
+   "total": 2,
+   "distinct": 1,
+   "screen_chars": 1651,
+   "routes_with_hits": 1,
+   "page_errors": 0
+  },
+  "r2_sweep_zh.json": {
+   "file": "r2_sweep_zh.json",
+   "base": "http://127.0.0.1:49843/",
+   "locale": "zh",
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "screen_nodes": 0,
+   "screen_tokens": [],
+   "total": 2,
+   "distinct": 1,
+   "screen_chars": 1651,
+   "routes_with_hits": 1,
+   "page_errors": 0
+  }
+ },
+ "r2_label": [
+  {
+   "id": "panel_reached",
+   "verdict": "PASS",
+   "observed": "panelPresent=true activityRows=6 journeyId=22222222-2222-4222-8222-222222222222"
+  },
+  {
+   "id": "every_status_slot_is_painted",
+   "verdict": "PASS",
+   "observed": "8 slots painted, e.g. [\"Completed\",\"Completed\",\"Completed\"]"
+  },
+  {
+   "id": "no_status_slot_paints_a_machine_shape",
+   "verdict": "PASS",
+   "observed": "none of the status slots match the sweep's four shapes"
+  },
+  {
+   "id": "painted_words_come_from_the_dictionary",
+   "verdict": "PASS",
+   "observed": "all within the table's wordings (10 entries)"
+  },
+  {
+   "id": "no_page_error",
+   "verdict": "PASS",
+   "observed": "[]"
+  }
+ ],
+ "r2_rulers": {
+  "statusq_r2_prefix_red.json": {
+   "file": "statusq_r2_prefix_red.json",
+   "not_a_playwright_report": true,
+   "keys": [
+    "contract_line",
+    "contract_statuses",
+    "fallback_labels",
+    "file_bytes",
+    "generatedBy",
+    "resolved_wordings",
+    "ruler",
+    "run",
+    "state_key_map"
+   ],
+   "bytes": 1739
+  },
+  "statusq_r2_green.json": {
+   "file": "statusq_r2_green.json",
+   "not_a_playwright_report": true,
+   "keys": [
+    "contract_line",
+    "contract_statuses",
+    "fallback_labels",
+    "file_bytes",
+    "generatedBy",
+    "resolved_wordings",
+    "ruler",
+    "run",
+    "state_key_map"
+   ],
+   "bytes": 2143
+  },
+  "statusq_r2_mC.json": {
+   "file": "statusq_r2_mC.json",
+   "not_a_playwright_report": true,
+   "keys": [
+    "contract_line",
+    "contract_statuses",
+    "fallback_labels",
+    "file_bytes",
+    "generatedBy",
+    "resolved_wordings",
+    "ruler",
+    "run",
+    "state_key_map"
+   ],
+   "bytes": 2009
+  },
+  "statusq_r2_mD.json": {
+   "file": "statusq_r2_mD.json",
+   "not_a_playwright_report": true,
+   "keys": [
+    "contract_line",
+    "contract_statuses",
+    "fallback_labels",
+    "file_bytes",
+    "generatedBy",
+    "resolved_wordings",
+    "ruler",
+    "run",
+    "state_key_map"
+   ],
+   "bytes": 2134
+  }
+ },
+ "r2_verbatim": {
+  "statusq_r2_prefix_red_verbatim.txt": {
+   "arms_failed": 2,
+   "arms_passed": 2,
+   "tail_lines": [
+    "  2 failed",
+    "  2 passed (1.0s)"
+   ]
+  },
+  "statusq_r2_green_verbatim.txt": {
+   "arms_failed": 0,
+   "arms_passed": 4,
+   "tail_lines": [
+    "  4 passed (352ms)"
+   ]
+  },
+  "statusq_r2_mC_verbatim.txt": {
+   "arms_failed": 1,
+   "arms_passed": 3,
+   "tail_lines": [
+    "  1 failed",
+    "  3 passed (682ms)"
+   ]
+  },
+  "statusq_r2_mD_verbatim.txt": {
+   "arms_failed": 1,
+   "arms_passed": 3,
+   "tail_lines": [
+    "  1 failed",
+    "  3 passed (633ms)"
+   ]
+  }
+ },
+ "r2_publish": {
+  "rows": 13,
+  "created": 13,
+  "skip": 0,
+  "blobs": {
+   "sweep_tipbaseline_en_r2gen.json": "e4c245e0ed6138943acf45290125ad993c45b19f",
+   "sweep_tipbaseline_zh_r2gen.json": "3e0159915f0169ca079dc1ef10090039411b8c2c",
+   "sweep_r2_en.json": "f3e7f9d965a21db48e9cd376a5d5a4afce1af2e3",
+   "sweep_r2_zh.json": "1b3966bae7eb2f4ff9ead5aee4052c462a023316",
+   "labelcheck_r2_en.json": "21ae52e66085d6d23ed389f5b8df524be91b6240",
+   "ruler_r2_prefix_red.json": "dc2d9fd955a7a59698b0b66206659aa5258ffb38",
+   "ruler_r2_prefix_red_verbatim.txt": "be87ef9182c18329ffb179252ea54bd943447e74",
+   "ruler_r2_fixed_green.json": "6d0fd225f5753a976a5115e1cb5f477078a74a91",
+   "ruler_r2_fixed_green_verbatim.txt": "5328d239e729ba7d3293f5df8ca1fccc8ab73ec9",
+   "ruler_r2_mutantC.json": "188f20fac415cdaa62f8f8037447af5e5014fcb8",
+   "ruler_r2_mutantC_verbatim.txt": "f10fba79afe90175dc4341c1ce41c164bc673285",
+   "ruler_r2_mutantD.json": "4ddd41b09b88306bf6ed3827aa436c47d4c8b68b",
+   "ruler_r2_mutantD_verbatim.txt": "29e7a4d2151898eecb5e8675baeb843a5d9ee71b"
+  },
+  "manifest_bytes": 4487
+ },
+ "inventory_bytes": 1903,
+ "db_sizes": {
+  "_cmdra_0553.db": 17358848,
+  "_cmdra_0553p.db": 17358848
+ },
+ "seed_bytes": 17330176
+}
