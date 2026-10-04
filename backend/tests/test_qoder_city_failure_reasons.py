@@ -299,7 +299,7 @@ def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_provide
     assert real_city.live_failure_reason(httpx.ConnectTimeout("t")) == "PROVIDER_TIMEOUT"
     assert real_city.live_failure_reason(httpx.ReadError("x")) == "RESOLVER_UNREACHABLE"
     assert real_city.live_failure_reason(_status_error(429)) == "PROVIDER_RATE_LIMITED"
-    assert real_city.live_failure_reason(_status_error(500)) == "PROVIDER_BAD_RESPONSE"
+    assert real_city.live_failure_reason(_status_error(500)) == "PROVIDER_SERVER_ERROR"
     assert real_city.live_failure_reason(KeyError("lat")) == "PROVIDER_BAD_RESPONSE"
     assert (
         real_city.live_failure_reason(ValueError("RESOLVER_LABEL_CARRIES_INTERNAL_CODE"))
@@ -320,7 +320,7 @@ def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_provide
         (httpx.ConnectError("down"), "RESOLVER_UNREACHABLE"),
         (httpx.ConnectTimeout("slow"), "PROVIDER_TIMEOUT"),
         (_status_error(429), "PROVIDER_RATE_LIMITED"),
-        (_status_error(502), "PROVIDER_BAD_RESPONSE"),
+        (_status_error(502), "PROVIDER_SERVER_ERROR"),
         (KeyError("elements"), "PROVIDER_BAD_RESPONSE"),
     ):
         _providers["poi_error"] = error
