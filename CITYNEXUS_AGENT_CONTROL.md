@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0557 落地之后我用自己那把仪器复核了一遍（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：镜像确已生效——本机账本与 `commander/control` 在四个比较点上是同一枚字节；两格待落的尺重挂到现尖并各跑绿一眼；另自报我这手的探针先报了两个假「不存在」
+
+**一、已落地那枚模块，按你的门将要用的形制调用了一遍**：仓库根进 `sys.path`、不假设有 `__init__.py`、`repo_dir=` 指向 `D:/moodle/CityNexus`。三趟读回同一枚远端 blob `4261ec20a8a9b40c68c29e075e0b116d6f0e7367`、13560004 字节、重算 sha1 相等、两通道一致（`commander/control` 当时头 `f9ddab9b86056126734192ce001ffbadbe6bb29f`）。落地字节核对：线尖 `aefbbd1a2f99c448a9a684b3d01ce387273ee83c` 上那枚模块的 blob 就是 `dd939945f560632fea20186a57929d2edc1ab6ad`，与我交的都一样
+  一条接口硬信息给你的门：第二通道需要凭据文件，给法是环境变量 `CITYNEXUS_API_TOKEN_FILE` 或 `token_file=` 传参；没有它就抛 `IncompleteRemoteRead(leg="api_channel")`（`tools/cnx_ledger_mirror_reader_r1.py:114`）——我这手第一趟就撞在这格上，它是具名失败，不是挂死
+
+**二、镜像是不是真生效（这是 0557 的原始痛点，用数回答）**：五点探针「本机 → 远端 → 本机 → 远端 → 本机」——本机与 `commander/control` 都是 blob `216580f9b48830e29cdfd9d64cd02f3e4226952e`、13569073 字节、91467 行；四个比较点全等（4 全中、未匹配 0），两次远端读各自 `hash_equal` 且 `channels_agree`。件 `mirror_sync_probe_r1.json` blob `28961357723d46076979bc8a80eb2fee0b23fed2`，复跑 `python fc4a3359d049ef3a899842941bb334dadf029e98` 的那枚脚本
+  地形一并量清：账本这枚文件在 `commander/control` 上存在（`true`，问的是读者自己拉下来的 ref），在权威枝 `aefbbd1a2f99c448a9a684b3d01ce387273ee83c` 上不存在（`false`，问的是 `tip:path`）——所以镜像的目标枝只有 `commander/control` 一个
+  早先那一次「不等」不是镜像坏了，是追及：第一次比较里本机是 `62e3a743a4274221749eb9c2a98d8eea9da35391` 而远端还在 `4261ec20a8a9b40c68c29e075e0b116d6f0e7367`；过一分钟远端就成了 `62e3a743a4274221749eb9c2a98d8eea9da35391`（正是上一刻本机那枚字节），而本机这时已被代插改写成另一枚——同样 91446 行、字节不同；那枚本机快照不是 git 对象，只能指件里的行：`evidence/1d64acf5-ord0557-postland-verify-r1/mirror_lag_probe_r1.json:6` 的 `local_blob`（件 blob `6ce1c7afb185feb401b2f8f99d2ff28dc615fd5f`）。这是读数的形，不是缺陷——五点对齐见 `mirror_lag_probe_r2.json` blob `f7786bd0655d075f31c7a2735239c87cf815aa80` 与正式件 `mirror_sync_probe_r1.json` blob `28961357723d46076979bc8a80eb2fee0b23fed2`
+
+**三、两格待落的尺重挂到现尖，但我不说这是「重测」**
+  - `refs/heads/review/1d64acf5-ord0296-g4-floor-r7` = `89a0a27e0ece435dd8d40df15aa3bd89bad997c8`：链根＝`aefbbd1a2f99c448a9a684b3d01ce387273ee83c`、自己名下 2 枚、他人 0 枚、只读预测树 `fa2b24a364d567069f2f2d72a6b17c6ce595499c` 冲突 0 行；携带字节 `032777990661c5220794a91c2a00a8ed1ea97fe7` 与产出八态三腿读数的逐字相同；那一格自己的节点在新基上 `1 passed, 2 warnings in 2.30s`
+  - `refs/heads/review/1d64acf5-ord0476-response-set-r7` = `3c9f4df6edb2ffeed609087bed87a5372ca4529b`：同样链根＝该尖、名下 1 枚、他人 0 枚、预测树 `ab69f17f7178f6d52b5a3d09036be51566457d3b` 冲突 0 行；携带 `534b673b749adfd7548066cca770e0c52d105306`；节点在新基上 `1 passed, 2 warnings in 2.10s`
+  - 不必重测的证据是预映像没动：线现在那两枚分别是 `d3e21e9084a3589678d08f7b50afe5119b2b85b8`（== 我八态所用的 `d3e21e9084a3589678d08f7b50afe5119b2b85b8`）与 `853e9a67a7c33f4ac33b36dc49f53fd806265442`（== 我六态所用的 `853e9a67a7c33f4ac33b36dc49f53fd806265442`），逐枚列在件 `ack_aefbbd1a_r1.json` 的 `preimage_check` （blob `0a0223f0b3e22c62d6cf116d973a19b04f1b2b2d`，跑法见同名的 `77db9f1e7186d76ea2106a6e5505a9d41a9593b9`）
+
+**四、自报：我这手的探针先造了两个假「不存在」**：第一版问「账本在不在这条枝上」时把 `commander/control` 当 rev 直接问 `git cat-file -e commander/control:<路径>`，那枚枝名在本地克隆里不一定解析得到，于是回吐 `ledger_on_control=false`——同一时刻读者明明把那枚 blob 整份取回来了。已改成只问解析得到的 ref，并把「问的是哪枚 rev」写进件里（`fc4a3359d049ef3a899842941bb334dadf029e98:69` 那段注释就是这次改形的因）。这是「负向断言要先打印自己问过哪些路」的又一形，不是我原来那把尺的正常噪声
+
+**五、下一格我自申报，推荐 ①**：① 把五点探针做成常设自检（每次代插后跑一趟，不等就报警），必要时再加一枚反件——把本机副本换掉一个字节的比较必须报「不等」，证明这把尺真的在咬；② 我自己那批闸的「空分母」反件扫查（今夜被咬过的那两形：暂存集合为空仍判通过、以及这一节的假「不存在」）；③ 你门收下那两格之后，我把三腿读数并进 0296 那把尺的形制件换代次（`g4_single_source_shape_r5.json` 之后的新名，旧的不动）
+
+坐标：证据 6 枚新增在 `commander/control` 的 `evidence/1d64acf5-ord0557-postland-verify-r1/`，逐枚本机字节与服务端 `ls-tree` 读回 blob 全等（回执控制尖 `c0116576fb8f9934d53b652777d7467cdf3b2530`）；上一块 `1d64acf5_1824.md` 的 Q43 判语 `GREEN`、你的回执是 ORD-0557 CLOSED、权威尖当时 `aefbbd1a2f99c448a9a684b3d01ce387273ee83c`（`rev-list --count` 现读 1，无父重建树，所以本块一律按 blob 相等判落地）
+
+**边界**：产品字节 0 枚新增（本手只读远端与本机账本，没有改 `backend/app/**` 与 `frontend/src/**` 任何一枚）、他人文件 0 枚改动、权威线 0 次移动、force-push 0 次、账本 0 次直写（本块走收件口）、`demo/reset` 0 次、共享 `_preview.db` 0 次写、本车道 0 个端口在跑；写过的唯一一枚仓库内文件是已落地那把仪器的字节回显（`tools/cnx_ledger_mirror_reader_r1.py`，blob `dd939945f560632fea20186a57929d2edc1ab6ad`，与线上逐字相同，不落新内容）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0500 手机车道（0afdb49b）r4 已落地（现尖就是我那枚提交），另更正上一块一句说过头的话：链那一步当时还没切到 r7——现在切了，实测在 `…-staging-door-r5`
 
 一、落地已由我自己现读确认（不转述你的话）
