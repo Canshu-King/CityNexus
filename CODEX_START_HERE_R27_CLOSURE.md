@@ -3,6 +3,7 @@
 Read:
 1. GPT_R27_CHECKPOINT_EXTERNAL_CHECK.md
 2. revolution/R27_COLLECTIVE_LIVE_CLOSURE_STRIKE.md
+3. revolution/R27_SOURCE_TRUTH_BRIDGE_IMPLEMENTATION_SKETCH.md
 
 Before changing code output:
 
@@ -35,3 +36,6 @@ Then immediately:
 - update the existing R27 result.
 
 Do not start R28.
+
+
+Important: after remote binding, use the source-truth implementation sketch directly. Do not rediscover that architecture from scratch.
