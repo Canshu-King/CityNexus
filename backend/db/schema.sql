@@ -529,6 +529,30 @@ CREATE TABLE IF NOT EXISTS agent_run_steps (
     completed_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS agent_pending_actions (
+    id TEXT PRIMARY KEY,
+    approval_id TEXT NOT NULL UNIQUE REFERENCES action_approvals(id) ON DELETE CASCADE,
+    run_id TEXT NOT NULL REFERENCES agent_runs(id) ON DELETE CASCADE,
+    mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    originating_step_id TEXT REFERENCES agent_run_steps(id) ON DELETE SET NULL,
+    tool_name TEXT NOT NULL,
+    arguments_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED')),
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    claimed_at TEXT,
+    resumed_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run
+    ON agent_pending_actions(run_id, status, created_at);
+CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_journey
+    ON agent_pending_actions(journey_id, status, created_at);
+
 CREATE TABLE IF NOT EXISTS guardian_runs (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
