@@ -1,0 +1,35 @@
+{
+ "run": "ORD0568pix-011621",
+ "board_source": "D:/moodle/CityNexus/backend/citynexus.db",
+ "board_opened": "mode=ro, sqlite backup API, 0 writes",
+ "board_bytes": 37801984,
+ "copy_bytes": 37801984,
+ "db": "D:\\moodle\\_ord0568_r3\\stack_ORD0568pix-011621\\ORD0568pix-011621.db",
+ "worktree": "D:/moodle/_qoder_ord0568_r3_20261005/wt",
+ "branch_head": "b528e3fb7478bd296341a38efa08e6cce69e8cac",
+ "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+ "ports": {
+  "backend": 4732,
+  "front": 4731
+ },
+ "health_status": 200,
+ "front_status": 200,
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "tables_in_copy": {
+  "journeys": 1,
+  "replan_proposals": 3,
+  "provider_observations": 39,
+  "plan_versions": 4,
+  "events": 2
+ },
+ "children": [
+  {
+   "pid": 32556,
+   "role": "uvicorn"
+  },
+  {
+   "pid": 109096,
+   "role": "vite preview"
+  }
+ ]
+}

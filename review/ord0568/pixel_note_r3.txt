@@ -1,0 +1,60 @@
+ORD-0568 r3 -- the cell this lane could not reach is now read on a pixel, in both arms, and the branch is
+re-cut onto the authoritative tip so it can land without a merge.
+
+WHAT CLOSED (the gap named in note_r1.txt, which stays as published)
+  The Chinese arm reads: mock-mobility · RUNTIME_CAPTURE（运行时取证）
+  The English arm reads: mock-mobility · RUNTIME_CAPTURE（runtime capture）
+  Label beside the cell, as the screen writes it: zh '事发证据' / en 'Incident evidence'.
+  Both readings are innerText, so they are what a traveller sees, not what the DOM hides. The enum name is
+  still there in both arms and the words sit beside it in brackets -- that is the ruling, not a translation
+  of the identity. The provider key 'mock-mobility' is untouched.
+  On-screen proof per arm: zh box 265x15 at (948,538) with centre hit on element 'b.'; en box 293x15 at (920,538)
+  with centre hit on element 'b.'. Screenshots: authoritative_zh_r1.png, authoritative_en_r1.png (viewed).
+  Page exceptions across both arms: 0. Console errors: 0. API responses at or above 400: 0.
+
+HOW THE STATE WAS REACHED (no demo/reset, no write to the shared board)
+  The cell only exists once the journey carries a recovery proposal with an incident. This lane's own store
+  cannot produce that state, and the only store on the machine holding it is the board's. So the board file
+  D:/moodle/CityNexus/backend/citynexus.db was opened mode=ro and copied with the sqlite backup API into
+  ORD0568pix-011621.db (37801984 bytes copied from 37801984). The private stack wrote to the copy only.
+  Backend :4732 answered health 200, front :4731 answered 200 over index-BETPmGcB.js built from this tree. The run id env var
+  is deliberately absent: `backend/app/db/session.py:50` refuses to reopen an existing file under a run id,
+  and this store is a copy by design. Both arms entered through the shell's own stored keys
+  (citynexus.v8.journey_id, citynexus.locale) and the product's own Recovery control -- zh clicked '恢复与执行', en
+  clicked 'Recovery'; the panel testid v14-recovery-truth was present 1/1 times.
+
+RE-CUT ONTO THE CURRENT LINE
+  base (authoritative tip, read from the server at re-cut time): eaf4069e5d07a3dacc1ec33a0be515119208e16e
+  candidate head on review/cff87c64-ord0568-route-provenance-gloss-r3: b528e3fb7478bd296341a38efa08e6cce69e8cac
+  The two product commits were cherry-picked clean onto that tip; the diff against the base is 2 product
+  files, 1 ruler spec, 1 private runner config and this evidence folder.
+
+GATES ON THIS TREE
+  Ruler (4 arms, source-reading, starts nothing): 4 arms ok, rc=0, in review/ord0568/ruler_arms_r3.txt.
+  Typecheck: `tsc -p tsconfig.check.json --noEmit` rc=0 and `-p tsconfig.typecheck.json --noEmit` rc=0;
+  the captured output is 0 bytes (no diagnostics).
+  Exposure, same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), same
+  command, same export shape on both sides: base cells_total=6, candidate cells_total=6, growth=0.
+  The one extra module on the candidate side is this lane's own ruler spec. Full pair in
+  review/ord0568/exposure_pair_r3.txt.
+  The four strings are in the built bundle index-BETPmGcB.js: {"运行时取证": true, "runtime capture": true, "退回降级基线参照": true, "这台服务器写了一个这屏不认识的证据来源": true}.
+
+ONE THING THE PIXEL SHOWED THAT IS NOT MINE TO DECIDE (named, not fixed here)
+  Under the Chinese arm, the same panel prints an English sentence that came from the server rather than
+  from either dictionary. Both ends are named:
+    render: `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:181` reads
+            `verified?.impact_resolution?.semantic_explanation`, and `verified` is `proposal.diff.verified_evidence`
+            from the same file -- so the key path is diff_json -> verified_evidence -> impact_resolution ->
+            semantic_explanation.
+    emit:   `backend/app/intelligence/impact_resolver.py:182` passes a hardcoded English literal as
+            `human_explanation=`.
+  Read back from the copy just now: 3 of 3 proposals in this store carry it, and the value is 'The event contains a server-validated Activity reference.' in all of
+  them. ORD-0568 ruled on an enum; free prose from the resolver has no closed table to go through, so the
+  honest options are to stop rendering it in the Chinese arm, to have the resolver emit a code the screen
+  can look up, or to label it as upstream text. Either is a product decision, so this lane leaves the bytes
+  alone and reports the reading.
+
+NOT CLAIMED
+  The other five provenance wordings are proven only by the ruler, not by a pixel: this store holds one
+  incident, and it says RUNTIME_CAPTURE. Reaching the remaining five would need five different incident
+  shapes; no screen reading is claimed for them.
