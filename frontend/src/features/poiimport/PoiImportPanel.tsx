@@ -142,8 +142,8 @@ function describeRejection(cause: unknown): Failure {
 }
 
 /** One sentence per named condition, all of them ours. A condition with no dictionary line does not
- * get to borrow the answer's wording -- it gets `errUnnamed`, and the machine token stays visible in
- * the detail so the screen is still diagnosable. */
+ * get to borrow the answer's wording -- it gets `errUnnamed`. The technical cell beside these lines
+ * paints only what this device measured: a status code, or that no status was measured. */
 const FAILURE_SENTENCE: Record<Failure["code"], PoiImportCopyKey> = {
   JOURNEY_NOT_FOUND: "errJourneyNotFound",
   NO_ACTIVE_PLAN: "errNoActivePlan",
@@ -152,6 +152,13 @@ const FAILURE_SENTENCE: Record<Failure["code"], PoiImportCopyKey> = {
   IMPORT_PLACE_NOT_VISITABLE: "errPlaceNotVisitable",
   NO_RESPONSE_FROM_ORIGIN: "errNoResponse",
   UNNAMED_REFUSAL: "errUnnamed",
+};
+
+/** The answer names which channel produced the list; that name is a machine token, so it never sits
+ * in the main slot. The mapping is keyed by the type the answer allows, so a second channel value
+ * from the server is a compile error here rather than a token that reaches the screen unchecked. */
+const CHANNEL_NAME: Record<ParseResponse["source_channel"], PoiImportCopyKey> = {
+  LOCAL_TEXT_PARSER: "channelValueLocal",
 };
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
@@ -460,7 +467,7 @@ export function PoiImportPanel({
                 {failure.status ? (
                   <small data-testid="poi-import-error-detail">HTTP {failure.status}</small>
                 ) : (
-                  <small data-testid="poi-import-error-detail">{poiImportCopy(locale, "errNoResponse")}</small>
+                  <small data-testid="poi-import-error-detail">{poiImportCopy(locale, "noStatusMeasured")}</small>
                 )}
               </p>
             ) : null}
@@ -484,10 +491,16 @@ export function PoiImportPanel({
             </button>
           </article>
           <div className="v8-intel-facts">
-            <div>
+            <div data-testid="poi-import-channel-cell">
               <span>{poiImportCopy(locale, "channelLabel")}</span>
-              <b>{parsed?.source_channel ?? "LOCAL_TEXT_PARSER"}</b>
+              <b data-testid="poi-import-channel-name">{poiImportCopy(locale, CHANNEL_NAME[parsed?.source_channel ?? "LOCAL_TEXT_PARSER"])}</b>
               <small>{poiImportCopy(locale, "channelNote")}</small>
+              {/* The token itself stays available for diagnosis, but only inside the fold: the main
+                  slot is the dictionary's words. */}
+              <details data-testid="poi-import-channel-fold">
+                <summary>{poiImportCopy(locale, "technicalToggle")}</summary>
+                <code data-testid="poi-import-channel-token">{parsed?.source_channel ?? "LOCAL_TEXT_PARSER"}</code>
+              </details>
             </div>
             {unsupportedForms.length ? (
               <div data-testid="poi-import-unsupported">
