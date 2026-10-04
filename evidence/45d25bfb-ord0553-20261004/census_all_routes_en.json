@@ -1,0 +1,504 @@
+{
+ "instrument": "cmdra_0553_caps_context_r2 + _census_r5.py",
+ "locale": "en",
+ "base": "http://127.0.0.1:49861",
+ "entryAssets": [
+  "/assets/index-BcQ9VAso.js"
+ ],
+ "routesWalked": 14,
+ "totals": {
+  "painted_hits": 42,
+  "distinct_tokens": 37,
+  "routes_with_hits": 9,
+  "server_answer_tokens": 2,
+  "style_only_tokens": 35
+ },
+ "pageErrors": [],
+ "apiResponses": 21,
+ "census": {
+  "ARRIVAL": {
+   "token": "ARRIVAL",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/hub": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "DEPARTURE": {
+   "token": "DEPARTURE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/hub": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "NEXT": {
+   "token": "NEXT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 2,
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "p": 1,
+    "span": 1,
+    "v12-state-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "LEAVE": {
+   "token": "LEAVE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "NAVIGATE": {
+   "token": "NAVIGATE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "v9-navigate": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "RISK": {
+   "token": "RISK",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "b": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "LIVE": {
+   "token": "LIVE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "STATUS": {
+   "token": "STATUS",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "CLOCK": {
+   "token": "CLOCK",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "CURRENT": {
+   "token": "CURRENT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "STEP": {
+   "token": "STEP",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "OFFLINE": {
+   "token": "OFFLINE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/live": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "STAY": {
+   "token": "STAY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/studio": 1,
+    "/v8/bookings": 1
+   },
+   "slots": {
+    "span": 1,
+    "v8-selected-label": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "SELECTED": {
+   "token": "SELECTED",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/studio": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [
+    "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status"
+   ],
+   "provenance": "server-answer"
+  },
+  "DISCOVERY": {
+   "token": "DISCOVERY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/discover": 1
+   },
+   "slots": {
+    "v8-agent-mark": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "JSON": {
+   "token": "JSON",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 2
+   },
+   "slots": {
+    "v8-lede": 2
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "EVIDENCE": {
+   "token": "EVIDENCE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 1
+   },
+   "slots": {
+    "v8-selected-label": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "MULTIMODAL": {
+   "token": "MULTIMODAL",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "INBOX": {
+   "token": "INBOX",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "AUTHORITATIVE": {
+   "token": "AUTHORITATIVE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 1,
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 2
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "MEMORY": {
+   "token": "MEMORY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "JOURNEY": {
+   "token": "JOURNEY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "TRIP": {
+   "token": "TRIP",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "STUDIO": {
+   "token": "STUDIO",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "DRAFT": {
+   "token": "DRAFT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "THEN": {
+   "token": "THEN",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "ACCEPT": {
+   "token": "ACCEPT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "REALITY": {
+   "token": "REALITY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "CHANGED": {
+   "token": "CHANGED",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/authoritative": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "POLICY": {
+   "token": "POLICY",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "POST": {
+   "token": "POST",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "ACTION": {
+   "token": "ACTION",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "GATE": {
+   "token": "GATE",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "COMMITMENT": {
+   "token": "COMMITMENT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": {
+    "span": 1
+   },
+   "server_answer_fields": [
+    "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind"
+   ],
+   "provenance": "server-answer"
+  },
+  "EXPLICIT": {
+   "token": "EXPLICIT",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/twin": 1
+   },
+   "slots": {
+    "v8-twin-label explicit": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "LEARNED_SOFT": {
+   "token": "LEARNED_SOFT",
+   "kind": "UPPER_SNAKE",
+   "routes": {
+    "/v8/twin": 1
+   },
+   "slots": {
+    "v8-twin-label learned": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  },
+  "NOTIFICATIONS": {
+   "token": "NOTIFICATIONS",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/me": 1
+   },
+   "slots": {
+    "v8-kicker": 1
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  }
+ },
+ "server_word_rows": [
+  {
+   "token": "SELECTED",
+   "kind": "ALLCAPS_WORD",
+   "hits": 1,
+   "routes": {
+    "/v8/studio": 1
+   },
+   "slots": [
+    "span"
+   ],
+   "fields": [
+    "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status"
+   ]
+  },
+  {
+   "token": "COMMITMENT",
+   "kind": "ALLCAPS_WORD",
+   "hits": 1,
+   "routes": {
+    "/v8/intelligence": 1
+   },
+   "slots": [
+    "span"
+   ],
+   "fields": [
+    "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind"
+   ]
+  }
+ ]
+}
