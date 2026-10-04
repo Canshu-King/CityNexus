@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 00:55 · 新量的一格（可派单清单）：代码注释里点名的**设计/契约文档**有二十处、落在十三枚文件里、指着十一份不在树上的文档；我把口径与三条防假阳的规则一起写清，并说明我先前的粗扫数为什么不可用——这轮产品字节 0、枝 0 推，只等一句"补文档还是改指针"
+
+**〇、钟点**：本块写时 shell `date` 现读 00:55（已过午夜，我名下前几块是 21:14、00:07、同日更前的 19:26 与 18:12），请按块头时间戳排先后。
+
+**一、量到了什么（权威＝`git ls-tree -r`，判"存在"的标准是别人 checkout 得到）**
+
+扫描基座 = 我那枝注释锚 r2 的头 `b5dec327174664f7a8764006d333f6494b3bad54`（这枚在我这台可 `cat-file`；树上 10459 枚被跟踪文件）。
+
+- 站点二十处，落在十三枚代码文件里，指着十一份不在树上的文档（尺在 `D:/moodle/_qoder_rel_ord0447_wk/k60_missing_docs.py:1`）。
+- 按文档聚合（次数＝点名它的注释行数；四份占 12 处，余下 8 份各 1 处）：`docs/ACK_RESOLUTION_CONTRACT.md` 5、`docs/BUDGET_EVIDENCE_CONTRACT.md` 4、`docs/NETWORK_POLICY.md` 3，其余 8 份各 1 次：`docs/TEST_MATRIX.md`、`docs/PHYSICAL_IDENTITY_CONTRACT.md`、`docs/T1_IDENTITY_HARDENING.md`、`docs/T1_NEAR_IDENTITY_GATE.md`、`docs/TEST_AND_EVIDENCE_GATE.md`、`docs/MOBILITY_TRUTH_CONTRACT.md`、`docs/DESIGN_CORRECTIONS_REQUIRED.md`（逐枚行号在第三节）。
+
+**二、口径里那三条防假阳规则（我踩过两次才写死的）**
+
+1. 存在性只按被跟踪文件判，不按工作树判——我第一版拿工作树当权威，把 `data/mock/*.json` 与 `review/*` 全判成死指针。
+2. 仓库根目录那批 `*.md`（`INTEGRATION_REPORT.md`、`*_2026MMDD.md` 等）是**当时的历史报告**，里面的路径是记录不是承诺 ⇒ 整类排除；不排除的话光这一类就贡献 45 处。
+3. 只认"被代码注释点名的文档/契约路径"（前缀 `docs/`、`contracts/`、`tools/`、`scripts/`）；路由形状（以 `/` 开头、含 `{`）与非文档扩展名一律不算文件指针。
+
+**为什么我不发那个大数**：未加规则 1、2 时同一把尺报过一百七十九处、一百五十二处、一百三十四处三个版本，三次数不一致、且每一版都混着可证明的假阳（`run/tunnel_url.txt` 是运行期产物、`dev-sw.js` 是构建旁支、`.spec.ts` 是我正则截到的片段）。所以我只交上面那 20 处这一格——它逐枚我能复跑，尺留在第三节路径。那三个数（一百七十九／一百五十二／一百三十四）请当不存在，别贴进任何派单。
+
+**三、逐枚清单（`文件:行 -> 被点名的文档`，全部现读）**
+
+- `backend/app/integrations/discovery/real_city.py:623` 与 `:816`、`backend/app/integrations/provider_config.py:25` -> `docs/NETWORK_POLICY.md`
+- `backend/tests/test_qoder_anywhere_gates.py:44` -> `contracts/anywhere_v1.openapi.yaml`
+- `backend/tests/test_qoder_physical_identity_contract.py:108` -> `docs/TEST_MATRIX.md` 与 `docs/PHYSICAL_IDENTITY_CONTRACT.md`
+- `backend/tests/test_qoder_physical_identity_contract.py:228` -> `docs/T1_IDENTITY_HARDENING.md`
+- `backend/tests/test_qoder_physical_identity_contract.py:294` -> `docs/T1_NEAR_IDENTITY_GATE.md`
+- `frontend/e2e/qoder-ack-rendered.spec.ts:2`、`frontend/e2e/qoder-ack-resolution.spec.ts:2`、`frontend/src/app/V8Experience.tsx:707`、`frontend/src/features/execution/LiveRecovery.tsx:179`、`frontend/src/lib/disruptionState.ts:13` -> `docs/ACK_RESOLUTION_CONTRACT.md`
+- `frontend/e2e/qoder-budget-evidence.spec.ts:2`、`frontend/e2e/qoder-budget-rendered.spec.ts:2`、`frontend/src/app/V8Experience.tsx:3325`、`frontend/src/lib/budgetEvidence.ts:17` -> `docs/BUDGET_EVIDENCE_CONTRACT.md`
+- `frontend/e2e/qoder-budget-evidence.spec.ts:6` -> `docs/TEST_AND_EVIDENCE_GATE.md`
+- `frontend/src/features/execution/LiveRecovery.tsx:66` -> `docs/MOBILITY_TRUTH_CONTRACT.md`
+- `frontend/src/routes/v8Routes.ts:57` -> `docs/DESIGN_CORRECTIONS_REQUIRED.md`
+- 同一把尺还点了 `backend/app/anywhere_capability.py:59 -> P7_UNKNOWN_RETRYABLE_CAPABILITY_ACCEPTANCE.md` 与 `backend/app/catalog_hydration_operations.py:104 -> cmdr_1530.md`、`backend/app/db/session.py:247` 与 `backend/app/main.py:4904 -> RELATION/relation_and_copy_findings.md`（这三份在仓库外：账本/外部逆向笔记目录），具名附在清单末尾，不计进上面的 20 处
+
+**四、为什么不我自己动手改**
+
+每一处有两条修法，选哪条不是我该定的：**补出那份文档**（这些名字看着都像承诺过的契约/门文档，写它属于该契约的作者），或者**把指针改成树上真有的东西**（改注释、0 行为）。我核过：仓库里没有任何文件以这些名字或同族名存在（`git grep -l "ACK_RESOLUTION_CONTRACT" -- '*.md'` 回空），也就是说这不是"文件搬家没改引用"，而是**引用了一份从没入库的文档**。我单方面改成别的文件，等于替那位作者决定"那份契约其实长在哪" —— 这条我不做。请点名给谁：**该补文档**还是**该改指针**（后者我接，只动注释、我按上面清单逐枚改并交反件）。
+
+**五、名下现状与这轮纪律**
+
+- 我这两枝候选仍未落（逐枚 blob 现比，不用祖先形判据）：注释锚 r2 头 `b5dec327174664f7a8764006d333f6494b3bad54`、ORD-0507 仪表那枝头 `d0f019cdf521d0e9fb98efc273cbccb720826a12`；现读权威尖我落块时再取一次，形状我仍报"我这侧 0 冲突"。
+- 还等你两句（不催）：ORD-0507 第三件折叠的甲/乙；第一件那支 e2e 重指或整件闭单。
+- 这轮：产品字节 0 枚；权威线没推、名下枝 0 次新推、无 force-push 记录；`_preview.db` 一次没写；`demo/reset` 一次没主动调；保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 没起也没停；快照与临时 tar 都删净；别人的枝、stash、工作树没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 00:55 · 自申报那件做完了：六类在现尖重跑，顶栏头像那格从 68 枚归零，注入反控证明是屏变了不是尺瞎了（产品字节改动 0 枚）
+
+- 同一代我交了三枚，是因为我自己两处措辞不合格才重切的（都不是屏变了）：`-r4` 把「clipped 两臂相等」写成定句，而这一代它已不相等；`-r5` 把头像那格判成「仍读不到那两处改动」，把两半混成一判。请落最新这枚 `refs/heads/review/2d2d7428-ord0561-reach-instrument-r6`，前两枚 `refs/heads/review/2d2d7428-ord0561-reach-instrument-r4` 与 `refs/heads/review/2d2d7428-ord0561-reach-instrument-r5` 弃读——我不重写已发布的枝、也不删。
+- 头像那一格的读数拆成两半各证各的：**名字那半**对上了（现尖那枚按钮已有 `aria-label`）；**让位那半**对上了（屏侧不再读到它被裁：本代以字形被裁形式出现的头像 0 枚，上一代 68 枚）。我原先点在 CSS 里的三条属性只在位一条（`flex`），那三条是我猜的修法形状、不是那手 diff 的原文，所以我在件里明写它只当旁证。判语的字节锚与逐枚表在 `review/ord0561/REACH_INSTRUMENT_R6.md:93`。
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-reach-instrument-r6` 远端头现读 `44c0645b9a32e5e2445ab9eb3e7bd4f3a7373157`，父提 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 就是现尖 ⇒ 可直接快进合；本代的件 `review/ord0561/REACH_INSTRUMENT_R6.md` 的 blob `baadef4e3e1e51e8ee1ffadc97aa89ac22b601a9`（`git cat-file -s` 现回 11059 字节），件 96 行、11059 字节 B；相对现尖只动这一枚件（`git diff --name-only` 只列出它）。上一枚 `-r4` 之前的 `-r3` 已在线上：件 `review/ord0561/REACH_INSTRUMENT_R3.md` 在现尖的 blob 现读 `52ec75ee3113cd8497e065f91a243379ad1f4501`，与我交时逐字相同 ⇒ 新件不覆盖它，只新增当代读数。
+- 头像那格（本手的正题）：上一代 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 顶栏无名/只剩两三个字母的读数是 68 枚（两臂两形每趟一枚，`clientWidth 28 px` 对 `scrollWidth 48 px`）；现尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 同一条判据读到 0 枚。
+- 归零不算证据，配对才算：本代干净臂里注入记号 0 枚，而注入臂（每类一枚带 `data-testid=cn-mut-…` 的假缺陷）六格各命中 6 枚，其中就含「两字母无 `aria-label`」那一格 ⇒ 判据仍能咬，所以那个 0 是屏变了。字节侧同向：现尖 `styles.css` 的 `.v8-avatar` 规则里 `overflow`、`nowrap`、`flex` 三条都在，`V8Experience.tsx` 那枚按钮已有 `aria-label`。逐枚在三代对照那一节，反控明细在 `review/ord0561/REACH_INSTRUMENT_R6.md:64`。
+- 其余五类在现尖（组合必须连着报：light 档 × 1280x900、390x844 形 × 两臂 × 17 条路由 = 68 趟，未挂载 0 趟、拒收 0 条）：C1 被压成 1 px 的整句 16 枚、C2 合计 217 枚（头像那格已 0）、C3 中心被正文盖住 2 枚、C4 越过 `768 px` 或落进底栏那一条带 109 枚、C5 `/v8/agent` 命中 4 枚、C6 省略号收尾的触键 4 枚；与上一代逐类差 C1 16→16、C2 285→217、C3 2→2、C4 109→109、C5 4→4、C6 4→4。它那五屏网格上 `clipped` 从每臂 7 枚降到 2 枚（就是头像那枚字），`ellipsis` 两臂仍各 6 枚未变。分类表在 `review/ord0561/REACH_INSTRUMENT_R6.md:51`。
+- 顺手把「报数必须带构成」这条钉进件里：墨色那一节这代是 68 趟，但构成是两臂单档，与另一代普查件的两档单臂趟数相同、不可直接相减 ⇒ 我在件里明写了这句，防止下一个读件的人（包括我自己）拿趟数当同一把尺。见 `review/ord0561/REACH_INSTRUMENT_R6.md:79`。
+- 没做的，具名：前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`，本件结论不依赖测试计数）；凭据两读没跑（本手产品字节 0 枚，`NOT_APPLICABLE_BY_SCOPE`）；没量实体手机；`/v8/map` 这代 68 趟全部 `networkidle` 成功、没有一个结论依赖瓦片像素；我这把尺与 `1ba48dbf` 那把在 `covered` 上的口径差仍未闭合（要加「点底栏进入」那一臂），那格我这手没做。
+- 现场：私有栈 api pid 18144 / static pid 76668，停净后 netstat 现读 :4891 与 :4892 的 LISTENING 0 条（读数取自 `listeners_after_rch4.txt`，0 字节 B）；`demo/reset` 只落我自己的库 `_r5_rch4.db`；`:4783` 那枚预览口这一手我没读也没写；权威尖我没移动过；已发布 ref 覆盖 0 次（force-push 没用过）；D 盘现读 8425271296 字节 B 可用。
+- 我自申报的下一手（先读账本 ## ORDERS 再动）：给仪表补「点底栏进入」那一臂，把我这把与 `1ba48dbf` 那把在 `covered` 上剩的口径差闭合，并把 C4 那 109 枚按屏逐枚列成可裁的表（分类表在 `review/ord0561/REACH_INSTRUMENT_R6.md:51`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜对 ORD-0553 r5 普查交一枚反证加一把分辨尺：那两枚「服务端答的字」在我这一代逐枚都不是——源上它们是字典标签与一句人话，屏读侧那两屏各消费八门、答出这串字的响应为零、且根本没请求 memory 门（本手产品字节 0 枚、没动别人的尺一个字）
 
 **〇、坐标（写这块这一刻现读；三枚 40 位都可 `git cat-file`）。**
