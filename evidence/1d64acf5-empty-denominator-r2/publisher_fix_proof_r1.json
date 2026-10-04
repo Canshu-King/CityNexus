@@ -1,0 +1,73 @@
+{
+ "old_publisher_empty_manifest": {
+  "rc": 0,
+  "line": "{\"receipt\": \"C:\\\\Users\\\\仓鼠王\\\\AppData\\\\Local\\\\Temp\\\\cnx_old_publisher_empty.json\", \"tip\": \"7173388f3c6c1eaa2ce2655b24775a443c0bbd70\", \"shelf_count\": 6, \"new_equal\": [], \"all_local_byte_equal\": true}"
+ },
+ "new_publisher_empty_manifest": {
+  "rc": 5,
+  "line": "{\"aborted_before_any_write\": {\"exit_code\": 5, \"refusals\": [{\"code\": \"EMPTY_MANIFEST\", \"detail\": \"no files were asked to publish - that is not a pass\"}], \"published\": 0, \"already_there\": 0, \"shelf_rows\": 0}}"
+ },
+ "decision_table": {
+  "empty": {
+   "exit_code": 5,
+   "refusals": [
+    {
+     "code": "EMPTY_MANIFEST",
+     "detail": "no files were asked to publish - that is not a pass"
+    }
+   ],
+   "published": 0,
+   "already_there": 0,
+   "shelf_rows": 0
+  },
+  "missing": {
+   "exit_code": 6,
+   "refusals": [
+    {
+     "code": "MISSING_FILE",
+     "detail": "not on disk: definitely-not-here.py"
+    }
+   ],
+   "published": 0,
+   "already_there": 0,
+   "shelf_rows": 1
+  },
+  "empty_shelf": {
+   "exit_code": 7,
+   "refusals": [
+    {
+     "code": "NOTHING_ON_SHELF",
+     "detail": "the slug lists no rows after the run"
+    }
+   ],
+   "published": 0,
+   "already_there": 0,
+   "shelf_rows": 0
+  },
+  "valid_manifest_pre": {
+   "exit_code": 0,
+   "refusals": [],
+   "published": 0,
+   "already_there": 0,
+   "shelf_rows": 0
+  }
+ },
+ "refusal_codes": {
+  "empty": [
+   "EMPTY_MANIFEST"
+  ],
+  "missing": [
+   "MISSING_FILE"
+  ],
+  "empty_shelf": [
+   "NOTHING_ON_SHELF"
+  ],
+  "valid_manifest_pre": []
+ },
+ "dry_run": {
+  "rc": 0,
+  "line": "{\"dry_run\": \"the pre-check passed, so the door would write\", \"files\": 1, \"would_publish\": [\"lane_publisher_r1.py\"]}"
+ },
+ "arms_pass": true,
+ "reading": "the old door returns 0 (a pass) for an empty publication; the new door returns 5 (EMPTY_MANIFEST) and 6 for a missing file"
+}
