@@ -16588,6 +16588,207 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 01:35 · 自申报下一件做完了：注释锚那枝按"切枝当场取尖"重切为 r3（r2 的基座已不在线上、merge-tree 直接报 unrelated histories），线上又长出的 20 枚带号引用一并去号，守闸三臂绿、反件照样咬
+
+**一、为什么又重切一次（不是我勤快，是判据要求）**
+
+r2 头 `b5dec327174664f7a8764006d333f6494b3bad54` 的基座 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 已经不在权威线上：这条线每次落地都重建，所以对我现读的尖，r2 那枚 `git merge-base` 回空、`git merge-tree` 直接 `fatal: refusing to merge unrelated histories`。一棵形状预测不出来的候选，等于让落地门去猜——按你 10-04f 那条名册（切枝当场取尖、尖动就退一版），我重切了。
+
+**二、r3 的坐标与面**
+
+- 枝 `refs/heads/review/a68b0631-comment-anchor-drift-r3` 头 `7c92c5407558e0df65f27bdafcc0df9fa55aef67`（`git ls-remote --refs origin` 现读同值、本地 `git cat-file -t` 回 commit）；基座 = 切枝那一刻的权威尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`，所以形状预测不需要再借基座：对它 `merge-tree` 的冲突数为零（同一枚尖写块时再读一次仍是这枚）。
+- 面：153 枚路径、增 890 删 396（对基座 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 现数）；重放用的是 r2 那 150 枚路径的净 diff，三方合上 0 冲突、0 跳过块，另加这轮新扫的 3 枚（一份草稿契约、一枚 spec 注释、一枚读数件）。
+
+**三、这轮新扫到的（线自己长出来的）**
+
+r2 之后线上又进了带号引用：`contracts/openapi-anywhere-draft.yaml` 的描述散文 19 行，和 `frontend/e2e/qoder-ord0545s6-copy-cells-r1.spec.ts` 里点名 `PoiImportPanel.tsx:489` 那 1 行。两处都按名字形去掉号；机检仍是逐对重算——20 对删/增里对不上号的 0 对。全树刻意留的仍是那 1 枚生成物里的具名豁免（理由写在守闸的豁免表里，不是空白跳过）。
+
+**四、守闸与反件（都在这代重跑，不搬旧数）**
+
+- `backend/tests/test_qoder_a68b0631_comment_anchor_drift_r1.py` 三臂：G1 登记项、G2 死引用、G3 全树形制 ⇒ 3 passed。
+- 反件：把 `PoiImportPanel.tsx:489` 塞回那枚 spec 注释 ⇒ 只有 G3 红并点名那一行；文件按字节还原后复跑 3 passed（还原比对为逐字节相同）。
+- 其余面：`compileall` rc 0；整套后端 `--collect-only` 收到 1739 条、0 收集错（基座 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 上现跑）；`tsconfig.check.json` 与 `tsconfig.typecheck.json` 各 rc 0；`npm run build` rc 0。
+- 读数件：`frontend/review/line_anchor_drift/READINGS_r7.txt`（这轮全部数与判语的落档处）。
+
+**五、名下还在等的（不催、不自取）**
+
+- ORD-0507 第三件折叠：甲/乙；第一件那支 e2e：重指或整件闭单。
+- 00:55 那块那份"代码注释指着 11 份没入库文档"的清单：补文档还是改指针（改指针归我，只动注释、带反件）。
+- ORD-0507 的仪表那枝（头 `d0f019cdf521d0e9fb98efc273cbccb720826a12`）基座也已过期，同一条判据下我需要照 r3 这样再切一次；它要重跑产线屏读，成本比这格高，你说要不要现在花，我就花。
+- 我落这枚之前最后现读的权威尖是 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+**六、纪律**：权威线 0 次推送；名下只首推了 r3 这一枚新枝，没有 force-push 记录；r1、r2 两枝原样未动；`_preview.db` 一次没写；`demo/reset` 一次没主动调（守闸跑在我的一次性库 `backend/data/_k6*.db` 上）；保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 没起也没停；别人的工作树、stash、枝一枚没碰；临时快照与 tar 已删净。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 自申报的下一件做完了：我自己那张「读在飞作业」八行名单**改成真跑复验**（不再读 AST），判语是 5 行已不红、2 行的函数名在尖上不存在、1 行仍红但成因不是我写的修法；另具名一枚守门缺陷（不是我的红，会咬所有守常设的车道）。枝 `review/89f2e2d6-inflight-table-erratum-r1` = `efc6f365fe040ba1a05a373426f3aa4490ced72a`，产品字节零枚改动
+
+**一、为什么这件事轮到我**
+
+g10 那一手（块「g10 反证交件」）证明了我那张表的方法有洞：它是用 AST 找「有没有等待器」，不是把每行真跑一遍。别人给的成因是假设，我自己给的更是。现在 `review/inflight-wait-r1/INFLIGHT_WAIT_INVENTORY_r1.json` 那张表已经被逐扇派下去，车道 `1d64acf5` 那块第六节还写着「G4 那格仍等车道 89f2e2d6 的名单」——所以我先把表本身重验一遍再让人跑，别让六扇门追一个我不确定的判语。
+
+**二、八行逐行判定（现读尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`；孤立一趟 + 整档一趟，各自一枚新库）**
+
+| 尖上位置 | 孤立单跑 | 在整档批量里红不红 | 尖上还有这个函数名吗 | 判语 |
+|---|---|---|---|---|
+| `backend/tests/test_qoder_ord197_four_class_receipt.py:470` | 绿 | 不红 | 在 | 已闭——是被 `5a53846b` 那手落的修闭掉的，逐字节证：该文件现尖 blob = `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5`，与其 `-r3` 候选 blob = `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` 同一枚 |
+| `backend/tests/test_qoder_ord197_four_class_receipt.py:501` | 绿 | 不红 | 在 | 同一手（同文件那枚 blob 即证）；配套第二枚 `backend/tests/test_qoder_city_failure_reasons.py` 现尖 = `d40513cb37e977d36df1dfd3b2d480ee43f7caf6`，也与其 `-r3` 的 `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` 同一枚 |
+| `backend/tests/test_qoder_anywhere_gates.py:169` | 绿 | 不红 | 在 | 不用再补等待器（文件现尖 = `fbdff5d636fccd3f2b6934eb519f75c2121bd1ce`） |
+| `backend/tests/test_qoder_ord224_g3_generation_measurement.py:162` | 绿 | 不红 | 在 | 同上（文件现尖 = `73e723c333cb31a78148cde5f25b1916ce808fae`） |
+| `backend/tests/test_qoder_provider_identity_leg.py:437` | 绿 | 不红 | 在 | 同上（文件现尖 = `2e79969efe05d6b27fbb3a7ad30c05a380a7ae26`） |
+| `backend/tests/test_qoder_pending_destination_identity.py:157` | **红但不是那条臂** | 不红 | **不在** | 我写的函数名多了一个复数 `s`；尖上那格真实名是 `test_g1_unresolved_text_never_reaches_the_identity_column`，按真名跑 = 绿 |
+| `backend/tests/test_qoder_pending_destination_identity.py:373` | **红但不是那条臂** | 不红 | **不在** | 我把尾巴写成了 `_from_the_pending_key`；尖上真实名是 `test_g6_the_stored_label_is_separate_from_the_normalised_resolver_query`，按真名跑 = 绿 |
+| `backend/tests/test_qoder_anywhere_provider_truth.py:72` | 红 | 红 | 在 | 已由「g10 反证交件」那块处理：等待器不闭它（文件现尖 = `4d952cd51f6874096d60d0704acf0bac07786bc4`） |
+
+- 两枚跑量具与读数件：单点趟 `review/inflight-wait-r1/inflight_row_recheck_r1.py` blob `63390023b319205b107b93576f132b7372b279ac` → 件 `review/inflight-wait-r1/INFLIGHT_ROW_RECHECK_r1.json` blob `80a107452456c0e8e10ceda6d22b9e785e0a48e9`；整档趟 `review/inflight-wait-r1/inflight_file_batch_r1.py` blob `fd9208aa147fb644511eee030938d7568fa05c61` → 件 `review/inflight-wait-r1/INFLIGHT_FILE_BATCH_r1.json` blob `79402a9987cc609a11456d035c7c67b05a4caa43`；八行合并判定 `review/inflight-wait-r1/INFLIGHT_TABLE_ERRATUM_r1.json` blob `ce7d9f8fa737135aff64be816a95bf8c7c2a2d80`（已发布那枚表**一字未改**，更正另存新名）。
+- 时效性不是我口头保证：判定件里每行带 `file_at_measured_head` 与 `file_at_tip_now` 两枚 blob，我测的那代与现在这尖之间，被引用的文件移动了零枚（`files that moved under a reading I am quoting: none`）。
+
+**三、具名一枚守门缺陷（我不动它，等裁语；它不是产品回归，但会让两条线读到不同的红集合）**
+
+- 现场：`backend/tests/test_qoder_pending_destination_identity.py` 里两枚 migrate 臂——`test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids` 与 `test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row`——在**权威模式**（进程带 `CITYNEXUS_E2E_RUN_ID`，也就是常设要求的「每趟新 run id」）下**孤立跑就红**：一枚 `1 failed, 2 warnings in 2.67s`，一枚 `1 failed, 2 warnings in 2.16s`。
+- 拒的落点与词：`backend/app/db/session.py:50` 抛 `RuntimeError`，句子是「E2E run '<id>' refuses to reopen an existing database at <tmp_path>\legacy_pending.db … issue a new CITYNEXUS_E2E_RUN_ID instead of deleting it here」。
+- 为什么那句补救在这里不可能生效：那个 `.db` 是臂**自己几秒前**用 `sqlite3` 建出来的旧行样本，然后要按产品自己的 migration 就地升级；守门比的是「文件存不存在」，不是「这枚文件是不是本进程创建的」，所以换新 run id 也照样红。
+- 我杀掉的假设（不是没查就下判语）：先怀疑 pytest 的 basetemp 陈旧复用——把 `--basetemp` 换到本车道自己名下的空目录再跑，仍然 2 failed，假设作废。
+- 要紧的地方：守门在**没有** run id 时直接早退，所以同一棵树在「普通 pytest」里这两枚臂是绿的、在「按常设带的权威 run id」里是红的。**两条车道若调用方式不同，报出来的红集合就不同**，这不是谁的笔误。
+- 我建议的修法方向（落地归你，我不改产品码）：让守门只回答它真正要问的那件事——本轮声明的那枚 `CITYNEXUS_DATABASE_URL`，而不是 `make_engine` 每次收到的 per-test sqlite URL。
+
+**四、批量顺带读到、但不是我那八行的（只报事实，不判成因）**
+
+`tests/test_qoder_anywhere_gates.py`（该文件现尖 blob `fbdff5d636fccd3f2b6934eb519f75c2121bd1ce`）整档一趟 `2 failed, 11 passed, 2 warnings in 64.93s (0:01:04)`，红的是 `test_g3_xproc_loser_readback_five_processes_one_operation` 与 `test_g5_an_ai_run_that_changed_must_say_which_it_was`；那一档耗时 `64.93` 秒。`g5` 那条在更早的 triage 表里已被具名为量具缺陷，我不重复判。
+
+**五、我这手没做的**
+
+- 产品字节零枚改动、测试判据零枚放宽、skip/mock 零枚；新增只有 `review/inflight-wait-r1/` 下五枚（两量具、三读数/判定件）。
+- 我不再替任何一行补等待器：八行里唯一仍红的那行已归到 g10 那块，其余七行按这份判定不该再有人动笔。若号令者要把 `pending_destination_identity` 那两枚 migrate 臂正式开单，点名给我或给守门那侧都行，我这边读数已经齐。
+
+边界 A：本手产品字节零枚改动、契约零枚、他人量具零枚改动；他人已发布件（`INFLIGHT_WAIT_INVENTORY_r1.json`）一字未改，尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+边界 B：权威线零移动；push 三次（收口、g10、本手），目标全是本车道名下新枝，force-push 零次，他人枝零枚改动，旧枝零枚删除，枝头 = `efc6f365fe040ba1a05a373426f3aa4490ced72a`。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写；监听端口零个在跑（跑的是 pytest 自起的私有库，每趟一枚、run id 各不同），尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6efab655 · 号令者实例 A · 盘上清干净了、镜像这轮亲测通了、英文臂同代次普查读到位
+
+一、现尖现读 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。
+
+二、盘（本轮第一件事是它，可用只剩七点六 GB 时就动的手）：
+- 先只读点名再删：候选 = 我自己的派生导出目录里「超十二小时且没在被服务」的那些，逐枚探针只查两处常见 junction 位（`frontend/node_modules` 与根 `node_modules`），不做全盘扫（避免几分钟静默像卡死）。名单落 `_cleanup_manifest_builds_r1.json:1`，已发布件 blob `5b2bc347473b3972cc40349d53ad297f9c0e38f1`（38004 B）。
+- 形制：每枚先用普通 `cmd /c rmdir` 卸 junction，再删树，绝不递归删穿 junction。
+- 结果：删成二百八十六枚、失败零枚、耗时 49.9 秒；`df -h /d` 从 7.6 GB 到 11 GB 可用（前后两行逐字在 `_cleanup_builds_run_r1.log:1`）。被三枚在服务的产物目录跳过了（`_build_a3324c4`、`_build_1d39477`、`_build_ee14270`，见名册 `served_kept` 字段，blob 同上）。没碰别人的工作树、缓存或回收站。
+
+三、账本镜像这一轮**通了**，我此前反复报的缺口正式销账：代插工具这趟打印 `mirror rc=0 | route4 streamed blob body: 13990977 B, equal=True, attempts=1 | READBACK STATE: BYTE_LEVEL_CONFIRMED | PROVEN`（逐字在 `_apply_0140.txt:1`，取到的字节数带单位、与远端报的 blob 逐字节相等）。⇒ 早前那串「truncated read」读数只对旧取法成立，现在按新取法为 PROVEN；我上一块写的「镜像仍欠」这句作废，作废写在新块里、不改旧块。同趟入账的是另外两扇的块（回执在 `_processed/` 里那两枚 `inserted_` 后缀件）。
+
+四、英文臂同代次普查（补齐我自己点名的欠格）：与我上一块的中文臂读数是**同一代产物**（资产名 `index-iZ6I1MKH.js`，同一台私有栈前口），英文臂全屏画在屏上的机词读得 23 处，其中 hub 那屏零处而屏内字符 6372 枚（正对照：主体在屏上，不是空分母），`/v8/intelligence` 三处、`/v8/authoritative` 四处、`/v8/bookings` 五处、`/v8/live` 八处，页面异常零枚。件 blob `bf3fecd91f1d92fa1af31005ddfab2cd99d245a1`（7655 B）。对照旧基线（英文臂曾读 33 处、更早 60 处）说明词表那一族确实在往下压，不是我换了尺子口径。
+
+五、仍欠（具名，不粉）：普查尺允许表还是少 `JSON` 这枚词， bookings 那五处里含正当文案 ⇒ 读数偏高，方向保守；ORD-0520 屏侧那格仍未开工 `NOT_REACHED_BY_CMDR`；闭合查找尺仍未接进共享落地门 `NOT_IN_GATE_YET_BY_CMDR`；这一代之后尖又走了（现尖见第一节），所以第四节的屏读只对 `ee14270` 那一代负责，不当下代次引用。
+
+
+### 6a150e1e 车道 · 待落三枚枝已随现尖重挂到更高一级（新尖只动了 tools 两枚文件）＋ 上一格那句"十三枚"扩到全在册屏面：十七路由两档共三十四次到访，去重后是十九枚不同的声明上不了屏，且全部落在 `button` 上
+
+**〇、坐标**。权威尖现读 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（01:14 那一手：`restore mirror self-check + hook onto current tip via tip-tree + path-level overlay`，改动只有 `tools/cnx_ledger_mirror_sync_check_r1.py` 与 `tools/cnx_ledger_mirror_sync_hook_r1.py` 两枚文件，用 `git diff --name-only eaf4069e5d07a3dacc1ec33a0be515119208e16e..4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 现取两行）。**同一命令限定 `-- frontend` 时命中零行**——也就是说新尖的前端字节与我昨夜那代产物逐枚相同，本轮跨屏量仍跑在现读服务着的 `D:/moodle/_qoder_6a_ord0531_20261001/dist_census_tip3`（静态端口 `127.0.0.1:4829`，入口 `http_status=200`，后端仍指我自己那枚 api 端口 `127.0.0.1:8021`），不必重构建，这一句是可核的而不是省事的借口。我 00:50 那块已入账（块头「把上一块留下的"判不了"那桶补成读数」，写这块时账本现读第 16908 行；账本是整文件重写的，行号会漂，认块头别认行号）。BB 机我这扇 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；账本 `## ORDERS` 段起于第 16590 行，读到此刻没有点我名的新行，也没有裁语①或甲/乙那一句。
+
+**一、三枚待落枝已按新尖重挂（这件是号令者反复点过的"落地口前最后一手"）**。脚本 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_r1.py`，读数 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_4d43f8bc_r1.json`；三枚都升到下一级新枝名（旧名原样在远端，我不覆盖、不删），四件门全过、`git ls-remote --refs` 回读与本地头逐字相同：
+- 花费面那句：枝 `refs/heads/review/6a150e1e-spend-off-day-sentence-r6`，头 `8d49b32a87221f58761c16d44a659f381e30eac6`，对尖 diff 现读三枚路径：`frontend/e2e/qoder-6a150e1e-spend-faces-day24-r1.spec.ts`、`frontend/src/features/trip/SpendPanel.tsx`、`frontend/src/features/trip/spendCopy.ts`。
+- 回收站注释名字形：枝 `refs/heads/review/6a150e1e-trash-citation-rot-r7`，头 `61149e14d3e8a10960737a4599490cdfc3e3d4d2`，diff 三枚路径：`backend/tests/test_qoder_ord0531_bin_ownership.py`、`frontend/src/features/trash/journeyTrash.ts`、`frontend/src/features/trash/journeyTrashCopy.ts`。
+- 出页门验证器：枝 `refs/heads/review/6a150e1e-emitter-door-verify-r6`，头 `3850ebf8174134e55f1cf1ad3e9610668cffd5a2`，diff 两枚路径：`review/ord0531-emitter-door/door_check_r1.py`、`review/ord0531-emitter-door/verdict_r1.json`。
+**这里我多核了一道**（因为您 10-04 定过"整树代切＝静默回退雷"）：三枚头对尖的 `git diff --name-only` 我逐枚单独跑过，输出的路径清单**只有我自己那几枚**，没有夹带任何别人的文件、也没有任何一枚显示为删除——重挂只换父，内容与我上一代枝里逐枚相同（脚本里 `all_content_preserved` 为真，我这轮的独立复算也给出同样的枚数：三、三、二）。
+
+**二、跨屏读数（本轮主交付）**。"在册屏面"我不用嘴说，用那张表：`frontend/src/routes/v8Routes.ts` 里 `{ key: "…"` 那些行——一张 key 在表里，`/v8/<该 key>` 才是一屏而不是一句被弹回 Today 的地址。现取十七枚 key：`hub`、`live`、`map`、`studio`、`stay`、`discover`、`import`、`bookings`、`footprints`、`agent`、`authoritative`、`intelligence`、`twin`、`trash`、`access`、`trips`、`me`。件：`D:/moodle/_qoder_6a_ord0531_20261001/font_declare_screens_r2.cjs`，读数 `font_declare_screens_r2.json`（第一代 `…_r1.cjs`／`…_r1.json` 原样留着；第一代只在件里存了"丢"那桶的明细，`other` 桶只有计数，所以重跑第二代把逐枚明细全存下——这条不掩盖：一杠拿不出的数就不该写在块里）。两档视口各走一遍，共三十四次到访，**每次都回读 `location.pathname`，三十四次逐字等于 `/v8/<该 key>`，零次被弹回**。
+
+- 分母（一档合计）：`button` 五百四十枚、`textarea` 六枚、`input` 四枚、`select` 两枚；进入判语的是"带着单类 `font-size` 声明"的那批。
+- 三十四次到访的判语合计：**丢（声明值没上屏、且赢的是 `frontend/src/styles.css:131` 那条全局泄漏）二百一十六行**；保住四十行；别的规则赢十二行；声明本就上屏三十八行；声明即 `inherit` 且与父级同值四行。
+- **去重后的真正答案是"十九枚"**：不是十枚也不是十三枚，而是十九种不同的「类 × 声明值 → 屏上值」，且**tag 全部是 `button`**（`input`／`select`／`textarea` 这轮没有一枚因此丢值——`textarea` 那两枚恰好把 `var(--cn-fs-body)` 解析成十六 px 且上屏，因为那条泄漏的选择器只选 `button`）。逐枚（类名｜声明｜屏上｜出现于多少次到访）：`v9-language`｜十 px｜十六 px｜六十八（每屏两枚都在）、`v8-mobile-menu`｜零 px｜十六 px｜三十四、`v8-icon-button`｜二十 px｜十六 px｜三十四、`v8-quiet-button`｜十二 px｜十六 px｜十四、`v8-primary`｜十二 px｜十六 px｜八、`v8-outline-button`｜十二 px｜十六 px｜八、`cn-access-sort-tier`｜`var(--cn-fs-caption)`｜十六 px｜八、`v8-primary-button`｜`var(--cn-fs-meta)`｜十六 px｜六、`cn-access-trip-open`｜`var(--cn-fs-caption)`｜十六 px｜六、`v8-primary`｜十二 px｜十 px｜六、`v8-primary`｜十二 px｜十二点四八 px｜四、`cn-stop-checkin`｜`var(--cn-fs-caption)`｜十 px｜四、`cn-collect__entry`｜十一 px｜十六 px｜四、`v8-text-button`｜十二 px｜十六 px｜二、`v8-compare-button`｜十 px｜十六 px｜二、`cn-collections__retry`｜`var(--cn-fs-caption)`｜十六 px｜二、`cn-footprints__retry`｜`var(--cn-fs-caption)`｜十六 px｜二、`v8-outline-button`｜十二 px｜十二点四八 px｜二、`cn-poster-open`｜`var(--cn-fs-secondary)`｜十六 px｜二。
+- **这轮最有用的一条新事实**：同一枚 `.v8-primary` 在不同屏上量到三种屏上值——十六 px、十 px、十二点四八 px。因为 `font: inherit` 的效果不是"把字号改成某个固定值"，而是"改成随父级"，所以它**不统一**，随那一屏的容器字号漂。推论对我自己那两句都有效：上一块那句"主按钮与次按钮在字号与字重两维同值"只能在同屏内说，不能在全产品说；而"要不要把字号交回各自的规则"这一刀的实际后果，也得按屏看，不是按一个全局数值看。
+
+**三、与上一格那句"十三枚"的口径关系（不矛盾，差集逐枚具名）**。上一格是 `trips` 多点开一枚 dock（`.cn-copilot-edge`）的态，读到十三行；本轮走同一屏的**默认态**，读到十一行。两个集合的差集我现算了，不是猜：只多 `cn-copilot-close` 与 `v8-primary` 这两行——它们只在 dock 打开后才在册，反向差集为空（没有"不开 dock 才丢"的）。所以"十三"与"十一"各自对自己那一刻的屏态成立，跨态的口径我按这条写法固定下来：**报这种数必须带"开了哪一枚面板"**。
+
+**四、我自己两个桶名起宽了，具名更正（这是判读风险，不是措辞问题）**。① 上一格与本轮都出现的 `other_rule_wins`：十二行不是噪声，而是**屏级作用域规则**赢——`hub` 那八行赢在 `.v8-hub-actions .v8-quiet-button`、`live` 那四行赢在 `.cn-live-toolbar .v8-quiet-button`；屏上值十三 px 也不是声明的十二 px，所以这类同样是"规则里写的值不等于屏上的值"，只是成因不是那条全局泄漏。甲形若真修，这两处要一起看，不能只盯 `:131`。② `preserved_by_own_compound_rule` 这四十行里装着两种东西：三十四行是 `v8-avatar` 被我这手元素加类规则保住（真·按设计，也是唯一一处），另外六行是 `.v15-copilot-suggestions .v8-outline-button` 这种**容器级覆盖**（屏上十 px ≠ 声明十二 px），它不是 ORD-0570 那种修法。桶名写成"own compound"会让人以为全是可控的设计，这条是我起名过宽，读数没动、判语按本段收窄。
+
+**五、要不要修（仍 0 产品字节，决定归您）**。现在两形的代价都可数了：**甲（逐枚限定）**的工作量单位是"十九枚不同的声明"，其中三枚每次都丢（顶栏与底栏那三枚），另有一枚 `cn-copilot-edge` 已经是正确形制的活样本——它靠 `.cn-copilot-dock.idle-compact .cn-copilot-edge` 这种两类的容器规则把十一 px 稳稳送上屏（三十四次到访全上屏），这说明甲形在本产品里已有先例、不是发明。**乙（动 `frontend/src/styles.css:131`）**的影响面是同一次到访里的二百一十六行屏上值要改由各自规则说话，跨十七屏两档，需要一次跨屏回归；这枚文件是今夜多条车道都在改的热行，我不碰。字重那一维仍与上一格相同（`v9-language`、`v8-primary`、`v8-quiet-button`、`cn-collect__entry`、`cn-poster-open` 声明非四百、屏上四百）。
+
+**六、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；已发布枝 force-push 0 次、删除 0 次（本轮只新建三级新枝名，旧名原样）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮不碰任何库）；别人的枝与别人的文件改写 0 次；别人车道的进程我既没起也没停；skip 0 处、mock 0 处；产品字节 0 枚改动（本轮新件都在我车道目录，未推 review 枝——量具要入库需要您那一句）；工作树现读 `git status --porcelain` 空输出（我车道那棵树 `D:/moodle/_qoder_n2b_ord0466_20260929/wt`）。端口本轮没新起一枚、也没退掉一枚（清单即下列七枚）：api `127.0.0.1:8021`、静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`、`127.0.0.1:4829`；工地板 `127.0.0.1:4820` 不是我起的、我没碰；那四枚受保护端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 在 `netstat -ano` 里现读命中零行，本轮也没向它们发过请求。
+
+**七、下一手（自申报，不等裁语）**。本格闭合。我这轮留下的最后一格是把**屏态**展开：本轮走的是十七屏的默认态（零次点击，除第一代那次开过一枚 dock），暗色档与各屏的抽屉、弹层、错误态都没进分母，而"屏上值随父级漂"这条新事实恰恰说明态越多、可能的漂法越多。我接下来就跑这一格：同一把尺在暗色档与"点开各屏第一枚入口"的态上重走一遍，让"十九枚"这个数在态展开后要么撑大、要么具名收成不变的清单，仍 0 产品字节、仍只按"声明值 vs 计算值"判、仍逐次回读地址。等您的两句照旧：甲/乙点一形，裁语①（找回门甲/乙/丙，我推荐甲、反对丙）点形制；要落地我这三枚新枝时说一声，我按那一刻的现尖再挂一次。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 自申报第三件：我给 `NOT_REACHED` 那枚Initialization补上了断言，并用单变量反件证明它咬着东西 · 候选 `refs/heads/review/5a53846b-not-reached-arm-r1` = `0e1084873609566dd8463bb01b32c8cab79b5e03`（对现读尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 只读预测冲突 0 枚，改动文件 2 枚：`backend/tests/test_qoder_city_failure_reasons.py`, `review/not-reached-arm/READINGS.md`）。本手 0 产品字节。
+
+**一、为什么这格归我**
+
+- `NOT_REACHED` 这枚值是 CMDR 02:35 第 5 条那一手（我）写进去的兜底：`backend/app/integrations/discovery/real_city.py:1542` 的注释就写着「失败形状可能从根本没问到腿的路径 reach 到那道门，未绑定的名字会把具名原因码换成 UnboundLocalError」。现读尖上这个字在 `backend/` 全树命中 1 处（都在产品那一行），`backend/tests/` 下含它的文件 0 枚 ⇒ 兜底一直在，没人看着。
+
+**二、我先把一条自己写错的结论撤回**
+
+- 我先写了枚一次性探针，直接 POST 畸形城市号到 `/api/v1/journeys`，四枚号全回 `VALIDATION_ERROR`，于是我记下「schema 在门口就拒了，这条路不可达」。**这句是错的**：探针自己的 payload 缺了真helper 会送的字段。既有臂 `backend/tests/test_qoder_city_failure_reasons.py:test_our_own_malformed_label_is_not_blamed_on_the_provider` 就是从产品这条路走的（`_journey("CN-CN-TIANJIN")`）。所以我不再加新臂——撤回新臂那版，只给既有臂补一行断言。
+
+**三、改了什么（逐字）**
+
+- 新增行 4 枚（含 3 行注释 + 1 行断言）：`assert status["fallback_geocode"] == "NOT_REACHED"`。测试文件 blob：尖 `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` → 候选 `86de1d147dc778478e0f682fbdc2bae6d8efc515`；产品文件未被这手动过 （尖上仍是 `5bed42608bdfaad1067c50abb11918dfba4710b4`）。
+
+**四、反件（单变量，跑完按哈希还原）**
+
+- 控制：该模块在尖上跑 = `7 passed, 2 warnings`，退出 0。
+- 变异：删掉 `backend/app/integrations/discovery/real_city.py:1542` 那一行Initialization（该行在文件里出现 1 处，删前断言过唯一性）→ 单跑这一枚臂 = `1 failed`，退出 1，原因逐字：`backend/app/integrations/discovery/real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_geocode'`。也就是「具名原因码」会被换成 500，正是新断言拦住的那件事。
+- 还原：产品文件跑完字节回来（sha256 前后同值）。
+
+**五、门与线**：`git merge-tree --write-tree 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d 0e1084873609566dd8463bb01b32c8cab79b5e03` 冲突 0 枚；`git diff --name-only` 该候选相对尖 = 2 枚文件，全部在本车道名下路径 + 那一枚测试文件。
+
+边界 A：本手产品字节 0 枚、契约 0 枚、他人尺 0 枚改动（补的是我自己那一手的兜底断言），尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+边界 B：权威线 0 移动；push 2 次，都进本车道自己名下枝 `refs/heads/review/5a53846b-not-reached-arm-r1`，force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除，尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+边界 C：账本 0 直写（本块走收件口），demo/reset 只在测试私有库上被 fixture 自己调用、共享 `_preview.db` 0 次写，监听端口 0 个在跑（那枚一次性探针跑完即删，工作树现读脏 1 行 = 本候选的测试文件），尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 01:36 · 自申报那件做完了：入口方式成了一臂，两把尺在 covered 上的口径差从此是枚数不是说法（产品字节改动 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-entry-arms-r1` 远端头现读 `fcda6d35ce585a927c6aa402cedbe615460972bb`，父提 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 就是现尖 ⇒ 可直接快进合；件 `review/ord0561/ENTRY_ARMS_R1.md` 的 blob `620467bfb2b5b0d5ec7685d94aa1759cd696ef0f`（`git cat-file -s` 现回 4835 字节），件 54 行、4835 字节 B；相对现尖只动这一枚件（`git diff --name-only` 只列出它）。
+- 仪表改了什么：`sweep_ink_r1.cjs` 新增 `ENTER=nav`——先落 `/v8/hub`，再点底栏自己的 `[data-testid="nav-<key>"]`，并等 `location.pathname` 真的换页才算进入；点不到或没换页就进 `refusals` 具名报出，不偷偷退回地址进入。底栏只挂 五 枚（`hub、trips、map、agent、me`），走不到的路由进 `skipped` 并计数。每趟另记 `path_walked`（当场回读）。细节与配对条件在 `review/ord0561/ENTRY_ARMS_R1.md:9`。
+- 配对是先决条件不是客套：两臂必须同尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`、同入口资产 `index-iZ6I1MKH.js`、同形 `390x844`、同档 `light`、同两臂、逐屏 `path_walked` 逐枚相等，任一不满足脚本直接拒。
+- 读数（每臂 10 趟 = 五屏 × 两臂，全部挂载）：合计 点击进入 对 地址直达 —— covered 37对37、clipped 4对4、ellipsis 12对12、no_name 0对0、glyph_name 35对35、below_floor 21对21；逐屏逐类同数的格子 56/60。
+- 差在哪：按枚身份比（y 精确）只在一臂出现的——点击臂 6 枚、地址臂 6 枚；换成 8 px 容差比就是 3 对 3，而那几枚全是 `Map marker`（同物、同命中方，只差列表滚了一两像素）⇒ 那是**我这把尺的身份键太严**，不是两臂的屏不同。更要紧的是六类合计两臂逐类相同，所以我上一件写的解释被自己这一手证伪了一半：「入口方式不同」解释不了我与 `1ba48dbf` 那把在 covered 上的差，剩下能算的那条是选择器面宽窄（我这把多收 `a[href]` 与 `[role=button]`），另一条要拿它那件的逐枚原始读数同屏比才能验，我把它列进下一手，不改口径凑相等。逐枚在 `review/ord0561/ENTRY_ARMS_R1.md:32` 那一节。
+- 演示门与现场：`demo/reset` http_status=200、`prepare-scenario` http_status=200、`demo/scene` http_status=200，站点 6 段、无坐标 0 段，错 token 的重置回 http_status=403，分享授权回 http_status=201；私有栈 api pid 59772 / static pid 29420 停净，停后 :4891 与 :4892 的 LISTENING 0 条；`demo/reset` 只落我自己的库 `_r5_rch5.db`；`:4783` 那枚预览口这一手我没读也没写；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；D 盘现读 11393773568 字节 B 可用。
+- 没做的，具名：产品字节 0 枚；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`，本件结论不依赖测试计数）；没量实体手机；这一臂只跑了底栏那五屏（底栏之外的路由在这一臂走不到，已计数而非当作不存在）；`C4` 那族按屏逐枚的可裁表仍未交；选择器面宽窄那条口径差也仍未闭。
+- 我自申报的下一手（先读账本 ## ORDERS 再动）：把 covered 的判据在两臂上各跑一遍之后，再将 `C4` 那 21 枚按屏逐枚列成可裁的表（屏、路由、臂、逐字、命中方、越界像素），让号令者一行就能裁要不要动底栏避让。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 自申报下一格 · 把七枚非主屏在 360、390、414 px 三档 × 两臂补走一遍（共 42 格屏读，判据沿用 ORD-0561 那五形，0 枚产品字节）
+
+**〇、为什么是这一格**
+
+- 我上一手交的是底栏那五枚主屏（件 LG-235946 与 TS-002039 那两趟），宽度维已经补上；但产品里还有七枚屏既不在底栏五格之内、也没人按三档量过：号令者代量那格（ORD-0565）是单档 390 px 的现场账。宽度会不会在那七枚屏上藏东西，现在是空的。
+- 屏的清单不是我凭记忆列的：在现尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 的树上跑 `grep -rhoE "/v8/[a-z-]+" frontend/src --include=*.tsx --include=*.ts | sort -u`，逐字取到九枚串；去掉底栏那五枚已量的与一枚测试用的假屏名，剩这七枚：discover、footprints、trash、access、stay、import、shared（这条命令的逐字输出我做成一枚小件，随下一手的交付块与证据枝一起交，本手先把清单与形制落账）。
+
+**一、形制（沿用已批的那把尺，不新造判据）**
+
+- 构建一次、私有栈一套：`vite build` 后由我这手的驱动起私有后端与私有前端各一枚（端口在件里逐枚写清），库是本趟新建的私有文件，`demo/scene/ensure` 的 `http_status=200` 当场回读；`:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 一枚不碰。
+- 每格读渲染后的文字（`innerText` 走可见节点，不读 data 属性、不读源码），并留几何腿（`getBoundingClientRect` 加中心 `elementFromPoint`，中心是否命中自己按包含关系判布尔，不再拿描述串比对）；每格当场回读 `location.href`。
+- 这七枚屏大多不在底栏里，进入方式预期是 `url_no_nav`（按地址进），我会把它当读数记下来，不当缺陷。
+- 判据仍是原单那五形：机词上屏、半截句、错位重叠、空白屏、点不动的按钮；已知不重复报的照旧避开（`/v8/authoritative` 英文臂枚举机词、hub 的 `SYNTHETIC_DEFAULT`、头像 padding 那枚已落地）。
+
+**二、边界（我先说清不做什么）**
+
+- 不抢别人的单：`/v8/trips` 命中固定底栏那一格（ORD-0571）车道 `5a53846b` 已在账本点名接走；我上一手交的「中止这趟行程」点不到那枚（ORD-0520 那一族的 `frontend/src/features/abort/JourneyAbortPanel.tsx`）等点单，我不自取、不动那两枚热文件。
+- 只读：本格 0 枚产品字节改动；若某格我顺手能指出明确的一行修法，按 ORD-0561 那条只写进块里交、不擅自开枝。
+
+**三、账**
+
+- 本手账：产品字节改动 0 枚、他人文件改动 0 枚、他人枝删改 0 枚、密钥落盘 0 枚。
+- 纪律那几格逐条写：权威线移动 0 次、`demo/reset` 0 次、共享预览库覆盖 0 次、他人文件删除 0 次、他人内容改写 0 次、写库请求 0 次（每个零前面紧挨着的就是它守的那一栏）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜自申报那一格做完了：两把常驻判据按现尖重跑（七臂加四臂全绿），而且被解析的三枚源文件里有两枚在两尖之间确实变了——所以这不是"blob 没动所以肯定还绿"的空话；顺带把三枚在飞候选的前影像与上一块反证引的行号逐枚复看（本手产品字节 0 枚、判据字节 0 枚）
 
 **〇、坐标（现读；每枚 40 位都可 `git cat-file`）。**
