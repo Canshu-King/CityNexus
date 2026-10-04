@@ -1,0 +1,82 @@
+{
+  "schema": "CNX_ORD0500_ANCHOR_FORM_MUTANTS_V1",
+  "tool": "anchor_form_gate_mutants_r26",
+  "tip": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+  "runs": [
+    {
+      "id": "C1_control",
+      "action": "the candidate as written",
+      "verdict": "GREEN",
+      "red": [],
+      "why": {},
+      "expect": null,
+      "bite": true
+    },
+    {
+      "id": "M1_numeric_anchor_back",
+      "action": "put a `path:line` citation back into the sentence",
+      "verdict": "RED",
+      "red": [
+        "NUMERIC_ANCHOR_FORBIDDEN"
+      ],
+      "why": {
+        "NUMERIC_ANCHOR_FORBIDDEN": "None"
+      },
+      "expect": "NUMERIC_ANCHOR_FORBIDDEN",
+      "bite": true
+    },
+    {
+      "id": "M2_declaration_undiscoverable",
+      "action": "rename the declaration so the gate cannot find it",
+      "verdict": "RED",
+      "red": [
+        "ANCHOR_LINE_PRESENT"
+      ],
+      "why": {
+        "ANCHOR_LINE_PRESENT": "the shipped file declares no `Anchor labels` line"
+      },
+      "expect": "ANCHOR_LINE_PRESENT",
+      "bite": true
+    },
+    {
+      "id": "M3_label_no_longer_exists",
+      "action": "declare a label that is not in the file it names",
+      "verdict": "RED",
+      "red": [
+        "LABEL_RESOLVES"
+      ],
+      "why": {
+        "LABEL_RESOLVES": "LABEL_NOT_FOUND"
+      },
+      "expect": "LABEL_RESOLVES",
+      "bite": true
+    },
+    {
+      "id": "M4_label_ambiguous",
+      "action": "declare a label that matches twice, with no qualifier",
+      "verdict": "RED",
+      "red": [
+        "LABEL_RESOLVES"
+      ],
+      "why": {
+        "LABEL_RESOLVES": "AMBIGUOUS_LABEL_WITHOUT_QUALIFIER"
+      },
+      "expect": "LABEL_RESOLVES",
+      "bite": true
+    },
+    {
+      "id": "C2_after_revert",
+      "action": "re-judge the untouched candidate",
+      "verdict": "GREEN",
+      "red": [],
+      "why": {},
+      "expect": null,
+      "bite": true
+    }
+  ],
+  "mutant_count": 4,
+  "control_count": 2,
+  "every_arm_bit": true,
+  "worktree_written": false,
+  "scratch_note": "the gate is fed candidate bodies in memory; nothing under wt22 is written"
+}

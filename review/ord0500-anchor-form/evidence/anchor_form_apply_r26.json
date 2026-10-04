@@ -1,0 +1,59 @@
+{
+  "schema": "CNX_ORD0500_ANCHOR_FORM_APPLY_V1",
+  "tool": "anchor_form_apply_r26",
+  "tip": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+  "file": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+  "before": {
+    "verdict": "RED",
+    "numeric_anchors": 2,
+    "red": [
+      [
+        "NUMERIC_ANCHOR_FORBIDDEN",
+        ""
+      ],
+      [
+        "ANCHOR_LINE_PRESENT",
+        "the shipped file declares no `Anchor labels` line"
+      ]
+    ]
+  },
+  "after": {
+    "verdict": "GREEN",
+    "numeric_anchors": 0,
+    "red": [],
+    "labels": [
+      {
+        "label": "def require(",
+        "verdict": "GREEN",
+        "count": 1
+      },
+      {
+        "label": "The duplicate answer comes",
+        "verdict": "GREEN",
+        "count": 1
+      },
+      {
+        "label": "UNIQUE (journey_id, target_key)",
+        "verdict": "GREEN",
+        "count": 1
+      },
+      {
+        "label": "\"caught_by\": \"unique_index\",",
+        "verdict": "GREEN",
+        "count": 1
+      }
+    ],
+    "anchor_line": [
+      {
+        "check": "ANCHOR_LINE_PRESENT",
+        "file": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+        "verdict": "GREEN",
+        "why": "",
+        "line": 134,
+        "count": 4
+      }
+    ]
+  },
+  "candidate_bytes": 7280,
+  "limitation": "the gate proves the labels this file declares DO resolve; it cannot prove the declaration is complete -- that half is a reviewer reading a diff in this file"
+}

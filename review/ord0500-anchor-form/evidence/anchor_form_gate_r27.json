@@ -1,0 +1,1605 @@
+{
+  "schema": "CNX_ORD0500_ANCHOR_FORM_V2",
+  "tool": "anchor_form_gate_r27",
+  "tip": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+  "verdict": "RED",
+  "files_scanned": 207,
+  "counts": {
+    "shipped_spec": 2,
+    "shipped_spec:RED": 1,
+    "lane_tool": 19,
+    "lane_tool:GREEN": 43,
+    "evidence_artifact": 0,
+    "evidence_artifact:NOT_THIS_CLASS": 157,
+    "lane_tool:EXEMPT_DECLARED": 6
+  },
+  "derivation": "git log --grep=ORD-0500 --name-only at the live tip (not a typed list)",
+  "rows": [
+    {
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "count": 2,
+      "lines": [
+        15,
+        126
+      ],
+      "class": "shipped_spec",
+      "verdict": "RED",
+      "why": "NUMERIC_ANCHOR_IN_SHIPPED_SPEC",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/R6_READINGS.md",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/CE2_MUTANT_RECIPE_r5.md",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/branch_emit_arm_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/branch_emit_arm_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/branch_emit_arm_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/build_faces_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_en_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_after_second.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R14_zh_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_en_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_en_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_en_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_en_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_zh_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_zh_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_zh_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_zh_after_second.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_O0500_R7_zh_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_en_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_after_second.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_06ad00b0_zh_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_en_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_en_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_en_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_en_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_zh_390x844_r3.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_zh_after_duplicate.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_zh_after_first_tap.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_zh_after_second.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_TIP_e7ff7938_zh_arrived.png",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_audit_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_audit_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_audit_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_audit_r8.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r10.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r10_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r11.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r11_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r12.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r12_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r14_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r17_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r19_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r9.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/citation_gate_r9_mutants.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/comment_anchors_r5.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/css_delta_proof_r5.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day24_anchor_recheck_r9.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day24_tip_citation_recheck_r9.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r10.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r11.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r11b.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r12.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day26_anchor_recheck_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/day26_anchor_recheck_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/exposure_pair_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/exposure_r14_base.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/exposure_r14_cand.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/exposure_r17_base.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/exposure_r17_cand.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/fmt_lint_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/fmt_lint_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/fmt_lint_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/landing_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/prior_denominators_r5.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/pytest_collectonly_r14.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/pytest_collectonly_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/pytest_collectonly_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/r6_exposure_base_e7ff7938.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/r6_exposure_cand.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/reanchor_r8.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/reanchor_r8_selftest.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/ref_discovery_arm_r17.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/ref_discovery_arm_r19.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/receipts/sweep_r6.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r6_out.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r6_out2.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r6_out3.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r6_out4.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r7_c4cf.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r7_out.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/landing_r7b.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r15_READINGS_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r16_READINGS_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r17_READINGS_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r18_READINGS_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r19_READINGS_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_blobs.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_O0500_R14.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_O0500_R6.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_O0500_R7.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_TIP_06ad00b0.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_TIP_dc9dc10f.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_build_TIP_e7ff7938.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_exposure_base_dc9dc10f.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_exposure_base_e7ff7938.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_exposure_cand.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_pytest.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R14_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R6_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R7_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_O0500_R7_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_06ad00b0_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_dc9dc10f_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_e7ff7938_tsconfig.check.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/r6_tsc_TIP_e7ff7938_tsconfig.typecheck.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_carrier_arms_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_carrier_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_ce1_proof_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_ce1_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_doors_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_exposure_candidate_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_exposure_tip_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_gen9_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/remeasure_stack_r1.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/sweep_r6_out.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/sweep_r6_out2.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/run/sweep_r7_out.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-checkin/tools/branch_emit_arm_r16.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/build_faces_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/checkin_copy_rows_mutants_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/checkin_copy_rows_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/checkin_phone_r3.cjs",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/citation_audit_r8.py",
+      "count": 1,
+      "lines": [
+        37
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "the ruler's own regex source contains an example pattern",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/citation_gate_r10_mutants.py",
+      "count": 5,
+      "lines": [
+        136,
+        143,
+        146,
+        150,
+        154
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "mutant payloads are wrong citations on purpose; the arm asserts the gate judges them red",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/citation_gate_r9.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/citation_gate_r9_mutants.py",
+      "count": 4,
+      "lines": [
+        98,
+        100,
+        102,
+        107
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "same as above, previous generation",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/collect_count_r16.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/comment_anchors_r5.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/exposure_pair_r17.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/fmt_lint_r16.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/landing_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/make_probe_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/prior_denominators_r5.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/pytest_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r10_block.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r15_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r15_readings.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r16_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r17_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r18_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r19_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r19c_chain.sh",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r6_block.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r8_block.py",
+      "count": 5,
+      "lines": [
+        247,
+        248,
+        256,
+        257,
+        259
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "rendered narrative from an earlier generation, kept because a published page cites its blob",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/r9_block.py",
+      "count": 1,
+      "lines": [
+        230
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "same reason as r8_block.py",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/reanchor_r8.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/reanchor_r8_selftest.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/recheck_r14.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/ref_discovery_arm_r18.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/selfdecl_ord0500_r6.py",
+      "count": 3,
+      "lines": [
+        91,
+        93,
+        97
+      ],
+      "class": "lane_tool",
+      "verdict": "EXEMPT_DECLARED",
+      "why": "same reason: a published block cites this file's blob, so it is not rewritten",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-checkin/tools/sweep_r6.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/evidence/stage_door_r20.json",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/evidence/stage_door_r20_mutants.json",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/evidence/stage_door_r24.json",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/evidence/stage_door_r24_mutants.json",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/run/collide_control.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/collide_probe.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/commit_r20_door_msg.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/commit_r24_door_msg.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r20_STAGING_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r20_forced_red.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r20_green_control.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r24_STAGING_RED.json",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r24_mutants.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/run/r24_receipt_b.txt",
+      "class": "evidence_artifact",
+      "count": 0,
+      "verdict": "NOT_THIS_CLASS",
+      "why": "instrument output; cited paths are data, not claims"
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/publish_side_ref_r20.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r20.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r20_mutants.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r20_receipt.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r24.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r24_mutants.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_door_r24_receipt.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    },
+    {
+      "path": "review/ord0500-staging-door/tools/stage_readings_r7.py",
+      "count": 0,
+      "lines": [],
+      "class": "lane_tool",
+      "verdict": "GREEN",
+      "why": "",
+      "count_blamed_to_this_order": 0
+    }
+  ],
+  "red": [
+    [
+      "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      2,
+      "NUMERIC_ANCHOR_IN_SHIPPED_SPEC"
+    ]
+  ],
+  "exempt_declared": 8,
+  "limitation": "an exemption can still be ADDED here without touching the cited file; what this cut removes is silence -- every declared exemption is printed with its reason and its numeric count in this receipt"
+}
