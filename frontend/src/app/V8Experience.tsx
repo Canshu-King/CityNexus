@@ -2038,12 +2038,7 @@ export function V8Experience() {
                 </>
               )}
             </div>
-            <button
-              className="v8-avatar"
-              data-testid="topbar-avatar"
-              aria-label={t("nav.me")}
-              onClick={() => navigate("me")}
-            >
+            <button className="v8-avatar" onClick={() => navigate("me")}>
               {initialsFrom(cityName)}
             </button>
           </div>
@@ -2375,6 +2370,7 @@ function budgetAdvisory(
   reference: V8Data["trip"]["budget_reference"],
   zh: boolean,
   locale: string,
+  t: (key: string, params?: Record<string, string | number>) => string,
 ): { tight: boolean; text: string; hint: string } | null {
   if (!reference || !reference.available) return null;
   const days = reference.day_count;
@@ -2400,9 +2396,7 @@ function budgetAdvisory(
   const amount = budgetMoney(perPersonPerDay, currency, locale);
   return {
     tight,
-    text: zh
-      ? `${days} 天 · ${people} 人 · 每人每天约 ${amount}`
-      : `${days} days · ${people} people · about ${amount} per person per day`,
+    text: t("hub.budgetLine", { days, people, amount }),
     hint: tight
       ? zh
         ? TIGHT_CAVEAT_ZH
@@ -2561,7 +2555,7 @@ function Hub({
     boolean | null
   >(null);
   const tripUnlocatable = mapReportsNoLocation ?? tripHasNoCoordinates(data);
-  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale);
+  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale, t);
   const activities = (data.active_plan?.activities ?? []) as unknown as Array<{
     id: string;
     title: string;
@@ -2944,12 +2938,8 @@ function Hub({
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
             {tripDayCount === null
-              ? zh
-                ? "天数未知"
-                : "length unknown"
-              : zh
-                ? `${tripDayCount} 天`
-                : `${tripDayCount} days`}
+              ? t("hub.todayDaysUnknown")
+              : t("hub.todayDays", { n: tripDayCount })}
           </p>
         </div>
         {/* Pass-8 ruling #1/#2: with an active journey the hero's
