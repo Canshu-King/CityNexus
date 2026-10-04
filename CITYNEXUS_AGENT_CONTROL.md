@@ -16588,6 +16588,66 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · /v8/authoritative 那两枚残留大写字 · 车道 45d25bfb 补 r4（把上一块里我自己标 PREDICTED 的那格量了；本单不占新号、0 枚产品字节）
+
+零、为什么要补这一枚
+- 我上一枚收口块（标题逐字含「r3 残留定位」，本轮现读落在账本第 17422 行，它引的读数件是 blob b8b6e550a624d1c69fe4ebcd4df5d60adf26825d；行号会随别人插入漂移，定位请用该标题 grep）第五节里，把「那支 authoritative-integrity 的 e2e 在现尖会红」写成预测，理由是我没跑整套。这轮我跑了，读数推翻了我那次归因的次序，按规矩发新帖、不改旧帖。
+
+一、跑法（权威模式：两个进程都必须归这次调用自己起，否则它拒开）
+- 它自己宣布的那行逐字是 `provenance ok: run=45d25bfb1930 frontend=:4213 -> backend=:8763 ai=disabled db=_e2e_45d25bfb1930.db`，逐字在件 blob 0994f75ff9d15d9c06bd6a80eb6da6ecad5a0ade
+- 门槛由 `frontend/playwrightEnv.ts` 的权威支定：CITYNEXUS_E2E_PORT 与 CITYNEXUS_BACKEND_PORT 各给一枚且不许相同、CITYNEXUS_PYTHON 必须真实存在（我指 D:/moodle/CityNexus/.venv/Scripts/python.exe）、CITYNEXUS_DATABASE_URL 必须是 `_*.db` 且文件名含 run id、CITYNEXUS_AI_ENABLED=false 且环境里不许留 DEEPSEEK_API_KEY 或 CITYNEXUS_AI_API_KEY，形状记在件 blob f105ad862832a67896e9abb180f1930fa4a76731
+- 播种支那一条是绿的：`ok 1 [real-seed] › e2e/_qoderRealSeed.setup.ts:110 › seed a real journey through the product API (5.4s)`，逐字在件 blob 0994f75ff9d15d9c06bd6a80eb6da6ecad5a0ade
+- 目标那一条判负，汇总逐字是 `1 failed` 与 `1 passed (12.3s)`，件 blob 0994f75ff9d15d9c06bd6a80eb6da6ecad5a0ade
+
+二、它红在哪一行（不是我以为的那一行）
+- 断言倒在 `frontend/e2e/v13-authoritative-integrity.spec.ts:26` 那句 `expect(generated.ok()).toBeTruthy()`，收到 false，栈在件 blob 0994f75ff9d15d9c06bd6a80eb6da6ecad5a0ade
+- 前两行就是因由，逐字都在同一件里：`POST /api/v1/demo/reset` 回 http_status=403，于是 ids.journey_id 是 undefined，接着 `POST /api/v1/journeys/undefined/plans/generate` 回 http_status=422
+- 那枚 403 的具名身体我在自己起的 :8764 后端上直探得到（启动回执 `pid_owns_port` true、owner 见件 blob dee84d916455f9f605739342b5c7ae6bcbf2f91e）：code=RESET_TOKEN_REQUIRED、details.header=X-Demo-Reset-Token、details.tables_protected=true、error_receipt_id=CNX-AWXGQEEA，body 302 B，件 blob 8c189dcaf15ea8a35f4b6befc2f9227e79c23487
+- 结论：这一支 spec 在现尖根本走不到钉按钮名的那三行（:37、:38、:39），它先死在播种门缺具名 token 上；这道门是 ORD-0389 那条旧债的形状，与我 r2 的措辞改动无关。
+
+三、上一块那条读数仍然成立，只是归因次序要改
+- 屏上那一枚按钮两代逐字我量过：现尖代 Mark In progress，旧代 Mark IN PROGRESS，两件 blob 38a6870dd5a89b1891b12026400cd2b611eeda5c 与 4451a7b4b78ca0a17057c5a7859a1fb83eec60fa；而 spec 钉的逐字是 Mark EN ROUTE 与 Mark ARRIVED
+- 「等 token 那扇门修好、spec 走到那三行，它仍会因字面不同而红」——这句现在仍是预测而不是读数，因为这一趟跑不到那里，具名 PREDICTED_NOT_MEASURED_BY_45d25bfb
+- 我没改那支 spec（它是别人的判据文件），也没改任何产品字节：r4 产品字节 0 枚、提交 0 笔、推送 0 次
+
+四、要请你裁的一格（这一格不属 ORD-0553 的措辞范围）
+- `frontend/e2e/v13-authoritative-integrity.spec.ts:21` 的播种腿只用 `POST /api/v1/demo/reset`，而这道门要具名 X-Demo-Reset-Token。两条走法请你点一条：要么把这行改成先读 `/api/v1/demo/scene` 拿现成行程、拿不到再退 reset（与 09-29 那条裁语同形），要么另开一单把 token 供给 e2e。我不自动改别人的判据文件，也不改断言凑绿。
+
+五、私有栈与收尾
+- 我这轮先前起的 :8751 :8752 :49841 :49842 :49843 :49844 :49851 :49852 早已停（netstat LISTENING 现读 0 行）；本轮另起 :8764 一枚（同一支启动器、`pid_owns_port` true），交完这块就停
+- 这一趟的 webServer 两支由 playwright 自己起自己收（宣布行里的 :4213 与 :8763 在件 blob 0994f75ff9d15d9c06bd6a80eb6da6ecad5a0ade 里逐字可查），我跑完后 netstat 现读那两个口无 LISTENING
+- 本轮新落盘四件，全在 evidence/45d25bfb-ord0553-20261004/ 新路径下、全 CREATED、重写 0 件，回执文件 `_publish_manifest_r4.jsonl`（1395 B，本机）
+- 共享预览库没读、没写、没 ALTER；`:8000` `:4781` `:4782` `:8693` 与别人的 uvicorn 一个没动；force-push 0 次；权威线我没碰
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 节拍接入做完了（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：`tools/cnx_ledger_mirror_sync_hook_r1.py` 给代插腿一次调用＝一枚判语＋一行审计＋一个退出码，三枚反件全部拒得住；线上那把自检的第一趟生产读数也一并交回
+
+**一、欠的那半现在长这样**：入口 `run_after_insert()`（`tools/cnx_ledger_mirror_sync_hook_r1.py:86`）——测量交给已落地的 `tools/cnx_ledger_mirror_sync_check_r1.py`（blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`），取字节交给 `tools/cnx_ledger_mirror_reader_r1.py`（blob `dd939945f560632fea20186a57929d2edc1ab6ad`），所以「这份正文齐不齐」只有一处决定；判语 CURRENT/LAGGING/DIVERGED、退出码 0/7/8/9/6；不是守护进程、没有新循环（按你 BB 那句「节拍随代插腿即可，别新开长循环」）。接线一句：`sys.path.insert(0, 仓库根)` 后 `from tools.cnx_ledger_mirror_sync_hook_r1 import run_after_insert`——这一形是从本机 work 目录当外部 cwd 实测的，回话在件 `hook_build_r1.json`（blob `6316f7d2362c84c29b9246e83352dbb9e17f97ae`）的 `import_from_outside`
+  审计行刻意不落在人类收件口：现写 `D:/moodle/_mirror_sync/trail.jsonl`（可用 `CITYNEXUS_MIRROR_SYNC_TRAIL` 改），免和被代插腿 glob 的候选块抢同一个目录
+
+**二、三枚反件的现测（要红在正确那一侧）**
+  - `flip_a_byte`：内存里翻掉本机末位一枚 ⇒ 判语降为 `LAGGING`、退出码非 0，且只写临时 trail （`wrote_only_to_scratch=true`）——假读数绝不进生产审计
+  - `empty_trail`：全新路径的历史查询回「没有前一行」（`refuses_to_imply_ok=true`），不暗示 ok；这条防的是「空清单即通过」那一形
+  - `unwritable_trail`：把 trail 指向一个被文件占住的目录 ⇒ 具名抛 `leg=trail_write`，同时读数照样返回 （`reading_kept=true`）。闸门在 `tools/cnx_ledger_mirror_sync_hook_r1.py:68`
+
+**三、线上那把自检的第一趟生产读数（不是我车道的副本，是落地字节自己跑）**：判语 `CURRENT`、比较点 4/4 全等、本机与 `commander/control` 同一枚 blob `23ca23d312ec7660ae0ebf4c08e77413a2922bc0`；件 `landed_selfcheck_first_run_r1.json` blob `16afdcf9768b7ede7dbce4eac987a678ebe1800e`。钩子自己写下的第一行审计：
+  `2026-10-04 21:47:52` 第 1 行，判语 `CURRENT`，本机=远端=`868a06d7bd93b560674abce83e80680b5a48ca4d`，13655679 字节，比较点 4/4；trail 快照已上架（`mirror_sync_trail_r1.jsonl` blob `f2559fe190a2f9101affad2dc972730ae2cf49cd`）
+
+**四、形制与账（等你那道门）**：枝 = `0adc8d36f9eaa70dd0d7c4f16171fb8e78f6cd48`（`ls-remote` 回读同值），链根＝现尖 `62ee41e3d36debdb9db502c8180c386241a46f86`、1 笔、自己名下 1 枚、他人 0 枚、只读预测树 `ad2f14206a207c038d09ead8c49606dd43738ddb` 冲突 0 行；钩子本体 blob `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3`。证据 6 枚新增在 `commander/control` 的 `evidence/1d64acf5-mirror-sync-hook-r1/`（回执控制尖 `3d0a8a08470000ba8f5676952e69bc977db330da`）
+
+**五、上一轮那条观察的后续（我没动别人的东西）**：`refs/heads/review/1d64acf5-mirror-sync-selfcheck-r2` 仍指向当时的权威尖，和我今晚那枚「推成枝指针」的误件同形；它不是我建的，要清请你说一句，我只清自己名下的
+
+**六、下一件我自申报并已开始**：②「我自己那批闸的空分母扫查」——把本车道每一处「清单为空即通过」的入口逐枚列出（今夜已实咬到我两次的两形：暂存集合为空仍判「无他人文件」；把枝名当 rev 问存在性而回吐假「不存在」），各配一枚**空输入必须红**的反件，两向跑，逐枚贴一行红。验收：入口数、反件数、逐枚反件的红各一行；0 产品字节。G4 那格按你 BB 的话等 `89f2e2d6` 的名单出来再分，我不撞车
+
+坐标：可 cat-file 的 40 位由写工具逐枚现验（本块 14 枚）；构建腿 `e4c600fec57636109080982600da89701bad02fe`、反件流水 `d294c176dda0c01c231080d09819a85c3d9f25b8`
+
+**边界**：产品字节 0 枚新增（本手只新增 `tools/` 下一枚钩子，`backend/app/**` 与 `frontend/src/**` 一枚未动）、改写他人文件 0 枚、权威线 0 次移动、force-push 0 次（新枝名）、回滚 0 次、本车道端口 0 个在跑、改写账本 0 次（本块走收件口）、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、覆盖已发布路径 0 次（新增 slug）；反件对真账本 0 字节改写（翻的是内存副本）；号令者的门文件 0 字节改写
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 重交 ORD-0561 ② · r1 被落地门退回（枝父在旧重建线上），这一枝当场从现尖重取父 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b`、补丁原样重放，并把 A/B 两半**重测在这一代自己身上**（不再靠跨代迁移）：改前 48>28 无名、改后 28==28 有两臂名字，`tsc` 与 `vite build` 两半都绿
 
 **〇、为什么退、这次凭什么能落**
