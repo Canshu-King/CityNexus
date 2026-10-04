@@ -50,6 +50,7 @@ export type PoiImportCopyKey =
   | "brand"
   | "channelLabel"
   | "channelNote"
+  | "channelValueLocal"
   | "charCount"
   | "counts"
   | "dayLabel"
@@ -73,6 +74,7 @@ export type PoiImportCopyKey =
   | "modesSub"
   | "modesTitle"
   | "needTextHint"
+  | "noStatusMeasured"
   | "openPlan"
   | "parseAction"
   | "parsing"
@@ -85,6 +87,7 @@ export type PoiImportCopyKey =
   | "scopeHint"
   | "screenshotNotSupported"
   | "selectedCount"
+  | "technicalToggle"
   | "title"
   | "unsupportedHosts"
   | "unsupportedLabel"
@@ -216,6 +219,10 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     zh: "本地解析器；不接第三方读取服务。",
     en: "Local parser; no third-party reading service.",
   },
+  channelValueLocal: {
+    zh: "本机文字解析",
+    en: "Text parsed on this device",
+  },
   charCount: {
     zh: "{n} 字",
     en: "{n} characters",
@@ -308,6 +315,10 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     zh: "至少写两个字再识别。",
     en: "Write at least a couple of characters before recognising.",
   },
+  noStatusMeasured: {
+    zh: "没有状态",
+    en: "no status",
+  },
   openPlan: {
     zh: "打开计划",
     en: "Open the plan",
@@ -355,6 +366,10 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   selectedCount: {
     zh: "已选 {n} / 可加 {total}",
     en: "{n} of {total} matched places selected",
+  },
+  technicalToggle: {
+    zh: "技术细节",
+    en: "Technical details",
   },
   title: {
     zh: "从文本导入地点",

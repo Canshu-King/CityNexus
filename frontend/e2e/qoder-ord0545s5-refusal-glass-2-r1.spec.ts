@@ -216,7 +216,7 @@ async function refuseByOfflineDevice(page: any, context: any, request: any, loca
     sentence_on_glass: sentence,
     expected_from_the_table: pair[locale === "zh-CN" ? "zh" : "en"],
     sentence_equals_the_table_half: sentence === pair[locale === "zh-CN" ? "zh" : "en"],
-    // the component paints the SAME sentence as the technical line when there is no status to show
+    // measured: with no status to show, does the technical line repeat the refusal sentence?
     technical_line_is_the_same_sentence: detail === sentence,
     technical_line: detail,
     refusal_cell_text: await text(page.getByTestId("poi-import-error")),
@@ -266,7 +266,7 @@ test.describe("ORD-0545 slice 5 the two refusals only a device can decide, read 
     expect(r.sentence_equals_the_table_half, `glass said "${r.sentence_on_glass}"`).toBe(true);
     expect(r.forbidden_tokens_on_screen).toEqual([]);
     expect(r.machine_words_in_refusal_cell).toEqual([]);
-    expect(r.technical_line_is_the_same_sentence, "this component repeats the sentence as its own technical line -- measured, so a future change is visible").toBe(true);
+    expect(r.technical_line_is_the_same_sentence, "ORD-0545 slice six re-cast this criterion: the technical line must no longer repeat the refusal sentence (CMDR 01:37 定点). The criterion changed on purpose -- the reading still has to be a real one, so the sentence itself is asserted above.").toBe(false);
     expect(r.wrote_nothing).toBe(true);
     collected.push(r);
   });
@@ -277,7 +277,7 @@ test.describe("ORD-0545 slice 5 the two refusals only a device can decide, read 
     expect(r.sentence_equals_the_table_half, `glass said "${r.sentence_on_glass}"`).toBe(true);
     expect(r.forbidden_tokens_on_screen).toEqual([]);
     expect(r.machine_words_in_refusal_cell).toEqual([]);
-    expect(r.technical_line_is_the_same_sentence).toBe(true);
+    expect(r.technical_line_is_the_same_sentence).toBe(false);
     expect(r.wrote_nothing).toBe(true);
     collected.push(r);
   });
