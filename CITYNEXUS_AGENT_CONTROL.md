@@ -16588,6 +16588,83 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0504 单 B r2（0 产品字节）· 裁语③：把量纲与假零那两笔在**落地后的那一代**重跑一遍，前后两代只差一枚文件；刷新只动时间戳（车道 da46954a）
+
+**〇、令与原话**
+
+- 号令者 02:10 第 ③ 条逐字：「单 B 落地后重跑两代比对——**要**。你那份 `spend_money_fixB_cycle_r1.py` 自己会重建产物并逐代取字节见证，跑完报我。」又 02:55 报：单 B 已由你落地并亲测上屏（花费面显示 `JPY 4,800`，没除以 100）。本纸就是那一次重跑的读数与自证。
+- 落地判据用字节等、不用祖先（复切会把已落地读成未落地）：我跑时现读的尖 `b7c9d799917d093405ac73771d6a16180ce34dbe` 上，`frontend/src/features/trip/spendFacts.ts` 的 blob = `5e74a2e257fdad354058a249ca3b7a9a72e7e63a`，与我单 B 枝头 `1b96c55a2edeab094f699fe5a1e7021ae9f7ae46` 同一枚文件逐字相同。你 05:0x 另告知现尖已到 `0413e556` 那一代——短号按你原话转述，不补全成 40 位（手打全号写错比不写更糟）。
+- 本轮枝 `refs/heads/review/da46954a-ord0504b-spend-money-r2`，头 = `2d5188958f1c0d3d1bd628a4e053e5c39edacdf1`（`git ls-remote` 逐字回读与本机 `git rev-parse HEAD` 相同），基座就是上面那枚尖。它对基座只动 `review/` 下的读数件，例 `review/ord0504/spend_money_armsB_tip1.json:1` 与 `review/ord0504/spend_money_fixB_cycle_r1.txt:1`；被量的那枚产品文件在 r2 与基座是同一枚 blob ⇒ 产品字节零。现场证据是 `review/ord0504/spend_money_fixB_cycle_r1.txt:53` 那行 `git status --porcelain -- frontend/src/features/trip/spendFacts.ts = ''`。
+
+**一、两代比对（这次前后两代只差一枚文件）**
+
+- 口径差异先说清：r1 那轮的 before 代是 `701b5e3868fa9bed6e7b6a377d1c4a38a5e0d06b` 整棵旧树；本轮 before 代是**现尖整棵树 + 只把这一枚文件退回**，两代之间只差 `frontend/src/features/trip/spendFacts.ts`，所以红绿之差只能归到它身上。
+- 每代都带双重字节见证：该代入口 JS 的服务中摘要既等于该代刚建产物的磁盘字节，又与其他代不同。下面这些是产物字节的本机 sha1（内容摘要、非 blob、不可 cat-file）；本段可 cat-file 的 git 坐标 = 本枝头 `2d5188958f1c0d3d1bd628a4e053e5c39edacdf1` 与基座尖 `b7c9d799917d093405ac73771d6a16180ce34dbe`。
+  - before 第 1 趟 `ARMS=3 PASSED=0 FAILED=3`，入口 `/assets/index-D3oxMlnI.js` 其本机 sha1 `c8bd43d1318e6660948417298d460a23a2ac5162`（内容摘要、非 git 对象；报告行 `review/ord0504/spend_money_fixB_cycle_r1.txt:7`），`generated_at 2026-10-03T20:53:32.340Z`；
+  - before 第 2 趟 `ARMS=3 PASSED=0 FAILED=3`、同红集合，件在 `review/ord0504/spend_money_armsB_tip2.json:1`（报告行 `review/ord0504/spend_money_fixB_cycle_r1.txt:14`）；
+  - 修复代两趟 `ARMS=3 PASSED=3 FAILED=0`，入口 `/assets/index-DUhOk9ks.js` 其本机 sha1 `e70af9719dbb7be7d167852978279ad12bd4db6b`（内容摘要、非 git 对象；报告行 `review/ord0504/spend_money_fixB_cycle_r1.txt:21`）；
+  - MB1（只把 `moneyText` 的量纲退回"一律除以一百"）`ARMS=3 PASSED=1 FAILED=2`：红的正是量纲那两枚、假零臂留绿；入口 `/assets/index-spavejBI.js` 其本机 sha1 `25b1b93b9d5770f3f23fca74d653cf2c9d6150f2`（内容摘要、非 git 对象；报告行 `review/ord0504/spend_money_fixB_cycle_r1.txt:35`）；
+  - MB2（只把承诺"学到没学到"退回"库里那串数一律当真"）`ARMS=3 PASSED=2 FAILED=1`：红的正是假零臂、两枚量纲臂留绿；入口 `/assets/index-BB9WutP0.js` 其本机 sha1 `bd7727373c0a987db287abf48ef2b391a1f2701e`（内容摘要、非 git 对象；报告行 `review/ord0504/spend_money_fixB_cycle_r1.txt:42`）。
+- 判语逐条由件内现取（不是我手打的串）：`review/ord0504/spend_money_fixB_cycle_r1.txt:46` 两趟红集合相同、`:47` 修复代零红、`:48` MB1 只动量纲那侧、`:49` MB2 只动假零那侧、`:50` 每趟各一份证据件；跑完 `restored: bytes_equal_to_shipped=True`（`review/ord0504/spend_money_fixB_cycle_r1.txt:52`）。
+
+**二、「刷新只动时间戳」这条我是自证过的**
+
+- 提交前先把 r2 的读数件与基座上同份件逐件对比：每份顶层键集无增减、除 `generated_at` 外所有字段逐字相同（逐件打印在 `D:/moodle/_qoder_r_ord0465_20260929/run/r2_selfcheck.txt`；被比对的件例 `review/ord0504/spend_money_armsB_mb1.json:1` 与 `review/ord0504/spend_money_armsB_mb2.json:1`）。各件臂判定序列如常：before 全假、修复代全真、MB1 只红量纲那两枚、MB2 只红假零那枚。
+- 该变就该报：若代码没动而降定读数变了，那是仪器或库变了，我不会当成噪声放过。这轮没变，因为被量文件同一枚 blob、库也没换（`run/ord0465_lane.db`，行程 `eb94766b-2b77-4ae1-a54d-1da189a2085e`，门现答 6 张票与 2 项承诺，见 `review/ord0504/book_seed_report_r2.json:1` 那节）。
+
+**三、口径与没改善的**
+
+- 量的仍是我私有栈：`:8731` 后端带 `CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_r_ord0465_20260929/run/ord0465_lane.db`、`:4931` 我这台静态口、Chromium 桌面窗口取 `review/ord0504/one_ticket_two_faces_r1.js:28` 那对尺寸（1280×900 px）。它不替 day25/day33 共享机宣称什么；你那句"花费面上屏 `JPY 4,800`"与我这两代读数同向。
+- 没跑后端整套与前端 e2e：本轮产品字节零、代码与 r1 交付同一枚 blob；跑的是两代各两趟屏读加两枚反件。
+- 按 `0413e556` 那一代再跑一遍：给我全 40 位，或一句"按现尖 ls-remote 自取"，我就以同样形制重跑（每代各建产物、各取字节见证、跑完还原），读数另纸。
+- 复现：`cd D:/moodle/_qoder_r_ord0465_20260929/wt && git checkout 2d5188958f1c0d3d1bd628a4e053e5c39edacdf1` → 起 `:8731`（少那枚库变量，尺会连到别处的空库并报 `no such table: plan_versions`）→ 需重建库时同一变量跑 `python review/ord0504/book_seed_r1.py` → `python review/ord0504/spend_money_fixB_cycle_r1.py`（加趟用环境变量 `BOOK_B_PASSES`，其默认值与读取处见 `review/ord0504/spend_money_fixB_cycle_r1.py:33`）。Python 用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）三句裁语的回执：① 已装并已咬（真路径退码非 0、字节全部收回），② 已发（今天非空，一枚 note，幂等键按天），③ 三枚选项逐条摆好等你点；另：你问的那块追记落在 `_processed/0afdb49b_0202.md.inserted_020543`
+
+〇、先把「你没看到的那块」答清（四处现读，一枚都不是我口头保证）
+- 追记：收件口文件名 `0afdb49b_0202.md`（2660 B），代插戳 `_processed/0afdb49b_0202.md.inserted_020543`，现在账本本体 `CITYNEXUS_AGENT_CONTROL.md:17300` 那块抬头是「ORD-0500 r19 追记（手机车道 0afdb49b）」，枝名逐枚可在下面第四节 `git ls-remote` 复算。
+- 同一天我名下另三块也已入账：主块 `0afdb49b_0159.md.inserted_020034`（31991 B，账本 `CITYNEXUS_AGENT_CONTROL.md:17403`）、勘误 `0afdb49b_0212.md.inserted_021543`（3610 B，账本 `CITYNEXUS_AGENT_CONTROL.md:17083`）、① 的件块 `0afdb49b_0558.md.inserted_062827`（6547 B，账本 `CITYNEXUS_AGENT_CONTROL.md:16796`）。
+- 你 02:3x 那轮把 ORD-0500 r19 落了（线里那枚提交 `6246876a3b9171f5c2d6ec948f43b35605262bee`）。我这侧按内容复核，不靠 ancestor：现尖那枚测试文件的 blob = `dd4bf606865e414775babab7d93763205bf7dd84`，与我枝上同一枚逐字节相等（两趟 `git rev-parse <rev>:backend/tests/test_qoder_ord0500_journey_refusal.py`），那批读数件同样已在线上（`git ls-tree -r --name-only` 现读 7 枚 `_r19.json`）。
+
+一、① 装 —— 门已经在写盘那道口里，而且真被拒过一次（不是把判语删了装绿）
+- 装的位置：`stage_readings_r6.py` 自己肚子里（它开写之前先拍一份全树快照，写完立刻按**已落进枝的那份字节**判十项，判红就把自己写的字节全部拿回去、退码非 0、只落一张具名失败件）。三门面原件 blob `5591f5c89eee8dc2b610a5ddf361966880516d48`。
+- 拒的那一趟是真路径：同一位工具、同一个窗口，注入一枚假判语（`R20_FORCE_STAGING_RED=引文闸判语`，不动任何件）→ 退码非 0，尾行 `STAGING_READINGS_RED r20 -- red items 引文闸判语; tree restored (8 written back, 0 removed)`，失败件 2626 B，跑完 `git status` 与跑前逐行相等。原件 blob `a5635d29051f09754ca76a8f5e8fd5d9f4ab8b0b`，那趟原始输出 blob `bcd559c7b95065473083053cff13363b0d00929a`。
+- 控制趟（不带注入）：退码 0、输出里 `staging_door` 为 GREEN，它写的 8 枚路径在本手结束时全部还原、`git status` 空。原件 blob `645717625ff85f64ab940841e30855575c0259c7`。
+- 反件四枚 + 控制两枚，全在临时目录里跑（一条闸：临时目录若解析进共享工作树就拒跑）：改判语、删件、把件截断成半份、造一份快照里没有的新文件再判红——四枚都咬，且每枚结束时目录树与它自己那份快照逐字节相等；两枚控制趟都没报红。原件 blob `c38cae9ffe62acb7b9041f9fac46a6b61595ffa2`，件 blob `82000817a2eb5d871ed79348287e79a27fad6e70`。
+- 「半份拷贝」那一格是这手新加的判据：缺件或 JSON 读不出直接算红（`MISSING_RECEIPT` / `UNPARSEABLE_RECEIPT`），不再被当成跳过。这就是 M3 那枚反件要证的东西。
+- 落地预测（现读，不用你重算）：件枝 `refs/heads/review/0afdb49b-ord0500-staging-door-r1` = `434801bfa39b5105d5f60dcc61ed0d79b814b7aa` 在我 05:5x 发它的时候对当时的现尖 `ab8ddb55d1744b4c54139accd8b6444d9ba86bd2` 退 0、预测树 `ad9ac1e9c163baa114239342fc563795a3b037ff`、`CONFLICT` 0 枚；本手 14:0x 再量时线已经换过一次形（下面第五节），那枚 r1 与新尖已无 merge-base，所以我按新尖重切了一枚 r2：`refs/heads/review/0afdb49b-ord0500-staging-door-r2` = `89213c447190c853de998e2d78e4b6d5f63847f9`，父就是当代尖 `868958e7e11472faa0fc84c2218304c36d1885b0`，`git merge-tree --write-tree` 退 0、`CONFLICT` 0 枚。复算：`git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/0afdb49b-ord0500-staging-door-r2`。
+- 重切没有改内容：r2 的 9 枚路径 blob 与 r1 逐枚相同，例如门的原件仍是 `5591f5c89eee8dc2b610a5ddf361966880516d48`、反件的判语件仍是 `82000817a2eb5d871ed79348287e79a27fad6e70`；落进线之前那 9 枚路径在新尖上都不存在（`git ls-tree -r --name-only` 现读计数为 0），所以这一手不落别人任何东西、也不覆盖别人字节。r1 原样留着当证据，我没强推、没删枝。
+- 你那句「含产品字节」我要纠一下（现读，不是嘴硬）：这枚枝相对它的父 `ab8ddb55d1744b4c54139accd8b6444d9ba86bd2` 共动 9 枚路径，全在 `review/ord0500-staging-door/` 之下，产品路径 0 枚（`git diff --name-only` 两趟，越界计数为 0）。若你那边把「工具字节」读成了产品字节，以这条现读为准。
+
+二、② 发 —— 已发，且只在非空时发
+- 今天非空：全线尺这一趟扫 74 枚文件、看到 185 条引用、判我自己名下 173 条、不判 12 条，出自 9 位作者。取数件已进枝：`review/ord0500-citation-note/evidence/citation_audit_r21.json`，blob `dffbe3c969bf59ddaf8370113bae6403b2c8ad5a`，跑法 `python tools/citation_audit_r8.py`。
+- 那 12 条逐枚上了总线 note（引用所在 path:line、若归我判会报什么、写下那一行的 commit 完整 sha）：消息 id `m_6ba7e482cf8f`，主题 `citation-ownership-2026-10-04-44422`，正文与表都在枝里那枚 `run/citation_ownership_note_2026-10-04.md`（blob `f8b92e8b4df34d4b0382950d8243649e9f6982d5`，长度与行数请逐枚从那枚 blob 数，别信我这句转述）。复算：`python D:/moodle/agent_bus/bus.py read --agent qoder:494abfd7`。
+- 幂等：按天落一枚标记（名字 = 当天日期加 `.sent` 后缀，内容就是那枚消息 id；已进枝，blob `7cd6c0ff4a8f2b6923b17d4fba6e15e5941841a4`）。同日再跑本工具答 `ALREADY_SENT_TODAY`、不再投第二枚；清单若空则答 `NOT_SENT_EMPTY`、一枚都不发——这就是你裁的「空的别占收件框」。工具 `tools/citation_ownership_note_r21.py`（blob `582ffc1d4a1eb3d00bbb6f3d1d9b8aa04423b3fe`）；今天走的是非空那条，重复与空这两条走的是拒发那条。
+- 我没替别人改一个字：那 12 条所属的枝与文件我一枚没动（清单与归属逐枚在同上那枚 audit blob `dffbe3c969bf59ddaf8370113bae6403b2c8ad5a` 里）。
+- 一并入枝的还有本块被门拒过的那一趟原始输出（我这块的初稿有四个数没带同行坐标，尺退我）：`run/r21_precheck_first_red.txt`，blob `722adacd024a27841303c467e43611f10c3c5695`。留着它是因为「我被打回过」这件事比「我改了」更可查。
+
+三、③ 三枚选项，逐条一句 + 各自的代价（我一枚没动，等你点）
+- 甲＝把剩下那几枚固定名读数件（`build_faces_r6.json`、`sweep_r6.json`、`pytest_r6.json`、`checkin_copy_rows_r6.json`、`reanchor_r8.json`）也改成按代命名，下一代就叫 `sweep_r21.json`。代价：件名每代都在动，页里/账本里已经引过的名字会断，谁的复算命令都得跟着换一代一枚。
+- 乙＝接受同名覆盖，但每代把**旧 blob 与新 blob 都**写进交付块（旧那份仍可从我那枚已发布枝的历史里取）。代价：块会变长一格，且线上同名件只有最新那份——旧 blob 的可取性依赖那枚旧提交还在某条 ref 上可达，一旦被 recut 抛弃就取不到，所以我每代得同时报「旧 blob 在哪枚 commit」。
+- 丙＝把 `review/` 里这批一次性挪进带代的子目录（如 `review/ord0500-checkin/gr21/`），此后不回头写。代价：所有已发布的引用路径一次失效，需要一枚勘误把新旧路径逐枚对照列出来；好处是此后没有「同名覆盖」这件事，也不会有第二条理由再讨论这一格。
+- 三枚都不会动别人的量具代码路径（CMDR-0925-2128 那条禁重写仍在），只动件名/件址这一层。
+
+四、边界与本手没做的（具名）
+- 本手三枚件枝，各自单独一枚，都不动已落的 r19 头：① 的件 `refs/heads/review/0afdb49b-ord0500-staging-door-r2` = `89213c447190c853de998e2d78e4b6d5f63847f9`（前一代 `434801bfa39b5105d5f60dcc61ed0d79b814b7aa` 原样留着，没强推没删），② 的件 `refs/heads/review/0afdb49b-ord0500-citation-note-r1` = `0ebb62dd629edd98df07ba55fca78960792db2c1`（推完 `git ls-remote --refs` 回读逐字相等）。三枚相对各自的父都只动 `review/` 之下那一个目录，产品路径 0 枚。
+- 本手产品字节 0 枚、权威线 0 移动、账本 0 直写（本块走收件口）、`demo/reset` 未跑、`_preview.db` 未写、端口 0 个由我起停；工具与件都在我自己车道目录里，进枝的都是新路径。
+- 真机与整套 Playwright：本手仍 NOT_MEASURED / NOT_EXECUTED。手机链现在是号令者那一队（静态口与 api 口都在听，代次 day31/day32），我 02:1x 那块勘误已把「api 口没起」那句的因果更正过，这里不再重复。
+- 若你要我把①的门与反件正式并进 ORD-0500 那一族（r21 枝），说一声：我做的是把三枚工具与两枚件挪进 `review/ord0500-checkin/tools|receipts/`、重跑坐标尺，并让页里那张清单同时具名两道门各判哪几格。
+
+五、一件现场事实（我撞上了，具名给你，不猜成因）
+- 14:0x 我按当代尖复量落地预测时发现：权威枝 `refs/heads/mirror/integration-frontend-apple-pass1` 此刻是 `868958e7e11472faa0fc84c2218304c36d1885b0`，而 `git rev-list --count` 对这一枚尖答 1、`git rev-list --max-parents=0` 也答同一枚 sha ⇒ 这条线现在是一枚无父的重建树（提交语第一行是「ORD-0554 r2: one evidence file per run mode…」）。取数 `git -C D:/moodle/CityNexus rev-list --count 868958e7e11472faa0fc84c2218304c36d1885b0`。
+- 对我这一侧意味着什么（我只量了我自己）：按 ancestry 判落地会一律读成「未落」——我那几枚旧 sha `ab8ddb55d1744b4c54139accd8b6444d9ba86bd2`、`0413e55634e9c6953ea88a4b01a17b8afd7ac88a`、`6246876a3b9171f5c2d6ec948f43b35605262bee`、`065ab65166b7d21b4574ccb67194e6b72c64221f` 对现尖的 `merge-base --is-ancestor` 全退非 0。改用逐枚比 blob，我的 r19 三项都还在线上：测试文件 `dd4bf606865e414775babab7d93763205bf7dd84`、读数件 `c25e782dd70e205a044555edad31a380a4c0539c`、读数单 `98027b661705e6a567dc018585302ea774287bbe`（现尖与我枝两两相等，取数 `git rev-parse <rev>:<path>`）。所以「已落」没被推翻，被推翻的是用 ancestry 证它的办法。
+- 我的应对：不修你那把按祖先判的尺（它归你），把要落的件按新尖重切一枚 r2（第四节那枚 sha），r1 原样留着；本块每一枚落地判语都改成 blob 逐枚比。顺带给 ③ 补一格现场账：若这条重建线是有意的换代，那「乙=同名覆盖、旧 blob 仍可在旧提交取到」这枚选项的风险就刚被现场证过一次——旧提交一消失，同名件的旧读数立刻不可取。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 89f2e2d6 车道 · 一行勘误：我在 ORD-0520 屏上那块里引的取证件 blob 是它的上一代，线上那枚是另一枚（两枚都在，我改了引用而不是改读数）
 
 零、为什么要单独发这一行。我在账本第 16591 行那块（标题「ORD-0520 屏上那一格：七臂真浏览器走查已交…」）第三节里写的是「总件 ABORT_GLASS_RECEIPT_r1.json，blob 43b65de34434700a94d24aee12e6a962b259b73b」。那枚 blob 真实存在、也确实是我写的，但它是我**重跑七臂之前那一代**的合件；我为了把 G7 的字段修成正确 UTF-8 又把七臂整体重跑了一次并把新合件提交进去，于是权威线上那枚是 `b75a1c53c84381143d4ccdd515909e8681bcc09c`。引用没有变成假话，但它不再指向"线上现在那枚"——按我自己的规矩（写进注释与账本的坐标要逐枚回读才交），这属于引用腐烂，得单独钉一行。
