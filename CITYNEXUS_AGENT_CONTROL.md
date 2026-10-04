@@ -16588,6 +16588,40 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:37 裁语 · 选项乙已交：切片六动了产品字节——那两格一个换成词表人话（机词进折叠），一个改成本机量到的事实（含两枚单变量反件，顺手当场修掉我自己那把尺的一枚缺陷）
+
+**代次**：我这笔 `fa6944ab5012593e0a50ea4f425f426ab4dd85d6`（枝 `refs/heads/review/newlane-ord0545s6-copy-cells-r1`，`ls-remote` 独立回读 = `fa6944ab5012593e0a50ea4f425f426ab4dd85d6`，逐字相等）由三笔叠成，起笔点 = 我当场 `git ls-remote` 自读的 `f3ba478caaecdbdf7254786b2bf0d03d323897d0`（量法 `fa6944ab5012593e0a50ea4f425f426ab4dd85d6~3` 逐字相等 = `True`）。现尖又走到 `a54fc1597c968f430ff4db52130156068aff0a88`。这条线的尖是无父重建树，`merge-base --is-ancestor` 在这类尖上不顶用，所以我按字节判撞车：`frontend/src/features/poiimport/PoiImportPanel.tsx` 在现尖取到 `95a15c02f1f74e9a59fb991eea4a95f438902255`、`frontend/src/features/poiimport/poiImportCopy.ts` 取到 `881bc009b3bd56f8af7bd6e3b7e551285249d580`，与我起笔点那枚逐枚相等 = `True`、`True`（这两枚是「我起笔之后线上有没有别人动过这屏」的判据，与我枝上的改动无关）；那 2 枚新提交动了 4 枚路径，与我这 36 枚的交集 0 枚（交集：无）。
+
+**这不再是 0 产品字节**：2 枚路径落在产品面，逐枚是 `frontend/src/features/poiimport/PoiImportPanel.tsx`（blob `4f0c3a54140016b01361ab6dddcc7e6ace760790`）与 `frontend/src/features/poiimport/poiImportCopy.ts`（blob `19f85f88e808c5d9407863b2c0abcbb4fd305d2e`）。`backend/app/` 一枚没动——门从头到尾没人碰。另有屏读规格与配置四枚：`frontend/e2e/qoder-ord0545s6-copy-cells-r1.spec.ts` blob `91178ec8047a61570003e8208e329f7202481011`、`frontend/playwright.ord0545s6-copy-cells.config.ts` blob `c40b6bf13c9c18dd274974ba219a5a30807bbce8`、被声明换判据的 `frontend/e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts` blob `7d54fa7c95d4e81f5f6ec06ce01c36b7d48552ee`、以及两把量具（`review/ord0545/slice6_glass_r1.py`、`review/ord0545/slice6_counterarm_r1.py`）。
+
+**第一格（你定点的机词）**：`frontend/src/features/poiimport/PoiImportPanel.tsx:496` 主槽走词表，中文臂屏上读到「本机文字解析」、英文臂读到 "Text parsed on this device"；机词本体挪进同格的可折叠 `frontend/src/features/poiimport/PoiImportPanel.tsx:502`，折叠标题也出自词表（中文「技术细节」/ 英文 "Technical details"）。机词与词表键的对应是按答案类型开的表，服务端再多一种渠道就是编译期报错，不会自己爬上屏。
+
+**第二格（你定点的重复）**：无量到状态时技术格写本机事实——中文臂「没有状态」/ 英文臂 "no status"（`frontend/src/features/poiimport/PoiImportPanel.tsx:470`），不再把上面那句拒绝话重画一遍；量到状态那半句一字未动（`frontend/src/features/poiimport/PoiImportPanel.tsx:468` 仍是 `HTTP` 加本机读到的状态码）。
+
+**判据换了，我是声明换的、不是为了让它绿而改**：切片五那格 `technical_line_is_the_same_sentence` 原本断言 true（那时它是在把缺陷钉成读数）。本笔把 `frontend/e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts` 的两处换成 false（`:269` 中文臂、`:280` 英文臂），同一枚臂里仍断言「拒绝那句逐字等于词表那半」作正对照——服务器这一问没有回答。什么都没改动。 / "The server did not answer this one. Nothing was changed."——它不能靠删消息变绿。类型检查现跑 rc 0。
+
+**三代同跑的回归（同一代源码、同一枚库副本，件 `review/ord0545/readouts/slice6_glass_20261004T123042Z.json` 的 `runs` 三格；每格自报 `collected`、`passed`、`failed`、`rc` 与 `wall_seconds`，墙钟我不在块里重写一遍）**：切片六 `frontend/e2e/qoder-ord0545s6-copy-cells-r1.spec.ts` 那格 collected 4 / passed 4 / rc 0；切片五 `frontend/e2e/qoder-ord0545s5-refusal-glass-2-r1.spec.ts` 那格 collected 4 / passed 4 / rc 0；切片四整屏走查那格 collected 2 / passed 2 / rc 0。切片四是写在本笔之前的量具，它自己那格 `channel_facts_cell.prints_server_field_verbatim` 两臂都从 true 落到 false（中文臂 False / 英文臂 False），而同格 `renders_channel_label`、`renders_channel_note` 仍 true——不是我新写的臂在给自己打分。
+
+**反件（件 `review/ord0545/readouts/slice6_counterarms_20261004T111148Z.json`，它起跑前的 panel 字节与本笔提交的字节同值 = `True`）**：控制两腿先绿（A 腿 rc 0 passed 2、B 腿 rc 0 passed 2），再枚枚单变量——
+- `M1_channel_cell_paints_the_server_token`：只把主槽换回直接画机词——A 腿 collected 2 / failed 2 / rc 1，同跑 B 腿 rc 0 / passed 2，`panel_restored_byte_identical` True。
+- `M2_no_status_cell_repeats_the_sentence`：只把技术格换回重述那句——B 腿 collected 2 / failed 2 / rc 1，同跑 A 腿 rc 0 / passed 2，`panel_restored_byte_identical` True。
+整件判语 `KILL_OK two single-variable mutations each turn red exactly their own arms`，`main_untouched` = True。
+
+**乙的前置照你裁的那样跑了**：同一把尺在本笔源码上仍报 `UNREACHABLE_BY_A_TRAVELLER_STEP` 4 枚、`GLASS_ONLY` 2 枚、`REACHABLE_BY_A_TRAVELLER_STEP` 1 枚，三格自查全 true（件 `review/ord0545/readouts/refusal_reachability_ruler_at_slice6.json`）——一枚没翻，所以乙改的是字不是门。
+
+**我自己那把尺的缺陷当场修了（是甲那一枝的追加一笔，不是改写已发布那笔）**：r1 取 `FAILURE_SENTENCE` 是从名字读到文件尾，切片六新增的渠道表被它一起扫进映射，尺在我自己的新源码上直接 abort。r2 把取数收到那枚映射自己的收尾括号。等价性是量的不是说的：在 r1 发布时代的那枚源码上，宽取与窄取回同样 7 对，且 r2 的行、判定、`reason_code` 与挡门与已发布 r1 读数逐枚相同（件 `review/ord0545/readouts/refusal_reachability_ruler_r2.json`，逐枚相等的行数 7）；r2 也仍翻得动（件 `review/ord0545/readouts/refusal_reachability_ruler_counterarms_20261004T111714Z.json`，两枚单变量各自翻自己那行再翻回，`main_untouched` = True）。尺文件是甲枝尖 `bbab207fefb750c06e570af81ef42920ac78c7dd` 里的 `review/ord0545/refusal_reachability_ruler_r2.py` blob `4ea505bfeb5f11b95dc2a74fb29a856fd5de7c94`；要落的时候甲那一枝现在是两笔：`a8eeb460caad0e3e7870bdf9c5e9e003267bd7e4` 与 `bbab207fefb750c06e570af81ef42920ac78c7dd`。
+
+**一格留给你判，我不代判**：折叠用 `<details>`，闭着的时候机词仍在 DOM 文本里、不在渲染文本里。两件都量进件里：`token_in_the_cards_dom_while_closed` 中文臂 True / 英文臂 True，`token_in_the_cards_rendered_text_while_closed` False / False，而 `machine_words_rendered_in_card_while_closed` 两臂皆空。若你的普查尺读 `textContent`，这枚机词还算在屏上；读渲染文本才算清干净——判据归你定，定了我就照它调形制。
+
+**没改善（具名报缺，不自造默认值）**：同一屏还剩一枚服务端机词照旧上屏——`frontend/src/features/poiimport/PoiImportPanel.tsx:508` 把 `backend/app/poi_import.py:22` 那族原样 join 上主屏，族里现读的成员是 `EMPTY_INPUT`、`LINK_ONLY`、`PASSWORD_CODE`、`PASTED_TEXT`、`SCREENSHOT_OR_IMAGE`；它不在你定点的两格里，我一个字节没动。真机那几格仍没量；那 4 枚句子照旧没有玻璃读数；`frontend/src/features/poiimport/poiImportCopy.ts` 的键数现在数到 70 枚。
+
+**现场**：本轮的栈自己起自己收，两个端口跑完无监听；归因不是嘴上说的——向我的端口 POST 一枚带本跑名字的旅行者，我的库副本里数到 1 枚、号令者那枚 canary 里数到 0 枚，监听者属我起的进程族 = True；canary 跑前跑后逐字节相等 = True（两笔件的 `canary_source_untouched` 字段）。没自派单、没碰 `:4783` 与 `:4787`、没写账本、没 force-push（0 次）。
+
+**接着做什么**：这一单到此交完。下一格等你点单：`ORD-0556`（`/v8/bookings` 英文臂那五枚大写词判源，账本里写着我名，我未开工）仍在手上待接；上面那枚 `unsupported_forms` 要不要一并做掉也等你一句。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 89f2e2d6 车道 · 「读在飞作业」尺族全树清点：八处可直接派单的臂、五处具名排除，另附一枚实测（加一行等待就把红率从半数打到 0）
 
 零、这手交什么。号令者点的是我自报的那格：全树找出**"提交作业之后不等终态就断言结论字段"**的臂，产出可直接派单的名单。三件东西都在树上（候选 `refs/heads/review/89f2e2d6-inflight-wait-inventory-r1` = `e9a6cc7f926777a5010947cef0b9b787ee67cb13`，`env -u HTTP_PROXY -u HTTPS_PROXY NO_PROXY="*" git ls-remote --refs origin` 现读同值；本轮现读权威尖 `62ee41e3d36debdb9db502c8180c386241a46f86` 与命令同段）：粗筛尺 `review/inflight-wait-r1/inflight_job_wait_inventory_r1.py`、读数件 `INFLIGHT_WAIT_INVENTORY_r1.json`、实测件 `INFLIGHT_FIX_EXPERIMENT_r1.json` 与那一行修法 `wait_fix_recipe_r1.diff`。产品字节 0 改动，臂我只实验、跑完还原（`git status` 现读：`backend/tests` 与 HEAD 一致）。
