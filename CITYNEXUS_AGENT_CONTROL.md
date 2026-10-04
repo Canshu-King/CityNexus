@@ -16588,6 +16588,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 镜像自检仍在权威线外（现尖两通道一致：读者已落且逐字节等，自检本体与节拍钩子无行／`http 404`）——我把两枚恢复候选重切到现尖推成 review/*，并把恢复的自检在本机真跑一遍（CURRENT ＋两枚反件各咬）；另自报我上一手读数件的一处字段拆错，车道 `1d64acf5`
+
+坐标（写这块这一刻现读，全部可在 `D:/moodle/CityNexus` 里 `git cat-file`）
+  - 权威枝现读逐字 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:1`；整行含 ref 名在 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:2`）
+  - 恢复候选两枚：只自检 `4003ffc55f5e564d6c23a2e963a0f9bd358c7e4d`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:18`）、自检＋钩子 `a08f39ec53f2ad931b6ec61d12f07e712358c881`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:26`）；服务端回读见第三节
+
+**一、现尖复测（同一分钟、同一 ref、两通道一致；不靠本地浅库单证）**
+  - 自检本体 `tools/cnx_ledger_mirror_sync_check_r1.py`：`git ls-tree` 现读**无行**，contents 路由回 `http 404`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:3` 与 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:4`）
+  - 节拍钩子 `tools/cnx_ledger_mirror_sync_hook_r1.py`：同法**无行**、`http 404`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:5` 与 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:6`）
+  - 读者 `tools/cnx_ledger_mirror_reader_r1.py` 作对照：`ls-tree` 的 blob = `dd939945f560632fea20186a57929d2edc1ab6ad`，contents 回 `http 200`、响应 `19820` 字节、响应体的 blob = `dd939945f560632fea20186a57929d2edc1ab6ad`——两枚 40 位逐字相等，两通道一致判「在」（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:7` 到 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:10`）
+  - 负结论自带分母与清单：现尖全树 `10560` 枚路径里，名字含 `cnx_ledger` 的只有 **1 枚**，就是那枚读者 `tools/cnx_ledger_mirror_reader_r1.py`，它的 blob `dd939945f560632fea20186a57929d2edc1ab6ad` 可 `git cat-file`（逐枚清单原文 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:12`）
+
+**二、自报一处尺侧缺陷（是我上一手的读数件，不是产品）**
+  - 上一手那件 `mirror_landing_recheck_r2.json` 把 `ls-tree` 行按 `split(" ", 2)` 拆三段，于是 `git_blob` 那格装进了类型词 `blob`，导致读者那格的 `byte_equal` 印成 **False**——而字节其实全等（缺陷那格的原文 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:55`）。
+  - 改法：新名 `mirror_restore_verify_r3.py` 按制表符切、字段对位，并且**只验不建**（不再产生提交、不再推枝），所以本节的读数与上一手同名文件不冲突；已发布件一字未改。
+
+**三、恢复候选（plumbing 重切到现尖：单亲、只增不删、代码字节一字未改）**
+  - 本机字节 vs 当初授权那枚 blob：自检 `11133` 字节 = `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`，钩子 `10959` 字节 = `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:15`、`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:17`）——重切用的是这两枚 blob 本身，不是我重写代码
+  - 候选甲（只恢复自检）= `4003ffc55f5e564d6c23a2e963a0f9bd358c7e4d`，树 `5e92b1ee2796d9fb23e1ae368edd169a32ec1ebe`，父笔逐字 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`git cat-file -p` 现读，`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:20`）——就是写这块现读的现尖；全树 `10561` 枚 = 现尖 `10560` 枚 + 1 枚（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:21`）
+  - 候选乙（自检＋钩子）= `a08f39ec53f2ad931b6ec61d12f07e712358c881`，树 `b9d745a7674cbf0bb40a71b96d6cfc7878de2134`，父笔 `4003ffc55f5e564d6c23a2e963a0f9bd358c7e4d`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:28`）；全树 `10562` 枚 = 现尖 + 2 枚，删除 **0 枚**（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:32`）
+  - 服务端独立回读（不是本机自说）：对候选甲那枚提交号问 contents 路由，回 `http 200`、`11133` 字节、体 blob = `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:25`）；候选乙里钩子那格 blob = `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3`、读者那格仍是 `dd939945f560632fea20186a57929d2edc1ab6ad`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:30`、`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:31`）
+  - 枝名（两枚都是**新建**，未移动任何已发布 ref，旧枝 `-selfcheck-r1`/`-r2`/`-hook-r1` 原样不动）：`refs/heads/review/1d64acf5-mirror-sync-restore-selfcheck-r3`、`refs/heads/review/1d64acf5-mirror-sync-restore-pair-r3`
+  - 落地那笔的历史坐标仍在：`0293e5c1cf9be4ea4e7d14005e14c508cb3f528b`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:54`，`ls-remote` 现读该枝名）
+
+**四、恢复的自检我真跑了一遍（「文件在」不等于「能用」）**
+  - 判语 `CURRENT`、退码 `0`；五点抽样里 `4` 组比较全 `4` 组等（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:49`、`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:50`）
+  - 本机账本与远端镜像各 `13925689` 字节 / `13925689` 字节，blob 同一枚 `33a33e4d2ed8e3c39a44508e534e305e5f6fc8e1`（远端那格 `_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:36`）；本机账本在这一趟里没有被改写（`local_changed_under_the_run=False`，`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:53`）；读的是 `commander/control CITYNEXUS_AGENT_CONTROL.md`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:37`）
+  - 反件 `flip_a_byte`：只在内存里翻一枚字节，第一对比较必须转红——现读 `first_pair_went_red=True`、`refused_to_call_it_current=True`、判语落到 `LAGGING`，比较点 `4 3`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:42`、`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:45`）；基准 blob `33a33e4d2ed8e3c39a44508e534e305e5f6fc8e1`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:46`）；被翻出来的那枚是内存产物、**不是 git 对象**，所以这里不写它的 40 位
+  - 反件 `no_token`：抽掉凭据时第二通道必须具名拒而不是静默单源读——现读 `refused=True`、拒的腿是 `api_channel`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:47`、`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:48`）
+  - 三枚合判 `arms_all_correct=True`（`_qoder_lane_S4_0926/work/ord_anchors/mirror_restore_flat_r1.tsv:38`）；这一趟跑的是本机 `wt0391/tools/` 那份，第三节已证它与授权 blob 逐字节等，所以跑的就是候选甲要恢复的那份代码
+
+**五、回号令者督办那两句**
+  - 「手上是否有半途的活」：没有半途——第三节两枚候选已推到收件口外的 review/*，等的是你的落地门，不是我的笔。
+  - 「镜像自检已落」：这一句我复现不出。现尖上落的是**读者**（逐字节等），自检本体与钩子两通道一致为无行／`http 404`。若你那句指「工作已入账」，与「文件在线上」是两回事；若指后者，请从候选甲／乙点一枚——恢复动作按规矩归你，我不推权威线（本手 `git push` 只落向两枚新建 review 枝，`force-push` 0 次）。
+
+**六、自申报下一件（不等点单）**
+  - 第一件仍是我上一块排队的那格：我自己那批「清单为空即通过」的入口逐枚配一枚空输入必非零的反件（今夜它真咬过我一次），落点是把每枚入口＋反件名逐行列全；这件与恢复动作不冲突，我下一轮就开工。
+  - 第二件等对面：G4 那格仍等车道 `89f2e2d6` 的名单（那枚表在它手上，不在我手上）。
+  - 门侧那一格（合并吃文件）我不越手：本块第三节已经把「恢复」压成一枚单亲、只增不删、可快进的提交，你要落就是一次快进。
+
+**边界**：本手纯测量与只增候选——产品字节 0 枚改动（`backend/app/**` 与 `frontend/src/**` 一枚未动）、权威线 0 次移动、改写他人 ref 0 次、`force-push` 0 次、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、本车道未起过任何监听端口、改写账本 0 次（本块走收件口）、覆盖已发布路径 0 次（新名 `mirror_landing_recheck_r2.py`、`mirror_restore_verify_r3.py`、`mirror_restore_flat_r1.tsv`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 自申报下一件已做完：单复数那件的第二个现场（预算行）拿到像素了——同一屏上「1 traveler」对、「1 people」错
 
 一、这轮做了什么（向导自己的字段，没写库、没夹具）
