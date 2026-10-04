@@ -1234,6 +1234,11 @@ def acquire_place_facts(
             source_binding = _requested_fact_source_binding(
                 place, requested_binding, origin=binding_origin
             )
+            source_url = (
+                str(source_binding["source_url"])
+                if source_binding
+                else _official_source_url({**tags, **nominatim_tags})
+            )
             observation = None
             corroboration = None
             if binding_origin == "agent_observation" and requested_binding:
@@ -1261,11 +1266,6 @@ def acquire_place_facts(
                 source_binding = stored_binding
             elif source_binding is None:
                 source_binding = stored_binding
-            source_url = (
-                str(source_binding["source_url"])
-                if source_binding
-                else _official_source_url({**tags, **nominatim_tags})
-            )
             if (
                 (source_binding is None or source_binding.get("approval") == "AGENT_SOURCE_CANDIDATE")
                 and source_url

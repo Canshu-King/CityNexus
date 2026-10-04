@@ -112,3 +112,116 @@ Also passed:
 ## Next bounded experiment
 
 Keep the same member-aware mediation branch. Use the Agent's bounded search/source path to acquire a second real Nara candidate with canonical opening and cost, or pivot once to another fresh city if the provider frontier remains unavailable. Only after two individually `GROUNDED_FEASIBLE` candidates exist should the real Agent be allowed to arbitrate compromise and enter the normal Gateway/execution path.
+
+## Collective Live Closure Addendum — 2026-10-05
+
+### Source binding and publication
+
+- Closure taskbook: `origin/gpt/revolution-r27-collective-closure-20261004`.
+- Source-truth implementation sketch blob: `dfd09cb6788ad6632a9d70b322f4a1db5378b1d2`.
+- Local implementation was published before this runtime attempt. Local HEAD and
+  `origin/codex/revolution-realtrip-recovery` both resolve to
+  `d7f63fbdaeb25a18efdf32e466f163a59c579306`.
+- The working tree remained free of tracked product edits after the commit; old R20–R26
+  receipts and disposable databases remain untracked and were not included in the commit.
+
+The bounded source-truth bridge is now in the product:
+
+- `RESEARCH_PLACE_SOURCES` exposes only `research_place_sources(place_id)`; the server builds
+  the query from the exact Place and Journey city.
+- Results are persisted as `WebObservation` with `authority_status=NON_AUTHORITATIVE`.
+- `acquire_place_facts` accepts the server-owned observation reference, fetches the page itself,
+  and can promote only after exact normalized venue identity plus an independent provider-known
+  anchor. Raw Agent URLs remain `AGENT_SOURCE_CANDIDATE`; snippets never become facts.
+- Same-name/wrong-city, missing-anchor, and raw-URL negative controls are covered.
+
+### Fresh same-Journey runtime readout
+
+The earlier zero-byte database was discarded from consideration. A new disposable database was
+created and product-created with the same shared Journey shape:
+
+- DB: `backend\\r27-live-closure-20261004.sqlite3`
+- Journey: `3a059855-1634-49b6-b4ce-8f3549d90998`
+- two fresh Travelers and two `MEMBER_IN_FORCE` rows were created; the second member is `ADMIN`.
+- owner preference and second-member preference were written through the member-scoped product
+  route; no owner preference was copied to the other member.
+- `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`.
+
+The same Journey was sent through the product's live discovery path with `Nara Craft Museum`.
+Nominatim captured the city anchor, but the category query did not obtain a catalog response:
+
+```json
+{
+  "mode": "live-unavailable",
+  "provider_status": {
+    "nominatim": "CAPTURED",
+    "photon": "NOT_CALLED",
+    "overpass": "UNAVAILABLE",
+    "failure_stage": "category_search",
+    "fallback_reason": "PROVIDER_TIMEOUT",
+    "wrong_city_replay_blocked": true,
+    "attempts": [
+      {"endpoint": "https://overpass-api.de/api/interpreter", "http_status": 504},
+      {"endpoint": "https://overpass.kumi.systems/api/interpreter", "error": "ReadTimeout"},
+      {"endpoint": "https://overpass.private.coffee/api/interpreter", "error": "ReadTimeout"},
+      {"endpoint": "https://overpass.openstreetmap.fr/api/interpreter", "error": "ReadTimeout"}
+    ]
+  },
+  "candidates": []
+}
+```
+
+The bounded `research_place_sources` Agent read-tool was also exercised on the fresh Journey.
+There was no configured WebResearchProvider or SearXNG endpoint, so it returned the honest
+machine result below and persisted no authoritative observation:
+
+```json
+{
+  "status": "SOURCE_DISCOVERY_UNAVAILABLE",
+  "authority": "NON_AUTHORITATIVE",
+  "observations": [],
+  "query": "\\\"吉城園\\\" NARA official opening hours admission fee overpass way/97082273"
+}
+```
+
+As a bounded fallback probe, live Nominatim independently resolved two exact OSM entities on
+that same fresh Journey (`node/2465643503` and `way/97082272`). They were materialized as live
+Nominatim candidates with opening facts still `UNKNOWN`; the existing fact-acquisition boundary
+correctly did not treat Nominatim-only identities as Overpass fact entities. The attempted
+operator-bound official fetch therefore did not promote opening/cost. No R22 persisted facts,
+manual opening values, free-price inference, mock mobility, or synthetic compromise was used.
+
+### Exact current blocker
+
+The blocker has changed from “Nara has no second real candidate” to:
+
+`R27_LIVE_FACT_ACQUISITION_COVERAGE_BLOCKED_BY_OVERPASS_PROVIDER_TIMEOUT`
+
+This is precise and machine-derived:
+
+1. live Nominatim is available and can resolve real OSM identities;
+2. all four bounded Overpass mirrors failed during the category acquisition stage;
+3. the current canonical fact acquisition function requires an Overpass entity reference and
+   performs its own Overpass + Nominatim observation before official fact promotion;
+4. therefore the fresh Journey has zero product-canonical, fully grounded candidates from this
+   run, so a two-candidate collective conflict cannot honestly be constructed;
+5. consequently no collective Agent mediation, Gateway mutation, or physical execution is
+   claimed in this checkpoint.
+
+This is not evidence that Nara lacks a second real candidate. It is a live provider coverage
+frontier. The source bridge is implemented and bounded fallback is exhausted for this run; the
+next in-scope action is to rerun the same fresh Journey when Overpass category acquisition is
+available, then acquire facts through server corroboration before starting the real collective
+mediation.
+
+### Focused verification after source bridge
+
+```text
+67 passed, 1 warning
+python -m compileall -q app: PASS
+git diff --check: PASS
+```
+
+The 67 tests include the complete R20–R27 focused lineage, R27 member isolation/fairness/skip
+hygiene, and the new source-truth bridge controls. This remains an implementation + exact
+blocker checkpoint, not a collective live closure claim.
