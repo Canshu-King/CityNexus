@@ -16588,6 +16588,35 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 勘误 r7b（r7 那块里我引的总判语是我自己反件盖出来的；尺已改成每趟各写各的件）· 车道 45d25bfb 自申报（0 枚产品字节）
+
+一、更正哪一句
+- r7 那块（标题逐字含「槽位级判源尺 r7」）第二节第一行把总判语写成「整体 RED」，错的。真相是干净那趟七臂全 PASS、GREEN、红臂 0 枚。
+- 错的成因具名：我那把尺把输出件路径写死成同一枚（`_evidence/r7_slot_provenance_report.json`），跑反件的两趟与干净那趟写同一枚文件，最后一枚反件的 RED 把干净读数盖了；r7 渲染器读到的就是被盖的那枚。另外反件那条臂的 observed 句子我当时是写死的文案，不是算出来的，所以判语与 verdict 会各说各话。
+- 修法（已在这把 r2 尺里）：报告件路径改由环境变量按趟给（R7_REPORT_PATH），干净趟与各反件各写各的；observed 全部由计算值生成（本轮新增「未被判成契约字的 token 清单」与「与当代仍上屏的重叠清单」两格）。旧 r7 那块一字不改，按规矩发新帖。
+
+二、重跑后的判语
+- 干净趟：整体 GREEN、红臂 0 枚，件 _evidence/r7b_report_clean.json，blob e852f569e4d9c2960534fa6ca6e0d6da450a2c4f；控制台 blob ff639ec2f83be46188472430a9080ac8b139bf13。
+- 七臂逐条（全是现算）：every_painted_token_classified=PASS | false_positive_SELECTED_is_copy_word=PASS | false_positive_COMMITMENT_is_copy_word=PASS | contract_status_names_are_server_words=PASS | positive_control_dirty_generation_would_flag=PASS | no_undetermined_left_silent=PASS | zh_arm_has_no_contract_word=PASS。
+- 关键三臂原文：SELECTED SELECTED buckets=['contract-word', 'copy-word'] line=['NO STAY SELECTED'] sources=['frontend/src/i18n/LocaleCo；COMMITMENT COMMITMENT buckets=['copy-word'] sources=['frontend/src/features/pending/pendingSetCopy.ts', 'fr；正对照 pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS']; tokens NOT bucketed contract-word=[]; still painted on this generation=[]。
+- 两枚词表条逐字（本轮现取行号）：frontend/src/i18n/LocaleContext.tsx:238 与 frontend/src/i18n/LocaleContext.tsx:777。
+
+三、反件（各自红，且不再污染干净件）
+- mE2（把词表扫描里的词表文件抽掉）：rc=1，报红臂 false_positive_SELECTED_is_copy_word / false_positive_COMMITMENT_is_copy_word；控制台件 blob ed63e456f02c23a0a7dcd9b3134b8b42c73b7312。
+- mF2（把下划线转空格那条规则删掉）：rc=1，报红臂 positive_control_dirty_generation_would_flag；控制台件 blob 181fa4402061d5cc1fb7c50b8eca34bf07476f14。
+- 两枚反件跑完后回读干净件：verdict 前 GREEN 后 GREEN、红臂 []、件字节 13690 —— 即这轮的隔离是真生效，不是我又写了一句。逐枚在件 blob b0477dd29d4aa60400dd27c76c2514ef9a273fd4。
+- 没有 skip、没有改断言凑绿、没有遮尺子的报错。
+
+四、r7 那块里仍然成立的几条（同一算法两次跑，结果一致）
+- SELECTED 落双桶（词表整行 NO STAY SELECTED，同时它也是契约 Literal 成员），COMMITMENT 落词表桶；待看清单 0 枚；中文臂那枚 JSON 是词表字；英文臂读入 42 处、去重 37 枚全部落桶；入口逐字 /assets/index-BcQ9VAso.js；件 blob e852f569e4d9c2960534fa6ca6e0d6da450a2c4f。
+
+五、纪律与待裁
+- r7b 产品字节 0 枚、提交 0 笔、推送 0 次、0 枚新端口；本轮纯静态（不接浏览器、不接库）；新落盘 6 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r7b.jsonl；共享预览库没读没写、没跑 demo/reset；force-push 0 次；权威线我没碰。
+- 等你裁的还是那四格：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。这把尺现在能不动产品字节把「哪一格真的在读契约字段」逐枚指出来，你要开全量单就先点它。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0485 手机那两枚产品腿能不能原样摘——量过了：不能，那枚冻结字句已被后续代次改掉，守卫也已被别人的规格接管
 
 一、量法（现尖 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``；件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed`；仪器 `review/ord0485-spec-drift/tools/phone_words_spec_drift_r2.py` blob `d0231c160ec8213a5fbad8ebe99f47a1ccada2a0`）
