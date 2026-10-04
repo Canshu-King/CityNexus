@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0485 手机那两枚产品腿能不能原样摘——量过了：不能，那枚冻结字句已被后续代次改掉，守卫也已被别人的规格接管
+
+一、量法（现尖 ``4d43f8bc25a1a2f4e4c752afe08851032ab6c71d``；件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed`；仪器 `review/ord0485-spec-drift/tools/phone_words_spec_drift_r2.py` blob `d0231c160ec8213a5fbad8ebe99f47a1ccada2a0`）
+- 被量的规格逐字从枝 `refs/heads/review/newlane-ord0485-phone-walkthrough-r4` = `8d6c582fd493469f88f02c494f5f227736da24ac` 的字节读出来（5516 B），不从我的记忆里读。
+- 只取规格自己冻结的字面量：顶层 `const NAME = "…"` 与 `for (const word of [...])` 的列表，共 5 枚；`expect(…, node(id, "诊断语"))` 的标题一律不收（那是规格自己写的失败语，见第四节）。
+- 三枚对照臂都对（`positive=对、negative=对、colon_in_text=对`）：必须有命中的（`poi-import`）、必须没命中的（一枚乱码针）、以及「含冒号的真源行必须被解析回来」那枚。分母也现取了：`frontend` 有 835 枚文件、`backend` 有 402 枚，「两棵树都没有」这句话才有得说。
+
+二、读数（件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed`）
+- 词面在线上：4 枚；不在线上：1 枚，而那唯一一枚就是这枚规格的中心断言——「本地通道」。
+- 那个键 `poiImport.channelLocal` 在 `frontend/src/i18n/LocaleContext.tsx` 里 0 处提及；句子并没丢，它搬到了 `frontend/src/features/poiimport/poiImportCopy.ts:170`，现值 zh = 「本地解析，不打开链接」⇒ 判语 `COPY_REWORDED_ON_LINE`（同一行号来自件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed` 的 `entry_lines`，不是我手打）。
+- 规格要防的另一半「键名不许上屏」，线上已有**别人的已落地规格**守着：`frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts:192` 起那几行就是 `expect(called).not.toContain("poiImport.channelLocal")` 与两本字典里 `has(...) === false`。
+- 第二个键 `exec.state.notStarted` 仍在线上的两本词表里：`frontend/src/i18n/LocaleContext.tsx:625`（en）与 `:1704`（zh）⇒ 0485 那半边的修复其实已经在线上。
+
+三、结论与建议（不自裁）
+- **原样摘 = 一落地就红的测试**：它断言屏幕上必须有「本地通道」，而线上此刻打印的是「本地解析，不打开链接」。这不是我改坏了什么——线上的文件自己说了原因：`frontend/src/features/poiimport/poiImportCopy.ts:35` 写着那枚徽章从 `t("poiImport.channelLocal")` 搬过来，`:168` 写着「ORD-0533 的话是搬家不是重写」；我那枚规格的冻结值没跟着动。
+- 建议按「被后续代次取代」结案：那两枚产品腿不摘；欠账从「从未上线」改记为「过期守卫」，我这边不再重复报同一笔。
+- 若要保留那半条守卫的价值，只有两条路：把那枚冻结断言改成现值，或者删掉它只留「键名不许上屏」——两者都算**改断言**，得你点单，我不自取。
+
+四、我这两版仪器各自的毛病（具名，判语不采信）
+- 第一版（`tools/phone_words_spec_drift_r1.py`，留在车道目录、**没有上架任何枝**）把 `expect(...)` 的标题当断言主体，于是把 9 行读数里的 5 行报成「失踪」——那几行是规格自己写的失败语，产品里本来就没有。件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r1.json` blob `4c178633ff5ed58b5abe0e5693fbc6c2bc7a9f55` 一并发布，就是为了这笔账能对得上。
+- 第二版第一趟还有一处更阴的：把 `git grep` 输出的 `rev:path:line:text` 从右边切，凡是行文本自带冒号（`channelLocal: {` 就是）的全被丢掉，于是「句子只是搬家」被误判成「句子没了」。加了一枚「取一真源行、必须原样读回来」的对照臂之后这趟不再犯——那枚臂现在就在件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed` 的 `controls` 里。原始两趟输出在 `review/ord0485-spec-drift/run/spec_drift_r2.txt` blob `3aba2b9cfd59680a99aa0a84db2f28008712dcd9`。
+
+五、边界与未量
+- 本手产品字节改动 0 枚；权威线移动 0 次；已落字节覆盖 0 枚；名下旧枝改写 0 枚、强推 0 次、删枝 0 枚；账本直写 0 处（本块走收件口）；`demo/reset` 未跑；端口起停 0 个；wt22 工作树写入 0 处（只读 ref 字节与 tip 树）。
+- 未量格子具名：**本手全程是源码词面 + blob 比对，没跑过浏览器**，所以「词面在场」不等于「上屏」；真机 NOT_MEASURED；Playwright 本手未跑。要哪一格上屏证据，点单给我，或归那枚已落地的守卫规格（`frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts:192`）。
+- 复算：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/phone_words_spec_drift_r2.py`（只读；输出即件 `review/ord0485-spec-drift/evidence/phone_words_spec_drift_r2.json` blob `83fa07377589e6f378522a968a0a59945ee1f0ed`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜把顶栏那四屏的名字登记上了：一枚产品文件四行白名单，判据同步翻成防回归；改后树七臂绿、五枚反件（四咬、一枚按设计不咬并具名）、两把 tsc 各 rc=0；上一轮我说的"热文件被压住"这轮我自己复算掉了才动手
 
 **〇、坐标（写这块这一刻现读；四枚 40 位都可 `git cat-file`）。**
