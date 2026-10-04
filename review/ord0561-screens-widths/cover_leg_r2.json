@@ -1,0 +1,7259 @@
+{
+ "base": "http://127.0.0.1:5020",
+ "cells": 15,
+ "legs": [
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1173,
+   "rows": [
+    {
+     "el": "button",
+     "label": "住宿",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 349,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 512,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "预订",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 681,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 844,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "花费",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1013,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 1176,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "中止这趟行程",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 96,
+      "cw": 96
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 292,
+       "cw": 292,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 220,
+       "y": 574,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 596,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 596,
+        "w": 326,
+        "h": 21,
+        "cx": 180,
+        "cy": 607,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 220,
+       "y": 574,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 596,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 596,
+        "w": 326,
+        "h": 21,
+        "cx": 180,
+        "cy": 607,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.active",
+     "label": "10月10日周六6 项",
+     "aria": null,
+     "testid": "trip-day-0",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 324,
+      "cw": 324
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-day-strip",
+       "sx": 326,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 812,
+       "w": 326,
+       "h": 49,
+       "cx": 180,
+       "cy": 837,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 360,
+        "h": 76,
+        "cx": 180,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 17,
+       "y": 397,
+       "w": 326,
+       "h": 49,
+       "cx": 180,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.active",
+       "top_box": {
+        "x": 17,
+        "y": 397,
+        "w": 326,
+        "h": 49,
+        "cx": 180,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "详情 ›",
+     "aria": "查看详情: Central Food Hall",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 26,
+      "cw": 26
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 122,
+       "y": 810,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 832,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.active",
+       "top_box": {
+        "x": 75,
+        "y": 789,
+        "w": 70,
+        "h": 48,
+        "cx": 110,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 122,
+       "y": 400,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.trip-stop-more",
+       "top_box": {
+        "x": 122,
+        "y": 400,
+        "w": 26,
+        "h": 44,
+        "cx": 135,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "收藏到…",
+     "aria": "收藏到…: Nexus River Cruise Pier",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 776,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 798,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 145,
+        "y": 789,
+        "w": 70,
+        "h": 48,
+        "cx": 180,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 88,
+       "y": 428,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 450,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.cn-collect__entry",
+       "top_box": {
+        "x": 88,
+        "y": 428,
+        "w": 242,
+        "h": 44,
+        "cx": 209,
+        "cy": 450,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w360_zh-CN_trips.png"
+  },
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 455,
+   "rows": [
+    {
+     "el": "button.v8-outline-button",
+     "label": "为什么这样安排？",
+     "aria": null,
+     "testid": null,
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 100,
+      "cw": 100
+     },
+     "parent_chain": [
+      {
+       "el": "div.v15-copilot-suggestions",
+       "sx": 286,
+       "cw": 286,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 286,
+       "cw": 286,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 788,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 804,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 75,
+        "y": 789,
+        "w": 70,
+        "h": 48,
+        "cx": 110,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 406,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-outline-button",
+       "top_box": {
+        "x": 37,
+        "y": 406,
+        "w": 102,
+        "h": 32,
+        "cx": 88,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w360_zh-CN_agent.png"
+  },
+  {
+   "vw": 360,
+   "arm": "en",
+   "route": "hub",
+   "url": "http://127.0.0.1:5020/v8/hub",
+   "scroll_max_y": 1984,
+   "rows": [
+    {
+     "el": "button.v8-map-viewport-control",
+     "label": "Fit to my journey",
+     "aria": "The view is on your journey",
+     "testid": "map-viewport-reset",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 147,
+      "cw": 147
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-map-viewport-controls",
+       "sx": 149,
+       "cw": 149,
+       "ox": "visible",
+       "pos": "absolute"
+      },
+      {
+       "el": "div.v8-map-panel",
+       "sx": 325,
+       "cw": 324,
+       "ox": "hidden",
+       "pos": "relative"
+      },
+      {
+       "el": "div.v8-hero-grid",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 181,
+       "y": 788,
+       "w": 149,
+       "h": 36,
+       "cx": 255,
+       "cy": 806,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "path",
+       "top_box": {
+        "x": 244,
+        "y": 795,
+        "w": 13,
+        "h": 14,
+        "cx": 251,
+        "cy": 803,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 181,
+       "y": 404,
+       "w": 149,
+       "h": 36,
+       "cx": 255,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span.v8-map-viewport-control-label",
+       "top_box": {
+        "x": 220,
+        "y": 414,
+        "w": 97,
+        "h": 16,
+        "cx": 268,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Review this plan generation",
+     "aria": null,
+     "testid": "pretrip-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 194,
+      "cw": 194
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pretrip-empty",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pretrip",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 949,
+       "w": 194,
+       "h": 44,
+       "cx": 129,
+       "cy": 971,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-text-button",
+     "label": "Compare stays →",
+     "aria": null,
+     "testid": null,
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 100,
+      "cw": 100
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-section-heading",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 243,
+       "y": 1073,
+       "w": 100,
+       "h": 52,
+       "cx": 293,
+       "cy": 1099,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Filter",
+     "aria": null,
+     "testid": "pending-filter-open",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 35,
+      "cw": 35
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-bar",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 293,
+       "y": 1947,
+       "w": 35,
+       "h": 44,
+       "cx": 311,
+       "cy": 1969,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-primary-button",
+     "label": "Open City Discovery",
+     "aria": null,
+     "testid": "pending-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 294,
+      "cw": 294
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 2067,
+       "w": 296,
+       "h": 44,
+       "cx": 180,
+       "cy": 2089,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Read it again",
+     "aria": null,
+     "testid": "pending-reread",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 92,
+      "cw": 92
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 2121,
+       "w": 92,
+       "h": 44,
+       "cx": 78,
+       "cy": 2143,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w360_en_hub.png"
+  },
+  {
+   "vw": 360,
+   "arm": "en",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1272,
+   "rows": [
+    {
+     "el": "button",
+     "label": "Stay",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 349,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 512,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Bookings",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 681,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 844,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Spend",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 326,
+      "cw": 326
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1322,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1013,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "cx": 1176,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Abort this trip",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 98,
+      "cw": 98
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 292,
+       "cw": 292,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 34,
+       "y": 640,
+       "w": 98,
+       "h": 44,
+       "cx": 83,
+       "cy": 662,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 630,
+        "w": 326,
+        "h": 43,
+        "cx": 180,
+        "cy": 652,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 34,
+       "y": 640,
+       "w": 98,
+       "h": 44,
+       "cx": 83,
+       "cy": 662,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 630,
+        "w": 326,
+        "h": 43,
+        "cx": 180,
+        "cy": 652,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Export calendar",
+     "aria": null,
+     "testid": "calendar-export",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 110,
+      "cw": 110
+     },
+     "parent_chain": [
+      {
+       "el": "div",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-page-intro",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 828,
+       "w": 110,
+       "h": 44,
+       "cx": 72,
+       "cy": 850,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.active",
+     "label": "Sat 10 Oct6 stops",
+     "aria": null,
+     "testid": "trip-day-0",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 324,
+      "cw": 324
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-day-strip",
+       "sx": 326,
+       "cw": 326,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 360,
+       "cw": 360,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 911,
+       "w": 326,
+       "h": 49,
+       "cx": 180,
+       "cy": 935,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Old Town Gate",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 127,
+       "y": 1010,
+       "w": 36,
+       "h": 44,
+       "cx": 145,
+       "cy": 1032,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Old Town Gate",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 169,
+       "y": 1010,
+       "w": 62,
+       "h": 44,
+       "cx": 200,
+       "cy": 1032,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Old Town Gate",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1072,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1094,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Riverside Museum",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 127,
+       "y": 1167,
+       "w": 36,
+       "h": 44,
+       "cx": 145,
+       "cy": 1189,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Riverside Museum",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 169,
+       "y": 1167,
+       "w": 62,
+       "h": 44,
+       "cx": 200,
+       "cy": 1189,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Riverside Museum",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1229,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1251,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Central Food Hall",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 105,
+       "y": 1324,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 1346,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Central Food Hall",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 147,
+       "y": 1324,
+       "w": 62,
+       "h": 44,
+       "cx": 178,
+       "cy": 1346,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Central Food Hall",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1386,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1408,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Tech Art Center",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 127,
+       "y": 1481,
+       "w": 36,
+       "h": 44,
+       "cx": 145,
+       "cy": 1503,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Tech Art Center",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 169,
+       "y": 1481,
+       "w": 62,
+       "h": 44,
+       "cx": 200,
+       "cy": 1503,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Tech Art Center",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1543,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1565,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Nexus River Cruise Pier",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 105,
+       "y": 1638,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 1660,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Nexus River Cruise Pier",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 147,
+       "y": 1638,
+       "w": 62,
+       "h": 44,
+       "cx": 178,
+       "cy": 1660,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Nexus River Cruise Pier",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1700,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1722,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Skyline Dinner House",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 127,
+       "y": 1795,
+       "w": 36,
+       "h": 44,
+       "cx": 145,
+       "cy": 1817,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-stop-checkin",
+     "label": "Check in",
+     "aria": "Check in at Skyline Dinner House",
+     "testid": "stop-checkin",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 62,
+      "cw": 62
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 169,
+       "y": 1795,
+       "w": 62,
+       "h": 44,
+       "cx": 200,
+       "cy": 1817,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Skyline Dinner House",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 240,
+      "cw": 240
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 242,
+       "cw": 242,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 324,
+       "cw": 324,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 1857,
+       "w": 242,
+       "h": 44,
+       "cx": 209,
+       "cy": 1879,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w360_en_trips.png"
+  },
+  {
+   "vw": 360,
+   "arm": "en",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 588,
+   "rows": [
+    {
+     "el": "button.v8-primary",
+     "label": "Ask Copilot",
+     "aria": null,
+     "testid": "v15-copilot-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 140,
+      "cw": 140
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-agent-toolbar",
+       "sx": 286,
+       "cw": 286,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 286,
+       "cw": 286,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 812,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 834,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 75,
+        "y": 789,
+        "w": 70,
+        "h": 48,
+        "cx": 110,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 400,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-primary",
+       "top_box": {
+        "x": 37,
+        "y": 400,
+        "w": 140,
+        "h": 44,
+        "cx": 107,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 360,
+      "h": 76,
+      "cx": 180,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 360,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w360_en_agent.png"
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "route": "hub",
+   "url": "http://127.0.0.1:5020/v8/hub",
+   "scroll_max_y": 1604,
+   "rows": [
+    {
+     "el": "button.v8-map-viewport-control",
+     "label": "回到行程视野",
+     "aria": "视野正落在这段行程上",
+     "testid": "map-viewport-reset",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 128,
+      "cw": 128
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-map-viewport-controls",
+       "sx": 130,
+       "cw": 130,
+       "ox": "visible",
+       "pos": "absolute"
+      },
+      {
+       "el": "div.v8-map-panel",
+       "sx": 355,
+       "cw": 354,
+       "ox": "hidden",
+       "pos": "relative"
+      },
+      {
+       "el": "div.v8-hero-grid",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 230,
+       "y": 750,
+       "w": 130,
+       "h": 36,
+       "cx": 295,
+       "cy": 768,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 390,
+        "h": 76,
+        "cx": 195,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 230,
+       "y": 404,
+       "w": 130,
+       "h": 36,
+       "cx": 295,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span.v8-map-viewport-control-label",
+       "top_box": {
+        "x": 269,
+        "y": 414,
+        "w": 78,
+        "h": 16,
+        "cx": 308,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "去看这一代方案",
+     "aria": null,
+     "testid": "pretrip-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 112,
+      "cw": 112
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pretrip-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pretrip",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 186,
+       "y": 807,
+       "w": 112,
+       "h": 44,
+       "cx": 242,
+       "cy": 829,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 271,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 186,
+       "y": 400,
+       "w": 112,
+       "h": 44,
+       "cx": 242,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-quiet-button",
+       "top_box": {
+        "x": 186,
+        "y": 400,
+        "w": 112,
+        "h": 44,
+        "cx": 242,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "筛选",
+     "aria": null,
+     "testid": "pending-filter-open",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 32,
+      "cw": 32
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-bar",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 326,
+       "y": 1198,
+       "w": 32,
+       "h": 44,
+       "cx": 342,
+       "cy": 1220,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-primary-button",
+     "label": "去城市探索",
+     "aria": null,
+     "testid": "pending-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 324,
+      "cw": 324
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 1318,
+       "w": 326,
+       "h": 44,
+       "cx": 195,
+       "cy": 1340,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "再读一次",
+     "aria": null,
+     "testid": "pending-reread",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 64,
+      "cw": 64
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 1372,
+       "w": 64,
+       "h": 44,
+       "cx": 64,
+       "cy": 1394,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_zh-CN_hub.png"
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1156,
+   "rows": [
+    {
+     "el": "button",
+     "label": "住宿",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 379,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 557,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "预订",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 741,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 919,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "花费",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1103,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 1281,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "中止这趟行程",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 96,
+      "cw": 96
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 322,
+       "cw": 322,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 220,
+       "y": 557,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 579,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 579,
+        "w": 356,
+        "h": 21,
+        "cx": 195,
+        "cy": 590,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 220,
+       "y": 557,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 579,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 579,
+        "w": 356,
+        "h": 21,
+        "cx": 195,
+        "cy": 590,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.active",
+     "label": "10月10日周六6 项",
+     "aria": null,
+     "testid": "trip-day-0",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 354,
+      "cw": 354
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-day-strip",
+       "sx": 356,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 795,
+       "w": 356,
+       "h": 49,
+       "cx": 195,
+       "cy": 820,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span",
+       "top_box": {
+        "x": 182,
+        "y": 816,
+        "w": 26,
+        "h": 17,
+        "cx": 195,
+        "cy": 825,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 17,
+       "y": 397,
+       "w": 356,
+       "h": 49,
+       "cx": 195,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.active",
+       "top_box": {
+        "x": 17,
+        "y": 397,
+        "w": 356,
+        "h": 49,
+        "cx": 195,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "详情 ›",
+     "aria": "查看详情: Central Food Hall",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 26,
+      "cw": 26
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 122,
+       "y": 810,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 832,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.active",
+       "top_box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 119,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 122,
+       "y": 400,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.trip-stop-more",
+       "top_box": {
+        "x": 122,
+        "y": 400,
+        "w": 26,
+        "h": 44,
+        "cx": 135,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "收藏到…",
+     "aria": "收藏到…: Nexus River Cruise Pier",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 270,
+      "cw": 270
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 776,
+       "w": 272,
+       "h": 44,
+       "cx": 224,
+       "cy": 798,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 195,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 88,
+       "y": 428,
+       "w": 272,
+       "h": 44,
+       "cx": 224,
+       "cy": 450,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.cn-collect__entry",
+       "top_box": {
+        "x": 88,
+        "y": 428,
+        "w": 272,
+        "h": 44,
+        "cx": 224,
+        "cy": 450,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_zh-CN_trips.png"
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 433,
+   "rows": [
+    {
+     "el": "button.v8-outline-button",
+     "label": "为什么这样安排？",
+     "aria": null,
+     "testid": null,
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 100,
+      "cw": 100
+     },
+     "parent_chain": [
+      {
+       "el": "div.v15-copilot-suggestions",
+       "sx": 316,
+       "cw": 316,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 316,
+       "cw": 316,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 766,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 782,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 390,
+        "h": 76,
+        "cx": 195,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 406,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-outline-button",
+       "top_box": {
+        "x": 37,
+        "y": 406,
+        "w": 102,
+        "h": 32,
+        "cx": 88,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_zh-CN_agent.png"
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "route": "hub",
+   "url": "http://127.0.0.1:5020/v8/hub",
+   "scroll_max_y": 1849,
+   "rows": [
+    {
+     "el": "button.v8-map-viewport-control",
+     "label": "Fit to my journey",
+     "aria": "The view is on your journey",
+     "testid": "map-viewport-reset",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 147,
+      "cw": 147
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-map-viewport-controls",
+       "sx": 149,
+       "cw": 149,
+       "ox": "visible",
+       "pos": "absolute"
+      },
+      {
+       "el": "div.v8-map-panel",
+       "sx": 355,
+       "cw": 354,
+       "ox": "hidden",
+       "pos": "relative"
+      },
+      {
+       "el": "div.v8-hero-grid",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 211,
+       "y": 769,
+       "w": 149,
+       "h": 36,
+       "cx": 285,
+       "cy": 787,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 390,
+        "h": 76,
+        "cx": 195,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 211,
+       "y": 404,
+       "w": 149,
+       "h": 36,
+       "cx": 285,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span.v8-map-viewport-control-label",
+       "top_box": {
+        "x": 250,
+        "y": 414,
+        "w": 97,
+        "h": 16,
+        "cx": 298,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Review this plan generation",
+     "aria": null,
+     "testid": "pretrip-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 194,
+      "cw": 194
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pretrip-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pretrip",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 870,
+       "w": 194,
+       "h": 44,
+       "cx": 129,
+       "cy": 892,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-text-button",
+     "label": "Compare stays →",
+     "aria": null,
+     "testid": null,
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 109,
+      "cw": 109
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-section-heading",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 264,
+       "y": 995,
+       "w": 109,
+       "h": 52,
+       "cx": 318,
+       "cy": 1021,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Filter",
+     "aria": null,
+     "testid": "pending-filter-open",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 35,
+      "cw": 35
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-bar",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 323,
+       "y": 1831,
+       "w": 35,
+       "h": 44,
+       "cx": 341,
+       "cy": 1853,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-primary-button",
+     "label": "Open City Discovery",
+     "aria": null,
+     "testid": "pending-empty-action",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 324,
+      "cw": 324
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 1951,
+       "w": 326,
+       "h": 44,
+       "cx": 195,
+       "cy": 1973,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Read it again",
+     "aria": null,
+     "testid": "pending-reread",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 92,
+      "cw": 92
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-pending-empty-actions",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-pending-empty",
+       "sx": 326,
+       "cw": 326,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-pending",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 32,
+       "y": 2005,
+       "w": 92,
+       "h": 44,
+       "cx": 78,
+       "cy": 2027,
+       "center_x_inside": true,
+       "center_y_inside": false
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_en_hub.png"
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1212,
+   "rows": [
+    {
+     "el": "button",
+     "label": "Stay",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 379,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 557,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Bookings",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 741,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 919,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Spend",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 356,
+      "cw": 356
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1442,
+       "cw": 356,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1103,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "cx": 1281,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Abort this trip",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 98,
+      "cw": 98
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 322,
+       "cw": 322,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 240,
+       "y": 591,
+       "w": 98,
+       "h": 44,
+       "cx": 289,
+       "cy": 613,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 613,
+        "w": 356,
+        "h": 21,
+        "cx": 195,
+        "cy": 624,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 240,
+       "y": 591,
+       "w": 98,
+       "h": 44,
+       "cx": 289,
+       "cy": 613,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 613,
+        "w": 356,
+        "h": 21,
+        "cx": 195,
+        "cy": 624,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Export calendar",
+     "aria": null,
+     "testid": "calendar-export",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 110,
+      "cw": 110
+     },
+     "parent_chain": [
+      {
+       "el": "div",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-page-intro",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 390,
+       "cw": 390,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 768,
+       "w": 110,
+       "h": 44,
+       "cx": 72,
+       "cy": 790,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 43,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 17,
+       "y": 400,
+       "w": 110,
+       "h": 44,
+       "cx": 72,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-quiet-button",
+       "top_box": {
+        "x": 17,
+        "y": 400,
+        "w": 110,
+        "h": 44,
+        "cx": 72,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Riverside Museum",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 270,
+      "cw": 270
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 801,
+       "w": 272,
+       "h": 44,
+       "cx": 224,
+       "cy": 823,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 195,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 88,
+       "y": 400,
+       "w": 272,
+       "h": 44,
+       "cx": 224,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.cn-collect__entry",
+       "top_box": {
+        "x": 88,
+        "y": 400,
+        "w": 272,
+        "h": 44,
+        "cx": 224,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Nexus River Cruise Pier",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 272,
+       "cw": 272,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 354,
+       "cw": 354,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 105,
+       "y": 809,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 831,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span",
+       "top_box": {
+        "x": 104,
+        "y": 816,
+        "w": 29,
+        "h": 17,
+        "cx": 119,
+        "cy": 825,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 105,
+       "y": 400,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.trip-stop-more",
+       "top_box": {
+        "x": 105,
+        "y": 400,
+        "w": 36,
+        "h": 44,
+        "cx": 123,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_en_trips.png"
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 566,
+   "rows": [
+    {
+     "el": "button.v8-primary",
+     "label": "Ask Copilot",
+     "aria": null,
+     "testid": "v15-copilot-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 140,
+      "cw": 140
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-agent-toolbar",
+       "sx": 316,
+       "cw": 316,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 316,
+       "cw": 316,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 356,
+       "cw": 356,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 790,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 812,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48,
+        "cx": 119,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 400,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-primary",
+       "top_box": {
+        "x": 37,
+        "y": 400,
+        "w": 140,
+        "h": 44,
+        "cx": 107,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 390,
+      "h": 76,
+      "cx": 195,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 390,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w390_en_agent.png"
+  },
+  {
+   "vw": 414,
+   "arm": "zh-CN",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1139,
+   "rows": [
+    {
+     "el": "button",
+     "label": "住宿",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 403,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 593,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "预订",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 789,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 979,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "花费",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1175,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 1365,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "中止这趟行程",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 96,
+      "cw": 96
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 346,
+       "cw": 346,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 220,
+       "y": 540,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 562,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 562,
+        "w": 380,
+        "h": 21,
+        "cx": 207,
+        "cy": 573,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 220,
+       "y": 540,
+       "w": 96,
+       "h": 44,
+       "cx": 268,
+       "cy": 562,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 562,
+        "w": 380,
+        "h": 21,
+        "cx": 207,
+        "cy": 573,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.active",
+     "label": "10月10日周六6 项",
+     "aria": null,
+     "testid": "trip-day-0",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 378,
+      "cw": 378
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-day-strip",
+       "sx": 380,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 778,
+       "w": 380,
+       "h": 49,
+       "cx": 207,
+       "cy": 803,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "svg",
+       "top_box": {
+        "x": 197,
+        "y": 793,
+        "w": 19,
+        "h": 19,
+        "cx": 207,
+        "cy": 803,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 17,
+       "y": 397,
+       "w": 380,
+       "h": 49,
+       "cx": 207,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.active",
+       "top_box": {
+        "x": 17,
+        "y": 397,
+        "w": 380,
+        "h": 49,
+        "cx": 207,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "详情 ›",
+     "aria": "查看详情: Central Food Hall",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 26,
+      "cw": 26
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 122,
+       "y": 810,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 832,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span",
+       "top_box": {
+        "x": 113,
+        "y": 816,
+        "w": 26,
+        "h": 17,
+        "cx": 126,
+        "cy": 825,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 122,
+       "y": 400,
+       "w": 26,
+       "h": 44,
+       "cx": 135,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.trip-stop-more",
+       "top_box": {
+        "x": 122,
+        "y": 400,
+        "w": 26,
+        "h": 44,
+        "cx": 135,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "收藏到…",
+     "aria": "收藏到…: Nexus River Cruise Pier",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 294,
+      "cw": 294
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 776,
+       "w": 296,
+       "h": 44,
+       "cx": 236,
+       "cy": 798,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 167,
+        "y": 789,
+        "w": 81,
+        "h": 48,
+        "cx": 207,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 88,
+       "y": 428,
+       "w": 296,
+       "h": 44,
+       "cx": 236,
+       "cy": 450,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.cn-collect__entry",
+       "top_box": {
+        "x": 88,
+        "y": 428,
+        "w": 296,
+        "h": 44,
+        "cx": 236,
+        "cy": 450,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w414_zh-CN_trips.png"
+  },
+  {
+   "vw": 414,
+   "arm": "zh-CN",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 433,
+   "rows": [
+    {
+     "el": "button.v8-outline-button",
+     "label": "为什么这样安排？",
+     "aria": null,
+     "testid": null,
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 100,
+      "cw": 100
+     },
+     "parent_chain": [
+      {
+       "el": "div.v15-copilot-suggestions",
+       "sx": 340,
+       "cw": 340,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 340,
+       "cw": 340,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 766,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 782,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 414,
+        "h": 76,
+        "cx": 207,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 406,
+       "w": 102,
+       "h": 32,
+       "cx": 88,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-outline-button",
+       "top_box": {
+        "x": 37,
+        "y": 406,
+        "w": 102,
+        "h": 32,
+        "cx": 88,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w414_zh-CN_agent.png"
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "route": "trips",
+   "url": "http://127.0.0.1:5020/v8/trips",
+   "scroll_max_y": 1195,
+   "rows": [
+    {
+     "el": "button",
+     "label": "Stay",
+     "aria": null,
+     "testid": "trips-tab-stay",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 403,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 593,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Bookings",
+     "aria": null,
+     "testid": "trips-tab-bookings",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 789,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 979,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button",
+     "label": "Spend",
+     "aria": null,
+     "testid": "trips-tab-spend",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 380,
+      "cw": 380
+     },
+     "parent_chain": [
+      {
+       "el": "nav.trips-tabs",
+       "sx": 1538,
+       "cw": 380,
+       "ox": "auto",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-product-shell",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 1175,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "cx": 1365,
+       "cy": 125,
+       "center_x_inside": false,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": null,
+       "top_box": null,
+       "z": null,
+       "pos": null,
+       "hits_self": false
+      }
+     },
+     "after": null,
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Abort this trip",
+     "aria": null,
+     "testid": "journey-abort-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 98,
+      "cw": 98
+     },
+     "parent_chain": [
+      {
+       "el": "details.cn-abort__form",
+       "sx": 346,
+       "cw": 346,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.cn-abort",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "main.v8-main",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 240,
+       "y": 574,
+       "w": 98,
+       "h": 44,
+       "cx": 289,
+       "cy": 596,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 596,
+        "w": 380,
+        "h": 21,
+        "cx": 207,
+        "cy": 607,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 240,
+       "y": 574,
+       "w": 98,
+       "h": 44,
+       "cx": 289,
+       "cy": 596,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "p.v8-lede",
+       "top_box": {
+        "x": 17,
+        "y": 596,
+        "w": 380,
+        "h": 21,
+        "cx": 207,
+        "cy": 607,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.v8-quiet-button",
+     "label": "Export calendar",
+     "aria": null,
+     "testid": "calendar-export",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 110,
+      "cw": 110
+     },
+     "parent_chain": [
+      {
+       "el": "div",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-page-intro",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-content",
+       "sx": 414,
+       "cw": 414,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 17,
+       "y": 751,
+       "w": 110,
+       "h": 44,
+       "cx": 72,
+       "cy": 773,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "nav.v8-mobile-nav",
+       "top_box": {
+        "x": 0,
+        "y": 768,
+        "w": 414,
+        "h": 76,
+        "cx": 207,
+        "cy": 806,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "10",
+       "pos": "fixed",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 17,
+       "y": 400,
+       "w": 110,
+       "h": 44,
+       "cx": 72,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-quiet-button",
+       "top_box": {
+        "x": 17,
+        "y": 400,
+        "w": 110,
+        "h": 44,
+        "cx": 72,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.cn-collect__entry",
+     "label": "Collect into…",
+     "aria": "Collect into…: Riverside Museum",
+     "testid": "collect-entry",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 294,
+      "cw": 294
+     },
+     "parent_chain": [
+      {
+       "el": "div.cn-collect",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.cn-stop-collect-host",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 88,
+       "y": 801,
+       "w": 296,
+       "h": 44,
+       "cx": 236,
+       "cy": 823,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 167,
+        "y": 789,
+        "w": 81,
+        "h": 48,
+        "cx": 207,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 88,
+       "y": 400,
+       "w": 296,
+       "h": 44,
+       "cx": 236,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.cn-collect__entry",
+       "top_box": {
+        "x": 88,
+        "y": 400,
+        "w": 296,
+        "h": 44,
+        "cx": 236,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    },
+    {
+     "el": "button.trip-stop-more",
+     "label": "Details ›",
+     "aria": "View details: Nexus River Cruise Pier",
+     "testid": "trip-stop-details",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 36,
+      "cw": 36
+     },
+     "parent_chain": [
+      {
+       "el": "div.trip-stop-meta",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-stop-body",
+       "sx": 296,
+       "cw": 296,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "article.trip-stop",
+       "sx": 378,
+       "cw": 378,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.trip-day-detail",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 105,
+       "y": 809,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 831,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "span",
+       "top_box": {
+        "x": 112,
+        "y": 816,
+        "w": 29,
+        "h": 17,
+        "cx": 126,
+        "cy": 825,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 105,
+       "y": 400,
+       "w": 36,
+       "h": 44,
+       "cx": 123,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.trip-stop-more",
+       "top_box": {
+        "x": 105,
+        "y": 400,
+        "w": 36,
+        "h": 44,
+        "cx": 123,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w414_en_trips.png"
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "route": "agent",
+   "url": "http://127.0.0.1:5020/v8/agent",
+   "scroll_max_y": 493,
+   "rows": [
+    {
+     "el": "button.v8-primary",
+     "label": "Ask Copilot",
+     "aria": null,
+     "testid": "v15-copilot-submit",
+     "overflow_of_self": {
+      "ox": "visible",
+      "sx": 140,
+      "cw": 140
+     },
+     "parent_chain": [
+      {
+       "el": "div.v8-agent-toolbar",
+       "sx": 340,
+       "cw": 340,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-input",
+       "sx": 340,
+       "cw": 340,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "div.v8-agent-composer-card",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      },
+      {
+       "el": "section.v8-page",
+       "sx": 380,
+       "cw": 380,
+       "ox": "visible",
+       "pos": "static"
+      }
+     ],
+     "before": {
+      "box": {
+       "x": 37,
+       "y": 770,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 792,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button",
+       "top_box": {
+        "x": 86,
+        "y": 789,
+        "w": 81,
+        "h": 48,
+        "cx": 126,
+        "cy": 813,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": false
+      }
+     },
+     "after": {
+      "box": {
+       "x": 37,
+       "y": 400,
+       "w": 140,
+       "h": 44,
+       "cx": 107,
+       "cy": 422,
+       "center_x_inside": true,
+       "center_y_inside": true
+      },
+      "hit": {
+       "top": "button.v8-primary",
+       "top_box": {
+        "x": 37,
+        "y": 400,
+        "w": 140,
+        "h": 44,
+        "cx": 107,
+        "cy": 422,
+        "center_x_inside": true,
+        "center_y_inside": true
+       },
+       "z": "auto",
+       "pos": "static",
+       "hits_self": true
+      }
+     },
+     "nav_box": {
+      "x": 0,
+      "y": 768,
+      "w": 414,
+      "h": 76,
+      "cx": 207,
+      "cy": 806,
+      "center_x_inside": true,
+      "center_y_inside": true
+     },
+     "vw": 414,
+     "vh": 844
+    }
+   ],
+   "shot": "D:\\moodle\\_qoder_anchor_rulers_20261002\\ord0561_shots_CV2-001835/cover_w414_en_agent.png"
+  }
+ ],
+ "errors": []
+}

@@ -1,0 +1,374 @@
+{
+ "base": "http://127.0.0.1:4990",
+ "legs": [
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "armed": true,
+   "centered": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 574,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_mouse": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 574,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 574,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_element_click": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 574,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 596
+    },
+    "center_top": "section.cn-abort",
+    "center_hits_self": true,
+    "received_clicks": 3,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程必须写原因。空着会被拒绝，而不是存下一"
+   },
+   "mouse_reached": false,
+   "touch_reached": false,
+   "js_reached": true
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "armed": true,
+   "centered": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 557,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 579
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_mouse": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 557,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 579
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 557,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 579
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程"
+   },
+   "after_element_click": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "中止这趟行程",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 220,
+     "y": 557,
+     "w": 96,
+     "h": 44
+    },
+    "center": {
+     "x": 268,
+     "y": 579
+    },
+    "center_top": "section.cn-abort",
+    "center_hits_self": true,
+    "received_clicks": 3,
+    "panel_text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。中止这趟行程中止的原因（会随行程一起存下）中止这趟行程必须写原因。空着会被拒绝，而不是存下一"
+   },
+   "mouse_reached": false,
+   "touch_reached": false,
+   "js_reached": true
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "armed": true,
+   "centered": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 591,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 613
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_mouse": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 591,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 613
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 591,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 613
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_element_click": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 591,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 613
+    },
+    "center_top": "div.cn-abort__refusal",
+    "center_hits_self": false,
+    "received_clicks": 3,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "mouse_reached": false,
+   "touch_reached": false,
+   "js_reached": true
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "armed": true,
+   "centered": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 574,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_mouse": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 574,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 574,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 596
+    },
+    "center_top": "p.v8-lede",
+    "center_hits_self": false,
+    "received_clicks": 0,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "after_element_click": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "has_button": true,
+    "label": "Abort this trip",
+    "type": "button",
+    "disabled": false,
+    "box": {
+     "x": 240,
+     "y": 574,
+     "w": 98,
+     "h": 44
+    },
+    "center": {
+     "x": 289,
+     "y": 596
+    },
+    "center_top": "div.cn-abort__refusal",
+    "center_hits_self": false,
+    "received_clicks": 3,
+    "panel_text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards"
+   },
+   "mouse_reached": false,
+   "touch_reached": false,
+   "js_reached": true
+  }
+ ],
+ "errors": []
+}

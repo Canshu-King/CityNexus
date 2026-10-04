@@ -1,0 +1,113 @@
+# -*- coding: utf-8 -*-
+"""读走查件，按用户能感觉到的五形分档，并把"被底栏盖住"那形交给第二条腿（滚到底再命中）。
+
+只报渲染文字里读到的东西；几何腿用来判重叠与出缘。已知不重复报的两形在这里显式排除并计数，
+免得我把自己上一手的结论又当成新缺陷交上去。
+"""
+from __future__ import annotations
+
+import io
+import json
+import re
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+SRC = sys.argv[1]
+doc = json.load(io.open(SRC, encoding="utf-8"))
+HAN = re.compile(r"[\u4e00-\u9fff]")
+ENUM = re.compile(r"\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b")
+SNAKE = re.compile(r"\b[a-z][a-z0-9]*(?:_[a-z0-9]+){2,}\b")
+DOTTED = re.compile(r"\b[a-z][A-Za-z0-9]*\.[a-z][A-Za-z0-9_.]+\b")
+# 号令者点名不重复报的两形
+KNOWN = {"SYNTHETIC_DEFAULT"}
+
+rows = []
+for c in doc["cells"]:
+    text = c["text"]
+    lines = [l.strip() for l in text.split("\n") if l.strip()]
+    enum = sorted({m.group(0) for m in ENUM.finditer(text)} - KNOWN)
+    snake = sorted({m.group(0) for m in SNAKE.finditer(text)})
+    dotted = sorted({m.group(0) for m in DOTTED.finditer(text)})
+    han_lines = [l for l in lines if HAN.search(l)]
+    toggle = c.get("toggle_text")
+    han_en = [l for l in han_lines if c["arm"] == "en" and l != toggle]
+    cov = [b for b in c["buttons"] if not b["center_hits_self"]]
+    off = [b for b in c["buttons"] if not b["in_viewport"]]
+    dis = [b for b in c["buttons"] if b["disabled"]]
+    unnamed = [b for b in c["buttons"] if not b["label"] and not b["aria"]]
+    rows.append({
+        "vw": c["vw"], "arm": c["arm"], "key": c["key"], "entered_by": c["entered_by"],
+        "url": c["url"], "nav_present": c["nav_present"], "chars": len(text),
+        "lines": len(lines), "headings": c["headings"][:3],
+        "doc_scroll_w": c["doc_scroll_w"], "overflow_x": c["doc_scroll_w"] > c["vw"],
+        "enum": enum, "snake": snake[:6], "dotted": dotted[:6],
+        "han_en_lines": len(han_en), "han_en_samples": han_en[:3],
+        "toggle_only": (len(han_lines) == 1 and toggle is not None),
+        "covered": [b["el"] + "|" + (b["label"] or b["aria"] or "?") + "->" + str(b["hit_by"])
+                    for b in cov],
+        "covered_n": len(cov), "off_viewport_n": len(off), "off_viewport":
+                    [b["el"] + "|" + (b["label"] or b["aria"] or "?") for b in off],
+        "disabled": [b["label"] or b["aria"] or b["el"] for b in dis],
+        "unnamed": [b["el"] for b in unnamed],
+        "ellipsis_lines": [l for l in lines if l.endswith(("...", "…"))][:3],
+        "blank": len(lines) <= 3,
+    })
+
+print("cells=%d widths=%s arms=%s keys=%s"
+      % (len(rows), sorted({r["vw"] for r in rows}), sorted({r["arm"] for r in rows}),
+         sorted({r["key"] for r in rows})))
+print("walk_errors=%s" % (doc.get("errors"),))
+for r in rows:
+    flag = []
+    if r["overflow_x"]:
+        flag.append("横向溢出")
+    if r["enum"]:
+        flag.append("枚举机词")
+    if r["snake"]:
+        flag.append("下划线机词")
+    if r["dotted"]:
+        flag.append("点号键名")
+    if r["han_en_lines"]:
+        flag.append("英文臂嵌中文%d" % r["han_en_lines"])
+    if r["covered_n"]:
+        flag.append("中心被盖%d" % r["covered_n"])
+    if r["off_viewport_n"]:
+        flag.append("中心在视口外%d" % r["off_viewport_n"])
+    if r["disabled"]:
+        flag.append("禁用%d" % len(r["disabled"]))
+    if r["unnamed"]:
+        flag.append("无 accessibility 名%d" % len(r["unnamed"]))
+    if r["blank"]:
+        flag.append("近空白屏")
+    if r["entered_by"] != "nav_click":
+        flag.append(r["entered_by"])
+    print("w%(vw)d %(arm)-5s %(key)-6s chars=%(chars)-5d nav=%(nav_present)-5s doc_sw=%(doc_scroll_w)-4d "
+          "h1=%(headings)s | %(flags)s" % dict(r, flags=",".join(flag) or "无"))
+    for k in ("enum", "snake", "dotted", "han_en_samples", "covered", "off_viewport",
+              "disabled", "unnamed", "ellipsis_lines"):
+        if r[k]:
+            print("      %-14s %s" % (k, json.dumps(r[k], ensure_ascii=False)[:230]))
+
+agg = {}
+for r in rows:
+    agg.setdefault(r["key"], {"cells": 0, "covered": 0, "enum": 0, "han_en": 0, "overflow": 0,
+                              "off": 0, "unnamed": 0})
+    a = agg[r["key"]]
+    a["cells"] += 1
+    a["covered"] += r["covered_n"]
+    a["off"] += r["off_viewport_n"]
+    a["enum"] += 1 if r["enum"] else 0
+    a["han_en"] += r["han_en_lines"]
+    a["overflow"] += 1 if r["overflow_x"] else 0
+    a["unnamed"] += len(r["unnamed"])
+print("\n按屏汇总（分母=该屏在这三档两臂下的格数）")
+for k, a in sorted(agg.items()):
+    print("  %-6s 格=%d 中心被盖=%d 视口外=%d 机词格=%d 英文臂中文行=%d 横向溢出格=%d 无名按钮=%d"
+          % (k, a["cells"], a["covered"], a["off"], a["enum"], a["han_en"], a["overflow"],
+             a["unnamed"]))
+need = [(r["vw"], r["arm"], r["key"], r["covered"]) for r in rows if r["covered_n"]]
+print("\n要第二条腿（滚到底再命中）的格：%d" % len(need))
+for n in need:
+    print("   w%d %s %s %s" % n)
+json.dump(rows, io.open(SRC + ".rows.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("ROWS", SRC + ".rows.json")

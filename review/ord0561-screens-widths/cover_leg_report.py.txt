@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+"""读第二腿的件：谁盖了谁、滚到居中之后还盖不盖、容器是不是横向可滚。
+
+只把"滚到居中后仍被别的元素接走中心点"的算缺陷候选——首帧外是布局顺序，不算不可达。
+"""
+import io
+import json
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+SRC = sys.argv[1]
+d = json.load(io.open(SRC, encoding="utf-8"))
+still = []
+print("legs=" + str(len(d["legs"])))
+for L in d["legs"]:
+    for r in L["rows"]:
+        b, a = r["before"], r["after"]
+        bcx, bcy = b["box"]["cx"], b["box"]["cy"]
+        hit = b["hit"]["top"]
+        if a:
+            acx, acy, ahit = a["box"]["cx"], a["box"]["cy"], a["hit"]["top"]
+            verdict = "仍被接走" if ahit not in (r["el"], None) and ahit != r["el"] else "滚后自己接住"
+            own_after = (ahit == r["el"])
+        else:
+            acx = acy = ahit = "-"
+            verdict = "中心本来就在屏外"
+            own_after = None
+        par = r["parent_chain"][0] if r["parent_chain"] else {}
+        line = ("w{vw} {arm} {route} | {el} [{label}] 中心({bcx},{bcy})->{hit} "
+                "| 滚到居中后 中心({acx},{acy})->{ahit} => {verdict} "
+                "| 父容器 {pel} scroll={sx}/client={cw} overflow-x={ox}").format(
+                    vw=L["vw"], arm=L["arm"], route=L["route"], el=r["el"],
+                    label=(r["label"] or r["aria"] or "?")[:16], bcx=bcx, bcy=bcy, hit=hit,
+                    acx=acx, acy=acy, ahit=ahit, verdict=verdict,
+                    pel=par.get("el", "-"), sx=par.get("sx", "-"), cw=par.get("cw", "-"),
+                    ox=par.get("ox", "-"))
+        print(line)
+        if own_after is False:
+            still.append((L["vw"], L["arm"], L["route"], r["el"], r["label"], hit, ahit))
+print()
+print("=== 滚到居中后中心仍被别的元素接走（缺陷候选）: %d 枚 ===" % len(still))
+for s in still:
+        print("   w%d %s %s | %s [%s] 改前被 %s 接走 → 滚后被 %s 接走" % s)

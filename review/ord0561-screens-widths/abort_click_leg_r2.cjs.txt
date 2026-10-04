@@ -1,0 +1,99 @@
+// ORD-0561 补档第四腿 r2：那枚"中止这趟行程"到底收不收得到点击——用计数器直接量，
+// 不再靠"页面状态变了没"猜。三种打法各量一次：真鼠标点中心、真手指点中心、元素自己的 click()。
+// 只挂监听不改产品字节；不填原因、不碰那扇真正会写库的门。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.AB_BASE;
+const OUT = process.env.AB_OUT;
+const SHOTDIR = process.env.AB_SHOTS;
+const JID = process.env.AB_JID;
+const CELLS = (process.env.AB_CELLS || "360:zh-CN,390:zh-CN,390:en,414:en").split(",").map((s) => {
+  const [vw, arm] = s.split(":");
+  return { vw: Number(vw), arm };
+});
+
+const BTN = "[data-testid='journey-abort-submit']";
+const STATE = () => {
+  const btn = document.querySelector("[data-testid='journey-abort-submit']");
+  const sec = btn ? btn.closest("section") : null;
+  const r = btn ? btn.getBoundingClientRect() : null;
+  const cx = r ? Math.round(r.x + r.width / 2) : null;
+  const cy = r ? Math.round(r.y + r.height / 2) : null;
+  const top = cx !== null ? document.elementFromPoint(cx, cy) : null;
+  return { url: location.href, has_button: !!btn, label: btn ? (btn.textContent || "").trim() : null,
+           type: btn ? btn.getAttribute("type") : null, disabled: btn ? btn.disabled === true : null,
+           box: r ? { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) } : null,
+           center: { x: cx, y: cy },
+           center_top: top ? (top.tagName.toLowerCase() + (typeof top.className === "string" && top.className
+                             ? "." + top.className.trim().split(/\s+/)[0] : "")) : null,
+           center_hits_self: !!top && !!btn && (top === btn || btn.contains(top) || top.contains(btn)),
+           received_clicks: (window.__cnAbortClicks || 0),
+           panel_text: sec ? (sec.textContent || "").replace(/\s+/g, " ").trim().slice(0, 160) : null };
+};
+const ARM = () => {
+  window.__cnAbortClicks = 0;
+  const b = document.querySelector("[data-testid='journey-abort-submit']");
+  if (b) { b.addEventListener("click", () => { window.__cnAbortClicks = (window.__cnAbortClicks || 0) + 1; }); }
+  return !!b;
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, legs: [], errors: [] };
+  for (const spec of CELLS) {
+    const ctx = await browser.newContext({ viewport: { width: spec.vw, height: 844 },
+      deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+      locale: spec.arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    const leg = { vw: spec.vw, arm: spec.arm };
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", spec.arm]);
+      await page.goto(BASE + "/v8/trips", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(3500);
+      leg.armed = await page.evaluate(ARM);
+      await page.evaluate((sel) => { const b = document.querySelector(sel); if (b) { b.scrollIntoView({ block: "center" }); } }, BTN);
+      await page.waitForTimeout(400);
+      leg.centered = await page.evaluate(STATE);
+      await page.screenshot({ path: SHOTDIR + "/abort2_center_w" + spec.vw + "_" + spec.arm + ".png" })
+        .catch(() => rep.errors.push("shot center"));
+      await page.mouse.click(leg.centered.center.x, leg.centered.center.y);
+      await page.waitForTimeout(900);
+      leg.after_mouse = await page.evaluate(STATE);
+      await page.evaluate(ARM);
+      await page.touchscreen.tap(leg.centered.center.x, leg.centered.center.y);
+      await page.waitForTimeout(900);
+      leg.after_touch = await page.evaluate(STATE);
+      await page.evaluate(ARM);
+      await page.evaluate((sel) => { const b = document.querySelector(sel); if (b) { b.click(); } }, BTN);
+      await page.waitForTimeout(900);
+      leg.after_element_click = await page.evaluate(STATE);
+      leg.mouse_reached = leg.after_mouse.received_clicks > 0;
+      leg.touch_reached = leg.after_touch.received_clicks > 0;
+      leg.js_reached = leg.after_element_click.received_clicks > 0;
+      rep.legs.push(leg);
+      console.log("w%d %s | 按钮 %s×%s 中心(%d,%d) 接中心者=%s 命中自己=%s disabled=%s type=%s",
+        spec.vw, spec.arm, leg.centered.box.w, leg.centered.box.h, leg.centered.center.x,
+        leg.centered.center.y, leg.centered.center_top, leg.centered.center_hits_self,
+        leg.centered.disabled, leg.centered.type);
+      console.log("    收到点击计数：真鼠标=%d 真手指=%d 元素 click()=%d  (=> 鼠标到达=%s 手指到达=%s JS 到达=%s)",
+        leg.after_mouse.received_clicks, leg.after_touch.received_clicks,
+        leg.after_element_click.received_clicks, leg.mouse_reached, leg.touch_reached, leg.js_reached);
+      console.log("    面板文字（改前）%s", (leg.centered.panel_text || "").slice(0, 90));
+      console.log("    面板文字（JS 后）%s", (leg.after_element_click.panel_text || "").slice(0, 90));
+    } catch (e) {
+      rep.errors.push(spec.vw + "/" + spec.arm + " " + (e.message || String(e)).slice(0, 120));
+    } finally {
+      await ctx.close().catch(() => {});
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  console.log("legs=%d errors=%d", rep.legs.length, rep.errors.length);
+})();

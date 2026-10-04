@@ -1,0 +1,54 @@
+{
+ "run_id": "LG-235946",
+ "live_tip": "45207a0cc0fcae000b619753b4dfccb06594a59f",
+ "tip_read_at": "23:59:50",
+ "tracked_dirty": [],
+ "untracked_left_by_others": [
+  "?? review/ord0502/report-ORD0502-164201.json",
+  "?? review/ord0502/walk-ORD0502-164201.json"
+ ],
+ "probes": {
+  "widths": "ord0561_widths_probe_r1.cjs",
+  "walk": "ord0561_walk_r3.cjs",
+  "cover": "ord0561_cover_leg_r1.cjs"
+ },
+ "tree_at": "45207a0cc0fcae000b619753b4dfccb06594a59f",
+ "tip_has_padding_rule": true,
+ "build_rc": 0,
+ "build_secs": 7.7,
+ "private_backend_port": 4941,
+ "private_front_port": 4950,
+ "backend_pid": 98176,
+ "ensure_http_status": 200,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "entry": {
+  "asset": "index-iZ6I1MKH.js",
+  "http_status": 200,
+  "bytes": 1623095,
+  "served_equals_disk": true,
+  "disk_sha1": "c1b65cc2c9bb8b4c59b554c6181b51eddb1e19fa"
+ },
+ "widths": {
+  "rc": 0,
+  "cells": 12,
+  "clipped_n": 0,
+  "errors": [],
+  "artifact": "widths_at_tip_LG-235946.json"
+ },
+ "walk": {
+  "rc": 0,
+  "cells": 30,
+  "errors": [],
+  "artifact": "walk_at_tip_LG-235946.json"
+ },
+ "walk_stdout_tail": "d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en hub nav_click 2093 22 5 5 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en trips nav_click 1364 36 24 19 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en map nav_click 1003 20 8 8 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en agent nav_click 857 14 4 2 414 true\nw414 %-5s %-6s by=%-20s chars=%-5d btn=%-3d covered=%-2d offscreen=%-2d doc_sw=%-4d nav=en me nav_click 642 12 2 2 414 true\n",
+ "cover": {
+  "rc": 0,
+  "legs": 15,
+  "errors": [],
+  "artifact": "cover_at_tip_LG-235946.json"
+ },
+ "cover_stdout_tail": "a(scroll=296/client=296,ox=visible) < div.trip-stop-body(scroll=296/client=296,ox=visible) < article.trip-stop(scroll=378/client=378,ox=visible) < div.trip-day-detail(scroll=380/client=380,ox=visible)\nw414 en agent 视口内没命中自己的按钮 1 枚\n   button.v8-primary [Ask Copilot] 中心(107,792) 盖住者=button z=auto pos=static | 滚到居中后 中心(107,422) 盖住者=button.v8-primary\n      父链 div.v8-agent-toolbar(scroll=340/client=340,ox=visible) < div.v8-agent-input(scroll=340/client=340,ox=visible) < div.v8-agent-composer-card(scroll=380/client=380,ox=visible) < section.v8-page(scroll=380/client=380,ox=visible)\nlegs=15 errors=0\n",
+ "backend_exit": 1,
+ "BAD": []
+}

@@ -1,0 +1,113 @@
+// ORD-0561 补档第二腿 r2：把"中心没命中自己"的那些按钮逐枚打开看——谁盖的、盖在哪、
+// 滚进视口之后还盖不盖。判据照号令者那条：首帧外是布局顺序，不算不可达；
+// 所以只有"滚到居中后仍被别的元素接走中心点"才留作缺陷。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.CC_BASE;
+const OUT = process.env.CC_OUT;
+const SHOTDIR = process.env.CC_SHOTS;
+const JID = process.env.CC_JID;
+// "vw:arm:route" 三枚一组，逗号分隔——只走第一趟里出现"视口内被盖"的那些格
+const CELLS = (process.env.CC_CELLS || "").split(",").filter(Boolean).map((s) => {
+  const [vw, arm, route] = s.split(":");
+  return { vw: Number(vw), arm, route };
+});
+
+const PROBE = () => {
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+  };
+  const desc = (el) => el ? (el.tagName.toLowerCase()
+    + (el.id ? "#" + el.id : "")
+    + (typeof el.className === "string" && el.className ? "." + el.className.trim().split(/\s+/)[0] : "")) : null;
+  const box = (el) => {
+    const r = el.getBoundingClientRect();
+    return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height),
+             cx: Math.round(r.x + r.width / 2), cy: Math.round(r.y + r.height / 2),
+             center_x_inside: (r.x + r.width / 2) >= 0 && (r.x + r.width / 2) <= window.innerWidth,
+             center_y_inside: (r.y + r.height / 2) >= 0 && (r.y + r.height / 2) <= window.innerHeight };
+  };
+  const hitAt = (b, self) => {
+    const top = document.elementFromPoint(b.cx, b.cy);
+    return { top: desc(top), top_box: top ? box(top) : null,
+             z: top ? getComputedStyle(top).zIndex : null,
+             pos: top ? getComputedStyle(top).position : null,
+             hits_self: !!top && !!self && (top === self || self.contains(top) || top.contains(self)) };
+  };
+  const nav = document.querySelector(".v8-mobile-nav");
+  const rows = [];
+  for (const b of Array.from(document.querySelectorAll("button")).filter(vis)) {
+    const r = box(b);
+    const top = document.elementFromPoint(r.cx, r.cy);
+    const own = !!top && (top === b || b.contains(top) || top.contains(b));
+    if (own) continue;
+    const before = { box: r, hit: hitAt(r, b) };
+    let after = null;
+    if (r.center_y_inside && r.center_x_inside) {
+      b.scrollIntoView({ block: "center", inline: "nearest" });
+      const r2 = box(b);
+      after = { box: r2, hit: hitAt(r2, b) };
+    }
+    rows.push({ el: desc(b), label: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40) || null,
+                aria: b.getAttribute("aria-label"), testid: b.getAttribute("data-testid"),
+                overflow_of_self: (() => { const cs = getComputedStyle(b);
+                  return { ox: cs.overflowX, sx: b.scrollWidth, cw: b.clientWidth }; })(),
+                parent_chain: (() => { const chain = []; let p = b.parentElement;
+                  for (let i = 0; p && i < 4; i++, p = p.parentElement) {
+                    chain.push({ el: desc(p), sx: p.scrollWidth, cw: p.clientWidth,
+                                 ox: getComputedStyle(p).overflowX, pos: getComputedStyle(p).position });
+                  } return chain; })(),
+                before: before, after: after, nav_box: nav ? box(nav) : null,
+                vw: window.innerWidth, vh: window.innerHeight });
+  }
+  return { url: location.href, rows: rows, scroll_max_y: (document.scrollingElement || document.documentElement).scrollHeight - window.innerHeight };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, cells: CELLS.length, legs: [], errors: [] };
+  for (const spec of CELLS) {
+    const ctx = await browser.newContext({ viewport: { width: spec.vw, height: 844 },
+      deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+      locale: spec.arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", spec.arm]);
+      await page.goto(BASE + "/v8/" + spec.route, { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(3500);
+      const got = await page.evaluate(PROBE);
+      const shot = SHOTDIR + "/cover_w" + spec.vw + "_" + spec.arm + "_" + spec.route + ".png";
+      await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + shot));
+      rep.legs.push({ vw: spec.vw, arm: spec.arm, route: spec.route, url: got.url,
+                      scroll_max_y: got.scroll_max_y, rows: got.rows, shot: shot });
+      console.log("w%d %s %s 视口内没命中自己的按钮 %d 枚", spec.vw, spec.arm, spec.route, got.rows.length);
+      for (const r of got.rows) {
+        console.log("   %s [%s] 中心(%d,%d) 盖住者=%s z=%s pos=%s | 滚到居中后 中心(%s,%s) 盖住者=%s",
+          r.el, (r.label || r.aria || "?").slice(0, 18), r.before.box.cx, r.before.box.cy,
+          r.before.hit.top, r.before.hit.z, r.before.hit.pos,
+          r.after ? r.after.box.cx : "n/a", r.after ? r.after.box.cy : "n/a",
+          r.after ? r.after.hit.top : "n/a");
+        if (r.parent_chain.length) {
+          console.log("      父链 %s", r.parent_chain.map((p) => p.el + "(scroll=" + p.sx
+            + "/client=" + p.cw + ",ox=" + p.ox + ")").join(" < "));
+        }
+      }
+    } catch (e) {
+      rep.errors.push(spec.vw + "/" + spec.arm + "/" + spec.route + " " + (e.message || String(e)).slice(0, 120));
+    } finally {
+      await ctx.close().catch(() => {});
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  console.log("legs=%d errors=%d", rep.legs.length, rep.errors.length);
+})();

@@ -1,0 +1,132 @@
+// ORD-0561 补档第三腿：/v8/trips 那排页签到底能不能被用户够到。
+// 只读不改产品字节。三段：① 容器自己的 scrollWidth/clientWidth/overflow-x；
+// ② 程序化把 scrollLeft 推一段，看它动没动、动之后那三枚屏外页签的中心是否命中自己；
+// ③ 真手指形制（touch 拖一段）再量一次——因为程序化能滑不等于用户能滑（我这把尺两形分开报）。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.TS_BASE;
+const OUT = process.env.TS_OUT;
+const SHOTDIR = process.env.TS_SHOTS;
+const JID = process.env.TS_JID;
+const CELLS = (process.env.TS_CELLS || "360:zh-CN,390:zh-CN,390:en,414:en").split(",").map((s) => {
+  const [vw, arm] = s.split(":");
+  return { vw: Number(vw), arm };
+});
+
+const READ = () => {
+  const tabs = Array.from(document.querySelectorAll("button[data-testid^='trips-tab-']"));
+  const box = (el) => { const r = el.getBoundingClientRect();
+    return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height),
+             right: Math.round(r.right), cx: Math.round(r.x + r.width / 2), cy: Math.round(r.y + r.height / 2) }; };
+  const hit = (el) => { const b = box(el), top = document.elementFromPoint(b.cx, b.cy);
+    const own = !!top && (top === el || el.contains(top) || top.contains(el));
+    return { box: b, in_viewport_x: b.cx >= 0 && b.cx <= window.innerWidth, self: own,
+             top: top ? (top.tagName.toLowerCase() + (top.id ? "#" + top.id : "")) : null }; };
+  let strip = tabs.length ? tabs[0].parentElement : null;
+  const chain = [];
+  for (let p = strip, i = 0; p && i < 5; i++, p = p.parentElement) {
+    const cs = getComputedStyle(p);
+    chain.push({ el: p.tagName.toLowerCase() + (p.className && typeof p.className === "string"
+                  ? "." + p.className.trim().split(/\s+/)[0] : ""),
+                 sx: p.scrollWidth, cw: p.clientWidth, ox: cs.overflowX, sl: Math.round(p.scrollLeft) });
+  }
+  return { url: location.href, vw: window.innerWidth,
+           tabs: tabs.map((el) => Object.assign({ id: el.getAttribute('data-testid'), label: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 24) }, hit(el))),
+           chain: chain };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, legs: [], errors: [] };
+  for (const spec of CELLS) {
+    const ctx = await browser.newContext({ viewport: { width: spec.vw, height: 844 },
+      deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+      locale: spec.arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    const leg = { vw: spec.vw, arm: spec.arm };
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", spec.arm]);
+      await page.goto(BASE + "/v8/trips", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(3500);
+      leg.before = await page.evaluate(READ);
+      // ② 程序化推一段
+      leg.programmatic = await page.evaluate(() => {
+        const t = document.querySelector("button[data-testid^='trips-tab-']");
+        let p = t ? t.parentElement : null;
+        for (let i = 0; p && i < 5; i++, p = p.parentElement) {
+          if (p.scrollWidth > p.clientWidth + 1) {
+            const max = p.scrollWidth - p.clientWidth;
+            p.scrollLeft = Math.min(max, 320);
+            return { moved_to: Math.round(p.scrollLeft), max_px: max,
+                     el: p.tagName.toLowerCase() + (typeof p.className === "string" && p.className
+                           ? "." + p.className.trim().split(/\s+/)[0] : "") };
+          }
+        }
+        return { moved_to: null, max_px: 0, el: null };
+      });
+      await page.waitForTimeout(500);
+      leg.after_programmatic = await page.evaluate(READ);
+      await page.screenshot({ path: SHOTDIR + "/tabprog_w" + spec.vw + "_" + spec.arm + ".png" })
+        .catch(() => rep.errors.push("shot programmatic"));
+      // ③ 真手指形制：从第一条页签往左拖
+      const b = leg.before.tabs[0].box;
+      await page.evaluate(() => {
+        const t = document.querySelector("button[data-testid^='trips-tab-']");
+        let p = t ? t.parentElement : null;
+        for (let i = 0; p && i < 5; i++, p = p.parentElement) { if (p.scrollWidth > p.clientWidth + 1) { p.scrollLeft = 0; return; } }
+      });
+      await page.waitForTimeout(200);
+      await page.touchscreen.tap(b.cx, b.cy).catch(() => {});
+      const cdp = await ctx.newCDPSession(page);
+      const y = b.cy;
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: b.cx, y: y }] });
+      for (const dx of [40, 90, 150, 210, 260]) {
+        await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: b.cx - dx, y: y }] });
+      }
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      await page.waitForTimeout(700);
+      leg.after_touch = await page.evaluate(READ);
+      await page.screenshot({ path: SHOTDIR + "/tabtouch_w" + spec.vw + "_" + spec.arm + ".png" })
+        .catch(() => rep.errors.push("shot touch"));
+      // ④ 直接点那三枚屏外页签里的最后一枚（程序化滚动后中心若在屏上，就真点一次看换没换内容）
+      const target = leg.after_programmatic.tabs.find((t) => t.id === "trips-tab-spend");
+      leg.click_spend = null;
+      if (target && target.in_viewport_x && target.self) {
+        const h1_before = await page.evaluate(() => (document.querySelector("h1") || {}).textContent || "");
+        await page.evaluate(() => {
+          const t = document.querySelector("button[data-testid^='trips-tab-']");
+          let p = t ? t.parentElement : null;
+          for (let i = 0; p && i < 5; i++, p = p.parentElement) { if (p.scrollWidth > p.clientWidth + 1) { p.scrollLeft = 320; return; } }
+        });
+        await page.locator("button[data-testid='trips-tab-spend']").click({ timeout: 8000 })
+          .catch((e) => { leg.click_spend = { clicked: false, why: e.message.slice(0, 80) }; });
+        await page.waitForTimeout(1200);
+        const h1_after = await page.evaluate(() => (document.querySelector("h1") || {}).textContent || "");
+        if (!leg.click_spend) leg.click_spend = { clicked: true, h1_before: h1_before.trim(), h1_after: h1_after.trim() };
+      }
+      rep.legs.push(leg);
+      const offB = leg.before.tabs.filter((t) => !t.in_viewport_x).length;
+      const offA = leg.after_programmatic.tabs.filter((t) => !t.in_viewport_x).length;
+      console.log("w%d %s 屏外页签 改前=%d 程序化滚后=%d moved_to=%s 触摸滑后=%d spend 点得到=%s",
+        spec.vw, spec.arm, offB, offA, leg.programmatic.moved_to,
+        leg.after_touch.tabs.filter((t) => !t.in_viewport_x).length,
+        leg.click_spend ? (leg.click_spend.clicked ? "是" : "否") : "没试");
+      console.log("   容器链 %s", leg.before.chain.map((c) => c.el + "(scroll=" + c.sx + "/client=" + c.cw
+        + ",ox=" + c.ox + ",sl=" + c.sl + ")").join(" < "));
+    } catch (e) {
+      rep.errors.push(spec.vw + "/" + spec.arm + " " + (e.message || String(e)).slice(0, 120));
+    } finally {
+      await ctx.close().catch(() => {});
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  console.log("legs=%d errors=%d", rep.legs.length, rep.errors.length);
+})();

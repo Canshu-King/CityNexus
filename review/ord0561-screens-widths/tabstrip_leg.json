@@ -1,0 +1,1330 @@
+{
+ "base": "http://127.0.0.1:4990",
+ "legs": [
+  {
+   "vw": 360,
+   "arm": "zh-CN",
+   "before": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 360,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": 17,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 343,
+       "cx": 180,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 349,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 675,
+       "cx": 512,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 681,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 1007,
+       "cx": 844,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 1013,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 1339,
+       "cx": 1176,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1322,
+      "cw": 326,
+      "ox": "auto",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "programmatic": {
+    "moved_to": 320,
+    "max_px": 996,
+    "el": "nav.trips-tabs"
+   },
+   "after_programmatic": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 360,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": -303,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 23,
+       "cx": -140,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 29,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 355,
+       "cx": 192,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 361,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 687,
+       "cx": 524,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 693,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 1019,
+       "cx": 856,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1322,
+      "cw": 326,
+      "ox": "auto",
+      "sl": 320
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 360,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": -251,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 75,
+       "cx": -88,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 81,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 407,
+       "cx": 244,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 413,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 739,
+       "cx": 576,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 745,
+       "y": 105,
+       "w": 326,
+       "h": 40,
+       "right": 1071,
+       "cx": 908,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1322,
+      "cw": 326,
+      "ox": "auto",
+      "sl": 268
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 360,
+      "cw": 360,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "click_spend": null
+  },
+  {
+   "vw": 390,
+   "arm": "zh-CN",
+   "before": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": 17,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 373,
+       "cx": 195,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 379,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 735,
+       "cx": 557,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 741,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1097,
+       "cx": 919,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 1103,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1459,
+       "cx": 1281,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "programmatic": {
+    "moved_to": 320,
+    "max_px": 1086,
+    "el": "nav.trips-tabs"
+   },
+   "after_programmatic": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": -303,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 53,
+       "cx": -125,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 59,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 415,
+       "cx": 237,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 421,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 777,
+       "cx": 599,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 783,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1139,
+       "cx": 961,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 320
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "行程",
+      "box": {
+       "x": -251,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 105,
+       "cx": -73,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "住宿",
+      "box": {
+       "x": 111,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 467,
+       "cx": 289,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "预订",
+      "box": {
+       "x": 473,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 829,
+       "cx": 651,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "花费",
+      "box": {
+       "x": 835,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1191,
+       "cx": 1013,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 268
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "click_spend": null
+  },
+  {
+   "vw": 390,
+   "arm": "en",
+   "before": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": 17,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 373,
+       "cx": 195,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 379,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 735,
+       "cx": 557,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 741,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1097,
+       "cx": 919,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 1103,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1459,
+       "cx": 1281,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "programmatic": {
+    "moved_to": 320,
+    "max_px": 1086,
+    "el": "nav.trips-tabs"
+   },
+   "after_programmatic": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": -303,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 53,
+       "cx": -125,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 59,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 415,
+       "cx": 237,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 421,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 777,
+       "cx": 599,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 783,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1139,
+       "cx": 961,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 320
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 390,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": -228,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 128,
+       "cx": -50,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 134,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 490,
+       "cx": 312,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 496,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 852,
+       "cx": 674,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 858,
+       "y": 105,
+       "w": 356,
+       "h": 40,
+       "right": 1214,
+       "cx": 1036,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1442,
+      "cw": 356,
+      "ox": "auto",
+      "sl": 245
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 390,
+      "cw": 390,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "click_spend": null
+  },
+  {
+   "vw": 414,
+   "arm": "en",
+   "before": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 414,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": 17,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 397,
+       "cx": 207,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 403,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 783,
+       "cx": 593,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 789,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 1169,
+       "cx": 979,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 1175,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 1555,
+       "cx": 1365,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1538,
+      "cw": 380,
+      "ox": "auto",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "programmatic": {
+    "moved_to": 320,
+    "max_px": 1158,
+    "el": "nav.trips-tabs"
+   },
+   "after_programmatic": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 414,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": -303,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 77,
+       "cx": -113,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 83,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 463,
+       "cx": 273,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 469,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 849,
+       "cx": 659,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 855,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 1235,
+       "cx": 1045,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1538,
+      "cw": 380,
+      "ox": "auto",
+      "sl": 320
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "after_touch": {
+    "url": "http://127.0.0.1:4990/v8/trips",
+    "vw": 414,
+    "tabs": [
+     {
+      "id": "trips-tab-itinerary",
+      "label": "Itinerary",
+      "box": {
+       "x": -253,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 127,
+       "cx": -63,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-stay",
+      "label": "Stay",
+      "box": {
+       "x": 133,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 513,
+       "cx": 323,
+       "cy": 125
+      },
+      "in_viewport_x": true,
+      "self": true,
+      "top": "button"
+     },
+     {
+      "id": "trips-tab-bookings",
+      "label": "Bookings",
+      "box": {
+       "x": 519,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 899,
+       "cx": 709,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     },
+     {
+      "id": "trips-tab-spend",
+      "label": "Spend",
+      "box": {
+       "x": 905,
+       "y": 105,
+       "w": 380,
+       "h": 40,
+       "right": 1285,
+       "cx": 1095,
+       "cy": 125
+      },
+      "in_viewport_x": false,
+      "self": false,
+      "top": null
+     }
+    ],
+    "chain": [
+     {
+      "el": "nav.trips-tabs",
+      "sx": 1538,
+      "cw": 380,
+      "ox": "auto",
+      "sl": 270
+     },
+     {
+      "el": "div.v8-content",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "main.v8-main",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div.v8-product-shell",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     },
+     {
+      "el": "div",
+      "sx": 414,
+      "cw": 414,
+      "ox": "visible",
+      "sl": 0
+     }
+    ]
+   },
+   "click_spend": null
+  }
+ ],
+ "errors": []
+}
