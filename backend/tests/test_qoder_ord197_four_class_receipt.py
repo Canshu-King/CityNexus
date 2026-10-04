@@ -468,6 +468,9 @@ def test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage(
     assert len(cells) == 1 and cells[0]["status"] == "OK", cells
     assert cells[0]["answered"] is True and cells[0]["attempts"][0]["http_status"] == 200, cells
     a, b, job = _replay_semantics(RAW_COUNTY)
+    # 结论字段（outcome / provider_attempts / survey）只能在作业进终态之后读；`_replay_semantics` 立刻
+    # 读行，读到的可能是在飞作业（outcome=None、审计为空 {}），那正是这两枚臂的红率漂移的来源。
+    job = _wait_closed(a["operation_id"])
     assert job["canonical_destination_id"] is None, job
     assert job["pending_destination_label"] == RAW_COUNTY, job
     assert _audit(job).get("provider_attempts"), sorted(job["payload"])
@@ -499,6 +502,9 @@ def test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match(
     assert attempt["answered"] is False and attempt["endpoint"], attempt
     assert attempt["reason"], f"期望：说得出哪一类失败；实际：{attempt}"
     a, b, job = _replay_semantics(RAW_COUNTY)
+    # 结论字段（outcome / provider_attempts / survey）只能在作业进终态之后读；`_replay_semantics` 立刻
+    # 读行，读到的可能是在飞作业（outcome=None、审计为空 {}），那正是这两枚臂的红率漂移的来源。
+    job = _wait_closed(a["operation_id"])
     assert job["outcome"] == hydration_module.OUTCOME_RESOLVER_RUNTIME_FAILURE, job
     assert _audit(job).get("provider_attempts"), sorted(job["payload"])
     assert _audit(job)["provider_attempts"][0]["answered"] is False, _audit(job)
