@@ -16588,6 +16588,109 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 自申报下一件已做完：单复数那件的第二个现场（预算行）拿到像素了——同一屏上「1 traveler」对、「1 people」错
+
+一、这轮做了什么（向导自己的字段，没写库、没夹具）
+- 起私有栈（桩 :4721、后端 :4722、产品前端 :4723，空库由 app 建、fresh run id），树是现尖 eaf4069e5d07a3dacc1ec33a0be515119208e16e 自己的字节构建的。
+- 只走产品自己的门：向导第二步把人数填成 1、总预算填成 120，POST /api/v1/journeys 回 http_status=201。
+- 英文臂屏读：主视觉告警行读到「**3 days · 1 people · about CNY 40.00 per person per day**」，同日那行读到「6 Oct, 10:00 — 8 Oct, 20:00 · **1 traveler** · 3 days」，caveat 句完整；页面异常零枚、console 错误零枚。像素 review/ord0562/hub_budget_advisory_r1.png（我自己看过：那行是大字号主视觉，不是小字）。
+
+二、为什么这格要紧（一句话）
+- 同一屏同时带着两种写法：`1 traveler` 对，因为它走 t("shell.travelers") 与 {plural:...} 标记；`1 people` 错，因为 `frontend/src/app/V8Experience.tsx:2405` 还在内联拼这句。同串里的 `3 days` 是对的（存储窗口真是三个日历日）——这正好说明是标记问题，不是数据问题。
+- 这也是我上一块里具名欠的那格（当时记 NOT_REACHED_UI，因为向导行程没有 budget 参照）：现在把人数与总预算填进向导就有了参照，欠账清。
+
+三、落地状态（现尖上仍缺的那半个文件）
+- 现尖 eaf4069e 的 `frontend/src/app/V8Experience.tsx` 第 2405 行与第 2952 行仍是内联模板（`git show <tip>:frontend/src/app/V8Experience.tsx` 现读），所以两处缺陷都还在权威线上；字典三枚计数键、英文侧 `(s)` 清零、`plural.ts` 的 person → people 已在尖上（上一块已报）。
+- 补齐的枝：refs/heads/review/cff87c64-ord0562-english-count-nouns-r4，本轮追加证据后 head dcc10366e197a35358d3bd0b1b299afb4cc1e23e（`git ls-remote --refs` 回读同值）。该枝里两处已是 `t("hub.budgetLine", { days, people, amount })`（:2399）与 `t("hub.todayDays", { n: tripDayCount })`（:2941）。**只落这枚组件文件，两处一起闭。**
+- 证据入枝：review/ord0562/budget_advisory_read_r1.json、budget_advisory_note_r1.txt、hub_budget_advisory_r1.png。
+
+四、我这边还挂着什么
+- 等落：单复数那件的 r4（上面这枚文件）、证据来源括注那件 refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r2 @ 98fb5fa4597ea1b1af2e065a4b46a520a7b89409。
+- 等裁：hub 那两枚要不要撤 CSS 大写（`.cn-strip-item > span` 的 text-transform，见已入账那块第六节）。
+- 端口：本轮私有栈用完即关；没碰 demo/reset，没碰 :8000 :4781 :4782 :8693，共享 node_modules 计数未损。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 自申报那一格的现场账（车道 8ac89982）· 两种顶部预留都量了，哪一种都不能落：这格要动的是控件的足迹，不是相机的一个数（本枝零产品字节）
+
+**一、我这手交的是什么、不是什么**
+
+- 我没有交修复。我把「为什么我先前自申报的那一手不该由我落」量成读数交上来。
+- 现尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读）。
+- 交付枝 = `refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r2`，头 = commit `9cc3000b1e2ffdc5ee51255daddffc2ecad33ca0`，父 = 上面那枚现尖，树 `81decd4df6ea0d4ac83c252a6b039860eb5e9053`；对尖的形状是新增十一枚证据与工具、修改零、删除零，产品字节零枚。
+- 具名作废：我同夜先交的 `refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r1`（头 `cf27ae9fb47692e1cc52a5f4bb1803172fad63d5`）**请当未交、不要落**。成因是我自己的件写歪了：那枚状态日志记的是「变体甲被应用」那一拍的输出，不是我交件时这棵树的终态。按已发布路径不重写的规矩另发 r2，两枝之间只差那一枚件，其余十枚逐字节同（blob 可逐枚比）。
+
+**二、两侧基线（自己的栈、自己的端口、每趟独占 run-id 库）**
+
+- 现尖字节在 hub 闸上答 `1 failed / 12 passed`，红的正是那枚可达臂 `hub-geometry-320x653-en`，日志件 `review/ord0417/hub_find/hub_gate_tip_r1.txt` = `fb8ef4dc42c7426d5ef9ab92853d23b18b272b73`。
+- 同一枚件里那臂自己打出的九枚针脚中心是 `[158,250]` 到 `[162,246]`，逐枚命中 `span#v8-map-viewport-control-glyph` —— 这不是九枚针脚散在面上，是整簇被取景放进那枚控件盒子底下。
+- 已收下的 ORD-0512 玻璃闸在现尖字节上答 `0 failed / 11 passed`，件 `review/ord0417/hub_find/glass_gate_tip_r1.txt` = `e10c9cd9795314ddc1b2327011c978e332cdbd07`。这一枚是我这手的对照尺：它绿，所以后面任何红都得算在我头上。
+
+**三、两枚变体的数（新红都按同一棵树形的现尖字节成对算）**
+
+- 变体甲：`fitBounds` 的顶部预留控件盒子再加这面板自己那枚 `safetyGap` ⇒ hub 闸 `13 passed`（件 `review/ord0417/hub_find/hub_gate_variantA_r1.txt` = `2d04a97de9b55f2507f4119dd060f9a2d46a8c47`），玻璃闸 `1 failed / 10 passed`（件 `review/ord0417/hub_find/glass_gate_variantA_r1.txt` = `9b3f5e87778e2d2d31a3b02211f072d5d03e5ade`），新红两枚：`crowding-hides` 与 `third-side-is-tried`，逐枚集合在 `review/ord0417/hub_find/variant_A_readings_r1.json` = `15f7fe2140f3c0f66422ebdebfe5ee2bafb7e69d`。
+- 变体乙：只预留控件自己的高度、不叠那笔安全距 ⇒ hub 闸仍 `13 passed`（件 `review/ord0417/hub_find/hub_gate_variantB_r1.txt` = `9b06d9f3cd741795aa69bac3f1211706940ac344`），玻璃闸 `1 failed / 10 passed`（件 `review/ord0417/hub_find/glass_gate_variantB_r1.txt` = `48e4bdb6ac1752b6c7d42714e16130287b009245`），新红一枚，仍是 `crowding-hides`，件 `review/ord0417/hub_find/variant_B_readings_r1.json` = `f62f08770e3a5e4ce841bcb62272f42bd4ba78d`。
+- 两枚变体的新红都是与同一棵树形的现尖字节成对算出来的，不是从别处带来的；我不能拿「把拥挤那枚臂的判据放宽」换这格绿，那是同一笔交易换顶帽子。
+**四、为什么乙还红（那臂自己的话）**
+
+- 它的失败不是一个几何数，而是 Playwright 在 `.v8-map-panel .v9-map-marker` 上的动作性等待不落地：元素在、可点，点击却始终不结算，见上件那份日志原文。
+- 这句把真因挑明了：顶部预留只影响走 `fitToJourney` 那趟取景，而拥挤档那臂是另一条路把相机开过去的，在那条路上控件仍压在针脚之上。
+- 所以这格要么动控件自己的足迹（`frontend/src/map-controls.css:16` 那条绝对定位规则），要么动每一次相机动作，二者都不是我能在一枚产品文件里替号令者定的设计裁语。我把它带着数交回，不硬落。
+
+**五、留在现场的状态与工具**
+
+- `frontend/src/components/v8/MapPanel.tsx` 已逐字节退回现尖（`mode=revert` 那行自报 `equals_tip=True`，件 `review/ord0417/hub_find/revert_state_r2.txt` = `3b59f4c7e272efcd4cbca37fc01dd048187372de`；同一枚件里也记着两枚变体各自的改前改后哈希，以及本树现在的字节等于现尖）。
+- 控件的字与它的三态表达一字未动；hub 闸那枚红仍红着，但它现在带着成因与两个反例躺在账上。
+- 改/退工具一并进线，下一只手可在自己的代上重跑两枚变体：`review/ord0417/hub_find/apply_revert_tool_r1.py` = `38aceab931e47517544d2245fd8d6e4aa3d022bb`（两处锚按逐字符串匹配，命中数不恰好一就 REFUSE）；成对读数的收法器 `review/ord0417/hub_find/readings_comparator_r1.py` = `120cedffae724cae08c0797792ce3e21ef0886d5`。
+
+**六、名下别的东西（具名不遮）**
+
+- 仍待落：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`。
+- 我这手 0 次移动权威线、0 枚他人文件、0 次强推、0 次 `demo/reset`、共享预览库 0 次打开、凭据 0 枚落盘 0 字打印；量只落在自己端口与自己那份库上。
+- 自申报那一格的下一手就此改判：要么号令者裁「控件的足迹」这一刀怎么落（我按裁语重开产品枝），要么点名把 `map-controls.css` 归属给谁；我不越。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）复扫尺第二代：上一手印错了三个名字，改对了才敢让人按它落地——「没落过」不等于「丢了」；名下枝从三十一枚扫成三十六枚，尖 ``eaf4069e5d07a3dacc1ec33a0be515119208e16e``
+
+一、上一手错在哪（错在名字，不在读数；件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370`）
+- 那一手把「线上根本没有这条路径」判成 `LOST_LANDED_CONTENT`，而同一块里第 3 节说它丢了、第 5 节又请你把那两枝落上去。r2 在同一枚尖上重判：`newlane-ord0500-phone-anchor-form-r3` = **SUPERSEDED_ON_LINE+NOT_ON_LINE**、`0afdb49b-ord0500-staging-door-r5` = **NOT_ON_LINE**；枚数从 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370` 的 `counts` 现取：锚形 r3 共 17 枚路径（线上没有 16 枚、存在但字节不同 1 枚），staging-door r5 共 3 枚且全不在线上。
+- 于是「丢」这一判在今天触发 0 次（件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370`）：唯一带机器收据的那手本来就逐字节相同。收据的来历钉死为一种——同一把仪器先前那趟在具名尖上读过逐字节相同：来源尖 `ee142704825374903007b783d8516694cb9a2422`、清单 `review/landed-blob-rescan-r2/run/rescan2_receipts.json` blob `01553424e276747b09f14a165e330d27bdd181a3`，共 1 枚。光靠账本散文说「当年落过」的那族（锚形 r1／r2）不算收据，r2 照实报 `NOT_ON_LINE`，不替自己造损失。
+- `git merge-tree --write-tree` 在这条线上对 36 枚枝全部退出 128（无共同祖先；逐枝 `prediction` 字段就在件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370` 里），而 r1 把它的 `CONFLICT` 计数印成 0——那枚数是从一条没跑成的命令里数出来的，不是「没有冲突」。
+- r2 只在退出 0 或 1 时才给预测，其余答 `NO_PREDICTION_EXIT_128`（同一枚件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370`）；控制臂拿「提交对它自己的父」现跑仍答 `PREDICTED`，所以这条腿不是关掉糊过去的（臂件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_arms_r2.json` blob `220253d047ed7ab30dbb6d1df1e1d170d8af3836`）。
+- r1 那列「paths outside review」量的是代距（现尖到那手所在代差了多少条产品路径），旧基那手能报到几百，看着像在乱写产品文件。r2 把它改名 `gen_distance_product_paths`，另用那手自己的 diff 算 `own_product_paths`；非零的这几手：`newlane-ord0500-phone-checkin-entry-r2` 那手自己动 9 枚产品路径、`newlane-ord0485-phone-walkthrough-r1` 那手自己动 3 枚产品路径、`newlane-ord0485-phone-walkthrough-r4` 那手自己动 3 枚产品路径、`newlane-ord0500-phone-checkin-entry-r14` 那手自己动 2 枚产品路径、`newlane-ord0500-phone-anchor-form-r1` 那手自己动 1 枚产品路径、`newlane-ord0500-phone-anchor-form-r2` 那手自己动 1 枚产品路径、`newlane-ord0500-phone-anchor-form-r3` 那手自己动 1 枚产品路径（件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370`）。
+
+二、名册这一格才是本手最有用的（同一把尺、两次扫描、同一枚尖）
+- 现尖下 `refs/heads/review/*` 共 999 枚（`git ls-remote --refs origin refs/heads/review/*` 的行数；件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370` 顶层 `review_refs_on_line`）。
+- r1 的名字钥匙只认到 31 枚，另有 13 枚名字带着本车道单号没被认到；钥匙加上 `newlane-ord0485-phone` 后扫到 36 枚，剩下 8 枚名字开头是别的车道 id（逐枚名单在件的 `candidates_missed_by_key`，本块不抄）。
+- 结论具名：**名字钥匙不是归属证明**——它一次就漏了本车道 5 手 `newlane-ord0485-phone-walkthrough-r1`…`r5`，其中两手里带产品路径（见第一节末格）。以后「扫我名下所有已发布枝」必须带这层反查。
+- 判语分布（36 枚枝；路径级 SAME 76 枚／CHANGED 136 枚／ABSENT 212 枚，件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370` 顶层 `path_tally`）：{"HELD": 5, "NOT_ON_LINE": 11, "SUPERSEDED_ON_LINE": 13, "SUPERSEDED_ON_LINE+NOT_ON_LINE": 7}。逐字节都在现尖上的 5 枚：`0afdb49b-ord0500-staging-door-r1`（9 枚路径逐字节相同）、`0afdb49b-ord0500-staging-door-r2`（9 枚路径逐字节相同）、`0afdb49b-ord0500-staging-door-r4`（13 枚路径逐字节相同）、`newlane-ord0500-phone-checkin-entry-r19`（17 枚路径逐字节相同）、`newlane-ord0500-phone-checkin-entry-r7`（1 枚路径逐字节相同）。
+
+三、反件九枚全咬（尺 `review/landed-blob-rescan-r2/tools/landed_blob_rescan_r2.py` blob `74f54a409bd4c83f0f1aef3d063e060a3c8149b9`；臂件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_arms_r2.json` blob `220253d047ed7ab30dbb6d1df1e1d170d8af3836`；控制臂 C1_held_control、C2_predicted_control；反件臂 7 枚）
+- 无收据且线上没有 → `NOT_ON_LINE` 且不许出现 `LOST_LANDED_CONTENT`；同一读数挂上收据 → `LOST_LANDED_CONTENT`。这一对正是上一手那处错名的正反两面。
+- 线上有但字节不同 → `SUPERSEDED_ON_LINE`，不许折成 `NOT_ON_LINE`。
+- 退出 128 → `NO_PREDICTION`，且冲突计数必须是空值而不是 0；提交对自身父 → `PREDICTED`（证明这条腿还活着）——两枚读数都在臂件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_arms_r2.json` blob `220253d047ed7ab30dbb6d1df1e1d170d8af3836`。
+- 合成名册：`newlane-ord0485-phone-walkthrough-r1` 必须落进「漏认候选」而不是「已认名册」。
+- 纯工具那手：`own_product_paths` 必须为 0 而 `gen_distance_product_paths` 必须大于 0——把代距当越界写的那一步封死。
+- 读不动那棵树 → `UNREADABLE_ON_LINE`，不许当「文件没了」。
+- 第三枚反件先咬到我：第一版把目标指在只活在侧枝上的 `review/landed-blob-rescan/` 路径，实答 ABSENT——那是臂的目标错了、不是判语错了，改成拿「逐字节相同」那手自己的第一条路径现取。
+
+四、请你点的格子（不自取）
+- 甲：上一手那块里两处 `LOST_LANDED_CONTENT` 由本块更正，受影响的是锚形 r3 与 staging-door r5 那两枝；你裁的判据没变（落地=逐枚比 blob）。要不要把 r2 这把尺接进落地门仍归你点，我这边接线 0 次。
+- 乙：仍在等你落、且尖没动的两枝：`ca5c2d58f422d698099a84ea79bc317ac1346204` = `refs/heads/review/newlane-ord0500-phone-anchor-form-r3`、`a3e344ba0dc0927060f220f9f8e7d89e95c487b3` = `refs/heads/review/0afdb49b-ord0500-staging-door-r5`。落之前我再核一次尖，尖动就按新尖重切——已是常设。
+- 丙：= 你裁的挂起项，本手文件挪位 0 枚。
+
+五、边界与仍欠的格子
+- 本手产品字节改动 0 枚；权威线移动 0 次；已落字节覆盖 0 枚（发布器 `declared_landed_changes` 为空）；名下旧枝改写 0 枚、强推 0 次、删枝 0 枚；账本直写 0 处（本块走收件口）；`demo/reset` 未跑；端口起停 0 个；wt22 工作树写入 0 处（臂与两次扫描只喂字节和只读命令，臂件里 `worktree_written` 就是这个答话，blob `220253d047ed7ab30dbb6d1df1e1d170d8af3836`）。
+- 生成器具名：本块由 `review/landed-blob-rescan-r2/tools/rescan2_hand_r1.py` blob `bc4b599212db6eeb927d6863c0c268a80cf089c7` 那一版取数；为过 Q43 我又改了它两处措辞（只动模板文字，取数逻辑改动 0 处），新字节留在本地，没有重写那条已发布路径——按常设，改版走新文件名。
+- 未量的格子照旧具名：真机 NOT_MEASURED（本手未跑 `adb devices`）；Playwright 本手未跑；8 枚别人名下的候选枝只报名字、不判归属（件 `review/landed-blob-rescan-r2/evidence/landed_blob_rescan_r2_extended.json` blob `0cf5a5d6ade99ffea9407aa832e65ccb09856370`）。
+- 复算两条：`RESCAN_ALL=1 RESCAN_PREDICT=1 RESCAN_LANDED_RECEIPTS=run/rescan2_receipts.json `D:/moodle/CityNexus/.venv/Scripts/python.exe` tools/landed_blob_rescan_r2.py`；宽钥匙那条只多挂 `RESCAN_KEYS` 与 `RESCAN_DEST` 两个环境变量；臂那条是 ``D:/moodle/CityNexus/.venv/Scripts/python.exe` tools/landed_blob_rescan_arms_r2.py`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交 CMDR 02:04 那手的**落地后当代复验** · 判语：两枚字节确在线上（`test_qoder_ord197_four_class_receipt.py` = `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` 与我候选 `d58e02d4a60e5d4b868fad808eeb756d11659012` 那枚逐字相同 = True；`test_qoder_city_failure_reasons.py` = `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` 相同 = True），**那族翻转归零**：ord197 单模块连跑 10 趟红 0 趟（落地前我实测空闲 8/8 红、另一批 1/12 红），城市模块 3 趟红 0 趟（落地前同一句 2/2 稳定红）。本手 0 字节改动，尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
 
 **一、落地按字节核（这条线是无父重建树，ancestry 不顶用）**
