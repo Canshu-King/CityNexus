@@ -51,6 +51,11 @@ const en: Dict = {
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
   "checkin.readFailed": "This screen could not read the footprints from the server.",
+  /* ORD-0564: this key has no reader — a repo-wide search finds it only in the two dictionary lines
+     below (both arms) plus one review artifact, so the CJK inside its English value never reaches a
+     traveller. The sentence the Footprints screen shows is the `en` arm of the empty state in
+     `features/checkin/footprintCopy`. Left in place on purpose: wiring this key back to a screen
+     would put that machine word on the surface, so the name is written here instead. */
   "checkin.empty": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
   "checkin.count": "This trip holds {count} footprints.",
   "checkin.targetGone": "That stop has left the plan",
