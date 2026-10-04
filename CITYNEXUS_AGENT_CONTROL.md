@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 交 ORD-0519 收口件（值守点单指名欠的那格）· 判语：那一手的内容在现读重建头 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上**逐行仍在**（2/2 枚新增代码行，absent 0），3 枚证据件 blob 逐枚相同；顺带报一格覆盖欠账：全树读 `anchor_credit_kept` 的文件里 backend/tests 命中 0 枚。判据按号令者对重建树下的那条改用 blob/内容相等，ancestry 在这里用不了（`merge-base` 回空）。
+
+**一、那一手自己的形状（现读，不凭记忆）**
+
+- 交付头 `a7c77d3061f556f633d7ff03ae8f468474481c0e`，提交语「ORD-0519: the fallback shapes keep the anchor credit, and the 」，作者日期 09-30 22:23；它自己改动的文件 4 枚：`backend/app/integrations/discovery/real_city.py`、`READINGS.md`, `board_F_nominatim_only.json`, `mutant_M1b_masked_leg.json`。
+- 这枚头与现读重建头 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 的 `git merge-base` 回空（两条历史接不上），重建头的父提交列为空、`git rev-list --count` = 1，提交日期 2026-10-04 18:49:19 +0800。所以我不用 ancestry 判它「在不在」，用逐行内容与逐枚 blob。
+
+**二、内容存活（`backend/app/integrations/discovery/real_city.py` 在 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上现读）**
+
+- 仍在：`"anchor": anchor or journey_anchor,`
+- 仍在：`"anchor_credit_kept": anchor is not None,`
+- 汇总：新增代码行去重 2 枚，仍在 2 枚，已不在 0 枚；这两句在现读头落在 `backend/app/integrations/discovery/real_city.py` 的第 1747、1770 行（`git grep -n` 现读，命中行数 = 2）。
+
+**三、三枚证据件按字节核**
+
+- `review/ord0519/READINGS.md`：我那枝 `8c79fca7730c33437946ac4bac485954c78505c5` vs 现读头 `8c79fca7730c33437946ac4bac485954c78505c5` — 相同 = 是
+- `review/ord0519/board_F_nominatim_only.json`：我那枝 `81268582e2bd926304dbfbaa9a1d71a2f6e9103f` vs 现读头 `81268582e2bd926304dbfbaa9a1d71a2f6e9103f` — 相同 = 是
+- `review/ord0519/mutant_M1b_masked_leg.json`：我那枝 `0051a14900821c94488c8dd74aaf3af0b0856f53` vs 现读头 `0051a14900821c94488c8dd74aaf3af0b0856f53` — 相同 = 是
+
+**四、覆盖欠账（具名，带分母）**
+
+- 现读头 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上含 `anchor_credit_kept` 的文件共 5 枚，分区实测：产品 `backend/app/**` 1 枚、`backend/tests/**` 0 枚、`review/**`（我自己那两趟读数件）4 枚、其它 0 枚。
+- 也就是说：这格「兜底形状保住锚点信用」目前只有产品代码在发、我自己在读，**没有一枚 shipped 臂断言它**。要不要补一枚臂由你裁——我不会自己塞一条新断言来收这单，那属于改判据。
+
+**五、当代门读数（现读头 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 的工作树，conftest 私有库）**
+
+- `python -m pytest -p no:cacheprovider -q --tb=line -rf tests/test_qoder_city_failure_reasons.py tests/test_qoder_provider_identity_leg.py tests/test_qoder_anywhere_discovery_truth.py`：collect 31 条（退出 0），执行尾行逐字「1 failed, 30 passed, 2 warnings in 3.40s」。
+- 唯一那枚红是 `test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at`，断言原文「assert 'PROVIDER_SERVER_ERROR' == 'PROVIDER_BAD_RESPONSE'」（在 `backend/tests/test_qoder_city_failure_reasons.py` 的那一句 5xx 期望上）——正是我待落候选 `3cbd8be62024b69917505aa62e9302bcc13808ff` / `541831b83b8f3727b631b63dbb6a09319680fb1b` 在改的那句命名；候选还没落，所以这格在头上一仍是红，我如实贴，不改成绿。件 `D:/moodle/_qoder_seed_ord0489/run/ord0519_closeout_pytest.txt`。
+
+**六、下一格已接（ORD-0571）**：1ba48dbf 的 ORD-0561 第④类——`/v8/trips` 上「详情 ›」「打卡」中心命中固定底栏（读数件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`，y=817 那批、底栏 768..844 那段）。我要的前置说清楚：复现必须真浏览器，而号令者验证栈那些端口我不动，所以我会自己起私有栈（我自己的前端端口 + 我自己的后端 + 私有库，三证归属），交法是一枚修法枝 + 一块。
+
+边界 A：本手产品字节 0 枚改动、shipped 尺 0 枚改动（收口件只测不写），尖 = `f3ba478caaecdbdf7254786b2bf0d03d323897d0`。
+
+边界 B：权威线 0 移动，push 0 次，force-push 0 次，他人枝 0 枚改动，尖 = `f3ba478caaecdbdf7254786b2bf0d03d323897d0`。
+
+边界 C：账本 0 直写（本块走收件口），demo/reset 0 次，`_preview.db` 0 次写，监听端口 0 个在跑，库是 conftest 自起的私有 `suite.db`，尖 = `f3ba478caaecdbdf7254786b2bf0d03d323897d0`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · ORD-0562 英文臂单复数收口：改了四枚文件、五臂常设尺、三态英文屏读；头号那格（1 day）我这轮没证到，原因与走法已具名
 
 一、形制
