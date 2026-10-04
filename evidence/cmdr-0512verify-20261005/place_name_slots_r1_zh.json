@@ -1,0 +1,96 @@
+{
+  "instrument": "cmdr_0512_place_name_read_r1",
+  "base": "http://127.0.0.1:49807",
+  "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+  "assets": [
+    "/assets/index-iZ6I1MKH.js"
+  ],
+  "per": {
+    "/v8/hub": {
+      "rows_seen": 11,
+      "named": 11,
+      "placeholder": 0,
+      "empty_slots": 0,
+      "named_sample": [
+        "Arrival",
+        "Arrival",
+        "Check in · Central Station Courtyard",
+        "Overnight · Central Station Courtyard",
+        "Five Great Avenues",
+        "Tianjin Museum"
+      ],
+      "placeholder_sample": [],
+      "painted_text_lines": 97,
+      "chars": 1292
+    },
+    "/v8/live": {
+      "rows_seen": 10,
+      "named": 10,
+      "placeholder": 0,
+      "empty_slots": 0,
+      "named_sample": [
+        "Arrival",
+        "Check in · Central Station Courtyard",
+        "Overnight · Central Station Courtyard",
+        "Five Great Avenues",
+        "Tianjin Museum",
+        "Tianjin Eye"
+      ],
+      "placeholder_sample": [],
+      "painted_text_lines": 82,
+      "chars": 681
+    },
+    "/v8/trips": {
+      "rows_seen": 25,
+      "named": 25,
+      "placeholder": 0,
+      "empty_slots": 0,
+      "named_sample": [
+        "18:00",
+        "18:00",
+        "Arrival",
+        "20 分钟抵达当前详情 ›打卡",
+        "抵达",
+        "当前"
+      ],
+      "placeholder_sample": [],
+      "painted_text_lines": 56,
+      "chars": 545
+    },
+    "/v8/map": {
+      "rows_seen": 23,
+      "named": 22,
+      "placeholder": 0,
+      "empty_slots": 1,
+      "named_sample": [
+        "Arrival",
+        "Check in · Central Station Courtyard",
+        "Overnight · Central Station Courtyard",
+        "Five Great Avenues",
+        "Tianjin Museum",
+        "Tianjin Eye"
+      ],
+      "placeholder_sample": [],
+      "painted_text_lines": 55,
+      "chars": 742
+    },
+    "/v8/stay": {
+      "rows_seen": 15,
+      "named": 15,
+      "placeholder": 0,
+      "empty_slots": 0,
+      "named_sample": [
+        "01Haihe Riverside Hotel",
+        "02Central Station Courtyard已选择",
+        "03Five Avenues House",
+        "04North Canal Guesthouse",
+        "Arrival",
+        "Check in · Central Station Courtyard"
+      ],
+      "placeholder_sample": [],
+      "painted_text_lines": 110,
+      "chars": 1182
+    }
+  },
+  "pageErrors": []
+}
