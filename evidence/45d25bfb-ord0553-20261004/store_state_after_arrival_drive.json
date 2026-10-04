@@ -1,0 +1,51 @@
+{
+ "backend_port": 8752,
+ "netstat_listening_owners": [
+  "46096"
+ ],
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "plan_versions_listed": 28,
+ "current_version_no": 1,
+ "current_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+ "activity_statuses": [
+  [
+   1,
+   "Old Town Gate",
+   "COMPLETED"
+  ],
+  [
+   2,
+   "Riverside Museum",
+   "COMPLETED"
+  ],
+  [
+   3,
+   "Central Food Hall",
+   "COMPLETED"
+  ],
+  [
+   4,
+   "Tech Art Center",
+   "ARRIVED"
+  ],
+  [
+   5,
+   "Nexus River Cruise Pier",
+   "PLANNED"
+  ],
+  [
+   6,
+   "Skyline Dinner House",
+   "PLANNED"
+  ]
+ ],
+ "twin_now_title": "Tech Art Center",
+ "twin_now_state": "ARRIVED",
+ "twin_next_title": "Nexus River Cruise Pier",
+ "twin_next_state": "PLANNED",
+ "statuses_present_on_screen": [
+  "ARRIVED",
+  "COMPLETED",
+  "PLANNED"
+ ]
+}
