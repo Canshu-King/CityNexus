@@ -1,0 +1,4816 @@
+{
+ "root": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord_anchors",
+ "py_files": 139,
+ "write_legs": 138,
+ "counts": {
+  "guarded": 24,
+  "unguarded": 114,
+  "no-write-leg": 0,
+  "unparseable": 1
+ },
+ "unparseable_files": [
+  {
+   "file": "block_selfdecl_005x_r1.py",
+   "detail": "invalid character '、' (U+3001) (<unknown>, line 91)"
+  }
+ ],
+ "known_cases": {
+  "block_census_r3_r1.py": {
+   "measured": "guarded",
+   "analyzer": "guarded",
+   "agrees": true
+  },
+  "anchor_drift_survey_r3.py": {
+   "measured": "unguarded",
+   "analyzer": "unguarded",
+   "agrees": true
+  },
+  "empty_denominator_scan_r2.py": {
+   "measured": "guarded",
+   "analyzer": "guarded",
+   "agrees": true
+  }
+ },
+ "mismatched_controls": [],
+ "fixture_discrimination": {
+  "no_floor_says": "unguarded",
+  "with_floor_says": "guarded",
+  "no_floor_cut": 5,
+  "with_floor_floors": [
+   4
+  ],
+  "discriminates": true
+ },
+ "unguarded_legs": [
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "bytes": 13594,
+   "claim_write_lines": [
+    81,
+    117
+   ],
+   "external_write_lines": [],
+   "cut_line": 81,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r1.py",
+   "bytes": 8364,
+   "claim_write_lines": [
+    162
+   ],
+   "external_write_lines": [],
+   "cut_line": 162,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r2.py",
+   "bytes": 8553,
+   "claim_write_lines": [
+    165
+   ],
+   "external_write_lines": [],
+   "cut_line": 165,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "bytes": 7225,
+   "claim_write_lines": [
+    120
+   ],
+   "external_write_lines": [],
+   "cut_line": 120,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 36,
+     "text": "raise SystemExit(\"git failed %s :: %s\" % (a[:2], (r.stderr or \"\")[-200:]))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_mutation_arms_r1.py",
+   "bytes": 6974,
+   "claim_write_lines": [
+    116,
+    120,
+    135
+   ],
+   "external_write_lines": [],
+   "cut_line": 116,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r1.py",
+   "bytes": 4864,
+   "claim_write_lines": [
+    72
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r2.py",
+   "bytes": 4917,
+   "claim_write_lines": [
+    73
+   ],
+   "external_write_lines": [],
+   "cut_line": 73,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_ack0557_r1.py",
+   "bytes": 8277,
+   "claim_write_lines": [
+    76,
+    114
+   ],
+   "external_write_lines": [
+    103
+   ],
+   "cut_line": 76,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0019_r1.py",
+   "bytes": 6907,
+   "claim_write_lines": [
+    64,
+    96
+   ],
+   "external_write_lines": [
+    85
+   ],
+   "cut_line": 64,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0130_r1.py",
+   "bytes": 8834,
+   "claim_write_lines": [
+    86,
+    123
+   ],
+   "external_write_lines": [
+    113
+   ],
+   "cut_line": 86,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0557_r1.py",
+   "bytes": 9750,
+   "claim_write_lines": [
+    93,
+    132
+   ],
+   "external_write_lines": [
+    120
+   ],
+   "cut_line": 93,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_hook_r1.py",
+   "bytes": 8155,
+   "claim_write_lines": [
+    79,
+    115
+   ],
+   "external_write_lines": [
+    105
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_selfcheck_r1.py",
+   "bytes": 8299,
+   "claim_write_lines": [
+    79,
+    114
+   ],
+   "external_write_lines": [
+    104
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_alarm_r1.py",
+   "bytes": 2826,
+   "claim_write_lines": [
+    33
+   ],
+   "external_write_lines": [
+    24
+   ],
+   "cut_line": 24,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_edenom_r1.py",
+   "bytes": 2669,
+   "claim_write_lines": [],
+   "external_write_lines": [
+    24
+   ],
+   "cut_line": 24,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_reply_cmdr0245_r1.py",
+   "bytes": 3571,
+   "claim_write_lines": [
+    59
+   ],
+   "external_write_lines": [
+    52
+   ],
+   "cut_line": 52,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ack0557_r1.py",
+   "bytes": 12496,
+   "claim_write_lines": [
+    154,
+    165,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 154,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 149,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_alarm_r1.py",
+   "bytes": 8031,
+   "claim_write_lines": [
+    104,
+    115,
+    124
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 99,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_anchors_erratum_r1.py",
+   "bytes": 5320,
+   "claim_write_lines": [
+    82,
+    90
+   ],
+   "external_write_lines": [],
+   "cut_line": 82,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 53,
+     "text": "raise SystemExit(9)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_anchors_r1.py",
+   "bytes": 10367,
+   "claim_write_lines": [
+    116,
+    125
+   ],
+   "external_write_lines": [],
+   "cut_line": 116,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 84,
+     "text": "A(\"- 写期限尺 `backend/tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_census_r1.py",
+   "bytes": 6177,
+   "claim_write_lines": [
+    71,
+    80
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_cmdr0130_r1.py",
+   "bytes": 14945,
+   "claim_write_lines": [
+    192,
+    203,
+    212
+   ],
+   "external_write_lines": [],
+   "cut_line": 192,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 187,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_edenom_r1.py",
+   "bytes": 8912,
+   "claim_write_lines": [
+    109,
+    120,
+    129
+   ],
+   "external_write_lines": [],
+   "cut_line": 109,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 65,
+     "text": "A(\"  v2 走语法树，把「底」收紧成**同一函数里必须有一枚语句在集合为空时拒绝**（`assert X`／`if not X: raise|return \""
+    },
+    {
+     "line": 104,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_empty_floor_r1.py",
+   "bytes": 9606,
+   "claim_write_lines": [
+    85,
+    86
+   ],
+   "external_write_lines": [],
+   "cut_line": 85,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 83,
+     "text": "raise SystemExit(\"unreplaced slots: %s\" % left)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_g4_floor_erratum_r1.py",
+   "bytes": 7337,
+   "claim_write_lines": [
+    89,
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 89,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_g4_floor_r1.py",
+   "bytes": 7064,
+   "claim_write_lines": [
+    81,
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 81,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_hook_r1.py",
+   "bytes": 10060,
+   "claim_write_lines": [
+    129,
+    140,
+    149
+   ],
+   "external_write_lines": [],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 124,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_mirror_restore_r1.py",
+   "bytes": 10229,
+   "claim_write_lines": [
+    106,
+    107
+   ],
+   "external_write_lines": [],
+   "cut_line": 106,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 103,
+     "text": "raise SystemExit(\"unreplaced slots: %s\" % sorted(set(left)))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ord0552_r1.py",
+   "bytes": 12427,
+   "claim_write_lines": [
+    151,
+    162,
+    171
+   ],
+   "external_write_lines": [],
+   "cut_line": 151,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_selfcheck_r1.py",
+   "bytes": 10209,
+   "claim_write_lines": [
+    130,
+    140,
+    146,
+    150,
+    151
+   ],
+   "external_write_lines": [],
+   "cut_line": 130,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 124,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_notice_anchors_landed_r1.py",
+   "bytes": 5979,
+   "claim_write_lines": [
+    75,
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 5,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_erratum_r1.py",
+   "bytes": 5052,
+   "claim_write_lines": [
+    72,
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_r1.py",
+   "bytes": 7347,
+   "claim_write_lines": [
+    84,
+    103
+   ],
+   "external_write_lines": [],
+   "cut_line": 84,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r1.py",
+   "bytes": 7743,
+   "claim_write_lines": [
+    84,
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 84,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r3_r1.py",
+   "bytes": 7482,
+   "claim_write_lines": [
+    102,
+    123
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr0124_r1.py",
+   "bytes": 8058,
+   "claim_write_lines": [
+    112,
+    133
+   ],
+   "external_write_lines": [],
+   "cut_line": 112,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [
+    {
+     "line": 54,
+     "text": "if l.strip().startswith('assert sorted(listed[\"responses\"])')][0],"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr0245_r1.py",
+   "bytes": 10651,
+   "claim_write_lines": [
+    129,
+    163
+   ],
+   "external_write_lines": [
+    150
+   ],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr1945_r1.py",
+   "bytes": 9436,
+   "claim_write_lines": [
+    107,
+    145
+   ],
+   "external_write_lines": [
+    131
+   ],
+   "cut_line": 107,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r1.py",
+   "bytes": 6585,
+   "claim_write_lines": [
+    74,
+    93
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r2.py",
+   "bytes": 7990,
+   "claim_write_lines": [
+    87,
+    106
+   ],
+   "external_write_lines": [],
+   "cut_line": 87,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_ord0552_r1.py",
+   "bytes": 9261,
+   "claim_write_lines": [
+    98,
+    132
+   ],
+   "external_write_lines": [
+    120
+   ],
+   "cut_line": 98,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_arms_r1.py",
+   "bytes": 7342,
+   "claim_write_lines": [
+    127
+   ],
+   "external_write_lines": [],
+   "cut_line": 127,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 9,
+     "text": "sparse-checkout), because two of the files assert that committed readouts beside them exist. The classificatio"
+    },
+    {
+     "line": 42,
+     "text": "raise SystemExit(\"cannot read %s at %s\" % (rel, tip))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_counterarm_r1.py",
+   "bytes": 5828,
+   "claim_write_lines": [
+    71,
+    84,
+    98
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_run_r1.py",
+   "bytes": 3501,
+   "claim_write_lines": [
+    59
+   ],
+   "external_write_lines": [],
+   "cut_line": 59,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_verdicts_r1.py",
+   "bytes": 6800,
+   "claim_write_lines": [
+    101
+   ],
+   "external_write_lines": [],
+   "cut_line": 101,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0019_landing_prediction_r1.py",
+   "bytes": 4272,
+   "claim_write_lines": [
+    68
+   ],
+   "external_write_lines": [],
+   "cut_line": 68,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0245_landing_prediction_r1.py",
+   "bytes": 4112,
+   "claim_write_lines": [
+    66
+   ],
+   "external_write_lines": [],
+   "cut_line": 66,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0245_landing_prediction_r2.py",
+   "bytes": 4112,
+   "claim_write_lines": [
+    66
+   ],
+   "external_write_lines": [],
+   "cut_line": 66,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "bytes": 19820,
+   "claim_write_lines": [
+    327,
+    337
+   ],
+   "external_write_lines": [],
+   "cut_line": 327,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_check_r1.py",
+   "bytes": 11133,
+   "claim_write_lines": [
+    200
+   ],
+   "external_write_lines": [],
+   "cut_line": 200,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_hook_r1.py",
+   "bytes": 10959,
+   "claim_write_lines": [
+    74,
+    146,
+    194,
+    200
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "bytes": 6411,
+   "claim_write_lines": [
+    99
+   ],
+   "external_write_lines": [],
+   "cut_line": 99,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_denominator_scan_r1.py",
+   "bytes": 12735,
+   "claim_write_lines": [
+    220,
+    221,
+    222,
+    269
+   ],
+   "external_write_lines": [],
+   "cut_line": 220,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 8,
+     "text": "(`assert X`, `if not X: raise|return <non-zero>`, `len(X) == 0 -> raise`, `X == 0 -> refuse`)."
+    },
+    {
+     "line": 61,
+     "text": "(r\"^\\s*assert\\s+%s\\b(?! )\" % c, None),                       # `assert staged` / `assert rows and …`"
+    },
+    {
+     "line": 63,
+     "text": "(r\"if\\s+not\\s+%s\\b\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 64,
+     "text": "(r\"len\\(\\s*%s\\s*\\)\\s*==\\s*0\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 65,
+     "text": "(r\"%s\\s*==\\s*0\\b\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 81,
+     "text": "except (SyntaxError, ValueError):"
+    },
+    {
+     "line": 200,
+     "text": "assert rows, \"empty denominator - nothing was measured\""
+    },
+    {
+     "line": 207,
+     "text": "raise SystemExit(\"ABORT: nothing staged\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_floor_counterexample_r1.py",
+   "bytes": 8064,
+   "claim_write_lines": [
+    153
+   ],
+   "external_write_lines": [],
+   "cut_line": 153,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 76,
+     "text": "except SystemExit as e:"
+    },
+    {
+     "line": 128,
+     "text": "except ValueError as e:"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_leg_reachability_r3.py",
+   "bytes": 9437,
+   "claim_write_lines": [
+    165,
+    196
+   ],
+   "external_write_lines": [],
+   "cut_line": 165,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 33,
+     "text": "RAISE_VERB = re.compile(r\"SystemExit|sys\\.exit|AssertionError|RuntimeError|ValueError|Error\\(|assert \")"
+    },
+    {
+     "line": 152,
+     "text": "\"        raise SystemExit('ABORT: rows enumerated nothing')\\n\""
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_publisher_counterexample_r1.py",
+   "bytes": 3554,
+   "claim_write_lines": [
+    51,
+    70
+   ],
+   "external_write_lines": [],
+   "cut_line": 51,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 40,
+     "text": "assert s.count(anchor) == 1, \"the publisher's body moved; the fix line has nowhere to go\""
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "flat_empty_floor_r1.py",
+   "bytes": 7890,
+   "claim_write_lines": [
+    129,
+    132,
+    133
+   ],
+   "external_write_lines": [],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "flat_restore_r1.py",
+   "bytes": 8059,
+   "claim_write_lines": [
+    114,
+    123
+   ],
+   "external_write_lines": [],
+   "cut_line": 114,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r1.py",
+   "bytes": 7338,
+   "claim_write_lines": [
+    70,
+    91,
+    139
+   ],
+   "external_write_lines": [],
+   "cut_line": 70,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 57,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 69,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r2.py",
+   "bytes": 7338,
+   "claim_write_lines": [
+    70,
+    91,
+    139
+   ],
+   "external_write_lines": [],
+   "cut_line": 70,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 57,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 69,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r3.py",
+   "bytes": 8463,
+   "claim_write_lines": [
+    72,
+    93,
+    151
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 59,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 71,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r1.py",
+   "bytes": 11951,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r2.py",
+   "bytes": 11970,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r3.py",
+   "bytes": 11940,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r4.py",
+   "bytes": 12139,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r5.py",
+   "bytes": 13943,
+   "claim_write_lines": [
+    73,
+    242
+   ],
+   "external_write_lines": [],
+   "cut_line": 73,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "hook_build_r1.py",
+   "bytes": 9166,
+   "claim_write_lines": [
+    41,
+    145
+   ],
+   "external_write_lines": [],
+   "cut_line": 41,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "land_candidate_r1.py",
+   "bytes": 4357,
+   "claim_write_lines": [
+    46,
+    77
+   ],
+   "external_write_lines": [],
+   "cut_line": 46,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "land_g4_floor_r2.py",
+   "bytes": 5011,
+   "claim_write_lines": [
+    42,
+    51,
+    82
+   ],
+   "external_write_lines": [],
+   "cut_line": 42,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r1.py",
+   "bytes": 9191,
+   "claim_write_lines": [
+    134
+   ],
+   "external_write_lines": [],
+   "cut_line": 134,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r2.py",
+   "bytes": 9191,
+   "claim_write_lines": [
+    134
+   ],
+   "external_write_lines": [],
+   "cut_line": 134,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r3.py",
+   "bytes": 9961,
+   "claim_write_lines": [
+    143
+   ],
+   "external_write_lines": [],
+   "cut_line": 143,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_repro_r1.py",
+   "bytes": 5725,
+   "claim_write_lines": [
+    108
+   ],
+   "external_write_lines": [],
+   "cut_line": 108,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_runs_r1.py",
+   "bytes": 7979,
+   "claim_write_lines": [
+    137
+   ],
+   "external_write_lines": [],
+   "cut_line": 137,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 37,
+     "text": "except ValueError:"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "merge_dropped_landed_tool_r1.py",
+   "bytes": 5527,
+   "claim_write_lines": [
+    88
+   ],
+   "external_write_lines": [],
+   "cut_line": 88,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_landing_recheck_r2.py",
+   "bytes": 10532,
+   "claim_write_lines": [
+    214
+   ],
+   "external_write_lines": [],
+   "cut_line": 214,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 6,
+   "refusal_texts_before_cut": [
+    {
+     "line": 84,
+     "text": "raise SystemExit(\"ls-tree -r failed rc %d: %s\" % (rc, err[-300:]))"
+    },
+    {
+     "line": 101,
+     "text": "raise SystemExit(\"plumbing %s rc %d: %s\" % (args[0], p.returncode,"
+    },
+    {
+     "line": 105,
+     "text": "raise SystemExit(\"write-tree rc %d\" % p.returncode)"
+    },
+    {
+     "line": 115,
+     "text": "raise SystemExit(\"commit-tree rc %d: %s\" % (p.returncode, p.stderr.decode(\"utf-8\", \"replace\")[-300:]))"
+    },
+    {
+     "line": 129,
+     "text": "raise SystemExit(\"no authoritative tip read\")"
+    },
+    {
+     "line": 135,
+     "text": "raise SystemExit(\"fetch failed, cannot measure the tip\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_restore_verify_r3.py",
+   "bytes": 6551,
+   "claim_write_lines": [
+    130
+   ],
+   "external_write_lines": [],
+   "cut_line": 130,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 78,
+     "text": "raise SystemExit(\"no tip\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_sync_probe_r1.py",
+   "bytes": 8459,
+   "claim_write_lines": [
+    126
+   ],
+   "external_write_lines": [
+    79,
+    87
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r1.py",
+   "bytes": 10135,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r2.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r3.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r4.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r5.py",
+   "bytes": 10228,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0557_build_r1.py",
+   "bytes": 13862,
+   "claim_write_lines": [
+    222
+   ],
+   "external_write_lines": [],
+   "cut_line": 222,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 50,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "progress_block_r1.py",
+   "bytes": 5375,
+   "claim_write_lines": [
+    76,
+    86
+   ],
+   "external_write_lines": [],
+   "cut_line": 76,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_alarm_r1.py",
+   "bytes": 5537,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_anchors_r1.py",
+   "bytes": 4973,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r1.py",
+   "bytes": 5141,
+   "claim_write_lines": [
+    95
+   ],
+   "external_write_lines": [],
+   "cut_line": 95,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r2.py",
+   "bytes": 5031,
+   "claim_write_lines": [
+    93
+   ],
+   "external_write_lines": [],
+   "cut_line": 93,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r3_r1.py",
+   "bytes": 5450,
+   "claim_write_lines": [
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 97,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0019_r1.py",
+   "bytes": 5257,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0124_r1.py",
+   "bytes": 5144,
+   "claim_write_lines": [
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 94,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0130_r1.py",
+   "bytes": 6045,
+   "claim_write_lines": [
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0245_r1.py",
+   "bytes": 5380,
+   "claim_write_lines": [
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 94,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0245_r2.py",
+   "bytes": 4955,
+   "claim_write_lines": [
+    89
+   ],
+   "external_write_lines": [],
+   "cut_line": 89,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0557_r1.py",
+   "bytes": 5850,
+   "claim_write_lines": [
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0557_r2.py",
+   "bytes": 5626,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr1945_r1.py",
+   "bytes": 5187,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_edenom_r1.py",
+   "bytes": 5825,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_g4_floor_r1.py",
+   "bytes": 5159,
+   "claim_write_lines": [
+    98
+   ],
+   "external_write_lines": [],
+   "cut_line": 98,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_g4_floor_r2.py",
+   "bytes": 5143,
+   "claim_write_lines": [
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 97,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_hook_r1.py",
+   "bytes": 6065,
+   "claim_write_lines": [
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_selfcheck_r1.py",
+   "bytes": 5827,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publisher_fix_proof_r1.py",
+   "bytes": 4401,
+   "claim_write_lines": [
+    45,
+    77
+   ],
+   "external_write_lines": [
+    55,
+    59
+   ],
+   "cut_line": 45,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_cmdr1945_r1.py",
+   "bytes": 6249,
+   "claim_write_lines": [
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r2_r1.py",
+   "bytes": 4183,
+   "claim_write_lines": [
+    63
+   ],
+   "external_write_lines": [],
+   "cut_line": 63,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r3_r1.py",
+   "bytes": 5825,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r1.py",
+   "bytes": 4684,
+   "claim_write_lines": [
+    75
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r2.py",
+   "bytes": 4733,
+   "claim_write_lines": [
+    75
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_d76_only_r3.py",
+   "bytes": 13363,
+   "claim_write_lines": [
+    202,
+    251
+   ],
+   "external_write_lines": [],
+   "cut_line": 202,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 38,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    },
+    {
+     "line": 76,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_gen_66d805_r1.py",
+   "bytes": 13706,
+   "claim_write_lines": [
+    243
+   ],
+   "external_write_lines": [],
+   "cut_line": 243,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 50,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    },
+    {
+     "line": 89,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_gen_live_r2.py",
+   "bytes": 17576,
+   "claim_write_lines": [
+    96,
+    267,
+    317
+   ],
+   "external_write_lines": [],
+   "cut_line": 96,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 55,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "selfcheck_build_r1.py",
+   "bytes": 10117,
+   "claim_write_lines": [
+    54,
+    169
+   ],
+   "external_write_lines": [],
+   "cut_line": 54,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "shared_clone_object_gap_r1.py",
+   "bytes": 4812,
+   "claim_write_lines": [
+    71
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  }
+ ],
+ "legs": [
+  {
+   "file": "_patch_driver_detached.py",
+   "bytes": 4040,
+   "claim_write_lines": [
+    68
+   ],
+   "external_write_lines": [],
+   "cut_line": 68,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    51
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 26,
+     "text": "assert s.count(old_head) == 1, (\"head bolt\", s.count(old_head))"
+    },
+    {
+     "line": 46,
+     "text": "assert s.count(a) == 1, (\"tail\", s.count(a))"
+    },
+    {
+     "line": 51,
+     "text": "raise SystemExit(\"ABORT needle %r matched %d\" % (a[:50], n))"
+    },
+    {
+     "line": 63,
+     "text": "assert s.count(old_d7) == 1, (\"d76 re-attach\", s.count(old_d7))"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "bytes": 13594,
+   "claim_write_lines": [
+    81,
+    117
+   ],
+   "external_write_lines": [],
+   "cut_line": 81,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r1.py",
+   "bytes": 8364,
+   "claim_write_lines": [
+    162
+   ],
+   "external_write_lines": [],
+   "cut_line": 162,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r2.py",
+   "bytes": 8553,
+   "claim_write_lines": [
+    165
+   ],
+   "external_write_lines": [],
+   "cut_line": 165,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "bytes": 7225,
+   "claim_write_lines": [
+    120
+   ],
+   "external_write_lines": [],
+   "cut_line": 120,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 36,
+     "text": "raise SystemExit(\"git failed %s :: %s\" % (a[:2], (r.stderr or \"\")[-200:]))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_mutation_arms_r1.py",
+   "bytes": 6974,
+   "claim_write_lines": [
+    116,
+    120,
+    135
+   ],
+   "external_write_lines": [],
+   "cut_line": 116,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r1.py",
+   "bytes": 4864,
+   "claim_write_lines": [
+    72
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r2.py",
+   "bytes": 4917,
+   "claim_write_lines": [
+    73
+   ],
+   "external_write_lines": [],
+   "cut_line": 73,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_ack0557_r1.py",
+   "bytes": 8277,
+   "claim_write_lines": [
+    76,
+    114
+   ],
+   "external_write_lines": [
+    103
+   ],
+   "cut_line": 76,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0019_r1.py",
+   "bytes": 6907,
+   "claim_write_lines": [
+    64,
+    96
+   ],
+   "external_write_lines": [
+    85
+   ],
+   "cut_line": 64,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0130_r1.py",
+   "bytes": 8834,
+   "claim_write_lines": [
+    86,
+    123
+   ],
+   "external_write_lines": [
+    113
+   ],
+   "cut_line": 86,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0557_r1.py",
+   "bytes": 9750,
+   "claim_write_lines": [
+    93,
+    132
+   ],
+   "external_write_lines": [
+    120
+   ],
+   "cut_line": 93,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_hook_r1.py",
+   "bytes": 8155,
+   "claim_write_lines": [
+    79,
+    115
+   ],
+   "external_write_lines": [
+    105
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_selfcheck_r1.py",
+   "bytes": 8299,
+   "claim_write_lines": [
+    79,
+    114
+   ],
+   "external_write_lines": [
+    104
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_alarm_r1.py",
+   "bytes": 2826,
+   "claim_write_lines": [
+    33
+   ],
+   "external_write_lines": [
+    24
+   ],
+   "cut_line": 24,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_edenom_r1.py",
+   "bytes": 2669,
+   "claim_write_lines": [],
+   "external_write_lines": [
+    24
+   ],
+   "cut_line": 24,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_reply_cmdr0245_r1.py",
+   "bytes": 3571,
+   "claim_write_lines": [
+    59
+   ],
+   "external_write_lines": [
+    52
+   ],
+   "cut_line": 52,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ack0557_r1.py",
+   "bytes": 12496,
+   "claim_write_lines": [
+    154,
+    165,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 154,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 149,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_alarm_r1.py",
+   "bytes": 8031,
+   "claim_write_lines": [
+    104,
+    115,
+    124
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 99,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_anchors_erratum_r1.py",
+   "bytes": 5320,
+   "claim_write_lines": [
+    82,
+    90
+   ],
+   "external_write_lines": [],
+   "cut_line": 82,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 53,
+     "text": "raise SystemExit(9)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_anchors_r1.py",
+   "bytes": 10367,
+   "claim_write_lines": [
+    116,
+    125
+   ],
+   "external_write_lines": [],
+   "cut_line": 116,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 84,
+     "text": "A(\"- 写期限尺 `backend/tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_blindspot_r1.py",
+   "bytes": 6601,
+   "claim_write_lines": [
+    82,
+    90
+   ],
+   "external_write_lines": [],
+   "cut_line": 82,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    39
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 39,
+     "text": "raise SystemExit(\"ABORT: the shelf enumerates nothing for \" + SLUG)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_census_r1.py",
+   "bytes": 6177,
+   "claim_write_lines": [
+    71,
+    80
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_census_r2.py",
+   "bytes": 7850,
+   "claim_write_lines": [
+    100,
+    110
+   ],
+   "external_write_lines": [],
+   "cut_line": 100,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    43
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 43,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/control\" % slug)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_census_r3_r1.py",
+   "bytes": 12230,
+   "claim_write_lines": [
+    166,
+    168,
+    181,
+    190
+   ],
+   "external_write_lines": [],
+   "cut_line": 166,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    53,
+    64
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 53,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/control\" % slug)"
+    },
+    {
+     "line": 64,
+     "text": "raise SystemExit(\"ABORT: shelf listing does not match the publish receipt\")"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0019_r1.py",
+   "bytes": 10569,
+   "claim_write_lines": [
+    150,
+    161,
+    170
+   ],
+   "external_write_lines": [],
+   "cut_line": 150,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    54
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 54,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing\" % slug)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0124_r1.py",
+   "bytes": 13599,
+   "claim_write_lines": [
+    187,
+    189,
+    202,
+    211
+   ],
+   "external_write_lines": [],
+   "cut_line": 187,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    65
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 65,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/control\" % slug)"
+    },
+    {
+     "line": 79,
+     "text": "assert g4_parent == p3[\"tip\"], \"the re-cut chain does not start at the current tip: %s\" % g4_parent"
+    },
+    {
+     "line": 80,
+     "text": "assert [F_G4[\"rc\"], F_D76[\"rc\"]] == [0, 0] and [F_G4[\"conflict_names\"], F_D76[\"conflict_names\"]] == [0, 0], \\"
+    },
+    {
+     "line": 127,
+     "text": "if l.strip().startswith('assert sorted(listed[\"responses\"])')]"
+    },
+    {
+     "line": 128,
+     "text": "assert len(old_line) == 1, \"the equality line this ruling replaces is not found exactly once on the tip\""
+    },
+    {
+     "line": 148,
+     "text": "\"`assert sorted(listed[\\\"responses\\\"]) == [\\\"200\\\", \\\"409\\\"]`；现在换成三条具名断言——承诺集 `promised_get` \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0130_r1.py",
+   "bytes": 14945,
+   "claim_write_lines": [
+    192,
+    203,
+    212
+   ],
+   "external_write_lines": [],
+   "cut_line": 192,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 187,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_cmdr0245_r1.py",
+   "bytes": 17291,
+   "claim_write_lines": [
+    92,
+    226,
+    228,
+    241,
+    250
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    53
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 53,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/control\" % slug)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0557_r1.py",
+   "bytes": 14824,
+   "claim_write_lines": [
+    198,
+    209,
+    218
+   ],
+   "external_write_lines": [],
+   "cut_line": 198,
+   "floors_before_cut": [
+    40
+   ],
+   "floor_worded_raises_before_cut": [
+    44,
+    47
+   ],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 44,
+     "text": "raise SystemExit(\"ABORT: the cited repro numbers are not the published bytes \""
+    },
+    {
+     "line": 47,
+     "text": "raise SystemExit(\"ABORT: %s resolves to no single shelf path\" % name)"
+    },
+    {
+     "line": 193,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr1945_r1.py",
+   "bytes": 12025,
+   "claim_write_lines": [
+    172,
+    183,
+    192
+   ],
+   "external_write_lines": [],
+   "cut_line": 172,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    57
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 57,
+     "text": "raise SystemExit(\"ABORT: %s enumerates nothing on commander/control\" % slug)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_edenom_r1.py",
+   "bytes": 8912,
+   "claim_write_lines": [
+    109,
+    120,
+    129
+   ],
+   "external_write_lines": [],
+   "cut_line": 109,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 65,
+     "text": "A(\"  v2 走语法树，把「底」收紧成**同一函数里必须有一枚语句在集合为空时拒绝**（`assert X`／`if not X: raise|return \""
+    },
+    {
+     "line": 104,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_empty_floor_r1.py",
+   "bytes": 9606,
+   "claim_write_lines": [
+    85,
+    86
+   ],
+   "external_write_lines": [],
+   "cut_line": 85,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 83,
+     "text": "raise SystemExit(\"unreplaced slots: %s\" % left)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_g4_floor_erratum_r1.py",
+   "bytes": 7337,
+   "claim_write_lines": [
+    89,
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 89,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_g4_floor_r1.py",
+   "bytes": 7064,
+   "claim_write_lines": [
+    81,
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 81,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_hook_r1.py",
+   "bytes": 10060,
+   "claim_write_lines": [
+    129,
+    140,
+    149
+   ],
+   "external_write_lines": [],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 124,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_mirror_restore_r1.py",
+   "bytes": 10229,
+   "claim_write_lines": [
+    106,
+    107
+   ],
+   "external_write_lines": [],
+   "cut_line": 106,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 103,
+     "text": "raise SystemExit(\"unreplaced slots: %s\" % sorted(set(left)))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ord0552_r1.py",
+   "bytes": 12427,
+   "claim_write_lines": [
+    151,
+    162,
+    171
+   ],
+   "external_write_lines": [],
+   "cut_line": 151,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ord0552_r2.py",
+   "bytes": 7597,
+   "claim_write_lines": [
+    112,
+    123,
+    132
+   ],
+   "external_write_lines": [],
+   "cut_line": 112,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    45
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 45,
+     "text": "raise SystemExit(\"ABORT: %r found %d times in %s\" % (needle, len(hits), rel))"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_selfcheck_r1.py",
+   "bytes": 10209,
+   "claim_write_lines": [
+    130,
+    140,
+    146,
+    150,
+    151
+   ],
+   "external_write_lines": [],
+   "cut_line": 130,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 3,
+   "refusal_texts_before_cut": [
+    {
+     "line": 124,
+     "text": "raise SystemExit(10)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_notice_anchors_landed_r1.py",
+   "bytes": 5979,
+   "claim_write_lines": [
+    75,
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 5,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_erratum_r1.py",
+   "bytes": 5052,
+   "claim_write_lines": [
+    72,
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_r1.py",
+   "bytes": 7347,
+   "claim_write_lines": [
+    84,
+    103
+   ],
+   "external_write_lines": [],
+   "cut_line": 84,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r1.py",
+   "bytes": 7743,
+   "claim_write_lines": [
+    84,
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 84,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r3_r1.py",
+   "bytes": 7482,
+   "claim_write_lines": [
+    102,
+    123
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr0124_r1.py",
+   "bytes": 8058,
+   "claim_write_lines": [
+    112,
+    133
+   ],
+   "external_write_lines": [],
+   "cut_line": 112,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [
+    {
+     "line": 54,
+     "text": "if l.strip().startswith('assert sorted(listed[\"responses\"])')][0],"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr0245_r1.py",
+   "bytes": 10651,
+   "claim_write_lines": [
+    129,
+    163
+   ],
+   "external_write_lines": [
+    150
+   ],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr1945_r1.py",
+   "bytes": 9436,
+   "claim_write_lines": [
+    107,
+    145
+   ],
+   "external_write_lines": [
+    131
+   ],
+   "cut_line": 107,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r1.py",
+   "bytes": 6585,
+   "claim_write_lines": [
+    74,
+    93
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r2.py",
+   "bytes": 7990,
+   "claim_write_lines": [
+    87,
+    106
+   ],
+   "external_write_lines": [],
+   "cut_line": 87,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_ord0552_r1.py",
+   "bytes": 9261,
+   "claim_write_lines": [
+    98,
+    132
+   ],
+   "external_write_lines": [
+    120
+   ],
+   "cut_line": 98,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_arms_r1.py",
+   "bytes": 7342,
+   "claim_write_lines": [
+    127
+   ],
+   "external_write_lines": [],
+   "cut_line": 127,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 9,
+     "text": "sparse-checkout), because two of the files assert that committed readouts beside them exist. The classificatio"
+    },
+    {
+     "line": 42,
+     "text": "raise SystemExit(\"cannot read %s at %s\" % (rel, tip))"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_counterarm_r1.py",
+   "bytes": 5828,
+   "claim_write_lines": [
+    71,
+    84,
+    98
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_run_r1.py",
+   "bytes": 3501,
+   "claim_write_lines": [
+    59
+   ],
+   "external_write_lines": [],
+   "cut_line": 59,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_verdicts_r1.py",
+   "bytes": 6800,
+   "claim_write_lines": [
+    101
+   ],
+   "external_write_lines": [],
+   "cut_line": 101,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0019_landing_prediction_r1.py",
+   "bytes": 4272,
+   "claim_write_lines": [
+    68
+   ],
+   "external_write_lines": [],
+   "cut_line": 68,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0130_landing_prediction_r1.py",
+   "bytes": 6439,
+   "claim_write_lines": [
+    105
+   ],
+   "external_write_lines": [],
+   "cut_line": 105,
+   "floors_before_cut": [
+    47,
+    53,
+    65
+   ],
+   "floor_worded_raises_before_cut": [
+    48,
+    54,
+    66
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 48,
+     "text": "raise SystemExit(\"ABORT: no authoritative tip read from the server (%s)\" % err[:200])"
+    },
+    {
+     "line": 54,
+     "text": "raise SystemExit(\"ABORT: tip %s is not a local commit (tracking ref reads %s); refusing to diff \""
+    },
+    {
+     "line": 66,
+     "text": "raise SystemExit(\"ABORT: candidate %s is not a local commit - will not predict a landing from \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "cmdr0245_landing_prediction_r1.py",
+   "bytes": 4112,
+   "claim_write_lines": [
+    66
+   ],
+   "external_write_lines": [],
+   "cut_line": 66,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0245_landing_prediction_r2.py",
+   "bytes": 4112,
+   "claim_write_lines": [
+    66
+   ],
+   "external_write_lines": [],
+   "cut_line": 66,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "bytes": 19820,
+   "claim_write_lines": [
+    327,
+    337
+   ],
+   "external_write_lines": [],
+   "cut_line": 327,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_check_r1.py",
+   "bytes": 11133,
+   "claim_write_lines": [
+    200
+   ],
+   "external_write_lines": [],
+   "cut_line": 200,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_hook_r1.py",
+   "bytes": 10959,
+   "claim_write_lines": [
+    74,
+    146,
+    194,
+    200
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "bytes": 6411,
+   "claim_write_lines": [
+    99
+   ],
+   "external_write_lines": [],
+   "cut_line": 99,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_denominator_scan_r1.py",
+   "bytes": 12735,
+   "claim_write_lines": [
+    220,
+    221,
+    222,
+    269
+   ],
+   "external_write_lines": [],
+   "cut_line": 220,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 8,
+     "text": "(`assert X`, `if not X: raise|return <non-zero>`, `len(X) == 0 -> raise`, `X == 0 -> refuse`)."
+    },
+    {
+     "line": 61,
+     "text": "(r\"^\\s*assert\\s+%s\\b(?! )\" % c, None),                       # `assert staged` / `assert rows and …`"
+    },
+    {
+     "line": 63,
+     "text": "(r\"if\\s+not\\s+%s\\b\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 64,
+     "text": "(r\"len\\(\\s*%s\\s*\\)\\s*==\\s*0\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 65,
+     "text": "(r\"%s\\s*==\\s*0\\b\" % c, r\"(raise|SystemExit|return\\s+[1-9]|abort)\"),"
+    },
+    {
+     "line": 81,
+     "text": "except (SyntaxError, ValueError):"
+    },
+    {
+     "line": 200,
+     "text": "assert rows, \"empty denominator - nothing was measured\""
+    },
+    {
+     "line": 207,
+     "text": "raise SystemExit(\"ABORT: nothing staged\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_denominator_scan_r2.py",
+   "bytes": 11530,
+   "claim_write_lines": [
+    177,
+    212,
+    239
+   ],
+   "external_write_lines": [],
+   "cut_line": 177,
+   "floors_before_cut": [
+    136,
+    139
+   ],
+   "floor_worded_raises_before_cut": [
+    137,
+    140
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 10,
+     "text": "floor_upstream  whether the function this site sits in is fed by a named ABORT/SystemExit floor in the same fi"
+    },
+    {
+     "line": 58,
+     "text": "self.abort_names = set()  # names mentioned inside ABORT/SystemExit messages in this file"
+    },
+    {
+     "line": 103,
+     "text": "raises = (\"Raise\" in body and \"SystemExit\" in body) or \"Assert\" in body"
+    },
+    {
+     "line": 128,
+     "text": "for m in re.finditer(r\"(?:SystemExit|raise)\\((.{0,200})\", src):"
+    },
+    {
+     "line": 137,
+     "text": "raise SystemExit(\"ABORT: no such root %s\" % root)"
+    },
+    {
+     "line": 140,
+     "text": "raise SystemExit(\"ABORT: no .py files under %s - refusing to call an empty root a clean scan\" % root)"
+    },
+    {
+     "line": 146,
+     "text": "except (SyntaxError, ValueError):"
+    },
+    {
+     "line": 159,
+     "text": "re.search(r\"(?:ABORT|SystemExit|raise)[^\\n]*\\b%s\\b\" % re.escape(c), src) for c in called)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "empty_floor_counterexample_r1.py",
+   "bytes": 8064,
+   "claim_write_lines": [
+    153
+   ],
+   "external_write_lines": [],
+   "cut_line": 153,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 76,
+     "text": "except SystemExit as e:"
+    },
+    {
+     "line": 128,
+     "text": "except ValueError as e:"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_leg_reachability_r1.py",
+   "bytes": 5487,
+   "claim_write_lines": [
+    109
+   ],
+   "external_write_lines": [],
+   "cut_line": 109,
+   "floors_before_cut": [
+    95
+   ],
+   "floor_worded_raises_before_cut": [
+    96
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 5,
+     "text": "file write), is there any refusal an empty input could reach - a `raise SystemExit(...)`, an `assert`, or a"
+    },
+    {
+     "line": 30,
+     "text": "REFUSE_RE = re.compile(r\"raise SystemExit|sys\\.exit|assert \\w|raise [A-Z]\\w*Error|HookGuard\")"
+    },
+    {
+     "line": 96,
+     "text": "raise SystemExit(\"ABORT: no .py legs under %s - refusing to call an empty denominator a clean audit\" % HERE)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "empty_leg_reachability_r2.py",
+   "bytes": 5587,
+   "claim_write_lines": [
+    114
+   ],
+   "external_write_lines": [],
+   "cut_line": 114,
+   "floors_before_cut": [
+    98
+   ],
+   "floor_worded_raises_before_cut": [
+    99
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 30,
+     "text": "RAISE = re.compile(r\"raise SystemExit|sys\\.exit|raise [A-Z]\\w*Error|assert \")"
+    },
+    {
+     "line": 62,
+     "text": "if RAISE.search(body_txt) or \"SystemExit\" in body_txt:"
+    },
+    {
+     "line": 99,
+     "text": "raise SystemExit(\"ABORT: no .py files under %s\" % HERE)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "empty_leg_reachability_r3.py",
+   "bytes": 9437,
+   "claim_write_lines": [
+    165,
+    196
+   ],
+   "external_write_lines": [],
+   "cut_line": 165,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 33,
+     "text": "RAISE_VERB = re.compile(r\"SystemExit|sys\\.exit|AssertionError|RuntimeError|ValueError|Error\\(|assert \")"
+    },
+    {
+     "line": 152,
+     "text": "\"        raise SystemExit('ABORT: rows enumerated nothing')\\n\""
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_publisher_counterexample_r1.py",
+   "bytes": 3554,
+   "claim_write_lines": [
+    51,
+    70
+   ],
+   "external_write_lines": [],
+   "cut_line": 51,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 40,
+     "text": "assert s.count(anchor) == 1, \"the publisher's body moved; the fix line has nowhere to go\""
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "flat_empty_floor_r1.py",
+   "bytes": 7890,
+   "claim_write_lines": [
+    129,
+    132,
+    133
+   ],
+   "external_write_lines": [],
+   "cut_line": 129,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "flat_restore_r1.py",
+   "bytes": 8059,
+   "claim_write_lines": [
+    114,
+    123
+   ],
+   "external_write_lines": [],
+   "cut_line": 114,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r1.py",
+   "bytes": 7338,
+   "claim_write_lines": [
+    70,
+    91,
+    139
+   ],
+   "external_write_lines": [],
+   "cut_line": 70,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 57,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 69,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r2.py",
+   "bytes": 7338,
+   "claim_write_lines": [
+    70,
+    91,
+    139
+   ],
+   "external_write_lines": [],
+   "cut_line": 70,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 57,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 69,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r3.py",
+   "bytes": 8463,
+   "claim_write_lines": [
+    72,
+    93,
+    151
+   ],
+   "external_write_lines": [],
+   "cut_line": 72,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 59,
+     "text": "fired = [l.strip()[:170] for l in out.splitlines() if \"AssertionError\" in l]"
+    },
+    {
+     "line": 71,
+     "text": "assert text in src, (\"anchor line not found\", rel)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_artifact_r1.py",
+   "bytes": 6854,
+   "claim_write_lines": [
+    92,
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    29
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 29,
+     "text": "raise SystemExit(\"ABORT: %s found %d times in the arm\" % (label, len(hits)))"
+    },
+    {
+     "line": 52,
+     "text": "\"offenders_still_the_same\": at('assert offenders == {}', \"offenders\"),"
+    },
+    {
+     "line": 61,
+     "text": "\"`def busy_timeout_ms(` or state `busy_timeout = <int>`, or the whitelist assert \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_artifact_r2.py",
+   "bytes": 6854,
+   "claim_write_lines": [
+    92,
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    29
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 29,
+     "text": "raise SystemExit(\"ABORT: %s found %d times in the arm\" % (label, len(hits)))"
+    },
+    {
+     "line": 52,
+     "text": "\"offenders_still_the_same\": at('assert offenders == {}', \"offenders\"),"
+    },
+    {
+     "line": 61,
+     "text": "\"`def busy_timeout_ms(` or state `busy_timeout = <int>`, or the whitelist assert \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_artifact_r3.py",
+   "bytes": 6844,
+   "claim_write_lines": [
+    92,
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    29
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 29,
+     "text": "raise SystemExit(\"ABORT: %s found %d times in the arm\" % (label, len(hits)))"
+    },
+    {
+     "line": 52,
+     "text": "\"offenders_still_the_same\": at('assert offenders == {}', \"offenders\"),"
+    },
+    {
+     "line": 61,
+     "text": "\"`def busy_timeout_ms(` or state `busy_timeout = <int>`, or the whitelist assert \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_artifact_r4.py",
+   "bytes": 6907,
+   "claim_write_lines": [
+    92,
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    29
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 29,
+     "text": "raise SystemExit(\"ABORT: %s found %d times in the arm\" % (label, len(hits)))"
+    },
+    {
+     "line": 52,
+     "text": "\"offenders_still_the_same\": at('assert offenders == {}', \"offenders\"),"
+    },
+    {
+     "line": 61,
+     "text": "\"`def busy_timeout_ms(` or state `busy_timeout = <int>`, or the whitelist assert \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_artifact_r5.py",
+   "bytes": 9896,
+   "claim_write_lines": [
+    132,
+    134
+   ],
+   "external_write_lines": [],
+   "cut_line": 132,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    29
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 29,
+     "text": "raise SystemExit(\"ABORT: %s found %d times in the arm\" % (label, len(hits)))"
+    },
+    {
+     "line": 73,
+     "text": "\"offenders_still_the_same\": at('assert offenders == {}', \"offenders\"),"
+    },
+    {
+     "line": 82,
+     "text": "\"`def busy_timeout_ms(` or state `busy_timeout = <int>`, or the whitelist assert \""
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_probe_r1.py",
+   "bytes": 11951,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r2.py",
+   "bytes": 11970,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r3.py",
+   "bytes": 11940,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r4.py",
+   "bytes": 12139,
+   "claim_write_lines": [
+    74,
+    216
+   ],
+   "external_write_lines": [],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r5.py",
+   "bytes": 13943,
+   "claim_write_lines": [
+    73,
+    242
+   ],
+   "external_write_lines": [],
+   "cut_line": 73,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "hook_build_r1.py",
+   "bytes": 9166,
+   "claim_write_lines": [
+    41,
+    145
+   ],
+   "external_write_lines": [],
+   "cut_line": 41,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "land_candidate_r1.py",
+   "bytes": 4357,
+   "claim_write_lines": [
+    46,
+    77
+   ],
+   "external_write_lines": [],
+   "cut_line": 46,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "land_g4_floor_r2.py",
+   "bytes": 5011,
+   "claim_write_lines": [
+    42,
+    51,
+    82
+   ],
+   "external_write_lines": [],
+   "cut_line": 42,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "landed_ledger_mirror_r1.py",
+   "bytes": 11949,
+   "claim_write_lines": [
+    233
+   ],
+   "external_write_lines": [],
+   "cut_line": 233,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    77,
+    118
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 77,
+     "text": "raise SystemExit(\"ABORT: git cat-file failed for %s: %s\" % (rev, p.stderr[-200:]))"
+    },
+    {
+     "line": 110,
+     "text": "raise SystemExit(\"ARM no_api: expected the api leg to be unavailable - see caller\")"
+    },
+    {
+     "line": 118,
+     "text": "raise SystemExit(\"ABORT: git fetch of refs/heads/%s failed: %s\" % (ref, err[-300:]))"
+    },
+    {
+     "line": 197,
+     "text": "except SystemExit:"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "lane_publisher_r1.py",
+   "bytes": 9191,
+   "claim_write_lines": [
+    134
+   ],
+   "external_write_lines": [],
+   "cut_line": 134,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r2.py",
+   "bytes": 9191,
+   "claim_write_lines": [
+    134
+   ],
+   "external_write_lines": [],
+   "cut_line": 134,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r3.py",
+   "bytes": 9961,
+   "claim_write_lines": [
+    143
+   ],
+   "external_write_lines": [],
+   "cut_line": 143,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_complete_read_r1.py",
+   "bytes": 11949,
+   "claim_write_lines": [
+    233
+   ],
+   "external_write_lines": [],
+   "cut_line": 233,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    77,
+    118
+   ],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 77,
+     "text": "raise SystemExit(\"ABORT: git cat-file failed for %s: %s\" % (rev, p.stderr[-200:]))"
+    },
+    {
+     "line": 110,
+     "text": "raise SystemExit(\"ARM no_api: expected the api leg to be unavailable - see caller\")"
+    },
+    {
+     "line": 118,
+     "text": "raise SystemExit(\"ABORT: git fetch of refs/heads/%s failed: %s\" % (ref, err[-300:]))"
+    },
+    {
+     "line": 197,
+     "text": "except SystemExit:"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "ledger_mirror_repro_r1.py",
+   "bytes": 5725,
+   "claim_write_lines": [
+    108
+   ],
+   "external_write_lines": [],
+   "cut_line": 108,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_runs_r1.py",
+   "bytes": 7979,
+   "claim_write_lines": [
+    137
+   ],
+   "external_write_lines": [],
+   "cut_line": 137,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 37,
+     "text": "except ValueError:"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "make_gen_r4_r5_r1.py",
+   "bytes": 2754,
+   "claim_write_lines": [
+    55
+   ],
+   "external_write_lines": [],
+   "cut_line": 55,
+   "floors_before_cut": [
+    49
+   ],
+   "floor_worded_raises_before_cut": [
+    47,
+    50,
+    54
+   ],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [
+    {
+     "line": 47,
+     "text": "raise SystemExit(\"ABORT: needle in %s matched %d times, expected 1: %r\" % (src, n, old[:70]))"
+    },
+    {
+     "line": 50,
+     "text": "raise SystemExit(\"ABORT: the new tip never landed in %s\" % dst)"
+    },
+    {
+     "line": 54,
+     "text": "raise SystemExit(\"ABORT: %s already exists and will not be overwritten\" % dst)"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "merge_dropped_landed_tool_r1.py",
+   "bytes": 5527,
+   "claim_write_lines": [
+    88
+   ],
+   "external_write_lines": [],
+   "cut_line": 88,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_landing_recheck_r2.py",
+   "bytes": 10532,
+   "claim_write_lines": [
+    214
+   ],
+   "external_write_lines": [],
+   "cut_line": 214,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 6,
+   "refusal_texts_before_cut": [
+    {
+     "line": 84,
+     "text": "raise SystemExit(\"ls-tree -r failed rc %d: %s\" % (rc, err[-300:]))"
+    },
+    {
+     "line": 101,
+     "text": "raise SystemExit(\"plumbing %s rc %d: %s\" % (args[0], p.returncode,"
+    },
+    {
+     "line": 105,
+     "text": "raise SystemExit(\"write-tree rc %d\" % p.returncode)"
+    },
+    {
+     "line": 115,
+     "text": "raise SystemExit(\"commit-tree rc %d: %s\" % (p.returncode, p.stderr.decode(\"utf-8\", \"replace\")[-300:]))"
+    },
+    {
+     "line": 129,
+     "text": "raise SystemExit(\"no authoritative tip read\")"
+    },
+    {
+     "line": 135,
+     "text": "raise SystemExit(\"fetch failed, cannot measure the tip\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_restore_verify_r3.py",
+   "bytes": 6551,
+   "claim_write_lines": [
+    130
+   ],
+   "external_write_lines": [],
+   "cut_line": 130,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 78,
+     "text": "raise SystemExit(\"no tip\")"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_sync_probe_r1.py",
+   "bytes": 8459,
+   "claim_write_lines": [
+    126
+   ],
+   "external_write_lines": [
+    79,
+    87
+   ],
+   "cut_line": 79,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r1.py",
+   "bytes": 10135,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r2.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r3.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r4.py",
+   "bytes": 10165,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0476_gate_probe_r5.py",
+   "bytes": 10228,
+   "claim_write_lines": [
+    75,
+    174
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 35,
+     "text": "OLD = ('    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])')"
+    },
+    {
+     "line": 43,
+     "text": "assert promised_get <= seen_get, (\"a response ORD-0476 promised is gone from the read door\","
+    },
+    {
+     "line": 45,
+     "text": "assert seen_get - promised_get <= named_expansion_get, ("
+    },
+    {
+     "line": 49,
+     "text": "assert named_expansion_get <= seen_get, (\"a code is whitelisted but not documented\","
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0557_build_r1.py",
+   "bytes": 13862,
+   "claim_write_lines": [
+    222
+   ],
+   "external_write_lines": [],
+   "cut_line": 222,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 50,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "progress_block_r1.py",
+   "bytes": 5375,
+   "claim_write_lines": [
+    76,
+    86
+   ],
+   "external_write_lines": [],
+   "cut_line": 76,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_alarm_r1.py",
+   "bytes": 5537,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_anchors_r1.py",
+   "bytes": 4973,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r1.py",
+   "bytes": 5141,
+   "claim_write_lines": [
+    95
+   ],
+   "external_write_lines": [],
+   "cut_line": 95,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r2.py",
+   "bytes": 5031,
+   "claim_write_lines": [
+    93
+   ],
+   "external_write_lines": [],
+   "cut_line": 93,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_census_r3_r1.py",
+   "bytes": 5450,
+   "claim_write_lines": [
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 97,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0019_r1.py",
+   "bytes": 5257,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0124_r1.py",
+   "bytes": 5144,
+   "claim_write_lines": [
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 94,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0130_r1.py",
+   "bytes": 6045,
+   "claim_write_lines": [
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0245_r1.py",
+   "bytes": 5380,
+   "claim_write_lines": [
+    94
+   ],
+   "external_write_lines": [],
+   "cut_line": 94,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0245_r2.py",
+   "bytes": 4955,
+   "claim_write_lines": [
+    89
+   ],
+   "external_write_lines": [],
+   "cut_line": 89,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0557_r1.py",
+   "bytes": 5850,
+   "claim_write_lines": [
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr0557_r2.py",
+   "bytes": 5626,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_cmdr1945_r1.py",
+   "bytes": 5187,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_edenom_r1.py",
+   "bytes": 5825,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_empty_floor_r1.py",
+   "bytes": 4682,
+   "claim_write_lines": [
+    97
+   ],
+   "external_write_lines": [
+    74
+   ],
+   "cut_line": 74,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    47
+   ],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [
+    {
+     "line": 47,
+     "text": "raise SystemExit(\"ref exists; refusing to move a published ref\")"
+    },
+    {
+     "line": 70,
+     "text": "raise SystemExit(\"plumbing %s rc %d %s\" % (args[0], p.returncode,"
+    }
+   ],
+   "verdict": "guarded"
+  },
+  {
+   "file": "publish_g4_floor_r1.py",
+   "bytes": 5159,
+   "claim_write_lines": [
+    98
+   ],
+   "external_write_lines": [],
+   "cut_line": 98,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_g4_floor_r2.py",
+   "bytes": 5143,
+   "claim_write_lines": [
+    97
+   ],
+   "external_write_lines": [],
+   "cut_line": 97,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_hook_r1.py",
+   "bytes": 6065,
+   "claim_write_lines": [
+    104
+   ],
+   "external_write_lines": [],
+   "cut_line": 104,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_selfcheck_r1.py",
+   "bytes": 5827,
+   "claim_write_lines": [
+    91
+   ],
+   "external_write_lines": [],
+   "cut_line": 91,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publisher_fix_proof_r1.py",
+   "bytes": 4401,
+   "claim_write_lines": [
+    45,
+    77
+   ],
+   "external_write_lines": [
+    55,
+    59
+   ],
+   "cut_line": 45,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_cmdr1945_r1.py",
+   "bytes": 6249,
+   "claim_write_lines": [
+    102
+   ],
+   "external_write_lines": [],
+   "cut_line": 102,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r2_r1.py",
+   "bytes": 4183,
+   "claim_write_lines": [
+    63
+   ],
+   "external_write_lines": [],
+   "cut_line": 63,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r3_r1.py",
+   "bytes": 5825,
+   "claim_write_lines": [
+    92
+   ],
+   "external_write_lines": [],
+   "cut_line": 92,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r1.py",
+   "bytes": 4684,
+   "claim_write_lines": [
+    75
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r2.py",
+   "bytes": 4733,
+   "claim_write_lines": [
+    75
+   ],
+   "external_write_lines": [],
+   "cut_line": 75,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 1,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_d76_only_r3.py",
+   "bytes": 13363,
+   "claim_write_lines": [
+    202,
+    251
+   ],
+   "external_write_lines": [],
+   "cut_line": 202,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 38,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    },
+    {
+     "line": 76,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_gen_66d805_r1.py",
+   "bytes": 13706,
+   "claim_write_lines": [
+    243
+   ],
+   "external_write_lines": [],
+   "cut_line": 243,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 50,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    },
+    {
+     "line": 89,
+     "text": "raise SystemExit(8)"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_gen_live_r2.py",
+   "bytes": 17576,
+   "claim_write_lines": [
+    96,
+    267,
+    317
+   ],
+   "external_write_lines": [],
+   "cut_line": 96,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [
+    {
+     "line": 55,
+     "text": "OLD_LINE = '    assert sorted(listed[\"responses\"]) == [\"200\", \"409\"], sorted(listed[\"responses\"])'"
+    }
+   ],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "selfcheck_build_r1.py",
+   "bytes": 10117,
+   "claim_write_lines": [
+    54,
+    169
+   ],
+   "external_write_lines": [],
+   "cut_line": 54,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 2,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "shared_clone_object_gap_r1.py",
+   "bytes": 4812,
+   "claim_write_lines": [
+    71
+   ],
+   "external_write_lines": [],
+   "cut_line": 71,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [],
+   "failure_only_raises_before_cut": 0,
+   "refusal_texts_before_cut": [],
+   "verdict": "unguarded"
+  },
+  {
+   "file": "shelf_prune_r1.py",
+   "bytes": 4823,
+   "claim_write_lines": [
+    87
+   ],
+   "external_write_lines": [],
+   "cut_line": 87,
+   "floors_before_cut": [],
+   "floor_worded_raises_before_cut": [
+    56,
+    73
+   ],
+   "failure_only_raises_before_cut": 4,
+   "refusal_texts_before_cut": [
+    {
+     "line": 33,
+     "text": "raise SystemExit(\"ls-tree failed: \" + err[:200])"
+    },
+    {
+     "line": 56,
+     "text": "raise SystemExit(\"REFUSE: %d draft paths have no byte-identical twin under %s: %s\""
+    },
+    {
+     "line": 60,
+     "text": "raise SystemExit(\"read-tree failed: \" + err[:200])"
+    },
+    {
+     "line": 64,
+     "text": "raise SystemExit(\"update-index failed: \" + err[:200])"
+    },
+    {
+     "line": 73,
+     "text": "raise SystemExit(\"push refused (not forced): \" + (out + err)[-300:])"
+    }
+   ],
+   "verdict": "guarded"
+  }
+ ]
+}

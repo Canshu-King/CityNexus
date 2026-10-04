@@ -1,0 +1,38 @@
+{
+ "tool": "tools/cnx_ledger_mirror_sync_check_r1.py",
+ "tool_blob": "5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e",
+ "empty_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+ "real_ledger_blob": "cccfd292e57ad0ef7818f2ee11da59a4d24d771c",
+ "extract": {
+  "start": 98,
+  "end": 111,
+  "lines": 14,
+  "parse": "ok",
+  "digest": "26670103763cfd50"
+ },
+ "leg_a_real_one_sided_empty": {
+  "local_file_bytes": 0,
+  "rc": 8,
+  "stdout_tail": "{\"verdict\": \"DIVERGED\", \"local_blob\": \"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391\", \"remote_blob\": \"cccfd292e57ad0ef7818f2ee11da59a4d24d771c\", \"points\": [1, 0], \"self_proved\": true}",
+  "stderr_tail": "",
+  "answered_current": false
+ },
+ "leg_b_replica_both_empty": {
+  "fed_local_len": 3,
+  "fed_remote_len": 2,
+  "verdict": "CURRENT"
+ },
+ "leg_c_replica_with_floor": {
+  "refused": true,
+  "detail": "ABORT: both sides carry no content, that is not CURRENT"
+ },
+ "positive_control_real_bytes": {
+  "verdict": "CURRENT"
+ },
+ "summary": {
+  "real_run_did_not_answer_current": true,
+  "replica_answers_current_on_both_empty": true,
+  "proposed_floor_refuses_both_empty": true,
+  "positive_control_still_current": true
+ }
+}

@@ -1,0 +1,35 @@
+authoritative_tip_now	d107131c6f6e65d9f207f6bf1b563d1cc8877f89	git ls-remote --refs origin refs/heads/mirror/... (this minute)
+r1_counts	{guarded:32,unguarded:63,no-mutation-leg:42}	empty_leg_reachability_r1.json counts
+r1_controls_disagree	2 of 3	empty_leg_reachability_r1.json known_cases[*].agrees
+r3_py_files	139	empty_leg_reachability_r3.json py_files
+r3_write_legs	138	same file write_legs
+r3_guarded	24	counts.guarded
+r3_unguarded	114	counts.unguarded
+r3_unparseable	1	counts.unparseable
+r3_unparseable_file	block_selfdecl_005x_r1.py	unparseable_files[0].file
+r3_controls_all_agree	True	known_cases[*].agrees
+r3_fixture_discriminates	True	fixture_discrimination.discriminates
+r3_fixture_no_floor	unguarded	fixture_discrimination.no_floor_says
+r3_fixture_with_floor	guarded	fixture_discrimination.with_floor_says
+audit_census	guarded cut 166	legs[file=block_census_r3_r1.py]
+audit_survey	unguarded cut 120	legs[file=anchor_drift_survey_r3.py]
+audit_scan_r2	guarded cut 177	legs[file=empty_denominator_scan_r2.py]
+audit_block_gen	unguarded cut 85	legs[file=block_empty_floor_r1.py]
+audit_shelf_prune	guarded cut 87	legs[file=shelf_prune_r1.py]
+audit_hook	unguarded cut 74	legs[file=cnx_ledger_mirror_sync_hook_r1.py]
+probe_tool_blob	5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e	sync_check_emptiness_probe_r1.json tool_blob
+probe_extract_range	98-111	extract.start / extract.end
+probe_extract_lines	14	extract.lines
+probe_legA_rc	8	leg_a_real_one_sided_empty.rc
+probe_legA_verdict	DIVERGED	leg_a_real_one_sided_empty.stdout_tail verdict field
+probe_legA_local_blob	e69de29bb2d1d6434b8b29ae775ad8c2e48c5391	leg_a_real_one_sided_empty.stdout_tail local_blob
+probe_legA_remote_blob	cccfd292e57ad0ef7818f2ee11da59a4d24d771c	leg_a_real_one_sided_empty.stdout_tail remote_blob
+probe_legA_answered_current	False	leg_a_real_one_sided_empty.answered_current
+probe_legB_verdict	CURRENT	leg_b_replica_both_empty.verdict
+probe_legC_refused	True	leg_c_replica_with_floor.refused
+probe_positive_verdict	CURRENT	positive_control_real_bytes.verdict
+probe_real_ledger_blob	cccfd292e57ad0ef7818f2ee11da59a4d24d771c	sync_check_emptiness_probe_r1.json real_ledger_blob
+probe_summary	{real_run_did_not_answer_current:true,replica_answers_current_on_both_empty:true,proposed_floor_refuses_both_empty:true,positive_control_still_current:true}	summary
+probe_script_bytes	5795	os.path.getsize of sync_check_emptiness_probe_r1.py
+r3_json_bytes	114555	os.path.getsize of empty_leg_reachability_r3.json
+empty_inputs_three_legs_measured_today	census ABORT / survey rc 0 / scan_r2 ABORT	empty_floor_counterexample_r1.json E1_with_floor_empty.detail, E2_real_survey_empty.rc, E3_scanner_r2.empty_root_refused

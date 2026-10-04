@@ -1,0 +1,10 @@
+file	verdict	cut	floors_before_cut	floor_worded_raises	failure_only_raises	refusal_texts_before_cut
+block_census_r3_r1.py	guarded	166	[]	[53, 64]	2	53:raise SystemExit("ABORT: %s enumerates nothing on commander/control" %; 64:raise SystemExit("ABORT: shelf listing does not match the publish rece
+anchor_drift_survey_r3.py	unguarded	120	[]	[]	2	36:raise SystemExit("git failed %s :: %s" % (a[:2], (r.stderr or "")[-200
+empty_denominator_scan_r2.py	guarded	177	[136, 139]	[137, 140]	0	10:floor_upstream  whether the function this site sits in is fed by a nam; 58:self.abort_names = set()  # names mentioned inside ABORT/SystemExit me; 103:raises = ("Raise" in body and "SystemExit" in body) or "Assert" in bod
+block_empty_floor_r1.py	unguarded	85	[]	[]	1	83:raise SystemExit("unreplaced slots: %s" % left)
+publish_cmdr1945_r1.py	unguarded	91	[]	[]	1	-
+shelf_prune_r1.py	guarded	87	[]	[56, 73]	4	33:raise SystemExit("ls-tree failed: " + err[:200]); 56:raise SystemExit("REFUSE: %d draft paths have no byte-identical twin u; 60:raise SystemExit("read-tree failed: " + err[:200])
+push_g4_floor_r3_r1.py	unguarded	92	[]	[]	1	-
+announce_hook_r1.py	unguarded	79	[]	[]	4	-
+cnx_ledger_mirror_sync_hook_r1.py	unguarded	74	[]	[]	2	-

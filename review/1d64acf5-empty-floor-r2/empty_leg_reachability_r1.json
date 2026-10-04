@@ -1,0 +1,1174 @@
+{
+ "root": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord_anchors",
+ "py_files": 137,
+ "shipping_legs": 95,
+ "counts": {
+  "guarded": 32,
+  "unguarded": 63,
+  "no-mutation-leg": 42
+ },
+ "known_cases": {
+  "block_census_r3_r1.py": {
+   "expected_from_real_runs": "guarded",
+   "analyzer_says": "guarded",
+   "agrees": true
+  },
+  "anchor_drift_survey_r3.py": {
+   "expected_from_real_runs": "unguarded",
+   "analyzer_says": "guarded",
+   "agrees": false
+  },
+  "empty_denominator_scan_r2.py": {
+   "expected_from_real_runs": "guarded",
+   "analyzer_says": "no-mutation-leg",
+   "agrees": false
+  }
+ },
+ "self_test_empty_denominator": "refuses above",
+ "legs": [
+  {
+   "file": "_patch_driver_detached.py",
+   "bytes": 4040,
+   "first_mutation_line": 68,
+   "first_mutation": "io.open(P, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(s)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [
+    26,
+    46,
+    51,
+    63
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "ack_aefbbd1a_r1.py",
+   "bytes": 13594,
+   "first_mutation_line": 81,
+   "first_mutation": "io.open(os.path.join(HERE, \"ack_aefbbd1a_r1.json\"), \"w\", encoding=\"utf-8\").write(",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r1.py",
+   "bytes": 8364,
+   "first_mutation_line": 162,
+   "first_mutation": "io.open(os.path.join(OUT, \"anchor_drift_survey_r1.json\"), \"w\", encoding=\"utf-8\").write(",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r2.py",
+   "bytes": 8553,
+   "first_mutation_line": 165,
+   "first_mutation": "io.open(os.path.join(OUT, \"anchor_drift_survey_r2.json\"), \"w\", encoding=\"utf-8\").write(",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_drift_survey_r3.py",
+   "bytes": 7225,
+   "first_mutation_line": 120,
+   "first_mutation": "io.open(os.path.join(OUT, \"anchor_drift_survey_r3.json\"), \"w\", encoding=\"utf-8\").write(",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    36
+   ],
+   "empty_floor_before_mutation": [
+    35
+   ],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "anchor_mutation_arms_r1.py",
+   "bytes": 6974,
+   "first_mutation_line": 116,
+   "first_mutation": "io.open(path, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(mut[\"body\"])",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r1.py",
+   "bytes": 4864,
+   "first_mutation_line": 50,
+   "first_mutation": "doc = json.load(io.open(os.path.join(WORK, \"anchor_drift_survey_r1.json\"), encoding=\"utf-8\"))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "anchor_survey_verdicts_r2.py",
+   "bytes": 4917,
+   "first_mutation_line": 46,
+   "first_mutation": "doc = json.load(io.open(os.path.join(WORK, \"anchor_drift_survey_r2.json\"), encoding=\"utf-8\"))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_ack0557_r1.py",
+   "bytes": 8277,
+   "first_mutation_line": 13,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0019_r1.py",
+   "bytes": 6907,
+   "first_mutation_line": 13,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0130_r1.py",
+   "bytes": 8834,
+   "first_mutation_line": 18,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_cmdr0557_r1.py",
+   "bytes": 9750,
+   "first_mutation_line": 17,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_hook_r1.py",
+   "bytes": 8155,
+   "first_mutation_line": 13,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "announce_selfcheck_r1.py",
+   "bytes": 8299,
+   "first_mutation_line": 13,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_alarm_r1.py",
+   "bytes": 2826,
+   "first_mutation_line": 9,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_edenom_r1.py",
+   "bytes": 2669,
+   "first_mutation_line": 10,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bb_reply_cmdr0245_r1.py",
+   "bytes": 3571,
+   "first_mutation_line": 16,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ack0557_r1.py",
+   "bytes": 12496,
+   "first_mutation_line": 154,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    149
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_alarm_r1.py",
+   "bytes": 8031,
+   "first_mutation_line": 85,
+   "first_mutation": "A(\"**边界**：本手是纯测量（`ls-remote` / `fetch` / `ls-tree` / `diff` / contents API GET）——产品字节 0 枚新增\"",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_census_r3_r1.py",
+   "bytes": 12230,
+   "first_mutation_line": 166,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [
+    53,
+    64
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0019_r1.py",
+   "bytes": 10569,
+   "first_mutation_line": 150,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    54
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0124_r1.py",
+   "bytes": 13599,
+   "first_mutation_line": 187,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 7,
+   "refusal_before_mutation": [
+    65,
+    79,
+    127,
+    128,
+    148
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0130_r1.py",
+   "bytes": 14945,
+   "first_mutation_line": 192,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    187
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0245_r1.py",
+   "bytes": 17291,
+   "first_mutation_line": 226,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    53
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr0557_r1.py",
+   "bytes": 14824,
+   "first_mutation_line": 198,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 5,
+   "refusal_before_mutation": [
+    44,
+    47,
+    193
+   ],
+   "empty_floor_before_mutation": [
+    43
+   ],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_cmdr1945_r1.py",
+   "bytes": 12025,
+   "first_mutation_line": 172,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    57
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_edenom_r1.py",
+   "bytes": 8912,
+   "first_mutation_line": 109,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [
+    65,
+    104
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_empty_floor_r1.py",
+   "bytes": 9606,
+   "first_mutation_line": 49,
+   "first_mutation": "l(\"  - 自检本体在线上：`ls-tree` 行 `100644 blob 5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`，同一 ref 的 contents 路由回 `http {tip_api_s",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_hook_r1.py",
+   "bytes": 10060,
+   "first_mutation_line": 129,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    124
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_mirror_restore_r1.py",
+   "bytes": 10229,
+   "first_mutation_line": 60,
+   "first_mutation": "a(\"  - 自检本体 `{f1}`：`git ls-tree` 现读**无行**，contents 路由回 `http {absent_selfcheck_api_status}`（`{tsv}:{ln_absent_selfcheck_",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ord0552_r1.py",
+   "bytes": 12427,
+   "first_mutation_line": 101,
+   "first_mutation": "A(\"**二、你那条前提要更正一处，也是我自己读数印错的一格**：早先我把 contents 路那格印成 `body_is_json_only: false`，\"",
+   "refusal_points": 2,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "block_ord0552_r2.py",
+   "bytes": 7597,
+   "first_mutation_line": 112,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    45
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_selfcheck_r1.py",
+   "bytes": 10209,
+   "first_mutation_line": 130,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    124
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "block_selfdecl_005x_r1.py",
+   "bytes": 8746,
+   "first_mutation_line": 115,
+   "first_mutation": "io.open(draft, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(out)",
+   "refusal_points": 2,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "unparseable",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_notice_anchors_landed_r1.py",
+   "bytes": 5979,
+   "first_mutation_line": 75,
+   "first_mutation": "io.open(note, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(body)",
+   "refusal_points": 5,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_erratum_r1.py",
+   "bytes": 5052,
+   "first_mutation_line": 72,
+   "first_mutation": "io.open(note, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(body)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_anchors_r1.py",
+   "bytes": 7347,
+   "first_mutation_line": 69,
+   "first_mutation": "1 for _ in io.open(os.path.join(WORK, \"anchor_diff_r1.patch\"), encoding=\"utf-8\")",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r1.py",
+   "bytes": 7743,
+   "first_mutation_line": 84,
+   "first_mutation": "io.open(note, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(body)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_census_r3_r1.py",
+   "bytes": 7482,
+   "first_mutation_line": 102,
+   "first_mutation": "io.open(note, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(body)",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr0124_r1.py",
+   "bytes": 8058,
+   "first_mutation_line": 112,
+   "first_mutation": "io.open(note, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(body)",
+   "refusal_points": 5,
+   "refusal_before_mutation": [
+    54
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "bus_post_cmdr0245_r1.py",
+   "bytes": 10651,
+   "first_mutation_line": 17,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_cmdr1945_r1.py",
+   "bytes": 9436,
+   "first_mutation_line": 18,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r1.py",
+   "bytes": 6585,
+   "first_mutation_line": 62,
+   "first_mutation": "A(\"**裁语第三件我已执行**（`shelf_prune_r1.json` blob `%s`，脚本 blob `%s`）：草稿架 `%s/` 的 6 枚与权威架 `%s/` 同名 6 枚**逐枚 blob 相同**，比对通过才动手；用临",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_g4_floor_r2.py",
+   "bytes": 7990,
+   "first_mutation_line": 74,
+   "first_mutation": "A(\"**裁语第三件已执行**（`shelf_prune_r1.json` blob `%s`）：草稿架 `%s/` 的 6 枚与权威架 `%s/` 同名 6 枚**逐枚 blob 相同**，比对通过才动手；用临时索引 `read-tree",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "bus_post_ord0552_r1.py",
+   "bytes": 9261,
+   "first_mutation_line": 17,
+   "first_mutation": "BB = r\"D:\\moodle\\agent_bus\\bus.py\"",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_arms_r1.py",
+   "bytes": 7342,
+   "first_mutation_line": 64,
+   "first_mutation": "doc = json.load(io.open(os.path.join(WORK, \"anchor_drift_survey_r3.json\"), encoding=\"utf-8\"))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    9,
+    42
+   ],
+   "empty_floor_before_mutation": [
+    41
+   ],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "census_r3_counterarm_r1.py",
+   "bytes": 5828,
+   "first_mutation_line": 71,
+   "first_mutation": "io.open(YAML, \"wb\").write(mutated)",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "census_r3_run_r1.py",
+   "bytes": 3501,
+   "first_mutation_line": 59,
+   "first_mutation": "io.open(OUT, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cmdr0130_landing_prediction_r1.py",
+   "bytes": 6439,
+   "first_mutation_line": 105,
+   "first_mutation": "io.open(n, \"w\", encoding=\"utf-8\").write(json.dumps(out, ensure_ascii=False, indent=1))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    48,
+    54,
+    66
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_reader_r1.py",
+   "bytes": 19820,
+   "first_mutation_line": 21,
+   "first_mutation": "3. that same id and size equal what the GitHub contents route reports for the same ref (a second, independent",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_check_r1.py",
+   "bytes": 11133,
+   "first_mutation_line": 200,
+   "first_mutation": "io.open(a.out, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "cnx_ledger_mirror_sync_hook_r1.py",
+   "bytes": 10959,
+   "first_mutation_line": 74,
+   "first_mutation": "with io.open(trail, \"a\", encoding=\"utf-8\", newline=\"\\n\") as fh:",
+   "refusal_points": 7,
+   "refusal_before_mutation": [
+    54
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "deliver_ord0552_r1.py",
+   "bytes": 6411,
+   "first_mutation_line": 81,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:refs/heads/%s\" % (sha, BRANCH))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_denominator_scan_r1.py",
+   "bytes": 12735,
+   "first_mutation_line": 269,
+   "first_mutation": "io.open(a.out, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 5,
+   "refusal_before_mutation": [
+    8,
+    61,
+    200,
+    207
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "empty_leg_reachability_r1.py",
+   "bytes": 5487,
+   "first_mutation_line": 4,
+   "first_mutation": "Question per leg file: before the FIRST mutating statement (git push / commit-tree / contents POST / bus send /",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "empty_publisher_counterexample_r1.py",
+   "bytes": 3554,
+   "first_mutation_line": 51,
+   "first_mutation": "io.open(path, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(code)",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    40
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "flat_empty_floor_r1.py",
+   "bytes": 7890,
+   "first_mutation_line": 14,
+   "first_mutation": "API = \"https://api.github.com/repos/Canshu-King/CityNexus/contents\"",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "flat_restore_r1.py",
+   "bytes": 8059,
+   "first_mutation_line": 56,
+   "first_mutation": "(\"absent_selfcheck_api_status\", str(pres[SELFCHECK][\"api_status\"]), \"GET contents/\" + SELFCHECK + \"?ref=\" + tip),",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "floor_probe_r1.py",
+   "bytes": 7338,
+   "first_mutation_line": 70,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    69
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "floor_probe_r2.py",
+   "bytes": 7338,
+   "first_mutation_line": 70,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    69
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "floor_probe_r3.py",
+   "bytes": 8463,
+   "first_mutation_line": 72,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    71
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "g4_shape_probe_r1.py",
+   "bytes": 11951,
+   "first_mutation_line": 74,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(text)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r2.py",
+   "bytes": 11970,
+   "first_mutation_line": 74,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(text)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r3.py",
+   "bytes": 11940,
+   "first_mutation_line": 74,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(text)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r4.py",
+   "bytes": 12139,
+   "first_mutation_line": 74,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(text)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "g4_shape_probe_r5.py",
+   "bytes": 13943,
+   "first_mutation_line": 73,
+   "first_mutation": "io.open(p, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(text)",
+   "refusal_points": 8,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "hook_build_r1.py",
+   "bytes": 9166,
+   "first_mutation_line": 130,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:%s\" % (BRANCH, BRANCH))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    44,
+    66
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "land_candidate_r1.py",
+   "bytes": 4357,
+   "first_mutation_line": 46,
+   "first_mutation": "io.open(dst, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(io.open(src, encoding=\"utf-8\").read())",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "land_g4_floor_r2.py",
+   "bytes": 5011,
+   "first_mutation_line": 42,
+   "first_mutation": "io.open(os.path.join(HERE, \"arm_final_r2.txt\"), \"w\", encoding=\"utf-8\", newline=\"\\n\").write(final)",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "landed_ledger_mirror_r1.py",
+   "bytes": 11949,
+   "first_mutation_line": 18,
+   "first_mutation": "names == the id the GitHub contents route reports for the same ref, and the byte count == the size that",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r1.py",
+   "bytes": 9191,
+   "first_mutation_line": 134,
+   "first_mutation": "io.open(out, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r2.py",
+   "bytes": 9191,
+   "first_mutation_line": 134,
+   "first_mutation": "io.open(out, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "lane_publisher_r3.py",
+   "bytes": 9961,
+   "first_mutation_line": 143,
+   "first_mutation": "io.open(out, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_complete_read_r1.py",
+   "bytes": 11949,
+   "first_mutation_line": 18,
+   "first_mutation": "names == the id the GitHub contents route reports for the same ref, and the byte count == the size that",
+   "refusal_points": 4,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ledger_mirror_repro_r1.py",
+   "bytes": 5725,
+   "first_mutation_line": 51,
+   "first_mutation": "status, hdr, body = get(\"https://api.github.com/repos/%s/contents/%s?ref=%s\" % (REPO, PATH, REF))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "make_gen_r4_r5_r1.py",
+   "bytes": 2754,
+   "first_mutation_line": 55,
+   "first_mutation": "io.open(path, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(s)",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    47,
+    50,
+    54
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "merge_dropped_landed_tool_r1.py",
+   "bytes": 5527,
+   "first_mutation_line": 4,
+   "first_mutation": "Every fact below is read twice where a channel exists - local git objects and the GitHub contents API - because",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_landing_recheck_r2.py",
+   "bytes": 10532,
+   "first_mutation_line": 4,
+   "first_mutation": "Two channels for every presence claim (a `git ls-tree` row and the GitHub contents route at the same ref),",
+   "refusal_points": 7,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_restore_verify_r3.py",
+   "bytes": 6551,
+   "first_mutation_line": 21,
+   "first_mutation": "API = \"https://api.github.com/repos/Canshu-King/CityNexus/contents\"",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "mirror_sync_probe_r1.py",
+   "bytes": 8459,
+   "first_mutation_line": 13,
+   "first_mutation": "contents route agreeing on both blob and size).",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "ord0557_build_r1.py",
+   "bytes": 13862,
+   "first_mutation_line": 194,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:%s\" % (BRANCH, BRANCH))",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    50
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "publish_alarm_r1.py",
+   "bytes": 5537,
+   "first_mutation_line": 23,
+   "first_mutation": "MSG = (\"S4-ast-taint alarm, measured on two channels: the mirror self-check that was landed at 0293e5c1cf9be4ea4e7d14005",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "publish_empty_floor_r1.py",
+   "bytes": 4682,
+   "first_mutation_line": 74,
+   "first_mutation": "sha = subprocess.run([\"git\", \"-C\", WT, \"commit-tree\", tree, \"-p\", tip, \"-m\",",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    47,
+    70
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "publisher_fix_proof_r1.py",
+   "bytes": 4401,
+   "first_mutation_line": 45,
+   "first_mutation": "io.open(old_path, \"w\", encoding=\"utf-8\", newline=\"\\n\").write(old_with_empty_manifest())",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_cmdr1945_r1.py",
+   "bytes": 6249,
+   "first_mutation_line": 86,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"refs/heads/%s:refs/heads/%s\" % (b, b))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r2_r1.py",
+   "bytes": 4183,
+   "first_mutation_line": 37,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:refs/heads/%s\" % (sha, BRANCH))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_g4_floor_r3_r1.py",
+   "bytes": 5825,
+   "first_mutation_line": 71,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:refs/heads/%s\" % (sha, BRANCH))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r1.py",
+   "bytes": 4684,
+   "first_mutation_line": 55,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:refs/heads/%s\" % (sha, BRANCH))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "push_ord0476_gate_r2.py",
+   "bytes": 4733,
+   "first_mutation_line": 55,
+   "first_mutation": "rc, _o, err = git(\"push\", \"origin\", \"%s:refs/heads/%s\" % (sha, BRANCH))",
+   "refusal_points": 1,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "recut_d76_only_r3.py",
+   "bytes": 13363,
+   "first_mutation_line": 155,
+   "first_mutation": "rc, out, err = repo(\"push\", \"origin\", \"%s:%s\" % (ref, ref))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    38,
+    76
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "recut_gen_66d805_r1.py",
+   "bytes": 13706,
+   "first_mutation_line": 175,
+   "first_mutation": "rc, out, err = repo(\"push\", \"origin\", \"%s:%s\" % (ref, ref))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    50,
+    89
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "recut_gen_live_r2.py",
+   "bytes": 17576,
+   "first_mutation_line": 225,
+   "first_mutation": "rc, out, err = repo(\"push\", \"origin\", \"%s:%s\" % (ref, ref))",
+   "refusal_points": 3,
+   "refusal_before_mutation": [
+    55,
+    98
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "selfcheck_build_r1.py",
+   "bytes": 10117,
+   "first_mutation_line": 146,
+   "first_mutation": "rc, o, err = git(\"push\", \"origin\", \"%s:%s\" % (BRANCH, BRANCH))",
+   "refusal_points": 2,
+   "refusal_before_mutation": [
+    57
+   ],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "guarded"
+  },
+  {
+   "file": "shared_clone_object_gap_r1.py",
+   "bytes": 4812,
+   "first_mutation_line": 71,
+   "first_mutation": "io.open(n, \"w\", encoding=\"utf-8\").write(json.dumps(doc, ensure_ascii=False, indent=1))",
+   "refusal_points": 0,
+   "refusal_before_mutation": [],
+   "empty_floor_before_mutation": [],
+   "parse": "parsed",
+   "verdict": "unguarded"
+  },
+  {
+   "file": "shelf_prune_r1.py",
+   "bytes": 4823,
+   "first_mutation_line": 70,
+   "first_mutation": "commit = git(\"commit-tree\", new_tree, \"-p\", tip, \"-m\", msg, env=env)[1]",
+   "refusal_points": 6,
+   "refusal_before_mutation": [
+    33,
+    56,
+    60,
+    64
+   ],
+   "empty_floor_before_mutation": [
+    32
+   ],
+   "parse": "parsed",
+   "verdict": "guarded"
+  }
+ ]
+}
