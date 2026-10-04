@@ -78,7 +78,18 @@ RUNTIME_MCP_ALLOWLIST_V2 = frozenset(item.tool_name for item in (*TOOLS, *TYPED_
 
 
 def tool_catalog() -> list[dict[str, object]]:
-    return [item.as_dict() for item in TOOLS]
+    # The unversioned V1 surface is a compatibility contract.  R27 additions
+    # are available through the typed V2 catalog and must not silently change
+    # the legacy endpoint's exact set.
+    legacy_names = {
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services",
+        "request_replan",
+        "accept_replan",
+    }
+    return [item.as_dict() for item in TOOLS if item.tool_name in legacy_names]
 
 
 def tool_catalog_v2() -> list[dict[str, object]]:

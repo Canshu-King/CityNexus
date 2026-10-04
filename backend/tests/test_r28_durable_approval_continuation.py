@@ -46,6 +46,7 @@ def _seed_pending_continuation() -> dict[str, str]:
                 updated_at=now,
             )
         )
+        session.flush()
         session.add(
             Journey(
                 id=journey_id,
@@ -65,6 +66,11 @@ def _seed_pending_continuation() -> dict[str, str]:
                 updated_at=now,
             )
         )
+        # The fixture uses scalar foreign-key ids without ORM relationships;
+        # flush the parent rows before inserting approval/pending rows so
+        # SQLite's production foreign-key enforcement sees the same durable
+        # ordering as the API path.
+        session.flush()
         session.add(
             JourneyMission(
                 id=mission_id,
@@ -78,6 +84,7 @@ def _seed_pending_continuation() -> dict[str, str]:
                 started_at=now,
             )
         )
+        session.flush()
         session.add(
             AgentRun(
                 id=run_id,
@@ -92,6 +99,7 @@ def _seed_pending_continuation() -> dict[str, str]:
                 completed_at=None,
             )
         )
+        session.flush()
         session.add(
             ActionApproval(
                 id=approval_id,
