@@ -1,0 +1,66 @@
+ORD-0562 -- a counted English noun says one or says several. What was measured, on this lane's own stack.
+
+WHAT CHANGED (four source files, one order)
+  src/lib/plural.ts            `person` joins the irregular table once, so the budget line can say
+                               `1 person` / `2 people` without spelling it out per sentence.
+  src/i18n/LocaleContext.tsx   three new counted keys (hub.todayDays, hub.todayDaysUnknown,
+                               hub.budgetLine) and seven softened lines brought onto the marker:
+                               studio.feasibilityPartialSub, studio.gate.MOBILITY_DATA_UNAVAILABLE,
+                               studio.gate.unknown, poster.shareDone, poster.shareReused,
+                               recovery.failureCount, twin.hardNeedsRemain.
+  src/app/V8Experience.tsx     the hub's day count and the budget line stop building nouns inline (the
+                               `1 days` came from exactly that) and ask the dictionary instead;
+                               budgetAdvisory takes the translator as a parameter rather than keeping its
+                               own copy of the sentence.
+  Two verbs that only agreed with a plural subject were restructured, not conjugated: the budget line drops
+  `lack` ("{n} {plural:item} without a verified provider price"), the twin line drops `remain`
+  ("{n} hard {plural:need}, explicit and never learned"). Chinese copy is byte-identical -- the two
+  relocated Chinese sentences are the same strings the components used to build inline.
+
+STANDING RULER -- e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts, five arms, rc=0
+  1  no English line softens a count into `(s)` any more (scans the whole English side)
+  2  the counted keys carry the marker on the English side only, and the Chinese side stays plain
+  3  the hub stopped building counted nouns inline (no `${...} days` / `${...} people` template survives)
+  4  the irregular noun is declared once, in plural.ts, and the budget line's marker stems are exactly
+     ["day","person"]
+  5  the ruler read what it claims (dictionary lines, entries parsed, English entries, softened-still-
+     present count) -- evidence in count_ruler_evidence_r1.json
+
+GATES ON THIS TREE (4fc050be5, stacked on my unlanded ORD-0563 head 126d170ae)
+  npm run typecheck rc=0; npm run typecheck:all rc=0.
+  Exposure: same ruler, same command, same export shape -- base 126d170ae answers 6 cells, this candidate
+  answers 6 cells, identical per-file set (exposure_pair_r1.txt).
+  The existing budget gate e2e/qoder-budget-advisory-tiers.spec.ts was checked before touching the copy: it
+  pins the Chinese `每人每天约` pairing and the two frozen caveat sentences, none of which this order
+  rewrites, so no assertion was edited to make it pass.
+
+REAL BROWSER READ (run ORD0562-190529; stub :4691, backend :4692, product front :4693; the store was created
+empty by the app under a fresh CITYNEXUS_E2E_RUN_ID; no seed copy, no demo/reset, nothing on
+:8000/:4781/:4782/:8693; English arm proved by the heading the screen itself paints: "Trip to Tianjin")
+  wizard_default_no_patch  http_status=201  line: "5 Oct, 10:00 -- 7 Oct, 20:00 . 2 travelers . 3 days"
+  window_same_day          PATCH http_status=200  line: "20 Oct, 08:00 -- 20 Oct, 20:00 . 2 travelers . 3 days"
+  window_two_days          PATCH http_status=200  line: "20 Oct, 08:00 -- 21 Oct, 20:00 . 2 travelers . 3 days"
+  page exceptions (uncaught JS) 0; console errors 0. Screenshots: screen_hub_wizard_default_en.png,
+  screen_hub_window_two_days_en.png.
+  What this proves: the plural path is live and renders `3 days` / `2 travelers` through the marker, and the
+  line still tracks the stored window it is given (the dates moved between states).
+
+WHAT THIS ROUND DID NOT PROVE, AND WHY (named instead of smoothed)
+  The headline case -- `1 day` on a one-day trip -- was NOT read on screen this round. Reason, measured
+  rather than assumed: the hub's count is `journey.temporal_shape.day_count`, and the server prefers an
+  anchor's own moment over the journey window (backend/app/main.py:3110-3115), so patching
+  `/api/v1/journeys/{id}` moved the printed window (20 Oct 08:00 -- 20 Oct 20:00) while the count stayed
+  `3 days`, because the wizard's anchors still sit on 5 Oct and 7 Oct. Only two PATCH doors exist
+  (backend/app/main.py:6455 the inbox draft, backend/app/main.py:7054 the journey), so the way to a
+  same-day trip is to put same-day moments on the anchors: create a draft through the manual import door
+  (POST /inbox/import, which needs no provider), confirm it, and read the hub again. That route is
+  identified, not yet walked -- the next round runs it and sends an addendum with the `1 day` reading.
+  A source-level proof of the n=1 branch exists meanwhile: the marker expands through
+  englishCountNoun(count, "day"), and `isOne` answers on the number 1 or the string "1"
+  (src/lib/plural.ts:18-36), which arm 4 of the ruler pins to the stems actually used by these lines.
+
+NOT DONE HERE
+  ORD-0568 (RUNTIME_CAPTURE parenthetical) untouched.
+  The budget line's own on-screen text was ABSENT in this state (the wizard journey carries no budget
+  reference), so `1 person` / `2 people` is measured at the dictionary and marker level only, not on a
+  pixel. Recorded as NOT_REACHED_UI for that one string.
