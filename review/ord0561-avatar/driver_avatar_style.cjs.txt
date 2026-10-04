@@ -1,0 +1,30 @@
+// ② 的一问：那枚头像为什么"需要 48 px 只给 28 px"？把计算样式与文本度量一起打出来。
+const { chromium } = require("playwright");
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+(async () => {
+  const b = await chromium.launch();
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3,
+    isMobile: true, hasTouch: true, locale: "en-US", serviceWorkers: "block" });
+  const p = await ctx.newPage();
+  await p.addInitScript(([jid]) => { localStorage.setItem("citynexus.locale", "en");
+    if (jid) localStorage.setItem("citynexus.v8.journey_id", jid); },
+    [process.env.ORD561_JID || ""]);
+  await p.goto(BASE + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 60000 });
+  await p.waitForTimeout(2500);
+  console.log(JSON.stringify(await p.evaluate(() => {
+    const el = document.querySelector(".v8-avatar");
+    const c = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const textW = Array.from(range.getClientRects()).reduce((n, x) => n + x.width, 0);
+    return { text: el.textContent.trim(), aria: el.getAttribute("aria-label"),
+             testid: el.getAttribute("data-testid"), title: el.getAttribute("title"),
+             rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
+             scroll_w: el.scrollWidth, client_w: el.clientWidth,
+             font: c.fontSize + "/" + c.fontWeight, ls: c.letterSpacing, pad: c.padding, box: c.boxSizing,
+             overflow: c.overflow, white_space: c.whiteSpace, display: c.display, place: c.justifyItems + "/" + c.alignItems,
+             text_rect_w: Math.round(textW), right_edge: Math.round(r.right), viewport_w: innerWidth };
+  }), null, 1));
+  await ctx.close(); await b.close();
+})();

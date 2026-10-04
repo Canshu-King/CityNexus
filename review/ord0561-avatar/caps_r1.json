@@ -1,0 +1,649 @@
+{
+  "base": "http://127.0.0.1:4783",
+  "arms": [
+    {
+      "want": "en",
+      "screens": [
+        {
+          "key": "hub",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "items": [
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TODAY",
+              "rendered": "TODAY",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TODAY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "PLAN",
+              "rendered": "PLAN",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "PLAN"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TRAVEL",
+              "rendered": "TRAVEL",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TRAVEL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "SYSTEM",
+              "rendered": "SYSTEM",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "SYSTEM"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "P",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Good evening",
+              "rendered": "GOOD EVENING",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "GOOD",
+                "EVENING"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Attention",
+              "rendered": "ATTENTION",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "ATTENTION"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "cn-hero-label",
+              "raw": "Next",
+              "rendered": "NEXT",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "NEXT"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "",
+              "raw": "Stay",
+              "rendered": "STAY",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "STAY"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "",
+              "raw": "ARRIVAL",
+              "rendered": "ARRIVAL",
+              "text_transform": "uppercase",
+              "caps_in_raw": [
+                "ARRIVAL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "",
+              "raw": "DEPARTURE",
+              "rendered": "DEPARTURE",
+              "text_transform": "uppercase",
+              "caps_in_raw": [
+                "DEPARTURE"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Before you go",
+              "rendered": "BEFORE YOU GO",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "BEFORE"
+              ]
+            },
+            {
+              "tag": "P",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Plan at a glance",
+              "rendered": "PLAN AT A GLANCE",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "PLAN",
+                "GLANCE"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Compare the plans this trip can choose from",
+              "rendered": "COMPARE THE PLANS THIS TRIP CAN CHOOSE FROM",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "COMPARE",
+                "PLANS",
+                "THIS",
+                "TRIP",
+                "CHOOSE",
+                "FROM"
+              ]
+            }
+          ],
+          "raw_caps_leaves": 6,
+          "css_only_leaves": 7
+        },
+        {
+          "key": "trips",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "items": [
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TODAY",
+              "rendered": "TODAY",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TODAY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "PLAN",
+              "rendered": "PLAN",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "PLAN"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TRAVEL",
+              "rendered": "TRAVEL",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TRAVEL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "SYSTEM",
+              "rendered": "SYSTEM",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "SYSTEM"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "P",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Trips",
+              "rendered": "TRIPS",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "TRIPS"
+              ]
+            }
+          ],
+          "raw_caps_leaves": 4,
+          "css_only_leaves": 1
+        },
+        {
+          "key": "map",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "items": [
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TODAY",
+              "rendered": "TODAY",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TODAY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "PLAN",
+              "rendered": "PLAN",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "PLAN"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TRAVEL",
+              "rendered": "TRAVEL",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TRAVEL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "SYSTEM",
+              "rendered": "SYSTEM",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "SYSTEM"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "P",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Map · one glance",
+              "rendered": "MAP · ONE GLANCE",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "GLANCE"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Next leg",
+              "rendered": "NEXT LEG",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "NEXT"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Stops on this day",
+              "rendered": "STOPS ON THIS DAY",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "STOPS",
+                "THIS"
+              ]
+            }
+          ],
+          "raw_caps_leaves": 4,
+          "css_only_leaves": 3
+        },
+        {
+          "key": "agent",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "items": [
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TODAY",
+              "rendered": "TODAY",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TODAY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "PLAN",
+              "rendered": "PLAN",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "PLAN"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TRAVEL",
+              "rendered": "TRAVEL",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TRAVEL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "SYSTEM",
+              "rendered": "SYSTEM",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "SYSTEM"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "P",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Ask me anything about your trip",
+              "rendered": "ASK ME ANYTHING ABOUT YOUR TRIP",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "ANYTHING",
+                "ABOUT",
+                "YOUR",
+                "TRIP"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-status-pill violet",
+              "raw": "Twin context ready",
+              "rendered": "TWIN CONTEXT READY",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "TWIN",
+                "CONTEXT",
+                "READY"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "What I understood",
+              "rendered": "WHAT I UNDERSTOOD",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "WHAT",
+                "UNDERSTOOD"
+              ]
+            }
+          ],
+          "raw_caps_leaves": 4,
+          "css_only_leaves": 3
+        },
+        {
+          "key": "me",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "items": [
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TODAY",
+              "rendered": "TODAY",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TODAY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "PLAN",
+              "rendered": "PLAN",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "PLAN"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "TRAVEL",
+              "rendered": "TRAVEL",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "TRAVEL"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-nav-group",
+              "raw": "SYSTEM",
+              "rendered": "SYSTEM",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "SYSTEM"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "This trip",
+              "rendered": "THIS TRIP",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "THIS",
+                "TRIP"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Stay",
+              "rendered": "STAY",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "STAY"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Confirmed bookings",
+              "rendered": "CONFIRMED BOOKINGS",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "CONFIRMED",
+                "BOOKINGS"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "Change preferences",
+              "rendered": "CHANGE PREFERENCES",
+              "text_transform": "uppercase",
+              "caps_in_raw": [],
+              "caps_rendered_only": [
+                "CHANGE",
+                "PREFERENCES"
+              ]
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "cls": "v8-kicker",
+              "raw": "NOTIFICATIONS",
+              "rendered": "NOTIFICATIONS",
+              "text_transform": "uppercase",
+              "caps_in_raw": [
+                "NOTIFICATIONS"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "CODE",
+              "testid": null,
+              "cls": "",
+              "raw": "ADVISORY",
+              "rendered": "",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "ADVISORY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "CODE",
+              "testid": null,
+              "cls": "",
+              "raw": "CNX-DEMO",
+              "rendered": "",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "DEMO"
+              ],
+              "caps_rendered_only": []
+            }
+          ],
+          "raw_caps_leaves": 7,
+          "css_only_leaves": 4
+        }
+      ]
+    },
+    {
+      "want": "zh-CN",
+      "screens": [
+        {
+          "key": "hub",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "items": [],
+          "raw_caps_leaves": 0,
+          "css_only_leaves": 0
+        },
+        {
+          "key": "trips",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "items": [],
+          "raw_caps_leaves": 0,
+          "css_only_leaves": 0
+        },
+        {
+          "key": "map",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "items": [],
+          "raw_caps_leaves": 0,
+          "css_only_leaves": 0
+        },
+        {
+          "key": "agent",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "items": [],
+          "raw_caps_leaves": 0,
+          "css_only_leaves": 0
+        },
+        {
+          "key": "me",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "items": [
+            {
+              "tag": "CODE",
+              "testid": null,
+              "cls": "",
+              "raw": "ADVISORY",
+              "rendered": "",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "ADVISORY"
+              ],
+              "caps_rendered_only": []
+            },
+            {
+              "tag": "CODE",
+              "testid": null,
+              "cls": "",
+              "raw": "CNX-DEMO",
+              "rendered": "",
+              "text_transform": "none",
+              "caps_in_raw": [
+                "DEMO"
+              ],
+              "caps_rendered_only": []
+            }
+          ],
+          "raw_caps_leaves": 2,
+          "css_only_leaves": 0
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

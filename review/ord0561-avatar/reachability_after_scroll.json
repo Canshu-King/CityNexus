@@ -1,0 +1,734 @@
+{
+  "base": "http://127.0.0.1:4783",
+  "screens": [
+    {
+      "key": "trips",
+      "url": "http://127.0.0.1:4783/v8/trips",
+      "nav": {
+        "rect": {
+          "x": 0,
+          "y": 768,
+          "w": 390,
+          "h": 76,
+          "bottom": 844
+        },
+        "pos": {
+          "position": "fixed",
+          "z": "10",
+          "overflow": "visible",
+          "pb": "7px",
+          "mb": "0px",
+          "pos": null
+        }
+      },
+      "blocked": [
+        {
+          "label": "Abort this trip",
+          "testid": "journey-abort-submit",
+          "cls": "v8-quiet-button",
+          "rect": {
+            "x": 240,
+            "y": 591,
+            "w": 98,
+            "h": 44,
+            "bottom": 635
+          },
+          "center": {
+            "x": 289,
+            "y": 613
+          },
+          "blocker": {
+            "el": "p.v8-lede",
+            "rect": {
+              "x": 17,
+              "y": 613,
+              "w": 356,
+              "h": 21,
+              "bottom": 635
+            },
+            "css": {
+              "position": "static",
+              "z": "auto",
+              "overflow": "visible",
+              "pb": "0px",
+              "mb": "0px",
+              "pos": null
+            },
+            "text": "Day by day. Confirmed bookings are marked as protected."
+          },
+          "chain": [
+            {
+              "el": "button[journey-abort-submit].v8-quiet-button",
+              "rect": {
+                "x": 240,
+                "y": 591,
+                "w": 98,
+                "h": 44,
+                "bottom": 635
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "5px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "details.cn-abort__form",
+              "rect": {
+                "x": 34,
+                "y": 466,
+                "w": 322,
+                "h": 54,
+                "bottom": 520
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "section[journey-abort].cn-abort",
+              "rect": {
+                "x": 17,
+                "y": 303,
+                "w": 356,
+                "h": 235,
+                "bottom": 537
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "16px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-content",
+              "rect": {
+                "x": 0,
+                "y": 66,
+                "w": 390,
+                "h": 1811,
+                "bottom": 1877
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "124px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "main.v8-main",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 390,
+                "h": 1877,
+                "bottom": 1877
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-product-shell",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 390,
+                "h": 1957,
+                "bottom": 1957
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "80px",
+                "mb": "0px",
+                "pos": null
+              }
+            }
+          ]
+        },
+        {
+          "label": "Sat 10 Oct6 stops",
+          "testid": "trip-day-0",
+          "cls": "active",
+          "rect": {
+            "x": 17,
+            "y": 752,
+            "w": 356,
+            "h": 49,
+            "bottom": 801
+          },
+          "center": {
+            "x": 195,
+            "y": 776
+          },
+          "blocker": {
+            "el": "nav.v8-mobile-nav",
+            "rect": {
+              "x": 0,
+              "y": 768,
+              "w": 390,
+              "h": 76,
+              "bottom": 844
+            },
+            "css": {
+              "position": "fixed",
+              "z": "10",
+              "overflow": "visible",
+              "pb": "7px",
+              "mb": "0px",
+              "pos": null
+            },
+            "text": "TodayTripsMapCopilotMe"
+          },
+          "chain": [
+            {
+              "el": "button[trip-day-0].active",
+              "rect": {
+                "x": 17,
+                "y": 752,
+                "w": 356,
+                "h": 49,
+                "bottom": 801
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "8px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div[trip-day-strip].trip-day-strip",
+              "rect": {
+                "x": 17,
+                "y": 740,
+                "w": 356,
+                "h": 67,
+                "bottom": 807
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "auto",
+                "pb": "6px",
+                "mb": "12px",
+                "pos": null
+              }
+            },
+            {
+              "el": "section[trip-itinerary].v8-page",
+              "rect": {
+                "x": 17,
+                "y": 537,
+                "w": 356,
+                "h": 1216,
+                "bottom": 1753
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-content",
+              "rect": {
+                "x": 0,
+                "y": 66,
+                "w": 390,
+                "h": 1811,
+                "bottom": 1877
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "124px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "main.v8-main",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 390,
+                "h": 1877,
+                "bottom": 1877
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-product-shell",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 390,
+                "h": 1957,
+                "bottom": 1957
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "80px",
+                "mb": "0px",
+                "pos": null
+              }
+            }
+          ]
+        }
+      ],
+      "blocked_after_scroll_to_bottom": [],
+      "reachable": {
+        "journey-abort-submit": "CLEARS_AFTER_SCROLL",
+        "trip-day-0": "CLEARS_AFTER_SCROLL"
+      },
+      "scroll_after": {
+        "top": 1113,
+        "max": 1113
+      }
+    },
+    {
+      "key": "agent",
+      "url": "http://127.0.0.1:4783/v8/agent",
+      "nav": {
+        "rect": {
+          "x": 0,
+          "y": 768,
+          "w": 390,
+          "h": 76,
+          "bottom": 844
+        },
+        "pos": {
+          "position": "fixed",
+          "z": "10",
+          "overflow": "visible",
+          "pb": "7px",
+          "mb": "0px",
+          "pos": null
+        }
+      },
+      "blocked": [
+        {
+          "label": "Ask Copilot",
+          "testid": "v15-copilot-submit",
+          "cls": "v8-primary",
+          "rect": {
+            "x": 37,
+            "y": 790,
+            "w": 140,
+            "h": 44,
+            "bottom": 834
+          },
+          "center": {
+            "x": 107,
+            "y": 812
+          },
+          "blocker": {
+            "el": "button[nav-trips]",
+            "rect": {
+              "x": 81,
+              "y": 789,
+              "w": 76,
+              "h": 48,
+              "bottom": 837
+            },
+            "css": {
+              "position": "static",
+              "z": "auto",
+              "overflow": "visible",
+              "pb": "3px",
+              "mb": "0px",
+              "pos": null
+            },
+            "text": "Trips"
+          },
+          "chain": [
+            {
+              "el": "button[v15-copilot-submit].v8-primary",
+              "rect": {
+                "x": 37,
+                "y": 790,
+                "w": 140,
+                "h": 44,
+                "bottom": 834
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-agent-toolbar",
+              "rect": {
+                "x": 37,
+                "y": 762,
+                "w": 316,
+                "h": 72,
+                "bottom": 834
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-agent-input",
+              "rect": {
+                "x": 37,
+                "y": 577,
+                "w": 316,
+                "h": 379,
+                "bottom": 956
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-agent-composer-card",
+              "rect": {
+                "x": 17,
+                "y": 325,
+                "w": 356,
+                "h": 652,
+                "bottom": 976
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "20px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "section[v15-copilot].v8-page",
+              "rect": {
+                "x": 17,
+                "y": 93,
+                "w": 356,
+                "h": 1113,
+                "bottom": 1206
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-content",
+              "rect": {
+                "x": 0,
+                "y": 66,
+                "w": 390,
+                "h": 1264,
+                "bottom": 1330
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "124px",
+                "mb": "0px",
+                "pos": null
+              }
+            }
+          ]
+        }
+      ],
+      "blocked_after_scroll_to_bottom": [],
+      "reachable": {
+        "v15-copilot-submit": "CLEARS_AFTER_SCROLL"
+      },
+      "scroll_after": {
+        "top": 566,
+        "max": 566
+      }
+    },
+    {
+      "key": "hub",
+      "url": "http://127.0.0.1:4783/v8/hub",
+      "nav": {
+        "rect": {
+          "x": 0,
+          "y": 768,
+          "w": 390,
+          "h": 76,
+          "bottom": 844
+        },
+        "pos": {
+          "position": "fixed",
+          "z": "10",
+          "overflow": "visible",
+          "pb": "7px",
+          "mb": "0px",
+          "pos": null
+        }
+      },
+      "blocked": [],
+      "blocked_after_scroll_to_bottom": [],
+      "reachable": {},
+      "scroll_after": {
+        "top": 2053,
+        "max": 2053
+      }
+    },
+    {
+      "key": "map",
+      "url": "http://127.0.0.1:4783/v8/map",
+      "nav": {
+        "rect": {
+          "x": 0,
+          "y": 768,
+          "w": 390,
+          "h": 76,
+          "bottom": 844
+        },
+        "pos": {
+          "position": "fixed",
+          "z": "10",
+          "overflow": "visible",
+          "pb": "7px",
+          "mb": "0px",
+          "pos": null
+        }
+      },
+      "blocked": [],
+      "blocked_after_scroll_to_bottom": [
+        {
+          "label": "Nexus River Cruise Pier",
+          "testid": "map-stop-d452003a-3ec1-46be-aa89-a4ead8bcca33",
+          "cls": "v8-map-stop",
+          "rect": {
+            "x": 40,
+            "y": 566,
+            "w": 310,
+            "h": 35,
+            "bottom": 601
+          },
+          "center": {
+            "x": 195,
+            "y": 584
+          },
+          "blocker": {
+            "el": "button[map-stops-capture].v8-map-stops-capture",
+            "rect": {
+              "x": 40,
+              "y": 554,
+              "w": 310,
+              "h": 35,
+              "bottom": 589
+            },
+            "css": {
+              "position": "relative",
+              "z": "auto",
+              "overflow": "visible",
+              "pb": "8px",
+              "mb": "0px",
+              "pos": null
+            },
+            "text": "Show all 6 places"
+          },
+          "chain": [
+            {
+              "el": "button[map-stop-d452003a-3ec1-46be-aa89-a4ead8bcca33].v8-map-stop",
+              "rect": {
+                "x": 40,
+                "y": 566,
+                "w": 310,
+                "h": 35,
+                "bottom": 601
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "8px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div[map-stops-box].v8-map-stops",
+              "rect": {
+                "x": 40,
+                "y": 302,
+                "w": 310,
+                "h": 244,
+                "bottom": 546
+              },
+              "css": {
+                "position": "relative",
+                "z": "auto",
+                "overflow": "hidden",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div[map-stops].v8-map-stops-wrap",
+              "rect": {
+                "x": 40,
+                "y": 302,
+                "w": 310,
+                "h": 287,
+                "bottom": 589
+              },
+              "css": {
+                "position": "relative",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-map-facts",
+              "rect": {
+                "x": 17,
+                "y": 100,
+                "w": 356,
+                "h": 540,
+                "bottom": 640
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "22px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "div.v8-map-page-grid",
+              "rect": {
+                "x": 17,
+                "y": -308,
+                "w": 356,
+                "h": 948,
+                "bottom": 640
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            },
+            {
+              "el": "section.v8-page",
+              "rect": {
+                "x": 17,
+                "y": -554,
+                "w": 356,
+                "h": 1194,
+                "bottom": 640
+              },
+              "css": {
+                "position": "static",
+                "z": "auto",
+                "overflow": "visible",
+                "pb": "0px",
+                "mb": "0px",
+                "pos": null
+              }
+            }
+          ]
+        }
+      ],
+      "reachable": {},
+      "scroll_after": {
+        "top": 647,
+        "max": 647
+      }
+    },
+    {
+      "key": "me",
+      "url": "http://127.0.0.1:4783/v8/me",
+      "nav": {
+        "rect": {
+          "x": 0,
+          "y": 768,
+          "w": 390,
+          "h": 76,
+          "bottom": 844
+        },
+        "pos": {
+          "position": "fixed",
+          "z": "10",
+          "overflow": "visible",
+          "pb": "7px",
+          "mb": "0px",
+          "pos": null
+        }
+      },
+      "blocked": [],
+      "blocked_after_scroll_to_bottom": [],
+      "reachable": {},
+      "scroll_after": {
+        "top": 644,
+        "max": 644
+      }
+    }
+  ],
+  "errors": []
+}

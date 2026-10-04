@@ -1,0 +1,32 @@
+{
+  "details_open": false,
+  "details_box": {
+    "w": 322,
+    "h": 54,
+    "y": 466
+  },
+  "details_display": "grid",
+  "summary_box": {
+    "w": 322,
+    "h": 44,
+    "y": 466
+  },
+  "textarea_box": {
+    "w": 206,
+    "h": 78,
+    "y": 541
+  },
+  "textarea_display": "inline-block",
+  "button_box": {
+    "w": 98,
+    "h": 44,
+    "y": 591
+  },
+  "button_display": "inline-flex",
+  "abort_section_box": {
+    "w": 356,
+    "h": 235,
+    "y": 303
+  },
+  "section_display": "grid"
+}

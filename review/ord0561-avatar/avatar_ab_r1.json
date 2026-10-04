@@ -1,0 +1,145 @@
+{
+  "run_id": "AVFIX-191024",
+  "line_tip": "f3ba478caaecdbdf7254786b2bf0d03d323897d0",
+  "snap_tip": "cea803133b046da6d80ee127aef526f485961305",
+  "branch_base": "f3ba478caaecdbdf7254786b2bf0d03d323897d0",
+  "css_blob_snap": "179d26e66209ed2f9b6fe3c2a64591dbf1799a39",
+  "css_blob_branch_base": "179d26e66209ed2f9b6fe3c2a64591dbf1799a39",
+  "css_bytes_identical": true,
+  "avatar_render_lines_identical": true,
+  "probe": "ord0561_avatar_probe_r1.cjs",
+  "backend_pid": 52408,
+  "ensure_http_status": 200,
+  "before_build": {
+    "asset": "index-DCnaKrB5.js",
+    "http_status": 200,
+    "bytes": 1620657,
+    "served_equals_disk": true,
+    "disk_sha1": "864b5f67a0293817ed03c717c4f610e3918c263f"
+  },
+  "before": {
+    "rc": 0,
+    "arms": [
+      {
+        "locale_arm": "en",
+        "present": true,
+        "text": "DE",
+        "aria": null,
+        "testid": null,
+        "name_from_contents_only": true,
+        "scroll_w": 48,
+        "client_w": 28,
+        "font": "16px",
+        "pad": "12px 14px",
+        "overflow_hidden": true,
+        "center_hits_self": true,
+        "center_hit": "button",
+        "rect": {
+          "x": 345,
+          "y": 25,
+          "w": 28,
+          "h": 28,
+          "right": 373
+        },
+        "url": "http://127.0.0.1:4856/v8/hub"
+      },
+      {
+        "locale_arm": "zh-CN",
+        "present": true,
+        "text": "DE",
+        "aria": null,
+        "testid": null,
+        "name_from_contents_only": true,
+        "scroll_w": 48,
+        "client_w": 28,
+        "font": "16px",
+        "pad": "12px 14px",
+        "overflow_hidden": true,
+        "center_hits_self": true,
+        "center_hit": "button",
+        "rect": {
+          "x": 345,
+          "y": 25,
+          "w": 28,
+          "h": 28,
+          "right": 373
+        },
+        "url": "http://127.0.0.1:4856/v8/hub"
+      }
+    ],
+    "errors": [],
+    "stdout": "en present=true 字=\"DE\" aria=null testid=null scroll=48 client=28 font=16px pad=12px 14px 自命中=true url=hub\nzh-CN present=true 字=\"DE\" aria=null testid=null scroll=48 client=28 font=16px pad=12px 14px 自命中=true url=hub\nerrors []\n"
+  },
+  "patched_bytes": {
+    "frontend/src/styles.css": "5a99d0ade5f47a6227cb28a2d9f786a3817f5a51",
+    "frontend/src/app/V8Experience.tsx": "a3735e7e01a039f754f31f3a63abce1e15d04197"
+  },
+  "build_rc": 0,
+  "build_seconds": 9.6,
+  "after_build": {
+    "asset": "index-DPesbsyx.js",
+    "http_status": 200,
+    "bytes": 1620713,
+    "served_equals_disk": true,
+    "disk_sha1": "6bb0cfea8c8b33c1e6361d241547fb40513198df"
+  },
+  "after": {
+    "rc": 0,
+    "arms": [
+      {
+        "locale_arm": "en",
+        "present": true,
+        "text": "DE",
+        "aria": "Me",
+        "testid": "topbar-avatar",
+        "name_from_contents_only": false,
+        "scroll_w": 28,
+        "client_w": 28,
+        "font": "10px",
+        "pad": "0px",
+        "overflow_hidden": true,
+        "center_hits_self": true,
+        "center_hit": "button[topbar-avatar]",
+        "rect": {
+          "x": 345,
+          "y": 25,
+          "w": 28,
+          "h": 28,
+          "right": 373
+        },
+        "url": "http://127.0.0.1:4856/v8/hub"
+      },
+      {
+        "locale_arm": "zh-CN",
+        "present": true,
+        "text": "DE",
+        "aria": "我的",
+        "testid": "topbar-avatar",
+        "name_from_contents_only": false,
+        "scroll_w": 28,
+        "client_w": 28,
+        "font": "10px",
+        "pad": "0px",
+        "overflow_hidden": true,
+        "center_hits_self": true,
+        "center_hit": "button[topbar-avatar]",
+        "rect": {
+          "x": 345,
+          "y": 25,
+          "w": 28,
+          "h": 28,
+          "right": 373
+        },
+        "url": "http://127.0.0.1:4856/v8/hub"
+      }
+    ],
+    "errors": [],
+    "stdout": "en present=true 字=\"DE\" aria=\"Me\" testid=topbar-avatar scroll=28 client=28 font=10px pad=0px 自命中=true url=hub\nzh-CN present=true 字=\"DE\" aria=\"我的\" testid=topbar-avatar scroll=28 client=28 font=10px pad=0px 自命中=true url=hub\nerrors []\n"
+  },
+  "snap_restored": {
+    "frontend/src/styles.css": true,
+    "frontend/src/app/V8Experience.tsx": true
+  },
+  "backend_exit": 1,
+  "BAD": []
+}

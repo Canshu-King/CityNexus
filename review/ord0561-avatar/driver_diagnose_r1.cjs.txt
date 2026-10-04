@@ -1,0 +1,92 @@
+// ORD-0561 修复前的归因探针：把"被盖住"那几枚控件的祖先链、定位与遮挡者的矩形一起打出来，
+// 免得照着一个猜出来的根因去改热文件。只读，不点任何写侧控件。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const JID = process.env.ORD561_JID;
+
+const DIAG = () => {
+  const desc = (el) => el.tagName.toLowerCase() + (el.getAttribute("data-testid")
+    ? "[" + el.getAttribute("data-testid") + "]" : "") +
+    (typeof el.className === "string" && el.className.trim()
+      ? "." + el.className.trim().split(/\s+/).slice(0, 2).join(".") : "");
+  const rect = (el) => { const r = el.getBoundingClientRect();
+    return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height),
+             bottom: Math.round(r.bottom) }; };
+  const css = (el) => { const c = getComputedStyle(el);
+    return { position: c.position, z: c.zIndex, overflow: c.overflow, pb: c.paddingBottom,
+             mb: c.marginBottom, pos: c.insetStart !== undefined ? c.bottom : null }; };
+  const bar = document.querySelector(".v8-mobile-nav");
+  const out = { nav: bar ? { rect: rect(bar), pos: css(bar) } : null, controls: [] };
+  for (const b of Array.from(document.querySelectorAll("button"))) {
+    const r = b.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+    const top = document.elementFromPoint(cx, cy);
+    if (!top || top === b || b.contains(top) || top.contains(b)) continue;
+    const chain = [];
+    let p = b;
+    for (let i = 0; i < 6 && p; i++) { chain.push({ el: desc(p), rect: rect(p), css: css(p) }); p = p.parentElement; }
+    out.controls.push({ label: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40),
+                        testid: b.getAttribute("data-testid"), cls: b.className, rect: rect(b),
+                        center: { x: cx, y: cy },
+                        blocker: { el: desc(top), rect: rect(top), css: css(top),
+                                   text: (top.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60) },
+                        chain: chain });
+  }
+  return out;
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, screens: [], errors: [] };
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 3, isMobile: true, hasTouch: true, locale: "en-US", serviceWorkers: "block" });
+  const page = await ctx.newPage();
+  page.setDefaultTimeout(15000);
+  try {
+    await page.addInitScript(([jid, loc]) => {
+      localStorage.setItem("citynexus.locale", loc);
+      if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+    }, [JID || "", "en"]);
+    for (const key of ["trips", "agent", "hub", "map", "me"]) {
+      await page.goto(BASE + "/v8/" + key, { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(2200);
+      const d = await page.evaluate(DIAG);
+      // 决定性的一问：把这页滚到底，那枚被盖的控件能不能被摆到底栏之上？
+      // 摆得开 = "此刻在带里"（固定底栏的正常行为，不是不可达）；摆不开 = 真不可达。
+      await page.evaluate(() => { const se = document.scrollingElement || document.documentElement;
+        se.scrollTop = se.scrollHeight; });
+      await page.waitForTimeout(700);
+      const after = await page.evaluate(DIAG);
+      const reachable = {};
+      for (const c of d.controls) {
+        const still = after.controls.filter((x) => x.testid === c.testid);
+        reachable[c.testid || c.label] = still.length ? "STILL_BLOCKED_AT_BOTTOM" : "CLEARS_AFTER_SCROLL";
+      }
+      rep.screens.push({ key, url: page.url(), nav: d.nav, blocked: d.controls,
+                         blocked_after_scroll_to_bottom: after.controls, reachable: reachable,
+                         scroll_after: await page.evaluate(() => {
+                           const se = document.scrollingElement || document.documentElement;
+                           return { top: se.scrollTop, max: se.scrollHeight - se.clientHeight }; }) });
+    }
+  } catch (e) { rep.errors.push(String(e).slice(0, 200)); }
+  await ctx.close();
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const s of rep.screens) {
+    console.log("==", s.key, "nav rect", JSON.stringify(s.nav && s.nav.rect));
+    for (const c of s.blocked) {
+      console.log("   BLOCKED", JSON.stringify(c.label), "testid=" + c.testid, "rect=" + JSON.stringify(c.rect));
+      console.log("     by", c.blocker.el, JSON.stringify(c.blocker.rect), "pos=" + c.blocker.css.position,
+                  "z=" + c.blocker.css.z, "|", JSON.stringify(c.blocker.text.slice(0, 40)));
+      for (const ch of c.chain.slice(0, 4)) {
+        console.log("     ^", ch.el, "y=" + ch.rect.y, "bottom=" + ch.rect.bottom,
+                    "pos=" + ch.css.position, "z=" + ch.css.z, "pb=" + ch.css.paddingBottom);
+      }
+    }
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();
