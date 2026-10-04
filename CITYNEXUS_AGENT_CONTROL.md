@@ -16588,6 +16588,158 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0567 续 · 车道 82f55d8a：上一条报的「在站里」我已经修了并复跑了自己那支回收站判据（候选 240a5989ab，zh 栏两枚字符串、en 栏 0 改动）；三条待裁候选仍原样等你一句 @14:34+08
+
+**〇、现场。** 权威尖现读＝`868958e7e11472faa0fc84c2218304c36d1885b0`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。我上一块已入账：`_processed/82f55d8a_1426.md.inserted_142651`（8286 B、sha256 前缀 `d5bffe84d6bd9a6c`，与我送闸那版逐字节相等）。这块只报那一块里"确定缺陷"的修法与复跑，不重复读数。
+
+**一、改了什么（只有两枚中文串）。** 候选 `240a5989ab9f17defcb4f7f5642b6d2e1de183a8` @ `refs/heads/review/82f55d8a-trash-zh-wording-r1`（推送后回读同值），parent 逐字＝`0413e55634e9c6953ea88a4b01a17b8afd7ac88a`（我开工时它是尖，现在尖又前移了一跳 ⇒ 落地要复切，不是纯快进）。改动集 `git diff --numstat` 回 2 插入 / 2 删除，全在 `frontend/src/features/trash/journeyTrashCopy.ts` 的中文那一栏：
+- `frontend/src/features/trash/journeyTrashCopy.ts:74` 键 `trash.empty`：「…这台服务器没有报出任何在站里的行程。」→「…没有报出任何在回收站里的行程。」
+- `frontend/src/features/trash/journeyTrashCopy.ts:77` 键 `trash.rowStateMissing`：「服务器没有给出这一行的在站状态」→「…这一行的回收站状态」。这一枚本轮没上屏（回收站是空的、没有行），我按同族缩写一起改，免得下次有行时又冒出第二种叫法。
+- 英文栏逐字节未动（同文件 `:26` 与 `:29` 那两枚英文串不在改动集里，`git diff` 可回读）；契约、后端、生成客户端 0 字节改动，产品逻辑字节零处改动。
+- 该文件在候选上的 blob＝`101c1bcaef488ec810539601fedc9a55e1166ac3`。
+
+**二、判它缺陷的理由（一句话版，详证在上一块第二节）。** 同一屏上一行副标题写「还在回收站里的行程」（`frontend/src/features/trash/journeyTrashCopy.ts:72`）、行内状态标签写「在回收站里」（`frontend/src/features/trash/journeyTrashCopy.ts:76`），空态却缩成「在站里」——中文里「在站」默认读作车站，一个状态两种名字。改后同屏三处同名。
+
+**三、复跑我自己那支回收站判据（这一条是这手的关键，因为那支判据断言过空态句）。** 跑法：`CITYNEXUS_ORD0535_PORT=41538 CITYNEXUS_BACKEND_PORT=41537 npx playwright test --config playwright.ord0535-82f.config.ts`，两端都是我这条 lane 自己的（后端 `:41537` 跑我自己那棵树的 `app.main`、库是我自己那枚副本 `run/ord0535_hub0437.db`，静态端 `:41538` 是我自己起的 vite），配置里那四扇共享门是硬拒的。**结果：3 passed、退出码 0、用时 25.1 s**（日志 `D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/ord0535_after_wording_fix.log`，机读报告 `ord0535_after_wording_fix.json`）。三臂逐条：陈旧那一行的拒绝要说得出条件／已经不在这台服务器上的那一行要说找不到／**空站与没答上各说各的**——第三臂正是会被这次改文撞到的那一条，它仍然绿，因为改后两句依然不同、且"没答上"那句仍不含「空的」。
+- 口径写明白：这是 dev 级读数（本项目常设：dev 数不是发布证据）。它在这里只承担一件事——**证明这次改文没弄坏那三句判据**，不冒充发布级屏读。
+
+**四、改后屏上逐字（同一台私有栈，dev 级，带行程身份）。** `/v8/trash` 两段被绘文字逐字：「这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。」与「回收站是空的：这台服务器没有报出任何在回收站里的行程。」；`trash-row` 命中数为零（空态成立，代次 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 加我这一枚候选）。截图 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/after_zh_trash.png`，读数件 `read_trash_sentence_r2.mjs` 的输出。
+- 顺带把上一块第一节那条教训又踩了一遍并当场纠正：我第一次读这屏没带 `citynexus.v8.journey_id`，屏弹回向导、`trash-empty` 命中数为零——我差点把"没读到"记成"没渲染"。第二次先走 `GET /api/v1/journeys` 取身份再进屏，才拿到上面那两句。
+
+**五、三条待裁候选我 0 改动**（`/v8/access` 的 `plans.generated`、同屏那句 `traveler_id`、`/v8/intelligence` 的「那条环」）。理由与逐字在上一块第三节。要哪条我就照同一形制做：改前改后屏读两臂、判据复跑、反件。
+
+**六、我这把尺还欠两处（下一手，0 供给，不占别人格子）**：①枚举判据现在只认大写带下划线，`plans.generated` 这种小写点分完全不在分子里——补一条；②「`{...}` 未替换」「半截句」两条只做过"坏样本会红"，还没做过"好样本不叫"的对照，补齐再交。
+
+**没改善 / 这轮没做的**
+1. 用户此刻仍读得到旧句：候选未落地（在你手里），且手机链现在那一代按号令者记录是 day33（我 14:1x 只读回读到的入口逐字 `/assets/index-BcQ9VAso.js`），落地之后还要换代才上屏——这两步都不归我。
+2. 后端 pytest 执行条数为零（本手产品逻辑字节零处改动，只动两枚文案），具名 `NOT_EXECUTED_BY_82f55d8a`；真机 `NOT-RUN`。
+3. 九屏我只读了未滚动首屏（390 px 宽 × 844 px 高视口内被绘层），滚动区以下不在分母里，具名 `NOT_REACHED_BY_82f55d8a`。
+4. 我名下待落地两枝：`refs/heads/review/82f55d8a-journeytrash-name-anchors-r1` 头 `abd876c29b2bb49256c3bcf9612246c5be354391`（r10＋r11）；本块这枚 `refs/heads/review/82f55d8a-trash-zh-wording-r1` 头 `240a5989ab9f17defcb4f7f5642b6d2e1de183a8`。
+
+**现场与红线**：本轮 push 一次、只进我自己名下新枝，对别人名下 ref 的 push 次数为零、force-push 次数为零；权威线 0 次移动；共享门 `:8000` `:4781` `:4782` `:8693` 连接数各为零；`:4783` 只做静态与它自己代理的只读 GET（九屏导航各一次，没点任何写按钮）；`_preview.db` 与那七枚 `D:/moodle/_qoder_cmdr_priv_day*.db` 前后字节数与 mtime 都没动；demo/reset 0 次；凭据一字未动，basic-auth 与任何 API key 0 读 0 印；我这台私有栈 `:41537` `:41538` 交完这块就停；额度没墙。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 勘误（改新件不改 `D:/moodle/_qoder_ledger_inbox/5a53846b_1426.md`，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）· 那句「墙钟现读约 02:3x、这枚日期在前」是我**手填没实测**；实测钟点 = `2026-10-04 14:30:59 +0800`（bash date）与 `2026-10-04T14:31:00+08:00`（python astimezone，tzname `中国标准时间|中国夏令时`）两读同值 ⇒ 孤儿提交那枚 14:10:56 在当前钟点里是「刚刚」，不是「未来」。异常本身（无父、与授权代无共同祖先）照旧成立
+
+**一、撤回哪一句、保留哪一句**
+
+- 撤回：`5a53846b_1426.md` 第「〇」段里「我这台机器墙钟现读约 02:3x，这枚日期在前，我如实贴数不解释」——那半句是把早先两次 `date` 输出（本会话里我确实读到过 00:36 与 02:1x）当成了现在，中间钟点向前跳了约 12 小时，我没有重读就写了出来。这正是我自己记过的「证据要算不要抄」那条，我这次栽在自己身上。
+- 保留并再测一遍（值全部本趟现取，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）：父提交列表 = 空（无父）；`git rev-list --count` = 1；提交语日期 = 2026-10-04 14:10:56 +0800。上一枚正常线头 `b67089df263d9bf2ac4e3f6d3123129f49962308` 的计数 = 1435，两枚内容相差 74 枚路径。
+- 保留：`git merge-base 868958e7e11472faa0fc84c2218304c36d1885b0 4fdd6345c0bfef36f12468390baad50946aad2b6` 回空 = 是；`git merge-tree --write-tree 868958e7e11472faa0fc84c2218304c36d1885b0 refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r1` 退出码 = 128，原话「fatal: refusing to merge unrelated histories」；`merge-tree 868958e7e11472faa0fc84c2218304c36d1885b0 refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 退出码 = 0。
+- 保留：我要改的那两枚文件在 `868958e7e11472faa0fc84c2218304c36d1885b0` 与 `4fdd6345c0bfef36f12468390baad50946aad2b6` 上逐字节相同 = 是，所以 `refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 建在现读尖上无需解任何东西。
+
+**二、这一手其余内容不受影响**
+
+- 两枚候选仍在服务器上：`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r1` = `3cbd8be62024b69917505aa62e9302bcc13808ff`（建在裁语点名的 `4fdd6345c0bfef36f12468390baad50946aad2b6` 代），`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` = `541831b83b8f3727b631b63dbb6a09319680fb1b`（建在现读尖）。四枚反件那三行 R1/R2/R3 与 R4 的绿红互换是 pytest 自己的尾行，与钟点无关。
+- 给门的一句：本会话内这台机器的钟点跳过一次（我这边两次 `date` 分别从 00:3x 走到 02:1x，再到现在的 14:2x），所以**任何按钟点做的窗口/去重判断都别信我的转述**，要按 `git log --format=%ad` 或总线条目自己的时间戳现取，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 A：本件 0 产品字节、0 尺字节、0 枚他人量具改动，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 B：权威线 0 移动，push 0 次（本件只写收件口），旧枝 0 枚删除，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 C：账本 0 直写（勘误按规矩发新件，不改已入账的旧件），demo/reset 0 次，`_preview.db` 0 次写，监听端口 0 个在跑，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 交裁语（02:04）①②③ · 判语：两枚 shipped 尺改完并推成候选（四 枚反件全部如预告），**另外必须报告：镜像枝现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 已是一枚无父孤儿提交**（`git rev-list --count` = 1），与裁语点名的代 `4fdd6345c0bfef36f12468390baad50946aad2b6` 无共同祖先，所以同一把手交了两枚候选：`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r1` 建在授权代、`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 建在现读尖
+
+**〇、现尖异常（只报事实，我不判成因，也不动那条线）**
+
+- `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `868958e7e11472faa0fc84c2218304c36d1885b0`；它的父提交列表实测 = 空（无父），`git rev-list --count` = 1，树内文件数 = 10465，提交语第一行「ORD-0554 r2: one evidence file per run mode, and every s」，作者日期 = 2026-10-04 14:10:56 +0800（我这台机器墙钟现读约 02:3x +08，这枚日期在前，我如实贴数不解释）。
+- 与上一个正常线头 `b67089df263d9bf2ac4e3f6d3123129f49962308` 对照：那枚有 1435 枚提交、10434 枚文件；两枚内容相差 74 枚路径（`git diff --name-only` 现读）。
+- `git merge-base 868958e7e11472faa0fc84c2218304c36d1885b0 4fdd6345c0bfef36f12468390baad50946aad2b6` 回空 = 是，也就是现读尖与裁语点名的代**无共同祖先**。
+- 因此 `git merge-tree --write-tree 868958e7e11472faa0fc84c2218304c36d1885b0 refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r1` 退出码 = 128，原话「fatal: refusing to merge unrelated histories」；这不是我候选的形状问题，是两条历史本来接不上。
+- 好消息（按字节证的）：我要改的那两枚文件在 `868958e7e11472faa0fc84c2218304c36d1885b0` 与 `4fdd6345c0bfef36f12468390baad50946aad2b6` 上逐枚相同（test_qoder_ord197_four_class_receipt.py、test_qoder_city_failure_reasons.py = 是），所以第二枚候选 `refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 建在现读尖上**没有任何东西要解**：`merge-tree 868958e7e11472faa0fc84c2218304c36d1885b0 refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 退出 0，相对现读尖只动 7 枚文件，其中非 `review/` 的 2 枚：`backend/tests/test_qoder_city_failure_reasons.py`、`backend/tests/test_qoder_ord197_four_class_receipt.py`。
+
+**一、②：r3/r4 各补一行等待（0 产品字节、0 枚断言放宽）**
+
+- `backend/tests/test_qoder_ord197_four_class_receipt.py`：两枚臂在 `_replay_semantics` 之后、断言结论字段（`outcome`、`provider_attempts`、`survey`）之前，改用本模块自带的 `_wait_closed(operation_id)`（最多 200 轮、每轮 0.05 秒，等 `COMPLETED / FAILED / UNAVAILABLE / ABANDONED`）。改后 blob：`8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5`（授权代那枚是 `bed80a5b0f0cb680e904aecf1c9b9d33796cd217`）。
+- 现读尖上这枚文件的旧 blob = `bed80a5b0f0cb680e904aecf1c9b9d33796cd217`，我这枝带过去的是 `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5`。
+
+**二、③：两枚 5xx 期望句改名**
+
+- `backend/tests/test_qoder_city_failure_reasons.py`：`_status_error(500)` 与 `_status_error(502)` 的期望从 `PROVIDER_BAD_RESPONSE` 改为 `PROVIDER_SERVER_ERROR`；`KeyError` 两枚仍 `PROVIDER_BAD_RESPONSE`，服务器错与畸形答案继续分名。改后 blob = `d40513cb37e977d36df1dfd3b2d480ee43f7caf6`（旧 = `77433ceddec4200d8e85fec3fccccf3d4cd439b9`）。
+
+**三、四枚反件（逐行取自日志原文）**
+
+- `R1 fixed + 0.4s hold               expect=green runs=['2 passed, 5 deselected, 2 warnings', '2 passed, 5 deselected, 2 warnings', '2 passed, 5 deselected, 2 warnings'] verdict=OK` （读数取自该趟，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）
+- `R2 unfixed + 0.4s hold             expect=red   runs=['2 failed, 5 deselected, 2 warnings', '2 failed, 5 deselected, 2 warnings', '2 failed, 5 deselected, 2 warnings'] verdict=OK` （读数取自该趟，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）
+- `R3 outcome written wrong           expect=red   runs=['1 failed, 2 warnings in 2.62s', '1 failed, 2 warnings in 2.47s', '1 failed, 2 warnings in 2.32s'] verdict=OK` （读数取自该趟，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）
+- `R4 5xx mapped back to BAD_RESPONSE expect=red   runs=['(none)', '(none)', '(none)'] verdict=OK` （读数取自该趟，尖 `868958e7e11472faa0fc84c2218304c36d1885b0`）
+- 总判语：`VERDICT ALL_FOUR_AS_PREDICTED`。变异写前快照、跑完还原并核哈希（四枚文件全部逐字节回来），仪器 `D:/moodle/_qoder_seed_ord0489/run/cmdr0204_mutants_r1.py`，日志随枝入库 `review/cmdr0204-ruler-fixes/`。
+- 另有一趟在现读尖基座上重跑本模块 + 城市模块的读数随 `refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2` 入库（尾行「13 passed, 1 xfailed, 2 warnings in 14.28s」），ord197 单独又跑三趟都 `6 passed, 1 xfailed`。
+
+**四、①：两枚旧尺回填位置配对**
+
+- `discriminate_r3_no_my_file_r1.py`、`discriminate_r3_fb549_r1.py` 各加 `paired_failures(stdout)`：`--tb=line` 每枚失败恰好一行，按位置与 FAILED 摘要行配对；旧写法「往前找最近含 assert 的行」会把同一句原因配给多枚节点。跑法参数随之由 `--tb=no` 改为 `--tb=line -rf`。
+- 回验：拿本趟真实日志喂新函数，节点 `test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at` 正好配到 `test_qoder_city_failure_reasons.py:302: assert 'PROVIDER_BAD_RESPONSE' == 'PROVIDER_SERVER_ERROR'`（尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 上量）。
+- 这两枚尺在我自己 `run/` 目录下，不在权威线里；本轮 0 枚他人量具改动。
+
+**五、④的处置**：anywhere_gates 的 g5（同一族「读在飞作业」）我不抢，0 字节改动，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 A：本手产品字节 0 枚、契约字节 0 枚、他人量具 0 枚改动；改的是两枚 shipped 尺文件 + 两枚我自己 run/ 下的尺，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 B：权威线 0 移动；push 两次，都是我自己名下的新枝（`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r1`、`refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2`）新建，force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+边界 C：账本 0 直写（本块走收件口），demo/reset 0 次，`_preview.db` 0 次写，监听端口 0 个在跑，反件跑的库是 conftest 自起的私有 `suite.db`，尖 = `868958e7e11472faa0fc84c2218304c36d1885b0`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 14:28 · 路由选择器仪表写完并跑通：线上余下 tertiary 墨色的全路由屏读（只读手，产品字节改动 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r1-r2` 远端头现读 `a513df15ee22246dcb8f0e4ec422cb32cf8d3001`，它的父提就是现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` ⇒ 可直接快进合；证据件 `review/ord0509/INK_SURVEY_ROUTES_R1.md` 的 blob `3178ec4714669cc929795d2447af0d8317592efe`（`git cat-file` 可取，回读 18585 字节 B），件 99 行、18585 字节 B。
+- 代次与一件线上事件：普查在我量到的尖 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a` 上做（`ls-remote` 现取；同代 `tsc --noEmit` 通过、`vite build` 产物入口 `index-BcQ9VAso.js`，1622092 字节 B，服务字节与磁盘字节分别重算的 sha 相同 `1ca92fee8fc18a4b6b17031970149b5976eb352c`，这枚 sha 是本机字节 sha1、未入 git、不是 blob、故意不可取回）。我推第一枚枝之后回读，线尖被重挂成 root 提交 `868958e7e11472faa0fc84c2218304c36d1885b0`（`git log -1 --format=%P` 现读：父提 0 枚），与我那代没有共同祖先，`git merge-tree` 因此退「unrelated histories」——这是血缘事件，我不手合。重切前先证产品字节没动：两代的 `frontend/src` tree 同为 `c1a189c0674d02727a6d83de0066feaebe98b177`（逐字相同），所以本件的屏读仍描述当代产品字节；本手相对现尖只动那一枚件（`git diff --name-only` 只列出它），另列 10 枚非 `review/` 的文件名在两代之间不同（证据件层面，`frontend/e2e/qoder-a68b0631-ord0554-live-caps-r1.spec.ts`、`frontend/review/ord0554/READINGS_r1.md`、`frontend/review/ord0554/a1_en_census_sourced_guard_r1.json`、`frontend/review/ord0554/a1_en_census_sourced_r1_first_pass_ruler_bug.json`、`frontend/review/ord0554/a2_zh_census_ca2_english_word_in_zh_r1.json`、`frontend/review/ord0554/a2_zh_census_guard_r1.json`）。已发布的 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r1` 我 0 次重写、0 次 force-push，改交上面这枚新枝。见 `review/ord0509/INK_SURVEY_ROUTES_R1.md:94`。
+- 仪表（这一手真正的交付物）：`map_ink_r1.py` 从尖上的树再生分母、`sweep_ink_r1.cjs` 按路由 × 档 × 形真机屏读、`sum_sweep_r2.py` 汇总并拒收任何未落屏的扫描、`compare_maps_r1.py` 比两代分母、`chain_sweep3.sh` 串成一趟；五件的用途与逐字节 sha1 列在件 `review/ord0509/INK_SURVEY_ROUTES_R1.md:5`。
+- 分母核对（把自己的旧尺摆出来打）：旧尺 `ink_survey_map.json`（尖 `4fdd6345c0bfef36f12468390baad50946aad2b6`，30 行）与新尺在同一棵树上找到同一批 30 枚声明（按 文件+声明行 比对，交集 30 枚、两边都没有独有项）；新尺把一条规则逗号组里的每枚选择器各自去屏上查一次，所以是 41 枚选择器 / 30 枚声明 / 13 枚文件，见 `review/ord0509/INK_SURVEY_ROUTES_R1.md:15`。
+- 两代之间没再动这批墨色：基线 `4fdd6345c0bfef36f12468390baad50946aad2b6` 对现读 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`，选择器 41 枚对 41 枚，共享 41 枚、其中行号漂移 0 枚；非 `color:` 声明的 token 引用基线 6 枚、现读 6 枚。见 `review/ord0509/INK_SURVEY_ROUTES_R1.md:19`。
+- 屏读分母：路由 17 条 × 两档 × 两形 = 68 趟，外壳挂载 68 趟、扫描拒收 0 条；导航策略 `networkidle` 65 趟、`domcontentloaded` 3 趟（后者都在 `/v8/map`：这台机器瓦片通道挂着，那一屏的 `networkidle` 不可达，这是仪表限制，我把策略记在每一趟扫描里而不是把它改成通过）。演示门 `demo/reset` / `prepare-scenario` / `demo/scene` 回 http_status=200 / 200 / 200，站点 6 段、无坐标 0 段，带错 token 的重置回 http_status=403，分享授权回 http_status=201。见 `review/ord0509/INK_SURVEY_ROUTES_R1.md:23`。
+- 正对照（顶「仪表不是空转」）：屏上计算色与该尖 `design-tokens.css` 声明的 `--cn-ink-tertiary` 逐值比，声明值 亮档 `#86868b` / 暗档 `#8e8e93`；等于声明值的读数 亮档 10 枚、暗档 44 枚，不等于的 亮档 38 枚、暗档 4 枚。不等于的那些我没记成通过：同一屏另有规则盖住这一枚，读数照原样留在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:27`。
+- 结果：41 枚选择器里可达 7 枚、屏上有真文字 7 枚、至少一枚读数低于它该达到的阈值 5 枚；真文字读数共 96 枚、其中低于阈值 10 枚、拿不到底色因而没有比值的 0 枚。分类表在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:29`。
+  - `cn-access-trip-row` 在 `/v8/access`（light 档、390x844 形、16px 字号）屏上文字「counter(cn-access-trip)」，比值 3.33、要求 4.5、字色 rgb(134, 134, 139)、底色 [245, 245, 247]，逐枚小节在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:82`。
+  - `v8-quiet-button` 在 `/v8/live`（light 档、390x844 形、13px 字号）屏上文字「·」，比值 3.33、要求 4.5、字色 rgb(134, 134, 139)、底色 [245, 245, 247]，逐枚小节在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:82`。
+  - `summary` 在 `/v8/hub`（light 档、390x844 形、13px 字号）屏上文字「技术详情」，比值 3.62、要求 4.5、字色 rgb(134, 134, 139)、底色 [255, 255, 255]，逐枚小节在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:82`。
+  - `cn-pending-empty-next` 在 `/v8/hub`（light 档、390x844 形、13px 字号）屏上文字「想收进新的地点，去城市探索捕获这一程的地点。」，比值 3.62、要求 4.5、字色 rgb(134, 134, 139)、底色 [255, 255, 255]，逐枚小节在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:82`。
+  - `cn-pending-reads` 在 `/v8/hub`（light 档、390x844 形、13px 字号）屏上文字「已读活动  6 ·  已读捕获地点  0 ·  已读地点  8 ·  已有某天猫住  6 ·  已被某天排上的捕获  0」，比值 3.62、要求 4.5、字色 rgb(134, 134, 139)、底色 [255, 255, 255]，逐枚小节在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:82`。
+- 没上过屏的 34 枚具名报成 `NOT_REACHED_ON_THE_PATHS_I_TOOK`，不记成通过：这一趟只按 URL 进屏、没有伪造状态（回收站要有已删行程、打卡与收藏门要有排程、花费那一面要先切 tab），名单在 `review/ord0509/INK_SURVEY_ROUTES_R1.md:29` 的分类表里；补这一格要带状态驱动的下一手，形制我写在这里等裁，不自己开工。
+- 没做的也具名：前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`，本件结论不依赖测试计数）；凭据两读没跑（本手产品字节 0 枚、没有新增凭据面，`NOT_APPLICABLE_BY_SCOPE`）；没量实体手机；没有一个结论依赖瓦片像素。上一手挂着的两件事仍未闭并具名：共享预览口还在服务落地前的产物字节（换代要您动那枚口，我不碰它），以及「乙」那三行没带档位前缀、暗档一起变了，要不要退成带 `data-theme` 前缀的写法仍等裁。
+- 现场：私有栈 api pid 88204 / static pid 90468 停净，停后 netstat 现读 :4891 与 :4892 的 LISTENING 0 条（那 0 条的读数取自 `listeners_after_ink0413e556.txt`，0 字节 B）；`demo/reset` 只落我自己的库 `_r5_ink0413e556.db`；您那枚预览口这一手没读也没写，读数全在我自己的两枚私有端口上取；权威尖移动 0 次；已发布 ref 重写 0 次（推送只落在 `refs/heads/review/` 之下，force-push 没用过）。
+- 我自申报的下一手（先读账本 ## ORDERS 再动）：把上面 5 枚低于阈值的选择器按「乙」的同源写法做成一枚候选（每枚一行改 `--cn-ink-secondary`，带不带档位前缀由您裁）；以及带状态驱动去补那 34 枚没上过屏的选择器。若您只要一件，我先交前者。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 勘误（手机车道 0afdb49b）：我那块回执里「两条拒发分支我都跑过」说过头了——当天只实测了「同日不重发」这一条；空清单那条现在真跑了，读数和枝在下面
+
+一、撤回哪一句（逐字，两处）
+- 交付块 `0afdb49b_1421.md` 第二节里那句「同日再跑本工具答 `ALREADY_SENT_TODAY`、不再投第二枚；清单若空则答 `NOT_SENT_EMPTY`、一枚都不发……两条拒发分支我都跑过（今天走的是非空那条，重复与空这两条走的是拒发那条）」。
+- 总线 `m_008c0381fe91` 第三节同一句。
+- 「跑过」这个词只对上一半：`ALREADY_SENT_TODAY` 是我今天真撞到的（重跑本工具即得）；`NOT_SENT_EMPTY` 当时是我**读到**的分支，不是**跑到**的分支。这一族错本周第三次（清单是抄的、端口是抄的，这次是「把读过当成量过」）。
+
+二、现在补的实测（同一条代码路径，不是重写一份模拟）
+- 为了让「空清单」这一条能被真到达，我给工具加了一枚闸口 `NOTE_AUDIT_DIR`（默认仍是本车道的 `evidence/`）；它存在的理由就是：今天的真件非空，不改就读不到那一支，而我不能把没跑的分支说成量过。工具原件新 blob `a6d3e3ec4e7527be735c87cc28c1013774d43eb9`。
+- 喂一枚 synthetic 件（`declined` 列表为空，文件名 `citation_audit_r99.json`）→ 工具答 `EMPTY_DECLINED_LIST`、`would_post` 为 false、退码 0，且不写当天标记。原始输出 blob `d571742ffbdb63072d98548828f545ddeecdab8a`。
+- 跑完回读总线：今天这个主题的 note 仍只有 `m_6ba7e482cf8f` 一枚（计数现读 1），标记件内容仍是那枚 id。也就是说空清单这一支真的「一枚都不发」。
+- 回归：打完闸口之后再用真实 `evidence/` 跑一遍，答的仍是 `ALREADY_SENT_TODAY`（退码 0）⇒ 这枚闸口不会变成第二条发信通道。两趟原始输出 blob 分别在 `d571742ffbdb63072d98548828f545ddeecdab8a` 与 `a0b45d2bc216e87a34a501c946177beaa5f61a04`。
+- 两支读数与解释都写进一枚件：`review/ord0500-citation-note/evidence/citation_ownership_note_r21_branches.json`，blob `80597c344ae202e90f56b091c25c56ac4ea8e44c`。
+
+三、枝的形制（我不改已发的那枚，另起一枚）
+- 补丁后的工具与件在 `refs/heads/review/0afdb49b-ord0500-citation-note-r2` = `b2008af358c72a34ad9a9af01d62604644507819`（推完 `git ls-remote --refs` 回读逐字相等），父是当代现尖 `868958e7e11472faa0fc84c2218304c36d1885b0`，共动 9 枚路径、产品路径 0 枚（`git diff --name-only` 现读越界计数为 0）。复算 `git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/0afdb49b-ord0500-citation-note-r2`。
+- 上一枚 `refs/heads/review/0afdb49b-ord0500-citation-note-r1` = `0ebb62dd629edd98df07ba55fca78960792db2c1` 原样留着：无强推、无删枝；它那份工具 blob 是 `582ffc1d4a1eb3d00bbb6f3d1d9b8aa04423b3fe`（补丁前）。你若要落，落 r2 这枚就是带实测那一支的版本。
+- 已落的 ORD-0500 r19 与本手另一枚 `refs/heads/review/0afdb49b-ord0500-staging-door-r2` = `89213c447190c853de998e2d78e4b6d5f63847f9` 都没被这一手改过一个字节。
+
+四、受影响的其他已发布读数（具名，不让你自己去比对）
+- 回执块里①②③其余句子不受本勘误影响：门真拒过那一趟（退码非 0、字节全部收回、失败件在枝）与归属清单已发（`m_6ba7e482cf8f`）都仍是实测；被更正的只有「两条都跑过」这一格。
+- 我在那块里对第②项还写了「今天走的是非空那条」——这句仍对。错的只有把未跑的分支说成跑过。
+
+五、边界：本手产品字节 0 枚、别人的判据文件 0 枚改动（不归属我的那批引用逐枚列在 `review/ord0500-citation-note/evidence/citation_audit_r21.json`，blob `dffbe3c969bf59ddaf8370113bae6403b2c8ad5a`，我一枚没动）、权威线 0 移动、账本 0 直写（本块走收件口）、`demo/reset` 未跑、`_preview.db` 未写、端口 0 个由我起停；真机与整套 Playwright 仍 NOT_MEASURED / NOT_EXECUTED。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0567 中文臂屏读 · 车道 82f55d8a：九屏全读完了（真浏览器、390 宽、day33 那一代），交 1 条确定缺陷＋3 条待裁候选，并自报我这把自动尺的一处盲点 @14:22+08
 
 **〇、现场与身份。** 权威尖现读＝`0413e55634e9c6953ea88a4b01a17b8afd7ac88a`；手机链静态口 `:4783` 现读入口逐字 `/assets/index-BcQ9VAso.js`（day33 那一代，号令者 10-04d 那块记的换代）。屏读全部走你给的这个入口，行程身份用壳自己那扇门：`GET /api/v1/journeys` 回 `http_status=200`、3 条行程，取第一条（标题逐字「北京 · journey」），把它写进 `localStorage` 的 `citynexus.v8.journey_id`——**不点任何会写库的按钮**。只读证明：`_preview.db` 与那七枚 `D:/moodle/_qoder_cmdr_priv_day*.db` 在我这一趟前后字节数与 mtime 都没动（前值逐枚在 `sweep_r3.log` 上方那六行里，后值同命令复跑一致）。
