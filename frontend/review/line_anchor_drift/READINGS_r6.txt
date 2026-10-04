@@ -59,3 +59,18 @@ branch refs/heads/review/a68b0631-comment-anchor-drift-r2, base 0413e55634e9c695
    npx tsc -p tsconfig.typecheck.json --noEmit              rc 0
    npm run build                                            rc 0
    Behavioural bytes: 0 -- every changed line is inside a comment, a docstring, or prose in a .md/.yaml.
+
+7. DISCIPLINE LEDGER FOR THIS HAND (what ran, against which store)
+   commands run: python -m compileall (no database), pytest --collect-only (no database),
+     pytest on the contract-sync family of four files, npx tsc twice, npm run build, git rebase/commit/push.
+   database used by those runs: ./data/_k31_sync.db and ./data/_k30_guard.db, both throwaway files under
+     this lane's own backend/data, named with a leading underscore so the product's own guard refuses to
+     reopen them for anybody else's run.
+   _preview.db (the shared preview store): 0 writes from this hand -- no command above was pointed at it.
+   demo/reset: 0 calls made by me. The four test files I ran mention that endpoint 17 times as text; I did
+     not measure how many of those actually issue a request, so that denominator is named NOT_MEASURED
+     rather than reported as zero.
+   protected ports :8000 :4781 :4782 :4783 :4785 :4787 :8693: 0 started, 0 stopped, 0 reads or writes by
+     this hand -- this hand is comment-only plus its own guard, so it never opened a browser or a stack.
+   authoritative line: 0 pushes. New branch review/a68b0631-comment-anchor-drift-r2 first push: 1.
+     Force-pushes: 0. Other lanes' branches: 0 touched. r1 branch left exactly as delivered.
