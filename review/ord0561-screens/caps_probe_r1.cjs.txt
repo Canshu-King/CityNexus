@@ -1,0 +1,87 @@
+// ORD-0561 · 全大写形的归因探针（英文臂）。
+// 为什么要它：document.body.innerText 是**渲染后**的文字，CSS `text-transform: uppercase` 会把
+// "Trips" 变成屏上的 "TRIPS"。把这种 CSS 效果当成"机词上屏"就是误报（号令者那条"有意的全大写
+// UI 标签要用中文臂对照判"讲的正是这件事）。这里对每一枚候选大写词，取承载它的那枚元素的
+// **原始 textContent**（不经 CSS）与 computed `text-transform` 一起报，再配中文臂同位对照。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const JID = process.env.ORD561_JID;
+const CAPS = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;      // 带下划线：SYNTHETIC_DEFAULT 这类
+const WORD = /\b[A-Z]{4,}\b/g;                          // 全大写单词
+const HAN = /[一-鿿]/;
+
+const WALK = () => {
+  const out = [];
+  const all = Array.from(document.querySelectorAll("body *"));
+  for (const el of all) {
+    if (!el.children.length) {                          // 只看叶子，父级会重复计
+      const raw = (el.textContent || "").replace(/\s+/g, " ").trim();
+      const rendered = (el.innerText || "").replace(/\s+/g, " ").trim();
+      if (!raw) continue;
+      const cs = getComputedStyle(el);
+      const caps = Array.from(new Set((raw.match(/\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g) || [])
+        .concat(raw.match(/\b[A-Z]{4,}\b/g) || [])));
+      const capsRenderedOnly = Array.from(new Set((rendered.match(/\b[A-Z]{4,}\b/g) || [])
+        .filter((x) => !caps.includes(x))));
+      if (caps.length || (capsRenderedOnly.length && cs.textTransform === "uppercase")) {
+        out.push({ tag: el.tagName, testid: el.getAttribute("data-testid"), cls:
+          (typeof el.className === "string" ? el.className : "").slice(0, 40),
+          raw: raw.slice(0, 90), rendered: rendered.slice(0, 90),
+          text_transform: cs.textTransform, caps_in_raw: caps, caps_rendered_only: capsRenderedOnly });
+      }
+    }
+  }
+  return { url: location.href, items: out,
+           body_han: /[一-鿿]/.test(document.body.innerText || "") };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, arms: [], errors: [] };
+  for (const want of ["en", "zh-CN"]) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+      locale: want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", want]);
+      const per = [];
+      for (const key of ["hub", "trips", "map", "agent", "me"]) {
+        await page.goto(BASE + "/v8/" + key, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(2200);
+        const s = await page.evaluate(WALK);
+        per.push({ key, url: s.url, items: s.items, raw_caps_leaves: s.items.filter(
+          (i) => i.caps_in_raw.length).length, css_only_leaves: s.items.filter(
+          (i) => !i.caps_in_raw.length).length });
+      }
+      rep.arms.push({ want, screens: per });
+    } catch (e) {
+      rep.errors.push("fatal " + want + " " + (e && e.message ? e.message.slice(0, 140) : String(e)));
+    } finally {
+      await ctx.close().catch(() => rep.errors.push("close " + want));
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const A of rep.arms) {
+    console.log(A.want, "| 屏", A.screens.length, "| 字面含大写词的叶子",
+      A.screens.reduce((n, s) => n + s.raw_caps_leaves, 0), "| 纯 CSS 大写",
+      A.screens.reduce((n, s) => n + s.css_only_leaves, 0));
+    for (const s of A.screens) {
+      for (const i of s.items.filter((x) => x.caps_in_raw.length)) {
+        console.log("   RAW", s.key, i.tag + (i.testid ? "#" + i.testid : ""),
+          "tt=" + i.text_transform, JSON.stringify(i.caps_in_raw), "|", i.raw.slice(0, 60));
+      }
+    }
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

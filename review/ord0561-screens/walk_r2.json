@@ -1,0 +1,969 @@
+{
+  "base": "http://127.0.0.1:4783",
+  "journey_id_pinned": true,
+  "arms": [
+    {
+      "want": "zh-CN",
+      "screens": [
+        {
+          "key": "hub",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "html_lang": "zh-CN",
+          "nav_present": true,
+          "text_chars": 1126,
+          "headings": [
+            "Demo之旅",
+            "服务端报出的两类待办",
+            "每一天，紧密相连。"
+          ],
+          "enum_tokens": [],
+          "snake_tokens": [],
+          "dotted_keys": [
+            "tile.openstreetmap.org"
+          ],
+          "han_lines_total": 65,
+          "han_lines_excl_toggle": 65,
+          "toggle_text": "EN",
+          "han_samples": [
+            "菜单",
+            "今天",
+            "跟随系统",
+            "晚上好",
+            "Demo之旅",
+            "10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天"
+          ],
+          "buttons_visible": 22,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "去看这一代方案",
+              "hit_by": null,
+              "box": {
+                "x": 186,
+                "y": 1116,
+                "w": 112,
+                "h": 44
+              }
+            },
+            {
+              "label": "对比住宿 →",
+              "hit_by": null,
+              "box": {
+                "x": 291,
+                "y": 1217,
+                "w": 82,
+                "h": 44
+              }
+            },
+            {
+              "label": "筛选",
+              "hit_by": null,
+              "box": {
+                "x": 326,
+                "y": 2084,
+                "w": 32,
+                "h": 44
+              }
+            },
+            {
+              "label": "去城市探索",
+              "hit_by": null,
+              "box": {
+                "x": 32,
+                "y": 2204,
+                "w": 326,
+                "h": 44
+              }
+            },
+            {
+              "label": "再读一次",
+              "hit_by": null,
+              "box": {
+                "x": 32,
+                "y": 2258,
+                "w": 64,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_zh-CN_hub.png",
+          "text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n晚上好\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n需要关注\n已处理\n\n刚才的变化已经处理好。\n\n现在\nRiverside Museum\n接下来\n12:15 Central Food Hall\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\nOld Town Gate\n2\nRiverside Museum\n3\n4\n5\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。\n\n把这趟能选的方案摆在一屏上比\n\n排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一维照实列出来，但不用它分高下。\n\n按这些维度排：预算。\n\n方案\t预算\t步行时长\t硬可用证据段数\t受保护锚点\n方案 2\tCNY 320.00\t没量到\t9/56\t没标受保护项\n方案 5\tCNY 320.00\t没量到\t9/56\t没标受保护项\n方案 3\tCNY 340.00\t没量到\t9/56\t没标受保护项\n方案 6\tCNY 340.00\t没量到\t9/56\t没标受保护项\n这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。\n这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。\n这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。\n这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 合成默认值，不是供应商给的。\n待规划\n\n这台服务器说这些地点属于这一程，还没排在任何一天。\n\n0 个地点没有排在某一天\n\n筛选\n\n这一程没有待规划的地点。\n\n想收进新的地点，去城市探索捕获这一程的地点。\n\n去城市探索\n再读一次\n技术详情\n✦\n今天\n行程\n地图\nCopilot\n我的"
+        },
+        {
+          "key": "trips",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "html_lang": "zh-CN",
+          "nav_present": true,
+          "text_chars": 619,
+          "headings": [
+            "1 天行程"
+          ],
+          "enum_tokens": [],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 48,
+          "han_lines_excl_toggle": 48,
+          "toggle_text": "EN",
+          "han_samples": [
+            "菜单",
+            "行程",
+            "跟随系统",
+            "行程",
+            "住宿",
+            "预订"
+          ],
+          "buttons_visible": 36,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "住宿",
+              "hit_by": null,
+              "box": {
+                "x": 379,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "预订",
+              "hit_by": null,
+              "box": {
+                "x": 741,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "花费",
+              "hit_by": null,
+              "box": {
+                "x": 1103,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "中止这趟行程",
+              "hit_by": "P",
+              "box": {
+                "x": 220,
+                "y": 557,
+                "w": 96,
+                "h": 44
+              }
+            },
+            {
+              "label": "详情 ›",
+              "hit_by": "NAV",
+              "box": {
+                "x": 148,
+                "y": 817,
+                "w": 26,
+                "h": 44
+              }
+            },
+            {
+              "label": "打卡",
+              "hit_by": "NAV",
+              "box": {
+                "x": 180,
+                "y": 817,
+                "w": 44,
+                "h": 44
+              }
+            },
+            {
+              "label": "收藏到…",
+              "hit_by": null,
+              "box": {
+                "x": 88,
+                "y": 879,
+                "w": 272,
+                "h": 44
+              }
+            },
+            {
+              "label": "详情 ›",
+              "hit_by": null,
+              "box": {
+                "x": 174,
+                "y": 974,
+                "w": 26,
+                "h": 44
+              }
+            },
+            {
+              "label": "打卡",
+              "hit_by": null,
+              "box": {
+                "x": 206,
+                "y": 974,
+                "w": 44,
+                "h": 44
+              }
+            },
+            {
+              "label": "收藏到…",
+              "hit_by": null,
+              "box": {
+                "x": 88,
+                "y": 1036,
+                "w": 272,
+                "h": 44
+              }
+            },
+            {
+              "label": "详情 ›",
+              "hit_by": null,
+              "box": {
+                "x": 122,
+                "y": 1131,
+                "w": 26,
+                "h": 44
+              }
+            },
+            {
+              "label": "打卡",
+              "hit_by": null,
+              "box": {
+                "x": 154,
+                "y": 1131,
+                "w": 44,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_zh-CN_trips.png",
+          "text_head": "菜单\n/\n行程\n跟随系统\nEN\nDE\n行程\n住宿\n预订\n花费\n\n把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。\n\n展开行程长图\n\n中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。\n\n中止这趟行程\n\n行程\n\n1 天行程\n\n逐日安排。已确认的预订会被标记为受保护。\n\n第 1 天 / 共 1 天。已完成 1/6 站。\n\n导出日历\n10月10日周六\n6 项\n09:00\n10:15\nOld Town Gate\n1 小时 15 分\n详情 ›\n打卡\n收藏到…\n10:45\n12:00\nRiverside Museum\n1 小时 15 分\n当前\n详情 ›\n打卡\n收藏到…\n12:15\n13:15\nCentral Food Hall\n1 小时\n详情 ›\n打卡\n收藏到…\n13:35\n14:55\nTech Art Center\n1 小时 20 分\n详情 ›\n打卡\n收藏到…\n15:30\n16:30\nNexus River Cruise Pier\n1 小时\n已确认 · 受保护\n详情 ›\n打卡\n收藏到…\n17:15\n18:45\nSkyline Dinner House\n1 小时 30 分\n详情 ›\n打卡\n收藏到…\n✦\n今天\n行程\n地图\nCopilot\n我的"
+        },
+        {
+          "key": "map",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "html_lang": "zh-CN",
+          "nav_present": true,
+          "text_chars": 584,
+          "headings": [
+            "整座城市，行程叠加其上。",
+            "Central Food Hall"
+          ],
+          "enum_tokens": [],
+          "snake_tokens": [],
+          "dotted_keys": [
+            "tile.openstreetmap.org"
+          ],
+          "han_lines_total": 24,
+          "han_lines_excl_toggle": 24,
+          "toggle_text": "EN",
+          "han_samples": [
+            "菜单",
+            "地图",
+            "跟随系统",
+            "地图 · 一目了然",
+            "整座城市，行程叠加其上。",
+            "采集的路线几何和供应商事实在你穿越行程时始终可见。"
+          ],
+          "buttons_visible": 20,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "只看打过",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 872,
+                "w": 310,
+                "h": 44
+              }
+            },
+            {
+              "label": "Old Town Gate",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 972,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Riverside Museum",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1027,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Central Food Hall",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1082,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Tech Art Center",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1137,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Nexus River Cruise Pier",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1192,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Skyline Dinner House",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1247,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "查看全部 6 个地点",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1180,
+                "w": 310,
+                "h": 35
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_zh-CN_map.png",
+          "text_head": "菜单\n/\n地图\n跟随系统\nEN\nDE\n\n地图 · 一目了然\n\n整座城市，行程叠加其上。\n\n采集的路线几何和供应商事实在你穿越行程时始终可见。\n\n对比出行方式\n1\nOld Town Gate\n2\nRiverside Museum\n3\nCentral Food Hall\n4\nTech Art Center\n5\nNexus River Cruise Pier\n6\n回到行程视野\n\n底图未加载，显示的是路线示意。\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n下一段路程\nCentral Food Hall\n\n这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。\n\n只看打过\n这一天去的地点\nOld Town Gate\nRiverside Museum\nCentral Food Hall\nTech Art Center\nNexus River Cruise Pier\nSkyline Dinner House\n查看全部 6 个地点\n未知费用保持未知。\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的"
+        },
+        {
+          "key": "agent",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "html_lang": "zh-CN",
+          "nav_present": true,
+          "text_chars": 363,
+          "headings": [
+            "你想改什么？",
+            "需要改变什么？"
+          ],
+          "enum_tokens": [],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 24,
+          "han_lines_excl_toggle": 24,
+          "toggle_text": "EN",
+          "han_samples": [
+            "菜单",
+            "跟随系统",
+            "随时问关于这趟行程的任何事",
+            "你想改什么？",
+            "可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。",
+            "画像上下文就绪"
+          ],
+          "buttons_visible": 14,
+          "buttons_disabled": [
+            "询问 Copilot"
+          ],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "为什么这样安排？",
+              "hit_by": "NAV",
+              "box": {
+                "x": 37,
+                "y": 766,
+                "w": 102,
+                "h": 32
+              }
+            },
+            {
+              "label": "如果我多待 60 分钟会怎样？",
+              "hit_by": "NAV",
+              "box": {
+                "x": 146,
+                "y": 766,
+                "w": 148,
+                "h": 32
+              }
+            },
+            {
+              "label": "找附近的室内地点",
+              "hit_by": "BUTTON#nav-trips",
+              "box": {
+                "x": 37,
+                "y": 805,
+                "w": 102,
+                "h": 32
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_zh-CN_agent.png",
+          "text_head": "菜单\n/\nCopilot\n跟随系统\nEN\nDE\n\n随时问关于这趟行程的任何事\n\n你想改什么？\n\n可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。\n\n画像上下文就绪\nCN / AI\n需要改变什么？\n\n使用自然语言。你的明确预算和受保护时刻在每一步都可见。\n\n我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。\n\n消息\n行程 · One Day in Nexus City\n询问 Copilot\n为什么这样安排？\n如果我多待 60 分钟会怎样？\n找附近的室内地点\n我的理解\n试算一次改动\n在不改动已选方案的前提下，预览时间和成本变化。\n受保护\n到达 / 出发锚点 · 未发起支付\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的"
+        },
+        {
+          "key": "me",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "html_lang": "zh-CN",
+          "nav_present": true,
+          "text_chars": 309,
+          "headings": [
+            "我的行程与偏好"
+          ],
+          "enum_tokens": [],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 28,
+          "han_lines_excl_toggle": 28,
+          "toggle_text": "EN",
+          "han_samples": [
+            "菜单",
+            "我的",
+            "跟随系统",
+            "我的",
+            "我的行程与偏好",
+            "这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。"
+          ],
+          "buttons_visible": 12,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "启用 Web Push",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1114,
+                "w": 141,
+                "h": 44
+              }
+            },
+            {
+              "label": "查看策略详情",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1574,
+                "w": 126,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_zh-CN_me.png",
+          "text_head": "菜单\n/\n我的\n跟随系统\nEN\nDE\n\n我的\n\n我的行程与偏好\n\n这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。\n\n这趟行程\n演示城市\n\n1 位旅行者 · ¥500.00\n\n住宿\n还没有选定\n\n在「行程 · 住宿」里挑选\n\n已确认的预订\n还没有\n\n在「行程 · 预订」里导入你的票或确认单。\n\n改动偏好\n仅提供建议\n\n任何会影响已确认预订或受保护安排的改动，都会先征得你同意。\n\n开启自动执行\n通知\n只记录，不发推送\n\n服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。\n\n启用 Web Push\n高级详情\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的"
+        }
+      ]
+    },
+    {
+      "want": "en",
+      "screens": [
+        {
+          "key": "hub",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "html_lang": "en",
+          "nav_present": true,
+          "text_chars": 2398,
+          "headings": [
+            "Trip to Demo",
+            "The two things the server reports as outstanding",
+            "Every day, connected."
+          ],
+          "enum_tokens": [
+            "EVENING",
+            "ATTENTION",
+            "ARRIVAL",
+            "DEPARTURE",
+            "BEFORE",
+            "GLANCE",
+            "COMPARE",
+            "PLANS",
+            "CHOOSE"
+          ],
+          "snake_tokens": [],
+          "dotted_keys": [
+            "tile.openstreetmap.org"
+          ],
+          "han_lines_total": 1,
+          "han_lines_excl_toggle": 0,
+          "toggle_text": "中文",
+          "han_samples": [
+            "中文"
+          ],
+          "buttons_visible": 22,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "Review this plan generation",
+              "hit_by": null,
+              "box": {
+                "x": 32,
+                "y": 1198,
+                "w": 194,
+                "h": 44
+              }
+            },
+            {
+              "label": "Compare stays →",
+              "hit_by": null,
+              "box": {
+                "x": 264,
+                "y": 1323,
+                "w": 109,
+                "h": 52
+              }
+            },
+            {
+              "label": "Filter",
+              "hit_by": null,
+              "box": {
+                "x": 323,
+                "y": 2400,
+                "w": 35,
+                "h": 44
+              }
+            },
+            {
+              "label": "Open City Discovery",
+              "hit_by": null,
+              "box": {
+                "x": 32,
+                "y": 2520,
+                "w": 326,
+                "h": 44
+              }
+            },
+            {
+              "label": "Read it again",
+              "hit_by": null,
+              "box": {
+                "x": 32,
+                "y": 2574,
+                "w": 92,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_en_hub.png",
+          "text_head": "Menu\n/\nToday\nSystem\n中文\nDE\n\nGOOD EVENING\n\nTrip to Demo\n\n10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days\n\nPlan my trip with AI\nTry another city\nOpen Trip Studio\nCopy journey link\nATTENTION\nHandled\n\nThe earlier change has been handled.\n\nNOW\nRiverside Museum\nNEXT\n12:15 Central Food Hall\n6 stops today\nOpen Live\n\"now\" comes from the server's scenario (execution cursor): 10 Oct, 10:45 · now/next come from the server's execution projection\n1\n2\nRiverside Museum\n3\n4\n5\n6\nFit to my journey\n\nBasemap did not load — showing the route diagram only.\n\nOne finger drags the map · two fingers zoom · to move the page, drag outside the map\n\nRoute context\n0 legs\nNo route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.\nBasemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org\nSTAY\nNot chosen yet\nARRIVAL\n10 Oct, 09:00\nDEPARTURE\n10 Oct, 19:00\nBEFORE YOU GO\nThe two things the server reports as outstanding\nNeither one is open on this generation.\nReview this plan generation\n\nPLAN AT A GLANCE\n\nEvery day, connected.\nCompare stays →\nNothing to preview yet\n\nChoose a plan and the day-by-day plan appears here.\n\nCOMPARE THE PLANS THIS TRIP CAN CHOOSE"
+        },
+        {
+          "key": "trips",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "html_lang": "en",
+          "nav_present": true,
+          "text_chars": 1158,
+          "headings": [
+            "1-day itinerary"
+          ],
+          "enum_tokens": [
+            "TRIPS"
+          ],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 1,
+          "han_lines_excl_toggle": 0,
+          "toggle_text": "中文",
+          "han_samples": [
+            "中文"
+          ],
+          "buttons_visible": 36,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "Stay",
+              "hit_by": null,
+              "box": {
+                "x": 379,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "Bookings",
+              "hit_by": null,
+              "box": {
+                "x": 741,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "Spend",
+              "hit_by": null,
+              "box": {
+                "x": 1103,
+                "y": 105,
+                "w": 356,
+                "h": 40
+              }
+            },
+            {
+              "label": "Abort this trip",
+              "hit_by": "P",
+              "box": {
+                "x": 240,
+                "y": 591,
+                "w": 98,
+                "h": 44
+              }
+            },
+            {
+              "label": "Sat 10 Oct6 stops",
+              "hit_by": "NAV",
+              "box": {
+                "x": 17,
+                "y": 752,
+                "w": 356,
+                "h": 49
+              }
+            },
+            {
+              "label": "Details ›",
+              "hit_by": null,
+              "box": {
+                "x": 127,
+                "y": 851,
+                "w": 36,
+                "h": 44
+              }
+            },
+            {
+              "label": "Check in",
+              "hit_by": null,
+              "box": {
+                "x": 169,
+                "y": 851,
+                "w": 62,
+                "h": 44
+              }
+            },
+            {
+              "label": "Collect into…",
+              "hit_by": null,
+              "box": {
+                "x": 88,
+                "y": 913,
+                "w": 272,
+                "h": 44
+              }
+            },
+            {
+              "label": "Details ›",
+              "hit_by": null,
+              "box": {
+                "x": 155,
+                "y": 1008,
+                "w": 36,
+                "h": 44
+              }
+            },
+            {
+              "label": "Check in",
+              "hit_by": null,
+              "box": {
+                "x": 197,
+                "y": 1008,
+                "w": 62,
+                "h": 44
+              }
+            },
+            {
+              "label": "Collect into…",
+              "hit_by": null,
+              "box": {
+                "x": 88,
+                "y": 1070,
+                "w": 272,
+                "h": 44
+              }
+            },
+            {
+              "label": "Details ›",
+              "hit_by": null,
+              "box": {
+                "x": 105,
+                "y": 1165,
+                "w": 36,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_en_trips.png",
+          "text_head": "Menu\n/\nTrips\nSystem\n中文\nDE\nItinerary\nStay\nBookings\nSpend\n\nOne long picture of this trip, made of the days already on this screen.\n\nOpen the trip poster\n\nAfter you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards -- and the reason you write is stored with the trip, so any later screen can read it back. There is no way back: this server has no door that un-aborts a trip, so travelling it again means starting a new one.\n\nAbort this trip\n\nTRIPS\n\n1-day itinerary\n\nDay by day. Confirmed bookings are marked as protected.\n\nday 1 of 1. 1/6 stops completed.\n\nExport calendar\nSat 10 Oct\n6 stops\n09:00\n10:15\nOld Town Gate\n1h 15m\nDetails ›\nCheck in\nCollect into…\n10:45\n12:00\nRiverside Museum\n1h 15m\nNow\nDetails ›\nCheck in\nCollect into…\n12:15\n13:15\nCentral Food Hall\n1h\nDetails ›\nCheck in\nCollect into…\n13:35\n14:55\nTech Art Center\n1h 20m\nDetails ›\nCheck in\nCollect into…\n15:30\n16:30\nNexus River Cruise Pier\n1h\nConfirmed · protected\nDetails ›\nCheck in\nCollect into…\n17:15\n18:45\nSkyline Dinner House\n1h 30m\nDetails ›\nCheck in\nCollect into…\n✦\nToday\nTrips\nMap\nCopilot\nMe"
+        },
+        {
+          "key": "map",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "html_lang": "en",
+          "nav_present": true,
+          "text_chars": 1004,
+          "headings": [
+            "The city, with the plan on top.",
+            "Central Food Hall"
+          ],
+          "enum_tokens": [
+            "GLANCE",
+            "STOPS"
+          ],
+          "snake_tokens": [],
+          "dotted_keys": [
+            "tile.openstreetmap.org"
+          ],
+          "han_lines_total": 1,
+          "han_lines_excl_toggle": 0,
+          "toggle_text": "中文",
+          "han_samples": [
+            "中文"
+          ],
+          "buttons_visible": 20,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "Stamped only",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 893,
+                "w": 310,
+                "h": 44
+              }
+            },
+            {
+              "label": "Old Town Gate",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 993,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Riverside Museum",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1048,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Central Food Hall",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1103,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Tech Art Center",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1158,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Nexus River Cruise Pier",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1213,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Skyline Dinner House",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1268,
+                "w": 310,
+                "h": 35
+              }
+            },
+            {
+              "label": "Show all 6 places",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1201,
+                "w": 310,
+                "h": 35
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_en_map.png",
+          "text_head": "Menu\n/\nMap\nSystem\n中文\nDE\n\nMAP · ONE GLANCE\n\nThe city, with the plan on top.\n\nCaptured route geometry and provider facts stay visible while you move through the Journey.\n\nCompare modes\n1\nOld Town Gate\n2\nRiverside Museum\n3\nCentral Food Hall\n4\nTech Art Center\n5\nNexus River Cruise Pier\n6\nFit to my journey\n\nBasemap did not load — showing the route diagram only.\n\nOne finger drags the map · two fingers zoom · to move the page, drag outside the map\n\nRoute context\n0 legs\nNo route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.\nBasemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org\nNEXT LEG\nCentral Food Hall\n\nThis server returned no footprint on this read, so every stop of this trip is painted hollow.\n\nStamped only\nSTOPS ON THIS DAY\nOld Town Gate\nRiverside Museum\nCentral Food Hall\nTech Art Center\nNexus River Cruise Pier\nSkyline Dinner House\nShow all 6 places\nUnknown costs remain unknown.\n✦\nCityNexus Copilot\nToday\nTrips\nMap\nCopilot\nMe"
+        },
+        {
+          "key": "agent",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "html_lang": "en",
+          "nav_present": true,
+          "text_chars": 857,
+          "headings": [
+            "What do you want to change?",
+            "What should change?"
+          ],
+          "enum_tokens": [
+            "ANYTHING",
+            "ABOUT",
+            "CONTEXT",
+            "READY",
+            "UNDERSTOOD"
+          ],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 1,
+          "han_lines_excl_toggle": 0,
+          "toggle_text": "中文",
+          "han_samples": [
+            "中文"
+          ],
+          "buttons_visible": 14,
+          "buttons_disabled": [
+            "Ask Copilot"
+          ],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "Ask Copilot",
+              "hit_by": "BUTTON#nav-trips",
+              "box": {
+                "x": 37,
+                "y": 790,
+                "w": 140,
+                "h": 44
+              }
+            },
+            {
+              "label": "Why is this plan arranged this way?",
+              "hit_by": null,
+              "box": {
+                "x": 37,
+                "y": 846,
+                "w": 177,
+                "h": 32
+              }
+            },
+            {
+              "label": "What if I stay 60 minutes longer?",
+              "hit_by": null,
+              "box": {
+                "x": 37,
+                "y": 885,
+                "w": 167,
+                "h": 32
+              }
+            },
+            {
+              "label": "Find an indoor place nearby",
+              "hit_by": null,
+              "box": {
+                "x": 37,
+                "y": 924,
+                "w": 145,
+                "h": 32
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_en_agent.png",
+          "text_head": "Menu\n/\nCopilot\nSystem\n中文\nDE\n\nASK ME ANYTHING ABOUT YOUR TRIP\n\nWhat do you want to change?\n\nAsk a question, try a what-if, or tell me something changed. Anything that touches your trip is explained before it is applied, and your confirmed bookings stay protected.\n\nTWIN CONTEXT READY\nCN / AI\nWhat should change?\n\nUse natural language. Your explicit budget and protected moments remain visible at every step.\n\nI can suggest changes, but anything that spends money or moves a confirmed booking waits for your approval.\n\nMessage\nJourney · One Day in Nexus City\nAsk Copilot\nWhy is this plan arranged this way?\nWhat if I stay 60 minutes longer?\nFind an indoor place nearby\nWHAT I UNDERSTOOD\nPreview a change\nPreview time, cost and walking without changing your chosen plan.\nProtected\nArrival / departure anchors · no payment initiated\n✦\nToday\nTrips\nMap\nCopilot\nMe"
+        },
+        {
+          "key": "me",
+          "entered_by": "nav_click",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "html_lang": "en",
+          "nav_present": true,
+          "text_chars": 624,
+          "headings": [
+            "My trip and preferences"
+          ],
+          "enum_tokens": [
+            "CONFIRMED",
+            "BOOKINGS",
+            "CHANGE",
+            "PREFERENCES",
+            "NOTIFICATIONS"
+          ],
+          "snake_tokens": [],
+          "dotted_keys": [],
+          "han_lines_total": 1,
+          "han_lines_excl_toggle": 0,
+          "toggle_text": "中文",
+          "han_samples": [
+            "中文"
+          ],
+          "buttons_visible": 12,
+          "buttons_disabled": [],
+          "buttons_unnamed": 0,
+          "buttons_covered": [
+            {
+              "label": "Enable Web Push",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1148,
+                "w": 156,
+                "h": 44
+              }
+            },
+            {
+              "label": "View policy detail",
+              "hit_by": null,
+              "box": {
+                "x": 40,
+                "y": 1607,
+                "w": 153,
+                "h": 44
+              }
+            }
+          ],
+          "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0561_en_me.png",
+          "text_head": "Menu\n/\nMe\nSystem\n中文\nDE\n\nME\n\nMy trip and preferences\n\nThe facts of this trip: party, budget, stay and confirmed bookings.\n\nTHIS TRIP\nDemo city\n\n1 traveler · CN¥500.00\n\nSTAY\nNot chosen yet\n\nChoose it in Trips · Stay\n\nCONFIRMED BOOKINGS\nNone yet\n\nImport a ticket or confirmation in Trips · Bookings.\n\nCHANGE PREFERENCES\nSuggestions only\n\nAnything affecting a confirmed booking or protected plan asks you first.\n\nAllow automatic changes\nNOTIFICATIONS\nRecorded, not pushed\n\nThe server has no push key, so notifications stay in the journey and never reach this device.\n\nEnable Web Push\nAdvanced detail\n✦\nToday\nTrips\nMap\nCopilot\nMe"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

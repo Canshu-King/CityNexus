@@ -1,0 +1,53 @@
+// ORD-0561 · 点名那枚被裁的顶栏控件：把每枚"渲染宽度不够"的按钮的 outerHTML、矩形与
+// 它相对视口右缘的位置打出来（上一把尺只给了字面 "DE"，不足以说是哪一枚）。
+const fs = require("fs");
+const { chromium } = require("playwright");
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const JID = process.env.ORD561_JID;
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, arms: [], errors: [] };
+  for (const want of ["zh-CN", "en"]) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+      locale: want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", want]);
+      await page.goto(BASE + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(2500);
+      rep.arms.push({ want, items: await page.evaluate(() => {
+        const vw = window.innerWidth;
+        return Array.from(document.querySelectorAll("button")).map((b) => {
+          const r = b.getBoundingClientRect();
+          return { text: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 24),
+                   testid: b.getAttribute("data-testid"), cls: (typeof b.className === "string" ? b.className : "").slice(0, 34),
+                   aria: (b.getAttribute("aria-label") || "").slice(0, 40),
+                   x: Math.round(r.x), right: Math.round(r.right), w: Math.round(r.width),
+                   scroll_w: b.scrollWidth, client_w: b.clientWidth,
+                   off_right: Math.round(r.right) > vw, clipped: b.scrollWidth > b.clientWidth + 1 };
+        }).filter((i) => i.off_right || i.clipped).slice(0, 10);
+      }) });
+    } catch (e) { rep.errors.push(want + " " + String(e).slice(0, 120)); }
+    await ctx.close();
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const A of rep.arms) {
+    console.log(A.want, "被裁或出缘的按钮", A.items.length);
+    for (const i of A.items) {
+      console.log("   ", JSON.stringify(i.text), "testid=" + i.testid, "cls=" + i.cls,
+        "x=" + i.x, "right=" + i.right, "w=" + i.w, "scroll=" + i.scroll_w, "client=" + i.client_w,
+        "出缘=" + i.off_right, "裁=" + i.clipped, "| aria=" + i.aria);
+    }
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

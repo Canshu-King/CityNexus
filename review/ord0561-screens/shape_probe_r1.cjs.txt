@@ -1,0 +1,102 @@
+// ORD-0561 · 形状尺 r1：只量三件"用户能感觉到"的事，并且先把"点不在屏上"从"被盖住"里摘出去。
+//  ① 真遮挡：按钮中心**在视口内**，而 elementFromPoint 命中的不是它自己或它的子孙 ⇒ 点名盖住它的那一枚；
+//  ② 真截断：元素 scrollWidth 超过 clientWidth（字被裁），或渲染文字以 … / ... 收尾；
+//  ③ 空白屏：整屏渲染文字极短、且没有任何标题。
+// 两臂各走五屏，逐屏当场回读 location.href。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const JID = process.env.ORD561_JID;
+const KEYS = ["hub", "trips", "map", "agent", "me"];
+
+const SHAPE = () => {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+  };
+  const covered = [], clipped = [], ellipsis = [];
+  for (const b of Array.from(document.querySelectorAll("button")).filter(vis)) {
+    const r = b.getBoundingClientRect();
+    const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+    if (cx < 0 || cy < 0 || cx > vw || cy > vh) continue;         // 点不在屏上：不算遮挡
+    const top = document.elementFromPoint(cx, cy);
+    if (top && !(top === b || b.contains(top) || top.contains(b))) {
+      covered.push({ label: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 48) || null,
+                     aria: b.getAttribute("aria-label"),
+                     box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
+                     hit_by: top.tagName + (top.getAttribute("data-testid") ? "#" + top.getAttribute("data-testid") : "")
+                             + (typeof top.className === "string" ? "." + top.className.trim().split(/\s+/)[0] : "") });
+    }
+  }
+  for (const el of Array.from(document.querySelectorAll("body *")).filter(vis)) {
+    if (el.children.length) continue;
+    const t = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+    if (!t) continue;
+    if (el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0) {
+      clipped.push({ tag: el.tagName, testid: el.getAttribute("data-testid"), text: t.slice(0, 70),
+                     scroll_w: el.scrollWidth, client_w: el.clientWidth,
+                     overflow: getComputedStyle(el).textOverflow, wrap: getComputedStyle(el).whiteSpace });
+    }
+    if (/…$|\.\.\.$/.test(t)) {
+      ellipsis.push({ tag: el.tagName, testid: el.getAttribute("data-testid"), text: t.slice(0, 70) });
+    }
+  }
+  const heads = Array.from(document.querySelectorAll("h1,h2,h3")).filter(vis).length;
+  return { url: location.href, text_chars: (document.body.innerText || "").length, headings: heads,
+           covered, clipped: clipped.slice(0, 12), ellipsis: ellipsis.slice(0, 12),
+           viewport: { w: vw, h: vh } };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, arms: [], errors: [] };
+  for (const want of ["zh-CN", "en"]) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+      locale: want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    const A = { want, screens: [] };
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", want]);
+      for (const key of KEYS) {
+        await page.goto(BASE + "/v8/" + key, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(2200);
+        const s = await page.evaluate(SHAPE);
+        A.screens.push({ key, url: s.url, text_chars: s.text_chars, headings: s.headings,
+                         viewport: s.viewport, covered: s.covered, clipped: s.clipped,
+                         ellipsis: s.ellipsis,
+                         blank_screen: s.text_chars < 60 || s.headings === 0 });
+      }
+    } catch (e) {
+      rep.errors.push("fatal " + want + " " + (e && e.message ? e.message.slice(0, 150) : String(e)));
+    } finally {
+      await ctx.close().catch(() => rep.errors.push("close " + want));
+    }
+    rep.arms.push(A);
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const A of rep.arms) {
+    console.log(A.want, "| 真遮挡", A.screens.reduce((n, s) => n + s.covered.length, 0),
+      "| 真截断", A.screens.reduce((n, s) => n + s.clipped.length, 0),
+      "| 省略号收尾", A.screens.reduce((n, s) => n + s.ellipsis.length, 0),
+      "| 空白屏", A.screens.filter((s) => s.blank_screen).length);
+    for (const s of A.screens) {
+      for (const c of s.covered) console.log("   COVER", s.key, JSON.stringify(c.label), "->", c.hit_by, JSON.stringify(c.box));
+      for (const c of s.clipped) console.log("   CLIP ", s.key, c.tag + (c.testid ? "#" + c.testid : ""),
+        "scroll=" + c.scroll_w + " client=" + c.client_w, "to=" + c.overflow, JSON.stringify(c.text));
+      for (const c of s.ellipsis) console.log("   ELLIP", s.key, c.tag + (c.testid ? "#" + c.testid : ""), JSON.stringify(c.text));
+    }
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

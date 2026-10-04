@@ -1,0 +1,130 @@
+// ORD-0561 · 手机链五屏两臂走查（号令者 :4783，只读走屏，不点写侧按钮）。
+// 只读渲染出来的文字：document.body.innerText 与逐枚 button 的 textContent/aria-label，不看 data 属性、不读源码。
+// 每屏都当场回读 location.href（共享标签会被别的会话中途导航走）。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const SHOTDIR = process.env.ORD561_SHOTS;
+const NAV_INDEX = [0, 1, 2, 3, 4];   // 今天 / 行程 / 地图 / Copilot / 我的（mobileRoutes 顺序）
+const ARMS = [{ locale: "zh-CN", want: "zh" }, { locale: "en-US", want: "en" }];
+
+const CJK = /[\u3400-\u4DBF\u4E00-\u9FFF\u3040-\u30FF\u3000-\u303F\uFF00-\uFFEF]/g;
+const CAPS = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;          // SYNTHETIC_DEFAULT 这类
+const CAPSINGLE = /\b[A-Z]{4,}\b/g;                          // PLANNED / READY 这类
+const SNAKE = /\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b/g;          // 下划线形
+const DOTTED = /\b(?:nav|trip|common|discover|collections)\.[A-Za-z0-9_.]+\b/g;  // 缺键回吐键名
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, arms: [], errors: [] };
+  for (const arm of ARMS) {
+    const ctx = await browser.newContext({
+      viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true,
+      hasTouch: true, locale: arm.locale, serviceWorkers: "block",
+    });
+    const page = await ctx.newPage();
+    const A = { want: arm.want, locale: arm.locale, screens: [], lang: null };
+    try {
+      await page.goto(BASE + "/", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(3500);
+      // 切语言：产品默认中文，en 臂就点顶栏那枚 Switch language（导航类控件，不写库）
+      const hasCJKnow = await page.evaluate(() => /[\u4E00-\u9FFF]/.test(document.body.innerText));
+      if (arm.want === "en" && hasCJKnow) {
+        const btn = page.locator('button[aria-label="Switch language"]').first();
+        A.lang_switch_found = await btn.count() > 0;
+        if (A.lang_switch_found) {
+          await btn.click({ timeout: 8000 }).catch((e) => rep.errors.push("lang " + e.message.slice(0, 60)));
+          await page.waitForTimeout(1500);
+        }
+      }
+      A.lang_after_boot_cjk_present = await page.evaluate(() => /[\u4E00-\u9FFF]/.test(document.body.innerText));
+      for (const idx of NAV_INDEX) {
+        const nav = page.locator(".v8-mobile-nav button").nth(idx);
+        const navLabel = (await nav.textContent().catch(() => "") || "").replace(/\s+/g, " ").trim();
+        await nav.click({ timeout: 8000 }).catch((e) => rep.errors.push("nav" + idx + " " + e.message.slice(0, 60)));
+        await page.waitForTimeout(1600);
+        const s = await page.evaluate(() => {
+          const txt = document.body.innerText || "";
+          const heads = Array.from(document.querySelectorAll("h1,h2,h3")).map((h) =>
+            (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean).slice(0, 12);
+          const vis = (el) => {
+            const r = el.getBoundingClientRect();
+            const cs = getComputedStyle(el);
+            return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+          };
+          const buttons = Array.from(document.querySelectorAll("button")).filter(vis).map((b) => {
+            const r = b.getBoundingClientRect();
+            const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+            const top = document.elementFromPoint(cx, cy);
+            const own = !!top && (top === b || b.contains(top) || top.contains(b));
+            return { label: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60) || null,
+                     aria: b.getAttribute("aria-label"), testid: b.getAttribute("data-testid"),
+                     disabled: b.disabled === true || b.getAttribute("aria-disabled") === "true",
+                     box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width),
+                            h: Math.round(r.height) },
+                     center_hits_self: own,
+                     center_hits: top ? (top.tagName + (top.getAttribute && top.getAttribute("data-testid")
+                               ? "#" + top.getAttribute("data-testid") : "")) : null };
+          });
+          return { url: location.href, text_chars: txt.length, text: txt.slice(0, 9000),
+                   headings: heads, buttons: buttons,
+                   scroll: { y: (document.scrollingElement || document.documentElement).scrollTop,
+                            h: (document.scrollingElement || document.documentElement).scrollHeight } };
+        });
+        const shot = SHOTDIR + "/ord0561_" + arm.want + "_" + idx + ".png";
+        await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + arm.want + idx));
+        const grab = (re) => Array.from(new Set((s.text.match(re) || [])));
+        A.screens.push({ nav_index: idx, nav_label: navLabel, url: s.url,
+                         text_chars: s.text_chars, headings: s.headings,
+                         text: s.text, screenshot: shot,
+                         enum_tokens: grab(CAPS).concat(grab(CAPSINGLE)),
+                         snake_tokens: grab(SNAKE), dotted_keys: grab(DOTTED),
+                         cjk_present: /[㐀-]/.test(s.text),
+                         cjk_samples: Array.from(new Set(s.text.match(CJK) || [])).length,
+                         buttons_total: s.buttons.length,
+                         buttons_disabled: s.buttons.filter((b) => b.disabled).map((b) => b.label || b.aria || b.testid),
+                         buttons_unnamed: s.buttons.filter((b) => !b.label && !b.aria).length,
+                         buttons_covered: s.buttons.filter((b) => !b.center_hits_self)
+                           .map((b) => ({ label: b.label || b.aria || b.testid, box: b.box,
+                                          hit_by: b.center_hits })),
+                         scroll: s.scroll });
+      }
+      // ORD-0564 那一单要的那一屏（不在五格底栏里，按地址进；当场回读 href 防被弹走）
+      for (const extra of ["discover"]) {
+        await page.goto(BASE + "/v8/" + extra, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(2000);
+        const s = await page.evaluate(() => ({ url: location.href,
+          text: (document.body.innerText || "").slice(0, 9000) }));
+        const shot = SHOTDIR + "/ord0561_" + arm.want + "_" + extra + ".png";
+        await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + arm.want + extra));
+        const grab = (re) => Array.from(new Set((s.text.match(re) || [])));
+        A.screens.push({ nav_index: "url:" + extra, nav_label: extra, url: s.url,
+                         text_chars: s.text.length, headings: [], text: s.text, screenshot: shot,
+                         enum_tokens: grab(CAPS).concat(grab(CAPSINGLE)),
+                         snake_tokens: grab(SNAKE), dotted_keys: grab(DOTTED),
+                         cjk_present: /[㐀-鿿]/.test(s.text),
+                         cjk_samples: Array.from(new Set(s.text.match(CJK) || [])).length,
+                         buttons_total: 0, buttons_disabled: [], buttons_unnamed: 0,
+                         buttons_covered: [], scroll: null, note: "只取文字与截图，按钮面未量" });
+      }
+    } catch (e) {
+      rep.errors.push("fatal " + arm.want + " " + (e && e.message ? e.message.slice(0, 160) : String(e)));
+    } finally {
+      await ctx.close();
+    }
+    rep.arms.push(A);
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const A of rep.arms) {
+    console.log(A.want, "screens", A.screens.length,
+      "| enum", A.screens.reduce((n, s) => n + s.enum_tokens.length, 0),
+      "| cjk", A.screens.filter((s) => s.cjk_present).length,
+      "| covered", A.screens.reduce((n, s) => n + s.buttons_covered.length, 0),
+      "| disabled", A.screens.reduce((n, s) => n + s.buttons_disabled.length, 0),
+      "| unnamed", A.screens.reduce((n, s) => n + s.buttons_unnamed.length, 0));
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

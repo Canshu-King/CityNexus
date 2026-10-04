@@ -1,0 +1,42 @@
+{
+  "base": "http://127.0.0.1:4783",
+  "arms": [
+    {
+      "want": "zh-CN",
+      "items": [
+        {
+          "text": "DE",
+          "testid": null,
+          "cls": "v8-avatar",
+          "aria": "",
+          "x": 345,
+          "right": 373,
+          "w": 28,
+          "scroll_w": 48,
+          "client_w": 28,
+          "off_right": false,
+          "clipped": true
+        }
+      ]
+    },
+    {
+      "want": "en",
+      "items": [
+        {
+          "text": "DE",
+          "testid": null,
+          "cls": "v8-avatar",
+          "aria": "",
+          "x": 345,
+          "right": 373,
+          "w": 28,
+          "scroll_w": 48,
+          "client_w": 28,
+          "off_right": false,
+          "clipped": true
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

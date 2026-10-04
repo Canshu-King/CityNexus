@@ -1,0 +1,127 @@
+// ORD-0561 · 手机链五屏两臂走查 r2（号令者 :4783，只读走屏）
+// r1 的失败（具名）：底栏那五枚按钮逐枚点 8 秒全超时 —— 因为新设备一进来落在**引导屏**，
+// 而引导屏按 Amendment F 本来就没有底栏。r1 于是把"五屏"读成了同一屏 5 次。r2 的改法：
+//   ① 开局把这台设备的行程号与语言钉进 localStorage（走的是产品自己 boot 读的那枚引用）；
+//   ② 每屏先按 `nav-<key>` 点，点不到就按地址进，并把"底栏在不在场"当成一格读数记下来；
+//   ③ 每屏当场回读 location.href（共享标签会被别的会话中途导航走）；
+//   ④ 汉字计数把语言开关自己单独量出来另报，不混进"英文句里嵌中文"。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.ORD561_BASE || "http://127.0.0.1:4783";
+const OUT = process.env.ORD561_OUT;
+const SHOTDIR = process.env.ORD561_SHOTS;
+const JID = process.env.ORD561_JID;
+const KEYS = ["hub", "trips", "map", "agent", "me"];
+const ARMS = [{ want: "zh-CN" }, { want: "en" }];
+const HAN = /[一-鿿]/;
+const CAPS = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;
+const CAPSINGLE = /\b[A-Z]{5,}\b/g;
+const SNAKE = /\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b/g;
+const DOTTED = /\b[a-z][A-Za-z0-9]*\.[a-z][A-Za-z0-9_.]+\b/g;
+
+const SNAP = () => {
+  const txt = document.body.innerText || "";
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.opacity !== "0";
+  };
+  const buttons = Array.from(document.querySelectorAll("button")).filter(vis).map((b) => {
+    const r = b.getBoundingClientRect();
+    const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+    const top = document.elementFromPoint(cx, cy);
+    const own = !!top && (top === b || b.contains(top) || top.contains(b));
+    return { label: (b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60) || null,
+             aria: b.getAttribute("aria-label"), testid: b.getAttribute("data-testid"),
+             disabled: b.disabled === true || b.getAttribute("aria-disabled") === "true",
+             box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
+             center_hits_self: own,
+             hit_by: top ? (top.tagName + (top.getAttribute && top.getAttribute("data-testid")
+                       ? "#" + top.getAttribute("data-testid") : "")) : null };
+  });
+  const toggle = document.querySelector('button[aria-label="Switch language"]');
+  return { url: location.href, lang: document.documentElement.lang, text: txt,
+           headings: Array.from(document.querySelectorAll("h1,h2,h3")).map((h) =>
+             (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean).slice(0, 10),
+           buttons: buttons,
+           nav_present: !!document.querySelector(".v8-mobile-nav"),
+           toggle_text: toggle ? (toggle.textContent || "").trim() : null };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, journey_id_pinned: !!JID, arms: [], errors: [] };
+  for (const arm of ARMS) {
+    const ctx = await browser.newContext({
+      viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true,
+      hasTouch: true, locale: arm.want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block",
+    });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    const A = { want: arm.want, screens: [] };
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", arm.want]);
+      await page.goto(BASE + "/", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(4000);
+      for (const key of KEYS) {
+        let how = "nav_click";
+        const nav = page.getByTestId("nav-" + key);
+        if (await nav.count().catch(() => 0)) {
+          await nav.first().click({ timeout: 8000 })
+            .catch((e) => { how = "url_after_click_fail"; rep.errors.push(arm.want + "/" + key + " " + e.message.slice(0, 50)); });
+        } else {
+          how = "url_no_nav";
+          await page.goto(BASE + "/v8/" + key, { waitUntil: "domcontentloaded", timeout: 60000 });
+        }
+        await page.waitForTimeout(1800);
+        const s = await page.evaluate(SNAP);
+        const shot = SHOTDIR + "/ord0561_" + arm.want + "_" + key + ".png";
+        const lines = s.text.split("\n").map((x) => x.trim()).filter(Boolean);
+        const han = lines.filter((l) => HAN.test(l));
+        const rec = { key, entered_by: how, url: s.url, html_lang: s.lang, nav_present: s.nav_present,
+                      text_chars: s.text.length, headings: s.headings,
+                      enum_tokens: Array.from(new Set((s.text.match(CAPS) || []).concat(s.text.match(CAPSINGLE) || []))),
+                      snake_tokens: Array.from(new Set(s.text.match(SNAKE) || [])),
+                      dotted_keys: Array.from(new Set(s.text.match(DOTTED) || [])).slice(0, 12),
+                      han_lines_total: han.length, han_lines_excl_toggle: han.filter((l) => l !== s.toggle_text).length,
+                      toggle_text: s.toggle_text, han_samples: han.slice(0, 6),
+                      buttons_visible: s.buttons.length,
+                      buttons_disabled: s.buttons.filter((b) => b.disabled).map((b) => b.label || b.aria || b.testid || "?").slice(0, 12),
+                      buttons_unnamed: s.buttons.filter((b) => !b.label && !b.aria).length,
+                      buttons_covered: s.buttons.filter((b) => !b.center_hits_self)
+                        .map((b) => ({ label: b.label || b.aria || b.testid, hit_by: b.hit_by, box: b.box })).slice(0, 12),
+                      screenshot: shot, text_head: s.text.slice(0, 1200) };
+        await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + arm.want + key));
+        A.screens.push(rec);
+      }
+    } catch (e) {
+      rep.errors.push("fatal " + arm.want + " " + (e && e.message ? e.message.slice(0, 150) : String(e)));
+    } finally {
+      await ctx.close().catch(() => rep.errors.push("close " + arm.want));
+    }
+    rep.arms.push(A);
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const A of rep.arms) {
+    console.log(A.want, "| 屏", A.screens.length,
+      "| 底栏在场", A.screens.filter((s) => s.nav_present).length,
+      "| 走 URL 进的", A.screens.filter((s) => s.entered_by !== "nav_click").length,
+      "| 枚举形", A.screens.reduce((n, s) => n + s.enum_tokens.length, 0),
+      "| 汉字行(除开关)", A.screens.reduce((n, s) => n + s.han_lines_excl_toggle, 0),
+      "| 被盖住", A.screens.reduce((n, s) => n + s.buttons_covered.length, 0),
+      "| 禁用", A.screens.reduce((n, s) => n + s.buttons_disabled.length, 0));
+    for (const s of A.screens) {
+      console.log("   ", s.key, s.url.replace(/^.*\/v8\//, "/v8/"), "by=" + s.entered_by,
+                  "chars=" + s.text_chars, "han=" + s.han_lines_excl_toggle,
+                  "enum=" + JSON.stringify(s.enum_tokens.slice(0, 5)));
+    }
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

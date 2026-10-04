@@ -1,0 +1,457 @@
+{
+  "base": "http://127.0.0.1:4783",
+  "arms": [
+    {
+      "want": "zh-CN",
+      "screens": [
+        {
+          "key": "hub",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "text_chars": 1112,
+          "headings": 3,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "text": "这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。",
+              "scroll_w": 360,
+              "client_w": 1,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "trips",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "text_chars": 619,
+          "headings": 1,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [
+            {
+              "label": "中止这趟行程",
+              "aria": null,
+              "box": {
+                "x": 220,
+                "y": 557,
+                "w": 96,
+                "h": 44
+              },
+              "hit_by": "P.v8-lede"
+            },
+            {
+              "label": "详情 ›",
+              "aria": "查看详情: Old Town Gate",
+              "box": {
+                "x": 148,
+                "y": 817,
+                "w": 26,
+                "h": 44
+              },
+              "hit_by": "NAV.v8-mobile-nav"
+            },
+            {
+              "label": "打卡",
+              "aria": "在Old Town Gate打卡",
+              "box": {
+                "x": 180,
+                "y": 817,
+                "w": 44,
+                "h": 44
+              },
+              "hit_by": "NAV.v8-mobile-nav"
+            }
+          ],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "收藏到…"
+            }
+          ],
+          "blank_screen": false
+        },
+        {
+          "key": "map",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "text_chars": 584,
+          "headings": 2,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "text": "这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。",
+              "scroll_w": 360,
+              "client_w": 1,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "agent",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "text_chars": 363,
+          "headings": 2,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [
+            {
+              "label": "为什么这样安排？",
+              "aria": null,
+              "box": {
+                "x": 37,
+                "y": 766,
+                "w": 102,
+                "h": 32
+              },
+              "hit_by": "NAV.v8-mobile-nav"
+            },
+            {
+              "label": "如果我多待 60 分钟会怎样？",
+              "aria": null,
+              "box": {
+                "x": 146,
+                "y": 766,
+                "w": 148,
+                "h": 32
+              },
+              "hit_by": "NAV.v8-mobile-nav"
+            },
+            {
+              "label": "找附近的室内地点",
+              "aria": null,
+              "box": {
+                "x": 37,
+                "y": 805,
+                "w": 102,
+                "h": 32
+              },
+              "hit_by": "BUTTON#nav-trips."
+            }
+          ],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "me",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "text_chars": 309,
+          "headings": 1,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        }
+      ]
+    },
+    {
+      "want": "en",
+      "screens": [
+        {
+          "key": "hub",
+          "url": "http://127.0.0.1:4783/v8/hub",
+          "text_chars": 2398,
+          "headings": 3,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "text": "No route is drawn: this deployment has no routing provider configured,",
+              "scroll_w": 456,
+              "client_w": 1,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "trips",
+          "url": "http://127.0.0.1:4783/v8/trips",
+          "text_chars": 1158,
+          "headings": 1,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [
+            {
+              "label": "Abort this trip",
+              "aria": null,
+              "box": {
+                "x": 240,
+                "y": 591,
+                "w": 98,
+                "h": 44
+              },
+              "hit_by": "P.v8-lede"
+            },
+            {
+              "label": "Sat 10 Oct6 stops",
+              "aria": null,
+              "box": {
+                "x": 17,
+                "y": 752,
+                "w": 356,
+                "h": 49
+              },
+              "hit_by": "NAV.v8-mobile-nav"
+            }
+          ],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            },
+            {
+              "tag": "BUTTON",
+              "testid": "collect-entry",
+              "text": "Collect into…"
+            }
+          ],
+          "blank_screen": false
+        },
+        {
+          "key": "map",
+          "url": "http://127.0.0.1:4783/v8/map",
+          "text_chars": 1004,
+          "headings": 2,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            },
+            {
+              "tag": "SPAN",
+              "testid": null,
+              "text": "No route is drawn: this deployment has no routing provider configured,",
+              "scroll_w": 456,
+              "client_w": 1,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "agent",
+          "url": "http://127.0.0.1:4783/v8/agent",
+          "text_chars": 857,
+          "headings": 2,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [
+            {
+              "label": "Ask Copilot",
+              "aria": null,
+              "box": {
+                "x": 37,
+                "y": 790,
+                "w": 140,
+                "h": 44
+              },
+              "hit_by": "BUTTON#nav-trips."
+            }
+          ],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        },
+        {
+          "key": "me",
+          "url": "http://127.0.0.1:4783/v8/me",
+          "text_chars": 624,
+          "headings": 1,
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "covered": [],
+          "clipped": [
+            {
+              "tag": "BUTTON",
+              "testid": null,
+              "text": "DE",
+              "scroll_w": 48,
+              "client_w": 28,
+              "overflow": "clip",
+              "wrap": "nowrap"
+            }
+          ],
+          "ellipsis": [],
+          "blank_screen": false
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
