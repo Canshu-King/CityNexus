@@ -16588,6 +16588,128 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0567 第二批续 · 车道 82f55d8a：把上一块那枚确定缺陷做成常驻判据交上来（两枚新增文件、产品字节 0 枚、七臂绿、七枚反件全咬，其中两枚一开始没咬——那是尺自己的毛病，改法逐枚写在第三节）
+
+**〇、坐标（写这块时现读；两枚 40 位都可 `git cat-file`）。**
+
+- 基座：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读逐字 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（提交时刻 22:27）。候选从它切出、直接可快进。
+- 候选：`refs/heads/review/82f55d8a-breadcrumb-route-debt-r1`，`git push --atomic` 之后 `git ls-remote --refs` 回读同一枚 `14ce2c4f10a1ac9631f7e1b2cfff863cf95b0782`。对基座 `git diff --name-status` 只有两枚新增：`frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts` 与 `frontend/playwright.breadcrumb-debt-r1.config.ts`；修改零枚、删除零枚 ⇒ 产品字节 0 枚。
+- 权威线我这边 push 零次、force-push 零次；上一块那两枚候选（回收站中文措辞、名字锚）仍等你的门，我没重切也没自落。
+
+**一、这件是什么。** 上一块（23:38 入账，写这块时它在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16851`）量到：外壳顶栏取词式 `t("nav." + (route in {…} ? route : "hub"))` 的白名单只有 13 枚路由，四枚在册屏幕落在外面，于是那四屏的顶栏画的是 hub 的名字（英文 "Today"、中文「今天」），而卡片抬头写着另一个名字。修法是在白名单里补四行——但那枚文件现在压着别人两枝未落地的东西（我上一块第六节记过），我不抢那格。这一件不做修，做的是**让这笔债不能再悄悄长大**：任何新屏幕落进白名单外、没被逐枚判过，判据直接红。
+
+**二、七臂逐枚（`frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts`，行号现取）。**
+
+- 臂一（`frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts:118`）：两侧都解析出非空分母——被挂载路由 ≥ 13、白名单 ≥ 13。它只是一根绊线，不参与判断哪一行动了。
+- 臂二（同件 `:125`）：在册屏幕若落在白名单外又没写进债表，红。这是"新屏幕没人判"那一格。
+- 臂三（同件 `:130`）：债表每一行必须仍然成立——有人把某枚路由补进白名单却没删债表行，红。债还得还，且还完要销账。
+- 臂四（同件 `:137`）：债表每行的 `nav.<route>` 必须两臂都在、且等于表里逐字值（英文 "Import places"/"Footprints"/"Recycle bin"/"Members and access"，中文「导入地点」「足迹」「回收站」「成员与权限」）。这一条同时钉住"修法是一行白名单、不是新造文案"。
+- 臂五（同件 `:144`）：白名单里不许有幽灵行（在册屏幕之外）。
+- 臂六（同件 `:149`）：兜底那枚键必须仍是 hub，且 hub 两臂的名字仍是 "Today"/「今天」——债之所以看起来像"顶栏写错屏"，全因这个兜底。
+- 臂七（同件 `:155`）：`tokenRoutes` 不是在册屏幕，且外壳必须留着那条独立的早退分支；这条讲的是 `/v8/shared` 那屏根本不画面包屑（我上一块两臂各测一次，`.v8-breadcrumb strong` 回 null），所以它不算这桩缺陷，也不许被算进来。
+- 债表本体在同件 `:102`，四行逐枚点名，注释里写明"这不是把债说成已了"。
+
+**三、七枚反件（`D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/breadcrumb_mutants_r1.py`，每枚只改一处、跑完立刻 `git checkout --` 还原，收尾 `git status` 里改动文件数为零）。**
+
+| 反件 | 改的是谁 | 结果 |
+| --- | --- | --- |
+| M1 白名单外加一枚没判的新屏幕 | `frontend/src/routes/v8Routes.ts` | 臂二红 |
+| M2 有人补了 trash 却没删债表行 | `frontend/src/app/V8Experience.tsx` | 臂二、臂三红 |
+| M3 债表被人悄悄删一行 | 判据自己 | 臂二红 |
+| M4 债表行背后的英文名被改 | `frontend/src/i18n/LocaleContext.tsx` | 臂四红 |
+| M5 白名单里塞一枚幽灵行 | `frontend/src/app/V8Experience.tsx` | 臂五红 |
+| M6 早退分支被改脏 | `frontend/src/app/V8Experience.tsx` | 臂七红 |
+| M7 把每一行 `key:` 改名，让尺读到零 | `frontend/src/routes/v8Routes.ts` | 臂一红 |
+
+**自报两枚一开始没咬的，那是尺的毛病不是产品的**（第二枚提交 `14ce2c4f10a1ac9631f7e1b2cfff863cf95b0782` 就是改尺）：
+
+1. M6 第一版不红。原因：臂七当时只搜"route 等于 shared 这串字"，而外壳在解析地址处还有一枚合取式的 `deepLink.route === "shared"`，那处不负责把外壳关掉。改法：臂七改成只认那条独立的早退分支（行首 if、单一条件、紧跟花括号），任何一处只是提到这枚键都不算。
+2. M7 第一版不红，而且它当时是"把导出的表改名"——那会连带打断构建，整套在装载期就死，压根到不了臂一。两处都改了：锚从子串匹配改成按声明行匹配（表名起头、紧跟等号，前缀匹配会让改名后的表被当成原名表），反件本身改成只动每行的 `key:` 词面（那枚反件写在 `D:/moodle/_qoder_82f55d8a_ord0535_20261001/run/breadcrumb_mutants_r1.py:44`），这样红的是臂一而不是加载器。
+3. 臂一原来还捎带断言"外面那几枚的数量等于债表行数"，于是 M1/M2/M3 全被它抢了话，看不出该谁负责。已拆成纯绊线（那次改动在同一枚提交里）。
+
+**四、闸与曝光。** `npm run typecheck` rc=0、`npm run typecheck:all` rc=0。**但两把都不覆盖 `e2e/`**：`tsconfig.check.json` 的 include 是五枚点名文件，`tsconfig.typecheck.json` 的 include 是 `src/**/*.ts(x)`；`--listFiles` 回 942 枚，落在 `/e2e/` 下的枚数为零。所以我这枚 spec 的类型面只被 Playwright 自己的转译走过（它跑通七臂），这句不是"类型已闸"。具名 `NOT_TYPECHECKED_BY_REPO_GATES`。跑法：`npx playwright test --config playwright.breadcrumb-debt-r1.config.ts`，不起任何东西、不开任何端口、不碰库（它只读三枚源文件），谁都能跑。
+
+**五、还这笔债的时候怎么动（给落地方的一眼活）。** 在 `frontend/src/app/V8Experience.tsx:1954` 那枚白名单末尾补四行 `import: 1, footprints: 1, trash: 1, access: 1,`，再把判据债表 `frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts:102` 那四行删掉——判据就转成纯防回归，仍会在下一枚没判的新屏幕上红。两边只动一处、都由臂三与臂二各自把关，漏一边就红。
+
+**六、没改善 / 这轮没做的**
+
+1. 顶栏那四屏现在仍然画着「今天 / Today」——这一件不修它，只钉住它不再扩散。用户可见的那一格仍等你的落地门。
+2. 判据只读源文件，不量渲染。"屏上确实画了另一屏的名字"那一句的证据仍是上一块的浏览器读数（14 次顶栏读数、两臂各 7 屏），本件没有重跑浏览器，具名 `NOT_REMEASURED_IN_THIS_HAND`。
+3. 后端 pytest 执行条数为零（本件 0 后端字节）；`vite build` 零次（0 产品字节，产物里不会多出我这枚 spec，因为它在 `e2e/` 下、不在 `src/` 的入口图里——这句是从两把 tsconfig 的 include 推的，没跑构建验证，具名 `NOT_MEASURED_BY_82f55d8a`）。
+4. 我名下三枚待裁候选（智能守护屏那三句英文）仍在等一句判，其中 `frontend/src/lib/displayVocabulary.ts:31` 那枚在我的文件里，你点头我就改。
+5. 红线自查：`_preview.db` 与那 23 枚 `.db` 本手零接触（判据不开后端）；`demo/reset` 零次；`:8000` `:4781` `:4782` `:8693` 连接数各为零；basic-auth 文件与任何 API key 零读零印；额度没墙。
+
+**七、下一手。** 这件交完，我名下没有新派未闭的单，账本 ORDERS 段读到此刻也没有点我的新行 ⇒ 具名「无单可领，等派」。如果还要我继续，我能自己往前做的是把上一块第二节那三条待裁候选各配一枚"改了会不会咬"的反件（零产品字节、只读源文件），等你一句判就能立刻落；不点我也不停在这里干等。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 自申报那格交完：把 ORD-0570 的根因做成一把普查尺（全树只有一枚裸 `button` 规则在漏盒、111 枚定盒子的类里同类形状三枚）——浏览器那杠裁下来"真被切"的只有一枚、且已被 0570 修掉；另附 0570 落地后的逐字节复核与三枚待落枝的重挂
+
+**〇、坐标**。权威尖现读 `45207a0cc0fcae000b619753b4dfccb06594a59f`（23:55 那笔就是我那手 ORD-0570；`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。BB 机回执那路我这扇现读是空（`bus.py read --agent qoder:6a150e1e` 回 `count` 为零），所以**落地与否我自己逐枚核**，不靠转述：`frontend/src/app/V8Experience.tsx` 尖上 blob `e45be179efe713cb8e957640008e1c35347ae335`、`frontend/src/styles.css` 尖上 `9833f6910700a2950977041d461bbf7bece17f73`、我那两枚判据件尖上 `8930d0789fd79e6b54ace0964f3b5b1c73efb564` 与 `ced526c8604596a74b82526d4e739467b5070e70`——四枚逐枚等于我枝里同路径字节 ⇒ 落了，按字节落的。
+- 落地后我又在**尖自己那代产物**上把两处屏读重跑了一遍（bundle `dist_census_tip`，服务入口 `assets/index-iZ6I1MKH.js` 的字节与磁盘逐字节相同，本机字节摘要前十二位 `c1b65cc2c9bb`——那是一枚本机摘要、非 git 对象、不入对象库，此处只作两侧对照用）：头像那颗在三九〇 与 一二八〇 两档视口都是 盒 28px、内容 28px、`scrollWidth` 28px、计算内边距 0px，字形 run 宽 10.92px 落在盒内；那代产物里逐字节搜得到 `topbar-avatar`，而**搜不到**花费面那句（`不在任何一天里` 零命中）——同一枚字节读数同时证成两件事：0570 已在代上、花费那句还没上代。也就是说这道修复不是"我写了就算"，是它在自己那代渲染上量得出。
+
+**一、为什么这格值得做（根因不是一颗头像）**。ORD-0570 那半"字被裁"的成因是 `frontend/src/styles.css:47` 那条**裸元素**规则带着 `padding: 12px 14px`，而头像自己的规则（`frontend/src/styles.css:154`）只定了宽高与字号——两个元素选择器分不出高低，内边距就漏进了一个 28px 的圆。所以任何"只定宽高、由裸元素规则撑着"的控件都是同一枚候选。这格把它变成一把可复跑的尺，而不是等下一个车道再撞见。
+
+**二、尺的两杠与读数**。件：`D:/moodle/_qoder_6a_ord0531_20261001/bare_box_leak_census_r2.py`（静态杠）与 `bare_box_leak_measure_r2.cjs`（浏览器杠），读数 `bare_box_leak_census_r2.json`、`bare_box_leak_measure_r2.json`。
+- 静态杠现读：全树设盒的裸元素规则**一枚**（`frontend/src/styles.css:47` 的 `button`）；定了宽且高的类一百一十一枚；其中真正落在裸元素标签上的同类形状**三枚**——`v8-avatar`（`frontend/src/app/V8Experience.tsx:2041`，已被 `button.v8-avatar` 修好）、`cn-copilot-close`（盒子规则 `frontend/src/styles.css:376`，用于 `frontend/src/features/agent/CopilotDock.tsx:884`）、`v8-user`（用于 `frontend/src/app/V8Experience.tsx:1912`）。
+- 浏览器杠逐枚量（两档视口各一次，`scrollWidth` 对 `clientWidth`、字形 run 走 `Range.getClientRects()`）：`cn-copilot-close` 确实继承了 14px 的左右内边距（计算值现读），但 40px 的盒里内容未被切——两档都是 `scrollWidth` 40 等 `clientWidth` 40、字形宽 10.95px 未越右沿；`v8-user` 在 390px 档是 0×0（这颗本来就不画），1280px 档盒 219px、自身内边距 5px（**不是**裸规则那枚），未切。⇒ 结论：**这个根因今天在屏幕上真切到的只有头像那一枚，已由 ORD-0570 修掉**；另两枚是同类形状但未成缺陷，我不为凑数改它们。
+- 一枚线索（不属本格，具名移交）：`.cn-copilot-close` 的规则写着 23px 字号，浏览器计算值读来是 16px——说明那里还有一条更晚/更强的规则在管这颗关闭钮。我只报这个不一致，不去猜它是谁。
+
+**三、尺自己的两处毛病（写出来，别让它以后假装干净）**。① 静态杠第一版用 `git grep` 找候选，而它是按行的——属性换行写的 JSX 它看不见，结果**连本次那枚头像都没列出来**，一把"零候选"的尺看起来正好像"没有别的问题"。改成整文件正则，并加了一枚正对照：`positive_control_v8_avatar_listed` 与 `positive_control_v8_avatar_marked_fixed` 两项必须为真，否则这把尺自己不成立（现读两项都为真）。② 浏览器杠第一次跑崩在我自己写的布尔取整（`(bool).toFixed`），另一次是我把 Python 的三引号说明直接落进了 .cjs——那两趟读数作废，不作判据。③ 静态杠对 `v8-user` 的归因是**过报**：它引的那条盒子规则其实是 `.v8-user > span`（管的是按钮里的 span），浏览器那杠把它否了。这正好证明两杠都得要：静态会过报，浏览器才会说"这枚今天没切"。
+
+**四、三枚待落枝的现状（这件是今夜这条线自己造的）**。我 23:43 那块里给的三枚重取枝（`-r3` / `-r4` / `-r3`）基在 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`，而 0570 落地后现尖换到了另一条重建线：`git merge-base` 对三枚全回空，`merge-tree` 回 rc=128（`refusing to merge unrelated histories`）——不是我改坏了，是"分支基座"这概念在今夜这条线上保鲜期只有几十分钟。所以我按同一道门把它们重挂到现尖，门是四件必过才推：新头不等于尖、对尖 numstat 非空、逐枚内容与来源枝相同、cherry-pick 退出码为零（脚本 `rehang_pending_candidates_r1.py`，读数 `rehang_45207a0c_r1.json`）。现读三枚都已过门并回读同值：
+- 花费面那句：`refs/heads/review/6a150e1e-spend-off-day-sentence-r4` 头 `d677c0e1543ae238ad051f1ab328be2a4568d99e`（三枚文件，逐枚内容相同，都未落地）。
+- 回收站注释名字形：`refs/heads/review/6a150e1e-trash-citation-rot-r5` 头 `7cad31f35e32d6c2b7e87bc9f9ad40bf0ff68902`（三枚文件，同上）。
+- 出页门验证器：`refs/heads/review/6a150e1e-emitter-door-verify-r4` 头 `a37189d59b5a5531e1cc870afe106ce5f9128d9d`（两枚文件，同上）。
+旧名（含我 22:4x 那三枚等于尖的空中枝 `spend-off-day-sentence-r2`、`trash-citation-rot-r3`、`emitter-door-verify-r2`）一律不 force、不删，只在此具名作废；**要落就按上面三枚新名落，落之前请再让我按当时现尖重挂一次**（一条命令的事，比事后发现"基又旧了"便宜）。
+
+**五、这轮没做的（具名）**。① 没为凑数去改那两枚"同类形状但未切"的控件——按 0570 的规矩，没有可复现的坏就 0 产品字节。② 后端 0 改、契约 0 改、共享字典 `frontend/src/i18n/LocaleContext.tsx` 0 改。③ 全量前端 e2e 与全量后端套件没跑（分母归您的回归轮）；本轮只跑我自己两族臂与两道编译闸（`tsconfig.check.json`、`tsconfig.typecheck.json` 各 rc=0、输出 0 字节）。④ 别人的枝 0 次挪动：`62ee41e3d36debdb9db502c8180c386241a46f86` 与 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b` 我只有 `git show`、`diff-tree`、`merge-base`、`merge-tree` 四种读。
+
+**六、边界账**。权威线 0 次推送、权威线 0 次移动（我这轮只推自己的 review 枝）；账本 0 次改写（这块走收件口）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（读的是自己那份 `spend_day24.db`）；别人的文件改写 0 次；本轮自造的旧枝 force-push 0 次、删除 0 次；skip 0 处、mock 0 处；工作树现读 `git status --porcelain` 空输出。端口现读全是我自己起的、逐枚按命令行认过：api `127.0.0.1:8021` 与静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`；矩阵用过的临时端口跑完都已释放。`:4820` 是工地板的，我没占。
+
+**下一手**：本格闭合，我账上已无可自跑的格——裁语①（找回门甲/乙/丙三形）我等您点形制，点完我就动那扇门；若您手上有一枚要量的屏或一枚要我重挂的枝，说一声即可。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 00:14 · ORD-0509 普查按令重切：现尖重跑完成，只读预测零冲突可落（0 枚产品字节）
+
+- 候选：枝 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r3` 远端头现读 `cb0555f3c72e6d4cee2fc5ce0b96a67c253c3085`，父提 = 我量到的 `45207a0cc0fcae000b619753b4dfccb06594a59f`（那手就是我量到的提交，标题原文不进本块，因为它带三个裸尺寸数）；证据件 `review/ord0509/INK_SURVEY_ROUTES_R3.md` 的 blob `b989ff2e073543d976279ec219fe0f44fd6c0380`（`git cat-file -s` 现回 16966 字节），件 93 行、16966 字节 B。
+- 只读落地预测（对现尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，`ls-remote` 现取）：`git merge-base` 读回 `45207a0cc0fcae000b619753b4dfccb06594a59f`、`git merge-tree --write-tree` 退 0、预测树 `677b02d3b8b0807eb617eab2f025a87c8e0e023b` ⇒ 零冲突、可落；落它是一枚正常合并（不是快进），由您的门做，我这边权威尖移动 0 次、已发布 ref 重写 0 次（force-push 没用过）。
+- 代次对账（这是「重切能不能重切」的判据，不是修辞）：我那代到现尖之间 `frontend/src` 只差 1 枚文件（`generated/api.ts`）；而本件 30 枚声明所在的 13 枚样式表逐枚 `git rev-parse <尖>:<路径>` 现比，同 13 枚 / 不同 0 枚 ⇒ 屏读数对现尖仍成立。若哪天差的正好是这 13 枚里的某枚，我这把尺会当场拒收而不是重挂。
+- 当代读数（同一把尺、现尖产物）：入口资产 `index-iZ6I1MKH.js`、1623095 字节 B、服务字节与磁盘字节重算的 sha 逐字相同 `c1b65cc2c9bb8b4c59b554c6181b51eddb1e19fa`（这枚是本机字节 sha1、未入 git、不是 blob、故意不可取回；要取当代字节请用下面那枚件的 blob）；68 趟屏读、外壳挂载 68 趟、扫描拒收 0 条；声明 30 枚展开成选择器 41 枚、可达 7 枚、屏上有真文字 7 枚、有读数低于该达到的阈值 5 枚、没上过屏 34 枚；真文字读数 96 枚、低于阈值 10 枚。最差那五枚（比值 3.33 两枚、3.62 三枚）逐枚带屏上原文在 `review/ord0509/INK_SURVEY_ROUTES_R3.md:82` 的小节里。
+- 旧那两枚按血缘作废并具名弃读（我不重写、不删）：`883ee51c77fc449e5875764cda37938d42329183` 与 `a513df15ee22246dcb8f0e4ec422cb32cf8d3001` 对现尖 `git merge-base` 退出码各为 1、1，即 `refusing to merge unrelated histories` —— 它们描述的是重挂之前的代次。
+- 与上一手相接的一格（具名，不含结论）：我 23:36 那块报的「头像那手修没进那一代」，在本件量的这一代（就是那枚提交）已由 `ORD-0570` 接走。但可达性那六类（含头像无障碍名）我这手没在现尖重跑，所以 C2 头像的当代枚数我不报数 —— 这是我下一手要补的具名格子。
+- 没做的：前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`，本件结论不依赖测试计数）；凭据两读没跑（本手产品字节 0 枚，`NOT_APPLICABLE_BY_SCOPE`）；没量实体手机；瓦片底图在这台机器仍不加载，本代 68 趟全部用 `networkidle` 也全部挂载成功，没有一个结论依赖瓦片像素；共享预览口那格仍挂着（换代要您动那枚口，我没读没写）。
+- 现场：私有栈 api pid 99580 / static pid 108524，停净后 netstat 现读 :4891 与 :4892 的 LISTENING 0 条（那 0 条的读数取自 `listeners_after_ink45207a0c.txt`，0 字节 B）；`demo/reset` 只落我自己的库 `_r5_ink45207a0c.db`。
+- 我自申报的下一手（先读账本 ## ORDERS 再动）：在现尖重跑可达性两臂（六类那把），把 C2 头像的当代枚数与「修好了没有」量出来；若那格真被 `ORD-0570` 修掉，我用同一枚注入反控证明是屏变了而不是尺瞎了。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 报警（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：已经落地的镜像自检 `tools/cnx_ledger_mirror_sync_check_r1.py` 被一次双亲合并从权威线上抹掉了——本地 `ls-tree` 无行、GitHub contents API 同一 ref 回 `http 404`，而同一清单里读者回 200 作对照。恢复坐标在下面，我 0 次动线
+
+**一、判法（两通道一致，不靠本地浅库单证）**：写这块时权威枝 `git ls-remote` 现读 `ee142704825374903007b783d8516694cb9a2422`；本读数件的尖是 `ee142704825374903007b783d8516694cb9a2422`（`git rev-list --parents` 现读双亲 `45207a0cc0fcae000b619753b4dfccb06594a59f / 2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b`）。对 `tools/cnx_ledger_mirror_sync_check_r1.py`：`git ls-tree` 回 `NO ROW`、contents API 回 `http 404`；同法问读者 `tools/cnx_ledger_mirror_reader_r1.py` 回 `http 200`——同一分钟、同一 ref、同一把尺，只差在文件本身
+
+**二、不是「没落地」，是被合并吃了**：落地那笔是 `0293e5c1cf9be4ea4e7d14005e14c508cb3f528b`（号令者代切，回执当时按 blob 相等核实 `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`）。从那一笔到现尖做 `git diff --name-status`：删除 1 枚、修改 12 枚、新增 65 枚，**唯一那枚删除就是自检本体**；而现尖的两个父亲各自 `ls-tree` 该路径都无行（`False` / `False`）——所以这是「合并按着一侧老树走，静默删掉已落地文件」，与今晚 `unrelated histories` 那批同源
+
+**三、同一合并里我的两格测试文件逐字节完好（对照，说明不是全树丢）**：G4 那枚尺仍 `032777990661c5220794a91c2a00a8ed1ea97fe7`、0476 那格仍 `534b673b749adfd7548066cca770e0c52d105306`，`intact=true` 逐枚记在件 `merge_dropped_landed_tool_r1.json`（blob `94113b2a6d3a261411c4ddc3ce24a6815da6e2ba`）
+
+**四、恢复坐标（恢复是你的动作）**：自检在 `refs/heads/review/1d64acf5-mirror-sync-selfcheck-r1` = `0a57e4b4664060015d66bb279db8b6c4c664d85b`（blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`）；节拍钩子从未落地（`refs/heads/review/1d64acf5-mirror-sync-hook-r1` = `0adc8d36f9eaa70dd0d7c4f16171fb8e78f6cd48`，blob `18f51ebc995a1a496a5b6b5d7947d73f9ba818d3`），要落可以一并。读数件：`94113b2a6d3a261411c4ddc3ce24a6815da6e2ba`、腿 `dc8016ea91bffc127fcc4687eeaf2073e646b710`、 presence 探针 `897d2d9bb8c0122c318eb583dd8b17e8275d882f`；4 枚在 `commander/control` 的 `evidence/1d64acf5-merge-drop-alarm-r1/`（回执控制尖 `67762da1121029a3e657555143077b7a3973a7e9`）
+
+**五、门侧我建议加的那一格（不动你的门，只报形）**：落地门在合并之后比一次「上一尖有、新尖无」的路径清单，非空就 ABORT 并列出——今晚这类三起都同族：`unrelated histories` 让复切假报冲突、空集合让发布腿自报绿、单侧默认让已落地文件消失。三起我都有读数件
+
+**六、回你督办那句「手上是否有半途的活」**：没有半途。②第一格已入账（`1d64acf5_2334.md`，23:37:45 代插），①镜像自检与节拍钩子都已交；下一格是「写路径 56 处逐枚补空即拒＋各配一枚空输入必非零反件」，我排在你对本条报警的处置之后（同一把尺要先有地方跑）。G4 那格仍等 `89f2e2d6` 名单
+
+坐标：本块可 cat-file 的 40 位逐枚现验（14 枚）；写这块时权威枝现读 `ee142704825374903007b783d8516694cb9a2422`
+
+**边界**：本手是纯测量（`ls-remote` / `fetch` / `ls-tree` / `diff` / contents API GET）——产品字节 0 枚新增（`backend/app/**` 与 `frontend/src/**` 一枚未动）、权威线 0 次移动、force-push 0 次、改写他人 ref 0 次、重写线上 0 次（恢复动作归你，坐标在第四节 `94113b2a6d3a261411c4ddc3ce24a6815da6e2ba`）
+  改写账本 0 次（本块走收件口）、`demo/reset` 0 次、回滚 0 次、本车道端口 0 个在跑、改写共享 `_preview.db` 0 次、覆盖已发布路径 0 次（本手只新增 slug `evidence/1d64acf5-merge-drop-alarm-r1/`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交 CMDR 02:04 那手的第三枚候选（按现尖重切）· 判语：`5a53846b-cmdr0204-ruler-fixes-r3` = `d58e02d4a60e5d4b868fad808eeb756d11659012` 的父笔就是我切枝时现读的尖 `45207a0cc0fcae000b619753b4dfccb06594a59f`，两枚改动文件的 blob 与 `-r2` 逐枚相同，四枚反件在这枚新基座上**重跑**且同判；对写作时现读尖 `ee142704825374903007b783d8516694cb9a2422` 的 `merge-tree` 只读预测冲突 0 枚、快进性 = 否（尖又前移了，见第二段）。同时报一格事实：现尖上我这修**还没落**（`_wait_closed` 命中 0 处、旧的 5xx 期望句仍 1 处）。0 产品字节。
 
 **一、三枚头与两枚 blob（逐枚 `ls-remote` / `rev-parse` 现读）**
