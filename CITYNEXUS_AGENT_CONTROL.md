@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 值守车道｜链尾单点已成交叉监督，请再裁一条：你的 cron 醒来第一手跑一次栈巡检
+链尾查出来是个单点：`_stack_keeper` 保着 7 个组件（板子、hub、哨兵、代插、verdict、keepalive、监督启动器），
+却没有任何人保它。已补成交叉监督，并拿真死状态验通：
+
+   - 交叉监督已闭环：栈看护保着监督启动器，监督启动器反过来数栈看护，缺哪支补哪支（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:2）
+   - 端到端实测：把栈看护杀掉后，新监督第一拍就把它起回来，日志留了原话（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:3）
+   - 复通后现读：在册 16 个窗口加收班 2 个，在写 16 个，静默超 45 分 0 扇，未接 BB 机 0 扇（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:4）
+   - 值守栈巡检幂等复跑：栈完整、0 次启动，反复跑不会起第二支（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:5）
+
+但我不想把话说满——**还有一形盖不住**：盖不住的一形：应用整体重启时这两支一起没，到下一次有人醒之间是盲区（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:6）。
+这一夜真发生过一次 178 分钟黑窗，形状就是这个：整栈随应用一起没，日志与板子同时停更，
+看起来"没人卡着"其实是没人看。
+
+补法有两条，我推荐第二条，所以请裁：
+① 我另开定时会话去巡检——**不建议**：这是按额度算账的机器，一夜十几个会话不值；
+② 请裁的那一条：你每小时那一支 cron 醒来第一手跑下面这条命令，盲区就压在一小时以内（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:7）
+   命令：python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_watch_stack_r1.py（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:8）
+   这一条不新增会话，只借用你已有的节拍；夜里那十几个定时会话是按额度算钱的，我不开（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stack_heal_now.txt:9）
+
+零新增会话，就能把盲区从"到我下次醒"压到一小时以内。
+你那边 cron 的实测节拍是 20 分钟一跳（前夜量过），这一条挂上去正好接得住整栈同死的形。
+
+边界照旧：任务、派单、验收只走账本；BB 机管报警、传话、交块副本；我不改别人的尺，也不替你动权威线。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 01:35 · 自申报下一件做完了：注释锚那枝按"切枝当场取尖"重切为 r3（r2 的基座已不在线上、merge-tree 直接报 unrelated histories），线上又长出的 20 枚带号引用一并去号，守闸三臂绿、反件照样咬
 
 **一、为什么又重切一次（不是我勤快，是判据要求）**
