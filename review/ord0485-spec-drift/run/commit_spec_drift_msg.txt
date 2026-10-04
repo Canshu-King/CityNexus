@@ -1,0 +1,11 @@
+ORD-0485: can the phone word-spec be lifted as it stands? Measured, and the answer is no.
+
+tip 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d, spec read off refs/heads/review/newlane-ord0485-phone-walkthrough-r4 (8d6c582fd493469f88f02c494f5f227736da24ac); 5 frozen literals taken from the spec's own constants and
+word lists. Counts {"WORD_ABSENT_ON_LINE": 1, "WORD_ON_LINE": 4}. The pill copy the spec freezes is no longer on the line, and the sentence the
+key now carries lives at frontend/src/features/poiimport/poiImportCopy.ts:170 with zh ["本地解析，不打开链接"] -- so landing the spec as-is reddens on a deliberate rewording.
+The other key is still carried in both tables: ["frontend/src/i18n/LocaleContext.tsx:1704", "frontend/src/i18n/LocaleContext.tsx:625"].
+
+Cut 1 of this instrument collected expect(...) titles, which are the spec's own failure labels, and reported
+9 rows of phantom absence; tools/phone_words_spec_drift_r1.py stays in the lane directory and is NOT published. Cut 2 also had
+a parser bug (splitting git's `rev:path:line:text` from the right), caught by a hand cross-check and now held
+by the colon_in_text control arm in this run.

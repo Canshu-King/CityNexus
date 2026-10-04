@@ -1,0 +1,196 @@
+{
+  "schema": "CNX_ORD0485_SPEC_DRIFT_V2",
+  "tool": "phone_words_spec_drift_r2",
+  "took_local": "2026-10-05T02:08:00.537385+08:00",
+  "live_tip": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r4",
+  "ref_head": "8d6c582fd493469f88f02c494f5f227736da24ac",
+  "spec_path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+  "spec_bytes": 5516,
+  "frozen_literals_read": 5,
+  "counts": {
+    "WORD_ABSENT_ON_LINE": 1,
+    "WORD_ON_LINE": 4
+  },
+  "rows": [
+    {
+      "role": "frozen_constant",
+      "name": "FROZEN_PILL_ZH",
+      "literal": "本地通道",
+      "frontend_files": [],
+      "backend_files": [],
+      "where": "none",
+      "verdict": "WORD_ABSENT_ON_LINE"
+    },
+    {
+      "role": "frozen_constant",
+      "name": "LEAKED_PILL_KEY",
+      "literal": "poiImport.channelLocal",
+      "frontend_files": [
+        "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+        "frontend/src/features/poiimport/poiImportCopy.ts"
+      ],
+      "backend_files": [],
+      "where": "frontend",
+      "verdict": "WORD_ON_LINE"
+    },
+    {
+      "role": "frozen_constant",
+      "name": "LEAKED_STATE_KEY",
+      "literal": "exec.state.notStarted",
+      "frontend_files": [
+        "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+        "frontend/src/features/execution/V12StatePrimitives.tsx",
+        "frontend/src/i18n/LocaleContext.tsx"
+      ],
+      "backend_files": [],
+      "where": "frontend",
+      "verdict": "WORD_ON_LINE"
+    },
+    {
+      "role": "iterated_word",
+      "name": "word",
+      "literal": "活跃",
+      "frontend_files": [
+        "frontend/src/i18n/LocaleContext.tsx"
+      ],
+      "backend_files": [],
+      "where": "frontend",
+      "verdict": "WORD_ON_LINE"
+    },
+    {
+      "role": "iterated_word",
+      "name": "word",
+      "literal": "计划中",
+      "frontend_files": [
+        "frontend/src/i18n/travelerLabels.ts",
+        "frontend/src/lib/displayVocabulary.ts"
+      ],
+      "backend_files": [],
+      "where": "frontend",
+      "verdict": "WORD_ON_LINE"
+    }
+  ],
+  "relations": [
+    {
+      "token": "PILL",
+      "frozen_const": "FROZEN_PILL_ZH",
+      "frozen_literal": "本地通道",
+      "key_const": "LEAKED_PILL_KEY",
+      "dictionary_key": "poiImport.channelLocal",
+      "frozen_present_on_line": false,
+      "carried": {
+        "key": "poiImport.channelLocal",
+        "i18n_readable": true,
+        "i18n_mentions": 0,
+        "i18n_lines": [],
+        "matched_on": "trailing_segment",
+        "trailing_segment": "channelLocal",
+        "test_mentions_excluded": 0,
+        "entry_hits": [
+          {
+            "path": "frontend/src/features/poiimport/poiImportCopy.ts",
+            "line": 170,
+            "shape": "channelLocal:",
+            "text": "channelLocal: {"
+          }
+        ]
+      },
+      "entry_lines": [
+        "frontend/src/features/poiimport/poiImportCopy.ts:170"
+      ],
+      "zh_values_now": [
+        "本地解析，不打开链接"
+      ],
+      "inline_values_now": [],
+      "verdict": "COPY_REWORDED_ON_LINE",
+      "key_still_in_i18n": false
+    },
+    {
+      "token": "STATE",
+      "frozen_const": null,
+      "frozen_literal": null,
+      "key_const": "LEAKED_STATE_KEY",
+      "dictionary_key": "exec.state.notStarted",
+      "frozen_present_on_line": null,
+      "carried": {
+        "key": "exec.state.notStarted",
+        "i18n_readable": true,
+        "i18n_mentions": 2,
+        "i18n_lines": [
+          {
+            "line": 625,
+            "text": "\"exec.state.notStarted\": \"Not started\","
+          },
+          {
+            "line": 1704,
+            "text": "\"exec.state.notStarted\": \"未开始\","
+          }
+        ],
+        "matched_on": "full_key",
+        "trailing_segment": "notStarted",
+        "test_mentions_excluded": 0,
+        "entry_hits": [
+          {
+            "path": "frontend/src/i18n/LocaleContext.tsx",
+            "line": 1704,
+            "shape": "\"exec.state.notStarted\":",
+            "text": "\"exec.state.notStarted\": \"未开始\","
+          },
+          {
+            "path": "frontend/src/i18n/LocaleContext.tsx",
+            "line": 625,
+            "shape": "\"exec.state.notStarted\":",
+            "text": "\"exec.state.notStarted\": \"Not started\","
+          }
+        ]
+      },
+      "entry_lines": [
+        "frontend/src/i18n/LocaleContext.tsx:1704",
+        "frontend/src/i18n/LocaleContext.tsx:625"
+      ],
+      "zh_values_now": [],
+      "inline_values_now": [
+        "Not started",
+        "未开始"
+      ],
+      "verdict": "KEY_ONLY_NO_FROZEN_COPY",
+      "key_still_in_i18n": true
+    }
+  ],
+  "controls": [
+    {
+      "arm": "positive",
+      "needle": "poi-import",
+      "found": true,
+      "files": [
+        "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+        "frontend/e2e/qoder-ord0437-poi-import-chain.spec.ts",
+        "frontend/e2e/qoder-ord0498-poster-multiday.spec.ts"
+      ],
+      "as_expected": true
+    },
+    {
+      "arm": "negative",
+      "needle": "cn0485driftprobezzz",
+      "found": false,
+      "files": [],
+      "as_expected": true
+    },
+    {
+      "arm": "colon_in_text",
+      "attempted": true,
+      "needle_path": "frontend/e2e-ord0232-real/ord0232-real-chain.spec.ts",
+      "needle": "const node = (detail: string) => `${FILE} :: ${NODE} — ${detail}`;",
+      "found_back": true,
+      "as_expected": true
+    }
+  ],
+  "tree_denominators": {
+    "frontend_files": 835,
+    "backend_files": 402
+  },
+  "worktree_written": false,
+  "r1_defect": "expect(...) titles were collected as assertions; five of nine r1 rows were the spec's own diagnostic labels",
+  "limit": "词面在场是必要条件不是充分条件；只有浏览器跑一遍才知道那枚字有没有上屏"
+}
