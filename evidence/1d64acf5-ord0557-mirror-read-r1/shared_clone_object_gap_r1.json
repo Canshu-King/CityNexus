@@ -1,0 +1,90 @@
+{
+ "read_at_local": "2026-10-04 18:14:24",
+ "authoritative_tip_named_by_server": "868958e7e11472faa0fc84c2218304c36d1885b0",
+ "that_commit_opens_locally_now": true,
+ "cat_file_now": {
+  "rc": 0,
+  "type": "commit",
+  "stderr": ""
+ },
+ "repo_is_shallow": true,
+ "shallow_boundaries_recorded": [
+  "41334e1acbcf9b5a3ec4cfe4c5837bf2a2d00e45",
+  "484bfa2e01afdcc28de26df103268d91d121a8cf",
+  "50373240559f1b3703bbc4d237301284e31e2408",
+  "60db8f3d95598f8c0ed0ee8e5bb8b36fe18bb46a",
+  "62ef4a8191b1b9562349f60012ca349877f1ee01",
+  "69aea259c9762658ab5a413734ac6e4d4ab9b805",
+  "84a96c6fc4418536156c84290819e56486300134",
+  "868958e7e11472faa0fc84c2218304c36d1885b0",
+  "d71776503dd15b8839e25a2efa196bf3749702e3",
+  "e26d0b5a0f0f30eb20bc8491862cdc9df84713d5",
+  "ed5a9cc37670251e722195fedb7fcb50e7445a49",
+  "ee9b24d8cf8028428bc685878aead06d11e5e064"
+ ],
+ "remote_tracking_ref": {
+  "name": "refs/remotes/origin/mirror/integration-frontend-apple-pass1",
+  "reads": "868958e7e11472faa0fc84c2218304c36d1885b0"
+ },
+ "disk_D": {
+  "free_bytes": 9310752768,
+  "total_bytes": 330024611840,
+  "used_pct": 97.2
+ },
+ "verify_refs_this_lane_owns": [
+  "refs/remotes/verify/anchors1",
+  "refs/remotes/verify/anchors2",
+  "refs/remotes/verify/anchors3",
+  "refs/remotes/verify/anchors4",
+  "refs/remotes/verify/blockview",
+  "refs/remotes/verify/blockview_1945",
+  "refs/remotes/verify/blockview_cmdr0019",
+  "refs/remotes/verify/blockview_cmdr0124",
+  "refs/remotes/verify/blockview_cmdr0245",
+  "refs/remotes/verify/blockview_r3",
+  "refs/remotes/verify/bsview",
+  "refs/remotes/verify/cc",
+  "refs/remotes/verify/cc2",
+  "refs/remotes/verify/cc3",
+  "refs/remotes/verify/cc4",
+  "refs/remotes/verify/censusr2",
+  "refs/remotes/verify/censusr3",
+  "refs/remotes/verify/cmdr0019r1",
+  "refs/remotes/verify/cmdr0124r1",
+  "refs/remotes/verify/cmdr0130r1",
+  "refs/remotes/verify/cmdr0245r1",
+  "refs/remotes/verify/cmdr0245r2",
+  "refs/remotes/verify/cmdr1945r1",
+  "refs/remotes/verify/cnx_reader_commander_control",
+  "refs/remotes/verify/dbg1",
+  "refs/remotes/verify/dbg2",
+  "refs/remotes/verify/dup1",
+  "refs/remotes/verify/final1",
+  "refs/remotes/verify/g4floor",
+  "refs/remotes/verify/g4floor2",
+  "refs/remotes/verify/n1552",
+  "refs/remotes/verify/n1552b",
+  "refs/remotes/verify/n1605",
+  "refs/remotes/verify/ncensus",
+  "refs/remotes/verify/ord0391",
+  "refs/remotes/verify/ord0391b",
+  "refs/remotes/verify/ord0552",
+  "refs/remotes/verify/ord0552_commander_control",
+  "refs/remotes/verify/prog1",
+  "refs/remotes/verify/pruneview",
+  "refs/remotes/verify/r2tiers"
+ ],
+ "failure_witnessed": {
+  "what": "the server named 868958e7e11472faa0fc84c2218304c36d1885b0 as the tip; `git cat-file -t` on it returned rc 128 while `git fetch` reported success and updated the ref, so no pack was ever sent (the broken ref advertises that sha as `have`)",
+  "fetch_forms_tried": [
+   "+refs/heads/<tip>:refs/remotes/origin/<track>",
+   "+refs/heads/<tip>:refs/remotes/verify/ord0557_tipfix",
+   "git fetch --depth=1 origin <full sha> (FETCH_HEAD written, object still absent)",
+   "git fetch --refetch --depth=1 origin +...:refs/remotes/verify/ord0557_refetch"
+  ],
+  "refetch_outcome": "rc 128 with `client_loop: send disconnect: Connection reset by peer`, `fetch-pack: unexpected disconnect while reading sideband packet`, `fatal: early EOF`, `fatal: fetch-pack: invalid index-pack output` - yet the objects arrived, which is what `that_commit_opens_locally_now` reads above",
+  "not_touched": "the shared refs/remotes/origin/mirror/... was left alone; only refs/remotes/verify/ord0557_* names created by this lane were dropped",
+  "hazard_for_other_lanes": "any lane that cuts, diffs or merge-trees against `git rev-parse refs/remotes/origin/<authoritative>` gets a sha whose objects may not exist; the cheap guard is to `cat-file -e <sha>^{commit}` before using it, which is what the reader module now does for its own ref name"
+ },
+ "instrument_change_it_caused": "tools/cnx_ledger_mirror_reader_r1.py proves the fetched commit AND the blob for the requested path are openable, and re-fetches once after dropping the single ref name it owns, before it will return any bytes"
+}
