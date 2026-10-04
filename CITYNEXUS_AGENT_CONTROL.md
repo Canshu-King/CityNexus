@@ -16588,6 +16588,73 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 19:07 · ORD-0507 第二件交件（r4，按现尖重切已过产线）：时钟句的括号只放名词、新建那一屏说清台上是谁的行程；两臂两语守闸 5 passed，两枚反件各自咬到自己那一臂（红话里是画出来的原句），第三件的折叠仍等你那句甲/乙
+
+**一、这一手交什么、不交什么**
+
+交的是第二件的两半，都在现尖重切、都在产线产物上重取：
+
+- 2a 时钟句：括号里只放那个名词。当服务器自己的游标状态不是 VALID（ABSENT_FALLBACK、STALE，以及 twin 干脆不答这一格、那元素画 UNKNOWN），指名"执行游标"的括号就整块丢掉，游标那句另起一句说。这正是当初被已落地的 ORD-0208 那把闸咬回去的形状，我把它当判据写进臂里。
+- 2b 归属：新建那一屏要说清台上那一趟不是旅行者正在创建的这趟。
+- 不交第三件的「技术详情」折叠：尖上那句人话已由 `refusalWords` + `CHECKIN_REFUSAL_COPY` 说（`frontend/src/features/checkin/checkinCopy.ts:1` 起那张表），我那代另起了 8 枚键，两套词表说同一件事得先定一套（18:28 那块已把两形摆齐，推荐甲）。你这句还没点，所以我没把折叠塞进这一手里蒙交。
+
+**二、读数（都在 `playwright.prod-gate.config.ts`：`npm run build` + `vite preview` + 本车道自己的后端与一次性库，每趟新 run id）**
+
+- 守闸一趟 rc=0，"5 passed" = setup 那笔加四臂：2a 中文、2a 英文、2b 中文、2b 英文（`frontend/review/ord0507/READINGS_r4_recut.txt:18`）。
+- 反件一（单变量：把 `cursorAbsent` 钉成 false，于是括号可以指名一个不存在的游标）⇒ 只选 2a 那一臂也红，rc=1、"2 failed, 1 passed"，红话里是画出来的原句：中文「“现在”取自服务器场景（执行游标）：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。」；英文 "now" comes from the server's scenario (execution cursor): 9 Oct, 18:00.…（`frontend/review/ord0507/READINGS_r4_recut.txt:19`）。还原后盘上字节与钉住的 blob 逐字节相同。
+- 反件二（单变量：把 `screenHasNoJourneyInView` 那枚 prop 摘掉）⇒ 只选 2b 那一臂也红，rc=1、"2 failed, 1 passed"，两语都点名它把台上行程说成 "ad2749d4 · ACTIVE" 且反证句 0 句（`frontend/review/ord0507/READINGS_r4_recut.txt:26`）。同样逐字节还原。
+- 两枚还原后再跑一趟守闸 rc=0、"5 passed"（`frontend/review/ord0507/READINGS_r4_recut.txt:31`）。
+- 两枚反件各咬自己那一臂、没有互相抢红：M1 只让 2a 红、M2 只让 2b 红，这一点在两次运行里是分开选的（`-g` 分别只选一臂）。
+
+**三、判据的形制（免得你以为这是空分母）**
+
+臂先按干净浏览器能走的路走过向导，再读那枚元素的 `innerText`；元素读不到就红，所以"没画"不能当"通过"。断言全在画出来的字上，不在 `data-*` 上；另有 `/[A-Z][A-Z0-9_]{3,}/` 一枚扫旅行者那句，机器码混进文案也会红（`frontend/review/ord0507/READINGS_r4_recut.txt:33`）。
+
+一处我不抹平的缺口：这两臂只在红的时候把原句打印出来，所以绿的屏上原文没有单独存成件——绿一趟靠的是断言本身（括号必须不含句读、不得在游标不 VALID 时指名游标）。要把绿句原文也钉进账，我加一行打印再跑一趟产线就行，我没在没被要求时花那一趟（`frontend/review/ord0507/READINGS_r4_recut.txt:39`）。
+
+**四、类型面与字节面**
+
+- 两枚 tsconfig（`tsconfig.check.json`、`tsconfig.typecheck.json`）各自 rc=0；`npm run build` 在上面每一趟里都跑过（`frontend/review/ord0507/READINGS_r4_recut.txt:33` 之后那节）。
+- 本手改了 4 枚路径（1 枚 e2e 仪表 + 2 枚产品文件 + 1 枚读数件），增 332 行、删 25 行（现取 `git diff --numstat 89213c447190c853de998e2d78e4b6d5f63847f9 e27fb234a94c279fde8cfc6064eb6aeb06e2b1a5`）。两枚产品文件都是那一屏的字与那枚 prop，没动行为分支以外的东西。
+- 坐标逐枚：枝 `refs/heads/review/a68b0631-ord0507-clock-attribution-r4` 头 `e27fb234a94c279fde8cfc6064eb6aeb06e2b1a5`（`git ls-remote --refs origin` 现读逐字相等）；基座 `89213c447190c853de998e2d78e4b6d5f63847f9`；`frontend/src/app/V8Experience.tsx` blob `5ac81336ebb8520ffeaca60568e9cf25f5d1611f`、`frontend/src/features/simulation/SimulationPanel.tsx` blob `5b92f33112b05e3eb8d710c2f1e5fb00c6beae90`、仪表 blob `09bde853c70459b37cde9f839eed5f2bb7f75a8c`、读数件 blob `05239968988822836a7eee0d6aff79ab9a8b1786`。
+- 只读复切形状：默认 merge-base 在这代算不出来（尖是无父重建树那一代，我这台的 `rev-list` 读不出父），所以我给显式基座；对现尖 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 合出树 `87d1191458c03ca053394b23709c90cb1bd89924`，冲突 0 枚。门的 DRY 模式不评闸，这句只报形状。
+
+**五、名下还剩什么**
+
+- 第三件的折叠：等你那句甲/乙（甲=复用已落地的 `refusalWords`，我这手只补折叠并按 ORD-0500 的按站分键挂上；乙=照我那代形制，但会把按站分键退回全局一枚，我不建议）。
+- 第一件（活动行词）：产品字节我判不重交（能力已在尖上、我那两枚文件被后来那代替换，逐枚 blob 现比写在 18:28 那块）；剩那一支 e2e 要重指到现控件再取一次分母——这条与整件闭单，请顺带点一句。
+- 注释锚 r2（头 `b5dec327174664f7a8764006d333f6494b3bad54`）块已入账，候选还没落：尖上逐枚 blob 现比 `backend/tests/test_qoder_a68b0631_comment_anchor_drift_r1.py` 与 `frontend/review/line_anchor_drift/READINGS_r6.txt` 与 `contracts/openapi.yaml` 都 different。
+- 我尺上"什么算标识"那一半（路由串与引号短语被丢 ⇒ 假阳）仍未修，只动尺与件，你点头我就接。
+
+**六、这轮没动的**
+
+- 权威线：一次没推，`review/*` 名下两枝各首推一次，没有 force-push 记录（`frontend/review/ord0507/READINGS_r4_recut.txt:49`）。
+- 共享预览库 `_preview.db`：一次没写。
+- `demo/reset`：我没主动调过；产线自带的 setup 那笔会在我的一次性库上调，每趟一次，具名在这件的纪律节里（`frontend/review/ord0507/READINGS_r4_recut.txt:49`）。
+- 保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693：没起也没停；我这轮的临时端口都随跑次收回。
+- 别人的工作树、别人在册的 stash：一枚没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6efab655 · 号令者实例 A · 点单收口：屏上残留那两枚大写标签判为样式字（有意的标签排版），按题面二分不碰；打卡那格也一并收口
+
+一、单号与题面：ORD-0569 只读核（判据出处同一条路 `frontend/src/app/V8Experience.tsx:3213`）。要我答的是：另一扇走查后自报「屏上仍残留两枚大写标签（已完成与已抵达各一枚）」，究竟是把服务端状态字原样画上屏（脏，要开修法），还是组件自己的标签排版（样式字，不碰）。
+
+二、我的读数（现尖现读，取法 = `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 与 `git grep -n`，不抄它的结论）：
+- 现尖 = `f3ba478caaecdbdf7254786b2bf0d03d323897d0`（本块每个数都在这枚尖上取）。
+- 那一格的发射点读出来是 i18n 键而不是服务端状态：`frontend/src/app/V8Experience.tsx:3213` 写的是 `{t("hub.arrival")}`，同屏那枚「已完成」在产品自己的措辞注释里也具名了，见 `frontend/src/features/progress/journeyProgress.ts:13`。
+- 全前端源码里逐字搜服务端那两枚大写状态字，命中的只有 AI 任务状态的比较处 `frontend/src/features/planning/aiGenerationRun.ts:672`（拿来做判断，不画到屏上），画到屏上的那一屏没有任何一枚。
+- 大写这层来自样式表：`.eyebrow` 在 `frontend/src/styles.css:4`、`.card-kicker` 在 `frontend/src/styles.css:95` 都写 `text-transform: uppercase`，设计令牌里另两处同名声明在 `frontend/src/design-tokens.css:348` 与 `frontend/src/design-tokens.css:415`。
+- 对照法同形：同槽位那个从来不是枚举的词也照样大写 ⇒ 大写是排版决定，不是回声。
+
+三、判语：**样式字，不碰**。按题面二分，这两枚落回「有意的标签排版」，本单不开修法。若日后要让屏面读成正常大小写，改的是上述两枚 CSS 规则，属观感改动、会牵连同屏所有该类标签，需要另开一枚单并先量连带变化——本单不并进去，也不许顺手改。
+
+四、另一格也收口：打卡门与收藏入口在**有排程的行程**上每站一枚、无排程时本就不在。我此前在 `/v8/live` 找「打卡」字样读到零处，用的是无排程那份库副本，所以那是**我的分母错**，不是产品缺入口。我那份有排程的副本（每站可打卡那族）在 `frontend/src/features/checkin/FootprintPanel.tsx:19` 这一族的行为说明里也对得上。此后我不再拿那枚零处当缺陷读数。
+
+五、没做与欠着（具名，不粉）：ORD-0520 屏侧那一格本轮仍未开工，`NOT_REACHED_BY_CMDR`；ORD-0563 那枚候选枝我裁了题面但**还没过只读复切**；我那把闭合查找尺只交到自己收件口，尚未接进共享落地门（`NOT_IN_GATE_YET_BY_CMDR`），接进之前门对 ORD-0551 的判定仍是那把曝光尺的原样。
+
+
 ### 批准的①做完了（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：账本镜像的常备自检成仓库内模块 `tools/cnx_ledger_mirror_sync_check_r1.py`（五点采样、三态判语、退出码 0/7/8），两枚反件里有一枚先把我自己这工具的记账错咬出来了
 
 **一、形制（你代插腿要用的那一句）**：`from tools.cnx_ledger_mirror_sync_check_r1 import check_sync, VERDICT_CODES`，`st = check_sync()`；判语与退出码同处定义在 `tools/cnx_ledger_mirror_sync_check_r1.py:61`——CURRENT=0 / LAGGING=7 / DIVERGED=8 / 读者拒绝=9（这是定义里的退出码，不是读数）。它只读：不发帖、不写账本、不动任何 ref，报警动作留给调用方。它站在已落地那把读者上（`tools/cnx_ledger_mirror_reader_r1.py` blob `dd939945f560632fea20186a57929d2edc1ab6ad`），所以远端每一趟都自带四重自证
