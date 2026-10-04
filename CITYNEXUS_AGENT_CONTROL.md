@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 交 CMDR 02:04 那手的**落地后当代复验** · 判语：两枚字节确在线上（`test_qoder_ord197_four_class_receipt.py` = `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` 与我候选 `d58e02d4a60e5d4b868fad808eeb756d11659012` 那枚逐字相同 = True；`test_qoder_city_failure_reasons.py` = `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` 相同 = True），**那族翻转归零**：ord197 单模块连跑 10 趟红 0 趟（落地前我实测空闲 8/8 红、另一批 1/12 红），城市模块 3 趟红 0 趟（落地前同一句 2/2 稳定红）。本手 0 字节改动，尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+
+**一、落地按字节核（这条线是无父重建树，ancestry 不顶用）**
+
+- 现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`；该头父提交列 = 空（又一枚无父重建头），`git rev-list --count` = 1。
+- 两枚线上 blob：`8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` 与 `d40513cb37e977d36df1dfd3b2d480ee43f7caf6`；我这手候选 `d58e02d4a60e5d4b868fad808eeb756d11659012` 上同名两枚 = `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5`、`d40513cb37e977d36df1dfd3b2d480ee43f7caf6`。
+- 形状现读（同两枚文件在 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 上的计数）：修法那一句 `job = _wait_closed(...)` 出现 2 次（两枚臂各一次）；旧 5xx 期望句 0 处之外的验证为 `new=1` 处、旧写法 `0` 处。
+
+**二、翻转归零（逐趟尾行，不写区间外推）**
+
+- `test_qoder_ord197_four_class_receipt.py` 单模块 10 趟：第 1 趟「6 passed, 1 xfailed, 2 warnings in 2.25s」；第 2 趟「6 passed, 1 xfailed, 2 warnings in 2.35s」；第 3 趟「6 passed, 1 xfailed, 2 warnings in 2.15s」；第 4 趟「6 passed, 1 xfailed, 2 warnings in 2.15s」 …（10/10 全绿，件 `run/postland_0204_r1.json` ）。
+- 落地前的同一形制（我这手自己量的，尖 `4fdd6345c0bfef36f12468390baad50946aad2b6` 与 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 两代）：空闲 8 趟红 8、带我自己 burner 的 8 趟红 1、钉 `PYTHONHASHSEED` 的 12 趟红 1 —— 件 `run/flip_race_r10.txt`、`run/flip_hash_r8.json`）。
+- `test_qoder_city_failure_reasons.py` 单模块 3 趟：「7 passed, 2 warnings in 12.67s」；「7 passed, 2 warnings in 12.11s」；「7 passed, 2 warnings in 11.35s」（红 0 趟）。落地前同一枚臂在 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上 2 趟同红，断言原文「assert 'PROVIDER_SERVER_ERROR' == 'PROVIDER_BAD_RESPONSE'」，件 `run/ord0519_closeout_pytest.txt`）。
+
+**三、邻族没有新红（红的都点名，不当自己人）**
+
+- 7 枚同族文件一起跑（工作树 checkout 到 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`、脏 0 行）：「2 failed, 71 passed, 1 xfailed, 2 warnings in 21.18s」，红的是 `test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`, `test_g5_an_ai_run_that_changed_must_say_which_it_was`。尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+- 两枚都不是我这手碰过的文件，且单独跑也 2/2 红（我这手实测）。落地前的证据：`test_g5_...` 在 `4fdd6345c0bfef36f12468390baad50946aad2b6` 代我单跑过「1 failed, 12 passed, 2 warnings in 4.97s」，件 `run/flip_single_r7.json`；`test_g10_...` 由车道 `89f2e2d6` 的全树清点件具名为「今夜四份整链红集合都出现」。
+- 这两枚属「读在飞作业」那一族，名单与修法在 `89f2e2d6` 那手里，我不重复报、不抢修。
+
+**四、还挂着没裁的（不催，只登记）**：ORD-0571（`/v8/trips` 行内动作那一格）我按读数交回了`NOT_REPRODUCED_ON_LANE_DATA`，等 ① 一份带站点的演示行程导出，或 ② 裁「滚动途中被压住算不算缺陷」；两条我都能当天动。尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+
+边界 A：本手产品字节 0 枚、shipped 尺 0 枚改动（复验只读只跑），尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+
+边界 B：权威线 0 移动，push 0 次，force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除，尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+
+边界 C：账本 0 直写（本块走收件口），demo/reset 0 次，`_preview.db` 0 次写，监听端口 0 个在跑，工作树 `D:/moodle/_qoder_seed_ord0489/wt504` checkout 到 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 且脏 0 行。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 00:55 · 新量的一格（可派单清单）：代码注释里点名的**设计/契约文档**有二十处、落在十三枚文件里、指着十一份不在树上的文档；我把口径与三条防假阳的规则一起写清，并说明我先前的粗扫数为什么不可用——这轮产品字节 0、枝 0 推，只等一句"补文档还是改指针"
 
 **〇、钟点**：本块写时 shell `date` 现读 00:55（已过午夜，我名下前几块是 21:14、00:07、同日更前的 19:26 与 18:12），请按块头时间戳排先后。
