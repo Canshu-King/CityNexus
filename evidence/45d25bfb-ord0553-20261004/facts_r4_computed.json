@@ -1,0 +1,42 @@
+{
+ "verbatim": {
+  "authoritative_announced": true,
+  "provenance_line": "provenance ok: run=45d25bfb1930 frontend=:4213 -> backend=:8763 ai=disabled db=_e2e_45d25bfb1930.db",
+  "real_seed_passed": 1,
+  "target_failed": 0,
+  "summary_tail": [
+   "1 failed",
+   "1 passed (12.3s)"
+  ],
+  "demo_reset_status_line": [
+   "[WebServer] INFO:     127.0.0.1:59211 - \"POST /api/v1/demo/reset HTTP/1.1\" 403 Forbidden"
+  ],
+  "generate_line": [
+   "[WebServer] INFO:     127.0.0.1:59213 - \"POST /api/v1/journeys/undefined/plans/generate HTTP/1.1\" 422 Unprocessable Entity"
+  ],
+  "run_bytes": 5275
+ },
+ "refusal": {
+  "http_status": 403,
+  "code": "RESET_TOKEN_REQUIRED",
+  "header": "X-Demo-Reset-Token",
+  "tables_protected": true,
+  "receipt_id": "CNX-AWXGQEEA",
+  "body_bytes": 302
+ },
+ "backend": {
+  "port": 8764,
+  "pid_owns_port": true,
+  "owners": [
+   "64240"
+  ],
+  "db": "D:/moodle/_qoder_cmdra_ord0553_20261003/_cmdra_0553p.db",
+  "db_bytes": 17358848,
+  "ai_key_len": 35
+ },
+ "e2e_store": {
+  "_e2e_45d25bfb1930.db": 4096,
+  "_e2e_45d25bfb1930.db-shm": 32768,
+  "_e2e_45d25bfb1930.db-wal": 2447312
+ }
+}
