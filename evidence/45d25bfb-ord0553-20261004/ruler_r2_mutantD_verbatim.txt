@@ -1,0 +1,39 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages (4ms)
+  x  2 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate (2ms)
+  ok 3 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:157:1 › the panel asks for a wording instead of putting the payload field on screen (4ms)
+  ok 4 e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:165:1 › the ruler is reading a live surface, not an empty one (2ms)
+
+
+  1) e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate 
+
+    Error: an execution-status wording that is the server's own printed form is the exact defect this order is about
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "COMPLETED.en prints the enum \"COMPLETED\"",
+    +   "COMPLETED.en prints the all-caps word \"COMPLETED\" in \"COMPLETED\"",
+    +   "COMPLETED.en is the enum verbatim (\"COMPLETED\")",
+    + ]
+
+      152 |     }
+      153 |   }
+    > 154 |   expect(offenders, "an execution-status wording that is the server's own printed form is the exact defect this order is about").toEqual([]);
+          |                                                                                                                                  ^
+      155 | });
+      156 |
+      157 | test("the panel asks for a wording instead of putting the payload field on screen", () => {
+        at D:\moodle\_qoder_cmdra_ord0553_r2_20261003\wt\frontend\e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:154:130
+
+    Error Context: test-results\qoder-45d25bfb-authoritati-d5be0-it-is-supposed-to-translate\error-context.md
+
+  1 failed
+    e2e\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate 
+  3 passed (633ms)
