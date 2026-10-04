@@ -1,0 +1,59 @@
+{
+  "instrument": "cmdra_0553_slot_text_r1",
+  "script_sha256": "d4bcb8708c167070ec57a0d33eff1a942eb11d754c30ada06f92bff3151d1e4a",
+  "base": "http://127.0.0.1:49852",
+  "locale": "en",
+  "entryAssets": [
+    "/assets/index-DUhOk9ks.js"
+  ],
+  "viewport": "390x844",
+  "read": {
+    "panelPresent": true,
+    "activityStatus": [
+      "COMPLETED",
+      "COMPLETED",
+      "COMPLETED",
+      "ARRIVED",
+      "Planned",
+      "Planned"
+    ],
+    "stateValues": [
+      "ARRIVED",
+      "Planned"
+    ],
+    "footerButton": [
+      "Mark IN PROGRESS",
+      "Preview impact",
+      "Accept edit"
+    ],
+    "rows": [
+      {
+        "title": "Old Town Gate",
+        "status": "COMPLETED"
+      },
+      {
+        "title": "Riverside Museum",
+        "status": "COMPLETED"
+      },
+      {
+        "title": "Central Food Hall",
+        "status": "COMPLETED"
+      },
+      {
+        "title": "Tech Art Center",
+        "status": "ARRIVED"
+      },
+      {
+        "title": "Nexus River Cruise Pier",
+        "status": "Planned"
+      },
+      {
+        "title": "Skyline Dinner House",
+        "status": "Planned"
+      }
+    ],
+    "nowTitle": "Tech Art Center",
+    "nextTitle": "Nexus River Cruise Pier"
+  },
+  "pageErrors": []
+}
