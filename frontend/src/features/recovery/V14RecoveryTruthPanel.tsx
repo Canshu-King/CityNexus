@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { routeProvenanceLabel } from "../../lib/displayVocabulary";
 import { type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
@@ -162,6 +163,9 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
               <span>{t("v14.incidentEvidence")}</span>
               <b data-testid="v14-recovery-provider">
                 {incident?.source_provider ?? snapshot?.source_provider ?? "—"} · {incident?.route_provenance ?? "—"}
+                {incident?.route_provenance
+                  ? `（${routeProvenanceLabel(incident.route_provenance, zh)}）`
+                  : ""}
               </b>
             </div>
             <div>
