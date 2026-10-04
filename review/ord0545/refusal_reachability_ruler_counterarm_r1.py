@@ -31,7 +31,7 @@ from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 MAIN = ROOT / "backend/app/main.py"
-RULER = "review/ord0545/refusal_reachability_ruler_r1.py"
+RULER = os.environ.get("CITYNEXUS_ORD0545S5_RULER", "review/ord0545/refusal_reachability_ruler_r1.py")
 RD = ROOT / "review/ord0545/readouts"
 DATA = pathlib.Path("D:/moodle/_qoder_newlane_ord0545_data")
 STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
