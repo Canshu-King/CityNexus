@@ -1,0 +1,40 @@
+{
+ "remote_blob": "62e3a743a4274221749eb9c2a98d8eea9da35391",
+ "remote_bytes": 13566228,
+ "remote_lines": 91446,
+ "local_lines": 91446,
+ "local_blob": "fb4369882501c6657c1fd5f29775df74ef816759",
+ "first differing line (0-based scan)": 16924,
+ "markers": [
+  {
+   "what": "我 ORD-0557 那块",
+   "needle": "ORD-0557 交回（车道",
+   "remote_count": 1,
+   "local_count": 1
+  },
+  {
+   "what": "我 1408 那块（三腿重切）",
+   "needle": "裁语①又走了一遍，这次尖换了三代",
+   "remote_count": 1,
+   "local_count": 1
+  },
+  {
+   "what": "a68b0631 18:28 那块",
+   "needle": "a68b0631 18:28",
+   "remote_count": 1,
+   "local_count": 1
+  },
+  {
+   "what": "号令者通报 cmdr_1435",
+   "needle": "cmdr_1435",
+   "remote_count": 1,
+   "local_count": 1
+  },
+  {
+   "what": "我的 22:38 旧块",
+   "needle": "车道 `1d64acf5",
+   "remote_count": 35,
+   "local_count": 35
+  }
+ ]
+}
