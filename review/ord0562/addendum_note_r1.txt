@@ -1,0 +1,48 @@
+ORD-0562 addendum -- the n=1 case reached on a screen, and what it showed.
+
+WHY THIS ROUND COULD REACH IT AT ALL
+  The previous round could not: the hub's count is `journey.temporal_shape.day_count`, and the server lets
+  an anchor's own moment outrank the journey window (backend/app/main.py:3110), so patching the journey
+  window left the count at three. The door that moves the anchors is the inbox: a confirmed reservation
+  writes its own moments onto the trip's anchors. So this walk uses the product's own two doors --
+  POST /api/v1/journeys/{id}/inbox/import (http_status=201) and
+  POST /api/v1/journeys/{id}/inbox/{draft_id}/confirm (http_status=200) -- with a same-day rail booking
+  whose moments sit inside the stored window (departure 2026-10-08T09:00+08:00, arrival 09:40).
+
+WHAT THE SERVER THEN SAID
+  temporal_shape: {"day_count": 1, "night_count": 0, "semantics": "CALENDAR_DAYS_INCLUSIVE",
+  "window_status": "IN_WINDOW", "min_days": 1, "max_days": 7}
+  arrival_anchor_at moved to 2026-10-08T09:40+08:00. Readings in shape_one_day_r1.json and
+  shape_one_day_shot_r1.json; the second run is the same door walked again and reproduced it.
+
+WHAT THE SCREEN SAID  --  the finding
+  [data-testid="today-when"] on the English arm: "6 Oct, 10:00 -- 8 Oct, 20:00 -- 2 travelers -- 1 days"
+  Pixel: hub_one_day_pixel.png. Page exceptions: 0.
+  So with the server holding day_count = 1, the traveller still reads `1 days`. The defect ORD-0562 was
+  raised for is alive on the authoritative line.
+
+WHY IT IS STILL ALIVE (a partial landing, not a wrong fix)
+  The tip 45207a0cc0fcae000b619753b4dfccb06594a59f carries part of ORD-0562 and not the rest:
+    landed   frontend/src/i18n/LocaleContext.tsx  hub.todayDays / hub.todayDaysUnknown / hub.budgetLine
+             exist, the English side carries the `{plural:...}` marker, and the seven `(s)` lines are gone
+             (a scan of the tip's English side finds zero `(s)`); the eleven ORD-0563 values are human too.
+    landed   frontend/src/lib/plural.ts           the irregular table declares person -> people.
+    MISSING  frontend/src/app/V8Experience.tsx    :2952 still reads `: \`${tripDayCount} days\`` and :2405
+             still reads `${days} days · ${people} people · ...`.
+  The dictionary can only word a count that is handed to it. The component never hands this one over, so
+  the new keys sit unused on the line and the inline template keeps painting the defect.
+  My branch review/cff87c64-ord0562-english-count-nouns-r4 @ cb1d5634cde949f8be994707f47b73703a7a014b has
+  those two sites as `t("hub.todayDays", { n: tripDayCount })` (:2941-2942) and
+  `t("hub.budgetLine", { days, people, amount })` (:2399) -- landing that file is what closes it.
+
+A SECOND STATE WORTH RECORDING (not a defect, and not smoothed either)
+  The first attempt used a booking on 2026-10-20, outside the stored 6-8 Oct window. The server then
+  answered temporal_shape {"day_count": null, "window_status": "INVALID_ANCHOR_ORDER"} and the hub read
+  "length unknown". That is the honest unknown branch working as designed -- and it is the first on-screen
+  reading of hub.todayDaysUnknown, which is also a key the tip's component never calls (same missing file).
+  Receipt: read_add2_r1.json.
+
+STILL NOT READ ON A PIXEL
+  `1 person` / `2 people` on the budget line: the hub's budget advisory needs a budget reference the
+  wizard does not set, so that string was ABSENT in these states. NOT_REACHED_UI, named rather than
+  assumed. Its wording is pinned by the ruler's arm four.

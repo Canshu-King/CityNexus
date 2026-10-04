@@ -1,0 +1,44 @@
+{
+ "steps": [
+  {
+   "step": "wizard_journey",
+   "today_when": "6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 3 days"
+  },
+  {
+   "step": "import_draft",
+   "status": 201,
+   "draft_id": "704d5c36-e90a-4e4e-9a46-96f03d47eca2",
+   "keys": [
+    "id",
+    "journey_id",
+    "artifact_type",
+    "extracted",
+    "interpretation",
+    "smart_intake",
+    "unresolved_fields",
+    "extraction_mode",
+    "status",
+    "created_at",
+    "confirmed_at"
+   ],
+   "draft_status": "READY_FOR_CONFIRMATION",
+   "unresolved": []
+  },
+  {
+   "step": "confirm_draft",
+   "status": 200
+  },
+  {
+   "step": "after_confirmation",
+   "today_when": "6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · length unknown",
+   "day_phrase": "NOT_FOUND",
+   "reads_one_day": false,
+   "reads_the_old_defect": false
+  }
+ ],
+ "pageerrors": [],
+ "console_errors": [],
+ "wizard_http": 201,
+ "heading": "Trip to Tianjin",
+ "journey_id": "0506d7ed-fec0-43a1-b324-841c205c3de7"
+}
