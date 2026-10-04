@@ -1,0 +1,437 @@
+{
+ "file": "e2e/qoder-8ac89982-named-control-census-r1.spec.ts",
+ "route": "bookings",
+ "arm": "zh",
+ "shape": "390x844",
+ "landed_href": "http://127.0.0.1:5172/v8/bookings",
+ "screen_title": "你的真实预订，受保护。",
+ "total_controls": 21,
+ "unnamed": 0,
+ "pointer_only_candidates": 0,
+ "pointer_only_unnamed": 0,
+ "rows": [
+  {
+   "tag": "button",
+   "testid": "v8-mobile-menu",
+   "role": null,
+   "classes": "v8-mobile-menu",
+   "accessible_name": "打开导航",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    19,
+    46,
+    27
+   ],
+   "html_head": "<button class=\"v8-mobile-menu\" aria-label=\"打开导航\" aria-expanded=\"false\" aria-controls=\"v8-nav-drawer\" data-testid=\"v8-mobile-menu\">菜单</button"
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-theme",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Theme: following the system. Choose light, dark, or back to system.",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    191,
+    17,
+    65,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-theme\" data-theme-choice=\"system\" data-contrast-role=\"control\" aria-label=\"Theme: following "
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-language",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Switch language",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    264,
+    17,
+    65,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-language\" data-contrast-role=\"control\" aria-label=\"Switch language\">EN</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-avatar",
+   "role": null,
+   "classes": "v8-avatar",
+   "accessible_name": "我的",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    345,
+    25,
+    28,
+    28
+   ],
+   "html_head": "<button class=\"v8-avatar\" data-testid=\"topbar-avatar\" aria-label=\"我的\">TI</button>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "高级：结构化数据",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    40,
+    618,
+    310,
+    44
+   ],
+   "html_head": "<summary>高级：结构化数据</summary>"
+  },
+  {
+   "tag": "textarea",
+   "testid": "bookings-json-input",
+   "role": null,
+   "classes": "",
+   "accessible_name": "预订 JSON",
+   "name_via": "label-element",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    93,
+    662,
+    162,
+    176
+   ],
+   "html_head": "<textarea id=\"reservation-json\" data-testid=\"bookings-json-input\" placeholder=\"{&quot;reservation_type&quot;:&quot;RAIL&quot;, &quot;confirm"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "v8-primary",
+   "accessible_name": "审核并保护",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": true,
+   "box": [
+    40,
+    842,
+    114,
+    44
+   ],
+   "html_head": "<button class=\"v8-primary\" disabled=\"\">审核并保护</button>"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "打开扫描器",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    34,
+    866,
+    104,
+    44
+   ],
+   "html_head": "<button type=\"button\">打开扫描器</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "journey-link-copy",
+   "role": null,
+   "classes": "v8-primary-button",
+   "accessible_name": "复制行程链接",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    34,
+    1069,
+    322,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"v8-primary-button\" data-testid=\"journey-link-copy\" data-cnx-field=\"journey_link_url\">复制行程链接</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "inbox-tab-paste",
+   "role": null,
+   "classes": "active",
+   "accessible_name": "粘贴确认信息",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    34,
+    1141,
+    157,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"active\" data-testid=\"inbox-tab-paste\">粘贴确认信息</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "inbox-tab-manual",
+   "role": null,
+   "classes": "",
+   "accessible_name": "手动填写",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    199,
+    1141,
+    157,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"\" data-testid=\"inbox-tab-manual\">手动填写</button>"
+  },
+  {
+   "tag": "textarea",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "粘贴的确认提取文本草稿",
+   "name_via": "label-element",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    34,
+    1243,
+    322,
+    122
+   ],
+   "html_head": "<textarea placeholder=\"粘贴铁路、航班、酒店或场地确认文本\"></textarea>"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "提取文本草稿",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": true,
+   "box": [
+    34,
+    1384,
+    128,
+    44
+   ],
+   "html_head": "<button type=\"button\" disabled=\"\">提取文本草稿</button>"
+  },
+  {
+   "tag": "input",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "确认截图图片字节仅用于此次提取请求。提取图片草稿",
+   "name_via": "label-element",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    34,
+    1468,
+    322,
+    64
+   ],
+   "html_head": "<input accept=\"image/*\" type=\"file\">"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "提取图片草稿",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": true,
+   "box": [
+    34,
+    1575,
+    128,
+    44
+   ],
+   "html_head": "<button type=\"button\" disabled=\"\">提取图片草稿</button>"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "cn-copilot-edge",
+   "accessible_name": "CityNexus Copilot",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    336,
+    714,
+    44,
+    44
+   ],
+   "html_head": "<button class=\"cn-copilot-edge\" type=\"button\" aria-label=\"CityNexus Copilot\"><span class=\"cn-copilot-edge-mark\">✦</span><span>CityNexus Copi"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-hub",
+   "role": null,
+   "classes": "",
+   "accessible_name": "今天",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    5,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-hub\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-trips",
+   "role": null,
+   "classes": "",
+   "accessible_name": "行程",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    81,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-map",
+   "role": null,
+   "classes": "",
+   "accessible_name": "地图",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    157,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-agent",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Copilot",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    233,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-me",
+   "role": null,
+   "classes": "",
+   "accessible_name": "我的",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    309,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-me\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" strok"
+  }
+ ],
+ "pointer_rows": [],
+ "negative_control_interactive_probe_seen": true,
+ "negative_control_pointer_probe_seen": true
+}

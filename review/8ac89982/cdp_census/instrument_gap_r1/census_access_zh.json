@@ -1,0 +1,492 @@
+{
+ "file": "e2e/qoder-8ac89982-named-control-census-r1.spec.ts",
+ "route": "access",
+ "arm": "zh",
+ "shape": "390x844",
+ "landed_href": "http://127.0.0.1:5172/v8/access",
+ "screen_title": "",
+ "total_controls": 24,
+ "unnamed": 1,
+ "rows": [
+  {
+   "tag": "button",
+   "testid": "v8-mobile-menu",
+   "role": null,
+   "classes": "v8-mobile-menu",
+   "accessible_name": "打开导航",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    19,
+    46,
+    27
+   ],
+   "html_head": "<button class=\"v8-mobile-menu\" aria-label=\"打开导航\" aria-expanded=\"false\" aria-controls=\"v8-nav-drawer\" data-testid=\"v8-mobile-menu\">菜单</button"
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-theme",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Theme: following the system. Choose light, dark, or back to system.",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    191,
+    17,
+    65,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-theme\" data-theme-choice=\"system\" data-contrast-role=\"control\" aria-label=\"Theme: following "
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-language",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Switch language",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    264,
+    17,
+    65,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-language\" data-contrast-role=\"control\" aria-label=\"Switch language\">EN</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-avatar",
+   "role": null,
+   "classes": "v8-avatar",
+   "accessible_name": "我的",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    345,
+    25,
+    28,
+    28
+   ],
+   "html_head": "<button class=\"v8-avatar\" data-testid=\"topbar-avatar\" aria-label=\"我的\">TI</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-CREATION_ORDER",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "创建序",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    268,
+    78,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-CREATION_ORDER\" aria-pressed=\"false\">创建序</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-RECENT_UPDATE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "最近更新",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    101,
+    268,
+    96,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-RECENT_UPDATE\" aria-pressed=\"true\">最近更新</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-DEPARTURE_DATE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "出发日期",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    203,
+    268,
+    94,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-DEPARTURE_DATE\" aria-pressed=\"false\">出发日期</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-TITLE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "名称",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    303,
+    268,
+    62,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-TITLE\" aria-pressed=\"false\">名称</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-trip-open-0",
+   "role": null,
+   "classes": "cn-access-trip-open",
+   "accessible_name": "Tianjin · stay-aware weekend",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    45,
+    490,
+    329,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-trip-open\" data-testid=\"access-trip-open-0\" aria-current=\"true\">Tianjin · stay-aware weekend</button>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "能力编号（服务器原样叫法）",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1002,
+    356,
+    44
+   ],
+   "html_head": "<summary>能力编号（服务器原样叫法）</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "能力编号（服务器原样叫法）",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1095,
+    356,
+    44
+   ],
+   "html_head": "<summary>能力编号（服务器原样叫法）</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "能力编号（服务器原样叫法）",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1208,
+    356,
+    44
+   ],
+   "html_head": "<summary>能力编号（服务器原样叫法）</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "查看完整权限规则",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1260,
+    356,
+    44
+   ],
+   "html_head": "<summary>查看完整权限规则</summary>"
+  },
+  {
+   "tag": "select",
+   "testid": "access-invite-visibility",
+   "role": null,
+   "classes": "",
+   "accessible_name": "仅个人获得链接者可见受邀者可见公开",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2151,
+    356,
+    44
+   ],
+   "html_head": "<select data-testid=\"access-invite-visibility\"><option value=\"PRIVATE\">仅个人</option><option value=\"LINK_READ\">获得链接者可见</option><option value=\""
+  },
+  {
+   "tag": "input",
+   "testid": "access-invite-expiry",
+   "role": null,
+   "classes": "",
+   "accessible_name": "",
+   "name_via": "none",
+   "unnamed": true,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2239,
+    356,
+    60
+   ],
+   "html_head": "<input data-testid=\"access-invite-expiry\" type=\"datetime-local\" value=\"\">"
+  },
+  {
+   "tag": "button",
+   "testid": "access-invite-submit",
+   "role": null,
+   "classes": "",
+   "accessible_name": "发出邀请",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2410,
+    356,
+    45
+   ],
+   "html_head": "<button data-testid=\"access-invite-submit\" type=\"button\">发出邀请</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-empty-issue-link-grant",
+   "role": null,
+   "classes": "cn-access-row-action",
+   "accessible_name": "发一条凭链接可读的邀请",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2554,
+    200,
+    44
+   ],
+   "html_head": "<button class=\"cn-access-row-action\" data-testid=\"access-empty-issue-link-grant\" type=\"button\">发一条凭链接可读的邀请</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-empty-focus-invite",
+   "role": null,
+   "classes": "cn-access-row-action",
+   "accessible_name": "去邀请那一格",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2867,
+    120,
+    44
+   ],
+   "html_head": "<button class=\"cn-access-row-action\" data-testid=\"access-empty-focus-invite\" type=\"button\">去邀请那一格</button>"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "cn-copilot-edge",
+   "accessible_name": "CityNexus Copilot",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    336,
+    94,
+    44,
+    44
+   ],
+   "html_head": "<button class=\"cn-copilot-edge\" type=\"button\" aria-label=\"CityNexus Copilot\"><span class=\"cn-copilot-edge-mark\">✦</span><span>CityNexus Copi"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-hub",
+   "role": null,
+   "classes": "",
+   "accessible_name": "今天",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    5,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-hub\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-trips",
+   "role": null,
+   "classes": "",
+   "accessible_name": "行程",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    81,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-map",
+   "role": null,
+   "classes": "",
+   "accessible_name": "地图",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    157,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-agent",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Copilot",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    233,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-me",
+   "role": null,
+   "classes": "",
+   "accessible_name": "我的",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    309,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-me\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" strok"
+  }
+ ]
+}

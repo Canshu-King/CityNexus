@@ -1,0 +1,497 @@
+{
+ "file": "e2e/qoder-8ac89982-named-control-census-r1.spec.ts",
+ "route": "access",
+ "arm": "en",
+ "shape": "390x844",
+ "landed_href": "http://127.0.0.1:5172/v8/access",
+ "screen_title": "",
+ "total_controls": 24,
+ "unnamed": 0,
+ "pointer_only_candidates": 0,
+ "pointer_only_unnamed": 0,
+ "rows": [
+  {
+   "tag": "button",
+   "testid": "v8-mobile-menu",
+   "role": null,
+   "classes": "v8-mobile-menu",
+   "accessible_name": "Open navigation",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    19,
+    55,
+    27
+   ],
+   "html_head": "<button class=\"v8-mobile-menu\" aria-label=\"Open navigation\" aria-expanded=\"false\" aria-controls=\"v8-nav-drawer\" data-testid=\"v8-mobile-menu\""
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-theme",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Theme: following the system. Choose light, dark, or back to system.",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    195,
+    17,
+    63,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-theme\" data-theme-choice=\"system\" data-contrast-role=\"control\" aria-label=\"Theme: following "
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-language",
+   "role": null,
+   "classes": "v9-language",
+   "accessible_name": "Switch language",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    266,
+    17,
+    63,
+    44
+   ],
+   "html_head": "<button class=\"v9-language\" data-testid=\"topbar-language\" data-contrast-role=\"control\" aria-label=\"Switch language\">中文</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "topbar-avatar",
+   "role": null,
+   "classes": "v8-avatar",
+   "accessible_name": "Me",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    345,
+    25,
+    28,
+    28
+   ],
+   "html_head": "<button class=\"v8-avatar\" data-testid=\"topbar-avatar\" aria-label=\"Me\">TI</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-CREATION_ORDER",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "Creation order",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    289,
+    132,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-CREATION_ORDER\" aria-pressed=\"false\">Creation order</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-RECENT_UPDATE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "Recently updated",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    155,
+    289,
+    163,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-RECENT_UPDATE\" aria-pressed=\"true\">Recently updated</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-DEPARTURE_DATE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "Departure date",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    339,
+    137,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-DEPARTURE_DATE\" aria-pressed=\"false\">Departure date</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-sort-tier-TITLE",
+   "role": null,
+   "classes": "cn-access-sort-tier",
+   "accessible_name": "Name",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    160,
+    339,
+    72,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-sort-tier\" data-testid=\"access-sort-tier-TITLE\" aria-pressed=\"false\">Name</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-trip-open-0",
+   "role": null,
+   "classes": "cn-access-trip-open",
+   "accessible_name": "Tianjin · stay-aware weekend",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    45,
+    629,
+    329,
+    44
+   ],
+   "html_head": "<button type=\"button\" class=\"cn-access-trip-open\" data-testid=\"access-trip-open-0\" aria-current=\"true\">Tianjin · stay-aware weekend</button>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "The capability codes, as the server names them",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1197,
+    356,
+    44
+   ],
+   "html_head": "<summary>The capability codes, as the server names them</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "The capability codes, as the server names them",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1310,
+    356,
+    44
+   ],
+   "html_head": "<summary>The capability codes, as the server names them</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "The capability codes, as the server names them",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1442,
+    356,
+    44
+   ],
+   "html_head": "<summary>The capability codes, as the server names them</summary>"
+  },
+  {
+   "tag": "summary",
+   "testid": null,
+   "role": null,
+   "classes": "",
+   "accessible_name": "Read the full permission rules",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    1494,
+    356,
+    44
+   ],
+   "html_head": "<summary>Read the full permission rules</summary>"
+  },
+  {
+   "tag": "select",
+   "testid": "access-invite-visibility",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Only meAnyone with the linkInvited people onlyPublic",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2513,
+    356,
+    44
+   ],
+   "html_head": "<select data-testid=\"access-invite-visibility\"><option value=\"PRIVATE\">Only me</option><option value=\"LINK_READ\">Anyone with the link</optio"
+  },
+  {
+   "tag": "input",
+   "testid": "access-invite-expiry",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Expiry moment (leaving it empty means the invitation never lapses)",
+   "name_via": "label-element",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2601,
+    356,
+    60
+   ],
+   "html_head": "<input data-testid=\"access-invite-expiry\" type=\"datetime-local\" value=\"\">"
+  },
+  {
+   "tag": "button",
+   "testid": "access-invite-submit",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Issue the invitation",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2772,
+    356,
+    45
+   ],
+   "html_head": "<button data-testid=\"access-invite-submit\" type=\"button\">Issue the invitation</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-empty-issue-link-grant",
+   "role": null,
+   "classes": "cn-access-row-action",
+   "accessible_name": "Issue a link-readable invitation",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    2916,
+    239,
+    44
+   ],
+   "html_head": "<button class=\"cn-access-row-action\" data-testid=\"access-empty-issue-link-grant\" type=\"button\">Issue a link-readable invitation</button>"
+  },
+  {
+   "tag": "button",
+   "testid": "access-empty-focus-invite",
+   "role": null,
+   "classes": "cn-access-row-action",
+   "accessible_name": "Go to the invitation form",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": false,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    17,
+    3248,
+    199,
+    44
+   ],
+   "html_head": "<button class=\"cn-access-row-action\" data-testid=\"access-empty-focus-invite\" type=\"button\">Go to the invitation form</button>"
+  },
+  {
+   "tag": "button",
+   "testid": null,
+   "role": null,
+   "classes": "cn-copilot-edge",
+   "accessible_name": "CityNexus Copilot",
+   "name_via": "aria-label",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    336,
+    334,
+    44,
+    44
+   ],
+   "html_head": "<button class=\"cn-copilot-edge\" type=\"button\" aria-label=\"CityNexus Copilot\"><span class=\"cn-copilot-edge-mark\">✦</span><span>CityNexus Copi"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-hub",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Today",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    5,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-hub\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-trips",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Trips",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    81,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-map",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Map",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    157,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stro"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-agent",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Copilot",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    233,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" st"
+  },
+  {
+   "tag": "button",
+   "testid": "nav-me",
+   "role": null,
+   "classes": "",
+   "accessible_name": "Me",
+   "name_via": "text",
+   "unnamed": false,
+   "decorative_only": false,
+   "icon_child": true,
+   "aria_hidden_self": false,
+   "disabled": false,
+   "box": [
+    309,
+    789,
+    76,
+    48
+   ],
+   "html_head": "<button data-testid=\"nav-me\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" strok"
+  }
+ ],
+ "pointer_rows": [],
+ "negative_control_interactive_probe_seen": true,
+ "negative_control_pointer_probe_seen": true
+}

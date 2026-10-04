@@ -1,0 +1,62 @@
+
+[WebServer] INFO:     127.0.0.1:63151 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63148 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63150 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64423 - "GET /api/v1/travelers/ab7cee41-6aa7-4b89-af6a-e3c7e07974fb/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63149 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65410 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64422 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55443 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62498 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55444 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60214 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60215 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60216 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60219 - "GET /api/v1/travelers/ab7cee41-6aa7-4b89-af6a-e3c7e07974fb/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50444 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50443 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60217 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60218 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62367 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/agent-feed?limit=50 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64384 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62994 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59186 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60097 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50692 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/member-role-limits HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50691 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50693 - "GET /api/v1/journeys/f309838b-a418-4755-83d8-21f582f106b4/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60920 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-8ac89982-named-control-census-r1.spec.ts:102:7 › lane 8ac89982 named-control census (instrument, not a gate) › census-access-en
+CENSUS access/en landed=http://127.0.0.1:5172/v8/access title= controls=24 unnamed=1
+
+  31 passed (2.1m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-named-control-census-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_cdp_census_r1.db ports 5172/5173 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=cdp_census_r1 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\cdp_census_r1.log
+CENSUS_RC=0

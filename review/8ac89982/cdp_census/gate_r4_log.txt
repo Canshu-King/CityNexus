@@ -1,0 +1,63 @@
+
+[WebServer] INFO:     127.0.0.1:60790 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60788 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49328 - "GET /api/v1/travelers/2cb1de51-ec40-418e-bd8b-34023668d59d/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51097 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55969 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56472 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60789 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60793 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58298 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58297 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58211 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58212 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58213 - "GET /api/v1/journeys?sort=RECENT_UPDATE HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58214 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58215 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50790 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50789 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58216 - "GET /api/v1/travelers/2cb1de51-ec40-418e-bd8b-34023668d59d/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58886 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/agent-feed?limit=50 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53288 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51496 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50791 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65180 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57286 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64452 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/member-role-limits HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64451 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64453 - "GET /api/v1/journeys/904b26bd-ea56-499f-9c29-e31aff8b3e39/acl/roles HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-8ac89982-named-control-census-r1.spec.ts:170:7 › lane 8ac89982 named-control census (instrument, not a gate) › census-access-en
+CENSUS access/en landed=http://127.0.0.1:5172/v8/access controls=24 unnamed=0 pointer_only=0 pointer_unnamed=0 probe_interactive_seen=true probe_pointer_seen=true
+
+  31 passed (2.2m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-named-control-census-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_cdp_census_r4.db ports 5172/5173 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=cdp_census_r4 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\cdp_census_r4.log
+CENSUS_RC=0
+r4_kept=30
