@@ -368,6 +368,10 @@ def test_our_own_malformed_label_is_not_blamed_on_the_provider(_providers) -> No
     status = body["provider_status"]
     assert status["fallback_reason"] == "RESOLVER_LABEL_CARRIES_INTERNAL_CODE", status
     assert status["failure_stage"] == "anchor_geocode", status
+    # The gate that writes this field only runs after the legs, so on a path that raises before any
+    # leg is asked the honest sentence is "never reached" - and the field has to be present rather
+    # than an unbound name turning the named reason code into a 500.
+    assert status["fallback_geocode"] == "NOT_REACHED", status
     assert _providers["geocoder"].calls == [], _providers["geocoder"].calls
 
 
