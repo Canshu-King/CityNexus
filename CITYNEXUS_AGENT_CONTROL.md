@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### C2 无名控件核对：hub 与 trips 两屏真无名零枚，可派单的修法有三条，另有一条是给仪表的（车道 8ac89982 · 零产品字节、只出名单）
+
+**一、题面与基**
+
+- 基 = 现尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读）。
+- 判据逐字沿用已落线那把可达性仪表的 C2（件 `review/ord0561/REACH_INSTRUMENT_R3.md`，选择器面同为 `button, a[href], [role=button]`）：C2a = `aria-label`、`title`、`textContent` 三者全空；C2b = 缺 `aria-label` 而可见文字只剩两三个字母。
+- 为什么不抄它的读数：它那张面在 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 那一代取，号令者要我按现尖核，所以判据复用、代次自取。形状 390 宽 × 844 高，栈/端口/run-id 独占库都是本车道自己的。
+- 负对照：每屏当场注入一枚该被抓到的假控件（无 `aria-label`、文字两字母），四格屏臂 4/4 都把它抓进名单，注入件在返回前移除、不进计数。
+
+**二、两屏的数**
+
+- C2a（真无名）：hub 与 trips 两屏在两臂全部读数里命中 0 枚 —— 这两屏没有「读屏拿到空白」的控件；逐枚形制可在现尖的 `frontend/src/app/V8Experience.tsx:2112` 与 `frontend/src/features/pending/PendingSetPanel.tsx:321` 复核。
+- C2b：命中 17 枚出现，去重 11 枚控件，逐枚都在下面三节里点名，每条都配它自己的源码坐标（现尖上可 `git cat-file` 那棵树里读回）。
+
+**三、可派单修法（甲乙丙三条，各自带坐标与"该用的词"）**
+
+- 甲 · 底栏那四枚路由键 `nav-hub`、`nav-trips`、`nav-map`、`nav-me`（zh 臂文字"今天/行程/地图/我的"，en 臂 "Map/Me"，共 8 枚出现）：**名不用补**——可见文字就是词表给的（渲染形制 `t("nav." + key)`，源码 `frontend/src/app/V8Experience.tsx:2112`）。缺的是**选中态**：当前路由那枚只有 `className="active"` 与 `data-contrast-role="state"`，没有任何 ARIA 状态。修法一枚：给命中路由的那枚加 `aria-current="page"`。
+- 乙 · trips 的四枚 tab `trips-tab-itinerary`、`trips-tab-stay`、`trips-tab-bookings`、`trips-tab-spend`（zh "行程/住宿/预订/花费"，4 枚出现）：两件事。① **字不在词表里** —— 它们是 `frontend/src/app/V8Experience.tsx:2237` 那行数组里的内联双语字面 `{zh ? item.zh : item.en}`，与 ORD-0422 具名文案那一族同形；该改成词表键（沿用同屏已有的 `trips.` 前缀，例如 `trips.tab.itinerary` 一枚一键）。② **状态与角色缺** —— 容器 `<nav>` 已有 `aria-label`（件 `frontend/src/app/V8Experience.tsx:2317` 那段），但每枚 tab 是裸 `button`，没有 `role="tab"`、`aria-selected`，面板侧也没有 `role="tabpanel"`；读屏用户能听见四个词、听不见"现在在哪一格"。
+- 丙 · hub 的 `pending-filter-open`（1 枚出现，文字"筛选"）：**判"确实该按文字算名"**。它的名来自词表 `say("pending.filter")`（源码 `frontend/src/features/pending/PendingSetPanel.tsx:321`），并且已经带 `aria-expanded={sheetOpen}`。这一枚不需要补任何东西，落在 C2b 里属误判。
+
+**四、给仪表的一条（这条比名单更要紧）**
+
+- C2b 那句"可见文字只剩两三个字母"在中文臂会把**几乎所有两字词**抓成命中：中文的词通常就两三个字，而英文的词往往四字母以上。它自己那张表就是这个形状——zh 臂 200 枚、en 臂 85 枚（件 `review/ord0561/REACH_INSTRUMENT_R3.md`）。本轮两屏 17 枚出现里，16 枚都是这个机制（甲 8 枚 + 乙 4 枚 + 丙 1 枚，另加 hub 臂与 trips 臂重复出现的底栏枚数）。
+- 建议改法一句：把长度判据限定在拉丁字母串上（或中文臂豁免），否则 C2 的数在中文臂不能用来派单——它会把"已经具名"的词一直报成缺陷，而真正该抓的三字母图标键被埋在噪声里。
+
+**五、本轮没做的（具名）**
+
+- 只核 hub 与 trips 两屏，别的屏幕的 C2 逐枚归属没看；没点开对话层/菜单（静止屏读数）；没量桌面形状；`C2a` 在别的屏是否为 0 不由这话推。
+- 读数件（四份逐枚 JSON 与探针源码）在本车道目录下，本轮没为它单独推枝（为省一次推送，逐枚原文与源码坐标都抄进本块，按坐标可在现尖树上复核）。要复跑或扩屏，说一声我就把那把探针按副本交出来。
+
+**六、纪律**
+
+产品字节零枚、他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次、凭据零枚落盘零字打印。名下待落：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`、`refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r2`、`refs/heads/review/8ac89982-named-control-census-r1`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜把上一块具名 `NOT_REACHED_BY_82f55d8a` 那一格补成实测：候选树上真跑一次 vite build，五枚路由 × 两臂十次读数，顶栏逐字已是「回收站 / Recycle bin」这四枚自己的名字，正对照 hub 没变、页面异常每次零枚；读完当场停掉我自己起的两台，共享链的 PID 一个没动
 
 **〇、栈与代次（三证齐，全部现读）。**
