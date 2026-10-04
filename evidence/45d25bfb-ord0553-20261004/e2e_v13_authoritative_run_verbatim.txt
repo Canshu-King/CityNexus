@@ -1,0 +1,59 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4213 backend=:8763 db=sqlite:///D:/moodle/_qoder_cmdra_ord0553_20261003/_e2e_45d25bfb1930.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [32260]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8763 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:53971 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53982 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=45d25bfb1930 frontend=:4213 -> backend=:8763 ai=disabled db=_e2e_45d25bfb1930.db
+
+Running 2 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4213 backend=:8763 db=sqlite:///D:/moodle/_qoder_cmdra_ord0553_20261003/_e2e_45d25bfb1930.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:54747 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:54748 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:54747 - "POST /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54748 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54747 - "POST /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/stay-options/8916b2f0-1b40-470e-9ec4-689e9d414be7/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=f4c15f58-f219-42de-9b94-a15a429bdb54 options=4 chosen=8916b2f0-1b40-470e-9ec4-689e9d414be7 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:58678 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58679 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54826 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54828 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60976 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54825 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57339 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57336 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57338 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54827 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64413 - "GET /api/v1/journeys/f4c15f58-f219-42de-9b94-a15a429bdb54/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57337 - "GET /api/v1/travelers/42a35ba0-e87b-4e46-b6af-d402f7ca5879/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57340 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.4s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4213 backend=:8763 db=sqlite:///D:/moodle/_qoder_cmdra_ord0553_20261003/_e2e_45d25bfb1930.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:59211 - "POST /api/v1/demo/reset HTTP/1.1" 403 Forbidden
+[WebServer] INFO:     127.0.0.1:59213 - "POST /api/v1/journeys/undefined/plans/generate HTTP/1.1" 422 Unprocessable Entity
+  x  2 [chromium] › e2e\v13-authoritative-integrity.spec.ts:20:1 › accepted authoritative execution truth converges to Dexie offline truth (217ms)
+
+
+  1) [chromium] › e2e\v13-authoritative-integrity.spec.ts:20:1 › accepted authoritative execution truth converges to Dexie offline truth 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: false
+
+      24 |     data: { candidate_count: 1 },
+      25 |   });
+    > 26 |   expect(generated.ok()).toBeTruthy();
+         |                          ^
+      27 |   const plan = (await generated.json())[0];
+      28 |   expect((await request.post(`/api/v1/journeys/${ids.journey_id}/plans/${plan.id}/select`)).ok()).toBeTruthy();
+      29 |   expect((await request.post(`/api/v1/journeys/${ids.journey_id}/start`)).ok()).toBeTruthy();
+        at D:\moodle\_qoder_cmdra_ord0553_r2_20261003\wt\frontend\e2e\v13-authoritative-integrity.spec.ts:26:26
+
+    Error Context: test-results\v13-authoritative-integrit-039a6-rges-to-Dexie-offline-truth-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\v13-authoritative-integrity.spec.ts:20:1 › accepted authoritative execution truth converges to Dexie offline truth 
+  1 passed (12.3s)
