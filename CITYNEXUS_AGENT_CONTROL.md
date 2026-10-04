@@ -16588,6 +16588,101 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0512 place_name 分支不可达那格已修并交件 · 现尖字节 24 枚红、这一手 20 枚红，红集合成对只差本单那四枚臂（车道 8ac89982）
+
+**一、先报这手做了什么（大白话）**
+
+地图上那句「先说店自己的名字，库里没有名字才说计划里敲的标题」一直是写着的，但答地图的那扇门从来没把这个字段发出去——模型里没有这一格，序列化时键就被丢掉了。所以线上每一枚站名走的都是兜底那一腿，主腿结构上到不了。这一手把它接上：投影里那一枚 Place 行本来就为了坐标拿在手上，多加一行取值即可，另加模型字段、纸面契约的可空声明，以及用项目自带的生成器重出的客户端（与线上文件逐字只差一行）。
+
+**二、交付坐标**
+
+- 基座 = 现尖 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，本手机器人只读该枝）
+- 交付枝 `refs/heads/review/8ac89982-ord0512-place-name-on-the-wire-r1`，头 = commit `2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b`，父 = 上面那枚现尖，树 `cab59154161dbcbfdeb1aac5e3848220437b37dc`
+- 对尖的形状：修改 4 枚、新增 1 枚产品侧文件（那支闸测）加 13 枚证据件、删除 0 枚
+- 产品侧四枚被改的路径与逐枚新字节：`backend/app/schemas.py` = `c7ce67e452f84b992b52d01adcb664d3671dc417`，`backend/app/services.py` = `c57c51d6ad9fb50b3146aaadc7751ba40ef2d07d`，`contracts/openapi.yaml` = `8fa657e6d08cee10fae142e380dae49c1d831ad4`，`frontend/src/generated/api.ts` = `2bba1e8d30954a78b2e2007f7aaf8aa5c8d5cbf7`
+- 新闸测 `backend/tests/test_qoder_ord0512_place_name_on_the_wire_r1.py` = `ca72becd2ef9553357ba1937e2c6c200abed86fe`
+- 改动落点（按名字与现取行号给，随这枚提交可 `git cat-file` 的那棵树读回）：模型字段 `backend/app/schemas.py:622`，投影取值 `backend/app/services.py:642`，纸面契约可空声明 `contracts/openapi.yaml:3680`，生成客户端 `frontend/src/generated/api.ts:3441`
+
+**三、六枚臂与「红过才叫臂」**
+
+同一枚解释器 CPython 3.12.14、pytest 8.4.2。这手改后的字节上六枚臂全绿：`backend/tests/test_qoder_ord0512_place_name_on_the_wire_r1.py:174` 读那枚名字与它替掉的标题并存且互不相等，`:190` 判从没落过点的那枚答 None 而不是把标题抄成名字，`:207` 判「place_id 指向不存在的行」这一形被库自己的外键当场拒（`IntegrityError`，不是我推测），`:236` 判模型与纸面契约说的是同一个可空词（这扇门的 runtime 规范里根本没有 `Activity` 这枚组件，是量出来的，臂写成双向：将来它出现就必须一致），`:273` 拿只读 SQLite 逐枚比同一批行，`:158` 先把「名字与标题确实不同」这一前提钉住。
+
+对照件（只把三枚产品/契约字节退回现尖、闸测不动）：`4 failed / 2 passed`，红的正是上面那四枚判产品的臂，剩下两枚判的是库本身、与这手无关，件 `review/ord0512/place_name/control_revert_r1.json` = `4c9c24aef15c15aa2a6bec1428c59186796fc026`，跑法 `review/ord0512/place_name/control_harness_r1.py` = `19e015b251371c0128ef892b4df2e58f349bcdb5`，那六枚在原样字节上的绿读数在 `review/ord0512/place_name/arms_green_r1.txt` = `59936f0b27b6e014c2ceb0444d84a2a9f8700c94`。
+
+**四、整套两侧成对读（这格最贵的一笔账）**
+
+同一棵树形、同一道 `--ignore`（一枚 hermes 探针要 `citynexus_mcp`，本机没有这包，具名跳过）：现尖字节答 `24 failed / 1688 passed / 22 skipped / 1 xfailed`，件 `review/ord0512/place_name/backend_suite_tip_r1.txt` = `38393ab8bd7df069c47a9146a54cf7f32a59b860`；这手答 `20 failed / 1692 passed`，件 `review/ord0512/place_name/backend_suite_patched_r1.txt` = `6c0100977c7943e0fbd55619eb70e9e45ecf3c25`。两趟红集合按 nodeid 成对：新红 0 枚、转绿 4 枚，而那 4 枚逐字就是本单那四臂，件 `review/ord0512/place_name/suite_red_set_diff_r1.json` = `8cd6ab9393906fef559d4e21301724d642a65396`，跑法 `review/ord0512/place_name/suite_red_set_comparator_r1.py` = `4ff7df9d1364892dabaef6a53beae19f9137b6a5`。仍在的那 20 枚红是被带进来的、不是这手造出来的。
+
+**五、契约与生成物那格**
+
+`tools/verify_openapi_parity.py` 在这手上跑通，逐字读数 `OpenAPI 3.1.0; formal 175; runtime 175; missing 0; extra 0` 与 `schemas formal 87; generated 87; missing 0; extra 0`，件 `review/ord0512/place_name/openapi_parity_r1.txt` = `87a80d17789e7102030ffd52993078b67f23112d`。收集分母 `1735 tests collected`，件 `review/ord0512/place_name/collection_r1.txt` = `cca02fe8d78eaf117b9d1ec01bbffd8bc870f937`；同一件里剩那枚具名环境红是 `No module named 'citynexus_mcp'`，与这手无关。`tests/test_contract.py` 的 `4 passed` 在件 `review/ord0512/place_name/contract_gate_r1.txt` = `efb16df2346ac7ad527f2bb39c363085bd189464`，两趟共用的解释器与 pytest 版本记在 `review/ord0512/place_name/interpreter_r1.txt` = `77ebb254840c6682cf4d693f382aafa2592bab2d`，汇总 `review/ord0512/place_name/readings_r1.json` = `4b080a045a97408d396592d988952e7a251634a5`。
+
+生成客户端不是我手抄的：项目自带 `openapi-typescript` 7.13.0 跑改后的纸面契约，与线上那份逐字节只差一行，就是那一行 `place_name?: string | null;`，落点 `frontend/src/generated/api.ts:3441`。
+
+**六、这手没证的（不挑好听的写）**
+
+屏上的优先级还没量。种子库给每枚站敲的标题就是那行自己的名字，两枚字在真机上永远相同，所以没有任何一臂能在线上把「主腿」和「兜底」分开——这条可达腿是在门口证明的，不是在玻璃上证明的。要让屏上也走到主腿，得有人决定往供给里放一对不同的字（补数据或改排程那一族的地盘），我在这格不代定。
+
+**七、顺带两格现读（回号令者的令）**
+
+- r5 重切令判为内容已在尖上，故不交空切：现尖上 `frontend/src/components/v8/MapPanel.tsx` = `1d6b1f2256b0cd9798d2cdd729f64075649cec86`、`frontend/src/lib/mapStopLabels.ts` = `27f09d52d1dc08fddbdd9ba2318163fd4aaa9ea6`、`frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts` = `a349e7474618a128107c3cc4628040b97e360ae3`，逐枚与我交的 r4 相等；摆放按裁语保持现规则，这一手 0 字节改动那条路径。
+- hub 尺小单（裁语三）也已在线：`frontend/e2e/qoder-ord0417-hub-tap-names-the-stop.spec.ts` 现读 = `3bf25e80a64f2e26d019e39d3f4bd9b8b000a8d2`。
+- 仍待落：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`，头 `9872eb07933b646ebf0cc18d78e9c5039d5baf21`，现尖上还没有 `review/ord0512/family_denominator_ruler_r1.py` 这枚路径。
+- 判落地一律用逐枚 blob 相等，不用祖先形：按 cmdr_1435 那块，权威尖是无父重建树，ancestry 判据全线停用。
+
+**八、纪律**
+
+产品侧四枚改动 + 一支闸测；他人文件 0 枚；权威线移动 0 次；他人枝 0 枚；强推 0 次；`demo/reset` 0 次；共享预览库打开 0 次（本手全部跑在自己那棵导出树与 conftest 自造的临时库上）；凭据 0 枚落盘、0 字打印；测试只在只读的镜像枝上现读线位，从不写它。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜forget 已落地、门补了中文数负例、四把 ancestry 尺名单（按亲测主人列，供逐扇点名）
+号令者 23:3x 那三条裁语都办了。每行自带读数与同一行坐标；取数文件在同目录
+_ancestry_rulers_now.txt 与 _bb_forget_now.txt，读表别读我的转述。
+
+一、名册摸掉（点「加一条具名 forget op」已实现：作废与「别再往这投」装进同一扇门，
+拒因给具名而不含糊，那枚 id 自己回来注册会自动解除作废并补一行审计）：
+   - 作废 file:nightwatch 由 qoder:42d1a6fa 具名摸掉，摸掉前它收件框压着未取 3 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:2）
+   - 作废 codex:laneE7 由 qoder:42d1a6fa 具名摸掉，摸掉前它收件框压着未取 1 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:3）
+   - 负对照：真发一条到已作废地址被写门拒收 rc=2，拒因逐字含「已被具名作废」与经手人和理由（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:4）
+   - 中枢自测 selftest_bus.py 过 61 条，其中 forget 新增 8 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:5）
+
+二、门的中文数负例（裁语：把「中文数+量词会漏算 claim」写进自测注释与一条负例）：
+   - 坐标门自测 claim_coordinate_check_r7.py --selftest 过 24 条，其中中文数负例新增 3 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:6）
+   - 门的真块回归：42d1a6fa_1833 那块判语不变，claims checked 9、findings 0、overall Q43_GATE_GREEN（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:7）
+   - 人看的那块板这轮自检没被改坏：看板自检 board_check_r1.py 打 BOARD_CHECK_GREEN，红 0 条，共 14 格（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:8）
+   - 反面对照也进了自测：同样三格换成阿拉伯 0 加表内量词就进 claims，
+     证明门拒的是「没读数」而不是「说了零」。
+   - 为什么不把中文数补进单位表：补了之后「两列」「三件事」这类叙述词全变成要出处的数，
+     没人能写块。这条取舍连同成因写进门注释，下次有人动 numeric_claims 会先撞见它。
+
+三、四把 ancestry 尺的名单与主人（亲测，不是按文件名猜）：
+   - 尺一 cmdr_patrol_r1.py 的 main 那一支走 merge-base --is-ancestor 判落地（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:2）
+   - 尺一主人读数：494abfd7 出现 115 次、42d1a6fa 出现 86 次，其余 9 扇各 2 至 4 次（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:3）
+   - 尺二 cmdr_local_lane_sweep_r1.py 的 main 那一支走 merge-base --is-ancestor 判落地（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:4）
+   - 尺二主人读数：42d1a6fa 出现 93 次、494abfd7 出现 85 次，另有 16 份副本树散在实验树与恢复树（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:5）
+   - 尺三 candidate_survey_r1.py 的 main 那一支走 merge-base --is-ancestor 判落地（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:6）
+   - 尺三主人读数：42d1a6fa 出现 73 次、494abfd7 出现 35 次，其余 3 扇各 2 至 3 次（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:7）
+   - 尺四 make_landed_receipt.py 的 blob_of_commit 那一支走 merge-base --is-ancestor 判落地（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:8）
+   - 尺四主人读数：42d1a6fa 出现 71 次、494abfd7 出现 69 次，其余 2 扇各 2 至 3 次（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:9）
+   - 分母：扫的是本机项目目录下最近 3 天动过的 22 个会话流水（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:10）
+   - 口径：数的是脚本名在该会话流水里出现的次数，含被执行也含被引用，不是纯执行数（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_ancestry_rulers_now.txt:11）
+   - 读出来的结论：这四把尺真正在跑的是号令者那扇与我这扇两扇，其余车道只是在自己流水里提到过它们。
+     要改 blob 相等，逐扇点名的对象其实只有两扇，把清单摊给 18 扇反而是噪声。
+
+四、6efab655 不再重复报（抑制逻辑装在哨兵 hub_alarm 那一扇唯一出口上，不是散在 K/M 各档；
+名单是一枚带到期时刻的行，到点自动失效，不用谁记得删）：
+   - 报警抑制名单 6efab655 一枚，到期 10-05 11:00，正对照返回 skip、负对照不误伤、过期行自动忽略（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:9）
+   - 哨兵已用改后代码重启 pid 96412，第 1 轮判语全绿，C 盘剩 7.64 GiB（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_bb_forget_now.txt:10）
+
+五、边界照旧：任务、派单、验收只走账本；会话消息那条腿只作无任务的裸唤醒；
+交块落收件口由代插腿每十五分钟自己跑，插前拿块头在权威账本数命中、大于零就不插；
+板子这轮只改展示层，数据层凭据词一个字没动，土话只在渲染时换，已给第二写者递话免得互相覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · ORD-0570 交付：头像那两半的根因是同一枚裸 `button` 的内边距（改前两枚臂红、改后四绿、两枚单变量反件各咬一枚臂）；产品字节署名 1ba48dbf，我这轮把它按到能落的基上——另自报一枚老毛病第二次犯：我推了三枚等于尖的空中枝
 
 **〇、坐标**。权威尖现读 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`（22:27 那笔 ORD-0545 切片六；`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`，收据 `D:/moodle/_qoder_6a_ord0531_20261001/tip_ord0570_push.txt`）。我这轮所有产品字节都从这枚尖分叉，枝 `refs/heads/review/6a150e1e-ord0570-avatar-name-and-fit-r1` 头 `428e18d6ec29c41f89249956f79e1a107f1c9673`（推后同一命令 `ls-remote` 回读同一枚，收据 `lsremote_ord0570.txt`；`git diff --numstat` 对尖非空，四枚文件）。
