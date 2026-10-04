@@ -88,6 +88,33 @@ async function pickHittablePin(page: Page) {
 }
 
 /**
+ * A pin to tap, plus the honesty note about what tapping it can prove.
+ *
+ * `pickHittablePin` demands a pin that answers a hit-test at its own centre. At 320x653 the hub's whole
+ * journey is fitted into a dot: nine markers share roughly one pixel, so the topmost one takes every tap
+ * and no marker can answer for itself. Refusing there reported a product red for the wrong reason -- the
+ * camera is degenerate, not the linkage. This picker takes the marker that is actually under the finger,
+ * measures how far apart the pins really are, and says which claim the shape cannot carry.
+ */
+async function pickPinForCamera(page: Page) {
+  const census = await markerCensus(page);
+  const selfLanding = census.pins.filter((pin) => pin.lands_on_pin);
+  const onMarker = census.pins.filter((pin) => pin.lands_on_marker);
+  const xs = census.pins.map((pin) => pin.centre[0]);
+  const ys = census.pins.map((pin) => pin.centre[1]);
+  const spread = census.pins.length
+    ? { x: Math.max(...xs) - Math.min(...xs), y: Math.max(...ys) - Math.min(...ys) }
+    : null;
+  return {
+    census,
+    target: selfLanding[0] ?? onMarker[0] ?? null,
+    attributable_to_one_stop: selfLanding.length > 0,
+    pins_answerable: onMarker.length,
+    pin_spread_px: spread,
+  };
+}
+
+/**
  * The markers, as a traveller's finger meets them: painted number, the name hidden in `aria-label`,
  * the real centre, whether a hit at that centre lands on the pin, and where the pin sits against the
  * bottom overlay band.
@@ -123,6 +150,19 @@ async function markerCensus(page: Page) {
           centre: [cx, cy] as [number, number],
           box: [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)],
           lands_on_pin: !!top && (top === el || el.contains(top)),
+          /* Whether the tap lands on *any* marker. At 320x653 the whole journey fits into a dot and the
+             nine pins share one pixel, so only the topmost one can answer for itself -- which is a fact
+             about the camera, and the difference between "this arm cannot attribute a tap to a stop" and
+             "the hub has no tappable pin". */
+          lands_on_marker: !!top && !!top.closest(".v9-map-marker"),
+          /* When a pin is covered, say by what. Without this the reading can only report "no pin is
+             tappable", which reads like a broken hub even when it is a notice sitting on top of it. */
+          covered_by: !top || (top === el || el.contains(top))
+            ? null
+            : [top.tagName.toLowerCase(),
+               (top as HTMLElement).dataset?.testid ?? "",
+               ((top as HTMLElement).className ?? "").toString().trim().split(/\s+/).slice(0, 2).join(".")]
+              .filter((part) => part !== "").join("#"),
           covered_px2_by_band: Math.round(overlap),
         };
       }),
@@ -346,6 +386,26 @@ for (const arm of ARMS) {
   });
 }
 
+/**
+ * Put the map where a traveller looking at the hub would have it, and report how far the page moved.
+ *
+ * The hub is a tall screen: at 320x653 the map sits entirely below the fold, so a census taken without
+ * this step measures controls that nobody on that phone can reach at all, and the pin pick finds nothing
+ * that answers a hit-test at its own centre -- the arm then aborts before judging anything. Scrolling the
+ * surface into view is what the standing reachability ruling asks for (hit-test in every shape), and it
+ * is also the only way the same two shapes can be compared with each other.
+ */
+async function bringMapIntoView(page: Page): Promise<number> {
+  const moved = await page.evaluate(() => {
+    const el = document.querySelector<HTMLElement>(".v8-maplibre-canvas");
+    if (!el) return -1;
+    el.scrollIntoView({ block: "center" });
+    return Math.round(window.scrollY);
+  });
+  await page.waitForTimeout(900);
+  return moved;
+}
+
 for (const [w, h] of SHAPES) {
   for (const arm of ARMS) {
     test(`hub-geometry-${w}x${h}-${arm.locale} — the linkage costs the hub no reachable control`, async ({
@@ -353,21 +413,29 @@ for (const [w, h] of SHAPES) {
     }) => {
       await page.setViewportSize({ width: w, height: h });
       await enterHub(page, arm);
+      const scrolledIdle = await bringMapIntoView(page);
       const idleControls = await controlCensus(page);
-      const { census: idlePins, target } = await pickHittablePin(page);
-      expect(target, node("H5", `${w}x${h}/${arm.locale}: no hittable hub pin to tap at this shape`)).not.toBeNull();
+      const { census: idlePins, target, attributable_to_one_stop: attributable, pins_answerable: answerable, pin_spread_px: spread } = await pickPinForCamera(page);
+      expect(target, node("H5", `${w}x${h}/${arm.locale}: no hub marker answers a hit at any pin's centre: ${JSON.stringify(idlePins.pins.map((pin) => [pin.painted, pin.centre, pin.lands_on_marker, pin.covered_by]))}`)).not.toBeNull();
       await page.mouse.click(target!.centre[0], target!.centre[1]);
       await page.waitForTimeout(1_800);
       const glass = await readGlassName(page);
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await page.waitForTimeout(900);
+      /* Back into view, not to the top of the document: the first version of this arm scrolled to zero
+         and then censused, which compared an idle screen with the map scrolled off it and reported the
+         difference as a lost control. */
+      const scrolledLive = await bringMapIntoView(page);
       const liveControls = await controlCensus(page);
+      const livePins = await markerCensus(page);
       const liveBand = await page.evaluate(() => {
         const b = document.querySelector<HTMLElement>(".v8-map-overlay-stack")?.getBoundingClientRect();
         return b ? [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)] : null;
       });
+      /* Reachable means what the standing ruling says it means: the control answers a hit-test at its own
+         centre and that centre is inside the viewport. `HIT_FLOOR` used to be a predicate here; it is a
+         number this lane invented, and a control below it is still tappable, so it is recorded and not
+         judged. */
       const reachable = (list: typeof idleControls) =>
-        list.filter((c) => c.hit_test && c.centre_above_floor && c.in_viewport).map((c) => c.key);
+        list.filter((c) => c.hit_test && c.in_viewport).map((c) => c.key);
       const beforeReachable = reachable(idleControls);
       const afterReachable = new Set(reachable(liveControls));
       const lost = beforeReachable.filter((k) => !afterReachable.has(k));
@@ -382,6 +450,12 @@ for (const [w, h] of SHAPES) {
           box: [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)],
           scroll_w: el.scrollWidth,
           client_w: el.clientWidth,
+          /* Whether the word is on the part of the screen a traveller can look at. The three checks this
+             arm already makes -- painted, inside its caption, not clipped by its own box -- can all be
+             true while the cell sits below the fold, which is how the first version of this arm stayed
+             green while the name was off the screen. */
+          in_viewport: r.top >= 0 && r.bottom <= window.innerHeight,
+          inner_height: window.innerHeight,
           outside_caption: host ? r.right > host.right + 1 || r.bottom > host.bottom + 1 : null,
         };
       });
@@ -389,6 +463,8 @@ for (const [w, h] of SHAPES) {
       await page.screenshot({ path: shot });
       push(`hub-geometry-${w}x${h}-${arm.locale}`, {
         viewport: [w, h],
+        scrolled_to_idle_px: scrolledIdle,
+        scrolled_to_live_px: scrolledLive,
         hit_floor_px: HIT_FLOOR,
         safety_gap_px: SAFETY_GAP_PX,
         controls_idle: idleControls.length,
@@ -396,6 +472,29 @@ for (const [w, h] of SHAPES) {
         reachable_idle: beforeReachable.length,
         reachable_with_selection: afterReachable.size,
         lost,
+        /* Where each lost control actually went. A key alone cannot tell "it moved" from "it vanished",
+           and the first version of this arm could only say the key had gone -- which is why the reading
+           it produced could not be argued with. */
+        lost_detail: lost.map((key) => {
+          const was = idleControls.find((c) => c.key === key);
+          const now = liveControls.find((c) => c.key === key);
+          return {
+            key,
+            idle: was ? { centre: was.centre, hit: was.hit_test, in_viewport: was.in_viewport, above_floor: was.centre_above_floor } : null,
+            live: now ? { centre: now.centre, hit: now.hit_test, in_viewport: now.in_viewport, above_floor: now.centre_above_floor } : "gone from the document",
+          };
+        }),
+        pins_idle: idlePins.pins.map((pin) => [pin.painted, pin.centre, pin.lands_on_pin, pin.covered_by]),
+        pins_with_selection: livePins.pins.map((pin) => [pin.painted, pin.centre, pin.lands_on_pin, pin.covered_by]),
+        /* Named rather than hidden: at the short shape the whole journey is fitted into one dot, so the
+           tap reaches a marker but cannot be said to belong to one stop. The geometry claims below still
+           hold -- they are about the glass, not about which stop was chosen -- and this says which claim
+           the shape cannot carry. */
+        pin_spread_px: spread,
+        pins_answerable: answerable,
+        attribution_claim: attributable
+          ? "measured"
+          : "NOT_MEASURED: the camera puts every pin on the same pixel, so a tap cannot be attributed to one stop",
         band_box_idle: idlePins.band_box,
         band_box_with_selection: liveBand,
         band_growth_px: bandGrowth,
@@ -417,6 +516,10 @@ for (const [w, h] of SHAPES) {
         node("H5", `${w}x${h}/${arm.locale}: the linkage must not add a control — ${idleControls.length} -> ${liveControls.length}`),
       ).toBe(idleControls.length);
       expect(clip, node("H5", `${w}x${h}/${arm.locale}: the naming cell vanished from the hub`)).not.toBeNull();
+      expect(
+        clip!.in_viewport,
+        node("H6", `${w}x${h}/${arm.locale}: the name is painted but not on the visible part of the screen: ${JSON.stringify(clip)}`),
+      ).toBe(true);
       expect(
         clip!.outside_caption,
         node("H5", `${w}x${h}/${arm.locale}: the name is painted outside its caption box: ${JSON.stringify(clip)}`),
