@@ -1,0 +1,20 @@
+# importers of V12StatePrimitives (grep -rln, run at 14:29:11 on HEAD 0413e55634e9c6953ea88a4b01a17b8afd7ac88a)
+frontend/src/features/studio/V12TripStudioPanel.tsx
+frontend/src/stories/V12StatePrimitives.stories.tsx
+
+# the one product importer, line 9:
+frontend/src/features/studio/V12TripStudioPanel.tsx:9:import { ImpactPreview } from "../execution/V12StatePrimitives";
+
+# symbols it imports:
+frontend/src/features/studio/V12TripStudioPanel.tsx:9:import { ImpactPreview } from "../execution/V12StatePrimitives";
+frontend/src/features/studio/V12TripStudioPanel.tsx:149:          <ImpactPreview
+
+# sites that paint a status through the replaceAll fallback (V12StatePrimitives.tsx:16-20):
+frontend/src/features/execution/V12StatePrimitives.tsx:16:function stateLabel(state: string | undefined, t: (key: string) => string): string {
+frontend/src/features/execution/V12StatePrimitives.tsx:24:  return <article className="v12-activity-row"><span className="v12-activity-index">{state === "COMPLETED" ? <Check size={14} /> : "•"}</span><span className="v12-activity-title">{title}</span><span className="v12-activity-status">{stateLabel(state, t)}{locked && <LockKeyhole size={12} />}</span></article>;
+frontend/src/features/execution/V12StatePrimitives.tsx:63:  return <div className="v12-live-journey"><span className="v8-kicker">{t("exec.liveJourneyPrefix")} {stateLabel(state, t)}</span><strong>{now}</strong><small>{t("exec.nextPrefix")} {next}</small></div>;
+
+# e2e assertions pinning the pre-r2 button names:
+frontend/e2e/v13-authoritative-integrity.spec.ts:37:  await expect(page.getByRole("button", { name: "Mark EN ROUTE" })).toBeVisible();
+frontend/e2e/v13-authoritative-integrity.spec.ts:38:  await page.getByRole("button", { name: "Mark EN ROUTE" }).click();
+frontend/e2e/v13-authoritative-integrity.spec.ts:39:  await expect(page.getByRole("button", { name: "Mark ARRIVED" })).toBeVisible();
