@@ -16588,6 +16588,76 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 交 ORD-0564 · 全量扫完（16 个 copy 文件、扁平键 2468 枚、`en:` 行 110 枚）：命中 3 条（2 枚活键、1 枚死键），本手改掉活键里的第一枚、另两枚具名不动；产品枝一笔两枚文件，改前改后用同一把探针各读一遍屏（证据枝 `7890adbc62e653c07dd1dfc6ae2c3a7562aec168`）
+
+**〇、题面与三格收窄**
+
+- 你 03:56 开单（`collectionCopy.ts` 英文句里嵌「城市探索」），随后两次追加：① 给了全量清单要求（另挂一把只读尺、只扫主字典）；② 亲测 Footprints 屏后把 `checkin.empty` 改判为**零读者死键**，处置给甲/乙两案并倾向乙。账本整份现读（91332 行）里带 `ORD-0564` 字样的行 0 枚 ⇒ **这三条都在转述里、没落账本**，我按最后那一版做：**修活的那一枚、死键走乙（留值 + 键旁具名）、其余同形只报不动**。
+- 扫描基准尖 `868958e7e11472faa0fc84c2218304c36d1885b0`（改前那趟现读）；产品枝尖 `59bf4dd3f00e6162c05d2d865b20909461bf860d`（回读逐字相等）；打包这趟现读产品线尖 `89213c447190c853de998e2d78e4b6d5f63847f9`。
+
+**一、全量扫描（分母先给，命中后给）**
+
+- 覆盖面：`frontend/src` 下 `*Copy.ts` 与主字典 `LocaleContext.tsx` 共 16 枚文件；扁平字典键 2468 枚、成对 copy 的 `en:` 行 110 枚（`zh:` 行 110 枚，按判据不计）。
+- 判据沿用你那把（值含汉字、含 ≥2 个拉丁词、不以「。」收尾），但**不靠"第一次出现=英文侧"的顺序假设**：`*Copy.ts` 是 `{ zh, en }` 成对写，我直接取字面上的 `en`。
+- 命中 3 条，逐枚现读读者数分死活（件 `review/ord0564-cjk-in-en/scan_before_r2b.json` = `d61362951397de56564e584b49b7c0378a2ca350`）：
+  1. **活键** `frontend/src/features/collections/collectionCopy.ts:37` 的 `COLLECTION_COPY.empty`：`Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land.` —— 你屏读到的那枚，本手改掉；
+  2. **活键** `frontend/src/features/poiimport/poiImportCopy.ts:119` 的 `COPY.storeOnlyRefusal`：`This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting it on a shelf is the exit above. No fourth word is invented here, so this one refuses by state and writes nothing.` —— 汉字是「加进计划」，渲染点 `frontend/src/features/poiimport/PoiImportPanel.tsx`（`616:                {poiImportCopy(locale, "storeOnlyRefusal`），键在定义文件之外被 3 处引用；
+  3. **死键** `frontend/src/i18n/LocaleContext.tsx:59` 的 `checkin.empty`：整仓（除 `review/` 里别人一枚证据件）读者数 0，屏上真句在 `features/checkin/footprintCopy` 的英文侧 —— 与你亲测同向。
+
+**二、改的字节（一笔、两枚文件，产品枝）**
+
+- `refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r1` = `59bf4dd3f00e6162c05d2d865b20909461bf860d`（`git ls-remote` 现读逐字相等）。`git diff --name-only` 恰好两枚：`frontend/src/features/collections/collectionCopy.ts`、`frontend/src/i18n/LocaleContext.tsx`。
+- `frontend/src/features/collections/collectionCopy.ts`：英文侧那一行换成 `Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.`（措辞取产品在同一臂里对那屏的称呼 `City Discovery`，不是我另造的词）。
+- `frontend/src/i18n/LocaleContext.tsx`：**只加注释、值一字未动**（`git diff --unified=0` 里那枚文件没有删除行），注释具名三件事：这枚键零读者（实测）、屏上真句在哪枚模块的英文侧、以及为什么留着（将来谁把它接回屏上，就会把机词接上屏）。**注释里不写行号** —— 按你 10-04 那条裁定（锚形用名字/标签）。
+- 编译与产物：`tsc -p tsconfig.check.json --noEmit` rc=0；`vite build` rc=0、25.7 s；入口资产由 `index-CuMOkEqV.js` 变成 `index-DCnaKrB5.js`（1620657 B）——名字变了 ⇒ 产物确实带着我改的那一行。
+- 产物字节反件（件 `review/ord0564-cjk-in-en/build_r1.json` = `e83a6d6e1b7c332badd5f69418c80061c657f1fc`）：旧形「`… in 城市探索 above`」在 bundle 里 0 命中；新形「`… in City Discovery above`」在场；中文臂那句仍在场（没被我顺手改坏）。
+
+**三、A/B 两腿：同一把探针、两侧都真产出了读数**
+
+- 改前（未改的那台 :4783，英文臂，件 `review/ord0564-cjk-in-en/screen_before_on_4783.json` = `dd18d93fa806a03d6668ec05ea50c1b99973a41c`）：屏上逐字读到 `Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land.`，整屏含汉字的行（除语言开关）1 枚。
+- 改后（我改的那一代字节 + 私有栈，英文臂，件 `review/ord0564-cjk-in-en/walk_after_r3.json` = `04691bfc7ef9c6bb7f4bc6f65f90d3ece74e40e1`）：屏上逐字读到 `Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.`，整屏含汉字的行（除语言开关）0 枚。
+- 中文臂两侧同值：空态标题仍是「我的收藏」，那句中文 copy 未变（`zh_sentence_keeps_the_chinese_copy` 为真）。
+- 代次钉法：入口资产「被服务字节 == 磁盘字节 == 改后构建记录字节」逐字等（两枚都真）；`frontend/src/features/collections/collectionCopy.ts` 在枝上的 blob 与本机工作树 `git hash-object --no-filters` 逐字等 ⇒ 屏读那一代与枝上那一代是同一枚字节。
+- 形制：Chromium、390 px 宽视口、`serviceWorkers=block`（离线壳会盖掉磁盘上那代字节）；语言用 `localStorage["citynexus.locale"]` 钉（`en` / `zh-CN`），当场回读 `document.documentElement.lang` 与 `location.href` 确认没被弹回 Today。
+
+**四、那一行「中文」为什么不算缺陷（点名，不抹）**
+
+改后英文臂整屏含汉字的行还剩 1 枚，而**除语言开关外是 0 枚** —— 那唯一一枚就是开关自己：顶栏那枚 `aria-label="Switch language"` 的按钮按它自己的字面渲染（英文臂显示「中文」、中文臂显示「EN」），框量 x=266 px、y=17 px、宽 63 px、高 44 px（件 `review/ord0564-cjk-in-en/walk_after_r3.json` = `04691bfc7ef9c6bb7f4bc6f65f90d3ece74e40e1`）。这是语言名的常规写法，不是"英文句里嵌中文"。我这把尺第一版把它算进缺陷、把自己的反件判红了 ⇒ 现在把开关单独量出来、报两个数（全部 / 除开关），不靠事后手删那一行。
+
+**五、剩下两枚（具名，本手没动）**
+
+- `frontend/src/features/poiimport/poiImportCopy.ts:119` 的 `COPY.storeOnlyRefusal`：**同形、且是活键**（英文句里嵌「加进计划」）。没改的两个理由：POI 那一族的地盘我不伸手（常设约束）；那枚键还被别人的 e2e 逐字读（`frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts` 里把它的文本读进表）。要我一并改，说一句我就照第二节同一形制做枝（改法就是把那句里的中文换成英文称呼，反件同）。
+- `frontend/src/i18n/LocaleContext.tsx:59` 的 `checkin.empty`：按你倾向的**乙**办了（留值 + 键旁具名）。若你想改判甲（删两行），我这把尺给得起那个前提：整仓非 `review/` 命中数 0（含 `tests/`、`scripts/`、`agent-mcp/`）—— 但注意本仓没有 `e2e/` 目录，端到端在 `frontend/e2e/`，我那把尺一开始按 `e2e` 当路径去 grep 是抓不到的，现在的读者数是**全仓**测的。
+
+**六、我这把尺作废过的三处（留名，不粉）**
+
+1. 第一版把键形认成 `key: "…"`，而现尖两种形制都不是它（主字典是带引号的点号键、copy 文件是 `{ zh, en }` 成对），于是报出 **0 命中**——那是尺空转。分母一起留着：16 枚文件、2468 枚键全按错的形去过（件 `review/ord0564-cjk-in-en/scan_before_r2b.json` = `d61362951397de56564e584b49b7c0378a2ca350` 同名 `ruler_scan_r1_wrong_key_shape.json`，脚本 `ruler_scan_r1_wrong_key_shape.py.txt`）。
+2. 第一版探针跑完不关浏览器，node 不退出，被我那台驱动的 420 秒超时咬住——我差点把"产品卡住"写进块里；实际是我的仪器（件 `driver_walk_r2_timeout_kept.py.txt`、`probe_r1_no_browser_close_kept.cjs.txt` 原样留枝上）。
+3. 第一版判据把语言开关那行汉字算成缺陷，于是把自己的反件判红（"en 臂整屏还有带汉字的行"）。修法见第四节：把开关单独量出来，报两个数。
+
+**七、坐标与账**
+
+- 产品枝 `refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r1` = `59bf4dd3f00e6162c05d2d865b20909461bf860d`；证据枝 `refs/heads/review/1ba48dbf-ord0564-evidence-r1` = `7890adbc62e653c07dd1dfc6ae2c3a7562aec168`（`git ls-remote` 现读逐字相等；15 枚件，逐枚可 `git cat-file -t`）：
+  - `review/ord0564-cjk-in-en/build_r1.json` = `e83a6d6e1b7c332badd5f69418c80061c657f1fc`
+  - `review/ord0564-cjk-in-en/driver_build_r1.py.txt` = `92700fb9c48957272480ade94f2a1d6425fa7e5b`
+  - `review/ord0564-cjk-in-en/driver_walk_r2_timeout_kept.py.txt` = `93d4fe020116be0ff4a72f6c4fa4ed7f9d3ac8e1`
+  - `review/ord0564-cjk-in-en/driver_walk_r3.py.txt` = `8d15243468ffc4bbccf5f65726c753370bec6766`
+  - `review/ord0564-cjk-in-en/probe_r1_no_browser_close_kept.cjs.txt` = `6ed4cb426a90ea584f4e704512946499e360b95c`
+  - `review/ord0564-cjk-in-en/probe_r2.cjs.txt` = `a1252a81d8fade42c2598c2ad6d37f5c6ca25332`
+  - `review/ord0564-cjk-in-en/ruler_scan_r1_wrong_key_shape.json` = `6f1b82a006a99765d0718252ada2db9318ef95a0`
+  - `review/ord0564-cjk-in-en/ruler_scan_r1_wrong_key_shape.py.txt` = `0bac0a30f9ab1cea39f65fd12c2bd55c58eb2aad`
+  - `review/ord0564-cjk-in-en/ruler_scan_r2.py.txt` = `73ce90f9947fbe5d8285f7c52fbe9348b680c045`
+  - `review/ord0564-cjk-in-en/scan_after_r1.json` = `b58fe77cf5ba32b7908eb3130fdc61b8c7e12070`
+  - `review/ord0564-cjk-in-en/scan_before_r2b.json` = `d61362951397de56564e584b49b7c0378a2ca350`
+  - `review/ord0564-cjk-in-en/screen_before_en.png` = `7d2893d74aa2c146332f676e53db3d9ddbb5bc4c`
+  - `review/ord0564-cjk-in-en/screen_before_on_4783.json` = `dd18d93fa806a03d6668ec05ea50c1b99973a41c`
+  - `review/ord0564-cjk-in-en/screen_before_zh.png` = `86abb86634a08f75de98bf18b20e5a19d7dd6091`
+  - `review/ord0564-cjk-in-en/walk_after_r3.json` = `04691bfc7ef9c6bb7f4bc6f65f90d3ece74e40e1`
+- 本手账：产品字节改动 2 枚文件（6 行增、1 行删，全在那两枚 copy/字典文件里）、他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、他人进程被动 0 次、`demo/reset` 0 次、共享预览库打开 0 次、密钥落盘 0 枚。`:4783` 那台只**读**了屏（GET 与渲染文字），没重启、没写库、没点任何写侧控件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0557 交回（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：镜像取法做成仓库内可导入模块 `tools/cnx_ledger_mirror_reader_r1.py`（blob `dd939945f560632fea20186a57929d2edc1ab6ad`），三趟自证全等、三枚反件全拒；你点名不许动的那枚门文件我一枚字节没动
 
 **一、接口（你接线只要这几句）**：`sys.path.insert(0, 仓库根)` 之后 `from tools.cnx_ledger_mirror_reader_r1 import read_remote_ledger, IncompleteRemoteRead`——`tools/` 里没有 `__init__.py`，py3 的命名空间包解析得动；这一形制是从本机 work 目录当外部 cwd 实测过的，读数件 blob `a8f2c3ded6a29e9a1ccfe8e9894f55ebeba6a914`（键 `import_probe`，回话 `IMPORT_OK`）。默认参数：`ref="commander/control"`、`path="CITYNEXUS_AGENT_CONTROL.md"`、`repo_dir=` 本模块所在仓库根、`token_file=` 读环境变量 `CITYNEXUS_API_TOKEN_FILE`（我不写死凭据值）。返回 dict 的键：`blob_id`、`bytes`、`git_blob_sha1`、`hash_equal`、`size_equal`、`channels_agree`、`api_blob_id`、`api_size`、`branch_tip_commit`、`text`、`fetch_self_heal`；坏形一律抛 `IncompleteRemoteRead(leg, detail)`（声明在 `tools/cnx_ledger_mirror_reader_r1.py:75`），`leg` ∈ `git_transport` / `hash_gate` / `size_gate` / `api_channel` / `channel_agreement`。**绝不回半份正文。**
