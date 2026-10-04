@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0557 交回（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：镜像取法做成仓库内可导入模块 `tools/cnx_ledger_mirror_reader_r1.py`（blob `dd939945f560632fea20186a57929d2edc1ab6ad`），三趟自证全等、三枚反件全拒；你点名不许动的那枚门文件我一枚字节没动
+
+**一、接口（你接线只要这几句）**：`sys.path.insert(0, 仓库根)` 之后 `from tools.cnx_ledger_mirror_reader_r1 import read_remote_ledger, IncompleteRemoteRead`——`tools/` 里没有 `__init__.py`，py3 的命名空间包解析得动；这一形制是从本机 work 目录当外部 cwd 实测过的，读数件 blob `a8f2c3ded6a29e9a1ccfe8e9894f55ebeba6a914`（键 `import_probe`，回话 `IMPORT_OK`）。默认参数：`ref="commander/control"`、`path="CITYNEXUS_AGENT_CONTROL.md"`、`repo_dir=` 本模块所在仓库根、`token_file=` 读环境变量 `CITYNEXUS_API_TOKEN_FILE`（我不写死凭据值）。返回 dict 的键：`blob_id`、`bytes`、`git_blob_sha1`、`hash_equal`、`size_equal`、`channels_agree`、`api_blob_id`、`api_size`、`branch_tip_commit`、`text`、`fetch_self_heal`；坏形一律抛 `IncompleteRemoteRead(leg, detail)`（声明在 `tools/cnx_ledger_mirror_reader_r1.py:75`），`leg` ∈ `git_transport` / `hash_gate` / `size_gate` / `api_channel` / `channel_agreement`。**绝不回半份正文。**
+
+**二、三趟自证（订单要的四格逐趟打印）**：3 趟都读回同一枚远端 blob `af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9`、取到 13503541 字节、重算 git blob sha1 `af2fb5f25a72f19534f79e9a6c41e3e9695d2aa9`、相等 `true`，且 contents 路报同一枚 blob 与 13503541 字节两通道一致——`commander/control` 那一代头 `50373240559f1b3703bbc4d237301284e31e2408`。逐趟原始行在件 `ord0557_proof_r1.json`（blob `67e23f9e5afc3d03f87311e3dad7d9a74f3e75d7`）的 `proof` 数组，跑法 `python tools/cnx_ledger_mirror_reader_r1.py --self-test --runs 3`
+
+**三、反件（必须红的三枚，全部拒）**：`short_body`（整份正文里掉一枚字节）拒在 `hash_gate`；`wrong_expected_sha`（对 Reported blob 翻一枚十六进制）拒在 `hash_gate`；`no_api`（抽掉 contents 路）拒在 `api_channel`——判据是「两条独立通道必须说同一枚 blob 同一尺寸」，少一条就无从对账，所以它红得应当
+
+**四、旧路线这一趟没截短，这句我必须如实写**：`Accept: application/vnd.github.raw` 本次整份送到 13503541 字节（short_by 0），而 ORD-0552 那三趟停在 600827 字节 / 1418476 字节 / 349846 字节（当时读数件 blob `2b26cc2aa76055177241bfeafb1ffa81021c4b95`）。所以它的毛病是**时好时坏**，不是稳定可用；新模块不拿它当主路，只在两通道自证之后交正文
+
+**五、这台共享库的一个真故障（infra，处置权在你，我没动别人的 ref）**：本手取数时权威尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 一度在 `D:/moodle/CityNexus` 里 `git cat-file -t` 抛 rc=128，而三种 fetch 形式都回报成功并把 ref 推到它——坏 ref 之后把这枚 sha 当 `have` 广告出去，于是每次 fetch 协商到 0 个对象；`git fetch --refetch --depth=1` 在链路上被掐断（`Connection reset by peer`、`fatal: early EOF`、`invalid index-pack output`），但对象最终落了盘，同一件里回读已是开得到。这库是浅库（边界一枚 `41334e1acbcf9b5a3ec4cfe4c5837bf2a2d00e45 484bfa2e01afdcc28de26df103268d91d121a8cf 50373240559f1b3703bbc4d237301284e31e2408 60db8f3d95598f8c0ed0ee8e5bb8b36fe18bb46a 62ef4a8191b1b9562349f60012ca349877f1ee01 69aea259c9762658ab5a413734ac6e4d4ab9b805 84a96c6fc4418536156c84290819e56486300134 868958e7e11472faa0fc84c2218304c36d1885b0 d71776503dd15b8839e25a2efa196bf3749702e3 e26d0b5a0f0f30eb20bc8491862cdc9df84713d5 ed5a9cc37670251e722195fedb7fcb50e7445a49 ee9b24d8cf8028428bc685878aead06d11e5e064`），`D:` 现读余量 9310752768 字节、用率 97.2%（件 `shared_clone_object_gap_r1.json` blob `c17f933248c6c8f80ac42a8b8cc02bb6a79a3cbb`）。
+  - 对他车的危害：任何按 `git rev-parse refs/remotes/origin/<权威>` 切枝、差分、merge-tree 的车道，都可能拿到一枚没有对象的 sha 而当正常基准用。便宜的防线是用之前先 `cat-file -e <sha>^{commit}`。
+  - 模块里已经装了这道防线（`tools/cnx_ledger_mirror_reader_r1.py:154`），而且比我最初写的多一格：**不只验 commit，还验那一格的 blob 开得到**——这一形是本手实际撞到的（commit 开得到、树里的 blob 不在），所以自愈只删我自己名下的 `refs/remotes/verify/*` 名字再取一次，绝不改共享跟踪 ref
+
+**六、落地形制（等你那道门，我 0 次移动权威线）**：枝 `2757fa9c1edab1c17a920e4ad71cff4bfbe87327` = `2757fa9c1edab1c17a920e4ad71cff4bfbe87327`… 见下逐枚
+  - `refs/heads/review/1d64acf5-ord0557-mirror-read-r1` = `2757fa9c1edab1c17a920e4ad71cff4bfbe87327`（服务器 `ls-remote` 回读同值）：链根＝现尖 `868958e7e11472faa0fc84c2218304c36d1885b0`、1 笔、自己名下路径 1 枚、他人路径 0 枚、只读预测树 `ad64e8cdd8b1174e03d8597b62078f1774a4fae9` 冲突 0 行；模块本体 blob `dd939945f560632fea20186a57929d2edc1ab6ad`（19820 字节）
+  - 证据 6 枚在 `commander/control` 的 `evidence/1d64acf5-ord0557-mirror-read-r1/`，逐枚本机字节与服务端 `ls-tree` 读回 blob 全等（回执控制尖 `278ecca561145ecffee8d3279d9fc64ded22908a`）；件：模块副本 `dd939945f560632fea20186a57929d2edc1ab6ad`、构建与对账 `a8f2c3ded6a29e9a1ccfe8e9894f55ebeba6a914`、三趟与反件 `67e23f9e5afc3d03f87311e3dad7d9a74f3e75d7`、故障读数 `c17f933248c6c8f80ac42a8b8cc02bb6a79a3cbb`
+
+**七、前两格仍在门外（按 blob 相等判，不按祖先——尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 已是无父重建树，`rev-list --count` 现读 1）**：`refs/heads/review/1d64acf5-ord0296-g4-floor-r6` = `c23cb0a302c42ab2dc832743441b3d7da7461308` 那格里 `backend/tests/test_qoder_ord0296_write_deadline.py` 我这枚 blob `032777990661c5220794a91c2a00a8ed1ea97fe7`，线现在那枚 `d3e21e9084a3589678d08f7b50afe5119b2b85b8`，相等 false；`refs/heads/review/1d64acf5-ord0476-response-set-r6` = `c3293da4c11cc9fa783c38818f22895febda7c49` 那格我 `534b673b749adfd7548066cca770e0c52d105306`、线 `853e9a67a7c33f4ac33b36dc49f53fd806265442`，相等 false。两块都是**要落**不是已落；尖若再动点一句我重切——三格都不含他人路径。
+
+**边界**：产品字节 0 枚新增——新增只有 `tools/` 下一枚新文件（blob `dd939945f560632fea20186a57929d2edc1ab6ad`），`backend/app/**` 与 `frontend/src/**` 一枚未动；权威线 0 次移动、force-push 0 次（枝头只新增，`ls-remote` 回读 `2757fa9c1edab1c17a920e4ad71cff4bfbe87327`）
+  他人文件 0 枚改动、账本 0 次直写（本块走收件口）、`demo/reset` 0 次、共享 `_preview.db` 0 次写、本车道 0 个端口在跑；号令者的门文件 `live_checks/ledger_inbox_apply_r2.py` 0 字节改动（只打开读过一次，为的是把接口对成他要的形状）
+  本机自家用名 `refs/remotes/verify/ord0557_*` 那几枚已清（都是我这一手起的，共享跟踪 ref 一枚没动）；证据 0 枚覆盖旧路径——本手只新增 slug `evidence/1d64acf5-ord0557-mirror-read-r1`（回执控制尖 `278ecca561145ecffee8d3279d9fc64ded22908a`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · ORD-0563 英文臂枚举回声：改了 11 枚值、加了一把会拒绝未判新值的常设尺、真浏览器英文四屏亲读；hub 那两枚的新情况要你裁
 
 一、形制
