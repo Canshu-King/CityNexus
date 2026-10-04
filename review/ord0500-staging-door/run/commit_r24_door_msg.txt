@@ -1,0 +1,17 @@
+ORD-0500 phone lane: the door re-cut onto the current line, and the writer's wiring shipped as r7
+
+r3 was refused by recut for a reason that is not my bytes: the line rebuilt again under it (the tip is
+now aefbbd1a2f99c448a9a684b3d01ce387273ee83c, which already carries the r2 flavour of this door).  Two
+things follow, and both are enforced in tools rather than promised in prose:
+
+  - landed instrument paths are not rewritten (CMDR-0925-2128).  The door's `removed_paths` fix therefore
+    ships as stage_door_r24.py, and the staging writer's wiring ships as stage_readings_r7.py; the line's
+    copy of stage_readings_r6.py and stage_door_r20.py stays byte-exact.  The publish tool now refuses any
+    commit whose path already exists on the line with different bytes (ABORT_OVERWRITES_LANDED_BYTES), so
+    the next hand cannot quietly replace a file somebody cited.
+  - both arms re-run against the line as it now stands, through the r7 writer (evidence/stage_door_r24.json
+    and evidence/stage_door_r24_mutants.json), with the refusal run's restore inventory naming each file it
+    takes back.
+
+Scope: only new paths under review/ord0500-staging-door/; zero product bytes; the r1/r2/r3 refs keep their
+heads exactly as published -- no force-push, no deletion.
