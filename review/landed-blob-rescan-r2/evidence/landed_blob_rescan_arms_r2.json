@@ -1,0 +1,169 @@
+{
+  "schema": "CNX_LANDED_BLOB_RESCAN_ARMS_V2",
+  "tool": "landed_blob_rescan_arms_r2",
+  "live_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "runs": [
+    {
+      "id": "C1_held_control",
+      "note": "a hand whose bytes really are on the line",
+      "expect": "HELD",
+      "got": "HELD",
+      "forbid": null,
+      "bit": true,
+      "detail": {
+        "id": "C1_held_control",
+        "note": "a hand whose bytes really are on the line",
+        "expect": "HELD",
+        "counts": {
+          "SAME": 13
+        }
+      }
+    },
+    {
+      "id": "C2_predicted_control",
+      "note": "merge-tree on a commit and its own parent: the arm can produce a prediction at all",
+      "expect": "PREDICTED",
+      "got": "PREDICTED",
+      "bit": true,
+      "detail": {
+        "merge_tree_exit": 0,
+        "conflicts": 0
+      }
+    },
+    {
+      "id": "M1_absent_without_receipt",
+      "note": "r1's mislabel: never landed must not read as lost",
+      "expect": "NOT_ON_LINE",
+      "got": "NOT_ON_LINE",
+      "forbid": "LOST_LANDED_CONTENT",
+      "bit": true,
+      "detail": {
+        "id": "M1_absent_without_receipt",
+        "note": "r1's mislabel: never landed must not read as lost",
+        "expect": "NOT_ON_LINE",
+        "rows": [
+          {
+            "path": "review/this/path/does/not/exist_r2_arm.json",
+            "expect": "0000000000000000000000000000000000000000",
+            "on_line": "ABSENT",
+            "verdict": "ABSENT"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M2_absent_with_receipt",
+      "note": "with a receipt the same reading does become a loss",
+      "expect": "LOST_LANDED_CONTENT",
+      "got": "LOST_LANDED_CONTENT",
+      "forbid": null,
+      "bit": true,
+      "detail": {
+        "id": "M2_absent_with_receipt",
+        "note": "with a receipt the same reading does become a loss",
+        "expect": "LOST_LANDED_CONTENT",
+        "rows": [
+          {
+            "path": "review/this/path/does/not/exist_r2_arm.json",
+            "expect": "0000000000000000000000000000000000000000",
+            "on_line": "ABSENT",
+            "verdict": "ABSENT"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M3_changed_not_absent",
+      "note": "a path that exists with other bytes is not 'not on the line'",
+      "expect": "SUPERSEDED_ON_LINE",
+      "got": "SUPERSEDED_ON_LINE",
+      "forbid": "NOT_ON_LINE",
+      "bit": true,
+      "detail": {
+        "id": "M3_changed_not_absent",
+        "note": "a path that exists with other bytes is not 'not on the line'",
+        "expect": "SUPERSEDED_ON_LINE",
+        "real_blob_on_line": "f5cb6c43b8a2e0102112ff803af9346e6aa45cd9",
+        "path": "review/ord0500-staging-door/evidence/stage_door_r24.json"
+      }
+    },
+    {
+      "id": "M4_vacuous_merge_tree",
+      "note": "exit 128 has to answer 'no prediction', never 'zero conflicts'",
+      "expect": "NO_PREDICTION",
+      "got": "NO_PREDICTION_EXIT_128",
+      "bit": true,
+      "detail": {
+        "merge_tree_exit": 128,
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      }
+    },
+    {
+      "id": "M5_key_blind_spot",
+      "note": "the ORD-0485 family must surface as a candidate",
+      "expect": 1,
+      "got": 1,
+      "bit": true,
+      "detail": {
+        "heads_matched_by_key": [
+          "refs/heads/review/0afdb49b-ord0500-staging-door-r4"
+        ],
+        "candidates_missed": [
+          "refs/heads/review/newlane-ord0485-phone-walkthrough-r1"
+        ]
+      }
+    },
+    {
+      "id": "M6_distance_is_not_stray",
+      "note": "a tool-only hand: generation distance is large, its own product paths are zero",
+      "expect": 0,
+      "got": 0,
+      "bit": true,
+      "detail": {
+        "own_product_paths": 0,
+        "gen_distance": {
+          "gen_distance_product_paths": 2,
+          "gen_distance_review_paths": 13
+        }
+      }
+    },
+    {
+      "id": "M7_unreadable_tree",
+      "note": "an unusable revision is not a vanished file (r1's arm, kept because r2 still classifies it)",
+      "expect": "UNREADABLE_ON_LINE",
+      "got": "UNREADABLE_ON_LINE",
+      "bit": true,
+      "detail": [
+        {
+          "path": "review/anything",
+          "expect": "0000000000000000000000000000000000000000",
+          "on_line": "UNREADABLE_ON_LINE",
+          "verdict": "UNREADABLE_ON_LINE"
+        }
+      ]
+    }
+  ],
+  "arm_count": 9,
+  "controls": [
+    "C1_held_control",
+    "C2_predicted_control"
+  ],
+  "mutants": [
+    "M1_absent_without_receipt",
+    "M2_absent_with_receipt",
+    "M3_changed_not_absent",
+    "M4_vacuous_merge_tree",
+    "M5_key_blind_spot",
+    "M6_distance_is_not_stray",
+    "M7_unreadable_tree"
+  ],
+  "every_arm_bit": true,
+  "worktree_written": false,
+  "r1_defects_addressed": [
+    "LOST label needs a receipt",
+    "merge-tree exit 128 is not zero conflicts",
+    "generation distance is not a stray write",
+    "name key misses the ORD-0485 family"
+  ]
+}

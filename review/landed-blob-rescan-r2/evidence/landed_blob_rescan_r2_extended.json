@@ -1,0 +1,2653 @@
+{
+  "schema": "CNX_LANDED_BLOB_RESCAN_V2",
+  "tool": "landed_blob_rescan_r2",
+  "took_local": "2026-10-05T00:59:25.936579+08:00",
+  "live_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "review_refs_on_line": 999,
+  "keys": [
+    "0afdb49b",
+    "newlane-ord0500-phone",
+    "newlane-ord0485-phone"
+  ],
+  "refs": [
+    {
+      "ref": "refs/heads/review/0afdb49b-landed-blob-rescan-r1",
+      "head": "ecf337c254d44d85f496643278cad8817923e089",
+      "paths": 7,
+      "counts": {
+        "ABSENT": 7
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 7,
+      "not_held": [
+        {
+          "path": "review/landed-blob-rescan/evidence/landed_blob_rescan_arms_r1.json",
+          "expect": "acf49e891bdae241acca4d6266a6e2555953370e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/evidence/landed_blob_rescan_r1.json",
+          "expect": "3afa1666fd61007562a6fb3d8d39b86c23470b93",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/run/commit_rescan_msg.txt",
+          "expect": "122efece0cf10ad1d5774f7a4afd7eaed92130a8",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/run/rescan_arms.txt",
+          "expect": "257e53a00060b539f511d619a4ebc998221ac338",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/run/rescan_ruler.txt",
+          "expect": "ca066542e615b4341c72300db2ac1b42e215fe0a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/tools/landed_blob_rescan_arms_r1.py",
+          "expect": "49ad687533d6ffc3b80f018e3d2a1daff4e8d5f9",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/landed-blob-rescan/tools/landed_blob_rescan_r1.py",
+          "expect": "3dc71be8247acf680072b15d0fefdf2ff53d8081",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 2,
+      "gen_distance_review_paths": 13
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-citation-note-r1",
+      "head": "0ebb62dd629edd98df07ba55fca78960792db2c1",
+      "paths": 6,
+      "counts": {
+        "ABSENT": 6
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 6,
+      "not_held": [
+        {
+          "path": "review/ord0500-citation-note/evidence/citation_audit_r21.json",
+          "expect": "dffbe3c969bf59ddaf8370113bae6403b2c8ad5a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_note_2026-10-04.md",
+          "expect": "f8b92e8b4df34d4b0382950d8243649e9f6982d5",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_note_2026-10-04.sent",
+          "expect": "7cd6c0ff4a8f2b6923b17d4fba6e15e5941841a4",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_summary_2026-10-04.txt",
+          "expect": "83b3af8312aeb95e73a006ab5a3b96841b8eeb61",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/r21_precheck_first_red.txt",
+          "expect": "722adacd024a27841303c467e43611f10c3c5695",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/tools/citation_ownership_note_r21.py",
+          "expect": "582ffc1d4a1eb3d00bbb6f3d1d9b8aa04423b3fe",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 26,
+      "gen_distance_review_paths": 91
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-citation-note-r2",
+      "head": "b2008af358c72a34ad9a9af01d62604644507819",
+      "paths": 9,
+      "counts": {
+        "ABSENT": 9
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 9,
+      "not_held": [
+        {
+          "path": "review/ord0500-citation-note/evidence/citation_audit_r21.json",
+          "expect": "dffbe3c969bf59ddaf8370113bae6403b2c8ad5a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/evidence/citation_ownership_note_r21_branches.json",
+          "expect": "80597c344ae202e90f56b091c25c56ac4ea8e44c",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_note_2026-10-04.md",
+          "expect": "f8b92e8b4df34d4b0382950d8243649e9f6982d5",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_note_2026-10-04.sent",
+          "expect": "7cd6c0ff4a8f2b6923b17d4fba6e15e5941841a4",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/citation_ownership_summary_2026-10-04.txt",
+          "expect": "83b3af8312aeb95e73a006ab5a3b96841b8eeb61",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/r21_dup_branch.txt",
+          "expect": "a0b45d2bc216e87a34a501c946177beaa5f61a04",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/r21_empty_branch.txt",
+          "expect": "d571742ffbdb63072d98548828f545ddeecdab8a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/run/r21_precheck_first_red.txt",
+          "expect": "722adacd024a27841303c467e43611f10c3c5695",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-citation-note/tools/citation_ownership_note_r21.py",
+          "expect": "a6d3e3ec4e7527be735c87cc28c1013774d43eb9",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 26,
+      "gen_distance_review_paths": 94
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-collide-probe-r1",
+      "head": "e2b9bd60e8b52cb03a8f531283547d1221daf657",
+      "paths": 1,
+      "counts": {
+        "CHANGED": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "review/ord0500-staging-door/run/commit_r24_door_msg.txt",
+          "expect": "1d4ebf1ac092557c88c24f84a4839e83bdcf500f",
+          "on_line": "c486041d002f3739851c5882400a933f294d2468",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 25,
+      "gen_distance_review_paths": 76
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r1",
+      "head": "434801bfa39b5105d5f60dcc61ed0d79b814b7aa",
+      "paths": 9,
+      "counts": {
+        "SAME": 9
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 0,
+      "not_held": [],
+      "verdict": "HELD",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 39,
+      "gen_distance_review_paths": 76
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r2",
+      "head": "89213c447190c853de998e2d78e4b6d5f63847f9",
+      "paths": 9,
+      "counts": {
+        "SAME": 9
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 0,
+      "not_held": [],
+      "verdict": "HELD",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 26,
+      "gen_distance_review_paths": 76
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r3",
+      "head": "acaba59d0a6168eee3ff0012ebadc75ea3387002",
+      "paths": 10,
+      "counts": {
+        "CHANGED": 4,
+        "SAME": 3,
+        "ABSENT": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 7,
+      "not_held": [
+        {
+          "path": "review/ord0500-staging-door/evidence/stage_door_r20.json",
+          "expect": "b59a70cc1b28c5427a047cd3707ab122b92edc7a",
+          "on_line": "5777e7c8df5609656017eb2dc817dc2035734b9a",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-staging-door/evidence/stage_door_r20_mutants.json",
+          "expect": "dfd67f4f131be8be49bf72ea3bbcd3bc60d2c373",
+          "on_line": "82000817a2eb5d871ed79348287e79a27fad6e70",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-staging-door/run/commit_r23_door_msg.txt",
+          "expect": "d1439fea9c1b246d5d38d12550d1fbb0a8b5fef1",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-staging-door/run/r20_STAGING_RED.json",
+          "expect": "d157a52d3a12bc0952871aa3de3793a4e9f0e3d9",
+          "on_line": "a5635d29051f09754ca76a8f5e8fd5d9f4ab8b0b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-staging-door/run/r23b_mutants.txt",
+          "expect": "b959148987ffcbc4ca889d960a17935fa28ac9a7",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-staging-door/run/r23b_receipt.txt",
+          "expect": "75b385f6800410b20395ecf4e4930bb958099591",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-staging-door/tools/stage_door_r20.py",
+          "expect": "e78308df3c0feb45de78fb4f4dc38447fe83bf00",
+          "on_line": "5591f5c89eee8dc2b610a5ddf361966880516d48",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 26,
+      "gen_distance_review_paths": 83
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r4",
+      "head": "aff61777229ee39d24e120b1e9b3146400d2af88",
+      "paths": 13,
+      "counts": {
+        "SAME": 13
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": true,
+      "not_held_count": 0,
+      "not_held": [],
+      "verdict": "HELD",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 25,
+      "gen_distance_review_paths": 63
+    },
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r5",
+      "head": "a3e344ba0dc0927060f220f9f8e7d89e95c487b3",
+      "paths": 3,
+      "counts": {
+        "ABSENT": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 3,
+      "not_held": [
+        {
+          "path": "review/ord0500-staging-door/run/r24_chain_forced.txt",
+          "expect": "6c900b2002ae352555d318185df7a054b9faf9cc",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-staging-door/run/r24_chain_green.txt",
+          "expect": "9d784fff6730f8263c680114cd7f599b9a182543",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-staging-door/tools/r24_chain.sh",
+          "expect": "b1bd224e1abf680e8f6851b190ea3040f8442f99",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 25,
+      "gen_distance_review_paths": 66
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r1",
+      "head": "80608938c52e92a23dcbed79f74e25a08f5736ff",
+      "paths": 63,
+      "counts": {
+        "ABSENT": 62,
+        "CHANGED": 1
+      },
+      "own_product_paths": 3,
+      "own_product": [
+        "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+        "frontend/playwright.ord0485-phone.config.ts",
+        "frontend/src/i18n/LocaleContext.tsx"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 63,
+      "not_held": [
+        {
+          "path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+          "expect": "16dd334020743912998fb62dd81636ba914febf2",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "frontend/playwright.ord0485-phone.config.ts",
+          "expect": "0c40a18533b2d2eb25a6f32963d1bf66531bd910",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "expect": "2abffd319265e9b66257efabc4ebd47b15845796",
+          "on_line": "20203fee4744513da320387e7923fabbf054d566",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0485-phone-walk/MANIFEST_r1.json",
+          "expect": "a45835b3fed7edb2280c80039fff14a4a60f6379",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/R1_READINGS.md",
+          "expect": "e339a69f6b8a9aa97d96b53b99dde9d6edd39234",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/candidate_prereq_r1.json",
+          "expect": "c9b99a46ec4a8a04c35d19eaa34fb547167b505e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/carrier_G0_pre_fix.json",
+          "expect": "11f754f69a6ff6d1b51ef7c97263ec6004ab0c6b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/carrier_G1_candidate.json",
+          "expect": "7f5b2749b3e5b329578ba21b495992c8368d2997",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/db_snapshot_proof_r2.json",
+          "expect": "409f06c59f24974aac84fcd314779bf612c3bdd2",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_r1.json",
+          "expect": "eacf1309a6b8b413321684be448dc9081d471e7e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/import_face_4861_G0.json",
+          "expect": "dbd1124e6371753e1083b5adfb867bc33092ac3d",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/import_face_4862_G1.json",
+          "expect": "9d89f117a4f53518519e3f5a3258c8018b176f68",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/neighbour_word_gates_G1.json",
+          "expect": "531b173f4fcadcb88ccd8b67c57d4b60a7545fdd",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/server_cells_r1.json",
+          "expect": "1b5f856af1cf542a78d40de24e9abdb3c3dc4ad7",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/server_cells_r1_stdout.json",
+          "expect": "9a7f225b716f96733d7b9e7e53d054e512f4b558",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/share_r1.json",
+          "expect": "4d7b9ecdbd34feb195d523428e5f527382aaa4dc",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/stack_up_r1.json",
+          "expect": "faad0295c3cafd37284bf9baa2eb237ad9f6c68d",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/static_identity_r2.json",
+          "expect": "8823f4a4e4822fd1dc81a29c6252b222ed5ce6c2",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/walk_r2.json",
+          "expect": "95c0b55bb122b7d0bb71f19ce659981b2286302b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/wizard_r1.json",
+          "expect": "57e51fcdc837d23f7522caa2331ea99aa42e8053",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 729,
+      "gen_distance_review_paths": 1428
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r2",
+      "head": "2e489da98fd1f4b01aad37f5e5f46587a0bda6c3",
+      "paths": 9,
+      "counts": {
+        "ABSENT": 9
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 9,
+      "not_held": [
+        {
+          "path": "review/ord0485-phone-walk/MANIFEST_r1.json",
+          "expect": "49ce7c14b9a35515aa56b4d6fd24fe2d6c49e24b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/R1_READINGS.md",
+          "expect": "e021a27d7928bef46b90d5d170fc38aad78b7592",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_base_gen_r1.json",
+          "expect": "fcdf22d836eff148dda8c93964d9e2252dac14ba",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_candidate_gen_r1.json",
+          "expect": "206033f7a2d63ebb6a0d3e0d5e60d8ff9d7c68cc",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_pair_r1.json",
+          "expect": "cb25e0e53eed68b3a408a46bb636cb3d22749c7c",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/i18n_gap_pair_r1.py",
+          "expect": "4a62d7d6af5cae6cd497c0f6bfea70fa8e6cbc76",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+          "expect": "15097f8a6d857128a147135177035f34f4a847ab",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/make_readings_r1.py",
+          "expect": "650dac0b5033ba9a277b505c0dd0c5a9a5af667a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/package_deliverables_r1.py",
+          "expect": "f1cf894f9276204ed7d0a1bfde3bb4e8aff0dfff",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 729,
+      "gen_distance_review_paths": 1433
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r3",
+      "head": "40f9ddc7435aca9e52c127fa7808194c1cb1ac4f",
+      "paths": 8,
+      "counts": {
+        "ABSENT": 8
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 8,
+      "not_held": [
+        {
+          "path": "review/ord0485-phone-walk/tools/CE2_MUTANT_RECIPE_r1.md",
+          "expect": "054e3bf536ef6021b93ce2404b75248854b55acb",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/checkin_phone_r2.cjs",
+          "expect": "f15fabb3759ae6a7405613a0b6c89f8c5781c6ed",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen4_build_r1.py",
+          "expect": "efc358492beff65580e0da4ab8ed67a557900e2f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen4_sheets_r1.py",
+          "expect": "c95e6d67ed78156bd3e6fba3d679b859b02f9a75",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen4_stack_r1.py",
+          "expect": "bc915e3238fdb10978a74c6da9792941344e37da",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen4_walk_r1.py",
+          "expect": "dbc69a19688b5819bb93136e38871654101a9cca",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+          "expect": "15097f8a6d857128a147135177035f34f4a847ab",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/land_dict_r4.py",
+          "expect": "51a74d630d86ab837b2b49f049c1c6a1028cdbdb",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 605,
+      "gen_distance_review_paths": 1137
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r4",
+      "head": "8d6c582fd493469f88f02c494f5f227736da24ac",
+      "paths": 16,
+      "counts": {
+        "ABSENT": 15,
+        "CHANGED": 1
+      },
+      "own_product_paths": 3,
+      "own_product": [
+        "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+        "frontend/playwright.ord0485-phone.config.ts",
+        "frontend/src/i18n/LocaleContext.tsx"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 16,
+      "not_held": [
+        {
+          "path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+          "expect": "16dd334020743912998fb62dd81636ba914febf2",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "frontend/playwright.ord0485-phone.config.ts",
+          "expect": "0c40a18533b2d2eb25a6f32963d1bf66531bd910",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "expect": "accba7aa78c6a493df489774e84f9d6ddb2ad08e",
+          "on_line": "20203fee4744513da320387e7923fabbf054d566",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0485-phone-walk/GEN5_READINGS.md",
+          "expect": "f3ca1134fdbea049a053c60aee24d1cd658a441a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/gen5_builds_r1.json",
+          "expect": "c423ff55b3478f82ac77108589fa14b8bdeb0894",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/gen5_checkin_sweep_r1.json",
+          "expect": "ffe997c3419593afa45cdb67d2db4f260a676815",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/gen5_walk_r1.json",
+          "expect": "474c65669cbc6943cd746f90f42cad651fc24e4c",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_O0485_R4_r1.json",
+          "expect": "0d9151246241b508ae50580cb932014aa870d771",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/receipts/i18n_gap_TIP_822db3d9_r1.json",
+          "expect": "94561491430d3fcb924101c206834c856c96b31f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/checkin_phone_r2.cjs",
+          "expect": "f15fabb3759ae6a7405613a0b6c89f8c5781c6ed",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen5_build_r1.py",
+          "expect": "4ecd15957e2dc7ad7012ad03301def927cfb432a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen5_sheets_r1.py",
+          "expect": "d2d3646357ce05cdc14a74feeecfaa9ece843b08",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen5_stack_r1.py",
+          "expect": "f8e7e1a8a884f46ce131676fbb5fe55a593de60e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/gen5_walk_r1.py",
+          "expect": "604c0546606464673da2cdd641c40edc9f2b3909",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/i18n_key_gap_r2.py",
+          "expect": "15097f8a6d857128a147135177035f34f4a847ab",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0485-phone-walk/tools/land_dict_r4.py",
+          "expect": "51a74d630d86ab837b2b49f049c1c6a1028cdbdb",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 582,
+      "gen_distance_review_paths": 1108
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0485-phone-walkthrough-r5",
+      "head": "a63dcc72934afc63d35d3a904c2bbcbec6a39a2e",
+      "paths": 1,
+      "counts": {
+        "ABSENT": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "review/ord0485-phone-walk/GEN6_READINGS.md",
+          "expect": "8d005bb93a7d61611bb0e20ce87cc39d94a90ec3",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 580,
+      "gen_distance_review_paths": 1105
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r1",
+      "head": "f51c0e164d1829df1da4c52339f918ef79b1c30a",
+      "paths": 11,
+      "counts": {
+        "CHANGED": 1,
+        "ABSENT": 10
+      },
+      "own_product_paths": 1,
+      "own_product": [
+        "backend/tests/test_qoder_ord0500_journey_refusal.py"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 11,
+      "not_held": [
+        {
+          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json",
+          "expect": "c52627562d2f7440a6acc3fcc6ee6b344ad59874",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json",
+          "expect": "5bbcfe616dc342063dce480943018342943f02d6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json",
+          "expect": "cf5dbcf9c9b85c0a83d1a65c4e768c03e9b3ac6f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/anchor_form_candidate.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/commit_r26_anchor_msg.txt",
+          "expect": "92752406a9ffc0811bb7df138def38a107c31a11",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r26_spec2.txt",
+          "expect": "f12b67023dd1f7b347e1ed72504c01b8b7f44a2e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_apply_r26.py",
+          "expect": "c7f59c9ab91efe229ed41f70cc664f04f437928f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py",
+          "expect": "7a12ca0284364df2860543a10977a9c0c853ea80",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r26.py",
+          "expect": "e7e2aa45265e452b09b2349216321481116f16d6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_spec_r26.py",
+          "expect": "836f4cf30fc74dd02194e27434d6f411b1e5ce66",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 24,
+      "gen_distance_review_paths": 72
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r2",
+      "head": "ba19776a29edb27d84e0a1eb204fa76eac61c2c0",
+      "paths": 12,
+      "counts": {
+        "CHANGED": 1,
+        "ABSENT": 11
+      },
+      "own_product_paths": 1,
+      "own_product": [
+        "backend/tests/test_qoder_ord0500_journey_refusal.py"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 12,
+      "not_held": [
+        {
+          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json",
+          "expect": "c52627562d2f7440a6acc3fcc6ee6b344ad59874",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json",
+          "expect": "5bbcfe616dc342063dce480943018342943f02d6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json",
+          "expect": "cf5dbcf9c9b85c0a83d1a65c4e768c03e9b3ac6f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json",
+          "expect": "b53626ecf94c17beb8ece8c0d74fe1d08a50dba1",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/anchor_form_candidate.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/commit_r26_anchor_msg.txt",
+          "expect": "92752406a9ffc0811bb7df138def38a107c31a11",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r26_spec2.txt",
+          "expect": "f12b67023dd1f7b347e1ed72504c01b8b7f44a2e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_apply_r26.py",
+          "expect": "c7f59c9ab91efe229ed41f70cc664f04f437928f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py",
+          "expect": "7a12ca0284364df2860543a10977a9c0c853ea80",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r26.py",
+          "expect": "e7e2aa45265e452b09b2349216321481116f16d6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_spec_r26.py",
+          "expect": "836f4cf30fc74dd02194e27434d6f411b1e5ce66",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 24,
+      "gen_distance_review_paths": 73
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r3",
+      "head": "ca5c2d58f422d698099a84ea79bc317ac1346204",
+      "paths": 17,
+      "counts": {
+        "CHANGED": 1,
+        "ABSENT": 16
+      },
+      "own_product_paths": 1,
+      "own_product": [
+        "backend/tests/test_qoder_ord0500_journey_refusal.py"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 17,
+      "not_held": [
+        {
+          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json",
+          "expect": "ac3413c61e683ce989672724545c60f86e8503bd",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json",
+          "expect": "9907a587cf9e4150c8a2009cb2ee4d8a408857b5",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_r27.json",
+          "expect": "4a926e53d066065b204184615dadad3f4d1fa891",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json",
+          "expect": "cf5dbcf9c9b85c0a83d1a65c4e768c03e9b3ac6f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json",
+          "expect": "a3d201afb134c5cff8201ad9d0e3b862e0bd14c1",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/anchor_form_candidate.py",
+          "expect": "80cfac127a927d49901a46386e8778ad71909133",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/commit_r28_anchor_msg.txt",
+          "expect": "ca5cf42486cca4161ca093b98b1893ef8611d3d7",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r28_apply_b.txt",
+          "expect": "7bde6173b6c9a933953f1d709ffb0e5c102748f3",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r28_mutants_b.txt",
+          "expect": "cb2a4270eed53866b445f8ecfa1164ea965fb82c",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r28_spec_b.txt",
+          "expect": "c82b17a03973a7f2246771e5357c477a3ea8a39a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/run/r28_writeset.txt",
+          "expect": "8ea00400e63a37fdd097a645546b53e7bea4b81b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_apply_r26.py",
+          "expect": "c7f59c9ab91efe229ed41f70cc664f04f437928f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py",
+          "expect": "7a12ca0284364df2860543a10977a9c0c853ea80",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r26.py",
+          "expect": "e7e2aa45265e452b09b2349216321481116f16d6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r27.py",
+          "expect": "38981e5e112934cb65b695aba79d8bff78d1971b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-anchor-form/tools/anchor_form_spec_r26.py",
+          "expect": "836f4cf30fc74dd02194e27434d6f411b1e5ce66",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 18,
+      "gen_distance_review_paths": 36
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r1",
+      "head": "3f3ab9c24221515b7d3ac151d4b5c6ae6d4945be",
+      "paths": 12,
+      "counts": {
+        "ABSENT": 12
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 12,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/tools/CE2_MUTANT_RECIPE_r1.md",
+          "expect": "054e3bf536ef6021b93ce2404b75248854b55acb",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/checkin_phone_r2.cjs",
+          "expect": "f15fabb3759ae6a7405613a0b6c89f8c5781c6ed",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_blocks_r1.py",
+          "expect": "9d5bd01e91eae3b60a570fcfd6eea63f117bafec",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_build_r1.py",
+          "expect": "efc358492beff65580e0da4ab8ed67a557900e2f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_carrier_r1.py",
+          "expect": "84cf45a1392eaabcd31a3e4b3073a5f312cefd0b",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_ce1_r1.py",
+          "expect": "982ee459f784e99d4d3018e56e31d0431d7ff4a6",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_doors_r1.py",
+          "expect": "3b6e5ef506586dc5e8b9594cfd3ffac874b7eb58",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_sheets_r1.py",
+          "expect": "c95e6d67ed78156bd3e6fba3d679b859b02f9a75",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_stack_r1.py",
+          "expect": "bc915e3238fdb10978a74c6da9792941344e37da",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen4_walk_r1.py",
+          "expect": "dbc69a19688b5819bb93136e38871654101a9cca",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/i18n_key_gap_r2.py",
+          "expect": "15097f8a6d857128a147135177035f34f4a847ab",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/land_dict_r4.py",
+          "expect": "51a74d630d86ab837b2b49f049c1c6a1028cdbdb",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 603,
+      "gen_distance_review_paths": 1155
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r10",
+      "head": "441c98320521b9d0fcd17d1aab904f45473ffbab",
+      "paths": 20,
+      "counts": {
+        "CHANGED": 18,
+        "SAME": 2
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 18,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "8335222966a6627f8524d633906ee43014ee1b18",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+          "expect": "84d20fab41d57c6ebe86941ee4425efee28b26a8",
+          "on_line": "02ffefff00dbee63bf22a60b02b1e4c55a1f1fae",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+          "expect": "86fee64f098093159745731d845999d8cb565418",
+          "on_line": "e1c5e27b9c4f4def71cef17d05eb196595ad1b90",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+          "expect": "5ef9a748027d394582810a66a297216567afbee4",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+          "expect": "b3bb764608fb42aebb330d813754e73549fd0e64",
+          "on_line": "8d8afd5538f933caf0583764cda6daa4f484110a",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+          "expect": "c11cb16384cb7f3bb779a6f61deedc6a91094df0",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+          "expect": "eb76e8dc654449b75bbf0e7e0b382d5a2c575453",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r10.json",
+          "expect": "152d027fb79b74e9d58b21fb91c75b550004f4c6",
+          "on_line": "52001e2a34a5d061c96356b51dc1056c8c40e0f7",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r10_mutants.json",
+          "expect": "eb0bb24e301f2a293a0eabd66d77734d448363f4",
+          "on_line": "ae870ad86ef9c93a27d648be3c3fbe74a60b44d6",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "181b37ddc413a46cba69b92d4069ea7440440fc9",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "91e120a577b19bb60ea8b11c4d997a50db15480a",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "f12478c1f6f392fe894414573c54deb47fb29853",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "5e9a69f26be05969642cb8047d92b04462967be1",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/citation_gate_r10_mutants.py",
+          "expect": "434c942be7644877bab2aa9023f3797cba3ae74a",
+          "on_line": "e6ab6fb1fa1d20e5400bf801f5d0233ae36060ee",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/citation_gate_r9.py",
+          "expect": "32aa083bc39c2b4be1eee7780064251ab511f645",
+          "on_line": "17a5d2a8a94b17b9725b0e604af040094dba23bb",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/landing_r6.py",
+          "expect": "48fbc42f88f064c7034091fb51f80bc63268c78c",
+          "on_line": "2488621816af589a1052711b0d6122cd225240da",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+          "expect": "449b44812a0ecbf104a8e5315d851e671566deaa",
+          "on_line": "e8af35a0568b9874ab134963414feeb0f6f30729",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+          "expect": "684669767fbfea30ec0f8c68c30b5d2a6acaec16",
+          "on_line": "c76ec0afa50417e119000fca718960705b6554e8",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 267,
+      "gen_distance_review_paths": 531
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r11",
+      "head": "9f5fcb022ec9abd8538c42ed713100fdfb929a2f",
+      "paths": 26,
+      "counts": {
+        "CHANGED": 21,
+        "SAME": 5
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 21,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "9efcd18fc74153f34d6be00fa2e66ddde365c8fd",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+          "expect": "1b3b621383d0f90c74b0c71ad52440b8bf419982",
+          "on_line": "02ffefff00dbee63bf22a60b02b1e4c55a1f1fae",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+          "expect": "f096839b1e46f940f7d40c4efb3293807f11a41d",
+          "on_line": "545a29c4b8edfa0b919aacd36df15ef16a3775df",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+          "expect": "bc2dd66e5944318dbfd49f05a253396fc9f0ebf4",
+          "on_line": "e1c5e27b9c4f4def71cef17d05eb196595ad1b90",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+          "expect": "ebd1b760b94e1b99683dce6d440d4fa04def7808",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+          "expect": "36aaad1ddd4699bee97eee857e6201e8e5f36fc5",
+          "on_line": "8d8afd5538f933caf0583764cda6daa4f484110a",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+          "expect": "a7c28e452dc30ecbf5c033d8e7bad860c9c4b254",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+          "expect": "34c1301a2e9e40052c81055d9a00190621a7c8d0",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r11.json",
+          "expect": "303772e455ce0d83e9ca60781408e8ba5a3cdfd4",
+          "on_line": "e2782c7fb1d48d10dcc1b3e26ddffa34c58135af",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r11_mutants.json",
+          "expect": "e78c9f22f1864a160fb7d868cadf35c340d05543",
+          "on_line": "a9aa8b80a0575551ae8e3338d599bab53dbfdd64",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "2732eda161fef3d2eec756eb98d47f945e06ac17",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+          "expect": "5f6d55a2cc20f27fb2332274fa8e3d0aa4bfca15",
+          "on_line": "2942fe00aabf8735f558ede1f780d478a48d54a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "eb9f5dfc88a00f8e058e1f96cfe95654543c1a43",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "4d62d88e6a8e68529c8d575e48f84e4799aaca9b",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "d76276fa2307c476eea3a2d1aa507e3fe669c9cf",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_pytest.txt",
+          "expect": "84a9f06898b4fc280800a3b71f8ffafac358c995",
+          "on_line": "3781a21b190d703c95d8322931d278f5ccd4f0e1",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/citation_gate_r10_mutants.py",
+          "expect": "42f229a3925b0456d10f34b596631dd0c0b627ae",
+          "on_line": "e6ab6fb1fa1d20e5400bf801f5d0233ae36060ee",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r10_block.py",
+          "expect": "4eebef421f3665bee1baa33eb1176364525ed28c",
+          "on_line": "56c15b171820eabd9a0c53e5c2029acd25cf69dd",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+          "expect": "3fb8e4500d5d7a1eac948fb7203785c28127afbe",
+          "on_line": "e8af35a0568b9874ab134963414feeb0f6f30729",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r9_block.py",
+          "expect": "3896d528a987aa39b435088a840b9cec01dcb480",
+          "on_line": "810d0f4bd64548b89a7046a5112e30a90e3fe8ed",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 206,
+      "gen_distance_review_paths": 526
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r12",
+      "head": "97c5df9466c5ea33003efac857fe647ea0d62e7f",
+      "paths": 13,
+      "counts": {
+        "CHANGED": 10,
+        "SAME": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 10,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "2508a7693a52e653a3d06ccd7978421e522ac555",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "4b8f805752c00df77586ce95fbdb8205abf07c55",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+          "expect": "169c7526526cb27260367a73b800dd330b947e4f",
+          "on_line": "2942fe00aabf8735f558ede1f780d478a48d54a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "9d4943bf1b47530e78504eab9ea207cc72552fe3",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "45cdc4e790c3fd021927f66ea7376ab92c965d5a",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "b6c7c9ffca09aad86d1165527e5ef55313fb065b",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_pytest.txt",
+          "expect": "ebee76af50bb798c1763257e8469eb488464402c",
+          "on_line": "3781a21b190d703c95d8322931d278f5ccd4f0e1",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/landing_r6.py",
+          "expect": "1b78e37d218c420b0cd8e210d5d07233185c06b6",
+          "on_line": "2488621816af589a1052711b0d6122cd225240da",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r10_block.py",
+          "expect": "9f97b6ab5fc4c9bfead062ede83ba5073c68d1c6",
+          "on_line": "56c15b171820eabd9a0c53e5c2029acd25cf69dd",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+          "expect": "2ff6f30e9dfa01abddf5d94ba39be4941a3c700e",
+          "on_line": "e8af35a0568b9874ab134963414feeb0f6f30729",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 206,
+      "gen_distance_review_paths": 523
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r13",
+      "head": "4084351b59b67a29e064e9f14fcfdee40c68cfbe",
+      "paths": 14,
+      "counts": {
+        "CHANGED": 12,
+        "SAME": 2
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 12,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "926726c73cbbb743524752d5f4d1bd0dc0705cbe",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r12.json",
+          "expect": "10ce7a870d485f6e79d993bb5c220cb6fe6eb7f4",
+          "on_line": "29187bd5337e9a49da1946dad0c48a594085516d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r12_mutants.json",
+          "expect": "ae6deee7407400b360b7f3472faa9a9bd1f8493d",
+          "on_line": "a830a219baa68d50b0ccad0144582c3a0376e31f",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r12.json",
+          "expect": "46dda7e4394761e9083c0f86c563b401644cb845",
+          "on_line": "063a347863832273c17b870afbeee569a94e9d79",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "d8b05c3b52f6b17b1d64bd1f664b4c9a7fe50e6c",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+          "expect": "4c265ec98cebf0b12958b580831c64ffb3c0c4b7",
+          "on_line": "2942fe00aabf8735f558ede1f780d478a48d54a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "5a726222a42ac8c4b03f4fed0633d373ae0ee6dc",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "38490e7ee35553d6c308e4931ff6e0abb4484a17",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "9b33a6bf30bf0703984f2338248d29919398e130",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_pytest.txt",
+          "expect": "8c5565693bbe93c8bf0eef129adb0aff25c700ad",
+          "on_line": "3781a21b190d703c95d8322931d278f5ccd4f0e1",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/landing_r6.py",
+          "expect": "9cb2f513041ef7d643b883930091a866db4f48eb",
+          "on_line": "2488621816af589a1052711b0d6122cd225240da",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r10_block.py",
+          "expect": "b13b34ff17d64bea624d9755657a88b0175f0973",
+          "on_line": "56c15b171820eabd9a0c53e5c2029acd25cf69dd",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 206,
+      "gen_distance_review_paths": 521
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r14",
+      "head": "71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "paths": 2,
+      "counts": {
+        "SAME": 1,
+        "CHANGED": 1
+      },
+      "own_product_paths": 2,
+      "own_product": [
+        "frontend/src/features/checkin/checkinCopy.ts",
+        "frontend/src/i18n/LocaleContext.tsx"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "frontend/src/i18n/LocaleContext.tsx",
+          "expect": "c5195d9fbf900947c80a6ace90d88c78eba0e941",
+          "on_line": "20203fee4744513da320387e7923fabbf054d566",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 201,
+      "gen_distance_review_paths": 441
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r15",
+      "head": "e579f0c4b2ddef55262624df3892ed17c61b5289",
+      "paths": 1,
+      "counts": {
+        "CHANGED": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "7b56cb01b92bb1722e932cebbff8081dcfe7d804",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 201,
+      "gen_distance_review_paths": 407
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r16",
+      "head": "2eae40b4d80984a7a92bc8f80b7b22006b91a4a5",
+      "paths": 21,
+      "counts": {
+        "CHANGED": 18,
+        "SAME": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 18,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "8e6d59c742457fbadb8a5408e857e40f38a5b348",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_mutants_r6.json",
+          "expect": "81609d356a41d0c370692ea61f8ecdbdc8a2c08d",
+          "on_line": "02ffefff00dbee63bf22a60b02b1e4c55a1f1fae",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6.json",
+          "expect": "f36f2efdd9c0df009622f302cd13e3d5d0719274",
+          "on_line": "545a29c4b8edfa0b919aacd36df15ef16a3775df",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1.json",
+          "expect": "ae496f39c74395763ce3f92ee1098de5191caa41",
+          "on_line": "e1c5e27b9c4f4def71cef17d05eb196595ad1b90",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M1_revert.json",
+          "expect": "1153fe964a09ef2511dfddc82a43e7b04fb1580a",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2.json",
+          "expect": "9c894d66728bd7b767769837e342027123398609",
+          "on_line": "8d8afd5538f933caf0583764cda6daa4f484110a",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_M2_revert.json",
+          "expect": "1153fe964a09ef2511dfddc82a43e7b04fb1580a",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_copy_rows_r6_control.json",
+          "expect": "1153fe964a09ef2511dfddc82a43e7b04fb1580a",
+          "on_line": "7e974455fda68c288bb897682f9e9bcb86c733f4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_audit_r14.json",
+          "expect": "45e5ca8970f41f3f7d61dbe2d2143d5b81ed9d81",
+          "on_line": "2706810d7de3de424b717372f2862bcbe991bd2f",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r14.json",
+          "expect": "09a331c03403fff7f9f80a7f166f89f90553021f",
+          "on_line": "7baeaa197cddd270adeac84b305b5901d59c47e9",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r14_mutants.json",
+          "expect": "c85d32269a12e562fa24602fb0b7507141f1e7cd",
+          "on_line": "59b9f9dce23ab0ebd7c7b9b60ca238f464e9997e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/day25_anchor_recheck_r14.json",
+          "expect": "0c4c89ad2a39dccda2e30f6d76ff7c84d8c30421",
+          "on_line": "5001b14ead9d5739d35e8219204a1a5c91852e82",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "03888f72d25b19aece17edce3efeb8c704f40b0d",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+          "expect": "8986ce43df21f8741abc366a0a601b90eb1e2788",
+          "on_line": "2942fe00aabf8735f558ede1f780d478a48d54a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "882812c50e352708ff926ac19f988fcde9c46a3f",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "a4af175e019284696b482aa717d6d10505bde5de",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "7b4043bc9b6e60faef95d8ac4bda11bb9543140e",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r10_block.py",
+          "expect": "58476a805bb0f19caa2322e1eb555b310b739ef5",
+          "on_line": "56c15b171820eabd9a0c53e5c2029acd25cf69dd",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 201,
+      "gen_distance_review_paths": 399
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r17",
+      "head": "b3ecdae10148f1cdeb7f77d92e4e18cf49edf10b",
+      "paths": 9,
+      "counts": {
+        "CHANGED": 9
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 9,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "cf5a19d090229685f1534e83afc9da5b16d6e1b0",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/fmt_lint_r14.json",
+          "expect": "9abf4507356088b61a405ffe78fbb275e7581d7b",
+          "on_line": "526920b10293b27dfea872717642c7875a0dfc94",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/fmt_lint_r17.json",
+          "expect": "7af00f03cefeea755ea4f1ddad701902a5bc3bcc",
+          "on_line": "1173426520a18dac777bfdab138461d0530cee60",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "9afbacb958f1b7bbbdfe3514dfaca9b6bb4b4267",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r17_READINGS_RED.json",
+          "expect": "34f827bd5d5366fdc361be4f23d842913adfa6ef",
+          "on_line": "1ff2f0d0a16d9ea6607c629039301748d6e21fa6",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "099acd8ca9eed8a46036776414bc470d0a110b9b",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "04014f5d21824399dddb0c85df6d7f41d7b275fd",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "e8cfb0696a1bfa02e9f81d4f053cfafcb64d7680",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r10_block.py",
+          "expect": "e877f7e1394d05479186a969621101698bf94952",
+          "on_line": "56c15b171820eabd9a0c53e5c2029acd25cf69dd",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 112,
+      "gen_distance_review_paths": 359
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r18",
+      "head": "b0b538798a2ffbf36bf592f883a9eba165426a98",
+      "paths": 7,
+      "counts": {
+        "CHANGED": 6,
+        "SAME": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 6,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "65622f11472105a3993a74035950b8e1c989ff97",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_audit_r17.json",
+          "expect": "ef106f9ea3e7f6a2cd02715b8e102cf262e3eb91",
+          "on_line": "4bc192594240ed7c59339ec3c47b5d08626c87aa",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r17.json",
+          "expect": "62ee864fd7acaa3e6f95d61be7bab34239ec24a4",
+          "on_line": "805fd00d17e09f442a0e6541c579027ac13fa149",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r17_mutants.json",
+          "expect": "91837c9267cfb8b462a440c05929edcad9b80235",
+          "on_line": "767f9a7f0ecb7d47b664f1c698abc9908d84ea90",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/day26_anchor_recheck_r17.json",
+          "expect": "4be2091c25d63bb9884391951152c3773f9c4a42",
+          "on_line": "035064781f11141914d4b9a7e604a10885fcc9ab",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/fmt_lint_r17.json",
+          "expect": "c39ef0457509892bdb74cfb473ed9d79194898ed",
+          "on_line": "1173426520a18dac777bfdab138461d0530cee60",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 110,
+      "gen_distance_review_paths": 336
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r19",
+      "head": "065ab65166b7d21b4574ccb67194e6b72c64221f",
+      "paths": 17,
+      "counts": {
+        "SAME": 17
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 0,
+      "not_held": [],
+      "verdict": "HELD",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 50,
+      "gen_distance_review_paths": 169
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r2",
+      "head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "paths": 44,
+      "counts": {
+        "CHANGED": 7,
+        "SAME": 2,
+        "ABSENT": 35
+      },
+      "own_product_paths": 9,
+      "own_product": [
+        "backend/app/main.py",
+        "backend/tests/test_qoder_ord0500_journey_refusal.py",
+        "contracts/openapi.yaml",
+        "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+        "frontend/playwright.ord0500-checkin.config.ts",
+        "frontend/src/features/checkin/checkinCopy.ts",
+        "frontend/src/features/checkin/checkins.ts",
+        "frontend/src/features/checkin/footprint.css"
+      ],
+      "has_landing_receipt": false,
+      "not_held_count": 42,
+      "not_held": [
+        {
+          "path": "backend/app/main.py",
+          "expect": "ce6bda55550d00cb9366b2986c63afd196eec0f7",
+          "on_line": "46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+          "expect": "35bff0ad2e4bd8146c46f019d917d3624ed3dc80",
+          "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "contracts/openapi.yaml",
+          "expect": "c870395cb084d13173e10d9425daa677e5a2efc6",
+          "on_line": "8fa657e6d08cee10fae142e380dae49c1d831ad4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "frontend/src/features/checkin/checkinCopy.ts",
+          "expect": "6d52c83f583c91c69d9dbfbd1878e1d0d7d3c982",
+          "on_line": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "frontend/src/features/checkin/checkins.ts",
+          "expect": "c9f6179932a3a8ad1b502e3fc8b2cf2726cf9eb2",
+          "on_line": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "frontend/src/features/checkin/footprint.css",
+          "expect": "f7454473c054476a6dd52aa73062925d92b3f570",
+          "on_line": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "frontend/src/features/trip/TripItinerary.tsx",
+          "expect": "9c74763fa71d7cf2b7f2bad87992a01836309f3f",
+          "on_line": "e846ed1b67c67313405f645ecac5432f1a97d241",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/GEN5_READINGS.md",
+          "expect": "f3ca1134fdbea049a053c60aee24d1cd658a441a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_390x844_r2.json",
+          "expect": "6038bb2b4c144f8c6610e7351f7ee18f3133ad46",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_CLIENTBOOL_MUTANT_phone_arrived.png",
+          "expect": "7bc270d3e94f6710c6daff65578e55c11bc1ecd4",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R2_UNDER_MUTANT_CE1_390x844_r2.json",
+          "expect": "94429c329329628379512abc661c698e8f15beea",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R2_desktop_1280x800_r2.json",
+          "expect": "005ddcf7056dca7f797588fa71a471ee42e3f764",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R2_phone_390x844_r2.json",
+          "expect": "127dc83e508875465007bdf6e1348a2cbadec10f",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_O0500_R2_phone_after_duplicate.png",
+          "expect": "56c42042374a94a4db0edd2eac4997f08c39775d",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_390x844_r2.json",
+          "expect": "892d7683e487f25962f135d1d7e2c47235d7b9df",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_PRE_SLICE2_dcb90ccc_phone_arrived.png",
+          "expect": "d0bbf371cd799229c0b78b1c4fbf8261d5b3bfa2",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_822db3d9_desktop_1280x800_r2.json",
+          "expect": "32b4e528a3b836ea13976fb2dfa5e1be4e5cbbc0",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_822db3d9_phone_390x844_r2.json",
+          "expect": "0fcb18ee1edce050a20c57ce6dff8f966d917c3c",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/checkin_TIP_822db3d9_phone_after_duplicate.png",
+          "expect": "2bceea13896364d03bb4d1f2886ba9846e3262c4",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/gen5_builds_r1.json",
+          "expect": "c423ff55b3478f82ac77108589fa14b8bdeb0894",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE+NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 578,
+      "gen_distance_review_paths": 1126
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r3",
+      "head": "34f30aa7a9af096aa9aefa7d53c9af10b28f2bb7",
+      "paths": 1,
+      "counts": {
+        "ABSENT": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/receipts/gen7_landing_check_r1.json",
+          "expect": "65333b91442f3e47986c6864e9a9aeb72eda25ca",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 571,
+      "gen_distance_review_paths": 1113
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r4",
+      "head": "1509357870f730ec43543b38884beb152d3681ca",
+      "paths": 1,
+      "counts": {
+        "ABSENT": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 1,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/receipts/gen8_landing_check_r1.json",
+          "expect": "033e96ee059fd1eb722b084a82c4b3b2b4fb9337",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 465,
+      "gen_distance_review_paths": 1053
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r5",
+      "head": "1230fd50bb7565ecd4dbde6041796f5bc97cc81d",
+      "paths": 3,
+      "counts": {
+        "ABSENT": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 3,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/receipts/gen9_landing_check_r1.json",
+          "expect": "a1ede5607074adfb297a57a2f5ea56c5cb18073a",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/run/stage_gen9_r5.txt",
+          "expect": "eab95d19453b6941bf8f5e6025eb0b845b0b3e4e",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/gen9_blocks_r1.py",
+          "expect": "d8027a050a4f06bbc4d5a142f2c285809640cc71",
+          "on_line": "ABSENT",
+          "verdict": "ABSENT"
+        }
+      ],
+      "verdict": "NOT_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 460,
+      "gen_distance_review_paths": 1058
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r6",
+      "head": "868bc514f77be7b42639e447ddf842ed86389d45",
+      "paths": 6,
+      "counts": {
+        "CHANGED": 4,
+        "SAME": 2
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 4,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "7f2103de6e791219fe59e09656e5b3e729653dab",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "818f292363eeb90041dd7404902a8d46f54ebd8c",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/landing_r6.py",
+          "expect": "ac788c9be13c1d41776b7a5ca4374af2fb22587b",
+          "on_line": "2488621816af589a1052711b0d6122cd225240da",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+          "expect": "0357d7a0424fc91e6811b59c1b8fa74bf55f7952",
+          "on_line": "c76ec0afa50417e119000fca718960705b6554e8",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 445,
+      "gen_distance_review_paths": 972
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r7",
+      "head": "c4cf1c7e853c1d2f3ea1f6f2b2be1131923c2574",
+      "paths": 1,
+      "counts": {
+        "SAME": 1
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 0,
+      "not_held": [],
+      "verdict": "HELD",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 274,
+      "gen_distance_review_paths": 664
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r8",
+      "head": "1783ca68b65e075ca5a86a37e1a87200e03ec0a8",
+      "paths": 8,
+      "counts": {
+        "CHANGED": 8
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 8,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "6a061014073417c0953158b364b695308736d578",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "79823e536627e9cdb8c80d4afe74b6608d0448e1",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "b8272a6f14039f2006445b444a51d00d93f0e145",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "708786f402b0291bfeafd74763150fa2b1ac1b7a",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "32848709d9f816358c9577054157c29c4095acc7",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r6_coordinates.py",
+          "expect": "6e614637062950186c3f88a1c1455d0a9cbfb26b",
+          "on_line": "e8af35a0568b9874ab134963414feeb0f6f30729",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/r8_block.py",
+          "expect": "b1868223b6b6b1f9b91aa3abc69aabeca70415cc",
+          "on_line": "c1ff473242b4dd3fc7f3e0014994db6d261417cc",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+          "expect": "713c180efaff0985e8fa35cedac4cd45e072c760",
+          "on_line": "c76ec0afa50417e119000fca718960705b6554e8",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 271,
+      "gen_distance_review_paths": 604
+    },
+    {
+      "ref": "refs/heads/review/newlane-ord0500-phone-checkin-entry-r9",
+      "head": "74471d538effb5726dcb29ff4459e4064f9df4d3",
+      "paths": 14,
+      "counts": {
+        "CHANGED": 11,
+        "SAME": 3
+      },
+      "own_product_paths": 0,
+      "own_product": [],
+      "has_landing_receipt": false,
+      "not_held_count": 11,
+      "not_held": [
+        {
+          "path": "review/ord0500-checkin/R6_READINGS.md",
+          "expect": "a90ef26d8b18d148ee2a28abf56db702d4308ca0",
+          "on_line": "98027b661705e6a567dc018585302ea774287bbe",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r9.json",
+          "expect": "bb3c65e242f80ff38c7dd6454074b75debcea6b8",
+          "on_line": "68817e1b3506ff38067a3af1964c746da9e5ed8f",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/citation_gate_r9_mutants.json",
+          "expect": "7102d61c427944ab61ada9cad0453fef926ba086",
+          "on_line": "12585023a00c2580719998d22d7cd3a6e571b3a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/landing_r6.json",
+          "expect": "981b9a2ab8978402fef4dcd9ed4edc1fc52a7010",
+          "on_line": "0f534dce61e2d0cbc70402073e28dbe2fcd6978b",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/receipts/pytest_r6.json",
+          "expect": "b7b34d62bb356ecd976b8f0e0c5f40828857ca18",
+          "on_line": "2942fe00aabf8735f558ede1f780d478a48d54a4",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_blobs.txt",
+          "expect": "95801a3ad4c35e19e556826458c93456a6630bb4",
+          "on_line": "035b15a37b8f57369b0dc1af7a9f12a5d481b51d",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_ls_remote.txt",
+          "expect": "a11e3b03f28ff7a9d947db7b0996bbcfd0bb6813",
+          "on_line": "e37c43f4cb61f1a9ee07738a15d6662f28040a5e",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_merge_tree.txt",
+          "expect": "f6098a3da315d25c201a650ce40b663161783e8b",
+          "on_line": "73d145f8162d3f81d4cdb4c0186660b7196096e3",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/run/r6_pytest.txt",
+          "expect": "1bfa37ee9e49287d0b0f45524dcd1bbe503af2e7",
+          "on_line": "3781a21b190d703c95d8322931d278f5ccd4f0e1",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/citation_gate_r9.py",
+          "expect": "5a35daaefc23c845be0c74939f5abea9accf600d",
+          "on_line": "17a5d2a8a94b17b9725b0e604af040094dba23bb",
+          "verdict": "CHANGED"
+        },
+        {
+          "path": "review/ord0500-checkin/tools/stage_readings_r6.py",
+          "expect": "1afa925c6b7517457ed89542621f3af1c5e0a0ef",
+          "on_line": "c76ec0afa50417e119000fca718960705b6554e8",
+          "verdict": "CHANGED"
+        }
+      ],
+      "verdict": "SUPERSEDED_ON_LINE",
+      "prediction": {
+        "prediction": "NO_PREDICTION_EXIT_128",
+        "merge_tree_exit": 128,
+        "predicted_tree": "",
+        "conflicts": null,
+        "why": "fatal: refusing to merge unrelated histories"
+      },
+      "gen_distance_product_paths": 267,
+      "gen_distance_review_paths": 533
+    }
+  ],
+  "candidates_missed_by_key": [
+    {
+      "ref": "refs/heads/review/5a53846b-ord0500-r19-landcheck-merge-r1",
+      "head": "d360d5cf70e9e9069fd4c2e781e6004346c0ecd4"
+    },
+    {
+      "ref": "refs/heads/review/5a53846b-ord0500-r19-tiprecut-probe-r1",
+      "head": "dace4a44c72478958a9a1f2737c5f9b724aef1a1"
+    },
+    {
+      "ref": "refs/heads/review/6a150e1e-ord0500-emitter-readings-red-r1",
+      "head": "63d668173fc54c6f1235a3428da567393e5b4d4c"
+    },
+    {
+      "ref": "refs/heads/review/cmdr-recut-ord0500-r1",
+      "head": "02b73c6c3ece71165b90476e644dd0d10d79611b"
+    },
+    {
+      "ref": "refs/heads/review/cmdr-recut-ord0500-r13",
+      "head": "06ad00b0267c2bef08d4cdcbae2e5a206ded8666"
+    },
+    {
+      "ref": "refs/heads/review/cmdr-recut-ord0500-r17-r1",
+      "head": "1d39477cdf675601f97b974e24e98ba2016c66c6"
+    },
+    {
+      "ref": "refs/heads/review/e766b154-ord0500-r6-rebase-preview-r1",
+      "head": "de28b2ce60db611a7a4a7982f5559fd098b5d229"
+    },
+    {
+      "ref": "refs/heads/review/e766b154-ord0500-r7-rebase-preview-r1",
+      "head": "467fa68b215ab5ed3a9a33e207d9fc53a9b11840"
+    }
+  ],
+  "receipted_refs": [
+    "refs/heads/review/0afdb49b-ord0500-staging-door-r4"
+  ],
+  "path_tally": {
+    "ABSENT": 212,
+    "CHANGED": 136,
+    "SAME": 76
+  },
+  "verdict": "SOMETHING_NOT_HELD",
+  "method": "per path, `git rev-parse <live_tip>:<path>` vs `git rev-parse <ref>:<path>`; ancestry is not consulted and merge-tree is not trusted for a verdict on this line"
+}

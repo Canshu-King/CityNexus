@@ -1,0 +1,16 @@
+{
+  "schema": "CNX_LANDED_RECEIPTS_V1",
+  "derived_from": "landed_blob_rescan_r1",
+  "derived_locally": true,
+  "landed": [
+    {
+      "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r4",
+      "head": "aff61777229ee39d24e120b1e9b3146400d2af88",
+      "paths": 13,
+      "landed_tip": "ee142704825374903007b783d8516694cb9a2422",
+      "claim_source": "refs/heads/review/0afdb49b-landed-blob-rescan-r1@ecf337c254d44d85f496643278cad8817923e089:review/landed-blob-rescan/evidence/landed_blob_rescan_r1.json",
+      "claim_source_blob": "3afa1666fd61007562a6fb3d8d39b86c23470b93",
+      "instrument_verdict_at_claim": "HELD"
+    }
+  ]
+}

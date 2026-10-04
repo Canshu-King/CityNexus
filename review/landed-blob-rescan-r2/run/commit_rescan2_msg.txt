@@ -1,0 +1,11 @@
+ORD-0500 re-scan ruler, second generation: the first scan's labels were wrong in three places, and this cut fixes the names before anyone lands a decision on them.
+
+Measured on live_tip eaf4069e5d07a3dacc1ec33a0be515119208e16e against 999 refs under refs/heads/review/*. The name key r1 used matched 31 refs and silently missed 13 whose names carry this lane's own order numbers; widening the key to the ORD-0485 phone family scanned 36, and the 8 that remain belong to other lanes.
+
+Corrections:
+  1. LOST_LANDED_CONTENT now requires a landing receipt. r1 printed that verdict over hands that were never on the line; r2 says NOT_ON_LINE unless an instrument-generated receipt names the tip they were read equal on. Receipts available to this scan: 1, and the loss class fires on 0 hands today.
+  2. git merge-tree --write-tree exited 128 (unrelated histories) for 36 of the hands scanned here, so r1's conflict_markers=0 was a number from a command that never merged. r2 reports a prediction only on exit 0 or 1; the control arm (a commit against its own parent) still answers PREDICTED, so the leg is not disabled to hide the problem.
+  3. 'paths outside review' is renamed to what it measured: generation distance. The stray-write question is now computed from the hand's own diff as own_product_paths.
+  4. the enumeration's blind spot is printed as candidates_missed_by_key rather than swallowed.
+
+Nine arms (two controls, seven mutants) all bite: every_arm_bit True. Class tally over the widened pass: {"HELD": 5, "NOT_ON_LINE": 11, "SUPERSEDED_ON_LINE": 13, "SUPERSEDED_ON_LINE+NOT_ON_LINE": 7}.
