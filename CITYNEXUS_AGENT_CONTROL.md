@@ -16588,6 +16588,99 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · /v8/authoritative 那两枚残留大写字 · 车道 45d25bfb 交 r2 落地回执 + r3 残留定位（本单不占新号；枝 review/45d25bfb-ord0553-authoritative-caps-r3）
+
+一、现尖、代次与本单的字节量
+- 交块前现读权威尖：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 于本机 18:15:56 逐字回读为 868958e7e11472faa0fc84c2218304c36d1885b0；我这轮所有读数的树切在 0413e55634e9c6953ea88a4b01a17b8afd7ac88a（HEAD 现读同一枚，树内 0 行脏）——期间权威线动过一次，不是我动的。
+- 移动不影响这块的读数：本单涉及的 7 枚文件在 0413e55634e9c6953ea88a4b01a17b8afd7ac88a 与 868958e7e11472faa0fc84c2218304c36d1885b0 两尖逐枚同 blob（`git rev-parse <tip>:<path>` 现取，同一命令两侧对拍），其中 frontend/src/i18n/LocaleContext.tsx 30edf573f98b966dbe8aafa05a81a635b26d7538、frontend/src/lib/displayVocabulary.ts bdbaa3da9bb3ad996a6238256abc5622915a93d1、frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx 821365340bc164af105fcbb7839f65d5540e591a、尺 frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts 84be25996cf4b082fcc2d6c338fa8a9cccd987f1。
+- r3 改了 0 枚产品字节、0 笔提交、0 次推送：那两枚残留判为「现尖不该再画它们」，读数在第三、四节；要不要为此上字节归你裁。标题里那枚 -r3 枝名只在我本地工作树上（没有可推的字节，远端没有同名 ref），所以这块不带 r3 的 40 位交付头。
+
+二、r3 怎么定位的（静态不收敬就改成量）
+- 静态那一趟先失败：产品树里逐枚 grep 不到任何一句把 ARRIVED / COMPLETED 直接写进 DOM 的话。我不拿「搜不到」当结论，那趟 importers 清单与 e2e 断言行号落在件 import_and_assertion_inventory.txt（1903 B）blob 22228dba4094761534cfb545cf0e808f32ba8dff。
+- 定法＝同库、同后端、只差 bundle 代次的 DOM 上下文对照。探针 cmdra_0553_caps_context_r1.js 真浏览器（390x844、单浏览器顺序、每次只读一臂一件），对每个可见文本节点记 token / tag / class / 五层祖先链 / 整行文字，并把这一屏收到的每个 /api/ JSON 的全部字符串值做成倒排索引，用「这枚字是否等于服务端答过的字段值」来判源，而不是靠我读代码。脚本件 blob 57fb3b773ad2f8b7a7c938bb78b7ae7519ba1c30。
+- 私有栈三证：后端 :8752 由启动器 D:/moodle/_qoder_cmdra_ord0553_20261003/_launch_backend_with_key_r1.py 起，`pid_owns_port` true（netstat LISTENING owner 46096 在我进程树里，否则 ABORT 返 9），`/api/v1/demo/scene` 回 demo_mode true、行程 22222222-2222-4222-8222-222222222222；这两个值连同端口记在件 facts_r3_computed.json blob b8b6e550a624d1c69fe4ebcd4df5d60adf26825d。
+- 分母：种子 D:/moodle/_qoder_cmdr_priv_0437seed.db 以 mode=ro 打开、`src.backup` 得本轮专用副本 D:/moodle/_qoder_cmdra_ord0553_20261003/_cmdra_0553p.db；共享预览库 _preview.db 我这轮没读、没写、没 ALTER，没跑 demo/reset。两枚库字节（17330176 B 与 17358848 B）在件 facts_r3_computed.json 的 seed_bytes 与 db_sizes 两格，blob b8b6e550a624d1c69fe4ebcd4df5d60adf26825d。
+- 造那一枚 ARRIVED 用的是页脚按钮那条 API（`POST /api/v1/journeys/(id)/activities/(aid)/depart` 再 `/arrive`，发射点 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:133 里 `transitionActivity` 调的那支）；配方件 drive_arrival_r3.py blob 32b1b2cc451d2e3b3f844a3ab90963d2329d7bde。推后权威版逐枚 Old Town Gate=COMPLETED | Riverside Museum=COMPLETED | Central Food Hall=COMPLETED | Tech Art Center=ARRIVED | Nexus River Cruise Pier=PLANNED | Skyline Dinner House=PLANNED；twin 现读 now_state ARRIVED、next_state PLANNED；件 store_state_after_arrival_drive.json blob 685b1379a9773930aef2a55be53e5cfd8bb34e3b。
+- 静态两道，入口名各取自身磁盘 index.html、服务字节 1,200 B 与磁盘同 sha1、访问日志在我目录：:49851 = 现尖代 index-BcQ9VAso.js，:49852 = r2 之前的基线代 index-DUhOk9ks.js。
+
+三、读数（那两枚画在哪一格）
+- 现尖代 :49851 index-BcQ9VAso.js（库里已有 ARRIVED 那一行）：那一屏机词形命中 10 处（按 token 计，一个节点可含多枚），其中服务端状态字 0 处；ARRIVED 与 COMPLETED 一枚都不画，页面异常 0 处。件 sweep_context_en_r2gen_arrived.json blob 21c16e5db0103aab21b917cd04f0ff28365efad5。
+  现尖代那 10 处逐枚：AUTHORITATIVE / JOURNEY / NEXT / TRIP / STUDIO / DRAFT / THEN / ACCEPT / REALITY / CHANGED —— 全在 v8-kicker / v12-state-kicker 那类样式字上，本单一枚没碰。
+- 基线代 :49852 index-DUhOk9ks.js（同库同 :8752，只差 bundle）：机词形 16 处，其中服务端状态字 6 处，逐枚 ARRIVED x2、COMPLETED x3、PROGRESS x1，页面异常 0 处。件 sweep_context_en_tipbaseline_arrived.json blob 22bf3a9ca5fab071b523c9ed82d933b6b39d0467。
+  槽位逐枚点名，正对你圈的两处：ARRIVED 画在 span.v12-state-value（NOW 卡那一行，发射点 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:110），并同一屏画在列表行 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:126 的 state-arrived；COMPLETED 画在 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:126 的 state-completed，整行文字就是 Old Town Gate 那一行。
+- 「面板确实挂载」这一证在两代上都成立：现尖代 True、基线代 True（读 data-testid=v12-authoritative-panel 那个 section 有无文字），那一屏 innerText 现尖代 3472 字、基线代 3472 字。推之前那对读数是现尖代 10 处 / 脏 0、基线代 16 处 / 脏 6（当时屏上是 ACTIVE、COMPLETED、ROUTE，屏里还没有 ARRIVED 这一态）。件 sweep_context_en_r2gen_before_transition.json blob 8bef638a0eb730e8dc36ae2b90a331dfe2dd3f5e、件 sweep_context_en_tipbaseline_before_transition.json blob 8fb4a93417663905ac0eb570b0231c32b9de21c5。
+- 判源（题面的二分）：ARRIVED 逐字等于服务端答过的值，这一屏收到的 JSON 里它在两条字段上：experience.active_plan.activities[3].status 与 twin.context.execution.now.state；COMPLETED 同样（列表那一行整行文字是 Old Town Gate=COMPLETED，我这库权威版逐枚里 Old Town Gate 的 status 就是 COMPLETED（同一件的 activity_statuses 那格））。按你 ORD-0553 的判语＝服务端答复的字＝脏，而这两枚的措辞正是 r2 落的那两格：frontend/src/i18n/LocaleContext.tsx:624 现值 Arrived、frontend/src/i18n/LocaleContext.tsx:627 现值 Completed。
+- 你那把尺在现尖代（同库含 ARRIVED 那一行）：那一屏 4 处、全屏 27 处、去重 22 枚、命中路由 9 条、页面异常 0 处，那一屏逐枚 AUTHORITATIVE / NEXT / TRIP / REALITY。件 cmdr_sweep_en_r2gen_arrived.json blob c0594b37eed1c04caf031ef26a5dcbc7be1cf914。
+- 同一把尺、同一库、同一后端，只把 bundle 换成 r2 之前的那一代 :49852 index-DUhOk9ks.js：那一屏 10 处、全屏 33 处、页面异常 0 处，那一屏逐枚 AUTHORITATIVE / ARRIVED / NEXT / COMPLETED / COMPLETED / COMPLETED / ARRIVED / PROGRESS / TRIP / REALITY —— 你圈的 ARRIVED 与 COMPLETED 就这么被同一把尺在原代字节上量出来。件 cmdr_sweep_en_tipbaseline_arrived.json blob b357c21a28d1f6bd1e10b34ed6a58628c8aca94c。
+- 槽位逐字（第三把尺 cmdra_0553_slot_text_r1.js，blob 91f6da81ddc376d111dd15aa1744049c05927657；它不下判语，只把三格画的是什么打出来，同一状态、两代字节）：
+  现尖代 index-BcQ9VAso.js：NOW 卡两格 Arrived / Planned，列表行 Old Town Gate=Completed ; Riverside Museum=Completed ; Central Food Hall=Completed ; Tech Art Center=Arrived ; Nexus River Cruise Pier=Planned ; Skyline Dinner House=Planned，页脚按钮 Mark In progress / Preview impact / Accept edit。件 slot_text_en_r2gen_arrived.json blob 38a6870dd5a89b1891b12026400cd2b611eeda5c。
+  基线代 index-DUhOk9ks.js：同两格 ARRIVED / Planned，同列表行 Old Town Gate=COMPLETED ; Riverside Museum=COMPLETED ; Central Food Hall=COMPLETED ; Tech Art Center=ARRIVED ; Nexus River Cruise Pier=Planned ; Skyline Dinner House=Planned，同按钮 Mark IN PROGRESS / Preview impact / Accept edit。件 slot_text_en_tipbaseline_arrived.json blob 4451a7b4b78ca0a17057c5a7859a1fb83eec60fa。
+- 中文臂现尖代（你那把尺，同库同后端）：那一屏 0 处、全屏 2 处、去重 1 枚、页面异常 0 处，那 2 处全在 /v8/bookings 的 JSON 上；中文这一屏没有新增机词行。件 cmdr_sweep_zh_r2gen_arrived.json blob 7c987ea281e7c9ef500dc415c9513b0a22bc7642。
+- 中文臂那一屏的 DOM 上下文另有一件：机词形 0 处、面板挂载 True（那一屏 innerText 1653 字）。件 sweep_context_zh_r2gen_arrived.json blob 67aa2a74905328ba6a7e34b73a639e45fa1d5e1d。
+- 中文臂槽位逐字（同那把槽位尺，现尖代 index-BcQ9VAso.js）：NOW 卡两格 已到达 / 计划中，列表行 Old Town Gate=已完成 ; Riverside Museum=已完成 ; Central Food Hall=已完成 ; Tech Art Center=已到达 ; Nexus River Cruise Pier=计划中 ; Skyline Dinner House=计划中，页脚按钮 标记 进行中 / 预览影响 / 接受编辑；页面异常 0 处。件 slot_text_zh_r2gen_arrived.json blob 59ae6d7c11018b292f8f85b2232278a95ee68e26。
+- 两趟全屏 sweep 报废、不当证据（那一屏没挂载，路由走空）：基线代第一趟那一屏只有 432 字、中文臂第一趟 198 字；两趟都另发了件，重跑的那两趟才是上面的读数。件 cmdr_sweep_en_tipbaseline_walk_did_not_reach_the_screen.json blob cf41a2483c4ab17ffd31927b5eb87e47a0e30ea5、件 cmdr_sweep_zh_r2gen_walk_did_not_reach_the_screen.json blob d8538419765fef106206ee7ccfcd7651d5b8ffca。
+
+四、r3 的结论与要你裁的那一步
+- 结论：这两枚脏字在现尖不该上屏——同库同后端只差 bundle 代次，基线代画 ARRIVED 2 处 / COMPLETED 3 处，现尖代画 0 处；差别只由 frontend/src/i18n/LocaleContext.tsx:624 与 frontend/src/i18n/LocaleContext.tsx:627 那两格词面解释，也就是 r2 落地的六枚里之两枚。
+- 所以请把你那一屏的入口名重读一次：`document.querySelectorAll('script[src*="assets/index-"]')` 应回 index-BcQ9VAso.js；若回 index-DUhOk9ks.js（或任何别的名字），那是 r2 之前的字节（旧 dist 或 SW 缓存），不是权威线的新构建。
+- 我没量到的格子具名：你那一屏实际加载的入口名与 dist 目录我取不到（不共享你的浏览器与那一棵树），NOT_REACHED_BY_CMDR；我这边两代入口名与三证都在上面。
+- 尺这一趟我在落地尖重跑过（纯读文件、不接供给）：4 臂全 passed、0 unexpected、用时 4289 毫秒。件 ruler_at_landed_tip_4arms.json blob c1039d42f31d6ca71b113ebf3b5744e1dc75fb0a。
+
+五、顺手量到、本单一行没改的三格（要裁就裁这三格）
+- frontend/e2e/v13-authoritative-integrity.spec.ts 那支 e2e 把按钮名钉死在旧字面：`Mark EN ROUTE` 逐字在 37、38 行、`Mark ARRIVED` 逐字在 39 行。同一枚按钮（发射点 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:133）我量到：现尖代逐字 Mark In progress，基线代逐字 Mark IN PROGRESS —— 现尖这一代它不再拼出枚举原文，所以钉着旧字面的那三行在现尖合不上。我没动别人的判据文件；「这三行会红」是从我量到的两个字符串推出来的预测，不是读数（整套 e2e 我没跑，跑它要 demo/reset 与 npm run dev），具名 PREDICTED_NOT_MEASURED。
+- frontend/src/features/execution/V12StatePrimitives.tsx:19 的兜底把状态名空格化后原样上屏，而它自己那张 stateKeyMap 不含 PLANNED / READY / CANCELLED。实测这枚文件在产品树只被 frontend/src/features/studio/V12TripStudioPanel.tsx:9 引一处、且只取 ImpactPreview，ActivityCard 与 LiveJourney 只在 stories 里出现（importers 清单在 import_and_assertion_inventory.txt blob 22228dba4094761534cfb545cf0e808f32ba8dff）。今天无屏可达，本单不改，具名 NOT_TOUCHED_BY_CMDRA。
+- 词表里另有三条英文值逐字含枚举原文：frontend/src/i18n/LocaleContext.tsx:605、frontend/src/i18n/LocaleContext.tsx:606、frontend/src/i18n/LocaleContext.tsx:608；同键的中文三条已是人话（frontend/src/i18n/LocaleContext.tsx:1681、frontend/src/i18n/LocaleContext.tsx:1682、frontend/src/i18n/LocaleContext.tsx:1684）。这一屏两代读数都没有从这三条来的枚（页脚按钮只取 exec.markInProgress 的首词，见 frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:133），本单没改，具名 NOT_TOUCHED_BY_CMDRA。
+
+六、r2 落地那一笔的回执（这块之前没进收件口，一并补上）
+- 交付头 1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c、父 f3304e25871832ddf6196da62287e0cc1ae60210、枝 review/45d25bfb-ord0553-authoritative-caps-r2；产品字节两枚：frontend/src/i18n/LocaleContext.tsx +8 行 -6 行、frontend/src/lib/displayVocabulary.ts +6 行 -0 行（`git diff --numstat f3304e25871832ddf6196da62287e0cc1ae60210 1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c`，只算这一笔；尺与 runner 在另两笔）。
+- 尺：修前 2 臂红（覆盖臂点名 READY 与 CANCELLED，回声臂点名那六枚枚举原文），修后 4 臂全绿、用时 352 毫秒；反件 mC（删 stateKeyMap 的 ACTIVE 一行）红 1 臂、用时 682 毫秒，反件 mD（把 exec.state.completed 改回 COMPLETED）红 1 臂、用时 633 毫秒。件 ruler_r2_prefix_red.json blob dc2d9fd955a7a59698b0b66206659aa5258ffb38、ruler_r2_fixed_green.json blob 6d0fd225f5753a976a5115e1cb5f477078a74a91、ruler_r2_mutantC.json blob 188f20fac415cdaa62f8f8037447af5e5014fcb8、ruler_r2_mutantD.json blob 4ddd41b09b88306bf6ed3827aa436c47d4c8b68b。
+- 屏（你那把尺，两臂各一件，同库同形状）：英文臂那一屏 10 处 → 4 处，降下来的正是判脏那 6 枚，剩下逐枚 AUTHORITATIVE / NEXT / TRIP / REALITY；全屏 33 处 → 27 处。中文臂那一屏 0 → 0、全屏 2 → 2。两臂页面异常 0。件 sweep_tipbaseline_en_r2gen.json blob e4c245e0ed6138943acf45290125ad993c45b19f、sweep_r2_en.json blob f3e7f9d965a21db48e9cd376a5d5a4afce1af2e3、sweep_tipbaseline_zh_r2gen.json blob 3e0159915f0169ca079dc1ef10090039411b8c2c、sweep_r2_zh.json blob 1b3966bae7eb2f4ff9ead5aee4052c462a023316。
+- 正对照（空分母不算通过）：修后英文臂那一屏仍画 8 个状态槽，逐字 Completed / Active / Planned 与按钮 Mark On the way，5 臂全 PASS；件 labelcheck_r2_en.json blob 21ae52e66085d6d23ed389f5b8df524be91b6240。
+- 发布：r2 那批 13 件全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_r2_20261003/_publish_manifest.jsonl（4487 B）；r3 这批 22 件、CREATED 22 件、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r3.jsonl（7807 B）；两批都在新前缀 evidence/45d25bfb-ord0553-20261004/ 下，没有覆盖任何已发布路径。
+- 收尾：我这轮起的 :8751 :8752 :49841 :49842 :49843 :49844 :49851 :49852 交完这块就停，node_modules 的 junction 只用普通 rmdir 卸、不递归删；:8000 :4781 :4782 :8693 与别人的 uvicorn 一个没动；force-push 0 次；权威线我没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）补一块：recut 被拒的成因我复现了——是我那枚枝的 base 旧在重建树之前；已按现尖重切并在新代把反件重跑，交 `review/0afdb49b-ord0500-staging-door-r3`。③=丙 收到并挂起，一件没动
+
+〇、你退回的理由是对的，我这侧逐枚实测（不是接受转述）
+- 被拒那枚 `refs/heads/review/0afdb49b-ord0500-staging-door-r1` = `434801bfa39b5105d5f60dcc61ed0d79b814b7aa` 的父是 `ab8ddb55d1744b4c54139accd8b6444d9ba86bd2`（重建之前的线）。拿它对现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 做 `git diff --name-only`：23 枚路径，其中 2 枚是 `frontend/src/i18n/LocaleContext.tsx` 与 `frontend/src/lib/displayVocabulary.ts` —— 那两枚是 45d25bfb / ORD-0553 的热文件，我这一手一枚没写，是**旧 base 把它们当成我的改动端了出来**。取数 `git -C D:/moodle/CityNexus diff --name-only 868958e7e11472faa0fc84c2218304c36d1885b0..434801bfa39b5105d5f60dcc61ed0d79b814b7aa`。
+- 我这侧的教训（与你的常设同一件事）：写集必须按**枚枝自己的分叉点**数，且那枚分叉点要在当场从现尖重取；base 旧了，diff 就会把别人的字节说成我的。我此前在 r19 那块里写过这条（fork 点而非尖），这一手我自己违反了。
+- 现在的两枚都是按现尖当场重切的：`git read-tree <现尖>` + 临时 index + `commit-tree -p <现尖>`，所以相对现尖只动我自己那一个目录。
+
+一、重切后的实测（三枚枝逐枚现读，全用 blob 等值判，不用 ancestry）
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r2` = `89213c447190c853de998e2d78e4b6d5f63847f9`：对现尖 `merge-tree --write-tree` 退 0、`CONFLICT` 0 枚、共动 9 枚路径全在 `review/ord0500-staging-door/` 之下、越界（非该目录）计数为 0。
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r3` = `acaba59d0a6168eee3ff0012ebadc75ea3387002`：同一趟判据，退 0、`CONFLICT` 0 枚、共动 10 枚路径、产品 0 枚（复算 `git -C D:/moodle/CityNexus diff --name-only 868958e7e11472faa0fc84c2218304c36d1885b0..acaba59d0a6168eee3ff0012ebadc75ea3387002`）。
+- `refs/heads/review/0afdb49b-ord0500-citation-note-r2` = `b2008af358c72a34ad9a9af01d62604644507819`：退 0、`CONFLICT` 0 枚。
+- r1 与 r2 的枝尖我都没换过（`ls-remote --refs` 回读仍是 `434801bfa39b5105d5f60dcc61ed0d79b814b7aa` 与 `89213c447190c853de998e2d78e4b6d5f63847f9`）：无强推、无删枝，按你那句「旧枝不要强推不要删、blob 都在库里可达」办。
+- **要落哪枚由你点，我推荐 r3**：r3 是 r2 的超集，工具字节里多含下面第二节那处缺陷的修法，件是当代尖上重跑的读数。r2 留着是给「只要门字节、不要新代件」那一档。
+
+二、你要的那件事：门在新代仍真咬（两趟真路径 + 四枚反件，全部当场重跑）
+- 反件：四枚全咬、两枚控制趟不报红，`every_arm_bit` 为真 —— 改判语 → 红「引文闸判语」；删件 → 红「换代复读无腐烂」；把件截成半份 → 红「词汇闸判语」；造一枚快照里没有的新文件再判红 → 红「静态 arity 尺绿且自检咬下」，且那枚新文件被拿走（`stray_before` 为真、`stray_after` 为假），每枚结束时目录树与它自己那份快照逐字节相等。件 `review/ord0500-staging-door/evidence/stage_door_r20_mutants.json`，blob `dfd67f4f131be8be49bf72ea3bbcd3bc60d2c373`。
+- 真路径拒的那一趟：注入一枚假判语（不动任何件）→ 退码非 0、尾行 `STAGING_READINGS_RED r20`、写回 8 枚、拿走 1 枚，跑完 `git status` 与跑前逐行相等。失败件 `review/ord0500-staging-door/run/r20_STAGING_RED.json`，blob `d157a52d3a12bc0952871aa3de3793a4e9f0e3d9`。
+- 真路径控制的那一趟：退码 0、输出里 `staging_door` 为 GREEN，它写的 9 枚路径随后全部还原、`git status` 空。两趟原始输出 blob `b959148987ffcbc4ca889d960a17935fa28ac9a7` 与 `75b385f6800410b20395ecf4e4930bb958099591`。
+- 新代自己暴露的一个我自己的缺陷：这一趟门**拿走了 1 枚文件**，而失败件只报计数不报名字——只有数字没有清单，正是本车道被点过名的形制。所以 `restore()` 现在返回 `removed_paths`，当代那一枚是 `receipts/citation_audit_r21.json`（按 glob 拷贝时造出来的、快照里没有的一件）。取数：上面那枚失败件 blob 的 `restore.removed_paths` 字段；门的原件新 blob `e78308df3c0feb45de78fb4f4dc38447fe83bf00`。
+
+三、你那句常设（ancestry 从此不可作判据）对我这一侧的落地影响（具名，不口头承认）
+- 我名下靠 ancestry 说「已落」的只有 r19 那块 §六 的一格（臂尖是否为现尖祖先）。按新常设它作废，改成 blob 等值：现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 上我那三枚与我 r19 头逐枚相等 —— 测试 `dd4bf606865e414775babab7d93763205bf7dd84`、读数件 `c25e782dd70e205a044555edad31a380a4c0539c`、读数单 `98027b661705e6a567dc018585302ea774287bbe`（取数 `git rev-parse <rev>:<path>` 两两比）。
+- 我其余的 ancestry 用法都在**同一枚枝内部**（读数提交是不是枝尖的祖先、快照 vs 树），不受重建树影响，继续有效：本手三枚枝的 `merge-tree` 全退 0 就是它给的答话。
+- 你那侧按枝名配头的缓存问题（把 `…-r19` 配到 `…-r18` 的头）我不碰那把门；我这边所有枝名读数都改成 `ls-remote --refs` 现取逐字核。
+
+四、③=丙 的处置：收到，**挂起，一件没动**
+- 我没有挪那批同名件、没有建带代子目录、没有写对照勘误。等你说重建树事件收口再放行。
+- 顺带把丙那枚的代价按今天现场补一格：这次被拒的成因正是「base 旧了」，而丙的作用面是同名覆盖那一族——挪进带代子目录后，旧路径不可达的问题不会消失（blob 仍在库里，但按路径复算的入口会断），所以对照件必须同时给「旧路径 → 旧 blob 所在 commit」，光给新旧路径不够。
+
+五、边界与本手没做的
+- 产品字节 0 枚；那两枚热文件我一枚没写：`frontend/src/i18n/LocaleContext.tsx` 与 `frontend/src/lib/displayVocabulary.ts` 在三枚枝对现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 的 `git diff --name-only` 里逐枚现读命中 0（三枚枝的总路径数是 9、10、9）；权威线 0 移动；账本 0 直写（本块走收件口）；端口 0 个由我起停；`demo/reset` 未跑；`_preview.db` 未写。
+- 真机与整套 Playwright：仍 NOT_MEASURED / NOT_EXECUTED（`adb devices` 现读只有表头）。② 的 note 今天已发过一枚（`m_6ba7e482cf8f`，幂等按天，重跑答 `ALREADY_SENT_TODAY`）。
+
+六、顺手报一格现场（我这侧现读，与落不落无关）
+- 我那枚已落的 r19 头 `065ab65166b7d21b4574ccb67194e6b72c64221f` 是从重建之前的 base 长出来的，所以它带的那两枚热文件字节与现尖不等：现尖 `frontend/src/i18n/LocaleContext.tsx` = `30edf573f98b966dbe8aafa05a81a635b26d7538`、我旧头上 = `c5195d9fbf900947c80a6ace90d88c78eba0e941`；现尖 `frontend/src/lib/displayVocabulary.ts` = `bdbaa3da9bb3ad996a6238256abc5622915a93d1`、我旧头上 = `5efc495a506e8d1ddde44ac24e542f2ee21a357c`。这不构成冲突（线里落的是逐枚选定的 blob，我那两枚本来一枚没写），但**别再把我那枚旧头往现尖上叠第二次**：要叠就按现尖当场重切（本手三枚枝就是这么造的）。取数 `git -C D:/moodle/CityNexus rev-parse <rev>:<path>` 逐枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### journeyInBin 走真门（六句里最后一句能真做的）· 车道 e766b154 · 18:08 · 两枚臂都 REACHED：门自己答那枚具名 code，屏上那句与表里逐字相等，跑完库回到基线
 
 **〇、坐标（`git ls-remote --refs origin` 现读，回读同值）**
