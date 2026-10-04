@@ -1,0 +1,265 @@
+
+Running 2 tests using 1 worker
+
+  x  1 e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-zh-CN — 真门把行程收进回收站后，这一屏还按得到打卡吗 (4.8s)
+  x  2 e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-en — 真门把行程收进回收站后，这一屏还按得到打卡吗 (4.8s)
+
+
+  1) e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-zh-CN — 真门把行程收进回收站后，这一屏还按得到打卡吗 
+
+    Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-zh-CN — the screen mounted 6 controls but no refusal was painted; body head: 菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 6
+
+      180 |       expect(screen.controls, node(`b-${locale}`,
+      181 |         `the screen mounted ${screen.controls} controls but no refusal was painted; body head: `
+    > 182 |         + `${screen.body_head}`)).toBe(0);
+          |                                   ^
+      183 |     }
+      184 |   });
+      185 | }
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35
+
+    Error Context: test-results\qoder-e766b154-journey-in--e6b44-CN-—-真门把行程收进回收站后，这一屏还按得到打卡吗\error-context.md
+
+  2) e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-en — 真门把行程收进回收站后，这一屏还按得到打卡吗 ───
+
+    Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-en — the screen mounted 6 controls but no refusal was painted; body head: Menu / Trips System 中文 DE Itinerary Stay Bookings Spend One long picture of this trip, made of the days already on this screen. Open the trip poster After you a
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 6
+
+      180 |       expect(screen.controls, node(`b-${locale}`,
+      181 |         `the screen mounted ${screen.controls} controls but no refusal was painted; body head: `
+    > 182 |         + `${screen.body_head}`)).toBe(0);
+          |                                   ^
+      183 |     }
+      184 |   });
+      185 | }
+        at D:\moodle\_qoder_e766b154_ord0472_20260930\wt\frontend\e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35
+
+    Error Context: test-results\qoder-e766b154-journey-in--4ba37-en-—-真门把行程收进回收站后，这一屏还按得到打卡吗\error-context.md
+
+  2 failed
+    e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-zh-CN — 真门把行程收进回收站后，这一屏还按得到打卡吗 ─
+    e2e\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:63:3 › b-en — 真门把行程收进回收站后，这一屏还按得到打卡吗 ────
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.e766-journey-in-bin-r1-P.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\playwright.e766-journey-in-bin-r1-P.config.ts",
+    "rootDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "qoder-e766b154-journey-in-bin-real-door-r1.spec.ts"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "file": "D:/moodle/_qoder_e766b154_ord0472_20260930/wt/frontend/review/journey-in-bin-real-door/readings/report_journey_in_bin.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+      "file": "qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "b-zh-CN — 真门把行程收进回收站后，这一屏还按得到打卡吗",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4842,
+                  "error": {
+                    "message": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-zh-CN — the screen mounted 6 controls but no refusal was painted; body head: 菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m",
+                    "stack": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-zh-CN — the screen mounted 6 controls but no refusal was painted; body head: 菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                      "column": 35,
+                      "line": 182
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 180 |\u001b[39m       expect(screen\u001b[33m.\u001b[39mcontrols\u001b[33m,\u001b[39m node(\u001b[32m`b-${locale}`\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 181 |\u001b[39m         \u001b[32m`the screen mounted ${screen.controls} controls but no refusal was painted; body head: `\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m         \u001b[33m+\u001b[39m \u001b[32m`${screen.body_head}`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     }\n \u001b[90m 184 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m }\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                        "column": 35,
+                        "line": 182
+                      },
+                      "message": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-zh-CN — the screen mounted 6 controls but no refusal was painted; body head: 菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m\n\n  180 |       expect(screen.controls, node(`b-${locale}`,\n  181 |         `the screen mounted ${screen.controls} controls but no refusal was painted; body head: `\n> 182 |         + `${screen.body_head}`)).toBe(0);\n      |                                   ^\n  183 |     }\n  184 |   });\n  185 | }\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T21:28:04.039Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-e766b154-journey-in--e6b44-CN-—-真门把行程收进回收站后，这一屏还按得到打卡吗\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                    "column": 35,
+                    "line": 182
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0638cdb6d50c18b7811a-2214894c4533f6e474d4",
+          "file": "qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+          "line": 63,
+          "column": 3
+        },
+        {
+          "title": "b-en — 真门把行程收进回收站后，这一屏还按得到打卡吗",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4785,
+                  "error": {
+                    "message": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-en — the screen mounted 6 controls but no refusal was painted; body head: Menu / Trips System 中文 DE Itinerary Stay Bookings Spend One long picture of this trip, made of the days already on this screen. Open the trip poster After you a\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m",
+                    "stack": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-en — the screen mounted 6 controls but no refusal was painted; body head: Menu / Trips System 中文 DE Itinerary Stay Bookings Spend One long picture of this trip, made of the days already on this screen. Open the trip poster After you a\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                      "column": 35,
+                      "line": 182
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 180 |\u001b[39m       expect(screen\u001b[33m.\u001b[39mcontrols\u001b[33m,\u001b[39m node(\u001b[32m`b-${locale}`\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 181 |\u001b[39m         \u001b[32m`the screen mounted ${screen.controls} controls but no refusal was painted; body head: `\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 182 |\u001b[39m         \u001b[33m+\u001b[39m \u001b[32m`${screen.body_head}`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 183 |\u001b[39m     }\n \u001b[90m 184 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 185 |\u001b[39m }\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                        "column": 35,
+                        "line": 182
+                      },
+                      "message": "Error: e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts :: b-en — the screen mounted 6 controls but no refusal was painted; body head: Menu / Trips System 中文 DE Itinerary Stay Bookings Spend One long picture of this trip, made of the days already on this screen. Open the trip poster After you a\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m6\u001b[39m\n\n  180 |       expect(screen.controls, node(`b-${locale}`,\n  181 |         `the screen mounted ${screen.controls} controls but no refusal was painted; body head: `\n> 182 |         + `${screen.body_head}`)).toBe(0);\n      |                                   ^\n  183 |     }\n  184 |   });\n  185 | }\n    at D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts:182:35"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T21:28:09.433Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\test-results\\qoder-e766b154-journey-in--4ba37-en-—-真门把行程收进回收站后，这一屏还按得到打卡吗\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_e766b154_ord0472_20260930\\wt\\frontend\\e2e\\qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+                    "column": 35,
+                    "line": 182
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0638cdb6d50c18b7811a-6a77fcd2836c915f98a7",
+          "file": "qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+          "line": 63,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-03T21:28:03.660Z",
+    "duration": 10726.491,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

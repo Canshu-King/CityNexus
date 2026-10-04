@@ -1,0 +1,55 @@
+{
+ "file": "e2e/qoder-e766b154-journey-in-bin-real-door-r1.spec.ts",
+ "locale": "zh-CN",
+ "base": "http://127.0.0.1:4997",
+ "viewport": "390x844",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "door_before_delete": {
+  "read_journey_status": 200,
+  "recycle_bin_status": 200,
+  "recycle_bin_rows": 0,
+  "journey_in_bin": false
+ },
+ "delete_door_status": 204,
+ "door_after_delete": {
+  "read_journey_status": 200,
+  "recycle_bin_status": 200,
+  "recycle_bin_rows": 1,
+  "journey_in_bin": true
+ },
+ "screen": {
+  "href": "http://127.0.0.1:4997/v8/trips",
+  "stops": 6,
+  "controls": 6,
+  "body_head": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服",
+  "painted_leaves": 71
+ },
+ "tapped_stop": "Old Town Gate",
+ "post_answer": {
+  "status": 409,
+  "reason_code": "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+  "message": "This trip is in the recycle bin. 找回 it before stamping or reading its footprints."
+ },
+ "notices_count": 1,
+ "painted_notice": "这趟行程在回收站里，先把它找回来才谈得上打卡或读足迹。",
+ "expected_from_table": "这趟行程在回收站里，先把它找回来才谈得上打卡或读足迹。",
+ "verdict": "REACHED",
+ "undelete_door_status": 200,
+ "door_after_restore": {
+  "read_journey_status": 200,
+  "recycle_bin_status": 200,
+  "recycle_bin_rows": 0,
+  "journey_in_bin": false
+ },
+ "checks": {
+  "withdraw_accepted_by_product_door": true,
+  "trip_is_in_the_bin_after_withdrawal": true,
+  "read_door_refuses_the_withdrawn_trip": false,
+  "sentence_painted_equals_the_tables_own_row": true,
+  "exactly_one_notice_on_the_whole_screen": true,
+  "no_uuid_reached_the_travellers_sentence": true,
+  "restored_by_product_door": true,
+  "bin_is_empty_again_after_restore": true
+ },
+ "taken_at": "2026-10-04T06:09:50.486Z"
+}
