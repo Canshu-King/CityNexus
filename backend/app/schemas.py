@@ -142,6 +142,7 @@ class AgentToolCall(BaseModel):
     service_type: str | None = Field(default=None, max_length=80)
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
     source_url: str | None = Field(default=None, min_length=1, max_length=2048)
+    source_observation_id: UUID | None = None
     source_class: Literal[
         "OFFICIAL_WEB",
         "OFFICIAL_OPERATOR",

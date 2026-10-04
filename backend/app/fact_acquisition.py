@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.money import major_to_minor
-from app.db.models import Journey, Place
+from app.db.models import Journey, Place, WebObservation
 from app.integrations.discovery.real_city import (
     OVERPASS_MIRRORS,
     cost_evidence_from_tags,
@@ -31,6 +31,7 @@ from app.integrations.discovery.real_city import (
 )
 from app.integrations.provider_config import trust_environment_for_public_providers
 from app.integrations.web.searxng import SearXNGSearchProvider
+from app.integrations.web.research_service import corroborate_observation
 
 
 KNOWN_COST_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
@@ -339,7 +340,7 @@ def _requested_fact_source_binding(
 
     if not isinstance(requested, Mapping):
         return None
-    if origin == "agent":
+    if origin in {"agent", "agent_observation"}:
         return {
             "provider_entity": str(place.external_id or ""),
             "source_url": str(requested.get("source_url") or "").strip(),
@@ -1233,6 +1234,19 @@ def acquire_place_facts(
             source_binding = _requested_fact_source_binding(
                 place, requested_binding, origin=binding_origin
             )
+            observation = None
+            corroboration = None
+            if binding_origin == "agent_observation" and requested_binding:
+                observation_id = str(requested_binding.get("source_observation_id") or "")
+                observation = session.get(WebObservation, observation_id)
+                if observation is None or observation.journey_id != journey.id or observation.url != source_url:
+                    source_binding = {
+                        "provider_entity": place.external_id,
+                        "source_url": source_url,
+                        "source_class": "AGENT_SOURCE_CANDIDATE",
+                        "identity_basis": {"matched_provider_entity": False, "reason": "OBSERVATION_NOT_OWNED"},
+                        "approval": "AGENT_SOURCE_CANDIDATE",
+                    }
             # An Agent may suggest a URL, but it cannot downgrade an already
             # corroborated operator/provider binding. Preserve the stronger
             # canonical source while still allowing the Agent to propose a
@@ -1278,6 +1292,24 @@ def acquire_place_facts(
             if source_url:
                 receipt["official_web"]["attempted"] += 1
                 try:
+                    if binding_origin == "agent_observation" and observation is not None:
+                        response, resolved_url = _safe_get(client, source_url, retrieved_at=retrieved_at)
+                        corroboration = corroborate_observation(
+                            place=place,
+                            observation=observation,
+                            page_text=_visible_html_text(response.text[:1_000_000]),
+                            provider_tags={**tags, **nominatim_tags},
+                            nominatim_row=nominatim_row,
+                        )
+                        if corroboration.get("status") == "CORROBORATED_OFFICIAL_SOURCE":
+                            source_binding = {
+                                "provider_entity": place.external_id,
+                                "source_url": resolved_url,
+                                "source_class": "MUNICIPAL_AUTHORITY" if ".go.jp" in resolved_url else "OFFICIAL_WEB",
+                                "identity_basis": corroboration,
+                                "approval": "CORROBORATED_OFFICIAL_SOURCE",
+                                "source_observation_id": observation.id,
+                            }
                     official = _official_web_facts(
                         client,
                         source_url,
@@ -1323,7 +1355,7 @@ def acquire_place_facts(
                 "source": endpoint, "provider": "overpass", "retrieved_at": retrieved_at,
                 "provider_entity": place.external_id,
                 "secondary_source": {"provider": "nominatim", "source": nominatim_endpoint, "provider_entity": place.external_id, "supporting_content": {"extratags": nominatim_tags}},
-                "official_web": official, "search_source": search,
+                "official_web": official, "search_source": search, "source_corroboration": corroboration,
                 "supporting_content": {"tags": tags, "nominatim_extratags": nominatim_tags},
                 "claims": {"opening_hours": {"status": opening.get("status"), "normalized": opening}, "cost": cost},
             }

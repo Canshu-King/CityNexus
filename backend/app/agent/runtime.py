@@ -104,7 +104,7 @@ def reconcile_stale_agent_runs(
 
 
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
-_NON_DOMAIN_TOOLS = {"search_city_services", "conclude_recovery"}
+_NON_DOMAIN_TOOLS = {"search_city_services", "research_place_sources", "conclude_recovery"}
 _MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - _NON_DOMAIN_TOOLS
 _RECOVERY_CONCLUSIONS = {
     "MUTATION_EXECUTED",
@@ -200,12 +200,19 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id"],
         ),
         _tool(
+            "research_place_sources",
+            "Research up to five non-authoritative source leads for one server-owned Place. The server builds the query; results never become facts by themselves.",
+            {**journey, "place_id": _property("string")},
+            ["journey_id", "place_id"],
+        ),
+        _tool(
             "acquire_place_facts",
             "Acquire provider-backed facts for one existing Place; missing facts remain UNKNOWN.",
             {
                 **journey,
                 "place_id": _property("string"),
                 "source_url": _property("string"),
+                "source_observation_id": _property("string", description="Server-owned non-authoritative WebObservation reference"),
                 "source_class": _property(
                     "string",
                     enum=[
