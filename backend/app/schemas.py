@@ -615,6 +615,11 @@ class Activity(BaseModel):
     id: UUID
     sequence_no: int = Field(ge=1)
     title: str
+    # The place's own name, read off the row this activity points at; None when there is no row to
+    # read it from.  A traveller's screen says this word first and falls back to `title` only when
+    # the store has no name, because `title` is what a planner typed, which is not always the name
+    # of the thing itself (`src/lib/mapStopLabels.ts`'s `stopLabel()` follows exactly this order).
+    place_name: str | None = None
     activity_type: str = "visit"
     place_id: str | None = None
     city_service_id: str | None = None

@@ -635,6 +635,11 @@ def activity_schema(item: Activity, place: Place | None = None) -> ActivitySchem
         id=item.id,
         sequence_no=item.sequence_no,
         title=item.title,
+        # Resolved from the same Place row the coordinates above come from, so a stop's name and its
+        # position are answered by one read rather than by two sources that can disagree.  A row that
+        # is missing (a dangling `place_id`) answers None: the screen then says the typed title, which
+        # is the fact the store actually has, instead of inventing a name.
+        place_name=place.name if place is not None else None,
         activity_type=item.activity_type,
         place_id=item.place_id,
         city_service_id=item.city_service_id,
