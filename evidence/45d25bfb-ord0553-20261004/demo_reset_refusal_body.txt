@@ -1,0 +1,1 @@
+{"error":{"code":"RESET_TOKEN_REQUIRED","message":"No demo reset token was presented; nothing was deleted.","message_key":"error.reset_token_required","trace_id":"4fe31f0b-b239-4779-92d4-fcc2709e99f1","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-AWXGQEEA"}}
