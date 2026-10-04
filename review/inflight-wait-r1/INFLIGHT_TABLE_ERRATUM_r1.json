@@ -1,0 +1,203 @@
+{
+  "generated_by": "89f2e2d6",
+  "order": "erratum to INFLIGHT_WAIT_INVENTORY_r1: re-measured by running, not by AST",
+  "measured_head": "13e2b6610c25a3c97a8dbca1c58377c66ceec649",
+  "measured_head_parent": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "tip_now": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "the_published_file_is_not_rewritten": "review/inflight-wait-r1/INFLIGHT_WAIT_INVENTORY_r1.json stays byte-for-byte as published; this file carries the corrections",
+  "rows": [
+    {
+      "site": "backend/tests/test_qoder_ord197_four_class_receipt.py:470",
+      "function": "test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+      "function_still_defined": true,
+      "prescription_in_my_table": "在 _replay_semantics 之后加一行 `job = _wait_closed(b[\"operation_id\"])` 再断言结论字段",
+      "isolated_outcome_at_measured_head": "passed",
+      "isolated_rc": 0,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "file_at_tip_now": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "file_unchanged_between_the_two": true,
+      "verdict": "NOT_RED_ANY_MORE",
+      "detail": "green when run alone and green inside its own whole-file batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_ord197_four_class_receipt.py:501",
+      "function": "test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+      "function_still_defined": true,
+      "prescription_in_my_table": "同一行修法；实测红率见 INFLIGHT_FIX_EXPERIMENT_r1.json",
+      "isolated_outcome_at_measured_head": "passed",
+      "isolated_rc": 0,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "file_at_tip_now": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "file_unchanged_between_the_two": true,
+      "verdict": "NOT_RED_ANY_MORE",
+      "detail": "green when run alone and green inside its own whole-file batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_anywhere_provider_truth.py:72",
+      "function": "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "function_still_defined": true,
+      "prescription_in_my_table": "POST /catalog-hydrations 之后先 wait_for_operation(operation_id) 再读那份 places 投影",
+      "isolated_outcome_at_measured_head": "red",
+      "isolated_rc": 1,
+      "in_whole_file_batch_failures": true,
+      "file_at_measured_head": "4d952cd51f6874096d60d0704acf0bac07786bc4",
+      "file_at_tip_now": "4d952cd51f6874096d60d0704acf0bac07786bc4",
+      "file_unchanged_between_the_two": true,
+      "verdict": "STILL_RED",
+      "detail": "red alone and in batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_anywhere_gates.py:169",
+      "function": "test_g2_an_existing_journey_becomes_plannable_without_being_recreated",
+      "function_still_defined": true,
+      "prescription_in_my_table": "202 之后先等终态，再断 `phase`/`status` 与后面那句 `plans/generate` 的前提（注释自陈前提是「水合完成后」）",
+      "isolated_outcome_at_measured_head": "passed",
+      "isolated_rc": 0,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+      "file_at_tip_now": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+      "file_unchanged_between_the_two": true,
+      "verdict": "NOT_RED_ANY_MORE",
+      "detail": "green when run alone and green inside its own whole-file batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_ord224_g3_generation_measurement.py:162",
+      "function": "test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
+      "function_still_defined": true,
+      "prescription_in_my_table": "反向依赖：`assert terminal_rows and open_rows` 把「有作业还没关」当判据；改法是后继也走闩锁（parked_worker）而不是靠线程没跑完，或只断「出现了 ≥2 代 operation_id」这一真判据",
+      "isolated_outcome_at_measured_head": "passed",
+      "isolated_rc": 0,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "73e723c333cb31a78148cde5f25b1916ce808fae",
+      "file_at_tip_now": "73e723c333cb31a78148cde5f25b1916ce808fae",
+      "file_unchanged_between_the_two": true,
+      "verdict": "NOT_RED_ANY_MORE",
+      "detail": "green when run alone and green inside its own whole-file batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_provider_identity_leg.py:437",
+      "function": "test_g7_a_resolved_identity_reaches_the_stored_operation_without_any_pending_token",
+      "function_still_defined": true,
+      "prescription_in_my_table": "读作业行与投影之前先等终态（该文件里 0 处等待器）",
+      "isolated_outcome_at_measured_head": "passed",
+      "isolated_rc": 0,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+      "file_at_tip_now": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+      "file_unchanged_between_the_two": true,
+      "verdict": "NOT_RED_ANY_MORE",
+      "detail": "green when run alone and green inside its own whole-file batch"
+    },
+    {
+      "site": "backend/tests/test_qoder_pending_destination_identity.py:157",
+      "function": "test_g1_unresolved_text_never_reaches_the_identity_columns",
+      "function_still_defined": false,
+      "prescription_in_my_table": "同文件已有 import 与用法（:224 引入、:232→:234 那处真在用），而 :157 与 :373 两枚走的是 _submit 之后直接 _row 断身份列；在断言前加同一次等待即可（:495 不算，它 start_worker=False）",
+      "isolated_outcome_at_measured_head": "red",
+      "isolated_rc": 4,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "file_at_tip_now": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "file_unchanged_between_the_two": true,
+      "verdict": "ROW_NAME_STALE_ON_THE_LINE",
+      "detail": "the table's function name is not defined in that file at 4d43f8bc; the file does define 15 test functions"
+    },
+    {
+      "site": "backend/tests/test_qoder_pending_destination_identity.py:373",
+      "function": "test_g6_the_stored_label_is_separate_from_the_pending_key",
+      "function_still_defined": false,
+      "prescription_in_my_table": "同上",
+      "isolated_outcome_at_measured_head": "red",
+      "isolated_rc": 4,
+      "in_whole_file_batch_failures": false,
+      "file_at_measured_head": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "file_at_tip_now": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "file_unchanged_between_the_two": true,
+      "verdict": "ROW_NAME_STALE_ON_THE_LINE",
+      "detail": "the table's function name is not defined in that file at 4d43f8bc; the file does define 15 test functions"
+    }
+  ],
+  "counts": {
+    "rows": 8,
+    "closed_by_another_lanes_landed_fix": [
+      "backend/tests/test_qoder_ord197_four_class_receipt.py:470",
+      "backend/tests/test_qoder_ord197_four_class_receipt.py:501"
+    ],
+    "not_red_any_more": [
+      "backend/tests/test_qoder_ord197_four_class_receipt.py:470",
+      "backend/tests/test_qoder_ord197_four_class_receipt.py:501",
+      "backend/tests/test_qoder_anywhere_gates.py:169",
+      "backend/tests/test_qoder_ord224_g3_generation_measurement.py:162",
+      "backend/tests/test_qoder_provider_identity_leg.py:437"
+    ],
+    "name_stale_on_the_line": [
+      "backend/tests/test_qoder_pending_destination_identity.py:157",
+      "backend/tests/test_qoder_pending_destination_identity.py:373"
+    ],
+    "still_red": [
+      "backend/tests/test_qoder_anywhere_provider_truth.py:72"
+    ]
+  },
+  "their_r3_blobs_now_on_the_line": {
+    "backend/tests/test_qoder_ord197_four_class_receipt.py": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+    "backend/tests/test_qoder_city_failure_reasons.py": "d40513cb37e977d36df1dfd3b2d480ee43f7caf6"
+  },
+  "guard_finding": {
+    "what_i_found": "two arms that seed their own sqlite file and then migrate it in place are refused by the fresh-database guard, deterministically, in isolation and with a fresh --basetemp",
+    "arms": [
+      "backend/tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+      "backend/tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+    ],
+    "refusal_site": "backend/app/db/session.py:50",
+    "refusal_words": "RuntimeError: E2E run '<id>' refuses to reopen an existing database at <tmp_path>/legacy_pending.db ... issue a new CITYNEXUS_E2E_RUN_ID instead of deleting it here",
+    "why_the_remedy_in_the_message_cannot_work": "a new run id does not help: the file is the one the arm itself created seconds earlier in the same process, and the guard compares existence, not provenance",
+    "only_under_an_authoritative_invocation": "the guard returns early when no run id is stamped, so these arms are green in a plain pytest run and red in the mode the standing rule tells every lane to use -- which is how the same tree can hand two lanes different red sets",
+    "hypotheses_i_killed": [
+      "stale pytest basetemp reuse: refuted, a fresh --basetemp under my own lane path still failed twice"
+    ],
+    "fix_direction_i_would_ask_for": "let the guard answer the question it actually asks -- the run's own declared database url, not every sqlite url the process opens (make_engine takes a per-test url)",
+    "not_mine_to_land": "it is product code and the guard exists because of the shared-store incidents; I report and wait for a ruling"
+  },
+  "other_files_touched_by_the_batch_runs": {
+    "tests/test_qoder_ord197_four_class_receipt.py": {
+      "summary": "6 passed, 1 xfailed, 2 warnings in 3.69s",
+      "failed": [],
+      "seconds_visible_in_summary": true
+    },
+    "tests/test_qoder_anywhere_gates.py": {
+      "summary": "2 failed, 11 passed, 2 warnings in 64.93s (0:01:04)",
+      "failed": [
+        "tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation",
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was"
+      ],
+      "seconds_visible_in_summary": true
+    },
+    "tests/test_qoder_ord224_g3_generation_measurement.py": {
+      "summary": "3 passed, 2 warnings in 2.63s",
+      "failed": [],
+      "seconds_visible_in_summary": true
+    },
+    "tests/test_qoder_provider_identity_leg.py": {
+      "summary": "17 passed, 2 warnings in 2.73s",
+      "failed": [],
+      "seconds_visible_in_summary": true
+    },
+    "tests/test_qoder_pending_destination_identity.py": {
+      "summary": "2 failed, 13 passed, 2 warnings in 2.49s",
+      "failed": [
+        "tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+        "tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+      ],
+      "seconds_visible_in_summary": true
+    },
+    "tests/test_qoder_anywhere_provider_truth.py": {
+      "summary": "1 failed, 3 passed, 2 warnings in 2.18s",
+      "failed": [
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes"
+      ],
+      "seconds_visible_in_summary": true
+    }
+  }
+}
