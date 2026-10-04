@@ -1,0 +1,28 @@
+[
+ {
+  "mutant": "mE2_drop_localectx_from_copy_scan",
+  "rc": 1,
+  "red_arms": [
+   "false_positive_SELECTED_is_copy_word",
+   "false_positive_COMMITMENT_is_copy_word"
+  ],
+  "report": "_evidence/mE2_drop_localectx_from_copy_scan_report.json",
+  "console": "_evidence/mE2_drop_localectx_from_copy_scan_console.txt"
+ },
+ {
+  "mutant": "mF2_drop_space_form_rule",
+  "rc": 1,
+  "red_arms": [
+   "positive_control_dirty_generation_would_flag"
+  ],
+  "report": "_evidence/mF2_drop_space_form_rule_report.json",
+  "console": "_evidence/mF2_drop_space_form_rule_console.txt"
+ },
+ {
+  "check": "clean report survived the mutant runs",
+  "before_verdict": "GREEN",
+  "after_verdict": "GREEN",
+  "after_red": [],
+  "bytes": 13690
+ }
+]
