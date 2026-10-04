@@ -1,0 +1,114 @@
+{
+  "generated_by": "89f2e2d6",
+  "order": "ORD-0520 wrap-up: the glass arms on the landed generation",
+  "measured_against_tip": "ee142704825374903007b783d8516694cb9a2422",
+  "authoritative_ref_read": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "run_id": "ord0520regress-20261004T161646Z",
+  "database_basename": "_ord0520regress-20261004T161646Z.db",
+  "database_bytes": 4096,
+  "arms_expected": 7,
+  "arms_unexpected": 0,
+  "arms": [
+    {
+      "arm": "ord0520g-1-the-consequence-is-said-before-the-press",
+      "status": "passed",
+      "duration_ms": 683
+    },
+    {
+      "arm": "ord0520g-2-pressing-it-writes-and-the-reason-reads-back",
+      "status": "passed",
+      "duration_ms": 655
+    },
+    {
+      "arm": "ord0520g-3-the-live-screen-loses-the-trip-and-keeps-another",
+      "status": "passed",
+      "duration_ms": 1331
+    },
+    {
+      "arm": "ord0520g-4-aborted-is-not-discarded",
+      "status": "passed",
+      "duration_ms": 495
+    },
+    {
+      "arm": "ord0520g-5-a-stale-window-press-is-said-in-words",
+      "status": "passed",
+      "duration_ms": 1399
+    },
+    {
+      "arm": "ord0520g-6-an-empty-reason-is-refused-by-both-doors",
+      "status": "passed",
+      "duration_ms": 809
+    },
+    {
+      "arm": "ord0520g-7-the-live-screen-keeps-the-trip-out-after-another-door-moved-status",
+      "status": "passed",
+      "duration_ms": 3193
+    }
+  ],
+  "per_arm_readings": {
+    "g1_consequence_sentence.json": {
+      "arm": "G1",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "4a2f64ff2809170eda1ef455aded5d1df5da5365"
+    },
+    "g2_press_writes_and_reads_back.json": {
+      "arm": "G2",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "0c25b69f5ee2e46815f5e399bc60bdf7d74b4797"
+    },
+    "g3_live_screen_decision.json": {
+      "arm": "G3",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "d6c1b43a3318f981de9cbeaffb65f67b7d4cd357"
+    },
+    "g4_abort_is_not_discard.json": {
+      "arm": "G4",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "807a1c8d010bb6d4b59679f0d9a3daf1da17af7c"
+    },
+    "g5_refusal_said_on_the_glass.json": {
+      "arm": "G5",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "985c8504fa0b1c5bebb58f579379272b806a1779"
+    },
+    "g6_empty_reason_refused.json": {
+      "arm": "G6",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "41380dfa1df9d7306736d1057a155d00a8d8f67c"
+    },
+    "g7_status_move_keeps_it_out.json": {
+      "arm": "G7",
+      "verdict": "GREEN",
+      "run": "ord0520regress-20261004T161646Z",
+      "head": "ee142704825374903007b783d8516694cb9a2422",
+      "sha1": "d76609af17827763463356644f822812f9df0acb"
+    }
+  },
+  "durable_rows": {
+    "aborted_rows_in_this_store": 5,
+    "rows_still_marked_planned_after_the_abort": [
+      {
+        "rowid": 9,
+        "id": "5e387e62-ca0b-4adc-9748-17c8734498b2",
+        "status": "PLANNED",
+        "aborted_at": "2026-10-04T16:17:21.648410+00:00",
+        "abort_reason": "挪走状态之前先中止（g7-739517）"
+      }
+    ],
+    "reading": "arm 7's row keeps status moved off CANCELLED while aborted_at and abort_reason stay on it - the exclusion the screen shows comes from that column, not from status"
+  },
+  "provenance_receipt": "review/ord0520/ABORT_GLASS_PROVENANCE_ord0520regress-20261004T161646Z.json",
+  "verdict": "REGRESSION_GREEN"
+}
