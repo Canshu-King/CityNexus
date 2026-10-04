@@ -1,0 +1,17 @@
+ORD-0562 second site, read on a pixel -- the budget advisory is the louder of the two.
+
+State put on screen through the product's own wizard only (no store writes, no fixtures):
+  travellers field = 1   total budget field = 120   POST /api/v1/journeys -> http_status=201
+
+What the English arm rendered:
+  hero advisory : 3 days · 1 people · about CNY 40.00 per person per day
+  caveat        : At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.
+  today line    : 6 Oct, 10:00 — 8 Oct, 20:00 · 1 traveler · 3 days
+
+So one screen carries both shapes at once: the traveller count in the today line reads `1 traveler`
+because it goes through t("shell.travelers") and the {plural:...} marker, while the advisory right above it
+reads `1 people` because V8Experience.tsx:2405 builds the sentence inline. `3 days` in the same string is
+correct -- the stored window really is three calendar days -- which is the tell that this is a marker
+problem and not a data problem.
+
+Page exceptions 0; console errors 0. Pixel: hub_budget_advisory_r1.png.
