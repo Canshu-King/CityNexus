@@ -706,11 +706,16 @@ def _terminal_agent_status(
 
     run_status = "COMPLETED" if has_final_text else "PARTIAL"
     completion = _server_completion_contract(tool_steps, run_status=run_status)
-    if completion["kind"] == "UNRESOLVED":
+    waiting_for_approval = completion["kind"] == "APPROVAL_PENDING"
+    if waiting_for_approval:
+        run_status = "WAITING_FOR_APPROVAL"
+    elif completion["kind"] == "UNRESOLVED":
         run_status = "PARTIAL"
     waiting_for_members = completion.get("mission_status") == "WAITING_FOR_MEMBERS"
     mission_status = (
-        "WAITING_FOR_MEMBERS"
+        "WAITING_FOR_APPROVAL"
+        if waiting_for_approval
+        else "WAITING_FOR_MEMBERS"
         if waiting_for_members
         else "WAITING_FOR_USER"
         if clarification
@@ -1263,6 +1268,23 @@ class DeepSeekJourneyAgent:
                             "content": _result_for_model(result),
                         }
                     )
+                    # Human approval is not a reason to keep asking the model.
+                    # Persist the already-selected action and suspend this same
+                    # AgentRun until the server receives the approval.
+                    from app.agent.continuation import approval_waiting, capture_pending_action
+
+                    if approval_waiting(result):
+                        capture_pending_action(
+                            session,
+                            run=run,
+                            mission=mission,
+                            step=step,
+                            tool_name=tool_name,
+                            arguments=arguments,
+                            result=result,
+                        )
+                        final_text = "Agent is waiting for the required human approval."
+                        break
                     # A collective decision request is itself a durable,
                     # server-owned mission transition. Do not spend another
                     # model turn asking for a prose conclusion: a later
@@ -1336,11 +1358,19 @@ class DeepSeekJourneyAgent:
             raise
         finally:
             completed = _now()
-            run.completed_at = completed
-            mission.completed_at = completed
+            suspended = run.status == "WAITING_FOR_APPROVAL"
+            if suspended:
+                # A suspended run is intentionally not terminal.  Its durable
+                # continuation will append the resumed tool step and set the
+                # completion timestamp after the approved mutation executes.
+                run.completed_at = None
+                mission.completed_at = None
+            else:
+                run.completed_at = completed
+                mission.completed_at = completed
             record_audit(
                 session,
-                action="agent.run.completed",
+                action="agent.run.suspended" if suspended else "agent.run.completed",
                 entity_type="AgentRun",
                 entity_id=run.id,
                 journey_id=journey.id,
@@ -1352,6 +1382,7 @@ class DeepSeekJourneyAgent:
                     "status": run.status,
                     "outcome": run.outcome,
                     "failure_reason": run.failure_reason,
+                    "waiting_for_approval": suspended,
                 },
                 trace_id=trace_id,
             )
