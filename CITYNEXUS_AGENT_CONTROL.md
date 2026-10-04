@@ -16588,6 +16588,85 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 交 ORD-0561 · 两臂五屏真浏览器走查（390 px 视口，底栏由点进入 10 屏 / 共 10 屏）：缺陷 6 类，全部带逐字文本与像素量；另把"全大写"拆成字面与 CSS 两栏（en 臂 25 枚字面、18 枚纯 CSS），并当场收回我自己那把假阳性尺
+
+**〇、题面、形制与代次**
+
+- 你点名的题面：走今天/行程/地图/Copilot/我的五屏，zh 与 en 两臂各一遍，逐屏读**渲染出来的文字**，找用户能感觉到的缺陷（机词上屏、半截句、错位重叠、空白屏、点不动的按钮），每条附路由+臂+逐字+判由。已知不重复报的两条我照单避开。账本整份现读（91560 行；本手证据枝 `refs/heads/review/1ba48dbf-ord0561-screens-r1`）里带 `ORD-0561` 字样的行 0 枚、带 `ORD-0565` 的 0 枚 ⇒ 题面在转述里；`ORD-0565`（六屏）你已代量关单，本手只补"两臂 + 归因"这一格，不重判你关掉的。
+- 形制：Chromium、视口 5 屏 × 2 臂逐屏走，宽 390 px、`serviceWorkers=block`；开局把行程号与语言钉进 `localStorage`（走的是产品自己 boot 读的那两枚引用），每屏先按底栏 `nav-<key>` 点、当场回读 `location.href`。入口 http://127.0.0.1:4783（号令者验证栈）：**只读**——GET 与渲染文字，没重启、没写库、没点任何写侧控件。
+- 代次：走查时现读产品线尖 `aff61777229ee39d24e120b1e9b3146400d2af88`，出块这趟现读 `aff61777229ee39d24e120b1e9b3146400d2af88`（线在走）。本手 0 枚产品字节改动，所以两代之间不需要对账；所有源锚按**名字**给（不写行号，按你那条锚形裁定）。
+
+**一、缺陷清单（每条：路由 + 臂 + 逐字 + 判由）**
+
+**① 一句完整的话被压成 1 px 宽，屏上看不见** — `/v8/hub` 与 `/v8/map`（键 `mapComp.noRouteNoProvider`），**两臂都在**：
+- en 逐字：`No route is drawn: this deployment has no routing provider configured,`（我这条尺每条只留 70 字，全句在件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`）；zh 逐字：`这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。`
+- 量：`scrollWidth` en 456 px / zh 360 px，而 `clientWidth` = 1 px（zh 同）⇒ 文字在 DOM 里、`innerText` 读得到，**画面上只剩一条竖线宽**；两屏各一枚，共 2 枚。
+- 判由：这是"错位/看不见"级，不是文案问题——同一句在源码字典里是完整句子。
+
+**② 一枚无名的控件，字还被裁** — 顶栏最右那枚头像（class `v8-avatar`，**没有 `aria-label`、没有 `data-testid`**），五屏都在，**两臂都在**：
+- 逐字：`DE`；量：宽 28 px、x=345 px，`scrollWidth` 48 px > `clientWidth` 28 px ⇒ 字被裁一半。
+- 判由：两件事叠在一起——视觉上半截字，读屏用户拿到一枚**没有名字的按钮**（无障碍名缺失）。
+
+**③ 按钮中心被一段正文盖住** — `/v8/trips`，两臂：
+- en 逐字 `Abort this trip`，中心命中 `P.v8-lede`，框 x=240 y=591 宽 98 高 44；zh 逐字 `中止这趟行程`，框 x=220 y=557（两枚同件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`）。
+- 判由：点在视口内（不是"没滚到"），而 `elementFromPoint` 命中的是 `<p class="v8-lede">` ⇒ 用户按它会打到正文，不是打到按钮。
+
+**④ 行内动作落在固定底栏里** — `/v8/trips`，两臂同形不同位：
+- zh：详情 ›(y=817)、打卡(y=817) 共 2 枚，中心命中 `NAV.v8-mobile-nav`（那条带在 768..844；件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`）；
+- en：`Sat 10 Oct6 stops` 整枚 x=17 y=752 宽 356 高 49，中心命中 `NAV.v8-mobile-nav`（同一枚件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`）。
+- 判由：与账上 `ORD-0401` 那条"可命中首屏止于底栏上沿"同形（现读账本里带 `ORD-0401` 的行 41 枚），但这次被压的是**每站的动作**，不是页脚装饰。
+
+**⑤ Copilot 屏的入口键被底栏压住** — `/v8/agent`，两臂：
+- en：`Ask Copilot` 框 x=37 y=790 宽 140 高 44，中心命中 `BUTTON#nav-trips.`（件 `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`）；
+- zh：3 枚快捷问句被盖（逐枚：为什么这样安排？→NAV.v8-mobile-nav、如果我多待 60 分钟会怎样？→NAV.v8-mobile-nav、找附近的室内地点→BUTTON#nav-trips.）。
+- 判由：命中的是 `NAV.v8-mobile-nav` 与 `BUTTON#nav-trips`——都是固定底栏那一族；不滚就点不到，且这是**发消息的那枚键**。
+
+**⑥ 每枚停靠行的收藏入口读起来是半截句** — `/v8/trips`，两臂各 6 枚（每站一枚）：
+- en 逐字 `Collect into…`；zh 逐字 `收藏到…`。
+- 判由：**这条我不判成截断**——源字典 `collectionCopy` 里就这么写的（省略号是原文，不是被裁），它是开菜单的触发键。列出来只因为你点名要"半截句"这一形：如果目标是"看得懂按下去会发生什么"，这句缺宾语；要不要改归你裁。
+
+**二、"全大写"这一形拆成两栏（避免误报）**
+
+`innerText` 会把 CSS `text-transform: uppercase` 一起算进来，所以"屏上看到大写"不等于"机词上屏"。我这把尺对每枚叶子同时取**原始 `textContent`**（不经 CSS）与 computed `text-transform`：
+
+- en 臂字面含大写词的叶子 25 枚，其中纯 CSS 大写的 18 枚**不是缺陷**；
+- 字面那批的构成：四组导航分组标题 `TODAY`/`PLAN`/`TRAVEL`/`SYSTEM`（字典 en 值本来就是全大写词，zh 值是「今日/规划/出行/系统」）、`/v8/hub` 的 `ARRIVAL`/`DEPARTURE`、`/v8/me` 的 `NOTIFICATIONS`——都是**字典里的有意样式**，中文臂不出现（zh 臂字面大写叶子 2 枚）；
+- 真正"枚举值直接上屏"的只有一枚：`/v8/me` 那行 `mode` 后面的 `<code>ADVISORY</code>`（渲染式是"取服务端 policy.mode，缺省回退字面 ADVISORY"）——**两臂都上屏**（zh 臂也读到 `ADVISORY`）。这条与你转达过的"枚举加人话括注"同族，我不重开单，只把"它在 Me 屏、两臂都在、是 `<code>` 不是正文"这一格量给你。
+
+**三、干净的那几格（分母一起给）**
+
+- 空白屏：两臂 5 屏各 2 遍，渲染文字最短 309 字、最长 2398 字（件 `review/ord0561-screens/walk_r2.json` = `e0e6cfbd9b79753d032044cbaa29efceb4a8e9e3`），短到像空白的 0 枚；每屏都有可见标题。
+- 屏上出现的点号串只有 `tile.openstreetmap.org`（那是"底图没加载"那句里的瓦片服务器域名，不是缺键）；形如 `nav.foo` 的 `t()` 缺键回吐：两臂 0 枚。
+- en 臂五屏嵌汉字（除语言开关自己那行）：0 枚 ⇒ 我上一手修的 ORD-0564 那一形在这五屏里不出现（那枚在 `/v8/discover`）。
+- 语言开关本身：en 臂显示「中文」、zh 臂显示「EN」——按语言名自己的字面渲染，不算缺陷，我的尺把它单独量出来另报。
+
+**四、我这把尺收回的两处假读数（留名）**
+
+1. 第一趟（件 `review/ord0561-screens/walk_r1_wrong_nav_KEEP.json` = `21c5d6c3815298c253499e6de2016b21990289cc`）底栏五枚按钮逐枚点 8 秒全超时，于是"五屏"其实是**同一屏读了 5 次**：新设备一进来落在引导屏，而引导屏按 Amendment F 本来就没有底栏。r2 钉进行程号与语言后，5 屏全部由底栏进入（`entered_by=nav_click` 计数满）。
+2. 第一趟报"被盖住 30/31 枚"是**假阳性**：点算在视口外时 `elementFromPoint` 回 `null`，我把 `null` 读成了"被盖住"。形状尺先判"点在不在视口内"再判遮挡，真数降到 en 3 枚、zh 6 枚——就是第一节③④⑤那几条。
+
+**五、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-ord0561-screens-r1` = `d9424847a51a04b0a0d8e6fb731a0476606b6137`（`git ls-remote` 现读逐字相等；14 枚件，逐枚可 `git cat-file -t`；含四把尺的回执、第一趟那把错尺、四张截图）：
+  - `review/ord0561-screens/caps_attribution_r1.json` = `5039d4c0453a5f7ad769b753fea738587b38101c`
+  - `review/ord0561-screens/caps_probe_r1.cjs.txt` = `b10ebf6ca1a79ff49f4e81205e868960fbff1510`
+  - `review/ord0561-screens/driver_walk_r1_KEEP.cjs.txt` = `54796dbfe726b0cf9aa682141ecfbadf2607a6c1`
+  - `review/ord0561-screens/driver_walk_r2.cjs.txt` = `73b96c3b6e8eb4bc0235821d8a966cc0a8fe8c20`
+  - `review/ord0561-screens/shape_probe_r1.cjs.txt` = `fc72b3c85b50be3ded2bdc50f1b002b33cc82191`
+  - `review/ord0561-screens/shape_r1.json` = `79763ddbb86274196e970290ea32b446efbdaa6a`
+  - `review/ord0561-screens/shot_en_agent.png` = `91373962444a146fa1ab21856324bc9e66b33c2d`
+  - `review/ord0561-screens/shot_en_hub.png` = `34ce278ae4dc8b42f278966819f95b7ed1504119`
+  - `review/ord0561-screens/shot_en_trips.png` = `314c345538ac99676dc5d297fa3427d872110012`
+  - `review/ord0561-screens/shot_zh_trips.png` = `a1959a1dcf035ea820c8abd9b80794190dc26697`
+  - `review/ord0561-screens/walk_r1_wrong_nav_KEEP.json` = `21c5d6c3815298c253499e6de2016b21990289cc`
+  - `review/ord0561-screens/walk_r2.json` = `e0e6cfbd9b79753d032044cbaa29efceb4a8e9e3`
+  - `review/ord0561-screens/which_button_r1.cjs.txt` = `04649d48a7bc0f7a6b8fd4251ac77aaadf6ad3c9`
+  - `review/ord0561-screens/which_button_r1.json` = `fa3d9021b1264681b650cb1e940280c8158ea6f6`
+- 本手账：产品字节改动 0 枚、他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、他人进程被动 0 次、`demo/reset` 0 次、共享预览库打开 0 次、密钥落盘 0 枚。`:4783` 与 `:4787` 那台验证栈我全程只读（GET + 渲染文字），没重启、没写库、没点任何写侧控件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0557 落地之后我用自己那把仪器复核了一遍（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：镜像确已生效——本机账本与 `commander/control` 在四个比较点上是同一枚字节；两格待落的尺重挂到现尖并各跑绿一眼；另自报我这手的探针先报了两个假「不存在」
 
 **一、已落地那枚模块，按你的门将要用的形制调用了一遍**：仓库根进 `sys.path`、不假设有 `__init__.py`、`repo_dir=` 指向 `D:/moodle/CityNexus`。三趟读回同一枚远端 blob `4261ec20a8a9b40c68c29e075e0b116d6f0e7367`、13560004 字节、重算 sha1 相等、两通道一致（`commander/control` 当时头 `f9ddab9b86056126734192ce001ffbadbe6bb29f`）。落地字节核对：线尖 `aefbbd1a2f99c448a9a684b3d01ce387273ee83c` 上那枚模块的 blob 就是 `dd939945f560632fea20186a57929d2edc1ab6ad`，与我交的都一样
