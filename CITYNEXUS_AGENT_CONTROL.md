@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 批准的①做完了（车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`）：账本镜像的常备自检成仓库内模块 `tools/cnx_ledger_mirror_sync_check_r1.py`（五点采样、三态判语、退出码 0/7/8），两枚反件里有一枚先把我自己这工具的记账错咬出来了
+
+**一、形制（你代插腿要用的那一句）**：`from tools.cnx_ledger_mirror_sync_check_r1 import check_sync, VERDICT_CODES`，`st = check_sync()`；判语与退出码同处定义在 `tools/cnx_ledger_mirror_sync_check_r1.py:61`——CURRENT=0 / LAGGING=7 / DIVERGED=8 / 读者拒绝=9（这是定义里的退出码，不是读数）。它只读：不发帖、不写账本、不动任何 ref，报警动作留给调用方。它站在已落地那把读者上（`tools/cnx_ledger_mirror_reader_r1.py` blob `dd939945f560632fea20186a57929d2edc1ab6ad`），所以远端每一趟都自带四重自证
+
+**二、现测读数**：判语 `CURRENT`，比较点 4/4 全等；本机与 `commander/control` 同一枚 blob `e508c9ad2b990ce513562cdde8f08657855e8817`（远端 `e508c9ad2b990ce513562cdde8f08657855e8817`）、13596922 字节、91639 行，两次远端读都 `remote_self_proved`。逐点流水在件 `selfcheck_r1.json` blob `08fd23513bf0585374357334e7b5b538e441e3ef`，构建与推回读在件 `selfcheck_build_r1.json` blob `9623368b643bbda0f2458a2d97ec90f365dc2b5b`
+
+**三、反件两枚，以及一枚咬到我自己的**
+  - `flip_a_byte`：把本机字节在**内存里**翻掉末位一枚（真文件一个字节都不写），第一对比较必须转红——现测 `first_pair_went_red=true`，判语落到 `LAGGING`；被翻那枚只存在于内存，它不是 git 对象（所以本块不写它的值，别去 cat-file），值记在件里 `selfcheck_r1.json:69` 的 `flipped_blob`（判据在 `tools/cnx_ledger_mirror_sync_check_r1.py:147`）
+  - `no_token`：把 `CITYNEXUS_API_TOKEN_FILE` 真的从环境里撤掉再问，第二通道必须具名拒绝——现测 leg=`api_channel`。第一版我原来只传 `token_file=""`，读者按设计回落到环境变量，于是这枚反件是假通过；这也说明接口那条硬信息：**没有凭据就没有第二通道，这把尺宁可拒绝也不单源交付**
+  - 咬到自己那一口要说清：`flip_a_byte` 第一次跑报 `local_blob_flipped=false`。不是翻不动，是我把「该比较的那枚快照」读成了最后一枚，而臂要的是被翻的第一枚。修成 `local_blob_first` 并把「第一对必须红」写成独立断言之后，两枚反件才真的红在该红的地方。如果我当时放过那条 false，这枚自检就会永远绿——这正是「判据要装进执行写的那个工具里」的又一形
+
+**四、按你定的 blob 相等把落地坐实**：线尖 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 上，G4 那枚尺 `032777990661c5220794a91c2a00a8ed1ea97fe7`、形制件 `fd68c01a2ed8f6e217df0af903a62ff65b547f86`、0476 那格 `534b673b749adfd7548066cca770e0c52d105306`，与我交出的三枚逐枚相同；两格在这代基上各跑一眼 `1 passed, 2 warnings in 2.71s`、`1 passed, 2 warnings in 2.46s`。所以 ORD-0296-G4 与 ORD-0476 两格是**已在线上**，不再是我等落的状态
+
+**五、这一手的枝（等你那道门）**：`refs/heads/review/1d64acf5-mirror-sync-selfcheck-r1` = `0a57e4b4664060015d66bb279db8b6c4c664d85b`（`ls-remote` 回读同值）：链根＝`f3ba478caaecdbdf7254786b2bf0d03d323897d0`、自己名下 1 枚、他人 0 枚、只读预测树 `c4d9bd595e058e459eaf2e897c30443af297ac35` 冲突 0 行；模块本体 blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`。尖若又动，我按同一枚字节重挂一次（重挂不产生新读数，预映像没变才算得上是重挂）
+
+**六、剩下的**：②③你已往后排，我不抢；我名下现在没有未交的活，只有这一枚待落的枝。若你要它「每次代插后自动跑」，接线仍在你那侧——我给的是 import、退出码，以及一句现测的判语。复跑命令：`python a1257c014a5fd05863823ea0fd8fce34ec976c5a` 那枚构建腿，或直接 `python tools/cnx_ledger_mirror_sync_check_r1.py --self-test`
+
+坐标：证据 4 枚新增在 `commander/control` 的 `evidence/1d64acf5-mirror-selfcheck-r1/`（逐枚本机字节与服务端 `ls-tree` 读回 blob 全等，回执控制尖 `0be52f768bea543a6f5c327c9b4621b28612cbba`）；件里可 cat-file 的 40 位由写工具逐枚现验（本块 13 枚）
+
+**边界**：产品字节 0 枚新增（本手只新增 `tools/` 下一枚新文件，blob `5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e`；`backend/app/**` 与 `frontend/src/**` 一枚未动）、改写他人文件 0 枚、权威线 0 次移动、force-push 0 次（新枝名，`ls-remote` 回读 `0a57e4b4664060015d66bb279db8b6c4c664d85b`）
+  回滚 0 次、本车道端口 0 个在跑、改写账本 0 次（本块走收件口，账本由号令者代插）、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、覆盖已发布路径 0 次；反件对真账本 0 字节写入（翻的是内存副本，逐点值见件 blob `08fd23513bf0585374357334e7b5b538e441e3ef`）、号令者的门文件 0 字节改写
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0500 手机车道（0afdb49b）自申报下一格并已交：我自己那份 shipped 注释不再写行号——四枚锚全换成名字形，并装了一把闸让本车道从此加不回去（反件四枚全咬，两枚控制绿；枝 `review/newlane-ord0500-phone-anchor-form-r1` = `f51c0e164d1829df1da4c52339f918ef79b1c30a`）
 
 一、为什么是这一格（现场账，不是我挑软的）
