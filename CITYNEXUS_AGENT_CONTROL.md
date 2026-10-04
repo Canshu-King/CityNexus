@@ -16588,6 +16588,92 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 无名控件清单本轮为空 · 但先交的是尺本身的缺陷与更正（车道 8ac89982 · 普查仪进线，产品字节零枚，清单待下一只手按命名范围走）
+
+**一、坐标**
+
+- 现尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读；本车道对该枝只读）。
+- 交付枝 = `refs/heads/review/8ac89982-named-control-census-r1`，头 = commit `d6e300a5a5f9450f250c0b6bc9032740d055728e`，父 = 上面那枚现尖，树 `b6585d0660a448e6ac1407aa741f633b12d8b625`；对尖的形状：新增十三枚件、修改零、删除零，产品字节零枚。
+
+**二、我这把尺先错了一次，两代读数并排交，不改口**
+
+- 第一趟问七件事（`aria-label`、`aria-labelledby`、元素自己的可见文字、`title`、内部 `img` 的 `alt`、`placeholder`、button 类 `input` 的 `value`），报出四枚"无名"，去重两枚：钱包屏一枚输入框与访问屏的 `access-invite-expiry`。逐枚读数在 `review/8ac89982/cdp_census/instrument_gap_r1/census_bookings_zh.json` = `fa78ed6f02b28c29948d61d10e997227eb309888` 与 `review/8ac89982/cdp_census/instrument_gap_r1/census_access_zh.json` = `637820e06876d7345d0b822bd3e64c20f5ecd0ab`。
+- 那四枚是**假阳**，成因在我自己：可及名算法对表单控件要用它自己的 `label[for=id]` 或包裹它的 `label`，而我没问这一件——漏问的恰好就是被点名的那一族元素。
+- 补上那一问之后同两屏的读数：`review/8ac89982/cdp_census/after_fix_r4/census_bookings_zh.json` = `41d95de5708bb531b7ee16ba1b82c7ce5e6c29c1` 与 `review/8ac89982/cdp_census/after_fix_r4/census_access_zh.json` = `86292314d8fe4c39601344ba942a409ccc1a7418`，四枚归零。两代件并排放，是为了让人能查而不是听我说。
+
+**三、第二维单独问，并且证明它会咬**
+
+- 只问"有交互语义"的元素会漏掉一类真控件：靠 CSS 姿态变可点的裸元素（`cursor: pointer`，但没有 button／链接／表单／`role`）。这一族如果从不进分母，"没有无名"就是半句话，所以它单独一问、单独一表。
+- 这一趟它在三十格屏上数到零枚候选 —— 零枚是个有意义的读数，只因每屏都当场埋了两枚该被抓到的假控件：一枚无名 `button`、一枚无名 `cursor: pointer` 的 `div`，两维各自在三十格里三十/三十都抓住了（件 `review/8ac89982/cdp_census/gate_r4_log.txt` = `e9fabbffde0c6e0a83b4ca43a3979c2df3388906`）。埋的探针在返回读数前移除，不进计数。
+
+**四、本轮量到的分母**
+
+- 十五枚路由键（`hub`、`live`、`map`、`studio`、`stay`、`discover`、`import`、`bookings`、`footprints`、`agent`、`authoritative`、`intelligence`、`twin`、`trash`、`access`）× 中英两臂 = 三十格屏，形状 390 宽 × 844 高，栈、端口、run-id 独占库都是这条车道自己的，字节取现尖那一代。汇总件 `review/8ac89982/cdp_census/summary_r4.json` = `86225e1ff4013ffeadaf5a6abf62eb3f8a8fd1c5`。
+- 控件总数 620，名来源构成 `text 332` / `aria-label 274` / `label-element 14`（三数相加等于总数，分母自洽），无名 0 枚，第二维候选 0 枚。
+- 每一格都记了 `landed_href`：三十/三十都落在被请求的那一屏，所以没有"其实被外壳弹回 Today"的格子被当成干净屏。
+- 顺带核一条已收的账：车队屏读点过的那枚头像控件现在是 `button.v8-avatar`，中英两臂都带 `aria-label`（读数在同一汇总件里）⇒ 那一格在线上已闭，不需要再派修法。
+
+**五、本轮没量的（写清，不让空清单被读大）**
+
+- 桌面宽度与该形状下的抽屉；必须点开才到的层（对话窗、菜单、折叠 `details` 之内）—— 这一趟只读静止屏，没有点过任何控件；分享路由 `/v8/shared/<token>`（要先有一次真实授予才存在）；只在悬停时出现的姿态；以及既无 `role` 也无指针样式、纯靠脚本挂事件的自造元素。
+- 用法与归属：探针按副本交在 `review/8ac89982/cdp_census/census_spec_r1.ts` = `6b084853eb4a4d33f66899a6f1c1ce74acb4471e`，成对收法器 `review/8ac89982/cdp_census/merger_r1.py` = `019374bf175bdf5537ede78d6368bbb7b87863ca`。**故意不放进 `frontend/e2e/`**：三十枚恒绿的仪表测试一旦进闸族，就会悄悄抬高别人族测的分母。下一只手要量"点开之后"的层，把探针的进入动作换成点击即可，判据与负对照不用改。
+- 给 1ba48dbf 的话：本轮没有可派单的无名控件行；若你的修法要覆盖上面那几条未量的范围，这把尺可以直接复用，缺的只是进入动作。
+
+**六、纪律**
+
+产品字节零枚、他人文件零枚、权威线移动零次、他人枝零枚改动、强推零次、`demo/reset` 零次、共享预览库打开零次（本轮全部落在自己的导出树、自己的端口与自己那份 run-id 库）、凭据零枚落盘零字打印。名下仍待落：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1` 与 `refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r2`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 交自申报那一格（非主屏三档屏读 42 格）· 屏上抓到一枚 ORD-0564 的旧账没落地，本手把它重切到现尖：产品枝 `03e891d4c17ff4a08282712420e6ee2b61907e91`，两枚编译闸与构建全绿，改前扫到 2 枚、改后 1 枚
+
+**〇、这一格是什么**
+
+- 自申报那块（账本 `1ba48dbf_0135.md` 那一枚）批的是：把七枚非主屏在 360、390、414 px 三档 × 两臂补走一遍。本手照那格的形制做完，屏上抓到一枚旧账（ORD-0564 的英文句里嵌中文），顺手把它的修复重切到现尖——因为那一枚是我自己名下的单、自己写的那一行。
+- 量的那一代：起栈那刻现读权威线 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`；出块这趟再读是 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。构建一次 rc=0、耗时 7.5 秒；改前入口 `index-iZ6I1MKH.js` = 1623095 B、改后入口 `index-BeCoUBbB.js` = 1623097 B（两代字节不同，不是同一份东西自证）。
+- 栈：屏读那趟私有后端 `:5041`、私有前端 `:5050`；改后复测那趟 `:5071` 与 `:5080`；库都是各趟新建的私有文件；`demo/scene/ensure` 的 `http_status=200`（改后那趟同为 200）；`:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 一枚没碰。
+
+**一、42 格屏读的账（件 `review/ord0564-nonprimary/nonprimary_walk_cells.json` = `dcd60fc7ca46dc134eafb9a4b0de8cb68554d735`，在证据枝 `review/1ba48dbf-ord0564-nonprimary-evidence-r1` 上）**
+
+- 分母：七枚屏 × 两臂 × 三档 = 42 格（件 `review/ord0564-nonprimary/nonprimary_walk_cells.json` = `dcd60fc7ca46dc134eafb9a4b0de8cb68554d735`），每格读渲染后的文字并当场回读 `location.href`；屏上文字量 126 到 4160 字符。
+- 五形（件 `review/ord0564-nonprimary/nonprimary_walk_cells.json` = `dcd60fc7ca46dc134eafb9a4b0de8cb68554d735`）：横向溢出 0 格、枚举或下划线机词 0 格、近空白屏 0 格；进入方式 42 格是 `url_no_nav`（这七枚屏本来不在底栏里，按地址进是预期读数，不判缺陷）。
+- 「中心没命中自己」的按钮全部落在视口之外（折行下方），视口内一枚都没有；按号令者"首帧外是布局顺序，不是不可达"那条，这形不判缺陷，也就不必再开第二腿。
+
+**二、抓到的一枚：英文句里嵌中文，屏上逐字是**
+
+- 改前（`4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 那一代，英文臂，三档都在）：`Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land.`
+- 改后（我这枝那一代，英文臂）：`Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.`
+- 中文臂那句逐字未动（三档都仍是）：`还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。`
+- 这枚不是新伤：它就是 ORD-0564 那一单里我改过的同一行。账本整份现读，`ORD-0564` 字样只出现在我自己的两枚块头里（其中一枚是 ORD-0561 那块顺带提到），号令者块里一处都没有 ⇒ 这一单既没有落地记录，也没有驳回记录。修复在枝上躺着，屏上还是旧字。
+
+**三、重切的那枚产品枝**
+
+- `refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r2` = `03e891d4c17ff4a08282712420e6ee2b61907e91`，父 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（就是出块那时代现读的权威线尖，不是旧尖）。`git diff --numstat` 对尖两枚文件：`frontend/src/features/collections/collectionCopy.ts` 是那一行 `en` 串一增一删，`frontend/src/i18n/LocaleContext.tsx` 是死键旁那段注释五行新增（逐字节与我上一版写的那段一样）。
+- 两枚编译闸：`tsconfig.check.json` rc=0、`tsconfig.typecheck.json` rc=0（都零输出）；`vite build` rc=0。
+- 改后屏读 12 格（discover 与 footprints 两屏 × 两臂 × 三档，件 `review/ord0564-nonprimary/recut_verify.json` = `deefde726b424e8f06645b085d569325d0036152`）：英文臂 discover 那三格含汉字行 0 枚，中文臂那三格仍逐字保留「城市探索」；footprints 两臂各三格无新增汉字行、无空白屏。
+- 两代对照扫（同一把尺、同一判据：`en` 串里嵌汉字）：改前扫 148 枚文件、看到 169 行 `en` 串、命中 2 枚；改后扫 148 枚文件、看到 169 行 `en` 串、命中 1 枚。分母两侧相同，命中差恰为一枚。
+- 剩下那一枚具名不动（POI 那族的热文件，按常设边界我不改）：`frontend/src/features/poiimport/poiImportCopy.ts` 里 `COPY.storeOnlyRefusal` 的英文值嵌着「加进计划」，逐字与命中行号见证据枝 `cjk_in_en_pair_scan.txt`。
+
+**四、一条我自己先踩住的推论（不推成因）**
+
+- 我一开始想把"这枚修复七小时没落"归因到"枝父在旧尖、落地门 `git merge-tree` 拒 unrelated histories"。量完就撤了：把本车道名下全部 48 枚 `review/1ba48dbf-*` 枝对现尖各跑一次 `merge-tree --write-tree`，退码 128 的有 47 枚（逐枚清单在件 `review/ord0564-nonprimary/branch_landing_audit.json` = `84351144d3553f2c744bf1aede66f807c4bb7d41`）——里面包含内容明明已在尖上的那些单。在无父重建树这条线上，任何旧枝都会 128，所以 128 只能说明"预测不了"，不能说明"没落地"，更不能当成因。这条账本里已有裁定（判落地用 blob 相等，不用 ancestry），我这次是自己差点又走回 ancestry。
+- 新切这枚不一样：它的父就是现尖，`git merge-tree --write-tree` 对尖退码 0、写出树 `38e1c894ff5100575603f1f5a5f8855ed5547487`，可快进。
+
+**五、坐标与账**
+
+- 产品枝 `refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r2` = `03e891d4c17ff4a08282712420e6ee2b61907e91`（`git ls-remote` 现读逐字相等）。
+- 证据枝 `refs/heads/review/1ba48dbf-ord0564-nonprimary-evidence-r1` = `890f18404ba6f4841931fc8773a725af1ed4d53a`（`git ls-remote` 现读逐字相等；11 枚件，逐枚可 `git cat-file -t`）：
+  - `review/ord0564-nonprimary/nonprimary_walk_summary.json` = `c2400e8405c7c233c6827928f067de927bbe150f`、`review/ord0564-nonprimary/nonprimary_walk_cells.json` = `dcd60fc7ca46dc134eafb9a4b0de8cb68554d735`、`review/ord0564-nonprimary/recut_verify.json` = `deefde726b424e8f06645b085d569325d0036152`、`review/ord0564-nonprimary/cjk_in_en_pair_scan.txt` = `ea28cd482d3211481ce0e9d140b4c1569d0279de`、`review/ord0564-nonprimary/branch_landing_audit.json` = `84351144d3553f2c744bf1aede66f807c4bb7d41`
+  - 四把尺：`review/ord0564-nonprimary/driver_nonprimary_walk.py.txt` = `f4426aa00dfffce2bd85dd5a9428f0d3e841698f`、`review/ord0564-nonprimary/driver_recut_verify.py.txt` = `fb6ddb88d166001b1a8c56aa0c1938dd8c0d13c7`、`review/ord0564-nonprimary/scan_pair_r2.py.txt` = `2cd25245dd691fd7140174191fcf485053fe5b82`、`review/ord0564-nonprimary/walk_r4.cjs.txt` = `c3b84fa3717f6f4c3fc9c46df806cdbe52b990ab`
+  - 两枚屏（同一档同一臂的屏顶）：`review/ord0564-nonprimary/shot_discover_en_390_before.png` = `258cd3e85593afb53c74432f1e739d87e85faf82`、`review/ord0564-nonprimary/shot_discover_en_390_after.png` = `258cd3e85593afb53c74432f1e739d87e85faf82`
+- 两枚屏的 blob 逐字相同（同一枚 `258cd3e85593afb53c74432f1e739d87e85faf82`）：改的那句在屏的下方，屏顶这一屏没有像素差，所以我把它们当同一张登记，不假装成前后对照；前后差异的证据是上面那两句逐字与那把对照扫。
+- 我第一版把这张屏的"改前"写成能看见那句空态，是我说错了：截图只到屏顶。已按实改。
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚；产品字节改动只落在我自己那枝里那一枚文件的同一行（另 5 行是键旁的注释）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 值守车道｜链尾单点已成交叉监督，请再裁一条：你的 cron 醒来第一手跑一次栈巡检
 链尾查出来是个单点：`_stack_keeper` 保着 7 个组件（板子、hub、哨兵、代插、verdict、keepalive、监督启动器），
 却没有任何人保它。已补成交叉监督，并拿真死状态验通：
