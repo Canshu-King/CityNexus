@@ -309,3 +309,84 @@ git diff --check: PASS
 The focused run covered Truth Mesh independent Overpass/Nominatim behavior, source observation corroboration, plan-delta fairness, normal plan selection, member projection, R26 routing hygiene, and the R20–R27 endpoint lineage. One unrelated legacy baseline assertion still expects the pre-R27 tool catalog and is not part of this change.
 
 This is the final R27 implementation/runtime checkpoint: the product now has multi-source identity convergence and a server-enforced collective mutation boundary; the remaining closure work is a real configured Agent mediation run on an ACTIVE shared Journey, not another report-only or provider-retry round.
+
+## Agent Collective Live Closure Strike — 2026-10-05
+
+### Code binding
+
+- Branch: `codex/revolution-realtrip-recovery`.
+- Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`.
+- Code checkpoint: `017e9df3c3877b30157bd4e1d7a586375d742f14`.
+- Starting local/remote SHA for this strike: `8710b39ced686e398ac8cebff1a127f04722d29f`.
+- `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false`.
+- Configured chain: `cn:glm-5.3-flash` → `cn:deepseek-v4.1-flash` through the local WB2api Hermes-compatible endpoint. The key was loaded into the disposable server process only.
+
+### Fresh ACTIVE shared Journey
+
+The run used the existing fresh disposable database `backend\\r27-agent-closure-20261005.sqlite3`, not the earlier completed v3 Journey:
+
+- Journey: `e4bcf69e-eb7d-4b14-800c-4b844b05bd45`, status `ACTIVE`.
+- OWNER member: `0bee86b2-953c-4943-81f4-c927427d4a21`, traveler-scoped preference `interest/garden`.
+- ADMIN member: `006697d0-205f-4168-bc4e-69d1eb074368`, traveler-scoped preference `interest/museum`.
+- Both preferences were read back as non-empty and different; no baseline preference or TravelerTwin row was rewritten by a collective answer.
+- The server retained canonical live Nara facts, including exact OSM identity convergence and official opening/cost for the Craft Museum and Daijo-in Garden. Candidate proposal mobility came from live Valhalla captures; estimate authority stayed OFF.
+
+### Real Agent attempts and exact blocker
+
+Three fresh real `AgentRun` attempts were made against this ACTIVE Journey. The durable traces show the configured runtime, not a deterministic substitute:
+
+```text
+e400c2b0-02e5-4a08-ab85-2a847c10a311
+  inspect_journey -> inspect_twin -> search_city_services
+  GLM MODEL_TIMEOUT; DeepSeek bounded-output external error
+
+c3cbcd6e-036d-4017-be01-29eb6c306a04
+  GLM MODEL_TIMEOUT -> inspect_journey -> inspect_twin
+  DeepSeek MODEL_TIMEOUT
+
+156381fd-86f8-423f-9a5d-e84be94479c1
+  GLM MODEL_TIMEOUT -> DeepSeek MODEL_TIMEOUT
+  no model-generated mutation or shared-decision tool call
+```
+
+Each external failure was persisted as `FAILED_EXTERNAL` with provider, model, elapsed time, mission ID, and run ID. None was reclassified as `NO_ACTION`, and no deterministic prose was counted as Agent autonomy. The bounded model fallback is exhausted for this runtime state.
+
+The exact current closure result is therefore:
+
+```text
+R27_AGENT_COLLECTIVE_LIVE_MEDIATION_NOT_CLOSED
+cause = configured WB2api GLM + DeepSeek calls timed out before the model emitted request_collective_decision
+product state = ACTIVE, no unauthorized mutation
+```
+
+### Machine contract probe after the failed Agent calls
+
+To separate the external runtime blocker from product code, the server-owned contract was exercised on the same Journey. These are diagnostic tool calls, explicitly not claimed as Agent decisions:
+
+1. `list_replans` returned `HUMAN_TRADEOFF_REQUIRED`, two or more distinct grounded proposal shapes, separate OWNER/ADMIN fit receipts, and both decision-relevant member IDs.
+2. `request_collective_decision` accepted only Journey/mission/event scope and returned `WAITING_FOR_MEMBERS`; proposal IDs and required members were server-derived.
+3. One response from each required member produced `RESOLVED` and a child mission. The child preserved parent autonomy/cost/loss/schedule bounds and stored only a server-owned `collective_decision` envelope.
+4. `accept_replan` for a non-selected proposal was rejected with HTTP 409 `COLLECTIVE_CANDIDATE_NOT_SELECTED`.
+5. The selected child proposal was not physically executed in this strike because doing so manually would no longer be Agent-mediated closure.
+
+The Journey remains `ACTIVE`; no plan pointer, member baseline preference, or TravelerTwin was changed by the diagnostic probe. Transport caller-principal authentication remains unproven: the member response route is member-scoped server state, not authenticated traveler identity.
+
+### Inline fixes in this strike
+
+- Collective child resolution now distinguishes `ReplanProposal.id` from its target `PlanVersion.id` before the mutation gate.
+- Child missions inherit the stored server trigger event even when the parent was created before event selection.
+- Non-collective clarification children are not incorrectly rejected by the collective gate.
+- A successful durable `WAITING_FOR_MEMBERS` tool result terminates the Agent loop without spending another model turn that could timeout and overwrite the valid state.
+- `inspect_twin` exposes a compact server-derived collective proposal receipt, and the decision tool deduplicates materially identical plan deltas.
+- Discovery materialization no longer erases an already promoted canonical opening/cost/source binding when a later live search response contains only UNKNOWN facts.
+- First model selection is bounded at 1200 tokens with one 2400-token retry; it cannot expand into an unbounded external job.
+
+### Focused verification
+
+```text
+python -m compileall -q backend/app: PASS
+pytest -q backend/tests/test_r27_collective_mediation.py backend/tests/test_r27_member_surface.py --disable-warnings: 6 passed, 1 warning
+git diff --check: PASS
+```
+
+This strike closes the server contract gap and records an exact external-runtime blocker. It does **not** claim R27 Agent-mediated live closure, Gateway activation, or physical completion. The next bounded action is to rerun the same ACTIVE Journey only after the configured WB2api model path returns within its server budget; no new city or synthetic Agent fallback is justified.
