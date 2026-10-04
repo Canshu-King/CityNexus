@@ -45,7 +45,7 @@ const hasCJK = (text: string) => /[\u3400-\u9fff]/.test(text);
 
 /* The shape the commander's 08:40 reproduction installs, named once so the upstream prose below is
    derived from it instead of hand-copied: `OriginResponseUnusableError` renders its message from
-   exactly (status, content-type) -- failureAttribution.ts:94. */
+   exactly (status, content-type) -- failureAttribution.ts. */
 const BROKEN_STATUS = 200;
 const BROKEN_CONTENT_TYPE = "text/html; charset=utf-8";
 const UPSTREAM_ERROR_NAME = "OriginResponseUnusableError";
@@ -360,7 +360,7 @@ test("ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后�
 
   /* Read B -- the control, built as close to read A as the product allows: the SAME answer shape
      (200 + `text/html; charset=utf-8`) on a read that does go through `classifyReadFailure` +
-     `recordAttribution` -- boot's journey read (V8Experience.tsx:741-759).  So this half proves two
+     `recordAttribution` -- boot's journey read (V8Experience.tsx).  So this half proves two
      things at once: this gate can see the channel, and the channel carries exactly the fact class
      read A drops (status 200 with the media type the origin sent).  If it came back silent, read A's
      silence would prove nothing about the product -- only that the instrument is blind.
@@ -424,8 +424,8 @@ test("ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后�
 
   /* The claim under test: a technical fact that is no longer allowed in the DOM has to be recorded
      somewhere a diagnosis can be made.  It is not -- `enterSealedDemo`'s catch
-     (src/app/V8Experience.tsx:890-899) sets `sealedDemoDetail`, which JourneyTrialSetup still accepts
-     as a prop (JourneyTrialSetup.tsx:473) and no longer renders or reads anywhere, and it never calls
+     (src/app/V8Experience.tsx) sets `sealedDemoDetail`, which JourneyTrialSetup still accepts
+     as a prop (JourneyTrialSetup.tsx) and no longer renders or reads anywhere, and it never calls
      `recordAttribution`.  Red by product truth, not by instrument: the facts have no sink. */
   const sealedRecord = afterSealed.find((r) =>
     /sealed|wizard/i.test(String(r.context ?? "")),

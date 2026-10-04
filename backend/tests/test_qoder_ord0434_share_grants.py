@@ -1,8 +1,8 @@
 """ORD-0434 step 1 - a share grant becomes a server fact, and it ends on schedule.
 
 Measured at the authoritative tip `3543928ea1b7a0466871b6fbc3c3d24f64b14044`: the share exit was a
-client-side string concat (`frontend/src/lib/journeyLink.ts:34`), the journey read
-(`backend/app/main.py:3099`) accepted no caller identity at all, and nothing in the store could hold
+client-side string concat (`frontend/src/lib/journeyLink.ts`), the journey read
+(`backend/app/main.py`) accepted no caller identity at all, and nothing in the store could hold
 a visibility, a deadline or a withdrawal. So "who can see this trip" existed only in a URL.
 
 What the constraints became in code, and which arm proves each:
@@ -21,7 +21,7 @@ What the constraints became in code, and which arm proves each:
 
 The vocabulary was checked before naming anything: `PRIVATE`/`LINK_READ`/`INVITEES_ONLY`/`PUBLIC`
 have no other meaning in this tree, while `EXPIRED`/`REVOKED` already belong to the agent-approval
-status enum (`contracts/openapi.yaml:2220`), so this slice never emits those bare words - every code
+status enum (`contracts/openapi.yaml`), so this slice never emits those bare words - every code
 it adds is prefixed `SHARE_GRANT_`.
 """
 

@@ -38,7 +38,7 @@ frontend/e2e/qoder-stored-journey-link-is-an-entry.spec.ts	* `ROUTE_ALIASES` in 
 frontend/e2e/qoder-today-follows-the-stage.spec.ts	top of its band (`styles.css` puts the dock at `bottom: 72px`, `.v8-content` reserves
 frontend/e2e/qoder-trip-shape-and-budget.spec.ts	(playwright.config.ts); in a long run that row may belong to a database this run never
 frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts	`JourneyTrialSetup.tsx`, which printed `draft.pace` straight out; the option table with
-frontend/src/app/V8Experience.tsx	`_reservation_payload` (main.py) links a reservation to the commitment it became.  This is
+frontend/src/app/V8Experience.tsx	`_reservation_payload` (`backend/app/main.py`) links a reservation
 frontend/src/app/V8Experience.tsx	`_commitment_payload` (main.py) puts the money under `monetary_value` and says how much
 frontend/src/components/PoiCandidateCard.tsx	Selection is a pair, never a state: the reference chain's own rule (map_findings.md) is that
 frontend/src/components/v8/MapPanel.tsx	`e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and

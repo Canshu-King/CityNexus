@@ -13,7 +13,7 @@ import { evidencePath } from "./_qoderEvidence";
  * The cause was in the code, not in the browser: `MapPanel` binds the pin to
  * `selectRef.current?.(point.id ?? null)` (`frontend/src/components/v8/MapPanel.tsx`), and the hub's
  * call site passed `data`, `option` and `onNoLocationChange` only
- * (`frontend/src/app/V8Experience.tsx:3069`) — so the optional call discarded the tap in silence while
+ * (`frontend/src/app/V8Experience.tsx`) — so the optional call discarded the tap in silence while
  * the marker still advertised `role="button"`, `tabindex="0"` and an `aria-pressed` state.  A control
  * that looks focusable, answers a hit-test and then does nothing is the same defect ORD-0417 was opened
  * for, one screen over.  Nothing anywhere declared the hub map an overview: no comment at the call

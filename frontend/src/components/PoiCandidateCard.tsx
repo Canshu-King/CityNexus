@@ -63,7 +63,7 @@ export function PoiCandidateCard({
   return (
     <article
       /* `.selected` used to be set here for the traveller's own pick, and on this line that class means
-         the server's feasibility verdict on the discovery screen (styles.css:172 gives it a green-ish
+         the server's feasibility verdict on the discovery screen (styles.css gives it a green-ish
          ring). Measured: with it, my picked card painted #8490e9 from that shared rule instead of the
          accent line ORD-0435's sheet writes for `[data-picked="true"]`. One state, one hook -- the pick
          now rides `[data-picked]` only. */

@@ -62,7 +62,7 @@
 .cn-sim-ball-dot[data-state="NO_STAGE"] {
   background: #8b93a1;
 }
-/* `v8-page` on this element is not decoration: the dark content-surface group (`design-tokens.css:534`)
+/* `v8-page` on this element is not decoration: the dark content-surface group (`design-tokens.css`)
    and the AA outline border (`:666`) are both keyed to that scope, and portalling the widget out of it
    silently gave back white buttons on a dark panel and a 1.36:1 border. Re-declaring each override here
    would leave the next portalled surface with the same bug, so the window declares itself a page

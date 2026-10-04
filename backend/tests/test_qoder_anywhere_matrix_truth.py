@@ -3,7 +3,7 @@
 三条门，全部进程内假 provider，一个字节都不出网（§17C）：
 
 * G13 单位 - Valhalla 的 ``/route`` 与 ``/sources_to_targets`` 都按 **秒** 返回 ``time``、按
-  **公里** 返回 ``length``/``distance``。产品在三个地方各自除 60（``valhalla_http.py:99``
+  **公里** 返回 ``length``/``distance``。产品在三个地方各自除 60（``valhalla_http.py``
   ``:225`` ``:275``），**没有任何东西钉住单位**：把秒当分钟用，15 分钟的腿会写成 1 分钟；反过来
   会写成 900 分钟 —— 两者都是一个"看着正常"的数字。假 provider 只自证"我们也算了一遍"，所以这条
   门真正的判据是**物理速度带**：1.5 km 走 20 分钟 = 4.5 km/h；任何一次单位错都把速度推到
@@ -194,7 +194,7 @@ def test_g13d_distance_must_survive_whichever_shape_the_provider_answers(
     """同一格信息不得因为响应形状而被丢掉：:178 那条分支传了 distances，:187 那条没传。
 
     实测：喂 durations + distances，duration 规规矩矩换算，distance 全变成 None。
-    这条门是给后端的（``valhalla_http.py:185-187`` 少传一个参数），不是环境噪声。
+    这条门是给后端的（``valhalla_http.py`` 少传一个参数），不是环境噪声。
     """
 
     def durations_handler(request: httpx.Request) -> httpx.Response:
@@ -400,7 +400,7 @@ def test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts(monkeypatch)
 def test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives(monkeypatch):
     """分片是后端要交的活：先按 cells 预检，再按 ⌈N/10⌉² 拆片，一格都不许少。
 
-    今天 ``runtime.py:232`` 把全部 key 一次塞进 ``provider.matrix(keys)``：N=20 ⇒ 400 cells ⇒
+    今天 ``runtime.py`` 把全部 key 一次塞进 ``provider.matrix(keys)``：N=20 ⇒ 400 cells ⇒
     400/150 ⇒ 整次捕获 FAILED。**这条门现在是红的**，它是收口条件，不许 skip，也不许改成
     「按错误文案里的 locations 数」预检 —— 那个字面数在方阵上同解、在矩形上判错。
     """

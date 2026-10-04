@@ -54,7 +54,7 @@ node tools/chain_self_heal.mjs --only static,tunnel --static-port 4792 --auth-po
 ## 已量到的三条形状事实（写在这里，省得下一个人重踩）
 
 - 那把鉴权代理尺把自己钉死在 `:4782`、静态上游钉死在 `:4781`（`raw/preview_auth_proxy.py` 与 `:31`），只有 API 上游可由 `CNX_PROXY_API_UPSTREAM` 改（`:30`）⇒ 它不能挪端口做实验，只能整条一起起。
-- `vite preview` 的 /api 目标是 `CITYNEXUS_BACKEND_PORT ?? 8000`（`frontend/vite.config.ts:132`、`:143`）⇒ 后端在 `:8693` 时，代理会自己答 500/0 字节（14:34 那批 `ECONNREFUSED 127.0.0.1:8000` 就是这个）。这一形状是 ORD-0352 的题，不是本单的题。
+- `vite preview` 的 /api 目标是 `CITYNEXUS_BACKEND_PORT ?? 8000`（`frontend/vite.config.ts`、`:143`）⇒ 后端在 `:8693` 时，代理会自己答 500/0 字节（14:34 那批 `ECONNREFUSED 127.0.0.1:8000` 就是这个）。这一形状是 ORD-0352 的题，不是本单的题。
 - quick tunnel 把新址打成 `... INF |  https://xxx.trycloudflare.com  |`，**行首不是 URL** ⇒ 提取地址的 regex 不能带 `^` 锚。
 - 在这台机器上 `cloudflared tunnel --url … `（默认 QUIC）会停在 `precheck complete` 之后不再打印地址（实测 5 分钟没吐）；现网那条自己带 `--protocol http2`。本工具起的隧道同样带 `--protocol http2`，吐址只要几秒。
 - `cmd /c start "" /min 某.bat` 起的是 `cmd /K 某.bat`：那个 cmd **一直握着从调用方继承的 stdout 管道写端**且不退出 ⇒ `spawnSync` 永远不返回（实测把一整趟 recover 挂死）。所有 start 调用一律 `stdio: "ignore"` + `timeout: 30000`。

@@ -2333,7 +2333,7 @@ def demo_prepare_scenario(session: Session = Depends(get_session)):
     `GET /plans` - which does not filter by status - and turned 35 gates red, one of them in
     isolation.  A door that resets state must reset state and nothing else.
 
-    It also stops short of `/start`, because `commerce/validators.py:33-41` books only against a
+    It also stops short of `/start`, because `commerce/validators.py` books only against a
     PLANNED journey with a SELECTED plan: the hard-commitment step of the demo lives in this
     window, and auto-starting would erase it.
     """
@@ -3267,7 +3267,7 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     than overwriting it, so a trip cannot look more recently deleted than it is.
 
     `status` is not touched.  It answers what the trip was doing, and its closed CHECK
-    (`backend/db/schema.sql:125`) has no word for "in the bin" - inventing one would rebuild
+    (`backend/db/schema.sql`) has no word for "in the bin" - inventing one would rebuild
     the table for a fact that now has a column of its own.
     """
 
@@ -3314,8 +3314,8 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     The word is 找回 / undelete, chosen by measurement rather than taste.  恢复 and `recover*`
     are autonomous recovery in this product (`POST /api/v1/journeys/{journey_id}/recovery/acknowledge`
     above, and `recovery.*` copy keys); 还原 is already the plan-version screen's word for reverting
-    to an older plan (`frontend/src/features/studio/planVersionHistoryCopy.ts:10` states that rule);
-    `restore` in this tree means "a reload brings the same draft/panel back" (`main.py:3200`).  An
+    to an older plan (`frontend/src/features/studio/planVersionHistoryCopy.ts` states that rule);
+    `restore` in this tree means "a reload brings the same draft/panel back" (`main.py`).  An
     audit action of `journey.restored` would have handed 恢复 a fourth meaning.
 
     `JOURNEY_NOT_DELETED` (409) is the refusal that makes this door honest: bringing back a trip
@@ -3676,7 +3676,7 @@ def _collection_rows_by_folder(
     statements and not eleven.  It is an INNER join, and that is load-bearing rather than
     incidental: `collection_items.place_id` references `places(id)` with no `ON DELETE` clause
     (`backend/db/schema.sql`), and `PRAGMA foreign_keys=ON` is set on every connection
-    (`backend/app/db/session.py:64`), so a place a shelf points at cannot be deleted underneath
+    (`backend/app/db/session.py`), so a place a shelf points at cannot be deleted underneath
     it.  A shelf row therefore always has a place to resolve to, and the join cannot quietly drop
     a row and leave `item_count` short of what was asked for.
 
@@ -3737,7 +3737,7 @@ def create_collection(payload: CollectionFolderCreate, session: Session = Depend
 
     `owner_traveler_id` is asserted by the caller and validated against `travelers`, not
     authenticated: this is the same stance `POST /api/v1/journeys/{id}/members` takes on
-    `invited_by` (`backend/app/main.py:3917`), because the anonymous read is still the product's
+    `invited_by` (`backend/app/main.py`), because the anonymous read is still the product's
     default.  What the column does establish is whose shelf a row is, so the scoped read below has
     something to scope on and 「我的收藏」 stops being a hope expressed by a screen.
 
@@ -3804,7 +3804,7 @@ def list_collections(
 
     `traveler_id` is required, and that is the whole of the scope: a shelf is answered to the id
     written on it and to no one else.  It is a query parameter the way every other filtered read on
-    this server asks for one (`city_code` at `backend/app/main.py:5823` is the same shape), not a
+    this server asks for one (`city_code` at `backend/app/main.py` is the same shape), not a
     new channel.  What this version does *not* do is authenticate it -- see
     `create_collection`: the id is asserted by whoever calls, so 「我的收藏」 is a statement about
     which row the shelf belongs to, not a statement about who is allowed to look.
@@ -3817,7 +3817,7 @@ def list_collections(
     "/api/v1/collections/{folder_id}/items",
     response_model=CollectionItemSchema,
     status_code=201,
-    # ORD-0444, following ORD-0395's rule at `backend/app/main.py:2114`: the refusal is behaviour
+    # ORD-0444, following ORD-0395's rule at `backend/app/main.py`: the refusal is behaviour
     # this door exists to have, so the application's own served spec has to say it.  The hand
     # contract declared the 404 and the 409; without this block `/openapi.json` showed only
     # 201 and 422, and a consumer of the served document could not see that a shelf it does not
@@ -4105,7 +4105,7 @@ def _checkin_target(payload: JourneyCheckinCreate) -> tuple[str, str]:
 
     The key is written here, once, and is never re-derived when the stamp is read.  That is not
     tidiness -- either target column can go NULL underneath a live stamp (`ON DELETE SET NULL`, and
-    the replan path at `backend/app/main.py:11190` and `backend/app/operations/v9.py:732` is what
+    the replan path at `backend/app/main.py` and `backend/app/operations/v9.py` is what
     triggers it), so a key derived from the columns would change or vanish after the fact and the
     重复打卡 promise would end up depending on rows that no longer exist.
     """
@@ -4135,7 +4135,7 @@ def _checkin_journey_read(session: Session, journey_id: str) -> Journey:
     """One rule at both doors: a trip in the recycle bin is neither stampable nor stamp-readable.
 
     409 rather than 404 because the row exists and 找回 puts it back, which is the same reasoning
-    `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` records at `backend/app/main.py:3852`.  The bin is applied to
+    `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` records at `backend/app/main.py`.  The bin is applied to
     the read door on purpose too: `GET /api/v1/journeys` keeps its `deleted_at IS NULL` promise, so a
     screen that could read a binned trip's footprints would be showing the history of a trip the
     product refuses to list -- and one rule at both doors is cheaper to state than two that differ.
@@ -4728,7 +4728,7 @@ def _shared_plan_projection(
     Answers `(plan_state, plan)`, and the state is named rather than left to be inferred from a null.
     Three cases are genuinely different facts and a screen cannot tell them apart from `None` alone:
     this journey never had a plan; it points at a plan row that is not there; it has one.
-    `_active_plan_payload` (`app/stay_mobility.py:1684`) is the owner's projection and carries the
+    `_active_plan_payload` (`app/stay_mobility.py`) is the owner's projection and carries the
     owner's live position, their commitments and their disruption events -- none of which a guest
     asked for, and the first of which is a person's location.
 
@@ -4904,7 +4904,7 @@ def read_shared_journey(
 # holds.  Shape borrowed from RELATION/relation_and_copy_findings.md (a role answers "what may
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
-# (`app/stay_mobility.py:1963`).
+# (`app/stay_mobility.py`).
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"

@@ -72,7 +72,7 @@ export type PosterShareOutcome =
  * the list door actually answers with:
  *
  *   - `revoked_at` is `null`. A withdrawn grant is not a standing one, and the door keeps revoked
- *     rows in the answer on purpose (`backend/app/main.py:4347` -- "a silently filtered row is
+ *     rows in the answer on purpose (`backend/app/main.py` -- "a silently filtered row is
  *     indistinguishable from one that never existed"), so skipping them is this file's job.
  *   - `visibility` is exactly `LINK_READ`. The commander's ruling for ORD-0541, verbatim:
  *     「`visibility` 恰为 `LINK_READ` 才算可复用链接」. A `PUBLIC` row reaches a wider audience than

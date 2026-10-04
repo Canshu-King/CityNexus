@@ -49,7 +49,7 @@ export function stampForActivity(
 /**
  * The day a stamp was made, as it is painted under the pin.
  *
- * Date and no clock, on purpose: `e2e/_mapLabelRules.ts:69` forbids a time painted on the map glass
+ * Date and no clock, on purpose: `e2e/_mapLabelRules.ts` forbids a time painted on the map glass
  * (`clock-time`, `/\b\d{1,2}:\d{2}\b/`), because a pin carrying a clock reads as a promise about a
  * value the planner may not hold -- and `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts`
  * enforces that list against the canvas's own rendered text. A stamp day is still the server's

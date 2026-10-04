@@ -17,7 +17,7 @@ import type { V8Data } from "../../app/v8Types";
  * one called it "没有排在某一天" -- two answers about the same stop.  The order's own instruction is to
  * report rather than invent a field, so the lane reports instead: this build has no representation of
  * "a place with no day" other than the captured-but-unplaced row, and the date door even refuses to
- * produce one (`backend/app/main.py:5204`, answered at `:5210`; measured 2026-09-29 on this lane's own
+ * produce one (`backend/app/main.py`, answered at `:5210`; measured 2026-09-29 on this lane's own
  * copy, `D:/moodle/_qoder_n2b_ord0445_20260929/prep_receipt_r1.json`).
  *
  * Nor does the screen offer to put a place onto a day: this server has no such write
@@ -26,7 +26,7 @@ import type { V8Data } from "../../app/v8Types";
  */
 
 /** One captured place, as this screen reads it.  Declared here rather than imported from the
- *  generated client: the route answers with a hand-built dict (`backend/app/main.py:1712`), so what
+ *  generated client: the route answers with a hand-built dict (`backend/app/main.py`), so what
  *  this device got is what is true, and the guard in `pendingSetReads.ts` decides whether the answer
  *  really was a list. */
 export interface PendingCandidate {
@@ -82,7 +82,7 @@ export interface PendingDerivation {
 
 /**
  * The traveller's own calendar day for an instant.  Same rule as the itinerary's, and deliberately
- * not imported from it: `TripItinerary.tsx:32` keeps it local, and reaching into another lane's
+ * not imported from it: `TripItinerary.tsx` keeps it local, and reaching into another lane's
  * screen for a helper would make this panel's count depend on a file this order may not touch.
  */
 export function localDateKey(iso: string, timeZone: string): string | null {
@@ -125,7 +125,7 @@ export function derivePendingSet(input: {
 
   /* Which places some day already holds.  Both columns count: a plan stop names its place in
      `place_id`, and a capture names the row it materialised into
-     (`backend/app/db/models.py:441`), so the join is place-to-place, never name-to-name. */
+     (`backend/app/db/models.py`), so the join is place-to-place, never name-to-name. */
   const placedPlaceIds = new Set<string>();
   for (const activity of activities) {
     const id = activity.place_id;

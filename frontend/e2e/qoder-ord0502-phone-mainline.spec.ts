@@ -32,7 +32,7 @@ const RUN_ID = process.env.CITYNEXUS_E2E_RUN_ID ?? "unrun";
 const BACKEND = `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? "")}`;
 const PHONE = { width: 390, height: 844 };
 /* Playwright hands every test a fresh context, and the shell's only handle on a journey is a
-   localStorage key (`app/V8Experience.tsx:1195`).  Without a handoff C1's journey is invisible to
+   localStorage key (`app/V8Experience.tsx`).  Without a handoff C1's journey is invisible to
    the cells after it and they time out on a screen that never renders -- which is what the previous
    three generations of this run reported.  `beforeAll` below creates the journey through the
    product's own wizard and saves it here; the import must NOT blank this file, because a worker
@@ -44,7 +44,7 @@ const JOURNEY_KEY = "citynexus.v8.journey_id";
    restarted mid-walk (Playwright does that on a test timeout) arrives with none of them. */
 const WALK = path.join(OUT, `walk-${RUN_ID}.json`);
 /* A string the backend's own extractor is proven to accept -- lifted verbatim from
- * `backend/tests/test_v10_flagship_e2e.py:52`, which asserts http_status=201 and status READY on it. */
+ * `backend/tests/test_v10_flagship_e2e.py`, which asserts http_status=201 and status READY on it. */
 const PASTE = "V10-RAIL-42 rail confirmation Tianjin West";
 
 type Leg = { name: string; method: string; route: string; http_status: number | "NOT_SEEN" };
@@ -129,7 +129,7 @@ async function waitLeg(page: Page, leg: Leg, action: () => Promise<void>): Promi
 
 /**
  * 确定性导入 -- the door the paste screen points at by name when the extractor is not configured
- * (`JourneyInboxWorkbench.tsx:745` answers 「DeepSeek 提取未配置；确定性导入仍可用」; the tab is `:616`,
+ * (`JourneyInboxWorkbench.tsx` answers 「DeepSeek 提取未配置；确定性导入仍可用」; the tab is `:616`,
  * the fields `:635`-`:714`, and 提交 POSTs `/inbox/import` at `:329`).  Two cells call it: C2b measures
  * the door on its own, and C3 uses it to get a draft at all so that 落到那一天 can still be judged on a
  * deployment where the AI extractor is off.
@@ -286,9 +286,9 @@ test.describe("ORD-0502 phone mainline", () => {
         state = "PASS";
       } else {
         /* No journey on this device -- and this generation has no "open the wizard" control to
-           press: `app/V8Experience.tsx:881` returns the wizard itself in place of the shell when
+           press: `app/V8Experience.tsx` returns the wizard itself in place of the shell when
            nothing is stored.  The walk therefore goes through the wizard's own fields
-           (`features/setup/JourneyTrialSetup.tsx:901`, `:1011`, `:1040`), whose step-1 gate is the
+           (`features/setup/JourneyTrialSetup.tsx`, `:1011`, `:1040`), whose step-1 gate is the
            three values named at `:784-793`; 下一步/确认创建 are at `:1560`/`:1584`. */
         for (const [field, value] of [
           ["trial-city", "天津"],
@@ -365,7 +365,7 @@ test.describe("ORD-0502 phone mainline", () => {
       const statusLine = draftShown
         ? ""
         : (await page.locator(".v10-inbox-message").innerText({ timeout: 8_000 }).catch(() => "")).replace(/\s+/g, " ").trim();
-      /* The draft the extractor returned lands in `v10-inbox-draft` (`JourneyInboxWorkbench.tsx:842`,
+      /* The draft the extractor returned lands in `v10-inbox-draft` (`JourneyInboxWorkbench.tsx`,
          fed by `showResult` at `:417`).  The panel this cell used to read, `v13-2-memory`, is the
          *confirmed-artefact* memory (`:753`) -- on a journey this walk just created it correctly
          reads 「0 个受保护事实 / 暂无已确认工件绑定到此行程」, and judging the paste by that panel
@@ -661,7 +661,7 @@ test.describe("ORD-0502 phone mainline", () => {
         hit = await tap(page, "C7b", page.getByTestId("access-invite-submit"));
       });
       /* Wait for the panel's OWN roster reload to put a grant row on the screen before looking for a
-         token in it: `issueInvitation` awaits `afterWrite` -> `loadRoster` (`AccessPanel.tsx:238-245`,
+         token in it: `issueInvitation` awaits `afterWrite` -> `loadRoster` (`AccessPanel.tsx`,
          `:278`), and the previous shape of this cell scanned the folds the moment the POST answered,
          so it found only the member/role folds and reported a token that had not yet arrived. */
       const rowShown = await page
@@ -720,7 +720,7 @@ test.describe("ORD-0502 phone mainline", () => {
         rendered = await inner(guestPage, '[data-testid="shared-screen"]');
         /* The grant bar follows the contract that landed at this tip, not the walk's old 201-only
            guess: creation answers 201 and a reused grant answers 200
-           (`backend/tests/test_qoder_ord0541_share_grant_reuse_r1.py:84` create, `:99` reuse).  This
+           (`backend/tests/test_qoder_ord0541_share_grant_reuse_r1.py` create, `:99` reuse).  This
            walk measured 200 because a grant for the journey already existed before 生成邀请 was
            pressed -- that pre-existing grant is itself a reading and is named in `failure`. */
         const grantOk = grantLeg.http_status === 201 || grantLeg.http_status === 200;

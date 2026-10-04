@@ -21,7 +21,7 @@ import "./poi-import.css";
 /**
  * ORD-0437 — the second step of the POI entry chain: paste text or links, get places.
  *
- * Shapes are taken line by line from `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`
+ * Shapes are taken line by line from `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md`
  * (the F24 chain), and the ones this build cannot honour are said out loud instead of being skipped:
  *
  *   two parallel input modes — 文本或链接识别 is wired; 截图识别 is presented and refused by name,

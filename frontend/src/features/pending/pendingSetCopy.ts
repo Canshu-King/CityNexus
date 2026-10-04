@@ -10,7 +10,7 @@
  *    It is not "暂无数据", and it never asks the traveller to guess whether something was lost.
  *  - The verb pair stays the one already pinned: 找回 / 还原. 恢复 is not used anywhere -- it already
  *    means autonomous recovery here (`recovery.*`, `POST /journeys/{id}/recovery/acknowledge`), and
- *    还原 belongs to the plan-version screen (`features/studio/planVersionHistoryCopy.ts:10`).
+ *    还原 belongs to the plan-version screen (`features/studio/planVersionHistoryCopy.ts`).
  *  - No sentence promises a door this build does not have. There is no write that puts a place on a
  *    day (`backend/app/main.py`, `:7226`, `:7231` only move an activity through execution), so
  *    the screen says that plainly instead of showing a button for it (ORD-0385).

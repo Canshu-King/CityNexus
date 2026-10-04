@@ -70,7 +70,7 @@ function writeEvidence(name: string, payload: unknown) {
 }
 
 async function bootIntoTrip(page: Page, journeyId: string, via: "deep" | "nav" = "deep") {
-  // The shell's own gate: `V8Experience.tsx:868` only opens the wizard when no journey reference is
+  // The shell's own gate: `V8Experience.tsx` only opens the wizard when no journey reference is
   // stored, so the reference -- not a completed wizard -- is what gets the traveller inside.
   await page.addInitScript(
     ([id, locale]) => {

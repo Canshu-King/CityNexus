@@ -3,7 +3,7 @@
 车道 B 的 ORD-0109 实测把这三条钉出来了，本文件把它们变成门（全部假 provider、零出网）：
 
 * G16 TTL 必须有人读 - `settings.real_city_cache_ttl_seconds=900` 只在
-  ``real_city.py:964-966`` **写** ``RealPlaceCandidate.expires_at``、:1004 抄进 evidence_json，
+  ``real_city.py`` **写** ``RealPlaceCandidate.expires_at``、:1004 抄进 evidence_json，
   全仓没有任何一处读它来决定「这次还要不要出网」。B 量的结果就是暖趟与冷趟同耗时
   （242.9 s vs 238.3 s）。判据用**计数 client**：同一 journey + 同一 provider + 未过期 ⇒ 第二次
   外呼必须为 0，且第二次的产出不得变少（否则「0 次」可以靠「什么都不返回」蒙过去）。
@@ -53,7 +53,7 @@ COVERAGE_CATEGORIES = {
     "mobility": "地铁站",
     "booking": "门票预约",
 }
-#: ``real_city.py:699`` 那句默认集合，抄来是为了**比对**，不是为了使用。
+#: ``real_city.py`` 那句默认集合，抄来是为了**比对**，不是为了使用。
 DEFAULT_TAGS = '"amenity"~"cafe|restaurant|library|arts_centre|theatre"'
 CAFE_ELEMENT = {
     "type": "node",
@@ -228,7 +228,7 @@ def test_g16a_the_counting_client_sees_every_outbound_call_or_the_zero_proves_no
 def test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside(monkeypatch):
     """同一 journey、同一 provider、`expires_at` 还在未来 ⇒ 第二次外呼必须为 0。
 
-    今天红：``expires_at`` 只有写（``real_city.py:966``）没有读。修法归后端 —— 按
+    今天红：``expires_at`` 只有写（``real_city.py``）没有读。修法归后端 —— 按
     (journey_id, provider_key, 分类问题) 命中未过期候选就直接用库存。不许改成「写过字段就算过」。
     """
 
@@ -321,7 +321,7 @@ def _overpass_query(monkeypatch, query: str, radius_m: int) -> str:
 def test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp(monkeypatch):
     """发出去的几何必须配得上问的那块地方。
 
-    ``real_city.py:716`` 的 ``around:{min(radius_m, 5000)}`` 把 12 km（一个县的尺度）压成 5 km 圈。
+    ``real_city.py`` 的 ``around:{min(radius_m, 5000)}`` 把 12 km（一个县的尺度）压成 5 km 圈。
     今天红。修法不限（bbox / ``area[...]`` 多边形 / 按 extent 计算都行），固定一个与请求无关的数不行。
     """
 

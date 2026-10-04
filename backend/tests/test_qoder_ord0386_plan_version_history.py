@@ -1,8 +1,8 @@
 """ORD-0386 步骤一 · 版本历史：只读列表必须带写入时间，且这台服务器确实没有保留上限。
 
-为什么要有这个文件：`GET /journeys/{id}/plans` 早就把每一版都返回了（`backend/app/main.py:5116`
+为什么要有这个文件：`GET /journeys/{id}/plans` 早就把每一版都返回了（`backend/app/main.py`
 那条 GET 的 docstring 自己写着 "Every version this journey has ever had"），但投影里没有 `created_at`
-（改动前 `backend/app/services.py:612` 的 `PlanSchema(...)` 传了 18 个字段，里面没有它——计数方式：
+（改动前 `backend/app/services.py` 的 `PlanSchema(...)` 传了 18 个字段，里面没有它——计数方式：
 `re.findall(r'^\\s{8}(\\w+)=', <该调用体>, re.M)` 对 `git show HEAD:backend/app/services.py` 的结果），
 所以一屏"历史版本"只能靠 `version_no` 排序去猜时间。本文件把这一枚字段钉进契约、投影和响应，并把**上限那一格钉成实测**：
 不是"我以为没有上限"，是"跑 N 次生成，行数按候选数增长、version_no 连续、旧行不消失"。
@@ -27,7 +27,7 @@ client = TestClient(app)
 
 def _boot() -> None:
     """Tables come up through the product's own demo seed, the same way
-    `test_qoder_demo_accessibility_evidence.py:70` brings them up -- never via the shared
+    `test_qoder_demo_accessibility_evidence.py` brings them up -- never via the shared
     `demo/reset` route, which wipes 52 tables and is guarded off the preview anyway."""
 
     with SessionLocal() as session:

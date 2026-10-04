@@ -166,7 +166,7 @@ async function q1(page: Page, locale: Locale, tag: string) {
   await page.waitForTimeout(300);
   const backAgain = await page.locator(`${TICK}[aria-checked="false"]`).count();
 
-  /* The tick has to fit beside the name it belongs to. `src/styles.css:47` is a bare
+  /* The tick has to fit beside the name it belongs to. `src/styles.css` is a bare
      `button { display: block; width: 100%; margin-top: 12px }`, and a class that overrides only
      `display` inherits that width: measured at 272 px inside a 358 px card, the control took 76 % of
      the card and pushed the place name into a column next to the eligibility badge. These two
@@ -220,7 +220,7 @@ async function q1(page: Page, locale: Locale, tag: string) {
      tell "the traveller chose this" from "this place passed the gate" again. */
   expect(after.feasibility, node(arm, `the feasibility class moved from ${feasibilityBefore} to ${after.feasibility} on a tick -- the two states are not independent`)).toBe(feasibilityBefore);
   expect(backAgain, node(arm, "unticking did not return the control to its unselected twin")).toBe(boot.cards);
-  /* The layout guard for the `styles.css:47` inheritance trap described above: a tick that eats the
+  /* The layout guard for the `styles.css` inheritance trap described above: a tick that eats the
      card is as unusable as a tick that is missing, and only the second one shows up in a count. */
   const sq = squeeze as { card_width?: number; tick_share_pct?: number; name_badge_overlap_area?: number };
   expect(sq.card_width, node(arm, `the card could not be measured (${JSON.stringify(squeeze)})`)).toBeGreaterThan(0);

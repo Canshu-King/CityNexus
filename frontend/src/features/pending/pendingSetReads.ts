@@ -71,7 +71,7 @@ export async function readCapturedPlaces(journeyId: string): Promise<Door<Pendin
 export async function readCityPlaces(cityCode: string): Promise<Door<PendingPlaceRow>> {
   const json = await getAnswer(`/places?city_code=${encodeURIComponent(cityCode)}`);
   /* This door's own contract is a bare array (`response_model=list[PlaceSchema]`,
-     `backend/app/main.py:5362`), so anything else -- an envelope, a page object, no bytes at all --
+     `backend/app/main.py`), so anything else -- an envelope, a page object, no bytes at all --
      is `no_list` rather than an empty catalogue. */
   if (!Array.isArray(json)) return { kind: "no_list", keys: topLevelKeys(json) };
   const rows = json

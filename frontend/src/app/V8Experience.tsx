@@ -3893,7 +3893,7 @@ function MapPage({
     (item) => activityCoordinate(item) == null,
   );
   /* ORD-0497 -- the footprints on this map. One read, the same door the footprint screen and the
-     per-stop 打卡 control read (`GET /api/v1/journeys/{id}/checkins`, `checkins.ts:93`), asked once
+     per-stop 打卡 control read (`GET /api/v1/journeys/{id}/checkins`, `checkins.ts`), asked once
      per mount by `useFootprints` and cached nowhere: the traveller who stamps a stop on the trips
      screen and comes back to the map is looking at what the server holds at that moment, not at
      something this panel remembered. That is also why no second footprint state was introduced --
@@ -3914,8 +3914,8 @@ function MapPage({
 
      Pressing is done by height, not by leaving rows out of the DOM. Two accepted arms of this lane's
      own gates count stop rows as "every pinned stop has a row here" —
-     `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` (4 counted against 9 pins) and
-     `e2e/qoder-ord0394-map-coordinates.spec.ts:261` — and both read through
+     `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` (4 counted against 9 pins) and
+     `e2e/qoder-ord0394-map-coordinates.spec.ts` — and both read through
      `getByTestId(/^map-stop-/).count()`, which counts nodes, not sight. A collapse that deleted nodes
      would pass for as long as those arms stop earlier on their own preconditions and go red the moment
      either precondition clears. */
@@ -3924,7 +3924,7 @@ function MapPage({
   const stopsBoxRef = useRef<HTMLDivElement | null>(null);
   const stopIds = planStops.map((item) => item.id).join(",");
   /* The clip line is the bottom of the last chip that must stay whole, read off the laid-out chip
-     rather than computed from a height: `styles.css:47` gives every bare `button` `width: 100%`, so a
+     rather than computed from a height: `styles.css` gives every bare `button` `width: 100%`, so a
      stop chip takes a line to itself -- measured, the pressed height came out 244 px at 320, 360, 390
      and 414 alike -- and the right number is "where the fifth chip ends", which a row count cannot say
      if a long name ever wraps. Taking the TOP of the next chip instead would cut the shown chips too
@@ -3997,7 +3997,7 @@ function MapPage({
               : nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}
           </h2>
           {/* `type` is what this payload calls the category — `Activity.activity_type` in
-              `api/citynexus.ts:16` is a different shape, and the typechecker caught the guess. */}
+              `api/citynexus.ts` is a different shape, and the typechecker caught the guess. */}
           {selectedActivity?.type ? (
             <p className="v8-map-selected-type" data-testid="map-selected-type">
               {selectedActivity.type}
@@ -4148,7 +4148,7 @@ function serverConfirmed(value: string | null | undefined): boolean {
 const BOOKING_TYPES: Record<string, { zh: string; en: string }> = {
   FLIGHT: { zh: "航班", en: "Flight" },
   RAIL: { zh: "火车", en: "Rail" },
-  // The photo and calendar intake write whatever the provider's ticket said (`v9.py:1134` upper-cases it
+  // The photo and calendar intake write whatever the provider's ticket said (`v9.py` upper-cases it
   // and no column constrains it), so TRAIN arrives as often as RAIL does. It is a traveller word already.
   TRAIN: { zh: "火车", en: "Train" },
   COACH: { zh: "大巴", en: "Coach" },

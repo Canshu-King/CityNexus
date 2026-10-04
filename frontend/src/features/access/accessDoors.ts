@@ -206,8 +206,8 @@ export function readMembers(journeyId: string): Promise<JourneyMemberRow[]> {
 /** ORD-0527: the journey this device is already on, read the way the shell reads it.
  *
  *  `citynexus.v8.journey_id` is the shell's own reference (`app/V8Experience.tsx`, and the
- *  `citynexus.v8.*` family named at `lib/failureAttribution.ts:391`); `features/planning/
- *  PlanRankingPanel.tsx:39` is the shipped precedent of a panel reading it instead of waiting for a
+ *  `citynexus.v8.*` family named at `lib/failureAttribution.ts`); `features/planning/
+ *  PlanRankingPanel.tsx` is the shipped precedent of a panel reading it instead of waiting for a
  *  manual pick.  This screen read nothing, which is why a roster with rows in the store still painted
  *  the empty cell.  The value is only a *reference*: the caller must find it among the rows the list
  *  door answered, because a stale id here is the exact hazard that file documents.

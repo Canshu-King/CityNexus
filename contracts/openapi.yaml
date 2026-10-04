@@ -824,7 +824,7 @@ paths:
         target no longer holds.  Those four are nullable and the null is a fact rather than a blank:
         both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in
         `backend/db/schema.sql`, triggered in practice by the replan path at
-        `backend/app/main.py:11190`), and the footprint is the traveller's own history, so it outlives
+        `backend/app/main.py`), and the footprint is the traveller's own history, so it outlives
         them and says so instead of inventing a title.
 
         A trip with no stamps answers `[]` -- absence is a list, not a 404.  No pagination, no filter,
@@ -3267,7 +3267,7 @@ components:
       type: string
       description: >-
         Derived from the row's own columns, never stored.  Prefixed because bare EXPIRED and WITHDRAWN
-        already mean something to accommodation offers (`backend/app/stay_mobility.py:1963`).
+        already mean something to accommodation offers (`backend/app/stay_mobility.py`).
       enum: [MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN]
     JourneyCapability:
       type: string
@@ -3500,12 +3500,12 @@ components:
           description: >-
             Which generation of the trip this is, read off `plan_versions.source`.  The traveller-facing
             words for these three values already exist on the front
-            (`frontend/src/lib/displayVocabulary.ts:30`), so a guest screen can say 首次生成 / 来自一次重规划
+            (`frontend/src/lib/displayVocabulary.ts`), so a guest screen can say 首次生成 / 来自一次重规划
             without inventing a sentence -- and without one, "the trip you were sent" and "the trip you
             were sent, three replans later" are the same words.
           # The plan's own `status` is deliberately not on this answer: two of its five values
           # (SELECTED, SUPERSEDED) have no entry in the shared status table
-          # (`frontend/src/i18n/travelerLabels.ts:81`), so a screen handed the field could only echo a
+          # (`frontend/src/i18n/travelerLabels.ts`), so a screen handed the field could only echo a
           # machine word at a traveller.  Every enumeration this door does offer is pinned to have a
           # label for each of its values, by
           # `backend/tests/test_qoder_ord0465_shared_landing.py`.

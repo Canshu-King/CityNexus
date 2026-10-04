@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "frontend" / "review" / "line_anchor_drift" / "CONVERTED_r1.txt"
 CITE = re.compile(r"([A-Za-z0-9_./\\-]{0,80})\.(tsx|ts|py|cjs|mjs|js|json|yaml|yml|md|css|sql):(\d{1,6})(?:-\d{1,6})?")
 COMMENT = re.compile(r"^\s*(//|\*|/\*|#|##|-|\s*\*/)")
-SCAN_ROOTS = ["frontend/src", "frontend/e2e", "frontend/tools", "backend/app", "backend/tests",
+SCAN_ROOTS = ["frontend/src", "frontend/e2e", "frontend/tools", "backend/app", "backend/tests",  # contracts added below
               "backend/tools", "tools", "docs"]
 SKIP = {"node_modules", ".git", "dist", "data", "test-results", ".venv", "__pycache__"}
 EXTENSIONS = {".ts", ".tsx", ".py", ".js", ".cjs", ".mjs", ".md", ".css", ".sql", ".yaml", ".yml"}
@@ -101,3 +101,131 @@ def test_G2_no_dead_line_citation_survives_in_the_shipped_tree():
                             dead.append("%s:%d cites %s beyond its %d lines" % (
                                 path.relative_to(ROOT), i + 1, m.group(0), len(tl)))
     assert not dead, "dead line citations are back (%d found): %s" % (len(dead), dead[:8])
+
+
+# --- G3: the whole tree, in one form -------------------------------------------------------------
+#
+# A line-start rule is not a comment detector.  It reads a one-line block comment as code, and it never
+# sees the second line of a block comment or a docstring, which is where most of the remaining
+# citations were living.  These helpers find the regions themselves, so G3 can promise what G1 could
+# not: no shipped comment or prose line anywhere in the scanned roots carries a line number.
+
+GENERATED_EXEMPTION = {
+    # The text here is copied out of the server's own endpoint descriptions by openapi-typescript;
+    # policing it would only re-state the docstring rule, and regenerating it inside a comment-only
+    # hand would sweep other lanes' pending contract bytes along with it.
+    "frontend/src/generated/api.ts": "generated from contracts/openapi.yaml",
+}
+
+
+def _py_regions(text):
+    import io as _io
+    import tokenize as _tk
+
+    lines = set()
+    try:
+        for tok in _tk.generate_tokens(_io.StringIO(text.replace("\r\n", "\n")).readline):
+            if tok.type == _tk.COMMENT:
+                lines.add(tok.start[0])
+            elif tok.type == _tk.STRING and "\n" in tok.string:
+                lines.update(range(tok.start[0], tok.end[0] + 1))
+    except Exception:
+        lines.update(i for i, line in enumerate(text.split("\n"), start=1) if line.lstrip().startswith("#"))
+    return lines
+
+
+def _block_regions(text):
+    lines = set()
+    i, n, state, quote, line_no = 0, len(text), "code", "", 1
+    while i < n:
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < n else ""
+        if ch == "\n":
+            line_no += 1
+            if state == "line":
+                state = "code"
+            i += 1
+            continue
+        if state == "code":
+            if ch in "\"'`":
+                quote, state = ch, "string"
+            elif ch == "/" and nxt == "/":
+                state, _ = "line", lines.add(line_no)
+                i += 2
+                continue
+            elif ch == "/" and nxt == "*":
+                state, _ = "block", lines.add(line_no)
+                i += 2
+                continue
+        elif state == "string":
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == quote:
+                state = "code"
+        elif state == "block":
+            lines.add(line_no)
+            if ch == "*" and nxt == "/":
+                state = "code"
+                i += 2
+                continue
+        i += 1
+    return lines
+
+
+def comment_regions(rel, text):
+    if rel.endswith(".py"):
+        return _py_regions(text)
+    if rel.endswith(".md"):
+        return set(range(1, text.count("\n") + 2))
+    if rel.endswith((".yaml", ".yml")):
+        # A `description: |` block scalar is prose the traveller's screen reads; a key line is not.
+        out = set()
+        block_indent = None
+        for i, line in enumerate(text.split("\n"), start=1):
+            if line.lstrip().startswith("#"):
+                out.add(i)
+                continue
+            stripped = line.strip()
+            if block_indent is not None:
+                indent = len(line) - len(line.lstrip())
+                if stripped and indent >= block_indent:
+                    out.add(i)
+                    continue
+                if stripped:
+                    block_indent = None
+            m = re.search(r":\s*[|>][-+]?\s*(#.*)?$", stripped)
+            if m:
+                block_indent = len(line) - len(line.lstrip()) + 2
+        return out
+    return _block_regions(text)
+
+
+def test_G3_no_shipped_comment_carries_a_line_number_anywhere():
+    offenders = []
+    scanned = 0
+    for base in SCAN_ROOTS:
+        if not (ROOT / base).is_dir():
+            continue
+        for sub, dirs, files in os.walk(ROOT / base):
+            dirs[:] = [d for d in dirs if d not in SKIP]
+            for f in files:
+                ext = os.path.splitext(f)[1]
+                if ext not in EXTENSIONS:
+                    continue
+                path = Path(sub) / f
+                rel = str(path.relative_to(ROOT)).replace("\\", "/")
+                text = path.read_text(encoding="utf-8", errors="replace")
+                scanned += 1
+                if rel in GENERATED_EXEMPTION:
+                    continue
+                marks = comment_regions(rel, text)
+                for i, line in enumerate(text.split("\n"), start=1):
+                    if i not in marks:
+                        continue
+                    m = CITE.search(line)
+                    if m:
+                        offenders.append("%s:%d %s" % (rel, i, m.group(0)))
+    assert scanned > 400, "the scan walked only %d files, so a pass would be an empty denominator" % scanned
+    assert not offenders, ("these shipped comments cite a line number, and the tree is one form -- a name "
+                           "anchor: %s" % offenders[:8])

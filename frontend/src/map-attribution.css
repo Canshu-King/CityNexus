@@ -23,7 +23,7 @@
    the caption was a single line. Anchoring them as one stack means the camera is told about the
    whole band (see `.v8-map-overlay-stack` in MapPanel's fitBounds padding) and neither element can
    land on top of the other at any width. Selectors are deliberately deeper than
-   `styles.css:169` (.v8-map-caption) and `design-tokens.css:1300` (.v8-map-gesture-hint) so they
+   `styles.css` (.v8-map-caption) and `design-tokens.css` (.v8-map-gesture-hint) so they
    win on specificity, not on import order. */
 .v8-map-panel .v8-map-overlay-stack {
   position: absolute;

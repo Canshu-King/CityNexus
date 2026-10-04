@@ -17,7 +17,7 @@
  *   B4  a refusal costs no second screen and leaks no prose into an attribute (Q64=① / Q71).
  *
  * The counter-example that lives outside this file: `review/n3_mutation_hollow_r1.py` deletes the
- * empty-id guard at `frontend/src/lib/journeyLink.ts:29`, re-runs A1 and B1, and requires them red.
+ * empty-id guard at `frontend/src/lib/journeyLink.ts`, re-runs A1 and B1, and requires them red.
  */
 import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";

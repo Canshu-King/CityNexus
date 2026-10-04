@@ -139,7 +139,7 @@ export function MapPanel({
    * the read did not answer about (`footprints` not on its `read` arm ⇒ the switch is not offered at
    * all, see the row in V8Experience).  Hiding is `visibility`, never removal:
    * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
-   * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins and rows as the proof that every
+   * `e2e/qoder-ord0394-map-coordinates.spec.ts` count pins and rows as the proof that every
    * located stop can still be picked, and ORD-0453 already settled that a filter is a clip, not a
    * deletion.
    */
@@ -154,7 +154,7 @@ export function MapPanel({
   const markerEls = useRef<{ el: HTMLElement; id: string | null; at: [number, number] | null }[]>([]);
   /* ORD-0497: the date badges are maplibre markers of their own, appended and removed by
      `applyFootprints` -- never children of a pin, because
-     `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:177` asserts a pin paints nothing but
+     `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts` asserts a pin paints nothing but
      its stop number. Kept in a ref so a footprint read that lands after the map was built can restyle
      the pins without tearing the map down (the camera-reset lesson of ORD-0390 right above). */
   const stampBadges = useRef<import("maplibre-gl").Marker[]>([]);
@@ -511,7 +511,7 @@ export function MapPanel({
       marker.setAttribute("role", "button");
       marker.tabIndex = 0;
       marker.setAttribute("aria-pressed", String(!!point.id && point.id === selectedRef.current));
-      /* The class is the painted half of the same state (`map-selection.css:22`), and the build path
+      /* The class is the painted half of the same state (`map-selection.css`), and the build path
          set only the attribute, so a selection that existed before the markers were created announced
          itself to a screen reader and not to the eye. */
       if (point.id && point.id === selectedRef.current) marker.classList.add("selected");
@@ -736,7 +736,7 @@ export function MapPanel({
       entry.el.classList.add("stamped");
       if (!map || !maplibre || !entry.at) continue;
       /* The day goes beside the pin, not inside it: `e2e/qoder-map-ord0403-named-control-and-labels
-         .spec.ts:177` asserts a pin paints nothing but its stop number, and a child node would
+         .spec.ts` asserts a pin paints nothing but its stop number, and a child node would
          break that with the text it adds. Date only, never a clock -- `formatStampDay` names the
          glass rule that forbids one. */
       const badge = document.createElement("div");

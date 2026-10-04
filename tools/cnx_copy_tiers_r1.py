@@ -556,7 +556,7 @@ def fallback_mutants():
     tier_b = '  setActionState(copyFor(attribution, zh).body ?? "Stop failed");\n'
     enum_ok = '  const code = (await r.json()).error_code ?? "SERVER_UNAVAILABLE";\n'
     multiline = '  const raw = body?.detail ??\n    (zh ? "暂时无法接受。" : "Could not accept.");\n'
-    # A real shape from this tree (api/citynexus.ts:691): a media-type label that
+    # A real shape from this tree (api/citynexus.ts): a media-type label that
     # merely sits after a `??` on the same line. Counting it would be a false
     # positive, and this arm is what proves the locale test is load-bearing.
     media = '      emptyAnswer ? "empty" : (contentType ?? "").includes("html") ? "html" : "not_json",\n'

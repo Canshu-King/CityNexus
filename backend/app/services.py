@@ -439,8 +439,8 @@ def journey_live_view(item: Journey) -> JourneyLiveView:
     The rule reads `journeys.aborted_at` -- the column the abort door owns and never clears -- and
     falls back to `status` for a row written before that column existed.  It is not `status` alone:
     `select_plan` writes `journeys.status = "PLANNED"` without reading the journey's status
-    (`backend/app/main.py:7833`), and the two activity-advance doors write `"COMPLETED"` the same
-    way (`backend/app/main.py:9372`, `backend/app/main.py:9456`), so a trip called off and then
+    (`backend/app/main.py`), and the two activity-advance doors write `"COMPLETED"` the same
+    way (`backend/app/main.py`, `backend/app/main.py`), so a trip called off and then
     re-planned would come back onto the live screen while still carrying the abort moment and the
     traveller's reason -- two answers on one screen, which is what the follow-up race probe found for
     the write gate (`review/ord0520/ABORT_RACE_RECEIPT.json`) and what `abort_resurrect_probe_r1.py`

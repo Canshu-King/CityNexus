@@ -64,11 +64,11 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
          (arrive/begin/complete/depart/skip); all five take an `{activity_id}` that must already exist,
          and there is no collection-level POST/PUT to `/…/activities`;
        - the backend inserts an Activity row at 6 points, none of which takes a traveller-named place:
-         plan composition (`services.py:1212` in `generate_plans`/`_generic_compose_plans`,
-         `services.py:1770`, `planning/authoritative_v12.py:1347` in `compose_authoritative_multiday`),
-         stay-option materialisation (`operations/v9.py:631` in `materialize_stay_option`), trip-studio
-         accept of ids that already exist (`main.py:5970` in `_trip_studio_accept_impl`) and replan
-         accept (`main.py:9978`) -- re-measure with
+         plan composition (`services.py` in `generate_plans`/`_generic_compose_plans`,
+         `services.py`, `planning/authoritative_v12.py` in `compose_authoritative_multiday`),
+         stay-option materialisation (`operations/v9.py` in `materialize_stay_option`), trip-studio
+         accept of ids that already exist (`main.py` in `_trip_studio_accept_impl`) and replan
+         accept (`main.py`) -- re-measure with
          `review/n3_0407_write_door_inventory_r1.py`, which names the enclosing function with each line
          so a moved line number is catchable rather than silently stale;
        - `POST /journeys/{id}/location` does exist (`main.py`, `post_foreground_location`) and the
@@ -116,7 +116,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   /* ORD-0497 — 足迹上地图。Three rules these sentences have to keep:
      1. the `read` arm with nothing in it names the READ ("这台服务器这次没有交回"), not the
         traveller ("你没有去过任何一站"), because an empty list from one server on one occasion is
-        all this surface was ever given (`backend/app/main.py:3419` -- absence is a list, not a 404);
+        all this surface was ever given (`backend/app/main.py` -- absence is a list, not a 404);
      2. the two unanswered arms say the map distinguishes NOTHING, so a plain pin cannot be read as
         "checked in" by someone who never asked;
      3. `%s` carries only the server's own count. The day under a pin is that same row's

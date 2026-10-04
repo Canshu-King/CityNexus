@@ -123,7 +123,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 
 /* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
    The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
-   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
+   returned before .v8-product-shell exists (V8Experience.tsx) and would otherwise
    inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
    and wins by load order — the two must move together or the shell reverts. */
 :root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
@@ -330,12 +330,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; }
 #v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: var(--cn-r-8); color: var(--cn-ink-secondary); background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
 /* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
-   (`V8Experience.tsx:1976`), so `> button svg` matched none of the 14 rows and each icon grew to the
+   (`V8Experience.tsx`), so `> button svg` matched none of the 14 rows and each icon grew to the
    full 243px width available in the flex row -- 292px per row, 4,512px of scroll, 3,668px of overflow.
    Same 档位 as the sidebar above, now from one token.
    ORD-0427: the three row rules below carry `:not(.v8-quiet-button)` for the same reason. Widening
    `> button` to ` button` (ORD-0419) also reached the head row's Close button, which already carries
-   that class (`V8Experience.tsx:1969`), so it inherited width:100% and the row padding: measured,
+   that class (`V8Experience.tsx`), so it inherited width:100% and the row padding: measured,
    its box went 32px -> 199px at 390x844 and the kicker above it wrapped to a second client rect.
    Excluding the class keeps the 14 rows styled and leaves the head control to its own rule. */
 #v8-nav-drawer button svg { width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
@@ -672,7 +672,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
    floats over the scrolling content.  So it no longer needs `position: sticky`, no longer needs a
    gradient to fake a soft edge over what it covered, and the content no longer needs padding to
    hide from it.  The stage ball stays clear of it by its own `--cn-sim-float-clearance`
-   (SimulationPanel.css:20/122), which measured 136px+safe on a phone against a band of 68px. */
+   (SimulationPanel.css/122), which measured 136px+safe on a phone against a band of 68px. */
 .trial-sticky-cta {
   display: flex;
   gap: var(--cn-s-10);
@@ -1789,10 +1789,10 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 /* ORD-0382 · 三处 390px 下量出来的版式缺陷（读数在 review/evidence/ord0382/measurements_*.json）
  *
  * 根因不是本弹窗自己的规则，是两条全局泄漏：
- *  - `styles.css:47` 的裸 `button { display: block; width: 100%; margin-top: 12px; ... }` 把右上角的
+ *  - `styles.css` 的裸 `button { display: block; width: 100%; margin-top: 12px; ... }` 把右上角的
  *    × 撑成 184px 宽的一列（390 视口下标题文字列只剩 162px，被挤成三行）；同一个 margin-top 让页脚
  *    两枚按钮在一条 flex 行里量到 56 与 44 两种高度。
- *  - `styles.css:131` 的 `.v8-product-shell button { font: inherit }` 特异性高于 `.v8-primary-button`
+ *  - `styles.css` 的 `.v8-product-shell button { font: inherit }` 特异性高于 `.v8-primary-button`
  *    自己的 `font-weight: 600`，于是主按钮实测 font-weight=400、与次按钮同字重同色阶。
  * 修法一律限定在 `.plan-ai-*` 之内：不动那条全局规则，也不给别的车道换脸。
  */

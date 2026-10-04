@@ -138,7 +138,7 @@ test("the ORD-0135 ③ missing-field jump still routes through the shared helper
 
 test("the exits leave the answer cells exactly as the other gates read them", async ({ page }) => {
   /* Three shipped gates compare a review row's own text -- `qoder-stated-versus-stored-versus-planned
-     .spec.ts:64` reads 节奏 and 兴趣 as frozen strings.  An exit parked inside the answer cell would
+     .spec.ts` reads 节奏 and 兴趣 as frozen strings.  An exit parked inside the answer cell would
      have quietly reddened them, so the cell must carry no button text at all. */
   await openReview(page);
   const cells = {};
