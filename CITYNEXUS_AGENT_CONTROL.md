@@ -16588,6 +16588,79 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 交 CMDR 02:04 那手的第三枚候选（按现尖重切）· 判语：`5a53846b-cmdr0204-ruler-fixes-r3` = `d58e02d4a60e5d4b868fad808eeb756d11659012` 的父笔就是我切枝时现读的尖 `45207a0cc0fcae000b619753b4dfccb06594a59f`，两枚改动文件的 blob 与 `-r2` 逐枚相同，四枚反件在这枚新基座上**重跑**且同判；对写作时现读尖 `ee142704825374903007b783d8516694cb9a2422` 的 `merge-tree` 只读预测冲突 0 枚、快进性 = 否（尖又前移了，见第二段）。同时报一格事实：现尖上我这修**还没落**（`_wait_closed` 命中 0 处、旧的 5xx 期望句仍 1 处）。0 产品字节。
+
+**一、三枚头与两枚 blob（逐枚 `ls-remote` / `rev-parse` 现读）**
+
+- `-r1` = `3cbd8be62024b69917505aa62e9302bcc13808ff`（起于裁语点名的 `4fdd6345c0bfef36f12468390baad50946aad2b6`，那条线是无父重建树，与现尖无共同祖先 ⇒ 只能存档，不可快进）。
+- `-r2` = `541831b83b8f3727b631b63dbb6a09319680fb1b`（起于 `868958e7e11472faa0fc84c2218304c36d1885b0`，那代已被后来的尖取代）。
+- `-r3` = `d58e02d4a60e5d4b868fad808eeb756d11659012`（起于现读尖 `ee142704825374903007b783d8516694cb9a2422`）——**要落就落这枚**。
+- `backend/tests/test_qoder_ord197_four_class_receipt.py`：现尖 `bed80a5b0f0cb680e904aecf1c9b9d33796cd217`，`-r2` `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5`，`-r3` `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` —— r2 与 r3 逐字相同 = True，现尖与 r3 不同 = True（即仍未落地）。
+- `backend/tests/test_qoder_city_failure_reasons.py`：现尖 `77433ceddec4200d8e85fec3fccccf3d4cd439b9`，`-r2` `d40513cb37e977d36df1dfd3b2d480ee43f7caf6`，`-r3` `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` —— r2 与 r3 逐字相同 = True，现尖与 r3 不同 = True（即仍未落地）。
+
+**二、落地面（只读预测）**
+
+- `git merge-tree --write-tree ee142704825374903007b783d8516694cb9a2422 d58e02d4a60e5d4b868fad808eeb756d11659012` 预测树 `ec49bd1adf87f16f198aef6a48ba270fc64f3278`，CONFLICT 行数 = 0；`git merge-base --is-ancestor ee142704825374903007b783d8516694cb9a2422 d58e02d4a60e5d4b868fad808eeb756d11659012` 退出码 = 1（0 = 我这枝含现尖，可直接快进；非 0 = 尖自我切枝后又前移了一格，那就不叫快进，叫 0 冲突重切）。
+- 尖在今夜从 `4fdd6345c0bfef36f12468390baad50946aad2b6` 经 `868958e7e11472faa0fc84c2218304c36d1885b0`、`45207a0cc0fcae000b619753b4dfccb06594a59f` 走到 `ee142704825374903007b783d8516694cb9a2422`（我这块写作时又读到一次移动）。落地请按**当时**现读尖核这三行数字；若你要我按那一尖再退一枚 r4，我一分钟就交，你别手合。
+
+**三、四枚反件在新基座上的复跑（不是继承 r2 的结论）**
+
+- `R1 fixed + 0.4s hold               expect=green runs=['2 passed, 5 deselected, 2 warnings', '2 passed, 5 deselected, 2 warnings', '2 passed, 5 deselected, 2 warnings'] verdict=OK`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- `R2 unfixed + 0.4s hold             expect=red   runs=['2 failed, 5 deselected, 2 warnings', '2 failed, 5 deselected, 2 warnings', '2 failed, 5 deselected, 2 warnings'] verdict=OK`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- `R3 outcome written wrong           expect=red   runs=['1 failed, 2 warnings in 2.05s', '1 failed, 2 warnings in 1.93s', '1 failed, 2 warnings in 1.96s'] verdict=OK`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- `R4 5xx mapped back to BAD_RESPONSE expect=red   runs=['(none)', '(none)', '(none)'] verdict=OK`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- `restored byte-identical: YES all 4`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- `VERDICT ALL_FOUR_AS_PREDICTED`（件 blob `06269db44f78f83199711be713cd3c1855a7a84f`）
+- 日志 `review/cmdr0204-ruler-fixes/cmdr0204_mutants_r3base.txt`（已随 `5a53846b-cmdr0204-ruler-fixes-r3` 入库，blob `06269db44f78f83199711be713cd3c1855a7a84f`）；变异跑完按快照还原并核哈希，四枚文件全部逐字节回来。
+
+**四、r1/r2 的处置**：保留不删、不强推、不再请落；`-r1` 与无父重建树无祖先关系这一条已在`5a53846b_1431.md`（勘误件）里具名报过。尖 = `ee142704825374903007b783d8516694cb9a2422`。
+
+边界 A：本手产品字节 0 枚改动、契约 0 枚、他人量具 0 枚改动；改动仍只有那两枚 shipped 尺文件 + 读数件，尖 = `ee142704825374903007b783d8516694cb9a2422`。
+
+边界 B：权威线 0 移动；push 1 次，目标是本车道自己名下新枝 `refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r3`，force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除，尖 = `ee142704825374903007b783d8516694cb9a2422`。
+
+边界 C：账本 0 直写（本块走收件口），demo/reset 0 次，`_preview.db` 0 次写，监听端口 0 个在跑（反件跑的是 conftest 自起的私有 `suite.db`），尖 = `ee142704825374903007b783d8516694cb9a2422`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）自申报的下一件已交：一把「已落地内容还在不在」的尺（不是我口头复扫，是工具），第一趟就把我自己三手量出 HELD/LOST 分明；枝 `review/0afdb49b-landed-blob-rescan-r1` = `ecf337c254d44d85f496643278cad8817923e089`
+
+一、为什么是这一件（今晚现场给的因）
+- 我那手锚形是**先落后进、再被掉出去**的：20:0x 我按 blob 量到线上还在（`review/ord0500-anchor-form/` 11 枚路径、测试文件 = 标签版 `80cfac12…`），同一窗口内尖一换，那 11 枚路径 0 枚、测试文件回到数字锚版 `dd4bf606…`——而单子是 CLOSED 状态、没有任何一道门响过。
+- 常设已经说了「落地=逐枚比 blob」，但没人有一把现成的尺去复扫已关单的单子。这一件就是把那句话变成可跑的东西：`tools/landed_blob_rescan_r1.py`，原件 blob `3dc71be8247acf680072b15d0fefdf2ff53d8081`。
+
+二、它怎么取「期望值」（不靠我抄）
+- 坐标取自**已发布的枝本身**：路径是那手 `git diff --name-only <ref>^..<ref>`，期望 blob 是 `git rev-parse <ref>:<path>`。枝是不可变的，「我当时交了什么」只剩那里记着是诚实的。
+- 对现尖逐枚问五种答话：`SAME`（逐字节相同）/ `ABSENT`（线上没这路径）/ `CHANGED`（有但不是那版字节，可能被人正当覆盖，所以只报不判）/ `UNREADABLE_ON_LINE`（读不动那棵树——绝不折进 ABSENT）/ `NOT_REACHED`（那枚枝读不到，绝不算通过）。被本手删掉的路径另有两答 `DELETION_HELD` / `DELETION_UNDONE`。
+- 它不查 ancestry：在一条会重根的线上那件事答不了这个问题。
+
+三、第一趟读数（现尖 `ee142704825374903007b783d8516694cb9a2422`，件 `review/landed-blob-rescan/evidence/landed_blob_rescan_r1.json` blob `3afa1666fd61007562a6fb3d8d39b86c23470b93`）
+- `0afdb49b-ord0500-staging-door-r4`（头 `aff61777229e` 起）→ **HELD**：13 枚路径全 SAME。
+- `newlane-ord0500-phone-anchor-form-r3` → **LOST_LANDED_CONTENT**：16 枚 ABSENT + 1 枚 CHANGED（那枚 CHANGED 就是 `backend/tests/test_qoder_ord0500_journey_refusal.py`：期望 `80cfac12…`、线上 `dd4bf606…`）。
+- `0afdb49b-ord0500-staging-door-r5` → **LOST_LANDED_CONTENT**：3 枚 ABSENT（链脚本与两趟原始输出）。
+- 也就是说：这把尺第一趟独立复现了我昨天用手量到的那件损失，同时把手上还在的那手判成 HELD——它不是「什么都报丢」的噪声尺。
+
+四、反件五枚全咬（`tools/landed_blob_rescan_arms_r1.py`，blob `49ad687533d6ffc3b80f018e3d2a1daff4e8d5f9`；件 blob `acf49e891bdae241acca4d6266a6e2555953370e`）
+- 控制：线上真有的那枚路径判 SAME（不冤枉）。
+- 期望 blob 写成别的 → 必须 CHANGED，不许 SAME。
+- 线上没有那路径 → 必须 ABSENT，不许 CHANGED。
+- 枝读不到 → NOT_REACHED，且永不计为通过。
+- 整棵树读不动 → UNREADABLE_ON_LINE，不许当成「文件没了」。
+- 写这两枚反件时它们各抓到一个真 bug：git 的 fatal 行会把 revision 印在句子里，stdout 与 stderr 合并再抓 40 位就把「路径不存在」读成一枚 blob（判成 CHANGED）；另一处哨兵字符串与判语标签不一致（`UNREADABLE` 对 `UNREADABLE_ON_LINE`），同样判成 CHANGED。两处都在同一枚件里改掉了，反件现在量的就是改后的行为。
+
+五、请你点的两格（不自取）
+- ① 这把尺要不要升成车队常设：由你在落地门里调它（它只读、不写，接口是 `coordinates(ref)` + `scan(tip, coords)`，件里都有），还是各车道自己跑？我这边下一趟可以按同一形制把我名下所有已发布枝都扫一遍，出清单入账。
+- ② 我那两手仍在等你落的枝（`newlane-ord0500-phone-anchor-form-r3` = `ca5c2d58f422d698099a84ea79bc317ac1346204`、`0afdb49b-ord0500-staging-door-r5` = `a3e344ba0dc0927060f220f9f8e7d89e95c487b3`）：落之前我会再核一次尖，尖动就按新尖重切——这已是常设，不另议。
+- ③=丙 照你裁的挂起，一枚同名件没挪。
+
+六、边界
+- 本手产品字节 0 枚、线上已落字节 0 枚覆盖（发布器 `declared_landed_changes` 为空、`allow_landed` 为空）、0 枚别人名下文件改动；权威线 0 移动；账本 0 直写（本块走收件口）；端口 0 个由我起停；`demo/reset` 未跑；`_preview.db` 未写。
+- 仍欠的格子：真机 NOT_MEASURED（`adb devices` 现读只有表头）；Playwright 本手未跑；我名下三枚已发布枝的头一枚没换，无强推无删枝。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 00:07 · 尺的那一格做完了（第四类取词 + 一枚新判态）：同一棵树上两口径对跑改了 50 行引用，我具名那 6 枚假阳现在全部由机器自己认账（5 枚变 alive、1 枚变 file_level），产品字节 0、枝 0 推
 
 **〇、钟点先说一句**：本块写时 shell `date` 现读 00:07（已过午夜）。我名下前两块是 21:14 与 23:26（`D:/moodle/CITYNEXUS_AGENT_CONTROL.md` 里两块头都在），请按块头时间戳排，别按文件名当天数字排。
