@@ -409,7 +409,7 @@ def test_a_deleted_trip_is_still_readable_because_the_row_is_the_bin_s_content()
 
 
 def test_the_hand_contract_declares_both_new_operations_and_names_both_refusals() -> None:
-    """`test_contract.py:82` compares (path, method) sets; this arm compares the words.
+    """`test_contract.py` compares (path, method) sets; this arm compares the words.
 
     A client generated from the contract has to be able to tell "no such trip" from "already in
     the bin" without parsing English, so the two codes are declared where the operation lives.

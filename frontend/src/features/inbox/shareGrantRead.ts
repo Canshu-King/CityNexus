@@ -30,7 +30,7 @@ export type GrantRow = {
   expires_at: string | null;
   revoked_at: string | null;
   /**
-   * ORD-0541: the door has always sent this (`ShareGrant.token`, `backend/app/schemas.py:904` -- "list
+   * ORD-0541: the door has always sent this (`ShareGrant.token`, `backend/app/schemas.py` -- "list
    * answers carry it so the owner can build or revoke the link"), and this file left it off the row
    * because nothing here needed it. Reusing an existing link instead of minting a second grant needs
    * it: a row without its token is an id the traveller cannot do anything with.

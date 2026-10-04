@@ -110,7 +110,7 @@ export const SPEND_CLASSES_WITHOUT_A_READ = [
   "TRANSACTION",
 ] as const;
 
-/** The server's own words for "this promise is real", read off `backend/db/schema.sql:233`. */
+/** The server's own words for "this promise is real", read off `backend/db/schema.sql`. */
 const ANCHORED_LEVELS = new Set(["C2_Reserved", "C3_Guaranteed", "C4_Anchored"]);
 const LIVE_COMMITMENT_STATES = new Set(["ACTIVE", "FULFILLED"]);
 

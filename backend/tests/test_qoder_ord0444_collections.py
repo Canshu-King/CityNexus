@@ -3,7 +3,7 @@
 Measured at the authoritative tip `7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a`: the product had no
 collection object of any kind.  `favorite` and 收藏 hit 0 times across `backend/app`, `frontend/src`
 and `contracts`, and every `collection` hit was GeoJSON `FeatureCollection` or prose
-(`frontend/src/i18n/mapPanelCopy.ts:47`, `backend/app/main.py:8051`).  So the three-exit capture
+(`frontend/src/i18n/mapPanelCopy.ts`, `backend/app/main.py`).  So the three-exit capture
 chain (加进计划 / 收藏 / 新建计划) had two landings and no third one, and 「收藏」 could not be
 built later on top of anything.
 
@@ -529,7 +529,7 @@ def test_demo_reset_can_empty_the_container_and_does_it_in_the_right_order():
     failed` (`scratch/reset_counter_before_r1.json`, keys
     `4_demo_reset_with_a_non_empty_shelf` and `6_server_log_attribution`).  `places` is deleted by
     that door and `collection_items.place_id` references it with no `ON DELETE` clause, with
-    `PRAGMA foreign_keys=ON` on every connection (`backend/app/db/session.py:64`), so a container
+    `PRAGMA foreign_keys=ON` on every connection (`backend/app/db/session.py`), so a container
     that is not emptied first makes the fixture reset for roughly 140 modules fail the moment a
     traveller favourites anything.
 

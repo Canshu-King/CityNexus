@@ -207,7 +207,7 @@ test("ORD-0541 A1 a press that writes, then a press that does not", async ({ bro
 
   expect(reading.roster_reset_by_this_arm.standing_left, "the arm started from no standing link").toBe(0);
   /* `rows_before` is the roster's length, and the door keeps withdrawn rows in that answer on purpose
-     (`backend/app/main.py:4346`), so it is recorded and not asserted: on a second trip over the same
+     (`backend/app/main.py`), so it is recorded and not asserted: on a second trip over the same
      store it is a count of history, not a count of what could be reused. The first cut of this line
      compared that number to zero and went red on a correct product. */
   expect(reading.first_press_page_errors, "the writing press threw nothing").toEqual([]);

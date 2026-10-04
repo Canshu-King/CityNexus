@@ -279,7 +279,7 @@ def render_pos(text, abs_off):
         # which is a string being assembled, not a place a value is painted).
         # Without the `>`-to-`{` gap rule this branch claimed an `if (...) {` block
         # was element text -- measured on frontend/src/features/recovery/
-        # RecoveryRequiredPanel.tsx:71, where the enclosing brace is a control block.
+        # RecoveryRequiredPanel.tsx, where the enclosing brace is a control block.
         gt = before.rfind(">")
         gap = before[gt + 1:] if gt >= 0 else ""
         if (last and last not in "=(,)[]:;{}<>+-*/%&|^!~?\"$%" and not attr
@@ -556,7 +556,7 @@ def fallback_mutants():
     tier_b = '  setActionState(copyFor(attribution, zh).body ?? "Stop failed");\n'
     enum_ok = '  const code = (await r.json()).error_code ?? "SERVER_UNAVAILABLE";\n'
     multiline = '  const raw = body?.detail ??\n    (zh ? "暂时无法接受。" : "Could not accept.");\n'
-    # A real shape from this tree (api/citynexus.ts:691): a media-type label that
+    # A real shape from this tree (api/citynexus.ts): a media-type label that
     # merely sits after a `??` on the same line. Counting it would be a false
     # positive, and this arm is what proves the locale test is load-bearing.
     media = '      emptyAnswer ? "empty" : (contentType ?? "").includes("html") ? "html" : "not_json",\n'

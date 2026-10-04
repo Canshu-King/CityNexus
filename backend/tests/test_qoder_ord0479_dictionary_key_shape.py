@@ -1,7 +1,7 @@
 """ORD-0479 · 凭据尺不许把 i18n 查表的值读成凭据——判据是结构，不是词表、也不是申报。
 
-号令者那块点名的红在 backend/tests/test_qoder_ord0307_credential_gate.py:180（C07，断
-hits_in_product_path == 0 得 1），命中的是 frontend/src/features/shared/SharedJourneyPanel.tsx:45
+号令者那块点名的红在 backend/tests/test_qoder_ord0307_credential_gate.py（C07，断
+hits_in_product_path == 0 得 1），命中的是 frontend/src/features/shared/SharedJourneyPanel.tsx
 那张"拒绝码 ↔ 字典键"对照表里的值。要求写得很死：要结构判据，不要往占位词表塞词，也不要走申报通道
 （那等于把尺的假阳性登记成真凭据）。
 

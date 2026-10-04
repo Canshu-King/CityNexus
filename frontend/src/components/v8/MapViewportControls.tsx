@@ -6,7 +6,7 @@ import "../../map-controls.css";
  *
  * Before this the v8 map had no control at all (`MapPanel` drew markers and a caption and nothing
  * else), while the evidence map used maplibre's stock `NavigationControl`
- * (`components/JourneyMap.tsx:118`). Two surfaces, two unrelated answers about "how do I get back".
+ * (`components/JourneyMap.tsx`). Two surfaces, two unrelated answers about "how do I get back".
  * This is a single named component both can be measured against.
  *
  * One button, two states, and the state is carried by the control itself rather than by a sentence

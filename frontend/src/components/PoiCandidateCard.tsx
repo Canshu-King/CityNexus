@@ -13,12 +13,12 @@ import { PlaceProvenance } from "./PlaceProvenance";
  *
  * The markup contract is lifted from the discovery panel's result card rather than written afresh,
  * because two cards that look alike are how a screen starts answering the same question twice:
- * `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:239-252` at the base of the first round
+ * `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` at the base of the first round
  * (8d038b21f09477b933cff3b1c7b09845c542373b), and the same file's `[data-picked]` + `.v8-pick-box`
  * control as it stands on the line now. It is extracted, not forked: nothing on the discovery side
  * was touched, so ORD-0435 can move onto this component in one edit of its own.
  *
- * Selection is a pair, never a state: the reference chain's own rule (map_findings.md:150) is that
+ * Selection is a pair, never a state: the reference chain's own rule (map_findings.md) is that
  * every 选中态 needs its 未选中态, so the control is always mounted and `aria-checked` is what moves.
  */
 export type PoiCardStatus = "RESOLVED" | "AMBIGUOUS" | "UNRESOLVED";
@@ -63,7 +63,7 @@ export function PoiCandidateCard({
   return (
     <article
       /* `.selected` used to be set here for the traveller's own pick, and on this line that class means
-         the server's feasibility verdict on the discovery screen (styles.css:172 gives it a green-ish
+         the server's feasibility verdict on the discovery screen (styles.css gives it a green-ish
          ring). Measured: with it, my picked card painted #8490e9 from that shared rule instead of the
          accent line ORD-0435's sheet writes for `[data-picked="true"]`. One state, one hook -- the pick
          now rides `[data-picked]` only. */

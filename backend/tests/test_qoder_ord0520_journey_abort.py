@@ -2,8 +2,8 @@
 
 Measured on the base this order was cut from (`48aa7a9eaa33a9eaea9ed1d84a0e5f926c88d8f3`):
 `journeys.status` had the word `CANCELLED` in its CHECK (`backend/db/schema.sql`) and no door wrote
-it - the only writers that existed put PLANNED (`app/main.py:7253` at that commit), ACTIVE
-(`app/main.py:8626`) and COMPLETED (`app/main.py:8792`, `:8876`) in that column.  Both shapes of
+it - the only writers that existed put PLANNED (`app/main.py` at that commit), ACTIVE
+(`app/main.py`) and COMPLETED (`app/main.py`, `:8876`) in that column.  Both shapes of
 `POST /api/v1/journeys/{id}/abort` answered the framework's own 404.  So the half of the product
 that says "this trip is off, and here is why" did not exist, and a traveller could only drop the
 whole row into the bin.

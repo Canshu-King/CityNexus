@@ -12,7 +12,7 @@
  *
  * Three rules, all of them pinned elsewhere already:
  *  - a trip coming out of the bin is 找回. 恢复 and `recover*` are autonomous recovery here, and
- *    还原 is the plan-version screen's word (`planVersionHistoryCopy.ts:10`, restated by the 找回
+ *    还原 is the plan-version screen's word (`planVersionHistoryCopy.ts`, restated by the 找回
  *    door in `backend/app/main.py`), so sharing does not take 还原 either: taking a person's access
  *    away is 撤销.
  *  - a sentence names whose situation changed. "对方将获得对应权限" and "你的权限也会随之变化"

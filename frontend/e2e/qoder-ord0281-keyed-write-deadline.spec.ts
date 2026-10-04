@@ -120,7 +120,7 @@ async function startedJourney(request: import("@playwright/test").APIRequestCont
 
 const PROPOSAL = {
   id: "ord0281-proposal",
-  /* The panel's own filter is `status === "PRESENTED" || "GENERATED"` (LiveRecovery.tsx:206) -- a status of
+  /* The panel's own filter is `status === "PRESENTED" || "GENERATED"` (LiveRecovery.tsx) -- a status of
      "PENDING" is not one this surface ever treats as an offer, which the first run of this file proved the
      hard way: no button rendered, and the arm measured an empty page. */
   status: "PRESENTED",

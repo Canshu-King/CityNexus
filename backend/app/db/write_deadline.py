@@ -262,7 +262,7 @@ def boundary_verdict(exc: BaseException) -> WriteDeadlineExceeded | None:
     armed -- a job, a script -- nothing here applies.
 
     The judge sits at the boundary rather than around `Session.commit()` because a request's writes do
-    not all leave at commit: `app/main.py:718` flushes mid-route (674 in the generation this branch is
+    not all leave at commit: `app/main.py` flushes mid-route (674 in the generation this branch is
     cut from), so a commit-only wrapper would bound part of the same request and leave the rest
     reaching the framework's contentless 500.
     """
