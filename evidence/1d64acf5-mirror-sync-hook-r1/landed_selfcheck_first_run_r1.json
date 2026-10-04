@@ -1,0 +1,84 @@
+{
+ "state": {
+  "verdict": "CURRENT",
+  "exit_code": 0,
+  "local_path": "D:\\moodle\\CITYNEXUS_AGENT_CONTROL.md",
+  "ref": "commander/control",
+  "ledger_path": "CITYNEXUS_AGENT_CONTROL.md",
+  "local_blob": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+  "local_blob_first": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+  "remote_blob": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+  "local_snapshots": [
+   "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "23ca23d312ec7660ae0ebf4c08e77413a2922bc0"
+  ],
+  "remote_reads": [
+   "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "23ca23d312ec7660ae0ebf4c08e77413a2922bc0"
+  ],
+  "compared_points": [
+   {
+    "pair": "local_0 vs remote_1",
+    "equal": true
+   },
+   {
+    "pair": "local_1 vs remote_1",
+    "equal": true
+   },
+   {
+    "pair": "local_1 vs remote_2",
+    "equal": true
+   },
+   {
+    "pair": "local_2 vs remote_2",
+    "equal": true
+   }
+  ],
+  "points_compared": 4,
+  "points_matched": 4,
+  "local_bytes": 13649659,
+  "remote_bytes": 13649659,
+  "local_lines": 91986,
+  "remote_lines": 91986,
+  "first_differing_line": null,
+  "remote_self_proved": true,
+  "remote_blob_id_named_by_api": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+  "remote_size_named_by_api": 13649659,
+  "arm": "none",
+  "local_changed_under_the_run": false
+ },
+ "arms": [
+  {
+   "arm": "none",
+   "verdict": "CURRENT",
+   "remote_blob": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "local_blob": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "self_proved": true,
+   "points": [
+    4,
+    4
+   ]
+  },
+  {
+   "arm": "flip_a_byte",
+   "verdict": "LAGGING",
+   "local_blob_flipped": true,
+   "first_pair_went_red": true,
+   "refused_to_call_it_current": true,
+   "flipped_blob": "6ac3b3101512ce97e0b604daba0da54894308804",
+   "base_blob": "23ca23d312ec7660ae0ebf4c08e77413a2922bc0",
+   "points": [
+    4,
+    3
+   ]
+  },
+  {
+   "arm": "no_token",
+   "refused": true,
+   "leg": "api_channel",
+   "detail": "api_channel: no token file at '' - set CITYNEXUS_API_TOKEN_FILE"
+  }
+ ],
+ "arms_all_correct": true
+}
