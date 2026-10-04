@@ -1,0 +1,26 @@
+phone lane: a landed-content re-scan, because a CLOSED order and the bytes on the line had drifted apart
+
+Tonight this lane had a hand landed, verified by blob at the time, and then dropped out of the line by a
+rebuild while the order stayed CLOSED and every gate stayed quiet.  Ancestry cannot answer that question on a
+re-rooted line, and the standing rule already says landed means byte equality -- so the question gets a tool:
+
+  - tools/landed_blob_rescan_r1.py takes each published hand's own coordinates off the ref itself
+    (`git diff --name-only <ref>^..<ref>` for the paths, `git rev-parse <ref>:<path>` for the expected blobs;
+    a ref is immutable, so it is where "I shipped this" is still recorded honestly), then asks of the live
+    tip: SAME / ABSENT / CHANGED / UNREADABLE_ON_LINE / NOT_REACHED.  DELETED_BY_HAND paths are checked as
+    deletions in their own right, so a restored deletion is reported too.
+  - tools/landed_blob_rescan_arms_r1.py - five arms, all biting: control says SAME for a path that is
+    actually there; a wrong expected blob must come out CHANGED, never SAME; a path missing from the line
+    must come out ABSENT, not CHANGED; an unreadable ref is NOT_REACHED and never a pass; and a revision
+    that cannot be read at all must not be answered as "the file is gone".
+
+Those last two arms each caught a real bug while being written: git prints the revision inside its own
+`does not exist` message, so reading stdout+stderr together let a missing path be matched as a 40-hex blob
+(reported CHANGED), and an unreadable sentinel string did not equal the label it was compared against
+(reported CHANGED too).  Both are fixed in this file and the fixes are what the arms now measure.
+
+First run, on this lane's own three hands, against tip ee142704825374903007b783d8516694cb9a2422: the
+staging-door cut is HELD (13 paths byte-equal), while the anchor-form hand reports 16 ABSENT + 1 CHANGED and
+the chain hand 3 ABSENT -- i.e. the ruler reproduced, independently, the loss this lane had found by hand.
+
+Scope: read-only against the line; 0 product bytes; 0 writes to the authoritative branch; new paths only.

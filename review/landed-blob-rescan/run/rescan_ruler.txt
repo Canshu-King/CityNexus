@@ -1,0 +1,37 @@
+{
+ "live_tip": "ee142704825374903007b783d8516694cb9a2422",
+ "verdict": "LOST_LANDED_CONTENT",
+ "tally": {
+  "SAME": 13,
+  "CHANGED": 1,
+  "ABSENT": 19
+ },
+ "refs": [
+  [
+   "0afdb49b-ord0500-staging-door-r4",
+   "HELD",
+   13,
+   {
+    "SAME": 13
+   }
+  ],
+  [
+   "newlane-ord0500-phone-anchor-form-r3",
+   "LOST_LANDED_CONTENT",
+   17,
+   {
+    "CHANGED": 1,
+    "ABSENT": 16
+   }
+  ],
+  [
+   "0afdb49b-ord0500-staging-door-r5",
+   "LOST_LANDED_CONTENT",
+   3,
+   {
+    "ABSENT": 3
+   }
+  ]
+ ]
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\landed_blob_rescan_r1.json

@@ -1,0 +1,42 @@
+{
+  "schema": "CNX_LANDED_BLOB_RESCAN_ARMS_V1",
+  "tool": "landed_blob_rescan_arms_r1",
+  "live_tip": "ee142704825374903007b783d8516694cb9a2422",
+  "ran_local": "2026-10-05T00:09:58.284271+08:00",
+  "every_arm_bit": true,
+  "runs": [
+    {
+      "id": "C1_control",
+      "expect_verdict": "SAME",
+      "got": "SAME",
+      "bite": true,
+      "note": "review/ord0500-staging-door/tools/stage_readings_r7.py"
+    },
+    {
+      "id": "M1_wrong_blob",
+      "expect_verdict": "CHANGED",
+      "got": "CHANGED",
+      "bite": true
+    },
+    {
+      "id": "M2_path_absent",
+      "expect_verdict": "ABSENT",
+      "got": "ABSENT",
+      "bite": true
+    },
+    {
+      "id": "M3_ref_unreadable",
+      "expect_verdict": "NOT_REACHED",
+      "got": "NOT_REACHED",
+      "bite": true,
+      "why": "REF_UNREADABLE "
+    },
+    {
+      "id": "M4_broken_read_not_absent",
+      "expect_verdict": "UNREADABLE_ON_LINE",
+      "got": "UNREADABLE_ON_LINE",
+      "bite": true
+    }
+  ],
+  "note": "M2's fixture is a real path this lane published on a ref that the line no longer carries"
+}

@@ -1,0 +1,37 @@
+{
+ "every_arm_bit": true,
+ "tip": "ee1427048253",
+ "runs": [
+  [
+   "C1_control",
+   "SAME",
+   "SAME",
+   true
+  ],
+  [
+   "M1_wrong_blob",
+   "CHANGED",
+   "CHANGED",
+   true
+  ],
+  [
+   "M2_path_absent",
+   "ABSENT",
+   "ABSENT",
+   true
+  ],
+  [
+   "M3_ref_unreadable",
+   "NOT_REACHED",
+   "NOT_REACHED",
+   true
+  ],
+  [
+   "M4_broken_read_not_absent",
+   "UNREADABLE_ON_LINE",
+   "UNREADABLE_ON_LINE",
+   true
+  ]
+ ]
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\landed_blob_rescan_arms_r1.json
