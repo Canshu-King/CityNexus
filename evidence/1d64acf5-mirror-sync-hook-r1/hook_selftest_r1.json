@@ -1,0 +1,64 @@
+{
+ "hook": "cnx_ledger_mirror_sync_hook_r1",
+ "base_reading": {
+  "at": "2026-10-04 21:47:52",
+  "hook": "cnx_ledger_mirror_sync_hook_r1",
+  "tool": "cnx_ledger_mirror_sync_check_r1",
+  "verdict": "CURRENT",
+  "exit_code": 0,
+  "local_blob": "868a06d7bd93b560674abce83e80680b5a48ca4d",
+  "remote_blob": "868a06d7bd93b560674abce83e80680b5a48ca4d",
+  "points": [
+   4,
+   4
+  ],
+  "self_proved": true,
+  "local_bytes": 13655679,
+  "remote_bytes": 13655679,
+  "first_differing_line": null,
+  "arm": "none",
+  "trail_line": 1,
+  "trail_lines_after": 1,
+  "appended": true,
+  "trail_guard": null,
+  "trail_path": "D:\\moodle\\_mirror_sync\\trail.jsonl"
+ },
+ "arms": [
+  {
+   "arm": "none",
+   "verdict": "CURRENT",
+   "appended": true,
+   "trail_lines_after": 1,
+   "exit_code": 0,
+   "trail": "D:\\moodle\\_mirror_sync\\trail.jsonl"
+  },
+  {
+   "arm": "flip_a_byte",
+   "verdict": "LAGGING",
+   "exit_code": 7,
+   "refused_to_call_it_current": true,
+   "local_blob_is_not_the_base": false,
+   "wrote_only_to_scratch": true
+  },
+  {
+   "arm": "history_after_a_run",
+   "lines": 1,
+   "last_verdict": "CURRENT",
+   "reading": "the line this hook just wrote is readable back, so cadence is auditable without a daemon"
+  },
+  {
+   "arm": "empty_trail",
+   "lines": 0,
+   "last_is_none": true,
+   "refuses_to_imply_ok": true
+  },
+  {
+   "arm": "unwritable_trail",
+   "guard_fired": true,
+   "reading_kept": true,
+   "leg": "trail_write",
+   "why_unwritable": "the intended directory is occupied by a file, so the append cannot create it - a real shape a trail dies by"
+  }
+ ],
+ "arms_all_correct": true
+}
