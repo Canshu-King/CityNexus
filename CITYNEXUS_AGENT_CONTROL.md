@@ -16588,6 +16588,55 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 21:14 · 尺的那一格做完了（01:42 那句"若你还有余力就接"）：census 的取词文法加上"路由串/引号短语/大写与驼峰标识"三类，同一代字节两跑对照 27 行改判，我先前具名的 6 枚假阳里 3 枚自己变 alive 且抓到的正是我当时回读点名的那个名——产品字节 0、只动尺与件
+
+**一、改的是什么**
+
+那把 census 尺原来只把「被反引号包住的串」当作"这句注释点了某个名字"，于是注释里用**路由路径**（`/api/v1/...`）或**引号短语**（「技术详情」/"JOURNEY_NOT_DELETED"）点名的一律看不见，只能报 drifted。修的是文法本身，判据一条没改（dead / alive / drifted / no_token 四态与 ±4 行窗口原样）。加进去的三类：`D:/moodle/_qoder_rel_ord0447_wk/e5_census_wide.py:22`（QUOTED）、`:23`（ROUTE）、`:24`（IDENT）。
+
+**二、同一代字节上两跑的对照（基座 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`，本块写完后现读 `git ls-remote` 并 `git cat-file -t` 回 commit；快照 = 该枚 `git archive` 解出的只读树，量完已删）**
+
+| 口径 | 在册引用 | dead | drifted | no_token | alive |
+| --- | --- | --- | --- | --- | --- |
+
+- 旧口径（只认反引号）：`b60418ccbda8937029e6b74f8c990ad06a8d62f8` 上 205 枚引用，dead 10、drifted 153、no_token 10、alive 32。
+- 新口径（加三类）：同一枚 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`、同样 205 枚，dead 10、drifted 145、no_token 0、alive 50。
+
+逐行比：改判 27 行 = drifted→alive 17 行、no_token→drifted 9 行、no_token→alive 1 行（两跑各自的逐行读数我留在车道工作区 `D:/moodle/_qoder_rel_ord0447_wk/e5_census_wide.py:1` 那把尺产的 census_narrow.json / census_wide.json，随快照删掉了，数记在本块）。分母两跑都是 205 枚，是同一棵树的两次判法，不是两代树。
+
+一件要报的事：我第一次是在更早一枚权威尖上量的，那枚提交现在既不在本地对象库、`git fetch` 也回 `not our ref`（重建线的老毛病），所以我没有把那枚 40 位写进本块——写了谁也取不到。上表这组是在一枚**现在还能 cat-file 的基座**上重跑的，结论与第一次一致（27 行改判、分布相同）。
+
+**三、我先前具名的那批假阳，现在机器自己承认了**
+
+`frontend/src/features/trash/journeyTrash.ts` 里我逐枚打开回读过、判"其实指对了"的那几枚，新口径下 3 枚翻成 alive，抓到的 token 正是我当时口头点的名：
+
+- `frontend/src/features/trash/journeyTrash.ts:13` → `backend/app/main.py` 那行：靠 `/api/v1/journeys/{journey_id}/undelete` 对上（找回门那条路由）
+- `frontend/src/features/trash/journeyTrash.ts:15` → 同一文件：靠 `JOURNEY_NOT_DELETED` 对上
+- `frontend/src/features/trash/journeyTrash.ts:16` → 回收站读门：靠 `/api/v1/recycle-bin/journeys` 对上
+
+剩下 3 枚这趟没逐枚重读，具名留空不猜——要的话我下一步就补那三枚的对照（还是只动尺与件）。
+
+**四、顺带一个你们排落地用得上的数**
+
+同一把尺（旧口径，行首判注释那版还没换）在 `ccfd11c034e94c871af168b0429417debe2dae52` 那代数到 drifted 104 枚；到 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 数到 153 枚。这两次是同一把尺、同一判据的两次现读 ⇒ 注释锚那枝（`refs/heads/review/a68b0631-comment-anchor-drift-r2` 头 `b5dec327174664f7a8764006d333f6494b3bad54`）每多停一段时间，线上带号引用就多长一截，落它时要改的面也更可能变大。这不是催你，是我把代价量出来了。
+
+**五、形制与纪律**
+
+- 产品字节：0 枚。改的只有我车道路径下一枚尺脚本（`D:/moodle/_qoder_rel_ord0447_wk/e5_census_wide.py:1`），不在仓库里，不推枝。
+- 量完的只读快照与 tar 已删净（现读该前缀目录 0 枚）；删的时候第一次报 `Device or resource busy`（我自己的 shell 还站在里面），出来再删就干净了——这条报出来是因为它一度看起来像"没删"。
+- 权威线没推；名下枝本轮 0 次新推；`_preview.db` 一次没写；`demo/reset` 一次没调；保护端口 :4783 :4787 :8000 :4781 :4782 :4785 :8693 没起也没停；别人的枝、别人的 stash、别人的工作树一枚没碰。
+- 另两枚已入账的账：`D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16591`（ORD-0507 第二件本体）与 1926 那块（绿趟原句存件，头 `d0f019cdf521d0e9fb98efc273cbccb720826a12`）。
+
+**六、名下还剩（都在等一句，不自取）**
+
+- ORD-0507 第三件「技术详情」折叠：甲/乙。
+- ORD-0507 第一件那支 e2e 的重指或整件闭单。
+- 注释锚 r2 与 ORD-0554 之后的落地排队（我这边形状都是 0 冲突）。
+- 再补的话：上面那 3 枚未重读的对照，以及把新口径的尺交给门用（它现在能读懂路由串与引号短语，误报面比旧口径小）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 01:37 裁语 · 选项乙已交：切片六动了产品字节——那两格一个换成词表人话（机词进折叠），一个改成本机量到的事实（含两枚单变量反件，顺手当场修掉我自己那把尺的一枚缺陷）
 
 **代次**：我这笔 `fa6944ab5012593e0a50ea4f425f426ab4dd85d6`（枝 `refs/heads/review/newlane-ord0545s6-copy-cells-r1`，`ls-remote` 独立回读 = `fa6944ab5012593e0a50ea4f425f426ab4dd85d6`，逐字相等）由三笔叠成，起笔点 = 我当场 `git ls-remote` 自读的 `f3ba478caaecdbdf7254786b2bf0d03d323897d0`（量法 `fa6944ab5012593e0a50ea4f425f426ab4dd85d6~3` 逐字相等 = `True`）。现尖又走到 `a54fc1597c968f430ff4db52130156068aff0a88`。这条线的尖是无父重建树，`merge-base --is-ancestor` 在这类尖上不顶用，所以我按字节判撞车：`frontend/src/features/poiimport/PoiImportPanel.tsx` 在现尖取到 `95a15c02f1f74e9a59fb991eea4a95f438902255`、`frontend/src/features/poiimport/poiImportCopy.ts` 取到 `881bc009b3bd56f8af7bd6e3b7e551285249d580`，与我起笔点那枚逐枚相等 = `True`、`True`（这两枚是「我起笔之后线上有没有别人动过这屏」的判据，与我枝上的改动无关）；那 2 枚新提交动了 4 枚路径，与我这 36 枚的交集 0 枚（交集：无）。
