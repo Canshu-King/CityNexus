@@ -1,0 +1,416 @@
+{
+  "instrument": "cmdra_0553_caps_context_r1",
+  "script_sha256": "318853bc47800c2c4011ec20e23c80f82d122ae9febec0730d3a3cd3e0cb9ec6",
+  "base": "http://127.0.0.1:49851",
+  "locale": "en",
+  "viewport": "390x844",
+  "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+  ],
+  "journeyId": "22222222-2222-4222-8222-222222222222",
+  "docChars": 3469,
+  "apiResponses": [
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/places?city_code=CNX-DEMO",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status",
+      "status": 200
+    }
+  ],
+  "paintedTokens": [
+    "AUTHORITATIVE",
+    "JOURNEY",
+    "NEXT",
+    "TRIP",
+    "STUDIO",
+    "DRAFT",
+    "THEN",
+    "ACCEPT",
+    "REALITY",
+    "CHANGED"
+  ],
+  "traced": [
+    {
+      "token": "AUTHORITATIVE",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "JOURNEY",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "NEXT",
+      "painted_in": [
+        "span.v12-state-kicker"
+      ],
+      "standalone_lines": 1,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "TRIP",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "STUDIO",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "DRAFT",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "THEN",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "ACCEPT",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "REALITY",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    },
+    {
+      "token": "CHANGED",
+      "painted_in": [
+        "span.v8-kicker"
+      ],
+      "standalone_lines": 0,
+      "server_field_paths": [],
+      "provenance": "not-in-any-response-body"
+    }
+  ],
+  "hits": [
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "AUTHORITATIVE",
+      "node_text": "AUTHORITATIVE JOURNEY",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-authoritative-panel].v12-authoritative-panel",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "AUTHORITATIVE JOURNEY"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "JOURNEY",
+      "node_text": "AUTHORITATIVE JOURNEY",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-authoritative-panel].v12-authoritative-panel",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "AUTHORITATIVE JOURNEY"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "NEXT",
+      "node_text": "NEXT",
+      "tag": "span",
+      "cls": "v12-state-kicker",
+      "standalone_line": true,
+      "ancestors": [
+        "span.v12-state-kicker",
+        "article.v12-state-card.next",
+        "div.v12-now-next",
+        "section[v12-authoritative-panel].v12-authoritative-panel",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "NEXT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "TRIP",
+      "node_text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-trip-studio].v12-trip-studio",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "TRIP STUDIO · DRAFT THEN ACCEPT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "STUDIO",
+      "node_text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-trip-studio].v12-trip-studio",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "TRIP STUDIO · DRAFT THEN ACCEPT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "DRAFT",
+      "node_text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-trip-studio].v12-trip-studio",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "TRIP STUDIO · DRAFT THEN ACCEPT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "THEN",
+      "node_text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-trip-studio].v12-trip-studio",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "TRIP STUDIO · DRAFT THEN ACCEPT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "ACCEPT",
+      "node_text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v12-trip-studio].v12-trip-studio",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "TRIP STUDIO · DRAFT THEN ACCEPT"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "REALITY",
+      "node_text": "V14 · REALITY CHANGED",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v14-recovery-truth].v12-authoritative-panel",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "V14 · REALITY CHANGED"
+      }
+    },
+    {
+      "kind": "ALLCAPS_WORD",
+      "token": "CHANGED",
+      "node_text": "V14 · REALITY CHANGED",
+      "tag": "span",
+      "cls": "v8-kicker",
+      "standalone_line": false,
+      "ancestors": [
+        "span.v8-kicker",
+        "div",
+        "header.v12-panel-header",
+        "section[v14-recovery-truth].v12-authoritative-panel",
+        "section[v12-authoritative-page].v8-page"
+      ],
+      "block": {
+        "tag": "span",
+        "text": "V14 · REALITY CHANGED"
+      }
+    }
+  ],
+  "panels": {
+    "recovery-required-panel": null,
+    "plan-version-history": "Plan versions on this tripEvery version the server still holds, newest last. This list is read-only.28 versions listedNo retention limit is applied: this trip currently holds 28 versions and all of them are listed here. Nothing is dropped as newer versions are written.Version 1first generation28 Sept, 04:41no parent versionthe trip runs this oneVersion 2first generation29 Sept, 06:08no parent vers",
+    "v12-authoritative-panel": "AUTHORITATIVE JOURNEYOne truth from plan to edge frozen evidence NOWTech Art CenterActive NEXTNexus River Cruise PierPlanned03:30 PMOld Town GateCompletedRiverside MuseumCompletedCentral Food HallCompleted4Tech Art CenterActive5Nexus River Cruise PierPlanned6Skyline Dinner HousePlannedServer execution truth · auditableMark On the way",
+    "v12-trip-studio": "TRIP STUDIO · DRAFT THEN ACCEPTAdjust the authoritative journeyReorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place. same evidence6 activities1 protected anchorNo draft changes•Old Town Gate○Riverside Museum○Central Food Hall○Tech Art Center○Nexus River Cruise Pier○Skyline Dinner House To pick up a draggable item, press the space bar. While dragging,",
+    "v14-preventive": null,
+    "v14-recovery-truth": "V14 · REALITY CHANGEDGrounded adaptive recoveryRefresh recoveryNo recovery proposal is waiting on this Journey.",
+    "v12-authoritative-page": "V12 · plan, mobile, Edge, and twinAuthoritative trip execution.Your chosen plan is the single source of truth for today, the map, offline use, and every change we suggest.Refresh truthPlan versions on this tripEvery version the server still holds, newest last. This list is read-only.28 versions listedNo retention limit is applied: this trip currently holds 28 versions and all of them are listed he"
+  },
+  "pageErrors": []
+}
