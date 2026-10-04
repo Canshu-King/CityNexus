@@ -1,0 +1,13 @@
+Same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), one command per side:
+`node <ruler> --tree <export> --out <receipt>`; export = `git archive <ref> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x`
+
+base 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d   cells_total=6 modules_in_graph=328 files_found=328 unresolved_import_count=58 resolution_truncated_total=40 crossing_cuts=0 ruler_rc=0
+cand 7eeb84a6394c394d45ebc71a84efe5a375c0a4fb   cells_total=6 modules_in_graph=329 files_found=329 unresolved_import_count=58 resolution_truncated_total=40 crossing_cuts=0 ruler_rc=0
+
+per-file cells with hits, base: {"frontend/src/features/planning/PlanWithAiSheet.tsx": 3, "frontend/src/features/recovery/RecoveryRequiredPanel.tsx": 1, "frontend/src/features/simulation/SimulationPanel.tsx": 1, "frontend/src/features/trip/ActivityDetail.tsx": 1}
+per-file cells with hits, cand: {"frontend/src/features/planning/PlanWithAiSheet.tsx": 3, "frontend/src/features/recovery/RecoveryRequiredPanel.tsx": 1, "frontend/src/features/simulation/SimulationPanel.tsx": 1, "frontend/src/features/trip/ActivityDetail.tsx": 1}
+
+per-rule cells, base: {"RAW_BODY_TO_DOM": 1, "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1, "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4}
+per-rule cells, cand: {"RAW_BODY_TO_DOM": 1, "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1, "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4}
+
+Cell growth over the authoritative tip: 0. Files whose per-file count differs: ['frontend/e2e/qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts']

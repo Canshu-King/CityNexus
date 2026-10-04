@@ -1,0 +1,230 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts:131:1 › the eleven fixed English values say a human word, and their Chinese siblings still say Chinese (7ms)
+  ok 2 e2e\qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts:150:1 › every remaining shouted English value is judged and named, not waved through (4ms)
+  ok 3 e2e\qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts:159:1 › the policy-mode family agrees with the vocabulary table that already words it (2ms)
+  ok 4 e2e\qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts:171:1 › the ruler read what it claims to have read (1ms)
+
+  4 passed (508ms)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0563-enarm-r1.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\playwright.ord0563-enarm-r1.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-cff87c64-ord0563-english-arm-enum-echo-.*\\.spec\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {}
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+      "file": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the eleven fixed English values say a human word, and their Chinese siblings still say Chinese",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T17:59:35.838Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7e02f2c602cf6ea0106a-40ac64e4d81ed7419317",
+          "file": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+          "line": 131,
+          "column": 1
+        },
+        {
+          "title": "every remaining shouted English value is judged and named, not waved through",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T17:59:35.875Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7e02f2c602cf6ea0106a-56018f7758c128d91071",
+          "file": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+          "line": 150,
+          "column": 1
+        },
+        {
+          "title": "the policy-mode family agrees with the vocabulary table that already words it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T17:59:35.887Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7e02f2c602cf6ea0106a-b6a5cb0e061e8b217ecd",
+          "file": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+          "line": 159,
+          "column": 1
+        },
+        {
+          "title": "the ruler read what it claims to have read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-04T17:59:35.897Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7e02f2c602cf6ea0106a-6fd77e54e68bff5a724f",
+          "file": "qoder-cff87c64-ord0563-english-arm-enum-echo-r1.spec.ts",
+          "line": 171,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T17:59:35.423Z",
+    "duration": 508.104,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+ "pageerrors": [],
+ "console_errors": [
+  "Failed to load resource: net::ERR_TIMED_OUT",
+  "Failed to load resource: net::ERR_TIMED_OUT",
+  "Failed to load resource: net::ERR_TIMED_OUT",
+  "Failed to load resource: net::ERR_TIMED_OUT"
+ ],
+ "party_value": "1",
+ "budget_value": "120",
+ "wizard_http": 201,
+ "today_when": "ABSENT",
+ "advisory_count": 1,
+ "advisory_text": "3 days · 1 person · about CNY 40.00 per person per day",
+ "caveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.",
+ "trip_fields": null
+}
