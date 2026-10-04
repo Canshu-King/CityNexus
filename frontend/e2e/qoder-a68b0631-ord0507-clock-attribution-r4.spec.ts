@@ -17,7 +17,7 @@
  * sentence came from, and the assertions are on what is painted.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const NODE_CLOCK = "ord0507-2a-clock-parenthetical-holds-only-the-noun";
@@ -30,6 +30,14 @@ const MACHINE_TOKEN = /[A-Z][A-Z0-9_]{3,}/;
 /* a sentence terminator anywhere between the brackets means the bracket holds a clause, not a noun */
 const PAREN = /[（(]([^）)]*)[）)]/;
 const HAS_CLAUSE = (inner: string) => /[。]|(?<=[a-z])\.(?=\s?[A-Za-z])/.test(inner);
+
+/* A green run has to leave the painted sentence behind, not just pass.  One file per arm per locale, so
+   a counter-arm re-running the same arm cannot overwrite the guard's own painting. */
+function paint(arm: string, locale: string, payload: Record<string, unknown>) {
+  const dir = resolve(process.cwd(), "review/ord0507/paintings");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(resolve(dir, `${arm}_${locale}.json`), JSON.stringify(payload, null, 2), "utf8");
+}
 
 const WORDS = {
   "zh-CN": {
@@ -205,6 +213,11 @@ for (const locale of ["zh-CN", "en"] as Locale[]) {
       MACHINE_TOKEN.test(read.sentence),
       node(NODE_CLOCK, `a machine token is painted on the traveller's line: ${JSON.stringify(read.sentence)}`),
     ).toBe(false);
+    paint("2a-clock-sentence", locale, {
+      sentence: read.sentence,
+      paren: read.parenContent,
+      cursor_status: read.cursorStatus,
+    });
   });
 
   test(`ord0507-2b-stage-attribution [${locale}] — 新建那一屏要说台上不是你的行程`, async ({
@@ -255,6 +268,10 @@ for (const locale of ["zh-CN", "en"] as Locale[]) {
       MACHINE_TOKEN.test(painted as string),
       node(NODE_STAGE, `a machine token is painted in the traveller's sentence: ${JSON.stringify(painted)}`),
     ).toBe(false);
+    paint("2b-stage-attribution", locale, {
+      mismatch_sentence: painted,
+      stage_row: stageRow,
+    });
     await page.close();
   });
 }

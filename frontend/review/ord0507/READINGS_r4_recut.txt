@@ -36,11 +36,19 @@ POSITIVE CONTROLS INSIDE THE ARMS
   machine-token check (/[A-Z][A-Z0-9_]{3,}/) is applied to the traveller's sentence, so a reason code
   sneaking back into the copy would fail the arm rather than pass it.
 
-GAP NAMED, NOT SMOOTHED
-  The arms quote the painted sentence only when they go red, so this file holds the mutant-form strings and
-  not a stored printout of the green sentence. A green run is the assertion that the bracket is dropped;
-  if a literal green string is wanted in the ledger, one extra log line plus one more production run gets
-  it, and I did not spend that run without being asked.
+GAP CLOSED IN THE FOLLOWING COMMIT
+  The arms originally quoted the painted sentence only when they went red, so the first commit of this hand
+  carried the mutant-form strings and no stored green one. That is fixed: each arm now writes what it read
+  to `frontend/review/ord0507/paintings/<arm>_<locale>.json` after its last assertion, so a green run leaves
+  the shipped sentence behind. Painted at this generation --
+    zh  “现在”取自服务器场景：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。…
+    en  "now" comes from the server's scenario: 9 Oct, 18:00. The server gave no execution cursor for this
+        minute, so this screen reads time by the journey's window. …
+  In both, the bracket is absent altogether (the file records `paren: null`), which is the point: the cursor
+  is not VALID on this stage, so the noun the scene named is not painted at all and the cursor fact is its
+  own sentence. Arm 2b's file records the stage row it separated off (`2cd995cb · ACTIVE`) beside the
+  counter-sentence that names it, in both locales.
+  The run that produced these four files: rc=0, "5 passed" (the setup project plus the four arms).
 
 SANITY SURFACES
   npx tsc -p tsconfig.check.json --noEmit and tsconfig.typecheck.json --noEmit  rc 0 (spec is new, product

@@ -1,0 +1,5 @@
+{
+  "sentence": "\"now\" comes from the server's scenario: 9 Oct, 18:00. The server gave no execution cursor for this minute, so this screen reads time by the journey's window. Now/next come from the server's execution projection.",
+  "paren": null,
+  "cursor_status": "ABSENT_FALLBACK"
+}
