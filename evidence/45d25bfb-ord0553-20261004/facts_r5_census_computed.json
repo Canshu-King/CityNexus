@@ -1,0 +1,707 @@
+{
+ "backend": "http://127.0.0.1:8752",
+ "endpoints_replayed": 21,
+ "endpoints_answered_2xx": 19,
+ "indexed_tokens": 57,
+ "arms": {
+  "en": {
+   "instrument": "cmdra_0553_caps_context_r2 + _census_r5.py",
+   "locale": "en",
+   "base": "http://127.0.0.1:49861",
+   "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "routesWalked": 14,
+   "totals": {
+    "painted_hits": 42,
+    "distinct_tokens": 37,
+    "routes_with_hits": 9,
+    "server_answer_tokens": 2,
+    "style_only_tokens": 35
+   },
+   "pageErrors": [],
+   "apiResponses": 21,
+   "census": {
+    "ARRIVAL": {
+     "token": "ARRIVAL",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/hub": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "DEPARTURE": {
+     "token": "DEPARTURE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/hub": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "NEXT": {
+     "token": "NEXT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 2,
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "p": 1,
+      "span": 1,
+      "v12-state-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "LEAVE": {
+     "token": "LEAVE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "NAVIGATE": {
+     "token": "NAVIGATE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "v9-navigate": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "RISK": {
+     "token": "RISK",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "b": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "LIVE": {
+     "token": "LIVE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "STATUS": {
+     "token": "STATUS",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "CLOCK": {
+     "token": "CLOCK",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "CURRENT": {
+     "token": "CURRENT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "STEP": {
+     "token": "STEP",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "OFFLINE": {
+     "token": "OFFLINE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/live": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "STAY": {
+     "token": "STAY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/studio": 1,
+      "/v8/bookings": 1
+     },
+     "slots": {
+      "span": 1,
+      "v8-selected-label": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "SELECTED": {
+     "token": "SELECTED",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/studio": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [
+      "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status"
+     ],
+     "provenance": "server-answer"
+    },
+    "DISCOVERY": {
+     "token": "DISCOVERY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/discover": 1
+     },
+     "slots": {
+      "v8-agent-mark": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "JSON": {
+     "token": "JSON",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 2
+     },
+     "slots": {
+      "v8-lede": 2
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "EVIDENCE": {
+     "token": "EVIDENCE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 1
+     },
+     "slots": {
+      "v8-selected-label": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "MULTIMODAL": {
+     "token": "MULTIMODAL",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "INBOX": {
+     "token": "INBOX",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "AUTHORITATIVE": {
+     "token": "AUTHORITATIVE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 1,
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 2
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "MEMORY": {
+     "token": "MEMORY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "JOURNEY": {
+     "token": "JOURNEY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "TRIP": {
+     "token": "TRIP",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "STUDIO": {
+     "token": "STUDIO",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "DRAFT": {
+     "token": "DRAFT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "THEN": {
+     "token": "THEN",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "ACCEPT": {
+     "token": "ACCEPT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "REALITY": {
+     "token": "REALITY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "CHANGED": {
+     "token": "CHANGED",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/authoritative": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "POLICY": {
+     "token": "POLICY",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "POST": {
+     "token": "POST",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "ACTION": {
+     "token": "ACTION",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "GATE": {
+     "token": "GATE",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "COMMITMENT": {
+     "token": "COMMITMENT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": {
+      "span": 1
+     },
+     "server_answer_fields": [
+      "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind"
+     ],
+     "provenance": "server-answer"
+    },
+    "EXPLICIT": {
+     "token": "EXPLICIT",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/twin": 1
+     },
+     "slots": {
+      "v8-twin-label explicit": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "LEARNED_SOFT": {
+     "token": "LEARNED_SOFT",
+     "kind": "UPPER_SNAKE",
+     "routes": {
+      "/v8/twin": 1
+     },
+     "slots": {
+      "v8-twin-label learned": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    },
+    "NOTIFICATIONS": {
+     "token": "NOTIFICATIONS",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/me": 1
+     },
+     "slots": {
+      "v8-kicker": 1
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    }
+   },
+   "server_word_rows": [
+    {
+     "token": "SELECTED",
+     "kind": "ALLCAPS_WORD",
+     "hits": 1,
+     "routes": {
+      "/v8/studio": 1
+     },
+     "slots": [
+      "span"
+     ],
+     "fields": [
+      "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status"
+     ]
+    },
+    {
+     "token": "COMMITMENT",
+     "kind": "ALLCAPS_WORD",
+     "hits": 1,
+     "routes": {
+      "/v8/intelligence": 1
+     },
+     "slots": [
+      "span"
+     ],
+     "fields": [
+      "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind"
+     ]
+    }
+   ],
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "page_errors": 0,
+   "api_responses": 21,
+   "server_word_tokens": [
+    "COMMITMENT",
+    "SELECTED"
+   ],
+   "style_word_tokens": [
+    "ACCEPT",
+    "ACTION",
+    "ARRIVAL",
+    "AUTHORITATIVE",
+    "CHANGED",
+    "CLOCK",
+    "CURRENT",
+    "DEPARTURE",
+    "DISCOVERY",
+    "DRAFT",
+    "EVIDENCE",
+    "EXPLICIT",
+    "GATE",
+    "INBOX",
+    "JOURNEY",
+    "JSON",
+    "LEARNED_SOFT",
+    "LEAVE",
+    "LIVE",
+    "MEMORY",
+    "MULTIMODAL",
+    "NAVIGATE",
+    "NEXT",
+    "NOTIFICATIONS",
+    "OFFLINE",
+    "POLICY",
+    "POST",
+    "REALITY",
+    "RISK",
+    "STATUS",
+    "STAY",
+    "STEP",
+    "STUDIO",
+    "THEN",
+    "TRIP"
+   ]
+  },
+  "zh": {
+   "instrument": "cmdra_0553_caps_context_r2 + _census_r5.py",
+   "locale": "zh",
+   "base": "http://127.0.0.1:49861",
+   "entryAssets": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "routesWalked": 14,
+   "totals": {
+    "painted_hits": 2,
+    "distinct_tokens": 1,
+    "routes_with_hits": 1,
+    "server_answer_tokens": 0,
+    "style_only_tokens": 1
+   },
+   "pageErrors": [],
+   "apiResponses": 21,
+   "census": {
+    "JSON": {
+     "token": "JSON",
+     "kind": "ALLCAPS_WORD",
+     "routes": {
+      "/v8/bookings": 2
+     },
+     "slots": {
+      "v8-lede": 2
+     },
+     "server_answer_fields": [],
+     "provenance": "style-or-unindexed"
+    }
+   },
+   "server_word_rows": [],
+   "entry": [
+    "/assets/index-BcQ9VAso.js"
+   ],
+   "page_errors": 0,
+   "api_responses": 21,
+   "server_word_tokens": [],
+   "style_word_tokens": [
+    "JSON"
+   ]
+  }
+ },
+ "endpoint_log": [
+  {
+   "path": "/api/v1/agent/runtime-status",
+   "http_status": 200,
+   "bytes": 408
+  },
+  {
+   "path": "/api/v1/collections",
+   "http_status": 422,
+   "bytes": 327
+  },
+  {
+   "path": "/api/v1/demo/scene",
+   "http_status": 200,
+   "bytes": 1006
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed",
+   "http_status": 200,
+   "bytes": 20800
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+   "http_status": 200,
+   "bytes": 2
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/execution-clock",
+   "http_status": 200,
+   "bytes": 209
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "http_status": 200,
+   "bytes": 6089
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status",
+   "http_status": 200,
+   "bytes": 357
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/inbox",
+   "http_status": 200,
+   "bytes": 65
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory",
+   "http_status": 200,
+   "bytes": 421
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+   "http_status": 200,
+   "bytes": 1679
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+   "http_status": 200,
+   "bytes": 972706
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+   "http_status": 200,
+   "bytes": 95
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+   "http_status": 200,
+   "bytes": 2
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+   "http_status": 200,
+   "bytes": 2660
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+   "http_status": 200,
+   "bytes": 1198
+  },
+  {
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/web-observations",
+   "http_status": 200,
+   "bytes": 103
+  },
+  {
+   "path": "/api/v1/places",
+   "http_status": 422,
+   "bytes": 325
+  },
+  {
+   "path": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+   "http_status": 200,
+   "bytes": 527
+  },
+  {
+   "path": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+   "http_status": 200,
+   "bytes": 122
+  },
+  {
+   "path": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/recycle-bin/journeys",
+   "http_status": 200,
+   "bytes": 2
+  }
+ ]
+}
