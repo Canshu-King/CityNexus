@@ -1,0 +1,290 @@
+{
+  "instrument": "cmdr_machine_speech_sweep_r1",
+  "base": "http://127.0.0.1:49852",
+  "locale": "en",
+  "entryAssets": [
+    "/assets/index-DUhOk9ks.js"
+  ],
+  "routesWalked": 14,
+  "viewport": "390x844",
+  "allowListForAllCaps": [
+    "UTC",
+    "GMT",
+    "PDF",
+    "ID",
+    "URL",
+    "API",
+    "AI",
+    "GPS",
+    "OSM",
+    "OK",
+    "FAQ",
+    "COPILOT",
+    "COPILOT"
+  ],
+  "routesWithPaintedMachineText": 5,
+  "routes_with_hits": [
+    "/v8/hub",
+    "/v8/discover",
+    "/v8/bookings",
+    "/v8/intelligence",
+    "/v8/twin"
+  ],
+  "totalPaintedHits": 14,
+  "distinctTokens": 13,
+  "topTokens": [
+    [
+      "JSON",
+      2
+    ],
+    [
+      "ARRIVAL",
+      1
+    ],
+    [
+      "DEPARTURE",
+      1
+    ],
+    [
+      "DISCOVERY",
+      1
+    ],
+    [
+      "STAY",
+      1
+    ],
+    [
+      "MULTIMODAL",
+      1
+    ],
+    [
+      "AUTHORITATIVE",
+      1
+    ],
+    [
+      "POLICY",
+      1
+    ],
+    [
+      "ADVISORY",
+      1
+    ],
+    [
+      "POST",
+      1
+    ],
+    [
+      "COMMITMENT",
+      1
+    ],
+    [
+      "EXPLICIT",
+      1
+    ],
+    [
+      "LEARNED_SOFT",
+      1
+    ]
+  ],
+  "perRoute": {
+    "/v8/hub": {
+      "totalTextNodesScanned": 2,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ARRIVAL",
+          "text_head": "ARRIVAL",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DEPARTURE",
+          "text_head": "DEPARTURE",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 1135,
+      "kinds": {
+        "ALLCAPS_WORD": 2
+      }
+    },
+    "/v8/live": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 86,
+      "kinds": {}
+    },
+    "/v8/map": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 872,
+      "kinds": {}
+    },
+    "/v8/studio": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 86,
+      "kinds": {}
+    },
+    "/v8/stay": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 495,
+      "kinds": {}
+    },
+    "/v8/discover": {
+      "totalTextNodesScanned": 1,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DISCOVERY",
+          "text_head": "CN / DISCOVERY",
+          "tag": "span",
+          "cls": "v8-agent-mark"
+        }
+      ],
+      "documentChars": 1075,
+      "kinds": {
+        "ALLCAPS_WORD": 1
+      }
+    },
+    "/v8/bookings": {
+      "totalTextNodesScanned": 5,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as ",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STAY",
+          "text_head": "STAY EVIDENCE",
+          "tag": "span",
+          "cls": "v8-selected-label"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirm",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "MULTIMODAL",
+          "text_head": "MULTIMODAL INBOX",
+          "tag": "span",
+          "cls": "v8-kicker"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "AUTHORITATIVE",
+          "text_head": "AUTHORITATIVE MEMORY",
+          "tag": "span",
+          "cls": "v8-kicker"
+        }
+      ],
+      "documentChars": 1246,
+      "kinds": {
+        "ALLCAPS_WORD": 5
+      }
+    },
+    "/v8/agent": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 284,
+      "kinds": {}
+    },
+    "/v8/authoritative": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 432,
+      "kinds": {}
+    },
+    "/v8/intelligence": {
+      "totalTextNodesScanned": 4,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POLICY",
+          "text_head": "POLICY",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ADVISORY",
+          "text_head": "ADVISORY",
+          "tag": "b",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POST",
+          "text_head": "POST-ACTION GATE",
+          "tag": "span",
+          "cls": ""
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "COMMITMENT",
+          "text_head": "COMMITMENT",
+          "tag": "span",
+          "cls": ""
+        }
+      ],
+      "documentChars": 923,
+      "kinds": {
+        "ALLCAPS_WORD": 4
+      }
+    },
+    "/v8/twin": {
+      "totalTextNodesScanned": 2,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "EXPLICIT",
+          "text_head": "EXPLICIT",
+          "tag": "span",
+          "cls": "v8-twin-label explicit"
+        },
+        {
+          "kind": "UPPER_SNAKE",
+          "token": "LEARNED_SOFT",
+          "text_head": "LEARNED_SOFT",
+          "tag": "span",
+          "cls": "v8-twin-label learned"
+        }
+      ],
+      "documentChars": 913,
+      "kinds": {
+        "ALLCAPS_WORD": 1,
+        "UPPER_SNAKE": 1
+      }
+    },
+    "/v8/trash": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 207,
+      "kinds": {}
+    },
+    "/v8/trips": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 1158,
+      "kinds": {}
+    },
+    "/v8/me": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 86,
+      "kinds": {}
+    }
+  },
+  "pageErrors": []
+}
