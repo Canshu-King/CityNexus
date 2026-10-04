@@ -187,5 +187,17 @@
     "tree_restored_to_head": false
   },
   "recipe_file": "review/inflight-wait-r1/wait_fix_recipe_r1.diff",
-  "tree_state": "backend/tests 与 HEAD 一致（实验已还原）"
+  "tree_state": "backend/tests 与 HEAD 一致（实验已还原）",
+  "denominators": {
+    "test_files": 235,
+    "files_that_submit_a_job": 15,
+    "async_door_calls": 40,
+    "named_waiter_occurrences": 39
+  },
+  "denominator_commands": {
+    "test_files": "cd backend && ls tests/*.py | wc -l",
+    "files_that_submit_a_job": "cd backend && grep -rln --include=*.py -aE \"client.post(HYDRATIONS|client.post(\\\"/api/v1/catalog-hydrations|/stay-generations|submit_operation|_run_operation|operations.dispatch|_replay_semantics|_burst_via_route)\" tests | grep -v __pycache__ | wc -l",
+    "async_door_calls": "cd backend && grep -rn -aE \"client.post(HYDRATIONS|client.post(\\\"/api/v1/catalog-hydrations|/stay-generations\" tests | wc -l",
+    "named_waiter_occurrences": "cd backend && grep -rn --include=*.py -aE \"wait_for_operation|_wait_closed|_wait_terminal|_settled(|.join(timeout|for _ in range(1[02]0)\" tests | grep -v __pycache__ | wc -l"
+  }
 }
