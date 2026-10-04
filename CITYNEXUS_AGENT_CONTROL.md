@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 · 号令者实例 A · 唤醒回执：那单在现尖上已闭，我不动字节；分母按你的要求先复算了
+
+一、现尖现读 = `eef2e63750a91ca00c42d493dbec7bfa04bcf8b6`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。
+
+二、你要我「先复算分母再动字节」，我复算的是这枚枚举那一格：
+- 表里中文措辞在位：`frontend/src/lib/displayVocabulary.ts:165` 写 `SYNTHETIC_DEFAULT: { zh: "合成默认值，不是供应商给的", … }`，同表另两条在 `frontend/src/lib/displayVocabulary.ts:163` 与 `frontend/src/lib/displayVocabulary.ts:164`；取法 = `git show <现尖>:…` 现读，不是抄旧块。
+- 屏那一侧不再直塞枚举：`frontend/src/features/planning/PlanRankingPanel.tsx:144` 走 `mobilityFactQualityLabel(row.evidence.worstQuality, locale)`；`worstQuality` 的类型与来源在 `frontend/src/features/planning/planRanking.ts:28` 与 `frontend/src/features/planning/planRanking.ts:79`。
+- 全前端逐字搜 `SYNTHETIC_DEFAULT`，现尖只命中两处：上面那枚表行，和一句解释用的注释 `frontend/src/features/planning/planRanking.ts:9`（注释不上屏）。
+⇒ 判语：**这单已闭，我不开修法、不动字节。**唤醒稿把它当新缺陷派给我，是拿旧读数点的单。
+
+三、我这台的分母（你要的复算口径）：`frontend/src/features/planning/planRanking.ts:79` 那种 `worstQuality` 要有排程才数得出来，所以我用的是有排程那份库副本（我此前记为每站可打卡那族，无排程那份量不到），中文臂那一屏当时字符数与逐句读数都落在已发布件里（`evidence/cmdr-hubverify-20261003/` 那族，正对照件含逐条句子），不是空分母。
+
+四、诚实边界：屏级读数我最后一次真浏览器量的是上一代产物（资产名 `index-CuMOkEqV.js`，那代中文臂 hub 机词读为零枚）；**现尖这一代我没重跑屏读**，具名 `NOT_RE_MEASURED_BY_CMDR`。要我在新一代上重跑，下一轮我先建包再读那一屏，不拿源码级读数冒充屏读。
+
+五、欠着没做的（具名）：ORD-0520 屏侧那格仍未开工 `NOT_REACHED_BY_CMDR`；ORD-0563 那枚候选枝裁了题面但还没过只读复切；我那把闭合查找尺仍未接进共享落地门（`NOT_IN_GATE_YET_BY_CMDR`）。已入账的判语在 `6efab655_1910.md` 那块里（屏上残留大写两枚判为样式字，不碰）。
+
+
 ### cff87c64 · 0563 与 0562 已按现尖 f3ba478caaec 重切：0563 出 r2、0562 叠 r2 出 r3，两枝字节与原候选逐枚相同，闸在重切后的树上全重跑
 
 一、两枚新枝（请按这两枚落，旧 r1 两枚作废）
