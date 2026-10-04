@@ -1,0 +1,280 @@
+# -*- coding: utf-8 -*-
+"""ORD-0561 ② 的重切那一手（r2）：在**现尖那一代**上做同代 A/B —— 构建、起私有栈、两臂各读一次，
+再打上那两枚文件的补丁、重构建、再读一次。差别只有我的补丁。
+
+为什么这次在 wt2 里跑而不是复用旧快照：落地门退我 r1 的理由是"枝父在旧尖"，那么这次的读数
+也必须出自现尖那一代，否则又是一次跨代迁移。"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+SCR = Path("D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+PROBE = SCR / "ord0561_avatar_probe_r1.cjs"
+PYX = Path("D:/moodle/CityNexus/.venv/Scripts/python.exe")
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+CSS = WT2 / "frontend/src/styles.css"
+TSX = WT2 / "frontend/src/app/V8Experience.tsx"
+AV_OLD = ('            <button className="v8-avatar" onClick={() => navigate("me")}>\n'
+          '              {initialsFrom(cityName)}\n'
+          '            </button>')
+AV_NEW = ('            <button\n'
+          '              className="v8-avatar"\n'
+          '              data-testid="topbar-avatar"\n'
+          '              aria-label={t("nav.me")}\n'
+          '              onClick={() => navigate("me")}\n'
+          '            >\n'
+          '              {initialsFrom(cityName)}\n'
+          '            </button>')
+CSS_ANCHOR = ".v8-avatar { background: var(--v8-indigo); }"
+CSS_RULE = ("\n/* ORD-0561 ②: the bare `button` rule above carries `padding: 12px 14px` and a 16px "
+            "font, and the avatar circle sets only width/height/font-size -- so the padding survived "
+            "into a 28px box and the two initials needed 48px of it. Element selectors cannot out-rank "
+            "each other here, so the fix is a class-qualified rule that states the padding the circle "
+            "actually has room for. */\n"
+            "button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing: .2px; }")
+FORBIDDEN = {8000, 4781, 4782, 4783, 4785, 4787, 4789, 8693, 4799}
+BAD: list[str] = []
+
+
+def sha1(b: bytes) -> str:
+    return hashlib.sha1(b).hexdigest()
+
+
+def g(*a: str) -> str:
+    r = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    if r.returncode != 0 and r.stderr:
+        BAD.append("GIT %s: %s" % (" ".join(a[:2]), r.stderr.strip()[:120]))
+    return (r.stdout or "").strip()
+
+
+def free_port(wanted: int, taken=()) -> int:
+    p = wanted
+    while p < wanted + 60:
+        if p not in FORBIDDEN and p not in taken:
+            with socket.socket() as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                    return p
+                except OSError:
+                    pass
+        p += 1
+    raise SystemExit("找不到空闲私有端口")
+
+
+def http(url, data=None, headers=None, timeout=60):
+    req = urllib.request.Request(url, data=data, method="POST" if data is not None else "GET",
+                                 headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, (type(e).__name__ + str(e))[:150].encode()
+
+
+def vite_build():
+    t0 = time.time()
+    r = subprocess.run(["node", str(WT2 / "frontend/node_modules/vite/bin/vite.js"), "build",
+                        "--logLevel", "warn"], cwd=str(WT2 / "frontend"), capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
+    return r.returncode, round(time.time() - t0, 1), (r.stderr or "")[-200:]
+
+
+def tsc():
+    r = subprocess.run(["node", str(WT2 / "frontend/node_modules/typescript/bin/tsc"),
+                        "-p", "tsconfig.check.json", "--noEmit"], cwd=str(WT2 / "frontend"),
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return r.returncode, (r.stdout or "")[-300:]
+
+
+def main() -> int:
+    tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+    run_id = "AVR2-%s" % time.strftime("%H%M%S")
+    out = {"run_id": run_id, "line_tip": tip, "probe": PROBE.name,
+           "css_blob_at_tip": g("rev-parse", "%s:frontend/src/styles.css" % tip),
+           "tsx_blob_at_tip": g("rev-parse", "%s:frontend/src/app/V8Experience.tsx" % tip)}
+    g("checkout", "-q", "--detach", tip)
+    DIST = WT2 / "frontend" / "dist"
+
+    api = free_port(4861)
+    front_port = free_port(api + 7, taken={api})
+    env = dict(os.environ)
+    for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+        env.pop(k, None)
+    env.update({"CITYNEXUS_DATABASE_URL": "sqlite:///%s" % (WT2 / "backend" / ("%s.db" % run_id)).as_posix(),
+                "CITYNEXUS_E2E_RUN_ID": run_id, "CITYNEXUS_BACKEND_PORT": str(api),
+                "CITYNEXUS_DEMO_MODE": "true", "CITYNEXUS_DEMO_SCENE_TOKEN": os.urandom(16).hex()})
+    token = env["CITYNEXUS_DEMO_SCENE_TOKEN"]
+    log = ART / ("uvicorn_%s.log" % run_id)
+    backend = subprocess.Popen([str(PYX), "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                                "--port", str(api)], cwd=str(WT2 / "backend"), env=env,
+                               stdout=log.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+    out["backend_pid"] = backend.pid
+    front = "http://127.0.0.1:%d" % front_port
+
+    class H(BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def _send(self, code, body, ctype):
+            self.send_response(code)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            try:
+                self.wfile.write(body)
+            except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError):
+                pass
+
+        def do_GET(self):
+            p = self.path.split("?")[0]
+            if p.startswith("/api/"):
+                st, body = http("http://127.0.0.1:%d%s" % (api, self.path))
+                self._send(st or 502, body, "application/json")
+                return
+            f = (DIST / (p.lstrip("/") or "index.html")).resolve()
+            ctype = ("text/javascript" if f.suffix == ".js" else "text/css" if f.suffix == ".css"
+                     else "text/html" if f.suffix == ".html" else "application/octet-stream")
+            if not str(f).startswith(str(DIST)) or not f.is_file():
+                f, ctype = DIST / "index.html", "text/html"
+            self._send(200, f.read_bytes(), ctype)
+
+        do_POST = do_GET
+
+    srv = ThreadingHTTPServer(("127.0.0.1", front_port), H)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+
+    def entry():
+        idx = (DIST / "index.html").read_text(encoding="utf-8")
+        js = re.search(r"/assets/(index-[\w\-]+\.js)", idx).group(1)
+        st, body = http(front + "/assets/" + js)
+        disk = (DIST / "assets" / js).read_bytes()
+        return {"asset": js, "http_status": st, "bytes": len(body),
+                "served_equals_disk": body == disk, "disk_sha1": sha1(disk)}
+
+    def probe(tag):
+        dest = ART / ("avr2_%s_%s.json" % (tag, run_id))
+        penv = dict(os.environ)
+        penv.update({"NODE_PATH": str(WT2 / "frontend/node_modules"), "AV_FRONT": front,
+                     "AV_OUT": str(dest), "AV_SHOT": str(ART / ("avr2_%s_%s.png" % (tag, run_id))),
+                     "AV_JID": jid})
+        r = subprocess.run(["node", str(PROBE)], capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", env=penv, timeout=240)
+        doc = json.loads(dest.read_text(encoding="utf-8")) if dest.exists() else {}
+        return {"rc": r.returncode, "errors": doc.get("errors"),
+                "arms": [{k: a.get(k) for k in ("locale_arm", "present", "text", "aria", "testid",
+                                                "scroll_w", "client_w", "font", "pad", "ls",
+                                                "center_hits_self", "url")}
+                         for a in doc.get("arms") or []]}
+
+    jid = None
+    try:
+        ok = False
+        for _ in range(90):
+            st, body = http("http://127.0.0.1:%d/api/v1/health" % api)
+            if st == 200 and run_id.encode() in body:
+                ok = True
+                break
+            time.sleep(1)
+        if not ok:
+            BAD.append("后端没答或答复里没本 run id（日志 %s）" % log.name)
+            raise SystemExit(1)
+        hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": token,
+               "Idempotency-Key": "avr2-" + run_id}
+        req = urllib.request.Request("http://127.0.0.1:%d/api/v1/demo/scene/ensure" % api,
+                                     data=b"{}", headers=hdr, method="POST")
+        with urllib.request.urlopen(req, timeout=120) as r:
+            jid = json.loads(r.read().decode("utf-8")).get("journey_id")
+        out["ensure_http_status"] = r.status
+        if not jid:
+            BAD.append("供不出场景")
+            raise SystemExit(1)
+
+        out["tsc_before"] = tsc()
+        out["build_before"] = vite_build()
+        if out["build_before"][0] != 0:
+            BAD.append("改前那趟构建没绿：%s" % out["build_before"][2])
+            raise SystemExit(1)
+        out["before_build"] = entry()
+        out["before"] = probe("before")
+
+        css_txt, tsx_txt = CSS.read_text(encoding="utf-8"), TSX.read_text(encoding="utf-8")
+        if css_txt.count(CSS_ANCHOR) != 1 or AV_OLD not in tsx_txt:
+            BAD.append("现尖那两处的锚不唯一/不匹配，补丁不能打")
+            raise SystemExit(1)
+        CSS.write_text(css_txt.replace(CSS_ANCHOR, CSS_ANCHOR + CSS_RULE, 1), encoding="utf-8",
+                       newline=chr(10))
+        TSX.write_text(tsx_txt.replace(AV_OLD, AV_NEW, 1), encoding="utf-8", newline=chr(10))
+        out["tsc_after"] = tsc()
+        out["build_after"] = vite_build()
+        if out["build_after"][0] != 0 or out["tsc_after"][0] != 0:
+            BAD.append("改后 tsc/构建没绿：tsc=%s build=%s" % (out["tsc_after"], out["build_after"][2]))
+        out["after_build"] = entry()
+        if out["after_build"]["asset"] == out["before_build"]["asset"]:
+            BAD.append("入口资产同名 —— 改动没进产物")
+        out["after"] = probe("after")
+    except SystemExit:
+        pass
+    finally:
+        srv.shutdown()
+        srv.server_close()
+        backend.terminate()
+        try:
+            backend.wait(timeout=40)
+        except subprocess.TimeoutExpired:
+            backend.kill()
+        out["backend_exit"] = backend.poll()
+
+    if out.get("after"):
+        bef = {a["locale_arm"]: a for a in out["before"]["arms"]}
+        aft = {a["locale_arm"]: a for a in out["after"]["arms"]}
+        for w in ("en", "zh-CN"):
+            if w not in bef or w not in aft:
+                BAD.append("缺臂 " + w)
+                continue
+            if not (bef[w]["scroll_w"] > bef[w]["client_w"] and bef[w]["aria"] is None):
+                BAD.append("%s 臂改前不是『溢出 + 无名』" % w)
+            if not (aft[w]["scroll_w"] <= aft[w]["client_w"] and aft[w]["testid"] == "topbar-avatar"
+                    and aft[w]["center_hits_self"]):
+                BAD.append("%s 臂改后没过判据" % w)
+        if aft.get("en", {}).get("aria") != "Me" or aft.get("zh-CN", {}).get("aria") != "我的":
+            BAD.append("改后 aria-label 不是 nav.me 的两臂值")
+    # 工作树：把补丁留在盘上，下一步建枝提交
+    out["diff_files"] = g("status", "--porcelain").splitlines()
+    out["BAD"] = BAD
+    dst = ART / ("ord0561_avatar_ab_%s.json" % run_id)
+    dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8",
+                   newline=chr(10))
+    for half in ("before", "after"):
+        for a in out.get(half, {}).get("arms", []):
+            print("%-6s %s 字=%r aria=%r testid=%s scroll=%s client=%s font=%s pad=%s 自命中=%s"
+                  % (half, a["locale_arm"], a["text"], a["aria"], a["testid"], a["scroll_w"],
+                     a["client_w"], a["font"], a["pad"], a["center_hits_self"]))
+    print(json.dumps({k: out.get(k) for k in ("run_id", "line_tip", "tsc_before", "tsc_after",
+                                              "build_before", "build_after", "before_build",
+                                              "after_build", "BAD")}, ensure_ascii=False, indent=2))
+    print("ARTIFACT", dst)
+    return 1 if BAD else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,117 @@
+{
+  "run_id": "AVR2-203636",
+  "line_tip": "0293e5c1cf9be4ea4e7d14005e14c508cb3f528b",
+  "probe": "ord0561_avatar_probe_r1.cjs",
+  "css_blob_at_tip": "179d26e66209ed2f9b6fe3c2a64591dbf1799a39",
+  "tsx_blob_at_tip": "14974f5cbb11d52bed4d3cbbabf6b6b73ed90718",
+  "backend_pid": 73960,
+  "ensure_http_status": 200,
+  "tsc_before": [
+    0,
+    ""
+  ],
+  "build_before": [
+    0,
+    8.2,
+    "rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n"
+  ],
+  "before_build": {
+    "asset": "index-BcQ9VAso.js",
+    "http_status": 200,
+    "bytes": 1622092,
+    "served_equals_disk": true,
+    "disk_sha1": "1ca92fee8fc18a4b6b17031970149b5976eb352c"
+  },
+  "before": {
+    "rc": 0,
+    "errors": [],
+    "arms": [
+      {
+        "locale_arm": "en",
+        "present": true,
+        "text": "DE",
+        "aria": null,
+        "testid": null,
+        "scroll_w": 48,
+        "client_w": 28,
+        "font": "16px",
+        "pad": "12px 14px",
+        "ls": "0.32px",
+        "center_hits_self": true,
+        "url": "http://127.0.0.1:4868/v8/hub"
+      },
+      {
+        "locale_arm": "zh-CN",
+        "present": true,
+        "text": "DE",
+        "aria": null,
+        "testid": null,
+        "scroll_w": 48,
+        "client_w": 28,
+        "font": "16px",
+        "pad": "12px 14px",
+        "ls": "0.32px",
+        "center_hits_self": true,
+        "url": "http://127.0.0.1:4868/v8/hub"
+      }
+    ]
+  },
+  "tsc_after": [
+    0,
+    ""
+  ],
+  "build_after": [
+    0,
+    7.0,
+    "rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n"
+  ],
+  "after_build": {
+    "asset": "index-DARdhhan.js",
+    "http_status": 200,
+    "bytes": 1622148,
+    "served_equals_disk": true,
+    "disk_sha1": "d36f7c8aace5d50ae0da11bec78d04e4d5c3ec13"
+  },
+  "after": {
+    "rc": 0,
+    "errors": [],
+    "arms": [
+      {
+        "locale_arm": "en",
+        "present": true,
+        "text": "DE",
+        "aria": "Me",
+        "testid": "topbar-avatar",
+        "scroll_w": 28,
+        "client_w": 28,
+        "font": "10px",
+        "pad": "0px",
+        "ls": "0.2px",
+        "center_hits_self": true,
+        "url": "http://127.0.0.1:4868/v8/hub"
+      },
+      {
+        "locale_arm": "zh-CN",
+        "present": true,
+        "text": "DE",
+        "aria": "我的",
+        "testid": "topbar-avatar",
+        "scroll_w": 28,
+        "client_w": 28,
+        "font": "10px",
+        "pad": "0px",
+        "ls": "0.2px",
+        "center_hits_self": true,
+        "url": "http://127.0.0.1:4868/v8/hub"
+      }
+    ]
+  },
+  "backend_exit": 1,
+  "diff_files": [
+    "M frontend/src/app/V8Experience.tsx",
+    " M frontend/src/styles.css",
+    "?? review/ord0502/report-ORD0502-164201.json",
+    "?? review/ord0502/walk-ORD0502-164201.json"
+  ],
+  "BAD": []
+}

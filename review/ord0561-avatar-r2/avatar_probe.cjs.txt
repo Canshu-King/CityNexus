@@ -1,0 +1,67 @@
+// ORD-0561 ② 的度量探针：只量顶栏那枚头像——它的名字从哪来、字要不要溢出、点得到点不到。
+// 两臂各读一次；当场回读 location.href（共享标签会被别的会话中途导航走）。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const FRONT = process.env.AV_FRONT;
+const OUT = process.env.AV_OUT;
+const SHOT = process.env.AV_SHOT;
+const JID = process.env.AV_JID;
+const WANT = (process.env.AV_LOCALES || "en,zh-CN").split(",");
+
+const READ = () => {
+  const el = document.querySelector(".v8-avatar");
+  if (!el) return { present: false, url: location.href };
+  const c = getComputedStyle(el);
+  const r = el.getBoundingClientRect();
+  const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+  const top = document.elementFromPoint(cx, cy);
+  return { present: true, url: location.href,
+           text: (el.textContent || "").replace(/\s+/g, " ").trim(),
+           aria: el.getAttribute("aria-label"), testid: el.getAttribute("data-testid"),
+           name_from_contents_only: !el.getAttribute("aria-label") && !el.getAttribute("title"),
+           rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height),
+                   right: Math.round(r.right) },
+           scroll_w: el.scrollWidth, client_w: el.clientWidth, overflow_hidden: c.overflow === "hidden",
+           font: c.fontSize, weight: c.fontWeight, pad: c.padding, ls: c.letterSpacing,
+           center_hits_self: !!top && (top === el || el.contains(top)),
+           center_hit: top ? top.tagName.toLowerCase() + (top.getAttribute("data-testid")
+                          ? "[" + top.getAttribute("data-testid") + "]" : "") : null };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { front: FRONT, arms: [], errors: [] };
+  for (const want of WANT) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+      locale: want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(15000);
+    try {
+      await page.addInitScript(([jid, loc]) => {
+        localStorage.setItem("citynexus.locale", loc);
+        if (jid) localStorage.setItem("citynexus.v8.journey_id", jid);
+      }, [JID || "", want]);
+      await page.goto(FRONT + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.waitForTimeout(3200);
+      const r = await page.evaluate(READ);
+      r.locale_arm = want;
+      rep.arms.push(r);
+      if (want === "en") {
+        await page.screenshot({ path: SHOT, clip: { x: 300, y: 0, width: 90, height: 60 } })
+          .catch(() => rep.errors.push("shot"));
+      }
+    } catch (e) { rep.errors.push(want + " " + String(e).slice(0, 120)); }
+    await ctx.close();
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  for (const a of rep.arms) {
+    console.log(a.locale_arm, "present=" + a.present, "字=" + JSON.stringify(a.text),
+                "aria=" + JSON.stringify(a.aria), "testid=" + a.testid,
+                "scroll=" + a.scroll_w, "client=" + a.client_w, "font=" + a.font,
+                "pad=" + a.pad, "自命中=" + a.center_hits_self, "url=" + (a.url || "").split("/v8/")[1]);
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();
