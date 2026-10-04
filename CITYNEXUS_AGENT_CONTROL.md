@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · ORD-0562 英文臂单复数收口：改了四枚文件、五臂常设尺、三态英文屏读；头号那格（1 day）我这轮没证到，原因与走法已具名
+
+一、形制
+- 候选枝 refs/heads/review/cff87c64-ord0562-english-count-nouns-r1，`git ls-remote --refs` 回读 head 6c86b542b19776f3e7e2ff8fc85126430b204f95。
+- 这枝**叠在我自己那枚未落地的 ORD-0563 枝头** 126d170ae6321e3deb32f138a0efd69565e256d3 上（同一枚 `LocaleContext.tsx`，两单并改必撞），你先落 0563 再落本枝就是快进；要独立落就把本枝 re-cut 到现尖。
+
+二、改了什么（四枚源文件）
+- `frontend/src/lib/plural.ts`：`person` 进不规则表一枚，预算行就能自己说 `1 person` / `2 people`，不必逐句拼（frontend/src/lib/plural.ts:13）。
+- `frontend/src/i18n/LocaleContext.tsx`：新增三枚计数键 hub.todayDays / hub.todayDaysUnknown / hub.budgetLine（英文侧带 `{plural:...}`、中文侧不带），并把七处软化写法改成计数名词：studio.feasibilityPartialSub、studio.gate.MOBILITY_DATA_UNAVAILABLE、studio.gate.unknown、poster.shareDone、poster.shareReused、recovery.failureCount、twin.hardNeedsRemain（review/ord0562/screen_note_r1.txt:5）。
+- `frontend/src/app/V8Experience.tsx`：hub 天数与预算行不再内联拼名词（`1 days` 就是从那来的），改问字典；`budgetAdvisory` 收一个翻译函数入参，不再自带句子（review/ord0562/screen_note_r1.txt:9）。
+- 两处只与复数主语一致的动词是**重写**不是变位：预算行去掉 `lack`、twin 行去掉 `remain`（review/ord0562/screen_note_r1.txt:14）。中文逐字节未动：搬进字典的那两句就是组件原来内联的那两句。
+
+三、常设尺（五臂 rc=0）
+- 臂一：整张英文侧再没有任何 `(s)` 软化；臂二：计数标记只在英文侧、中文侧保持干净；臂三：hub 不再内联拼 `${...} days` / `${...} people`；臂四：不规则名词只在 plural.ts 声明一次，且预算行标记词干恰为 day 与 person；臂五：读数分母自证（frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:56）。
+- 分母与逐枚值：review/ord0562/count_ruler_evidence_r1.json；跑动原样：review/ord0562/ruler_arms_r1.txt。
+
+四、闸与曝光
+- npm run typecheck rc=0；npm run typecheck:all rc=0（review/ord0562/screen_note_r1.txt:24）。
+- 曝光：同尺同命令同形制全量导出，base 126d170ae 答 6 格、本枝 4fc050be5 答 6 格、按文件集合与 base 同（review/ord0562/exposure_pair_r1.txt:4）。
+- 动文案前先核了既有闸 `frontend/e2e/qoder-budget-advisory-tiers.spec.ts`：它钉的是中文「每人每天约」成对与两句冻结的 caveat，本单没重写其中任何一句 ⇒ 没有为了绿改断言（review/ord0562/screen_note_r1.txt:27）。
+
+五、真浏览器英文三态（run ORD0562-190529；私有栈 桩 :4691、后端 :4692、产品前端 :4693；库由 app 从空文件建，没复制 seed、没调用 demo/reset、没碰 :8000 :4781 :4782 :8693）
+- 向导建行程 http_status=201，屏上标题读到 "Trip to Tianjin"（英文臂为真）。
+- 三态屏读逐字：未改窗口「5 Oct, 10:00 -- 7 Oct, 20:00 · 2 travelers · 3 days」；PATCH 同日窗口「20 Oct, 08:00 -- 20 Oct, 20:00 · 2 travelers · 3 days」；PATCH 两日窗口「20 Oct, 08:00 -- 21 Oct, 20:00 · 2 travelers · 3 days」，PATCH 均 http_status=200；页面异常零枚、console 错误零枚（review/ord0562/screen_read_r1.json:1）。
+- 这三态证到的是：复数路径在屏上活着（`3 days`、`2 travelers` 都走标记展开），且那一行跟着被给的窗口动（日期在两态间确实变了）。截图两枚已入枝。
+
+六、这轮**没证到**的那格，具名不抹平
+- 头号用例「一天行程要读 `1 day`」这轮没在屏上读到。原因是量出来的不是猜的：hub 的数取 `journey.temporal_shape.day_count`，服务端**锚点自身时刻优先于行程窗口**（backend/app/main.py:3110），所以我 PATCH `/api/v1/journeys/{id}` 把打印出来的窗口挪到了同日，数仍停在 `3 days`——向导写下的锚点在 5 Oct 与 7 Oct（backend/app/main.py:7054 是行程门、backend/app/main.py:6455 是收件箱草稿门，全库只有这两扇 PATCH）。
+- 走法已定位、本轮未走：把同日时刻放到**锚点**上——用手动导入门 POST /inbox/import（不需要供应商）建草稿、确认，再读 hub。下一轮我把这格的屏读补上，另发勘误块，不把这三态当已完备。
+- 期间源码级证据在：标记经 `englishCountNoun(count, "day")` 展开，`isOne` 对数字 1 与字符串 "1" 都判单数（frontend/src/lib/plural.ts:18），臂四钉住了这些行真正用到的词干。
+- 预算行那句屏上 ABSENT（向导行程没有 budget 参照），所以 `1 person` / `2 people` 本轮只到字典与标记层，未到像素——记 NOT_REACHED_UI。
+
+七、没动
+- ORD-0568（RUNTIME_CAPTURE 括注）未动。exec.state.* 未动。中文侧零字节。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 19:07 · ORD-0507 第二件交件（r4，按现尖重切已过产线）：时钟句的括号只放名词、新建那一屏说清台上是谁的行程；两臂两语守闸 5 passed，两枚反件各自咬到自己那一臂（红话里是画出来的原句），第三件的折叠仍等你那句甲/乙
 
 **一、这一手交什么、不交什么**
