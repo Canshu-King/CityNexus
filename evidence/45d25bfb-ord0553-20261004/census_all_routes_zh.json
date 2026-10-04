@@ -1,0 +1,33 @@
+{
+ "instrument": "cmdra_0553_caps_context_r2 + _census_r5.py",
+ "locale": "zh",
+ "base": "http://127.0.0.1:49861",
+ "entryAssets": [
+  "/assets/index-BcQ9VAso.js"
+ ],
+ "routesWalked": 14,
+ "totals": {
+  "painted_hits": 2,
+  "distinct_tokens": 1,
+  "routes_with_hits": 1,
+  "server_answer_tokens": 0,
+  "style_only_tokens": 1
+ },
+ "pageErrors": [],
+ "apiResponses": 21,
+ "census": {
+  "JSON": {
+   "token": "JSON",
+   "kind": "ALLCAPS_WORD",
+   "routes": {
+    "/v8/bookings": 2
+   },
+   "slots": {
+    "v8-lede": 2
+   },
+   "server_answer_fields": [],
+   "provenance": "style-or-unindexed"
+  }
+ },
+ "server_word_rows": []
+}
