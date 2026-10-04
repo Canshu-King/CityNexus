@@ -276,6 +276,31 @@ class AgentRunStep(Base):
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
+class AgentPendingAction(Base):
+    """Durable human-in-the-loop continuation owned by one AgentRun."""
+
+    __tablename__ = "agent_pending_actions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    approval_id: Mapped[str] = mapped_column(
+        ForeignKey("action_approvals.id", ondelete="CASCADE"), unique=True
+    )
+    run_id: Mapped[str] = mapped_column(ForeignKey("agent_runs.id", ondelete="CASCADE"))
+    mission_id: Mapped[str] = mapped_column(ForeignKey("journey_missions.id", ondelete="CASCADE"))
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    originating_step_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_run_steps.id", ondelete="SET NULL"), nullable=True
+    )
+    tool_name: Mapped[str] = mapped_column(String)
+    arguments_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    claimed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
 class AutopilotEnrollment(Base):
     """Per-Journey standing subscription for the process-global worker."""
 
