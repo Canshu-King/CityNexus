@@ -1,0 +1,68 @@
+{
+ "sequence": [
+  {
+   "point": "local_before_read_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:33:45"
+  },
+  {
+   "point": "remote_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:33:50",
+   "hash_equal": true,
+   "agree": true,
+   "seconds_of_read": null
+  },
+  {
+   "point": "local_after_read_1",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:33:50"
+  },
+  {
+   "point": "remote_2",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:33:54",
+   "hash_equal": true,
+   "agree": true
+  },
+  {
+   "point": "local_after_read_2",
+   "blob": "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+   "bytes": 13569073,
+   "lines": 91467,
+   "at": "18:33:54"
+  }
+ ],
+ "verdicts": {
+  "remote_caught_up_to_an_earlier_local": true,
+  "local_file_changed_under_this_run": false,
+  "every_remote_read_was_self_proved": true,
+  "equal_at_any_single_point": [
+   [
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e"
+   ],
+   [
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e"
+   ],
+   [
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e"
+   ],
+   [
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e",
+    "216580f9b48830e29cdfd9d64cd02f3e4226952e"
+   ]
+  ]
+ },
+ "reading": "the mirror is in effect; the only thing that makes one hash compare unequal is that this box's ledger is being rewritten by the inserter between the local hash and the remote read"
+}
