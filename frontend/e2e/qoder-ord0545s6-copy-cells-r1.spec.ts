@@ -90,16 +90,25 @@ async function channelArm(page: any, locale: string) {
   const nameCell = page.getByTestId("poi-import-channel-name");
   const painted = await text(nameCell);
   const folded = page.getByTestId("poi-import-channel-token");
+  const card = page.getByTestId("poi-import-card");
   const closedRendered = await folded.isVisible().catch(() => false);
   const closedRenderedText = closedRendered ? await text(folded) : "";
   const foldOpen = await attr(page.getByTestId("poi-import-channel-fold"), "open");
+  const domWhileClosed = await card.evaluate((el: Element) => el.textContent ?? "");
+  const cardRenderedWhileClosed = ((await card.innerText(READ_CAP)) ?? "").replace(/\s+/g, " ").trim();
 
   // open the fold the way a traveller would
   await page.getByTestId("poi-import-channel-fold").locator("summary").click();
   await expect(folded, "the token must be readable once the fold is opened").toBeVisible({ timeout: 10_000 });
   const openedText = await text(folded);
+  const cardRenderedWhileOpen = ((await card.innerText(READ_CAP)) ?? "").replace(/\s+/g, " ").trim();
 
   const cellWords = await text(page.getByTestId("poi-import-channel-cell"));
+  // Rendered text and DOM text disagree on purpose here: a closed <details> keeps its child in the DOM
+  // without painting it. Which of the two a census counts decides whether this fold clears a screen or
+  // only a viewport, so both are measured rather than argued.
+  const noteWords = await text(page.getByTestId("poi-import-channel-name").locator("xpath=../small"));
+  const summaryWords = await text(page.getByTestId("poi-import-channel-fold").locator("summary"));
   return {
     arm: "A",
     locale,
@@ -107,19 +116,22 @@ async function channelArm(page: any, locale: string) {
     channel_cell_words: painted,
     expected_from_the_table: pair[HALF(locale)],
     channel_words_equal_the_table: painted === pair[HALF(locale)],
-    toggle_words: await text(page.getByTestId("poi-import-channel-fold").locator("summary")),
-    toggle_equals_the_table: (await text(page.getByTestId("poi-import-channel-fold").locator("summary"))) ===
-      toggle[HALF(locale)],
+    toggle_words: summaryWords,
+    toggle_equals_the_table: summaryWords === toggle[HALF(locale)],
     folded_attribute_before_click: foldOpen === null ? "closed" : "open",
     token_rendered_while_closed: closedRendered,
     token_text_while_closed: closedRenderedText,
+    token_in_the_cards_dom_while_closed: domWhileClosed.includes("LOCAL_TEXT_PARSER"),
+    token_in_the_cards_rendered_text_while_closed: cardRenderedWhileClosed.includes("LOCAL_TEXT_PARSER"),
+    token_in_the_cards_rendered_text_while_open: cardRenderedWhileOpen.includes("LOCAL_TEXT_PARSER"),
+    machine_words_rendered_in_card_while_closed: renderedMachineWords(cardRenderedWhileClosed),
     token_text_after_click: openedText,
     token_is_the_servers_name: openedText === "LOCAL_TEXT_PARSER",
     machine_words_in_channel_cell_after_open: renderedMachineWords(cellWords),
     channel_cell_words_after_open: cellWords,
-    note_words: await text(page.getByTestId("poi-import-channel-name").locator("xpath=../small")),
-    note_equals_the_table: (await text(page.getByTestId("poi-import-channel-name").locator("xpath=../small"))) ===
-      tablePair("channelNote")[HALF(locale)],
+    note_words: noteWords,
+    note_equals_the_table: noteWords === tablePair("channelNote")[HALF(locale)],
+    dom_text_length_while_closed: domWhileClosed.length,
   };
 }
 
@@ -166,6 +178,7 @@ test("Azh zh-CN 渠道格说的是词表的人话，机词只在折叠里", asyn
   expect(r.token_rendered_while_closed, "no token may be rendered while the fold is closed").toBe(false);
   expect(r.token_text_after_click, "opening the fold must reveal the server's own name").toBe("LOCAL_TEXT_PARSER");
   expect(r.machine_words_in_channel_cell_after_open, "once opened on purpose the token is the only machine word there").toEqual(["LOCAL_TEXT_PARSER"]);
+  expect(r.machine_words_rendered_in_card_while_closed, "while the fold is shut the card renders no machine word").toEqual([]);
   collected.push(r);
 });
 
@@ -178,6 +191,7 @@ test("Aen en-GB the same fold walk reads the table's en half", async ({ page }) 
   expect(r.token_rendered_while_closed).toBe(false);
   expect(r.token_text_after_click).toBe("LOCAL_TEXT_PARSER");
   expect(r.machine_words_in_channel_cell_after_open).toEqual(["LOCAL_TEXT_PARSER"]);
+  expect(r.machine_words_rendered_in_card_while_closed).toEqual([]);
   collected.push(r);
 });
 
