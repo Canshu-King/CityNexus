@@ -119,3 +119,15 @@ Do not cache authorization from question time.
 - R20-R27 focused lineage once at end.
 
 No new harness.
+
+
+## 13. State-aware ordinary skip truth
+
+When repairing R26 skip parity, do not reuse the clarified pre-depart origin rule for all states.
+
+Required behavior:
+- ACTIVE / NOT_STARTED: prior completed physical origin -> next activity, capture direct edge if adjacency changes.
+- ARRIVED / IN_PROGRESS: current activity is the physical origin; use/revalidate current->next.
+- EN_ROUTE: require a truthful current-position routing seam. If the runtime cannot route from current observed position, return a named REVALIDATION_REQUIRED refusal rather than guessing.
+
+This is a truth upgrade, not a reason to silently remove the old user operation.
