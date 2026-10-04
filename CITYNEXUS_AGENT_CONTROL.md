@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0500 手机车道（0afdb49b）自申报下一格并已交：我自己那份 shipped 注释不再写行号——四枚锚全换成名字形，并装了一把闸让本车道从此加不回去（反件四枚全咬，两枚控制绿；枝 `review/newlane-ord0500-phone-anchor-form-r1` = `f51c0e164d1829df1da4c52339f918ef79b1c30a`）
+
+一、为什么是这一格（现场账，不是我挑软的）
+- 同一件事我为它交过两手：`backend/tests/test_qoder_ord0500_journey_refusal.py` 里那几枚行号，每次线动就得重量（r8 与 r19 那两手的正文就是去改这四个整数）。取数 `git log --oneline --grep=anchor -- backend/tests/test_qoder_ord0500_journey_refusal.py` 现读命中 2 枚。
+- 号令者给 6a150e1e 的裁语方向是「锚用名字形」；我那侧只有我自己名下这一枚文件可以照做，别人名下一枚不动。
+
+二、改了什么（产品侧就一枚文件、只动注释文字）
+- `backend/tests/test_qoder_ord0500_journey_refusal.py` 对现尖 `f3ba478caaecdbdf7254786b2bf0d03d323897d0` 的 numstat 是 8 增 4 删（`git diff --numstat` 现读）；线上那份 blob `dd4bf606865e414775babab7d93763205bf7dd84` → 我这版 `80cfac127a927d49901a46386e8778ad71909133`。断言、夹具、用例名一枚没动。
+- 三处数字引用被换成名字：共享 helper 写作 `def require(`；重复打卡那两处写作「以 `The duplicate answer comes` 开头的块」与 `UNIQUE (journey_id, target_key)` 索引，以及唯一写入 `"caught_by": "unique_index",` 的那一支。四枚标签在线上的命中数逐枚为 1（件 `review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json`，blob `c52627562d2f7440a6acc3fcc6ee6b344ad59874`）。
+- 标签清单写在**被审的那枚文件里**（`Anchor labels (name form; gate: anchor_form_gate_r26.py): …`），不再放外面的 manifest——因为外面的清单我可以悄悄删短，放进文件里删一枚就是一次产品 diff。这一步是反件 M2 逼出来的（下面第三节）。
+
+三、闸与反件（判据是文件字节，不是我的读法）
+- 闸 `tools/anchor_form_gate_r26.py` 四条判据：本文件里出现 `path:数字` 即红（`NUMERIC_ANCHOR_FORBIDDEN`）；没有 `Anchor labels` 声明即红（`ANCHOR_LINE_PRESENT`）；声明的标签在那枚文件里找不到即红（`LABEL_NOT_FOUND`）；标签命中多枚又没带限定语即红（`AMBIGUOUS_LABEL_WITHOUT_QUALIFIER`）。原件 `tools/anchor_form_gate_r26.py` blob `e7e2aa45265e452b09b2349216321481116f16d6`，跑法 `python tools/anchor_form_gate_r26.py`。
+- 反件四枚全咬、控制两枚不报红（`every_arm_bit` 为真），件 `review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json` blob `5bbcfe616dc342063dce480943018342943f02d6`（同一件里逐行存判语、红的项与 why）：把行号写回去 → 红第一项；把声明改名让闸找不到 → 红第二项；声明一枚已不存在的标签 → 红 `LABEL_NOT_FOUND`；声明一枚命中两次的标签且不写限定语 → 红 `AMBIGUOUS_LABEL_WITHOUT_QUALIFIER`。四枚都在内存里的候选正文上跑，工作树 0 写入。
+- 前后对照（现算，不手打）：线上那份判语 RED、数字锚 2 枚；候选判语 GREEN、数字锚 0 枚、四枚标签全 GREEN。同一对读数在 `evidence/anchor_form_apply_r26.json`（blob `c52627562d2f7440a6acc3fcc6ee6b344ad59874`）。
+
+四、这手里闸把我自己咬回去的两次（具名，不留到最后解释）
+- 第一版草稿我写了 `select(JourneyCheckin).where(` 与 `_checkin_resolve_targets` 两枚标签，并在句子里断言「先查表、后调用」。闸报红：前者命中 2 枚，后者是 helper 的 `def` 在 handler 之上——**文件顺序那句是假的**。我把句子改成不带顺序断言的写法，并把这两枚标签在脚本注释里具名写成「试过、不要用」。
+- 另一次是我自己写的声明格式：括号里的说明跨了行，闸答「本文件没有 Anchor labels 声明」。这是它该有的行为（读不到就当缺，不静默放行），我没改判据，改的是我的文本。
+
+五、规格没被这次改动弄坏（跑了，不是推理）
+- 候选正文 `ast.parse` 通过；把那枚文件放进工作树后按本车道的臂跑两枚规格（私有库 `run/r6_pytest.db`，共享库逐枚比字节与 mtime_ns），尾行 16 passed in 3.82s、退出码 0、跑后库中 9 行、共享库未动为真（同段读数件 blob `b53626ecf94c17beb8ece8c0d74fe1d08a50dba1`）；随后工作树还原、`git status` 计数为 0、还原后的 blob 与线上逐字相等。件 `review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json` blob `b53626ecf94c17beb8ece8c0d74fe1d08a50dba1`，跑法 `python tools/anchor_form_spec_r26.py`。
+
+六、枝与落地预测（现读，不用你重算）
+- `refs/heads/review/newlane-ord0500-phone-anchor-form-r2` = `ba19776a29edb27d84e0a1eb204fa76eac61c2c0`，父就是当代现尖 `f3ba478caaecdbdf7254786b2bf0d03d323897d0`；对它跑 `git merge-tree --write-tree` 退 0、`CONFLICT` 0 枚；共 11 枚路径，唯一一处替换线上字节的就是那枚产品注释文件，且它是**当场声明**过的（发布器的 `PUBLISH_ALLOW_LANDED` 只放行这一枚，其余一律 `ABORT_OVERWRITES_LANDED_BYTES`）。复算 `git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/newlane-ord0500-phone-anchor-form-r2`。
+- 我名下其余各枚（staging-door r1..r5、citation-note r1/r2、collide probe）头一枚没换，无强推、无删枝。
+- 为什么不直接用先推的那枚 `f51c0e164d1829df1da4c52339f918ef79b1c30a`：它漏带了自己的规格读数件 `evidence/anchor_form_spec_r26.json`（blob `b53626ecf94c17beb8ece8c0d74fe1d08a50dba1`）——一件说「两枚模块仍通过」的证据没进枝，就等于那句话没有出处。r2 是把那枚补齐的**重切**（不是覆盖）：与 r1 共用的 10 枚路径blob 逐枚相同（闸 `e7e2aa45265e452b09b2349216321481116f16d6`、反件驱动 `7a12ca0284364df2860543a10977a9c0c853ea80`、前后测量 `c7f59c9ab91efe229ed41f70cc664f04f437928f`、产品注释 `80cfac127a927d49901a46386e8778ad71909133`），只多那一枚件。落 r2；r1 原样留着，无强推无删枝。
+
+七、这枚闸证明不了什么（不遮掩）
+- 它证明「声明里列出的标签确实各自唯一解析」与「本文件里没留行号」；它**不证明**声明是完整的——若我在句子里再写一个没列进声明的名字形引用，闸看不见。那一半只能靠 reviewer 读这枚文件的 diff，所以我把声明放进被审文件、并把删除声明做成红项。
+- 标签本身的耐久性也不是无限的：`The duplicate answer comes` 是 main.py 里那行注释的开头，若别人重写那行注释，我这把尺会答 `LABEL_NOT_FOUND` 而不是沉默——这正是我要的行为（不再靠一个会腐烂的整数）。
+
+八、边界
+- 产品字节只有那一枚文件的注释（8 增 4 删）；`backend/app/main.py`、`contracts/openapi.yaml`、`frontend/` 与别人名下判据文件 0 枚改动；线上量具路径 0 枚重写（除声明放行的那一枚产品文件）；权威线 0 移动；账本 0 直写（本块走收件口）；端口 0 个由我起停；`demo/reset` 未跑；`_preview.db` 未写；真机与整套 Playwright 仍 NOT_MEASURED / NOT_EXECUTED（`adb devices` 现读只有表头）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 交 ORD-0561 · 两臂五屏真浏览器走查（390 px 视口，底栏由点进入 10 屏 / 共 10 屏）：缺陷 6 类，全部带逐字文本与像素量；另把"全大写"拆成字面与 CSS 两栏（en 臂 25 枚字面、18 枚纯 CSS），并当场收回我自己那把假阳性尺
 
 **〇、题面、形制与代次**
