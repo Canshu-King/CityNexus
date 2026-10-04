@@ -1,0 +1,95 @@
+// ORD-0564 反件探针：在**自己那台私有栈**上把 City Discovery 屏两臂各读一遍。
+// 判据只看渲染出来的文字（document.body.innerText），不看 data 属性、不读源码。
+// en 臂：那句空态必须整句无汉字，且要读到 "City Discovery"；zh 臂：那句必须还是原来那句中文（不误改）。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const FRONT = process.env.ORD564_FRONT;
+const OUT = process.env.ORD564_OUT;
+const SHOTDIR = process.env.ORD564_SHOTS;
+const JOURNEY = process.env.ORD564_JID;
+const ARMS = ["en", "zh-CN"];
+const CJK = /[\u3400-\u4dbf\u4e00-\u9fff\u3040-\u30ff\u3000-\u303f\uff00-\uffef]/;
+const HAN = /[\u4e00-\u9fff]/;
+
+(async () => {
+  const flush = () => fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  const browser = await chromium.launch();
+  const rep = { front: FRONT, arms: [], errors: [] };
+  for (const locale of ARMS) {
+    const ctx = await browser.newContext({
+      viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true,
+      hasTouch: true, locale: locale === "en" ? "en-US" : "zh-CN", serviceWorkers: "block",
+    });
+    const page = await ctx.newPage();
+    page.setDefaultTimeout(20000);
+    const mark = (m) => console.log("[" + locale + "] " + m + " @" + Date.now());
+    try {
+      mark("context open");
+      await page.addInitScript(([jid, loc]) => {
+        try {
+          localStorage.setItem("citynexus.v8.journey_id", jid);
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JOURNEY, locale]);
+      await page.goto(FRONT + "/v8/discover", { waitUntil: "domcontentloaded", timeout: 60000 });
+      mark("goto done");
+      await page.waitForTimeout(3500);
+      const s = await page.evaluate(() => ({
+        url: location.href, lang: document.documentElement.lang,
+        stored: (() => { try { return localStorage.getItem("citynexus.locale"); } catch (e) { return null; } })(),
+        text: document.body.innerText || "",
+        headings: Array.from(document.querySelectorAll("h1,h2,h3")).map((h) =>
+          (h.textContent || "").replace(/\s+/g, " ").trim()).filter(Boolean).slice(0, 8),
+        // 语言开关那一枚按钮的字**按它自己的字面**渲染（中文臂显示 English、英文臂显示 中文），
+        // 那是语言名不是"英文句里嵌中文"。这里把它单独量出来，不靠事后手删那一行。
+        toggle: (() => {
+          const b = document.querySelector('button[aria-label="Switch language"]');
+          if (!b) return null;
+          const r = b.getBoundingClientRect();
+          return { text: (b.textContent || "").replace(/\s+/g, " ").trim(),
+                   aria: b.getAttribute("aria-label"),
+                   box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width),
+                          h: Math.round(r.height) } };
+        })(),
+      }));
+      const lines = s.text.split("\n").map((x) => x.trim()).filter(Boolean);
+      const sentence = lines.filter((l) => /collected|收藏/.test(l));
+      const hanAll = locale === "en" ? lines.filter((l) => HAN.test(l)) : [];
+      const toggleText = s.toggle ? s.toggle.text : null;
+      const hanRest = hanAll.filter((l) => l !== toggleText);
+      const shot = SHOTDIR + "/ord0564_discover_" + locale + ".png";
+      const rec = { locale, url: s.url, html_lang: s.lang, stored_locale: s.stored,
+                    text_chars: s.text.length, headings: s.headings,
+                    language_toggle: s.toggle,
+                    empty_state_lines: sentence,
+                    han_lines_all: hanAll.length, han_lines_all_list: hanAll.slice(0, 10),
+                    han_lines_excluding_toggle: hanRest.length,
+                    han_lines_excluding_toggle_list: hanRest.slice(0, 10),
+                    punct_note: "全角标点只登记，不并入汉字计数",
+                    fullwidth_hits: (s.text.match(/[\u3000-\u303f\uff00-\uffef]/g) || []).length,
+                    screenshot: null };
+      rep.arms.push(rec);          // 先落数据：截图若卡住，读数不能跟着丢
+      mark("arms record pushed");
+      await page.screenshot({ path: shot }).catch(() => rep.errors.push("shot " + locale));
+      rec.screenshot = shot;
+      mark("screenshot done");
+      flush();
+    } catch (e) {
+      rep.errors.push("fatal " + locale + " " + (e && e.message ? e.message.slice(0, 140) : String(e)));
+    } finally {
+      flush();
+      await ctx.close().catch(() => rep.errors.push("close " + locale));
+    }
+  }
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 2) + "\n", "utf8");
+  await browser.close();     // 不关浏览器，node 就不退出（上一趟 420 秒超时是这里，不是产品卡住）
+  for (const a of rep.arms) {
+    console.log(a.locale, "| url", (a.url || "").split("/v8/")[1] || "?", "| lang", a.html_lang,
+                "| 空态句", JSON.stringify((a.empty_state_lines || [])[0] || "").slice(0, 96),
+                "| 汉字行(全部)", a.han_lines_all, "| 汉字行(除语言开关)",
+                a.han_lines_excluding_toggle, "| 开关字", JSON.stringify(a.language_toggle &&
+                a.language_toggle.text));
+  }
+  console.log("errors", JSON.stringify(rep.errors));
+})();

@@ -1,0 +1,78 @@
+{
+  "front": "http://127.0.0.1:4783",
+  "arms": [
+    {
+      "locale": "en",
+      "url": "http://127.0.0.1:4783/v8/discover",
+      "html_lang": "en",
+      "stored_locale": "en",
+      "text_chars": 1140,
+      "headings": [
+        "First, whether this city can be planned",
+        "Ask for the kind of city day you actually want.",
+        "Shape the city stop",
+        "Each shelf carries the traveller it belongs to; this list is the rows that say so."
+      ],
+      "language_toggle": {
+        "text": "中文",
+        "aria": "Switch language",
+        "box": {
+          "x": 266,
+          "y": 17,
+          "w": 63,
+          "h": 44
+        }
+      },
+      "empty_state_lines": [
+        "Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land."
+      ],
+      "han_lines_all": 2,
+      "han_lines_all_list": [
+        "中文",
+        "Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land."
+      ],
+      "han_lines_excluding_toggle": 1,
+      "han_lines_excluding_toggle_list": [
+        "Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land."
+      ],
+      "punct_note": "全角标点只登记，不并入汉字计数",
+      "fullwidth_hits": 0,
+      "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0564_discover_en.png"
+    },
+    {
+      "locale": "zh-CN",
+      "url": "http://127.0.0.1:4783/v8/discover",
+      "html_lang": "zh-CN",
+      "stored_locale": "zh-CN",
+      "text_chars": 428,
+      "headings": [
+        "先看这座城能不能规划",
+        "说出你真正想要的城市一天。",
+        "塑造城市停留",
+        "这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。"
+      ],
+      "language_toggle": {
+        "text": "EN",
+        "aria": "Switch language",
+        "box": {
+          "x": 264,
+          "y": 17,
+          "w": 65,
+          "h": 44
+        }
+      },
+      "empty_state_lines": [
+        "我的收藏",
+        "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。"
+      ],
+      "han_lines_all": 0,
+      "han_lines_all_list": [],
+      "han_lines_excluding_toggle": 0,
+      "han_lines_excluding_toggle_list": [],
+      "punct_note": "全角标点只登记，不并入汉字计数",
+      "fullwidth_hits": 24,
+      "screenshot": "D:/moodle/_qoder_ord0561_shots/ord0564_discover_zh-CN.png"
+    }
+  ],
+  "errors": []
+}

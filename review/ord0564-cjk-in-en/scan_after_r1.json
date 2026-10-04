@@ -1,0 +1,81 @@
+{
+  "line_tip": "59bf4dd3f00e6162c05d2d865b20909461bf860d",
+  "files": [
+    "frontend/src/features/abort/journeyAbortCopy.ts",
+    "frontend/src/features/access/accessCopy.ts",
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "frontend/src/features/checkin/footprintCopy.ts",
+    "frontend/src/features/collections/collectionCopy.ts",
+    "frontend/src/features/discovery/prepAbandonSurveyCopy.ts",
+    "frontend/src/features/discovery/prepFailureCopy.ts",
+    "frontend/src/features/estimation/estimationLadderCopy.ts",
+    "frontend/src/features/pending/pendingSetCopy.ts",
+    "frontend/src/features/planning/planRankingCopy.ts",
+    "frontend/src/features/poiimport/poiImportCopy.ts",
+    "frontend/src/features/studio/planVersionHistoryCopy.ts",
+    "frontend/src/features/trash/journeyTrashCopy.ts",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/i18n/mapPanelCopy.ts",
+    "frontend/src/i18n/placeProvenanceCopy.ts"
+  ],
+  "files_scanned": 16,
+  "denominator": {
+    "flat_keys": 2468,
+    "en_lines": 110,
+    "zh_lines": 110
+  },
+  "hits": [
+    {
+      "file": "frontend/src/features/poiimport/poiImportCopy.ts",
+      "line": 119,
+      "name": "COPY.storeOnlyRefusal",
+      "en_value": "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting it on a shelf is the exit above. No fourth word is invented here, so this one refuses by state and writes nothing.",
+      "cjk": "划加计进",
+      "form": "copy_pair",
+      "entry_refs_outside_definition": 3,
+      "entry_ref_sample": [
+        {
+          "path": "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+          "text": "356:        \"D\", \"store_only_why\", \"storeOnlyRefusal\", await text(page.getByTestId(\"poi-import-store-only-why\")),"
+        },
+        {
+          "path": "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+          "text": "357:        tableHalf(\"storeOnlyRefusal\", half), \"table\", 'data-testid=\"poi-import-store-only-why\"',"
+        },
+        {
+          "path": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+          "text": "616:                {poiImportCopy(locale, \"storeOnlyRefusal\")}"
+        }
+      ],
+      "module_refs_outside_definition": 87,
+      "module_ref_sample": [
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "17: *    screen's vocabulary into `poiImportCopy.ts` and a hand-copied count would have gone stale with it."
+        },
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "35:const COPY_TABLE = \"frontend/src/features/poiimport/poiImportCopy.ts\";"
+        },
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "90: * The screen's own sentence table (ORD-0524's `poiImportCopy.ts`), read as key + both halves."
+        }
+      ],
+      "class": "LIVE_BY_MODULE"
+    },
+    {
+      "file": "frontend/src/i18n/LocaleContext.tsx",
+      "line": 59,
+      "name": "checkin.empty",
+      "en_value": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+      "cjk": "卡打",
+      "form": "flat_dict",
+      "entry_refs_outside_definition": 0,
+      "entry_ref_sample": [],
+      "module_refs_outside_definition": 0,
+      "module_ref_sample": [],
+      "class": "DEAD_KEY_ZERO_READER"
+    }
+  ]
+}

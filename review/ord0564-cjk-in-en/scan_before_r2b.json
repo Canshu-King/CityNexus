@@ -1,0 +1,120 @@
+{
+  "line_tip": "868958e7e11472faa0fc84c2218304c36d1885b0",
+  "files": [
+    "frontend/src/features/abort/journeyAbortCopy.ts",
+    "frontend/src/features/access/accessCopy.ts",
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "frontend/src/features/checkin/footprintCopy.ts",
+    "frontend/src/features/collections/collectionCopy.ts",
+    "frontend/src/features/discovery/prepAbandonSurveyCopy.ts",
+    "frontend/src/features/discovery/prepFailureCopy.ts",
+    "frontend/src/features/estimation/estimationLadderCopy.ts",
+    "frontend/src/features/pending/pendingSetCopy.ts",
+    "frontend/src/features/planning/planRankingCopy.ts",
+    "frontend/src/features/poiimport/poiImportCopy.ts",
+    "frontend/src/features/studio/planVersionHistoryCopy.ts",
+    "frontend/src/features/trash/journeyTrashCopy.ts",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/i18n/mapPanelCopy.ts",
+    "frontend/src/i18n/placeProvenanceCopy.ts"
+  ],
+  "files_scanned": 16,
+  "denominator": {
+    "flat_keys": 2468,
+    "en_lines": 110,
+    "zh_lines": 110
+  },
+  "hits": [
+    {
+      "file": "frontend/src/features/collections/collectionCopy.ts",
+      "line": 37,
+      "name": "COLLECTION_COPY.empty",
+      "en_value": "Nothing collected yet. Pick a place in 城市探索 above and it will have somewhere to land.",
+      "cjk": "城市探索",
+      "form": "copy_pair",
+      "entry_refs_outside_definition": 763,
+      "entry_ref_sample": [
+        {
+          "path": "frontend/docs/SW_LIFECYCLE_ACCEPTANCE.md",
+          "text": "28:- in both cases, `#root` must become non-empty and executable resources must never receive `text/html`."
+        },
+        {
+          "path": "frontend/docs/SW_LIFECYCLE_ACCEPTANCE.md",
+          "text": "67:8. Assert `#root` is non-empty, reload, and assert it is still non-empty."
+        },
+        {
+          "path": "frontend/e2e/_qoderAuthoritativeSetup.ts",
+          "text": "12:   :8000 from another agent lane returns an empty token and the run stops. */"
+        }
+      ],
+      "module_refs_outside_definition": 7,
+      "module_ref_sample": [
+        {
+          "path": "frontend/src/features/collections/CollectInto.tsx",
+          "text": "14:    sentence from `collectionCopy.ts`, chosen by state name; the reason code is read only to tell the"
+        },
+        {
+          "path": "frontend/src/features/collections/CollectionPanel.tsx",
+          "text": "9:  - only this order's own copy (`collectionCopy.ts`), chosen by a state name this component picks;"
+        },
+        {
+          "path": "frontend/src/features/collections/CollectionPanel.tsx",
+          "text": "24:import { COLLECTION_NO_TRAVELER } from \"./collectionCopy\";"
+        }
+      ],
+      "class": "LIVE_BY_MODULE"
+    },
+    {
+      "file": "frontend/src/features/poiimport/poiImportCopy.ts",
+      "line": 119,
+      "name": "COPY.storeOnlyRefusal",
+      "en_value": "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting it on a shelf is the exit above. No fourth word is invented here, so this one refuses by state and writes nothing.",
+      "cjk": "划加计进",
+      "form": "copy_pair",
+      "entry_refs_outside_definition": 3,
+      "entry_ref_sample": [
+        {
+          "path": "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+          "text": "356:        \"D\", \"store_only_why\", \"storeOnlyRefusal\", await text(page.getByTestId(\"poi-import-store-only-why\")),"
+        },
+        {
+          "path": "frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
+          "text": "357:        tableHalf(\"storeOnlyRefusal\", half), \"table\", 'data-testid=\"poi-import-store-only-why\"',"
+        },
+        {
+          "path": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+          "text": "616:                {poiImportCopy(locale, \"storeOnlyRefusal\")}"
+        }
+      ],
+      "module_refs_outside_definition": 87,
+      "module_ref_sample": [
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "17: *    screen's vocabulary into `poiImportCopy.ts` and a hand-copied count would have gone stale with it."
+        },
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "35:const COPY_TABLE = \"frontend/src/features/poiimport/poiImportCopy.ts\";"
+        },
+        {
+          "path": "frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+          "text": "90: * The screen's own sentence table (ORD-0524's `poiImportCopy.ts`), read as key + both halves."
+        }
+      ],
+      "class": "LIVE_BY_MODULE"
+    },
+    {
+      "file": "frontend/src/i18n/LocaleContext.tsx",
+      "line": 54,
+      "name": "checkin.empty",
+      "en_value": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+      "cjk": "卡打",
+      "form": "flat_dict",
+      "entry_refs_outside_definition": 0,
+      "entry_ref_sample": [],
+      "module_refs_outside_definition": 0,
+      "module_ref_sample": [],
+      "class": "DEAD_KEY_ZERO_READER"
+    }
+  ]
+}

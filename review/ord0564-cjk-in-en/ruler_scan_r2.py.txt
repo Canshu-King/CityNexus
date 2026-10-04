@@ -1,0 +1,149 @@
+# -*- coding: utf-8 -*-
+"""ORD-0564 全量扫描尺 r2（只读：git show 现尖取字节，只打印，绝不写产品树）。
+
+为什么换 r2：r1 的键形认成 `key: "…"`，而现尖两种形制都不是它 ——
+  · 主字典 `frontend/src/i18n/LocaleContext.tsx` 是扁平的 `"a.b": "…"`（带引号的点号键）；
+  · 组件 copy 文件（`*Copy.ts`）是 `{ zh: "…", en: "…" }` 成对写。
+r1 因此报出 0 命中——那是**尺的空转**，不是"没有缺陷"（分母：16 枚文件、39 枚键，全按错的形去过）。
+
+r2 按两种形制分开扫，并且每一条命中都现读读者数，分「活键 / 死键」：
+  · 主字典：判据同号令者（值含 CJK、含 ≥2 个拉丁词、不以「。」结尾），每个键只取第一次出现（= 英文侧）；
+  · `*Copy.ts`：只取 `en:` 那一行（英文侧写在字面上，不用顺序假设），并把它在对象里的路径拼成名字。
+"""
+import json
+import re
+import subprocess
+import sys
+from collections import OrderedDict
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = "D:/moodle/_qoder_newlane_ord0444_20260929/wt2"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+CJK = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\u3040-\u30ff\u3000-\u303f\uff00-\uffef]")
+LATIN = re.compile(r"[A-Za-z]{2,}")
+FLAT = re.compile(r'^\s*(["\'])([A-Za-z][A-Za-z0-9_.]*)\1\s*:\s*(["\'])(.*?)\3\s*,?\s*$', re.S)
+PAIR = re.compile(r'^\s*(en)\s*:\s*(["\'])(.*?)\2\s*,?\s*$', re.S)
+ZH = re.compile(r'^\s*(zh)\s*:\s*(["\'])(.*?)\2\s*,?\s*$', re.S)
+CONST = re.compile(r"^(?:export\s+)?(?:const|let)\s+([A-Za-z0-9_]+)\s*[:=]")
+NESTED = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*:\s*\{\s*$")
+
+
+def sh(*a):
+    return subprocess.run(list(a), cwd=WT, capture_output=True, text=True,
+                          encoding="utf-8", errors="replace")
+
+
+def bad_en(val):
+    """英文侧的判据：含汉字、含 ≥2 个拉丁词、且不以「。」收尾。"""
+    return bool(CJK.search(val)) and len(LATIN.findall(val)) >= 2 and not val.rstrip().endswith("。")
+
+
+def scan(t, path):
+    body = sh("git", "show", "%s:%s" % (t, path)).stdout
+    hits, seen, denom = [], OrderedDict(), {"flat_keys": 0, "en_lines": 0, "zh_lines": 0}
+    const, stack = None, []
+    for i, line in enumerate(body.split("\n"), 1):
+        cm = CONST.match(line)
+        if cm:
+            const = cm.group(1)
+        nm = NESTED.match(line)
+        if nm:
+            stack.append((len(line) - len(line.lstrip()), nm.group(1)))
+        elif line.strip().startswith("}"):
+            while stack and stack[-1][0] >= (len(line) - len(line.lstrip())):
+                stack.pop()
+        m = FLAT.match(line)
+        if m:
+            key, val = m.group(2), m.group(4)
+            denom["flat_keys"] += 1
+            if key in seen:
+                continue
+            seen[key] = 1
+            if bad_en(val):
+                hits.append({"file": path, "line": i, "name": key, "en_value": val,
+                             "cjk": "".join(sorted(set(CJK.findall(val)))), "form": "flat_dict"})
+            continue
+        pe = PAIR.match(line)
+        if pe:
+            denom["en_lines"] += 1
+            val = pe.group(3)
+            name = ".".join([const or "?"] + [s[1] for s in stack] or [const or "?"])
+            if bad_en(val):
+                hits.append({"file": path, "line": i, "name": name, "en_value": val,
+                             "cjk": "".join(sorted(set(CJK.findall(val)))), "form": "copy_pair"})
+            continue
+        if ZH.match(line):
+            denom["zh_lines"] += 1
+    return hits, denom
+
+
+def readers(t, h, own):
+    """读者数。r2 第一版按"名字最后一段"去 grep，于是 `checkin.empty` 抓到全树所有 `empty` ——
+    那是假阳性（号令者亲测这枚键零读者）。这里按形制分开查：
+      · 扁平字典键：查带引号的**整串点号键**（`"checkin.empty"`），定义文件之外有引用才算活；
+      · copy 成对：先查这枚**条目名**（如 `storeOnlyRefusal`）在别处的引用，再查这枚 copy 文件
+        被谁 import —— 两个数一起给，别只按一个下判语。"""
+    if h["form"] == "flat_dict":
+        out = sh("git", "grep", "-n", "--fixed-strings", '"%s"' % h["name"], t, "--",
+                 "frontend", "e2e").stdout
+    else:
+        entry = h["name"].split(".")[-1]
+        mod = own.rsplit("/", 1)[-1][:-3]
+        out = sh("git", "grep", "-n", "--fixed-strings", entry, t, "--", "frontend", "e2e").stdout
+        imp = sh("git", "grep", "-n", "--fixed-strings", mod, t, "--", "frontend", "e2e").stdout
+        rows = [{"path": r.split(":", 2)[1], "text": r.split(":", 2)[-1][:120]}
+                for r in out.splitlines() if len(r.split(":", 2)) >= 3 and r.split(":", 2)[1] != own]
+        imp_rows = [{"path": r.split(":", 2)[1], "text": r.split(":", 2)[-1][:120]}
+                    for r in imp.splitlines() if len(r.split(":", 2)) >= 3 and r.split(":", 2)[1] != own]
+        return rows, imp_rows
+    rows = []
+    for line in out.splitlines():
+        rest = line.split(":", 2)
+        if len(rest) < 3 or rest[1] == own:
+            continue
+        rows.append({"path": rest[1], "text": rest[2].split(":", 1)[-1][:120]})
+    return rows, []
+
+
+def main():
+    if len(sys.argv) > 1:                      # 允许 pin 到某枚提交（判"改完之后"要用枝尖，不是现尖）
+        t = sys.argv[1].strip()
+    else:
+        t = sh("git", "ls-remote", "--refs", "origin", MIRROR).stdout.split("\t")[0].strip()
+    files = [f for f in sh("git", "ls-tree", "-r", "--name-only", t, "--", "frontend/src").stdout
+             .splitlines() if f.endswith("Copy.ts") or f.endswith("LocaleContext.tsx")]
+    rep = {"line_tip": t, "files": files, "files_scanned": len(files),
+           "denominator": {"flat_keys": 0, "en_lines": 0, "zh_lines": 0}, "hits": []}
+    for f in files:
+        hits, den = scan(t, f)
+        for k in den:
+            rep["denominator"][k] += den[k]
+        for h in hits:
+            entry_rows, importer_rows = readers(t, h, f)
+            h["entry_refs_outside_definition"] = len(entry_rows)
+            h["entry_ref_sample"] = entry_rows[:3]
+            h["module_refs_outside_definition"] = len(importer_rows)
+            h["module_ref_sample"] = importer_rows[:3]
+            if h["form"] == "flat_dict":
+                h["class"] = "LIVE_KEY" if entry_rows else "DEAD_KEY_ZERO_READER"
+            else:
+                h["class"] = "LIVE_BY_MODULE" if importer_rows else "MODULE_NOT_IMPORTED"
+            rep["hits"].append(h)
+    print(json.dumps(rep, ensure_ascii=False, indent=2))
+    d = rep["denominator"]
+    cls = {}
+    for h in rep["hits"]:
+        cls[h["class"]] = cls.get(h["class"], 0) + 1
+    sys.stderr.write("tip %s | files %d | flat_keys %d | en_lines %d | zh_lines %d | hits %d | %s\n"
+                     % (t[:12], rep["files_scanned"], d["flat_keys"], d["en_lines"], d["zh_lines"],
+                        len(rep["hits"]), json.dumps(cls, ensure_ascii=False)))
+    for h in rep["hits"]:
+        sys.stderr.write("  %-22s %-58s :%s  entry_refs=%s module_refs=%s  %r\n"
+                         % (h["class"], h["file"] + ":" + str(h["line"]), h["name"],
+                            h["entry_refs_outside_definition"], h["module_refs_outside_definition"],
+                            h["en_value"][:90]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

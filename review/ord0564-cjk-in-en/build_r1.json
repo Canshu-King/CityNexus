@@ -1,0 +1,37 @@
+{
+  "build_rc": 0,
+  "build_seconds": 25.7,
+  "assets": [
+    {
+      "name": "index-CH7QOPDS.css",
+      "bytes": 231759,
+      "sha1": "e04c2eb78bcd62193620238fddba9aaffe470a36"
+    },
+    {
+      "name": "index-DCnaKrB5.js",
+      "bytes": 1620657,
+      "sha1": "864b5f67a0293817ed03c717c4f610e3918c263f"
+    },
+    {
+      "name": "JourneyMap-lWbjR62R.js",
+      "bytes": 4573,
+      "sha1": "b5010e30cd153a7b44d8ade148892f41c2dbd9e0"
+    },
+    {
+      "name": "maplibre-gl-DYmgh-Sw.js",
+      "bytes": 1053381,
+      "sha1": "447ec594a54ca0352a741e3ed78462fedcc41e7e"
+    }
+  ],
+  "index_entry": [
+    "/assets/index-DCnaKrB5.js",
+    "/assets/index-CH7QOPDS.css"
+  ],
+  "needle_counts": {
+    "old_shape_present": false,
+    "new_shape_present": true,
+    "zh_sentence_present": true
+  },
+  "build_tail": "|rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n",
+  "BAD": []
+}

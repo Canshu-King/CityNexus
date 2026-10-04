@@ -1,0 +1,24 @@
+{
+  "line_tip": "0413e55634e9c6953ea88a4b01a17b8afd7ac88a",
+  "files_scanned": 16,
+  "files": [
+    "frontend/src/features/abort/journeyAbortCopy.ts",
+    "frontend/src/features/access/accessCopy.ts",
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "frontend/src/features/checkin/footprintCopy.ts",
+    "frontend/src/features/collections/collectionCopy.ts",
+    "frontend/src/features/discovery/prepAbandonSurveyCopy.ts",
+    "frontend/src/features/discovery/prepFailureCopy.ts",
+    "frontend/src/features/estimation/estimationLadderCopy.ts",
+    "frontend/src/features/pending/pendingSetCopy.ts",
+    "frontend/src/features/planning/planRankingCopy.ts",
+    "frontend/src/features/poiimport/poiImportCopy.ts",
+    "frontend/src/features/studio/planVersionHistoryCopy.ts",
+    "frontend/src/features/trash/journeyTrashCopy.ts",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/i18n/mapPanelCopy.ts",
+    "frontend/src/i18n/placeProvenanceCopy.ts"
+  ],
+  "hits": [],
+  "keys_scanned": 39
+}

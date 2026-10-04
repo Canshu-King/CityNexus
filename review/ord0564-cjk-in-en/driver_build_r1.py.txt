@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+"""ORD-0564 的构建与产物反件：改完字节先重跑 vite，再在**产物字节**上判两件事——
+ ① 修好的英文句在 bundle 里在场；② 那枚「英文里嵌汉字」的旧形在 bundle 里 0 命中。
+产物名与 sha1 一起记进件里，屏读那一趟再引用同一枚资产，代次就钉住了。"""
+import hashlib
+import json
+import re
+import subprocess
+import time
+from pathlib import Path
+
+SNAP = Path("D:/moodle/_qoder_stoprow_STOPROW-003533")
+WT2 = Path("D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+ART = Path("D:/moodle/_qoder_anchor_rulers_20261002")
+OLD = "Pick a place in \u57ce\u5e02\u63a2\u7d22 above"          # 英文里嵌汉字那一形
+NEW = "Pick a place in City Discovery above"                     # 修好的英文
+ZH_SENTENCE = "\u8fd8\u6ca1\u6709\u6536\u85cf\u3002"             # 中文臂那句的头
+
+node = "node"
+vite = WT2 / "frontend/node_modules/vite/bin/vite.js"
+t0 = time.time()
+proc = subprocess.run([node, str(vite), "build", "--logLevel", "warn"], cwd=str(SNAP / "frontend"),
+                      capture_output=True, text=True, encoding="utf-8", errors="replace")
+secs = round(time.time() - t0, 1)
+dist = SNAP / "frontend" / "dist"
+assets = []
+for p in sorted((dist / "assets").iterdir()):
+    b = p.read_bytes()
+    assets.append({"name": p.name, "bytes": len(b), "sha1": hashlib.sha1(b).hexdigest()})
+index = (dist / "index.html").read_text(encoding="utf-8", errors="replace")
+entry = re.findall(r'/assets/[\w.\-]+\.(?:js|css)', index)
+
+# bundle 里搜：产物是压缩过的，字符串按字面量原样留着，所以直接按子串比。
+blob = "".join((dist / "assets" / a["name"]).read_text(encoding="utf-8", errors="replace")
+               for a in assets if a["name"].endswith(".js"))
+found = {"old_shape_present": OLD in blob, "new_shape_present": NEW in blob,
+         "zh_sentence_present": ZH_SENTENCE in blob}
+out = {"build_rc": proc.returncode, "build_seconds": secs, "assets": assets,
+       "index_entry": entry, "needle_counts": found,
+       "build_tail": (proc.stdout or "")[-300:] + "|" + (proc.stderr or "")[-200:]}
+BAD = []
+if proc.returncode != 0:
+    BAD.append("vite build 没绿")
+if found["old_shape_present"]:
+    BAD.append("旧形（英文里嵌汉字）还在产物里")
+if not found["new_shape_present"]:
+    BAD.append("修好的英文句没进产物")
+if not found["zh_sentence_present"]:
+    BAD.append("中文臂那句被误改了")
+out["BAD"] = BAD
+dst = ART / "ord0564_build_r1.json"
+dst.write_text(json.dumps(out, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8",
+               newline=chr(10))
+print(json.dumps({"build_rc": proc.returncode, "build_seconds": secs, "index_entry": entry,
+                  "needle_counts": found, "BAD": BAD, "asset_count": len(assets)},
+                 ensure_ascii=False, indent=2))
+print("ARTIFACT", dst)
+raise SystemExit(1 if BAD else 0)
