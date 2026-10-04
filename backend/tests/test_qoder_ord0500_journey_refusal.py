@@ -12,7 +12,7 @@ The measured starting shape, read on this lane's own base tree at tip
 
 Three things wrong in one answer, all of them the family this project keeps having to fix: a uuid
 inside a traveller's sentence, no name to switch on, and a null where the contract says a reason
-rides.  It came from the shared `require()` helper -- the line `def require(` in `backend/app/main.py`, which every door
+rides.  It came from the shared `require()` helper (`backend/app/main.py:818`), which every door
 uses, so the fix is inside the footprint doors' own journey read -- and these arms keep it there.
 
 Nothing here calls `POST /api/v1/demo/reset`, and nothing runs against a shared store: the engine is
@@ -123,16 +123,12 @@ def test_the_duplicate_answer_comes_from_the_door_and_not_from_the_index(staged)
     """Which layer refused is a fact the sentence alone cannot carry.
 
     Two guards refuse a second tap on the same stop, both of them on this tip: the door looks
-    its own table up first (the block that opens with the comment `The duplicate answer comes
-    first`), and the `UNIQUE (journey_id, target_key)` index catches a race that lookup cannot
-    see -- its branch is the only one that writes `"caught_by": "unique_index",`.  A screen-side
-    check of the
+    its own table up first (`backend/app/main.py:4263`), and the `UNIQUE (journey_id,
+    target_key)` index catches a race that lookup cannot see (`:4299`), which is the only
+    branch that adds `caught_by: unique_index` (`:4316`).  A screen-side check of the
     sentence cannot tell those apart -- delete the door's
     lookup and a sentence-only arm still passes.  This arm pins the layer, so it is the one that
     goes red under that mutation, while the sibling spec keeps the durable half.
-
-    Anchor labels (name form; gate: anchor_form_gate_r26.py): `backend/app/main.py::def require(`; `backend/app/main.py::The duplicate answer comes`; `backend/app/main.py::UNIQUE (journey_id, target_key)`; `backend/app/main.py::"caught_by": "unique_index",`
-    The declaration lives inside this file, so dropping a label shows up as a product diff.
     """
 
     journey_id, activity_id = staged["own"]["journey"], staged["own"]["activity"]
