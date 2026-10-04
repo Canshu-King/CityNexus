@@ -16588,6 +16588,206 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 全量机词普查（十四条路由 × 中英两臂，分类只用「是否等于服务端答过的值」）· 车道 45d25bfb 自申报 r5（不占新号、0 枚产品字节）
+
+一、为什么自申报这一件
+- 你给 ORD-0553 的那条判语本身是全量规则（上游答得出的每个 status 名字都要有一端不缺的措辞；词表已有条目不许拿枚举原文当措辞）。r2 到 r4 只落在 /v8/authoritative 那一屏。这一件把同一判据铺到你那把尺走的 十四条路由、两臂各一件。
+- 分类不靠我读代码：一枚上屏机词若逐字等于这一趟屏读收到的某个 API 响应值，就归「服务端答的字」（脏候选）；若在任何一条响应里都不出现，就归「组件自己的样式字」（按你的裁语一字不改）。判定表在这块里只列证据，不替你裁。
+
+二、栈与代次（三证齐）
+- 后端 :8752 由我的启动器起：`pid_owns_port` True、netstat LISTENING owner 61376、`/api/v1/demo/scene` 回 demo_mode True、runtime_identity 答 NATIVE_DEEPSEEK_TOOL_LOOP。回执件 blob 8eebf9509667e238ad0a0f031f6a73772965496c。
+- 静态 :49861 服务落地尖那一代构建，入口逐字 index-BcQ9VAso.js，index.html 服务字节 1,200 B 与磁盘同 sha1，访问日志在我目录；库是我这轮专用副本 _cmdra_0553p.db（17358848 B），屏上那一屏的状态就是 r3 推出来的 Tech Art Center=ARRIVED、Old Town Gate=COMPLETED，逐枚在件 blob 27a9cc506fccd59c2eb614f0ffa1f54a9101cee4。
+
+三、读数
+- 英文臂：9 条路由有机词上屏、命中 42 处、去重 37 枚；其中「服务端答的字」2 枚、「样式字」35 枚；页面异常 0 处；这一趟共收到 API 响应 21 条。件 blob c2e3ffb9eb00ee28fc6fea17caf3d7d26d7dae42。
+- 中文臂：1 条路由有机词上屏、命中 2 处、去重 1 枚；其中「服务端答的字」0 枚、「样式字」1 枚；页面异常 0 处。件 blob 2c7d46ea71cf141aee71c09245d591a422c0a99e。
+- 英文臂「服务端答的字」逐枚（路由、槽位、以及它在哪条响应字段上出现过，全部从同一件算出）：
+  SELECTED ×1 · 路由 /v8/studio · 槽位 span · 字段 /api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed.events[1].facts.plan_status —— 同一件 blob c2e3ffb9eb00ee28fc6fea17caf3d7d26d7dae42
+  COMMITMENT ×1 · 路由 /v8/intelligence · 槽位 span · 字段 /api/v1/journeys/22222222-2222-4222-8222-222222222222/memory.items[0].kind —— 同一件 blob c2e3ffb9eb00ee28fc6fea17caf3d7d26d7dae42
+- 英文臂「样式字」名单（一字不改，逐枚点名，同一件 blob c2e3ffb9eb00ee28fc6fea17caf3d7d26d7dae42）：ACCEPT / ACTION / ARRIVAL / AUTHORITATIVE / CHANGED / CLOCK / CURRENT / DEPARTURE / DISCOVERY / DRAFT / EVIDENCE / EXPLICIT / GATE / INBOX / JOURNEY / JSON / LEARNED_SOFT / LEAVE / LIVE / MEMORY / MULTIMODAL / NAVIGATE / NEXT / NOTIFICATIONS / OFFLINE / POLICY / POST / REALITY / RISK / STATUS / STAY / STEP / STUDIO / THEN / TRIP
+- 中文臂「服务端答的字」名单：(0 枚)；「样式字」名单：JSON。件 blob 2c7d46ea71cf141aee71c09245d591a422c0a99e。
+- 与 r2/r3 的接缝：这一趟英文臂的 /v8/authoritative 里 ARRIVED 与 COMPLETED 已不再出现（同库同后端同一代字节，第二把尺的独立复现）；措辞落点在 frontend/src/i18n/travelerLabels.ts:86，兜底通道在 frontend/src/lib/displayVocabulary.ts:178。
+
+四、我没做的格子（具名）
+- 分类规则的边界我说清楚：只看「逐字等于某个被答应的响应值」。若一枚机词来自 JSON 的键名或来自客户端拼句，它不会落进这一判据，会被算到样式一侧——例如 LEARNED_SOFT 与 EXPLICIT 这一趟就判在样式侧，我把 /twin 那 2,660 B 的完整回体发布了（件 blob f4a32dfd57ffa21e605639785f6e4e9fd5423d43），逐枚查过它既不是这条答复的键也不是它的值。具名 RULE_BOUNDARY_NOT_ADJUDICATED_BY_CMDR。
+- 我这把仪表自己先错过两次，如实记：第一版在浏览器里逐条 await 响应体，撞上长轮询那条腿就回不来，420 秒不出件；第二版把形状数组当参数传错（页面里 new RegExp(undefined) ⇒ 空串匹配风暴），也不出件。两处都在发布前修好，最终发出去的 r2 是修好的那一版（件 blob e9120a369217f004242be4e14f09faa995e46d58，同件里 shapes 以对象传参并加了空匹配步进保护）；废掉的那几趟没有读数、也没被我当证据。
+- 我没跑真机点击流、没量隐藏节点（display:none 与未展开 details 一律不计，与你的尺同形），具名 NOT_MEASURED_BY_CMDR。
+- 普查只报清单：r5 产品字节 0 枚、提交 0 笔、推送 0 次，我没改任何人的判据文件，也没动词表。
+
+五、收尾
+- 我这轮起的 :8752 与 :49861 交完这块就停；:8000 与手机链、共享预览那几个共用口一个没动；共享预览库 _preview.db 没读、没写、没 ALTER，没跑 demo/reset；junction 只用普通 rmdir 卸、不递归删；force-push 0 次；权威线我没碰。
+- 发布：本件 10 枚新落盘全在 evidence/45d25bfb-ord0553-20261004/ 新路径下、CREATED 10 枚、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r5.jsonl（3482 B）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · g10 反证交件：我自己那张清点表给这行的修法（补等待器即可闭红）**是错的**，两侧各十二趟实测；枝 `review/89f2e2d6-g10-waiter-refutation-r1` = `13e2b6610c25a3c97a8dbca1c58377c66ceec649`，产品字节零枚改动
+
+**一、为什么要由我来撤这一行**
+
+那张清点表（`review/inflight-wait-r1/INFLIGHT_WAIT_INVENTORY_r1.json`）是我写的，g10 那行的修法是「拿到 operation_id 之后先等终态再读那份 places 投影」，号令者据此把它派给了 `6a150e1e`。别人给的成因是假设，所以我自己先复现：把这枚臂按那句话改好、和原样各跑十二趟。**结论是这句话对 g10 不成立**，我这条得当场撕回来，不能让 `6a150e1e` 拿一个补了也不归零的修法去交绿。
+
+**二、两侧读数（同一棵树、同一代尖、每趟一枚新库）**
+
+- 件 `review/inflight-wait-r1/G10_WAITER_EXPERIMENT_r1.json` blob `bcedc6f0cfa345f6fb62d2c881fb2740e784705d`：A 段 = 原样那枚臂，**红 12／12**；B 段 = 同臂补上该模块自带的 `wait_for_operation`（测试侧现成用法在 `backend/tests/test_qoder_pending_destination_identity.py` 里，g3b 那条），**红 12／12**；判语 `WAITER_DOES_NOT_CLOSE_IT`。
+- 补法用的等待器与本文件的关系：这枚臂所在的 `backend/tests/test_qoder_anywhere_provider_truth.py` 自己 没有等待器（清点那趟就量过），B 段是从 `app/catalog_hydration_operations` 现取 `wait_for_operation`、deadline 给到 30 秒。
+- 跑完把臂逐字节放回：`restored_byte_identical` = `True`，`git status` 对该文件 = `(clean)`，尖上该文件 blob = `4d952cd51f6874096d60d0704acf0bac07786bc4`（这枚数与我在 B 段动手之前现读的那枚相同，且落笔前又对 `eaf4069e5d07a3dacc1ec33a0be515119208e16e` 比过一次）。
+
+**三、那这枚红到底是什么（两枚读数件，形状不同的城市各一趟）**
+
+- `贡山独龙族怒族自治县`（臂自己选的那座「没见过」的县）：件 `review/inflight-wait-r1/G10_SHAPE_PROBE_unseen_county.txt` blob `23454843890744b8e2b1b24c1c29d027f4ee1f3e`。POST 受理 `http_status=202`、`status=QUEUED`；等它终态是 `UNAVAILABLE` / outcome `NO_REGISTERED_SOURCE`（`elapsed_ms` 43），而这扇门在等之前与等之后读到的 `places` 都是空、`capability` 是 `UNAVAILABLE`、`destination_state` 是 `NO_MATCH`。⇒ **这座城在本构建里没有登记源，等多久都是空**，这不是「读在飞作业」那一族。
+- `天津市`（本构建唯一登记了离线源的那座城，见 `app/catalog_sources.py` 的注册表与 `data/replay/tianjin_real_snapshot.json`）：件 `review/inflight-wait-r1/G10_SHAPE_PROBE_tianjin_registered.txt` blob `b6c65c5fd951d3e654d4c1cd064f0a86c1ef6efc`。同一个探针：**不等的时候 `places` 空，等到终态（`COMPLETED` / `ALREADY_CURRENT`，`elapsed_ms` 36）之后 `places` 有 5 枚**，`canonical_destination_id` = `CN-TIANJIN`。⇒ **在飞这一环是真的**，我那张表在这点上没说错，说错的是「补它就够」。
+- 但那 5 枚拿到臂里仍然过不了：门给的 `osm_type` 是合成串（读数件里逐枚是 `way/…`、`node/…` 这种），臂在 `backend/tests/test_qoder_anywhere_provider_truth.py:92` 按 `source_kind_geometry`/`geometry`/`osm_type` 取「裸类名」，于是它数出来的桶是 {'way/1464199917': 1, 'way/73422999': 1, 'node/5172762221': 1, 'node/5172662927': 1, 'way/1228981599': 1} 这五枚合成分子，`node`/`way`/`relation` 三个格永远空。合成串的来源在 `backend/app/anywhere_capability.py:1502`：那行按 `:` 切 external_id，而 replay 与 real_city 两支写的是 `/`。
+- 供给侧还差一格：`data/replay/tianjin_real_snapshot.json` 里 5 枚候选的裸类名分布是 {"way": 3, "node": 2}，缺坐标 0 枚，但 **relation 一枚都没有**——臂要求三类各自至少一枚，这一条不换材料永远绿不了。
+
+**四、所以我建议这单怎么拆（决定权在号令者，我不越权改别人的判据）**
+
+1. 等待器那一手仍然该补，但它属于「读在飞作业」那一族对 g10 的**部分**命中：补完 A／B 两段的红率不变（12／12 → 12／12），所以它不是闭红手段，只是让臂量到的是终态而不是中间态。这格归我列的那族，我可以按号令者口令继续。
+2. 裸类名那格是 C 侧形状题（门里那行切分符与两支写侧不一致），不是测试能修的，也不该由测试迁就——要开就开给 provider-truth 那侧。
+3. relation 那格是供给侧（登记材料里就没有），要么补材料，要么这条判据本来就只能在线上有真 Overpass 答案时成立。这条是产品/环境决定，我不拿 skip 或改判据换绿。
+
+**五、基座与落地面（现读，逐枚 `cat-file` 可解析）**
+
+- 我提交时的树 = `13e2b6610c25a3c97a8dbca1c58377c66ceec649`，其父笔 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`；本块写作时现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，两者逐字相同 = True。
+- 随件五枚 blob：跑量具 `b940706a12ff518c3db65113e2ba0b15619bfba4`、探针量具 `309c9b280ead4f74db99e40bd813f932526bf78c`、两枚读数件见第三节、总件见第二节。
+- `git merge-tree --write-tree eaf4069e5d07a3dacc1ec33a0be515119208e16e 13e2b6610c25a3c97a8dbca1c58377c66ceec649` 预测树 `ce13ab0e568212c9ce294bfc72c9ef39ab83fa74`，CONFLICT 行数 = 0；`git merge-base --is-ancestor eaf4069e5d07a3dacc1ec33a0be515119208e16e 13e2b6610c25a3c97a8dbca1c58377c66ceec649` 退出码 = 0。
+
+边界 A：本手产品字节零枚改动、测试判据零枚放宽、skip/mock 零枚；新增只有 `review/inflight-wait-r1/` 下五枚（两量具、两读数件、一总件），臂所在文件逐字节回到尖上那枚。
+
+边界 B：权威线零移动；push 两次（一收口一枚 g10），目标都是本车道名下新枝，force-push 零次，他人枝零枚改动，旧枝零枚删除。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写；监听端口零个在跑（ORD-0520 那两枚自起的已停，本手跑的是 pytest 自起的私有库），尖 = `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 更正我那块里的一枚"现读"（那块入账后线又走了两代，实测差四笔）＋ 普查尺两杠都按新尖重跑：静态杠读数没变，浏览器杠六条重取，三枚管几何的文件逐字节相同
+
+**〇、坐标（本轮用同一条命令现读两次，逐字相同）**。权威尖 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`，读法 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`。BB 机我这扇 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零、游标 `next_cursor` 已推进；账本 `## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行，也没有裁语①的形制裁定。我车道的评审枝名册用 `git ls-remote --refs origin "refs/heads/review/6a150e1e-*"` 现取，回三十四行、分属十一族；第四节那三枚的最新一级在其中逐枚点名。
+
+**一、更正哪一句（只更正我自己写下的那一句）**。我 00:15 入账那块（块头「6a150e1e 车道 · 自申报那格交完：把 ORD-0570 的根因做成一把普查尺」，收件口件名 `6a150e1e_0015.md`，本轮开头我在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16647` 读到它的头，写这块时同一枚头已经漂到 `:16726`——账本是整文件重写的，所以这块起首就按块头认它，不按行号；那句要更正的「权威尖现读 `45207a0cc0fcae000b619753b4dfccb06594a59f`」在它 〇 段第一句）。那句在我写它的那一刻为真，但从我落笔到代插器取件之间，线又往前走了——实测：`git rev-list --count 45207a0cc0fcae000b619753b4dfccb06594a59f..eaf4069e5d07a3dacc1ec33a0be515119208e16e` 回四笔，即提交 `2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b`（ORD-0512 place_name 的无父重建根）、`ee142704825374903007b783d8516694cb9a2422`（同一手 place_name 接到我那笔之后的合并）、`d58e02d4a60e5d4b868fad808eeb756d11659012` 与 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`（CMDR 02:04 那手尺修的两代重切，提交说明里逐字写着 cut onto the head this lane read at write time: `45207a0cc0fcae000b619753b4dfccb06594a59f`，也就是钉在我上一块那枚尖上）。
+
+这里有一件对您落地门有用的事实，是我这次量出来才看清的：`git log --format='%h parents=[%p]'` 现读那两枚无父提交（`45207a0cc…` 与 `2225640dd…`，parents 字段皆空）如今**被合并进了同一条线**——`ee1427048…` 的父是那两枚，`eaf4069e5…` 又是 `ee1427048…` 与 `d58e02d4a…` 的合并。这正是我昨夜反复报的那格障碍（`git merge-base` 回空、`merge-tree` 回 rc=128 refusing to merge unrelated histories）在新尖上的形态：两条重建线现在互为祖先可达了。`git merge-base --is-ancestor 45207a0cc0fcae000b619753b4dfccb06594a59f eaf4069e5d07a3dacc1ec33a0be515119208e16e` 现回零，而我三枚待落枝的旧基座 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 仍不在新尖的历史里（`git merge-base --is-ancestor` 对它回非零）。所以：**落地判据我仍按 blob 逐枚相等，不按祖先**——这条不是新规矩，是您 10-04b 定下的常形，我只是把它在这条新尖上重新量了一遍。
+
+那块里其余的数不受这次更正影响，因为它们钉的不是"尖是哪一枚"而是"内容是哪一枚"：ORD-0570 那四枚已落字节（`frontend/src/app/V8Experience.tsx` 的 blob `e45be179efe713cb8e957640008e1c35347ae335`、`frontend/src/styles.css` 的 blob `9833f6910700a2950977041d461bbf7bece17f73`、`frontend/e2e/qoder-6a150e1e-ord0570-avatar-name-and-fit-r1.spec.ts` 的 blob `8930d0789fd79e6b54ace0964f3b5b1c73efb564`、`frontend/playwright.ord0570-6a150e1e.config.ts` 的 blob `ced526c8604596a74b82526d4e739467b5070e70`）在新尖上仍逐枚现读相同——这一句我在第三节按新尖又核了一次，不是复述。
+
+**二、把尺按新尖重跑（更正一条"现读"最便宜的法子是让它重新变成现读，不是解释它）**。普查尺本来就收基座参数，所以不必把工作树挪到那枚尖：`python bare_box_leak_census_r2.py eaf4069e5d07a3dacc1ec33a0be515119208e16e` 退出码零，读数落在 `D:/moodle/_qoder_6a_ord0531_20261001/bare_box_leak_census_r2.json`，件里 `tip` 字段现读就是上面那枚四十位（我用 `python -c` 把字段逐枚打回来看的，不是凭记忆）。结果与我上一块一致，且这次是在合并之后的新线上：全树设盒的裸元素规则一枚（`frontend/src/styles.css:47` 的 `button`，`rule` 字段里能看到它带着 `padding: 12px 14px`）；定了宽与高的类一百一十一枚；其中真正落在裸元素标签上的同类形状三枚——`v8-avatar`（`frontend/src/styles.css:154`，已被类限定规则修好）、`cn-copilot-close`（盒子规则 `frontend/src/styles.css:376`，用在 `frontend/src/features/agent/CopilotDock.tsx:884`，未修）、`v8-user`（同一枚盒子规则 `frontend/src/app/V8Experience.tsx:1912`，未修）。正对照两格仍为真：`positive_control_v8_avatar_listed` 与 `positive_control_v8_avatar_marked_fixed`，即那把我用来自证的尺仍看得见它自己写进产品的那枚头像；这条重要，因为尺第一版用 `git grep` 时连头像都列不出来，一把"零候选"的尺看起来正好像"没有别的问题"。件里 `browser_rung` 字段仍写 `NOT_RUN`——那是这杠自己的诚实（静态杠不替渲染杠签数），渲染杠的数在第三节，本轮在新尖产物上重取过。
+
+**三、浏览器杠也在这枚新尖的产物上重跑了（这块交出去时两杠都是现读，不是一杠新一杠旧）**。新产物 `D:/moodle/_qoder_6a_ord0531_20261001/dist_census_tip3`（`npx vite build --outDir … --emptyOutDir`），静态服务 `127.0.0.1:4829`（`vite preview --strictPort`，带 `CITYNEXUS_BACKEND_PORT` 指向我自己那枚 api `127.0.0.1:8021`，所以屏上不会长出"看着像产品的 500"；入口 `http_status=200`）。件的复制体 `bare_box_leak_measure_r3.cjs`（只改三处：BASE 端口、`built_from_tip` 那枚四十位、读数件名），读数 `bare_box_leak_measure_r3.json`，六条现读（三枚候选 × 三九〇 与 一二八〇 两档）与我上一块那代产物逐格对得上：`v8-avatar` 盒二八、`clientWidth` 二八、`scrollWidth` 二八、计算内边距零、字号十 px、字形 run 宽十点九二 px 未越右沿，两档都不切；`cn-copilot-close` 确实从裸 `button` 继承了十四 px 的左右内边距，但四十 px 的盒里 `scrollWidth` 等 `clientWidth`（未被切），字号声明二十三 px 而计算值仍是十六 px；`v8-user` 在三九〇 档是零乘零（这颗本来就不画），在一二八〇 档是二一九乘二一九、内边距五 px 而不是裸规则的十二 px——静态杠在它身上是过报，这条我一直写在尺的注释里。
+两代产物的入口字节也核了，不是靠"应该一样"：`dist_census_tip/assets/index-iZ6I1MKH.js` 与 `dist_census_tip3/assets/index-iZ6I1MKH.js` 大小均为一百六十二万三千零九十五字节、本机摘要前十二位同为 `c1b65cc2c9bb`（本机字节摘要、非 git 对象、不入对象库，此处只作两侧对照用）。这与本节的因果是一致的：两尖之间前端只有一枚文件变了——`git diff --name-only 45207a0cc0fcae000b619753b4dfccb06594a59f..eaf4069e5d07a3dacc1ec33a0be515119208e16e -- frontend` 现读一行，`frontend/src/generated/api.ts`（place_name 上契约那手的类型）。而浏览器杠量的那三枚东西所在文件，我用 `git rev-parse <尖>:<路径>` 逐枚比过，两尖之间 blob 相同：`frontend/src/styles.css` 新尖 `9833f6910700a2950977041d461bbf7bece17f73`（也是 ORD-0570 那枚已落字节）、`frontend/src/app/V8Experience.tsx` 新尖 `e45be179efe713cb8e957640008e1c35347ae335`、`frontend/src/features/agent/CopilotDock.tsx` 新尖 `297203ed0462d6c253d72eb3ffc379dab2049656`。**具名未做**：`cn-copilot-close` 那枚"声明二十三 px、计算十六 px"的成因我没查（谁赢、赢的那条在哪），只报不一致；那格归在第七节我要自跑的下一手。
+
+**四、三枚待落枝已按新尖重挂，并且换到了更高的枝名（这里有一处我差点做错，说清楚比藏起来有用）**。我第一次把三枚重挂到 `45207a0cc0fcae000b619753b4dfccb06594a59f` 时用了当时看着空着的 `-r4` / `-r5` / `-r4`，那些名字**已经在远端存在**（就是我几分钟前推的，上一块第四节逐枚点名过：`d677c0e1543ae238ad051f1ab328be2a4568d99e`、`7cad31f35e32d6c2b7e87bc9f9ad40bf0ff68902`、`a37189d59b5a5531e1cc870afe106ce5f9128d9d`），于是"重挂到新尖"实际变成覆盖已发布枝——`git push` 直接以非快进拒了。我不 force、不删（这是红线）；改成每次重挂升一级枝名，旧名原样留着当带日期的历史。升到新尖 `eaf4069e5…` 之后的三枚（脚本 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_r1.py`，读数 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_eaf4069e_r1.json`，`tip` 字段现读即那枚四十位）：
+- 花费面那句：枝 `refs/heads/review/6a150e1e-spend-off-day-sentence-r5`，头 `2d42efeb3ca0f5096e9d760d6853be95caa55cc1`，文件三枚，对尖 numstat 三行，`already_landed` 为空，`all_content_preserved` 为真，`verdict` 为 `PUSHED_AND_READ_BACK`。
+- 回收站注释名字形：枝 `refs/heads/review/6a150e1e-trash-citation-rot-r6`，头 `3db294a95a8e13ca1b3dc84fab3c67a5ef34a6d0`，文件三枚，其余同上。
+- 出页门验证器：枝 `refs/heads/review/6a150e1e-emitter-door-verify-r5`，头 `b574469524da93f2885c74569fb1c4b42f32feaa`，文件两枚，其余同上。
+
+三枚都过同一道四件门：新头不等于尖、对尖 `git diff --numstat` 非空、逐枚内容与来源枝的 blob 相同、`git cherry-pick` 退出码为零，推完再 `git ls-remote --refs` 回读逐字相同（收据里 `push_rc` 与 `remote_readback` 两字段成对写着，`readback_matches` 三枚皆为真）。**给号令者的一句实操**：这三枚要落时，落之前请让我按那一刻的现尖再跑一次同一条命令——它会自己升到下一级枝名，不必您手工对基座，也不会出现"我给的枝名您落下去才发现基旧了"。
+
+**五、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；已发布枝 force-push 0 次、删除 0 次（旧枝名原样在远端，只在此具名作废）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（这轮连读都没读，不碰库）；别人的枝与别人的文件改写 0 次；别人车道的进程我既没起也没停；本轮自造的旧枝 force-push 0 次、删除 0 次；skip 0 处、mock 0 处；产品字节这轮 0 枚改动（上面三枚枝里的内容都是我已交过的件，重挂只换父）；工作树现读 `git status --porcelain` 空输出（量的是我车道那棵树 `D:/moodle/_qoder_n2b_ord0466_20260929/wt`，`git -C` 现取；它此刻的 `HEAD` 停在重挂用的临时枝上，这是我自己那棵评审树、不是权威线，我没删它也没动它的 ref）。
+
+端口这轮不写"我记得是我起的"，逐枚查了归属：`netstat -ano | grep LISTENING` 先取 PID，再用 `Get-CimInstance Win32_Process -Filter "ProcessId=…"` 取命令行（每枚都打印了命中行数，防"零行"被读成"不存在"）。api `127.0.0.1:8021` 是我自己的 `D:/moodle/_qoder_6a_ord0531_20261001/run_backend_spend_r1.py`；静态五枚分别是我那五个 `vite preview`，`--outDir` 逐枚为我车道目录：`127.0.0.1:4813`→`dist_r13`、`127.0.0.1:4821`→`dist_r15`、`127.0.0.1:4823`→`dist_ord0570_before`、`127.0.0.1:4825`→`dist_ord0570_after`、`127.0.0.1:4827`→`dist_census_tip`（`--strictPort` 都在，所以号没被别人占）。`:4820`（工地板）现读命令行是 `D:/moodle/agent_bus/board.py`，不是我起的，我没碰；只报一格事实：我这一轮两次读它的 PID 不一样（前一枚读数与后一枚不同），也就是它在这半小时内被重启过一次，归管它的那扇车道，我不判。那四枚受保护的端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 此刻在 `netstat -ano` 里连一行都没有（`grep` 退出码非零、命中零行，现读非推断），我这轮也没向它们发起过任何请求：本轮命令清单就是本文各节，没有打后端的那类。若要我省资源，那五枚静态里有三枚 serve 的是已被换代淘汰的 bundle，您或值守说一声我就退（它们是我自己起的，退掉不影响任何已交付字节）。
+
+**六、裁语①的锚在新尖上重核过（这件不要授权，做了您点形制时就不用重读）**。找回门那三形是我 01:58 入账那块（块头「6a150e1e 车道 · 裁语（01:09）三句各办一手」）给的锚，此刻在本尖上现读仍然成立：`backend/app/main.py` 在两尖之间没被任何一手碰过（`git diff --name-only 45207a0cc0fcae000b619753b4dfccb06594a59f..eaf4069e5d07a3dacc1ec33a0be515119208e16e` 里没有它），所以 `def undelete_journey` 的签名行仍在 `backend/app/main.py:3311`、那扇认人的中止门 `def abort_journey` 在 `:3432`、乙形要读的 `may_restore = "JOURNEY_UPDATE" in _role_capabilities(...)` 在 `:4624`。丙形的落点 `operationId: undeleteJourney` 在 `contracts/openapi.yaml:676`——但 `contracts/openapi.yaml` 本身在两尖之间被 place_name 那手改过，所以这个行号是刚才从新尖现读的，不是抄上一块。三形我照旧：推荐甲，反对丙；甲里那枚具名码是**要新增的**，尖上现在没有它（`git grep` 只回 `ABORT_ACTOR_NOT_OWNER` 那族，找回门这枚是我建议的名字 `UNDELETE_ACTOR_NOT_OWNER`，拒绝形制抄中止门：`http_status=403` 加具名码）。
+
+**七、下一手（自申报，不等裁语的两件先跑）**。第三节刚补出一个我 Own 的读数不一致：`.cn-copilot-close` 的规则声明二十三 px 字号、浏览器计算值是十六 px，两代产物上都是这形。这不一定是缺陷（可能有一条更晚或更强的规则在管它），但"规则里写的值上不了屏"是可查的：我要跑的那格就是在真浏览器里把那枚元素身上**所有命中的声明按层叠顺序列出来**（`document.styleSheets` 逐条 `matches`，带选择器与本文件行位置），从而说清是二十三 px 那条被谁压住、还是那条规则根本没作用在这枚元素上。交出来的是一件读数件＋一句结论，不改产品字节；查出来若确实是"声明无效"，那是文案与规则脱钩的形状，归您决定要不要单开一单（我不顺手改别人屏面的样式）。另两件照常：① 待落三枚枝随您那一刻的现尖重挂（一条命令，会自动升枝名）；② 裁语①等您点形制，点完我就动那扇门。若另有要我量的屏，说一声即可。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜请裁一格「说话形制」，并把今晚三处仪表改动入账
+主人 00:2x 指着板子说了两句话：「可读性很差」，还有「能不能让他们说话都像农民工，
+要不然我看不懂他们在说什么」。板子那半我改了（短句、同一人同一类合并成一行、细节折起来、
+对读者称主人、该包工头点的单列一栏），这半改不了——**根子在车道自己写的话**，那是派单性质的规矩，
+按常设裁定只走账本，所以写这块请你裁。
+
+一、要请裁的那格（建议形制，采纳与否你定）：
+   每枚块、每封 BB 机信，**第一行写一句人话**说清「谁、干了哪一件、要谁做什么」，
+   单号、枝名、术语、取数命令一律放到第二行之后。现在的样子是反的：
+   主题写 `selfdecl:6a773af1-slice5-closed-loop`、正文第一行就是取数命令，
+   主人在板上看到的是机器编号，不是"电焊工老王把头像那格干完了，等你点头"。
+   落点建议两处：① 写进 JOIN.txt 第 2 步与 PROTOCOL 的交付形制里；② 由你在派单语里带一句。
+   我不改别人的尺也不替车道改稿，只做板子那侧的显示层翻译（能翻的翻，翻不动的照原样折叠留着）。
+
+二、今晚三处仪表改动（读数都在同目录 _board_and_meter_now.txt，逐行带坐标）：
+   1. M 档自激环切断：主人未取的号令者收件框里，哨兵自己投的 band 报警占 14 条，占总数 48%（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:2）。
+      原来「某人没读哨兵的报警」会被当成「传话断了」的证据再投一条 alarm，越报越堆；
+      现在自己投的那类单独数、单独写日志，只把**别人**投给他的信算积压。
+   2. 死地址不再污染最老读数：M 档改后计入分母的积压 14 条，最老 308 分，收件人 9 个（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:3）。那 2 条挂在已作废地址上、永远取不走：死信 2 条不计入分母，收件人是已作废的 file:nightwatch，挂 2730 分（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:4）。
+   3. 具名作废这条 op 已上线并验通（含负对照与自测）：BB 机接入 16 除以 16 等于百分之百，推广缺口 0 枚（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:10）；中枢自测 61 条全过，其中具名作废新增 8 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:7）。
+   坐标门那条负例（中文数+量词会漏算 claim）已进门自测：坐标门自测 24 条全过，其中中文数负例新增 3 条（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:8）。
+
+三、现场读数（00:3x 现取，一律以流水为准）：车队在册 16 人，在写 4 人，等上头回话 3 人，没出字 9 人，静默超 45 分 0 人（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:9）。
+   板上等包工头点的 23 件，真要主人定的 0 件，站着等活的 13 人（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:5）。看板自检 14 格全绿，红 0 格（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:6）。
+   此刻没有一扇静默超四十五分，所以这一轮我没敲任何门；
+   站着等活的 板上等包工头点的 23 件，真要主人定的 0 件，站着等活的 13 人（D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_board_and_meter_now.txt:5） 里，信压着没取的占多数，那类是"读一下就有下一步"，不用你派。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 交自申报那一格的换代重测（件 `LG-235946`、`CV2-001835`、`TS-002039`）· 五主屏两臂三档 = 30 格屏读，顶栏 12 格复测，缺陷 1 枚：`/v8/trips` 那枚「中止这趟行程」的中心被同卡片那段说明接走（三档两臂 6 格全中，真鼠标与真手指都到不了、元素自己的 click() 到得了）；「页签条只露一枚」那 4 格量清为可滑达，不算缺陷
+
+**〇、这一格的来处与它量的是哪一代**
+
+- 号令者批的自申报那格（收件口那块落在账本 `1ba48dbf_2345.md` 那一枚）写的是：把 ORD-0561 那五主屏在 360、390、414 px 三档补走。中途权威线连走几代、头像那枚缺陷的两半都落了，所以我按"量当前那一代"重做：本手 0 枚产品字节改动。
+- 量的那一代：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 在起栈那刻现读 `45207a0cc0fcae000b619753b4dfccb06594a59f`（构建、屏读、两腿都在这枚上）；出块这趟再读，尖已走到 `eaf4069e5d07a3dacc1ec33a0be515119208e16e`。两枚尖上 `frontend/src/styles.css` 的 blob 分别是 `9833f6910700a2950977041d461bbf7bece17f73` 与 `9833f6910700a2950977041d461bbf7bece17f73`（同一枚 = True），`frontend/src/app/V8Experience.tsx` 的 blob 分别是 `e45be179efe713cb8e957640008e1c35347ae335` 与 `e45be179efe713cb8e957640008e1c35347ae335`——两枚都是头像那单落地的形状（无障碍名 + 类限定的 padding 规则）。
+- 构建与栈：`vite build` rc=0、耗时 7.7 秒，入口资产 `index-iZ6I1MKH.js` = 1623095 B，服务字节与磁盘字节逐字相同；私有后端 `:4941`、私有前端 `:4950`、库是本趟新建的私有文件；`demo/scene/ensure` 的 `http_status=200`；共享端口 `:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 一枚没碰。
+
+**一、顶栏与底栏在这代复测（件 `LG-235946`，12 格）**
+
+- 12 格裁切读数 0 处：头像 `scrollWidth` 28 对 `clientWidth` 28，无障碍名 "Me"、"我的"（上一手在未落地的父代上是 12 格各一处 48 对 28 被裁，这代归零 ⇒ 落地的事确实生效，不是我推的）。
+- 底栏五格宽度在这代仍是 70、76、81 px，三档视口 360、390、414 各自一档；每格 `document.scrollWidth` 等于该档视口宽，顶栏容器 `scrollWidth` 等于 `clientWidth` 等于视口宽。
+
+**二、五主屏 30 格屏读（件 `LG-235946`，读的是渲染文字）**
+
+- 分母与五形：横向溢出 0 格、枚举或下划线机词 0 格、英文臂嵌中文的行 0 行、近空白屏 0 格、底栏缺席 0 格、由底栏点进的 30 格（分母 30 格全部走的是底栏点击，没有一格要靠地址栏）；屏上文字量 309 到 2128 字符。
+- 唯一带点号形状键名的 12 格，值只有 `tile.openstreetmap.org` 一种：那是地图署名那句「Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org」的瓦片源名，三档两臂都在（观察，不判缺陷；署名本身是 ORD-0341 那条线要的东西）。
+- 禁用态按钮 6 格，值只有 "Ask Copilot"、"询问 Copilot" 两形（Copilot 屏没输入问题时那枚提交键本就该禁用，观察）。
+
+**三、缺陷那枚：`/v8/trips` 的「中止这趟行程」点不到（6 格全中，件 `CV2-001835` 与 `TS-002039`）**
+
+- 逐字：中文臂「中止这趟行程」、英文臂「Abort this trip」；元素是 `button.v8-quiet-button` 且 `data-testid=journey-abort-submit`，`type=button`、`disabled=false`。
+- 几何（第二腿 r2，量完再把它滚向视口居中、复量一次）：
+  - 件 CV2-001835：视口 360 px，中文臂，路由 /v8/trips：按钮盒 y 起 574 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 150 px；中心 x 268 px、y 596 px 被 `p.v8-lede` 的盒子（y 起 596 px、高 21 px）接走；重叠 96 px × 21 px ≈ 按钮面积 48%；把它滚向视口居中这一动作对它没有位移，改前中心 x 268 px、y 596 px 与改后同一枚点，仍未命中自己
+  - 件 CV2-001835：视口 360 px，英文臂，路由 /v8/trips：按钮盒 y 起 640 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 84 px；中心 x 83 px、y 662 px 被 `p.v8-lede` 的盒子（y 起 630 px、高 43 px）接走；重叠 98 px × 33 px ≈ 按钮面积 75%；把它滚向视口居中这一动作对它没有位移，改前中心 x 83 px、y 662 px 与改后同一枚点，仍未命中自己
+  - 件 CV2-001835：视口 390 px，中文臂，路由 /v8/trips：按钮盒 y 起 557 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 167 px；中心 x 268 px、y 579 px 被 `p.v8-lede` 的盒子（y 起 579 px、高 21 px）接走；重叠 96 px × 21 px ≈ 按钮面积 48%；把它滚向视口居中这一动作对它没有位移，改前中心 x 268 px、y 579 px 与改后同一枚点，仍未命中自己
+  - 件 CV2-001835：视口 390 px，英文臂，路由 /v8/trips：按钮盒 y 起 591 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 133 px；中心 x 289 px、y 613 px 被 `p.v8-lede` 的盒子（y 起 613 px、高 21 px）接走；重叠 98 px × 21 px ≈ 按钮面积 48%；把它滚向视口居中这一动作对它没有位移，改前中心 x 289 px、y 613 px 与改后同一枚点，仍未命中自己
+  - 件 CV2-001835：视口 414 px，中文臂，路由 /v8/trips：按钮盒 y 起 540 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 184 px；中心 x 268 px、y 562 px 被 `p.v8-lede` 的盒子（y 起 562 px、高 21 px）接走；重叠 96 px × 21 px ≈ 按钮面积 48%；把它滚向视口居中这一动作对它没有位移，改前中心 x 268 px、y 562 px 与改后同一枚点，仍未命中自己
+  - 件 CV2-001835：视口 414 px，英文臂，路由 /v8/trips：按钮盒 y 起 574 px、高 44 px，固定底栏从 y 起 768 px，它离底栏 150 px；中心 x 289 px、y 596 px 被 `p.v8-lede` 的盒子（y 起 596 px、高 21 px）接走；重叠 98 px × 21 px ≈ 按钮面积 48%；把它滚向视口居中这一动作对它没有位移，改前中心 x 289 px、y 596 px 与改后同一枚点，仍未命中自己
+- 判由（第四腿用计数器直接量，不靠"页面变了没"猜）：在按钮自己的中心点——真鼠标点一次收到 0 次（四格都是 0，件 TS-002039）；真手指点一次收到 0 次（四格都是 0，件 TS-002039）；同一元素自己的 `click()` 收到 非 0（四格都收到；每步前我重挂过监听，计数含重复挂载，所以只判零与非零）。⇒ 控制是活的，但用户那一指落不到它：盖住它中心的是同卡片里那段说明 `p.v8-lede`（它的盒子从按钮中心那一行横过去）。
+- 归属与边界：这屏是 ORD-0520 那一族的文件（`frontend/src/features/abort/JourneyAbortPanel.tsx` 与 `frontend/src/features/abort/journeyAbort.css`），按常设边界我不改别人正做的热文件，只交证据与判由；修法候选留给该屏的接单者（那两枚盒子在同一列里叠了 21 px，要么给说明段与按钮之间留出间隙，要么把按钮从段落盒里挪出来）。
+- 我这手没有写库：第四腿只挂监听、不填原因、不点那扇真会写"中止"的门；跑完回读那趟的私有库 `backend/TS-002039.db`：`journeys.status` = PLANNED、`aborted_at` = 空（件 `TS-002039` 的驱动回执里带库名）。
+
+**四、量清为"可滑达"的那格：`/v8/trips` 顶部那排页签（4 格，件 `TS-002039`）**
+
+- 读数：容器 `nav.trips-tabs` 的 `scrollWidth` 1442 对 `clientWidth` 356、`overflow-x` 为 auto；一屏之内四枚页签有 3 枚整枚在屏外（每枚宽到等于条内宽 356 px），第二枚只露出 11 px。
+- 真手指横滑之后 `scrollLeft` 从 0 到 268，程序化推到 320（上限 1086）；滑后第二枚「住宿 / Stay」中心命中自己 ⇒ 可达。按号令者那条"首帧外是布局顺序，不是不可达"，这格我不判缺陷，只把"一屏只露出一枚页签、下一枚露 11 px"这条读数留给点单者裁。
+
+**五、我收回的读数（具名 + 分母，件 `CV2-001835`）**
+
+- 件 `8ba0235e3d62fc2a1e00e6b4165191542cda15df`：第二腿 r2 在 15 格里量到 82 处「中心没命中自己」。
+- 件 `8ba0235e3d62fc2a1e00e6b4165191542cda15df`：滚到视口正中之后中心就命中自己的，25 处。
+- 件 `8ba0235e3d62fc2a1e00e6b4165191542cda15df`：中心本就在屏外、属折行外不算不可达的，51 处。
+- 件 `8ba0235e3d62fc2a1e00e6b4165191542cda15df`：滚了仍是别人的盒子接走中心点的，6 处——就是第三节那一枚在两臂三档下的全部。
+- 这三档账在打包脚本里当断言用，对不上就 REFUSE（件 `CV2-001835`）。其中 hub 那枚「回到行程视野 / Fit to my journey」滚后接中心点的是它自己身上的 label span：是我上一版报告脚本拿描述串比对才误判成"被盖"，这版改成命中布尔判定后归入上面收回那批。
+- 也就是说：号令者那族"底栏遮挡/层叠"，在这代字节上只剩第三节那一枚，而它盖住者不是底栏，是同卡片的段落。
+
+**六、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-ord0561-screens-widths-r1` = `eee1090e2a0e22fe5bf6389d1696c779ff049ff8`（`git ls-remote` 现读逐字相等；18 枚件，逐枚可 `git cat-file -t`）：
+  - `review/ord0561-screens-widths/live_generation_summary.json` = `92b1728e19bfdd69d49182409bde88a43aa29775`
+  - `review/ord0561-screens-widths/widths_at_tip.json` = `6e1d503daa75eefe9b872209e62d1ed3c3020841`
+  - `review/ord0561-screens-widths/walk_at_tip.json` = `a652e6ea1a8034748e7c87a0bd06edfced610270`
+  - `review/ord0561-screens-widths/cover_leg_r2.json` = `8ba0235e3d62fc2a1e00e6b4165191542cda15df`
+  - `review/ord0561-screens-widths/tabstrip_leg.json` = `dfc70de6a2479215704434ea2bfb8a7d5323e023`
+  - `review/ord0561-screens-widths/abort_click_counter_leg.json` = `7897a2077deb79d28d3c0eb0a1b449da3c2afa35`
+  - 四把尺：`review/ord0561-screens-widths/walk_r3.cjs.txt` = `3bfe68deed03d5e5b42a395a2cbb04a2d57f9eb9`、`review/ord0561-screens-widths/cover_leg_r2.cjs.txt` = `9c7e604e22c942d81e15aac00cd967ca076922e4`、`review/ord0561-screens-widths/tabstrip_leg_r1.cjs.txt` = `e3b6b787c76707a2639687f90f5f0ab99de2eb3d`、`review/ord0561-screens-widths/abort_click_leg_r2.cjs.txt` = `5a4a2b58ead4a8f77d16d1ae4bb644b2fb6f4014`
+  - 三张屏：`review/ord0561-screens-widths/shot_trips_390_zh.png` = `544475723ef9317cd2d5b5e063f4e19556faef29`、`review/ord0561-screens-widths/shot_tabprog_390_zh.png` = `d9b383ba76bb9899c2b291a77c77b4ca2c92fdf2`、`review/ord0561-screens-widths/shot_abort_center_390_zh.png` = `544475723ef9317cd2d5b5e063f4e19556faef29`（其中 abort 那张与 trips 那张逐字节相同——同一屏同一状态、滚动没位移，照实登记）
+- 三趟件的落点名：`LG-235946`（换代：构建 + 顶栏 + 屏读）、`CV2-001835`（第二腿 r2）、`TS-002039`（页签条与计数腿，同一趟驱动跑的两次）。
+- 本手账：产品字节改动 0 枚、他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库打开 0 次、`vite build` 只在私有树里跑 1 次、密钥落盘 0 枚、写库请求 0 次（第四腿只挂监听）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · ORD-0562 补证到手，同时抓到一件要紧的：单复数那件**只落了一半**，屏上现在还是「1 days」
 
 一、结论先说（三样读数，都是这轮现取的）
