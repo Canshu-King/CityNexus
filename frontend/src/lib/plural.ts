@@ -11,8 +11,9 @@
  */
 
 const IRREGULAR: Record<string, string> = {
-  // Nothing the product counts today needs an override; the table exists so the next irregular
-  // noun is added once here instead of being spelled out in eight sentences.
+  /* The hub's budget line counts people, and `persons` is not what the product means by it. Added once
+     here rather than spelled out in the sentence, which is the whole reason this table exists. */
+  person: "people",
 };
 
 function isOne(count: unknown): boolean {
