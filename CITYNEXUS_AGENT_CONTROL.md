@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜名下两枚在飞候选的落地前体检：按现尖逐枚比 blob，两枚都零冲突、都不用重切（本手产品字节 0 枚、判据字节 0 枚，只比字节）
+
+**〇、坐标（写这块这一刻现读；每枚 40 位都可 `git cat-file`）。**
+
+- 尖：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读逐字 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`。
+- 我那两枝（远端回读同值）：`refs/heads/review/82f55d8a-trash-zh-wording-r1` 头 `240a5989ab9f17defcb4f7f5642b6d2e1de183a8`；`refs/heads/review/82f55d8a-journeytrash-name-anchors-r1` 头 `abd876c29b2bb49256c3bcf9612246c5be354391`，它的 r10 那一跳的父是 `4fdd6345c0bfef36f12468390baad50946aad2b6`。
+- 判读口径按你 14:35 那条常设裁语走：无父重建树下 ancestry 一律停用，"能不能落"只看 blob。
+
+**一、逐枚比过来的（左边是现尖上的，右边是候选要落的）。**
+
+- `frontend/src/features/trash/journeyTrashCopy.ts`：现尖 `b7bd3f66cb4e8e0bb81616c2627df8ce29580da5`；候选那枚 `101c1bcaef488ec810539601fedc9a55e1166ac3`；而候选的父尖上同一枚文件就是 `b7bd3f66cb4e8e0bb81616c2627df8ce29580da5` ⇒ 前影像与现尖逐字节相同，落它不需要重切，改到的只有中文栏那两行（第 74 行、第 77 行）。
+- `frontend/src/features/trash/journeyTrash.ts`：现尖 `fe2af5c96235883acdcd5c9d6afb89f5bfd2a8ab`；r10 的父上同一枚也是 `fe2af5c96235883acdcd5c9d6afb89f5bfd2a8ab`；分支要落的那枚 `a2c5716de4a16f92f4180c119994ea8e3c8af8b4` ⇒ 同样零冲突。这一枝一共动三枚文件（新增两枚判据与 runner、修改这一枚产品注释文件），删除零枚。
+- 顺带一句"别人有没有插进来"：`a68b0631` 在 23:26 那块报的是 journeyTrash 剩下三枚假阳的逐枚回读，与本枝不撞同一枚字节——依据就是上面那行 blob：现尖仍是 r9 落进去的那枚，没有被再改过。
+
+**二、所以落地门这边可以怎么排。** 两枚都等一句"落"，不需要我先动。判据那一枝（`refs/heads/review/82f55d8a-breadcrumb-route-debt-r1`，头 `14ce2c4f10a1ac9631f7e1b2cfff863cf95b0782`）也是从这枚尖直接切的，同样零冲突。三枝互相不撞文件：一枚动 `journeyTrashCopy.ts`，一枚动 `journeyTrash.ts` 加两枚判据文件，一枚只新增 `e2e/` 与 runner。
+
+**三、没做 / 没重跑的**
+
+1. 本手零字节，所以三枝各自的判据与屏读都没有重跑：上一轮的读数仍是 `0413e556` 与 `f3ba478ca` 那两代上取的，blob 对照证明的只是"补丁前影像没变"，不是"屏读仍然成立"。具名 `NOT_REEXECUTED_BY_82f55d8a`。
+2. 顶栏那四屏仍然画着「今天 / Today」；常驻判据那块 00:14 已进收件口（此刻还没被代插腿取走），它钉的是"别再扩散"，不修现值。
+3. 红线自查：本手只读 git 对象与远端 ref，没起进程、没开端口、没连过任何一枚共享门；`_preview.db` 与那 23 枚 `.db` 零接触；`demo/reset` 零次；权威线我这边 push 零次、force-push 零次。
+
+**四、下一手。** 交完这件，我名下没有新派未闭的单，账本 ORDERS 段读到此刻也没有点我的新行 ⇒ 具名「无单可领，等派」。三枝在飞件全等你的门；你不点，我继续按上一块第七节说的方向做零供给的常驻判据，不干等。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0567 第二批续 · 车道 82f55d8a：把上一块那枚确定缺陷做成常驻判据交上来（两枚新增文件、产品字节 0 枚、七臂绿、七枚反件全咬，其中两枚一开始没咬——那是尺自己的毛病，改法逐枚写在第三节）
 
 **〇、坐标（写这块时现读；两枚 40 位都可 `git cat-file`）。**
