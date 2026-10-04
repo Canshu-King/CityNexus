@@ -1,0 +1,53 @@
+ORD-0507 item 2, re-cut at this generation -- lane a68b0631, 2026-10-04
+candidate refs/heads/review/a68b0631-ord0507-clock-attribution-r4
+base 89213c447190c853de998e2d78e4b6d5f63847f9 (authoritative line read at the time the branch was cut)
+
+WHAT THIS HAND CARRIES
+  2a  the Today clock sentence: the parentheses hold only the noun the scene named. When the server's own
+      cursor status is not VALID -- ABSENT_FALLBACK, STALE, or answered absent altogether, which paints
+      UNKNOWN -- the bracket that names an execution cursor is dropped and the cursor fact is carried by
+      its own sentence below instead. This is the shape the shipped ORD-0208 gate bit me for the first time.
+  2b  the new-journey screen says whose trip is on stage, instead of attributing the demo stage's global
+      journey to the traveller who is still creating one.
+  NOT carried: item 3's 「技术详情」 fold. The line already answers those refusals in traveller words through
+      refusalWords + CHECKIN_REFUSAL_COPY; my older candidate put a second dictionary vocabulary beside it.
+      The fold waits for one vocabulary to win (see lane block naming the collision).
+
+RUNS (playwright.prod-gate.config.ts: npm run build + vite preview + this lane's own backend, throwaway
+     data/_<tag>_<epoch>.db, fresh CITYNEXUS_E2E_RUN_ID per attempt)
+  guard   exit 0   "5 passed"  = the setup project plus 4 arms: 2a [zh-CN], 2a [en], 2b [zh-CN], 2b [en]
+  M1      exit 1   "2 failed, 1 passed"  (only arm 2a selected)
+          mutant: cursorAbsent forced to false, so the bracket may name an absent cursor
+          painted text it caught, zh: “现在”取自服务器场景（执行游标）：10月9日 18:00。服务器没有给出这一分钟的
+            执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。
+          painted text it caught, en: "now" comes from the server's scenario (execution cursor): 9 Oct, 18:00.
+            The server gave no execution cursor ...
+          restored: disk bytes equal the pinned blob
+  M2      exit 1   "2 failed, 1 passed"  (only arm 2b selected)
+          mutant: the screenHasNoJourneyInView prop removed from the <SimulationEntry ... /> call
+          painted text it caught, both locales: the new-journey screen names a stage journey
+            ("ad2749d4 · ACTIVE") with 0 counter-sentences
+          restored: disk bytes equal the pinned blob
+  final   exit 0   "5 passed"  after both restores
+
+POSITIVE CONTROLS INSIDE THE ARMS
+  Each arm walks the setup wizard the way a clean browser can, then reads innerText of the painted element
+  and fails if the element is absent -- the assertions are on painted text, not on a data-* attribute. The
+  machine-token check (/[A-Z][A-Z0-9_]{3,}/) is applied to the traveller's sentence, so a reason code
+  sneaking back into the copy would fail the arm rather than pass it.
+
+GAP NAMED, NOT SMOOTHED
+  The arms quote the painted sentence only when they go red, so this file holds the mutant-form strings and
+  not a stored printout of the green sentence. A green run is the assertion that the bracket is dropped;
+  if a literal green string is wanted in the ledger, one extra log line plus one more production run gets
+  it, and I did not spend that run without being asked.
+
+SANITY SURFACES
+  npx tsc -p tsconfig.check.json --noEmit and tsconfig.typecheck.json --noEmit  rc 0 (spec is new, product
+  files compile); npm run build ran inside every one of the four harness runs above.
+
+DISCIPLINE
+  demo/reset: called by the prod-gate harness's own real-seed setup project once per attempt, against this
+  lane's throwaway db only; not called by me against any shared store. _preview.db: 0 writes. Protected
+  ports (:4783 :4787 :8000 :4781 :4782 :4785 :8693): 0 started, 0 stopped. Authoritative line: 0 pushes;
+  only review/a68b0631-* branches were pushed, first push each, no force-push.
