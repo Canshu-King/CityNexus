@@ -1,0 +1,49 @@
+{
+ "tip": "ee142704825374903007b783d8516694cb9a2422",
+ "tip_parents": [
+  "45207a0cc0fcae000b619753b4dfccb06594a59f",
+  "2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b"
+ ],
+ "check_rows_on_tip": 0,
+ "check_ls_tree_on_tip": "NO ROW",
+ "hook_ls_tree_on_tip": "NO ROW",
+ "api_http_check_on_tip": 404,
+ "api_http_hook_on_tip": 404,
+ "api_http_reader_on_tip": 200,
+ "deleted_between_landing_tip_and_now": [
+  {
+   "path": "tools/cnx_ledger_mirror_sync_check_r1.py",
+   "was_blob_on": "0293e5c1cf9be4ea4e7d14005e14c508cb3f528b"
+  }
+ ],
+ "cells_still_on_tip": {
+  "backend/tests/test_qoder_ord0296_write_deadline.py": {
+   "expected_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+   "blob_on_tip": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+   "intact": true
+  },
+  "backend/tests/test_qoder_ord0476_checkins.py": {
+   "expected_blob": "534b673b749adfd7548066cca770e0c52d105306",
+   "blob_on_tip": "534b673b749adfd7548066cca770e0c52d105306",
+   "intact": true
+  }
+ },
+ "diff_counts": {
+  "D": 1,
+  "M": 12,
+  "A": 65
+ },
+ "check_present_on_each_parent": {
+  "45207a0cc0fcae000b619753b4dfccb06594a59f": false,
+  "2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b": false
+ },
+ "restore_coordinates": {
+  "branch_with_the_check": "refs/heads/review/1d64acf5-mirror-sync-selfcheck-r1",
+  "branch_head": "0a57e4b4664060015d66bb279db8b6c4c664d85b",
+  "branch_blob": "5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e",
+  "branch_with_the_hook_never_landed": "refs/heads/review/1d64acf5-mirror-sync-hook-r1",
+  "hook_branch_head": "0adc8d36f9eaa70dd0d7c4f16171fb8e78f6cd48",
+  "note": "restoring is the sequencer's move - this file only measures and reports"
+ },
+ "reading": "the check landed at 0293e5c1cf9b and is gone from ee1427048253; neither parent of the current merge carries it, so a merge resolved against an older side and silently deleted a landed file. My two test-tree cells survived the same merge unchanged."
+}
