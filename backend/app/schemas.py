@@ -987,6 +987,13 @@ class JourneyMemberPreferenceUpdate(BaseModel):
     preferences: list[PreferenceInput] = Field(default_factory=list, max_length=20)
 
 
+class CollectiveClarificationAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    proposal_id: UUID
+
+
 class JourneyRoleRule(BaseModel):
     """One role, the capabilities the server holds for it, and the key that states its scope."""
 

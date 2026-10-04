@@ -8,8 +8,39 @@ hard constraint.
 from __future__ import annotations
 
 from typing import Any, Iterable, Mapping
+import hashlib
+import json
 
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
+
+
+def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
+                              base_plan_version_id: str | None, options: Iterable[Mapping[str, Any]],
+                              required_member_ids: Iterable[str], members: Iterable[Mapping[str, Any]]) -> str:
+    """Stable server fingerprint for a member decision's governing reality."""
+    material = {
+        "journey_id": str(journey_id),
+        "mission_id": str(mission_id),
+        "trigger_event_id": str(trigger_event_id),
+        "base_plan_version_id": str(base_plan_version_id) if base_plan_version_id else None,
+        "options": [
+            {"proposal_id": str(item.get("proposal_id")), "plan_id": str(item.get("plan_id")), "status": item.get("status")}
+            for item in options
+        ],
+        "required_member_ids": sorted(str(item) for item in required_member_ids),
+        "members": [
+            {
+                "member_id": str(item.get("member_id")),
+                "role": item.get("role"),
+                "capabilities": sorted(item.get("capabilities") or []),
+                "preferences": item.get("journey_scoped_explicit_preferences") or [],
+                "member_state": item.get("member_state"),
+            }
+            for item in members
+            if str(item.get("member_id")) in {str(value) for value in required_member_ids}
+        ],
+    }
+    return hashlib.sha256(json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
 def member_fit(*, preferences: Iterable[Any], candidate_tags: Iterable[str]) -> dict[str, Any]:

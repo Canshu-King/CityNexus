@@ -47,6 +47,7 @@ TOOLS = (
 )
 
 TYPED_TOOLS = (
+    ToolDescriptor(AgentAction.REQUEST_COLLECTIVE_DECISION, "request_collective_decision", True, False, False),
     ToolDescriptor(AgentAction.CONCLUDE_RECOVERY, "conclude_recovery", False, False, False),
     ToolDescriptor(AgentAction.APPLY_CLARIFIED_HORIZON_CHOICE, "apply_clarified_horizon_choice", True, False, False),
     ToolDescriptor(AgentAction.ACQUIRE_PLACE_FACTS, "acquire_place_facts", True, False, False),

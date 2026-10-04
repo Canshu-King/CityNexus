@@ -598,6 +598,7 @@ class AgentToolGateway:
             "estimate_place_facts": self.estimate_place_facts,
             "generate_plans": self.generate_plans,
             "request_replan": self.request_replan,
+            "request_collective_decision": self.request_collective_decision,
             "accept_replan": self.accept_replan,
             "activate_standby": self.activate_standby,
             "replace_activity": self.replace_activity,
@@ -714,6 +715,57 @@ class AgentToolGateway:
             if isinstance(self.session, Session)
             else {"members": [], "member_count": 0, "authority_basis": "JourneyRoleCapability", "candidate_fit_matrix": [], "mediation": {"classification": "INSUFFICIENT_WORLD_FACTS"}}
         )
+        # Existing presented proposals are part of the current shared reality,
+        # not an answer supplied by the mission. Expose their compact,
+        # server-derived collective receipt during inspection so the model can
+        # recognize a human trade-off without guessing from member names or
+        # preloaded strategy hints.
+        presented_collective: dict[str, Any] = {
+            "classification": "INSUFFICIENT_WORLD_FACTS",
+            "options": [],
+        }
+        if trigger is not None:
+            from app.main import collective_proposal_receipt
+            presented = self.session.scalars(
+                select(ReplanProposal).where(
+                    ReplanProposal.journey_id == journey.id,
+                    ReplanProposal.trigger_event_id == trigger.id,
+                    ReplanProposal.status == "PRESENTED",
+                ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+            ).all()
+            receipt = collective_proposal_receipt(self.session, journey, presented)
+            mediation = receipt.get("collective_mediation") or {}
+            compact_options: list[dict[str, Any]] = []
+            seen_option_shapes: set[str] = set()
+            for item in receipt.get("proposal_collective_decisions", {}).values():
+                if item.get("status") != "GROUNDED_FEASIBLE":
+                    continue
+                plan_id = str(item.get("plan_id") or "")
+                shape = json.dumps(
+                    {
+                        "places": item.get("fit_subject_place_ids") or [],
+                        "tags": item.get("fit_subject_tags") or [],
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                option_key = shape if shape != "{}" else plan_id
+                if option_key in seen_option_shapes:
+                    continue
+                seen_option_shapes.add(option_key)
+                compact_options.append({
+                    "proposal_id": str(item.get("proposal_id")),
+                    "plan_id": plan_id,
+                    "status": item.get("status"),
+                    "member_fits": item.get("member_fits") or {},
+                    "fairness": item.get("fairness") or {},
+                })
+            presented_collective = {
+                "classification": mediation.get("classification"),
+                "decision_relevant_member_ids": mediation.get("decision_relevant_member_ids") or [],
+                "options": compact_options,
+                "fit_subject_basis": receipt.get("fit_subject_basis"),
+            }
         mission_preferences = {}
         if request.mission_id is not None:
             mission = self.session.get(JourneyMission, str(request.mission_id))
@@ -742,6 +794,7 @@ class AgentToolGateway:
             "event_selection_error": selection_error,
             "decision_sensitivity": decision_receipt,
             "collective_journey": collective,
+            "presented_collective_proposals": presented_collective,
             "current_event": (
                 {"id": trigger.id, "event_type": trigger.event_type, "provenance": trigger.provenance,
                  "severity": trigger.severity, "affected_activity_id": trigger.affected_activity_id}
@@ -826,6 +879,9 @@ class AgentToolGateway:
                     item.pop(field)
                     omitted.append(f"{item['id']}:{field}")
 
+        from app.main import collective_proposal_receipt
+        collective_receipt = collective_proposal_receipt(self.session, journey, proposals)
+
         return {
             "tool": "list_replans",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
@@ -837,6 +893,7 @@ class AgentToolGateway:
             "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
             "detail_fields_omitted": omitted,
             "event_scope": str(trigger.id) if trigger is not None else None,
+            **collective_receipt,
         }
 
     def conclude_recovery(self, request: AgentToolCall) -> dict[str, Any]:
@@ -1523,12 +1580,21 @@ class AgentToolGateway:
         key = _agent_key("request_replan", request.agent_id, request.request_id)
         stored = _read_idempotent(self.session, key, signature)
         if stored is not None:
-            return _upgrade_cached_request_replan_response(
+            upgraded = _upgrade_cached_request_replan_response(
                 self.session,
                 stored,
                 journey_id=journey.id,
                 trigger_event_id=str(request.trigger_event_id),
             )
+            cached_rows = self.session.scalars(
+                select(ReplanProposal).where(
+                    ReplanProposal.journey_id == journey.id,
+                    ReplanProposal.trigger_event_id == str(request.trigger_event_id),
+                ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+            ).all()
+            from app.main import collective_proposal_receipt
+            upgraded.update(collective_proposal_receipt(self.session, journey, cached_rows))
+            return upgraded
 
         from app.main import generate_replan
 
@@ -1576,6 +1642,8 @@ class AgentToolGateway:
                 for item in proposals
             ],
         }
+        from app.main import collective_proposal_receipt
+        response.update(collective_proposal_receipt(self.session, journey, proposals))
         record_audit(
             self.session,
             action="agent.request_replan",
@@ -1616,6 +1684,107 @@ class AgentToolGateway:
                 )
             raise
         return response
+
+    def request_collective_decision(self, request: AgentToolCall) -> dict[str, Any]:
+        """Create a server-owned shared decision only for a real trade-off.
+
+        The model supplies scope, never options or members.  This tool creates
+        no plan and changes no active reality; it only moves the mission into a
+        durable member-response state.
+        """
+        if request.mission_id is None or request.trigger_event_id is None:
+            raise HTTPException(422, "mission_id and trigger_event_id are required")
+        journey = _require_journey(self.session, request.journey_id)
+        mission = self.session.get(JourneyMission, str(request.mission_id))
+        if mission is None or mission.journey_id != journey.id:
+            raise HTTPException(404, "Journey mission was not found")
+        trigger = self.session.get(Event, str(request.trigger_event_id))
+        if trigger is None or trigger.journey_id != journey.id or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}:
+            raise HTTPException(409, "collective decision trigger is not actionable")
+        proposals = self.session.scalars(
+            select(ReplanProposal).where(
+                ReplanProposal.journey_id == journey.id,
+                ReplanProposal.trigger_event_id == trigger.id,
+                ReplanProposal.status == "PRESENTED",
+            ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+        ).all()
+        from app.main import collective_proposal_receipt, active_journey_members_with_capabilities
+        receipt = collective_proposal_receipt(self.session, journey, proposals)
+        mediation = receipt.get("collective_mediation") or {}
+        options = []
+        seen_option_shapes: set[str] = set()
+        for item in receipt.get("proposal_collective_decisions", {}).values():
+            if item.get("status") != "GROUNDED_FEASIBLE":
+                continue
+            plan_id = str(item.get("plan_id") or "")
+            shape = json.dumps(
+                {
+                    "places": item.get("fit_subject_place_ids") or [],
+                    "tags": item.get("fit_subject_tags") or [],
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            option_key = shape if shape != "{}" else plan_id
+            if option_key in seen_option_shapes:
+                continue
+            seen_option_shapes.add(option_key)
+            options.append(item)
+        if len(options) < 2 or mediation.get("classification") != "HUMAN_TRADEOFF_REQUIRED":
+            raise HTTPException(409, "COLLECTIVE_TRADEOFF_NOT_REQUIRED")
+        members = active_journey_members_with_capabilities(self.session, journey).get("members", [])
+        member_by_id = {str(item.get("member_id")): item for item in members}
+        relevant_ids = {str(item) for item in (mediation.get("decision_relevant_member_ids") or [])}
+        required_ids = sorted(relevant_ids.intersection(member_by_id))
+        if not required_ids:
+            raise HTTPException(409, "COLLECTIVE_MUTATION_AUTHORITY_CONFLICT")
+        from app.collective_mediation import collective_decision_epoch
+        decision_epoch = collective_decision_epoch(
+            journey_id=journey.id,
+            mission_id=mission.id,
+            trigger_event_id=trigger.id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=options,
+            required_member_ids=required_ids,
+            members=members,
+        )
+        clarification_id = str(uuid4())
+        payload = {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "clarification_id": clarification_id,
+            "decision_epoch": decision_epoch,
+            "trigger_event_id": trigger.id,
+            "base_plan_version_id": journey.active_plan_version_id,
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "responses": {},
+            "status": "WAITING_FOR_MEMBERS",
+            "selected_proposal_id": None,
+            "selected_candidate_id": None,
+        }
+        mission.clarification_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+        mission.status = "WAITING_FOR_MEMBERS"
+        mission.completed_at = None
+        record_audit(
+            self.session,
+            action="agent.collective_decision.requested",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="AI_AGENT",
+            actor_id=request.agent_id,
+            after={"clarification_id": clarification_id, "status": "WAITING_FOR_MEMBERS", "required_member_ids": required_ids},
+        )
+        self.session.commit()
+        return {
+            "tool": "request_collective_decision",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "executed": False,
+            "mission_status": "WAITING_FOR_MEMBERS",
+            "clarification": payload,
+            "collective_mediation": mediation,
+        }
 
     def activate_standby(self, request: AgentToolCall) -> dict[str, Any]:
         """Governed handover of a fresh standby branch; distinct from generic select."""
@@ -1784,6 +1953,11 @@ class AgentToolGateway:
             # recorded in the response for a caller that is comparing receipts.
             raise HTTPException(409, "replan proposal is stale or its trigger is resolved")
 
+        from app.main import _collective_resolution_for_child
+        resolved_collective_decision = _collective_resolution_for_child(
+            self.session, journey, proposal, str(request.mission_id) if request.mission_id else None
+        )
+
         try:
             proposal_diff = json.loads(proposal.diff_json or "{}")
         except json.JSONDecodeError:
@@ -1847,6 +2021,7 @@ class AgentToolGateway:
                 policy_version=auth.policy_version,
                 authorization_decision=auth.decision.value,
                 reason_codes=response_reason_codes,
+                resolved_decision=resolved_collective_decision,
             )
             response = {
                 "tool": "accept_replan",

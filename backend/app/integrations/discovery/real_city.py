@@ -80,6 +80,51 @@ def _place_metadata(
         metadata.setdefault("opening_hours", {"status": "UNKNOWN"})
     return metadata
 
+
+def _merge_existing_canonical_place_truth(
+    existing: Place | None,
+    candidate: Any,
+    *,
+    mode: str,
+    incoming_cost: dict[str, Any],
+    incoming_opening: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Keep acquired authority when a later discovery only has identity data.
+
+    Search/discovery is allowed to refresh identity and coordinates, but an
+    UNKNOWN cache hit must not erase facts already promoted from provider tags
+    or a corroborated official page.  This is a merge at the materialization
+    boundary, not an authority upgrade: the incoming candidate can still
+    replace an existing value when it carries equal or stronger evidence.
+    """
+    incoming_metadata = _place_metadata(candidate, mode, incoming_cost, incoming_opening)
+    if existing is None:
+        return incoming_opening, incoming_cost, incoming_metadata
+    previous_metadata = _load_json(existing.metadata_json, {})
+    previous_opening = normalize_opening_hours(_load_json(existing.opening_hours_json, {}))
+    previous_cost = canonical_cost_evidence(
+        previous_metadata.get("cost_evidence") or {}, previous_metadata.get("tags")
+    )
+    incoming_cost_status = str(incoming_cost.get("status") or "UNKNOWN").upper()
+    previous_cost_status = str(previous_cost.get("status") or "UNKNOWN").upper()
+    incoming_opening_status = str(incoming_opening.get("status") or "UNKNOWN").upper()
+    previous_opening_status = str(previous_opening.get("status") or "UNKNOWN").upper()
+    if incoming_cost_status in {"UNKNOWN", "NOT_AVAILABLE"} and previous_cost_status in {"KNOWN", "VERIFIED_PROVIDER"}:
+        incoming_cost = previous_cost
+        incoming_metadata["cost_evidence"] = previous_cost
+        incoming_metadata["cost_minor"] = previous_metadata.get("cost_minor", 0)
+        incoming_metadata["price_known"] = True
+    if incoming_opening_status in {"UNKNOWN", "NOT_AVAILABLE"} and previous_opening_status not in {"UNKNOWN", "NOT_AVAILABLE"}:
+        incoming_opening = previous_opening
+        incoming_metadata["opening_hours"] = previous_opening
+    # A later discovery response does not get to downgrade a source binding or
+    # an already corroborated identity assertion.
+    if previous_metadata.get("source_binding") and not incoming_metadata.get("source_binding"):
+        incoming_metadata["source_binding"] = previous_metadata["source_binding"]
+    if previous_metadata.get("identity_authority") and not incoming_metadata.get("identity_authority"):
+        incoming_metadata["identity_authority"] = previous_metadata["identity_authority"]
+    return incoming_opening, incoming_cost, {**previous_metadata, **incoming_metadata}
+
 def _json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
 
@@ -1346,6 +1391,13 @@ def materialize_candidates(
                 Place.external_id == external_id,
             )
         )
+        opening_hours, cost_evidence, merged_metadata = _merge_existing_canonical_place_truth(
+            place,
+            candidate,
+            mode=mode,
+            incoming_cost=cost_evidence,
+            incoming_opening=opening_hours,
+        )
         if place is None:
             place = Place(
                 id=f"real-place-{hashlib.sha1(f'{candidate.provider_key}|{external_id}'.encode()).hexdigest()[:24]}",
@@ -1358,9 +1410,7 @@ def materialize_candidates(
                 longitude=candidate.longitude,
                 opening_hours_json=_json(opening_hours),
                 tags_json=_json(list(candidate.tags)),
-                metadata_json=_json(
-                    _place_metadata(candidate, mode, cost_evidence, opening_hours)
-                ),
+                metadata_json=_json(merged_metadata),
                 updated_at=captured_at,
             )
             session.add(place)
@@ -1372,9 +1422,7 @@ def materialize_candidates(
             place.longitude = candidate.longitude
             place.opening_hours_json = _json(opening_hours)
             place.tags_json = _json(list(candidate.tags))
-            place.metadata_json = _json(
-                _place_metadata(candidate, mode, cost_evidence, opening_hours)
-            )
+            place.metadata_json = _json(merged_metadata)
             place.updated_at = captured_at
         session.flush()
         row.materialized_place_id = place.id

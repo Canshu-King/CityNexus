@@ -27,12 +27,15 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     # It remains subject to the persisted traveler policy and deterministic
     # gateway facts, but must not inherit the native MCP proposal-only fence.
     agent_id = "hermes-compat"
-    _initial_max_tokens = 2400
+    # Keep the first tool-selection turn small.  WB2api can spend a long time
+    # on a reasoning-only frame; the single retry below is intentionally
+    # bounded rather than turning a mission into an unbounded external job.
+    _initial_max_tokens = 1200
     # Tool-rich Journey context can spend the first response budget on model
     # reasoning before emitting a call. Keep a single bounded retry, but leave
     # enough room for a real tool call instead of silently switching to the
     # deterministic controller.
-    _empty_message_retry_max_tokens = 9600
+    _empty_message_retry_max_tokens = 2400
 
     def __init__(
         self,

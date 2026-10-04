@@ -342,6 +342,7 @@ from app.schemas import (
     AgentCommandRequest,
     AgentRunResponse,
     ClarificationAnswer,
+    CollectiveClarificationAnswer,
     AgentPolicyPayload,
     AgentToolCall,
     BookingCreate,
@@ -2284,7 +2285,7 @@ def pending_journey_missions(
             JourneyMission.journey_id == journey.id,
             JourneyMission.is_standing.is_(False),
             or_(
-                JourneyMission.status.in_(("WAITING_FOR_USER", "RUNNING")),
+                JourneyMission.status.in_(("WAITING_FOR_USER", "WAITING_FOR_MEMBERS", "RUNNING")),
                 and_(
                     JourneyMission.parent_mission_id.is_not(None),
                     JourneyMission.status.in_(("CREATED", "DEGRADED")),
@@ -2392,6 +2393,139 @@ def answer_journey_clarification(
         "scope": payload.scope,
         "active_plan_unchanged": True,
         "resume": {"required": True, "mission_id": child.id},
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}")
+def answer_collective_clarification(
+    journey_id: UUID,
+    mission_id: UUID,
+    member_id: UUID,
+    payload: CollectiveClarificationAnswer,
+    session: Session = Depends(get_session),
+):
+    """Record exactly one member's answer without rewriting member memory.
+
+    The current transport has no trusted caller-principal seam.  This route
+    therefore proves only server-scoped member state; a future authenticated
+    caller must be added before this path is treated as identity-bound.
+    """
+    journey = require(session, Journey, str(journey_id), "Journey")
+    parent = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if parent.journey_id != journey.id:
+        raise HTTPException(404, "Journey mission was not found")
+    stored = _json_object(parent.clarification_json or "{}")
+    if stored.get("kind") != "COLLECTIVE_TRADEOFF" or stored.get("status") != "WAITING_FOR_MEMBERS":
+        raise HTTPException(409, "collective decision is not waiting for members")
+    if stored.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "collective clarification id does not match")
+    member = session.get(JourneyMemberModel, str(member_id))
+    if member is None or member.journey_id != journey.id or _member_state(member, datetime.now(timezone.utc)) != "MEMBER_IN_FORCE":
+        raise HTTPException(409, "member is not in force for this collective decision")
+    required = {str(item) for item in stored.get("required_member_ids") or []}
+    if str(member_id) not in required:
+        raise HTTPException(403, "member is not decision-relevant for this collective trade-off")
+    options = [item for item in stored.get("candidate_options") or [] if isinstance(item, dict)]
+    option_ids = {str(item.get("proposal_id")) for item in options}
+    if str(payload.proposal_id) not in option_ids:
+        raise HTTPException(422, "proposal is not a server-derived collective option")
+    from app.collective_mediation import collective_decision_epoch
+    from app.main import collective_proposal_receipt
+    proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == stored.get("trigger_event_id"),
+            ReplanProposalModel.status == "PRESENTED",
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    receipt = collective_proposal_receipt(session, journey, proposals)
+    current_options = [
+        item for item in receipt.get("proposal_collective_decisions", {}).values()
+        if str(item.get("proposal_id")) in option_ids and item.get("status") == "GROUNDED_FEASIBLE"
+    ]
+    members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(stored.get("trigger_event_id")),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=current_options,
+        required_member_ids=required,
+        members=members,
+    )
+    if decision_epoch != stored.get("decision_epoch"):
+        stored["status"] = "STALE"
+        parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+        session.commit()
+        raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+    responses = dict(stored.get("responses") or {})
+    responses[str(member_id)] = {"proposal_id": str(payload.proposal_id), "member_id": str(member_id)}
+    stored["responses"] = responses
+    if required.issubset(responses):
+        selected = {str(item.get("proposal_id")) for item in responses.values()}
+        if len(selected) == 1:
+            selected_id = next(iter(selected))
+            stored["status"] = "RESOLVED"
+            stored["selected_proposal_id"] = selected_id
+            stored["selected_candidate_id"] = selected_id
+            parent.status = "ANSWERED"
+            parent.completed_at = datetime.now(timezone.utc).isoformat()
+            child = create_mission(
+                session,
+                journey,
+                command="Resume the shared Journey using the server-resolved collective proposal and normal authority boundaries.",
+                requested_autonomy=parent.requested_autonomy,
+                trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
+                parent_mission_id=parent.id,
+            )
+            child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
+            child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
+            child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+            child.resolved_intent_json = json.dumps({
+                "collective_decision": {
+                    "clarification_id": stored["clarification_id"],
+                    "decision_epoch": stored["decision_epoch"],
+                    "selected_proposal_id": selected_id,
+                    "selected_candidate_id": selected_id,
+                    "selected_plan_version_id": next(
+                        (
+                            str(item.get("plan_id"))
+                            for item in stored.get("candidate_options") or []
+                            if str(item.get("proposal_id")) == selected_id
+                        ),
+                        None,
+                    ),
+                    "policy": stored["policy"],
+                }
+            }, ensure_ascii=False, sort_keys=True)
+            response_child = mission_payload(child)
+        else:
+            stored["status"] = "UNRESOLVED_DISAGREEMENT"
+            response_child = None
+    else:
+        stored["status"] = "WAITING_FOR_MEMBERS"
+        response_child = None
+    parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+    record_audit(
+        session,
+        action="agent.collective_decision.response",
+        entity_type="JourneyMission",
+        entity_id=parent.id,
+        journey_id=journey.id,
+        actor_type="MEMBER_SCOPED_STATE",
+        actor_id=str(member_id),
+        after={"clarification_id": stored.get("clarification_id"), "member_id": str(member_id), "status": stored.get("status")},
+    )
+    session.commit()
+    return {
+        "journey_id": journey.id,
+        "mission_id": parent.id,
+        "clarification_id": stored.get("clarification_id"),
+        "status": stored.get("status"),
+        "responses": stored.get("responses", {}),
+        "baseline_preferences_unchanged": True,
+        "traveler_twin_unchanged": True,
+        "child_mission": response_child,
     }
 
 
@@ -4129,6 +4263,105 @@ def collective_mutation_gate(
         "member_count": refreshed.get("member_count", 0),
         "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
         "mediation": mediation,
+        "fit_subject_basis": "PLAN_DIFF",
+    }
+
+
+def collective_proposal_receipt(
+    session: Session,
+    journey: Journey,
+    proposals: list[ReplanProposalModel],
+) -> dict[str, Any]:
+    """Recompute collective choice facts for exactly the presented proposals.
+
+    This is intentionally separate from ``collective_mutation_gate``: the Agent
+    must see the server's decision over the same proposal set before it asks the
+    members, while the mutation gate still recomputes everything at commit time.
+    """
+    active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    base_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+    ).all() if active is not None else []
+    base_items = [
+        {"sequence_no": item.sequence_no, "place_id": item.place_id, "activity_type": item.activity_type, "locked": item.locked}
+        for item in base_activities
+    ]
+    windows: list[dict[str, Any]] = []
+    for proposal in proposals:
+        plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if plan is None:
+            continue
+        activities = session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+        place_ids = [str(item.place_id) for item in activities if item.place_id]
+        places = {
+            item.id: item
+            for item in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+        } if place_ids else {}
+        activity_items = []
+        for item in activities:
+            place = places.get(str(item.place_id)) if item.place_id else None
+            activity_items.append({
+                "sequence_no": item.sequence_no,
+                "place_id": item.place_id,
+                "activity_type": item.activity_type,
+                "locked": item.locked,
+                "category": place.category if place else None,
+                "tags": json.loads(place.tags_json or "[]") if place else [],
+            })
+        subject = plan_collective_fit_subject(base_items, activity_items)
+        tags: list[str] = []
+        for place_id in subject.get("fit_subject_place_ids", []):
+            place = places.get(str(place_id))
+            if place is not None:
+                tags.append(str(place.category or ""))
+                tags.extend(json.loads(place.tags_json or "[]"))
+        projection = plan_schema(session, plan).model_dump(mode="json")
+        grounded = bool(
+            proposal.hard_constraints_passed
+            and proposal.locked_commitments_preserved
+            and projection.get("selectable") is True
+        )
+        windows.append({
+            "window_id": proposal.id,
+            "status": "GROUNDED_FEASIBLE" if grounded else "REVALIDATION_REQUIRED",
+            "candidate": {
+                "place_id": proposal.id,
+                "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                **subject,
+            },
+            "proposal_id": proposal.id,
+            "plan_id": plan.id,
+        })
+    refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
+    mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    decisions: dict[str, Any] = {}
+    for window in windows:
+        proposal_id = str(window["proposal_id"])
+        decisions[proposal_id] = {
+            "proposal_id": proposal_id,
+            "plan_id": str(window["plan_id"]),
+            "status": window["status"],
+            "fit_subject_place_ids": list(window["candidate"].get("fit_subject_place_ids") or []),
+            "fit_subject_tags": list(window["candidate"].get("fit_subject_tags") or []),
+            "fit_subject_basis": window["candidate"].get("fit_subject_basis"),
+            "member_fits": next(
+                (row.get("member_fits", {}) for row in refreshed.get("candidate_fit_matrix", [])
+                 if str(row.get("candidate_id")) == proposal_id),
+                {},
+            ),
+            "fairness": next(
+                (row.get("fairness", {}) for row in refreshed.get("candidate_fit_matrix", [])
+                 if str(row.get("candidate_id")) == proposal_id),
+                {},
+            ),
+        }
+    return {
+        "collective_mediation": mediation,
+        "proposal_collective_decisions": decisions,
+        "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
+        "member_count": refreshed.get("member_count", 0),
         "fit_subject_basis": "PLAN_DIFF",
     }
 
@@ -12890,6 +13123,69 @@ def _revalidate_locked_commitments(
         )
 
 
+def _collective_resolution_for_child(
+    session: Session,
+    journey: Journey,
+    proposal: ReplanProposalModel,
+    mission_id: str | None,
+) -> dict[str, Any] | None:
+    """Load and revalidate the server-owned collective answer for a child mission."""
+    if mission_id is None:
+        return None
+    child = session.get(JourneyMission, str(mission_id))
+    if child is None or child.journey_id != journey.id or child.parent_mission_id is None:
+        return None
+    resolved = _json_object(child.resolved_intent_json or "{}").get("collective_decision")
+    # Other clarification children (for example a single-traveler horizon
+    # answer) are valid replan context but do not carry a collective decision.
+    # Only the server-owned collective envelope is subject to this gate.
+    if not isinstance(resolved, dict):
+        return None
+    parent = session.get(JourneyMission, child.parent_mission_id)
+    stored = _json_object(parent.clarification_json or "{}") if parent is not None else {}
+    if parent is None or stored.get("kind") != "COLLECTIVE_TRADEOFF" or stored.get("status") != "RESOLVED":
+        raise HTTPException(409, "COLLECTIVE_TRADEOFF_UNRESOLVED")
+    if str(resolved.get("selected_proposal_id")) != str(proposal.id) or str(stored.get("selected_proposal_id")) != str(proposal.id):
+        raise HTTPException(409, "COLLECTIVE_CANDIDATE_NOT_SELECTED")
+    proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == proposal.trigger_event_id,
+            ReplanProposalModel.status == "PRESENTED",
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    receipt = collective_proposal_receipt(session, journey, proposals)
+    options = [
+        item for item in receipt.get("proposal_collective_decisions", {}).values()
+        if str(item.get("proposal_id")) in {str(value.get("proposal_id")) for value in stored.get("candidate_options") or []}
+    ]
+    members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    from app.collective_mediation import collective_decision_epoch
+    epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(proposal.trigger_event_id),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=stored.get("required_member_ids") or [],
+        members=members,
+    )
+    if epoch != stored.get("decision_epoch") or epoch != resolved.get("decision_epoch"):
+        raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+    selected_plan_id = str(proposal.proposed_plan_version_id)
+    return {
+        "status": "RESOLVED",
+        "selected_proposal_id": str(proposal.id),
+        # collective_mutation_decision gates the PlanVersion being mutated;
+        # the member envelope names the ReplanProposal. Keep both identities
+        # explicit instead of relying on an accidental equality.
+        "selected_candidate_id": selected_plan_id,
+        "selected_plan_version_id": selected_plan_id,
+        "decision_epoch": epoch,
+        "clarification_id": stored.get("clarification_id"),
+    }
+
+
 def _accept_replan_impl(
     proposal_id: UUID,
     idempotency_key: str | None,
@@ -12900,6 +13196,7 @@ def _accept_replan_impl(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
 ):
     """Serialize acceptance for one Journey across its whole transaction.
 
@@ -12922,6 +13219,7 @@ def _accept_replan_impl(
         "policy_version": policy_version,
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
+        "resolved_decision": resolved_decision,
     }
     located = session.get(ReplanProposalModel, str(proposal_id))
     journey_id = located.journey_id if located is not None else None
@@ -12973,6 +13271,7 @@ def _accept_replan_serialized_impl(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
 ):
     """Accept a replan, replaying any response this key already produced.
 
@@ -13030,6 +13329,7 @@ def _accept_replan_executing(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
@@ -13091,6 +13391,7 @@ def _accept_replan_executing(
         journey,
         proposed,
         hard_feasible_plan_ids={str(proposed.id)},
+        resolved_decision=resolved_decision,
     )
     if not collective_gate.get("allowed"):
         raise HTTPException(

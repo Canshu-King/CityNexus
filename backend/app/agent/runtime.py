@@ -265,6 +265,16 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             ["journey_id", "trigger_event_id"],
         ),
         _tool(
+            "request_collective_decision",
+            "Create a server-derived shared member decision only when presented grounded proposals leave a real human value trade-off. The server chooses the options and required members; the model supplies no candidate IDs or social policy.",
+            {
+                **journey,
+                "mission_id": _property("string"),
+                "trigger_event_id": _property("string"),
+            },
+            ["journey_id", "mission_id", "trigger_event_id"],
+        ),
+        _tool(
             "accept_replan",
             "Accept a feasible proposal only when Gateway policy permits it.",
             {
@@ -404,6 +414,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "For a shared Journey, inspect_journey and inspect_twin expose separate in-force members, role capabilities, journey-scoped preferences, and compact learned-soft context. Never treat the owner TravelerTwin as the group. "
         "Use the server-returned per-member fit matrix and mediation classification: seek a grounded compromise before asking people, never majority-vote, and never ask a member about opening, cost, mobility, or provider identity. "
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
+        "When server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with only the Journey, current mission, and selected server event. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -608,6 +619,14 @@ def _server_completion_contract(
         return {"kind": requested, "source": "server_trace"}
     if requested == "UNRESOLVED":
         return {"kind": requested, "source": "server_trace"}
+    if any(
+        item.get("tool_name") == "request_collective_decision"
+        and isinstance(item.get("result"), dict)
+        and item["result"].get("mission_status") == "WAITING_FOR_MEMBERS"
+        and item["result"].get("clarification", {}).get("clarification_id")
+        for item in tool_steps
+    ):
+        return {"kind": "CLARIFICATION_REQUIRED", "source": "server_trace", "mission_status": "WAITING_FOR_MEMBERS"}
     if requested == "CLARIFICATION_REQUIRED" and any(
         item.get("tool_name") == "conclude_recovery"
         and isinstance(item.get("result"), dict)
@@ -638,8 +657,11 @@ def _terminal_agent_status(
     completion = _server_completion_contract(tool_steps, run_status=run_status)
     if completion["kind"] == "UNRESOLVED":
         run_status = "PARTIAL"
+    waiting_for_members = completion.get("mission_status") == "WAITING_FOR_MEMBERS"
     mission_status = (
-        "WAITING_FOR_USER"
+        "WAITING_FOR_MEMBERS"
+        if waiting_for_members
+        else "WAITING_FOR_USER"
         if clarification
         else "COMPLETED"
         if run_status == "COMPLETED"
@@ -1190,6 +1212,19 @@ class DeepSeekJourneyAgent:
                             "content": _result_for_model(result),
                         }
                     )
+                    # A collective decision request is itself a durable,
+                    # server-owned mission transition. Do not spend another
+                    # model turn asking for a prose conclusion: a later
+                    # timeout must not downgrade WAITING_FOR_MEMBERS into a
+                    # failed AgentRun.
+                    if (
+                        tool_name == "request_collective_decision"
+                        and isinstance(result, dict)
+                        and result.get("mission_status") == "WAITING_FOR_MEMBERS"
+                        and result.get("clarification", {}).get("clarification_id")
+                    ):
+                        final_text = "Collective decision is waiting for the required member responses."
+                        break
                 session.flush()
                 if final_text:
                     break
