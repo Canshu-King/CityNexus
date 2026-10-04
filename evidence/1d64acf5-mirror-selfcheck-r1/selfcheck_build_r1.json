@@ -1,0 +1,180 @@
+{
+ "started_local": "2026-10-04 18:55:09",
+ "base": {
+  "tip": "f3ba478caaecdbdf7254786b2bf0d03d323897d0",
+  "on_branch": "review/1d64acf5-mirror-sync-selfcheck-r1"
+ },
+ "lint": {
+  "path": "tools/cnx_ledger_mirror_sync_check_r1.py",
+  "bytes": 11133,
+  "ast": "ok"
+ },
+ "self_test": {
+  "rc": 0,
+  "tail": "{\"verdict\": \"CURRENT\", \"arms_all_correct\": true, \"exit_code\": 0}"
+ },
+ "readings": {
+  "verdict": "CURRENT",
+  "local_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "remote_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "points": [
+   4,
+   4
+  ],
+  "local_bytes": 13596922,
+  "remote_bytes": 13596922,
+  "lines": [
+   91639,
+   91639
+  ],
+  "flip_caught": true,
+  "flip_blob_differs": true,
+  "no_token_refused": true,
+  "no_token_leg": "api_channel"
+ },
+ "node_g4": {
+  "label": "g4",
+  "rc": 0,
+  "verdict": "green",
+  "summary": "1 passed, 2 warnings in 2.71s"
+ },
+ "node_ord0476": {
+  "label": "ord0476",
+  "rc": 0,
+  "verdict": "green",
+  "summary": "1 passed, 2 warnings in 2.46s"
+ },
+ "committed": {
+  "head": "0a57e4b4664060015d66bb279db8b6c4c664d85b",
+  "blob": "5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e"
+ },
+ "pushed": {
+  "ref": "refs/heads/review/1d64acf5-mirror-sync-selfcheck-r1",
+  "head": "0a57e4b4664060015d66bb279db8b6c4c664d85b",
+  "readback": "0a57e4b4664060015d66bb279db8b6c4c664d85b",
+  "foreign": [],
+  "conflicts": 0,
+  "tree": "c4d9bd595e058e459eaf2e897c30443af297ac35",
+  "chain_root_is_tip": true
+ },
+ "self_check_state": {
+  "verdict": "CURRENT",
+  "exit_code": 0,
+  "local_path": "D:\\moodle\\CITYNEXUS_AGENT_CONTROL.md",
+  "ref": "commander/control",
+  "ledger_path": "CITYNEXUS_AGENT_CONTROL.md",
+  "local_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "local_blob_first": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "remote_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "local_snapshots": [
+   "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "e508c9ad2b990ce513562cdde8f08657855e8817"
+  ],
+  "remote_reads": [
+   "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "e508c9ad2b990ce513562cdde8f08657855e8817"
+  ],
+  "compared_points": [
+   {
+    "pair": "local_0 vs remote_1",
+    "equal": true
+   },
+   {
+    "pair": "local_1 vs remote_1",
+    "equal": true
+   },
+   {
+    "pair": "local_1 vs remote_2",
+    "equal": true
+   },
+   {
+    "pair": "local_2 vs remote_2",
+    "equal": true
+   }
+  ],
+  "points_compared": 4,
+  "points_matched": 4,
+  "local_bytes": 13596922,
+  "remote_bytes": 13596922,
+  "local_lines": 91639,
+  "remote_lines": 91639,
+  "first_differing_line": null,
+  "remote_self_proved": true,
+  "remote_blob_id_named_by_api": "e508c9ad2b990ce513562cdde8f08657855e8817",
+  "remote_size_named_by_api": 13596922,
+  "arm": "none",
+  "local_changed_under_the_run": false
+ },
+ "self_check_arms": {
+  "none": {
+   "arm": "none",
+   "verdict": "CURRENT",
+   "remote_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "local_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "self_proved": true,
+   "points": [
+    4,
+    4
+   ]
+  },
+  "flip_a_byte": {
+   "arm": "flip_a_byte",
+   "verdict": "LAGGING",
+   "local_blob_flipped": true,
+   "first_pair_went_red": true,
+   "refused_to_call_it_current": true,
+   "flipped_blob": "58108a8203348e8cdfa16cf4835e5c1ac6217d4f",
+   "base_blob": "e508c9ad2b990ce513562cdde8f08657855e8817",
+   "points": [
+    4,
+    3
+   ]
+  },
+  "no_token": {
+   "arm": "no_token",
+   "refused": true,
+   "leg": "api_channel",
+   "detail": "api_channel: no token file at '' - set CITYNEXUS_API_TOKEN_FILE"
+  }
+ },
+ "nodes": [
+  {
+   "label": "g4",
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.71s"
+  },
+  {
+   "label": "ord0476",
+   "rc": 0,
+   "verdict": "green",
+   "summary": "1 passed, 2 warnings in 2.46s"
+  }
+ ],
+ "tool": {
+  "path": "tools/cnx_ledger_mirror_sync_check_r1.py",
+  "blob": "5d0ca99076de5c11e9906acadc9c03ed1a3b8e6e",
+  "head": "0a57e4b4664060015d66bb279db8b6c4c664d85b",
+  "branch": "refs/heads/review/1d64acf5-mirror-sync-selfcheck-r1",
+  "tip": "f3ba478caaecdbdf7254786b2bf0d03d323897d0",
+  "own_paths": [
+   "tools/cnx_ledger_mirror_sync_check_r1.py"
+  ],
+  "foreign_paths": [],
+  "merge_tree": {
+   "tree": "c4d9bd595e058e459eaf2e897c30443af297ac35",
+   "conflict_names": 0,
+   "rc": 0
+  }
+ },
+ "landed_cells_reverified": {
+  "g4_expected_blob": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+  "ord0476_expected_blob": "534b673b749adfd7548066cca770e0c52d105306",
+  "tip_blobs": {
+   "g4": "032777990661c5220794a91c2a00a8ed1ea97fe7",
+   "ord0476": "534b673b749adfd7548066cca770e0c52d105306"
+  }
+ },
+ "all_clean": true
+}
