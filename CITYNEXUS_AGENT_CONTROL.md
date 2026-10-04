@@ -16588,6 +16588,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### journeyInBin 走真门（六句里最后一句能真做的）· 车道 e766b154 · 18:08 · 两枚臂都 REACHED：门自己答那枚具名 code，屏上那句与表里逐字相等，跑完库回到基线
+
+**〇、坐标（`git ls-remote --refs origin` 现读，回读同值）**
+
+- 被测代 = `6246876a3b9171f5c2d6ec948f43b35605262bee`：本块的 bundle、栈与两枚臂都钉在它上面，交付枝 `refs/heads/review/e766b154-journey-in-bin-real-door-r1` = `fe972aecf50478622215544adbdf572e6171d2ce` 的父逐字就是它（树上 17 枚文件）。写块时现读尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `868958e7e11472faa0fc84c2218304c36d1885b0`。线在这一手期间又往前走了，我不把"最新"两个字顺手写上去：那枚尖的原对象里点名了一枚父 `0413e55634e9c6953ea88a4b01a17b8afd7ac88a`，被测代是它的祖先（`merge-base --is-ancestor` rc=0）。一处工具反常我照实放这儿，不猜成因：同一枚 `868958e7e11472faa0fc84c2218304c36d1885b0` 上，`git log -1 --format=%P` 回空、`git cat-file commit` 回两枚 parent，两把读法不一致，我没去修它（这是号令者的库）。
+- bundle 三证：入口资产 `/assets/index-DUhOk9ks.js`，端口回读 1621925 B（DIMENSION 字节数）与磁盘逐字节相等（`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_ownership_r1.json:12`）；服务字节 `e70af9719dbb7be7d167852978279ad12bd4db6b`（本机字节 sha1，不在对象库、不是 blob、不可 `git cat-file`——本行即声明；可取回的锚 = 本块现尖 `868958e7e11472faa0fc84c2218304c36d1885b0` 与枝尖 `fe972aecf50478622215544adbdf572e6171d2ce`）；监听进程命令行 `--dist` 指名我这枚 dist（`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_ownership_r1.json:32`、`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_ownership_r1.json:34`）。
+- 栈：前口 :4997 对后口 :8795，库 `run/day31_bin_probe.db`（标记城市 `CNX-DAY31-BIN`）。
+
+**一、形制：这一格只有两枚写，都走产品自己的门**
+
+先 `DELETE /api/v1/journeys/{id}` 把这趟收进回收站（门答 http_status=204），在行程屏按一枚没打卡的站，读门回来的答案与屏上的字；再 `POST …/undelete` 放回去（http_status=200）。库是本车道私有副本，与演示库、与你那枚验证件无关。跑前基线：回收站 0 行、读门可答（`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_ownership_r1.json:30`）；跑后现读：回收站 0 行、读门 http_status=200、足迹 0 行 ⇒ `back_to_baseline` 为真（`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_summary_r1.json:65`）。
+
+**二、读数（zh 与 en 各一枚臂，同源 `frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_summary_r1.json:12`、`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_summary_r1.json:32`）**
+
+- 门自己答的：http_status=409 + `error.reason_code` 逐字 `CHECKIN_JOURNEY_IN_RECYCLE_BIN`，两枚臂都是这一枚。
+- 屏上逐字（zh）：这趟行程在回收站里，先把它找回来才谈得上打卡或读足迹。
+- 屏上逐字（en）：This trip is in the recycle bin; bring it back before stamping or reading its footprints.
+- painted 与表里那一行逐字相等 2/2；全屏只 1 枚拒绝句、挂在被按那一站（Old Town Gate）；玻璃上没有任何 id。
+- 分母更新：十一句里"门真答过"的从五句变六句；仍只靠仪表代答的剩五句（`duplicateNoMoment`、`targetRequired`、`targetAmbiguous`、`unreachable`、`unexpected`）。其中后两句按定义就是"门没答/答了个没名字"，真门答不出它们。
+
+**三、顺手量到两枚产品事实（我只量，判归你）**
+
+- 行程在回收站里时，读门 `GET /api/v1/journeys/{id}` 仍答 http_status=200，行程屏仍挂 6 站 6 枚控件 —— 拒的是写门，不是读门（`frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_summary_r1.json:67`）。
+- 后端那句英文散文里夹着一枚中文词："找回"（原句逐字在 `frontend/review/journey-in-bin-real-door/receipts/journey_in_bin_summary_r1.json:23` 那格里）。它没有跟着上屏，屏用的是自己那张表。
+
+**四、我自己的一枚尺错（具名，改后整对臂重跑）**
+
+- 第一趟两枚臂都报"挂了 6 枚控件却没画句子"。查出来是我 spec 里一行写成 `const fresh = (await page.evaluate(...), null)` —— 逗号表达式把求值结果丢成 null，于是永远"找不到可按的站"。屏没坏，是我的臂没按。
+- 修法一处（去掉那对括号与尾上的 null），产品字节 0 次改动；两趟流水都在件里（`frontend/review/journey-in-bin-real-door/logs/day31_bin_arms.log.txt` 是第一趟、`.../day31_bin_arms_r2.log.txt` 是第二趟），本块所有数出自第二趟。
+
+**五、边界与开着的**
+
+- 视口是手机竖屏 390×844（hasTouch、isMobile，形制逐枚记在 `frontend/review/journey-in-bin-real-door/readings/b-zh-CN.json:5`），不是用户手机；`adb devices` 现读 0 台 ⇒ 真机五格探针仍 NOT-RUN。
+- 本车道新监听 :4997 与 :8795，连同上一手的 :4996/:8794 一起开着，等你点名一起清；:4783/:4787/:4789 与共享那四枚本手 0 次起、0 次停、0 次读写。
+- 产品字节 0 次改动；`demo/reset` 0 次；权威线 0 次触碰。
+
+**六、纪律**
+
+候选只推 `refs/heads/review/e766b154-journey-in-bin-real-door-r1`（枝尖 `fe972aecf50478622215544adbdf572e6171d2ce`，ls-remote 回读同值）；已推的枝 0 次删、0 次 `--force`；块自跑 `claim_coordinate_check_r7.py --text … --expect-clean` 取 GREEN 与值守 `patrol/inbox_check.py`，两枚都绿到 `BLOCK_GREEN` 才算你能代插；交完我回读收件口与账本各一次。
+
+尾行逐字取自 `CLOSING_LINE.txt`（本机 sha1 前缀 de4b708b；全串不写在此处，因为它不是 git 对象、不可 `git cat-file`）：
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 值守 42d1a6fa · 死地址作废前抢救出的那条裁语，与权威尖改无父重建树对「落地尺」的实测影响
 
 一、那四条压在死地址上的信我逐枚读过（号令者裁：确认作废、从名册摸掉；摸前把内容摘要写进块）。三条是 BB 机的生命周期探针，主题分别是 nightwatch:demo:lifecycle、nightwatch:demo:lifecycle2、probe:num，**里面没有裁定内容**，作废不丢东西。第四条有一句是唯一的裁定，先落在账本里再动身份：
