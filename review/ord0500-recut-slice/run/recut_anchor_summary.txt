@@ -1,0 +1,39 @@
+{
+  "tip_parent": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "commit": "51901f524258580c18e4f880700a86378d42d33f",
+  "tree": "3aa8687f34748d37d156d14a831613cc92fb5439",
+  "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r4",
+  "read_back": "51901f524258580c18e4f880700a86378d42d33f",
+  "commit_equals_read_back": true,
+  "paths": 17,
+  "product_paths": [],
+  "declared_landed_changes": [
+    {
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+      "mine": "80cfac127a927d49901a46386e8778ad71909133"
+    }
+  ],
+  "allow_landed": [
+    "backend/tests/test_qoder_ord0500_journey_refusal.py"
+  ],
+  "blobs": {
+    "backend/tests/test_qoder_ord0500_journey_refusal.py": "80cfac127a927d49901a46386e8778ad71909133",
+    "review/ord0500-anchor-form/tools/anchor_form_gate_r26.py": "e7e2aa45265e452b09b2349216321481116f16d6",
+    "review/ord0500-anchor-form/tools/anchor_form_gate_r27.py": "38981e5e112934cb65b695aba79d8bff78d1971b",
+    "review/ord0500-anchor-form/tools/anchor_form_apply_r26.py": "c7f59c9ab91efe229ed41f70cc664f04f437928f",
+    "review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py": "7a12ca0284364df2860543a10977a9c0c853ea80",
+    "review/ord0500-anchor-form/tools/anchor_form_spec_r26.py": "836f4cf30fc74dd02194e27434d6f411b1e5ce66",
+    "review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json": "ac3413c61e683ce989672724545c60f86e8503bd",
+    "review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json": "9907a587cf9e4150c8a2009cb2ee4d8a408857b5",
+    "review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json": "a3d201afb134c5cff8201ad9d0e3b862e0bd14c1",
+    "review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json": "cf5dbcf9c9b85c0a83d1a65c4e768c03e9b3ac6f",
+    "review/ord0500-anchor-form/evidence/anchor_form_gate_r27.json": "4a926e53d066065b204184615dadad3f4d1fa891",
+    "review/ord0500-anchor-form/run/r28_apply_b.txt": "7bde6173b6c9a933953f1d709ffb0e5c102748f3",
+    "review/ord0500-anchor-form/run/r28_mutants_b.txt": "cb2a4270eed53866b445f8ecfa1164ea965fb82c",
+    "review/ord0500-anchor-form/run/r28_spec_b.txt": "c82b17a03973a7f2246771e5357c477a3ea8a39a",
+    "review/ord0500-anchor-form/run/r28_writeset.txt": "8ea00400e63a37fdd097a645546b53e7bea4b81b",
+    "review/ord0500-anchor-form/run/anchor_form_candidate.py": "80cfac127a927d49901a46386e8778ad71909133",
+    "review/ord0500-anchor-form/run/commit_r28_anchor_msg.txt": "ca5cf42486cca4161ca093b98b1893ef8611d3d7"
+  }
+}

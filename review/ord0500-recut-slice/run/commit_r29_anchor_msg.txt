@@ -1,0 +1,8 @@
+ORD-0500 anchor-form, re-parented: same bytes, new parent.
+
+Parent is the tip read at push time; this hand does not carry anyone else's bytes and does not rewrite a
+published path -- refs/heads/review/newlane-ord0500-phone-anchor-form-r3 stays where it is.
+
+Re-checked before re-cutting, with this order's own gate fed the bytes on refs/heads/review/newlane-ord0500-phone-anchor-form-r3 and the tip read at this
+second: verdict GREEN over 7 checks. The labels the shipped comment cites still resolve in the tip's
+backend/app/main.py, and no numeric citation came back.

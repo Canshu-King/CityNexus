@@ -1,0 +1,176 @@
+{
+  "schema": "CNX_LANDED_PRODUCT_SLICE_V1",
+  "tool": "landed_product_slice_r1",
+  "live_tip": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "took_local": "2026-10-05T01:15:45.143303+08:00",
+  "refs_scanned": 37,
+  "refs_review_total": 1006,
+  "paths": [
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r1",
+      "ref_head": "80608938c52e92a23dcbed79f74e25a08f5736ff",
+      "path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+      "shipped_blob": "16dd334020743912998fb62dd81636ba914febf2",
+      "on_line": "ABSENT",
+      "verdict": "NOT_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r1",
+      "ref_head": "80608938c52e92a23dcbed79f74e25a08f5736ff",
+      "path": "frontend/playwright.ord0485-phone.config.ts",
+      "shipped_blob": "0c40a18533b2d2eb25a6f32963d1bf66531bd910",
+      "on_line": "ABSENT",
+      "verdict": "NOT_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r1",
+      "ref_head": "80608938c52e92a23dcbed79f74e25a08f5736ff",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "shipped_blob": "2abffd319265e9b66257efabc4ebd47b15845796",
+      "on_line": "20203fee4744513da320387e7923fabbf054d566",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r4",
+      "ref_head": "8d6c582fd493469f88f02c494f5f227736da24ac",
+      "path": "frontend/e2e/qoder-ord0485-phone-words.spec.ts",
+      "shipped_blob": "16dd334020743912998fb62dd81636ba914febf2",
+      "on_line": "ABSENT",
+      "verdict": "NOT_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r4",
+      "ref_head": "8d6c582fd493469f88f02c494f5f227736da24ac",
+      "path": "frontend/playwright.ord0485-phone.config.ts",
+      "shipped_blob": "0c40a18533b2d2eb25a6f32963d1bf66531bd910",
+      "on_line": "ABSENT",
+      "verdict": "NOT_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0485-phone-walkthrough-r4",
+      "ref_head": "8d6c582fd493469f88f02c494f5f227736da24ac",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "shipped_blob": "accba7aa78c6a493df489774e84f9d6ddb2ad08e",
+      "on_line": "20203fee4744513da320387e7923fabbf054d566",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-anchor-form-r1",
+      "ref_head": "f51c0e164d1829df1da4c52339f918ef79b1c30a",
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "shipped_blob": "80cfac127a927d49901a46386e8778ad71909133",
+      "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-anchor-form-r2",
+      "ref_head": "ba19776a29edb27d84e0a1eb204fa76eac61c2c0",
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "shipped_blob": "80cfac127a927d49901a46386e8778ad71909133",
+      "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-anchor-form-r3",
+      "ref_head": "ca5c2d58f422d698099a84ea79bc317ac1346204",
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "shipped_blob": "80cfac127a927d49901a46386e8778ad71909133",
+      "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r14",
+      "ref_head": "71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "path": "frontend/src/features/checkin/checkinCopy.ts",
+      "shipped_blob": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+      "on_line": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+      "verdict": "HELD_AS_SHIPPED"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r14",
+      "ref_head": "71e855fa492901075a5abc8e0db97fee37b17d8e",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "shipped_blob": "c5195d9fbf900947c80a6ace90d88c78eba0e941",
+      "on_line": "20203fee4744513da320387e7923fabbf054d566",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "backend/app/main.py",
+      "shipped_blob": "ce6bda55550d00cb9366b2986c63afd196eec0f7",
+      "on_line": "46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+      "shipped_blob": "35bff0ad2e4bd8146c46f019d917d3624ed3dc80",
+      "on_line": "dd4bf606865e414775babab7d93763205bf7dd84",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "contracts/openapi.yaml",
+      "shipped_blob": "c870395cb084d13173e10d9425daa677e5a2efc6",
+      "on_line": "8fa657e6d08cee10fae142e380dae49c1d831ad4",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/e2e/qoder-ord0500-checkin-truth.spec.ts",
+      "shipped_blob": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+      "on_line": "dcbb4fac2c97e5fd3e828fb4a0b3642c0016fba2",
+      "verdict": "HELD_AS_SHIPPED"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/playwright.ord0500-checkin.config.ts",
+      "shipped_blob": "503a5638c4d383287c01359f9f191cbca9be50b2",
+      "on_line": "503a5638c4d383287c01359f9f191cbca9be50b2",
+      "verdict": "HELD_AS_SHIPPED"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/src/features/checkin/checkinCopy.ts",
+      "shipped_blob": "6d52c83f583c91c69d9dbfbd1878e1d0d7d3c982",
+      "on_line": "f81c5f39b8b30597d857d21fc507348953a92e0b",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/src/features/checkin/checkins.ts",
+      "shipped_blob": "c9f6179932a3a8ad1b502e3fc8b2cf2726cf9eb2",
+      "on_line": "9b7e14d898240c7ff72753b0a219a3e39785e700",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/src/features/checkin/footprint.css",
+      "shipped_blob": "f7454473c054476a6dd52aa73062925d92b3f570",
+      "on_line": "ad6fafc5a8dd7c460702378342ff3e0a0bad8f1d",
+      "verdict": "SUPERSEDED_ON_LINE"
+    },
+    {
+      "ref": "newlane-ord0500-phone-checkin-entry-r2",
+      "ref_head": "75a27ae982447f71c0bc6d64fa05a503e6a8d5b1",
+      "path": "frontend/src/features/trip/TripItinerary.tsx",
+      "shipped_blob": "9c74763fa71d7cf2b7f2bad87992a01836309f3f",
+      "on_line": "e846ed1b67c67313405f645ecac5432f1a97d241",
+      "verdict": "SUPERSEDED_ON_LINE"
+    }
+  ],
+  "refs_without_product_paths": 30,
+  "tally": {
+    "NOT_ON_LINE": 4,
+    "SUPERSEDED_ON_LINE": 13,
+    "HELD_AS_SHIPPED": 3
+  }
+}

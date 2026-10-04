@@ -1,0 +1,48 @@
+{
+  "schema": "CNX_ANCHOR_FORM_RECUT_PROBE_V1",
+  "tool": "anchor_form_recut_probe_r1",
+  "live_tip": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r3",
+  "ref_head": "ca5c2d58f422d698099a84ea79bc317ac1346204",
+  "audited_file": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+  "shipped_blob": "80cfac127a927d49901a46386e8778ad71909133",
+  "gate_verdict": "GREEN",
+  "rows": [
+    {
+      "check": "NUMERIC_ANCHOR_FORBIDDEN",
+      "verdict": "GREEN",
+      "hits": []
+    },
+    {
+      "check": "ANCHOR_LINE_PRESENT",
+      "verdict": "GREEN",
+      "why": ""
+    },
+    {
+      "check": "LABEL_RESOLVES",
+      "verdict": "GREEN",
+      "label": "def require("
+    },
+    {
+      "check": "LABEL_RESOLVES",
+      "verdict": "GREEN",
+      "label": "The duplicate answer comes"
+    },
+    {
+      "check": "LABEL_RESOLVES",
+      "verdict": "GREEN",
+      "label": "UNIQUE (journey_id, target_key)"
+    },
+    {
+      "check": "LABEL_RESOLVES",
+      "verdict": "GREEN",
+      "label": "\"caught_by\": \"unique_index\","
+    },
+    {
+      "check": "MANIFEST_LISTS_THE_FILE",
+      "verdict": "GREEN"
+    }
+  ],
+  "mainpy_at_tip_len_bytes": 623764,
+  "worktree_written": false
+}

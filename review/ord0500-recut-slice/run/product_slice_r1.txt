@@ -1,0 +1,22 @@
+{"live_tip": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d", "refs_scanned": 37, "refs_without_product": 30, "product_rows": 20, "tally": {"NOT_ON_LINE": 4, "SUPERSEDED_ON_LINE": 13, "HELD_AS_SHIPPED": 3}}
+newlane-ord0485-phone-walkthrough-r1         frontend/e2e/qoder-ord0485-phone-words.spec.ts       NOT_ON_LINE
+newlane-ord0485-phone-walkthrough-r1         frontend/playwright.ord0485-phone.config.ts          NOT_ON_LINE
+newlane-ord0485-phone-walkthrough-r1         frontend/src/i18n/LocaleContext.tsx                  SUPERSEDED_ON_LINE
+newlane-ord0485-phone-walkthrough-r4         frontend/e2e/qoder-ord0485-phone-words.spec.ts       NOT_ON_LINE
+newlane-ord0485-phone-walkthrough-r4         frontend/playwright.ord0485-phone.config.ts          NOT_ON_LINE
+newlane-ord0485-phone-walkthrough-r4         frontend/src/i18n/LocaleContext.tsx                  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-anchor-form-r1         backend/tests/test_qoder_ord0500_journey_refusal.py  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-anchor-form-r2         backend/tests/test_qoder_ord0500_journey_refusal.py  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-anchor-form-r3         backend/tests/test_qoder_ord0500_journey_refusal.py  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r14      frontend/src/features/checkin/checkinCopy.ts         HELD_AS_SHIPPED
+newlane-ord0500-phone-checkin-entry-r14      frontend/src/i18n/LocaleContext.tsx                  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       backend/app/main.py                                  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       backend/tests/test_qoder_ord0500_journey_refusal.py  SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       contracts/openapi.yaml                               SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       frontend/e2e/qoder-ord0500-checkin-truth.spec.ts     HELD_AS_SHIPPED
+newlane-ord0500-phone-checkin-entry-r2       frontend/playwright.ord0500-checkin.config.ts        HELD_AS_SHIPPED
+newlane-ord0500-phone-checkin-entry-r2       frontend/src/features/checkin/checkinCopy.ts         SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       frontend/src/features/checkin/checkins.ts            SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       frontend/src/features/checkin/footprint.css          SUPERSEDED_ON_LINE
+newlane-ord0500-phone-checkin-entry-r2       frontend/src/features/trip/TripItinerary.tsx         SUPERSEDED_ON_LINE
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\landed_product_slice_r1.json

@@ -1,0 +1,4 @@
+ORD-0500 staging-door evidence, re-parented: same bytes, new parent (tip 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d).
+
+The r5 ref stays published and untouched; this is a parent-only move so the landing door's receipts can be
+landed on the line as it now stands without dragging an older generation in.
