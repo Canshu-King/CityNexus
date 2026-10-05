@@ -8,7 +8,7 @@ Branch:
 
 GPT relay HEAD at handoff:
 
-`69f0663605c31152ce1074e4eec0eae3476d5d57`
+`5048d61224e54649b5eea6e5b4d2aad6c732c69f`
 
 Codex's last push before this review:
 
@@ -157,6 +157,26 @@ Commits:
 - `69f0663605c31152ce1074e4eec0eae3476d5d57` — expires renewed consent if the active base plan has changed before consumption.
 
 Do not weaken these if focused tests reveal a real integration mismatch.
+
+### C. Renewed human consent outranks algorithmic compromise ranking
+
+After renewed consent resolves, the exact selected plan now carries pending social authority until consumed.
+
+A remaining edge case was that the current fairness classifier might still prefer a sibling compromise B while the same relevant members explicitly chose A. That would invert the authority model by allowing algorithmic ranking to overrule renewed human consent.
+
+GPT fixed the core gate so:
+
+- sibling B remains denied by `COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED`;
+- exact selected A is allowed once hard feasibility/authority checks pass;
+- the returned classification is `RENEWED_COLLECTIVE_CONSENT`;
+- stale renewed consent still expires if its base plan no longer matches active reality.
+
+Commits:
+
+- `906e35020f26c33cc35dfbcd20a8f38c35aec3a5`
+- `5048d61224e54649b5eea6e5b4d2aad6c732c69f`
+
+This is a hard social-authority invariant. Do not "fix" a failing test by restoring algorithmic ranking above renewed human consent.
 
 ## Codex Phase A — validate the current GPT HEAD
 
