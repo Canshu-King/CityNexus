@@ -5,6 +5,7 @@ import {
   commitmentLevelLabel,
   commitmentStatusLabel,
 } from "../lib/displayVocabulary";
+import { englishCountNoun } from "../lib/plural";
 import { Icon } from "../components/v8/Icon";
 import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
@@ -3039,7 +3040,7 @@ function Hub({
             {disruptions.length
               ? zh
                 ? `${disruptions.length} 项变化`
-                : `${disruptions.length} change(s)`
+                : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
               : handledDisruptions.length
                 ? zh
                   ? "已处理"
