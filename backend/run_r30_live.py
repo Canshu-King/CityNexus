@@ -301,6 +301,73 @@ def _reach_post_consent_interlock(
     }
 
 
+def _prove_unrelated_observation_control(
+    journey_id: str,
+    *,
+    selected_plan_id: str,
+    fit_subject_place_ids: list[str],
+) -> dict[str, Any]:
+    """Prove ordinary provider churn does not invalidate current consent."""
+
+    from app.agent.signal_pipeline import refresh_demo_signals, set_fixture_state
+    from app.collective_mediation import collective_material_world_epoch
+    from app.db.models import Journey, PlanVersion
+    from app.db.session import SessionLocal
+    from app.main import collective_material_world_basis
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        plan = session.get(PlanVersion, selected_plan_id)
+        if journey is None or plan is None:
+            raise RuntimeError(
+                "journey/selected plan disappeared before unrelated control"
+            )
+        before_basis = collective_material_world_basis(
+            session,
+            journey,
+            plan,
+            fit_subject_place_ids=fit_subject_place_ids,
+        )
+        before_epoch = collective_material_world_epoch(before_basis)
+
+        set_fixture_state(
+            session,
+            journey,
+            state="NORMAL",
+            payload={
+                "r30_unrelated_observation_control": True,
+                "description": (
+                    "provider refresh not scoped to the consented candidate"
+                ),
+            },
+        )
+        signals = refresh_demo_signals(session, journey)
+        session.commit()
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        plan = session.get(PlanVersion, selected_plan_id)
+        after_basis = collective_material_world_basis(
+            session,
+            journey,
+            plan,
+            fit_subject_place_ids=fit_subject_place_ids,
+        )
+        after_epoch = collective_material_world_epoch(after_basis)
+
+    if before_epoch != after_epoch:
+        raise RuntimeError(
+            "unrelated provider observation incorrectly changed the material "
+            f"world epoch: {before_epoch} -> {after_epoch}"
+        )
+    return {
+        "unrelated": True,
+        "before_epoch": before_epoch,
+        "after_epoch": after_epoch,
+        "signals": signals.to_dict(),
+    }
+
+
 def _inject_provider_replay_shock(
     journey_id: str,
     *,
@@ -604,6 +671,11 @@ def _run_full() -> dict[str, Any]:
             "selected renewed-consent option has no decision-relevant Place "
             "for the provider-replay shock"
         )
+    unrelated_control = _prove_unrelated_observation_control(
+        journey_id,
+        selected_plan_id=str(interlock["selected_plan_id"]),
+        fit_subject_place_ids=fit_subject_place_ids,
+    )
     shock = _inject_provider_replay_shock(
         journey_id,
         target_place_id=fit_subject_place_ids[0],
@@ -633,6 +705,7 @@ def _run_full() -> dict[str, Any]:
         "journey_id": journey_id,
         "first_agent_run": first,
         "interlock": interlock,
+        "unrelated_observation_control": unrelated_control,
         "shock": shock,
         "stale_authority": stale,
         "old_authority_attempt": old_attempt,
