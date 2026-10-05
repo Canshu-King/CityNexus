@@ -1,0 +1,56 @@
+comment-anchor guard -- r5 generation (four arms, cut at the tip it now rests on)
+Written by k91_make_readings_r5.py; every number is parsed from a log, a probe, or git.
+
+[coordinates]
+  tip this hand rests on           : b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c
+  branch                           : review/a68b0631-comment-anchor-drift-r5 head 8709577df8db47ed2781e186892fdbedad2ff761
+  previous generation              : r4 head e7a0e5d5b35cdfaa3aae85dc6fd0c353d2757fbe, cut at d107131c6f6e65d9f207f6bf1b563d1cc8877f89
+  guard test blob                  : b74c6a687ac8fbac9dd9ccafa4e56716d9328328
+  registry blob                    : 40dc1176e62a275713658d3ef3f46428cb9f4c7b (103 entries)
+  derived copy blob                : e1b5320f1cd3731058e965a07bb96ad8d791523b
+
+[why a generation was spent, measured rather than asserted]
+  the line moved 10 paths since r4 was cut:
+    frontend/e2e/qoder-6a150e1e-spend-faces-day24-r1.spec.ts
+    frontend/src/features/trip/SpendPanel.tsx
+    frontend/src/features/trip/spendCopy.ts
+    review/ord0512/r5/commit_tool_r5.py
+    review/ord0512/r5/family_day35_r5.json
+    review/ord0512/r5/family_day35_r5.log
+    review/ord0512/r5/family_diff_previous_vs_day35_r5.txt
+    review/ord0512/r5/family_fulltitle_comparator_r1.py
+    review/ord0512/r5/family_runner_r1.py
+    review/ord0512/r5/family_stdout_r5.txt
+  paths this hand touches          : 154
+  intersection of the two lists    : 0  <-- the re-cut reverts none of this generation's bytes
+  r4 against the new tip, `git merge-tree --write-tree` conflicts : 0
+  So the re-cut buys one thing and says so: the hand and its readings now name the same tip the
+  landing door will read.  It did not buy conflict-freedom, because there was no conflict.
+
+[arms, at this generation]
+  four arms, final run on the restored tree : 4 passed / 0 failed
+  files scanned by the tree-wide arm        : 825 (of which the contracts root 24)
+  registry entries                          : 103
+  numbered citations left in the derived copy : 0
+  derived copy vs a fresh generator run     : 0 changed lines
+  frontend typecheck                        : rc 0, 0 `error TS` lines
+  backend --collect-only                    : 1740 tests, rc 0
+
+[counter-arms, parsed from this generation's own logs]
+  M1_number_back_g3  red: G3           green: the other 3, names not printed by that runner  (1 failed / 3 passed)
+  M2_name_deleted_g1 red: G1           green: the other 3, names not printed by that runner  (1 failed / 3 passed)
+  M3_derived_only    red: G1,G4        green: G2,G3  (2 failed / 2 passed)
+  M4_both            red: G1,G3        green: G2,G4  (2 failed / 2 passed)
+  M5_contract_only   red: G3           green: G1,G2,G4  (1 failed / 3 passed)
+  A/B on the scan root alone, same mutant both times:
+    without the contracts root : {"test_G1": "FAILED", "test_G2": "PASSED", "test_G3": "PASSED", "test_G4": "PASSED"}
+    with the contracts root    : {"test_G1": "FAILED", "test_G2": "PASSED", "test_G3": "FAILED", "test_G4": "PASSED"}, naming ['contracts/openapi.yaml:3270']
+
+[what changed in the numbers since r8, and why it is not a regression]
+  M3 (the number put back into the derived copy only) now goes red on G1,G4 instead of only on G4.
+  That is the direct effect of registering the converted sentence in the previous generation: the
+  same rot is now caught by the registry arm and by the derived-staleness arm, so it takes two
+  independent oversights to slip through instead of one.  G3 staying green on M3 is the point:
+  the derived file is exempted by design, and only the new arm sees it.
+
+-- lane a68b0631, r5 generation
