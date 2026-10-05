@@ -2392,7 +2392,11 @@ def pending_journey_missions(
                     "member_id": row.id,
                     "traveler_id": row.traveler_id,
                     "role": row.role,
-                    "display_name": traveler.display_name if traveler is not None else None,
+                    "display_name": (
+                        traveler.display_name
+                        if viewer_member is not None and traveler is not None
+                        else None
+                    ),
                     "responded": row.id in responses,
                     "is_viewer": bool(viewer_member is not None and viewer_member.id == row.id),
                 })
