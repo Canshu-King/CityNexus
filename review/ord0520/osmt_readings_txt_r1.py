@@ -107,7 +107,8 @@ def run_arms_at_head() -> tuple[int, str]:
         if path.exists():
             path.unlink()
     hit = re.search(r"(\d+ passed|\d+ failed[^\n]*)", proc.stdout or "")
-    return proc.returncode, hit.group(0) if hit else (proc.stdout or "")[-120:]
+    return proc.returncode, "%s %s" % (git_text("rev-parse", "HEAD").strip(),
+                                       hit.group(0) if hit else (proc.stdout or "")[-120:])
 
 
 def collect_only() -> tuple[int, str]:
