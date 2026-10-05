@@ -1,0 +1,108 @@
+{
+  "schema": "CNX_CHAIN_STATIC_DOOR_WITNESS_V1",
+  "tool": "chain_static_door_witness_r1",
+  "took_local": "2026-10-05T16:11:09.048843+08:00",
+  "probed_paths": 7,
+  "no_response": 7,
+  "statuses": [
+    "NO_RESPONSE",
+    "NO_RESPONSE",
+    "NO_RESPONSE",
+    "NO_RESPONSE",
+    "NO_RESPONSE",
+    "NO_RESPONSE",
+    "NO_RESPONSE"
+  ],
+  "reads": [
+    {
+      "url": "http://127.0.0.1:4783/",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/v8/hub",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/index.html",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/favicon.svg",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/assets/",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/v8/trips",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    },
+    {
+      "url": "http://127.0.0.1:4783/__probe_missing_zz",
+      "status": "NO_RESPONSE",
+      "error": "RemoteDisconnected: Remote end closed connection without response"
+    }
+  ],
+  "raw_sockets": [
+    {
+      "path": "/",
+      "bytes_received": 0,
+      "first_bytes": ""
+    },
+    {
+      "path": "/index.html",
+      "bytes_received": 0,
+      "first_bytes": ""
+    }
+  ],
+  "api_health": {
+    "url": "http://127.0.0.1:4787/api/v1/health",
+    "status": 200,
+    "bytes": 113,
+    "ctype": "application/json"
+  },
+  "api_control": {
+    "url": "http://127.0.0.1:4787/api/v1/journeys",
+    "status": 200,
+    "bytes": 1566,
+    "ctype": "application/json"
+  },
+  "static_owner": {
+    "port": 4783,
+    "listening_pids": [
+      "37684"
+    ],
+    "processes": [
+      {
+        "pid": "37684",
+        "command_line": "python  _cmdr_lan_static_api_r1.py --dist D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day33/frontend/dist --port 4783 --api 4787 --log _lan_4783_log_day33.json"
+      }
+    ]
+  },
+  "api_owner": {
+    "port": 4787,
+    "listening_pids": [
+      "34184"
+    ],
+    "processes": [
+      {
+        "pid": "34184",
+        "command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn backend.app.main:app --host 127.0.0.1 --port 4787"
+      }
+    ]
+  },
+  "served_dirs": [],
+  "actions_taken": {
+    "restarts": 0,
+    "kills": 0,
+    "rebinds": 0,
+    "writes_to_other_lanes": 0
+  }
+}
