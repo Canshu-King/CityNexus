@@ -6,7 +6,12 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 import app.main as main_module
+from app.agent.continuation import capture_pending_action
+from app.agent.gateway import AgentToolGateway
 from app.agent.runtime import _terminal_agent_status
+from app.core.config import settings
+from app.schemas import AgentToolCall
+from test_agent_authority_v2_actions import _selected_plan
 from app.db.models import (
     ActionApproval,
     AgentPendingAction,
@@ -228,3 +233,116 @@ def test_r28_approval_route_resumes_same_run_without_second_model_turn(monkeypat
     )
     assert replay.status_code == 409
     assert len(calls) == 1, "approval replay must not cause a second mutation"
+
+
+def test_r28_real_gateway_approval_resumes_same_agent_run() -> None:
+    journey_id, plan = _selected_plan()
+    target = next(item for item in plan["activities"] if not item["locked"])
+    mission_id = str(uuid4())
+    run_id = str(uuid4())
+    now = _now()
+
+    arguments = {
+        "request_id": "r28-real-gateway-pending-" + str(uuid4()),
+        "agent_id": settings.agent_principal_id,
+        "journey_id": journey_id,
+        "mission_id": mission_id,
+        "activity_id": target["id"],
+        "start_at": target["start_at"],
+        "end_at": target["end_at"],
+    }
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        mission = JourneyMission(
+            id=mission_id,
+            journey_id=journey_id,
+            traveler_id=journey.traveler_id,
+            trigger_event_id=None,
+            user_text="Keep this schedule, but execute it only after my approval.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            status="RUNNING",
+            created_at=now,
+            started_at=now,
+        )
+        session.add(mission)
+        session.flush()
+        run = AgentRun(
+            id=run_id,
+            mission_id=mission_id,
+            journey_id=journey_id,
+            provider_key="hermes",
+            model_key="r28-local-gateway-control",
+            status="RUNNING",
+            outcome=None,
+            created_at=now,
+            started_at=now,
+            completed_at=None,
+        )
+        session.add(run)
+        session.flush()
+
+        request = AgentToolCall.model_validate(arguments)
+        pending_result = AgentToolGateway(session).dispatch("reschedule_activity", request)
+        assert pending_result["executed"] is False
+        assert pending_result["decision"] in {"REQUIRE_CONFIRMATION", "REQUIRE_STEP_UP"}
+        approval_id = str(pending_result["approval_id"])
+
+        step = AgentRunStep(
+            id=str(uuid4()),
+            run_id=run_id,
+            sequence_no=1,
+            tool_name="reschedule_activity",
+            arguments_json=__import__("json").dumps(arguments, sort_keys=True),
+            result_json=__import__("json").dumps(pending_result, sort_keys=True, default=str),
+            decision=str(pending_result["decision"]),
+            status="COMPLETED",
+            created_at=_now(),
+            completed_at=_now(),
+        )
+        session.add(step)
+        captured = capture_pending_action(
+            session,
+            run=run,
+            mission=mission,
+            step=step,
+            tool_name="reschedule_activity",
+            arguments=arguments,
+            result=pending_result,
+        )
+        assert captured is not None
+        pending_id = captured.id
+        session.commit()
+
+    approved = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve",
+        json={"approval_method": "USER_CONFIRMATION"},
+    )
+    assert approved.status_code == 200, approved.text
+    payload = approved.json()
+    assert payload["status"] == "CONSUMED"
+    assert payload["continuation"]["status"] == "RESUMED"
+    assert payload["continuation"]["run_id"] == run_id
+
+    with SessionLocal() as session:
+        pending = session.get(AgentPendingAction, pending_id)
+        run = session.get(AgentRun, run_id)
+        mission = session.get(JourneyMission, mission_id)
+        approval = session.get(ActionApproval, approval_id)
+        assert pending is not None and pending.status == "RESUMED"
+        assert run is not None and run.status == "COMPLETED"
+        assert mission is not None and mission.status == "COMPLETED"
+        assert approval is not None and approval.status == "CONSUMED"
+        steps = (
+            session.query(AgentRunStep)
+            .filter(AgentRunStep.run_id == run_id)
+            .order_by(AgentRunStep.sequence_no)
+            .all()
+        )
+        assert [item.tool_name for item in steps] == [
+            "reschedule_activity",
+            "reschedule_activity",
+        ]
+        assert "agent-resume-" in steps[-1].arguments_json
+        assert __import__("json").loads(steps[-1].result_json)["executed"] is True
