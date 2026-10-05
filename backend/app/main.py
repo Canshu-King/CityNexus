@@ -4637,6 +4637,14 @@ def collective_mutation_gate(
         })
     refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
     mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    target_window_status = next(
+        (
+            str(item.get("status") or "")
+            for item in windows
+            if str(item.get("window_id") or "") == str(target_plan.id)
+        ),
+        "",
+    )
     effective_resolved_decision = resolved_decision
     renewed_consent_selected = bool(
         pending_selection is not None
@@ -4653,14 +4661,21 @@ def collective_mutation_gate(
         }
 
     if renewed_consent_selected:
-        # Hard feasibility and authority checks above still apply. Once the
-        # same relevant members explicitly renew consent for one grounded plan,
-        # algorithmic compromise ranking must not overrule that social choice.
-        decision = {
-            "allowed": True,
-            "code": None,
-            "classification": "RENEWED_COLLECTIVE_CONSENT",
-        }
+        # Renewed human consent outranks algorithmic ranking, never hard
+        # feasibility. A stale/unselectable target must be revalidated instead
+        # of being activated merely because people previously chose it.
+        if target_window_status != "GROUNDED_FEASIBLE":
+            decision = {
+                "allowed": False,
+                "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+            }
+        else:
+            decision = {
+                "allowed": True,
+                "code": None,
+                "classification": "RENEWED_COLLECTIVE_CONSENT",
+            }
     else:
         decision = collective_mutation_decision(
             mediation,
