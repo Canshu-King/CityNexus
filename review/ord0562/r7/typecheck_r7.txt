@@ -1,0 +1,5 @@
+ORD-0562 r6 typecheck, run in this pass from the re-cut branch worktree.
+$ node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+  rc=0  captured output=0 bytes (no diagnostics)
+$ node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+  rc=0  captured output=0 bytes (no diagnostics)
