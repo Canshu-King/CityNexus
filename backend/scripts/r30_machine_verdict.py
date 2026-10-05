@@ -217,6 +217,104 @@ def build_verdict(
             selected_plan_id=selected_plan_id,
         )
 
+        renewed_required = {
+            str(value)
+            for value in mediator_payload.get("required_member_ids") or []
+            if value
+        }
+        renewed_responses = (
+            mediator_payload.get("responses")
+            if isinstance(mediator_payload.get("responses"), dict)
+            else {}
+        )
+        renewed_progress = (
+            mediator_payload.get("mediation_progress")
+            if isinstance(
+                mediator_payload.get("mediation_progress"),
+                dict,
+            )
+            else {}
+        )
+        renewed_improved_ids = {
+            str(value)
+            for value in renewed_progress.get("improved_option_ids") or []
+            if value
+        }
+        renewed_response_audits = list(
+            session.scalars(
+                select(AuditLog)
+                .where(
+                    AuditLog.action
+                    == "agent.collective_decision.response",
+                    AuditLog.entity_type == "JourneyMission",
+                    AuditLog.entity_id == mediator_id,
+                    AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                )
+                .order_by(AuditLog.created_at, AuditLog.id)
+            ).all()
+        )
+        renewed_authenticated_members = {
+            str((_json(row.after_json, {}) or {}).get("member_id") or "")
+            for row in renewed_response_audits
+        }
+        (
+            renewed_independent_choices,
+            renewed_independent_errors,
+        ) = _independent_choice_evidence(
+            mediator_payload,
+            renewed_required,
+            allowed_proposal_ids=renewed_improved_ids,
+        )
+        renewed_independent_ok = bool(
+            renewed_required
+            and renewed_improved_ids
+            and set(renewed_independent_choices) == renewed_required
+            and not renewed_independent_errors
+            and len(set(renewed_independent_choices.values())) == 1
+            and set(renewed_independent_choices.values())
+            == {durable_selected}
+            and all(
+                isinstance(renewed_responses.get(member_id), dict)
+                and str(
+                    renewed_responses[member_id].get("proposal_id") or ""
+                )
+                == renewed_independent_choices[member_id]
+                for member_id in renewed_required
+            )
+        )
+        renewed_authority_ok = bool(
+            renewed_required
+            and renewed_required.issubset(set(renewed_responses))
+            and renewed_required.issubset(
+                renewed_authenticated_members
+            )
+            and renewed_independent_ok
+        )
+        verdicts[
+            "e1_w1_authenticated_independent_authority"
+        ] = _verdict(
+            PROVEN if renewed_authority_ok else CONTRADICTED,
+            (
+                "The pre-shock renewed consent is authenticated and every "
+                "relevant member independently converges on the same unique "
+                "grounded best improved option."
+                if renewed_authority_ok
+                else
+                "The pre-shock E1/W1 authority is not proven as independent "
+                "authenticated member convergence."
+            ),
+            mediator_mission_id=mediator_id,
+            required_member_ids=sorted(renewed_required),
+            response_member_ids=sorted(renewed_responses),
+            authenticated_member_ids=sorted(
+                renewed_authenticated_members
+            ),
+            improved_option_ids=sorted(renewed_improved_ids),
+            independent_member_choices=renewed_independent_choices,
+            independent_choice_errors=renewed_independent_errors,
+            selected_proposal_id=durable_selected,
+        )
+
         def _external_run_for_mission(mission_id: str) -> AgentRun | None:
             if not mission_id:
                 return None
