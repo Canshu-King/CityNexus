@@ -396,11 +396,39 @@ def _attempt_old_authority(
 
     from fastapi.testclient import TestClient
 
-    from app.db.models import Journey, ReplanProposal
+    from sqlalchemy import select
+
+    from app.db.models import AuditLog, Journey, ReplanProposal
     from app.db.session import SessionLocal
     from app.main import app
 
     client = TestClient(app)
+
+    # First spend the old E1/W1 authority through the ordinary public mutation
+    # route. This must fail at the same core gate used by production acceptance
+    # and must leave a durable collective.mutation.denied audit.
+    direct_accept = client.post(
+        f"/api/v1/replans/{selected_proposal_id}/accept",
+        headers={
+            "Idempotency-Key": (
+                "r30-stale-consent-" + selected_proposal_id.replace("-", "")[:20]
+            )
+        },
+    )
+    direct_accept_payload = (
+        direct_accept.json()
+        if direct_accept.headers.get("content-type", "").startswith(
+            "application/json"
+        )
+        else {"text": direct_accept.text}
+    )
+    if direct_accept.status_code != 409:
+        raise RuntimeError(
+            "old E1/W1 proposal did not fail closed through normal accept route: "
+            f"{direct_accept.status_code} "
+            f"{json.dumps(direct_accept_payload, ensure_ascii=True)}"
+        )
+
     resumed = client.post(
         f"/api/v1/journeys/{journey_id}/missions/{child_id}/resume"
     )
@@ -434,13 +462,38 @@ def _attempt_old_authority(
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
         proposal = session.get(ReplanProposal, selected_proposal_id)
+        denial = session.scalar(
+            select(AuditLog)
+            .where(
+                AuditLog.journey_id == journey_id,
+                AuditLog.action == "collective.mutation.denied",
+                AuditLog.entity_id == (
+                    str(proposal.proposed_plan_version_id) if proposal else ""
+                ),
+            )
+            .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        )
+        denial_after = (
+            json.loads(denial.after_json or "{}") if denial is not None else {}
+        )
         state = {
             "active_plan_version_id": journey.active_plan_version_id if journey else None,
             "selected_proposal_status": proposal.status if proposal else None,
+            "denial_audit_id": denial.id if denial else None,
+            "denial_audit": denial_after,
         }
     if state["selected_proposal_status"] == "ACCEPTED":
         raise RuntimeError("stale E1/W1 authority was incorrectly consumed")
+    if state.get("denial_audit", {}).get("code") != (
+        "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+    ):
+        raise RuntimeError(
+            "normal stale-authority accept did not persist the expected "
+            f"world-epoch denial audit: {json.dumps(state, ensure_ascii=True)}"
+        )
     return {
+        "direct_accept_status": direct_accept.status_code,
+        "direct_accept": direct_accept_payload,
         "resume_status": resumed.status_code,
         "resume": resumed_payload,
         "approval_id": approval_id,
