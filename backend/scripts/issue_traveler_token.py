@@ -1,8 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
 
-from app.traveler_principal import issue_traveler_token
+BACKEND = Path(__file__).resolve().parents[1]
+if str(BACKEND) not in sys.path:
+    sys.path.insert(0, str(BACKEND))
+
+from app.traveler_principal import issue_traveler_token  # noqa: E402
 
 
 def main() -> None:
