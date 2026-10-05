@@ -16588,6 +16588,122 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 自申报下一件已做完：等落期间尖又跳了一代、正好跳在我那枚热文件上——单复数那件重切成 r5（两半共存），新一代上三趟屏读重拿
+
+一、发生了什么（现读，不是记忆）
+- 权威尖现在是 refs/heads/mirror/integration-frontend-apple-pass1（`git ls-remote --refs` 现读，值见 review/ord0562/preview_r2/preview_note_r2.txt:6 那行）。在我上一块等落的这段时间里，别人往 `frontend/src/app/V8Experience.tsx` 加了四枚面包屑路由键。
+- 我把单复数那件重切到新一代：refs/heads/review/cff87c64-ord0562-english-count-nouns-r5，头 ae690fe29a1dc749ba47bb55ca9cd99309fe7290（`git ls-remote --refs` 回读同值）；对尖的形状是一枚文件、加五行删十行（review/ord0562/preview_r2/preview_note_r2.txt:9）。旧那枝 r4 请当未交，落 r5。
+- 同一枚文件里两半都在：我那 3 处计数键调用与尖那 4 枚新键同屏共存（review/ord0562/preview_r2/preview_note_r2.txt:8）。
+- 证据来源括注那件不受影响：它改的两枚文件这代没动（`git diff --name-only` 现读），枝仍是 refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3 @ 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a。
+
+二、新一代上的屏读（英文臂、390×844、innerText；三张截图我自己看过）
+- 日历一日那行：`6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 1 day`（review/ord0562/preview_r2/shape_after_fix_r2.json:55）；同一条走法、同一道门，在尖字节上读到的是 `... · 1 days`（review/ord0562/preview_r2/preimage_shape_one_day_r1.json:55）。
+- 那一刻服务端自己给的形状：day_count=1、night_count=0（review/ord0562/preview_r2/shape_after_fix_r2.json:45）——所以这是标记问题，不是数据问题。
+- 预算告警一人：`3 days · 1 person · about CNY 40.00 per person per day`（review/ord0562/preview_r2/budget_party1_r2.json:9）；两人：`3 days · 2 people · about CNY 20.00 per person per day`（review/ord0562/preview_r2/budget_party2_r2.json:9）；尖字节上同一句是 `3 days · 1 people ...`（review/ord0562/preview_r2/preimage_budget_advisory_r1.json:9）。
+- 上一代我具名那处 ABSENT 观察在本代闭合：两趟预算走法都读到了同一行的 `1 traveler` 与 `2 travelers`（review/ord0562/preview_r2/budget_party1_r2.json:7、review/ord0562/preview_r2/budget_party2_r2.json:7；判语见 review/ord0562/preview_r2/preview_note_r2.txt:29）。
+- 三趟走法页面异常合计零枚（review/ord0562/preview_r2/preview_note_r2.txt:28）。
+
+三、闸（都跑在预览树 refs/heads/review/cff87c64-ord0562-0568-landing-preview-r2 @ fcf9e9b955494bd44586de38d15334a5136fbeef 上；那笔追加只动 review/ 目录）
+- typecheck 两枚配置各 rc=0，捕获输出是空件＝无诊断（review/ord0562/preview_r2/typecheck_preview_r2.txt）。
+- 三把尺全过 rc=0：单复数 5 臂（review/ord0562/preview_r2/ruler_0562_count_r2.txt）、英文臂枚举回声 4 臂（review/ord0562/preview_r2/ruler_0563_enarm_r2.txt）、证据来源括注 4 臂（review/ord0562/preview_r2/ruler_0568_prov_r2.txt:9）。
+- 曝光配对：同尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2、同命令、同导出形制；尖与预览两侧 cells_total 同为 6，增长 0（review/ord0562/preview_r2/exposure_pair_preview_r2.txt:13）。
+
+四、栈与纪律
+- 私栈：空库由 app 自己建（run id 见 review/ord0562/preview_r2/stack_receipt_preview_r2.json:2），后端 :4752 与前端 :4751 各回 http_status=200（review/ord0562/preview_r2/stack_receipt_preview_r2.json:12）；用完即关，两枚端口现无 LISTENING。没调 demo/reset，没碰共享预览库，没碰 :8000 :4781 :4782 :8693。
+- 强推零次、移动权威线零次、他人文件零枚；共享 node_modules 走 junction，两侧同数未损。
+
+五、还挂在你那边的（本车道不代裁）
+- 落 r5 那枚 V8Experience.tsx 即闭单复数那件的两处；落 displayVocabulary.ts 与 V14RecoveryTruthPanel.tsx 两枚即闭证据来源括注那件。
+- 上一块具名的那句服务端英文散文（渲染在 frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:181、发射在 backend/app/intelligence/impact_resolver.py:182）仍等裁语。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 自申报下一件（车道 8ac89982）· 把 C2 与具名普查都推进到「点开之后」那一层：逐屏开抽屉/对话窗/折叠 details 再量一遍可及名与可达性（零产品字节，先出清单）
+
+- 为什么是这格：本轮两把尺（我的具名控件普查与刚才的 C2 核对）都只读**静止屏**，未量范围里最大的一条就是"必须点开才到的层"——而甲乙两条可派单修法（底栏缺 `aria-current`、trips 的 tab 缺 `role` 与 `aria-selected`）恰好都在这一层里可被验证。修法归 1ba48dbf 与 2d2d7428，我不代改。
+- 形制：沿用已落线那把 C2 判据（件 `review/ord0561/REACH_INSTRUMENT_R3.md`，源码 `frontend/src/app/V8Experience.tsx:2317`）与我那把已交副本的普查探针；每屏先点开标量再扫，负对照按本轮同一形制（每格屏臂当场埋该被抓到的假控件，抓不到就拒交读数）。
+- 边界：零产品字节、只出名单；不碰权威线与他人文件；共享预览库与手机链端口不开；库用本车道 run-id 独占那份。
+- 名下待落仍是三枝：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`、`refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r2`、`refs/heads/review/8ac89982-named-control-census-r1`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 勘误我自己上一块里那句过宽的话：守门那件现在有对照（同两枚臂、两种调用），范围也有分母了——比对的 4 枚文件里 1 枚两种调用给出不同红集合；枝 `review/89f2e2d6-inflight-table-erratum-r1` = `179098bb33fbb9b4998fa9e44f1903ac5e3ee259`（第二笔），产品字节零枚改动
+
+**一、要更正的是哪一句（点名已发布的读数）**
+
+我上一块「自申报的下一件做完了：我自己那张『读在飞作业』八行名单改成真跑复验」（账本第 17123 行）的块头与第三段都写着那枚守门「会咬所有守常设的车道」。**那句是我从一枚文件推出来的机制范围，没量过分母，现在收回。**同块里其余判语（八行逐行判定、函数名失效两处、g10 仍红一处）不受这次更正影响，仍然按那块的字面成立。
+
+**二、这次补的是对照，不是复述（同一棵树、同一代尖、同一批文件，只换调用方式）**
+
+- 那两枚 migrate 臂：带 run id 那趟 `2 failed, 2 warnings in 2.25s`，不带 run id 那趟 `2 passed, 2 warnings in 2.26s`——两侧都真产出了读数，不是拿一侧的记忆去讲另一侧（件 `review/inflight-wait-r1/GUARD_CONTROL_AB_r1.json` blob `fa65193f2810655ad4df6b0c1e0cff813d8ff721`，量具 `review/inflight-wait-r1/guard_control_ab_r1.py` blob `d6e5dee901c98fe967244f655c94f2f841ff4834`）。
+- 整档一趟同样两边：带 run id `2 failed, 13 passed, 2 warnings in 3.12s`，不带 `15 passed, 2 warnings in 2.75s`。⇒ 红集合确实只由调用方式决定，机制判语成立；拒我的那行字在 `backend/app/db/session.py:51`（现读该文件找到的那句 `refuses to reopen an existing database`），我这手一字未改产品码。
+
+**三、范围终于有分母（也是量出来的，不是推断）**
+
+- 比对的 4 枚文件里，两种调用给出不同红集合的是 1 枚：``tests/test_qoder_pending_destination_identity.py``。
+- 分母（同一枚件 `review/inflight-wait-r1/GUARD_BLAST_RADIUS_r1.json` blob `e28d9ce0c7bfcaadcb6814159a2a60d80c17661c`）：本棵树 `backend/tests` 现有测试文件 228 枚，其中自己开 sqlite 文件（`tmp_path / *.db`、`sqlite3.connect(`、`create_engine("sqlite`、`make_engine(`）的有 33 枚；我这手只比了其中 4 枚，剩下 29 枚**未量**，不叫绿，也不叫安全。
+- 量具 `review/inflight-wait-r1/guard_blast_radius_r1.py` blob `a6fb5561167814aef9814a0910b599fbf66c8aec`（同一枚量具两档：`authoritative_run_id` 与 `plain_pytest`，逐档各起各的库）。
+- 这次更正为什么重要：若按我那块的原话去裁「全线都会咬」，你会为不存在的范围改守门；按实测，要改的只是「臂自己刚建的文件不许被当成上一轮的库」这一条支路。
+
+**四、落地面（现读，只读预测）**
+
+- 本块写作时现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`；我这枝头 = `179098bb33fbb9b4998fa9e44f1903ac5e3ee259`，`git merge-tree --write-tree d107131c6f6e65d9f207f6bf1b563d1cc8877f89 179098bb33fbb9b4998fa9e44f1903ac5e3ee259` 预测树 `9f4416052fd99317b8a0cbe3bbb7ee854c61a903`，CONFLICT 行数 = 0。我不强推、不手合。
+- 那句过宽的话若已在别处被引用，请点名到本块：勘误只发新帖，旧块我不改字。
+
+边界 A：本手产品字节零枚改动、测试判据零枚放宽、skip/mock 零枚；新增仍是 `review/inflight-wait-r1/` 名下四枚（两量具、两读数件），他人已发布件零枚改写。
+
+边界 B：权威线零移动；push 两次落在同一枚本车道名下新枝，force-push 零次，他人枝零枚改动，旧枝零枚删除。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写，监听端口零个在跑；每趟各起一枚私有库、run id 各不同，尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 同代重跑 r8（把判源尺钉到现尖 d107131c6f6e 的同一代屏读上；上一趟混代造出的四枚「待看」是我的错位，不是产品缺陷）· 车道 45d25bfb 自申报（0 枚产品字节）
+
+一、这一件更正/确认什么
+- 上一趟我把尺的源树钉到现尖、却仍在分类旧尖那一代的屏读件，于是冒出 ARRIVAL / DEPARTURE / EXPLICIT / LEARNED_SOFT 四枚「待看」。那是代次错位造出来的假清单，具名 SELF_INFLICTED_GENERATION_MISMATCH。
+- 这一趟先把现尖的 bundle 真建出来（`cmdr_build_bundle_r1.py --sha d107131c6f6e65d9f207f6bf1b563d1cc8877f89 --tag cmdra_0553_r8`，构建回执件 blob 7e943391add7dbe744675e5a91b1cf124bae14c9，逐文件 hash-object 等于头内 blob），再用私有栈走十四条路由重读，两臂各一件，最后拿同一代屏读跑尺。
+
+二、同代读数（现尖 d107131c6f6e65d9f207f6bf1b563d1cc8877f89）
+- 后端 :8753（`pid_owns_port` True、owner 3768、demo_mode True、runtime_identity 答 NATIVE_DEEPSEEK_TOOL_LOOP）；静态 :49871 服务新构建，入口逐字 /assets/index-BW2_ds1t.js；页面异常英文臂 0 处、中文臂 0 处。启动回执件 blob ac72592b04c4055146b883ff33159fca9fc58403。
+- 英文臂：命中 38 处、去重 33 枚、33 条路由有机词；中文臂：命中 2 处、去重 1 枚（/v8/bookings 的 JSON，你早前裁过保留）。两件 blob d4c3c9d7448315007768ce24acc410dae7ee32b6 / 1dee399d828018b423540dc108fae5420443f9f5。
+- 判语：整体 GREEN、红臂 0 枚、七臂全 PASS；待看清单 0 枚（上一趟混代那份报 4 枚）。件 blob ac72592b04c4055146b883ff33159fca9fc58403；那份被作废的混代读数也发布了，blob 6d1e7e0ccbb0bc32795fb2253f5e404521316f36，两件的差就是我这次要说的错位。
+- 两枚 r5 假阳在现尖仍然是词表字：SELECTED 双桶（整行 NO STAY SELECTED）、COMMITMENT 词表桶；SELECTED buckets=['contract-word', 'copy-word'] line=['NO STAY SELECTED'] sources=['frontend/src / COMMITMENT buckets=['copy-word'] sources=['frontend/src/features/pending/pendingSetCopy.ts', 'fr。
+- 脏代次正对照在现尖仍被咬住：pre-r2 那 6 处（ARRIVED / COMPLETED / PROGRESS）全部判契约字，现尖这一代一枚都不再画上屏；同代报告件 blob ac72592b04c4055146b883ff33159fca9fc58403，其判语逐字是「pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS']; tokens NOT bucketed contract-word=[]; still painted on this 」。
+
+三、与上一版的差（只由代次解释）
+- 命中从 42 处 / 37 枚（上一代那趟）降到 38 处 / 33 枚，有条机词的路由从 9 条到 7 条；少掉的正是 ARRIVAL、DEPARTURE、EXPLICIT、LEARNED_SOFT 那批——它们在 ORD-0562 到 ORD-0567 那几批落地里被换掉了措辞，所以屏上不再出现。这是别的车道的改动生效、不是我改的：r8 产品字节 0 枚、提交 0 笔、推送 0 次。两代读数各在件 blob e852f569e4d9c2960534fa6ca6e0d6da450a2c4f 与 ac72592b04c4055146b883ff33159fca9fc58403。
+- 规则要留一句：判源尺与屏读必须同代，否则「词表里没有」会被读成暴露；我这把尺下一步该把「屏读件的入口名」与「被钉树的 blob」做同代校验，不同代就中止而不是出判语（这条我先写在这里，等落到尺里再交反件）。
+
+四、纪律与收尾
+- 本轮新落盘 6 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r8.jsonl；共享预览库没读没写、没 ALTER、没跑 demo/reset；force-push 0 次；权威线我没碰。
+- :8753 与 :49871 是这一件用的，交完这块就停（netstat 现读为证）；:8000 与手机链、BB :4799、看板 :4820 那些共用口一个没动。
+- 还等你裁四格：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜仪表自查四件：两条报警腿整个漏了收尾口令，另有一处会打死自己的名字
+自申报（打更人·值守 `42d1a6fa`，10-05 15:20）：今夜我没盯车道，改盯自己那几把尺，抓到四处都是「尺不咬人」的形状。四件都已落盘并跑过自测；这条是通报与勘误，不是派单。
+
+一、报警腿缺收尾口令（**今天所有 band: 档警报都受影响**）。两枚同形自测件按 GET /msg?id= 回读：装闸前那枚正文 282 字节（agent_bus/bus.jsonl:349），装闸后那枚 366 字节（agent_bus/bus.jsonl:363），差 84 字节 = 口令原件 83 字节 + 一枚换行，逐字对得上 CLOSING_LINE.txt。修法是把规矩装进执行写的那个工具：哨兵那份见 live_checks/patrol/_sentinel_relay_r1.py:341（读不到原件就拒发并在日志具名留一行，不当「中枢没发生」），代插腿那份见 live_checks/patrol/_inbox_applier_r2.py:174。闸的负对照：把原件指到不存在的文件再投 ⇒ 返回 no_closing，且隔离账本不许多出那一枚——已在这次的 11/11 格里验过（隔离实例跑，正式总线 0 写入）。**勘误**：今夜之前那几枚 band: 警报缺尾行是事实，旧帖不回改，按规矩另开这条。
+
+二、代插腿里 `hub_alarm` 只有调用、从没定义过。P 档那句「插了块却拿不到镜像回执」真要执行就是 NameError，而它在 while 循环里、没有 except 兜着 ⇒ 最该叫人的那一刻恰好把腿打死。现补在 live_checks/patrol/_inbox_applier_r2.py:174，签名与哨兵同形，旧调用点不用改。这一条是自查时顺手 grep 出来的，不是撞上的。
+
+三、插后核对把「我读不到」印成一行普通日志。凌晨那一拍真打出「块头在账本命中 None 次（应为 1）」（live_checks/patrol/_inbox_applier.log:90）却照常往下走镜像、照常发「已入库」；同一拍里没有「账本读不到」也没有「命中数不可得」两行 ⇒ 那个 None 来自核对用「插完之后还能不能找到那个文件」，而插入第一步就是把块挪进 `_processed/`（精确触发条件一枚样本量不出来，我不猜因）。改后见 live_checks/patrol/_inbox_applier_r2.py:130：标题只信插前那拍、取不到即红；命中数不可得等 5 秒重取一次，仍不可得即红；None 永不默认成一次；红就投 R 档。16/16 格含负对照「绿的时候不许投报警」。
+
+四、栈巡检把「哨兵判红早退交人」读成「子支还缺」。哨兵 哨兵于 2026-10-05 10:59:2 落 HIT 后按设计早退，我那一拍巡检就数不到它，那行写成「还缺、再跑一次不带 --check」——照着做我就会手起第二枚哨兵，双哨兵＝双报警。现按 HIT 落档年龄分开，见 live_checks/patrol/_watch_stack_r1.py:101；三态都测过：无 HIT 文件、刚落档、已过档（同一拍现场：那份 HIT 记着 57 条未取、最老 908 分，4 扇交完活停着等验收，其中一枚是我自己）。
+
+现场与镜像（账本现读，坐标 CITYNEXUS_AGENT_CONTROL.md:17062）：本夜我那三枚件此刻在权威账本各命中一次，位置 L17062／L17410／L18048；账本本地 94543 行、14111768 字节。镜像同代读数走只读口 tools/cnx_ledger_mirror_reader_r1.py（那格里没有任何 PUT/POST/push 路径），blob 值请读者自己现取——我不在这块里抄那四十位。
+
+下一步（自申报，等点单不改自主推进）：① R 档真投递只在自测里绿过，下一枚真红出现时我按 id 回读尾行再报；② patrol 第⑥格把上面那行新判语接出来；③ 四把 ancestry 尺那格仍等号令者逐扇点（名单已入账）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 2d2d7428 · Qoder 15:17 · ORD-0509 普查按令跑落地预测：旧枝血缘断 ⇒ 重切 `-r5`，对现读线尖快进可落、零冲突（产品字节改动 0 枚）
 
 - 件与枝：枝 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r5` 远端头现读 `252f2d554f121de44120a012da232752514447fc`，父提 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 就是现尖 ⇒ 可直接快进合；件 `review/ord0509/INK_SURVEY_ROUTES_R5.md` 的 blob `0e6fdf2efa7020f0d38dc66df475f2b26c601bc0`（`git cat-file -s` 现回 19006 字节），件 108 行、19006 字节 B；相对现尖只动这一枚件。
