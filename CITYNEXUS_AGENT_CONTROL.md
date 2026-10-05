@@ -16588,6 +16588,81 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `6a773af1` · ORD-0556 追加三趟只读腿：十四路由逐屏量完、21 枚大写词查到出处、再按现读尖复核（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `04e4f02e32e99853fd1069ee8f56982dd0d331a1`，`ls-remote` 独立回读同值；parent = `f70d50c061ed68599bf6a82dd905fbb304cb51f6`（屏读那笔），其 parent = `a61d4e7a022d73e0f882de674d51a7036371f9ad`（我 ORD-0556 r2，一字未动）。两笔合计 6 枚文件，全在 `review/` 下，产品路径 0 枚。屏读那趟的基座尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+**为什么再走一遍**：我 ORD-0556 那块具名报缺的那格是「跑号令者整把尺」——`review/ord0556/sweep_bookings_caps_r1.py:206` 那 `timeout=900` 在 vite-dev 基座被杀。这轮换走法不换尺：`review/ord0556/route_sweep_dev_r1.py` 一次只进一枚路由、两臂各一趟；计数规则逐字取自 `cmdr_machine_speech_sweep_r1`（件里 `generation.rules_copied_from`），允许表与基线同源（`generation.baseline_allow_list`，基线件 blob `44a51e236a68ac84ee58dd3be98e9cb890e66bac`，本地对象库现开得出）。
+
+**一、屏读总数**（件 `route_sweep_dev_20261004T180116Z.json`）：英文臂读到 13 枚路由（未读到 1 枚）共 24 枚大写、去重 21 枚，页面异常 0 条，墙钟 692.7 秒（`route_sweep_dev_20261004T180116Z.json:19` 起）；中文臂 13 枚路由共 3 枚、去重 2 枚、页面异常 0 条、墙钟 336.6 秒（`route_sweep_dev_20261004T180116Z.json:167`）。形状分成 23 枚全大写词与 1 枚下划线枚举（`route_sweep_dev_20261004T180116Z.json:22`）。整件判语 `SWEEP_DONE`。
+
+**二、逐屏**（英文枚数 ｜ 中文枚数 ｜ 你的基线 → 现在；锚是同一枚读数件里的行号）：
+
+- `/v8/hub`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 2 → 现在 0（`route_sweep_dev_20261004T180116Z.json:53`、`:180`、`:285`、`:286`）；英文臂字面：无
+- `/v8/live`：英文臂 8 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 8 → 现在 8（`route_sweep_dev_20261004T180116Z.json:58`、`:185`、`:293`、`:294`）；英文臂字面：`CLOCK`、`CURRENT`、`LIVE`、`NAVIGATE`、`NEXT`、`OFFLINE`、`RISK`
+- `/v8/map`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 0 → 现在 0（`route_sweep_dev_20261004T180116Z.json:73`、`:190`、`:297`、`:298`）；英文臂字面：无
+- `/v8/studio`：英文臂 1 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 1 → 现在 1（`route_sweep_dev_20261004T180116Z.json:78`、`:195`、`:309`、`:310`）；英文臂字面：`STAY`
+- `/v8/stay`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 0 → 现在 0（`route_sweep_dev_20261004T180116Z.json:87`、`:200`、`:305`、`:306`）；英文臂字面：无
+- `/v8/discover`：英文臂 1 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 1 → 现在 1（`route_sweep_dev_20261004T180116Z.json:92`、`:205`、`:281`、`:282`）；英文臂字面：`DISCOVERY`
+- `/v8/bookings`：英文臂 2 枚 ｜ 中文臂 2 枚 ｜ 你那件基线 5 → 现在 2（`route_sweep_dev_20261004T180116Z.json:101`、`:210`、`:277`、`:278`）；英文臂字面：`JSON`
+- `/v8/agent`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 0 → 现在 0（`route_sweep_dev_20261004T180116Z.json:110`、`:219`、`:269`、`:270`）；英文臂字面：无
+- `/v8/authoritative`：英文臂 8 枚 ｜ 中文臂 1 枚 ｜ 你那件基线 10 → 现在 8（`route_sweep_dev_20261004T180116Z.json:115`、`:224`、`:273`、`:274`）；英文臂字面：`AUTHORITATIVE`、`CHANGED`、`NEXT`、`PASSED`、`PROTECTED`、`REALITY`、`RUNTIME_CAPTURE`、`TRIP`
+- `/v8/intelligence`：英文臂 3 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 3 → 现在 3（`route_sweep_dev_20261004T180116Z.json:132`、`:233`、`:289`、`:290`）；英文臂字面：`COMMITMENT`、`POLICY`、`POST`
+- `/v8/twin`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 2 → 现在 0（`route_sweep_dev_20261004T180116Z.json:143`、`:238`、`:317`、`:318`）；英文臂字面：无
+- `/v8/trips`：英文臂 0 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 0 → 现在 0（`route_sweep_dev_20261004T180116Z.json:148`、`:243`、`:313`、`:314`）；英文臂字面：无
+- `/v8/me`：英文臂 1 枚 ｜ 中文臂 0 枚 ｜ 你那件基线 1 → 现在 1（`route_sweep_dev_20261004T180116Z.json:153`、`:248`、`:301`、`:302`）；英文臂字面：`NOTIFICATIONS`
+- `/v8/trash`：两臂都 **未读到** —— `NOT_REACHED_BY_LANE`（件 `notes`，`route_sweep_dev_20261004T180116Z.json:257` 与 `:259`）
+
+**三、21 枚去重词的出处**（腿二，件 `token_source_probe_20261005T073046Z.json`；扫的是基座尖那代源码：前端 146 枚 `.ts/.tsx`、后端 146 枚 `.py`、契约 2 枚）：
+
+- 18 枚出现在**英文字典里整值大写的标签**中 —— 与 ORD-0556 那三枚同类，是能改文案改掉的。
+- 2 枚只在**句子里**：`JSON`（你已裁「不许动」）与 `PASSED`（那行是 `"PASSED · provider facts frozen"`，前半大写后半散文；我这把尺判成「句中嵌入」，你要判成标签类我就按你的判据重算，判据换、读数不换）。
+- 1 枚**字典里根本没有**：`RUNTIME_CAPTURE`。它只在服务端出现（`backend/app/main.py:11547`），却在中英两臂的 `en:/v8/authoritative、zh:/v8/authoritative` 都上了屏 —— 这枚不是文案大小写的事，是服务端枚举原样回显，按你那族 `displayVocabulary` 的路子才治得住。
+
+**四、按现读尖复核**（腿三，件 `label_caps_crosscheck_20261005T073239Z.json`，尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`，那本字典 blob `09d7bdecd00436730bfa039f9e456450a5bed59d`）：腿二在基座尖那代数出的 30 枚整值大写英文标签行（去重后；同一行含多枚词的已并成一枚），逐枚再查：27 枚在现尖仍整值大写；3 枚的键已不在这本表里 —— 是 `v14.kicker`、`v14.kickerChanged`、`v14.kickerProtected`。这 3 枚的字面现尖仍在，只是搬进了 JSX 字面量：`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:98` 逐字 `<span className="v8-kicker">V14 · REALITY CHANGED</span>`；字典里那半中文接不上它了（这句是源码读，屏侧要重跑才算）。现尖那本字典比屏读那代短了 898 行（2243 → 1345），说明搬家正在发生，所以名单按当代读、不折算成上一代。
+
+现尖仍大写的 27 枚（逐枚键 + 现尖行号 + 逐字值）：
+
+- `studio.selectedStay`（现尖 `frontend/src/i18n/LocaleContext.tsx:132`）：`SELECTED STAY`
+- `studio.noStaySelected`（现尖 `frontend/src/i18n/LocaleContext.tsx:134`）：`NO STAY SELECTED`
+- `live.leaveBy`（现尖 `frontend/src/i18n/LocaleContext.tsx:176`）：`NEXT · LEAVE BY`
+- `live.navigate`（现尖 `frontend/src/i18n/LocaleContext.tsx:180`）：`NAVIGATE →`
+- `live.risk`（现尖 `frontend/src/i18n/LocaleContext.tsx:181`）：`RISK`
+- `bookings.stayEvidence`（现尖 `frontend/src/i18n/LocaleContext.tsx:204`）：`STAY EVIDENCE`
+- `bookings.stayPreview`（现尖 `frontend/src/i18n/LocaleContext.tsx:209`）：`STAY PREVIEW`
+- `offline.readOnly`（现尖 `frontend/src/i18n/LocaleContext.tsx:223`）：`OFFLINE · READ ONLY`
+- `me.currentMode`（现尖 `frontend/src/i18n/LocaleContext.tsx:234`）：`CURRENT MODE`
+- `me.tripContext`（现尖 `frontend/src/i18n/LocaleContext.tsx:245`）：`TRIP CONTEXT`
+- `discovery.liveProvider`（现尖 `frontend/src/i18n/LocaleContext.tsx:316`）：`LIVE PROVIDER MODE`
+- `discovery.liveProviderMode`（现尖 `frontend/src/i18n/LocaleContext.tsx:318`）：`LIVE PROVIDERS`
+- `discovery.brand`（现尖 `frontend/src/i18n/LocaleContext.tsx:319`）：`CN / DISCOVERY`
+- `exec.liveStatus`（现尖 `frontend/src/i18n/LocaleContext.tsx:377`）：`LIVE STATUS`
+- `exec.clock`（现尖 `frontend/src/i18n/LocaleContext.tsx:380`）：`CLOCK`
+- `exec.currentStep`（现尖 `frontend/src/i18n/LocaleContext.tsx:382`）：`CURRENT STEP`
+- `exec.offline`（现尖 `frontend/src/i18n/LocaleContext.tsx:386`）：`OFFLINE`
+- `exec.authoritativeJourney`（现尖 `frontend/src/i18n/LocaleContext.tsx:394`）：`AUTHORITATIVE JOURNEY`
+- `exec.next`（现尖 `frontend/src/i18n/LocaleContext.tsx:401`）：`NEXT`
+- `exec.liveJourneyPrefix`（现尖 `frontend/src/i18n/LocaleContext.tsx:423`）：`LIVE JOURNEY ·`
+- `exec.nextPrefix`（现尖 `frontend/src/i18n/LocaleContext.tsx:424`）：`NEXT ·`
+- `inbox.authoritativeMemory`（现尖 `frontend/src/i18n/LocaleContext.tsx:486`）：`AUTHORITATIVE MEMORY`
+- `intel.policy`（现尖 `frontend/src/i18n/LocaleContext.tsx:537`）：`POLICY`
+- `intel.postActionGate`（现尖 `frontend/src/i18n/LocaleContext.tsx:541`）：`POST-ACTION GATE`
+- `intel.commitment`（现尖 `frontend/src/i18n/LocaleContext.tsx:544`）：`COMMITMENT`
+- `studio.v12Kicker`（现尖 `frontend/src/i18n/LocaleContext.tsx:583`）：`TRIP STUDIO · DRAFT THEN ACCEPT`
+- `push.kicker`（现尖 `frontend/src/i18n/LocaleContext.tsx:622`）：`NOTIFICATIONS`
+
+**五、ORD-0556 仍未落线**（现读）：现尖那本字典里 `bookings.stayEvidence` 在 `frontend/src/i18n/LocaleContext.tsx:204` 仍是 `STAY EVIDENCE`、`inbox.multimodal` 在 `frontend/src/i18n/LocaleContext.tsx:460` 仍是 `MULTIMODAL INBOX`、`inbox.authoritativeMemory` 在 `frontend/src/i18n/LocaleContext.tsx:486` 仍是 `AUTHORITATIVE MEMORY`。我这枝改的正是这三行，但现尖的字典形状已与我起笔那代不同（blob `09d7bdecd00436730bfa039f9e456450a5bed59d` vs 我枝上那枚 `260f2755f0353d2742f9aef57900f3f60760a942`），落地门要在这枚热文件上做文件级合。**要不要我按现尖 re-cut 成 r3 并重取两臂读数，等你一句**；不点我不动，也不自己合别人的热文件。
+
+**六、现场**：本车道自己的两枚端口 4951 与 4956 跑完无监听（件 `teardown.my_ports_listening_after`）；库副本是号令者 canary 的一份拷贝，跑前跑后逐字节相等（`teardown.canary_source_untouched` = true）；件里 `notes` 4 条，其中两枚点名 `/v8/trash`。没自派单、没碰 `:4783` 与 `:4787`、没写账本、force-push 0 次。
+
+**七、没改善（具名报缺）**
+1. **逐格归因给不出**：屏读那趟我只把每枚路由的枚数与去重词存进件里，原始上屏文字被我自己那手 teardown 删了（`review/ord0556/route_sweep_dev_r1.py:219`）。所以「某一枚字是从哪一行放上屏的」这轮没有读数；要就得重跑一趟并保留原始件。我没改那行 —— 改完没重跑就等于没验过。
+2. `/v8/trash` 两臂都未读到（`NOT_REACHED_BY_LANE`：那屏自己的标题始终没上屏），我没为了让枚数好看去放宽就绪判据。
+3. 基座是 vite-dev 源码即时编译，不是你那份建成品包（`FRONTSRC_BUILD_PREREQ`），所以总数与你基线的 14 枚路由 33 枚不是同一代可比；我只在 13 枚共有路由上给逐屏差（件 `baseline_comparison.per_route_delta`）。
+4. `/v8/bookings` 那格现读是 2 枚，**这是带着我未落地的 ORD-0556 改动的基座量到的**；现尖那三枚字典值仍是方块大写（第五节逐枚给了行号），但现尖这一代我没重跑屏读，所以「屏上念成什么」的证据仍是 ORD-0556 那块那一趟；「降到 2 枚」这句要落线之后重量才算数。
+5. 出处那一分类是我定的形制（整值大写 vs 句中嵌入），边界那枚是 `PASSED`；且它证的是「这枚词面在源码里存在/不存在」，不是「屏上那枚节点就读自那一行」。
+
+
 ### 车道 2d2d7428 · Qoder 15:43 · 我这把尺的 C2b 判据改形：旧字面判据在中文臂读到的全是两字中文词、英文臂全是底栏自己的标签，收紧成「只剩一个字符或纯符号」后同代同趟并记两格（产品字节改动 0 枚）
 
 - 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-c2b-rule-r2` 远端头现读 `9087c79d0df4bbb8ff9ffa3eed06f9fadd2d501b`，父提 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 就是现尖 ⇒ 可直接快进合（另现取 `git merge-base` 读回 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`、`git merge-tree --write-tree` 退 0、预测树 `39bb64bb007bd55c144623e61c30d9173e6f6fe3`、相对现尖只动这一枚件）；件 `review/ord0561/C2B_RULE_R2.md` 的 blob `ba4e74bfe57aa76c0d98618e1a44f46d58ffd9fd`（`git cat-file -s` 现回 8438 字节），件 87 行、8438 字节 B。
