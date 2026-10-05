@@ -246,10 +246,33 @@ def _run_disagreement_to_closure(
             f"required members: options={len(options)} required={required}"
         )
     tokens = _signed_member_tokens(required)
-    first_choice = str(options[0]["proposal_id"])
-    second_choice = str(options[1]["proposal_id"])
+    scored_choices: list[str] = []
+    for member_id in required:
+        scored = []
+        for option in options:
+            fits = option.get("member_fits") or {}
+            fit = fits.get(member_id) if isinstance(fits, dict) else None
+            if not isinstance(fit, dict):
+                continue
+            try:
+                score = float(fit.get("effective_fit"))
+            except (TypeError, ValueError):
+                continue
+            proposal_id = str(option.get("proposal_id") or "")
+            if proposal_id:
+                scored.append((score, proposal_id))
+        if not scored:
+            raise RuntimeError(
+                f"round-1 options have no measurable member fit for {member_id}"
+            )
+        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        scored_choices.append(scored[0][1])
+    first_choice, second_choice = scored_choices
     if first_choice == second_choice:
-        raise RuntimeError("round-1 options are not distinct")
+        raise RuntimeError(
+            "provider-backed setup did not produce genuine preference-driven "
+            f"disagreement; both members independently prefer {first_choice}"
+        )
 
     round1_path = (
         f"/api/v1/journeys/{journey_id}/missions/{round1_mission_id}/"
