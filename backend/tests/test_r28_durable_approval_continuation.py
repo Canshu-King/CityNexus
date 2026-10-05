@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.agent.continuation import capture_pending_action
 from app.agent.gateway import AgentToolGateway
-from app.agent.runtime import DeepSeekJourneyAgent, _terminal_agent_status
+from app.agent.runtime import DeepSeekJourneyAgent, _acceptance_requested, _terminal_agent_status
 from app.core.config import settings
 from app.schemas import AgentToolCall
 from test_agent_authority_v2_actions import _selected_plan
@@ -158,6 +158,29 @@ def _seed_pending_continuation() -> dict[str, str]:
         "approval_id": approval_id,
         "pending_id": pending_id,
     }
+
+
+def test_r28_server_resolved_collective_selection_requires_acceptance() -> None:
+    proposal_id = str(uuid4())
+    mission = JourneyMission(
+        id=str(uuid4()),
+        journey_id=str(uuid4()),
+        traveler_id=str(uuid4()),
+        user_text=(
+            "Resume the shared Journey using the server-resolved collective proposal "
+            "and normal authority boundaries."
+        ),
+        requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+        resolved_intent_json=json.dumps(
+            {"collective_decision": {"selected_proposal_id": proposal_id}}
+        ),
+        status="CREATED",
+        created_at=_now(),
+    )
+    assert _acceptance_requested(mission) is True
+
+    mission.requested_autonomy = "PLAN_ONLY"
+    assert _acceptance_requested(mission) is False
 
 
 def test_r28_terminal_status_is_durable_wait_not_completed() -> None:
