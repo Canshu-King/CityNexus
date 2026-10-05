@@ -265,8 +265,18 @@ def _run_disagreement_to_closure(
             raise RuntimeError(
                 f"round-1 options have no measurable member fit for {member_id}"
             )
-        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        scored_choices.append(scored[0][1])
+        best_score = max(score for score, _proposal_id in scored)
+        best_ids = sorted(
+            proposal_id
+            for score, proposal_id in scored
+            if abs(score - best_score) <= 1e-9
+        )
+        if len(best_ids) != 1:
+            raise RuntimeError(
+                "provider-backed setup does not prove a unique preference-driven "
+                f"choice for member {member_id}; tied best proposals={best_ids}"
+            )
+        scored_choices.append(best_ids[0])
     first_choice, second_choice = scored_choices
     if first_choice == second_choice:
         raise RuntimeError(
