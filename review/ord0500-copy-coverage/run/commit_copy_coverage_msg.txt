@@ -1,0 +1,13 @@
+ORD-0500 copy coverage: is the refusal vocabulary the line carries actually inside the bundle the phone chain
+serves today? Measured on tip aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f -- yes for every testable sentence.
+
+Values are read from frontend/src/features/checkin/checkinCopy.ts and frontend/src/features/checkin/footprintCopy.ts in the tip's own tree (48 values). The corpus is the entry bundle
+the page loads (/assets/index-BcQ9VAso.js, 1558596 bytes) plus every chunk it references: 2616278 bytes after excluding
+0 responses that were the SPA shell answering an unknown path (a 200 is not a file). Tested 36:
+found 36, missing 0, placeholders skipped 12. Controls asserted before writing: the label 足迹
+must be found (it is) and a nonsense string must not be (it is not) -- so the percentage is not a grep that
+matches nothing.
+
+Consequence stated plainly: the chain's stale generation costs the four nav labels, not this order's copy,
+so the price of rebuilding is smaller than the previous block implied. Words in a bundle are necessary, not
+sufficient -- no real-device or browser walk of these sentences is claimed.

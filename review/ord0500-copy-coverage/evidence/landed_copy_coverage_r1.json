@@ -1,0 +1,34 @@
+{
+  "schema": "CNX_LANDED_COPY_COVERAGE_V1",
+  "tool": "landed_copy_coverage_r1",
+  "took_local": "2026-10-06T01:32:05.876145+08:00",
+  "live_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+  "served_index_status": 200,
+  "entry_bundle": "/assets/index-BcQ9VAso.js",
+  "entry_bytes": 1558596,
+  "chunks_discovered": 2,
+  "files_fetched": 3,
+  "fetch_failures": [],
+  "spa_fallback_responses": 0,
+  "spa_fallback_urls": [],
+  "corpus_bytes": 2616278,
+  "source_files": [
+    "frontend/src/features/checkin/checkinCopy.ts",
+    "frontend/src/features/checkin/footprintCopy.ts"
+  ],
+  "values_read": 48,
+  "values_untestable_placeholders": 12,
+  "values_in_served_build": 36,
+  "values_not_in_served_build": 0,
+  "coverage_percent": 100.0,
+  "missing_examples": [],
+  "controls": {
+    "present_found": true,
+    "absent_found": false,
+    "present": "足迹",
+    "absent": "zzcnxnothereqwerty"
+  },
+  "reading_rule": "词面在包里=可被渲染的必要条件；不在包里=这一代产物里没有这句话",
+  "limit": "构建可能把带占位符的句子拆开，那类值另计不计入分母；同源不同代的两份产物不能互证",
+  "worktree_written": false
+}

@@ -1,0 +1,14 @@
+{
+ "live_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "entry_bundle": "/assets/index-BcQ9VAso.js",
+ "chunks_discovered": 2,
+ "files_fetched": 3,
+ "corpus_bytes": 2616278,
+ "values_read": 48,
+ "values_untestable_placeholders": 12,
+ "values_in_served_build": 36,
+ "values_not_in_served_build": 0,
+ "coverage_percent": 100.0,
+ "fetch_failures": []
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\landed_copy_coverage_r1.json
