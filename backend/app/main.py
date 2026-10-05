@@ -2332,10 +2332,21 @@ def approve_agent_action(
 @app.get("/api/v1/journeys/{journey_id}/missions/pending")
 def pending_journey_missions(
     journey_id: UUID,
+    request: Request,
     session: Session = Depends(get_session),
 ):
-    """Read durable questions and unfinished clarification children after a reload."""
+    """Project durable human/Agent waits into one traveler-facing read model."""
+
     journey = require(session, Journey, str(journey_id), "Journey")
+    viewer_principal = None
+    viewer_member = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        viewer_principal, viewer_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+
     missions = session.scalars(
         select(JourneyMission)
         .where(
@@ -2352,6 +2363,9 @@ def pending_journey_missions(
         .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
         .limit(20)
     ).all()
+
+    from app.db.models import AgentPendingAction
+
     items = []
     for mission in missions:
         latest_run = session.scalar(
@@ -2359,11 +2373,112 @@ def pending_journey_missions(
             .where(AgentRun.mission_id == mission.id)
             .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
         )
+        mission_view = mission_payload(mission)
+        clarification = dict(mission_view.get("clarification") or {})
+        collective_view = None
+        if clarification.get("kind") == "COLLECTIVE_TRADEOFF":
+            required_ids = [str(item) for item in clarification.get("required_member_ids") or []]
+            responses = clarification.get("responses") or {}
+            member_rows = [
+                row
+                for member_id in required_ids
+                if (row := session.get(JourneyMemberModel, member_id)) is not None
+                and row.journey_id == journey.id
+            ]
+            required_members = []
+            for row in member_rows:
+                traveler = session.get(Traveler, row.traveler_id)
+                required_members.append({
+                    "member_id": row.id,
+                    "traveler_id": row.traveler_id,
+                    "role": row.role,
+                    "display_name": traveler.display_name if traveler is not None else None,
+                    "responded": row.id in responses,
+                    "is_viewer": bool(viewer_member is not None and viewer_member.id == row.id),
+                })
+            option_views = []
+            for option in clarification.get("candidate_options") or []:
+                if not isinstance(option, dict):
+                    continue
+                place_ids = [str(item) for item in option.get("fit_subject_place_ids") or []]
+                place_rows = {
+                    row.id: row
+                    for row in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+                } if place_ids else {}
+                option_views.append({
+                    **option,
+                    "display_places": [
+                        {
+                            "place_id": place_id,
+                            "name": place_rows[place_id].name,
+                            "category": place_rows[place_id].category,
+                        }
+                        for place_id in place_ids
+                        if place_id in place_rows
+                    ],
+                })
+            collective_view = {
+                "status": clarification.get("status"),
+                "policy": clarification.get("policy"),
+                "required_count": len(required_ids),
+                "response_count": len(set(required_ids).intersection(responses)),
+                "required_members": required_members,
+                "viewer_member_id": viewer_member.id if viewer_member is not None else None,
+                "viewer_has_responded": bool(
+                    viewer_member is not None and viewer_member.id in responses
+                ),
+                "candidate_options": option_views,
+                "selected_proposal_id": clarification.get("selected_proposal_id"),
+            }
+
+        pending = session.scalar(
+            select(AgentPendingAction)
+            .where(AgentPendingAction.mission_id == mission.id)
+            .order_by(AgentPendingAction.created_at.desc(), AgentPendingAction.id.desc())
+        )
+        continuation_view = None
+        if pending is not None:
+            approval = session.get(ActionApproval, pending.approval_id)
+            can_approve = False
+            if approval is not None and viewer_member is not None and viewer_principal is not None:
+                from app.traveler_principal import member_has_capability
+
+                can_approve = bool(
+                    viewer_principal.traveler_id == approval.traveler_id
+                    and member_has_capability(session, viewer_member, "JOURNEY_UPDATE")
+                    and approval.status == "PENDING"
+                )
+            continuation_view = {
+                "pending_action_id": pending.id,
+                "pending_status": pending.status,
+                "tool_name": pending.tool_name,
+                "approval_id": pending.approval_id,
+                "approval_status": approval.status if approval is not None else None,
+                "required_decision": approval.required_decision if approval is not None else None,
+                "approved_by": approval.approved_by if approval is not None else None,
+                "viewer_can_approve": can_approve,
+            }
+
         items.append({
-            "mission": mission_payload(mission),
+            "mission": mission_view,
             "run": persisted_agent_run_payload(session, latest_run) if latest_run else None,
+            "collective": collective_view,
+            "continuation": continuation_view,
         })
-    return {"journey_id": journey.id, "items": items}
+    return {
+        "journey_id": journey.id,
+        "viewer": (
+            {
+                "traveler_id": viewer_principal.traveler_id,
+                "member_id": viewer_member.id,
+                "role": viewer_member.role,
+                "auth_method": viewer_principal.auth_method,
+            }
+            if viewer_principal is not None and viewer_member is not None
+            else None
+        ),
+        "items": items,
+    }
 
 
 @app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/clarification")
