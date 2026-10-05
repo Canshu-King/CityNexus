@@ -16588,6 +16588,62 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 补测那一格（me 屏策略详情可达性 + hub 续跑层条件）· 上一块留下的两格 NOT_MEASURED 都闭合：一格判「我自己那腿量错了状态、屏上无缺陷」，一格判「渲染条件要写路径才造得出、按常设边界不造」
+
+**〇、这一格是什么**
+
+- 上一块（`refs/heads/review/1ba48dbf-opened-layers-evidence-r1` 那趟普查）里有两格我按规矩记了 NOT_MEASURED：me 屏「查看策略详情」那枚按钮的可达性、hub 屏续跑那层的渲染条件。本手只补这两格，不改产品字节、不动权威线。
+- 结论先说：me 那格**不是缺陷**——那枚按钮本来就在 `me-advanced` 这层折叠里，我上一腿量的是"没点 summary"的那一态，所以"滚到底也够不到"是我的尺少了前面那一格动作；真按用户的动作点开 summary 后，两臂 × 三档共六格全部可达、命中自己、点后详情层出字。hub 那格**维持不量**：它的渲染条件是一枚写路径的结果态，按常设边界我不触发。
+
+**一、代次与栈（四趟共用同一份产物，不是同一份东西自证）**
+
+- 现读权威线 `refs/heads/mirror/integration-frontend-apple-pass1` = `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`（`git ls-remote --refs` 逐字）；四趟量它那一刻的现尖是 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`——线在本手之后移动过一次，出块这趟再读已是它；本格未改任何产品字节，读数仍属 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 那一代。
+- 屏上跑的那份构建：入口 `index-BW2_ds1t.js` = 1623134 B、磁盘字节 sha1 = 3f6489d75227ccaa5c62bb7f100e16ebd7e6c637（本机 sha1，未入 git 对象库，非 blob）；四趟（RK-160145、RK-160507、RK-161034、RK-161432）的 `tree_at` 逐字都是 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`、入口与 sha1 逐字相同 ⇒ 四趟读的是同一代，差别只在尺本身。
+- 栈：私有后端 `:5131`、私有前端 `:5140`、库各趟新建的私有文件；`demo/scene/ensure` 的 `http_status=200`；`:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 一枚没碰。视口 844 px 高、三档宽 360 px / 390 px / 414 px、两臂。
+
+**二、me 那枚按钮：我上一腿量的那一态（折叠态）逐格读数**
+
+- 那一趟（件 RK-161034）每格量：滚到底后按钮自己的 rect、视口高、文档可滚范围、第一个装不下它的祖先、那一行的命中测试。逐格如下：
+  - 中文臂｜宽 360 px：滚到底按钮 rect 964..1008 px、视口 844 px、文档 scrollHeight 1454 px、最多滚 610 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 368 px；那一行命中的是 `nav`（件 RK-161034）
+  - 中文臂｜宽 390 px：滚到底按钮 rect 964..1008 px、视口 844 px、文档 scrollHeight 1454 px、最多滚 610 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 368 px；那一行命中的是 `nav`（件 RK-161034）
+  - 中文臂｜宽 414 px：滚到底按钮 rect 964..1008 px、视口 844 px、文档 scrollHeight 1454 px、最多滚 610 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 368 px；那一行命中的是 `nav`（件 RK-161034）
+  - 英文臂｜宽 360 px：滚到底按钮 rect 979..1023 px、视口 844 px、文档 scrollHeight 1488 px、最多滚 644 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 383 px；那一行命中的是 `nav`（件 RK-161034）
+  - 英文臂｜宽 390 px：滚到底按钮 rect 963..1007 px、视口 844 px、文档 scrollHeight 1488 px、最多滚 644 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 367 px；那一行命中的是 `nav`（件 RK-161034）
+  - 英文臂｜宽 414 px：滚到底按钮 rect 964..1008 px、视口 844 px、文档 scrollHeight 1427 px、最多滚 583 px；第一个装不下它的祖先 `details.v8-advanced` rect 585..640 px、算高 44px、差 368 px；那一行命中的是 `nav`（件 RK-161034）
+- 源码那一层就写着它是折叠件：`frontend/src/app/V8Experience.tsx:4797` 开 `<details className="v8-advanced" data-testid="me-advanced">`，紧接 `frontend/src/app/V8Experience.tsx:4798` 是「高级详情」那行摘要，按钮在更里面的 `frontend/src/app/V8Experience.tsx:4853`。折叠时内容不占可滚范围，这是那六格读数的形状，不是我推断的成因。
+- 这一态本身不判缺陷：把"没展开"量成"不可达"是我的尺缺了一步动作。判据写进块里，是因为上一块那两格正是这么记下的（`refs/heads/review/1ba48dbf-opened-layers-evidence-r1`）。
+
+**三、按用户的动作点开 summary 之后：六格全可达**
+
+- 每格做三件事：真点 summary（`frontend/src/app/V8Experience.tsx:4846`，不在页面里改 `.open`）→ 滚到底量按钮 → 真点按钮看详情层出不出字。逐格如下（件 RK-161432）：
+  - 中文臂｜宽 360 px：点过 summary 后 details open=True、算高 446 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+  - 中文臂｜宽 390 px：点过 summary 后 details open=True、算高 446 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+  - 中文臂｜宽 414 px：点过 summary 后 details open=True、算高 446 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+  - 英文臂｜宽 360 px：点过 summary 后 details open=True、算高 461 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+  - 英文臂｜宽 390 px：点过 summary 后 details open=True、算高 446 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+  - 英文臂｜宽 414 px：点过 summary 后 details open=True、算高 446 px；按钮 rect 573..617 px、视口 844 px、屏内=True、命中自己=True、命中的顶层 `button`；点后详情层在场=True、层内文字 601 字符（件 RK-161432）
+- 汇总：六格展开后 `open` 都为真、命中测试回的都是按钮自己（`button`）、点开后详情层 `[data-testid='me-policy-json']` 六格都在场并出字。
+- 两臂三档的屏（展开并点开后那一屏）在证据枝里：`review/me-hub-closure/shot_me_opened_zh.png` = `b340979b166bce26750e244c260b06719b52cbd0`；折叠态滚到底那一屏也留了一枚做对照：`review/me-hub-closure/shot_me_collapsed_maxscroll_zh.png` = `a53c0ae30cf60f71449e01d22b2e6ea9bd13d88d`。
+- 判语：me 那格 NOT_MEASURED 撤销，改记**已量、可达、无缺陷**；上一块里那句"我的滚动腿没把它带进视口"的读数作废（作废只在本块点名，不改旧块）。
+
+**四、hub 续跑层：条件具名，维持不造**
+
+- 那一趟（件 RK-160145）两臂各量一枚，读的是渲染后的 DOM：pending 那格 `[data-testid='continuation-resume'] / .today-continuation` 在场 False；技术详情折叠层 `[data-testid='continuation-technical-details']` 在场 False、它的摘要 `[data-testid='continuation-technical-toggle']` 在场 False；服务器原因那句 `[data-testid='continuation-resume-server-reason']` 在场 False；屏上按钮 39 枚。
+- 源码里这三层的门是一串条件，不是"点开就到"：`frontend/src/app/V8Experience.tsx:2806、frontend/src/app/V8Experience.tsx:2811` 要 `continuation.kind === "pending"`（设备本地那枚中断标记）；`frontend/src/app/V8Experience.tsx:2829` 要 `resumeOutcome` 非空；那枚折叠层还要 `frontend/src/app/V8Experience.tsx:2860` 的 `kind === "refused"` 且带 `serverReason`。
+- 也就是说要看见这一层，得先让一次 resume 请求回成"被拒且带原因"——那是写路径的结果态，按常设边界我不触发。所以这一格记**按边界不造、不判缺陷也不判可达**，量到的只有"静止屏上那三枚 testid 都不在场"。
+- 一处不放过：中文臂那趟屏上有一行含「技术详情」四字（正则扫 `body.innerText` 抓到的），而上面那三枚 testid 都不在场 ⇒ 那行字属于别的件，本手没量它来自哪枚，记为下一格候选。
+
+**五、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-me-hub-closure-evidence-r1` = `e24f7ee4dc3a196ccfddb0e80e2f5ac73a0db9ca`（`git ls-remote` 现读逐字相等；12 枚件，逐枚可 `git cat-file -t`）：
+  - `review/me-hub-closure/collapsed_shape.json` = `44da0476bd2d44361d54b3298ed2c7ad10572aaa`、`review/me-hub-closure/opened_reachability.json` = `f3a07af4c613121dfff2962ff08f617f2856a9ef`、`review/me-hub-closure/hub_condition.json` = `64c24eb6f156b72d6b26d9fb38c02214d7fa5419`、`review/me-hub-closure/run_summaries.txt` = `ceac369dc5970b6298ee834a85cdd85c8c04aded`
+  - 三把尺：`review/me-hub-closure/probe_me_clip.cjs.txt` = `92e8be6a53880f7f4df259b9a699dc2fc2b14bf7`、`review/me-hub-closure/probe_me_open_reach.cjs.txt` = `75c246e95f7cad889ff306f8d9fb2738150a6566`、`review/me-hub-closure/probe_reachability_legs.cjs.txt` = `4c3483f4980b533d0688f0e88c26375ecbb8e59e`、`review/me-hub-closure/driver_reachability.py.txt` = `2e4f86fc16ebfdf2eeebf1e0e5716087ee863604`
+  - 条件抄件（现尖上 grep 出来的行，带行号）：`review/me-hub-closure/source_conditions.txt` = `6639dafe34dc5f52271b7246c4b46af496d4fd3d`
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚、产品字节改动 0 枚（本格纯屏读与源码回读）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜自申报那格量出来一件比它本身要紧的事：**能签验收的那道 e2e 闸现在一条测试都收不到**——`npm run test:e2e` 裸跑时十四枚 spec 在导入期抛错、Playwright 整轮中止收集，读数 `Total: 0 tests in 0 files`（整个 `frontend/e2e` 目录都在里面，包括我刚落地那把判据）。我把清单、对照与三条修法交回，别人文件与共享闸配置一个字没动
 
 **〇、先办信。** BB 机上到档未取的是 `m_8784b9e1f9e4`（来自 `qoder:0afdb49b`，17:20:53，标题 `bundle_generation_lane_1791192053467`）。已按收件人身份 ack（回读 `D:/moodle/agent_bus/state.json` 的 `acks` 表，我的 `by`/`verdict` 在位）。他给的两条我独立复算过，结论一致：
