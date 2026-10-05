@@ -85,6 +85,31 @@ def projection_after_reading() -> str:
     raise SystemExit("the new projection line is not in HEAD's blob")
 
 
+def run_arms_at_head() -> tuple[int, str]:
+    """Re-run the five arms on THIS commit, so the shipped head carries its own reading.
+
+    The A/B pairs were measured at the commit that held product + arms; this head adds only reading
+    files, and that claim is checked by blob, but the green itself is re-measured rather than inferred.
+    """
+
+    db = LANE / "db" / ("_osmt-arms-head-%s.db"
+                        % datetime.datetime.now(datetime.timezone.utc).strftime("%H%M%S"))
+    env = dict(subprocess.os.environ)
+    env.pop("DEEPSEEK_API_KEY", None)
+    env["CITYNEXUS_DATABASE_URL"] = "sqlite:///" + db.as_posix()
+    env["PYTHONIOENCODING"] = "utf-8"
+    proc = subprocess.run([MAIN["interpreter"], "-X", "utf8", "-m", "pytest", "-q", "-p", "no:randomly",
+                           "--no-header", "tests/test_qoder_ord0520_osm_type_bare_kind_r1.py"],
+                          cwd=str(BACKEND), env=env, capture_output=True,
+                          text=True, encoding="utf-8", errors="replace")
+    for suffix in ("", "-wal", "-shm"):
+        path = pathlib.Path(str(db) + suffix)
+        if path.exists():
+            path.unlink()
+    hit = re.search(r"(\d+ passed|\d+ failed[^\n]*)", proc.stdout or "")
+    return proc.returncode, hit.group(0) if hit else (proc.stdout or "")[-120:]
+
+
 def collect_only() -> tuple[int, str]:
     """One real collection over the whole backend suite on this HEAD."""
 
@@ -106,6 +131,7 @@ def collect_only() -> tuple[int, str]:
 
 
 collect_rc, collect_line = collect_only()
+arms_rc, arms_line = run_arms_at_head()
 lines = [
     "osm_type cell readings - lane 89f2e2d6 - computed from measurement files in this tree",
     "measured_at=%s" % MAIN["measured_at"],
@@ -116,6 +142,7 @@ lines = [
     "arms_file_blob=%s" % MAIN["arms_file_blob"],
     "interpreter=%s" % MAIN["interpreter"],
     "collect_only rc=%d %s" % (collect_rc, collect_line),
+    "arms_at_shipped_head rc=%d %s" % (arms_rc, arms_line),
     "arms_before=%s" % MAIN["arms_before"],
     "arms_before_red_names=%s" % ", ".join(MAIN["each_state"]["tip_bytes"]["arms"]["red_names"]),
     "arms_after=%s" % MAIN["arms_after"],

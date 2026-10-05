@@ -7,6 +7,7 @@ product_blob_parent=1073674df9bb8526dc72dbfa97ee92d253a772ae
 arms_file_blob=111066a79fe0f17c752248e144dd0151cd6f19c7
 interpreter=D:\moodle\CityNexus\.venv\Scripts\python.exe
 collect_only rc=0 1741 tests collected
+arms_at_shipped_head rc=0 5 passed
 arms_before=4 failed, 1 passed
 arms_before_red_names=test_a1_a_slash_shaped_way_identity_answers_a_bare_kind, test_a2_a_slash_shaped_node_identity_answers_a_bare_kind, test_a3_an_identity_that_is_not_an_osm_element_answers_a_named_null, test_a4_a_provider_prefixed_identity_is_answered_null_not_parsed_into_a_kind
 arms_after=5 passed
