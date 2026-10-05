@@ -1393,6 +1393,22 @@ def fingerprint_parts(
     )
 
 
+#: The identity the door reports a geometry kind from is written by several legs and they do not
+#: share a separator.  The offline replay supply this build actually serves writes a slash:
+#: `data/replay/tianjin_real_snapshot.json` carries `way/1464199917` and `node/5172762221`, and
+#: `backend/app/integrations/discovery/real_city.py` stores those strings unchanged.  Splitting on
+#: one colon only (the line this replaces) therefore returned the WHOLE identity: a value that is
+#: neither a kind nor a gap.  A reader that buckets by kind -- g10 does exactly that -- can never
+#: find a `node` key in it, so the echo both misinforms and hides.  Anything the door cannot name
+#: answers null rather than guessing at a nested segment.
+_OSM_GEOMETRY_KINDS = ("node", "way", "relation")
+
+
+def _place_geometry_kind(external_id: object) -> str | None:
+    head = re.split(r"[:/]", str(external_id or ""), maxsplit=1)[0].strip().lower()
+    return head if head in _OSM_GEOMETRY_KINDS else None
+
+
 def evaluate_capability(
     session: Session,
     query: str,
@@ -1499,9 +1515,7 @@ def evaluate_capability(
                         "id": str(place.id),
                         "source_provider": place.provider_key,
                         "source_identity": place.external_id,
-                        "osm_type": str(place.external_id).split(":", 1)[0].lower()
-                        if place.external_id
-                        else None,
+                        "osm_type": _place_geometry_kind(place.external_id),
                         "name": place.name,
                         "category": place.category,
                         "latitude": place.latitude,
