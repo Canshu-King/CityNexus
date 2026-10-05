@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 from uuid import UUID, uuid4
 
 import pytest
@@ -10,6 +11,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select
 
 import app.collective_mediation as collective_mediation
+import app.agent.signal_pipeline as signal_pipeline
 import app.main as main_module
 from app.core.config import settings
 from app.agent.gateway import AgentToolGateway, _journey_has_unresolved_collective_mediation
@@ -1562,3 +1564,159 @@ def test_r30_unrelated_provider_observation_does_not_change_world_epoch() -> Non
         )
         after_epoch = collective_mediation.collective_material_world_epoch(after)
         assert after_epoch == before_epoch
+
+
+
+def test_r30_targeted_provider_fixture_creates_server_owned_closure(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    target_place_id = "place-r30-provider-target"
+
+    with SessionLocal() as session:
+        session.add(
+            Place(
+                id=target_place_id,
+                provider_key="openstreetmap-replay",
+                external_id="r30/provider-target",
+                city_code="NARA",
+                name="R30 provider target",
+                category="garden",
+                latitude=34.1,
+                longitude=135.1,
+                opening_hours_json=json.dumps(
+                    {
+                        "status": "NORMALIZED_VALID",
+                        "open": "09:00",
+                        "close": "18:00",
+                        "intervals": [{"open": "09:00", "close": "18:00"}],
+                    },
+                    sort_keys=True,
+                ),
+                tags_json=json.dumps(["garden"], sort_keys=True),
+                metadata_json=json.dumps(
+                    {
+                        "tags": {"fee": "no"},
+                        "cost_evidence": {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": None,
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                updated_at=now,
+            )
+        )
+        session.commit()
+
+        monkeypatch.setattr(
+            signal_pipeline,
+            "_mobility_evidence",
+            lambda *_args, **_kwargs: (
+                {
+                    "snapshot_id": "r30-targeted-fixture-snapshot",
+                    "source_provider": "valhalla-replay",
+                    "degraded": False,
+                    "facts": [],
+                },
+                SimpleNamespace(id="r30-targeted-mobility-observation"),
+            ),
+        )
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        fixture = signal_pipeline.set_fixture_state(
+            session,
+            journey,
+            state="DISRUPTED",
+            payload={
+                "r30_post_consent_shock": True,
+                "target_place_id": target_place_id,
+            },
+        )
+        result = signal_pipeline.refresh_demo_signals(session, journey)
+        session.commit()
+
+        assert result.state == "DISRUPTED"
+        assert len(result.created_event_ids) == 1
+        event = session.get(Event, result.created_event_ids[0])
+        assert event is not None
+        assert event.provider_key == "city-signal-fixture"
+        assert event.provenance == "PROVIDER_VERIFIED"
+        assert event.event_type == "CLOSURE"
+        assert event.affected_activity_id is None
+        payload = json.loads(event.payload_json or "{}")
+        assert payload["scope_place_id"] == target_place_id
+        assert payload["target_place_id"] == target_place_id
+        assert payload["fixture_revision"] == fixture.revision
+        sibling_types = {
+            row.event_type
+            for row in session.scalars(
+                select(Event).where(
+                    Event.journey_id == str(seeded["journey_id"]),
+                    Event.provider_key == "city-signal-fixture",
+                    Event.id != event.id,
+                )
+            ).all()
+        }
+        assert "WEATHER" not in sibling_types
+        assert "TRAFFIC_DELAY" not in sibling_types
+
+
+def test_r30_targeted_provider_fixture_rejects_noncanonical_city_scope(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    foreign_place_id = "place-r30-foreign-target"
+
+    with SessionLocal() as session:
+        session.add(
+            Place(
+                id=foreign_place_id,
+                provider_key="openstreetmap-replay",
+                external_id="r30/foreign-target",
+                city_code="TOKYO",
+                name="Foreign target",
+                category="museum",
+                latitude=35.6,
+                longitude=139.7,
+                opening_hours_json="{}",
+                tags_json="[]",
+                metadata_json="{}",
+                updated_at=now,
+            )
+        )
+        session.commit()
+
+        monkeypatch.setattr(
+            signal_pipeline,
+            "_mobility_evidence",
+            lambda *_args, **_kwargs: (
+                {"degraded": False, "facts": []},
+                SimpleNamespace(id="unused"),
+            ),
+        )
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        signal_pipeline.set_fixture_state(
+            session,
+            journey,
+            state="DISRUPTED",
+            payload={"target_place_id": foreign_place_id},
+        )
+        with pytest.raises(
+            ValueError,
+            match="target_place_id is not a canonical Place",
+        ):
+            signal_pipeline.refresh_demo_signals(session, journey)
+
+        trusted = session.scalars(
+            select(Event).where(
+                Event.journey_id == str(seeded["journey_id"]),
+                Event.provider_key == "city-signal-fixture",
+                Event.provenance == "PROVIDER_VERIFIED",
+            )
+        ).all()
+        assert trusted == []
