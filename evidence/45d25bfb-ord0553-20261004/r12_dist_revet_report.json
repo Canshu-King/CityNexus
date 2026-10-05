@@ -1,0 +1,71 @@
+{
+ "tool": "cmdra_0553_dist_revet_r12",
+ "rule": "the bundle a reading came from must be reproducible byte-for-byte from the sha it claims",
+ "positive": {
+  "pinned_a": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "tag_a": "cmdra_0553_r11",
+  "files_a": 10,
+  "pinned_b": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "tag_b": "cmdra_0553_r12v",
+  "files_b": 10,
+  "entry_a": [
+   "assets/index-DLbc3Q3N.js"
+  ],
+  "entry_b": [
+   "assets/index-DLbc3Q3N.js"
+  ],
+  "only_in_a": [],
+  "only_in_b": [],
+  "bytes_differ": [],
+  "same_byte_identical": true
+ },
+ "negative": {
+  "pinned_a": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "tag_a": "cmdra_0553_r11",
+  "files_a": 10,
+  "pinned_b": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+  "tag_b": "cmdra_0553_r12neg",
+  "files_b": 10,
+  "entry_a": [
+   "assets/index-DLbc3Q3N.js"
+  ],
+  "entry_b": [
+   "assets/index-BW2_ds1t.js"
+  ],
+  "only_in_a": [
+   "assets/JourneyMap-CgvVv5Oo.js",
+   "assets/index-DLbc3Q3N.js",
+   "assets/maplibre-gl-DKd3EUeA.js"
+  ],
+  "only_in_b": [
+   "assets/JourneyMap-BflXqYwi.js",
+   "assets/index-BW2_ds1t.js",
+   "assets/maplibre-gl-Oo4Mqkko.js"
+  ],
+  "bytes_differ": [
+   "index.html",
+   "v10-sw.js"
+  ],
+  "same_byte_identical": false
+ },
+ "arms": [
+  {
+   "id": "independent_rebuild_of_one_sha_is_byte_identical",
+   "verdict": "PASS",
+   "observed": "10 files vs 10, entry assets/index-DLbc3Q3N.js on both, only_a 0, only_b 0, bytes_differ 0"
+  },
+  {
+   "id": "a_previous_generation_is_refused",
+   "verdict": "PASS",
+   "observed": "10 vs 10, entry assets/index-DLbc3Q3N.js vs assets/index-BW2_ds1t.js, bytes_differ 2, only_in_a ['assets/JourneyMap-CgvVv5Oo.js', 'assets/index-DLbc3Q3N.js']"
+  },
+  {
+   "id": "revet_is_not_a_rubber_stamp",
+   "verdict": "PASS",
+   "observed": "identical(same sha)=True identical(other generation)=False"
+  }
+ ],
+ "verdict": "GREEN",
+ "red_arms": [],
+ "note_missing_dists": "the older _build_cmdra_0553_r8 and _build_cmdra_0553_r2 trees had no frontend dir at all when this ran -- shared build scratch is reclaimed, so a block must never depend on the dist surviving"
+}
