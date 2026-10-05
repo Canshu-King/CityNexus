@@ -1,0 +1,113 @@
+{
+ "ports": [
+  8772,
+  8774
+ ],
+ "legs": [
+  {
+   "port": 8772,
+   "calls": [
+    {
+     "door": "plans",
+     "http_status": 200,
+     "plan_count": 28,
+     "active_versions": [
+      1
+     ]
+    },
+    {
+     "door": "start",
+     "http_status": 200,
+     "code_answered": null
+    }
+   ],
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "scene_demo_mode": true,
+   "twin": {
+    "http_status": 200,
+    "now_state": "ACTIVE",
+    "next_state": "PLANNED"
+   },
+   "activities": [
+    [
+     1,
+     "COMPLETED"
+    ],
+    [
+     2,
+     "COMPLETED"
+    ],
+    [
+     3,
+     "COMPLETED"
+    ],
+    [
+     4,
+     "ACTIVE"
+    ],
+    [
+     5,
+     "PLANNED"
+    ],
+    [
+     6,
+     "PLANNED"
+    ]
+   ],
+   "journey_status": "ACTIVE"
+  },
+  {
+   "port": 8774,
+   "calls": [
+    {
+     "door": "plans",
+     "http_status": 200,
+     "plan_count": 28,
+     "active_versions": [
+      1
+     ]
+    },
+    {
+     "door": "start",
+     "http_status": 200,
+     "code_answered": null
+    }
+   ],
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "scene_demo_mode": true,
+   "twin": {
+    "http_status": 200,
+    "now_state": "ACTIVE",
+    "next_state": "PLANNED"
+   },
+   "activities": [
+    [
+     1,
+     "COMPLETED"
+    ],
+    [
+     2,
+     "COMPLETED"
+    ],
+    [
+     3,
+     "COMPLETED"
+    ],
+    [
+     4,
+     "ACTIVE"
+    ],
+    [
+     5,
+     "PLANNED"
+    ],
+    [
+     6,
+     "PLANNED"
+    ]
+   ],
+   "journey_status": "ACTIVE"
+  }
+ ],
+ "stores_in_same_execution_state": true
+}
