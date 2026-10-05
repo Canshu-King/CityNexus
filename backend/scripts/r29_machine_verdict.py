@@ -169,6 +169,107 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             selected_proposal_id=round1_payload.get("selected_proposal_id"),
         )
 
+        round1_runs = (
+            list(
+                session.scalars(
+                    select(AgentRun)
+                    .where(AgentRun.mission_id == round1.id)
+                    .order_by(AgentRun.created_at, AgentRun.id)
+                ).all()
+            )
+            if round1
+            else []
+        )
+        round1_agent_run = None
+        round1_agent_steps: list[AgentRunStep] = []
+        for candidate in round1_runs:
+            steps = _run_steps(session, candidate.id)
+            opened_collective = any(
+                step.tool_name == "request_collective_decision"
+                and isinstance(_json(step.result_json, {}), dict)
+                and _json(step.result_json, {}).get("mission_status")
+                == "WAITING_FOR_MEMBERS"
+                for step in steps
+            )
+            if not opened_collective:
+                continue
+            if round1_agent_run is None:
+                round1_agent_run = candidate
+                round1_agent_steps = steps
+            if _looks_external(candidate.provider_key, candidate.model_key):
+                round1_agent_run = candidate
+                round1_agent_steps = steps
+                break
+        round1_external_ok = bool(
+            round1_agent_run
+            and _looks_external(
+                round1_agent_run.provider_key,
+                round1_agent_run.model_key,
+            )
+        )
+        verdicts["real_external_round1_agent"] = _verdict(
+            PROVEN if round1_external_ok else NOT_PROVEN,
+            "A configured external Agent opened the first collective decision."
+            if round1_external_ok
+            else "No external AgentRun is proven to have opened round 1.",
+            run_id=round1_agent_run.id if round1_agent_run else None,
+            provider_key=round1_agent_run.provider_key if round1_agent_run else None,
+            model_key=round1_agent_run.model_key if round1_agent_run else None,
+        )
+
+        round1_options = [
+            item
+            for item in (round1_payload.get("candidate_options") or [])
+            if isinstance(item, dict) and item.get("proposal_id")
+        ]
+        best_by_member: dict[str, dict[str, Any]] = {}
+        preference_driven_ok = bool(round1_required and round1_options)
+        for member_id in sorted(round1_required):
+            scored: list[tuple[float, str]] = []
+            for option in round1_options:
+                fits = option.get("member_fits") or {}
+                fit = fits.get(member_id) if isinstance(fits, dict) else None
+                if not isinstance(fit, dict):
+                    continue
+                try:
+                    score = float(fit.get("effective_fit"))
+                except (TypeError, ValueError):
+                    continue
+                proposal_id = str(option.get("proposal_id") or "")
+                if proposal_id:
+                    scored.append((score, proposal_id))
+            if not scored:
+                preference_driven_ok = False
+                best_by_member[member_id] = {
+                    "chosen_proposal_id": round1_choices.get(member_id),
+                    "best_score": None,
+                    "best_proposal_ids": [],
+                }
+                continue
+            best_score = max(score for score, _proposal_id in scored)
+            best_ids = sorted(
+                proposal_id
+                for score, proposal_id in scored
+                if abs(score - best_score) <= 1e-9
+            )
+            chosen = round1_choices.get(member_id)
+            preference_driven_ok = preference_driven_ok and chosen in best_ids
+            best_by_member[member_id] = {
+                "chosen_proposal_id": chosen,
+                "best_score": best_score,
+                "best_proposal_ids": best_ids,
+            }
+        preference_driven_ok = (
+            preference_driven_ok and len(distinct_round1_choices) >= 2
+        )
+        verdicts["preference_driven_round1_disagreement"] = _verdict(
+            PROVEN if preference_driven_ok else CONTRADICTED,
+            "Each relevant member chose a server-grounded maximum-fit option and those optima diverged."
+            if preference_driven_ok
+            else "Round-1 disagreement is not proven to follow each member's server-computed best fit.",
+            members=best_by_member,
+        )
+
         round1_audits = _response_audits(session, round1.id) if round1 else []
         round1_audit_members = {
             str(_after(row).get("member_id") or "") for row in round1_audits
