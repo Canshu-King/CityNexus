@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0500 手机车道（0afdb49b）办 BB 报警：静态口那件我独立复现了，并且给出了因——它 serve 的那份 dist 整个目录已不在，而服务代码在没有 404 分支
+
+一、复现（不是重跑别人的脚本，换了客户端、换了路径集）
+- 探针与件都已在架：``review/chain-static-witness/tools/chain_static_door_witness_r1.py` blob `7c21f5c4e853344ac5d8bdf7d917b4fafbe967fd``，读数全部出自 ``review/chain-static-witness/evidence/chain_static_door_witness_r1.json` blob `2ad3ad337ab285a410c1c324d55347b30068c2b4``。对 `:4783` 用 urllib 探 7 枚路径（那 lane 用的是 curl 五枚，我另加两枚并把 `/index.html` 也放进去），**7 枚全部拿不到响应**（件里 `statuses` 逐条列着）；api 门 `:4787` 两枚路由都回 200，正文 113 字节（件 `api_health`）⇒ 不是全局网络，是那一扇门。
+- 裸连 TCP 再证一次形状：发出请求后**对端关闭前一个字节都没回**——件 `raw_sockets` 里 `/` 与 `/index.html` 各收到 0 字节，`error` 为空（连上了、被关了），这跟那 lane 报的「约三毫秒就断」同形（件 `review/chain-static-witness/evidence/chain_static_door_witness_r1.json` blob `2ad3ad337ab285a410c1c324d55347b30068c2b4`）。
+- 谁在听：`:4783` 由 PID 37684 持有，命令行是 `python _cmdr_lan_static_api_r1.py --dist …_build_day33/frontend/dist --port 4783 --api 4787`；`:4787` 是另一枚 PID 34184（uvicorn 真后端）。两扇门都活着，所以「进程没了」这个解释被排除。
+
+二、因（代码路径 + 文件系统两边对上）
+- 它 `--dist` 指的那份产物**整个目录已经不在了**：`live_checks/_build_day33` 现读不存在（只剩旁边的 `_build_day33_info.json`）。
+- 服务代码没有「文件没了就回 404」这一支：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_lan_static_api_r1.py:81` 判完 `isfile` 就把兜底目标换成 `dist/index.html`，紧接 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_lan_static_api_r1.py:85` **无条件 open** —— 兜底目标同样不存在时这里抛 FileNotFoundError，线程死掉、连接被关，于是外面看到的就是「在听、0 字节、几毫秒」。这条链的每一环都是读出来的，不是推的（该文件现读 125 行）。
+- 同一把尺顺手看了替代品：`_build_day34/frontend/dist` 在，7 项，含 `index.html` 与 `assets/`。
+
+三、我能做与不能做的
+- 没做：不重启、不杀进程、不改参数、不动别人名下的端口（那是号令者起的链）。件 `review/chain-static-witness/evidence/chain_static_door_witness_r1.json` blob `2ad3ad337ab285a410c1c324d55347b30068c2b4`：本手重启 0 次、杀进程 0 次、改绑定 0 次、写别人的目录 0 处（件的 `actions_taken` 四项皆零，是这台仪器自己记的）。
+- 等一句的：把静态口指向 day34 那份 dist，或重建 day33 —— 这属于换代动作，归你；点给我我就把复现脚本与判据留着，改完我再独立复测一遍并把四屏顶栏那四行重新量一次（那正是这条链现在挡住的格子）。
+- 我这侧受影响的格子据实写：真机 NOT_MEASURED、手机屏读那批仍不可取；Playwright 本手未跑。
+
+四、边界
+- 边界读数出自件 `review/chain-static-witness/evidence/chain_static_door_witness_r1.json` blob `2ad3ad337ab285a410c1c324d55347b30068c2b4`：本手产品字节改动 0 枚；线上已落字节覆盖 0 枚；名下枝改写 0 枚；删枝 0 枚；账本直写 0 处（本块走收件口）；端口起停 0 个；wt22 工作树写入 0 处；`demo/reset` 未跑。
+- 读数时刻成立：以上都是 现尖 `16:11` 之后 这一眼取的，链随时可能被别人换代，复算请重跑那把尺而不是引用这块。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0512 r5 已按令切到现尖 · 令要保的站名摆放逐枚已在尖上，故这枚枝带的是令里同句要的族测重跑（产品字节零枚，车道 8ac89982）
 
 **一、坐标**
