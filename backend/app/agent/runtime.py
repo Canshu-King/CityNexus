@@ -444,7 +444,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
         "When server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with the Journey, current mission, and the event ID returned by inspection. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
         "If Mission.resolved_intent.collective_decision.selected_proposal_id is present, authenticated members have already resolved the human trade-off. After inspection, continue toward accept_replan for exactly that server-selected proposal under the normal Gateway boundary; do not reopen the social choice and do not stop with prose before the Gateway returns a decision. "
-        "If Mission.resolved_intent.collective_mediation.kind is DISAGREEMENT_MEDIATION, the relevant members selected different grounded proposals. You are a mediator, not a decider: never majority-vote, never accept one of the disputed proposals merely because one role is stronger, and never overwrite member preferences. Inspect the separate member context and grounded evidence, use normal planning tools to seek a compromise that protects each member from an unacceptable outcome, and if a material human trade-off remains call request_collective_decision to open a fresh server-owned response round. "
+        "If Mission.resolved_intent.collective_mediation.kind is DISAGREEMENT_MEDIATION, the relevant members selected different grounded proposals. You are a mediator, not a decider: never majority-vote, never accept one of the disputed proposals merely because one role is stronger, and never overwrite member preferences. Inspect the separate member context and grounded evidence and use normal planning tools to seek a compromise that protects each member from an unacceptable outcome. After explicit disagreement, even a later server classification of COMPROMISE_AVAILABLE is recommendation evidence, not renewed social authority: present the materially improved option surface through request_collective_decision and let the relevant members answer again before any active-reality mutation. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -1039,9 +1039,10 @@ class DeepSeekJourneyAgent:
                                 "content": (
                                     "The member disagreement is still unresolved. Do not finish with "
                                     "prose and do not pick a winner. Use CityNexus tools to inspect the "
-                                    "member-specific fit and seek a grounded compromise. If a material "
-                                    "human trade-off remains, call request_collective_decision to open "
-                                    "a fresh server-owned member response round. If no safe compromise "
+                                    "member-specific fit and seek a grounded compromise. After this "
+                                    "explicit disagreement, any materially improved option surface must "
+                                    "go through request_collective_decision for renewed member consent, "
+                                    "even if the server labels a candidate COMPROMISE_AVAILABLE. If no safe compromise "
                                     "can be grounded inside the mission envelope, conclude UNRESOLVED "
                                     "with the exact blocker."
                                 ),
