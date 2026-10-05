@@ -64,6 +64,32 @@ from app.services import (
 from app.replanning.provider_snapshots import MobilitySnapshot
 
 
+_MEDIATION_ACTIVE_REALITY_MUTATIONS = {
+    "accept_replan",
+    "activate_standby",
+    "replace_activity",
+    "reschedule_activity",
+    "create_booking",
+    "cancel_refundable_booking",
+    "request_commitment_change",
+    "apply_clarified_horizon_choice",
+}
+
+
+def _is_disagreement_mediator_mission(mission: JourneyMission | None) -> bool:
+    if mission is None:
+        return False
+    try:
+        intent = json.loads(mission.resolved_intent_json or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return False
+    mediation = intent.get("collective_mediation") if isinstance(intent, dict) else None
+    return (
+        isinstance(mediation, dict)
+        and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+    )
+
+
 def _agent_key(kind: str, *parts: object) -> str:
     material = "|".join(str(part) for part in parts)
     digest = hashlib.sha256(material.encode("utf-8")).hexdigest()
@@ -632,6 +658,33 @@ class AgentToolGateway:
         # denial or an idempotent receipt. This makes the feed an audit
         # projection rather than a React-side activity log.
         self.session.commit()
+
+        # A disagreement mediator may create/search/replan candidates and open
+        # a fresh collective round, but it has no social authority to change
+        # active reality. Even a server-classified COMPROMISE_AVAILABLE option
+        # must go back to the humans after they explicitly disagreed.
+        if tool_name in _MEDIATION_ACTIVE_REALITY_MUTATIONS and request.mission_id is not None:
+            mission = self.session.get(JourneyMission, str(request.mission_id))
+            if _is_disagreement_mediator_mission(mission):
+                record_audit(
+                    self.session,
+                    action="agent.collective_mediation.mutation_denied",
+                    entity_type="JourneyMission",
+                    entity_id=mission.id,
+                    journey_id=mission.journey_id,
+                    actor_type="AI_AGENT",
+                    actor_id=request.agent_id,
+                    after={
+                        "tool": tool_name,
+                        "request_id": request.request_id,
+                        "reason": "FRESH_COLLECTIVE_DECISION_REQUIRED",
+                    },
+                )
+                self.session.commit()
+                raise HTTPException(
+                    409,
+                    "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION",
+                )
         return handlers[tool_name](request)
 
     def inspect_journey(self, request: AgentToolCall) -> dict[str, Any]:
