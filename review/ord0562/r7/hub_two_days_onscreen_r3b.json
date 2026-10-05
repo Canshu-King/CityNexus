@@ -1,0 +1,25 @@
+{
+ "pageerrors": [],
+ "journey_id": "2ed46810-d86c-4816-8db9-600956a6524a",
+ "rendered_text": "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 2 days",
+ "bounding_box": {
+  "x": 17,
+  "y": 178.56358337402344,
+  "width": 356,
+  "height": 21.4375
+ },
+ "hit_at_shot": {
+  "present": true,
+  "box": {
+   "x": 17,
+   "y": 172,
+   "w": 356,
+   "h": 21
+  },
+  "in_viewport": true,
+  "centre_element": "P#.v8-lede",
+  "line_is_own_top": true,
+  "wizard_on_screen": false
+ },
+ "location": "http://localhost:4761/v8/hub"
+}

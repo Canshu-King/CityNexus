@@ -1,0 +1,41 @@
+ORD-0562 r6 screen reads, third generation. Every value on every line below is copied out of
+the named receipt in this lane's scratch folder by the script that writes this file, which
+refuses to write anything if a receipt is missing or says otherwise.
+
+TREE / STACK
+  branch head 6109c8b7c5e295bf1e4fbce62a5a6b1b4806a017 on review/cff87c64-ord0562-english-count-nouns-r6 over tip aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+  store: ORD0562prv3-033652.db (the app, from an empty file (no seed copy, no demo/reset))
+  run id ORD0562prv3-033652, backend port 4762, front port 4761, health http_status=200, front http_status=200
+  served bundle: index-ByKt0laS.js, index-Cb6APFFy.css
+  no seed copy, no demo/reset, no shared store touched.
+
+THE HUB DAY LINE, ENGLISH ARM, 390x844, innerText read twice around one screenshot
+  one calendar day:  "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 1 day"
+    server shape then: day_count=1; hit-test box {"x": 17, "y": 171, "w": 356, "h": 21}; page exceptions 0
+    receipt: hub_one_day_onscreen_r3c.json, picture: screens/hub_one_day_onscreen_r3c.png
+  two calendar days: "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 2 days"
+    server shape then: day_count=2; hit-test box {"x": 17, "y": 179, "w": 356, "h": 21}; page exceptions 0
+    receipt: hub_two_days_onscreen_r3c.json, picture: screens/hub_two_days_onscreen_r3c.png
+  In both walks the text read before the screenshot equals the text read after it, the element
+  under the line's centre is the line itself, and the onboarding sheet is not over the screen.
+  The pass before these two (hub_*_onscreen_r3b.*) proved the same words with a hit-test but took
+  its picture while the sheet had reopened over the hub, so those pictures were retired rather
+  than shipped; the r3c pair is what this block stands on, and both rows are readable together in
+  screens/r3c_both_arms_stacked.png.
+
+THE BUDGET ADVISORY, SAME WIZARD WALK, party typed into the product's own field
+  one traveller (party field = 1): "3 days · 1 person · about CNY 40.00 per person per day"
+    day line beside it: "7 Oct, 10:00 — 9 Oct, 20:00 · 1 traveler · 3 days"  receipt: budget_party1_r3.json
+  two travellers (party field = 2): "3 days · 2 people · about CNY 20.00 per person per day"
+    day line beside it: "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 3 days"  receipt: budget_party2_r3.json
+  Page exceptions across the five walks this generation ran: 0.
+
+PRE-IMAGE ON THIS GENERATION, read out of the tip's own bytes (not inherited)
+  budget advisory, one traveller reads `1 people` -> line 2418: : `${days} days · ${people} people · about ${amount} per person per day`,
+  hub day line, one day reads `1 days` -> line 2965: : `${tripDayCount} days`}
+  attention line, one change reads `1 change(s)` -> line 3043: : `${disruptions.length} change(s)`
+  budget advisory goes through the counted key -> line 2418: text: t("hub.budgetLine", { days, people, amount }),
+  hub day line goes through the counted key -> line 2961: : t("hub.todayDays", { n: tripDayCount })}
+  attention line goes through the helper -> line 3039: : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+  Same three lines on this branch read through the counted keys instead; full receipt with both
+  sides and their anchors: preimage_on_tip_r7.txt.

@@ -1,0 +1,65 @@
+{
+ "pageerrors": [],
+ "journey_id": "20e1f758-cdec-4a6a-9105-b36493895893",
+ "read_before_shot": {
+  "present": true,
+  "text": "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 1 day",
+  "box": {
+   "x": 17,
+   "y": 183,
+   "w": 356,
+   "h": 21
+  },
+  "in_viewport": true,
+  "centre_element": "P.v8-lede",
+  "line_is_own_top": true,
+  "wizard_on_screen": false,
+  "stored_journey": "20e1f758-cdec-4a6a-9105-b36493895893"
+ },
+ "read_after_shot": {
+  "present": true,
+  "text": "7 Oct, 10:00 — 9 Oct, 20:00 · 2 travelers · 1 day",
+  "box": {
+   "x": 17,
+   "y": 171,
+   "w": 356,
+   "h": 21
+  },
+  "in_viewport": true,
+  "centre_element": "P.v8-lede",
+  "line_is_own_top": true,
+  "wizard_on_screen": false,
+  "stored_journey": "20e1f758-cdec-4a6a-9105-b36493895893"
+ },
+ "server_shape": {
+  "http_status": 200,
+  "journey_start": "2026-10-07T02:00:00+00:00",
+  "journey_end": "2026-10-09T12:00:00+00:00",
+  "temporal_shape": {
+   "day_count": 1,
+   "night_count": 0,
+   "semantics": "CALENDAR_DAYS_INCLUSIVE",
+   "window_status": "IN_WINDOW",
+   "min_days": 1,
+   "max_days": 7
+  },
+  "trip_day_count_source": {
+   "arrival": {
+    "at": "2026-10-09T09:40:00+08:00",
+    "location": "Beijing South",
+    "latitude": null,
+    "longitude": null,
+    "reservation_id": "feadffac-9583-4191-8525-79ae765e27bc"
+   },
+   "departure": {
+    "at": "2026-10-09T12:00:00Z",
+    "location": "Beijing South",
+    "latitude": null,
+    "longitude": null,
+    "reservation_id": null
+   }
+  },
+  "plan_count": 0
+ },
+ "location": "http://localhost:4761/v8/hub"
+}
