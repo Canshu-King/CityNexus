@@ -5,6 +5,7 @@ import json
 import hashlib
 import hmac
 import logging
+import math
 import os
 import secrets
 import time
@@ -142,6 +143,7 @@ from app.db.models import (
     JourneyShareGrant,
     JourneyOutcomeEvent,
     JourneyTripContext,
+    LocationObservation,
     MobilityFact,
     NotificationEvent,
     OfflineJourneySnapshot,
@@ -201,6 +203,12 @@ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的�
     startup_report as credential_gate_startup,
 )
 from app.execution.clock import execution_clock
+from app.execution.truth import (
+    DEVICE_LOCATION_VERIFIED_EXECUTION,
+    OPERATOR_CONFIRMED_EXECUTION,
+    SIMULATED_STATE_TRANSITION,
+    append_execution_truth,
+)
 from app.execution.traveler_twin import (
     clear_learned,
     learn_from_journey,
@@ -360,6 +368,7 @@ from app.schemas import (
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
+    ExecutionTruthAttestation,
     LuggageContextRequest,
     MobilityModeRequest,
     OrderCreate,
