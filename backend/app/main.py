@@ -4873,6 +4873,52 @@ def collective_mutation_gate(
     }
 
 
+def _record_collective_mutation_denial(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    decision: Mapping[str, Any],
+    *,
+    mutation_kind: str,
+    proposal_id: str | None = None,
+) -> None:
+    """Persist a refused collective-authority spend at the mutation boundary.
+
+    R30 needs durable evidence that stale human authority was refused by the
+    product, not merely reported by a live harness. Keep the audit compact and
+    derived from the core gate's machine decision.
+    """
+
+    record_audit(
+        session,
+        action="collective.mutation.denied",
+        entity_type="PlanVersion",
+        entity_id=target_plan.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="collective-mutation-gate",
+        after={
+            "mutation_kind": mutation_kind,
+            "proposal_id": proposal_id,
+            "target_plan_version_id": target_plan.id,
+            "code": decision.get("code"),
+            "classification": decision.get("classification"),
+            "resolved_decision_epoch": decision.get("resolved_decision_epoch"),
+            "current_decision_epoch": decision.get("current_decision_epoch"),
+            "resolved_material_world_epoch": decision.get(
+                "resolved_material_world_epoch"
+            ),
+            "current_material_world_epoch": decision.get(
+                "current_material_world_epoch"
+            ),
+        },
+    )
+    # The refusal is itself durable product truth. The callers reach this point
+    # before any domain mutation, so committing the audit cannot partially
+    # commit an attempted plan transition.
+    session.commit()
+
+
 def collective_proposal_receipt(
     session: Session,
     journey: Journey,
@@ -7850,6 +7896,13 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
         hard_feasible_plan_ids={str(plan.id)},
     )
     if not collective_gate.get("allowed"):
+        _record_collective_mutation_denial(
+            session,
+            journey,
+            plan,
+            collective_gate,
+            mutation_kind="SELECT_PLAN",
+        )
         raise HTTPException(
             409,
             f"{collective_gate.get('code')}: collective mediation must be resolved before selection",
@@ -14763,6 +14816,14 @@ def _accept_replan_executing(
         resolved_decision=resolved_decision,
     )
     if not collective_gate.get("allowed"):
+        _record_collective_mutation_denial(
+            session,
+            journey,
+            proposed,
+            collective_gate,
+            mutation_kind="ACCEPT_REPLAN",
+            proposal_id=proposal.id,
+        )
         raise HTTPException(
             409,
             f"{collective_gate.get('code')}: collective mediation must be resolved before mutation",
