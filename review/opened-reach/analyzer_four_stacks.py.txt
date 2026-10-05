@@ -1,0 +1,143 @@
+# -*- coding: utf-8 -*-
+"""把两臂的开层前后可达性件收成四堆，只有前两堆进本格的判据：
+  堆一 层自己的控件 = 开层后才渲染出来的那批（in_A 为假）——它们够不到才是这格能判的事；
+  堆二 点开才好的 = 开层前渲染了却滚不到/被盖、开层后能滚到且能命中（me 屏那一手的推广）；
+  堆三 底屏原本就够不到的（两态都够不到且开层前就在屏上）——单列，属别的格；
+  堆四 点开反倒坏的（开层前好、开层后够不到）——再分"被本层模态盖住（设计如此）"与"别的元素盖住（要看）"。"""
+from __future__ import annotations
+
+import glob
+import io
+import json
+import os
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+TAGS = (os.environ.get("TAGS") or "openreach_zh4,openreach_en4").split(",")
+RUNS = {"zh-CN": TAGS[0], "en": TAGS[1]}
+MODAL = ("drawer-backdrop", "v8-drawer", "modal", "overlay", "backdrop", "nav-drawer")
+MAPFAM = ("maplibregl", "v9-map-marker", "v8-map-stop-label", "map-viewport", "map-stops")
+
+
+def load():
+    cells = []
+    rids = {}
+    for arm, tag in RUNS.items():
+        f = sorted(glob.glob(os.path.join(ART, "ord0561_%s_RK-*.json" % tag)))[-1]
+        d = json.load(io.open(f, encoding="utf-8"))
+        rids[arm] = "RK-" + os.path.basename(f).split("_RK-")[-1].split(".")[0]
+        for c in d["cells"]:
+            c["run_id"] = rids[arm]
+            cells.append(c)
+    return cells, rids
+
+
+def bad(x):
+    return (not x["scrollable_in"]) or (x["top_at_best"] is None) or (not x["hits_self"])
+
+
+def self_is_backdrop(x):
+    """遮罩件自己被面板压住是设计如此：整屏高、类名带 backdrop/overlay，且盖它的就在同一层里"""
+    return ("backdrop" in (x["cls"] or "")) or ("overlay" in (x["cls"] or ""))
+
+
+def kind(x):
+    if not x["scrollable_in"]:
+        return "纵向滚不到"
+    if x["top_at_best"] is None:
+        return "中心点在屏外"
+    return "被盖住"
+
+
+def who_of(x):
+    return (x["top_at_best"] or "null") + "." + (x["top_cls"] or "")
+
+
+def row(c, x, why, extra=""):
+    return {"arm": c["arm"], "vw": c["vw"], "route": c["route"], "trigger": c["trigger"],
+            "tag": x["tag"], "testid": x["testid"], "text": x["text"], "cls": x["cls"],
+            "cy_doc": x["cy_doc"], "scroll_to": x["scroll_to"],
+            "rect": "%d..%d" % (x["rect_at_best"]["top"], x["rect_at_best"]["bottom"]),
+            "scrollable_in": x["scrollable_in"], "hits_self": x["hits_self"],
+            "covered_by": who_of(x), "covered_text": x.get("top_text", ""),
+            "why": why, "kind": kind(x), "run_id": c["run_id"], "note": extra}
+
+
+cells, rids = load()
+measured = [c for c in cells if c.get("rows") is not None]
+absent = [c for c in cells if not c.get("trigger_found")]
+h1_ok = h1_bad = 0
+stack1, stack2, stack3, stack4_modal, stack4_other, stack4_map = [], [], [], [], [], []
+stack1_bd = []
+per_layer = {}
+for c in measured:
+    a_bad = {x["key"] for x in (c.get("A") or {}).get("bad", [])}
+    c_keys = {x["key"] for x in c["rows"]}
+    lay = c["route"] + "/" + c["trigger"]
+    st = per_layer.setdefault(lay, {"new": 0, "new_bad": 0, "fixed": 0, "cells": 0, "backdrop": 0})
+    st["cells"] += 1
+    for x in c["rows"]:
+        if not x["in_A"]:
+            st["new"] += 1
+            if bad(x):
+                if self_is_backdrop(x):
+                    st["backdrop"] = st.get("backdrop", 0) + 1
+                    stack1_bd.append(row(c, x, "堆一·例外：遮罩件自己被面板压住（设计如此）"))
+                else:
+                    h1_bad += 1
+                    st["new_bad"] += 1
+                    stack1.append(row(c, x, "堆一：开层后才渲染、仍够不到"))
+            else:
+                h1_ok += 1
+        elif x["key"] in a_bad and not bad(x):
+            st["fixed"] += 1
+            stack2.append(row(c, x, "堆二：开层前滚不到、点开才够得到"))
+    for x in (c.get("A") or {}).get("bad", []):
+        if x["key"] in c_keys:
+            cm = next(y for y in c["rows"] if y["key"] == x["key"])
+            if bad(cm):
+                stack3.append(row(c, cm, "堆三：底屏开层前就够不到、开层后还是够不到"))
+    for x in (c.get("broken_by_opening") or []):
+        who = who_of(x)
+        if any(k in who for k in MODAL):
+            stack4_modal.append(row(c, x, "堆四：被本层模态盖住（设计如此）"))
+        elif any(k in who for k in MAPFAM):
+            stack4_map.append(row(c, x, "堆四：地图族互盖"))
+        else:
+            stack4_other.append(row(c, x, "堆四：开层前能命中、开层后被别的元素盖住"))
+
+print("cells=%d 量到=%d 触发件不在屏=%d" % (len(cells), len(measured), len(absent)))
+print("run_ids=%s" % rids)
+print("堆一 层自己的控件=%d 枚（够不到=%d 枚、遮罩件设计如此另列=%d 枚）" % (
+    h1_ok + h1_bad + len(stack1_bd), h1_bad, len(stack1_bd)))
+print("堆二 点开才好的=%d 枚" % len(stack2))
+print("堆三 底屏原本就够不到=%d 枚（不归本格）" % len(stack3))
+print("堆四 点开反倒坏的：模态盖住=%d 枚、地图族=%d 枚、其余=%d 枚" % (
+    len(stack4_modal), len(stack4_map), len(stack4_other)))
+print("--- 堆一逐枚（本格能判的候选缺陷）")
+for r in stack1[:14]:
+    print("  {arm} w{vw} {route}/{trigger} {tag}#{testid}「{text}」 {kind}"
+          " 中心文档 y={cy_doc} 滚到 {scroll_to} 后 rect {rect} 盖它的是 {covered_by}「{covered_text}」 件 {run_id}".format(**r))
+print("--- 堆四·其余逐枚")
+for r in stack4_other[:14]:
+    print("  {arm} w{vw} {route}/{trigger} {tag}#{testid}「{text}」 {kind} 盖它的是 {covered_by}「{covered_text}」 件 {run_id}".format(**r))
+print("--- 每层的账")
+for k, v in sorted(per_layer.items()):
+    print("  %-42s 格=%d 新渲染=%d 其中够不到=%d 点开才好=%d" % (
+        k, v["cells"], v["new"], v["new_bad"], v["fixed"]))
+ctrl_bad = [c for c in measured if c.get("control_ok") is not True]
+print("负对照抓齐=%d/%d 格" % (len(measured) - len(ctrl_bad), len(measured)))
+out = os.path.join(ART, "opened_reach_four_stacks_%s_%s.json" % (
+    rids["zh-CN"][3:], rids["en"][3:]))
+io.open(out, "w", encoding="utf-8", newline="\n").write(json.dumps({
+    "run_ids": [rids["zh-CN"], rids["en"]], "cells": len(cells), "measured": len(measured),
+    "trigger_absent": [{"route": c["route"], "trigger": c["trigger"], "vw": c["vw"],
+                        "arm": c["arm"]} for c in absent],
+    "stack1_new_rendered": h1_ok + h1_bad, "stack1_bad": h1_bad,
+    "stack1": stack1, "stack1_backdrop": stack1_bd, "stack2_fixed_by_opening": stack2,
+    "stack3_preexisting_bad": stack3, "stack4_modal": stack4_modal,
+    "stack4_map": stack4_map, "stack4_other": stack4_other,
+    "per_layer": per_layer, "control_ok_cells": len(measured) - len(ctrl_bad)
+}, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + out)

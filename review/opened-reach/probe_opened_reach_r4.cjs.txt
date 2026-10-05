@@ -1,0 +1,294 @@
+// 1ba48dbf · 自申报格 r2：每一层"点开才到"的控件，在 360/390/414 三档下逐枚量能不能滚到、滚到后能不能命中
+// 两条尺伤是 r1 自己抓出来的，这一版按它们改：
+//  ① 可达性不能按"滚到底那一刻在不在视口"判——靠顶部的控件滚到底反而被顶出上沿；
+//     改成"存在某个滚动位置能让它整个进视口"（中心文档 y 落在 [0, max_scroll + 视口高] 内），
+//     再把窗口滚到那个位置做命中测试。
+//  ② 折叠 <details> 的内容一直在 DOM 里，只是没渲染；按"DOM 里新增"算会把它们全漏掉。
+//     改成按"有没有渲染出的盒子"（rect 宽高都 > 0）算，开层前只登记已渲染的那批。
+// 负对照三枚：视口外那枚必须判不可达、被盖住那枚必须判命中失败、干净那枚必须判可达，缺一格就整格作废。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.CL_BASE;
+const OUT = process.env.CL_OUT;
+const SHOTDIR = process.env.CL_SHOTS;
+const JID = process.env.CL_JID;
+const WIDTHS = (process.env.CL_WIDTHS || "360,390,414").split(",").map(Number);
+const ONLY = (process.env.CL_ONLY || "").split(",").filter(Boolean);
+
+const LAYERS_ALL = [
+  { route: "hub", name: "待办筛选面板", sel: "pending-filter-open" },
+  { route: "hub", name: "今天续跑的折叠技术面", sel: "continuation-technical-details" },
+  { route: "trips", name: "站点详情", sel: "trip-stop-details" },
+  { route: "trips", name: "收藏到…入口", sel: "collect-entry" },
+  { route: "trips", name: "中止这趟行程的表单层", sel: "journey-abort-open" },
+  { route: "map", name: "只看打过卡", sel: "v8-map-footprint-filter" },
+  { route: "me", name: "策略详情", sel: "me-advanced" },
+  { route: "access", name: "角色说明的折叠层", sel: "access-role-details" },
+  { route: "discover", name: "收藏架的重读入口所在层", sel: "collection-retry" },
+  { route: "shell", name: "顶栏菜单抽屉", sel: "v8-mobile-menu" },
+  { route: "shell", name: "顶栏主题选择", sel: "topbar-theme" }
+];
+const LAYERS = ONLY.length ? LAYERS_ALL.filter((s) => ONLY.indexOf(s.sel) >= 0) : LAYERS_ALL;
+
+const SEL = "button,a,summary,[role=button],[role=link],input,select,textarea";
+
+// 页面里跑的函数必须自足：playwright 只送那一枚函数的源码
+const SNAP_RENDERED = () => {
+  const out = [];
+  for (const el of Array.from(document.querySelectorAll(
+      "button,a,summary,[role=button],[role=link],input,select,textarea"))) {
+    if (el.hasAttribute("data-rp-probe")) { continue; }
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) { continue; }
+    out.push(el.tagName + "|" + (el.getAttribute("data-testid") || "") + "|"
+      + (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40));
+  }
+  return out;
+};
+
+const PLANT = () => {
+  document.querySelectorAll("[data-rp-probe]").forEach((n) => n.remove());
+  const mk = (kind, css) => {
+    const el = document.createElement("button");
+    el.setAttribute("data-rp-probe", kind);
+    el.style.cssText = css;
+    el.textContent = "RP-" + kind.toUpperCase();
+    document.body.appendChild(el);
+  };
+  mk("offscreen", "position:fixed;left:8px;top:-200px;width:120px;height:44px;");
+  mk("covered", "position:fixed;left:8px;top:120px;width:120px;height:44px;");
+  const over = document.createElement("div");
+  over.setAttribute("data-rp-probe", "overlay");
+  over.style.cssText = "position:fixed;left:0;top:100px;width:200px;height:90px;"
+    + "z-index:2147483646;background:rgba(0,0,0,0.01);";
+  document.body.appendChild(over);
+  mk("clean", "position:fixed;right:8px;top:120px;width:120px;height:44px;z-index:2147483647;");
+  return true;
+};
+
+const UNPLANT = () => {
+  document.querySelectorAll("[data-rp-probe]").forEach((n) => n.remove());
+  return true;
+};
+
+// 一枚枚量：能不能滚到 → 滚到那个位置 → 命中测试
+const REACH = (opts) => {
+  const beforeKeys = opts.before || [];
+  const bs2 = new Set(beforeKeys);
+  const de = document.scrollingElement || document.documentElement;
+  const vh = window.innerHeight;
+  const bs = new Set(beforeKeys);
+  const max = de.scrollHeight - de.clientHeight;
+  const clamp = (v) => Math.max(0, Math.min(max, v));
+  // 逐枚量之前先复位：上一枚为把它滚进视口而挪过的窗口/内层滚动，会把下一枚的位置改掉
+  const scrollers = [];
+  for (const a of Array.from(document.querySelectorAll("*"))) {
+    const cs = getComputedStyle(a);
+    if (/auto|scroll/.test(cs.overflowY) && a.scrollHeight > a.clientHeight + 1) {
+      scrollers.push([a, a.scrollTop]);
+    }
+  }
+  const y0 = window.scrollY;
+  const reset = () => {
+    window.scrollTo(0, y0);
+    for (const pair of scrollers) { pair[0].scrollTop = pair[1]; }
+  };
+  const plants = {};
+  if (opts.plants) {
+    const pv = window.innerHeight;
+    for (const el of Array.from(document.querySelectorAll("button[data-rp-probe]"))) {
+      const kind = el.getAttribute("data-rp-probe");
+      const rr = el.getBoundingClientRect();
+      const pcx = Math.round(rr.left + rr.width / 2), pcy = Math.round(rr.top + rr.height / 2);
+      const ptop = document.elementFromPoint(pcx, pcy);
+      plants["plant_" + kind] = {
+        rect: Math.round(rr.top) + ".." + Math.round(rr.bottom),
+        in_view: pcy >= 0 && pcy <= pv,
+        hits_self: !!ptop && (ptop === el || el.contains(ptop) || ptop.contains(el)) };
+    }
+    // 对照只管这一趟的牙，量完立刻拔掉：埋着它去量真控件，自己的 overlay 会盖住真控件
+    document.querySelectorAll("[data-rp-probe]").forEach((n) => n.remove());
+  }
+  const rows = [];
+  for (const el of Array.from(document.querySelectorAll(
+      "button,a,summary,[role=button],[role=link],input,select,textarea"))) {
+    if (el.hasAttribute("data-rp-probe")) { continue; }
+    let r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) { continue; }
+    const key = el.tagName + "|" + (el.getAttribute("data-testid") || "") + "|"
+      + (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    const was_in_before = bs2.has(key);
+    reset();
+    r = el.getBoundingClientRect();
+    const cy_doc = r.top + window.scrollY + r.height / 2;
+    const scrollable_in = cy_doc - vh <= max && cy_doc >= 0;
+    window.scrollTo(0, clamp(cy_doc - vh / 2));
+    // 窗口滚不到不等于够不到：抽屉、面板这类内层滚动容器要逐层试过才算
+    let via = scrollable_in ? "window" : null;
+    if (!scrollable_in || (r.top < 0 || r.bottom > vh)) {
+      for (let a = el.parentElement; a; a = a.parentElement) {
+        const cs = getComputedStyle(a);
+        if (!/auto|scroll/.test(cs.overflowY)) { continue; }
+        if (a.scrollHeight <= a.clientHeight + 1) { continue; }
+        const ar = a.getBoundingClientRect();
+        const need = r.top + r.height / 2 - (ar.top + ar.height / 2);
+        a.scrollTop = Math.max(0, Math.min(a.scrollHeight - a.clientHeight, a.scrollTop + need));
+        r = el.getBoundingClientRect();
+        via = "inner:" + a.tagName.toLowerCase() + (a.getAttribute("data-testid")
+          ? "#" + a.getAttribute("data-testid") : "")
+          + (typeof a.className === "string" && a.className
+            ? "." + a.className.trim().split(/\s+/)[0] : "");
+        if (r.top >= 0 && r.bottom <= vh) { break; }
+      }
+    }
+    r = el.getBoundingClientRect();
+    const cx = Math.round(r.left + r.width / 2), cy = Math.round(r.top + r.height / 2);
+    const top = document.elementFromPoint(cx, cy);
+    rows.push({ key: key, in_A: was_in_before, tag: el.tagName.toLowerCase(),
+                testid: el.getAttribute("data-testid") || "",
+                cls: (typeof el.className === "string" ? el.className.trim().split(/\s+/)[0] : ""),
+                text: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 28),
+                cy_doc: Math.round(cy_doc), h: Math.round(r.height),
+                rect_at_best: { top: Math.round(r.top), bottom: Math.round(r.bottom) },
+                scroll_to: Math.round(clamp(cy_doc - vh / 2)),
+                scrollable_in: scrollable_in, scrolled_via: via,
+                in_view_after_scroll: r.top >= 0 && r.bottom <= vh,
+                in_view_at_best: cy >= 0 && cy <= vh,
+                hits_self: !!top && (top === el || el.contains(top) || top.contains(el)),
+                top_at_best: top ? (top.tagName.toLowerCase() + (top.getAttribute("data-testid")
+                  ? "#" + top.getAttribute("data-testid") : "")) : null,
+                top_cls: top && typeof top.className === "string"
+                  ? top.className.trim().split(/\s+/).slice(0, 2).join(".") : "",
+                top_id: (top && top.id) ? top.id : "",
+                top_text: top ? (top.textContent || "").replace(/\s+/g, " ").trim().slice(0, 24) : "",
+                top_rect: top ? (Math.round(top.getBoundingClientRect().top) + ".."
+                  + Math.round(top.getBoundingClientRect().bottom)) : "",
+                top_chain: (() => {
+                  const out = [];
+                  for (let q = top; q && out.length < 3; q = q.parentElement) {
+                    out.push(q.tagName.toLowerCase() + (q.getAttribute("data-testid")
+                      ? "#" + q.getAttribute("data-testid") : "")
+                      + (typeof q.className === "string" && q.className
+                        ? "." + q.className.trim().split(/\s+/)[0] : ""));
+                  }
+                  return out.join(" < ");
+                })() });
+  }
+  return { vh: vh, doc_h: de.scrollHeight, max_scroll: max, rows: rows, plants: plants };
+};
+
+const m_rows_n = (rec) => (rec.rows || []).length;
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, widths: WIDTHS, cells: [], errors: [] };
+  const save = () => fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  const ARMS = (process.env.CL_ARMS || "zh-CN,en").split(",").filter(Boolean);
+  for (const arm of ARMS) {
+    for (const vw of WIDTHS) {
+      for (const spec of LAYERS) {
+        const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+          deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+          locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+        const page = await ctx.newPage();
+        page.setDefaultTimeout(15000);
+        const rec = { arm: arm, vw: vw, route: spec.route, layer: spec.name, trigger: spec.sel };
+        try {
+          await page.addInitScript(([jid, loc]) => {
+            try {
+              if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+              localStorage.setItem("citynexus.locale", loc);
+            } catch (e) {}
+          }, [JID || "", arm]);
+          await page.goto(BASE + (spec.route === "shell" ? "/v8/hub" : "/v8/" + spec.route),
+            { waitUntil: "domcontentloaded", timeout: 60000 });
+          await page.waitForTimeout(3000);
+          rec.href = page.url();
+          const trigger = page.locator("[data-testid='" + spec.sel + "']").first();
+          rec.trigger_found = await trigger.count().then((n) => n > 0);
+          if (!rec.trigger_found) { rep.cells.push(rec); save(); await ctx.close().catch(() => {}); continue; }
+          // A 态：还没点开的屏（折叠层的内容这时往往已经渲染、只是滚不到）
+          const a = await page.evaluate(REACH, { before: [], plants: false });
+          const aKeys = new Set(a.rows.map((x) => x.key));
+          rec.a_keys = Array.from(aKeys);
+          rec.A = { vh: a.vh, doc_h: a.doc_h, max_scroll: a.max_scroll,
+                    n: a.rows.length, bad: a.rows.filter((x) => !x.scrollable_in || !x.hits_self) };
+          const isDet = await trigger.evaluate((el) => el.tagName === "DETAILS").catch(() => false);
+          rec.trigger_is_details = isDet;
+          const clicker = isDet
+            ? page.locator("[data-testid='" + spec.sel + "'] > summary").first() : trigger;
+          await clicker.scrollIntoViewIfNeeded().catch(() => {});
+          await page.waitForTimeout(250);
+          await clicker.click({ timeout: 8000 })
+            .catch((e) => { rec.click_error = (e.message || "").slice(0, 70); });
+          await page.waitForTimeout(800);
+          rec.after_open_href = page.url();
+          await page.evaluate(PLANT);
+          // C 态：点开之后，同一把尺再量一遍；对照埋在这一态，否则会盖住 A 态的真控件
+          const m = await page.evaluate(REACH, { before: rec.a_keys, plants: true });
+          rec.vh = m.vh; rec.doc_h = m.doc_h; rec.max_scroll = m.max_scroll;
+          rec.rows = m.rows;
+          Object.assign(rec, m.plants);
+          const aBad = new Set(rec.A.bad.map((x) => x.key));
+          const cBad = new Set(m.rows.filter((x) => !x.scrollable_in || !x.hits_self).map((x) => x.key));
+          rec.n_new = m.rows.filter((x) => !x.in_A).length;
+          rec.n_unscrollable = m.rows.filter((x) => !x.scrollable_in).length;
+          rec.n_hitfail = m.rows.filter((x) => x.scrollable_in && !x.hits_self).length;
+          rec.unscrollable = m.rows.filter((x) => !x.scrollable_in);
+          rec.hitfail = m.rows.filter((x) => x.scrollable_in && !x.hits_self);
+          rec.fixed_by_opening = rec.A.bad.filter((x) => !cBad.has(x.key));
+          rec.n_inner_scrolled = m.rows.filter((x) => (x.scrolled_via || "").indexOf("inner:") === 0).length;
+          rec.broken_by_opening = m.rows.filter((x) => !aBad.has(x.key) && (
+            !x.scrollable_in || !x.hits_self));
+          rec.still_bad = m.rows.filter((x) => aBad.has(x.key) && (
+            !x.scrollable_in || !x.hits_self));
+          const po = rec.plant_offscreen, pc = rec.plant_covered, pl = rec.plant_clean;
+          rec.control_ok = !!(po && !po.in_view && pc && pc.in_view && !pc.hits_self
+            && pl && pl.in_view && pl.hits_self);
+          await page.screenshot({ path: SHOTDIR + "/r_" + vw + "_" + arm + "_" + spec.route + "_"
+            + spec.sel + ".png" }).catch(() => {});
+          rep.cells.push(rec);
+          save();
+          console.log("w" + vw + " " + arm + " " + spec.route + "/" + spec.sel
+            + " | 开层前屏上 " + rec.A.n + " 枚、开层后 " + m_rows_n(rec) + " 枚"
+            + "（其中新渲染 " + rec.n_new + " 枚）、滚不进去 " + rec.n_unscrollable
+            + " 枚、滚到了却没命中自己 " + rec.n_hitfail + " 枚"
+            + " | 文档 " + rec.doc_h + " px、最多滚 " + rec.max_scroll + " px"
+            + "、经内层滚动容器才到的 " + rec.n_inner_scrolled + " 枚"
+            + " | 三枚对照按预期抓到=" + rec.control_ok
+            + (rec.click_error ? " | 点不动=" + rec.click_error : ""));
+          console.log("    开层动作的账：点开才好的 " + rec.fixed_by_opening.length + " 枚"
+            + "、点开反倒坏的 " + rec.broken_by_opening.length + " 枚"
+            + "、两态都够不到的 " + rec.still_bad.length + " 枚");
+          for (const x of rec.still_bad.concat(rec.broken_by_opening).slice(0, 4)) {
+            console.log("    ! " + x.tag + "#" + x.testid + "「" + x.text + "」 中心文档 y="
+              + x.cy_doc + " 滚到 " + x.scroll_to + " 后 rect " + x.rect_at_best.top + ".."
+              + x.rect_at_best.bottom + " 命中=" + x.hits_self
+              + " 盖它的是 " + x.top_at_best + (x.top_cls ? "." + x.top_cls : "")
+              + (x.top_id ? "#" + x.top_id : "") + "「" + x.top_text + "」");
+          }
+        } catch (e) {
+          rep.errors.push(arm + "/" + vw + "/" + spec.sel + " " + (e.message || String(e)).slice(0, 110));
+          rep.cells.push(rec);
+          save();
+        } finally { await ctx.close().catch(() => {}); }
+      }
+    }
+  }
+  await browser.close();
+  save();
+  const done = rep.cells.filter((c) => c.n_new !== undefined);
+  const bad = done.filter((c) => c.control_ok !== true);
+  console.log("cells=" + rep.cells.length + " 量到=" + done.length
+    + " 触发件不在屏=" + rep.cells.filter((c) => !c.trigger_found).length
+    +  " 开层前屏上控件=" + done.reduce((a, c) => a + (c.A ? c.A.n : 0), 0)
+    + " 开层后屏上控件=" + done.reduce((a, c) => a + m_rows_n(c), 0)
+    + " 其中新渲染=" + done.reduce((a, c) => a + c.n_new, 0)
+    + " 滚不进去=" + done.reduce((a, c) => a + c.n_unscrollable, 0)
+    + " 滚到了没命中自己=" + done.reduce((a, c) => a + c.n_hitfail, 0)
+    + " 点开才好的=" + done.reduce((a, c) => a + c.fixed_by_opening.length, 0)
+    + " 点开反倒坏的=" + done.reduce((a, c) => a + c.broken_by_opening.length, 0)
+    + " 两态都够不到=" + done.reduce((a, c) => a + c.still_bad.length, 0)
+    + " 负对照没抓齐的格=" + bad.length + " errors=" + rep.errors.length);
+})();

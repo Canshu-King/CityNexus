@@ -1,0 +1,98 @@
+// 1ba48dbf · 抽屉里那两枚"滚到了却没命中自己"的控件：把盖住它们的那枚元素点名
+// 只读数不推断：outerHTML 前一段、计算样式、矩形、子元素数、pointer-events 全打出来。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.CL_BASE;
+const OUT = process.env.CL_OUT;
+const JID = process.env.CL_JID;
+
+const LOOK = () => {
+  const de = document.scrollingElement || document.documentElement;
+  const vh = window.innerHeight;
+  const max = de.scrollHeight - de.clientHeight;
+  const nodes = Array.from(document.querySelectorAll(
+    "button,a,summary,[role=button],[role=link]"));
+  const targets = [
+    { label: "button#v8-drawer-entry-hub",
+      pick: (n) => (n.getAttribute("data-testid") || "") === "v8-drawer-entry-hub" },
+    { label: "无名且整屏高的 button",
+      pick: (n) => !(n.getAttribute("data-testid") || "") && !(n.textContent || "").trim()
+        && n.getBoundingClientRect().height > 500 }
+  ];
+  const out = [];
+  for (const t of targets) {
+    const el = nodes.find((n) => n.getBoundingClientRect().height > 0 && t.pick(n));
+    const tid = el ? (el.getAttribute("data-testid") || "") : "";
+    if (!el) { out.push({ asked: t.label, found: false }); continue; }
+    window.scrollTo(0, Math.max(0, Math.min(max,
+      el.getBoundingClientRect().top + window.scrollY + el.getBoundingClientRect().height / 2 - vh / 2)));
+    const r = el.getBoundingClientRect();
+    const cx = Math.round(r.left + r.width / 2), cy = Math.round(r.top + r.height / 2);
+    const top = document.elementFromPoint(cx, cy);
+    const desc = (n) => n ? {
+      tag: n.tagName.toLowerCase(), id: n.id || "",
+      cls: (typeof n.className === "string" ? n.className.trim() : "").slice(0, 60),
+      testid: n.getAttribute("data-testid") || "",
+      role: n.getAttribute("role") || "", aria: n.getAttribute("aria-label") || "",
+      text: (n.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40),
+      rect: Math.round(n.getBoundingClientRect().top) + ".." + Math.round(n.getBoundingClientRect().bottom)
+        + " × " + Math.round(n.getBoundingClientRect().left) + ".." + Math.round(n.getBoundingClientRect().right),
+      pos: getComputedStyle(n).position, z: getComputedStyle(n).zIndex,
+      pe: getComputedStyle(n).pointerEvents, op: getComputedStyle(n).opacity,
+      kids: n.children.length,
+      html: (n.outerHTML || "").replace(/\s+/g, " ").slice(0, 170)
+    } : null;
+    out.push({ asked: t.label, found: true, self: desc(el), at: { cx: cx, cy: cy },
+               is_self: top === el, cover: desc(top),
+               stack: Array.from(document.elementsFromPoint(cx, cy)).slice(0, 4).map((n) =>
+                 n.tagName.toLowerCase() + (n.id ? "#" + n.id : "")
+                 + (typeof n.className === "string" && n.className
+                   ? "." + n.className.trim().split(/\s+/)[0] : "")) });
+  }
+  return { vh: vh, doc_h: de.scrollHeight, max: max, rows: out };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, cells: [], errors: [] };
+  for (const arm of ["zh-CN", "en"]) {
+    for (const vw of [360, 390, 414]) {
+      const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      page.setDefaultTimeout(15000);
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm]);
+        await page.goto(BASE + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(3000);
+        await page.locator("[data-testid='v8-mobile-menu']").first().click({ timeout: 8000 });
+        await page.waitForTimeout(900);
+        const x = await page.evaluate(LOOK);
+        x.arm = arm; x.vw = vw; x.href = page.url();
+        rep.cells.push(x);
+        console.log("w" + vw + " " + arm + " 文档 " + x.doc_h + " px 最多滚 " + x.max + " px");
+        for (const r of x.rows) {
+          console.log("  问：" + r.asked + " 在场=" + r.found
+            + (r.found ? " 自己 rect=" + r.self.rect + " pos=" + r.self.pos + " z=" + r.self.z
+              + "｜命中自己=" + r.is_self + "｜栈=" + JSON.stringify(r.stack) : ""));
+          if (r.found && !r.is_self) {
+            console.log("    盖它的是：" + JSON.stringify(r.cover));
+          }
+        }
+      } catch (e) {
+        rep.errors.push(arm + "/" + vw + " " + (e.message || String(e)).slice(0, 110));
+      } finally { await ctx.close().catch(() => {}); }
+      fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  console.log("cells=" + rep.cells.length + " errors=" + rep.errors.length);
+})();
