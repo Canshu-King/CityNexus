@@ -8924,6 +8924,157 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return twin
 
 
+def _execution_distance_m(
+    latitude_a: float,
+    longitude_a: float,
+    latitude_b: float,
+    longitude_b: float,
+) -> float:
+    radius_m = 6_371_000.0
+    phi_a = math.radians(latitude_a)
+    phi_b = math.radians(latitude_b)
+    delta_phi = math.radians(latitude_b - latitude_a)
+    delta_lambda = math.radians(longitude_b - longitude_a)
+    hav = (
+        math.sin(delta_phi / 2.0) ** 2
+        + math.cos(phi_a) * math.cos(phi_b) * math.sin(delta_lambda / 2.0) ** 2
+    )
+    return radius_m * 2.0 * math.atan2(math.sqrt(hav), math.sqrt(max(0.0, 1.0 - hav)))
+
+
+def _resolve_execution_truth_attestation(
+    request: Request,
+    session: Session,
+    *,
+    journey: Journey,
+    activity: Activity,
+    transition: str,
+    captured_at: str,
+    attestation: ExecutionTruthAttestation | None,
+) -> dict[str, Any]:
+    """Resolve execution evidence without letting caller prose promote reality."""
+
+    requested = (
+        attestation.truth_kind
+        if attestation is not None
+        else SIMULATED_STATE_TRANSITION
+    )
+    if requested == SIMULATED_STATE_TRANSITION:
+        return {
+            "kind": SIMULATED_STATE_TRANSITION,
+            "actor_type": "SIMULATION",
+            "actor_id": "api-state-machine",
+            "evidence": {
+                "source": "API_STATE_MACHINE",
+                "physical_presence_claimed": False,
+                "operator_confirmed": False,
+            },
+        }
+
+    if not settings.traveler_auth_secret:
+        raise HTTPException(
+            409,
+            "STRONG_EXECUTION_TRUTH_REQUIRES_AUTHENTICATED_TRAVELER",
+        )
+
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+
+    if requested == OPERATOR_CONFIRMED_EXECUTION:
+        if attestation is None or attestation.operator_confirmed is not True:
+            raise HTTPException(
+                422,
+                "OPERATOR_CONFIRMED_EXECUTION_REQUIRES_EXPLICIT_CONFIRMATION",
+            )
+        return {
+            "kind": OPERATOR_CONFIRMED_EXECUTION,
+            "actor_type": "AUTHENTICATED_TRAVELER",
+            "actor_id": principal.traveler_id,
+            "evidence": {
+                "member_id": member.id,
+                "role": member.role,
+                "auth_method": principal.auth_method,
+                "operator_confirmed": True,
+                "physical_presence_claimed": False,
+            },
+        }
+
+    if requested != DEVICE_LOCATION_VERIFIED_EXECUTION:
+        raise HTTPException(422, "unsupported execution truth kind")
+    if attestation is None or attestation.location_observation_id is None:
+        raise HTTPException(
+            422,
+            "DEVICE_LOCATION_VERIFIED_EXECUTION_REQUIRES_LOCATION_OBSERVATION",
+        )
+
+    observation = session.get(
+        LocationObservation, str(attestation.location_observation_id)
+    )
+    if observation is None or observation.journey_id != journey.id:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_BOUND_TO_JOURNEY")
+    try:
+        observed_at = datetime.fromisoformat(observation.captured_at)
+    except ValueError as exc:
+        raise HTTPException(409, "LOCATION_OBSERVATION_TIME_INVALID") from exc
+    if observed_at.tzinfo is None:
+        raise HTTPException(409, "LOCATION_OBSERVATION_TIME_INVALID")
+    now = datetime.now(timezone.utc)
+    age_seconds = (now - observed_at.astimezone(timezone.utc)).total_seconds()
+    if age_seconds < -60 or age_seconds > 300:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_FRESH")
+    if float(observation.accuracy_m) > 100.0:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_PRECISE_ENOUGH")
+
+    location_audit = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "journey.location.recorded",
+            AuditLog.entity_type == "LocationObservation",
+            AuditLog.entity_id == observation.id,
+            AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if location_audit is None:
+        raise HTTPException(409, "LOCATION_OBSERVATION_PRINCIPAL_NOT_PROVEN")
+
+    evidence: dict[str, Any] = {
+        "location_observation_id": observation.id,
+        "captured_at": observation.captured_at,
+        "source": observation.source,
+        "accuracy_m": observation.accuracy_m,
+        "member_id": member.id,
+        "auth_method": principal.auth_method,
+        "physical_presence_claimed": True,
+    }
+    if activity.place_id:
+        place = session.get(Place, str(activity.place_id))
+        if place is not None:
+            distance_m = _execution_distance_m(
+                float(observation.latitude),
+                float(observation.longitude),
+                float(place.latitude),
+                float(place.longitude),
+            )
+            maximum_distance_m = max(150.0, float(observation.accuracy_m) * 2.0)
+            evidence["place_id"] = place.id
+            evidence["distance_to_place_m"] = round(distance_m, 1)
+            evidence["maximum_distance_m"] = round(maximum_distance_m, 1)
+            if distance_m > maximum_distance_m:
+                raise HTTPException(409, "LOCATION_OBSERVATION_TOO_FAR_FROM_ACTIVITY")
+
+    return {
+        "kind": DEVICE_LOCATION_VERIFIED_EXECUTION,
+        "actor_type": "AUTHENTICATED_TRAVELER",
+        "actor_id": principal.traveler_id,
+        "evidence": evidence,
+    }
+
+
 def _transition_activity_state(
     journey_id: UUID,
     activity_id: UUID,
