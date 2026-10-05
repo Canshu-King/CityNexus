@@ -18,14 +18,16 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 from pathlib import Path
 from typing import Any
 
-from run_r28_live import _api_setup, _configure
+from run_r28_live import BACKEND, ROOT, _api_setup, _configure
 from run_r29_live import (
     _approval_id_from_run,
     _first_mission_id,
     _owner_member_id,
+    _resume_resolved_child_and_approve,
     _run_first_agent,
     _signed_member_tokens,
 )
@@ -631,6 +633,256 @@ def _latest_waiting_collective_round(journey_id: str) -> dict[str, Any] | None:
     return None
 
 
+def _journey_owner_member_id(journey_id: str) -> str:
+    from sqlalchemy import select
+
+    from app.db.models import JourneyMember
+    from app.db.session import SessionLocal
+
+    with SessionLocal() as session:
+        rows = list(
+            session.scalars(
+                select(JourneyMember).where(
+                    JourneyMember.journey_id == journey_id,
+                    JourneyMember.role == "OWNER",
+                    JourneyMember.removed_at.is_(None),
+                )
+            ).all()
+        )
+    if len(rows) != 1:
+        raise RuntimeError(
+            "R30 final approval requires exactly one in-force Journey OWNER: "
+            f"{[(row.id, row.role) for row in rows]}"
+        )
+    return str(rows[0].id)
+
+
+def _select_fresh_collective_choice(
+    clarification: dict[str, Any],
+) -> str:
+    """Choose only a uniquely best server-grounded acceptable recovery option."""
+
+    ranked: list[tuple[tuple[int, float, float], str]] = []
+    for option in clarification.get("candidate_options") or []:
+        if not isinstance(option, dict) or not option.get("proposal_id"):
+            continue
+        if option.get("status") != "GROUNDED_FEASIBLE":
+            continue
+        fairness = option.get("fairness") or {}
+        unacceptable_count = len(
+            fairness.get("unacceptable_member_ids") or []
+        )
+        try:
+            minimum_fit = float(fairness.get("minimum_member_fit"))
+        except (TypeError, ValueError):
+            minimum_fit = -1.0
+        try:
+            maximum_regret = float(fairness.get("maximum_regret"))
+        except (TypeError, ValueError):
+            maximum_regret = 1.0
+        score = (
+            1 if unacceptable_count == 0 else 0,
+            minimum_fit,
+            -maximum_regret,
+        )
+        ranked.append((score, str(option["proposal_id"])))
+    if not ranked:
+        raise RuntimeError(
+            "fresh recovery round has no grounded option with fairness facts"
+        )
+    ranked.sort(reverse=True)
+    best_score = ranked[0][0]
+    best_ids = sorted(
+        proposal_id for score, proposal_id in ranked if score == best_score
+    )
+    if len(best_ids) != 1:
+        raise RuntimeError(
+            "fresh recovery round has no unique jointly acceptable option; "
+            f"human choice remains genuinely open: {best_ids}"
+        )
+    return best_ids[0]
+
+
+def _close_fresh_collective_round(
+    *,
+    journey_id: str,
+    waiting: dict[str, Any],
+) -> dict[str, Any]:
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    mission_id = str(waiting.get("mission_id") or "")
+    clarification = waiting.get("clarification") or {}
+    required = [
+        str(value)
+        for value in clarification.get("required_member_ids") or []
+        if value
+    ]
+    if not mission_id or not required:
+        raise RuntimeError(
+            "fresh collective round has no mission or required member scope"
+        )
+    choice = _select_fresh_collective_choice(clarification)
+    tokens = _signed_member_tokens(required)
+    client = TestClient(app)
+    path = (
+        f"/api/v1/journeys/{journey_id}/missions/{mission_id}/"
+        "collective-clarification"
+    )
+    responses: list[dict[str, Any]] = []
+    for index, member_id in enumerate(required):
+        response = client.post(
+            f"{path}/{member_id}",
+            headers={"Authorization": f"Bearer {tokens[member_id]}"},
+            json={
+                "clarification_id": clarification["clarification_id"],
+                "proposal_id": choice,
+            },
+        )
+        if response.status_code >= 400:
+            raise RuntimeError(
+                "fresh post-shock consent failed for "
+                f"{member_id}: {response.status_code} {response.text}"
+            )
+        payload = response.json()
+        responses.append(payload)
+        if index < len(required) - 1:
+            if payload.get("status") != "WAITING_FOR_MEMBERS":
+                raise RuntimeError(
+                    "fresh collective round resolved before every required "
+                    "member answered"
+                )
+            if payload.get("child_mission") is not None:
+                raise RuntimeError(
+                    "fresh collective round created a continuation child too early"
+                )
+
+    resolved = responses[-1]
+    child = resolved.get("child_mission") or {}
+    child_id = str(child.get("id") or "")
+    if resolved.get("status") != "RESOLVED" or not child_id:
+        raise RuntimeError(
+            "fresh authenticated responses did not resolve the post-shock round"
+        )
+
+    owner_member_id = _journey_owner_member_id(journey_id)
+    closure = _resume_resolved_child_and_approve(
+        client,
+        journey_id=journey_id,
+        child_id=child_id,
+        owner_member_id=owner_member_id,
+    )
+    return {
+        "required_member_ids": required,
+        "selected_proposal_id": choice,
+        "responses": responses,
+        "resolved_child_id": child_id,
+        **closure,
+    }
+
+
+def _close_unambiguous_recovery(
+    *,
+    journey_id: str,
+    recovery: dict[str, Any],
+) -> dict[str, Any] | None:
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    payload = recovery.get("payload") or {}
+    run = payload.get("run") if isinstance(payload, dict) else None
+    if not isinstance(run, dict):
+        return None
+    run_id = str(run.get("run_id") or "")
+    approval_id = _approval_id_from_run(run, journey_id)
+    if approval_id:
+        owner_member_id = _journey_owner_member_id(journey_id)
+        owner_token = _signed_member_tokens([owner_member_id])[
+            owner_member_id
+        ]
+        client = TestClient(app)
+        approval = client.post(
+            f"/api/v1/journeys/{journey_id}/agent/approvals/"
+            f"{approval_id}/approve",
+            headers={"Authorization": f"Bearer {owner_token}"},
+            json={"approval_method": "USER_CONFIRMATION"},
+        )
+        if approval.status_code >= 400:
+            raise RuntimeError(
+                "post-shock unambiguous recovery approval failed: "
+                f"{approval.status_code} {approval.text}"
+            )
+        approval_payload = approval.json()
+        final_run_id = str(
+            (approval_payload.get("continuation") or {}).get("run_id")
+            or run_id
+        )
+        return {
+            "mode": "NO_FRESH_COLLECTIVE_ROUND_APPROVAL",
+            "approval_id": approval_id,
+            "approval": approval_payload,
+            "final_run_id": final_run_id,
+        }
+    outcome = run.get("outcome")
+    if run_id and run.get("status") == "COMPLETED" and isinstance(
+        outcome, dict
+    ) and outcome.get("status") == "MUTATION_EXECUTED":
+        return {
+            "mode": "NO_FRESH_COLLECTIVE_ROUND_ALREADY_EXECUTED",
+            "final_run_id": run_id,
+        }
+    return None
+
+
+def _run_machine_verdict(
+    *,
+    checkpoint_path: str,
+    final_run_id: str | None,
+) -> dict[str, Any]:
+    verdict_path = (
+        ROOT
+        / "output"
+        / "revolution-r30-live-20261006"
+        / "R30_MACHINE_VERDICT.json"
+    )
+    command = [
+        "uv",
+        "run",
+        "--project",
+        ".",
+        "python",
+        "scripts/r30_machine_verdict.py",
+        "--checkpoint",
+        str(ROOT / checkpoint_path),
+        "--output",
+        str(verdict_path),
+    ]
+    if final_run_id:
+        command.extend(["--final-run-id", final_run_id])
+    completed = subprocess.run(
+        command,
+        cwd=BACKEND,
+        env=os.environ.copy(),
+        capture_output=True,
+        text=True,
+    )
+    parsed = None
+    if verdict_path.is_file():
+        try:
+            parsed = json.loads(verdict_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            parsed = None
+    return {
+        "exit_code": completed.returncode,
+        "path": verdict_path.relative_to(ROOT).as_posix(),
+        "summary": (parsed or {}).get("summary"),
+        "stdout_tail": completed.stdout[-6000:],
+        "stderr_tail": completed.stderr[-6000:],
+    }
+
+
 def _write_checkpoint(result: dict[str, Any]) -> str:
     root = Path(__file__).resolve().parents[1]
     out = root / "output" / "revolution-r30-live-20261006"
@@ -694,8 +946,28 @@ def _run_full() -> dict[str, Any]:
     )
     recovery = _run_external_recovery(journey_id)
     waiting = _latest_waiting_collective_round(journey_id)
+    fresh_closure = None
+    unambiguous_closure = None
+    final_run_id = None
+    if waiting is not None:
+        fresh_closure = _close_fresh_collective_round(
+            journey_id=journey_id,
+            waiting=waiting,
+        )
+        final_run_id = str(fresh_closure.get("final_run_id") or "")
+    else:
+        unambiguous_closure = _close_unambiguous_recovery(
+            journey_id=journey_id,
+            recovery=recovery,
+        )
+        final_run_id = str(
+            (unambiguous_closure or {}).get("final_run_id") or ""
+        )
+
     status = (
-        "R30_RECOVERY_WAITING_FOR_FRESH_MEMBERS"
+        "R30_FINAL_CANDIDATE_READY"
+        if final_run_id
+        else "R30_RECOVERY_WAITING_FOR_FRESH_MEMBERS"
         if waiting is not None
         else "R30_RECOVERY_AGENT_RAN"
     )
@@ -711,6 +983,9 @@ def _run_full() -> dict[str, Any]:
         "old_authority_attempt": old_attempt,
         "external_recovery": recovery,
         "fresh_collective_round": waiting,
+        "fresh_collective_closure": fresh_closure,
+        "unambiguous_recovery_closure": unambiguous_closure,
+        "final_run_id": final_run_id or None,
         "truth_boundary": {
             "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE",
             "external_agent_required": True,
@@ -718,6 +993,19 @@ def _run_full() -> dict[str, Any]:
         },
     }
     result["checkpoint_path"] = _write_checkpoint(result)
+    verdict = _run_machine_verdict(
+        checkpoint_path=result["checkpoint_path"],
+        final_run_id=final_run_id or None,
+    )
+    result["machine_verdict"] = verdict
+    if (
+        verdict.get("exit_code") == 0
+        and (verdict.get("summary") or {}).get("overall") == "PROVEN"
+    ):
+        result["status"] = "R30_PROVEN"
+        # Re-write the checkpoint with the final machine status for a single
+        # self-contained handoff artifact.
+        result["checkpoint_path"] = _write_checkpoint(result)
     return result
 
 
@@ -747,10 +1035,7 @@ def main() -> int:
     try:
         result = _run_full()
         print(json.dumps(result, ensure_ascii=True))
-        # This harness intentionally stops at the post-shock recovery boundary.
-        # Machine-PROVEN closure still requires fresh authority (when needed),
-        # exactly-once final acceptance, and the R30 verifier.
-        return 0
+        return 0 if result.get("status") == "R30_PROVEN" else 4
     except Exception as exc:
         print(
             json.dumps(
