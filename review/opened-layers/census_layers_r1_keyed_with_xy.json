@@ -1,0 +1,9289 @@
+{
+ "base": "http://127.0.0.1:5110",
+ "layers": [
+  {
+   "arm": "zh-CN",
+   "route": "hub",
+   "layer": "待办筛选面板",
+   "trigger": "pending-filter-open",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||AI 帮我规划|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "AI 帮我规划",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 68,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||试用其他城市|101,200",
+      {
+       "testid": null,
+       "label": "试用其他城市",
+       "via": "text",
+       "box": {
+        "x": 101,
+        "y": 200,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||打开行程工作台|195,200",
+      {
+       "testid": null,
+       "label": "打开行程工作台",
+       "via": "text",
+       "box": {
+        "x": 195,
+        "y": 200,
+        "w": 91,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||复制行程链接|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "复制行程链接",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||查看实时行程|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "查看实时行程",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 130,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,757",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 757,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|69,763",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 69,
+        "y": 763,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,756",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 756,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Riverside Museum|129,791",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 129,
+        "y": 791,
+        "w": 129,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,754",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 754,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,753",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 753,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,752",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 752,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,751",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 751,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|视野正落在这段行程上|回到行程视野|230,750",
+      {
+       "testid": "map-viewport-reset",
+       "label": "回到行程视野",
+       "via": "aria-label",
+       "box": {
+        "x": 230,
+        "y": 750,
+        "w": 130,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||去看这一代方案|186,1153",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "去看这一代方案",
+       "via": "text",
+       "box": {
+        "x": 186,
+        "y": 1153,
+        "w": 112,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||对比住宿 →|291,1254",
+      {
+       "testid": null,
+       "label": "对比住宿 →",
+       "via": "text",
+       "box": {
+        "x": 291,
+        "y": 1254,
+        "w": 82,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||筛选|326,1951",
+      {
+       "testid": "pending-filter-open",
+       "label": "筛选",
+       "via": "text",
+       "box": {
+        "x": 326,
+        "y": 1951,
+        "w": 32,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||去城市探索|32,2071",
+      {
+       "testid": "pending-empty-action",
+       "label": "去城市探索",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2071,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||再读一次|32,2125",
+      {
+       "testid": "pending-reread",
+       "label": "再读一次",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2125,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||技术详情|32,2185",
+      {
+       "testid": null,
+       "label": "技术详情",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2185,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,704",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 704,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-10 09:00 +08:00||330,644",
+      {
+       "testid": "sim-ball",
+       "label": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 644,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 31
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "total": 35
+   },
+   "added_n": 29,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 15,
+    "text": 14
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "hub",
+   "layer": "今天续跑的折叠技术面",
+   "trigger": "continuation-technical-details",
+   "trigger_found": false,
+   "note": "触发件不在这一屏"
+  },
+  {
+   "arm": "zh-CN",
+   "route": "trips",
+   "layer": "站点详情",
+   "trigger": "trip-stop-details",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1 天行程",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||行程|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||住宿|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "住宿",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||预订|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "预订",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||花费|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "花费",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||展开行程长图|30,234",
+      {
+       "testid": "poster-open",
+       "label": "展开行程长图",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||中止这趟行程|34,432",
+      {
+       "testid": "journey-abort-open",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 432,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,507",
+      {
+       "testid": "journey-abort-reason",
+       "label": "中止的原因（会随行程一起存下）",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 507,
+        "w": 186,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||中止这趟行程|220,557",
+      {
+       "testid": "journey-abort-submit",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 220,
+        "y": 557,
+        "w": 96,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||导出日历|17,712",
+      {
+       "testid": "calendar-export",
+       "label": "导出日历",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 712,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||10月10日周六6 项|17,795",
+      {
+       "testid": "trip-day-0",
+       "label": "10月10日周六6 项",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 795,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Old Town Gate|详情 ›|148,894",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 894,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Old Town Gate打卡|打卡|180,894",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 894,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Old Town Gate|收藏到…|88,956",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 956,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Riverside Museum|详情 ›|148,1051",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1051,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Riverside Museum打卡|打卡|180,1051",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1051,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Riverside Museum|收藏到…|88,1113",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1113,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Central Food Hall|详情 ›|122,1208",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1208,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Central Food Hall打卡|打卡|154,1208",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1208,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Central Food Hall|收藏到…|88,1270",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1270,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Tech Art Center|详情 ›|148,1365",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1365,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Tech Art Center打卡|打卡|180,1365",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1365,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Tech Art Center|收藏到…|88,1427",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1427,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Nexus River Cruise Pier|详情 ›|122,1522",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1522,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Nexus River Cruise Pier打卡|打卡|154,1522",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1522,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Nexus River Cruise Pier|收藏到…|88,1584",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1584,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Skyline Dinner House|详情 ›|148,1679",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1679,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Skyline Dinner House打卡|打卡|180,1679",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1679,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Skyline Dinner House|收藏到…|88,1741",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1741,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1 小时 20 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 20 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 20 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1 小时 30 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 30 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 30 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "Old Town Gate",
+    "total": 15
+   },
+   "added_n": 9,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 5,
+    "text": 4
+   },
+   "added_pointer_only": -30,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "trips",
+   "layer": "收藏到…入口",
+   "trigger": "collect-entry",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1 天行程",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||行程|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||住宿|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "住宿",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||预订|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "预订",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||花费|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "花费",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||展开行程长图|30,234",
+      {
+       "testid": "poster-open",
+       "label": "展开行程长图",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||中止这趟行程|34,432",
+      {
+       "testid": "journey-abort-open",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 432,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,507",
+      {
+       "testid": "journey-abort-reason",
+       "label": "中止的原因（会随行程一起存下）",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 507,
+        "w": 186,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||中止这趟行程|220,557",
+      {
+       "testid": "journey-abort-submit",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 220,
+        "y": 557,
+        "w": 96,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||导出日历|17,712",
+      {
+       "testid": "calendar-export",
+       "label": "导出日历",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 712,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||10月10日周六6 项|17,795",
+      {
+       "testid": "trip-day-0",
+       "label": "10月10日周六6 项",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 795,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Old Town Gate|详情 ›|148,894",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 894,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Old Town Gate打卡|打卡|180,894",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 894,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Old Town Gate|收藏到…|88,956",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 956,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Riverside Museum|详情 ›|148,1051",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1051,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Riverside Museum打卡|打卡|180,1051",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1051,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Riverside Museum|收藏到…|88,1113",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1113,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Central Food Hall|详情 ›|122,1208",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1208,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Central Food Hall打卡|打卡|154,1208",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1208,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Central Food Hall|收藏到…|88,1270",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1270,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Tech Art Center|详情 ›|148,1365",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1365,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Tech Art Center打卡|打卡|180,1365",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1365,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Tech Art Center|收藏到…|88,1427",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1427,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Nexus River Cruise Pier|详情 ›|122,1522",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1522,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Nexus River Cruise Pier打卡|打卡|154,1522",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1522,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Nexus River Cruise Pier|收藏到…|88,1584",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1584,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Skyline Dinner House|详情 ›|148,1679",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1679,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Skyline Dinner House打卡|打卡|180,1679",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1679,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Skyline Dinner House|收藏到…|88,1741",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1741,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1 小时 20 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 20 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 20 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1 小时 30 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 30 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 30 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1 天行程",
+    "total": 40
+   },
+   "added_n": 34,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 23,
+    "text": 10,
+    "label-element": 1
+   },
+   "added_pointer_only": 2,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "trips",
+   "layer": "中止这趟行程的表单层",
+   "trigger": "journey-abort-open",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1 天行程",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||行程|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||住宿|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "住宿",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||预订|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "预订",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||花费|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "花费",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||展开行程长图|30,234",
+      {
+       "testid": "poster-open",
+       "label": "展开行程长图",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||中止这趟行程|34,432",
+      {
+       "testid": "journey-abort-open",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 432,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,507",
+      {
+       "testid": "journey-abort-reason",
+       "label": "中止的原因（会随行程一起存下）",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 507,
+        "w": 186,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||中止这趟行程|220,557",
+      {
+       "testid": "journey-abort-submit",
+       "label": "中止这趟行程",
+       "via": "text",
+       "box": {
+        "x": 220,
+        "y": 557,
+        "w": 96,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||导出日历|17,712",
+      {
+       "testid": "calendar-export",
+       "label": "导出日历",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 712,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||10月10日周六6 项|17,795",
+      {
+       "testid": "trip-day-0",
+       "label": "10月10日周六6 项",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 795,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Old Town Gate|详情 ›|148,894",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 894,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Old Town Gate打卡|打卡|180,894",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 894,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Old Town Gate|收藏到…|88,956",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 956,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Riverside Museum|详情 ›|148,1051",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1051,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Riverside Museum打卡|打卡|180,1051",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1051,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Riverside Museum|收藏到…|88,1113",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1113,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Central Food Hall|详情 ›|122,1208",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1208,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Central Food Hall打卡|打卡|154,1208",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1208,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Central Food Hall|收藏到…|88,1270",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1270,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Tech Art Center|详情 ›|148,1365",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1365,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Tech Art Center打卡|打卡|180,1365",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1365,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Tech Art Center|收藏到…|88,1427",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1427,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Nexus River Cruise Pier|详情 ›|122,1522",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 122,
+        "y": 1522,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Nexus River Cruise Pier打卡|打卡|154,1522",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 154,
+        "y": 1522,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Nexus River Cruise Pier|收藏到…|88,1584",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1584,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|查看详情: Skyline Dinner House|详情 ›|148,1679",
+      {
+       "testid": "trip-stop-details",
+       "label": "详情 ›",
+       "via": "aria-label",
+       "box": {
+        "x": 148,
+        "y": 1679,
+        "w": 26,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|在Skyline Dinner House打卡|打卡|180,1679",
+      {
+       "testid": "stop-checkin",
+       "label": "打卡",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 1679,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|收藏到…: Skyline Dinner House|收藏到…|88,1741",
+      {
+       "testid": "collect-entry",
+       "label": "收藏到…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1741,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1 小时 15 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 15 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 15 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1 小时 20 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 20 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 20 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1 小时详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1 小时 30 分详情 ›打卡收藏到…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1 小时 30 分详情 ›打卡"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1 小时 30 分"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "收藏到…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1 天行程",
+    "total": 39
+   },
+   "added_n": 21,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "text": 2,
+    "aria-label": 19
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "map",
+   "layer": "只看打过卡",
+   "trigger": "v8-map-footprint-filter",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/map",
+    "title": "整座城市，行程叠加其上。",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|||对比出行方式|17,247",
+      {
+       "testid": null,
+       "label": "对比出行方式",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 247,
+        "w": 130,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|96,494",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 96,
+        "y": 494,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|132,501",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 132,
+        "y": 501,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|143,464",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 143,
+        "y": 464,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Riverside Museum|178,470",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 470,
+        "w": 129,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|166,434",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 166,
+        "y": 434,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Central Food Hall|201,440",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Central Food Hall",
+       "via": "aria-label",
+       "box": {
+        "x": 201,
+        "y": 440,
+        "w": 122,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|213,404",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 213,
+        "y": 404,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Tech Art Center|248,410",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Tech Art Center",
+       "via": "aria-label",
+       "box": {
+        "x": 248,
+        "y": 410,
+        "w": 110,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|236,374",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 236,
+        "y": 374,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Nexus River Cruise Pier|74,380",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Nexus River Cruise Pier",
+       "via": "aria-label",
+       "box": {
+        "x": 74,
+        "y": 380,
+        "w": 161,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|260,344",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 260,
+        "y": 344,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|视野正落在这段行程上|回到行程视野|230,343",
+      {
+       "testid": "map-viewport-reset",
+       "label": "回到行程视野",
+       "via": "aria-label",
+       "box": {
+        "x": 230,
+        "y": 343,
+        "w": 130,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|v8-map-footprint-filter||只看打过|40,872",
+      {
+       "testid": "v8-map-footprint-filter",
+       "label": "只看打过",
+       "via": "text",
+       "box": {
+        "x": 40,
+        "y": 872,
+        "w": 310,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-3a58c470-524c-5854-aa39-6c37a350eb80|在地图上定位 Old Town Gate|Old Town Gate|40,972",
+      {
+       "testid": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 972,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-abe4e842-249e-516f-ac43-b41695083792|在地图上定位 Riverside Museum|Riverside Museum|40,1027",
+      {
+       "testid": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1027,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee|在地图上定位 Central Food Hall|Central Food Hall|40,1082",
+      {
+       "testid": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+       "label": "Central Food Hall",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1082,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6|在地图上定位 Tech Art Center|Tech Art Center|40,1137",
+      {
+       "testid": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+       "label": "Tech Art Center",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1137,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036|在地图上定位 Nexus River Cruise Pier|Nexus River Cruise Pier|40,1192",
+      {
+       "testid": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+       "label": "Nexus River Cruise Pier",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1192,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837|在地图上定位 Skyline Dinner House|Skyline Dinner House|40,1247",
+      {
+       "testid": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+       "label": "Skyline Dinner House",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1247,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stops-capture|展开或收起地点清单|查看全部 6 个地点|40,1180",
+      {
+       "testid": "map-stops-capture",
+       "label": "查看全部 6 个地点",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1180,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|215,718",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 215,
+        "y": 718,
+        "w": 165,
+        "h": 42
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 31
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/map",
+    "title": "整座城市，行程叠加其上。",
+    "total": 26
+   },
+   "added_n": 20,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 18,
+    "text": 2
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "access",
+   "layer": "角色说明的折叠层",
+   "trigger": "access-role-details",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/access",
+    "title": null,
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-CREATION_ORDER||创建序|17,268",
+      {
+       "testid": "access-sort-tier-CREATION_ORDER",
+       "label": "创建序",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 268,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-RECENT_UPDATE||最近更新|101,268",
+      {
+       "testid": "access-sort-tier-RECENT_UPDATE",
+       "label": "最近更新",
+       "via": "text",
+       "box": {
+        "x": 101,
+        "y": 268,
+        "w": 96,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-DEPARTURE_DATE||出发日期|203,268",
+      {
+       "testid": "access-sort-tier-DEPARTURE_DATE",
+       "label": "出发日期",
+       "via": "text",
+       "box": {
+        "x": 203,
+        "y": 268,
+        "w": 94,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-TITLE||名称|303,268",
+      {
+       "testid": "access-sort-tier-TITLE",
+       "label": "名称",
+       "via": "text",
+       "box": {
+        "x": 303,
+        "y": 268,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-trip-open-0||One Day in Nexus City|45,490",
+      {
+       "testid": "access-trip-open-0",
+       "label": "One Day in Nexus City",
+       "via": "text",
+       "box": {
+        "x": 45,
+        "y": 490,
+        "w": 329,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||能力编号（服务器原样叫法）|17,1020",
+      {
+       "testid": null,
+       "label": "能力编号（服务器原样叫法）",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1020,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||能力编号（服务器原样叫法）|17,1114",
+      {
+       "testid": null,
+       "label": "能力编号（服务器原样叫法）",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1114,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||能力编号（服务器原样叫法）|17,1227",
+      {
+       "testid": null,
+       "label": "能力编号（服务器原样叫法）",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1227,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||查看完整权限规则|17,1279",
+      {
+       "testid": null,
+       "label": "查看完整权限规则",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1279,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SELECT|access-invite-visibility||仅个人获得链接者可见受邀者可见公开|17,2170",
+      {
+       "testid": "access-invite-visibility",
+       "label": "仅个人获得链接者可见受邀者可见公开",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2170,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "INPUT|access-invite-expiry|||17,2258",
+      {
+       "testid": "access-invite-expiry",
+       "label": "到期时刻（留空就是这条不会自己失效）",
+       "via": "label-element",
+       "box": {
+        "x": 17,
+        "y": 2258,
+        "w": 356,
+        "h": 60
+       }
+      }
+     ],
+     [
+      "BUTTON|access-invite-submit||发出邀请|17,2429",
+      {
+       "testid": "access-invite-submit",
+       "label": "发出邀请",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2429,
+        "w": 356,
+        "h": 45
+       }
+      }
+     ],
+     [
+      "BUTTON|access-empty-issue-link-grant||发一条凭链接可读的邀请|17,2573",
+      {
+       "testid": "access-empty-issue-link-grant",
+       "label": "发一条凭链接可读的邀请",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2573,
+        "w": 200,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-empty-focus-invite||去邀请那一格|17,2886",
+      {
+       "testid": "access-empty-focus-invite",
+       "label": "去邀请那一格",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2886,
+        "w": 120,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,94",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 94,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 24
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/access",
+    "title": null,
+    "total": 25
+   },
+   "added_n": 19,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 5,
+    "text": 13,
+    "label-element": 1
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "discover",
+   "layer": "收藏架的重读入口所在层",
+   "trigger": "collection-retry",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/discover",
+    "title": "先看这座城能不能规划",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "INPUT|prep-query|||17,267",
+      {
+       "testid": "prep-query",
+       "label": "目的地",
+       "via": "label-element",
+       "box": {
+        "x": 17,
+        "y": 267,
+        "w": 356,
+        "h": 47
+       }
+      }
+     ],
+     [
+      "BUTTON|prep-check||看看能不能规划|17,338",
+      {
+       "testid": "prep-check",
+       "label": "看看能不能规划",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 338,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|v13-discovery-goal||我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。|37,883",
+      {
+       "testid": "v13-discovery-goal",
+       "label": "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+       "via": "text",
+       "box": {
+        "x": 37,
+        "y": 883,
+        "w": 316,
+        "h": 150
+       }
+      }
+     ],
+     [
+      "SELECT||证据模式|密封真实回放实时供应商合成演示回放|84,1045",
+      {
+       "testid": null,
+       "label": "密封真实回放实时供应商合成演示回放",
+       "via": "aria-label",
+       "box": {
+        "x": 84,
+        "y": 1045,
+        "w": 102,
+        "h": 19
+       }
+      }
+     ],
+     [
+      "BUTTON|v13-discover-submit||探索并组合|37,1086",
+      {
+       "testid": "v13-discover-submit",
+       "label": "探索并组合",
+       "via": "text",
+       "box": {
+        "x": 37,
+        "y": 1086,
+        "w": 149,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collection-retry||重读一次|265,1166",
+      {
+       "testid": "collection-retry",
+       "label": "重读一次",
+       "via": "text",
+       "box": {
+        "x": 265,
+        "y": 1166,
+        "w": 88,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,594",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 594,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 16
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/discover",
+    "title": "先看这座城能不能规划",
+    "total": 17
+   },
+   "added_n": 11,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 6,
+    "label-element": 1,
+    "text": 4
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "shell",
+   "layer": "顶栏菜单抽屉",
+   "trigger": "v8-mobile-menu",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||AI 帮我规划|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "AI 帮我规划",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 68,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||试用其他城市|101,200",
+      {
+       "testid": null,
+       "label": "试用其他城市",
+       "via": "text",
+       "box": {
+        "x": 101,
+        "y": 200,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||打开行程工作台|195,200",
+      {
+       "testid": null,
+       "label": "打开行程工作台",
+       "via": "text",
+       "box": {
+        "x": 195,
+        "y": 200,
+        "w": 91,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||复制行程链接|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "复制行程链接",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||查看实时行程|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "查看实时行程",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 130,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,757",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 757,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|140,791",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 140,
+        "y": 791,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,756",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 756,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,754",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 754,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,753",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 753,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,752",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 752,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,751",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 751,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|视野正落在这段行程上|回到行程视野|230,750",
+      {
+       "testid": "map-viewport-reset",
+       "label": "回到行程视野",
+       "via": "aria-label",
+       "box": {
+        "x": 230,
+        "y": 750,
+        "w": 130,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||去看这一代方案|186,1153",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "去看这一代方案",
+       "via": "text",
+       "box": {
+        "x": 186,
+        "y": 1153,
+        "w": 112,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||对比住宿 →|291,1254",
+      {
+       "testid": null,
+       "label": "对比住宿 →",
+       "via": "text",
+       "box": {
+        "x": 291,
+        "y": 1254,
+        "w": 82,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||筛选|326,1951",
+      {
+       "testid": "pending-filter-open",
+       "label": "筛选",
+       "via": "text",
+       "box": {
+        "x": 326,
+        "y": 1951,
+        "w": 32,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||去城市探索|32,2071",
+      {
+       "testid": "pending-empty-action",
+       "label": "去城市探索",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2071,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||再读一次|32,2125",
+      {
+       "testid": "pending-reread",
+       "label": "再读一次",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2125,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||技术详情|32,2185",
+      {
+       "testid": null,
+       "label": "技术详情",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2185,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,554",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 554,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-10 09:00 +08:00||330,494",
+      {
+       "testid": "sim-ball",
+       "label": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 494,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 30
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "total": 50
+   },
+   "added_n": 21,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 3,
+    "text": 18
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "zh-CN",
+   "route": "shell",
+   "layer": "顶栏主题选择",
+   "trigger": "topbar-theme",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|打开导航|菜单|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "菜单",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 46,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|跟随系统|191,17",
+      {
+       "testid": "topbar-theme",
+       "label": "跟随系统",
+       "via": "aria-label",
+       "box": {
+        "x": 191,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|EN|264,17",
+      {
+       "testid": "topbar-language",
+       "label": "EN",
+       "via": "aria-label",
+       "box": {
+        "x": 264,
+        "y": 17,
+        "w": 65,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|我的|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||AI 帮我规划|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "AI 帮我规划",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 68,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||试用其他城市|101,200",
+      {
+       "testid": null,
+       "label": "试用其他城市",
+       "via": "text",
+       "box": {
+        "x": 101,
+        "y": 200,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||打开行程工作台|195,200",
+      {
+       "testid": null,
+       "label": "打开行程工作台",
+       "via": "text",
+       "box": {
+        "x": 195,
+        "y": 200,
+        "w": 91,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||复制行程链接|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "复制行程链接",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 78,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||查看实时行程|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "查看实时行程",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 130,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,757",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 757,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|140,791",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 140,
+        "y": 791,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,756",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 756,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,754",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 754,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,753",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 753,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,752",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 752,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,751",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 751,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|视野正落在这段行程上|回到行程视野|230,750",
+      {
+       "testid": "map-viewport-reset",
+       "label": "回到行程视野",
+       "via": "aria-label",
+       "box": {
+        "x": 230,
+        "y": 750,
+        "w": 130,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||去看这一代方案|186,1153",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "去看这一代方案",
+       "via": "text",
+       "box": {
+        "x": 186,
+        "y": 1153,
+        "w": 112,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||对比住宿 →|291,1254",
+      {
+       "testid": null,
+       "label": "对比住宿 →",
+       "via": "text",
+       "box": {
+        "x": 291,
+        "y": 1254,
+        "w": 82,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||筛选|326,1951",
+      {
+       "testid": "pending-filter-open",
+       "label": "筛选",
+       "via": "text",
+       "box": {
+        "x": 326,
+        "y": 1951,
+        "w": 32,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||去城市探索|32,2071",
+      {
+       "testid": "pending-empty-action",
+       "label": "去城市探索",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2071,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||再读一次|32,2125",
+      {
+       "testid": "pending-reread",
+       "label": "再读一次",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2125,
+        "w": 64,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||技术详情|32,2185",
+      {
+       "testid": null,
+       "label": "技术详情",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2185,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,704",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 704,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||今天|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "今天",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||行程|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "行程",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||地图|157,789",
+      {
+       "testid": "nav-map",
+       "label": "地图",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||我的|309,789",
+      {
+       "testid": "nav-me",
+       "label": "我的",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-10 09:00 +08:00||330,644",
+      {
+       "testid": "sim-ball",
+       "label": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 644,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 30
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Demo之旅",
+    "total": 31
+   },
+   "added_n": 2,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 2
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "hub",
+   "layer": "待办筛选面板",
+   "trigger": "pending-filter-open",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||Plan my trip with AI|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "Plan my trip with AI",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 117,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Try another city|150,200",
+      {
+       "testid": null,
+       "label": "Try another city",
+       "via": "text",
+       "box": {
+        "x": 150,
+        "y": 200,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Open Trip Studio|258,200",
+      {
+       "testid": null,
+       "label": "Open Trip Studio",
+       "via": "text",
+       "box": {
+        "x": 258,
+        "y": 200,
+        "w": 99,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||Copy journey link|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "Copy journey link",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 103,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||Open Live|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "Open Live",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 105,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,776",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 776,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|70,782",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 70,
+        "y": 782,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,774",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 774,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Riverside Museum|130,809",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 130,
+        "y": 809,
+        "w": 129,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,773",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 773,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,772",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 772,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,771",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 771,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,770",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 770,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|The view is on your journey|Fit to my journey|211,769",
+      {
+       "testid": "map-viewport-reset",
+       "label": "Fit to my journey",
+       "via": "aria-label",
+       "box": {
+        "x": 211,
+        "y": 769,
+        "w": 149,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||Review this plan generation|32,1235",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "Review this plan generation",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 1235,
+        "w": 194,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Compare stays →|264,1360",
+      {
+       "testid": null,
+       "label": "Compare stays →",
+       "via": "text",
+       "box": {
+        "x": 264,
+        "y": 1360,
+        "w": 109,
+        "h": 52
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||Filter|323,2196",
+      {
+       "testid": "pending-filter-open",
+       "label": "Filter",
+       "via": "text",
+       "box": {
+        "x": 323,
+        "y": 2196,
+        "w": 35,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||Open City Discovery|32,2316",
+      {
+       "testid": "pending-empty-action",
+       "label": "Open City Discovery",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2316,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||Read it again|32,2370",
+      {
+       "testid": "pending-reread",
+       "label": "Read it again",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2370,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||Technical details|32,2430",
+      {
+       "testid": null,
+       "label": "Technical details",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2430,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|215,718",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 215,
+        "y": 718,
+        "w": 165,
+        "h": 42
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|Simulation stage (a scenario is on stage): teaching simulation stage · the server supplies \"now\": 2026-10-10 09:00 +08:00||330,646",
+      {
+       "testid": "sim-ball",
+       "label": "Simulation stage (a scenario is on stage",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 646,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 31
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "total": 35
+   },
+   "added_n": 29,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 15,
+    "text": 14
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "hub",
+   "layer": "今天续跑的折叠技术面",
+   "trigger": "continuation-technical-details",
+   "trigger_found": false,
+   "note": "触发件不在这一屏"
+  },
+  {
+   "arm": "en",
+   "route": "trips",
+   "layer": "站点详情",
+   "trigger": "trip-stop-details",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1-day itinerary",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||Itinerary|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "Itinerary",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||Stay|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "Stay",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||Bookings|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "Bookings",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||Spend|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "Spend",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||Open the trip poster|30,234",
+      {
+       "testid": "poster-open",
+       "label": "Open the trip poster",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||Abort this trip|34,466",
+      {
+       "testid": "journey-abort-open",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 466,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,541",
+      {
+       "testid": "journey-abort-reason",
+       "label": "Why you are calling it off (stored with ",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 541,
+        "w": 206,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||Abort this trip|240,591",
+      {
+       "testid": "journey-abort-submit",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 240,
+        "y": 591,
+        "w": 98,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||Export calendar|17,768",
+      {
+       "testid": "calendar-export",
+       "label": "Export calendar",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 768,
+        "w": 110,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||Sat 10 Oct6 stops|17,851",
+      {
+       "testid": "trip-day-0",
+       "label": "Sat 10 Oct6 stops",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 851,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Old Town Gate|Details ›|127,950",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 950,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Old Town Gate|Check in|169,950",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 950,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Old Town Gate|Collect into…|88,1012",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1012,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Riverside Museum|Details ›|127,1107",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1107,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Riverside Museum|Check in|169,1107",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1107,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Riverside Museum|Collect into…|88,1169",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1169,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Central Food Hall|Details ›|105,1264",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1264,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Central Food Hall|Check in|147,1264",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1264,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Central Food Hall|Collect into…|88,1326",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1326,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Tech Art Center|Details ›|127,1421",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1421,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Tech Art Center|Check in|169,1421",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1421,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Tech Art Center|Collect into…|88,1483",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1483,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Nexus River Cruise Pier|Details ›|105,1578",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1578,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Nexus River Cruise Pier|Check in|147,1578",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1578,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Nexus River Cruise Pier|Collect into…|88,1640",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1640,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Skyline Dinner House|Details ›|127,1735",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1735,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Skyline Dinner House|Check in|169,1735",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1735,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Skyline Dinner House|Collect into…|88,1797",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1797,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1h 15mDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1h 15mDetails ›Check inC"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1hDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1h 20mDetails ›Check inCo"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 20mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 20m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1hDetails ›Check "
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1h 30mDetails ›Check"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 30mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 30m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "Old Town Gate",
+    "total": 15
+   },
+   "added_n": 9,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 5,
+    "text": 4
+   },
+   "added_pointer_only": -30,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "trips",
+   "layer": "收藏到…入口",
+   "trigger": "collect-entry",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1-day itinerary",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||Itinerary|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "Itinerary",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||Stay|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "Stay",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||Bookings|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "Bookings",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||Spend|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "Spend",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||Open the trip poster|30,234",
+      {
+       "testid": "poster-open",
+       "label": "Open the trip poster",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||Abort this trip|34,466",
+      {
+       "testid": "journey-abort-open",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 466,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,541",
+      {
+       "testid": "journey-abort-reason",
+       "label": "Why you are calling it off (stored with ",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 541,
+        "w": 206,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||Abort this trip|240,591",
+      {
+       "testid": "journey-abort-submit",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 240,
+        "y": 591,
+        "w": 98,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||Export calendar|17,768",
+      {
+       "testid": "calendar-export",
+       "label": "Export calendar",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 768,
+        "w": 110,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||Sat 10 Oct6 stops|17,851",
+      {
+       "testid": "trip-day-0",
+       "label": "Sat 10 Oct6 stops",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 851,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Old Town Gate|Details ›|127,950",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 950,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Old Town Gate|Check in|169,950",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 950,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Old Town Gate|Collect into…|88,1012",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1012,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Riverside Museum|Details ›|127,1107",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1107,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Riverside Museum|Check in|169,1107",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1107,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Riverside Museum|Collect into…|88,1169",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1169,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Central Food Hall|Details ›|105,1264",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1264,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Central Food Hall|Check in|147,1264",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1264,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Central Food Hall|Collect into…|88,1326",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1326,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Tech Art Center|Details ›|127,1421",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1421,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Tech Art Center|Check in|169,1421",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1421,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Tech Art Center|Collect into…|88,1483",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1483,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Nexus River Cruise Pier|Details ›|105,1578",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1578,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Nexus River Cruise Pier|Check in|147,1578",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1578,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Nexus River Cruise Pier|Collect into…|88,1640",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1640,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Skyline Dinner House|Details ›|127,1735",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1735,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Skyline Dinner House|Check in|169,1735",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1735,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Skyline Dinner House|Collect into…|88,1797",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1797,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1h 15mDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1h 15mDetails ›Check inC"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1hDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1h 20mDetails ›Check inCo"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 20mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 20m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1hDetails ›Check "
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1h 30mDetails ›Check"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 30mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 30m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1-day itinerary",
+    "total": 40
+   },
+   "added_n": 34,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 23,
+    "text": 10,
+    "label-element": 1
+   },
+   "added_pointer_only": 2,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "trips",
+   "layer": "中止这趟行程的表单层",
+   "trigger": "journey-abort-open",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1-day itinerary",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-itinerary||Itinerary|17,105",
+      {
+       "testid": "trips-tab-itinerary",
+       "label": "Itinerary",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-stay||Stay|379,105",
+      {
+       "testid": "trips-tab-stay",
+       "label": "Stay",
+       "via": "text",
+       "box": {
+        "x": 379,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-bookings||Bookings|741,105",
+      {
+       "testid": "trips-tab-bookings",
+       "label": "Bookings",
+       "via": "text",
+       "box": {
+        "x": 741,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|trips-tab-spend||Spend|1103,105",
+      {
+       "testid": "trips-tab-spend",
+       "label": "Spend",
+       "via": "text",
+       "box": {
+        "x": 1103,
+        "y": 105,
+        "w": 356,
+        "h": 40
+       }
+      }
+     ],
+     [
+      "BUTTON|poster-open||Open the trip poster|30,234",
+      {
+       "testid": "poster-open",
+       "label": "Open the trip poster",
+       "via": "text",
+       "box": {
+        "x": 30,
+        "y": 234,
+        "w": 330,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|journey-abort-open||Abort this trip|34,466",
+      {
+       "testid": "journey-abort-open",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 34,
+        "y": 466,
+        "w": 322,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|journey-abort-reason|||34,541",
+      {
+       "testid": "journey-abort-reason",
+       "label": "Why you are calling it off (stored with ",
+       "via": "label-element",
+       "box": {
+        "x": 34,
+        "y": 541,
+        "w": 206,
+        "h": 78
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-abort-submit||Abort this trip|240,591",
+      {
+       "testid": "journey-abort-submit",
+       "label": "Abort this trip",
+       "via": "text",
+       "box": {
+        "x": 240,
+        "y": 591,
+        "w": 98,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|calendar-export||Export calendar|17,768",
+      {
+       "testid": "calendar-export",
+       "label": "Export calendar",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 768,
+        "w": 110,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-day-0||Sat 10 Oct6 stops|17,851",
+      {
+       "testid": "trip-day-0",
+       "label": "Sat 10 Oct6 stops",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 851,
+        "w": 356,
+        "h": 49
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Old Town Gate|Details ›|127,950",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 950,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Old Town Gate|Check in|169,950",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 950,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Old Town Gate|Collect into…|88,1012",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1012,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Riverside Museum|Details ›|127,1107",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1107,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Riverside Museum|Check in|169,1107",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1107,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Riverside Museum|Collect into…|88,1169",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1169,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Central Food Hall|Details ›|105,1264",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1264,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Central Food Hall|Check in|147,1264",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1264,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Central Food Hall|Collect into…|88,1326",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1326,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Tech Art Center|Details ›|127,1421",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1421,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Tech Art Center|Check in|169,1421",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1421,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Tech Art Center|Collect into…|88,1483",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1483,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Nexus River Cruise Pier|Details ›|105,1578",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 105,
+        "y": 1578,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Nexus River Cruise Pier|Check in|147,1578",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 147,
+        "y": 1578,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Nexus River Cruise Pier|Collect into…|88,1640",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1640,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|trip-stop-details|View details: Skyline Dinner House|Details ›|127,1735",
+      {
+       "testid": "trip-stop-details",
+       "label": "Details ›",
+       "via": "aria-label",
+       "box": {
+        "x": 127,
+        "y": 1735,
+        "w": 36,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|stop-checkin|Check in at Skyline Dinner House|Check in|169,1735",
+      {
+       "testid": "stop-checkin",
+       "label": "Check in",
+       "via": "aria-label",
+       "box": {
+        "x": 169,
+        "y": 1735,
+        "w": 62,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collect-entry|Collect into…: Skyline Dinner House|Collect into…|88,1797",
+      {
+       "testid": "collect-entry",
+       "label": "Collect into…",
+       "via": "aria-label",
+       "box": {
+        "x": 88,
+        "y": 1797,
+        "w": 272,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,54",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 54,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "09:0010:15"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Old Town Gate1h 15mDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "10:3011:45"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Riverside Museum1h 15mDetails ›Check inC"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 15mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 15m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "12:0013:00"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Central Food Hall1hDetails ›Check inColl"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "13:2014:40"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Tech Art Center1h 20mDetails ›Check inCo"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 20mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 20m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "15:3016:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Nexus River Cruise Pier1hDetails ›Check "
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1hDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-time",
+      "text": "17:0018:30"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "text": "Skyline Dinner House1h 30mDetails ›Check"
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-meta",
+      "text": "1h 30mDetails ›Check in"
+     },
+     {
+      "tag": "span",
+      "cls": "",
+      "text": "1h 30m"
+     },
+     {
+      "tag": "div",
+      "cls": "cn-collect",
+      "text": "Collect into…"
+     }
+    ],
+    "total": 38
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/trips",
+    "title": "1-day itinerary",
+    "total": 39
+   },
+   "added_n": 21,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "text": 2,
+    "aria-label": 19
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "map",
+   "layer": "只看打过卡",
+   "trigger": "v8-map-footprint-filter",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/map",
+    "title": "The city, with the plan on top.",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|||Compare modes|17,268",
+      {
+       "testid": null,
+       "label": "Compare modes",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 268,
+        "w": 151,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|96,516",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 96,
+        "y": 516,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|132,523",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 132,
+        "y": 523,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|143,486",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 143,
+        "y": 486,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Riverside Museum|178,492",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 492,
+        "w": 129,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|166,456",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 166,
+        "y": 456,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Central Food Hall|201,462",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Central Food Hall",
+       "via": "aria-label",
+       "box": {
+        "x": 201,
+        "y": 462,
+        "w": 122,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|213,426",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 213,
+        "y": 426,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Tech Art Center|248,432",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Tech Art Center",
+       "via": "aria-label",
+       "box": {
+        "x": 248,
+        "y": 432,
+        "w": 110,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|236,395",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 236,
+        "y": 395,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Nexus River Cruise Pier|74,402",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Nexus River Cruise Pier",
+       "via": "aria-label",
+       "box": {
+        "x": 74,
+        "y": 402,
+        "w": 161,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|260,365",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 260,
+        "y": 365,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|The view is on your journey|Fit to my journey|211,364",
+      {
+       "testid": "map-viewport-reset",
+       "label": "Fit to my journey",
+       "via": "aria-label",
+       "box": {
+        "x": 211,
+        "y": 364,
+        "w": 149,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|v8-map-footprint-filter||Stamped only|40,893",
+      {
+       "testid": "v8-map-footprint-filter",
+       "label": "Stamped only",
+       "via": "text",
+       "box": {
+        "x": 40,
+        "y": 893,
+        "w": 310,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-3a58c470-524c-5854-aa39-6c37a350eb80|Locate Old Town Gate on the map|Old Town Gate|40,993",
+      {
+       "testid": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 993,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-abe4e842-249e-516f-ac43-b41695083792|Locate Riverside Museum on the map|Riverside Museum|40,1048",
+      {
+       "testid": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1048,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee|Locate Central Food Hall on the map|Central Food Hall|40,1103",
+      {
+       "testid": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+       "label": "Central Food Hall",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1103,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6|Locate Tech Art Center on the map|Tech Art Center|40,1158",
+      {
+       "testid": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+       "label": "Tech Art Center",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1158,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036|Locate Nexus River Cruise Pier on the map|Nexus River Cruise Pier|40,1213",
+      {
+       "testid": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+       "label": "Nexus River Cruise Pier",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1213,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837|Locate Skyline Dinner House on the map|Skyline Dinner House|40,1268",
+      {
+       "testid": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+       "label": "Skyline Dinner House",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1268,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON|map-stops-capture|Expand or collapse the stop list|Show all 6 places|40,1201",
+      {
+       "testid": "map-stops-capture",
+       "label": "Show all 6 places",
+       "via": "aria-label",
+       "box": {
+        "x": 40,
+        "y": 1201,
+        "w": 310,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|215,718",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 215,
+        "y": 718,
+        "w": 165,
+        "h": 42
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 31
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/map",
+    "title": "The city, with the plan on top.",
+    "total": 26
+   },
+   "added_n": 20,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 18,
+    "text": 2
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "access",
+   "layer": "角色说明的折叠层",
+   "trigger": "access-role-details",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/access",
+    "title": null,
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|199,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 199,
+        "y": 17,
+        "w": 61,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|268,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 268,
+        "y": 17,
+        "w": 61,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-CREATION_ORDER||Creation order|17,289",
+      {
+       "testid": "access-sort-tier-CREATION_ORDER",
+       "label": "Creation order",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 289,
+        "w": 132,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-RECENT_UPDATE||Recently updated|155,289",
+      {
+       "testid": "access-sort-tier-RECENT_UPDATE",
+       "label": "Recently updated",
+       "via": "text",
+       "box": {
+        "x": 155,
+        "y": 289,
+        "w": 163,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-DEPARTURE_DATE||Departure date|17,339",
+      {
+       "testid": "access-sort-tier-DEPARTURE_DATE",
+       "label": "Departure date",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 339,
+        "w": 137,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-sort-tier-TITLE||Name|160,339",
+      {
+       "testid": "access-sort-tier-TITLE",
+       "label": "Name",
+       "via": "text",
+       "box": {
+        "x": 160,
+        "y": 339,
+        "w": 72,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-trip-open-0||One Day in Nexus City|45,629",
+      {
+       "testid": "access-trip-open-0",
+       "label": "One Day in Nexus City",
+       "via": "text",
+       "box": {
+        "x": 45,
+        "y": 629,
+        "w": 329,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||The capability codes, as the server name|17,1216",
+      {
+       "testid": null,
+       "label": "The capability codes, as the server name",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1216,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||The capability codes, as the server name|17,1329",
+      {
+       "testid": null,
+       "label": "The capability codes, as the server name",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1329,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||The capability codes, as the server name|17,1461",
+      {
+       "testid": null,
+       "label": "The capability codes, as the server name",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1461,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||Read the full permission rules|17,1513",
+      {
+       "testid": null,
+       "label": "Read the full permission rules",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 1513,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SELECT|access-invite-visibility||Only meAnyone with the linkInvited peopl|17,2531",
+      {
+       "testid": "access-invite-visibility",
+       "label": "Only meAnyone with the linkInvited peopl",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2531,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "INPUT|access-invite-expiry|||17,2619",
+      {
+       "testid": "access-invite-expiry",
+       "label": "Expiry moment (leaving it empty means th",
+       "via": "label-element",
+       "box": {
+        "x": 17,
+        "y": 2619,
+        "w": 356,
+        "h": 60
+       }
+      }
+     ],
+     [
+      "BUTTON|access-invite-submit||Issue the invitation|17,2790",
+      {
+       "testid": "access-invite-submit",
+       "label": "Issue the invitation",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2790,
+        "w": 356,
+        "h": 45
+       }
+      }
+     ],
+     [
+      "BUTTON|access-empty-issue-link-grant||Issue a link-readable invitation|17,2934",
+      {
+       "testid": "access-empty-issue-link-grant",
+       "label": "Issue a link-readable invitation",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 2934,
+        "w": 239,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|access-empty-focus-invite||Go to the invitation form|17,3267",
+      {
+       "testid": "access-empty-focus-invite",
+       "label": "Go to the invitation form",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 3267,
+        "w": 199,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,334",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 334,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 24
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/access",
+    "title": null,
+    "total": 25
+   },
+   "added_n": 19,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 5,
+    "text": 13,
+    "label-element": 1
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "discover",
+   "layer": "收藏架的重读入口所在层",
+   "trigger": "collection-retry",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/discover",
+    "title": "First, whether this city can be planned",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "INPUT|prep-query|||17,327",
+      {
+       "testid": "prep-query",
+       "label": "Destination",
+       "via": "label-element",
+       "box": {
+        "x": 17,
+        "y": 327,
+        "w": 356,
+        "h": 47
+       }
+      }
+     ],
+     [
+      "BUTTON|prep-check||Check this destination|17,398",
+      {
+       "testid": "prep-check",
+       "label": "Check this destination",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 398,
+        "w": 356,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "TEXTAREA|v13-discovery-goal||I prefer quiet indoor culture, low walki|37,963",
+      {
+       "testid": "v13-discovery-goal",
+       "label": "I prefer quiet indoor culture, low walki",
+       "via": "text",
+       "box": {
+        "x": 37,
+        "y": 963,
+        "w": 316,
+        "h": 150
+       }
+      }
+     ],
+     [
+      "SELECT||Evidence mode|Sealed real replayLive providersSyntheti|118,1125",
+      {
+       "testid": null,
+       "label": "Sealed real replayLive providersSyntheti",
+       "via": "aria-label",
+       "box": {
+        "x": 118,
+        "y": 1125,
+        "w": 154,
+        "h": 19
+       }
+      }
+     ],
+     [
+      "BUTTON|v13-discover-submit||Discover and compose|37,1166",
+      {
+       "testid": "v13-discover-submit",
+       "label": "Discover and compose",
+       "via": "text",
+       "box": {
+        "x": 37,
+        "y": 1166,
+        "w": 235,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|collection-retry||Read again|251,1246",
+      {
+       "testid": "collection-retry",
+       "label": "Read again",
+       "via": "text",
+       "box": {
+        "x": 251,
+        "y": 1246,
+        "w": 102,
+        "h": 35
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|336,654",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 336,
+        "y": 654,
+        "w": 44,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 16
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/discover",
+    "title": "First, whether this city can be planned",
+    "total": 17
+   },
+   "added_n": 11,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 6,
+    "label-element": 1,
+    "text": 4
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "shell",
+   "layer": "顶栏菜单抽屉",
+   "trigger": "v8-mobile-menu",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||Plan my trip with AI|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "Plan my trip with AI",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 117,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Try another city|150,200",
+      {
+       "testid": null,
+       "label": "Try another city",
+       "via": "text",
+       "box": {
+        "x": 150,
+        "y": 200,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Open Trip Studio|258,200",
+      {
+       "testid": null,
+       "label": "Open Trip Studio",
+       "via": "text",
+       "box": {
+        "x": 258,
+        "y": 200,
+        "w": 99,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||Copy journey link|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "Copy journey link",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 103,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||Open Live|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "Open Live",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 105,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,776",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 776,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|140,810",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 140,
+        "y": 810,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,774",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 774,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,773",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 773,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,772",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 772,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,771",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 771,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,770",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 770,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|The view is on your journey|Fit to my journey|211,769",
+      {
+       "testid": "map-viewport-reset",
+       "label": "Fit to my journey",
+       "via": "aria-label",
+       "box": {
+        "x": 211,
+        "y": 769,
+        "w": 149,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||Review this plan generation|32,1235",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "Review this plan generation",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 1235,
+        "w": 194,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Compare stays →|264,1360",
+      {
+       "testid": null,
+       "label": "Compare stays →",
+       "via": "text",
+       "box": {
+        "x": 264,
+        "y": 1360,
+        "w": 109,
+        "h": 52
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||Filter|323,2196",
+      {
+       "testid": "pending-filter-open",
+       "label": "Filter",
+       "via": "text",
+       "box": {
+        "x": 323,
+        "y": 2196,
+        "w": 35,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||Open City Discovery|32,2316",
+      {
+       "testid": "pending-empty-action",
+       "label": "Open City Discovery",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2316,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||Read it again|32,2370",
+      {
+       "testid": "pending-reread",
+       "label": "Read it again",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2370,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||Technical details|32,2430",
+      {
+       "testid": null,
+       "label": "Technical details",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2430,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|215,718",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 215,
+        "y": 718,
+        "w": 165,
+        "h": 42
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|Simulation stage (a scenario is on stage): teaching simulation stage · the server supplies \"now\": 2026-10-10 09:00 +08:00||330,646",
+      {
+       "testid": "sim-ball",
+       "label": "Simulation stage (a scenario is on stage",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 646,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 30
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "total": 50
+   },
+   "added_n": 19,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 1,
+    "text": 18
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  },
+  {
+   "arm": "en",
+   "route": "shell",
+   "layer": "顶栏主题选择",
+   "trigger": "topbar-theme",
+   "trigger_found": true,
+   "before": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "rows": [
+     [
+      "BUTTON|v8-mobile-menu|Open navigation|Menu|17,19",
+      {
+       "testid": "v8-mobile-menu",
+       "label": "Menu",
+       "via": "aria-label",
+       "box": {
+        "x": 17,
+        "y": 19,
+        "w": 55,
+        "h": 27
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-theme|Theme: following the system. Choose light, dark, or back to system.|System|195,17",
+      {
+       "testid": "topbar-theme",
+       "label": "System",
+       "via": "aria-label",
+       "box": {
+        "x": 195,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-language|Switch language|中文|266,17",
+      {
+       "testid": "topbar-language",
+       "label": "中文",
+       "via": "aria-label",
+       "box": {
+        "x": 266,
+        "y": 17,
+        "w": 63,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|topbar-avatar|Me|DE|345,25",
+      {
+       "testid": "topbar-avatar",
+       "label": "DE",
+       "via": "aria-label",
+       "box": {
+        "x": 345,
+        "y": 25,
+        "w": 28,
+        "h": 28
+       }
+      }
+     ],
+     [
+      "BUTTON|hub-plan-with-ai||Plan my trip with AI|17,200",
+      {
+       "testid": "hub-plan-with-ai",
+       "label": "Plan my trip with AI",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 200,
+        "w": 117,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Try another city|150,200",
+      {
+       "testid": null,
+       "label": "Try another city",
+       "via": "text",
+       "box": {
+        "x": 150,
+        "y": 200,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Open Trip Studio|258,200",
+      {
+       "testid": null,
+       "label": "Open Trip Studio",
+       "via": "text",
+       "box": {
+        "x": 258,
+        "y": 200,
+        "w": 99,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|journey-link-copy||Copy journey link|17,246",
+      {
+       "testid": "journey-link-copy",
+       "label": "Copy journey link",
+       "via": "text",
+       "box": {
+        "x": 17,
+        "y": 246,
+        "w": 103,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|today-hero-cta||Open Live|42,547",
+      {
+       "testid": "today-hero-cta",
+       "label": "Open Live",
+       "via": "text",
+       "box": {
+        "x": 42,
+        "y": 547,
+        "w": 105,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "DIV||Old Town Gate|1|175,776",
+      {
+       "testid": null,
+       "label": "1",
+       "via": "aria-label",
+       "box": {
+        "x": 175,
+        "y": 776,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Old Town Gate|69,782",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Old Town Gate",
+       "via": "aria-label",
+       "box": {
+        "x": 69,
+        "y": 782,
+        "w": 105,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Riverside Museum|2|177,774",
+      {
+       "testid": null,
+       "label": "2",
+       "via": "aria-label",
+       "box": {
+        "x": 177,
+        "y": 774,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV|v8-map-stop-label|Map marker|Riverside Museum|129,809",
+      {
+       "testid": "v8-map-stop-label",
+       "label": "Riverside Museum",
+       "via": "aria-label",
+       "box": {
+        "x": 129,
+        "y": 809,
+        "w": 129,
+        "h": 22
+       }
+      }
+     ],
+     [
+      "DIV||Central Food Hall|3|178,773",
+      {
+       "testid": null,
+       "label": "3",
+       "via": "aria-label",
+       "box": {
+        "x": 178,
+        "y": 773,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Tech Art Center|4|179,772",
+      {
+       "testid": null,
+       "label": "4",
+       "via": "aria-label",
+       "box": {
+        "x": 179,
+        "y": 772,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Nexus River Cruise Pier|5|180,771",
+      {
+       "testid": null,
+       "label": "5",
+       "via": "aria-label",
+       "box": {
+        "x": 180,
+        "y": 771,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "DIV||Skyline Dinner House|6|181,770",
+      {
+       "testid": null,
+       "label": "6",
+       "via": "aria-label",
+       "box": {
+        "x": 181,
+        "y": 770,
+        "w": 34,
+        "h": 34
+       }
+      }
+     ],
+     [
+      "BUTTON|map-viewport-reset|The view is on your journey|Fit to my journey|211,769",
+      {
+       "testid": "map-viewport-reset",
+       "label": "Fit to my journey",
+       "via": "aria-label",
+       "box": {
+        "x": 211,
+        "y": 769,
+        "w": 149,
+        "h": 36
+       }
+      }
+     ],
+     [
+      "BUTTON|pretrip-empty-action||Review this plan generation|32,1235",
+      {
+       "testid": "pretrip-empty-action",
+       "label": "Review this plan generation",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 1235,
+        "w": 194,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|||Compare stays →|264,1360",
+      {
+       "testid": null,
+       "label": "Compare stays →",
+       "via": "text",
+       "box": {
+        "x": 264,
+        "y": 1360,
+        "w": 109,
+        "h": 52
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-filter-open||Filter|323,2196",
+      {
+       "testid": "pending-filter-open",
+       "label": "Filter",
+       "via": "text",
+       "box": {
+        "x": 323,
+        "y": 2196,
+        "w": 35,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-empty-action||Open City Discovery|32,2316",
+      {
+       "testid": "pending-empty-action",
+       "label": "Open City Discovery",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2316,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON|pending-reread||Read it again|32,2370",
+      {
+       "testid": "pending-reread",
+       "label": "Read it again",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2370,
+        "w": 92,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "SUMMARY|||Technical details|32,2430",
+      {
+       "testid": null,
+       "label": "Technical details",
+       "via": "text",
+       "box": {
+        "x": 32,
+        "y": 2430,
+        "w": 326,
+        "h": 44
+       }
+      }
+     ],
+     [
+      "BUTTON||CityNexus Copilot|✦CityNexus Copilot|215,718",
+      {
+       "testid": null,
+       "label": "✦CityNexus Copilot",
+       "via": "aria-label",
+       "box": {
+        "x": 215,
+        "y": 718,
+        "w": 165,
+        "h": 42
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-hub||Today|5,789",
+      {
+       "testid": "nav-hub",
+       "label": "Today",
+       "via": "text",
+       "box": {
+        "x": 5,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-trips||Trips|81,789",
+      {
+       "testid": "nav-trips",
+       "label": "Trips",
+       "via": "text",
+       "box": {
+        "x": 81,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-map||Map|157,789",
+      {
+       "testid": "nav-map",
+       "label": "Map",
+       "via": "text",
+       "box": {
+        "x": 157,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-agent||Copilot|233,789",
+      {
+       "testid": "nav-agent",
+       "label": "Copilot",
+       "via": "text",
+       "box": {
+        "x": 233,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|nav-me||Me|309,789",
+      {
+       "testid": "nav-me",
+       "label": "Me",
+       "via": "text",
+       "box": {
+        "x": 309,
+        "y": 789,
+        "w": 76,
+        "h": 48
+       }
+      }
+     ],
+     [
+      "BUTTON|sim-ball|Simulation stage (a scenario is on stage): teaching simulation stage · the server supplies \"now\": 2026-10-10 09:00 +08:00||330,646",
+      {
+       "testid": "sim-ball",
+       "label": "Simulation stage (a scenario is on stage",
+       "via": "aria-label",
+       "box": {
+        "x": 330,
+        "y": 646,
+        "w": 48,
+        "h": 48
+       }
+      }
+     ]
+    ],
+    "pointer": [],
+    "total": 31
+   },
+   "caught": {
+    "button_present": true,
+    "div_present": true
+   },
+   "plant_button_flagged": true,
+   "plant_div_flagged": true,
+   "after": {
+    "url": "http://127.0.0.1:5110/v8/hub",
+    "title": "Trip to Demo",
+    "total": 32
+   },
+   "added_n": 2,
+   "added_unnamed": [],
+   "added_via_counts": {
+    "aria-label": 2
+   },
+   "added_pointer_only": 0,
+   "opened": true
+  }
+ ],
+ "errors": [
+  "zh-CN/me/查看策略详情 locator.click: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=查看策略详情').first()\u001b[22m\n\u001b[2m    - locator resolved to <but",
+  "en/me/查看策略详情 locator.click: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=View policy detail').first()\u001b[22m\n\u001b[2m    - locator reso"
+ ]
+}

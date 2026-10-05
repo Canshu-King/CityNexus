@@ -1,0 +1,511 @@
+{
+ "run_id": "OA-151817",
+ "census": "ord0561_opened_layers_census_r1.cjs",
+ "live_tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "tip_read_at": "15:18:24",
+ "layers_planned": 11,
+ "tracked_dirty": [],
+ "untracked_left_by_others": [
+  "?? review/ord0502/report-ORD0502-164201.json",
+  "?? review/ord0502/walk-ORD0502-164201.json"
+ ],
+ "tree_at": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "build_rc": 0,
+ "build_secs": 10.1,
+ "private_backend_port": 5101,
+ "private_front_port": 5110,
+ "backend_pid": 22892,
+ "ensure_http_status": 200,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "entry": {
+  "asset": "index-BW2_ds1t.js",
+  "http_status": 200,
+  "bytes": 1623134,
+  "served_equals_disk": true,
+  "disk_sha1": "3f6489d75227ccaa5c62bb7f100e16ebd7e6c637"
+ },
+ "census_rc": 0,
+ "census_stdout": "zh-CN %-8s %-22s 触发=hub 打开=待办筛选面板 新增控件=1 无名=1 第二维新增=3 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=trips 打开=站点详情 新增控件=1 无名=1 第二维新增=4 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=trips 打开=收藏到…入口 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=4 true true\nzh-CN %-8s %-22s 触发=trips 打开=中止这趟行程的表单层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=map 打开=只看打过卡 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=access 打开=角色说明的折叠层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=discover 打开=收藏架的重读入口所在层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=shell 打开=顶栏菜单抽屉 新增控件=1 无名=1 第二维新增=19 负对照 button被抓=0 div被抓=0 true true\nzh-CN %-8s %-22s 触发=shell 打开=顶栏主题选择 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=hub 打开=待办筛选面板 新增控件=1 无名=1 第二维新增=3 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=trips 打开=站点详情 新增控件=1 无名=1 第二维新增=4 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=trips 打开=收藏到…入口 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=3 true true\nen %-8s %-22s 触发=trips 打开=中止这趟行程的表单层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=map 打开=只看打过卡 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=access 打开=角色说明的折叠层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=discover 打开=收藏架的重读入口所在层 新增控件=1 无名=1 第二维新增=0 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=shell 打开=顶栏菜单抽屉 新增控件=1 无名=1 第二维新增=19 负对照 button被抓=0 div被抓=0 true true\nen %-8s %-22s 触发=shell 打开=顶栏主题选择 新增控件=1 无名=1 第二维新增=1 负对照 button被抓=0 div被抓=0 true true\nlayers=22/22 打开=18 新增合计=58 无名合计=0 负对照全抓=true errors=2\n",
+ "census_stderr": "",
+ "layers_recorded": 22,
+ "census_errors": [
+  "zh-CN/me/查看策略详情 鼠标点不到（诊断见该格 click_diagnosis）",
+  "en/me/查看策略详情 鼠标点不到（诊断见该格 click_diagnosis）"
+ ],
+ "layers_measured": 18,
+ "layers_not_on_screen": [
+  "今天续跑的折叠技术面",
+  "策略详情",
+  "今天续跑的折叠技术面",
+  "策略详情"
+ ],
+ "unnamed_total": 0,
+ "unnamed_after_total": 0,
+ "pointer_items": [
+  {
+   "arm": "zh-CN",
+   "route": "trips",
+   "layer": "收藏到…入口",
+   "items": [
+    {
+     "tag": "div",
+     "cls": "trip-stop-body",
+     "text": "Old Town Gate1 小时 15 分详情 ›打卡收藏到…收到哪个架子这位",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "div||trip-stop-body|Old Town Gate1 小时 15 分详情 ›打卡收藏到…收到哪个架子这位"
+    },
+    {
+     "tag": "div",
+     "cls": "cn-collect",
+     "text": "收藏到…收到哪个架子这位旅客名下还没有架子，所以这一枚没地方放。先不收",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "div|collect-into|cn-collect|收藏到…收到哪个架子这位旅客名下还没有架子，所以这一枚没地方放。先不收"
+    },
+    {
+     "tag": "p",
+     "cls": "cn-collect__picker-title",
+     "text": "收到哪个架子",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "p||cn-collect__picker-title|收到哪个架子"
+    },
+    {
+     "tag": "p",
+     "cls": "cn-collect__state",
+     "text": "这位旅客名下还没有架子，所以这一枚没地方放。",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "p|collect-no-shelf|cn-collect__state|这位旅客名下还没有架子，所以这一枚没地方放。"
+    }
+   ]
+  },
+  {
+   "arm": "en",
+   "route": "trips",
+   "layer": "收藏到…入口",
+   "items": [
+    {
+     "tag": "div",
+     "cls": "cn-collect",
+     "text": "Collect into…Which shelf should hold itT",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "div|collect-into|cn-collect|Collect into…Which shelf should hold itT"
+    },
+    {
+     "tag": "p",
+     "cls": "cn-collect__picker-title",
+     "text": "Which shelf should hold it",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "p||cn-collect__picker-title|Which shelf should hold it"
+    },
+    {
+     "tag": "p",
+     "cls": "cn-collect__state",
+     "text": "This traveller holds no shelf yet, so th",
+     "cursor_declared_on": "article.trip-stop[testid=trip-stop]",
+     "id": "p|collect-no-shelf|cn-collect__state|This traveller holds no shelf yet, so th"
+    }
+   ]
+  }
+ ],
+ "click_fallback": [
+  {
+   "arm": "zh-CN",
+   "layer": "待办筛选面板",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 326,
+     "y": 400,
+     "w": 32,
+     "h": 44
+    },
+    "center": {
+     "x": 342,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#pending-filter-open"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "站点详情",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 148,
+     "y": 400,
+     "w": 26,
+     "h": 44
+    },
+    "center": {
+     "x": 161,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#trip-stop-details"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "收藏到…入口",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 88,
+     "y": 400,
+     "w": 272,
+     "h": 44
+    },
+    "center": {
+     "x": 224,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#collect-entry"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "中止这趟行程的表单层",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 34,
+     "y": 432,
+     "w": 322,
+     "h": 44
+    },
+    "center": {
+     "x": 195,
+     "y": 454
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "summary#journey-abort-open"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "只看打过卡",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 40,
+     "y": 400,
+     "w": 310,
+     "h": 44
+    },
+    "center": {
+     "x": 195,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#v8-map-footprint-filter"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "策略详情",
+   "key_opened": false,
+   "js_opened": false,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 40,
+     "y": 964,
+     "w": 126,
+     "h": 44
+    },
+    "center": {
+     "x": 103,
+     "y": 986
+    },
+    "in_viewport": false,
+    "hits_self": false,
+    "top": null
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "收藏架的重读入口所在层",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 265,
+     "y": 405,
+     "w": 88,
+     "h": 35
+    },
+    "center": {
+     "x": 309,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#collection-retry"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "顶栏菜单抽屉",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 17,
+     "y": 19,
+     "w": 46,
+     "h": 27
+    },
+    "center": {
+     "x": 40,
+     "y": 33
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#v8-mobile-menu"
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "layer": "顶栏主题选择",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 191,
+     "y": 17,
+     "w": 65,
+     "h": 44
+    },
+    "center": {
+     "x": 224,
+     "y": 39
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#topbar-theme"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "待办筛选面板",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 323,
+     "y": 400,
+     "w": 35,
+     "h": 44
+    },
+    "center": {
+     "x": 341,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#pending-filter-open"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "站点详情",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 127,
+     "y": 400,
+     "w": 36,
+     "h": 44
+    },
+    "center": {
+     "x": 145,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#trip-stop-details"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "收藏到…入口",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 88,
+     "y": 400,
+     "w": 272,
+     "h": 44
+    },
+    "center": {
+     "x": 224,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#collect-entry"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "中止这趟行程的表单层",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 34,
+     "y": 466,
+     "w": 322,
+     "h": 44
+    },
+    "center": {
+     "x": 195,
+     "y": 488
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "summary#journey-abort-open"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "只看打过卡",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 40,
+     "y": 400,
+     "w": 310,
+     "h": 44
+    },
+    "center": {
+     "x": 195,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#v8-map-footprint-filter"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "策略详情",
+   "key_opened": false,
+   "js_opened": false,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 40,
+     "y": 963,
+     "w": 153,
+     "h": 44
+    },
+    "center": {
+     "x": 117,
+     "y": 985
+    },
+    "in_viewport": false,
+    "hits_self": false,
+    "top": null
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "收藏架的重读入口所在层",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 251,
+     "y": 404,
+     "w": 102,
+     "h": 35
+    },
+    "center": {
+     "x": 302,
+     "y": 422
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#collection-retry"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "顶栏菜单抽屉",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 17,
+     "y": 19,
+     "w": 55,
+     "h": 27
+    },
+    "center": {
+     "x": 44,
+     "y": 33
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#v8-mobile-menu"
+   }
+  },
+  {
+   "arm": "en",
+   "layer": "顶栏主题选择",
+   "key_opened": null,
+   "js_opened": null,
+   "diagnosis": {
+    "found": true,
+    "box": {
+     "x": 195,
+     "y": 17,
+     "w": 63,
+     "h": 44
+    },
+    "center": {
+     "x": 226,
+     "y": 39
+    },
+    "in_viewport": true,
+    "hits_self": true,
+    "top": "button#topbar-theme"
+   }
+  }
+ ],
+ "plant_all_caught": true,
+ "static_total_min": 16,
+ "backend_exit": 1,
+ "BAD": []
+}

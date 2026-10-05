@@ -1,0 +1,259 @@
+// 1ba48dbf · "必须点开才到"的层的具名控件普查
+// 判据逐字沿用车道 8ac89982 的八问算法（件 review/8ac89982/cdp_census/census_spec_r1.ts），
+// 只把进入动作换成点击；每层进入前后各普查一次，只算新增控件。
+// 负对照：每层当场埋两枚必被抓的假控件（无名 button、无名 cursor:pointer 的 div），
+// 两维各自要在那一层的读数里被抓到，计数前移除——不加这一条，空清单就是没牙的。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.OA_BASE;
+const OUT = process.env.OA_OUT;
+const SHOTDIR = process.env.OA_SHOTS;
+const JID = process.env.OA_JID;
+
+// 只列"打开一层"的触发件；提交类、会写库的、切语言的一律不在表内
+const ONLY = (process.env.OA_ONLY || "").split(",").filter(Boolean);
+const LAYERS_ALL = [
+  { route: "hub", name: "待办筛选面板", by: "testid", sel: "pending-filter-open" },
+  { route: "hub", name: "今天续跑的折叠技术面", by: "testid", sel: "continuation-technical-details" },
+  { route: "trips", name: "站点详情", by: "testid", sel: "trip-stop-details" },
+  { route: "trips", name: "收藏到…入口", by: "testid", sel: "collect-entry" },
+  { route: "trips", name: "中止这趟行程的表单层", by: "testid", sel: "journey-abort-open" },
+  { route: "map", name: "只看打过卡", by: "testid", sel: "v8-map-footprint-filter" },
+  { route: "me", name: "策略详情", by: "text", sel: "查看策略详情", sel_en: "View policy detail" },
+  { route: "access", name: "角色说明的折叠层", by: "testid", sel: "access-role-details" },
+  { route: "discover", name: "收藏架的重读入口所在层", by: "testid", sel: "collection-retry" },
+  { route: "shell", name: "顶栏菜单抽屉", by: "testid", sel: "v8-mobile-menu" },
+  { route: "shell", name: "顶栏主题选择", by: "testid", sel: "topbar-theme" },
+];
+
+const LAYERS = ONLY.length ? LAYERS_ALL.filter((s) => ONLY.indexOf(s.sel) >= 0) : LAYERS_ALL;
+
+const CENSUS = () => {
+  const SEL = ["button", "a[href]", "input", "select", "textarea", "summary",
+    "[role=button]", "[role=link]", "[role=checkbox]", "[role=switch]", "[role=tab]",
+    "[role=menuitem]", "[role=combobox]", "[role=searchbox]"].join(",");
+  const text = (n) => (n && n.textContent ? n.textContent : "").replace(/\s+/g, " ").trim();
+  const labelledBy = (el) => (el.getAttribute("aria-labelledby") || "").split(/\s+/).filter(Boolean)
+    .map((id) => text(document.getElementById(id))).filter(Boolean).join(" ").trim();
+  /* 身份键故意不含坐标：开一层常常把整屏重排，带坐标会把"挪了位置的老控件"数成新增。
+     r1 就是这么把 hub 那格报成"新增 29 枚"而屏上控件总数只涨了 4 枚。 */
+  const key = (el) => (el.tagName || "") + "|" + (el.getAttribute("data-testid") || "") + "|"
+    + (el.getAttribute("aria-label") || "") + "|" + text(el).slice(0, 40);
+  const rows = new Map();
+  for (const el of Array.from(document.querySelectorAll(SEL))) {
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) continue;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === "hidden" || cs.display === "none") continue;
+    const aria = (el.getAttribute("aria-label") || "").trim();
+    const labelled = labelledBy(el);
+    const own = text(el);
+    const title = (el.getAttribute("title") || "").trim();
+    const img = el.querySelector("img");
+    const alt = (img && img.alt ? img.alt : "").trim();
+    const placeholder = (el.getAttribute("placeholder") || "").trim();
+    const isForm = el instanceof HTMLInputElement || el instanceof HTMLSelectElement
+      || el instanceof HTMLTextAreaElement;
+    const ownId = el.getAttribute("id") || "";
+    const labelEl = isForm && ownId ? document.querySelector('label[for="' + CSS.escape(ownId) + '"]')
+      : el.closest("label");
+    const labelText = labelEl ? text(labelEl).replace(/:$/, "").trim() : "";
+    const inputValue = el instanceof HTMLInputElement
+      && (el.type === "submit" || el.type === "button") ? (el.value || "").trim() : "";
+    const via = aria ? "aria-label" : labelled ? "aria-labelledby" : own ? "text"
+      : labelText ? "label-element" : title ? "title" : alt ? "img-alt"
+        : placeholder ? "placeholder" : inputValue ? "input-value" : "NONE";
+    rows.set(key(el), { testid: el.getAttribute("data-testid") || null,
+                        label: own.slice(0, 40) || aria.slice(0, 40) || labelText.slice(0, 40) || null,
+                        via: via, box: { x: Math.round(r.x), y: Math.round(r.y),
+                                         w: Math.round(r.width), h: Math.round(r.height) } });
+  }
+  // 第二维：只有 cursor:pointer 姿态、没有交互语义的裸元素
+  const pointerOnly = [];
+  for (const el of Array.from(document.querySelectorAll("div,span,p,li,td,img,svg,i,em,strong"))) {
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) continue;
+    const cs = getComputedStyle(el);
+    if (cs.cursor !== "pointer") continue;
+    if (el.closest(SEL)) continue;
+    if (el.getAttribute("role") || el.getAttribute("tabindex") !== null
+        || el.getAttribute("aria-label") || el.onclick) continue;
+    /* 手型是从哪儿来的：cursor 会继承，所以往上找到"第一个自己变成 pointer、父亲还不是"
+       的那一枚祖先——这才是真正声明它的元素。不靠猜 CSS 文件，量出来。 */
+    let src = el;
+    for (let a2 = el.parentElement; a2; a2 = a2.parentElement) {
+      if (getComputedStyle(a2).cursor !== "pointer") { break; }
+      src = a2;
+    }
+    const srcDesc = src.tagName.toLowerCase() + (src.id ? "#" + src.id : "")
+      + (typeof src.className === "string" && src.className
+        ? "." + src.className.trim().split(/\s+/).slice(0, 2).join(".") : "")
+      + (src.getAttribute("data-testid") ? "[testid=" + src.getAttribute("data-testid") + "]" : "");
+    pointerOnly.push({ tag: el.tagName.toLowerCase(), cls: (typeof el.className === "string"
+      ? el.className.trim().split(/\s+/)[0] : ""), text: text(el).slice(0, 40),
+      cursor_declared_on: srcDesc,
+      id: el.tagName.toLowerCase() + "|" + (el.getAttribute("data-testid") || "") + "|"
+        + (typeof el.className === "string" ? el.className.trim().split(/\s+/)[0] : "")
+        + "|" + text(el).slice(0, 40) });
+  }
+  return { url: location.href, title: (document.querySelector("h1") || {}).textContent
+    ? document.querySelector("h1").textContent.trim() : null,
+    rows: Array.from(rows.entries()), pointer: pointerOnly, total: rows.size };
+};
+
+// 埋两枚必被抓的假控件：一枚无名 button、一枚无名 cursor:pointer 的 div
+const PLANT = () => {
+  const b = document.createElement("button");
+  b.setAttribute("data-cn-probe", "unnamed-button");
+  b.setAttribute("data-testid", "cn-probe-unnamed-button");
+  b.style.cssText = "position:fixed;left:12px;bottom:130px;width:26px;height:26px;z-index:99999";
+  const d = document.createElement("div");
+  d.setAttribute("data-cn-probe", "unnamed-pointer-div");
+  d.style.cssText = "position:fixed;left:48px;bottom:130px;width:26px;height:26px;"
+    + "cursor:pointer;z-index:99999";
+  document.body.appendChild(b);
+  document.body.appendChild(d);
+  return true;
+};
+const UNPLANT = () => {
+  document.querySelectorAll("[data-cn-probe]").forEach((n) => n.remove());
+  return true;
+};
+const PROBE_CAUGHT = () => {
+  const btn = document.querySelector('[data-cn-probe="unnamed-button"]');
+  const dv = document.querySelector('[data-cn-probe="unnamed-pointer-div"]');
+  return { button_present: !!btn, div_present: !!dv };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, layers: [], errors: [] };
+  for (const arm of [{ want: "zh-CN" }, { want: "en" }]) {
+    for (const spec of LAYERS) {
+      const ctx = await browser.newContext({ viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: arm.want === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      page.setDefaultTimeout(15000);
+      const rec = { arm: arm.want, route: spec.route, layer: spec.name, trigger: spec.sel };
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm.want]);
+        await page.goto(BASE + (spec.route === "shell" ? "/v8/hub" : "/v8/" + spec.route),
+          { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(3500);
+        const want = arm.want === "en" && spec.sel_en ? spec.sel_en : spec.sel;
+        const loc = (spec.by === "testid"
+          ? page.locator("[data-testid='" + want + "']")
+          : page.locator("text=" + want)).first();
+        rec.trigger_found = await loc.count().then((n) => n > 0);
+        if (!rec.trigger_found) { rec.note = "触发件不在这一屏"; rep.layers.push(rec); continue; }
+        rec.before = await page.evaluate(CENSUS);
+        await loc.scrollIntoViewIfNeeded().catch(() => {});
+        await page.waitForTimeout(300);
+        rec.click_diagnosis = await page.evaluate((arg) => {
+          const nodes = Array.from(document.querySelectorAll(
+            "button,a,summary,[role=button],[role=link]"));
+          const el = arg.kind === "testid"
+            ? nodes.find((n) => n.getAttribute("data-testid") === arg.value)
+            : nodes.find((n) => (n.textContent || "").replace(/\s+/g, " ").trim() === arg.value);
+          if (!el) { return { found: false, asked: arg.value }; }
+          const r = el.getBoundingClientRect();
+          const cx = Math.round(r.x + r.width / 2), cy = Math.round(r.y + r.height / 2);
+          const top = document.elementFromPoint(cx, cy);
+          return { found: true, box: { x: Math.round(r.x), y: Math.round(r.y),
+                     w: Math.round(r.width), h: Math.round(r.height) }, center: { x: cx, y: cy },
+                   in_viewport: cy >= 0 && cy <= window.innerHeight,
+                   hits_self: !!top && (top === el || el.contains(top) || top.contains(el)),
+                   top: top ? (top.tagName.toLowerCase() + (top.getAttribute("data-testid")
+                     ? "#" + top.getAttribute("data-testid") : "")) : null };
+        }, { kind: spec.by, value: want });
+        try {
+          await loc.click({ timeout: 8000 });
+          rec.clicked = true;
+        } catch (e) {
+          rec.clicked = false;
+          rec.click_error = (e.message || String(e)).slice(0, 90);
+          await loc.press("Enter").catch(() => {});
+          await page.waitForTimeout(700);
+          const after_key = await page.evaluate(CENSUS);
+          rec.alt_key_opened = after_key.total !== rec.before.total;
+          await page.evaluate((arg) => {
+            const nodes = Array.from(document.querySelectorAll("button,a,summary,[role=button],[role=link]"));
+            const el = arg.kind === "testid" ? nodes.find((n) => n.getAttribute("data-testid") === arg.value)
+              : nodes.find((n) => (n.textContent || "").replace(/\s+/g, " ").trim() === arg.value);
+            if (el) { el.click(); }
+          }, { kind: spec.by, value: want }).catch(() => {});
+          await page.waitForTimeout(700);
+          const after_js = await page.evaluate(CENSUS);
+          rec.alt_js_opened = after_js.total !== rec.before.total;
+          rec.click_error = (rec.click_error || "") + "；键盘 Enter 后变了=" + rec.alt_key_opened
+            + "，元素 click 后变了=" + rec.alt_js_opened;
+          rep.errors.push(arm.want + "/" + spec.route + "/" + spec.sel + " 鼠标点不到（诊断见该格 click_diagnosis）");
+          await page.screenshot({ path: SHOTDIR + "/stuck_" + arm.want + "_" + spec.route + "_"
+            + spec.sel + ".png" }).catch(() => {});
+          rep.layers.push(rec);
+          continue;
+        }
+        await page.waitForTimeout(1200);
+        await page.evaluate(PLANT);
+        await page.waitForTimeout(250);
+        const planted = await page.evaluate(CENSUS);
+        rec.caught = await page.evaluate(PROBE_CAUGHT);
+        await page.evaluate(UNPLANT);
+        await page.screenshot({ path: SHOTDIR + "/open_" + arm.want + "_" + spec.route + "_"
+          + spec.sel + ".png" }).catch(() => rep.errors.push("shot " + spec.sel));
+        const beforeKeys = new Set(rec.before.rows.map((x) => x[0]));
+        const added = planted.rows.filter((x) => !beforeKeys.has(x[0])
+                                 && !(x[1].testid || "").startsWith("cn-probe"));
+        // 假控件必须被抓进"无名"：button 走八问皆空、div 走第二维
+        rec.plant_button_flagged = planted.rows.some((x) => x[1].testid === "cn-probe-unnamed-button"
+          && x[1].via === "NONE");
+        rec.plant_div_flagged = (planted.pointer || []).some((p) => p.text === "" && p.tag === "div");
+        rec.after = { url: planted.url, title: planted.title, total: planted.total };
+        rec.after_unnamed = planted.rows.filter((x) => x[1].via === "NONE"
+          && !(x[1].testid || "").startsWith("cn-probe")).map((x) => x[1]);
+        rec.before_unnamed = rec.before.rows.filter((x) => x[1].via === "NONE"
+          && !(x[1].testid || "").startsWith("cn-probe")).map((x) => x[1]);
+        rec.added_n = added.length;
+        rec.added_unnamed = added.filter((x) => x[1].via === "NONE").map((x) => x[1]);
+        rec.added_via_counts = added.reduce((m, x) => (m[x[1].via] = (m[x[1].via] || 0) + 1, m), {});
+        const beforePointer = new Set((rec.before.pointer || []).map((x) => x.id));
+        rec.added_pointer_only = (planted.pointer || []).filter((x) => !beforePointer.has(x.id)
+          && !x.cls.includes("data-cn-probe") && x.tag !== "div" || (!beforePointer.has(x.id)
+            && x.tag === "div" && !String(x.cls).startsWith("cn-probe") && x.text !== ""));
+        rec.added_pointer_items = rec.added_pointer_only;
+        rec.added_pointer_n = rec.added_pointer_only.length;
+        rec.added_pointer_only = rec.added_pointer_n;
+        rec.opened = planted.url !== rec.before.url || planted.title !== rec.before.title
+          || planted.total !== rec.before.total;
+        rep.layers.push(rec);
+        console.log("%s %-8s %-22s 触发=%s 打开=%s 新增控件=%d 无名=%d 第二维新增=%d "
+          + "负对照 button被抓=%s div被抓=%s",
+          arm.want, spec.route, spec.name, rec.trigger_found, rec.opened, rec.added_n,
+          rec.added_unnamed.length, rec.added_pointer_only,
+          rec.plant_button_flagged, rec.plant_div_flagged);
+        if (rec.added_unnamed.length) {
+          console.log("    无名清单 %s", JSON.stringify(rec.added_unnamed.map((u) => u.testid || u.box)).slice(0, 260));
+        }
+      } catch (e) {
+        rep.errors.push(arm.want + "/" + spec.route + "/" + spec.sel + " "
+          + (e.message || String(e)).slice(0, 140));
+      } finally {
+        await ctx.close().catch(() => {});
+      }
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  const done = rep.layers.filter((r) => r.added_n !== undefined);
+  console.log("layers=%d/%d 打开=%d 新增合计=%d 无名合计=%d 负对照全抓=%s errors=%d",
+    rep.layers.length, LAYERS.length * 2, done.filter((r) => r.opened).length,
+    done.reduce((n, r) => n + r.added_n, 0), done.reduce((n, r) => n + r.added_unnamed.length, 0),
+    done.every((r) => r.plant_button_flagged && r.plant_div_flagged), rep.errors.length);
+})();
