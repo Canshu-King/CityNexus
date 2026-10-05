@@ -20,7 +20,6 @@ a painting, or `git`.  Nothing here is carried over from the r4 or r5 generation
     language gate  frontend=:61720 backend=:61721  db=sqlite:///./data/_r6gate_lang_1791185025.db
     wizard gate    frontend=:61730 backend=:61731  db=sqlite:///./data/_r6gate_wizard_1791185062.db
     files present under backend/data/ after the four runs: 4
-  patch application : `git apply -3` reported both files clean -- no conflict hunks
 
 [arms, guard run]  e2e/qoder-a68b0631-ord0507-clock-attribution-r6.spec.ts, prod-gate config, vite v7.3.6, 2030 modules transformed, built in 9.81s
   tests           : 5 passed / 0 failed / 0 skipped in 42.5s
@@ -59,8 +58,9 @@ a painting, or `git`.  Nothing here is carried over from the r4 or r5 generation
 
 [what this generation adds over r4]
   r4 and r5 readings were taken at base 89213c447190, which the rebuilt line no longer carries.
-  The hand is the same bytes re-applied: `git apply -3` took it with no conflict hunks, and the
-  tip had picked up none of it on its own, measured line by line against the tip's blobs:
+  The hand is the same bytes re-applied (no conflict markers survive in either file, checked
+  above, in the bytes about to be shipped), and the tip had picked up none of it on its own,
+  measured line by line against the tip's blobs:
     V8Experience.tsx: 34 added by the hand, 34 of them not present at the tip before this cut
     SimulationPanel.tsx: 38 added by the hand, 38 of them not present at the tip before this cut
   So this is a re-cut of a still-missing fix, not a re-ship of a landed one.
