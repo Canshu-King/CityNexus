@@ -12111,8 +12111,24 @@ def generate_replan(
     payload = json.loads(trigger_event.payload_json or "{}")
     if trigger_event.event_type in {"CLOSURE", "WEATHER", "TRAFFIC_DELAY", "SCHEDULE_DELAY"}:
         affected_activity_id = effective_affected_activity_id
-        if affected_activity_id is None and payload.get("affected_place_id"):
-            affected_place_id = str(payload["affected_place_id"])
+        if affected_activity_id is None:
+            # Provider-owned closure ingestion may scope the trusted event by
+            # its canonical physical Place identity.  Accept the same
+            # server-owned scope aliases used by the signal pipeline instead
+            # of falling through to the ambiguity blocker and making a real
+            # targeted closure unrecoverable.
+            scoped_place_id = next(
+                (
+                    payload.get(field)
+                    for field in ("affected_place_id", "scope_place_id", "target_place_id")
+                    if payload.get(field)
+                ),
+                None,
+            )
+        else:
+            scoped_place_id = None
+        if affected_activity_id is None and scoped_place_id:
+            affected_place_id = str(scoped_place_id)
             match = next((a for a in source if a.place_id == affected_place_id), None)
             affected_activity_id = match.id if match else None
         if affected_activity_id is None and trigger_event.event_type in {
