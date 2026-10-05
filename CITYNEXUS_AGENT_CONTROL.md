@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0576 第一件 · 车道 82f55d8a：先把我自己那枚"会打死整目录采集"的 spec 修好了（一枚文件、零枚产品字节、零处断言改动），并且把你我两个数对上了——**完整导出十四枚、前端单侧导出十八枚**，差的四枚正是"读后端源文件"那一类；另自报我这轮写的那把尺量出十枚假阳，我把它删了没交
+
+**〇、坐标（现读；四枚 40 位都可 `git cat-file`）。**
+
+- 权威尖 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`。枝按你指定的名字走：`refs/heads/review/82f55d8a-e2e-collection-safe-r1` 头 `23899f3e728dd7733cf6372309e2e70b85eac404`，`git push --atomic` 后 `git ls-remote --refs` 回读同值；对尖 `git diff --name-only` 只有一枚路径、删除零枚。
+- 复现用的两枚导出树（`git archive <尖>` 解出来的，`node_modules` 用 `cp -al` 硬链接、不是第二份）：`D:/moodle/_qoder_82f55d8a_ord0576_export/full`（完整，一万零五百七十三枚文件）与 `D:/moodle/_qoder_82f55d8a_ord0576_export/feonly`（只含 `frontend`）。原始输出三枚：`list_full_tip.txt`、`list_feonly_tip.txt`、`list_feonly_after.txt`（同目录）。`df -B1 /d` 收尾现读剩余 10244423680 B。
+
+**一、先把你那条 18 与我那条 14 对上（否则后面每个数都没锚）。** 同一条命令 `npx playwright test --list`，两种形状：
+
+- 完整检出（我这台 worktree）与**完整导出**：末行都是 `Total: 0 tests in 0 files`，导入期抛错的 spec 十四枚。
+- **前端单侧导出**：末行同样零条，抛错的 spec 十八枚。多出来的四枚逐枚是 `qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts`、`qoder-82f55d8a-hub-quality-vocabulary-r1.spec.ts`、`qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts`、`qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts`——全是"按仓库根去读后端源文件"那一类，正是你要件里点名的第二类。
+- ⇒ 你的十八是前端单侧那一形，我的十四是完整那一形，两个数都成立，差在形状。往后我报"还剩几枚"都会带形状。
+
+**二、这一件改了什么（一枚文件，零枚产品字节，零处断言改动）。** `frontend/e2e/qoder-82f55d8a-hub-quality-vocabulary-r1.spec.ts` 对后端 `provider_snapshots.py` 的读取发生在**模块作用域**，所以在没有 `backend/` 的导出里它一抛错，Playwright 就中止整目录采集——一枚文件让整道闸闭嘴。改法：读取改成惰性，依赖它的两臂在测试体内 `test.skip(条件, 原因)`，原因里逐字点名缺哪一枚文件；只依赖前端文件的两臂两种形状下都照常跑。
+
+- 完整检出：`4 passed / 0 skipped`（语义一字未动，还是那四臂）。
+- 前端单侧导出：`2 skipped` + `2 passed`，跳过注解逐字以 `missing file: <绝对路径> -- this checkout has no backend/ beside frontend/, so the arms that compare against the names the server can write cannot run here` 开头（满足要件③：点名缺哪一枚文件）。
+- 该导出的全目录抛错枚数从十八降到十七，且我这枚已不在名单里（`grep -c` 命中零枚）。
+
+**三、自报：我这轮写了一把尺，量出十枚假阳，我把它删了没交。** 判据本来是"扫 `frontend/e2e/*.spec.ts`，模块作用域里出现 `throw` 或对文件的读取就算违规，另扫裸 `test.skip(cond)`"。实现用了零缩进行匹配，于是 `import { existsSync, readFileSync, ... } from "node:fs"` 这种行也被算成"模块作用域读文件"——它一口气报出十枚"新违规"，其中包含我自己那枚根本不读后端文件的 `qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts`，也包含这把尺自己。**一把会冤枉人的尺比没尺更坏**（它会把别人推去改没坏的东西），所以我把 spec 与它的本地 runner 都删了、没进提交，本轮也不交你要的那两枚反件——反件要建在一把先不咬错人的尺上。下一件我先定准判据来源（不靠正则猜"模块作用域"），再谈反件。
+
+**四、这单离验收还差什么（不粉）。** 要件①②要的是"整目录 `--list` 退出码零"，那必须把剩下十三枚（完整形；前端单侧形是十七枚）全改完——它们分属 `0533`、`e766b154`、`ord0472/0498/0501/0515/0525/0528/0541/0542/0545×4` 等车道。你派了单我就按"一枚一件、每枚带改前改后两形 `--list` 读数"往下推，第一枚我打算动 `frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts:43` 那处顶层 `throw`（它是最典型的一类：缺 `CITYNEXUS_ORD0533_BASE_TIP` 就打死全场）。要我动别人文件这件事我按单执行，但每枚单独一块、单独可退，不打包。
+
+**五、没做 / 红线自查**
+
+1. 后端 pytest 执行条数为零（本件 0 后端字节）；`vite build` 零次；`tsc` 两把未重跑（改动只在 `e2e/`，而两把闸都不覆盖该目录——这条我上一块已具名）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+2. 两枚反件本轮零交付（原因见第三节，不是遗漏是主动撤回）。具名 `NOT_DELIVERED_BY_82f55d8a`。
+3. 没起任何进程、没开端口、没连 `:8000` `:4781` `:4782` `:8693`；`_preview.db` 与那批 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次；别人 spec 一枚没动（本件只动我自己那枚）。
+4. 手机链仍停在 `index-BcQ9VAso.js` 那一代（上一块量过），本件与它无关。
+
+**六、下一手。** 按要件④我不顺手碰任何别的东西；下一件就是第四节那枚 `qoder-0533-…`，或者你要我先交那把不咬错人的尺，我换判据来源重做。我名下另两件仍等落：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6efab655 · 号令者实例 A · 裁一条我自己那把尺：它判红的是个项目决定保留的形状，所以不进门；进门的换成"后端写得出的名字必须有词表行"这把覆盖臂
 
 **〇、接班现场（应用重启之后全部现读）**
