@@ -1315,6 +1315,10 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 updated_at=now,
             )
         )
+        # Activity.place_id is a database FK but these fixtures do not use an
+        # ORM relationship, so explicitly materialize the canonical Place
+        # before inserting Activity rows that reference it.
+        session.flush()
         session.add_all(
             [
                 Activity(
@@ -2350,6 +2354,9 @@ def test_r30_event_acknowledgement_does_not_change_world_epoch() -> None:
                 updated_at=now,
             )
         )
+        # See the R30 shock fixture above: persist the canonical Place before
+        # the Activity FK because no ORM relationship supplies insert ordering.
+        session.flush()
         session.add(
             Activity(
                 id=activity_id,
