@@ -483,6 +483,69 @@ def _run_disagreement_to_closure(
     }
 
 
+def _write_proven_result(result: dict[str, object]) -> str | None:
+    verdict = result.get("verdict") or {}
+    summary = verdict.get("summary") if isinstance(verdict, dict) else None
+    if result.get("status") != "R29_PROVEN" or not isinstance(summary, dict):
+        return None
+
+    path = ROOT / "REVOLUTION_R29_LIVE_DISAGREEMENT_MEDIATION_RESULT.md"
+    progress = result.get("mediation_progress") or {}
+    progress_policy = (
+        progress.get("progress_policy")
+        if isinstance(progress, dict)
+        else None
+    )
+    lines = [
+        "# Revolution R29 — Live Disagreement Mediation Result",
+        "",
+        "## Verdict",
+        "",
+        "**PROVEN** by the generated R29 machine verdict.",
+        "",
+        "## Causal closure",
+        "",
+        f"- Round-1 mission: `{result.get('round1_mission_id')}`",
+        f"- Mediator mission: `{result.get('mediator_mission_id')}`",
+        f"- Real mediator AgentRun: `{result.get('mediator_run_id')}`",
+        f"- Improved compromise proposal: `{result.get('improved_choice')}`",
+        f"- Resolved child mission: `{result.get('resolved_child_id')}`",
+        f"- Final approval/continuation AgentRun: `{result.get('final_run_id')}`",
+        f"- Mediation progress policy: `{progress_policy}`",
+        f"- Machine verdict: `{verdict.get('path')}`",
+        f"- Machine summary: `{json.dumps(summary, sort_keys=True)}`",
+        "",
+        "The live strike proved a preference-driven first-round disagreement, "
+        "a server-owned Journey social-authority lock, an external-Agent "
+        "mediation turn that created a materially improved non-regressing "
+        "decision surface, renewed consent from the same relevant signed "
+        "Journey principals, and the inherited R28 same-run approval "
+        "continuation into exactly-once proposal acceptance.",
+        "",
+        "## Truth boundaries",
+        "",
+        "- The harness chose each round-1 response from that member's highest "
+        "server-computed grounded fit; it did not manufacture disagreement by "
+        "proposal array position.",
+        "- The improved compromise was chosen only after the external mediator "
+        "run, from server-recorded `mediation_progress.improved_option_ids`; "
+        "no compromise proposal ID was supplied to the model.",
+        "- Authenticated-member proof is proof of distinct signed Journey "
+        "principals at the CityNexus boundary. It is not proof that two "
+        "physically distinct people operated two separate devices.",
+        "- No post-accept physical travel is claimed. Physical execution is "
+        "NOT PROVEN unless separately attested.",
+        "",
+        "## Stop rule",
+        "",
+        "R29 is closed only for this causal contract. Do not reopen it as "
+        "R29.1 merely to accumulate more receipts.",
+        "",
+    ]
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return str(path)
+
+
 def _first_mission_id(first: dict[str, object]) -> str:
     payload = first.get("payload") or {}
     if not isinstance(payload, dict):
@@ -521,6 +584,9 @@ def main() -> int:
                 journey_id,
                 mission_id,
             )
+            result_path = _write_proven_result(result)
+            if result_path:
+                result["result_path"] = result_path
             print(json.dumps(result, ensure_ascii=True))
             return 0 if result.get("status") == "R29_PROVEN" else 4
         except Exception as exc:
@@ -579,6 +645,9 @@ def main() -> int:
             str(setup["journey_id"]),
             _first_mission_id(first),
         )
+        result_path = _write_proven_result(result)
+        if result_path:
+            result["result_path"] = result_path
         print(
             json.dumps(
                 {"first": first, "r29": result},
