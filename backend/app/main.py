@@ -4513,7 +4513,10 @@ def collective_mutation_gate(
     transition path that reaches this gate must wait for the mediator lineage
     to reach a fresh server-owned RESOLVED collective round.
     """
-    from app.collective_mediation import journey_has_unresolved_collective_mediation
+    from app.collective_mediation import (
+        journey_has_unresolved_collective_mediation,
+        pending_resolved_mediation_selection,
+    )
 
     if journey_has_unresolved_collective_mediation(session, journey.id):
         return {
@@ -4525,6 +4528,30 @@ def collective_mutation_gate(
             "mediation": {
                 "classification": "MEDIATION_REQUIRED",
                 "reason": "EXPLICIT_DISAGREEMENT_AWAITS_RENEWED_MEMBER_CONSENT",
+            },
+            "fit_subject_basis": "PLAN_DIFF",
+        }
+
+    pending_selection = pending_resolved_mediation_selection(
+        session,
+        journey.id,
+        active_plan_version_id=journey.active_plan_version_id,
+    )
+    if (
+        pending_selection is not None
+        and str(target_plan.id)
+        != str(pending_selection["selected_plan_version_id"])
+    ):
+        return {
+            "allowed": False,
+            "code": "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED",
+            "classification": "RESOLVED_MEDIATION_PENDING_CONSUMPTION",
+            "member_count": None,
+            "candidate_fit_matrix": [],
+            "mediation": {
+                "classification": "RESOLVED",
+                "reason": "RENEWED_CONSENT_IS_BOUND_TO_ONE_SELECTED_PLAN",
+                **pending_selection,
             },
             "fit_subject_basis": "PLAN_DIFF",
         }
@@ -4610,10 +4637,24 @@ def collective_mutation_gate(
         })
     refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
     mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    effective_resolved_decision = resolved_decision
+    if (
+        effective_resolved_decision is None
+        and pending_selection is not None
+        and str(target_plan.id)
+        == str(pending_selection["selected_plan_version_id"])
+    ):
+        effective_resolved_decision = {
+            "status": "RESOLVED",
+            "selected_candidate_id": pending_selection["selected_plan_version_id"],
+            "selected_plan_version_id": pending_selection["selected_plan_version_id"],
+            "selected_proposal_id": pending_selection["selected_proposal_id"],
+            "clarification_id": pending_selection["clarification_id"],
+        }
     decision = collective_mutation_decision(
         mediation,
         str(target_plan.id),
-        resolved_decision=resolved_decision,
+        resolved_decision=effective_resolved_decision,
     )
     return {
         **decision,
