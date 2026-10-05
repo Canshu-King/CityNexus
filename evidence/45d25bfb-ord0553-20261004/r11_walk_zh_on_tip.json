@@ -1,0 +1,251 @@
+{
+  "instrument": "cmdra_0553_caps_context_r2",
+  "script_sha256": "1b48d81c4bb59f0eef7d21c5ea9fc5feedf686116e0be081480acf797220a429",
+  "base": "http://127.0.0.1:49881",
+  "locale": "zh",
+  "viewport": "390x844",
+  "entryAssets": [
+    "/assets/index-DLbc3Q3N.js"
+  ],
+  "routesWalked": 14,
+  "apiResponses": 21,
+  "apiResponseList": [
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1006
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 6089
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2660
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 972706
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1679
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 527
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1198
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 408
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 20800
+    },
+    {
+      "url": "/api/v1/places?city_code=CNX-DEMO",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2155
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 95
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/execution-clock",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 209
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/web-observations",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 103
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/collections?traveler_id=11111111-1111-4111-8111-111111111111",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/inbox",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 65
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 421
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 357
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/recycle-bin/journeys",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 122
+    }
+  ],
+  "server_index_file": "(none -- classification done by _census_r5.py)",
+  "indexed_server_strings": 0,
+  "totals": {
+    "painted_hits": 2,
+    "distinct_tokens": 1,
+    "routes_with_hits": 1,
+    "server_answer_tokens": 0,
+    "style_only_tokens": 1
+  },
+  "pageErrors": [],
+  "perRoute": {
+    "/v8/hub": {
+      "hits": [],
+      "docChars": 2957
+    },
+    "/v8/live": {
+      "hits": [],
+      "docChars": 665
+    },
+    "/v8/map": {
+      "hits": [],
+      "docChars": 590
+    },
+    "/v8/studio": {
+      "hits": [],
+      "docChars": 266
+    },
+    "/v8/stay": {
+      "hits": [],
+      "docChars": 208
+    },
+    "/v8/discover": {
+      "hits": [],
+      "docChars": 428
+    },
+    "/v8/bookings": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。",
+          "tag": "p",
+          "cls": "v8-lede",
+          "standalone_line": false,
+          "ancestors": [
+            "p.v8-lede",
+            "div",
+            "div.v8-page-intro.compact",
+            "section.v8-page"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。",
+          "tag": "p",
+          "cls": "v8-lede",
+          "standalone_line": false,
+          "ancestors": [
+            "p.v8-lede",
+            "aside.v9-inbox",
+            "div.v9-wallet-layout",
+            "section.v8-page"
+          ]
+        }
+      ],
+      "docChars": 604
+    },
+    "/v8/agent": {
+      "hits": [],
+      "docChars": 363
+    },
+    "/v8/authoritative": {
+      "hits": [],
+      "docChars": 1653
+    },
+    "/v8/intelligence": {
+      "hits": [],
+      "docChars": 359
+    },
+    "/v8/twin": {
+      "hits": [],
+      "docChars": 340
+    },
+    "/v8/trash": {
+      "hits": [],
+      "docChars": 138
+    },
+    "/v8/trips": {
+      "hits": [],
+      "docChars": 619
+    },
+    "/v8/me": {
+      "hits": [],
+      "docChars": 309
+    }
+  },
+  "census": {
+    "JSON": {
+      "token": "JSON",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/bookings": 2
+      },
+      "slots": {
+        "v8-lede": 2
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    }
+  }
+}
