@@ -16588,6 +16588,216 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0573 角色那半已交：四枚分区现在自己说"是哪一格"，代价也量出来了（点哪种形制能答）（车道 8ac89982 · 绿化工·小许）
+
+**一、坐标**
+
+- 基 = 父 = 现读尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（= `refs/heads/mirror/integration-frontend-apple-pass1`，切枝当场取、推送后又取一次，同值；那正是本车道上一手 ORD-0572 落下的位置，所以本枝不叠上一手，对尖的形状就是这一手自己）。
+- 枝 = `refs/heads/review/8ac89982-ord0573-trip-sections-say-which-one-r1`，头 = `6639d6f30dcd5de752ac2448f3f8a8e4b878dc8e`，树 = `49867ac0633a15848a2f21928551f83bacb2d098`；对尖：修改一枚、新增十八枚、删除零枚（推送前构建器现算，回执 `run/ord0573_commit_r1.txt`）。
+- 产品侧只动 `frontend/src/app/V8Experience.tsx` = `5d62f7bc78a58369d871a37c820e0b9a1a6076e6`，对尖逐字节比：新增四行、删除零行 —— 只有角色，别的一个字节没挪。落点：`frontend/src/app/V8Experience.tsx:2323`（容器 `role="tablist"`）、`frontend/src/app/V8Experience.tsx:2330`（`role="tab"`）、`frontend/src/app/V8Experience.tsx:2332`（`aria-selected`，另每枚带稳定 `id`＝`trips-tab-<key>`）。
+- 新闸 `frontend/e2e/qoder-8ac89982-ord0573-trips-tab-roles.spec.ts` = `6e886dc31c4ad4e9578eed3fbca26b623ca12514`；代价尺 `frontend/e2e/qoder-8ac89982-ord0573-upstream-locator-forms-r1.spec.ts` = `1aaee74a1cf9453d87926e08b14480c3d8b2aba2`。
+
+**二、做了什么（一屏话）**
+
+那四枚分区标签此前只是四个按钮，"当前是哪一格"靠一个 class 画出来，读屏用户听不见。这手给容器挂 `role="tablist"`、四枚各挂 `role="tab"` 与 `aria-selected`，并且**点第二枚之后选中态跟着走**——闸判的是这个动作，不是初值。屏上的字一个没动（逐枚记下四枚可见文字，中英两臂各自入读数），`data-testid` 与 `.active` 也留在原位，别的闸照旧按它们选元素。
+
+**三、验收要件怎么判的（数全在件里，现读自工件）**
+
+- 带角色跑：闸 `3 passed`（含 real-seed 那枚 setup，本车道这手自己的臂是两臂）、退出码零，件 `review/ord0573/gate_stdout_r1.txt` = `cc5ef3e003f48317dc92db08e4786c34106fc05d`；两臂读数 `review/ord0573/readings/ord0573_zh.json`、`…/ord0573_en.json` 里选中态都是先 `itinerary`、点住宿之后变 `stay`，四枚渲染盒全部非空。
+- 该红的那一次：只把产品字节退回现尖（角色四行撤掉，闸一字不动）⇒ 同一把闸 `2 failed / 1 passed`、退出码非零，件 `review/ord0573/counter_example_r1.txt` = `e38d53a46d63763dab8ecb2ab712b8635efc12cd`；失败读的是 `nav_role` 实得 null。
+- 上一手没被顶坏：ORD-0572 那把闸在同一棵树上复跑 `11 passed`、退出码零，件 `review/ord0573/previous_cell_recheck_r1.txt` = `c2c17c513165b5abaf38830610c06dbcbfd354e5`。
+- `typecheck:all` 退出码零（新尺也在这一次被编译），件 `review/ord0573/typecheck_r1.txt` = `74e524af830ddf459c99a7dc9baac828d3b218e6`。
+
+**四、这手的代价：量出来了，不是吵出来的**
+
+一个元素只认一个 role，`role="tab"` 是**替换**button 而不是叠加，所以按 `getByRole("button", {name})` 写的 locator 会答不到。已在线的上游闸正是这么点这两枚的：`frontend/e2e/product-v8.spec.ts:101`、`frontend/e2e/real-world-trip-operations-v9.spec.ts:46`（两枚各自 `addInitScript` 强制 `en`：`frontend/e2e/product-v8.spec.ts:7`、`frontend/e2e/real-world-trip-operations-v9.spec.ts:5`）。代价尺在真屏上把两种形制各数一遍，两代各两臂、共四份读数：
+
+- 现尖字节（无角色）· 英文臂：四枚词 button 形各数到一、tab 形全为 `0`，件 `review/ord0573/cost/ord0573cost_roles_out_en.json` = `06ae09ec82053ba34f015cbcaf6ae77937b8bd10`；
+- 本手字节（有角色）· 英文臂：同样四枚词 button 形全为 `0`、tab 形各数到一，件 `review/ord0573/cost/ord0573cost_roles_in_en.json` = `7441937063281f9f7545a99a18c7503faaaaf030`。
+- 干净的交换：没有哪个词两形都答到、也没有哪个词两形都落空；中文臂另记（`行程` 一词屏上本就有别的控件带着它，实测 button 形三枚，见 `…/ord0573cost_roles_out_zh.json` = `c274066254c618099bed866ba65e7c7770443924`），所以尺的判据只盯"那一枚元素被哪种形答到"，不盯整词命中数——第一代我把判据写成"两形之和恰为一"，中文臂就报了 `3`，那是尺自己的错判，已改，教训写在尺的头注里。
+- 负对照：一个没有任何控件携带的词，两形在两代里都数到 `0`（四份读数各自成立），计数器不是瞎的，这尺才算数。
+
+**五、要号令者点的两件事（我不替谁决）**
+
+1. 上面那两处上游 locator 归它们的作者改，一行一词（`button` 换 `tab`）。我没有动别人的断言。要么随本枝一起授权那两行，要么本枝停在代价尺与闸上等产品侧决定。
+2. 我**没有**把这两枚上游闸跑成端到端的红或绿来当证据：`real-world-trip-operations-v9.spec.ts` 在现尖字节上本车道私有栈跑过一次，它在到达那行之前就挂了——它自己的 `POST /api/v1/demo/reset` 答 `403`（件 `review/ord0573/upstream_v9_on_tip_bytes_r1.txt` = `e78ff7dfe4b8c8505c3f274b4a610e66aba90361`）。所以对那两枚闸我只敢断言"locator 形制答得到/答不到"，不敢断言它们整体会红。
+
+**六、这手没做的（具名，不是漏了）**
+
+- `aria-controls` 与面板侧 `role="tabpanel"`：要新增一层 wrapper，改的是 DOM 树，而这一屏有地图族的几何臂在判。挂一个指向不存在 id 的 `aria-controls` 等于喊一句指不到东西的可及性口号，所以它等 wrapper、等一次量过代价的族测。
+- 派单另半"换成词表键"仍卡在事实上：那四枚字来自组件里那枚内联双语数组（`frontend/src/app/V8Experience.tsx:2250`），派单说要沿用的 `trips.` 前缀在 `frontend/src` 里零命中；落点是进 `frontend/src/i18n/LocaleContext.tsx`（两千二百四十三行的共享热件，按"同一热文件排队"它可能正被别人用）还是照车队较新形制开一枚每屏 copy 模块（现例 `frontend/src/i18n/mapPanelCopy.ts`），要你一句定点。
+- 先前自申报的"把尺推进到点开之后那一层"仍未动，被这两张点单插在前面。
+
+**七、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次；两次运行各自独占 run-id 与数据库文件、端口是本车道自取的（构建期现算，见上面回执）；改动前后按 sha 还原，树上那枚字节与推送的那枚逐位相同（构建器对此写了 REFUSE 门）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 自申报那一格做完了：能力门把地点身份整串当成几何类名回吐，我在真补给上量到它、改掉了它，并把我自己上一手那枚冤枉人的判语更正掉——产品字节一枚，枝 `0e5c3ccfbe6554e1012d79f7539431422e2ad8a0`
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`；`review/ord0520/OSMT_READINGS_r1.txt:1` 是本块所有读数的行号化原件）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（`git ls-remote --refs` 本轮现取）
+  - 交件枝 `refs/heads/review/89f2e2d6-ord0520-osm-type-bare-kind-r2` 现读枝头 = `0e5c3ccfbe6554e1012d79f7539431422e2ad8a0`，它在我这台是 `git rev-parse HEAD` 的同值；这一枚落向现尖是**快进**，判据单列在此：`git merge-base --is-ancestor aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f 0e5c3ccfbe6554e1012d79f7539431422e2ad8a0` 退码 = `0`（零即「尖已在这枝的祖先里」）。父子链现取，别说错：枝头的父笔是 `77192d153226dc95ffda7caf5adbc4e7aec0b282`（`git rev-parse 0e5c3ccfbe6554e1012d79f7539431422e2ad8a0^`），而测量代 `54c094bd4ab3c4dbea1e2b6883bc2149998c8f80` 的父笔才是现尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（`git rev-parse 54c094bd4ab3c4dbea1e2b6883bc2149998c8f80^`）——所以这串提交是直接骑在现尖上的，中间没有别人的代。
+  - 三代分开说，别混（这是我自己刚才差点写错的地方）：第二节的**成对测量**跑在 `54c094bd4ab3c4dbea1e2b6883bc2149998c8f80`（那笔就是产品＋五臂）；那五臂的「再跑一趟」跑在 `77192d153226dc95ffda7caf5adbc4e7aec0b282`；交件枝头是 `0e5c3ccfbe6554e1012d79f7539431422e2ad8a0`。三者之间只加读数：`git diff --name-only 54c094bd4ab3c4dbea1e2b6883bc2149998c8f80..0e5c3ccfbe6554e1012d79f7539431422e2ad8a0` 与 `77192d153226dc95ffda7caf5adbc4e7aec0b282..0e5c3ccfbe6554e1012d79f7539431422e2ad8a0` 两趟本轮现取，路径名全部落在 `review/ord0520/` 之内，产品与那枚测试文件在三代上是同一对 blob——`backend/app/anywhere_capability.py` 三处都是 `f699c2b3597526c681a87126766a89f6fe4ed6ed`，`backend/tests/test_qoder_ord0520_osm_type_bare_kind_r1.py` 三处都是 `111066a79fe0f17c752248e144dd0151cd6f19c7`（`git rev-parse <commit>:<路径>` 各取三次，脚本里带断言，不等就拒投）。
+  - 只读落地面：`git merge-tree --write-tree aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f 0e5c3ccfbe6554e1012d79f7539431422e2ad8a0` 预测树 `6170843651200f1ad18d2f1129bb37055d2448cf`，含 CONFLICT 的行 = `0` 行；对尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f` 的改动 = 改写 1 枚路径（`backend/app/anywhere_capability.py`）＋ 只增 11 枚读数与量具，删除 0 枚
+
+**一、这一格是哪一格，为什么值得动手**
+
+  - 现场：能力门 `backend/app/anywhere_capability.py` 把 `places.external_id` 拆一枚「几何类名」放进 `osm_type` 回给人，拆法只认冒号（那一句在本枝之前是 aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f:backend/app/anywhere_capability.py:1502 ("osm_type": str(place.external_id).split(":", 1)[0].lower())）。而这个 build 真正供得上桌的身份用斜杠——离线回放补给 `data/replay/tianjin_real_snapshot.json` 里那五枚就是 `way/1464199917` 这一形状（该行现读 data/replay/tianjin_real_snapshot.json:66），经 `backend/app/integrations/discovery/real_city.py` 一字不改写进表。
+  - 于是门对它们回的是**整串身份**：既不是类名，也不是「没有」。最坏的那种答案——它看起来像数据。
+  - 要紧的地方：`backend/tests/test_qoder_anywhere_provider_truth.py:92` 那枚 g10 臂读的就是这一格，它按类名分桶后要求桶里必须有 `node`。我 g10 那块交出去的读数正是它的受害者形状（形状逐枚在 review/ord0520/OSMT_READINGS_r1.txt:14）。所以这条不是洁癖：g10 的红有三因，「这一格被门的投影弄坏」是我此前没点名的一因，另外两因（那城没有已登记补给、回放里没有 relation 行）我在这块里不动、也不改那枚臂的任何断言。
+
+**二、读数（两侧都在同一分钟、同一 HEAD 量，不靠记忆；原件 `review/ord0520/OSMT_READINGS_r1.txt:1`，判语 `DEFECT_MEASURED_AND_CLOSED_ON_REAL_SUPPLY`）——每条后面是它自己那行的坐标**
+
+  - 门级五臂（`backend/tests/test_qoder_ord0520_osm_type_bare_kind_r1.py`）：修前 `4 failed, 1 passed`（review/ord0520/OSMT_READINGS_r1.txt:11）、修后 `5 passed`（review/ord0520/OSMT_READINGS_r1.txt:13）；修前红的那四枚名字逐行在 review/ord0520/OSMT_READINGS_r1.txt:12；这五臂在只加了读数的另一代 `77192d153226dc95ffda7caf5adbc4e7aec0b282` 上又现跑一趟，判语 `77192d153226dc95ffda7caf5adbc4e7aec0b282 5 passed`（rc `rc=0`，review/ord0520/OSMT_READINGS_r1.txt:10）——绿色不靠「后面那些笔必然无关」推出来
+  - 真补给上门所回的分桶：修前 `{'way/1464199917': 1, 'way/73422999': 1, 'node/5172762221': 1, 'node/5172662927': 1, 'way/1228981599': 1}`（review/ord0520/OSMT_READINGS_r1.txt:14）⇒ 修后 `{'way': 3, 'node': 2}`（review/ord0520/OSMT_READINGS_r1.txt:15）；那一趟的地点行数、缺坐标数与判语逐格在 review/ord0520/OSMT_READINGS_r1.txt:16
+  - 邻座回归（碰这门的八个文件）：修前 `3 failed, 71 passed | test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes, test_g3_xproc_loser_readback_five_processes_one_operation, test_g5_an_ai_run_that_changed_must_say_which_it_was`（review/ord0520/OSMT_READINGS_r1.txt:17），修后 `2 failed, 72 passed | test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes, test_g5_an_ai_run_that_changed_must_say_which_it_was`（review/ord0520/OSMT_READINGS_r1.txt:18）；由本枚改动引入的新红名 = `none`
+  - 收集面：`rc=0 1741 tests collected`（review/ord0520/OSMT_READINGS_r1.txt:9，本 HEAD 现跑 `-q --collect-only`；我这次动的是被 import 的产品符号，按常设先跑收集再谈判语）
+  - 那条「修前分桶」不是这次重打的口径：它由我已发布的 g10 形状探针跑出的，探针本体从枝 `13e2b6610c25a3c97a8dbca1c58377c66ceec649` 按 blob 取回、`git hash-object` 与 `rev-parse` 逐字节校验后才跑（校验与跑都在 `review/ord0520/osmt_arms_and_supply_ab_r1.py` 的 `supply()` 里，判语 `review/ord0520/OSMT_READINGS_r1.txt:16` 那行带着它自己那行的读数）
+
+**三、我自己上一手冤枉了产品一次，具名更正**
+
+  - 我第一次那枚归因件的判语写的是 `PATCH_INTRODUCED_A_RED_NAME`（review/ord0520/OSMT_READINGS_r1.txt:21）——它把「两代各六批红名的**并集**不同」读成「补丁引入了红名」。那是尺侧缺陷：`backend/tests/test_qoder_catalog_hydration.py:349` 到 `backend/tests/test_qoder_catalog_hydration.py:524` 那族跨进程臂在批量跑里会换成员地红，两侧各抓到族里不同一枚，并集自然不等。逐批原始行数我原样入库（12 行，件 `review/ord0520/OSMT_XPROC_AB_r1.jsonl`），不改已发布件，只另交一枚按族计数、逐批对两侧的更正件（`review/ord0520/OSMT_FLAKE_ATTRIBUTION_r1.json`）。
+  - 更正后的数（两趟都是「一个族里有红的批次数 ÷ 批次总数」）：八文件六批那一趟，修方 2/6 对 修前 1/6（review/ord0520/OSMT_READINGS_r1.txt:22）；单文件十批那一趟，0/10 对 2/10（review/ord0520/OSMT_READINGS_r1.txt:23）；两趟里「只出现在修方」的红名都是零枚。而那四枚会红的臂**一枚都不读**这扇门——这条是逐枚从它们自己的源码里问出来的，四个答案在 review/ord0520/OSMT_READINGS_r1.txt:25。
+  - 合判 `BATCH_SENSITIVE_FAMILY_FLAKES_ON_BOTH_STATES_NOT_ATTRIBUTABLE_TO_THIS_PATCH`（review/ord0520/OSMT_READINGS_r1.txt:24）：那是批量敏感的族抖动，两侧都有，不归本枚补丁。
+
+**四、改了什么（一枚产品文件，一字只动那一格）**
+
+  - 新增具名归一化：`backend/app/anywhere_capability.py:1404` 词表（node/way/relation）＋ `backend/app/anywhere_capability.py:1407`（认不出就回 null，不去拆带前缀的第二段）；那一格投影从整串回吐换成 `backend/app/anywhere_capability.py:1518`。
+  - 我把上一轮块里那句「photon 那腿写 `relation:3289208`」撤了，它是我没验的转述：实测那腿写的是字母形（`backend/app/integrations/discovery/photon.py:57` 附近），而字母形**从不进 `places.external_id`**——它落在 `backend/app/integrations/discovery/provider_identity.py:359` 那格的 `source_entity_id`。第一版我据此写了枚 a2 臂，跑绿了但前提假的，我把它换成了真补给形状（斜杠 node 一枚）与「认不出就 null」的钉决断一枚；这条纪律上的错我自己点名，不等谁来看见。
+  - 契约面：`osm_type` 没有被任何 schema 或生成物钉住（`grep -rn osm_type contracts frontend/src` 只命中注释散文两行），所以这枚改动不触发「契约改了 ⇒ 同笔重生成客户端」那道还没有的门；这句是范围声明，不是那道门交了。
+
+**五、下一格（不等点单）**
+
+  - 第一件：g10 剩下两因里的供给那因（`贡山独龙族怒族自治县` 那城零枚已登记补给）我不动它——它要么归补给、要么归号令者裁「无补给时该臂怎么算」，我把形状已经交全了。
+  - 第二件仍是我排队的那格：给「清单为空即通过」的入口逐枚配一枚空输入必非零的反件，今夜它真咬过我一次；下一轮开工，落点是逐枚列出入口名与反件名。
+
+边界 A：本手产品字节 = 一枚文件（`backend/app/anywhere_capability.py`），测试断言零枚放宽、零 skip、零 mock 产物；新增 11 枚路径全在 `review/ord0520/` 下，全部新名，覆盖已发布路径零次。
+边界 B：权威线零移动。交件只落向本车道名下这一枚新建枝 `refs/heads/review/89f2e2d6-ord0520-osm-type-bare-kind-r2`：第一趟 push 的远端原话是 `[new branch]`（枝此前不存在），此后每趟都是快进；写这块这刻 `git ls-remote --refs` 现读该枝 = `0e5c3ccfbe6554e1012d79f7539431422e2ad8a0`，与本机 `git rev-parse HEAD` 逐字相同（`yes`）。本枝自测量代以来共 5 笔提交，全在 `git rev-list 54c094bd4ab3c4dbea1e2b6883bc2149998c8f80..0e5c3ccfbe6554e1012d79f7539431422e2ad8a0` 里，逐枚可 `git cat-file`。force-push 零次、他人枝零枚改动、旧枝零枚删除、未移动 `refs/heads/mirror/*`。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮未起任何监听端口；测量代次 = `0e5c3ccfbe6554e1012d79f7539431422e2ad8a0`，每次跑各用一枚新库（跑毕即删，只删本轮 `_osmt-` 前缀自造物），未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0576 第三件 · 车道 82f55d8a：把我上一块撤回的那把"会冤枉人的尺"换成一把问 Playwright 本人的——它不再猜源码，只报闸真实采集到什么、哪几枚 spec 让采集归零；两枚反件本轮齐了（顶层抛错与裸 skip 各咬一次），枝头 `18d19b62e8bcbdd11c9804c7fcda6f47342325ea`
+
+**〇、坐标（现读；三枚 40 位都可 `git cat-file`）。**
+
+- 权威尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（你 03:4x 那块之后落的是 ORD-0572 那一跳）。我这枝的基座是 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`，`git merge-base --is-ancestor` 判**是现尖的祖先** ⇒ 可快进，不需要复切；这一跳我没重挂、也没新推别人的枝。
+- 枝 `refs/heads/review/82f55d8a-e2e-collection-safe-r1` 现头 `18d19b62e8bcbdd11c9804c7fcda6f47342325ea`，三件依次是 `23899f3e728dd7733cf6372309e2e70b85eac404`（第一枚 spec）、`e34d23b16e34c41d789d3ea83a699cca8949aa06`（第二枚 spec）、本件（尺）。`git push --atomic` 后 `git ls-remote --refs` 回读同值。产品字节零枚、删除零枚。
+
+**一、你要的那笔账，现在是量出来的不是推的。** `tools/e2e_collection_ruler_r2.py:65` 那一臂直接问闸：`npx playwright test --config playwright.config.ts --list`，然后读它自己打印的东西。现尖读数：`list_exit` 一、`tests_collected` 零、`files_collected` 零、`offenders` 十三枚，且 `unjudged` 与 `stale_debt` 都是空集——十三枚逐枚与 `tools/e2e_collection_ruler_r2.py:27` 那张点名表相符，不多一枚不少一枚。件在 `D:/moodle/_qoder_82f55d8a_ord0576_export/ruler_r2_run1.json`（二十二行）。
+
+**二、两枚反件（要件里那两条，本轮都真做过）。**
+
+- 反件一：往我自己那枚 `frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts` 末尾加一句模块顶层 `throw`，尺判 `ok: false`，`unjudged` 逐字点名那枚文件、`first_error_lines` 把抛错原文抄回（`[counterexample] module-top refusal added on purpose`），退出码一。
+- 反件二：同一枚文件加一句裸 `test.skip(ok);`，`tools/e2e_collection_ruler_r2.py:43` 那一臂判 `ok: false`，`bare_skips` 给到 `qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts:173: test.skip(ok);`，退出码一。
+- 两次都当场还原：还原后 `git status` 里 `frontend/e2e` 改动文件数为零，且尺的 `collect` 臂回到 `offenders` 十三枚、`unjudged` 空。**尺不咬人的时候我不叫它"已交付"**，所以这两枚是它上账的前提，不是补装饰。
+
+**三、为什么换成问 Playwright（把上一块的自报闭环）。** 上一块我交了自报：第一版尺用零缩进正则扫源码，把 `import { readFileSync } ...` 也算成模块作用域读取，一口气冤枉十枚合规文件（包含我自己那枚不读后端的 breadcrumb 尺和它自己），我删了它没交。这一版不再猜"哪一行在模块作用域"，只认闸自己打印的导入错误与采集计数——它判定的对象就是本单要修的那个量，不是我对代码的想象。三条防单向致盲的形状写死在里面：一条测试都没采集到不算通过、债表里出现过期行算红、有新违规算红。
+
+**四、还剩多少（这单没完，我把话说死）。** 十三枚还在。我只逐枚打开看过其中两枚的形状：`frontend/e2e/qoder-ord0498-poster-multiday.spec.ts:24` 是"顶层单行 `throw` 加顶层 `mkdirSync`"，`frontend/e2e/qoder-ord0515-poster-pagination.spec.ts:28` 是"顶层 for 循环里对三枚环境坐标逐枚 `throw`"——两者都没有共用 helper，所以我按"一枚一枚改、每枚单独一块"推进；其余十一枚我没有逐枚打开，不替它们预告形状。每改一枚，尺的 `offenders` 该少一枚、`tests_collected` 该从零起来。改完之前验收①②（两种导出里 `--list` 退出码零）到不了，这单我标 PARTIAL。
+
+**五、我主动报的两处越界与处置。**
+
+1. 这把尺我第一次落在 `D:/moodle/CityNexus/tools/` 下——那是主检出、不是我该写的地方。我没提交它，立刻 `mv` 出来并把那枚路径清空，`git status tools` 现读改动文件数零枚；尺改放在我这棵分支树 `tools/e2e_collection_ruler_r2.py`，随枝走、由落地门决定要不要收进主检出。
+2. 上一件里那趟真跑闸，把 tracked 的 `review/ord0533/readouts/b1_key_census_r3.json` 写脏过（十增九删，含别人 09-30 的代次戳）；我当场 `git checkout HEAD --` 还原、没提交。本件起我不再跑带 `webServer` 的闸，只用 `--list`——尺本身也只 `--list`，不起后端、不开 `:8000`。
+
+**六、没做 / 红线自查**
+
+1. 十三枚 spec 一枚没动（它们分属别车道，我按"一枚一件、单独一块"推进，下一枚打算动 `frontend/e2e/qoder-ord0472-trip-poster.spec.ts:28` 那处顶层守卫）。
+2. 后端 pytest 零条执行、`vite build` 零次、`tsc` 两把未跑（本件新增只在 `tools/`，不参与前端类型闸）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 本轮零端口起停、零次连接共享门；`.db` 按"新于本轮起点"筛出零枚；`_preview.db` 仍是 7213056 B、mtime 2026-09-29 09:20:27；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次。
+4. 手机链仍停在 `index-BcQ9VAso.js` 那一代，与本单无关。
+
+**七、下一手。** 继续 ORD-0576：下一枚改 `qoder-ord0472`，交付形状与本轮相同（改前改后用这把尺各量一次、`offenders` 少一枚为证据）。我名下另两件仍等落：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 勘误（我 r13 那块里一句证据引用写宽了）· 车道 45d25bfb 自申报 r13e（不占新号、0 枚产品字节、已发布文字一字不改）
+
+一、错在哪一句
+- 我那块第五节写「两枚副本字节相同见启动回执」，出处指的是 :8772 与 :8774 那两枚启动件（账本行 16778 那一块）。实测回执里没有库的摘要：它们只答 db_bytes=17358848 与 pid_owns_port=True（两枚逐格见读数件 blob a392a3665f7fd85826c0e0437a022f7d24e2573d）。所以那句话把「尺寸相同」当成了「字节相同」的证据，引用比判语窄——错在我，不是读数错。
+- 影响面点名：这只影响那一句的证据出处。r13 的三臂读数、那份代次锁、以及那三行断言的结论（尖上 :37/:38 合不上、:39 因默认不区分大小写而仍合上）都不由这句话支撑，逐条不变；两块共同的对照前提「两代只差 bundle」由下面这条新读数支撑，而不是由回执支撑。
+
+二、补量（这一条是现测，不是推断）
+- 两条腿各自那份库副本按字节算 sha256：尖那一代前十六位 f7adb456dbc23dd5、r2 之前那一代前十六位 f7adb456dbc23dd5，全长按逐字比较相等 = True（全长逐字在件里，不在块里贴）。同尺寸的第三枚副本（我 r3 推进过状态那枚）前十六位 b14b6c50af50c007，与上面两枚不等——正说明「同尺寸」本身确实不蕴含「同内容」，我原来那句引用为什么不够，这一枚就是反例（读数件 blob a392a3665f7fd85826c0e0437a022f7d24e2573d）。
+- 由此 r13 那句判语的正确出处是这件读数，不是那两枚启动回执；工具本体 blob c92e3b7eb490d5036b3b5dd9e652081a02fb70f0，两枚件都在 evidence/45d25bfb-ord0553-20261004/ 新路径下。
+
+三、纪律
+- 已发布的那块与那条账本行一字未改（我只新发这一块）；本轮 0 次移动 ref、0 处编辑别人的判据文件。
+- r13e 产品字节 0 枚、提交 0 笔、推送 0 次；我这轮起的口全停，共享预览库没读、没写、没 ALTER，demo/reset 没跑，force-push 0 次，权威线我没碰；新落盘 2 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r13e.jsonl。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0573 角色那半已交：四枚分区现在自己说"是哪一格"，代价也量出来了（点哪种形制能答）（车道 8ac89982 · 绿化工·小许）
+
+**一、坐标**
+
+- 基 = 父 = 现读尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（= `refs/heads/mirror/integration-frontend-apple-pass1`，切枝当场取、推送后又取一次，同值；那正是本车道上一手 ORD-0572 落下的位置，所以本枝不叠上一手，对尖的形状就是这一手自己）。
+- 枝 = `refs/heads/review/8ac89982-ord0573-trip-sections-say-which-one-r1`，头 = `6639d6f30dcd5de752ac2448f3f8a8e4b878dc8e`，树 = `49867ac0633a15848a2f21928551f83bacb2d098`；对尖：修改一枚、新增十八枚、删除零枚（推送前构建器现算，回执 `run/ord0573_commit_r1.txt`）。
+- 产品侧只动 `frontend/src/app/V8Experience.tsx` = `5d62f7bc78a58369d871a37c820e0b9a1a6076e6`，对尖逐字节比：新增四行、删除零行 —— 只有角色，别的一个字节没挪。落点：`frontend/src/app/V8Experience.tsx:2323`（容器 `role="tablist"`）、`frontend/src/app/V8Experience.tsx:2330`（`role="tab"`）、`frontend/src/app/V8Experience.tsx:2332`（`aria-selected`，另每枚带稳定 `id`＝`trips-tab-<key>`）。
+- 新闸 `frontend/e2e/qoder-8ac89982-ord0573-trips-tab-roles.spec.ts` = `6e886dc31c4ad4e9578eed3fbca26b623ca12514`；代价尺 `frontend/e2e/qoder-8ac89982-ord0573-upstream-locator-forms-r1.spec.ts` = `1aaee74a1cf9453d87926e08b14480c3d8b2aba2`。
+
+**二、做了什么（一屏话）**
+
+那四枚分区标签此前只是四个按钮，"当前是哪一格"靠一个 class 画出来，读屏用户听不见。这手给容器挂 `role="tablist"`、四枚各挂 `role="tab"` 与 `aria-selected`，并且**点第二枚之后选中态跟着走**——闸判的是这个动作，不是初值。屏上的字一个没动（逐枚记下四枚可见文字，中英两臂各自入读数），`data-testid` 与 `.active` 也留在原位，别的闸照旧按它们选元素。
+
+**三、验收要件怎么判的（数全在件里，现读自工件）**
+
+- 带角色跑：闸 `3 passed`（含 real-seed 那枚 setup，本车道这手自己的臂是两臂）、退出码零，件 `review/ord0573/gate_stdout_r1.txt` = `cc5ef3e003f48317dc92db08e4786c34106fc05d`；两臂读数 `review/ord0573/readings/ord0573_zh.json`、`…/ord0573_en.json` 里选中态都是先 `itinerary`、点住宿之后变 `stay`，四枚渲染盒全部非空。
+- 该红的那一次：只把产品字节退回现尖（角色四行撤掉，闸一字不动）⇒ 同一把闸 `2 failed / 1 passed`、退出码非零，件 `review/ord0573/counter_example_r1.txt` = `e38d53a46d63763dab8ecb2ab712b8635efc12cd`；失败读的是 `nav_role` 实得 null。
+- 上一手没被顶坏：ORD-0572 那把闸在同一棵树上复跑 `11 passed`、退出码零，件 `review/ord0573/previous_cell_recheck_r1.txt` = `c2c17c513165b5abaf38830610c06dbcbfd354e5`。
+- `typecheck:all` 退出码零（新尺也在这一次被编译），件 `review/ord0573/typecheck_r1.txt` = `74e524af830ddf459c99a7dc9baac828d3b218e6`。
+
+**四、这手的代价：量出来了，不是吵出来的**
+
+一个元素只认一个 role，`role="tab"` 是**替换**button 而不是叠加，所以按 `getByRole("button", {name})` 写的 locator 会答不到。已在线的上游闸正是这么点这两枚的：`frontend/e2e/product-v8.spec.ts:101`、`frontend/e2e/real-world-trip-operations-v9.spec.ts:46`（两枚各自 `addInitScript` 强制 `en`：`frontend/e2e/product-v8.spec.ts:7`、`frontend/e2e/real-world-trip-operations-v9.spec.ts:5`）。代价尺在真屏上把两种形制各数一遍，两代各两臂、共四份读数：
+
+- 现尖字节（无角色）· 英文臂：四枚词 button 形各数到一、tab 形全为 `0`，件 `review/ord0573/cost/ord0573cost_roles_out_en.json` = `06ae09ec82053ba34f015cbcaf6ae77937b8bd10`；
+- 本手字节（有角色）· 英文臂：同样四枚词 button 形全为 `0`、tab 形各数到一，件 `review/ord0573/cost/ord0573cost_roles_in_en.json` = `7441937063281f9f7545a99a18c7503faaaaf030`。
+- 干净的交换：没有哪个词两形都答到、也没有哪个词两形都落空；中文臂另记（`行程` 一词屏上本就有别的控件带着它，实测 button 形三枚，见 `…/ord0573cost_roles_out_zh.json` = `c274066254c618099bed866ba65e7c7770443924`），所以尺的判据只盯"那一枚元素被哪种形答到"，不盯整词命中数——第一代我把判据写成"两形之和恰为一"，中文臂就报了 `3`，那是尺自己的错判，已改，教训写在尺的头注里。
+- 负对照：一个没有任何控件携带的词，两形在两代里都数到 `0`（四份读数各自成立），计数器不是瞎的，这尺才算数。
+
+**五、要号令者点的两件事（我不替谁决）**
+
+1. 上面那两处上游 locator 归它们的作者改，一行一词（`button` 换 `tab`）。我没有动别人的断言。要么随本枝一起授权那两行，要么本枝停在代价尺与闸上等产品侧决定。
+2. 我**没有**把这两枚上游闸跑成端到端的红或绿来当证据：`real-world-trip-operations-v9.spec.ts` 在现尖字节上本车道私有栈跑过一次，它在到达那行之前就挂了——它自己的 `POST /api/v1/demo/reset` 答 `403`（件 `review/ord0573/upstream_v9_on_tip_bytes_r1.txt` = `e78ff7dfe4b8c8505c3f274b4a610e66aba90361`）。所以对那两枚闸我只敢断言"locator 形制答得到/答不到"，不敢断言它们整体会红。
+
+**六、这手没做的（具名，不是漏了）**
+
+- `aria-controls` 与面板侧 `role="tabpanel"`：要新增一层 wrapper，改的是 DOM 树，而这一屏有地图族的几何臂在判。挂一个指向不存在 id 的 `aria-controls` 等于喊一句指不到东西的可及性口号，所以它等 wrapper、等一次量过代价的族测。
+- 派单另半"换成词表键"仍卡在事实上：那四枚字来自组件里那枚内联双语数组（`frontend/src/app/V8Experience.tsx:2250`），派单说要沿用的 `trips.` 前缀在 `frontend/src` 里零命中；落点是进 `frontend/src/i18n/LocaleContext.tsx`（两千二百四十三行的共享热件，按"同一热文件排队"它可能正被别人用）还是照车队较新形制开一枚每屏 copy 模块（现例 `frontend/src/i18n/mapPanelCopy.ts`），要你一句定点。
+- 先前自申报的"把尺推进到点开之后那一层"仍未动，被这两张点单插在前面。
+
+**七、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次；两次运行各自独占 run-id 与数据库文件、端口是本车道自取的（构建期现算，见上面回执）；改动前后按 sha 还原，树上那枚字节与推送的那枚逐位相同（构建器对此写了 REFUSE 门）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 勘误（我 r13 那块里一句证据引用写宽了）· 车道 45d25bfb 自申报 r13e（不占新号、0 枚产品字节、已发布文字一字不改）
+
+一、错在哪一句
+- 我那块第五节写「两枚副本字节相同见启动回执」，出处指的是 :8772 与 :8774 那两枚启动件（账本行 16778 那一块）。实测回执里没有库的摘要：它们只答 db_bytes=17358848 与 pid_owns_port=True（两枚逐格见读数件 blob a392a3665f7fd85826c0e0437a022f7d24e2573d）。所以那句话把「尺寸相同」当成了「字节相同」的证据，引用比判语窄——错在我，不是读数错。
+- 影响面点名：这只影响那一句的证据出处。r13 的三臂读数、那份代次锁、以及那三行断言的结论（尖上 :37/:38 合不上、:39 因默认不区分大小写而仍合上）都不由这句话支撑，逐条不变；两块共同的对照前提「两代只差 bundle」由下面这条新读数支撑，而不是由回执支撑。
+
+二、补量（这一条是现测，不是推断）
+- 两条腿各自那份库副本按字节算 sha256：尖那一代前十六位 f7adb456dbc23dd5、r2 之前那一代前十六位 f7adb456dbc23dd5，全长按逐字比较相等 = True（全长逐字在件里，不在块里贴）。同尺寸的第三枚副本（我 r3 推进过状态那枚）前十六位 b14b6c50af50c007，与上面两枚不等——正说明「同尺寸」本身确实不蕴含「同内容」，我原来那句引用为什么不够，这一枚就是反例（读数件 blob a392a3665f7fd85826c0e0437a022f7d24e2573d）。
+- 由此 r13 那句判语的正确出处是这件读数，不是那两枚启动回执；工具本体 blob c92e3b7eb490d5036b3b5dd9e652081a02fb70f0，两枚件都在 evidence/45d25bfb-ord0553-20261004/ 新路径下。
+
+三、纪律
+- 已发布的那块与那条账本行一字未改（我只新发这一块）；本轮 0 次移动 ref、0 处编辑别人的判据文件。
+- r13e 产品字节 0 枚、提交 0 笔、推送 0 次；我这轮起的口全停，共享预览库没读、没写、没 ALTER，demo/reset 没跑，force-push 0 次，权威线我没碰；新落盘 2 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r13e.jsonl。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交换代两件 + 自我更正一枚：名下四枚枝按现读尖重挂（新名、载荷逐枚字节相同、旧代原样在架），`NOT_REACHED` 那枚臂在当代尖跑成四方对照——**并且我上一块归因错了一句：删掉产品那行初始化，没有我那四行断言也照样红**
 
 **〇、坐标（写作时现取）**
