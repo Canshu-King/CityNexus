@@ -1,0 +1,5 @@
+arm_off_deletion rc=1 cause_full: D:\moodle\_qoder_seed_ord0489\wt504\backend\app\integrations\discovery\real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_geocode' where it is not associated with a value
+arm_on_deletion rc=1 cause_full: D:\moodle\_qoder_seed_ord0489\wt504\backend\app\integrations\discovery\real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_geocode' where it is not associated with a value
+payload_numstat: 4	0	backend/tests/test_qoder_city_failure_reasons.py
+assertions_added: 1
+dirty_after=0
