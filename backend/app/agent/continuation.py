@@ -15,7 +15,9 @@ from app.db.models import (
     AgentPendingAction,
     AgentRun,
     AgentRunStep,
+    Journey,
     JourneyMission,
+    ReplanProposal,
 )
 from app.schemas import AgentToolCall
 
@@ -150,6 +152,93 @@ def _append_resume_step(
     return step
 
 
+def _already_applied_accept_replan(
+    session: Session,
+    *,
+    pending: AgentPendingAction,
+    arguments: dict[str, Any],
+    approval_id: str,
+) -> dict[str, Any] | None:
+    """Recover truth after a crash that happened after mutation commit.
+
+    accept_replan can commit the authoritative plan transition before the outer
+    continuation row is marked RESUMED.  In that narrow window the approval is
+    already CONSUMED, so blindly consuming it again would turn a successful
+    mutation into a permanent 409.  Reconstruct success only from durable
+    proposal + Journey truth; never from an optimistic local flag.
+    """
+
+    if pending.tool_name != "accept_replan":
+        return None
+    proposal_id = str(arguments.get("proposal_id") or "")
+    if not proposal_id:
+        return None
+    proposal = session.get(ReplanProposal, proposal_id)
+    if proposal is None or proposal.journey_id != pending.journey_id:
+        return None
+    journey = session.get(Journey, pending.journey_id)
+    if (
+        journey is None
+        or proposal.status != "ACCEPTED"
+        or journey.active_plan_version_id != proposal.proposed_plan_version_id
+    ):
+        return None
+    return {
+        "tool": "accept_replan",
+        "decision": "REQUIRE_CONFIRMATION",
+        "executed": True,
+        "approval_id": approval_id,
+        "status": "CONSUMED",
+        "proposal_id": proposal.id,
+        "result": {
+            "status": "ACCEPTED",
+            "proposal": {
+                "id": proposal.id,
+                "status": proposal.status,
+                "proposed_plan_version_id": proposal.proposed_plan_version_id,
+            },
+            "journey": {
+                "id": journey.id,
+                "active_plan_version_id": journey.active_plan_version_id,
+            },
+        },
+        "continuation_recovered_from_domain_truth": True,
+    }
+
+
+def reconcile_approved_pending_actions(
+    session: Session,
+    *,
+    limit: int = 50,
+) -> dict[str, int]:
+    """Finish approved continuations that survived a process restart."""
+
+    rows = session.scalars(
+        select(AgentPendingAction)
+        .where(AgentPendingAction.status.in_(("PENDING", "RESUMING")))
+        .order_by(AgentPendingAction.created_at, AgentPendingAction.id)
+        .limit(max(1, int(limit)))
+    ).all()
+    resumed = 0
+    waiting = 0
+    failed = 0
+    for pending in rows:
+        approval = session.get(ActionApproval, pending.approval_id)
+        if approval is None or approval.status not in {"APPROVED", "CONSUMED"}:
+            waiting += 1
+            continue
+        outcome = resume_pending_action(session, approval_id=pending.approval_id)
+        if outcome is None:
+            failed += 1
+        elif outcome.get("status") == "RESUMED":
+            resumed += 1
+        elif outcome.get("status") == "FAILED":
+            failed += 1
+        else:
+            waiting += 1
+    return {"resumed": resumed, "waiting": waiting, "failed": failed}
+
+
 def resume_pending_action(
     session: Session,
     *,
@@ -206,16 +295,30 @@ def resume_pending_action(
     # stable across retries and therefore exactly-once at the Gateway boundary.
     arguments["request_id"] = f"agent-resume-{pending.id}"
 
+    recovered = (
+        _already_applied_accept_replan(
+            session,
+            pending=pending,
+            arguments=arguments,
+            approval_id=approval_id,
+        )
+        if approval.status == "CONSUMED"
+        else None
+    )
+
     pending.status = "RESUMING"
     pending.claimed_at = pending.claimed_at or _now()
     pending.updated_at = _now()
     session.commit()
 
     try:
-        from app.agent.gateway import AgentToolGateway
+        if recovered is not None:
+            result = recovered
+        else:
+            from app.agent.gateway import AgentToolGateway
 
-        request = AgentToolCall.model_validate(arguments)
-        result = AgentToolGateway(session).dispatch(pending.tool_name, request)
+            request = AgentToolCall.model_validate(arguments)
+            result = AgentToolGateway(session).dispatch(pending.tool_name, request)
     except HTTPException as exc:
         session.rollback()
         pending = session.get(AgentPendingAction, pending.id)
