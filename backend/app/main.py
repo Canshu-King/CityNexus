@@ -9080,6 +9080,8 @@ def _transition_activity_state(
     activity_id: UUID,
     target_state: str,
     event_type: str,
+    request: Request,
+    attestation: ExecutionTruthAttestation | None,
     session: Session,
 ):
     allowed_predecessors = {
@@ -9119,13 +9121,22 @@ def _transition_activity_state(
             except (KeyError, TypeError, ValueError):
                 raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
     metadata = json.loads(activity.metadata_json or "{}")
+    captured_at = datetime.now(timezone.utc).isoformat()
+    truth = _resolve_execution_truth_attestation(
+        request,
+        session,
+        journey=journey,
+        activity=activity,
+        transition=target_state,
+        captured_at=captured_at,
+        attestation=attestation,
+    )
     actual_key = {
         "EN_ROUTE": "en_route_at",
         "ARRIVED": "arrived_at",
         "IN_PROGRESS": "started_at_actual",
     }.get(target_state)
     if actual_key:
-        captured_at = datetime.now(timezone.utc).isoformat()
         metadata[actual_key] = captured_at
         # Preserve the V11 names for existing consumers while exposing the
         # authoritative V12 execution contract.
@@ -9136,10 +9147,28 @@ def _transition_activity_state(
                 "IN_PROGRESS": "actual_started_at",
             }[target_state]
         ] = captured_at
+    truth_record = append_execution_truth(
+        metadata,
+        kind=str(truth["kind"]),
+        transition=target_state,
+        captured_at=captured_at,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        evidence=dict(truth.get("evidence") or {}),
+    )
     activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
     activity.status = target_state
-    _record_outcome_event(session, journey, activity=activity, event_type=event_type, actor_type="USER")
-    activity.updated_at = datetime.now(timezone.utc).isoformat()
+    _record_outcome_event(
+        session,
+        journey,
+        activity=activity,
+        event_type=event_type,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        occurred_at_actual=captured_at,
+        payload={"execution_truth": truth_record},
+    )
+    activity.updated_at = captured_at
     twin = _twin_snapshot(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
