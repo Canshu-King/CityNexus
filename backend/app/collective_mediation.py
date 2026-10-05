@@ -241,21 +241,31 @@ def mediation_progress_gate(
     previous = [item for item in (previous_options or []) if isinstance(item, Mapping)]
     current = [item for item in (current_options or []) if isinstance(item, Mapping)]
     previous_shapes = {shape(item) for item in previous}
-    previous_ids = {str(item.get("proposal_id")) for item in previous if item.get("proposal_id")}
-    new_options = [
-        item for item in current
-        if str(item.get("proposal_id")) not in previous_ids or shape(item) not in previous_shapes
-    ]
+    # A new database row or proposal id is not a new social choice. Until we
+    # carry an explicit world-fact epoch into this receipt, same-shape options
+    # fail closed even if they were regenerated later.
+    new_options = [item for item in current if shape(item) not in previous_shapes]
     old_min = max((fairness(item)[0] for item in previous), default=0.0)
     old_regret = min((fairness(item)[1] for item in previous), default=1.0)
-    old_unacceptable = set().union(*(fairness(item)[2] for item in previous)) if previous else set()
+    old_unacceptable_sets = [fairness(item)[2] for item in previous]
+    old_best_unacceptable_count = min(
+        (len(values) for values in old_unacceptable_sets),
+        default=0,
+    )
+    old_unacceptable_union = (
+        set().union(*old_unacceptable_sets) if old_unacceptable_sets else set()
+    )
     improved: list[dict[str, Any]] = []
     for item in new_options:
         new_min, new_regret, new_unacceptable = fairness(item)
+        # Compare against the strongest previous boundary, not the union of
+        # everyone harmed by different old options. Otherwise a third option
+        # that still sacrifices one traveler could look like "progress" only
+        # because the two old options sacrificed different travelers.
         improves_boundary = (
             new_min > old_min + 0.001
             or new_regret < old_regret - 0.001
-            or new_unacceptable < old_unacceptable
+            or len(new_unacceptable) < old_best_unacceptable_count
         )
         if improves_boundary:
             improved.append(item)
@@ -273,6 +283,7 @@ def mediation_progress_gate(
         "improved_option_ids": [str(item.get("proposal_id")) for item in improved],
         "previous_minimum_member_fit": round(old_min, 3),
         "previous_maximum_regret": round(old_regret, 3),
-        "previous_unacceptable_member_ids": sorted(old_unacceptable),
+        "previous_unacceptable_member_ids": sorted(old_unacceptable_union),
+        "previous_best_unacceptable_count": old_best_unacceptable_count,
         "new_option_count": len(new_options),
     }
