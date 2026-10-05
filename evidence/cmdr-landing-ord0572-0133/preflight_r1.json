@@ -1,0 +1,239 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-06T01:31:45+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "candidate_ref": "refs/heads/review/8ac89982-ord0572-bottom-bar-says-where-you-are-r1",
+ "candidate_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-8ac89982-ord0572-nav-current.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "review/ord0572/commit_tool_r1.py",
+   "review/ord0572/counter_example_r1.txt",
+   "review/ord0572/gate_full_log_r1.log",
+   "review/ord0572/gate_stdout_r1.txt",
+   "review/ord0572/readings/ord0572_hub_en.json",
+   "review/ord0572/readings/ord0572_hub_zh.json",
+   "review/ord0572/readings/ord0572_live_en.json",
+   "review/ord0572/readings/ord0572_live_zh.json",
+   "review/ord0572/readings/ord0572_map_en.json",
+   "review/ord0572/readings/ord0572_map_zh.json",
+   "review/ord0572/readings/ord0572_me_en.json",
+   "review/ord0572/readings/ord0572_me_zh.json",
+   "review/ord0572/readings/ord0572_trips_en.json",
+   "review/ord0572/readings/ord0572_trips_zh.json",
+   "review/ord0572/typecheck_r1.txt"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "1a88c73727205ea364d09c66e3fc6179eebed017",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_013057",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-8ac89982-ord0572-nav-current.spec.ts",
+    "candidate_blob": "941a8bd1331d0ac6c17c22b65f8be2a775d4ff02",
+    "export_blob": "941a8bd1331d0ac6c17c22b65f8be2a775d4ff02",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "62aa8b83c35a5d408170bc2ad4470ae70e78a136",
+    "export_blob": "62aa8b83c35a5d408170bc2ad4470ae70e78a136",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/commit_tool_r1.py",
+    "candidate_blob": "4fa5ef9782b0a1ad733eb474c63c88e8625f71e8",
+    "export_blob": "4fa5ef9782b0a1ad733eb474c63c88e8625f71e8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/counter_example_r1.txt",
+    "candidate_blob": "ad53a85fc16340ebf3d338d6d6c2a86c1965f0b9",
+    "export_blob": "ad53a85fc16340ebf3d338d6d6c2a86c1965f0b9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/gate_full_log_r1.log",
+    "candidate_blob": "c0aadf53ff19fd082daf1e19dfd8337423d79fd9",
+    "export_blob": "c0aadf53ff19fd082daf1e19dfd8337423d79fd9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/gate_stdout_r1.txt",
+    "candidate_blob": "e417a512d8cacf97332f6aca5424da706c802ae8",
+    "export_blob": "e417a512d8cacf97332f6aca5424da706c802ae8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_hub_en.json",
+    "candidate_blob": "a8d0659e0b600c696f8438d95e7f5aea5267375f",
+    "export_blob": "a8d0659e0b600c696f8438d95e7f5aea5267375f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_hub_zh.json",
+    "candidate_blob": "100114e251c127fb692a38393957a5ad131a603a",
+    "export_blob": "100114e251c127fb692a38393957a5ad131a603a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_live_en.json",
+    "candidate_blob": "c0716925ef9fb74b0f39e8f92c093e203d951d67",
+    "export_blob": "c0716925ef9fb74b0f39e8f92c093e203d951d67",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_live_zh.json",
+    "candidate_blob": "080f4fc23d5fd51952aaaefedae3ad7d01068685",
+    "export_blob": "080f4fc23d5fd51952aaaefedae3ad7d01068685",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_map_en.json",
+    "candidate_blob": "0157d48ef4a77ca3e11ea39ab403b90945167b79",
+    "export_blob": "0157d48ef4a77ca3e11ea39ab403b90945167b79",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_map_zh.json",
+    "candidate_blob": "e2ba32837b603eee5c13dd49bbf98bbccd79a058",
+    "export_blob": "e2ba32837b603eee5c13dd49bbf98bbccd79a058",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_me_en.json",
+    "candidate_blob": "535c340262bb011505dee71bcb5aa1c0829e4d03",
+    "export_blob": "535c340262bb011505dee71bcb5aa1c0829e4d03",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_me_zh.json",
+    "candidate_blob": "521e12f9e08ee40d529a6cb6bd777bfaf16c2eea",
+    "export_blob": "521e12f9e08ee40d529a6cb6bd777bfaf16c2eea",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_trips_en.json",
+    "candidate_blob": "76da03149f7798bf1f9b3499ff766b1af649cd86",
+    "export_blob": "76da03149f7798bf1f9b3499ff766b1af649cd86",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/readings/ord0572_trips_zh.json",
+    "candidate_blob": "d74b18a53285aae0cfd3b6e6722db02f204db58c",
+    "export_blob": "d74b18a53285aae0cfd3b6e6722db02f204db58c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0572/typecheck_r1.txt",
+    "candidate_blob": "74e524af830ddf459c99a7dc9baac828d3b218e6",
+    "export_blob": "74e524af830ddf459c99a7dc9baac828d3b218e6",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1736,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1736 tests collected in 8.16s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CiyY-Q-V.js",
+    "/assets/index-Cb6APFFy.css"
+   ],
+   "live_tree": "1a88c73727205ea364d09c66e3fc6179eebed017",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_aac1142_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+  "branches_route": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
