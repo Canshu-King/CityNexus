@@ -463,6 +463,58 @@ def test_r29_mediator_cannot_mutate_active_reality_before_fresh_collective_round
         assert bypass_exc.value.detail == "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION"
 
 
+def test_r29_core_collective_mutation_gate_blocks_direct_rest_bypass() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    with SessionLocal() as session:
+        parent = session.get(JourneyMission, str(seeded["parent_id"]))
+        clarification = json.loads(parent.clarification_json or "{}")
+        clarification["status"] = "MEDIATION_REQUIRED"
+        parent.clarification_json = json.dumps(clarification, sort_keys=True)
+        parent.status = "ANSWERED"
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                user_text="Mediate the unresolved disagreement.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="CREATED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        target_plan_id = str(seeded["options"][0]["plan_id"])
+        target_plan = session.get(PlanVersion, target_plan_id)
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            target_plan,
+            hard_feasible_plan_ids={target_plan_id},
+            resolved_decision={
+                "status": "RESOLVED",
+                "selected_candidate_id": target_plan_id,
+            },
+        )
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED"
+        assert gate["classification"] == "MEDIATION_REQUIRED"
+
+
 def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
