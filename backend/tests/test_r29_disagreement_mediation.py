@@ -412,3 +412,134 @@ def test_r29_mediator_cannot_mutate_active_reality_before_fresh_collective_round
         assert facts["tool"] == "accept_replan"
         assert facts["reason"] == "FRESH_COLLECTIVE_DECISION_REQUIRED"
 
+def test_r29_fair_compromise_reopens_same_members_for_renewed_consent(monkeypatch) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    mediator_id = str(uuid4())
+    new_plan_id = str(uuid4())
+    new_proposal_id = str(uuid4())
+    now = _now()
+    old_options = list(seeded["options"])
+    fair_option = {
+        "proposal_id": new_proposal_id,
+        "plan_id": new_plan_id,
+        "status": "GROUNDED_FEASIBLE",
+        "fit_subject_place_ids": ["place-craft-garden"],
+        "fit_subject_tags": ["craft", "garden"],
+        "member_fits": {
+            str(seeded["owner_member_id"]): {"effective_fit": 0.7},
+            str(seeded["admin_member_id"]): {"effective_fit": 0.7},
+        },
+        "fairness": {
+            "minimum_member_fit": 0.7,
+            "maximum_regret": 0.0,
+            "unacceptable_member_ids": [],
+        },
+    }
+
+    with SessionLocal() as session:
+        session.add(
+            PlanVersion(
+                id=new_plan_id,
+                journey_id=str(seeded["journey_id"]),
+                version_no=4,
+                planning_mode="balanced",
+                status="CANDIDATE",
+                lifecycle="ACTIVE",
+                source="REPLAN",
+                parent_plan_version_id=str(seeded["base_id"]),
+                total_cost_minor=0,
+                currency="JPY",
+                estimated_duration_min=60,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                explanation_json="{}",
+                mobility_evidence_json="{}",
+                created_at=now,
+            )
+        )
+        session.add(
+            ReplanProposal(
+                id=new_proposal_id,
+                journey_id=str(seeded["journey_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                base_plan_version_id=str(seeded["base_id"]),
+                proposed_plan_version_id=new_plan_id,
+                status="PRESENTED",
+                hard_constraints_passed=True,
+                locked_commitments_preserved=True,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                diff_json="{}",
+                explanation_json="{}",
+                created_at=now,
+            )
+        )
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                user_text="Mediate the unresolved disagreement.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="CREATED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                            "required_member_ids": [
+                                str(seeded["owner_member_id"]),
+                                str(seeded["admin_member_id"]),
+                            ],
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+    def receipt(_session, _journey, _proposals):
+        options = [*old_options, fair_option]
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            # The new option is algorithmically fair. R29 still requires
+            # renewed human consent because the previous round ended in
+            # explicit disagreement.
+            "collective_mediation": {
+                "classification": "COMPROMISE_AVAILABLE",
+                "candidate_ids": [new_plan_id],
+                "selected_candidate_id": new_plan_id,
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    with SessionLocal() as session:
+        request = AgentToolCall(
+            request_id="r29-renew-consent-001",
+            agent_id="r29-test-agent",
+            journey_id=UUID(str(seeded["journey_id"])),
+            mission_id=UUID(mediator_id),
+            trigger_event_id=UUID(str(seeded["event_id"])),
+        )
+        result = AgentToolGateway(session).dispatch(
+            "request_collective_decision",
+            request,
+        )
+        assert result["mission_status"] == "WAITING_FOR_MEMBERS"
+        clarification = result["clarification"]
+        assert clarification["policy"] == "POST_DISAGREEMENT_REQUIRES_RENEWED_MEMBER_CONSENT"
+        assert set(clarification["required_member_ids"]) == {
+            str(seeded["owner_member_id"]),
+            str(seeded["admin_member_id"]),
+        }
+        assert clarification["mediation_progress"]["allowed"] is True
+        assert new_proposal_id in clarification["mediation_progress"]["improved_option_ids"]
+        mission = session.get(JourneyMission, mediator_id)
+        assert mission.status == "WAITING_FOR_MEMBERS"
+
