@@ -32,11 +32,17 @@ def git_text(*args: str) -> str:
 
 
 def grab(relpath: str, needle: str) -> str:
-    text = (TREE / relpath).read_text(encoding="utf-8")
+    """`path:line` read out of the COMMITTED blob (`HEAD:<path>`), not the working tree.
+
+    A working-tree anchor can be true while nothing of it is committed; this way every number quoted
+    in the block exists in what actually lands.
+    """
+
+    text = git_text("show", "HEAD:%s" % relpath)
     for number, line in enumerate(text.splitlines(), start=1):
         if needle in line:
             return "%s:%d" % (relpath, number)
-    raise SystemExit("anchor not found: %r in %s" % (needle, relpath))
+    raise SystemExit("anchor not found: %r in committed %s" % (needle, relpath))
 
 
 def tip_line(needle: str) -> str:
@@ -45,6 +51,38 @@ def tip_line(needle: str) -> str:
         if needle in line:
             return "%s:%d" % (PRODUCT, number)
     raise SystemExit("tip anchor missing: %r" % needle)
+
+
+def projection_before_reading() -> str:
+    """The "before" line belongs to the PARENT's blob, so it is cited as `<commit>:<path>:<line>`.
+
+    A bare `path:line` would be read against the tree the block lands in, and there that line number
+    now points at something else entirely (this run caught it: the number resolves to `):` on my own
+    branch).  Pinning the commit keeps the anchor true after the merge.
+    """
+
+    text = git_text("show", "%s:%s" % (MAIN["parent_tip"], PRODUCT))
+    for number, line in enumerate(text.splitlines(), start=1):
+        if 'str(place.external_id).split(":", 1)[0].lower()' in line:
+            return "%s:%s:%d (%s)" % (
+                MAIN["parent_tip"], PRODUCT, number,
+                json.loads(json.dumps(line.strip()))[:60],
+            )
+    raise SystemExit("the projection line is not in the parent's blob")
+
+
+def projection_after_reading() -> str:
+    """The "after" line is one my commit adds, and it is checked against the COMMITTED blob.
+
+    Reading the working tree would pass even with the patch uncommitted; reading
+    `git rev-parse HEAD:<path>` means the anchor quoted in the block exists in what gets landed.
+    """
+
+    text = git_text("show", "HEAD:%s" % PRODUCT)
+    for number, line in enumerate(text.splitlines(), start=1):
+        if '"osm_type": _place_geometry_kind(place.external_id)' in line:
+            return "%s:%d" % (PRODUCT, number)
+    raise SystemExit("the new projection line is not in HEAD's blob")
 
 
 def collect_only() -> tuple[int, str]:
@@ -101,8 +139,8 @@ lines = [
     "flake_verdict=%s" % FLAKE["verdict"],
     "flaking_arms_read_the_capability_door=%s"
     % json.dumps(FLAKE["do_the_flaking_arms_read_the_capability_door"], ensure_ascii=False),
-    "anchor_projection_before=%s" % tip_line('"osm_type": str(place.external_id).split(":", 1)[0].lower()'),
-    "anchor_projection_after=%s" % grab(PRODUCT, '"osm_type": _place_geometry_kind(place.external_id)'),
+    "anchor_projection_before=%s" % projection_before_reading(),
+    "anchor_projection_after=%s" % projection_after_reading(),
     "anchor_helper_names=%s" % grab(PRODUCT, "_OSM_GEOMETRY_KINDS = (\"node\", \"way\", \"relation\")"),
     "anchor_helper_def=%s" % grab(PRODUCT, "def _place_geometry_kind("),
     "anchor_arm_a1=%s" % grab("backend/tests/test_qoder_ord0520_osm_type_bare_kind_r1.py",
