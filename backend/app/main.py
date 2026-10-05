@@ -4957,6 +4957,7 @@ def collective_mutation_gate(
         # a value choice and must return to the relevant members.
         if (
             stale_prior_authority
+            and resolved_decision is None
             and str(mediation.get("classification") or "")
             != "UNANIMOUS_DOMINANCE"
         ):
@@ -14699,8 +14700,17 @@ def _collective_resolution_for_child(
     ).all()
     receipt = collective_proposal_receipt(session, journey, proposals)
     options = [
-        item for item in receipt.get("proposal_collective_decisions", {}).values()
-        if str(item.get("proposal_id")) in {str(value.get("proposal_id")) for value in stored.get("candidate_options") or []}
+        item
+        for item in receipt.get(
+            "proposal_collective_decisions", {}
+        ).values()
+        if str(item.get("proposal_id"))
+        in {
+            str(value.get("proposal_id"))
+            for value in stored.get("candidate_options") or []
+            if isinstance(value, dict)
+        }
+        and item.get("status") == "GROUNDED_FEASIBLE"
     ]
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
     from app.collective_mediation import collective_decision_epoch
@@ -14713,9 +14723,58 @@ def _collective_resolution_for_child(
         required_member_ids=stored.get("required_member_ids") or [],
         members=members,
     )
-    if epoch != stored.get("decision_epoch") or epoch != resolved.get("decision_epoch"):
+    if (
+        epoch != stored.get("decision_epoch")
+        or epoch != resolved.get("decision_epoch")
+    ):
         raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+
     selected_plan_id = str(proposal.proposed_plan_version_id)
+    selected_plan = session.get(PlanVersion, selected_plan_id)
+    selected_option = next(
+        (
+            item
+            for item in stored.get("candidate_options") or []
+            if isinstance(item, dict)
+            and str(item.get("proposal_id") or "") == str(proposal.id)
+        ),
+        None,
+    )
+    stored_world_epoch = str(stored.get("material_world_epoch") or "")
+    resolved_world_epoch = str(
+        resolved.get("material_world_epoch") or ""
+    )
+    current_world_epoch: str | None = None
+    if stored_world_epoch or resolved_world_epoch:
+        if (
+            selected_plan is None
+            or selected_option is None
+            or not stored_world_epoch
+            or stored_world_epoch != resolved_world_epoch
+        ):
+            raise HTTPException(
+                409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+            )
+        from app.collective_mediation import (
+            collective_material_world_epoch,
+        )
+
+        current_world_basis = collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=list(
+                selected_option.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch = collective_material_world_epoch(
+            current_world_basis
+        )
+        if current_world_epoch != stored_world_epoch:
+            raise HTTPException(
+                409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+            )
+
     return {
         "status": "RESOLVED",
         "selected_proposal_id": str(proposal.id),
@@ -14725,6 +14784,9 @@ def _collective_resolution_for_child(
         "selected_candidate_id": selected_plan_id,
         "selected_plan_version_id": selected_plan_id,
         "decision_epoch": epoch,
+        "material_world_epoch": (
+            current_world_epoch or stored_world_epoch or None
+        ),
         "clarification_id": stored.get("clarification_id"),
     }
 
