@@ -2295,6 +2295,8 @@ def approve_agent_action(
     from app.agent.continuation import resume_pending_action
 
     actor_id = journey.traveler_id
+    principal = None
+    member = None
     if settings.traveler_auth_secret:
         from app.traveler_principal import (
             member_has_capability,
@@ -2329,6 +2331,34 @@ def approve_agent_action(
         step_up_code=payload.step_up_code if payload else None,
         actor_id=actor_id,
     )
+    if principal is not None and member is not None:
+        existing_principal_audit = session.scalar(
+            select(AuditLog).where(
+                AuditLog.action == "agent.action_approval.principal_bound",
+                AuditLog.entity_type == "ActionApproval",
+                AuditLog.entity_id == approval.id,
+                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                AuditLog.actor_id == principal.traveler_id,
+            )
+        )
+        if existing_principal_audit is None:
+            record_audit(
+                session,
+                action="agent.action_approval.principal_bound",
+                entity_type="ActionApproval",
+                entity_id=approval.id,
+                journey_id=journey.id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=principal.traveler_id,
+                after={
+                    "approval_id": approval.id,
+                    "member_id": member.id,
+                    "role": member.role,
+                    "auth_method": principal.auth_method,
+                    "approval_status": approval.status,
+                },
+            )
+            session.commit()
     continuation = resume_pending_action(session, approval_id=str(approval_id))
     if continuation is None:
         # Approvals created by direct/manual tool calls retain the historical
