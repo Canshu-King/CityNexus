@@ -2765,9 +2765,17 @@ def answer_collective_clarification(
                 trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
                 parent_mission_id=parent.id,
             )
-            child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
-            child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
-            child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+            # A disagreement-mediation child is a continuation of the same
+            # bounded mission.  Copy the parent envelope exactly: the
+            # create_mission defaults are zero, so min(default, parent) would
+            # silently collapse a valid parent budget and change the mission's
+            # authority rather than inheriting it.
+            child.max_cost_delta_minor = parent.max_cost_delta_minor
+            child.max_loss_minor = parent.max_loss_minor
+            child.max_schedule_drift_min = parent.max_schedule_drift_min
+            child.protected_activity_ids_json = parent.protected_activity_ids_json
+            child.mutable_activity_ids_json = parent.mutable_activity_ids_json
+            child.allowed_action_classes_json = parent.allowed_action_classes_json
             member_choices = [
                 {
                     "member_id": member_key,

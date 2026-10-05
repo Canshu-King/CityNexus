@@ -204,3 +204,75 @@ def classify_group_decision(candidates: list[dict[str, Any]]) -> dict[str, Any]:
         if max(fits) - min(fits) > 0.05 or min(fits) < 0.35:
             relevant.append(member_id)
     return {"classification": "HUMAN_TRADEOFF_REQUIRED", "candidate_ids": [item.get("candidate_id") for item in candidates], "decision_relevant_member_ids": relevant}
+
+
+def mediation_progress_gate(
+    previous_options: Iterable[Mapping[str, Any]] | None,
+    current_options: Iterable[Mapping[str, Any]] | None,
+) -> dict[str, Any]:
+    """Require a mediator round to change the executable decision surface.
+
+    Proposal ids are deliberately excluded from the shape comparison: a new
+    row containing the same itinerary is not a new future.  A new option must
+    introduce a different grounded place/tag shape and improve a measurable
+    fairness boundary (or remove an unacceptable member).  The result is a
+    compact receipt suitable for durable mission JSON and does not select an
+    authority or call a provider.
+    """
+
+    def shape(item: Mapping[str, Any]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+        places = tuple(sorted({str(value) for value in (item.get("fit_subject_place_ids") or []) if value}))
+        tags = tuple(sorted({str(value).strip().lower() for value in (item.get("fit_subject_tags") or []) if value}))
+        return places, tags
+
+    def fairness(item: Mapping[str, Any]) -> tuple[float, float, set[str]]:
+        receipt = item.get("fairness") or {}
+        try:
+            minimum = float(receipt.get("minimum_member_fit"))
+        except (TypeError, ValueError):
+            minimum = 0.0
+        try:
+            regret = float(receipt.get("maximum_regret"))
+        except (TypeError, ValueError):
+            regret = 1.0
+        unacceptable = {str(value) for value in (receipt.get("unacceptable_member_ids") or [])}
+        return minimum, regret, unacceptable
+
+    previous = [item for item in (previous_options or []) if isinstance(item, Mapping)]
+    current = [item for item in (current_options or []) if isinstance(item, Mapping)]
+    previous_shapes = {shape(item) for item in previous}
+    previous_ids = {str(item.get("proposal_id")) for item in previous if item.get("proposal_id")}
+    new_options = [
+        item for item in current
+        if str(item.get("proposal_id")) not in previous_ids or shape(item) not in previous_shapes
+    ]
+    old_min = max((fairness(item)[0] for item in previous), default=0.0)
+    old_regret = min((fairness(item)[1] for item in previous), default=1.0)
+    old_unacceptable = set().union(*(fairness(item)[2] for item in previous)) if previous else set()
+    improved: list[dict[str, Any]] = []
+    for item in new_options:
+        new_min, new_regret, new_unacceptable = fairness(item)
+        improves_boundary = (
+            new_min > old_min + 0.001
+            or new_regret < old_regret - 0.001
+            or new_unacceptable < old_unacceptable
+        )
+        if improves_boundary:
+            improved.append(item)
+    return {
+        "allowed": bool(improved),
+        "code": None if improved else "MEDIATION_NO_PROGRESS",
+        "previous_option_shapes": [
+            {"places": list(places), "tags": list(tags)}
+            for places, tags in sorted(previous_shapes)
+        ],
+        "new_option_shapes": [
+            {"places": list(shape(item)[0]), "tags": list(shape(item)[1])}
+            for item in new_options
+        ],
+        "improved_option_ids": [str(item.get("proposal_id")) for item in improved],
+        "previous_minimum_member_fit": round(old_min, 3),
+        "previous_maximum_regret": round(old_regret, 3),
+        "previous_unacceptable_member_ids": sorted(old_unacceptable),
+        "new_option_count": len(new_options),
+    }

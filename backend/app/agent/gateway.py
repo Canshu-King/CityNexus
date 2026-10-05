@@ -1741,6 +1741,33 @@ class AgentToolGateway:
             options.append(item)
         if len(options) < 2 or mediation.get("classification") != "HUMAN_TRADEOFF_REQUIRED":
             raise HTTPException(409, "COLLECTIVE_TRADEOFF_NOT_REQUIRED")
+
+        # A mediator child must make measurable progress.  Proposal ids alone
+        # are not progress: a freshly persisted copy of the same two plans
+        # would otherwise reopen the same questionnaire indefinitely.
+        mediation_progress = None
+        try:
+            mission_intent = json.loads(mission.resolved_intent_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            mission_intent = {}
+        mediation_intent = mission_intent.get("collective_mediation")
+        if isinstance(mediation_intent, dict) and mediation_intent.get("kind") == "DISAGREEMENT_MEDIATION":
+            source_id = str(mediation_intent.get("source_mission_id") or "")
+            source = self.session.get(JourneyMission, source_id) if source_id else None
+            if source is None or source.journey_id != journey.id:
+                raise HTTPException(409, "MEDIATION_PROGRESS_CONTEXT_MISSING")
+            try:
+                source_clarification = json.loads(source.clarification_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                source_clarification = {}
+            from app.collective_mediation import mediation_progress_gate
+
+            mediation_progress = mediation_progress_gate(
+                source_clarification.get("candidate_options") or [],
+                options,
+            )
+            if not mediation_progress.get("allowed"):
+                raise HTTPException(409, "MEDIATION_NO_PROGRESS")
         members = active_journey_members_with_capabilities(self.session, journey).get("members", [])
         member_by_id = {str(item.get("member_id")): item for item in members}
         relevant_ids = {str(item) for item in (mediation.get("decision_relevant_member_ids") or [])}
@@ -1772,6 +1799,8 @@ class AgentToolGateway:
             "selected_proposal_id": None,
             "selected_candidate_id": None,
         }
+        if mediation_progress is not None:
+            payload["mediation_progress"] = mediation_progress
         mission.clarification_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
         mission.status = "WAITING_FOR_MEMBERS"
         mission.completed_at = None
@@ -1783,7 +1812,12 @@ class AgentToolGateway:
             journey_id=journey.id,
             actor_type="AI_AGENT",
             actor_id=request.agent_id,
-            after={"clarification_id": clarification_id, "status": "WAITING_FOR_MEMBERS", "required_member_ids": required_ids},
+            after={
+                "clarification_id": clarification_id,
+                "status": "WAITING_FOR_MEMBERS",
+                "required_member_ids": required_ids,
+                "mediation_progress": mediation_progress,
+            },
         )
         self.session.commit()
         return {
