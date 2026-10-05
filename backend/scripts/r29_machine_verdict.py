@@ -228,12 +228,22 @@ def build_verdict(run_id: str) -> dict[str, Any]:
         mediator_steps: list[AgentRunStep] = []
         for candidate in mediator_runs:
             steps = _run_steps(session, candidate.id)
-            if any(
-                step.tool_name == "request_collective_decision"
-                and (_json(step.result_json, {}) or {}).get("mission_status")
-                == "WAITING_FOR_MEMBERS"
-                for step in steps
-            ):
+            reached_round = False
+            for step in steps:
+                result = _json(step.result_json, {})
+                if (
+                    step.tool_name == "request_collective_decision"
+                    and isinstance(result, dict)
+                    and result.get("mission_status") == "WAITING_FOR_MEMBERS"
+                ):
+                    reached_round = True
+                    break
+            if not reached_round:
+                continue
+            if mediator_run is None:
+                mediator_run = candidate
+                mediator_steps = steps
+            if _looks_external(candidate.provider_key, candidate.model_key):
                 mediator_run = candidate
                 mediator_steps = steps
                 break
