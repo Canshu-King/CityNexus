@@ -37,7 +37,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
     # reasoning before emitting a call. Keep a single bounded retry, but leave
     # enough room for a real tool call instead of silently switching to the
     # deterministic controller.
-    _empty_message_retry_max_tokens = 2400
+    _empty_message_retry_max_tokens = 9600
 
     def __init__(
         self,

@@ -1,0 +1,297 @@
+{
+  "inputs": {
+    "final_agent_run_id": "c84ab0d7-cbd1-4223-be3a-62ce26663d66"
+  },
+  "r28_binding": {
+    "approval_id": "a499ff5f-1b42-4fd4-81d1-62d3a3011080",
+    "journey_id": "c1468e56-dac1-489c-9aa4-fcdd4ce34898",
+    "mission_id": "7190bb69-ebeb-4ca1-a6bb-33632d2460ea",
+    "pending_action_id": "aa5101e1-9c4a-4cca-be5f-f4ac1d7ab2a3",
+    "proposal_id": "c9f91f84-f02f-4980-b4fc-98cd127e33ea"
+  },
+  "r28_summary": {
+    "CONTRADICTED": 0,
+    "NOT_PROVEN": 0,
+    "PROVEN": 14,
+    "overall": "PROVEN"
+  },
+  "schema_version": "R29_MACHINE_VERDICT_V1",
+  "summary": {
+    "CONTRADICTED": 0,
+    "NOT_PROVEN": 0,
+    "PROVEN": 13,
+    "overall": "PROVEN"
+  },
+  "verdicts": {
+    "authenticated_disagreement_state": {
+      "facts": {
+        "distinct_proposal_ids": [
+          "313e68b3-c057-4b2d-86d5-c497b4e0f47d",
+          "52b93198-f955-4000-b4a0-7b05eaf8f5d8"
+        ],
+        "member_choices": {
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3": "52b93198-f955-4000-b4a0-7b05eaf8f5d8",
+          "facea812-d92a-450a-8096-55b77fcf3a73": "313e68b3-c057-4b2d-86d5-c497b4e0f47d"
+        },
+        "mission_status": "MEDIATION_REQUIRED",
+        "required_member_ids": [
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+          "facea812-d92a-450a-8096-55b77fcf3a73"
+        ],
+        "selected_proposal_id": null
+      },
+      "reason": "Round 1 durably records distinct member choices and no selected winner.",
+      "status": "PROVEN"
+    },
+    "journey_social_authority_lock_released": {
+      "facts": {
+        "journey_id": "c1468e56-dac1-489c-9aa4-fcdd4ce34898"
+      },
+      "reason": "The disagreement lock cleared only after the descendant collective round resolved.",
+      "status": "PROVEN"
+    },
+    "material_decision_surface_progress": {
+      "facts": {
+        "final_proposal_id": "c9f91f84-f02f-4980-b4fc-98cd127e33ea",
+        "mediation_progress": {
+          "allowed": true,
+          "code": null,
+          "improved_option_ids": [
+            "b8d27df9-213c-44f5-b88a-4de2a4396c11",
+            "c9f91f84-f02f-4980-b4fc-98cd127e33ea"
+          ],
+          "new_option_count": 2,
+          "new_option_shapes": [
+            {
+              "places": [
+                "real-place-8c09b32224152e3e1ae12843",
+                "real-place-ebd30de67691cab346be66ec"
+              ],
+              "tags": [
+                "garden",
+                "indoor",
+                "museum",
+                "outdoor",
+                "real_city"
+              ]
+            },
+            {
+              "places": [
+                "real-place-8c09b32224152e3e1ae12843",
+                "real-place-ebd30de67691cab346be66ec"
+              ],
+              "tags": [
+                "garden",
+                "indoor",
+                "museum",
+                "outdoor",
+                "real_city"
+              ]
+            }
+          ],
+          "previous_best_unacceptable_count": 1,
+          "previous_maximum_regret": 1.0,
+          "previous_minimum_member_fit": 0.0,
+          "previous_option_shapes": [
+            {
+              "places": [
+                "real-place-8c09b32224152e3e1ae12843"
+              ],
+              "tags": [
+                "indoor",
+                "museum",
+                "real_city"
+              ]
+            },
+            {
+              "places": [
+                "real-place-ebd30de67691cab346be66ec"
+              ],
+              "tags": [
+                "garden",
+                "outdoor",
+                "real_city"
+              ]
+            }
+          ],
+          "previous_unacceptable_member_ids": [
+            "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+            "facea812-d92a-450a-8096-55b77fcf3a73"
+          ],
+          "progress_policy": "NON_REGRESSING_PARETO_BOUNDARY_WITH_STRICT_IMPROVEMENT"
+        },
+        "round2_status": "RESOLVED",
+        "selected_proposal_id": "c9f91f84-f02f-4980-b4fc-98cd127e33ea"
+      },
+      "reason": "The finally accepted proposal is a machine-recorded improved mediation option.",
+      "status": "PROVEN"
+    },
+    "mediation_lineage": {
+      "facts": {
+        "final_mission_id": "7190bb69-ebeb-4ca1-a6bb-33632d2460ea",
+        "mediation_kind": "DISAGREEMENT_MEDIATION",
+        "mediator_mission_id": "8506e3c0-b8e1-4b6d-a37b-a5c5333f07de",
+        "round1_mission_id": "372d9c02-1918-4f41-ae96-a96d8ff69b27"
+      },
+      "reason": "Final mutation lineage descends from the disagreement mediator.",
+      "status": "PROVEN"
+    },
+    "mediator_did_not_choose_winner": {
+      "facts": {
+        "executed_mutations": []
+      },
+      "reason": "Mediator changed no active reality before renewed human consent.",
+      "status": "PROVEN"
+    },
+    "member_preferences_unchanged": {
+      "facts": {
+        "baseline": {
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3": [
+            {
+              "category": "interest",
+              "key": "museum",
+              "value": true,
+              "weight": 1.0
+            }
+          ],
+          "facea812-d92a-450a-8096-55b77fcf3a73": [
+            {
+              "category": "interest",
+              "key": "garden",
+              "value": true,
+              "weight": 1.0
+            }
+          ]
+        },
+        "current": {
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3": [
+            {
+              "category": "interest",
+              "key": "museum",
+              "value": true,
+              "weight": 1.0
+            }
+          ],
+          "facea812-d92a-450a-8096-55b77fcf3a73": [
+            {
+              "category": "interest",
+              "key": "garden",
+              "value": true,
+              "weight": 1.0
+            }
+          ]
+        }
+      },
+      "reason": "Journey-scoped member preferences match the mediation-start baseline.",
+      "status": "PROVEN"
+    },
+    "preference_driven_round1_disagreement": {
+      "facts": {
+        "members": {
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3": {
+            "best_proposal_ids": [
+              "52b93198-f955-4000-b4a0-7b05eaf8f5d8"
+            ],
+            "best_score": 1.0,
+            "chosen_proposal_id": "52b93198-f955-4000-b4a0-7b05eaf8f5d8",
+            "unique_best": true
+          },
+          "facea812-d92a-450a-8096-55b77fcf3a73": {
+            "best_proposal_ids": [
+              "313e68b3-c057-4b2d-86d5-c497b4e0f47d"
+            ],
+            "best_score": 1.0,
+            "chosen_proposal_id": "313e68b3-c057-4b2d-86d5-c497b4e0f47d",
+            "unique_best": true
+          }
+        }
+      },
+      "reason": "Each relevant member had one unique server-grounded maximum-fit option, chose it, and those optima diverged.",
+      "status": "PROVEN"
+    },
+    "r28_continuation_invariants": {
+      "facts": {
+        "r28_summary": {
+          "CONTRADICTED": 0,
+          "NOT_PROVEN": 0,
+          "PROVEN": 14,
+          "overall": "PROVEN"
+        }
+      },
+      "reason": "R28 same-run approval, accepted-plan, C4 and execution-truth invariants remain proven.",
+      "status": "PROVEN"
+    },
+    "real_external_mediator": {
+      "facts": {
+        "model_key": "cn:glm-5.3-flash",
+        "provider_key": "hermes",
+        "run_id": "e02372d8-018f-4823-81d7-794e3443c3b5"
+      },
+      "reason": "A configured external Agent produced the fresh collective round.",
+      "status": "PROVEN"
+    },
+    "real_external_round1_agent": {
+      "facts": {
+        "model_key": "cn:glm-5.3-flash",
+        "provider_key": "hermes",
+        "run_id": "934e44a9-bd7f-40fb-b546-c8f74a0eef9d"
+      },
+      "reason": "A configured external Agent opened the first collective decision.",
+      "status": "PROVEN"
+    },
+    "renewed_authenticated_consent": {
+      "facts": {
+        "authenticated_member_ids": [
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+          "facea812-d92a-450a-8096-55b77fcf3a73"
+        ],
+        "authenticated_traveler_ids": [
+          "1ef51747-4d3d-4083-9b99-2741d8fcb063",
+          "c674028b-e2be-4ec4-ab04-0788c231a8a0"
+        ],
+        "policy": "POST_DISAGREEMENT_REQUIRES_RENEWED_MEMBER_CONSENT",
+        "required_member_ids": [
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+          "facea812-d92a-450a-8096-55b77fcf3a73"
+        ],
+        "source_required_member_ids": [
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+          "facea812-d92a-450a-8096-55b77fcf3a73"
+        ]
+      },
+      "reason": "The same relevant member set authenticated again on the improved decision surface.",
+      "status": "PROVEN"
+    },
+    "round1_authenticated_principals": {
+      "facts": {
+        "authenticated_member_ids": [
+          "6b48ccb8-abd1-4665-966e-03564fbef7b3",
+          "facea812-d92a-450a-8096-55b77fcf3a73"
+        ],
+        "authenticated_traveler_ids": [
+          "1ef51747-4d3d-4083-9b99-2741d8fcb063",
+          "c674028b-e2be-4ec4-ab04-0788c231a8a0"
+        ]
+      },
+      "reason": "Every required round-1 answer is bound to authenticated traveler audits.",
+      "status": "PROVEN"
+    },
+    "round1_proposals_not_laundered": {
+      "facts": {
+        "disputed": [
+          {
+            "proposal_id": "313e68b3-c057-4b2d-86d5-c497b4e0f47d",
+            "status": "INVALIDATED"
+          },
+          {
+            "proposal_id": "52b93198-f955-4000-b4a0-7b05eaf8f5d8",
+            "status": "INVALIDATED"
+          }
+        ],
+        "final_proposal_id": "c9f91f84-f02f-4980-b4fc-98cd127e33ea"
+      },
+      "reason": "No disputed round-1 proposal became the accepted result.",
+      "status": "PROVEN"
+    }
+  }
+}

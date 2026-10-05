@@ -162,7 +162,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             "Round 1 durably records distinct member choices and no selected winner."
             if disagreement_ok
             else "Round 1 does not prove a genuine unresolved disagreement.",
-            status=round1_payload.get("status"),
+            mission_status=round1_payload.get("status"),
             required_member_ids=sorted(round1_required),
             member_choices=round1_choices,
             distinct_proposal_ids=sorted(distinct_round1_choices),

@@ -78,11 +78,18 @@ def _copy_catalog(session) -> dict[str, str]:
         "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
         "real-place-ebd30de67691cab346be66ec": "candidate_garden",
         "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+        # Keep the protected appointment on a distinct provider-backed venue.
+        # The mediator must be able to recombine the two disputed interests
+        # while preserving the C4 anchor; using the museum that was also a
+        # round-1 candidate made every multi-place composition lose the lock.
+        "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum",
     }
     try:
         columns = {column.name for column in Place.__table__.columns}
+        placeholders = ",".join("?" for _ in selected)
+        selected_ids = tuple(selected)
         rows = source.execute(
-            "SELECT * FROM places WHERE id IN (?,?,?,?)", tuple(selected)
+            f"SELECT * FROM places WHERE id IN ({placeholders})", selected_ids
         ).fetchall()
         if len(rows) != len(selected):
             raise RuntimeError(f"captured provider world is incomplete: {len(rows)} place rows")
@@ -91,7 +98,7 @@ def _copy_catalog(session) -> dict[str, str]:
         ])
         service_columns = {column.name for column in CityService.__table__.columns}
         services = source.execute(
-            "SELECT * FROM city_services WHERE place_id IN (?,?,?,?)", tuple(selected)
+            f"SELECT * FROM city_services WHERE place_id IN ({placeholders})", selected_ids
         ).fetchall()
         if services:
             session.execute(CityService.__table__.insert(), [
@@ -168,7 +175,7 @@ def _api_setup(db: Path) -> dict[str, object]:
         f"/api/v1/journeys/{journey_id}/plans/generate",
         json={"candidate_count": 1, "place_ids": [
             "real-place-22cf72809897ff4c7f312fcf",
-            "real-place-b47a20314c81d5a81381d4a4",
+            "real-place-a346e8f7f72a4d8f523d81e3",
         ]},
     )
     if current_plan.status_code not in {200, 201}:
@@ -204,6 +211,7 @@ def _api_setup(db: Path) -> dict[str, object]:
             kind="APPOINTMENT", level="C4_Anchored", status="ACTIVE",
             monetary_value_minor=0, monetary_value_status="KNOWN", currency="JPY",
             external_ref="R28-C4-ANCHOR", policy_json=json.dumps({
+                "anchor_role": "MID_TRIP",
                 "semantic_key": anchor.place_id, "scheduled_start_at": anchor.start_at,
                 "source": "R28_OPERATOR_SETUP_PROVIDER_BACKED",
             }), created_at=now, updated_at=now,

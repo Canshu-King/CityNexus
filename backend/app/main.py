@@ -12,6 +12,7 @@ import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from itertools import permutations
 from threading import RLock
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
@@ -11033,6 +11034,11 @@ def _replan_payload(item: ReplanProposalModel) -> dict[str, Any]:
 class _ReplanCandidateSpec:
     family: str
     replacement_choice: Any | None
+    # An opportunity window can contain more than one grounded stop.  Keep the
+    # individual provider-backed choices on the spec so the persisted proposal
+    # can prove the whole recombined itinerary, while the legacy single-choice
+    # field continues to serve replacement and scoring paths.
+    insertion_choices: tuple[Any, ...] = ()
     candidate_delay: int = 0
     candidate_remove: bool = False
     window_evidence: dict[str, Any] | None = None
@@ -11909,6 +11915,14 @@ def generate_replan(
         for opportunity_choice in opportunity_choices:
             _need_pair(_activity_location(current_execution), opportunity_choice.place_id)
             _need_pair(opportunity_choice.place_id, _activity_location(opportunity_anchor))
+        # A mediator may recombine more than one grounded opportunity into a
+        # single executable future.  Capture every adjacent pair up front so
+        # the compound proposal below never falls back to an invented travel
+        # constant when it is re-timed and revalidated.
+        for left in opportunity_choices:
+            for right in opportunity_choices:
+                if left.place_id != right.place_id:
+                    _need_pair(left.place_id, right.place_id)
     for choice in replacement_choices:
         _need_pair(_activity_location(current_execution or previous_affected), choice.place_id)
         _need_pair(_activity_location(previous_affected), choice.place_id)
@@ -12229,6 +12243,7 @@ def generate_replan(
     # the exception's own attributes, not from parsing that message back apart.
     mobility_gaps: list[dict[str, Any]] = []
     heuristic_specs: list[_ReplanCandidateSpec] = []
+    compound_opportunity_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
     if opportunity_choices and opportunity_anchor is not None:
@@ -12299,6 +12314,132 @@ def generate_replan(
                 )
             else:
                 failed_reasons.update(evidence.failures)
+        # Replanning must expose the same genuinely changed shared future that
+        # exploratory composition can discover.  Single-place F4 insertions
+        # cannot represent a fair garden+museum itinerary, so also evaluate
+        # bounded permutations of two or three distinct grounded Places.  The
+        # provider facts, route legs, opening windows, budget, and final plan
+        # feasibility gate remain authoritative.
+        if len(opportunity_choices) >= 2:
+            max_insertions = min(3, len(opportunity_choices))
+            for insertion_count in range(2, max_insertions + 1):
+                for ordered_choices in permutations(opportunity_choices, insertion_count):
+                    candidate_cost = sum(int(item.cost_minor) for item in ordered_choices)
+                    budget_remaining = journey.budget_amount_minor - sum(
+                        int(item.estimated_cost_minor) for item in source
+                    )
+                    previous_location = _activity_location(current_execution)
+                    cursor = effective_event_time
+                    scheduled_insertions: list[dict[str, Any]] = []
+                    failed_schedule = False
+                    try:
+                        for choice in ordered_choices:
+                            inbound_leg = _replan_estimate(
+                                session,
+                                journey,
+                                mobility,
+                                previous_location,
+                                choice.place_id,
+                                operation_key=(
+                                    f"opportunity-compound-inbound:{trigger_id}:"
+                                    f"{previous_location}:{choice.place_id}"
+                                ),
+                            )
+                            candidate_place = session.get(Place, choice.place_id)
+                            opening = normalize_opening_hours(
+                                json.loads(candidate_place.opening_hours_json or "{}")
+                            )
+                            start_at = cursor + timedelta(minutes=inbound_leg)
+                            opens_at = _at_local_time(opening.get("open"))
+                            closes_at = _at_local_time(opening.get("close"))
+                            if opens_at is not None and start_at < opens_at:
+                                start_at = opens_at
+                            end_at = start_at + timedelta(minutes=choice.duration_min)
+                            if closes_at is not None and end_at > closes_at:
+                                failed_schedule = True
+                                break
+                            scheduled_insertions.append(
+                                {
+                                    "place_id": choice.place_id,
+                                    "start_at": start_at.isoformat(),
+                                    "end_at": end_at.isoformat(),
+                                    "travel_from_prev_min": int(inbound_leg),
+                                }
+                            )
+                            cursor = end_at
+                            previous_location = choice.place_id
+
+                        if failed_schedule or len(scheduled_insertions) != insertion_count:
+                            continue
+                        outbound_leg = _replan_estimate(
+                            session,
+                            journey,
+                            mobility,
+                            previous_location,
+                            _activity_location(opportunity_anchor),
+                            operation_key=(
+                                f"opportunity-compound-outbound:{trigger_id}:"
+                                f"{previous_location}:{_activity_location(opportunity_anchor)}"
+                            ),
+                        )
+                    except MobilityDataUnavailable as exc:
+                        mobility_unavailable_pairs.add(str(exc))
+                        mobility_gaps.append(_mobility_gap_from(exc))
+                        failed_reasons.add(exc.reason_code)
+                        continue
+
+                    first_start = datetime.fromisoformat(
+                        str(scheduled_insertions[0]["start_at"])
+                    )
+                    compound_visit_min = max(
+                        0, int((cursor - first_start).total_seconds() // 60)
+                    )
+                    compound_inbound_min = max(
+                        0, int((first_start - effective_event_time).total_seconds() // 60)
+                    )
+                    compound_evidence = evaluate_window_replacement(
+                        now=effective_event_time,
+                        next_commitment_start=datetime.fromisoformat(
+                            str(payload.get("next_commitment_start") or opportunity_anchor.start_at)
+                        ),
+                        safety_buffer_min=int(payload.get("safety_buffer_min") or 15),
+                        budget_remaining_minor=budget_remaining,
+                        candidate=WindowReplacementInput(
+                            key="|".join(item.place_id for item in ordered_choices),
+                            visit_minutes=compound_visit_min,
+                            inbound_travel_min=compound_inbound_min,
+                            outbound_travel_min=int(outbound_leg),
+                            cost_minor=candidate_cost,
+                        ),
+                    )
+                    if not compound_evidence.fits:
+                        failed_reasons.update(compound_evidence.failures)
+                        continue
+                    compound_opportunity_specs.append(
+                        _ReplanCandidateSpec(
+                            family="F4_OPPORTUNITY_INSERTION",
+                            replacement_choice=ordered_choices[0],
+                            insertion_choices=tuple(ordered_choices),
+                            window_evidence={
+                                **compound_evidence.as_dict,
+                                "origin_key": _activity_location(current_execution),
+                                "destination_key": _activity_location(opportunity_anchor),
+                                "inbound_travel_min": compound_inbound_min,
+                                "outbound_travel_min": int(outbound_leg),
+                                "safety_buffer_min": int(payload.get("safety_buffer_min") or 15),
+                                "duration_source": "BOUNDED_OPPORTUNITY_POLICY",
+                                "candidate_place_ids": [
+                                    item.place_id for item in ordered_choices
+                                ],
+                                "insertions": scheduled_insertions,
+                            },
+                            additive_insertion=True,
+                        )
+                    )
+        # Prefer a whole, materially improved itinerary in the bounded result
+        # set while retaining every single-place alternative as an independent
+        # grounded option for the collective decision surface.
+        heuristic_specs = compound_opportunity_specs + heuristic_specs
     elif replacement_choices:
         for index, choice in enumerate(replacement_choices):
             family = "F0_SAME_SLOT_REPLACEMENT"
@@ -12846,6 +12987,7 @@ def generate_replan(
             _ReplanCandidateSpec(
                 family=spec.family,
                 replacement_choice=spec.replacement_choice,
+                insertion_choices=spec.insertion_choices,
                 candidate_delay=spec.candidate_delay,
                 candidate_remove=spec.candidate_remove,
                 window_evidence=spec.window_evidence,
@@ -12939,6 +13081,11 @@ def generate_replan(
     def _spec_assignment_key(spec: _ReplanCandidateSpec) -> str:
         if spec.v2_plan is not None:
             return f"V2:{spec.v2_plan.fingerprint}"
+        if spec.insertion_choices:
+            return (
+                f"{spec.family}:"
+                + ",".join(str(choice.place_id) for choice in spec.insertion_choices)
+            )
         if spec.candidate_remove:
             return "DROP"
         if spec.replacement_choice is not None:
@@ -13141,36 +13288,72 @@ def generate_replan(
                 session.flush()
                 continue
             anchor_sequence = int(opportunity_anchor.sequence_no)
+            insertion_choices = spec.insertion_choices or (replacement_choice,)
+            scheduled_insertions = window_evidence.get("insertions")
+            if not isinstance(scheduled_insertions, list) or len(scheduled_insertions) != len(insertion_choices):
+                scheduled_insertions = [
+                    {
+                        "place_id": choice.place_id,
+                        "start_at": (
+                            datetime.fromisoformat(str(window_evidence["window_opens_at"]))
+                            + timedelta(minutes=int(window_evidence["inbound_travel_min"]))
+                        ).isoformat(),
+                        "end_at": (
+                            datetime.fromisoformat(str(window_evidence["window_opens_at"]))
+                            + timedelta(
+                                minutes=int(window_evidence["inbound_travel_min"])
+                                + int(choice.duration_min)
+                            )
+                        ).isoformat(),
+                        "travel_from_prev_min": int(window_evidence["inbound_travel_min"]),
+                    }
+                    for choice in insertion_choices
+                ]
             for existing_row in copied_rows:
                 if int(existing_row["sequence_no"]) >= anchor_sequence:
-                    existing_row["sequence_no"] = int(existing_row["sequence_no"]) + 1
-            candidate_place = session.get(Place, replacement_choice.place_id)
-            start_dt = datetime.fromisoformat(str(window_evidence["window_opens_at"])) + timedelta(
-                minutes=int(window_evidence["inbound_travel_min"])
-            )
-            inserted_row = {
-                "sequence_no": anchor_sequence,
-                "activity_type": "visit",
-                "title": replacement_choice.title,
-                "place_id": replacement_choice.place_id,
-                "city_service_id": None,
-                "start_at": start_dt.isoformat(),
-                "end_at": (start_dt + timedelta(minutes=replacement_choice.duration_min)).isoformat(),
-                "travel_from_prev_min": int(window_evidence["inbound_travel_min"]),
-                "estimated_cost_minor": replacement_choice.cost_minor,
-                "currency": journey.budget_currency,
-                "status": "PLANNED",
-                "locked": False,
-                "metadata_json": _replacement_activity_metadata(
-                    candidate_place,
-                    replacement_choice,
-                    family="F4_OPPORTUNITY_INSERTION",
-                    replaced_place_id=None,
-                    reason_codes=replacement_choice.reason_codes,
-                ),
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "updated_at": datetime.now(timezone.utc).isoformat(),
-            }
+                    existing_row["sequence_no"] = int(existing_row["sequence_no"]) + len(insertion_choices)
+            inserted_rows: list[dict[str, Any]] = []
+            for insertion_index, (choice, scheduled) in enumerate(
+                zip(insertion_choices, scheduled_insertions)
+            ):
+                if str(scheduled.get("place_id") or "") != str(choice.place_id):
+                    failed_reasons.add("OPPORTUNITY_INSERTION_SCHEDULE_MISMATCH")
+                    inserted_rows = []
+                    break
+                candidate_place = session.get(Place, choice.place_id)
+                if candidate_place is None:
+                    failed_reasons.add("OPPORTUNITY_INSERTION_PLACE_MISSING")
+                    inserted_rows = []
+                    break
+                inserted_rows.append(
+                    {
+                        "sequence_no": anchor_sequence + insertion_index,
+                        "activity_type": "visit",
+                        "title": choice.title,
+                        "place_id": choice.place_id,
+                        "city_service_id": None,
+                        "start_at": str(scheduled["start_at"]),
+                        "end_at": str(scheduled["end_at"]),
+                        "travel_from_prev_min": int(scheduled.get("travel_from_prev_min") or 0),
+                        "estimated_cost_minor": int(choice.cost_minor),
+                        "currency": journey.budget_currency,
+                        "status": "PLANNED",
+                        "locked": False,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            choice,
+                            family="F4_OPPORTUNITY_INSERTION",
+                            replaced_place_id=None,
+                            reason_codes=choice.reason_codes,
+                        ),
+                        "created_at": datetime.now(timezone.utc).isoformat(),
+                        "updated_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+            if len(inserted_rows) != len(insertion_choices):
+                session.delete(proposed)
+                session.flush()
+                continue
             insertion_index = next(
                 (
                     index
@@ -13179,7 +13362,7 @@ def generate_replan(
                 ),
                 len(copied_rows),
             )
-            copied_rows.insert(insertion_index, inserted_row)
+            copied_rows[insertion_index:insertion_index] = inserted_rows
 
         def _row_routing_key(row: dict[str, Any]) -> str | None:
             """Same routing identity the gate and the frozen evidence use.
