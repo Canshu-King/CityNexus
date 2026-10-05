@@ -1,0 +1,68 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "179098bb33fbb9b4998fa9e44f1903ac5e3ee259",
+  "files_compared": [
+    "tests/test_e2e_provenance.py",
+    "tests/test_qoder_ord0296_write_deadline.py",
+    "tests/test_qoder_ord0327_write_bound_default.py",
+    "tests/test_qoder_ord0332_error_receipt.py",
+    "tests/test_qoder_ord0355_honest_stay_budget.py",
+    "tests/test_qoder_ord0383_journey_soft_delete.py",
+    "tests/test_qoder_ord0488_schema_catchup.py",
+    "tests/test_qoder_ord0520_journey_abort.py",
+    "tests/test_qoder_pending_destination_identity.py"
+  ],
+  "nine_run": {
+    "run_id": "shapes-4acbb5ff",
+    "rc": 1,
+    "refusal_lines": [
+      "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\pytest-of-仓鼠王\\pytest-2070\\test_g10_legacy_pending_rows_m0\\legacy_pending.db.",
+      "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\pytest-of-仓鼠王\\pytest-2070\\test_g13_rerunning_the_schema_0\\replay.db.",
+      "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\pytest-of-仓鼠王\\pytest-2070\\test_ord0488_dropping_a_previe0\\stale.db.",
+      "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\pytest-of-仓鼠王\\pytest-2070\\test_the_additive_column_arriv0\\_ord0383_legacy.db.",
+      "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\pytest-of-仓鼠王\\pytest-2070\\test_the_additive_migration_ar0\\_ord0355_legacy.db.",
+      "D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db."
+    ],
+    "child_refusals": 0,
+    "failed": [
+      "tests/test_e2e_provenance.py::test_an_unstamped_process_is_left_alone",
+      "tests/test_e2e_provenance.py::test_health_does_not_claim_a_run_id_it_was_never_given",
+      "tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_the_additive_migration_arrives_without_touching_the_existing_row_or_column",
+      "tests/test_qoder_ord0383_journey_soft_delete.py::test_the_additive_column_arrives_without_rewriting_the_row_that_predates_it",
+      "tests/test_qoder_ord0488_schema_catchup.py::test_ord0488_dropping_a_preview_missing_table_then_booting_heals_it",
+      "tests/test_qoder_ord0520_journey_abort.py::test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client",
+      "tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+      "tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+    ],
+    "tracebacks_with_refusal": [
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX",
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX",
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX",
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX",
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX",
+      "E   RuntimeError: E2E run 'shapes-4acbb5ff' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shapes-4acbb5ff.db. An authoritative run must start from an empty file; issue a new CITYNEX"
+    ]
+  },
+  "child_command_direct": {
+    "with_stamp": {
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    },
+    "plain": {
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    }
+  },
+  "files_that_start_a_second_process": [
+    "tests/test_qoder_ord0296_write_deadline.py",
+    "tests/test_qoder_ord0520_journey_abort.py"
+  ],
+  "shapes": {
+    "A_arm_opens_a_file_it_seeded": [],
+    "B_child_inherits_the_run_id": []
+  },
+  "previous_proposal": "my last block asked for the guard to check only the run's declared database url -- this measures whether that would help"
+}

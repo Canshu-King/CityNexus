@@ -1,0 +1,185 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "179098bb33fbb9b4998fa9e44f1903ac5e3ee259",
+  "same_run_two_opens": {
+    "first": {
+      "stamp": true,
+      "run_id": "shape2-probe",
+      "db": "_shape2-probe.db",
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    },
+    "second": {
+      "stamp": true,
+      "run_id": "shape2-probe",
+      "db": "_shape2-probe.db",
+      "rc": 1,
+      "refusal": true,
+      "tail": "RuntimeError: E2E run 'shape2-probe' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shape2-probe.db. An authorit"
+    },
+    "plain_control": {
+      "stamp": false,
+      "run_id": "shape2-plain",
+      "db": "_shape2-plain.db",
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    },
+    "verdict": "SECOND_OPEN_OF_THE_RUNS_OWN_STORE_IS_REFUSED"
+  },
+  "per_file": [
+    {
+      "node": "tests/test_e2e_provenance.py",
+      "rc": 1,
+      "run_id": "shape2-c58c26dd",
+      "summary": "2 failed, 5 passed, 2 warnings in 2.17s",
+      "refusal_paths": [],
+      "shapes": [],
+      "failed": [
+        "test_an_unstamped_process_is_left_alone",
+        "test_health_does_not_claim_a_run_id_it_was_never_given"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_ord0296_write_deadline.py",
+      "rc": 1,
+      "run_id": "shape2-2be57209",
+      "summary": "2 warnings, 11 errors in 1.94s",
+      "refusal_paths": [
+        "D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shape2-2be57209"
+      ],
+      "shapes": [
+        "B_run_own_store_reopened"
+      ],
+      "failed": [],
+      "error_count": 11
+    },
+    {
+      "node": "tests/test_qoder_ord0327_write_bound_default.py",
+      "rc": 1,
+      "run_id": "shape2-7b5651b6",
+      "summary": "2 warnings, 7 errors in 2.07s",
+      "refusal_paths": [
+        "D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shape2-7b5651b6"
+      ],
+      "shapes": [
+        "B_run_own_store_reopened"
+      ],
+      "failed": [],
+      "error_count": 7
+    },
+    {
+      "node": "tests/test_qoder_ord0332_error_receipt.py",
+      "rc": 1,
+      "run_id": "shape2-2228c05c",
+      "summary": "1 failed, 8 passed, 2 warnings in 3.58s",
+      "refusal_paths": [
+        "D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shape2-2228c05c"
+      ],
+      "shapes": [
+        "B_run_own_store_reopened"
+      ],
+      "failed": [
+        "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_ord0355_honest_stay_budget.py",
+      "rc": 1,
+      "run_id": "shape2-5b604584",
+      "summary": "1 failed, 10 passed, 2 warnings in 2.09s",
+      "refusal_paths": [
+        "\\pytest-2072\\test_the_additive_migration_ar0\\_ord0355_legacy"
+      ],
+      "shapes": [
+        "A_arm_seeded_file"
+      ],
+      "failed": [
+        "test_the_additive_migration_arrives_without_touching_the_existing_row_or_column"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_ord0383_journey_soft_delete.py",
+      "rc": 1,
+      "run_id": "shape2-30f79609",
+      "summary": "1 failed, 6 passed, 2 warnings in 2.60s",
+      "refusal_paths": [
+        "\\pytest-2073\\test_the_additive_column_arriv0\\_ord0383_legacy"
+      ],
+      "shapes": [
+        "A_arm_seeded_file"
+      ],
+      "failed": [
+        "test_the_additive_column_arrives_without_rewriting_the_row_that_predates_it"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_ord0488_schema_catchup.py",
+      "rc": 1,
+      "run_id": "shape2-ccf326f5",
+      "summary": "1 failed, 3 passed in 0.66s",
+      "refusal_paths": [
+        "est-of-仓鼠王\\pytest-2074\\test_ord0488_dropping_a_previe0\\stale"
+      ],
+      "shapes": [
+        "A_arm_seeded_file"
+      ],
+      "failed": [
+        "test_ord0488_dropping_a_preview_missing_table_then_booting_heals_it"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_ord0520_journey_abort.py",
+      "rc": 1,
+      "run_id": "shape2-ac4cfa9c",
+      "summary": "1 failed, 10 passed, 2 warnings in 3.83s",
+      "refusal_paths": [],
+      "shapes": [],
+      "failed": [
+        "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+      ],
+      "error_count": 0
+    },
+    {
+      "node": "tests/test_qoder_pending_destination_identity.py",
+      "rc": 1,
+      "run_id": "shape2-493b62ad",
+      "summary": "2 failed, 13 passed, 2 warnings in 2.46s",
+      "refusal_paths": [
+        "王\\pytest-2075\\test_g10_legacy_pending_rows_m0\\legacy_pending",
+        "st-of-仓鼠王\\pytest-2075\\test_g13_rerunning_the_schema_0\\replay"
+      ],
+      "shapes": [
+        "A_arm_seeded_file"
+      ],
+      "failed": [
+        "test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+        "test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+      ],
+      "error_count": 0
+    }
+  ],
+  "shape_counts": {
+    "A_arm_seeded_file": 4,
+    "B_run_own_store_reopened": 3,
+    "compared": 9
+  },
+  "shape_A_files": [
+    "tests/test_qoder_ord0355_honest_stay_budget.py",
+    "tests/test_qoder_ord0383_journey_soft_delete.py",
+    "tests/test_qoder_ord0488_schema_catchup.py",
+    "tests/test_qoder_pending_destination_identity.py"
+  ],
+  "shape_B_files": [
+    "tests/test_qoder_ord0296_write_deadline.py",
+    "tests/test_qoder_ord0327_write_bound_default.py",
+    "tests/test_qoder_ord0332_error_receipt.py"
+  ],
+  "what_this_does_to_my_previous_proposal": "my last block asked the guard to check only the run's declared url; the same_run_two_opens reading shows the declared url is exactly what gets refused the second time, so that proposal cannot be the whole fix"
+}
