@@ -5092,45 +5092,106 @@ def collective_material_world_basis(
         "selected_facts": selected_facts,
     }
 
-    relevant_events = (
-        list(
-            session.scalars(
-                select(EventModel)
-                .where(
-                    EventModel.journey_id == journey.id,
-                    EventModel.affected_activity_id.in_(activity_ids),
-                )
-                .order_by(
-                    EventModel.affected_activity_id,
-                    EventModel.event_type,
-                    EventModel.detected_at,
-                    EventModel.id,
-                )
-            ).all()
-        )
-        if activity_ids
-        else []
+    # Events are Journey facts, while candidate-plan Activity ids are version-
+    # local. A real shock will often target the currently active Activity whose
+    # physical Place is also present in the consented candidate. Match both the
+    # exact Activity id and the stable physical location identity; otherwise a
+    # normal active-plan provider event could never stale consent for a
+    # candidate that refers to the same real venue under another Activity row.
+    target_location_keys = {
+        str(item.place_id or item.city_service_id)
+        for item in activities
+        if item.place_id or item.city_service_id
+    }
+    all_events = list(
+        session.scalars(
+            select(EventModel)
+            .where(EventModel.journey_id == journey.id)
+            .order_by(EventModel.detected_at, EventModel.id)
+        ).all()
     )
+    affected_ids = {
+        str(item.affected_activity_id)
+        for item in all_events
+        if item.affected_activity_id
+    }
+    affected_rows = {
+        str(item.id): item
+        for item in (
+            session.scalars(
+                select(Activity).where(Activity.id.in_(affected_ids))
+            ).all()
+            if affected_ids
+            else []
+        )
+    }
+
+    relevant_events: list[EventModel] = []
+    for event in all_events:
+        payload = _json_object(event.payload_json, {})
+        affected = (
+            affected_rows.get(str(event.affected_activity_id))
+            if event.affected_activity_id
+            else None
+        )
+        affected_location = (
+            str(affected.place_id or affected.city_service_id)
+            if affected is not None and (affected.place_id or affected.city_service_id)
+            else ""
+        )
+        payload_place_ids = {
+            str(value)
+            for value in (
+                payload.get("place_id"),
+                payload.get("affected_place_id"),
+                (_json_object(json.dumps(payload.get("semantic") or {}))).get("place_id")
+                if isinstance(payload.get("semantic"), Mapping)
+                else None,
+            )
+            if value
+        }
+        if (
+            str(event.affected_activity_id or "") in activity_ids
+            or (affected_location and affected_location in target_location_keys)
+            or bool(payload_place_ids.intersection(target_location_keys))
+        ):
+            relevant_events.append(event)
+
     relevant_event_ids = {str(item.id) for item in relevant_events}
-    event_basis: list[dict[str, Any]] = []
+
+    # Deduplicate equal world facts. A provider retry that records the same
+    # closure twice is observation churn, not a new decision world.
+    event_basis_by_key: dict[str, dict[str, Any]] = {}
     for event in relevant_events:
         payload = _json_object(event.payload_json, {})
         semantic = payload.get("semantic")
-        event_basis.append(
-            {
-                "event_type": str(event.event_type or ""),
-                "severity": str(event.severity or ""),
-                "status": str(event.status or ""),
-                "affected_activity_id": str(event.affected_activity_id or ""),
-                "provider_key": str(event.provider_key or ""),
-                "provenance": str(event.provenance or ""),
-                "incident_fingerprint": payload.get("incident_fingerprint"),
-                "extra_minutes": payload.get("extra_minutes"),
-                "semantic": semantic if isinstance(semantic, Mapping) else None,
-            }
+        affected = (
+            affected_rows.get(str(event.affected_activity_id))
+            if event.affected_activity_id
+            else None
         )
+        fact = {
+            "event_type": str(event.event_type or ""),
+            "severity": str(event.severity or ""),
+            "status": str(event.status or ""),
+            "affected_location": (
+                str(affected.place_id or affected.city_service_id)
+                if affected is not None and (affected.place_id or affected.city_service_id)
+                else ""
+            ),
+            "provider_key": str(event.provider_key or ""),
+            "provenance": str(event.provenance or ""),
+            "incident_fingerprint": payload.get("incident_fingerprint"),
+            "extra_minutes": payload.get("extra_minutes"),
+            "semantic": semantic if isinstance(semantic, Mapping) else None,
+        }
+        key = json.dumps(
+            fact, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str
+        )
+        event_basis_by_key[key] = fact
+    event_basis = [event_basis_by_key[key] for key in sorted(event_basis_by_key)]
 
-    observation_basis: list[dict[str, Any]] = []
+    observation_basis_by_key: dict[str, dict[str, Any]] = {}
     if relevant_event_ids:
         observations = session.scalars(
             select(ProviderObservation)
@@ -5153,18 +5214,26 @@ def collective_material_world_basis(
                 if isinstance(mobility_snapshot, Mapping)
                 else {}
             )
-            observation_basis.append(
-                {
-                    "provider_key": str(observation.provider_key or ""),
-                    "observation_type": str(observation.observation_type or ""),
-                    "state": str(observation.state or ""),
-                    "provenance": str(observation.provenance or ""),
-                    "incident_fingerprint": observation.incident_fingerprint,
-                    "event_id": linked_event_id,
-                    "snapshot_id": snapshot.get("snapshot_id"),
-                    "integrity_hash": snapshot.get("integrity_hash"),
-                }
+            fact = {
+                "provider_key": str(observation.provider_key or ""),
+                "observation_type": str(observation.observation_type or ""),
+                "state": str(observation.state or ""),
+                "provenance": str(observation.provenance or ""),
+                "incident_fingerprint": observation.incident_fingerprint,
+                "snapshot_id": snapshot.get("snapshot_id"),
+                "integrity_hash": snapshot.get("integrity_hash"),
+            }
+            key = json.dumps(
+                fact,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                default=str,
             )
+            observation_basis_by_key[key] = fact
+    observation_basis = [
+        observation_basis_by_key[key] for key in sorted(observation_basis_by_key)
+    ]
 
     return {
         "journey_id": str(journey.id),
