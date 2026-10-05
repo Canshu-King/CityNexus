@@ -1,0 +1,25 @@
+Which of the four paths this order touches still need to land, decided by blob equality against the tip read in this run.
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
+e748c987240a6fe6b1e2ef2dfd35ef3238d20c9d
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+
+frontend/src/i18n/LocaleContext.tsx
+  tip blob 20203fee4744513da320387e7923fabbf054d566
+  branch blob 20203fee4744513da320387e7923fabbf054d566
+  verdict ALREADY_ON_TIP (nothing to land for this path)
+
+frontend/src/lib/plural.ts
+  tip blob aefcc082623f11b473d75020dae37787c4fcb6e8
+  branch blob aefcc082623f11b473d75020dae37787c4fcb6e8
+  verdict ALREADY_ON_TIP (nothing to land for this path)
+
+frontend/src/app/V8Experience.tsx
+  tip blob 62aa8b83c35a5d408170bc2ad4470ae70e78a136
+  branch blob 4ba9d383f3f98f7cc11580870d7b61cd4b413c73
+  verdict NEEDS_LANDING (the tip lacks these bytes)
+
+frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts
+  tip blob fc2c06432044e2870bf9c682e1a27b31dbf83610
+  branch blob 9344249444808bfbfa8b28cf9c38efbe912e9559
+  verdict NEEDS_LANDING (the tip lacks these bytes)
