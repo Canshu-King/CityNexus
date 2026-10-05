@@ -515,6 +515,81 @@ def test_r29_core_collective_mutation_gate_blocks_direct_rest_bypass() -> None:
         assert gate["classification"] == "MEDIATION_REQUIRED"
 
 
+def test_r29_resolved_mediation_authorizes_only_the_selected_plan_until_consumed() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    with SessionLocal() as session:
+        mediator = JourneyMission(
+            id=mediator_id,
+            journey_id=str(seeded["journey_id"]),
+            traveler_id=str(seeded["owner_id"]),
+            trigger_event_id=str(seeded["event_id"]),
+            parent_mission_id=str(seeded["parent_id"]),
+            user_text="Mediate the unresolved disagreement.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            status="ANSWERED",
+            resolved_intent_json=json.dumps(
+                {
+                    "collective_mediation": {
+                        "kind": "DISAGREEMENT_MEDIATION",
+                        "round": 1,
+                        "source_mission_id": str(seeded["parent_id"]),
+                    }
+                },
+                sort_keys=True,
+            ),
+            clarification_json=json.dumps(
+                {
+                    "kind": "COLLECTIVE_TRADEOFF",
+                    "status": "RESOLVED",
+                    "clarification_id": "r29-renewed-resolution",
+                    "selected_proposal_id": str(seeded["garden_proposal_id"]),
+                },
+                sort_keys=True,
+            ),
+            created_at=now,
+            started_at=now,
+            completed_at=now,
+        )
+        session.add(mediator)
+        session.commit()
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        garden_plan_id = str(seeded["options"][0]["plan_id"])
+        museum_plan_id = str(seeded["options"][1]["plan_id"])
+        museum_plan = session.get(PlanVersion, museum_plan_id)
+
+        sibling_gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            museum_plan,
+            hard_feasible_plan_ids={museum_plan_id},
+        )
+        assert sibling_gate["allowed"] is False
+        assert sibling_gate["code"] == "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED"
+        assert (
+            sibling_gate["mediation"]["selected_plan_version_id"]
+            == garden_plan_id
+        )
+
+        # Once the selected proposal is durably consumed, the old mediation
+        # decision no longer acts as a permanent lock on future Journey work.
+        selected_proposal = session.get(
+            ReplanProposal, str(seeded["garden_proposal_id"])
+        )
+        selected_proposal.status = "ACCEPTED"
+        session.commit()
+
+        from app.collective_mediation import pending_resolved_mediation_selection
+
+        assert pending_resolved_mediation_selection(
+            session,
+            str(seeded["journey_id"]),
+            active_plan_version_id=journey.active_plan_version_id,
+        ) is None
+
+
 def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
