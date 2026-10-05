@@ -12,7 +12,7 @@ from sqlalchemy import select
 import app.collective_mediation as collective_mediation
 import app.main as main_module
 from app.core.config import settings
-from app.agent.gateway import AgentToolGateway
+from app.agent.gateway import AgentToolGateway, _journey_has_unresolved_collective_mediation
 from app.agent.runtime import _acceptance_requested, _collective_mediation_requested
 from app.db.models import (
     AuditLog,
@@ -363,6 +363,11 @@ def test_r29_mediator_cannot_mutate_active_reality_before_fresh_collective_round
     mediator_id = str(uuid4())
     now = _now()
     with SessionLocal() as session:
+        parent = session.get(JourneyMission, str(seeded["parent_id"]))
+        parent_clarification = json.loads(parent.clarification_json or "{}")
+        parent_clarification["status"] = "MEDIATION_REQUIRED"
+        parent.clarification_json = json.dumps(parent_clarification, sort_keys=True)
+        parent.status = "ANSWERED"
         session.add(
             JourneyMission(
                 id=mediator_id,
@@ -411,6 +416,73 @@ def test_r29_mediator_cannot_mutate_active_reality_before_fresh_collective_round
         facts = json.loads(denial.after_json)
         assert facts["tool"] == "accept_replan"
         assert facts["reason"] == "FRESH_COLLECTIVE_DECISION_REQUIRED"
+
+        # Starting another Agent mission, or omitting the mediator mission id,
+        # cannot launder authority around the Journey-level disagreement lock.
+        bypass = AgentToolCall(
+            request_id="r29-deny-bypass-001",
+            agent_id="r29-other-agent",
+            journey_id=UUID(str(seeded["journey_id"])),
+            proposal_id=UUID(str(seeded["garden_proposal_id"])),
+        )
+        with pytest.raises(HTTPException) as bypass_exc:
+            AgentToolGateway(session).dispatch("accept_replan", bypass)
+        assert bypass_exc.value.status_code == 409
+        assert bypass_exc.value.detail == "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION"
+
+
+def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    mediator_id = str(uuid4())
+    now = _now()
+    with SessionLocal() as session:
+        parent = session.get(JourneyMission, str(seeded["parent_id"]))
+        clarification = json.loads(parent.clarification_json or "{}")
+        clarification["status"] = "MEDIATION_REQUIRED"
+        parent.clarification_json = json.dumps(clarification, sort_keys=True)
+        parent.status = "ANSWERED"
+        mediator = JourneyMission(
+            id=mediator_id,
+            journey_id=str(seeded["journey_id"]),
+            traveler_id=str(seeded["owner_id"]),
+            trigger_event_id=str(seeded["event_id"]),
+            user_text="Mediate the unresolved disagreement.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            status="WAITING_FOR_MEMBERS",
+            resolved_intent_json=json.dumps(
+                {
+                    "collective_mediation": {
+                        "kind": "DISAGREEMENT_MEDIATION",
+                        "round": 1,
+                        "source_mission_id": str(seeded["parent_id"]),
+                    }
+                },
+                sort_keys=True,
+            ),
+            clarification_json=json.dumps(
+                {"kind": "COLLECTIVE_TRADEOFF", "status": "WAITING_FOR_MEMBERS"},
+                sort_keys=True,
+            ),
+            created_at=now,
+        )
+        session.add(mediator)
+        session.commit()
+
+        assert _journey_has_unresolved_collective_mediation(
+            session, str(seeded["journey_id"])
+        ) is True
+
+        mediator.clarification_json = json.dumps(
+            {"kind": "COLLECTIVE_TRADEOFF", "status": "RESOLVED"},
+            sort_keys=True,
+        )
+        mediator.status = "ANSWERED"
+        session.commit()
+
+        assert _journey_has_unresolved_collective_mediation(
+            session, str(seeded["journey_id"])
+        ) is False
+
 
 def test_r29_fair_compromise_reopens_same_members_for_renewed_consent(monkeypatch) -> None:
     seeded = _seed_r29_disagreement_http_fixture()
