@@ -11,7 +11,83 @@ from typing import Any, Iterable, Mapping
 import hashlib
 import json
 
+from sqlalchemy import select
+
+from app.db.models import JourneyMission
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
+
+
+def _mission_object(value: str | None) -> dict[str, Any]:
+    try:
+        parsed = json.loads(value or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def journey_has_unresolved_collective_mediation(session, journey_id: str) -> bool:
+    """Return whether explicit member disagreement still locks social authority.
+
+    The lock is Journey-scoped and follows both the ORM parent pointer and the
+    server-owned source_mission_id recorded in mediator intent, so callers
+    cannot bypass it by starting another Agent mission or using a direct REST
+    mutation path.
+    """
+
+    missions = list(
+        session.scalars(
+            select(JourneyMission).where(JourneyMission.journey_id == journey_id)
+        ).all()
+    )
+    by_parent: dict[str, list[JourneyMission]] = {}
+    for row in missions:
+        if row.parent_mission_id:
+            by_parent.setdefault(str(row.parent_mission_id), []).append(row)
+        mediation = _mission_object(row.resolved_intent_json).get(
+            "collective_mediation"
+        )
+        source_mission_id = (
+            mediation.get("source_mission_id")
+            if isinstance(mediation, dict)
+            and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+            else None
+        )
+        if source_mission_id:
+            by_parent.setdefault(str(source_mission_id), []).append(row)
+
+    def resolved_through_mediator(
+        source: JourneyMission,
+        seen: set[str],
+    ) -> bool:
+        if source.id in seen:
+            return False
+        seen = {*seen, source.id}
+        clarification = _mission_object(source.clarification_json)
+        if clarification.get("status") == "RESOLVED":
+            return True
+        if clarification.get("status") != "MEDIATION_REQUIRED":
+            return False
+        for child in by_parent.get(source.id, []):
+            mediation = _mission_object(child.resolved_intent_json).get(
+                "collective_mediation"
+            )
+            if not (
+                isinstance(mediation, dict)
+                and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+                and str(mediation.get("source_mission_id") or "") == source.id
+            ):
+                continue
+            if resolved_through_mediator(child, seen):
+                return True
+        return False
+
+    for mission in missions:
+        clarification = _mission_object(mission.clarification_json)
+        if clarification.get("status") != "MEDIATION_REQUIRED":
+            continue
+        if not resolved_through_mediator(mission, set()):
+            return True
+    return False
 
 
 def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
