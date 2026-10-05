@@ -87,11 +87,16 @@ const shortId = (value: string | null) => (value ? value.slice(0, 8) : "—");
 
 export function SimulationPanel({
   viewingJourneyId = null,
+  screenHasNoJourneyInView = false,
   onStageChanged = null,
   onClose = null,
 }: {
   /** The journey the shell is showing, so the panel can say when the stage is a different one. */
   viewingJourneyId?: string | null;
+  /** ORD-0507 2: set on a screen that has no journey in view at all (the new-journey setup screen).
+      Without it the panel still names the journey sitting on the stage, and a traveller who has not
+      created one yet reads the demo scene's global journey as hers. */
+  screenHasNoJourneyInView?: boolean;
   /** ORD-0082: Today renders from the shell's own journey read, so any action that moves the
       stage has to tell that read to refresh.  Without it the panel advances while the hero keeps
       showing the cursor it loaded with -- a new way to show two answers on one screen. */
@@ -852,17 +857,34 @@ export function SimulationPanel({
         </div>
       </dl>
 
-      {viewingJourneyId && journeyId && viewingJourneyId !== journeyId && (
-        <p
-          className="cn-sim-mismatch"
-          data-testid="sim-journey-mismatch"
-          role="status"
-        >
-          {zh
-            ? `注意：台上是行程 ${shortId(journeyId)}，而你现在这屏看的是 ${shortId(viewingJourneyId)}。下面的动作打在台上那一趟。`
-            : `Note: the stage holds journey ${shortId(journeyId)} while this screen is showing ${shortId(viewingJourneyId)}. The actions below hit the one on stage.`}
-        </p>
-      )}
+      {journeyId &&
+        (screenHasNoJourneyInView && !viewingJourneyId ? (
+          <p
+            className="cn-sim-mismatch"
+            data-testid="sim-journey-mismatch"
+            data-mismatch-kind="no_journey_in_view"
+            role="status"
+          >
+            {zh
+              ? /* ORD-0507 2: this screen has no journey in view -- the traveller is setting up a new
+                   one -- so naming a stage journey here without saying whose it is not attributed the
+                   global demo scene to the trip she has not created yet.  Measured on a production
+                   bundle: 「台上行程」 read `3579c9ab · DRAFT` with 0 counter-sentences. */
+                `注意：这一屏还没有正在看的行程，你正在新建的是另一趟。台上那一趟（${shortId(journeyId)}）是演示舞台的全局场景，下面的动作打在它身上，不会写进你正在建的这一趟。`
+              : `Note: this screen has no journey in view yet -- you are setting up a new one. The journey on stage (${shortId(journeyId)}) is the demo stage's own scenario; the actions below act on it, not on the trip you are creating.`}
+          </p>
+        ) : viewingJourneyId && viewingJourneyId !== journeyId ? (
+          <p
+            className="cn-sim-mismatch"
+            data-testid="sim-journey-mismatch"
+            data-mismatch-kind="other_journey_on_stage"
+            role="status"
+          >
+            {zh
+              ? `注意：台上是行程 ${shortId(journeyId)}，而你现在这屏看的是 ${shortId(viewingJourneyId)}。下面的动作打在台上那一趟。`
+              : `Note: the stage holds journey ${shortId(journeyId)} while this screen is showing ${shortId(viewingJourneyId)}. The actions below hit the one on stage.`}
+          </p>
+        ) : null)}
 
       <ul className="cn-sim-actions" data-testid="sim-actions">
         {rows.map((row) => {
@@ -1016,10 +1038,14 @@ function useBottomChromeClearance(active: boolean) {
 
 export function SimulationEntry({
   viewingJourneyId = null,
+  screenHasNoJourneyInView = false,
   onStageChanged = null,
   defaultOpen = null,
 }: {
   viewingJourneyId?: string | null;
+  /** ORD-0507 2: the new-journey setup screen passes this -- it has no journey in view, so the panel
+      must say whose journey is on the stage instead of leaving the demo scene's to be read as hers. */
+  screenHasNoJourneyInView?: boolean;
   onStageChanged?: ((action: ActionId) => void) | null;
   /** `true` opens the window on first paint; `null`/`false` leave the ball closed, which is the
       pose on a phone where a wall of rows over the content was the thing being complained about. */
@@ -1123,6 +1149,7 @@ export function SimulationEntry({
           <div className="cn-sim-pop-body" data-testid="sim-pop-body">
             <SimulationPanel
               viewingJourneyId={viewingJourneyId}
+              screenHasNoJourneyInView={screenHasNoJourneyInView}
               onStageChanged={onStageChanged}
               onClose={() => setOpen(false)}
             />
