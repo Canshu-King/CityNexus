@@ -175,6 +175,35 @@ def test_r29_mediation_progress_does_not_use_union_of_different_losers() -> None
     assert result["previous_best_unacceptable_count"] == 1
 
 
+def test_r29_mediation_progress_rejects_one_metric_gain_with_fairness_regression() -> None:
+    from app.collective_mediation import mediation_progress_gate
+
+    previous = {
+        "proposal_id": "proposal-old",
+        "fit_subject_place_ids": ["place-old"],
+        "fit_subject_tags": ["old"],
+        "fairness": {
+            "minimum_member_fit": 0.4,
+            "maximum_regret": 0.3,
+            "unacceptable_member_ids": [],
+        },
+    }
+    misleading = {
+        "proposal_id": "proposal-new",
+        "fit_subject_place_ids": ["place-new"],
+        "fit_subject_tags": ["new"],
+        "fairness": {
+            "minimum_member_fit": 0.41,
+            "maximum_regret": 0.9,
+            "unacceptable_member_ids": [],
+        },
+    }
+    result = mediation_progress_gate([previous], [misleading])
+    assert result["allowed"] is False
+    assert result["code"] == "MEDIATION_NO_PROGRESS"
+    assert result["progress_policy"] == "NON_REGRESSING_PARETO_BOUNDARY_WITH_STRICT_IMPROVEMENT"
+
+
 def test_r29_mediation_progress_gate_accepts_new_fairer_option() -> None:
     from app.collective_mediation import mediation_progress_gate
 
