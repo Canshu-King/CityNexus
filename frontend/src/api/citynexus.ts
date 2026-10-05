@@ -3,6 +3,7 @@ import type { ReplanProposal } from "../contracts/replan";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
 import { OriginResponseUnusableError } from "../lib/failureAttribution";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
+import { travelerAuthHeaders } from "../lib/travelerSession";
 
 export interface Money {
   amount_minor: number;
@@ -177,6 +178,27 @@ export interface AgentMission {
   clarification?: JourneyClarification;
 }
 
+export interface CollectiveCandidateOption {
+  proposal_id: string;
+  plan_id?: string;
+  status?: string;
+  fit_subject_place_ids?: string[];
+  fit_subject_tags?: string[];
+  fit_subject_basis?: string;
+  display_places?: Array<{
+    place_id: string;
+    name: string;
+    category?: string | null;
+  }>;
+  fairness?: {
+    minimum_member_fit?: number;
+    unacceptable_member_ids?: string[];
+    [key: string]: unknown;
+  };
+  member_fits?: Record<string, { effective_fit?: number; [key: string]: unknown }>;
+  [key: string]: unknown;
+}
+
 export interface JourneyClarification {
   clarification_id?: string;
   question?: string;
@@ -184,11 +206,59 @@ export interface JourneyClarification {
   option_to_strategy?: Record<string, string>;
   preference_dimension?: string;
   decision_epoch?: string;
+  kind?: "COLLECTIVE_TRADEOFF" | string;
+  status?: string;
+  policy?: string;
+  required_member_ids?: string[];
+  responses?: Record<string, { member_id?: string; proposal_id?: string }>;
+  candidate_options?: CollectiveCandidateOption[];
+  selected_proposal_id?: string | null;
+}
+
+export interface PendingJourneyViewer {
+  traveler_id: string;
+  member_id: string;
+  role: string;
+  auth_method: string;
+}
+
+export interface PendingCollectiveMember {
+  member_id: string;
+  traveler_id: string;
+  role: string;
+  display_name: string | null;
+  responded: boolean;
+  is_viewer: boolean;
+}
+
+export interface PendingCollectiveView {
+  status: string | null;
+  policy: string | null;
+  required_count: number;
+  response_count: number;
+  required_members: PendingCollectiveMember[];
+  viewer_member_id: string | null;
+  viewer_has_responded: boolean;
+  candidate_options: CollectiveCandidateOption[];
+  selected_proposal_id: string | null;
+}
+
+export interface PendingContinuationView {
+  pending_action_id: string;
+  pending_status: string;
+  tool_name: string;
+  approval_id: string;
+  approval_status: string | null;
+  required_decision: string | null;
+  approved_by: string | null;
+  viewer_can_approve: boolean;
 }
 
 export interface PendingJourneyMission {
   mission: AgentMission;
   run: AgentRun | null;
+  collective?: PendingCollectiveView | null;
+  continuation?: PendingContinuationView | null;
 }
 
 export interface ClarificationAnswerResponse {
@@ -198,6 +268,34 @@ export interface ClarificationAnswerResponse {
   scope: "THIS_JOURNEY" | "REMEMBER_FOR_FUTURE_TRIPS";
   active_plan_unchanged: boolean;
   resume: { required: boolean; mission_id: string };
+}
+
+export interface CollectiveClarificationAnswerResponse {
+  journey_id: string;
+  mission_id: string;
+  clarification_id: string;
+  status: string;
+  responses: Record<string, { member_id?: string; proposal_id?: string }>;
+  baseline_preferences_unchanged: boolean;
+  traveler_twin_unchanged: boolean;
+  child_mission: AgentMission | null;
+}
+
+export interface AgentApprovalResponse {
+  approval_id: string;
+  status: string;
+  required_decision?: string;
+  approval_method?: string | null;
+  approved_by?: string | null;
+  continuation?: {
+    status: string;
+    pending_action_id?: string;
+    run_id?: string;
+    mission_id?: string;
+    replayed?: boolean;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 }
 
 export interface GuardianRun {
@@ -1030,9 +1128,12 @@ export const cityNexusApi = {
 
   getPendingJourneyMissions(journeyId: string): Promise<{
     journey_id: string;
+    viewer: PendingJourneyViewer | null;
     items: PendingJourneyMission[];
   }> {
-    return requestJson("/journeys/" + journeyId + "/missions/pending");
+    return requestJson("/journeys/" + journeyId + "/missions/pending", {
+      headers: travelerAuthHeaders(),
+    });
   },
 
   answerJourneyClarification(
@@ -1045,6 +1146,38 @@ export const cityNexusApi = {
       method: "POST",
       body: JSON.stringify({ clarification_id: clarificationId, option_key: optionKey, scope: "THIS_JOURNEY" }),
     });
+  },
+
+  answerCollectiveClarification(
+    journeyId: string,
+    missionId: string,
+    memberId: string,
+    clarificationId: string,
+    proposalId: string,
+  ): Promise<CollectiveClarificationAnswerResponse> {
+    return requestJson(
+      "/journeys/" + journeyId + "/missions/" + missionId
+        + "/collective-clarification/" + encodeURIComponent(memberId),
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ clarification_id: clarificationId, proposal_id: proposalId }),
+      },
+    );
+  },
+
+  approveAgentAction(
+    journeyId: string,
+    approvalId: string,
+  ): Promise<AgentApprovalResponse> {
+    return requestJson(
+      "/journeys/" + journeyId + "/agent/approvals/" + encodeURIComponent(approvalId) + "/approve",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ approval_method: "USER_CONFIRMATION" }),
+      },
+    );
   },
 
   resumeJourneyMission(journeyId: string, missionId: string): Promise<{
