@@ -1,0 +1,93 @@
+{
+  "generated_by": "89f2e2d6",
+  "order": "ORD-0520 wrap-up, second defect: my own parity arm inherited the run stamp",
+  "tree_head": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "test_file_blob_at_head": "2c37bf57546b2e758dd6a8a801dda1b63a3d350a",
+  "patched_blob": "d7a24bf17a13c78868a0b678c73a3d05c63e188e",
+  "before_published_receipt": "review/inflight-wait-r1/GUARD_SHAPES_r3.json",
+  "before_rate_refusals": 6,
+  "before_rate_runs": 6,
+  "after_single_arm_stamped": {
+    "runs": 6,
+    "refusals": 6,
+    "green": 0,
+    "rows": [
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 3.30s",
+        "run_id": "parityfix-16f0a74a"
+      },
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 3.46s",
+        "run_id": "parityfix-3d4eae52"
+      },
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 3.39s",
+        "run_id": "parityfix-a2e94da3"
+      },
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 2.98s",
+        "run_id": "parityfix-d353cd1d"
+      },
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 2.95s",
+        "run_id": "parityfix-7a09b521"
+      },
+      {
+        "rc": 1,
+        "refusal": true,
+        "summary": "1 failed, 2 warnings in 2.64s",
+        "run_id": "parityfix-32642cb9"
+      }
+    ]
+  },
+  "after_whole_file": {
+    "stamped": {
+      "stamp": true,
+      "run_id": "parityfix-b087ebba",
+      "rc": 1,
+      "summary": "1 failed, 10 passed, 2 warnings in 3.36s",
+      "refusal": true,
+      "failed": [
+        "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+      ]
+    },
+    "plain": {
+      "stamp": false,
+      "run_id": "(none)",
+      "rc": 0,
+      "summary": "11 passed, 2 warnings in 4.44s",
+      "refusal": false,
+      "failed": []
+    }
+  },
+  "counterexample": {
+    "what_was_broken": "tools/verify_openapi_parity.py forced to exit 1",
+    "arm_answer": {
+      "stamp": true,
+      "run_id": "parityfix-25c13908",
+      "rc": 1,
+      "summary": "1 failed, 2 warnings in 1.86s",
+      "refusal": false,
+      "failed": [
+        "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+      ]
+    },
+    "arm_still_bites": true,
+    "tool_restored_byte_identical": true,
+    "tool_blob_before": "bbcd96a34afa339bf9a357493abd93f5062e862d",
+    "tool_blob_after_restore": "bbcd96a34afa339bf9a357493abd93f5062e862d",
+    "git_status_for_the_tool": "(clean)"
+  },
+  "what_this_does_not_fix": "the guard itself (shapes A and C remain; this is only the one file this lane owns and only the child-env leg)",
+  "assertions_unchanged": true
+}

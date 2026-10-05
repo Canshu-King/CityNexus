@@ -377,7 +377,11 @@ def test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated
     assert '"/journeys/{journey_id}/abort"' in text, "the client does not carry the door"
     for name in ("JourneyAbort", "JourneyLiveView"):
         assert f"        {name}: " in text, f"the generated client has no component {name}"
-    env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    # The parity tool only reads the contract and the generated client; handing it this run's
+    # stamp would make it re-open the store the guard already saw created, and be refused.
+    child_env = {k: v for k, v in os.environ.items() if k not in ("CITYNEXUS_E2E_RUN_ID",
+                                                              "CITYNEXUS_DATABASE_URL")}
+    env = dict(child_env, PYTHONIOENCODING="utf-8")
     run = subprocess.run(
         [sys.executable, str(PARITY_TOOL)],
         capture_output=True,

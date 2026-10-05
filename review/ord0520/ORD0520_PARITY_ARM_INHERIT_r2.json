@@ -1,0 +1,80 @@
+{
+  "generated_by": "89f2e2d6",
+  "state": "patched (candidate)",
+  "tree_head": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "test_file_blob_at_head_before": "2c37bf57546b2e758dd6a8a801dda1b63a3d350a",
+  "test_file_patched_blob": "d7a24bf17a13c78868a0b678c73a3d05c63e188e",
+  "working_tree_blob": "d7a24bf17a13c78868a0b678c73a3d05c63e188e",
+  "patch_present_in_working_tree": true,
+  "single_arm_stamped_after": {
+    "runs": 6,
+    "refusals": 0,
+    "green": 6,
+    "rows": [
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 4.11s"
+      },
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 3.76s"
+      },
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 3.88s"
+      },
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 3.72s"
+      },
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 3.76s"
+      },
+      {
+        "rc": 0,
+        "refusal": false,
+        "summary": "1 passed, 2 warnings in 3.72s"
+      }
+    ]
+  },
+  "whole_file_after": {
+    "stamped": {
+      "stamp": true,
+      "run_id": "paritypost-bcab4020",
+      "rc": 0,
+      "summary": "11 passed, 2 warnings in 4.30s",
+      "refusal": false,
+      "failed": []
+    },
+    "plain": {
+      "stamp": false,
+      "run_id": "(none)",
+      "rc": 0,
+      "summary": "11 passed, 2 warnings in 4.36s",
+      "refusal": false,
+      "failed": []
+    }
+  },
+  "counterexample_after": {
+    "arm_rc": 1,
+    "failed": [
+      "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+    ],
+    "still_bites": true,
+    "tool_git_status": "(clean)",
+    "tool_blob_at_head": "bbcd96a34afa339bf9a357493abd93f5062e862d"
+  },
+  "before_for_the_record": {
+    "single_arm_refusals": 6,
+    "rechecked_refusals": 6,
+    "whole_file_stamped": "1 failed, 10 passed, 2 warnings in 3.36s",
+    "whole_file_plain": "11 passed, 2 warnings in 4.44s"
+  },
+  "judgement": "ARM_NO_LONGER_SEES_THE_REFUSAL"
+}
