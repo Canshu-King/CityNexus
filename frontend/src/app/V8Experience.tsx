@@ -2320,12 +2320,16 @@ function TripsWorkspace({
       <nav
         className="trips-tabs"
         data-testid="trips-tabs"
+        role="tablist"
         aria-label={zh ? "行程分区" : "Trip sections"}
       >
         {tabs.map((item) => (
           <button
             key={item.key}
             type="button"
+            role="tab"
+            id={`trips-tab-${item.key}`}
+            aria-selected={tab === item.key}
             className={tab === item.key ? "active" : ""}
             data-testid={`trips-tab-${item.key}`}
             onClick={() => setTab(item.key)}
