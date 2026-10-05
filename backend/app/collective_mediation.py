@@ -13,7 +13,7 @@ import json
 
 from sqlalchemy import select
 
-from app.db.models import JourneyMission
+from app.db.models import JourneyMission, PlanVersion, ReplanProposal
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
 
 
@@ -88,6 +88,77 @@ def journey_has_unresolved_collective_mediation(session, journey_id: str) -> boo
         if not resolved_through_mediator(mission, set()):
             return True
     return False
+
+
+def pending_resolved_mediation_selection(
+    session,
+    journey_id: str,
+    *,
+    active_plan_version_id: str | None,
+) -> dict[str, str] | None:
+    """Return exact renewed-consent authority that has not yet been consumed.
+
+    A resolved mediation round authorizes one selected proposal/plan, not every
+    algorithmically fair sibling. The authority is pending while the proposal
+    remains PRESENTED and its plan remains a CANDIDATE distinct from active
+    reality. Once that proposal is accepted or the plan is no longer a live
+    candidate, the old decision no longer re-locks future Journey evolution.
+    """
+
+    missions = list(
+        session.scalars(
+            select(JourneyMission).where(JourneyMission.journey_id == journey_id)
+        ).all()
+    )
+    candidates: list[tuple[str, JourneyMission, dict[str, Any]]] = []
+    for mission in missions:
+        mediation = _mission_object(mission.resolved_intent_json).get(
+            "collective_mediation"
+        )
+        clarification = _mission_object(mission.clarification_json)
+        if not (
+            isinstance(mediation, dict)
+            and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+            and clarification.get("status") == "RESOLVED"
+            and clarification.get("selected_proposal_id")
+        ):
+            continue
+        candidates.append(
+            (
+                str(mission.completed_at or mission.started_at or mission.created_at or ""),
+                mission,
+                clarification,
+            )
+        )
+
+    for _stamp, mission, clarification in sorted(
+        candidates,
+        key=lambda item: (item[0], item[1].id),
+        reverse=True,
+    ):
+        proposal_id = str(clarification.get("selected_proposal_id") or "")
+        proposal = session.get(ReplanProposal, proposal_id)
+        if (
+            proposal is None
+            or proposal.journey_id != journey_id
+            or proposal.status != "PRESENTED"
+        ):
+            continue
+        plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if (
+            plan is None
+            or plan.journey_id != journey_id
+            or plan.status != "CANDIDATE"
+            or str(plan.id) == str(active_plan_version_id or "")
+        ):
+            continue
+        return {
+            "mission_id": mission.id,
+            "clarification_id": str(clarification.get("clarification_id") or ""),
+            "selected_proposal_id": proposal.id,
+            "selected_plan_version_id": plan.id,
+        }
+    return None
 
 
 def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
