@@ -301,7 +301,11 @@ def _reach_post_consent_interlock(
     }
 
 
-def _inject_provider_replay_shock(journey_id: str) -> dict[str, Any]:
+def _inject_provider_replay_shock(
+    journey_id: str,
+    *,
+    target_place_id: str,
+) -> dict[str, Any]:
     """Use the normal server-owned sensing seam; do not write Event rows here."""
 
     from app.agent.signal_pipeline import refresh_demo_signals, set_fixture_state
@@ -319,6 +323,7 @@ def _inject_provider_replay_shock(journey_id: str) -> dict[str, Any]:
             payload={
                 "r30_post_consent_shock": True,
                 "purpose": "CONSENT_WORLD_EPOCH_LIVE_STRIKE",
+                "target_place_id": target_place_id,
             },
         )
         signals = refresh_demo_signals(session, journey)
@@ -536,7 +541,20 @@ def _run_full() -> dict[str, Any]:
         journey_id,
         list(interlock["renewed_required_member_ids"]),
     )
-    shock = _inject_provider_replay_shock(journey_id)
+    fit_subject_place_ids = [
+        str(value)
+        for value in interlock.get("fit_subject_place_ids") or []
+        if value
+    ]
+    if not fit_subject_place_ids:
+        raise RuntimeError(
+            "selected renewed-consent option has no decision-relevant Place "
+            "for the provider-replay shock"
+        )
+    shock = _inject_provider_replay_shock(
+        journey_id,
+        target_place_id=fit_subject_place_ids[0],
+    )
     stale = _assert_world_stale_at_core(
         journey_id=journey_id,
         selected_plan_id=str(interlock["selected_plan_id"]),
