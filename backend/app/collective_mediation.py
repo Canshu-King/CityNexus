@@ -165,6 +165,7 @@ def pending_resolved_mediation_selection(
         "mission_id": mission.id,
         "clarification_id": str(clarification.get("clarification_id") or ""),
         "decision_epoch": str(clarification.get("decision_epoch") or ""),
+        "material_world_epoch": str(clarification.get("material_world_epoch") or ""),
         "selected_proposal_id": proposal.id,
         "selected_plan_version_id": plan.id,
     }
@@ -255,6 +256,26 @@ def collective_decision_epoch(
     return hashlib.sha256(
         json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+def collective_material_world_epoch(basis: Mapping[str, Any]) -> str:
+    """Hash only server-projected decision-material physical reality.
+
+    Database rows, provider payloads and observation timestamps are intentionally
+    projected by the caller before reaching this pure helper.  The hash is
+    therefore stable across irrelevant storage churn while changing whenever a
+    selected future's physical meaning changes.
+    """
+
+    return hashlib.sha256(
+        json.dumps(
+            basis,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8")
+    ).hexdigest()
+
 
 def member_fit(*, preferences: Iterable[Any], candidate_tags: Iterable[str]) -> dict[str, Any]:
     breakdown = verified_interest_preference_breakdown(preferences, candidate_tags=candidate_tags)
