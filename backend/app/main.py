@@ -9235,25 +9235,73 @@ def _invalidate_pending_replans_after_completion(
 
 
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/depart", response_model=JourneyTwinSchema)
-def depart_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "EN_ROUTE", "ACTIVITY_DEPARTED", session)
+def depart_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "EN_ROUTE",
+        "ACTIVITY_DEPARTED",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/arrive", response_model=JourneyTwinSchema)
-def arrive_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "ARRIVED", "ACTIVITY_ARRIVED", session)
+def arrive_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "ARRIVED",
+        "ACTIVITY_ARRIVED",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/begin", response_model=JourneyTwinSchema)
-def begin_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "IN_PROGRESS", "ACTIVITY_IN_PROGRESS", session)
+def begin_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "IN_PROGRESS",
+        "ACTIVITY_IN_PROGRESS",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post(
     "/api/v1/journeys/{journey_id}/activities/{activity_id}/complete",
     response_model=JourneyTwinSchema,
 )
-def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
+def complete_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
