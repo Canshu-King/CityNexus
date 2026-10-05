@@ -1,0 +1,9 @@
+ORD-0567 follow-up: the static door answers again, but the bundle it serves predates the four registrations.
+
+Two independent witnesses agree. HTTP level: /assets/index-BcQ9VAso.js is 1622092 bytes, its shell registry holds 29 keys and does NOT
+contain the four route names registered at d107131c6 (access, footprints, import, trash); control routes hub and trips are present. Browser
+level at 390x844: /v8/import, /v8/footprints, /v8/trash and /v8/access all print the hub label Today, while
+/v8/trips prints Trips -- so the reading discriminates rather than reporting one constant.
+
+The door now serves _build_0413e55/frontend/dist (started by the commander's chain, PID read from netstat);
+carrying the fix needs a rebuild or a re-point, which is a generation swap and not this lane's to take.

@@ -1,0 +1,49 @@
+{
+  "schema": "CNX_CHAIN_BUNDLE_REGISTRY_CHECK_V1",
+  "tool": "chain_bundle_registry_check_r1",
+  "took_local": "2026-10-05T17:14:28.831715+08:00",
+  "index_status": 200,
+  "index_bytes": 1200,
+  "bundle_src": "/assets/index-BcQ9VAso.js",
+  "bundle_status": 200,
+  "bundle_bytes": 1622092,
+  "registry_keys_found": 29,
+  "route_keys_present": {
+    "import": false,
+    "footprints": false,
+    "trash": false,
+    "access": false,
+    "trips": true,
+    "hub": true
+  },
+  "missing_route_keys": [
+    "access",
+    "footprints",
+    "import",
+    "trash"
+  ],
+  "context_windows": [
+    {
+      "around": "trips",
+      "found": true,
+      "window": "ys\")}),l.jsx(\"b\",{children:\"/\"}),l.jsx(\"strong\",{children:Ze(\"nav.\"+(n in{hub:1,trips:1,studio:1,stay:1,discover:1,live:1,bookings:1,intelligence:1,twin:1,agent:1,auth"
+    },
+    {
+      "around": "import",
+      "found": false,
+      "window": ""
+    },
+    {
+      "around": "trash",
+      "found": false,
+      "window": ""
+    }
+  ],
+  "served_dist_note": "asked over HTTP with Cache-Control: no-cache",
+  "actions_taken": {
+    "restarts": 0,
+    "kills": 0,
+    "rebinds": 0,
+    "writes_to_other_lanes": 0
+  }
+}

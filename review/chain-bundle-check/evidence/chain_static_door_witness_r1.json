@@ -1,0 +1,125 @@
+{
+  "schema": "CNX_CHAIN_STATIC_DOOR_WITNESS_V1",
+  "tool": "chain_static_door_witness_r1",
+  "took_local": "2026-10-05T17:11:01.497184+08:00",
+  "probed_paths": 7,
+  "no_response": 0,
+  "statuses": [
+    "200",
+    "200",
+    "200",
+    "200",
+    "200",
+    "200",
+    "200"
+  ],
+  "reads": [
+    {
+      "url": "http://127.0.0.1:4783/",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    },
+    {
+      "url": "http://127.0.0.1:4783/v8/hub",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    },
+    {
+      "url": "http://127.0.0.1:4783/index.html",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    },
+    {
+      "url": "http://127.0.0.1:4783/favicon.svg",
+      "status": 200,
+      "bytes": 199,
+      "ctype": "image/svg+xml"
+    },
+    {
+      "url": "http://127.0.0.1:4783/assets/",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    },
+    {
+      "url": "http://127.0.0.1:4783/v8/trips",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    },
+    {
+      "url": "http://127.0.0.1:4783/__probe_missing_zz",
+      "status": 200,
+      "bytes": 1200,
+      "ctype": "text/html; charset=utf-8"
+    }
+  ],
+  "raw_sockets": [
+    {
+      "path": "/",
+      "bytes_received": 1357,
+      "first_bytes": "HTTP/1.0 200 OK\r\nServer: SimpleHTTP/0.6 Python/3.10.11\r\nDate"
+    },
+    {
+      "path": "/index.html",
+      "bytes_received": 1357,
+      "first_bytes": "HTTP/1.0 200 OK\r\nServer: SimpleHTTP/0.6 Python/3.10.11\r\nDate"
+    }
+  ],
+  "api_health": {
+    "url": "http://127.0.0.1:4787/api/v1/health",
+    "status": 200,
+    "bytes": 113,
+    "ctype": "application/json"
+  },
+  "api_control": {
+    "url": "http://127.0.0.1:4787/api/v1/journeys",
+    "status": 200,
+    "bytes": 1566,
+    "ctype": "application/json"
+  },
+  "static_owner": {
+    "port": 4783,
+    "listening_pids": [
+      "80460"
+    ],
+    "processes": [
+      {
+        "pid": "80460",
+        "command_line": "C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python310\\python.exe D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_cmdr_lan_static_api_r1.py --dist D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_0413e55\\frontend\\dist --port 4783 --api 4787 --log D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_lan_4783_log_restored_r1.json"
+      }
+    ]
+  },
+  "api_owner": {
+    "port": 4787,
+    "listening_pids": [
+      "34184"
+    ],
+    "processes": [
+      {
+        "pid": "34184",
+        "command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn backend.app.main:app --host 127.0.0.1 --port 4787"
+      }
+    ]
+  },
+  "served_dirs": [
+    {
+      "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_0413e55/frontend/dist",
+      "entries": 7,
+      "has_index_html": true,
+      "asset_dirs": [
+        "assets",
+        "index.html"
+      ]
+    }
+  ],
+  "actions_taken": {
+    "restarts": 0,
+    "kills": 0,
+    "rebinds": 0,
+    "writes_to_other_lanes": 0
+  }
+}

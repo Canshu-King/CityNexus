@@ -1,0 +1,70 @@
+{
+  "schema": "CNX_CHAIN_SCREEN_LABEL_READING_V1",
+  "tool": "playwright MCP browser_evaluate (async iframe walk), copied verbatim from the run",
+  "taken_utc": "2026-10-05T09:13Z",
+  "viewport": "390x844 (set with browser_resize before the walk)",
+  "origin": "http://127.0.0.1:4783",
+  "bundle_asset_observed": "/assets/index-BcQ9VAso.js",
+  "screens": [
+    {
+      "path": "/v8/import",
+      "top_bar_strong": [
+        "CityNexus",
+        "Today"
+      ]
+    },
+    {
+      "path": "/v8/footprints",
+      "top_bar_strong": [
+        "CityNexus",
+        "Today"
+      ]
+    },
+    {
+      "path": "/v8/trash",
+      "top_bar_strong": [
+        "CityNexus",
+        "Today"
+      ]
+    },
+    {
+      "path": "/v8/access",
+      "top_bar_strong": [
+        "CityNexus",
+        "Today"
+      ]
+    },
+    {
+      "path": "/v8/trips",
+      "top_bar_strong": [
+        "CityNexus",
+        "Trips"
+      ]
+    },
+    {
+      "path": "/v8/hub",
+      "top_bar_strong": [
+        "CityNexus",
+        "Today",
+        "Handled",
+        "Riverside Museum",
+        "12:15 Central Food Hall",
+        "Not chosen yet"
+      ]
+    }
+  ],
+  "reading_rule": "the shell prints t(\"nav.\" + (route in registry ? route : \"hub\")); a registered route names itself, an unregistered one falls back to the hub label",
+  "misnamed_routes": [
+    "/v8/import",
+    "/v8/footprints",
+    "/v8/trash",
+    "/v8/access"
+  ],
+  "control_route_named_correctly": "/v8/trips",
+  "cross_checked_by": "tools/chain_bundle_registry_check_r1.py (HTTP-level, no browser, no service worker)",
+  "actions_taken": {
+    "restarts": 0,
+    "kills": 0,
+    "shared_tab_navigation_stopped": "the walk used iframes; the outer tab stayed on /v8/import"
+  }
+}
