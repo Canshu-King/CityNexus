@@ -4878,6 +4878,224 @@ def collective_proposal_receipt(
     }
 
 
+def collective_material_world_basis(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    *,
+    fit_subject_place_ids: list[str] | tuple[str, ...] | set[str] | None = None,
+) -> dict[str, Any]:
+    """Project only physical facts that can change the meaning of this consent.
+
+    R30 deliberately avoids a Journey-global revision counter.  The basis is
+    scoped to the selected future: immutable plan route evidence, canonical
+    facts for the optional Places people were choosing between, and provider /
+    event facts that actually intersect activities in that selected plan.
+    """
+
+    activities = list(
+        session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == target_plan.id)
+            .order_by(Activity.sequence_no, Activity.id)
+        ).all()
+    )
+    activity_ids = {str(item.id) for item in activities}
+    plan_places = {
+        str(item.place_id)
+        for item in activities
+        if item.place_id
+    }
+    subject_ids = {
+        str(value)
+        for value in (fit_subject_place_ids or [])
+        if value
+    }
+    # A missing stored fit subject should fail safe to the selected plan's
+    # concrete Places rather than silently producing an empty physical epoch.
+    relevant_place_ids = subject_ids or plan_places
+
+    place_rows = (
+        list(
+            session.scalars(
+                select(Place)
+                .where(Place.id.in_(relevant_place_ids))
+                .order_by(Place.id)
+            ).all()
+        )
+        if relevant_place_ids
+        else []
+    )
+    place_basis: list[dict[str, Any]] = []
+    for place in place_rows:
+        metadata = _json_object(place.metadata_json, {})
+        raw_tags = metadata.get("tags")
+        provider_tags = raw_tags if isinstance(raw_tags, Mapping) else {}
+        opening = normalize_opening_hours(
+            _json_object(place.opening_hours_json, {})
+        )
+        cost = canonical_cost_evidence(
+            metadata.get("cost_evidence")
+            if isinstance(metadata.get("cost_evidence"), Mapping)
+            else {},
+            provider_tags,
+        )
+        place_basis.append(
+            {
+                "place_id": str(place.id),
+                "provider_key": str(place.provider_key or ""),
+                "external_id": str(place.external_id or ""),
+                "opening": {
+                    "status": opening.get("status"),
+                    "open": opening.get("open"),
+                    "close": opening.get("close"),
+                    "intervals": opening.get("intervals") or [],
+                    "weekday_intervals": opening.get("weekday_intervals") or [],
+                },
+                "cost": {
+                    "status": cost.get("status"),
+                    "amount_minor": cost.get("amount_minor"),
+                    "currency": cost.get("currency"),
+                    "currency_agnostic": bool(cost.get("currency_agnostic")),
+                    "evidence_basis": cost.get("evidence_basis"),
+                },
+            }
+        )
+
+    mobility = _json_object(target_plan.mobility_evidence_json, {})
+    selected_facts: list[dict[str, Any]] = []
+    if not mobility.get("integrity_hash"):
+        for fact in mobility.get("selected_facts") or []:
+            if not isinstance(fact, Mapping):
+                continue
+            selected_facts.append(
+                {
+                    "origin_key": fact.get("origin_key"),
+                    "destination_key": fact.get("destination_key"),
+                    "mode": fact.get("mode"),
+                    "duration_min": fact.get("duration_min", fact.get("minutes")),
+                    "provider": fact.get("provider"),
+                    "fact_quality": fact.get("fact_quality"),
+                    "degraded": bool(fact.get("degraded")),
+                    "cost_status": fact.get("cost_status"),
+                    "cost_amount_minor": fact.get("cost_amount_minor"),
+                    "currency": fact.get("currency"),
+                }
+            )
+        selected_facts.sort(
+            key=lambda item: (
+                str(item.get("origin_key") or ""),
+                str(item.get("destination_key") or ""),
+                str(item.get("mode") or ""),
+            )
+        )
+    mobility_basis = {
+        "snapshot_id": mobility.get("snapshot_id") or target_plan.mobility_snapshot_id,
+        "integrity_hash": mobility.get("integrity_hash"),
+        "normalizer_version": mobility.get("normalizer_version"),
+        "aggregate_provenance": mobility.get("aggregate_provenance"),
+        "source_provider": mobility.get("source_provider"),
+        "selected_facts": selected_facts,
+    }
+
+    relevant_events = (
+        list(
+            session.scalars(
+                select(EventModel)
+                .where(
+                    EventModel.journey_id == journey.id,
+                    EventModel.affected_activity_id.in_(activity_ids),
+                )
+                .order_by(
+                    EventModel.affected_activity_id,
+                    EventModel.event_type,
+                    EventModel.detected_at,
+                    EventModel.id,
+                )
+            ).all()
+        )
+        if activity_ids
+        else []
+    )
+    relevant_event_ids = {str(item.id) for item in relevant_events}
+    event_basis: list[dict[str, Any]] = []
+    for event in relevant_events:
+        payload = _json_object(event.payload_json, {})
+        semantic = payload.get("semantic")
+        event_basis.append(
+            {
+                "event_type": str(event.event_type or ""),
+                "severity": str(event.severity or ""),
+                "status": str(event.status or ""),
+                "affected_activity_id": str(event.affected_activity_id or ""),
+                "provider_key": str(event.provider_key or ""),
+                "provenance": str(event.provenance or ""),
+                "incident_fingerprint": payload.get("incident_fingerprint"),
+                "extra_minutes": payload.get("extra_minutes"),
+                "semantic": semantic if isinstance(semantic, Mapping) else None,
+            }
+        )
+
+    observation_basis: list[dict[str, Any]] = []
+    if relevant_event_ids:
+        observations = session.scalars(
+            select(ProviderObservation)
+            .where(ProviderObservation.journey_id == journey.id)
+            .order_by(
+                ProviderObservation.provider_key,
+                ProviderObservation.observation_type,
+                ProviderObservation.captured_at,
+                ProviderObservation.id,
+            )
+        ).all()
+        for observation in observations:
+            payload = _json_object(observation.payload_json, {})
+            linked_event_id = str(payload.get("event_id") or "")
+            if linked_event_id not in relevant_event_ids:
+                continue
+            mobility_snapshot = payload.get("mobility_snapshot")
+            snapshot = (
+                mobility_snapshot
+                if isinstance(mobility_snapshot, Mapping)
+                else {}
+            )
+            observation_basis.append(
+                {
+                    "provider_key": str(observation.provider_key or ""),
+                    "observation_type": str(observation.observation_type or ""),
+                    "state": str(observation.state or ""),
+                    "provenance": str(observation.provenance or ""),
+                    "incident_fingerprint": observation.incident_fingerprint,
+                    "event_id": linked_event_id,
+                    "snapshot_id": snapshot.get("snapshot_id"),
+                    "integrity_hash": snapshot.get("integrity_hash"),
+                }
+            )
+
+    return {
+        "journey_id": str(journey.id),
+        "plan_version_id": str(target_plan.id),
+        "plan_parent_id": str(target_plan.parent_plan_version_id or ""),
+        "activities": [
+            {
+                "activity_id": str(item.id),
+                "sequence_no": int(item.sequence_no),
+                "place_id": str(item.place_id or ""),
+                "city_service_id": str(item.city_service_id or ""),
+                "start_at": str(item.start_at),
+                "end_at": str(item.end_at),
+                "locked": bool(item.locked),
+            }
+            for item in activities
+        ],
+        "fit_subject_place_ids": sorted(relevant_place_ids),
+        "places": place_basis,
+        "mobility": mobility_basis,
+        "relevant_events": event_basis,
+        "relevant_provider_observations": observation_basis,
+    }
+
+
 def _member_expiry(raw: str | None) -> str | None:
     """Same rule as a grant: an instant with no offset is a guess about whose clock, so refuse it."""
     if raw is None:
