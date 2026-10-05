@@ -657,29 +657,46 @@ def _journey_owner_member_id(journey_id: str) -> str:
     return str(rows[0].id)
 
 
-def _independent_fresh_member_choices(
+def _independent_member_choices(
     clarification: dict[str, Any],
     required_member_ids: list[str],
+    *,
+    allowed_proposal_ids: set[str] | None = None,
+    phase: str = "collective round",
 ) -> dict[str, str]:
-    """Derive each test member's choice independently from its own grounded fit.
+    """Derive each test member's choice independently from grounded fit.
 
-    The harness may emulate the authenticated principals used by the R29/R30
-    strike, but it must not invent social consensus by picking one global
-    fairness optimum and submitting that answer for everyone. Each relevant
-    member must have one unique server-grounded maximum, and the maxima must
-    converge on the same proposal before automated closure is allowed.
+    Automated strike code may emulate authenticated principals, but it must
+    never manufacture social consensus by choosing one global fairness optimum
+    and submitting that answer for everyone. Every relevant member must have
+    one unique acceptable grounded maximum on the current decision surface,
+    and those independent maxima must converge before automation may close the
+    round.
+
+    allowed_proposal_ids lets a mediator narrow the decision surface to
+    proposals it has actually improved. The mediator may define that surface;
+    it still may not choose on behalf of the people inside it.
     """
 
+    allowed = (
+        {str(value) for value in allowed_proposal_ids if value}
+        if allowed_proposal_ids is not None
+        else None
+    )
     options = [
         item
         for item in clarification.get("candidate_options") or []
         if isinstance(item, dict)
         and item.get("proposal_id")
         and item.get("status") == "GROUNDED_FEASIBLE"
+        and (
+            allowed is None
+            or str(item.get("proposal_id") or "") in allowed
+        )
     ]
     if not options:
         raise RuntimeError(
-            "fresh recovery round has no grounded feasible options"
+            f"{phase} has no grounded feasible options on its allowed surface"
         )
 
     choices: dict[str, str] = {}
@@ -703,8 +720,8 @@ def _independent_fresh_member_choices(
             scored.append((score, str(option["proposal_id"])))
         if not scored:
             raise RuntimeError(
-                "fresh recovery round has no acceptable grounded fit for "
-                f"member {member_id}"
+                f"{phase} has no acceptable grounded fit for member "
+                f"{member_id}"
             )
         best_score = max(score for score, _proposal_id in scored)
         best_ids = sorted(
@@ -714,21 +731,19 @@ def _independent_fresh_member_choices(
         )
         if len(best_ids) != 1:
             raise RuntimeError(
-                "fresh recovery member has no unique grounded maximum; "
-                f"human choice remains genuinely open for {member_id}: "
-                f"{best_ids}"
+                f"{phase} member has no unique grounded maximum; human "
+                f"choice remains genuinely open for {member_id}: {best_ids}"
             )
         choices[member_id] = best_ids[0]
 
     distinct = sorted(set(choices.values()))
     if len(distinct) != 1:
         raise RuntimeError(
-            "fresh recovery members still prefer different grounded futures; "
+            f"{phase} members still prefer different grounded futures; "
             "the harness must not manufacture consensus: "
             f"{choices}"
         )
     return choices
-
 
 def _close_fresh_collective_round(
     *,
@@ -750,9 +765,10 @@ def _close_fresh_collective_round(
         raise RuntimeError(
             "fresh collective round has no mission or required member scope"
         )
-    independent_choices = _independent_fresh_member_choices(
+    independent_choices = _independent_member_choices(
         clarification,
         required,
+        phase="fresh post-shock recovery round",
     )
     choice = next(iter(set(independent_choices.values())))
     tokens = _signed_member_tokens(required)
