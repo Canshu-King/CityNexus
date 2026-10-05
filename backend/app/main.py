@@ -9027,6 +9027,11 @@ def _resolve_execution_truth_attestation(
         raise HTTPException(409, "LOCATION_OBSERVATION_NOT_FRESH")
     if float(observation.accuracy_m) > 100.0:
         raise HTTPException(409, "LOCATION_OBSERVATION_NOT_PRECISE_ENOUGH")
+    # A signed traveler posting JSON coordinates is still not a cryptographic
+    # device/location attestation.  Keep this tier fail-closed until a trusted
+    # ingestion path records an attested source instead of FOREGROUND_WEB.
+    if str(observation.source) not in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_DEVICE_VERIFIED")
 
     location_audit = session.scalar(
         select(AuditLog)
