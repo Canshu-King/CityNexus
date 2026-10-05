@@ -45,8 +45,8 @@ Therefore the final exactly-once acceptance and execution continuation are **not
 
 ```text
 python -m compileall -q app
-python -m pytest -q tests/test_r29_disagreement_mediation.py tests/test_r28_authenticated_member_principal.py tests/test_r28_durable_approval_continuation.py
-39 passed, 4 warnings
+python -m pytest -q tests/test_r29_disagreement_mediation.py tests/test_r28_authenticated_member_principal.py tests/test_r28_durable_approval_continuation.py tests/test_r30_consent_epoch.py tests/test_r30_compound_regression.py
+42 passed, 4 warnings
 ```
 
 The machine verifier reports 9 proven causal claims and 2 blocked final claims. `CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false` was kept in force.
