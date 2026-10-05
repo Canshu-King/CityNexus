@@ -12,7 +12,7 @@
  * in review/ord0562/.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,6 +23,7 @@ const FILES = {
   hub: join(ROOT, "frontend", "src", "app", "V8Experience.tsx"),
 };
 const EVIDENCE = process.env.CITYNEXUS_COUNT_EVIDENCE ?? "";
+const EVIDENCE_SITES = process.env.CITYNEXUS_COUNT_SITES ?? "";
 const RUN = process.env.CITYNEXUS_COUNT_RUN ?? "count-unset";
 
 const ENTRY = /^\s*"([^"]+)"\s*:\s*"([^"]*)"\s*,?\s*$/;
@@ -126,4 +127,68 @@ test("the ruler read what it claims to have read", () => {
     }, null, 1), "utf8");
   }
   expect(entries.length, "the parse is empty").toBeGreaterThan(1000);
+});
+
+/* The seven dictionary lines were only the visible half: the same dodge also sits in inline component
+   strings, and `V8Experience.tsx` carried one on the very file this order fixes. This arm reads every
+   source under frontend/src, so a new `1 or more` string cannot land outside the dictionary again. */
+function sources(dir: string, into: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) sources(full, into);
+    else if (/\.(ts|tsx)$/.test(entry)) into.push(full);
+  }
+  return into;
+}
+
+/** Offsets in the line where `(s)` sits inside a string literal. A line can hold both an arrow parameter
+ *  named `s` and a real screen string, so the decision is per occurrence; a per-line test produced one false
+ *  positive on the first run (`shelves.find((s) => ...)` on a line that also carries quotes). */
+function softenedInStrings(line: string): number[] {
+  const found: number[] = [];
+  let quote = "";
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i];
+    if (quote) {
+      const rest = line.slice(i);
+      if (ch === "(" && /^\(s\)/i.test(rest) && !/^\(s\)\s*=>/.test(rest)) found.push(i);
+      if (ch === quote && line[i - 1] !== "\\") quote = "";
+      continue;
+    }
+    if (ch === "`" || ch === '"' || ch === "'") { quote = ch; continue; }
+    if (ch !== "(") continue;
+    const rest = line.slice(i);
+    if (!/^\(s\)/i.test(rest)) continue;
+    if (/^\(s\)\s*=>/.test(rest)) continue;
+    found.push(i);
+  }
+  return found;
+}
+
+test("no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed", () => {
+  /* Three of the surviving sites live in files another lane may have open (LiveRecovery, simulationAdapter,
+     pretripChecklist). This lane does not edit them on an order it was not given, so the arm asserts only
+     over what ORD-0562 owns and writes the rest into the evidence with its line number -- a list the
+     commander can dispatch from, rather than a green that hides it. */
+  const OWNED = ["frontend/src/i18n/LocaleContext.tsx", "frontend/src/app/V8Experience.tsx",
+    "frontend/src/lib/plural.ts"];
+  const files = sources(join(ROOT, "frontend", "src"));
+  const owned: string[] = [];
+  const elsewhere: string[] = [];
+  const posix = (p: string) => p.split("\\").join("/");
+  for (const file of files) {
+    const relative = posix(file).slice(posix(ROOT).length + 1);
+    const lines = readFileSync(file, "utf8").split("\n");
+    lines.forEach((line, index) => {
+      const text = line.trim();
+      if (text.startsWith("*") || text.startsWith("//") || text.startsWith("/*")) return;
+      if (!softenedInStrings(text).length) return;
+      const site = relative + ":" + (index + 1) + "  " + text.slice(0, 90);
+      if (OWNED.includes(relative)) owned.push(site);
+      else elsewhere.push(site);
+    });
+  }
+  expect(owned, "a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge").toEqual([]);
+  expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
+  writeFileSync(EVIDENCE_SITES, elsewhere.join("\n") + (elsewhere.length ? "\n" : ""), "utf8");
 });
