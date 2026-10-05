@@ -1,22 +1,26 @@
 Delivery-time readiness, and the exact relationship between the head it judged and the head that ships.
 $ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
-  now: 3691f1c359d372b62457caa2b1839f8dda48c448
+  now: b23ecf3a472308821ac1e0c9450826ea58533495
   the readiness run judged: cf20f512495e60816c2e51d0eaf10f96fc4b0d10
 $ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
   now: aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f   (the same value the run recorded: aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f, equal=True)
 
 What sits between the judged head and the shipped head:
+  review/ord0562/r7/already_on_tip_r7.txt
+  review/ord0562/r7/head_loop_r7.txt
+  review/ord0562/r7/make_head_loop_r7.py
   review/ord0562/r7/readiness_r7.json
+  review/ord0562/r7/ruler_0563_r7.txt
   files outside review/ in that step: none
 
 The paths the ruler judged, each compared against the head of the branch it belongs to:
   frontend/src/app/V8Experience.tsx
     branch refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
-    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now 3691f1c359d372b62457caa2b1839f8dda48c448; equal=False
+    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now b23ecf3a472308821ac1e0c9450826ea58533495; equal=False
     verdict CLEAN; blob then 4ba9d383f3f98f7cc11580870d7b61cd4b413c73; blob now 4ba9d383f3f98f7cc11580870d7b61cd4b413c73; equal=True
   frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts
     branch refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
-    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now 3691f1c359d372b62457caa2b1839f8dda48c448; equal=False
+    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now b23ecf3a472308821ac1e0c9450826ea58533495; equal=False
     verdict CLEAN; blob then 9344249444808bfbfa8b28cf9c38efbe912e9559; blob now 9344249444808bfbfa8b28cf9c38efbe912e9559; equal=True
   frontend/src/lib/displayVocabulary.ts
     branch refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3
