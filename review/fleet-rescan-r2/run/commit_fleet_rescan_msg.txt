@@ -1,0 +1,26 @@
+[ORD-0500 lane / 0afdb49b] fleet landed-content re-scan, second generation of the aggregate
+
+Question asked of the whole fleet rather than this lane: every refs/heads/review/* hand the
+remote answers for (1081 refs, 1035 distinct heads, tip read live) compared to the live tip by
+byte equality -- the standing ruling that landed-ness is blob equality and ancestry is unusable.
+
+r1 (tools/fleet_landed_rescan_r1.py) got the per-path counts right and the aggregate wrong in
+two ways, both fixed here rather than described:
+  * whole-tree snapshot hands (~9.5k-10.6k own paths each) were folded into CHANGED, which reads
+    as "thousands of artefacts were overwritten".  They now get SNAPSHOT_SHAPED and NO verdict.
+  * a head that emitted nothing was treated as "published nothing".  Two of those are genuinely
+    empty commits (tree equals every parent tree) and are now EMPTY_COMMIT; the rest was this
+    tool's own bug -- git diff-tree --stdin does not flush an unterminated final line, so the
+    lexically largest head dropped out of every batch.  Trailing newline added, roster coverage
+    checked, and C11 pins batch == per-head.
+
+Labels are byte-words now: NOT_ON_LINE / DIFFERENT_ON_LINE, never LOST or superseded, because a
+loss claim needs an instrument landing receipt naming a tip the hand once matched and this scan
+reads no receipt.
+
+Eleven counter-examples, all biting: tools/fleet_landed_rescan_arms_r2.py ->
+evidence/fleet_rescan_r2/fleet_rescan_arms_r2.json.  Readings:
+evidence/fleet_rescan_r2/fleet_rescan_r2.json plus run/fleet_r2_read.txt and run/fleet_r2_arms.txt.
+
+Zero product bytes, zero landed bytes overwritten, zero refs moved, zero force-pushes, zero
+branch deletions, no fetch, no ledger write, no port touched, demo/reset not run.

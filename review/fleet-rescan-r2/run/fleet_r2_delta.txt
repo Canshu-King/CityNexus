@@ -1,0 +1,21 @@
+refs_compared=1081 labels_changed=35 same_tip=True (r1=aac1142e1d r2=aac1142e1d)
+  MIXED                -> SNAPSHOT_SHAPED          21 refs
+  OTHER                -> SNAPSHOT_SHAPED          6 refs
+  NO_PATHS_REPORTED    -> EMPTY_COMMIT             2 refs
+  NO_PATHS_REPORTED    -> HELD                     2 refs
+  MIXED                -> ALL_NOT_ON_LINE          2 refs
+  HELD                 -> ALL_DELETIONS_HELD       1 refs
+  OTHER                -> ALL_NOT_ON_LINE          1 refs
+rows_with_per_path_counts_moved=35
+   1ba48dbf-ord0513-evidence-r1                   r1=[0, 10, 9171] r2=[0, 10, 0]
+   1ba48dbf-ord0513-evidence-r2                   r1=[0, 12, 9368] r2=[0, 12, 0]
+   1ba48dbf-ord0513-evidence-r3                   r1=[0, 13, 9506] r2=[0, 13, 0]
+   1ba48dbf-ord0513-evidence-r4                   r1=[0, 15, 9506] r2=[0, 15, 0]
+   1ba48dbf-ord0538-evidence-r1                   r1=[0, 9, 9133] r2=[0, 9, 0]
+   1d64acf5-mirror-sync-selfcheck-r2              r1=[28, 0, 7] r2=[2, 0, 3]
+recovered_from_batch_bug=4
+   Q-ord0382-ai-three-stage-r4                    -> EMPTY_COMMIT paths=0
+   R-ord0437-link-import-r12                      -> HELD paths=1
+   cmdr-batch-ord-0437-195842                     -> HELD paths=1
+   newlane-ord0444-prod-evidence-r1               -> EMPTY_COMMIT paths=0
+bytes=29994

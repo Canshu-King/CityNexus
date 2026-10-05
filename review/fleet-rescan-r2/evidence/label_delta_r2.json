@@ -1,0 +1,1361 @@
+{
+ "tool": "label_delta_r2",
+ "refs_compared": 1081,
+ "refs_whose_own_head_moved_between_passes": 1,
+ "head_moves": [
+  {
+   "ref": "refs/heads/review/6a773af1-ord0556-route-sweep-r1",
+   "r1_head": "5a90d65b230d0c6d66ab5e2c05d6cebc956cffcc",
+   "r2_head": "5971231736e175d81dd4f6e5a33f4ae93a21222f",
+   "r1_label": "ALL_ABSENT",
+   "r2_label": "ALL_NOT_ON_LINE",
+   "r1_paths": 2,
+   "r2_paths": 3
+  }
+ ],
+ "labels_changed": 35,
+ "changed_pairs": [
+  {
+   "from": "MIXED",
+   "to": "SNAPSHOT_SHAPED",
+   "refs": 21
+  },
+  {
+   "from": "OTHER",
+   "to": "SNAPSHOT_SHAPED",
+   "refs": 6
+  },
+  {
+   "from": "NO_PATHS_REPORTED",
+   "to": "EMPTY_COMMIT",
+   "refs": 2
+  },
+  {
+   "from": "NO_PATHS_REPORTED",
+   "to": "HELD",
+   "refs": 2
+  },
+  {
+   "from": "MIXED",
+   "to": "ALL_NOT_ON_LINE",
+   "refs": 2
+  },
+  {
+   "from": "HELD",
+   "to": "ALL_DELETIONS_HELD",
+   "refs": 1
+  },
+  {
+   "from": "OTHER",
+   "to": "ALL_NOT_ON_LINE",
+   "refs": 1
+  }
+ ],
+ "rows_with_per_path_counts_moved": 35,
+ "count_move_causes": {
+  "deletion_class_split": 33,
+  "recovered_from_batch_drop": 2
+ },
+ "unattributed_count_moves": 0,
+ "count_moves": [
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r1",
+   "r1": [
+    0,
+    10,
+    9171
+   ],
+   "r2": [
+    0,
+    10,
+    0
+   ],
+   "r1_paths": 9181,
+   "r2_paths": 9181,
+   "deletion_held": 0,
+   "deletion_undone": 9171,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r2",
+   "r1": [
+    0,
+    12,
+    9368
+   ],
+   "r2": [
+    0,
+    12,
+    0
+   ],
+   "r1_paths": 9380,
+   "r2_paths": 9380,
+   "deletion_held": 0,
+   "deletion_undone": 9368,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r3",
+   "r1": [
+    0,
+    13,
+    9506
+   ],
+   "r2": [
+    0,
+    13,
+    0
+   ],
+   "r1_paths": 9519,
+   "r2_paths": 9519,
+   "deletion_held": 0,
+   "deletion_undone": 9506,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r4",
+   "r1": [
+    0,
+    15,
+    9506
+   ],
+   "r2": [
+    0,
+    15,
+    0
+   ],
+   "r1_paths": 9521,
+   "r2_paths": 9521,
+   "deletion_held": 0,
+   "deletion_undone": 9506,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0538-evidence-r1",
+   "r1": [
+    0,
+    9,
+    9133
+   ],
+   "r2": [
+    0,
+    9,
+    0
+   ],
+   "r1_paths": 9142,
+   "r2_paths": 9142,
+   "deletion_held": 0,
+   "deletion_undone": 9133,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-mirror-sync-selfcheck-r2",
+   "r1": [
+    28,
+    0,
+    7
+   ],
+   "r2": [
+    2,
+    0,
+    3
+   ],
+   "r1_paths": 35,
+   "r2_paths": 35,
+   "deletion_held": 26,
+   "deletion_undone": 4,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/89f2e2d6-inflight-wait-inventory-r2",
+   "r1": [
+    4,
+    0,
+    3
+   ],
+   "r2": [
+    4,
+    0,
+    2
+   ],
+   "r1_paths": 7,
+   "r2_paths": 7,
+   "deletion_held": 0,
+   "deletion_undone": 1,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/N3-ord0407-empty-state-actions-r1",
+   "r1": [
+    9,
+    0,
+    2
+   ],
+   "r2": [
+    8,
+    0,
+    2
+   ],
+   "r1_paths": 11,
+   "r2_paths": 11,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/N3-ord0407-empty-state-actions-r7",
+   "r1": [
+    1,
+    0,
+    0
+   ],
+   "r2": [
+    0,
+    0,
+    0
+   ],
+   "r1_paths": 1,
+   "r2_paths": 1,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/Q-ord0369-replan-walkthrough-r2",
+   "r1": [
+    2,
+    6,
+    1
+   ],
+   "r2": [
+    1,
+    6,
+    1
+   ],
+   "r1_paths": 9,
+   "r2_paths": 9,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/Q-ord0392-panel-registry",
+   "r1": [
+    7,
+    0,
+    0
+   ],
+   "r2": [
+    6,
+    0,
+    0
+   ],
+   "r1_paths": 7,
+   "r2_paths": 7,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/Q-ord0404-deeplink-screen-r2",
+   "r1": [
+    4,
+    0,
+    0
+   ],
+   "r2": [
+    3,
+    0,
+    0
+   ],
+   "r1_paths": 4,
+   "r2_paths": 4,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/Q-ord0508-contract-reproducible-client",
+   "r1": [
+    5,
+    1,
+    1
+   ],
+   "r2": [
+    2,
+    1,
+    1
+   ],
+   "r1_paths": 7,
+   "r2_paths": 7,
+   "deletion_held": 3,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/R-ord0437-link-import-r12",
+   "r1": [
+    0,
+    0,
+    0
+   ],
+   "r2": [
+    1,
+    0,
+    0
+   ],
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "recovered_from_batch_drop"
+  },
+  {
+   "ref": "refs/heads/review/a68b0631-ord0554-live-caps-r1",
+   "r1": [
+    10,
+    0,
+    0
+   ],
+   "r2": [
+    7,
+    0,
+    0
+   ],
+   "r1_paths": 10,
+   "r2_paths": 10,
+   "deletion_held": 3,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0480-drawer-close-arms-r2",
+   "r1": [
+    0,
+    2,
+    1
+   ],
+   "r2": [
+    0,
+    2,
+    0
+   ],
+   "r1_paths": 3,
+   "r2_paths": 3,
+   "deletion_held": 0,
+   "deletion_undone": 1,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0497-footprints-on-map-r2",
+   "r1": [
+    8,
+    10,
+    0
+   ],
+   "r2": [
+    0,
+    10,
+    0
+   ],
+   "r1_paths": 18,
+   "r2_paths": 18,
+   "deletion_held": 8,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0497-footprints-on-map-r3",
+   "r1": [
+    23,
+    0,
+    0
+   ],
+   "r2": [
+    13,
+    0,
+    0
+   ],
+   "r1_paths": 23,
+   "r2_paths": 23,
+   "deletion_held": 10,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0530-footprints-by-day-r2",
+   "r1": [
+    23,
+    25,
+    0
+   ],
+   "r2": [
+    0,
+    25,
+    0
+   ],
+   "r1_paths": 48,
+   "r2_paths": 48,
+   "deletion_held": 23,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-0434-013044",
+   "r1": [
+    1059,
+    0,
+    46
+   ],
+   "r2": [
+    1058,
+    0,
+    46
+   ],
+   "r1_paths": 1105,
+   "r2_paths": 1105,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0406",
+   "r1": [
+    170,
+    0,
+    54
+   ],
+   "r2": [
+    169,
+    0,
+    54
+   ],
+   "r1_paths": 224,
+   "r2_paths": 224,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0434",
+   "r1": [
+    108,
+    0,
+    34
+   ],
+   "r2": [
+    107,
+    0,
+    34
+   ],
+   "r1_paths": 142,
+   "r2_paths": 142,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0437-195842",
+   "r1": [
+    0,
+    0,
+    0
+   ],
+   "r2": [
+    1,
+    0,
+    0
+   ],
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "recovered_from_batch_drop"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0438",
+   "r1": [
+    89,
+    0,
+    32
+   ],
+   "r2": [
+    84,
+    0,
+    32
+   ],
+   "r1_paths": 121,
+   "r2_paths": 121,
+   "deletion_held": 5,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0440-234455",
+   "r1": [
+    1453,
+    0,
+    42
+   ],
+   "r2": [
+    1452,
+    0,
+    42
+   ],
+   "r1_paths": 1495,
+   "r2_paths": 1495,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0444",
+   "r1": [
+    108,
+    24,
+    37
+   ],
+   "r2": [
+    107,
+    24,
+    37
+   ],
+   "r1_paths": 169,
+   "r2_paths": 169,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0445",
+   "r1": [
+    109,
+    0,
+    30
+   ],
+   "r2": [
+    108,
+    0,
+    30
+   ],
+   "r1_paths": 139,
+   "r2_paths": 139,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0513-002504",
+   "r1": [
+    0,
+    12,
+    9368
+   ],
+   "r2": [
+    0,
+    12,
+    0
+   ],
+   "r1_paths": 9380,
+   "r2_paths": 9380,
+   "deletion_held": 0,
+   "deletion_undone": 9368,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0557-sc-202427",
+   "r1": [
+    28,
+    0,
+    7
+   ],
+   "r2": [
+    2,
+    0,
+    3
+   ],
+   "r1_paths": 35,
+   "r2_paths": 35,
+   "deletion_held": 26,
+   "deletion_undone": 4,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-inventory-221851",
+   "r1": [
+    4,
+    0,
+    3
+   ],
+   "r2": [
+    4,
+    0,
+    2
+   ],
+   "r1_paths": 7,
+   "r2_paths": 7,
+   "deletion_held": 0,
+   "deletion_undone": 1,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-recut-ORD-0435-r1",
+   "r1": [
+    106,
+    0,
+    17
+   ],
+   "r2": [
+    101,
+    0,
+    17
+   ],
+   "r1_paths": 123,
+   "r2_paths": 123,
+   "deletion_held": 5,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-recut-ORD-0441-r2",
+   "r1": [
+    90,
+    4,
+    15
+   ],
+   "r2": [
+    89,
+    4,
+    15
+   ],
+   "r1_paths": 109,
+   "r2_paths": 109,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-recut-ord0415-r2",
+   "r1": [
+    62,
+    0,
+    8
+   ],
+   "r2": [
+    61,
+    0,
+    8
+   ],
+   "r1_paths": 70,
+   "r2_paths": 70,
+   "deletion_held": 1,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-recut-ord0446-r1",
+   "r1": [
+    89,
+    0,
+    35
+   ],
+   "r2": [
+    84,
+    0,
+    35
+   ],
+   "r1_paths": 124,
+   "r2_paths": 124,
+   "deletion_held": 5,
+   "deletion_undone": 0,
+   "n_parents": 2,
+   "cause": "deletion_class_split"
+  },
+  {
+   "ref": "refs/heads/review/e766b154-ord0528-poster-share-r2",
+   "r1": [
+    19,
+    0,
+    0
+   ],
+   "r2": [
+    14,
+    0,
+    0
+   ],
+   "r1_paths": 19,
+   "r2_paths": 19,
+   "deletion_held": 5,
+   "deletion_undone": 0,
+   "n_parents": 1,
+   "cause": "deletion_class_split"
+  }
+ ],
+ "recovered_from_batch_bug": [
+  {
+   "ref": "refs/heads/review/Q-ord0382-ai-three-stage-r4",
+   "head": "bfd020be68c24416e471467bde518935da80d913",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "EMPTY_COMMIT",
+   "r1_paths": 0,
+   "r2_paths": 0,
+   "r1_counts": {},
+   "r2_counts": {},
+   "why": "head tree equals every parent tree -- nothing was published by this commit itself"
+  },
+  {
+   "ref": "refs/heads/review/R-ord0437-link-import-r12",
+   "head": "ffd84dc480832c29bb4f43b14dc654cd4c02e57a",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "HELD",
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "r1_counts": {},
+   "r2_counts": {
+    "SAME": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0437-195842",
+   "head": "ffd84dc480832c29bb4f43b14dc654cd4c02e57a",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "HELD",
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "r1_counts": {},
+   "r2_counts": {
+    "SAME": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/newlane-ord0444-prod-evidence-r1",
+   "head": "5f947f40ba81d1f7f38d322283b0d4006a8c29c7",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "EMPTY_COMMIT",
+   "r1_paths": 0,
+   "r2_paths": 0,
+   "r1_counts": {},
+   "r2_counts": {},
+   "why": "head tree equals every parent tree -- nothing was published by this commit itself"
+  }
+ ],
+ "changed_rows": [
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r1",
+   "head": "458225391690fe4603fd663ac295b3254425187d",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9181,
+   "r2_paths": 9181,
+   "r1_counts": {
+    "absent": 10,
+    "changed": 9171
+   },
+   "r2_counts": {
+    "ABSENT": 10,
+    "DELETION_UNDONE": 9171
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9181 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r2",
+   "head": "84d53277e412a51bd603391bcfdc1c8834d5e2bb",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9380,
+   "r2_paths": 9380,
+   "r1_counts": {
+    "absent": 12,
+    "changed": 9368
+   },
+   "r2_counts": {
+    "ABSENT": 12,
+    "DELETION_UNDONE": 9368
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9380 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r3",
+   "head": "2ed6a21da3bfb8f65b462a61b65c79e6c71e37a2",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9519,
+   "r2_paths": 9519,
+   "r1_counts": {
+    "absent": 13,
+    "changed": 9506
+   },
+   "r2_counts": {
+    "ABSENT": 13,
+    "DELETION_UNDONE": 9506
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9519 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r4",
+   "head": "31c27041210a605f75265b13445cc1d91f0177ab",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9521,
+   "r2_paths": 9521,
+   "r1_counts": {
+    "absent": 15,
+    "changed": 9506
+   },
+   "r2_counts": {
+    "ABSENT": 15,
+    "DELETION_UNDONE": 9506
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9521 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0538-evidence-r1",
+   "head": "a46d7bc6ebb252773a76cb80dd67f522e9bd99e6",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9142,
+   "r2_paths": 9142,
+   "r1_counts": {
+    "absent": 9,
+    "changed": 9133
+   },
+   "r2_counts": {
+    "ABSENT": 9,
+    "DELETION_UNDONE": 9133
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9142 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-avatar-r2",
+   "head": "62ee41e3d36debdb9db502c8180c386241a46f86",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10490,
+   "r2_paths": 10490,
+   "r1_counts": {
+    "same": 10474,
+    "changed": 16
+   },
+   "r2_counts": {
+    "SAME": 10474,
+    "CHANGED": 16
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10490 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-dup-erratum-r1",
+   "head": "f8d065fc7d49561b9e9baa5d4bf831d164e231a3",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10592,
+   "r2_paths": 10592,
+   "r1_counts": {
+    "same": 10589,
+    "absent": 3
+   },
+   "r2_counts": {
+    "SAME": 10589,
+    "ABSENT": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10592 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-empty-floor-r1",
+   "head": "2e43ed7746b78336cd31298db573235f73d5bff1",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10567,
+   "r2_paths": 10567,
+   "r1_counts": {
+    "same": 10559,
+    "absent": 5,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10559,
+    "ABSENT": 5,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10567 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-empty-floor-r2",
+   "head": "31eb3e565437b35ea5f12626f7ebedb36d3503e3",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10574,
+   "r2_paths": 10574,
+   "r1_counts": {
+    "same": 10562,
+    "absent": 9,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10562,
+    "ABSENT": 9,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10574 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-mirror-sync-restore-pair-r3",
+   "head": "a08f39ec53f2ad931b6ec61d12f07e712358c881",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10562,
+   "r2_paths": 10562,
+   "r1_counts": {
+    "same": 10559,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10559,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10562 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/1d64acf5-mirror-sync-restore-selfcheck-r3",
+   "head": "4003ffc55f5e564d6c23a2e963a0f9bd358c7e4d",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10561,
+   "r2_paths": 10561,
+   "r1_counts": {
+    "same": 10558,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10558,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10561 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/6a150e1e-emitter-door-verify-r2",
+   "head": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10533,
+   "r2_paths": 10533,
+   "r1_counts": {
+    "same": 10521,
+    "changed": 12
+   },
+   "r2_counts": {
+    "SAME": 10521,
+    "CHANGED": 12
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10533 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/6a150e1e-spend-off-day-sentence-r2",
+   "head": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10533,
+   "r2_paths": 10533,
+   "r1_counts": {
+    "same": 10521,
+    "changed": 12
+   },
+   "r2_counts": {
+    "SAME": 10521,
+    "CHANGED": 12
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10533 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/6a150e1e-trash-citation-rot-r3",
+   "head": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10533,
+   "r2_paths": 10533,
+   "r1_counts": {
+    "same": 10521,
+    "changed": 12
+   },
+   "r2_counts": {
+    "SAME": 10521,
+    "CHANGED": 12
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10533 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/8ac89982-ord0512-place-name-on-the-wire-r1",
+   "head": "2225640dd4ba1ec1ca8c6d4ecb701aba20eec16b",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10547,
+   "r2_paths": 10547,
+   "r1_counts": {
+    "same": 10539,
+    "changed": 8
+   },
+   "r2_counts": {
+    "SAME": 10539,
+    "CHANGED": 8
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10547 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/N3-ord0407-empty-state-actions-r7",
+   "head": "c841c8ac8b03afb4cc475f58126d9b43b33a8d0a",
+   "r1_label": "HELD",
+   "r2_label": "ALL_DELETIONS_HELD",
+   "r1_paths": 1,
+   "r2_paths": 1,
+   "r1_counts": {
+    "same": 1
+   },
+   "r2_counts": {
+    "DELETION_HELD": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/Q-ord0382-ai-three-stage-r4",
+   "head": "bfd020be68c24416e471467bde518935da80d913",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "EMPTY_COMMIT",
+   "r1_paths": 0,
+   "r2_paths": 0,
+   "r1_counts": {},
+   "r2_counts": {},
+   "why": "head tree equals every parent tree -- nothing was published by this commit itself"
+  },
+  {
+   "ref": "refs/heads/review/R-ord0437-link-import-r12",
+   "head": "ffd84dc480832c29bb4f43b14dc654cd4c02e57a",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "HELD",
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "r1_counts": {},
+   "r2_counts": {
+    "SAME": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0480-drawer-close-arms-r2",
+   "head": "91644673e2a7baec710037d6103f32ac4aaade77",
+   "r1_label": "OTHER",
+   "r2_label": "ALL_NOT_ON_LINE",
+   "r1_paths": 3,
+   "r2_paths": 3,
+   "r1_counts": {
+    "absent": 2,
+    "changed": 1
+   },
+   "r2_counts": {
+    "ABSENT": 2,
+    "DELETION_UNDONE": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0497-footprints-on-map-r2",
+   "head": "f362aedc45fa9638b9ae0fee379c3072827bf2dc",
+   "r1_label": "MIXED",
+   "r2_label": "ALL_NOT_ON_LINE",
+   "r1_paths": 18,
+   "r2_paths": 18,
+   "r1_counts": {
+    "same": 8,
+    "absent": 10
+   },
+   "r2_counts": {
+    "ABSENT": 10,
+    "DELETION_HELD": 8
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/bac10f40-ord0530-footprints-by-day-r2",
+   "head": "90d00c7480bab499bd8efb2c5d9e4b1aae163183",
+   "r1_label": "MIXED",
+   "r2_label": "ALL_NOT_ON_LINE",
+   "r1_paths": 48,
+   "r2_paths": 48,
+   "r1_counts": {
+    "same": 23,
+    "absent": 25
+   },
+   "r2_counts": {
+    "ABSENT": 25,
+    "DELETION_HELD": 23
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0437-195842",
+   "head": "ffd84dc480832c29bb4f43b14dc654cd4c02e57a",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "HELD",
+   "r1_paths": 0,
+   "r2_paths": 1,
+   "r1_counts": {},
+   "r2_counts": {
+    "SAME": 1
+   },
+   "why": null
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0476-184919",
+   "head": "f3ba478caaecdbdf7254786b2bf0d03d323897d0",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10489,
+   "r2_paths": 10489,
+   "r1_counts": {
+    "same": 10473,
+    "changed": 16
+   },
+   "r2_counts": {
+    "SAME": 10473,
+    "CHANGED": 16
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10489 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0500-af-194653",
+   "head": "eef2e63750a91ca00c42d493dbec7bfa04bcf8b6",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10519,
+   "r2_paths": 10519,
+   "r1_counts": {
+    "same": 10478,
+    "absent": 26,
+    "changed": 15
+   },
+   "r2_counts": {
+    "SAME": 10478,
+    "ABSENT": 26,
+    "CHANGED": 15
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10519 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0513-002504",
+   "head": "596f45d73c8bd387d51dc1260c5ca672f21d4c7e",
+   "r1_label": "OTHER",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 9380,
+   "r2_paths": 9380,
+   "r1_counts": {
+    "absent": 12,
+    "changed": 9368
+   },
+   "r2_counts": {
+    "ABSENT": 12,
+    "DELETION_UNDONE": 9368
+   },
+   "why": "own paths >= 0.5 of the live tip tree (9380 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0545s6-222800",
+   "head": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10533,
+   "r2_paths": 10533,
+   "r1_counts": {
+    "same": 10521,
+    "changed": 12
+   },
+   "r2_counts": {
+    "SAME": 10521,
+    "CHANGED": 12
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10533 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0554-141056",
+   "head": "868958e7e11472faa0fc84c2218304c36d1885b0",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10465,
+   "r2_paths": 10465,
+   "r1_counts": {
+    "same": 10447,
+    "changed": 18
+   },
+   "r2_counts": {
+    "SAME": 10447,
+    "CHANGED": 18
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10465 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0557-182552",
+   "head": "aefbbd1a2f99c448a9a684b3d01ce387273ee83c",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10475,
+   "r2_paths": 10475,
+   "r1_counts": {
+    "same": 10457,
+    "changed": 18
+   },
+   "r2_counts": {
+    "SAME": 10457,
+    "CHANGED": 18
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10475 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0561-210008",
+   "head": "62ee41e3d36debdb9db502c8180c386241a46f86",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10490,
+   "r2_paths": 10490,
+   "r1_counts": {
+    "same": 10474,
+    "changed": 16
+   },
+   "r2_counts": {
+    "SAME": 10474,
+    "CHANGED": 16
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10490 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-0570-235522",
+   "head": "45207a0cc0fcae000b619753b4dfccb06594a59f",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10540,
+   "r2_paths": 10540,
+   "r1_counts": {
+    "same": 10531,
+    "changed": 9
+   },
+   "r2_counts": {
+    "SAME": 10531,
+    "CHANGED": 9
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10540 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-cmdr0204-001303",
+   "head": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10560,
+   "r2_paths": 10560,
+   "r1_counts": {
+    "same": 10557,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10557,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10560 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-batch-ord-restore2-011440",
+   "head": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10562,
+   "r2_paths": 10562,
+   "r1_counts": {
+    "same": 10559,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10559,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10562 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/cmdr-restore-mirror-selfcheck-r2",
+   "head": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10562,
+   "r2_paths": 10562,
+   "r1_counts": {
+    "same": 10559,
+    "changed": 3
+   },
+   "r2_counts": {
+    "SAME": 10559,
+    "CHANGED": 3
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10562 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  },
+  {
+   "ref": "refs/heads/review/newlane-ord0444-prod-evidence-r1",
+   "head": "5f947f40ba81d1f7f38d322283b0d4006a8c29c7",
+   "r1_label": "NO_PATHS_REPORTED",
+   "r2_label": "EMPTY_COMMIT",
+   "r1_paths": 0,
+   "r2_paths": 0,
+   "r1_counts": {},
+   "r2_counts": {},
+   "why": "head tree equals every parent tree -- nothing was published by this commit itself"
+  },
+  {
+   "ref": "refs/heads/review/newlane-ord0545s6-copy-cells-r2",
+   "head": "b60418ccbda8937029e6b74f8c990ad06a8d62f8",
+   "r1_label": "MIXED",
+   "r2_label": "SNAPSHOT_SHAPED",
+   "r1_paths": 10533,
+   "r2_paths": 10533,
+   "r1_counts": {
+    "same": 10521,
+    "changed": 12
+   },
+   "r2_counts": {
+    "SAME": 10521,
+    "CHANGED": 12
+   },
+   "why": "own paths >= 0.5 of the live tip tree (10533 of 10589) -- this hand is the repository, so no landed/lost verdict is claimed"
+  }
+ ],
+ "r1_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "r2_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "same_tip": true
+}

@@ -1,0 +1,19 @@
+tip=aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f tip_tree_paths=10589 review_refs=1081 distinct_heads=1035 refs_sharing_a_head=42
+head_object_kinds={'commit': 1035} unresolvable_locally=0 quiet_heads=2 empty_commit=2
+class_tally={'HELD': 272, 'MIXED': 385, 'ALL_DIFFERENT_ON_LINE': 129, 'ALL_NOT_ON_LINE': 224, 'SNAPSHOT_SHAPED': 27, 'NONE_HELD_SPLIT': 41, 'ALL_DELETIONS_HELD': 1, 'EMPTY_COMMIT': 2}
+candidate_hands_judged=1052 candidate_paths_total=41263 same=34309 absent=1819 changed=4992 deletion_undone=11
+snapshot_shaped_paths_total=277343
+absent_by_lane_top8=[{'lane': 'newlane', 'absent_paths': 277}, {'lane': '1ba48dbf', 'absent_paths': 216}, {'lane': 'cff87c64', 'absent_paths': 215}, {'lane': 'Q', 'absent_paths': 167}, {'lane': '8ac89982', 'absent_paths': 109}, {'lane': 'bac10f40', 'absent_paths': 100}, {'lane': 'cmdr', 'absent_paths': 99}, {'lane': '0afdb49b', 'absent_paths': 99}]
+--- classes with named hands ---
+HELD                     refs=272   paths=1388    same=1368   absent=0      changed=0     
+      cmdr-batch-ord-0504d-041538                                head=ab8ddb55d1 paths=69 {'SAME': 69, 'ABSENT': 0, 'CHANGED': 0, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+      Q-ord0427-drawer-head-row-r2                               head=d363d3620d paths=68 {'SAME': 68, 'ABSENT': 0, 'CHANGED': 0, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+      e766b154-checkin-words-day24-screen-r1                     head=3bdaf61058 paths=61 {'SAME': 61, 'ABSENT': 0, 'CHANGED': 0, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+MIXED                    refs=385   paths=37618   same=32941  absent=249    changed=4338  
+      cmdr-batch-ord-0465-032234                                 head=65195d1b9c paths=2088 {'SAME': 2068, 'ABSENT': 0, 'CHANGED': 20, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+      cmdr-batch-ord-0440-234455                                 head=1d566ffa17 paths=1495 {'SAME': 1452, 'ABSENT': 0, 'CHANGED': 42, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 1, 'DELETION_UNDONE': 0}
+      cmdr-batch-0434-013044                                     head=48aa7a9eaa paths=1105 {'SAME': 1058, 'ABSENT': 0, 'CHANGED': 46, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 1, 'DELETION_UNDONE': 0}
+SNAPSHOT_SHAPED          refs=27    paths=277343  same=220980 absent=114    changed=197   
+      1d64acf5-dup-erratum-r1                                    head=f8d065fc7d paths=10592 {'SAME': 10589, 'ABSENT': 3, 'CHANGED': 0, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+      1d64acf5-empty-floor-r2                                    head=31eb3e5654 paths=10574 {'SAME': 10562, 'ABSENT': 9, 'CHANGED': 3, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}
+      1d64acf5-empty-floor-r1                                    head=2e43ed7746 paths=10567 {'SAME': 10559, 'ABSENT': 5, 'CHANGED': 3, 'UNREADABLE_ON_LINE': 0, 'DELETION_HELD': 0, 'DELETION_UNDONE': 0}

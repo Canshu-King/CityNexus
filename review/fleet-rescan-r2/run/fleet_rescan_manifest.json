@@ -1,0 +1,10 @@
+[["tools/fleet_landed_rescan_r1.py", "tools"], ["tools/fleet_landed_rescan_r2.py", "tools"],
+ ["tools/fleet_landed_rescan_arms_r2.py", "tools"], ["tools/fleet_rescan_label_delta_r2.py", "tools"],
+ ["tools/fleet_rescan_roster_r2.py", "tools"],
+ ["evidence/fleet_rescan_r2_summary_r2.json", "evidence"],
+ ["evidence/fleet_rescan_r2_roster_r2.tsv", "evidence"],
+ ["evidence/fleet_rescan_r2/label_delta_r2.json", "evidence"],
+ ["evidence/fleet_rescan_r2/fleet_rescan_arms_r2.json", "evidence"],
+ ["run/fleet_r2_read.txt", "run"], ["run/fleet_r2_arms.txt", "run"],
+ ["run/fleet_r2_delta.txt", "run"], ["run/fleet_rescan_manifest.json", "run"],
+ ["run/commit_fleet_rescan_msg.txt", "run"]]

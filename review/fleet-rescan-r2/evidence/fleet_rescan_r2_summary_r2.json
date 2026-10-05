@@ -1,0 +1,179 @@
+{
+ "tool": "fleet_landed_rescan_r2",
+ "supersedes_reading_of": "fleet_landed_rescan_r1 (aggregate labels only; per-path counts unchanged)",
+ "tip_ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "tip_tree_paths": 10589,
+ "review_refs": 1081,
+ "distinct_review_heads": 1035,
+ "refs_sharing_a_head": 42,
+ "distinct_heads_shared": 42,
+ "head_object_kinds": {
+  "commit": 1035
+ },
+ "heads_unresolvable_locally": 0,
+ "heads_quiet_in_batch": 2,
+ "heads_empty_commit": 2,
+ "empty_commit_refs": [
+  "refs/heads/review/Q-ord0382-ai-three-stage-r4",
+  "refs/heads/review/newlane-ord0444-prod-evidence-r1"
+ ],
+ "snapshot_fraction": 0.5,
+ "tip_tree_distinct_blobs": 5756,
+ "tip_tree_blobs_missing_locally": 0,
+ "parent_count_distribution": {
+  "0": 15,
+  "1": 780,
+  "2": 240
+ },
+ "class_tally": {
+  "HELD": 272,
+  "MIXED": 385,
+  "ALL_DIFFERENT_ON_LINE": 129,
+  "ALL_NOT_ON_LINE": 224,
+  "SNAPSHOT_SHAPED": 27,
+  "NONE_HELD_SPLIT": 41,
+  "ALL_DELETIONS_HELD": 1,
+  "EMPTY_COMMIT": 2
+ },
+ "candidate_hands_judged": 1052,
+ "snapshot_shaped_paths_total": 277343,
+ "candidate_paths_total": 41263,
+ "candidate_same": 34309,
+ "candidate_absent": 1819,
+ "candidate_changed": 4992,
+ "candidate_deletion_undone": 11,
+ "lanes_top10": [
+  {
+   "lane": "cmdr",
+   "classes": {
+    "HELD": 29,
+    "MIXED": 243,
+    "ALL_DIFFERENT_ON_LINE": 8,
+    "ALL_NOT_ON_LINE": 3
+   }
+  },
+  {
+   "lane": "Q",
+   "classes": {
+    "HELD": 43,
+    "NONE_HELD_SPLIT": 3,
+    "MIXED": 11,
+    "ALL_DIFFERENT_ON_LINE": 13,
+    "ALL_NOT_ON_LINE": 22
+   }
+  },
+  {
+   "lane": "newlane",
+   "classes": {
+    "ALL_NOT_ON_LINE": 23,
+    "HELD": 23,
+    "MIXED": 19,
+    "ALL_DIFFERENT_ON_LINE": 7,
+    "NONE_HELD_SPLIT": 7
+   }
+  },
+  {
+   "lane": "1ba48dbf",
+   "classes": {
+    "ALL_NOT_ON_LINE": 27,
+    "ALL_DIFFERENT_ON_LINE": 14,
+    "MIXED": 1,
+    "HELD": 5
+   }
+  },
+  {
+   "lane": "6a150e1e",
+   "classes": {
+    "ALL_DIFFERENT_ON_LINE": 13,
+    "ALL_NOT_ON_LINE": 8,
+    "NONE_HELD_SPLIT": 1,
+    "MIXED": 7,
+    "HELD": 10
+   }
+  },
+  {
+   "lane": "cff87c64",
+   "classes": {
+    "MIXED": 10,
+    "ALL_NOT_ON_LINE": 17,
+    "HELD": 7,
+    "NONE_HELD_SPLIT": 4
+   }
+  },
+  {
+   "lane": "2d2d7428",
+   "classes": {
+    "HELD": 12,
+    "ALL_DIFFERENT_ON_LINE": 1,
+    "ALL_NOT_ON_LINE": 24
+   }
+  },
+  {
+   "lane": "82f55d8a",
+   "classes": {
+    "ALL_DIFFERENT_ON_LINE": 14,
+    "MIXED": 7,
+    "HELD": 9,
+    "ALL_NOT_ON_LINE": 1,
+    "NONE_HELD_SPLIT": 1
+   }
+  },
+  {
+   "lane": "R",
+   "classes": {
+    "HELD": 11,
+    "MIXED": 10,
+    "NONE_HELD_SPLIT": 2,
+    "ALL_NOT_ON_LINE": 5,
+    "ALL_DIFFERENT_ON_LINE": 1
+   }
+  },
+  {
+   "lane": "N3",
+   "classes": {
+    "MIXED": 7,
+    "HELD": 16,
+    "ALL_NOT_ON_LINE": 2,
+    "ALL_DELETIONS_HELD": 1,
+    "NONE_HELD_SPLIT": 2
+   }
+  }
+ ],
+ "absent_by_lane_top8": [
+  {
+   "lane": "newlane",
+   "absent_paths": 277
+  },
+  {
+   "lane": "1ba48dbf",
+   "absent_paths": 216
+  },
+  {
+   "lane": "cff87c64",
+   "absent_paths": 215
+  },
+  {
+   "lane": "Q",
+   "absent_paths": 167
+  },
+  {
+   "lane": "8ac89982",
+   "absent_paths": 109
+  },
+  {
+   "lane": "bac10f40",
+   "absent_paths": 100
+  },
+  {
+   "lane": "cmdr",
+   "absent_paths": 99
+  },
+  {
+   "lane": "0afdb49b",
+   "absent_paths": 99
+  }
+ ],
+ "roster_tsv_rows": 1081,
+ "per_ref_rows_live_at": "evidence/fleet_rescan_r2/fleet_rescan_r2.json (lane-local, 1018904 B)"
+}

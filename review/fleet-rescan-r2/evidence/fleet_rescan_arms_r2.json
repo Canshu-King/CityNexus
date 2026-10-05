@@ -1,0 +1,146 @@
+{
+ "arms": [
+  {
+   "arm": "C1_control_held_not_accused",
+   "bit": true,
+   "detail": {
+    "ref": "refs/heads/review/0269-0273-reparent-dcae1bc",
+    "class": "HELD",
+    "same": 1,
+    "absent": 0,
+    "changed": 0
+   }
+  },
+  {
+   "arm": "C2_different_bytes_cannot_read_same",
+   "bit": true,
+   "detail": {
+    "path": "_autopilot_flow.py",
+    "counts": {
+     "SAME": 0,
+     "ABSENT": 0,
+     "CHANGED": 1,
+     "UNREADABLE_ON_LINE": 0,
+     "DELETION_HELD": 0,
+     "DELETION_UNDONE": 0
+    },
+    "sample": {
+     "path": "_autopilot_flow.py",
+     "expect": "0000000000000000000000000000000000000001",
+     "on_line": "4869253f58ce0dae62e4599a2e6b21c2bade656a"
+    }
+   }
+  },
+  {
+   "arm": "C3_missing_path_is_absent_not_changed",
+   "bit": true,
+   "detail": {
+    "class": "ALL_NOT_ON_LINE",
+    "counts": {
+     "SAME": 0,
+     "ABSENT": 1,
+     "CHANGED": 0,
+     "UNREADABLE_ON_LINE": 0,
+     "DELETION_HELD": 0,
+     "DELETION_UNDONE": 0
+    }
+   }
+  },
+  {
+   "arm": "C4_snapshot_hand_gets_no_verdict",
+   "bit": true,
+   "detail": {
+    "shape": "10589 paths, every one different",
+    "class": "SNAPSHOT_SHAPED",
+    "old_r1_label_would_be": "ALL_SUPERSEDED_ON_LINE",
+    "snapshot_refs_observed": 27,
+    "snapshot_paths_observed": 277343
+   }
+  },
+  {
+   "arm": "C5_pure_deletion_hand_named",
+   "bit": true,
+   "detail": {
+    "class": "ALL_DELETIONS_HELD",
+    "refs_observed": 1
+   }
+  },
+  {
+   "arm": "C6_undone_deletion_not_a_pass",
+   "bit": true,
+   "detail": {
+    "class": "ALL_DELETIONS_UNDONE",
+    "counts": {
+     "SAME": 0,
+     "ABSENT": 0,
+     "CHANGED": 0,
+     "UNREADABLE_ON_LINE": 0,
+     "DELETION_HELD": 0,
+     "DELETION_UNDONE": 1
+    },
+    "refs_observed": 0
+   }
+  },
+  {
+   "arm": "C7_unreadable_blob_is_not_changed",
+   "bit": true,
+   "detail": {
+    "counts": {
+     "SAME": 0,
+     "ABSENT": 0,
+     "CHANGED": 0,
+     "UNREADABLE_ON_LINE": 1,
+     "DELETION_HELD": 0,
+     "DELETION_UNDONE": 0
+    },
+    "sample": {
+     "path": "_autopilot_flow.py",
+     "on_line": "4869253f58ce0dae62e4599a2e6b21c2bade656a"
+    }
+   }
+  },
+  {
+   "arm": "C8_empty_roster_aborts",
+   "bit": true,
+   "detail": {
+    "abort": "ABORT_DIFF_TREE_EMITTED_NOTHING -- the readings below would be vacuous"
+   }
+  },
+  {
+   "arm": "C9_denominator_is_the_remote",
+   "bit": true,
+   "detail": {
+    "refs": 1081,
+    "distinct_heads": 1035,
+    "refs_sharing_a_head": 42,
+    "unresolvable_locally": 0
+   }
+  },
+  {
+   "arm": "C10_no_ref_moved",
+   "bit": true,
+   "detail": {
+    "moved": [],
+    "refs_now": 1081,
+    "refs_at_scan": 1081
+   }
+  },
+  {
+   "arm": "C11_batch_equals_per_head",
+   "bit": true,
+   "detail": {
+    "sampled": 4,
+    "mismatches": [],
+    "largest_head": "ffd84dc48083",
+    "largest_in_batch": true,
+    "largest_paths": 1,
+    "heads_in_batch": 1033,
+    "heads_asked": 1035,
+    "heads_quiet": 2
+   }
+  }
+ ],
+ "every_arm_bit": true,
+ "tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "ruler_blob_source": "tools/fleet_landed_rescan_r2.py"
+}

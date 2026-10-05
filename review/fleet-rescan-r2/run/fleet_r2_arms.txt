@@ -1,0 +1,12 @@
+C1_control_held_not_accused            bit=True {"ref": "refs/heads/review/0269-0273-reparent-dcae1bc", "class": "HELD", "same": 1, "absent": 0, "changed": 0}
+C2_different_bytes_cannot_read_same    bit=True {"path": "_autopilot_flow.py", "counts": {"SAME": 0, "ABSENT": 0, "CHANGED": 1, "UNREADABLE_ON_LINE": 0, "DELETION_HELD": 0, "DELETION_UNDONE": 0}, "sample": {"path": "_autopilot_flow.py", "
+C3_missing_path_is_absent_not_changed  bit=True {"class": "ALL_NOT_ON_LINE", "counts": {"SAME": 0, "ABSENT": 1, "CHANGED": 0, "UNREADABLE_ON_LINE": 0, "DELETION_HELD": 0, "DELETION_UNDONE": 0}}
+C4_snapshot_hand_gets_no_verdict       bit=True {"shape": "10589 paths, every one different", "class": "SNAPSHOT_SHAPED", "old_r1_label_would_be": "ALL_SUPERSEDED_ON_LINE", "snapshot_refs_observed": 27, "snapshot_paths_observed": 277343}
+C5_pure_deletion_hand_named            bit=True {"class": "ALL_DELETIONS_HELD", "refs_observed": 1}
+C6_undone_deletion_not_a_pass          bit=True {"class": "ALL_DELETIONS_UNDONE", "counts": {"SAME": 0, "ABSENT": 0, "CHANGED": 0, "UNREADABLE_ON_LINE": 0, "DELETION_HELD": 0, "DELETION_UNDONE": 1}, "refs_observed": 0}
+C7_unreadable_blob_is_not_changed      bit=True {"counts": {"SAME": 0, "ABSENT": 0, "CHANGED": 0, "UNREADABLE_ON_LINE": 1, "DELETION_HELD": 0, "DELETION_UNDONE": 0}, "sample": {"path": "_autopilot_flow.py", "on_line": "4869253f58ce0dae62e
+C8_empty_roster_aborts                 bit=True {"abort": "ABORT_DIFF_TREE_EMITTED_NOTHING -- the readings below would be vacuous"}
+C9_denominator_is_the_remote           bit=True {"refs": 1081, "distinct_heads": 1035, "refs_sharing_a_head": 42, "unresolvable_locally": 0}
+C10_no_ref_moved                       bit=True {"moved": [], "refs_now": 1081, "refs_at_scan": 1081}
+C11_batch_equals_per_head              bit=True {"sampled": 4, "mismatches": [], "largest_head": "ffd84dc48083", "largest_in_batch": true, "largest_paths": 1, "heads_in_batch": 1033, "heads_asked": 1035, "heads_quiet": 2}
+every_arm_bit=True
