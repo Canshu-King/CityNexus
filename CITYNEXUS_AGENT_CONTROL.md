@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜自申报那格量出来一件比它本身要紧的事：**能签验收的那道 e2e 闸现在一条测试都收不到**——`npm run test:e2e` 裸跑时十四枚 spec 在导入期抛错、Playwright 整轮中止收集，读数 `Total: 0 tests in 0 files`（整个 `frontend/e2e` 目录都在里面，包括我刚落地那把判据）。我把清单、对照与三条修法交回，别人文件与共享闸配置一个字没动
+
+**〇、先办信。** BB 机上到档未取的是 `m_8784b9e1f9e4`（来自 `qoder:0afdb49b`，17:20:53，标题 `bundle_generation_lane_1791192053467`）。已按收件人身份 ack（回读 `D:/moodle/agent_bus/state.json` 的 `acks` 表，我的 `by`/`verdict` 在位）。他给的两条我独立复算过，结论一致：
+
+- 门确实回来了，但是**换了服务目录**回来的：`:4783` 现探根路径 http_status=200；持有者已不是报警时那枚 PID，现读是 PID 80460，命令行里 `--dist` 指着 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_0413e55/frontend/dist`，日志也换成 `_lan_4783_log_restored_r1.json`。
+- 手机上那四屏仍然不对：从门上真下载那枚入口资产 `assets/index-BcQ9VAso.js`，1622092 B、sha256 头 16 位 `16b3f4425c744b0b`（与我记录的被服务那一代三项全同）；在这枚**被服务的字节**里按 literal 形状数，`hub:1` 命中一枚，我落地的 `trash`、`footprints`、`access`、`import` 四枚命中都是零枚。⇒ 权威线已带修复，任何一份在服务的产物都还没带——要一次从现尖起的新构建，不是重挂目录。
+
+**一、这一格本来要查什么、结果查出了更大的。** 我落地那把判据之后，该问的不是"它绿不绿"，而是"有没有人跑到它"。查法：`npx playwright test --config playwright.config.ts --list`（只列不跑）。原始输出 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/default_gate_list_r1.txt:1` 起是那行闸自己的环境打印（`suite=current-product authoritative=false frontend=:4173 backend=:8000`），第 3 行起是抛错，末行 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/default_gate_list_r1.txt:185` 逐字是 `Total: 0 tests in 0 files`。
+
+**二、成因形状（不是我猜的，是输出里逐枚点名的）。** 默认闸的 `playwright.config.ts` 只写了 `testDir: "./e2e"` 与 `testIgnore: /[\/]e2e[\/]legacy[\/]/`，没有 testMatch ⇒ 整个 `frontend/e2e` 目录一起进收集；目录里现有 一百六十七枚 `*.spec.ts`，其中 十四枚在**模块顶层**（不是测试体里）读环境变量、拿不到就 `throw`。Playwright 在收集阶段遇到导入期异常就中止整轮，于是：别人的 十四枚抛错 ⇒ 其余 一百五十三枚一条都不跑 ⇒ 这道能签验收的闸当前签不出任何东西。抛错点逐枚（全部现读行号）：
+
+- `frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts:43`、`frontend/e2e/qoder-e766b154-checkin-words-real-door-r1.spec.ts:28`、`frontend/e2e/qoder-ord0472-trip-poster.spec.ts:28`、`frontend/e2e/qoder-ord0498-poster-multiday.spec.ts:24`
+- `frontend/e2e/qoder-ord0501-poster-day-seams.spec.ts:37`、`frontend/e2e/qoder-ord0515-poster-pagination.spec.ts:33`、`frontend/e2e/qoder-ord0525-entry-reachability-r3.spec.ts:29`、`frontend/e2e/qoder-ord0528-poster-share.spec.ts:40`
+- `frontend/e2e/qoder-ord0541-share-idempotent.spec.ts:47`、`frontend/e2e/qoder-ord0542-poster-day-line.spec.ts:30`、`frontend/e2e/qoder-ord0545-family-words-r1.spec.ts:34`、`frontend/e2e/qoder-ord0545s3-refusal-on-glass-r1.spec.ts:42`
+- `frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:58`、`frontend/e2e/qoder-ord0545s6-copy-cells-r1.spec.ts:31`
+
+**三、对照（证明问题在"整轮收集"，不在我这类尺）。** 同一份默认配置、只把文件名限定到我那把判据：`npx playwright test --config playwright.config.ts e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts --list` 正常列出七臂（回读 `Total: 8 tests in 2 files`）。⇒ 我的判据与默认闸是兼容的、被中止连累的那一方；这格我不自夸，只说明"0 tests"不是我的尺不咬。
+
+**四、三条修法，选哪条不该我定（别人断言与共享闸配置我一个字没动）。**
+
+1. 把那 十四枚的顶层 `throw` 挪进测试体，或改成 `test.skip(!ok, "缺 CITYNEXUS_…")`：抛错不再中止收集，缺坐标的臂自己变灰并写明缺哪枚。改动小、语义不变（仍然"没坐标不许当绿"），但要 十四枚各自的车道动手。
+2. 给默认闸补一份"预检"：跑之前把需要的坐标一次性列出来、缺哪枚就退哪枚，并且**打印本轮实际收集到多少条**——现在这行是 `0`，但没人看它，因为它只在抛错之后出现。
+3. 或者在 `playwright.config.ts` 里把这类"要私有栈/要坐标"的 lane 尺挪出默认 testDir（各自带 runner），默认闸只跑无前置的那批。这条动的是共享闸配置，归你点。
+
+**五、没做 / 没查的**
+
+1. 没查这道闸是从哪一跳开始变成收不到（要翻历史提交里那 十四枚的落地顺序），具名 `NOT_MEASURED_BY_82f55d8a`；我只证明"现尖上它是 0"。
+2. 没跑任何真实测试（本手只 `--list`），后端 pytest 零条、`vite build` 零次、`tsc` 零次；本手产品字节 0 枚、判据字节 0 枚。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 没动那 十四枚里任何一枚、没动 `playwright.config.ts`、没重启那台静态口、没写别人目录（他人进程与文件不碰）。
+4. 我名下待落仍是两枝（上一块已按现尖重挂、内容等价逐枚可核）：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`。
+5. 红线自查：本轮只读文件、只探 `:4783` 与它的资产、只发 BB 的 ack；没连 `:8000` `:4781` `:4782` `:8693`；`_preview.db` 与那批 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次；额度没墙。
+
+**六、下一手。** 这件我判断优先级高于我名下任何一格：闸收不到测试，意味着这一夜所有车道"落地后判据复跑"的说法都要打折。修法一我可以直接替自己做（我那几枚尺本来就不要环境变量，无需动），但**别人的 十四枚我不碰**；如果你点头，我可以逐枚把抛错挪进测试体并各配一枚反件，一车道一块地交。我名下无新派未闭单 ⇒ 具名「无单可领，等派」。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `6a773af1` · ORD-0556 第五趟只读腿：把上一块具名报缺的那格补成读数——两尖共有的路径逐枚比内容，再查剪枝后有没有悬空引用（本手零枚产品字节）
 
 **代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `5a90d65b230d0c6d66ab5e2c05d6cebc956cffcc`，`ls-remote` 独立回读同值；parent = `2695dc6759ed3b38285c7ee20665aaae1a131789`，再上 = `d80a86c2abad1943e4c880074cd8ba028181fce2`（腿四那笔）。本轮两笔合计 4 枚文件（脚本各一版 + 读数件两枚），产品路径 0 枚。比的两枚尖：旧 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（我屏读那趟的基座），新 = `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（本轮 `ls-remote origin HEAD` 现读；件里 `generation.leg4_newer_ref` 与它相同 ⇒ 腿四腿五同一代，没有再换代）。本克隆 `shallow` = true，**血缘仍不证**。
