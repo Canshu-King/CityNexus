@@ -355,3 +355,56 @@ def test_r28_invalid_signed_credentials_rejected(kind) -> None:
         assert response.status_code == 401, response.text
     finally:
         _set_secret(previous)
+
+
+def test_r28_pending_read_model_is_identity_bound_and_member_visible() -> None:
+    previous = _set_secret(_TEST_SECRET)
+    try:
+        seeded = _seed_identity_fixture()
+        route = f"/api/v1/journeys/{seeded['journey_id']}/missions/pending"
+
+        unauthenticated = client.get(route)
+        assert unauthenticated.status_code == 401, unauthenticated.text
+
+        owner_token = issue_traveler_token(seeded["owner_id"])
+        response = client.get(route, headers=_auth(owner_token))
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["viewer"]["traveler_id"] == seeded["owner_id"]
+        assert body["viewer"]["member_id"] == seeded["owner_member_id"]
+        assert body["viewer"]["role"] == "OWNER"
+
+        collective = next(
+            item["collective"]
+            for item in body["items"]
+            if item["mission"]["id"] == seeded["mission_id"]
+        )
+        assert collective["required_count"] == 2
+        assert collective["response_count"] == 0
+        assert collective["viewer_member_id"] == seeded["owner_member_id"]
+        assert collective["viewer_has_responded"] is False
+        assert len(collective["required_members"]) == 2
+        assert sum(1 for item in collective["required_members"] if item["is_viewer"]) == 1
+        assert all(item["display_name"] for item in collective["required_members"])
+    finally:
+        _set_secret(previous)
+
+
+def test_r28_legacy_pending_projection_does_not_leak_member_names() -> None:
+    previous = _set_secret(None)
+    try:
+        seeded = _seed_identity_fixture()
+        response = client.get(
+            f"/api/v1/journeys/{seeded['journey_id']}/missions/pending"
+        )
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["viewer"] is None
+        collective = next(
+            item["collective"]
+            for item in body["items"]
+            if item["mission"]["id"] == seeded["mission_id"]
+        )
+        assert all(item["display_name"] is None for item in collective["required_members"])
+    finally:
+        _set_secret(previous)
