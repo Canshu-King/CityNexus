@@ -476,20 +476,96 @@ def build_verdict(
                 str((_json(row.after_json, {}) or {}).get("member_id") or "")
                 for row in response_audits
             }
+            independent_choices: dict[str, str] = {}
+            independent_choice_errors: dict[str, str] = {}
+            grounded_options = [
+                item
+                for item in fresh_payload.get("candidate_options") or []
+                if isinstance(item, dict)
+                and item.get("proposal_id")
+                and item.get("status") == "GROUNDED_FEASIBLE"
+            ]
+            for member_id in sorted(required):
+                scored: list[tuple[float, str]] = []
+                for option in grounded_options:
+                    fairness = option.get("fairness") or {}
+                    if member_id in {
+                        str(value)
+                        for value in fairness.get(
+                            "unacceptable_member_ids"
+                        )
+                        or []
+                    }:
+                        continue
+                    fits = option.get("member_fits") or {}
+                    fit = (
+                        fits.get(member_id)
+                        if isinstance(fits, dict)
+                        else None
+                    )
+                    if not isinstance(fit, dict):
+                        continue
+                    try:
+                        score = float(fit.get("effective_fit"))
+                    except (TypeError, ValueError):
+                        continue
+                    scored.append(
+                        (score, str(option.get("proposal_id") or ""))
+                    )
+                if not scored:
+                    independent_choice_errors[member_id] = (
+                        "no acceptable grounded member fit"
+                    )
+                    continue
+                best_score = max(score for score, _pid in scored)
+                best_ids = sorted(
+                    pid
+                    for score, pid in scored
+                    if pid and abs(score - best_score) <= 1e-9
+                )
+                if len(best_ids) != 1:
+                    independent_choice_errors[member_id] = (
+                        "no unique grounded maximum: " + repr(best_ids)
+                    )
+                    continue
+                independent_choices[member_id] = best_ids[0]
+
+            selected_fresh = str(
+                fresh_payload.get("selected_proposal_id") or ""
+            )
+            independent_convergence_ok = bool(
+                required
+                and set(independent_choices) == required
+                and not independent_choice_errors
+                and len(set(independent_choices.values())) == 1
+                and set(independent_choices.values()) == {selected_fresh}
+                and all(
+                    isinstance(responses.get(member_id), dict)
+                    and str(
+                        responses[member_id].get("proposal_id") or ""
+                    )
+                    == independent_choices[member_id]
+                    for member_id in required
+                )
+            )
             fresh_auth_ok = bool(
                 required
                 and required.issubset(set(responses))
                 and required.issubset(authenticated_members)
+                and independent_convergence_ok
             )
             verdicts["fresh_selective_human_authority"] = _verdict(
                 PROVEN if fresh_auth_ok else CONTRADICTED,
-                "The post-shock collective round was answered by its recomputed authenticated member set."
+                "The post-shock round is authenticated and every relevant member independently has the same unique grounded best option."
                 if fresh_auth_ok
-                else "Post-shock collective authority is not fully authenticated.",
+                else "Fresh authority is not proven as independent authenticated member convergence.",
                 mission_id=fresh_mission.id,
                 required_member_ids=sorted(required),
                 response_member_ids=sorted(responses),
                 authenticated_member_ids=sorted(authenticated_members),
+                independent_member_choices=independent_choices,
+                independent_choice_errors=independent_choice_errors,
+                selected_proposal_id=selected_fresh,
             )
 
             e2 = str(fresh_payload.get("decision_epoch") or "")
