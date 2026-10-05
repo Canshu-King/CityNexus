@@ -1,0 +1,82 @@
+{
+ "instrument": "cmdra_0553_v13_verdict_r13",
+ "spec_lines_as_measured": {
+  "en_route_visible": {
+   "name": "Mark EN ROUTE",
+   "asserted_at_line": 37
+  },
+  "en_route_click": {
+   "name": "Mark EN ROUTE",
+   "asserted_at_line": 38
+  },
+  "arrived_visible": {
+   "name": "Mark ARRIVED",
+   "asserted_at_line": 39
+  }
+ },
+ "painted_mark_buttons": {
+  "tip_b2fccfdf": [
+   "Mark Arrived"
+  ],
+  "prer2_f3304e25": [
+   "Mark ARRIVED"
+  ]
+ },
+ "painted_before_click": {
+  "tip_b2fccfdf": [
+   "Mark On the way"
+  ],
+  "prer2_f3304e25": [
+   "Mark EN ROUTE"
+  ]
+ },
+ "arms": [
+  {
+   "id": "spec_first_line_is_a_named_refusal_on_this_generation",
+   "verdict": "PASS",
+   "observed": "no_header=403/RESET_TOKEN_REQUIRED wrong_header=403/RESET_TOKEN_INVALID; the spec posts no header at all"
+  },
+  {
+   "id": "refused_reset_touched_no_rows",
+   "verdict": "PASS",
+   "observed": "after both refusals demo/scene still answers journey_id and demo_mode=True"
+  },
+  {
+   "id": "both_legs_are_in_the_same_server_state",
+   "verdict": "PASS",
+   "observed": "now_state=ACTIVE on both, statuses identical=True, plan_count=[28, 28]"
+  },
+  {
+   "id": "each_leg_served_its_own_generation",
+   "verdict": "PASS",
+   "observed": "tip=index-DLbc3Q3N.js pre-r2=index-DUhOk9ks.js (the pre-r2 name is the one r3 measured on the baseline port)"
+  },
+  {
+   "id": "locator_instrument_has_eyes_and_a_floor",
+   "verdict": "PASS",
+   "observed": "painted name 'Today' matched 1, nonsense name matched 0"
+  },
+  {
+   "id": "three_asserted_lines_hold_on_the_pre_r2_generation",
+   "verdict": "PASS",
+   "observed": "Mark EN ROUTE before click matched=1 visible=True; Mark ARRIVED after click matched=1 visible=True"
+  },
+  {
+   "id": "on_the_tip_only_the_en_route_lines_break",
+   "verdict": "PASS",
+   "observed": "Mark EN ROUTE on tip matched=0 visible=False; Mark ARRIVED on tip matched=1 visible=True exact=0"
+  },
+  {
+   "id": "my_r3_prediction_of_three_broken_lines_is_refuted_in_part",
+   "verdict": "PASS",
+   "observed": "Mark ARRIVED loose=1 exact=0 on 'Mark Arrived' -- loose matching saves line 39, lines 37-38 still break"
+  }
+ ],
+ "verdict": "GREEN",
+ "red_arms": [],
+ "note_for_the_ruling": {
+  "line_37_38": "the footer button is composed from exec.state words; on the tip those are human words",
+  "line_39": "still satisfied on the tip because the matcher is case-insensitive by default",
+  "not_reachable_in_the_suite": "line 21 refuses first, so neither line is exercised when the suite runs"
+ }
+}
