@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from uuid import uuid4
+from uuid import UUID, uuid4
 
+import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
 import app.collective_mediation as collective_mediation
 import app.main as main_module
 from app.core.config import settings
+from app.agent.gateway import AgentToolGateway
 from app.agent.runtime import _acceptance_requested, _collective_mediation_requested
 from app.db.models import (
     AuditLog,
@@ -22,6 +25,7 @@ from app.db.models import (
     Traveler,
 )
 from app.db.session import SessionLocal
+from app.schemas import AgentToolCall
 from app.traveler_principal import issue_traveler_token
 
 
@@ -101,6 +105,74 @@ def test_r29_mediation_progress_gate_rejects_same_option_surface() -> None:
     )
     assert result["allowed"] is False
     assert result["code"] == "MEDIATION_NO_PROGRESS"
+
+
+def test_r29_mediation_progress_gate_rejects_same_shape_even_with_new_id_and_better_scores() -> None:
+    from app.collective_mediation import mediation_progress_gate
+
+    previous = {
+        "proposal_id": "proposal-old",
+        "fit_subject_place_ids": ["place-garden"],
+        "fit_subject_tags": ["garden"],
+        "fairness": {
+            "minimum_member_fit": 0.0,
+            "maximum_regret": 1.0,
+            "unacceptable_member_ids": ["member-admin"],
+        },
+    }
+    regenerated = {
+        **previous,
+        "proposal_id": "proposal-new-row",
+        "fairness": {
+            "minimum_member_fit": 0.8,
+            "maximum_regret": 0.1,
+            "unacceptable_member_ids": [],
+        },
+    }
+    result = mediation_progress_gate([previous], [regenerated])
+    assert result["allowed"] is False
+    assert result["code"] == "MEDIATION_NO_PROGRESS"
+    assert result["new_option_count"] == 0
+
+
+def test_r29_mediation_progress_does_not_use_union_of_different_losers() -> None:
+    from app.collective_mediation import mediation_progress_gate
+
+    previous = [
+        {
+            "proposal_id": "proposal-garden",
+            "fit_subject_place_ids": ["place-garden"],
+            "fit_subject_tags": ["garden"],
+            "fairness": {
+                "minimum_member_fit": 0.0,
+                "maximum_regret": 1.0,
+                "unacceptable_member_ids": ["member-admin"],
+            },
+        },
+        {
+            "proposal_id": "proposal-museum",
+            "fit_subject_place_ids": ["place-museum"],
+            "fit_subject_tags": ["museum"],
+            "fairness": {
+                "minimum_member_fit": 0.0,
+                "maximum_regret": 1.0,
+                "unacceptable_member_ids": ["member-owner"],
+            },
+        },
+    ]
+    still_sacrifices_one_member = {
+        "proposal_id": "proposal-new",
+        "fit_subject_place_ids": ["place-gallery"],
+        "fit_subject_tags": ["gallery"],
+        "fairness": {
+            "minimum_member_fit": 0.0,
+            "maximum_regret": 1.0,
+            "unacceptable_member_ids": ["member-owner"],
+        },
+    }
+    result = mediation_progress_gate(previous, [still_sacrifices_one_member])
+    assert result["allowed"] is False
+    assert result["previous_best_unacceptable_count"] == 1
 
 
 def test_r29_mediation_progress_gate_accepts_new_fairer_option() -> None:
@@ -285,3 +357,58 @@ def test_r29_conflicting_authenticated_responses_create_mediation_child(monkeypa
             assert json.loads(next(item.preferences_json for item in members if item.id == seeded["admin_member_id"])) == {"preferences": [{"key": "museum"}]}
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+def test_r29_mediator_cannot_mutate_active_reality_before_fresh_collective_round() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    mediator_id = str(uuid4())
+    now = _now()
+    with SessionLocal() as session:
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                user_text="Mediate the unresolved disagreement.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="CREATED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        request = AgentToolCall(
+            request_id="r29-deny-mutation-001",
+            agent_id="r29-test-agent",
+            journey_id=UUID(str(seeded["journey_id"])),
+            mission_id=UUID(mediator_id),
+            proposal_id=UUID(str(seeded["garden_proposal_id"])),
+        )
+        with pytest.raises(HTTPException) as exc:
+            AgentToolGateway(session).dispatch("accept_replan", request)
+        assert exc.value.status_code == 409
+        assert exc.value.detail == "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION"
+
+        denial = session.scalar(
+            select(AuditLog)
+            .where(
+                AuditLog.action == "agent.collective_mediation.mutation_denied",
+                AuditLog.entity_id == mediator_id,
+            )
+            .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        )
+        assert denial is not None
+        facts = json.loads(denial.after_json)
+        assert facts["tool"] == "accept_replan"
+        assert facts["reason"] == "FRESH_COLLECTIVE_DECISION_REQUIRED"
+
