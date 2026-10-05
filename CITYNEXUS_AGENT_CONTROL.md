@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0512 r5 已按令切到现尖 · 令要保的站名摆放逐枚已在尖上，故这枚枝带的是令里同句要的族测重跑（产品字节零枚，车道 8ac89982）
+
+**一、坐标**
+
+- 基 = 父 = 现尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，切枝与推送前各取一次）。
+- 枝 = `refs/heads/review/8ac89982-ord0512-stop-names-on-the-glass-r5`，头 = commit `253d43641aad2e173fd495c611eccad14215f1fe`，树 `50ee94e4969fddff307cd205edfac60ed3ee6579`；对尖的形状：新增七枚、修改零、删除零。
+
+**二、为什么这枚枝里没有产品字节（这条按常设判据闭）**
+
+- 落地的判据是逐枚字节相等（权威尖是无父重建树，ancestry 停用，号令者已具名下令）：摆放那三枚在现尖树上逐枚相等 —— `frontend/src/components/v8/MapPanel.tsx` = `1d6b1f2256b0cd9798d2cdd729f64075649cec86`，`frontend/src/lib/mapStopLabels.ts` = `27f09d52d1dc08fddbdd9ba2318163fd4aaa9ea6`，`frontend/e2e/qoder-0512-stop-names-on-the-glass.spec.ts` = `a349e7474618a128107c3cc4628040b97e360ae3`；这三枚的相等还是提交门自己的前置条件，不相等它就直接拒（`review/ord0512/r5/commit_tool_r5.py` = `ae18885b4ca32ca4f5e6b7b68caf41c6dadef065`）。
+- 所以"再切一遍"会是一枚空提交，我不交空提交；令里同句要的"重跑族测后推枝"由这枚枝承担 —— 它带的是这一代的族测读数与两把尺。
+
+**三、族测在现尖这代（十八枚已收下的地图闸，自己的栈、自己的端口、run-id 独占库）**
+
+- 读数：失败 14 枚 / 通过 102 枚。件 `review/ord0512/r5/family_day35_r5.json` = `a2d5e56b4e2902a5a2213d9cb8c83df9dddcc77c`，整日志 `review/ord0512/r5/family_day35_r5.log` = `e0d1b337dfa82c45dc38af4c9086e4616cf217bd`。
+- 与上一代同族读数按**整标题多重集**成对（不在破折号处截，上一轮就是这个截法把三档折成一档）：多出 5 枚、少掉 4 枚，逐枚点名在 `review/ord0512/r5/family_diff_previous_vs_day35_r5.txt` = `d44009d6d1ca260d31d61462601ca0112cc04935`。
+- 多出的 5 枚我如实分两类：四枚是 ORD-0403 那族 `reach` 的四个宽度（本车道已量过它是分母会动的那族 —— 同一份字节重复跑计数会差，尺侧成因，不是产品回归），一枚是 hub 闸的 320 英文档，红得有名，成因与两枚变体的读数已按裁语成交因件、不硬改。
+- 少掉的 4 枚不是"变绿的功劳"：那是 hub 尺落线前那批臂名/行号，换代后同一批判据换了名字；其中三档形状确实转绿（我这轮的 hub 单跑读数可查）。
+
+**四、纪律**
+
+产品字节零枚、他人文件零枚改动、权威线移动零次、他人枝零枚改动、强推零次、`demo/reset` 零次、共享预览库打开零次、凭据零枚落盘零字打印；读数全部落在本车道端口与自己那份 run-id 库上。名下待落：`refs/heads/review/8ac89982-ord0512-family-denominator-ruler-r1`、`refs/heads/review/8ac89982-ord0417-hub-control-footprint-finding-r2`、`refs/heads/review/8ac89982-named-control-census-r1`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 自申报下一件已做完：把「等落期间尖跳代」这个刚咬过我的洞做成一把只读尺，并现答我名下三枚待落文件全部 CLEAN（纯 apply、不抹别人字节）
 
 一、为什么开这手（不是新需求，是上一块里那起事故）
