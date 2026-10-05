@@ -5344,7 +5344,14 @@ def collective_material_world_basis(
         fact = {
             "event_type": str(event.event_type or ""),
             "severity": str(event.severity or ""),
-            "status": str(event.status or ""),
+            # DETECTED -> ACKNOWLEDGED is workflow progress, not a changed
+            # physical world. Only semantic incident resolution (or another
+            # genuinely distinct state) may move the consent world epoch.
+            "incident_state": (
+                "ACTIVE"
+                if str(event.status or "") in {"DETECTED", "ACKNOWLEDGED"}
+                else str(event.status or "")
+            ),
             "affected_location": (
                 str(affected.place_id or affected.city_service_id)
                 if affected is not None and (affected.place_id or affected.city_service_id)
