@@ -272,6 +272,44 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             approval_target_id=approval.target_id if approval else None,
         )
 
+        accept_audit = (
+            session.scalar(
+                select(AuditLog)
+                .where(
+                    AuditLog.action == "agent.accept_replan",
+                    AuditLog.entity_type == "ReplanProposal",
+                    AuditLog.entity_id == proposal.id,
+                )
+                .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+            )
+            if proposal is not None
+            else None
+        )
+        resume_args = _json(resume_step.arguments_json, {}) if resume_step else {}
+        accept_after = _audit_after(accept_audit) if accept_audit else {}
+        exact_request_ok = bool(
+            resume_step is not None
+            and accept_audit is not None
+            and str(resume_args.get("request_id") or "")
+            and str(resume_args.get("request_id"))
+            == str(accept_after.get("request_id") or "")
+            and str(resume_args.get("proposal_id") or "")
+            == (proposal.id if proposal else "")
+            and accept_after.get("status") == "ACCEPTED"
+        )
+        verdicts["proposal_accept_request"] = _verdict(
+            PROVEN if exact_request_ok else CONTRADICTED,
+            "The resumed AgentRun request id is the exact request recorded by the acceptance audit."
+            if exact_request_ok
+            else "The exact resumed request cannot be matched to the proposal acceptance audit.",
+            resumed_step_id=resume_step.id if resume_step else None,
+            request_id=resume_args.get("request_id") if resume_step else None,
+            proposal_id=resume_args.get("proposal_id") if resume_step else None,
+            accept_audit_id=accept_audit.id if accept_audit else None,
+            accept_audit_request_id=accept_after.get("request_id") if accept_audit else None,
+            accept_audit_status=accept_after.get("status") if accept_audit else None,
+        )
+
         active_plan_ok = bool(
             proposal is not None
             and journey.active_plan_version_id == proposal.proposed_plan_version_id
@@ -455,6 +493,19 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             if execution_ok
             else "At least one execution transition lacks an allowed execution-truth label.",
             events=execution_facts,
+        )
+
+        principal_transport_ok = (
+            verdicts.get("authenticated_approver", {}).get("status") == PROVEN
+            and verdicts.get("authenticated_collective_responses", {}).get("status") == PROVEN
+        )
+        verdicts["transport_caller_principal_authentication"] = _verdict(
+            PROVEN if principal_transport_ok else CONTRADICTED,
+            "Both collective responses and the approval are machine-bound to authenticated traveler principals."
+            if principal_transport_ok
+            else "At least one human transport action lacks authenticated-principal proof.",
+            collective_response_status=verdicts.get("authenticated_collective_responses", {}).get("status"),
+            approval_status=verdicts.get("authenticated_approver", {}).get("status"),
         )
 
         counts = {PROVEN: 0, NOT_PROVEN: 0, CONTRADICTED: 0}
