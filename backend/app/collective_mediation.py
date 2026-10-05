@@ -164,25 +164,82 @@ def pending_resolved_mediation_selection(
     return {
         "mission_id": mission.id,
         "clarification_id": str(clarification.get("clarification_id") or ""),
+        "decision_epoch": str(clarification.get("decision_epoch") or ""),
         "selected_proposal_id": proposal.id,
         "selected_plan_version_id": plan.id,
     }
 
 
-def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
-                              base_plan_version_id: str | None, options: Iterable[Mapping[str, Any]],
-                              required_member_ids: Iterable[str], members: Iterable[Mapping[str, Any]]) -> str:
-    """Stable server fingerprint for a member decision's governing reality."""
+def collective_decision_epoch(
+    *,
+    journey_id: str,
+    mission_id: str,
+    trigger_event_id: str,
+    base_plan_version_id: str | None,
+    options: Iterable[Mapping[str, Any]],
+    required_member_ids: Iterable[str],
+    members: Iterable[Mapping[str, Any]],
+) -> str:
+    """Stable server fingerprint for a collective decision's semantic reality.
+
+    R30 tightens the older identity-only epoch.  Proposal/plan ids are still
+    included, but they are not enough: the same database rows must not preserve
+    human authority after the actual optional experience or member-fit meaning
+    changes.  Keep this projection deterministic and deliberately limited to
+    facts already used by the collective decision surface.
+    """
+
+    required_ids = sorted({str(item) for item in required_member_ids})
+    required_set = set(required_ids)
+
+    normalized_options: list[dict[str, Any]] = []
+    for item in options:
+        fits = item.get("member_fits") or {}
+        normalized_options.append(
+            {
+                "proposal_id": str(item.get("proposal_id")),
+                "plan_id": str(item.get("plan_id")),
+                "status": item.get("status"),
+                "fit_subject_place_ids": sorted(
+                    {str(value) for value in (item.get("fit_subject_place_ids") or []) if value}
+                ),
+                "fit_subject_tags": sorted(
+                    {
+                        str(value).strip().lower()
+                        for value in (item.get("fit_subject_tags") or [])
+                        if str(value).strip()
+                    }
+                ),
+                "fit_subject_basis": item.get("fit_subject_basis"),
+                "member_fits": {
+                    str(member_id): {
+                        "effective_fit": (fit or {}).get("effective_fit"),
+                        "preference_tier": (fit or {}).get("preference_tier"),
+                        "conflict": (fit or {}).get("conflict"),
+                    }
+                    for member_id, fit in sorted(fits.items(), key=lambda pair: str(pair[0]))
+                    if str(member_id) in required_set
+                },
+                "fairness": {
+                    "minimum_member_fit": (item.get("fairness") or {}).get("minimum_member_fit"),
+                    "maximum_regret": (item.get("fairness") or {}).get("maximum_regret"),
+                    "unacceptable_member_ids": sorted(
+                        str(value)
+                        for value in (item.get("fairness") or {}).get(
+                            "unacceptable_member_ids", []
+                        )
+                    ),
+                },
+            }
+        )
+
     material = {
         "journey_id": str(journey_id),
         "mission_id": str(mission_id),
         "trigger_event_id": str(trigger_event_id),
         "base_plan_version_id": str(base_plan_version_id) if base_plan_version_id else None,
-        "options": [
-            {"proposal_id": str(item.get("proposal_id")), "plan_id": str(item.get("plan_id")), "status": item.get("status")}
-            for item in options
-        ],
-        "required_member_ids": sorted(str(item) for item in required_member_ids),
+        "options": normalized_options,
+        "required_member_ids": required_ids,
         "members": [
             {
                 "member_id": str(item.get("member_id")),
@@ -192,11 +249,12 @@ def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event
                 "member_state": item.get("member_state"),
             }
             for item in members
-            if str(item.get("member_id")) in {str(value) for value in required_member_ids}
+            if str(item.get("member_id")) in required_set
         ],
     }
-    return hashlib.sha256(json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-
+    return hashlib.sha256(
+        json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 def member_fit(*, preferences: Iterable[Any], candidate_tags: Iterable[str]) -> dict[str, Any]:
     breakdown = verified_interest_preference_breakdown(preferences, candidate_tags=candidate_tags)
