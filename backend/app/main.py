@@ -4507,7 +4507,28 @@ def collective_mutation_gate(
     matrix from current rows and compares only the optional delta of each target
     plan against the current active reality.  Approval can authorize a caller;
     it cannot manufacture another member's agreement.
+
+    Once members explicitly disagree, that social-authority lock is stronger
+    than a later algorithmic COMPROMISE_AVAILABLE classification.  Every plan
+    transition path that reaches this gate must wait for the mediator lineage
+    to reach a fresh server-owned RESOLVED collective round.
     """
+    from app.collective_mediation import journey_has_unresolved_collective_mediation
+
+    if journey_has_unresolved_collective_mediation(session, journey.id):
+        return {
+            "allowed": False,
+            "code": "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED",
+            "classification": "MEDIATION_REQUIRED",
+            "member_count": None,
+            "candidate_fit_matrix": [],
+            "mediation": {
+                "classification": "MEDIATION_REQUIRED",
+                "reason": "EXPLICIT_DISAGREEMENT_AWAITS_RENEWED_MEMBER_CONSENT",
+            },
+            "fit_subject_basis": "PLAN_DIFF",
+        }
+
     member_projection = active_journey_members_with_capabilities(session, journey)
     if member_projection.get("member_count", 0) < 2:
         return {
