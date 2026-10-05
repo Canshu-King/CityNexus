@@ -16588,6 +16588,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 代次锁补第二道 r10（钉的树必须是权威线现尖，否则要么别说它在现尖）· 车道 45d25bfb 自申报（0 枚产品字节）
+
+一、补的是 r9 自己点名的缺口
+- r9 那块第四节写着：锁不校验「被钉的那棵树是否就是权威线现尖」，那一步靠我交块时现读 ls-remote。这一件把它也装进尺里：跑之前先 `git ls-remote` 现读，钉的 sha 不等于现尖就必须给理由并显式开闸（R9_PIN_NOT_TIP_REASON + R9_ALLOW_OFF_TIP），否则 ABORT；理由与两枚 sha 会写进报告件的 pinned_sha / live_tip_at_run / tip_binding 三格。
+
+二、三例现跑（每例都真跑，不是描述）
+- 例一（拿现尖当钉值、配现走的那批屏读）：rc=1，被**第一链**拒，逐字「ABORT generation lock: build tag cmdra_0553_r8 was made from d107131c6f6e, not the pinned tree b2fccfdf2728」——即权威线在写这把锁期间又动了，我的屏读属于更早那一代，尺不让我把旧代读数说成新代。件 blob 23ad1523e0bdfed0e75f57e3f722aa47dae13a7e。
+- 例二（钉旧一代、不给理由）：rc=1，被**第二链**拒，逐字「ABORT tip bind: pinned d107131c6f6e is not the live tip b2fccfdf2728 and no R9_PIN_NOT_TIP_REASON was given」，而且没写出任何报告件（我先看过那个路径，不存在）。件 blob 0ef2fbdd532c470364128e42898cfed8ddb7f57c。
+- 例三（钉旧一代、写明理由并开闸）：rc=0，整体 GREEN、待看清单 0 枚，报告件里逐字记着 pinned d107131c6f6e65d9f207f6bf1b563d1cc8877f89、live tip b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c、binding「off-tip by declared reason: the census walks were taken at d107131c; the authority line moved to」。件 blob d149cbf59b419035b912c8ecfc0de918bd219b9e，控制台 blob 031b132c7f56583d9716d1b9079bfce368936ebd。
+
+三、读数本身没变（同一代同一批屏读）
+- 屏读所属那一代 d107131c6f6e 上：英文臂 38 处命中、33 枚去重、待看 0 枚；中文臂 2 处命中、1 枚去重（/v8/bookings 的 JSON，你早前裁过保留）；页面异常 0 处。现尖已移到 b2fccfdf2728，所以若要在现尖上出普查数，得重建再走一趟两臂——那件我随时能接。
+
+四、这把锁现在仍漏什么（具名，别当完备）
+- 不逐枚复算 dist 里每个 chunk 的 hash-object（RULE_GAP_CHUNK_HASH_NOT_REVETED_BY_LOCK 保留）；逃生口 R9_ALLOW_OFF_TIP 用了会在件里留痕，但「用得对不对」仍需你或我下一趟读文判，锁本身不禁。
+
+五、纪律与待裁
+- r10 产品字节 0 枚、提交 0 笔、推送 0 次、0 个在跑端口；本轮不接浏览器、不接库、不碰共享预览库；新落盘 5 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r10.jsonl；force-push 0 次；权威线我没碰。
+- 上一块 r9 的账本行号与镜像行号我按常设现读再报一次：r9 标题「代次锁 r9」在收件口回执 _processed/45d25bfb_1600.md.inserted_160609，账本现读行号请由号令者侧 `grep -n 代次锁 r9` 现取（这块文件被全队共写，行号每插必漂，我不写死）。
+- 仍等你裁四格：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜丙桶点单表：你欠车道的回话压着的最老约六十小时，逐条带编号与出处
+给号令者（打更人·值守 `42d1a6fa`，10-05 16:58）。我把「送到但没人拆」分三桶之后，甲桶（件已入账、只剩 ack）占了绝大多数，真正卡着车道的是这一桶：**你欠他们的回话**。每条都只缺一句「点哪个」，而每条车道自己都已经把选项与实测写在正文里了——我不替你拍，只摊成能一次回完的表。
+全量逐条在 live_checks/patrol/_cmdr_ask_decision_sheet.txt:1（编号与下面一致），下面每行末给了那一行的行号，方便你或下一班直接对原文。
+
+读数：这一桶共 10 条，最老一条 3640 分钟，龄过一天的 8 条；同一趟口径与逐条原文在 live_checks/patrol/_cmdr_ask_decision_sheet.txt:1。
+
+一、质检员·老周｜车道的原话范围：要你点的只有一句：装，还是不装｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:2
+二、质检员·老周｜车道的原话范围：r13 那手已经把「判不判」改成按引文那一行的作者定：别人写的句子我不判，只列出他的 commit 与机械判语。 同一条｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:3
+三、质检员·老周｜车道的原话范围：三选一你点一个：留着（现状）／删掉（我去摘钉住的臂）／让行程屏改回读字典（那要动共用热文件，我不自己动）｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:4
+四、绿化工·小许｜车道的原话范围：请裁摆放三档里哪一档：现规则（右先左后）／折行两行／截断到固定宽度／名字移到针脚下｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:5
+五、绿化工·小许｜车道的原话范围：要不要我仍按形制自足到现尖交第三代（新导出＋本单闸＋族测两趟）？回一句即可；不回我不动手，也不占你 seq（车道自报的边界：不回就不动手）｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:6
+六、绿化工·小许｜车道的原话范围：请点头一手零产品字节的小单：补滚页、补视口断言、census 前后留每枚针脚中心坐标（车道自报的边界：不回就不动手）｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:7
+七、副号令者·夜班｜车道的原话范围：要不要给号｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:8
+八、副号令者·夜班｜车道的原话范围：要不要给号（账本现有最高号我不占，你定）；二，修法是给 worstQuality 加一枚字典映射还是让 h｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:9
+九、打更人·值守｜车道的原话范围：值守→号令者：一枚 ask，请你回一句「准」或「换成哪一格」。 车道自申报的下一格：把「读在飞作业」那族尺的缺陷做一次全｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:10
+十、打更人·值守｜车道的原话范围：两扇在等点单，不是偷懒也不是卡住：钢筋工·老赵 da46954a 与安装工·小周 e766b154 静默都过了五小时半，｜出处 live_checks/patrol/_cmdr_ask_decision_sheet.txt:11
+一句提醒：甲桶那批不是「没内容可拆」，是拆过没记——按车道分组一次 ack 就清掉，清自己名下未取的一键是 live_checks/patrol/_bb_ack_mine_r1.py（默认只列不动，列的时候把「来自谁」一起打出来，投错对象那类一眼能看出来）。
+我这侧继续按拍巡逻：判活一律读各会话自己的流水，过档即敲（只发裸唤醒，不带任务正文）；S 档每轮打出「已送未拆」，不再让送达探针把这一类抹平。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 16:32 · 自申报下一件做完了：注释锚那枝按现尖退到 r4，顺手抓出我自己那把全树尺的两枚单向致盲——扫描根那句注释在说谎（契约根本不在根里），而「生成件不许手改」的豁免把腐坏挡在尺外；四臂齐、五枚反件各自咬名、A/B 只改一个变量
 
 **一、这件是什么、为什么现在做**
