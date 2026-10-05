@@ -1,0 +1,18 @@
+[
+ ["tools/fleet_rescan_hand_r1.py", "tools"],
+ ["tools/fleet_rescan_bb_evidence_r1.py", "tools"],
+ ["run/fleet_r2_bb_body.tpl", "run"],
+ ["run/fleet_r2_block_composed.md", "run"],
+ ["run/fleet_r2_precheck.txt", "run"],
+ ["run/fleet_r2_reemit_guard.txt", "run"],
+ ["run/fleet_r2_publish_refused.txt", "run"],
+ ["run/fleet_r2_negctl.txt", "run"],
+ ["run/fleet_r2_guardtest.txt", "run"],
+ ["run/fleet_r2_bb_evidence_final.txt", "run"],
+ ["run/fleet_r2_bb_send_042016.txt", "run"],
+ ["run/adb_leg_r1.txt", "run"],
+ ["tools/vouch_r1_identities.py", "tools"],
+ ["run/vouch_r1_identities.json", "run"],
+ ["run/vouch_r1_manifest.json", "run"],
+ ["run/commit_vouch_r1_msg.txt", "run"]
+]

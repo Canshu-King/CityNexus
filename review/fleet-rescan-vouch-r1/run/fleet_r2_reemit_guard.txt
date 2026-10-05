@@ -1,0 +1,18 @@
+Q43 rc=0
+{
+ "version": "Q43_r7",
+ "input": "D:/moodle/_qoder_phone_ord0485_20260930\\run\\fleet_r2_block_composed.md",
+ "bytes": 10947,
+ "lines": 62,
+ "claims_checked": 45,
+ "exempt_classes": {
+  "DIMENSION": 10
+ },
+ "verdict": "Q43_GATE_GREEN",
+ "exit_code": 0,
+ "findings": [],
+ "finding_kinds": [],
+ "finding_total": 0,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
+ABORT_ALREADY_DELIVERED 0afdb49b_0351.md.inserted_035934 -- this generation is already booked; publish an erratum as a NEW block instead of re-dropping

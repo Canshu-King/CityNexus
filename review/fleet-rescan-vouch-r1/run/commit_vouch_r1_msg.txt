@@ -1,0 +1,27 @@
+fleet vouch line r1: the block's own emitter, its BB voucher, the guard receipts and the adb leg, published as a new side ref (0 product paths)
+
+This hand moves no product byte. It publishes the instruments that produced the already-booked fleet
+re-scan r2 block, plus the receipts that show each guard actually bit, so the sentence "that block was
+computed, not typed" can be checked with git cat-file instead of taken on trust.
+
+Contents, all under review/fleet-rescan-vouch-r1/:
+- tools/fleet_rescan_hand_r1.py -- the emitter: reads the three published artifacts off the side ref's
+  blobs (never the lane copy), aborts if any two disagree, runs the ledger coordinate gate, and refuses
+  to re-drop a generation that is already booked.
+- tools/fleet_rescan_bb_evidence_r1.py -- the voucher: re-reads the same blobs, prints key=value, and
+  borrows the hub's own numeric_claims() to prove every number in both bodies has a source. It also
+  refuses to rewrite a body it is currently posting.
+- run/fleet_r2_bb_body.tpl -- the BB copy template the voucher renders.
+- run/fleet_r2_block_composed.md -- the bytes that went into the ledger (md5 matches the receipt).
+- run/fleet_r2_precheck.txt, run/fleet_r2_reemit_guard.txt -- gate green, and ABORT_ALREADY_DELIVERED
+  fired against the real receipt.
+- run/fleet_r2_publish_refused.txt -- ABORT_REF_NOT_FREE fired on a second push of the same ref.
+- run/fleet_r2_negctl.txt, run/fleet_r2_guardtest.txt -- the two negative controls: an injected number
+  refused, a stale body refused instead of rewritten.
+- run/fleet_r2_bb_evidence_final.txt, run/fleet_r2_bb_send_042016.txt -- the vouching output and the
+  hub's answer for the delivered copy.
+- run/adb_leg_r1.txt -- the real-device leg I had been naming as unmeasured: adb version, devices list
+  empty, get-state rc 1, kill-server. Measured on this box, no device attached.
+- run/vouch_r1_identities.json, run/vouch_r1_manifest.json -- the pre-push blob ids of these files.
+
+Generations: new file names throughout; no landed instrument path is rewritten (CMDR-0925-2128).

@@ -1,0 +1,144 @@
+{
+  "files": [
+    {
+      "rel": "tools/fleet_rescan_hand_r1.py",
+      "raw_bytes": 19013,
+      "lf_bytes": 19013,
+      "blob": "18abcfd2efc6dd94d0b2b49461f60c53c1d9742d",
+      "crlf": 0,
+      "local_git_sha1": "18abcfd2efc6dd94d0b2b49461f60c53c1d9742d",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "tools/fleet_rescan_bb_evidence_r1.py",
+      "raw_bytes": 11043,
+      "lf_bytes": 11043,
+      "blob": "8246f9748e0b5a3974272099d86b593cd6b5a76e",
+      "crlf": 0,
+      "local_git_sha1": "8246f9748e0b5a3974272099d86b593cd6b5a76e",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_bb_body.tpl",
+      "raw_bytes": 1734,
+      "lf_bytes": 1734,
+      "blob": "4c8b8fd832adec8920c83672dacf7c5e81474d38",
+      "crlf": 0,
+      "local_git_sha1": "4c8b8fd832adec8920c83672dacf7c5e81474d38",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_block_composed.md",
+      "raw_bytes": 10947,
+      "lf_bytes": 10947,
+      "blob": "3b385a90e39c0f61bbe361133928d2b41e505bda",
+      "crlf": 0,
+      "local_git_sha1": "3b385a90e39c0f61bbe361133928d2b41e505bda",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_precheck.txt",
+      "raw_bytes": 542,
+      "lf_bytes": 527,
+      "blob": "ce2f688720152d7f101e96df9b5bba2bba7f6004",
+      "crlf": 15,
+      "local_git_sha1": "ce2f688720152d7f101e96df9b5bba2bba7f6004",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_reemit_guard.txt",
+      "raw_bytes": 707,
+      "lf_bytes": 689,
+      "blob": "b38d111e5a78c95bb7fd666f82acc5d50e801794",
+      "crlf": 18,
+      "local_git_sha1": "b38d111e5a78c95bb7fd666f82acc5d50e801794",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_publish_refused.txt",
+      "raw_bytes": 120,
+      "lf_bytes": 119,
+      "blob": "31d13005c1d010b5c8e32793b8c45cd2838c3f13",
+      "crlf": 1,
+      "local_git_sha1": "31d13005c1d010b5c8e32793b8c45cd2838c3f13",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_negctl.txt",
+      "raw_bytes": 3070,
+      "lf_bytes": 3067,
+      "blob": "2b7823c46afcb21c4e8aadcbae25c99a2ba88789",
+      "crlf": 3,
+      "local_git_sha1": "2b7823c46afcb21c4e8aadcbae25c99a2ba88789",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_guardtest.txt",
+      "raw_bytes": 121,
+      "lf_bytes": 120,
+      "blob": "d683880de559d892f4ff6feda8df8447ef26744f",
+      "crlf": 1,
+      "local_git_sha1": "d683880de559d892f4ff6feda8df8447ef26744f",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_bb_evidence_final.txt",
+      "raw_bytes": 3023,
+      "lf_bytes": 3021,
+      "blob": "5fdb7d9030746180eb6675f6b7c8fcf3dce5eca0",
+      "crlf": 2,
+      "local_git_sha1": "5fdb7d9030746180eb6675f6b7c8fcf3dce5eca0",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/fleet_r2_bb_send_042016.txt",
+      "raw_bytes": 6047,
+      "lf_bytes": 5961,
+      "blob": "8f5394bc9499a724aed76e10bc205fdb92912f05",
+      "crlf": 86,
+      "local_git_sha1": "8f5394bc9499a724aed76e10bc205fdb92912f05",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/adb_leg_r1.txt",
+      "raw_bytes": 291,
+      "lf_bytes": 285,
+      "blob": "a13e4fe386e21fe5bd8ae94603ee9de01ae58e71",
+      "crlf": 6,
+      "local_git_sha1": "a13e4fe386e21fe5bd8ae94603ee9de01ae58e71",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "tools/vouch_r1_identities.py",
+      "raw_bytes": 2950,
+      "lf_bytes": 2950,
+      "blob": "b6889731963320866960575d88e07cc8aaa4941c",
+      "crlf": 0,
+      "local_git_sha1": "b6889731963320866960575d88e07cc8aaa4941c",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/vouch_r1_identities.json",
+      "status": "absent_at_read_time"
+    },
+    {
+      "rel": "run/vouch_r1_manifest.json",
+      "raw_bytes": 679,
+      "lf_bytes": 679,
+      "blob": "cb3e0a9a605fe20caa4338e781d991126562a649",
+      "crlf": 0,
+      "local_git_sha1": "cb3e0a9a605fe20caa4338e781d991126562a649",
+      "blob_equals_local": true
+    },
+    {
+      "rel": "run/commit_vouch_r1_msg.txt",
+      "raw_bytes": 2076,
+      "lf_bytes": 2076,
+      "blob": "422d7ec024618cf39e9a1c3afea8db24dbc94020",
+      "crlf": 0,
+      "local_git_sha1": "422d7ec024618cf39e9a1c3afea8db24dbc94020",
+      "blob_equals_local": true
+    }
+  ],
+  "git_sha1_of_content_matches_blob": true
+}

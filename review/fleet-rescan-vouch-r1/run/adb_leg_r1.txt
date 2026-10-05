@@ -1,0 +1,16 @@
+$ adb version
+Android Debug Bridge version 1.0.41
+Version 33.0.0-8141338
+Installed as C:\WINDOWS\System32\adb.exe
+
+$ adb devices -l  (rc measured without a pipe)
+List of devices attached
+
+rc=0
+
+$ adb get-state (no serial)
+error: no devices/emulators found
+rc=1
+
+$ adb kill-server
+rc=0
