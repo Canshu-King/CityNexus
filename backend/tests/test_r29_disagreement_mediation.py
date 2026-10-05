@@ -13,10 +13,12 @@ from sqlalchemy import select
 import app.collective_mediation as collective_mediation
 import app.agent.signal_pipeline as signal_pipeline
 import app.main as main_module
+from app.agent.approval import consume_action_approval
 from app.core.config import settings
 from app.agent.gateway import AgentToolGateway, _journey_has_unresolved_collective_mediation
 from app.agent.runtime import _acceptance_requested, _collective_mediation_requested
 from app.db.models import (
+    ActionApproval,
     Activity,
     AuditLog,
     Event,
@@ -2422,3 +2424,87 @@ def test_r30_event_acknowledgement_does_not_change_world_epoch() -> None:
         )
 
         assert after_epoch == before_epoch
+
+
+
+def test_r30_denial_audit_does_not_commit_failed_approval_consumption() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    approval_id = str(uuid4())
+    proposal_id = str(seeded["garden_proposal_id"])
+    target_plan_id = str(seeded["options"][0]["plan_id"])
+    fingerprint = "r30-denial-rollback-fingerprint"
+
+    with SessionLocal() as session:
+        session.add(
+            ActionApproval(
+                id=approval_id,
+                traveler_id=str(seeded["owner_id"]),
+                journey_id=str(seeded["journey_id"]),
+                action="ACCEPT_REPLAN",
+                target_type="ReplanProposal",
+                target_id=proposal_id,
+                request_fingerprint=fingerprint,
+                status="APPROVED",
+                required_decision="REQUIRE_CONFIRMATION",
+                created_at=now,
+                expires_at=(
+                    datetime.now(timezone.utc) + timedelta(minutes=10)
+                ).isoformat(),
+                approved_at=now,
+                approved_by=str(seeded["owner_id"]),
+                approval_method="USER_CONFIRMATION",
+            )
+        )
+        session.commit()
+
+        consumed = consume_action_approval(
+            session,
+            approval_id=approval_id,
+            journey_id=str(seeded["journey_id"]),
+            action="ACCEPT_REPLAN",
+            target_type="ReplanProposal",
+            target_id=proposal_id,
+            request_fingerprint=fingerprint,
+            actor_id="r30-test-agent",
+        )
+        assert consumed.status == "CONSUMED"
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        target_plan = session.get(PlanVersion, target_plan_id)
+        main_module._record_collective_mutation_denial(
+            session,
+            journey,
+            target_plan,
+            {
+                "allowed": False,
+                "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                "resolved_decision_epoch": "e1",
+                "current_decision_epoch": "e1",
+                "resolved_material_world_epoch": "w1",
+                "current_material_world_epoch": "w2",
+            },
+            mutation_kind="ACCEPT_REPLAN",
+            proposal_id=proposal_id,
+        )
+
+    with SessionLocal() as verify:
+        approval = verify.get(ActionApproval, approval_id)
+        assert approval is not None
+        assert approval.status == "APPROVED"
+        assert approval.consumed_at is None
+
+        denial = verify.scalar(
+            select(AuditLog)
+            .where(
+                AuditLog.journey_id == str(seeded["journey_id"]),
+                AuditLog.action == "collective.mutation.denied",
+                AuditLog.entity_id == target_plan_id,
+            )
+            .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        )
+        assert denial is not None
+        after = json.loads(denial.after_json or "{}")
+        assert after["code"] == "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+        assert after["proposal_id"] == proposal_id
