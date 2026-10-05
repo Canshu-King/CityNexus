@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import copy
 import json
 import hashlib
 import hmac
@@ -11876,6 +11877,116 @@ def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
     return moment.isoformat()
 
 
+def _r30_pending_future_recovery_event(
+    session: Session,
+    journey: Journey,
+    base: PlanVersion,
+    trigger_event: EventModel,
+    source: list[Activity],
+) -> EventModel:
+    """Project a scoped future shock onto the active opportunity window.
+
+    A renewed collective decision is a presented future until its normal accept
+    boundary runs.  A provider closure can therefore name a Place in that
+    future while the active plan still contains the old execution reality.  In
+    that narrow server-owned replay case, recovery must replan the current
+    opportunity window rather than guess an Activity row that is not active.
+    The returned object is an in-memory planning view; the persisted trigger
+    remains the original provider Event.
+    """
+
+    if trigger_event.event_type not in {"CLOSURE", "WEATHER"}:
+        return trigger_event
+    raw_payload = _json_object(trigger_event.payload_json)
+    if not raw_payload.get("r30_post_consent_shock"):
+        return trigger_event
+    scope_place_id = str(
+        raw_payload.get("affected_place_id")
+        or raw_payload.get("scope_place_id")
+        or raw_payload.get("target_place_id")
+        or ""
+    ).strip()
+    if not scope_place_id or any(str(item.place_id or "") == scope_place_id for item in source):
+        return trigger_event
+
+    # Only a future selected by a resolved collective mission can authorize
+    # this projection.  Arbitrary presented proposals must remain inert.
+    selected_future = False
+    presented = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.status == "PRESENTED",
+        )
+        .order_by(ReplanProposalModel.created_at.desc(), ReplanProposalModel.id.desc())
+    ).all()
+    resolved_selection_ids: set[str] = set()
+    for mission in session.scalars(
+        select(JourneyMission).where(JourneyMission.journey_id == journey.id)
+    ).all():
+        clarification = _json_object(mission.clarification_json)
+        if clarification.get("status") == "RESOLVED" and clarification.get("selected_proposal_id"):
+            resolved_selection_ids.add(str(clarification["selected_proposal_id"]))
+    for proposal in presented:
+        if proposal.id not in resolved_selection_ids:
+            continue
+        proposed = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if proposed is None:
+            continue
+        proposed_places = {
+            str(item.place_id or "")
+            for item in session.scalars(
+                select(Activity).where(Activity.plan_version_id == proposed.id)
+            ).all()
+            if item.place_id
+        }
+        if scope_place_id in proposed_places:
+            selected_future = True
+            break
+    if not selected_future:
+        return trigger_event
+
+    # The opportunity Event is server-derived from the active JourneyTwin and
+    # already carries the exact current cursor and next protected anchor.
+    opportunity = None
+    opportunities = session.scalars(
+        select(EventModel)
+        .where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "OPPORTUNITY_WINDOW",
+            EventModel.status.in_(("DETECTED", "ACKNOWLEDGED")),
+        )
+        .order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+    ).all()
+    for candidate in opportunities:
+        candidate_payload = _json_object(candidate.payload_json)
+        if candidate_payload.get("active_plan_version_id") != base.id:
+            continue
+        if candidate_payload.get("current_execution_activity_id") != journey.current_activity_id:
+            continue
+        opportunity = candidate
+        break
+    if opportunity is None:
+        return trigger_event
+
+    planning_event = copy.copy(opportunity)
+    planning_event.id = trigger_event.id
+    planning_event.detected_at = trigger_event.detected_at
+    planning_event.created_at = trigger_event.created_at
+    opportunity_payload = _json_object(opportunity.payload_json)
+    opportunity_payload.update(
+        {
+            "r30_recovery_source_event_id": trigger_event.id,
+            "r30_closed_place_id": scope_place_id,
+            "r30_post_consent_shock": True,
+        }
+    )
+    planning_event.payload_json = json.dumps(
+        opportunity_payload, ensure_ascii=False, sort_keys=True
+    )
+    return planning_event
+
+
 @app.post(
     "/api/v1/journeys/{journey_id}/replans", response_model=ReplanProposalSchema, status_code=201
 )
@@ -11936,6 +12047,13 @@ def generate_replan(
     source = session.scalars(
         select(Activity).where(Activity.plan_version_id == base.id).order_by(Activity.sequence_no)
     ).all()
+    # A provider shock may explicitly target a Place in the still-presented
+    # future selected under renewed consent.  Keep the raw closure as the
+    # durable trigger, while using the active server-owned opportunity window
+    # as the bounded recovery planning surface.
+    trigger_event = _r30_pending_future_recovery_event(
+        session, journey, base, trigger_event, source
+    )
     c4_rows = session.scalars(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
@@ -12474,6 +12592,13 @@ def generate_replan(
             or payload.get("next_activity_id") != opportunity_anchor.id
         ):
             raise HTTPException(409, "OPPORTUNITY_WINDOW_STALE_OR_UNBOUND")
+        blocked_place_ids = {
+            str(value)
+            for value in (payload.get("blocked_place_ids") or [])
+            if value
+        }
+        if payload.get("r30_closed_place_id"):
+            blocked_place_ids.add(str(payload["r30_closed_place_id"]))
         effective_event_time = max(
             effective_event_time, datetime.fromisoformat(current_execution.end_at)
         )
@@ -12482,6 +12607,8 @@ def generate_replan(
             failure = None
             if candidate_place is None:
                 failure = "PLACE_NOT_FOUND"
+            elif candidate_place.id in blocked_place_ids:
+                failure = "EVENT_TARGET_UNAVAILABLE"
             elif candidate_place.id in occupied_place_ids:
                 failure = "ALREADY_ACTIVE"
             elif candidate_place.provider_key in _SERVER_OWNED_PLACE_PROVIDERS:
