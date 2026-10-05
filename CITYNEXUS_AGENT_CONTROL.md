@@ -16588,6 +16588,51 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 我自己埋的第二处修掉了：ORD-0520 的 parity 臂把本轮 run 戳传给了子进程，任何按常设带戳的车道跑我这枚文件都会读到一枚红；只改子进程环境，判据一字未动，两侧各六趟实测。枝 `review/89f2e2d6-ord0520-parity-arm-child-env-r1` = `afa44222e2d59b6feef236b5c94d3075dbde5085`
+
+**一、这格从哪来**
+
+就是我上一块「守门那件分成型了」（账本第 17204 行）的乙型之一，而那一格落的文件是我自己交付的 `backend/tests/test_qoder_ord0520_journey_abort.py`。那枚臂 shell 出去跑 `tools/verify_openapi_parity.py`——一枚只读契约与生成物的尺——却把 `CITYNEXUS_E2E_RUN_ID` 与 `CITYNEXUS_DATABASE_URL` 一起递下去，于是子进程去重开本轮那枚已被父进程建好的库，守门拒它。**该改的是我这枚臂，不是守门**：这条读数正好把我先前那条「等号令者改守门」的范围又收窄了一格。
+
+**二、改了什么（只有一处，环境组装）**
+
+- 子进程 env 由「继承全部」改为「继承全部但剥掉那两枚键」，另加两行注释写明为什么剥。
+- 未动：任何 assert（件里 `assertions_unchanged` = `True`）、任何判据、任何产品码、`tools/verify_openapi_parity.py` 本体（临时变异后逐字节还原：`git status` 对该文件 = `(clean)`，尖上 blob = `bbcd96a34afa339bf9a357493abd93f5062e862d`）。
+- 改前后那枚测试文件的 blob：现尖 `2c37bf57546b2e758dd6a8a801dda1b63a3d350a` → 本枝 `d7a24bf17a13c78868a0b678c73a3d05c63e188e`（不同即证补丁真在枝上，不是口头）。
+
+**三、读数（同 node、每档六趟单跑 + 整档各一趟；全部由两枚件推导）**
+
+| 状态 | 单臂带 run id（拒／绿） | 整档带 run id | 整档不带 run id |
+|---|---|---|---|
+| 改前（锚 `backend/tests/test_qoder_ord0520_journey_abort.py:380`） | 拒 6／绿 0（本手复测一趟不放心，又跑六趟：`6` 拒） | 1 failed, 10 passed, 2 warnings in 3.36s | 11 passed, 2 warnings in 4.44s |
+| 改后（同处补丁落在枝上 `d7a24bf17a13c78868a0b678c73a3d05c63e188e`） | 拒 0／绿 6 | 11 passed, 2 warnings in 4.30s | 11 passed, 2 warnings in 4.36s |
+
+- 改前那六趟与已发布形状件里的六趟独立同判（件 `review/inflight-wait-r1/GUARD_SHAPES_r3.json` 里 `shape_B_rate_for_my_own_arm` 记的 6／6）。
+- 判语（件 `review/ord0520/ORD0520_PARITY_ARM_INHERIT_r2.json` blob `aff60b0958d0b5cb22d872e35d67bba3e3e7a718`）：`ARM_NO_LONGER_SEES_THE_REFUSAL`；整档两档改后同为 `11 passed, 2 warnings in 4.36s`，**这枚文件的红集合不再随调用方式变**——那正是我那块范围件要的效果，只是这一格不必等守门。
+- 件与量具：改前件 `review/ord0520/ORD0520_PARITY_ARM_INHERIT_r1.json` blob `7a849cf17b9706c1caa5e8f1aacd4d8fab78e1a4`、改后件见上一行；量具 `review/ord0520/parity_arm_inherit_fix_r1.py` blob `44eb8c75c1c09b0b0881168682e0d6b98bbae38e`、`review/ord0520/parity_arm_inherit_fix_r2.py` blob `2b0eb9503681d72953e78220b9e6e9d2cb53d4c8`。
+
+**四、反件（证明这刀没把臂改瞎）**
+
+把子进程要跑的那枚尺强制成退出码非零（`tools/verify_openapi_parity.py` 一进 main 就 `raise SystemExit(1)`），再跑这枚臂：带 run id 那趟 `1`、失败名单 ``test_the_parity_ruler_is_green_and_names_the``，件里 `arm_still_bites` = `True`。臂仍然红 ⇒ 剥环境没让它闭眼。跑完那枚尺逐字节还原（见第二节）。
+
+**五、自报一处方法错（两份件都入库，不留一手）**
+
+第一版脚本把所有读数排在打补丁**之前**就全跑完了，所以 `..._r1.json` 里挂着 "after" 标签的那些数其实是第二次改前读数。发现后另跑 `..._r2.py` 在补丁落地之后重测，两份件都随枝入库，判语只认 r2。这类错若不在件里留痕，读的人只会看到一个漂亮的单向对比。
+
+**六、落地面与请求**
+
+- `git merge-tree --write-tree b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c afa44222e2d59b6feef236b5c94d3075dbde5085` 预测树 `fa9f8ef8efa5d2d93347c96d4fae98d480f17b6d`，CONFLICT 行数 = 0；`git merge-base --is-ancestor b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c afa44222e2d59b6feef236b5c94d3075dbde5085` 退出码 = 0（我这枝起点就是现读尖 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`）。
+- 要落就落这一枚枝：一测试文件 + 四枚件/量具，产品码零枚。甲型与丙型那两格仍在等守门与常设的形制，我没顺手改别人的文件。
+
+边界 A：本手产品字节零枚改动（`backend/app/**` 一枚未动）；他人测试零枚改动；改动只有我自己那枚 ORD-0520 测试文件的一处环境组装 + `review/ord0520/` 下四枚。
+
+边界 B：权威线零移动；push 一次，目标本车道名下新枝，force-push 零次，他人枝零枚改动，旧枝零枚删除，枝头 = `afa44222e2d59b6feef236b5c94d3075dbde5085`。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写，监听端口零个在跑；每趟各一枚私有库、run id 各不同，尖 = `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜把那道闸的"值多少钱"量出来了：排除那十四枚导入期抛错的 spec，同一份默认配置能收到 **七百二十五条测试、一百五十三个文件**（裸跑是一条都收不到）；并且证明这不是我这一手带进来的——十四枚在两跳之间逐字节未动。计数用的是一份只存在于我这台的临时配置，共享闸与别人文件零改动
 
 **〇、先回上一块。** 那块（`82f55d8a_1806.md`，收件口 18:06 投）报的是：能签验收的 e2e 闸裸跑收不到任何测试。BB 机这轮没有待办信（点名给我的最新两封 `m_5dbcbfef0bc5`、`m_8784b9e1f9e4` 都已按收件人身份 ack，回读在 `D:/moodle/agent_bus/state.json` 的 `acks` 表；另有一封是值守发我的回执，回执不必再回）。账本 ORDERS 段读到此刻没有点我的新行。
