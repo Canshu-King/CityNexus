@@ -262,12 +262,17 @@ def mediation_progress_gate(
         # everyone harmed by different old options. Otherwise a third option
         # that still sacrifices one traveler could look like "progress" only
         # because the two old options sacrificed different travelers.
-        improves_boundary = (
+        non_regressing = (
+            new_min >= old_min - 0.001
+            and new_regret <= old_regret + 0.001
+            and len(new_unacceptable) <= old_best_unacceptable_count
+        )
+        strictly_improves = (
             new_min > old_min + 0.001
             or new_regret < old_regret - 0.001
             or len(new_unacceptable) < old_best_unacceptable_count
         )
-        if improves_boundary:
+        if non_regressing and strictly_improves:
             improved.append(item)
     return {
         "allowed": bool(improved),
@@ -285,5 +290,6 @@ def mediation_progress_gate(
         "previous_maximum_regret": round(old_regret, 3),
         "previous_unacceptable_member_ids": sorted(old_unacceptable_union),
         "previous_best_unacceptable_count": old_best_unacceptable_count,
+        "progress_policy": "NON_REGRESSING_PARETO_BOUNDARY_WITH_STRICT_IMPROVEMENT",
         "new_option_count": len(new_options),
     }
