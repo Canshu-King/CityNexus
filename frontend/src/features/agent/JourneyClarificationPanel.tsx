@@ -240,7 +240,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
 
         return (
           <article key={mission.id} data-mission-id={mission.id} data-mission-status={mission.status}>
-            {collectiveWaiting ? <>
+            {collectiveWaiting ? <div data-testid="collective-decision">
               <div className="cn-collective-heading">
                 <div>
                   <h4>{zh ? "这一步需要同行者共同决定" : "This step needs a group decision"}</h4>
@@ -248,12 +248,12 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                     ? `已回答 ${item.collective!.response_count}/${item.collective!.required_count}。助手会等相关成员都表态后再继续。`
                     : `${item.collective!.response_count}/${item.collective!.required_count} answered. The assistant waits for every relevant traveler before continuing.`}</p>
                 </div>
-                <span>{item.collective!.response_count}/{item.collective!.required_count}</span>
+                <span data-testid="collective-progress">{item.collective!.response_count}/{item.collective!.required_count}</span>
               </div>
 
               <ul className="cn-collective-members" aria-label={zh ? "成员回答状态" : "Member response status"}>
                 {item.collective!.required_members.map((member) => (
-                  <li key={member.member_id} className={member.responded ? "answered" : "waiting"}>
+                  <li key={member.member_id} data-testid="collective-member" data-responded={member.responded ? "true" : "false"} className={member.responded ? "answered" : "waiting"}>
                     <b>{member.display_name || roleLabel(member.role, zh)}{member.is_viewer ? (zh ? "（你）" : " (you)") : ""}</b>
                     <span>{member.responded ? (zh ? "已回答" : "Answered") : (zh ? "等待回答" : "Waiting")}</span>
                   </li>
@@ -262,7 +262,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
 
               <div className="cn-collective-options">
                 {item.collective!.candidate_options.map((option, index) => (
-                  <div key={option.proposal_id} className="cn-collective-option">
+                  <div key={option.proposal_id} className="cn-collective-option" data-testid="collective-option" data-proposal-id={option.proposal_id}>
                     <b>{candidateLabel(option, index, zh)}</b>
                     <small>{candidateTradeoff(option, zh)}</small>
                     <button
@@ -286,7 +286,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                     : "This browser has no server-confirmed member identity, so the group state is read-only here."}
                 </small>
               )}
-            </> : approvalWaiting ? <>
+            </div> : approvalWaiting ? <div data-testid="collective-approval">
               <div className="cn-approval-wait">
                 <h4>{zh ? "共同选择已形成，助手正在等批准" : "The group choice is ready; the assistant is waiting for approval"}</h4>
                 <p>{zh
@@ -296,7 +296,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                   ? `批准状态：${item.continuation!.approval_status ?? "UNKNOWN"} · 任务状态：${item.continuation!.pending_status}`
                   : `Approval: ${item.continuation!.approval_status ?? "UNKNOWN"} · continuation: ${item.continuation!.pending_status}`}</small>
                 {item.continuation!.viewer_can_approve ? (
-                  <button type="button" className="v8-primary" disabled={busy} onClick={() => void approve(item)}>
+                  <button type="button" className="v8-primary" data-testid="collective-approve" disabled={busy} onClick={() => void approve(item)}>
                     {zh ? "批准并让助手继续" : "Approve and let the assistant continue"}
                   </button>
                 ) : (
@@ -304,7 +304,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                 )}
               </div>
               {item.run && <small>{completionLabel(item.run, zh)}</small>}
-            </> : waiting ? <>
+            </div> : waiting ? <>
               <h4>{zh ? "这次旅行，你更看重哪一个？" : "What matters more for this trip?"}</h4>
               <p>{question.question}</p>
               <small>{zh ? "只用于本次行程；答案会交给助手继续验证和执行，不会扩大权限。" : "This journey only. The assistant continues through normal verification and authority boundaries."}</small>
