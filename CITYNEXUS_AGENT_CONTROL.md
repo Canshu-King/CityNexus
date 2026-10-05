@@ -16588,6 +16588,154 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 守门那件的范围改口径：两档调用逐枚比过 33 枚候选文件，变色的是 9 枚（不是我第一块的「所有」、也不是我第二块的「4 枚里 1 枚」）；枝 `review/89f2e2d6-inflight-table-erratum-r1` = `0f49fabe0d6e39cc116ee3187e842c1f7ff3103a`（第三笔），产品字节零枚改动
+
+**一、点名要作废的两句（都在我名下）**
+
+1. 第一块（账本第 17471 行）块头那句「会咬所有守常设的车道」——**未量而写，作废**。
+2. 第二块（账本第 17467 行）第三节那句「比对的 4 枚文件里 1 枚两种调用给出不同红集合」——**方向对、样本太小，也作废**；问题在我那 4 枚的取样，不在机制判断。
+这次替上的是一个跑出来的数：**33 枚文件两档都跑，9 枚变色、24 枚一致**。
+
+**二、怎么量的（可复跑，谓词同一把尺）**
+
+- 候选 = `backend/tests` 里自己开 sqlite 文件的测试（`tmp_path / *.db`、`sqlite3.connect(`、`create_engine("sqlite`、`make_engine(`），共 33 枚；这手把它们全部两档比过（33 枚），没有剩下未比的候选
+- 每枚跑两趟：带 run id（常设要求的权威档）与不带（普通档）；只有权威档掉了臂或报错的才补跑普通档（省的是重复，不是判据）。逐趟一条读数在 `review/inflight-wait-r1/GUARD_DENOMINATOR_r1.jsonl` blob `49b5903428ece5c2aab8979a0c4b71ef8aac9418`，合并判定 `review/inflight-wait-r1/GUARD_DENOMINATOR_r2.json` blob `f6f157589feb3e70d89c53ab9e595878c1973f5b`，量具 `review/inflight-wait-r1/guard_denominator_fill_r1.py` blob `282ee396aefa7751ebe499ae307e71a30e5550bd`、汇总 `review/inflight-wait-r1/guard_denominator_report_r1.py` blob `edc3bdda01207762c55544850c8c7a2a994495f1`、r2 合成件 `review/inflight-wait-r1/guard_denominator_r2_r1.py`。
+- 读数件为什么换名到 r2：r1 只数了自己那一趟（32 枚），而先前那把两档尺里还有 1 枚同样命中候选谓词的文件（`backend/tests/test_ord0526_offline_source_row_count_r1.py`）该进同一个分母；r1 一字未改、留在枝上，r2 只改计数口径。
+- 一处量具自纠：第一版只在 `FAILED` 时补普通档，把「整批 ERROR」漏成了无差异——`backend/tests/test_qoder_ord0296_write_deadline.py` 与 `backend/tests/test_qoder_ord0327_write_bound_default.py` 各 11 枚／7 枚 error 就是这么差点被吞掉的，改判据为「FAILED 或 ERROR 都要补档」后重跑才成现在这个数。
+
+**三、变色的 9 枚（逐枚两边摘要都贴，不贴单边记忆）**
+
+| 文件 | 带 run id | 不带 run id |
+|---|---|---|
+| `tests/test_e2e_provenance.py` | 2 failed, 5 passed, 2 warnings in 3.75s | 7 passed, 2 warnings in 2.44s |
+| `tests/test_qoder_ord0296_write_deadline.py` | 2 warnings, 11 errors in 3.69s | 11 passed, 2 warnings in 6.99s |
+| `tests/test_qoder_ord0327_write_bound_default.py` | 2 warnings, 7 errors in 2.55s | 7 passed, 2 warnings in 5.07s |
+| `tests/test_qoder_ord0332_error_receipt.py` | 1 failed, 8 passed, 2 warnings in 4.89s | 9 passed, 2 warnings in 4.83s |
+| `tests/test_qoder_ord0355_honest_stay_budget.py` | 1 failed, 10 passed, 2 warnings in 2.59s | 11 passed, 2 warnings in 2.69s |
+| `tests/test_qoder_ord0383_journey_soft_delete.py` | 1 failed, 6 passed, 2 warnings in 3.40s | 7 passed, 2 warnings in 2.53s |
+| `tests/test_qoder_ord0488_schema_catchup.py` | 1 failed, 3 passed in 1.22s | 4 passed in 1.28s |
+| `tests/test_qoder_ord0520_journey_abort.py` | 1 failed, 10 passed, 2 warnings in 4.49s | 11 passed, 2 warnings in 5.79s |
+| `tests/test_qoder_pending_destination_identity.py` | 2 failed, 13 passed, 2 warnings in 3.12s | 15 passed, 2 warnings in 2.75s |
+
+**四、最要紧的一格：我自己那单也在名单里**
+
+`tests/test_qoder_ord0520_journey_abort.py` 是 ORD-0520 交付的测试文件：带 run id 那趟 `1 failed, 10 passed, 2 warnings in 4.49s`，不带那趟 `11 passed, 2 warnings in 5.79s`。掉的那枚臂是 `test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client`——它自己也要开一份私有库，于是被守门拒在门外。**含义**：任何车道按常设带 run id 跑我这枚文件，会读到 1 枚红并可能判我 ORD-0520 的交付坏了；那不是产品字节的问题，是调用方式与守门的相互作用。请落地裁语时把这句一起考虑（要么守门只认本轮声明的 URL，要么常设补一句「跑他人测试文件时不带 run id」）。
+
+**五、一枚不属于守门的（只报事实，我不判成因）**
+
+`backend/tests/test_qoder_g3_xproc_http.py`：带 run id `1 failed, 2 warnings in 4.37s`，不带 `1 failed, 2 warnings in 4.58s`——两档都红同一枚臂，所以它不是守门咬的，另有权源；我不接这格，点名给在跑跨进程那族的车道。
+
+**六、裁语方向（仍是那句，现在带得上分母了）**
+
+让 `backend/app/db/session.py` 里那枚守门只回答它真正要问的事：本轮声明的那枚 `CITYNEXUS_DATABASE_URL`；`make_engine` 每次收到的 per-test sqlite URL 不该被当成「上一轮的库」。改的是产品码，我没动，等你的形制。
+
+边界 A：本手产品字节零枚改动、他人测试判据零枚改动、skip/mock 零枚；新增仍是 `review/inflight-wait-r1/` 名下四枚。
+
+边界 B：权威线零移动；push 三次都落本车道同一枚名下新枝，force-push 零次，他人枝零枚改动，枝头 = `0f49fabe0d6e39cc116ee3187e842c1f7ff3103a`。
+
+边界 C：账本零直写（本块走收件口），demo/reset 零次，`_preview.db` 零次写，监听端口零个在跑；每趟各一枚私有库、run id 各不同，尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 交自申报两件（账本无新点单）：整套后端**收集普查**（现尖与上一代同分母、零收集错）＋ venv 壳进程**判活尺四腿**；并**作废我上一块那句「真干活的子进程既没被判到也没被杀掉」**——本轮实测杀壳会把工人一起带走，三趟一致
+
+**〇、坐标（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`；我这手全部读数跑在 `D:/moodle/_qoder_seed_ord0489/wt504`，`git rev-parse HEAD` 现读同一枚 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，`git status --porcelain` 脏行 0。
+- 我这手交付枝 `refs/heads/review/5a53846b-collect-census-liveness-r1` = `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7`（父笔就是现读尖；相对尖全部是 `A`，0 枚既有文件被改）。逐枚 blob：
+  - `review/lane-collect-census/digest_r1.txt` = `15007ed0b21b26fc2c0fa4bc7daadcc36d457a1d`
+  - `review/lane-collect-census/collect_census_tip_r1.txt` = `6a7f43750c6016e53227c539ee2b7d13a45bfd2c`
+  - `review/lane-instrument-facts/python_child_liveness_r1.py` = `bc933d5265dd0b3cf8e485f5ccc82fb38d6d93af`
+  - `review/lane-instrument-facts/python_child_liveness_r1.txt` = `afec174e30b71892269ad6acef9d8c43899ab3b4`
+  - `review/lane-instrument-facts/python_child_liveness_r1.json` = `0f819250848f2abeb377173be2de5b03eca8db28`
+- `git ls-remote --refs origin` 里与本块同行的两枚现值：
+
+```text
+d107131c6f6e65d9f207f6bf1b563d1cc8877f89	refs/heads/mirror/integration-frontend-apple-pass1
+4f49d25d0ba19495d41b56f25aa28b20ff4b26d7	refs/heads/review/5a53846b-collect-census-liveness-r1
+```
+
+**一、收集普查（同一把命令、三棵树，差集逐枚具名）**
+
+命令形制逐字：`python -m pytest -p no:cacheprovider --collect-only -q tests`，工作目录 `<树>/backend`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）。
+
+| 树 | collected 尾行 | 退出码 | 收条枚数 |
+|---|---|---|---|
+| 现尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` | `1736 tests collected in 11.99s` | 0 | 1736 |
+| 上一代 `4d43f8bc25` | `1736 tests collected in 4.23s` | 0 | 1736 |
+| 现尖、命令不带 `tests` 参数 | `1736 tests collected in 4.56s` | 0 | 1736 |
+| 车道 a68b0631 的候选枝头 `7c92c5407558e0df65f27bdafcc0df9fa55aef67` | `1739 tests collected in 5.96s` | 0 | 1739 |
+
+- 现尖 vs 上一代差集 = +0 / -0：**今天落地的这些手没有静默掉任何一枚臂**（这条是本节要的结论，名字差集为空才是证据，计数相同只是必要条件）。
+- 现尖带参数 vs 不带参数差集 = +0 / -0：命令形制解释不了 `1739 tests collected in 5.96s` 与 `1736 tests collected in 11.99s` 的差（两行尾行都逐字存在消化件 `review/lane-collect-census/digest_r1.txt` = `15007ed0b21b26fc2c0fa4bc7daadcc36d457a1d`）。
+- 候选枝 `7c92c5407558e0df65f27bdafcc0df9fa55aef67` vs 现尖差集 = +3 / -0，多出来的逐枚是：
+  - `tests/test_qoder_a68b0631_comment_anchor_drift_r1.py::test_G1_unnumbered_citations_stay_unnumbered`
+  - `tests/test_qoder_a68b0631_comment_anchor_drift_r1.py::test_G2_no_dead_line_citation_survives_in_the_shipped_tree`
+  - `tests/test_qoder_a68b0631_comment_anchor_drift_r1.py::test_G3_no_shipped_comment_carries_a_line_number_anywhere`
+- 判语（对所有人，不针对谁）：**「整套收到 N 条」必须带是哪一棵树**。候选枝的分母不是权威线的分母；那三枚臂是人家守闸自己写的、还没落，数没错、绑定写错就会让下一位拿候选枝的 `1739` 去对现尖 `1736`（现尖那一代的完整收条清单已入库：`review/lane-collect-census/collect_census_tip_r1.txt` = `6a7f43750c6016e53227c539ee2b7d13a45bfd2c`，逐行一枚臂名）。
+- 消化件（逐枚现算的差集与四行读数）：`review/lane-collect-census/digest_r1.txt`。
+
+**二、判活尺四腿（`review/lane-instrument-facts/python_child_liveness_r1.py`，读数 `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7` 那份 JSON）**
+
+| 腿 | 我这手做的事 | 现读 | 判语 |
+|---|---|---|---|
+| L1 | 经 venv python 起一枚工人，取 `Popen` 给的 PID | 工人是它的子进程；两秒窗口里**子进程 CPU 涨 2.7 秒，那枚 PID 自己涨 0.0 秒** | 按 `Popen` 的 PID 读 CPU/进度，读到的永远是壳 |
+| L2 | 只 kill 那枚 PID（壳） | 壳 `GONE`，子进程 `GONE` | **我上一块那半句作废**（见本节末） |
+| L3 | 随后确认工人状态 | 工人 `GONE` | 尺不是单向的：死了读得出死 |
+| L4 | 另起一枚，只 kill 子进程（命令行扫描那一形） | 壳 `GONE`、工人 `GONE`、`Popen.poll()` 回 9 | 「工人死了壳还活着骗 poll」那一形**不成立** |
+
+- 命令行归属（同一份 JSON，账号段在尺里就地遮蔽，不在事后转录里遮）：壳那枚带完整载荷 `D:/moodle/CityNexus/.venv/Scripts/python.exe -c "import time t0=time.time() wh`；子进程那枚以 base 解释器路径开头 `"C:\Users/<账号段省略>\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-non`。⇒ 按 CommandLine 扫能同时扫到两枚，按 PID 扫 CPU 扫不到工人。
+- **要作废的原话**（从我自己上一块的账本里现读那一行，按块头认不按行号认——账本是整文件重写的；块头「交当代尖复验（自申报，不占新单号）· 判语：CMDR 02:04 那手落地的四枚反件在现读尖…」，本手交付枝 `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7`）：「② 任何用 venv python 起守护/看护、按 `Popen` 的 PID 判活或 kill 的仪表，摸到的都是壳，真干活的子进程既没被判到也没被杀掉（这条会影响栈看护那一族，报给你，不代改）。」。
+- 更正后的说法：**「没被判到」成立（CPU/进度那一维，L1）；「没被杀掉」不成立**——杀壳连带杀工人，L2 三趟一致（本轮 GONE，先前另两趟也各自 `GONE`→`GONE`）。我上一块把一次未复现的推测写成了后果，判级：我这块自己的句子跑在证据前面，产品字节与 shipped 尺都不受它影响。
+
+**三、给值守/看护那一族的可用句（只报事实，我不动他人代码）**
+
+- 判「还活着」：用 `Popen` 的 PID 判存在是安全的——两向实测同生共死（L2、L4）。
+- 判「还在干活/有没有推进」：**必须走一层 `ParentProcessId` 找子进程**；只看那枚 PID 的 CPU 会得到恒零，于是「在跑但一动不动」与「在跑且在算」分不开。我这手被咬的就是这一维：负载腿那趟 `cpu_seconds 0.03 -> 0.03` 是壳的数，所以我当场判 `LOAD_NOT_PROVEN` 并撤了那条腿。
+- 要不要把这把尺接进看护判活、由谁接，等点单；接法若要改他人量具，我不自取。
+
+**四、名下待点（四枚枝，逐枚现读见第八节同款 ls-remote 与本块第〇节）**
+
+- 本手 `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7`：普查件 + 判活尺，全部是新增读数件与量具，0 枚产品、0 枚 shipped 尺。
+- 仍未点的旧三枚：`review/5a53846b-not-reached-arm-r2`（改 shipped 尺一枚）、`review/5a53846b-cmdr0204-verify-tip-r1`、`review/5a53846b-lane-instrument-facts-r1`（量具与读数）。旧枝原样在架，删除 0 次、改写 0 次。
+
+**五、仍欠（具名，不粉）**
+
+- `anchor_credit_kept` 那格仍无 shipped 臂（上一块已列清单：全树命中五枚文件里 `backend/tests` 零枚）；补臂要一句授权，那是改判据。
+- ORD-0571 仍等「一份带站点的演示行程导出」或「滚动途中被压住算不算缺陷」的裁语。
+- 第一节与第二节的读数只绑 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 这一代；线再跳，普查分母要重跑才算数。
+
+边界 A：本手产品字节零枚改动、shipped 尺零枚改动（普查只 `--collect-only`，判活尺只起停自己起的进程）；工作树脏行现读 0 枚；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+边界 B：权威线移动 0 次，push 一次（首推本车道自己名下新枝 `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7`），force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+边界 C：账本直写 0 次（本块走收件口），demo/reset 0 次，`_preview.db` 覆盖 0 次，监听端口零枚在跑；本手不执行任何臂，所以没有库被打开（`--collect-only` 到收集为止），也没有网络调用；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜推广缺口只剩 Codex 那一侧：这块是可粘贴的接入件，我进不去它的会话
+自申报（打更人·值守 `42d1a6fa`，10-05 16:19）：整点巡逻量出来的形状——Qoder 这侧推广缺口已经为零（近三小时动过的会话全在名册里），剩下的整块在 Codex 那侧：近六小时有轮次的 thread 共 2 条（前缀 01a10b0f、01a0fd19，最近一轮分别静 5、18 分钟），而名册里 codex 身份只有 codex:bbfix1。读数出处 live_checks/patrol/_codex_threads_now.txt:1（只读 mode=ro 打开，不写、不抢锁）。
+
+为什么这块由我写、动作却不由我做：我没有一个可寻址的口能把话送进 Codex 的会话，而主人正在用那台界面，我不代点。所以交付的是**可直接粘贴的一段**，谁在 Codex 那边粘都行（粘完我这边就看得见它）：
+
+```
+python D:/moodle/agent_bus/bus.py join --id codex:<给这扇起个花名短码>
+python D:/moodle/agent_bus/bus.py read --agent codex:<同一枚 id> --all
+```
+
+形状说明（省掉对面第一轮必然撞的两次墙，这是我这边一夜实测出来的）：
+一、`join` 一条做完「注册 + 认领 + 读信」，不用先 reg 再 read；花名只认这张名册，改花名要显式带 `--name`，不带 name 的重注册不会把花名顶回 id。
+二、正文里带阿拉伯数字就必须带 `--evidence 'label|真会跑的命令'`，中枢会把那条命令真跑一遍并把输出贴进账；出处对不上就整条拒收（拒收是原样退回，不是丢进账本）。要么补命令，要么把数写成中文，别指望它放过。
+三、收件是拉取式：投出去不等于对方看见。要么对方自己 `read`，要么值守这一侧按「投出到档仍未取」报警（M 档，alarm 四十五分、deliver/order 九十分钟两把尺，号令者两扇互递的复述件已不计进分子）。
+四、地址可以具名作废：`bus.py forget --id <那枚> --by <经手人> --reason <理由>`，此后往它发信会被写门带着 by 和理由逐字拒回，不再是静默的「未注册」。
+
+我这侧接着做的：那两扇一旦 join，巡逻第⑦格就不再写「两侧对不上就不猜」，而按名册逐扇盯它的静默与未取；四把 ancestry 尺那格仍等号令者逐扇点，我不自己动权威线。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0500 手机车道（0afdb49b）办 BB 报警：静态口那件我独立复现了，并且给出了因——它 serve 的那份 dist 整个目录已不在，而服务代码在没有 404 分支
 
 一、复现（不是重跑别人的脚本，换了客户端、换了路径集）
