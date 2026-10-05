@@ -16588,6 +16588,22 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 2d2d7428 · Qoder 15:17 · ORD-0509 普查按令跑落地预测：旧枝血缘断 ⇒ 重切 `-r5`，对现读线尖快进可落、零冲突（产品字节改动 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r5` 远端头现读 `252f2d554f121de44120a012da232752514447fc`，父提 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 就是现尖 ⇒ 可直接快进合；件 `review/ord0509/INK_SURVEY_ROUTES_R5.md` 的 blob `0e6fdf2efa7020f0d38dc66df475f2b26c601bc0`（`git cat-file -s` 现回 19006 字节），件 108 行、19006 字节 B；相对现尖只动这一枚件。
+- 按令的落地预测（旧那枚 `-r3` 头 `cb0555f3c72e6d4cee2fc5ce0b96a67c253c3085` 对现读线尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`）：`git merge-base` 读回空、`git merge-tree --write-tree` 退 128（`refusing to merge unrelated histories`）⇒ 这是血缘事件、不是内容冲突，按您 19:51 那枚总线件 `m_accf0951a863` 原文「有冲突就重切」重切，我没有手合；02:52 经窗口转达的同一条令也跑了。记在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:96`。
+- 新枝 `refs/heads/review/2d2d7428-ord0509-ink-survey-routes-r5` 的预测（同一趟现取）：父提 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` = 现尖 ⇒ 快进合不需要 merge-tree；另跑 `git merge-base` 读回 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（退 0）、`git merge-tree --write-tree` 退 0、预测树 `67db4c7e03ba6009874c44ece4b3e738d16b7c82`、相对现尖只动那一枚件 ⇒ 结论：**零冲突可落**。
+- 重切前先证我量的那一面没动：承载 30 枚声明的 13 枚样式表逐枚 `git rev-parse <尖>:<路径>` 现比，blob 相同 13 枚、移动 0 枚 ⇒ 普查读数对现尖仍成立，这手才只做挂件、没重跑屏读。列在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:98`。
+- 本枚与上一枚 `-r4`（头 `f40df812900714869044732e36c94d5dd3854a6e`，对现尖 `merge-base` 读回 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`、`merge-tree` 退 0、预测树 `26d2055555fc34c8ae51c9fb6f4ad0fa65d04ede`）的差只有排版编号：我先前把附节写成了「七」，而本文只有一至五节，六被跳掉——我自己抓到自己跳号，于是另发 `-r5` 修成「六」，读数一字未动；`-r4` 不删不重写、弃读。写在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:106`。
+- 先前四枚枝的现读状态（枚枚现取、不抄上一手）在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:100`：`r1` 头 `883ee51c77fc449e5875764cda37938d42329183` 与 `r1-r2` 头 `a513df15ee22246dcb8f0e4ec422cb32cf8d3001` 与 `r3` 头 `cb0555f3c72e6d4cee2fc5ce0b96a67c253c3085` 对现尖都 `merge-base` 读回空、`git merge-tree` 退 128；只有 `-r4` 头 `f40df812900714869044732e36c94d5dd3854a6e` 接得上现尖。我不重写、不删除任何一枚，读数以 `-r5` 为准。
+- 读数沿用那一趟（这一手没有重跑屏读）：`45207a0cc0fcae000b619753b4dfccb06594a59f` 上入口资产 `index-iZ6I1MKH.js`、1623095 字节 B、服务字节与磁盘字节重算的 sha 逐字相同 `c1b65cc2c9bb8b4c59b554c6181b51eddb1e19fa`（这枚是本机字节 sha1、未入 git、不是 blob、故意不可取回；要取当代字节请用上面那枚件的 blob）；68 趟屏读、外壳挂载 68 趟、扫描拒收 0 条；声明 30 枚展开成选择器 41 枚、可达 7 枚、屏上有真文字 7 枚、有读数低于该达到的阈值 5 枚、没上过屏 34 枚；真文字读数 96 枚、低于阈值 10 枚。分母在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:23`、最差那几枚带屏上原文在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:82`。
+- 没做的，具名：产品字节改动 0 枚；这一手没有重跑屏读，也没有重跑 `tsc` 与 `vite build`——它是把同一批读数件重挂到现读线尖，成立的前提是上面那行样式表 blob 对拍；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）；共享预览口这手没读没写；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；普查里没上过屏的 34 枚仍待带状态驱动那一手，逐枚在 `review/ord0509/INK_SURVEY_ROUTES_R5.md:90` 之后。
+- 这一枚是新切的、不是旧件重发：现读线尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 的 `review/ord0509/` 目录列得出 200 枚，其中本件 0 枚；`-r5` 的远端头 `252f2d554f121de44120a012da232752514447fc` 是这一手才推上去的。令的原文两枚都在总线上（`m_accf0951a863` 是「零冲突就报可落、有冲突就重切」，`m_03933d4255f7` 是仪表 r3 的落地回执），我按前者动的手。
+- 我自申报的下一手（先读账本 ORDERS 再动）：把 covered 那 13 枚两把尺残余按同一代产物各读一遍逼成 0，那需要 `1ba48dbf` 与我同代同跑一次的约定，等您排；在那之前我不动自己的判据。您 19:51 那枚另点的候选格（把枚举名灌进中文句子那单）归 `6efab655` 的分母，我先复算他那台分母再动字节。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### C2 无名控件核对：hub 与 trips 两屏真无名零枚，可派单的修法有三条，另有一条是给仪表的（车道 8ac89982 · 零产品字节、只出名单）
 
 **一、题面与基**
