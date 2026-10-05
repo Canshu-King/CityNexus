@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 现尖同代普查 r11（锁满足、钉的就是权威线现尖 b2fccfdf2728；两臂各一件，判语 GREEN、待看 0 枚）· 车道 45d25bfb 自申报（0 枚产品字节）
+
+一、这一件答的是哪一问
+- 上一块 r10 我把「钉的树必须是现尖」装进尺里，但也因此承认：我 r8/r9 那批屏读属于更早那一代。这一件就把那一趟补成真正的现尖同代：现读权威线 → 建那一代的 bundle → 起私有栈重走十四条路由两臂 → 过锁再出判语。
+- 交块前再现读一次权威线：`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 于本机 17:45:45 回 b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c，与跑判语那一刻的 live_tip_at_run 逐字相同。
+
+二、三链与读数
+- 链一（构建回执 sha == 钉的树）：构建 cmdra_0553_r11 用的 sha 是 b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c，与被钉 b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c 相同；回执件 blob 455355cd1b27c227c34dc68efa59715153d96b1d。
+- 链二（磁盘那代 dist 的入口名 == 屏读件记录的入口名）：两臂各自记的入口逐字 /assets/index-DLbc3Q3N.js。
+- 链三（屏读来自那道口）：后端 :8754（`pid_owns_port` True、owner 39748、demo_mode True、runtime_identity 答 NATIVE_DEEPSEEK_TOOL_LOOP），静态 :49881 代理到它，页面异常两臂都 0 处。启动回执件 blob 166540c5a64c5813d34b23d5077a07ab5ad11ff5。
+- 尺的自证：`tip_binding` 逐字「pin equals the live authority tip」，pinned b2fccfdf2728、live_tip_at_run b2fccfdf2728；七臂全 PASS、整体 GREEN、待看清单 0 枚。报告件 blob 8362403ec314c1736c2ee135ffed54b5d4ea8cda。
+
+三、判语（现尖那一代，与 d107131c 那一代逐枚相同 = 这几代没把新的机词推上屏）
+- 英文臂：走了 14 条路由，其中 7 条有机词上屏、命中 38 处、去重 33 枚；服务端答的字 0 枚（r5 那两枚假阳 SELECTED / COMMITMENT 在现尖仍是词表字）。两件 blob 668b6c9c071d8e72b94e21b9bccecd6b78d0dc24。
+- 中文臂：1 条路由、命中 2 处、去重 1 枚，就是 /v8/bookings 的 JSON（你早前裁过保留）。件 blob 25b8288e2bc91b0ba6043ff02dbb0d14e592d630。
+- 反例（同一把尺、只把构建标签换成上一代的 cmdra_0553_r8）：rc=1、逐字「ABORT generation lock: build tag cmdra_0553_r8 was made from d107131c6f6e, not the pinned tree b2fccfdf2728」，并且在出判语之前就拒、没有写出任何报告件。控制台 blob 23ad1523e0bdfed0e75f57e3f722aa47dae13a7e。
+
+四、纪律
+- r11 产品字节 0 枚、提交 0 笔、推送 0 次；本轮新端口 :8754 与 :49881 交完这块就停；共享预览库 _preview.db 没读没写、没 ALTER、没跑 demo/reset；分库是我私有副本 _cmdra_0553p.db（17358848 B）；:8000 与手机链、BB :4799、看板 :4820 一个没动；force-push 0 次；权威线我没碰。
+- 新落盘 7 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r11.jsonl。
+- 仍等你裁四格：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6efab655 · 号令者实例 A · 勘误（不改上一块）：我在账本里引了一枚行号锚，它已经被我自己那次插入推走
 
 - 上一块（块头「SYNTHETIC_DEFAULT 那格在现尖上再钉一次」）第一节里我写「现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:20751`」。那枚行号在我写下的那一刻是对的（`grep -n` 现取），但我随后在 17:42 又插了一枚块，账本整文件重写，同一句现在落在第 20789 行——**我自己就是那次漂移的制造者**。
