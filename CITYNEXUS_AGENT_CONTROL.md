@@ -16588,6 +16588,76 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 · 号令者实例 A · 督办那格一句话答完；复现并立案一件比它大的：现尖上 e2e 闸一条测试都收不到（开 ORD-0576）
+
+**一、督办点的 SYNTHETIC_DEFAULT**
+
+- 现尖 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c` 上它仍是修好的：词表行 `frontend/src/lib/displayVocabulary.ts:165`，屏侧只经 `frontend/src/features/planning/PlanRankingPanel.tsx:144` 出字。本轮零改动，无字节可改。闭单判语在账本块头「四、SYNTHETIC_DEFAULT 那格再钉一次」那枚块里（按名字形搜，别按行号）。
+
+**二、收件框现状**
+
+- 车道 1ba48dbf 已按我给的改法重交并入了（三枚块在 18:17 到 18:21 之间入账，两枚旧的拒件已被它自己的新块顶替）。我不欠它指引了。
+- 本轮跑门：待插零枚、拒零枚。
+
+**三、复现车道 82f55d8a 那条报警：成立，而且比它自己说的更结构化**
+
+- 我在**现尖的导出树**里跑 `cd <export>/frontend && npx playwright test --list`：退出码一，末行 `Total: 0 tests in 0 files`，导入期抛错的 spec 有 18 枚（逐枚名单与原始输出在同一件里：blob `ca3fd57b2ea0d93ec54ba2feab8852406f1648e5`，14143 字节）。
+- 两类成因都在那枚件里点名：一类在模块顶层要环境前置才肯走（例：`frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts:43` 那行，缺 `CITYNEXUS_ORD0533_BASE_TIP` 就 throw）；一类按相对路径去读后端源文件（例：`frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:44` 读 `backend/app/schemas.py`，前端单侧导出里当然没有）。
+- **只补环境不解决问题**：我把那枚变量按现尖值喂进去再跑，末行仍是 `Total: 0 tests in 0 files`（同一件 `env_probe` 段）。Playwright 的采集是一荣俱荣、一损俱损：任何一枚 spec 在 import 期 throw，整轮就收不到东西。
+- 顺手钉一条会骗人的读数（对我自己也有效）：在**工作树** `D:/moodle/CityNexus/frontend` 里同一条命令收 26 条、十四份文件（读数逐字在件 blob ca3fd57b2ea0d93ec54ba2feab8852406f1648e5 的 `working_tree_control` 段）。但那不是发布线——那枚 ORD-0533 spec 在工作树里根本不存在（`ls` 报无此文件），在现尖那棵树里存在（`git cat-file` 回 blob）。谁拿工作树的条数当闸的证据，数的是旧代次。
+
+**四、开单 ORD-0576 → 车道 82f55d8a（报警人即 e2e 口径的持有人）**
+
+- 要修的形状：采集不许被单枚 spec 的模块顶层断言打死。需要前置的 spec，把前置检查挪进用例内并 `test.skip` 带**具名原因**（不许裸 skip、不许改断言凑绿）；要读后端源文件的 spec，路径要按仓库根解析（或改读已发布件），使前端单侧导出与完整检出两种形状下都能采集。
+- 验收要件（我自己重跑，别替我写绿）：① 现尖完整导出里 `npx playwright test --list` 退出码零且条数大于工作树那次的读数；② 现尖**前端单侧**导出里同一条命令也退出码零；③ 因前置不足而跳过的用例，跳过原因里必须点名缺哪一枚环境变量或哪一枚文件；④ 全程零枚产品字节改动之外的顺手修改。
+- 反件至少两枚：把任一已修好的 spec 的模块顶层断言改回去、以及把某枚 skip 改成裸 skip（无原因），两枚都必须让这把尺报红。
+- 枝名请沿 `review/82f55d8a-e2e-collection-safe-r1`。
+
+**五、没改善的部分（具名）**
+
+- ORD-0576 本轮零字节落地：在那之前，任何"e2e 闸绿"的说法在现尖上都不成立，包括我上一块里那句「测试我没跑」——更准确的说法是**就算跑也收不到测试**。
+- ORD-0575（被正文盖住的提交键）仍零字节；ORD-0572、ORD-0573、ORD-0574 未交件。
+- 花费面那句在真屏仍 `NOT_REACHED_BY_CMDR`；闭合查找尺仍未接进落地门；机词普查白名单仍缺 `JSON` 一枚。
+- 权威线本轮未动，仍是 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`；手机链仍停在 day33 那一代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 拒写门按件套完四件（它当场咬到我一次改名没命中）；`cn-copilot-edge` 那枚用"不点它"的第二趟量回来了，并因此抓到我自己判语命名的一处错
+
+**〇、坐标**。权威尖现读 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`，与我 17:15 那块同一枚（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 本轮再读两次逐字相同），所以本轮 ref 0 次重挂。那块已入账（块头「裁语③那格确认已落地」，现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:17188`，收件口回执在盘 `6a150e1e_1715.md.inserted_171821`）。BB 机 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行。栈：静态端口 `127.0.0.1:4831` 与我那枚 api 端口 `127.0.0.1:8021` 现读各一枚 LISTENING、本轮没起也没停过一回。
+
+**一、上一块第六节那张名单，按件套完了本轮该套的四件，两分支都真跑过**
+- 装了门的四件：`css_leak_census_r3.py`、`font_declare_browser_r2.cjs`、`font_declare_screens_r2.cjs`、`font_declare_supply_r4.cjs`（每件都在写盘前查同名件是否已在盘；在盘就打 `REFUSE_OVERWRITE` 并非零退出）。
+- **拒写分支**：前三件各跑一次，退出码都是七、日志逐字打印拒写目标；我同时回读那三枚原有读数件的字节数与修改时刻（epoch 逐枚与跑之前相同），确认真的没被改写。第四件 `font_declare_supply_r4.cjs` 的输出名带档位标签，所以给它一个在盘的名字（`up`）时它照样拒。
+- **写分支**：给同一个脚本一个新档名（`up3`）就正常写出 `D:/moodle/_qoder_6a_ord0531_20261001/font_declare_supply_up3_r3.json`，退出码零。也就是说这道门不是"永远不让写"，只拦覆盖。
+- **它当场咬到我一次**：我把门复制到三腿臂新一代时，改了 `RUNG_TAG` 却没改中输出名（我那条替换的字面串压根没命中，而这次不是靠人眼发现——第二次跑同一档直接 `REFUSE_OVERWRITE: output name must end with the rung tag r4`、退出码七）。`grep` 现读那两行确实一个是 `_r3.json` 一个是 `"r4"`。**这正是这道门存在的理由**：它第一次没拦住的时候（今天早些时候），我覆盖掉了一代读数，那份"修正前 vs 修正后"只剩当时的 stdout。
+- 旧代不装门的：`bare_box_leak_census_r1.py`、`forms_verify_r1.py`、`recut_at_b168b_r2.py`、`trash_anchor_state_b168b_r1.py`、`bare_box_leak_measure_r1.cjs`、`ancestry_causal_arm_r1.cjs`／`r2.cjs`——理由具名：它们已经不是现役尺，给退役件装门只会制造"全部已焊死"的错觉；现役的（`causal_arm_all_r5.cjs`、`bare_box_leak_census_r2.py`、`font_declare_*` 现行代）都有门。
+
+**二、`cn-copilot-edge` 量回来了，代价是抓到自己一处判语命名错**。我上一块说过那枚缺席是"我自己的动作把它移出分母"（一杠要先点开 Copilot 才量别的，而一点它、入口本身就被面板替换）。这轮给臂加了开关：同一件既能跑"开面板"趟也能跑"不开面板"趟，档名带模态（`causal_arm_all_light_390_noclick_r5.json` 与 `causal_arm_all_light_390_clicked_r5.json`，件 `causal_arm_all_r5.cjs`）。
+- 不开面板那趟：进判语十九枚，只缺 `cn-copilot-close`；`cn-copilot-edge` 现读声明十一 px、壳内十一 px、壳外十一 px、归位十一 px。
+- 开面板那趟：进判语十九枚，只缺 `cn-copilot-edge`；`cn-copilot-close` 现读声明二十三 px、壳内十六 px、壳外二十三 px、归位十六 px（这才是"祖先压住它"的形状）。
+- **我第一版把它判成 `ANCESTOR_EXPLAINED`，那是错的命名**：它壳内就已经等于声明值，也就是**根本没在丢**，把它算进"丢了但能解释"那一栏会凭空给这格加一枚受害者。于是新增第四判语 `NOT_LOSING_at_all`（臂里写了为什么需要它），重跑后它落进新栏，其余各栏计数随之从十七枚变成十六枚（不开面板趟）。
+- 附带一条方法账：同一对类名（`cn-copilot-edge` 与 `cn-copilot-close`）按交互态**交换缺席**——这就是"分母随态变"的具体形状，也说明为什么这类表必须写"开了哪一枚面板"。
+
+**三、二十枚去重声明的因果定案（两趟并集，三九〇 档 light 档，现尖产物）**
+- 十七枚 `ANCESTOR_EXPLAINED`：搬出外壳就读回自己声明的值，搬回又变回去（每一行两枚校验位皆真：壳外时 `closest(".v8-product-shell")` 为空、归位后非空）。
+- 一枚 `NOT_LOSING_at_all`：`cn-copilot-edge`（十一 px 三腿同值）。
+- 一枚 `OTHER_RULE_STILL_GOVERNS`：`v8-avatar`——三腿全十 px、怎么搬都不翻，因为它的值来自元素加类 `button.v8-avatar`。**这枚是整把尺的反面对照：修对的形制在它面前不翻。**
+- 一枚 `UNDECIDABLE`：`trip-stop-more` 声明即 `inherit`（壳内十 px、壳外十六 px，随父级变，没有"声明被抢"这件事）。
+- 用法上这条给了甲形一个能跑的验收判据：修完之后重跑这把臂，`ANCESTOR_EXPLAINED` 那一栏应当清空，只剩下不翻的形制对照与具名不判的那枚。
+
+**四、复跑一致性（新尖上第三次确认）**：`up3` 趟现读 hub 进判语十六枚、丢十枚、去重七枚；agent 十枚、五枚、四枚——与我 15:23、16:11、17:15 三块的读数逐格相同。尖在这期间换过两代（`d107131c` → `b2fccfdf`），这一维没动，所以前几块那句"二十枚"在现尖上仍成立。
+
+**五、这轮没做的（具名）**。① 三腿臂仍只在 light×三九〇 跑了两趟模态，暗色与一二八〇 的模态并集没跑（档维上一轮已证不变，态维只在这一档证过）；② 没把门推成产品里的判据（臂只读 DOM，不动样式表，落不进 e2e 断言，除非您点头要一件常驻判据臂）；③ 产品字节 0 枚改动；④ 后端与前端全量套件零次执行（分母归您的回归轮）；⑤ 量具入库 push 0 次。
+
+**六、边界账**。权威线 0 次推送、权威线 0 次移动；账本改写 0 次（这块走收件口）；已发布枝 force-push 0 次、删除 0 次；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮不碰任何库，屏面读走我自己那份 `spend_day24.db`）；别人车道的进程我既没起也没停过一回；我自己那两枚服务也没起停；skip 0 处、mock 0 处；工作树现读 `git status --porcelain` 空输出（`D:/moodle/_qoder_n2b_ord0466_20260929/wt`，`HEAD` 在重挂用的临时枝上，是我那棵评审树不是权威线，ref 一个没挪）。端口清单不变：api `127.0.0.1:8021`、静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`、`127.0.0.1:4829`、`127.0.0.1:4831`；工地板 `127.0.0.1:4820` 不归我、我没碰；受保护那四枚 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 现读命中零行，本轮没向它们发起过请求。
+
+**七、下一手（自申报）**。把第三节的定案表在**暗色档与一二八〇 档各补一趟"开／不开面板"两模态**（共四趟），验一件事：`ANCESTOR_EXPLAINED` 那十七枚会不会在某档里出现"壳外也不等于声明值"的新成员——那将说明还有一条我没归因的规则在管它，而不是我把态说全了。跑法是现成臂加两个参数，读数件名带档与模态、门自动防覆盖。随后照旧等三句：甲/乙点一形、裁语①点形制（我推荐甲、反对丙）、要不要把量具推成一枚 review 枝入库。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · 代次锁补第三道 r12（把「那代 dist 的字节真属于那枚 sha」也量了：同一 sha 独立重建两遍，逐文件 sha256 全等；隔壁一代必须不等）· 车道 45d25bfb 自申报（0 枚产品字节）
 
 一、补的是 r11 我自己点名的缺口
