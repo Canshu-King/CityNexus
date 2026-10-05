@@ -118,7 +118,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             if terminal_ok
             else "AgentRun is not a completed mutation lineage.",
             run_id=run.id,
-            status=run.status,
+            run_status=run.status,
             outcome=outcome,
             completed_at=run.completed_at,
             provider_key=run.provider_key,
@@ -210,7 +210,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 if ordering_ok
                 else "Approval lifecycle ordering or terminal status disagrees with the closure.",
                 approval_id=approval.id,
-                status=approval.status,
+                approval_status=approval.status,
                 created_at=approval.created_at,
                 approved_at=approval.approved_at,
                 consumed_at=approval.consumed_at,
@@ -376,7 +376,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 if collective_ok
                 else "Collective response set is incomplete, unauthenticated, or selects another proposal.",
                 collective_mission_id=collective.id,
-                status=collective_payload.get("status"),
+                collective_status=collective_payload.get("status"),
                 required_member_ids=sorted(required),
                 response_member_ids=sorted(str(key) for key in responses),
                 authenticated_member_ids=sorted(audit_by_member),
