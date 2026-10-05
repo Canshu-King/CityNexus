@@ -2107,6 +2107,41 @@ class AgentToolGateway:
             self.session, journey, proposal, str(request.mission_id) if request.mission_id else None
         )
 
+        # A policy approval cannot stand in for shared human authority.  The
+        # normal approval path used to create a pending ACCEPT_REPLAN receipt
+        # before the core collective gate ran, so an external Agent could stop
+        # at WAITING_FOR_APPROVAL while a HUMAN_TRADEOFF_REQUIRED proposal had
+        # never been presented to the relevant members.  Recompute the same
+        # server-owned mutation gate before issuing an approval; the approval
+        # route will recompute it again at the actual write boundary.
+        proposed = self.session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if proposed is not None:
+            from app.main import (
+                _record_collective_mutation_denial,
+                collective_mutation_gate,
+            )
+
+            collective_gate = collective_mutation_gate(
+                self.session,
+                journey,
+                proposed,
+                hard_feasible_plan_ids={str(proposed.id)},
+                resolved_decision=resolved_collective_decision,
+            )
+            if not collective_gate.get("allowed"):
+                _record_collective_mutation_denial(
+                    self.session,
+                    journey,
+                    proposed,
+                    collective_gate,
+                    mutation_kind="ACCEPT_REPLAN",
+                    proposal_id=proposal.id,
+                )
+                raise HTTPException(
+                    409,
+                    f"{collective_gate.get('code')}: collective mediation must be resolved before approval",
+                )
+
         try:
             proposal_diff = json.loads(proposal.diff_json or "{}")
         except json.JSONDecodeError:
