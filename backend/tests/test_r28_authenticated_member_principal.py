@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
+import pytest
 from fastapi.testclient import TestClient
 
 import app.main as main_module
@@ -274,6 +275,83 @@ def test_r28_approval_requires_owner_principal_and_journey_update_capability() -
         )
         assert owner_approval.status_code == 200, owner_approval.text
         assert owner_approval.json()["status"] == "APPROVED"
-        assert owner_approval.json()["approved_by"] == seeded["owner_id"] if "approved_by" in owner_approval.json() else True
+        assert owner_approval.json()["approved_by"] == seeded["owner_id"]
+    finally:
+        _set_secret(previous)
+
+
+@pytest.mark.parametrize("member_key", ["owner_member_id", "admin_member_id"])
+def test_r28_expired_members_cannot_answer_or_approve(member_key) -> None:
+    previous = _set_secret(_TEST_SECRET)
+    try:
+        seeded = _seed_identity_fixture()
+        traveler_key = "owner_id" if member_key == "owner_member_id" else "admin_id"
+        token = issue_traveler_token(seeded[traveler_key])
+        with SessionLocal() as session:
+            member = session.get(JourneyMember, seeded[member_key])
+            member.expires_at = (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat()
+            session.commit()
+        answer = client.post(
+            f"/api/v1/journeys/{seeded['journey_id']}/missions/{seeded['mission_id']}/"
+            f"collective-clarification/{seeded[member_key]}",
+            headers=_auth(token),
+            json={"clarification_id": seeded["clarification_id"], "proposal_id": str(uuid4())},
+        )
+        approval = client.post(
+            f"/api/v1/journeys/{seeded['journey_id']}/agent/approvals/{seeded['approval_id']}/approve",
+            headers=_auth(token), json={"approval_method": "USER_CONFIRMATION"},
+        )
+        assert answer.status_code == 403, answer.text
+        assert approval.status_code == 403, approval.text
+    finally:
+        _set_secret(previous)
+
+
+def test_r28_admin_cannot_answer_owner_and_body_cannot_override_actor() -> None:
+    previous = _set_secret(_TEST_SECRET)
+    try:
+        seeded = _seed_identity_fixture()
+        token = issue_traveler_token(seeded["admin_id"])
+        root = f"/api/v1/journeys/{seeded['journey_id']}"
+        answer_body = {"clarification_id": seeded["clarification_id"], "proposal_id": str(uuid4())}
+        impersonation = client.post(
+            f"{root}/missions/{seeded['mission_id']}/collective-clarification/{seeded['owner_member_id']}",
+            headers=_auth(token), json=answer_body,
+        )
+        assert impersonation.status_code == 403, impersonation.text
+        forged = {"member_id": seeded["owner_member_id"], "traveler_id": seeded["owner_id"]}
+        forged_answer = client.post(
+            f"{root}/missions/{seeded['mission_id']}/collective-clarification/{seeded['admin_member_id']}",
+            headers=_auth(token), json={**answer_body, **forged},
+        )
+        forged_approval = client.post(
+            f"{root}/agent/approvals/{seeded['approval_id']}/approve",
+            headers=_auth(token), json={"approval_method": "USER_CONFIRMATION", **forged},
+        )
+        assert forged_answer.status_code == 422, forged_answer.text
+        assert forged_approval.status_code == 422, forged_approval.text
+        with SessionLocal() as session:
+            assert session.get(ActionApproval, seeded["approval_id"]).status == "PENDING"
+            assert json.loads(session.get(JourneyMission, seeded["mission_id"]).clarification_json)["responses"] == {}
+    finally:
+        _set_secret(previous)
+
+
+@pytest.mark.parametrize("kind", ["tampered", "expired"])
+def test_r28_invalid_signed_credentials_rejected(kind) -> None:
+    previous = _set_secret(_TEST_SECRET)
+    try:
+        seeded = _seed_identity_fixture()
+        if kind == "expired":
+            token = issue_traveler_token(seeded["owner_id"], now=1)
+        else:
+            token = issue_traveler_token(seeded["owner_id"])
+            body, signature = token.split(".")
+            token = body + "." + ("A" if signature[0] != "A" else "B") + signature[1:]
+        response = client.post(
+            f"/api/v1/journeys/{seeded['journey_id']}/agent/approvals/{seeded['approval_id']}/approve",
+            headers=_auth(token), json={"approval_method": "USER_CONFIRMATION"},
+        )
+        assert response.status_code == 401, response.text
     finally:
         _set_secret(previous)

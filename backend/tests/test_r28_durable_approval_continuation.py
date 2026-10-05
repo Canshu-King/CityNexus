@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
@@ -8,7 +9,7 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.agent.continuation import capture_pending_action
 from app.agent.gateway import AgentToolGateway
-from app.agent.runtime import _terminal_agent_status
+from app.agent.runtime import DeepSeekJourneyAgent, _terminal_agent_status
 from app.core.config import settings
 from app.schemas import AgentToolCall
 from test_agent_authority_v2_actions import _selected_plan
@@ -19,7 +20,10 @@ from app.db.models import (
     AgentRunStep,
     Journey,
     JourneyMission,
+    PlanVersion,
+    ReplanProposal,
     Traveler,
+    AuditLog,
 )
 from app.db.session import SessionLocal
 
@@ -231,8 +235,11 @@ def test_r28_approval_route_resumes_same_run_without_second_model_turn(monkeypat
         f"{seeded['approval_id']}/approve",
         json={"approval_method": "USER_CONFIRMATION"},
     )
-    assert replay.status_code == 409
+    assert replay.status_code == 200, replay.text
+    assert replay.json()["continuation"]["replayed"] is True
     assert len(calls) == 1, "approval replay must not cause a second mutation"
+    with SessionLocal() as session:
+        assert session.query(AgentRunStep).filter_by(run_id=seeded["run_id"]).count() == 1
 
 
 def test_r28_real_gateway_approval_resumes_same_agent_run() -> None:
@@ -346,3 +353,140 @@ def test_r28_real_gateway_approval_resumes_same_agent_run() -> None:
         ]
         assert "agent-resume-" in steps[-1].arguments_json
         assert __import__("json").loads(steps[-1].result_json)["executed"] is True
+
+
+def test_r28_startup_recovers_consumed_approval_without_second_mutation(monkeypatch) -> None:
+    """Reopen the app after Gateway committed but before outer finalization."""
+    seeded = _seed_pending_continuation()
+    base_id, proposed_id, proposal_id = (str(uuid4()) for _ in range(3))
+    with SessionLocal() as session:
+        for version, plan_id in enumerate((base_id, proposed_id), start=1):
+            session.add(PlanVersion(
+                id=plan_id, journey_id=seeded["journey_id"], version_no=version,
+                planning_mode="balanced", status="SUPERSEDED" if version == 1 else "ACTIVE",
+                source="INITIAL" if version == 1 else "REPLAN",
+                total_cost_minor=0, currency="JPY", estimated_duration_min=60,
+                created_at=_now(),
+            ))
+        session.flush()
+        session.add(ReplanProposal(
+            id=proposal_id, journey_id=seeded["journey_id"], trigger_event_id=None,
+            base_plan_version_id=base_id, proposed_plan_version_id=proposed_id,
+            status="ACCEPTED", hard_constraints_passed=True,
+            locked_commitments_preserved=True, utility_score=0.5,
+            score_breakdown_json="{}", diff_json="{}", explanation_json="{}",
+            created_at=_now(), decided_at=_now(),
+        ))
+        journey = session.get(Journey, seeded["journey_id"])
+        journey.active_plan_version_id = proposed_id
+        pending = session.get(AgentPendingAction, seeded["pending_id"])
+        arguments = json.loads(pending.arguments_json)
+        arguments["proposal_id"] = proposal_id
+        pending.arguments_json = json.dumps(arguments)
+        pending.status = "RESUMING"
+        pending.claimed_at = _now()
+        approval = session.get(ActionApproval, seeded["approval_id"])
+        approval.target_id = proposal_id
+        approval.status = "CONSUMED"
+        approval.approved_at = _now()
+        approval.consumed_at = _now()
+        session.commit()
+
+    def must_not_dispatch(*args, **kwargs):
+        raise AssertionError("startup recovery must not perform a second mutation")
+
+    monkeypatch.setattr(AgentToolGateway, "dispatch", must_not_dispatch)
+    with TestClient(main_module.app) as restarted_client:
+        assert restarted_client.get("/api/v1/health").status_code == 200
+    with SessionLocal() as session:
+        pending = session.get(AgentPendingAction, seeded["pending_id"])
+        assert pending.status == "RESUMED"
+        assert json.loads(pending.result_json)["continuation_recovered_from_domain_truth"] is True
+        assert session.get(AgentRun, seeded["run_id"]).status == "COMPLETED"
+        assert session.get(JourneyMission, seeded["mission_id"]).status == "COMPLETED"
+        assert session.get(Journey, seeded["journey_id"]).active_plan_version_id == proposed_id
+        assert session.query(AgentRunStep).filter_by(run_id=seeded["run_id"]).count() == 1
+    # A second boot and approval replay are read-only for the recovered lineage.
+    with TestClient(main_module.app) as restarted_client:
+        replay = restarted_client.post(
+            f"/api/v1/journeys/{seeded['journey_id']}/agent/approvals/{seeded['approval_id']}/approve",
+            json={"approval_method": "USER_CONFIRMATION"},
+        )
+        assert replay.status_code == 200, replay.text
+        assert replay.json()["continuation"]["replayed"] is True
+    with SessionLocal() as session:
+        assert session.query(AgentRunStep).filter_by(run_id=seeded["run_id"]).count() == 1
+
+
+def test_r28_model_loop_suspends_then_authenticated_approval_resumes() -> None:
+    """Fake only model selection; run the real runtime, Gateway and HTTP route."""
+    from app.traveler_principal import issue_traveler_token
+
+    journey_id, plan = _selected_plan()
+    target = next(item for item in plan["activities"] if not item["locked"])
+    mission_id = str(uuid4())
+    calls = []
+
+    class LocalModelControl(DeepSeekJourneyAgent):
+        provider_key = "local-test-control"
+
+        def __init__(self):
+            self.model_key = "deterministic-tool-selection-not-external-agent"
+
+        def _complete(self, messages):
+            calls.append(len(messages))
+            assert len(calls) <= 2, "waiting/approval must not spend another model turn"
+            tool = "inspect_journey" if len(calls) == 1 else "reschedule_activity"
+            arguments = {} if len(calls) == 1 else {
+                "activity_id": target["id"], "start_at": target["start_at"], "end_at": target["end_at"],
+            }
+            return {"tool_calls": [{
+                "id": f"local-call-{len(calls)}", "type": "function",
+                "function": {"name": tool, "arguments": json.dumps(arguments)},
+            }]}
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        traveler_id = journey.traveler_id
+        mission = JourneyMission(
+            id=mission_id, journey_id=journey_id, traveler_id=traveler_id,
+            user_text="Maintain the current schedule within normal approval boundaries.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS", status="CREATED", created_at=_now(),
+        )
+        session.add(mission)
+        session.commit()
+        payload = LocalModelControl().run(session, journey=journey, mission=mission)
+        run_id = payload["run_id"]
+        pending = session.query(AgentPendingAction).filter_by(run_id=run_id).one()
+        approval_id = pending.approval_id
+        assert session.get(AgentRun, run_id).status == "WAITING_FOR_APPROVAL"
+        assert session.get(AgentRun, run_id).completed_at is None
+        assert mission.status == "WAITING_FOR_APPROVAL" and mission.completed_at is None
+    assert len(calls) == 2
+    # A new HTTP request/session represents a user returning after suspension.
+    previous_secret = settings.traveler_auth_secret
+    test_secret = "r28-local-runtime-control-secret-0123456789abcdef"
+    object.__setattr__(settings, "traveler_auth_secret", test_secret)
+    try:
+        headers = {"Authorization": "Bearer " + issue_traveler_token(traveler_id)}
+        route = f"/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve"
+        approved = client.post(route, headers=headers, json={"approval_method": "USER_CONFIRMATION"})
+        assert approved.status_code == 200, approved.text
+        assert approved.json()["continuation"]["status"] == "RESUMED"
+        assert approved.json()["approved_by"] == traveler_id
+        replay = client.post(route, headers=headers, json={"approval_method": "USER_CONFIRMATION"})
+        assert replay.status_code == 200, replay.text
+        assert replay.json()["continuation"]["replayed"] is True
+        assert len(calls) == 2
+        with SessionLocal() as session:
+            assert session.get(AgentRun, run_id).status == "COMPLETED"
+            assert session.get(JourneyMission, mission_id).status == "COMPLETED"
+            assert session.get(ActionApproval, approval_id).status == "CONSUMED"
+            steps = session.query(AgentRunStep).filter_by(run_id=run_id).order_by(AgentRunStep.sequence_no).all()
+            assert [step.tool_name for step in steps] == ["inspect_journey", "reschedule_activity", "reschedule_activity"]
+            assert json.loads(steps[-1].result_json)["executed"] is True
+            mutations = session.query(AuditLog).filter_by(journey_id=journey_id, action="agent.reschedule_activity").all()
+            executed = [row for row in mutations if json.loads(row.after_json)["status"] == "EXECUTED"]
+            assert len(executed) == 1
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
