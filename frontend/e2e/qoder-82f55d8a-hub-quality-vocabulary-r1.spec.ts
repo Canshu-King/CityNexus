@@ -15,7 +15,7 @@
  * Not the acceptance gate: `playwright.config.ts` stays the only thing that can sign one.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -94,10 +94,21 @@ function writeReading(payload: Record<string, unknown>): void {
   writeFileSync(EVIDENCE, JSON.stringify(payload, null, 1), "utf8");
 }
 
-const emitted = emittedQualities();
-const labelled = labelledQualities();
+/**
+ * ORD-0576: this ruler compares the screen's vocabulary against the names the backend can write, so two of
+ * its arms need `backend/` next to `frontend/`. Reading it at module scope made a frontend-only export abort
+ * collection for *every* spec in the directory -- one missing file silenced the whole gate. The read is now
+ * lazy and those two arms skip themselves with the absent path named in the reason; the other two arms,
+ * which only need frontend files, still run in either shape.
+ */
+const BACKEND_PREREQ = existsSync(FILES.qualities)
+  ? null
+  : `missing file: ${FILES.qualities} -- this checkout has no backend/ beside frontend/, so the arms that compare against the names the server can write cannot run here`;
 
 test("the names the server can write and the names the screen can say are one set", () => {
+  test.skip(BACKEND_PREREQ !== null, BACKEND_PREREQ ?? undefined);
+  const emitted = emittedQualities();
+  const labelled = labelledQualities();
   expect(emitted.length, "a single quality name would not be worth a ruler").toBeGreaterThan(1);
   expect(
     Object.keys(labelled).sort(),
@@ -106,6 +117,9 @@ test("the names the server can write and the names the screen can say are one se
 });
 
 test("every quality is worded in both languages, and no wording is a machine token", () => {
+  test.skip(BACKEND_PREREQ !== null, BACKEND_PREREQ ?? undefined);
+  const emitted = emittedQualities();
+  const labelled = labelledQualities();
   const offenders: string[] = [];
   for (const [name, label] of Object.entries(labelled)) {
     if (!label.zh.trim() || !label.en.trim()) offenders.push(`${name}: an empty side`);
