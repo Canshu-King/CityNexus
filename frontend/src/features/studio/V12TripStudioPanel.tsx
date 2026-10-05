@@ -16,7 +16,7 @@ import { formatV8Money } from "../../lib/v8Formatting";
 
 /**
  * The refusal names this panel can explain, taken from the server's own raise sites
- * (`backend/app/main.py:5395`, `:5397`, `:5495`, `:5499`, `:5513`). A token outside this set is
+ * (`backend/app/main.py`, `:5397`, `:5495`, `:5499`, `:5513`). A token outside this set is
  * counted, never translated -- inventing a reason is the defect this file is being fixed for.
  */
 const GATE_CODES = [

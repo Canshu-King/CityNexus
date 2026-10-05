@@ -6,11 +6,11 @@
  * rows read on a second sqlite connection): the same instruction sent three times with NO key left
  * three different missions, and the same key sent three times left six -- `idempotency_keys` never
  * moved off its starting two. The route behind this leg declares no such parameter
- * (`backend/app/main.py:1057 run_agent_command`; the four `Header(alias="Idempotency-Key")` sites are
+ * (`backend/app/main.py run_agent_command`; the four `Header(alias="Idempotency-Key")` sites are
  * `:4606/:7740/:9907/:11364`), so a key travelling on this request is inert: "the request carried a
  * header" is not a receipt, and treating it as one is the false safety this file exists to remove.
  *
- * Why the bound sits ABOVE the server's own chain rather than below it. `backend/app/core/config.py:95-96`
+ * Why the bound sits ABOVE the server's own chain rather than below it. `backend/app/core/config.py`
  * gives SQLite a 30 s lock wait and one write a 45 s budget. A client bound under 45 s would end the
  * request while the server may still be legitimately working, and on THIS leg there is no durable
  * receipt to go back and read -- the traveller's only remaining move would be to press again, which is

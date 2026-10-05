@@ -38,7 +38,7 @@ const en: Dict = {
   /* ORD-0402 slice 2: the recycle bin nav label. The screen owns its own copy in
      `features/trash/journeyTrashCopy.ts`; this pair has to live in the shared dictionary only
      because the nav strip looks labels up as t("nav." + key) with no fallback
-     (app/V8Experience.tsx:1672). */
+     (app/V8Experience.tsx). */
   "nav.trash": "Recycle bin",
   "nav.access": "Members and access",
   /* ORD-0476 slice 2 -- the footprint screen, in one contiguous run so this hot file takes a single
@@ -103,7 +103,7 @@ const en: Dict = {
   "trial.liveNote": "For cities without a sealed replay, use live providers. If providers are unavailable, CityNexus will tell you instead of inventing facts about the city.",
   /* ORD-0216 ④: no city name here, on purpose.  `GET /api/v1/demo/scene` picks the sealed journey
      from server data -- the one an ACTIVE plan points at, else the most recently seeded one
-     (backend/app/main.py:6331-6335) -- so the entry cannot know which city it hands over until the
+     (backend/app/main.py) -- so the entry cannot know which city it hands over until the
      server has answered.  HJ-P1 read 「使用封存的天津演示」 on a stage whose sealed journey is
      Guangzhou (`review/evidence/ui-overnight/ord0216-scene-city.json` reproduces the selection
      rule).  Naming *any* city here is the `HUMAN_MISLEADING` defect; so would be "Guangzhou". */
@@ -983,9 +983,9 @@ const en: Dict = {
      features/discovery/RealCityDiscoveryPanel.tsx. One contiguous block per locale on purpose
      (ORD-0420 appends to this file too; scattered insertions are what let two lanes take each
      other's value). The `twin.cap.*`, `twin.sev.*`, `twin.dim.*` and `v14.mode.*` keys are the
-     server's closed vocabularies -- backend/app/capabilities.py:19, backend/app/schemas.py:58,
-     backend/app/schemas.py:105 -- and the data/mock/traveler_demo.json preference keys, which are
-     open (backend/app/execution/traveler_twin.py:343 takes them from preference rows), so every
+     server's closed vocabularies -- backend/app/capabilities.py, backend/app/schemas.py,
+     backend/app/schemas.py -- and the data/mock/traveler_demo.json preference keys, which are
+     open (backend/app/execution/traveler_twin.py takes them from preference rows), so every
      group has an *Unknown frame that quotes the token instead of rendering a bare enum. */
   "twin.capabilityNeeds": "Capability needs",
   "twin.learnedCapabilityState": "Learned capability state",
@@ -1218,7 +1218,7 @@ const zhCN: Dict = {
   "trial.liveTitle": "通用城市试用",
   "trial.liveNote": "没有封存回放的城市应使用实时数据源。若数据源不可用，系统会明确告诉你，而不是编造这座城市的资料。",
   /* ORD-0216 ④：这里刻意不写城市名。封存演示是哪一趟由服务器的 /api/v1/demo/scene 决定（有 ACTIVE
-     方案的那趟，否则最近 seed 的那趟，backend/app/main.py:6331-6335），入口在服务器回答之前无从知道
+     方案的那趟，否则最近 seed 的那趟，backend/app/main.py），入口在服务器回答之前无从知道
      城市。HJ-P1 在封存那趟为广州的舞台上读到「使用封存的天津演示」（`ord0216-scene-city.json` 复现了
      这条选择规则）。写任何城市名都是 `HUMAN_MISLEADING`；改成"广州"同样只是把不一致挪个地方。 */
   "trial.tianjinDemo": "使用封存的演示行程",
@@ -2036,9 +2036,9 @@ const zhCN: Dict = {
      features/discovery/RealCityDiscoveryPanel.tsx. One contiguous block per locale on purpose
      (ORD-0420 appends to this file too; scattered insertions are what let two lanes take each
      other's value). The `twin.cap.*`, `twin.sev.*`, `twin.dim.*` and `v14.mode.*` keys are the
-     server's closed vocabularies -- backend/app/capabilities.py:19, backend/app/schemas.py:58,
-     backend/app/schemas.py:105 -- and the data/mock/traveler_demo.json preference keys, which are
-     open (backend/app/execution/traveler_twin.py:343 takes them from preference rows), so every
+     server's closed vocabularies -- backend/app/capabilities.py, backend/app/schemas.py,
+     backend/app/schemas.py -- and the data/mock/traveler_demo.json preference keys, which are
+     open (backend/app/execution/traveler_twin.py takes them from preference rows), so every
      group has an *Unknown frame that quotes the token instead of rendering a bare enum. */
   "twin.capabilityNeeds": "能力需求",
   "twin.learnedCapabilityState": "习得的能力状态",

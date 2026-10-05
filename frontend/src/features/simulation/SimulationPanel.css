@@ -9,7 +9,7 @@
  * The bottom offsets are measured, not derived: on a phone the app reserves
  * `124px + safe-area` of bottom band for the fixed nav (`--cn-nav-h` 80px plus
  * the safe area) and the Copilot pill resting on top of it
- * (`styles.css:405` `bottom: 72px`, `.cn-copilot-edge` `min-height: 50px`), so
+ * (`styles.css` `bottom: 72px`, `.cn-copilot-edge` `min-height: 50px`), so
  * anything parked below ~122px is on top of somebody else's control. Desktop's
  * pill sits at `bottom: 22px` with `min-height: 56px`. Both numbers get a gate:
  * `sim-stage-actions-are-reachable-and-never-in-the-nav-band` asserts the ball
@@ -62,7 +62,7 @@
 .cn-sim-ball-dot[data-state="NO_STAGE"] {
   background: #8b93a1;
 }
-/* `v8-page` on this element is not decoration: the dark content-surface group (`design-tokens.css:534`)
+/* `v8-page` on this element is not decoration: the dark content-surface group (`design-tokens.css`)
    and the AA outline border (`:666`) are both keyed to that scope, and portalling the widget out of it
    silently gave back white buttons on a dark panel and a 1.36:1 border. Re-declaring each override here
    would leave the next portalled surface with the same bug, so the window declares itself a page

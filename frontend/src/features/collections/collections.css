@@ -9,7 +9,7 @@ Colours, sizes and radii come from the `--cn-*` layer, not hex literals, so the 
 without a second block.
 
 `width: auto` and `margin-top: 0` on `.cn-collections__retry` are load-bearing, not tidiness:
-`src/styles.css:47` is a bare element rule (`button { display: block; width: 100%; margin-top: 12px;
+`src/styles.css` is a bare element rule (`button { display: block; width: 100%; margin-top: 12px;
 … }`), and a class that overrides only `display` inherits the full width and the stray margin -- the
 same trap ORD-0435 measured at 272 px of control inside a 358 px card.
 */

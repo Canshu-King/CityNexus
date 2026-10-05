@@ -11,7 +11,7 @@ export const desktopRoutes = [
   { key: "bookings", label: "Travel Wallet", icon: "ticket", group: "TRAVEL" },
   /* ORD-0476 slice 2: the footprint screen. A key in this table is what makes `/v8/footprints` a
      screen instead of a URL that bounces to Today (`KNOWN_ROUTES` is built from these two tables,
-     app/V8Experience.tsx:467), and `nav.footprints` is added to both dictionary arms so the drawer
+     app/V8Experience.tsx), and `nav.footprints` is added to both dictionary arms so the drawer
      cannot fall back to printing the key -- the fallback is `dictionaries.en[key] ?? key`.
      Deliberately not in `mobileRoutes`: that table is the five-item bottom bar, and a sixth item
      there is a crowding change this order does not own. The mobile route is reachable by URL and by
@@ -22,7 +22,7 @@ export const desktopRoutes = [
   { key: "intelligence", label: "Intelligence", icon: "spark", group: "SYSTEM" },
   { key: "twin", label: "Traveler Twin", icon: "calendar", group: "SYSTEM" },
   /* ORD-0402 slice 2: putting the key here is what makes `/v8/trash` a route instead of a
-     dead URL -- KNOWN_ROUTES (app/V8Experience.tsx:467) is built from these two tables, and a
+     dead URL -- KNOWN_ROUTES (app/V8Experience.tsx) is built from these two tables, and a
      key outside them sends a hard refresh back to Today. The panel is mounted from the
      registry, so the shell still holds no mount for it. */
   { key: "trash", label: "Recycle bin", icon: "calendar", group: "SYSTEM" },
@@ -37,7 +37,7 @@ export const desktopRoutes = [
    rather than a row in `desktopRoutes` for two reasons. The drawer would put a "Shared trip" button in
    front of the traveller, and clicking it goes nowhere: there is nothing to share until an owner
    grants it, so the entry would advertise an action the product has not taken. And the keys in
-   `desktopRoutes` / `mobileRoutes` feed `t("nav." + key)` (app/V8Experience.tsx:1734, :1997) with no
+   `desktopRoutes` / `mobileRoutes` feed `t("nav." + key)` (app/V8Experience.tsx, :1997) with no
    fallback hook, so a row here would demand a nav label for a control that must not be drawn.
    `KNOWN_ROUTES` still has to know the key, or a hard refresh on a share link lands on Today. */
 export const tokenRoutes = [{ key: "shared" }] as const;

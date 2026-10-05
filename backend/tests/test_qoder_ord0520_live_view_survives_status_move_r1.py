@@ -3,12 +3,12 @@
 Found by walking the order's own rule on a real screen and then asking what could break it:
 `journey_live_view` (`backend/app/services.py`) answered "does this trip belong on 实时行程" from
 `journeys.status`, while the abort door's own admission gate was moved onto `journeys.aborted_at`
-by the contention follow-up (`backend/app/main.py:3513`, `backend/app/main.py:3535`,
-`backend/app/main.py:3556`).  Those two rules agree as long as nothing else writes `status`, and
+by the contention follow-up (`backend/app/main.py`, `backend/app/main.py`,
+`backend/app/main.py`).  Those two rules agree as long as nothing else writes `status`, and
 other doors do: `POST /api/v1/journeys/{id}/plans/{plan_version_id}/select` writes
 `journeys.status = "PLANNED"` without reading the journey's status at all
-(`backend/app/main.py:7833`), and the two activity-advance doors write `"COMPLETED"` the same way
-(`backend/app/main.py:9372`, `backend/app/main.py:9456`).  A trip whose plan is selected again after
+(`backend/app/main.py`), and the two activity-advance doors write `"COMPLETED"` the same way
+(`backend/app/main.py`, `backend/app/main.py`).  A trip whose plan is selected again after
 being called off would therefore come back onto the live screen while still carrying the abort
 moment and the traveller's reason -- the "two answers on one screen" that ORD-0520 forbids, and the
 same class of defect the socket race probe found for the write gate.
@@ -100,8 +100,8 @@ def _abort(journey_id: str, actor: str):
 def _move_status_committed(journey_id: str, value: str) -> None:
     """The write another door performs on this row, from a second connection, committed.
 
-    `PLANNED` is what `select_plan` writes (`backend/app/main.py:7833`); `ACTIVE` is what `/start`
-    writes (`backend/app/main.py:9206`); `COMPLETED` is what the two activity-advance doors write.
+    `PLANNED` is what `select_plan` writes (`backend/app/main.py`); `ACTIVE` is what `/start`
+    writes (`backend/app/main.py`); `COMPLETED` is what the two activity-advance doors write.
     """
 
     with sqlite3.connect(_store_path()) as connection:

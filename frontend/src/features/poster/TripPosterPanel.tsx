@@ -110,7 +110,7 @@ export function TripPosterPanel({ data }: { data: V8Data }) {
     const measuredWidth = sheet.current ? sheet.current.getBoundingClientRect().width : 0;
     const result = await drawTripPoster(lines, measuredWidth, currentPage);
     /* Tested by which arm the value carries rather than by `ok`, because this project type-checks
-       with `strict: false` (`tsconfig.typecheck.json:2`) and a boolean discriminant does not narrow
+       with `strict: false` (`tsconfig.typecheck.json`) and a boolean discriminant does not narrow
        a union here -- the failure fields would read as missing. */
     if ("step" in result) {
       setState({ phase: "failed", step: result.step });

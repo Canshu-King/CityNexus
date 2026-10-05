@@ -7,7 +7,7 @@
  *  N1 fill to step 3, refresh, and the traveller must still be on step 3 with her own values;
  *  N2 the confirmation step may print no internal key -- `relaxed`, `balanced`, `packed`,
  *     `food`, `culture` are this product's vocabulary, not hers (the leak measured at
- *     `JourneyTrialSetup.tsx:854`, which printed `draft.pace` straight out; the option table with
+ *     `JourneyTrialSetup.tsx`, which printed `draft.pace` straight out; the option table with
  *     轻松/适中/紧凑 already existed 600 lines above it).  Note the third key is `packed`, not the
  *     `strict` named in the order -- corrected against the file, not assumed;
  *  N3 with the step blocked, every named missing field has to be a control that moves focus to

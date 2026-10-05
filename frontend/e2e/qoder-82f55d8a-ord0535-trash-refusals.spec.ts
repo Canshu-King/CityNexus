@@ -5,7 +5,7 @@
  * What is on the line today: the three refusal states are pinned by backend pytest
  * (`tests/test_qoder_ord0399_journey_undelete.py`, `test_qoder_ord0383_undelete_write_lock.py`), and
  * the only front-end file that touches this surface at all is ORD-0509's contrast enumeration
- * (`qoder-ord0509-contrast-screens.spec.ts:47`), which lists test ids without asserting a sentence.
+ * (`qoder-ord0509-contrast-screens.spec.ts`), which lists test ids without asserting a sentence.
  * So "the traveller is *told* which condition refused" had no evidence on the painted layer:
  *   - a stale row tapped after somebody else brought the trip back -> 409 `JOURNEY_NOT_DELETED`;
  *   - a row whose trip is no longer on this server -> 404 `JOURNEY_NOT_FOUND`;

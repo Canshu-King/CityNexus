@@ -180,7 +180,7 @@ test.describe("Ruling ④ the theme root contract", () => {
         `the theme control is ${(box?.height ?? 0).toFixed(1)}px tall at 390px, under 44`),
     ).toBeGreaterThanOrEqual(44);
 
-    /* `body` declares no background (styles.css:2 resets only the margin), so comparing it
+    /* `body` declares no background (styles.css resets only the margin), so comparing it
        would compare two transparent values. The heading's ink is where the token tables
        actually flip, and it is what a traveller sees. */
     const painted = () =>

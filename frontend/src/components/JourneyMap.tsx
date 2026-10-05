@@ -300,7 +300,7 @@ export function JourneyMap({
           The notice is a SIBLING of the map container, not a child: maplibre empties the element it
           is handed, so a React child of `.maplibre-container` is deleted on init — measured, the
           container came back with 0 children. `.map-canvas` is `position:relative; overflow:hidden`
-          (styles.css:12), so the sibling anchors to the same box without adding a DOM level. */}
+          (styles.css), so the sibling anchors to the same box without adding a DOM level. */}
       <span className="maplibre-attribution" data-testid="maplibre-attribution">
         {mapCopy(locale, "attributionVector")}
       </span>

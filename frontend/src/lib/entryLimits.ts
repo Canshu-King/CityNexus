@@ -2,9 +2,9 @@
  * ORD-0456: what the trip-setup entry asks for, declared once.
  *
  * Before this file the same two facts existed twice - 「旅行人数」 was spelled one way in the
- * missing-field sentence (`JourneyTrialSetup.tsx:797`) and another way in the field's own label
+ * missing-field sentence (`JourneyTrialSetup.tsx`) and another way in the field's own label
  * (`:1145`), and the accepted range was typed into the input as literal `min`/`max` attributes while
- * the server carried its own bound (`backend/app/schemas.py:221`). Two copies of one fact is how a
+ * the server carried its own bound (`backend/app/schemas.py`). Two copies of one fact is how a
  * label ends up promising 1-20 while the control silently allows something else.
  *
  * So both the label and the control are produced from these entries. `required` here means the
@@ -13,7 +13,7 @@
  */
 
 export const PARTY_SIZE_MIN = 1;
-/** `party_size: int = Field(default=1, ge=1, le=20)` in `backend/app/schemas.py:221`. */
+/** `party_size: int = Field(default=1, ge=1, le=20)` in `backend/app/schemas.py`. */
 export const PARTY_SIZE_MAX = 20;
 export const ROOMS_MIN = 1;
 /** The same ceiling as party size: one room per traveller is the upper bound the form offers. */

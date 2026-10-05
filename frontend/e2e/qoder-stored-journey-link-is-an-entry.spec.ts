@@ -2,7 +2,7 @@
  * ORD-0351 · 一条指向已存行程的链接，要么打开那一趟，要么具名地说它打不开 —— 不许是同一个壳假装什么都没发生。
  *
  * 改前量到的形状（`--land` 前那一次读数就是它）：`frontend/src/main.tsx` 的 `App()` 只认 `/legacy`，
- * 其余路径一律渲染同一个壳；壳里 `routeFromPath`（app/V8Experience.tsx:461）把不认识的第一段判成 Today
+ * 其余路径一律渲染同一个壳；壳里 `routeFromPath`（app/V8Experience.tsx）把不认识的第一段判成 Today
  * （:472 的注释就是那句 "an unknown path is Today"），而 boot 只读 `localStorage`（:731）。全树写 URL 的
  * 只有 navigate()（:844），它的 11 枚调用点喂的全是路由名 —— 也就是没有任何代码把行程 id 放进地址栏，
  * 也没有任何代码把它读回来。旅客把 `/v8/<id>` 发给同事，同事看到的是自己设备上那一趟（或新建向导），
@@ -28,7 +28,7 @@ const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 const API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
 const V8_JOURNEY_KEY = "citynexus.v8.journey_id";
 const REFERENCE_KEYS = [V8_JOURNEY_KEY, "citynexus.demo.journey_id", "citynexus.demo.agent_run_id"];
-/** `ROUTE_ALIASES` in app/V8Experience.tsx:447 — kept here as data so arm E can name what it checked. */
+/** `ROUTE_ALIASES` in app/V8Experience.tsx — kept here as data so arm E can name what it checked. */
 const ALIAS_NAMES = ["today", "copilot", "wallet", "itinerary", "stays", "home"];
 const GHOST = randomUUID();
 

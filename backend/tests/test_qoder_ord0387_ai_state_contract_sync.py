@@ -3,8 +3,8 @@
 Why this gate exists, measured at the tip it was opened against
 `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`:
 
-* `backend/app/agent/ai_availability.py:41` produced four words in `AI_STATES`;
-* `contracts/openapi.yaml:196` and `:1822` declared exactly those four as the `enum` for
+* `backend/app/agent/ai_availability.py` produced four words in `AI_STATES`;
+* `contracts/openapi.yaml` and `:1822` declared exactly those four as the `enum` for
   `ai_state` on `/agent/runtime-status` and on `HealthResponse`;
 * `frontend/src/generated/api.ts` -- which is produced *from that contract* by
   openapi-typescript -- contained **zero** occurrences of `ai_state`, because the checked-in

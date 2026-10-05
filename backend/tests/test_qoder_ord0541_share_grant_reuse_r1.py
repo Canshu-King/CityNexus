@@ -1,13 +1,13 @@
 """ORD-0541 (lane 82f55d8a) - 重复发起同一枚分享要返回同一枚结果.
 
 Measured at the authoritative tip `0c061d9eb74b21f0b0b297a068778479b08658b4`, before any change of mine:
-`create_share_grant` (`backend/app/main.py:4222`) reached
+`create_share_grant` (`backend/app/main.py`) reached
 `grant = JourneyShareGrant(id=str(uuid4()), token=secrets.token_urlsafe(24), ...)` and committed
-(`backend/app/main.py:4300`) on every call - it never looked at the rows it already had. So pressing
+(`backend/app/main.py`) on every call - it never looked at the rows it already had. So pressing
 「分享这张图」twice grew a second row, and `GET /api/v1/journeys/{journey_id}/share-grants`
-(`backend/app/main.py:4338`) answered two tokens for one intent. The ruling that decides which rows may
+(`backend/app/main.py`) answered two tokens for one intent. The ruling that decides which rows may
 be reused is the commander's: only a row whose `visibility` is exactly `LINK_READ` counts, so the other
-three values of `ShareVisibility` (`backend/app/schemas.py:879`) keep minting a new link every time.
+three values of `ShareVisibility` (`backend/app/schemas.py`) keep minting a new link every time.
 
 Arms, each naming its own lever:
 * A1 首次/重复 两向读数 - the same request twice returns the same token and the list door still
