@@ -1,0 +1,22 @@
+fatal: not a git repository (or any of the parent directories): .git
+copy_values=126 copy_words=127 contract=64 {
+ "out": "_evidence/r9_wired_samegen.json",
+ "head": "",
+ "verdict": "GREEN",
+ "red_arms": [],
+ "copy_universe": 127,
+ "contract_universe": 64,
+ "en_tokens": 33,
+ "undetermined": [],
+ "dual_bucket": [
+  "DRAFT",
+  "SELECTED"
+ ]
+}
+  PASS every_painted_token_classified | 33 tokens in the en walk, all bucketed
+  PASS false_positive_SELECTED_is_copy_word | SELECTED buckets=['contract-word', 'copy-word'] line=['NO STAY SELECTED'] sources=['frontend/src/i18n/LocaleContext.tsx']
+  PASS false_positive_COMMITMENT_is_copy_word | COMMITMENT buckets=['copy-word'] sources=['frontend/src/features/pending/pendingSetCopy.ts', 'frontend/src/i18n/LocaleContext.tsx']
+  PASS contract_status_names_are_server_words | contract universe=64 names, sample=ARRIVED,COMPLETED,PLANNED,READY,SKIPPED
+  PASS positive_control_dirty_generation_would_flag | pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS']; tokens NOT bucketed contract-word=[]; still painted on this generation=[]
+  PASS no_undetermined_left_silent | undetermined shortlist (0): 
+  PASS zh_arm_has_no_contract_word | zh tokens painted=['JSON'] buckets={'JSON': ['copy-word']}
