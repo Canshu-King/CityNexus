@@ -348,6 +348,9 @@ def test_r29_conflicting_authenticated_responses_create_mediation_child(monkeypa
             assert mediation["kind"] == "DISAGREEMENT_MEDIATION"
             assert {item["proposal_id"] for item in mediation["member_choices"]} == {seeded["garden_proposal_id"], seeded["museum_proposal_id"]}
             assert "selected_proposal_id" not in mediation
+            snapshots = mediation["member_preference_snapshots"]
+            assert snapshots[str(seeded["owner_member_id"])] == [{"key": "garden"}]
+            assert snapshots[str(seeded["admin_member_id"])] == [{"key": "museum"}]
             assert child.max_cost_delta_minor == parent.max_cost_delta_minor
             assert child.max_loss_minor == parent.max_loss_minor
             assert child.max_schedule_drift_min == parent.max_schedule_drift_min
