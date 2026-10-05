@@ -1,0 +1,7 @@
+ORD-0567 pre-flight: will the four newly registered routes print words or dictionary keys after the phone
+chain swaps generation? Measured on tip b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c -- no.
+
+The route list is read out of the landed commit's own added lines (access, footprints, import, trash); each of them resolves in both
+word tables of frontend/src/i18n/LocaleContext.tsx (tables_holding_it=2 per route), and for all 4 routes value_equals_key and
+value_is_empty are false. Verdict NO_KEY_WILL_REACH_THE_SCREEN, defect routes 0. Controls: nav.hub must resolve and does;
+nav.zznotaroute must not resolve and does not -- an always-green ruler would fail that arm.

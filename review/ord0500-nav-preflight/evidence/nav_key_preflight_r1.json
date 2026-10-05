@@ -1,0 +1,114 @@
+{
+  "schema": "CNX_NAV_KEY_PREFLIGHT_V1",
+  "tool": "nav_key_preflight_r1",
+  "took_local": "2026-10-05T18:49:19.799842+08:00",
+  "live_tip": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+  "landing_commit": "d107131c6",
+  "registry_routes_added": [
+    "access",
+    "footprints",
+    "import",
+    "trash"
+  ],
+  "diff_plus_lines": 8,
+  "carrier": "frontend/src/i18n/LocaleContext.tsx",
+  "rows": [
+    {
+      "route": "access",
+      "dictionary_key": "nav.access",
+      "tables_holding_it": 2,
+      "lines": [
+        43,
+        1164
+      ],
+      "values": [
+        "Members and access",
+        "成员与权限"
+      ],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "LABEL_ON_LINE"
+    },
+    {
+      "route": "footprints",
+      "dictionary_key": "nav.footprints",
+      "tables_holding_it": 2,
+      "lines": [
+        47,
+        1166
+      ],
+      "values": [
+        "Footprints",
+        "足迹"
+      ],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "LABEL_ON_LINE"
+    },
+    {
+      "route": "import",
+      "dictionary_key": "nav.import",
+      "tables_holding_it": 2,
+      "lines": [
+        21,
+        1146
+      ],
+      "values": [
+        "Import places",
+        "导入地点"
+      ],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "LABEL_ON_LINE"
+    },
+    {
+      "route": "trash",
+      "dictionary_key": "nav.trash",
+      "tables_holding_it": 2,
+      "lines": [
+        42,
+        1163
+      ],
+      "values": [
+        "Recycle bin",
+        "回收站"
+      ],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "LABEL_ON_LINE"
+    },
+    {
+      "route": "hub",
+      "dictionary_key": "nav.hub",
+      "tables_holding_it": 2,
+      "lines": [
+        10,
+        1135
+      ],
+      "values": [
+        "Today",
+        "今天"
+      ],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "CONTROL_MUST_BE_PRESENT",
+      "bit": true
+    },
+    {
+      "route": "zznotaroute",
+      "dictionary_key": "nav.zznotaroute",
+      "tables_holding_it": 0,
+      "lines": [],
+      "values": [],
+      "value_equals_key": false,
+      "value_is_empty": false,
+      "verdict": "CONTROL_MUST_BE_ABSENT",
+      "bit": true
+    }
+  ],
+  "landed_routes": 4,
+  "defect_routes": [],
+  "verdict": "NO_KEY_WILL_REACH_THE_SCREEN",
+  "controls_ok": true,
+  "worktree_written": false
+}

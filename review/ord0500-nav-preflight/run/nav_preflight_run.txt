@@ -1,0 +1,6 @@
+{"live_tip": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c", "routes": ["access", "footprints", "import", "trash"], "diff_plus_lines": 8, "landed_routes": 4, "defects": [], "verdict": "NO_KEY_WILL_REACH_THE_SCREEN"}
+access      LABEL_ON_LINE        tables=2 lines=[43, 1164] values=["Members and access", "成员与权限"]
+footprints  LABEL_ON_LINE        tables=2 lines=[47, 1166] values=["Footprints", "足迹"]
+import      LABEL_ON_LINE        tables=2 lines=[21, 1146] values=["Import places", "导入地点"]
+trash       LABEL_ON_LINE        tables=2 lines=[42, 1163] values=["Recycle bin", "回收站"]
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\nav_key_preflight_r1.json
