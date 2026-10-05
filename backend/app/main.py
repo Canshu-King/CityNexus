@@ -9321,19 +9321,40 @@ def complete_activity(
                 409,
                 f"INVALID_ACTIVITY_TRANSITION:{activity.status}->COMPLETED; expected=IN_PROGRESS",
             )
-    activity.status = "COMPLETED"
     metadata = json.loads(activity.metadata_json or "{}")
     completed_at = datetime.now(timezone.utc).isoformat()
+    truth = _resolve_execution_truth_attestation(
+        request,
+        session,
+        journey=journey,
+        activity=activity,
+        transition="COMPLETED",
+        captured_at=completed_at,
+        attestation=payload,
+    )
     metadata["completed_at_actual"] = completed_at
     if not authoritative_execution and metadata.get("execution_state") != "IN_PROGRESS":
         metadata["legacy_execution_compatibility"] = "DIRECT_COMPLETION_PRE_V12_CONTRACT"
+    truth_record = append_execution_truth(
+        metadata,
+        kind=str(truth["kind"]),
+        transition="COMPLETED",
+        captured_at=completed_at,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        evidence=dict(truth.get("evidence") or {}),
+    )
+    activity.status = "COMPLETED"
     activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
     _record_outcome_event(
         session,
         journey,
         activity=activity,
         event_type="ACTIVITY_COMPLETED",
-        actor_type="USER",
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        occurred_at_actual=completed_at,
+        payload={"execution_truth": truth_record},
     )
     next_activity = session.scalar(
         select(Activity)
@@ -9367,7 +9388,11 @@ def complete_activity(
         entity_type="Activity",
         entity_id=activity.id,
         journey_id=journey.id,
-        after={"status": activity.status, "next_activity_id": journey.current_activity_id},
+        after={
+            "status": activity.status,
+            "next_activity_id": journey.current_activity_id,
+            "execution_truth": truth_record,
+        },
     )
     twin = _twin_snapshot(session, journey)
     if journey.status == "COMPLETED":
