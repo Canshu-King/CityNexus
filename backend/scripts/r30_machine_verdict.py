@@ -649,60 +649,13 @@ def build_verdict(
                 str((_json(row.after_json, {}) or {}).get("member_id") or "")
                 for row in response_audits
             }
-            independent_choices: dict[str, str] = {}
-            independent_choice_errors: dict[str, str] = {}
-            grounded_options = [
-                item
-                for item in fresh_payload.get("candidate_options") or []
-                if isinstance(item, dict)
-                and item.get("proposal_id")
-                and item.get("status") == "GROUNDED_FEASIBLE"
-            ]
-            for member_id in sorted(required):
-                scored: list[tuple[float, str]] = []
-                for option in grounded_options:
-                    fairness = option.get("fairness") or {}
-                    if member_id in {
-                        str(value)
-                        for value in fairness.get(
-                            "unacceptable_member_ids"
-                        )
-                        or []
-                    }:
-                        continue
-                    fits = option.get("member_fits") or {}
-                    fit = (
-                        fits.get(member_id)
-                        if isinstance(fits, dict)
-                        else None
-                    )
-                    if not isinstance(fit, dict):
-                        continue
-                    try:
-                        score = float(fit.get("effective_fit"))
-                    except (TypeError, ValueError):
-                        continue
-                    scored.append(
-                        (score, str(option.get("proposal_id") or ""))
-                    )
-                if not scored:
-                    independent_choice_errors[member_id] = (
-                        "no acceptable grounded member fit"
-                    )
-                    continue
-                best_score = max(score for score, _pid in scored)
-                best_ids = sorted(
-                    pid
-                    for score, pid in scored
-                    if pid and abs(score - best_score) <= 1e-9
-                )
-                if len(best_ids) != 1:
-                    independent_choice_errors[member_id] = (
-                        "no unique grounded maximum: " + repr(best_ids)
-                    )
-                    continue
-                independent_choices[member_id] = best_ids[0]
-
+            (
+                independent_choices,
+                independent_choice_errors,
+            ) = _independent_choice_evidence(
+                fresh_payload,
+                required,
+            )
             selected_fresh = str(
                 fresh_payload.get("selected_proposal_id") or ""
             )
