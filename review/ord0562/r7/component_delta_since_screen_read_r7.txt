@@ -1,3 +1,7 @@
+Component-file delta between the tree the pixel reads were taken on (r5 head 52b11e837b33243163aeb2366750f0b66ab058bf) and the head this block ships.
+Command: git -C D:/moodle/CityNexus diff <r5 head>:<path> <r6 head>:<path> -- the one path the hub screen renders from.
+Every added line is listed below; the count of added lines is stated in the receipt at the bottom.
+
 diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
 index 4c30d836a..4ba9d383f 100644
 --- a/frontend/src/app/V8Experience.tsx
@@ -18,3 +22,5 @@ index 4c30d836a..4ba9d383f 100644
              data-contrast-role={
                route === item.key || (item.key === "map" && route === "live")
                  ? "state"
+
+added lines carrying a counted noun (day/days/people/change/changes): 0
