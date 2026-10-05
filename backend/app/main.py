@@ -2794,6 +2794,13 @@ def answer_collective_clarification(
                         "decision_epoch": stored.get("decision_epoch"),
                         "policy": stored.get("policy"),
                         "required_member_ids": sorted(required),
+                        "member_preference_snapshots": {
+                            str(item.get("member_id")): (
+                                item.get("journey_scoped_explicit_preferences") or []
+                            )
+                            for item in members
+                            if str(item.get("member_id")) in required
+                        },
                         "candidate_proposal_ids": sorted(
                             {
                                 str(item.get("proposal_id"))
