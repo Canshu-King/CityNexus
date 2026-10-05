@@ -3,9 +3,17 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+
+BACKEND = Path(__file__).resolve().parents[1]
+SCRIPTS = Path(__file__).resolve().parent
+for _path in (BACKEND, SCRIPTS):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
 
 
 PROVEN = "PROVEN"
