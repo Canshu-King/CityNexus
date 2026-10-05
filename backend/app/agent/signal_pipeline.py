@@ -749,6 +749,39 @@ def refresh_demo_signals(
     if state in {"DISRUPTED", "RISK_FORECAST"}:
         predictive = state == "RISK_FORECAST"
         fixture_payload_data = payload.get("payload") or {}
+
+        # R30 / bounded provider-fixture targeting: a deterministic provider
+        # observation may name an already canonical Place as the physical scope
+        # of a disruption. The server validates that identity and owns Event
+        # creation; callers still cannot assign trusted provenance or Event ids.
+        target_place_id = str(
+            fixture_payload_data.get("target_place_id") or ""
+        ).strip()
+        target_place = (
+            session.get(Place, target_place_id) if target_place_id else None
+        )
+        if target_place_id and (
+            target_place is None
+            or str(target_place.city_code or "") != str(journey.city_code or "")
+        ):
+            raise ValueError(
+                "city signal fixture target_place_id is not a canonical Place "
+                "in this Journey city"
+            )
+        target_activity = (
+            next(
+                (
+                    item
+                    for item in activities
+                    if target_place_id
+                    and str(item.place_id or item.city_service_id or "")
+                    == target_place_id
+                ),
+                None,
+            )
+            if target_place_id
+            else None
+        )
         prevented = None
         if predictive:
             prevented = next(
@@ -769,74 +802,107 @@ def refresh_demo_signals(
                 ),
                 None,
             )
-        if prevented is not None:
-            weather, created = prevented, False
-        else:
-            weather, created = _upsert_fixture_event(
+        if target_place_id and not predictive:
+            # A targeted replay disruption is one provider fact, not an excuse
+            # to inject unrelated weather/traffic noise. This keeps R30's
+            # causal strike scoped to the selected future while still using the
+            # normal server-owned signal pipeline.
+            target_event, target_created = _upsert_fixture_event(
                 session,
                 journey,
-                event_type="WEATHER",
-                severity="MINOR" if predictive else "MAJOR",
-                activity=weather_activity,
-                scope_key=weather_activity.place_id if weather_activity else "journey-weather",
+                event_type="CLOSURE",
+                severity="MAJOR",
+                activity=target_activity,
+                scope_key=target_place_id,
                 occurred_at=_fixture_event_time(
                     session,
                     journey,
-                    event_type="WEATHER",
-                    scope_key="place-tech-art",
-                    activity=current_activity or weather_activity,
-                    minutes_before=5,
+                    event_type="CLOSURE",
+                    scope_key=target_place_id,
+                    activity=target_activity or current_activity,
+                    minutes_before=3,
                 ),
                 payload={
-                    "description": (
-                        "Forecast rain is likely to weaken the outdoor connection before it becomes infeasible"
-                        if predictive
-                        else "Heavy rain threatens an outdoor city connection"
-                    ),
-                    "disruption_class": "FORECAST_HEAVY_RAIN" if predictive else "HEAVY_RAIN",
-                    "weather": "HEAVY_RAIN",
+                    "description": "Provider reports the selected place is closed",
+                    "disruption_class": "PLACE_CLOSURE",
+                    "target_place_id": target_place_id,
                     "fixture_revision": fixture.revision,
-                    "predictive_only": predictive,
-                    "forecast_horizon_min": int(
-                        fixture_payload_data.get("forecast_horizon_min", 45)
-                    ),
-                    "risk_score": int(
-                        fixture_payload_data.get("risk_score", 82 if predictive else 0)
-                    ),
-                    "expected_route_delay_min": int(
-                        fixture_payload_data.get(
-                            "expected_route_delay_min", 18 if predictive else 0
-                        )
+                    "r30_post_consent_shock": bool(
+                        fixture_payload_data.get("r30_post_consent_shock")
                     ),
                 },
-                provenance="SYSTEM_DERIVED" if predictive else "PROVIDER_VERIFIED",
+                provenance="PROVIDER_VERIFIED",
             )
-        events_to_record = [(weather, created)]
-        if not predictive:
-            traffic, traffic_created = _upsert_fixture_event(
-                session,
-                journey,
+            events_to_record = [(target_event, target_created)]
+        else:
+            if prevented is not None:
+                weather, created = prevented, False
+            else:
+                weather, created = _upsert_fixture_event(
+                    session,
+                    journey,
+                    event_type="WEATHER",
+                    severity="MINOR" if predictive else "MAJOR",
+                    activity=weather_activity,
+                    scope_key=weather_activity.place_id if weather_activity else "journey-weather",
+                    occurred_at=_fixture_event_time(
+                        session,
+                        journey,
+                        event_type="WEATHER",
+                        scope_key="place-tech-art",
+                        activity=current_activity or weather_activity,
+                        minutes_before=5,
+                    ),
+                    payload={
+                        "description": (
+                            "Forecast rain is likely to weaken the outdoor connection before it becomes infeasible"
+                            if predictive
+                            else "Heavy rain threatens an outdoor city connection"
+                        ),
+                        "disruption_class": "FORECAST_HEAVY_RAIN" if predictive else "HEAVY_RAIN",
+                        "weather": "HEAVY_RAIN",
+                        "fixture_revision": fixture.revision,
+                        "predictive_only": predictive,
+                        "forecast_horizon_min": int(
+                            fixture_payload_data.get("forecast_horizon_min", 45)
+                        ),
+                        "risk_score": int(
+                            fixture_payload_data.get("risk_score", 82 if predictive else 0)
+                        ),
+                        "expected_route_delay_min": int(
+                            fixture_payload_data.get(
+                                "expected_route_delay_min", 18 if predictive else 0
+                            )
+                        ),
+                    },
+                    provenance="SYSTEM_DERIVED" if predictive else "PROVIDER_VERIFIED",
+                )
+            events_to_record = [(weather, created)]
+            if not predictive:
+                traffic, traffic_created = _upsert_fixture_event(
+                    session,
+                    journey,
                     event_type="TRAFFIC_DELAY",
                     severity="MINOR",
                     activity=traffic_activity,
                     scope_key=traffic_activity.place_id if traffic_activity else "journey-traffic",
-                occurred_at=_fixture_event_time(
-                    session,
-                    journey,
-                    event_type="TRAFFIC_DELAY",
-                    scope_key="place-river-cruise",
-                    activity=traffic_activity,
-                    minutes_before=4,
-                ),
-                payload={
-                    "description": "River corridor mobility deterioration",
-                    "disruption_class": "ROUTE_DELAY",
-                    "extra_minutes": 20,
-                    "mobility": mobility,
-                    "fixture_revision": fixture.revision,
-                },
-            )
-            events_to_record.append((traffic, traffic_created))
+                    occurred_at=_fixture_event_time(
+                        session,
+                        journey,
+                        event_type="TRAFFIC_DELAY",
+                        scope_key="place-river-cruise",
+                        activity=traffic_activity,
+                        minutes_before=4,
+                    ),
+                    payload={
+                        "description": "River corridor mobility deterioration",
+                        "disruption_class": "ROUTE_DELAY",
+                        "extra_minutes": 20,
+                        "mobility": mobility,
+                        "fixture_revision": fixture.revision,
+                    },
+                )
+                events_to_record.append((traffic, traffic_created))
         for event, was_created in events_to_record:
             event_ids.append(event.id)
             created_event_ids.extend([event.id] if was_created else [])
