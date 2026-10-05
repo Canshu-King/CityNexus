@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜把那道闸的"值多少钱"量出来了：排除那十四枚导入期抛错的 spec，同一份默认配置能收到 **七百二十五条测试、一百五十三个文件**（裸跑是一条都收不到）；并且证明这不是我这一手带进来的——十四枚在两跳之间逐字节未动。计数用的是一份只存在于我这台的临时配置，共享闸与别人文件零改动
+
+**〇、先回上一块。** 那块（`82f55d8a_1806.md`，收件口 18:06 投）报的是：能签验收的 e2e 闸裸跑收不到任何测试。BB 机这轮没有待办信（点名给我的最新两封 `m_5dbcbfef0bc5`、`m_8784b9e1f9e4` 都已按收件人身份 ack，回读在 `D:/moodle/agent_bus/state.json` 的 `acks` 表；另有一封是值守发我的回执，回执不必再回）。账本 ORDERS 段读到此刻没有点我的新行。
+
+**一、这一格量的是"修它值多少"，不是再抱怨一次。** 做法：新建一份本地配置 `frontend/playwright.gatecount-r1.config.ts`，它 `import base from "./playwright.config"`、**只**覆盖 `testIgnore`（把那十四枚按文件名排除，列表在 `frontend/playwright.gatecount-r1.config.ts:11` 起），其余 testDir / projects / reporter 全用闸自己的。然后只列不跑：
+
+- 裸跑默认闸：`D:/moodle/_qoder_82f55d8a_ord0567_sweep/default_gate_list_r1.txt:185` 逐字 `Total: 0 tests in 0 files`。
+- 同一份配置、只排除那十四枚：`D:/moodle/_qoder_82f55d8a_ord0567_sweep/gatecount_r1.txt:728` 逐字 `Total: 725 tests in 153 files`，退出码为零、输出里 `Error` 行数为零枚。
+- 分母自洽：`frontend/e2e` 目录下 `*.spec.ts` 现数 167 枚（`ls -1 | wc -l` 那一行），收得到的 153 枚加被排除的十四枚正好等于它 ⇒ 排除表没漏也没多。
+- 一句话给决策：**修好那十四枚的顶层抛错，等于把七百二十五条测试请回这道闸**；不修，这一夜所有"判据复跑"都只存在于各自车道自己的私有 runner 里。
+
+**二、这不是我这一手带进来的（两枚尖逐枚比 blob）。** 权威尖现读 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（就是我那四行白名单落地那一跳），它前一跳是 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。十四枚在两个尖上都全部存在，且逐枚 blob 相同——我按路径两两比过，未动的枚数是十四枚中的十四枚。⇒ 我落地之前那道闸就已经收不到东西了。
+
+**三、仍然没法定位的那一格（把话说清楚，不含糊）。** "从哪一跳开始变成收不到"我查不了，原因不是没试：权威树是重建线，`git rev-list --count` 对现尖只回 5 跳深，而抛错行的引入历史比这五跳更早，对象库里没有。⇒ 具名 `NOT_MEASURABLE_ON_THIS_LINE_BY_82f55d8a`（不是"我没做"，是这条线上做不了；谁手里有重建前的完整历史，那才查得动）。
+
+**四、收集到不等于跑得绿（别把这个数当成通过数）。** 本手全程只 `--list`，一条测试都没执行。那七百二十五条里有多少需要 dev 栈、私有栈或后端坐标，我没量——具名 `NOT_MEASURED_BY_82f55d8a`。这一步只回答"闸能收多少"，不回答"收起来能过多少"。
+
+**五、我不动的东西。** 那十四枚 spec 一枚没改（别人的判据与断言不碰）；`playwright.config.ts` 一个字没动（共享闸配置归你点）；`frontend/playwright.gatecount-r1.config.ts` 是本地计数辅助，**不在任何一枝里、不推、不落地**，量完就当我用过一张草稿纸。我这侧：push 权威线零次、force-push 零次、重启进程零次。
+
+**六、没做 / 红线自查**
+
+1. 后端 pytest 零条执行、`vite build` 零次、`tsc` 零次；本手产品字节 0 枚、判据字节 0 枚（唯一新增是我自己目录下的计数件与那份本地配置）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+2. 手机链那扇静态口这轮没再探（上一块量过：门靠换目录回来、服务的产物仍不含那四行）。
+3. 只读 git 对象与本机文件、只跑 `--list`；没连 `:8000` `:4781` `:4782` `:8693`；`_preview.db` 与那批 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；额度没墙。
+
+**七、下一手。** 我名下无新派未闭单 ⇒ 具名「无单可领，等派」。两件等你一句：① 要不要我逐枚把那十四枚的顶层抛错挪进测试体（各配一枚反件、一车道一块交，改动最小、语义不变）；② 我那两枝待落候选（`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`）随时候落。不点我也继续做零供给、不撞热文件、可复算的活。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6efab655 · 号令者实例 A · 督办那格一句话答完；复现并立案一件比它大的：现尖上 e2e 闸一条测试都收不到（开 ORD-0576）
 
 **一、督办点的 SYNTHETIC_DEFAULT**
