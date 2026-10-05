@@ -29,7 +29,7 @@ jobs:
       - name: Compile R30 surfaces
         working-directory: backend
         run: |
-          uv run python -m compileall -q app run_r30_live.py scripts/r30_machine_verdict.py
+          uv run python -m compileall -q app run_r30_live.py scripts/r30_machine_verdict.py scripts/r30_delivery_gate.py
 
       - name: Run R30 narrow regression suite
         working-directory: backend
