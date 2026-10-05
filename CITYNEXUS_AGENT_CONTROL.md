@@ -16588,6 +16588,63 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 代次锁补第三道 r12（把「那代 dist 的字节真属于那枚 sha」也量了：同一 sha 独立重建两遍，逐文件 sha256 全等；隔壁一代必须不等）· 车道 45d25bfb 自申报（0 枚产品字节）
+
+一、补的是 r11 我自己点名的缺口
+- r10 那块第四节留着 RULE_GAP_CHUNK_HASH_NOT_REVETED_BY_LOCK：锁只看构建回执的 sha、磁盘 index.html 的入口名、屏读记的 base，没证明磁盘上那批字节的的确确是那枚 sha 的产物。这一件把它量掉。
+- vite 的产物没有「逐文件对 git blob」这条通路（输出名是内容哈希、且经过打包），所以可检查的做法只有一个：把同一枚 sha 再独立建一遍到另一个目录，逐文件比 sha256。等集等字节 = 那代磁盘确实是那枚 sha 的输出；任何一点差就拒。
+
+二、三臂现跑
+- 同 sha 两遍独立重建：PASS，10 枚对 10 枚、只在一边出现的 0 枚 / 0 枚、同名不同字节的 0 枚，入口两侧逐字同为 assets/index-DLbc3Q3N.js。报告件 blob af3a8f2c10086d79448e368befda23d7e4615767
+- 反例（r11 之前那一代，构建件 cmdra_0553_r12neg）：PASS，入口 assets/index-DLbc3Q3N.js 对 assets/index-BW2_ds1t.js，同名不同字节 2 枚、只在被走那一代出现的 3 枚，逐枚列在报告件 blob af3a8f2c10086d79448e368befda23d7e4615767 里。
+- 第三臂专门钉「这不是橡皮章」：同 sha 等 = True、跨代等 = False，两个值必须一真一假才算它认得出。整体 GREEN、红臂 0 枚，同一件 blob af3a8f2c10086d79448e368befda23d7e4615767。
+- 三份构建回执都发了（被走那一代 cmdra_0553_r11、同 sha 重建 cmdra_0553_r12v、反例那一代 cmdra_0553_r12neg），blob 086bf429506bc32f0740311dac092be8883980a1 / 3827bdd61fac5982813c1f0f68580a67512c2334 / 81208b2338e15f00975df3eb467e25e429352109。
+
+三、顺量到一条共享盘事实（跟证据保存有关，具名）
+- 跑之前先点了旧构建目录：`_build_cmdra_0553_r8/frontend` 与 `_build_cmdra_0553_r2/frontend` 已经整个不在（不是只有 dist 空），也就是 live_checks 下那份 build scratch 会被回收。所以任何块都不能假设「我那块 dist 还在」——我只把可复算的最小件（读数 JSON、构建回执、工具本体）发到 evidence/ 下，这也是这块把三份回执一起发的原因。
+
+四、纪律
+- r12 产品字节 0 枚、提交 0 笔、推送 0 次、0 个在跑端口；本轮只起 vite 构建（不接后端、不接库、不碰共享预览库、没跑 demo/reset）；新落盘 5 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r12.jsonl；force-push 0 次；权威线我没碰。
+- 仍等你裁四格：旧按钮名的 e2e 断言、词表三条英文枚举原文、StatePrimitives 的 replaceAll 兜底、spec.ts:21 播种门（改读 demo/scene 还是发 token）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0567 预检（手机车道 0afdb49b）：换代那天那四屏顶栏会不会露键名——提前量过了，不会；四枚路由在现尖的两本词表里都有真值，没有一枚的值等于键名
+
+一、为什么这格值得在换代之前量
+- 壳把顶栏标签交给 `t("nav." + route)`，而 `d107131c6` 那跳只是把四枚路由名**加进了注册集合**；真正决定屏上出现什么字的是词表。注册了但词表没有 → 换代当天屏幕上就是 `nav.trash` 这种键名，那正是本单一直要拦的形状，而且要等屏上看得到才算晚。
+
+二、读数（现尖 ``b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c``，件 `review/ord0500-nav-preflight/evidence/nav_key_preflight_r1.json` blob `3d4d7f6172cbb04d1282423083d51b936e44c23f`；路由清单从那次落地的 diff 里现取，不是我抄的）
+- 落进注册集合的路由：`access`、`footprints`、`import`、`trash`（该次 diff 的 `+` 行 8 枚）。
+- 每条的载体行号与值：
+
+| 路由 | 字典键 | 出现位置 | 词表里的值 |
+| --- | --- | --- | --- |
+| `access` | `nav.access` | 两本词表各一枚：`frontend/src/i18n/LocaleContext.tsx:43` 与 `frontend/src/i18n/LocaleContext.tsx:1164` | 值 `Members and access` / `成员与权限` |
+| `footprints` | `nav.footprints` | 两本词表各一枚：`frontend/src/i18n/LocaleContext.tsx:47` 与 `frontend/src/i18n/LocaleContext.tsx:1166` | 值 `Footprints` / `足迹` |
+| `import` | `nav.import` | 两本词表各一枚：`frontend/src/i18n/LocaleContext.tsx:21` 与 `frontend/src/i18n/LocaleContext.tsx:1146` | 值 `Import places` / `导入地点` |
+| `trash` | `nav.trash` | 两本词表各一枚：`frontend/src/i18n/LocaleContext.tsx:42` 与 `frontend/src/i18n/LocaleContext.tsx:1163` | 值 `Recycle bin` / `回收站` |
+
+- 判据与结论：每条都 **两本词表各命中一枚**（`tables_holding_it` = 2），且 `value_equals_key` 与 `value_is_empty` 对全部 4 条都为假 ⇒ 判语 `NO_KEY_WILL_REACH_THE_SCREEN`，缺陷路由 0 枚。
+
+三、两枚对照（证明这把尺不是恒绿）
+- 必在场的对照 `nav.hub`：两本词表都有（件的 `controls`）。
+- 必不在场的对照 `nav.zznotaroute`，读数出自件 `review/ord0500-nav-preflight/evidence/nav_key_preflight_r1.json` blob `3d4d7f6172cbb04d1282423083d51b936e44c23f` 的 `controls`：它在两本词表里各命中 0 枚——若它也报"有"，那这把尺就是在自证。
+- 这两个对照不过就中止，本件里 `controls_ok` = true。
+
+四、与其它格的关系（不自夸）
+- 上一块量的那四屏仍念旧名，是因**链 serve 的包**早于这一代；本块说的是**换代之后的字**——两件事合起来才是这条线的完整读数：现在看不见 ≠ 将来看不见，将来看得见的内容我已经先验过一遍。
+- 仍然不许口的：这不是浏览器实测那四屏已渲染成这些词（链还 serving 旧包，测不到）；真机仍 NOT_MEASURED；Playwright 本手未跑（除上一块那次同源走查）。
+
+五、边界与复算
+- 本手产品字节改动 0 枚；线上已落字节覆盖 0 枚；权威线移动 0 次（都是别人落的）；名下旧枝改写 0 枚；删枝 0 枚；账本直写 0 处（本块走收件口）；端口起停 0 个；wt22 工作树写入 0 处（件 `review/ord0500-nav-preflight/evidence/nav_key_preflight_r1.json` blob `3d4d7f6172cbb04d1282423083d51b936e44c23f` 顶层 `worktree_written`）。
+- 待你一句的仍挂着：甲/乙/丙那三选（今晚同两手已重切两轮、字节零变化，我推荐乙或丙，不再自作主张推新枝）。
+- 复算：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/nav_key_preflight_r1.py`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 自申报那一格（模拟悬浮件的压覆盖）· 上一格四堆归因里唯一落在"设计如此"之外的两枚读数，本手量到它在自然滚动位上谁都没压，只有被刻意滚到屏幕中线那一刻才落进它 48 × 60 px 的带里 ⇒ 判条件性遮挡，不判不可达也不判缺陷
 
 **〇、这一格是什么**
