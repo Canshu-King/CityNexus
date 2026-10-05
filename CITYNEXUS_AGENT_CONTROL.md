@@ -16588,6 +16588,34 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · 自申报那格交完：三放置位臂跑遍那十七枚逐枚三选一——十五枚泄漏在管、一枚容器在管（v8-outline-button，上一杠两腿误报的那枚）、一枚按媒体条件两档分形；暗色零影响、一百三十二行零恢复失败
+
+**〇、坐标**。权威尖现读 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`；号令者落 ORD-0572 之后没人再落，账本现读同句），本轮 ref 0 次重挂。我 21:30 那块现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16757`（块头「六档并集跑完」）。BB 机 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行。栈随应用重启掉过、本轮已起回：api `127.0.0.1:8021`（钉树 runner，`PINNED_BACKEND_ROOT_OK` 打印在案）、静态 `127.0.0.1:4831` 服务本轮重建的现尖产物 `dist_states_tip5`（入口 `index-CiyY-Q-V.js`，与号令者那块报的入口名逐字相同）；行程列表经代理回 `http_status=200` 且三笔含 `b25faac4`。
+
+**一、正题：逐枚三选一，跑满四档宽组合**。件 `D:/moodle/_qoder_6a_ord0531_20261001/ancestor_disambiguation_all_r1.cjs`（新增：档/宽/开面板三参数、逐枚判决语、拒写门带 rung 标），读数八份 `ancestor_disambiguation_all_<档>_<宽>_<模态>_r1.json`；每行三放置位（原位／壳内离容器／离壳）各报适用规则与赢家，读毕插回原父子并回读，一百三十二行 `restored_ok` 皆真。暗色确实生效（每屏回读 `<html data-theme>` 与 `--v8-surface`：dark 侧 `#1c1c1e`、light 侧 `#ffffff`），判语与 light 逐行相同。
+
+| 判决语 | 枚数 | 成员 |
+| --- | --- | --- |
+| 泄漏在管 | 十五 | cn-access-sort-tier、cn-access-trip-open、cn-collect__entry、cn-collections__retry、cn-copilot-close、cn-footprints__retry、cn-poster-open、cn-stop-checkin、v8-compare-button、v8-icon-button、v8-primary、v8-primary-button、v8-quiet-button、v8-text-button、v9-language |
+| 容器在管 | 一 | v8-outline-button |
+| 泄漏在管@三九〇 / 壳外不恢复@一二八〇 | 一 | v8-mobile-menu |
+| 免疫 | 零 | （无） |
+
+- 泄漏在管十五枚：原位赢家逐枚都是 `.v8-product-shell button`（值 `inherit`、十六 px），壳内离容器仍十六 px，离壳读回各自声明值——那枚全局泄漏直接管着它，元素加类即可救。
+- v8-mobile-menu 一枚按媒体条件两档分形：三九〇 档声明零 px 写在 `@media (max-width: 680px)` 内，原位被泄漏顶成十六 px、离壳读回零 px ⇒ 泄漏在管；一二八〇 档该媒体块不适用，原位十六 px、离壳十三点三三三三 px 且无任何赢家（浏览器默认）⇒ 壳外不恢复，即「这里没有可判的声明」，与上一块 r3 普查同形。
+- 免疫零枚：十七枚里没有一枚原位已等于自己声明值；免疫那枚（`v8-avatar`）与声明即 `inherit` 的（`trip-stop-more`）本就不在这十七枚里，仍是正对照。
+
+**二、这一格的新发现：v8-outline-button 是容器在管，上一杠两腿臂把它误报成祖先解释**。两腿臂「原位→直接搬 body」一步同时离开外壳与控件自己的容器，读「离壳回十二 px」就盖了 ANCESTOR_EXPLAINED；三放置位把它拆开：原位十 px（赢家 `.v15-copilot-suggestions .v8-outline-button`，容器级两类规则）、壳内离容器十六 px（赢家换成那枚泄漏）、离壳十二 px（赢家 `.v8-outline-button`，声明值）。即原位压住它的是 copilot 建议那枚容器规则（故意十 px），不是泄漏；泄漏只在它离开容器时接管。**修法含义**：给它元素加类（`button.v8-outline-button`）打不过容器规则（两百 对 一百零一），甲形「元素加类」对这一枚不适用，得按容器级形制处理，或认定容器规则本就是设计。
+
+**三、甲形工作清单（这张表才是）**。十七枚里十五枚只需元素加类就能从泄漏手里读回声明值；一枚（v8-outline-button）要容器级形制、元素加类救不回；一枚（v8-mobile-menu）三九〇 可救、一二八〇 本无可救的声明。产品字节改动 0 枚——本格只量不动。
+
+**四、边界账**。权威线 0 次推送、权威线 0 次移动；账本改写 0 次（本块走收件口）；已发布枝 force-push 0 次、删除 0 次；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮连读都没读）；别人的枝与文件改写 0 次；别人车道的进程没起也没停过一回；skip 0 处、mock 0 处。端口：api `127.0.0.1:8021`、静态 `127.0.0.1:4831` 是我自己的，本轮各起回一次（应用重启带掉、属恢复不是新起）；工地板 `127.0.0.1:4820` 与 BB 机 `127.0.0.1:4799` 不归我、没碰；受保护四枚 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 现读命中零行，本轮没向它们发过请求。工作树 `git status --porcelain` 空输出（`D:/moodle/_qoder_n2b_ord0466_20260929/wt`，构建后已切回 `tmp-hang-r8emitte` 临时枝、不是权威线）。重建产物退出码零、入口名与号令者那块逐字相同，作本代产物对拍。
+
+**五、下一手（自申报）**。待你三句裁语照旧：甲/乙点一形（本轮把「容器级形制」坐实为第二种已在产品里成立的形制，请一并算进改动面）、裁语①点形制（我推荐甲、反对丙）、要不要把量具推成一枚 review 枝入库。另报一件随尖动而欠的：名下两枚待落枝（`review/6a150e1e-trash-citation-rot-r9`、`review/6a150e1e-emitter-door-verify-r8`）此刻基在 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`、现尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`，落之前请让我按那一刻的现尖再跑一次重挂（升一级枝名、不覆盖旧名）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 我自己的一块交付被入账两次（收件口副本造成的），把重复量成可回读的证据件请号令者裁撤后一笔——已发布件一字未动，车道 `1d64acf5`
 
 坐标（写这块这一刻现读；正文每行挂一枚可在 `D:/moodle/CityNexus` 里 `git cat-file` 的 40 位。摊平件＝`dup_erratum_flat_r1.tsv`，件 blob `9c17864354b4649adbad0f792f520dc445f430ad`；读数件＝`dup_receipt_measure_r1.json`，件 blob `05d8c3c4ef1ea124c0d75b3a13ff9ca930dd1ef6`；量具本体 blob `6dcc8c556ca2b016a7039eb922323a3d2653352b`。下面「第 N 行」指摊平件自己文件内的行，不指账本；账本行号会漂，所以每处另按「标题行→收尾行」的闭区间量过）
