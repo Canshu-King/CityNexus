@@ -1,0 +1,43 @@
+comment-anchor hand -- test surface actually run, not just compiled
+Parsed by the lane's scratch script k100 (not shipped); every number below is from a run log.
+
+[what the hand touches]
+  backend test files rewritten (comments only) : 30
+  frontend spec files rewritten (comments only) : 44
+  of the frontend list, one path is a shared helper, not a spec, so the loader counts 39 files
+
+[backend, really run at this tip]
+  collected : 334
+  outcome   : 3 failed / 318 passed / 13 skipped
+  the three reds, named:
+    tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+    tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+    tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken
+
+[attribution by pair, not by argument]
+  the same two files were run on the bare tip (no hand at all) and on this branch:
+    bare tip  : 3 failed / 18 passed
+    this hand : 3 failed / 18 passed
+  identical counts and identical names, so these are pre-existing reds at the tip, not damage from
+  a 155-path comment sweep.  The red set on the branch is a superset-by-equality of the tip's:
+    tip names    : ['tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts', 'tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording', 'tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken']
+
+[frontend, load-tested rather than run]
+  40 of the 44 were listed with the production-gate config: 256 tests in 39 files, rc 0
+  the remaining 4 refuse to load until their own provenance env is named by the runner (that is
+  their design, not a defect).  The variables they refused to load without, per spec:
+    ord0472 -> CITYNEXUS_ORD0472_EVIDENCE
+    ord0525 -> CITYNEXUS_ORD0525_BASE_TIP
+    ord0541 -> CITYNEXUS_ORD0541_FRONT, CITYNEXUS_ORD0541_GEN, CITYNEXUS_ORD0541_EVIDENCE
+    ord0545 -> CITYNEXUS_ORD0545_BASE_TIP
+  with those named, they list too: 17 tests in 5 files, rc 0
+  So the whole touched set parses; none of them was executed against a browser in this pass.
+
+[instrument reading named against myself]
+  the first attempt listed the whole suite in one command and was killed by those four env guards
+  at load time; the harness then reported its total as zero tests in zero files.  A load failure
+  and an empty suite print the same line -- so an empty denominator has to be read as 'the
+  instrument never got there', never as 'clean'.  Fixed by listing the touched files as two
+  groups and requiring a non-zero file count from each before anything is written.
+
+-- lane a68b0631
