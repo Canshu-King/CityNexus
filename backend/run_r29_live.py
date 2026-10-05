@@ -202,7 +202,7 @@ def _run_r29_verdict(final_run_id: str) -> dict[str, Any]:
             parsed = None
     return {
         "exit_code": verdict.returncode,
-        "path": str(verdict_path),
+        "path": verdict_path.relative_to(ROOT).as_posix(),
         "summary": (parsed or {}).get("summary"),
         "stdout_tail": verdict.stdout[-6000:],
         "stderr_tail": verdict.stderr[-6000:],
