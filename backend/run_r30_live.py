@@ -337,6 +337,7 @@ def _assert_world_stale_at_core(
     journey_id: str,
     selected_plan_id: str,
     expected_w1: str,
+    fit_subject_place_ids: list[str],
 ) -> dict[str, Any]:
     """Prove the world-epoch layer independently of hard feasibility."""
 
@@ -350,7 +351,12 @@ def _assert_world_stale_at_core(
         plan = session.get(PlanVersion, selected_plan_id)
         if journey is None or plan is None:
             raise RuntimeError("journey/selected plan disappeared before stale check")
-        basis = collective_material_world_basis(session, journey, plan)
+        basis = collective_material_world_basis(
+            session,
+            journey,
+            plan,
+            fit_subject_place_ids=fit_subject_place_ids,
+        )
         w2 = collective_material_world_epoch(basis)
         gate = collective_mutation_gate(
             session,
@@ -535,6 +541,7 @@ def _run_full() -> dict[str, Any]:
         journey_id=journey_id,
         selected_plan_id=str(interlock["selected_plan_id"]),
         expected_w1=str(interlock["material_world_epoch_w1"]),
+        fit_subject_place_ids=list(interlock["fit_subject_place_ids"]),
     )
     old_attempt = _attempt_old_authority(
         journey_id=journey_id,
