@@ -1,0 +1,450 @@
+{
+ "built_at": "2026-10-06T01:35:38+0800",
+ "tip_after_landing": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "tip_before": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "candidate_ref": "refs/heads/review/8ac89982-ord0572-bottom-bar-says-where-you-are-r1",
+ "generation": {
+  "entry": "index-CiyY-Q-V.js",
+  "served_bytes": 1624199,
+  "disk_bytes": 1624199,
+  "equal": true,
+  "sha256_head16": "64233121de97379e"
+ },
+ "stack": {
+  "api_port": 8813,
+  "web_port": 49813,
+  "journeys": 142,
+  "journeys_with_legs": 45,
+  "journey_read": "5a203174-bbcc-422a-aa64-8343c2883c72"
+ },
+ "readings": {
+  "zh": {
+   "instrument": "cmdr_0572_bottom_bar_state_r1",
+   "at": "2026-10-05T17:34:11.514Z",
+   "base": "http://127.0.0.1:49813",
+   "locale": "zh",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "viewport": "390x844",
+   "rows": [
+    {
+     "route": "/v8/hub",
+     "pathname": "/v8/hub",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "今天",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "行程",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "地图",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "我的",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "hub"
+     ],
+     "expected_marked": [
+      "hub"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 1329
+    },
+    {
+     "route": "/v8/trips",
+     "pathname": "/v8/trips",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "今天",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "行程",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "地图",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "我的",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "trips"
+     ],
+     "expected_marked": [
+      "trips"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 545
+    },
+    {
+     "route": "/v8/map",
+     "pathname": "/v8/map",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "今天",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "行程",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "地图",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "我的",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "map"
+     ],
+     "expected_marked": [
+      "map"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 742
+    },
+    {
+     "route": "/v8/me",
+     "pathname": "/v8/me",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "今天",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "行程",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "地图",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "我的",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "me"
+     ],
+     "expected_marked": [
+      "me"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 324
+    }
+   ],
+   "screens_ok": 4,
+   "empty_denominators": [],
+   "page_problems": 0,
+   "problem_samples": []
+  },
+  "en": {
+   "instrument": "cmdr_0572_bottom_bar_state_r1",
+   "at": "2026-10-05T17:34:24.430Z",
+   "base": "http://127.0.0.1:49813",
+   "locale": "en",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "viewport": "390x844",
+   "rows": [
+    {
+     "route": "/v8/hub",
+     "pathname": "/v8/hub",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "Today",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "Trips",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "Map",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "Me",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "hub"
+     ],
+     "expected_marked": [
+      "hub"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 2327
+    },
+    {
+     "route": "/v8/trips",
+     "pathname": "/v8/trips",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "Today",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "Trips",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "Map",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "Me",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "trips"
+     ],
+     "expected_marked": [
+      "trips"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 1134
+    },
+    {
+     "route": "/v8/map",
+     "pathname": "/v8/map",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "Today",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "Trips",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "Map",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "Me",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "map"
+     ],
+     "expected_marked": [
+      "map"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 1149
+    },
+    {
+     "route": "/v8/me",
+     "pathname": "/v8/me",
+     "buttons": [
+      {
+       "key": "hub",
+       "present": true,
+       "text": "Today",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "trips",
+       "present": true,
+       "text": "Trips",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "map",
+       "present": true,
+       "text": "Map",
+       "ariaCurrent": null,
+       "contrastRole": null,
+       "centre_hit_self": true
+      },
+      {
+       "key": "me",
+       "present": true,
+       "text": "Me",
+       "ariaCurrent": "page",
+       "contrastRole": "state",
+       "centre_hit_self": true
+      }
+     ],
+     "marked": [
+      "me"
+     ],
+     "expected_marked": [
+      "me"
+     ],
+     "exactly_one": true,
+     "marks_the_active_one": true,
+     "words_unchanged": true,
+     "body_chars": 632
+    }
+   ],
+   "screens_ok": 4,
+   "empty_denominators": [],
+   "page_problems": 0,
+   "problem_samples": []
+  }
+ },
+ "alias_and_other_screens": [
+  {
+   "path": "/v8/live",
+   "marked": [
+    "map"
+   ]
+  },
+  {
+   "path": "/v8/trash",
+   "marked": []
+  },
+  {
+   "path": "/v8/stay",
+   "marked": []
+  }
+ ]
+}
