@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from uuid import uuid4
+from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -12,11 +13,35 @@ from app.core.config import settings
 from app.db.models import Activity, Journey, JourneyMember, Place
 from app.db.session import SessionLocal
 from app.traveler_principal import issue_traveler_token
-from test_v12_authoritative_trip_execution import _journey_with_inputs
+from app.services import plan_authority_blocker, SYNTHETIC_LIVE_SELECTION_BLOCKED
+from test_v12_authoritative_trip_execution import _journey_with_inputs, _seal_v12_test_plan
 
 
 client = TestClient(main_module.app)
 _TEST_SECRET = "r28-execution-truth-test-secret-0123456789abcdef"
+
+
+def test_sealed_fixture_authority_only_uses_selected_content() -> None:
+    def place(key: str, sealed: bool) -> Place:
+        return Place(
+            id=key, provider_key="overpass", external_id=f"overpass:node/{key}",
+            city_code="TEST", name=key, category="museum", latitude=1, longitude=2,
+            opening_hours_json='{"status":"OFFICIAL_WEB_VERIFIED","open":"09:00","close":"17:00"}',
+            metadata_json=json.dumps({
+                "authority_envelope": "SEALED_DEMO_FIXTURE" if sealed else None,
+                "cost_evidence": {"status": "VERIFIED_PROVIDER", "amount_minor": 0},
+            }), tags_json="[]", updated_at=_now(),
+        )
+
+    rows = {"a": place("a", True), "b": place("b", True), "unused": place("unused", False)}
+    plan = SimpleNamespace(explanation_json="{}", mobility_evidence_json=json.dumps({
+        "facts": [{"origin_key": "a", "destination_key": "b", "route_provenance": "SYNTHETIC_FIXTURE"}],
+        "runtime_label": "SEALED_REPLAY_OR_SYNTHETIC_FIXTURE_EXPLICIT",
+        "provider_evidence": {"selected_path": "SYNTHETIC_FIXTURE"},
+    }))
+    assert plan_authority_blocker(plan, rows, used_place_ids=["a", "b"]) is None
+    rows["b"] = place("b", False)
+    assert plan_authority_blocker(plan, rows, used_place_ids=["a", "b"]) == SYNTHETIC_LIVE_SELECTION_BLOCKED
 
 
 def _now() -> str:
@@ -41,6 +66,7 @@ def _start_authoritative_journey() -> tuple[str, str, str]:
     )
     assert composed.status_code == 201, composed.text
     plan = composed.json()["top_k"][0]
+    _seal_v12_test_plan(plan)
     selected = client.post(
         f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select"
     )
@@ -197,7 +223,7 @@ def test_r28_foreground_web_location_cannot_claim_device_verified_execution() ->
             },
         )
         assert verified.status_code == 409, verified.text
-        assert verified.json()["detail"] == "LOCATION_OBSERVATION_NOT_DEVICE_VERIFIED"
+        assert verified.json()["error"]["message"] == "LOCATION_OBSERVATION_NOT_DEVICE_VERIFIED"
 
         with SessionLocal() as session:
             activity = session.get(Activity, activity_id)

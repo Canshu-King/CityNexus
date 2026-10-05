@@ -7369,7 +7369,9 @@ def _trip_studio_context(
     route_gaps = []
     for previous, current in zip(ordered, ordered[1:]):
         pair = (str(previous.place_id or previous.city_service_id or ""), str(current.place_id or current.city_service_id or ""))
-        fact = fact_pairs.get(pair)
+        # Use the same selected/mode-cost policy as the deterministic gate.
+        # A last-in-matrix UNKNOWN fare must not hide a known-cost option.
+        fact = _trip_studio_fact(pair[0], pair[1], evidence)
         if fact is None:
             route_gaps.append({"from": pair[0], "to": pair[1], "reason": "MISSING"})
         elif str(fact.get("cost_status") or "UNKNOWN").upper() == "UNKNOWN":

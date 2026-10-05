@@ -119,6 +119,21 @@ def _journey_with_inputs() -> tuple[str, list[str], str]:
     return journey_id, place_ids, commitment_id
 
 
+def _seal_v12_test_plan(plan: dict) -> None:
+    """Declare this offline fixture explicitly; never label its facts LIVE.
+
+    Includes structural Places created during composition.  The production
+    authority gate must still reject identical unsealed synthetic content.
+    """
+    with SessionLocal() as session:
+        for activity in plan["activities"]:
+            place = session.get(Place, activity["place_id"])
+            metadata = json.loads(place.metadata_json or "{}")
+            metadata["authority_envelope"] = "SEALED_DEMO_FIXTURE"
+            place.metadata_json = json.dumps(metadata)
+        session.commit()
+
+
 def test_v12_authoritative_compose_same_evidence_execute_studio_and_edge() -> None:
     client = TestClient(app)
     journey_id, place_ids, commitment_id = _journey_with_inputs()
@@ -131,6 +146,7 @@ def test_v12_authoritative_compose_same_evidence_execute_studio_and_edge() -> No
     payload = composed.json()
     assert payload["complete_plan_count"] == 3
     plan = payload["top_k"][0]
+    _seal_v12_test_plan(plan)
     assert len(plan["activities"]) == 12
     assert plan["mobility_evidence"]["mode_matrix_count"] >= 100
 
@@ -195,6 +211,7 @@ def test_v12_studio_protects_locked_order() -> None:
     )
     assert composed.status_code == 201
     plan = composed.json()["top_k"][0]
+    _seal_v12_test_plan(plan)
     assert client.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select").status_code == 200
     order = [item["id"] for item in plan["activities"]]
     order[0], order[1] = order[1], order[0]
@@ -220,6 +237,7 @@ def test_v12_autonomous_recovery_uses_preauthorized_envelope(monkeypatch) -> Non
     )
     assert composed.status_code == 201
     base_plan = composed.json()["top_k"][0]
+    _seal_v12_test_plan(base_plan)
     assert client.post(f"/api/v1/journeys/{journey_id}/plans/{base_plan['id']}/select").status_code == 200
     assert client.post(f"/api/v1/journeys/{journey_id}/start").status_code == 200
 

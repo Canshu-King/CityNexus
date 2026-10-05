@@ -779,7 +779,7 @@ def plan_authority_blocker(
         synthetic = provider.startswith(("mock", "fixture"))
     if not synthetic:
         return None
-    content_places = [
+    content_places = used_content_places if used_place_ids is not None else [
         place for place in places_by_id.values()
         if place.provider_key != ANCHOR_PROVIDER_KEY
     ]
