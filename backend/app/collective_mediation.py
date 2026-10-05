@@ -13,7 +13,7 @@ import json
 
 from sqlalchemy import select
 
-from app.db.models import JourneyMission, PlanVersion, ReplanProposal
+from app.db.models import Activity, JourneyMission, PlanVersion, Place, ReplanProposal
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
 
 
@@ -180,6 +180,7 @@ def collective_decision_epoch(
     options: Iterable[Mapping[str, Any]],
     required_member_ids: Iterable[str],
     members: Iterable[Mapping[str, Any]],
+    decision_material: Mapping[str, Any] | None = None,
 ) -> str:
     """Stable server fingerprint for a collective decision's semantic reality.
 
@@ -252,10 +253,86 @@ def collective_decision_epoch(
             for item in members
             if str(item.get("member_id")) in required_set
         ],
+        # Compatibility input for the earlier R30 test surface.  The live
+        # product path binds its richer material-world epoch separately; this
+        # optional projection lets callers include a deterministic material
+        # snapshot without changing the normal call contract.
+        "decision_material": decision_material or {},
     }
     return hashlib.sha256(
         json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+
+def decision_material_snapshot(
+    session,
+    *,
+    journey_id: str,
+    base_plan_version_id: str | None,
+    options: Iterable[Mapping[str, Any]],
+    selected_proposal_id: str | None = None,
+    selected_plan_version_id: str | None = None,
+) -> dict[str, Any]:
+    """Project a small deterministic compatibility snapshot for consent tests.
+
+    The current R30 runtime stores the richer decision-material projection in
+    ``main.collective_material_world_basis``.  Older target-branch callers
+    still pass an explicit snapshot into ``collective_decision_epoch``; keep
+    that surface server-derived and intentionally ignore unrelated provider
+    observations.
+    """
+
+    selected_plan_id = str(selected_plan_version_id or "") or None
+    option_rows = [dict(item) for item in options if isinstance(item, Mapping)]
+    plan = session.get(PlanVersion, selected_plan_id) if selected_plan_id else None
+    activities = []
+    places = []
+    if plan is not None:
+        activities = list(
+            session.scalars(
+                select(Activity)
+                .where(Activity.plan_version_id == plan.id)
+                .order_by(Activity.sequence_no, Activity.id)
+            ).all()
+        )
+        place_ids = sorted({str(item.place_id) for item in activities if item.place_id})
+        if place_ids:
+            places = list(session.scalars(select(Place).where(Place.id.in_(place_ids))).all())
+    place_facts = []
+    for place in sorted(places, key=lambda item: str(item.id)):
+        metadata = _mission_object(place.metadata_json)
+        cost = metadata.get("cost_evidence") or metadata.get("cost") or {}
+        try:
+            tags = json.loads(place.tags_json or "[]")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            tags = []
+        place_facts.append(
+            {
+                "place_id": str(place.id),
+                "category": place.category,
+                "tags": tags if isinstance(tags, list) else [],
+                "opening_hours": _mission_object(place.opening_hours_json),
+                "cost": cost,
+            }
+        )
+    return {
+        "journey_id": str(journey_id),
+        "base_plan_version_id": str(base_plan_version_id) if base_plan_version_id else None,
+        "selected_proposal_id": str(selected_proposal_id) if selected_proposal_id else None,
+        "selected_plan_version_id": selected_plan_id,
+        "candidate_plan_ids": sorted(str(item.get("plan_id")) for item in option_rows if item.get("plan_id")),
+        "activities": [
+            {
+                "id": str(item.id),
+                "sequence_no": item.sequence_no,
+                "place_id": item.place_id,
+                "activity_type": item.activity_type,
+                "locked": item.locked,
+            }
+            for item in activities
+        ],
+        "places": place_facts,
+    }
 
 def collective_material_world_epoch(basis: Mapping[str, Any]) -> str:
     """Hash only server-projected decision-material physical reality.

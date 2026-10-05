@@ -444,6 +444,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
         "For an ordinary shared mission that is not already a DISAGREEMENT_MEDIATION child, when server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with the Journey, current mission, and the event ID returned by inspection. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
         "If Mission.resolved_intent.collective_decision.selected_proposal_id is present, authenticated members have already resolved the human trade-off. After inspection, continue toward accept_replan for exactly that server-selected proposal under the normal Gateway boundary; do not reopen the social choice and do not stop with prose before the Gateway returns a decision. "
+         "If accept_replan returns COLLECTIVE_CONSENT_EPOCH_STALE, the selected proposal's consent is no longer authoritative for the current material world. Do not retry that proposal, reuse its member responses, or accept a sibling from the old round. Inspect the current provider/event state, create a fresh server-owned replan through request_replan, and open a fresh request_collective_decision round for the relevant members before any mutation. "
         "If Mission.resolved_intent.collective_mediation.kind is DISAGREEMENT_MEDIATION, the relevant members selected different grounded proposals. You are a mediator, not a decider: never majority-vote, never accept one of the disputed proposals merely because one role is stronger, and never overwrite member preferences. The previous decision surface is already known to be socially unresolved, so do not immediately call request_collective_decision on the unchanged proposals. Inspect the separate member context and grounded evidence, then use normal search/fact/planning/replan tools to create a materially different candidate surface that improves the server fairness boundary without regressing another protected fairness boundary. You may recombine multiple already-grounded server-returned Place IDs when that creates a genuinely different executable future. generate_plans is exploratory only; before asking members again, use request_replan with the grounded Place IDs and the inspected trigger event so the improved future becomes a server-owned ReplanProposal that collective mediation can evaluate. CityNexus will revalidate it, so this is exploration rather than authority. Only after CityNexus exposes measurable progress should you call request_collective_decision for renewed consent. After explicit disagreement, even a later server classification of COMPROMISE_AVAILABLE is recommendation evidence, not renewed social authority: present the materially improved option surface through request_collective_decision and let the relevant members answer again before any active-reality mutation. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
@@ -1338,6 +1339,23 @@ class DeepSeekJourneyAgent:
                             "content": _result_for_model(result),
                         }
                     )
+                    if (
+                        tool_name == "accept_replan"
+                        and isinstance(result, dict)
+                        and result.get("error") == "COLLECTIVE_CONSENT_EPOCH_STALE"
+                    ):
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": (
+                                    "The previous collective consent epoch is stale. Stop retrying the old proposal "
+                                    "and do not copy its responses. Inspect the current provider/event state, then "
+                                    "use request_replan to create a fresh server-owned candidate and "
+                                    "request_collective_decision so the relevant members can answer a new round. "
+                                    "Do not mutate active reality until the fresh round resolves."
+                                ),
+                            }
+                        )
                     # Human approval is not a reason to keep asking the model.
                     # Persist the already-selected action and suspend this same
                     # AgentRun until the server receives the approval.
