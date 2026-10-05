@@ -2694,6 +2694,46 @@ def answer_collective_clarification(
         selected = {str(item.get("proposal_id")) for item in responses.values()}
         if len(selected) == 1:
             selected_id = next(iter(selected))
+            selected_option = next(
+                (
+                    item
+                    for item in current_options
+                    if str(item.get("proposal_id") or "") == selected_id
+                ),
+                None,
+            )
+            selected_plan_id = (
+                str(selected_option.get("plan_id") or "")
+                if isinstance(selected_option, dict)
+                else ""
+            )
+            selected_plan = (
+                session.get(PlanVersion, selected_plan_id)
+                if selected_plan_id
+                else None
+            )
+            if selected_option is None or selected_plan is None:
+                stored["status"] = "STALE"
+                parent.clarification_json = json.dumps(
+                    stored, ensure_ascii=False, sort_keys=True
+                )
+                session.commit()
+                raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+
+            from app.collective_mediation import collective_material_world_epoch
+
+            material_world_basis = collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=list(
+                    selected_option.get("fit_subject_place_ids") or []
+                ),
+            )
+            stored["material_world_basis"] = material_world_basis
+            stored["material_world_epoch"] = collective_material_world_epoch(
+                material_world_basis
+            )
             stored["status"] = "RESOLVED"
             stored["selected_proposal_id"] = selected_id
             stored["selected_candidate_id"] = selected_id
@@ -2721,6 +2761,7 @@ def answer_collective_clarification(
                 "collective_decision": {
                     "clarification_id": stored["clarification_id"],
                     "decision_epoch": stored["decision_epoch"],
+                    "material_world_epoch": stored["material_world_epoch"],
                     "selected_proposal_id": selected_id,
                     "selected_candidate_id": selected_id,
                     "selected_plan_version_id": next(
@@ -4726,6 +4767,49 @@ def collective_mutation_gate(
             # option surface cannot safely retain social authority.
             consent_epoch_stale = True
 
+    resolved_world_epoch = (
+        str(pending_selection.get("material_world_epoch") or "")
+        if pending_selection is not None
+        else ""
+    )
+    current_world_epoch: str | None = None
+    world_epoch_stale = False
+    if renewed_consent_selected and resolved_world_epoch:
+        source_mission_for_world = session.get(
+            JourneyMission, str(pending_selection.get("mission_id") or "")
+        )
+        source_clarification_for_world = (
+            _json_object(source_mission_for_world.clarification_json or "{}")
+            if source_mission_for_world is not None
+            else {}
+        )
+        selected_option_for_world = next(
+            (
+                item
+                for item in (
+                    source_clarification_for_world.get("candidate_options") or []
+                )
+                if isinstance(item, dict)
+                and str(item.get("proposal_id") or "")
+                == str(pending_selection.get("selected_proposal_id") or "")
+            ),
+            None,
+        )
+        from app.collective_mediation import collective_material_world_epoch
+
+        current_world_basis = collective_material_world_basis(
+            session,
+            journey,
+            target_plan,
+            fit_subject_place_ids=list(
+                (selected_option_for_world or {}).get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch = collective_material_world_epoch(
+            current_world_basis
+        )
+        world_epoch_stale = current_world_epoch != resolved_world_epoch
+
     if effective_resolved_decision is None and renewed_consent_selected:
         effective_resolved_decision = {
             "status": "RESOLVED",
@@ -4747,6 +4831,14 @@ def collective_mutation_gate(
                 "resolved_decision_epoch": resolved_decision_epoch,
                 "current_decision_epoch": current_decision_epoch,
             }
+        elif world_epoch_stale:
+            decision = {
+                "allowed": False,
+                "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch,
+            }
         # Renewed human consent outranks algorithmic ranking, never hard
         # feasibility. A stale/unselectable target must be revalidated instead
         # of being activated merely because people previously chose it.
@@ -4763,6 +4855,8 @@ def collective_mutation_gate(
                 "classification": "RENEWED_COLLECTIVE_CONSENT",
                 "resolved_decision_epoch": resolved_decision_epoch or None,
                 "current_decision_epoch": current_decision_epoch,
+                "resolved_material_world_epoch": resolved_world_epoch or None,
+                "current_material_world_epoch": current_world_epoch,
             }
     else:
         decision = collective_mutation_decision(
