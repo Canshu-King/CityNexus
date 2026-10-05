@@ -4652,6 +4652,80 @@ def collective_mutation_gate(
         and str(target_plan.id)
         == str(pending_selection["selected_plan_version_id"])
     )
+
+    # R30: renewed consent is authority for the semantic decision surface that
+    # members actually saw, not merely for stable proposal/plan database ids.
+    # Recompute the same bounded collective epoch at the mutation core.  This
+    # catches member-role/preference changes and option meaning changes
+    # (changed optional Places/tags/member-fit/fairness) even while the selected
+    # proposal itself remains PRESENTED and the plan remains a CANDIDATE.
+    resolved_decision_epoch = (
+        str(pending_selection.get("decision_epoch") or "")
+        if pending_selection is not None
+        else ""
+    )
+    current_decision_epoch: str | None = None
+    consent_epoch_stale = False
+    if renewed_consent_selected and resolved_decision_epoch:
+        source_mission = session.get(
+            JourneyMission, str(pending_selection.get("mission_id") or "")
+        )
+        source_clarification = (
+            _json_object(source_mission.clarification_json or "{}")
+            if source_mission is not None
+            else {}
+        )
+        original_option_ids = {
+            str(item.get("proposal_id"))
+            for item in (source_clarification.get("candidate_options") or [])
+            if isinstance(item, dict) and item.get("proposal_id")
+        }
+        if original_option_ids:
+            epoch_proposals = session.scalars(
+                select(ReplanProposalModel).where(
+                    ReplanProposalModel.journey_id == journey.id,
+                    ReplanProposalModel.id.in_(original_option_ids),
+                    ReplanProposalModel.status == "PRESENTED",
+                ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+            ).all()
+            epoch_receipt = collective_proposal_receipt(
+                session, journey, list(epoch_proposals)
+            )
+            epoch_options = [
+                item
+                for item in epoch_receipt.get(
+                    "proposal_collective_decisions", {}
+                ).values()
+                if str(item.get("proposal_id")) in original_option_ids
+                and item.get("status") == "GROUNDED_FEASIBLE"
+            ]
+            epoch_members = active_journey_members_with_capabilities(
+                session, journey
+            ).get("members", [])
+            from app.collective_mediation import collective_decision_epoch
+
+            current_decision_epoch = collective_decision_epoch(
+                journey_id=journey.id,
+                mission_id=source_mission.id,
+                trigger_event_id=str(
+                    source_clarification.get("trigger_event_id")
+                    or source_mission.trigger_event_id
+                    or ""
+                ),
+                base_plan_version_id=journey.active_plan_version_id,
+                options=epoch_options,
+                required_member_ids=source_clarification.get(
+                    "required_member_ids"
+                )
+                or [],
+                members=epoch_members,
+            )
+            consent_epoch_stale = current_decision_epoch != resolved_decision_epoch
+        else:
+            # A resolved collective decision that has lost its server-owned
+            # option surface cannot safely retain social authority.
+            consent_epoch_stale = True
+
     if effective_resolved_decision is None and renewed_consent_selected:
         effective_resolved_decision = {
             "status": "RESOLVED",
@@ -4662,10 +4736,21 @@ def collective_mutation_gate(
         }
 
     if renewed_consent_selected:
+        # Semantic staleness and physical infeasibility are intentionally
+        # separate R30 authority failures.  A plan can still be selectable
+        # while the meaning of the human decision has changed.
+        if consent_epoch_stale:
+            decision = {
+                "allowed": False,
+                "code": "COLLECTIVE_CONSENT_EPOCH_STALE",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                "resolved_decision_epoch": resolved_decision_epoch,
+                "current_decision_epoch": current_decision_epoch,
+            }
         # Renewed human consent outranks algorithmic ranking, never hard
         # feasibility. A stale/unselectable target must be revalidated instead
         # of being activated merely because people previously chose it.
-        if target_window_status != "GROUNDED_FEASIBLE":
+        elif target_window_status != "GROUNDED_FEASIBLE":
             decision = {
                 "allowed": False,
                 "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
@@ -4676,6 +4761,8 @@ def collective_mutation_gate(
                 "allowed": True,
                 "code": None,
                 "classification": "RENEWED_COLLECTIVE_CONSENT",
+                "resolved_decision_epoch": resolved_decision_epoch or None,
+                "current_decision_epoch": current_decision_epoch,
             }
     else:
         decision = collective_mutation_decision(
