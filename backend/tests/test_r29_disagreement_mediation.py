@@ -690,6 +690,90 @@ def test_r29_renewed_human_choice_overrides_algorithmic_compromise_ranking(monke
             )
 
 
+def test_r29_renewed_consent_cannot_override_hard_revalidation(monkeypatch) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+
+    with SessionLocal() as session:
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Mediate the unresolved disagreement.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r29-renewed-stale",
+                        "selected_proposal_id": str(seeded["garden_proposal_id"]),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.commit()
+
+        class _NotSelectable:
+            def model_dump(self, *, mode="json"):
+                return {"selectable": False}
+
+        monkeypatch.setattr(
+            main_module,
+            "plan_schema",
+            lambda _session, _plan: _NotSelectable(),
+        )
+        monkeypatch.setattr(
+            main_module,
+            "active_journey_members_with_capabilities",
+            lambda _session, _journey, *, candidate_windows=None: (
+                {"member_count": 2, "members": []}
+                if candidate_windows is None
+                else {
+                    "member_count": 2,
+                    "members": [],
+                    "candidate_fit_matrix": [],
+                    "mediation": {
+                        "classification": "COMPROMISE_AVAILABLE",
+                        "candidate_ids": [selected_plan_id],
+                        "selected_candidate_id": selected_plan_id,
+                    },
+                }
+            ),
+        )
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            selected_plan,
+            hard_feasible_plan_ids=set(),
+        )
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED"
+        assert gate["classification"] == "RENEWED_COLLECTIVE_CONSENT_STALE"
+
+
 def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
