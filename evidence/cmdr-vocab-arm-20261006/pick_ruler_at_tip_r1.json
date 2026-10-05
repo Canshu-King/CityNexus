@@ -1,0 +1,93 @@
+{
+ "built_at": "2026-10-06T01:42:01+0800",
+ "tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "coverage_arm_run": null,
+ "pick_leak_ruler_at_tip": {
+  "instrument": "cmdr_pick_closed_lookup_r1",
+  "path": "frontend/src/lib/displayVocabulary.ts",
+  "arms": [
+   {
+    "arm": "rev:aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f (as shipped)",
+    "rawChannel_present": true,
+    "pick_present": true,
+    "return_statements": [
+     [
+      3,
+      "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+     ],
+     [
+      4,
+      "return rawChannel(value, zh);"
+     ]
+    ],
+    "return_count": 2,
+    "miss_branch_hands_back_input": true,
+    "leaking_lines_inside_pick": [
+     [
+      4,
+      "return rawChannel(value, zh);"
+     ]
+    ],
+    "verdict": "RED",
+    "claim": "pick 未命中即把调用方入参原样回吐（尺按所有调用点回答 => 标签扩散）"
+   },
+   {
+    "arm": "rev:aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f + closed-lookup variant (expects GREEN)",
+    "rawChannel_present": true,
+    "pick_present": true,
+    "return_statements": [
+     [
+      3,
+      "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+     ],
+     [
+      4,
+      "return null as never;"
+     ]
+    ],
+    "return_count": 2,
+    "miss_branch_hands_back_input": false,
+    "leaking_lines_inside_pick": [],
+    "verdict": "GREEN",
+    "claim": "pick 未命中不回吐入参（查找已闭合）"
+   },
+   {
+    "arm": "rev:aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f mutant: miss branch 回吐入参 (expects RED)",
+    "rawChannel_present": true,
+    "pick_present": true,
+    "return_statements": [
+     [
+      3,
+      "if (entry) return wantsChinese(zh) ? entry.zh : entry.en;"
+     ],
+     [
+      4,
+      "return rawChannel(value, zh);"
+     ]
+    ],
+    "return_count": 2,
+    "miss_branch_hands_back_input": true,
+    "leaking_lines_inside_pick": [
+     [
+      4,
+      "return rawChannel(value, zh);"
+     ]
+    ],
+    "verdict": "RED",
+    "claim": "pick 未命中即把调用方入参原样回吐（尺按所有调用点回答 => 标签扩散）"
+   }
+  ],
+  "shipped_verdict": "RED"
+ },
+ "post_reboot": {
+  "listeners_listening": [
+   "4783",
+   "4799",
+   "4820",
+   "8813",
+   "49813"
+  ],
+  "disk_free": "9.6G",
+  "inbox_pending": 0
+ }
+}
