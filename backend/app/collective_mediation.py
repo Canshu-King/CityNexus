@@ -142,6 +142,8 @@ def pending_resolved_mediation_selection(
             proposal is None
             or proposal.journey_id != journey_id
             or proposal.status != "PRESENTED"
+            or str(proposal.base_plan_version_id)
+            != str(active_plan_version_id or "")
         ):
             continue
         plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
