@@ -281,23 +281,6 @@ export interface CollectiveClarificationAnswerResponse {
   child_mission: AgentMission | null;
 }
 
-export interface AgentApprovalResponse {
-  approval_id: string;
-  status: string;
-  required_decision?: string;
-  approval_method?: string | null;
-  approved_by?: string | null;
-  continuation?: {
-    status: string;
-    pending_action_id?: string;
-    run_id?: string;
-    mission_id?: string;
-    replayed?: boolean;
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
-}
-
 export interface GuardianRun {
   id: string;
   journey_id: string;
@@ -749,11 +732,22 @@ export interface AgentApprovalResponse {
   target_type: string;
   target_id: string;
   status: "PENDING" | "APPROVED" | "CONSUMED" | "EXPIRED" | "REVOKED";
+  required_decision?: string;
   approval_method: "USER_CONFIRMATION" | "STEP_UP" | "WEBAUTHN" | null;
+  approved_by?: string | null;
   created_at: string;
   expires_at: string;
   approved_at: string | null;
   consumed_at: string | null;
+  continuation?: {
+    status: string;
+    pending_action_id?: string;
+    run_id?: string;
+    mission_id?: string;
+    replayed?: boolean;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 }
 
 export interface RouteFeature {
@@ -1166,20 +1160,6 @@ export const cityNexusApi = {
     );
   },
 
-  approveAgentAction(
-    journeyId: string,
-    approvalId: string,
-  ): Promise<AgentApprovalResponse> {
-    return requestJson(
-      "/journeys/" + journeyId + "/agent/approvals/" + encodeURIComponent(approvalId) + "/approve",
-      {
-        method: "POST",
-        headers: travelerAuthHeaders(),
-        body: JSON.stringify({ approval_method: "USER_CONFIRMATION" }),
-      },
-    );
-  },
-
   resumeJourneyMission(journeyId: string, missionId: string): Promise<{
     mission: AgentMission;
     run: AgentRun;
@@ -1343,9 +1323,10 @@ export const cityNexusApi = {
     approvalMethod: "USER_CONFIRMATION" | "STEP_UP" | "WEBAUTHN" = "USER_CONFIRMATION",
   ): Promise<AgentApprovalResponse> {
     return requestJson<AgentApprovalResponse>(
-      "/journeys/" + journeyId + "/agent/approvals/" + approvalId + "/approve",
+      "/journeys/" + journeyId + "/agent/approvals/" + encodeURIComponent(approvalId) + "/approve",
       {
         method: "POST",
+        headers: travelerAuthHeaders(),
         body: JSON.stringify({ approval_method: approvalMethod }),
       },
     );
