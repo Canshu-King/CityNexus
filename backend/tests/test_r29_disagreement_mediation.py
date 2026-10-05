@@ -1313,6 +1313,7 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 updated_at=now,
             )
         )
+        session.flush()
         session.add_all(
             [
                 Activity(
@@ -1426,9 +1427,9 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 id=str(uuid4()),
                 journey_id=str(seeded["journey_id"]),
                 provider_key="city-provider",
-                provenance="LIVE_PROVIDER",
+                provenance="PROVIDER_VERIFIED",
                 event_type="CLOSURE",
-                severity="HIGH",
+                severity="CRITICAL",
                 status="DETECTED",
                 # The trusted shock targets the active-plan Activity row, not
                 # the candidate-plan row. R30 relevance must follow the shared
