@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import pathlib
+import posixpath
 import re
 import subprocess
 import sys
@@ -56,6 +57,24 @@ def bucket(p: str) -> str:
     return "/".join(parts[:2]) if len(parts) > 1 else parts[0]
 
 
+def relative_import_check(ref: str, present: set) -> dict:
+    """Do the sources at this ref import anything that is not in the same tree? A pruned tree that still
+    references a removed module would be broken; this answers that without running a build. Paths are
+    normalised (`a/../b`), which is what made an earlier hand run of this check report 102 false hits."""
+    srcs = sorted(p for p in present if p.endswith((".ts", ".tsx")) and p.startswith("frontend/"))
+    text_cache: dict[str, str] = {}
+    dangling = []
+    for p in srcs:
+        if p not in text_cache:
+            text_cache[p] = need("show", f"{ref}:{p}")
+        for m in re.finditer(r"from\s+[\"'](\.[^\"']+)[\"']", text_cache[p]):
+            cand = posixpath.normpath(posixpath.join(posixpath.dirname(p), m.group(1)))
+            if not any(cand + e in present for e in ("", ".ts", ".tsx", "/index.ts", "/index.tsx", ".json", ".css")):
+                dangling.append({"path": p, "specifier": m.group(1)})
+    return {"files_scanned": len(srcs), "dangling_relative_imports": len(dangling),
+            "sample": dangling[:8]}
+
+
 def main() -> int:
     diff = json.loads(sorted(OUT_DIR.glob("tip_tree_diff_*.json"))[-1].read_text(encoding="utf-8"))
     older, newer = (diff["generation"]["older_ref_from_sweep_receipt"],
@@ -77,6 +96,7 @@ def main() -> int:
     keys = {p: {"older": bo.get(p, "absent"), "newer": bn.get(p, "absent"),
                 "state": ("ABSENT_ONE_SIDE" if p not in bo or p not in bn
                           else ("SAME_BLOB" if bo[p] == bn[p] else "BLOB_CHANGED"))} for p in KEY_PATHS}
+    imports = relative_import_check(newer, set(bn))
     doc = {
         "generation": {"older_ref": older, "newer_ref": newer, "leg4_newer_ref": diff["generation"]["newer_ref_from_ls_remote_now"],
                        "recorded_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
@@ -88,6 +108,7 @@ def main() -> int:
         "changed_by_bucket_top": by_bucket.most_common(12),
         "changed_sample": [{"path": p, "older": bo[p], "newer": bn[p]} for p in changed[:12]],
         "key_paths": keys,
+        "imports_at_newer_ref": imports,
         "verdict": "BLOB_CENSUS_READ",
     }
     out = OUT_DIR / f"tip_blob_census_{doc['generation']['recorded_at']}.json"
@@ -95,6 +116,7 @@ def main() -> int:
     c = doc["counts"]
     print(json.dumps({"receipt": out.name, **c, "verdict": doc["verdict"],
                       "newer_ref": newer}, ensure_ascii=False))
+    print(f"IMPORT_SCAN files={imports['files_scanned']} dangling={imports['dangling_relative_imports']}")
     for b, n in doc["changed_by_bucket_top"]:
         print(f"CHANGED_BUCKET {b} {n}")
     for p, v in keys.items():
