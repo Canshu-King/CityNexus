@@ -4638,12 +4638,12 @@ def collective_mutation_gate(
     refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
     mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
     effective_resolved_decision = resolved_decision
-    if (
-        effective_resolved_decision is None
-        and pending_selection is not None
+    renewed_consent_selected = bool(
+        pending_selection is not None
         and str(target_plan.id)
         == str(pending_selection["selected_plan_version_id"])
-    ):
+    )
+    if effective_resolved_decision is None and renewed_consent_selected:
         effective_resolved_decision = {
             "status": "RESOLVED",
             "selected_candidate_id": pending_selection["selected_plan_version_id"],
@@ -4651,11 +4651,22 @@ def collective_mutation_gate(
             "selected_proposal_id": pending_selection["selected_proposal_id"],
             "clarification_id": pending_selection["clarification_id"],
         }
-    decision = collective_mutation_decision(
-        mediation,
-        str(target_plan.id),
-        resolved_decision=effective_resolved_decision,
-    )
+
+    if renewed_consent_selected:
+        # Hard feasibility and authority checks above still apply. Once the
+        # same relevant members explicitly renew consent for one grounded plan,
+        # algorithmic compromise ranking must not overrule that social choice.
+        decision = {
+            "allowed": True,
+            "code": None,
+            "classification": "RENEWED_COLLECTIVE_CONSENT",
+        }
+    else:
+        decision = collective_mutation_decision(
+            mediation,
+            str(target_plan.id),
+            resolved_decision=effective_resolved_decision,
+        )
     return {
         **decision,
         "member_count": refreshed.get("member_count", 0),
