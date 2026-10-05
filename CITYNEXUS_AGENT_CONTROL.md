@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 旧按钮名那三行 e2e 断言：从 PREDICTED 改成读数（两代字节 × 同一执行态，用 Playwright 自己的名字匹配器问它）· 车道 45d25bfb 自申报 r13（0 枚产品字节改动）
+
+一、这一件补的是我自己欠的那格
+- 我从 r3 起把那三行挂着 PREDICTED_NOT_MEASURED，判语是「那三行在现尖都合不上」。这是推断，不是读数；这次我用 Playwright 自己的 getByRole("button", {name}) 去问，匹配计数与可见性都取它给的值，判据一律从三件读数派生（派生件 blob 04f416922c0ec1f9961ee8fdd01aefa79888e1bd，8 臂红 0 枚）。
+- 题面那三行逐字在 frontend/e2e/v13-authoritative-integrity.spec.ts:37、:38、:39（尖 blob f78b0507b749b03a6a0cd8eabfd97f005463d6e4）：:37 与 :39 是 toBeVisible，:38 是 click。
+
+二、先把不能做的事说明白：demo/reset 我一次都没跑
+- 号令者对这道门是绝对禁令（它在 seed 之前先走 services.reset_all 清空整库，main.py 的 ORD-0058 注释就是这件事的来处），所以我量的是它的拒绝：不带头回 403 且具名 RESET_TOKEN_REQUIRED，带错头回 403 且具名 RESET_TOKEN_INVALID（读数件 blob 9d5bbce0659785e4a66b0232443d903b8327dabc）。
+- 两回拒绝之后 /api/v1/demo/scene 仍回同一条行程与 demo_mode true（同一件），也就是被拒的请求没删任何行——这正是那两道 guard 放在 stop_autorun() 之前的行为。我没跑成 reset，也没打算跑。
+- 同一屏的状态由非破坏门拿到：GET plans 见 ACTIVE 版本 [1]、POST journeys/{id}/start 回 200，随后 twin 答 now_state ACTIVE、动作腿是 depart（配方件 blob fed7f6b65065d1ca5170073b1e082e69501c47dc）。
+
+三、读数：两代字节、同一执行态，只有字节不同
+- 可比性先证：两份我自己的库副本 twin 都答 now_state ACTIVE、活动状态序列逐枚相同、plans 各 28 条（同一件 blob fed7f6b65065d1ca5170073b1e082e69501c47dc）；被走的入口名尖上 index-DLbc3Q3N.js、r2 之前那代 index-DUhOk9ks.js，后者与我 r3 在基线端口量到的名字逐字同（构建回执件 blob 748cede20ecc899a83aa72b35fb528272e487941）。
+- 仪器自己先看得到东西：那屏真画的按钮名取一枚去问，匹配 1 枚；再问一枚不存在的名，匹配 0 枚（读数件 blob 2bc0a9665c9b7177231d77ad89f52433a1670a97）。
+- r2 之前那一代（index-DUhOk9ks.js）：点之前屏上画 ["Mark EN ROUTE"]，:37 的 Mark EN ROUTE 匹配 1 枚、可见 True；点之后屏上画 ["Mark ARRIVED"]，:39 匹配 1 枚。=> 那三行在它自己那一代是绿的，spec 不是天生错。
+- 现尖（index-DLbc3Q3N.js）：点之前屏上画 ["Mark On the way"]，:37/:38 问的那枚名字匹配 0 枚、可见 False；点 "Mark On the way" 之后屏上画 ["Mark Arrived"]，:39 问的那枚名匹配 1 枚、严格匹配 0 枚。
+
+四、结论：我 r3 那句预测被我自己这趟量窄了一格，如实更正
+- 该更正的是「三行都合不上」：实测在现尖只有 :37 与 :38 合不上（屏上那枚按钮逐字 ["Mark Arrived"]）；:39 仍合得上，因为 Playwright 的 name 匹配默认不区分大小写，["Mark Arrived"] 里含 Arrived 就中了——严格匹配 0 枚证明它并非同名（同一件 blob 2bc0a9665c9b7177231d77ad89f52433a1670a97）。
+- 归因（现取，不引别人给的数）：尖上 frontend/src/i18n/LocaleContext.tsx 与 frontend/src/lib/displayVocabulary.ts 与我 r2 交付头 1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c 的那两枚逐字同代（git diff 两侧空输出；那一笔现读不是尖的祖先，字面是经 4d43f8bc25a1a2f4e4c752afe08851032ab6c71d 那次 mirror 重挂带上尖的）。所以 :37/:38 合不上的成因就是 r2 的人话措辞本身，与「服务端答的字不该上屏」这条判语一致。
+- 整套 e2e 我没跑（跑它要 npm run dev 与那道删表的门）；:21 那条门一堵，:37-:39 在套件里根本执行不到，所以「现在它是红的」这件事的真因仍是播种门，与按钮名无关——两格要分开裁。我没动的格子具名 NOT_MEASURED_BY_CMDRA：套件整体红集合、:26 那条断言。
+- 要裁的就这两条：① :37/:38 的字面改成与人话措辞一致（或在 spec 里改用状态断言而不是名字断言），② :21 的播种门走哪条非破坏通道。我一个字没改别人的判据文件。
+
+五、栈与纪律
+- 我这一趟的栈：后端 :8772 与 :8774 由我的启动器起（各指我自己的一份库副本 _cmdra_0553_r13a.db 与 _cmdra_0553_r13b.db，两份都从私有种子 D:/moodle/_qoder_cmdr_priv_0437seed.db 以 mode=ro 备份而来，pid_owns_port 真，两枚副本字节相同见启动回执），静态入口 :49902 服务尖那一代、:49903 服务 r2 之前那一代，访问日志在我目录；两代各跑一遍同一序列，页面异常逐枚 [0, 0]。
+- r13 产品字节 0 枚、提交 0 笔、推送 0 次；共享预览库 _preview.db 没读、没写、没 ALTER，demo/reset 没跑，junction 只用普通 rmdir 卸，force-push 0 次，权威线我没碰；新落盘 9 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r13.jsonl。
+- 收尾：我这轮起的 :8772 :8774 :49902 :49903 交完这块就停；:8000、:4799、:4820 与手机链那几个共用口一个没动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交自申报一件（账本无新点单）：现尖上整套后端一次执行的具名红集合（观察，不作基线）；尖自我跑这套那代快进一笔、那一笔后端零枚，故本集合当代仍成立
 
 **〇、坐标（写作时现取，不是抄上一块）**
