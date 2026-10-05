@@ -2706,9 +2706,16 @@ def answer_collective_clarification(
                 trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
                 parent_mission_id=parent.id,
             )
-            child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
-            child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
-            child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+            # This child is a server-owned continuation of the same human
+            # mission, not a new authority request. Carry the already-bounded
+            # parent envelope exactly; never widen it and never collapse it to
+            # the mediator command compiler's default zero ceilings.
+            child.max_cost_delta_minor = parent.max_cost_delta_minor
+            child.max_loss_minor = parent.max_loss_minor
+            child.max_schedule_drift_min = parent.max_schedule_drift_min
+            child.protected_activity_ids_json = parent.protected_activity_ids_json
+            child.mutable_activity_ids_json = parent.mutable_activity_ids_json
+            child.allowed_action_classes_json = parent.allowed_action_classes_json
             child.resolved_intent_json = json.dumps({
                 "collective_decision": {
                     "clarification_id": stored["clarification_id"],
