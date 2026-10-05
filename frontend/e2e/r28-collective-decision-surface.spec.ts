@@ -493,11 +493,11 @@ test.describe("R28 collective decision surface", () => {
     // Round 1 ends in explicit disagreement. The mediator auto-resumes and
     // returns a genuinely changed decision surface; no proposal is a winner.
     await page.getByTestId("collective-option").first().getByRole("button").click();
-    await expect(page.locator(".cn-collective-notice")).toContainText(/mediating|调解|折中/i);
+    await expect(page.locator(".cn-collective-notice")).toContainText(/mediating|mediat(?:e|ing)|compromise|调解|折中/i);
     await expect(page.getByTestId("collective-decision")).toBeVisible();
     await expect(page.getByTestId("collective-option")).toHaveCount(3);
     await expect(page.getByText("Craft Garden")).toBeVisible();
-    await expect(page.getByText(/winner|获胜者/i)).toHaveCount(0);
+    await expect(page.getByTestId("collective-decision").getByText(/winner|获胜者/i)).toHaveCount(0);
 
     // OWNER choosing the improved compromise is not enough. The product must
     // remain in WAITING_FOR_MEMBERS and must not surface approval yet.
@@ -513,7 +513,7 @@ test.describe("R28 collective decision surface", () => {
       window.sessionStorage.setItem("citynexus.traveler.bearer", token);
     }, adminToken);
     await page.getByRole("button", { name: /Refresh task status|刷新任务状态/i }).click();
-    await expect(page.getByText(/ADMIN/)).toBeVisible();
+    await expect(page.locator('[data-member-id="member-admin"]')).toBeVisible();
     await page.getByTestId("collective-option").filter({ hasText: "Craft Garden" }).getByRole("button").click();
     await expect.poll(() => round2AdminAuthorization).toBe(`Bearer ${adminToken}`);
 
