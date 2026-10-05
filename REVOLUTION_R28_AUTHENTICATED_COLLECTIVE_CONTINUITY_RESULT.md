@@ -71,6 +71,21 @@ This explicit execution label preserves the R28 evidence boundary: API state-mac
 1. `backend/run_r28_live.py` now handles the product’s post-activation `ACTIVE -> EN_ROUTE` execution predecessor instead of silently skipping the first activity and attempting to depart the second activity.
 2. `backend/scripts/r28_machine_verdict.py` no longer passes the fact field `status` twice into `_verdict()`; the facts are now named `run_status`, `approval_status`, and `collective_status`.
 
+## Evidence scope
+
+The machine receipt proves **two distinct signed, in-force Journey member principals** made the collective responses and that the authorized OWNER principal approved the gated mutation. The closure harness minted those short-lived HMAC bearer credentials inside a trusted local operator process.
+
+Therefore this R28 closure proves the CityNexus principal boundary, member separation, authorization policy, durable wait/resume lineage, and exactly-once mutation path. It does **not** prove internet-grade identity verification, nor does it prove that two physically distinct people manually operated two browsers. A production identity provider can replace the local signer without changing the JourneyMember authority seam.
+
+## Bounded replay prerequisites
+
+The committed harness contains no credentials and no machine-specific user path. A local replay must provide:
+
+- `CITYNEXUS_WB2API_CONFIG` -> local WB2api `config.json` containing the operator's API credential;
+- optionally `CITYNEXUS_R28_SOURCE_DB` -> captured provider-backed R27 source DB (defaults to `backend/r27-agent-closure-20261005.sqlite3` when present locally).
+
+Neither credential material nor the disposable runtime DB is committed.
+
 ## Verification
 
 - R28 authenticated principal / durable continuation / execution-truth focused tests: `22 passed`
