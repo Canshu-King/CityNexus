@@ -43,6 +43,13 @@ class Settings:
         for item in os.getenv("CITYNEXUS_AGENT_ALLOWED_TRAVELER_IDS", "").split(",")
         if item.strip()
     )
+    # R28 human principal boundary.  This secret signs short-lived traveler
+    # bearer tokens; when absent, authenticated-human routes fail closed rather
+    # than trusting caller-supplied traveler/member ids.
+    traveler_auth_secret: str | None = os.getenv("CITYNEXUS_TRAVELER_AUTH_SECRET") or None
+    traveler_auth_ttl_seconds: int = int(
+        os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "3600")
+    )
     live_valhalla_url: str | None = os.getenv("CITYNEXUS_LIVE_VALHALLA_URL") or None
     open_meteo_url: str = os.getenv("CITYNEXUS_OPEN_METEO_URL", "https://api.open-meteo.com")
     open_meteo_timeout_seconds: float = float(
