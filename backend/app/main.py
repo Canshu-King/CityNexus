@@ -6188,10 +6188,19 @@ def get_offline_journey_snapshot(journey_id: UUID, session: Session = Depends(ge
 @app.post("/api/v1/journeys/{journey_id}/location", status_code=201)
 def post_foreground_location(
     journey_id: UUID,
+    request: Request,
     payload: LocationObservationRequest,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    principal = None
+    member = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
     try:
         row = record_location(
             session,
@@ -6203,6 +6212,22 @@ def post_foreground_location(
         )
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
+    record_audit(
+        session,
+        action="journey.location.recorded",
+        entity_type="LocationObservation",
+        entity_id=row.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER" if principal is not None else "LEGACY_UNAUTHENTICATED_INPUT",
+        actor_id=principal.traveler_id if principal is not None else None,
+        after={
+            "source": row.source,
+            "captured_at": row.captured_at,
+            "accuracy_m": row.accuracy_m,
+            "member_id": member.id if member is not None else None,
+            "principal_bound": principal is not None,
+        },
+    )
     session.commit()
     return {
         "id": row.id,
@@ -6213,6 +6238,7 @@ def post_foreground_location(
         "captured_at": row.captured_at,
         "source": row.source,
         "background_tracking_claimed": False,
+        "principal_bound": principal is not None,
     }
 
 
