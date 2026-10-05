@@ -58,6 +58,81 @@ def _looks_external(provider_key: str | None, model_key: str | None) -> bool:
     )
 
 
+
+def _independent_choice_evidence(
+    payload: dict[str, Any],
+    required_member_ids: set[str],
+    *,
+    allowed_proposal_ids: set[str] | None = None,
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Recompute independent member maxima from the persisted decision surface."""
+
+    allowed = (
+        {str(value) for value in allowed_proposal_ids if value}
+        if allowed_proposal_ids is not None
+        else None
+    )
+    grounded_options = [
+        item
+        for item in payload.get("candidate_options") or []
+        if isinstance(item, dict)
+        and item.get("proposal_id")
+        and item.get("status") == "GROUNDED_FEASIBLE"
+        and (
+            allowed is None
+            or str(item.get("proposal_id") or "") in allowed
+        )
+    ]
+    choices: dict[str, str] = {}
+    errors: dict[str, str] = {}
+    for member_id in sorted(required_member_ids):
+        scored: list[tuple[float, str]] = []
+        for option in grounded_options:
+            fairness = option.get("fairness") or {}
+            if member_id in {
+                str(value)
+                for value in fairness.get("unacceptable_member_ids") or []
+            }:
+                continue
+            fits = option.get("member_fits") or {}
+            fit = fits.get(member_id) if isinstance(fits, dict) else None
+            if not isinstance(fit, dict):
+                continue
+            try:
+                score = float(fit.get("effective_fit"))
+            except (TypeError, ValueError):
+                continue
+            proposal_id = str(option.get("proposal_id") or "")
+            if proposal_id:
+                scored.append((score, proposal_id))
+        if not scored:
+            errors[member_id] = "no acceptable grounded member fit"
+            continue
+        best_score = max(score for score, _pid in scored)
+        best_ids = sorted(
+            pid
+            for score, pid in scored
+            if abs(score - best_score) <= 1e-9
+        )
+        if len(best_ids) != 1:
+            errors[member_id] = "no unique grounded maximum: " + repr(
+                best_ids
+            )
+            continue
+        choices[member_id] = best_ids[0]
+
+    if (
+        required_member_ids
+        and set(choices) == required_member_ids
+        and not errors
+        and len(set(choices.values())) != 1
+    ):
+        errors["__convergence__"] = (
+            "members independently prefer different grounded futures: "
+            + repr(choices)
+        )
+    return choices, errors
+
 def _configure_checkpoint_db(checkpoint: dict[str, Any]) -> Path:
     raw = str(checkpoint.get("db") or "").strip()
     if not raw:
