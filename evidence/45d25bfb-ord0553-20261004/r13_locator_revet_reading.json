@@ -1,0 +1,227 @@
+{
+ "instrument": "cmdra_0553_v13_locator_revet_r13",
+ "legs": [
+  {
+   "tag": "tip_b2fccfdf",
+   "port": 49902,
+   "entry": [
+    "index-DLbc3Q3N.js"
+   ],
+   "panel_visible": true,
+   "buttons_painted": [
+    "Today",
+    "Live Journey",
+    "Map",
+    "Trip Studio",
+    "Stay Explorer",
+    "City Discovery",
+    "Import places",
+    "Travel Wallet",
+    "Footprints",
+    "Copilot",
+    "Recovery",
+    "Intelligence",
+    "Traveler Twin",
+    "Recycle bin",
+    "Members and access",
+    "DEDemo1 traveler•••",
+    "System",
+    "中文",
+    "◌",
+    "DE",
+    "Refresh truth",
+    "Mark On the way",
+    "•Old Town Gate",
+    "○Riverside Museum",
+    "○Central Food Hall",
+    "○Tech Art Center",
+    "○Nexus River Cruise Pier",
+    "○Skyline Dinner House",
+    "Preview impact",
+    "Accept edit",
+    "Refresh recovery",
+    "✦CityNexus Copilot"
+   ],
+   "spec_names": [
+    {
+     "name": "Mark EN ROUTE",
+     "matched": 0,
+     "visible": false,
+     "matched_exact": 0
+    },
+    {
+     "name": "Mark ARRIVED",
+     "matched": 0,
+     "visible": false,
+     "matched_exact": 0
+    }
+   ],
+   "after_click": {
+    "clicked": "Mark On the way",
+    "names": [
+     {
+      "name": "Mark EN ROUTE",
+      "matched": 0,
+      "visible": false,
+      "matched_exact": 0
+     },
+     {
+      "name": "Mark ARRIVED",
+      "matched": 1,
+      "visible": true,
+      "matched_exact": 0
+     }
+    ],
+    "buttons_painted": [
+     "Today",
+     "Live Journey",
+     "Map",
+     "Trip Studio",
+     "Stay Explorer",
+     "City Discovery",
+     "Import places",
+     "Travel Wallet",
+     "Footprints",
+     "Copilot",
+     "Recovery",
+     "Intelligence",
+     "Traveler Twin",
+     "Recycle bin",
+     "Members and access",
+     "DEDemo1 traveler•••",
+     "System",
+     "中文",
+     "◌",
+     "DE",
+     "Refresh truth",
+     "Mark Arrived",
+     "•Old Town Gate",
+     "○Riverside Museum",
+     "○Central Food Hall",
+     "○Tech Art Center",
+     "○Nexus River Cruise Pier",
+     "○Skyline Dinner House",
+     "Preview impact",
+     "Accept edit",
+     "Refresh recovery",
+     "✦CityNexus Copilot"
+    ]
+   },
+   "page_errors": 0
+  },
+  {
+   "tag": "prer2_f3304e25",
+   "port": 49903,
+   "entry": [
+    "index-DUhOk9ks.js"
+   ],
+   "panel_visible": true,
+   "buttons_painted": [
+    "Today",
+    "Live Journey",
+    "Map",
+    "Trip Studio",
+    "Stay Explorer",
+    "City Discovery",
+    "Import places",
+    "Travel Wallet",
+    "Footprints",
+    "Copilot",
+    "Recovery",
+    "Intelligence",
+    "Traveler Twin",
+    "Recycle bin",
+    "Members and access",
+    "DEDemo1 traveler•••",
+    "System",
+    "中文",
+    "◌",
+    "DE",
+    "Refresh truth",
+    "Mark EN ROUTE",
+    "•Old Town Gate",
+    "○Riverside Museum",
+    "○Central Food Hall",
+    "○Tech Art Center",
+    "○Nexus River Cruise Pier",
+    "○Skyline Dinner House",
+    "Preview impact",
+    "Accept edit",
+    "Refresh recovery",
+    "✦CityNexus Copilot"
+   ],
+   "spec_names": [
+    {
+     "name": "Mark EN ROUTE",
+     "matched": 1,
+     "visible": true,
+     "matched_exact": 1
+    },
+    {
+     "name": "Mark ARRIVED",
+     "matched": 0,
+     "visible": false,
+     "matched_exact": 0
+    }
+   ],
+   "after_click": {
+    "clicked": "Mark EN ROUTE",
+    "names": [
+     {
+      "name": "Mark EN ROUTE",
+      "matched": 0,
+      "visible": false,
+      "matched_exact": 0
+     },
+     {
+      "name": "Mark ARRIVED",
+      "matched": 1,
+      "visible": true,
+      "matched_exact": 1
+     }
+    ],
+    "buttons_painted": [
+     "Today",
+     "Live Journey",
+     "Map",
+     "Trip Studio",
+     "Stay Explorer",
+     "City Discovery",
+     "Import places",
+     "Travel Wallet",
+     "Footprints",
+     "Copilot",
+     "Recovery",
+     "Intelligence",
+     "Traveler Twin",
+     "Recycle bin",
+     "Members and access",
+     "DEDemo1 traveler•••",
+     "System",
+     "中文",
+     "◌",
+     "DE",
+     "Refresh truth",
+     "Mark ARRIVED",
+     "•Old Town Gate",
+     "○Riverside Museum",
+     "○Central Food Hall",
+     "○Tech Art Center",
+     "○Nexus River Cruise Pier",
+     "○Skyline Dinner House",
+     "Preview impact",
+     "Accept edit",
+     "Refresh recovery",
+     "✦CityNexus Copilot"
+    ]
+   },
+   "page_errors": 0
+  }
+ ],
+ "controls": {
+  "positive_painted_name": "Today",
+  "positive_matched": 1,
+  "nonsense_matched": 0,
+  "spec_lines_are_not_vacuous": 2
+ }
+}
