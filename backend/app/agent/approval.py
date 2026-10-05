@@ -62,6 +62,7 @@ def approval_payload(row: ActionApproval) -> dict[str, Any]:
         "status": row.status,
         "required_decision": row.required_decision,
         "approval_method": row.approval_method,
+        "approved_by": row.approved_by,
         "created_at": row.created_at,
         "expires_at": row.expires_at,
         "approved_at": row.approved_at,
