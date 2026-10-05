@@ -1,0 +1,129 @@
+{
+ "port": 8772,
+ "instrument": "cmdra_0553_v13_doors_r13",
+ "steps": [
+  {
+   "leg": "reset_door",
+   "case": "no_header",
+   "http_status": 403,
+   "answered": {
+    "http_body_keys": [
+     "error"
+    ],
+    "codes_found": [
+     "RESET_TOKEN_REQUIRED"
+    ],
+    "detail_first_140": null,
+    "bytes": 317
+   }
+  },
+  {
+   "leg": "reset_door",
+   "case": "wrong_header",
+   "http_status": 403,
+   "answered": {
+    "http_body_keys": [
+     "error"
+    ],
+    "codes_found": [
+     "RESET_TOKEN_INVALID"
+    ],
+    "detail_first_140": null,
+    "bytes": 327
+   }
+  },
+  {
+   "leg": "fingerprint",
+   "case": "after_refusals",
+   "http_status": 200,
+   "scene_keys": [
+    "basis",
+    "current_activity_id",
+    "demo_mode",
+    "effective_now",
+    "evidence_expires_at",
+    "evidence_reference_consistent",
+    "evidence_snapshot_id",
+    "evidence_state",
+    "journey_id",
+    "journey_status",
+    "mobility_legs_hard_eligible",
+    "mobility_legs_total",
+    "plan_version_id",
+    "scene_end_at",
+    "scene_start_at",
+    "supply"
+   ],
+   "demo_mode": true,
+   "journey_id": "22222222-2222-4222-8222-222222222222"
+  },
+  {
+   "leg": "store_before",
+   "http_status": 200,
+   "plan_count": 28,
+   "active_plan_versions": [
+    1
+   ]
+  },
+  {
+   "leg": "start",
+   "http_status": 200,
+   "answered": {
+    "keys": [
+     "active_plan_version_id",
+     "context",
+     "current_activity_id",
+     "journey_id",
+     "latest_event_id",
+     "projection_status",
+     "snapshot_at",
+     "upcoming_commitments"
+    ]
+   }
+  },
+  {
+   "leg": "twin_after_start",
+   "http_status": 200,
+   "now_state": "ACTIVE",
+   "next_state": "PLANNED"
+  },
+  {
+   "leg": "activity_statuses",
+   "http_status": 200,
+   "activities": [
+    [
+     1,
+     "COMPLETED"
+    ],
+    [
+     2,
+     "COMPLETED"
+    ],
+    [
+     3,
+     "COMPLETED"
+    ],
+    [
+     4,
+     "ACTIVE"
+    ],
+    [
+     5,
+     "PLANNED"
+    ],
+    [
+     6,
+     "PLANNED"
+    ]
+   ]
+  }
+ ],
+ "netstat_owners_before": [
+  "35332"
+ ],
+ "netstat_owners_after": [
+  "35332"
+ ],
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "reset_was_run": false
+}
