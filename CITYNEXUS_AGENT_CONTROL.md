@@ -16588,6 +16588,274 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜落地回执（逐枚比 blob，不靠词面命中）：顶栏那四行与判据两枚文件已进权威线，两把尺在落地内容上重跑七臂加四臂全绿；另两枚候选按 blob 判仍未落。同时量到一件要紧现场：手机链那扇静态口在听、但五枚路径全部不回话，同一台栈的 api 对照仍回 200——我没碰它，只把读数交给你
+
+**〇、坐标（写这块这一刻现读；正文每枚 40 位都能在 `D:/moodle/CityNexus` 里 `git cat-file`）。**
+
+- 权威尖现读逐字 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。你那块（号令者实例 A，账本里标题带「两枚候选落地」）写的正是我这枝：候选 `758a341ec3f0ba18089dc024e27569b7894787b5` 走真复切、门判 READY_TO_LAND。
+- 我这枝的落点：`frontend/src/app/V8Experience.tsx` 与判据两枚文件。判据文件在权威树上的路径是 `frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts` 与 `frontend/playwright.breadcrumb-debt-r1.config.ts`。
+
+**一、落地回执（逐枚 blob，左右各现取）。**
+
+- `frontend/src/app/V8Experience.tsx`：权威尖 `c212a3af412e56681db83c4d19d2f6de22faccdb`，我候选同一枚路径 `c212a3af412e56681db83c4d19d2f6de22faccdb` ⇒ 逐字节相同，落地成立。顶栏那四枚路由（`import`、`footprints`、`trash`、`access`）按行形状逐枚在权威树上数过，各命中一枚。
+- `frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts`：权威尖 `5ea84976c39ce5a275d7dbc5ec41cc038e3cac39`，候选同一枚 `5ea84976c39ce5a275d7dbc5ec41cc038e3cac39` ⇒ 相同。runner 那枚（`frontend/playwright.breadcrumb-debt-r1.config.ts`）两代短形同为 `9a3312c4a6`。⇒ 判据与它守的修复一起进了权威线，不是只落了产品那半边。
+
+**二、两把尺在"落地后的内容"上重跑。** `npx playwright test --config playwright.breadcrumb-debt-r1.config.ts` 七臂 rc=0；`npx playwright test --config playwright.hubq-r1.config.ts` 四臂 rc=0。为什么这算权威线上的读数而不是我这台的读数：这把尺解析的三枚文件（`frontend/src/routes/v8Routes.ts`、`frontend/src/app/V8Experience.tsx`、`frontend/src/i18n/LocaleContext.tsx`）在权威尖与我这枝 HEAD 上逐枚 blob 相同（短形分别 `7b296a3608`、`c212a3af41`、`20203fee47`，两代一致），所以同一把尺读的是同一份字节。
+
+**三、另两枚候选按 blob 判仍未落（含一条方法自报）。**
+
+- `frontend/src/features/trash/journeyTrashCopy.ts`：权威尖 `b7bd3f66cb4e8e0bb81616c2627df8ce29580da5` 这一形就是修复前的那枚（同值出现在我记录的前影像里），我候选是 `101c1bcaef488ec810539601fedc9a55e1166ac3` ⇒ 未落。权威树上第 74 行与第 77 行现读仍是「在站里」「在站状态」（`frontend/src/features/trash/journeyTrashCopy.ts:74`、`frontend/src/features/trash/journeyTrashCopy.ts:77`）。
+- `frontend/src/features/trash/journeyTrash.ts`：权威尖 `fe2af5c96235883acdcd5c9d6afb89f5bfd2a8ab`（那是我 r9 落进去的行号修正那版），名字锚候选要换的是 `a2c5716de4a16f92f4180c119994ea8e3c8af8b4` ⇒ 未落。
+- **自报一条差点出口的错误**：我判"措辞那枝落没落"时先用词面 grep 数了一次，命中 2 处，看着像"已落"——那是 `trash.sub` 那句本来就带的「在回收站里的行程」。改成逐枚比 blob 才判出未落。词面命中不能当落地判据，blob 才行；这条我记在自己账上，也提醒别的车道。
+
+**四、要紧现场：手机链的静态口在听但不回话（读数，不猜成因）。**
+
+- `netstat -ano | grep LISTENING` 现读：`0.0.0.0:4783` 由 PID 37684 在听、`127.0.0.1:4787` 由 PID 34184 在听；`Get-CimInstance Win32_Process -Filter 'ProcessId=37684'` 回 Name 为 `python.exe`（进程活着）。
+- 五枚路径逐枚 curl（`--max-time 8`）：`/`、`/v8/hub`、`/index.html`、`/favicon.svg`、`/assets/index-BcQ9VAso.js` 全部 http_code 为零（拿不到响应），每枚耗时约 0.003 秒 ⇒ 是"接了就连忙断"，不是超时挂住。Playwright 侧同一枚口回 `net::ERR_EMPTY_RESPONSE`（件 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/chain_gen_check_r1.mjs`）。
+- 对照（同一台栈的另一扇门，证明不是整台机器或网络的问题）：`:4787` 的 `GET /api/v1/journeys` 与 `GET /api/v1/demo/scene` 各回 http_status=200。
+- 时间窗：我这台最后一次从 `:4783` 读到内容是一趟供给侧屏读（00:44 至 00:52 那一段，账本里我那块反证的读数就是它给的），当时同一条链正常出字。⇒ 断在那之后。
+- 我没碰它：没重启、没杀进程、没改它的参数（他人进程不碰是硬账）。它服务的是 `_build_day33/frontend/dist` 那一份产物，日志文件名在我这边按 `_lan_4783*day33*` 的形状去 `_qoder_cmdr_ref_20260921/live_checks` 里找没找到（具名 `NOT_LOCATED_BY_82f55d8a`），所以我连"它自己怎么说"都没法给你，只能给你上面这组外部读数。
+- 顺带一句对手机可见状态的影响：即便这扇门修好，它服务的仍是 `index-BcQ9VAso.js` 那一代，早于我这四行白名单 ⇒ 手机上那四屏顶栏仍会画「今天 / Today」，要等你换代。
+
+**五、没做 / 没改善的**
+
+1. 没在换代产物上复验落地效果（换代是你的动作，且现在这扇静态口本身不回话，我修它是越界）。具名 `NOT_REACHED_BY_82f55d8a`。
+2. 后端 pytest 零条执行、`vite build` 本手零次、`tsc` 两把本手未重跑（本手产品字节 0 枚、判据字节 0 枚，只跑尺与读数）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 三条待裁英文措辞候选仍等一句判；`frontend/src/lib/displayVocabulary.ts:31` 那枚在我的文件里，你点头我就改。
+4. 红线自查：本轮只读 git 对象与本机端口，没起服务、没连 `:8000` `:4781` `:4782` `:8693`；`_preview.db` 与那批 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次。
+
+**六、下一手。** 落地回执这件交完，我名下无新派未闭单 ⇒ 具名「无单可领，等派」。在飞还剩两枝（回收站中文措辞、名字锚）与三条待裁候选；手机链那扇静态口的读数我按常理归你或值守处置，不擅自动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 待落三枚枝已随最新尖重挂到 `-r7`／`-r8`／`-r7` ＋ 错误态那格做完了，顺带掉出一枚单变量对照：同一枚 `.v8-primary-button` 在外壳里声明上不了屏，外壳不在就正好上屏
+
+**〇、坐标（本轮现读两次逐字相同）**。权威尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（03:05 那手 ORD-0567 第二批：把顶栏一直叫错名的四屏登记进去），读法 `git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`。对上一枚尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d` 用 `git diff --name-only` 现取共四枚文件、其中前端三枚，产品源只动了 `frontend/src/app/V8Experience.tsx`；`frontend/src/styles.css` 在两尖之间 blob 逐枚相同（`9833f6910700a2950977041d461bbf7bece17f73`）。因为产品源确实变了，本轮重构建了再量：产物 `D:/moodle/_qoder_6a_ord0531_20261001/dist_states_tip4`，入口 `assets/index-BW2_ds1t.js`——与上一代入口 `index-iZ6I1MKH.js` 不同名，所以字节真的变了，我没有拿旧产物去读新尖。静态服务端口 `127.0.0.1:4831`（`vite preview --strictPort`，代理指我自己那枚 api 端口 `127.0.0.1:8021`）。我 03:22 那块已入账（块头「屏态那格跑完了」，本轮现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16770`，写它时同一枚头在 `:16641`；行号会漂，认块头）。BB 机 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行，也没有裁语①或甲/乙那一句。
+
+**一、三枚待落枝按新尖重挂（升到下一级枝名，旧名不覆盖不删）**。脚本 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_r1.py`，读数 `D:/moodle/_qoder_6a_ord0531_20261001/rehang_rung_up_d107131c_r1.json`（`tip` 字段现读即上头那枚四十位）：
+- 花费面那句：枝 `refs/heads/review/6a150e1e-spend-off-day-sentence-r7`，头 `153ca0dcf56494a71c8bfeec8216335351c39bb0`。
+- 回收站注释名字形：枝 `refs/heads/review/6a150e1e-trash-citation-rot-r8`，头 `9c6b25729545206404b402e2d55ca90824b2383c`。
+- 出页门验证器：枝 `refs/heads/review/6a150e1e-emitter-door-verify-r7`，头 `eca05a349dc17e1dc6812665a51068439a8b2f06`。
+三枚仍过同一道四件门（新头不等于尖、对尖 `git diff --numstat` 非空、逐枚内容与来源枝相同、`git cherry-pick` 退出码为零），推完 `git ls-remote --refs` 回读逐字相同，收据里 `gate` 三枚皆 `PASS`、`readback_matches` 三枚皆为真。**给落地门的一句**：这条线今夜已经换了四代基座，要落之前仍请让我按那一刻的现尖再挂一次（一条命令，自动升枝名）。
+
+**二、错误态这一格（我 03:22 那块自申报的下一件，做完了）**。造法不 mock、不改断言、不造假产物：只停我自己那枚 api 进程（`D:/moodle/_qoder_6a_ord0531_20261001/run_backend_spend_r1.py`；先 `netstat` 认端口再 `Get-CimInstance` 认命令行，确认 PID 是我的那枚才 `taskkill`），让屏自己去读、自己画它自己的失败面；读完立刻起回来，并回读健康。件：`font_declare_supply_r1.cjs` 到 `font_declare_supply_r4.cjs`，读数 `font_declare_supply_up_r1.json`、`font_declare_supply_up2_r1.json`、`font_declare_supply_down_r1.json`、`font_declare_supply_down2_r1.json`、`font_declare_supply_down3_r3.json`、`font_declare_supply_down4_r3.json`。
+
+- **读数一：失败时整面屏被换掉，不是被填充**。三屏现读 `shell_present` 为假、顶栏与底部导航都不在 DOM 里；页面自己的请求回 `http_status=500`；三屏渲染文本取集合后唯一（同一面失败屏，与路由无关）。
+- **读数二：先自报我自己那把尺的盲区**。第一版判据把分母钉死在 `.v8-product-shell` 之内，外壳一不在就直接返回空集，于是打印出「丢」为零——**那是"没量到"，不是"干净"**，如果我就这么交，等于用一把瞎掉的尺签了个字。改判据（外壳缺席时退到 `main`，再退到 `body`；件里注释写明这条为什么存在）重跑：错误态里进判语的控件一枚，就是「重试」那颗 `button.v8-primary-button`，它的声明 `var(--cn-fs-meta)` 由浏览器解析成十四 px，屏上也是十四 px ⇒ 上屏。
+- **读数三（本格最有用的产出）：一枚免费的单变量对照**。同一枚类、同一份 CSS、同一代产物、同一次会话：
+  - 供上的那一趟（外壳在册）：`.v8-primary-button` 声明十四 px → 屏上十六 px，赢的是 `frontend/src/styles.css:131` 的 `.v8-product-shell button { font: inherit; }`，判语 `LOST_to_global_leak`；
+  - 供断的那一趟（外壳不在）：同一枚声明十四 px → 屏上十四 px，赢家就是它自己那条 `.v8-primary-button`，判语 `landed`。
+  唯一变化的量是那层祖先元素。这比我前几块任何计数都硬：之前那些「丢」不是与外壳相关的统计倾向，而是这枚祖先规则的直接后果，现在同一枚控件两个方向都量到了。
+- **读数四（文案现场，只报事实、不判）**：那面失败屏渲染出来的完整文本共二四三个字符，其中中文六一一个，其余是键名与数值。逐节点读是四块各自的元素：`p.v8-kicker`「服务器」、`h1`「服务器这次没能把行程读出来」、`p.v8-lede`「服务器自己报错了（http_status=500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。」、`button.v8-primary-button`「重试」；其后是一段「归因详情」，把键值原样铺在屏上：`attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=false`。两处必须写清：① 我第一版探针用 `textContent` 把整面拼成一串，读出来像「服务器服务器……服务器自己报错了」重复三遍——**那是我的拼接伪影**，逐节点读之后三块各在自己的块级元素里，我不拿它当缺陷；② 但「这三行首词连续都是同一枚词」与「七个键值原样上屏、中文只占约四分之一」是量出来的事实，要不要这样给旅行者看属措辞与设计判断，交您；我这边只钉「它确实在屏上」。顺带一句归属：技术事实落点这件事正对 ORD-0341 那格——现在它同时落在六枚 `data-*` 属性（`data-testid`、`data-attribution-reason`、`data-evidence-kind`、`data-http-status`、`data-source-layer`、`data-recovery-action`）和上面那段渲染文本里，两路都在，不是一路。
+- **一致性（同一轮内复跑）**：供上的那趟跑了两遍（`up` 与 `up2`），三屏逐格相同（trips：按钮四十一、进判语十六、丢十一、去重七；hub：三十八、十六、十、七；agent：三十一、十、五、四），且与我上一块在**上一枚尖**产物上读到的同三屏数字完全一致 ⇒ ORD-0567 那手登记没有改动这一维，我的前几块计数在新尖上仍成立。
+
+**三、本轮我自己的一次故障，必须写在读数之后**（它改变了我自己的可用资源，别人可能读到过）。那枚 runner 不钉代码树——它靠启动时的当前目录决定 `app.main` 是哪一棵树。我重启时头两次起错了树（先 `D:/moodle/CityNexus/backend`，再 `D:/moodle/_qoder_integration_20260919/backend`），两次 `GET /api/v1/journeys` 都回 `http_status=405`（列表路由在那两棵树的这一枚代次上不通），第三次从我车道那棵 tip worktree 起才回 `http_status=200`；确认等价用了两条现读回读：行程列表三笔且含我读数依赖的那枚 id，以及 `up` 趟三屏数字复现。代价与如实的范围：本轮真实断供是四段（四次错误态读取各一段），每段我没有逐秒计时，所以时长具名未量；另有两段「端口在册、但列表路由回 `http_status=405`」的错树窗口。期间任何借我这枚 api 端口读数的车道都会读到失败态或非预期状态码，这句按后果报、不按我估的时长报。现在栈是好的，而且是刚回读过的：api 与静态各一枚 LISTENING、经代理列表路由回 `http_status=200`、行程三笔含我那枚 id、屏面也回 `http_status=200`。修法我下一手就做，且不需要授权，因为那是我自己的量具：**给 runner 加一行钉死代码树，并把「起复后必须回读 `http_status=200` 与列表三笔」焊进同一条起复命令里**——规矩要焊在会执行写的那扇门上，不写在备忘里。
+
+**四、边界账**。权威线 0 次推送、权威线 0 次移动；账本 0 次改写（这块走收件口）；已发布枝 force-push 0 次、删除 0 次；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（连读都没有，屏面读走我自己那份 `spend_day24.db`）；别人的枝与别人的文件改写 0 次；别人的进程我既没起也没停（本轮起停的只有我自己那枚 api：`run_backend_spend_r1.py`，先 `netstat` 认端口、再 `Get-CimInstance` 认命令行，确认那枚 PID 是我的才动手。次数我不圆报——起过八回（日志八枚逐枚在盘：`backend_8021_restart.log` 到 `backend_8021_restart8.log`，其中两回没绑上端口、两回起错了树），停过六回（每回都先认过命令行））；skip 0 处、mock 0 处（错误态是真断供，不是假响应）；产品字节 0 枚改动；全量前端 e2e 与全量后端套件零次执行（分母归您的回归轮）。端口本轮新增一枚我起的静态服务：`127.0.0.1:4831`（读新尖产物用）；其余仍是我原先那些（api `127.0.0.1:8021` 与静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`、`127.0.0.1:4829`）。工地板 `127.0.0.1:4820` 不是我起的、我没碰；那四枚受保护端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 在 `netstat -ano` 里现读命中零行，本轮没向它们发起过请求。工作树本轮为构建切到 detached 头（`git switch --detach` 到现尖），现读 `git status --porcelain` 空输出；我那三枚评审枝的 ref 一个没动。
+
+**五、下一手（自申报，不等裁语）**。① 把读数三那枚祖先对照做成**常驻判据**，不再靠停后端：同一屏上用 JS 把一颗带单类字号声明的控件搬进/搬出 `.v8-product-shell` 各读一次，声明能否上屏应当随祖先翻转——翻转即因果成立，不翻转就说明我这轮的归因错了；这比快照计数硬，而且能反复跑。② 把我自己那枚 runner 钉死代码树，并把起复回读焊进同一条命令（第三节那条）。③ 等您的三句：甲/乙点一形（甲的工作量＝二十枚去重声明，乙的影响面＝两档各一百零八行屏上值），裁语①（找回门甲/乙/丙，我推荐甲、反对丙），以及第二节读数四那句要不要另开一单——它属措辞与设计，不属我能自己定的范围。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 交当代尖复验（自申报，不占新单号）· 判语：CMDR 02:04 那手落地的四枚反件在现读尖上**全部是真读数**、ord197 翻转族四形十四趟红节点零枚；同时自报三枚仪器缺陷——第一枚要作废我自己上一块「四枚反件都咬」那句，因为其中那一行当时是 pytest 的用法错误退出，不是断言红
+
+**〇、坐标（写作时现取，不抄上一块）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`；我这手全部读数跑在 `D:/moodle/_qoder_seed_ord0489/wt504` 的 detached HEAD，`git rev-parse HEAD` 回同一枚 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，`git status --porcelain` 脏行 0。
+- 我切那两枚枝的代次尖是 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（`61cf94c7e1c4690a84ab44bd624dce5d76faa81c` 往回数两笔的父笔现读与它同值，assert 过；我这手第一笔是 `71c701b3a2bcf07ffbbd7d30409fe7b2e913c8eb`）。两代之间 `git diff --name-only` 现读四枚路径：`frontend/e2e/qoder-82f55d8a-breadcrumb-route-debt-r1.spec.ts`、`frontend/playwright.breadcrumb-debt-r1.config.ts`、`frontend/src/app/V8Experience.tsx`、`review/ord0561/COVERED_GAP_R1.md`——**前端与读数件，没有一枚后端文件**。`git merge-base --is-ancestor 4d43f8bc25 d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 判定为是祖先，`git rev-list --count` 之间 = 4 笔。
+- 我量的四枚后端文件在两代之间逐枚 blob 相同（同一枚尺两代都跑过，见第三节读数的代次绑定）：
+
+| 文件 | `4d43f8bc25` 代 | 现尖代 | 判定 |
+|---|---|---|---|
+| `test_qoder_ord197_four_class_receipt.py` | `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` | `8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5` | 相同 |
+| `test_qoder_city_failure_reasons.py` | `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` | `d40513cb37e977d36df1dfd3b2d480ee43f7caf6` | 相同 |
+| `real_city.py` | `5bed42608bdfaad1067c50abb11918dfba4710b4` | `5bed42608bdfaad1067c50abb11918dfba4710b4` | 相同 |
+| `catalog_hydration_operations.py` | `c999aa92cc5cb688902e530dede20eb2af22b14c` | `c999aa92cc5cb688902e530dede20eb2af22b14c` | 相同 |
+
+**一、四枚已落字节仍在（逐枚 blob 对拍，不用 ancestry）**：上表右侧那列就是现尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 上 `git rev-parse <尖>:<路径>` 的现读值，与我那手 `d58e02d4a60e5d4b868fad808eeb756d11659012` 枝里同路径逐枚相等——落地的判据按名册走内容，不走父链。
+
+**二、当代门读数（四枚模块一趟，跑在现尖）**
+
+- 命令逐字：`python -m pytest -p no:cacheprovider -q --tb=line -rf tests/test_qoder_city_failure_reasons.py tests/test_qoder_provider_identity_leg.py tests/test_qoder_anywhere_discovery_truth.py tests/test_qoder_ord197_four_class_receipt.py`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）。
+- 收集：`--collect-only` 收 38 条、退出码零，件 `review/lane-instrument-facts/gate_tip_collect_d107131c.txt` = `a1733f0cb838e2086ddf7f0350dadbb1fbb65164`。
+- 执行尾行逐字「37 passed, 1 xfailed, 2 warnings in 17.22s」，件 `review/lane-instrument-facts/gate_tip_4modules_d107131c.txt` = `c31af6cece9d7ece0f7a586e76bde927e67e9ee3`。
+- 那枚 xfail 具名 = `test_r1d_a_feature_without_any_usable_id_is_named_malformed_not_absent`，标记在同一枚 `backend/tests/test_qoder_ord197_four_class_receipt.py` 里那行 `@pytest.mark.xfail(`；按名形引而不写行号（名册里那条「锚用名字不用行号」的令对我自己同样生效）。它是 g14/r1b 那族留给「B 侧交出计数」的 strict 探针，**不是我这手写的，也不该由我摘**，读数件 `review/lane-instrument-facts/gate_tip_xfail_d107131c.txt` = `f20862d83acf73fdf9a37cff6dc738a1e78a7039`。
+- 与我 五 枚前那块 ORD-0519 收口件对照：同代那三个模块曾报「1 failed, 30 passed」，红的就是 5xx 命名臂；现在它绿，是靠**改臂**（CMDR 02:04 ③ 点名的那条）绿的，不是改码换绿，也不是 skip——第三节 R4 会证明这句没有粉饰。
+- 库证句（不带 `-q` 才读得到，见第五节）：`…\cnx_pytest_2i0hfwea\suite.db | exists=False | declared_by=conftest temp dir`。件 `review/cmdr0204-ruler-fixes/cmdr0204_mutants_tip_r2.txt`。
+
+**三、四枚反件在现尖重跑（我这手的新尺 r2，三趟一枚）**
+
+| 反件 | 期望 | 三趟判形 |
+|---|---|---|
+| R1 修好的尺 + 注入收尾延迟 `HOLD_INJECT`（尺上那行逐字 `import time as _hold; _hold.sleep(0.4)`，件 `review/cmdr0204-ruler-fixes/cmdr0204_mutants_r2.py` = `878c4ec7db011a3b5165cafc1f982c5c45b9436d`） | 绿 | ['GREEN', 'GREEN', 'GREEN'] |
+| R2 同一注入 + 摘掉那两行 `_wait_closed` | 红 | ['RED_named:test_r3_an_empty_answer_prov', 'RED_named:test_r3_an_empty_answer_prov', 'RED_named:test_r3_an_empty_answer_prov'] |
+| R3 worker 把结论字段写错 | 红 | ['RED_named:test_r4_a_failed_source_is_n', 'RED_named:test_r4_a_failed_source_is_n', 'RED_named:test_r4_a_failed_source_is_n'] |
+| R4 产品侧把 5xx 具名改回 `PROVIDER_BAD_RESPONSE` | 红 | ['RED_named:test_a_live_failure_arrives_', 'RED_named:test_a_live_failure_arrives_', 'RED_named:test_a_live_failure_arrives_'] |
+
+- R1 尾行「2 passed, 5 deselected, 2 warnings in 3.30s」；R4 尾行「1 failed, 2 warnings in 4.91s」。三枚红的落点各自具名：R2 = `D:\moodle\_qoder_seed_ord0489\wt504\backend\tests\test_qoder_ord197_four_class_receipt.py:475: AssertionError: []`；R3 = `D:\moodle\_qoder_seed_ord0489\wt504\backend\tests\test_qoder_ord197_four_class_receipt.py:508: AssertionError: {'canonical_destination_id': None, 'destination_pending_key`；R4 = `D:\moodle\_qoder_seed_ord0489\wt504\backend\tests\test_qoder_city_failure_reasons.py:302: AssertionError: assert 'PROVIDER_BAD_RESPONSE' == 'PROVIDER_SERVER_ERROR'`。
+- 跑完按 sha256 还原：`restored byte-identical: all 4 | tree dirty lines after=0`；`VERDICT ALL_FOUR_REAL`。这枚尺每跑一次都把四枚被改文件的原字节写回去，所以第二节那次门读数与第三节这十二趟不互相污染。
+
+**四、自报①：我上一块「R4 也咬」那句是空证（成因查到底了，已修，且修法本身有该红的那一次）**
+
+- 现象：旧尺 `review/cmdr0204-ruler-fixes/cmdr0204_mutants_r1.py`（blob `06269db44f78f83199711be713cd3c1855a7a84f`）R4 那行原样是「R4 5xx mapped back to BAD_RESPONSE expect=green runs=['1 failed, 2 warnings in 1.56s', '1 failed, 2 warnings in 1.57s', '1 failed, 2 warnings in 1.58s'] verdict=MISMATCH」，而它的 `nodes` / `reason` 两栏是空的。
+- 成因（是仪器自己的形状，不是产品）：调用方把节点 id 当**字符串**传进去，`run()` 里做 `args += list(selection)`，`list(str)` 把一枚参数拆成一堆单字符参数（那趟现读是 109 枚，见下一节同一枚件的 `0d57f0d1f79884b7330dce7fbe50603da3a85408`），pytest 回的是**用法错误**（退出码非零、无 summary 行、无 FAILED 行）。旧尺只按「exit != 0 即红」判，于是它把一次命令行拼装失败记成了一次牙齿证明，而我照着写了那句。
+- 判级：**尺侧空证**。产品字节 0 枚改动、shipped 尺 0 枚改动，被这行影响的已发布句子只有我自己那一块里的「四枚反件都咬」那句，更正写在本块、旧块不改。
+- 修法与它的反控：新尺 `review/cmdr0204-ruler-fixes/cmdr0204_mutants_r2.py` 把 selection 归一成参数列表，并新增第三判形 `INVALID_no_summary`——**读不到证据就不许算绿也不算红**。旧尺 r1 按 CMDR-0925-2128 原样留在架上，我不重写它的代码路径。
+- 该红的那一次（拿旧尺那条拆坏的命令在新尺上重放）：「leg1 shape=INVALID_no_summary exit=4 summary='(none)'」——件 `review/lane-instrument-facts/mutants_r2_selftest_r1.txt` = `0d57f0d1f79884b7330dce7fbe50603da3a85408`。
+- 同一枚调用改成归一形制（无变异、干净模块）：「leg2 shape=GREEN exit=0 summary='1 passed, 2 warnings in 11.80s'」，判定 `VERDICT INVALID_LEG_BITES`——同一枚件 `0d57f0d1f79884b7330dce7fbe50603da3a85408`，尺体 `c87ff62ea9a8b807445cc6f966fd924b74e0a4fd`。
+
+**五、自报②（对所有车道，不是我这手的事但会咬所有人）：`-q` 会把 ORD-0211 的库证句吃掉**
+
+- 我这把翻转尺每一趟都记 db header，十四趟记下来的全是 `(header not printed)`；把同一对模块不带 `-q` 重跑一趟，才拿到第二节末尾那句 `resolved=…\AppData\Local\Temp\cnx_pytest_*\suite.db | exists=False | declared_by=conftest temp dir`。
+- 判语：**任何一块里写「库是 conftest 自起的私有 `suite.db`」而它的命令带着 `-q`，那句就不是读来的**（`-q` 抑制 report header，pytest 自己的行为）。我这手的件里所有库证都按不带 `-q` 那一趟引。要不要把这条装进落地门由你裁，我不动别人的闸。
+- 附带一枚同类：路径里的账号名在这台机器的控制台编码下会显示成乱码，所以本块只引 `Temp` 之后的部分，不贴全串。
+
+**六、自报③：venv 的 `python.exe` 是启动器壳，我起的 burner 跟真正吃 CPU 的不是同一枚 PID**
+
+- 现读：这枚机器的逻辑线程数 `os.cpu_count()` = 32，件 `review/lane-instrument-facts/burner_identity_r13.txt` = `02335b6430e49fbfe52a6145d4e9a60f239babaa`。
+- 一枚 burner 起来后，`Popen` 返回的那枚 PID 整段循环不吃 CPU，真正干活的是它的**子进程**（同为 `python.exe`）。逐枚读数：CPU seconds per burning pid: ['n=2', 'pid=83332|cpu=0.00', 'pid=38504|cpu=4.48']，同一枚件 `02335b6430e49fbfe52a6145d4e9a60f239babaa`。
+- 后果两条：① 我这手 `flip_load_proof_r12.py` 全程跟踪并 kill 的是壳，那趟「负载」腿现读「BURNER CPU         pids_alive=6->6 cpu_seconds 0.03 -> 0.03 (grew 0.00 s over the 2.95s run)」，判形 `VERDICT LOAD_NOT_PROVEN`，件 `review/lane-instrument-facts/flip_load_proof_r12.txt` = `2d38f0b0ebbdd743c38c943ac75e2016423363db`——**所以负载腿我不当证据用**；② 任何用 venv python 起守护/看护、按 `Popen` 的 PID 判活或 kill 的仪表，摸到的都是壳，真干活的子进程既没被判到也没被杀掉（这条会影响栈看护那一族，报给你，不代改）。
+- 孤儿核实：按 CommandLine（`sum(range(200000))`）现读，本轮探针开始前 'count=0'，探针自己按命令行清理后 'count=0'。上一手 r10/r11 起的那几批我不能记在自己 kill 的功劳上——它们各自带 60/75 秒到点自退，本块现读已无残留。
+- 处置：负载这一维不再补（32 枚线程上放六枚 burner 本来就不算负载）。翻转的成因已由第三节 R1/R2 那对**可控注入**闭合：同一枚注入的收尾延迟，尺修了就三趟全绿、尺没修就三趟全红。
+
+**七、翻转族十四趟（现尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，四形各自重复）**
+
+| 形制 | 趟数 | 红节点 |
+|---|---|---|
+| A alone x6 | 6 | 0 |
+| B paired x3 | 3 | 0 |
+| C r3+r4 only x3 | 3 | 0 |
+| D loaded x2 | 2 | 0 |
+
+- 合计 0 枚红节点 / 14 趟。空载与带壳负载的同模块墙钟分别 [3.68, 3.11, 2.94, 3.06, 3.15, 4.14] / [3.08, 2.92]（这一对比只作「两批都真跑了」的读数，不作负载判据，理由见第六节）。件 `review/ord197-flip/ord197_flip_tip_r11.txt` = `5ee2fa2e3183f607fa124a0fc4e48af194039075`。
+- 与修前对照（同一枚工作树、同一族仪器）：修前红率能从零到满都能出（那四形各自十二趟，红在一趟到八趟之间摆），红永远落在「`_audit(job)` 回空字典」与「`job['outcome']` 不是具名终态」两处；现在那两处只在 R2 反件里被具名抓到（第三节 `D:\moodle\_qoder_seed_ord0489\wt504\backend\tests\test_qoder_ord197_four_class_receipt.py:475: AssertionError: []`），说明**臂还在、还在咬**，只是不再抢跑。
+
+**八、名下待落形状（三枚新枝，各自首推一次，ls-remote 回读逐字）**
+
+```text
+d107131c6f6e65d9f207f6bf1b563d1cc8877f89	refs/heads/mirror/integration-frontend-apple-pass1
+f1fdad6230f0271cad60105f64c4d3b14f4535cf	refs/heads/review/5a53846b-cmdr0204-verify-tip-r1
+be30dd5f832b590557e65a0744008f5091f752b3	refs/heads/review/5a53846b-lane-instrument-facts-r1
+0e1084873609566dd8463bb01b32c8cab79b5e03	refs/heads/review/5a53846b-not-reached-arm-r1
+61cf94c7e1c4690a84ab44bd624dce5d76faa81c	refs/heads/review/5a53846b-not-reached-arm-r2
+```
+
+- `review/5a53846b-not-reached-arm-r2` = `61cf94c7e1c4690a84ab44bd624dce5d76faa81c`：往上第一笔是我这手的读数件笔 `71c701b3a2bcf07ffbbd7d30409fe7b2e913c8eb`，再往上就是切枝那一刻的尖 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`；载荷两枚路径——`backend/tests/test_qoder_city_failure_reasons.py` = `86de1d147dc778478e0f682fbdc2bae6d8efc515`、`review/not-reached-arm/READINGS.md` = `689df67eff1a4252ac0f07c13ed94189ebb4d0a6`。
+- 为什么要 r2 而不是复用 r1：r1 两笔提交语逐字是「ORD-0571 follow-on readings: the reachability claim I first wrote down was wrong and is retracted here, with the control/mutant/restore numbers ⧸ ORD-0571 follow-on (self-declared): the NOT_REACHED initialisation now has an assertion, and a single-variable mutant shows it is load-bearing」——**它把这一手挂在 ORD-0571 名下，而内容是 `NOT_REACHED` 那枚初始化的断言与它的读数件**。单号挂错，按单号找字节的人和板子会把这两枚文件读成另一族的落地。r2 只改提交语，载荷与 r1 逐枚相等：test 两处同为 `86de1d147dc778478e0f682fbdc2bae6d8efc515` / `86de1d147dc778478e0f682fbdc2bae6d8efc515`，读数件两处同为 `689df67eff1a4252ac0f07c13ed94189ebb4d0a6` / `689df67eff1a4252ac0f07c13ed94189ebb4d0a6`。
+- r1 = `0e1084873609566dd8463bb01b32c8cab79b5e03` 原样在架：不删、不改写、force-push 0 次。
+- `review/5a53846b-cmdr0204-verify-tip-r1` = `f1fdad6230f0271cad60105f64c4d3b14f4535cf`：七枚新增路径（量具与读数件，0 枚产品、0 枚 shipped 尺），逐枚 blob：
+  - `review/cmdr0204-ruler-fixes/cmdr0204_mutants_r2.py` = `878c4ec7db011a3b5165cafc1f982c5c45b9436d`
+  - `review/cmdr0204-ruler-fixes/cmdr0204_mutants_tip_r2.txt` = `250411fb0aa41ec1fa76de0af9b739b9e888372e`
+  - `review/cmdr0204-ruler-fixes/r4_teeth_open_r11.py` = `387324ee329e44ba8f3b8591c4d76d2119034e07`
+  - `review/cmdr0204-ruler-fixes/r4_teeth_open_r11.txt` = `b32c6ae418154266136871618af790a986e8cc4e`
+  - `review/ord197-flip/ord197_flip_tip_r11.json` = `3d6b5a0993f343c54253522d9c79012b853cf470`
+  - `review/ord197-flip/ord197_flip_tip_r11.py` = `faf5632d41123a6646a5b318844f5a50e2458df0`
+  - `review/ord197-flip/ord197_flip_tip_r11.txt` = `5ee2fa2e3183f607fa124a0fc4e48af194039075`
+- `review/5a53846b-lane-instrument-facts-r1` = `be30dd5f832b590557e65a0744008f5091f752b3`：父 = 上一枚 `f1fdad6230f0271cad60105f64c4d3b14f4535cf`，九枚新增路径：
+  - `review/lane-instrument-facts/burner_identity_r13.json` = `eb8f0100a0f99a1715e7193959008adb203395bf`
+  - `review/lane-instrument-facts/burner_identity_r13.py` = `ef5257fd4abfaab42b0439e7f93b7b1b160c9726`
+  - `review/lane-instrument-facts/burner_identity_r13.txt` = `02335b6430e49fbfe52a6145d4e9a60f239babaa`
+  - `review/lane-instrument-facts/flip_load_proof_r12.json` = `7d5a88ef37f176630c549abcc4cdf2acb81b0dd6`
+  - `review/lane-instrument-facts/flip_load_proof_r12.py` = `a5888efd9a9db70ef308bdcd7907eff0c47bde51`
+  - `review/lane-instrument-facts/flip_load_proof_r12.txt` = `2d38f0b0ebbdd743c38c943ac75e2016423363db`
+  - `review/lane-instrument-facts/flip_load_proof_r12_crash_first.txt` = `503ec43e2c2fc6889f2c4f7c0d7aba63ebeb12e9`
+  - `review/lane-instrument-facts/gate_tip_4modules_d107131c.txt` = `c31af6cece9d7ece0f7a586e76bde927e67e9ee3`
+  - `review/lane-instrument-facts/gate_tip_collect_d107131c.txt` = `a1733f0cb838e2086ddf7f0350dadbb1fbb65164`
+  - `review/lane-instrument-facts/gate_tip_xfail_d107131c.txt` = `f20862d83acf73fdf9a37cff6dc738a1e78a7039`
+  - `review/lane-instrument-facts/mutants_r2_selftest_r1.py` = `c87ff62ea9a8b807445cc6f966fd924b74e0a4fd`
+  - `review/lane-instrument-facts/mutants_r2_selftest_r1.txt` = `0d57f0d1f79884b7330dce7fbe50603da3a85408`
+- **一句提醒，免得落地门把那四枚 `D` 读成回退**：我那两枚枝相对现尖做 `git diff --name-status` 会显出四枚 `D`，那是现尖自己新进去的那四枚路径（第〇节名列）在我枝里没有，**不是我删**；`4d43f8bc25` 与 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 的 ancestry 已现读为是祖先、之间 4 笔。要我把两枚枝按「切枝当场取尖」再挂一级，说一声即可；不要求我就不追名，免得每跳一格就多一代枝名。
+
+**九、仍欠（具名，不粉）**
+
+- ORD-0519 那格的覆盖欠账在现尖仍在：`anchor_credit_kept` 全树命中 五 枚文件（产品 1 枚 = `real_city.py`、`backend/tests` 命中 0 枚、其余是读数件：`real_city.py`、`door_real_path_answered_zero.json`、`door_real_path_cafe100.json`、`door_real_path_cafe100_one.json`、`door_real_path_r1.json`）。**没有一枚 shipped 臂断言「兜底形状保住锚点信用」**；补臂要授权，我自己不往 shipped 尺里塞新断言。
+- ORD-0571 仍等两条之一：一份带站点的演示行程导出，或「滚动途中被压住算不算缺陷」的裁语。这手 0 枚字节动到它。
+- 第二、三、七节的读数只绑 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 这一代；线再跳，这三节要按新一代重跑才算数。
+
+边界 A：本手产品字节 0 枚改动、shipped 尺字节 0 枚改动（四枚反件跑完按 sha256 还原，还原行逐字在第三节）；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+边界 B：权威线移动 0 次，push 五次（三枚新枝各首推一枚，其中 `review/5a53846b-lane-instrument-facts-r1` 之后同枝快进两次，逐枚回读见第八节 `ls-remote` 那段），全部进本车道自己名下枝，force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+边界 C：账本直写 0 次（本块走收件口），demo/reset 0 次，`_preview.db` 覆盖 0 次，监听端口 0 个在跑；pytest 全在 conftest 自起的私有 `suite.db` 上（第〇、二节各引一次库证句）；尖 = `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 交自申报那一格 · "必须点开才到"的层具名控件普查：9 层 × 两臂 = 18 格量到，开层后真新增 58 枚控件、整屏无名 0 枚，负对照 18/18 格两维都被抓到；第二维在收藏那一层量到 7 枚裸指针候选（件 `OA-151817`）
+
+**〇、这一格从哪来**
+
+- 车道 `8ac89982` 的静止屏普查（总线 `m_84201041cc05`，件 `refs/heads/review/8ac89982-named-control-census-r1` = `d6e300a5a5f9450f250c0b6bc9032740d055728e`）第四节写明本轮没量"必须点开才到的层（对话窗、菜单、折叠 details 之内）"，第五节把探针与负对照形制交出并说"要量点开之后的层，只把进入动作换成点击，判据与负对照不必改"。无障碍名那一族在我名下，所以自申报接了它（申报块落在账本 `1ba48dbf_03xx.md` 那一枚）。
+
+**一、代次与栈**
+
+- 起栈那刻现读权威线 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 并在这枚上构建、走层；出块这趟再读是 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`。`vite build` rc=0、耗时 10.1 秒，入口 `index-BW2_ds1t.js` = 1623134 B，服务字节与磁盘字节逐字相同。
+- 私有后端 `:5101`、私有前端 `:5110`、库是本趟新建的私有文件；`demo/scene/ensure` 的 `http_status=200`；`:8000` `:4781` `:4782` `:4783` `:4785` `:4787` `:4789` `:8693` `:4799` 一枚没碰。
+- 判据逐字沿用他那八问（`aria-label` → `aria-labelledby` 文本 → 可见文字 → 表单控件自己的 `label` → `title` → `img` 的 `alt` → `placeholder` → submit/button 的 `value`），只把进入动作换成点击；每层进入前后各普查一次。
+
+**二、18 格逐格读数（件 `OA-151817`）**
+
+  - 中文臂｜hub｜待办筛选面板：静止 31 枚 → 开后 35 枚，真新增 3 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜trips｜站点详情：静止 38 枚 → 开后 15 枚，真新增 4 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜trips｜收藏到…入口：静止 38 枚 → 开后 40 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 4 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜trips｜中止这趟行程的表单层：静止 38 枚 → 开后 39 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜map｜只看打过卡：静止 31 枚 → 开后 26 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜access｜角色说明的折叠层：静止 22 枚 → 开后 23 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜discover｜收藏架的重读入口所在层：静止 16 枚 → 开后 17 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜shell｜顶栏菜单抽屉：静止 31 枚 → 开后 51 枚，真新增 19 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 中文臂｜shell｜顶栏主题选择：静止 31 枚 → 开后 32 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜hub｜待办筛选面板：静止 31 枚 → 开后 35 枚，真新增 3 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜trips｜站点详情：静止 38 枚 → 开后 15 枚，真新增 4 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜trips｜收藏到…入口：静止 38 枚 → 开后 40 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 3 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜trips｜中止这趟行程的表单层：静止 38 枚 → 开后 39 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜map｜只看打过卡：静止 31 枚 → 开后 26 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜access｜角色说明的折叠层：静止 22 枚 → 开后 23 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜discover｜收藏架的重读入口所在层：静止 16 枚 → 开后 17 枚，真新增 0 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜shell｜顶栏菜单抽屉：静止 31 枚 → 开后 51 枚，真新增 19 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+  - 英文臂｜shell｜顶栏主题选择：静止 31 枚 → 开后 32 枚，真新增 1 枚，开后整屏无名 0 枚，裸指针新增 0 枚，负对照两维都被抓=True（件 OA-151817）
+
+**三、空清单是有牙的，两代尺并排**
+
+- 每层当场埋两枚必被抓的假控件（一枚无名 `button`、一枚无名 `cursor: pointer` 的 `div`），18 格全部两维都抓到（18/18），埋的探针在计数前移除、不进任何分母。没有这一条，"0 枚无名"这句话不值钱。
+- 我这把尺先错过一次，两代都进线：第一版把元素坐标算进身份键，而开一层会让整屏重排 —— hub 那格因此报"新增 29 枚"，可它静止 31 枚、开后 35 枚，总数只涨了 4。第二版把坐标从键里去掉，同一格真新增 3 枚（静止 31 枚 → 开后 35 枚）。两代件都在证据枝里：`review/opened-layers/census_layers.json` = `b6d7bad62f9425fb871d05b72bc9b5b8930ad884` 与 `review/opened-layers/census_layers_r1_keyed_with_xy.json` = `3aa149e632cd22f4454afc29f43980b4745d488e`。
+- 分母口径也换了：无名按"开层后整屏"算（0 枚），不再只算"新增那批"——只算新增会把挪了位置的老控件漏在分母外。开层前整屏同样是 0 枚无名。
+
+**四、第二维那 7 枚候选（全在 trips 的收藏入口那一层）**
+
+  - 中文臂｜收藏到…入口：`div.trip-stop-body`「Old Town Gate1 小时 15 分详情 ›」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 中文臂｜收藏到…入口：`div.cn-collect`「收藏到…收到哪个架子这位旅客名下还没有架子，所以这一」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 中文臂｜收藏到…入口：`p.cn-collect__picker-title`「收到哪个架子」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 中文臂｜收藏到…入口：`p.cn-collect__state`「这位旅客名下还没有架子，所以这一枚没地方放。」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 英文臂｜收藏到…入口：`div.cn-collect`「Collect into…Which shelf s」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 英文臂｜收藏到…入口：`p.cn-collect__picker-title`「Which shelf should hold it」，手型量自 `article.trip-stop[testid=trip-stop]`
+  - 英文臂｜收藏到…入口：`p.cn-collect__state`「This traveller holds no sh」，手型量自 `article.trip-stop[testid=trip-stop]`
+
+- 判由：这批不是"缺名的控件"，是**整张站点卡片把手型撒到了它内部每一段文字上**。两条腿对得上——运行时量：这 7 枚的 `cursor: pointer` 全部来自同一枚祖先 `article.trip-stop`（逐枚见件 `review/opened-layers/pointer_attribution.txt` = `430a9a9c12904287ef0822de5b640d9d62f82e86`）；源码侧：`frontend/src/styles.css` 里那条 `.trip-stop { cursor: pointer; }` 就是它的出处（按规则文本锚，不写行号）。后果是用户能感觉的：一段说明文字和整个容器都显示"可点"的手型，点上去什么也不发生。修法候选（一行级）：把手型从 `.trip-stop` 这层容器收到真正可点的那枚控件上。站点卡片那一族不在我名下的热文件里，本手按申报只交清单，要开枝请点单。
+
+
+**五、两格没量到，具名不抹平**
+
+- 中文臂与英文臂的 hub「今天续跑的折叠技术面」：触发件 `continuation-technical-details` 不在这一屏（这份演示场景没有续跑卡）⇒ NOT_MEASURED，共 1 层两臂。要量它得先造出续跑态，那属于另一格。
+  - 中文臂｜me｜策略详情：中心 x=103 px、y=986 px，视口高 844 px 之下（in_viewport=False），我的滚动腿没把它带进视口；键盘 Enter 之后控件数变化=False、元素自己的 click 之后=False ⇒ 这一格连"能不能打开"都没证到，记 NOT_MEASURED，不记缺陷（件 OA-151817）
+  - 英文臂｜me｜策略详情：中心 x=117 px、y=985 px，视口高 844 px 之下（in_viewport=False），我的滚动腿没把它带进视口；键盘 Enter 之后控件数变化=False、元素自己的 click 之后=False ⇒ 这一格连"能不能打开"都没证到，记 NOT_MEASURED，不记缺陷（件 OA-151817）
+
+**六、本轮仍不覆盖的（与 `d6e300a5a5f9450f250c0b6bc9032740d055728e` 那份同一张清单）**
+
+- 桌面宽度与该形状的抽屉；`/v8/shared/<token>`（要先有真实授予）；只在悬停出现的姿态；既无 role 也无指针样式、纯挂脚本事件的自造元素。
+
+**七、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-opened-layers-evidence-r1` = `5b1a66fb541aa775046f95adefe5870ecb34ad94`（`git ls-remote` 现读逐字相等；8 枚件，逐枚可 `git cat-file -t`）：
+  - `review/opened-layers/census_run_summary.json` = `a958ba05e02db5c7eaaef3ac8497f8a303ad746e`、`review/opened-layers/census_layers.json` = `b6d7bad62f9425fb871d05b72bc9b5b8930ad884`、`review/opened-layers/census_layers_r1_keyed_with_xy.json` = `3aa149e632cd22f4454afc29f43980b4745d488e`、`review/opened-layers/pointer_attribution.txt` = `430a9a9c12904287ef0822de5b640d9d62f82e86`
+  - 两把腿：`review/opened-layers/probe_opened_layers.cjs.txt` = `e8f8a3f152a6454e1f9f06ff4956996437d04e9d`、`review/opened-layers/driver_opened_layers.py.txt` = `6ea453da4106019624d43763199fafa53077af24`
+  - 两张屏（一层展开、一具抽屉打开）：`review/opened-layers/shot_collect_layer_zh.png` = `1a93b044cf3d304709ae4d3bdf95d7d4fc4c3983`、`review/opened-layers/shot_drawer_open_en.png` = `31ce7a17b731e442b78123e8c71d0158e2095ed4`
+- 本手账：产品字节改动 0 枚、他人文件改动 0 枚、他人枝删改 0 枚、权威线移动 0 次、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次（只点"打开一层"的触发件，打卡·提交·发邀请·识别·提问一律没点）、密钥落盘 0 枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 自申报下一件已做完：等落期间尖又跳了一代、正好跳在我那枚热文件上——单复数那件重切成 r5（两半共存），新一代上三趟屏读重拿
 
 一、发生了什么（现读，不是记忆）
