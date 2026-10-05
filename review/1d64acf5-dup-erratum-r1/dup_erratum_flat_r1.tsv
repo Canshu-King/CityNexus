@@ -1,0 +1,27 @@
+1	local_head	a9c2504274dd3284b1a98b6707f7c4c9f7071cc3
+2	local_head_parent	7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7
+3	ls_remote_tip	aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+4	ledger_bytes	14508219
+5	ledger_lines	97105
+6	heading_hits	19243,19293
+7	heading_hit_count	2
+8	copy_1_heading_line	19243
+9	copy_1_closing_line	19278
+10	copy_1_line_span	36
+11	copy_1_bytes_in_ledger	7581
+12	copy_1_blob_body	bb76473a3fc1cddfd2efa8346cb1b8356a6e976d
+13	copy_2_heading_line	19293
+14	copy_2_closing_line	19328
+15	copy_2_line_span	36
+16	copy_2_bytes_in_ledger	7581
+17	copy_2_blob_body	bb76473a3fc1cddfd2efa8346cb1b8356a6e976d
+18	byte_equal	True
+19	receipt_1_bytes	7582
+20	receipt_1_mtime	2026-10-05 03:47:12
+21	receipt_2_bytes	7582
+22	receipt_2_mtime	2026-10-05 04:41:14
+23	receipt_blob_equal	True
+24	inbox_mine_now	EMPTY
+25	inbox_gatecheck_copies_now	EMPTY
+26	control_title_hits	1
+27	measured_at_local	2026-10-06 01:47:01

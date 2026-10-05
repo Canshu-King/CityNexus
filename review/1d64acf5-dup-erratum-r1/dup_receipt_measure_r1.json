@@ -1,0 +1,64 @@
+{
+ "measured_at_local": "2026-10-06 01:47:01",
+ "ledger_path": "D:/moodle/CITYNEXUS_AGENT_CONTROL.md",
+ "ledger_bytes": 14508219,
+ "ledger_lines": 97105,
+ "heading_hits": [
+  19243,
+  19293
+ ],
+ "heading_hit_count": 2,
+ "copies": [
+  {
+   "heading_line": 19243,
+   "closing_line": 19278,
+   "line_span": 36,
+   "bytes_in_ledger": 7581,
+   "sha256_body": "dc8789b608ec156b8c65d01c8c01ddf588f7ff1f76faa32b8419ce265abc9e9c",
+   "blob_body": "bb76473a3fc1cddfd2efa8346cb1b8356a6e976d"
+  },
+  {
+   "heading_line": 19293,
+   "closing_line": 19328,
+   "line_span": 36,
+   "bytes_in_ledger": 7581,
+   "sha256_body": "dc8789b608ec156b8c65d01c8c01ddf588f7ff1f76faa32b8419ce265abc9e9c",
+   "blob_body": "bb76473a3fc1cddfd2efa8346cb1b8356a6e976d"
+  }
+ ],
+ "byte_equal": true,
+ "receipts": [
+  {
+   "path": "D:/moodle/_qoder_ledger_inbox/_processed/1d64acf5_0347.md.inserted_035112",
+   "bytes": 7582,
+   "blob": "6ed4a2c5bee57b767a1a4b0f5b1b95ccea0728af",
+   "mtime": "2026-10-05 03:47:12"
+  },
+  {
+   "path": "D:/moodle/_qoder_ledger_inbox/_processed/1d64acf5_0447.md.inserted_044731",
+   "bytes": 7582,
+   "blob": "6ed4a2c5bee57b767a1a4b0f5b1b95ccea0728af",
+   "mtime": "2026-10-05 04:41:14"
+  }
+ ],
+ "receipt_blob_equal": true,
+ "inbox_mine_now": [],
+ "inbox_gatecheck_copies_now": [],
+ "local_head": "a9c2504274dd3284b1a98b6707f7c4c9f7071cc3",
+ "local_head_parent": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+ "ls_remote_tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "ref_name": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "discipline": {
+  "product_bytes_changed": 0,
+  "authoritative_line_moved_by_me": 0,
+  "force_push": 0,
+  "ledger_written_by_me": 0
+ },
+ "control_single_hit_title": {
+  "hits": [
+   19281
+  ],
+  "count": 1,
+  "note": "control title must be a single hit; if it were 2 the counter would be blind"
+ }
+}
