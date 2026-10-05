@@ -253,18 +253,24 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 if abs(score - best_score) <= 1e-9
             )
             chosen = round1_choices.get(member_id)
-            preference_driven_ok = preference_driven_ok and chosen in best_ids
+            unique_best = len(best_ids) == 1
+            preference_driven_ok = (
+                preference_driven_ok
+                and unique_best
+                and chosen == best_ids[0]
+            )
             best_by_member[member_id] = {
                 "chosen_proposal_id": chosen,
                 "best_score": best_score,
                 "best_proposal_ids": best_ids,
+                "unique_best": unique_best,
             }
         preference_driven_ok = (
             preference_driven_ok and len(distinct_round1_choices) >= 2
         )
         verdicts["preference_driven_round1_disagreement"] = _verdict(
             PROVEN if preference_driven_ok else CONTRADICTED,
-            "Each relevant member chose a server-grounded maximum-fit option and those optima diverged."
+            "Each relevant member had one unique server-grounded maximum-fit option, chose it, and those optima diverged."
             if preference_driven_ok
             else "Round-1 disagreement is not proven to follow each member's server-computed best fit.",
             members=best_by_member,
