@@ -1272,7 +1272,8 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
     selected_plan_id = str(seeded["options"][0]["plan_id"])
     selected_proposal_id = str(seeded["garden_proposal_id"])
     mediator_id = str(uuid4())
-    activity_id = str(uuid4())
+    candidate_activity_id = str(uuid4())
+    active_activity_id = str(uuid4())
     place_id = "place-r30-selected-garden"
 
     with SessionLocal() as session:
@@ -1310,26 +1311,47 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 updated_at=now,
             )
         )
-        session.add(
-            Activity(
-                id=activity_id,
-                plan_version_id=selected_plan_id,
-                sequence_no=1,
-                activity_type="visit",
-                title="R30 selected garden",
-                place_id=place_id,
-                city_service_id=None,
-                start_at=now,
-                end_at=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
-                travel_from_prev_min=0,
-                estimated_cost_minor=0,
-                currency="JPY",
-                status="PLANNED",
-                locked=False,
-                metadata_json="{}",
-                created_at=now,
-                updated_at=now,
-            )
+        session.add_all(
+            [
+                Activity(
+                    id=candidate_activity_id,
+                    plan_version_id=selected_plan_id,
+                    sequence_no=1,
+                    activity_type="visit",
+                    title="R30 selected garden candidate row",
+                    place_id=place_id,
+                    city_service_id=None,
+                    start_at=now,
+                    end_at=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+                    travel_from_prev_min=0,
+                    estimated_cost_minor=0,
+                    currency="JPY",
+                    status="PLANNED",
+                    locked=False,
+                    metadata_json="{}",
+                    created_at=now,
+                    updated_at=now,
+                ),
+                Activity(
+                    id=active_activity_id,
+                    plan_version_id=str(seeded["base_id"]),
+                    sequence_no=1,
+                    activity_type="visit",
+                    title="R30 same physical garden on active plan",
+                    place_id=place_id,
+                    city_service_id=None,
+                    start_at=now,
+                    end_at=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+                    travel_from_prev_min=0,
+                    estimated_cost_minor=0,
+                    currency="JPY",
+                    status="PLANNED",
+                    locked=False,
+                    metadata_json="{}",
+                    created_at=now,
+                    updated_at=now,
+                ),
+            ]
         )
         session.flush()
         journey = session.get(Journey, str(seeded["journey_id"]))
@@ -1406,7 +1428,10 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 event_type="CLOSURE",
                 severity="HIGH",
                 status="DETECTED",
-                affected_activity_id=activity_id,
+                # The trusted shock targets the active-plan Activity row, not
+                # the candidate-plan row. R30 relevance must follow the shared
+                # physical Place rather than requiring identical Activity UUIDs.
+                affected_activity_id=active_activity_id,
                 occurred_at=now,
                 detected_at=now,
                 payload_json=json.dumps(
