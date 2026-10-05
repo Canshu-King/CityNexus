@@ -590,6 +590,106 @@ def test_r29_resolved_mediation_authorizes_only_the_selected_plan_until_consumed
         ) is None
 
 
+def test_r29_renewed_human_choice_overrides_algorithmic_compromise_ranking(monkeypatch) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+    sibling_plan_id = str(seeded["options"][1]["plan_id"])
+
+    with SessionLocal() as session:
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Mediate the unresolved disagreement.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r29-renewed-ranking",
+                        "selected_proposal_id": str(seeded["garden_proposal_id"]),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.commit()
+
+        original_projection = main_module.active_journey_members_with_capabilities
+
+        def projection(_session, _journey, *, candidate_windows=None, **kwargs):
+            if candidate_windows is None:
+                return {"member_count": 2, "members": []}
+            candidate_ids = [
+                str((item.get("candidate") or {}).get("place_id") or item.get("window_id") or "")
+                for item in candidate_windows
+            ]
+            return {
+                "member_count": 2,
+                "members": [],
+                "candidate_fit_matrix": [],
+                "mediation": {
+                    "classification": "COMPROMISE_AVAILABLE",
+                    "candidate_ids": candidate_ids,
+                    # Deliberately make the algorithm prefer the sibling plan.
+                    "selected_candidate_id": sibling_plan_id,
+                },
+            }
+
+        monkeypatch.setattr(
+            main_module,
+            "active_journey_members_with_capabilities",
+            projection,
+        )
+        try:
+            journey = session.get(Journey, str(seeded["journey_id"]))
+            selected_plan = session.get(PlanVersion, selected_plan_id)
+            sibling_plan = session.get(PlanVersion, sibling_plan_id)
+
+            selected_gate = main_module.collective_mutation_gate(
+                session,
+                journey,
+                selected_plan,
+                hard_feasible_plan_ids={selected_plan_id, sibling_plan_id},
+            )
+            assert selected_gate["allowed"] is True
+            assert selected_gate["classification"] == "RENEWED_COLLECTIVE_CONSENT"
+
+            sibling_gate = main_module.collective_mutation_gate(
+                session,
+                journey,
+                sibling_plan,
+                hard_feasible_plan_ids={selected_plan_id, sibling_plan_id},
+            )
+            assert sibling_gate["allowed"] is False
+            assert sibling_gate["code"] == "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED"
+        finally:
+            monkeypatch.setattr(
+                main_module,
+                "active_journey_members_with_capabilities",
+                original_projection,
+            )
+
+
 def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
