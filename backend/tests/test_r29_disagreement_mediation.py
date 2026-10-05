@@ -1047,3 +1047,216 @@ def test_r29_fair_compromise_reopens_same_members_for_renewed_consent(monkeypatc
         mission = session.get(JourneyMission, mediator_id)
         assert mission.status == "WAITING_FOR_MEMBERS"
 
+
+
+
+def test_r30_collective_decision_epoch_tracks_semantic_option_meaning() -> None:
+    members = [
+        {
+            "member_id": "member-a",
+            "role": "OWNER",
+            "capabilities": ["EDIT_PLAN"],
+            "journey_scoped_explicit_preferences": [
+                {"category": "interest", "key": "garden", "value": True, "weight": 1.0}
+            ],
+            "member_state": "MEMBER_IN_FORCE",
+        },
+        {
+            "member_id": "member-b",
+            "role": "ADMIN",
+            "capabilities": ["EDIT_PLAN"],
+            "journey_scoped_explicit_preferences": [
+                {"category": "interest", "key": "museum", "value": True, "weight": 1.0}
+            ],
+            "member_state": "MEMBER_IN_FORCE",
+        },
+    ]
+    base_option = {
+        "proposal_id": "proposal-a",
+        "plan_id": "plan-a",
+        "status": "GROUNDED_FEASIBLE",
+        "fit_subject_place_ids": ["place-garden"],
+        "fit_subject_tags": ["outdoor", "garden"],
+        "fit_subject_basis": "PLAN_DIFF",
+        "member_fits": {
+            "member-a": {
+                "effective_fit": 1.0,
+                "preference_tier": "EXPLICIT",
+                "conflict": None,
+            },
+            "member-b": {
+                "effective_fit": 0.0,
+                "preference_tier": "NEUTRAL",
+                "conflict": None,
+            },
+        },
+        "fairness": {
+            "minimum_member_fit": 0.0,
+            "maximum_regret": 1.0,
+            "unacceptable_member_ids": ["member-b"],
+        },
+    }
+
+    def epoch(option):
+        return collective_mediation.collective_decision_epoch(
+            journey_id="journey-a",
+            mission_id="mission-a",
+            trigger_event_id="event-a",
+            base_plan_version_id="base-plan",
+            options=[option],
+            required_member_ids=["member-b", "member-a"],
+            members=members,
+        )
+
+    baseline = epoch(base_option)
+    reordered = epoch(
+        {
+            **base_option,
+            "fit_subject_place_ids": list(reversed(base_option["fit_subject_place_ids"])),
+            "fit_subject_tags": list(reversed(base_option["fit_subject_tags"])),
+            "debug_only": "ignored",
+        }
+    )
+    assert reordered == baseline
+
+    changed_place = epoch(
+        {**base_option, "fit_subject_place_ids": ["place-museum"]}
+    )
+    assert changed_place != baseline
+
+    changed_fit = epoch(
+        {
+            **base_option,
+            "member_fits": {
+                **base_option["member_fits"],
+                "member-b": {
+                    "effective_fit": 0.5,
+                    "preference_tier": "LEARNED_SOFT",
+                    "conflict": None,
+                },
+            },
+        }
+    )
+    assert changed_fit != baseline
+
+
+def test_r30_core_gate_rejects_resolved_consent_when_semantic_epoch_changed(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+
+    with SessionLocal() as session:
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Resolved renewed consent before a semantic shock.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r30-consent-before-shock",
+                        "decision_epoch": "epoch-before-shock",
+                        "trigger_event_id": str(seeded["event_id"]),
+                        "candidate_options": seeded["options"],
+                        "required_member_ids": [
+                            str(seeded["owner_member_id"]),
+                            str(seeded["admin_member_id"]),
+                        ],
+                        "selected_proposal_id": str(seeded["garden_proposal_id"]),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.commit()
+
+        class _Selectable:
+            def model_dump(self, *, mode="json"):
+                return {"selectable": True}
+
+        members = [
+            {
+                "member_id": str(seeded["owner_member_id"]),
+                "role": "OWNER",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "garden"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+            {
+                "member_id": str(seeded["admin_member_id"]),
+                "role": "ADMIN",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "museum"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+        ]
+
+        def projection(_session, _journey, *, candidate_windows=None):
+            if candidate_windows is None:
+                return {"member_count": 2, "members": members}
+            return {
+                "member_count": 2,
+                "members": members,
+                "candidate_fit_matrix": [],
+                "mediation": {
+                    "classification": "COMPROMISE_AVAILABLE",
+                    "candidate_ids": [selected_plan_id],
+                    "selected_candidate_id": selected_plan_id,
+                },
+            }
+
+        monkeypatch.setattr(main_module, "plan_schema", lambda *_args, **_kwargs: _Selectable())
+        monkeypatch.setattr(
+            main_module, "active_journey_members_with_capabilities", projection
+        )
+        monkeypatch.setattr(
+            main_module,
+            "collective_proposal_receipt",
+            lambda _session, _journey, _proposals: {
+                "proposal_collective_decisions": {
+                    str(item["proposal_id"]): item for item in seeded["options"]
+                }
+            },
+        )
+        monkeypatch.setattr(
+            collective_mediation,
+            "collective_decision_epoch",
+            lambda **_kwargs: "epoch-after-shock",
+        )
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            selected_plan,
+            hard_feasible_plan_ids={selected_plan_id},
+        )
+
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_CONSENT_EPOCH_STALE"
+        assert gate["classification"] == "RENEWED_COLLECTIVE_CONSENT_STALE"
+        assert gate["resolved_decision_epoch"] == "epoch-before-shock"
+        assert gate["current_decision_epoch"] == "epoch-after-shock"
