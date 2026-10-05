@@ -257,3 +257,113 @@ Do not:
 The R30 product truth is now precise:
 
 > Human permission is valid only for the meaningfully relevant world it was granted in. When that world changes, expired permission neither executes nor blocks recovery. The system may continue without asking again only when the current shared decision is genuinely unanimous; otherwise fresh human authority is required and is revalidated again at the final mutation boundary.
+
+
+---
+
+# GPT addendum — CI, independent fresh authority, and denial transaction isolation
+
+This addendum is newer than the body above.
+
+## Fresh responses may not be manufactured by a global fairness optimum
+
+Commits:
+
+- \`124edfd465db00da2ac215971ad536199fad4135\`
+- \`815ea5b2e5b2cf9a294b4a8ea60a9c283ffeab2d\`
+
+The R30 harness no longer picks one globally "fair" compromise and submits that
+answer for every relevant member.
+
+For every fresh required member it now independently derives that member's
+unique maximum \`effective_fit\` over grounded acceptable options.
+
+Automated strike closure is permitted only when:
+
+\`\`\`text
+every relevant member has one unique grounded maximum
+AND
+all independently derived maxima are the same proposal
+AND
+the persisted authenticated response from each member matches its own maximum
+\`\`\`
+
+If the independent maxima differ, the harness must stop rather than manufacture
+consensus. That is a real unresolved human trade-off, not a test failure to
+paper over.
+
+The machine verifier independently recomputes this property from persisted
+candidate options, member fits, responses and authenticated response audits.
+
+## A denied mutation may not burn an approval receipt
+
+Commits:
+
+- \`432ff691c5dd6becca6604f44fbcd9f7ca545452\`
+- \`92b41ba7e324f9102cc98d926e3c0ea0d6f68902\`
+
+A transaction bug was found after inspecting the Agent approval flow.
+
+\`consume_action_approval()\` flushes \`APPROVED -> CONSUMED\` before the actual
+replan reaches the collective gate. The earlier denial audit helper committed
+on that same Session, so it could accidentally make this true:
+
+\`\`\`text
+mutation rejected
+BUT
+approval receipt permanently CONSUMED
+\`\`\`
+
+That is now forbidden.
+
+The denial helper now:
+
+\`\`\`text
+capture immutable denial facts
+-> rollback the refused action transaction
+-> open an independent Session
+-> persist only collective.mutation.denied
+-> commit only that audit
+\`\`\`
+
+A regression test proves that the approval remains \`APPROVED\` with no
+\`consumed_at\`, while the denial audit survives durably.
+
+## Branch-local narrow CI now exists
+
+Workflow:
+
+\`.github/workflows/r30-narrow.yml\`
+
+Initial runs exposed only a CI packaging mistake: this backend is a flat-layout
+application, not an editable setuptools package.
+
+The workflow has been corrected to install the existing locked environment with:
+
+\`uv sync --extra dev --no-install-project\`
+
+It then runs:
+
+\`\`\`text
+python -m compileall -q app run_r30_live.py scripts/r30_machine_verdict.py
+
+python -m pytest -q
+  tests/test_r29_disagreement_mediation.py
+  tests/test_r28_authenticated_member_principal.py
+  tests/test_r28_durable_approval_continuation.py
+\`\`\`
+
+A green CI run is evidence only for narrow deterministic regression safety.
+It is NOT R30 live proof and does not replace:
+
+\`python run_r30_live.py --full-r30\`
+
+## Codex execution order
+
+1. Pull the latest remote branch, not any SHA named earlier in this taskbook.
+2. Check the latest \`R30 narrow validation\` GitHub Actions result.
+3. If red, inspect the first failing compile/test assertion and fix exactly that.
+4. If green, do not rerun a broad suite.
+5. Run \`python run_r30_live.py --full-r30\` in the configured local external-Agent environment.
+6. Fix only the first causal live failure / first machine-verdict blocker.
+7. Stop only at \`R30_MACHINE_VERDICT.summary.overall == PROVEN\`.
