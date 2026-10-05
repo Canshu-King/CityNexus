@@ -4836,6 +4836,12 @@ def collective_mutation_gate(
                 "allowed": False,
                 "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
                 "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                # Carry both layers into the durable denial audit. At this
+                # branch the semantic epoch already compared equal, which lets
+                # R30 prove that physical-world staleness is not merely an
+                # alias for changed member/option meaning.
+                "resolved_decision_epoch": resolved_decision_epoch,
+                "current_decision_epoch": current_decision_epoch,
                 "resolved_material_world_epoch": resolved_world_epoch,
                 "current_material_world_epoch": current_world_epoch,
             }
