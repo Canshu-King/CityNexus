@@ -1,0 +1,13 @@
+{
+  "hand": "anchor-form",
+  "old_ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r4",
+  "old_head": "51901f524258580c18e4f880700a86378d42d33f",
+  "new_ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r5",
+  "new_head": "da78a2b170e5cb49e5cebd431846011b645fd738",
+  "pair": "newlane-ord0500-phone-anchor-form-r4..newlane-ord0500-phone-anchor-form-r5",
+  "heads_read_from_refs": true,
+  "paths_compared": 17,
+  "changed_bytes": [],
+  "missing_on_new": [],
+  "verdict": "PARENT_ONLY"
+}

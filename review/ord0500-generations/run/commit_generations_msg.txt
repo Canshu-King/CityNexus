@@ -1,0 +1,13 @@
+ORD-0500 generations: two rosters on two named tips, compared, and both pending hands re-parented.
+
+old_tip eaf4069e5d07a3dacc1ec33a0be515119208e16e (36 hands) vs new_tip d107131c6f6e65d9f207f6bf1b563d1cc8877f89 (42 hands; 1034
+review refs on the line). Verdict transitions between the generations: 0; the loss class
+fired 0 times. Prediction leg: {'NO_PREDICTION_EXIT_128': 37, 'PREDICTED': 5} -- the line grew real parents, so
+merge-tree now answers for hands cut under it and still exits 128 for hands cut from a discarded line.
+A path I feared had fallen out is declared only by hands that were never landed, so the verdict is
+NOT_A_ROLLBACK, computed rather than remembered.
+
+Recuts, both PARENT_ONLY with heads read from the refs: anchor-form r4->r5, staging-door r6->r7. The
+first guard accepted a typed sha and my typo made it compare nothing; the mistyped reading is kept in
+this artifact set as the arm's witness. The drift the guard caught (a same-named instrument output
+overwriting the local copy) is recorded with all three blobs in run/recut_drift_note_r1.json.

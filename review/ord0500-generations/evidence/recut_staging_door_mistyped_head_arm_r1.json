@@ -1,0 +1,15 @@
+{
+  "hand": "staging-door",
+  "old_ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r5",
+  "old_head": "a3e344ba0dc0927060f220f9f8e7d89e95c487b3",
+  "new_ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r7",
+  "new_head": "3b085628f42f9f049676f8a2101b3871c96f8e6b",
+  "paths_compared": 3,
+  "changed_bytes": [],
+  "missing_on_new": [
+    "review/ord0500-staging-door/tools/r24_chain.sh",
+    "review/ord0500-staging-door/run/r24_chain_forced.txt",
+    "review/ord0500-staging-door/run/r24_chain_green.txt"
+  ],
+  "verdict": "PATH_MISSING_ON_NEW_REF"
+}

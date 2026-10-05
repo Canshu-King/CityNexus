@@ -1,0 +1,17 @@
+{
+  "tip_parent": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+  "commit": "3b035628f33e593e243d02b3d1647f805d191321",
+  "tree": "3242e034c5003fad622f35f04d6e383570c45dd6",
+  "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r7",
+  "read_back": "3b035628f33e593e243d02b3d1647f805d191321",
+  "commit_equals_read_back": true,
+  "paths": 3,
+  "product_paths": [],
+  "declared_landed_changes": [],
+  "allow_landed": [],
+  "blobs": {
+    "review/ord0500-staging-door/tools/r24_chain.sh": "b1bd224e1abf680e8f6851b190ea3040f8442f99",
+    "review/ord0500-staging-door/run/r24_chain_forced.txt": "6c900b2002ae352555d318185df7a054b9faf9cc",
+    "review/ord0500-staging-door/run/r24_chain_green.txt": "9d784fff6730f8263c680114cd7f599b9a182543"
+  }
+}

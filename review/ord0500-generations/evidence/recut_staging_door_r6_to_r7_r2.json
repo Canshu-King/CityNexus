@@ -1,0 +1,13 @@
+{
+  "hand": "staging-door",
+  "old_ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r6",
+  "old_head": "31904cf3f413de4154a921224f2187e99527a1e4",
+  "new_ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r7",
+  "new_head": "3b035628f33e593e243d02b3d1647f805d191321",
+  "pair": "0afdb49b-ord0500-staging-door-r6..0afdb49b-ord0500-staging-door-r7",
+  "heads_read_from_refs": true,
+  "paths_compared": 3,
+  "changed_bytes": [],
+  "missing_on_new": [],
+  "verdict": "PARENT_ONLY"
+}

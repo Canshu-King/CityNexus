@@ -1,0 +1,14 @@
+{
+  "drift_found_because": "the same instrument ran again tonight and wrote over the local copy",
+  "r4_ref": "51901f524258580c18e4f880700a86378d42d33f",
+  "r4_carries_blob": "a3d201afb134c5cff8201ad9d0e3b862e0bd14c1",
+  "newer_reading_on": {
+    "ref_head": "27192f21214fae7fe8cda5773c1578c4830e299d",
+    "path": "review/ord0500-spec-run/evidence/anchor_form_spec_r26.json",
+    "blob": "23b9d32d906ef2e9c2db9ecc91a98d6baf0a8755"
+  },
+  "restored_local_file_bytes": 580,
+  "local_lf_blob_now": "a3d201afb134c5cff8201ad9d0e3b862e0bd14c1",
+  "local_equals_r4": true,
+  "newer_copy_still_published_untouched": true
+}

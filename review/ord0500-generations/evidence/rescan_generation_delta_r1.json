@@ -1,0 +1,45 @@
+{
+  "schema": "CNX_RESCAN_GENERATION_DELTA_V1",
+  "tool": "rescan_generation_delta_r1",
+  "old_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+  "new_tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+  "refs_old": 36,
+  "refs_new": 42,
+  "added_this_window": [
+    "0afdb49b-landed-blob-rescan-r2",
+    "0afdb49b-ord0485-spec-drift-r1",
+    "0afdb49b-ord0500-recut-slice-r1",
+    "0afdb49b-ord0500-spec-run-r1",
+    "0afdb49b-ord0500-staging-door-r6",
+    "newlane-ord0500-phone-anchor-form-r4"
+  ],
+  "moved_count": 0,
+  "moved": [],
+  "prediction_split": {
+    "NO_PREDICTION_EXIT_128": 37,
+    "PREDICTED": 5
+  },
+  "path_tally_new": {
+    "ABSENT": 263,
+    "CHANGED": 137,
+    "SAME": 76
+  },
+  "review_refs_on_line_new": 1034,
+  "disputed_path": "review/ord0500-staging-door/tools/r24_chain.sh",
+  "disputed_path_declared_by": [
+    {
+      "ref": "0afdb49b-ord0500-staging-door-r5",
+      "verdict": "NOT_ON_LINE"
+    },
+    {
+      "ref": "0afdb49b-ord0500-staging-door-r6",
+      "verdict": "NOT_ON_LINE"
+    }
+  ],
+  "disputed_path_held_by_a_landed_hand": [],
+  "near_miss_verdict": "NOT_A_ROLLBACK",
+  "receipted_refs_new": [
+    "0afdb49b-ord0500-staging-door-r4"
+  ],
+  "lost_today_new": 0
+}
