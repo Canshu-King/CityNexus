@@ -146,6 +146,8 @@ def main() -> int:
                         "h1_count": f["h1_count"], "h2_count": f["h2_count"],
                         "would_my_reader_have_become_ready": heading_gate > 0,
                         "kicker_text": f["kicker_text"],
+                        "kicker_style": f["kicker_style"],
+                        "cmdr_shape_hits": f["node_hits"],
                         "testids_present": [k for k, v in f["present"].items() if v],
                         "body_chars": f["body_chars"],
                         "body_head": f["inner_head"][:200],

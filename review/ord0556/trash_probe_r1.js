@@ -48,6 +48,45 @@ const { chromium } = require("D:/moodle/CityNexus/frontend/node_modules/playwrig
     const texts = (sel) => Array.from(document.querySelectorAll(sel))
       .map((e) => (e.innerText || "").trim().slice(0, 60)).filter(Boolean);
     const q = (sel) => document.querySelector(sel);
+    // Computed style of the element that actually carries the kicker text, because the question this
+    // leg answers is "is that caps on the screen written in the source, or made by CSS".
+    const kick = Array.from(document.querySelectorAll("span.v8-kicker")).map((e) => ({
+      node_text: (e.textContent || "").trim().slice(0, 40),
+      transformed: getComputedStyle(e).textTransform,
+    }));
+    // Same walk as the proven reader, rules copied verbatim from it: `innerText` would show the
+    // uppercase the CSS paints, `nodeValue` shows what the source strings say.
+    const SHAPES = [
+      { kind: "UPPER_SNAKE", re: /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+){1,}\b/ },
+      { kind: "IANA_ZONE", re: /\b(?:Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)\/[A-Za-z_]+(?:\/[A-Za-z_]+)?\b/ },
+      { kind: "LOWER_SNAKE_KEY", re: /\b[a-z][a-z0-9]*(?:_[a-z0-9]+){1,}\b/ },
+      { kind: "ALLCAPS_WORD", re: /\b[A-Z]{4,}\b/ },
+    ];
+    const ALLOW = ["UTC", "GMT", "PDF", "ID", "URL", "API", "AI", "GPS", "OSM", "OK", "FAQ", "COPILOT", "COPILOT"];
+    const node_hits = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = walker.nextNode())) {
+      const text = (n.nodeValue || "").trim();
+      if (text.length < 3) continue;
+      const el = n.parentElement;
+      if (!el) continue;
+      if (el.closest("script,style,code,pre,noscript")) continue;
+      const det = el.closest("details");
+      if (det && !det.open) continue;
+      const rg = document.createRange(); rg.selectNodeContents(n);
+      if (rg.getClientRects().length === 0) continue;
+      const cs = getComputedStyle(el);
+      if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0) continue;
+      for (const s of SHAPES) {
+        const m = text.match(s.re);
+        if (!m) continue;
+        if (s.kind === "ALLCAPS_WORD" && ALLOW.includes(m[0])) continue;
+        if (s.kind === "ALLCAPS_WORD" && /[_]/.test(m[0])) continue;
+        node_hits.push({ kind: s.kind, token: m[0], node_text: text.slice(0, 50), transform: cs.textTransform });
+        break;
+      }
+    }
     return {
       url: location.href,
       h1_count: document.querySelectorAll("h1").length,
@@ -55,6 +94,8 @@ const { chromium } = require("D:/moodle/CityNexus/frontend/node_modules/playwrig
       h1_text: texts("h1"),
       h2_text: texts("h2"),
       kicker_text: texts("span.v8-kicker"),
+      kicker_style: kick,
+      node_hits,
       present: ids.reduce((a, id) => { a[id] = !!q('[data-testid="' + id + '"]'); return a; }, {}),
       body_chars: (document.body.innerText || "").length,
       inner_head: (document.body.innerText || "").replace(/\s+/g, " ").slice(0, 300),
@@ -69,6 +110,6 @@ const { chromium } = require("D:/moodle/CityNexus/frontend/node_modules/playwrig
   const shown = Object.keys(facts.present).filter((k) => facts.present[k]);
   console.log(JSON.stringify({ route: route, locale: locale, h1: facts.h1_count, h2: facts.h2_count,
     testids: shown, chars: facts.body_chars, api: calls.length, errors: errors.length,
-    kicker: facts.kicker_text.slice(0, 2) }));
+    node_hits: facts.node_hits.length, kicker: facts.kicker_text.slice(0, 2) }));
   await browser.close();
 })();
