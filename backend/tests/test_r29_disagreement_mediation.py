@@ -774,6 +774,95 @@ def test_r29_renewed_consent_cannot_override_hard_revalidation(monkeypatch) -> N
         assert gate["classification"] == "RENEWED_COLLECTIVE_CONSENT_STALE"
 
 
+def test_r29_superseded_resolved_consent_cannot_resurrect() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    old_mission_id = str(uuid4())
+    new_mission_id = str(uuid4())
+
+    with SessionLocal() as session:
+        session.add_all([
+            JourneyMission(
+                id=old_mission_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Older resolved mediation.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r29-old-consent",
+                        "selected_proposal_id": str(seeded["garden_proposal_id"]),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            ),
+            JourneyMission(
+                id=new_mission_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=old_mission_id,
+                user_text="Newer resolved mediation.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 2,
+                            "source_mission_id": old_mission_id,
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r29-new-consent",
+                        "selected_proposal_id": str(seeded["museum_proposal_id"]),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=(datetime.now(timezone.utc) + timedelta(seconds=1)).isoformat(),
+                started_at=(datetime.now(timezone.utc) + timedelta(seconds=1)).isoformat(),
+                completed_at=(datetime.now(timezone.utc) + timedelta(seconds=1)).isoformat(),
+            ),
+        ])
+        newer_proposal = session.get(
+            ReplanProposal, str(seeded["museum_proposal_id"])
+        )
+        newer_proposal.status = "REJECTED"
+        session.commit()
+
+        from app.collective_mediation import pending_resolved_mediation_selection
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        assert pending_resolved_mediation_selection(
+            session,
+            str(seeded["journey_id"]),
+            active_plan_version_id=journey.active_plan_version_id,
+        ) is None
+
+
 def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
