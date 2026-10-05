@@ -1,0 +1,3 @@
+frontend/src/features/execution/LiveRecovery.tsx:347  : `Merged ${duplicateCount} identical suggestion(s).`}
+frontend/src/features/simulation/simulationAdapter.ts:157  const legsEn = mobility.legs > 0 ? ` ${mobility.legs} leg(s)` : "";
+frontend/src/lib/pretripChecklist.ts:75  en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; t

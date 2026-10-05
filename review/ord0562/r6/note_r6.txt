@@ -1,0 +1,46 @@
+ORD-0562 r6 -- the dictionary was only half the defect. This pass fixes the last counted noun the hub
+still builds inline, and widens the ruler from three files to every source under frontend/src.
+
+THE FIX (one line, in the file this order already owns)
+  before:  : `${disruptions.length} change(s)`
+  after:   : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+  `frontend/src/app/V8Experience.tsx` -- the attention line, which reads `1 change` for one disruption
+  and `3 changes` for several. No dictionary key was needed: `englishCountNoun` is already exported from
+  `frontend/src/lib/plural.ts`, the same helper the budget line uses.
+
+THE WIDENED ARM (6th arm of the standing ruler)
+  It walks every .ts/.tsx under frontend/src -- 148 files by this note's own recount -- and decides per
+  occurrence, not per line: a `(s)` counts only inside a string literal, so `shelves.find((s) => ...)` is
+  not a screen string (a per-line version of this arm produced exactly that false positive on its first
+  run and was replaced). Comment lines are skipped, because plural.ts's own header names the dodge it
+  rejects.
+  Asserted empty over the three files ORD-0562 owns: LocaleContext.tsx, V8Experience.tsx, plural.ts.
+  Everything else is counted and written out, not policed -- this lane does not edit files another lane
+  may have open on an order it was not given. The inventory right now:
+    frontend/src/features/execution/LiveRecovery.tsx:347  : `Merged ${duplicateCount} identical suggestion(s).`}
+    frontend/src/features/simulation/simulationAdapter.ts:157  const legsEn = mobility.legs > 0 ? ` ${mobility.legs} leg(s)` : "";
+    frontend/src/lib/pretripChecklist.ts:75  en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; t
+
+THE ARM BITES
+  Planting the old string back into V8Experience.tsx turned the arm red with its own words --
+  "a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge" -- and the file was
+  restored afterwards; the same pass then reads six arms passing.
+  Receipt: review/ord0562/r6/counter_arm_r1.txt (red) beside ruler_arms_r6.txt (green, six arms).
+
+GATES
+  typecheck: `-p tsconfig.check.json --noEmit` rc=0 and `-p tsconfig.typecheck.json --noEmit` rc=0;
+  captured output 0 bytes (no diagnostics).
+  dictionary parse still reads back: 2244 lines, 1883 entries, 953 of them English.
+  exposure, same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), same
+  command, same export shape:
+    base b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c   cells_total=6 modules_in_graph=330 files_found=330 unresolved_import_count=58 resolution_truncated_total=40 crossing_cuts=0 ruler_rc=0
+    cand 091b7483ffdd66d8044f4c513c04d9a51593415f   cells_total=6 modules_in_graph=329 files_found=329 unresolved_import_count=58 resolution_truncated_total=40 crossing_cuts=0 ruler_rc=0
+  cells_total is 6 on both sides and the per-file list is identical, so exposure did not grow. The
+  candidate shows one module fewer for a reason worth stating out loud:
+
+LANDING HAZARD THIS BRANCH HAS, STATED PLAINLY
+  The branch was cut one generation ago, so its TREE lacks files the tip gained since (a spend-face copy
+  module and another lane's review/ evidence). Landing the whole tree would wipe them; landing the named
+  files does not. `python tools/cff87c64_landing_readiness_r1.py --selftest` answers exactly this per file
+  and reads CLEAN for every path this lane has open -- run it again at the moment of landing, because a
+  CLEAN from an hour ago is not a promise.
