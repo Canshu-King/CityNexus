@@ -5005,41 +5005,51 @@ def _record_collective_mutation_denial(
     mutation_kind: str,
     proposal_id: str | None = None,
 ) -> None:
-    """Persist a refused collective-authority spend at the mutation boundary.
+    """Persist a refused authority spend without committing failed action state.
 
-    R30 needs durable evidence that stale human authority was refused by the
-    product, not merely reported by a live harness. Keep the audit compact and
-    derived from the core gate's machine decision.
+    The Agent gateway may have *flushed* an approval consumption before the
+    replan reaches the collective mutation gate. A denial must roll that failed
+    action transaction back; otherwise persisting this audit on the same
+    Session would accidentally burn the approval receipt for an action that
+    never executed. Capture immutable audit facts, rollback the caller, then
+    persist only the denial in an independent transaction.
     """
 
-    record_audit(
-        session,
-        action="collective.mutation.denied",
-        entity_type="PlanVersion",
-        entity_id=target_plan.id,
-        journey_id=journey.id,
-        actor_type="SYSTEM",
-        actor_id="collective-mutation-gate",
-        after={
-            "mutation_kind": mutation_kind,
-            "proposal_id": proposal_id,
-            "target_plan_version_id": target_plan.id,
-            "code": decision.get("code"),
-            "classification": decision.get("classification"),
-            "resolved_decision_epoch": decision.get("resolved_decision_epoch"),
-            "current_decision_epoch": decision.get("current_decision_epoch"),
-            "resolved_material_world_epoch": decision.get(
-                "resolved_material_world_epoch"
-            ),
-            "current_material_world_epoch": decision.get(
-                "current_material_world_epoch"
-            ),
-        },
-    )
-    # The refusal is itself durable product truth. The callers reach this point
-    # before any domain mutation, so committing the audit cannot partially
-    # commit an attempted plan transition.
-    session.commit()
+    journey_id = str(journey.id)
+    target_plan_id = str(target_plan.id)
+    after = {
+        "mutation_kind": mutation_kind,
+        "proposal_id": proposal_id,
+        "target_plan_version_id": target_plan_id,
+        "code": decision.get("code"),
+        "classification": decision.get("classification"),
+        "resolved_decision_epoch": decision.get("resolved_decision_epoch"),
+        "current_decision_epoch": decision.get("current_decision_epoch"),
+        "resolved_material_world_epoch": decision.get(
+            "resolved_material_world_epoch"
+        ),
+        "current_material_world_epoch": decision.get(
+            "current_material_world_epoch"
+        ),
+    }
+
+    # Nothing in the refused mutation may survive merely because the refusal
+    # itself needs durable evidence. This also releases SQLite write locks
+    # before the independent audit transaction begins.
+    session.rollback()
+
+    with SessionLocal() as audit_session:
+        record_audit(
+            audit_session,
+            action="collective.mutation.denied",
+            entity_type="PlanVersion",
+            entity_id=target_plan_id,
+            journey_id=journey_id,
+            actor_type="SYSTEM",
+            actor_id="collective-mutation-gate",
+            after=after,
+        )
+        audit_session.commit()
 
 
 def collective_proposal_receipt(
