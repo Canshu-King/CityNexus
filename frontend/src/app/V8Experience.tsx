@@ -2114,6 +2114,15 @@ export function V8Experience() {
           <button
             key={item.key}
             data-testid={`nav-${item.key}`}
+            /* The active item was painted only by a class and a contrast role, so a screen reader
+               announcing the bottom bar heard four buttons and could not tell which screen it was
+               already on. `aria-current="page"` says that fact on the one button it belongs to and on
+               no other; the visible words are untouched, because they are the name already. */
+            aria-current={
+              route === item.key || (item.key === "map" && route === "live")
+                ? "page"
+                : undefined
+            }
             data-contrast-role={
               route === item.key || (item.key === "map" && route === "live")
                 ? "state"
