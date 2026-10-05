@@ -16588,6 +16588,70 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 16:32 · 自申报下一件做完了：注释锚那枝按现尖退到 r4，顺手抓出我自己那把全树尺的两枚单向致盲——扫描根那句注释在说谎（契约根本不在根里），而「生成件不许手改」的豁免把腐坏挡在尺外；四臂齐、五枚反件各自咬名、A/B 只改一个变量
+
+**一、这件是什么、为什么现在做**
+
+裁语②要把这把守闸升成全树尺；裁语③那一格已交，除此之外我没有非等裁语才能动的格，所以按常设自申报这一件。上一代 r3 的块已在账本、候选未落；尖从它那一代的基座跳到现读这一枚，按「切枝当场取尖、尖动就退一版」我退了 r4。
+
+**二、坐标（写块这一刻现取，逐枚 `git cat-file` 过）**
+
+- 枝 `refs/heads/review/a68b0631-comment-anchor-drift-r4` 头 `e7a0e5d5b35cdfaa3aae85dc6fd0c353d2757fbe`：本地 `git rev-parse` 与 `git ls-remote --refs origin` 两侧逐字相等，`git cat-file -t` 回 commit
+- 基座 = 现读权威尖 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`（写块前再读一次仍是这枚）。r3 对这枚尖 `git merge-tree --write-tree` 的冲突数是 0，所以退版买的是「与当代同尖」和两枚新臂，不是解冲突
+- 被退的那代头 `7c92c5407558e0df65f27bdafcc0df9fa55aef67`，不再交、留作留痕
+- 守闸 `backend/tests/test_qoder_a68b0631_comment_anchor_drift_r1.py` blob `b74c6a687ac8fbac9dd9ccafa4e56716d9328328`
+- 名册 `frontend/review/line_anchor_drift/CONVERTED_r1.txt` blob `40dc1176e62a275713658d3ef3f46428cb9f4c7b`（103 条登记项）
+- 派生件 `frontend/src/generated/api.ts` blob `e1b5320f1cd3731058e965a07bb96ad8d791523b`（尖上那枚是 `2bba1e8d30954a78b2e2007f7aaf8aa5c8d5cbf7`）
+- 读数件 `frontend/review/line_anchor_drift/READINGS_r8.txt` blob `a2518ba61fdc00389b67f25c5f635802f37973aa`
+
+**三、这一代抓到什么（两枚都是我自己那把尺的缺陷，不是别人的码）**
+
+1. 扫描根的列表旁边写着「契约在下方加入」，而列表里根本没有那一枚根。全树尺因此从来没读过 OpenAPI 文件——而那文件的 description 正是被复制进用户编译的客户端注释里的来源。A/B 只改这一枚变量（同一个反件：行号同时放进契约与派生件），逐臂判定：
+     - 没有该根 : {"test_G1": "FAILED", "test_G2": "PASSED", "test_G3": "PASSED", "test_G4": "PASSED"}
+     - 加上该根 : {"test_G1": "FAILED", "test_G2": "PASSED", "test_G3": "FAILED", "test_G4": "PASSED"}，红话点名 ['contracts/openapi.yaml:3270']
+   这一枚句子恰好被名册登记过，所以那一臂一直在红；**没被登记过的契约行号，在旧扫描根下四臂全看不见**——这才是缺陷的分母，不是「反正有人抓到」。
+2. 「派生件由契约产出、不许手改」这枚豁免等于给派生件一条免检通道：契约已去掉行号、派生件还留着行号时，没有任何一臂会响。新臂 G4 把豁免改成「派生件不得比它的来源更旧」，只查这一条，不重复上一臂。
+
+**四、G4 找到的那一枚，修法是重跑生成器，不是手打字节**
+
+- 生成器现跑（openapi-typescript 读契约），产物与树上的派生件差恰为一行，就是那枚陈旧行号；随后把派生件换成产物的字节，再比一次差为 0 行——所以落地后再生成不会 churn，派生文件里没有一个字节是我手打的。
+- 同一句已按名册规矩登记，登记项从上一代的 102 增至 103；它现在被两臂看着，不再只被一臂看着。名册 blob `40dc1176e62a275713658d3ef3f46428cb9f4c7b`，两个数都在读数件 `a2518ba61fdc00389b67f25c5f635802f37973aa` 的分母段
+
+**五、反件与闸（每条从各自那件产物里读，不跨代复用）**
+
+- 守闸四臂现跑 4 passed；派生件里行号形引用剩 0 枚。
+- 五枚反件各咬各的臂：{"M1_number_back_g3": {}, "M2_name_deleted_g1": {}, "M3_derived_only": {"test_G1": "PASSED", "test_G2": "PASSED", "test_G3": "PASSED", "test_G4": "FAILED"}, "M4_both": {"test_G1": "PASSED", "test_G2": "PASSED", "test_G3": "FAILED", "test_G4": "PASSED"}, "M5_contract_only": {"test_G1": "PASSED", "test_G2": "PASSED", "test_G3": "FAILED", "test_G4": "PASSED"}}
+- 读法：行号只在派生件时上一臂绿、新臂红，这就是那条免检通道；行号同时在契约与派生件时上一臂红、新臂绿，这就是「新臂不是上一臂的副本」。逐臂原文与恢复校验都在读数件里。
+- 每枚反件跑完按 sha256 回比恢复，最后 4 passed，树上无残留。这一条我本轮差点自己踩：反件脚本一度把下一枚插在上一枚的恢复之前，中断后真反件留在工作树里，靠 sha 断言才没被提交——顺序已改成「先恢复、比过 sha，再上下一枚」，并写进读数件的自报段。
+- 前端 `npx tsc -p tsconfig.check.json`：rc 0、`error TS` 0 行；整套后端 `--collect-only`：收 1740 条、rc 0。一枚 154 路径的注释扫过去，没有 import 断。
+- 全树尺的分母：扫过 824 枚文件，其中契约根 24 枚，逐根拆计都在读数件 blob `a2518ba61fdc00389b67f25c5f635802f37973aa` 里
+
+**六、面与纪律**
+
+- 面：154 枚路径，加 997 行、减 397 行；产品侧只有注释与派生件那一行说明文字，行为判据零改，契约字节零枚、后端逻辑字节零枚。逐枚路径与本枝头 `e7a0e5d5b35cdfaa3aae85dc6fd0c353d2757fbe` 同代，面也记在读数件 `a2518ba61fdc00389b67f25c5f635802f37973aa`
+- 纪律：权威线零移动；账本零直写（本块走收件口）；`demo/reset` 自调零次；`_preview.db` 读写零枚；端口零枚触碰（本轮没起面，只跑 pytest 与 tsc）；stash / force 零次；别人的脏树与 `_processed` 回执零枚触碰。
+- 待落队列两枝都在等同一个窗口：本枝 r4 的头在第二节；另一枝是 ORD-0507 第二件，头 `d308b32d379f27b3985b7016378f1aa82d67206a`（同样现读 `git cat-file -t` 回 commit）。
+- 仍等你三句裁语：折叠那格的甲/乙、第一件那支 e2e 是重指现行控件还是整件闭单、二十处死文档是补文档还是改指针。这三件我不自派。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜落地顺序表：能同批落的、必须分跳的、代次已过期别点的，三张名单
+给号令者点单用（打更人·值守 `42d1a6fa`，10-05 16:33）。哨兵 H 档这一拍自己报红，我这边同口径现读对上：权威尖上一笔距今 807 分钟，最近 150 分钟窗口里扫到申报块 34 条（现读 git 与收件口同一把尺，出处 live_checks/patrol/_landing_plan_1005_1625.txt:1）⇒ 车道交完活全卡在「等落地」这一格，而这格只有你能做。顺序我排好了，你按批点。
+
+分母（枝尖一律以远端 `ls-remote` 为准，不看块里自报的那枚）：申报未落地 25 枚，同族折叠后 25 枚按字节确有未落地差。表里逐枚列出 21 枚的全名，够覆盖这三类点得着的那几枚；分母按折叠后那 25 枚算。逐枚原文在这张表里 live_checks/patrol/_landing_plan_1005_1625.txt:1。
+
+**第一类·同批就能落（15 枚，彼此不改同一枚文件）**：review/0afdb49b-ord0500-staging-door-r7、review/1ba48dbf-me-hub-closure-evidence-r1、review/1ba48dbf-opened-layers-evidence-r1、review/2d2d7428-ord0509-ink-survey-routes-r5、review/2d2d7428-ord0561-c2b-rule-r2、review/5a53846b-cmdr0204-verify-tip-r1、review/5a53846b-collect-census-liveness-r1、review/5a53846b-lane-instrument-facts-r1、review/5a53846b-not-reached-arm-r2、review/6a150e1e-emitter-door-verify-r7、review/6a150e1e-spend-off-day-sentence-r7、review/8ac89982-named-control-census-r1、review/8ac89982-ord0512-stop-names-on-the-glass-r5、review/cff87c64-landing-readiness-ruler-r1、review/newlane-ord0500-phone-anchor-form-r5（同一张表 live_checks/patrol/_landing_plan_1005_1625.txt:1）
+**第二类·必须分跳（4 对）**：同批落两枚改同一文件且各自结果不同的，后落那枚必然 ABORT（复切判据是「合完逐字节等于车道那份」，这是它的直接后果）。对子与撞的文件：review/6a150e1e-trash-citation-rot-r8 × review/82f55d8a-journeytrash-name-anchors-r2（撞 journeyTrash.ts）；review/6a150e1e-trash-citation-rot-r8 × review/82f55d8a-trash-zh-wording-r2（撞 journeyTrashCopy.ts）；review/a68b0631-ord0507-clock-attribution-r6 × review/cff87c64-ord0562-0568-landing-preview-r2（撞 V8Experience.tsx）；review/a68b0631-ord0507-clock-attribution-r6 × review/cff87c64-ord0562-english-count-nouns-r5（撞 V8Experience.tsx）（同一张表 live_checks/patrol/_landing_plan_1005_1625.txt:1）；撞得最多的热文件：V8Experience.tsx（2 对撞它）、journeyTrash.ts（1 对撞它）、journeyTrashCopy.ts（1 对撞它）
+**第三类·先别点（5 枚块里代次已过期）**：块报的头与远端头不一致，说明车道写完之后又推了一代；照块里那枚点就会落错代。review/2d2d7428-ord0509-ink-survey-routes-r5、review/6a150e1e-trash-citation-rot-r8、review/6a150e1e-emitter-door-verify-r7、review/82f55d8a-journeytrash-name-anchors-r2、review/cff87c64-ord0568-route-provenance-gloss-r3（两块头各是什么逐字在这张表里 live_checks/patrol/_landing_plan_1005_1625.txt:1，我不在这儿抄一遍免得抄错）
+建议的动法：第一类整批先落（一屏看完）；第二类每跳只落一对里的一枚、中间让另一枚 rebase；第三类先让那几扇把当代号重报一次。
+
+边界：这块只排顺序，是**只读预测**（`ls-remote`／`merge-base`／`ls-tree`／`diff`），零次写、零次落地、零次动权威线；门的实判在 `--apply`／`--land` 那侧，两问不混说。另一件顺手修掉的：这张表以前把枝名按列宽截断打印，也曾在代插腿把刚插完的块搬进 `_processed/` 时整支崩掉（FileNotFoundError）——两处都已改成「跟着搬后的件重读、读不到就具名记一笔并写进分母说明」，不再让共享收件口的一次竞态咬死读数。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 申报那格跑完：翻转集合不随档变（暗色零影响、宽屏只让一枚声明退出分母）；顺带两次拆到自己的仪器——一杠不算 `@media` 条件，一杠把上一代读数件覆盖了
 
 **〇、坐标**。权威尖现读 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，与我 15:23、15:30、16:11 三块同一枚（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 本轮再读逐字相同），所以本轮 ref 0 次重挂。16:11 那块已入账（块头「自申报那一格跑完：把三腿翻转臂逐枚过一遍那十九枚去重声明」，`_processed` 现读回执 `6a150e1e_1611.md.inserted_*` 在盘）。件与读数全在 `D:/moodle/_qoder_6a_ord0531_20261001/`：`causal_arm_all_r3.cjs` 加四枚读数 `causal_arm_all_light_390_r3.json`、`causal_arm_all_dark_390_r3.json`、`causal_arm_all_light_1280_r3.json`、`causal_arm_all_dark_1280_r3.json`；栈仍是那两枚：静态端口 `127.0.0.1:4831` 服务现尖产物 `dist_states_tip4`、api 端口 `127.0.0.1:8021`（本轮全程在册、一回没停）。
