@@ -1,0 +1,83 @@
+{
+ "instrument": "cmdra_0553_generation_bind_r9",
+ "cases": [
+  {
+   "case": "c1_same_generation_tip",
+   "expected": "ok",
+   "got": "ok",
+   "reason": "all three links hold",
+   "discriminates": true,
+   "evidence": {
+    "pinned_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+    "build_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+    "build_tag": "cmdra_0553_r8",
+    "dist_on_disk": true,
+    "dist_entry": [
+     "assets/index-BW2_ds1t.js"
+    ],
+    "walk_entry": [
+     "index-BW2_ds1t.js"
+    ],
+    "walk_base": "http://127.0.0.1:49871"
+   }
+  },
+  {
+   "case": "c2_tip_tree_with_previous_build",
+   "expected": "refuse",
+   "got": "refuse",
+   "reason": "link1 build receipt sha != pinned tree",
+   "discriminates": true,
+   "evidence": {
+    "pinned_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+    "build_sha": "1abc280a3d4b4bbb0bf6d9197322a5f4afc2697c",
+    "build_tag": "cmdra_0553_r2",
+    "dist_on_disk": false,
+    "dist_entry": [],
+    "walk_entry": [
+     "index-BW2_ds1t.js"
+    ],
+    "walk_base": "http://127.0.0.1:49871"
+   }
+  },
+  {
+   "case": "c3_tip_build_with_previous_walk",
+   "expected": "refuse",
+   "got": "refuse",
+   "reason": "link2 bundle entry on disk is not what the walk recorded",
+   "discriminates": true,
+   "evidence": {
+    "pinned_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+    "build_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+    "build_tag": "cmdra_0553_r8",
+    "dist_on_disk": true,
+    "dist_entry": [
+     "assets/index-BW2_ds1t.js"
+    ],
+    "walk_entry": [
+     "index-BcQ9VAso.js"
+    ],
+    "walk_base": "http://127.0.0.1:49861"
+   }
+  }
+ ],
+ "arms": [
+  {
+   "id": "same_generation_pair_accepted",
+   "verdict": "PASS",
+   "observed": "all three links hold | disk assets/index-BW2_ds1t.js | walk index-BW2_ds1t.js"
+  },
+  {
+   "id": "tip_tree_with_stale_build_is_refused",
+   "verdict": "PASS",
+   "observed": "link1 build receipt sha != pinned tree"
+  },
+  {
+   "id": "tip_build_with_stale_walk_is_refused",
+   "verdict": "PASS",
+   "observed": "link2 bundle entry on disk is not what the walk recorded | disk assets/index-BW2_ds1t.js | walk index-BcQ9VAso.js"
+  }
+ ],
+ "verdict": "GREEN",
+ "red_arms": [],
+ "rule": "a screen reading may only be classified by the tree that built the bundle it came from"
+}
