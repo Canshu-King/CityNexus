@@ -13,7 +13,15 @@ import json
 
 from sqlalchemy import select
 
-from app.db.models import JourneyMission, PlanVersion, ReplanProposal
+from app.db.models import (
+    Activity,
+    Event,
+    JourneyMission,
+    PlanVersion,
+    Place,
+    ProviderObservation,
+    ReplanProposal,
+)
 from app.replanning.candidate_evidence import verified_interest_preference_breakdown
 
 
@@ -95,7 +103,7 @@ def pending_resolved_mediation_selection(
     journey_id: str,
     *,
     active_plan_version_id: str | None,
-) -> dict[str, str] | None:
+) -> dict[str, Any] | None:
     """Return exact renewed-consent authority that has not yet been consumed.
 
     A resolved mediation round authorizes one selected proposal/plan, not every
@@ -112,13 +120,9 @@ def pending_resolved_mediation_selection(
     )
     candidates: list[tuple[str, JourneyMission, dict[str, Any]]] = []
     for mission in missions:
-        mediation = _mission_object(mission.resolved_intent_json).get(
-            "collective_mediation"
-        )
         clarification = _mission_object(mission.clarification_json)
         if not (
-            isinstance(mediation, dict)
-            and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+            clarification.get("kind") == "COLLECTIVE_TRADEOFF"
             and clarification.get("status") == "RESOLVED"
             and clarification.get("selected_proposal_id")
         ):
@@ -164,15 +168,326 @@ def pending_resolved_mediation_selection(
     return {
         "mission_id": mission.id,
         "clarification_id": str(clarification.get("clarification_id") or ""),
+        "trigger_event_id": str(clarification.get("trigger_event_id") or mission.trigger_event_id or ""),
+        "decision_epoch": clarification.get("decision_epoch"),
+        "consent_epoch": clarification.get("consent_epoch") or clarification.get("decision_epoch"),
+        "required_member_ids": [str(item) for item in clarification.get("required_member_ids") or []],
+        "candidate_options": [
+            dict(item) for item in clarification.get("candidate_options") or [] if isinstance(item, Mapping)
+        ],
         "selected_proposal_id": proposal.id,
         "selected_plan_version_id": plan.id,
     }
 
 
+_RUNTIME_TIMESTAMP_KEYS = frozenset(
+    {
+        "captured_at",
+        "created_at",
+        "updated_at",
+        "detected_at",
+        "provider_captured_at",
+        "expires_at",
+    }
+)
+
+
+def _json_object(raw: Any) -> dict[str, Any]:
+    if isinstance(raw, Mapping):
+        return dict(raw)
+    try:
+        parsed = json.loads(raw or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _json_value(raw: Any, fallback: Any) -> Any:
+    if raw is None:
+        return fallback
+    try:
+        return json.loads(raw) if isinstance(raw, (str, bytes, bytearray)) else raw
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return fallback
+
+
+def _material_value(value: Any) -> Any:
+    """Remove capture bookkeeping while keeping decision facts deterministic."""
+
+    if isinstance(value, Mapping):
+        return {
+            str(key): _material_value(item)
+            for key, item in value.items()
+            if str(key) not in _RUNTIME_TIMESTAMP_KEYS
+        }
+    if isinstance(value, set):
+        return [_material_value(item) for item in sorted(value, key=str)]
+    if isinstance(value, (list, tuple)):
+        return [_material_value(item) for item in value]
+    return value
+
+
+def _material_hash(value: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            _material_value(value),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def _payload_mentions(value: Any, needles: set[str]) -> bool:
+    if not needles:
+        return False
+    if isinstance(value, Mapping):
+        return any(_payload_mentions(key, needles) or _payload_mentions(item, needles) for key, item in value.items())
+    if isinstance(value, (list, tuple, set)):
+        return any(_payload_mentions(item, needles) for item in value)
+    return str(value) in needles
+
+
+def _plan_decision_material(session, plan_id: str | None, option: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """Project only the selected plan facts that can change the meaning of consent.
+
+    This intentionally reads the existing PlanVersion evidence and canonical Place rows.
+    It does not use row timestamps as an epoch input, and it does not include unrelated
+    Journey provider observations.
+    """
+
+    if not plan_id:
+        return None
+    plan = session.get(PlanVersion, str(plan_id))
+    if plan is None:
+        return {
+            "plan_version_id": str(plan_id),
+            "plan_missing": True,
+            "immutable_fingerprint": _material_hash({"plan_version_id": str(plan_id), "plan_missing": True}),
+        }
+    activities = list(
+        session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == plan.id)
+            .order_by(Activity.sequence_no, Activity.id)
+        ).all()
+    )
+    activity_ids = {str(item.id) for item in activities}
+    place_ids = {str(item.place_id) for item in activities if item.place_id}
+    route_keys: set[str] = set()
+    for item in activities:
+        route_key = str(item.place_id or item.city_service_id or "")
+        if route_key:
+            route_keys.add(route_key)
+        metadata = _json_object(item.metadata_json or "{}")
+        semantic_key = str(metadata.get("semantic_key") or "").strip()
+        if semantic_key:
+            route_keys.add(semantic_key)
+    route_pairs = [
+        [
+            str(previous.place_id or previous.city_service_id or ""),
+            str(current.place_id or current.city_service_id or ""),
+        ]
+        for previous, current in zip(activities, activities[1:])
+    ]
+    option = option or {}
+    fit_subject = {
+        "place_ids": sorted(str(item) for item in (option.get("fit_subject_place_ids") or [])),
+        "tags": sorted(str(item).strip().lower() for item in (option.get("fit_subject_tags") or []) if str(item).strip()),
+        "basis": option.get("fit_subject_basis"),
+    }
+    try:
+        mobility_evidence = json.loads(plan.mobility_evidence_json or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        mobility_evidence = {}
+    if not isinstance(mobility_evidence, dict):
+        mobility_evidence = {}
+    facts = []
+    for fact in mobility_evidence.get("facts") or []:
+        if not isinstance(fact, Mapping):
+            continue
+        pair = [str(fact.get("origin_key") or ""), str(fact.get("destination_key") or "")]
+        if pair in route_pairs:
+            facts.append(_material_value(fact))
+    selected_fact_ids = [_material_hash(item) for item in facts]
+    evidence_identity = {
+        "snapshot_id": plan.mobility_snapshot_id or mobility_evidence.get("snapshot_id"),
+        "integrity_hash": mobility_evidence.get("integrity_hash") or _material_hash(facts),
+        "normalizer_version": mobility_evidence.get("normalizer_version"),
+        "route_pairs": route_pairs,
+        "selected_fact_ids": selected_fact_ids,
+        "provider_observation_ids": sorted(
+            str(item)
+            for item in {
+                mobility_evidence.get("provider_observation_id"),
+                _json_object(mobility_evidence.get("incident_recovery_evidence")).get("provider_observation_id"),
+            }
+            if item
+        ),
+    }
+    place_rows = list(
+        session.scalars(select(Place).where(Place.id.in_(sorted(place_ids)))).all()
+    ) if place_ids else []
+    place_facts: list[dict[str, Any]] = []
+    for place in sorted(place_rows, key=lambda item: str(item.id)):
+        metadata = _json_object(place.metadata_json or "{}")
+        place_facts.append(
+            {
+                "place_id": str(place.id),
+                "provider_key": place.provider_key,
+                "external_id": place.external_id,
+                "category": place.category,
+                "tags": sorted(_material_value(_json_value(place.tags_json, []))),
+                "opening_hours": _material_value(_json_value(place.opening_hours_json, {})),
+                "cost_evidence": _material_value(
+                    metadata.get("cost_evidence") or metadata.get("cost") or {}
+                ),
+            }
+        )
+    material_needles = {
+        str(plan.id),
+        *activity_ids,
+        *place_ids,
+        *route_keys,
+    }
+    referenced_observation_ids = set(evidence_identity["provider_observation_ids"])
+    observation_facts: list[dict[str, Any]] = []
+    for observation in session.scalars(
+        select(ProviderObservation).where(ProviderObservation.journey_id == plan.journey_id)
+    ).all():
+        payload = _json_object(observation.payload_json or "{}")
+        if str(observation.id) not in referenced_observation_ids and not _payload_mentions(payload, material_needles):
+            continue
+        observation_facts.append(
+            {
+                "id": str(observation.id),
+                "provider_key": observation.provider_key,
+                "observation_type": observation.observation_type,
+                "state": observation.state,
+                "incident_fingerprint": observation.incident_fingerprint,
+                "payload": _material_value(payload),
+            }
+        )
+    event_facts: list[dict[str, Any]] = []
+    for event in session.scalars(select(Event).where(Event.journey_id == plan.journey_id)).all():
+        payload = _json_object(event.payload_json or "{}")
+        if str(event.affected_activity_id or "") not in activity_ids and not _payload_mentions(payload, material_needles):
+            continue
+        event_facts.append(
+            {
+                "id": str(event.id),
+                "provider_key": event.provider_key,
+                "provenance": event.provenance,
+                "event_type": event.event_type,
+                "severity": event.severity,
+                "status": event.status,
+                "affected_activity_id": event.affected_activity_id,
+                "occurred_at": event.occurred_at,
+                "payload": _material_value(payload),
+            }
+        )
+    plan_structure = {
+        "plan_version_id": str(plan.id),
+        "parent_plan_version_id": plan.parent_plan_version_id,
+        "planning_mode": plan.planning_mode,
+        "total_cost_minor": plan.total_cost_minor,
+        "currency": plan.currency,
+        "estimated_duration_min": plan.estimated_duration_min,
+        "mobility_snapshot_id": plan.mobility_snapshot_id,
+        "activities": [
+            {
+                "id": str(item.id),
+                "sequence_no": item.sequence_no,
+                "activity_type": item.activity_type,
+                "place_id": item.place_id,
+                "city_service_id": item.city_service_id,
+                "start_at": item.start_at,
+                "end_at": item.end_at,
+                "travel_from_prev_min": item.travel_from_prev_min,
+                "estimated_cost_minor": item.estimated_cost_minor,
+                "locked": item.locked,
+            }
+            for item in activities
+        ],
+    }
+    immutable_fingerprint = _material_hash(
+        {
+            "plan": plan_structure,
+            "fit_subject": fit_subject,
+            "mobility": evidence_identity,
+            "places": place_facts,
+            "provider_observations": observation_facts,
+            "events": event_facts,
+        }
+    )
+    return {
+        "plan_version_id": str(plan.id),
+        "immutable_fingerprint": immutable_fingerprint,
+        "plan_structure": _material_value(plan_structure),
+        "fit_subject": fit_subject,
+        "hard_feasibility_evidence": {
+            "mobility_snapshot_id": evidence_identity.get("snapshot_id"),
+            "mobility_integrity_hash": evidence_identity.get("integrity_hash"),
+            "route_pairs": route_pairs,
+            "selected_fact_ids": selected_fact_ids,
+            "provider_observation_ids": evidence_identity.get("provider_observation_ids", []),
+        },
+        "place_evidence": place_facts,
+        "provider_observations": sorted(observation_facts, key=lambda item: item["id"]),
+        "event_evidence": sorted(event_facts, key=lambda item: item["id"]),
+    }
+
+
+def decision_material_snapshot(
+    session,
+    *,
+    journey_id: str,
+    base_plan_version_id: str | None,
+    options: Iterable[Mapping[str, Any]],
+    selected_proposal_id: str | None = None,
+    selected_plan_version_id: str | None = None,
+) -> dict[str, Any]:
+    """Return the material world inputs bound to a collective consent epoch."""
+
+    option_rows = [dict(item) for item in options if isinstance(item, Mapping)]
+    candidate_materials = []
+    selected_option: Mapping[str, Any] | None = None
+    for option in option_rows:
+        proposal_id = str(option.get("proposal_id") or "")
+        plan_id = str(option.get("plan_id") or "") or None
+        if proposal_id and proposal_id == str(selected_proposal_id or ""):
+            selected_option = option
+        candidate_plan = _plan_decision_material(session, plan_id, option)
+        candidate_materials.append(
+            {
+                "proposal_id": proposal_id,
+                "plan_id": plan_id,
+                "status": option.get("status"),
+                "fit_subject_place_ids": sorted(str(item) for item in (option.get("fit_subject_place_ids") or [])),
+                "fit_subject_tags": sorted(str(item) for item in (option.get("fit_subject_tags") or [])),
+                "immutable_fingerprint": (candidate_plan or {}).get("immutable_fingerprint"),
+            }
+        )
+    selected_plan_id = str(selected_plan_version_id or "") or None
+    if selected_plan_id is None and selected_option is not None:
+        selected_plan_id = str(selected_option.get("plan_id") or "") or None
+    selected_plan = _plan_decision_material(session, selected_plan_id, selected_option)
+    return {
+        "base_plan_version_id": str(base_plan_version_id) if base_plan_version_id else None,
+        "selected_proposal_id": str(selected_proposal_id) if selected_proposal_id else None,
+        "selected_plan_version_id": selected_plan_id,
+        "candidate_plan_materials": candidate_materials,
+        "selected_plan": selected_plan,
+    }
+
+
 def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
                               base_plan_version_id: str | None, options: Iterable[Mapping[str, Any]],
-                              required_member_ids: Iterable[str], members: Iterable[Mapping[str, Any]]) -> str:
+                              required_member_ids: Iterable[str], members: Iterable[Mapping[str, Any]],
+                              decision_material: Mapping[str, Any] | None = None) -> str:
     """Stable server fingerprint for a member decision's governing reality."""
+    required_ids = {str(value) for value in required_member_ids}
     material = {
         "journey_id": str(journey_id),
         "mission_id": str(mission_id),
@@ -182,7 +497,7 @@ def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event
             {"proposal_id": str(item.get("proposal_id")), "plan_id": str(item.get("plan_id")), "status": item.get("status")}
             for item in options
         ],
-        "required_member_ids": sorted(str(item) for item in required_member_ids),
+        "required_member_ids": sorted(required_ids),
         "members": [
             {
                 "member_id": str(item.get("member_id")),
@@ -192,8 +507,9 @@ def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event
                 "member_state": item.get("member_state"),
             }
             for item in members
-            if str(item.get("member_id")) in {str(value) for value in required_member_ids}
+            if str(item.get("member_id")) in required_ids
         ],
+        "decision_material": _material_value(decision_material or {}),
     }
     return hashlib.sha256(json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 

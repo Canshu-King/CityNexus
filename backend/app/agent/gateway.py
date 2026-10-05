@@ -1876,7 +1876,16 @@ class AgentToolGateway:
         required_ids = sorted(relevant_ids.intersection(member_by_id))
         if not required_ids:
             raise HTTPException(409, "COLLECTIVE_MUTATION_AUTHORITY_CONFLICT")
-        from app.collective_mediation import collective_decision_epoch
+        from app.collective_mediation import (
+            collective_decision_epoch,
+            decision_material_snapshot,
+        )
+        decision_material = decision_material_snapshot(
+            self.session,
+            journey_id=journey.id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=options,
+        )
         decision_epoch = collective_decision_epoch(
             journey_id=journey.id,
             mission_id=mission.id,
@@ -1885,6 +1894,7 @@ class AgentToolGateway:
             options=options,
             required_member_ids=required_ids,
             members=members,
+            decision_material=decision_material,
         )
         clarification_id = str(uuid4())
         payload = {
@@ -1896,6 +1906,7 @@ class AgentToolGateway:
             ),
             "clarification_id": clarification_id,
             "decision_epoch": decision_epoch,
+            "decision_material": decision_material,
             "trigger_event_id": trigger.id,
             "base_plan_version_id": journey.active_plan_version_id,
             "candidate_options": options,

@@ -2658,7 +2658,10 @@ def answer_collective_clarification(
     option_ids = {str(item.get("proposal_id")) for item in options}
     if str(payload.proposal_id) not in option_ids:
         raise HTTPException(422, "proposal is not a server-derived collective option")
-    from app.collective_mediation import collective_decision_epoch
+    from app.collective_mediation import (
+        collective_decision_epoch,
+        decision_material_snapshot,
+    )
     from app.main import collective_proposal_receipt
     proposals = session.scalars(
         select(ReplanProposalModel).where(
@@ -2673,6 +2676,12 @@ def answer_collective_clarification(
         if str(item.get("proposal_id")) in option_ids and item.get("status") == "GROUNDED_FEASIBLE"
     ]
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    decision_material = decision_material_snapshot(
+        session,
+        journey_id=journey.id,
+        base_plan_version_id=journey.active_plan_version_id,
+        options=current_options,
+    )
     decision_epoch = collective_decision_epoch(
         journey_id=journey.id,
         mission_id=parent.id,
@@ -2681,6 +2690,7 @@ def answer_collective_clarification(
         options=current_options,
         required_member_ids=required,
         members=members,
+        decision_material=decision_material,
     )
     if decision_epoch != stored.get("decision_epoch"):
         stored["status"] = "STALE"
@@ -2694,9 +2704,38 @@ def answer_collective_clarification(
         selected = {str(item.get("proposal_id")) for item in responses.values()}
         if len(selected) == 1:
             selected_id = next(iter(selected))
+            selected_plan_id = next(
+                (
+                    str(item.get("plan_id"))
+                    for item in current_options
+                    if str(item.get("proposal_id")) == selected_id
+                ),
+                None,
+            )
+            resolved_material = decision_material_snapshot(
+                session,
+                journey_id=journey.id,
+                base_plan_version_id=journey.active_plan_version_id,
+                options=current_options,
+                selected_proposal_id=selected_id,
+                selected_plan_version_id=selected_plan_id,
+            )
+            resolved_epoch = collective_decision_epoch(
+                journey_id=journey.id,
+                mission_id=parent.id,
+                trigger_event_id=str(stored.get("trigger_event_id")),
+                base_plan_version_id=journey.active_plan_version_id,
+                options=current_options,
+                required_member_ids=required,
+                members=members,
+                decision_material=resolved_material,
+            )
             stored["status"] = "RESOLVED"
             stored["selected_proposal_id"] = selected_id
             stored["selected_candidate_id"] = selected_id
+            stored["decision_epoch"] = resolved_epoch
+            stored["consent_epoch"] = resolved_epoch
+            stored["decision_material"] = resolved_material
             parent.status = "ANSWERED"
             parent.completed_at = datetime.now(timezone.utc).isoformat()
             child = create_mission(
@@ -2720,7 +2759,8 @@ def answer_collective_clarification(
             child.resolved_intent_json = json.dumps({
                 "collective_decision": {
                     "clarification_id": stored["clarification_id"],
-                    "decision_epoch": stored["decision_epoch"],
+                    "decision_epoch": resolved_epoch,
+                    "consent_epoch": resolved_epoch,
                     "selected_proposal_id": selected_id,
                     "selected_candidate_id": selected_id,
                     "selected_plan_version_id": next(
@@ -4652,6 +4692,52 @@ def collective_mutation_gate(
         and str(target_plan.id)
         == str(pending_selection["selected_plan_version_id"])
     )
+    consent_epoch_stale = False
+    if renewed_consent_selected and pending_selection.get("consent_epoch"):
+        from app.collective_mediation import (
+            collective_decision_epoch,
+            decision_material_snapshot,
+        )
+
+        trigger_id = str(pending_selection.get("trigger_event_id") or "")
+        proposal_rows = session.scalars(
+            select(ReplanProposalModel).where(
+                ReplanProposalModel.journey_id == journey.id,
+                ReplanProposalModel.trigger_event_id == trigger_id,
+                ReplanProposalModel.status == "PRESENTED",
+            ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+        ).all()
+        receipt = collective_proposal_receipt(session, journey, proposal_rows)
+        allowed_option_ids = {
+            str(item.get("proposal_id"))
+            for item in pending_selection.get("candidate_options") or []
+            if isinstance(item, Mapping) and item.get("proposal_id")
+        }
+        current_options = [
+            item
+            for item in receipt.get("proposal_collective_decisions", {}).values()
+            if str(item.get("proposal_id")) in allowed_option_ids
+            and item.get("status") == "GROUNDED_FEASIBLE"
+        ]
+        current_material = decision_material_snapshot(
+            session,
+            journey_id=journey.id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=current_options,
+            selected_proposal_id=pending_selection.get("selected_proposal_id"),
+            selected_plan_version_id=pending_selection.get("selected_plan_version_id"),
+        )
+        current_epoch = collective_decision_epoch(
+            journey_id=journey.id,
+            mission_id=str(pending_selection.get("mission_id") or ""),
+            trigger_event_id=trigger_id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=current_options,
+            required_member_ids=pending_selection.get("required_member_ids") or [],
+            members=member_projection.get("members", []),
+            decision_material=current_material,
+        )
+        consent_epoch_stale = current_epoch != pending_selection.get("consent_epoch")
     if effective_resolved_decision is None and renewed_consent_selected:
         effective_resolved_decision = {
             "status": "RESOLVED",
@@ -4669,6 +4755,12 @@ def collective_mutation_gate(
             decision = {
                 "allowed": False,
                 "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+            }
+        elif consent_epoch_stale:
+            decision = {
+                "allowed": False,
+                "code": "COLLECTIVE_CONSENT_EPOCH_STALE",
                 "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
             }
         else:
@@ -14053,7 +14145,19 @@ def _collective_resolution_for_child(
         if str(item.get("proposal_id")) in {str(value.get("proposal_id")) for value in stored.get("candidate_options") or []}
     ]
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
-    from app.collective_mediation import collective_decision_epoch
+    from app.collective_mediation import (
+        collective_decision_epoch,
+        decision_material_snapshot,
+    )
+    selected_plan_id = str(proposal.proposed_plan_version_id)
+    decision_material = decision_material_snapshot(
+        session,
+        journey_id=journey.id,
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        selected_proposal_id=proposal.id,
+        selected_plan_version_id=selected_plan_id,
+    )
     epoch = collective_decision_epoch(
         journey_id=journey.id,
         mission_id=parent.id,
@@ -14062,10 +14166,21 @@ def _collective_resolution_for_child(
         options=options,
         required_member_ids=stored.get("required_member_ids") or [],
         members=members,
+        decision_material=decision_material,
     )
-    if epoch != stored.get("decision_epoch") or epoch != resolved.get("decision_epoch"):
+    expected_epoch = stored.get("consent_epoch") or stored.get("decision_epoch")
+    resolved_epoch = resolved.get("consent_epoch") or resolved.get("decision_epoch")
+    stale_epoch = bool(
+        expected_epoch
+        and resolved_epoch
+        and (epoch != expected_epoch or epoch != resolved_epoch)
+    )
+    # Renewed post-disagreement authority is rechecked at the core mutation
+    # boundary, where semantic staleness has its own fail-closed code. Keep this
+    # earlier continuation validation for ordinary collective choices, but do
+    # not collapse R30's consent-epoch refusal into a generic child error.
+    if stale_epoch and stored.get("policy") != "POST_DISAGREEMENT_REQUIRES_RENEWED_MEMBER_CONSENT":
         raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
-    selected_plan_id = str(proposal.proposed_plan_version_id)
     return {
         "status": "RESOLVED",
         "selected_proposal_id": str(proposal.id),
@@ -14075,6 +14190,8 @@ def _collective_resolution_for_child(
         "selected_candidate_id": selected_plan_id,
         "selected_plan_version_id": selected_plan_id,
         "decision_epoch": epoch,
+        "consent_epoch": epoch,
+        "decision_material": decision_material,
         "clarification_id": stored.get("clarification_id"),
     }
 

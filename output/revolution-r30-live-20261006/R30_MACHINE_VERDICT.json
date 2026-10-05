@@ -1,0 +1,252 @@
+{
+  "verdict": "R30_MACHINE_VERDICT",
+  "summary": {
+    "overall": "PROVEN",
+    "proven": 19,
+    "not_proven": 0,
+    "contradicted": 0,
+    "claim_count": 19
+  },
+  "receipt": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\output\\revolution-r30-live-20261006\\R30_LIVE_RECEIPT.json",
+  "db": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-ec1702dd94f2ffe9.sqlite3",
+  "journey_id": "aad03817-3081-4eec-ae09-ba14cd797b23",
+  "r29_baseline": {
+    "verdict": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\output\\revolution-r29-live-20261005\\R29_MACHINE_VERDICT.json",
+    "summary": {
+      "overall": "PROVEN",
+      "proven": 13,
+      "not_proven": 0,
+      "contradicted": 0
+    }
+  },
+  "claims": {
+    "r29_inherited_causal_invariants": {
+      "status": "PROVEN",
+      "reason": "The submitted R29 machine verdict is PROVEN and its disagreement/mediator lineage is durably present before the R30 shock.",
+      "facts": {
+        "round1_mission_id": "3a5ec1bf-f93d-437c-b6c3-f596400d1ea7",
+        "round1_choices": {
+          "24dd0745-0eff-491a-b0d4-95a86d0d24d4": "eac9fe1f-09c2-4887-a821-a96c5ac9c157",
+          "41b3f2c9-f9ce-44f1-bbdc-b81376f79237": "97dbd5ce-2871-48c8-aa43-f624a21e148b"
+        },
+        "mediator_run_id": "808cc9a8-cae5-4dea-9a00-357dc101b5ea",
+        "mediator_external": true,
+        "mediator_opened_round": true,
+        "submitted_r29_verdict": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\output\\revolution-r29-live-20261005\\R29_MACHINE_VERDICT.json",
+        "submitted_r29_summary": {
+          "overall": "PROVEN",
+          "proven": 13,
+          "not_proven": 0,
+          "contradicted": 0
+        }
+      }
+    },
+    "durable_resolved_epoch_e1": {
+      "status": "PROVEN",
+      "reason": "The resolved R29 renewal stores the exact E1 consent epoch.",
+      "facts": {
+        "mission_id": "1bae64d3-69c2-4a5c-b6a5-e683f26597e5",
+        "consent_epoch": "ec0eeff16a47a088ff0c37d5ab556b3d6762f6d77956debcc8b247ea2e272b5d",
+        "clarification_id": "3d988280-f9c6-4fce-93bc-cf7dda855d48"
+      }
+    },
+    "provider_shock_after_e1": {
+      "status": "PROVEN",
+      "reason": "A normal CitySignal fixture transition produced provider observations and Event evidence after E1.",
+      "facts": {
+        "event_ids": [
+          "0e2a6c25-4eb6-4337-9f6c-ecfe91a2ac92",
+          "2c7fe426-61e2-4dd9-9f64-a5b052be29ee"
+        ],
+        "observation_ids": [
+          "083c8402-c64d-4401-b62e-a4ffc7e930d7",
+          "90038fe5-23a3-4c5f-9481-319ded83ab97"
+        ],
+        "fixture_revision": 1,
+        "fixture_audit_count": 1
+      }
+    },
+    "material_world_fingerprint_changed": {
+      "status": "PROVEN",
+      "reason": "The provider shock changes both selected material fingerprint and authority epoch.",
+      "facts": {
+        "e1_epoch": "ec0eeff16a47a088ff0c37d5ab556b3d6762f6d77956debcc8b247ea2e272b5d",
+        "post_shock_epoch": "6aad445cd994dc8eedc176db47a832a155c6999913fd0941b58fa6325681525d",
+        "e1_material_fingerprint": "dcc33a6a836e7ab8c8ec615eb47d7266518ca88efb065c140ec279d307a012bf",
+        "post_shock_material_fingerprint": "7d7512cd72ba85e626ae752743f7f5d02b576a1ee8d4667d6691e10a969203ee"
+      }
+    },
+    "old_consent_rejected_at_core": {
+      "status": "PROVEN",
+      "reason": "The old resolved child reached the mutation core and persisted COLLECTIVE_CONSENT_EPOCH_STALE.",
+      "facts": {
+        "stale_errors": [
+          {
+            "decision": "CONTINUATION_FAILED",
+            "error": "COLLECTIVE_CONSENT_EPOCH_STALE: collective mediation must be resolved before mutation",
+            "status_code": 409
+          }
+        ],
+        "failed_pending_action_ids": [
+          "f3433d04-f7fc-4cf7-a7b6-c7b978a3b3ab"
+        ]
+      }
+    },
+    "no_sibling_consumed_e1": {
+      "status": "PROVEN",
+      "reason": "The E1 selected proposal and its siblings did not consume stale authority.",
+      "facts": {
+        "old_proposal_id": "fda97b80-c584-4506-8be8-378ebacf3ded",
+        "old_proposal_status": "INVALIDATED"
+      }
+    },
+    "no_older_mediation_resurrected": {
+      "status": "PROVEN",
+      "reason": "Recovery consumed only the fresh server-owned selection.",
+      "facts": {
+        "old_status": "INVALIDATED",
+        "fresh_selected": "e3cbd4ae-c7c4-4618-abd2-9eb9971056da"
+      }
+    },
+    "external_agent_recovery": {
+      "status": "PROVEN",
+      "reason": "A configured external Agent inspected the shock and created the fresh replan/decision surface.",
+      "facts": {
+        "run_id": "07e651b2-043c-4edd-8fc1-dc92a9a8a6ab",
+        "provider_key": "hermes",
+        "model_key": "cn:glm-5.3-flash",
+        "tools": [
+          "inspect_journey",
+          "inspect_twin",
+          "inspect_twin",
+          "request_replan",
+          "request_collective_decision"
+        ]
+      }
+    },
+    "protected_commitments_survived": {
+      "status": "PROVEN",
+      "reason": "The protected locked anchor and active C4 commitment survived recovery.",
+      "facts": {
+        "old_locked_places": [
+          "real-place-a346e8f7f72a4d8f523d81e3"
+        ],
+        "active_locked_places": [
+          "real-place-a346e8f7f72a4d8f523d81e3"
+        ],
+        "active_commitment_ids": [
+          "75e77a43-cb7a-4774-b6c5-a74488cacd38"
+        ]
+      }
+    },
+    "completed_execution_truth_survived": {
+      "status": "PROVEN",
+      "reason": "The execution cursor remains on the same Journey after recovery.",
+      "facts": {
+        "current_activity_id": "928b4753-2b76-4092-b087-51473c040676",
+        "current_status": "ACTIVE",
+        "active_plan_version_id": "1ff44d2b-67a0-444f-99f2-16d34d9ccc08"
+      }
+    },
+    "fresh_server_owned_decision_surface": {
+      "status": "PROVEN",
+      "reason": "A new server-owned collective decision surface was resolved after recovery.",
+      "facts": {
+        "mission_id": "f005df16-5fb3-4d0c-ab62-d647bb43309e",
+        "clarification_id": "3fbcc674-42f6-4af0-ab6d-c622a3ccecda",
+        "candidate_count": 2
+      }
+    },
+    "required_member_scope_recomputed": {
+      "status": "PROVEN",
+      "reason": "Fresh required members are server-selected in-force Journey principals.",
+      "facts": {
+        "required_member_ids": [
+          "24dd0745-0eff-491a-b0d4-95a86d0d24d4",
+          "41b3f2c9-f9ce-44f1-bbdc-b81376f79237"
+        ],
+        "in_force_member_ids": [
+          "24dd0745-0eff-491a-b0d4-95a86d0d24d4",
+          "41b3f2c9-f9ce-44f1-bbdc-b81376f79237"
+        ]
+      }
+    },
+    "fresh_server_owned_replan": {
+      "status": "PROVEN",
+      "reason": "The post-shock external Agent created the fresh replan through request_replan.",
+      "facts": {
+        "proposal_id": "e3cbd4ae-c7c4-4618-abd2-9eb9971056da",
+        "trigger_event_id": "2c7fe426-61e2-4dd9-9f64-a5b052be29ee"
+      }
+    },
+    "fresh_authenticated_responses_not_copied": {
+      "status": "PROVEN",
+      "reason": "Fresh signed member responses point to the new proposal envelope and are not E1 response copies.",
+      "facts": {
+        "response_actor_types": [
+          "AUTHENTICATED_TRAVELER"
+        ],
+        "old_response_values": [
+          "fda97b80-c584-4506-8be8-378ebacf3ded"
+        ],
+        "fresh_response_values": [
+          "e3cbd4ae-c7c4-4618-abd2-9eb9971056da"
+        ]
+      }
+    },
+    "fresh_epoch_e2_differs": {
+      "status": "PROVEN",
+      "reason": "Fresh consent is bound to E2, which differs from E1.",
+      "facts": {
+        "e1": "ec0eeff16a47a088ff0c37d5ab556b3d6762f6d77956debcc8b247ea2e272b5d",
+        "e2": "2fb97a954a6420bd052194339992949a1d01e89a2026fa0596864504b9811ac3"
+      }
+    },
+    "exactly_one_final_accept": {
+      "status": "PROVEN",
+      "reason": "Exactly one fresh recovery proposal is accepted and active.",
+      "facts": {
+        "accepted_proposal_ids": [
+          "e3cbd4ae-c7c4-4618-abd2-9eb9971056da"
+        ],
+        "active_plan_version_id": "1ff44d2b-67a0-444f-99f2-16d34d9ccc08",
+        "final_run_id": "9f7516db-7427-4469-8647-1cbfd02c2cc4"
+      }
+    },
+    "irrelevant_evidence_churn_does_not_invalidate": {
+      "status": "PROVEN",
+      "reason": "Unrelated provider churn is outside the decision-material envelope and leaves E1 equivalent.",
+      "facts": {
+        "control_observation_ids": [
+          "82bbcaf4-f9b3-42bb-823f-e32af587a3a2"
+        ],
+        "material_observation_ids": [
+          "27e1b3e1-5cf2-418b-ae92-ecd75cfaddab",
+          "536aa7ac-fa92-4eb1-928d-ec4762e8c7a9",
+          "698d3c8b-38bf-4f38-9833-ae1d5d6c2ed5"
+        ],
+        "control_epoch": {
+          "recomputed_consent_epoch": "ec0eeff16a47a088ff0c37d5ab556b3d6762f6d77956debcc8b247ea2e272b5d",
+          "unchanged": true
+        }
+      }
+    },
+    "same_journey_execution_continued": {
+      "status": "PROVEN",
+      "reason": "Recovery remained on the same Journey.",
+      "facts": {
+        "journey_id": "aad03817-3081-4eec-ae09-ba14cd797b23",
+        "final_run_journey_id": "aad03817-3081-4eec-ae09-ba14cd797b23"
+      }
+    },
+    "final_external_continuation_completed": {
+      "status": "PROVEN",
+      "reason": "The fresh resolved child completed through the configured external Agent and approval continuation.",
+      "facts": {
+        "final_run_id": "9f7516db-7427-4469-8647-1cbfd02c2cc4",
+        "provider_key": "hermes",
+        "model_key": "cn:glm-5.3-flash"
+      }
+    }
+  }
+}
