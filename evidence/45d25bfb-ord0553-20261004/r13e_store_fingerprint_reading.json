@@ -1,0 +1,34 @@
+{
+ "instrument": "cmdra_0553_store_fingerprint_r13e",
+ "files": {
+  "leg_tip_generation": {
+   "name": "_cmdra_0553_r13a.db",
+   "bytes": 17358848,
+   "sha256": "f7adb456dbc23dd5c0eacb32210fa5928f254e9a3f26e49ab67e591e7de2f02e"
+  },
+  "leg_prer2_generation": {
+   "name": "_cmdra_0553_r13b.db",
+   "bytes": 17358848,
+   "sha256": "f7adb456dbc23dd5c0eacb32210fa5928f254e9a3f26e49ab67e591e7de2f02e"
+  },
+  "earlier_probe_copy": {
+   "name": "_cmdra_0553p.db",
+   "bytes": 17358848,
+   "sha256": "b14b6c50af50c00753e7e4b7dfd615c070d6cbf881cd050ba1782a14238492ba"
+  }
+ },
+ "both_legs_byte_identical": true,
+ "launch_receipt_fields": {
+  "8772": {
+   "db_bytes": 17358848,
+   "pid_owns_port": true,
+   "carries_a_digest_of_the_store": false
+  },
+  "8774": {
+   "db_bytes": 17358848,
+   "pid_owns_port": true,
+   "carries_a_digest_of_the_store": false
+  }
+ },
+ "claim_corrected": "the two legs' stores are equal because their sha256 is equal, not because the receipts say so; the receipts vouch size and port ownership only"
+}
