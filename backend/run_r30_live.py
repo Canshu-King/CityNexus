@@ -945,6 +945,107 @@ def _write_checkpoint(result: dict[str, Any]) -> str:
     return path.relative_to(root).as_posix()
 
 
+
+def _write_result_markdown(result: dict[str, Any]) -> str:
+    """Write the human-readable closeout from machine-derived R30 truth."""
+
+    root = Path(__file__).resolve().parents[1]
+    path = root / "REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_RESULT.md"
+    verdict = result.get("machine_verdict") or {}
+    summary = verdict.get("summary") or {}
+    truth = result.get("truth_boundary") or {}
+    interlock = result.get("interlock") or {}
+    old_attempt = result.get("old_authority_attempt") or {}
+    fresh = result.get("fresh_collective_closure")
+    unanimous = result.get("unambiguous_recovery_closure")
+
+    authority_mode = (
+        "FRESH_AUTHENTICATED_MEMBER_CONVERGENCE"
+        if isinstance(fresh, dict)
+        else "CURRENT_UNANIMOUS_DOMINANCE"
+        if isinstance(unanimous, dict)
+        else "UNKNOWN"
+    )
+    lines = [
+        "# Revolution R30 - Consent Epoch Shock Recovery Result",
+        "",
+        "## Final status",
+        "",
+        f"- Harness status: {result.get('status')}",
+        f"- Machine verdict: {summary.get('overall')}",
+        f"- PROVEN: {summary.get('PROVEN', 0)}",
+        f"- NOT_PROVEN: {summary.get('NOT_PROVEN', 0)}",
+        f"- CONTRADICTED: {summary.get('CONTRADICTED', 0)}",
+        f"- Final authority mode: {authority_mode}",
+        "",
+        "## Evidence",
+        "",
+        "- output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json",
+        "- output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json",
+        "",
+        "## Authority chain proven",
+        "",
+        (
+            "- Pre-shock renewed E1/W1 authority was bound to authenticated, "
+            "independent relevant-member convergence on one grounded future."
+        ),
+        (
+            "- An unrelated provider observation left the material world epoch "
+            "unchanged."
+        ),
+        (
+            "- A server-owned provider-replay closure changed the material "
+            "world epoch for the consent-relevant future."
+        ),
+        (
+            "- Old E1/W1 authority failed closed and the selected old proposal "
+            "was not accepted."
+        ),
+        (
+            "- Expired authority released the stale selected-plan lock without "
+            "transferring value-choice authority to the algorithm."
+        ),
+        (
+            "- Recovery proceeded only through current unanimous dominance or "
+            "fresh authenticated independent member authority."
+        ),
+        (
+            "- Final mutation preserved inherited R28 exactly-once approval "
+            "and continuation invariants."
+        ),
+        "",
+        "## Bound identifiers",
+        "",
+        f"- Selected pre-shock proposal: {interlock.get('selected_proposal_id')}",
+        f"- Selected pre-shock plan: {interlock.get('selected_plan_id')}",
+        f"- E1: {interlock.get('decision_epoch_e1')}",
+        f"- W1: {interlock.get('material_world_epoch_w1')}",
+        f"- Final AgentRun: {result.get('final_run_id')}",
+        "",
+        "## Truth boundary",
+        "",
+        f"- Shock source: {truth.get('shock_source')}",
+        f"- External Agent required: {truth.get('external_agent_required')}",
+        f"- Physical travel proven: {truth.get('physical_travel_proven')}",
+        "",
+        (
+            "R30 proves consent invalidation and recovery authority against a "
+            "server-owned provider-replay shock. It does not claim the shock "
+            "came from a live public network provider and does not claim "
+            "physical travel."
+        ),
+        "",
+        "## Old-authority refusal",
+        "",
+        f"- Direct stale accept status: {old_attempt.get('direct_accept_status')}",
+        f"- Durable denial audit: {old_attempt.get('denial_audit_id')}",
+        "",
+        "R30 closes only because the machine verdict is PROVEN.",
+        "",
+    ]
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return path.relative_to(root).as_posix()
+
 def _run_full() -> dict[str, Any]:
     db = _configure()
     setup = _api_setup(db)
@@ -1053,8 +1154,9 @@ def _run_full() -> dict[str, Any]:
         and (verdict.get("summary") or {}).get("overall") == "PROVEN"
     ):
         result["status"] = "R30_PROVEN"
-        # Re-write the checkpoint with the final machine status for a single
-        # self-contained handoff artifact.
+        result["result_path"] = _write_result_markdown(result)
+        # Re-write the checkpoint with the final machine status and the
+        # generated closeout path for a single self-contained handoff artifact.
         result["checkpoint_path"] = _write_checkpoint(result)
     return result
 
