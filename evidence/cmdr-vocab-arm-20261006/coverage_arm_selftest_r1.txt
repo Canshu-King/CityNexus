@@ -1,0 +1,37 @@
+{
+ "arm": "cmdr_gate_vocab_covered_arm_r1",
+ "rev": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "vocab": "frontend/src/lib/displayVocabulary.ts",
+ "families": [
+  "RUNTIME_IDENTITY",
+  "MOBILITY_FACT_QUALITY"
+ ],
+ "against_line": {
+  "verdict": "PASS",
+  "families": [
+   {
+    "family": "RUNTIME_IDENTITY",
+    "backend_writable": 4,
+    "table_keys": 4,
+    "missing_rows": [],
+    "table_only": []
+   },
+   {
+    "family": "MOBILITY_FACT_QUALITY",
+    "backend_writable": 3,
+    "table_keys": 3,
+    "missing_rows": [],
+    "table_only": []
+   }
+  ],
+  "missing": []
+ },
+ "selftest": {
+  "dropped_row": "RUNTIME_IDENTITY/NOT_CONFIGURED",
+  "verdict": "FAIL",
+  "missing": [
+   "RUNTIME_IDENTITY/NOT_CONFIGURED"
+  ]
+ },
+ "arm_discriminates": true
+}
