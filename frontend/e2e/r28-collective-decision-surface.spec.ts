@@ -122,7 +122,7 @@ test.describe("R28 collective decision surface", () => {
 
     await page.getByTestId("collective-option").first().getByRole("button").click();
     await expect.poll(() => answerAuthorization).toBe(`Bearer ${TOKEN}`);
-    await expect(page.getByRole("status")).toContainText(/saved|等待/i);
+    await expect(page.locator(".cn-collective-notice")).toContainText(/saved|等待/i);
   });
 
   test("shows durable approval and sends the same signed identity when approving", async ({ page }) => {
@@ -206,6 +206,6 @@ test.describe("R28 collective decision surface", () => {
     await expect(page.getByTestId("collective-approval")).toBeVisible();
     await page.getByTestId("collective-approve").click();
     await expect.poll(() => approvalAuthorization).toBe(`Bearer ${TOKEN}`);
-    await expect(page.getByRole("status")).toContainText(/resumed|继续|完成/i);
+    await expect(page.locator(".cn-collective-notice")).toContainText(/resumed|继续|完成/i);
   });
 });
