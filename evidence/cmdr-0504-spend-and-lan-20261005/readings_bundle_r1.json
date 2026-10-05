@@ -1,0 +1,262 @@
+{
+ "built_at": "2026-10-05T16:57:29+0800",
+ "tip_after_landing": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "generation_proof": {
+  "entry": "index-DLbc3Q3N.js",
+  "served_bytes": 1624131,
+  "disk_bytes": 1624131,
+  "sha256_head16": "0ad6efd8853b974d",
+  "equal": true
+ },
+ "spend_read_zh": {
+  "instrument": "cmdr_0504spend_offday_read_r1",
+  "at": "2026-10-05T08:51:52.378Z",
+  "base": "http://127.0.0.1:49812",
+  "locale": "zh",
+  "journeys_tried": 12,
+  "rows": [
+   {
+    "journey": "38c4b867-56e6-45ad-94ff-f27c45475247",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "9f738eed-6930-43c5-b187-f9c27ccfcea6",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "fa049b63-ed0c-4dc6-905b-07e3c911ec76",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "aa5244b3-32ab-43e2-923c-3dd8d2befa7c",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "b6ded6ad-3763-48fa-a316-5b23f18a4be1",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "848e9521-3b42-4c43-9780-f2ff291fdf32",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1209,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "3d6a1939-86d5-44bd-a35f-1bd771b8f0f4",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "e6b30cd5-c98f-43b6-b30f-0b4352143d97",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": false,
+    "panel_chars": 0,
+    "body_chars": 550,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "bed76675-26ec-44ce-b5fd-14348ed8569d",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "abb9f8a0-4382-4025-b18b-e3f27e9a077c",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": true,
+    "panel_chars": 19,
+    "body_chars": 1183,
+    "url": "/v8/trips"
+   },
+   {
+    "journey": "d975e72b-48d7-4511-8b3f-2a54a2772334",
+    "tab": {
+     "cx": 195,
+     "cy": 125,
+     "centre_hit_self": true
+    },
+    "sentence": null,
+    "key_leaked_on_screen": false,
+    "panel_present": false,
+    "panel_chars": 0,
+    "body_chars": 570,
+    "url": "/v8/trips"
+   }
+  ],
+  "sentences_seen": 0,
+  "key_leaks": 0,
+  "page_problems": 0,
+  "problem_samples": []
+ },
+ "off_day_denominator_probe": {
+  "journeys_tried": 12,
+  "sentences_painted": 0,
+  "key_leaks": 0,
+  "legs_with_cost": 376,
+  "legs_with_cost_and_no_depart_at": 0,
+  "painted_headline": "这台服务器答出了 9 项有金额的既成事实，另有 0 项它记着但没有价。",
+  "day_estimates_sum": "432.00 + 48.00 + 12.00 = 492.00 与币种合计 估算 CNY 492.00 相同"
+ },
+ "lan_4783_restore": {
+  "at": "2026-10-05T16:57:06+0800",
+  "port": 4783,
+  "api": 4787,
+  "dist": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_0413e55\\frontend\\dist",
+  "rebuilt_from_sha": "0413e55634e9c6953ea88a4b01a17b8afd7ac88a",
+  "listeners_before": [
+   {
+    "pid": "48824",
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\python.exe D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_cmdr_lan_static_api_r1.py --dist D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_0"
+   }
+  ],
+  "killed": [
+   {
+    "pid": "48824",
+    "rc": 0,
+    "out": "�ɹ�: ����ֹ PID 48824 (���� PID 99264 �ӽ���)�Ľ��̡�"
+   }
+  ],
+  "port_freed": true,
+  "child_pid": 80460,
+  "ready_after_s": 0,
+  "owner_after": {
+   "ProcessId": 80460,
+   "Name": "python.exe",
+   "CommandLine": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\python.exe D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_cmdr_lan_static_api_r1.py --dist D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_0413e55\\frontend\\dist --port 4783 --api 4787 --log D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_lan_4783_log_restored_r1.json"
+  },
+  "probes": {
+   "/": [
+    200,
+    1200,
+    26
+   ],
+   "/v8/hub": [
+    200,
+    1200,
+    16
+   ],
+   "/index.html": [
+    200,
+    1200,
+    17
+   ],
+   "/favicon.svg": [
+    200,
+    199,
+    13
+   ],
+   "/assets/index-BcQ9VAso.js": [
+    200,
+    1622092,
+    20
+   ]
+  },
+  "entry_asset": "index-BcQ9VAso.js",
+  "entry_disk_bytes": 1622092,
+  "entry_served_bytes": 1622092,
+  "entry_bytes_match_disk": true,
+  "log": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_lan_4783_log_restored_r1.json"
+ }
+}
