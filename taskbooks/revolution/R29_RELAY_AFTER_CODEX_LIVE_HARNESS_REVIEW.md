@@ -6,9 +6,11 @@ Branch:
 
 `gpt/revolution-r29-disagreement-mediation`
 
-GPT relay HEAD at handoff:
+GPT relay code HEAD before this baton update:
 
-`5048d61224e54649b5eea6e5b4d2aad6c732c69f`
+`ca5c0856d76963164fc64c06bccd4f29b4a85b13`
+
+Always execute against the current remote branch HEAD returned by `git rev-parse HEAD`.
 
 Codex's last push before this review:
 
@@ -177,6 +179,40 @@ Commits:
 - `5048d61224e54649b5eea6e5b4d2aad6c732c69f`
 
 This is a hard social-authority invariant. Do not "fix" a failing test by restoring algorithmic ranking above renewed human consent.
+
+## Final authority hardening before live execution
+
+Do not add more static R29 policy unless the live strike exposes a concrete causal defect.
+
+GPT found and fixed three final execution-path issues:
+
+1. **Mediator recombination is now discoverable.** The current provider-backed fixture already contains two real grounded alternatives (Garden and Museum). A mediator may recombine multiple grounded Place IDs into one new executable plan. `generate_plans` is exploratory; to enter the renewed collective decision surface the Agent must use `request_replan` so the improved future becomes a server-owned ReplanProposal.
+
+   Commits:
+   - `e83ddfa38af7d7e448e4f2ca76dfeb709011bc66`
+   - `ebd2089c4dca1734cfaae5df148eb8eee29845f6`
+
+2. **Hard feasibility remains above renewed consent.** Human renewed consent outranks algorithmic compromise ranking, but it cannot make a stale/unselectable plan executable. Exact selected consent now fails with `COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED` unless the selected plan is still `GROUNDED_FEASIBLE`.
+
+   Commits:
+   - `50984750bb5e4730bc101c5b574b9e44a96a4462`
+   - `65bc8c8430399e66c86e1259cfb4dae56502fcc2`
+
+3. **Superseded consent cannot resurrect.** Only the latest resolved mediation can carry pending social authority. If the newest decision is consumed, stale, invalidated, or no longer pending, the system returns no pending authority instead of falling back to an older resolved decision.
+
+   Commits:
+   - `74c786d46aac844010b154da9ad4c5777c5bcce9`
+   - `ca5c0856d76963164fc64c06bccd4f29b4a85b13`
+
+The authority order is now explicit:
+
+```text
+hard safety / feasibility
+  > exact renewed human consent
+  > algorithmic fairness ranking
+```
+
+and social authority is monotonic: a newer collective decision supersedes every older one.
 
 ## Codex Phase A — validate the current GPT HEAD
 
