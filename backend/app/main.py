@@ -2728,8 +2728,88 @@ def answer_collective_clarification(
             }, ensure_ascii=False, sort_keys=True)
             response_child = mission_payload(child)
         else:
-            stored["status"] = "UNRESOLVED_DISAGREEMENT"
-            response_child = None
+            # R29: disagreement is not a terminal dead end. The humans have
+            # completed this decision round, but no proposal has social
+            # authority. Spawn a bounded mediator mission that may search for
+            # a grounded compromise or return a fresh server-owned decision
+            # round. It must never turn disagreement into a majority vote.
+            stored["status"] = "MEDIATION_REQUIRED"
+            parent.status = "ANSWERED"
+            parent.completed_at = datetime.now(timezone.utc).isoformat()
+            parent_intent = _json_object(parent.resolved_intent_json or "{}")
+            prior_mediation = parent_intent.get("collective_mediation")
+            prior_round = (
+                int(prior_mediation.get("round") or 0)
+                if isinstance(prior_mediation, dict)
+                else 0
+            )
+            mediation_round = prior_round + 1
+            child = create_mission(
+                session,
+                journey,
+                command=(
+                    "Mediate the unresolved shared Journey disagreement without choosing a winner. "
+                    "Inspect the member-specific context and grounded proposal evidence, seek a "
+                    "compromise that protects every relevant member from an unacceptable outcome, "
+                    "and if a material value trade-off remains return a fresh collective decision "
+                    "through the normal server-owned boundary."
+                ),
+                requested_autonomy=parent.requested_autonomy,
+                trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
+                parent_mission_id=parent.id,
+            )
+            child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
+            child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
+            child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+            member_choices = [
+                {
+                    "member_id": member_key,
+                    "proposal_id": str(response.get("proposal_id") or ""),
+                }
+                for member_key, response in sorted(responses.items())
+                if isinstance(response, dict)
+            ]
+            child.resolved_intent_json = json.dumps(
+                {
+                    "collective_mediation": {
+                        "kind": "DISAGREEMENT_MEDIATION",
+                        "round": mediation_round,
+                        "source_mission_id": parent.id,
+                        "source_clarification_id": stored.get("clarification_id"),
+                        "decision_epoch": stored.get("decision_epoch"),
+                        "policy": stored.get("policy"),
+                        "required_member_ids": sorted(required),
+                        "candidate_proposal_ids": sorted(
+                            {
+                                str(item.get("proposal_id"))
+                                for item in stored.get("candidate_options") or []
+                                if isinstance(item, dict) and item.get("proposal_id")
+                            }
+                        ),
+                        "member_choices": member_choices,
+                    }
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            record_audit(
+                session,
+                action="agent.collective_decision.mediation_started",
+                entity_type="JourneyMission",
+                entity_id=child.id,
+                journey_id=journey.id,
+                actor_type="SYSTEM",
+                actor_id="collective-mediator",
+                after={
+                    "parent_mission_id": parent.id,
+                    "clarification_id": stored.get("clarification_id"),
+                    "round": mediation_round,
+                    "required_member_ids": sorted(required),
+                    "distinct_selected_proposal_ids": sorted(selected),
+                    "status": "CREATED",
+                },
+            )
+            response_child = mission_payload(child)
     else:
         stored["status"] = "WAITING_FOR_MEMBERS"
         response_child = None
