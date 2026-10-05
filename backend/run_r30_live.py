@@ -211,12 +211,13 @@ def _reach_post_consent_interlock(
         raise RuntimeError(
             f"R29/R30 renewed member set drifted: {required} -> {round2_required}"
         )
-    round2_options = [
-        item
-        for item in round2.get("candidate_options") or []
-        if isinstance(item, dict) and item.get("proposal_id")
-    ]
-    improved_choice = _best_improved_choice(round2_options, improved_ids)
+    renewed_independent_choices = _independent_member_choices(
+        round2,
+        round2_required,
+        allowed_proposal_ids=set(improved_ids),
+        phase="pre-shock renewed consent round",
+    )
+    improved_choice = next(iter(set(renewed_independent_choices.values())))
 
     round2_tokens = _signed_member_tokens(round2_required)
     round2_path = (
@@ -230,7 +231,7 @@ def _reach_post_consent_interlock(
             headers={"Authorization": f"Bearer {round2_tokens[member_id]}"},
             json={
                 "clarification_id": round2["clarification_id"],
-                "proposal_id": improved_choice,
+                "proposal_id": renewed_independent_choices[member_id],
             },
         )
         if response.status_code >= 400:
@@ -291,6 +292,7 @@ def _reach_post_consent_interlock(
         "mediator_run_id": mediator_run.get("run_id"),
         "mediation_progress": progress,
         "renewed_required_member_ids": round2_required,
+        "renewed_independent_member_choices": renewed_independent_choices,
         "renewed_responses": renewed_responses,
         "selected_proposal_id": selected_proposal_id,
         "selected_plan_id": selected_plan_id,
