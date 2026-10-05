@@ -1,0 +1,32 @@
+Delivery-time readiness, and the exact relationship between the head it judged and the head that ships.
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
+  now: 3691f1c359d372b62457caa2b1839f8dda48c448
+  the readiness run judged: cf20f512495e60816c2e51d0eaf10f96fc4b0d10
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+  now: aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f   (the same value the run recorded: aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f, equal=True)
+
+What sits between the judged head and the shipped head:
+  review/ord0562/r7/readiness_r7.json
+  files outside review/ in that step: none
+
+The paths the ruler judged, each compared against the head of the branch it belongs to:
+  frontend/src/app/V8Experience.tsx
+    branch refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
+    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now 3691f1c359d372b62457caa2b1839f8dda48c448; equal=False
+    verdict CLEAN; blob then 4ba9d383f3f98f7cc11580870d7b61cd4b413c73; blob now 4ba9d383f3f98f7cc11580870d7b61cd4b413c73; equal=True
+  frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts
+    branch refs/heads/review/cff87c64-ord0562-english-count-nouns-r6
+    head the run compared cf20f512495e60816c2e51d0eaf10f96fc4b0d10; head now 3691f1c359d372b62457caa2b1839f8dda48c448; equal=False
+    verdict CLEAN; blob then 9344249444808bfbfa8b28cf9c38efbe912e9559; blob now 9344249444808bfbfa8b28cf9c38efbe912e9559; equal=True
+  frontend/src/lib/displayVocabulary.ts
+    branch refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3
+    head the run compared 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a; head now 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a; equal=True
+    verdict CLEAN; blob then e3255a21678207673556977cf61081391c86992e; blob now e3255a21678207673556977cf61081391c86992e; equal=True
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+    branch refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3
+    head the run compared 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a; head now 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a; equal=True
+    verdict CLEAN; blob then 20c2da725dc3b1e3b3012b782acce81abaaae09a; blob now 20c2da725dc3b1e3b3012b782acce81abaaae09a; equal=True
+
+So the CLEAN the ruler printed describes exactly the bytes this branch now publishes. What cannot
+be inherited is the tip side: a CLEAN is a statement about the tip at the instant it was read --
+hence the tip value printed above, and hence run the ruler again inside the landing window.
