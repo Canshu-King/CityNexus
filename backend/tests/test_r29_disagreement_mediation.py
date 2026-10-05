@@ -1434,7 +1434,7 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 provider_key="city-provider",
                 provenance="PROVIDER_VERIFIED",
                 event_type="CLOSURE",
-                severity="HIGH",
+                severity="MAJOR",
                 status="DETECTED",
                 # The trusted shock targets the active-plan Activity row, not
                 # the candidate-plan row. R30 relevance must follow the shared
