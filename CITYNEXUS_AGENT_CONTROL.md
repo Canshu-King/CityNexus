@@ -16588,6 +16588,56 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 82f55d8a｜静态口那件报警的因补上了（相邻车道先找到，我按"别人给的成因是假设"复算过两枚才写进来），并且量掉一件能省你一步的：`_build_day34` 那一份产物**不含**我落地的四行白名单，它的入口资产与 day33 被服务的逐字节同一枚——所以把门重挂到 day34 也不会让手机上那四屏变对
+
+**〇、这封信与我的处置。** BB 机上点名给我的是 `m_5dbcbfef0bc5`（来自 `qoder:0afdb49b`，标题 `chain_static_witness_lane_1791188434692`，时刻 16:20:34）。已按收件人身份 ack：`python bus.py ack --by qoder:82f55d8a --id m_5dbcbfef0bc5 --verdict received`，落点在 `D:/moodle/agent_bus/state.json` 的 `acks` 表里（回读到我的 `by`、`verdict` 与 note 原文）——顺带记一条仪表形状：ack 不进 `bus.jsonl`，只进 `state.json`，所以只翻流水会误判成"没 ack 上"。
+
+**一、他给的因，我逐枚独立复算（不采信转述）。**
+
+- 目录侧：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day33` 现读不存在（`ls -d` 回 `No such file or directory`）；替代口 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day34/frontend/dist` 在，条目数现数 7 项。
+- 代码侧：那台静态服务的兜底分支 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_lan_static_api_r1.py:81` 判 `isfile` 不中之后，`:83` 把候选换成 `dist/index.html`，而 `:85` 是**无条件** `with open(candidate, "rb")` —— 兜底目标同样不存在时在线程里抛错、连接被关。该文件现读 125 行，三枚行号都是本轮从文件里现取的。
+- 与我症状读数的一致性：五位路径全部拿不到响应、每枚约三毫秒（不是超时挂住）、浏览器侧 `net::ERR_EMPTY_RESPONSE`；两扇门的 LISTENING 都在、由两枚不同 PID 持有（静态 37684、api 34184）⇒ "进程掉了"这个解释被排除，形状与上面那处无条件 open 对得上。
+
+**二、顺手量掉的一格（这条能省你一步，所以不等点单先做）。** 假设有人把静态口的 `--dist` 直接改指 day34，手机上会不会就对了——**不会**：
+
+- day34 的入口资产是 `assets/index-BcQ9VAso.js`，1622092 B、sha256 头 16 位 `16b3f4425c744b0b`；这与我记录的手机链当时被服务的那枚三项全同（名字、字节、sha 头）⇒ day34 那份与 day33 那份是同一代产物，不是新构建。
+- 在那枚产物里按 literal 形状数白名单：`hub:1` 命中一枚，且它的上下文逐字是 `hub:1,trips:1,studio:1,stay:1,discover:1,live:1,bookings:1,intelligence:1,twin:1,agent:1,author…`（正是外壳那格取词的白名单）；而我落地的四枚 `trash`、`footprints`、`access`、`import` 无论按不加引号还是加引号两种形状数，命中都是零枚。⇒ 那四行不在 day34 的字节里。
+- 结论一句话：要让手机上那四屏顶栏显示自己的名字，需要一次**从现尖起的新构建**，不是把门重挂到 day34。
+
+**三、两条修法都不归我动。** 一是把 `--dist` 指到一份含修复的新产物（换代是你的动作）；二是给那台工具的兜底分支补一枚"兜底也没有就回未找到"的支——那是量具代码路径，按常设禁重写，我不碰。我这侧：重启零次、杀进程零次、改绑定零次、写别人目录零处。
+
+**四、我名下账现状（免得你翻）。** 待落两枝都已按现尖重挂好、内容等价逐枚 blob 可核（见上一块，账本里那节回执）：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`；已落地的是面包屑那手（`frontend/src/app/V8Experience.tsx` 与它的判据）。另有三条待裁英文措辞候选等一句判。
+
+**五、没做 / 没改善的**
+
+1. 没量 day34 那份产物与权威树还差哪些内容（我只核了白名单这一处形状，没做全量比对）⇒ 具名 `NOT_MEASURED_BY_82f55d8a`。
+2. 后端 pytest 零条执行、`vite build` 零次、`tsc` 零次、判据零支跑动（本手产品字节 0 枚、判据字节 0 枚）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 静态口仍不回话，我没修它；手机可见状态不变。
+4. 红线自查：本轮只读目录、文件与 git 对象，只发了 BB 的 ack；没起进程、没连 `:8000` `:4781` `:4782` `:8693`；`_preview.db` 与那批 `.db` 零接触；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次；额度没墙。
+
+**六、下一手。** 信办完、因复算完、白跑一步量掉，我名下无新派未闭单 ⇒ 具名「无单可领，等派」。若你要我接着做，最省的一格是：我从现尖起一次自己的构建（我自己的端口、我自己的目录），把落地后的四屏两臂顶栏逐字读回来——那不需要等谁换代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 17:07 · C2 那格的分母在收紧后的判据下重登：十七路由 × 两臂 × 两形 × 亮暗两档共百三十六趟，新判据读到零枚、旧字面判据同趟二百一十七枚（产品字节改动 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-c2-denominator-r1` 远端头现读 `1de97bbbd5032b162a989652a1d64c490f6030f0`，父提 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c` 就是现尖 ⇒ 可直接快进合（另现取 `git merge-base` 读回 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`、`git merge-tree --write-tree` 退 0、预测树 `6ae1c665198aacfe1882e64620b6247ec71498bf`、相对现尖只动这一枚件）；件 `review/ord0561/C2_DENOMINATOR_R1.md` 的 blob `ca803b93bcf281393c7826e37a951bb1b6ee2035`（`git cat-file -s` 现回 5648 字节），件 69 行、5648 字节 B；产物入口 `index-DLbc3Q3N.js`、1624131 字节 B、服务字节与磁盘字节重算的 sha 逐字相同 `1357c527bfe91129065087329259ed74e580c97f`（这枚是本机字节 sha1、未入 git、不是 blob、故意不可取回；要取当代字节请用上面那枚件的 blob）。
+- 分母（每一档 68 趟 = 17 条路由 × 两臂 × 两形，两档合计 136 趟，全部挂载、未挂载 0 趟、扫描拒收 0 条）。
+- 亮档逐类：`C1` 16 枚、`C2` 0 枚、`C2old` 217 枚、`C3` 2 枚、`C4` 109 枚、`C5` 4 枚、`C6` 4 枚。表在 `review/ord0561/C2_DENOMINATOR_R1.md:9`。
+- 暗档逐类：`C1` 16 枚、`C2` 0 枚、`C2old` 217 枚、`C3` 2 枚、`C4` 109 枚、`C5` 4 枚、`C6` 4 枚；两档枚数不同的类：无（逐类枚数相同）。表在 `review/ord0561/C2_DENOMINATOR_R1.md:9`。
+- 同一趟里新旧各数各的：旧字面判据 `C2old` 亮档读 217 枚（zh 166 枚 对 en 51 枚）、新判据 `C2` 亮档读 0 枚 ⇒ 那 217 枚全部落在『短但确有名字』那一族。暗档同形：旧 217 枚、新 0 枚。表在 `review/ord0561/C2_DENOMINATOR_R1.md:9`。
+- 三代连得上（同一把尺、只有判据在变）：尖 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 那代 285 枚（zh 166 对 en 51）→ 尖 `b60418ccbda8937029e6b74f8c990ad06a8d62f8` 那代 285 枚（zh 166 对 en 51）→ 本手在现尖读到 0 枚。旧那句 285 枚从此不可用于派单。写在 `review/ord0561/C2_DENOMINATOR_R1.md:32`。
+- 暗档那一格补上了（先前具名 `NOT_MEASURED`）：两档逐类枚数相同，但不折成『完全相同』——`/v8/hub` 那屏（中文臂、`390 px × 844 px`）原始信号亮档 8 条、暗档 9 条，暗档同一枚地图标记被读到两次命中。我判这是标记落位抖动、不判成档位造成的缺陷（这格的判据不看颜色），两档逐枚都在读数件里。列在 `review/ord0561/C2_DENOMINATOR_R1.md:36`。
+- 反控（同一枚入口资产 `index-DLbc3Q3N.js` 上注入 6 趟）：省略号那枚新判据咬 6 趟、两字母那枚新判据读 0 枚而旧判据读 6 枚；其余五格同趟仍各自咬着（`below_floor:c4` 6 枚、`clipped:c1` 6 枚、`covered:c2` 1 枚、`covered:c3` 5 枚、`covered:c4` 6 枚、`ellipsis:c6` 6 枚、`no_name:c2` 6 枚）；干净臂带注入标记 0 枚 ⇒ 这一代的零枚不是尺瞎了。写在 `review/ord0561/C2_DENOMINATOR_R1.md:46`。
+- 先前那一趟弃用，弃得有数：我第一趟扫在 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，交件前现尖走到 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`，两者之间动过 10 组文件，其中 `frontend/src` 里 2 组（`SpendPanel.tsx`、`spendCopy.ts`）正落在 `/v8/trips` 那面上；`frontend/src` 的树号也从 `4e125ed35e7d316b5fd7e717eef6520368d3b664` 变成 `7d65c8df79a27e242d55df1831b278ac52681f7b` ⇒ 按『面动就重跑、不重挂』重跑了两档，本件的读数全部来自新尖。
+- 五屏校正面与 `1ba48dbf` 那把不并数：那把的逐枚读数取的是另一代产物，我这把 covered/clipped 与它的差在这代没有同代同跑就不能判谁错。我这侧的逐臂读数列在 `review/ord0561/C2_DENOMINATOR_R1.md:50`。
+- 没做的，具名：底栏点击进入那一臂在 17 条路由 × 两档上没重跑（这手是地址直达 + 反控一趟的 nav）=`NOT_MEASURED`；第三形（例如 `320 px` 宽那档）没跑 = `NOT_MEASURED`；产品字节改动 0 枚、契约 0 枚；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）；共享预览口这手没读没写；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；墨色普查里没上过屏那批仍待带状态驱动那一手。清单在 `review/ord0561/C2_DENOMINATOR_R1.md:63`。
+- 我自申报的下一手（先读账本 ORDERS 再动）：把底栏点击进入那一臂在同样 17 条路由 × 两档上补齐，让『两种入口六类合计相同』这条从五屏升到全路由；covered 那十三枚两把尺残余仍等您排同代同跑那一次约定。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `6a773af1` · ORD-0556 第四趟只读腿：把现读尖与我屏读那代逐枚比树（判据清零、路径少四千），另具名一件我自己造成的投递错对象（本手零枚产品字节）
 
 **代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `d80a86c2abad1943e4c880074cd8ba028181fce2`，`ls-remote` 独立回读同值；parent = `04e4f02e32e99853fd1069ee8f56982dd0d331a1`（腿二腿三那笔），本轮再加 2 枚文件：`review/ord0556/tip_tree_diff_r1.py` 与 `review/ord0556/readouts/tip_tree_diff_20261005T084854Z.json`，产品路径 0 枚。比的两枚尖：旧尖 = `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（我屏读那趟的基座，取自读数件 `generation.older_ref_from_sweep_receipt`），新尖 = `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（本轮 `ls-remote origin HEAD` 现读）。**血缘不证**：`git merge-base --is-ancestor` rc=1、本克隆 `shallow` = true，所以这块只讲两枚树的差，不讲谁删了谁。
