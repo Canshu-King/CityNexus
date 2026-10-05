@@ -8,7 +8,7 @@ Branch:
 
 GPT relay HEAD at handoff:
 
-`9daac1e899d198138d0614aee6e0faa4b5fcf397`
+`69f0663605c31152ce1074e4eec0eae3476d5d57`
 
 Codex's last push before this review:
 
@@ -154,6 +154,7 @@ Commits:
 - `185ccc682ae14428eb9376907d9c5c3b3c5b5c1c`
 - `f7ed8997e06a6da83cfb747218d264d1a8c147be`
 - `9daac1e899d198138d0614aee6e0faa4b5fcf397`
+- `69f0663605c31152ce1074e4eec0eae3476d5d57` — expires renewed consent if the active base plan has changed before consumption.
 
 Do not weaken these if focused tests reveal a real integration mismatch.
 
