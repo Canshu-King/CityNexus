@@ -657,50 +657,77 @@ def _journey_owner_member_id(journey_id: str) -> str:
     return str(rows[0].id)
 
 
-def _select_fresh_collective_choice(
+def _independent_fresh_member_choices(
     clarification: dict[str, Any],
-) -> str:
-    """Choose only a uniquely best server-grounded acceptable recovery option."""
+    required_member_ids: list[str],
+) -> dict[str, str]:
+    """Derive each test member's choice independently from its own grounded fit.
 
-    ranked: list[tuple[tuple[int, float, float], str]] = []
-    for option in clarification.get("candidate_options") or []:
-        if not isinstance(option, dict) or not option.get("proposal_id"):
-            continue
-        if option.get("status") != "GROUNDED_FEASIBLE":
-            continue
-        fairness = option.get("fairness") or {}
-        unacceptable_count = len(
-            fairness.get("unacceptable_member_ids") or []
-        )
-        try:
-            minimum_fit = float(fairness.get("minimum_member_fit"))
-        except (TypeError, ValueError):
-            minimum_fit = -1.0
-        try:
-            maximum_regret = float(fairness.get("maximum_regret"))
-        except (TypeError, ValueError):
-            maximum_regret = 1.0
-        score = (
-            1 if unacceptable_count == 0 else 0,
-            minimum_fit,
-            -maximum_regret,
-        )
-        ranked.append((score, str(option["proposal_id"])))
-    if not ranked:
+    The harness may emulate the authenticated principals used by the R29/R30
+    strike, but it must not invent social consensus by picking one global
+    fairness optimum and submitting that answer for everyone. Each relevant
+    member must have one unique server-grounded maximum, and the maxima must
+    converge on the same proposal before automated closure is allowed.
+    """
+
+    options = [
+        item
+        for item in clarification.get("candidate_options") or []
+        if isinstance(item, dict)
+        and item.get("proposal_id")
+        and item.get("status") == "GROUNDED_FEASIBLE"
+    ]
+    if not options:
         raise RuntimeError(
-            "fresh recovery round has no grounded option with fairness facts"
+            "fresh recovery round has no grounded feasible options"
         )
-    ranked.sort(reverse=True)
-    best_score = ranked[0][0]
-    best_ids = sorted(
-        proposal_id for score, proposal_id in ranked if score == best_score
-    )
-    if len(best_ids) != 1:
+
+    choices: dict[str, str] = {}
+    for member_id in required_member_ids:
+        scored: list[tuple[float, str]] = []
+        for option in options:
+            fits = option.get("member_fits") or {}
+            fit = fits.get(member_id) if isinstance(fits, dict) else None
+            if not isinstance(fit, dict):
+                continue
+            fairness = option.get("fairness") or {}
+            if member_id in {
+                str(value)
+                for value in fairness.get("unacceptable_member_ids") or []
+            }:
+                continue
+            try:
+                score = float(fit.get("effective_fit"))
+            except (TypeError, ValueError):
+                continue
+            scored.append((score, str(option["proposal_id"])))
+        if not scored:
+            raise RuntimeError(
+                "fresh recovery round has no acceptable grounded fit for "
+                f"member {member_id}"
+            )
+        best_score = max(score for score, _proposal_id in scored)
+        best_ids = sorted(
+            proposal_id
+            for score, proposal_id in scored
+            if abs(score - best_score) <= 1e-9
+        )
+        if len(best_ids) != 1:
+            raise RuntimeError(
+                "fresh recovery member has no unique grounded maximum; "
+                f"human choice remains genuinely open for {member_id}: "
+                f"{best_ids}"
+            )
+        choices[member_id] = best_ids[0]
+
+    distinct = sorted(set(choices.values()))
+    if len(distinct) != 1:
         raise RuntimeError(
-            "fresh recovery round has no unique jointly acceptable option; "
-            f"human choice remains genuinely open: {best_ids}"
+            "fresh recovery members still prefer different grounded futures; "
+            "the harness must not manufacture consensus: "
+            f"{choices}"
         )
-    return best_ids[0]
+    return choices
 
 
 def _close_fresh_collective_round(
@@ -723,7 +750,11 @@ def _close_fresh_collective_round(
         raise RuntimeError(
             "fresh collective round has no mission or required member scope"
         )
-    choice = _select_fresh_collective_choice(clarification)
+    independent_choices = _independent_fresh_member_choices(
+        clarification,
+        required,
+    )
+    choice = next(iter(set(independent_choices.values())))
     tokens = _signed_member_tokens(required)
     client = TestClient(app)
     path = (
@@ -737,7 +768,7 @@ def _close_fresh_collective_round(
             headers={"Authorization": f"Bearer {tokens[member_id]}"},
             json={
                 "clarification_id": clarification["clarification_id"],
-                "proposal_id": choice,
+                "proposal_id": independent_choices[member_id],
             },
         )
         if response.status_code >= 400:
@@ -775,6 +806,7 @@ def _close_fresh_collective_round(
     )
     return {
         "required_member_ids": required,
+        "independent_member_choices": independent_choices,
         "selected_proposal_id": choice,
         "responses": responses,
         "resolved_child_id": child_id,
