@@ -2269,6 +2269,7 @@ def get_agent_run(
 def approve_agent_action(
     journey_id: UUID,
     approval_id: UUID,
+    request: Request,
     payload: AgentApprovalRequest | None = None,
     session: Session = Depends(get_session),
 ):
@@ -2282,6 +2283,22 @@ def approve_agent_action(
         raise HTTPException(404, "agent approval was not found")
     from app.agent.approval import approval_payload, approve_action_approval
     from app.agent.continuation import resume_pending_action
+
+    actor_id = journey.traveler_id
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if principal.traveler_id != approval.traveler_id:
+            raise HTTPException(403, "authenticated member cannot approve for another traveler")
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "authenticated member cannot authorize this Journey mutation")
+        actor_id = principal.traveler_id
 
     # If a previous request crashed after the mutation committed but before the
     # continuation row was finalized, the approval is already CONSUMED.  Give
@@ -2300,7 +2317,7 @@ def approve_agent_action(
         approval,
         approval_method=payload.approval_method if payload else "USER_CONFIRMATION",
         step_up_code=payload.step_up_code if payload else None,
-        actor_id=journey.traveler_id,
+        actor_id=actor_id,
     )
     continuation = resume_pending_action(session, approval_id=str(approval_id))
     if continuation is None:
@@ -2441,14 +2458,15 @@ def answer_collective_clarification(
     journey_id: UUID,
     mission_id: UUID,
     member_id: UUID,
+    request: Request,
     payload: CollectiveClarificationAnswer,
     session: Session = Depends(get_session),
 ):
-    """Record exactly one member's answer without rewriting member memory.
+    """Record one member answer, identity-bound when traveler auth is configured.
 
-    The current transport has no trusted caller-principal seam.  This route
-    therefore proves only server-scoped member state; a future authenticated
-    caller must be added before this path is treated as identity-bound.
+    The member id remains in the URL for compatibility, but in strict R28 mode
+    it is never authority: a signed traveler principal is resolved server-side
+    and must map to this exact in-force JourneyMember.
     """
     journey = require(session, Journey, str(journey_id), "Journey")
     parent = require(session, JourneyMission, str(mission_id), "JourneyMission")
@@ -2459,9 +2477,20 @@ def answer_collective_clarification(
         raise HTTPException(409, "collective decision is not waiting for members")
     if stored.get("clarification_id") != payload.clarification_id:
         raise HTTPException(409, "collective clarification id does not match")
-    member = session.get(JourneyMemberModel, str(member_id))
-    if member is None or member.journey_id != journey.id or _member_state(member, datetime.now(timezone.utc)) != "MEMBER_IN_FORCE":
-        raise HTTPException(409, "member is not in force for this collective decision")
+    authenticated_principal = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        authenticated_principal, authenticated_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if authenticated_member.id != str(member_id):
+            raise HTTPException(403, "authenticated traveler cannot answer for another Journey member")
+        member = authenticated_member
+    else:
+        member = session.get(JourneyMemberModel, str(member_id))
+        if member is None or member.journey_id != journey.id or _member_state(member, datetime.now(timezone.utc)) != "MEMBER_IN_FORCE":
+            raise HTTPException(409, "member is not in force for this collective decision")
     required = {str(item) for item in stored.get("required_member_ids") or []}
     if str(member_id) not in required:
         raise HTTPException(403, "member is not decision-relevant for this collective trade-off")
@@ -2552,9 +2581,15 @@ def answer_collective_clarification(
         entity_type="JourneyMission",
         entity_id=parent.id,
         journey_id=journey.id,
-        actor_type="MEMBER_SCOPED_STATE",
-        actor_id=str(member_id),
-        after={"clarification_id": stored.get("clarification_id"), "member_id": str(member_id), "status": stored.get("status")},
+        actor_type="AUTHENTICATED_TRAVELER" if authenticated_principal else "MEMBER_SCOPED_STATE",
+        actor_id=authenticated_principal.traveler_id if authenticated_principal else str(member_id),
+        after={
+            "clarification_id": stored.get("clarification_id"),
+            "member_id": str(member_id),
+            "traveler_id": member.traveler_id,
+            "auth_method": authenticated_principal.auth_method if authenticated_principal else "LEGACY_MEMBER_SCOPED_STATE",
+            "status": stored.get("status"),
+        },
     )
     session.commit()
     return {
