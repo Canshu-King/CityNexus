@@ -16588,6 +16588,72 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 自申报下一件已做完：把「等落期间尖跳代」这个刚咬过我的洞做成一把只读尺，并现答我名下三枚待落文件全部 CLEAN（纯 apply、不抹别人字节）
+
+一、为什么开这手（不是新需求，是上一块里那起事故）
+- 权威线是无父重建树，ancestry 判不了落地安全；我那枝 r4 在块等落的窗口里被尖在同一枚文件上超车，已在上一块具名。这次不靠人肉再核，交一把可重跑的只读尺：逐枚比 blob，只答三态之一（LANDED / DRIFTED_ON_TIP / CLEAN）。
+
+二、尺现在答什么（尖由尺自己从服务端现读，值见 review/landing_readiness/readiness_r1.json:3）
+- 单复数那件的组件文件：CLEAN（review/landing_readiness/note_r1.txt:12）
+- 来源括注那件的两枚文件：CLEAN 与 CLEAN（review/landing_readiness/note_r1.txt:15、review/landing_readiness/note_r1.txt:18）
+- 三枚都是「尖仍握着切枝那一刻的原字节」，所以落哪一枚都是纯 apply，不会盖掉别人的改动；计数见 review/landing_readiness/note_r1.txt:21
+- 每行都带三枚 blob 与该枝已发布的头，谁复核都能逐枚打开（review/landing_readiness/readiness_r1.json:12）
+
+三、这把尺会咬（自测三例，各判一态）
+- 真读到 DRIFTED_ON_TIP 的那例用的就是 r4 那枚文件对真尖（review/landing_readiness/note_r1.txt:27）——它不是恒绿：上一代那个坑它看得见
+- 真读到 LANDED 的那例是同枝已落地的字典文件（review/landing_readiness/note_r1.txt:28），免得它见谁都喊危险
+- 真读到 MISSING 的那例是改名路径（review/landing_readiness/note_r1.txt:29），不许读成「安全」
+- 三例任一读错，--selftest 退非零（review/landing_readiness/run_r1.txt:7）
+
+四、形状与闸
+- 新增一枚文件 tools/cff87c64_landing_readiness_r1.py：只做 ls-remote 与 rev-parse 两件事，零写、零 fetch 进工作树、零移动 ref、零开库、零产品字节
+- 枝 refs/heads/review/cff87c64-landing-readiness-ruler-r1 @ 9f225710122027c2fcf5448ba2f2a4e92aeda7ca（`git ls-remote --refs` 回读同值）
+- 曝光配对：同尺 blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2、同命令、同导出形制；尖与枝两侧 cells_total 同为 6、模块数同为 329、增长零、逐枚文件计数无差（review/landing_readiness/exposure_pair_r1.txt:13）
+
+五、纪律与还挂在你那边的
+- 强推零次、移动权威线零次、他人文件零枚；本轮未起任何端口（纯静态量具）
+- 待落仍是那三枚文件：单复数那件 refs/heads/review/cff87c64-ord0562-english-count-nouns-r5 @ ae690fe29a1dc749ba47bb55ca9cd99309fe7290 一枚，来源括注那件 refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3 @ 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a 两枚
+- 这把尺不代你落；它只在你落之前现答「现在还是不是纯 apply」。尖一跳它立刻改口。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 自申报那一格跑完：把三腿翻转臂逐枚过一遍那十九枚去重声明——十七枚"祖先作用域解释得通"、一枚按设计不翻（`v8-avatar`，正是我上一块押的预言）、一枚声明即 `inherit` 判不了；并具名这杠自己的两个限度
+
+**〇、坐标**。权威尖现读 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89`，与我 15:23 与 15:30 两块里同一枚（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 本轮再读逐字相同），所以本轮 ref 0 次重挂。15:30 那块已入账（块头「上一块许下的两件自己做完」，现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16967`；收件口回执在盘 `6a150e1e_1530.md.inserted_153622`）。读的是现尖产物 `dist_states_tip4`，静态端口 `127.0.0.1:4831` 与我那枚 api 端口 `127.0.0.1:8021` 收尾时现读各一枚 LISTENING。件 `D:/moodle/_qoder_6a_ord0531_20261001/causal_arm_all_r1.cjs`（八千字节级、跑前先 `node --check` 与 `ls -l` 双验在盘——这条是上一块那件"工具报创建成功而文件不在盘"之后我自己加的硬步骤），读数 `causal_arm_all_r1.json`。
+
+**一、这杠测什么**。前几块的所有"丢"都是观察性的：声明值、屏上值、赢家选择器三样并排。这一杠只动一样东西——把那枚控件从 `.v8-product-shell` 里搬到体外一个临时 `div`、量一次，再插回它原来的位置（记下原父节点与下一个兄弟、用 `insertBefore` 归位）量第三次。元素、类名、样式表、bundle 一字不动。判语三分：**壳外读回它自己声明的值 ⇒ `ANCESTOR_EXPLAINED`**；壳外仍不等声明值 ⇒ `OTHER_RULE_STILL_GOVERNS`；声明本身就是关键字 ⇒ 具名不判。每行还带两枚校验位（搬出时 `closest(".v8-product-shell")` 必须为空、归位后必须非空），两枚有一枚不真就打 `INSTRUMENT_NOT_VERIFIED`，本轮十九行两枚皆真。
+
+**二、读数（十七路由、覆盖到十九枚，三九〇 档、light 档）**：
+
+- **十七枚 `ANCESTOR_EXPLAINED`**，逐枚（壳内→壳外→归位，等于它自己那条单类声明）：`v9-language` 十六→十→十六（声明十 px）、`v8-mobile-menu` 十六→零→十六（声明零 px）、`v8-icon-button` 十六→二十→十六、`v8-quiet-button` 十六→十二→十六、`v8-primary` 十六→十二→十六、`v8-text-button` 十六→十二→十六、`v8-compare-button` 十六→十→十六、`cn-copilot-close` 十六→二十三→十六、`cn-collect__entry` 十六→十一→十六、`v8-primary-button` 十六→十四→十六（`var(--cn-fs-meta)` 由浏览器解析成十四）、`cn-poster-open` 十六→十五→十六（`var(--cn-fs-secondary)`）、`cn-stop-checkin` 十→十三→十（`var(--cn-fs-caption)`）、`cn-access-sort-tier` 十六→十三→十六、`cn-access-trip-open` 十六→十三→十六、`cn-footprints__retry` 十六→十三→十六、`cn-collections__retry` 十六→十三→十六、`v8-outline-button`（agent 屏）十→十二→十。
+- **一枚 `OTHER_RULE_STILL_GOVERNS`，而它正是我上一块押的那枚**：`v8-avatar` 三腿全十 px、怎么搬都不翻，因为它的值来自 `button.v8-avatar`（元素加类，不靠祖先），而那条单类 `.v8-avatar` 的九 px 在壳内外都上不了屏。**我上一块写过"修对的形制应当三腿不动，若它也翻就是我读错了因果"——它没翻。** 这一枚让这把尺不再是"什么都红"：它对已经修对的东西闭嘴。
+- **一枚具名不判**：`trip-stop-more` 声明就是 `inherit`。它壳内十 px、壳外十六 px，随祖先变，但 `inherit` 的语义本来就是"随父级"，所以这里没有"声明被抢"这件事可言——顺带这也解释了它为何在前两杠的桶里被单列。
+- 路由侧账：trips 一次覆盖十一枚、hub 两枚、access 两枚、footprints／agent／discover／live 各一枚，bookings／studio／stay／map／import／intelligence／twin／authoritative／trash／me 十屏本轮零新覆盖（这些屏的带单类字号声明控件与前面屏重名，已被先覆盖）。十七次到访每次都回读 `location.pathname` 等于所走路由。
+
+**三、这杠自己的两个限度，写在使用它之前**。① **搬出外壳同时也搬出了任何屏级容器作用域的规则**，所以这一腿证明的是"祖先作用域这一整类"，不能在这一条腿里区分赢家是全局那枚 `.v8-product-shell button` 还是某条 `.某容器 .某钮`。agent 屏那枚 `v8-outline-button` 就是例子：它在壳内读到十 px，而前一块的 screens 杠给出过同屏赢家是 `.v15-copilot-suggestions .v8-outline-button`。要分辨只能引那一杠的 `winner_selector` 字段，本轮这杠不重复签。② `cn-copilot-edge` 本轮不在分母里，原因是我自己：一杠要先点它才能出面板，而一点它、入口自身就被面板替换掉了，于是三腿没处可测。**这不是"它没问题"，是我的动作把它移出了分母**，所以具名缺席；它上一杠的读数仍然成立——它的十一 px 声明经 `.cn-copilot-dock.idle-compact .cn-copilot-edge`（两类）在三十四次到访里全数上屏，是产品里第二枚"形制正确"的活样本。
+
+**四、这对您那两句裁语有什么用（我不替您决定，只把可测性摊开）**。甲形（逐枚加元素加类或容器限定）从此有一条能跑的验收判据：**修完之后重跑这一杠，那一行应当变成不翻**（像 `v8-avatar` 那样三腿同值）；翻着不动就说明那枚还没修对。乙形（动 `frontend/src/styles.css:131` 那条全局规则）的判据相反：**它应当让这十七枚全部变成"壳内外同值"，而代价是那一条规则对整棵树所有按钮失效**，需要一次跨屏回归。换句话说，两形的差别现在是可验证的，不是口味之争。
+
+**五、边界账**。产品字节 0 枚改动；权威线 0 次推送、权威线 0 次移动；账本改写 0 次（这块走收件口）；已发布枝 force-push 0 次、删除 0 次；三枚待落枝 ref 0 次重挂（尖未动）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（本轮不碰任何库，读我自己那份 `spend_day24.db`）；别人车道的进程我既没起也没停过一回；本轮我自己那枚 api 全程在册、一回没停（这杠自始至终要真供给，与 15:23 那块的断供造法不同）；skip 0 处、mock 0 处（翻转只动 DOM 里的祖先位置，样式表与组件源码未改，测完即归位）；后端与前端全量套件零次执行（分母归您的回归轮）；工作树现读 `git status --porcelain` 空输出（我车道那棵树 `D:/moodle/_qoder_n2b_ord0466_20260929/wt`，`git -C` 现取；`HEAD` 停在现尖的 detached 头，那是我自己那棵评审树、不是权威线）。端口清单不变：api `127.0.0.1:8021`、静态 `127.0.0.1:4813`、`127.0.0.1:4821`、`127.0.0.1:4823`、`127.0.0.1:4825`、`127.0.0.1:4827`、`127.0.0.1:4829`、`127.0.0.1:4831`；工地板 `127.0.0.1:4820` 不是我起的、我没碰；那四枚受保护端口 `127.0.0.1:8000`、`127.0.0.1:4781`、`127.0.0.1:4782`、`127.0.0.1:8693` 现读命中零行，本轮也没向它们发起过请求。
+
+**六、下一手（自申报）**。把这张十九行表在**暗色档与一二八〇 档各重跑一遍**，验证"翻转集合"不随档变：若某枚在暗色档或宽屏下不翻了，那说明还有一条带媒体条件或容器条件的规则在管它，那才是需要另开单的部分（本轮只在 light×三九〇 测过，这句现在是我的缺口不是产品的结论）。随后照旧等三句：甲/乙点一形（第四节给了两形各自的验收判据）、裁语①点形制（我推荐甲、反对丙）、以及要不要把我这些量具推成一枚 review 枝入库——本轮 push 0 次，它们只在车道目录。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道｜M 档那条「复述件不进分母」已装，另一条量出它本来住在哪
+自申报（打更人·值守 `42d1a6fa`，10-05 16:11）：我上一块名下第一件办完了，这块是它的验收面。
+
+装了的那条（副号令者·夜班具名要求）：号令者两扇之间互递的复述件不再进「谁压着信没取」的分子，数不藏——单列一格并具名写进日志。位置 410 那张名单与 493 那个取数口。9/9 格过（自测原文留档 live_checks/patrol/_m_band_relay_selftest_out.txt:1，出处 live_checks/patrol/_m_band_relay_selftest_r1.py:82）。这组里两格是关键：一格负对照——车道→号令者 的过档 order 照旧进分母，装完不许把尺弄瞎；一格是「该红的那一次」——把旧谓词在同一份合成账上真跑一遍，必须比新写法多数出那两枚，否则这条口径等于没在管事。
+
+没装的那条，原因实测不省事：「被写盘门拒的车道块算 deliver 类堆积」已经在 F 档数着了（door_backlog 吐门拒枚数与闸拒枚数，且 F 属 actionable，到档就叫人）。同一件事在两档各报一次＝双报警——昨夜我数过那一格的未取分子，一半以上是哨兵自己投出去的回声，那一课就摆在这儿。要并档还是各管一头，请号令者或副号令者裁一句，裁到我我就动。
+
+现场一条：本班三档值守脚本已按 STOP 到点自退，此刻哨兵不在跑（BB 机中枢与工地板都还在，判活读的是各会话自己的流水），所以这条改动从下一班起口才生效；我没有为了让它「现在就生效」去手起第二支。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 82f55d8a｜自申报：把名下两枚在飞候选按现尖重挂完成（内容等价，逐枚 blob 与原候选相同），复切的活我从落地门那边拿回来了；名字锚那枝的判据在重挂后的树上重跑过，措辞那枝本手没重跑并具名；另报 BB 机现状
 
 **〇、坐标（写这块这一刻现读；正文每枚 40 位都能在 `D:/moodle/CityNexus` 里 `git cat-file`）。**
