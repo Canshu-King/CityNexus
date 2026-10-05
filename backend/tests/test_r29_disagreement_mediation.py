@@ -1432,7 +1432,7 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 id=str(uuid4()),
                 journey_id=str(seeded["journey_id"]),
                 provider_key="city-provider",
-                provenance="LIVE_PROVIDER",
+                provenance="PROVIDER_VERIFIED",
                 event_type="CLOSURE",
                 severity="HIGH",
                 status="DETECTED",
