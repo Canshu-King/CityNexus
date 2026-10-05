@@ -131,36 +131,42 @@ def pending_resolved_mediation_selection(
             )
         )
 
-    for _stamp, mission, clarification in sorted(
+    ordered = sorted(
         candidates,
         key=lambda item: (item[0], item[1].id),
         reverse=True,
+    )
+    if not ordered:
+        return None
+
+    # Social authority is monotonic: only the latest resolved mediation may
+    # grant a pending capability. If that newest decision is already consumed,
+    # stale, or invalidated, never fall back to an older superseded consent.
+    _stamp, mission, clarification = ordered[0]
+    proposal_id = str(clarification.get("selected_proposal_id") or "")
+    proposal = session.get(ReplanProposal, proposal_id)
+    if (
+        proposal is None
+        or proposal.journey_id != journey_id
+        or proposal.status != "PRESENTED"
+        or str(proposal.base_plan_version_id)
+        != str(active_plan_version_id or "")
     ):
-        proposal_id = str(clarification.get("selected_proposal_id") or "")
-        proposal = session.get(ReplanProposal, proposal_id)
-        if (
-            proposal is None
-            or proposal.journey_id != journey_id
-            or proposal.status != "PRESENTED"
-            or str(proposal.base_plan_version_id)
-            != str(active_plan_version_id or "")
-        ):
-            continue
-        plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
-        if (
-            plan is None
-            or plan.journey_id != journey_id
-            or plan.status != "CANDIDATE"
-            or str(plan.id) == str(active_plan_version_id or "")
-        ):
-            continue
-        return {
-            "mission_id": mission.id,
-            "clarification_id": str(clarification.get("clarification_id") or ""),
-            "selected_proposal_id": proposal.id,
-            "selected_plan_version_id": plan.id,
-        }
-    return None
+        return None
+    plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
+    if (
+        plan is None
+        or plan.journey_id != journey_id
+        or plan.status != "CANDIDATE"
+        or str(plan.id) == str(active_plan_version_id or "")
+    ):
+        return None
+    return {
+        "mission_id": mission.id,
+        "clarification_id": str(clarification.get("clarification_id") or ""),
+        "selected_proposal_id": proposal.id,
+        "selected_plan_version_id": plan.id,
+    }
 
 
 def collective_decision_epoch(*, journey_id: str, mission_id: str, trigger_event_id: str,
