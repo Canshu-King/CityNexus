@@ -377,9 +377,48 @@ def build_verdict(
             None,
         )
         if fresh_resolved is None:
+            accepted_after_denial = None
+            accepted_authority: dict[str, Any] = {}
+            accepted_rows = list(
+                session.scalars(
+                    select(AuditLog)
+                    .where(
+                        AuditLog.journey_id == journey_id,
+                        AuditLog.action == "replan.accepted",
+                        AuditLog.entity_type == "ReplanProposal",
+                    )
+                    .order_by(AuditLog.created_at, AuditLog.id)
+                ).all()
+            )
+            for row in reversed(accepted_rows):
+                created = _dt(row.created_at)
+                if (
+                    denial_time is not None
+                    and created is not None
+                    and created < denial_time
+                ):
+                    continue
+                after = _json(row.after_json, {})
+                authority = (
+                    after.get("collective_authority")
+                    if isinstance(after, dict)
+                    and isinstance(after.get("collective_authority"), dict)
+                    else {}
+                )
+                accepted_after_denial = row
+                accepted_authority = authority
+                break
+
+            unanimous_no_reconsent_ok = bool(
+                accepted_after_denial is not None
+                and accepted_authority.get("classification")
+                == "UNANIMOUS_DOMINANCE"
+            )
             verdicts["fresh_selective_human_authority"] = _verdict(
-                NOT_PROVEN,
-                "No post-shock resolved collective round is persisted; this is valid only if final recovery proves no renewed value choice was required.",
+                PROVEN if unanimous_no_reconsent_ok else NOT_PROVEN,
+                "No fresh human round was needed because the final post-shock mutation was durably authorized as current UNANIMOUS_DOMINANCE."
+                if unanimous_no_reconsent_ok
+                else "No post-shock resolved collective round is persisted, and no durable unanimously-dominant mutation authority proves that re-consent was unnecessary.",
                 post_shock_collective_rounds=[
                     {
                         "mission_id": row.id,
@@ -390,10 +429,24 @@ def build_verdict(
                     }
                     for row, payload in fresh_candidates
                 ],
+                accepted_audit_id=(
+                    accepted_after_denial.id
+                    if accepted_after_denial is not None
+                    else None
+                ),
+                accepted_proposal_id=(
+                    accepted_after_denial.entity_id
+                    if accepted_after_denial is not None
+                    else None
+                ),
+                collective_authority=accepted_authority,
             )
             verdicts["e2_w2_durable_when_required"] = _verdict(
-                NOT_PROVEN,
-                "No post-shock resolved collective authority is yet available for E2/W2 verification.",
+                PROVEN if unanimous_no_reconsent_ok else NOT_PROVEN,
+                "E2/W2 human authority is not required when current post-shock authority is unanimously dominant."
+                if unanimous_no_reconsent_ok
+                else "No fresh E2/W2 authority exists and the no-reconsent unanimous exception is not durably proven.",
+                not_required=unanimous_no_reconsent_ok,
             )
         else:
             fresh_mission, fresh_payload = fresh_resolved
