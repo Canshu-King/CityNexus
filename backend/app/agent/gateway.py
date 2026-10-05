@@ -114,6 +114,19 @@ def _journey_has_unresolved_collective_mediation(
     for row in missions:
         if row.parent_mission_id:
             by_parent.setdefault(str(row.parent_mission_id), []).append(row)
+        # A persisted mediator carries a server-owned source_mission_id in its
+        # resolved intent.  Keep the lock traversal correct even when an
+        # imported/legacy row is missing the ORM parent pointer; the
+        # source-mission relation is still the durable mediation lineage.
+        mediation = _mission_json(row.resolved_intent_json).get("collective_mediation")
+        source_mission_id = (
+            mediation.get("source_mission_id")
+            if isinstance(mediation, dict)
+            and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+            else None
+        )
+        if source_mission_id:
+            by_parent.setdefault(str(source_mission_id), []).append(row)
 
     def resolved_through_mediator(source: JourneyMission, seen: set[str]) -> bool:
         if source.id in seen:
