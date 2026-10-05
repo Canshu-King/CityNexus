@@ -1,0 +1,2199 @@
+{
+ "built_at": "2026-10-05T15:36:41+0800",
+ "tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "entry_asset": "index-BW2_ds1t.js",
+ "entry_asset_bytes": 1623134,
+ "entry_asset_sha256_head16": "780bdef73784a61d",
+ "stack": {
+  "api_port": 8811,
+  "web_port": 49811,
+  "private_db": "D:/moodle/_qoder_cmdr_stack_d107131/cmdr_stack_copy.db",
+  "src_db": "D:/moodle/_qoder_cmdr_priv_0437seed.db",
+  "journeys": 142,
+  "journeys_with_legs": 45,
+  "journey_read": "5a203174-bbcc-422a-aa64-8343c2883c72",
+  "legs_on_it": 24
+ },
+ "readings": {
+  "_crumb_zh_d107131_r2.json": {
+   "at": "2026-10-05T07:26:55.890Z",
+   "base": "http://127.0.0.1:49811",
+   "locale": "zh",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "viewport": {
+    "w": 390,
+    "h": 844
+   },
+   "rows": [
+    {
+     "route": "/v8/hub",
+     "control": true,
+     "expected": "今天",
+     "href": "/v8/hub",
+     "painted": "今天",
+     "chars": 2,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "行程/今天",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 1328
+    },
+    {
+     "route": "/v8/trash",
+     "control": false,
+     "expected": "回收站",
+     "href": "/v8/trash",
+     "painted": "回收站",
+     "chars": 3,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "行程/回收站",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 138
+    },
+    {
+     "route": "/v8/access",
+     "control": false,
+     "expected": "成员与权限",
+     "href": "/v8/access",
+     "painted": "成员与权限",
+     "chars": 5,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "行程/成员与权限",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 5005
+    },
+    {
+     "route": "/v8/import",
+     "control": false,
+     "expected": "导入地点",
+     "href": "/v8/import",
+     "painted": "导入地点",
+     "chars": 4,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "行程/导入地点",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 349
+    },
+    {
+     "route": "/v8/footprints",
+     "control": false,
+     "expected": "足迹",
+     "href": "/v8/footprints",
+     "painted": "足迹",
+     "chars": 2,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "行程/足迹",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 139
+    }
+   ],
+   "matched": 5,
+   "mismatches": [],
+   "emptyDenominators": [],
+   "pageProblems": 0,
+   "problemSamples": []
+  },
+  "_crumb_en_d107131_r2.json": {
+   "at": "2026-10-05T07:27:09.528Z",
+   "base": "http://127.0.0.1:49811",
+   "locale": "en",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "viewport": {
+    "w": 390,
+    "h": 844
+   },
+   "rows": [
+    {
+     "route": "/v8/hub",
+     "control": true,
+     "expected": "Today",
+     "href": "/v8/hub",
+     "painted": "Today",
+     "chars": 5,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "Journeys/Today",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 2333
+    },
+    {
+     "route": "/v8/trash",
+     "control": false,
+     "expected": "Recycle bin",
+     "href": "/v8/trash",
+     "painted": "Recycle bin",
+     "chars": 11,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "Journeys/Recycle bin",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 266
+    },
+    {
+     "route": "/v8/access",
+     "control": false,
+     "expected": "Members and access",
+     "href": "/v8/access",
+     "painted": "Members and access",
+     "chars": 18,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "Journeys/Members and access",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 7850
+    },
+    {
+     "route": "/v8/import",
+     "control": false,
+     "expected": "Import places",
+     "href": "/v8/import",
+     "painted": "Import places",
+     "chars": 13,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "Journeys/Import places",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 923
+    },
+    {
+     "route": "/v8/footprints",
+     "control": false,
+     "expected": "Footprints",
+     "href": "/v8/footprints",
+     "painted": "Footprints",
+     "chars": 10,
+     "matchesExpected": true,
+     "machineWordShape": false,
+     "crumb": "Journeys/Footprints",
+     "hitTestCenter": true,
+     "wizardOnScreen": false,
+     "documentChars": 324
+    }
+   ],
+   "matched": 5,
+   "mismatches": [],
+   "emptyDenominators": [],
+   "pageProblems": 0,
+   "problemSamples": []
+  },
+  "_chk_zh_d107131.json": {
+   "instrument": "cmdr_0555_checkin_entry_locate_r1",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "zh",
+   "viewport": "390x844",
+   "entryAssets": [
+    "/assets/index-BW2_ds1t.js"
+   ],
+   "pattern": "打卡|足迹|已去过",
+   "stages": [
+    {
+     "stage": "root-auto",
+     "url": "/",
+     "chars": 168,
+     "text_hits": [],
+     "buttons": [
+      "EN",
+      "看支持的目的地",
+      "高级设置",
+      "高级设置",
+      "目的地",
+      "抵达地点",
+      "离开地点",
+      "使用封存的演示行程",
+      "下一步"
+     ]
+    },
+    {
+     "stage": "/v8/hub",
+     "url": "/v8/hub",
+     "chars": 1291,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "AI 帮我规划",
+      "试用其他城市",
+      "打开行程工作台",
+      "复制行程链接",
+      "查看实时行程",
+      "查看实时行程",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7"
+     ]
+    },
+    {
+     "stage": "/v8/hub -> after tap",
+     "url": "/v8/hub",
+     "chars": 1291,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "AI 帮我规划",
+      "试用其他城市",
+      "打开行程工作台",
+      "复制行程链接",
+      "查看实时行程",
+      "查看实时行程",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7"
+     ],
+     "tap_target": {
+      "text": "足迹",
+      "tag": "span",
+      "cls": "",
+      "box": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "centre": {
+       "cx": 0,
+       "cy": 0
+      },
+      "in_viewport": true,
+      "hit_is_self": false,
+      "clickable_ancestor": true
+     },
+     "calls_from_tap": []
+    },
+    {
+     "stage": "/v8/map",
+     "url": "/v8/map",
+     "chars": 742,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
+       "tag": "p",
+       "cls": "v8-map-footprint-state",
+       "box": {
+        "x": 40,
+        "y": 862,
+        "w": 310,
+        "h": 34
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 879
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": false
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "对比出行方式",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure"
+     ]
+    },
+    {
+     "stage": "/v8/map -> after tap",
+     "url": "/v8/map",
+     "chars": 742,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
+       "tag": "p",
+       "cls": "v8-map-footprint-state",
+       "box": {
+        "x": 40,
+        "y": 862,
+        "w": 310,
+        "h": 34
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 879
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": false
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "对比出行方式",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure"
+     ],
+     "tap_target": {
+      "text": "足迹",
+      "tag": "span",
+      "cls": "",
+      "box": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "centre": {
+       "cx": 0,
+       "cy": 0
+      },
+      "in_viewport": true,
+      "hit_is_self": false,
+      "clickable_ancestor": true
+     },
+     "calls_from_tap": []
+    },
+    {
+     "stage": "/v8/stay",
+     "url": "/v8/stay",
+     "chars": 1182,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "TIANJIN01Haihe Riverside H",
+      "TIANJIN02Central Station C",
+      "TIANJIN03Five Avenues Hous",
+      "TIANJIN04North Canal Guest",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8"
+     ]
+    },
+    {
+     "stage": "/v8/stay -> after tap",
+     "url": "/v8/stay",
+     "chars": 1182,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "TIANJIN01Haihe Riverside H",
+      "TIANJIN02Central Station C",
+      "TIANJIN03Five Avenues Hous",
+      "TIANJIN04North Canal Guest",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8"
+     ],
+     "tap_target": {
+      "text": "足迹",
+      "tag": "span",
+      "cls": "",
+      "box": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "centre": {
+       "cx": 0,
+       "cy": 0
+      },
+      "in_viewport": true,
+      "hit_is_self": false,
+      "clickable_ancestor": true
+     },
+     "calls_from_tap": []
+    },
+    {
+     "stage": "/v8/live",
+     "url": "/v8/live",
+     "chars": 681,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure",
+      "回到行程视野"
+     ]
+    },
+    {
+     "stage": "/v8/live -> after tap",
+     "url": "/v8/live",
+     "chars": 681,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure",
+      "回到行程视野"
+     ],
+     "tap_target": {
+      "text": "足迹",
+      "tag": "span",
+      "cls": "",
+      "box": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "centre": {
+       "cx": 0,
+       "cy": 0
+      },
+      "in_viewport": true,
+      "hit_is_self": false,
+      "clickable_ancestor": true
+     },
+     "calls_from_tap": []
+    },
+    {
+     "stage": "/v8/trips",
+     "url": "/v8/trips",
+     "chars": 545,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 211,
+        "y": 838,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 233,
+        "cy": 860
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 185,
+        "y": 995,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 207,
+        "cy": 1017
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 180,
+        "y": 1152,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 202,
+        "cy": 1174
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "行程",
+      "住宿",
+      "预订",
+      "花费",
+      "展开行程长图",
+      "中止这趟行程",
+      "中止这趟行程",
+      "导出日历",
+      "10月9日周五3 项",
+      "10月10日周六4 项",
+      "10月11日周日2 项",
+      "详情 ›",
+      "打卡",
+      "收藏到…",
+      "详情 ›",
+      "打卡",
+      "收藏到…",
+      "详情 ›",
+      "打卡"
+     ]
+    },
+    {
+     "stage": "/v8/trips -> after tap",
+     "url": "/v8/trips",
+     "chars": 545,
+     "text_hits": [
+      {
+       "text": "足迹",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 211,
+        "y": 838,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 233,
+        "cy": 860
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 185,
+        "y": 995,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 207,
+        "cy": 1017
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "打卡",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 180,
+        "y": 1152,
+        "w": 44,
+        "h": 44
+       },
+       "centre": {
+        "cx": 202,
+        "cy": 1174
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "导入地点",
+      "旅行票夹",
+      "足迹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "成员与权限",
+      "TITianjin1 位旅行者•••",
+      "菜单",
+      "跟随系统",
+      "EN",
+      "◌1",
+      "TI",
+      "行程",
+      "住宿",
+      "预订",
+      "花费",
+      "展开行程长图",
+      "中止这趟行程",
+      "中止这趟行程",
+      "导出日历",
+      "10月9日周五3 项",
+      "10月10日周六4 项",
+      "10月11日周日2 项",
+      "详情 ›",
+      "打卡",
+      "收藏到…",
+      "详情 ›",
+      "打卡",
+      "收藏到…",
+      "详情 ›",
+      "打卡"
+     ],
+     "tap_target": {
+      "text": "足迹",
+      "tag": "span",
+      "cls": "",
+      "box": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "centre": {
+       "cx": 0,
+       "cy": 0
+      },
+      "in_viewport": true,
+      "hit_is_self": false,
+      "clickable_ancestor": true
+     },
+     "calls_from_tap": []
+    }
+   ],
+   "calls": [
+    {
+     "m": "GET",
+     "u": "a203174-bbcc-422a-aa64-8343c2883c72/checkins",
+     "s": 200
+    },
+    {
+     "m": "GET",
+     "u": "a203174-bbcc-422a-aa64-8343c2883c72/checkins",
+     "s": 200
+    }
+   ],
+   "pageErrors": []
+  },
+  "_chk_en_d107131.json": {
+   "instrument": "cmdr_0555_checkin_entry_locate_r1",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "en",
+   "viewport": "390x844",
+   "entryAssets": [
+    "/assets/index-BW2_ds1t.js"
+   ],
+   "pattern": "check in|checkin|footprint|visited",
+   "stages": [
+    {
+     "stage": "root-auto",
+     "url": "/",
+     "chars": 441,
+     "text_hits": [],
+     "buttons": [
+      "中文",
+      "See supported destinations",
+      "Advanced settings",
+      "Advanced settings",
+      "the destination",
+      "where you arrive",
+      "where you leave",
+      "Use the sealed demo trip",
+      "Next"
+     ]
+    },
+    {
+     "stage": "/v8/hub",
+     "url": "/v8/hub",
+     "chars": 2333,
+     "text_hits": [
+      {
+       "text": "Footprints",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "18:45 Check in · Central Station Courtyard",
+       "tag": "strong",
+       "cls": "cn-hero-next-row",
+       "box": {
+        "x": 42,
+        "y": 557,
+        "w": 306,
+        "h": 64
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 589
+       },
+       "in_viewport": true,
+       "hit_is_self": true,
+       "clickable_ancestor": false
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "div",
+       "cls": "v8-map-stop-label maplibregl-marker maplibre",
+       "box": {
+        "x": 75,
+        "y": 886,
+        "w": 238,
+        "h": 22
+       },
+       "centre": {
+        "cx": 194,
+        "cy": 897
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Arrival · Check in · Central Station Courtyard · Overnight ·",
+       "tag": "p",
+       "cls": "",
+       "box": {
+        "x": 36,
+        "y": 1971,
+        "w": 318,
+        "h": 35
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 1988
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "Today",
+      "Live Journey",
+      "Map",
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery",
+      "Import places",
+      "Travel Wallet",
+      "Footprints",
+      "Copilot",
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Members and access",
+      "TITianjin1 traveler•••",
+      "Menu",
+      "System",
+      "中文",
+      "◌1",
+      "TI",
+      "Plan my trip with AI",
+      "Try another city",
+      "Open Trip Studio",
+      "Copy journey link",
+      "Review in Live",
+      "Open Live",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7"
+     ]
+    },
+    {
+     "stage": "/v8/map",
+     "url": "/v8/map",
+     "chars": 1149,
+     "text_hits": [
+      {
+       "text": "Footprints",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "div",
+       "cls": "v8-map-stop-label maplibregl-marker maplibre",
+       "box": {
+        "x": 47,
+        "y": 480,
+        "w": 238,
+        "h": 22
+       },
+       "centre": {
+        "cx": 166,
+        "cy": 490
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "h2",
+       "cls": "",
+       "box": {
+        "x": 40,
+        "y": 799,
+        "w": 310,
+        "h": 64
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 831
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": false
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "button",
+       "cls": "v8-map-stop",
+       "box": {
+        "x": 40,
+        "y": 1080,
+        "w": 310,
+        "h": 35
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 1098
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "Today",
+      "Live Journey",
+      "Map",
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery",
+      "Import places",
+      "Travel Wallet",
+      "Footprints",
+      "Copilot",
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Members and access",
+      "TITianjin1 traveler•••",
+      "Menu",
+      "System",
+      "中文",
+      "◌1",
+      "TI",
+      "Compare modes",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure"
+     ]
+    },
+    {
+     "stage": "/v8/stay",
+     "url": "/v8/stay",
+     "chars": 2078,
+     "text_hits": [
+      {
+       "text": "Footprints",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "div",
+       "cls": "v8-map-stop-label maplibregl-marker maplibre",
+       "box": {
+        "x": 75,
+        "y": 579,
+        "w": 238,
+        "h": 22
+       },
+       "centre": {
+        "cx": 194,
+        "cy": 589
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "Today",
+      "Live Journey",
+      "Map",
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery",
+      "Import places",
+      "Travel Wallet",
+      "Footprints",
+      "Copilot",
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Members and access",
+      "TITianjin1 traveler•••",
+      "Menu",
+      "System",
+      "中文",
+      "◌1",
+      "TI",
+      "TIANJIN01Haihe Riverside H",
+      "TIANJIN02Central Station C",
+      "TIANJIN03Five Avenues Hous",
+      "TIANJIN04North Canal Guest",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8"
+     ]
+    },
+    {
+     "stage": "/v8/live",
+     "url": "/v8/live",
+     "chars": 1280,
+     "text_hits": [
+      {
+       "text": "Footprints",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "NEXT · Check in · Central Station Courtyard · Drive · 14 min",
+       "tag": "p",
+       "cls": "",
+       "box": {
+        "x": 92,
+        "y": 293,
+        "w": 210,
+        "h": 30
+       },
+       "centre": {
+        "cx": 197,
+        "cy": 308
+       },
+       "in_viewport": true,
+       "hit_is_self": true,
+       "clickable_ancestor": false
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "div",
+       "cls": "v8-map-stop-label maplibregl-marker maplibre",
+       "box": {
+        "x": 189,
+        "y": 245,
+        "w": 238,
+        "h": 22
+       },
+       "centre": {
+        "cx": 308,
+        "cy": 255
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "h3",
+       "cls": "",
+       "box": {
+        "x": 38,
+        "y": 1334,
+        "w": 314,
+        "h": 54
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 1361
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": false
+      }
+     ],
+     "buttons": [
+      "Today",
+      "Live Journey",
+      "Map",
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery",
+      "Import places",
+      "Travel Wallet",
+      "Footprints",
+      "Copilot",
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Members and access",
+      "TITianjin1 traveler•••",
+      "Menu",
+      "System",
+      "中文",
+      "◌1",
+      "TI",
+      "1",
+      "Arrival",
+      "2",
+      "Check in · Central Station",
+      "3",
+      "Overnight · Central Statio",
+      "4",
+      "Five Great Avenues",
+      "5",
+      "Tianjin Museum",
+      "6",
+      "Tianjin Eye",
+      "7",
+      "Overnight · Central Statio",
+      "8",
+      "Check out · Central Statio",
+      "9",
+      "Departure",
+      "Fit to my journey"
+     ]
+    },
+    {
+     "stage": "/v8/trips",
+     "url": "/v8/trips",
+     "chars": 1134,
+     "text_hits": [
+      {
+       "text": "Footprints",
+       "tag": "span",
+       "cls": "",
+       "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+       },
+       "centre": {
+        "cx": 0,
+        "cy": 0
+       },
+       "in_viewport": true,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 228,
+        "y": 894,
+        "w": 62,
+        "h": 44
+       },
+       "centre": {
+        "cx": 259,
+        "cy": 916
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in · Central Station Courtyard",
+       "tag": "b",
+       "cls": "",
+       "box": {
+        "x": 88,
+        "y": 1030,
+        "w": 272,
+        "h": 17
+       },
+       "centre": {
+        "cx": 224,
+        "cy": 1038
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": false
+      },
+      {
+       "text": "Check in",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 211,
+        "y": 1051,
+        "w": 62,
+        "h": 44
+       },
+       "centre": {
+        "cx": 241,
+        "cy": 1073
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      },
+      {
+       "text": "Check in",
+       "tag": "button",
+       "cls": "cn-stop-checkin",
+       "box": {
+        "x": 171,
+        "y": 1208,
+        "w": 62,
+        "h": 44
+       },
+       "centre": {
+        "cx": 202,
+        "cy": 1230
+       },
+       "in_viewport": false,
+       "hit_is_self": false,
+       "clickable_ancestor": true
+      }
+     ],
+     "buttons": [
+      "Today",
+      "Live Journey",
+      "Map",
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery",
+      "Import places",
+      "Travel Wallet",
+      "Footprints",
+      "Copilot",
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Members and access",
+      "TITianjin1 traveler•••",
+      "Menu",
+      "System",
+      "中文",
+      "◌1",
+      "TI",
+      "Itinerary",
+      "Stay",
+      "Bookings",
+      "Spend",
+      "Open the trip poster",
+      "Abort this trip",
+      "Abort this trip",
+      "Export calendar",
+      "Fri 9 Oct3 stops",
+      "Sat 10 Oct4 stops",
+      "Sun 11 Oct2 stops",
+      "Details ›",
+      "Check in",
+      "Collect into…",
+      "Details ›",
+      "Check in",
+      "Collect into…",
+      "Details ›",
+      "Check in"
+     ]
+    }
+   ],
+   "calls": [
+    {
+     "m": "GET",
+     "u": "a203174-bbcc-422a-aa64-8343c2883c72/checkins",
+     "s": 200
+    },
+    {
+     "m": "GET",
+     "u": "a203174-bbcc-422a-aa64-8343c2883c72/checkins",
+     "s": 200
+    }
+   ],
+   "pageErrors": []
+  },
+  "_dbl_zh_d107131.json": {
+   "instrument": "cmdr_0555_checkin_double_tap_r2",
+   "at": "2026-10-05T07:30:59.877Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "zh",
+   "label": "打卡",
+   "entry_screen": "/v8/trips",
+   "controls_found": 3,
+   "geometry": {
+    "box": {
+     "x": 211,
+     "y": 400,
+     "w": 44,
+     "h": 44
+    },
+    "cx": 233,
+    "cy": 422,
+    "viewportH": 844,
+    "in_viewport": true,
+    "centre_hit_self": true
+   },
+   "screen_before_first_tap": {
+    "url": "/v8/trips",
+    "visibleButtonTexts": 3,
+    "disabledTargets": 0,
+    "messages": [],
+    "bodyChars": 545
+   },
+   "taps": [
+    {
+     "tap": 1,
+     "geometry": {
+      "box": {
+       "x": 211,
+       "y": 400,
+       "w": 44,
+       "h": 44
+      },
+      "cx": 233,
+      "cy": 422,
+      "viewportH": 844,
+      "in_viewport": true,
+      "centre_hit_self": true
+     },
+     "before_messages": 0,
+     "after_messages": 0,
+     "new_messages": [],
+     "visible_targets_before": 3,
+     "visible_targets_after": 2,
+     "disabled_before": 0,
+     "disabled_after": 0,
+     "body_chars_before": 545,
+     "body_chars_after": 546,
+     "write_calls": [
+      {
+       "m": "POST",
+       "s": 201,
+       "u": "1/journeys/5a203174-bbcc-422a-aa64-8343c2883c72/checkins"
+      }
+     ],
+     "screenshot": "_dbl_zh_d107131_tap1.png"
+    },
+    {
+     "tap": 2,
+     "geometry": {
+      "box": {
+       "x": 211,
+       "y": 400,
+       "w": 44,
+       "h": 44
+      },
+      "cx": 233,
+      "cy": 422,
+      "viewportH": 844,
+      "in_viewport": true,
+      "centre_hit_self": true
+     },
+     "before_messages": 0,
+     "after_messages": 1,
+     "new_messages": [
+      "这一站已经打过卡了（服务器记的是 10月5日 15:30），这次没有再盖一枚，行程里还是原来那一枚。"
+     ],
+     "visible_targets_before": 2,
+     "visible_targets_after": 2,
+     "disabled_before": 0,
+     "disabled_after": 0,
+     "body_chars_before": 546,
+     "body_chars_after": 599,
+     "write_calls": [
+      {
+       "m": "POST",
+       "s": 409,
+       "u": "1/journeys/5a203174-bbcc-422a-aa64-8343c2883c72/checkins"
+      }
+     ],
+     "screenshot": "_dbl_zh_d107131_tap2.png"
+    }
+   ],
+   "page_problems": 1,
+   "problem_samples": [
+    "console Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ],
+   "write_calls_total": 2
+  },
+  "_dbl_en_d107131.json": {
+   "instrument": "cmdr_0555_checkin_double_tap_r2",
+   "at": "2026-10-05T07:31:49.883Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "en",
+   "label": "Check in",
+   "entry_screen": "/v8/trips",
+   "controls_found": 3,
+   "geometry": {
+    "box": {
+     "x": 228,
+     "y": 400,
+     "w": 62,
+     "h": 44
+    },
+    "cx": 259,
+    "cy": 422,
+    "viewportH": 844,
+    "in_viewport": true,
+    "centre_hit_self": true
+   },
+   "screen_before_first_tap": {
+    "url": "/v8/trips",
+    "visibleButtonTexts": 3,
+    "disabledTargets": 0,
+    "messages": [],
+    "bodyChars": 1134
+   },
+   "taps": [
+    {
+     "tap": 1,
+     "geometry": {
+      "box": {
+       "x": 228,
+       "y": 400,
+       "w": 62,
+       "h": 44
+      },
+      "cx": 259,
+      "cy": 422,
+      "viewportH": 844,
+      "in_viewport": true,
+      "centre_hit_self": true
+     },
+     "before_messages": 0,
+     "after_messages": 0,
+     "new_messages": [],
+     "visible_targets_before": 3,
+     "visible_targets_after": 2,
+     "disabled_before": 0,
+     "disabled_after": 0,
+     "body_chars_before": 1134,
+     "body_chars_after": 1136,
+     "write_calls": [
+      {
+       "m": "POST",
+       "s": 201,
+       "u": "1/journeys/5a203174-bbcc-422a-aa64-8343c2883c72/checkins"
+      }
+     ],
+     "screenshot": "_dbl_en_d107131_tap1.png"
+    },
+    {
+     "tap": 2,
+     "geometry": {
+      "box": {
+       "x": 228,
+       "y": 400,
+       "w": 62,
+       "h": 44
+      },
+      "cx": 259,
+      "cy": 422,
+      "viewportH": 844,
+      "in_viewport": true,
+      "centre_hit_self": true
+     },
+     "before_messages": 0,
+     "after_messages": 1,
+     "new_messages": [
+      "This stop is already stamped (5 Oct, 15:31); nothing new was written — the trip keeps the stamp it had."
+     ],
+     "visible_targets_before": 2,
+     "visible_targets_after": 2,
+     "disabled_before": 0,
+     "disabled_after": 0,
+     "body_chars_before": 1136,
+     "body_chars_after": 1242,
+     "write_calls": [
+      {
+       "m": "POST",
+       "s": 409,
+       "u": "1/journeys/5a203174-bbcc-422a-aa64-8343c2883c72/checkins"
+      }
+     ],
+     "screenshot": "_dbl_en_d107131_tap2.png"
+    }
+   ],
+   "page_problems": 1,
+   "problem_samples": [
+    "console Failed to load resource: the server responded with a status of 409 (Conflict)"
+   ],
+   "write_calls_total": 2
+  },
+  "_refusal_announce_zh_d107131.json": {
+   "instrument": "cmdr_0555_refusal_announce_r3",
+   "at": "2026-10-05T07:33:38.861Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "geometry": {
+    "cx": 202,
+    "cy": 545,
+    "in_viewport": true,
+    "centre_hit_self": true
+   },
+   "probe": {
+    "found": false
+   },
+   "screenshot": "_refusal_announce_zh_d107131.png"
+  },
+  "_refusal_announce_zh_d107131_r2.json": {
+   "instrument": "cmdr_0555_refusal_announce_r3",
+   "at": "2026-10-05T07:34:36.156Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "geometry": {
+    "cx": 207,
+    "cy": 422,
+    "in_viewport": true,
+    "centre_hit_self": true
+   },
+   "probe": {
+    "found": false
+   },
+   "screenshot": "_refusal_announce_zh_d107131_r2.png",
+   "tap1": {
+    "row": {
+     "row_text": "20 分钟抵达当前详情 ›打卡"
+    },
+    "writes": [
+     {
+      "m": "POST",
+      "s": 201,
+      "body": "{\"activity_id\":\"e28be29a-cec9-441f-906b-1cb5b3916990\"}"
+     }
+    ]
+   },
+   "tap2": {
+    "row": {
+     "row_text": "20 分钟入住详情 ›打卡"
+    },
+    "writes": [
+     {
+      "m": "POST",
+      "s": 201,
+      "body": "{\"activity_id\":\"bf985cd7-af7a-4a97-99be-0522a7b9fbb3\"}"
+     }
+    ]
+   }
+  },
+  "_refusal_announce_zh_d107131_r3.json": {
+   "instrument": "cmdr_0555_refusal_announce_r3",
+   "at": "2026-10-05T07:35:39.565Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "geometry": {
+    "cx": 233,
+    "cy": 422,
+    "in_viewport": true,
+    "centre_hit_self": true
+   },
+   "probe": {
+    "found": true,
+    "text": "这一站已经打过卡了（服务器记的是 10月5日 15:35），这次没有再盖一枚，行程里还是原来那一枚。",
+    "visible": true,
+    "announced_to_screen_reader": true,
+    "announced_via": "p/status",
+    "ancestor_chain": [
+     {
+      "tag": "p",
+      "cls": "cn-stop-checkin__notice",
+      "role": "status",
+      "ariaLive": null,
+      "id": null,
+      "w": 272,
+      "h": 51
+     },
+     {
+      "tag": "div",
+      "cls": "trip-stop-body",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 272,
+      "h": 178
+     },
+     {
+      "tag": "article",
+      "cls": "trip-stop current",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 356,
+      "h": 200
+     },
+     {
+      "tag": "div",
+      "cls": "trip-day-detail",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 356,
+      "h": 514
+     },
+     {
+      "tag": "section",
+      "cls": "v8-page",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 356,
+      "h": 817
+     },
+     {
+      "tag": "div",
+      "cls": "v8-content",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 390,
+      "h": 1378
+     },
+     {
+      "tag": "main",
+      "cls": "v8-main",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 390,
+      "h": 1444
+     },
+     {
+      "tag": "div",
+      "cls": "v8-product-shell",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 390,
+      "h": 1524
+     },
+     {
+      "tag": "div",
+      "cls": "",
+      "role": null,
+      "ariaLive": null,
+      "id": "root",
+      "w": 390,
+      "h": 1524
+     },
+     {
+      "tag": "body",
+      "cls": "",
+      "role": null,
+      "ariaLive": null,
+      "id": null,
+      "w": 390,
+      "h": 1524
+     }
+    ]
+   },
+   "screenshot": "_refusal_announce_zh_d107131_r3.png",
+   "tap1": {
+    "row": {
+     "row_text": "20 分钟抵达当前详情 ›打卡"
+    },
+    "writes": [
+     {
+      "m": "POST",
+      "s": 201,
+      "body": "{\"activity_id\":\"e28be29a-cec9-441f-906b-1cb5b3916990\"}"
+     }
+    ]
+   },
+   "tap2": {
+    "row": {
+     "row_text": "20 分钟入住详情 ›打卡"
+    },
+    "writes": [
+     {
+      "m": "POST",
+      "s": 409,
+      "body": "{\"activity_id\":\"e28be29a-cec9-441f-906b-1cb5b3916990\"}"
+     }
+    ]
+   }
+  }
+ },
+ "screenshots": {
+  "_dbl_en_d107131_tap1.png": {
+   "bytes": 37525,
+   "sha256_head16": "451ad74df83f7eab"
+  },
+  "_dbl_en_d107131_tap2.png": {
+   "bytes": 39137,
+   "sha256_head16": "109104f6f5776b66"
+  },
+  "_dbl_zh_d107131_tap1.png": {
+   "bytes": 40369,
+   "sha256_head16": "e76437ce291cb36d"
+  },
+  "_dbl_zh_d107131_tap2.png": {
+   "bytes": 43078,
+   "sha256_head16": "108b3a02684f458f"
+  },
+  "_refusal_announce_zh_d107131_r3.png": {
+   "bytes": 43054,
+   "sha256_head16": "98ae27f076f3377c"
+  }
+ }
+}
