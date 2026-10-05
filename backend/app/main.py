@@ -5144,6 +5144,8 @@ def collective_material_world_basis(
             for value in (
                 payload.get("place_id"),
                 payload.get("affected_place_id"),
+                payload.get("scope_place_id"),
+                payload.get("target_place_id"),
                 (_json_object(json.dumps(payload.get("semantic") or {}))).get("place_id")
                 if isinstance(payload.get("semantic"), Mapping)
                 else None,
@@ -5178,6 +5180,11 @@ def collective_material_world_basis(
                 str(affected.place_id or affected.city_service_id)
                 if affected is not None and (affected.place_id or affected.city_service_id)
                 else ""
+            ),
+            "scope_place_id": str(
+                payload.get("scope_place_id")
+                or payload.get("target_place_id")
+                or ""
             ),
             "provider_key": str(event.provider_key or ""),
             "provenance": str(event.provenance or ""),
