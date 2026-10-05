@@ -76,18 +76,73 @@ _MEDIATION_ACTIVE_REALITY_MUTATIONS = {
 }
 
 
+def _mission_json(value: str | None) -> dict[str, Any]:
+    try:
+        parsed = json.loads(value or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
 def _is_disagreement_mediator_mission(mission: JourneyMission | None) -> bool:
     if mission is None:
         return False
-    try:
-        intent = json.loads(mission.resolved_intent_json or "{}")
-    except (TypeError, ValueError, json.JSONDecodeError):
-        return False
-    mediation = intent.get("collective_mediation") if isinstance(intent, dict) else None
+    mediation = _mission_json(mission.resolved_intent_json).get("collective_mediation")
     return (
         isinstance(mediation, dict)
         and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
     )
+
+
+def _journey_has_unresolved_collective_mediation(
+    session: Session,
+    journey_id: str,
+) -> bool:
+    """Treat explicit member disagreement as a Journey-level social-authority lock.
+
+    A later Agent mission cannot bypass a pending mediator merely by omitting
+    the mediator mission id. The lock clears only when the mediator lineage
+    reaches a server-owned RESOLVED collective round.
+    """
+
+    missions = list(
+        session.scalars(
+            select(JourneyMission).where(JourneyMission.journey_id == journey_id)
+        ).all()
+    )
+    by_parent: dict[str, list[JourneyMission]] = {}
+    for row in missions:
+        if row.parent_mission_id:
+            by_parent.setdefault(str(row.parent_mission_id), []).append(row)
+
+    def resolved_through_mediator(source: JourneyMission, seen: set[str]) -> bool:
+        if source.id in seen:
+            return False
+        seen = {*seen, source.id}
+        clarification = _mission_json(source.clarification_json)
+        if clarification.get("status") == "RESOLVED":
+            return True
+        if clarification.get("status") != "MEDIATION_REQUIRED":
+            return False
+        for child in by_parent.get(source.id, []):
+            mediation = _mission_json(child.resolved_intent_json).get("collective_mediation")
+            if not (
+                isinstance(mediation, dict)
+                and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
+                and str(mediation.get("source_mission_id") or "") == source.id
+            ):
+                continue
+            if resolved_through_mediator(child, seen):
+                return True
+        return False
+
+    for mission in missions:
+        clarification = _mission_json(mission.clarification_json)
+        if clarification.get("status") != "MEDIATION_REQUIRED":
+            continue
+        if not resolved_through_mediator(mission, set()):
+            return True
+    return False
 
 
 def _agent_key(kind: str, *parts: object) -> str:
@@ -659,32 +714,43 @@ class AgentToolGateway:
         # projection rather than a React-side activity log.
         self.session.commit()
 
-        # A disagreement mediator may create/search/replan candidates and open
-        # a fresh collective round, but it has no social authority to change
-        # active reality. Even a server-classified COMPROMISE_AVAILABLE option
-        # must go back to the humans after they explicitly disagreed.
-        if tool_name in _MEDIATION_ACTIVE_REALITY_MUTATIONS and request.mission_id is not None:
-            mission = self.session.get(JourneyMission, str(request.mission_id))
-            if _is_disagreement_mediator_mission(mission):
-                record_audit(
-                    self.session,
-                    action="agent.collective_mediation.mutation_denied",
-                    entity_type="JourneyMission",
-                    entity_id=mission.id,
-                    journey_id=mission.journey_id,
-                    actor_type="AI_AGENT",
-                    actor_id=request.agent_id,
-                    after={
-                        "tool": tool_name,
-                        "request_id": request.request_id,
-                        "reason": "FRESH_COLLECTIVE_DECISION_REQUIRED",
-                    },
-                )
-                self.session.commit()
-                raise HTTPException(
-                    409,
-                    "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION",
-                )
+        # Explicit member disagreement is a Journey-level social-authority
+        # lock, not a cooperative-model convention. Candidate generation and a
+        # fresh collective round remain allowed; active reality cannot change
+        # from this mediator or from a newly started Agent mission until that
+        # mediator lineage reaches a server-owned RESOLVED round.
+        if (
+            tool_name in _MEDIATION_ACTIVE_REALITY_MUTATIONS
+            and scope_journey_id is not None
+            and _journey_has_unresolved_collective_mediation(
+                self.session, str(scope_journey_id)
+            )
+        ):
+            mission = (
+                self.session.get(JourneyMission, str(request.mission_id))
+                if request.mission_id is not None
+                else None
+            )
+            record_audit(
+                self.session,
+                action="agent.collective_mediation.mutation_denied",
+                entity_type="JourneyMission" if mission is not None else "Journey",
+                entity_id=mission.id if mission is not None else str(scope_journey_id),
+                journey_id=str(scope_journey_id),
+                actor_type="AI_AGENT",
+                actor_id=request.agent_id,
+                after={
+                    "tool": tool_name,
+                    "request_id": request.request_id,
+                    "reason": "FRESH_COLLECTIVE_DECISION_REQUIRED",
+                    "mission_id": mission.id if mission is not None else None,
+                },
+            )
+            self.session.commit()
+            raise HTTPException(
+                409,
+                "MEDIATION_REQUIRES_FRESH_COLLECTIVE_DECISION",
+            )
         return handlers[tool_name](request)
 
     def inspect_journey(self, request: AgentToolCall) -> dict[str, Any]:
