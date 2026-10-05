@@ -14,6 +14,9 @@
  *    kept apart), the unpriced line said as a count rather than as 0.00, and the line list.
  *  - S2 the bare trip: the named empty state, still showing the declared budget, and no total.
  *  - S3 screen against server: the same two rungs compared to the arithmetic the doors support.
+ *  - S4 (CMDR 01:09 cell ③) the sentence that names the money sitting in a currency total and on no
+ *    day, its count taken from the two answers, and the gap between the two faces equal to it.
+ *  - S5 the same sentence must NOT appear on the bare trip -- no priced money, no gap to announce.
  */
 
 import { expect, test, type Page } from "@playwright/test";
@@ -26,7 +29,15 @@ const SEED = JSON.parse(
   answers: Record<string, { experience: any; wallet: any }>;
 };
 
+const DATED = JSON.parse(
+  readFileSync("D:/moodle/_qoder_6a_ord0531_20261001/spend_offday_report_r1.json", "utf8"),
+) as {
+  journey: string;
+  precondition_check: Record<string, string[]>;
+};
+
 const EVIDENCE = "D:/moodle/_qoder_6a_ord0531_20261001/e2e";
+
 const readings: Record<string, unknown> = {};
 
 test.setTimeout(180_000);
@@ -200,6 +211,106 @@ test.describe.serial("CMDR 01:24 the spend face on day24", () => {
       expect(inDays.confirmed + nowhere.confirmed, `${currency} confirmed: days plus no-instant`).toBe(buckets.confirmed);
       expect(inDays.estimated + nowhere.estimated, `${currency} estimated: days plus no-instant`).toBe(buckets.estimated);
     }
+  });
+
+  test("S4 the face says which priced money belongs to no day", async ({ page }) => {
+    const experience = SEED.answers.priced.experience;
+    const wallet = SEED.answers.priced.wallet;
+    const legs = (experience.active_plan?.legs ?? []) as any[];
+    const reservations = (wallet.reservations ?? []) as any[];
+    const commitments = (wallet.commitments ?? []) as any[];
+
+    /* The precondition first: without a priced line that has no instant, this arm measures nothing
+       and can only read green. Every figure is counted from the two door answers. */
+    const offDay: Array<{ source: string; currency: string; minor: number }> = [];
+    for (const leg of legs) {
+      if (leg.cost_amount_minor != null && leg.cost_status === "KNOWN" && !leg.depart_at) {
+        offDay.push({ source: "LEG", currency: leg.currency, minor: leg.cost_amount_minor });
+      }
+    }
+    for (const item of reservations) {
+      if (item.status === "CONFIRMED" && item.price?.amount_minor != null && !item.scheduled_departure_at) {
+        offDay.push({ source: "RESERVATION", currency: item.price.currency, minor: item.price.amount_minor });
+      }
+    }
+    for (const item of commitments) {
+      const value = item.monetary_value ?? {};
+      if (["ACTIVE", "FULFILLED"].includes(item.status) && value.amount_minor != null
+        && !item.policy?.scheduled_start_at) {
+        offDay.push({ source: "COMMITMENT", currency: value.currency, minor: value.amount_minor });
+      }
+    }
+    expect(offDay.length, "this seed must hold a priced line with no instant or S4 proves nothing")
+      .toBeGreaterThan(0);
+
+    const panel = await openSpendTab(page, SEED.journeys.priced);
+    const sentence = panel.getByTestId("spend-off-day");
+    const shown = await sentence.count();
+    const text = shown ? (await sentence.innerText()).replace(/\s+/g, " ").trim() : null;
+    const groups = (await panel.getByTestId("spend-group-total").allInnerTexts()).join(" | ");
+    const dayTexts = (await panel.getByTestId("spend-day").allInnerTexts())
+      .map((s) => s.replace(/\s+/g, " ").trim());
+
+    note("S4_off_day_sentence", {
+      off_day_lines: offDay,
+      expected_count: offDay.length,
+      sentence_rendered: shown,
+      sentence_text: text,
+      on_screen_totals: groups,
+      on_screen_days: dayTexts,
+    });
+
+    expect(shown, "a priced line that belongs to no day must be said out loud").toBe(1);
+    expect(text).toContain(String(offDay.length));
+    expect(text).toContain("不在任何一天里");
+    /* The sentence is not decoration: the money it points at has to be exactly the money the two
+       faces disagree about, read off both of them. */
+    const sumParsed = (texts: string[], currency: string): number => {
+      let minor = 0;
+      for (const chunk of texts) {
+        for (const hit of chunk.matchAll(new RegExp(`(已确认|估算)\\s+${currency}\\s+([\\d,]+\\.\\d{2})`, "g"))) {
+          minor += Math.round(Number(hit[2].replace(/,/g, "")) * 100);
+        }
+      }
+      return minor;
+    };
+    for (const currency of Array.from(new Set(offDay.map((line) => line.currency)))) {
+      const gap = sumParsed([groups], currency) - sumParsed(dayTexts, currency);
+      const owed = offDay.filter((line) => line.currency === currency)
+        .reduce((acc, line) => acc + line.minor, 0);
+      expect(gap, `${currency}: totals minus days must be exactly the no-instant money`).toBe(owed);
+    }
+    await page.screenshot({ path: `${EVIDENCE}/S4_off_day_sentence.png`, fullPage: true });
+  });
+
+  test("S5 the face stays quiet when every priced line has a day", async ({ page }) => {
+    /* The first version of this arm read the BARE trip, where nothing is priced: that face cannot
+       contain the sentence whatever the component does, so the mutant that renders it unconditionally
+       walked straight through it. This world is the one where the guard is load-bearing -- there is
+       money on the page, and every line of it has an instant, so "1 笔不在任何一天里" must not appear. */
+    const panel = await openSpendTab(page, DATED.journey);
+    const shown = await panel.getByTestId("spend-off-day").count();
+    const text = shown ? (await panel.getByTestId("spend-off-day").innerText()).trim() : null;
+    const totals = await panel.getByTestId("spend-group-total").count();
+    const pricedLines: string[] = [];
+    for (const line of await panel.getByTestId("spend-line").all()) {
+      pricedLines.push((await line.getByTestId("spend-line-amount").innerText()).trim());
+    }
+    const emptyFace = await panel.getByTestId("spend-empty").count();
+    note("S5_every_line_has_a_day", {
+      journey: DATED.journey,
+      off_day_sentence_rendered: shown,
+      off_day_sentence_text: text,
+      currency_totals: totals,
+      priced_line_amounts: pricedLines,
+      empty_face_rendered: emptyFace,
+      server_lines_without_instant: DATED.precondition_check,
+    });
+    /* Non-vacuous by construction: the world must really carry priced money the totals can show. */
+    expect(totals, "this trip has money on the page, so the arm is not reading an empty face").toBeGreaterThan(0);
+    expect(pricedLines.length, "and at least one priced line is listed").toBeGreaterThan(0);
+    expect(shown, "with a day for every priced line there is no gap to announce").toBe(0);
+    await page.screenshot({ path: `${EVIDENCE}/S5_every_line_has_a_day.png`, fullPage: true });
   });
 
   test("S9 write the readings file", async () => {
