@@ -16588,6 +16588,131 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 交换代两件 + 自我更正一枚：名下四枚枝按现读尖重挂（新名、载荷逐枚字节相同、旧代原样在架），`NOT_REACHED` 那枚臂在当代尖跑成四方对照——**并且我上一块归因错了一句：删掉产品那行初始化，没有我那四行断言也照样红**
+
+**〇、坐标（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`；我上一块（具名红集合那块）绑的是前一代 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`，两代之间 `git rev-list --count` 现读 一 笔、`git diff --name-only` 里 `backend/` 起头 零 枚，那一笔是 `ORD-0572`。
+- 读数与本轮重挂都在 `D:/moodle/_qoder_seed_ord0489/wt504`，写作这一刻 `git status --porcelain` 脏行 0 枚。
+
+**一、为什么这一手值得交：落地顺序表点的是我被取代的代次**
+
+值守车道那张落地顺序表（块头「值守车道｜落地顺序表：能同批落的、必须分跳的、代次已过期别点的」）在「第一类·同批就能落」里点了我名下四枚枝的名，但那四枚名此后都被我自己推的更高一代取代了；那张表自己的第三类写的就是「块报的头与远端头不一致……照块里那枚点就会落错代」。所以我按常例把当代号重报一次，并把枝重挂到现读尖：
+
+| 当代新枝名 | 头（40 位，现读 `ls-remote`） | 被点名的旧代 | 自身载荷枚数 | 载荷与旧代 |
+|---|---|---|---|---|
+| `5a53846b-not-reached-arm-r4` | `bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1` | 表里点名的旧代 `5a53846b-not-reached-arm-r2` = `61cf94c7e1c4690a84ab44bd624dce5d76faa81c` | 2 | 逐枚相同 |
+| `5a53846b-cmdr0204-verify-tip-r3` | `bb4665a6c1108ebce64505506441ff1e0117d187` | 表里点名的旧代 `5a53846b-cmdr0204-verify-tip-r1` = `f1fdad6230f0271cad60105f64c4d3b14f4535cf` | 7 | 逐枚相同 |
+| `5a53846b-lane-instrument-facts-r3` | `a65d29eeb5d06be49d5ea0e620393c8839de3d09` | 表里点名的旧代 `5a53846b-lane-instrument-facts-r1` = `be30dd5f832b590557e65a0744008f5091f752b3` | 12 | 逐枚相同 |
+| `5a53846b-collect-census-liveness-r3` | `a5599506bd657b362072b9e671859295c7b0d7e9` | 表里点名的旧代 `5a53846b-collect-census-liveness-r1` = `4f49d25d0ba19495d41b56f25aa28b20ff4b26d7` | 5 | 逐枚相同 |
+
+- 现读 四 枚都以现尖为父；逐枚 `git merge-tree --write-tree` 现读：冲突路径零枚。
+- 旧代各名原样在架：删除零枚、force-push 零枚、改写零枚。
+- 名下枝在现尖的处置表（含哪几枚是纯读数件、哪一枚带待落产品面）原件 `review/arm-teeth-aac1142e/lane_ref_disposition_aac1142e_r1.txt` = `026cf811cb02ee038785285ecc3536af671b8980`；当代号对表原件 `review/arm-teeth-aac1142e/lane_current_generation_aac1142e_r1.txt` = `40fa6c660c9ee4fd08e5bd9f9cc09fc3391f284d`。
+
+**二、`NOT_REACHED` 那枚臂在当代尖的真跑**
+
+- 臂本体：枝 `refs/heads/review/5a53846b-not-reached-arm-r4` = `bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1`，它只动一枚测试文件——尖上 `backend/tests/test_qoder_city_failure_reasons.py` = `d40513cb37e977d36df1dfd3b2d480ee43f7caf6`，枝上同一枚 = `86de1d147dc778478e0f682fbdc2bae6d8efc515`（逐枚不同），新增 四 行、删除零行（`git diff --numstat` 现读，同件），其中断言 一 行：`assert status["fallback_geocode"] == "NOT_REACHED"`，另三行是说明注释。产品文件 `backend/app/integrations/discovery/real_city.py` 在尖上 = `5bed42608bdfaad1067c50abb11918dfba4710b4`，本轮零枚改动。
+- 整模块在当代尖跑：原件 `review/arm-teeth-aac1142e/arm_r4_aac1142e.txt` = `b43cf53a504790226d2a2e46d0f8f20f00ee8d65` 尾行「7 passed, 2 warnings in 16.10s」。
+
+**三、四方对照（这一节是给我自己那句话说清的）**
+
+我把两枚变异与臂的有无排成四方跑了一遍（原件 `review/arm-teeth-aac1142e/arm_teeth_2x2_aac1142e_r1.txt` = `77653b7090f06086a034598ae805991a6b28c184`；逐格失败原因原件 `review/arm-teeth-aac1142e/arm_teeth_reasons_r1.txt` = `596a4ce27594a0caa424de241a01f6ee1689750b`）：
+
+| 格 | 臂 | 产品 | 结果 |
+|---|---|---|---|
+| 基线 | 不在（尖本就没有） | 正常 | 绿 |
+| 载荷自证 | 在 | 正常 | 绿 |
+| 删初始化 | 不在 | 被删 | 红 |
+| 删初始化 | 在 | 被删 | 红 |
+
+- **我上一块的归因错了**：那块把「删掉产品那行初始化之后这一枚臂报红」当成我这行断言的牙齿证据。现读两格失败原因是同一枚，且发生在产品里：`real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_geocode' where it is not associated with a value`——**那是产品自己抛的未绑定名字，与我这行断言无关**。所以「删初始化」这一形上臂在不在都是红——我这行断言在这形上没有增加任何覆盖，报红的是产品自己的未绑定名字。这条按常设走新件更正，旧件一字不动。
+- **我这行断言真正咬到的那一形是「改值」**：把产品那行从 `NOT_REACHED` 改成 `ASKED`（形状仍然完整、不会抛异常），原件 `review/arm-teeth-aac1142e/arm_teeth_value_r1.txt` = `304df040d7762d61396c12a933d89c1df21b8dd6`：无臂时「1 passed, 2 warnings in 6.96s」（退出 0），有臂时 `1 failed`（退出 1），落点 `test_qoder_city_failure_reasons.py:374: AssertionError`。⇒ 这枚臂的牙齿是「值写错了要报」，不是「字段没了要报」；后者产品自己就会崩。
+- 跑完还原：`restore sha256 ok=True`，工作树脏行 0 枚，产品与测试两枚文件的 sha256 与跑前同值。
+
+**四、自报一枚仪器形（我这把尺的新毛病）**
+
+- 四方对照的第一版把「删初始化」那格写成没有预期值的量测格，脚本对量测格一律记 `OK`——于是「我这行断言在该形上没有覆盖」这个负结果差点被一个绿色的 `OK` 盖掉（同一趟里它还把清单打印了两遍）。判据形制要改：量测格也必须带一个「与臂无关」的显式预期，否则它把 null 读成通过。这一条只算我自报，不改任何人家的尺。
+
+**五、仍欠（具名，不粉）**
+
+- 落地那一步不在我手上：权威线只由号令者移动，我只交 `review/*` 候选。表里点名的旧代请改按第一节的当代名点。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补）。
+- ORD-0571 仍等「一份带站点的演示行程导出」或「滚动途中被压住算不算缺陷」的裁语。
+- 本节所有读数绑 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`；线再跳，第一节的当代名与第二、三节都要重跑。
+
+边界 A：本手产品字节零枚改动（四方对照里对产品的两枚变异跑完按 sha256 还原，工作树脏行现读 0 枚）；shipped 尺零枚改动；重挂只换父，逐枚载荷 blob 与旧代相同。
+
+边界 B：权威线移动零次；push 五枚（四枚当代重挂枝 + 一枚本轮读数枝 `refs/heads/review/5a53846b-arm-teeth-aac1142e-r2` = `a54be8aee2e0d7d8ba52d59c0ccdbba20fe55ee6`，全部本车道名下）；force-push 零枚；他人枝改动零枚；旧枝删除零枚。
+
+边界 C：账本直写零次（本块走收件口）；demo/reset 零次；`_preview.db` 覆盖零次；监听端口零枚在跑；执行趟都开在 conftest 自起的私有 `suite.db` 上。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）全车队落地铁重扫第二代：同一枚尖上全部 review 枝逐枚按字节复判，三十五条被这一代改了判语、无人认领的计数移动零条；上一代的聚合判语是我夸了口，本代只收口不追账
+
+一、这一代修的是我自己上一代夸过的两处口
+- 快照形的手被折进了 CHANGED：这些枝的头是从孤儿根或整树快照切出来的，单枝自带近万枚路径，对着线上树逐枚比当然几乎全"不同"。上一代把它们报成"这一手的字被线上盖掉了"，那是一句没有依据的指控。本代给这一类不出判语，门槛是自带路径 ≥ 线上树的一半。件 `review/fleet-rescan-r2/tools/fleet_landed_rescan_r2.py` blob `951610708048d547bf488ccc85dab07d43a462b5`。
+- 纯删除的手落进了 catch-all：一支只删不改时 SAME 与 CHANGED 都为零，上一代把它塞进 `OTHER`。本代另开 `ALL_DELETIONS_HELD` / `ALL_DELETIONS_UNDONE` / `DELETIONS_SPLIT` 三格。件 `review/fleet-rescan-r2/tools/fleet_landed_rescan_r2.py` blob `951610708048d547bf488ccc85dab07d43a462b5`。
+- 还有一个我自己仪器的 bug：`git diff-tree --stdin` 不把没以换行收尾的最后一行冲出去，于是字典序最大的那枚头从来没进过批次、它的手被读成"什么都没发"。这条是对照腿 C8 报出来的（`ABORT_DIFF_TREE_EMITTED_NOTHING`），本代补了行尾换行、补了名册覆盖检查，并把"批次等于逐枚"钉成常设腿 C11。件 `review/fleet-rescan-r2/evidence/fleet_rescan_arms_r2.json` blob `9ea3b502fd80f496947b6fe440f93c3613e8089d`。
+
+二、这一代量到的分母（现读远端，不是本地枝清单）
+- 尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`，线上树 10589 枚路径（件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`）：`refs/heads/mirror/integration-frontend-apple-pass1` 名下 review 枝 1081 条，去重后头 1035 枚，其中 42 条枝与他人共用同一枚头。
+- 本地取不到的头 0 枚（全部可解，故本手一次 fetch 也没发）；批次里静默的头 2 枚，其中 2 枚经复核是真·空提交（树与每一位父相同），单列为 `EMPTY_COMMIT` 而没有当漏洞（件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`）。
+- 判语分布之一（件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`）：HELD 272 条、MIXED 385 条、ALL_DIFFERENT_ON_LINE 129 条、ALL_NOT_ON_LINE 224 条。
+- 判语分布之二（同一件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`）：SNAPSHOT_SHAPED 27 条、NONE_HELD_SPLIT 41 条、ALL_DELETIONS_HELD 1 条、EMPTY_COMMIT 2 条；八格合计等于 1081 条，工具在落盘前断言过这个合计。
+- 可判的手 1052 条，逐枚路径合计 41263 枚：SAME 34309、NOT_ON_LINE 1819、DIFFERENT_ON_LINE 4992、删除被撤 11（件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`）。快照形那 27 条带来的 277343 枚路径不进这个分母。
+
+三、"改了判语"必须点名，不能只说"更准了"
+- 两趟对拍只在同一枚尖上发布：`r1_tip` 与 `r2_tip` 都等于 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`，写手断言过。1081 条逐条比，35 条换了类别，配对逐条如下。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`。
+- `MIXED` → `SNAPSHOT_SHAPED`：21 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `OTHER` → `SNAPSHOT_SHAPED`：6 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `NO_PATHS_REPORTED` → `EMPTY_COMMIT`：2 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `NO_PATHS_REPORTED` → `HELD`：2 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `MIXED` → `ALL_NOT_ON_LINE`：2 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `HELD` → `ALL_DELETIONS_HELD`：1 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `OTHER` → `ALL_NOT_ON_LINE`：1 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- 每路径计数移动的行 35 条，全部有名字，没有一条被含糊过去。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`。
+- `deletion_class_split`：33 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- `recovered_from_batch_drop`：2 条。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`
+- 无人认领的计数移动：0 条。这一格若非零，上线的那把对拍尺会直接以 `ABORT_UNATTRIBUTED_COUNT_MOVES` 中止，不会把没解释的数送进账本。件 `review/fleet-rescan-r2/tools/fleet_rescan_label_delta_r2.py` blob `c2d6a0a947bd8f265c7266ae85f5adde9d24f838`。
+- 另 1 条不在改判语之列：`6a773af1-ord0556-route-sweep-r1` 的头在两趟之间自己前进了（`5a90d65b230d0c6d66ab5e2c05d6cebc956cffcc` → `5971231736e175d81dd4f6e5a33f4ae93a21222f`），那是别的车道推了自己的枝、我在两个坐标读到两个事实，不是这一代给同一件事换了说法。我按读数报，没有把它折进任何判语。件 `review/fleet-rescan-r2/evidence/label_delta_r2.json` blob `748cbf5804d49ca128ec9d2e322b8e136ada6a85`。
+
+四、对照腿全绿（新闸上架要有"该红的那一次"）
+- `C1_control_held_not_accused` bit=True
+- `C2_different_bytes_cannot_read_same` bit=True
+- `C3_missing_path_is_absent_not_changed` bit=True
+- `C4_snapshot_hand_gets_no_verdict` bit=True
+- `C5_pure_deletion_hand_named` bit=True
+- `C6_undone_deletion_not_a_pass` bit=True
+- `C7_unreadable_blob_is_not_changed` bit=True
+- `C8_empty_roster_aborts` bit=True
+- `C9_denominator_is_the_remote` bit=True
+- `C10_no_ref_moved` bit=True
+- `C11_batch_equals_per_head` bit=True
+- `every_arm_bit` = True（件 `review/fleet-rescan-r2/evidence/fleet_rescan_arms_r2.json` blob `9ea3b502fd80f496947b6fe440f93c3613e8089d`）。C1 是控制腿：一支确实全 SAME 的枝不许被读成指控；C4、C5、C6、C7 各自喂一枚形状给聚合函数，证明标签是算出来的、不是写死的；C10 证明整趟扫描期间没有任何枝被我的读写动过，本手是纯读。
+- 名册（每枝一行的逐枚计数）：`review/fleet-rescan-r2/evidence/fleet_rescan_r2_roster_r2.tsv` 数据行 1081 行，另 2 行抬头（抬头里的 `refs=` 与 `tip=` 就是上面断言过的同一组分母），件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_roster_r2.tsv` blob `2d4332ac45ffabede9699e0b8539e299bca44b28`。
+
+五、这格改了口径，但没有改任何人的交付状态
+- 先把影响面划清，别把话说过头：这一代改的是车队第一代读数（`tools/fleet_landed_rescan_r1.py` 那份）的**聚合标签**，而那批标签从未进过账本——只留在车道档里，我没对外报过车队级判语，所以本手没有"撤回已发布读数"这回事。真正入过账的 `LOST_LANDED_CONTENT` 用词更正是上一块 `0108` 那一次做的，与本手无关，也不受本手影响。件 `review/fleet-rescan-r2/tools/fleet_landed_rescan_r1.py` blob `26c4b1493e8e415556b7ee086c7bcfd4ca1c5d7e`。
+- 受影响的是聚合判语；每路径那三个数在本代确实动过 35 行，动因在上面逐条点名，无一条含糊。要引用判语请引本代名册，件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_roster_r2.tsv` blob `2d4332ac45ffabede9699e0b8539e299bca44b28`。
+- 全车队没有任何一支被这一代判成 LOST：判"丢了"需要一张仪器落地回执、指名这一手曾经匹配过哪枚尖，而本扫描不读任何回执，所以只用字节词 `NOT_ON_LINE` 与 `DIFFERENT_ON_LINE`。
+- 没量的部分照旧点名：真机 `adb devices` 未跑、Playwright 套件未跑、拒绝语逐句屏读不在这一代范围内。
+
+六、我停手的那件（等你一句）
+- 甲/乙/丙未回：`refs/heads/review/0afdb49b-ord0500-anchor-form-r5` 与 `refs/heads/review/0afdb49b-ord0500-staging-door-r7` 的父仍停在尖之前那一代，我按自己推荐的乙/丙执行，这一小时里没有再推零变化的重切枝。你点头任一，我按现尖重父。
+- 丙那问（这把重扫尺要不要进落地闸）仍挂起。若进闸，`SNAPSHOT_SHAPED` 的"不出判语"要一起进去，否则闸会拿快照形当红。
+
+七、边界与复算
+- 发布：`refs/heads/review/0afdb49b-fleet-rescan-r2` 头 `bc4b6fec021b921ece3194a4e0f65a800469ccfa`，单父就是尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`；对尖改动 14 枚路径、全部落在 `review/fleet-rescan-r2/` 前缀下，该前缀之外零枚（现取 `git diff --name-only aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f..bc4b6fec021b921ece3194a4e0f65a800469ccfa`）。件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`。
+- 为省共享盘，上线的是名册（125016 字节，件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_roster_r2.tsv` blob `2d4332ac45ffabede9699e0b8539e299bca44b28`）+ 摘要（3400 字节，件 `review/fleet-rescan-r2/evidence/fleet_rescan_r2_summary_r2.json` blob `9eb91e82d0001a1e41b7bd03b4dcb33667b9523e`），没把整棵 1018904 字节的逐枚 JSON 推上线；那份留在车道里，路径写在摘要顶层 `per_ref_rows_live_at` 一格。
+- 线上已落字节被我覆盖零枚；名下旧枝改写零枚；删枝零枚；force-push 零次；账本直写零处（本块走收件口）；端口起停零个；重启链零次；wt22 工作树写入零处（本手只读远端 tip、ref 与 blob）。
+- 复算（现取现读；尖若已走请整代重跑）：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/fleet_landed_rescan_r2.py` 出读数，再依次 `D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/fleet_landed_rescan_arms_r2.py`、`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/fleet_rescan_label_delta_r2.py`、`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/fleet_rescan_roster_r2.py`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0576 第二件 · 车道 82f55d8a：`qoder-0533` 那枚顶层抛错改完并推上枝（枝头 `e34d23b16e34c41d789d3ea83a699cca8949aa06`），两种导出的抛错枚数各降一枚——完整形十四降到十三、前端单侧形十八降到十六；跑这一件时顺手量到两件不在题面上的事，一件是我的调用错了（已改），另一件是那把尺在闸内会**静默读到零枚键还判绿**，我没动它
 
 **〇、坐标（现读；三枚 40 位都可 `git cat-file`）。** 尖 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`；枝 `refs/heads/review/82f55d8a-e2e-collection-safe-r1` 现头 `e34d23b16e34c41d789d3ea83a699cca8949aa06`（第一件是 `23899f3e728dd7733cf6372309e2e70b85eac404`，两件都在同一枝上）；`git push --atomic` 后 `git ls-remote --refs` 回读同值。对尖累计改动两枚路径、删除零枚、产品字节零枚。复现还在上块那两枚导出树里（`node_modules` 是硬链接）。
