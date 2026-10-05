@@ -1310,6 +1310,7 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 updated_at=now,
             )
         )
+        session.flush()
         session.add(
             Activity(
                 id=activity_id,
@@ -1402,9 +1403,9 @@ def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> Non
                 id=str(uuid4()),
                 journey_id=str(seeded["journey_id"]),
                 provider_key="city-provider",
-                provenance="LIVE_PROVIDER",
+                provenance="PROVIDER_VERIFIED",
                 event_type="CLOSURE",
-                severity="HIGH",
+                severity="CRITICAL",
                 status="DETECTED",
                 affected_activity_id=activity_id,
                 occurred_at=now,
@@ -1537,3 +1538,127 @@ def test_r30_unrelated_provider_observation_does_not_change_world_epoch() -> Non
         )
         after_epoch = collective_mediation.collective_material_world_epoch(after)
         assert after_epoch == before_epoch
+
+
+def test_r30_selected_place_opening_and_cost_change_world_epoch() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+    place_id = f"r30-open-cost-{uuid4()}"
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        assert journey is not None
+        assert selected_plan is not None
+        session.add(
+            Place(
+                id=place_id,
+                provider_key="openstreetmap-replay",
+                external_id=place_id,
+                city_code="NARA",
+                name="R30 opening cost place",
+                category="garden",
+                latitude=34.0,
+                longitude=135.0,
+                opening_hours_json=json.dumps(
+                    {
+                        "status": "NORMALIZED_VALID",
+                        "open": "09:00",
+                        "close": "18:00",
+                        "intervals": [{"open": "09:00", "close": "18:00"}],
+                    },
+                    sort_keys=True,
+                ),
+                tags_json=json.dumps(["garden"], sort_keys=True),
+                metadata_json=json.dumps(
+                    {
+                        "tags": {"fee": "no"},
+                        "cost_evidence": {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": "JPY",
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                updated_at=now,
+            )
+        )
+        session.flush()
+        session.add(
+            Activity(
+                id=str(uuid4()),
+                plan_version_id=selected_plan_id,
+                sequence_no=1,
+                activity_type="visit",
+                title="R30 opening cost activity",
+                place_id=place_id,
+                start_at=now,
+                end_at=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+                travel_from_prev_min=0,
+                estimated_cost_minor=0,
+                currency="JPY",
+                status="PLANNED",
+                locked=False,
+                metadata_json="{}",
+                created_at=now,
+                updated_at=now,
+            )
+        )
+        session.flush()
+        activity = session.scalar(
+            select(Activity)
+            .where(Activity.plan_version_id == selected_plan_id, Activity.place_id.is_not(None))
+            .order_by(Activity.sequence_no, Activity.id)
+        )
+        assert activity is not None
+        place = session.get(Place, activity.place_id)
+        assert place is not None
+
+        before = collective_mediation.collective_material_world_epoch(
+            main_module.collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=[str(place.id)],
+            )
+        )
+
+        place.opening_hours_json = json.dumps(
+            {
+                "status": "NORMALIZED_VALID",
+                "open": "10:00",
+                "close": "17:00",
+                "intervals": [{"open": "10:00", "close": "17:00"}],
+            },
+            sort_keys=True,
+        )
+        session.flush()
+        after_opening = collective_mediation.collective_material_world_epoch(
+            main_module.collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=[str(place.id)],
+            )
+        )
+        assert after_opening != before
+
+        metadata = json.loads(place.metadata_json or "{}")
+        metadata["cost_evidence"] = {
+            "status": "KNOWN",
+            "amount_minor": 1800,
+            "currency": "JPY",
+        }
+        place.metadata_json = json.dumps(metadata, sort_keys=True)
+        session.flush()
+        after_cost = collective_mediation.collective_material_world_epoch(
+            main_module.collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=[str(place.id)],
+            )
+        )
+        assert after_cost != after_opening

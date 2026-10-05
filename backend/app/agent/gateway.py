@@ -424,6 +424,19 @@ def _facts_for_accept(
     selected_activity = (
         session.get(Activity, str(selected_activity_id)) if selected_activity_id else None
     )
+    # The semantic resolver may deliberately point at a future candidate
+    # Activity from the proposed plan (for example, a provider closure that
+    # invalidates a place the mediator selected).  That Activity is useful
+    # evidence, but it is not the server-owned mutation anchor because the
+    # proposal is still being accepted against the current base plan.  Clear
+    # it before the base-plan fallbacks below so the removed current Activity
+    # can be revalidated instead of leaving the acceptance gate false.
+    if (
+        selected_activity is not None
+        and selected_activity.plan_version_id != proposal.base_plan_version_id
+    ):
+        selected_activity = None
+        selected_activity_id = None
     # Provider-verified incidents may carry an affected Activity directly even
     # when the semantic impact resolver did not produce an independent target.
     # The server still verifies ownership, active-plan membership and state;

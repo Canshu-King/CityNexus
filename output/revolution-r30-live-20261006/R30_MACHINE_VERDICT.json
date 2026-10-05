@@ -1,0 +1,157 @@
+{
+  "status": "R30_LIVE_BLOCKED",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-592728682e7eb64c.sqlite3",
+  "journey_id": "c0041a22-d2b6-467f-b48f-eccf03dfb647",
+  "lab_estimate_authority": false,
+  "summary": {
+    "proven": 9,
+    "blocked": 2,
+    "not_proven": 0
+  },
+  "old_mediator_mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34",
+  "fresh_mission_id": "d117022b-6b2f-447d-9c0b-0d6272a48556",
+  "old_proposal_id": "86e29664-2e46-44ed-a524-931f120c03ac",
+  "fresh_proposal_id": "d9152f9e-e43f-42bd-93c2-6ab029178f6b",
+  "verdicts": {
+    "r29_inherited_disagreement": {
+      "status": "PROVEN",
+      "reason": "Round 1 contains two distinct member proposal choices.",
+      "facts": {
+        "round1_mission_id": "53f0695d-fb0e-49b6-871e-3a8c42de7872",
+        "distinct_proposal_ids": [
+          "0669cbf2-f73a-473b-a08e-c7aa566b43fc",
+          "4e480f68-aced-4198-a1d2-dea34483bb67"
+        ]
+      }
+    },
+    "e1_w1_durable": {
+      "status": "PROVEN",
+      "reason": "R29 renewed consent durably stores E1, W1, basis, and all required responses.",
+      "facts": {
+        "mediator_mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34",
+        "decision_epoch": "4e17c402fc53bd01de2ff8e113d91a364adbf968e0e01f11b83146d22732bb07",
+        "material_world_epoch": "74e41924218fb32be8def8fd227fa0d45fa7eb727b141edb502747608e6f2600",
+        "required_member_ids": [
+          "c5a97176-e492-4f8c-9f99-b3b7f9fe8c14",
+          "f3ef2ba9-6752-475c-a1fc-fb0a72e05d86"
+        ],
+        "response_member_ids": [
+          "c5a97176-e492-4f8c-9f99-b3b7f9fe8c14",
+          "f3ef2ba9-6752-475c-a1fc-fb0a72e05d86"
+        ]
+      }
+    },
+    "shock_after_e1_w1_before_consumption": {
+      "status": "PROVEN",
+      "reason": "A normal provider-backed closure landed after E1/W1 while the old proposal remained presented.",
+      "facts": {
+        "event_id": "9b1199b0-0047-4bbc-bbe8-cfbe7529391a",
+        "event_occurred_at": "2026-10-08T10:06:00+09:00",
+        "event_affected_activity_id": "8a9d4822-5f9e-4f3a-8342-7752ed682cc2",
+        "old_proposal_status": "PRESENTED"
+      }
+    },
+    "world_epoch_changed_and_selection_survived": {
+      "status": "PROVEN",
+      "reason": "Relevant provider reality changed W while the old social selection still existed.",
+      "facts": {
+        "stored_w1": "74e41924218fb32be8def8fd227fa0d45fa7eb727b141edb502747608e6f2600",
+        "recomputed_after_shock": "dcee9be66c58279f36c60f411318a1974f14f5752a5b0783b0a11959a8a721ae",
+        "selected_plan_id": "bda2784f-ee5f-46d5-a4cd-a4289d47fe4b",
+        "plan_status": "CANDIDATE"
+      }
+    },
+    "old_mutation_rejected_at_core": {
+      "status": "PROVEN",
+      "reason": "The original Agent mutation reached the core world-epoch gate and was refused.",
+      "facts": {
+        "stale_child_mission_id": "6c06fcde-041f-4a71-b7c5-2f5e730f47b4",
+        "stale_run_id": "0422ea22-b5f1-4216-be4f-f92f813950a6",
+        "failure_reason": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE: collective mediation must be resolved before mutation"
+      }
+    },
+    "real_external_recovery": {
+      "status": "PROVEN",
+      "reason": "The configured external Agent created a fresh server-owned recovery and consent surface.",
+      "facts": {
+        "run_id": "1fdad295-a060-4286-a068-103013a7264b",
+        "provider_key": "hermes",
+        "model_key": "cn:glm-5.3-flash",
+        "tool_names": [
+          "inspect_journey",
+          "inspect_twin",
+          "inspect_twin",
+          "request_replan",
+          "request_collective_decision"
+        ]
+      }
+    },
+    "fresh_authenticated_e2": {
+      "status": "PROVEN",
+      "reason": "A separate resolved consent mission stores fresh E2/W2 and authenticated member responses.",
+      "facts": {
+        "fresh_mission_id": "d117022b-6b2f-447d-9c0b-0d6272a48556",
+        "decision_epoch": "cda5e51f2722c3c0f7cd3f40d31e7f95a409baf6efd10b904bf9effe519873ef",
+        "material_world_epoch": "c67ad7583d6238fce2adcf44d8816eab3ca4c9a5f53f252f00d220787f702443",
+        "required_member_ids": [
+          "c5a97176-e492-4f8c-9f99-b3b7f9fe8c14",
+          "f3ef2ba9-6752-475c-a1fc-fb0a72e05d86"
+        ],
+        "response_member_ids": [
+          "c5a97176-e492-4f8c-9f99-b3b7f9fe8c14",
+          "f3ef2ba9-6752-475c-a1fc-fb0a72e05d86"
+        ],
+        "authenticated_response_audit_count": 2,
+        "old_mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34"
+      }
+    },
+    "fresh_continuation_blocker": {
+      "status": "BLOCKED",
+      "reason": "Fresh continuation reached the normal approval boundary but the current gate still selected the older mediation authority.",
+      "facts": {
+        "fresh_child_mission_id": "69f4d040-b731-4a18-8828-773f3efe2bcc",
+        "fresh_run_id": "41376976-c155-4000-bd20-2258c6ce5dda",
+        "fresh_run_status": "PARTIAL",
+        "failure_reason": "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED: collective mediation must be resolved before mutation",
+        "pending_selection": {
+          "mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34",
+          "clarification_id": "1e5fb67a-2047-4734-bd82-455f8059abd4",
+          "decision_epoch": "4e17c402fc53bd01de2ff8e113d91a364adbf968e0e01f11b83146d22732bb07",
+          "material_world_epoch": "74e41924218fb32be8def8fd227fa0d45fa7eb727b141edb502747608e6f2600",
+          "selected_proposal_id": "86e29664-2e46-44ed-a524-931f120c03ac",
+          "selected_plan_version_id": "bda2784f-ee5f-46d5-a4cd-a4289d47fe4b"
+        }
+      }
+    },
+    "protected_and_execution_truth": {
+      "status": "PROVEN",
+      "reason": "Protected C4 commitment and completed execution cursor survived the live strike.",
+      "facts": {
+        "c4_commitment_ids": [
+          "a2dc15cd-fb34-4008-9538-ed919fc2dcc0"
+        ],
+        "current_activity_id": "cccf2e91-d4e2-5500-9d81-72c51f2803ff",
+        "current_activity_status": "ARRIVED",
+        "active_plan_version_id": "d89ed3c6-f662-5f13-89a5-2c85f810c283"
+      }
+    },
+    "unrelated_observation_control": {
+      "status": "PROVEN",
+      "reason": "The live harness recorded an unrelated provider observation before the shock; focused tests prove it does not alter W.",
+      "facts": {
+        "observation_ids": [
+          "a8d4dfc2-314b-4e2c-b175-1c05bc00f908"
+        ],
+        "provider_key": "r30-control-provider"
+      }
+    },
+    "exactly_one_final_acceptance": {
+      "status": "BLOCKED",
+      "reason": "The final exactly-once acceptance is blocked by the fresh mediation gate in this durable strike.",
+      "facts": {
+        "accepted_proposal_ids": [],
+        "expected_fresh_proposal_id": "d9152f9e-e43f-42bd-93c2-6ab029178f6b"
+      }
+    }
+  }
+}

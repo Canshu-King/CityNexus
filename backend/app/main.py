@@ -11782,10 +11782,24 @@ def generate_replan(
         for provider_node, location in grounded_recovery_aliases.items()
         if provider_node.startswith("place:") and location in places_by_id
     }
+    # A provider event may target an activity in a server-owned future
+    # candidate plan whose consent is being revalidated.  Include that one
+    # same-Journey Activity in the impact context so structured evidence is
+    # validated without making it active reality; the generated replacement
+    # still uses ``source`` (the active plan) below.
+    impact_activities = list(source)
+    if trigger_event.affected_activity_id and not any(
+        item.id == trigger_event.affected_activity_id for item in impact_activities
+    ):
+        future_target = session.get(Activity, trigger_event.affected_activity_id)
+        if future_target is not None:
+            future_plan = session.get(PlanVersion, future_target.plan_version_id)
+            if future_plan is not None and future_plan.journey_id == journey.id:
+                impact_activities.append(future_target)
     impact_resolution = resolve_impact(
         event=trigger_event,
         journey=journey,
-        activities=source,
+        activities=impact_activities,
         places_by_id=places_by_id,
         c4_activity_ids={row.activity_id for row in c4_rows if row.activity_id},
     )
@@ -11897,11 +11911,36 @@ def generate_replan(
     replacement_choices = []
     affected_activity_id = None
     affected_place_id = None
+    future_target_place_id = None
     delay_minutes = 0
     remove_affected = False
     payload = json.loads(trigger_event.payload_json or "{}")
     if trigger_event.event_type in {"CLOSURE", "WEATHER", "TRAFFIC_DELAY", "SCHEDULE_DELAY"}:
         affected_activity_id = effective_affected_activity_id
+        # A provider closure can be attached to an activity in the selected
+        # future consent plan while active reality still uses the prior plan.
+        # Keep the future activity's place as the disruption subject, but use
+        # the current mutable cursor as the deterministic replan operation
+        # anchor.  This avoids guessing a venue while still allowing the
+        # server to synthesize a replacement before acceptance.
+        if affected_activity_id is not None and not any(
+            item.id == affected_activity_id for item in source
+        ):
+            future_target = session.get(Activity, affected_activity_id)
+            if future_target is not None and future_target.place_id:
+                future_target_place_id = future_target.place_id
+                cursor = next(
+                    (
+                        item
+                        for item in source
+                        if item.id == journey.current_activity_id
+                        and item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                        and not item.locked
+                    ),
+                    None,
+                )
+                if cursor is not None:
+                    affected_activity_id = cursor.id
         if affected_activity_id is None and payload.get("affected_place_id"):
             affected_place_id = str(payload["affected_place_id"])
             match = next((a for a in source if a.place_id == affected_place_id), None)
@@ -11939,6 +11978,24 @@ def generate_replan(
                 affected_activity_id = next(
                     (item.id for item in source if item.id == grounded), None
                 )
+                # A provider may ground a disruption on an activity in a
+                # consented future candidate plan while the active Journey
+                # still points at its prior plan.  Preserve that raw event
+                # identity for the world epoch, but resolve the operation to
+                # the active activity at the same physical place so the
+                # normal replan generator can produce a replacement.
+                if affected_activity_id is None:
+                    future_target = session.get(Activity, grounded)
+                    if future_target is not None and future_target.place_id:
+                        affected_activity_id = next(
+                            (
+                                item.id
+                                for item in source
+                                if item.place_id == future_target.place_id
+                                and item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                            ),
+                            None,
+                        )
             asserts_current = bool(
                 payload.get("at_current_location")
                 or payload.get("disruption_at_current_position")
@@ -11969,7 +12026,7 @@ def generate_replan(
                 raise HTTPException(422, "REPLAN_TARGET_UNRESOLVED")
         affected = next((a for a in source if a.id == affected_activity_id), None)
         if affected is not None:
-            affected_place_id = affected.place_id
+            affected_place_id = future_target_place_id or affected.place_id
             if affected.status in {"COMPLETED", "SKIPPED", "CANCELLED"}:
                 raise HTTPException(409, "disruption targets an activity that is already terminal")
             if affected.locked and trigger_event.event_type in {"CLOSURE", "WEATHER"}:
@@ -11977,9 +12034,7 @@ def generate_replan(
                     422, "closed activity is protected and cannot be replaced automatically"
                 )
             if trigger_event.event_type in {"CLOSURE", "WEATHER"}:
-                affected_place = (
-                    session.get(Place, affected.place_id) if affected.place_id else None
-                )
+                affected_place = session.get(Place, affected_place_id) if affected_place_id else None
                 if affected_place is None:
                     raise HTTPException(422, "affected place is unavailable")
                 places = session.scalars(

@@ -1,0 +1,34 @@
+{
+  "status": "R30_LIVE_BLOCKED",
+  "created_at": "2026-10-05T21:21:46.178922+00:00",
+  "db": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-592728682e7eb64c.sqlite3",
+  "journey_id": "c0041a22-d2b6-467f-b48f-eccf03dfb647",
+  "old_mediator_mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34",
+  "fresh_mission_id": "d117022b-6b2f-447d-9c0b-0d6272a48556",
+  "old_proposal_id": "86e29664-2e46-44ed-a524-931f120c03ac",
+  "fresh_proposal_id": "d9152f9e-e43f-42bd-93c2-6ab029178f6b",
+  "summary": {
+    "proven": 9,
+    "blocked": 2,
+    "not_proven": 0
+  },
+  "blocker": {
+    "status": "BLOCKED",
+    "reason": "Fresh continuation reached the normal approval boundary but the current gate still selected the older mediation authority.",
+    "facts": {
+      "fresh_child_mission_id": "69f4d040-b731-4a18-8828-773f3efe2bcc",
+      "fresh_run_id": "41376976-c155-4000-bd20-2258c6ce5dda",
+      "fresh_run_status": "PARTIAL",
+      "failure_reason": "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED: collective mediation must be resolved before mutation",
+      "pending_selection": {
+        "mission_id": "f9fb2239-c3a8-4e33-b988-ceb5db163f34",
+        "clarification_id": "1e5fb67a-2047-4734-bd82-455f8059abd4",
+        "decision_epoch": "4e17c402fc53bd01de2ff8e113d91a364adbf968e0e01f11b83146d22732bb07",
+        "material_world_epoch": "74e41924218fb32be8def8fd227fa0d45fa7eb727b141edb502747608e6f2600",
+        "selected_proposal_id": "86e29664-2e46-44ed-a524-931f120c03ac",
+        "selected_plan_version_id": "bda2784f-ee5f-46d5-a4cd-a4289d47fe4b"
+      }
+    }
+  },
+  "verdict_path": "output\\revolution-r30-live-20261006\\R30_MACHINE_VERDICT.json"
+}
