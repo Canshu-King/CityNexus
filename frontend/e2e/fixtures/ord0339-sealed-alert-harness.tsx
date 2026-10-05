@@ -39,7 +39,7 @@ createRoot(host).render(
       onUseSealedDemo: async () => {},
       sealedDemoUnavailable:
         "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
-      /* The shell's real shape (V8Experience.tsx:897): the caught exception's message and name. */
+      /* The shell's real shape (V8Experience.tsx): the caught exception's message and name. */
       sealedDemoDetail: { message: CANARY_MESSAGE, name: CANARY_NAME },
     }),
   ),

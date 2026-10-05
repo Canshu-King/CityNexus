@@ -28,7 +28,7 @@ export function RawFactsPanel({
   /** ORD-0353 also wants "the server sent no number" said out loud, where a 编号 slot could otherwise
    *  be filled by anything nearby.  That sentence is new copy inside `.v8-message`, and three landed
    *  gates read that banner's own text (ORD-0325 at
-   *  `e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts:382`, plus ORD-0323 and the inbox
+   *  `e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts`, plus ORD-0323 and the inbox
    *  queue), so naming the absence is opt-in per mount and the wizard mounts it with the flag on.  A
    *  number the server really sent is always shown -- hiding one is not honesty. */
   nameMissingReceipt?: boolean;

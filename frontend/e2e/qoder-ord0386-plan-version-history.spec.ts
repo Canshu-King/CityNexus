@@ -9,7 +9,7 @@
  * walk into:
  *   H3 `created_at: null` -- every stored version here has a write time (9 of 9), so the "no time
  *                            recorded" branch is only reachable by taking the value away;
- *   H6 the three sources -- `backend/app/schemas.py:495` declares INITIAL / REPLAN / MANUAL, but
+ *   H6 the three sources -- `backend/app/schemas.py` declares INITIAL / REPLAN / MANUAL, but
  *                            this journey holds only MANUAL rows;
  *   H5 HTTP 500            -- the read has to actually fail for the failure sentence to be judged.
  * Mutation is single-variable, applied to the real response fetched with `route.fetch()`: no field

@@ -18,7 +18,7 @@ import { evidencePath } from "./_qoderEvidence";
  *
  * The honesty rule from ORD-0038 still applies and is asserted: only stages the client
  * really awaited may appear, no percentage, and no claiming to have cancelled work the
- * server never agreed to cancel — `stay-options/generate` (backend/app/main.py:2386) is a
+ * server never agreed to cancel — `stay-options/generate` (backend/app/main.py) is a
  * synchronous route with no operation id and no cancel endpoint, so an aborted fetch means
  * the traveller stopped watching, nothing more.
  */

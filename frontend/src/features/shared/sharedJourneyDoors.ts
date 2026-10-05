@@ -17,7 +17,7 @@ import {
  * opening a page) or one that has never heard of a share grant (`GET /api/v1/journeys/{id}`,
  * `/plans/{id}`). A screen assembled from those would keep filling in after the owner withdrew the
  * link or the deadline passed, which is the one thing a grant must not allow. So `plan_state` and
- * `active_plan` ride on this answer (`backend/app/schemas.py:836`) and nowhere else.
+ * `active_plan` ride on this answer (`backend/app/schemas.py`) and nowhere else.
  *
  * Opening this address sends a GET and nothing else. No traveller is registered, no journey is
  * created, no demo scenario is claimed -- the recipient did not ask for any of that and this device
@@ -43,7 +43,7 @@ export const SHARED_JOURNEY_DOOR = "/shared/journeys/";
 /**
  * Every named refusal this door can answer with, and the state each one puts on screen.
  *
- * The list is the contract's list, read off `contracts/openapi.yaml:602` and the raise sites in
+ * The list is the contract's list, read off `contracts/openapi.yaml` and the raise sites in
  * `backend/app/main.py` beside `read_shared_journey`, not off what the screen happens to handle: four
  * of these are the states the order names, and the other five exist anyway -- `PRIVATE`,
  * `INVITEES_ONLY` and an unreadable deadline are all answers a traveller can be given today. Dropping

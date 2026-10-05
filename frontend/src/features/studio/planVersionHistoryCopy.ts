@@ -13,9 +13,9 @@
  */
 /**
  * Each label names only what the source code actually proves. The server writes exactly three
- * values (`backend/app/schemas.py:495`) from six places, and `MANUAL` is the one that is easy to
- * over-claim: `main.py:5721` writes it when a traveller re-orders activities in the trip studio
- * (`product_path = V12_TRIP_STUDIO_ACCEPT`), and `operations/v9.py:580` writes it for a stay-driven
+ * values (`backend/app/schemas.py`) from six places, and `MANUAL` is the one that is easy to
+ * over-claim: `main.py` writes it when a traveller re-orders activities in the trip studio
+ * (`product_path = V12_TRIP_STUDIO_ACCEPT`), and `operations/v9.py` writes it for a stay-driven
  * rewrite. So it says 人工改动 and names both, rather than claiming one of them.
  */
 export const planVersionHistoryCopy = {
@@ -53,7 +53,7 @@ export const planVersionHistoryCopy = {
     /* "no cap" is a structural reading, not an extrapolation: nothing in the backend prunes a kept
        version (`grep -riE 'retention|prune|max_versions' backend/app` -> no hits), and the only
        DELETEs that touch plan versions remove a *proposal the hard gate refused before it was ever
-       returned* (`backend/app/main.py:9787`, `backend/app/operations/v9.py:733`). Measured against
+       returned* (`backend/app/main.py`, `backend/app/operations/v9.py`). Measured against
        real writes: 7 generate rounds left 21 rows, version_no 1..21 with no hole
        (backend/tests/test_qoder_ord0386_plan_version_history.py, test_3). */
     "history.retention": "这台服务器没有设保留上限：目前这趟共有 {n} 份版本，这里全部列出。写新版本不会丢掉旧的。",

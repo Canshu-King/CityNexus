@@ -583,8 +583,8 @@ class RealCityDiscoveryCandidate(BaseModel):
 class RealCityDiscoveryResponse(BaseModel):
     """The wrapper both `capture_real_city_candidates` return sites build.
 
-    Measured on the tree: the cache-hit return (real_city.py:1346) and the main
-    return (real_city.py:1550) carry the same 11 keys, so nothing here is optional
+    Measured on the tree: the cache-hit return (real_city.py) and the main
+    return (real_city.py) carry the same 11 keys, so nothing here is optional
     just in case.
     """
 
@@ -1000,7 +1000,7 @@ class ShareGrantRevoked(BaseModel):
 class SharedActivityCoordinate(BaseModel):
     """Where the place an activity names actually is, in the capability vocabulary this product froze.
 
-    The four `state` words are `CAPABILITY_STATES` (`app/anywhere_capability.py:74`) and the `reason`
+    The four `state` words are `CAPABILITY_STATES` (`app/anywhere_capability.py`) and the `reason`
     words are the `REASON_*` beside it.  They are re-declared here as a `Literal` because a contract
     needs the enumeration, and `tests/test_qoder_ord0465_shared_landing.py` pins both lists against
     the source so this cannot drift into a fifth word.  Re-declaring and pinning beats importing:
@@ -1008,7 +1008,7 @@ class SharedActivityCoordinate(BaseModel):
 
     Nothing here invents a position.  When there is no place row to join, or the row carries no
     coordinate, `latitude`/`longitude` stay None and `state`/`reason` say which of those two cases this
-    is -- the same answer `_active_plan_payload` gives the owner's own screen (`app/stay_mobility.py:1642`).
+    is -- the same answer `_active_plan_payload` gives the owner's own screen (`app/stay_mobility.py`).
     """
 
     state: Literal["READY", "HYDRATABLE", "UNKNOWN_RETRYABLE", "UNAVAILABLE"]
@@ -1058,11 +1058,11 @@ class SharedPlan(BaseModel):
     version_no: int
     # Which generation of the trip this is, in the server's own words rather than a screen's guess.
     # `source` has traveller-facing labels already on the front
-    # (`frontend/src/lib/displayVocabulary.ts:30`, `PLAN_SOURCE`), and all three of its values are in
+    # (`frontend/src/lib/displayVocabulary.ts`, `PLAN_SOURCE`), and all three of its values are in
     # that table, so the share screen can name a first generation apart from a replan without printing
     # a machine word.  The plan's `status` is deliberately NOT carried: two of its five values
     # (`SELECTED`, `SUPERSEDED`) are absent from the shared status table
-    # (`frontend/src/i18n/travelerLabels.ts:81`), so a screen that received the field would be handed a
+    # (`frontend/src/i18n/travelerLabels.ts`), so a screen that received the field would be handed a
     # token it can only echo.  `tests/test_qoder_ord0465_shared_landing.py` pins that every value of
     # every word this answer offers has a label, which is why `source` stayed and `status` did not.
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
@@ -1070,7 +1070,7 @@ class SharedPlan(BaseModel):
 
 
 # ORD-0434 step 2.  The member-state words are prefixed on purpose: bare EXPIRED and WITHDRAWN are
-# already accommodation-offer statuses (`app/stay_mobility.py:1963`), and borrowing them here would
+# already accommodation-offer statuses (`app/stay_mobility.py`), and borrowing them here would
 # make one word mean two things in two different answers.
 MemberRole = Literal["OWNER", "ADMIN", "COLLABORATOR"]
 MemberState = Literal["MEMBER_IN_FORCE", "MEMBER_LAPSED", "MEMBER_WITHDRAWN"]

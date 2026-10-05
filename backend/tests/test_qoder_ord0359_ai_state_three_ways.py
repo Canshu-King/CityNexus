@@ -1,11 +1,11 @@
 """ORD-0359 - "the AI is not answering" stops being one word for three facts.
 
-Measured at the base commit `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`, `backend/app/main.py:792`
+Measured at the base commit `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`, `backend/app/main.py`
 answered `/health` with `"ai": "enabled" if settings.ai_enabled and settings.ai_api_key else
 "disabled"`.  An operator who switched the feature off, a store nobody installed a credential in,
 and a provider that looked at the request and refused it all came back as the same string, so the
 screen had no way to tell them apart and the sentence it had lying around for an unexplained
-failure was 「网络或后端没有响应」 (`frontend/src/features/planning/PlanWithAiSheet.tsx:289`) - an
+failure was 「网络或后端没有响应」 (`frontend/src/features/planning/PlanWithAiSheet.tsx`) - an
 excuse about the traveller's connection for a fact about this server.
 
 These tests are written so the shortcuts cannot pass:

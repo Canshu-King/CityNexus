@@ -17,11 +17,11 @@
  * primary action (Pass-8: 打开权威方案 owns that). The `[data-picked]` rules sit at specificity
  * 0-2-1 against `.v8-stay-card`'s 0-1-0, so they win regardless of injection order.
  *
- * `width: auto` and `margin-top: 0` on `.v8-pick-box` are not decoration. `src/styles.css:47` is a
+ * `width: auto` and `margin-top: 0` on `.v8-pick-box` are not decoration. `src/styles.css` is a
  * bare element rule -- `button { display: block; width: 100%; margin-top: 12px; … }` -- and a class
  * that overrides only `display` leaves `width` and `margin-top` inherited from it, which measured
  * 272 px of tick inside a 358 px card (76 % of the card width) and pushed the place name into a
- * column beside it. The same trap is already written down at `src/styles.css:1792`. Measured here
+ * column beside it. The same trap is already written down at `src/styles.css`. Measured here
  * with the two properties absent, and again with them present, by
  * `review/ord0435/_check_title_squeeze.js`.
  */

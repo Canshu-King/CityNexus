@@ -625,7 +625,7 @@ export function JourneyTrialSetup({
   const [advanced, setAdvanced] = useState(false);
   /* createJourney catches its own failure and does not rethrow, so a resolved
      `await onCreate()` here does not mean a journey exists.  Its success path closes this
-     wizard (V8Experience.tsx:577 setSetupOpen(false)), so still being mounted once the
+     wizard (V8Experience.tsx setSetupOpen(false)), so still being mounted once the
      await settles is the deterministic signal that the step did not complete. */
   const [createAttemptFailed, setCreateAttemptFailed] = useState(false);
   /* ORD-0066 (甲): a tap on a button that cannot advance has to answer out loud.  A live

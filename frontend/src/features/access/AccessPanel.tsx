@@ -404,7 +404,7 @@ export function AccessPanel({
 
   /** The shell's own trip reference, honoured as soon as the list door can vouch for it.  Nothing is
    *  loaded from a reference the door did not answer a row for: that is the stale-id hazard
-   *  `lib/failureAttribution.ts:5` documents, and here it is named on screen instead of left blank. */
+   *  `lib/failureAttribution.ts` documents, and here it is named on screen instead of left blank. */
   useEffect(() => {
     if (trips.phase !== "ready" || chosen !== null) return;
     const reference = initialJourneyId ?? readJourneyReference();

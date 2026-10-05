@@ -15,7 +15,7 @@
  *   U  the paste door caps `text` at 20000 characters (backend/app/schemas.py, PoiImportParseRequest).
  *      A longer paste is a thing a traveller really does -- 粘一整篇攻略 -- and the door answers 422 with
  *      `error.code = "VALIDATION_ERROR"` and NO `reason_code` field at all, which is exactly the case
- *      `describeRejection` answers with UNNAMED_REFUSAL (frontend/src/features/poiimport/PoiImportPanel.tsx:139).
+ *      `describeRejection` answers with UNNAMED_REFUSAL (frontend/src/features/poiimport/PoiImportPanel.tsx).
  *      So the screen must say the table's own `errUnnamed` half and the measured status, nothing else.
  *   N  a refusal that arrives as "the question was never answered" -- the device goes offline after the
  *      panel is mounted (the traveller's own network, not a mocked provider) -- must read `errNoResponse`,
@@ -74,7 +74,7 @@ async function ownText(locator: any): Promise<string> {
 
 /** Tokens that must never reach the glass, whatever the screen decides to say.
  *  Note this is a NAMED list, not "any upper-case word": the shipped dictionary itself capitalises the
- *  nav labels (frontend/src/i18n/LocaleContext.tsx:80, :82, :83 answer "TODAY", "TRAVEL", "SYSTEM"), so a
+ *  nav labels (`nav.groupToday`, `nav.groupTravel` and `nav.groupSystem` in frontend/src/i18n/LocaleContext.tsx answer "TODAY", "TRAVEL" and "SYSTEM"), so a
  *  blanket whole-screen assertion would be red on a screen that is exposing nothing. */
 const FORBIDDEN_ON_SCREEN = [
   "VALIDATION_ERROR",

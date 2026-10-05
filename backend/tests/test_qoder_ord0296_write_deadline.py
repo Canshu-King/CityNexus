@@ -420,7 +420,7 @@ def test_G10_the_budget_belongs_to_one_request_not_one_connection() -> None:
 def test_G11_importing_the_app_is_what_arms_the_door() -> None:
     """G11（包工头字面点名的那一枚补上的）：门必须挂在真正的启动路径上，而不是只挂在函数上。
 
-    前十格量不到这件事：G2/G3 直接叫 `assert_configuration_reachable()`，所以把 `app/main.py:427`
+    前十格量不到这件事：G2/G3 直接叫 `assert_configuration_reachable()`，所以把 `app/main.py`
     那句调用删掉时它们照绿——M11 把我门的空洞照了出来。这一格走**子进程真 import**：
     期限压到锁等待之下 ⇒ 导入必须失败且说得出档名；抬高一毫秒 ⇒ 必须导入成功（双向）。
     子进程带自己的临时库，不吃套件里别人留下的状态。

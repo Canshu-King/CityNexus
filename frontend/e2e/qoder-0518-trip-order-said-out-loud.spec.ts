@@ -404,7 +404,7 @@ test("order-fold-r1 — the deny-list the TITLE check ships is the deny-list the
 }) => {
   test.setTimeout(180_000);
   // this project loads specs as ES modules, where `__dirname` does not exist (the trap
-  // `e2e/qoder-e2e-config-guard.spec.ts:29` names); `import.meta.url` is what survives the loader
+  // `e2e/qoder-e2e-config-guard.spec.ts` names); `import.meta.url` is what survives the loader
   const fixture = resolve(
     dirname(fileURLToPath(import.meta.url)),
     "..",
