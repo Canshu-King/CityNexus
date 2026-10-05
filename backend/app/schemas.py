@@ -425,6 +425,25 @@ class LocationObservationRequest(BaseModel):
     captured_at: datetime
 
 
+class ExecutionTruthAttestation(BaseModel):
+    """Optional evidence class for one execution-state transition.
+
+    Omitting the body intentionally means SIMULATED_STATE_TRANSITION.  Stronger
+    labels require evidence and are checked server-side; callers cannot promote
+    an HTTP state-machine exercise into physical presence by choosing a string.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    truth_kind: Literal[
+        "SIMULATED_STATE_TRANSITION",
+        "OPERATOR_CONFIRMED_EXECUTION",
+        "DEVICE_LOCATION_VERIFIED_EXECUTION",
+    ] = "SIMULATED_STATE_TRANSITION"
+    operator_confirmed: bool = False
+    location_observation_id: UUID | None = None
+
+
 class PushSubscriptionRequest(BaseModel):
     endpoint: str = Field(min_length=8, max_length=2048)
     keys: dict[str, str] = Field(default_factory=dict)
