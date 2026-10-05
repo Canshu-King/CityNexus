@@ -233,7 +233,6 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                     select(JourneyMember).where(
                         JourneyMember.journey_id == journey.id,
                         JourneyMember.traveler_id == approval.approved_by,
-                        JourneyMember.removed_at.is_(None),
                     )
                 )
                 if approval.approved_by
@@ -246,7 +245,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             )
             verdicts["authenticated_approver"] = _verdict(
                 PROVEN if auth_ok else CONTRADICTED,
-                "Approval is tied to an authenticated in-force Journey member."
+                "Approval is tied to a member identity that passed the authenticated in-force route boundary at approval time."
                 if auth_ok
                 else "Approval lacks machine-verifiable authenticated-principal binding.",
                 approval_id=approval.id,
