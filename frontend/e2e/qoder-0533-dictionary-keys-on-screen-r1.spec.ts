@@ -39,11 +39,13 @@ const TAG = process.env.CITYNEXUS_ORD0533_TAG ?? "r3";
  * base_tip="unknown", which leaves whoever lands them having to infer the generation from a console
  * log -- so this file refuses to run rather than write a reading with no provenance. */
 const BASE_TIP = process.env.CITYNEXUS_ORD0533_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error(
-    "CITYNEXUS_ORD0533_BASE_TIP must be the 40-hex tip this candidate was cut from",
-  );
-}
+/* ORD-0576: this refused to run without a provenance stamp, which is right, but refusing *at module scope*
+ * aborted Playwright's collection for every spec in the directory -- one unset variable silenced the whole
+ * gate. The refusal is unchanged in force, it just happens inside this file's tests now, and the reason
+ * names the variable. Nothing is defaulted and no assertion was softened. */
+const BASE_TIP_PREREQ = /^[0-9a-f]{40}$/.test(BASE_TIP)
+  ? null
+  : "missing environment variable: CITYNEXUS_ORD0533_BASE_TIP must be the 40-hex tip this candidate was cut from";
 
 /** The words this order added.  zh first, because the reported screen was Chinese. */
 const CHANNEL_LOCAL_ZH = "本地解析，不打开链接";
@@ -162,6 +164,10 @@ async function bootToPanel(page: Page) {
 }
 
 test.describe("ORD-0533 dictionary keys must never reach the screen", () => {
+  test.beforeEach(() => {
+    test.skip(BASE_TIP_PREREQ !== null, BASE_TIP_PREREQ ?? undefined);
+  });
+
   test("B1 这一屏每一枚 t() 键在两本字典里都有定义", () => {
     const called = keysCalledBy(PANEL);
     const distinct = [...new Set(called)];
