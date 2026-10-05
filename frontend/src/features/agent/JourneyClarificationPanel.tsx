@@ -164,7 +164,10 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
         proposalId,
       );
       if (answer.child_mission) {
-        setNotice(zh ? "所有相关成员已经回答。助手正在继续处理共同选择。" : "All required travelers answered. The assistant is continuing the shared choice.");
+        const mediating = answer.status === "MEDIATION_REQUIRED";
+        setNotice(mediating
+          ? (zh ? "成员的选择不同。助手不会替任何人拍板，正在寻找双方都能接受的折中。" : "The travelers chose differently. The assistant will not pick a winner; it is looking for a grounded compromise.")
+          : (zh ? "所有相关成员已经回答。助手正在继续处理共同选择。" : "All required travelers answered. The assistant is continuing the shared choice."));
         await resume(answer.child_mission.id);
       } else {
         setNotice(zh ? "你的选择已保存，正在等待其他相关成员。" : "Your choice is saved. Waiting for the other relevant travelers.");
@@ -237,6 +240,14 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
           && question?.kind === "COLLECTIVE_TRADEOFF"
           && item.collective;
         const approvalWaiting = mission.status === "WAITING_FOR_APPROVAL" && item.continuation;
+        const mediationIntent = mission.resolved_intent?.collective_mediation;
+        const mediationReady = mission.parent_mission_id
+          && ["CREATED", "DEGRADED"].includes(mission.status)
+          && typeof mediationIntent === "object"
+          && mediationIntent !== null;
+        const mediationRound = mediationReady
+          ? Number((mediationIntent as Record<string, unknown>).round ?? 1)
+          : 0;
 
         return (
           <article key={mission.id} data-mission-id={mission.id} data-mission-status={mission.status}>
@@ -304,6 +315,14 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                 )}
               </div>
               {item.run && <small>{completionLabel(item.run, zh)}</small>}
+            </div> : mediationReady ? <div data-testid="collective-mediation">
+              <h4>{zh ? "你们意见不同，助手正在做调解" : "You disagree; the assistant is mediating"}</h4>
+              <p>{zh
+                ? `第 ${mediationRound} 轮调解不会多数表决，也不会替任何成员改偏好。助手会先找有事实依据的折中；如果仍有价值冲突，会把新的选择重新交给相关成员。`
+                : `Mediation round ${mediationRound} does not use majority voting or rewrite anyone's preferences. The assistant will seek a grounded compromise first and return any remaining value trade-off to the relevant travelers.`}</p>
+              <button type="button" className="v8-primary" disabled={busy} onClick={() => void act(item)}>
+                {zh ? "继续调解" : "Continue mediation"}
+              </button>
             </div> : waiting ? <>
               <h4>{zh ? "这次旅行，你更看重哪一个？" : "What matters more for this trip?"}</h4>
               <p>{question.question}</p>
