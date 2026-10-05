@@ -2508,3 +2508,35 @@ def test_r30_denial_audit_does_not_commit_failed_approval_consumption() -> None:
         after = json.loads(denial.after_json or "{}")
         assert after["code"] == "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
         assert after["proposal_id"] == proposal_id
+
+
+
+def test_r30_fresh_human_choice_outranks_algorithmic_compromise_tiebreak() -> None:
+    mediation = {
+        "classification": "COMPROMISE_AVAILABLE",
+        "candidate_ids": ["plan-human", "plan-algorithm"],
+        "selected_candidate_id": "plan-algorithm",
+    }
+    resolved = {
+        "status": "RESOLVED",
+        "selected_candidate_id": "plan-human",
+    }
+
+    human = collective_mediation.collective_mutation_decision(
+        mediation,
+        "plan-human",
+        resolved_decision=resolved,
+    )
+    algorithm = collective_mediation.collective_mutation_decision(
+        mediation,
+        "plan-algorithm",
+        resolved_decision=resolved,
+    )
+
+    assert human["allowed"] is True
+    assert human["code"] is None
+    assert algorithm["allowed"] is False
+    assert (
+        algorithm["code"]
+        == "COLLECTIVE_CANDIDATE_NOT_ACCEPTABLE_COMPROMISE"
+    )
