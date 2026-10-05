@@ -16588,6 +16588,116 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 自申报那一格（模拟悬浮件的压覆盖）· 上一格四堆归因里唯一落在"设计如此"之外的两枚读数，本手量到它在自然滚动位上谁都没压，只有被刻意滚到屏幕中线那一刻才落进它 48 × 60 px 的带里 ⇒ 判条件性遮挡，不判不可达也不判缺陷
+
+**〇、这一格是什么**
+
+- 上一格（点开才到的控件 × 三档）把两堆"设计如此"之外只剩两枚读数：宽 414 px 中文臂、主题层打开那一格里，`div#sim-float` 与 `button#sim-ball` 各压住一枚控件（件 RK-170014）。本手就是去复现并量清它。
+- 结论先说：在 hub 与 trips 两屏、两臂、三档、滚动零位与最大位共 24 个态，加主题层打开后的 12 个态，共 36 个态里，悬浮件在场 24 态，而**控件中心落在它矩形里的读数 0 枚**。
+
+**一、量法与代次**
+
+- 全程只量矩形与命中测试；除"主题层打开"那一批沿用上一格同一枚点开动作外，一次点击都不发，不触发任何写路径。
+- 悬浮件只在 hub 屏在场：hub 的 24 个态全部量到它，trips 屏的 12 个态一枚都不在场。
+- 现读权威线 `refs/heads/mirror/integration-frontend-apple-pass1` = `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`；两趟（件 RK-173921、RK-174109）的 `tree_at` 逐字就是它；屏上跑的是入口 `index-DLbc3Q3N.js` = 1624131 B、磁盘字节 sha1 = 1357c527bfe91129065087329259ed74e580c97f（本机 sha1，未入 git 对象库，非 blob）；私有后端 :5131、私有前端 :5140；`demo/scene/ensure` 的 `http_status=200`。
+
+**二、悬浮件自己是什么**
+
+- 它固定贴在右缘，矩形 y 402..462 px × x 354..402 px，即 48 px 宽、60 px 高，`position=fixed`、`z-index=30`。
+- 它自带可访问名：那枚 `sim-ball` 的 `aria-label` 起头是「模拟舞台（舞台上有场景）」，所以它不是无名控件；它自己就是那枚可点的球，屏上没有第二枚盖住它。
+
+**三、那两枚读数为什么在上一格出现**
+
+  - 中文臂｜宽 414 px｜topbar-theme 那格里的 button#「对比住宿 →」：被刻意滚到中线时它的 rect 是 400..444 px，正落进悬浮件的 y 402..462 px × x 354..402 px 带里（件 RK-170014）
+  - 中文臂｜宽 414 px｜topbar-theme 那格里的 button#pending-filter-open「筛选」：被刻意滚到中线时它的 rect 是 400..444 px，正落进悬浮件的 y 402..462 px × x 354..402 px 带里（件 RK-170014）
+- 也就是说：它们只在"被尺刻意滚到屏幕中线"的那一刻落进这条带；在同一格的自然滚动位（顶与底两态）里，两枚都命中自己。上一格那条"点开反倒被盖"的读数因此是尺的居中动作造出来的，不是屏上日常会撞上的形状。
+
+**四、判语**
+
+- 判**条件性遮挡**：不判不可达（顶、底两态都能点），也不判缺陷（悬浮件自带可访问名、贴在右缘 48 px 的窄带里）。
+- 若要按"任何滚动位置都不许压住控件中心"来判，那是产品取舍，得号令者点单；本手不自行收紧判据。
+
+**五、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-simfloat-geom-evidence-r1` = `c9f3ef4a608f0ee6d3e8e7af3740e61a6f3a5125`（`git ls-remote` 现读逐字相等；6 枚件，逐枚可 `git cat-file -t`）：
+  - `review/simfloat-geom/geom_base_screens.json` = `701f4c080609bb4067714b521568e97a8285daab`、`review/simfloat-geom/geom_theme_open.json` = `a8a168f7196c56973f2e31a3fba503bb70a3689d`、`review/simfloat-geom/prev_census_rows.json` = `5500be9ca19b1450870b8e9254574af36c382191`
+  - 尺：`review/simfloat-geom/probe_simfloat_geom.cjs.txt` = `46519b95537445843556b363a555f24dc1380ff2`、`review/simfloat-geom/driver_reachability.py.txt` = `1cc323cc35785dedce24c493fdd50ff9d03b0d67`
+  - 屏（主题层打开、宽 414 px 中文臂那一屏）：`review/simfloat-geom/shot_hub_414_zh_theme_open.png` = `58fb23bc7bc00d03ab2c395ecbb96d849649cef0`
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚、产品字节改动 0 枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 自申报那一格（点开才到的控件 × 三档可达性）· 六十六格里"这层自己的控件"零枚够不到，本手不报新缺陷；四处我自己咬出来的假警报逐处点名并附反证件
+
+**〇、这一格是什么**
+
+- 上一手 me 屏那枚按钮把我的尺咬了一次：折叠层里"此刻不在屏上"不等于"够不到"。这一格就是把那条判据推广到全部十一层——每层先量开层前的屏，真点触发件（`<details>` 那几层点的是它自己的 summary，不在页面里改 `.open`），再量开层后，逐枚判"存不存在一个滚动位置能让它整个进视口并被命中"。
+- 结论先说：开层后才渲染出来的控件 168 枚，其中够不到 0 枚 ⇒ 本格不报新缺陷；另有 22 枚是"开层前就渲染了却滚不到、点开才够得到"，那正是折叠层的正常形状，不是伤（件 RK-171245、RK-171514）。
+
+**一、分母、代次与对照**
+
+- 十一层 × 两臂 × 三档 = 66 格，量到 60 格（件 RK-171245、RK-171514）。
+- 三档宽是 360 px、390 px、414 px，视口高 844 px（件 RK-171245、RK-171514）。
+- 另 6 格是 `hub/continuation-technical-details` 的触发件不在屏上——它的渲染条件上一手已具名（件 RK-160145），属"按边界不造"。
+- 现读权威线 `refs/heads/mirror/integration-frontend-apple-pass1` = `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`；两臂两趟跑的是同一份产物：入口 `index-DLbc3Q3N.js` = 1624131 B、磁盘字节 sha1 = 1357c527bfe91129065087329259ed74e580c97f（本机 sha1，未入 git 对象库，非 blob）；私有端口 5131/5140；`demo/scene/ensure` 的 `http_status=200`。
+- 每格三枚负对照（视口外那枚必须判不可达、被盖那枚必须判命中失败、干净那枚必须判可达）在 60 格全部按预期抓到（件 RK-171245、RK-171514）。
+
+**二、逐层的账（件 RK-171245、RK-171514）**
+
+  - access/access-role-details：6 格里新渲染 0 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - discover/collection-retry：6 格里新渲染 0 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - hub/pending-filter-open：6 格里新渲染 18 枚、够不到 0 枚、点开才够得到 2 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - map/v8-map-footprint-filter：6 格里新渲染 6 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - me/me-advanced：6 格里新渲染 0 枚、够不到 0 枚、点开才够得到 6 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - shell/topbar-theme：6 格里新渲染 6 枚、够不到 0 枚、点开才够得到 2 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - shell/v8-mobile-menu：6 格里新渲染 114 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 6 枚（件 RK-171245、RK-171514）
+  - trips/collect-entry：6 格里新渲染 6 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - trips/journey-abort-open：6 格里新渲染 0 枚、够不到 0 枚、点开才够得到 12 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+  - trips/trip-stop-details：6 格里新渲染 24 枚、够不到 0 枚、点开才够得到 0 枚、遮罩件另列 0 枚（件 RK-171245、RK-171514）
+
+**三、"点开才够得到"的那批**
+
+  - hub/pending-filter-open：2 枚，落在 1 格里，去重后具名 button#「对比住宿 →」×1、button#pending-filter-open「筛选」×1（件 RK-171245）
+  - me/me-advanced：6 枚，落在 6 格里，去重后具名 button#「查看策略详情」×3、button#「View policy detail」×3（件 RK-171245）
+  - shell/topbar-theme：2 枚，落在 1 格里，去重后具名 button#「对比住宿 →」×1、button#pending-filter-open「筛选」×1（件 RK-171245）
+  - trips/journey-abort-open：12 枚，落在 6 格里，去重后具名 textarea#journey-abort-reason「」×6、button#journey-abort-submit「中止这趟行程」×3、button#journey-abort-submit「Abort this trip」×3（件 RK-171245）
+
+**四、"点开反倒被盖"的归因（合计 177 枚）**
+
+- 被抽屉面板或它的遮罩盖住 147 枚：抽屉是模态面板，开层后盖住底屏是设计如此，不判缺陷。
+- 地图族互盖 30 枚（marker、label 与 canvas 同区重叠）。
+- 上面两堆之外，本代读到 0 枚。
+- 同一把尺在上一代权威线上读到 2 枚落在两堆之外，逐枚具名：
+  - zh-CN｜宽 414 px｜shell/topbar-theme 里的 button#「对比住宿 →」：盖它的是 `div#sim-float.cn-sim-float`（链 `div#sim-float.cn-sim-float < body < html`），件 RK-170014
+  - zh-CN｜宽 414 px｜shell/topbar-theme 里的 button#pending-filter-open「筛选」：盖它的是 `button#sim-ball.cn-sim-ball`（链 `button#sim-ball.cn-sim-ball < div#sim-float.cn-sim-float < body`），件 RK-170014
+- 这一形是状态相关的：本代同尺复跑没再读到它 ⇒ 不据一次读数判缺陷，具名交下一格复现（上一代那两枚的件号在上一行）。
+
+**五、四处我自己咬出来的假警报（每处都有反证件，不写成成因）**
+
+- 一处：把折叠态的"滚不到"当成不可达——件 RK-160507、RK-161034；上一手已按件 RK-161432 撤回该读数。
+- 一处：页面里的函数互相调用，playwright 只送被调那一枚的源码，整腿 ReferenceError 崩掉——件 RK-163129。
+- 一处：把"DOM 里存在"当成"已渲染"，折叠层的内容全被算成旧控件、开层后新增数读成零——件 RK-163250。
+- 一处：逐枚滚动互相污染（上一枚为了进视口挪过的滚动位置会改掉下一枚的命中对象），抽屉里一度报出 42 枚假不可达——件 RK-164158；给每枚控件量前先复位，降到 2 枚（件 RK-164630、RK-164859）；再把"我埋的对照层"量完当场拔掉（那枚 overlay 正压在抽屉首项上），才降到 0 枚（件 RK-171245、RK-171514）。
+
+**六、换代核对（本格读数量在两代权威线上同形）**
+
+- 出块这趟现读 `refs/heads/mirror/integration-frontend-apple-pass1` = `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`；两臂两趟（件 RK-171245、RK-171514）的 `tree_at` 逐字就是它。
+- 上一代 `d107131c6f6e65d9f207f6bf1b563d1cc8877f89` 上同一把尺同样两臂（件 RK-170014、RK-170243）读过：堆一 168 枚、够不到 0 枚，与本代逐字同形 ⇒ 结论不靠"恰好赶上某一版"。
+- 两代产物字节不同，不是同一份东西自证：上一代入口 `index-BW2_ds1t.js` = 1623134 B、磁盘字节 sha1 = 3f6489d75227ccaa5c62bb7f100e16ebd7e6c637（本机 sha1，未入 git 对象库，非 blob）；本代入口 `index-DLbc3Q3N.js` = 1624131 B、磁盘字节 sha1 = 1357c527bfe91129065087329259ed74e580c97f。两代之间前端差 3 枚文件、183 行（`frontend/src/features/trip/SpendPanel.tsx`、`frontend/src/features/trip/spendCopy.ts` 与一枚 spec），都不在本格那十一层的触发件里。
+- 本代出块前重跑的两枚编译闸：`tsconfig.check.json` 与 `tsconfig.typecheck.json` 退码都是零，`vite build` 退码零。
+
+**七、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-opened-reach-evidence-r5` = `f6d06156521efe0c21dfeef64bed1fbd7cfd00ee`（`git ls-remote` 现读逐字相等；10 枚件，逐枚可 `git cat-file -t`）：
+  - 四堆归因件 `review/opened-reach/four_stacks.json` = `79ea45a0a3ec9a762978a2243f0d82332bf173c8`；两臂逐格件 `review/opened-reach/cells_zh.json` = `535a2fba89d68bdc023aa80d6077592c5c9f3ea7`、`review/opened-reach/cells_en.json` = `fb3f0a908f42501f1a6abc7225531a3c9031a781`
+  - 尺：现行那把 `review/opened-reach/probe_opened_reach_r4.cjs.txt` = `6a202ab00c64aa6785e4553bfaf56229fa33664c`；被撤回那把 `review/opened-reach/probe_opened_reach_r2.cjs.txt` = `25b3ee0c0e6e641269855e4cfbdd02c1a1a725b2`；归因腿 `review/opened-reach/analyzer_four_stacks.py.txt` = `3083e9a7eea7345b7de08d5761b0b1bccf678efd`；栈腿 `review/opened-reach/driver_reachability.py.txt` = `1cc323cc35785dedce24c493fdd50ff9d03b0d67`；抽屉点名腿 `review/opened-reach/forensic_drawer_cover.cjs.txt` = `1eb8dd059fed9f35f7aae9292c244570a0ffc180`
+  - 屏：`review/opened-reach/shot_drawer_r_360_zh-CN_shell_v8-mobile-menu.png` = `a3f6db4e6547a84bc142f56520172829c9c29940`、`review/opened-reach/shot_drawer_r_390_zh-CN_shell_v8-mobile-menu.png` = `f9d27ee4ab15964577a74bd1b9da3550329fc9c5`
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚、产品字节改动 0 枚（本格纯屏读，未改任何一件源文件）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 1ba48dbf 补测那一格（me 屏策略详情可达性 + hub 续跑层条件）· 上一块留下的两格 NOT_MEASURED 都闭合：一格判「我自己那腿量错了状态、屏上无缺陷」，一格判「渲染条件要写路径才造得出、按常设边界不造」
 
 **〇、这一格是什么**
