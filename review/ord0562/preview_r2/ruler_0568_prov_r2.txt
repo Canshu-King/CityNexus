@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:77:1 › every route_provenance the server can write has a traveller wording, in both languages (5ms)
+  ok 2 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:91:1 › the lookup is closed: an unlisted provenance is never answered with its own word (2ms)
+  ok 3 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:101:1 › the panel keeps the provider key and the enum and adds the words beside them (3ms)
+  ok 4 e2e\qoder-cff87c64-ord0568-route-provenance-gloss-r1.spec.ts:111:1 › the ruler read what it claims to have read (1ms)
+
+  4 passed (445ms)

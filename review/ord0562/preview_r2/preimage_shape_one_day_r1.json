@@ -1,0 +1,56 @@
+{
+ "pageerrors": [],
+ "wanted": {
+  "departure_at": "2026-10-08T09:00:00+08:00",
+  "arrival_at": "2026-10-08T09:40:00+08:00"
+ },
+ "journey_id": "afbbcb07-9638-40fb-b8a1-d235d5338dc8",
+ "before": {
+  "http_status": 200,
+  "journey_start": "2026-10-06T02:00:00+00:00",
+  "journey_end": "2026-10-08T12:00:00+00:00",
+  "temporal_shape": {
+   "day_count": 3,
+   "night_count": 2,
+   "semantics": "CALENDAR_DAYS_INCLUSIVE",
+   "window_status": "IN_WINDOW",
+   "min_days": 1,
+   "max_days": 7
+  },
+  "arrival_anchor_at": "2026-10-06T02:00:00Z",
+  "departure_anchor_at": "2026-10-08T12:00:00Z"
+ },
+ "line_before": "6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 3 days",
+ "import": {
+  "status": 201,
+  "id": "e8beeaad-a83b-4b65-85ec-66ba4b88ce3a",
+  "unresolved": []
+ },
+ "confirm": {
+  "status": 200,
+  "keys": [
+   "reservation",
+   "commitment"
+  ],
+  "reservation_window": {
+   "from": "2026-10-08T09:00:00+08:00",
+   "to": "2026-10-08T09:40:00+08:00"
+  }
+ },
+ "after": {
+  "http_status": 200,
+  "journey_start": "2026-10-06T02:00:00+00:00",
+  "journey_end": "2026-10-08T12:00:00+00:00",
+  "temporal_shape": {
+   "day_count": 1,
+   "night_count": 0,
+   "semantics": "CALENDAR_DAYS_INCLUSIVE",
+   "window_status": "IN_WINDOW",
+   "min_days": 1,
+   "max_days": 7
+  },
+  "arrival_anchor_at": "2026-10-08T09:40:00+08:00",
+  "departure_anchor_at": "2026-10-08T12:00:00Z"
+ },
+ "line_after": "6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 1 days"
+}

@@ -1,0 +1,44 @@
+ORD-0562 + ORD-0568 landing preview, second generation -- the tip moved while the first preview was
+waiting to be landed, and it moved on the very file the singular/plural fix edits. So the fix was re-cut
+onto the new tip and every reading below was taken again on that generation.
+
+THE DRIFT, MEASURED
+  authoritative tip: d107131c6f6e65d9f207f6bf1b563d1cc8877f89 (read from the server here, not typed)
+  the tip's own V8Experience.tsx gained four breadcrumb route keys while my branch was open; the re-cut
+  file carries both halves: 3 counted-key call sites of mine and 4 of the tip's new keys, in one file
+  re-cut branch refs/heads/review/cff87c64-ord0562-english-count-nouns-r5, head ae690fe29a1dc749ba47bb55ca9cd99309fe7290 -- one file, five
+  added lines and ten removed against the tip, nothing else.
+
+THE TREE EVERY READING BELOW CAME FROM
+  preview branch refs/heads/review/cff87c64-ord0562-0568-landing-preview-r2, head a9c2504274dd3284b1a98b6707f7c4c9f7071cc3
+  over the tip it is five paths: the re-cut V8Experience.tsx, the two provenance-gloss files, that
+  branch's ruler spec and its private runner config. Store created empty by the app under run id ORD0562prv2-064001; no
+  seed copy, no demo/reset. Backend :4752 and front :4751 answered 200 over index-Cb6APFFy.css.
+
+WHAT THE SCREEN SAYS (English arm, 390x844, innerText; three screenshots viewed)
+  one calendar day:  6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 1 day
+    server's own shape at that moment: day_count=1, night_count=0
+    the same walk on the tip's bytes read: 6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 1 days
+    (pre-image shipped as preimage_shape_one_day_r1.json, originally committed on head dcc10366e197a35358d3bd0b1b299afb4cc1e23e)
+  budget advisory, one traveller:  3 days · 1 person · about CNY 40.00 per person per day
+  budget advisory, two travellers: 3 days · 2 people · about CNY 20.00 per person per day
+    same wizard walk on the tip's bytes read: 3 days · 1 people · about CNY 40.00 per person per day
+    (pre-image shipped as preimage_budget_advisory_r1.json)
+    this generation both walks also read the day line beside the advisory: '6 Oct, 10:00 — 8 Oct, 20:00 · 1 traveler · 3 days' and '6 Oct, 10:00 — 8 Oct, 20:00 · 2 travelers · 3 days'
+  Page exceptions across the three walks: 0.
+  In the first generation one walk answered ABSENT for the day line while the AI sheet covered the first
+  screen; on this generation both budget walks read it, so that observation is closed rather than inherited.
+
+GATES ON THIS TREE
+  typecheck: both configs rc=0, captured output 0 bytes (no diagnostics).
+  ruler ord0562-count-r1: 5 arms ok, rc=0.
+  ruler ord0563-enarm-r1: 4 arms ok, rc=0.
+  ruler ord0568-prov-r1: 4 arms ok, rc=0.
+  exposure, same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), same
+  command, same export shape: tip cells_total=6, preview cells_total=6, growth=0; the only per-file
+  difference is this lane's own ruler spec, outside the six cells.
+
+WHAT THIS IS NOT
+  Not a third piece of work and not a merge: a convenience tree so the two accepted items can be signed on
+  one generation. The authoritative content stays on the two order branches -- the singular/plural one is
+  now r5, and the provenance-gloss one is unchanged because no file it edits moved.

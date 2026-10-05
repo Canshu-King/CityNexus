@@ -1,0 +1,28 @@
+{
+ "run": "ORD0562prv2-064001",
+ "db": "D:/moodle/_ord0568_r3\\stack_ORD0562prv2-064001\\ORD0562prv2-064001.db",
+ "store_created_by": "the app, from an empty file (no seed copy, no demo/reset)",
+ "tree": "D:/moodle/_qoder_ord0568_r3_20261005/wt",
+ "preview_head": "9af5404ef9c36963f4e4f4402f7dcf0156971edc",
+ "base_tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "ports": {
+  "backend": 4752,
+  "front": 4751
+ },
+ "health_status": 200,
+ "front_status": 200,
+ "bundle": [
+  "index-BwXPdizC.js",
+  "index-Cb6APFFy.css"
+ ],
+ "children": [
+  {
+   "pid": 77740,
+   "role": "uvicorn"
+  },
+  {
+   "pid": 93908,
+   "role": "vite preview"
+  }
+ ]
+}
