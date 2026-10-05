@@ -358,10 +358,40 @@ def collective_mutation_decision(
         allowed = str((mediation or {}).get("candidate_id") or "") == str(candidate_id)
         return {"allowed": allowed, "code": None if allowed else "COLLECTIVE_CANDIDATE_NOT_DOMINANT", "classification": classification}
     if classification == "COMPROMISE_AVAILABLE":
-        allowed_ids = {str(item) for item in (mediation or {}).get("candidate_ids") or []}
-        selected = str((mediation or {}).get("selected_candidate_id") or "")
-        allowed = str(candidate_id) in allowed_ids and (not selected or str(candidate_id) == selected)
-        return {"allowed": allowed, "code": None if allowed else "COLLECTIVE_CANDIDATE_NOT_ACCEPTABLE_COMPROMISE", "classification": classification}
+        allowed_ids = {
+            str(item) for item in (mediation or {}).get("candidate_ids") or []
+        }
+        decision = resolved_decision or {}
+        human_selected = (
+            str(decision.get("selected_candidate_id") or "")
+            if str(decision.get("status") or "") == "RESOLVED"
+            else ""
+        )
+        if human_selected:
+            # A fresh server-validated collective answer owns the value choice
+            # among currently acceptable compromises. The algorithm may define
+            # the acceptable set, but it may not override renewed human
+            # authority with its own tie-break/ranking.
+            allowed = (
+                str(candidate_id) in allowed_ids
+                and str(candidate_id) == human_selected
+            )
+        else:
+            selected = str(
+                (mediation or {}).get("selected_candidate_id") or ""
+            )
+            allowed = str(candidate_id) in allowed_ids and (
+                not selected or str(candidate_id) == selected
+            )
+        return {
+            "allowed": allowed,
+            "code": (
+                None
+                if allowed
+                else "COLLECTIVE_CANDIDATE_NOT_ACCEPTABLE_COMPROMISE"
+            ),
+            "classification": classification,
+        }
     if classification == "HUMAN_TRADEOFF_REQUIRED":
         decision = resolved_decision or {}
         allowed = str(decision.get("status") or "") == "RESOLVED" and str(decision.get("selected_candidate_id") or "") == str(candidate_id)
