@@ -1,0 +1,260 @@
+{
+ "built_at": "2026-10-05T15:49:08+0800",
+ "tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "note": "ORD-0520 screen cell: abort disclosure reach + confirm-button coverage, both arms, plus the coverage re-read",
+ "readings": {
+  "_0520_zh_d107131.json": {
+   "instrument": "cmdr_0520_abort_entry_reach_r1",
+   "at": "2026-10-05T07:46:33.670Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "zh",
+   "viewport": "390x844",
+   "screens": [
+    {
+     "route": "/v8/hub",
+     "url": "/v8/hub",
+     "hits": [],
+     "body_chars": 1328
+    },
+    {
+     "route": "/v8/trips",
+     "url": "/v8/trips",
+     "hits": [
+      {
+       "text": "中止这趟行程",
+       "tag": "summary",
+       "cls": "cn-abort__summary",
+       "box": {
+        "x": 34,
+        "y": 432,
+        "w": 322,
+        "h": 44
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 454
+       },
+       "in_viewport": true,
+       "centre_hit_self": true,
+       "hit_element": "summary.cn-abort__summary",
+       "interactive_ancestor": "summary",
+       "ancestor_disabled": false
+      },
+      {
+       "text": "中止这趟行程",
+       "tag": "button",
+       "cls": "v8-quiet-button",
+       "box": {
+        "x": 251,
+        "y": 557,
+        "w": 96,
+        "h": 44
+       },
+       "centre": {
+        "cx": 299,
+        "cy": 579
+       },
+       "in_viewport": true,
+       "centre_hit_self": false,
+       "hit_element": "p.v8-lede",
+       "interactive_ancestor": "button",
+       "ancestor_disabled": false
+      }
+     ],
+     "body_chars": 546
+    },
+    {
+     "route": "/v8/live",
+     "url": "/v8/live",
+     "hits": [],
+     "body_chars": 681
+    },
+    {
+     "route": "/v8/me",
+     "url": "/v8/me",
+     "hits": [],
+     "body_chars": 324
+    }
+   ],
+   "action": {
+    "route": "/v8/trips",
+    "geometry": {
+     "cx": 195,
+     "cy": 422,
+     "in_viewport": true,
+     "centre_hit_self": true
+    },
+    "after_click": {
+     "url": "/v8/trips",
+     "body_chars": 568,
+     "visible_texts": [
+      "跟随系统",
+      "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。",
+      "展开行程长图",
+      "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务",
+      "中止的原因（会随行程一起存下）",
+      "中止这趟行程",
+      "逐日安排。已确认的预订会被标记为受保护。",
+      "第 1 天 / 共 3 天。9 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。",
+      "导出日历",
+      "10月9日周五3 项",
+      "10月10日周六4 项",
+      "10月11日周日2 项",
+      "✦CityNexus Copilot",
+      "Copilot"
+     ]
+    },
+    "screenshot": "_0520_zh_d107131_opened_v8trips.png",
+    "write_calls": [],
+    "abort_words_now": [
+     "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务",
+     "中止的原因（会随行程一起存下）",
+     "中止这趟行程"
+    ]
+   },
+   "page_problems": 0,
+   "problem_samples": []
+  },
+  "_0520_en_d107131.json": {
+   "instrument": "cmdr_0520_abort_entry_reach_r1",
+   "at": "2026-10-05T07:47:08.149Z",
+   "base": "http://127.0.0.1:49811",
+   "journey": "5a203174-bbcc-422a-aa64-8343c2883c72",
+   "locale": "en",
+   "viewport": "390x844",
+   "screens": [
+    {
+     "route": "/v8/hub",
+     "url": "/v8/hub",
+     "hits": [],
+     "body_chars": 2333
+    },
+    {
+     "route": "/v8/trips",
+     "url": "/v8/trips",
+     "hits": [
+      {
+       "text": "Abort this trip",
+       "tag": "summary",
+       "cls": "cn-abort__summary",
+       "box": {
+        "x": 34,
+        "y": 466,
+        "w": 322,
+        "h": 44
+       },
+       "centre": {
+        "cx": 195,
+        "cy": 488
+       },
+       "in_viewport": true,
+       "centre_hit_self": true,
+       "hit_element": "summary.cn-abort__summary",
+       "interactive_ancestor": "summary",
+       "ancestor_disabled": false
+      },
+      {
+       "text": "Abort this trip",
+       "tag": "button",
+       "cls": "v8-quiet-button",
+       "box": {
+        "x": 251,
+        "y": 591,
+        "w": 98,
+        "h": 44
+       },
+       "centre": {
+        "cx": 300,
+        "cy": 613
+       },
+       "in_viewport": true,
+       "centre_hit_self": false,
+       "hit_element": "p.v8-lede",
+       "interactive_ancestor": "button",
+       "ancestor_disabled": false
+      }
+     ],
+     "body_chars": 1136
+    },
+    {
+     "route": "/v8/live",
+     "url": "/v8/live",
+     "hits": [],
+     "body_chars": 1280
+    },
+    {
+     "route": "/v8/me",
+     "url": "/v8/me",
+     "hits": [],
+     "body_chars": 632
+    }
+   ],
+   "action": {
+    "route": "/v8/trips",
+    "geometry": {
+     "cx": 195,
+     "cy": 422,
+     "in_viewport": true,
+     "centre_hit_self": true
+    },
+    "after_click": {
+     "url": "/v8/trips",
+     "body_chars": 1201,
+     "visible_texts": [
+      "Itinerary",
+      "Stay",
+      "Bookings",
+      "Spend",
+      "One long picture of this trip, made of the days already on this screen.",
+      "Open the trip poster",
+      "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting ",
+      "Why you are calling it off (stored with the trip)",
+      "Abort this trip",
+      "Trips",
+      "Day by day. Confirmed bookings are marked as protected.",
+      "day 1 of 3. none of the 9 stops is walked yet -- the server moves a stop's status and this",
+      "Export calendar",
+      "Fri 9 Oct3 stops",
+      "Sat 10 Oct4 stops",
+      "Sun 11 Oct2 stops",
+      "✦CityNexus Copilot",
+      "Today",
+      "Trips",
+      "Map",
+      "Copilot"
+     ]
+    },
+    "screenshot": "_0520_en_d107131_opened_v8trips.png",
+    "write_calls": [],
+    "abort_words_now": [
+     "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting ",
+     "Abort this trip"
+    ]
+   },
+   "page_problems": 0,
+   "problem_samples": []
+  },
+  "_0520_abort_confirm_coverage_r1": {
+   "button": "button.v8-quiet-button text=中止这趟行程",
+   "box_x": 251,
+   "box_y": 525,
+   "box_w": 96,
+   "box_h": 44,
+   "area_px2": 4224,
+   "element_on_top_at_centre": "p.v8-lede",
+   "lede_text": "逐日安排。已确认的预订会被标记为受保护。",
+   "overlap_px2": 2058,
+   "overlap_share_of_button": "48.7 percent",
+   "button_position": "static",
+   "button_z": "auto",
+   "lede_position": "static",
+   "lede_z": "auto",
+   "lede_pointer_events": "auto"
+  }
+ },
+ "screenshots": {
+  "_0520_en_d107131_opened_v8trips.png": 46224,
+  "_0520_zh_d107131_opened_v8trips.png": 53598
+ }
+}
