@@ -1,0 +1,23 @@
+ORD-0500 phone lane: the anchor-form cut re-applied -- the line rebuilt and dropped it
+
+Measured, not inferred.  Between `eef2e63750a91ca00c42d493dbec7bfa04bcf8b6` (where this lane verified its own
+delivery landed: spec blob `80cfac127a927d49901a46386e8778ad71909133`, 11 paths under
+`review/ord0500-anchor-form/`) and the current tip `62ee41e3d36debdb9db502c8180c386241a46f86`, the line was
+rebuilt again as a single root commit and that content is gone from its tree: `git ls-tree -r --name-only`
+answers 0 paths for the directory above, and `git rev-parse <tip>:backend/tests/test_qoder_ord0500_journey_refusal.py`
+is back to `dd4bf606865e414775babab7d93763205bf7dd84` -- the numeric-anchor version, so the two `path:line`
+citations this hand deleted are live on the line again (read at lines 15 and 126).
+
+This commit is the re-application, cut against the current tip rather than moved off the old one:
+  - the candidate is regenerated from the tip's own bytes and re-measured (before: 2 numeric citations, gate
+    RED; after: 0, gate GREEN, four labels resolving exactly once each).
+  - the mutant driver runs again (four arms bite, two controls stay green) and the spec arm re-executes
+    through the lane's private database, with the shared store byte-checked and the worktree restored.
+  - the previous ref `ba19776a29edb27d84e0a1eb204fa76eac61c2c0` is NOT re-pushed: against this tip it has no
+    merge base (two rebuild lines), and `git diff --name-only` from it would also carry two frontend files
+    that belong to other lanes -- so re-cutting here, at the live tip, is the only version of this delivery
+    that touches nothing but its own paths.
+
+Scope: this lane wrote 0 bytes to the authoritative line (the commander moves it), deleted no ref and used no
+force.  One product file changes, comment bytes only, declared up front via the publisher's allow-list;
+everything else is under review/ord0500-anchor-form/.

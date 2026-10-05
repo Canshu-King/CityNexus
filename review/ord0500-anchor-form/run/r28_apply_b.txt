@@ -1,0 +1,52 @@
+{
+ "tip": "b60418ccbda8",
+ "before": {
+  "verdict": "RED",
+  "numeric_anchors": 2,
+  "red": [
+   [
+    "NUMERIC_ANCHOR_FORBIDDEN",
+    ""
+   ],
+   [
+    "ANCHOR_LINE_PRESENT",
+    "the shipped file declares no `Anchor labels` line"
+   ]
+  ]
+ },
+ "after_verdict": "GREEN",
+ "after_numeric": 0,
+ "labels": [
+  {
+   "label": "def require(",
+   "verdict": "GREEN",
+   "count": 1
+  },
+  {
+   "label": "The duplicate answer comes",
+   "verdict": "GREEN",
+   "count": 1
+  },
+  {
+   "label": "UNIQUE (journey_id, target_key)",
+   "verdict": "GREEN",
+   "count": 1
+  },
+  {
+   "label": "\"caught_by\": \"unique_index\",",
+   "verdict": "GREEN",
+   "count": 1
+  }
+ ],
+ "anchor_line": [
+  {
+   "check": "ANCHOR_LINE_PRESENT",
+   "file": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+   "verdict": "GREEN",
+   "why": "",
+   "line": 134,
+   "count": 4
+  }
+ ]
+}
+WROTE D:/moodle/_qoder_phone_ord0485_20260930\evidence\anchor_form_apply_r26.json
