@@ -1870,3 +1870,158 @@ def test_r30_stale_resolved_consent_releases_selected_plan_lock(
         assert gate["allowed"] is True
         assert gate.get("code") is None
         assert gate["classification"] == "UNANIMOUS_DOMINANCE"
+
+
+
+def test_r30_stale_consent_does_not_let_algorithm_choose_new_compromise(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    recovery_plan_id = str(uuid4())
+
+    with SessionLocal() as session:
+        session.add(
+            PlanVersion(
+                id=recovery_plan_id,
+                journey_id=str(seeded["journey_id"]),
+                version_no=4,
+                planning_mode="balanced",
+                status="CANDIDATE",
+                lifecycle="ACTIVE",
+                source="REPLAN",
+                parent_plan_version_id=str(seeded["base_id"]),
+                total_cost_minor=0,
+                currency="JPY",
+                estimated_duration_min=60,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                explanation_json="{}",
+                mobility_evidence_json="{}",
+                created_at=now,
+            )
+        )
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Resolved consent that later became stale.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r30-stale-compromise-boundary",
+                        "decision_epoch": "old-e1",
+                        "material_world_epoch": "old-w1",
+                        "trigger_event_id": str(seeded["event_id"]),
+                        "candidate_options": seeded["options"],
+                        "required_member_ids": [
+                            str(seeded["owner_member_id"]),
+                            str(seeded["admin_member_id"]),
+                        ],
+                        "selected_proposal_id": str(
+                            seeded["garden_proposal_id"]
+                        ),
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.commit()
+
+        monkeypatch.setattr(
+            main_module,
+            "_pending_collective_authority_freshness",
+            lambda *_args, **_kwargs: {
+                "resolved_decision_epoch": "old-e1",
+                "current_decision_epoch": "old-e1",
+                "resolved_material_world_epoch": "old-w1",
+                "current_material_world_epoch": "new-w2",
+                "semantic_stale": False,
+                "world_stale": True,
+                "stale": True,
+            },
+        )
+
+        class _Selectable:
+            def model_dump(self, *, mode="json"):
+                return {"selectable": True}
+
+        monkeypatch.setattr(
+            main_module,
+            "plan_schema",
+            lambda *_args, **_kwargs: _Selectable(),
+        )
+
+        members = [
+            {
+                "member_id": str(seeded["owner_member_id"]),
+                "role": "OWNER",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "garden"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+            {
+                "member_id": str(seeded["admin_member_id"]),
+                "role": "ADMIN",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "museum"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+        ]
+
+        def projection(_session, _journey, *, candidate_windows=None):
+            if candidate_windows is None:
+                return {"member_count": 2, "members": members}
+            return {
+                "member_count": 2,
+                "members": members,
+                "candidate_fit_matrix": [],
+                "mediation": {
+                    "classification": "COMPROMISE_AVAILABLE",
+                    "candidate_ids": [recovery_plan_id],
+                    "selected_candidate_id": recovery_plan_id,
+                },
+            }
+
+        monkeypatch.setattr(
+            main_module,
+            "active_journey_members_with_capabilities",
+            projection,
+        )
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        recovery = session.get(PlanVersion, recovery_plan_id)
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            recovery,
+            hard_feasible_plan_ids={recovery_plan_id},
+        )
+
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_STALE_CONSENT_RENEWAL_REQUIRED"
+        assert (
+            gate["classification"]
+            == "POST_STALE_CONSENT_HUMAN_AUTHORITY_REQUIRED"
+        )
+        assert gate["current_mediation_classification"] == "COMPROMISE_AVAILABLE"
