@@ -98,64 +98,10 @@ def _journey_has_unresolved_collective_mediation(
     session: Session,
     journey_id: str,
 ) -> bool:
-    """Treat explicit member disagreement as a Journey-level social-authority lock.
+    """Compatibility wrapper around the shared Journey social-authority lock."""
+    from app.collective_mediation import journey_has_unresolved_collective_mediation
 
-    A later Agent mission cannot bypass a pending mediator merely by omitting
-    the mediator mission id. The lock clears only when the mediator lineage
-    reaches a server-owned RESOLVED collective round.
-    """
-
-    missions = list(
-        session.scalars(
-            select(JourneyMission).where(JourneyMission.journey_id == journey_id)
-        ).all()
-    )
-    by_parent: dict[str, list[JourneyMission]] = {}
-    for row in missions:
-        if row.parent_mission_id:
-            by_parent.setdefault(str(row.parent_mission_id), []).append(row)
-        # A persisted mediator carries a server-owned source_mission_id in its
-        # resolved intent.  Keep the lock traversal correct even when an
-        # imported/legacy row is missing the ORM parent pointer; the
-        # source-mission relation is still the durable mediation lineage.
-        mediation = _mission_json(row.resolved_intent_json).get("collective_mediation")
-        source_mission_id = (
-            mediation.get("source_mission_id")
-            if isinstance(mediation, dict)
-            and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
-            else None
-        )
-        if source_mission_id:
-            by_parent.setdefault(str(source_mission_id), []).append(row)
-
-    def resolved_through_mediator(source: JourneyMission, seen: set[str]) -> bool:
-        if source.id in seen:
-            return False
-        seen = {*seen, source.id}
-        clarification = _mission_json(source.clarification_json)
-        if clarification.get("status") == "RESOLVED":
-            return True
-        if clarification.get("status") != "MEDIATION_REQUIRED":
-            return False
-        for child in by_parent.get(source.id, []):
-            mediation = _mission_json(child.resolved_intent_json).get("collective_mediation")
-            if not (
-                isinstance(mediation, dict)
-                and mediation.get("kind") == "DISAGREEMENT_MEDIATION"
-                and str(mediation.get("source_mission_id") or "") == source.id
-            ):
-                continue
-            if resolved_through_mediator(child, seen):
-                return True
-        return False
-
-    for mission in missions:
-        clarification = _mission_json(mission.clarification_json)
-        if clarification.get("status") != "MEDIATION_REQUIRED":
-            continue
-        if not resolved_through_mediator(mission, set()):
-            return True
-    return False
+    return journey_has_unresolved_collective_mediation(session, journey_id)
 
 
 def _agent_key(kind: str, *parts: object) -> str:
