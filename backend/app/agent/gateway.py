@@ -1792,26 +1792,41 @@ class AgentToolGateway:
                 continue
             seen_option_shapes.add(option_key)
             options.append(item)
-        if len(options) < 2 or mediation.get("classification") != "HUMAN_TRADEOFF_REQUIRED":
-            raise HTTPException(409, "COLLECTIVE_TRADEOFF_NOT_REQUIRED")
-
-        # A mediator child must make measurable progress.  Proposal ids alone
-        # are not progress: a freshly persisted copy of the same two plans
-        # would otherwise reopen the same questionnaire indefinitely.
-        mediation_progress = None
         try:
             mission_intent = json.loads(mission.resolved_intent_json or "{}")
-        except (TypeError, json.JSONDecodeError):
+        except (TypeError, ValueError, json.JSONDecodeError):
             mission_intent = {}
-        mediation_intent = mission_intent.get("collective_mediation")
-        if isinstance(mediation_intent, dict) and mediation_intent.get("kind") == "DISAGREEMENT_MEDIATION":
+        mediation_intent = (
+            mission_intent.get("collective_mediation")
+            if isinstance(mission_intent, dict)
+            else None
+        )
+        is_disagreement_mediator = (
+            isinstance(mediation_intent, dict)
+            and mediation_intent.get("kind") == "DISAGREEMENT_MEDIATION"
+        )
+
+        if len(options) < 2:
+            raise HTTPException(409, "COLLECTIVE_TRADEOFF_NOT_REQUIRED")
+        if (
+            not is_disagreement_mediator
+            and mediation.get("classification") != "HUMAN_TRADEOFF_REQUIRED"
+        ):
+            raise HTTPException(409, "COLLECTIVE_TRADEOFF_NOT_REQUIRED")
+
+        # A mediator child must make measurable progress. Proposal ids alone
+        # are not progress, and after explicit disagreement even a server-
+        # classified COMPROMISE_AVAILABLE option requires renewed human
+        # consent instead of becoming automatic social authority.
+        mediation_progress = None
+        if is_disagreement_mediator:
             source_id = str(mediation_intent.get("source_mission_id") or "")
             source = self.session.get(JourneyMission, source_id) if source_id else None
             if source is None or source.journey_id != journey.id:
                 raise HTTPException(409, "MEDIATION_PROGRESS_CONTEXT_MISSING")
             try:
                 source_clarification = json.loads(source.clarification_json or "{}")
-            except (TypeError, json.JSONDecodeError):
+            except (TypeError, ValueError, json.JSONDecodeError):
                 source_clarification = {}
             from app.collective_mediation import mediation_progress_gate
 
@@ -1823,7 +1838,16 @@ class AgentToolGateway:
                 raise HTTPException(409, "MEDIATION_NO_PROGRESS")
         members = active_journey_members_with_capabilities(self.session, journey).get("members", [])
         member_by_id = {str(item.get("member_id")): item for item in members}
-        relevant_ids = {str(item) for item in (mediation.get("decision_relevant_member_ids") or [])}
+        if is_disagreement_mediator:
+            relevant_ids = {
+                str(item)
+                for item in (mediation_intent.get("required_member_ids") or [])
+            }
+        else:
+            relevant_ids = {
+                str(item)
+                for item in (mediation.get("decision_relevant_member_ids") or [])
+            }
         required_ids = sorted(relevant_ids.intersection(member_by_id))
         if not required_ids:
             raise HTTPException(409, "COLLECTIVE_MUTATION_AUTHORITY_CONFLICT")
@@ -1840,7 +1864,11 @@ class AgentToolGateway:
         clarification_id = str(uuid4())
         payload = {
             "kind": "COLLECTIVE_TRADEOFF",
-            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "policy": (
+                "POST_DISAGREEMENT_REQUIRES_RENEWED_MEMBER_CONSENT"
+                if is_disagreement_mediator
+                else "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES"
+            ),
             "clarification_id": clarification_id,
             "decision_epoch": decision_epoch,
             "trigger_event_id": trigger.id,
