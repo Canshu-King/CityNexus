@@ -74,6 +74,30 @@ def _signed_member_tokens(member_ids: list[str]) -> dict[str, str]:
     }
 
 
+def _owner_member_id(journey_id: str, required_member_ids: list[str]) -> str:
+    from sqlalchemy import select
+
+    from app.db.models import JourneyMember
+    from app.db.session import SessionLocal
+
+    with SessionLocal() as session:
+        rows = list(
+            session.scalars(
+                select(JourneyMember).where(
+                    JourneyMember.journey_id == journey_id,
+                    JourneyMember.id.in_(required_member_ids),
+                )
+            ).all()
+        )
+    owners = [row.id for row in rows if row.role == "OWNER"]
+    if len(owners) != 1:
+        raise RuntimeError(
+            "renewed-consent member set does not contain exactly one OWNER: "
+            f"{[(row.id, row.role) for row in rows]}"
+        )
+    return str(owners[0])
+
+
 def _approval_id_from_run(run_payload: dict[str, Any], journey_id: str) -> str | None:
     from sqlalchemy import select
 
@@ -376,7 +400,7 @@ def _run_disagreement_to_closure(
             f"{json.dumps(resolved, ensure_ascii=True)}"
         )
 
-    owner_member_id = required[0]
+    owner_member_id = _owner_member_id(journey_id, round2_required)
     closure = _resume_resolved_child_and_approve(
         client,
         journey_id=journey_id,
