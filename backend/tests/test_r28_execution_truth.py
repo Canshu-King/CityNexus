@@ -160,7 +160,7 @@ def test_r28_operator_confirmed_execution_requires_signed_member_and_explicit_co
         _set_secret(previous)
 
 
-def test_r28_location_verified_execution_requires_principal_bound_fresh_location() -> None:
+def test_r28_foreground_web_location_cannot_claim_device_verified_execution() -> None:
     previous = _set_secret(_TEST_SECRET)
     try:
         journey_id, activity_id, traveler_id = _start_authoritative_journey()
@@ -196,15 +196,13 @@ def test_r28_location_verified_execution_requires_principal_bound_fresh_location
                 "location_observation_id": location.json()["id"],
             },
         )
-        assert verified.status_code == 200, verified.text
+        assert verified.status_code == 409, verified.text
+        assert verified.json()["detail"] == "LOCATION_OBSERVATION_NOT_DEVICE_VERIFIED"
 
         with SessionLocal() as session:
             activity = session.get(Activity, activity_id)
-            truth = json.loads(activity.metadata_json)["execution_truth"]
-            assert truth["kind"] == "DEVICE_LOCATION_VERIFIED_EXECUTION"
-            assert truth["actor_id"] == traveler_id
-            assert truth["evidence"]["location_observation_id"] == location.json()["id"]
-            assert truth["evidence"]["physical_presence_claimed"] is True
-            assert float(truth["evidence"]["accuracy_m"]) == 20.0
+            assert activity.status == "ACTIVE"
+            metadata = json.loads(activity.metadata_json or "{}")
+            assert "execution_truth" not in metadata
     finally:
         _set_secret(previous)
