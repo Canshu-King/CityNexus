@@ -4944,6 +4944,48 @@ def collective_mutation_gate(
             str(target_plan.id),
             resolved_decision=effective_resolved_decision,
         )
+        stale_prior_authority = bool(
+            pending_selection is not None
+            and pending_freshness.get("stale")
+            and str(target_plan.id)
+            != str(pending_selection.get("selected_plan_version_id") or "")
+        )
+        # R30: expiring old authority must release the dead selected-plan lock
+        # without silently transferring the choice to the algorithm. After a
+        # stale human decision, only a currently unanimous dominant future may
+        # bypass fresh human authority. A mere algorithmic compromise is still
+        # a value choice and must return to the relevant members.
+        if (
+            stale_prior_authority
+            and str(mediation.get("classification") or "")
+            != "UNANIMOUS_DOMINANCE"
+        ):
+            decision = {
+                "allowed": False,
+                "code": "COLLECTIVE_STALE_CONSENT_RENEWAL_REQUIRED",
+                "classification": "POST_STALE_CONSENT_HUMAN_AUTHORITY_REQUIRED",
+                "prior_selected_plan_version_id": pending_selection.get(
+                    "selected_plan_version_id"
+                ),
+                "prior_selected_proposal_id": pending_selection.get(
+                    "selected_proposal_id"
+                ),
+                "current_mediation_classification": mediation.get(
+                    "classification"
+                ),
+                "resolved_decision_epoch": pending_freshness.get(
+                    "resolved_decision_epoch"
+                ),
+                "current_decision_epoch": pending_freshness.get(
+                    "current_decision_epoch"
+                ),
+                "resolved_material_world_epoch": pending_freshness.get(
+                    "resolved_material_world_epoch"
+                ),
+                "current_material_world_epoch": pending_freshness.get(
+                    "current_material_world_epoch"
+                ),
+            }
     return {
         **decision,
         "member_count": refreshed.get("member_count", 0),
@@ -15124,6 +15166,22 @@ def _accept_replan_executing(
             "policy_version": policy_version,
             "authorization_decision": authorization_decision,
             "reason_codes": list(reason_codes),
+            "collective_authority": {
+                "classification": collective_gate.get("classification"),
+                "code": collective_gate.get("code"),
+                "resolved_decision_epoch": collective_gate.get(
+                    "resolved_decision_epoch"
+                ),
+                "current_decision_epoch": collective_gate.get(
+                    "current_decision_epoch"
+                ),
+                "resolved_material_world_epoch": collective_gate.get(
+                    "resolved_material_world_epoch"
+                ),
+                "current_material_world_epoch": collective_gate.get(
+                    "current_material_world_epoch"
+                ),
+            },
         },
     )
     twin = _twin_snapshot(session, journey)
