@@ -16588,6 +16588,54 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `5a53846b` 交自申报一件（账本无新点单）：现尖上整套后端一次执行的具名红集合（观察，不作基线）；尖自我跑这套那代快进一笔、那一笔后端零枚，故本集合当代仍成立
+
+**〇、坐标（写作时现取，不是抄上一块）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`；这套读数跑在它的前一代 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c` 上。两代之间 `git rev-list --count` 现读 一 笔提交，那一笔是 `ORD-0572`（底栏自证当前屏），它动的路径里没有一枚是 `backend/` 起头（`git diff --name-only` 现比 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c` 与 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`）⇒ 后端一枚没动，这份红集合对现尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f` 依旧成立。
+- 读数树 `D:/moodle/_qoder_seed_ord0489/wt504`，`git rev-parse HEAD` 当时现读 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`，`git status --porcelain` 脏行零枚。
+
+**一、整套一次执行（一次观察，不是基线）**
+
+- 命令形制：`python -m pytest -p no:cacheprovider -q --tb=line -rf tests`，目录 `<树>/backend`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（uv 壳，真身 3.12.14）。
+- 尾行逐字「8 failed, 1711 passed, 16 skipped, 1 xfailed, 4 warnings in 181.89s」，原件 `review/suite-redset/full_suite_run.txt` = `4cf18018e699df1529895db1014673aa7e2ab9dc`。
+- 合成分母 = 我上一块那份收集普查同分母 `1736`，即 一千七百三十六 条；收集与执行两把尺对上，普查原件 `refs/heads/review/5a53846b-verify-b2fccfdf-r1` = `16f9a0c45f4a033caa7815f3c99c25c0cff4a0ca`。⇒ 运行一次没有静默掉任何一枚臂。
+
+**二、逐条单跑都是真红，不是跨模块串味**
+
+- 上面每一条红各自单独跑一遍：`rc=1` 命中 八 次、`rc=0` 命中零次，分母 八 次，原件 `review/suite-redset/isolated_reds.txt` = `c83fee5588e96e61e69c26ce4b75ad0568f4af37`。⇒ 没有一枚靠「跟别人同跑才红」，也没有一枚单跑就自己清了。
+- 涉及测试文件 七 枚（按节点前缀去重现数；同一文件含两枚红的情况在第三节具名拆开，计数原件 `4cf18018e699df1529895db1014673aa7e2ab9dc`）。
+
+**三、两枚红其实是同一件事；另有一枚抓到默认套件里的真调用（具名）**
+
+- 红七 `test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken` 的现读判语逐字：`the order's base 127ce7b05329eaa837701cdb93bdbc2e5d64e10f is not an ancestor of HEAD`，其中点到的基座 = `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`（同句展开为全四十位）。
+- 该基座 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`：`git cat-file -t` 现读回 commit（对象取得到），但它在**本重建线里不是现尖的祖先**——这条线是被重挂出来的，祖先判据在上面本就不成立（判语原件 `4cf18018e699df1529895db1014673aa7e2ab9dc`）。
+- 红八 `test_qoder_ord0495_gitshow_portable.py::test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo` 是 subprocess 调起红七那枚文件、把它的非零退出读成自己的失败；调用链逐字在 `review/suite-redset/red8_tb_long.txt` = `e1d10db0737f6d8459306dde0bb7c2e170946937` 里（`CompletedProcess(args=[… 'pytest', 'tests/test_qoder_ord0479_dictionary_key_shape.py'…])`）。⇒ 修一处（红七的祖先判据）同时解两枚。
+- 另有一臂判据是「`backend/tests/**` 里不该有对 provider 域名的真实调用」，实际抓到 `test_qoder_provider_identity.py` 里那句 `transport.get("https://photon.komoot.io/api/")`，现读判语原件 `review/suite-redset/full_suite_run.txt` = `4cf18018e699df1529895db1014673aa7e2ab9dc`。这枚臂的归属不在我这手（见第五节），只是它在这代确实红着，如实登进来。
+
+**四、自报两枚仪器事（我自己的尺，不指认别人）**
+
+- 第一代解析器 `review/suite-redset/parse_suite_r1_superseded.py` = `d4718220d62d6b2ef5d88eb50c6f52935c73e512` 用「按文件分组、再取第 i 枚 traceback」配对，会把节点 i 的理由接到文件 j 上。
+- 第二代 `review/suite-redset/parse_suite_r2.py` = `7200fc92a3f0ba1f7818f59baa7c787653534731` 改成按位置配对，并当场核「节点文件名必须出现在它那条 traceback 路径里」；本块写作时现跑现读那一趟的输出为 `pairing mismatches` = 0（跑的是 `7200fc92a3f0ba1f7818f59baa7c787653534731` 这枚代码，输出没有另立工件，所以这里的坐标是脚本本身的 blob）。
+- 新尺带负对照：同一趟自检报「would mispair 4 of 7 files」，即旧尺 `d4718220d62d6b2ef5d88eb50c6f52935c73e512` 的配错数被当场量出来——新尺用旧尺的错证明自己会咬。本块第二、三节的理由配的都是第二代。
+- `-q` 压掉了 pytest 的 report header，`--tb=line` 把多行断言截成一行：所以这套件的库出处不能靠 `-q` 那一趟读，我另起一趟非 `-q` 才拿到 conftest 自起的私有 `suite.db` 行；红八那句 `AssertionError: this order never` 是被 `--tb=line` 截断的半句，全文在 `review/suite-redset/red8_tb_long.txt` = `e1d10db0737f6d8459306dde0bb7c2e170946937` 里。
+
+**五、这一手没改善的部分（照实）**
+
+- 这是一次观察：八 次单跑都真红，只说明「非跨模块串味」，不构成基线，也不判定该由谁修，原件 `review/suite-redset/isolated_reds.txt` = `c83fee5588e96e61e69c26ce4b75ad0568f4af37`。
+- 归属按 git 指不出来：每枚红文件最后一次提交的署名都是同一个具名身份（本机提交者），分不出车道 ⇒ 按常设走车道自申报，我不替别人认领，也不替自己认领别人的臂。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补，自己不往 shipped 尺里塞断言）。
+- 本块绑 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`；线再跳，第一节仍需重跑，第二节的单跑不受尖影响但分母会变。
+
+边界 A：本手产品字节零枚改动、shipped 尺零枚改动（组合器只读工件与 git，不改树、不跑测试写盘）；工作树脏行零枚；尖 = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`。
+
+边界 B：权威线移动 0 次；本手 push 0 次（读数枝 `refs/heads/review/5a53846b-suite-redset-b2fccfdf-r1` 头 = `26a1ee58de69fadd21fd35991d186a993f47f544` 为上一轮已发布，本手未再推），force-push 0 次，他人枝 0 枚改动，旧枝 0 枚删除；尖 = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`。
+
+边界 C：账本直写 0 次（本块走收件口），demo/reset 0 次，`_preview.db` 覆盖 0 次，监听端口零枚在跑；单跑趟都开在 conftest 自起的私有 `suite.db` 上；尖 = `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 自申报那格交完：三放置位臂跑遍那十七枚逐枚三选一——十五枚泄漏在管、一枚容器在管（v8-outline-button，上一杠两腿误报的那枚）、一枚按媒体条件两档分形；暗色零影响、一百三十二行零恢复失败
 
 **〇、坐标**。权威尖现读 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`；号令者落 ORD-0572 之后没人再落，账本现读同句），本轮 ref 0 次重挂。我 21:30 那块现读在 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16757`（块头「六档并集跑完」）。BB 机 `bus.py read --agent qoder:6a150e1e` 现读 `count` 为零；`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`，读到此刻没有点我名的新行。栈随应用重启掉过、本轮已起回：api `127.0.0.1:8021`（钉树 runner，`PINNED_BACKEND_ROOT_OK` 打印在案）、静态 `127.0.0.1:4831` 服务本轮重建的现尖产物 `dist_states_tip5`（入口 `index-CiyY-Q-V.js`，与号令者那块报的入口名逐字相同）；行程列表经代理回 `http_status=200` 且三笔含 `b25faac4`。
