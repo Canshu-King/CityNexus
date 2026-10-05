@@ -1672,7 +1672,7 @@ export function V8Experience() {
             used to exist only inside Hub, which renders when a journey already does -- so the one
             state that needs it had no way to reach it, and measured wizard -> wizard.  Collapsed
             here so the wizard keeps the screen. */}
-        <SimulationEntry defaultOpen={false} />
+        <SimulationEntry defaultOpen={false} screenHasNoJourneyInView />
       </>
     );
   if (busy && !data)
@@ -3162,26 +3162,46 @@ function Hub({
                    Time, and a self-contradiction ("取自服务器场景" beside a status that says ABSENT).
                    A non-VALID cursor is now the plain sentence the order suggests; the enum stays in
                    the `data-cursor-status` attribute, where it is inspectable without being prose. */
-                const cursorNote =
+                const cursorClause =
                   cursorStatus && cursorStatus !== "VALID"
                     ? zh
-                      ? "。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读"
-                      : ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
+                      ? "服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。"
+                      : "The server gave no execution cursor for this minute, so this screen reads time by the journey's window."
                     : "";
-                const stationNote = useProjection
+                const stationClause = useProjection
                   ? zh
-                    ? " · 现在/接下来由服务器的执行投影给出"
-                    : " · now/next come from the server's execution projection"
+                    ? "现在/接下来由服务器的执行投影给出。"
+                    : "Now/next come from the server's execution projection."
                   : cursorStatus === "STALE"
                     ? zh
-                      ? " · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标"
-                      : " · the server does not trust its own cursor, so this screen reads the stations by time window, not by cursor"
+                      ? "服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标。"
+                      : "The server does not trust its own cursor, so this screen reads the stations by time window, not by cursor."
                     : zh
-                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
-                      : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
-                return zh
-                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`
-                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`;
+                      ? "服务器的执行投影还没到，这一屏没有按游标定位。"
+                      : "The server's execution projection has not arrived, so no station is claimed from the cursor.";
+                /* ORD-0507 2: the cursor clause used to be spliced *inside* the parentheses, so one
+                   bracket on this line carried a whole second sentence -- measured on a production
+                   bundle in both shipped locales: 「（行程起点。服务器没有给出…时间窗来读）」 and
+                   "(journey start. The server gave no … window)".  The parentheses now hold the noun
+                   the scene named; every clause that needs a verb gets its own sentence.
+                   ORD-0208's shipped gate then bit this rewording, and it is right to: a bracket may
+                   not name an execution cursor in a state where the server's own cursor status says
+                   ABSENT_FALLBACK or STALE, so in that state the bracket is dropped and the cursor
+                   sentence below carries the fact instead.  Re-taken at the day15 generation this
+                   also covers the twin answering no cursor status at all -- the element then paints
+                   UNKNOWN, and "not known to be valid" is the only honest test for a bracket that
+                   names a cursor. */
+                const cursorAbsent = cursorStatus !== "VALID";
+                const namesCursor = basis === "执行游标" || basis === "execution cursor";
+                const bracket = zh
+                  ? cursorAbsent && namesCursor ? "" : `（${basis}）`
+                  : cursorAbsent && namesCursor ? "" : ` (${basis})`;
+                const head = zh
+                  ? `“现在”取自服务器场景${bracket}：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}。`
+                  : `"now" comes from the server's scenario${bracket}: ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}.`;
+                return [head, cursorClause, stationClause]
+                  .filter((piece) => piece.length > 0)
+                  .join(zh ? "" : " ");
               }
               if (stage.phase === "loading")
                 return zh
