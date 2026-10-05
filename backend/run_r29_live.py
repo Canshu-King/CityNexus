@@ -364,19 +364,40 @@ def _run_disagreement_to_closure(
             "renewed round changed the required member set: "
             f"round1={required} round2={round2_required}"
         )
-    round2_option_ids = {
-        str(item.get("proposal_id"))
+    round2_options = [
+        item
         for item in (round2.get("candidate_options") or [])
         if isinstance(item, dict) and item.get("proposal_id")
+    ]
+    round2_option_ids = {
+        str(item.get("proposal_id")) for item in round2_options
     }
-    improved_choice = next(
-        (proposal_id for proposal_id in improved_ids if proposal_id in round2_option_ids),
-        None,
-    )
-    if improved_choice is None:
+    candidates = []
+    for option in round2_options:
+        proposal_id = str(option.get("proposal_id") or "")
+        if proposal_id not in improved_ids:
+            continue
+        fairness = option.get("fairness") or {}
+        try:
+            minimum_fit = float(fairness.get("minimum_member_fit"))
+        except (TypeError, ValueError):
+            minimum_fit = -1.0
+        try:
+            maximum_regret = float(fairness.get("maximum_regret"))
+        except (TypeError, ValueError):
+            maximum_regret = 1.0
+        unacceptable_count = len(fairness.get("unacceptable_member_ids") or [])
+        candidates.append(
+            (minimum_fit, -maximum_regret, -unacceptable_count, proposal_id)
+        )
+    if not candidates or not any(
+        proposal_id in round2_option_ids for proposal_id in improved_ids
+    ):
         raise RuntimeError(
             "mediation progress does not point to a selectable renewed option"
         )
+    candidates.sort(reverse=True)
+    improved_choice = candidates[0][3]
 
     # Round 2: the same relevant principals independently renew consent. The
     # first response must remain WAITING_FOR_MEMBERS; only the second may
