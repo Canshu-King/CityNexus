@@ -18,12 +18,28 @@ from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
-SOURCE_DB = BACKEND / "r27-agent-closure-20261005.sqlite3"
-WB2API_CONFIG = Path(r"C:\Users\仓鼠王\WorkBuddy\2026-09-15-15-47-27\wb2api\config.json")
+SOURCE_DB = Path(
+    os.getenv(
+        "CITYNEXUS_R28_SOURCE_DB",
+        str(BACKEND / "r27-agent-closure-20261005.sqlite3"),
+    )
+).expanduser()
+
+
+def _wb2api_config_path() -> Path:
+    configured = os.getenv("CITYNEXUS_WB2API_CONFIG")
+    if not configured:
+        raise RuntimeError(
+            "CITYNEXUS_WB2API_CONFIG must point to the local WB2api config.json"
+        )
+    path = Path(configured).expanduser()
+    if not path.is_file():
+        raise RuntimeError(f"WB2api config was not found: {path}")
+    return path
 
 
 def _configure() -> Path:
-    cfg = json.loads(WB2API_CONFIG.read_text(encoding="utf-8"))
+    cfg = json.loads(_wb2api_config_path().read_text(encoding="utf-8"))
     db = BACKEND / f"r28-live-{secrets.token_hex(8)}.sqlite3"
     os.environ.update(
         {
@@ -50,6 +66,11 @@ def _configure() -> Path:
 def _copy_catalog(session) -> dict[str, str]:
     from app.db.models import CityService, Place
 
+    if not SOURCE_DB.is_file():
+        raise RuntimeError(
+            "captured provider source DB was not found; set CITYNEXUS_R28_SOURCE_DB "
+            f"to the local R27 provider-backed database (current: {SOURCE_DB})"
+        )
     source = sqlite3.connect(SOURCE_DB)
     source.row_factory = sqlite3.Row
     selected = {
