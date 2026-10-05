@@ -2320,3 +2320,105 @@ def test_r30_fresh_resolved_child_can_authorize_post_stale_compromise(
         assert gate["allowed"] is True
         assert gate.get("code") is None
         assert gate["classification"] == "COMPROMISE_AVAILABLE"
+
+
+
+def test_r30_event_acknowledgement_does_not_change_world_epoch() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+    place_id = "place-r30-ack-stable"
+    activity_id = str(uuid4())
+    event_id = str(uuid4())
+
+    with SessionLocal() as session:
+        session.add(
+            Place(
+                id=place_id,
+                provider_key="openstreetmap-replay",
+                external_id="r30/ack-stable",
+                city_code="NARA",
+                name="R30 acknowledgement-stable place",
+                category="garden",
+                latitude=34.2,
+                longitude=135.2,
+                opening_hours_json="{}",
+                tags_json=json.dumps(["garden"], sort_keys=True),
+                metadata_json="{}",
+                updated_at=now,
+            )
+        )
+        session.add(
+            Activity(
+                id=activity_id,
+                plan_version_id=selected_plan_id,
+                sequence_no=1,
+                activity_type="visit",
+                title="R30 acknowledgement-stable activity",
+                place_id=place_id,
+                city_service_id=None,
+                start_at=now,
+                end_at=(
+                    datetime.now(timezone.utc) + timedelta(hours=1)
+                ).isoformat(),
+                travel_from_prev_min=0,
+                estimated_cost_minor=0,
+                currency="JPY",
+                status="PLANNED",
+                locked=False,
+                metadata_json="{}",
+                created_at=now,
+                updated_at=now,
+            )
+        )
+        session.add(
+            Event(
+                id=event_id,
+                journey_id=str(seeded["journey_id"]),
+                provider_key="city-signal-fixture",
+                provenance="PROVIDER_VERIFIED",
+                event_type="CLOSURE",
+                severity="MAJOR",
+                status="DETECTED",
+                affected_activity_id=activity_id,
+                occurred_at=now,
+                detected_at=now,
+                payload_json=json.dumps(
+                    {
+                        "scope_place_id": place_id,
+                        "incident_fingerprint": "r30-ack-stable-incident",
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        before = main_module.collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=[place_id],
+        )
+        before_epoch = collective_mediation.collective_material_world_epoch(
+            before
+        )
+
+        event = session.get(Event, event_id)
+        event.status = "ACKNOWLEDGED"
+        session.commit()
+
+        after = main_module.collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=[place_id],
+        )
+        after_epoch = collective_mediation.collective_material_world_epoch(
+            after
+        )
+
+        assert after_epoch == before_epoch
