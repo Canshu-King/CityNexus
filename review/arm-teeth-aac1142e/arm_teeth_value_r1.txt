@@ -1,0 +1,4 @@
+arm_off value-mutated rc=0 | 1 passed, 2 warnings in 6.96s | []
+arm_on value-mutated rc=1 | 1 failed, 2 warnings in 2.86s | ["D:\\moodle\\_qoder_seed_ord0489\\wt504\\backend\\tests\\test_qoder_city_failure_reasons.py:374: AssertionError: {'anchor': None, 'anchor_credit_kept': False, 'anchor_"]
+restore sha256 ok=True
+dirty=0
