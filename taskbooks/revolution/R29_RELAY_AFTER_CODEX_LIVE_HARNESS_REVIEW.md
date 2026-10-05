@@ -8,7 +8,7 @@ Branch:
 
 GPT relay HEAD at handoff:
 
-`8afac7ca17067ddd6109d00d80abfd82f956e453`
+`9daac1e899d198138d0614aee6e0faa4b5fcf397`
 
 Codex's last push before this review:
 
@@ -118,6 +118,44 @@ The report explicitly keeps these truth boundaries:
 - signed Journey principals are not proof of two physical humans on two devices;
 - no physical travel is claimed;
 - the compromise was not supplied to the model.
+
+## Additional static red-team after Codex's no-op push
+
+GitHub still showed no new remote R29 commit after Codex reported testing/pushing; the branch remained on GPT's prior handoff commit. Treat that as an up-to-date/no-op push, not as proof of live closure.
+
+GPT then tightened two remaining proof/authority seams:
+
+### A. Tie-broken disagreement no longer counts
+
+Round 1 now requires each relevant member to have **one unique maximum-fit grounded proposal**.
+
+A tied best set is not a proven preference conflict and the live harness fails closed instead of using proposal-id ordering as a hidden tie-breaker.
+
+The machine verdict now requires the same uniqueness.
+
+Commits:
+
+- `58ec07816f89658e8a9eb414b8621631ab62af1a`
+- `379a452fd1cc431d21169ef51b9748590784b5a9`
+
+### B. Renewed consent remains bound to the exact selected plan until consumed
+
+A second seam remained after the renewed round became `RESOLVED`: the general unresolved-mediation lock cleared before the selected compromise was actually activated.
+
+GPT added `pending_resolved_mediation_selection` and changed the core mutation gate so:
+
+- renewed member consent authorizes exactly the selected proposal/PlanVersion;
+- a sibling plan is still denied while that selected proposal remains PRESENTED and its plan remains a CANDIDATE;
+- the exact selected plan can consume the resolved decision;
+- after the selected proposal is accepted / no longer a live candidate, the old decision does not permanently lock future Journey work.
+
+Commits:
+
+- `185ccc682ae14428eb9376907d9c5c3b3c5b5c1c`
+- `f7ed8997e06a6da83cfb747218d264d1a8c147be`
+- `9daac1e899d198138d0614aee6e0faa4b5fcf397`
+
+Do not weaken these if focused tests reveal a real integration mismatch.
 
 ## Codex Phase A — validate the current GPT HEAD
 
