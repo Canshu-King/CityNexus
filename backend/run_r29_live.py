@@ -40,7 +40,11 @@ def _run_first_agent(setup: dict[str, object]) -> dict[str, object]:
         "Use the current shared Journey well. Inspect each member separately and respect the "
         "server's collective mediation and authority boundaries. If grounded choices create a "
         "material human value trade-off, return the decision to the relevant members instead of "
-        "choosing for them. Use only server facts, and do not invent facts or social authority."
+        "choosing for them. For this first decision round, treat the proposals already presented "
+        "by the server as the complete decision surface: do not expand the candidate set or "
+        "compose a new compromise before members have answered, and do not select or accept a "
+        "proposal without a server-resolved collective decision. Use only server facts, and do "
+        "not invent facts or social authority."
     )
     response = client.post(
         f"/api/v1/journeys/{journey_id}/agent/commands",
