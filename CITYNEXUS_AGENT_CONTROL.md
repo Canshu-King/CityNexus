@@ -16588,6 +16588,49 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `6a773af1` · ORD-0556 第六趟只读腿：连报两块的 `/v8/trash` 读到了——那屏挂上面板却一枚标题都没有；再按现读尖查它在不在这代线上（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `448dffdf5dd2ddb44741b11eb03bea922ce24474`，`ls-remote` 独立回读同值。本腿五笔合计 10 枚文件（量具与读数件各若干，逐枚都在 `review/` 下），产品路径 0 枚。**屏读跑在哪一代可指**：件里 `generation.tree_head` = `18aeb02fd5b186e5635f94e8ad475bcecd13bd96`（`review/ord0556/readouts/trash_leg6_figures_r1.json:50`），那笔与现尖 `448dffdf5dd2ddb44741b11eb03bea922ce24474` 的 `frontend` 与 `backend` 子树逐位相同（现取 `git rev-parse` 两侧同值：`84a01935fa2005ccfb21d0cb039b4c4c42f4c426`、`779552621b192807e5d2a0ed61c4f1e0f479fe9e`），所以本手屏侧读数与我这枝所改产品字节同代；血缘仍不证（本克隆 shallow）。
+
+**一、那屏读到了，而且它一枚标题都没有**（屏读件 `trash_reach_20261005T174830Z.json`，判语 `TRASH_READ`）。逐枚读数锚在汇总件 `review/ord0556/readouts/trash_leg6_figures_r1.json`（它只做算术，不新测；出处 3 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:10`） 起）：
+
+- case 读成 3 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:10`），中途弃读 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:11`）
+- `/v8/trash` 挂上面板 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:13`），同两臂没有任何标题元素 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:12`）
+- 英臂标题节点 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:17`）、中臂 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:18`），对照 `/v8/bookings` 的 4 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:21`）
+- 英臂正文 260 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:15`），中臂 137 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:16`），对照 bookings 1515 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:22`）（那屏 `h1` 1 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:19`）、`h2` 3 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:20`））
+- 页面异常 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:14`）
+
+**成因我这手量到了，具名**：`frontend/src/features/trash/JourneyTrashPanel.tsx:225` 把标题只放进 `<span className="v8-kicker">`，那文件没有 `h1`、没有 `h2`；而我屏读尺的就绪判据正是「屏上有 h1 或 h2」（`review/ord0556/bookings_caps_reader_r1.js:57`）。⇒ 前两块那句 `NOT_REACHED_BY_LANE` 成立的是**我的尺瞎**，不是那屏不存在。这格到此闭，闭在仪器侧。
+
+**二、那屏的大写是 CSS 写的，不是文案写的**（同两枚汇总读数）：英臂 kicker 的**源串节点**是 `Recycle bin`（`review/ord0556/readouts/trash_leg6_figures_r1.json:28`），本代词表件 `frontend/src/features/trash/journeyTrashCopy.ts:22` 同一枚键写的就是这句；屏上计算值 `uppercase` 来自 `frontend/src/styles.css:173` 那条 `.v8-kicker`（同行末尾 `text-transform: uppercase`）。中臂源串 `回收站`（`review/ord0556/readouts/trash_leg6_figures_r1.json:29`，中文无大小写）。按号令者那把尺的取字路子（读 `nodeValue`，逐字复用在 `review/ord0556/trash_probe_r1.js`）命中：`/v8/trash` 英臂 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:23`）、中臂 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:24`）；对照 `/v8/bookings` 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:25`）（`JSON`、`JSON`），且这 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:26`） `transform` 都是 `none`——句中嵌入，非 CSS 造成。
+**与 ORD-0556 对上号**：bookings 三枚 kicker 源串与计算值逐枚 「Import a booking」`uppercase` ／ 「Multimodal inbox」`uppercase` ／ 「Authoritative memory」`uppercase`，其中 `Multimodal inbox`、`Authoritative memory` 正是那单要改的两枚键，三枚 kicker 的计算值全为大写，计数 3 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:27`）。所以**改词表里的值改得动那把尺的读数，改不动屏幕外观**。射程说窄：这手只证到「本手读到的这两屏的 kicker 走那条规则」，全仓还有多少标签走它我没数。
+
+**三、这屏不在现读尖那代线上**（存在性件 `trash_existence_readout_r2.json`，现尖 = `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`，逐枚现读 `ls-remote` 与 `ls-tree`）：
+
+- 现尖路径 6542 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:33`），其中带 trash 或 recycle 字面的 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:34`）；路由键 13 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:35`），`trash` 在其中为假
+- 屏读那代路径 10562 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:37`），带该字面 48 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:38`）；路由键 18 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:39`），`trash` 在其中为真
+- 那本路由表两代不同 blob：现尖 `999d4c2eeb6b3ef7cc5dd89b5aa042b3b5f2dfe8`、屏读那代 `7b296a360871045f989062b2167188c1a9aa0ee4`（`review/ord0556/readouts/trash_leg6_figures_r1.json:47` 与 `review/ord0556/readouts/trash_leg6_figures_r1.json:48`）
+- 只在枝上有的路由键 `access`、`footprints`、`import`、`shared`、`trash`，共 5 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:43`）；只在现尖有的 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:44`）
+- 我腿一扫到的路由 13 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:45`） 与现尖路由键 13 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:35`） 两集合相等（`review/ord0556/readouts/trash_leg6_figures_r1.json:46`）：也就是我扫的正是现尖那代全部路由，唯一没读到的 `trash` 是那代根本没有的一屏。
+
+**这里具名一件我自己造的计数污染**：汇总件 `lane_tree_paths` 那格把本腿新落的两枚**仪器文件**（文件名自带 `trash_` 前缀）也算进了「带该字面的路径」，所以那格数**不能当产品事实引**，本块一枚都不引它；要干净的那格得先按文件名排除仪器再数，我没重跑，因此宁缺。
+
+**四、这手我自己踩过的仪器错（具名，免得照踩）**
+1. 量具第一版写 `require("playwright")`，在 `review/` 下解析不到模块，三枚 case 全弃读；改成本枝既有读数件同一枚绝对路径写法（`review/ord0556/bookings_caps_reader_r1.js:17`）才跑起来。
+2. 第二版把带尾斜杠的 base 与带头斜杠的路由直接相加，拼出双斜杠地址，路由器不认，三屏**全部渲染成 hub 的文案**——发现它是因为三枚 case 字面完全一致。此后「上屏地址必须等于所求路由」做成硬闸（`review/ord0556/trash_reach_r1.py:139`）。那两版的读数件我**删了没提交**，故它们涉及的枚数本块一枚不写。枝上现存两枚屏读件：`trash_reach_20261005T174247Z.json` 是导航修正后、还没并 `nodeValue` 计数那代（本块不引它的读数，只在册可查），本块屏侧唯一出处是 `trash_reach_20261005T174830Z.json`。
+
+**五、没改善（具名报缺）**
+1. **现尖那代 `/v8/trash` 的屏侧读数取不到**：那代带该字面路径 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:34`）、`trash` 也不是路由，没有这屏可读。要当代数请点名是谁把这屏从线上剪掉的、还是它本来没落线——我这侧无推送记录、克隆 shallow，仍证不了（与腿四腿五同一格缺因）。
+2. **全仓 `.v8-kicker` 覆盖面没数**：第二节结论只站得住本手读到的这两屏。
+3. **上面那格计数污染我选择不重跑**：所以本块只引屏读那代 48 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:38`） 那格。
+4. 逐格归因仍缺（原始上屏文字被腿一那手 teardown 删，`review/ord0556/route_sweep_dev_r1.py:219`；那行我没改，改完没重跑等于没验过）。
+5. 基座是 vite-dev 源码即时编译，不是建成品包。
+
+**六、现场与等点**：本车道自己的两枚端口 4951 与 4956 跑完无监听（`review/ord0556/readouts/trash_leg6_figures_r1.json:30` 与 `review/ord0556/readouts/trash_leg6_figures_r1.json:31`）；库副本是号令者 canary 的一份拷贝，跑前跑后逐字节相等（`review/ord0556/readouts/trash_leg6_figures_r1.json:32`）；本轮产品路径 0 枚、构建 0 次、force-push 0 次、没写账本、没动任何人的进程、没碰别人的端口。仍等你点的两件不变：其一 ORD-0556 按现尖 re-cut r3 并重取两臂读数；其二 甲那格 `unsupported_forms` 换人话。不点我不动。
+
+（另具名一件投递对象的旧错：本腿之前我有三枚 deliver 与两枚 note 投给了主人那条腿而不是号令者腿，已在上两块自报并按当代坐标重投过；本块的 BB 副本只投号令者腿，正文用当代读数。）
+
+
 ### ORD-0573 角色那半已交：四枚分区现在自己说"是哪一格"，代价也量出来了（点哪种形制能答）（车道 8ac89982 · 绿化工·小许）
 
 **一、坐标**
