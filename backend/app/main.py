@@ -525,6 +525,25 @@ except Exception:  # noqa: BLE001
     )
 app = FastAPI(title="CityNexus MVP API", version="0.1.0")
 logger = logging.getLogger(__name__)
+
+
+@app.on_event("startup")
+def resume_approved_agent_continuations() -> None:
+    """Finish approval continuations left between durable commit boundaries."""
+
+    try:
+        from app.agent.continuation import reconcile_approved_pending_actions
+
+        with SessionLocal() as startup_session:
+            outcome = reconcile_approved_pending_actions(startup_session)
+        if outcome.get("resumed") or outcome.get("failed"):
+            logger.info("R28 approval continuation startup reconciliation: %s", outcome)
+    except Exception:  # noqa: BLE001
+        # Startup must remain available so an operator can inspect a failed
+        # continuation; the durable row is intentionally left queryable.
+        logger.exception("could not reconcile approved Agent continuations at startup")
+
+
 _trip_studio_accept_lock = RLock()
 
 
@@ -2263,6 +2282,18 @@ def approve_agent_action(
         raise HTTPException(404, "agent approval was not found")
     from app.agent.approval import approval_payload, approve_action_approval
     from app.agent.continuation import resume_pending_action
+
+    # If a previous request crashed after the mutation committed but before the
+    # continuation row was finalized, the approval is already CONSUMED.  Give
+    # the durable continuation one chance to reconcile from server truth before
+    # returning the historical 409.
+    if approval.status == "CONSUMED":
+        continuation = resume_pending_action(session, approval_id=str(approval_id))
+        if continuation is not None and continuation.get("status") == "RESUMED":
+            current = session.get(ActionApproval, str(approval_id))
+            receipt = approval_payload(current) if current is not None else approval_payload(approval)
+            return {**receipt, "continuation": continuation}
+        raise HTTPException(409, "agent approval is no longer usable")
 
     approved = approve_action_approval(
         session,
