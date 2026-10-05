@@ -15,12 +15,15 @@ from app.core.config import settings
 from app.agent.gateway import AgentToolGateway, _journey_has_unresolved_collective_mediation
 from app.agent.runtime import _acceptance_requested, _collective_mediation_requested
 from app.db.models import (
+    Activity,
     AuditLog,
     Event,
     Journey,
     JourneyMember,
     JourneyMission,
+    Place,
     PlanVersion,
+    ProviderObservation,
     ReplanProposal,
     Traveler,
 )
@@ -1260,3 +1263,277 @@ def test_r30_core_gate_rejects_resolved_consent_when_semantic_epoch_changed(
         assert gate["classification"] == "RENEWED_COLLECTIVE_CONSENT_STALE"
         assert gate["resolved_decision_epoch"] == "epoch-before-shock"
         assert gate["current_decision_epoch"] == "epoch-after-shock"
+
+
+
+def test_r30_world_epoch_rejects_relevant_post_consent_shock(monkeypatch) -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+    selected_proposal_id = str(seeded["garden_proposal_id"])
+    mediator_id = str(uuid4())
+    activity_id = str(uuid4())
+    place_id = "place-r30-selected-garden"
+
+    with SessionLocal() as session:
+        session.add(
+            Place(
+                id=place_id,
+                provider_key="openstreetmap-replay",
+                external_id="r30-selected-garden",
+                city_code="NARA",
+                name="R30 selected garden",
+                category="garden",
+                latitude=34.0,
+                longitude=135.0,
+                opening_hours_json=json.dumps(
+                    {
+                        "status": "NORMALIZED_VALID",
+                        "open": "09:00",
+                        "close": "18:00",
+                        "intervals": [{"open": "09:00", "close": "18:00"}],
+                    },
+                    sort_keys=True,
+                ),
+                tags_json=json.dumps(["garden", "outdoor"], sort_keys=True),
+                metadata_json=json.dumps(
+                    {
+                        "tags": {"fee": "no"},
+                        "cost_evidence": {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": None,
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                updated_at=now,
+            )
+        )
+        session.add(
+            Activity(
+                id=activity_id,
+                plan_version_id=selected_plan_id,
+                sequence_no=1,
+                activity_type="visit",
+                title="R30 selected garden",
+                place_id=place_id,
+                city_service_id=None,
+                start_at=now,
+                end_at=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+                travel_from_prev_min=0,
+                estimated_cost_minor=0,
+                currency="JPY",
+                status="PLANNED",
+                locked=False,
+                metadata_json="{}",
+                created_at=now,
+                updated_at=now,
+            )
+        )
+        session.flush()
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        baseline_basis = main_module.collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=[place_id],
+        )
+        baseline_epoch = collective_mediation.collective_material_world_epoch(
+            baseline_basis
+        )
+        options = [
+            {
+                **item,
+                "fit_subject_place_ids": (
+                    [place_id]
+                    if str(item["proposal_id"]) == selected_proposal_id
+                    else item["fit_subject_place_ids"]
+                ),
+            }
+            for item in seeded["options"]
+        ]
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["parent_id"]),
+                user_text="Resolved consent before a provider-backed shock.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": str(seeded["parent_id"]),
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {
+                        "kind": "COLLECTIVE_TRADEOFF",
+                        "status": "RESOLVED",
+                        "clarification_id": "r30-world-before-shock",
+                        "decision_epoch": "semantic-stable",
+                        "material_world_epoch": baseline_epoch,
+                        "material_world_basis": baseline_basis,
+                        "trigger_event_id": str(seeded["event_id"]),
+                        "candidate_options": options,
+                        "required_member_ids": [
+                            str(seeded["owner_member_id"]),
+                            str(seeded["admin_member_id"]),
+                        ],
+                        "selected_proposal_id": selected_proposal_id,
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.add(
+            Event(
+                id=str(uuid4()),
+                journey_id=str(seeded["journey_id"]),
+                provider_key="city-provider",
+                provenance="LIVE_PROVIDER",
+                event_type="CLOSURE",
+                severity="HIGH",
+                status="DETECTED",
+                affected_activity_id=activity_id,
+                occurred_at=now,
+                detected_at=now,
+                payload_json=json.dumps(
+                    {
+                        "semantic": {
+                            "assertion_status": "OBSERVED",
+                            "place_id": place_id,
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        class _Selectable:
+            def model_dump(self, *, mode="json"):
+                return {"selectable": True}
+
+        members = [
+            {
+                "member_id": str(seeded["owner_member_id"]),
+                "role": "OWNER",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "garden"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+            {
+                "member_id": str(seeded["admin_member_id"]),
+                "role": "ADMIN",
+                "capabilities": ["EDIT_PLAN"],
+                "journey_scoped_explicit_preferences": [{"key": "museum"}],
+                "member_state": "MEMBER_IN_FORCE",
+            },
+        ]
+
+        def projection(_session, _journey, *, candidate_windows=None):
+            if candidate_windows is None:
+                return {"member_count": 2, "members": members}
+            return {
+                "member_count": 2,
+                "members": members,
+                "candidate_fit_matrix": [],
+                "mediation": {
+                    "classification": "COMPROMISE_AVAILABLE",
+                    "candidate_ids": [selected_plan_id],
+                    "selected_candidate_id": selected_plan_id,
+                },
+            }
+
+        monkeypatch.setattr(main_module, "plan_schema", lambda *_args, **_kwargs: _Selectable())
+        monkeypatch.setattr(
+            main_module, "active_journey_members_with_capabilities", projection
+        )
+        monkeypatch.setattr(
+            main_module,
+            "collective_proposal_receipt",
+            lambda _session, _journey, _proposals: {
+                "proposal_collective_decisions": {
+                    str(item["proposal_id"]): item for item in options
+                }
+            },
+        )
+        monkeypatch.setattr(
+            collective_mediation,
+            "collective_decision_epoch",
+            lambda **_kwargs: "semantic-stable",
+        )
+
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            selected_plan,
+            hard_feasible_plan_ids={selected_plan_id},
+        )
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+        assert gate["classification"] == "RENEWED_COLLECTIVE_CONSENT_STALE"
+        assert gate["resolved_material_world_epoch"] == baseline_epoch
+        assert gate["current_material_world_epoch"] != baseline_epoch
+
+
+def test_r30_unrelated_provider_observation_does_not_change_world_epoch() -> None:
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    selected_plan_id = str(seeded["options"][0]["plan_id"])
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        selected_plan = session.get(PlanVersion, selected_plan_id)
+        before = main_module.collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=[],
+        )
+        before_epoch = collective_mediation.collective_material_world_epoch(before)
+
+        session.add(
+            ProviderObservation(
+                id=str(uuid4()),
+                journey_id=str(seeded["journey_id"]),
+                provider_key="unrelated-provider",
+                observation_type="MOBILITY",
+                state="CAPTURED",
+                incident_fingerprint="unrelated-incident",
+                provenance="LIVE_PROVIDER",
+                captured_at=now,
+                expires_at=None,
+                payload_json=json.dumps(
+                    {
+                        "event_id": "not-a-selected-plan-event",
+                        "mobility_snapshot": {"snapshot_id": "unrelated-snapshot"},
+                    },
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        after = main_module.collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=[],
+        )
+        after_epoch = collective_mediation.collective_material_world_epoch(after)
+        assert after_epoch == before_epoch
