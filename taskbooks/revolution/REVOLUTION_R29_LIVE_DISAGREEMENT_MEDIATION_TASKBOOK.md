@@ -23,7 +23,8 @@ GPT has already implemented the first product slice:
 - `d339ae4bf1fc0fe1e2fe1cfe305f750b79286c14` — disagreement creates a mediator child mission instead of terminating;
 - `2374d7dcd429d3ecea5d1c760650e5d86318633e` — external Agent is explicitly constrained to mediate, never majority-vote or pick a winner, and cannot finish with prose alone;
 - `b058415ca969777954adcaecd04ae5340aa55af2` — mediator authority boundary tests;
-- `c3c1e8aa11efb42ef281f13f8fbaa48d810d4086` — traveler UI exposes live mediation and automatic continuation.
+- `c3c1e8aa11efb42ef281f13f8fbaa48d810d4086` — traveler UI exposes live mediation and automatic continuation;
+- `271d015e91bed03d8672b1cd071f23321013876a` — mediator child inherits the parent mission's already-bounded authority envelope instead of collapsing to compiler-default zero ceilings.
 
 R28 remains closed on its own branch. Do not reopen R28 unless an R29 test finds a genuine shared regression.
 
@@ -121,6 +122,7 @@ Required assertions after the second response:
 - child has `collective_mediation.kind == DISAGREEMENT_MEDIATION`;
 - child contains both member choices;
 - child contains no `selected_proposal_id`;
+- child authority ceilings/protected/mutable/action-class envelope equal the parent mission and are not widened;
 - audit `agent.collective_decision.mediation_started` exists;
 - baseline TravelerTwin/JourneyMember preferences unchanged.
 
