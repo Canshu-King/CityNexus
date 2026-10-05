@@ -1,0 +1,14 @@
+# 现尖 d107131c6f6e65d9f207f6bf1b563d1cc8877f89 上 frontend/src/app/V8Experience.tsx 的 grep -n 回读（出块这趟现读）
+frontend/src/app/V8Experience.tsx:2806:          {continuation.kind === "pending" && (
+frontend/src/app/V8Experience.tsx:2811:            <section className="today-continuation" data-testid="continuation-pending">
+frontend/src/app/V8Experience.tsx:2829:          {resumeOutcome && (
+frontend/src/app/V8Experience.tsx:2844:                    {!resumeOutcome.serverReason && (
+frontend/src/app/V8Experience.tsx:2860:              {resumeOutcome.kind === "refused" && resumeOutcome.serverReason && (
+frontend/src/app/V8Experience.tsx:2867:                <details className="today-continuation-technical" data-testid="continuation-technical-details">
+frontend/src/app/V8Experience.tsx:2868:                  <summary data-testid="continuation-technical-toggle">
+frontend/src/app/V8Experience.tsx:2871:                  <span data-testid="continuation-resume-server-reason">
+frontend/src/app/V8Experience.tsx:2873:                    {resumeOutcome.serverReason}
+frontend/src/app/V8Experience.tsx:4797:      <details className="v8-advanced" data-testid="me-advanced">
+frontend/src/app/V8Experience.tsx:4798:        <summary>{zh ? "高级详情" : "Advanced detail"}</summary>
+frontend/src/app/V8Experience.tsx:4846:              onClick={() => setShowAdvanced(!showAdvanced)}
+frontend/src/app/V8Experience.tsx:4853:                  ? "查看策略详情"

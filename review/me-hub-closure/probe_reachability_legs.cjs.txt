@@ -1,0 +1,152 @@
+// 1ba48dbf · 上一格两格 NOT_MEASURED 的补测腿
+// ① me 屏「查看策略详情」：四路把它带进视口（窗口滚动 / 逐层祖先滚动 / 聚焦 / 键盘 Enter），
+//    哪一路能到、到了之后 <pre data-testid=me-policy-json> 出不出现，全部逐路记数。
+//    判据不是"我点得到点不到"，是"普通用户能不能够到它"。
+// ② hub 的续跑技术详情层：它的渲染条件是 resumeOutcome.kind === "refused" 且带回 serverReason，
+//    这一趟只量这份场景里那块在不在、屏上读到的是哪一种结局，不伪造状态。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.RK_BASE;
+const OUT = process.env.RK_OUT;
+const SHOTDIR = process.env.RK_SHOTS;
+const JID = process.env.RK_JID;
+const WIDTHS = (process.env.RK_WIDTHS || "360,390,414").split(",").map(Number);
+
+const ME_LEGS = () => {
+  const btn = Array.from(document.querySelectorAll("button"))
+    .find((b) => (b.textContent || "").replace(/\s+/g, " ").trim() === "查看策略详情"
+      || (b.textContent || "").replace(/\s+/g, " ").trim() === "View policy detail");
+  if (!btn) { return { found: false }; };
+  const rect = () => { const r = btn.getBoundingClientRect();
+    return { y: Math.round(r.y), x: Math.round(r.x), w: Math.round(r.width), h: Math.round(r.height),
+             cy: Math.round(r.y + r.height / 2) }; };
+  const inView = () => { const r = rect(); return r.cy >= 0 && r.cy <= window.innerHeight; };
+  const pre = () => !!document.querySelector("[data-testid='me-policy-json']");
+  const scrollerInfo = () => {
+    const de = document.scrollingElement || document.documentElement;
+    const cs = getComputedStyle(document.documentElement);
+    const bs = getComputedStyle(document.body);
+    return { doc_scroll_h: de.scrollHeight, doc_client_h: de.clientHeight,
+             html_overflow_y: cs.overflowY, body_overflow_y: bs.overflowY,
+             body_height: bs.height, inner_h: window.innerHeight };
+  };
+  const out = { found: true, before: rect(), pre_before: pre(), screen: scrollerInfo() };
+  // 腿一：窗口滚动
+  window.scrollTo(0, 99999);
+  out.leg_window = { after: rect(), in_view: inView(), scroll_y: Math.round(window.scrollY) };
+  window.scrollTo(0, 0);
+  // 腿二：逐层祖先滚动
+  const ancestors = [];
+  for (let p = btn.parentElement, i = 0; p && i < 8; p = p.parentElement, i++) {
+    const cs = getComputedStyle(p);
+    const can = p.scrollHeight > p.clientHeight + 1
+      && /auto|scroll/.test(cs.overflowY);
+    let moved = null;
+    if (can) { const b = p.scrollTop; p.scrollTop = b + 2000; moved = p.scrollTop - b; }
+    ancestors.push({ el: p.tagName.toLowerCase() + (typeof p.className === "string" && p.className
+                              ? "." + p.className.trim().split(/\s+/)[0] : ""),
+                     scroll_h: p.scrollHeight, client_h: p.clientHeight, oy: cs.overflowY,
+                     can_scroll: can, moved_by: moved });
+    if (inView()) { break; }
+  }
+  out.leg_ancestors = { list: ancestors, after: rect(), in_view: inView() };
+  // 腿三：聚焦（浏览器会自己把它带进视口）
+  btn.focus();
+  out.leg_focus = { after: rect(), in_view: inView(), active_is_btn:
+    document.activeElement === btn };
+  // 腿四：键盘 Enter 真按一次，看那层开不开
+  const before_click = { rect: rect(), pre: pre(), total: document.querySelectorAll("button").length };
+  btn.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+  btn.click();
+  out.leg_enter = { pre_after: pre(), rect_after: rect(),
+                    total_after: document.querySelectorAll("button").length,
+                    total_before: before_click.total,
+                    label_now: (btn.textContent || "").replace(/\s+/g, " ").trim() };
+  out.final_in_view = inView();
+  return out;
+};
+
+const HUB_LEGS = () => {
+  const cont = document.querySelector("[data-testid='continuation-resume'], .today-continuation");
+  const details = document.querySelector("[data-testid='continuation-technical-details']");
+  const toggle = document.querySelector("[data-testid='continuation-technical-toggle']");
+  const reason = document.querySelector("[data-testid='continuation-resume-server-reason']");
+  const lines = (document.body.innerText || "").split("\n").map((x) => x.trim()).filter(Boolean);
+  return { continuation_present: !!cont, details_present: !!details, toggle_present: !!toggle,
+           reason_present: !!reason,
+           lines_with_continuation: lines.filter((l) => /续跑|继续|中止|服务器给出的原因|技术详情/.test(l)).slice(0, 6),
+           total_buttons: document.querySelectorAll("button").length };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, widths: WIDTHS, me: [], hub: [], errors: [] };
+  for (const arm of ["zh-CN", "en"]) {
+    for (const vw of WIDTHS) {
+      const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      page.setDefaultTimeout(15000);
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm]);
+        await page.goto(BASE + "/v8/me", { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(3200);
+        const m = await page.evaluate(ME_LEGS);
+        m.arm = arm; m.vw = vw; m.route = "me";
+        rep.me.push(m);
+        await page.screenshot({ path: SHOTDIR + "/me_w" + vw + "_" + arm + ".png" })
+          .catch(() => rep.errors.push("shot me"));
+        console.log("w%d %s me | 找到=%s 起始 y=%s 屏内=%s | 窗口滚后 y=%s 屏内=%s scroll_y=%s | 祖先可滚=%s 滚后屏内=%s | 聚焦后屏内=%s | Enter 后 pre 出现=%s 按钮文字=%s",
+          vw, arm, m.found, m.before && m.before.y, !!(m.before && m.before.cy <= 844 && m.before.cy >= 0),
+          m.leg_window && m.leg_window.after.y, m.leg_window && m.leg_window.in_view,
+          m.leg_window && m.leg_window.scroll_y,
+          m.leg_ancestors && m.leg_ancestors.list.filter((x) => x.can_scroll).map((x) => x.el),
+          m.leg_ancestors && m.leg_ancestors.in_view, m.leg_focus && m.leg_focus.in_view,
+          m.leg_enter && m.leg_enter.pre_after, m.leg_enter && m.leg_enter.label_now);
+        if (m.screen) {
+          console.log("     文档 scrollHeight=%s clientHeight=%s html overflow-y=%s body overflow-y=%s",
+            m.screen.doc_scroll_h, m.screen.doc_client_h, m.screen.html_overflow_y, m.screen.body_overflow_y);
+        }
+      } catch (e) {
+        rep.errors.push("me " + arm + "/" + vw + " " + (e.message || String(e)).slice(0, 120));
+      } finally { await ctx.close().catch(() => {}); }
+    }
+    const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+      locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+    const p2 = await ctx2.newPage();
+    try {
+      await p2.addInitScript(([jid, loc]) => {
+        try {
+          if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+          localStorage.setItem("citynexus.locale", loc);
+        } catch (e) {}
+      }, [JID || "", arm]);
+      await p2.goto(BASE + "/v8/hub", { waitUntil: "domcontentloaded", timeout: 60000 });
+      await p2.waitForTimeout(3200);
+      const h = await p2.evaluate(HUB_LEGS);
+      h.arm = arm; h.route = "hub";
+      rep.hub.push(h);
+      console.log("%s hub | 续跑块在场=%s 折叠层在场=%s 摘要在场=%s 服务器原因在场=%s 屏上相关行=%s",
+        arm, h.continuation_present, h.details_present, h.toggle_present, h.reason_present,
+        JSON.stringify(h.lines_with_continuation).slice(0, 180));
+      await p2.screenshot({ path: SHOTDIR + "/hub_" + arm + ".png" }).catch(() => {});
+    } catch (e) {
+      rep.errors.push("hub " + arm + " " + (e.message || String(e)).slice(0, 120));
+    } finally { await ctx2.close().catch(() => {}); }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  const opened = rep.me.filter((m) => m.leg_enter && m.leg_enter.pre_after).length;
+  const reachable = rep.me.filter((m) => m.final_in_view).length;
+  console.log("me 腿=%d 最终可达=%d Enter 后那层开=%d hub 腿=%d 折叠层在场=%d errors=%d",
+    rep.me.length, reachable, opened, rep.hub.length,
+    rep.hub.filter((h) => h.details_present).length, rep.errors.length);
+})();

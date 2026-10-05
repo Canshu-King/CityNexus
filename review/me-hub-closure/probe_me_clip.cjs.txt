@@ -1,0 +1,116 @@
+// 1ba48dbf · me 屏那枚按钮够不到的"剪掉它的那一层"定位腿 r3
+// 只量一件事：从按钮往上，第一个"自己的盒子装不下按钮"的祖先是谁，它的哪些计算样式把它压矮了。
+// 不许推成因：这一腿只读数，不猜哪条 CSS 规则写的。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.CL_BASE;
+const OUT = process.env.CL_OUT;
+const SHOTDIR = process.env.CL_SHOTS;
+const JID = process.env.CL_JID;
+const WIDTHS = (process.env.CL_WIDTHS || "360,390,414").split(",").map(Number);
+
+const LEG = () => {
+  const labels = ["查看策略详情", "View policy detail"];
+  const btn = Array.from(document.querySelectorAll("button"))
+    .find((b) => labels.includes((b.textContent || "").replace(/\s+/g, " ").trim()));
+  if (!btn) { return { found: false }; }
+  const box = (el) => {
+    const r = el.getBoundingClientRect();
+    return { top: Math.round(r.top), bottom: Math.round(r.bottom),
+             left: Math.round(r.left), right: Math.round(r.right),
+             w: Math.round(r.width), h: Math.round(r.height) };
+  };
+  window.scrollTo(0, 99999);
+  const b = box(btn);
+  const rows = [];
+  for (let p = btn.parentElement, i = 0; p && i < 10; p = p.parentElement, i++) {
+    const cs = getComputedStyle(p);
+    const rb = box(p);
+    rows.push({ el: p.tagName.toLowerCase() + (p.id ? "#" + p.id : "")
+                  + (typeof p.className === "string" && p.className
+                    ? "." + p.className.trim().split(/\s+/).slice(0, 2).join(".") : ""),
+                depth: i + 1,
+                rect: rb,
+                contains_btn: rb.top <= b.top && rb.bottom >= b.bottom,
+                shortfall: Math.max(0, b.bottom - rb.bottom),
+                height: cs.height, min_height: cs.minHeight, max_height: cs.maxHeight,
+                overflow_y: cs.overflowY, overflow_x: cs.overflowX,
+                position: cs.position, display: cs.display,
+                content_visibility: cs.contentVisibility || null,
+                scroll_h: p.scrollHeight, client_h: p.clientHeight,
+                flex: cs.flex, aspect_ratio: cs.aspectRatio || null });
+  }
+  const de = document.scrollingElement || document.documentElement;
+  const cx = Math.round((Math.max(b.left, 1) + Math.min(b.right, 359)) / 2);
+  const cyAtBottom = Math.min(843, b.top + Math.round(b.h / 2));
+  const hit = document.elementFromPoint(cx, cyAtBottom);
+  return {
+    found: true, label: (btn.textContent || "").replace(/\s+/g, " ").trim(),
+    btn: b, scroll_y: Math.round(window.scrollY),
+    inner_h: window.innerHeight,
+    html_scroll_h: document.documentElement.scrollHeight,
+    de_max_scroll: de.scrollHeight - de.clientHeight,
+    btn_bottom_gap: b.top - window.innerHeight,
+    first_clipping: rows.find((r) => !r.contains_btn) || null,
+    rows: rows,
+    hit_at_btn_row: hit ? (hit.tagName.toLowerCase() + (hit.getAttribute("data-testid")
+      ? "#" + hit.getAttribute("data-testid") : "") + "|"
+      + (hit.textContent || "").replace(/\s+/g, " ").trim().slice(0, 30)) : null,
+    pre_present: !!document.querySelector("[data-testid='me-policy-json']")
+  };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, widths: WIDTHS, legs: [], errors: [] };
+  for (const arm of ["zh-CN", "en"]) {
+    for (const vw of WIDTHS) {
+      const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm]);
+        await page.goto(BASE + "/v8/me", { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(3200);
+        const x = await page.evaluate(LEG);
+        x.arm = arm; x.vw = vw;
+        rep.legs.push(x);
+        await page.screenshot({ path: SHOTDIR + "/clipmax_w" + vw + "_" + arm + ".png" }).catch(() => {});
+        const f = x.first_clipping;
+        console.log("w" + vw + " " + arm + " | 按钮滚到底 rect.top=" + x.btn.top + " bottom=" + x.btn.bottom
+          + "；视口高 " + x.inner_h + "；scrollY=" + x.scroll_y
+          + " html scrollHeight=" + x.html_scroll_h + " 最多滚=" + x.de_max_scroll
+          + " | 第一个装不下它的祖先=" + (f ? f.el : "无")
+          + " 其rect bottom=" + (f ? f.rect.bottom : "-") + " 差=" + (f ? f.shortfall : 0)
+          + " height=" + (f ? f.height : "-") + " overflow-y=" + (f ? f.overflow_y : "-"));
+        for (const r of x.rows) {
+          console.log("   d" + r.depth + " " + r.el.padEnd(30, " ").slice(0, 30)
+            + " rect=" + r.rect.top + ".." + r.rect.bottom
+            + " 含按钮=" + (r.contains_btn ? "yes" : "NO ")
+            + " cssH=" + r.height + " minH=" + r.min_height + " maxH=" + r.max_height
+            + " ovY=" + r.overflow_y + " disp=" + r.display
+            + " pos=" + r.position + " scrollH/clientH=" + r.scroll_h + "/" + r.client_h);
+        }
+      } catch (e) {
+        rep.errors.push(arm + "/" + vw + " " + (e.message || String(e)).slice(0, 120));
+      } finally { await ctx.close().catch(() => {}); }
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  const ok = rep.legs.filter((x) => x.found);
+  const below = ok.filter((x) => x.btn.bottom > x.inner_h);
+  const clipped = ok.filter((x) => x.first_clipping);
+  console.log("legs=" + rep.legs.length + " found=" + ok.length
+    + " 滚到底按钮底边仍在视口外=" + below.length
+    + " 有装不下它的祖先=" + clipped.length
+    + " 祖先开过那层pre在场=" + ok.filter((x) => x.pre_present).length
+    + " errors=" + rep.errors.length);
+})();

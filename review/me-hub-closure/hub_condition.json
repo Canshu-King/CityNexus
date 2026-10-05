@@ -1,0 +1,839 @@
+{
+ "base": "http://127.0.0.1:5140",
+ "widths": [
+  360,
+  390,
+  414
+ ],
+ "me": [
+  {
+   "found": true,
+   "before": {
+    "y": 1574,
+    "x": 40,
+    "w": 126,
+    "h": 44,
+    "cy": 1596
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1454,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1453.78px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 964,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 986
+    },
+    "in_view": false,
+    "scroll_y": 610
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 391,
+      "client_h": 391,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1157,
+      "client_h": 1157,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1308,
+      "client_h": 1308,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1374,
+      "client_h": 1374,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "查看策略详情"
+   },
+   "final_in_view": false,
+   "arm": "zh-CN",
+   "vw": 360,
+   "route": "me"
+  },
+  {
+   "found": true,
+   "before": {
+    "y": 1574,
+    "x": 40,
+    "w": 126,
+    "h": 44,
+    "cy": 1596
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1454,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1453.78px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 964,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 986
+    },
+    "in_view": false,
+    "scroll_y": 610
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 391,
+      "client_h": 391,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1157,
+      "client_h": 1157,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1308,
+      "client_h": 1308,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1374,
+      "client_h": 1374,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "查看策略详情"
+   },
+   "final_in_view": false,
+   "arm": "zh-CN",
+   "vw": 390,
+   "route": "me"
+  },
+  {
+   "found": true,
+   "before": {
+    "y": 1574,
+    "x": 40,
+    "w": 126,
+    "h": 44,
+    "cy": 1596
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1454,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1453.78px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 964,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 986
+    },
+    "in_view": false,
+    "scroll_y": 610
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 391,
+      "client_h": 391,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1157,
+      "client_h": 1157,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1308,
+      "client_h": 1308,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1374,
+      "client_h": 1374,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1454,
+      "client_h": 1454,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1574,
+     "x": 40,
+     "w": 126,
+     "h": 44,
+     "cy": 1596
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "查看策略详情"
+   },
+   "final_in_view": false,
+   "arm": "zh-CN",
+   "vw": 414,
+   "route": "me"
+  },
+  {
+   "found": true,
+   "before": {
+    "y": 1623,
+    "x": 40,
+    "w": 153,
+    "h": 44,
+    "cy": 1645
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1488,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1487.53px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 979,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1001
+    },
+    "in_view": false,
+    "scroll_y": 644
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 406,
+      "client_h": 406,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1191,
+      "client_h": 1191,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1342,
+      "client_h": 1342,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1408,
+      "client_h": 1408,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1488,
+      "client_h": 1488,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1488,
+      "client_h": 1488,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1623,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1645
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1623,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1645
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1623,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1645
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "View policy detail"
+   },
+   "final_in_view": false,
+   "arm": "en",
+   "vw": 360,
+   "route": "me"
+  },
+  {
+   "found": true,
+   "before": {
+    "y": 1607,
+    "x": 40,
+    "w": 153,
+    "h": 44,
+    "cy": 1629
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1488,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1487.53px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 963,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 985
+    },
+    "in_view": false,
+    "scroll_y": 644
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 391,
+      "client_h": 391,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1191,
+      "client_h": 1191,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1342,
+      "client_h": 1342,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1408,
+      "client_h": 1408,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1488,
+      "client_h": 1488,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1488,
+      "client_h": 1488,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1607,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1629
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1607,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1629
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1607,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1629
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "View policy detail"
+   },
+   "final_in_view": false,
+   "arm": "en",
+   "vw": 390,
+   "route": "me"
+  },
+  {
+   "found": true,
+   "before": {
+    "y": 1547,
+    "x": 40,
+    "w": 153,
+    "h": 44,
+    "cy": 1569
+   },
+   "pre_before": false,
+   "screen": {
+    "doc_scroll_h": 1427,
+    "doc_client_h": 844,
+    "html_overflow_y": "visible",
+    "body_overflow_y": "visible",
+    "body_height": "1427.34px",
+    "inner_h": 844
+   },
+   "leg_window": {
+    "after": {
+     "y": 964,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 986
+    },
+    "in_view": false,
+    "scroll_y": 583
+   },
+   "leg_ancestors": {
+    "list": [
+     {
+      "el": "article.v8-me-card",
+      "scroll_h": 197,
+      "client_h": 197,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-me-grid",
+      "scroll_h": 391,
+      "client_h": 391,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "details.v8-advanced",
+      "scroll_h": 54,
+      "client_h": 54,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "section.v8-page",
+      "scroll_h": 1130,
+      "client_h": 1130,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-content",
+      "scroll_h": 1281,
+      "client_h": 1281,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "main.v8-main",
+      "scroll_h": 1347,
+      "client_h": 1347,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div.v8-product-shell",
+      "scroll_h": 1427,
+      "client_h": 1427,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     },
+     {
+      "el": "div",
+      "scroll_h": 1427,
+      "client_h": 1427,
+      "oy": "visible",
+      "can_scroll": false,
+      "moved_by": null
+     }
+    ],
+    "after": {
+     "y": 1547,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1569
+    },
+    "in_view": false
+   },
+   "leg_focus": {
+    "after": {
+     "y": 1547,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1569
+    },
+    "in_view": false,
+    "active_is_btn": false
+   },
+   "leg_enter": {
+    "pre_after": false,
+    "rect_after": {
+     "y": 1547,
+     "x": 40,
+     "w": 153,
+     "h": 44,
+     "cy": 1569
+    },
+    "total_after": 29,
+    "total_before": 29,
+    "label_now": "View policy detail"
+   },
+   "final_in_view": false,
+   "arm": "en",
+   "vw": 414,
+   "route": "me"
+  }
+ ],
+ "hub": [
+  {
+   "continuation_present": false,
+   "details_present": false,
+   "toggle_present": false,
+   "reason_present": false,
+   "lines_with_continuation": [
+    "技术详情"
+   ],
+   "total_buttons": 39,
+   "arm": "zh-CN",
+   "route": "hub"
+  },
+  {
+   "continuation_present": false,
+   "details_present": false,
+   "toggle_present": false,
+   "reason_present": false,
+   "lines_with_continuation": [],
+   "total_buttons": 39,
+   "arm": "en",
+   "route": "hub"
+  }
+ ],
+ "errors": []
+}

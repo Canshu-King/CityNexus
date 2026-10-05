@@ -1,0 +1,131 @@
+// 1ba48dbf · me 屏「查看策略详情」：先把 details.v8-advanced 展开，再量可达性 r4
+// 上一腿（RK-160507 / RK-161034）量的是折叠态，那本来就不在屏上——这一腿只回答一件事：
+// 展开以后，这枚按钮能不能滚到、能不能命中、点了能不能出详情层。
+const fs = require("fs");
+const { chromium } = require("playwright");
+
+const BASE = process.env.CL_BASE;
+const OUT = process.env.CL_OUT;
+const SHOTDIR = process.env.CL_SHOTS;
+const JID = process.env.CL_JID;
+const WIDTHS = (process.env.CL_WIDTHS || "360,390,414").split(",").map(Number);
+
+const FIND = () => {
+  const btn = Array.from(document.querySelectorAll("button"))
+    .find((b) => ["查看策略详情", "View policy detail"]
+      .includes((b.textContent || "").replace(/\s+/g, " ").trim()));
+  return btn ? { found: true } : { found: false };
+};
+
+const MEASURE = (openFirst) => {
+  const de = document.scrollingElement || document.documentElement;
+  const det = document.querySelector("details[data-testid='me-advanced']");
+  const before = det ? { open: det.open, h: Math.round(det.getBoundingClientRect().height) } : null;
+  if (det && openFirst && !det.open) { det.open = true; }
+  const btn = Array.from(document.querySelectorAll("button"))
+    .find((b) => ["查看策略详情", "View policy detail"]
+      .includes((b.textContent || "").replace(/\s+/g, " ").trim()));
+  if (!btn) {
+    return { found: false, details_before: before,
+             details_after: det ? { open: det.open } : null };
+  }
+  window.scrollTo(0, 99999);
+  const r = btn.getBoundingClientRect();
+  const cx = Math.round(r.left + r.width / 2), cy = Math.round(r.top + r.height / 2);
+  const top = document.elementFromPoint(cx, cy);
+  const chain = [];
+  for (let p = btn.parentElement, i = 0; p && i < 6; p = p.parentElement, i++) {
+    const rb = p.getBoundingClientRect();
+    chain.push({ el: p.tagName.toLowerCase() + (p.id ? "#" + p.id : "")
+                   + (typeof p.className === "string" && p.className
+                     ? "." + p.className.trim().split(/\s+/).slice(0, 1).join(".") : ""),
+                 rect: Math.round(rb.top) + ".." + Math.round(rb.bottom),
+                 contains: rb.top <= r.top && rb.bottom >= r.bottom });
+  }
+  return {
+    found: true, details_before: before,
+    details_after: det ? { open: det.open, h: Math.round(det.getBoundingClientRect().height) } : null,
+    btn: { top: Math.round(r.top), bottom: Math.round(r.bottom), h: Math.round(r.height) },
+    scroll_y: Math.round(window.scrollY),
+    max_scroll: de.scrollHeight - de.clientHeight,
+    html_scroll_h: de.scrollHeight, inner_h: window.innerHeight,
+    in_view: cy >= 0 && cy <= window.innerHeight,
+    hits_self: !!top && (top === btn || btn.contains(top) || top.contains(btn)),
+    hit_top: top ? (top.tagName.toLowerCase() + (top.getAttribute("data-testid")
+      ? "#" + top.getAttribute("data-testid") : "")) : null,
+    chain: chain
+  };
+};
+
+(async () => {
+  const browser = await chromium.launch();
+  const rep = { base: BASE, widths: WIDTHS, legs: [], errors: [] };
+  for (const arm of ["zh-CN", "en"]) {
+    for (const vw of WIDTHS) {
+      const ctx = await browser.newContext({ viewport: { width: vw, height: 844 },
+        deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+        locale: arm === "en" ? "en-US" : "zh-CN", serviceWorkers: "block" });
+      const page = await ctx.newPage();
+      const rec = { arm: arm, vw: vw };
+      try {
+        await page.addInitScript(([jid, loc]) => {
+          try {
+            if (jid) { localStorage.setItem("citynexus.v8.journey_id", jid); }
+            localStorage.setItem("citynexus.locale", loc);
+          } catch (e) {}
+        }, [JID || "", arm]);
+        await page.goto(BASE + "/v8/me", { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.waitForTimeout(3200);
+        rec.href = page.url();
+        rec.collapsed_present = await page.evaluate(FIND);
+        // 用用户的动作开这层：真点 summary，不在页面里改 .open
+        const sum = page.locator("details[data-testid='me-advanced'] > summary").first();
+        rec.summary_present = await sum.count().then((c) => c > 0);
+        await sum.click({ timeout: 8000 }).catch((e) => { rec.summary_click_error = (e.message || "").slice(0, 90); });
+        await page.waitForTimeout(400);
+        rec.opened = await page.evaluate(MEASURE, false);
+        if (rec.opened.found) {
+          const loc = page.locator("button").filter({ hasText: arm === "en"
+            ? "View policy detail" : "查看策略详情" }).first();
+          await loc.click({ timeout: 8000 }).catch((e) => { rec.click_error = (e.message || "").slice(0, 90); });
+          await page.waitForTimeout(500);
+          rec.pre_after_click = await page.evaluate(() => ({
+            present: !!document.querySelector("[data-testid='me-policy-json']"),
+            text_len: (document.querySelector("[data-testid='me-policy-json']") || {})
+              .textContent ? document.querySelector("[data-testid='me-policy-json']").textContent.length : 0
+          }));
+          await page.screenshot({ path: SHOTDIR + "/open_w" + vw + "_" + arm + ".png" }).catch(() => {});
+        }
+        rep.legs.push(rec);
+        const o = rec.opened;
+        console.log("w" + vw + " " + arm + " | 折叠态按钮在场=" + rec.collapsed_present.found
+          + " summary在场=" + rec.summary_present
+          + (rec.summary_click_error ? " 点summary错=" + rec.summary_click_error : "")
+          + " | 点过 summary 后 details open=" + (o.details_after ? o.details_after.open : "-")
+          + " h=" + (o.details_after ? o.details_after.h : "-")
+          + " 按钮 rect " + (o.btn ? o.btn.top + ".." + o.btn.bottom : "-")
+          + " scrollY=" + o.scroll_y + "/" + o.max_scroll
+          + " htmlH=" + o.html_scroll_h + " 屏内=" + o.in_view
+          + " 命中自己=" + o.hits_self + " 顶层=" + o.hit_top
+          + " | 点后详情层=" + (rec.pre_after_click ? rec.pre_after_click.present : "n/a"));
+        if (o.chain) {
+          for (const c of o.chain) {
+            console.log("   " + c.el.padEnd(26, " ").slice(0, 26) + " rect " + c.rect
+              + " 含按钮=" + (c.contains ? "yes" : "NO"));
+          }
+        }
+      } catch (e) {
+        rep.errors.push(arm + "/" + vw + " " + (e.message || String(e)).slice(0, 120));
+        rep.legs.push(Object.assign(rec, { error: (e.message || String(e)).slice(0, 160) }));
+      } finally { await ctx.close().catch(() => {}); }
+    }
+  }
+  await browser.close();
+  fs.writeFileSync(OUT, JSON.stringify(rep, null, 1) + "\n", "utf8");
+  const g = rep.legs.filter((x) => x.opened && x.opened.found);
+  console.log("legs=" + rep.legs.length + " 展开后按钮在场=" + g.length
+    + " 屏内=" + g.filter((x) => x.opened.in_view).length
+    + " 命中自己=" + g.filter((x) => x.opened.hits_self).length
+    + " 点后详情层出=" + g.filter((x) => x.pre_after_click && x.pre_after_click.present).length
+    + " errors=" + rep.errors.length);
+})();

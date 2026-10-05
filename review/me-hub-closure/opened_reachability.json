@@ -1,0 +1,419 @@
+{
+ "base": "http://127.0.0.1:5140",
+ "widths": [
+  360,
+  390,
+  414
+ ],
+ "legs": [
+  {
+   "arm": "zh-CN",
+   "vw": 360,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 446
+    },
+    "details_after": {
+     "open": true,
+     "h": 446
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 1001,
+    "max_scroll": 1001,
+    "html_scroll_h": 1845,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "440..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "249..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "194..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-908..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-935..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-1001..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 390,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 446
+    },
+    "details_after": {
+     "open": true,
+     "h": 446
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 1001,
+    "max_scroll": 1001,
+    "html_scroll_h": 1845,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "440..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "249..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "194..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-908..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-935..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-1001..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 414,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 446
+    },
+    "details_after": {
+     "open": true,
+     "h": 446
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 1001,
+    "max_scroll": 1001,
+    "html_scroll_h": 1845,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "440..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "249..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "194..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-908..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-935..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-1001..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  },
+  {
+   "arm": "en",
+   "vw": 360,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 461
+    },
+    "details_after": {
+     "open": true,
+     "h": 461
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 1050,
+    "max_scroll": 1050,
+    "html_scroll_h": 1894,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "440..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "234..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "179..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-957..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-984..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-1050..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  },
+  {
+   "arm": "en",
+   "vw": 390,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 446
+    },
+    "details_after": {
+     "open": true,
+     "h": 446
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 1034,
+    "max_scroll": 1034,
+    "html_scroll_h": 1878,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "441..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "250..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "195..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-941..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-968..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-1034..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  },
+  {
+   "arm": "en",
+   "vw": 414,
+   "href": "http://127.0.0.1:5140/v8/me",
+   "collapsed_present": {
+    "found": true
+   },
+   "summary_present": true,
+   "opened": {
+    "found": true,
+    "details_before": {
+     "open": true,
+     "h": 446
+    },
+    "details_after": {
+     "open": true,
+     "h": 446
+    },
+    "btn": {
+     "top": 573,
+     "bottom": 617,
+     "h": 44
+    },
+    "scroll_y": 974,
+    "max_scroll": 974,
+    "html_scroll_h": 1818,
+    "inner_h": 844,
+    "in_view": true,
+    "hits_self": true,
+    "hit_top": "button",
+    "chain": [
+     {
+      "el": "article.v8-me-card",
+      "rect": "441..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-me-grid",
+      "rect": "249..640",
+      "contains": true
+     },
+     {
+      "el": "details.v8-advanced",
+      "rect": "194..640",
+      "contains": true
+     },
+     {
+      "el": "section.v8-page",
+      "rect": "-881..640",
+      "contains": true
+     },
+     {
+      "el": "div.v8-content",
+      "rect": "-908..764",
+      "contains": true
+     },
+     {
+      "el": "main.v8-main",
+      "rect": "-974..764",
+      "contains": true
+     }
+    ]
+   },
+   "pre_after_click": {
+    "present": true,
+    "text_len": 601
+   }
+  }
+ ],
+ "errors": []
+}
