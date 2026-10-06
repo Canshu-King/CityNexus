@@ -1878,8 +1878,6 @@ def _operator_actor(request: Request, session: Session, journey: Journey) -> str
         principal, member = resolve_journey_member_principal(
             request, session, journey_id=journey.id
         )
-        if principal.traveler_id != journey.traveler_id:
-            raise HTTPException(403, "authenticated member cannot operate another traveler Journey")
         if not member_has_capability(session, member, "JOURNEY_UPDATE"):
             raise HTTPException(403, "authenticated member cannot operate this Journey")
         actor_id = principal.traveler_id
@@ -1998,10 +1996,19 @@ def stop_journey_operator(
 @app.get("/api/v1/journeys/{journey_id}/operator")
 def get_journey_operator(
     journey_id: UUID,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
-    return operator_projection(session, journey)
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        _principal, viewer_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        viewer_member_id = viewer_member.id
+    return operator_projection(session, journey, viewer_member_id=viewer_member_id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/reject")
@@ -3658,6 +3665,22 @@ def answer_collective_clarification(
                 "traveler_twin_unchanged": True,
                 "child_mission": response_child,
             }
+        record_audit(
+            session,
+            action="agent.collective_decision.authority_issued",
+            entity_type="CollectiveAuthorityReceipt",
+            entity_id=authority_receipt.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="collective-authority",
+            after={
+                "receipt_id": authority_receipt.id,
+                "source_mission_id": parent.id,
+                "clarification_id": stored.get("clarification_id"),
+                "decision_epoch": stored.get("decision_epoch"),
+                "required_member_ids": sorted(required),
+            },
+        )
         stored["authority_receipt_id"] = authority_receipt.id
         parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
         response_child["authority_receipt_id"] = authority_receipt.id

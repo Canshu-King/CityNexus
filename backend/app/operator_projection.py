@@ -125,7 +125,12 @@ def _timeline(session: Session, journey_id: str) -> list[dict[str, Any]]:
     return items[-12:]
 
 
-def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
+def operator_projection(
+    session: Session,
+    journey: Journey,
+    *,
+    viewer_member_id: str | None = None,
+) -> dict[str, Any]:
     """Join Guardian/Agent/approval truth without creating a second control plane."""
 
     enrollment = session.get(AutopilotEnrollment, journey.id)
@@ -268,6 +273,16 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
     )
     brain["recovery_resume"] = resume_projection(resume)
 
+    from app.collective_operator import collective_operator_projection
+
+    collective = collective_operator_projection(
+        session,
+        journey,
+        viewer_member_id=viewer_member_id,
+    )
+    timeline = [*_timeline(session, journey.id), *(collective.get("timeline") or [])]
+    timeline.sort(key=lambda item: (str(item.get("at") or ""), str(item.get("kind") or "")))
+
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
     if approval is not None and pending is not None and pending.status in {"PENDING", "RESUMING"}:
@@ -337,7 +352,8 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
         "decision": decision,
         "approval": approval_payload,
         "brain": brain,
-        "timeline": _timeline(session, journey.id),
+        "collective": collective,
+        "timeline": timeline[-12:],
         "advanced": {
             "guardian": (
                 {

@@ -380,6 +380,26 @@ export interface JourneyOperatorBrainProjection {
   }>;
 }
 
+export interface JourneyOperatorCollectiveProjection {
+  state: "SINGLE_TRAVELLER" | "WAITING_FOR_MEMBERS" | "MEDIATING" | "COLLECTIVE_READY" | "COLLECTIVE_AUTHORIZED" | "COLLECTIVE_STALE" | "COLLECTIVE_NEEDS_ATTENTION";
+  status?: string | null;
+  mission_id: string | null;
+  clarification_id?: string | null;
+  decision_epoch?: string | null;
+  required_count: number;
+  response_count: number;
+  waiting_for_member_count?: number;
+  viewer_member_id?: string | null;
+  viewer_has_responded: boolean;
+  viewer_can_respond?: boolean;
+  members: Array<{ member_id: string | null; display_name: string; role: string; responded: boolean; is_viewer: boolean; needs_response?: boolean }>;
+  options: Array<{ proposal_id: string | null; label: string; schedule_delta_min?: number | null; cost_delta_minor?: number | null; fit_subject_place_ids?: string[] }>;
+  selected_proposal_id?: string | null;
+  authority_receipt_id?: string | null;
+  mediation_mission_id?: string | null;
+  timeline?: JourneyOperatorTimelineItem[];
+}
+
 export interface JourneyOperatorProjection {
   journey_id: string;
   state: "OFF" | "WATCHING" | "INVESTIGATING" | "WAITING_FOR_APPROVAL" | "APPLYING" | "RECOVERED" | "NEEDS_ATTENTION" | "DEGRADED";
@@ -404,6 +424,7 @@ export interface JourneyOperatorProjection {
     pending_action_id: string;
   } | null;
   brain: JourneyOperatorBrainProjection;
+  collective: JourneyOperatorCollectiveProjection;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }
@@ -1361,7 +1382,9 @@ export const cityNexusApi = {
   },
 
   getJourneyOperator(journeyId: string): Promise<JourneyOperatorProjection> {
-    return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator");
+    return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
+      headers: travelerAuthHeaders(),
+    });
   },
 
   startJourneyOperator(

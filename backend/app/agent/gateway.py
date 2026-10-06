@@ -2052,6 +2052,27 @@ class AgentToolGateway:
                 "mediation_progress": mediation_progress,
             },
         )
+        # One durable cue per affected member and decision epoch. Notification
+        # delivery remains the existing infrastructure; this key is the
+        # collective decision boundary so Guardian pulses cannot fan out spam.
+        from app.operations.v9 import notify
+
+        for required_member_id in required_ids:
+            notify(
+                self.session,
+                journey.id,
+                dedupe_key=(
+                    f"collective-decision:{journey.id}:"
+                    f"{decision_epoch}:{required_member_id}"
+                ),
+                kind="COLLECTIVE_DECISION",
+                priority="HIGH",
+                payload={
+                    "member_id": required_member_id,
+                    "decision_epoch": decision_epoch,
+                    "message": "The shared trip needs your choice.",
+                },
+            )
         self.session.commit()
         return {
             "tool": "request_collective_decision",

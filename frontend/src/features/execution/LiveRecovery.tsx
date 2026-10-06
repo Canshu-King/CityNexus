@@ -235,6 +235,28 @@ export function LiveRecovery({
     }
   }, [journeyId, loadOperator, operator, zh]);
 
+  const answerCollectiveOption = useCallback(async (proposalId: string | null) => {
+    const collective = operator?.collective;
+    if (!collective?.mission_id || !collective.clarification_id || !collective.viewer_member_id || !proposalId) return;
+    setBusy("collective-answer");
+    setMessage(null);
+    try {
+      await cityNexusApi.answerCollectiveClarification(
+        journeyId,
+        collective.mission_id,
+        collective.viewer_member_id,
+        collective.clarification_id,
+        proposalId,
+      );
+      await loadOperator();
+      setMessage(zh ? "已记录你的选择，正在等待其他成员。" : "Your choice is recorded. Waiting for the other travellers.");
+    } catch {
+      setMessage(zh ? "这次选择已过期或暂时无法提交。" : "That choice is stale or could not be submitted yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, loadOperator, operator, zh]);
+
   const loadProposals = useCallback(async () => {
     try {
       const r = await fetch(`/api/v1/journeys/${journeyId}/replans`);
@@ -600,6 +622,45 @@ export function LiveRecovery({
                   ? (zh ? "问题已记住，规划 AI 恢复后会继续处理。" : "I remembered the problem and will continue when planning is available.")
                   : (zh ? "这次恢复已保留，需要安全地回到原来的处理链。" : "I kept this recovery safe and will not switch brains blindly.")}
               </span>
+            )}
+          </div>
+        )}
+        {operator?.collective && operator.collective.state !== "SINGLE_TRAVELLER" && (
+          <div className="journey-operator-collective" data-testid="journey-operator-collective">
+            <span className="v8-kicker">Shared trip</span>
+            <strong>
+              {operator.collective.state === "MEDIATING"
+                ? (zh ? "大家的选择不同，CityNexus 正在寻找兼顾彼此的方案。" : "Your choices differ. CityNexus is looking for a compromise that protects everyone.")
+                : operator.collective.state === "COLLECTIVE_AUTHORIZED"
+                  ? (zh ? "大家已同意，正在继续执行共享行程。" : "Everyone agreed. The shared trip is continuing.")
+                  : operator.collective.state === "COLLECTIVE_STALE"
+                    ? (zh ? "行程情况已变化，需要重新确认。" : "The trip changed, so this group decision needs to be renewed.")
+                    : (zh
+                      ? `这次变化影响 ${operator.collective.required_count} 位同行者，已回答 ${operator.collective.response_count} 位。`
+                      : `This change affects ${operator.collective.required_count} travellers; ${operator.collective.response_count} have responded.`)}
+            </strong>
+            <div className="journey-operator-members">
+              {operator.collective.members.map((member) => (
+                <span key={member.member_id ?? member.display_name} data-responded={member.responded}>
+                  {member.display_name}{member.responded ? (zh ? " · 已回答" : " · answered") : (zh ? " · 等待中" : " · waiting")}
+                </span>
+              ))}
+            </div>
+            {operator.collective.viewer_can_respond && operator.collective.options.length > 0 && (
+              <div className="journey-operator-collective-options">
+                <span>{zh ? "你更愿意哪种处理？" : "Which recovery fits you?"}</span>
+                {operator.collective.options.map((option) => (
+                  <button
+                    key={option.proposal_id}
+                    type="button"
+                    disabled={busy !== null}
+                    onClick={() => void answerCollectiveOption(option.proposal_id)}
+                  >
+                    {option.label}
+                    {option.schedule_delta_min != null ? ` · ${option.schedule_delta_min} min` : ""}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         )}

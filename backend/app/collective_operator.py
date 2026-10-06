@@ -2,12 +2,21 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.db.models import CollectiveAuthorityReceipt, Journey, JourneyMember, JourneyMission, Traveler
+from app.db.models import (
+    AuditLog,
+    CollectiveAuthorityReceipt,
+    Journey,
+    JourneyMember,
+    JourneyMission,
+    JourneyRoleCapability,
+    Traveler,
+)
 
 
 def classify_collective_operator_state(
@@ -49,6 +58,7 @@ def collective_operator_projection(
     *,
     viewer_member_id: str | None = None,
 ) -> dict[str, Any]:
+    now = datetime.now(timezone.utc)
     members = list(
         session.scalars(
             select(JourneyMember)
@@ -71,15 +81,20 @@ def collective_operator_projection(
             "authority_receipt_id": None,
         }
 
-    mission = session.scalar(
+    # Select the latest durable collective round, including an answered source
+    # mission whose mediation child is still running. This keeps all viewers
+    # attached to the same Journey decision instead of the latest child mission.
+    mission = None
+    clarification: dict[str, Any] = {}
+    for candidate in session.scalars(
         select(JourneyMission)
-        .where(
-            JourneyMission.journey_id == journey.id,
-            JourneyMission.is_standing.is_(False),
-            JourneyMission.status.in_(("WAITING_FOR_MEMBERS", "ANSWERED", "RUNNING", "CREATED", "DEGRADED")),
-        )
+        .where(JourneyMission.journey_id == journey.id, JourneyMission.is_standing.is_(False))
         .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
-    )
+    ).all():
+        candidate_clarification = _json(candidate.clarification_json, {})
+        if isinstance(candidate_clarification, dict) and candidate_clarification.get("kind") == "COLLECTIVE_TRADEOFF":
+            mission, clarification = candidate, candidate_clarification
+            break
     if mission is None:
         return {
             "state": "COLLECTIVE_NEEDS_ATTENTION",
@@ -92,32 +107,30 @@ def collective_operator_projection(
             "authority_receipt_id": None,
         }
 
-    clarification = _json(mission.clarification_json, {})
-    if not isinstance(clarification, dict) or clarification.get("kind") != "COLLECTIVE_TRADEOFF":
-        return {
-            "state": "COLLECTIVE_NEEDS_ATTENTION",
-            "required_count": len(members),
-            "response_count": 0,
-            "viewer_has_responded": False,
-            "members": [],
-            "options": [],
-            "mission_id": mission.id,
-            "authority_receipt_id": None,
-        }
-
     required_ids = [str(item) for item in clarification.get("required_member_ids") or []]
     responses = clarification.get("responses") or {}
-    member_rows = [item for item in members if item.id in set(required_ids)]
+    required_set = set(required_ids)
+    active_members = {
+        item.id: item for item in members
+        if _member_is_in_force(item, now=now)
+    }
+    member_rows = [active_members[item] for item in required_ids if item in active_members]
+    membership_stale = len(member_rows) != len(required_ids)
+    capability_rows = session.scalars(select(JourneyRoleCapability)).all()
+    member_update_roles = {row.role for row in capability_rows if row.capability == "JOURNEY_UPDATE"}
+    if any(item.role not in member_update_roles for item in member_rows):
+        membership_stale = True
     member_views = []
     for item in member_rows:
         traveler = session.get(Traveler, item.traveler_id)
         member_views.append(
             {
-                "member_id": item.id,
                 "display_name": traveler.display_name if traveler is not None else "Traveller",
                 "role": item.role,
+                "member_id": item.id if viewer_member_id == item.id else None,
                 "responded": item.id in responses,
                 "is_viewer": bool(viewer_member_id and viewer_member_id == item.id),
+                "needs_response": item.id not in responses,
             }
         )
 
@@ -132,14 +145,21 @@ def collective_operator_projection(
         member_count=len(required_ids) or len(member_rows),
         status=str(clarification.get("status") or ""),
         response_count=response_count,
-        authority_receipt_present=bool(receipt is not None and receipt.invalidated_at is None),
-        stale=str(clarification.get("status") or "").upper() == "STALE",
+        authority_receipt_present=bool(
+            receipt is not None
+            and receipt.invalidated_at is None
+            and receipt.decision_epoch == clarification.get("decision_epoch")
+            and receipt.material_world_epoch == clarification.get("material_world_epoch")
+            and receipt.candidate_surface_fingerprint == clarification.get("candidate_surface_fingerprint")
+            and set(_json(receipt.required_member_ids_json, [])) == required_set
+        ),
+        stale=membership_stale or str(clarification.get("status") or "").upper() == "STALE",
     )
     options = [
         {
             "proposal_id": item.get("proposal_id"),
             "label": item.get("label") or item.get("summary") or "Recovery option",
-            "schedule_delta_min": item.get("schedule_delta_min") or item.get("end_time_delta_min"),
+            "schedule_delta_min": item.get("schedule_delta_min", item.get("end_time_delta_min")),
             "cost_delta_minor": item.get("cost_delta_minor"),
             "fit_subject_place_ids": item.get("fit_subject_place_ids") or [],
         }
@@ -155,8 +175,90 @@ def collective_operator_projection(
         "response_count": response_count,
         "viewer_member_id": viewer_member_id,
         "viewer_has_responded": bool(viewer_member_id and viewer_member_id in responses),
+        "viewer_can_respond": bool(
+            viewer_member_id
+            and viewer_member_id in required_set
+            and viewer_member_id in active_members
+            and active_members[viewer_member_id].role in member_update_roles
+            and str(clarification.get("status") or "").upper() == "WAITING_FOR_MEMBERS"
+            and viewer_member_id not in responses
+        ),
         "members": member_views,
         "options": options,
         "authority_receipt_id": receipt.id if receipt is not None else None,
         "selected_proposal_id": clarification.get("selected_proposal_id"),
+        "waiting_for_member_count": max(0, len(required_ids) - response_count),
+        "mediation_mission_id": _latest_mediation_child(session, journey.id, mission.id),
+        "status": clarification.get("status"),
+        "mission_status": mission.status,
+        "decision_epoch_current": not membership_stale,
+        "timeline": collective_operator_timeline(session, journey.id, member_rows),
     }
+
+
+def _member_is_in_force(member: JourneyMember, *, now: datetime) -> bool:
+    if member.removed_at:
+        return False
+    if not member.expires_at:
+        return True
+    try:
+        expires = datetime.fromisoformat(member.expires_at)
+    except ValueError:
+        return False
+    return expires.tzinfo is not None and expires.astimezone(timezone.utc) > now
+
+
+def _latest_mediation_child(session: Session, journey_id: str, source_mission_id: str) -> str | None:
+    rows = session.scalars(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey_id,
+            JourneyMission.parent_mission_id == source_mission_id,
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all()
+    for row in rows:
+        intent = _json(row.resolved_intent_json, {})
+        mediation = intent.get("collective_mediation") if isinstance(intent, dict) else None
+        if isinstance(mediation, dict) and mediation.get("kind") == "DISAGREEMENT_MEDIATION":
+            return row.id
+    return None
+
+
+def collective_operator_timeline(
+    session: Session, journey_id: str, members: list[JourneyMember]
+) -> list[dict[str, Any]]:
+    names = {
+        member.id: (
+            session.get(Traveler, member.traveler_id).display_name
+            if session.get(Traveler, member.traveler_id) is not None
+            else "A traveller"
+        )
+        for member in members
+    }
+    labels = {
+        "agent.collective_decision.requested": "CityNexus found recovery options for the group",
+        "agent.collective_decision.mediation_started": "The group choices conflict; looking for a compromise",
+        "agent.collective_decision.authority_issued": "All required travellers agreed",
+        "operator.recovered": "Shared plan updated; watching again",
+    }
+    rows = session.scalars(
+        select(AuditLog).where(AuditLog.journey_id == journey_id)
+        .order_by(AuditLog.created_at, AuditLog.id)
+    ).all()
+    items: list[dict[str, Any]] = []
+    response_seen: set[tuple[str, str]] = set()
+    for row in rows:
+        after = _json(row.after_json, {})
+        if not isinstance(after, dict):
+            continue
+        label = labels.get(row.action)
+        if row.action == "agent.collective_decision.response":
+            member_id = str(after.get("member_id") or "")
+            clarification_id = str(after.get("clarification_id") or "")
+            key = (member_id, clarification_id)
+            if key in response_seen:
+                continue
+            response_seen.add(key)
+            label = f"{names.get(member_id, 'A traveller')} responded"
+        if label:
+            items.append({"at": row.created_at, "kind": row.action, "label": label})
+    return items[-12:]

@@ -1442,6 +1442,9 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-operator-heading { display: grid; gap: 4px; }
 .journey-operator-heading strong { font-size: 16px; }
 .journey-operator-brain { display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: rgba(31, 91, 114, .08); }
+.journey-operator-collective { display: grid; gap: 8px; margin-top: 8px; padding: 12px; border: 1px solid rgba(93, 116, 141, .24); border-radius: 12px; background: rgba(255, 255, 255, .72); }
+.journey-operator-members, .journey-operator-collective-options { display: flex; flex-wrap: wrap; gap: 7px; }
+.journey-operator-members span { color: #68788a; font-size: 13px; }
 .journey-operator-approval { display: grid; gap: 7px; padding: 12px; border-radius: 12px; background: #fff; border: 1px solid #d8b46c; color: #5d431d; }
 .journey-operator-card ol { display: grid; gap: 4px; margin: 0; padding-left: 20px; font-size: 13px; }
 @media (max-width: 760px) { .live-guardian-check { grid-template-columns: 1fr; gap: 4px; } }
