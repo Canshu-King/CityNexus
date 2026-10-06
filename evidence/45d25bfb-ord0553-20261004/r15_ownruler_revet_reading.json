@@ -1,0 +1,45 @@
+{
+ "instrument": "cmdra_0553_ownruler_revet_r15",
+ "node_modules_junctions": {
+  "tip_export": "exists",
+  "mutant": "made"
+ },
+ "runs": [
+  {
+   "tag": "clean-at-tip",
+   "rc": 0,
+   "passed": 4,
+   "failed": 0,
+   "tail": "\nRunning 4 tests using 1 worker\n\n  ok 1 e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:128:1 › every status the contract can answer has one wording, in both languages (5ms)\n  ok 2 e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate (1ms)\n  ok 3 e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:157:1 › the panel asks for a wording instead of putting the payload field on screen (1ms)\n  ok 4 e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:165:1 › the ruler is reading a live surface, not an empty one (3ms)\n\n  4 passed (523ms)\n",
+   "evidence_written": true
+  },
+  {
+   "tag": "mutant-enum-wording",
+   "rc": 1,
+   "passed": 3,
+   "failed": 1,
+   "tail": "          |                                                                                                                                  ^\n      155 | });\n      156 |\n      157 | test(\"the panel asks for a wording instead of putting the payload field on screen\", () => {\n        at D:\\moodle\\_qoder_cmdra_ord0553_20261003\\_r15_mutant\\frontend\\e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:154:130\n\n    Error Context: ..\\_r15_out\\qoder-45d25bfb-authoritati-d5be0-it-is-supposed-to-translate\\error-context.md\n\n  1 failed\n    e2e\\qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:138:1 › no status wording is the machine token it is supposed to translate \n  3 passed (853ms)\n",
+   "evidence_written": true
+  }
+ ],
+ "arms": [
+  {
+   "id": "the_landed_ruler_still_passes_on_todays_tip",
+   "verdict": "PASS",
+   "observed": "clean run: rc=0 passed=4 failed=0"
+  },
+  {
+   "id": "the_ruler_goes_red_when_the_wording_is_put_back_to_the_enum",
+   "verdict": "PASS",
+   "observed": "mutant run: rc=1 passed=3 failed=1"
+  },
+  {
+   "id": "both_runs_actually_read_a_live_surface",
+   "verdict": "PASS",
+   "observed": "each run wrote its own reading file: clean=True mutant=True"
+  }
+ ],
+ "mutant_note": "one line changed: exec.state.enRoute en wording -> the enum's printed form",
+ "verdict": "GREEN",
+ "red_arms": []
+}
