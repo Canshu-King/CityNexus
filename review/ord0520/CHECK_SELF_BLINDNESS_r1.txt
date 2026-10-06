@@ -1,0 +1,16 @@
+{"file": "vacuous_truth_scan_r1.py", "functions": 7, "verdict_sites": 8, "names_its_own_file": false, "mentions_self_or_blob": true, "carries_an_empty_refusal": false, "can_notice_own_drift": false, "status": "READ"}
+{"file": "vacuous_guard_arms_r1.py", "functions": 2, "verdict_sites": 10, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": true, "can_notice_own_drift": true, "status": "READ"}
+{"file": "vacuous_guard_abnormal_arm_r1.py", "functions": 3, "verdict_sites": 5, "names_its_own_file": false, "mentions_self_or_blob": false, "carries_an_empty_refusal": true, "can_notice_own_drift": false, "status": "READ"}
+{"file": "vacuous_guard_abnormal_pair_r1.py", "functions": 3, "verdict_sites": 2, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": true, "can_notice_own_drift": true, "status": "READ"}
+{"file": "vacuous_guard_gap_closed_arm_r1.py", "functions": 3, "verdict_sites": 2, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": true, "can_notice_own_drift": true, "status": "READ"}
+{"file": "vacuous_guard_partial_arms_r1.py", "functions": 3, "verdict_sites": 7, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": true, "can_notice_own_drift": true, "status": "READ"}
+{"file": "vacuous_guard_manifest_r1.py", "functions": 1, "verdict_sites": 0, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": false, "can_notice_own_drift": true, "status": "READ"}
+{"file": "osmt_flake_attribution_r1.py", "functions": 4, "verdict_sites": 3, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": false, "can_notice_own_drift": true, "status": "READ"}
+{"file": "abort_glass_provenance_r1.py", "functions": 5, "verdict_sites": 12, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": false, "can_notice_own_drift": true, "status": "READ"}
+{"file": "abort_http_probe_r1.py", "functions": 5, "verdict_sites": 22, "names_its_own_file": true, "mentions_self_or_blob": true, "carries_an_empty_refusal": false, "can_notice_own_drift": true, "status": "READ"}
+control_self_aware True
+control_self_blind False
+checked 10, not-in-this-tree 0, cannot-notice-own-drift 2, carry-empty-refusal 5
+blind_list vacuous_truth_scan_r1.py, vacuous_guard_abnormal_arm_r1.py
+guarded_list vacuous_guard_arms_r1.py, vacuous_guard_abnormal_arm_r1.py, vacuous_guard_abnormal_pair_r1.py, vacuous_guard_gap_closed_arm_r1.py, vacuous_guard_partial_arms_r1.py
+VERDICT MEASURED_NOT_SCORED
