@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0553 · 自证：我 r2 落进尖的那把状态词表尺今天还绿不绿、把缺陷放回去它咬不咬（两趟实跑）· 车道 45d25bfb 自申报 r15（0 枚产品字节）
+
+一、为什么要自己跑这一趟
+- 那把尺是我 r2 落进权威线的（frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts，尖 blob 84be25996cf4b082fcc2d6c338fa8a9cccd987f1），此后尖被重挂与别人多笔改过。落在树上的判据不自己跑一遍就不算还活着；这一件只做这件事，不碰任何产品字节。
+- 它是**纯读文件**的尺（读契约行、stateKeyMap、两本词表、兜底族、面板那一行），不起服务器；所以我不走产品那份 config（它会起后端与 dev 两个进程），另写了一支只声明这一支 spec、无 webServer 的跑法（件 blob 89ad3ff889da93114a94b87d5cf9f400e343c6b7）。
+
+二、两趟读数（判据从件派生，件 blob 09f46098757f3f3b43c6e50b0cdf867dbbaaed55）
+- 干净那趟（尖的全树导出）：四 条臂全过、零条红、rc=0；它自己写下的读数是契约行解析出的 十 枚状态名、stateKeyMap 七 枚键（读数件 blob d1c39f667eeaa551b6ce085b00a34c7d2ec9f859）。
+- 反件那趟：同一支尺、只把 en 那格措辞改回枚举原文（exec.state.enRoute 的英文值改回大写原文，源行出处 frontend/src/i18n/LocaleContext.tsx，尖 blob 20203fee4744513da320387e7923fabbf054d566）：一 条臂红、红的正是「措辞不许是它要翻译的那个机器词」那条，rc=1。
+- 三臂判语：尺今天仍绿=PASS；放回缺陷必红=PASS；两趟都真写出了读数=PASS（同一件 blob 09f46098757f3f3b43c6e50b0cdf867dbbaaed55）。
+
+三、我这仪器自己先错两次（都在发布前修好，如实记）
+- 第一趟两跑都 rc=1 且零条执行：我把那支 config 放在导出根，而它要 import 的 @playwright/test 只挂在 frontend 下的 node_modules，解析失败。把 config 挪到 node_modules 旁边才跑起来。
+- 第二趟反件树 rc=1：我只搬了被读的几枚源文件，没带 frontend/package.json，.ts 被当成 CJS 加载。补上 package.json 与 tsconfig 后它才真跑。两处都是仪器的错，不是尺的错。
+
+四、这趟**不能**说明什么（具名）
+- 绿只说明这把尺读到的五个文件仍然满足它那四条判据；它不证明屏上渲染正确，也不签收——按它自己的注释，签收归 playwright.config.ts 那份验收套件。
+- 我没量：整套 e2e 在权威模式下跑（要 npm run dev 与两枚端口）；别的车道那几支同名族尺今天绿不绿（只跑了我自己这一支）。具名 NOT_MEASURED_BY_CMDRA。
+
+五、纪律
+- r15 产品字节 0 枚、提交 0 笔、推送 0 次；两棵被我碰过的树都在我自己目录里，node_modules 是 junction 指回仓库、不复制也不递归删；共享预览库 _preview.db 没读、没写、没 ALTER，demo/reset 一次没跑，force-push 0 次，权威线我没碰；新落盘 五 枚全 CREATED 或 SKIP_IDENTICAL、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r15.jsonl。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 下一件自申报：把别车道剩下那几处软化写法收掉（等点名）
 
 一、手里已无欠活
