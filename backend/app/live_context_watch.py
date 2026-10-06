@@ -128,10 +128,21 @@ def classify_opening_hours(*, activity: Any, place: Any, opening: dict[str, Any]
     }
 
 
-def _place_receipt(receipt: dict[str, Any], place_id: str) -> dict[str, Any] | None:
+def _place_receipt(
+    receipt: dict[str, Any],
+    place_id: str,
+    provider_entity: str | None = None,
+) -> dict[str, Any] | None:
+    """Return only evidence bound to the exact planned Place/provider entity."""
+
     for item in receipt.get("places") or []:
-        if isinstance(item, dict) and str(item.get("place_id")) == str(place_id):
-            return item
+        if not isinstance(item, dict) or str(item.get("place_id")) != str(place_id):
+            continue
+        if provider_entity is not None and str(item.get("provider_entity") or "") != str(
+            provider_entity
+        ):
+            continue
+        return item
     return None
 
 
@@ -234,7 +245,15 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
     degraded = bool(receipt.get("degraded_providers"))
     for activity in active:
         place = session.get(Place, str(activity.place_id))
-        row = _place_receipt(receipt, str(activity.place_id))
+        row = (
+            _place_receipt(
+                receipt,
+                str(activity.place_id),
+                str(place.external_id or ""),
+            )
+            if place is not None
+            else None
+        )
         if place is None or row is None:
             classifications.append({"activity_id": activity.id, "place_id": activity.place_id, "status": "UNKNOWN", "reason_code": "EXACT_PLACE_EVIDENCE_MISSING"})
             continue
