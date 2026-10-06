@@ -2106,7 +2106,7 @@ def _advance_steps(session: Session, journey_id: str, timed) -> None:
         first = plans[0]
         plan_id = getattr(first, "id", None) or (first.get("id") if isinstance(first, dict) else None)
     # Deliberately stops at SELECTED: `start_journey` flips the journey to ACTIVE, and
-    # `commerce/validators.py:33-41` refuses a booking unless the journey is PLANNED with a
+    # `commerce/validators.py` refuses a booking unless the journey is PLANNED with a
     # SELECTED plan.  Auto-starting therefore used to make M4's first half impossible to
     # demonstrate; starting is now an explicit action on the stage.
     if plan_id is not None:
@@ -2333,7 +2333,7 @@ def demo_prepare_scenario(session: Session = Depends(get_session)):
     `GET /plans` - which does not filter by status - and turned 35 gates red, one of them in
     isolation.  A door that resets state must reset state and nothing else.
 
-    It also stops short of `/start`, because `commerce/validators.py:33-41` books only against a
+    It also stops short of `/start`, because `commerce/validators.py` books only against a
     PLANNED journey with a SELECTED plan: the hard-commitment step of the demo lives in this
     window, and auto-starting would erase it.
     """
@@ -3267,7 +3267,7 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     than overwriting it, so a trip cannot look more recently deleted than it is.
 
     `status` is not touched.  It answers what the trip was doing, and its closed CHECK
-    (`backend/db/schema.sql:125`) has no word for "in the bin" - inventing one would rebuild
+    (`backend/db/schema.sql`) has no word for "in the bin" - inventing one would rebuild
     the table for a fact that now has a column of its own.
     """
 
@@ -3314,8 +3314,8 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     The word is 找回 / undelete, chosen by measurement rather than taste.  恢复 and `recover*`
     are autonomous recovery in this product (`POST /api/v1/journeys/{journey_id}/recovery/acknowledge`
     above, and `recovery.*` copy keys); 还原 is already the plan-version screen's word for reverting
-    to an older plan (`frontend/src/features/studio/planVersionHistoryCopy.ts:10` states that rule);
-    `restore` in this tree means "a reload brings the same draft/panel back" (`main.py:3200`).  An
+    to an older plan (`frontend/src/features/studio/planVersionHistoryCopy.ts` states that rule);
+    `restore` in this tree means "a reload brings the same draft/panel back" (`main.py`).  An
     audit action of `journey.restored` would have handed 恢复 a fourth meaning.
 
     `JOURNEY_NOT_DELETED` (409) is the refusal that makes this door honest: bringing back a trip
@@ -3676,7 +3676,7 @@ def _collection_rows_by_folder(
     statements and not eleven.  It is an INNER join, and that is load-bearing rather than
     incidental: `collection_items.place_id` references `places(id)` with no `ON DELETE` clause
     (`backend/db/schema.sql`), and `PRAGMA foreign_keys=ON` is set on every connection
-    (`backend/app/db/session.py:64`), so a place a shelf points at cannot be deleted underneath
+    (`backend/app/db/session.py`), so a place a shelf points at cannot be deleted underneath
     it.  A shelf row therefore always has a place to resolve to, and the join cannot quietly drop
     a row and leave `item_count` short of what was asked for.
 
@@ -3737,7 +3737,7 @@ def create_collection(payload: CollectionFolderCreate, session: Session = Depend
 
     `owner_traveler_id` is asserted by the caller and validated against `travelers`, not
     authenticated: this is the same stance `POST /api/v1/journeys/{id}/members` takes on
-    `invited_by` (`backend/app/main.py:3917`), because the anonymous read is still the product's
+    `invited_by` (`backend/app/main.py`), because the anonymous read is still the product's
     default.  What the column does establish is whose shelf a row is, so the scoped read below has
     something to scope on and 「我的收藏」 stops being a hope expressed by a screen.
 
@@ -3804,7 +3804,7 @@ def list_collections(
 
     `traveler_id` is required, and that is the whole of the scope: a shelf is answered to the id
     written on it and to no one else.  It is a query parameter the way every other filtered read on
-    this server asks for one (`city_code` at `backend/app/main.py:5823` is the same shape), not a
+    this server asks for one (`city_code` at `backend/app/main.py` is the same shape), not a
     new channel.  What this version does *not* do is authenticate it -- see
     `create_collection`: the id is asserted by whoever calls, so 「我的收藏」 is a statement about
     which row the shelf belongs to, not a statement about who is allowed to look.
@@ -3817,7 +3817,7 @@ def list_collections(
     "/api/v1/collections/{folder_id}/items",
     response_model=CollectionItemSchema,
     status_code=201,
-    # ORD-0444, following ORD-0395's rule at `backend/app/main.py:2114`: the refusal is behaviour
+    # ORD-0444, following ORD-0395's rule at `backend/app/main.py`: the refusal is behaviour
     # this door exists to have, so the application's own served spec has to say it.  The hand
     # contract declared the 404 and the 409; without this block `/openapi.json` showed only
     # 201 and 422, and a consumer of the served document could not see that a shelf it does not
@@ -4105,7 +4105,7 @@ def _checkin_target(payload: JourneyCheckinCreate) -> tuple[str, str]:
 
     The key is written here, once, and is never re-derived when the stamp is read.  That is not
     tidiness -- either target column can go NULL underneath a live stamp (`ON DELETE SET NULL`, and
-    the replan path at `backend/app/main.py:11190` and `backend/app/operations/v9.py:732` is what
+    the replan path at `backend/app/main.py` and `backend/app/operations/v9.py` is what
     triggers it), so a key derived from the columns would change or vanish after the fact and the
     重复打卡 promise would end up depending on rows that no longer exist.
     """
@@ -4135,7 +4135,7 @@ def _checkin_journey_read(session: Session, journey_id: str) -> Journey:
     """One rule at both doors: a trip in the recycle bin is neither stampable nor stamp-readable.
 
     409 rather than 404 because the row exists and 找回 puts it back, which is the same reasoning
-    `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` records at `backend/app/main.py:3852`.  The bin is applied to
+    `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` records at `backend/app/main.py`.  The bin is applied to
     the read door on purpose too: `GET /api/v1/journeys` keeps its `deleted_at IS NULL` promise, so a
     screen that could read a binned trip's footprints would be showing the history of a trip the
     product refuses to list -- and one rule at both doors is cheaper to state than two that differ.
@@ -4381,7 +4381,7 @@ def list_journey_checkins(journey_id: UUID, session: Session = Depends(get_sessi
 
 
 # ORD-0434: a share grant is a server fact instead of a URL the client assembles
-# (`frontend/src/lib/journeyLink.ts:34`).  The anonymous read above is deliberately untouched - the
+# (`frontend/src/lib/journeyLink.ts`).  The anonymous read above is deliberately untouched - the
 # phone demo chain and every existing e2e walk it, and tightening what it accepts is a daylight
 # decision.  `PRIVATE` refuses every token read; `INVITEES_ONLY` asks the reader to name a member
 # and checks that name against `journey_members`, and a read that names nobody is refused rather
@@ -4728,7 +4728,7 @@ def _shared_plan_projection(
     Answers `(plan_state, plan)`, and the state is named rather than left to be inferred from a null.
     Three cases are genuinely different facts and a screen cannot tell them apart from `None` alone:
     this journey never had a plan; it points at a plan row that is not there; it has one.
-    `_active_plan_payload` (`app/stay_mobility.py:1684`) is the owner's projection and carries the
+    `_active_plan_payload` (`app/stay_mobility.py`) is the owner's projection and carries the
     owner's live position, their commitments and their disruption events -- none of which a guest
     asked for, and the first of which is a person's location.
 
@@ -4855,7 +4855,7 @@ def read_shared_journey(
     # ORD-0465 ④: the owner put this trip in the recycle bin, and a grant does not outlive that.
     #
     # Before this branch the door answered 200 with the whole trip, because `journey_schema` carries no
-    # `deleted_at` (`backend/app/schemas.py:239`) and this door never looked at the column -- so the
+    # `deleted_at` (`backend/app/schemas.py`) and this door never looked at the column -- so the
     # recipient of a share link read a trip its owner had thrown away, and no word on that screen could
     # have been true. 409 and not 404: the row is there and the owner can 找回 it, so "no longer
     # readable" would be a different fact; and the name says which of the two the traveller is being
@@ -4901,10 +4901,10 @@ def read_shared_journey(
 
 
 # ORD-0434 step 2: membership is one set per journey, and what a role may do is a table the server
-# holds.  Shape borrowed from RELATION/relation_and_copy_findings.md:94 (a role answers "what may
+# holds.  Shape borrowed from RELATION/relation_and_copy_findings.md (a role answers "what may
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
-# (`app/stay_mobility.py:1963`).
+# (`app/stay_mobility.py`).
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"
@@ -4956,8 +4956,8 @@ def _member_expiry(raw: str | None) -> str | None:
     normalized = parsed.astimezone(timezone.utc).isoformat()
     # ORD-0461 r3: a membership whose deadline this server would already read as spent is refused at
     # the write door, by the one comparison the read path uses (`_expiry_verdict`,
-    # backend/app/main.py:3934) and exactly as the grant door refuses it at
-    # backend/app/main.py:4036.  Accepting it stored a row that `_member_state` called
+    # backend/app/main.py) and exactly as the grant door refuses it at
+    # backend/app/main.py.  Accepting it stored a row that `_member_state` called
     # `MEMBER_LAPSED` in the same breath -- a membership born dead.  `PAST` includes the instant equal
     # to now, because that is what the read door has always meant by spent; the two doors cannot hold
     # two definitions.
