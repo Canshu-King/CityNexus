@@ -16588,6 +16588,123 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0577 重切交：同一双手重切到当代尖（`ba30eaa3`），取代我先前那两枝，四个腿都重跑过（车道 8ac89982 · 绿化工·小许）
+
+**一、为什么重切**
+
+我先前交的两枝（底栏那一手 `6d7c4c99471965e5acc8825580372c60ff7af6c5`、抽屉与侧栏那一手 `03168b4c2a68bc11cf261efdbb2ed861613b2d36`）建在**旧一代**的尖上：期间别的车道动了那枚外壳文件（`frontend/src/app/V8Experience.tsx`），把注释里的行号锚换成了名字锚——**逐字节比是注释那一层，功能一字未动**（外壳 blob 由 `5d62f7bc78a58369d871a37c820e0b9a1a6076e6` 变成 `4fece5054beef7ab90ea6544cfaf1ce7ad720050`，我先 diff 过才敢这么说）。所以这两枝已经不贴在尖上了，按常设重切。
+
+**二、坐标**
+
+- 父 = 建枝时现读的尖；它那枚外壳正是上面那枚 `4fece505…`（**当代尖的那一枚**，不是我记的）。
+- 枝 = `refs/heads/review/8ac89982-ord0577-bar-and-layers-say-where-r2`，头 `ba30eaa3503ad18c3870fa4dcee8d52e3ef88614`；外壳逐字节比 **新增十五行、删除两行**（＝底栏那一手十三行 + 抽屉与侧栏那两行）。
+- **这枝取代我上面点名的那两枝**，落一枝就好，别三枝都落。
+
+**三、这一代的验收（四个腿都重跑，不是继承）**
+
+- 底栏那把闸：带这手跑 **绿**；只把外壳退回**当代尖自己的字节**、闸一字不动 ⇒ **红**（报的就是"这一屏底栏什么都没答"）。
+- 抽屉与侧栏那把闸：带这手跑 **绿**；同样退回尖上字节 ⇒ **红**（报的是"抽屉对读屏什么都没说"）。
+- `typecheck:all` 退出码零。
+- 可见文字仍是比出来的：底栏五枚、抽屉与侧栏每行的文字，逐屏逐枚与**改动前**抓的基线件比（基线随枝交），不是我念的。
+- 读数：底栏六屏由按钮的 current 答、十一屏由指向答；抽屉十七屏、侧栏十五屏说得上；负对照（不指向任何屏的地址）仍答"今天"。
+
+**四、这一枝与上一版不同的地方**（据实说，不是话术）
+
+只有基座换了与重跑读数：手的内容、闸的判据、基线件、零新文案这些都没变。换句话说，这一枝证明的是"同一双手在当代尖那枚外壳上依然成立"。
+
+**五、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次；四趟跑各自独占 run-id 与库文件、端口本车道自取；每趟跑完按 blob 还原（末尾核对那枚与推上去那枚逐位相同）；共享仓库那把 `shallow.lock` 是别的车道正在跑的 fetch／push 持有的，我没删也没抢，也因此没在提交工具里 fetch。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0576 r3 · 车道 82f55d8a：这枝等了两代没被取，我按现尖重挂了——**在 `79daa3c4…` 上量到 `--list` 退出码零、`Total: 799 tests in 170 files`、抛错零枚**；真三方合并预测仍是零冲突（尽管有四枚 spec 同时被别人动过）。枝 `review/82f55d8a-e2e-collection-safe-r3` 头 `bb964e67b026ba896f134422e001006cbb510f15`
+
+**〇、为什么重挂（不是空转，是量出来该动）。** 我这枝（r2，头 `c2c127ea8ee575aab31aabf50dea30d0b4f730d7`）在 `cfda610a…` 上做的；权威线后来连走两跳到 `79daa3c4ff8f37304d352177b456133d4b9c2a45`，我在**新尖现导出的完整检出**里量：退出码一、`Total: 0 tests in 0 files`、抛错十三枚（件 `D:/moodle/_qoder_82f55d8a_ord0576_export/list_t79da_full.txt`）。也就是说这枝一天不落，现尖就一天收不到东西。与其等，不如把父换到现尖。
+
+**一、重挂前先证它安全（两条读数）。**
+
+- 交叠：现尖自 `cfda610a…` 起改动的路径，与我这枝改的十七枚里**有四枚重叠**——`frontend/e2e/qoder-ord0472-trip-poster.spec.ts`、`frontend/e2e/qoder-ord0525-entry-reachability-r3.spec.ts`、`frontend/e2e/qoder-ord0541-share-idempotent.spec.ts`、`frontend/e2e/qoder-ord0545s6-copy-cells-r1.spec.ts`。别人也动了这四枚。
+- 真三方合并预测：`git merge-tree --write-tree --messages 79daa3c4… c2c127ea…` → 退出码零、合并树 `b8fc003440ae6988e77c76f227a5a323d67d184d`、`CONFLICT` 计数零。⇒ 两边是并排，不是打架；重挂不会压掉别人的新字。
+
+**二、重挂后在本枝上量的结果。** `cd frontend && npx playwright test --config playwright.config.ts --list` → 退出码零、`Total: 799 tests in 170 files`、导入期抛错零枚（件 `D:/moodle/_qoder_82f55d8a_ord0576_export/list_r3.txt`）。这是**在现尖 `79daa3c4…` 之上**的读数，不是我旧基座上的自证。
+
+**三、内容与 r2 同，只换父。** 模块作用域的前置拒绝改成"收集 + 具名跳过"（逐枚消息串原样保留、断言一字未动），一枚顶层读后端源文件的改成惰性读，加一把问 Playwright 本人的采集尺（`tools/e2e_collection_ruler_r2.py`）。产品字节零枚、删除零枚。
+
+**四、给落地门的一句话。** r1（头 `18d19b62e8bcbdd11c9804c7fcda6f47342325ea`）已落；r2 未落、已被 r3 取代（内容同、父更新到现尖）——**取 r3 即可，不用再复切 r2**；r2 与 r1 的旧枝我没删（删远端枝是共享状态动作，归你点）。
+
+**五、没做 / 红线自查**
+
+1. 全程只 `--list`：不起 `webServer`、不开端口、不连 `:8000` `:4781` `:4782` `:8693`；导出树与 worktree 都在我自己目录下（`node_modules` 硬链接，不是第二份）；`.db` 按"新于本轮起点"筛出零枚；`_preview.db` 仍是 7213056 B、mtime 2026-09-29 09:20:27；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印。
+2. push 权威线零次、force-push 零次（只推了 `review/*` 一枚新枝）。
+3. 这些 spec 的**通过**与否仍未量（要私有栈与证据目录）；"收得到"与"跑得绿"是两件事，我不混说。具名 `NOT_EXECUTED_BY_82f55d8a`。
+
+**六、下一手。** 落地后我按老形制在那一代上把两形 `--list` 各量一次交回执；若要我把这把尺接进日常（落地门跑一次 `tools/e2e_collection_ruler_r2.py`），你一句话。我名下另两件仍等落：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · ORD-0556 第十一趟只读腿：那 66 枚「无小写字母」的词条，有多少是真被引用过的（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `ba063663ce7087422b4d669d26be19e61a28c470`，`ls-remote` 独立回读同值，parent = `0c2a00a6e6f5d334ac8c8d87ef4b428ecb4f2ff8`。本腿一笔 2 枚文件（量具一枚 + 读数件一枚），产品路径 0 枚。件 `review/ord0556/readouts/dead_copy_20261006T122554Z.json`，判语 `DEAD_COPY_READ`，现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（现读 `ls-remote`），与腿七那 66 枚同一枚尖。
+
+**一、问的是更便宜的那一问**：腿七数了「值里没有小写字母」的 66 枚（`review/ord0556/readouts/dead_copy_20261006T122554Z.json:11`），但没问它们有没有被引用过。**没被任何代码引到的词条不在这单的活儿里**——改它不会有任何屏变。
+
+**二、判据与我改过一次**：判据是「前端源码里出现过这个带引号的键名」，不是只认 `t("键")` 调用点。**第一版只认调用点，于是 `exec.state.*` 那族被我错判成死词条**——它们在 `frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:45` 起的 `stateKeyMap` 里以普通字符串出现（枚举值映射到键名），屏上照样读得到。改成「出现即引用」后：被引用 57 枚（`review/ord0556/readouts/dead_copy_20261006T122554Z.json:12`），从未被引用 9 枚（`review/ord0556/readouts/dead_copy_20261006T122554Z.json:13`）（两数之和即 66 枚）。扫描的前端源文件 53 枚（`review/ord0556/readouts/dead_copy_20261006T122554Z.json:7`），词表条目 573 枚（`review/ord0556/readouts/dead_copy_20261006T122554Z.json:8`），扫描时把词表自己排除，否则每个键都会「命中自己」。
+
+**三、那 9 枚点名**：`bookings.importKicker`、`discovery.liveProvider`、`discovery.sealedReal`、`discovery.sealedReplayReady`、`exec.notStarted`、`intel.cpsat`、`me.currentMode`、`me.preAuthorized`、`me.tripContext`。其中 `bookings.importKicker`、`me.currentMode`、`me.preAuthorized`、`me.tripContext` 与腿八那几块对得上——被端掉的屏留下的词条（`bookings.importKicker` 属 import 屏那族，`me.*` 属 me 屏那一代）。**这九条我逐条核过「不是近似名的替身」**：同一文件里用的是 `discovery.liveProviderMode`、`discovery.liveProviders`、`discovery.sealedRealReplay` 这几枚，不是它们。
+
+**四、说什么、不说什么**：说——在这代尖上，治「机词上屏」这个词表的面**最多 57 枚**，另 9 枚不必动；再与腿七相交，其中 7 枚走 `.v8-kicker`（改值改不动像素），其余走别的元素（改值直接改屏）。不说——**「被引用」不等于「真上屏」**：引用只说明代码会问它要字符串，这一格要屏侧读数才作数（腿一那趟屏读跑在旧代树上，现尖的屏侧读数仍缺）。另：动态拼键我只另核了会拼键的那两处文件（`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx` 与 `frontend/src/features/execution/V12StatePrimitives.tsx`），它们的键以普通字符串落在映射表里、已被本判据覆盖；再别的拼法我这手没穷举。
+
+**五、没改善（具名报缺）**
+1. **屏侧仍没有数**（同腿四到腿十那条缺因）：这腿是纯 git 对象读，一枚浏览器都没开。
+2. **没判「引用了但那屏打不开」**：被引用 57 枚里，有多少落在现尖已端掉的那几屏后面，我没查。
+3. 逐格归因仍缺（原始上屏文字被腿一那手 teardown 删，`review/ord0556/route_sweep_dev_r1.py:219`）。
+
+**六、现场与等点**：本轮零枚自建端口、零枚浏览器、零枚产品字节、没写账本、force-push 0 次、没动任何人的进程、没碰别人的端口。仍等你点的两件不变：其一 ORD-0556 按现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a` re-cut r3 并重取两臂读数；其二 甲那格 `unsupported_forms` 换人话。不点我不动。
+
+
+### ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到
+
+一、为什么是这一件
+- 我自己名下扫过一遍，发现我引错过一枚枝名。同一类错在账本层面是集体的事：一块里引的枝名读者 `ls-remote` 查不到，就是把所有人送去空跑。所以这把尺不扫我名下，扫**整本账本**。
+
+二、分母与发布
+- 扫的源是账本本体：99807 行、14887272 字节。账本里共引过 734 条不同枝名、7844 枚不同 40 位。件 `review/citation-audit-fleet-r1/evidence/citation_audit_fleet_r1.json` blob `dfee0a9589d7a734604ff4f3d7c6c021ddc38afc`。
+- 发布：`refs/heads/review/0afdb49b-citation-audit-fleet-r1` 头 `f02f91e88181733485d23d8e0087e9b9ea010e6e`，单父=发布那刻现读的尖 `79daa3c4ff8f37304d352177b456133d4b9c2a45`；对尖改动 5 枚路径，全在 `review/citation-audit-fleet-r1/` 前缀之下，产品路径零枚。本块落笔时再读，现尖已是 `79daa3c4ff8f37304d352177b456133d4b9c2a45`；现读 ref 共 1295 条（审计那一次读到 1294 条，1 条之差是别人在这中间推的，不是我改的）。
+
+三、两个读数，方法不同、可信度也不同，我不混着说
+- **字节坐标：7844 枚逐枚答得出对象，答不出 0 枚。** 这是本件最硬的一条：全车队没有一枚死坐标，读者照任何一块写的 blob 号去 `cat-file`，取得到。件 `review/citation-audit-fleet-r1/run/citation_audit_fleet_r1.txt` blob `138c2f41510e86e2c5952a71db40c72e77165dd4`。
+- **枝名：账本引过而线上查不到的「完整」枝名 10 条。** 这一条是判语（`ls-remote --refs origin` 一次就拿到整张远端 ref 表，没有本机缓存这一层依赖），逐条如下，每行自带被引次数。
+    - `refs/heads/agent/b-c01d72a3-ord0263` 被引 1 次
+    - `refs/heads/composite/f92f9e9-fcf76941` 被引 3 次
+    - `refs/heads/gates/credential-literals-20260923` 被引 7 次
+    - `refs/heads/review/0296-write-deadline-f` 被引 1 次
+    - `refs/heads/review/0afdb49b-ord0500-anchor-form-r5` 被引 7 次
+    - `refs/heads/review/R-od0437-link-import-r1` 被引 1 次
+    - `refs/heads/review/R-od0471-evidence-r1` 被引 1 次
+    - `refs/heads/review/R-ord0437-link-import-r1x` 被引 1 次
+    - `refs/heads/review/cff87c64-english-arm-enum-echo-r2` 被引 1 次
+    - `refs/heads/review/newlane-ord0444-collections-r5` 被引 1 次
+
+四、两件我必须自己说清的事
+- **那 10 条里只有一条是我名下的**（`refs/heads/review/0afdb49b-ord0500-anchor-form-r5`，我上一块已发过勘误）；其余 9 条是**别的车道**块里引的：b-c01d72a3-ord0263、f92f9e9-fcf76941、credential-literals-20260923、0296-write-deadline-f、R-od0437-link-import-r1、R-od0471-evidence-r1、R-ord0437-link-import-r1x、cff87c64-english-arm-enum-echo-r2、newlane-ord0444-collections-r5。
+- **另有 11 条「查不到」是我这把尺自己造的假红**：块里把枝名缩写成 `…integration-frontend-appl` 那类片段，正则把碎片当成整名。单列 FRAGMENT 不计入。这是本车道第二次在自己的尺上抓到假红（上一把是把通配命令当枝名），一并写在这里：**尺会造假红，就得连假红一起报**。
+- 另一件方法上的诚实：`cat-file` 只问**我本机**的对象库。别人推的 blob 在远端是活的、只是没 fetch 到我这儿，所以「答不出」我**不**读成死坐标；要真判死得 fetch 七千多枚，那笔网络开销没人授权，我不去做。这一格我只能说「在我这儿取得到」。
+
+五、边界与复算
+- 权威尖零次移动；线上已落字节覆盖零枚；名下旧枝改写零次；删枝零次；force-push 零次；账本直写零处（本块走收件口）；端口起停零个；重启链零次；wt22 工作树写入零处（全程只读远端 ref 表与本机对象库）。
+- 本代没跑构建、没跑套件、**零 fetch**；上线的 5 枚路径里没有一枚是产品文件。账本是直读，不落副本。
+- 复算（现取现读；账本与尖若已走请整代重跑）：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/citation_audit_fleet_r1.py` 出读数（尺在枝上：`review/citation-audit-fleet-r1/tools/citation_audit_fleet_r1.py` blob `9005e3d2375b2579ff6e9513371bc445bea5cfda`）。
+
+六、等你那三件（照旧，我没自己动）
+- 甲：预判在 `0afdb49b_1755` 第三节（两枝 20 枚路径 CLEAN_REPLAY 一、ADD_IF_FREE 十九、CONFLICT 零）。乙、丙照旧挂起。
+- 未量照旧点名：Playwright 套件、拒绝语逐句屏读；真机那格已在 `0afdb49b_1640` 量过（设备清单为空，没量到产品）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `5a53846b` 交自申报：这一跳**后端真变了**，我这把「同代尺」第一次给出「必须重跑」的答案——整套在现读尖重跑一次（红 七 枚、单跑无一自清），并顺手清点了名下已经堆到 二十七 枚的枝架
 
 **〇、坐标（写作时现取）**
