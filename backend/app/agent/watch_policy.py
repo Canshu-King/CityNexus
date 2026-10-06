@@ -318,6 +318,7 @@ def next_move_projection(
     # current/next activity pair; a different edge must remain UNKNOWN.
     route_evidence = {
         "state": "UNKNOWN",
+        "kind": "ACTIVITY_EDGE",
         "provider": None,
         "provenance": None,
         "captured_at": None,
@@ -329,6 +330,8 @@ def next_move_projection(
         "degraded": False,
         "reason_code": "NO_TRAVEL_EDGE",
     }
+    launch_origin: dict[str, Any] | None = None
+    launch_edge: dict[str, Any] | None = None
     edge_origin = current
     edge_destination = next_activity
     if edge_destination is not None and edge_origin is None:
@@ -349,6 +352,7 @@ def next_move_projection(
             degraded = bool(fact.get("degraded", mobility_raw.get("degraded", False)))
             route_evidence = {
                 "state": "DEGRADED" if degraded else "AVAILABLE",
+                "kind": "ACTIVITY_EDGE",
                 "provider": fact.get("provider") or mobility_raw.get("source_provider"),
                 "provenance": fact.get("route_provenance") or fact.get("fact_quality"),
                 "captured_at": fact.get("captured_at") or mobility_raw.get("captured_at"),
@@ -359,6 +363,68 @@ def next_move_projection(
                 "edge_match": True,
                 "degraded": degraded,
                 "reason_code": "ROUTE_EDGE_MATCHED",
+            }
+
+    # Before the first activity there may be no previous activity edge.  Use a
+    # grounded launch origin only for that gap, and only accept an exact edge
+    # for the target Place.  This remains a projection: no route fact is
+    # captured and no execution state is changed here.
+    if (
+        not route_evidence.get("edge_match")
+        and next_activity is not None
+        and (
+            phase_value.get("journey_phase") == "PRE_TRIP"
+            or edge_origin is None
+            or (current is not None and str(current.id) == str(next_activity.id))
+        )
+        and callable(getattr(session, "scalar", None))
+    ):
+        from app.execution.launch_origin import launch_context_projection
+
+        launch = launch_context_projection(
+            session,
+            journey,
+            target_activity=next_activity,
+            previous_activity=None,
+            now=stamp,
+        )
+        launch_origin = launch.get("origin")
+        launch_edge = launch.get("edge")
+        edge_state = str((launch_edge or {}).get("state") or "LAUNCH_EDGE_UNAVAILABLE")
+        if edge_state in {"LAUNCH_ROUTE_READY", "LAUNCH_ROUTE_READY_FROZEN"}:
+            edge = launch_edge or {}
+            route_evidence = {
+                "state": (
+                    "FROZEN"
+                    if edge_state == "LAUNCH_ROUTE_READY_FROZEN"
+                    else ("DEGRADED" if edge.get("degraded") else "AVAILABLE")
+                ),
+                "kind": "LAUNCH_EDGE",
+                "provider": edge.get("provider"),
+                "provenance": edge.get("provenance"),
+                "captured_at": edge.get("captured_at"),
+                "expires_at": edge.get("expires_at"),
+                "minutes": edge.get("duration_min"),
+                "from_activity_id": None,
+                "to_activity_id": str(next_activity.id),
+                "origin_key": edge.get("origin_key"),
+                "target_key": edge.get("target_key"),
+                "edge_match": True,
+                "degraded": bool(edge.get("degraded")),
+                "reason_code": edge.get("reason_code") or "EXACT_LAUNCH_EDGE_MATCH",
+                "launch_origin": launch_origin,
+            }
+        else:
+            route_evidence = {
+                **route_evidence,
+                "kind": "LAUNCH_EDGE",
+                "reason_code": (
+                    "LAUNCH_ORIGIN_UNKNOWN"
+                    if str((launch_origin or {}).get("state")) == "UNKNOWN_ORIGIN"
+                    else "LAUNCH_EDGE_UNAVAILABLE"
+                ),
+                "launch_origin": launch_origin,
+                "launch_edge": launch_edge,
             }
 
     presence_state = str(presence.get("state") or "LOCATION_UNAVAILABLE")
@@ -376,6 +442,15 @@ def next_move_projection(
         copy = "The next stop has no exact place yet; Guardian is using the plan schedule."
     else:
         copy = "Location sharing is off; Guardian is using the plan schedule only."
+
+    if route_evidence.get("kind") == "LAUNCH_EDGE":
+        origin_name = str((launch_origin or {}).get("name") or "your starting point")
+        if route_evidence.get("edge_match") and route_evidence.get("minutes") is not None:
+            copy = f"Using {origin_name}, the next stop is about {route_evidence['minutes']} minutes away."
+        elif str((launch_origin or {}).get("state")) == "UNKNOWN_ORIGIN":
+            copy = "Your first route is not ready yet; Guardian cannot safely estimate when to leave."
+        else:
+            copy = "Your starting point is known, but the route to the next stop is not ready yet."
 
     def activity_payload(row: Activity | None) -> dict[str, Any] | None:
         if row is None:
@@ -395,6 +470,8 @@ def next_move_projection(
         "presence": presence,
         "venue_readiness": venue_readiness,
         "route_evidence": route_evidence,
+        "launch_origin": launch_origin,
+        "launch_edge": launch_edge,
         "journey_phase": phase_value.get("journey_phase"),
         "phase_authority": phase_value.get("phase_authority"),
         "copy": copy,

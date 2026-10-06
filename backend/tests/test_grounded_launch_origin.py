@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
 from app.db.models import AccommodationOfferSnapshot, JourneyTripContext, StayJourneyOption
-from app.execution.launch_origin import grounded_launch_origin
+from app.execution.launch_origin import grounded_launch_origin, launch_context_projection, launch_edge_projection
 
 
 class _Rows:
@@ -37,6 +37,22 @@ class _Session:
             return self.trip_context
         return None
 
+
+class _FactRows:
+    def __init__(self, row):
+        self.row = row
+
+    def first(self):
+        return self.row
+
+
+class _FactSession(_Session):
+    def __init__(self, fact):
+        super().__init__()
+        self.fact = fact
+
+    def scalars(self, statement):
+        return _FactRows(self.fact)
 
 def _journey():
     return SimpleNamespace(id="j1")
@@ -148,3 +164,42 @@ def test_no_grounded_source_stays_unknown():
 
     assert result["state"] == "UNKNOWN_ORIGIN"
     assert result["origin_key"] is None
+
+
+def test_unknown_origin_never_invents_launch_edge():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    result = launch_context_projection(_Session(), _journey(), target_activity=_target(now), now=now)
+
+    assert result["origin"]["state"] == "UNKNOWN_ORIGIN"
+    assert result["edge"]["state"] == "LAUNCH_EDGE_UNAVAILABLE"
+    assert result["edge"]["duration_min"] is None
+
+
+def test_exact_mobility_fact_is_the_only_launch_edge_match():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    fact = SimpleNamespace(
+        id="fact1",
+        provider_key="provider",
+        provenance="LIVE_CAPTURE",
+        captured_at=now.isoformat(),
+        expires_at=(now + timedelta(hours=1)).isoformat(),
+        duration_min=18,
+        distance_m=1200,
+        mode="WALK",
+        walking_min=18,
+        evidence_json='{"degraded": false}',
+        geometry_json='{}',
+    )
+    origin = {"state": "READY", "origin_key": "stay-offer:offer1"}
+    target = _target(now)
+    result = launch_edge_projection(
+        _FactSession(fact),
+        _journey(),
+        origin=origin,
+        target_activity=target,
+        now=now,
+    )
+
+    assert result["state"] == "LAUNCH_ROUTE_READY"
+    assert result["duration_min"] == 18
+    assert result["target_key"] == "target-place"

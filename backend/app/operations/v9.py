@@ -1405,6 +1405,9 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             "recommended_action": readiness.get("recommended_action"),
             "must_leave_by": readiness.get("must_leave_by"),
             "must_leave_by_absent_reason": readiness.get("must_leave_by_absent_reason"),
+            "safety_buffer_minutes": readiness.get("safety_buffer_minutes"),
+            "launch_origin": readiness.get("launch_origin"),
+            "launch_edge": readiness.get("launch_edge"),
             "checks": readiness.get("checks"),
             "venue_last_known": (readiness.get("next_move") or {}).get("venue_readiness"),
             "route_evidence": (readiness.get("next_move") or {}).get("route_evidence"),
@@ -1419,6 +1422,8 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         "departure_readiness": {
             "venue": (readiness.get("next_move") or {}).get("venue_readiness", {}).get("observed_at"),
             "route": (readiness.get("next_move") or {}).get("route_evidence", {}).get("captured_at"),
+            "launch_origin": (readiness.get("launch_origin") or {}).get("captured_at"),
+            "launch_edge": (readiness.get("launch_edge") or {}).get("captured_at"),
             "semantics": "last_known_at_capture",
         },
     }

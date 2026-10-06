@@ -122,6 +122,48 @@ def test_aggregate_route_minutes_without_matching_edge_never_fabricates_departur
     assert result["must_leave_by_absent_reason"] == "NO_TRAVEL_EDGE"
 
 
+def test_exact_launch_edge_computes_leave_by_with_explicit_buffer(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    move = _next_move(now, presence="NEAR_TARGET")
+    move["route_evidence"] = {
+        "state": "AVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "minutes": 20,
+        "edge_match": True,
+        "degraded": False,
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH",
+    }
+    move["launch_origin"] = {"source": "SELECTED_STAY", "name": "Hotel"}
+    move["launch_edge"] = {"state": "LAUNCH_ROUTE_READY", "duration_min": 20}
+    _patch_basics(monkeypatch, now, move)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["must_leave_by"] == (now + timedelta(minutes=60)).isoformat()
+    assert result["must_leave_by_absent_reason"] is None
+    assert result["safety_buffer_minutes"] == 10
+    assert result["launch_origin"]["source"] == "SELECTED_STAY"
+
+
+def test_degraded_launch_edge_stays_uncertain_and_has_no_leave_by(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    move = _next_move(now, presence="NEAR_TARGET")
+    move["route_evidence"] = {
+        "state": "DEGRADED",
+        "kind": "LAUNCH_EDGE",
+        "minutes": 20,
+        "edge_match": True,
+        "degraded": True,
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH",
+    }
+    _patch_basics(monkeypatch, now, move)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["must_leave_by"] is None
+    assert result["must_leave_by_absent_reason"] == "ROUTE_EVIDENCE_DEGRADED"
+
+
 def test_readiness_fingerprint_changes_on_material_state_but_not_clock_tick(monkeypatch):
     now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
     _patch_basics(monkeypatch, now, _next_move(now, presence="NEAR_TARGET"))

@@ -147,6 +147,9 @@ def departure_readiness_projection(
     route = next_move.get("route_evidence") or {}
     route_state = str(route.get("state") or "UNKNOWN")
     route_degraded = bool(route.get("degraded"))
+    launch_origin = next_move.get("launch_origin") or route.get("launch_origin")
+    launch_edge = next_move.get("launch_edge") or route.get("launch_edge")
+    launch_edge_state = str((launch_edge or {}).get("state") or "")
     presence = next_move.get("presence") or {}
     presence_state = str(presence.get("state") or "LOCATION_UNAVAILABLE")
 
@@ -168,7 +171,7 @@ def departure_readiness_projection(
     elif venue_state in _UNCERTAIN_VENUE_STATES:
         warnings.append("VENUE_NOT_VERIFIED")
 
-    if route_degraded or route_state.upper() in {"UNKNOWN", "UNAVAILABLE", "DEGRADED"}:
+    if route_degraded or route_state.upper() in {"UNKNOWN", "UNAVAILABLE", "DEGRADED", "FROZEN"} or launch_edge_state == "LAUNCH_ROUTE_UNAVAILABLE":
         warnings.append("ROUTE_EVIDENCE_UNCERTAIN")
 
     critical_events = [row for row in events if str(row.severity).upper() == "CRITICAL"]
@@ -197,6 +200,7 @@ def departure_readiness_projection(
         warnings.append("LOCATION_UNAVAILABLE")
 
     must_leave_by = None
+    safety_buffer_minutes = None
     if "edge_match" not in route:
         # Compatibility for callers supplying the older compact route shape;
         # persisted projections use the explicit NO_TRAVEL_EDGE reason.
@@ -205,6 +209,8 @@ def departure_readiness_projection(
         must_leave_reason = str(route.get("reason_code") or "NO_TRAVEL_EDGE")
     elif route_degraded:
         must_leave_reason = "ROUTE_EVIDENCE_DEGRADED"
+    elif route_state.upper() == "FROZEN":
+        must_leave_reason = "ROUTE_EVIDENCE_FROZEN"
     else:
         must_leave_reason = "ROUTE_EVIDENCE_UNKNOWN"
     # Only use an explicit duration from the exact current -> next edge.
@@ -213,8 +219,15 @@ def departure_readiness_projection(
         travel_minutes = int(route_minutes) if route_minutes is not None else None
     except (TypeError, ValueError):
         travel_minutes = None
-    if starts_at is not None and travel_minutes is not None and travel_minutes >= 0:
-        must_leave_by = (starts_at - timedelta(minutes=travel_minutes + 10)).isoformat()
+    if (
+        starts_at is not None
+        and travel_minutes is not None
+        and travel_minutes >= 0
+        and not route_degraded
+        and route_state.upper() not in {"DEGRADED", "FROZEN"}
+    ):
+        safety_buffer_minutes = 10
+        must_leave_by = (starts_at - timedelta(minutes=travel_minutes + safety_buffer_minutes)).isoformat()
         must_leave_reason = None
 
     if not target:
@@ -250,6 +263,9 @@ def departure_readiness_projection(
         "minutes_until_start": minutes_until_start,
         "must_leave_by": must_leave_by,
         "must_leave_by_absent_reason": must_leave_reason,
+        "safety_buffer_minutes": safety_buffer_minutes,
+        "launch_origin": launch_origin,
+        "launch_edge": launch_edge,
         "blocking_reasons": sorted(set(blocking)),
         "warning_reasons": sorted(set(warnings)),
         "checks": {

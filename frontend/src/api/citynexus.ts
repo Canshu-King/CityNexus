@@ -353,6 +353,9 @@ export interface DepartureReadiness {
   minutes_until_start: number | null;
   must_leave_by: string | null;
   must_leave_by_absent_reason?: string | null;
+  safety_buffer_minutes?: number | null;
+  launch_origin?: { source?: string | null; name?: string | null; captured_at?: string | null } | null;
+  launch_edge?: { state?: string | null; duration_min?: number | null; captured_at?: string | null; provider?: string | null } | null;
   blocking_reasons: string[];
   warning_reasons: string[];
   checks: Record<string, string | null>;

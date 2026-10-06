@@ -56,6 +56,7 @@ type DepartureReadiness = {
   starts_at?: string | null;
   minutes_until_start?: number | null;
   must_leave_by?: string | null;
+  launch_origin?: { source?: string | null; name?: string | null } | null;
   recommended_action?: string;
 };
 
@@ -463,6 +464,11 @@ export function LiveRecovery({
                 hour: "2-digit",
                 minute: "2-digit",
               })}
+            </small>
+          )}
+          {departureReadiness.launch_origin?.name && (
+            <small>
+              {zh ? `出发点：${departureReadiness.launch_origin.name}` : `Starting from ${departureReadiness.launch_origin.name}`}
             </small>
           )}
         </div>
