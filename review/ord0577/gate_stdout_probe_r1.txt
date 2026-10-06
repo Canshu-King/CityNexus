@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:65398 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65397 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54305 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/agent-feed?limit=50 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56839 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51409 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49300 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65400 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57233 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57235 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57234 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/member-role-limits HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57236 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61185 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61186 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61187 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56058 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65421 - "GET /api/v1/travelers/31a1b533-7d2a-4976-8ebb-f6785b1a2546/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61188 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56059 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60783 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56060 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64013 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64014 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64015 - "GET /api/v1/travelers/31a1b533-7d2a-4976-8ebb-f6785b1a2546/push-config HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64016 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64018 - "GET /api/v1/travelers/31a1b533-7d2a-4976-8ebb-f6785b1a2546/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54199 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64017 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54200 - "GET /api/v1/journeys/b55ee3e8-bd77-4383-a98d-50f59281a62d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54201 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  2 passed (1.0m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-hamburger-probe-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577probe_r1.db ports 5202/5203 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0577probe_r1 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577probe_r1.log

@@ -1,0 +1,39 @@
+ORD-0577 second layer census -- provenance (lane 8ac89982, 绿化工·小许, 2026-10-06)
+
+WHAT THIS MEASURES
+  The same question as the bar census (which chrome layer answers "where am I"), asked of the other two
+  layers: the phone drawer (opened by the hamburger) and the desktop sidebar. The answer decides the cost
+  of the two fix shapes the order allows, which is why it was measured before either was proposed.
+
+BYTES (read live, not remembered)
+  tip when this branch was built        d602db8ed6280a56697eda8500cc4effe3484479
+  tip when the census ran               8996eee4fb9fb4e159588305223ef421728c4e72
+  frontend/src/app/V8Experience.tsx     5d62f7bc78a58369d871a37c820e0b9a1a6076e6 at BOTH tips
+  lane tree, same path                  5d62f7bc78a58369d871a37c820e0b9a1a6076e6
+  -> the readings belong to the shell bytes the authority line still carries; what moved between the two
+     tips was other lanes' work (trash feature, LocaleContext), not this file.
+
+RUNS (own ports, own run id, own database file each time)
+  layers r1  ports 5200/5201  2 failed  -- my instrument's fault: the spec never set the phone viewport,
+                                          so the hamburger was display:none (styles.css hides it above
+                                          680px) and the click timed out. The timeout said nothing about
+                                          the product.
+  probe      ports 5202/5203  2 passed  -- the hamburger probe written to tell those two facts apart:
+                                          visible, display:block, 46x27 box on all 17 screens at 390x844.
+  layers r2  ports 5204/5205  2 failed  -- my budget's fault: 17 screens x two phases does not fit the
+                                          default 60 s, and it surfaced as a timeout at a waitForTimeout.
+  layers r3  ports 5206/5207  3 passed  -- with the viewport set and the test's own timeout raised.
+  receipts: review/ord0577/gate_stdout_layers_r1.txt (the r3 run), review/ord0577/gate_stdout_probe_r1.txt
+
+FOUND (identical in zh and en)
+  drawer, 390x844, 17 rows: exactly one row carries .active on every one of the 17 screens and it is that
+      screen's own row; the negative control lands on the Today row. aria-current on drawer rows: 0.
+  sidebar, 1280x900, 15 rows: the current screen's row is marked on 15 screens (it iterates
+      desktopRoutes, so the mobile-only keys trips and me have no row there at all); every mark also
+      carries data-contrast-role="state". aria-current on sidebar rows: 0.
+  -> the drawer already knows the answer for all 17 screens and says it only by class; the bar answers 6
+     and is silent on 11; no layer anywhere uses aria-current except the six bar buttons.
+
+WHAT IS NOT CLAIMED
+  no fix ships here. This is measurement: it removes the need to invent a screen-to-bar mapping (the
+  drawer names the screen itself), and it shows what the "say it explicitly" shape would cost.
