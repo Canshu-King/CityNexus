@@ -72,6 +72,133 @@ def test_r32_external_wait_does_not_hold_database_transaction(monkeypatch):
     assert len(calls) >= 2
 
 
+def test_r32_executed_mutation_terminalizes_before_self_supersession(
+    monkeypatch,
+):
+    """A successful mutation ends the run on its server receipt.
+
+    Closing the bound epoch is a successful recovery handover, not evidence
+    that the run became stale.  No extra model turn may create a synthetic
+    successor epoch and relabel the successful run SUPERSEDED.
+    """
+
+    from app.agent.gateway import AgentToolGateway
+    from app.agent.mission import create_mission
+    from app.recovery_epoch import (
+        COMMITTED,
+        commit_recovery_epoch,
+        current_open_recovery_epoch,
+    )
+
+    journey_id = _selected_journey()
+    agent = object.__new__(DeepSeekJourneyAgent)
+    agent.model_key = "r32-terminal-mutation-fixture"
+    complete_calls = 0
+
+    def tool_message(name: str, arguments: dict[str, object], call_id: str):
+        return {
+            "content": "",
+            "tool_calls": [
+                {
+                    "id": call_id,
+                    "type": "function",
+                    "function": {
+                        "name": name,
+                        "arguments": json.dumps(arguments),
+                    },
+                }
+            ],
+        }
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        mission = create_mission(
+            session,
+            journey,
+            command="Inspect, then execute one authorized recovery mutation.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            trigger_event_id=None,
+        )
+        session.commit()
+
+        def complete(messages):
+            nonlocal complete_calls
+            complete_calls += 1
+            if complete_calls == 1:
+                return tool_message(
+                    "inspect_journey",
+                    {"journey_id": journey_id},
+                    "inspect-before-mutation",
+                )
+            if complete_calls == 2:
+                return tool_message(
+                    "accept_replan",
+                    {
+                        "journey_id": journey_id,
+                        "proposal_id": str(uuid4()),
+                    },
+                    "execute-mutation",
+                )
+            raise AssertionError(
+                "runtime requested another model turn after executed mutation"
+            )
+
+        def dispatch(self, tool_name, request):
+            if tool_name == "inspect_journey":
+                return {
+                    "tool": tool_name,
+                    "decision": "ALLOW_AUTO",
+                    "journey": {"id": journey_id},
+                }
+            assert tool_name == "accept_replan"
+            epoch = current_open_recovery_epoch(self.session, journey_id)
+            assert epoch is not None
+            commit_recovery_epoch(
+                self.session,
+                epoch,
+                reason="TEST_AUTHORIZED_MUTATION",
+            )
+            self.session.commit()
+            return {
+                "tool": tool_name,
+                "decision": "ALLOW_AUTO",
+                "executed": True,
+                "proposal_id": str(request.proposal_id),
+            }
+
+        monkeypatch.setattr(agent, "_complete", complete)
+        monkeypatch.setattr(AgentToolGateway, "dispatch", dispatch)
+        result = agent.run(
+            session,
+            journey=journey,
+            mission=mission,
+        )
+
+    assert complete_calls == 2
+    assert result["status"] == "COMPLETED"
+    assert result["completion_contract"]["kind"] == "MUTATION_EXECUTED"
+    assert [step["tool_name"] for step in result["tool_steps"]] == [
+        "inspect_journey",
+        "accept_replan",
+    ]
+    assert not any(
+        step["tool_name"] == "recovery_epoch_guard"
+        for step in result["tool_steps"]
+    )
+
+    with SessionLocal() as db:
+        persisted = db.get(AgentRun, result["run_id"])
+        assert persisted is not None
+        assert persisted.status == "COMPLETED"
+        epoch = db.get(
+            __import__("app.db.models", fromlist=["RecoveryEpoch"]).RecoveryEpoch,
+            persisted.recovery_epoch_id,
+        )
+        assert epoch is not None
+        assert epoch.status == COMMITTED
+
+
 def test_r32_shock_during_provider_wait_preempts_before_stale_tool(monkeypatch):
     """A model response born under R1 is discarded if R2 appears in flight."""
 
