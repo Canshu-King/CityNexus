@@ -88,6 +88,7 @@ def tool_catalog() -> list[dict[str, object]]:
         "search_city_services",
         "request_replan",
         "accept_replan",
+        "activate_standby",
     }
     return [item.as_dict() for item in TOOLS if item.tool_name in legacy_names]
 
