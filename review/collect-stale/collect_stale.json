@@ -1,0 +1,82 @@
+{
+ "run_id": "C4-012518",
+ "api": 5211,
+ "front": "http://127.0.0.1:5220",
+ "BAD": [],
+ "shelf_id": "4276fb8b-0f41-4506-9b6b-f799a5ffe05f",
+ "place_id": "place-old-town",
+ "traveler_id": "11111111-1111-4111-8111-111111111111",
+ "rows_deleted": 1,
+ "leg_rc": 0,
+ "leg_stdout": "frames=6 errors=0\n  [frame1_after_collect] result=已收在 StaleShelf held=0 already=false\n  [frame1_api] api=[]\n  [frame2_after_db_delete_screen_not_refreshed] result=已收在 StaleShelf held=0 already=false\n  [frame2_api_after_db_delete] api=[]\n  [frame3_after_manual_reload] result= held=0 already=?\n  [frame3_api] api=[]\n",
+ "leg_doc": {
+  "run_id": "C4-012518",
+  "arm": "zh-CN",
+  "width": 390,
+  "frames": [
+   {
+    "label": "frame1_after_collect",
+    "screen": {
+     "held_marks": [],
+     "shelves": [
+      {
+       "name": "StaleShelf0 枚地点",
+       "already": "false"
+      }
+     ],
+     "result_text": "已收在 StaleShelf",
+     "panel_items": [],
+     "tally": null
+    }
+   },
+   {
+    "label": "frame1_api",
+    "api": {
+     "status": 200,
+     "shelves": []
+    }
+   },
+   {
+    "label": "frame2_after_db_delete_screen_not_refreshed",
+    "screen": {
+     "held_marks": [],
+     "shelves": [
+      {
+       "name": "StaleShelf0 枚地点",
+       "already": "false"
+      }
+     ],
+     "result_text": "已收在 StaleShelf",
+     "panel_items": [],
+     "tally": null
+    }
+   },
+   {
+    "label": "frame2_api_after_db_delete",
+    "api": {
+     "status": 200,
+     "shelves": []
+    }
+   },
+   {
+    "label": "frame3_after_manual_reload",
+    "screen": {
+     "held_marks": [],
+     "shelves": [],
+     "result_text": null,
+     "panel_items": [],
+     "tally": null
+    }
+   },
+   {
+    "label": "frame3_api",
+    "api": {
+     "status": 200,
+     "shelves": []
+    }
+   }
+  ],
+  "errors": [],
+  "page_errors": []
+ }
+}

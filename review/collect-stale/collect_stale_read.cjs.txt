@@ -1,0 +1,107 @@
+/* 收藏那栋楼第四格的真跑腿（一趟会话里读三拍）：
+   拍1 收一次 → 屏上快照（结果句、held 标、层上的 already）
+   —— 等 Python 把库侧那一行删掉（写哨兵文件），不在屏上做任何刷新 ——
+   拍2 库已删、屏上没刷新 → 再读一次屏上快照（结果句、held 标）  ← 这一拍是"该红的那一次"的候选
+   拍3 手动 reload → 再读一次屏上快照 + 接口列表                  ← 对照臂
+   只多点一次收藏；其余都是读。 */
+const { chromium } = require("playwright");
+const fs = require("fs");
+
+const BASE = process.env.RK_BASE;
+const JID = process.env.RK_JID;
+const SHOTS = process.env.RK_SHOTS;
+const OUT = process.env.RK_OUT;
+const SENTINEL = process.env.RK_SENTINEL;
+const WIDTH = parseInt(process.env.RK_WIDTH || "390", 10);
+const ARM = process.env.RK_ARM || "zh-CN";
+const WAIT_MS = parseInt(process.env.RK_WAIT_MS || "600000", 10);
+
+(async () => {
+  const doc = { run_id: process.env.RK_RUN || "", arm: ARM, width: WIDTH,
+                frames: [], errors: [] };
+  const browser = await chromium.launch({ timeout: 120000 });
+  const readScreen = async (page, label) => {
+    const s = await page.evaluate(() => {
+      const held = Array.from(document.querySelectorAll("[data-testid='collect-held-mark']"))
+        .map((n) => n.textContent.trim());
+      const shelves = Array.from(document.querySelectorAll("[data-testid='collect-shelf']"))
+        .map((n) => ({ name: n.textContent.trim(), already: n.getAttribute("data-already-held") }));
+      const result = document.querySelector("[data-testid='collect-result']");
+      const panelItems = Array.from(document.querySelectorAll("[data-testid='collection-item']"))
+        .map((n) => n.textContent.trim());
+      const tally = document.querySelector("[data-testid='collection-tally']");
+      return { held_marks: held, shelves, result_text: result ? result.textContent.trim() : null,
+               panel_items: panelItems, tally: tally ? tally.textContent.trim() : null };
+    });
+    return { label, screen: s };
+  };
+  const readApi = async (page, label) => {
+    const a = await page.evaluate(async () => {
+      const jid = localStorage.getItem("citynexus.v8.journey_id");
+      const ex = await (await fetch("/api/v1/journeys/" + jid + "/experience")).json();
+      const tid = ex.traveler_id;
+      const r = await fetch("/api/v1/collections?traveler_id=" + encodeURIComponent(tid));
+      const j = await r.json();
+      return { status: r.status,
+               shelves: Array.isArray(j) ? j.map((f) => ({ name: f.name, item_count: (f.items || []).length })) : j };
+    });
+    return { label, api: a };
+  };
+  try {
+    const ctx = await browser.newContext({ viewport: { width: WIDTH, height: 844 },
+      deviceScaleFactor: 2, isMobile: true, hasTouch: true, serviceWorkers: "block", locale: ARM });
+    const page = await ctx.newPage();
+    const perr = [];
+    page.on("pageerror", (e) => perr.push(String(e).slice(0, 160)));
+    await page.goto(BASE + "/v8/hub", { waitUntil: "networkidle", timeout: 60000 });
+    await page.evaluate(([a, j]) => {
+      localStorage.setItem("citynexus.locale", a);
+      localStorage.setItem("citynexus.v8.journey_id", j);
+    }, [ARM, JID]);
+    await page.goto(BASE + "/v8/trips", { waitUntil: "networkidle", timeout: 60000 });
+
+    // 拍1：收一次
+    const entry = page.locator("[data-testid='collect-entry']").first();
+    if (!(await entry.count())) { doc.errors.push("屏上没有 collect-entry"); }
+    else {
+      await entry.click({ timeout: 15000 });
+      await page.waitForTimeout(700);
+      const shelf = page.locator("[data-testid='collect-shelf']").first();
+      if (await shelf.count()) { await shelf.click({ timeout: 15000 }); await page.waitForTimeout(800); }
+      else { doc.errors.push("挑层里没有 collect-shelf"); }
+      doc.frames.push(await readScreen(page, "frame1_after_collect"));
+      doc.frames.push(await readApi(page, "frame1_api"));
+      await page.screenshot({ path: SHOTS + "/frame1_collect_" + WIDTH + "_" + ARM + ".png" }).catch(() => {});
+
+      // 等 Python 把库侧那行删掉（哨兵文件）
+      const t0 = Date.now();
+      while (!fs.existsSync(SENTINEL) && Date.now() - t0 < WAIT_MS) {
+        await page.waitForTimeout(300);
+      }
+      if (!fs.existsSync(SENTINEL)) doc.errors.push("等不到 Python 的哨兵（超时）");
+      else {
+        // 拍2：屏上没刷新，只重读 DOM
+        doc.frames.push(await readScreen(page, "frame2_after_db_delete_screen_not_refreshed"));
+        doc.frames.push(await readApi(page, "frame2_api_after_db_delete"));
+        await page.screenshot({ path: SHOTS + "/frame2_stale_" + WIDTH + "_" + ARM + ".png" }).catch(() => {});
+        // 拍3：手动刷新，对照臂
+        await page.reload({ waitUntil: "networkidle", timeout: 60000 });
+        doc.frames.push(await readScreen(page, "frame3_after_manual_reload"));
+        doc.frames.push(await readApi(page, "frame3_api"));
+        await page.screenshot({ path: SHOTS + "/frame3_reload_" + WIDTH + "_" + ARM + ".png" }).catch(() => {});
+      }
+    }
+    doc.page_errors = perr.slice(0, 5);
+    await ctx.close();
+  } catch (e) {
+    doc.errors.push({ fatal: String(e).slice(0, 300) });
+  } finally { await browser.close(); }
+  fs.writeFileSync(OUT, JSON.stringify(doc, null, 1) + "\n", "utf-8");
+  console.log("frames=" + doc.frames.length + " errors=" + doc.errors.length);
+  for (const f of doc.frames) {
+    if (f.screen) console.log("  [" + f.label + "] result=" + String(f.screen.result_text || "").slice(0, 34) +
+      " held=" + f.screen.held_marks.length + " already=" + (f.screen.shelves[0] ? f.screen.shelves[0].already : "?"));
+    if (f.api) console.log("  [" + f.label + "] api=" + JSON.stringify(f.api.shelves));
+  }
+  process.exit(0);
+})();
