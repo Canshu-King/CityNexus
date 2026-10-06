@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+"""名下未落地枝的落地体检：逐枚对现尖跑只读三方预测。
+
+号令者为我那枚「锚尺 r2」跑落地门时被拦下，门报的是**基座太老**（三方合不出来），不是载荷错。
+这一形不会只砸在一枚枝上。本件对名下每枚枝跑一次 `git merge-tree --write-tree` 现尖 × 该枝，
+只看退出码与冲突面，不动任何枝、不推任何东西、不改产品字节。
+
+判类：
+- 快进：枝父就是现尖（推上去就落，不需要合）。
+- 干净：三方预测退出码 0（可合，写出树记下）。
+- 冲突：退出码非 0，冲突面逐枚具名（这些就是会撞门的）。
+- 空切：枝相对现尖零文件差异（载荷已在尖上，照 ORD-0550 交判定即可）。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+BAD: list[str] = []
+
+
+def run(cmd, t=900):
+    p = subprocess.run(cmd, cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return p.returncode, (p.stdout or ""), (p.stderr or "")
+
+
+def g(*a, t=900):
+    return run(["git", *a], t)[1].strip()
+
+
+run(["git", "fetch", "-q", "origin", "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*"])
+run(["git", "fetch", "-q", "origin", MIRROR])
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+
+refs = [x for x in g("for-each-ref", "--format=%(refname:short)",
+                     "refs/remotes/origin/review/1ba48dbf-*").splitlines() if x.strip()]
+rows = []
+for ref in sorted(refs):
+    name = ref.replace("refs/remotes/origin/", "")
+    sha = g("rev-parse", ref)
+    parent = g("rev-parse", "%s^" % sha)
+    changed = [x for x in g("diff", "--name-only", tip, sha).splitlines() if x.strip()]
+    rc, out, err = run(["git", "merge-tree", "--write-tree", tip, sha])
+    tree = (out or "").strip().splitlines()[0] if out.strip() else ""
+    conflicts = sorted({ln.split("CONFLICT")[1].split(":")[-1].strip()
+                        for ln in (out or "").splitlines() if ln.startswith("CONFLICT")})
+    if not changed:
+        verdict = "空切"
+    elif parent == tip:
+        verdict = "快进"
+    elif rc == 0:
+        verdict = "干净可合"
+    else:
+        verdict = "冲突"
+    rows.append({"ref": name, "sha": sha, "parent": parent, "parent_is_tip": parent == tip,
+                 "changed_files": len(changed), "changed": changed[:12],
+                 "merge_rc": rc, "merge_tree": tree, "conflict_files": conflicts,
+                 "verdict": verdict, "stderr_tail": (err or "").strip()[-160:]})
+
+tally: dict[str, int] = {}
+for r in rows:
+    tally[r["verdict"]] = tally.get(r["verdict"], 0) + 1
+conflicted = [r for r in rows if r["verdict"] == "冲突"]
+print("现尖=%s 名下枝=%d 枚" % (tip, len(rows)))
+print("分类=%s" % tally)
+for r in rows:
+    print("  {v:<8} {n:<52} 改动={c:<3} 父是尖={p} 预测rc={rc}".format(
+        v=r["verdict"], n=r["ref"].replace("review/1ba48dbf-", "")[:52],
+        c=r["changed_files"], p=r["parent_is_tip"], rc=r["merge_rc"]))
+    for f in r["conflict_files"][:3]:
+        print("        冲突面 %s" % f)
+out = {"tip": tip, "branches": len(rows), "tally": tally,
+       "conflicted": [{"ref": r["ref"], "sha": r["sha"], "files": r["conflict_files"]} for r in conflicted],
+       "rows": rows}
+p = os.path.join(ART, "landing_checkup_%s.json" % time.strftime("%H%M"))
+io.open(p, "w", encoding="utf-8", newline="\n").write(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + p)
+if BAD:
+    print("REFUSED:\n  " + "\n  ".join(BAD))
+    sys.exit(1)
