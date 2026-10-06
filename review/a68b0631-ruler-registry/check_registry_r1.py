@@ -26,6 +26,27 @@ def cat_file(hexcoord):
     return r.returncode, (r.stdout.strip() or r.stderr.strip())
 
 
+def remote_fetchable(coords):
+    """Resolve each coordinate against objects that came from the REMOTE, not from the local store.
+
+    The building asks for a coordinate that is "真实可取回" on the authoritative line: a stranger
+    who clones must be able to cat-file it.  Resolving against my local object store would prove
+    only that I once had it, which is exactly the "尺只在你本机的脚本不算" failure.  So this fetches
+    the ruler branch by refspec into a throwaway ref first; the objects fetched are what the remote
+    carries, and the branch is the one that holds the registry and the ruler bodies.
+    """
+    fetch = subprocess.run(
+        ["git", "fetch", "origin",
+         "+refs/heads/review/a68b0631-ruler-coordinates-r2:refs/tmp/registry_remote_check"],
+        cwd=WT, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    bad = []
+    for c in coords:
+        rc, kind = cat_file(c)
+        if rc != 0:
+            bad.append((c, kind))
+    return fetch.returncode, bad
+
+
 def main():
     if not os.path.isfile(REG):
         print("registry file is missing: %s" % REG)
@@ -72,6 +93,15 @@ def main():
     bodies = re.findall(r"body on this branch : `([^`]+)`", text)
     missing = [b for b in bodies if not os.path.isfile(WT + b)]
 
+    # the remote leg: resolve the SAME coordinates against objects the remote just handed us
+    fetch_rc, remote_bad = remote_fetchable(coords)
+    print("\n  remote fetch exit status   = %d (ruler branch fetched by refspec into a throwaway ref)"
+          % fetch_rc)
+    if fetch_rc == 0 and not remote_bad:
+        print("  every coordinate also resolves from the REMOTE-fetched objects: yes")
+    else:
+        print("  REMOTE RESOLUTION FAILED for: %s" % [c for c, _ in remote_bad])
+
     print("\n  coordinates checked: %d, bodies named: %d" % (len(coords), len(bodies)))
     if unresolved:
         print("  UNRESOLVED COORDINATES: %s" % [c for c, _ in unresolved])
@@ -85,7 +115,10 @@ def main():
         return 1
     if guard_stale:
         return 1
-    print("\nRESULT: registry sound -- every coordinate resolves and every named body exists.")
+    if fetch_rc != 0 or remote_bad:
+        return 1
+    print("\nRESULT: registry sound -- every coordinate resolves locally AND from the remote, and "
+          "every named body exists.")
     return 0
 
 
