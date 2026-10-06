@@ -16588,6 +16588,169 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 值守 22:15 呈号令者：`cff87c64` **一封 BB 机信都没取过**（20 收件／20 未取／0 回执），而它还在干活
+
+**实测读数**（现读时刻 2026-10-06 22:14:25，坐标 `D:/moodle/agent_bus/bus.jsonl`
+的 `ts` 列与 `state.json` 的 `acks` 键；收件判据是 `to` **逐字**等于 `qoder:cff87c64`）：
+未取 **20 枚**、已回执 **0 枚**；未取里 alarm 8 枚；最老 **1 枚**、最近 **1 枚**（分钟数见表）。
+
+**现读**（坐标 `live_checks/patrol/` 那一拍巡逻的第①格 ＋ 板上 `idle_min` 列）：
+
+| 项 | 读数 |
+|---|---|
+| `cff87c64` 资料员·小冯 收件 | **20 枚**（坐标：`live_checks/patrol/_verify_cell8_backlog_r1.py:44`） |
+| 其中未取 | **20 枚**（坐标：`live_checks/patrol/_verify_cell8_backlog_r1.py:28`；⇒ 已回执 0 枚，同一处 `acks` 键） |
+| 最老一封 | **5405 分钟前**（坐标：`live_checks/patrol/_verify_cell8_backlog_r1.py:44` 的 `ts` 列） |
+| 最近一封 | **35 分钟前**（坐标：`live_checks/patrol/_verify_cell8_backlog_r1.py:44` 的 `ts` 列） |
+| 它末态 | **交活型停着**，末条 `assistant text`，**28 分钟前**（坐标：`live_checks/patrol/_lane_tailform_r1.py:95`） |
+<!-- 上表每一行的分钟数都由该行括号里的坐标现读；末态那一行读的是 _lane_tailform_r1.py -->
+
+**那 20 封里 8 封是我发的裸唤醒 alarm**（最早那枚是表里那五千四百零五分钟前的 `order`，它之后连着 8 枚 alarm），
+内容都是同一句常设：「先取 BB 机信，回账本读最新块继续手上的活」。
+⇒ **它们一封都没有被取过**，而这扇窗**还在产出**（二十八分钟前刚交过活）。
+
+**这才是第⑧格那个「已送未拆」的根**：不是内容作废，是**收件端从不取信**。
+我今晚 22:10 量过同类：号令者名下二百九十件送达、只有十五件有回执；主人名下十四件只送达一件
+（坐标：上表那两行的同一读数口）。⇒ 病根是**通道到得了、回执腿几乎不动**
+（这一条与 `DECISION_1006` 第一件同源，但那件写的是"人那三枚"，这一件是**车道自己也不取**）。
+
+**归属**：敲门按常设归你（我不敲车道）。但这一件**值得你知道而不是被统计吞掉**：
+你名下压着的那批里，有一部分是"叫它取信"这件事本身在反复投递、而它不取。
+
+**我不动手**：零次发消息、零次敲门、零次改 ack 语义（那归你裁）。
+判据工具：末态尺 `live_checks/patrol/_lane_tailform_r1.py`（按形状闸口径：
+**交活型停着不该敲**——它不是停摆，它是在干活只是不取信）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 名下债务回执 · 车道 82f55d8a：我名下两枚候选的内容**都已在现尖上**——名字锚按 blob 逐字节相等（`journeyTrash.ts` 两尖同为 `a2c5716de4`），中文措辞按那两行逐字相等（现尖 `:74`/`:77` 已是"回收站里/回收站状态"），其余差异只是别人做的注释行号清理、与我的两行零重叠。名下待落的只剩 ORD-0576 那十七枚判据枝（r3，等门）
+
+**〇、坐标（现读）。** 权威尖 `ff7f62011821240835572bf4effe2e139ee2bada`；我名下三枝在飞的坐标：`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`、`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、判据枝 `refs/heads/review/82f55d8a-e2e-collection-safe-r3` 头 `bb964e67b026ba896f134422e001006cbb510f15`（`ls-remote` 逐枚回读同值）。
+
+**一、两枚候选的内容都已在现尖上（三种核法各证一次）。**
+
+- **名字锚**：`frontend/src/features/trash/journeyTrash.ts` 在现尖与在我那枚候选上是**同一枚 blob** `a2c5716de4` ⇒ 已落，逐字节相等，不需要再动。
+- **中文措辞**（`journeyTrashCopy.ts`）：我那枚候选相对自己的父只改了两行中文——`"trash.empty"` 由「…没有报出任何在**站里**的行程。」改成「…没有报出任何在**回收站里**的行程。」、`"trash.rowStateMissing"` 由「…这一行的**在站状态**」改成「…这一行的**回收站状态**」。现尖上那两行（`frontend/src/features/trash/journeyTrashCopy.ts:74`、`:77`）**逐字就是我改的那两句** ⇒ 那处用户看得见的措辞缺陷已经在现尖上消失了。
+- 现尖与我的候选在这枚文件上**只差一处**、且与我的两行零重叠：一枚注释里的行号引用被清成名字形（`planVersionHistoryCopy.ts:10` → `planVersionHistoryCopy.ts`）——那是别人（或 a68b0631 的注释锚那枝）做的行号→名字形清理，我的两行文案不在其中。
+
+⇒ 名下两枚**产品字节类**候选的内容都已落（名字锚是 blob 相等、中文措辞是那两行逐字相等），债务清零。
+
+**二、现尖此刻仍收不到测试，差的是判据那十七枚（我 r3 未落）。** 按新尖现导出量：完整检出 `npx playwright test --config playwright.config.ts --list` 退出码一、`Total: 0 tests in 0 files`（上一块已交，件 `D:/moodle/_qoder_82f55d8a_ord0576_export/list_t79da_full.txt`）。我 r3 那棵树上尺是绿的（退出码零、七百九十五条 / 一百六十九个文件、offenders 零），但它没落 ⇒ 现尖上那十七枚 spec 还在打死采集。**给门的话**：取 r3 即可，合并预测干净（上一块已交树 `b8fc003440ae6988e77c76f227a5a323d67d184d`、冲突零）。
+
+**三、我自己停掉的一条做法（免得追着尖空转）。** 权威线这晚连走五代（`cfda610a…`→`79daa3c4…`→`4323a5ce…`→…→`ff7f6201…`），我为此重挂过两次（r2、r3）；从这一枚起我不再逐代重挂——继续追既无收益也会把门外的未落枝越堆越多。判据那批等它被取走为止，我这边只做"落没落"的复验，不追尖。
+
+**四、没做 / 红线自查**
+
+1. 本轮**零提交、零推送**（只读 git 对象与跑 `--list`）；push 权威线零次、force-push 零次。
+2. 只 `--list`：不起 `webServer`、不开端口、不连 `:8000` `:4781` `:4782` `:8693`；`.db` 零写入、`_preview.db` 仍是 7213056 B、mtime 2026-09-29 09:20:27；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印。
+3. 我名下现在**没有待落的产品字节**（见第一节）。三条待裁英文措辞候选（智能守护屏那三句）仍等一句判——它们未落是因为未判，不是因为我漏了；`frontend/src/lib/displayVocabulary.ts:31` 那枚在我的文件里，你点头我就改。
+
+**五、下一手。** 名下产品字节清零、判据那批等门。我这边能自申报的下一格有两个方向，都零供给不撞热文件：① 把那三枚待裁英文措辞各配一枚"改了会不会咬"的反件（只读源文件），等你判就能立刻落；② 等 r3 落地后立刻在那一代上把两形 `--list` 各量一次交回执。你点哪个我就开哪个。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · ORD-0556 第十三趟只读腿：门是同一批门，动词也一样吗（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `3ecbab8eea5b70d37f6657724866975afe757a96`，`ls-remote` 独立回读同值，parent = `9e933b975d38e584709e9078b669af4d6d148eb2`。本腿一笔 2 枚文件（量具一枚 + 读数件一枚），产品路径 0 枚。件 `review/ord0556/readouts/verb_drift_20261006T140057Z.json`，判语 `VERB_DRIFT_READ`，现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（现读 `ls-remote`）与屏读那代 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`。
+
+**为什么接着上一趟查**：腿十二只比了**路径集合**，两代都相等；那只眼看不见最容易被藏起来的那种破口——**同一扇门在两处挂着不同的动词**。生成物是从旧契约生成的，它照样过类型检查，而屏会去敲一扇服务端已经不那样应的门。所以这趟比的是 (门, 动词) 集合。
+
+**一、两代各量一次**：
+
+- **现尖**：契约 138 个动词（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:12`）、前端生成物 138 个动词（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:13`）；**生成物多出 0 个（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:16`）、契约多出 0 个（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:17`），两集合相等 true**（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:18`）
+- **屏读那代**：契约 175 个动词（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:21`） 对生成物 175 个动词（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:22`），同样相等（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:27`）
+
+**门数与动词数的差**：腿十二量到现尖 129 扇门，这趟量到 138 个「门×动词」——说明现尖有门挂着不止一个动词（逐门求和与逐门计数的差就在这儿），这本身不是缺陷，只是说明「门数」与「动词数」不能互相代用。
+
+**二、这条不是恒真话（我给自己做的反件）**：两代都是「个数相等」，个数相等**掩盖不了对调**——生成物在 A 门放 `get`、契约在 A 门放 `post`，两边计数照样一样。所以写块时我把生成物里第一枚动词改成 `delete` 再比一次：集合立刻不等（`review/ord0556/readouts/verb_drift_20261006T140057Z.json:18` 这格就不再成立）。这眼在读结构。
+
+**三、说什么、不说什么**：说——**两代的「门×动词」都逐一对得上，现尖那代也对得上**；叠上腿五那格悬空导入为零、腿十二那格路径集合相等 ⇒ 现尖这代前后端门面在路径与动词两层都自洽。不说——**请求体与响应体的形状这趟仍没量**（那要逐门解 schema 再比字段集，这腿只到动词为止）；屏侧当代读数仍缺（腿一到腿十二同一条缺因），且 D 盘现读剩余 5.9 GiB，我开不出一份带依赖的现尖工作树。
+
+**四、没改善（具名报缺）**
+1. **同门同动词不同形没查**：字段增删、必填项变没变，这腿看不见。
+2. **屏侧当代读数仍缺**，且被盘卡住（要开需点名让我清盘，我不动别人的目录）。
+3. 逐格归因仍缺（原始上屏文字被腿一那手 teardown 删，`review/ord0556/route_sweep_dev_r1.py:219`）。
+
+**五、现场与等点**：本轮零枚自建端口、零枚浏览器、零枚产品字节、没写账本、force-push 0 次、没动任何人的进程、没碰别人的端口。仍等你点的三件不变：其一 ORD-0556 按现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a` re-cut r3 并重取两臂读数；其二 甲那格 `unsupported_forms` 换人话；其三 要不要清盘放我开现尖屏读。不点我不动。
+
+
+### 车道 `5a53846b` 交自申报：又一根因。`g5` 这条红**不是产品算错，是尺与产品对「有哪些词」的口径不同**——那 三 个词（`PLAN_CREATED`、`NO_ACTION`、`BLOCKED`）只存在于测试里；而产出那条「跳过」运行的函数**压根不写 `outcome` 字段**，却把真话写进了 `failure_reason`
+
+**〇、坐标（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `ff7f62011821240835572bf4effe2e139ee2bada`。写作这一刻 `git status --porcelain` 脏行 零 枚。
+
+**一、这条臂在量什么，以及它实际撞上什么**
+
+`test_g5_an_ai_run_that_changed_must_say_which_it_was` 的两道断言：第一道「不许 5xx」过了；第二道要求 run.outcome 必须是带机器可读语义的 dict，落在 `run.outcome` 上。实测这次调用：`run.outcome` 是 `None`，`run.status` 是运行时标签 `SKIPPED_EXTERNAL_DEPENDENCY`，`failure_reason` 写着「AI is switched off by the operator」。
+
+**这里有个要紧的分寸**：真话**是存在的**——`failure_reason` 逐字说了「操作员把 AI 关了」。所以「转了半天啥也没发生、用户拿到成功回执却不知原因」那个用户面问题，产品已经给了原因，只是**没有放进臂要验的那个接缝**。
+
+**二、根因（这一节是本块的真货）**
+
+顺着标签查到产出它的那个函数（`backend/app/agent/runtime.py`，`unavailable_run_payload`，标签字面量落在第 645 行附近）：
+
+- 它写的字段是 `status = "SKIPPED_EXTERNAL_DEPENDENCY"` 加 `failure_reason = reason_sentence(ai_availability_state())`（注释里还写明这一行已经修好过：从固定字面量改成跟 `/health` 读同一张表，所以运行不会在操作员关掉开关时还声称缺凭据）。
+- **它不写 `outcome`**。整条跳过路径里没有 `outcome` 这个键——不是写了空值，是这个字段根本不存在。
+- 而臂要验的 三 个词，逐词在产品 `backend/app/` 现读：
+
+| 词 | 在产品里现读 |
+|---|---|
+| `PLAN_CREATED` | 零处 |
+| `NO_ACTION` | `guardian.py`、`models.py` |
+| `BLOCKED` | `main.py`、`copilot_contract.py` |
+
+  零处是「产品在别处根本不用这个词」，其余是**别的用途**（guardian 的看护决策、copilot 的可行度），**都不是臂要的那套运行结果词表**。
+- 组合器对这两格都设了硬闸：若产品长出这套词表、或者跳过路径开始写 `outcome`，就 rc=9 拒发——根因移动了就不该再报一次。原件 `review/g5-rootcause/g5_rootcause_probe_r1.json` = `093c4c607e608c05da217af2f652bc63f9a67472`。
+
+**三、和上一格（`g10`）放在一起看：两条红的性质不同，处置也不同**
+
+- `g10` 是**产品侧缺口**：查询拿不到规范身份、水合作业走不到产出，产品行为本身有问题。
+- `g5` 是**接缝/词表缺口**：产品给了原因，只是没放在尺验的那一格，且尺要的词表产品没有。**这类的处置是先对齐口径，不是先改产品**——改产品去凑一套它没有的词表，等于把尺的偏好写进产品。
+
+**四、这一手没改善的部分（照实）**
+
+- 我没改任何字节，也没替任何人决定口径：这该由号令者裁——是给产品加 `outcome` 接缝（并让那 三 个词成为产品词表），还是把臂改成读 `failure_reason` 那个已存在的真话。**我不自派。**
+- 这一格的价值在于把「产品算错」降级为「口径未对齐」，让裁的人知道自己在裁什么。
+- 归属按 git 指不出来，按车道自申报。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补）；ORD-0571 仍等那两句裁语。
+- 本块绑 `ff7f62011821240835572bf4effe2e139ee2bada`；产品一改（长出词表或写出 `outcome`），本块立刻作废，由组合器的硬闸兜住。
+
+边界 A：本手产品字节零枚改动、shipped 尺零枚改动；工作树脏行 零 枚；尖 = `ff7f62011821240835572bf4effe2e139ee2bada`。
+
+边界 B：权威线移动零次；本手 push 一次（读数枝 `refs/heads/review/5a53846b-g5-rootcause-r1` = `944b892ed6944274f178ecbca88f1a436a038910`，本车道名下），force-push 零枚，他人枝改动零枚，旧枝删除零枚；尖 = `ff7f62011821240835572bf4effe2e139ee2bada`。
+
+边界 C：账本直写零次（本块走收件口），demo/reset 零次，`_preview.db` 覆盖零次，监听端口零枚在跑；失败现场取自 conftest 自起私有库的一次真跑；尖 = `ff7f62011821240835572bf4effe2e139ee2bada`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 2d2d7428 · Qoder 22:04 · 派单板按带已装进尺的口径重出：能派单 9 行、收到零 25 行；上一张板（带宽形那批当缺陷）**不可再用于派单**，以本枚为准
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-control-set-board-gated-r1` 远端头现读 `dcc7d9f216d1265ef26b6d65b67b264609ab015b`，父提 `ff7f62011821240835572bf4effe2e139ee2bada` 就是现尖 ⇒ 可直接快进合（`git merge-base` 读回 `ff7f62011821240835572bf4effe2e139ee2bada`、`git merge-tree --write-tree` 退 0、相对现尖只动这一枚件）；件 `review/ord0561/CONTROL_SET_BOARD_GATED_R1.md` 的 blob `47955b31e8b6ff953ae7d685fc03d5064642cfe2`（`git cat-file -s` 现回 7129 字节），件 80 行。
+- **本枚取代** `review/ord0561/CONTROL_SET_BOARD_R1.md` 那张板：那张是在带还写死的读数上算的，把宽形「线下方」当成缺陷，而宽形上底栏不渲染（那正是本车道已证的尺缺陷）。本枚用带已装进尺的同一批读数重出，是当前唯一有效的板。review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:3
+- 仍是重算、没有新测量：读数代次 `79daa3c4ff8f37304d352177b456133d4b9c2a45`（入口资产 `index-ay8Jsqaq.js`、1624284 字节 B、服务字节 sha1 `5d298521e168f0212b70768c44365a6a39f9747d`（本机 sha1、未入 git、故意不可取回）），每档 136 趟、挂载 136 趟、拒收 0 枚；与现尖 `frontend/src` 树号逐位相同（`00b2c3ed9fbc75c81bc490f8adde65ca2e936d00`）。
+- 口径：只把**无障碍树仍持有的真控件**、且**落在底栏真的在场那条带**里的读数算可派单；名牌不计入；带不适用屏的越界读数单列在行上（保留可见、不算缺陷、不静默丢）。
+- 板行 34 行（屏 × 形）：**能派单 9 行、收到零 25 行**；带不适用被剔出的读数共 170 枚仍列在行上。review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13
+- 能派单那 9 行按屏重头（手机形 / 宽形，合计）：`/v8/hub` 52、`/v8/agent` 16、`/v8/live` 16；逐行明细（屏 / 形 / covered 树内 / below 带内 / 剔名牌 / 针）：
+  - `/v8/agent` / 390x844 / 8 / 8 / 0 / 0　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/hub` / 390x844 / 28 / 24 / 8 / 24　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/live` / 390x844 / 12 / 4 / 4 / 8　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/map` / 390x844 / 4 / 0 / 20 / 4　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/trips` / 390x844 / 8 / 4 / 0 / 0　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/bookings` / 1280x900 / 4 / 0 / 0 / 0　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/hub` / 1280x900 / 2 / 0 / 18 / 2　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/map` / 1280x900 / 8 / 0 / 24 / 4　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+  - `/v8/trips` / 1280x900 / 4 / 0 / 0 / 0　（行锚 review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:13）
+- 收到零的 25 行：12 行两项都干净（量到零，不是没看），13 行只把带不适用那批剔掉后为零。review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:52
+- 没做的，具名：本枚是重算、没有新起浏览器；产品字节 0 枚改动、契约 0 枚；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）；共享预览口这手没读没写；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；与 `1ba48dbf` 那把尺的残余差仍等您排『同代产物各读一遍』那一次约定。review/ord0561/CONTROL_SET_BOARD_GATED_R1.md:74
+- 我自申报的下一格（先读账本 ORDERS 再动）：把 `C4` 这格在下一个尖上复量一次确认不再漂，并把这条板接成只读看板（谁要修、修哪屏、修完怎么复量都挂在行上）；在那之前我不动 `C3`/`C4` 的判据。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 自申报第二格已开工并交完：给那三行补上"真的渲染成一个或几个"的行为证明
 
 一、上一块我自己点名的缺口，这次补上
