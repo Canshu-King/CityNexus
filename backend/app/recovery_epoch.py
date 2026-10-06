@@ -17,7 +17,15 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.db.models import Activity, Event, Journey, PlanVersion, RecoveryEpoch
+from app.db.models import (
+    Activity,
+    CollectiveAuthorityReceipt,
+    Event,
+    Journey,
+    PlanVersion,
+    RecoveryEpoch,
+    ReplanProposal,
+)
 
 OPEN = "OPEN"
 SUPERSEDED = "SUPERSEDED"
@@ -164,6 +172,39 @@ class RecoveryEpochSuperseded(RuntimeError):
         super().__init__(self.facts["reason"])
 
 
+def _retire_superseded_epoch_dependents(
+    session: Session, epoch: RecoveryEpoch, *, decided_at: str
+) -> None:
+    """Remove stale authority/candidates from the current executable surface.
+
+    History remains queryable.  Only still-PRESENTED candidates and unspent
+    receipts are retired; no old decision is rewritten as if it never existed.
+    """
+
+    proposals = session.scalars(
+        select(ReplanProposal).where(
+            ReplanProposal.recovery_epoch_id == epoch.id,
+            ReplanProposal.status == "PRESENTED",
+        )
+    ).all()
+    for proposal in proposals:
+        proposal.status = "INVALIDATED"
+        proposal.decided_at = decided_at
+        plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if plan is not None and plan.status == "CANDIDATE":
+            plan.status = "REJECTED"
+
+    receipts = session.scalars(
+        select(CollectiveAuthorityReceipt).where(
+            CollectiveAuthorityReceipt.recovery_epoch_id == epoch.id,
+            CollectiveAuthorityReceipt.invalidated_at.is_(None),
+        )
+    ).all()
+    for receipt in receipts:
+        receipt.invalidated_at = decided_at
+        receipt.invalidation_code = RECOVERY_EPOCH_SUPERSEDED
+
+
 def ensure_recovery_epoch(session: Session, journey: Journey) -> RecoveryEpoch:
     basis = recovery_reality_basis(session, journey)
     fingerprint = recovery_reality_fingerprint(basis)
@@ -179,8 +220,18 @@ def ensure_recovery_epoch(session: Session, journey: Journey) -> RecoveryEpoch:
         current.status = SUPERSEDED
         current.closed_at = now
         current.close_reason = "RECOVERY_REALITY_CHANGED"
+        _retire_superseded_epoch_dependents(
+            session, current, decided_at=now
+        )
+        # Flush the retirement inside the caller transaction before opening
+        # the next generation.  Do not point superseded_by at a row that does
+        # not exist yet.
+        session.flush()
+
     max_generation = session.scalar(
-        select(func.max(RecoveryEpoch.generation)).where(RecoveryEpoch.journey_id == journey.id)
+        select(func.max(RecoveryEpoch.generation)).where(
+            RecoveryEpoch.journey_id == journey.id
+        )
     ) or 0
     epoch = RecoveryEpoch(
         id=str(uuid4()),
@@ -201,20 +252,23 @@ def ensure_recovery_epoch(session: Session, journey: Journey) -> RecoveryEpoch:
         status=OPEN,
         opened_at=now,
     )
-    if current is not None:
-        current.superseded_by_recovery_epoch_id = epoch.id
-    session.add(epoch)
     try:
-        session.flush()
+        # A savepoint contains only the competing OPEN-row insert.  A losing
+        # concurrent opener must not roll back unrelated caller work or the
+        # durable retirement of stale authority.
+        with session.begin_nested():
+            session.add(epoch)
+            session.flush()
     except IntegrityError:
-        # The partial unique index is the concurrency arbiter.  A concurrent
-        # winner already created the same open epoch; reload it rather than a
-        # process-local mutex or a caller-selected retarget.
-        session.rollback()
+        session.expire_all()
         winner = current_open_recovery_epoch(session, journey.id)
         if winner is not None:
             return winner
         raise
+
+    if current is not None:
+        current.superseded_by_recovery_epoch_id = epoch.id
+        session.flush()
     return epoch
 
 
