@@ -367,3 +367,153 @@ It is NOT R30 live proof and does not replace:
 5. Run \`python run_r30_live.py --full-r30\` in the configured local external-Agent environment.
 6. Fix only the first causal live failure / first machine-verdict blocker.
 7. Stop only at \`R30_MACHINE_VERDICT.summary.overall == PROVEN\`.
+
+
+---
+
+# GPT addendum — E1 authority is now real, and push must be machine-proven
+
+This addendum supersedes all older execution/push instructions in this relay.
+
+## Why any old local R30 strike must be rerun
+
+The canonical R30 branch advanced after the previous reported Codex push.
+
+More importantly, R30 authority semantics changed:
+
+- post-shock E2/W2 was already required to prove independent authenticated
+  member convergence;
+- pre-shock E1/W1 now has the same rule.
+
+The older harness selected one global-fairness compromise and submitted it for
+every member during the renewed pre-shock round. That could create a signed
+record without proving that the automated principals independently converged.
+
+That is no longer allowed.
+
+Current rule:
+
+    mediator may improve / narrow the grounded decision surface
+    -> each relevant member gets its own server-grounded fit
+    -> each member must have one unique acceptable maximum
+    -> those independent maxima must be the same proposal
+    -> each authenticated persisted response must match that member's maximum
+    -> only then may E1/W1 be called renewed collective authority
+
+If the maxima still differ, stop. Do not restore the global-fairness shortcut.
+That means the human trade-off is still real.
+
+The same independent-authority helper and the same machine-verifier concept now
+cover both E1/W1 and E2/W2.
+
+A regression test explicitly proves that the R30 harness refuses to manufacture
+consensus when two members independently prefer different futures.
+
+## Current deterministic validation
+
+The branch-local GitHub Actions R30 narrow validation is green with:
+
+    48 passed / 0 failed
+
+Do not spend local Codex time repeating the same broad deterministic review.
+
+## PROVEN now generates the closeout automatically
+
+A successful:
+
+    python run_r30_live.py --full-r30
+
+now writes all required closeout content from machine truth:
+
+- output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json
+- output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json
+- REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_RESULT.md
+
+Do not hand-write a competing result document.
+
+## A push is not complete until the remote SHA is proven
+
+New verifier:
+
+    backend/scripts/r30_delivery_gate.py
+
+After the PROVEN strike, commit the three generated artifacts and push them to
+the canonical R30 branch.
+
+Exact delivery sequence:
+
+    git fetch origin
+    git checkout gpt/revolution-r30-consent-epoch-shock-recovery
+    git reset --hard origin/gpt/revolution-r30-consent-epoch-shock-recovery
+    git rev-parse HEAD
+    git status --short
+
+    cd backend
+    python run_r30_live.py --full-r30
+
+Only continue if the command exits 0 and the machine verdict says PROVEN.
+
+Then:
+
+    cd ..
+    git add \
+      output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json \
+      output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json \
+      REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_RESULT.md
+
+    git commit -m "r30: prove consent-epoch shock recovery live"
+    git push origin HEAD:refs/heads/gpt/revolution-r30-consent-epoch-shock-recovery
+
+Then run:
+
+    cd backend
+    python scripts/r30_delivery_gate.py
+
+Success is not "git push returned 0".
+
+Success is the delivery-gate JSON proving all of these simultaneously:
+
+    ok == true
+    branch == gpt/revolution-r30-consent-epoch-shock-recovery
+    machine_verdict_overall == PROVEN
+    checkpoint_status == R30_PROVEN
+    working_tree_clean == true
+    all three artifacts tracked == true
+    remote_matches_local == true
+    remote_head == local_head
+
+If remote_matches_local is false, the delivery is not complete.
+
+If origin advanced while the local strike was running, do not force-push and do
+not simply move old evidence onto new code. Pull the new code and rerun the
+causal strike because live evidence is code-version specific.
+
+## If the new E1 rule blocks the strike
+
+If the strike stops because the pre-shock mediator round still leaves different
+independent member maxima:
+
+Do not weaken the authority rule.
+
+Do not make every member submit the global fairness winner.
+
+Instead fix the scenario / normal mediator path so the external Agent produces
+a genuinely grounded improved future on which the relevant members
+independently converge, then rerun.
+
+That is the Revolution contract:
+
+A signed response is not proof that the system respected human authority if the
+test harness chose the answer for the human.
+
+## Stop condition
+
+R30 closes only when:
+
+    R30_MACHINE_VERDICT.summary.overall == PROVEN
+
+and:
+
+    r30_delivery_gate.py -> ok == true
+
+At that point STOP. Do not create R30.1.
