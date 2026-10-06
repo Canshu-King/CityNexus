@@ -455,6 +455,7 @@ export interface JourneyOperatorProjection {
   discovery: JourneyOperatorDiscoveryProjection;
   operations?: JourneyOperatorOperationsProjection | null;
   flow?: JourneyContinuousFlow | null;
+  ahead?: JourneyAheadProjection | null;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }
@@ -472,6 +473,20 @@ export interface JourneyContinuousFlow {
   notification_key?: string;
   captured_at?: string;
   read_only?: boolean;
+}
+
+export interface JourneyAheadProjection {
+  state: string;
+  headline: string;
+  recommended_action: string;
+  horizon: { remaining_activity_count: number; lookahead_until: string; bounded_hours?: number };
+  top_risk?: { activity_id?: string; title?: string; risk_kind?: string; start_at?: string; starts_at?: string; lead_time_minutes?: number; grounded?: boolean; risk_identity?: string } | null;
+  risks?: Array<Record<string, unknown>>;
+  snapshot_id?: string | null;
+  snapshot_captured_at?: string | null;
+  current_activity_id?: string | null;
+  read_only?: boolean;
+  predictive_only?: boolean;
 }
 
 export interface ExecutionTransitionPayload {

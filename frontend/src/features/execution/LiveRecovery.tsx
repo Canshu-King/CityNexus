@@ -661,6 +661,24 @@ export function LiveRecovery({
             ) : null}
           </div>
         )}
+        {operator?.ahead && (
+          <div className={`journey-ahead journey-ahead-${operator.ahead.state.toLowerCase()}`} data-testid="journey-ahead" aria-live="polite">
+            <span className="v8-kicker">{zh ? "同时看着后面的行程" : "Looking ahead"}</span>
+            <strong>{operator.ahead.headline}</strong>
+            <small>
+              {zh
+                ? `未来 ${operator.ahead.horizon.remaining_activity_count} 个行程点 · 看到 ${new Date(operator.ahead.horizon.lookahead_until).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}`
+                : `${operator.ahead.horizon.remaining_activity_count} future stops · looking through ${new Date(operator.ahead.horizon.lookahead_until).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}`}
+            </small>
+            {operator.ahead.top_risk && (
+              <span data-testid="journey-ahead-risk">
+                {zh
+                  ? `${operator.ahead.top_risk.title ?? "后续行程"} · ${operator.ahead.top_risk.lead_time_minutes ?? ""} 分钟后${operator.ahead.top_risk.grounded ? " · 有依据的预测" : " · 继续观察"}`
+                  : `${operator.ahead.top_risk.title ?? "Later stop"} · in ${operator.ahead.top_risk.lead_time_minutes ?? ""} min${operator.ahead.top_risk.grounded ? " · grounded forecast" : " · watching"}`}
+              </span>
+            )}
+          </div>
+        )}
         {operator?.brain && (
           <div className="journey-operator-brain" data-testid="journey-operator-brain">
             <span className="v8-kicker">Planning brain</span>

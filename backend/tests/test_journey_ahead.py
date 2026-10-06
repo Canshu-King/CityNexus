@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from app.agent.journey_ahead import journey_ahead_state
+from app.agent.journey_ahead import actionable_future_risks, journey_ahead_state
 
 
 NOW = datetime(2026, 10, 7, 3, 0, tzinfo=timezone.utc)
@@ -103,3 +103,24 @@ def test_completed_journey_stops_ahead_work():
     )
     assert result["state"] == "CLEAR"
     assert result["recommended_action"] == "NONE"
+
+
+def test_actionability_orders_protected_booking_before_score_only_risk():
+    risks = actionable_future_risks(
+        [
+            {
+                **_risk(minutes=300, score=98, activity_id="far"),
+                "protected_commitment": False,
+                "booking_exposure": False,
+            },
+            {
+                **_risk(minutes=180, score=65, activity_id="near"),
+                "protected_commitment": True,
+                "booking_exposure": True,
+                "route_slack_minutes": 10,
+            },
+        ],
+        now=NOW,
+    )
+    assert risks[0]["activity_id"] == "near"
+    assert risks[0]["actionability_score"] > risks[1]["actionability_score"]

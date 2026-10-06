@@ -31,6 +31,7 @@ from app.db.models import (
 )
 from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
+from app.agent.journey_ahead import journey_ahead_projection
 
 
 def classify_operator_state(
@@ -190,7 +191,8 @@ def operator_projection(
         if guardian is not None and guardian.proposal_id
         else None
     )
-    open_event = session.scalar(
+    open_event = None
+    for candidate in session.scalars(
         select(Event)
         .where(
             Event.journey_id == journey.id,
@@ -198,7 +200,14 @@ def operator_projection(
             Event.event_type.in_(("WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY")),
         )
         .order_by(Event.detected_at.desc(), Event.id.desc())
-    )
+    ).all():
+        try:
+            if bool(json.loads(candidate.payload_json or "{}").get("predictive_only")):
+                continue
+        except (TypeError, json.JSONDecodeError):
+            pass
+        open_event = candidate
+        break
 
     enabled = bool(enrollment is not None and enrollment.enabled)
     mission_active = standing is not None
@@ -389,6 +398,31 @@ def operator_projection(
             or (activity_incident and state in {"INVESTIGATING", "DEGRADED"})
         ),
     )
+    # Journey Ahead is a read-only projection.  Reuse the already persisted
+    # predictive Guardian/brain state, but never start a provider call or an
+    # action from this GET path.
+    prevention_status = None
+    if guardian is not None and str(guardian.trigger_kind or "").upper() == "PREDICTIVE":
+        predictive_action = str(guardian.action_status or "").upper()
+        prevention_status = {
+            "PLANNING": "PLANNING",
+            "RUNNING": "PLANNING",
+            "DISCOVERING": "DISCOVERING",
+            "REQUIRE_CONFIRMATION": "WAITING_FOR_APPROVAL",
+            "REQUIRE_STEP_UP": "WAITING_FOR_APPROVAL",
+            "EXECUTED": "APPLIED",
+        }.get(predictive_action)
+    resume_projection_state = brain.get("recovery_resume") or {}
+    ahead = journey_ahead_projection(
+        session,
+        journey,
+        prevention_status=prevention_status,
+        provider_degraded=degraded,
+        brain_blocked=bool(
+            resume_projection_state.get("pending")
+            and not resume_projection_state.get("safe_to_resume")
+        ),
+    )
 
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
@@ -475,6 +509,7 @@ def operator_projection(
         "discovery": discovery,
         "operations": operations,
         "flow": flow,
+        "ahead": ahead,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {
