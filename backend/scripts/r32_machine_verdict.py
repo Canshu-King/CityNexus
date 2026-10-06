@@ -78,6 +78,8 @@ def verdict(
     events = final.get("events") or []
     audits = final.get("audits") or []
     authority_setup = checkpoint.get("authority_setup") or {}
+    runtime_preflight = checkpoint.get("runtime_preflight") or {}
+    evaluator_receipt = _evaluator_receipt()
 
     r1 = checkpoint.get("r1") or {}
     r2 = checkpoint.get("r2") or {}
@@ -168,6 +170,25 @@ def verdict(
         b_external = bool(
             b_provider_invoked
             and b.get("provider_key") == "hermes"
+        )
+
+    runtime_preflight_isolated: bool | None = None
+    if runtime_preflight:
+        runtime_preflight_isolated = bool(
+            runtime_preflight.get("selected_openai_compatible_hermes") is True
+            and runtime_preflight.get("hermes_api_url_configured") is True
+            and runtime_preflight.get("hermes_api_key_configured") is True
+            and runtime_preflight.get("semantic_ai_api_key_configured") is False
+            and runtime_preflight.get("native_hermes_ready") is False
+        )
+
+    verifier_source_traceable: bool | None = None
+    if evaluator_receipt.get("sha256"):
+        verifier_source_traceable = (
+            True
+            if evaluator_receipt.get("git_head")
+            and evaluator_receipt.get("tracked_dirty") is False
+            else None
         )
 
     standing_authority_preconfigured: bool | None = None
@@ -490,6 +511,21 @@ def verdict(
                 f"{source_receipt.get('tracked_dirty_before_strike')}"
             ),
         ),
+        "runtime_preflight_isolated": _dim(
+            runtime_preflight_isolated,
+            (
+                "pre-strike runtime selection must be WB2api/Hermes with "
+                "ambient semantic AI and native Hermes excluded"
+            ),
+        ),
+        "verifier_source_traceable": _dim(
+            verifier_source_traceable,
+            (
+                f"verifier_sha256={evaluator_receipt.get('sha256')} "
+                f"git_head={evaluator_receipt.get('git_head')} "
+                f"tracked_dirty={evaluator_receipt.get('tracked_dirty')}"
+            ),
+        ),
         "concurrent_external_barrier": _dim(
             concurrent_barrier,
             (
@@ -679,6 +715,8 @@ def verdict(
 
     required_dimensions = {
         "strike_source_state_traceable",
+        "runtime_preflight_isolated",
+        "verifier_source_traceable",
         "concurrent_external_barrier",
         "standing_authority_preconfigured",
         "no_post_shock_human_authority_fabrication",
@@ -711,6 +749,8 @@ def verdict(
     if checkpoint.get("failure") or checkpoint.get("status") == "NOT_PROVEN":
         observed_on_abort = {
             "strike_source_state_traceable": bool(source_receipt),
+            "runtime_preflight_isolated": bool(runtime_preflight),
+            "verifier_source_traceable": bool(evaluator_receipt.get("sha256")),
             "standing_authority_preconfigured": bool(authority_setup),
             "r1_opened_from_shock_a": bool(r1id),
             "agent_a_external_and_bound_r1": bool(
@@ -775,7 +815,7 @@ def verdict(
     )
     return {
         "schema": "citynexus.r32.machine-verdict.v3",
-        "evaluator_receipt": _evaluator_receipt(),
+        "evaluator_receipt": evaluator_receipt,
         "overall": overall,
         "required_dimensions": sorted(required_dimensions),
         "coverage_not_proven": [
