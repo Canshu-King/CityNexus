@@ -1,7 +1,7 @@
 """ORD-0467 · 契约是那族具名拒绝码的唯一真相，凭据尺只按它逐字节排除，并且双向自证。
 
-背景（号令者 15:07 那块第三节）：现尖真执行套件里 `test_qoder_ord04307_credential_gate.py:180`
-（C07 那格）读到产品路径内一枚命中，位置 `frontend/src/features/pending/pendingPlaceWrites.ts:122`。
+背景（号令者 15:07 那块第三节）：现尖真执行套件里 `test_qoder_ord04307_credential_gate.py`
+（C07 那格）读到产品路径内一枚命中，位置 `frontend/src/features/pending/pendingPlaceWrites.ts`。
 那是一枚具名拒绝码，被放在一个叫 `token` 的字段上，所以 labeled_assignment 的形状判据抓它没有错。
 本单不许的路也被同一批格子钉住：不给 `in_product_path` 加豁免词表、不把 ORD-0307 的断言改小、
 不只改屏上文案而留着字段名说谎。

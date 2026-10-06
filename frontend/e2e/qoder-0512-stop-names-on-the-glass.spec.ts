@@ -10,7 +10,7 @@ import { mapLabelViolations } from "./_mapLabelRules";
  * `e2e/_mapLabelRules.ts` has said since ORD-0403 which classes of string may never be painted on the
  * glass, and `qoder-ord0415-label-string-origin.spec.ts` measured the consequence nobody had faced: no
  * word on the product path was painted at all, so the whitelist had nothing to whitelist and
- * `qoder-map-ord0403-named-control-and-labels.spec.ts:190` could only assert that a pin "paints only its
+ * `qoder-map-ord0403-named-control-and-labels.spec.ts` could only assert that a pin "paints only its
  * stop number". What the corpus this rule judges actually holds is measured here rather than quoted: on
  * the tip's own bytes `.v8-maplibre-canvas` yields 17 characters (none of them a stop's name), and on this
  * candidate 52, of which the three names then on the glass account for 32. The traveller's complaint is
@@ -56,7 +56,7 @@ const node = (arm: string, detail: string) => `${FILE} :: ${arm} — ${detail}`;
 async function enterMap(page: Page): Promise<void> {
   /* The address, not the tab: `.v8-mobile-nav` is `display:none` above 680 px, so an arm that clicks
      `nav-map` can only ever run at phone width. `/v8/map` is the same route the tab navigates to
-     (`V8Experience.tsx:966` pushes `/v8/${key}`), which lets the 390 arm and the desktop arm read one
+     (`V8Experience.tsx` pushes `/v8/${key}`), which lets the 390 arm and the desktop arm read one
      screen instead of two different ways of reaching it. */
   await ensureDemoJourney(page);
   await openScreen(page, "/v8/map", ["v8-maplibre-panel"]);
@@ -445,7 +445,7 @@ test("attribution-never-covered — a name never paints over the licence sentenc
       continue;
     }
     /* Recorded, not asserted: the whole overlay band is `pointer-events:none` on purpose
-       (`map-attribution.css:64`, and the same rule the stamp badge follows), so a hit-test at its centre
+       (`map-attribution.css`, and the same rule the stamp badge follows), so a hit-test at its centre
        answers with the canvas underneath. That is why "is a name painted over the licence" cannot be
        asked of `elementFromPoint` here, and why the pixel half below carries the claim. */
     const onTop = await page.evaluate((selector: string) => {

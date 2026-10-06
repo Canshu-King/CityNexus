@@ -3,7 +3,7 @@
  * must not express "we could not tell" as a number.
  *
  * Measured source: `/v8/me` printed the server's own push label (`RECORD_ONLY`, from
- * `backend/app/integrations/push.py:18`) as the status line, and the AI sheet published its internal
+ * `backend/app/integrations/push.py`) as the status line, and the AI sheet published its internal
  * indeterminate sentinel on `data-plan-count="-1"` -- an attribute gates read, where `-1` means
  * "not knowable", not "negative one plans".
  *

@@ -1,13 +1,13 @@
 """ORD-0383 格三 (the commander's 02:47 ruling) - two taps at 找回 must not both be allowed to write.
 
 The defect and its own admission are in the line this order fixes: at the base tip
-`dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`, `backend/app/main.py:3056` was
+`dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`, `backend/app/main.py` was
 
     journey.deleted_at = None
     session.commit()
 
 after a `session.get(...)` whose result had just been checked for non-null.  That is a read-then-write
-of an ORM object, and `backend/app/main.py:3038` said so out loud: "Two taps at once are still
+of an ORM object, and `backend/app/main.py` said so out loud: "Two taps at once are still
 unguarded, as in slice 1."  The same file already carries the opposite instruction in
 `_accept_replan_executing` (`# Conditional writes, not object assignment.  A read-then-write of the
 ORM rows is exactly the window two concurrent accepters can both pass`), and the shape it prescribes

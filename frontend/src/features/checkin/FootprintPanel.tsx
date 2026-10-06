@@ -5,7 +5,7 @@ What is on this screen and where each part comes from:
     assembled locally: no stamp appears because a button was pressed, only because the read returned
     it, and no day heading appears unless a stamp is under it;
   - `stamped_at` is the instant the server recorded (the doors take no caller-supplied time --
-    `backend/app/main.py:3301`). The DAY and the CLOCK on each row are that instant read in the
+    `backend/app/main.py`). The DAY and the CLOCK on each row are that instant read in the
     journey's own timezone (`journey.timezone`, from the same payload), never in the device's: the
     same stamp is 09/28 18:20 in Los Angeles and 09/29 09:20 in Asia/Shanghai, and only one of those
     is the day the traveller was standing there. When the trip carries no timezone the screen says so

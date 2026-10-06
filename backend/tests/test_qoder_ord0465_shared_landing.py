@@ -3,11 +3,11 @@
 What was measured on the authoritative tip `9110db281ca7706bb78e8e1f2dbad04a08705d88` before this file
 existed (all of it read off `backend/app/main.py` at that commit, not inferred):
 
-  * `read_shared_journey` returned `journey_schema(journey)` (`backend/app/main.py:3422` at that tip).
+  * `read_shared_journey` returned `journey_schema(journey)` (`backend/app/main.py` at that tip).
     A `Journey` carries id, title, city, timezone, dates, budget and status -- and no stops.  So the
     landing screen this door feeds could name a trip but could not name a single day of it.
   * Nothing in this door read `journeys.deleted_at`.  `journey_schema` does not emit that column
-    (`backend/app/schemas.py:239`, confirmed by ORD-0402 slice 2), so a trip its owner had put in the
+    (`backend/app/schemas.py`, confirmed by ORD-0402 slice 2), so a trip its owner had put in the
     recycle bin answered `200` with its full body.  That is the fourth state being absent, not being
     mis-named: there was no word for it because there was no reading of it.
   * The three grant states the order asks about were already named and are pinned here rather than
@@ -52,7 +52,7 @@ def _journey_with_plan(*, stops: int = 2) -> tuple[str, str]:
     Returns `(journey_id, first_place_id)`.
     """
     moment = _now()
-    # `places` carries UNIQUE(provider_key, external_id) (`app/db/models.py:483`), and every test in
+    # `places` carries UNIQUE(provider_key, external_id) (`app/db/models.py`), and every test in
     # this module seeds its own trip into the same run's database -- so the place rows have to be
     # named apart from each other or the second test dies on that constraint instead of testing
     # anything.
@@ -117,7 +117,7 @@ def _journey_with_plan(*, stops: int = 2) -> tuple[str, str]:
             place_ids.append(place.id)
         # The places have to be on the row-side of the transaction before anything names them:
         # SQLite enforces `activities.place_id` at insert, and the unit of work does not order a
-        # string-assigned FK for you (`tests/test_snapshot_j_backend_truth_gaps.py:102` flushes for
+        # string-assigned FK for you (`tests/test_snapshot_j_backend_truth_gaps.py` flushes for
         # the same reason).
         session.flush()
         for index, place_id in enumerate(place_ids, start=1):
@@ -322,7 +322,7 @@ def test_ord0465_no_plan_is_named_and_not_left_to_be_inferred_from_a_null():
 def test_ord0465_a_dangling_plan_pointer_fails_closed_rather_than_answering_a_plan():
     """The third `plan_state`, and the reason it is tested on the function rather than through HTTP.
 
-    `journeys.active_plan_version_id` is a foreign key to `plan_versions` (`app/db/models.py:189`), so
+    `journeys.active_plan_version_id` is a foreign key to `plan_versions` (`app/db/models.py`), so
     the store will not hold a pointer to a row that is not there: measured, writing one through the
     same session answers `sqlite3.IntegrityError: FOREIGN KEY constraint failed`.  That is why no
     request in this file can reach this branch -- and why the branch is still here.  A column with no
@@ -339,7 +339,7 @@ def test_ord0465_a_dangling_plan_pointer_fails_closed_rather_than_answering_a_pl
 
 def test_ord0465_a_stop_whose_place_row_was_deleted_names_which_nothing_it_is():
     """Reachable, because the store does it for you: `activities.place_id` is
-    `ForeignKey("places.id", ondelete="SET NULL")` (`app/db/models.py:535`), so deleting the place
+    `ForeignKey("places.id", ondelete="SET NULL")` (`app/db/models.py`), so deleting the place
     clears the identity rather than leaving a dangling reference.  The stop is then "an activity with
     no canonical identity", which is what the frozen reason token says, and the screen draws no pin
     for it."""
@@ -359,7 +359,7 @@ def test_ord0465_an_identity_the_catalog_does_not_hold_says_coverage_not_identit
     """The other half of "nothing": the activity still names a place, and the place is not in what was
     read.  Those two read differently to a traveller -- one is "this stop has no address", the other is
     "we have not catalogued this city that far" -- and the pair is the same one the owner's map reads
-    (`app/stay_mobility.py:1642`).
+    (`app/stay_mobility.py`).
 
     On the function, not through HTTP, for the reason in the test above: the store's own foreign key
     makes `place_id` NULL rather than let it name a missing row.
@@ -411,7 +411,7 @@ def test_ord0465_every_word_this_answer_offers_has_a_label_the_traveller_reads()
     to say it -- `PLAN_SOURCE` for the generation, `CAPABILITY_STATES` for a coordinate -- and the
     plan's own `status` is asserted ABSENT rather than labelled, because two of its five values
     (`SELECTED`, `SUPERSEDED`) have no entry in `STATUS_LABELS`
-    (`frontend/src/i18n/travelerLabels.ts:81`) and the screen would have nothing to do with them but
+    (`frontend/src/i18n/travelerLabels.ts`) and the screen would have nothing to do with them but
     echo them.  The tables are read out of the TypeScript rather than restated here: a label list
     copied into a Python test would drift in exactly the way it is supposed to catch."""
     import re

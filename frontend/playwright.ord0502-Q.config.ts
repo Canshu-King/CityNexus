@@ -2,7 +2,8 @@
  *
  * There is deliberately no webServer here. The backend is a uvicorn this lane started on
  * `CITYNEXUS_BACKEND_PORT` against its own fresh SQLite file (one run id per attempt), and the
- * frontend is a dev server this lane started on `CITYNEXUS_E2E_PORT`; `vite.config.ts:129-147`
+ * frontend is a dev server this lane started on `CITYNEXUS_E2E_PORT`; the `server.proxy` entry in
+ * `frontend/vite.config.ts`
  * resolves `/api/v1` from `CITYNEXUS_BACKEND_PORT`, so the browser can only ever reach the server
  * this invocation owns. Both ports are required rather than defaulted: a chain walked over
  * somebody else's journey is not this lane's evidence, and `:8000` is a standing 不提供 at this

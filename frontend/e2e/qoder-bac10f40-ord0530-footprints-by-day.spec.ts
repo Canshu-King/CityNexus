@@ -50,7 +50,7 @@ const COPY = {
 
 const runId = process.env.CITYNEXUS_E2E_RUN_ID || "dev";
 /* One artefact per arm, written at the moment that arm reads. A single aggregate file only ever
-   holds whichever worker wrote last -- the lesson `e2e/qoder-map-ord0412-label-scope.spec.ts:59`
+   holds whichever worker wrote last -- the lesson `e2e/qoder-map-ord0412-label-scope.spec.ts`
    records, and the reason this file has no "the arms write their readings" test at the end. */
 const push = (arm: string, v: Record<string, unknown>) => {
   const payload = { file: FILE, arm, run_id: runId, denominator: SEEDED ? "copied private db" : "authoritative fresh db", ...v };

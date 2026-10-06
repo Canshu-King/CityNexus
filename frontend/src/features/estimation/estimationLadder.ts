@@ -4,7 +4,7 @@
  * Pi Travel never leaves an estimate standing alone as "仅供参考". Its corpus walks a traveller up a
  * ladder: say how the number was made, warn before it is used, ask for verification after it has
  * been shown, and name what the traveller can still do about it
- * (`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:150`, item F15).
+ * (`D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md`, item F15).
  *
  * CityNexus already owns two of those steps as behaviour -- a stay with no rate prints 价格未知
  * instead of `0` (`features/stay/StayExplorer.tsx`, `priceLabel` / `pricePair`), and a plan whose

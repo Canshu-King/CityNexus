@@ -1309,7 +1309,7 @@ class JourneyCheckin(Base):
 
     The two target columns are nullable *and* cascade to NULL, and that pair of choices is the
     measured one: `activities` rows are deleted when a plan version is superseded
-    (`backend/app/main.py:11190`, `backend/app/operations/v9.py:732`) and `places` rows are pruned by
+    (`backend/app/main.py`, `backend/app/operations/v9.py`) and `places` rows are pruned by
     the catalog.  A RESTRICT would have made those doors fail, and a CASCADE would have let a replan
     erase the traveller's own history.  So the stamp outlives its target and keeps saying which one
     it was, through `target_kind` and `target_key`, which the door writes once and nothing later

@@ -409,7 +409,7 @@ export function SimulationPanel({
         const refused =
           advance?.steps.find((step) => step.refused !== undefined) ?? null;
         /* ORD-0078 (a): the shell decides which journey to show once, at boot, from
-           `localStorage["citynexus.v8.journey_id"]` (V8Experience.tsx:493), and `demo/reset`
+           `localStorage["citynexus.v8.journey_id"]` (V8Experience.tsx), and `demo/reset`
            deletes the rows the old id pointed at without writing the new one.  So a teacher who
            presses 重置 is dropped back on the three-step wizard holding a journey that does exist
            on the server.  Handing over the id the server just returned is not an invented trip --

@@ -7,8 +7,8 @@ store itself (`PRAGMA table_info` / `index_list`) and the other half walks the d
    tap, but the thing that makes "already stamped" true is the `UNIQUE (journey_id, target_key)`
    index, so one arm drives that index directly, past the door, and one arm checks that the key the
    index sits on cannot be rewritten by a cascade.
-2. The target rows are deleted by doors that already exist -- `backend/app/main.py:11190` and
-   `backend/app/operations/v9.py:732` remove activities when a plan version is superseded.  So the
+2. The target rows are deleted by doors that already exist -- `backend/app/main.py` and
+   `backend/app/operations/v9.py` remove activities when a plan version is superseded.  So the
    arms here delete those rows for real and assert what the stamp says afterwards.  This is the
    decision that would otherwise have turned two replan doors into foreign-key failures, which is the
    same class of defect this project already had once with a new table and `demo/reset`.
@@ -413,7 +413,7 @@ def test_a_trip_in_the_bin_is_neither_stampable_nor_stamp_readable():
 def test_a_footprint_outlives_the_rows_it_pointed_at():
     """The measured reason for `ON DELETE SET NULL`, replayed the way the replan path does it.
 
-    `backend/app/operations/v9.py:732` deletes the activities of a superseded plan version, so this
+    `backend/app/operations/v9.py` deletes the activities of a superseded plan version, so this
     arm deletes that plan version and asserts three things: the stamp survives, its link goes to NULL
     through the store rather than through application code, and the door still says *what* was
     stamped from the key it wrote at the time.  A RESTRICT here would have broken that replan door --

@@ -169,7 +169,7 @@ def reset_all(session: Session) -> None:
         # ORD-0444: the collection shelf is cleared with the rest of the scene, and it has to be
         # cleared *before* `places`, because `collection_items.place_id` references `places(id)` with
         # no `ON DELETE` clause and `PRAGMA foreign_keys=ON` is set on every connection
-        # (`backend/app/db/session.py:64`).  Measured before this line existed: a shelf holding one
+        # (`backend/app/db/session.py`).  Measured before this line existed: a shelf holding one
         # place made `POST /api/v1/demo/reset` answer 500 with
         # `sqlite3.IntegrityError: FOREIGN KEY constraint failed`
         # (`scratch/reset_counter_before_r1.json`, keys `4_demo_reset_with_a_non_empty_shelf` and
@@ -439,8 +439,8 @@ def journey_live_view(item: Journey) -> JourneyLiveView:
     The rule reads `journeys.aborted_at` -- the column the abort door owns and never clears -- and
     falls back to `status` for a row written before that column existed.  It is not `status` alone:
     `select_plan` writes `journeys.status = "PLANNED"` without reading the journey's status
-    (`backend/app/main.py:7833`), and the two activity-advance doors write `"COMPLETED"` the same
-    way (`backend/app/main.py:9372`, `backend/app/main.py:9456`), so a trip called off and then
+    (`backend/app/main.py`), and the two activity-advance doors write `"COMPLETED"` the same
+    way (`backend/app/main.py`, `backend/app/main.py`), so a trip called off and then
     re-planned would come back onto the live screen while still carrying the abort moment and the
     traveller's reason -- two answers on one screen, which is what the follow-up race probe found for
     the write gate (`review/ord0520/ABORT_RACE_RECEIPT.json`) and what `abort_resurrect_probe_r1.py`

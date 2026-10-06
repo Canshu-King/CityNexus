@@ -1,28 +1,28 @@
 """ORD-0490 -- the link still works after the owner takes the trip back out of the recycle bin.
 
 ORD-0465 put a named refusal on the bin (`SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN`, 409, raised at
-`backend/app/main.py:3843`).  That is only honest if the refusal is about a state and not about a
-decision: `backend/app/main.py:3010` (DELETE) and `backend/app/main.py:3058` (找回) are a soft delete
+`backend/app/main.py`).  That is only honest if the refusal is about a state and not about a
+decision: `backend/app/main.py` (DELETE) and `backend/app/main.py` (找回) are a soft delete
 and its inverse, so a binned trip is a trip that can come back -- and if it comes back, the same
 token has to read again.  A link that stayed dead after its trip had been 找回 would make the
 sentence this door's own refusal tells the traveller ("能把它找回来的只有主人",
-`frontend/src/i18n/LocaleContext.tsx:2034`) a promise this server does not keep.
+`frontend/src/i18n/LocaleContext.tsx`) a promise this server does not keep.
 
 What was measured before this file existed, on the authoritative tip
 `dcb90cccc68b81f2317b28db19051dedb9f06c80`, and why these tests are mostly round trips rather than
 new assertions about the bin:
 
   * `DELETE /api/v1/journeys/{id}` writes one column (`journeys.deleted_at`) and touches no grant row
-    (`backend/app/main.py:3038-3040`), and `POST .../undelete` clears that same column and touches
-    nothing else (`backend/app/main.py:3107-3112`).  So the round trip has nothing in its way -- the
+    (`backend/app/main.py`), and `POST .../undelete` clears that same column and touches
+    nothing else (`backend/app/main.py`).  So the round trip has nothing in its way -- the
     risk is not a refusal that sticks, it is an answer that is quietly *different* after the trip
     comes back.  That is what `test_..._is_the_same_answer_the_trip_gave_before_the_bin` measures,
     body against body.
-  * The grant's own state is decided before the bin is (`backend/app/main.py:3809-3823`), so an
+  * The grant's own state is decided before the bin is (`backend/app/main.py`), so an
     expired link stays expired whichever way the trip moves.  `backend/tests/test_qoder_ord0465_shared_landing.py::test_ord0465_a_dead_grant_is_still_named_dead_when_the_trip_was_also_binned`
     pins that; nothing here re-litigates it.
   * The door holds no cache and `journey_schema` does not emit `deleted_at`
-    (`backend/app/schemas.py:239`), so every reading below is a fresh read of the column.  Two tests
+    (`backend/app/schemas.py`), so every reading below is a fresh read of the column.  Two tests
     still walk bin -> restore -> bin, because "it reads the column every time" is a claim about this
     door's behaviour and is only evidence if the same token is asked three times.
 
@@ -247,7 +247,7 @@ def test_ord0490_the_round_trip_writes_nothing_to_the_grant():
     This is the half the traveller cannot see: a restored read that answered 200 while the grant row
     had moved (`revoked_at` set, `plan_version_id` cleared) would mean the next read refuses, and
     nobody would be able to say which of the two writes did it.  `token` is included for the reason
-    ORD-0465 records at `backend/app/main.py:3760` -- the column is matched with BINARY collation, so
+    ORD-0465 records at `backend/app/main.py` -- the column is matched with BINARY collation, so
     it is the one thing that must not drift.
     """
     journey_id = _trip_with_plan()
@@ -271,7 +271,7 @@ def test_ord0490_a_restore_that_was_not_needed_leaves_the_link_exactly_where_it_
     """`JOURNEY_NOT_DELETED` (409) is a refusal that changes nothing, and it must not cost a link.
 
     The owner's screen can tap 找回 twice; the second tap refuses (that is ORD-0399's own rule,
-    `backend/app/main.py:3099-3103`).  What this order needs from that door is the fact that a
+    `backend/app/main.py`).  What this order needs from that door is the fact that a
     refused tap left the trip readable -- otherwise a double tap would look like a way to break a
     share link.
     """
@@ -291,7 +291,7 @@ def test_ord0490_a_restore_that_was_not_needed_leaves_the_link_exactly_where_it_
 def test_ord0490_a_version_scoped_link_still_reads_its_version_after_the_trip_comes_back():
     """ORD-0466's scope survives the bin in both directions.
 
-    A grant cut for one plan version reads that version (`backend/app/main.py:3856`).  Nothing about
+    A grant cut for one plan version reads that version (`backend/app/main.py`).  Nothing about
     the bin touches `plan_version_id`, so the scoped answer must be the same one before, and after --
     and the refusal in between must not have quietly downgraded the link to a journey-level read.
     """
@@ -316,9 +316,9 @@ def test_ord0490_a_version_scoped_link_still_reads_its_version_after_the_trip_co
 def test_ord0490_the_refusal_names_the_bin_moment_and_the_restored_read_carries_no_stale_one():
     """What each of the two answers is allowed to say about the bin.
 
-    The refusal carries `deleted_at` in `error.details` (`backend/app/main.py:3848`) because a person
+    The refusal carries `deleted_at` in `error.details` (`backend/app/main.py`) because a person
     asking "when did this go in" is entitled to the stored answer.  The restored read must carry no
-    such value anywhere: `Journey` has no `deleted_at` field (`backend/app/schemas.py:239`), and a
+    such value anywhere: `Journey` has no `deleted_at` field (`backend/app/schemas.py`), and a
     stale moment on a body that says the trip is back would be a second, contradicting clock.
     """
     journey_id = _trip_with_plan()
@@ -339,7 +339,7 @@ def test_ord0490_the_word_for_bringing_it_back_is_the_one_the_recycle_bin_uses()
     """The screen's sentence and the door's behaviour have to be about the same action.
 
     `shared.refusedInRecycleBin` tells a traveller that only the owner can 找回 the trip, from the
-    owner's own recycle bin (`frontend/src/i18n/LocaleContext.tsx:2034`).  That sentence is only true
+    owner's own recycle bin (`frontend/src/i18n/LocaleContext.tsx`).  That sentence is only true
     while the door that undoes the bin is the owner's `POST /journeys/{id}/undelete` and while nothing
     on the share side can bring a trip back.  Both halves are measured: the owner's door is the one
     that restores this trip, and the token read itself is a GET that cannot (see
@@ -362,7 +362,7 @@ def test_ord0490_the_word_for_bringing_it_back_is_the_one_the_recycle_bin_uses()
 def test_ord0490_a_link_revoked_while_the_trip_was_in_the_bin_stays_revoked_when_it_comes_back():
     """Two refusals, and the older one still wins after the trip returns.
 
-    The grant's state is decided before the bin's (`backend/app/main.py:3809`), so a withdrawal made
+    The grant's state is decided before the bin's (`backend/app/main.py`), so a withdrawal made
     while the trip sat in the bin does not become unreadable-then-readable: it is `SHARE_GRANT_REVOKED`
     on both sides of the 找回.  The risk this pins is an implementation that reports the bin, restores
     the trip, and finds itself answering 200 to a link its owner revoked in the meantime.
@@ -389,7 +389,7 @@ def test_ord0490_a_link_revoked_while_the_trip_was_in_the_bin_stays_revoked_when
 def test_ord0490_the_restored_answer_is_still_the_guest_shape_and_not_the_owner_one():
     """Restoring a trip must not turn a share link into the owner's own read.
 
-    The absence rules are ORD-0465's (`backend/app/schemas.py:836` and
+    The absence rules are ORD-0465's (`backend/app/schemas.py` and
     `test_ord0465_success_says_the_owner_flags_and_position_are_not_on_this_answer`); they belong to
     the answer, not to the bin.  A round trip that re-computed the body through a different path --
     the owner's projection, which carries a live position and the lock flags -- would keep this
@@ -415,7 +415,7 @@ def test_ord0490_a_trip_binned_and_restored_keeps_the_day_it_was_planned_into():
     """The dates are the fragile part of a restored read.
 
     A stop's day on this screen is derived from its `start_at` in the trip's own timezone
-    (`frontend/src/features/shared/SharedJourneyPanel.tsx:126`), so a restored answer whose instants
+    (`frontend/src/features/shared/SharedJourneyPanel.tsx`), so a restored answer whose instants
     came back in a different shape would put the same stop on a different day -- and the day heading
     would be the only thing on the screen that said so.  Checked against the pre-bin reading rather
     than against a literal, so the assertion is about the round trip and not about a format.

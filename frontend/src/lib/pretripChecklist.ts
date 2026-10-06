@@ -10,8 +10,8 @@
  * a real anchor would take, in `review/n3_0384_unanchored_list_r1.py` and the file it generates.
  *
  * So this module now holds exactly two rules, both reading the payload the screen already has:
- *   plan_feasibility_open    <- experience_flags.feasibility_failures  (contracts/openapi.yaml:1393)
- *   recovery_needs_decision  <- recovery.requires_user_decision       (contracts/openapi.yaml:1923)
+ *   plan_feasibility_open    <- experience_flags.feasibility_failures  (contracts/openapi.yaml)
+ *   recovery_needs_decision  <- recovery.requires_user_decision       (contracts/openapi.yaml)
  * Those two numbers are pinned against contract blob 177f3ad34f4198e87f9d8353b10d9724a816c55d; when
  * the document grows they go stale silently, which is what e2e case Y4 exists to catch.
  * It stores nothing and writes nothing. Completion is not a checkbox: the item disappears when the
