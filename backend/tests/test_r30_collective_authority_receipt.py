@@ -332,3 +332,30 @@ def test_r30_human_receipt_rejects_audit_from_stale_decision_epoch():
     )
     with pytest.raises(ValueError, match="decision epoch mismatch"):
         _issue(session)
+
+
+
+def test_r30_phase_a_does_not_require_external_agent_choreography():
+    import inspect
+
+    import run_r30_live
+
+    source = inspect.getsource(run_r30_live._run_full)
+    assert "_run_first_agent" not in source
+    assert "_first_mission_id" not in source
+    assert "_reach_post_consent_interlock(setup=setup)" in source
+
+
+def test_r30_verifier_does_not_require_pre_shock_external_agent_runs():
+    from pathlib import Path
+
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "r30_machine_verdict.py"
+    ).read_text(encoding="utf-8")
+
+    assert "real_external_round1_agent" not in source
+    assert "real_external_mediator" not in source
+    assert "pre_shock_human_authority_receipt" in source
+    assert "real_external_post_shock_recovery_agent" in source
