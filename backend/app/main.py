@@ -266,6 +266,7 @@ from app.integrations.discovery.real_city import (
 )
 from app.integrations.discovery.orchestration import orchestrate_discovery
 from app.fact_acquisition import acquire_place_facts
+from app.live_context_watch import run_live_context_watch
 from app.integrations.inbox.vision import extract_reservation_image, extract_reservation_text
 from app.integrations.inbox.semantic_intake import (
     journey_interpreter_context,
@@ -2110,6 +2111,30 @@ def acquire_journey_place_facts(
         session.rollback()
         raise HTTPException(502, str(exc)) from exc
     return receipt
+
+
+@app.post("/api/v1/journeys/{journey_id}/context-watch")
+def run_journey_context_watch(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Refresh exact active-plan venue facts and classify their live context.
+
+    This server-owned watch never starts an Agent itself.  A qualified conflict
+    is persisted as a SYSTEM_DERIVED Event; the existing Agent command path may
+    then decide whether recovery is needed under current authority.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "context watch requires an active Journey")
+    try:
+        result = run_live_context_watch(session, journey)
+        session.commit()
+    except (httpx.HTTPError, ValueError) as exc:
+        session.rollback()
+        raise HTTPException(502, str(exc)) from exc
+    return result
 
 
 @app.post("/api/v1/journeys/{journey_id}/real-city/intelligence", status_code=201)
