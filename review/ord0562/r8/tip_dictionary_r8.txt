@@ -1,0 +1,28 @@
+The newest tip hop, read from published bytes in this run.
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+32372c7e57611f73782fdc607d929735224cf657
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/cff87c64-ord0562-english-count-nouns-r7
+fd99f18329af5950007e925eeb3221623f7d077f
+
+$ git -C D:/moodle/CityNexus diff --name-only 8996eee4fb9fb4e159588305223ef421728c4e72 32372c7e57611f73782fdc607d929735224cf657 | wc -l
+68
+paths this lane is asking to land, among them: 0 of 2
+(the two it asks to land are frontend/src/app/V8Experience.tsx, frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts)
+
+What the hop did to the dictionary this lane does not ship but does read:
+   -  "bookings.stayEvidence": "STAY EVIDENCE",
+   +  "bookings.stayEvidence": "Stay evidence",
+   -  "inbox.multimodal": "MULTIMODAL INBOX",
+   +  "inbox.multimodal": "Multimodal inbox",
+   -  "inbox.authoritativeMemory": "AUTHORITATIVE MEMORY",
+   +  "inbox.authoritativeMemory": "Authoritative memory",
+
+The counted keys this lane introduced, still on that tip (grep -n on the tip blob):
+   line 196: "hub.todayDays": "{n} {plural:day}",
+   line 197: "hub.todayDaysUnknown": "length unknown",
+   line 198: "hub.budgetLine": "{days} {plural:day:days} · {people} {plural:person:people} · about {amount} per person per day",
+   line 1303: "hub.todayDays": "{n} 天",
+   line 1304: "hub.todayDaysUnknown": "天数未知",
+   line 1305: "hub.budgetLine": "{days} 天 · {people} 人 · 每人每天约 {amount}",
+
+So the hop did not touch what this lane lands, and did not touch the counted keys either.
