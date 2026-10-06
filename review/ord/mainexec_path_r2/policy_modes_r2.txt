@@ -1,0 +1,5 @@
+Cell 5: the policy check on report_disruption, read by running it on this tree.
+the decision REPORT_DISRUPTION gets in every product mode, with the tightest envelope:
+   ADVISORY -> ALLOW_AUTO
+   ASSISTED -> ALLOW_AUTO
+   AUTONOMOUS -> ALLOW_AUTO
