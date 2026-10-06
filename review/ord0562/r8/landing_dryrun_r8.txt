@@ -1,0 +1,29 @@
+Landing dry-run: the newest authoritative tip with this branch
+s two files put on top, then the gates run on that tree.
+Tree = tip 3d40efcc1956f49dcc0679a41995dedc5aae8475 + the two files from refs/heads/review/cff87c64-ord0562-english-count-nouns-r7 @ 48d8564701b26c0feeea0aa1a9e82d17d38316f7
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+3d40efcc1956f49dcc0679a41995dedc5aae8475
+
+file frontend/src/app/V8Experience.tsx
+  tip blob      5d62f7bc78a58369d871a37c820e0b9a1a6076e6
+  applied blob  19b89006617defc2d8ad8fa98ece2f35bee113e5
+  worktree byte 19b89006617defc2d8ad8fa98ece2f35bee113e5
+
+file frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts
+  tip blob      fc2c06432044e2870bf9c682e1a27b31dbf83610
+  applied blob  9344249444808bfbfa8b28cf9c38efbe912e9559
+  worktree byte 9344249444808bfbfa8b28cf9c38efbe912e9559
+
+$ git -C <worktree> diff --cached --stat <tip>   # the two files are staged, not committed, on this scratch branch
+ ...cff87c64-ord0562-english-count-nouns-r1.spec.ts | 67 +++++++++++++++++++++-
+ frontend/src/app/V8Experience.tsx                  | 18 +++---
+ 2 files changed, 73 insertions(+), 12 deletions(-)
+
+
+Gates run on that tree:
+  ruler ord0562-count-r1: 6 arms ok, rc=0  (receipt: dryrun_arms_r8.txt)
+  tsc -p tsconfig.check.json --noEmit: rc=0, 0 bytes
+  tsc -p tsconfig.typecheck.json --noEmit: rc=0, 0 bytes
+
+This answers the question the readiness ruler cannot: not "will it clobber" but "is the tip green
+afterwards". It is a dry run only -- the branch that ships is unchanged by it.
