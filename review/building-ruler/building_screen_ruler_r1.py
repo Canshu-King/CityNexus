@@ -33,7 +33,7 @@ SCENARIOS = [
         "cause": "no_canonical_identity",
         "query": "贡山独龙族怒族自治县",
         "server_code": "NO_CANONICAL_IDENTITY",
-        "names_cause": ["没认出", "认不出", "无法", "不能"],
+        "names_cause": ["没认出", "认不出", "无法追溯", "不能追溯"],
         # this cause is answered by the neutral basis the screen falls back to, NOT by the word
         # "server" -- a first version of this ruler searched for that word and mis-scored an honest
         # screen as dishonest.  The check is whether the screen carries this answer's substance.
@@ -45,7 +45,7 @@ SCENARIOS = [
         "query": "北京",
         "server_code": "COVERAGE_INCOMPLETE",
         # the flattened line contains none of these -- that is the finding this ruler exists to catch
-        "names_cause": ["还缺", "没准备", "不足", "没有", "short", "missing"],
+        "names_cause": ["还缺", "没准备", "未准备", "不足", "short ", "missing ", "categories"],
         "quotes_server": ["服务器", "Server", "server"],
         "next_step": ["可以先准备", "先准备", "准备", "先刷新", "prepare", "refresh"],
     },
