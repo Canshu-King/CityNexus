@@ -1,0 +1,818 @@
+{
+ "started": "10-01 17:25:39",
+ "head": "07c1a776f3426d1dc1913ec596e810756d96484a",
+ "shelf": {
+  "created": 201,
+  "listed": 1
+ },
+ "generations": {
+  "human_copy": {
+   "entry": "index-DN-RG4J3.js",
+   "rows": [
+    {
+     "shape": "390x844",
+     "locale": "zh-CN",
+     "exit": 0,
+     "failures": [],
+     "checks": [
+      {
+       "check": "[zh-CN@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": false,
+        "line": "已收在 ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 2",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架",
+        "posts": 2
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 201
+        },
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "390x844",
+     "locale": "en",
+     "exit": 0,
+     "failures": [],
+     "checks": [
+      {
+       "check": "[en@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "1280x900",
+     "locale": "zh-CN",
+     "exit": 0,
+     "failures": [],
+     "checks": [
+      {
+       "check": "[zh-CN@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "这一枚已经在这个架子上。 · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 31
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "1280x900",
+     "locale": "en",
+     "exit": 0,
+     "failures": [],
+     "checks": [
+      {
+       "check": "[en@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no machine token",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "This place is already on that shelf. · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 66
+       }
+      },
+      {
+       "check": "[en@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    }
+   ],
+   "all_green": true
+  },
+  "masked_copy": {
+   "entry": "index-3PAyLEl1.js",
+   "rows": [
+    {
+     "shape": "390x844",
+     "locale": "zh-CN",
+     "exit": 1,
+     "failures": [
+      "[zh-CN@390x844] the refusal sentence carries no machine token"
+     ],
+     "checks": [
+      {
+       "check": "[zh-CN@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence carries no machine token",
+       "held": false,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 46
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "390x844",
+     "locale": "en",
+     "exit": 1,
+     "failures": [
+      "[en@390x844] the refusal sentence carries no machine token"
+     ],
+     "checks": [
+      {
+       "check": "[en@390x844] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@390x844] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@390x844] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@390x844] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@390x844] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence carries no machine token",
+       "held": false,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@390x844] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 57
+       }
+      },
+      {
+       "check": "[en@390x844] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@390x844] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "1280x900",
+     "locale": "zh-CN",
+     "exit": 1,
+     "failures": [
+      "[zh-CN@1280x900] the refusal sentence carries no machine token"
+     ],
+     "checks": [
+      {
+       "check": "[zh-CN@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[zh-CN@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence carries no machine token",
+       "held": false,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · 已收在 ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 46
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[zh-CN@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    },
+    {
+     "shape": "1280x900",
+     "locale": "en",
+     "exit": 1,
+     "failures": [
+      "[en@1280x900] the refusal sentence carries no machine token"
+     ],
+     "checks": [
+      {
+       "check": "[en@1280x900] the 收藏到 entry is on the screen",
+       "held": true,
+       "reading": {
+        "entries": 6,
+        "itinerary": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] at least one shelf is offered",
+       "held": true,
+       "reading": 1
+      },
+      {
+       "check": "[en@1280x900] attempt 1",
+       "held": null,
+       "reading": {
+        "met409": true,
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架",
+        "posts": 1
+       }
+      },
+      {
+       "check": "[en@1280x900] the walk met a 409 from the door",
+       "held": true,
+       "reading": [
+        {
+         "url": "/api/v1/collections/5ca4be6b-22fd-43ab-8c12-a275433d2356/items",
+         "status": 409
+        }
+       ]
+      },
+      {
+       "check": "[en@1280x900] the refusal line is on the screen and not empty",
+       "held": true,
+       "reading": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no identifier",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence carries no machine token",
+       "held": false,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence is not a dictionary key吐回",
+       "held": true,
+       "reading": {
+        "line": "PLACE_ALREADY_IN_COLLECTION · Collected into ORD-0513 反例架"
+       }
+      },
+      {
+       "check": "[en@1280x900] the refusal sentence reads like a sentence (>= 8 chars, has a space)",
+       "held": true,
+       "reading": {
+        "length": 57
+       }
+      },
+      {
+       "check": "[en@1280x900] details elements on this screen",
+       "held": null,
+       "reading": {
+        "count": 0,
+        "summaries": [],
+        "empty": 0
+       }
+      },
+      {
+       "check": "[en@1280x900] no empty 技术详情 face",
+       "held": true,
+       "reading": {
+        "label_seen": false,
+        "details": 0,
+        "empty": 0
+       }
+      }
+     ],
+     "console_errors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+     ]
+    }
+   ],
+   "all_green": false
+  }
+ },
+ "entry_human": "index-DN-RG4J3.js",
+ "masked_build": {
+  "exit": 0,
+  "tail": "22m\n\u001b[32m✓ built in 5.35s\u001b[39m\n\nPWA v1.3.0\nmode      generateSW\nprecache  8 entries (2806.65 KiB)\nfiles generated\n  dist/v10-sw.js\n  dist/workbox-6923124b.js\n\u001b[33m\n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n"
+ },
+ "entry_masked": "index-3PAyLEl1.js",
+ "verdict": {
+  "human_copy_green": true,
+  "masked_all_red": true,
+  "masked_red_on_the_machine_token_check": 4,
+  "entries_differ": true,
+  "counterexample_holds": true
+ },
+ "restored_build": {
+  "exit": 0
+ },
+ "preview_store_untouched": {
+  "bytes_equal": true,
+  "mtime_ns_equal": true,
+  "bytes_before": 7213056,
+  "bytes_after": 7213056
+ },
+ "worktree_after": ""
+}
