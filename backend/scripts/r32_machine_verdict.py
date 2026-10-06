@@ -55,6 +55,19 @@ def _evaluator_receipt() -> dict[str, Any]:
     }
 
 
+_REQUIRED_STRIKE_SOURCE_PATHS = {
+    "backend/run_r32_live.py",
+    "backend/app/agent/runtime.py",
+    "backend/app/recovery_epoch.py",
+    "backend/app/agent/gateway.py",
+    "backend/app/agent/signal_pipeline.py",
+    "backend/app/agent/delegation_policy.py",
+    "backend/app/collective_authority.py",
+    "backend/app/main.py",
+    "backend/scripts/r32_machine_verdict.py",
+}
+
+
 def verdict(
     checkpoint: dict[str, Any],
     *,
@@ -137,9 +150,16 @@ def verdict(
     )
     source_traceable: bool | None = None
     if source_receipt:
+        source_hashes = source_receipt.get("source_sha256") or {}
         source_traceable = bool(
             source_receipt.get("git_head")
-            and source_receipt.get("source_sha256")
+            and isinstance(source_hashes, dict)
+            and _REQUIRED_STRIKE_SOURCE_PATHS.issubset(source_hashes)
+            and all(
+                isinstance(source_hashes.get(path), str)
+                and len(source_hashes[path]) == 64
+                for path in _REQUIRED_STRIKE_SOURCE_PATHS
+            )
             and source_receipt.get("tracked_dirty_before_strike") is False
         )
 
@@ -572,7 +592,9 @@ def verdict(
             (
                 f"git_head={source_receipt.get('git_head')} "
                 f"tracked_dirty_before_strike="
-                f"{source_receipt.get('tracked_dirty_before_strike')}"
+                f"{source_receipt.get('tracked_dirty_before_strike')} "
+                f"required_source_paths="
+                f"{len(_REQUIRED_STRIKE_SOURCE_PATHS)}"
             ),
         ),
         "runtime_preflight_isolated": _dim(
