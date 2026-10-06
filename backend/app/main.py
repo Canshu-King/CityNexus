@@ -267,6 +267,7 @@ from app.execution.group_presence import (
     LOCATION_FRESHNESS_SECONDS as GROUP_LOCATION_FRESHNESS_SECONDS,
     MAX_USEFUL_ACCURACY_M as GROUP_MAX_LOCATION_ACCURACY_M,
     group_presence_projection,
+    rendezvous_commitment_risk,
     rendezvous_target,
 )
 from app.route_session_operations import operation_payload as route_operation_payload
