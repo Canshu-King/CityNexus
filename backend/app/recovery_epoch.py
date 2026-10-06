@@ -150,6 +150,19 @@ def current_open_recovery_epoch(session: Session, journey_id: str) -> RecoveryEp
     ).first()
 
 
+def latest_recovery_epoch(
+    session: Session, journey_id: str
+) -> RecoveryEpoch | None:
+    """Return the newest durable generation without opening a new one."""
+
+    return session.scalars(
+        select(RecoveryEpoch)
+        .where(RecoveryEpoch.journey_id == str(journey_id))
+        .order_by(RecoveryEpoch.generation.desc(), RecoveryEpoch.id.desc())
+        .limit(1)
+    ).first()
+
+
 class RecoveryEpochSuperseded(RuntimeError):
     code = RECOVERY_EPOCH_SUPERSEDED
 
@@ -279,26 +292,42 @@ def validate_recovery_epoch_binding(
     *,
     expected_status: str = OPEN,
 ) -> RecoveryEpoch:
-    # "OPEN" is not enough: a provider/Event transaction may have changed the
-    # actual Journey reality before any caller explicitly refreshed the epoch.
-    # Recompute here so every authority-bearing spend observes current truth.
+    bound = (
+        session.get(RecoveryEpoch, str(bound_recovery_epoch_id))
+        if bound_recovery_epoch_id
+        else None
+    )
+
+    # A run already bound to a closed/superseded generation is stale by
+    # definition.  Reject it without calling ensure_recovery_epoch(): stale
+    # work must never mint a fresh generation merely by checking whether it is
+    # still authorized.
+    if bound is None or bound.status != expected_status:
+        current = (
+            current_open_recovery_epoch(session, journey_id)
+            or latest_recovery_epoch(session, journey_id)
+        )
+        raise RecoveryEpochSuperseded(
+            bound=bound,
+            current=current,
+            reason=(
+                "bound recovery epoch is no longer spendable; stale validation "
+                "does not create a successor generation"
+            ),
+        )
+
+    # When the bound generation is still OPEN, storage status alone is not
+    # enough: a provider/Event transaction may already have changed reality
+    # before any caller explicitly refreshed the epoch.  Recompute only in
+    # this case so current work sees new world facts while stale work stays
+    # causally inert.
     journey = session.get(Journey, str(journey_id))
     current = (
         ensure_recovery_epoch(session, journey)
         if journey is not None
         else current_open_recovery_epoch(session, journey_id)
     )
-    bound = (
-        session.get(RecoveryEpoch, str(bound_recovery_epoch_id))
-        if bound_recovery_epoch_id
-        else None
-    )
-    if (
-        bound is None
-        or current is None
-        or bound.id != current.id
-        or bound.status != expected_status
-    ):
+    if current is None or bound.id != current.id:
         raise RecoveryEpochSuperseded(bound=bound, current=current)
     return current
 
