@@ -113,7 +113,7 @@ def classify_opening_hours(*, activity: Any, place: Any, opening: dict[str, Any]
         if close_min <= open_min and close_min != 24 * 60:
             close_min += 24 * 60
         matching.append({"open": item.get("open"), "close": item.get("close"), "days": item.get("days")})
-        if max(start_min, open_min) < min(end_min, close_min):
+        if start_min >= open_min and end_min <= close_min:
             return {
                 **base,
                 "status": "OPEN_COMPATIBLE",
