@@ -1,0 +1,259 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts",
+ "arm": "en",
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "drawer_current": [
+   "v8-drawer-entry-hub"
+  ]
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "drawer_current": [
+    "v8-drawer-entry-hub"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-hub"
+   ],
+   "sidebar_current": [
+    "Today"
+   ],
+   "sidebar_active": [
+    "Today"
+   ]
+  },
+  {
+   "requested": "live",
+   "drawer_current": [
+    "v8-drawer-entry-live"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-live"
+   ],
+   "sidebar_current": [
+    "Live Journey"
+   ],
+   "sidebar_active": [
+    "Live Journey"
+   ]
+  },
+  {
+   "requested": "map",
+   "drawer_current": [
+    "v8-drawer-entry-map"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-map"
+   ],
+   "sidebar_current": [
+    "Map"
+   ],
+   "sidebar_active": [
+    "Map"
+   ]
+  },
+  {
+   "requested": "studio",
+   "drawer_current": [
+    "v8-drawer-entry-studio"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-studio"
+   ],
+   "sidebar_current": [
+    "Trip Studio"
+   ],
+   "sidebar_active": [
+    "Trip Studio"
+   ]
+  },
+  {
+   "requested": "stay",
+   "drawer_current": [
+    "v8-drawer-entry-stay"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-stay"
+   ],
+   "sidebar_current": [
+    "Stay Explorer"
+   ],
+   "sidebar_active": [
+    "Stay Explorer"
+   ]
+  },
+  {
+   "requested": "discover",
+   "drawer_current": [
+    "v8-drawer-entry-discover"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-discover"
+   ],
+   "sidebar_current": [
+    "City Discovery"
+   ],
+   "sidebar_active": [
+    "City Discovery"
+   ]
+  },
+  {
+   "requested": "import",
+   "drawer_current": [
+    "v8-drawer-entry-import"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-import"
+   ],
+   "sidebar_current": [
+    "Import places"
+   ],
+   "sidebar_active": [
+    "Import places"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "drawer_current": [
+    "v8-drawer-entry-bookings"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-bookings"
+   ],
+   "sidebar_current": [
+    "Travel Wallet"
+   ],
+   "sidebar_active": [
+    "Travel Wallet"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "drawer_current": [
+    "v8-drawer-entry-footprints"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-footprints"
+   ],
+   "sidebar_current": [
+    "Footprints"
+   ],
+   "sidebar_active": [
+    "Footprints"
+   ]
+  },
+  {
+   "requested": "agent",
+   "drawer_current": [
+    "v8-drawer-entry-agent"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-agent"
+   ],
+   "sidebar_current": [
+    "Copilot"
+   ],
+   "sidebar_active": [
+    "Copilot"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "drawer_current": [
+    "v8-drawer-entry-authoritative"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-authoritative"
+   ],
+   "sidebar_current": [
+    "Recovery"
+   ],
+   "sidebar_active": [
+    "Recovery"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "drawer_current": [
+    "v8-drawer-entry-intelligence"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-intelligence"
+   ],
+   "sidebar_current": [
+    "Intelligence"
+   ],
+   "sidebar_active": [
+    "Intelligence"
+   ]
+  },
+  {
+   "requested": "twin",
+   "drawer_current": [
+    "v8-drawer-entry-twin"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-twin"
+   ],
+   "sidebar_current": [
+    "Traveler Twin"
+   ],
+   "sidebar_active": [
+    "Traveler Twin"
+   ]
+  },
+  {
+   "requested": "trash",
+   "drawer_current": [
+    "v8-drawer-entry-trash"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-trash"
+   ],
+   "sidebar_current": [
+    "Recycle bin"
+   ],
+   "sidebar_active": [
+    "Recycle bin"
+   ]
+  },
+  {
+   "requested": "access",
+   "drawer_current": [
+    "v8-drawer-entry-access"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-access"
+   ],
+   "sidebar_current": [
+    "Members and access"
+   ],
+   "sidebar_active": [
+    "Members and access"
+   ]
+  },
+  {
+   "requested": "trips",
+   "drawer_current": [
+    "v8-drawer-entry-trips"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-trips"
+   ],
+   "sidebar_current": [],
+   "sidebar_active": []
+  },
+  {
+   "requested": "me",
+   "drawer_current": [
+    "v8-drawer-entry-me"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-me"
+   ],
+   "sidebar_current": [],
+   "sidebar_active": []
+  }
+ ]
+}

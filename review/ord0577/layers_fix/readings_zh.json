@@ -1,0 +1,259 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts",
+ "arm": "zh",
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "drawer_current": [
+   "v8-drawer-entry-hub"
+  ]
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "drawer_current": [
+    "v8-drawer-entry-hub"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-hub"
+   ],
+   "sidebar_current": [
+    "今天"
+   ],
+   "sidebar_active": [
+    "今天"
+   ]
+  },
+  {
+   "requested": "live",
+   "drawer_current": [
+    "v8-drawer-entry-live"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-live"
+   ],
+   "sidebar_current": [
+    "实时行程"
+   ],
+   "sidebar_active": [
+    "实时行程"
+   ]
+  },
+  {
+   "requested": "map",
+   "drawer_current": [
+    "v8-drawer-entry-map"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-map"
+   ],
+   "sidebar_current": [
+    "地图"
+   ],
+   "sidebar_active": [
+    "地图"
+   ]
+  },
+  {
+   "requested": "studio",
+   "drawer_current": [
+    "v8-drawer-entry-studio"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-studio"
+   ],
+   "sidebar_current": [
+    "行程工作台"
+   ],
+   "sidebar_active": [
+    "行程工作台"
+   ]
+  },
+  {
+   "requested": "stay",
+   "drawer_current": [
+    "v8-drawer-entry-stay"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-stay"
+   ],
+   "sidebar_current": [
+    "住宿选择"
+   ],
+   "sidebar_active": [
+    "住宿选择"
+   ]
+  },
+  {
+   "requested": "discover",
+   "drawer_current": [
+    "v8-drawer-entry-discover"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-discover"
+   ],
+   "sidebar_current": [
+    "城市探索"
+   ],
+   "sidebar_active": [
+    "城市探索"
+   ]
+  },
+  {
+   "requested": "import",
+   "drawer_current": [
+    "v8-drawer-entry-import"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-import"
+   ],
+   "sidebar_current": [
+    "导入地点"
+   ],
+   "sidebar_active": [
+    "导入地点"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "drawer_current": [
+    "v8-drawer-entry-bookings"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-bookings"
+   ],
+   "sidebar_current": [
+    "旅行票夹"
+   ],
+   "sidebar_active": [
+    "旅行票夹"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "drawer_current": [
+    "v8-drawer-entry-footprints"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-footprints"
+   ],
+   "sidebar_current": [
+    "足迹"
+   ],
+   "sidebar_active": [
+    "足迹"
+   ]
+  },
+  {
+   "requested": "agent",
+   "drawer_current": [
+    "v8-drawer-entry-agent"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-agent"
+   ],
+   "sidebar_current": [
+    "Copilot"
+   ],
+   "sidebar_active": [
+    "Copilot"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "drawer_current": [
+    "v8-drawer-entry-authoritative"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-authoritative"
+   ],
+   "sidebar_current": [
+    "恢复与执行"
+   ],
+   "sidebar_active": [
+    "恢复与执行"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "drawer_current": [
+    "v8-drawer-entry-intelligence"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-intelligence"
+   ],
+   "sidebar_current": [
+    "智能守护"
+   ],
+   "sidebar_active": [
+    "智能守护"
+   ]
+  },
+  {
+   "requested": "twin",
+   "drawer_current": [
+    "v8-drawer-entry-twin"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-twin"
+   ],
+   "sidebar_current": [
+    "旅行者画像"
+   ],
+   "sidebar_active": [
+    "旅行者画像"
+   ]
+  },
+  {
+   "requested": "trash",
+   "drawer_current": [
+    "v8-drawer-entry-trash"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-trash"
+   ],
+   "sidebar_current": [
+    "回收站"
+   ],
+   "sidebar_active": [
+    "回收站"
+   ]
+  },
+  {
+   "requested": "access",
+   "drawer_current": [
+    "v8-drawer-entry-access"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-access"
+   ],
+   "sidebar_current": [
+    "成员与权限"
+   ],
+   "sidebar_active": [
+    "成员与权限"
+   ]
+  },
+  {
+   "requested": "trips",
+   "drawer_current": [
+    "v8-drawer-entry-trips"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-trips"
+   ],
+   "sidebar_current": [],
+   "sidebar_active": []
+  },
+  {
+   "requested": "me",
+   "drawer_current": [
+    "v8-drawer-entry-me"
+   ],
+   "drawer_active": [
+    "v8-drawer-entry-me"
+   ],
+   "sidebar_current": [],
+   "sidebar_active": []
+  }
+ ]
+}

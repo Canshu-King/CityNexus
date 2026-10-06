@@ -1871,6 +1871,13 @@ export function V8Experience() {
     slots: routeSlots,
   };
 
+  /* ORD-0577: no bar button is the current one on a screen outside the bar's own routes, and the bar used
+     to say nothing there. It answers by pointing at the name the breadcrumb already paints, rather than
+     claiming a "nearest" main route the product does not carry and the traveller is not on. */
+  const barAnswersHere = mobileRoutes.some(
+    (item) => item.key === route || (item.key === "map" && route === "live")
+  );
+
   return (
     <div className="v8-product-shell">
       <aside className="v8-sidebar">
@@ -1893,6 +1900,7 @@ export function V8Experience() {
               )}
               <button
                 className={route === item.key ? "active" : ""}
+                aria-current={route === item.key ? "page" : undefined}
                 data-contrast-role={route === item.key ? "state" : undefined}
                 onClick={() => navigate(item.key)}
               >
@@ -1934,7 +1942,7 @@ export function V8Experience() {
           <div className="v8-breadcrumb">
             <span>{t("shell.journeys")}</span>
             <b>/</b>
-            <strong>
+            <strong id="v8-bar-where">
               {t(
                 "nav." +
                   (route in
@@ -2109,7 +2117,11 @@ export function V8Experience() {
           }}
         />
       )}
-      <nav className="v8-mobile-nav" aria-label="Mobile navigation">
+      <nav
+        className="v8-mobile-nav"
+        aria-label="Mobile navigation"
+        aria-describedby={barAnswersHere ? undefined : "v8-bar-where"}
+      >
         {mobileRoutes.map((item) => (
           <button
             key={item.key}
@@ -2184,6 +2196,7 @@ export function V8Experience() {
                   )}
                 <button
                   className={route === item.key ? "active" : ""}
+                  aria-current={route === item.key ? "page" : undefined}
                   data-testid={"v8-drawer-entry-" + item.key}
                   onClick={() => navigate(item.key)}
                 >

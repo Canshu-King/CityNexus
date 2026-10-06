@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:53849 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54698 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61145 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61146 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61147 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55998 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55999 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60459 - "GET /api/v1/travelers/eb3c5d0b-209c-4038-af6f-0885257a3d2c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61148 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55813 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61149 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62153 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62154 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62155 - "GET /api/v1/travelers/eb3c5d0b-209c-4038-af6f-0885257a3d2c/push-config HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "GET /api/v1/travelers/eb3c5d0b-209c-4038-af6f-0885257a3d2c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51767 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51766 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62156 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62157 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51768 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49182 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49185 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49186 - "GET /api/v1/travelers/eb3c5d0b-209c-4038-af6f-0885257a3d2c/push-config HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55174 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64325 - "GET /api/v1/travelers/eb3c5d0b-209c-4038-af6f-0885257a3d2c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49187 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55172 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49188 - "GET /api/v1/journeys/6e0df513-7963-4e30-8626-5d4a63637014/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55173 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  3 passed (1.9m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-layers-baseline-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577baseline_r1.db ports 5212/5213 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0577baseline_r1 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577baseline_r1.log
