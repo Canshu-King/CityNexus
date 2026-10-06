@@ -746,6 +746,25 @@ def _server_completion_contract(
         return {"kind": "MUTATION_EXECUTED", "source": "server_trace"}
     if approval_pending:
         return {"kind": "APPROVAL_PENDING", "source": "server_trace"}
+    no_progress = next(
+        (
+            item
+            for item in reversed(tool_steps)
+            if item.get("decision") == "NO_PROGRESS"
+            or (
+                isinstance(item.get("result"), dict)
+                and item["result"].get("status") == "NO_PROGRESS"
+            )
+        ),
+        None,
+    )
+    if no_progress is not None:
+        return {
+            "kind": "NO_PROGRESS",
+            "source": "server_trace",
+            "reason_code": "SAME_STATE_STRATEGY_STALLED",
+            "tool_name": no_progress.get("tool_name"),
+        }
     return {
         "kind": "UNRESOLVED",
         "source": "server_trace",
@@ -765,7 +784,7 @@ def _terminal_agent_status(
     waiting_for_approval = completion["kind"] == "APPROVAL_PENDING"
     if waiting_for_approval:
         run_status = "WAITING_FOR_APPROVAL"
-    elif completion["kind"] == "UNRESOLVED":
+    elif completion["kind"] in {"UNRESOLVED", "NO_PROGRESS"}:
         run_status = "PARTIAL"
     waiting_for_members = completion.get("mission_status") == "WAITING_FOR_MEMBERS"
     mission_status = (
@@ -994,6 +1013,7 @@ class DeepSeekJourneyAgent:
             tuple[str, str, int], tuple[int, dict[str, Any]]
         ] = {}
         tool_counts: dict[str, int] = {}
+        terminal_supervisor_turns = 0
         try:
             for _ in range(max_steps):
                 batch_search_seen = False
@@ -1037,6 +1057,39 @@ class DeepSeekJourneyAgent:
                     },
                 )
                 if not tool_calls:
+                    completion = _server_completion_contract(
+                        tool_trace,
+                        run_status="COMPLETED",
+                    )
+                    if (
+                        completion.get("kind") == "UNRESOLVED"
+                        and terminal_supervisor_turns < 1
+                    ):
+                        # The server may refuse to call prose "done", but it
+                        # must not prescribe the model's next tool. Give the
+                        # Agent one bounded free-strategy turn with only the
+                        # missing terminal fact.
+                        terminal_supervisor_turns += 1
+                        messages.append(
+                            {
+                                "role": "assistant",
+                                "content": str(content),
+                            }
+                        )
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": (
+                                    "CityNexus terminal contract is not yet "
+                                    "satisfied: no server-owned typed terminal "
+                                    "outcome exists for this mission. Continue "
+                                    "with any allowed strategy, or finish only "
+                                    "when the server can record a valid terminal "
+                                    "outcome. No specific next tool is required."
+                                ),
+                            }
+                        )
+                        continue
                     final_text = str(content)
                     break
                 assistant_message = {
