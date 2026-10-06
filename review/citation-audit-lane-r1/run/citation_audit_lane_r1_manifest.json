@@ -1,0 +1,7 @@
+[
+ ["tools/citation_audit_lane_r1.py", "tools"],
+ ["evidence/citation_audit_lane_r1/citation_audit_lane_r1.json", "evidence"],
+ ["run/citation_audit_lane_r1_run.txt", "run"],
+ ["run/citation_audit_lane_r1_manifest.json", "run"],
+ ["run/commit_citation_audit_lane_r1_msg.txt", "run"]
+]

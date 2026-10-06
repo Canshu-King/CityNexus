@@ -1,0 +1,25 @@
+citation audit r1: every coordinate this lane's own blocks cite, checked against what the remote answers (0 product paths)
+
+On 2026-10-06 I published three blocks citing a ref name that does not exist.  One wrong coordinate proved
+the class is worth sweeping, and the sweep is cheap: the citations are in the blocks themselves and the
+answers are one `ls-remote` plus `git cat-file -t` away.
+
+Three readings, each with its own verdict vocabulary:
+- every `refs/heads/...` cited -> EXISTS / MISSING against the live ref map;
+- where a block quotes a 40-hex on the same line as that ref -> does it still equal the live head?
+  (a moved head is not an error on this line -- generations pin their own tip -- so this is reported as a
+  fact, not a judgement about who changed what);
+- every distinct 40-hex cited -> does `git cat-file -t` still answer, and with what kind?
+
+The tool also self-reports its own first-version false positives: a loose regex read the glob literal
+`refs/heads/review/*` inside a quoted command as a ref and reported it missing twice.  Narrowed to
+"two-or-more real segments", after which exactly one ref is missing -- the known one.
+
+Contents under review/citation-audit-lane-r1/:
+- tools/citation_audit_lane_r1.py -- the audit; also renders and vouches its own BB copy.
+- evidence/citation_audit_lane_r1/citation_audit_lane_r1.json -- the full per-ref and per-hex tables.
+- run/citation_audit_lane_r1_run.txt -- the printed output.
+- run/citation_audit_lane_r1_manifest.json, run/commit_citation_audit_lane_r1_msg.txt -- this publish.
+
+No fetch, no write, no ref moved, no ledger direct write, no product byte.  New file names throughout;
+no landed instrument path is rewritten (CMDR-0925-2128).
