@@ -2127,6 +2127,47 @@ class AgentToolGateway:
             proposal_diff = json.loads(proposal.diff_json or "{}")
         except json.JSONDecodeError:
             proposal_diff = {}
+        target_plan = self.session.get(
+            PlanVersion, proposal.proposed_plan_version_id
+        )
+        if target_plan is None or target_plan.journey_id != journey.id:
+            raise HTTPException(409, "replan target plan is missing")
+
+        from app.main import (
+            _record_collective_mutation_denial,
+            collective_authority_preflight,
+        )
+
+        authority_preflight = collective_authority_preflight(
+            self.session,
+            journey,
+            proposal,
+            target_plan,
+            hard_feasible_plan_ids=(
+                {str(target_plan.id)}
+                if facts.hard_constraints_passed
+                else set()
+            ),
+            resolved_decision=resolved_collective_decision,
+        )
+        if authority_preflight.get("allowed") is not True:
+            _record_collective_mutation_denial(
+                self.session,
+                journey,
+                target_plan,
+                authority_preflight,
+                mutation_kind="ACCEPT_REPLAN",
+                proposal_id=proposal.id,
+            )
+            raise HTTPException(
+                409,
+                f"{authority_preflight.get('code')}: "
+                "collective authority is not currently spendable",
+            )
+        preflight_receipt_id = (
+            str(authority_preflight.get("authority_receipt_id") or "")
+            or None
+        )
         approval_signature = approval_fingerprint(
             action=AgentAction.ACCEPT_REPLAN.value,
             journey_id=journey.id,
@@ -2165,6 +2206,20 @@ class AgentToolGateway:
                     actor_id=request.agent_id,
                     required_decision=auth.decision.value,
                 )
+            if preflight_receipt_id:
+                existing_receipt_id = str(
+                    approval.authority_receipt_id or ""
+                )
+                if (
+                    existing_receipt_id
+                    and existing_receipt_id != preflight_receipt_id
+                ):
+                    self.session.rollback()
+                    raise HTTPException(
+                        409,
+                        "APPROVAL_AUTHORITY_RECEIPT_MISMATCH",
+                    )
+                approval.authority_receipt_id = preflight_receipt_id
 
         approved_receipt = approval is not None and approval.status == "CONSUMED"
         if auth.decision == AuthorizationDecision.ALLOW_AUTO or approved_receipt:
@@ -2187,6 +2242,7 @@ class AgentToolGateway:
                 authorization_decision=auth.decision.value,
                 reason_codes=response_reason_codes,
                 resolved_decision=resolved_collective_decision,
+                expected_authority_receipt_id=preflight_receipt_id,
             )
             receipt_id = result.get("collective_authority_receipt_id") if isinstance(result, dict) else None
             if approval is not None and receipt_id:
@@ -2225,6 +2281,10 @@ class AgentToolGateway:
             }
             if approval is not None:
                 response.update(approval_payload(approval))
+            if preflight_receipt_id:
+                response["collective_authority_receipt_id"] = (
+                    preflight_receipt_id
+                )
             after_status = proposal.status
 
         record_audit(
