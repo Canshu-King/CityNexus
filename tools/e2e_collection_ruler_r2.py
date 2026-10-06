@@ -24,16 +24,10 @@ from pathlib import Path
 
 # Specs that still abort collection. Each row is a file the gate cannot load, not a judgement about its
 # author: the fix is to move the prerequisite inside a test as a named skip (ORD-0576).
-DEBT = {
-    "qoder-ord0525-entry-reachability-r3.spec.ts",
-    "qoder-ord0545-family-words-r1.spec.ts",
-    "qoder-ord0545s3-refusal-on-glass-r1.spec.ts",
-    "qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts",
-    "qoder-e766b154-checkin-words-real-door-r1.spec.ts",
-}
+DEBT = set()  # every spec in this directory collects at this tip
 
 BARE_SKIP = re.compile(r"test\.skip\(\s*[A-Za-z0-9_.$\[\]'\" ]+\s*\)\s*;")
-TOTAL = re.compile(r"^Total:\s*(\d+) tests? in (\d+) files?")
+TOTAL = re.compile(r"^Total:\s*(\d+) tests? in (\d+) files?", re.M)
 AT = re.compile(r"^(\s+)?at (\S+\.spec\.ts):\d+")
 
 
@@ -56,7 +50,7 @@ def offenders(out: str) -> set[str]:
 
 def arm_collect(frontend: Path) -> dict:
     rc, out = run_list(frontend)
-    total = TOTAL.search(out.strip().splitlines()[-1] if out.strip() else "")
+    total = TOTAL.search(out)  # the Total line is not the last line: --list prints a blank line after it
     got = offenders(out)
     unjudged = sorted(got - DEBT)
     stale = sorted(DEBT - got)

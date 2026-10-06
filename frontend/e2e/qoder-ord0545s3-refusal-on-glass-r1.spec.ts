@@ -31,6 +31,8 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const CANARY_TRIP = "22222222-2222-4222-8222-222222222222";
 const PASTED = "Central Food Hall";
 const TABLE = "frontend/src/features/poiimport/poiImportCopy.ts";
@@ -38,9 +40,7 @@ const BACKEND = `http://127.0.0.1:${process.env.CITYNEXUS_ORD0545_BACKEND_PORT ?
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0545", "readouts");
 const TAG = process.env.CITYNEXUS_ORD0545_TAG ?? "r1";
 const BASE_TIP = process.env.CITYNEXUS_ORD0545_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
-}
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) COLLECTION_PREREQ.push("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
 
 const repoRoot = path.join(process.cwd(), "..");
 
@@ -213,6 +213,10 @@ async function walkToRefusal(page: any, request: any, locale: string) {
     whole_screen_text_sha256: createHash("sha256").update(screen, "utf8").digest("hex"),
   };
 }
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test.describe("ORD-0545 slice 3 a family-table refusal, read off real glass", () => {
   test("R1 中文那一屏：没排程的行程点\"加入\"，上屏的就是表里那句 zh", async ({ page, request }) => {
