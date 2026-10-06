@@ -1,0 +1,104 @@
+{
+ "base_revision": "1e95d106f81b29048ba17695fd0e49172516b9b1",
+ "private_db": "ord0527ab_9b1b1b1a.db",
+ "port_backend": 53282,
+ "port_preview": 53283,
+ "generations": [
+  {
+   "generation": "base",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-BGM3L0lx.js"
+   ],
+   "journey": "6ecd6be8-10b6-401c-a389-f3b38c8383db",
+   "read_before_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 1,
+    "identity_words": null,
+    "uuids": 0,
+    "words_withdraw_family": 0,
+    "picker_present": 1
+   },
+   "add_member": {
+    "http_status": 201,
+    "fields_sent": [
+     "traveler_id",
+     "role",
+     "invited_by"
+    ],
+    "member_id": "24a3a1ae-7642-4f9c-9f24-53a06c06ca19",
+    "role_answered": "OWNER",
+    "member_state": "MEMBER_IN_FORCE"
+   },
+   "read_back_rows": 1,
+   "read_after_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 1,
+    "identity_words": null,
+    "uuids": 0,
+    "words_withdraw_family": 0,
+    "picker_present": 1
+   }
+  },
+  {
+   "generation": "candidate",
+   "build_exit": 0,
+   "bundle_entry": [
+    "index-CADy2gy3.js"
+   ],
+   "journey": "0647d4f3-54ed-46f8-89df-70b64e9c186b",
+   "read_before_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [],
+    "role_change": 0,
+    "self_exit": 0,
+    "ladder_empty": 0,
+    "identity_words": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
+    "uuids": 0,
+    "words_withdraw_family": 1,
+    "picker_present": 1
+   },
+   "add_member": {
+    "http_status": 201,
+    "fields_sent": [
+     "traveler_id",
+     "role",
+     "invited_by"
+    ],
+    "member_id": "8a03b971-c27c-4a31-87fe-f7048161c559",
+    "role_answered": "OWNER",
+    "member_state": "MEMBER_IN_FORCE"
+   },
+   "read_back_rows": 1,
+   "read_after_add": {
+    "exit": 0,
+    "shape": "390x844",
+    "roster_rows": [
+     "所有者 · ORD0527-甲 · 还在生效 这一档能做什么：能读这条行程、改它、管成员、编辑地点，也能管共享链接。 我自己退出 撤销"
+    ],
+    "role_change": 0,
+    "self_exit": 1,
+    "ladder_empty": 0,
+    "identity_words": "这台设备替「ORD0527-甲」说话，他在这条行程上是所有者。",
+    "uuids": 0,
+    "words_withdraw_family": 1,
+    "picker_present": 1
+   }
+  }
+ ],
+ "restored": {
+  "build_exit": 0,
+  "bundle_entry": [
+   "index-CADy2gy3.js"
+  ]
+ }
+}
