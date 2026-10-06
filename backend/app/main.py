@@ -2474,6 +2474,9 @@ def pending_journey_missions(
                 ),
                 "candidate_options": option_views,
                 "selected_proposal_id": clarification.get("selected_proposal_id"),
+                "collective_authority_receipt_id": clarification.get(
+                    "authority_receipt_id"
+                ),
             }
 
         pending = session.scalar(
@@ -2501,6 +2504,14 @@ def pending_journey_missions(
                 "approval_status": approval.status if approval is not None else None,
                 "required_decision": approval.required_decision if approval is not None else None,
                 "approved_by": approval.approved_by if approval is not None else None,
+                "collective_authority_receipt_id": (
+                    pending.authority_receipt_id
+                    or (
+                        approval.authority_receipt_id
+                        if approval is not None
+                        else None
+                    )
+                ),
                 "viewer_can_approve": can_approve,
             }
 
