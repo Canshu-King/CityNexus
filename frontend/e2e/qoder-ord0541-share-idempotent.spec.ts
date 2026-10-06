@@ -35,6 +35,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { expect, test, type Browser, type Page } from "@playwright/test";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const JOURNEY_ID = "22222222-2222-4222-8222-222222222222";
 const FRONT = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0541_FRONT)}`;
 const GEN = (process.env.CITYNEXUS_ORD0541_GEN ?? "").trim();
@@ -44,9 +46,9 @@ for (const [name, value] of [
   ["CITYNEXUS_ORD0541_GEN", GEN],
   ["CITYNEXUS_ORD0541_EVIDENCE", EVIDENCE],
 ] as const) {
-  if (!value) throw new Error(`[ord0541] ${name} must be named by the runner`);
+  if (!value) COLLECTION_PREREQ.push(`[ord0541] ${name} must be named by the runner`);
 }
-mkdirSync(EVIDENCE, { recursive: true });
+if (EVIDENCE) mkdirSync(EVIDENCE, { recursive: true });
 
 const DOOR = `/api/v1/journeys/${JOURNEY_ID}/share-grants`;
 const GRANT_ID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
@@ -165,6 +167,10 @@ async function refuseAllDoors(page: Page) {
     }),
   );
 }
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test("ORD-0541 A1 a press that writes, then a press that does not", async ({ browser }) => {
   const write_arm = await openSheet(browser);

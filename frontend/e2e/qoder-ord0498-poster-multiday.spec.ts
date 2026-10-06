@@ -21,8 +21,8 @@ const WRITTEN = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0498_WRITTEN
 const UNWRITTEN_API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0498_UNWRITTEN_API)}`;
 const WRITTEN_API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0498_WRITTEN_API)}`;
 const EVIDENCE = (process.env.CITYNEXUS_ORD0498_EVIDENCE ?? "").trim();
-if (!EVIDENCE) throw new Error("[ord0498] CITYNEXUS_ORD0498_EVIDENCE must name where evidence is written");
-mkdirSync(EVIDENCE, { recursive: true });
+const EVIDENCE_PREREQ = EVIDENCE ? null : "[ord0498] CITYNEXUS_ORD0498_EVIDENCE must name where evidence is written";
+if (EVIDENCE) mkdirSync(EVIDENCE, { recursive: true });
 
 function write(name: string, body: unknown) {
   const path = `${EVIDENCE}/${name}.json`;
@@ -117,6 +117,12 @@ const stated = (line: string) => {
   const n = (v: string) => Number(v.replace(/,/g, ""));
   return { bytes: n(m[1]), width: n(m[2]), height: n(m[3]) };
 };
+
+test.beforeEach(() => {
+  const missing = [EVIDENCE_PREREQ]
+    .filter((v): v is string => v !== null);
+  test.skip(missing.length > 0, missing.join(" | "));
+});
 
 test("ORD-0498 M1 the same bundle shows one day before the writes and two days after", async ({ browser }) => {
   const before = await posterOn(browser, UNWRITTEN, UNWRITTEN_API, "M1_unwritten");

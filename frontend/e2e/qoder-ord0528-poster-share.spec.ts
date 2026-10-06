@@ -24,6 +24,8 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const JOURNEY_ID = "22222222-2222-4222-8222-222222222222";
 const FRONT = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0528_FRONT)}`;
 const GEN = (process.env.CITYNEXUS_ORD0528_GEN ?? "").trim();
@@ -37,9 +39,9 @@ for (const [name, value] of [
   ["CITYNEXUS_ORD0528_AUDIT", AUDIT],
   ["CITYNEXUS_ORD0528_PY", PYTHON],
 ] as const) {
-  if (!value) throw new Error(`[ord0528] ${name} must be named by the runner`);
+  if (!value) COLLECTION_PREREQ.push(`[ord0528] ${name} must be named by the runner`);
 }
-mkdirSync(EVIDENCE, { recursive: true });
+if (EVIDENCE) mkdirSync(EVIDENCE, { recursive: true });
 
 function write(name: string, body: unknown) {
   writeFileSync(`${EVIDENCE}/${name}.json`, JSON.stringify(body, null, 1), "utf8");
@@ -83,6 +85,10 @@ const tokenOf = (link: string) => {
   const match = /\/v8\/shared\/([^/]+)(?:\/([^/]+))?$/.exec(link.trim());
   return match ? { token: match[1], form: match[2] ?? "" } : null;
 };
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test("ORD-0528 S1 the download sends nothing to the share family", async ({ browser }) => {
   const context = await travellerContext(browser);

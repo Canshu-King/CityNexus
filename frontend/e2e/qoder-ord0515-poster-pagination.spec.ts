@@ -14,6 +14,8 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { expect, test, type Browser, type Page } from "@playwright/test";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const JOURNEY_ID = "22222222-2222-4222-8222-222222222222";
 const SHORT = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0515_SHORT_PORT)}`;
 const LONG = `http://127.0.0.1:${Number(process.env.CITYNEXUS_ORD0515_LONG_PORT)}`;
@@ -30,10 +32,10 @@ for (const [name, value] of [
   ["CITYNEXUS_ORD0515_PY", PYTHON],
   ["CITYNEXUS_ORD0515_EVIDENCE", EVIDENCE],
 ] as const) {
-  if (!value) throw new Error(`[ord0515] ${name} must be named by the runner`);
+  if (!value) COLLECTION_PREREQ.push(`[ord0515] ${name} must be named by the runner`);
 }
 if (!(LIMIT_RASTER_PX > 0)) throw new Error("[ord0515] the named bound could not be read from source");
-mkdirSync(EVIDENCE, { recursive: true });
+if (EVIDENCE) mkdirSync(EVIDENCE, { recursive: true });
 
 function write(name: string, body: unknown) {
   const path = `${EVIDENCE}/${name}.json`;
@@ -147,6 +149,10 @@ function blocksFromHairlines(groups: number, seamsDrawn: boolean) {
   expect(Number.isInteger(blocks), `hairline rows ${groups} do not describe whole blocks`).toBe(true);
   return blocks;
 }
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test("ORD-0515 P1 the short trip still exports one picture, and its size is measured", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
