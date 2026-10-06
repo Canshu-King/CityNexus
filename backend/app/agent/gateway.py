@@ -626,6 +626,53 @@ class AgentToolGateway:
             )
         return auth
 
+
+    def _bound_recovery_epoch_id(
+        self, request: AgentToolCall, journey: Journey
+    ) -> str | None:
+        """Resolve recovery causality from server context, never mission recency."""
+
+        if self.bound_run_id is not None:
+            bound_run = self.session.get(AgentRun, self.bound_run_id)
+            if (
+                bound_run is None
+                or bound_run.journey_id != journey.id
+                or (
+                    request.mission_id is not None
+                    and bound_run.mission_id != str(request.mission_id)
+                )
+            ):
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "AGENT_RUN_RECOVERY_BINDING_INVALID",
+                        "bound_run_id": self.bound_run_id,
+                    },
+                )
+            if not bound_run.recovery_epoch_id:
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "RECOVERY_EPOCH_UNAVAILABLE",
+                        "bound_run_id": bound_run.id,
+                    },
+                )
+            try:
+                validate_recovery_epoch_binding(
+                    self.session,
+                    journey.id,
+                    bound_run.recovery_epoch_id,
+                )
+            except RecoveryEpochSuperseded as exc:
+                raise HTTPException(409, detail=exc.facts)
+            return str(bound_run.recovery_epoch_id)
+
+        if request.mission_id is not None:
+            # Native/legacy transport has no local AgentRun row. Bind it to the
+            # server's current generation rather than guessing another run.
+            return str(ensure_recovery_epoch(self.session, journey).id)
+        return None
+
     @staticmethod
     def catalog() -> list[dict[str, object]]:
         return tool_catalog()
@@ -1659,6 +1706,7 @@ class AgentToolGateway:
                 UUID(item) for item in json.loads(mission.protected_activity_ids_json or "[]")
             ]
         auth = evaluate_action(policy, AgentAction.REQUEST_REPLAN, AuthoritativeActionFacts())
+        run_epoch_id = self._bound_recovery_epoch_id(request, journey)
         signature = canonical_request_signature(
             {
                 "tool": "request_replan",
@@ -1684,11 +1732,18 @@ class AgentToolGateway:
                 journey_id=journey.id,
                 trigger_event_id=str(request.trigger_event_id),
             )
+            cached_filters = [
+                ReplanProposal.journey_id == journey.id,
+                ReplanProposal.trigger_event_id == str(request.trigger_event_id),
+            ]
+            if run_epoch_id:
+                cached_filters.append(
+                    ReplanProposal.recovery_epoch_id == str(run_epoch_id)
+                )
             cached_rows = self.session.scalars(
-                select(ReplanProposal).where(
-                    ReplanProposal.journey_id == journey.id,
-                    ReplanProposal.trigger_event_id == str(request.trigger_event_id),
-                ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+                select(ReplanProposal)
+                .where(*cached_filters)
+                .order_by(ReplanProposal.created_at, ReplanProposal.id)
             ).all()
             from app.main import collective_proposal_receipt
             upgraded.update(collective_proposal_receipt(self.session, journey, cached_rows))
@@ -1703,73 +1758,60 @@ class AgentToolGateway:
         inner_key = _agent_key(
             "replan_generation", request.agent_id, request.request_id, journey.id
         )
-        generated = generate_replan(
-            UUID(journey.id),
-            ReplanGenerateRequest(
-                trigger_event_id=request.trigger_event_id,
-                candidate_count=candidate_count,
-                solver_mode=request.solver_mode,
-                protected_activity_ids=protected_activity_ids,
-                place_ids=request.place_ids,
-            ),
-            idempotency_key=inner_key,
-            session=self.session,
+        previous_epoch_context = self.session.info.get(
+            "recovery_epoch_id"
         )
-        proposals = self.session.scalars(
-            select(ReplanProposal)
-            .where(
-                ReplanProposal.journey_id == journey.id,
-                ReplanProposal.trigger_event_id == str(request.trigger_event_id),
+        previous_run_context = self.session.info.get("source_agent_run_id")
+        if run_epoch_id:
+            self.session.info["recovery_epoch_id"] = str(run_epoch_id)
+        if self.bound_run_id:
+            self.session.info["source_agent_run_id"] = self.bound_run_id
+        try:
+            generated = generate_replan(
+                UUID(journey.id),
+                ReplanGenerateRequest(
+                    trigger_event_id=request.trigger_event_id,
+                    candidate_count=candidate_count,
+                    solver_mode=request.solver_mode,
+                    protected_activity_ids=protected_activity_ids,
+                    place_ids=request.place_ids,
+                ),
+                idempotency_key=inner_key,
+                session=self.session,
             )
-            .order_by(ReplanProposal.created_at, ReplanProposal.id)
-        ).all()
-        # Bind recovery proposals to the server-owned epoch of the AgentRun;
-        # the model cannot supply or change this value.  Ordinary non-Agent
-        # proposals remain NULL for backwards compatibility.
-        run_epoch_id = None
-        if self.bound_run_id is not None:
-            bound_run = self.session.get(AgentRun, self.bound_run_id)
-            if (
-                bound_run is None
-                or bound_run.journey_id != journey.id
-                or (
-                    request.mission_id is not None
-                    and bound_run.mission_id != str(request.mission_id)
-                )
-            ):
-                raise HTTPException(
-                    409,
-                    {
-                        "code": "AGENT_RUN_RECOVERY_BINDING_INVALID",
-                        "bound_run_id": self.bound_run_id,
-                    },
-                )
-            if not bound_run.recovery_epoch_id:
-                raise HTTPException(
-                    409,
-                    {
-                        "code": "RECOVERY_EPOCH_UNAVAILABLE",
-                        "bound_run_id": bound_run.id,
-                    },
-                )
+        finally:
+            if previous_epoch_context is None:
+                self.session.info.pop("recovery_epoch_id", None)
+            else:
+                self.session.info["recovery_epoch_id"] = previous_epoch_context
+            if previous_run_context is None:
+                self.session.info.pop("source_agent_run_id", None)
+            else:
+                self.session.info["source_agent_run_id"] = previous_run_context
+
+        if run_epoch_id:
             try:
                 validate_recovery_epoch_binding(
-                    self.session,
-                    journey.id,
-                    bound_run.recovery_epoch_id,
+                    self.session, journey.id, str(run_epoch_id)
                 )
             except RecoveryEpochSuperseded as exc:
                 raise HTTPException(409, detail=exc.facts)
-            run_epoch_id = str(bound_run.recovery_epoch_id)
-        elif request.mission_id is not None:
-            # Native/legacy callers that do not have a local AgentRun are
-            # server-bound to current reality.  Never guess another run merely
-            # because it shares the same mission id.
-            run_epoch_id = ensure_recovery_epoch(self.session, journey).id
+
+        proposal_filters = [
+            ReplanProposal.journey_id == journey.id,
+            ReplanProposal.trigger_event_id == str(request.trigger_event_id),
+        ]
+        if run_epoch_id:
+            proposal_filters.append(
+                ReplanProposal.recovery_epoch_id == str(run_epoch_id)
+            )
+        proposals = self.session.scalars(
+            select(ReplanProposal)
+            .where(*proposal_filters)
+            .order_by(ReplanProposal.created_at, ReplanProposal.id)
+        ).all()
         canonical_by_identity: dict[str, ReplanProposal] = {}
         for item in proposals:
-            if run_epoch_id and item.recovery_epoch_id is None:
-                item.recovery_epoch_id = str(run_epoch_id)
             item.semantic_identity = semantic_plan_identity(
                 self.session, item.proposed_plan_version_id
             )
