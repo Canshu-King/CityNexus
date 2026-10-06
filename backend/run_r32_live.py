@@ -709,6 +709,14 @@ def run() -> dict[str, Any]:
                 and item.get("causal_slot")
             }
         )
+        invoked_run_ids = sorted(
+            {
+                str(item.get("agent_run_id"))
+                for item in external_call_outcomes
+                if item.get("provider_call_invoked") is True
+                and item.get("agent_run_id")
+            }
+        )
         final = _snapshot(journey_id)
         current_epoch = next(
             (
@@ -747,7 +755,8 @@ def run() -> dict[str, Any]:
                 ),
                 "external_call_outcomes": external_call_outcomes,
                 "provider_invoked_slots": invoked_slots,
-                "provider_calls_were_real": bool(invoked_slots),
+                "provider_invoked_run_ids": invoked_run_ids,
+                "provider_calls_were_real": bool(invoked_run_ids),
                 "concurrent_external_barrier_proven": False,
             },
             "shock_a": shock_a,
