@@ -67,6 +67,7 @@ def approval_payload(row: ActionApproval) -> dict[str, Any]:
         "expires_at": row.expires_at,
         "approved_at": row.approved_at,
         "consumed_at": row.consumed_at,
+        "collective_authority_receipt_id": row.authority_receipt_id,
     }
 
 
